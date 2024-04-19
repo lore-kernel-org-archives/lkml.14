@@ -1,110 +1,214 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6C3130A4C;
-	Fri, 19 Apr 2024 15:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3452712F361;
+	Fri, 19 Apr 2024 15:49:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713541762; cv=none; b=MAqtY/GekxuVAf/PrIG7RG6lTWhpZkkDBmjsYuurMJN1qy17xA8dMBTJv47KIMLn8w68SJQiHf3YecYiS5sStrduh4FY/NHu/XkdQwCk8tzDoiGqQv8Qiq1KTzqWE2BCJ42iBUaW1F3M0DmpM1zTPwDJBLfckph+05WHzU/4Io0=
+	t=1713541768; cv=none; b=t6KZLjCf4lACE1BE7kznBNG8qf6yacZKAkzybTGxT4+dW3PmKbTOT+uwyzAKGGIF4PP4h7C/klVlqMRHYKz7Ma1zB+Z+kDtjUh4v0pjypVaDp1x8JwkdFHFiTRYN/vCGpkKY4ybQeyJYzlU4Wg00aCrPzGh6wl468ceHlBifvtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713541762; c=relaxed/simple;
-	bh=TTsrsLTEbA91sWgljrri+dhf/sihEuA67rqO4RBzqZI=;
+	s=arc-20240116; t=1713541768; c=relaxed/simple;
+	bh=MMNCu9qXo/Sui8C3tMfJ7lzuoTJCSLI1PUO4ACRkh8M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aEANpU6qBHvfiCXar9NEFti90rWAP3EZ8lQBmozYcX530Vh10HetE2HiH61tKQzFr9WT/w8PRmgtB/m5jrmoUeKsWgT0c2khuGFnZ7n5tlN6UL72u+3ewkrtOtFhayIOuQxR4Tplrle8S8OyJCSe2+akxtEdEZ2wB9Js+DI2o2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VCoVBgtJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qJ6i3sVogZDql9IK1FPHjM//a/a0+aWriVDV1PSuWxinBgR/rIb/vt0ZzSJN9lScLjnky2zAh0vVxWZtwM2lNMygkt2MxcvqENFA3P4LGgxlrNoe/n2JiAOs6OqAl89C99F1d/joDO+mHSX0Aw2IkReTp8XWKloY1hggs//LHDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXF3MH9U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VCoVBgtJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 133AEC3277B;
-	Fri, 19 Apr 2024 15:49:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXF3MH9U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1F25C2BD10;
+	Fri, 19 Apr 2024 15:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713541761;
-	bh=TTsrsLTEbA91sWgljrri+dhf/sihEuA67rqO4RBzqZI=;
+	s=k20201202; t=1713541768;
+	bh=MMNCu9qXo/Sui8C3tMfJ7lzuoTJCSLI1PUO4ACRkh8M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VCoVBgtJvZLBFra+EAciHe3qFAsIm44f6/jXeaY6qe2KozPaU0pjDARbPy0vUaGeM
-	 btnGBwql5BxPVWS1O7Sl5Z69AGoWfqK2RELG75fhBxMI5y7BEK4Nc14D1aEyjTBw1k
-	 YUOAvI2KuGqPfzVC3Hj6wEBalKYrIa2SzMXZDUGJzdQ+PPGM6YJda5NoO5l/SV4idj
-	 baU2F9ULMQ715P4R91YLmDUtKkUexTK+c+/EKfv8bC4+TsssBy1FimQliT+YXDDtS4
-	 lrh/JAMUwWWRCS/dc7aG0O/C7Cb/6VSTHTu+asOmexY0rZCxyscsJ+Sr6eLrN8oMlh
-	 R0q0rq2A6S2LQ==
-Date: Fri, 19 Apr 2024 16:49:13 +0100
-From: Will Deacon <will@kernel.org>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: frank.li@nxp.com, mark.rutland@arm.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, john.g.garry@oracle.com, jolsa@kernel.org,
-	namhyung@kernel.org, irogers@google.com, mike.leach@linaro.org,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	alexander.shishkin@linux.intel.com, adrian.hunter@intel.com,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH v10 3/8] perf: imx_perf: let the driver manage the
- counter usage rather the user
-Message-ID: <20240419154913.GA3983@willie-the-truck>
-References: <20240415061320.3948707-1-xu.yang_2@nxp.com>
- <20240415061320.3948707-3-xu.yang_2@nxp.com>
+	b=cXF3MH9UhHZaW5c+fQbICV8+tqL8zZd3GbsK+MMtlVnuI+U9MykD5EdYMbnqzGiQA
+	 clolbwi+WJpRnCi8Bgt+tEF57vK45kHXEgAivOzflaV60ugfWPJize6jQXFRFHwjyr
+	 VRS95okpFhaUArffiB/+u6m+wylmbq/z7sLeQsbFvkITQqoo7UuMHWOkDxb5E4UPYj
+	 yAg41C5DHBDH+t2YzcwksmCMBm7ZYDOWSL2q4WPfoHN6O8DqUXWH6xY+zsUNil7480
+	 D0X+YTTKNs+W1AwuRvHl2QI8DgHMxQgN51X8xpUibgE1yudXL+nOsnAy3LXdkfDXNg
+	 tmjlh9MV2WO1A==
+Date: Fri, 19 Apr 2024 16:49:16 +0100
+From: Conor Dooley <conor@kernel.org>
+To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Anup Patel <anup@brainfault.org>, Shuah Khan <shuah@kernel.org>,
+	Atish Patra <atishp@atishpatra.org>, linux-doc@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 03/12] dt-bindings: riscv: add Zc* extension rules
+ implied by C extension
+Message-ID: <20240419-blinked-timid-da722ec6ddc4@spud>
+References: <20240418124300.1387978-1-cleger@rivosinc.com>
+ <20240418124300.1387978-4-cleger@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="DpdcO0rlxZdj1hXZ"
 Content-Disposition: inline
-In-Reply-To: <20240415061320.3948707-3-xu.yang_2@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20240418124300.1387978-4-cleger@rivosinc.com>
 
-On Mon, Apr 15, 2024 at 02:13:15PM +0800, Xu Yang wrote:
-> In current design, the user of perf app needs to input counter ID to count
-> events. However, this is not user-friendly since the user needs to lookup
-> the map table to find the counter. Instead of letting the user to input
-> the counter, let this driver to manage the counters in this patch.
-> 
-> This will be implemented by:
->  1. allocate counter 0 for cycle event.
->  2. find unused counter from 1-10 for reference events.
->  3. allocate specific counter for counter-specific events.
-> 
-> In this patch, counter attr will be kept for back-compatible but all the
-> value passed down by counter=<n> will be ignored. To mark counter-specific
-> events, counter ID will be encoded into perf_pmu_events_attr.id.
-> 
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> 
+
+--DpdcO0rlxZdj1hXZ
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Apr 18, 2024 at 02:42:26PM +0200, Cl=E9ment L=E9ger wrote:
+> As stated by Zc* spec:
+>=20
+> "As C defines the same instructions as Zca, Zcf and Zcd, the rule is that:
+>  - C always implies Zca
+>  - C+F implies Zcf (RV32 only)
+>  - C+D implies Zcd"
+>=20
+> Add additionnal validation rules to enforce this in dts.
+
+I'll get it out of the way: NAK, and the dts patch is the perfect
+example of why. I don't want us to have to continually update
+devicetrees. If these are implied due to being subsets of other
+extensions, then software should be able to enable them when that
+other extension is present.
+
+My fear is that, and a quick look at the "add probing" commit seemed to
+confirm it, new subsets would require updates to the dts, even though
+the existing extension is perfectly sufficient to determine presence.
+
+I definitely want to avoid continual updates to the devicetree for churn
+reasons whenever subsets are added, but not turning on the likes of Zca
+when C is present because "the bindings were updated to enforce this"
+is a complete blocker. I do concede that having two parents makes that
+more difficult and will likely require some changes to how we probe - do
+we need to have a "second round" type thing?
+Taking Zcf as an example, maybe something like making both of C and F into
+"standard" supersets and adding a case to riscv_isa_extension_check()
+that would mandate that Zca and F are enabled before enabling it, and we
+would ensure that C implies Zca before it implies Zcf?
+
+Given we'd be relying on ordering, we have to perform the same implication
+for both F and C and make sure that the "implies" struct has Zca before Zcf.
+I don't really like that suggestion, hopefully there's a nicer way of doing
+that, but I don't like the dt stuff here.
+
+Thanks,
+Conor.
+
+>=20
+> Signed-off-by: Cl=E9ment L=E9ger <cleger@rivosinc.com>
 > ---
-> Changes in v6:
->  - new patch
-> Changes in v7:
->  - no changes
-> Changes in v8:
->  - add Rb tag
-> Changes in v9:
->  - keep 'counter' attr for back-compatible
-> Changes in v10:
->  - add some explanation about 'counter' attr in commit message
-> ---
->  drivers/perf/fsl_imx9_ddr_perf.c | 168 ++++++++++++++++++-------------
->  1 file changed, 100 insertions(+), 68 deletions(-)
+>  .../devicetree/bindings/riscv/cpus.yaml       |  8 +++--
+>  .../devicetree/bindings/riscv/extensions.yaml | 34 +++++++++++++++++++
+>  2 files changed, 39 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Document=
+ation/devicetree/bindings/riscv/cpus.yaml
+> index d87dd50f1a4b..c4e2c65437b1 100644
+> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+> @@ -168,7 +168,7 @@ examples:
+>                  i-cache-size =3D <16384>;
+>                  reg =3D <0>;
+>                  riscv,isa-base =3D "rv64i";
+> -                riscv,isa-extensions =3D "i", "m", "a", "c";
+> +                riscv,isa-extensions =3D "i", "m", "a", "c", "zca";
+> =20
+>                  cpu_intc0: interrupt-controller {
+>                          #interrupt-cells =3D <1>;
+> @@ -194,7 +194,8 @@ examples:
+>                  reg =3D <1>;
+>                  tlb-split;
+>                  riscv,isa-base =3D "rv64i";
+> -                riscv,isa-extensions =3D "i", "m", "a", "f", "d", "c";
+> +                riscv,isa-extensions =3D "i", "m", "a", "f", "d", "c", "=
+zca",
+> +                                       "zcd";
+> =20
+>                  cpu_intc1: interrupt-controller {
+>                          #interrupt-cells =3D <1>;
+> @@ -215,7 +216,8 @@ examples:
+>                  compatible =3D "riscv";
+>                  mmu-type =3D "riscv,sv48";
+>                  riscv,isa-base =3D "rv64i";
+> -                riscv,isa-extensions =3D "i", "m", "a", "f", "d", "c";
+> +                riscv,isa-extensions =3D "i", "m", "a", "f", "d", "c", "=
+zca",
+> +                                       "zcd";
+> =20
+>                  interrupt-controller {
+>                          #interrupt-cells =3D <1>;
+> diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Do=
+cumentation/devicetree/bindings/riscv/extensions.yaml
+> index db7daf22b863..0172cbaa13ca 100644
+> --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+> @@ -549,6 +549,23 @@ properties:
+>                  const: zca
+>              - contains:
+>                  const: f
+> +      # C extension implies Zca
+> +      - if:
+> +          contains:
+> +            const: c
+> +        then:
+> +          contains:
+> +            const: zca
+> +      # C extension implies Zcd if d
+> +      - if:
+> +          allOf:
+> +            - contains:
+> +                const: c
+> +            - contains:
+> +                const: d
+> +        then:
+> +          contains:
+> +            const: zcd
+> =20
+>  allOf:
+>    # Zcf extension does not exists on rv64
+> @@ -566,6 +583,23 @@ allOf:
+>            not:
+>              contains:
+>                const: zcf
+> +  # C extension implies Zcf if f on rv32 only
+> +  - if:
+> +      properties:
+> +        riscv,isa-extensions:
+> +          allOf:
+> +            - contains:
+> +                const: c
+> +            - contains:
+> +                const: f
+> +        riscv,isa-base:
+> +          contains:
+> +            const: rv32i
+> +    then:
+> +      properties:
+> +        riscv,isa-extensions:
+> +          contains:
+> +            const: zcf
+> =20
+>  additionalProperties: true
+>  ...
+> --=20
+> 2.43.0
+>=20
 
-[...]
+--DpdcO0rlxZdj1hXZ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> @@ -245,8 +249,8 @@ static const struct attribute_group ddr_perf_events_attr_group = {
->  	.attrs = ddr_perf_events_attrs,
->  };
->  
-> -PMU_FORMAT_ATTR(event, "config:0-7");
-> -PMU_FORMAT_ATTR(counter, "config:8-15");
-> +PMU_FORMAT_ATTR(event, "config:0-15");
-> +PMU_FORMAT_ATTR(counter, "config:16-23");
+-----BEGIN PGP SIGNATURE-----
 
-Although these mappings are advertised in sysfs, I don't think we can
-change them because userspace could be relying on them. I also can't
-find any examples of other PMU drivers in the kernel changing these
-mappings after being merged, so please keep tthem the same.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiKSfAAKCRB4tDGHoIJi
+0p0bAQCI0ZdOO2q+xaWhcL7Krk9HCdLpniOsKdATTU8zMWqUWgEA7ccpybuwBzK1
+KglS0OiA5rjSvLYmJv2WgOCxlKn58AQ=
+=l0RY
+-----END PGP SIGNATURE-----
 
-If you need to expand the properties to be 16-bit, then you'll need to
-split them into 2x8-bit fields.
-
-Will
+--DpdcO0rlxZdj1hXZ--
