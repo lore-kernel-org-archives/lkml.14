@@ -1,105 +1,85 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09BC412DD97
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 14:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347FF8562A
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 14:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713535684; cv=none; b=WvGLregIFL2W1SCQ8pzyX6t3vt0l5HCyEKRtjo+76u1NRHKqe5J4W4ora23c+xzgBiZ6c6CR91U0KJ93lVmb93OhQkYtGrHEEXEaRd6UhZayNC1OupkVeXByxFRdXjlW89CWFvx8KrzigHtUy2T9KbB9xcClhN1Jn+/pgYAuBFM=
+	t=1713535736; cv=none; b=VEnBP/cFbi62VriOsV+FSf21XZPXm7M1dTlwufPKTeznHE5V03el6bXHAMXXyElaSGIwIvNmJMf12jvYkObTZZ2qBoeif+uKvuzDLIQZhynMhvKM6AK/BaYvlEmfIpxOzL7rrTIu2tNJWiEY4HtVe8bBwGH50MIlwrjn1oAx2g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713535684; c=relaxed/simple;
-	bh=xyu03HDQ5HqUivNlWzij0bKqi/bLZ6SmDe0+HX8RqMo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=d98yrPU8nRZJr4T5+Af+Gk6cl4DL0hVDmZsWkAxD4FuFp5wZhEt7W9MXV+FnoevjmupVR/WVO4UZyNyfuChVWYL6hem81jZ0dYDjCTpbiEMOPfPrkeuTPktDKPNqEC52NRRAdNpl4RhsfyurYlXA3AG8kDw77eDGli+dmy9LjTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=OgRlcTBz; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1713535736; c=relaxed/simple;
+	bh=AfSvAfZ+PLfkq85Cm4kW2djWmgUs/Kj0iJYGdgszdE4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=oLoUsy3vhgylQri4PIoRxF9rme0hK4uL99atG7Slm/j2hXgKRayCyqCCp09SGW4PwJ8vC/F+bAJ7xXTWSM8NDvsxMIAQg7F3LqhuENWiZTNcdd4HgldMTCykdRgdD52ORUNXGa1Sqb7XMUrFqS3k6imgvUrtoe6wLHDnBhs9urQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2qwXxU69; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="OgRlcTBz"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e45f339708so1649155ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 07:08:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2qwXxU69"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61b2abd30f9so28392077b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 07:08:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1713535681; x=1714140481; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KSDKTiByg68gLYMeDYGEiSgE2cD3L++faVxv3kdVgt4=;
-        b=OgRlcTBzvFxJSkSv9T9WJe4Rjc1Bp014KuSuZFS5tKt6EaZdRrb7uIQrnFCKAqjDRr
-         Y6XcLiqT4hRCfnPP3hMo2vEzylfikAFg75VHOhhIlJ+QNIkYIuPwNV3gslciIPwPLFiz
-         lXacW/5XE/mcJZgP9XXWwl2nGxcvYzCw7YqR74xsPjnkNtDxO3LHmDpPAYNBJtK9w6fJ
-         vXjnKP2yLMpV9lGk1M9VolZNNi0A1TLrwyvrHTK0zPCjzjwR2f6Hm9kUF9U35yLkhV4u
-         nkhiDQ9RSAYvtYrFw5PylVndPGK/rP5SmwB66IN2zAnjx3M/MgOCsdeOgIVzaCGD1d4t
-         UV6g==
+        d=google.com; s=20230601; t=1713535734; x=1714140534; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=33sdiDZDWg4/FZTAXVC794hL3/UVeYFyR3Xkr0YWvZ0=;
+        b=2qwXxU69LJ2MMB4MZ/FDduh1HeesVYk5kwOP+71/R3KCITSog5zlUoYUZEi4Cl0JUn
+         BHTXi8vtGEFhYXjKyk4ZdWqP8Zz7gCTf7XEm8ldqtzXt/AxKBwJgN4eztzyiKaEtGpwN
+         Qg9hK+x43Wh5PLoklfMKqu+t1JajkYOwTzR940y27zEeckICZ5uLiR9MU2VLyne4Yicw
+         SOkhFp/xYNZA/2e+hSatotfByCS4Hmk5SxMnxuGnKbXwTHsD42JZ67+rydNosqyEhJ5G
+         GMQYmsyLyJDYZgD+fM0QRlg/7RBBnZRUkz1WJ9KwRMYwxJVqcvxcufjaROYD3UfaTC3v
+         zJlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713535681; x=1714140481;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KSDKTiByg68gLYMeDYGEiSgE2cD3L++faVxv3kdVgt4=;
-        b=iaVcwwy3F5O7p/basUycKLURWKu/y0oTEI+OLfN6rFX4egD0aGkWS77FbEeaKV85/+
-         8osqAfmh/OigvsgQrWdDwiMsLAxk1TOqK+lTrzWPNERGO9INPUiQVxdzluNnWxJMMKw1
-         cB4Wpp4lbE/w0QWxa2LBsuOwEgFLzy/shSheDtg7EHUteJUCjfDEkDCtr2Mke1w915Xf
-         iubZJngqiGpEA7xsL61eUlTV4w3diF4s/+B7SLipWKIRzDQdflSIHX6cz8o+IH63yw1T
-         wa80xeWlzsEB4zwkYHMMcNZNvX7CzEdtO7+StHiyT+NdgCLQEvtxbrtyz1sDPWG/zfP+
-         1oew==
-X-Forwarded-Encrypted: i=1; AJvYcCVUKJsR5RIV8bLF4qlJv9cCi30kWZYWOLgMxVQerAin6ScJfz8Sdlq/0PImqYMXWqyZzcq6P4gDZWpHv8MYEfGJourmUffcu+eI5ck3
-X-Gm-Message-State: AOJu0YyArGg1CS5aoXlKk5icyVxxQsSDw17KR6+/XGXz2QVd57UASid5
-	dlfqyk90msbvhqszCEYUf9D/XyuZXoJ8qkpWPDowaKdbUN87MudxBqeMvXb+gLg=
-X-Google-Smtp-Source: AGHT+IE9KKSYVwG72VSDmoU2t2kLvppf7ICd7Pg14moTxUpcllBJ1abOnSOdZ8iLgrSUhwkRCTMeHw==
-X-Received: by 2002:a17:902:ec84:b0:1e8:4063:6ded with SMTP id x4-20020a170902ec8400b001e840636dedmr2404122plg.1.1713535681289;
-        Fri, 19 Apr 2024 07:08:01 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.194])
-        by smtp.gmail.com with ESMTPSA id jj1-20020a170903048100b001e2526a5cc3sm3365406plb.307.2024.04.19.07.07.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 07:08:00 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: tj@kernel.org, josef@toxicpanda.com, linan666@huaweicloud.com
-Cc: cgroups@vger.kernel.org, linux-block@vger.kernel.org, 
- linux-kernel@vger.kernel.org, yukuai3@huawei.com, yi.zhang@huawei.com, 
- houtao1@huawei.com, yangerkun@huawei.com
-In-Reply-To: <20240419093257.3004211-1-linan666@huaweicloud.com>
-References: <20240419093257.3004211-1-linan666@huaweicloud.com>
-Subject: Re: [PATCH v2] blk-iocost: do not WARNING if iocg has already
- offlined
-Message-Id: <171353567968.448662.8909505678465861389.b4-ty@kernel.dk>
-Date: Fri, 19 Apr 2024 08:07:59 -0600
+        d=1e100.net; s=20230601; t=1713535734; x=1714140534;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=33sdiDZDWg4/FZTAXVC794hL3/UVeYFyR3Xkr0YWvZ0=;
+        b=lFL9TlH0q+yRRukOWZBN0nS7W7UobazMCvlRMYJNUozWvwea94kSjFMjknjrcpzIBP
+         mvxJYUcPCgi9SOt6XsHxhzFQz6xynlRH3uPFWufFDxj4ThNbIQLlRExwIPytgb+BVagi
+         pw86/NboyfOyDJz4DtCMJV8g2D3x6tRE72g3LO2HSsfYL98ex6AjOjzP6Y/Hztm8JXs9
+         TFrhU72t2FoWKBS73ioZBuLp3rVymjoFgapa72OGAAp4goVbCP4ypyJejz6eLgN01mHW
+         pwH2enRITprnGqDB7nDNMYPKGmoadXXtzUq/CuLe5TOFHjomjAQHuzmEF/w9+82bjXHA
+         73cw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKmTSEMThEqu/F5svkatDPrbGQAzQFswQBIilUoGCEoIqys+Rq8QhVfR56D+XOuNbzSNOn4TAhpeq7YRcwuZ5y66BHbFjO3NZiISBD
+X-Gm-Message-State: AOJu0Yzd07D3cTq0f67V0c8NDvlSuX3lGFvsEVIOz5dpjmvH83vPNVhI
+	DrsnwKALIvhAsq9ZRdBnKBr5AWgVIAtTP+kfmRdL6BIIPqBqrkR329SAubfimcNiS0ZjnUY46vj
+	n8w==
+X-Google-Smtp-Source: AGHT+IFGxzB5q+UmtaeYs4fr1YvtZlgI+JgTd7YHhZpapr5Z1gcjIWkYcZeYP2XQFLsBW8qY+ksucflV/rA=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:6b01:0:b0:ddd:7581:1234 with SMTP id
+ g1-20020a256b01000000b00ddd75811234mr148387ybc.11.1713535734251; Fri, 19 Apr
+ 2024 07:08:54 -0700 (PDT)
+Date: Fri, 19 Apr 2024 07:08:52 -0700
+In-Reply-To: <ZiJ4r70tsphVk45Q@yilunxu-OptiPlex-7050>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.5-dev-2aabd
+Mime-Version: 1.0
+References: <20240417153450.3608097-1-pbonzini@redhat.com> <20240417153450.3608097-3-pbonzini@redhat.com>
+ <20240417193625.GJ3039520@ls.amr.corp.intel.com> <ZiJ4r70tsphVk45Q@yilunxu-OptiPlex-7050>
+Message-ID: <ZiJ69KnDcYabiUwi@google.com>
+Subject: Re: [PATCH 2/7] KVM: Add KVM_MAP_MEMORY vcpu ioctl to pre-populate
+ guest memory
+From: Sean Christopherson <seanjc@google.com>
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: Isaku Yamahata <isaku.yamahata@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, xiaoyao.li@intel.com, 
+	binbin.wu@linux.intel.com, rick.p.edgecombe@intel.com, 
+	isaku.yamahata@linux.intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-
-On Fri, 19 Apr 2024 17:32:57 +0800, linan666@huaweicloud.com wrote:
-> In iocg_pay_debt(), warn is triggered if 'active_list' is empty, which
-> is intended to confirm iocg is avitve when it has debt. However, warn
-> can be triggered during a blkcg or disk is being removed, as
-> iocg_waitq_timer_fn() is awakened at that time.
+On Fri, Apr 19, 2024, Xu Yilun wrote:
+> > > +#ifdef CONFIG_KVM_GENERIC_MAP_MEMORY
+> > > +	case KVM_CAP_MAP_MEMORY:
+> > > +		if (!kvm)
+> > > +			return 1;
+> > > +		/* Leave per-VM implementation to kvm_vm_ioctl_check_extension().  */
+> > 
+> > nitpick:
+> >                 fallthough;
 > 
->   WARNING: CPU: 0 PID: 2344971 at block/blk-iocost.c:1402 iocg_pay_debt+0x14c/0x190
->   Call trace:
->   iocg_pay_debt+0x14c/0x190
->   iocg_kick_waitq+0x438/0x4c0
->   iocg_waitq_timer_fn+0xd8/0x130
->   __run_hrtimer+0x144/0x45c
->   __hrtimer_run_queues+0x16c/0x244
->   hrtimer_interrupt+0x2cc/0x7b0
-> ps: This issue was got in linux 5.10, but it also exists in the mainline.
-> 
-> [...]
+> A little tricky. 'break;' should be more straightforward.  
 
-Applied, thanks!
-
-[1/1] blk-iocost: do not WARNING if iocg has already offlined
-      commit: 01bc4fda9ea0a6b52f12326486f07a4910666cf6
-
-Best regards,
--- 
-Jens Axboe
-
-
-
++1, though it's a moot point as Paolo dropped this code in v4.
