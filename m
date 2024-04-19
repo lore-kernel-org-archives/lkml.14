@@ -1,35 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11297139CE8;
-	Fri, 19 Apr 2024 19:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5BA131188;
+	Fri, 19 Apr 2024 19:51:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713556229; cv=none; b=LyiiLQKqaagKRDEBSzwS8eMUIrxru4ynTmYiDldhkUmrJcAMhNNoysROLIJDwDJHK41WCYsW9BizTWDNwJVUtEg+N4xphEQp/R3s2PZguhz4f+M4IX6IRe/zlrZXDzY0yrt9U3c2X7cKJirnscr1oMx84CCDowTQUOT5vqKhJE4=
+	t=1713556270; cv=none; b=f6CbEJRv5DfKmFu0RDLmMRSCKw6UyHw3woocBuT5XpbpcyQQVZWLSxtyW9lpC1Gv6zdwAMg3BRhs/Rijo4qEnlWOttegtFMWw6WCPtjQuinAEqz6tVedEExKoZ2JlJlPcnTIwiXVthzvu/uol37Pw1mMwtUYqs7XpqJg/qXfDrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713556229; c=relaxed/simple;
-	bh=x65GC0z98wTskh1l/wQIaNPdpvTmTWBoTgqMEUh8VgI=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ElsiDA5urlSyg9f+5/b9leJTNZL9WniMzh89huY/YomrOHaI85Kif6b4RxZJl8aglebdu9rkw3l9Q2O+dGb3A3n+ekzWrY7ZvdPJUAaXbnktEZ/kGKcSDz0ZsrrwJtELieQ3XGtRjgPFVAWsF6a7eMpjG//XL+sjunbOwg0qQXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bUvR2KTl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713556270; c=relaxed/simple;
+	bh=I+KaRSuYYHq33wzOX7I6A8aqVWCW9ldBZFg7/uknzuA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gwBkPmT/+2hAlzX5xkp342kY4qMHWrA4v0VtYNGrJYjrbhjUWfQjt4VJlarW6++7DNwrols26Tk+dcCE+N6tfJCJHTS2djnfnQjsxEjqSsN/VCZfcmQC6Bq9YSbEfE49C9iLqEk2oIvB/WD5ZGEo64i9bzNZB3cGnuL9YqrfclU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=no/tkbmQ; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUvR2KTl"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9BA63C2BD11;
-	Fri, 19 Apr 2024 19:50:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713556228;
-	bh=x65GC0z98wTskh1l/wQIaNPdpvTmTWBoTgqMEUh8VgI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=bUvR2KTlwI0I5MlLSJBpJhei/zHRCUBNLss9x0eWamMcK2+V+jhLoKwvL5Mzq6yNB
-	 7dO/TBaVHUDla3aregIl0rtjUoY71QPxKGHNbqQIxI5VAmfayqp6oopTVv76rzrKpc
-	 UfAHNkxu8PrRcaZQxXlr4veHAZtdL1Dle150bQhA2+0R/XOoOZC1hxpPW0sZ8klc70
-	 V6MsTq/CHF9NYEJj+s0aJhScInyFiWdaO5T0NroIFYuHyynKF8/KFyfx9xItV0z4NJ
-	 cfTcrysGnH4az2uejPqUtjwITLPA1RgO3x73g1Q6oKEjpbTF6ZBIrzakNIe1SMoqlI
-	 utxJnHgx7sYqQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8B967C43618;
-	Fri, 19 Apr 2024 19:50:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="no/tkbmQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713556269; x=1745092269;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=I+KaRSuYYHq33wzOX7I6A8aqVWCW9ldBZFg7/uknzuA=;
+  b=no/tkbmQhuHqWNGiTmyi1SeRcFY3VOVMhTwqXLiUNIxwi7NY62vpYhpb
+   HOJ16Y8tK4HqzBMocFVcL5W4UmK+liUgWdlmy8yjBNuzmM3oZ0lOdHPsp
+   MMWi9vvYCwmdi9TIIg4dqwNNaUnHmPVkgdczf51J7kajz/hLF03K1ux2R
+   KdisCNMRJXHDRJ1HktA7w4lnCOZB0YeHkH8r4ChVScU2jHtNpDjxxpDOZ
+   a5pC6BjJ9qGMXg8Hjsv1DeTTzWRyIMLOWZ6Y0bzfXizQ1Dnd6P4RRzRId
+   8FRI36yfeAO4RXpMmJSQchIUXva3n+FpsIvjw+5yR/gfe7JgOo6pnfJba
+   Q==;
+X-CSE-ConnectionGUID: ClTWVIqbQ7KhaG7fr6gd8g==
+X-CSE-MsgGUID: GSGavcpDTxaDsROCsUY8wg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="9046272"
+X-IronPort-AV: E=Sophos;i="6.07,214,1708416000"; 
+   d="scan'208";a="9046272"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 12:51:08 -0700
+X-CSE-ConnectionGUID: Xe14cQuhRnyFFqD/ir7/JA==
+X-CSE-MsgGUID: lljCEdhZS5OOh17gqeJo+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,214,1708416000"; 
+   d="scan'208";a="46723350"
+Received: from amlin-018-114.igk.intel.com ([10.102.18.114])
+  by fmviesa002.fm.intel.com with ESMTP; 19 Apr 2024 12:51:05 -0700
+From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+To: netdev@vger.kernel.org
+Cc: vadim.fedorenko@linux.dev,
+	jiri@resnulli.us,
+	davem@davemloft.net,
+	rrameshbabu@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	pabeni@redhat.com,
+	kuba@kernel.org,
+	mschmidt@redhat.com,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Subject: [PATCH net] dpll: fix dpll_pin_registration missing refcount
+Date: Fri, 19 Apr 2024 21:47:11 +0200
+Message-Id: <20240419194711.1075349-1-arkadiusz.kubalewski@intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,46 +65,112 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH RESEND] Bluetooth: btusb: medaitek: fix double free of skb in
- coredump
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <171355622856.26355.12127979464027120079.git-patchwork-notify@kernel.org>
-Date: Fri, 19 Apr 2024 19:50:28 +0000
-References: <da0859c4b24d314d9ff38179c26a58ee7e3f16d6.1713395895.git.sean.wang@kernel.org>
-In-Reply-To: <da0859c4b24d314d9ff38179c26a58ee7e3f16d6.1713395895.git.sean.wang@kernel.org>
-To: Sean Wang <sean.wang@kernel.org>
-Cc: luiz.dentz@gmail.com, marcel@holtmann.org, johan.hedberg@gmail.com,
- sean.wang@mediatek.com, chris.lu@mediatek.com, Deren.Wu@mediatek.com,
- jsiuda@google.com, frankgor@google.com, abhishekpandit@google.com,
- michaelfsun@google.com, mmandlik@google.com, abhishekpandit@chromium.org,
- mcchou@chromium.org, shawnku@google.com, linux-bluetooth@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hello:
+In scenario where pin is registered with multiple parent pins via
+dpll_pin_on_pin_register(..), belonging to the same dpll device,
+and each time with the same set of ops/priv data, a reference
+between a pin and dpll is created once and then refcounted, at the same
+time the dpll_pin_registration is only checked for existence and created
+if does not exist. This is wrong, as for the same ops/priv data a
+registration shall be also refcounted, a child pin is also registered
+with dpll device, until each child is unregistered the registration data
+shall exist.
 
-This patch was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
+Add refcount and check if all registrations are dropped before releasing
+dpll_pin_registration resources.
 
-On Wed, 17 Apr 2024 16:27:38 -0700 you wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> hci_devcd_append() would free the skb on error so the caller don't
-> have to free it again otherwise it would cause the double free of skb.
-> 
-> Fixes: 0b7015132878 ("Bluetooth: btusb: mediatek: add MediaTek devcoredump support")
-> Reported-by : Dan Carpenter <dan.carpenter@linaro.org>
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> 
-> [...]
+Currently, the following crash/call trace is produced when ice driver is
+removed on the system with installed NIC which includes dpll device:
 
-Here is the summary with links:
-  - [RESEND] Bluetooth: btusb: medaitek: fix double free of skb in coredump
-    https://git.kernel.org/bluetooth/bluetooth-next/c/6764ab72237d
+WARNING: CPU: 51 PID: 9155 at drivers/dpll/dpll_core.c:809 dpll_pin_ops+0x20/0x30
+Call Trace:
+ dpll_msg_add_pin_freq+0x37/0x1d0
+ dpll_cmd_pin_get_one+0x1c0/0x400
+ ? __nlmsg_put+0x63/0x80
+ dpll_pin_event_send+0x93/0x140
+ dpll_pin_on_pin_unregister+0x3f/0x100
+ ice_dpll_deinit_pins+0xa1/0x230 [ice]
+ ice_remove+0xf1/0x210 [ice]
 
-You are awesome, thank you!
+Fixes: b446631f355e ("dpll: fix dpll_xa_ref_*_del() for multiple registrations")
+Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+---
+ drivers/dpll/dpll_core.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/dpll/dpll_core.c b/drivers/dpll/dpll_core.c
+index 64eaca80d736..7ababa327c0c 100644
+--- a/drivers/dpll/dpll_core.c
++++ b/drivers/dpll/dpll_core.c
+@@ -40,6 +40,7 @@ struct dpll_device_registration {
+ 
+ struct dpll_pin_registration {
+ 	struct list_head list;
++	refcount_t refcount;
+ 	const struct dpll_pin_ops *ops;
+ 	void *priv;
+ };
+@@ -81,6 +82,7 @@ dpll_xa_ref_pin_add(struct xarray *xa_pins, struct dpll_pin *pin,
+ 		reg = dpll_pin_registration_find(ref, ops, priv);
+ 		if (reg) {
+ 			refcount_inc(&ref->refcount);
++			refcount_inc(&reg->refcount);
+ 			return 0;
+ 		}
+ 		ref_exists = true;
+@@ -113,6 +115,7 @@ dpll_xa_ref_pin_add(struct xarray *xa_pins, struct dpll_pin *pin,
+ 	reg->priv = priv;
+ 	if (ref_exists)
+ 		refcount_inc(&ref->refcount);
++	refcount_set(&reg->refcount, 1);
+ 	list_add_tail(&reg->list, &ref->registration_list);
+ 
+ 	return 0;
+@@ -131,8 +134,10 @@ static int dpll_xa_ref_pin_del(struct xarray *xa_pins, struct dpll_pin *pin,
+ 		reg = dpll_pin_registration_find(ref, ops, priv);
+ 		if (WARN_ON(!reg))
+ 			return -EINVAL;
+-		list_del(&reg->list);
+-		kfree(reg);
++		if (refcount_dec_and_test(&reg->refcount)) {
++			list_del(&reg->list);
++			kfree(reg);
++		}
+ 		if (refcount_dec_and_test(&ref->refcount)) {
+ 			xa_erase(xa_pins, i);
+ 			WARN_ON(!list_empty(&ref->registration_list));
+@@ -160,6 +165,7 @@ dpll_xa_ref_dpll_add(struct xarray *xa_dplls, struct dpll_device *dpll,
+ 		reg = dpll_pin_registration_find(ref, ops, priv);
+ 		if (reg) {
+ 			refcount_inc(&ref->refcount);
++			refcount_inc(&reg->refcount);
+ 			return 0;
+ 		}
+ 		ref_exists = true;
+@@ -192,6 +198,7 @@ dpll_xa_ref_dpll_add(struct xarray *xa_dplls, struct dpll_device *dpll,
+ 	reg->priv = priv;
+ 	if (ref_exists)
+ 		refcount_inc(&ref->refcount);
++	refcount_set(&reg->refcount, 1);
+ 	list_add_tail(&reg->list, &ref->registration_list);
+ 
+ 	return 0;
+@@ -211,8 +218,10 @@ dpll_xa_ref_dpll_del(struct xarray *xa_dplls, struct dpll_device *dpll,
+ 		reg = dpll_pin_registration_find(ref, ops, priv);
+ 		if (WARN_ON(!reg))
+ 			return;
+-		list_del(&reg->list);
+-		kfree(reg);
++		if (refcount_dec_and_test(&reg->refcount)) {
++			list_del(&reg->list);
++			kfree(reg);
++		}
+ 		if (refcount_dec_and_test(&ref->refcount)) {
+ 			xa_erase(xa_dplls, i);
+ 			WARN_ON(!list_empty(&ref->registration_list));
+
+base-commit: ac1a21db32eda8a09076bad025d7b848dd086d28
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.38.1
 
