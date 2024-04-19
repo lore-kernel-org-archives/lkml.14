@@ -1,167 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2090.outbound.protection.partner.outlook.cn [139.219.146.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D013B3D62;
-	Fri, 19 Apr 2024 10:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713523818; cv=none; b=n1mrUS4Udb2Wk9zf0e6Kc8fStH4DGq7uI/KOnFUw0CdVqT/BvGqdxjyPab4anvXP1rlUyMeYAR6sL0K2jVTRZqAFejjBDw0mnrS0pbx88YULHoRQZa5t5Frai8DaqNhUsw1dVVQUHeVXEp2uA8gTjXmKZ13e9FGFt3/j3+NW1DM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713523818; c=relaxed/simple;
-	bh=eAPMP/cHU6KEqU8q+tfjHwFwP6sfACuYmS7UfdP3cxQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AV52X/Xj05a43+owiQVDbDg1UmM87FuieLTRB5WrlLWDMvIjnVe+cz7R7ZOmdYJ4sOs4KthiKmmOnyTd5IBeaZjhrUdaV0SuXkMOt6IZ2GCu058fBWhb2D+qeSalvwDVJ1aIF0ZduW3Dh6k5Vo50u6kod9hJPhQI7RxoQXZvaDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rOID6TxS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rOID6TxS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 926BAC072AA;
-	Fri, 19 Apr 2024 10:50:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713523817;
-	bh=eAPMP/cHU6KEqU8q+tfjHwFwP6sfACuYmS7UfdP3cxQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rOID6TxSj8ICbmG3K2hSpxaiXsYmGuiUYyl/zAQPai4WarYIPm2FfuZJIBA22F4+Z
-	 iCCLbg3aPmnn9MnnZIx8bhopueXsMx35kH0ct3PT5VRpxfz+gri19dtL11YmD9915P
-	 uTRlb9b0sesXfz8z/cpg9Qr0+2TY6ttkJmq7gESUVgQ01Qz4BV4kVKiU2nLMKmubIB
-	 3BxxJGefKXfpC+R99ZtwRgKYx760NUIzLefpMdp7l/ZBenY/Y7rIiEj8Sw0VMe+neh
-	 UHCZnmJHefmEsXIKBF0OaDwyyvsKu/HLZSPitNKNmuiB4EAl1Jd2nziXqQug2vFAr/
-	 oAuqx1ueRjjeg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rxlot-0063Xb-Ei;
-	Fri, 19 Apr 2024 11:50:15 +0100
-Date: Fri, 19 Apr 2024 11:50:14 +0100
-Message-ID: <86r0f1r5i1.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	stable@vger.kernel.org,
-	patches@lists.linux.dev,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B29AD51;
+	Fri, 19 Apr 2024 10:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.90
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713524087; cv=fail; b=oAJetEn96REDBTHWcb2HDQXykxljon9vF2kaWDvpT9HVpYOBcQVOQFXGgcxy0FKiiUPE7U6QOOUB0ZE9u7i4KeIh9+X0VtFYby6PtBq78chyLFHzS8aG+0JgfAblhbUtWLRQkaojr5gz9eP+6kumif2AGGY9BsLNd0/e5/9K4Fw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713524087; c=relaxed/simple;
+	bh=UP9/we4PHPB1X2//BiZ72LNYVHu9bnYF0MiM4U9v2BQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Uq3WPqmxUsMzoVNkxQks1nJLH/GAVJwg4GtyzVOmN+U5r78FldsHQib4kgpAbEotbOxxg1e2EqpG6TUsIGFS5v0hgVxttMA6is2Ag/WjY7qLgGM8RxYSqgtdG03fIHYHjrSmGby4MkNEsZCYG2f3zaBi5tJP1CsqhOEJSLTJutk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JanWvZwFusp5R775VdCVTXewOOhqq0gNK9H00j1pklQz5tps6Ef0qw2t/4Z+XMgNlFlkS7O5f6m/CBoF76VX3GdPZifn2SZnAZVgdYyP1FIYeQsSvW+MbYnidFTtoURwgeoUTbIdiUfawtnTAWJMnInM5bQ5Mp/iBjstUifTrVq/2oOC4PGudXIaZVzVmKSVC3BnGirSMuGFAXEi3fZtOhRsnSJm5pLiLE4He79Ud/AfTCkIsB38WwQ2cw0BGCvlQ0xsu36WEhgitUPqy+m/PnIZiltyKLkpznlztKQvr9Gvis9tQqtEdc8rG6angbF6+RAOfLE2JY6ylA3fUbAEyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=flowjzOKs0zXc10a8zGVxJW0lIwqY29xTAislxFBQlw=;
+ b=XYq6zx1YXPtnb5zDDe9AFIQbbZq08K+Ze1vp/Ho2aOQ84J9L6iuAP9cCNRNqqgz73GyQefBNKFC4lKWvLIhazXrD8HkU7NsYehGQpGlCehOSHB34niQ9/JYxws0hdmBKpaLK+Vz9ucnQ7z4snMna8qstjm/TOF7JmVc1vUtQF0MJ1bxpUlRgnJ9IbNDcfnich8BSYB6x+xMoqUtzbFeM/JTxPmrs95cR97QY72tSsPBFP8IQtEnP6mbqJTgbKMV0ZOGHG4/yfpUlQ0uDxD/KmbCSkFMngOX5uhe1Aexpx+i9w0l3ZuI8laQJ81c+gyQndB1xiCdIoh3ExIDX2skobg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::10) by SHXPR01MB0847.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:24::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.43; Fri, 19 Apr
+ 2024 08:20:03 +0000
+Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ ([fe80::b0af:4c9d:2058:a344]) by
+ SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn ([fe80::b0af:4c9d:2058:a344%7])
+ with mapi id 15.20.7409.055; Fri, 19 Apr 2024 08:20:03 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Jack Zhu <jack.zhu@starfivetech.com>,
+	Changhuang Liang <changhuang.liang@starfivetech.com>,
+	linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com,
-	Yihuang Yu <yihyu@redhat.com>,
-	Gavin Shan <gshan@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Shaoqin Huang <shahuang@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: [PATCH 6.6 000/122] 6.6.28-rc1 review
-In-Reply-To: <2024041921-drown-dizzy-7481@gregkh>
-References: <20240415141953.365222063@linuxfoundation.org>
-	<Zh5UJh31PlBkpZWd@finisterre.sirena.org.uk>
-	<CA+G9fYu-AjRm-BBA=8fWS8oCbBJ5W443JHPh3uddD7ea7MY-YA@mail.gmail.com>
-	<86y19dqw74.wl-maz@kernel.org>
-	<Zh61KobDt_y1O46-@arm.com>
-	<86sezjq688.wl-maz@kernel.org>
-	<ZiECLaXHce05DSM6@arm.com>
-	<2024041921-drown-dizzy-7481@gregkh>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	linux-staging@lists.linux.dev
+Subject: [PATCH] staging: media: starfive: Add multiple resolution support
+Date: Fri, 19 Apr 2024 01:19:55 -0700
+Message-Id: <20240419081955.5140-1-changhuang.liang@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ZQ0PR01CA0033.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:2::8) To SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: gregkh@linuxfoundation.org, catalin.marinas@arm.com, naresh.kamboju@linaro.org, broonie@kernel.org, stable@vger.kernel.org, patches@lists.linux.dev, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, yihyu@redhat.com, gshan@redhat.com, ryan.roberts@arm.com, anshuman.khandual@arm.com, shahuang@redhat.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, anders.roxell@linaro.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SHXPR01MB0671:EE_|SHXPR01MB0847:EE_
+X-MS-Office365-Filtering-Correlation-Id: 80b4f6aa-f509-4111-f433-08dc60498316
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	eGswJsF6Ecs62UaS7Yq6vj6fJN9RWxNpdXQv0LP9JUbwIXWPh+b5k96tVwi93S0z8rKUbpEf+OtTzUFFqwtitJTS8SkJv8jKiGR/P4bu3lMN6ICvUxLarS/8dbvyh0saYBxmhvG3cSG5WObp6KZC3GtLe3ZKem8cdBDLDbJLk5vyujGsdnpJ+ZXe7MuTi6wgRUyGSZwaQ753e7yvoM/4H+ywFeGYeHfchyUwmZn/ktefQOjgZtKflzAOhM0AFoFBE9Kiz17TZ5uiCiRBSoKrM+9yV5bsM3D7a1HYlH5wOlOpBE/aLMP4zi5VezocOv6QJhakUm0WtUFBHrKW5DcseQLIn9nQjwjBsNDC/MwNOiHpvsc4CLyPHAO7RRAjnMcACrIBUal/F9p3CPDboWdoyRYtl6FTI9IvIEn/UdPqv3XKaKP1iNafhNkCP6GrvyNH3h4nffysmsritlWKXwawFkTy0ROZKA/Vr2IbwOb7lLv3wMBb1nYxbaXwpeSGbfiH4meg0Eg5HCm9Wb3uUr1xKHsJLZaCCfA/N8Ln8rSlIc7r/cRIq8j8sKWnfWJEu8KYjuAZFDOcYeGH4FRkX4eWp39Yt3fy92uDmJ0WcI1PPSZLUUiOco5GGXMV56wtdL+R
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(41320700004)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?mMIYneoNwmJZXa1uIQGLeV8OMGkIuAdvWkaC0+A+4gDvh6JUT5ODgt7bQdXx?=
+ =?us-ascii?Q?UiH7rBkvTXX7iY4xZ5hwbXZbufBjQxnqFDs9cXO+7MTS9cUVbPY7GR6+BlPL?=
+ =?us-ascii?Q?FiO5HTWYCyUxX6kzslFWJeqk262Q0LeFsMKsaDs2g9bAeXLwTCGSJKy+UagZ?=
+ =?us-ascii?Q?uCSe39LrL5XZa/A3SIleLFxrgRkv+QoGsScOpHZMjxC5b75w26OahxD3T+so?=
+ =?us-ascii?Q?ZuDsMLsqpHVEAtHHCKMEM1fRisdPZEsLQ0R2PG+bEa7d9sLGw4lArrPYn6XC?=
+ =?us-ascii?Q?ejng1nNtk2U7YAdXuhetm0E5a3WfOyEWJkdChV2aW0Bhn4gDdRjaE/3L8BQl?=
+ =?us-ascii?Q?9a2LTLLsNXsOvAMTNMz6yBiISKbwS2pYig9XwDDoUiKU/t0kYC0MAA+VoLXJ?=
+ =?us-ascii?Q?RQ+JA41xet7ycFmnLUHDcvZg3cUwYrWp7IyscriziExbvdyNoD82Wxwj9lBp?=
+ =?us-ascii?Q?6inPbviZUOrwKyBOSZQpPFfOzOCaNMYdwkfSGp7IvDbylu2boUOTeldxg5i8?=
+ =?us-ascii?Q?1pFQjv0ZmKNpl1HwaXGB2ZRyp6r4nFpOHNt45qwH4j0yB635k0hh9oxKc4ut?=
+ =?us-ascii?Q?Ym+BwV7qjJBOrOilWMKzFfuYXwKOJ/w5JFj2SwHVPO0qI5yGDdMfz0EC/0cx?=
+ =?us-ascii?Q?6OsLKaUCKdTRyadlj5cqZOAymSTeohZiZrbOdbT6mSnitq9mA4DZaxJxtXBK?=
+ =?us-ascii?Q?ql4Vj3n79mdJoAF7KcM7z2rNTVIwBYOe/kEwGtcCh8Qhg91lQGr0QScm3OJt?=
+ =?us-ascii?Q?pCBTGz9m6XiB8ZaR/4H2hEcmy8zbW2fPxqKRxmAMTqqZtycqJY13oGYl1euI?=
+ =?us-ascii?Q?GmPhI+LBIShp4WZICIV+xYqY9rVb9eSC5WgJh6+JDgntKh8TTLFDZ60MudPq?=
+ =?us-ascii?Q?2k3BVXPjIMdaD7iun6zhn4DyFcGUtQcdN+WLv4Mea0j2TolB11XRUyLT7+83?=
+ =?us-ascii?Q?qLarttGGd6CLaUzHkFOZ2SjkkyYzz4AdiYqSjfAF7LScQtmCuBwxZx41CtJ3?=
+ =?us-ascii?Q?RVHodeBG6ZrREORUw9bUILcQzZfgPv2CHsoMWf/L18B5gYmmdaLkM0aO7xpo?=
+ =?us-ascii?Q?TAfzPOWGDYOkbfM6GR7BXpXEViDhjtQHeXG9yGms5iMBEGyQ0hK2W07nHhjm?=
+ =?us-ascii?Q?dtwDsnyn5L3Ij4Kd36fq9TKgcYL1iArMUQExo3EJWvG9t3rumH5tWmyuJCp9?=
+ =?us-ascii?Q?t7TkFvikaj4n20oGTOtofpNPu8T1MjyCaS3Irz2ecrwCFfzc1rViKvkwTk9W?=
+ =?us-ascii?Q?5cixphVctKhRt9lssaCmqYo9jdqhC2L+6WU25OhlnCJIuxrq53oMlCneh6ad?=
+ =?us-ascii?Q?tMTXgvVg0G7R+YzBmTcYzm6bIMPJbJyiww8Nuwq5KynkJ7lSyu9WMgPLFpul?=
+ =?us-ascii?Q?B6bzIoh8tVIDSWBBOCh9C2MLePlhZYMPd876Kh5+HAQ+WFtifSIaZm0D7b3p?=
+ =?us-ascii?Q?D5jNy+95U3ryI44gzOq3XnQ8A/Qfuc+/cmlRE0qIa5v90+JVSTHlMBaJotf+?=
+ =?us-ascii?Q?GiYLoMyfIeZdcObMJk8bMwD1dL+oyqG+edod7wLANS7dz++CEiCMKHOY1sZf?=
+ =?us-ascii?Q?+WtU5ZAvbF4G4MaTy91ZcjydTosJciR4VsJ4n4uXiiy7v+9qUlfn1oTHvAPt?=
+ =?us-ascii?Q?7PqdJjMnkh3UXfE2hsrvnF4=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80b4f6aa-f509-4111-f433-08dc60498316
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 08:20:02.9912
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: REdevP97PIZS4ijQXw8u8S6QIAw2aoXosC4bJEEG6IhrnAt3R5L7Ct3EUubQUuvw9rjmnj5l6gN3r9WmER7pi3p/41DNISmE+BpP9gVbrWdAFDq6k3YGN2UqNUIhlyUL
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0847
 
-On Fri, 19 Apr 2024 11:40:33 +0100,
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> 
-> On Thu, Apr 18, 2024 at 12:21:17PM +0100, Catalin Marinas wrote:
-> > On Thu, Apr 18, 2024 at 12:07:35PM +0100, Marc Zyngier wrote:
-> > > On Tue, 16 Apr 2024 18:28:10 +0100,
-> > > Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > > On Tue, Apr 16, 2024 at 02:22:07PM +0100, Marc Zyngier wrote:
-> > > > > On Tue, 16 Apr 2024 14:07:30 +0100,
-> > > > > Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > > > > > On Tue, 16 Apr 2024 at 16:04, Mark Brown <broonie@kernel.org> wrote:
-> > > > > > > On Mon, Apr 15, 2024 at 04:19:25PM +0200, Greg Kroah-Hartman wrote:
-> > > > > > > > This is the start of the stable review cycle for the 6.6.28 release.
-> > > > > > > > There are 122 patches in this series, all will be posted as a response
-> > > > > > > > to this one.  If anyone has any issues with these being applied, please
-> > > > > > > > let me know.
-> > > > > > >
-> > > > > > > The bisect of the boot issue that's affecting the FVP in v6.6 (only)
-> > > > > > > landed on c9ad150ed8dd988 (arm64: tlb: Fix TLBI RANGE operand),
-> > > > > > > e3ba51ab24fdd in mainline, as being the first bad commit - it's also in
-> > > > > > > the -rc for v6.8 but that seems fine.  I've done no investigation beyond
-> > > > > > > the bisect and looking at the commit log to pull out people to CC and
-> > > > > > > note that the fix was explicitly targeted at v6.6.
-> > > > > > 
-> > > > > > Anders investigated this reported issues and bisected and also found
-> > > > > > the missing commit for stable-rc 6.6 is
-> > > > > > e2768b798a19 ("arm64/mm: Modify range-based tlbi to decrement scale")
-> > > > > 
-> > > > > Which is definitely *not* stable candidate. We need to understand why
-> > > > > the invalidation goes south when the scale go up instead of down.
-> > > > 
-> > > > If you backport e3ba51ab24fd ("arm64: tlb: Fix TLBI RANGE operand")
-> > > > which fixes 117940aa6e5f ("KVM: arm64: Define
-> > > > kvm_tlb_flush_vmid_range()") but without the newer e2768b798a19
-> > > > ("arm64/mm: Modify range-based tlbi to decrement scale"), it looks like
-> > > > "scale" in __flush_tlb_range_op() goes out of range to 4. Tested on my
-> > > > CBMC model, not on the actual kernel. It may be worth adding some
-> > > > WARN_ONs in __flush_tlb_range_op() if scale is outside the 0..3 range or
-> > > > num greater than 31.
-> > > > 
-> > > > I haven't investigated properly (and I'm off tomorrow, back on Thu) but
-> > > > it's likely the original code was not very friendly to the maximum
-> > > > range, never tested. Anyway, if one figures out why it goes out of
-> > > > range, I think the solution is to also backport e2768b798a19 to stable.
-> > > 
-> > > I looked into this, and I came to the conclusion that this patch is
-> > > pretty much incompatible with the increasing scale (even if you cap
-> > > num to 30).
-> > 
-> > Thanks Marc for digging into this.
-> > 
-> > > So despite my earlier comment, it looks like picking e2768b798a19 is
-> > > the right thing to do *if* we're taking e3ba51ab24fd into 6.6-stable.
-> > > 
-> > > Otherwise, we need a separate fix, which Ryan initially advocating for
-> > > initially.
-> > 
-> > My preference would be to cherry-pick the two upstream commits than
-> > coming up with an alternative fix for 6.6.
-> 
-> To be specific, which 2 commits, and what order?
+Add multiple resolution support for video "capture_raw" device. Otherwise
+it will capture the wrong image data if the width is not 1920.
 
-That'd be:
+Fixes: e080f339c80a ("media: staging: media: starfive: camss: Add capture driver")
 
-e2768b798a19 ("arm64/mm: Modify range-based tlbi to decrement scale")
+Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+---
+ drivers/staging/media/starfive/camss/stf-capture.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-followed by:
+diff --git a/drivers/staging/media/starfive/camss/stf-capture.c b/drivers/staging/media/starfive/camss/stf-capture.c
+index ec5169e7b391..9e853ff2596a 100644
+--- a/drivers/staging/media/starfive/camss/stf-capture.c
++++ b/drivers/staging/media/starfive/camss/stf-capture.c
+@@ -177,9 +177,12 @@ static void stf_channel_set(struct stfcamss_video *video)
+ {
+ 	struct stf_capture *cap = to_stf_capture(video);
+ 	struct stfcamss *stfcamss = cap->video.stfcamss;
++	struct v4l2_pix_format *pix;
+ 	u32 val;
 
-e3ba51ab24fd ("arm64: tlb: Fix TLBI RANGE operand")
+ 	if (cap->type == STF_CAPTURE_RAW) {
++		pix = &video->active_fmt.fmt.pix;
++
+ 		val = stf_syscon_reg_read(stfcamss, VIN_CHANNEL_SEL_EN);
+ 		val &= ~U0_VIN_CHANNEL_SEL_MASK;
+ 		val |= CHANNEL(0);
+@@ -193,7 +196,7 @@ static void stf_channel_set(struct stfcamss_video *video)
+ 		val |= PIXEL_HEIGH_BIT_SEL(0);
 
-Thanks,
+ 		val &= ~U0_VIN_PIX_CNT_END_MASK;
+-		val |= PIX_CNT_END(IMAGE_MAX_WIDTH / 4 - 1);
++		val |= PIX_CNT_END(pix->width / 4 - 1);
 
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+ 		stf_syscon_reg_write(stfcamss, VIN_INRT_PIX_CFG, val);
+ 	} else if (cap->type == STF_CAPTURE_YUV) {
+--
+2.25.1
