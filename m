@@ -1,204 +1,226 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DA62AD1A;
-	Fri, 19 Apr 2024 07:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D197E8487
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 07:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713512244; cv=none; b=oNMt2Zyk5tll18s3UrUk6pLI7yR5zkuV2P4/OdOdFOECthpfhTqHWIJ2BGwdDwvdTeETyHesuEvnHApKoGy4fYGvkfJoKVuzmESwy3AgBC4N+0wWQnZ9g7lEz5+uo53RJoqGqGBGElUFfDxgfUKyPeTOtPvg8j6g5RCg9dxqeI4=
+	t=1713512284; cv=none; b=N2eNqzcCR/Bt7gK7SlRmAWxKzOVWlYpuDWdZjZNX1yFH1zGE6UFwWqCZEprCL1HVbX9iqWvpmh/6L9hngUTfSaKDDZ31n5tbRgGASKwKRFCvlLHmBt2z2eN6JTuF9TTlyliD6A5NebxhkcJM9eUH8EOmSvh6fKTjg7VoYPidEHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713512244; c=relaxed/simple;
-	bh=WH/TWNwyB1L7t0DkTK1GAarV0p0L0EueWHtAvZAq7rg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LzOL4uJSMa4rRpyO5T7YTKWTT1eOmesuSuWzmcvQd/LsNGQ6AkWDsnRN1YMWNNE43BrUYPMxuo2aAcmsl8+vwEb7oKESuXyx6jx5vzVRD2USdacrBZZO0ENZa4NEvsazQULppVBItxiqW78NXZYBpEdzSgEBx42uktIOTFmUtdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mKMZfcmE; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713512284; c=relaxed/simple;
+	bh=7fD3EoRJQ+AUypWDyDAJC5MK5RRDCn3H14XrG+wYpa0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bIxucvUCcXTQTtf/IiFQzJN0DuaKa3eR9DHxOccCE5d90ZIaWNveIt3fYge/2Hz9AQ0Gr2LPJh0sEWCAwjl6MZfnjTcH0CHPJVjZOgwaznyxls7nIhcCEJhCIMDrE1hJW7ywz2h4bTBWMLrFPZIx5mH/Miewkjj9ME02n7k0g7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g0rrU9KS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mKMZfcmE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713512243; x=1745048243;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WH/TWNwyB1L7t0DkTK1GAarV0p0L0EueWHtAvZAq7rg=;
-  b=mKMZfcmEiZVzsb+MQXHDxkkOducz+2zyhbWIsncm5iKGKFhd4a8nUHsN
-   veln5dTnAVZSLrjEYz9qbTCRqJW3wr860e9FCUrDy5KrvieyWKI4wySIG
-   QVJnoDV23cABB70a8QARP0KtwTNhg7Q4aQHox2bPtcA20kVVEHod+p0jZ
-   AL2oJg5eyjZ8dXiz7nr12XkERanL+EJgCG3oOy98iY1IGv9KuDxbk60+c
-   WvnSkzh6fr0yflLOdqXEQfvp6mSXy5RwN5EdJon3v85czDlzTrVVYMYll
-   4EIGRLh7JzLIcmtRA/lAgbK/xRGB7Xi2eMm74W618MA0g3UqKI7QRKmjT
-   w==;
-X-CSE-ConnectionGUID: /mEfzdxcTjCZGy4zHlGAng==
-X-CSE-MsgGUID: SaCLh30YTvGhejiV2LmGnw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="9217819"
-X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
-   d="scan'208";a="9217819"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 00:37:22 -0700
-X-CSE-ConnectionGUID: yDaNp2+dQdWidn2TlCgqcQ==
-X-CSE-MsgGUID: 4DX5CsrsS/6l5cwvv9bu0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
-   d="scan'208";a="54179291"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa002.jf.intel.com with ESMTP; 19 Apr 2024 00:37:19 -0700
-Date: Fri, 19 Apr 2024 15:32:04 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Marco Pagani <marpagan@redhat.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alan Tull <atull@opensource.altera.com>,
-	Russ Weight <russ.weight@linux.dev>, linux-fpga@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] fpga: region: add owner module and take its refcount
-Message-ID: <ZiId9CnGEjwMcXeX@yilunxu-OptiPlex-7050>
-References: <20240411144811.121500-1-marpagan@redhat.com>
- <ZhnviXAgnTdzUyV4@yilunxu-OptiPlex-7050>
- <669b8b55-df83-4c32-9c8f-41895db18b75@redhat.com>
- <e5f15ea4-f8e4-4a97-95f6-63a2099d084c@redhat.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g0rrU9KS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713512281;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yzs0BM/PIa8R3H5Lga0McIN+1+rjmLVBUvUNByupKeI=;
+	b=g0rrU9KSKMRyH27BZFcoezlHH5gIGFUvQeoVmB2GMK+8tuXEfSZeNOUKWmCLixNAp7+LYc
+	q4HehsBkZksa9YqgHYQdNhM6vlPZmJyLDAhMH/Gg35FMnSocO7ixHFO/DTARZ0C7/VLdOZ
+	SLi6AK49ke/7mGC+mJbk4W4BZt1dc18=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-455-fmVGF2HqOzidlVqNnHezsA-1; Fri, 19 Apr 2024 03:38:00 -0400
+X-MC-Unique: fmVGF2HqOzidlVqNnHezsA-1
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-516c97ddcd8so1405526e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 00:37:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713512278; x=1714117078;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yzs0BM/PIa8R3H5Lga0McIN+1+rjmLVBUvUNByupKeI=;
+        b=q1jigJI1MKeiW4WFedQf6B942m3O8h5wYRE4MbVuCnEN9Hrbvc3yDpwchmlGHJJ9fJ
+         iKtQy2vqL75RxZndPi3TXmT8d4LX5j/8y+IQqJZqBDC03bIXyhIESA4HXJ2DHd6fHngs
+         DBE2K0Jfwp1XMSSPgsQA64SqmyNJ4hilT4ddqXUcFYDyR59UYrr7ItXrt10a4Tfqop78
+         DYemhDnRCmlao1JvQECGTOcBKhrz8lt3h4VUVJulLjDgEaKmeYzNwZA4NuKWlbxOK0r+
+         QgcZIoPPyHByKqPSM6OgJm2O5oz+qakgjS67Ip90eZpiuamrWIZP+xTc033AZpQ73LCI
+         7DTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW7N4R5d+fZQYAgOfDrKQi8w7v9gO4bqD+sTXgBBB7b7Tq/uxPxnanGA+Eun8kWOSCCuuA3fz6qihRKIRFN7Qacuc4u5nQdtGA+2MQS
+X-Gm-Message-State: AOJu0YwU8LRrSqP2Wty50WD+lWPomBi3H3XbNWAooa2ZIsjvOCyfUGDf
+	zIrsE1OPHZJNfX0e/MMF9Fj3eYsaU9+OpAvFHR6qKjbvcxKhHZaUL2GfI4myunnw9c3KPmcV/oa
+	kLv+RPSSkJRRrRM/mH6xao6ugwLa/fiKYtEN6KL3UVm8LJYPHHAf9W4SKqXS39A==
+X-Received: by 2002:a05:6512:208b:b0:51a:bebb:68ee with SMTP id t11-20020a056512208b00b0051abebb68eemr518556lfr.7.1713512278415;
+        Fri, 19 Apr 2024 00:37:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEYaJsY3Z9ostW7+zfwJkHmwfLB1aQfF+0QG/D/UiRd4w+fbLU/zSdzyB1oiHAHWrvcnsRnUw==
+X-Received: by 2002:a05:6512:208b:b0:51a:bebb:68ee with SMTP id t11-20020a056512208b00b0051abebb68eemr518536lfr.7.1713512277863;
+        Fri, 19 Apr 2024 00:37:57 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id x1-20020a056402414100b00571bc3bb70csm1631426eda.87.2024.04.19.00.37.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Apr 2024 00:37:57 -0700 (PDT)
+Message-ID: <a9e8759e-4d30-4923-bcfd-4cd133fe950d@redhat.com>
+Date: Fri, 19 Apr 2024 09:37:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e5f15ea4-f8e4-4a97-95f6-63a2099d084c@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/5] power: supply: power-supply-leds: Add
+ charging_orange_full_green trigger for RGB LED
+To: Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Kate Hsuan <hpa@redhat.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+ linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
+ linux-kernel@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>,
+ linux-pm@vger.kernel.org
+References: <20240416053909.256319-1-hpa@redhat.com>
+ <20240416053909.256319-5-hpa@redhat.com>
+ <sjhe7jvzvrlthf42lipnsnooh3z7vczdcruupsbstmpiujprze@jxwc3lquzvki>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <sjhe7jvzvrlthf42lipnsnooh3z7vczdcruupsbstmpiujprze@jxwc3lquzvki>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 15, 2024 at 07:11:03PM +0200, Marco Pagani wrote:
-> On 2024-04-15 14:19, Marco Pagani wrote:
-> > 
-> > 
-> > On 2024-04-13 04:35, Xu Yilun wrote:
-> >>>  /**
-> >>> - * fpga_region_register_full - create and register an FPGA Region device
-> >>> + * __fpga_region_register_full - create and register an FPGA Region device
-> >>>   * @parent: device parent
-> >>>   * @info: parameters for FPGA Region
-> >>> + * @owner: owner module containing the get_bridges function
-> >>
-> >> This is too specific and easily get unaligned if we add another
-> >> callback. How about "module containing the region ops"?
-> > 
-> > I had some concerns about using the name "region ops" in the kernel-doc
-> > comment since it was not supported by a struct definition nor referenced
-> > in the documentation. However, since the name is now referred to in the
-> > ops_owner pointer, making the change makes sense to me.
-> > 
-> 
-> On second thought, I think it would be better to leave the @owner
-> description to "module containing the get_bridges function" for the
-> moment. Otherwise, it could confuse the user by blurring the connection
-> between the @owner and @get_bridges parameters.
-> 
-> * __fpga_region_register - create and register an FPGA Region device
-> * [...]
-> * @get_bridges: optional function to get bridges to a list
-> * @owner: owner module containing get_bridges function
-> 
-> We can always modify the @owner description later, together with all the
-> necessary changes to add a new op, like grouping all ops in a structure
-> and changing the registration function signature.
+Hi,
 
-OK, it's good to me. I'll apply this patch to for-next.
+On 4/18/24 2:34 PM, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Tue, Apr 16, 2024 at 01:39:08PM +0800, Kate Hsuan wrote:
+>> Add a charging_orange_full_green LED trigger and the trigger is based on
+>> led_mc_trigger_event() which can set an RGB LED when the trigger is
+>> triggered. The LED will show orange when the battery status is charging.
+>> The LED will show green when the battery status is full.
+>>
+>> Link: https://lore.kernel.org/linux-leds/f40a0b1a-ceac-e269-c2dd-0158c5b4a1ad@gmail.com/
+>>
+>> Signed-off-by: Kate Hsuan <hpa@redhat.com>
+>> ---
+> 
+> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Acked-by: Xu Yilun <yilun.xu@intel.com>
+Thanks. Does this mean your ok with routing this change through the LED tree
+together with the 2 LED core patches adding the new led_mc_trigger_event()
+function this uses ?
 
+Regards,
+
+Hans
+
+
+
+
+> -- Sebastian
 > 
-> Thanks,
-> Marco
-> 
-> > 
-> >>
-> >>>   *
-> >>>   * Return: struct fpga_region or ERR_PTR()
-> >>>   */
-> >>>  struct fpga_region *
-> >>> -fpga_region_register_full(struct device *parent, const struct fpga_region_info *info)
-> >>> +__fpga_region_register_full(struct device *parent, const struct fpga_region_info *info,
-> >>> +			    struct module *owner)
-> >>>  {
-> >>>  	struct fpga_region *region;
-> >>>  	int id, ret = 0;
-> >>> @@ -213,6 +215,7 @@ fpga_region_register_full(struct device *parent, const struct fpga_region_info *
-> >>>  	region->compat_id = info->compat_id;
-> >>>  	region->priv = info->priv;
-> >>>  	region->get_bridges = info->get_bridges;
-> >>> +	region->ops_owner = owner;
-> >>>  
-> >>>  	mutex_init(&region->mutex);
-> >>>  	INIT_LIST_HEAD(&region->bridge_list);
-> >>> @@ -241,13 +244,14 @@ fpga_region_register_full(struct device *parent, const struct fpga_region_info *
-> >>>  
-> >>>  	return ERR_PTR(ret);
-> >>>  }
-> >>> -EXPORT_SYMBOL_GPL(fpga_region_register_full);
-> >>> +EXPORT_SYMBOL_GPL(__fpga_region_register_full);
-> >>>  
-> >>>  /**
-> >>> - * fpga_region_register - create and register an FPGA Region device
-> >>> + * __fpga_region_register - create and register an FPGA Region device
-> >>>   * @parent: device parent
-> >>>   * @mgr: manager that programs this region
-> >>>   * @get_bridges: optional function to get bridges to a list
-> >>> + * @owner: owner module containing get_bridges function
-> >>
-> >> ditto
-> >>
-> >>>   *
-> >>>   * This simple version of the register function should be sufficient for most users.
-> >>>   * The fpga_region_register_full() function is available for users that need to
-> >>> @@ -256,17 +260,17 @@ EXPORT_SYMBOL_GPL(fpga_region_register_full);
-> >>>   * Return: struct fpga_region or ERR_PTR()
-> >>>   */
-> >>>  struct fpga_region *
-> >>> -fpga_region_register(struct device *parent, struct fpga_manager *mgr,
-> >>> -		     int (*get_bridges)(struct fpga_region *))
-> >>> +__fpga_region_register(struct device *parent, struct fpga_manager *mgr,
-> >>> +		       int (*get_bridges)(struct fpga_region *), struct module *owner)
-> >>>  {
-> >>>  	struct fpga_region_info info = { 0 };
-> >>>  
-> >>>  	info.mgr = mgr;
-> >>>  	info.get_bridges = get_bridges;
-> >>>  
-> >>> -	return fpga_region_register_full(parent, &info);
-> >>> +	return __fpga_region_register_full(parent, &info, owner);
-> >>>  }
-> >>> -EXPORT_SYMBOL_GPL(fpga_region_register);
-> >>> +EXPORT_SYMBOL_GPL(__fpga_region_register);
-> >>>  
-> >>>  /**
-> >>>   * fpga_region_unregister - unregister an FPGA region
-> >>> diff --git a/include/linux/fpga/fpga-region.h b/include/linux/fpga/fpga-region.h
-> >>> index 9d4d32909340..5fbc05fe70a6 100644
-> >>> --- a/include/linux/fpga/fpga-region.h
-> >>> +++ b/include/linux/fpga/fpga-region.h
-> >>> @@ -36,6 +36,7 @@ struct fpga_region_info {
-> >>>   * @mgr: FPGA manager
-> >>>   * @info: FPGA image info
-> >>>   * @compat_id: FPGA region id for compatibility check.
-> >>> + * @ops_owner: module containing the get_bridges function
-> >>
-> >> ditto
-> >>
-> >> Thanks,
-> >> Yilun
-> >>
-> >>>   * @priv: private data
-> >>>   * @get_bridges: optional function to get bridges to a list
-> >>>   */
-> >>> @@ -46,6 +47,7 @@ struct fpga_region {
-> >>>  	struct fpga_manager *mgr;
-> >>>  	struct fpga_image_info *info;
-> >>>  	struct fpga_compat_id *compat_id;
-> >>> +	struct module *ops_owner;
-> >>>  	void *priv;
-> >>>  	int (*get_bridges)(struct fpga_region *region);
-> >>>  };
-> >>
-> 
+>>  drivers/power/supply/power_supply_leds.c | 26 ++++++++++++++++++++++++
+>>  include/linux/power_supply.h             |  2 ++
+>>  2 files changed, 28 insertions(+)
+>>
+>> diff --git a/drivers/power/supply/power_supply_leds.c b/drivers/power/supply/power_supply_leds.c
+>> index c7db29d5fcb8..8dd99199c65b 100644
+>> --- a/drivers/power/supply/power_supply_leds.c
+>> +++ b/drivers/power/supply/power_supply_leds.c
+>> @@ -22,6 +22,9 @@
+>>  static void power_supply_update_bat_leds(struct power_supply *psy)
+>>  {
+>>  	union power_supply_propval status;
+>> +	unsigned int intensity_green[3] = {255, 0, 0};
+>> +	unsigned int intensity_orange[3] = {128, 0, 255};
+>> +	unsigned int intensity_red[3] = {0, 0, 255};
+>>  
+>>  	if (power_supply_get_property(psy, POWER_SUPPLY_PROP_STATUS, &status))
+>>  		return;
+>> @@ -36,12 +39,20 @@ static void power_supply_update_bat_leds(struct power_supply *psy)
+>>  		/* Going from blink to LED on requires a LED_OFF event to stop blink */
+>>  		led_trigger_event(psy->charging_blink_full_solid_trig, LED_OFF);
+>>  		led_trigger_event(psy->charging_blink_full_solid_trig, LED_FULL);
+>> +		led_mc_trigger_event(psy->charging_orange_full_green_trig,
+>> +				     intensity_green,
+>> +				     ARRAY_SIZE(intensity_green),
+>> +				     LED_FULL);
+>>  		break;
+>>  	case POWER_SUPPLY_STATUS_CHARGING:
+>>  		led_trigger_event(psy->charging_full_trig, LED_FULL);
+>>  		led_trigger_event(psy->charging_trig, LED_FULL);
+>>  		led_trigger_event(psy->full_trig, LED_OFF);
+>>  		led_trigger_blink(psy->charging_blink_full_solid_trig, 0, 0);
+>> +		led_mc_trigger_event(psy->charging_orange_full_green_trig,
+>> +				     intensity_orange,
+>> +				     ARRAY_SIZE(intensity_orange),
+>> +				     LED_FULL);
+>>  		break;
+>>  	default:
+>>  		led_trigger_event(psy->charging_full_trig, LED_OFF);
+>> @@ -49,6 +60,10 @@ static void power_supply_update_bat_leds(struct power_supply *psy)
+>>  		led_trigger_event(psy->full_trig, LED_OFF);
+>>  		led_trigger_event(psy->charging_blink_full_solid_trig,
+>>  			LED_OFF);
+>> +		led_mc_trigger_event(psy->charging_orange_full_green_trig,
+>> +				     intensity_red,
+>> +				     ARRAY_SIZE(intensity_red),
+>> +				     LED_OFF);
+>>  		break;
+>>  	}
+>>  }
+>> @@ -74,6 +89,11 @@ static int power_supply_create_bat_triggers(struct power_supply *psy)
+>>  	if (!psy->charging_blink_full_solid_trig_name)
+>>  		goto charging_blink_full_solid_failed;
+>>  
+>> +	psy->charging_orange_full_green_trig_name = kasprintf(GFP_KERNEL,
+>> +		"%s-charging-orange-full-green", psy->desc->name);
+>> +	if (!psy->charging_orange_full_green_trig_name)
+>> +		goto charging_red_full_green_failed;
+>> +
+>>  	led_trigger_register_simple(psy->charging_full_trig_name,
+>>  				    &psy->charging_full_trig);
+>>  	led_trigger_register_simple(psy->charging_trig_name,
+>> @@ -82,9 +102,13 @@ static int power_supply_create_bat_triggers(struct power_supply *psy)
+>>  				    &psy->full_trig);
+>>  	led_trigger_register_simple(psy->charging_blink_full_solid_trig_name,
+>>  				    &psy->charging_blink_full_solid_trig);
+>> +	led_trigger_register_simple(psy->charging_orange_full_green_trig_name,
+>> +				    &psy->charging_orange_full_green_trig);
+>>  
+>>  	return 0;
+>>  
+>> +charging_red_full_green_failed:
+>> +	kfree(psy->charging_blink_full_solid_trig_name);
+>>  charging_blink_full_solid_failed:
+>>  	kfree(psy->full_trig_name);
+>>  full_failed:
+>> @@ -101,10 +125,12 @@ static void power_supply_remove_bat_triggers(struct power_supply *psy)
+>>  	led_trigger_unregister_simple(psy->charging_trig);
+>>  	led_trigger_unregister_simple(psy->full_trig);
+>>  	led_trigger_unregister_simple(psy->charging_blink_full_solid_trig);
+>> +	led_trigger_unregister_simple(psy->charging_orange_full_green_trig);
+>>  	kfree(psy->charging_blink_full_solid_trig_name);
+>>  	kfree(psy->full_trig_name);
+>>  	kfree(psy->charging_trig_name);
+>>  	kfree(psy->charging_full_trig_name);
+>> +	kfree(psy->charging_orange_full_green_trig_name);
+>>  }
+>>  
+>>  /* Generated power specific LEDs triggers. */
+>> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+>> index c0992a77feea..9b6898085224 100644
+>> --- a/include/linux/power_supply.h
+>> +++ b/include/linux/power_supply.h
+>> @@ -318,6 +318,8 @@ struct power_supply {
+>>  	char *online_trig_name;
+>>  	struct led_trigger *charging_blink_full_solid_trig;
+>>  	char *charging_blink_full_solid_trig_name;
+>> +	struct led_trigger *charging_orange_full_green_trig;
+>> +	char *charging_orange_full_green_trig_name;
+>>  #endif
+>>  };
+>>  
+>> -- 
+>> 2.44.0
+>>
+>>
+
