@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0BE7F47C;
-	Fri, 19 Apr 2024 10:09:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106BA7F46F;
+	Fri, 19 Apr 2024 10:09:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713521378; cv=none; b=RHY9MCgn4Xvurol946JYoBoOJLSLWOZtGwtxWSUUhAnedmIeu9R2iGc2eXnzqk7jIIrtVZa5MEjXCHFyT/FkT6kXncEYqZwLMyECSyEXW5x9d1zG/5DdYmMBAkatYIpTvqUY2g55w/0qFtG7yJEBeGzfeg5yi2s3M/45ovsodzw=
+	t=1713521378; cv=none; b=R3xMnOHos9naRD6//+gMlj00FUBhxqVnVDgBF7sFbS5hb0K9v9vDAfp+JU8WNI9FW7ZV5cUKjtxYrBuXiwPkll4JcbbOz9LMjl4ROVl2+ScAQBjIUXf2wgEXHr/fu0qKgS9bhxgS3c69GUQXS+Tf85GxRnXqevoLiKYi9YYWmNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713521378; c=relaxed/simple;
-	bh=QXo7TXAVxaylcHHjpRcvyG/89tEmiO1hQSF4FfXC2qs=;
+	bh=DrChZcFmzE0/BqrbPpCtlwi4iActHT7vq+cQDwv9Mng=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Uq/bQe+DOFLEbGhkgIfWjrnMsVOgX9S1HYkddYjohkAft+woICaG5S6evo+PrqiokFfH6JZSBfSPCFDda+bM8y68BbizcudLHLi2UuOimj3a/ff9Ah2hgyBUSKf8+33x6xnTW8MZNrGeYrzUx+2dU9IAiH/eedAXqsErHcWmSYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qgqqzKvW; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ID4/Mxmaxa/Z++taZHmW/pyLz+I7fMg5LnUDnqHw/BTxuE1msqeLczL0D93diYmESLKPp63WAq9e+TLqnKy0je4DRlOgIrIks3jvi2/YbM2aXmsgnbheL6TSIC5DQqiv/RBLMvaduGSRhFCuyaCJiupblWcB+5Nie4hWrzrC40U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hged/CNo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qgqqzKvW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0022AC3277B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hged/CNo"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8CADAC32783;
 	Fri, 19 Apr 2024 10:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713521378;
-	bh=QXo7TXAVxaylcHHjpRcvyG/89tEmiO1hQSF4FfXC2qs=;
+	s=k20201202; t=1713521377;
+	bh=DrChZcFmzE0/BqrbPpCtlwi4iActHT7vq+cQDwv9Mng=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=qgqqzKvWynmpgIFrMSIHpW8fVopOfTgvQwiqSYLktTckhPVtRVBIF58c4Vtpz8a/A
-	 Rzi0bSMa30O9P2SHK1tUJOd/VG3o7PxkHGTXC8yqv4aMEBmZW7ru+NhW9vEPEINgZo
-	 D9sppvQ+PKqrUFv9ebg1ffb218Hxs5RbG5AcHbDPkMcH8YaciTyb1VTwwa+ivDDuAP
-	 IW3OIVIg08x7spOiuQO86rRFZ0Ckd4FNDrepOxt+u0SVPIZ4nZad+Ya3JZMqz7xmia
-	 ql6HkAKCH45j8CHnOFsp4lanZ1RI3Y/PkZUHx7HM9iO2tVkygMyKNCoNKnyQ7pTadL
-	 uId6WvYZBto2g==
+	b=hged/CNoXD3WE13GYediM2t8hx8aPe2PagTM4EqEjKh5GTsId+QWSDI89WN2bFWrZ
+	 JEcATJishYrTF4nebTnl1KJk0J2AHbQ/2TnmQNj+vpf6xg3U5vUwo/rbNvmAq4+JiG
+	 jOXhCyKuw49a6IzQ54HEzs7uidHX+SLKiE7SLuc1W4dbZZyawvRI1uYqXyyNFbCoHA
+	 U+bhnyU8C0gWH7BKVNo4Ar6UKNlmEjUxbP3Ib5TudHwXV3j9MsZT3F5mrMOT9zjaxh
+	 bfbx51iu9mSFpSoOS2MwRtum/EhfHGMGrqUOLmovQSD9qPDjJ5FaM4fhM8SvaMsVTU
+	 bI30ZM2xTTVng==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3FCC04FF6;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C362C04FF6;
 	Fri, 19 Apr 2024 10:09:37 +0000 (UTC)
 From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL_via_B4_Relay?= <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Fri, 19 Apr 2024 13:09:32 +0300
-Subject: [PATCH net-next 09/13] net: dsa: mt7530: define MAC speed
- capabilities per switch model
+Date: Fri, 19 Apr 2024 13:09:26 +0300
+Subject: [PATCH net-next 03/13] net: dsa: mt7530: rename p5_intf_sel and
+ use only for MT7530 switch
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240419-for-netnext-mt7530-improvements-4-v1-9-6d852ca79b1d@arinc9.com>
+Message-Id: <20240419-for-netnext-mt7530-improvements-4-v1-3-6d852ca79b1d@arinc9.com>
 References: <20240419-for-netnext-mt7530-improvements-4-v1-0-6d852ca79b1d@arinc9.com>
 In-Reply-To: <20240419-for-netnext-mt7530-improvements-4-v1-0-6d852ca79b1d@arinc9.com>
 To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
@@ -59,11 +59,11 @@ Cc: Bartel Eerdekens <bartel.eerdekens@constell8.be>,
  linux-mediatek@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713521374; l=2468;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713521374; l=5777;
  i=arinc.unal@arinc9.com; s=arinc9-Xeront; h=from:subject:message-id;
- bh=U7m+wRsPDOynbhqa9RKx+0GeC9h4YeQt1AWk+qLy0W4=;
- b=0crF93zDGKVTpjGQEtq8n4SQMOTbZYWpe6bvUZvJS7QU9rdMeKGTO+QmpVP7+g6kxdvfi9UMQ
- IdQM4xMj7CMDeXciei7AC2vbAv1xB6047R1MFchs+fdLBBzPBx8y/R5
+ bh=uZA3tC7GsV/vAXhUQJDQl3EKCDn/sB64E6udt6p1H0w=;
+ b=Ee5sa4ZwnPjKLaHQg9TwnlUIU3N+zhk21ScX5AQU9a7Mf6VrPKEU4Y2hl1bmaiRtHCUqhqyYC
+ ew0En67SWlACyqi1e/l1CZrs6lju5eft1IuoBknGQS6dF8SyrenLnQ2
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=z49tLn29CyiL4uwBTrqH9HO1Wu3sZIuRp4DaLZvtP9M=
 X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-Xeront
@@ -73,74 +73,187 @@ Reply-To: arinc.unal@arinc9.com
 
 From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-With the support of the MT7988 SoC switch, the MAC speed capabilities
-defined on mt753x_phylink_get_caps() won't apply to all switch models
-anymore. Move them to more appropriate locations instead of overwriting
-config->mac_capabilities.
+The p5_intf_sel pointer is used to store the information of whether PHY
+muxing is used or not. PHY muxing is a feature specific to port 5 of the
+MT7530 switch. Do not use it for other switch models.
 
-Remove the comment on mt753x_phylink_get_caps() as it's become invalid with
-the support of MT7531 and MT7988 SoC switch.
+Rename the pointer to p5_mode to store the mode the port is being used in.
+Rename the p5_interface_select enum to mt7530_p5_mode, the string
+representation to mt7530_p5_mode_str, and the enum elements.
 
-Add break to case 6 of mt7988_mac_port_get_caps() to be explicit.
+If PHY muxing is not detected, the default mode, GMAC5, will be used.
 
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 ---
- drivers/net/dsa/mt7530.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/net/dsa/mt7530.c | 62 ++++++++++++++++++++----------------------------
+ drivers/net/dsa/mt7530.h | 15 ++++++------
+ 2 files changed, 33 insertions(+), 44 deletions(-)
 
 diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 4e9aa78ca3d0..8a141f849673 100644
+index 8dee9cee1104..5b6aeeddb5d9 100644
 --- a/drivers/net/dsa/mt7530.c
 +++ b/drivers/net/dsa/mt7530.c
-@@ -2685,6 +2685,8 @@ mt7531_setup(struct dsa_switch *ds)
- static void mt7530_mac_port_get_caps(struct dsa_switch *ds, int port,
- 				     struct phylink_config *config)
- {
-+	config->mac_capabilities |= MAC_10 | MAC_100 | MAC_1000FD;
-+
- 	switch (port) {
- 	/* Ports which are connected to switch PHYs. There is no MII pinout. */
- 	case 0 ... 4:
-@@ -2716,6 +2718,8 @@ static void mt7531_mac_port_get_caps(struct dsa_switch *ds, int port,
- {
- 	struct mt7530_priv *priv = ds->priv;
+@@ -857,19 +857,15 @@ mt7530_set_ageing_time(struct dsa_switch *ds, unsigned int msecs)
+ 	return 0;
+ }
  
-+	config->mac_capabilities |= MAC_10 | MAC_100 | MAC_1000FD;
-+
- 	switch (port) {
- 	/* Ports which are connected to switch PHYs. There is no MII pinout. */
- 	case 0 ... 4:
-@@ -2755,14 +2759,17 @@ static void mt7988_mac_port_get_caps(struct dsa_switch *ds, int port,
- 	case 0 ... 3:
- 		__set_bit(PHY_INTERFACE_MODE_INTERNAL,
- 			  config->supported_interfaces);
-+
-+		config->mac_capabilities |= MAC_10 | MAC_100 | MAC_1000FD;
- 		break;
- 
- 	/* Port 6 is connected to SoC's XGMII MAC. There is no MII pinout. */
- 	case 6:
- 		__set_bit(PHY_INTERFACE_MODE_INTERNAL,
- 			  config->supported_interfaces);
--		config->mac_capabilities = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
--					   MAC_10000FD;
-+
-+		config->mac_capabilities |= MAC_10000FD;
-+		break;
+-static const char *p5_intf_modes(unsigned int p5_interface)
+-{
+-	switch (p5_interface) {
+-	case P5_DISABLED:
+-		return "DISABLED";
+-	case P5_INTF_SEL_PHY_P0:
+-		return "PHY P0";
+-	case P5_INTF_SEL_PHY_P4:
+-		return "PHY P4";
+-	case P5_INTF_SEL_GMAC5:
+-		return "GMAC5";
++static const char *mt7530_p5_mode_str(unsigned int mode)
++{
++	switch (mode) {
++	case MUX_PHY_P0:
++		return "MUX PHY P0";
++	case MUX_PHY_P4:
++		return "MUX PHY P4";
+ 	default:
+-		return "unknown";
++		return "GMAC5";
  	}
  }
  
-@@ -2932,9 +2939,7 @@ static void mt753x_phylink_get_caps(struct dsa_switch *ds, int port,
- {
- 	struct mt7530_priv *priv = ds->priv;
+@@ -886,23 +882,23 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
+ 	val |= MHWTRAP_MANUAL | MHWTRAP_P5_MAC_SEL | MHWTRAP_P5_DIS;
+ 	val &= ~MHWTRAP_P5_RGMII_MODE & ~MHWTRAP_PHY0_SEL;
  
--	/* This switch only supports full-duplex at 1Gbps */
--	config->mac_capabilities = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
--				   MAC_10 | MAC_100 | MAC_1000FD;
-+	config->mac_capabilities = MAC_ASYM_PAUSE | MAC_SYM_PAUSE;
+-	switch (priv->p5_intf_sel) {
+-	case P5_INTF_SEL_PHY_P0:
+-		/* MT7530_P5_MODE_GPHY_P0: 2nd GMAC -> P5 -> P0 */
++	switch (priv->p5_mode) {
++	/* MUX_PHY_P0: P0 -> P5 -> SoC MAC */
++	case MUX_PHY_P0:
+ 		val |= MHWTRAP_PHY0_SEL;
+ 		fallthrough;
+-	case P5_INTF_SEL_PHY_P4:
+-		/* MT7530_P5_MODE_GPHY_P4: 2nd GMAC -> P5 -> P4 */
++
++	/* MUX_PHY_P4: P4 -> P5 -> SoC MAC */
++	case MUX_PHY_P4:
+ 		val &= ~MHWTRAP_P5_MAC_SEL & ~MHWTRAP_P5_DIS;
  
- 	priv->info->mac_port_get_caps(ds, port, config);
+ 		/* Setup the MAC by default for the cpu port */
+ 		mt7530_write(priv, MT753X_PMCR_P(5), 0x56300);
+ 		break;
+-	case P5_INTF_SEL_GMAC5:
+-		/* MT7530_P5_MODE_GMAC: P5 -> External phy or 2nd GMAC */
+-		val &= ~MHWTRAP_P5_DIS;
+-		break;
++
++	/* GMAC5: P5 -> SoC MAC or external PHY */
+ 	default:
++		val &= ~MHWTRAP_P5_DIS;
+ 		break;
+ 	}
+ 
+@@ -930,8 +926,8 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
+ 
+ 	mt7530_write(priv, MT7530_MHWTRAP, val);
+ 
+-	dev_dbg(ds->dev, "Setup P5, HWTRAP=0x%x, intf_sel=%s, phy-mode=%s\n",
+-		val, p5_intf_modes(priv->p5_intf_sel), phy_modes(interface));
++	dev_dbg(ds->dev, "Setup P5, HWTRAP=0x%x, mode=%s, phy-mode=%s\n", val,
++		mt7530_p5_mode_str(priv->p5_mode), phy_modes(interface));
+ 
+ 	mutex_unlock(&priv->reg_mutex);
  }
+@@ -2476,13 +2472,11 @@ mt7530_setup(struct dsa_switch *ds)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* Setup port 5 */
+-	if (!dsa_is_unused_port(ds, 5)) {
+-		priv->p5_intf_sel = P5_INTF_SEL_GMAC5;
+-	} else {
++	/* Check for PHY muxing on port 5 */
++	if (dsa_is_unused_port(ds, 5)) {
+ 		/* Scan the ethernet nodes. Look for GMAC1, lookup the used PHY.
+-		 * Set priv->p5_intf_sel to the appropriate value if PHY muxing
+-		 * is detected.
++		 * Set priv->p5_mode to the appropriate value if PHY muxing is
++		 * detected.
+ 		 */
+ 		for_each_child_of_node(dn, mac_np) {
+ 			if (!of_device_is_compatible(mac_np,
+@@ -2506,17 +2500,16 @@ mt7530_setup(struct dsa_switch *ds)
+ 				}
+ 				id = of_mdio_parse_addr(ds->dev, phy_node);
+ 				if (id == 0)
+-					priv->p5_intf_sel = P5_INTF_SEL_PHY_P0;
++					priv->p5_mode = MUX_PHY_P0;
+ 				if (id == 4)
+-					priv->p5_intf_sel = P5_INTF_SEL_PHY_P4;
++					priv->p5_mode = MUX_PHY_P4;
+ 			}
+ 			of_node_put(mac_np);
+ 			of_node_put(phy_node);
+ 			break;
+ 		}
+ 
+-		if (priv->p5_intf_sel == P5_INTF_SEL_PHY_P0 ||
+-		    priv->p5_intf_sel == P5_INTF_SEL_PHY_P4)
++		if (priv->p5_mode == MUX_PHY_P0 || priv->p5_mode == MUX_PHY_P4)
+ 			mt7530_setup_port5(ds, interface);
+ 	}
+ 
+@@ -2654,9 +2647,6 @@ mt7531_setup(struct dsa_switch *ds)
+ 			   MT7531_EXT_P_MDIO_12);
+ 	}
+ 
+-	if (!dsa_is_unused_port(ds, 5))
+-		priv->p5_intf_sel = P5_INTF_SEL_GMAC5;
+-
+ 	mt7530_rmw(priv, MT7531_GPIO_MODE0, MT7531_GPIO0_MASK,
+ 		   MT7531_GPIO0_INTERRUPT);
+ 
+diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
+index 7d7abb67202f..c8155e32edbe 100644
+--- a/drivers/net/dsa/mt7530.h
++++ b/drivers/net/dsa/mt7530.h
+@@ -708,12 +708,11 @@ struct mt7530_port {
+ 	struct phylink_pcs *sgmii_pcs;
+ };
+ 
+-/* Port 5 interface select definitions */
+-enum p5_interface_select {
+-	P5_DISABLED,
+-	P5_INTF_SEL_PHY_P0,
+-	P5_INTF_SEL_PHY_P4,
+-	P5_INTF_SEL_GMAC5,
++/* Port 5 mode definitions of the MT7530 switch */
++enum mt7530_p5_mode {
++	GMAC5,
++	MUX_PHY_P0,
++	MUX_PHY_P4,
+ };
+ 
+ struct mt7530_priv;
+@@ -776,7 +775,7 @@ struct mt753x_info {
+  * @ports:		Holding the state among ports
+  * @reg_mutex:		The lock for protecting among process accessing
+  *			registers
+- * @p5_intf_sel:	Holding the current port 5 interface select
++ * @p5_mode:		Holding the current mode of port 5 of the MT7530 switch
+  * @p5_sgmii:		Flag for distinguishing if port 5 of the MT7531 switch
+  *			has got SGMII
+  * @irq:		IRQ number of the switch
+@@ -798,7 +797,7 @@ struct mt7530_priv {
+ 	const struct mt753x_info *info;
+ 	unsigned int		id;
+ 	bool			mcm;
+-	enum p5_interface_select p5_intf_sel;
++	enum mt7530_p5_mode	p5_mode;
+ 	bool			p5_sgmii;
+ 	u8			mirror_rx;
+ 	u8			mirror_tx;
 
 -- 
 2.40.1
