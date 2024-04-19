@@ -1,154 +1,109 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B6012FB08
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 15:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C77F184E;
+	Fri, 19 Apr 2024 15:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713540449; cv=none; b=boNFwPhJcfpY/+YQ1EqzjkJJ9y/vn+6P9DBWtQhCGMh71RirUnt1ztW2cIP4f34NUTu41L+3NGeGvM3mZw/sA5vksCuwoWMuKEtVucmbF/yc7xjkrksWETHI66QM967As4rF564x6/AR0T6fmoy+ZnA0z/jBNLvX29hRhpiyNMs=
+	t=1713540532; cv=none; b=oTdC26vYckLwB8irVTA0Tc+Tc8Z+YihI1iAqJKup78XNwQ0TdY39XU16gfZjKSTUkuBvNfA8RsyvQrngldRLSOI+eCXxm0fWmvvCn87HCg/7Cwe/Moflnq1ZHVxuU3M8lptxVBOWnr2gZ9eDmegpMAzH97xK7VGurSVmRHShzbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713540449; c=relaxed/simple;
-	bh=wZS3/ka5uw+QwA+dK12SUdNfDxnhQ1D30LTvW5XU6ag=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FfY2pLZzVqYowkLgDjR9fPFI9viHE9CFDFLIZywNsNlF1wAnvCzt4VjvVXPNRdDs8wY2b1/L2+WGra5SwjXf6OhPMAU95smbd0zy6N7NQXYfOWNDB8OuHx9OZQRRDXjrgipm0Yum2UG8LuXXirQCgLp4GaPdeVw++M6coW+nT3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OGUXWstb; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OGUXWstb"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-615019cd427so19226337b3.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 08:27:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713540447; x=1714145247; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0CnJQyqRqCko7CRyzv7CHI17zfLS508ulBJIPXp4bTY=;
-        b=OGUXWstb0eb+/3jEW8eIwYNSqvvmNe4wUc/Wsyr7rxELkUYSY70lzBxHhHRHBSqw/6
-         4gpGy9kf8fqSNd7TbIrKy8LVZG7DVg05zHSCGwDCYwcMoUA3CzP1vpYNAhIvfe6ag5U6
-         A8D6l4+ge0d99iuZTA/UPnLR36ZQx3/PHyrgqDf6bTx+/zYApj62BnDeUC2W9PbPpN2E
-         ODCQUJWJ3wfv4PNgpN42YXo83w/5YSFgfTCKBCzsZabFGOJrYHhdDlUV8sIUDPb4a0ha
-         y/ci9JgeYQOPf99RU7WKuZYBRYZDVI/FTXy8lXIn1v7MLgeUgl/APZsTu82ftVrAbvuJ
-         9/GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713540447; x=1714145247;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0CnJQyqRqCko7CRyzv7CHI17zfLS508ulBJIPXp4bTY=;
-        b=Y8Vi61nx8HEFFnEfXTg0jhEh2r01wuyNnZAq3kDPSaWtRHXsLXLpsnoTyVQQgHC6wg
-         PP+/d17rLbk8jqGOWwLTVqUOxzmfHrNEjPxZtYzgXORCwmqh92h8ABNIhGSjH745pnFD
-         56wVKttcyxsT9wdBpxldSWmAxUIi/+to6BibTmvTMCRbEIQgWdFPIfXoJ0KDO8dIuMDE
-         RKB/LqHr8UySWdJDtdUlTlSibWQ8M5tb4W9zkb1KTdUal/+oQePzshd87vfudp86FjuK
-         Fx1ar5zj42ZjQoGqfgR364JsvuvJ/3BEQKgdvzcyuIdZvzwPylf8pOoxugNHjJosHeBg
-         8pAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtVUD/8G6Nven0tzaIt03WrYYov7DXw4bmv9DbU+fhWgU7B2iQFDASU9BQ8gdd2nHRDhLJi689J0jFMpqSuYyJJjjJm42wKmFaHzUW
-X-Gm-Message-State: AOJu0YyQdyj8qXtXCKQ1vqMf/QNqsa7jCpERNPbHFD9hgyeacZLZ5Emu
-	UY64xtxFZyN04eKOt31vXFfRFUJn/PYq7c6uy+WyR/HiqXcfEEb39/Cw5wd/bN1tM+djK1CRp+O
-	QCoKQeFcoMB52PlwTUjqUNr7/sUF9yC52iV4wEA==
-X-Google-Smtp-Source: AGHT+IGV9Ml+2vVPURcFgC+sUz6bLEO3DJd5BJxFzxuHh7rksR3eggTuaot2N8RDy5rH+Tz+m6dektlK/f1rFXqTUdo=
-X-Received: by 2002:a05:690c:61c6:b0:617:d662:8eb with SMTP id
- hk6-20020a05690c61c600b00617d66208ebmr2758611ywb.19.1713540447459; Fri, 19
- Apr 2024 08:27:27 -0700 (PDT)
+	s=arc-20240116; t=1713540532; c=relaxed/simple;
+	bh=bfF74m4I4t9XPTgeXN2m67auBjU4qnUvI02BEMhTbY4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=RtA20W5bwm24gxh526StNTeDN5ZgGNOJp8TWb+9m8VAJUt5PJGWFQwHij+Yq6aPcT26Shwbt4WLlITkgnYUnE6D8qIyG0knrxMAmBHVaijmq9R8k9SLJdGkOnqJpHIuLgBsZ1wBq90zrcbcN+6VtXeItt0QT+DIeQHATU/TIv8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4FEF2F;
+	Fri, 19 Apr 2024 08:29:17 -0700 (PDT)
+Received: from [192.168.20.58] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6820C3F64C;
+	Fri, 19 Apr 2024 08:28:46 -0700 (PDT)
+Message-ID: <d143cd11-26ea-42e3-8f32-700a34b3705e@arm.com>
+Date: Fri, 19 Apr 2024 10:28:45 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403043416.3800259-1-sumit.garg@linaro.org> <CAFA6WYNxTPgiq6WLQaKGMTenuKe51SXXhgGYkdyRibghXAMfnA@mail.gmail.com>
-In-Reply-To: <CAFA6WYNxTPgiq6WLQaKGMTenuKe51SXXhgGYkdyRibghXAMfnA@mail.gmail.com>
-From: Sumit Garg <sumit.garg@linaro.org>
-Date: Fri, 19 Apr 2024 08:27:14 -0700
-Message-ID: <CAFA6WYPk6E8JM8z62Skxq454WwPFYQ9EDx7FD--inqe7YoNJkg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] arm64: dts: qcom: apq8016: Add Schneider HMIBSC
- board DTS
-To: andersson@kernel.org, konrad.dybcio@linaro.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	stephan@gerhold.net, caleb.connolly@linaro.org, neil.armstrong@linaro.org, 
-	dmitry.baryshkov@linaro.org, laetitia.mariottini@se.com, 
-	pascal.eberhard@se.com, abdou.saker@se.com, jimmy.lalande@se.com, 
-	benjamin.missey@non.se.com, daniel.thompson@linaro.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] riscv: cacheinfo: initialize cacheinfo's level and
+ type from ACPI PPTT
+Content-Language: en-US
+To: Yunhui Cui <cuiyunhui@bytedance.com>, rafael@kernel.org, lenb@kernel.org,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ linux-riscv@lists.infradead.org, bhelgaas@google.com, james.morse@arm.com,
+ jhugo@codeaurora.org, john.garry@huawei.com, Jonathan.Cameron@huawei.com,
+ pierre.gondois@arm.com, sudeep.holla@arm.com, tiantao6@huawei.com
+References: <20240418034330.84721-1-cuiyunhui@bytedance.com>
+ <20240418034330.84721-2-cuiyunhui@bytedance.com>
+From: Jeremy Linton <jeremy.linton@arm.com>
+In-Reply-To: <20240418034330.84721-2-cuiyunhui@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 9 Apr 2024 at 23:24, Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> Hi Bjorn, Konrad,
->
-> On Wed, 3 Apr 2024 at 10:04, Sumit Garg <sumit.garg@linaro.org> wrote:
-> >
-> > Add Schneider Electric HMIBSC board DTS. The HMIBSC board is an IIoT Edge
-> > Box Core board based on the Qualcomm APQ8016E SoC. For more information
-> > refer to the product page [1].
-> >
-> > One of the major difference from db410c is serial port where HMIBSC board
-> > uses UART1 as the debug console with a default RS232 mode (UART1 mode mux
-> > configured via gpio99 and gpio100).
-> >
-> > Support for Schneider Electric HMIBSC. Features:
-> > - Qualcomm Snapdragon 410C SoC - APQ8016 (4xCortex A53, Adreno 306)
-> > - 1GiB RAM
-> > - 8GiB eMMC, SD slot
-> > - WiFi and Bluetooth
-> > - 2x Host, 1x Device USB port
-> > - HDMI
-> > - Discrete TPM2 chip over SPI
-> > - USB ethernet adaptors (soldered)
-> >
-> > This series is a v2 since v1 of this DTS file has been reviewed on the
-> > U-Boot mailing list [2].
-> >
-> > Changes in v5:
-> > - Addressed another nitpick from Stephen.
-> > - Collected Stephen's review tag.
-> > - Warnings reported by Rob's DT check bot aren't related to HMIBSC
-> >   board DTS but rather they are due to msm8916.dtsi or extcon-usb-gpio.txt
-> >   still not converted to YAML format.
-> >
->
-> I haven't seen any further comments on this series, can you help to pick it up?
+Hi,
 
-Gentle reminder.
+On 4/17/24 22:43, Yunhui Cui wrote:
+> Before cacheinfo can be built correctly, we need to initialize level
+> and type. Since RSIC-V currently does not have a register group that
+> describes cache-related attributes like ARM64, we cannot obtain them
+> directly, so now we obtain cache leaves from the ACPI PPTT table
+> (acpi_get_cache_info()) and set the cache type through split_levels.
+> 
+> Suggested-by: Jeremy Linton <jeremy.linton@arm.com>
+> Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> ---
+>   arch/riscv/kernel/cacheinfo.c | 22 ++++++++++++++++++++++
+>   1 file changed, 22 insertions(+)
+> 
+> diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
+> index 30a6878287ad..e47a1e6bd3fe 100644
+> --- a/arch/riscv/kernel/cacheinfo.c
+> +++ b/arch/riscv/kernel/cacheinfo.c
+> @@ -6,6 +6,7 @@
+>   #include <linux/cpu.h>
+>   #include <linux/of.h>
+>   #include <asm/cacheinfo.h>
+> +#include <linux/acpi.h>
+>   
+>   static struct riscv_cacheinfo_ops *rv_cache_ops;
+>   
+> @@ -78,6 +79,27 @@ int populate_cache_leaves(unsigned int cpu)
+>   	struct device_node *prev = NULL;
+>   	int levels = 1, level = 1;
+>   
+> +	if (!acpi_disabled) {
+> +		int ret, fw_levels, split_levels;
+> +
+> +		ret = acpi_get_cache_info(cpu, &fw_levels, &split_levels);
+> +		if (ret)
+> +			return ret;
+> +
+> +		BUG_ON((split_levels > fw_levels) ||
+> +		       (split_levels + fw_levels > this_cpu_ci->num_leaves));
+> +
+> +		for (; level <= this_cpu_ci->num_levels; level++) {
+> +			if (level <= split_levels) {
+> +				ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
+> +				ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
+> +			} else {
+> +				ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
+> +			}
+> +		}
+> +		return 0;
+> +	}
+> +
+>   	if (of_property_read_bool(np, "cache-size"))
+>   		ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
+>   	if (of_property_read_bool(np, "i-cache-size"))
 
--Sumit
+Yes, looks good.
 
->
-> > Changes in v4:
-> > - Dropped IRQ_TYPE_EDGE_FALLING for pm8916_resin given the expectations
-> >   of Linux kernel driver. Instead depend on systemd workaround suggested
-> >   by Caleb to get expected HMIBSC reset behaviour.
-> > - Incorporated further DT coding style comments from Stephen.
-> > - Warnings reported by Rob's DT check bot aren't related to HMIBSC
-> >   board DTS but rather they are due to msm8916.dtsi or extcon-usb-gpio.txt
-> >   still not converted to YAML format.
-> >
-> > Changes in v3:
-> > - Picked up tags.
-> > - Fixed further DT schema warnings.
-> > - Configure resin/power button interrupt as falling edge.
-> > - Incorporate DTS coding style comments from Krzysztof and Konrad.
-> >
-> > Changes in v2:
-> > - Fix DT schema warnings.
-> > - Incorporate suggestions from Stephan.
-> > - Document UART1 mode GPIOs based mux.
-> >
-> > [1] https://www.se.com/us/en/product/HMIBSCEA53D1L0T/iiot-edge-box-core-harmony-ipc-emmc-dc-linux-tpm/
-> > [2] https://patchwork.ozlabs.org/project/uboot/patch/20240311111027.44577-6-sumit.garg@linaro.org/
-> >
-> > Sumit Garg (3):
-> >   dt-bindings: vendor-prefixes: Add Schneider Electric
-> >   dt-bindings: arm: qcom: Add Schneider Electric HMIBSC board
-> >   arm64: dts: qcom: apq8016: Add Schneider HMIBSC board DTS
-> >
-> >  .../devicetree/bindings/arm/qcom.yaml         |   1 +
-> >  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
-> >  arch/arm64/boot/dts/qcom/Makefile             |   1 +
-> >  .../dts/qcom/apq8016-schneider-hmibsc.dts     | 491 ++++++++++++++++++
-> >  4 files changed, 495 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
-> >
-> > --
-> > 2.34.1
-> >
+Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
+
+
+
+Thanks,
