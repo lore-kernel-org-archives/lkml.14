@@ -1,80 +1,90 @@
-Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B74883D;
-	Fri, 19 Apr 2024 10:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8170022085;
+	Fri, 19 Apr 2024 10:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713522676; cv=none; b=PjP9tnl6i17DaGWwP+fw6nUo4mcl9ptXghPRVruT95lBYryX16qaSmMMk/0czDXCAdT0uC76ObiBVK4h2qfXaHRZuLifh0tg9gHZ0xQkbvhl6ffgOmjE6Z3plPH44QpdKyHgoGwNA2V19i+J8u+hx7wxfnQQGDtI0l8K/AtFNhE=
+	t=1713522724; cv=none; b=W7KpnNZ7zoVy0k3WNm4tVzxCq2LzH1WTVw1yyir/YB6cNhrmRg2+kdIL21Kl0k1XNME/sEemcrAxTwD2ATSQX4FLT11Dsns7nJ/jH6vZtCSu+/JOli+Z+5kiJy+InbO6DTo1htcEVnB6yhXZ8eFUli8aLf47wGNcymkecXKM7rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713522676; c=relaxed/simple;
-	bh=Jlq1b5r2fQJPdCFDUoO6+4tL43B6HP3gdv8zfz0k3GU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ex8SOI0TycrERABg2ufTrgv8tPW1glt4Ahc0d4150cI0R9qaELNnuOTrV7UlWLzPZdpF+KkMkj24tZpSqKu1w71UeAY9lAmzlXeT/zvr2eFo5JmEfz40oQyvykljtMxd40jxPeKvDdNDZ4yZDDUIVGi74bm5De4UMFMiSHpJg68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c01:4860:bdbf:c4be:ec53:8f46])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 39EF67E0148;
-	Fri, 19 Apr 2024 18:30:32 +0800 (CST)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Chukun Pan <amadeus@jmu.edu.cn>,
-	FUKAUMI Naoki <naoki@radxa.com>,
-	Dragan Simic <dsimic@manjaro.org>
-Subject: [PATCH v2 1/2] dt-bindings: arm: rockchip: correct the model name for Radxa ROCK 3A
-Date: Fri, 19 Apr 2024 18:30:18 +0800
-Message-Id: <20240419103019.992586-2-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240419103019.992586-1-amadeus@jmu.edu.cn>
-References: <20240419103019.992586-1-amadeus@jmu.edu.cn>
+	s=arc-20240116; t=1713522724; c=relaxed/simple;
+	bh=oMjuJg2nxzcJ7yzI/HWD4b2lVf4QtR3X0iqixF4fFGA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Lk5tEoW0MToc5nEEZfjAMbKdCZsRr4LVnoX8tGu/GjAR/Ocuql6yBXq7fh1RN2hOFG7s1ENrMtEfceiuhXGTpwE6lNzZ4zMPTT3I5ErTNg99+fHGDmWBbrQuKWdD9wF7fHmhfmTYvgvifNeS7K1A9/1lhOBpPBCTWSetclKMqM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bIVUtXVC; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bIVUtXVC"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-516db2214e6so2450605e87.1;
+        Fri, 19 Apr 2024 03:32:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713522720; x=1714127520; darn=vger.kernel.org;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+ADY1jQ3fMn8t5XRSmhrf7CXlATYEKca4dISZEI/O4I=;
+        b=bIVUtXVC8g2KdZlpiVHX9sX0By/HFkvMmBPDkT2UNAE/I4dbXt29kD/DVeS0oJJ6tf
+         xC8a3BUOMpKgO54VxmfQowdo2K6e/JyeHuTif3dsPmDokJVghrtpjJNNzSiqE1+Mn9Sh
+         j02wbgaczFOZApM+M2p1xNCmi/MKJUk8KeTrm5j7orQtF/0keCq0WlJdy26SwIgwW6pa
+         NzcLMSAD2IyxOfmEnJJX+6kn2JMbcJZR+KDKSwReS+fkExtGKkANJmUzSfCFcBM/LenH
+         dSxvDh0JJfP+iys5bhSzCTBZHcZWAUsf/tVuSX8bMYVi1so5TXFoWIIZmCbB021TBksB
+         s4bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713522720; x=1714127520;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+ADY1jQ3fMn8t5XRSmhrf7CXlATYEKca4dISZEI/O4I=;
+        b=keSX9pjd7X1a0otXIrnT/qUB7dEmOmwfFFpFPmwRYpu0FqRqsGr0ywJP5EXsCfxNZ6
+         lYr+5ce7qKCq/cJ/A/mHfjY3uB1MZKKB3droc5F/mf+i86FKye2lHDuCscoC8AJt0s0f
+         6AijEUnlV68U/wcyhKYo8dnhMqWxbR6MGQ8tEdFo78lXKXXdhNLtmfVM+1OGyfR8uudc
+         Q4eAoZbUImyeVRQEa6MuESnH3oCQAyK4VFK/ofqoJztN/XF+eZ+c4LSjNjpGcgr2lKip
+         J0uIQS4bbZRoKp/LoaKo9a6+HfEsVczZXekckcBVzWit+l2xdUeVJ85Ff2ZfdC5TB/iI
+         GLcw==
+X-Forwarded-Encrypted: i=1; AJvYcCWtyA0kE4TmJgxQLUVRePYtJUe4pxOjOX6mb5cHQuZ80WIcovx4D6GuBo8M7tcZT6DPgXf98LnLCAy3517R9YkOKYFPU9gsqIWjsLwItZI60Ty2oET8Onm4oZ1D/yuXYLj0SPRx
+X-Gm-Message-State: AOJu0YyDyZpaVUMjHExiwJL7JizW8ro5eFj7dGm0NCix840i2DNaROXk
+	rpBRG+1hdrdxhY5ut1+tpW8xtzBEsSZtxDCRWsQ+8CNIC34pPZ9V
+X-Google-Smtp-Source: AGHT+IHr1f2wQScjD2nMhwXM6LKMkGtdkS3wIc4hV1dHZdV23oMwK6P2ia0+IEZA+sRulz+K2TXHOw==
+X-Received: by 2002:a05:6512:2807:b0:513:39a0:1fec with SMTP id cf7-20020a056512280700b0051339a01fecmr1166802lfb.66.1713522720278;
+        Fri, 19 Apr 2024 03:32:00 -0700 (PDT)
+Received: from localhost (static-193-12-47-89.cust.tele2.se. [193.12.47.89])
+        by smtp.gmail.com with ESMTPSA id p7-20020a05651212c700b0051abb2bfc76sm264087lfg.304.2024.04.19.03.31.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Apr 2024 03:31:59 -0700 (PDT)
+From: Casper Andersson <casper.casan@gmail.com>
+To: Lukasz Majewski <lukma@denx.de>, netdev@vger.kernel.org, Paolo Abeni
+ <pabeni@redhat.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Eric Dumazet <edumazet@google.com>,
+ Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Oleksij Rempel
+ <o.rempel@pengutronix.de>, Tristram.Ha@microchip.com, Sebastian Andrzej
+ Siewior <bigeasy@linutronix.de>, Ravi Gunasekaran <r-gunasekaran@ti.com>,
+ Simon Horman <horms@kernel.org>, Nikita Zhandarovich
+ <n.zhandarovich@fintech.ru>, Murali Karicheri <m-karicheri2@ti.com>, Jiri
+ Pirko <jiri@resnulli.us>, Dan Carpenter <dan.carpenter@linaro.org>, Ziyang
+ Xuan <william.xuanziyang@huawei.com>, Shigeru Yoshida
+ <syoshida@redhat.com>, "Ricardo B. Marliere" <ricardo@marliere.net>,
+ linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
+Subject: Re: [net-next PATCH v5 1/4] net: hsr: Provide RedBox support (HSR-SAN)
+In-Reply-To: <20240415124928.1263240-2-lukma@denx.de>
+References: <20240415124928.1263240-1-lukma@denx.de>
+ <20240415124928.1263240-2-lukma@denx.de>
+Date: Fri, 19 Apr 2024 12:31:59 +0200
+Message-ID: <86wmot7ie8.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDH0pPVk9PHkoaQh5PShgdSlUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUlPSx5BSBlIQUkYS0pBT0NNS0EZHxkdQRhPGR5BHhhOSEFDHU9NWVdZFhoPEhUdFF
-	lBWU9LSFVKTU9JSklVSktLVUpCWQY+
-X-HM-Tid: 0a8ef5e8675603a2kunm39ef67e0148
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ky46Igw4FjMNN08YC1YtP0s#
-	OR8wCi9VSlVKTEpITklJTUhJQ0NNVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
-	Sx5BSBlIQUkYS0pBT0NNS0EZHxkdQRhPGR5BHhhOSEFDHU9NWVdZCAFZQUlPTko3Bg++
+Content-Type: text/plain
 
-According to https://radxa.com/products/rock3/3a,
-the name of this board should be "Radxa ROCK 3A".
 
-Suggested-by: FUKAUMI Naoki <naoki@radxa.com>
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
-Reviewed-by: Dragan Simic <dsimic@manjaro.org>
----
- Documentation/devicetree/bindings/arm/rockchip.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 99bd5e2c76a0..11f603edfb88 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -772,7 +772,7 @@ properties:
-           - const: radxa,rock2-square
-           - const: rockchip,rk3288
- 
--      - description: Radxa ROCK3 Model A
-+      - description: Radxa ROCK 3A
-         items:
-           - const: radxa,rock3a
-           - const: rockchip,rk3568
--- 
-2.25.1
+On 2024-04-15 14:49 +0200, Lukasz Majewski wrote:
+> +void hsr_handle_san_frame(bool san, enum hsr_port_type port,
+> +			  struct hsr_node *node);
+
+Function declared here but never defined or used.
+
 
