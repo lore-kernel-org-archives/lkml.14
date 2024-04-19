@@ -1,186 +1,145 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B00513B7A6
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 17:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1CE130E5E;
+	Fri, 19 Apr 2024 17:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713549391; cv=none; b=WkcMgB1D+QWDukYrgZefeeW/zG4XOfYz+IzMZVSe1aDY7WgxiXMDB/Ngs+ZUSB9gmW98+XTdcHd//wF/A8zBaEpNnIuZF+PTSJxmvbbdQqhyf1M2XEoKQ3J6e3fBCK01jGF6DhEHgkkVj11ypgi/6CTSGCKfk6Jr0QhxvWpzXPo=
+	t=1713549451; cv=none; b=PVjBbuZNi8Er3wDzcf5L9VuHHsIJOPw19th8L5RPlLfRVTchHXAG2K/YdtY2CaxJKyzAAnYzUJzlJDFU3n1b8jKttXRcP+2HCEHt+K12SoP0bN0kBJp0sv7TnOgdX7qYw8kvapdEVs8MS3EbKs81K2cPfHFDdVqB7WUhShO/3xM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713549391; c=relaxed/simple;
-	bh=VWTR8HOsv/sI4SJu0QdyOH5eya8dW2udTmWyDeoJXxQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k4EJIW2HePkBX+TBnj/wYgFdxyw9VgZYwBxbMJVJhunimeM+FLa889VL2EPfY8WQ+FfQEifyjiAafDEpeyQ6pFgAUAPT97LxcJbX8HQBvXbW/Is7wHrhP6ZgVyDiuL18yZ0VuU4rkD+3+yj/jFoQt3RDBSYiQKcJvPLpSe4udoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=j4j7oaQr; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1713549451; c=relaxed/simple;
+	bh=8KqYsbZxPpbmqR7WVXJVcqr2/Dlmjyv5KgkXl0VbG18=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oa976OKTTMYvSaPriwX5fR3vMgbOGBYZB19W1wADwjYmjLZ76mdDvjAGJHS7ys9+lQqsewlBhFymje6yZOKgGCHp5J7/BH0L6uN2vmw8fLXqCbURZqho/wAFlWqoVOXTlMU3lPN0AWgTdiHVi1o2bdtfxLMQyJG/gv4wbrKmCl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cvh3occt; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j4j7oaQr"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43JGiiJF007533;
-	Fri, 19 Apr 2024 17:56:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2023-11-20;
- bh=bsbvgyQd3N2o4z+XaeSxWb9HErpReSjR0K5j0Z+qNLg=;
- b=j4j7oaQrnxmDcqnDNWQW1YUe0vnk2KwsvXDsIaBhwTGzycPx04GWqXaN/TyFLsD6MokI
- XWnAEaFW/CXcDX0XfTKZKrUZ2XnQ+LgMVS4c6K8ZrMqzSNUFAhUbtOnDUL45KkOvb/wC
- fHO8F9+ITZ1jo1xinSVbWcY9oBfclkGARDN3y1avJIANwqjIS4TSQKDcw7A/WEVZVEp+
- WjqueqDZnjTvX7zr6xS40TjiWwLL9j9tUUEzgn0jN8lqUMzTlVF743Ujs7S8zfn7CVjD
- WH+cNvFDX0aMdHLgqaUoK5qKoNYqpKOAsmmIAw9xSkZjhaGyZeQbZGAsVaxGUOhREaMw mA== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xfgycwer1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 19 Apr 2024 17:56:13 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43JH48SI005568;
-	Fri, 19 Apr 2024 17:56:12 GMT
-Received: from jfwang-mac.us.oracle.com (dhcp-10-159-230-131.vpn.oracle.com [10.159.230.131])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3xkc7xd76r-2;
-	Fri, 19 Apr 2024 17:56:12 +0000
-From: Jianfeng Wang <jianfeng.w.wang@oracle.com>
-To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc: vbabka@suse.cz, cl@linux.com, akpm@linux-foundation.org,
-        penberg@kernel.org, rientjes@google.com
-Subject: [PATCH v3 1/2] slub: introduce count_partial_free_approx()
-Date: Fri, 19 Apr 2024 10:56:10 -0700
-Message-ID: <20240419175611.47413-2-jianfeng.w.wang@oracle.com>
-X-Mailer: git-send-email 2.42.1
-In-Reply-To: <20240419175611.47413-1-jianfeng.w.wang@oracle.com>
-References: <20240419175611.47413-1-jianfeng.w.wang@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cvh3occt"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d8b2389e73so27535911fa.3;
+        Fri, 19 Apr 2024 10:57:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713549448; x=1714154248; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xb7IxX2SneQa14Cc8sJ0b06K9/cpUqtMAYa24U3BHcw=;
+        b=Cvh3occt76VX6l93zCc3q6VCi65q1CgWAjeTk5gHD7+A0SoEs3luDgTor7HkJ08wrq
+         cd+IVak7MirCmRZoWvR5R0KOHJGCzKuS+23JyeCXddIZfqCoURXUq2sQh56gt2YzStKL
+         rzygeSc6xM4aXp1kvUp6hDVogdgvJ7qnF+MlU3qPsa/zhA/qh5KqbPIUBV+ZNpxB0Q4C
+         nao6d/lTl3nN8AUyHs72kmv60hrspZglhv5r7UwyceiA62VO7SnGvaaqMs6iDvlQECRR
+         7IR8PFg6V+WNVQBVrqfGV5Ua8remSYpR5sLHbF8Xj85nj5SNzCbLEgbEQEUg4OpmscqM
+         QQxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713549448; x=1714154248;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Xb7IxX2SneQa14Cc8sJ0b06K9/cpUqtMAYa24U3BHcw=;
+        b=BMUSAPJ+XPnc+JFsS3JcW9lgHpjYAZLB5Mr9AbipXjfjNO0Ik5hqf/22eBg9K58oIX
+         KGg2N6egD4H9tbfncOtg9/kMZlA+Fvks0HZgmsRAb+STtc02Vy8varzO+XUTBK9wrV0G
+         ulv+RYhIycp/DWdtAaMk0BHqdiO225dJHAyeDQItCuR3wCud/6D1vu4MSfwMDTEq7NKW
+         LUwy+8DoPHDbp/FSHDSvfqz21qTvIODkEJ3uGFzLYjgOCGNKLV23u8lbz8HbdOk3MbSv
+         GOXdstro59qM6QLOPeBVVitYXoEc4A5InlPYfYom/hZj21BaLqGaffH8YVYvCXsupicc
+         rvRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXSd2Pfkxm3O3m98NIsbknHoxpbBfSEMI54tsLAkvnU1sr+j9ZtBLUD7tdbNsBiXXEH8QjwXPJCZaq9yE+7QZmmO24Xl5fuj4ZdAioYhqgYv7b8lMlp+PUxYcTwrqLYCnoIYFT+5YJdSVvsFvLov39sSqIqV0DwSdZoQ6VcnFwVkS2RvETz
+X-Gm-Message-State: AOJu0Yzbn2f7GqSWLiSPNTekLy1lsbCO3KS9j2Gsge6eKxG95ElxC+qq
+	xxcx1n+vcHHE1YVA52V6bzRkNU+z+iEcNWonnLTNqr/Wqlq8DHOszLgJuQ==
+X-Google-Smtp-Source: AGHT+IGHTEV1ol6nILJHFaiC6F9WEo56gfw8hOxNK0OccNJgMINBYznO11NulRZ78isU46I1Ys73Lg==
+X-Received: by 2002:a2e:850b:0:b0:2d9:ecc1:6d56 with SMTP id j11-20020a2e850b000000b002d9ecc16d56mr1695817lji.11.1713549447402;
+        Fri, 19 Apr 2024 10:57:27 -0700 (PDT)
+Received: from localhost ([213.79.110.82])
+        by smtp.gmail.com with ESMTPSA id v20-20020a2e9614000000b002dba279f81asm642625ljh.59.2024.04.19.10.57.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Apr 2024 10:57:26 -0700 (PDT)
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Viresh Kumar <vireshk@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Vinod Koul <vkoul@kernel.org>
+Cc: Serge Semin <fancer.lancer@gmail.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	dmaengine@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/6] dmaengine: dw: Fix src/dst addr width misconfig
+Date: Fri, 19 Apr 2024 20:56:42 +0300
+Message-ID: <20240419175655.25547-1-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-19_13,2024-04-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
- malwarescore=0 suspectscore=0 spamscore=0 adultscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404190137
-X-Proofpoint-ORIG-GUID: GxkjSI6Zb372cMx3xe4mFXOWggEqqXOn
-X-Proofpoint-GUID: GxkjSI6Zb372cMx3xe4mFXOWggEqqXOn
 
-When reading "/proc/slabinfo", the kernel needs to report the number
-of free objects for each kmem_cache. The current implementation uses
-count_partial() to get it by scanning each kmem_cache_node's partial
-slab list and summing free objects from every partial slab. This
-process must hold per-kmem_cache_node spinlock and disable IRQ, and
-may take a long time. Consequently, it can block slab allocations on
-other CPUs and cause timeouts for network devices, when the partial
-list is long. In production, even NMI watchdog can be triggered due
-to this matter: e.g., for "buffer_head", the number of partial slabs
-was observed to be ~1M in one kmem_cache_node. This problem was also
-confirmed by others [1-3].
+The main goal of this series is to fix the data disappearance in case of
+the DW UART handled by the DW AHB DMA engine. The problem happens on a
+portion of the data received when the pre-initialized DEV_TO_MEM
+DMA-transfer is paused and then disabled. The data just hangs up in the
+DMA-engine FIFO and isn't flushed out to the memory on the DMA-channel
+suspension (see the second commit log for details). On a way to find the
+denoted problem fix it was discovered that the driver doesn't verify the
+peripheral device address width specified by a client driver, which in its
+turn if unsupported or undefined value passed may cause DMA-transfer being
+misconfigured. It's fixed in the first patch of the series.
 
-Iterating a partial list to get the exact count of objects can cause
-soft lockups for a long list with or without the lock (e.g., if
-preemption is disabled), and may not be very useful: the object count
-can change after the lock is released. The approach of maintaining
-free-object counters requires atomic operations on the fast path [3].
+In addition to that three cleanup patches follow the fixes described above
+in order to make the DWC-engine configuration procedure more coherent.
+First one simplifies the CTL_LO register setup methods. Second and third
+patches simplify the max-burst calculation procedure and unify it with the
+rest of the verification methods. Please see the patches log for more
+details.
 
-So, the fix is to introduce count_partial_free_approx(). This function
-can be used for getting the free object count in a kmem_cache_node's
-partial list. It limits the number of slabs to scan and avoids scanning
-the whole list by giving an approximation for a long list. Suppose the
-limit is N. If the list's length is not greater than N, output the exact
-count by traversing the list; if its length is greater than N, output an
-approximated count by traversing a subset of the list. The proposed
-method is to scan N/2 slabs from the list's head and N/2 slabs from
-the tail. For a partial list with ~280K slabs, benchmarks show that
-it performs better than just counting from the list's head, after slabs
-get sorted by kmem_cache_shrink(). Default the limit to 10000, as it
-produces an approximation within 1% of the exact count for both
-scenarios. Then, use count_partial_free_approx() in get_slabinfo().
+Final patch is another cleanup which unifies the status variables naming
+in the driver.
 
-Benchmarks: Diff = (exact - approximated) / exact
-* Normal case (w/o kmem_cache_shrink()):
-| MAX_TO_SCAN | Diff (count from head)| Diff (count head+tail)|
-| 1000        |  0.43  %              |  1.09  %              |
-| 5000        |  0.06  %              |  0.37  %              |
-| 10000       |  0.02  %              |  0.16  %              |
-| 20000       |  0.009 %              | -0.003 %              |
+Link: https://lore.kernel.org/dmaengine/20240416162908.24180-1-fancer.lancer@gmail.com/
+Changelog v2:
+- Add a note to the Patch #1 commit message about having the verification
+  method called in the dwc_config() function. (Andy)
+- Add hyphen to "1byte" in the in-situ comment. (Andy)
+- Convert "err" to "ret" variables and add a new patch which unifies the
+  status variables naming. (Andy)
+- Add a in-situ comment regarding why the memory-side bus width
+  verification was required. (Andy)
+- Group sms+dms and smsize+dmsize local variables initializations up. (Andy)
+- Move the zero initializations out to the variables init block
+  in the prepare_ctllo() callbacks. (Andy)
+- Directly refer to dwc_config() in the commit messages. (Andy)
+- Convert dwc_verify_maxburst() to returning zero. (Andy)
+- Add a comment regarding the values utilized in dwc_verify_p_buswidth()
+  being pre-verified before the method is called. (Andy)
+- Add new patches:
+  [PATCH v2 4/6] dmaengine: dw: Define encode_maxburst() above prepare_ctllo() callbacks
+  [PATCH v2 6/6] dmaengine: dw: Unify ret-val local variable naming
+  (Andy)
 
-* Skewed case (w/ kmem_cache_shrink()):
-| MAX_TO_SCAN | Diff (count from head)| Diff (count head+tail)|
-| 1000        |  12.46 %              |  6.75  %              |
-| 5000        |  5.38  %              |  1.27  %              |
-| 10000       |  4.99  %              |  0.22  %              |
-| 20000       |  4.86  %              | -0.06  %              |
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Cc: linux-serial@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-[1] https://lore.kernel.org/linux-mm/
-alpine.DEB.2.21.2003031602460.1537@www.lameter.com/T/
-[2] https://lore.kernel.org/lkml/
-alpine.DEB.2.22.394.2008071258020.55871@www.lameter.com/T/
-[3] https://lore.kernel.org/lkml/
-1e01092b-140d-2bab-aeba-321a74a194ee@linux.com/T/
+Serge Semin (6):
+  dmaengine: dw: Add peripheral bus width verification
+  dmaengine: dw: Add memory bus width verification
+  dmaengine: dw: Simplify prepare CTL_LO methods
+  dmaengine: dw: Define encode_maxburst() above prepare_ctllo()
+    callbacks
+  dmaengine: dw: Simplify max-burst calculation procedure
+  dmaengine: dw: Unify ret-val local variables naming
 
-Signed-off-by: Jianfeng Wang <jianfeng.w.wang@oracle.com>
----
- mm/slub.c | 39 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+ drivers/dma/dw/core.c     | 131 +++++++++++++++++++++++++++++++-------
+ drivers/dma/dw/dw.c       |  40 +++++++-----
+ drivers/dma/dw/idma32.c   |  19 +++---
+ drivers/dma/dw/platform.c |  20 +++---
+ drivers/dma/dw/regs.h     |   1 -
+ 5 files changed, 154 insertions(+), 57 deletions(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 1bb2a93cf7b6..993cbbdd2b6c 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -3213,6 +3213,43 @@ static inline bool free_debug_processing(struct kmem_cache *s,
- #endif /* CONFIG_SLUB_DEBUG */
- 
- #if defined(CONFIG_SLUB_DEBUG) || defined(SLAB_SUPPORTS_SYSFS)
-+#define MAX_PARTIAL_TO_SCAN 10000
-+
-+static unsigned long count_partial_free_approx(struct kmem_cache_node *n)
-+{
-+	unsigned long flags;
-+	unsigned long x = 0;
-+	struct slab *slab;
-+
-+	spin_lock_irqsave(&n->list_lock, flags);
-+	if (n->nr_partial <= MAX_PARTIAL_TO_SCAN) {
-+		list_for_each_entry(slab, &n->partial, slab_list)
-+			x += slab->objects - slab->inuse;
-+	} else {
-+		/*
-+		 * For a long list, approximate the total count of objects in
-+		 * it to meet the limit on the number of slabs to scan.
-+		 * Scan from both the list's head and tail for better accuracy.
-+		 */
-+		unsigned long scanned = 0;
-+
-+		list_for_each_entry(slab, &n->partial, slab_list) {
-+			x += slab->objects - slab->inuse;
-+			if (++scanned == MAX_PARTIAL_TO_SCAN / 2)
-+				break;
-+		}
-+		list_for_each_entry_reverse(slab, &n->partial, slab_list) {
-+			x += slab->objects - slab->inuse;
-+			if (++scanned == MAX_PARTIAL_TO_SCAN)
-+				break;
-+		}
-+		x = mult_frac(x, n->nr_partial, scanned);
-+		x = min(x, node_nr_objs(n));
-+	}
-+	spin_unlock_irqrestore(&n->list_lock, flags);
-+	return x;
-+}
-+
- static unsigned long count_partial(struct kmem_cache_node *n,
- 					int (*get_count)(struct slab *))
- {
-@@ -7089,7 +7126,7 @@ void get_slabinfo(struct kmem_cache *s, struct slabinfo *sinfo)
- 	for_each_kmem_cache_node(s, node, n) {
- 		nr_slabs += node_nr_slabs(n);
- 		nr_objs += node_nr_objs(n);
--		nr_free += count_partial(n, count_free);
-+		nr_free += count_partial_free_approx(n);
- 	}
- 
- 	sinfo->active_objs = nr_objs - nr_free;
 -- 
-2.42.1
+2.43.0
 
