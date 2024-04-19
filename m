@@ -1,170 +1,157 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802378004E
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 17:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA424C63A;
+	Fri, 19 Apr 2024 17:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713547435; cv=none; b=Jr8GvK46tbxQ7pRwYP/ZHzkOFGYdhBuFmX/0ZR2AtDobnrXP8YX/jKd4mSZJ/BJQ4Eypi+kh2DKbgPehqQAo/7o/L3gh2cZnkxLthcvc84W7+km+g46EYATzqzOnexKCIO1FfbF+L/tv58y/1tSeDi5aq10vcgOCor+FFHXHFD0=
+	t=1713547436; cv=none; b=PHCGocpjgWOVyJAUwrNaRi28URmaxghXAWnd2P+R/4aT+Dn2wlLAkuIesdrFWl3aEgGgyR4wL7uQU5nTQzuWiYl7vVoEaTqd//kSW0z9RUUYyCaqjHrmAxBw7+pNftR5usnjApF9o1At+N0NSC1S5nClAZV0XR01tVERVMmtpf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713547435; c=relaxed/simple;
-	bh=4zqi94Uc/R8iBsYBBImj/1Cm2SNGTxyyrkhMn0eenOY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DVM3ILNav3buwuL/aRRUOTJv7zrxh2Re5XlHeSH2HXsP22vXTX6+TYyIfqMJsmYdpUocBNZJD6xCvyp4ifLR3j5+BCFYyNPvme4vmotSV6sH3/z39qw2pVW0MHck7PZTg3XmX6fH/tznWC+9htfdvV1qCgvp9JIkwixURVieWQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I2wLMuhE; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1713547436; c=relaxed/simple;
+	bh=BK0T3Ph1aGHxJtSL9RG30RA0mM8JBF3nRKIEK7Tsigk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f1jKtUvG64BKtO1ap7WXnnvE+jhFnb8/qU/hJ4YyqCazH044L/UtpYXyQeHzbIQPTPvhAf4Caouc2KEsiv9PB2XseLfqPnCwMBy0pNnMR3EAqT8TPi54V0M39HcsBONEE67p6b4Rylno+rdKqbo2nPN7U462XsXlWOs7R8PUwFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Y+F7MDih; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I2wLMuhE"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2a2c4a28e43so2531577a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 10:23:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713547434; x=1714152234; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5WPGtsMCwemSIr+JDp0r8nt/aMHu/Jjken9XpaKI2j4=;
-        b=I2wLMuhEPUQlJ/JAHQd9rpfMn/rWXxVBCSRNRSosBQRBgPfVNs4g1jYZbKF4IMMNJT
-         3j/U0j+RL13ceVq5SYdZGRRImSTZYybS6SFvd0ZtEERCoXiQdo2S++wgCpt8BSv7w0Pr
-         AZ9f/Y8l+J24Q00EL8nnxMVvrrQPKSb2dUU/TKIDc9Ynb/rJ6EirRpm8jDxJXihbs3zn
-         cEps/grfphrNm8UsWINftQ3E8BAUDjJZqb2ASHf8yxDQr2Z9E+GAZw0earqMDm4Mh5ep
-         CIxD5tl87957emeXdBO2WzLKh4hP19MZWAlX0Ssja9mbXchQuz2a6EZsC86DJTeDS36D
-         099w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713547434; x=1714152234;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5WPGtsMCwemSIr+JDp0r8nt/aMHu/Jjken9XpaKI2j4=;
-        b=f6IYlHogPkfGTqw2TUKLOjwFC/VQRLJKxApZNx6tqTVyBmbNVrdo6/tXMCGeGen8EF
-         LyFXdAysM6Z383lyQNgaVgYNOdpm5Iyv4xZ53fg0BDE42RFDFWkX9s+6iL7xrvLQWdTF
-         MmgpcXgV+nrM/IBJIWaP/RgYOy3PXpVAwc7YD21DCVBCEGIOiA7HBJcJc88ajotDwpfh
-         XQjAy2tpBUckBrCfkMMpuZJOpxmJRhi9IBjry3zB93Me+OXmrftNcxTJfa24yfrmkweD
-         6yGxyBoSBWKA3d1vFJXK42YILdG/gfbX3SWcSzdHJ+5sgevdvRBs1XzmpF1GawkqZDlu
-         uknA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6whz8idHMdQZWHvZD46NWFAPs1t9f3Hg5g1Rr/d4vecuf+XQiCZbizYyt19+0RwsFr4fNeyY0vq68xU15wUv1cWYHtV2vhlPKDw/o
-X-Gm-Message-State: AOJu0YyrbOfW4BSvOmzFMMLeW7m3RzTuxnTeZU2/+EinIG8uIe7MqBkc
-	sMQEGb27P/nswluzig3lK5HLfZWzsyVoOlEsjK5n4gyitcGTOOqXe812WJX434ottt4mbFlbEPM
-	wHA==
-X-Google-Smtp-Source: AGHT+IGGe/+C3TYWvB4s3TxxlXneQCY3I9SMxiecXVgkEzf3CZxByEf/KHHFm+qEb9Q+1OuEhyXw0yNn4Bg=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90a:f411:b0:2ac:3c42:57ea with SMTP id
- ch17-20020a17090af41100b002ac3c4257eamr8941pjb.5.1713547433583; Fri, 19 Apr
- 2024 10:23:53 -0700 (PDT)
-Date: Fri, 19 Apr 2024 10:23:52 -0700
-In-Reply-To: <22b19d11-056c-402b-ac19-a389000d6339@intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Y+F7MDih"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43JHHVUg021435;
+	Fri, 19 Apr 2024 17:23:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=Li8QEJCoygMjxlapAv/HEj/Slh+EPe7jVKxtNtgjPRk=;
+ b=Y+F7MDihdtzAqnPXtUqsXCnyqYEoeDA0azmI/jMVgRobQASTw3jVqC740+W6o/E4lGN9
+ wZZKPo+o41VJY+XO57JEutDHsAAuMf7w5ZOePYJOhtmLW0kDtB7/HDOv8ACpnlHtsKb0
+ FjNwZHPSn6dh6shHGwXcA6LpI/EjLKktGG1ApBgCBFdH6zNk6uaWDaXYU1t8EPQYd7kY
+ aV3bPx9ZIo/0IxXEQK2pskv5HhFkhbPlOue5/PtbqfVmUGnXtjeJcPsVwY8VmqZad40b
+ yO5oHE9AS+JeE/Ra4PDgglwILOcOiSRWR3AFPdIIyLh4xtChCydnYqD+eBz8QunIbmbs 3g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xkvvk00v7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 19 Apr 2024 17:23:42 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43JHNfLw031899;
+	Fri, 19 Apr 2024 17:23:41 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xkvvk00um-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 19 Apr 2024 17:23:41 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43JFQZGG010509;
+	Fri, 19 Apr 2024 17:23:39 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xkbmm4yus-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 19 Apr 2024 17:23:39 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43JHNb2519202684
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 19 Apr 2024 17:23:39 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 57C5C5804B;
+	Fri, 19 Apr 2024 17:23:37 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8A7AB58063;
+	Fri, 19 Apr 2024 17:23:36 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 19 Apr 2024 17:23:36 +0000 (GMT)
+Message-ID: <4aa3459c-e029-40fa-a7f5-f858ba0e3c0f@linux.ibm.com>
+Date: Fri, 19 Apr 2024 13:23:35 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <Zhftbqo-0lW-uGGg@google.com> <6cd2a9ce-f46a-44d0-9f76-8e493b940dc4@intel.com>
- <Zh7KrSwJXu-odQpN@google.com> <900fc6f75b3704780ac16c90ace23b2f465bb689.camel@intel.com>
- <Zh_exbWc90khzmYm@google.com> <2383a1e9-ba2b-470f-8807-5f5f2528c7ad@intel.com>
- <ZiBc13qU6P3OBn7w@google.com> <5ffd4052-4735-449a-9bee-f42563add778@intel.com>
- <ZiEulnEr4TiYQxsB@google.com> <22b19d11-056c-402b-ac19-a389000d6339@intel.com>
-Message-ID: <ZiKoqMk-wZKdiar9@google.com>
-Subject: Re: [PATCH v19 023/130] KVM: TDX: Initialize the TDX module when
- loading the KVM intel kernel module
-From: Sean Christopherson <seanjc@google.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: Tina Zhang <tina.zhang@intel.com>, Hang Yuan <hang.yuan@intel.com>, 
-	Bo2 Chen <chen.bo@intel.com>, "sagis@google.com" <sagis@google.com>, 
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Erdem Aktas <erdemaktas@google.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	Isaku Yamahata <isaku.yamahata@intel.com>, 
-	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] crypto: ecdh - Pass private key in proper byte
+ order to check valid key
+Content-Language: en-US
+To: linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au,
+        davem@davemloft.net
+Cc: linux-kernel@vger.kernel.org, jarkko@kernel.org, ardb@kernel.org,
+        git@jvdsn.com, hkario@redhat.com, simo@redhat.com,
+        Salvatore Benedetto <salvatore.benedetto@intel.com>
+References: <20240418152445.2773042-1-stefanb@linux.ibm.com>
+ <20240418152445.2773042-2-stefanb@linux.ibm.com>
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20240418152445.2773042-2-stefanb@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: DfMq2rMGWiHXAuHWeWvUuF6-sCLtpu4h
+X-Proofpoint-GUID: zD2WPq62wFSasLYwgbb7EqFXqNRr5fI7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-19_12,2024-04-19_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 suspectscore=0 mlxlogscore=999
+ malwarescore=0 bulkscore=0 mlxscore=0 spamscore=0 phishscore=0
+ adultscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2404010000 definitions=main-2404190132
 
-On Fri, Apr 19, 2024, Kai Huang wrote:
-> On 19/04/2024 2:30 am, Sean Christopherson wrote:
-> > No, that will deadlock as cpuhp_setup_state() does cpus_read_lock().
+
+
+On 4/18/24 11:24, Stefan Berger wrote:
+> ecc_is_key_valid expects a key with the most significant digit in the last
+> entry of the digit array. Currently ecdh_set_secret passes a reversed key
+> to ecc_is_key_valid that then passes the rather simple test checking
+> whether the private key is in range [2, n-3]. For all current ecdh-
+> supported curves (NIST P192/256/384) the 'n' parameter is a rather large
+> number, therefore easily passing this test.
 > 
-> Right, but it takes cpus_read_lock()/unlock() internally.  I was talking
-> about:
+> Throughout the ecdh and ecc codebase the variable 'priv' is used for a
+> private_key holding the bytes in proper byte order. Therefore, introduce
+> priv in ecdh_set_secret and copy the bytes from ctx->private_key into
+> priv in proper byte order by using ecc_swap_digits. Pass priv to
+> ecc_is_valid_key.
 > 
-> 	if (enable_tdx) {
-> 		kvm_x86_virtualization_enable();
+
+Fixes: 3c4b23901a0c ("crypto: ecdh - Add ECDH software support")
+
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Salvatore Benedetto <salvatore.benedetto@intel.com>
+> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> Acked-by: Jarkko Sakkinen <jarkko@kernel.org>
+> ---
+>   crypto/ecdh.c | 11 ++++++++---
+>   1 file changed, 8 insertions(+), 3 deletions(-)
 > 
-> 		/*
-> 		 * Unfortunately currently tdx_enable() internally has
-> 		 * lockdep_assert_cpus_held().
-> 		 */
-> 		cpus_read_lock();
-> 		tdx_enable();
-> 		cpus_read_unlock();
-> 	}
-
-Ah.  Just have tdx_enable() do cpus_read_lock(), I suspect/assume the current
-implemention was purely done in anticipation of KVM "needing" to do tdx_enable()
-while holding cpu_hotplug_lock.
-
-And tdx_enable() should also do its best to verify that the caller is post-VMXON:
-
-	if (WARN_ON_ONCE(!(__read_cr4() & X86_CR4_VMXE)))
-		return -EINVAL;
-
-> > > Btw, why couldn't we do the 'system_state' check at the very beginning of
-> > > this function?
-> > 
-> > We could, but we'd still need to check after, and adding a small bit of extra
-> > complexity just to try to catch a very rare situation isn't worth it.
-> > 
-> > To prevent races, system_state needs to be check after register_syscore_ops(),
-> > because only once kvm_syscore_ops is registered is KVM guaranteed to get notified
-> > of a shutdown. >
-> > And because the kvm_syscore_ops hooks disable virtualization, they should be called
-> > after cpuhp_setup_state().  That's not strictly required, as the per-CPU
-> > hardware_enabled flag will prevent true problems if the system enter shutdown
-> > state before KVM reaches cpuhp_setup_state().
-> > 
-> > Hmm, but the same edge cases exists in the above flow.  If the system enters
-> > shutdown _just_ after register_syscore_ops(), KVM would see that in system_state
-> > and do cpuhp_remove_state(), i.e. invoke kvm_offline_cpu() and thus do a double
-> > disable (which again is benign because of hardware_enabled).
-> > 
-> > Ah, but registering syscore ops before doing cpuhp_setup_state() has another race,
-> > and one that could be fatal.  If the system does suspend+resume before the cpuhup
-> > hooks are registered, kvm_resume() would enable virtualization.  And then if
-> > cpuhp_setup_state() failed, virtualization would be left enabled.
-> > 
-> > So cpuhp_setup_state() *must* come before register_syscore_ops(), and
-> > register_syscore_ops() *must* come before the system_state check.
-> 
-> OK.  I guess I have to double check here to completely understand the races.
-> :-)
-> 
-> So I think we have consensus to go with the approach that shows in your
-> second diff -- that is to always enable virtualization during module loading
-> for all other ARCHs other than x86, for which we only always enables
-> virtualization during module loading for TDX.
-
-Assuming the other arch maintainers are ok with that approach.  If waiting until
-a VM is created is desirable for other architectures, then we'll need to figure
-out a plan b.  E.g. KVM arm64 doesn't support being built as a module, so enabling
-hardware during initialization would mean virtualization is enabled for any kernel
-that is built with CONFIG_KVM=y.
-
-Actually, duh.  There's absolutely no reason to force other architectures to
-choose when to enable virtualization.  As evidenced by the massaging to have x86
-keep enabling virtualization on-demand for !TDX, the cleanups don't come from
-enabling virtualization during module load, they come from registering cpuup and
-syscore ops when virtualization is enabled.
-
-I.e. we can keep kvm_usage_count in common code, and just do exactly what I
-proposed for kvm_x86_enable_virtualization().
-
-I have patches to do this, and initial testing suggests they aren't wildly
-broken.  I'll post them soon-ish, assuming nothing pops up in testing.  They are
-clean enough that they can land in advance of TDX, e.g. in kvm-coco-queue even
-before other architectures verify I didn't break them.
-
-> Then how about "do kvm_x86_virtualization_enable()  within
-> late_hardware_setup() in kvm_x86_vendor_init()"  vs "do
-> kvm_x86_virtualization_enable() in TDX-specific code after
-> kvm_x86_vendor_init()"?
-> 
-> Which do you prefer?
-
-The latter, assuming it doesn't make the TDX code more complex than it needs to
-be.  The fewer kvm_x86_ops hooks, the better.
+> diff --git a/crypto/ecdh.c b/crypto/ecdh.c
+> index 3049f147e011..c02c9a2b9682 100644
+> --- a/crypto/ecdh.c
+> +++ b/crypto/ecdh.c
+> @@ -27,7 +27,9 @@ static int ecdh_set_secret(struct crypto_kpp *tfm, const void *buf,
+>   			   unsigned int len)
+>   {
+>   	struct ecdh_ctx *ctx = ecdh_get_ctx(tfm);
+> +	u64 priv[ECC_MAX_DIGITS];
+>   	struct ecdh params;
+> +	int ret = 0;
+>   
+>   	if (crypto_ecdh_decode_key(buf, len, &params) < 0 ||
+>   	    params.key_size > sizeof(u64) * ctx->ndigits)
+> @@ -40,13 +42,16 @@ static int ecdh_set_secret(struct crypto_kpp *tfm, const void *buf,
+>   				       ctx->private_key);
+>   
+>   	memcpy(ctx->private_key, params.key, params.key_size);
+> +	ecc_swap_digits(ctx->private_key, priv, ctx->ndigits);
+>   
+>   	if (ecc_is_key_valid(ctx->curve_id, ctx->ndigits,
+> -			     ctx->private_key, params.key_size) < 0) {
+> +			     priv, params.key_size) < 0) {
+>   		memzero_explicit(ctx->private_key, params.key_size);
+> -		return -EINVAL;
+> +		ret = -EINVAL;
+>   	}
+> -	return 0;
+> +	memzero_explicit(priv, sizeof(priv));
+> +
+> +	return ret;
+>   }
+>   
+>   static int ecdh_compute_value(struct kpp_request *req)
