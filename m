@@ -1,189 +1,204 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1A826AE7;
-	Fri, 19 Apr 2024 07:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713512177; cv=fail; b=TzP+FqTwSYeR0yl1iqgURfwM0iFsWS2QVksrXccZaf7DD9LWDULXzZ7Tj1yKLYNI96k1ucwT7zLR8yQ/b8Dz3QrVnfjjjCb5i5R4bVSKbCR4X4rFyhff6v4RHND0tn36iJiQY0OUEqtsezxBm9fWmvP371McX4PJwFMZhTtwLow=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713512177; c=relaxed/simple;
-	bh=rgyKZRPMYBzi+6EYZDbUmTgXi5PX94kOK6DpFbaY6HM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=UQGuPJ5AEfV+W1FVQ/RZQibbFGxZDZhdzQbeP0QiFIx7VIGfRjBatCY2TpSECfSDlZUzkJab5dMX1FcbC2tKMfS/N2bc30+2HMs+0dA+9wPY4A6Qli5f51X/9gT/9D6noQnj+cGU3h1jTTeSMPVkLdVmMoPk5y5l1lQnaZGK0IY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=hhynvhar; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ROZGLE0Z; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DA62AD1A;
+	Fri, 19 Apr 2024 07:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713512244; cv=none; b=oNMt2Zyk5tll18s3UrUk6pLI7yR5zkuV2P4/OdOdFOECthpfhTqHWIJ2BGwdDwvdTeETyHesuEvnHApKoGy4fYGvkfJoKVuzmESwy3AgBC4N+0wWQnZ9g7lEz5+uo53RJoqGqGBGElUFfDxgfUKyPeTOtPvg8j6g5RCg9dxqeI4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713512244; c=relaxed/simple;
+	bh=WH/TWNwyB1L7t0DkTK1GAarV0p0L0EueWHtAvZAq7rg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LzOL4uJSMa4rRpyO5T7YTKWTT1eOmesuSuWzmcvQd/LsNGQ6AkWDsnRN1YMWNNE43BrUYPMxuo2aAcmsl8+vwEb7oKESuXyx6jx5vzVRD2USdacrBZZO0ENZa4NEvsazQULppVBItxiqW78NXZYBpEdzSgEBx42uktIOTFmUtdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mKMZfcmE; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hhynvhar";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ROZGLE0Z"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43J1JCiB013857;
-	Fri, 19 Apr 2024 07:36:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=5l4jpgIOnBak56rJvFUSJcxImRouwzTUI5AVs9dhDrw=;
- b=hhynvharEN5Q68kaTgOUE/s/DSQSPqXLzej/D6atvoATjgn6obYRAbhwljnHMV1DNZ1D
- WkLL/Hqnuc3KrGV9cC6OFP5lIKbfmtAlGYSkH0EfzINj7/bUykI04ubaMjc5gGkJpSw7
- bx4OWOW4G4qq3Ltb1L/ktvOwRsOhyRFXL9PllYkD3PJFqrd40KwvMHbCUS6DcvlLgS0y
- WXsx9H9H0MM9e9luGAPDs43NSh+zbx/UQgOpuPG1bFlHvEitL2Cs3yVndfLmyqEsUZtt
- 4b2XgQgrL9fGpjsZ8G0xkAc7zz5DxCe6YET/EuNIoH3fnzgd6ROE2nUPYF29jVnbQxkz bA== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xfgn2v8b6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 19 Apr 2024 07:36:04 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43J79Ob0040137;
-	Fri, 19 Apr 2024 07:36:02 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2041.outbound.protection.outlook.com [104.47.51.41])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3xkc5fpm93-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 19 Apr 2024 07:36:02 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ipScQ7oZRS6KW1P3z2rkHFc3vKxacuhVUNAEkS5YR9Lc3fy9ka9PHHCoeHlIHbhqYvkDa2dyYBXrPUF1rTjysfvnXgw5kySNAKFfNJdqClAlLNyw8m0JHkClpe1NeauJaDKEqb6962i6VP+MZiZsA0kGcWc5HEdp8Q1PsY9WgpGr6AM/1agBMZYCxZ/gH96ceAxzdD9N2gA8mTUvn8u2VmLlitIkpW6SR56DbYoo0GPIQVMjmhFmiDPoE8YgTkh0jg5YGITssWXkcI0zAWUm0lNNFWGVuVdQAxVRaUsI5XK9djBfW8/S3PNJ/GDE1Uk6k2zYyatGE0Enpq9KZJcd/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5l4jpgIOnBak56rJvFUSJcxImRouwzTUI5AVs9dhDrw=;
- b=O5pN8vlu5U+mIxShEmKAPuOuDFtIzYg3fHPkibX+/qGExPeheFQivyUQEwqNPGoP4GEwt6SDEyLtET/2yGnwRxXPdG/N7pPSOPiW9ujLEpzUw9ZXReXKOG2TlynmBvc4D2A85bSeLlbw4SE5CLkRrZTvf+8X+3+9BuMzwGH/fUkc9ZYDj2T7QV80iuj2NKkQHkLtmFCCjWcPzkdRI/ZjsZGmS4REytfrejco7pxL0BQI9b0QlbSr1woBIFHJU4QekbdyuOskMJolgi7BcjcjVO7NFVHbs2oRMn39c4HDkJOr8K3IQnNR2sZji+Yf7TGAEpyO9L9CUW6rM54o+1aoPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5l4jpgIOnBak56rJvFUSJcxImRouwzTUI5AVs9dhDrw=;
- b=ROZGLE0ZEwfkCPsImo6xBLINaKFswA4O+Wv1PNBDxyG0ZIGpQkzYXX1t+hQd3DYtrJjLhdJCFWndBKWaARyAFQpAVw315a94+Wl7tdTg+M8G8sUc+z0BN2pgNIDVqe6D3Ug+ExtvrQlNIMLPAG92ItGuJnOupk4tzwtsJ/4lD2k=
-Received: from PH8PR10MB6290.namprd10.prod.outlook.com (2603:10b6:510:1c1::7)
- by PH0PR10MB5562.namprd10.prod.outlook.com (2603:10b6:510:f1::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.43; Fri, 19 Apr
- 2024 07:36:00 +0000
-Received: from PH8PR10MB6290.namprd10.prod.outlook.com
- ([fe80::309b:26bb:11d5:cc76]) by PH8PR10MB6290.namprd10.prod.outlook.com
- ([fe80::309b:26bb:11d5:cc76%6]) with mapi id 15.20.7452.049; Fri, 19 Apr 2024
- 07:36:00 +0000
-Message-ID: <bcd611a0-ee8e-4a89-9783-81c3650b4942@oracle.com>
-Date: Fri, 19 Apr 2024 13:05:48 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bug-report] task info hung problem in fb_deferred_io_work()
-To: Nam Cao <namcao@linutronix.de>
-Cc: Daniel Vetter <daniel@ffwll.ch>, deller@gmx.de,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        tiwai@suse.de, bigeasy@linutronix.de, patrik.r.jakobsson@gmail.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vegard Nossum
- <vegard.nossum@oracle.com>,
-        George Kennedy <george.kennedy@oracle.com>,
-        Darren Kenny <darren.kenny@oracle.com>, chuansheng.liu@intel.com
-References: <271372d6-e665-4e7f-b088-dee5f4ab341a@oracle.com>
- <20240418160652.68df1a86@namcao>
-Content-Language: en-US
-From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-In-Reply-To: <20240418160652.68df1a86@namcao>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR01CA0007.apcprd01.prod.exchangelabs.com
- (2603:1096:4:191::11) To PH8PR10MB6290.namprd10.prod.outlook.com
- (2603:10b6:510:1c1::7)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mKMZfcmE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713512243; x=1745048243;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WH/TWNwyB1L7t0DkTK1GAarV0p0L0EueWHtAvZAq7rg=;
+  b=mKMZfcmEiZVzsb+MQXHDxkkOducz+2zyhbWIsncm5iKGKFhd4a8nUHsN
+   veln5dTnAVZSLrjEYz9qbTCRqJW3wr860e9FCUrDy5KrvieyWKI4wySIG
+   QVJnoDV23cABB70a8QARP0KtwTNhg7Q4aQHox2bPtcA20kVVEHod+p0jZ
+   AL2oJg5eyjZ8dXiz7nr12XkERanL+EJgCG3oOy98iY1IGv9KuDxbk60+c
+   WvnSkzh6fr0yflLOdqXEQfvp6mSXy5RwN5EdJon3v85czDlzTrVVYMYll
+   4EIGRLh7JzLIcmtRA/lAgbK/xRGB7Xi2eMm74W618MA0g3UqKI7QRKmjT
+   w==;
+X-CSE-ConnectionGUID: /mEfzdxcTjCZGy4zHlGAng==
+X-CSE-MsgGUID: SaCLh30YTvGhejiV2LmGnw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="9217819"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="9217819"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 00:37:22 -0700
+X-CSE-ConnectionGUID: yDaNp2+dQdWidn2TlCgqcQ==
+X-CSE-MsgGUID: 4DX5CsrsS/6l5cwvv9bu0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="54179291"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa002.jf.intel.com with ESMTP; 19 Apr 2024 00:37:19 -0700
+Date: Fri, 19 Apr 2024 15:32:04 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Marco Pagani <marpagan@redhat.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alan Tull <atull@opensource.altera.com>,
+	Russ Weight <russ.weight@linux.dev>, linux-fpga@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] fpga: region: add owner module and take its refcount
+Message-ID: <ZiId9CnGEjwMcXeX@yilunxu-OptiPlex-7050>
+References: <20240411144811.121500-1-marpagan@redhat.com>
+ <ZhnviXAgnTdzUyV4@yilunxu-OptiPlex-7050>
+ <669b8b55-df83-4c32-9c8f-41895db18b75@redhat.com>
+ <e5f15ea4-f8e4-4a97-95f6-63a2099d084c@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR10MB6290:EE_|PH0PR10MB5562:EE_
-X-MS-Office365-Filtering-Correlation-Id: 00355dae-4fb2-410c-b7a8-08dc60435bed
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	cEUUV3SQkV9sX9WImd3iLQl/aONAYy011px7r8t34viuqP4LWdWNRM5+V4ylMvlxIwnlCyFjtO3OmudyU29xzRMHDXuqY4+o0TKWICg5NKUwtD/AfkAF8Nj9/FXSJBdVtSZkJAVKsHDmU5xM7p7JKJ1TVOLNzG7bOAWDTEzLYXYgelbmgPl7UvCAZlwqqs+hnU0JVMqvA29Ck354WFgp+I+LqUmdmllhzBdP7wZobhMrUwfO4TRkX1cu8QS0uXV0zUPxdqqdnhZq+UciXMNa7oksx4uZP3ns28KleflVIFRvMyB7Mo025YmQ8PJGptq7fkVV0zdypnBW3dsuPqqzBG43iLrSCcdhS9LcZYGTm8xSYZboXe8pp9ZGuD4UGNzVsdDz8LtF/rd0B4ViJJWAohT3oTlC7TkIJXcW9fuC4ROnbCAvFezjrEgAs3EubDBGxhXWHMfngfIpjHVX1GneDUWMg2cCU2BDWZtkd2bDZImFmLyC42GosCHGX6/5t8GZy4lXXVgqsqlM2z4oFlxdK6GXmVM3cTMmfe5pvFDBmcDLFoYTPahF1vT4CVITFNaNIciOPQWdVLQHcGR0mF4MtwwHNtIGZmth/Xb8JtnFnBs0HQ3umU5LLlTCs1KYWAtaeP8OZEhDtt6TsadOvG3N+jYeIEqxLTUn7woulEBBBoo=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR10MB6290.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(7416005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?NHR2ZFRMQjBxeEZ6eElnd1I1U0h2UHBUSjBSRmMvTlJFdWxPRVg4Wmp5NFNR?=
- =?utf-8?B?L2dBbU8yaC8zeGxTM2pYeUhzRnJFb0pRQkhsSmJKRmZZMzR3ZXpWblFPVUl5?=
- =?utf-8?B?dTNvb0ZvdHpSTThpcFN4alNTK3hKcjVTbkRTUmlxMlJWNDZ6bU02blNOaTZV?=
- =?utf-8?B?V21JRVBXak1GUUJ0eU1NcGNaQnRaeUtMb3NsYTcvc2JuM3hibkd6elliYVM1?=
- =?utf-8?B?SUF4YmRxcFV6b1RGREJtN2xLcVAyZkp1eCs3VnlLR2JDZzRmQTJBbzFwT2JC?=
- =?utf-8?B?Vk5kN2NQVTloamtPUnI5ZVFXazM2WEJ3cE4wYndmcklyZG8zc2k5S1REaHVK?=
- =?utf-8?B?b2ZwUUtwbW9mN2JTOFNCb2tKZm52U29rOEpDVnpmVjU3WjJ0MWxzc0xtbVJT?=
- =?utf-8?B?Rk83TElnY3Y2QXc1b1NyU0RGU3NNVzc3blNibVlmaUhRWmRaMCtydXI0NE1x?=
- =?utf-8?B?VlhvSC84VXVsR0g3OUp5cCtGdXZjRUNlclNQRGdxWTJuckpUbXdwM2NITjFR?=
- =?utf-8?B?UkJ5Z1cwemFiTlNnQjc2N3BFRTdHRk43aFJvWGxEamM5cWNLWDJRSkxFdTdS?=
- =?utf-8?B?VG16OUs5Mms3bUcweHFCd0pkTEFBVklUQlcxRXpYWVJBMmdTZnRTVW1PUk1G?=
- =?utf-8?B?ZDMySjN1V0dGenNqdUluVUtwRWovakdlYWVmdEc5K1JCQVBTSUZUR2ErdGpn?=
- =?utf-8?B?dUtnWDFUUG1sRDYvVjVITHhoVGpncUJITHJ2N0RCNk95UWtsQnVXYld0ZGFE?=
- =?utf-8?B?VEhrOUQ2TlZ2ZjVRRjlhZnFQTFQxcU9rdnZLdTBSL29SM1IyWXd6VEQ4UXMx?=
- =?utf-8?B?UDN4UXJ3cllUdjAyV2FjVDk3REw2RFRMSmxNZGZBSmJtMmVvMWZEUG1oeXNi?=
- =?utf-8?B?WTdOTDF1am5OeWcxVXVoSGZqOFRIa0gyL1dTZE9IZ2tHNVptVWJjSDdraUR6?=
- =?utf-8?B?RWpnOXNSQmJheU9KSW9Kd2VZZ2dtOWhybFpLVmpybzZ3d1R0bDdJMDJoUEtP?=
- =?utf-8?B?MUVLUUozZGFIcTB1ZXF3NFd4Z1BtZUJFaVRxZEt5dTl5bmhGZzlCRmx1V0V1?=
- =?utf-8?B?UjlKZzRMTis4dUZFVjg4b1E0SG1sekl4VXpWT3Nmb2pRRXhLL2NFQ2pqL21z?=
- =?utf-8?B?WGpZNlczZTlyUVUxMEU5Wm0zdEg1VUZ6dHg3RzV5S2NxRWJSZ0Eybjl4emtF?=
- =?utf-8?B?TGZwenRyQzdINFNTTkxueDJ2bG5LOHVFcHJKOU9FU29samErV0tocFlsZmwr?=
- =?utf-8?B?VzR0M1NJZHhsOVlTYlYwUzh4dzhOYkRUamZLdUF3Ny9LV1o4d2pQMTYrNFZI?=
- =?utf-8?B?UTdPVXpRMnNaVVp5M01OdkI5VlBaZ3FYTDlxR2VXSlFJWjQyaTFXS0pHTXRQ?=
- =?utf-8?B?QUZXaHhqZ0dNSmNZQTlXSVhpSzlLaFJnQ2hPNjhSRGFuZGpNMXdvbFN4WGd2?=
- =?utf-8?B?ZTJsei9raWoxWHpXaUUwRVZyWE56Q3l3bU9xaGtaNzJEZUw0MkRXTXFDSk1G?=
- =?utf-8?B?aDM5eVVuS2ltM002clRWRFBpU1pMUXA4M01yb0xNM2Rma1ZmZ01TeTY5WlJh?=
- =?utf-8?B?WitXZ2NDRXlOWGFreUswdEg3bTVWTkFPZFBkL2QrV0hSYmNlU1gycSt4M3lv?=
- =?utf-8?B?WnVKNTZFYVo5cGRKUWRXRTdTcWdpSndKRUVWQzlBY1VvaktFZFZKYThYWkJY?=
- =?utf-8?B?Tzk4ZCtJa2c3UFJxcGRPQitxQUdmMjJhTERmTGgvdE9JMmd2Z1FQcjlQTVhK?=
- =?utf-8?B?Vk5GYXFrYi9QSzFiem55K1FSeHMvUVgvdmRHMkZ0YzkxNTBTYktVY0lTZWJj?=
- =?utf-8?B?V3lPYjNSZG04VnlyL3FabFJ1Q2ZGTk44VDZWZVI2ZEF2V3owVHBjNHFQS3pu?=
- =?utf-8?B?OEdrVVNuaWdYSlphbldxM1ozUFFqejI1ZjZhYW1oNytDdDJNdVVmZnJSUXlv?=
- =?utf-8?B?eUxOanlLL09HVldDcUFzVFkyUkZqWklHQ3ZraTdrTktzNjc4elBEOTVTU2Zr?=
- =?utf-8?B?d3RHc1RuTW5jZ1hPcXVaenBKc2dUekpTTFIycDZ5aHIvZTdFOHdRT2ticDdZ?=
- =?utf-8?B?SHpnNUxEU2NXdHExMFI4cDhxeUN1T25VODBZc0tBbEtSd2szMGVaeHlBZjk1?=
- =?utf-8?B?T0FRR05NK3VBMFRWTnZZVzM3T0xqRDNIK2FpOHZhRCtTUVQzSjF5YTVQNEFW?=
- =?utf-8?Q?1Dgb30Cb8ShBRi77p65QYiM=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	wfhv9HBiHJYBulgr/weXCIq0QgDEpuwOIfAdB5u3Aa1QkRtS7CdIxlDev94j8N4myYcnFvNCan1XSiB1OudYMYCZqay+uZwEzOEjvDZZuxALv6exgqg2HV3irY8rH6mgymI8v8/a/z079NIX5WxO7nNEXuwQlkjjHl5VsNwnZ6QPDkkod4zYqGxmn8Gd6qHAKWMwSnD/Eksl8hYLxF1v0+YYCIersfx30aCnSaNjY64bN595G+SZ+VqZPMwELIdMbyhky1OLAJj+8S/B+SgdJQt0Ij8VrY2aO803KNvPiDMNvUchwHmWAftdylhA/elpPiIFqMqVHRuPYYp35dwqQ79KRu+JkIse/jSp1OXjO6+XMXvlS6vtkBjVx2OabisfxPsuthzmLF/uSFecJZMT8m644/ZitbunoCX4zQEyUnhSVFh9qeFFIeDvCF1qYaqZMxSlNXbGy4cC8c+JzKiUmXsNT2DjatPPWeQBPbFKiF2n8Rg11wjYOu3HykYmSsWp/xWcAuR0q/B0iVZbVvNGbOfE6gQvZDp2zoLQ2aljSHFpbC+7Z3+lTYocsZGRneZcVTPoHCKqGtVei3xC1GVtJaxHopuNM4ZM3z+rXsGx8g4=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00355dae-4fb2-410c-b7a8-08dc60435bed
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR10MB6290.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 07:36:00.4708
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wb+NtICUBfu6bw8b15A2Vp8diRQqK1boFdGOQ5r+cywQyWx4HyRIbP3fWDd55EQYmvZRg1TZZ3Q0lBntsjzlQZIAndUYiKo2PUIW+DXVfvdEZjhVFTN/uge7BDc2Ft32
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5562
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-19_04,2024-04-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- bulkscore=0 spamscore=0 mlxscore=0 phishscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404190055
-X-Proofpoint-ORIG-GUID: QMU2K5OXif2QViTvzDTtLHaO6B-aMaeY
-X-Proofpoint-GUID: QMU2K5OXif2QViTvzDTtLHaO6B-aMaeY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e5f15ea4-f8e4-4a97-95f6-63a2099d084c@redhat.com>
 
-Hi Nam,
-
-On 18/04/24 19:36, Nam Cao wrote:
-> On 2024-04-18 Harshit Mogalapalli wrote:
->> While fuzzing 5.15.y kernel with Syzkaller, we noticed a INFO: task hung
->> bug in fb_deferred_io_work()
+On Mon, Apr 15, 2024 at 07:11:03PM +0200, Marco Pagani wrote:
+> On 2024-04-15 14:19, Marco Pagani wrote:
+> > 
+> > 
+> > On 2024-04-13 04:35, Xu Yilun wrote:
+> >>>  /**
+> >>> - * fpga_region_register_full - create and register an FPGA Region device
+> >>> + * __fpga_region_register_full - create and register an FPGA Region device
+> >>>   * @parent: device parent
+> >>>   * @info: parameters for FPGA Region
+> >>> + * @owner: owner module containing the get_bridges function
+> >>
+> >> This is too specific and easily get unaligned if we add another
+> >> callback. How about "module containing the region ops"?
+> > 
+> > I had some concerns about using the name "region ops" in the kernel-doc
+> > comment since it was not supported by a struct definition nor referenced
+> > in the documentation. However, since the name is now referred to in the
+> > ops_owner pointer, making the change makes sense to me.
+> > 
 > 
-> Which framebuffer device are you using exactly? It is possible that
-> the problem is with the device driver, not core framebuffer.
+> On second thought, I think it would be better to leave the @owner
+> description to "module containing the get_bridges function" for the
+> moment. Otherwise, it could confuse the user by blurring the connection
+> between the @owner and @get_bridges parameters.
 > 
+> * __fpga_region_register - create and register an FPGA Region device
+> * [...]
+> * @get_bridges: optional function to get bridges to a list
+> * @owner: owner module containing get_bridges function
+> 
+> We can always modify the @owner description later, together with all the
+> necessary changes to add a new op, like grouping all ops in a structure
+> and changing the registration function signature.
 
-I am not very sure about the answer, but the C reproducer uses(/dev/fb0)
+OK, it's good to me. I'll apply this patch to for-next.
 
-int fd = open("/dev/fb0", O_RDWR, 0);
+Acked-by: Xu Yilun <yilun.xu@intel.com>
 
-Thanks,
-Harshit
-
-> Best regards,
-> Nam
-
+> 
+> Thanks,
+> Marco
+> 
+> > 
+> >>
+> >>>   *
+> >>>   * Return: struct fpga_region or ERR_PTR()
+> >>>   */
+> >>>  struct fpga_region *
+> >>> -fpga_region_register_full(struct device *parent, const struct fpga_region_info *info)
+> >>> +__fpga_region_register_full(struct device *parent, const struct fpga_region_info *info,
+> >>> +			    struct module *owner)
+> >>>  {
+> >>>  	struct fpga_region *region;
+> >>>  	int id, ret = 0;
+> >>> @@ -213,6 +215,7 @@ fpga_region_register_full(struct device *parent, const struct fpga_region_info *
+> >>>  	region->compat_id = info->compat_id;
+> >>>  	region->priv = info->priv;
+> >>>  	region->get_bridges = info->get_bridges;
+> >>> +	region->ops_owner = owner;
+> >>>  
+> >>>  	mutex_init(&region->mutex);
+> >>>  	INIT_LIST_HEAD(&region->bridge_list);
+> >>> @@ -241,13 +244,14 @@ fpga_region_register_full(struct device *parent, const struct fpga_region_info *
+> >>>  
+> >>>  	return ERR_PTR(ret);
+> >>>  }
+> >>> -EXPORT_SYMBOL_GPL(fpga_region_register_full);
+> >>> +EXPORT_SYMBOL_GPL(__fpga_region_register_full);
+> >>>  
+> >>>  /**
+> >>> - * fpga_region_register - create and register an FPGA Region device
+> >>> + * __fpga_region_register - create and register an FPGA Region device
+> >>>   * @parent: device parent
+> >>>   * @mgr: manager that programs this region
+> >>>   * @get_bridges: optional function to get bridges to a list
+> >>> + * @owner: owner module containing get_bridges function
+> >>
+> >> ditto
+> >>
+> >>>   *
+> >>>   * This simple version of the register function should be sufficient for most users.
+> >>>   * The fpga_region_register_full() function is available for users that need to
+> >>> @@ -256,17 +260,17 @@ EXPORT_SYMBOL_GPL(fpga_region_register_full);
+> >>>   * Return: struct fpga_region or ERR_PTR()
+> >>>   */
+> >>>  struct fpga_region *
+> >>> -fpga_region_register(struct device *parent, struct fpga_manager *mgr,
+> >>> -		     int (*get_bridges)(struct fpga_region *))
+> >>> +__fpga_region_register(struct device *parent, struct fpga_manager *mgr,
+> >>> +		       int (*get_bridges)(struct fpga_region *), struct module *owner)
+> >>>  {
+> >>>  	struct fpga_region_info info = { 0 };
+> >>>  
+> >>>  	info.mgr = mgr;
+> >>>  	info.get_bridges = get_bridges;
+> >>>  
+> >>> -	return fpga_region_register_full(parent, &info);
+> >>> +	return __fpga_region_register_full(parent, &info, owner);
+> >>>  }
+> >>> -EXPORT_SYMBOL_GPL(fpga_region_register);
+> >>> +EXPORT_SYMBOL_GPL(__fpga_region_register);
+> >>>  
+> >>>  /**
+> >>>   * fpga_region_unregister - unregister an FPGA region
+> >>> diff --git a/include/linux/fpga/fpga-region.h b/include/linux/fpga/fpga-region.h
+> >>> index 9d4d32909340..5fbc05fe70a6 100644
+> >>> --- a/include/linux/fpga/fpga-region.h
+> >>> +++ b/include/linux/fpga/fpga-region.h
+> >>> @@ -36,6 +36,7 @@ struct fpga_region_info {
+> >>>   * @mgr: FPGA manager
+> >>>   * @info: FPGA image info
+> >>>   * @compat_id: FPGA region id for compatibility check.
+> >>> + * @ops_owner: module containing the get_bridges function
+> >>
+> >> ditto
+> >>
+> >> Thanks,
+> >> Yilun
+> >>
+> >>>   * @priv: private data
+> >>>   * @get_bridges: optional function to get bridges to a list
+> >>>   */
+> >>> @@ -46,6 +47,7 @@ struct fpga_region {
+> >>>  	struct fpga_manager *mgr;
+> >>>  	struct fpga_image_info *info;
+> >>>  	struct fpga_compat_id *compat_id;
+> >>> +	struct module *ops_owner;
+> >>>  	void *priv;
+> >>>  	int (*get_bridges)(struct fpga_region *region);
+> >>>  };
+> >>
+> 
