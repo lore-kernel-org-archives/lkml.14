@@ -1,100 +1,63 @@
-Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6802229CE5;
-	Fri, 19 Apr 2024 20:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423CC2BAE6;
+	Fri, 19 Apr 2024 20:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713559581; cv=none; b=D4jite2ZiTQdsOGGx7UUM23yZYnjyOC5nLKI9WPMNeQRboxVjyCF7FwA6HbiG2/cCElJNIfuVu+eXvQwEsIF0VCVbEy81bLDXafi+sejbV4G+x3A2RwbFqhcHCxX6T0BEPteG1WmXL0VFG4mg48jd9YjIqeYl4qDoQQZTmRVPbc=
+	t=1713559594; cv=none; b=obNExbEpTAs0XKGVBHZIkHMjXpPsf6Pv1Bv6VEEkXCHag0kKrN0id11qYYYQgxGiX/LRGT+KZdsapKkTrSgF+vMxqHyek3nU6hQGFgplNODWBBdiuHDfkHWhZbJFPCFfrb6dShAF+bS2fQexpCTMBtYxG9H5IXrErWGnRUh93Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713559581; c=relaxed/simple;
-	bh=Q0n2p3Gl2XGwFRL69wM+4Pn8DrdIQvix54nl3TqcDfI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NYnhi/OzRzzfGL5LxbED5XEctWb/2+xE54e5HaTiGYk+UZBJkZPjjILic0FZSSo/YQEDV0BS3VUkWIbuyrPOenMmO7WQUSmeZJNuDmr6riBjbnMjKLywPQUtQJf9itR8/J9f3Pidz5gcAoakDjem0bFq5XKaUyz9DpwRnXtiOiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=fR9v3p+z; arc=none smtp.client-ip=4.36.192.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
+	s=arc-20240116; t=1713559594; c=relaxed/simple;
+	bh=3sSWGnR89pyXPgXLVMho2jMDnauoRp1idi9Q++XkTkk=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=dpvGEw22F/L1jo6l7+DvLS9b/2rypBdSIj3c0bh4ykvZC672fiFEgp0Cpe0VZqalsNOpbfsi/YpXYlWG16BjNlqGBV7tKJqIxf2CquLjDpEYGbZIRgkHws97h1DKRsCHj2iTKvkWwZ8gDx2BLC7iZkuftKn4O3Acxb7PyZH6xqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKdIk/dO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="fR9v3p+z"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
-	bh=5p2yQvQe15hu1/dZghXrbNWOB2J/4kqzCzCcLTivdwE=; b=fR9v3p+zjVf9sCIqkYiQdMIBvS
-	FQWQVZ71cUCDyVhziOVnArmJjPymIm2os81/0UHq/3QVttuvtt4/WXtfa2arno+JquVqpETCQzu8j
-	WEN74vvkg3kh8B+URuhpz+FpbM+nnmYSrkz5OW0/2pXVxXHgAkkcPhbb+T+jF7DkFSdA6NXxkHGb2
-	a8ZtvB9ROZMZAbLXO8w6xshaP/5lW+FZ6GPMvA+V/fP0/CXdGFYcJFAQL2RQdTIJ3p0Fu0lVgABRx
-	GMqAq0xAcPtwtt+QZBQXBARwETz2JXk+TFEI9Ip6q/TsffEH+Wpu2x5I8J6Ka3l5B306VEtmGY9Kw
-	zf83hOmQ==;
-Received: from cw137ip160.mn.codeweavers.com ([10.69.137.160] helo=camazotz.localnet)
-	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <zfigura@codeweavers.com>)
-	id 1rxv7X-001bTU-1M;
-	Fri, 19 Apr 2024 15:46:07 -0500
-From: Elizabeth Figura <zfigura@codeweavers.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: wine-devel@winehq.org, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
- linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
- =?ISO-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
- Wolfram Sang <wsa@kernel.org>, Andy Lutomirski <luto@kernel.org>,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Randy Dunlap <rdunlap@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
- Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: [PATCH v4 00/30] NT synchronization primitive driver
-Date: Fri, 19 Apr 2024 15:46:07 -0500
-Message-ID: <4560699.LvFx2qVVIh@camazotz>
-In-Reply-To: <20240419161611.GA23130@noisy.programming.kicks-ass.net>
-References:
- <20240416010837.333694-1-zfigura@codeweavers.com>
- <3743440.MHq7AAxBmi@terabithia>
- <20240419161611.GA23130@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKdIk/dO"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A7D41C072AA;
+	Fri, 19 Apr 2024 20:46:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713559593;
+	bh=3sSWGnR89pyXPgXLVMho2jMDnauoRp1idi9Q++XkTkk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=iKdIk/dOiYwWCrUliW1fFZO+oVCnquy1G5RJRlvMKfQPRAyidEmrQid5k2Wr8llSp
+	 YbovNemH2iiDyARYKQLeeT8P7EAFm+JXNQPqLmyLWMMxNARjHIRT/Tn6fDNiO5wt8M
+	 goAKXqHwW2jHQZC4CcfkOzZDpKwW9xsmCohMdhQMAgfzEYrlftTjX0BHejNuy/t4tY
+	 XUlyqO8g+CDg0bZHxWiMQMfw4Qkww6TTx42lsYkrNXr6mLiBiQ5XUWm5q0lmSh83+8
+	 yjgGNLBirT5Xle5SJERJ+FTXNyEFnJSlDLWOvZT25Z5OvXTsE2/scrN2DJNNraWWGH
+	 P/cjwCBZD1H5w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9E8E3C433E9;
+	Fri, 19 Apr 2024 20:46:33 +0000 (UTC)
+Subject: Re: [GIT PULL] fuse fixes for 6.9-rc5
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CAJfpegvMf45cm=VQa35HdjM6=y8SeMojw8snnOjifqYjKbtM_w@mail.gmail.com>
+References: <CAJfpegvMf45cm=VQa35HdjM6=y8SeMojw8snnOjifqYjKbtM_w@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAJfpegvMf45cm=VQa35HdjM6=y8SeMojw8snnOjifqYjKbtM_w@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git tags/fuse-fixes-6.9-rc5
+X-PR-Tracked-Commit-Id: 09492cb45100cab909cabe164deb7cdc14e38634
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: daa757767db7870e916f8853e70dcb87268c5c26
+Message-Id: <171355959364.22865.7615098525091006892.pr-tracker-bot@kernel.org>
+Date: Fri, 19 Apr 2024 20:46:33 +0000
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
 
-On Friday, 19 April 2024 11:16:11 CDT Peter Zijlstra wrote:
-> On Tue, Apr 16, 2024 at 05:18:56PM -0500, Elizabeth Figura wrote:
-> > On Tuesday, 16 April 2024 16:18:24 CDT Elizabeth Figura wrote:
-> > > On Tuesday, 16 April 2024 03:14:21 CDT Peter Zijlstra wrote:
-> > > > I don't support GE has it in his builds? Last time I tried, building
-> > > > Wine was a bit of a pain.
-> > >=20
-> > > It doesn't seem so. I tried to build a GE-compatible ntsync build, up=
-loaded
-> > > here (thanks Arek for hosting):
-> > >=20
-> > >     https://f002.backblazeb2.com/file/wine-ntsync/ntsync-wine.tar.xz
-> >=20
-> > Oops, the initial version I uploaded had broken paths. Should be fixed =
-now.
-> >=20
-> > (It's also broken on an unpatched kernel unless explicitly disabled wit=
-h=20
-> > WINE_DISABLE_FAST_SYNC=3D1. Not sure what I messed up there=E2=80=94it =
-should fall back=20
-> > cleanly=E2=80=94but hopefully shouldn't be too important for testing.)
->=20
-> So I've tried using that wine build with lutris, and I can't get it to
-> start EGS or anything else.
->=20
-> I even added a printk to the ntsync driver for every open, to see if it
-> gets that far, but I'm not even getting that :/
+The pull request you sent on Fri, 19 Apr 2024 16:23:20 +0200:
 
-That's odd, it works for me, both as a standalone build and with
-lutris...
+> git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git tags/fuse-fixes-6.9-rc5
 
-Does /dev/ntsync exist (module is loaded) and have nonzero permissions?
-I forgot to mention that's necessary, sorry.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/daa757767db7870e916f8853e70dcb87268c5c26
 
-Otherwise I can try to look at an strace, or a Wine debug log. I don't
-think there's an easy way to get the latter with Lutris, but something
-like `WINEDEBUG=3D+all ./wine winecfg 2>log` should work.
+Thank you!
 
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
