@@ -1,150 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B2B19B;
-	Fri, 19 Apr 2024 00:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC961DDD5;
+	Fri, 19 Apr 2024 00:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713485440; cv=none; b=neDAW8OzT0evjYLPq5l5JMhhvZKPrW9ON0lms8A3F4F3fReggmIej90HW9dkDJs5RTcZVazxFyw4qjEjY1SgM0qotKj+52sY6FuJk6HdFknRQmMG41YT/SuE32xpc2Km+frBbXPC2NjfRjhgD46YAXw8XX5NeIz32c0ZB2DMd4c=
+	t=1713485449; cv=none; b=DSZLbeB+OH+ZA4t6unMwH7F8Ar5ZKLI3P2IneCvB6Xdkzc9AeF4MwSE0xDjnIQdh0Lvs0VzbSyoW01/If2YaCARd9h+zvc6mSe8jlXH1VrkH2FoSBLK4igeyujuC80KD2X5xEcnLxHLnE63QOGHNB0PGbhx0nPJfjEsmOq9F9GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713485440; c=relaxed/simple;
-	bh=G9Z/tW8og1ICHUXARDylS43YX/C9X4jXDk8QDq5f9S8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KaAz7FBFuyDSscqtaSvNVZJGWQ7ehJNdJ/Vg0aIkoPxl3fUi0rNkkQ//egwCs9Kj15ZXdlk5KUcHIZdxMayVDmARRagBHCVmJNS21vluRs9uESicIzESQy9VAQ7o9fkpUaIfDBjH8+u/OmUrCwBKzP3kjzu88mwKKOb5Q095fks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fLkuqs2y; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713485449; c=relaxed/simple;
+	bh=vt9o9pMYCW7hhpcZsv8ddcoj4OiStUOgb8ev/ufEpqU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EZlwS1zAEjAotvtMPMQvoIyPfgRzYnH2gXUbtckMotqmmHJ/UquTDB3d8oen0X1G87obIHP0J5yYgxQoLWUZsqreqNZf8i9gEjzUlNQqrgyY9QukvuB9kK261FF1u5rb5R4Jt7HmEMovvvVBC+Gf5gDII02V+cwQyBrcPr45eIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DDGWCZ53; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fLkuqs2y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713485438; x=1745021438;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=G9Z/tW8og1ICHUXARDylS43YX/C9X4jXDk8QDq5f9S8=;
-  b=fLkuqs2yGUWOZba3PC7Tea0Tk7RAavcychMJOuejCa9/sAa+JheGgA8z
-   R8r1PtdY7Jza+bcCv8m7bIlYQ/7XDf2rhzximQT7iiap88Q2U6nRnk62q
-   PiZ4yeCSPV0QaNWj92VdNXqjYT05gyXHwW1+rVehSKw4yHpRFhvE1MjWp
-   NUDp7bBIkTeVGR/MYVgKyTeleQ3jjwfS2Q4jeOVSEOwf3rjJdn73FQxL2
-   2eunfd6MzQaP0K/Ae7SWFuRMUC2mpczEcfbBUhRWO8NmBUk19Q3r4kYy/
-   lMDxInoPP/J2HjHjf9A4jtyGTFWDpDFuEMaGd1GMYAAguIvUN53qadnm6
-   g==;
-X-CSE-ConnectionGUID: ue2+92HqTaiAj75KnhSJ3g==
-X-CSE-MsgGUID: S1nq7XABT7eegfANSYKfsA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="12850768"
-X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
-   d="scan'208";a="12850768"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 17:10:37 -0700
-X-CSE-ConnectionGUID: yWA50Pj5ROG4BJ3wgFI6Ww==
-X-CSE-MsgGUID: XbpKVrp8TbGXaGj2n7IMTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
-   d="scan'208";a="27789915"
-Received: from unknown (HELO 23c141fc0fd8) ([10.239.97.151])
-  by fmviesa004.fm.intel.com with ESMTP; 18 Apr 2024 17:10:34 -0700
-Received: from kbuild by 23c141fc0fd8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rxbpm-0009Ml-1x;
-	Fri, 19 Apr 2024 00:10:30 +0000
-Date: Fri, 19 Apr 2024 08:09:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: lvzhaoxiong <lvzhaoxiong@huaqin.corp-partner.google.com>,
-	dmitry.torokhov@gmail.com, robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	jikos@kernel.org, benjamin.tissoires@redhat.co, dianders@google.com,
-	hsinyi@google.com
-Cc: oe-kbuild-all@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	lvzhaoxiong <lvzhaoxiong@huaqin.corp-partner.google.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: input: i2c-hid: Introduce Ilitek
- ili2900
-Message-ID: <202404190818.TnHkpNZd-lkp@intel.com>
-References: <20240418124815.31897-2-lvzhaoxiong@huaqin.corp-partner.google.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DDGWCZ53"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43INbfPi004091;
+	Fri, 19 Apr 2024 00:10:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=E+MUUFF
+	9nUQU8Lod6cFIwRusIEFGRZulrqTCSTn2l4E=; b=DDGWCZ53FhT+QCfVKD32aYt
+	i0jfb2R8cKDlrQ5IsA28ZWUdPjARYcZ/ht64cUfJnVTPmQbfMe8a/fxYLvgrh4TW
+	EWxAbxjegTtGHWAV23EAabMwfOfF6FNX4R1IgSzpHUOuGKJcEmm5/7GLohFmNJ7d
+	SiimyCaZ+KWR8nNQDBl0e49rdBf7eLYrk4up5Q4gjq570Ak+oUzMU6uc2oO7b0hp
+	6HeK51qxYIF1jzS1hQnenwyacpIuxCGJHc3VTBgtgy4dSF5RAyMOarun6knvANkg
+	BO2lRVz0dUjtV42JsonoHJPsNwCIDX4yDmbzNH4zwFYP+xNXX7LnR0E0/Nnfong=
+	=
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xjx54j9dd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 19 Apr 2024 00:10:33 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43J0AWOg015865
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 19 Apr 2024 00:10:32 GMT
+Received: from adas-linux5.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 18 Apr 2024 17:10:31 -0700
+From: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
+To: <agross@kernel.org>, <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <mani@kernel.org>
+CC: <quic_msarkar@quicinc.com>, <quic_kraravin@quicinc.com>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=
+	<kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel
+	<gustavo.pimentel@synopsys.com>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Yoshihiro Shimoda
+	<yoshihiro.shimoda.uh@renesas.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+Subject: [PATCH v3 0/3] Add 16GT/s equalization and margining settings
+Date: Thu, 18 Apr 2024 17:09:33 -0700
+Message-ID: <20240419001013.28788-1-quic_schintav@quicinc.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240418124815.31897-2-lvzhaoxiong@huaqin.corp-partner.google.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: CgrkrAVWo0boEGpqahhkjGnIaLHOEfu2
+X-Proofpoint-ORIG-GUID: CgrkrAVWo0boEGpqahhkjGnIaLHOEfu2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-18_21,2024-04-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ suspectscore=0 malwarescore=0 phishscore=0 mlxlogscore=764 bulkscore=0
+ impostorscore=0 spamscore=0 lowpriorityscore=0 priorityscore=1501
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404190000
 
-Hi lvzhaoxiong,
+Add 16GT/s specific equalization and rx lane margining settings. These
+settings are inline with respective PHY settings for 16GT/s 
+operation. 
 
-kernel test robot noticed the following build warnings:
+In addition, current QCOM EP and RC drivers do not share common
+codebase which would result in code duplication. Hence, adding
+common files for code reusability among RC and EP drivers.
 
-[auto build test WARNING on hid/for-next]
-[also build test WARNING on robh/for-next linus/master v6.9-rc4 next-20240418]
-[cannot apply to dtor-input/next dtor-input/for-linus]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+v2 -> v3:
+- Replaced FIELD_GET/FIELD_PREP macros for bit operations.
+- Renamed cmn to common.
+- Avoided unnecessary argument validations.
+- Addressed review comments from Konrad and Mani.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/lvzhaoxiong/dt-bindings-input-i2c-hid-Introduce-Ilitek-ili2900/20240418-205059
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-next
-patch link:    https://lore.kernel.org/r/20240418124815.31897-2-lvzhaoxiong%40huaqin.corp-partner.google.com
-patch subject: [PATCH v1 1/2] dt-bindings: input: i2c-hid: Introduce Ilitek ili2900
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-dtschema version: 2024.3.dev14+g64b72b0
-reproduce: (https://download.01.org/0day-ci/archive/20240419/202404190818.TnHkpNZd-lkp@intel.com/reproduce)
+v1 -> v2:
+- Capitilized commit message to be inline with history 
+- Dropped stubs from header file.
+- Moved Designware specific register offsets and masks to
+  pcie-designware.h header file.
+- Applied settings based on bus data rate rather than link generation.
+- Addressed review comments from Bjorn and Frank.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404190818.TnHkpNZd-lkp@intel.com/
+Shashank Babu Chinta Venkata (3):
+  PCI: qcom: Refactor common code
+  PCI: qcom: Add equalization settings for 16GT/s
+  PCI: qcom: Add rx margining settings for 16GT/s
 
-dtcheck warnings: (new ones prefixed by >>)
->> Documentation/devicetree/bindings/input/ilitek,ili9882t.yaml:22:5: [error] duplication of key "const" in mapping (key-duplicates)
---
-   Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.yaml:
-   Error in referenced schema matching $id: http://devicetree.org/schemas/nvmem/xlnx,zynqmp-nvmem.yaml
->> Documentation/devicetree/bindings/input/ilitek,ili9882t.yaml:22:5: found duplicate key "const" with value "ilitek,ili2900" (original value: "ilitek,ili9882t")
---
->> Documentation/devicetree/bindings/input/ilitek,ili9882t.yaml: ignoring, error parsing file
-
-vim +/const +22 Documentation/devicetree/bindings/input/ilitek,ili9882t.yaml
-
-     8	
-     9	maintainers:
-    10	  - Cong Yang <yangcong5@huaqin.corp-partner.google.com>
-    11	
-    12	description:
-    13	  Supports the Ilitek ili9882t touchscreen controller.
-    14	  This touchscreen controller uses the i2c-hid protocol with a reset GPIO.
-    15	
-    16	allOf:
-    17	  - $ref: /schemas/input/touchscreen/touchscreen.yaml#
-    18	
-    19	properties:
-    20	  compatible:
-    21	    const: ilitek,ili9882t
-  > 22	    const: ilitek,ili2900
-    23	
-    24	  reg:
-    25	    const: 0x41
-    26	
-    27	  interrupts:
-    28	    maxItems: 1
-    29	
-    30	  panel: true
-    31	
-    32	  reset-gpios:
-    33	    maxItems: 1
-    34	    description: Reset GPIO.
-    35	
-    36	  vccio-supply:
-    37	    description: The 1.8V supply to the touchscreen.
-    38	
-    39	required:
-    40	  - compatible
-    41	  - reg
-    42	  - interrupts
-    43	  - panel
-    44	  - vccio-supply
-    45	
+ drivers/pci/controller/dwc/Kconfig            |   5 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-designware.h  |  30 ++++
+ drivers/pci/controller/dwc/pcie-qcom-common.c | 129 ++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-qcom-common.h |  14 ++
+ drivers/pci/controller/dwc/pcie-qcom-ep.c     |  44 ++----
+ drivers/pci/controller/dwc/pcie-qcom.c        |  72 ++--------
+ 7 files changed, 201 insertions(+), 94 deletions(-)
+ create mode 100644 drivers/pci/controller/dwc/pcie-qcom-common.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-qcom-common.h
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.2
+
