@@ -1,44 +1,43 @@
 Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF498614B;
-	Fri, 19 Apr 2024 13:00:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC18C8594B;
+	Fri, 19 Apr 2024 13:00:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713531638; cv=none; b=YSh+na2zc+ORXW6yD3QAnyFvypM2ZaCytr1v6nimYEWXJIx4nOx5ji+xhTK9MhWpHL8z32/w3LTGmpA3GSheiDz/mK3hMU/CMu1Gb1kRuu08UZfu5uvZ/5NwK9MHSM6gy/RP17Pj5iJXflWwr2QqJvsybmPHC1ZLnrIyMmtjJDE=
+	t=1713531639; cv=none; b=SA4uyLysbmE9treM7o0dAnjpneEbe/uMmG7FlwmSO7yE+ZSAWHcl8EeSTxMV6iwOcLfVX41A+6X6PF0tK8Yt1cLXtD60PyDHS97wr4WjCYbzPEvtGfSEXe7pdnN6o3L8Btcfx4mRvZpKeAueygqxGU3IWkPeTiVIOSSNCJCu+A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713531638; c=relaxed/simple;
-	bh=DElho3Mb/w3HK6/xOXgygEqefvf9rPBbVa1vqoCNYT4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rouvS4Io2JITUG5C+LUPr72El0/6pEHZO5HF54Nq2lVfFFrDOj+9Ck+Y4lUPQ/lNqKRl9NuQuiadvngBO4LuXn+DTgyrtWS62K1HneKCrjznT5mw8ufjOt8JdMTv85OzbODj3wyF4wvZtZP74N1CosqC7M3Djeg2v8zZklGtTS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=Gw+XRuSq; arc=none smtp.client-ip=37.18.73.165
+	s=arc-20240116; t=1713531639; c=relaxed/simple;
+	bh=7pKojDMQuVrZIIvqhT/X6XWwh8Z/cok7nF7ciMlN8BE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RJyAWYlBrE6Y7z/cYDET+BJnwT19k5OHdckBVCiOx3bQS5NoBRAv4gu5z0otn/FbNAI+hF03yls2ldeiXhIOMjN4n0CkBZeu5Ox0suPhvBw5T1pXTry3x6W97FrnptyheQ662bAe6kzW1pm3GTUJNgzmGuuMh/erYL6vnOIIgtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=JTk3EAzo; arc=none smtp.client-ip=37.18.73.165
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="Gw+XRuSq"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="JTk3EAzo"
 Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 1159D10000B;
-	Fri, 19 Apr 2024 16:00:28 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 1159D10000B
+	by mx1.sberdevices.ru (Postfix) with ESMTP id DF042100007;
+	Fri, 19 Apr 2024 16:00:26 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru DF042100007
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1713531628;
-	bh=KIuGAr064Uhr/J/wzqdUXxyIs1qnbRClXG3hlcnxZzs=;
+	s=mail; t=1713531626;
+	bh=wKFbGy5kXF6YmVtQApc9Loyay81pnuGNBjJQMyo1XHY=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=Gw+XRuSqvKMjnf+7GtKvUJLYy8p23vmHiIZhAPW3gc5DUUg3NwXJlYvMGhaaQG3ug
-	 hDFEB3UGCPGeiNU7X/LEwGpGq/p3H5FKrcohaXgKKPI8phcACa7pafFAEWRd6MCI5R
-	 AoHeqfRPLnGOfgJgOGP6K41uQnPKZRGZs9Repo9FOqjb5KZzcEvTgHFneOmyKytik9
-	 7CLURLQ61RSVobjCE55L3soLmBLNs/YGhBQ7AJMqWxWHR3STwomfqWgH8ZSyKqHJSe
-	 shlTG0X5gWjDAVyZDYCFCNX9mE4UfDpzlEzArNbJk2EJynaI53uVnMZkw3pNfLRVMX
-	 87kPj3gLomS1A==
+	b=JTk3EAzoeVCi0LAVhcBtRyaZ5iOqwv+J8I0jB2MdXcy47F5vYDm71XyOhTbhTbBGA
+	 5HUXxV8cEAb+JkcncVQZkOVLVWVD89NrNNP/etjFUTN+0ScoY1rkmzA2Rf/I3n+PZu
+	 XZWLPYNLuSScVsEX3ugY7ZYa6inHZvODmGW1rikza8alooapkWEXHbA0RSn2kyWBda
+	 J+UnNddlNmjQlvRKcdL4iEbyTsuDoqWw6BCVV8UE2MyeTwWyjQaqb7E4MxLsGLRnPi
+	 IieTMCcXrapmWJyYAR3xbxQ0eQefy3aTOf2kXlT7nI2fBrLqqd0Imp9JnWho6rFxrq
+	 ByOzpbBrrv1DQ==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Fri, 19 Apr 2024 16:00:27 +0300 (MSK)
+	Fri, 19 Apr 2024 16:00:26 +0300 (MSK)
 Received: from CAB-WSD-0003115.sberdevices.ru (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 19 Apr 2024 16:00:27 +0300
+ 15.2.1118.40; Fri, 19 Apr 2024 16:00:26 +0300
 From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
 	<neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, Michael
@@ -50,12 +49,10 @@ To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
 	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
 	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>
-Subject: [RFC PATCH v3 3/6] clk: meson: axg: introduce AUD_MUX_TABLE() helper macro
-Date: Fri, 19 Apr 2024 15:58:09 +0300
-Message-ID: <20240419125812.983409-4-jan.dakinevich@salutedevices.com>
+Subject: [RFC PATCH v3 0/6] Add A1 Soc audio clock controller driver
+Date: Fri, 19 Apr 2024 15:58:06 +0300
+Message-ID: <20240419125812.983409-1-jan.dakinevich@salutedevices.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240419125812.983409-1-jan.dakinevich@salutedevices.com>
-References: <20240419125812.983409-1-jan.dakinevich@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,50 +72,67 @@ X-KSMG-AntiSpam-Rate: 0
 X-KSMG-AntiSpam-Status: not_detected
 X-KSMG-AntiSpam-Method: none
 X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_smtp_not_equal_from}, sberdevices.ru:5.0.1,7.1.1;salutedevices.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;100.64.160.123:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_sender_alignment_int}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
+X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_smtp_not_equal_from}, {Tracking_uf_ne_domains}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;sberdevices.ru:5.0.1,7.1.1;salutedevices.com:7.1.1;lore.kernel.org:7.1.1;100.64.160.123:7.1.2;127.0.0.199:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_sender_alignment_int}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
 X-MS-Exchange-Organization-SCL: -1
 X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
+X-KSMG-AntiPhishing: Clean, bases: 2024/04/19 12:19:00
+X-KSMG-LinksScanning: Clean, bases: 2024/04/19 12:19:00
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/18 23:49:00 #24865988
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-This macro takes into account ->table property of
-'struct clk_regmap_mux_data'.
+This series adds support for audio clock and reset controllers on A1 SoC family.
 
-Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
----
- drivers/clk/meson/meson-audio.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Changes v2 -> v3
+ - reset:
+   * added auxiliary device
+ - yaml:
+   * added declaration of optional clocks
+   * fixed names in example and another cosmetics
+ - clocks:
+   * reworked naming
+   * stop using of "core" clock name
+   * fixed wrong parenting
 
-diff --git a/drivers/clk/meson/meson-audio.h b/drivers/clk/meson/meson-audio.h
-index cbcdbd487d4a..1947c6cbf233 100644
---- a/drivers/clk/meson/meson-audio.h
-+++ b/drivers/clk/meson/meson-audio.h
-@@ -17,9 +17,11 @@
- 	},								\
- }
- 
--#define AUD_MUX(_name, _reg, _mask, _shift, _dflags, _pdata, _iflags) {	\
-+#define AUD_MUX_TABLE(_name, _reg, _table, _mask, _shift, _dflags,	\
-+		      _pdata, _iflags) {				\
- 	.data = &(struct clk_regmap_mux_data){				\
- 		.offset = (_reg),					\
-+		.table = (_table),					\
- 		.mask = (_mask),					\
- 		.shift = (_shift),					\
- 		.flags = (_dflags),					\
-@@ -33,6 +35,10 @@
- 	},								\
- }
- 
-+#define AUD_MUX(_name, _reg, _mask, _shift, _dflags, _pdata, _iflags)	\
-+	AUD_MUX_TABLE(_name, (_reg), NULL, (_mask), (_shift),		\
-+		      (_dflags), (_pdata), (_iflags))
-+
- #define AUD_DIV(_name, _reg, _shift, _width, _dflags, _pname, _iflags) { \
- 	.data = &(struct clk_regmap_div_data){				\
- 		.offset = (_reg),					\
+Changes v1 -> v2:
+ - Detached from v1's series (patch 2, 3, 4, 25).
+ - Reuse some of defines from axg-audio;
+ - Split the controller into two memory regions.
+
+Links:
+ [1] https://lore.kernel.org/lkml/20240314232201.2102178-1-jan.dakinevich@salutedevices.com/
+ [2] https://lore.kernel.org/lkml/20240328010831.884487-1-jan.dakinevich@salutedevices.com/
+
+Jan Dakinevich (6):
+  reset: reset-meson-audio: introduce separate driver
+  clk: meson: axg: share the set of audio helper macro
+  clk: meson: axg: introduce AUD_MUX_TABLE() helper macro
+  dt-bindings: clock: meson: document A1 SoC audio clock controller
+    driver
+  clk: meson: a1: add the audio clock controller driver
+  arm64: dts: meson: a1: add the audio clock controller
+
+ .../bindings/clock/amlogic,a1-audio-clkc.yaml | 124 ++++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi     |  46 ++
+ drivers/clk/meson/Kconfig                     |  16 +
+ drivers/clk/meson/Makefile                    |   1 +
+ drivers/clk/meson/a1-audio.c                  | 651 ++++++++++++++++++
+ drivers/clk/meson/axg-audio.c                 | 244 +------
+ drivers/clk/meson/meson-audio.h               | 149 ++++
+ drivers/reset/Kconfig                         |   7 +
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-meson-audio.c             | 207 ++++++
+ .../dt-bindings/clock/amlogic,a1-audio-clkc.h | 122 ++++
+ .../reset/amlogic,meson-a1-audio-reset.h      |  29 +
+ include/soc/amlogic/meson-audio-reset.h       |  10 +
+ 13 files changed, 1371 insertions(+), 236 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-audio-clkc.yaml
+ create mode 100644 drivers/clk/meson/a1-audio.c
+ create mode 100644 drivers/clk/meson/meson-audio.h
+ create mode 100644 drivers/reset/reset-meson-audio.c
+ create mode 100644 include/dt-bindings/clock/amlogic,a1-audio-clkc.h
+ create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-audio-reset.h
+ create mode 100644 include/soc/amlogic/meson-audio-reset.h
+
 -- 
 2.34.1
 
