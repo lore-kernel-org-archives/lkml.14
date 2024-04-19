@@ -1,163 +1,137 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE292137E;
-	Fri, 19 Apr 2024 04:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F38029A2;
+	Fri, 19 Apr 2024 04:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713500396; cv=none; b=DPc6ZhPiVJlF86+JggF+RpBbigawZmdHG3fnKeoOHx4vZt4vqPLVtrTUN79VtaR3zZB7L6NcVB81g0qfEXwbnWuewFON28JGJ2lEQEwghNn7dPvw9gja7XyIEq20tuzN2RT3Tiw305Pz3ZxWGaBPACzY0Bh/BlqxGWJQb68aF8A=
+	t=1713502192; cv=none; b=gHyh41LFtROcOrCWIIwudy2rUY1ahjoGLXLF8dkxaHVsTkvQ/+MaTcYM2SjIXlCpYTjpX9ABwsRP6cD0e57+SpgxrafsnELCqOfsKQNmOLZKv4q+c4vR6P2JYHQh+Z51dsUe9sc1vhXDAkTbzGut/cJ15LwVQMi+PzaOPA0pSVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713500396; c=relaxed/simple;
-	bh=PBAnXLS7YBdgwAVOVCNs0FlMIlB26SpBlBzxXB19yfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DCsM6KqW6PLMACsJkXVebP5mnaFu9Sp+5bu/MNEhvyJcIAvAXawC6oUdJw+Vdq9nQWQPIkw6oACFJtAbwxy6R1dUfHLWQV19oPNiPlxLX1Q/5BE733POuQjZfrWtFJqm1x+7rBtB8GGqqRatKcWWc+SXbyMuDpjYNZ7WcYdWMYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=sb8Aj+XG; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1713502192; c=relaxed/simple;
+	bh=ywLpntLIjzzq+kvvOLjtm+MThHrtTAjorMuXcYJc6g8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kQZ1gpM6hB2WearV7rOeka2rRngGaL5MiFz7ZXnF9HBbE+GdAvzxCWFsdCv8P8JbqLYNCYRwvShJRQNIwpbgc7EMKRErjKlI2acPHNGqZUBDHNtN+6cHto7Pjfjn9bUpiAHsUt5Ov/KiE4YfNDCxnyfxk0/yil4Oj1bnc3pDUEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lYw7ECwj; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sb8Aj+XG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1713500390;
-	bh=uzRJHPvvStv+0WlWLGWHtXPKQ0B60p9m7wWL6w2VZVg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=sb8Aj+XGFYGh5tZCOKwi+kmNDQfSUb/CTglGvjKbsKDemMFIJE6R5+53YmfHSxr8h
-	 NrokrQEJEISlFF0HaqIPr1wocwO0KpG9K/CEdPErwb7RbIny/Y3I5/Ral8ywXg5S0O
-	 N0TbLPq/Fb70vq/BGoZ1+1ToMXaPwFLqxQ8S8vFqLwfF3C571Pib2YCIGjTPnoj/lC
-	 qSsKVfss2Ajf8gm6Jykt0ayFHf2zyGDh7O/RlWNZsM7Y8KNGBgpXHjHUGtaQ2w85xq
-	 fkc+vXlkwo+mp9ZFvOaZzcVeQ78+t61LObwxlaKyVjbThyAzyEaCJTlVkPg1auYOfo
-	 LCAG+8e+Uf36w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VLLyZ0pggz4x0C;
-	Fri, 19 Apr 2024 14:19:49 +1000 (AEST)
-Date: Fri, 19 Apr 2024 14:19:47 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Greg KH <greg@kroah.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the tty tree with the tty.current tree
-Message-ID: <20240419141947.4bc16fa4@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lYw7ECwj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713502191; x=1745038191;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ywLpntLIjzzq+kvvOLjtm+MThHrtTAjorMuXcYJc6g8=;
+  b=lYw7ECwjYVL4/qKVq4prT1PJDKhl5gpBZWkU9rCNz/QJvAP4UQvee/7R
+   Kg3S0P4RLzdZTh6N9lF4yM1oQyUnMtWwIPX2Es06xx1Ji6wGhMRC9Ji85
+   Kto0TjpFEYJ4qc1QIlsqWfj9tEzxulZa6Ga7jO5yhZggkG141HexqO7QV
+   iFFfJmW1tPyY2YQBqIhmbS7zxZu9T/ETPn6qRfCEgzEZHf0Wr4hg/t5zY
+   lGopGIpt6N5WAj1/UyfbsSNgFTUxsEgxq5gN2mrIAD9NxFQ3+PSTxOsQJ
+   jdE9X8w0pbTR24BYqp39Tfg2p447dCjoFurNMpnrk6vrMzy+CKmSWcpxm
+   A==;
+X-CSE-ConnectionGUID: ib90uHpUQ/SsThVQ6oJ26Q==
+X-CSE-MsgGUID: 2YZxhgcxSTCC9bR2XptzOA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="34484224"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="34484224"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 21:49:49 -0700
+X-CSE-ConnectionGUID: Z5HZc5dGQZ+4vcbl3Wk/BA==
+X-CSE-MsgGUID: b1VsuKx8SAmM9KC+ZjhyUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="60649115"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa001.jf.intel.com with ESMTP; 18 Apr 2024 21:49:47 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 9167E18F; Fri, 19 Apr 2024 07:49:45 +0300 (EEST)
+Date: Fri, 19 Apr 2024 07:49:45 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Esther Shimanovich <eshimanovich@chromium.org>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
+Message-ID: <20240419044945.GR112498@black.fi.intel.com>
+References: <ZalOCPrVA52wyFfv@google.com>
+ <20240119053756.GC2543524@black.fi.intel.com>
+ <20240119074829.GD2543524@black.fi.intel.com>
+ <20240119102258.GE2543524@black.fi.intel.com>
+ <03926c6c-43dc-4ec4-b5a0-eae57c17f507@amd.com>
+ <20240123061820.GL2543524@black.fi.intel.com>
+ <CA+Y6NJFMDcB7NV49r2WxFzcfgarRiWsWO0rEPwz43PKDiXk61g@mail.gmail.com>
+ <CA+Y6NJGz6f8hE4kRDUTGgCj+jddUyHeD_8ocFBkARr7w90jmBw@mail.gmail.com>
+ <20240416050353.GI112498@black.fi.intel.com>
+ <CA+Y6NJF6+s5zUZeaWtagpMt8Qu0a1oE+3re3c6EsppH+ZsuMRQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/uVrJRs9Aye1uiDUT3E53_rk";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+Y6NJF6+s5zUZeaWtagpMt8Qu0a1oE+3re3c6EsppH+ZsuMRQ@mail.gmail.com>
 
---Sig_/uVrJRs9Aye1uiDUT3E53_rk
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
+On Thu, Apr 18, 2024 at 03:43:08PM -0400, Esther Shimanovich wrote:
+> Thank you for your response! It is very much appreciated.
+> 
+> On the Tiger Lake device I was testing on, the usb4-host-interface
+> value is NOT listed in its ACPI.
+> 
+> I then decided to query the ACPI values collected from devices in my
+> office, to see if this issue is limited to my device.
+> Ice Lake - 4 devices, none had "usb4-host-interface"
+> Tiger Lake - 31 devices, none have "usb4-host-interface"
+> Alder Lake - 32 devices, I see that 15 of them have
+> "usb4-host-interface" in their ACPI
+> Raptor Lake - 1 device, does not have "usb4-host-interface"
+> 
+> It looks like only Alder Lake has usb4-host-interface  listed in its
+> ACPI for whatever reason.
 
-Today's linux-next merge of the tty tree got a conflict in:
+The reason is that it is there only for "software connection manager"
+systems. That's Chrome TGL and then all ADL and beyond (with integrated
+Thunderbolt/USB4).
 
-  drivers/tty/serial/serial_core.c
+> It seems like I cannot use usb4-host-interface as a determinant
+> whether the CPU has Thunderbolt capabilities (thus not needing a
+> discrete Thunderbolt chip).
+> ExternalFacingPort is listed in devices that don't have CPUs with
+> Thunderbolts, so that can't be a determinant.
+> 
+> Am I missing something?
 
-between commit:
+"ExternalFacingPort" is there for all firmware and software connection
+manager systems but only if they use IOMMU for DMA security (also
+/sys/bus/thunderbolt/devices/domainX/iommu_dma_protection == 1). So this
+is all integrated (Ice Lake+), then Alpine Ridge, Titan Ridge and Maple
+Ridge based recent systems.
 
-  9cf7ea2eeb74 ("serial: core: Clearing the circular buffer before NULLifyi=
-ng it")
+That leaves out still older systems with firmware connection manager
+with the "legacy" security settings. This is pretty much Alpine and
+Titan Ridge and I think those you can identify using their PCI IDs
+directly as the list will not be too big. Something like this taken from
+the drivers/thunderbolt/nhi.h:
 
-from the tty.current tree and commits:
+#define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_LP_BRIDGE      0x15c0
+#define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_4C_BRIDGE    0x15d3
+#define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_2C_BRIDGE    0x15da
+#define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_BRIDGE       0x15e7
+#define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_BRIDGE       0x15ea
+#define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_BRIDGE       0x15ef
 
-  1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
-  abcd8632f26b ("serial: core: Extract uart_alloc_xmit_buf() and uart_free_=
-xmit_buf()")
+In addition to this some of the systems used the BIOS "assisted"
+enumeration which means that the controller is actually only present if
+you have either USB or Thunderbolt device connected. Othertimes it is
+not present at all (not sure if you want to label these differently
+though).
 
-from the tty tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/tty/serial/serial_core.c
-index c476d884356d,b9d631037ff6..000000000000
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@@ -285,6 -273,53 +273,54 @@@ static int uart_alloc_xmit_buf(struct t
-  		free_page(page);
-  	}
- =20
-+ 	return 0;
-+ }
-+=20
-+ static void uart_free_xmit_buf(struct tty_port *port)
-+ {
-+ 	struct uart_state *state =3D container_of(port, struct uart_state, port);
-+ 	struct uart_port *uport;
-+ 	unsigned long flags;
-+ 	char *xmit_buf;
-+=20
-+ 	/*
-+ 	 * Do not free() the transmit buffer page under the port lock since
-+ 	 * this can create various circular locking scenarios. For instance,
-+ 	 * console driver may need to allocate/free a debug object, which
-+ 	 * can end up in printk() recursion.
-+ 	 */
-+ 	uport =3D uart_port_lock(state, flags);
-++	kfifo_reset(&state->port.xmit_fifo);
-+ 	xmit_buf =3D port->xmit_buf;
-+ 	port->xmit_buf =3D NULL;
-+ 	INIT_KFIFO(port->xmit_fifo);
-+ 	uart_port_unlock(uport, flags);
-+=20
-+ 	free_page((unsigned long)xmit_buf);
-+ }
-+=20
-+ /*
-+  * Startup the port.  This will be called once per open.  All calls
-+  * will be serialised by the per-port mutex.
-+  */
-+ static int uart_port_startup(struct tty_struct *tty, struct uart_state *s=
-tate,
-+ 			     bool init_hw)
-+ {
-+ 	struct uart_port *uport =3D uart_port_check(state);
-+ 	int retval;
-+=20
-+ 	if (uport->type =3D=3D PORT_UNKNOWN)
-+ 		return 1;
-+=20
-+ 	/*
-+ 	 * Make sure the device is in D0 state.
-+ 	 */
-+ 	uart_change_pm(state, UART_PM_STATE_ON);
-+=20
-+ 	retval =3D uart_alloc_xmit_buf(&state->port);
-+ 	if (retval)
-+ 		return retval;
-+=20
-  	retval =3D uport->ops->startup(uport);
-  	if (retval =3D=3D 0) {
-  		if (uart_console(uport) && uport->cons->cflag) {
-
---Sig_/uVrJRs9Aye1uiDUT3E53_rk
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYh8OMACgkQAVBC80lX
-0GyP8Qf+PerP7qklRR1sKfZGoIzmimiPT88oA0ClWwytU23oyOfCJbKHF7YssGHz
-HhuxaH0C0D2TrYUJG5d998PPtVo+SVtXfYNvXH84mkHRBf2Cuc+8uEKQ1tb9D0mv
-AhGhfGH1cvyM8oYjbnAnNGF0XzKbubwVNM7qjcZ/yYJEVJi2fBYKJTmZekc5zDvH
-KDTjhA2eKvc3JcKwgQagEM/+MaNBeDG+yT5IjO36zd4Jf+vqlcUw3jNkMWrC0soC
-DdZS2QlzOJjgZ3pnlTtaZ7+OVb+orPBszzYG6Fa7yIP4Ah5P1LVzlo0aV+BEw5CN
-DqNYggsj+bYuQJKXda6iUmqwMvzYOQ==
-=IdQQ
------END PGP SIGNATURE-----
-
---Sig_/uVrJRs9Aye1uiDUT3E53_rk--
+In summary if you want to find out if the CPU has an integrated
+Thunderbolt/USB4 controller (I think this is what you ask above) then
+the best bet would be to use "ExternalFacingPort" because that is
+present in all those systems.
