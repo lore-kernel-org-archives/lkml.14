@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC9E7440B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B33473528
 	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 08:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713517175; cv=none; b=C9uE3osXEmB3x14dIn91l7wm+8qgxN767HVt/bIxEHV6gTtLaUXycRh75ERCo85rBkoR5tVsrNNqK7RGzW7ph/fo7ELSQmOZOqU8SR5/2/ahoqDIgfAa1eKgrxOfPuRIVp5IIX/FlKMpV40TQiGDIwGU3CAVIehvk6Aqfp+yyr4=
+	t=1713517175; cv=none; b=NBQY63gRCckzH3/937BgA2x+yf8SgKwpnJxOvNjcjt07zwNgrUZsJn/litVqRmUGvazvNVk4IjhI9EG7AwFGz8LDhjNik8+HIuOT6s1bgTbhpHTqkpQHAZAr7v8bYnAacUqDKtIymz9ymVG2+RIKrAhX98bo1y7g+zR8ChZcp/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713517175; c=relaxed/simple;
-	bh=MlYJpZfiuuMe5cB6DpdDfoHLrBt/ox1lOXIQJOlkpek=;
+	bh=p0m1HZy9UGhgenBFAgKeYWbF5X6HK5fP4nR7XaO2UKE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NniBE2f3yy9XoMbzhZk2aIrD/lWt6rtvegkGUP1TohxCY/o/UYyC7BEDVzgoCKh1+/PZ6ap3MCAwj1u750i8B7iYePTDDbO1qYv/V1JY5+vpSsH3L+LZSvWiKcdOULCDAhHp1kyMPpRPhzh5SbDcI7Chx1KXxWT5ccP9FanSO30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VkUZZOHb; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=FKKvFfhlJ4XkbvMVKycAt6oJJgX/hgv52W6RxCskE5lA8DIAkA4JlBH8dVCOlAJBO8Pa2Wx1JWUy7fJy8242Iq4CEzD8FTAalUt/oMBoeyh7tjsQ3hn138z4tFx1B3bg5BD+tTNnucxGtvt7EtPJ8SZQuLNJsm+Wmk33aWIe1KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z0S0s0qx; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VkUZZOHb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z0S0s0qx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1713517172;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6x7YBb66dnzoHcmKY1tLeMz57M5blqYb9nwNSC1fM+k=;
-	b=VkUZZOHbgL/6vfg4ZUsfdPK+4R1LbALHuXICDK0MY7uZg1tEgj4ufacPdPvL1ZUlPrcdky
-	udmzmuudNP1KhRMB3FTbRgRuMZweRFLVRzHxQqk/PsIUFvmJJ/AoW/8EaItawNFoSENMpJ
-	rhMnVCZv1P2t6KteaXF4CPwnGe0dars=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-626-Qxu4fn7EOdCxpIzEZ7KaRQ-1; Fri, 19 Apr 2024 04:59:29 -0400
-X-MC-Unique: Qxu4fn7EOdCxpIzEZ7KaRQ-1
+	bh=nBDAnD8rwFNbWbPY9L0LNNm2QshByyJ5ytYISZegYXU=;
+	b=Z0S0s0qxBibJCYFdtLR6jbBBW8o59V/TK5Zeovgoa8AKEHUNUauXXCodrwivl2IeO1w9AK
+	IQAxC4CBkmr0ujNVmQl/mf6dIcOgFnnYpWrdjdt7+dZ5yoDKRaOHcxtdGc3rDfDDibmaui
+	9aI2uzMOwO/9ZNRd3AIB/TbR0nrrTzg=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-155-YpT6iWRLNxe--xzwEC86Ng-1; Fri,
+ 19 Apr 2024 04:59:30 -0400
+X-MC-Unique: YpT6iWRLNxe--xzwEC86Ng-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 32F5118A2BC7;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A4B702812FE9;
 	Fri, 19 Apr 2024 08:59:29 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 01EFA20368A8;
-	Fri, 19 Apr 2024 08:59:28 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7389F20368A4;
+	Fri, 19 Apr 2024 08:59:29 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -48,9 +48,9 @@ Cc: isaku.yamahata@intel.com,
 	binbin.wu@linux.intel.com,
 	seanjc@google.com,
 	rick.p.edgecombe@intel.com
-Subject: [PATCH 3/6] KVM: x86/mmu: Extract __kvm_mmu_do_page_fault()
-Date: Fri, 19 Apr 2024 04:59:24 -0400
-Message-ID: <20240419085927.3648704-4-pbonzini@redhat.com>
+Subject: [PATCH 5/6] KVM: x86: Implement kvm_arch_vcpu_pre_fault_memory()
+Date: Fri, 19 Apr 2024 04:59:26 -0400
+Message-ID: <20240419085927.3648704-6-pbonzini@redhat.com>
 In-Reply-To: <20240419085927.3648704-1-pbonzini@redhat.com>
 References: <20240419085927.3648704-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -65,89 +65,132 @@ X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Extract out __kvm_mmu_do_page_fault() from kvm_mmu_do_page_fault().  The
-inner function is to initialize struct kvm_page_fault and to call the fault
-handler, and the outer function handles updating stats and converting
-return code.  KVM_PRE_FAULT_MEMORY will call the KVM page fault handler.
+Wire KVM_PRE_FAULT_MEMORY ioctl to __kvm_mmu_do_page_fault() to populate guest
+memory.  It can be called right after KVM_CREATE_VCPU creates a vCPU,
+since at that point kvm_mmu_create() and kvm_init_mmu() are called and
+the vCPU is ready to invoke the KVM page fault handler.
 
-This patch makes the emulation_type always set irrelevant to the return
-code.  kvm_mmu_page_fault() is the only caller of kvm_mmu_do_page_fault(),
-and references the value only when PF_RET_EMULATE is returned.  Therefore,
-this adjustment doesn't affect functionality.
+The helper function kvm_mmu_map_tdp_page take care of the logic to
+process RET_PF_* return values and convert them to success or errno.
 
-No functional change intended.
-
-Suggested-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Message-ID: <ddf1d98420f562707b11e12c416cce8fdb986bb1.1712785629.git.isaku.yamahata@intel.com>
+Message-ID: <9b866a0ae7147f96571c439e75429a03dcb659b6.1712785629.git.isaku.yamahata@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/mmu/mmu_internal.h | 38 +++++++++++++++++++++------------
- 1 file changed, 24 insertions(+), 14 deletions(-)
+ arch/x86/kvm/Kconfig   |  1 +
+ arch/x86/kvm/mmu/mmu.c | 72 ++++++++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/x86.c     |  3 ++
+ 3 files changed, 76 insertions(+)
 
-diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-index e68a60974cf4..9baae6c223ee 100644
---- a/arch/x86/kvm/mmu/mmu_internal.h
-+++ b/arch/x86/kvm/mmu/mmu_internal.h
-@@ -287,8 +287,8 @@ static inline void kvm_mmu_prepare_memory_fault_exit(struct kvm_vcpu *vcpu,
- 				      fault->is_private);
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index 7632fe6e4db9..54c155432793 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -44,6 +44,7 @@ config KVM
+ 	select KVM_VFIO
+ 	select HAVE_KVM_PM_NOTIFIER if PM
+ 	select KVM_GENERIC_HARDWARE_ENABLING
++	select KVM_GENERIC_PRE_FAULT_MEMORY
+ 	help
+ 	  Support hosting fully virtualized guest machines using hardware
+ 	  virtualization extensions.  You will need a fairly recent
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 10e90788b263..a045b23964c0 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4647,6 +4647,78 @@ int kvm_tdp_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
+ 	return direct_page_fault(vcpu, fault);
  }
  
--static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
--					u64 err, bool prefetch, int *emulation_type)
-+static inline int __kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
-+					  u64 err, bool prefetch, int *emulation_type)
- {
- 	struct kvm_page_fault fault = {
- 		.addr = cr2_or_gpa,
-@@ -318,6 +318,27 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 		fault.slot = kvm_vcpu_gfn_to_memslot(vcpu, fault.gfn);
- 	}
- 
-+	if (IS_ENABLED(CONFIG_MITIGATION_RETPOLINE) && fault.is_tdp)
-+		r = kvm_tdp_page_fault(vcpu, &fault);
-+	else
-+		r = vcpu->arch.mmu->page_fault(vcpu, &fault);
-+
-+	if (r == RET_PF_EMULATE && fault.is_private) {
-+		kvm_mmu_prepare_memory_fault_exit(vcpu, &fault);
-+		r = -EFAULT;
-+	}
-+
-+	if (fault.write_fault_to_shadow_pgtable && emulation_type)
-+		*emulation_type |= EMULTYPE_WRITE_PF_TO_SP;
-+
-+	return r;
-+}
-+
-+static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
-+					u64 err, bool prefetch, int *emulation_type)
++static int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code,
++		     u8 *level)
 +{
 +	int r;
 +
- 	/*
- 	 * Async #PF "faults", a.k.a. prefetch faults, are not faults from the
- 	 * guest perspective and have already been counted at the time of the
-@@ -326,18 +347,7 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 	if (!prefetch)
- 		vcpu->stat.pf_taken++;
- 
--	if (IS_ENABLED(CONFIG_MITIGATION_RETPOLINE) && fault.is_tdp)
--		r = kvm_tdp_page_fault(vcpu, &fault);
--	else
--		r = vcpu->arch.mmu->page_fault(vcpu, &fault);
--
--	if (r == RET_PF_EMULATE && fault.is_private) {
--		kvm_mmu_prepare_memory_fault_exit(vcpu, &fault);
--		return -EFAULT;
--	}
--
--	if (fault.write_fault_to_shadow_pgtable && emulation_type)
--		*emulation_type |= EMULTYPE_WRITE_PF_TO_SP;
-+	r = __kvm_mmu_do_page_fault(vcpu, cr2_or_gpa, err, prefetch, emulation_type);
- 
- 	/*
- 	 * Similar to above, prefetch faults aren't truly spurious, and the
++	/* Restrict to TDP page fault. */
++	if (vcpu->arch.mmu->page_fault != kvm_tdp_page_fault)
++		return -EOPNOTSUPP;
++
++retry:
++	r = __kvm_mmu_do_page_fault(vcpu, gpa, error_code, true, NULL, level);
++	if (r < 0)
++		return r;
++
++	switch (r) {
++	case RET_PF_RETRY:
++		if (signal_pending(current))
++			return -EINTR;
++		cond_resched();
++		goto retry;
++
++	case RET_PF_FIXED:
++	case RET_PF_SPURIOUS:
++		break;
++
++	case RET_PF_EMULATE:
++		return -ENOENT;
++
++	case RET_PF_CONTINUE:
++	case RET_PF_INVALID:
++	default:
++		WARN_ON_ONCE(r);
++		return -EIO;
++	}
++
++	return 0;
++}
++
++long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
++				    struct kvm_pre_fault_memory *range)
++{
++	u64 error_code = PFERR_GUEST_FINAL_MASK;
++	u8 level = PG_LEVEL_4K;
++	u64 end;
++	int r;
++
++	/*
++	 * reload is efficient when called repeatedly, so we can do it on
++	 * every iteration.
++	 */
++	kvm_mmu_reload(vcpu);
++
++	if (kvm_arch_has_private_mem(vcpu->kvm) &&
++	    kvm_mem_is_private(vcpu->kvm, gpa_to_gfn(range->gpa)))
++		error_code |= PFERR_PRIVATE_ACCESS;
++
++	/*
++	 * Shadow paging uses GVA for kvm page fault, so restrict to
++	 * two-dimensional paging.
++	 */
++	r = kvm_tdp_map_page(vcpu, range->gpa, error_code, &level);
++	if (r < 0)
++		return r;
++
++	/*
++	 * If the mapping that covers range->gpa can use a huge page, it
++	 * may start below it or end after range->gpa + range->size.
++	 */
++	end = (range->gpa & KVM_HPAGE_MASK(level)) + KVM_HPAGE_SIZE(level);
++	return min(range->size, end - range->gpa);
++}
++
+ static void nonpaging_init_context(struct kvm_mmu *context)
+ {
+ 	context->page_fault = nonpaging_page_fault;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 83b8260443a3..619ad713254e 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4715,6 +4715,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_MEMORY_FAULT_INFO:
+ 		r = 1;
+ 		break;
++	case KVM_CAP_PRE_FAULT_MEMORY:
++		r = tdp_enabled;
++		break;
+ 	case KVM_CAP_EXIT_HYPERCALL:
+ 		r = KVM_EXIT_HYPERCALL_VALID_MASK;
+ 		break;
 -- 
 2.43.0
 
