@@ -1,202 +1,206 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E621C121;
-	Fri, 19 Apr 2024 06:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7158883D
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 06:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713506876; cv=none; b=X2vTPiWcjjDFFrDrxRmTz1vLbixx4r7E+R/tBZS6NNXbL5OcD1Duh/7/wy9WikQKCKTyLCql2Pi+IaKWsdklpQFwJBxMrLPXa6zGupZ0kYfKf5zXNbpzKv6Qm6WTHFcA0qEhLkjkeMO6XOR3Ii57BqhsVS+e4AxhORCxpOonSqE=
+	t=1713506909; cv=none; b=FR9S4NJlMl0keu0z0Llhkrw7HNG1/wwXWw5uzMjatjlRB10/nQBXNsUhehtLHqMHUbTMssAqo7rupGYgQCGg9h1OHkQJDG1BI06licbx3QNKfEVAg5bWDIQsyxPVyAj68TgvYWEtPYxCqm5ucaBI/uSrQHdCJ3M/AkIs87t4f4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713506876; c=relaxed/simple;
-	bh=e8rL9wQCtwcp4ehgNV78lMdeWlBU1r4R6whdUxLxkEU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mrGlqw0xVzy4HJ9Ej989nSIMFou+KX188j4A2g+fJwnN7f2k+egs/ToHLoXmkvWbQKjh8+efujg4QhZSJg5Vh2iiUPX1we3N6UZz1jGOVWufqpStGgkJDfMkoqK1uqC1LbRRC3ScQgczdx5U6N7f1qA1plnNVWaMvYXxFhP6Aac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a523524e5baso165404866b.3;
-        Thu, 18 Apr 2024 23:07:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713506873; x=1714111673;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+QFAFdaeQGhdEPu7ZDYV3U7ePwFNPLImZP7cCf8biZg=;
-        b=KV6IyJVpwEyujCNjxuDwFyngesnYGk9OthWXeyq1lf36UCdo+zI3e4UDUel5QvmoXg
-         njq4CmQrYyj4G2a9Q7N8/8AbXp48w1VqlB3Motkkbm0LJ5mKgQ1nmfwtjLPP6SyST6OC
-         WYZZOJf+WLdGOIRpD6WY9BKhpgmReMOZ5oiGQXVPJyTyP+eAtjWEiuIJkuvDWb8MQt/g
-         FFC0VfQwJgrZ1AHU1OnM8nv8Ye1ZVR8IIzMETvq675czSHFDjDaWEUglX0EfunTFp1Ci
-         oPpHzXN8/ERKAWGsTuRNlxBH31WkxRPCo5ly7sE7SfOB3koIYMQ3KrTI500h2KGuQYzY
-         FoUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWfQa6a1EUxC6RcZgFMwKlQHTMU5DwyVPKnAEIK749JoQYRsl6dNPFY7WMr8MQdUv3HC+pD0AdXrjg5ODmIHiAfoEDeObtjBsm9qS4yoZTV9X1naGjMRJ/ruN8DKlT5y8PS9vHhj0Una+wg
-X-Gm-Message-State: AOJu0YwpLICFcKCTnYNhQDcIVlK0IzXp5cdYK6LVYx6IxsYbol2BgQqK
-	Sz5PNQLFQSghyrCUxy0OvUIHnkK5rPhK4xY6t6iT+/xJhQuRjptbW1EQvG1r
-X-Google-Smtp-Source: AGHT+IHfYbwFSZHp4nTkSxcXJI/0+mqiUsW6BNDF/1+v1th/hc3R51Sgae0vQXJTDrsm722SblYJ3A==
-X-Received: by 2002:a17:906:c9d5:b0:a51:a547:c21f with SMTP id hk21-20020a170906c9d500b00a51a547c21fmr1009664ejb.5.1713506872363;
-        Thu, 18 Apr 2024 23:07:52 -0700 (PDT)
-Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
-        by smtp.gmail.com with ESMTPSA id hg7-20020a170906f34700b00a4e5a6b57a2sm1738093ejb.163.2024.04.18.23.07.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Apr 2024 23:07:51 -0700 (PDT)
-Message-ID: <379d43bd-d5eb-4877-8781-888c82821bb8@kernel.org>
-Date: Fri, 19 Apr 2024 08:07:50 +0200
+	s=arc-20240116; t=1713506909; c=relaxed/simple;
+	bh=IGgBgBEQSVCduTNe5O0kJ/Q4QAhHDWDQ/BCjoNwvD94=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=TxyqS11JLRzcrEyJhOTZhxNKPz93MhvrApiVS9m/KDb5/KDeKFtrGIyIjaX4oH9Y92SwKcbGthntX+rS6jd7m/p5rw3RosU/8IeT7PGlasCrfKU6Pv+actM8HV2rW4JLYv40KI8uCNhB+bgpxtvLdRO8PaC5DUX8IFY/6P2oUxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bgcAgaqZ; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bgcAgaqZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713506908; x=1745042908;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=IGgBgBEQSVCduTNe5O0kJ/Q4QAhHDWDQ/BCjoNwvD94=;
+  b=bgcAgaqZ0Y3u1Tzs5R/xz4NKm5ffb9+7K1bXNE+sG+wU3yw8Z6TONUen
+   Cyx/ntZCCxGJYmFXjZ07992widvjyUKfwL4X07XCYXwM5P7uy7i48Qr8G
+   hpQPuxpg9hITDPGw7TH6xMpbU5qSragEoyoe+gNh8nNXpUtSfV9A1HQYK
+   NAIdjwLF4IWnjwUsY0icw26CR+4vWESQ/GJE0aPxlhQiFQEbuolHAd5iN
+   usHanV/4yEPH0m+pFJVedM2pKePWTciCgRWebKulwTG9z1MsKrKgOivb1
+   LcpDgI9nPqR0jOMDLk5fsSWdGvyBhCX9a/PQka9L0bVQlfOQY9Af0jnWZ
+   w==;
+X-CSE-ConnectionGUID: 0c9TwF87QkiU2/BrEFZoYA==
+X-CSE-MsgGUID: bVOhgLFQSuyCQ6SN8oTWeQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="34488721"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="34488721"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 23:08:27 -0700
+X-CSE-ConnectionGUID: oSQ2sxIETgOqx4gKNvbBZQ==
+X-CSE-MsgGUID: /mLe0RBqSluD0+4HvwAzUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="27886071"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 23:08:23 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Byungchul Park <byungchul@sk.com>
+Cc: <linux-kernel@vger.kernel.org>,  <linux-mm@kvack.org>,
+  <kernel_team@skhynix.com>,  <akpm@linux-foundation.org>,
+  <vernhao@tencent.com>,  <mgorman@techsingularity.net>,
+  <hughd@google.com>,  <willy@infradead.org>,  <david@redhat.com>,
+  <peterz@infradead.org>,  <luto@kernel.org>,  <tglx@linutronix.de>,
+  <mingo@redhat.com>,  <bp@alien8.de>,  <dave.hansen@linux.intel.com>,
+  <rjgolo@gmail.com>
+Subject: Re: [PATCH v9 rebase on mm-unstable 0/8] Reduce tlb and interrupt
+ numbers over 90% by improving folio migration
+In-Reply-To: <20240418061536.11645-1-byungchul@sk.com> (Byungchul Park's
+	message of "Thu, 18 Apr 2024 15:15:28 +0900")
+References: <20240418061536.11645-1-byungchul@sk.com>
+Date: Fri, 19 Apr 2024 14:06:30 +0800
+Message-ID: <87cyqlyjh5.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 4/4] serial: exar: change port_type ternary line
- wrapping
-To: Parker Newman <parker@finest.io>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Cc: Parker Newman <pnewman@connecttech.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-References: <cover.1713452766.git.pnewman@connecttech.com>
- <0081b6a7bbe1ad6ce114132f9ee86677a761de6d.1713452766.git.pnewman@connecttech.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- xsFNBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
- rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
- rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
- i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
- wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
- ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
- cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
- 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
- w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
- YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABzSFKaXJpIFNsYWJ5
- IDxqaXJpc2xhYnlAa2VybmVsLm9yZz7CwXcEEwEIACEFAlW3RUwCGwMFCwkIBwIGFQgJCgsC
- BBYCAwECHgECF4AACgkQvSWxBAa0cEnVTg//TQpdIAr8Tn0VAeUjdVIH9XCFw+cPSU+zMSCH
- eCZoA/N6gitEcnvHoFVVM7b3hK2HgoFUNbmYC0RdcSc80pOF5gCnACSP9XWHGWzeKCARRcQR
- 4s5YD8I4VV5hqXcKo2DFAtIOVbHDW+0okOzcecdasCakUTr7s2fXz97uuoc2gIBB7bmHUGAH
- XQXHvdnCLjDjR+eJN+zrtbqZKYSfj89s/ZHn5Slug6w8qOPT1sVNGG+eWPlc5s7XYhT9z66E
- l5C0rG35JE4PhC+tl7BaE5IwjJlBMHf/cMJxNHAYoQ1hWQCKOfMDQ6bsEr++kGUCbHkrEFwD
- UVA72iLnnnlZCMevwE4hc0zVhseWhPc/KMYObU1sDGqaCesRLkE3tiE7X2cikmj/qH0CoMWe
- gjnwnQ2qVJcaPSzJ4QITvchEQ+tbuVAyvn9H+9MkdT7b7b2OaqYsUP8rn/2k1Td5zknUz7iF
- oJ0Z9wPTl6tDfF8phaMIPISYrhceVOIoL+rWfaikhBulZTIT5ihieY9nQOw6vhOfWkYvv0Dl
- o4GRnb2ybPQpfEs7WtetOsUgiUbfljTgILFw3CsPW8JESOGQc0Pv8ieznIighqPPFz9g+zSu
- Ss/rpcsqag5n9rQp/H3WW5zKUpeYcKGaPDp/vSUovMcjp8USIhzBBrmI7UWAtuedG9prjqfO
- wU0ETpLnhgEQAM+cDWLL+Wvc9cLhA2OXZ/gMmu7NbYKjfth1UyOuBd5emIO+d4RfFM02XFTI
- t4MxwhAryhsKQQcA4iQNldkbyeviYrPKWjLTjRXT5cD2lpWzr+Jx7mX7InV5JOz1Qq+P+nJW
- YIBjUKhI03ux89p58CYil24Zpyn2F5cX7U+inY8lJIBwLPBnc9Z0An/DVnUOD+0wIcYVnZAK
- DiIXODkGqTg3fhZwbbi+KAhtHPFM2fGw2VTUf62IHzV+eBSnamzPOBc1XsJYKRo3FHNeLuS8
- f4wUe7bWb9O66PPFK/RkeqNX6akkFBf9VfrZ1rTEKAyJ2uqf1EI1olYnENk4+00IBa+BavGQ
- 8UW9dGW3nbPrfuOV5UUvbnsSQwj67pSdrBQqilr5N/5H9z7VCDQ0dhuJNtvDSlTf2iUFBqgk
- 3smln31PUYiVPrMP0V4ja0i9qtO/TB01rTfTyXTRtqz53qO5dGsYiliJO5aUmh8swVpotgK4
- /57h3zGsaXO9PGgnnAdqeKVITaFTLY1ISg+Ptb4KoliiOjrBMmQUSJVtkUXMrCMCeuPDGHo7
- 39Xc75lcHlGuM3yEB//htKjyprbLeLf1y4xPyTeeF5zg/0ztRZNKZicgEmxyUNBHHnBKHQxz
- 1j+mzH0HjZZtXjGu2KLJ18G07q0fpz2ZPk2D53Ww39VNI/J9ABEBAAHCwV8EGAECAAkFAk6S
- 54YCGwwACgkQvSWxBAa0cEk3tRAAgO+DFpbyIa4RlnfpcW17AfnpZi9VR5+zr496n2jH/1ld
- wRO/S+QNSA8qdABqMb9WI4BNaoANgcg0AS429Mq0taaWKkAjkkGAT7mD1Q5PiLr06Y/+Kzdr
- 90eUVneqM2TUQQbK+Kh7JwmGVrRGNqQrDk+gRNvKnGwFNeTkTKtJ0P8jYd7P1gZb9Fwj9YLx
- jhn/sVIhNmEBLBoI7PL+9fbILqJPHgAwW35rpnq4f/EYTykbk1sa13Tav6btJ+4QOgbcezWI
- wZ5w/JVfEJW9JXp3BFAVzRQ5nVrrLDAJZ8Y5ioWcm99JtSIIxXxt9FJaGc1Bgsi5K/+dyTKL
- wLMJgiBzbVx8G+fCJJ9YtlNOPWhbKPlrQ8+AY52Aagi9WNhe6XfJdh5g6ptiOILm330mkR4g
- W6nEgZVyIyTq3ekOuruftWL99qpP5zi+eNrMmLRQx9iecDNgFr342R9bTDlb1TLuRb+/tJ98
- f/bIWIr0cqQmqQ33FgRhrG1+Xml6UXyJ2jExmlO8JljuOGeXYh6ZkIEyzqzffzBLXZCujlYQ
- DFXpyMNVJ2ZwPmX2mWEoYuaBU0JN7wM+/zWgOf2zRwhEuD3A2cO2PxoiIfyUEfB9SSmffaK/
- S4xXoB6wvGENZ85Hg37C7WDNdaAt6Xh2uQIly5grkgvWppkNy4ZHxE+jeNsU7tg=
-In-Reply-To: <0081b6a7bbe1ad6ce114132f9ee86677a761de6d.1713452766.git.pnewman@connecttech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ascii
 
-On 18. 04. 24, 17:36, Parker Newman wrote:
-> From: Parker Newman <pnewman@connecttech.com>
-> 
-> Change line wrapping of ternary operators in
-> cti_get_port_type_xr17c15x_xr17v25x() for better readability.
-> 
-> Old example:
-> 
-> 	port_type = port_num == 0 ?
-> 			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
-> 
-> New:
-> 	port_type = port_num == 0 ? CTI_PORT_TYPE_RS232 :
-> 				CTI_PORT_TYPE_RS422_485;
+Byungchul Park <byungchul@sk.com> writes:
 
-This is worse IMO. Ilpo suggested a bit different alignment. But still...
+> Hi everyone,
+>
+> While I'm working with a tiered memory system e.g. CXL memory, I have
+> been facing migration overhead esp. tlb shootdown on promotion or
+> demotion between different tiers.  Yeah..  most tlb shootdowns on
+> migration through hinting fault can be avoided thanks to Huang Ying's
+> work, commit 4d4b6d66db ("mm,unmap: avoid flushing tlb in batch if PTE
+> is inaccessible").  See the following link for more information:
+>
+> https://lore.kernel.org/lkml/20231115025755.GA29979@system.software.com/
+>
+> However, it's only for ones using hinting fault.  I thought it'd be much
+> better if we have a general mechanism to reduce all tlb numbers that we
+> can ultimately apply to any type of migration.
+>
+> I'm suggesting a mechanism called MIGRC that stands for 'Migration Read
+> Copy', to reduce tlb numbers by deferring tlb flush until the source
+> folios at migration actually become used, of course, only if the target
+> PTE don't have write permission.
+>
+> To achieve that:
+>
+>    1. For the folios that map only to non-writable tlb entries, prevent
+>       tlb flush during migration but perform it just before the source
+>       folios actually become used out of buddy or pcp.
+>
+>    2. When any non-writable tlb entry changes to writable e.g. through
+>       fault handler, give up migrc mechanism and perform tlb flush
+>       required right away.
+>
+> No matter what type of workload is used for performance evaluation, the
+> result would be positive thanks to the unconditional reduction of tlb
+> flushes, tlb misses and interrupts.  For the test, I picked up XSBench
+> that is widely used for performance analysis on high performance
+> computing architectures - https://github.com/ANL-CESAR/XSBench.
+>
+> The result would depend on memory latency and how often reclaim runs,
+> which implies tlb miss overhead and how many times migration happens.
+> The slower the memory is and the more reclaim runs, the better migrc
+> works so as to obtain the better result.  In my system, the result
+> shows:
+>
+>    1. itlb flushes are reduced over 90%.
+>    2. itlb misses are reduced over 30%.
+>    3. All the other tlb numbers also get enhanced.
+>    4. tlb shootdown interrupts are reduced over 90%.
+>    5. The test program runtime is reduced over 5%.
+>
+> The test envitonment:
+>
+>    Architecture - x86_64
+>    QEMU - kvm enabled, host cpu
 
-> Based on feedback from:
-> Link: https://lore.kernel.org/linux-serial/f2353b8c-2079-b895-2707-f6be83161288@linux.intel.com
+The test is run in VM?  Do you have test results in bare metal
+environment?
 
-You should have CCed the author.
+>    Numa - 2 nodes (16 CPUs 1GB, no CPUs 99GB)
 
-> Signed-off-by: Parker Newman <pnewman@connecttech.com>
-> ---
->   drivers/tty/serial/8250/8250_exar.c | 20 ++++++++++----------
->   1 file changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
-> index 10725ad0f3ef..a76b4e5bab4e 100644
-> --- a/drivers/tty/serial/8250/8250_exar.c
-> +++ b/drivers/tty/serial/8250/8250_exar.c
-> @@ -741,19 +741,19 @@ static enum cti_port_type cti_get_port_type_xr17c15x_xr17v25x(struct exar8250 *p
->   		break;
->   	// 1x RS232, 1x RS422/RS485
->   	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_1_1:
-> -		port_type = port_num == 0 ?
-> -			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
-> +		port_type = port_num == 0 ? CTI_PORT_TYPE_RS232 :
-> +					CTI_PORT_TYPE_RS422_485;
+The configuration looks quite abnormal.  Have you tested with other
+configuration, such 1:4 or 1:8?
 
+>    Linux Kernel - v6.9-rc4, numa balancing tiering on, demotion enabled
+>
+> < measurement: raw data - tlb and interrupt numbers >
+>
+>    $ perf stat -a \
+>            -e itlb.itlb_flush \
+>            -e tlb_flush.dtlb_thread \
+>            -e tlb_flush.stlb_any \
+>            -e dtlb-load-misses \
+>            -e dtlb-store-misses \
+>            -e itlb-load-misses \
+>            XSBench -t 16 -p 50000000
+>
+>    $ grep "TLB shootdowns" /proc/interrupts
+>
+>    BEFORE
+>    ------
+>    40417078     itlb.itlb_flush
+>    234852566    tlb_flush.dtlb_thread
+>    153192357    tlb_flush.stlb_any
+>    119001107892 dTLB-load-misses
+>    307921167    dTLB-store-misses
+>    1355272118   iTLB-load-misses
+>
+>    TLB: 1364803    1303670    1333921    1349607
+>         1356934    1354216    1332972    1342842
+>         1350265    1316443    1355928    1360793
+>         1298239    1326358    1343006    1340971
+>         TLB shootdowns
+>
+>    AFTER
+>    -----
+>    3316495      itlb.itlb_flush
+>    138912511    tlb_flush.dtlb_thread
+>    115199341    tlb_flush.stlb_any
+>    117610390021 dTLB-load-misses
+>    198042233    dTLB-store-misses
+>    840066984    iTLB-load-misses
+>
+>    TLB: 117257     119219     117178     115737
+>         117967     118948     117508     116079
+>         116962     117266     117320     117215
+>         105808     103934     115672     117610
+>         TLB shootdowns
+>
+> < measurement: user experience - runtime >
+>
+>    $ time XSBench -t 16 -p 50000000
+>
+>    BEFORE
+>    ------
+>    Threads:     16
+>    Runtime:     968.783 seconds
+>    Lookups:     1,700,000,000
+>    Lookups/s:   1,754,778
+>
+>    15208.91s user 141.44s system 1564% cpu 16:20.98 total
+>
+>    AFTER
+>    -----
+>    Threads:     16
+>    Runtime:     913.210 seconds
+>    Lookups:     1,700,000,000
+>    Lookups/s:   1,861,565
+>
+>    14351.69s user 138.23s system 1565% cpu 15:25.47 total
 
-Well, could you initialize port_type = CTI_PORT_TYPE_RS232? And here do 
-only:
-if (port_num > 0)
-     return CTI_PORT_TYPE_RS422_485;
-?
+IIUC, the memory footprint will be larger with the patchset.  Do you
+have data?
 
-
->   		break;
->   	// 2x RS232, 2x RS422/RS485
->   	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_2:
-> -		port_type = port_num < 2 ?
-> -			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
-> +		port_type = port_num < 2 ? CTI_PORT_TYPE_RS232 :
-> +					CTI_PORT_TYPE_RS422_485;
-
-And so on.
-
->   		break;
->   	// 4x RS232, 4x RS422/RS485
->   	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4:
->   	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4_SP:
-> -		port_type = port_num < 4 ?
-> -			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
-> +		port_type = port_num < 4 ? CTI_PORT_TYPE_RS232 :
-> +					CTI_PORT_TYPE_RS422_485;
->   		break;
->   	// RS232/RS422/RS485 HW (jumper) selectable
->   	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2:
-> @@ -789,13 +789,13 @@ static enum cti_port_type cti_get_port_type_xr17c15x_xr17v25x(struct exar8250 *p
->   		break;
->   	// 6x RS232, 2x RS422/RS485
->   	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_6_2_SP:
-> -		port_type = port_num < 6 ?
-> -			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
-> +		port_type = port_num < 6 ? CTI_PORT_TYPE_RS232 :
-> +					CTI_PORT_TYPE_RS422_485;
->   		break;
->   	// 2x RS232, 6x RS422/RS485
->   	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_6_SP:
-> -		port_type = port_num < 2 ?
-> -			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
-> +		port_type = port_num < 2 ? CTI_PORT_TYPE_RS232 :
-> +					CTI_PORT_TYPE_RS422_485;
->   		break;
->   	default:
->   		dev_err(&pcidev->dev, "unknown/unsupported device\n");
-> --
-> 2.43.2
-> 
-
--- 
-js
-suse labs
-
+--
+Best Regards,
+Huang, Ying
