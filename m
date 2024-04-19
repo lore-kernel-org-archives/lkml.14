@@ -1,106 +1,131 @@
-Received: from wfout3-smtp.messagingengine.com (wfout3-smtp.messagingengine.com [64.147.123.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0E4BA41
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 06:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.146
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30CAB883D
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 06:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713506569; cv=none; b=WLQM/l7sN1kiIt02q7htGB5jGEIfDDIVJ0anZyka8uUOMHgDu5xJrmZg5EXKbbz8NNToBOVPHp1AR6fhfXPye+vPNA3W/oZxfN/ENwa8rYJtLDuKQBcB4rQJHm0FsgFBTCUx3nc0UI7PASg8RQmobCG3+/LhITmWTyNMoZAlzWM=
+	t=1713506574; cv=none; b=ibgfRVNV7cTLjBD6B6GsPQWzrRPFhy2OPgaZg47fOdAEd5dLj7ziW6JX75grNuA79GM1wJQ9wuBWXOD/anSWI+aEVfYAbnnkYC7fAd+8SJt2UvX9nE8VYZgV/nIyZSrEUMJJoFgJs8GZTs3EYbOd9HoW1VmBkmgQ9ySa56tNYZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713506569; c=relaxed/simple;
-	bh=tcjzjhwS3K9FGNJZQHWhowFCXN/wfaOp1piIIKJ34n8=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=J4D2jNOup554Uoym8cBTetcAKqIFB1CRUIqfs3l0hhSP9RCu/I7ZCh/m3/RRZE31OK5Z0Y+pa4nszxg1tRC02Iep/iI2Ihhv3ECNBHxP/3D38VP0J2kI8L+JCWXDoXeHwYR+8e0OEstKZIamvc/XJblNTFedTCcAo/MBsqJS4go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=hsXXsDAH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jO32ZMpu; arc=none smtp.client-ip=64.147.123.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="hsXXsDAH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jO32ZMpu"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id BF3CD1C000B8;
-	Fri, 19 Apr 2024 02:02:45 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Fri, 19 Apr 2024 02:02:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1713506565; x=1713592965; bh=A4M69jORvF
-	CHqEouhHsHZnQ4o5IRiYtV1dtNmi8CWUY=; b=hsXXsDAHFJt0xpuVclnzQ+etJt
-	+TAn5t4HUvCOFUtl0mIiCnW0F7cv3pwhi/9ahez+kgvMM+/1w2II4p+UxYyn1GPA
-	BzJtUnA7/P+kVX67CVRuafpqoMclrozQUxJY2rXiAi3QtkJgImf0j5UMGRecLMSJ
-	qITfG46yM613DRqkSn7YYooyXImtYkboj0ACrj2vHDd21tljUmMlTtifgdP9lJ1s
-	hVGX0TBOjxDWhzYGyfJ2DqWyOE/k4rPbPVxfrv/vzKzq/dIEbl3WhLV4khYRPwYM
-	O2c/RVIa+DK0MAj/4BNN07PAw3paTID4fCFlhvQM1m4OxxxzVjCffdIxCAjg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1713506565; x=1713592965; bh=A4M69jORvFCHqEouhHsHZnQ4o5IR
-	iYtV1dtNmi8CWUY=; b=jO32ZMpu82TAl1uSUGyscvkcR+NJTl75CR+ka88a0CAF
-	IR2ynM9HcbdrhjxC32Wj/6TQm96+rHM2ByvpBpTalLFQ1kYEVzYZ0enZqliTSLpa
-	/us+JaNG8cVZxh2vEN/hPyejjBVU0l/RIGH2Di7kl2H4hhFabmYuHlsvNQrLUjgB
-	hHOrK70HAGDU9csXAYEsr6i5WXGL7wQM+pd2bAmow8xj5Qx7KFhWviKhWd3bek1R
-	UL9gWiOUcWbCG3kara/Gp8YY9TPQqCx83Xq/eqt0PbT4WPAq9yebmJbk/+O1r8iK
-	eEG1tfBsto4+UpfviHY2E2d/zfa6XbKV5GAPJsbwIA==
-X-ME-Sender: <xms:BAkiZlSKgku2N6AHb1qqYiLKUFCdTTC5GBVlXOo5NTf1DEbmuYxtRQ>
-    <xme:BAkiZux5QhSUd9Qm5PHtwAi_BZPSikqX0zIoFYDRDRhHhO3q98YzrD49WnC6htrJ0
-    -VfaBpUOgfHjEZWea0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudekuddgleehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:BAkiZq1JyF5-ESwrTXFzFYGpbVuyjFc0omO39LCf1ZtdyXGpfcWOgw>
-    <xmx:BAkiZtA42IOVjsV76NrtTdaeETD76avy_hl5xo_rWUJYTmyaiPPmFw>
-    <xmx:BAkiZujUHmL3BxSGjO35SJE59HrTQQaT5gFn669qQ6ekGyp8D-QXFA>
-    <xmx:BAkiZhqzL3F7GxXuvLENG1GyX1rTbjAcc2PPYbd0eQgxeyJWQMGjCA>
-    <xmx:BQkiZjZxBDEfduSzoxV9VXKf0XCrMBVEJ8Z8nKjwZpYX1MtEtZOMYI6K>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D4620B6008D; Fri, 19 Apr 2024 02:02:44 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
+	s=arc-20240116; t=1713506574; c=relaxed/simple;
+	bh=vMsakpSTXaLFngsOc0z+ORPwqoABxK6u0U8Svsvb3RE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vDhr6ETGcqgC8nAiUaRPVY5P0Tg7X5O0VXjwynMu6RpJaqrKTYGKW0ID0gngAv5TMBeq8ovbwqxgQ/TljO+m66xpudc/w1PDUaiBR0aul3xbCd34QEFjulXTVIoDHn4pLfzp+W8RdebsxvN4tuTFqQQXyBbxyVhpwDGfkotKDpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d85ff70000001748-6c-662208ff0789
+Date: Fri, 19 Apr 2024 15:02:34 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, ying.huang@intel.com, vernhao@tencent.com,
+	mgorman@techsingularity.net, hughd@google.com, willy@infradead.org,
+	david@redhat.com, peterz@infradead.org, luto@kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, rjgolo@gmail.com
+Subject: Re: [PATCH v9 rebase on mm-unstable 0/8] Reduce tlb and interrupt
+ numbers over 90% by improving folio migration
+Message-ID: <20240419060234.GA48027@system.software.com>
+References: <20240418061536.11645-1-byungchul@sk.com>
+ <20240418131757.cd05a8e7c7e66b3e90508c11@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <4d63cbaa-63d9-49fa-bbf0-b3bc62ebfb36@app.fastmail.com>
-In-Reply-To: <20240419060013.14909-1-r-gunasekaran@ti.com>
-References: <20240419060013.14909-1-r-gunasekaran@ti.com>
-Date: Fri, 19 Apr 2024 08:02:24 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ravi Gunasekaran" <r-gunasekaran@ti.com>,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Nishanth Menon" <nm@ti.com>, "Vignesh Raghavendra" <vigneshr@ti.com>,
- "Tero Kristo" <kristo@kernel.org>
-Cc: "Bjorn Andersson" <quic_bjorande@quicinc.com>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- srk@ti.com
-Subject: Re: [PATCH] arm64: defconfig: Enable HSR driver
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240418131757.cd05a8e7c7e66b3e90508c11@linux-foundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDIsWRmVeSWpSXmKPExsXC9ZZnke5/DqU0g7+HtC3mrF/DZvF5wz82
+	ixcb2hktvq7/xWzx9FMfi8XlXXPYLO6t+c9qcX7XWlaLHUv3MVlcOrCAyeJ47wEmi/n3PrNZ
+	bN40ldni+JSpjBa/fwAVn5w1mcVBwON7ax+Lx85Zd9k9Fmwq9di8Qstj8Z6XTB6bVnWyeWz6
+	NInd4925c+weJ2b8ZvGYdzLQ4/2+q2weW3/ZeTROvcbm8XmTXABfFJdNSmpOZllqkb5dAlfG
+	s/8rWQveCVe8mLqCvYFxEn8XIyeHhICJxOvVe1lg7EUtT9lAbBYBVYkTq2cygdhsAuoSN278
+	ZAaxRQR0JVY93wVkc3EwCzxiklj+cRVYg7BAlcS623fBbF4BC4n9s96D2UICZRI3etZAxQUl
+	Ts58AraMWUBL4sa/l0ALOIBsaYnl/zhATE4Bb4mOeTkgFaICyhIHth1nAlklIbCMXeL08n+M
+	EHdKShxccYNlAqPALCRTZyGZOgth6gJG5lWMQpl5ZbmJmTkmehmVeZkVesn5uZsYgXG4rPZP
+	9A7GTxeCDzEKcDAq8fAuiFdME2JNLCuuzD3EKMHBrCTCa8YBFOJNSaysSi3Kjy8qzUktPsQo
+	zcGiJM5r9K08RUggPbEkNTs1tSC1CCbLxMEp1cAoG3zjxz/TW1s8zrb83XH+xrynPH2hM3d9
+	6eKqlfgW+3JXxVF2lpgXZ5hjZULPe6j13IwOrvvTOC9hU/Eug/JfgqtM935+GnGhWmXj64T/
+	i18qJDS5zXTf7Xbk2nRum7Q+fbUbB1t+Wf3Z9KM1Vrrr9L2n1y/yaeyYvyUp6pN5yHu7N6Wh
+	5081KbEUZyQaajEXFScCAAADjaC/AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsXC5WfdrPufQynN4MYOKYs569ewWXze8I/N
+	4sWGdkaLr+t/MVs8/dTHYnF47klWi8u75rBZ3Fvzn9Xi/K61rBY7lu5jsrh0YAGTxfHeA0wW
+	8+99ZrPYvGkqs8XxKVMZLX7/ACo+OWsyi4Ogx/fWPhaPnbPusnss2FTqsXmFlsfiPS+ZPDat
+	6mTz2PRpErvHu3Pn2D1OzPjN4jHvZKDH+31X2TwWv/jA5LH1l51H49RrbB6fN8kF8Edx2aSk
+	5mSWpRbp2yVwZTz7v5K14J1wxYupK9gbGCfxdzFyckgImEgsannKBmKzCKhKnFg9kwnEZhNQ
+	l7hx4ycziC0ioCux6vkuIJuLg1ngEZPE8o+rwBqEBaok1t2+C2bzClhI7J/1HswWEiiTuNGz
+	BiouKHFy5hMWEJtZQEvixr+XQAs4gGxpieX/OEBMTgFviY55OSAVogLKEge2HWeawMg7C0nz
+	LCTNsxCaFzAyr2IUycwry03MzDHVK87OqMzLrNBLzs/dxAiMqmW1fybuYPxy2f0QowAHoxIP
+	74J4xTQh1sSy4srcQ4wSHMxKIrxmHEAh3pTEyqrUovz4otKc1OJDjNIcLErivF7hqQlCAumJ
+	JanZqakFqUUwWSYOTqkGxqaDf7Z4dMdJ7q5nKDX/sYxjY75vwtlw9/y5Ew9vmeUi1DLLU8HS
+	xILveAGPxoNVzxY+F2meER7r56XZyeBoITFFeopT7fO8U9ei8vNzDBj2OTl8ZlY8OH/T+Ryb
+	5F2LdqzYzB+/b238lGpvt0OqLUFPZX95mh4JUaqRXDqhUNup0Thm/qFOJZbijERDLeai4kQA
+	xvmT7KYCAAA=
+X-CFilter-Loop: Reflected
 
-On Fri, Apr 19, 2024, at 08:00, Ravi Gunasekaran wrote:
-> HSR is a redundancy protocol that can be realized with any
-> two port ethernet controller.
->
-> Many of TI's K3 SoCs support multi port ethernet controller.
-> So enable HSR driver inorder to support this protocol on
-> such SoCs.
->
-> Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
+On Thu, Apr 18, 2024 at 01:17:57PM -0700, Andrew Morton wrote:
+> On Thu, 18 Apr 2024 15:15:28 +0900 Byungchul Park <byungchul@sk.com> wrote:
+> 
+> >    $ time XSBench -t 16 -p 50000000
+> > 
+> >    BEFORE
+> >    ------
+> >    Threads:     16
+> >    Runtime:     968.783 seconds
+> >    Lookups:     1,700,000,000
+> >    Lookups/s:   1,754,778
+> > 
+> >    15208.91s user 141.44s system 1564% cpu 16:20.98 total
+> > 
+> >    AFTER
+> >    -----
+> >    Threads:     16
+> >    Runtime:     913.210 seconds
+> >    Lookups:     1,700,000,000
+> >    Lookups/s:   1,861,565
+> > 
+> >    14351.69s user 138.23s system 1565% cpu 15:25.47 total
+> 
+> Well that's nice.  What exactly is XSBench doing in this situation? 
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+As far as I know, it's frequently and continuously accessing annon areas
+with addresses ranged within 6GB, by multi threads.  Thus, it triggers a
+lot of promotions by hinting fault of numa balancing tiering and a lot
+of demotions by kswapd as well, resulting in a ton of tlb flushes.
 
-The normal way this gets picked up into mainline is that you
-send it to the K3 platform maintainers (added to Cc) and they
-send me a pull request or forward the patch to soc@kernel.org.
+All I need is a system suffering from memory reclaim or any type of
+folio migration since migrc mechanism is one for mitigating the overhead
+of folio migration.  To see the benefits of migrc, it doesn't have to be
+XSBench but any workload suffering from reclaim.
 
-    Arnd
+> What sort of improvements can we expect to see in useful workloads?
+
+Increase throughput(= runtime reduction of each work in the system).
+
+   1. Because migrc removes the CPU time that would've been spent in IPI
+      handler due to tlb shootdown, by skipping a lot of tlb shootdowns.
+
+   2. Becasue migrc reduces tlb misses so as to utilize tlb cache better,
+      by skipping a lof of tlb flushes.
+
+Besides, I expect overall scheduler latencies can be enhanced, the worst
+latencies measured using some tracters of ftrace showed no change though.
+
+> I see it no longer consumes an additional page flag, good.
+> 
+> The patches show no evidence of review activity and I'm not seeing much
+> on the mailing list (patchset title was changed.  Previous title
+> "Reduce TLB flushes under some specific conditions").  Perhaps a better
+
+I changed the title because it was supposed to work with only numa
+balancing tiering like promotion and demotion but, for now, migrc works
+with any type of folio migration.  Thus, I can tell migrc demonstrates
+its benefits as long as a system is under the control of reclaim and
+folio migration.
+
+	Byungchul
+
+> description of the overall benefit to our users would help to motivate
+> reviewers.
