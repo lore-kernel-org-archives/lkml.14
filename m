@@ -1,109 +1,78 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D43512FB2A;
-	Fri, 19 Apr 2024 14:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D0B12FB34;
+	Fri, 19 Apr 2024 14:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713535616; cv=none; b=d6XaJWuHOr9RTBGDTKm/t9NTRjEyhbOPybtaKeISyDFs2rp/ONBNPp49iJy05RS07czHQWfZwIu2BhK8KOH8KG2I/syMR76NM3da4oQjLHYsoH7gU/t0+AyRilzH5Z3eAvlx+Ied7eZ4YF6y534evsPnlvEMweBVDvly+vq0gLA=
+	t=1713535618; cv=none; b=b48lvArSZcs6koMufJQDFev5xAHNmMzphgjiPdaODnZiH7HIQLDlnrFAxgxib2B3U70hqzIaXvSIl+r3gBuzeam+O99SI7UX8AnM1pbnOd5fxxGsk+2E9Q+eQvs2T+axzAgpTQ4JHJCM4HCrs/uhW8ot4HVQ1QUzaTNb1MyDHLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713535616; c=relaxed/simple;
-	bh=oyuMKSYGoMfRz+tvPVJ/jIgvFe45ZdlNrFcZrO/Oozo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UHxNZGDmru0Q5tHuWdW5lZ5bCKemUo2p/5ALokEUSDbp8SrhXMZx35Bsh8xNWOnMHiY1BRncWEKGw5Eb/j3u6AQfzJiX2aKSO2j+Z49wadAmAllhq2Lbysro+ZFt5fMvxYZzmFxWvhTPAjJbqEtVPN951ERC/QsEj+A0vtgcB98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=auristor.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=auristor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-69b10ead8f5so10509566d6.0;
-        Fri, 19 Apr 2024 07:06:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713535613; x=1714140413;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F8Fq3HZ/CaefZ5llRGtNvq0zZoQTpNhHnR6rkcG9Onc=;
-        b=QWRCbm0mAYrJ61AwC95b82Yn2lNQ61bnbw51PvqDLRGvtDWOC5U89LDhVOheTjx5cV
-         UCgkkbpG+ex/EGITQ2oGTf1Ts8uJZN/VLdyFuiLS7x/TSWHlbDHBnvJaJxSYz0TOKtXG
-         Ns25wbUH19sPG1XyncEwuoNHSR5djOGialmJ0vB2qcjG8DNcqh4lWhArYrNtLTwfq5ux
-         BMK4jxDWRYVEssBGL/TQqWQJCM0nL0ORYZgepu1hUZApF8c6oeO2dd6BJi8L+oc7w5hq
-         rKV4VZ1YjpjTH2b6YQdZ7fnfMwrK73X7hHzSt05FpTqnr2nHBU5a/N/4bJAeZthVINv5
-         DkQg==
-X-Forwarded-Encrypted: i=1; AJvYcCX+uEK8NrGMRuTaeyAjiMB17S/7UwJjbDaoeQHm+/JSuwmi65bBeORIJUBENNQ2BW+Qc5VKPTAWJwT2l+Q+Kutx8wOPI/rB
-X-Gm-Message-State: AOJu0YyBnigHeXnQEliNhJKFudKyvrqKKkFMkDia2+scoPdhojZcTR4c
-	AKBslfauhMaQvfqTbewRNH3UgXpBKt2PC/WUFzMRsYJdUV4GGFGH5/+AOtuD
-X-Google-Smtp-Source: AGHT+IEExWZrMFhZkzaFUZt5oFz3RthU8jjCWST9IjqMH5SnWFRL8n0X6a0aq8SFT13NmFp8XFaSHQ==
-X-Received: by 2002:a05:6214:2cd5:b0:69b:6746:7ff8 with SMTP id lf21-20020a0562142cd500b0069b67467ff8mr2309114qvb.31.1713535613102;
-        Fri, 19 Apr 2024 07:06:53 -0700 (PDT)
-Received: from hemlock.fiveisland.rocks (hlfxns014qw-156-57-186-228.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.57.186.228])
-        by smtp.gmail.com with ESMTPSA id g6-20020a0cdf06000000b0069f1c071f1csm1554335qvl.29.2024.04.19.07.06.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 07:06:52 -0700 (PDT)
-From: Marc Dionne <marc.dionne@auristor.com>
-To: David Howells <dhowells@redhat.com>,
-	netdev@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jeffrey Altman <jaltman@auristor.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-afs@lists.infradead.org
-Subject: [PATCH net] rxrpc: Clients must accept conn from any address
-Date: Fri, 19 Apr 2024 11:04:51 -0300
-Message-ID: <20240419140451.4139663-1-marc.dionne@auristor.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1713535618; c=relaxed/simple;
+	bh=8Dg2SETr6N4feoFsxjjd3WBN8QKCU3lGTMaIZTPgErk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CN2KVRpF2+V+HGAehNy/7ubKrdfLtogHAXtRba7B2sq1oaNi6t6GPrNhTRpTck4Nqs/eZN27rqvyZ9PuWMZvZ6Mxf9+tA8WPvEPD9ol/AbCXCH1R1wG8Xayun4FMjdfzboT0bhQUHfxnYo+N26d1c/IxWerGlYnAkT4Q5sfIw/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gh5Ysj92; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gh5Ysj92"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713535617; x=1745071617;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8Dg2SETr6N4feoFsxjjd3WBN8QKCU3lGTMaIZTPgErk=;
+  b=gh5Ysj92TvMVKrNyWzwVyY9adJlURzidKC0xJYsfWzLA9dxg3aogAcWo
+   CGRGUN15zVH9nfCg3Cqm5PLRnatvObajxAnQu6HOP/4WGpZdf5V2RGFhb
+   /+1Y+GMWfE0kxUNw+XuGNQsh8PGcwFvm1Bt5HMx719NqpTx/oSgLOWcxm
+   /9cjAgztiGcst0q7btYZK8ve7M3MD8P79er33vTTg9unmTbmQzq4eO28A
+   knjQHxhxeiwYGBoTN7naSTWCWxZiQz87dFXI22Mc8q0WbCYgCVpHot58c
+   lO9l0myScQz0a0z5aeQuFH7TJOWRR3ujmU5H4gOzT/wvbEUUYuZJjcdEh
+   A==;
+X-CSE-ConnectionGUID: uCIuEdztQVKYI3X/804Cuw==
+X-CSE-MsgGUID: qicirMKZTiGc7sGVpL4QTA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="8997109"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="8997109"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 07:06:56 -0700
+X-CSE-ConnectionGUID: rIiZ5WraTSC/mutCZT/PVA==
+X-CSE-MsgGUID: 1i84BjcMQbybm+Askr/Drw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="28121420"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa005.jf.intel.com with ESMTP; 19 Apr 2024 07:06:54 -0700
+Date: Fri, 19 Apr 2024 22:01:39 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	isaku.yamahata@intel.com, xiaoyao.li@intel.com,
+	binbin.wu@linux.intel.com, seanjc@google.com,
+	rick.p.edgecombe@intel.com
+Subject: Re: [PATCH 2/7] KVM: Add KVM_MAP_MEMORY vcpu ioctl to pre-populate
+ guest memory
+Message-ID: <ZiJ5Q3/ThsomR/Wa@yilunxu-OptiPlex-7050>
+References: <20240417153450.3608097-1-pbonzini@redhat.com>
+ <20240417153450.3608097-3-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240417153450.3608097-3-pbonzini@redhat.com>
 
-From: Jeffrey Altman <jaltman@auristor.com>
+On Wed, Apr 17, 2024 at 11:34:45AM -0400, Paolo Bonzini wrote:
+> From: Isaku Yamahata <isaku.yamahata@intel.com>
+> 
+> Add a new ioctl KVM_MAP_MEMORY in the KVM common code. It iterates on the
+> memory range and calls the arch-specific function.  Add stub arch function
+> as a weak symbol.
 
-The find connection logic of Transarc's Rx was modified in the mid-1990s
-to support multi-homed servers which might send a response packet from
-an address other than the destination address in the received packet.
-The rules for accepting a packet by an Rx initiator (RX_CLIENT_CONNECTION)
-were altered to permit acceptance of a packet from any address provided
-that the port number was unchanged and all of the connection identifiers
-matched (Epoch, CID, SecurityClass, ...).
+The weak symbol is gone.
 
-This change applies the same rules to the Linux implementation which makes
-it consistent with IBM AFS 3.6, Arla, OpenAFS and AuriStorFS.
-
-Signed-off-by: Jeffrey E Altman <jaltman@auristor.com>
-Acked-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
----
- net/rxrpc/conn_object.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
-
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 0af4642aeec4..1539d315afe7 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -119,18 +119,13 @@ struct rxrpc_connection *rxrpc_find_client_connection_rcu(struct rxrpc_local *lo
- 	switch (srx->transport.family) {
- 	case AF_INET:
- 		if (peer->srx.transport.sin.sin_port !=
--		    srx->transport.sin.sin_port ||
--		    peer->srx.transport.sin.sin_addr.s_addr !=
--		    srx->transport.sin.sin_addr.s_addr)
-+		    srx->transport.sin.sin_port)
- 			goto not_found;
- 		break;
- #ifdef CONFIG_AF_RXRPC_IPV6
- 	case AF_INET6:
- 		if (peer->srx.transport.sin6.sin6_port !=
--		    srx->transport.sin6.sin6_port ||
--		    memcmp(&peer->srx.transport.sin6.sin6_addr,
--			   &srx->transport.sin6.sin6_addr,
--			   sizeof(struct in6_addr)) != 0)
-+		    srx->transport.sin6.sin6_port)
- 			goto not_found;
- 		break;
- #endif
--- 
-2.44.0
-
+Thanks,
+Yilun
