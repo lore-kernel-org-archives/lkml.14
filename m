@@ -1,94 +1,72 @@
-Received: from mail115-76.sinamail.sina.com.cn (mail115-76.sinamail.sina.com.cn [218.30.115.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5B680629
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 11:03:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E9C81216
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 11:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713524593; cv=none; b=mRb23CCbeZmX/6Hseb0lDTMRzphZPcZyLy4WKjJdJfTH7Pvb7pUYYuVFLGtOn42rGfLviW166v40DdiiWRTcYKARkM4dkDS0YE/PBgXiR04Ei9ISgmfK46qid3x0GlyWM3JhHnk5xLExIdrnxqYOqEsiRK1oZjce/wRtcQWvU5E=
+	t=1713524592; cv=none; b=CJMhzOW+sbwkoj+MwBfhC77UQGR9cMylIfrxnjCY1jgIcz22TspWbQIID2v/a/yobgAYx7DzY2LgIqPYwYlNZnu9FYdc/AdRzrZhryS7yJVj43K07CiLQkpb8WfVM3iNGdeZT5hiS8cBn0jgTgZ9rfIa8ThN5iDdnjTOnuQ7aEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713524593; c=relaxed/simple;
-	bh=EA2I8c3ppVC1x+EQitfhhfZDOkuv79dfnWWAKMXjulk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nglGBmmt7Tp8DW3vXwvLAM5NqsgZzIKxpvMmPuytkreMPbvCl7OzHhlkXSDiZpjV5UO6YzhPFo0EWh3aksY+3uxHqDc3fQH1RPPhxIHYpK3kW5dWzqBqWS/glQaI1AexjRyxogE0LxGs5gKRRboCFkrsw/FtrGvqkjS6LP65ELw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.64.253])
-	by sina.com (10.75.12.45) with ESMTP
-	id 66224F5F00000946; Fri, 19 Apr 2024 19:02:58 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 3018731457733
-X-SMAIL-UIID: 226EC22C9F59408E96BA531040139487-20240419-190258-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+dddd99ae26c656485d89@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bpf?] possible deadlock in __stack_map_get
-Date: Fri, 19 Apr 2024 18:44:38 +0800
-Message-Id: <20240419104438.2747-1-hdanton@sina.com>
-In-Reply-To: <0000000000003f81750616646cb8@google.com>
-References: 
+	s=arc-20240116; t=1713524592; c=relaxed/simple;
+	bh=uWAY6LlF7v6+sqojjMdbCQRzzgR4DjCY8JKq5y18Ehk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NCYXOgy7z1bZb5Gd9gS20RA3vNeqkKjoLrP3AOqD7zV6VJbbpowBFslbU5B9uLekD+/8SwQelR0r62P3dP47DXJocqDL7IgqwRCXuVELncB99pPfhvF9pJNeOfJhnnceI8f6XeShthhnwm2d9ppbOzSqV3PXhQAXNkrscwij47U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D4CnkOV8; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D4CnkOV8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18D71C072AA;
+	Fri, 19 Apr 2024 11:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713524592;
+	bh=uWAY6LlF7v6+sqojjMdbCQRzzgR4DjCY8JKq5y18Ehk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D4CnkOV8TzpWGtuWggKvbOgGgmDnwWfihPiKWDyeKOBgfMQgKbYqAWbV0zNi09unu
+	 F6w+nEDNflQn9cwHTby2xXiJ9MTWm/QrSda0u4cpCBYLoa/RqiLmzG8NXqvSfQenri
+	 5k8ACsd7zdPRvLqTOV8cnP8JLL9bC+spTsesgIhlB/onl2LiCvS517GIm7uSG5M51A
+	 KAD4Q+WYmNz+CpMnYngIUdlMwvyrC1G/Y561SbvIf6XO7FNgFU5AVjNW8K27bBgQ0I
+	 uxbd91aRxGTbT0+nw8jptnCTZ00/9p7sog6tB/HmoZtM5pqFNusVV3/ASfza6XMse1
+	 41BbtdZO+HI1g==
+Date: Fri, 19 Apr 2024 12:03:06 +0100
+From: Will Deacon <will@kernel.org>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: alexghiti@rivosinc.com, ryan.roberts@arm.com,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+	akpm@linux-foundation.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH 0/9] Merge arm64/riscv hugetlbfs contpte support
+Message-ID: <20240419110306.GA2972@willie-the-truck>
+References: <CAHVXubiH64beFuB_GHSq5BKCus=O_+bqYTCwWQ+=2Q-F=T=ctQ@mail.gmail.com>
+ <mhng-911ba065-e6c8-4d42-978c-e47897bcb493@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <mhng-911ba065-e6c8-4d42-978c-e47897bcb493@palmer-ri-x1c9a>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Thu, 18 Apr 2024 13:00:28 -0700
-> syzbot found the following issue on:
+On Thu, Apr 18, 2024 at 03:11:56PM -0700, Palmer Dabbelt wrote:
+> On Fri, 01 Mar 2024 03:29:18 PST (-0800), alexghiti@rivosinc.com wrote:
+> > On Fri, Mar 1, 2024 at 11:45 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
+> > > I confess I haven't looked at the patches yet, but this cover letter raises a
+> > > few quesions for me. I'll aim to look at the actual patches in due course.
 > 
-> HEAD commit:    f99c5f563c17 Merge tag 'nf-24-03-21' of git://git.kernel.o..
-> git tree:       net
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f1f7cb180000
+> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+> 
+> in case someone wants to pick them up via a generic tree.  I'm happy to take
+> them via the RISC-V tree if folk want, no rush on my end I'm just scrubbing
+> through old stuff.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git  f99c5f563c17
+I'd definitely like to take the arm64 parts via the arm64 tree (on a
+shared branch), as it's a non-trivial amount of mm code which may end up
+conflicting. I'd also like to see Ryan's Ack on the changes before these
+end up in -next.
 
---- x/kernel/bpf/queue_stack_maps.c
-+++ y/kernel/bpf/queue_stack_maps.c
-@@ -124,7 +124,7 @@ out:
- 	return err;
- }
- 
--
-+static DEFINE_PER_CPU(int, map_depth);
- static long __stack_map_get(struct bpf_map *map, void *value, bool delete)
- {
- 	struct bpf_queue_stack *qs = bpf_queue_stack(map);
-@@ -132,12 +132,18 @@ static long __stack_map_get(struct bpf_m
- 	int err = 0;
- 	void *ptr;
- 	u32 index;
-+	int dumy;
-+	int *depth = &dumy;
- 
- 	if (in_nmi()) {
- 		if (!raw_spin_trylock_irqsave(&qs->lock, flags))
- 			return -EBUSY;
- 	} else {
--		raw_spin_lock_irqsave(&qs->lock, flags);
-+		preempt_disable_notrace();
-+		depth = this_cpu_ptr(&map_depth);
-+		*depth += 1;
-+		raw_spin_lock_irqsave_nested(&qs->lock, flags, *depth);
-+		preempt_enable_notrace();
- 	}
- 
- 	if (queue_stack_map_is_empty(qs)) {
-@@ -157,6 +163,7 @@ static long __stack_map_get(struct bpf_m
- 		qs->head = index;
- 
- out:
-+	*depth -= 1;
- 	raw_spin_unlock_irqrestore(&qs->lock, flags);
- 	return err;
- }
---
+Will
