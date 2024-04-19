@@ -1,140 +1,114 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FB312FF83;
-	Fri, 19 Apr 2024 15:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8837E11E;
+	Fri, 19 Apr 2024 15:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713539385; cv=none; b=EIMOZCRZ8k6F2VJw1A/sqL0bjYf8FFd8gnfs5PUCyjQcfn5QegxfVxMSocuK0/dhJ3fZn8Ag8jkTrANuD1fcN1jRIqPlDYeT4w3gqNNF+3BbUppFbiEhX3XUVvajcFlaFk5qx23fwxZByZy837I9cbL4ABN6ilsPkQ5SO3D0YT0=
+	t=1713539386; cv=none; b=T5VXk18x46cxEfnDyvar0ZyXZ0yP5gvfwunP23OOLzWXhHbk9Wpbtv6h3t1grfzdjB6FxOYOWI5jisBWL77V91kGOzPRBFPbfsjvYQ9F36s2JkV8zNjDKS8Iz3/mcbTnSDLAAa/9165j30To8fZ+dzugIhZfVnNJuHz4Bqb2RbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713539385; c=relaxed/simple;
-	bh=UXrRR8Rwe3eGNw6FPQ1CGv2PxvSvMhiUfVg6LFJkYNc=;
-	h=From:To:CC:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=omh1kb7wxsC+mQDJBxFd4TV4UezU9ISKXmal53YERSfFJtCNkyi5juhrU5TqaMHet4SPVyVOuqbYRYD+ty08f4B+TrjqCciIGyrd5zc27elg8fmINuddQhVGQi/5H0I0m6dDa7uoPBLLRPc+TjEnKtol1yaGWr98riaNFSrOZp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=Z52YMWLv; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1713539386; c=relaxed/simple;
+	bh=GkmOldRrmFVHxIp770IbU5zteXyXCmHeafYSEoFWihw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bOzwY8qwyYnY92oQZwC/AyqX/KAp/Hv7M3+a2i5A4es9Z4blwzipA4vnwat3LKMwHb2hhiANUXB4zzJxQktv5QE4+w37eW50s04YESxX6w/Nv0/GbzuusDFQKCZC64Ila7queQnAZeSzEnZLVqHcdkRtU/P9JmjZO3JHXEGVPZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=fjasle.eu; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=Yb0iQ9uT; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Z52YMWLv"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43JBUO8S003820;
-	Fri, 19 Apr 2024 10:09:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:references:in-reply-to:subject:date:message-id
-	:mime-version:content-type:content-transfer-encoding; s=
-	PODMain02222019; bh=A9fXj62GSpn81C11BByaZ+3oCtn50jmJ5C0FCnZnlVU=; b=
-	Z52YMWLv/UsRkPv6iI+bm2kU37ti04w6Z7qVxuRV6aICL1G8k9bZGBkh8+hl25I5
-	T27O24PvwyBahNZgc8EUIYJIO0oOPxa9U5fh0ChA9XXTnnsj20uqqMdvodlwEn5x
-	hjTRubut65G18T1wp6KDz8Zyt6FRABtk4bgm/b9XvY5/pGbT8Vtc0y0kUkxb08IG
-	jvdEAQ0skz3XtQ2jqql4X7N6fo5ZGck1uUhrxbcxfnM2/+A0XE92+hgtRRdoy3rK
-	JLTZUdtufcVGA0VqmyEYYlLhPtTEf7PPMY7Q4ywD0JiH5SnNiGgBuMCiwngKdsyU
-	jaUMME/+tvf0gwHXwmjJuQ==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3xfpfhwxfm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Apr 2024 10:09:39 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 19 Apr
- 2024 16:09:37 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
- via Frontend Transport; Fri, 19 Apr 2024 16:09:37 +0100
-Received: from LONN2DGDQ73 (LONN2DGDQ73.ad.cirrus.com [198.61.64.201])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 9027D820249;
-	Fri, 19 Apr 2024 15:09:37 +0000 (UTC)
-From: Stefan Binding <sbinding@opensource.cirrus.com>
-To: 'ArcticLampyrid' <ArcticLampyrid@outlook.com>
-CC: <david.rhodes@cirrus.com>, <james.schulman@cirrus.com>,
-        <linux-kernel@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-        <patches@opensource.cirrus.com>, <rf@opensource.cirrus.com>
-References: <TYCP286MB25357A4599E935F26A8AAB24C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM> <TYCP286MB253538FE76C93C032DB55212C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
-In-Reply-To: <TYCP286MB253538FE76C93C032DB55212C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
-Subject: RE: [PATCH v3 1/2] ALSA: cs35l41: obey the trigger type from DSDT
-Date: Fri, 19 Apr 2024 16:09:37 +0100
-Message-ID: <004201da926b$986d8040$c94880c0$@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="Yb0iQ9uT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fjasle.eu;
+	s=ds202307; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=ZnmSAWWYJEOgk0x27XufixVUQkAvIneONThu0c2jpJs=; b=Yb0iQ9uTHXIc8LY8Nf5v/laeV6
+	LyuUmZhC6EZRJ9tHNPfdP8Bi+YXy8BpvCmiq4Rr48/QEio29nf5ohBiRQUE7cj/OYP8KVdDHFex8a
+	owULukRTJW5fUgObp/KiB1m27RR5JX4WZHWtVDPTno/RYX8jbX6Q3teDKLHAF4gVTLXCPYX/G7erI
+	QKp7eQopshHfVISsEKhRAhTwXuqoBvaD3v+1fbnalUe8fP/18ehigcGr5HzEupLcyHxTF720e+CgH
+	HlWEtt/VYty4wUMtOBxV5Zw1UFdMAOg4xxtfZOq+Yr/sJBXrczCCzud5wODNtH8NqiYjUgb7Q73uH
+	X9iVkdjQ==;
+Received: from [2001:9e8:9f5:cc01:6f0:21ff:fe91:394] (port=35496 helo=bergen.fjasle.eu)
+	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <nicolas@fjasle.eu>)
+	id 1rxprn-004Ad7-PX;
+	Fri, 19 Apr 2024 17:09:31 +0200
+Date: Fri, 19 Apr 2024 17:09:28 +0200
+From: Nicolas Schier <nicolas@fjasle.eu>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] kbuild: use $(obj)/ instead of $(src)/ for pattern
+ rules for %.[cS]
+Message-ID: <ZiKJKFiJ1rtJyHjM@bergen.fjasle.eu>
+References: <20240416121838.95427-1-masahiroy@kernel.org>
+ <20240416121838.95427-4-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-gb
-Thread-Index: AQLGBaKYvvIVJPcFyfh0lTla+wDh4gIh6rgar4e74eA=
-X-Proofpoint-ORIG-GUID: 2XBwu9EnbRzQkZAfZRVS81mGGkeiydAF
-X-Proofpoint-GUID: 2XBwu9EnbRzQkZAfZRVS81mGGkeiydAF
-X-Proofpoint-Spam-Reason: safe
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Y9/E1gHvgvc4kx9j"
+Content-Disposition: inline
+In-Reply-To: <20240416121838.95427-4-masahiroy@kernel.org>
+X-Operating-System: Debian GNU/Linux trixie/sid
+Jabber-ID: nicolas@jabber.no
 
-Hi,
 
-We are still investigating this issue, but I do not think this
-solution is the correct one.
-Configuring the interrupt in this way does not fix the interrupt, just
-hides the issue.
-We are still looking into what we can do to try and fix this.
+--Y9/E1gHvgvc4kx9j
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Stefan
+On Tue 16 Apr 2024 21:18:37 GMT, Masahiro Yamada wrote:
+> Kbuild conventionally uses $(obj)/ for generated files, and $(src)/ for
+> checked-in source files. It is merely a convention without any functional
+> difference. In fact, $(obj) and $(src) are exactly the same, as defined
+> in scripts/Makefile.build:
+>=20
+>   src :=3D $(obj)
+>=20
+> Before changing the semantics of $(src) in the next commit, this commit
+> replaces $(obj)/ with $(src)/ in pattern rules where the prerequisite
+> might be a generated file.
 
-> -----Original Message-----
-> From: ArcticLampyrid <ArcticLampyrid@outlook.com>
-> Sent: Thursday, April 18, 2024 2:20 PM
-> To: sbinding@opensource.cirrus.com
-> Cc: david.rhodes@cirrus.com; james.schulman@cirrus.com; linux-
-> kernel@vger.kernel.org; linux-sound@vger.kernel.org;
-> patches@opensource.cirrus.com; rf@opensource.cirrus.com;
-> ArcticLampyrid <ArcticLampyrid@outlook.com>
-> Subject: [PATCH v3 1/2] ALSA: cs35l41: obey the trigger type from
-DSDT
-> 
-> On some models, CSC3551's interrupt pin connected to
-> APIC. We need to obey the trigger type from DSDT in this case.
-> 
-> Signed-off-by: ArcticLampyrid <ArcticLampyrid@outlook.com>
+thanks.  That's a good idea to split both steps.
+
+> C and assembly files are sometimes generated by tools, so they could
+> be either generated files or real sources. The $(obj)/ prefix works
+> for both cases with the help of VPATH.
+>=20
+> As mentioned above, $(obj) and $(src) are the same at this point, hence
+> this commit has no functional change.
+>=20
+> I did not modify scripts/Makefile.userprogs because there is no use
+> case where userspace C files are generated.
+>=20
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > ---
->  sound/pci/hda/cs35l41_hda.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/sound/pci/hda/cs35l41_hda.c
-b/sound/pci/hda/cs35l41_hda.c
-> index d3fa6e136744..d9c7b4034684 100644
-> --- a/sound/pci/hda/cs35l41_hda.c
-> +++ b/sound/pci/hda/cs35l41_hda.c
-> @@ -10,6 +10,7 @@
->  #include <linux/module.h>
->  #include <linux/moduleparam.h>
->  #include <sound/hda_codec.h>
-> +#include <linux/irq.h>
->  #include <sound/soc.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/spi/spi.h>
-> @@ -1511,6 +1512,14 @@ static int
-cs35l41_hda_apply_properties(struct
-> cs35l41_hda *cs35l41)
->  	irq_pol = cs35l41_gpio_config(cs35l41->regmap, hw_cfg);
-> 
->  	if (cs35l41->irq && using_irq) {
-> +		struct irq_data *irq_data;
-> +
-> +		irq_data = irq_get_irq_data(cs35l41->irq);
-> +		if (irq_data && irqd_trigger_type_was_set(irq_data)) {
-> +			irq_pol = irqd_get_trigger_type(irq_data);
-> +			dev_info(cs35l41->dev, "Using configured IRQ
-> Polarity: %d\n", irq_pol);
-> +		}
-> +
->  		ret = devm_regmap_add_irq_chip(cs35l41->dev, cs35l41-
-> >regmap, cs35l41->irq,
->  					       IRQF_ONESHOT |
-> IRQF_SHARED | irq_pol,
->  					       0,
-> &cs35l41_regmap_irq_chip, &cs35l41->irq_data);
-> --
-> 2.44.0
-> 
 
+Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
 
+--Y9/E1gHvgvc4kx9j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmYiiScACgkQB1IKcBYm
+EmlXpg//YUp1X17oIcSK4w0lHCy6zwMhBi/wizM1BFDARed1bhLj2beqVnEstfN+
+VgFCPujQYP7hxyQ5UuRXMr3ddxdUPk4nGva7+oUWO4AGfosA08QvD8BwJMlwzoH7
+8tEB7WVEeQM1romvXV9mQgceL4I69mmPmO830zAaETXsy+Lqvq/GUTQm8h07lGIZ
+NTYyhk0KXWFtmJ+MVDzMnGxe3GJ8mcTUIcZbu/MPJsaf3jbrDp1QHmF7kdae7APP
+BTYwheqUMnO+yNxm5iEOJ6ykh/gXPhQp974mgOF4LhQMFUik55g1CO9T1WYwYybG
+H5d05QCbdsxprMSiZu5fxGpO84WEwjCFbYIBGvN1P/NaUTe97YAz9paJc/eUnR4p
+On4ixHn0LwH2vuN9mf0jadcLO6drBXnOD7UZOTVmdrkHSeIPgYQpdhkvKGEtvTac
+JmdBer1+2VLnXONiTK85Q49F9DpQ1y9vk8dioYbKQ2eu0RJZU8XKWX3mccxNLhb8
+Bc3ei3nkqY/adWea9DDjNFy9CrwppDNUUQVsp9B8eSwnDwUMhBx9qvuginSv3juz
+PDIQK65OpZZS1Ux3vN0p30n8rNJ0AtFE7tmDs4fXZPD/SgpJCc+YmTwqVn16rZ+V
+dCTs2a7rmtGTXJfVMdPjAozUP5dL08XjSxAnNPu/ZP5AmrjCXDo=
+=fQnb
+-----END PGP SIGNATURE-----
+
+--Y9/E1gHvgvc4kx9j--
