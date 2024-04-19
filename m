@@ -1,82 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA2112FF6E;
-	Fri, 19 Apr 2024 15:50:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52BC77F13;
+	Fri, 19 Apr 2024 15:50:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713541812; cv=none; b=F7GZr0ruXtWWDmmMKs+b+PED85begEal3BIF/gfBv8blPyRz9ZZJV0db5Uz8n45lfWLy5kv+5xOC7Fiagk9e/Yw+q+ewWbBvCM2gIY9XgOvfpqTVE7PShbhO/PepYqTuKbXb/JMXoHrhhBxifkRCnCfPj6SW0aXOFHuJPH5fM7I=
+	t=1713541839; cv=none; b=llxUtTwdAiKq8S2FEKL8LydSacvUQ9TpvrR9IJhg6N05U6DgWqyv6AGjaWydIydVEz5g0C0lpIwrVRZkWuNf/mYF7s6xZI1D5eBUk476x9Pph/MxBKWrwKPxcSuyAi/6wqycKbzEIdg91jxUnH9NppKyaWOLzDxaonOTtiP4YfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713541812; c=relaxed/simple;
-	bh=jvlGgpkF/Oc6sdS8Ym3wS79QaEfTCeYHkiQivnn6tCQ=;
+	s=arc-20240116; t=1713541839; c=relaxed/simple;
+	bh=4syrMVBjLG+mqSAuWdu45onjerLE6hugRcJZYIbTm9w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c1TWbLKWWVhFy6ZTbHt9v2OiGmTO/sEddAOZTd6eIfDgCLdoqHVtYb7KBPaBhWi0lB3jc/YZOO18CaDGqsKbHv+fPLn9tT1LHnv2HkPRTo/TwfDjYOqe82mhm1T5UnyEtIQtZkzcxgGuYQzCBCxhquk8fCtxriKmmxcbwMCiGRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iam3SZGh; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=eRQOzsrj/ljKZqDXeCjzoqjDfNZ7gDiQqNMj/V3zxy6Yy3GW8lNZ8Wpj+4Ze0h9to0OYve361+ZtgU+i+EptEWjNOZhPbTulto8OduVyHbVsfZKROE8yHI0m5CxDzD1YOGYxJOieOXc7RpR1PtGT81f/avI2+EjtzQDf6o8E0W0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OHj3fHUB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iam3SZGh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81F03C072AA;
-	Fri, 19 Apr 2024 15:50:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHj3fHUB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B33F9C3277B;
+	Fri, 19 Apr 2024 15:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713541811;
-	bh=jvlGgpkF/Oc6sdS8Ym3wS79QaEfTCeYHkiQivnn6tCQ=;
+	s=k20201202; t=1713541839;
+	bh=4syrMVBjLG+mqSAuWdu45onjerLE6hugRcJZYIbTm9w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Iam3SZGhTHYGjyhPIqc6jp79nf8yZ1hY2eNXix0OK8rGy89GH2t5M+qaX3NMsVTy+
-	 1JsmqG9KCdZyLjnLCJa+LQtrmCUF/X+AZbv2vBiGWreXnxTLSDAEvJjTzb5rUUd33o
-	 lB5gDX6Wd5EraCkOyV7N38Rs3Ke2p1nun5CjvE612FU67POYlUGPtsJdbP0B4YHQ29
-	 0iwGfNudOU0ROjkbrvzCmqGauJEsew7gMU5e/eo8XbWQjLqcbyvt1UK4P6fQrkrHqv
-	 VuFagmjQ8S4BcLrJCf+U4KIwAuLGhEg2XtTOLgmsata4QtDWGf0PWAt/Xb9DqTgKpJ
-	 jJ/nEOBA7q7kA==
-Date: Fri, 19 Apr 2024 16:50:00 +0100
-From: Conor Dooley <conor@kernel.org>
-To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
+	b=OHj3fHUBZ5oW6uWZr153zLjsZ6q0yv8DxwxD0Zy4isctsEWry5XXGSfR8Vc3hMrh/
+	 vizLT7qFrrEF533kmJCP3HWtZ7Qzr6mVAw251VXfA8O2WlqLyeSYgvuFfPALuIdv03
+	 8KfWQePVkfruiceot7yZycnjNdoMZw4MifC81l3AU9dBYam0QRDoIaUN7a6lFYb8MN
+	 K0Whze6qtl25bkJdh4oiv03gWibiSz5LhY9l5mv+w3PTDhkRKRk4JGDzV2xKnexhV7
+	 tGBMGlG1WEFnNmkggVGWaWOAgxzIa+Avjitv3Mny3kNElAG5XpvzSHnQsEDp7b51Tm
+	 Ziw7Ozh3aQ/+w==
+Date: Fri, 19 Apr 2024 18:49:17 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Masami Hiramatsu <masami.hiramatsu@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Anup Patel <anup@brainfault.org>, Shuah Khan <shuah@kernel.org>,
-	Atish Patra <atishp@atishpatra.org>, linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 08/12] dt-bindings: riscv: add Zcmop ISA extension
- description
-Message-ID: <20240419-lumpish-synapse-db19786b15cd@spud>
-References: <20240418124300.1387978-1-cleger@rivosinc.com>
- <20240418124300.1387978-9-cleger@rivosinc.com>
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v4 14/15] kprobes: remove dependency on CONFIG_MODULES
+Message-ID: <ZiKSffcTiP2c6fbs@kernel.org>
+References: <20240411160051.2093261-1-rppt@kernel.org>
+ <20240411160051.2093261-15-rppt@kernel.org>
+ <20240418061615.5fad23b954bf317c029acc4d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="GUO42IRTVVtzYpmy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240418124300.1387978-9-cleger@rivosinc.com>
+In-Reply-To: <20240418061615.5fad23b954bf317c029acc4d@gmail.com>
 
+Hi Masami,
 
---GUO42IRTVVtzYpmy
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 18, 2024 at 06:16:15AM +0900, Masami Hiramatsu wrote:
+> Hi Mike,
+> 
+> On Thu, 11 Apr 2024 19:00:50 +0300
+> Mike Rapoport <rppt@kernel.org> wrote:
+> 
+> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> > 
+> > kprobes depended on CONFIG_MODULES because it has to allocate memory for
+> > code.
+> > 
+> > Since code allocations are now implemented with execmem, kprobes can be
+> > enabled in non-modular kernels.
+> > 
+> > Add #ifdef CONFIG_MODULE guards for the code dealing with kprobes inside
+> > modules, make CONFIG_KPROBES select CONFIG_EXECMEM and drop the
+> > dependency of CONFIG_KPROBES on CONFIG_MODULES.
+> 
+> Thanks for this work, but this conflicts with the latest fix in v6.9-rc4.
+> Also, can you use IS_ENABLED(CONFIG_MODULES) instead of #ifdefs in
+> function body? We have enough dummy functions for that, so it should
+> not make a problem.
 
-On Thu, Apr 18, 2024 at 02:42:31PM +0200, Cl=E9ment L=E9ger wrote:
-> Add description for the Zcmop (Compressed May-Be-Operations) ISA
-> extension which was ratified in commit c732a4f39a4 ("Zcmop is
-> ratified/1.0") of the riscv-isa-manual.
+The code in check_kprobe_address_safe() that gets the module and checks for
+__init functions does not compile with IS_ENABLED(CONFIG_MODULES). 
+I can pull it out to a helper or leave #ifdef in the function body,
+whichever you prefer.
+ 
+> -- 
+> Masami Hiramatsu
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
---GUO42IRTVVtzYpmy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiKSqAAKCRB4tDGHoIJi
-0m3+APsG28OMlzctPcsp9V+PWZH+VVar6PGgqnHMgv4RxiPxAwEA/dAxomnDRjLs
-fCfTTVZKzD353yb1BT0EmnILnVijyww=
-=FnpG
------END PGP SIGNATURE-----
-
---GUO42IRTVVtzYpmy--
+-- 
+Sincerely yours,
+Mike.
