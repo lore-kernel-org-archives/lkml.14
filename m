@@ -1,113 +1,145 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5C01311B9;
-	Fri, 19 Apr 2024 16:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2BB12E1D5
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 16:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713544147; cv=none; b=LJZP4Rim3OyO5PoswEiFp1Zo9CrTA6pVqm98+z0disFLiuQ4ZJ/67mc1nD6NZpLqnHlu93msdJgZ+KKMZoJV9DfSVVaaP8RtD1EBMNlOomxXDEOs7JQsYa+vxUH3nQ8AlKhorUJhdMHKSdWuI/3ngv9WIrYKht+0kookRZvA9JI=
+	t=1713544257; cv=none; b=Dqw+c9MyVZ4iieor6l4KXlGJBIisdGas3o4EiUCbV8QQ9AkJPAHxLdjB2SxQdoVcqV6QoQ8ZJqdhjdfmz9O7q+DbicRsGZ6rCEkv6pF4tJpvMgb48QgOLU85Y0sADLcMAW4Rnx/53IcJRvgrzXpPwoue5PtE7qMd/CKAqivkRRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713544147; c=relaxed/simple;
-	bh=ezY9lIHJUPii+5GdCwA6/18Koh5RgsMU5I39216AfOk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ShQij+Ls2W953oJflNSNqejeKb++mOpPdaBaHGwMFN/Tk8PurM2YpHEHqppnTcO8OMIrwiGt+WuMHmAjt4EwHjtBpEVm3EWl1ohVnQHXLh3Ks8eIshPGlJFrPiWX2JsHZemq8jHlMjXmeBMxBMKy8aLovScUfZx/vclYTx43OrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a5568bef315so390403066b.1;
-        Fri, 19 Apr 2024 09:29:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXy2U0jC1PEbcNO31z4xeQjR1lI6bwEgnGmAYB935/LpOOHqaEsKjDUP69PE+KpBPZ8QWfag3MJUgajmLBNxluYpItPks0eQT85Kw==
-X-Gm-Message-State: AOJu0YyF+YfGWI99qj05VipgxDEHqjyxK+CvAmDvJW76Q3ctph+bdof9
-	ddR+5ye+CRxaQ5LpqUEI/UaeV8G9afz9XYMrrA2u8rnUayUt5bqnZgV2WxfLduHQSrWqbc7T947
-	4A8hoU34vkLJx4lDddaedejKyF0o=
-X-Google-Smtp-Source: AGHT+IEVEabqKcu9eSY49T1AtpQFY4UB0nkwSjaSaTuptyXMJCug2muIi2v3znemu/NffBUEWviDXqEITFTlgcoMj4c=
-X-Received: by 2002:a17:907:3601:b0:a55:577e:4e2e with SMTP id
- bk1-20020a170907360100b00a55577e4e2emr5791100ejc.20.1713544142900; Fri, 19
- Apr 2024 09:29:02 -0700 (PDT)
+	s=arc-20240116; t=1713544257; c=relaxed/simple;
+	bh=2ChmEuRipVKFDKO+61sOph/LVI0N2uCOf1rUm1S9VJc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NJJhZREo98afRBlzdjzuscWhKm5ojTK3CKkfskgWNbnHCqeRo+4mQs0HHcNvZ556fB8NxvRwFOOnsZTWbc0uPNkon3nfuWgMP3Qe9LXJ5GugyB8FhHcerMBOK1PJVara1ItvnvtsViXH/Eu9AenOC4BGavRe3b0h1nqMwTs62Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pl9kVHpf; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pl9kVHpf"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ece8991654so2066904b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 09:30:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713544255; x=1714149055; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=9AqGcd7l2AM+pHRo1KfIRKsSfduZ03PoAnP5ssDCeqM=;
+        b=pl9kVHpfUP4h+EKoWy8/3vSCH5KCiBS5FDSkS4yoy0rM1e1X/QE3ySm3qLrPxcjdgF
+         7+xxXZCpEaJZKj9zIEFbq8sxJ8W1Wh9YMelcqLAbvilrrWER8Fmz37y1Y5c7F8J0AdCh
+         x7aTIsPzwRwhLR0iXrg8kTSk/gZNJ/Z1mY2YdC1cEppdTBWNP5OhPJRFTf7/FTDZlqD1
+         7iBT4+r7TmDlGIBL/jkqrf63W6Ykq13l9fi9tz2jAvqpc4khzntM8vv0S1qjJ7Kbjza0
+         ot7lCfkvMwUPmitTyT3mqbugjbevaw1y0kvcsXSgyCMcPv7dFpdxjodzwYtA2/YqhkH5
+         r6SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713544255; x=1714149055;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9AqGcd7l2AM+pHRo1KfIRKsSfduZ03PoAnP5ssDCeqM=;
+        b=G9TCPKkpMKIaVWKfGd2CdghzRkjUZ8NZM9RWXVepvVIczjvknI1kUEHKzIBtq1eL8s
+         UCt4BZxBf5NfZDKIB6zbpj+HP/dFgQO/jFldQjXvr3ALuBdHej6GIoHGTEtZ1c8yhNmj
+         eo1XGvVA2AtKQE84slcgbrB2Sv+lE0/Wy6JyxphPwO5VsyAQJeNDPL0ujj4EHjQZyjJs
+         jioTTBL4uVzo1LnwGs1iIx68kq0pWybW+iVMgv96kAPg4GXPxyUllTrMEXSyfbFWREHS
+         pvLG8p45RW8jAtU0m8l6Y2tWzC3JehTo1hsCL1s1Qy8qRn+G8a8S4YtTY0npuCaCfiP6
+         6W7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVT0jVGc4TeAFGjGuGadVKLIcdw2M5t4BlI/3nZFS19FQDrfHOoJDyyx2JMsIgu8gXUwYNe3xKgAD9W02eZwTkvptWCQskvnLwmq2Qb
+X-Gm-Message-State: AOJu0YwI66do114ePyczj01VUYal8Ic+1bk9v87OZFztAIvJQOY4SF60
+	/rPH6ghsHm9xj43h0SM3LQlvwLi60b+EEF6Cr7podEJ6kgaoL3GYF5mR8fYHHac=
+X-Google-Smtp-Source: AGHT+IG1/H33eIhEJoNVFzIV3iLrOi7Lc4imyDOqsKKNxCuSWJwd2E6dw4y1PTZu+yerUyKaC9Zlog==
+X-Received: by 2002:a17:902:6bc4:b0:1e4:51ab:fffb with SMTP id m4-20020a1709026bc400b001e451abfffbmr2633396plt.25.1713544255224;
+        Fri, 19 Apr 2024 09:30:55 -0700 (PDT)
+Received: from [172.20.9.36] ([209.37.221.130])
+        by smtp.gmail.com with ESMTPSA id c8-20020a170902724800b001e2a42a2e34sm3546640pll.65.2024.04.19.09.30.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Apr 2024 09:30:54 -0700 (PDT)
+Message-ID: <64604842-6ac7-4428-9673-140eefed3433@linaro.org>
+Date: Fri, 19 Apr 2024 18:30:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240306171149.3843481-1-floppym@gentoo.org> <CAJ0EP42dLgjk5ucgzDoknBzkByL=O5v43gCmMR2BvgBxsaAkCg@mail.gmail.com>
-In-Reply-To: <CAJ0EP42dLgjk5ucgzDoknBzkByL=O5v43gCmMR2BvgBxsaAkCg@mail.gmail.com>
-From: Mike Gilbert <floppym@gentoo.org>
-Date: Fri, 19 Apr 2024 12:28:51 -0400
-X-Gmail-Original-Message-ID: <CAJ0EP41garVk6XMggpQ-zsvREa-oy7qq6PpuyyCPoztBr=8K6A@mail.gmail.com>
-Message-ID: <CAJ0EP41garVk6XMggpQ-zsvREa-oy7qq6PpuyyCPoztBr=8K6A@mail.gmail.com>
-Subject: Re: [PATCH] sparc: move struct termio to asm/termios.h
-To: "David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: PCI: qcom,pcie-sm8350: Drop redundant
+ 'oneOf' sub-schema
+To: "Rob Herring (Arm)" <robh@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240417200431.3173953-1-robh@kernel.org>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240417200431.3173953-1-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 3, 2024 at 3:15=E2=80=AFPM Mike Gilbert <floppym@gentoo.org> wr=
-ote:
->
-> On Wed, Mar 6, 2024 at 12:11=E2=80=AFPM Mike Gilbert <floppym@gentoo.org>=
- wrote:
-> >
-> > Every other arch declares struct termio in asm/termios.h, so make sparc
-> > match them.
-> >
-> > Resolves a build failure in the PPP software package, which includes
-> > both bits/ioctl-types.h via sys/ioctl.h (glibc) and asm/termbits.h.
-> >
-> > Closes: https://bugs.gentoo.org/918992
-> > Signed-off-by: Mike Gilbert <floppym@gentoo.org>
-> > Cc: stable@vger.kernel.org
-> > ---
-> >  arch/sparc/include/uapi/asm/termbits.h | 10 ----------
-> >  arch/sparc/include/uapi/asm/termios.h  |  9 +++++++++
-> >  2 files changed, 9 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/arch/sparc/include/uapi/asm/termbits.h b/arch/sparc/includ=
-e/uapi/asm/termbits.h
-> > index 4321322701fc..0da2b1adc0f5 100644
-> > --- a/arch/sparc/include/uapi/asm/termbits.h
-> > +++ b/arch/sparc/include/uapi/asm/termbits.h
-> > @@ -10,16 +10,6 @@ typedef unsigned int tcflag_t;
-> >  typedef unsigned long  tcflag_t;
-> >  #endif
-> >
-> > -#define NCC 8
-> > -struct termio {
-> > -       unsigned short c_iflag;         /* input mode flags */
-> > -       unsigned short c_oflag;         /* output mode flags */
-> > -       unsigned short c_cflag;         /* control mode flags */
-> > -       unsigned short c_lflag;         /* local mode flags */
-> > -       unsigned char c_line;           /* line discipline */
-> > -       unsigned char c_cc[NCC];        /* control characters */
-> > -};
-> > -
-> >  #define NCCS 17
-> >  struct termios {
-> >         tcflag_t c_iflag;               /* input mode flags */
-> > diff --git a/arch/sparc/include/uapi/asm/termios.h b/arch/sparc/include=
-/uapi/asm/termios.h
-> > index ee86f4093d83..cceb32260881 100644
-> > --- a/arch/sparc/include/uapi/asm/termios.h
-> > +++ b/arch/sparc/include/uapi/asm/termios.h
-> > @@ -40,5 +40,14 @@ struct winsize {
-> >         unsigned short ws_ypixel;
-> >  };
-> >
-> > +#define NCC 8
-> > +struct termio {
-> > +       unsigned short c_iflag;         /* input mode flags */
-> > +       unsigned short c_oflag;         /* output mode flags */
-> > +       unsigned short c_cflag;         /* control mode flags */
-> > +       unsigned short c_lflag;         /* local mode flags */
-> > +       unsigned char c_line;           /* line discipline */
-> > +       unsigned char c_cc[NCC];        /* control characters */
-> > +};
-> >
-> >  #endif /* _UAPI_SPARC_TERMIOS_H */
-> > --
-> > 2.44.0
-> >
->
-> Ping. Could we get this merged please?
+On 17/04/2024 22:04, Rob Herring (Arm) wrote:
+> The first entry in the 'oneOf' schema doesn't work because the top
+> level schema requires exactly 8 interrupt entries. The 2nd entry is just
+> redundant with the top level. Since 1 entry appears to have been a
+> mistake, let's just drop the entire 'oneOf' rather than reworking the
+> top-level to allow 1 entry.
+> 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-Ping again. Any response from a SPARC maintainer would be appreciated.
+Indeed, copy-pasta. 8 entries is correct, just sometimes we were all too
+lazy to describe all of them in DTS.
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
+
