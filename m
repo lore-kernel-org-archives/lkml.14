@@ -1,196 +1,86 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6CB79949;
-	Fri, 19 Apr 2024 09:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28A769DFB;
+	Fri, 19 Apr 2024 09:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713517451; cv=none; b=HB7JVpB61UECjp72jkqgw0AnfcePg8cDUIzoWgSYFCYm9OaKV8iHKLi44ZmSVdsb0WXPlmDh/k1IYm+03sTr8qIjlFsKPDvWA8QU+1S9TqYtpuZCz3xr1wOa2HpHHj3rnHmkeOwHUyU50VDVxj6yvfamZ84XPBwVFK7n8u2VMXM=
+	t=1713517542; cv=none; b=A2qlxunDI2ewc6AiCuP/ZHeYciyS/qhkJaXdNHEQWHcc5Z4gqAWGkfd5jjEAGxLcN280W+81NExTRef3W9WH+bMSxzcxyTreqV2Z2TZFnOSnBNlIdHAjEbQKnEAZpwGn6dAl3saywew34+D7gQMD+nBdGtnJ1oOffuCb5B4CIxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713517451; c=relaxed/simple;
-	bh=yYoDQShDvmrOZ9K2+7B7afIlK5+dkxlsEVPcBywafew=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Grs+LnMfkUckmP3gBGEo72evk+4qagvCCimbBZr7VGRBN2Qxj/P/rLXfovudsbfMm2vwoxfxwE3eCmHVVMN/x51c/oZPj3LXwo7GBf8r0OEKLhD2el3xuJFWpYgT2EIc4AZGEovV+Ia+wiJ0sMxXvnC80OCxTY5Nebmw4TbAEx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NAOuEUb7; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAOuEUb7"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2da01cb187cso31191721fa.0;
-        Fri, 19 Apr 2024 02:04:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713517448; x=1714122248; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rgMQYr4oV4JNndEuD2biU5vQV/pnebRAnRkbrVejXaA=;
-        b=NAOuEUb7WgJEj8njit/zXVSz0BKrQR4AWPES9QfrV2/yjdWc8nrl4EdwHRXXxxFIXz
-         9QsB7uyD3UeUSM3IP0CJ0GUplyTlsrfkqbEf1NdzIODSkG7yD+aY6MiLBdjmJcDUVsO/
-         i0MxP/a8+P1WbBHBndeDZwOm43rGiJLn3Drmaa7y3CyqU5Z6XfuRLRTw0+wj08dYeKts
-         scDamhWSGV9hNSI4RLJsaK90gwbEotpyTg7gxEFGMjOY4N6cL4EJ5/MN0IyJPRpKQOC/
-         7KIRM+lWoUz33iz/5f6xKfW3FW7vU5p7OX9YxTAHftcCMMAp/eu699BVuHgmeh67Pq6t
-         Mxqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713517448; x=1714122248;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rgMQYr4oV4JNndEuD2biU5vQV/pnebRAnRkbrVejXaA=;
-        b=hGLoFd06nLSmTtdbdzPGtKE/nDEnjwR+0mxM1ErzqTb9Rz5rGQ70q/YykacLPVx38U
-         wEWyaH4QgiHrN+aNyHcjGzs8UboPPUrrwrncIa8yABtTH1QxVMH/j7O6w65KU13WoRXQ
-         gfWADzNf4eLDYUO8BxXRuC7TNy9lczsHOvEwi0+0iM5ti8qSJC5k0DdzVYMscrVM8pVf
-         lEw+PKlx+wOxyZAPewoCm1r/aqYdHifxRyMFxcyUM3JdPcxmuO8pnmO+hEJ4HWSdtTSh
-         eASCVFfJCxYsqsJ4K/2ZjoAQCYA3qsUiOIUAdaSn/1sMHeZGe6PBF2X8Vgu7g1tdPZVY
-         nspA==
-X-Forwarded-Encrypted: i=1; AJvYcCVvXtBrjU7QCbYIQb3UygH7d9hLqFQCIjlIQr/vs7VxiTn9egT4YLQa4/PFEheYWmNSOsLc9gFrB/EVv3ebevyjaamwn93T59jR/hd2SdXuNhLbq3wHUCCoC3XZLuzrT3OwknXZ
-X-Gm-Message-State: AOJu0YxMhJu3PlWkqXWwnI5nIqotsfsdLMeQ1YP67UPWsfLvVOhjcTAA
-	QdlyFWFkQIKjACzycdusmvJpKt8XlsjmAf2JV54UUaCQY+UCbIJg
-X-Google-Smtp-Source: AGHT+IHQi06xeUbRVNwJPi1rGkVQYXntNtrD89Vy0P8/uMlqN9zH9EDGdcfcGdRrkx/08kp0eZERLQ==
-X-Received: by 2002:a2e:2a46:0:b0:2d4:7455:89f6 with SMTP id q67-20020a2e2a46000000b002d4745589f6mr1137769ljq.40.1713517448297;
-        Fri, 19 Apr 2024 02:04:08 -0700 (PDT)
-Received: from localhost (srv1.baikalchip.ru. [87.245.175.227])
-        by smtp.gmail.com with ESMTPSA id h25-20020a2e3a19000000b002da968f03f9sm520526lja.89.2024.04.19.02.04.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 02:04:07 -0700 (PDT)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	Simon Horman <horms@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND net-next v3 2/2] net: stmmac: Move MAC caps init to phylink MAC caps getter
-Date: Fri, 19 Apr 2024 12:03:06 +0300
-Message-ID: <20240419090357.5547-3-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240419090357.5547-1-fancer.lancer@gmail.com>
-References: <20240419090357.5547-1-fancer.lancer@gmail.com>
+	s=arc-20240116; t=1713517542; c=relaxed/simple;
+	bh=3F263T9DjJp6sF8LRqG6ccucwjDKAexzal9qHEK3RWE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rr11mlU7BFWbSy6bTOoVTQdVRKvrMPMn6f+lvVGtHyQXy21M2vjGXIMTIJM+V6aIAmltCKbYQT/FkOBJNDgjzcYDUPNvIfmPHajK21aaS4zp6Ae4gM5QZHwr2zIO2JuiDQqLADFg5698B37j0qKWhziFC4AiykzemazSEQ8TJ4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VLTDx5GkHz1N8Qd;
+	Fri, 19 Apr 2024 17:02:41 +0800 (CST)
+Received: from canpemm500001.china.huawei.com (unknown [7.192.104.163])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7B50B18006D;
+	Fri, 19 Apr 2024 17:05:31 +0800 (CST)
+Received: from octopus.huawei.com (10.67.174.191) by
+ canpemm500001.china.huawei.com (7.192.104.163) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 19 Apr 2024 17:05:31 +0800
+From: Zhang Qiao <zhangqiao22@huawei.com>
+To: <mingo@kernel.org>, <chrubis@suse.cz>, <rostedt@goodmis.org>,
+	<bagasdotme@gmail.com>, <corbet@lwn.net>
+CC: <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Zhang Qiao
+	<zhangqiao22@huawei.com>
+Subject: [PATCH v2] sched/Documentation: Add RT_RUNTIME_SHARE documentation
+Date: Fri, 19 Apr 2024 17:04:32 +0800
+Message-ID: <20240419090432.1935211-1-zhangqiao22@huawei.com>
+X-Mailer: git-send-email 2.18.0.huawei.25
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500001.china.huawei.com (7.192.104.163)
 
-After a set of recent fixes the stmmac_phy_setup() and
-stmmac_reinit_queues() methods have turned to having some duplicated code.
-Let's get rid from the duplication by moving the MAC-capabilities
-initialization to the PHYLINK MAC-capabilities getter. The getter is
-called during each network device interface open/close cycle. So the
-MAC-capabilities will be initialized in generic device open procedure and
-in case of the Tx/Rx queues re-initialization as the original code
-semantics implies.
+RT_RUNTIME_SHARE is an important strategy for rt bandwidth, and
+we should document this sched feature.
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-Reviewed-by: Romain Gantois <romain.gantois@bootlin.com>
-
+Signed-off-by: Zhang Qiao <zhangqiao22@huawei.com>
+Improvements-suggested-by: Bagas Sanjaya <bagasdotme@gmail.com>
 ---
+ Documentation/scheduler/sched-rt-group.rst | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Link: https://lore.kernel.org/netdev/20240412180340.7965-5-fancer.lancer@gmail.com/
-Changelog v2:
-- Resubmit the patch to net-next separately from the main patchset (Paolo)
----
- .../net/ethernet/stmicro/stmmac/stmmac_main.c | 36 +++++++++----------
- 1 file changed, 17 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index b810f6b69bf5..0d6cd1704e6a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -936,6 +936,22 @@ static void stmmac_mac_flow_ctrl(struct stmmac_priv *priv, u32 duplex)
- 			priv->pause, tx_cnt);
- }
+diff --git a/Documentation/scheduler/sched-rt-group.rst b/Documentation/scheduler/sched-rt-group.rst
+index d685609ed3d7..eea2fc6f068f 100644
+--- a/Documentation/scheduler/sched-rt-group.rst
++++ b/Documentation/scheduler/sched-rt-group.rst
+@@ -12,6 +12,7 @@ Real-Time group scheduling
+      2.1 System-wide settings
+      2.2 Default behaviour
+      2.3 Basis for grouping tasks
++     2.4 RT_RUNTIME_SHARE sched feature
+    3. Future plans
  
-+static unsigned long stmmac_mac_get_caps(struct phylink_config *config,
-+					 phy_interface_t interface)
-+{
-+	struct stmmac_priv *priv = netdev_priv(to_net_dev(config->dev));
+ 
+@@ -146,6 +147,17 @@ For now, this can be simplified to just the following (but see Future plans):
+ 
+    \Sum_{i} runtime_{i} <= global_runtime
+ 
++2.4 RT_RUNTIME_SHARE sched feature
++----------------------------------
 +
-+	/* Refresh the MAC-specific capabilities */
-+	stmmac_mac_update_caps(priv);
++RT_RUNTIME_SHARE allows a cpu to borrow rt-runtime from other cpus if it runs
++out of its own rt-runtime.
 +
-+	config->mac_capabilities = priv->hw->link.caps;
++With this feature enabled, a rt-task may hit 100% cpu usage and can stall other
++per-cpu tasks like kworkers, as a result, which leads into system hang.
 +
-+	if (priv->plat->max_speed)
-+		phylink_limit_mac_speed(config, priv->plat->max_speed);
-+
-+	return config->mac_capabilities;
-+}
-+
- static struct phylink_pcs *stmmac_mac_select_pcs(struct phylink_config *config,
- 						 phy_interface_t interface)
- {
-@@ -1105,6 +1121,7 @@ static void stmmac_mac_link_up(struct phylink_config *config,
- }
++Thus, it is advised to disable this feature by default to avoid aforementioned
++issue unless you know what you're doing.
  
- static const struct phylink_mac_ops stmmac_phylink_mac_ops = {
-+	.mac_get_caps = stmmac_mac_get_caps,
- 	.mac_select_pcs = stmmac_mac_select_pcs,
- 	.mac_config = stmmac_mac_config,
- 	.mac_link_down = stmmac_mac_link_down,
-@@ -1204,7 +1221,6 @@ static int stmmac_phy_setup(struct stmmac_priv *priv)
- 	int mode = priv->plat->phy_interface;
- 	struct fwnode_handle *fwnode;
- 	struct phylink *phylink;
--	int max_speed;
- 
- 	priv->phylink_config.dev = &priv->dev->dev;
- 	priv->phylink_config.type = PHYLINK_NETDEV;
-@@ -1225,15 +1241,6 @@ static int stmmac_phy_setup(struct stmmac_priv *priv)
- 		xpcs_get_interfaces(priv->hw->xpcs,
- 				    priv->phylink_config.supported_interfaces);
- 
--	/* Refresh the MAC-specific capabilities */
--	stmmac_mac_update_caps(priv);
--
--	priv->phylink_config.mac_capabilities = priv->hw->link.caps;
--
--	max_speed = priv->plat->max_speed;
--	if (max_speed)
--		phylink_limit_mac_speed(&priv->phylink_config, max_speed);
--
- 	fwnode = priv->plat->port_node;
- 	if (!fwnode)
- 		fwnode = dev_fwnode(priv->device);
-@@ -7327,7 +7334,6 @@ int stmmac_reinit_queues(struct net_device *dev, u32 rx_cnt, u32 tx_cnt)
- {
- 	struct stmmac_priv *priv = netdev_priv(dev);
- 	int ret = 0, i;
--	int max_speed;
- 
- 	if (netif_running(dev))
- 		stmmac_release(dev);
-@@ -7341,14 +7347,6 @@ int stmmac_reinit_queues(struct net_device *dev, u32 rx_cnt, u32 tx_cnt)
- 			priv->rss.table[i] = ethtool_rxfh_indir_default(i,
- 									rx_cnt);
- 
--	stmmac_mac_update_caps(priv);
--
--	priv->phylink_config.mac_capabilities = priv->hw->link.caps;
--
--	max_speed = priv->plat->max_speed;
--	if (max_speed)
--		phylink_limit_mac_speed(&priv->phylink_config, max_speed);
--
- 	stmmac_napi_add(dev);
- 
- 	if (netif_running(dev))
+ 3. Future plans
+ ===============
 -- 
-2.43.0
+2.18.0.huawei.25
 
