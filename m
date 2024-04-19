@@ -1,94 +1,101 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138B312A14B
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 13:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7014612A151
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 13:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713534110; cv=none; b=cmq+kVmqaqIU1mh6WZlEajvpqUg8sMs3DP5ES1dMbZqhbj6Y6aqvEwFC/KEWZikGOTuNT2NMryFLEbE+VCfOKsmX7i1hb9Y42Z4SAMgkh2mdCrr79EehNZpH7j1mZBxs0zmNxS2K/1z4NDLNoHSBHPufwM9rWWAuXfx1SXjwpjc=
+	t=1713534131; cv=none; b=cOqzdhpsPSEyVRlkY0NJwVL6evQh6GjQidfP1RY6ewkaSYf9LGZi9GIKmzQWZmjRmet6Px7qffebm75El+a5XvJ8M2FiAly0CkecqgacOUKD4JFkKHLtb7dekwQIiSbVk9DDjLwk3eXVUpXaIlSNfzNxpNiDzlMzCo+T3R0ftaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713534110; c=relaxed/simple;
-	bh=++wcf7Oo4HULNgJkZlzxzN8ZrDnid6G0r8PM+hd/TmA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mfrHKfgF2N/sRzsp96HaRa3li97EBPy4Rnh+B4q9ubnfXDSW9IHpxYANwVBxHgvYIvKiRA2eUAFoVyUfyVPpewFykP8wsBDUvzVsOFr5a4N4vf+JWcYhzfPQGVQqzAFuakvHGtl7FGlFzKQKJDSqnRIvTcoERyMitEDwt50Fjx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yhS8pdkg; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1713534131; c=relaxed/simple;
+	bh=m+aW3ZV1GbE1e9yfgDFlcGvNARGgqlrucJS6VWZSudI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Za8zTRXppOYxsI3xdiHUm0eYr2cnrs1OVrwLLNOPfcMjVA9oxKkA2Oi2Qobp2DQXjNdAeK+9+IMaoTtsaBwl7LzWdFWQ5ETVp9DpKyAuCGcO8yz2lsB9aYrcd3EkUZu2qLv3Nu211SytnoYpPqE25FNnYQ622q6xIMefu9P7Nto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=P5wnIWlP; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yhS8pdkg"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de46f4eacd3so3225155276.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 06:41:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713534108; x=1714138908; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eIbLUE3R+om1X38nMWnrzy+JncLTgQydVTTv5mFU/to=;
-        b=yhS8pdkg5a0QmmX07joNPZJ0N4sU0obGDf6bRs3TVSq11kdwDWrV2dp0S34rlwlkN1
-         iBLI9kvtOwYSmtla4xBsqI3NgAhVW/o0WGzVGMqUdkaAVTEMQQ+u5jBuotUDBPNekhUA
-         6yDZE6n/pkcuDReGrlYG9mTy48l5Wg/VeFK8ZZZlOO0D8eMjEHpe/0N5U2aVYMKNcPP/
-         2O6ofg8VDMxwmxGSN/faxHXi9tlhY2D8JWh6BRWXrwOq3z2ogq5kPrA+NQ59lQAqYfjH
-         b/A5qWjFY9Ug+IPinjO55AorMBOcgVKn3CM8jFCvXgMz1Ma1Nigch69YJgquBIl5IOtZ
-         x/CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713534108; x=1714138908;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eIbLUE3R+om1X38nMWnrzy+JncLTgQydVTTv5mFU/to=;
-        b=dGFcyLD7ZeYBVyWFv3jUS+x1+zieC+ETY/70xHVIyim4fYc+UWgMHyBA5ZOXlhYg5c
-         00v7LP7r517RKqFcV8hFW9X51dJAe5mYhl0sGH0wgZekERZM3/Wj1+NLct40GlxLWOd3
-         RJgVMjT7mWfNJcLXhWJslgvMQu8kIlaNMZwKWIOc2H8lTpCidTCZUhxpa5ZczQ4wyb8r
-         KWeUf8gkXO4nQkQj4moRvf1fNYE5srMlWf9B2szPG4u83q8zJo0ROadPn65rF9NrYNck
-         UlLaECaaqbiG0u2sO6GYd6rKZbNlFiDUh3reFc3WxF2Ig8RIJbzgWpV904ozQUG8J9pf
-         jE3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWJxwoFEYU612MsR9UizsM/chRWrNuxzkw6Tw9hly1hpP4eJ17uW0kvgAIZvOgnfttiqk2N4FLRKdf+RV6Rn3ADSmtRM+OaPpXr5YBr
-X-Gm-Message-State: AOJu0Yx4kkRnSZiLbs3cdgs+/FfVcSmdLsYmvKItVLj1tz3dTpddlEwS
-	wrkl0umspnz8A/SRvaBHeGk3aaSq5iX+lrybayTqQJMJMvcJZtzfje9Uw7Q+7gz1g5IfsllnSNm
-	Fjw==
-X-Google-Smtp-Source: AGHT+IH4Z5T1+pfr45JTb+aarirdSILE0eG0Md04IR0SIPvit+QdVNVNsvLm+lVVA1gUCgt74a+9v16dFMI=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:100e:b0:de4:c2d4:e14f with SMTP id
- w14-20020a056902100e00b00de4c2d4e14fmr404835ybt.11.1713534108121; Fri, 19 Apr
- 2024 06:41:48 -0700 (PDT)
-Date: Fri, 19 Apr 2024 06:41:46 -0700
-In-Reply-To: <20240419112952.15598-5-wei.w.wang@intel.com>
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="P5wnIWlP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1713533777; bh=m+aW3ZV1GbE1e9yfgDFlcGvNARGgqlrucJS6VWZSudI=;
+	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
+	b=P5wnIWlPxezCqS2wvKd6KcgnwYxU+XsjnFt1xIkJTx20A17TE15EBcLuNpCOoDYTg
+	 emXzPzvLZcjc6Xsxsz7PDpNeXjd2K7Umcx+vH7JxALRvh9aTEY9SA5u8qu+mh959mq
+	 HcUbOxybGwzDSnFgggrKIbiola9mUZSyr2J8ISbc=
+Date: Fri, 19 Apr 2024 15:36:17 +0200
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To: linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>, 
+	Chen-Yu Tsai <wens@csie.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH v2 0/3] Move blender setup from individual planes to crtc
+ commit in sun4i-drm
+Message-ID: <wynuwtyn2skchb7gc5qixql2pxnb2nqvbmrda6s53u7nt5ki7n@hqb46kttkhee>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
+	linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <20240224150604.3855534-1-megi@xff.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240419112952.15598-1-wei.w.wang@intel.com> <20240419112952.15598-5-wei.w.wang@intel.com>
-Message-ID: <ZiJ0mjZxlRsLwl3E@google.com>
-Subject: Re: [RFC PATCH v2 4/5] KVM: x86: Remove KVM_X86_OP_OPTIONAL
-From: Sean Christopherson <seanjc@google.com>
-To: Wei Wang <wei.w.wang@intel.com>
-Cc: pbonzini@redhat.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240224150604.3855534-1-megi@xff.cz>
 
-On Fri, Apr 19, 2024, Wei Wang wrote:
-> KVM_X86_OP and KVM_X86_OP_OPTIONAL were utilized to define and execute
-> static_call_update() calls on mandatory and optional hooks, respectively.
-> Mandatory hooks were invoked via static_call() and necessitated definition
-> due to the presumption that an undefined hook (i.e., NULL) would cause
-> static_call() to fail. This assumption no longer holds true as
-> static_call() has been updated to treat a "NULL" hook as a NOP on x86.
-> Consequently, the so-called mandatory hooks are no longer required to be
-> defined, rendering them non-mandatory. 
+Hi,
 
-This is wrong.  They absolutely are mandatory.  The fact that static_call() doesn't
-blow up doesn't make them optional.  If a vendor neglects to implement a mandatory
-hook, KVM *will* break, just not immediately on the static_call().
-
-The static_call() behavior is actually unfortunate, as KVM at least would prefer
-that it does explode on a NULL point.  I.e. better to crash the kernel (hopefully
-before getting to production) then to have a lurking bug just waiting to cause
-problems.
-
-> This eliminates the need to differentiate between mandatory and optional
-> hooks, allowing a single KVM_X86_OP to suffice.
+On Sat, Feb 24, 2024 at 04:05:57PM GMT, megi xff wrote:
+> From: Ondrej Jirman <megi@xff.cz>
 > 
-> So KVM_X86_OP_OPTIONAL and the WARN_ON() associated with KVM_X86_OP are
-> removed to simplify usage, 
+> This series refactors blender setup from individual planes to a common
+> place where it can be performed at once and is easier to reason about.
+> 
+> In the process this fixes a few bugs that allowed blender pipes to be
+> disabled while corresponding DRM planes were requested to be enabled.
+> 
+> Please take a look. :)
+> 
+> v2:
+> - use regmap_write where possible
+> - add review tags
 
-Just in case it isn't clear, I am very strongly opposed to removing KVM_X86_OP_OPTIONAL()
-and the WARN_ON() protection to ensure mandatory ops are implemented.
+It would be nice to have this applied.
+
+Kind regards,
+	o.
+
+> Thank you very much,
+> 	Ondřej Jirman
+> 
+> Ondrej Jirman (3):
+>   drm/sun4i: Unify sun8i_*_layer structs
+>   drm/sun4i: Add more parameters to sunxi_engine commit callback
+>   drm/sun4i: Fix layer zpos change/atomic modesetting
+> 
+>  drivers/gpu/drm/sun4i/sun4i_backend.c  |  4 +-
+>  drivers/gpu/drm/sun4i/sun4i_crtc.c     |  2 +-
+>  drivers/gpu/drm/sun4i/sun8i_mixer.c    | 70 ++++++++++++++++++++-
+>  drivers/gpu/drm/sun4i/sun8i_mixer.h    | 20 ++++++
+>  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 85 +++----------------------
+>  drivers/gpu/drm/sun4i/sun8i_ui_layer.h | 20 ++----
+>  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 86 +++-----------------------
+>  drivers/gpu/drm/sun4i/sun8i_vi_layer.h | 20 ++----
+>  drivers/gpu/drm/sun4i/sunxi_engine.h   | 13 +++-
+>  9 files changed, 125 insertions(+), 195 deletions(-)
+> 
+> -- 
+> 2.44.0
+> 
