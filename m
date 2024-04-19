@@ -1,183 +1,124 @@
-Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [178.154.239.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCED8172F
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 11:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60F83F8F6;
+	Fri, 19 Apr 2024 11:29:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713526144; cv=none; b=Km7rHADXNah8dfs3T+RQ8MtENs1dkT73af/spd/MN7sTfhIInLkTT2wKyZDv5ly7vvvtjFXFlzW+jEZZZL3RfYZscfsdGZqepGw7H+lA4ojOWXk8Z0B1xGgB6pkCcX4+XwU0KGSczonJmL9ukdNn+IsdrH6QzeocXf3jafOrk94=
+	t=1713526179; cv=none; b=PRIUruAznx6eHP1gljvf43urR7ccZWRmqDHnXEZyir5r2bT3K/pS6ybB6OpcoDrfCnFm36tYzn8fK970ytowXojvFhZRB1KYYT2w7PONFOzBmvlReRvwfLbvFIPLrFAba5AxjdDOqCUnWVPwUEnYhkhSxWF/aWnimM1OuCdFhto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713526144; c=relaxed/simple;
-	bh=O5B1/wlKwjA0GI/EhPTBQW9UxA60IBmd+z5UJowJ5iQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k8f6oHge9k3n3Mb7Umt7b3kPT29uhahvpYMQjTmdrZlw0ri4HF+qZ2ZdtzN6jtHNWE77TdWOvlCXgxkpZVaUS6cLxpYB8gd0QCbubvOcvbfreGY82pqle128J+90mRF7fCOKwTSdif2AAd/VWd+Xobun0slAGU9a5R5LF9hueJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=bfEaM6pq; arc=none smtp.client-ip=178.154.239.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
+	s=arc-20240116; t=1713526179; c=relaxed/simple;
+	bh=BZU+jjm3qkAOXxyhJi1fbipx+0JsCWUoGV+Pn30kurI=;
+	h=Content-Type:Mime-Version:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=dC2/vWCQEo8Dq8Nw2mTEFz40sVoMLhevaOIo9Jw7u4JzaZOHwwV99KX731MXDr0CF1KAi6WQerh/5CKHfYLyJypjSYHQAju4dNlmyNl0qOVtR4hu54d+I6qK4ZAZy3BWtc0+Zp81QD0NOdneN7yC3pT8sflrqSqCJxmVoma4xmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LeXA/tNG; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="bfEaM6pq"
-Received: from mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:6401:0:640:7e6f:0])
-	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id 3007360C73;
-	Fri, 19 Apr 2024 14:26:56 +0300 (MSK)
-Received: from [IPV6:2a02:6b8:b081:b65b::1:3] (unknown [2a02:6b8:b081:b65b::1:3])
-	by mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id rQEsnb0Ih8c0-xeySooUW;
-	Fri, 19 Apr 2024 14:26:55 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1713526015;
-	bh=I3liX7sdTUPgP4kFmk6qBL8XLFKOBUGTFRAgA6Sf5aE=;
-	h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
-	b=bfEaM6pqH5LSVXQve+Tn/+pDGiOvGrW3W7poSiAAGq9b0McSZf8qB+GRXmzNPvsg1
-	 anzNivVWBuZbSFNQQ3Q8mR6cp6GJfn/kurSCNOZeJUlrLD+tb/CNVdpeatpoluuo33
-	 ei0JECYCUBi1iApLNzyqdl3HjBAKBkojtlcxT340=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-Message-ID: <2cd54041-253b-4e78-b8ea-dbe9b884ff9b@yandex-team.ru>
-Date: Fri, 19 Apr 2024 14:26:53 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LeXA/tNG"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a526d0b2349so223402166b.3;
+        Fri, 19 Apr 2024 04:29:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713526176; x=1714130976; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=n4LcJjORvXYEFla/jgoi0t4zdgiXzjY/KUEduncoJWw=;
+        b=LeXA/tNG12CeFJKH/ClsS+6jE/72XJEq+042+YKWlzXeg4xzZ2BewjGlJB1r0QtXrS
+         wRIxtD9LwrKX5p4YscEp6M4/LmVFF3g6VnSQGyTTHyV6HLyR8sdw5VHNS+FqnEjDqNF1
+         GCbFos/xdeypsh9D4FcTrEKH5fttKB78Ch1n+hy7F0oBc0mfnBeLrcctji8TNOlvranc
+         B3NczmgI0zCzBFmN4ZesH2N8RK8+BKQOCQJ4EYz7qEpoMxp1Di6ROxL58yEHoiF4RG5+
+         yfCEVUTO9Dqq7nOoRiwBn1hkj9pJjJQ31loouS7L4hMZNyUDhYQ+a90ttOcBWc/WncQz
+         m+xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713526176; x=1714130976;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n4LcJjORvXYEFla/jgoi0t4zdgiXzjY/KUEduncoJWw=;
+        b=k06wCY6zwV2s9IhDyBMJZpkFabJ5iyNz/aRzxzPCjoZaqFMDU+gRqr1dkaC6gZ9Cmc
+         hf3LBfYRcX41u6jwEh9UECb5vSLi2aue1kWWJiBD+F33GvjYN08a+02l0b+nhaqQHsC4
+         kKI0TwfV3I6eN+R6A/WyRVd1N8R8UR9c8O0Vx3r6x71HqQTyvCFMVwhwW6o8jq15jdIg
+         V4mKBleZpdlkZcn0bjPpenNkVhh0YeFehxovGsiAWnslRubvHy4WMjszxNcRD6ddEl2+
+         lJhjFt0h/QDTQepRqksnQeYmBFFILCS6ohxi1NoVxEsoHMkDMwPsZ0QwsWX9Y9J4q1DU
+         gnsw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNRu/uImCvM5mH86CT9rNBweSRpxoBoaGs/iRXdMI0FI7x0Y1Q8YXA7h72EBGYtn1cQfu6ppMgCPn7lmJVUsn+Isfi7XMzfsPAN6jimObfmZvW1jaBncHbhnlWdcGSthB4fvZnoKRP9+M=
+X-Gm-Message-State: AOJu0YxETSh51Fqe5Wa7cgEGCaaqAKo6ChAramigEjeK9c7LHEk9yO87
+	0yVtY59boCCqJPFhCxzoqaYo3UL65vQSPG46u4X2lw1/HMDW1W4I
+X-Google-Smtp-Source: AGHT+IEf9iXqPnduTXPuilXEaX9Z9lFHFjpO71vLglogWZ7GVIaRLlo4wqApk1YpwFvQyDAgpeF8NQ==
+X-Received: by 2002:a17:906:2b51:b0:a55:7ab9:57e6 with SMTP id b17-20020a1709062b5100b00a557ab957e6mr1202714ejg.47.1713526175713;
+        Fri, 19 Apr 2024 04:29:35 -0700 (PDT)
+Received: from localhost (p200300e41f162000f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f16:2000:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id g10-20020a1709067c4a00b00a4e5866448bsm2071756ejp.155.2024.04.19.04.29.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Apr 2024 04:29:35 -0700 (PDT)
+Content-Type: multipart/signed;
+ boundary=4631f6a9b2d371b5a1490d95dc7549b23a9b87b8b54b5e8e1f77dbc0f933;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/split_lock: fix delayed detection enabling
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: den-plotnikov@yandex-team.ru, x86@kernel.org,
- linux-kernel@vger.kernel.org, dave.hansen@linux.intel.com,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-References: <20240321195522.24830-1-davydov-max@yandex-team.ru>
- <7c8c6f7c-7476-d73d-4df1-9dea0aa4ecf2@igalia.com>
-Content-Language: en-US
-From: Maksim Davydov <davydov-max@yandex-team.ru>
-In-Reply-To: <7c8c6f7c-7476-d73d-4df1-9dea0aa4ecf2@igalia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Date: Fri, 19 Apr 2024 13:29:34 +0200
+Message-Id: <D0O2C1JJOF90.3MOQH6PE1M2SL@gmail.com>
+Subject: Re: [PATCH 3/4] gpu: host1x: Convert to platform remove callback
+ returning void
+From: "Thierry Reding" <thierry.reding@gmail.com>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ "David Airlie" <airlied@gmail.com>, "Daniel Vetter" <daniel@ffwll.ch>
+Cc: "Mikko Perttunen" <mperttunen@nvidia.com>,
+ <dri-devel@lists.freedesktop.org>, <linux-tegra@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.16.0-1-0-g560d6168f0ed-dirty
+References: <cover.1712681770.git.u.kleine-koenig@pengutronix.de>
+ <7e31909b1e536f0ddbb060b1aaa0a9e943687c8a.1712681770.git.u.kleine-koenig@pengutronix.de>
+In-Reply-To: <7e31909b1e536f0ddbb060b1aaa0a9e943687c8a.1712681770.git.u.kleine-koenig@pengutronix.de>
 
+--4631f6a9b2d371b5a1490d95dc7549b23a9b87b8b54b5e8e1f77dbc0f933
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
+On Tue Apr 9, 2024 at 7:02 PM CEST, Uwe Kleine-K=C3=B6nig wrote:
+> The .remove() callback for a platform driver returns an int which makes
+> many driver authors wrongly assume it's possible to do error handling by
+> returning an error code. However the value returned is ignored (apart
+> from emitting a warning) and this typically results in resource leaks.
+>
+> To improve here there is a quest to make the remove callback return
+> void. In the first step of this quest all drivers are converted to
+> .remove_new(), which already returns void. Eventually after all drivers
+> are converted, .remove_new() will be renamed to .remove().
+>
+> Trivially convert this driver from always returning zero in the remove
+> callback to the void returning variant.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+>  drivers/gpu/host1x/dev.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 
-On 3/31/24 20:07, Guilherme G. Piccoli wrote:
-> On 21/03/2024 16:55, Maksim Davydov wrote:
->> If the warn mode with disabled mitigation mode is used, then on each cpu
->> where the split lock occurred detection will be disabled in order to make
->> progress and delayed work will be scheduled, which then will enable
->> detection back. Now it turns out that all CPUs use one global delayed
->> work structure. This leads to the fact that if a split lock occurs on
->> several CPUs at the same time (within 2 jiffies), only one cpu will
->> schedule delayed work, but the rest will not. The return value of
->> schedule_delayed_work_on() would have shown this, but it is not checked
->> in the code
->> In order to fix the warn mode with disabled mitigation mode, delayed work
->> has to be a per-cpu.
->>
->> Fixes: 727209376f49 ("x86/split_lock: Add sysctl to control the misery mode")
-> 
-> Thanks Maksim! I confess I (think I) understand the theory behind the
-> possible problem, but I'm not seeing how it happens - probably just me
-> being silly , but can you help me to understand it clearly?
-> 
-> Let's say we have 2 CPUs, CPU0 and CPU1 and we're running with
-> sld_mitigate = 0, meaning we don't have "the misery".
-> 
-> If the code running in CPU0 reaches split_lock_warn(), my understanding
-> is that it warns the user, schedule the sld reenable [via and
-> schedule_delayed_work_on()] and disables the feature with
-> sld_update_msr(false), correct? So, does this disabling happens only at
-> core level, or it disables for the whole CPU including all cores?
-> 
-> But back to our example, if CPU1 detects the split lock, it'll run the
-> same procedure as CPU0 did - so are you saying we have a race there if
-> CPU1 face a split lock before CPU0 disabled the MSR?
-> 
-> Maybe a more clear example of the issue would be even helpful in the
-> commit message, showing the path both CPUs would take and how the
-> problem happens exactly.
-> 
-> Thanks in advance,
-> 
-> 
-> Guilherme
+Acked-by: Thierry Reding <treding@nvidia.com>
 
+--4631f6a9b2d371b5a1490d95dc7549b23a9b87b8b54b5e8e1f77dbc0f933
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-Resend with fixed formatting
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmYiVZ8ACgkQ3SOs138+
+s6ED0BAApayQb5R8tzI25oRF9vE4dD7fgryHQ6lE8bDFua62RK1xuC0+16Fi323n
+5eHdLgQSC/zdAUB+E0OeRpqWg7JGTJqfbfbn9hE5HT3qQu9MxDzI9btpGAHowNlv
+SOzzsMOjICuAhZ/92iZ0jp1EtsyU7QdhQ6jOMeFHqQFNggvpzXjLzeh+E+BoRvNK
+1SAGI1x+Eo7PHrFAOHgoZn/grnlyuSlGelszK5hwx3Rsr8LQ4qbYtMzTNKkdtDxv
+OSgiDSEuTQaqbROckvB5IOK8TZKwMMukSYkpJg/omb0y8dDjfWvqX38VTl2+NfIs
+jGa97Fi0/N2Ny9weM3jk7Rx64HCW/FxcCAcj0Wk9fVZAkh8aFUXYUxjigLFncDVr
+0p3BWfYeBebl8RSCQ4u0omoo9Ar5+yoBXs8+WhAm5QPdoqseCruj1JPFqiZl3KLt
+FYgRGmAIIMIh0R7089+8oT8wPc2t+HN/Wsoif8z+B/RqIERQBCfKV4GXd6I3nkKN
+2wl8TZUIWMGvy4VsXG8r4iufoHgW15AoWMOuI0gCgZt8ukVhyRdZGyX0Y1a0eFmP
+EHdY2XHmvOSEFlQE71pXm1kvocBHzChg0eEvBkb5s9m9VPp0LnKbiyQty4bYuCN+
+x5bLRkc13YsDn5sdB61L1qKLgDXWLMpn7zjelxT+M0aoJdAgDqU=
+=suAC
+-----END PGP SIGNATURE-----
 
-Sorry for a late reply.
-
-I made a diagram to explain how this bug occurs. If it makes it
-clearer, then I will include the diagram in the commit
-description.
-
-Some information that should be taken into account:
-* sld_update_msr() enables/disables SLD on both CPUs on the same core
-* schedule_delayed_work_on() internally checks WORK_STRUCT_PENDING_BIT.
-   If a work has the 'pending' status, then schedule_delayed_work_on()
-   will return an error code and, most importantly, the work will not
-   be placed in the workqueue.
-
-Let's say we have a multicore system on which split_lock_mitigate=0 and
-a multithreaded application is running that calls splitlock in multiple
-threads. Due to the fact that sld_update_msr() affects the entire core
-(both CPUs), we will consider 2 CPUs from different cores. Let the 2
-threads of this application schedule to CPU0 (core 0) and to CPU 2
-(core 1), then:
-
-|                                 ||                                   |
-|             CPU 0 (core 0)      ||          CPU 2 (core 1)           |
-|_________________________________||___________________________________|
-|                                 ||                                   |
-| 1) SPLIT LOCK occured           ||                                   |
-|                                 ||                                   |
-| 2) split_lock_warn()            ||                                   |
-|                                 ||                                   |
-| 3) sysctl_sld_mitigate == 0     ||                                   |
-|    (work = &sl_reenable)        ||                                   |
-|                                 ||                                   |
-| 4) schedule_delayed_work_on()   ||                                   |
-|    (reenable will be called     ||                                   |
-|     after 2 jiffies on CPU 0)   ||                                   |
-|                                 ||                                   |
-| 5) disable SLD for core 0       ||                                   |
-|                                 ||                                   |
-|    -------------------------    ||                                   |
-|                                 ||                                   |
-|                                 || 6) SPLIT LOCK occured             |
-|                                 ||                                   |
-|                                 || 7) split_lock_warn()              |
-|                                 ||                                   |
-|                                 || 8) sysctl_sld_mitigate == 0       |
-|                                 ||    (work = &sl_reenable,          |
-|                                 ||     the same address as in 3) )   |
-|                                 ||                                   |
-|            2 jiffies            || 9) schedule_delayed_work_on()     |
-|                                 ||    fials because the work is in   | 
-
-|                                 ||    the pending state since 4).    |
-|                                 ||    The work wasn't placed to the  |
-|                                 ||    workqueue. reenable won't be   |
-|                                 ||    called on CPU 2                |
-|                                 ||                                   |
-|                                 || 10) disable SLD for core 0        |
-|                                 ||                                   |
-|                                 ||     From now on SLD will          |
-|                                 ||     never be reenabled on core 1  |
-|                                 ||                                   |
-|    -------------------------    ||                                   |
-|                                 ||                                   |
-|    11) enable SLD for core 0 by ||                                   |
-|        __split_lock_reenable    ||                                   |
-|                                 ||                                   |
-
-
-If the application threads can be scheduled to all processor cores,
-then over time there will be only one core left, on which SLD will be
-enabled and split lock will be able to be detected; and on all other
-cores SLD will be disabled all the time.
-Most likely, this bug has not been noticed for so long because
-sysctl_sld_mitigate default value is 1, and in this case a semaphore
-is used that does not allow 2 different cores to have SLD disabled at
-the same time, that is, strictly only one work is placed in the
-workqueue.
-
--- 
-Best regards,
-Maksim Davydov
+--4631f6a9b2d371b5a1490d95dc7549b23a9b87b8b54b5e8e1f77dbc0f933--
