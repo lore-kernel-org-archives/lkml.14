@@ -1,48 +1,48 @@
 Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B209F12FF69;
-	Fri, 19 Apr 2024 15:29:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2B412F580;
+	Fri, 19 Apr 2024 15:29:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713540565; cv=none; b=p3xnd/P3SfgbttFF8dVkpWHYslEeZziQRRyBliii9QM0FkHnY8YrvBl39cBuSVpKYPxGZAp8DzeTBnSMOdQU2I1UTOi1+wQVf2hK7cOuLe+x7u3+BVKhu/Px1/X3PJwxJFunYqA3UR8FVoJXywbjPLpDlwlOBW5hq91/6zrGThk=
+	t=1713540585; cv=none; b=ecGUzUdcHSPAk18wXplPNsVQPOxE6MbQP8A5ccishBvCGcDkCqbOCDhyTOe75ORbfCf983QyysYxmsWysvWHn15lINEHEsOGuNL4KHikQ8HjeAs08MkEjVLPUXSQXKA/QM7n7VjuCjXodZ1J7/yR+ynNPLK3bD6aBs8xzv1Vv8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713540565; c=relaxed/simple;
-	bh=L6V3zkCgl72IeS36DZZPewcOyOhc5YMuHEqyxoQe2j8=;
+	s=arc-20240116; t=1713540585; c=relaxed/simple;
+	bh=YmVE7Z7aGg9AbS/1s9vutOTdya5Oz3xnhO4HnSqL5uI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Zt0o2wKt+jFOlv8nfhIGZassRxaFjxqdsQy+7KDeZsrnzzWy82HEdP3UaWF+D7cFO4v1EtddQktwV1eSFU65sohD9dshCKvU46CevGhcaxAF1Pri2uTxrCh/XQXFFtpg//BEnCxljBBvmgCIV/V0kVHOzaFhc+AWvs5dYoC+urg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=mtOpmYdK; arc=none smtp.client-ip=91.207.212.93
+	 MIME-Version:Content-Type; b=q4ReSncOu+Wb2mWMXTRFge3Zf1RRnG5RdLIHcjsYoRPcFkBK/gOzb4uF5PA/k94u1WsZYPMuTDfC3ZiRZ0vsXQt6givixS4HKxmNpB4liya8bEKJ08kIVDR1xAE3v9GDRZ0fHNrbSYJuk8fdRPAI2SAULz0PDypPgAsCuAAFhac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=WynbcFwM; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="mtOpmYdK"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="WynbcFwM"
 Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43JF1LM1030179;
-	Fri, 19 Apr 2024 17:28:53 +0200
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43JFHvrd031727;
+	Fri, 19 Apr 2024 17:29:29 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=QoUwuX5KHIbdoh+40YurQ3xUX1JJr1lgGIxxzL2DBuc=; b=mt
-	OpmYdKxY6Y0Hy9hQTTb70KcQ+UrSgkM/JNOhPcbLmMbwMW9Xx/gnW4/+qNoFmtua
-	/GSdBuHg7abvGC0q+EqDoB94Q28xWE65KkbQsgVbtmR6PzQoMxERJxbI/nB+XQ8v
-	trpbjJ+wSi9d9oWx4xbFh8PXk/Y32mHdNkgv6N659d3JkYEoeNzmuZut5NXRLqE7
-	umtUMMD9i5IZn+bH+XuVWrZqbFv7N1e82304JDCdJI1pef/HeoveZdwniv0S3oXi
-	V1gvSH0BwAeSuEObUo5gLjnNgtqmsgOwGHHVTNZ4wDcCoAnklK0fob9wey+XVuva
-	56uW/auKw13QVY3av9sg==
+	selector1; bh=BC0AnmV1q2gZy8CoakcYlhE1sPnppp/jJo3qpbITbiA=; b=Wy
+	nbcFwMzcBAlbeL0QvyT6n4UvawEQ3bT4re6Fk/Vp5O0foN24PMXSjzhPe4joAxpw
+	rcA7LEOvGPgFxJRq1Ai5B7UDRPJILs+6OiHjhbHW5i9yY7/eVPfuJhXS74fyiGam
+	/eOG20Wa0mkYoPoi9kQbKx2Hi1JUWaO/UqjfH5aUsb4VjzMDD12c//qikGLlBthR
+	wcPYmrBn8jkD7lm7MBOlipTnwtD6mI2vp2eUDokBKi5S698fr5uImdJU9rhAbecG
+	4u5O872L3U8DuV3/h5UWRsQjvKjxvIhN5WfJn2nH+1+I7mcktgIytgg9pe6gw6Ix
+	9UK+TVPTQpePbq1Nrkyg==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xgecys4kh-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xgecys4nc-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Apr 2024 17:28:52 +0200 (MEST)
+	Fri, 19 Apr 2024 17:29:29 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C5B2640045;
-	Fri, 19 Apr 2024 17:28:48 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 411854002D;
+	Fri, 19 Apr 2024 17:29:25 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D6892223F00;
-	Fri, 19 Apr 2024 17:27:54 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8CA2122367E;
+	Fri, 19 Apr 2024 17:28:56 +0200 (CEST)
 Received: from localhost (10.252.27.3) by SHFDAG1NODE1.st.com (10.75.129.69)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 19 Apr
- 2024 17:27:54 +0200
+ 2024 17:28:56 +0200
 From: <gabriel.fernandez@foss.st.com>
 To: Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd
@@ -58,9 +58,9 @@ To: Michael Turquette <mturquette@baylibre.com>,
 CC: <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/4] clk: stm32mp2: use of STM32 access controller
-Date: Fri, 19 Apr 2024 17:27:21 +0200
-Message-ID: <20240419152723.570159-3-gabriel.fernandez@foss.st.com>
+Subject: [PATCH 4/4] arm64: dts: st: add rcc support for STM32MP25
+Date: Fri, 19 Apr 2024 17:27:23 +0200
+Message-ID: <20240419152723.570159-5-gabriel.fernandez@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240419152723.570159-1-gabriel.fernandez@foss.st.com>
 References: <20240419152723.570159-1-gabriel.fernandez@foss.st.com>
@@ -80,566 +80,313 @@ X-Proofpoint-Virus-Version: vendor=baseguard
 
 From: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
 
-Use an STM32 access controller to filter the registration of clocks.
-If a clock is used by the security world, then it must not registered.
+Add RCC support to manage clocks and resets on the STM32MP25.
 
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
 ---
- drivers/clk/stm32/clk-stm32-core.c |   2 +-
- drivers/clk/stm32/clk-stm32-core.h |   2 +-
- drivers/clk/stm32/clk-stm32mp13.c  |   2 +-
- drivers/clk/stm32/clk-stm32mp25.c  | 475 +++++++++++++++++------------
- 4 files changed, 283 insertions(+), 198 deletions(-)
+ arch/arm64/boot/dts/st/stm32mp251.dtsi | 145 +++++++++++++++++++------
+ arch/arm64/boot/dts/st/stm32mp255.dtsi |   4 +-
+ 2 files changed, 111 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/clk/stm32/clk-stm32-core.c b/drivers/clk/stm32/clk-stm32-core.c
-index 1721a3ed7386..933e3cde0795 100644
---- a/drivers/clk/stm32/clk-stm32-core.c
-+++ b/drivers/clk/stm32/clk-stm32-core.c
-@@ -46,7 +46,7 @@ static int stm32_rcc_clock_init(struct device *dev,
- 		struct clk_hw *hw = ERR_PTR(-ENOENT);
- 
- 		if (data->check_security &&
--		    data->check_security(base, cfg_clock))
-+		    data->check_security(dev->of_node, base, cfg_clock))
- 			continue;
- 
- 		if (cfg_clock->func)
-diff --git a/drivers/clk/stm32/clk-stm32-core.h b/drivers/clk/stm32/clk-stm32-core.h
-index bb5aa19a792d..4be103710e12 100644
---- a/drivers/clk/stm32/clk-stm32-core.h
-+++ b/drivers/clk/stm32/clk-stm32-core.h
-@@ -71,7 +71,7 @@ struct stm32_rcc_match_data {
- 	unsigned int			maxbinding;
- 	struct clk_stm32_clock_data	*clock_data;
- 	struct clk_stm32_reset_data	*reset_data;
--	int (*check_security)(void __iomem *base,
-+	int (*check_security)(struct device_node *np, void __iomem *base,
- 			      const struct clock_config *cfg);
- 	int (*multi_mux)(void __iomem *base, const struct clock_config *cfg);
- };
-diff --git a/drivers/clk/stm32/clk-stm32mp13.c b/drivers/clk/stm32/clk-stm32mp13.c
-index bf81d7491708..9bc94c3c5df8 100644
---- a/drivers/clk/stm32/clk-stm32mp13.c
-+++ b/drivers/clk/stm32/clk-stm32mp13.c
-@@ -1458,7 +1458,7 @@ static const struct clock_config stm32mp13_clock_cfg[] = {
- 	STM32_COMPOSITE_CFG(CK_MCO2, ck_mco2, SECF_MCO2),
- };
- 
--static int stm32mp13_clock_is_provided_by_secure(void __iomem *base,
-+static int stm32mp13_clock_is_provided_by_secure(struct device_node *np, void __iomem *base,
- 						 const struct clock_config *cfg)
- {
- 	int sec_id = cfg->sec_id;
-diff --git a/drivers/clk/stm32/clk-stm32mp25.c b/drivers/clk/stm32/clk-stm32mp25.c
-index 210b75b39e50..a37ee9f707e3 100644
---- a/drivers/clk/stm32/clk-stm32mp25.c
-+++ b/drivers/clk/stm32/clk-stm32mp25.c
-@@ -4,7 +4,9 @@
-  * Author: Gabriel Fernandez <gabriel.fernandez@foss.st.com> for STMicroelectronics.
+diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+index af1444bf9442..15ee930168e7 100644
+--- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+@@ -3,7 +3,9 @@
+  * Copyright (C) STMicroelectronics 2023 - All Rights Reserved
+  * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
   */
++#include <dt-bindings/clock/st,stm32mp25-rcc.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/reset/st,stm32mp25-rcc.h>
  
-+#include <linux/bus/stm32_firewall_device.h>
- #include <linux/clk-provider.h>
-+#include <linux/of_address.h>
- #include <linux/platform_device.h>
+ / {
+ 	#address-cells = <2>;
+@@ -35,34 +37,16 @@ arm_wdt: watchdog {
+ 	};
  
- #include "clk-stm32-core.h"
-@@ -14,6 +16,31 @@
- #include <dt-bindings/clock/st,stm32mp25-rcc.h>
- #include <dt-bindings/reset/st,stm32mp25-rcc.h>
+ 	clocks {
+-		ck_flexgen_08: ck-flexgen-08 {
++		clk_dsi_txbyte: txbyteclk {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+-			clock-frequency = <100000000>;
++			clock-frequency = <0>;
+ 		};
  
-+/* Clock security definition */
-+#define SECF_NONE		-1
+-		ck_flexgen_51: ck-flexgen-51 {
++		clk_rcbsec: clk-rcbsec {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+-			clock-frequency = <200000000>;
+-		};
+-
+-		ck_icn_ls_mcu: ck-icn-ls-mcu {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <200000000>;
+-		};
+-
+-		ck_icn_p_vdec: ck-icn-p-vdec {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <200000000>;
+-		};
+-
+-		ck_icn_p_venc: ck-icn-p-venc {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <200000000>;
++			clock-frequency = <64000000>;
+ 		};
+ 	};
+ 
+@@ -135,7 +119,7 @@ usart2: serial@400e0000 {
+ 				compatible = "st,stm32h7-uart";
+ 				reg = <0x400e0000 0x400>;
+ 				interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&ck_flexgen_08>;
++				clocks = <&rcc CK_KER_USART2>;
+ 				access-controllers = <&rifsc 32>;
+ 				status = "disabled";
+ 			};
+@@ -145,8 +129,9 @@ sdmmc1: mmc@48220000 {
+ 				arm,primecell-periphid = <0x00353180>;
+ 				reg = <0x48220000 0x400>, <0x44230400 0x8>;
+ 				interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&ck_flexgen_51>;
++				clocks = <&rcc CK_KER_SDMMC1 >;
+ 				clock-names = "apb_pclk";
++				resets = <&rcc SDMMC1_R>;
+ 				cap-sd-highspeed;
+ 				cap-mmc-highspeed;
+ 				max-frequency = <120000000>;
+@@ -171,6 +156,94 @@ package_otp@1e8 {
+ 			};
+ 		};
+ 
++		rcc: clock-controller@44200000 {
++			compatible = "st,stm32mp25-rcc";
++			reg = <0x44200000 0x10000>;
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			clocks = <&scmi_clk CK_SCMI_HSE>,
++				<&scmi_clk CK_SCMI_HSI>,
++				<&scmi_clk CK_SCMI_MSI>,
++				<&scmi_clk CK_SCMI_LSE>,
++				<&scmi_clk CK_SCMI_LSI>,
++				<&scmi_clk CK_SCMI_HSE_DIV2>,
++				<&scmi_clk CK_SCMI_ICN_HS_MCU>,
++				<&scmi_clk CK_SCMI_ICN_LS_MCU>,
++				<&scmi_clk CK_SCMI_ICN_SDMMC>,
++				<&scmi_clk CK_SCMI_ICN_DDR>,
++				<&scmi_clk CK_SCMI_ICN_DISPLAY>,
++				<&scmi_clk CK_SCMI_ICN_HSL>,
++				<&scmi_clk CK_SCMI_ICN_NIC>,
++				<&scmi_clk CK_SCMI_ICN_VID>,
++				<&scmi_clk CK_SCMI_FLEXGEN_07>,
++				<&scmi_clk CK_SCMI_FLEXGEN_08>,
++				<&scmi_clk CK_SCMI_FLEXGEN_09>,
++				<&scmi_clk CK_SCMI_FLEXGEN_10>,
++				<&scmi_clk CK_SCMI_FLEXGEN_11>,
++				<&scmi_clk CK_SCMI_FLEXGEN_12>,
++				<&scmi_clk CK_SCMI_FLEXGEN_13>,
++				<&scmi_clk CK_SCMI_FLEXGEN_14>,
++				<&scmi_clk CK_SCMI_FLEXGEN_15>,
++				<&scmi_clk CK_SCMI_FLEXGEN_16>,
++				<&scmi_clk CK_SCMI_FLEXGEN_17>,
++				<&scmi_clk CK_SCMI_FLEXGEN_18>,
++				<&scmi_clk CK_SCMI_FLEXGEN_19>,
++				<&scmi_clk CK_SCMI_FLEXGEN_20>,
++				<&scmi_clk CK_SCMI_FLEXGEN_21>,
++				<&scmi_clk CK_SCMI_FLEXGEN_22>,
++				<&scmi_clk CK_SCMI_FLEXGEN_23>,
++				<&scmi_clk CK_SCMI_FLEXGEN_24>,
++				<&scmi_clk CK_SCMI_FLEXGEN_25>,
++				<&scmi_clk CK_SCMI_FLEXGEN_26>,
++				<&scmi_clk CK_SCMI_FLEXGEN_27>,
++				<&scmi_clk CK_SCMI_FLEXGEN_28>,
++				<&scmi_clk CK_SCMI_FLEXGEN_29>,
++				<&scmi_clk CK_SCMI_FLEXGEN_30>,
++				<&scmi_clk CK_SCMI_FLEXGEN_31>,
++				<&scmi_clk CK_SCMI_FLEXGEN_32>,
++				<&scmi_clk CK_SCMI_FLEXGEN_33>,
++				<&scmi_clk CK_SCMI_FLEXGEN_34>,
++				<&scmi_clk CK_SCMI_FLEXGEN_35>,
++				<&scmi_clk CK_SCMI_FLEXGEN_36>,
++				<&scmi_clk CK_SCMI_FLEXGEN_37>,
++				<&scmi_clk CK_SCMI_FLEXGEN_38>,
++				<&scmi_clk CK_SCMI_FLEXGEN_39>,
++				<&scmi_clk CK_SCMI_FLEXGEN_40>,
++				<&scmi_clk CK_SCMI_FLEXGEN_41>,
++				<&scmi_clk CK_SCMI_FLEXGEN_42>,
++				<&scmi_clk CK_SCMI_FLEXGEN_43>,
++				<&scmi_clk CK_SCMI_FLEXGEN_44>,
++				<&scmi_clk CK_SCMI_FLEXGEN_45>,
++				<&scmi_clk CK_SCMI_FLEXGEN_46>,
++				<&scmi_clk CK_SCMI_FLEXGEN_47>,
++				<&scmi_clk CK_SCMI_FLEXGEN_48>,
++				<&scmi_clk CK_SCMI_FLEXGEN_49>,
++				<&scmi_clk CK_SCMI_FLEXGEN_50>,
++				<&scmi_clk CK_SCMI_FLEXGEN_51>,
++				<&scmi_clk CK_SCMI_FLEXGEN_52>,
++				<&scmi_clk CK_SCMI_FLEXGEN_53>,
++				<&scmi_clk CK_SCMI_FLEXGEN_54>,
++				<&scmi_clk CK_SCMI_FLEXGEN_55>,
++				<&scmi_clk CK_SCMI_FLEXGEN_56>,
++				<&scmi_clk CK_SCMI_FLEXGEN_57>,
++				<&scmi_clk CK_SCMI_FLEXGEN_58>,
++				<&scmi_clk CK_SCMI_FLEXGEN_59>,
++				<&scmi_clk CK_SCMI_FLEXGEN_60>,
++				<&scmi_clk CK_SCMI_FLEXGEN_61>,
++				<&scmi_clk CK_SCMI_FLEXGEN_62>,
++				<&scmi_clk CK_SCMI_FLEXGEN_63>,
++				<&scmi_clk CK_SCMI_ICN_APB1>,
++				<&scmi_clk CK_SCMI_ICN_APB2>,
++				<&scmi_clk CK_SCMI_ICN_APB3>,
++				<&scmi_clk CK_SCMI_ICN_APB4>,
++				<&scmi_clk CK_SCMI_ICN_APBDBG>,
++				<&scmi_clk CK_SCMI_TIMG1>,
++				<&scmi_clk CK_SCMI_TIMG2>,
++				<&scmi_clk CK_SCMI_PLL3>,
++				<&clk_dsi_txbyte>;
++				access-controllers = <&rifsc 156>;
++		};
 +
-+#define RCC_REG_SIZE	32
-+#define RCC_SECCFGR(x)	(((x) / RCC_REG_SIZE) * 0x4 + RCC_SECCFGR0)
-+#define RCC_CIDCFGR(x)	((x) * 0x8 + RCC_R0CIDCFGR)
-+#define RCC_SEMCR(x)	((x) * 0x8 + RCC_R0SEMCR)
-+#define RCC_CID1	1
-+
-+/* Register: RIFSC_CIDCFGR */
-+#define RCC_CIDCFGR_CFEN	BIT(0)
-+#define RCC_CIDCFGR_SEM_EN	BIT(1)
-+#define RCC_CIDCFGR_SEMWLC1_EN	BIT(17)
-+#define RCC_CIDCFGR_SCID_MASK	GENMASK(6, 4)
-+
-+/* Register: RIFSC_SEMCR */
-+#define RCC_SEMCR_SEMCID_MASK	GENMASK(6, 4)
-+
-+#define MP25_RIF_RCC_IS2M	107
-+#define MP25_RIF_RCC_MCO1	108
-+#define MP25_RIF_RCC_MCO2	109
-+
-+#define SEC_RIFSC_FLAG		BIT(31)
-+#define SEC_RIFSC(_id)		((_id) | SEC_RIFSC_FLAG)
-+
- enum {
- 	HSE,
- 	HSI,
-@@ -1507,203 +1534,260 @@ static struct clk_stm32_gate ck_icn_p_wwdg2 = {
- 	.hw.init = CLK_HW_INIT_INDEX("ck_icn_p_wwdg2", ICN_LS_MCU, &clk_stm32_gate_ops, 0),
+ 		syscfg: syscon@44230000 {
+ 			compatible = "st,stm32mp25-syscfg", "syscon";
+ 			reg = <0x44230000 0x10000>;
+@@ -189,7 +262,7 @@ gpioa: gpio@44240000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x0 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOA>;
+ 				st,bank-name = "GPIOA";
+ 				status = "disabled";
+ 			};
+@@ -200,7 +273,7 @@ gpiob: gpio@44250000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x10000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOB>;
+ 				st,bank-name = "GPIOB";
+ 				status = "disabled";
+ 			};
+@@ -211,7 +284,7 @@ gpioc: gpio@44260000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x20000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOC>;
+ 				st,bank-name = "GPIOC";
+ 				status = "disabled";
+ 			};
+@@ -222,7 +295,7 @@ gpiod: gpio@44270000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x30000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOD>;
+ 				st,bank-name = "GPIOD";
+ 				status = "disabled";
+ 			};
+@@ -233,7 +306,7 @@ gpioe: gpio@44280000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x40000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOE>;
+ 				st,bank-name = "GPIOE";
+ 				status = "disabled";
+ 			};
+@@ -244,7 +317,7 @@ gpiof: gpio@44290000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x50000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOF>;
+ 				st,bank-name = "GPIOF";
+ 				status = "disabled";
+ 			};
+@@ -255,7 +328,7 @@ gpiog: gpio@442a0000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x60000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOG>;
+ 				st,bank-name = "GPIOG";
+ 				status = "disabled";
+ 			};
+@@ -266,7 +339,7 @@ gpioh: gpio@442b0000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x70000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOH>;
+ 				st,bank-name = "GPIOH";
+ 				status = "disabled";
+ 			};
+@@ -277,7 +350,7 @@ gpioi: gpio@442c0000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x80000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOI>;
+ 				st,bank-name = "GPIOI";
+ 				status = "disabled";
+ 			};
+@@ -288,7 +361,7 @@ gpioj: gpio@442d0000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0x90000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOJ>;
+ 				st,bank-name = "GPIOJ";
+ 				status = "disabled";
+ 			};
+@@ -299,7 +372,7 @@ gpiok: gpio@442e0000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0xa0000 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOK>;
+ 				st,bank-name = "GPIOK";
+ 				status = "disabled";
+ 			};
+@@ -318,7 +391,7 @@ gpioz: gpio@46200000 {
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				reg = <0 0x400>;
+-				clocks = <&ck_icn_ls_mcu>;
++				clocks = <&scmi_clk CK_SCMI_GPIOZ>;
+ 				st,bank-name = "GPIOZ";
+ 				st,bank-ioport = <11>;
+ 				status = "disabled";
+diff --git a/arch/arm64/boot/dts/st/stm32mp255.dtsi b/arch/arm64/boot/dts/st/stm32mp255.dtsi
+index 570c5dd0b2c3..f689b47c5010 100644
+--- a/arch/arm64/boot/dts/st/stm32mp255.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp255.dtsi
+@@ -10,7 +10,7 @@ vdec: vdec@480d0000 {
+ 		compatible = "st,stm32mp25-vdec";
+ 		reg = <0x480d0000 0x3c8>;
+ 		interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&ck_icn_p_vdec>;
++		clocks = <&rcc CK_BUS_VDEC>;
+ 		access-controllers = <&rifsc 89>;
+ 
+ 	};
+@@ -19,7 +19,7 @@ venc: venc@480e0000 {
+ 		compatible = "st,stm32mp25-venc";
+ 		reg = <0x480e0000 0x800>;
+ 		interrupts = <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&ck_icn_ls_mcu>;
++		clocks = <&rcc CK_BUS_VENC>;
+ 		access-controllers = <&rifsc 90>;
+ 	};
  };
- 
--#define SECF_NONE -1
-+static int stm32_rcc_get_access(void __iomem *base, u32 index)
-+{
-+	u32 seccfgr, cidcfgr, semcr;
-+	int bit, cid;
-+
-+	bit = index % RCC_REG_SIZE;
-+
-+	seccfgr = readl(base + RCC_SECCFGR(index));
-+	if (seccfgr & BIT(bit))
-+		return -EACCES;
-+
-+	cidcfgr = readl(base + RCC_CIDCFGR(index));
-+	if (!(cidcfgr & RCC_CIDCFGR_CFEN))
-+		/* CID filtering is turned off: access granted */
-+		return 0;
-+
-+	if (!(cidcfgr & RCC_CIDCFGR_SEM_EN)) {
-+		/* Static CID mode */
-+		cid = FIELD_GET(RCC_CIDCFGR_SCID_MASK, cidcfgr);
-+		if (cid != RCC_CID1)
-+			return -EACCES;
-+		return 0;
-+	}
-+
-+	/* Pass-list with semaphore mode */
-+	if (!(cidcfgr & RCC_CIDCFGR_SEMWLC1_EN))
-+		return -EACCES;
-+
-+	semcr = readl(base + RCC_SEMCR(index));
-+
-+	cid = FIELD_GET(RCC_SEMCR_SEMCID_MASK, semcr);
-+	if (cid != RCC_CID1)
-+		return -EACCES;
-+
-+	return 0;
-+}
-+
-+static int stm32mp25_check_security(struct device_node *np, void __iomem *base,
-+				    const struct clock_config *cfg)
-+{
-+	int ret = 0;
-+
-+	if (cfg->sec_id != SECF_NONE) {
-+		struct stm32_firewall firewall;
-+		u32 index = (u32)cfg->sec_id;
-+
-+		if (index & SEC_RIFSC_FLAG) {
-+			ret = stm32_firewall_get_firewall(np, &firewall, 1);
-+			if (ret)
-+				return ret;
-+			ret = stm32_firewall_grant_access_by_id(&firewall, index & ~SEC_RIFSC_FLAG);
-+		} else {
-+			ret = stm32_rcc_get_access(base, cfg->sec_id & ~SEC_RIFSC_FLAG);
-+		}
-+	}
-+
-+	return ret;
-+}
- 
- static const struct clock_config stm32mp25_clock_cfg[] = {
--	STM32_GATE_CFG(CK_BUS_ETH1,		ck_icn_p_eth1,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_ETH2,		ck_icn_p_eth2,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_PCIE,		ck_icn_p_pcie,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_ETHSW,		ck_icn_p_ethsw,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_ADC12,		ck_icn_p_adc12,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_ADC3,		ck_icn_p_adc3,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_CCI,		ck_icn_p_cci,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_CRC,		ck_icn_p_crc,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_MDF1,		ck_icn_p_mdf1,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_OSPIIOM,		ck_icn_p_ospiiom,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_HASH,		ck_icn_p_hash,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_CRYP1,		ck_icn_p_cryp1,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_CRYP2,		ck_icn_p_cryp2,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_ADF1,		ck_icn_p_adf1,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SPI8,		ck_icn_p_spi8,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_LPUART1,		ck_icn_p_lpuart1,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_I2C8,		ck_icn_p_i2c8,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_LPTIM3,		ck_icn_p_lptim3,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_LPTIM4,		ck_icn_p_lptim4,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_LPTIM5,		ck_icn_p_lptim5,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_IWDG5,		ck_icn_p_iwdg5,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_WWDG2,		ck_icn_p_wwdg2,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_I3C4,		ck_icn_p_i3c4,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SDMMC1,		ck_icn_m_sdmmc1,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SDMMC2,		ck_icn_m_sdmmc2,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SDMMC3,		ck_icn_m_sdmmc3,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_USB2OHCI,		ck_icn_m_usb2ohci,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_USB2EHCI,		ck_icn_m_usb2ehci,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_USB3DR,		ck_icn_m_usb3dr,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM2,		ck_icn_p_tim2,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM3,		ck_icn_p_tim3,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM4,		ck_icn_p_tim4,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM5,		ck_icn_p_tim5,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM6,		ck_icn_p_tim6,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM7,		ck_icn_p_tim7,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM10,		ck_icn_p_tim10,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM11,		ck_icn_p_tim11,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM12,		ck_icn_p_tim12,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM13,		ck_icn_p_tim13,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM14,		ck_icn_p_tim14,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_LPTIM1,		ck_icn_p_lptim1,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_LPTIM2,		ck_icn_p_lptim2,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SPI2,		ck_icn_p_spi2,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SPI3,		ck_icn_p_spi3,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SPDIFRX,		ck_icn_p_spdifrx,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_USART2,		ck_icn_p_usart2,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_USART3,		ck_icn_p_usart3,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_UART4,		ck_icn_p_uart4,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_UART5,		ck_icn_p_uart5,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_I2C1,		ck_icn_p_i2c1,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_I2C2,		ck_icn_p_i2c2,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_I2C3,		ck_icn_p_i2c3,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_I2C4,		ck_icn_p_i2c4,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_I2C5,		ck_icn_p_i2c5,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_I2C6,		ck_icn_p_i2c6,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_I2C7,		ck_icn_p_i2c7,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_I3C1,		ck_icn_p_i3c1,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_I3C2,		ck_icn_p_i3c2,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_I3C3,		ck_icn_p_i3c3,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM1,		ck_icn_p_tim1,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM8,		ck_icn_p_tim8,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM15,		ck_icn_p_tim15,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM16,		ck_icn_p_tim16,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM17,		ck_icn_p_tim17,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_TIM20,		ck_icn_p_tim20,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SAI1,		ck_icn_p_sai1,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SAI2,		ck_icn_p_sai2,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SAI3,		ck_icn_p_sai3,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SAI4,		ck_icn_p_sai4,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_USART1,		ck_icn_p_usart1,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_USART6,		ck_icn_p_usart6,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_UART7,		ck_icn_p_uart7,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_UART8,		ck_icn_p_uart8,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_UART9,		ck_icn_p_uart9,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_FDCAN,		ck_icn_p_fdcan,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SPI1,		ck_icn_p_spi1,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SPI4,		ck_icn_p_spi4,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SPI5,		ck_icn_p_spi5,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SPI6,		ck_icn_p_spi6,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_SPI7,		ck_icn_p_spi7,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_IWDG2,		ck_icn_p_iwdg2,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_IWDG3,		ck_icn_p_iwdg3,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_IWDG4,		ck_icn_p_iwdg4,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_WWDG1,		ck_icn_p_wwdg1,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_VREF,		ck_icn_p_vref,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_HDP,		ck_icn_p_hdp,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_IS2M,		ck_icn_p_is2m,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_DSI,		ck_icn_p_dsi,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_LTDC,		ck_icn_p_ltdc,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_CSI,		ck_icn_p_csi,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_DCMIPP,		ck_icn_p_dcmipp,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_LVDS,		ck_icn_p_lvds,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_USBTC,		ck_icn_p_usbtc,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_USB3PCIEPHY,	ck_icn_p_usb3pciephy,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_VDEC,		ck_icn_p_vdec,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_VENC,		ck_icn_p_venc,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM2,		ck_ker_tim2,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM3,		ck_ker_tim3,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM4,		ck_ker_tim4,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM5,		ck_ker_tim5,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM6,		ck_ker_tim6,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM7,		ck_ker_tim7,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM10,		ck_ker_tim10,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM11,		ck_ker_tim11,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM12,		ck_ker_tim12,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM13,		ck_ker_tim13,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM14,		ck_ker_tim14,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM1,		ck_ker_tim1,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM8,		ck_ker_tim8,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM15,		ck_ker_tim15,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM16,		ck_ker_tim16,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM17,		ck_ker_tim17,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_TIM20,		ck_ker_tim20,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_LPTIM1,		ck_ker_lptim1,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_LPTIM2,		ck_ker_lptim2,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_USART2,		ck_ker_usart2,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_UART4,		ck_ker_uart4,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_USART3,		ck_ker_usart3,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_UART5,		ck_ker_uart5,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SPI2,		ck_ker_spi2,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SPI3,		ck_ker_spi3,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SPDIFRX,		ck_ker_spdifrx,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_I2C1,		ck_ker_i2c1,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_I2C2,		ck_ker_i2c2,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_I3C1,		ck_ker_i3c1,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_I3C2,		ck_ker_i3c2,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_I2C3,		ck_ker_i2c3,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_I2C5,		ck_ker_i2c5,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_I3C3,		ck_ker_i3c3,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_I2C4,		ck_ker_i2c4,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_I2C6,		ck_ker_i2c6,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_I2C7,		ck_ker_i2c7,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SPI1,		ck_ker_spi1,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SPI4,		ck_ker_spi4,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SPI5,		ck_ker_spi5,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SPI6,		ck_ker_spi6,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SPI7,		ck_ker_spi7,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_USART1,		ck_ker_usart1,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_USART6,		ck_ker_usart6,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_UART7,		ck_ker_uart7,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_UART8,		ck_ker_uart8,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_UART9,		ck_ker_uart9,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_MDF1,		ck_ker_mdf1,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SAI1,		ck_ker_sai1,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SAI2,		ck_ker_sai2,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SAI3,		ck_ker_sai3,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SAI4,		ck_ker_sai4,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_FDCAN,		ck_ker_fdcan,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_CSI,		ck_ker_csi,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_CSITXESC,		ck_ker_csitxesc,	SECF_NONE),
--	STM32_GATE_CFG(CK_KER_CSIPHY,		ck_ker_csiphy,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_USBTC,		ck_ker_usbtc,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_I3C4,		ck_ker_i3c4,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SPI8,		ck_ker_spi8,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_I2C8,		ck_ker_i2c8,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_LPUART1,		ck_ker_lpuart1,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_LPTIM3,		ck_ker_lptim3,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_LPTIM4,		ck_ker_lptim4,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_LPTIM5,		ck_ker_lptim5,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_ADF1,		ck_ker_adf1,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SDMMC1,		ck_ker_sdmmc1,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SDMMC2,		ck_ker_sdmmc2,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_SDMMC3,		ck_ker_sdmmc3,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_ETH1,		ck_ker_eth1,		SECF_NONE),
--	STM32_GATE_CFG(CK_ETH1_STP,		ck_ker_eth1stp,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_ETHSW,		ck_ker_ethsw,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_ETH2,		ck_ker_eth2,		SECF_NONE),
--	STM32_GATE_CFG(CK_ETH2_STP,		ck_ker_eth2stp,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_ETH1PTP,		ck_ker_eth1ptp,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_ETH2PTP,		ck_ker_eth2ptp,		SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_GPU,		ck_icn_m_gpu,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_GPU,		ck_ker_gpu,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_ETHSWREF,		ck_ker_ethswref,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_ETHSWACMCFG,	ck_icn_p_ethsw_acm_cfg,	SECF_NONE),
--	STM32_GATE_CFG(CK_BUS_ETHSWACMMSG, ck_icn_p_ethsw_acm_msg,	SECF_NONE),
--	STM32_GATE_CFG(CK_ETH1_MAC,		ck_ker_eth1mac,		SECF_NONE),
--	STM32_GATE_CFG(CK_ETH1_TX,		ck_ker_eth1tx,		SECF_NONE),
--	STM32_GATE_CFG(CK_ETH1_RX,		ck_ker_eth1rx,		SECF_NONE),
--	STM32_GATE_CFG(CK_ETH2_MAC,		ck_ker_eth2mac,		SECF_NONE),
--	STM32_GATE_CFG(CK_ETH2_TX,		ck_ker_eth2tx,		SECF_NONE),
--	STM32_GATE_CFG(CK_ETH2_RX,		ck_ker_eth2rx,		SECF_NONE),
--	STM32_COMPOSITE_CFG(CK_MCO1,		ck_mco1,		SECF_NONE),
--	STM32_COMPOSITE_CFG(CK_MCO2,		ck_mco2,		SECF_NONE),
--	STM32_COMPOSITE_CFG(CK_KER_ADC12,	ck_ker_adc12,		SECF_NONE),
--	STM32_COMPOSITE_CFG(CK_KER_ADC3,	ck_ker_adc3,		SECF_NONE),
--	STM32_COMPOSITE_CFG(CK_KER_USB2PHY1,	ck_ker_usb2phy1,	SECF_NONE),
--	STM32_GATE_CFG(CK_KER_USB2PHY2,		ck_ker_usb2phy2,	SECF_NONE),
--	STM32_COMPOSITE_CFG(CK_KER_USB2PHY2EN,	ck_ker_usb2phy2_en,	SECF_NONE),
--	STM32_COMPOSITE_CFG(CK_KER_USB3PCIEPHY,	ck_ker_usb3pciephy,	SECF_NONE),
--	STM32_COMPOSITE_CFG(CK_KER_DSIBLANE,	clk_lanebyte,		SECF_NONE),
--	STM32_COMPOSITE_CFG(CK_KER_DSIPHY,	clk_phy_dsi,		SECF_NONE),
--	STM32_COMPOSITE_CFG(CK_KER_LVDSPHY,	ck_ker_lvdsphy,		SECF_NONE),
--	STM32_COMPOSITE_CFG(CK_KER_DTS,		ck_ker_dts,		SECF_NONE),
--	STM32_GATE_CFG(CK_KER_LTDC,		ck_ker_ltdc,		SECF_NONE),
-+	STM32_GATE_CFG(CK_BUS_ETH1,		ck_icn_p_eth1,		SEC_RIFSC(60)),
-+	STM32_GATE_CFG(CK_BUS_ETH2,		ck_icn_p_eth2,		SEC_RIFSC(61)),
-+	STM32_GATE_CFG(CK_BUS_PCIE,		ck_icn_p_pcie,		SEC_RIFSC(68)),
-+	STM32_GATE_CFG(CK_BUS_ETHSW,		ck_icn_p_ethsw,		SEC_RIFSC(70)),
-+	STM32_GATE_CFG(CK_BUS_ADC12,		ck_icn_p_adc12,		SEC_RIFSC(58)),
-+	STM32_GATE_CFG(CK_BUS_ADC3,		ck_icn_p_adc3,		SEC_RIFSC(59)),
-+	STM32_GATE_CFG(CK_BUS_CCI,		ck_icn_p_cci,		SEC_RIFSC(88)),
-+	STM32_GATE_CFG(CK_BUS_CRC,		ck_icn_p_crc,		SEC_RIFSC(109)),
-+	STM32_GATE_CFG(CK_BUS_MDF1,		ck_icn_p_mdf1,		SEC_RIFSC(54)),
-+	STM32_GATE_CFG(CK_BUS_OSPIIOM,		ck_icn_p_ospiiom,	SEC_RIFSC(111)),
-+	STM32_GATE_CFG(CK_BUS_HASH,		ck_icn_p_hash,		SEC_RIFSC(95)),
-+	STM32_GATE_CFG(CK_BUS_CRYP1,		ck_icn_p_cryp1,		SEC_RIFSC(96)),
-+	STM32_GATE_CFG(CK_BUS_CRYP2,		ck_icn_p_cryp2,		SEC_RIFSC(97)),
-+	STM32_GATE_CFG(CK_BUS_ADF1,		ck_icn_p_adf1,		SEC_RIFSC(55)),
-+	STM32_GATE_CFG(CK_BUS_SPI8,		ck_icn_p_spi8,		SEC_RIFSC(29)),
-+	STM32_GATE_CFG(CK_BUS_LPUART1,		ck_icn_p_lpuart1,	SEC_RIFSC(40)),
-+	STM32_GATE_CFG(CK_BUS_I2C8,		ck_icn_p_i2c8,		SEC_RIFSC(48)),
-+	STM32_GATE_CFG(CK_BUS_LPTIM3,		ck_icn_p_lptim3,	SEC_RIFSC(19)),
-+	STM32_GATE_CFG(CK_BUS_LPTIM4,		ck_icn_p_lptim4,	SEC_RIFSC(20)),
-+	STM32_GATE_CFG(CK_BUS_LPTIM5,		ck_icn_p_lptim5,	SEC_RIFSC(21)),
-+	STM32_GATE_CFG(CK_BUS_IWDG5,		ck_icn_p_iwdg5,		SEC_RIFSC(102)),
-+	STM32_GATE_CFG(CK_BUS_WWDG2,		ck_icn_p_wwdg2,		SEC_RIFSC(104)),
-+	STM32_GATE_CFG(CK_BUS_I3C4,		ck_icn_p_i3c4,		SEC_RIFSC(117)),
-+	STM32_GATE_CFG(CK_BUS_SDMMC1,		ck_icn_m_sdmmc1,	SEC_RIFSC(76)),
-+	STM32_GATE_CFG(CK_BUS_SDMMC2,		ck_icn_m_sdmmc2,	SEC_RIFSC(77)),
-+	STM32_GATE_CFG(CK_BUS_SDMMC3,		ck_icn_m_sdmmc3,	SEC_RIFSC(78)),
-+	STM32_GATE_CFG(CK_BUS_USB2OHCI,		ck_icn_m_usb2ohci,	SEC_RIFSC(63)),
-+	STM32_GATE_CFG(CK_BUS_USB2EHCI,		ck_icn_m_usb2ehci,	SEC_RIFSC(63)),
-+	STM32_GATE_CFG(CK_BUS_USB3DR,		ck_icn_m_usb3dr,	SEC_RIFSC(66)),
-+	STM32_GATE_CFG(CK_BUS_TIM2,		ck_icn_p_tim2,		SEC_RIFSC(1)),
-+	STM32_GATE_CFG(CK_BUS_TIM3,		ck_icn_p_tim3,		SEC_RIFSC(2)),
-+	STM32_GATE_CFG(CK_BUS_TIM4,		ck_icn_p_tim4,		SEC_RIFSC(3)),
-+	STM32_GATE_CFG(CK_BUS_TIM5,		ck_icn_p_tim5,		SEC_RIFSC(4)),
-+	STM32_GATE_CFG(CK_BUS_TIM6,		ck_icn_p_tim6,		SEC_RIFSC(5)),
-+	STM32_GATE_CFG(CK_BUS_TIM7,		ck_icn_p_tim7,		SEC_RIFSC(6)),
-+	STM32_GATE_CFG(CK_BUS_TIM10,		ck_icn_p_tim10,		SEC_RIFSC(8)),
-+	STM32_GATE_CFG(CK_BUS_TIM11,		ck_icn_p_tim11,		SEC_RIFSC(9)),
-+	STM32_GATE_CFG(CK_BUS_TIM12,		ck_icn_p_tim12,		SEC_RIFSC(10)),
-+	STM32_GATE_CFG(CK_BUS_TIM13,		ck_icn_p_tim13,		SEC_RIFSC(11)),
-+	STM32_GATE_CFG(CK_BUS_TIM14,		ck_icn_p_tim14,		SEC_RIFSC(12)),
-+	STM32_GATE_CFG(CK_BUS_LPTIM1,		ck_icn_p_lptim1,	SEC_RIFSC(17)),
-+	STM32_GATE_CFG(CK_BUS_LPTIM2,		ck_icn_p_lptim2,	SEC_RIFSC(18)),
-+	STM32_GATE_CFG(CK_BUS_SPI2,		ck_icn_p_spi2,		SEC_RIFSC(23)),
-+	STM32_GATE_CFG(CK_BUS_SPI3,		ck_icn_p_spi3,		SEC_RIFSC(24)),
-+	STM32_GATE_CFG(CK_BUS_SPDIFRX,		ck_icn_p_spdifrx,	SEC_RIFSC(30)),
-+	STM32_GATE_CFG(CK_BUS_USART2,		ck_icn_p_usart2,	SEC_RIFSC(32)),
-+	STM32_GATE_CFG(CK_BUS_USART3,		ck_icn_p_usart3,	SEC_RIFSC(33)),
-+	STM32_GATE_CFG(CK_BUS_UART4,		ck_icn_p_uart4,		SEC_RIFSC(34)),
-+	STM32_GATE_CFG(CK_BUS_UART5,		ck_icn_p_uart5,		SEC_RIFSC(35)),
-+	STM32_GATE_CFG(CK_BUS_I2C1,		ck_icn_p_i2c1,		SEC_RIFSC(41)),
-+	STM32_GATE_CFG(CK_BUS_I2C2,		ck_icn_p_i2c2,		SEC_RIFSC(42)),
-+	STM32_GATE_CFG(CK_BUS_I2C3,		ck_icn_p_i2c3,		SEC_RIFSC(43)),
-+	STM32_GATE_CFG(CK_BUS_I2C4,		ck_icn_p_i2c4,		SEC_RIFSC(44)),
-+	STM32_GATE_CFG(CK_BUS_I2C5,		ck_icn_p_i2c5,		SEC_RIFSC(45)),
-+	STM32_GATE_CFG(CK_BUS_I2C6,		ck_icn_p_i2c6,		SEC_RIFSC(46)),
-+	STM32_GATE_CFG(CK_BUS_I2C7,		ck_icn_p_i2c7,		SEC_RIFSC(47)),
-+	STM32_GATE_CFG(CK_BUS_I3C1,		ck_icn_p_i3c1,		SEC_RIFSC(114)),
-+	STM32_GATE_CFG(CK_BUS_I3C2,		ck_icn_p_i3c2,		SEC_RIFSC(115)),
-+	STM32_GATE_CFG(CK_BUS_I3C3,		ck_icn_p_i3c3,		SEC_RIFSC(116)),
-+	STM32_GATE_CFG(CK_BUS_TIM1,		ck_icn_p_tim1,		SEC_RIFSC(0)),
-+	STM32_GATE_CFG(CK_BUS_TIM8,		ck_icn_p_tim8,		SEC_RIFSC(7)),
-+	STM32_GATE_CFG(CK_BUS_TIM15,		ck_icn_p_tim15,		SEC_RIFSC(13)),
-+	STM32_GATE_CFG(CK_BUS_TIM16,		ck_icn_p_tim16,		SEC_RIFSC(14)),
-+	STM32_GATE_CFG(CK_BUS_TIM17,		ck_icn_p_tim17,		SEC_RIFSC(15)),
-+	STM32_GATE_CFG(CK_BUS_TIM20,		ck_icn_p_tim20,		SEC_RIFSC(16)),
-+	STM32_GATE_CFG(CK_BUS_SAI1,		ck_icn_p_sai1,		SEC_RIFSC(49)),
-+	STM32_GATE_CFG(CK_BUS_SAI2,		ck_icn_p_sai2,		SEC_RIFSC(50)),
-+	STM32_GATE_CFG(CK_BUS_SAI3,		ck_icn_p_sai3,		SEC_RIFSC(51)),
-+	STM32_GATE_CFG(CK_BUS_SAI4,		ck_icn_p_sai4,		SEC_RIFSC(52)),
-+	STM32_GATE_CFG(CK_BUS_USART1,		ck_icn_p_usart1,	SEC_RIFSC(31)),
-+	STM32_GATE_CFG(CK_BUS_USART6,		ck_icn_p_usart6,	SEC_RIFSC(36)),
-+	STM32_GATE_CFG(CK_BUS_UART7,		ck_icn_p_uart7,		SEC_RIFSC(37)),
-+	STM32_GATE_CFG(CK_BUS_UART8,		ck_icn_p_uart8,		SEC_RIFSC(38)),
-+	STM32_GATE_CFG(CK_BUS_UART9,		ck_icn_p_uart9,		SEC_RIFSC(39)),
-+	STM32_GATE_CFG(CK_BUS_FDCAN,		ck_icn_p_fdcan,		SEC_RIFSC(56)),
-+	STM32_GATE_CFG(CK_BUS_SPI1,		ck_icn_p_spi1,		SEC_RIFSC(22)),
-+	STM32_GATE_CFG(CK_BUS_SPI4,		ck_icn_p_spi4,		SEC_RIFSC(25)),
-+	STM32_GATE_CFG(CK_BUS_SPI5,		ck_icn_p_spi5,		SEC_RIFSC(26)),
-+	STM32_GATE_CFG(CK_BUS_SPI6,		ck_icn_p_spi6,		SEC_RIFSC(27)),
-+	STM32_GATE_CFG(CK_BUS_SPI7,		ck_icn_p_spi7,		SEC_RIFSC(28)),
-+	STM32_GATE_CFG(CK_BUS_IWDG2,		ck_icn_p_iwdg2,		SEC_RIFSC(99)),
-+	STM32_GATE_CFG(CK_BUS_IWDG3,		ck_icn_p_iwdg3,		SEC_RIFSC(100)),
-+	STM32_GATE_CFG(CK_BUS_IWDG4,		ck_icn_p_iwdg4,		SEC_RIFSC(101)),
-+	STM32_GATE_CFG(CK_BUS_WWDG1,		ck_icn_p_wwdg1,		SEC_RIFSC(103)),
-+	STM32_GATE_CFG(CK_BUS_VREF,		ck_icn_p_vref,		SEC_RIFSC(106)),
-+	STM32_GATE_CFG(CK_BUS_HDP,		ck_icn_p_hdp,		SEC_RIFSC(57)),
-+	STM32_GATE_CFG(CK_BUS_IS2M,		ck_icn_p_is2m,		MP25_RIF_RCC_IS2M),
-+	STM32_GATE_CFG(CK_BUS_DSI,		ck_icn_p_dsi,		SEC_RIFSC(81)),
-+	STM32_GATE_CFG(CK_BUS_LTDC,		ck_icn_p_ltdc,		SEC_RIFSC(80)),
-+	STM32_GATE_CFG(CK_BUS_CSI,		ck_icn_p_csi,		SEC_RIFSC(86)),
-+	STM32_GATE_CFG(CK_BUS_DCMIPP,		ck_icn_p_dcmipp,	SEC_RIFSC(87)),
-+	STM32_GATE_CFG(CK_BUS_LVDS,		ck_icn_p_lvds,		SEC_RIFSC(84)),
-+	STM32_GATE_CFG(CK_BUS_USBTC,		ck_icn_p_usbtc,		SEC_RIFSC(69)),
-+	STM32_GATE_CFG(CK_BUS_USB3PCIEPHY,	ck_icn_p_usb3pciephy,	SEC_RIFSC(67)),
-+	STM32_GATE_CFG(CK_BUS_VDEC,		ck_icn_p_vdec,		SEC_RIFSC(89)),
-+	STM32_GATE_CFG(CK_BUS_VENC,		ck_icn_p_venc,		SEC_RIFSC(90)),
-+	STM32_GATE_CFG(CK_KER_TIM2,		ck_ker_tim2,		SEC_RIFSC(1)),
-+	STM32_GATE_CFG(CK_KER_TIM3,		ck_ker_tim3,		SEC_RIFSC(2)),
-+	STM32_GATE_CFG(CK_KER_TIM4,		ck_ker_tim4,		SEC_RIFSC(3)),
-+	STM32_GATE_CFG(CK_KER_TIM5,		ck_ker_tim5,		SEC_RIFSC(4)),
-+	STM32_GATE_CFG(CK_KER_TIM6,		ck_ker_tim6,		SEC_RIFSC(5)),
-+	STM32_GATE_CFG(CK_KER_TIM7,		ck_ker_tim7,		SEC_RIFSC(6)),
-+	STM32_GATE_CFG(CK_KER_TIM10,		ck_ker_tim10,		SEC_RIFSC(8)),
-+	STM32_GATE_CFG(CK_KER_TIM11,		ck_ker_tim11,		SEC_RIFSC(9)),
-+	STM32_GATE_CFG(CK_KER_TIM12,		ck_ker_tim12,		SEC_RIFSC(10)),
-+	STM32_GATE_CFG(CK_KER_TIM13,		ck_ker_tim13,		SEC_RIFSC(11)),
-+	STM32_GATE_CFG(CK_KER_TIM14,		ck_ker_tim14,		SEC_RIFSC(12)),
-+	STM32_GATE_CFG(CK_KER_TIM1,		ck_ker_tim1,		SEC_RIFSC(0)),
-+	STM32_GATE_CFG(CK_KER_TIM8,		ck_ker_tim8,		SEC_RIFSC(7)),
-+	STM32_GATE_CFG(CK_KER_TIM15,		ck_ker_tim15,		SEC_RIFSC(13)),
-+	STM32_GATE_CFG(CK_KER_TIM16,		ck_ker_tim16,		SEC_RIFSC(14)),
-+	STM32_GATE_CFG(CK_KER_TIM17,		ck_ker_tim17,		SEC_RIFSC(15)),
-+	STM32_GATE_CFG(CK_KER_TIM20,		ck_ker_tim20,		SEC_RIFSC(16)),
-+	STM32_GATE_CFG(CK_KER_LPTIM1,		ck_ker_lptim1,		SEC_RIFSC(17)),
-+	STM32_GATE_CFG(CK_KER_LPTIM2,		ck_ker_lptim2,		SEC_RIFSC(18)),
-+	STM32_GATE_CFG(CK_KER_USART2,		ck_ker_usart2,		SEC_RIFSC(32)),
-+	STM32_GATE_CFG(CK_KER_UART4,		ck_ker_uart4,		SEC_RIFSC(34)),
-+	STM32_GATE_CFG(CK_KER_USART3,		ck_ker_usart3,		SEC_RIFSC(33)),
-+	STM32_GATE_CFG(CK_KER_UART5,		ck_ker_uart5,		SEC_RIFSC(35)),
-+	STM32_GATE_CFG(CK_KER_SPI2,		ck_ker_spi2,		SEC_RIFSC(23)),
-+	STM32_GATE_CFG(CK_KER_SPI3,		ck_ker_spi3,		SEC_RIFSC(24)),
-+	STM32_GATE_CFG(CK_KER_SPDIFRX,		ck_ker_spdifrx,		SEC_RIFSC(30)),
-+	STM32_GATE_CFG(CK_KER_I2C1,		ck_ker_i2c1,		SEC_RIFSC(41)),
-+	STM32_GATE_CFG(CK_KER_I2C2,		ck_ker_i2c2,		SEC_RIFSC(42)),
-+	STM32_GATE_CFG(CK_KER_I3C1,		ck_ker_i3c1,		SEC_RIFSC(114)),
-+	STM32_GATE_CFG(CK_KER_I3C2,		ck_ker_i3c2,		SEC_RIFSC(115)),
-+	STM32_GATE_CFG(CK_KER_I2C3,		ck_ker_i2c3,		SEC_RIFSC(43)),
-+	STM32_GATE_CFG(CK_KER_I2C5,		ck_ker_i2c5,		SEC_RIFSC(45)),
-+	STM32_GATE_CFG(CK_KER_I3C3,		ck_ker_i3c3,		SEC_RIFSC(116)),
-+	STM32_GATE_CFG(CK_KER_I2C4,		ck_ker_i2c4,		SEC_RIFSC(44)),
-+	STM32_GATE_CFG(CK_KER_I2C6,		ck_ker_i2c6,		SEC_RIFSC(46)),
-+	STM32_GATE_CFG(CK_KER_I2C7,		ck_ker_i2c7,		SEC_RIFSC(47)),
-+	STM32_GATE_CFG(CK_KER_SPI1,		ck_ker_spi1,		SEC_RIFSC(22)),
-+	STM32_GATE_CFG(CK_KER_SPI4,		ck_ker_spi4,		SEC_RIFSC(25)),
-+	STM32_GATE_CFG(CK_KER_SPI5,		ck_ker_spi5,		SEC_RIFSC(26)),
-+	STM32_GATE_CFG(CK_KER_SPI6,		ck_ker_spi6,		SEC_RIFSC(27)),
-+	STM32_GATE_CFG(CK_KER_SPI7,		ck_ker_spi7,		SEC_RIFSC(28)),
-+	STM32_GATE_CFG(CK_KER_USART1,		ck_ker_usart1,		SEC_RIFSC(31)),
-+	STM32_GATE_CFG(CK_KER_USART6,		ck_ker_usart6,		SEC_RIFSC(36)),
-+	STM32_GATE_CFG(CK_KER_UART7,		ck_ker_uart7,		SEC_RIFSC(37)),
-+	STM32_GATE_CFG(CK_KER_UART8,		ck_ker_uart8,		SEC_RIFSC(38)),
-+	STM32_GATE_CFG(CK_KER_UART9,		ck_ker_uart9,		SEC_RIFSC(39)),
-+	STM32_GATE_CFG(CK_KER_MDF1,		ck_ker_mdf1,		SEC_RIFSC(54)),
-+	STM32_GATE_CFG(CK_KER_SAI1,		ck_ker_sai1,		SEC_RIFSC(49)),
-+	STM32_GATE_CFG(CK_KER_SAI2,		ck_ker_sai2,		SEC_RIFSC(50)),
-+	STM32_GATE_CFG(CK_KER_SAI3,		ck_ker_sai3,		SEC_RIFSC(51)),
-+	STM32_GATE_CFG(CK_KER_SAI4,		ck_ker_sai4,		SEC_RIFSC(52)),
-+	STM32_GATE_CFG(CK_KER_FDCAN,		ck_ker_fdcan,		SEC_RIFSC(56)),
-+	STM32_GATE_CFG(CK_KER_CSI,		ck_ker_csi,		SEC_RIFSC(86)),
-+	STM32_GATE_CFG(CK_KER_CSITXESC,		ck_ker_csitxesc,	SEC_RIFSC(86)),
-+	STM32_GATE_CFG(CK_KER_CSIPHY,		ck_ker_csiphy,		SEC_RIFSC(86)),
-+	STM32_GATE_CFG(CK_KER_USBTC,		ck_ker_usbtc,		SEC_RIFSC(69)),
-+	STM32_GATE_CFG(CK_KER_I3C4,		ck_ker_i3c4,		SEC_RIFSC(117)),
-+	STM32_GATE_CFG(CK_KER_SPI8,		ck_ker_spi8,		SEC_RIFSC(29)),
-+	STM32_GATE_CFG(CK_KER_I2C8,		ck_ker_i2c8,		SEC_RIFSC(48)),
-+	STM32_GATE_CFG(CK_KER_LPUART1,		ck_ker_lpuart1,		SEC_RIFSC(40)),
-+	STM32_GATE_CFG(CK_KER_LPTIM3,		ck_ker_lptim3,		SEC_RIFSC(19)),
-+	STM32_GATE_CFG(CK_KER_LPTIM4,		ck_ker_lptim4,		SEC_RIFSC(20)),
-+	STM32_GATE_CFG(CK_KER_LPTIM5,		ck_ker_lptim5,		SEC_RIFSC(21)),
-+	STM32_GATE_CFG(CK_KER_ADF1,		ck_ker_adf1,		SEC_RIFSC(55)),
-+	STM32_GATE_CFG(CK_KER_SDMMC1,		ck_ker_sdmmc1,		SEC_RIFSC(76)),
-+	STM32_GATE_CFG(CK_KER_SDMMC2,		ck_ker_sdmmc2,		SEC_RIFSC(77)),
-+	STM32_GATE_CFG(CK_KER_SDMMC3,		ck_ker_sdmmc3,		SEC_RIFSC(78)),
-+	STM32_GATE_CFG(CK_KER_ETH1,		ck_ker_eth1,		SEC_RIFSC(60)),
-+	STM32_GATE_CFG(CK_ETH1_STP,		ck_ker_eth1stp,		SEC_RIFSC(60)),
-+	STM32_GATE_CFG(CK_KER_ETHSW,		ck_ker_ethsw,		SEC_RIFSC(70)),
-+	STM32_GATE_CFG(CK_KER_ETH2,		ck_ker_eth2,		SEC_RIFSC(61)),
-+	STM32_GATE_CFG(CK_ETH2_STP,		ck_ker_eth2stp,		SEC_RIFSC(61)),
-+	STM32_GATE_CFG(CK_KER_ETH1PTP,		ck_ker_eth1ptp,		SEC_RIFSC(60)),
-+	STM32_GATE_CFG(CK_KER_ETH2PTP,		ck_ker_eth2ptp,		SEC_RIFSC(61)),
-+	STM32_GATE_CFG(CK_BUS_GPU,		ck_icn_m_gpu,		SEC_RIFSC(79)),
-+	STM32_GATE_CFG(CK_KER_GPU,		ck_ker_gpu,		SEC_RIFSC(79)),
-+	STM32_GATE_CFG(CK_KER_ETHSWREF,		ck_ker_ethswref,	SEC_RIFSC(70)),
-+	STM32_GATE_CFG(CK_BUS_ETHSWACMCFG,	ck_icn_p_ethsw_acm_cfg,	SEC_RIFSC(71)),
-+	STM32_GATE_CFG(CK_BUS_ETHSWACMMSG,	ck_icn_p_ethsw_acm_msg,	SEC_RIFSC(72)),
-+	STM32_GATE_CFG(CK_ETH1_MAC,		ck_ker_eth1mac,		SEC_RIFSC(60)),
-+	STM32_GATE_CFG(CK_ETH1_TX,		ck_ker_eth1tx,		SEC_RIFSC(60)),
-+	STM32_GATE_CFG(CK_ETH1_RX,		ck_ker_eth1rx,		SEC_RIFSC(60)),
-+	STM32_GATE_CFG(CK_ETH2_MAC,		ck_ker_eth2mac,		SEC_RIFSC(61)),
-+	STM32_GATE_CFG(CK_ETH2_TX,		ck_ker_eth2tx,		SEC_RIFSC(61)),
-+	STM32_GATE_CFG(CK_ETH2_RX,		ck_ker_eth2rx,		SEC_RIFSC(61)),
-+	STM32_COMPOSITE_CFG(CK_MCO1,		ck_mco1,		MP25_RIF_RCC_MCO1),
-+	STM32_COMPOSITE_CFG(CK_MCO2,		ck_mco2,		MP25_RIF_RCC_MCO1),
-+	STM32_COMPOSITE_CFG(CK_KER_ADC12,	ck_ker_adc12,		SEC_RIFSC(58)),
-+	STM32_COMPOSITE_CFG(CK_KER_ADC3,	ck_ker_adc3,		SEC_RIFSC(59)),
-+	STM32_COMPOSITE_CFG(CK_KER_USB2PHY1,	ck_ker_usb2phy1,	SEC_RIFSC(63)),
-+	STM32_GATE_CFG(CK_KER_USB2PHY2,		ck_ker_usb2phy2,	SEC_RIFSC(63)),
-+	STM32_COMPOSITE_CFG(CK_KER_USB2PHY2EN,	ck_ker_usb2phy2_en,	SEC_RIFSC(63)),
-+	STM32_COMPOSITE_CFG(CK_KER_USB3PCIEPHY,	ck_ker_usb3pciephy,	SEC_RIFSC(67)),
-+	STM32_COMPOSITE_CFG(CK_KER_DSIBLANE,	clk_lanebyte,		SEC_RIFSC(81)),
-+	STM32_COMPOSITE_CFG(CK_KER_DSIPHY,	clk_phy_dsi,		SEC_RIFSC(81)),
-+	STM32_COMPOSITE_CFG(CK_KER_LVDSPHY,	ck_ker_lvdsphy,		SEC_RIFSC(84)),
-+	STM32_COMPOSITE_CFG(CK_KER_DTS,		ck_ker_dts,		SEC_RIFSC(107)),
-+	STM32_GATE_CFG(CK_KER_LTDC,		ck_ker_ltdc,		SEC_RIFSC(80)),
- };
- 
- #define RESET_MP25(id, _offset, _bit_idx, _set_clr)	\
-@@ -1839,6 +1923,7 @@ static const struct stm32_rcc_match_data stm32mp25_data = {
- 	.maxbinding	= STM32MP25_LAST_CLK,
- 	.clock_data	= &stm32mp25_clock_data,
- 	.reset_data	= &stm32mp25_reset_data,
-+	.check_security = &stm32mp25_check_security,
- };
- 
- static const struct of_device_id stm32mp25_match_data[] = {
+\ No newline at end of file
 -- 
 2.25.1
 
