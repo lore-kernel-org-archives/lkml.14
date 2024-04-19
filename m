@@ -1,92 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C807EC15D;
-	Fri, 19 Apr 2024 07:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19EE52F63;
+	Fri, 19 Apr 2024 07:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713513438; cv=none; b=SmCbPNh5BGCQ2gXTJLg8iYRSVdwhNw03POfDoAzeBk9dbIDpmOUUCDy8u9NMSzT+SSMgjEADIer47lnZNkTuU78Jj/BCl5ypFE23Xd4hoOqC94HvtiFgfyBqdGp1neMFC8cm+ncF8zzjLklXG7qFhsky2RMyfnxJ3BeTvzTi1v4=
+	t=1713513445; cv=none; b=JYmdts0n/T55BpxfSi+RedNr6t+CGnAnGrKty0mluC3Puy0Mww9vz6r3gQFmwfBY8Vwds6iKAr0n45QGD9Rv8Z5DEmbK0o+toQI2UlV8Up3HwppknhJmx1AO30HjAj7UVKnbYlMEs1ZDGYjpoAsEZSpKhPR+Srz8zVHw4uXtXD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713513438; c=relaxed/simple;
-	bh=1TZ8nYeFpnXiIoNsNPAlgLqamNWJVrnDVh0XwyAvwzo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V/pz1j1VUNCBq84dDLsFtatzHqLkbZskiU/vSvf/Nal9LihCNv3C/cRLv4zMPVeXchT/6pUm59qWVJg2+Bt52qaZdcpx8UEvF94eQp5K4Al8LgOHVtoeRzjfsB/13aWJavr2fSDXqUZeDsD2WEI8C2IaxWmUgrttNKwO4bkv60k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FcCA9M5S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713513445; c=relaxed/simple;
+	bh=/azgN9fac9eSB9GDOVwcavx6OAd95Ef5uZBSpwv/e8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VoIoY+W/rDw1chI0gOjtEQsi+i+i82d2Vgq4tpXRHuWfdiJT2qYTlcXHBEgu8rweI1O4ENrlW+hdSDD8dIgFtYRmDTmSWYLDXR0Z8L+RLsoZfSL0AEQe++RsAhgegS8v91oQ0gpIxDGeXo8vh6nvGkC/Ug2BATaNkAvkDzN34cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mK1SK2+X; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FcCA9M5S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 593BAC2BD10;
-	Fri, 19 Apr 2024 07:57:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713513438;
-	bh=1TZ8nYeFpnXiIoNsNPAlgLqamNWJVrnDVh0XwyAvwzo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FcCA9M5SXyan3VbSbTysHYhgiqWpiiiiUIbLTKQOchML+tqiy0o0TOXQAdauqzJZj
-	 QDHfDECqC8teTsw8Z2lkigcSQoIVLSQKkA+4jpjfnkJrrsbeBLm48RRwsVSqhz59ie
-	 I9wtwjnZmJJh3CiR0Qp+zWdd/snZid+y8bqTDibsMiRuNSS5gP6ZdExGrKhAhGgo1O
-	 2svJfDkem5U0s7ICLV4ZWb+M6JIYxnrBwkUtEOt/I2QOmDgQgItHswrjylGZPRQK9J
-	 0h6c2dKJVNwG5+pu+zjyYRb3D/Y0ZrK1LSMmt2T8gXQ91Q0mwIf73uOgpYd6/HfZ4Z
-	 i0sSrulhJg63A==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2dcc8d10d39so5607681fa.3;
-        Fri, 19 Apr 2024 00:57:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU/ZIu+GsHBvgKmaS5LlVWRTOzUg4+v9OtZ28izWuq9otIC+BDydoyXjXVEkLIIrNcUOfM6/8bQV2E/1zBlxEmdcsUgChB3lwgrvRx3o1T2GoWT8G0icVPLRBZyYkOTx0VGAisfY1OB4+0gUhS06KWktPgTwVeMC6j3nuDOsSDp82apNpzm4KGRhyNY01pM/C6p4Cbq3GNzPYWSBA==
-X-Gm-Message-State: AOJu0YytF6LxqyglF3zuWRhE+B9V88ZqMDZhC9evtymWIS6dIY5m7i/f
-	YhjBaVDhOQcCX7Noqt7XNV29/32fW3q3lS7ppON65HpqwZsxfm+YDa5ndZC4G/le81gMW6k7yVQ
-	lviTeGL2NftBFA2r39dzmicXBYLs=
-X-Google-Smtp-Source: AGHT+IGe0BXzWMTZhMt+wFll+Z29hCabZkKHmFp7RLlW1/LlIWEz4pzHm0vIJmiGDimQtO6B9WSAzRlWCg30klKUvqI=
-X-Received: by 2002:a05:651c:4d4:b0:2d8:34ad:7f4e with SMTP id
- e20-20020a05651c04d400b002d834ad7f4emr930276lji.4.1713513436740; Fri, 19 Apr
- 2024 00:57:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mK1SK2+X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713513444; x=1745049444;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/azgN9fac9eSB9GDOVwcavx6OAd95Ef5uZBSpwv/e8g=;
+  b=mK1SK2+XrnbruwTav+3uwYvU1fYeX/c4ASSCDjf7heFk04zxykT+0v4m
+   VexlknCu3z8TVQ3IOHD1g1j5YDEeCmfluVkARXl1t1Bvuj1dW78poTqUv
+   7e56TI0I5q6oLrX79FA+Bw9gCIzyIF6kfMA6bckw3ki8xIfYH/P3BSReY
+   rbQaMLzbhNpNYFNFWkRmnD5G9+h4aoJfovBKtPOTXgXZA9vRZ20s1HuqU
+   DWpoR7mFnmVnOFcNLEJWvMMwXYiE6jZ9l6QkJnzo6VJ6Gr+BAysmOi3Sw
+   H5DdqX/lncqcfFUy9ODr5AmCyjKzY+bk1ZH3q4sNUX1q4DMgWex22dtUq
+   w==;
+X-CSE-ConnectionGUID: bRjAzBujRpaG4D3ROVuCcQ==
+X-CSE-MsgGUID: syFEHzbtTDOgoyiV/zChHQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="34501527"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="34501527"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 00:57:23 -0700
+X-CSE-ConnectionGUID: uZpu/pNASeeRbeBwLJk6gA==
+X-CSE-MsgGUID: A9VbWiRERTquWs18JfEGlA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="23319101"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa010.fm.intel.com with ESMTP; 19 Apr 2024 00:57:20 -0700
+Date: Fri, 19 Apr 2024 15:52:06 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Peter Colberg <peter.colberg@intel.com>
+Cc: Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
+	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
+	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Russ Weight <russ.weight@linux.dev>,
+	Marco Pagani <marpagan@redhat.com>,
+	Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Subject: Re: [PATCH v2] fpga: dfl: remove unused function
+ is_dfl_feature_present
+Message-ID: <ZiIipqA6PdZIslfR@yilunxu-OptiPlex-7050>
+References: <20240415235743.3045-1-peter.colberg@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240415162041.2491523-5-ardb+git@google.com> <171327842741.29461.3030265084386428643.git-patchwork-notify@kernel.org>
-In-Reply-To: <171327842741.29461.3030265084386428643.git-patchwork-notify@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 19 Apr 2024 09:57:05 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGVRGcJGS1xuqHPeJfM797RB2UiJQfSHK+oj1JQG4YECg@mail.gmail.com>
-Message-ID: <CAMj1kXGVRGcJGS1xuqHPeJfM797RB2UiJQfSHK+oj1JQG4YECg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] kbuild: Avoid weak external linkage where possible
-To: patchwork-bot+netdevbpf@kernel.org
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, masahiroy@kernel.org, 
-	arnd@arndb.de, martin.lau@linux.dev, linux-arch@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, bpf@vger.kernel.org, andrii@kernel.org, 
-	olsajiri@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240415235743.3045-1-peter.colberg@intel.com>
 
-On Tue, 16 Apr 2024 at 16:40, <patchwork-bot+netdevbpf@kernel.org> wrote:
->
-> Hello:
->
-> This series was applied to bpf/bpf-next.git (master)
-> by Daniel Borkmann <daniel@iogearbox.net>:
->
-> On Mon, 15 Apr 2024 18:20:42 +0200 you wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > Weak external linkage is intended for cases where a symbol reference
-> > can remain unsatisfied in the final link. Taking the address of such a
-> > symbol should yield NULL if the reference was not satisfied.
-> >
-> > Given that ordinary RIP or PC relative references cannot produce NULL,
-> > some kind of indirection is always needed in such cases, and in position
-> > independent code, this results in a GOT entry. In ordinary code, it is
-> > arch specific but amounts to the same thing.
-> >
-> > [...]
->
-> Here is the summary with links:
->   - [v4,1/3] kallsyms: Avoid weak references for kallsyms symbols
->     (no matching commit)
->   - [v4,2/3] vmlinux: Avoid weak reference to notes section
->     (no matching commit)
->   - [v4,3/3] btf: Avoid weak external references
->     https://git.kernel.org/bpf/bpf-next/c/fc5eb4a84e4c
->
+On Mon, Apr 15, 2024 at 07:57:43PM -0400, Peter Colberg wrote:
+> The function is_dfl_feature_present was added but never used.
+                                    ^
 
+Function reference should use the format "function_name()", I fixed it
+in place.
 
-Thanks.
+Applied to for-next.
 
-Masahiro, could you pick up patches #1 and #2 please?
+> 
+> Fixes: 5b57d02a2f94 ("fpga: dfl: add feature device infrastructure")
+> Signed-off-by: Peter Colberg <peter.colberg@intel.com>
+> Reviewed-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> ---
+> v2:
+> - Do not wrap commit reference and move to Fixes: tag.
+> ---
+>  drivers/fpga/dfl.h | 5 -----
+>  1 file changed, 5 deletions(-)
+> 
+> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+> index 1d724a28f00a..5063d73b0d82 100644
+> --- a/drivers/fpga/dfl.h
+> +++ b/drivers/fpga/dfl.h
+> @@ -437,11 +437,6 @@ void __iomem *dfl_get_feature_ioaddr_by_id(struct device *dev, u16 id)
+>  	return NULL;
+>  }
+>  
+> -static inline bool is_dfl_feature_present(struct device *dev, u16 id)
+> -{
+> -	return !!dfl_get_feature_ioaddr_by_id(dev, id);
+> -}
+> -
+>  static inline
+>  struct device *dfl_fpga_pdata_to_parent(struct dfl_feature_platform_data *pdata)
+>  {
+> -- 
+> 2.44.0
+> 
+> 
