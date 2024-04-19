@@ -1,57 +1,57 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C79C12F394
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 09:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF64412FF87
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 09:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713520185; cv=none; b=sROp+4fUKIFeNioHca0Pv0694iirEHGEw5VU/tmPqXKgR8HFx5lW+RYhL7Ht0TSRNYg7bvv+Y/SjPw8Z3UKc9blOHzpG4bBnAp4vZz81wyFxSsPeGoX9lX9bhtrnO3LDYihVHgMmUpQ21mU3m4rVnyZX9e01WvwHNZ1q1nl+jrA=
+	t=1713520187; cv=none; b=W08mZTEBXPlnJwe1Pg6bxRWkaBWKXEd1jYV3ROeFeZCrk/3C+rAJAqlRvqbNpuWf6yEPHOowAQCkzwPDRWAeMj/LVwKP5GSfZS0g+WdBHRMMWzrtw7VkvEEEgb4oS2umNGSQUZQtB68mIA5ZLlQGGYxoep8x0Uw70/FIjpj3Cc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713520185; c=relaxed/simple;
-	bh=m351M6HyiT8IWLkyID5itxiSqWILJmFaZ7lxVFnP6BY=;
+	s=arc-20240116; t=1713520187; c=relaxed/simple;
+	bh=A2Ua3QkuJFffFg1BMdgqwGEYAvUbwmxlzRDyBr/ON+U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZtExC/fAU3g/Z/spA7YuRRFACUdPW2hEsdkTBC3lDd48lBzosqqEeyYKs3qPI0wzHN/hGJgrIDndfifD3vVubSHycxUJrTUSvr7n+RFLVn4SGrAFpqBHDnMNIh21vrSPwdoOiTSeuf+eYAh86uZReMFjd3dT0YQ9YWOZBf9pRTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KS1N1qjZ; arc=none smtp.client-ip=209.85.222.179
+	 In-Reply-To:To:Cc; b=J7JJLfZLbN1jMqt1Y2jBAeZ1FcDkQP4H610YB7b4W5H2oJO3EAc0nC+ZaBCv9KqA1Uw2vcyWvSUyLvzA1R574RktOvsnUXkWhKlGE/AtB/0vRtnKGus4iLbxnHx17FM+iAgGHf2HiuMnQkZjb6gPDoz5771JgXO7tW/gykMZLo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=N+xoW+Fb; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KS1N1qjZ"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-78f02298dc6so151341985a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 02:49:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N+xoW+Fb"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-78f056f0a53so125561985a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 02:49:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713520182; x=1714124982; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1713520185; x=1714124985; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gMpzOFCFY/OFyCB78Iqov2ITRER3c7lueX7XaC40UJk=;
-        b=KS1N1qjZK4OzIiQOBGYVGIGO5tLwBdsFre+btJV+UyPpHLTvqDZc3zkz547hbkRU5b
-         beg6iw5r1aaQyFnlmFRoXhfS2s+g7xR05mgjtfvcmF/Im2eoTK4iyhNNR9HbcWULeme/
-         m53QBrR0k8wwU9+UVsTdBJX0SlxL2xYP1NR3M=
+        bh=H+ICFE9T0WtFgFxAAIzneJg+RkmVbFrs0mrpkqFICS0=;
+        b=N+xoW+FbvAW1U01bcSqZ1e5hU7JIJyr6JEM18PiqKQQnR/OoeafWCtZDlYYvVCUkj8
+         G46WocLXkmNHBSwUIGTS8rIw/QIS6s/LYw/WyJaXtEdKLoJESgPkTBWo7VjuxjQb/f1k
+         FvNS6bSLcK4TTMAnrky0r7s5AsSTt1YQWg/Og=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713520182; x=1714124982;
+        d=1e100.net; s=20230601; t=1713520185; x=1714124985;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gMpzOFCFY/OFyCB78Iqov2ITRER3c7lueX7XaC40UJk=;
-        b=EABbzRn/8NhELDArb0EbEgEKg38nDuoxls6UyaFbLVyMdJcAKSeYL6e/a6b0snV7rK
-         lsT1adRk6KOfVzovV0jYzdKbd0mm37muB2GUL/Rl+E9zRErROfYvYIUN23nJV88cgq0q
-         BNwH9Zu8M3fRliDyAaxdDNlP3wFi1Cp+P7LtH+pfqjw5rwN0oWzzLj2lZU9ipsHL7aa/
-         bgfkINO4pzW0JqBPe70H0PNH86jO8lHyByT7wAo0cLkYcsfwI/8RmUuEGtGKiZhobXCm
-         GS9vG9nkwMNagt75NR2NBMA7omZCkKabBjQ3Ss0W/BkbhRTOXWiFK27RwVKGc2188D77
-         GgeA==
-X-Forwarded-Encrypted: i=1; AJvYcCXmF0pemTOVuTbSrDXQ07hiXU90bgx46oupse8R4E6UaQI/w9KHgoP9caOoU5hkpOhHcOe39RBtmD9PGHpq0ikNXwx4twXpxID3SuDc
-X-Gm-Message-State: AOJu0Yzxvvv7bqdT8qhkgvlWpwYIbYvIkQucTWrQeHlGWcTg66MFXC5H
-	aH/znaqhvtN3VRCoD8YVeX1/9Nlrwo+4uzxGhJAhb8VO9F+kViC4T/IW5qq1cg==
-X-Google-Smtp-Source: AGHT+IEXhcUKUor0dxuV3thvzJo2y+QPxtJebfEt+tWOQcWOyhTJf9Fve6oWEuZlRhBFIInhoP8+Wg==
-X-Received: by 2002:a05:620a:956:b0:78e:bd2f:1088 with SMTP id w22-20020a05620a095600b0078ebd2f1088mr2994401qkw.4.1713520182200;
-        Fri, 19 Apr 2024 02:49:42 -0700 (PDT)
+        bh=H+ICFE9T0WtFgFxAAIzneJg+RkmVbFrs0mrpkqFICS0=;
+        b=Dgh7KZlRjieZ4FVgcHZ85DQtIedCBZmHkzh4dOHD+qnWgYMpJXRNjh7PE/uVJtQTW3
+         rPFZl+5Dwmo65IW8GroBQfl9V+IuiFLBIJMa2k5Z7659yWoNSLgubZgRct8ktiFFcbHj
+         wFhppCQj7/mwJNMAZpr/ftiUGb3PZJXiclnCEvAE/1GcXGX6q5/+7rVp23XEAGD107lK
+         iBGNH8rw5s7/ZCcXF716rW2ihh+COfyOvknwDx5Myzxabjus4OJZ5QGk8ftJV6+zBET7
+         hm/bqF05aMFqEPGvTO/wrCtyUHG0Z80FMcAycro8DMXxkwyXXaZ4rciLNh75KNjCkxnT
+         +I6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVXBO6miJECfAXO1JEy3QVMNQGHRfegAmz1RXNOb3Z0yEssQLYuAVmd/D5vGVeHuWxOPd2yWImLwiMc6ngstL3mBUyT3i+o0hYgi/6N
+X-Gm-Message-State: AOJu0YxTeik6NKxR1EVAzibxzChlblnMs3h+zrwYhv1Hxtr+TpRXtquh
+	tuDB113fRzQ6QDxqOqPLQjQvAL/Q886CepC6UgWNOZvULBlWT9bBlmwbJmgE+g==
+X-Google-Smtp-Source: AGHT+IHphQGghhdnaPa8294fBxI47z+y4xb3Msllejvsy/cEZHbt70Y742XZJgUuOJUmQOPF+5kWGQ==
+X-Received: by 2002:a05:620a:1673:b0:78a:33f9:908c with SMTP id d19-20020a05620a167300b0078a33f9908cmr1816540qko.36.1713520184948;
+        Fri, 19 Apr 2024 02:49:44 -0700 (PDT)
 Received: from denia.c.googlers.com (114.152.245.35.bc.googleusercontent.com. [35.245.152.114])
-        by smtp.gmail.com with ESMTPSA id dt14-20020a05620a478e00b0078d735ca917sm1434532qkb.123.2024.04.19.02.49.41
+        by smtp.gmail.com with ESMTPSA id dt14-20020a05620a478e00b0078d735ca917sm1434532qkb.123.2024.04.19.02.49.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 02:49:41 -0700 (PDT)
+        Fri, 19 Apr 2024 02:49:44 -0700 (PDT)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Fri, 19 Apr 2024 09:48:06 +0000
-Subject: [PATCH v2 20/26] media: tegra-vde: Refactor timeout handling
+Date: Fri, 19 Apr 2024 09:48:08 +0000
+Subject: [PATCH v2 22/26] media: tc358746: Use the correct div_ function
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240419-fix-cocci-v2-20-2119e692309c@chromium.org>
+Message-Id: <20240419-fix-cocci-v2-22-2119e692309c@chromium.org>
 References: <20240419-fix-cocci-v2-0-2119e692309c@chromium.org>
 In-Reply-To: <20240419-fix-cocci-v2-0-2119e692309c@chromium.org>
 To: Martin Tuma <martin.tuma@digiteqautomotive.com>, 
@@ -100,39 +100,30 @@ Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
  Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.12.4
 
-Reorder the branches a bit, so cocci stops complaining about the code.
+fin does not fit in 32 bits in some arches.
 
-drivers/media/platform/nvidia/tegra-vde/h264.c:645:20-21: WARNING opportunity for min()
+Found by cocci:
+drivers/media/i2c/tc358746.c:847:2-8: WARNING: do_div() does a 64-by-32 division, please consider using div64_ul instead.
 
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/media/platform/nvidia/tegra-vde/h264.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/i2c/tc358746.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/nvidia/tegra-vde/h264.c b/drivers/media/platform/nvidia/tegra-vde/h264.c
-index 204e474d57f7..cfea5572a1b8 100644
---- a/drivers/media/platform/nvidia/tegra-vde/h264.c
-+++ b/drivers/media/platform/nvidia/tegra-vde/h264.c
-@@ -633,7 +633,9 @@ static int tegra_vde_decode_end(struct tegra_vde *vde)
+diff --git a/drivers/media/i2c/tc358746.c b/drivers/media/i2c/tc358746.c
+index d676adc4401b..edf79107adc5 100644
+--- a/drivers/media/i2c/tc358746.c
++++ b/drivers/media/i2c/tc358746.c
+@@ -844,8 +844,7 @@ static unsigned long tc358746_find_pll_settings(struct tc358746 *tc358746,
+ 			continue;
  
- 	timeout = wait_for_completion_interruptible_timeout(
- 			&vde->decode_completion, msecs_to_jiffies(1000));
--	if (timeout == 0) {
-+	if (timeout < 0) {
-+		ret = timeout;
-+	} else if (timeout == 0) {
- 		bsev_ptr = tegra_vde_readl(vde, vde->bsev, 0x10);
- 		macroblocks_nb = tegra_vde_readl(vde, vde->sxe, 0xC8) & 0x1FFF;
- 		read_bytes = bsev_ptr ? bsev_ptr - vde->bitstream_data_addr : 0;
-@@ -642,8 +644,6 @@ static int tegra_vde_decode_end(struct tegra_vde *vde)
- 			read_bytes, macroblocks_nb);
+ 		tmp = fout * postdiv;
+-		do_div(tmp, fin);
+-		mul = tmp;
++		mul = div64_ul(tmp, fin);
+ 		if (mul > 511)
+ 			continue;
  
- 		ret = -EIO;
--	} else if (timeout < 0) {
--		ret = timeout;
- 	} else {
- 		ret = 0;
- 	}
 
 -- 
 2.44.0.769.g3c40516874-goog
