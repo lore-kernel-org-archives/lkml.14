@@ -1,178 +1,154 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAA42AE75
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 09:47:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60AC87BB1B
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 09:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713520028; cv=none; b=IBwJkqaZlYjKPun+FMR6D5Iy9umO8EvhH0wTenvkw53KFj4T//weLVivq5qR1w6GKJj0nM6SoqcR98q18mT14b88yay4jd3mgQ6Ez6YJoHuyc0/p0ETmkd3vk3re/rYpoWji8rzc39xA9csSecr9ZuYMFIeujzMjHz/WcsNreBM=
+	t=1713520161; cv=none; b=jYAwnbyTUusSokrE2dHIDSRQKsVkpT28fa83RUMZLqZa4Z7DoJ1rakaZ2OsJhXCU+GJof5MqxglfX00Kxx9ERfyuWVMQ1ZaxV75SSQrG60miRHVLq40QJ+MlZ/hMzPTz0r89sR23AjglUHM7xip5iExb5WCmg/Lyt5uOUxYUkfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713520028; c=relaxed/simple;
-	bh=N/f1o95G/VJkj66uEFyQmlLCwLdEPKRS4xZy8zzcA38=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EgWZ0av0yAYtwxBW4LtRjzuibztfsuG+FNZsLBaQSFJt0Ew8PrOyIss8SN1XjiRKkGgygACYK4nfqulMa5k8u+YJqmWQMD1ygBCX7eLsVA4UlHdGOHj2aZiZ/ZAeFeJqj1zTk4dgpPUUaFzfYjCvmOrEfYOhiASYBr7gYsl/o0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WXBK3ije; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1713520161; c=relaxed/simple;
+	bh=9zM0Hr1EOWa9tBCrj0oU1BEsI1sH0P8oKQcejd+0WUE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Ye5IgbpfGPojVeYGDIbub20r2V05C/vV1nG6/MyRgXF5Za81X+rA58RCZyHBTyXDmD870Wcnr33jRZX4zmJav99w1ahgW1kPbrJmH2ylG2bWx5Ky82OtHQSVvMPbYfSBBeBm5ZlkxPreSoyfu93TMZ4UVjOP9vi0gntykhVlnFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=B9uGfTE4; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WXBK3ije"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4AADA240006;
-	Fri, 19 Apr 2024 09:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713520023;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qhQrAdSZcWxsBtjX37nSDsEa6NJe/8r/3/BaJkYjzC4=;
-	b=WXBK3ije6R0FhQbdMrBFErkSb3k8NZ67kO495uQot5nnroYCpmMt1l8CZEakJR8AuVAUKl
-	kRzCJkkuDztiiaISHw8tCV0pYmmLQ+ERKZnKCxLPELDq2NLwdb2D3Tt1h3QMCnwUR8nNbU
-	mGp+lRX7YhVT5RNCAoZogu+oT9FFJPGJuWCHkjLtLTCjZ0L2AWJMEL5yB0tV1dSgdaLMpo
-	xBYCPGoQ/UWiW94fErvRP9hTKDucgOajnznqh4bnB4nCS+rJXCR19tE9wiE8nsLOhPrp8s
-	6o2K9uTMQqof0WfzCkF70dDCl/3fVzFYAH3vLIj0pVuBQwaFqFaG+1i9h+9eQg==
-Date: Fri, 19 Apr 2024 11:46:57 +0200
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
- <vigneshr@ti.com>, linux-mtd@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] mtd: nand: mxc_nand: disable subpage reads
-Message-ID: <20240419114507.5d25d8cd@xps-13>
-In-Reply-To: <ZiEHUz3wicDJscGP@pengutronix.de>
-References: <20240417-mtd-nand-mxc-nand-exec-op-v1-0-d12564fe54e9@pengutronix.de>
-	<20240417-mtd-nand-mxc-nand-exec-op-v1-4-d12564fe54e9@pengutronix.de>
-	<ZiDCKGlG4MZ23Tqo@pengutronix.de>
-	<20240418113244.6e535d3f@xps-13>
-	<ZiEHUz3wicDJscGP@pengutronix.de>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B9uGfTE4"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-78f03917484so111313485a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 02:49:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713520159; x=1714124959; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TtlViaUk+ppF2YvB3wdQyftKniyUzK8Ej92YBlwMILc=;
+        b=B9uGfTE4vZBZ3DPOwWlD57mgs6r6jG/NwE89YV7tCii8zx4DvyKV0q/n9O5zialAJU
+         gAnsyMlQr7f0my8BExqqelEGCw/lHxIajmUPfaYuzQ+deGaGJDxLJYaLxLpmIQSGkY+C
+         V4q7j46jToCXVXnEGVhOLVbQ6ixsoF4NlPMOk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713520159; x=1714124959;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TtlViaUk+ppF2YvB3wdQyftKniyUzK8Ej92YBlwMILc=;
+        b=ues1Gw8i7/sxWwNHyc55QJBzdKG7GNOJUrsj7HSASDNxaj7y+GCYt8OKDjX+3j7jDM
+         adWnwqFXpXqEEFp8u/lt9lFPkQUbA11H1Acz9vB2VKG2XnWv1Oy6DliXKfFYyC2gcD+5
+         aT50wYDrdaaVjUeEXe5W1m4MRMfW3XinjVFly5Q8G+Sn1k2hZkV+B8iIBh3gbxOBEVn2
+         /uDXfDpa4R6F72u+5rPhowOyVImwBx1797uDXHPpbzNszbLFyiawY9F2/+6c6Z+X50a/
+         wkOyxpj0YSyiG4cNv/mOgVdJrM7guBlbdxGq6XJTVUqewAO7zbaJJq2+dnf+Rkdo/FdW
+         KaXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVRpMXJw3zNHqZWwvhgTN4iUmU3b4G0chumZNKtJpbk0mkvNBxoBS9f4J9xFExRSvuHgN1WydzV6KAxF/Tx3+Tn7Y9IZxgEU14aNrnI
+X-Gm-Message-State: AOJu0Yw4781wXdEGHt474U0A5i/7CHfvuUJE114tUDEyTF6LNZyPuk8o
+	HpBEqm5izt3wjQkMzgfwF4n6fyBkGc62ZrALhM1C0qkuLeEW84vA1lJsCOUnag==
+X-Google-Smtp-Source: AGHT+IHcSLXPGR/K0waZNqFgMaXNzaf95X9YYFUFUCHgvEpSUHJvLAV/8QVHrr+4o4OmwTvG9tzrkg==
+X-Received: by 2002:a05:620a:1da6:b0:78d:5065:c5df with SMTP id pj38-20020a05620a1da600b0078d5065c5dfmr1595944qkn.18.1713520159351;
+        Fri, 19 Apr 2024 02:49:19 -0700 (PDT)
+Received: from denia.c.googlers.com (114.152.245.35.bc.googleusercontent.com. [35.245.152.114])
+        by smtp.gmail.com with ESMTPSA id dt14-20020a05620a478e00b0078d735ca917sm1434532qkb.123.2024.04.19.02.49.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Apr 2024 02:49:18 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Fri, 19 Apr 2024 09:47:47 +0000
+Subject: [PATCH v2 01/26] media: pci: mgb4: Refactor struct resources
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240419-fix-cocci-v2-1-2119e692309c@chromium.org>
+References: <20240419-fix-cocci-v2-0-2119e692309c@chromium.org>
+In-Reply-To: <20240419-fix-cocci-v2-0-2119e692309c@chromium.org>
+To: Martin Tuma <martin.tuma@digiteqautomotive.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Hugues Fruchet <hugues.fruchet@foss.st.com>, 
+ Alain Volmat <alain.volmat@foss.st.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Paul Kocialkowski <paul.kocialkowski@bootlin.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ Sowjanya Komatineni <skomatineni@nvidia.com>, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Hans Verkuil <hverkuil@xs4all.nl>, Sergey Kozlov <serjk@netup.ru>, 
+ Abylay Ospan <aospan@netup.ru>, 
+ Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
+ Dmitry Osipenko <digetx@gmail.com>, 
+ Benjamin Mugnier <benjamin.mugnier@foss.st.com>, 
+ Sylvain Petinot <sylvain.petinot@foss.st.com>, 
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, 
+ Vikash Garodia <quic_vgarodia@quicinc.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev, 
+ linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org, 
+ linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+ Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.12.4
 
-Hi Sascha,
+The struct resource end field is inclusive not exclusive, this is, the
+size is (end - start) +1.
 
-s.hauer@pengutronix.de wrote on Thu, 18 Apr 2024 13:43:15 +0200:
+Update the definitions and use the generic resource_size() function.
 
-> On Thu, Apr 18, 2024 at 11:32:44AM +0200, Miquel Raynal wrote:
-> > Hi Sascha,
-> >=20
-> > s.hauer@pengutronix.de wrote on Thu, 18 Apr 2024 08:48:08 +0200:
-> >  =20
-> > > On Wed, Apr 17, 2024 at 09:13:31AM +0200, Sascha Hauer wrote: =20
-> > > > The NAND core enabled subpage reads when a largepage NAND is used w=
-ith
-> > > > SOFT_ECC. The i.MX NAND controller doesn't support subpage reads, so
-> > > > clear the flag again.
-> > > >=20
-> > > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > > > ---
-> > > >  drivers/mtd/nand/raw/mxc_nand.c | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >=20
-> > > > diff --git a/drivers/mtd/nand/raw/mxc_nand.c b/drivers/mtd/nand/raw=
-/mxc_nand.c
-> > > > index f44c130dca18d..19b46210bd194 100644
-> > > > --- a/drivers/mtd/nand/raw/mxc_nand.c
-> > > > +++ b/drivers/mtd/nand/raw/mxc_nand.c
-> > > > @@ -1667,6 +1667,8 @@ static int mxcnd_probe(struct platform_device=
- *pdev)
-> > > >  	if (err)
-> > > >  		goto escan;
-> > > > =20
-> > > > +	this->options &=3D ~NAND_SUBPAGE_READ;
-> > > > +   =20
-> > >=20
-> > > Nah, it doesn't work like this. It turns out the BBT is read using
-> > > subpage reads before we can disable them here.
-> > >
-> > > This is the code in nand_scan_tail() we stumble upon:
-> > >=20
-> > > 	/* Large page NAND with SOFT_ECC should support subpage reads */
-> > > 	switch (ecc->engine_type) {
-> > > 	case NAND_ECC_ENGINE_TYPE_SOFT:
-> > > 		if (chip->page_shift > 9)
-> > > 			chip->options |=3D NAND_SUBPAGE_READ;
-> > > 		break;
-> > >=20
-> > > 	default:
-> > > 		break;
-> > > 	}
-> > >=20
-> > > So the code assumes subpage reads are ok when SOFT_ECC is in use, whi=
-ch
-> > > in my case is not true. I guess some drivers depend on the
-> > > NAND_SUBPAGE_READ bit magically be set, so simply removing this code =
-is
-> > > likely not an option.  Any ideas what to do? =20
-> >=20
-> > Can you elaborate why subpage reads are not an option in your
-> > situation? While subpage writes depend on chip capabilities, reads
-> > however should always work: it's just the controller selecting the
-> > column where to start and then reading less data than it could from the
-> > NAND cache. It's a very basic NAND controller feature, and I remember
-> > this was working on eg. an i.MX27. =20
->=20
-> On the i.MX27 reading a full 2k page means triggering one read operation
-> per 512 bytes in the NAND controller, so it would be possible to read
-> subpages by triggering only one read operation instead of four in a row.
->=20
-> The newer SoCs like i.MX25 always read a full page with a single read
-> operation. We could likely read subpages by temporarily configuring the
-> controller for a 512b page size NAND.
->=20
-> I just realized the real problem comes with reading the OOB data. With
-> software BCH the NAND layer hardcodes the read_subpage hook to
-> nand_read_subpage() which uses nand_change_read_column_op() to read the
-> OOB data. This uses NAND_CMD_RNDOUT and I have now idea if/how this can
-> be implemented in the i.MX NAND driver. Right now the controller indeed
-> reads some data and then the SRAM buffer really contains part of the
-> desired OOB data, but also part of the user data.
+Fixes cocci check:
+drivers/media/pci/mgb4/mgb4_regs.c:13:22-25: WARNING: Suspicious code. resource_size is maybe missing with res
 
-NAND_CMD_RNDOUT is impossible to avoid, the controller surely supports
-it and the core really need it anyway. Basically reading from a NAND
-chip is a matter of:
+Reviewed-by: Martin Tůma <martin.tuma@digiteqautomotive.com>
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+---
+ drivers/media/pci/mgb4/mgb4_core.c | 4 ++--
+ drivers/media/pci/mgb4/mgb4_regs.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-- asking the chip to "sample" the NAND array and store a full page
-  (data+OOB) in its internal SRAM
-- waiting for it to happen
-- reading from the chip's SRAM, any length, any offset. Of course the
-  offset and length must be aligned with the on-host ECC engine when
-  there is one.
+diff --git a/drivers/media/pci/mgb4/mgb4_core.c b/drivers/media/pci/mgb4/mgb4_core.c
+index 9bcf10a77fd3..60498a5abebf 100644
+--- a/drivers/media/pci/mgb4/mgb4_core.c
++++ b/drivers/media/pci/mgb4/mgb4_core.c
+@@ -493,13 +493,13 @@ static int mgb4_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	struct mgb4_dev *mgbdev;
+ 	struct resource video = {
+ 		.start	= 0x0,
+-		.end	= 0x100,
++		.end	= 0xff,
+ 		.flags	= IORESOURCE_MEM,
+ 		.name	= "mgb4-video",
+ 	};
+ 	struct resource cmt = {
+ 		.start	= 0x1000,
+-		.end	= 0x1800,
++		.end	= 0x17ff,
+ 		.flags	= IORESOURCE_MEM,
+ 		.name	= "mgb4-cmt",
+ 	};
+diff --git a/drivers/media/pci/mgb4/mgb4_regs.c b/drivers/media/pci/mgb4/mgb4_regs.c
+index 53d4e4503a74..31befd722d72 100644
+--- a/drivers/media/pci/mgb4/mgb4_regs.c
++++ b/drivers/media/pci/mgb4/mgb4_regs.c
+@@ -10,7 +10,7 @@
+ int mgb4_regs_map(struct resource *res, struct mgb4_regs *regs)
+ {
+ 	regs->mapbase = res->start;
+-	regs->mapsize = res->end - res->start;
++	regs->mapsize = resource_size(res);
+ 
+ 	if (!request_mem_region(regs->mapbase, regs->mapsize, res->name))
+ 		return -EINVAL;
 
-Supporting this command must be straightforward with ->exec_op(), here
-is the pattern:
-https://elixir.bootlin.com/linux/latest/source/drivers/mtd/nand/raw/nand_ba=
-se.c#L1454
+-- 
+2.44.0.769.g3c40516874-goog
 
-> We might overcome these problems, but I am not sure if it's worth it.
-> It's ancient hardware that I don't want to put too much effort into and
-> I doubt that the end result would have a better performance when we need
-> one operation to read the subpage and another one to read OOB as opposed
-> to always read full pages
-
-We shall definitely avoid doing several read operations, but as
-explained above, you can move the internal SRAM pointer at no cost
-("read from cache" commands, named "changed_column" in the core), so the
-performance penalty is negligible.
-
-> (which is only one operation, say one
-> interrupt latency, for each page read).
-
-The mxc_nand.c driver was my first ever NAND controller driver re-write
-but unfortunately the quality was too bad for being submitted at that
-time. My goal was the same as yours. Quickly after we introduced
-->exec_op() and thus my initial re-work was trash. But I think it was
-close to this:
-https://github.com/miquelraynal/linux/blob/perso/mtd-next/mxc-nand/drivers/=
-mtd/nand/mxc_nand_v2.c
-Maybe that can help.
-
-Thanks,
-Miqu=C3=A8l
