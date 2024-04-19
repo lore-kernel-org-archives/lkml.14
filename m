@@ -1,128 +1,205 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77A3136678
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 16:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D13C136678;
+	Fri, 19 Apr 2024 16:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713545222; cv=none; b=lxuc79b+9qr1AGNWpHAXosqLgRejCiA8pIC/ZomR46pVGfmlvUwEH/x3T1O0vSBMf2hQH1UWdSbqZsxw9CG+LdCM0ve7XqckNhbXbStnhJ1Cv7Z0qhZsuL+NcPKtLnVFPm9nLlosK7rxczddsLbmkxNcaejaRwfEd310+R51mIk=
+	t=1713545267; cv=none; b=WAp7k6KUKxfF0iG2LvIpEhayPWmTMiBh22/OnSA7PKlwoeUy0VdwaS77wGjn8a7xUGmto8BEAeMWSPa3zWgTZZJJ2/7xQGrakkSs/KE5+hJ2TMQMzzrIow7twUPb5XUMvL+fKEvc5BXFgCIOcIjOUNy98aGJf/gDOhAGqqqzTgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713545222; c=relaxed/simple;
-	bh=XlVHXmoOoZJBxQK11P4e0G5gKO3J4n/iNHjCxcHwO6Q=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oa6FxQk5I//H4HkFkx0GKZUDGgroLbyw+pjqiTwz2wSGz7PJe6DjfHQBYovaMuLVz207+dXWb572frSMC5ASCqSgGMQNixH9g1Roxa2ZUYtfyOc/5U5E6kfX4L9aD3FfCCjatzkmVJXBxDwyFa77McTmjgHTFg24Jb86mmlePsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A+YXP2Mx; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A+YXP2Mx"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbf618042daso4155682276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 09:47:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713545220; x=1714150020; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jgTuoKjvUJwd1St1Ysaygwu9RtHx37o8FxEW9+VLH3g=;
-        b=A+YXP2MxlMlVxYSeS2g4hUJF7OfTdb2OCi0vElncwMhiBYObPyX/jCE799XN0fj08m
-         3QQatMxIKXR6o2a7Lv7AZDolFTm5ZSgzxRyXqsM8Cqzj9p9T34ttiJdtvOof4+CTlYlL
-         WVzLGBrOB5eRlULiPVugaGXKSDcpHavZ9jgZPhmR7E5Rps9LjXFpNhGNRdcb2IfQbfc/
-         6i5U/68tz407tr43dHvbRAXGwAxaaRGvZU8pSjF60vNu8sU5+8KAIgKHvJCCwiPNFDyb
-         qvbC3x0tqZsb7NrGy3XNMFB6XOtfN0RvszIGaFU4BdpQXNgn1dm53pZfA4JDygZUwcah
-         B41Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713545220; x=1714150020;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jgTuoKjvUJwd1St1Ysaygwu9RtHx37o8FxEW9+VLH3g=;
-        b=YmvUKt8+XNwGRss9r3ih2Z9LN/hlT9RS7eH1UWe97Uzc7AgFr3SHBtBnN/g+IY7IXv
-         jORVFYROpSnOp5NoiYs04ziXN/HDSN1alNuKJ3eQuCMLGjpm1225RgHWkotHam7aKSNg
-         OCOGqYBCNy8NjAzRR10CYE6aMxO5oU3C+F4jFZu0WuF0EHf7ZKRmC5RBgdzQaaRVFtfS
-         tQVxHehIVGkoGKd3mS/EYP/8D2A4cWtaa8c0rJHReEAd22E1IgrqmBQtCAGfkhg9N6Ce
-         +SxcueaMVjMAzV0pERJvXVdKl1vwNuf43jDpa4dtAi30GfwnkbsDeTQ9cZ/+R3ksNTPE
-         Ei/w==
-X-Forwarded-Encrypted: i=1; AJvYcCXyYPvFXkoXVfgEtqxy6Mw6URDAL9gXcOFMTcwV9nFT4ttNf4TGxNBFOcHcAuOiakBxCbgLTc11hFqYeRMbBPAHD3jRxbWSzJPLOcfp
-X-Gm-Message-State: AOJu0Yws0IZN77FqSCOMcO2d8zoM5jxT+nyYc7LMN8fNReU/OwfH7vkW
-	DnEQsEbHp1du/G/r7nMUCo8pCFUUOGJZFiJbdT9zQA5aYAjUqLKYzqkJtP380owC6+ul8nxMXpR
-	loA==
-X-Google-Smtp-Source: AGHT+IEqtJfIduJTupbfqjBE9B2dlDnnPdooK4NRFkzB0/8yaymYtyvWQGRlDH5P7p5wxJRE79mU11H50oQ=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:6908:0:b0:de1:21b4:76a5 with SMTP id
- e8-20020a256908000000b00de121b476a5mr160741ybc.13.1713545220035; Fri, 19 Apr
- 2024 09:47:00 -0700 (PDT)
-Date: Fri, 19 Apr 2024 09:46:58 -0700
-In-Reply-To: <20240419160537.namt5yaxhhvwwa3r@treble>
+	s=arc-20240116; t=1713545267; c=relaxed/simple;
+	bh=vxeDJBGJmcE4zin4YPrW480rqgvwsh0z7OcUlNEIshA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n98xeEWtuOQY5HMA2IF5nVQAP/8e30S34oagUIIVmXAG2X4y6vR+6sDs59XKaI5aRd9LyFgE51znS3yY2wXf/Jd1zwlURLhhOt7M4QKg0uliT6rvDm20Wd8njIDO5lSRXH6xErD8DZQbqpKGnC3i5tEGV8UqKZBTGFoYJ/9sfao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VLgYT6Q5zz6K8xt;
+	Sat, 20 Apr 2024 00:47:41 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
+	by mail.maildlp.com (Postfix) with ESMTPS id 45AEA140447;
+	Sat, 20 Apr 2024 00:47:43 +0800 (CST)
+Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
+ lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 19 Apr 2024 17:47:42 +0100
+From: <shiju.jose@huawei.com>
+To: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-mm@kvack.org>, <dan.j.williams@intel.com>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>
+CC: <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<david@redhat.com>, <Vilas.Sridharan@amd.com>, <leo.duran@amd.com>,
+	<Yazen.Ghannam@amd.com>, <rientjes@google.com>, <jiaqiyan@google.com>,
+	<tony.luck@intel.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<rafael@kernel.org>, <lenb@kernel.org>, <naoya.horiguchi@nec.com>,
+	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
+	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
+	<mike.malvestuto@intel.com>, <gthelen@google.com>,
+	<wschwartz@amperecomputing.com>, <dferguson@amperecomputing.com>,
+	<wbs@os.amperecomputing.com>, <nifan.cxl@gmail.com>, <yazen.ghannam@amd.com>,
+	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
+	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
+Subject: [RFC PATCH v8 02/10] cxl/mbox: Add GET_SUPPORTED_FEATURES mailbox command
+Date: Sat, 20 Apr 2024 00:47:11 +0800
+Message-ID: <20240419164720.1765-3-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.35.1.windows.2
+In-Reply-To: <20240419164720.1765-1-shiju.jose@huawei.com>
+References: <20240419164720.1765-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240417001507.2264512-1-seanjc@google.com> <20240417001507.2264512-2-seanjc@google.com>
- <20240419160537.namt5yaxhhvwwa3r@treble>
-Message-ID: <ZiKgAh1aNBGHpOof@google.com>
-Subject: Re: [PATCH 1/2] cpu: Re-enable CPU mitigations by default for !X86 architectures
-From: Sean Christopherson <seanjc@google.com>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500006.china.huawei.com (7.191.161.198)
 
-On Fri, Apr 19, 2024, Josh Poimboeuf wrote:
-> On Tue, Apr 16, 2024 at 05:15:06PM -0700, Sean Christopherson wrote:
-> > Add a generic Kconfig, CPU_MITIGATIONS, to control whether or not CPU
-> > mitigations are enabled by default, and force it on for all architectures
-> > except x86.  A recent commit to turn mitigations off by default if
-> > SPECULATION_MITIGATIONS=n kinda sorta missed that "cpu_mitigations" is
-> > completely generic, where as SPECULATION_MITIGATIONS is x86 specific.
-> > 
-> > Alternatively, SPECULATION_MITIGATIONS could simply be defined in common
-> > code, but that creates weirdness for x86 because SPECULATION_MITIGATIONS
-> > ends up being defined twice, and the default behavior would likely depend
-> > on the arbitrary include order (if the two definitions diverged).
-> > 
-> > Ideally, CPU_MITIGATIONS would be unconditionally on by default for all
-> > architectures, and manually turned off, but there is no way to unselect a
-> > Kconfig.
-> > 
-> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Reported-by: Michael Ellerman <mpe@ellerman.id.au>
-> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Closes: https://lkml.kernel.org/r/20240413115324.53303a68%40canb.auug.org.au
-> > Fixes: f337a6a21e2f ("x86/cpu: Actually turn off mitigations by default for SPECULATION_MITIGATIONS=n")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> 
-> It seems confusing to have two config options which have very similar
-> names and similar purposes (with subtle differences depending on the
-> arch).
-> 
-> How about we instead just get rid of the x86-specific
-> SPECULATION_MITIGATIONS and replace it with a menu which depends on
-> CPU_MITIGATIONS:
+From: Shiju Jose <shiju.jose@huawei.com>
 
-Huh, didn't realize that was possible.
+Add support for GET_SUPPORTED_FEATURES mailbox command.
 
-I agree that having two things for the same thing is confusing, though Boris'
-idea to do s/SPECULATION_MITIGATIONS/X86_CPU_MITIGATIONS would help a fair bit
-on that front.
+CXL spec 3.1 section 8.2.9.6 describes optional device specific features.
+CXL devices supports features with changeable attributes.
+Get Supported Features retrieves the list of supported device specific
+features. The settings of a feature can be retrieved using Get Feature
+and optionally modified using Set Feature.
 
-My only hesitation is that x86's menu and the common config knob end up in
-completely different locations.  And AFAICT, the parser doesn't allow sourcing
-menu entires from a different file:
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ drivers/cxl/core/mbox.c | 27 ++++++++++++++++++
+ drivers/cxl/cxlmem.h    | 61 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 88 insertions(+)
 
-  init/Kconfig:1959: 'menu' in different file than 'menu'
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index f0f54aeccc87..82e279b821e2 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1291,6 +1291,33 @@ int cxl_set_timestamp(struct cxl_memdev_state *mds)
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_set_timestamp, CXL);
+ 
++int cxl_get_supported_features(struct cxl_memdev_state *mds,
++			       u32 count, u16 start_index,
++			       struct cxl_mbox_get_supp_feats_out *feats_out)
++{
++	struct cxl_mbox_get_supp_feats_in pi;
++	struct cxl_mbox_cmd mbox_cmd;
++	int rc;
++
++	pi.count = cpu_to_le32(count);
++	pi.start_index = cpu_to_le16(start_index);
++
++	mbox_cmd = (struct cxl_mbox_cmd) {
++		.opcode = CXL_MBOX_OP_GET_SUPPORTED_FEATURES,
++		.size_in = sizeof(pi),
++		.payload_in = &pi,
++		.size_out = count,
++		.payload_out = feats_out,
++		.min_out = sizeof(*feats_out),
++	};
++	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
++	if (rc < 0)
++		return rc;
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_get_supported_features, CXL);
++
+ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 		       struct cxl_region *cxlr)
+ {
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 36cee9c30ceb..06231e63373e 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -527,6 +527,7 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_SET_TIMESTAMP	= 0x0301,
+ 	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+ 	CXL_MBOX_OP_GET_LOG		= 0x0401,
++	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
+ 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
+ 	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
+ 	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
+@@ -696,6 +697,63 @@ struct cxl_mbox_set_timestamp_in {
+ 
+ } __packed;
+ 
++/*
++ * Get Supported Features CXL 3.1 Spec 8.2.9.6.1
++ */
++
++/*
++ * Get Supported Features input payload
++ * CXL rev 3.1 section 8.2.9.6.1 Table 8-95
++ */
++struct cxl_mbox_get_supp_feats_in {
++	__le32 count;
++	__le16 start_index;
++	u8 rsvd[2];
++} __packed;
++
++/*
++ * Get Supported Features Supported Feature Entry
++ * CXL rev 3.1 section 8.2.9.6.1 Table 8-97
++ */
++/* Supported Feature Entry : Payload out attribute flags */
++#define CXL_FEAT_ENTRY_FLAG_CHANGABLE	BIT(0)
++#define CXL_FEAT_ENTRY_FLAG_DEEPEST_RESET_PERSISTENCE_MASK	GENMASK(3, 1)
++#define CXL_FEAT_ENTRY_FLAG_PERSIST_ACROSS_FIRMWARE_UPDATE	BIT(4)
++#define CXL_FEAT_ENTRY_FLAG_SUPPORT_DEFAULT_SELECTION	BIT(5)
++#define CXL_FEAT_ENTRY_FLAG_SUPPORT_SAVED_SELECTION	BIT(6)
++
++enum cxl_feat_attr_value_persistence {
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_NONE,
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_CXL_RESET,
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_HOT_RESET,
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_WARM_RESET,
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_COLD_RESET,
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_MAX
++};
++
++struct cxl_mbox_supp_feat_entry {
++	uuid_t uuid;
++	__le16 index;
++	__le16 get_size;
++	__le16 set_size;
++	__le32 attr_flags;
++	u8 get_version;
++	u8 set_version;
++	__le16 set_effects;
++	u8 rsvd[18];
++}  __packed;
++
++/*
++ * Get Supported Features output payload
++ * CXL rev 3.1 section 8.2.9.6.1 Table 8-96
++ */
++struct cxl_mbox_get_supp_feats_out {
++	__le16 nr_entries;
++	__le16 nr_supported;
++	u8 rsvd[4];
++	struct cxl_mbox_supp_feat_entry feat_entries[];
++} __packed;
++
+ /* Get Poison List  CXL 3.0 Spec 8.2.9.8.4.1 */
+ struct cxl_mbox_poison_in {
+ 	__le64 offset;
+@@ -827,6 +885,9 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+ 			    enum cxl_event_type event_type,
+ 			    const uuid_t *uuid, union cxl_event *evt);
+ int cxl_set_timestamp(struct cxl_memdev_state *mds);
++int cxl_get_supported_features(struct cxl_memdev_state *mds,
++			       u32 count, u16 start_index,
++			       struct cxl_mbox_get_supp_feats_out *feats_out);
+ int cxl_poison_state_init(struct cxl_memdev_state *mds);
+ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 		       struct cxl_region *cxlr);
+-- 
+2.34.1
 
-e.g. we can't declare the menuconfig in common code and then include arch
-definitions.
-
-Regardless of whether or not we shuffle things around, CPU_MITIGATIONS really
-should be in init/Kconfig, not drivers/base/Kconfig, e.g. so that if we make it
-a user-selectable option, it shows up under "General setup" instead of being
-buried two layers deep in drivers.
-
-That makes it less hard to find CPU_MITIGATIONS, but I still find it cumbersome
-to have to enable CPU_MITIGATIONS, and then go hunting for x86's menu.
