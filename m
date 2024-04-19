@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBE6130A5B;
-	Fri, 19 Apr 2024 16:47:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E05136E1C;
+	Fri, 19 Apr 2024 16:47:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713545266; cv=none; b=AiB4Me3VbGzxRAGwb6CUWk0nwUAxSbQ7uvrv3tN7ewkluHFncvbDNGhJLR6HeEbkk2wJFPVaAtt62GfEaVBZI/huUsxqO3/4EiAuA3JSQRscslb3BV8QTNMJmJSlI6uSBUUlJzSilENwrMkZ89WWGdMbAQGtjRPpS8N12yicyNs=
+	t=1713545268; cv=none; b=YkNHTPuHrv3feeLoThnTac1OZbWCONsa9qLoMrEVeampwlfdc3y0riyLHuwAoG3OKY1mOHZf/jdnBrKh8VY9zinUWtfMVLJs0gMoAHovmmgE+2q4iFWQVQkKhLS62w6dvUASEuhCsdUX69AbFL+85aFbGwNFatWGAxn+9KznWRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713545266; c=relaxed/simple;
-	bh=FLmy9nGhpeQpzNEGELd6fb1fl1kbOZbYo1/FiZ5frWc=;
+	s=arc-20240116; t=1713545268; c=relaxed/simple;
+	bh=reI3SeEHSCKIoQsRob7GvElPx06URHqGNZxJaNYoxFY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MBj/tJeq2NCNK6RbCfR7UWlCXCZ6M5JzSyfhe0DNQPLj4r59NBlTJZmAQTBSQIlmDsK4czrsZwx+0vVLiuXffGK27wh5MvjePBjzJZiLwwd0voIN8qUKcD0Z0lhWZyFTjC/i4Lnf/NO1MT/iQLFH0cPwKk2G8BnKUCfvLkuTizA=
+	 MIME-Version:Content-Type; b=YynhxsZi0HBh8rVoikk3RU5vBr00al10c/WmFzX4FqOugAI8zNW7E1GxTgJ8p/ZmnA9iCgROJR7fdfH13Qwhup9feEQ1Z57XzUR+U8ECiFV5ioyyICkmf6gD77R+8KujxTwtiYrpNeSJHXECQyDPDlrXhM+qrXVeqTauFuRTwPM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VLgW31Gl2z6K626;
-	Sat, 20 Apr 2024 00:45:35 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VLgW536scz6K62B;
+	Sat, 20 Apr 2024 00:45:37 +0800 (CST)
 Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0DB10140A70;
-	Sat, 20 Apr 2024 00:47:42 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 54086140AB8;
+	Sat, 20 Apr 2024 00:47:44 +0800 (CST)
 Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
  lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 19 Apr 2024 17:47:41 +0100
+ 15.1.2507.35; Fri, 19 Apr 2024 17:47:43 +0100
 From: <shiju.jose@huawei.com>
 To: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
 	<linux-mm@kvack.org>, <dan.j.williams@intel.com>, <dave@stgolabs.net>,
@@ -43,9 +43,9 @@ CC: <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
 	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
 	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
-Date: Sat, 20 Apr 2024 00:47:10 +0800
-Message-ID: <20240419164720.1765-2-shiju.jose@huawei.com>
+Subject: [RFC PATCH v8 03/10] cxl/mbox: Add GET_FEATURE mailbox command
+Date: Sat, 20 Apr 2024 00:47:12 +0800
+Message-ID: <20240419164720.1765-4-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.35.1.windows.2
 In-Reply-To: <20240419164720.1765-1-shiju.jose@huawei.com>
 References: <20240419164720.1765-1-shiju.jose@huawei.com>
@@ -62,426 +62,134 @@ X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-Add scrub subsystem supports configuring the memory scrubbers
-in the system. The scrub subsystem provides the interface for
-registering the scrub devices. The scrub control attributes
-are provided to the user in /sys/class/ras/rasX/scrub
+Add support for GET_FEATURE mailbox command.
 
-Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CXL spec 3.1 section 8.2.9.6 describes optional device specific features.
+The settings of a feature can be retrieved using Get Feature command.
+
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- .../ABI/testing/sysfs-class-scrub-configure   |  47 +++
- drivers/ras/Kconfig                           |   7 +
- drivers/ras/Makefile                          |   1 +
- drivers/ras/memory_scrub.c                    | 271 ++++++++++++++++++
- include/linux/memory_scrub.h                  |  37 +++
- 5 files changed, 363 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-scrub-configure
- create mode 100755 drivers/ras/memory_scrub.c
- create mode 100755 include/linux/memory_scrub.h
+ drivers/cxl/core/mbox.c | 53 +++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h    | 28 ++++++++++++++++++++++
+ 2 files changed, 81 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-scrub-configure b/Documentation/ABI/testing/sysfs-class-scrub-configure
-new file mode 100644
-index 000000000000..3ed77dbb00ad
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-scrub-configure
-@@ -0,0 +1,47 @@
-+What:		/sys/class/ras/
-+Date:		March 2024
-+KernelVersion:	6.9
-+Contact:	linux-kernel@vger.kernel.org
-+Description:
-+		The ras/ class subdirectory belongs to the
-+		common ras features such as scrub subsystem.
-+
-+What:		/sys/class/ras/rasX/scrub/
-+Date:		March 2024
-+KernelVersion:	6.9
-+Contact:	linux-kernel@vger.kernel.org
-+Description:
-+		The /sys/class/ras/ras{0,1,2,3,...}/scrub directories
-+		correspond to each scrub device registered with the
-+		scrub subsystem.
-+
-+What:		/sys/class/ras/rasX/scrub/name
-+Date:		March 2024
-+KernelVersion:	6.9
-+Contact:	linux-kernel@vger.kernel.org
-+Description:
-+		(RO) name of the memory scrubber
-+
-+What:		/sys/class/ras/rasX/scrub/enable_background
-+Date:		March 2024
-+KernelVersion:	6.9
-+Contact:	linux-kernel@vger.kernel.org
-+Description:
-+		(RW) Enable/Disable background(patrol) scrubbing if supported.
-+
-+What:		/sys/class/ras/rasX/scrub/rate_available
-+Date:		March 2024
-+KernelVersion:	6.9
-+Contact:	linux-kernel@vger.kernel.org
-+Description:
-+		(RO) Supported range for the scrub rate by the scrubber.
-+		The scrub rate represents in hours.
-+
-+What:		/sys/class/ras/rasX/scrub/rate
-+Date:		March 2024
-+KernelVersion:	6.9
-+Contact:	linux-kernel@vger.kernel.org
-+Description:
-+		(RW) The scrub rate specified and it must be with in the
-+		supported range by the scrubber.
-+		The scrub rate represents in hours.
-diff --git a/drivers/ras/Kconfig b/drivers/ras/Kconfig
-index fc4f4bb94a4c..181701479564 100644
---- a/drivers/ras/Kconfig
-+++ b/drivers/ras/Kconfig
-@@ -46,4 +46,11 @@ config RAS_FMPM
- 	  Memory will be retired during boot time and run time depending on
- 	  platform-specific policies.
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 82e279b821e2..999965871048 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1318,6 +1318,59 @@ int cxl_get_supported_features(struct cxl_memdev_state *mds,
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_get_supported_features, CXL);
  
-+config SCRUB
-+	tristate "Memory scrub driver"
-+	help
-+	  This option selects the memory scrub subsystem, supports
-+	  configuring the parameters of underlying scrubbers in the
-+	  system for the DRAM memories.
-+
- endif
-diff --git a/drivers/ras/Makefile b/drivers/ras/Makefile
-index 11f95d59d397..89bcf0d84355 100644
---- a/drivers/ras/Makefile
-+++ b/drivers/ras/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_RAS)	+= ras.o
- obj-$(CONFIG_DEBUG_FS)	+= debugfs.o
- obj-$(CONFIG_RAS_CEC)	+= cec.o
-+obj-$(CONFIG_SCRUB)	+= memory_scrub.o
- 
- obj-$(CONFIG_RAS_FMPM)	+= amd/fmpm.o
- obj-y			+= amd/atl/
-diff --git a/drivers/ras/memory_scrub.c b/drivers/ras/memory_scrub.c
-new file mode 100755
-index 000000000000..7e995380ec3a
---- /dev/null
-+++ b/drivers/ras/memory_scrub.c
-@@ -0,0 +1,271 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Memory scrub subsystem supports configuring the registered
-+ * memory scrubbers.
-+ *
-+ * Copyright (c) 2024 HiSilicon Limited.
-+ */
-+
-+#define pr_fmt(fmt)     "MEM SCRUB: " fmt
-+
-+#include <linux/acpi.h>
-+#include <linux/bitops.h>
-+#include <linux/delay.h>
-+#include <linux/kfifo.h>
-+#include <linux/memory_scrub.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
-+
-+/* memory scrubber config definitions */
-+#define SCRUB_ID_PREFIX "ras"
-+#define SCRUB_ID_FORMAT SCRUB_ID_PREFIX "%d"
-+
-+static DEFINE_IDA(scrub_ida);
-+
-+struct scrub_device {
-+	int id;
-+	struct device dev;
-+	const struct scrub_ops *ops;
-+};
-+
-+#define to_scrub_device(d) container_of(d, struct scrub_device, dev)
-+static ssize_t enable_background_store(struct device *dev,
-+				       struct device_attribute *attr,
-+				       const char *buf, size_t len)
++size_t cxl_get_feature(struct cxl_memdev_state *mds,
++		       const uuid_t feat_uuid, void *feat_out,
++		       size_t feat_out_size,
++		       size_t feat_out_min_size,
++		       enum cxl_get_feat_selection selection)
 +{
-+	struct scrub_device *scrub_dev = to_scrub_device(dev);
-+	bool enable;
-+	int ret;
++	struct cxl_dev_state *cxlds = &mds->cxlds;
++	struct cxl_mbox_get_feat_in pi;
++	struct cxl_mbox_cmd mbox_cmd;
++	size_t data_rcvd_size = 0;
++	size_t data_to_rd_size, size_out;
++	int rc;
 +
-+	ret = kstrtobool(buf, &enable);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = scrub_dev->ops->set_enabled_bg(dev, enable);
-+	if (ret)
-+		return ret;
-+
-+	return len;
-+}
-+
-+static ssize_t enable_background_show(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	struct scrub_device *scrub_dev = to_scrub_device(dev);
-+	bool enable;
-+	int ret;
-+
-+	ret = scrub_dev->ops->get_enabled_bg(dev, &enable);
-+	if (ret)
-+		return ret;
-+
-+	return sysfs_emit(buf, "%d\n", enable);
-+}
-+
-+static ssize_t name_show(struct device *dev,
-+			 struct device_attribute *attr, char *buf)
-+{
-+	struct scrub_device *scrub_dev = to_scrub_device(dev);
-+	int ret;
-+
-+	ret = scrub_dev->ops->get_name(dev, buf);
-+	if (ret)
-+		return ret;
-+
-+	return strlen(buf);
-+}
-+
-+static ssize_t rate_show(struct device *dev, struct device_attribute *attr,
-+			 char *buf)
-+{
-+	struct scrub_device *scrub_dev = to_scrub_device(dev);
-+	u64 val;
-+	int ret;
-+
-+	ret = scrub_dev->ops->rate_read(dev, &val);
-+	if (ret)
-+		return ret;
-+
-+	return sysfs_emit(buf, "0x%llx\n", val);
-+}
-+
-+static ssize_t rate_store(struct device *dev, struct device_attribute *attr,
-+			  const char *buf, size_t len)
-+{
-+	struct scrub_device *scrub_dev = to_scrub_device(dev);
-+	long val;
-+	int ret;
-+
-+	ret = kstrtol(buf, 10, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = scrub_dev->ops->rate_write(dev, val);
-+	if (ret)
-+		return ret;
-+
-+	return len;
-+}
-+
-+static ssize_t rate_available_show(struct device *dev,
-+				   struct device_attribute *attr,
-+				   char *buf)
-+{
-+	struct scrub_device *scrub_dev = to_scrub_device(dev);
-+	u64 min_sr, max_sr;
-+	int ret;
-+
-+	ret = scrub_dev->ops->rate_avail_range(dev, &min_sr, &max_sr);
-+	if (ret)
-+		return ret;
-+
-+	return sysfs_emit(buf, "0x%llx-0x%llx\n", min_sr, max_sr);
-+}
-+
-+DEVICE_ATTR_RW(enable_background);
-+DEVICE_ATTR_RO(name);
-+DEVICE_ATTR_RW(rate);
-+DEVICE_ATTR_RO(rate_available);
-+
-+static struct attribute *scrub_attrs[] = {
-+	&dev_attr_enable_background.attr,
-+	&dev_attr_name.attr,
-+	&dev_attr_rate.attr,
-+	&dev_attr_rate_available.attr,
-+	NULL
-+};
-+
-+static umode_t scrub_attr_visible(struct kobject *kobj,
-+				  struct attribute *a, int attr_id)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct scrub_device *scrub_dev = to_scrub_device(dev);
-+	const struct scrub_ops *ops = scrub_dev->ops;
-+
-+	if (a == &dev_attr_enable_background.attr) {
-+		if (ops->set_enabled_bg && ops->get_enabled_bg)
-+			return a->mode;
-+		if (ops->get_enabled_bg)
-+			return 0444;
-+		return 0;
-+	}
-+	if (a == &dev_attr_name.attr)
-+		return ops->get_name ? a->mode : 0;
-+	if (a == &dev_attr_rate_available.attr)
-+		return ops->rate_avail_range ? a->mode : 0;
-+	if (a == &dev_attr_rate.attr) { /* Write only makes little sense */
-+		if (ops->rate_read && ops->rate_write)
-+			return a->mode;
-+		if (ops->rate_read)
-+			return 0444;
++	if (feat_out_size < feat_out_min_size) {
++		dev_err(cxlds->dev,
++			"%s: feature out buffer size(%lu) is not big enough\n",
++			__func__, feat_out_size);
 +		return 0;
 +	}
 +
-+	return 0;
++	if (feat_out_size <= mds->payload_size)
++		size_out = feat_out_size;
++	else
++		size_out = mds->payload_size;
++	pi.uuid = feat_uuid;
++	pi.selection = selection;
++	do {
++		if ((feat_out_min_size - data_rcvd_size) <= mds->payload_size)
++			data_to_rd_size = feat_out_min_size - data_rcvd_size;
++		else
++			data_to_rd_size = mds->payload_size;
++
++		pi.offset = cpu_to_le16(data_rcvd_size);
++		pi.count = cpu_to_le16(data_to_rd_size);
++
++		mbox_cmd = (struct cxl_mbox_cmd) {
++			.opcode = CXL_MBOX_OP_GET_FEATURE,
++			.size_in = sizeof(pi),
++			.payload_in = &pi,
++			.size_out = size_out,
++			.payload_out = feat_out + data_rcvd_size,
++			.min_out = data_to_rd_size,
++		};
++		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
++		if (rc < 0 || mbox_cmd.size_out == 0)
++			return 0;
++		data_rcvd_size += mbox_cmd.size_out;
++	} while (data_rcvd_size < feat_out_min_size);
++
++	return data_rcvd_size;
 +}
++EXPORT_SYMBOL_NS_GPL(cxl_get_feature, CXL);
 +
-+static const struct attribute_group scrub_attr_group = {
-+	.name		= "scrub",
-+	.attrs		= scrub_attrs,
-+	.is_visible	= scrub_attr_visible,
-+};
-+
-+static const struct attribute_group *scrub_attr_groups[] = {
-+	&scrub_attr_group,
-+	NULL
-+};
-+
-+static void scrub_dev_release(struct device *dev)
-+{
-+	struct scrub_device *scrub_dev = to_scrub_device(dev);
-+
-+	ida_free(&scrub_ida, scrub_dev->id);
-+	kfree(scrub_dev);
-+}
-+
-+static struct class scrub_class = {
-+	.name = "ras",
-+	.dev_groups = scrub_attr_groups,
-+	.dev_release = scrub_dev_release,
-+};
-+
-+static struct device *
-+scrub_device_register(struct device *parent, void *drvdata,
-+		      const struct scrub_ops *ops)
-+{
-+	struct scrub_device *scrub_dev;
-+	struct device *hdev;
-+	int err;
-+
-+	scrub_dev = kzalloc(sizeof(*scrub_dev), GFP_KERNEL);
-+	if (!scrub_dev)
-+		return ERR_PTR(-ENOMEM);
-+	hdev = &scrub_dev->dev;
-+
-+	scrub_dev->id = ida_alloc(&scrub_ida, GFP_KERNEL);
-+	if (scrub_dev->id < 0) {
-+		kfree(scrub_dev);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	scrub_dev->ops = ops;
-+	hdev->class = &scrub_class;
-+	hdev->parent = parent;
-+	dev_set_drvdata(hdev, drvdata);
-+	dev_set_name(hdev, SCRUB_ID_FORMAT, scrub_dev->id);
-+	err = device_register(hdev);
-+	if (err) {
-+		put_device(hdev);
-+		return ERR_PTR(err);
-+	}
-+
-+	return hdev;
-+}
-+
-+static void devm_scrub_release(void *dev)
-+{
-+	device_unregister(dev);
-+}
-+
-+/**
-+ * devm_scrub_device_register - register scrubber device
-+ * @dev: the parent device
-+ * @drvdata: driver data to attach to the scrub device
-+ * @ops: pointer to scrub_ops structure (optional)
-+ *
-+ * Returns the pointer to the new device on success, ERR_PTR() otherwise.
-+ * The new device would be automatically unregistered with the parent device.
-+ */
-+struct device *
-+devm_scrub_device_register(struct device *dev, void *drvdata,
-+			   const struct scrub_ops *ops)
-+{
-+	struct device *hdev;
-+	int ret;
-+
-+	if (!dev)
-+		return ERR_PTR(-EINVAL);
-+
-+	hdev = scrub_device_register(dev, drvdata, ops);
-+	if (IS_ERR(hdev))
-+		return hdev;
-+
-+	ret = devm_add_action_or_reset(dev, devm_scrub_release, hdev);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return hdev;
-+}
-+EXPORT_SYMBOL_GPL(devm_scrub_device_register);
-+
-+static int __init memory_scrub_control_init(void)
-+{
-+	return class_register(&scrub_class);
-+}
-+subsys_initcall(memory_scrub_control_init);
-+
-+static void memory_scrub_control_exit(void)
-+{
-+	class_unregister(&scrub_class);
-+}
-+module_exit(memory_scrub_control_exit);
-diff --git a/include/linux/memory_scrub.h b/include/linux/memory_scrub.h
-new file mode 100755
-index 000000000000..f0e1657a5072
---- /dev/null
-+++ b/include/linux/memory_scrub.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
+ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 		       struct cxl_region *cxlr)
+ {
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 06231e63373e..c822eb30e6d1 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -528,6 +528,7 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+ 	CXL_MBOX_OP_GET_LOG		= 0x0401,
+ 	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
++	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
+ 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
+ 	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
+ 	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
+@@ -754,6 +755,28 @@ struct cxl_mbox_get_supp_feats_out {
+ 	struct cxl_mbox_supp_feat_entry feat_entries[];
+ } __packed;
+ 
 +/*
-+ * Memory scrub subsystem driver supports controlling
-+ * the memory scrubbers in the system.
-+ *
-+ * Copyright (c) 2024 HiSilicon Limited.
++ * Get Feature CXL 3.1 Spec 8.2.9.6.2
 + */
 +
-+#ifndef __MEMORY_SCRUB_H
-+#define __MEMORY_SCRUB_H
-+
-+#include <linux/types.h>
-+
-+struct device;
-+
-+/**
-+ * struct scrub_ops - scrub device operations (all elements optional)
-+ * @get_enabled_bg: check if currently performing background scrub.
-+ * @set_enabled_bg: start or stop a bg-scrub.
-+ * @get_name: get the memory scrubber name.
-+ * @rate_avail_range: retrieve limits on supported rates.
-+ * @rate_read: read the scrub rate
-+ * @rate_write: set the scrub rate
++/*
++ * Get Feature input payload
++ * CXL rev 3.1 section 8.2.9.6.2 Table 8-99
 + */
-+struct scrub_ops {
-+	int (*get_enabled_bg)(struct device *dev, bool *enable);
-+	int (*set_enabled_bg)(struct device *dev, bool enable);
-+	int (*get_name)(struct device *dev, char *buf);
-+	int (*rate_avail_range)(struct device *dev, u64 *min, u64 *max);
-+	int (*rate_read)(struct device *dev, u64 *rate);
-+	int (*rate_write)(struct device *dev, u64 rate);
++enum cxl_get_feat_selection {
++	CXL_GET_FEAT_SEL_CURRENT_VALUE,
++	CXL_GET_FEAT_SEL_DEFAULT_VALUE,
++	CXL_GET_FEAT_SEL_SAVED_VALUE,
++	CXL_GET_FEAT_SEL_MAX
 +};
 +
-+struct device *
-+devm_scrub_device_register(struct device *dev, void *drvdata,
-+			   const struct scrub_ops *ops);
-+#endif /* __MEMORY_SCRUB_H */
++struct cxl_mbox_get_feat_in {
++	uuid_t uuid;
++	__le16 offset;
++	__le16 count;
++	u8 selection;
++}  __packed;
++
+ /* Get Poison List  CXL 3.0 Spec 8.2.9.8.4.1 */
+ struct cxl_mbox_poison_in {
+ 	__le64 offset;
+@@ -888,6 +911,11 @@ int cxl_set_timestamp(struct cxl_memdev_state *mds);
+ int cxl_get_supported_features(struct cxl_memdev_state *mds,
+ 			       u32 count, u16 start_index,
+ 			       struct cxl_mbox_get_supp_feats_out *feats_out);
++size_t cxl_get_feature(struct cxl_memdev_state *mds,
++		       const uuid_t feat_uuid, void *feat_out,
++		       size_t feat_out_size,
++		       size_t feat_out_min_size,
++		       enum cxl_get_feat_selection selection);
+ int cxl_poison_state_init(struct cxl_memdev_state *mds);
+ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 		       struct cxl_region *cxlr);
 -- 
 2.34.1
 
