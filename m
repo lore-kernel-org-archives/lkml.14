@@ -1,140 +1,109 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09B91DFC5;
-	Fri, 19 Apr 2024 07:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7264314E;
+	Fri, 19 Apr 2024 07:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713512428; cv=none; b=vAKocTZmamBk3pwkzJtwpx6Q+qSZIeO49vCjldUGCEaRtd3FDSm4oXoPdr9iiPxKB/DWTjHDZgbHIPDNPS0p5dP69GwGBBekYoz1grSk2p0sA9U22M6dLB4+tKj0e+5DpsLluqIAStZaKl7Qh0RZnemqpH1/I+1gEYBi8y+Xer8=
+	t=1713512452; cv=none; b=u1hxX2aLGqAXOj05puBAIWFZ5PjyztumGnN8gNhkWVW4iGm1E7T65k/Tv2adThAgI/+uDSYaSCVimaYMq2NelXx/0z8oDFKkvZxbdK3vb3Q5IKbfutgydy6b9+sSh3rRv3mwF91CsS5uSx+imcvdH5XGGFnHL25/VBNJRpm31II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713512428; c=relaxed/simple;
-	bh=W/wi9e5UBK+Wu+Dsx1s02GeUnADp2GIoRZR8c6T4osA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZsN0165UY0Ywa4JlMiu0JURitcB4ChxVkWT2rpl8W3PDBF4E9uPDI9xPn1581E78SQ4qHZMNsvs6mJSN49lS3wgygf7hoCEOQ8VbNkwZ/WZhBI3+MIfFwEM2NjH9qUVi8QVqq/yrMPVrhg/BBRSJM9o3BvGuoUEVScpK9bJVJ3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gOCiSZp7; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1713512452; c=relaxed/simple;
+	bh=qZOTaYe15U2NKYw7NsaWXXCCYXLgb92jG31Z6M7FrEI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZebpEDOFio3kJckwHg3LaoVbnE7w8SuZTPvRuWC1lgt98MQnKfBTWKzfPjUHEyMCN8286qFgYkQgIwTU2QaItLLdtQK4zIlJy0/GNxvufCvmfntzlb3zcJgYaMl59dO0QsOb3YG12SX9aRN/fbRU0N4V9E8SZmJah+xptqZw4uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F0wBlOj8; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gOCiSZp7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713512424;
-	bh=W/wi9e5UBK+Wu+Dsx1s02GeUnADp2GIoRZR8c6T4osA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gOCiSZp74yYzUrOFKOX2tlJw04+WM/R4MfrvttLuUnU7i+tzNH5NAA0E142iiSwAS
-	 pFmOu0dGZdFfKJuubuHztaVs98IxsKPfLwfKNJPP/LmW7RpaEqhqQ3HhGRZFPU9BAS
-	 cYDtio0y+GRc/Oi5z0V6+df5sVLitmBMAjoDNe1Fsv/1SfYfJGIq0wYlhYTaWzqSSi
-	 cfu9ew/ROizc1XomMH7DR7aNbG0o8/X+s3r0vuh/hf4LyGdbNzG+BQMuforbTQr8zJ
-	 t02M4jwW6blvnRXg0VCBMiHkrzE/+oc4ArbG5CFPl0qMB4MsY6pbFpj41SXoxUoT/X
-	 fJPHvQpuvaf+Q==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 86D0A3782149;
-	Fri, 19 Apr 2024 07:40:23 +0000 (UTC)
-Message-ID: <28b0eeff-55ed-4e30-ac0b-a7bcac276fe9@collabora.com>
-Date: Fri, 19 Apr 2024 09:40:22 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F0wBlOj8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713512451; x=1745048451;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qZOTaYe15U2NKYw7NsaWXXCCYXLgb92jG31Z6M7FrEI=;
+  b=F0wBlOj8cc4DJJX2V06Vf/Ey3ScrT9HhdR5akMuwCPwpX/peJF4OAgVF
+   fAlkGiNInLGfU145qUZEr0aU5aIkYiMY2fl6TgvYyi2j1oHcGA4Z1ycVe
+   naWk6V5pMao+eFCU9zOVFMDOg51Cq/IgvTP7oCqPgI0209MAWZMp8XUN8
+   4URKmJe06UpFYhB8NMQ20MKq9o4ytLj9XF/vUG3o3C7zmQsen0rqBvRlD
+   BiPqtdfpU89TnZSb1SFtNsMnURMql/wuqAeQWBAaHM1JmPHHgLlkxbl96
+   xcpVPX5phKzB3Wuum5Ko9q0Z3ZsVJl81VW26uhoXSC5tjwzVzzeVpKtge
+   w==;
+X-CSE-ConnectionGUID: BDmnLdu1ReufYVBW55Q5ug==
+X-CSE-MsgGUID: azS5vRgdQ8eSz41WlRzW5Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="19711393"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="19711393"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 00:40:50 -0700
+X-CSE-ConnectionGUID: YIAcryn5RWuUzXu2oFTlNg==
+X-CSE-MsgGUID: DamULQioR/2laquRHHXpaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="23233044"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa009.jf.intel.com with ESMTP; 19 Apr 2024 00:40:48 -0700
+Date: Fri, 19 Apr 2024 15:35:34 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>
+Subject: Re: [PATCH v1 1/1] fpga: ice40-spi: Don't use "proxy" headers
+Message-ID: <ZiIexi02eCIGQtib@yilunxu-OptiPlex-7050>
+References: <20240415142428.853812-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: display: mediatek: Add OF graph
- support for board path
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: chunkuang.hu@kernel.org, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- matthias.bgg@gmail.com, shawn.sung@mediatek.com, yu-chang.lee@mediatek.com,
- ck.hu@mediatek.com, jitao.shi@mediatek.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- wenst@chromium.org, kernel@collabora.com
-References: <20240409120211.321153-1-angelogioacchino.delregno@collabora.com>
- <20240409120211.321153-2-angelogioacchino.delregno@collabora.com>
- <oe75tx35rd27r2a24ofdxfaqwr53tylfp5fwz3nrwc2uz6nmrs@vwc2krbpy3fh>
- <8600acf8-7b51-456b-8a81-4233cfd6f121@collabora.com>
- <CAA8EJpo68f=9ZyNnVY=+q+drHu9xJMSGk1kNCBa=HM442Jth8g@mail.gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <CAA8EJpo68f=9ZyNnVY=+q+drHu9xJMSGk1kNCBa=HM442Jth8g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240415142428.853812-1-andriy.shevchenko@linux.intel.com>
 
-Il 09/04/24 17:45, Dmitry Baryshkov ha scritto:
-> On Tue, 9 Apr 2024 at 18:41, AngeloGioacchino Del Regno
-> <angelogioacchino.delregno@collabora.com> wrote:
->>
->> Il 09/04/24 17:20, Dmitry Baryshkov ha scritto:
->>> On Tue, Apr 09, 2024 at 02:02:09PM +0200, AngeloGioacchino Del Regno wrote:
->>>> The display IPs in MediaTek SoCs support being interconnected with
->>>> different instances of DDP IPs (for example, merge0 or merge1) and/or
->>>> with different DDP IPs (for example, rdma can be connected with either
->>>> color, dpi, dsi, merge, etc), forming a full Display Data Path that
->>>> ends with an actual display.
->>>>
->>>> The final display pipeline is effectively board specific, as it does
->>>> depend on the display that is attached to it, and eventually on the
->>>> sensors supported by the board (for example, Adaptive Ambient Light
->>>> would need an Ambient Light Sensor, otherwise it's pointless!), other
->>>> than the output type.
->>>
->>> With the color and gamma being in play, should the configuration be
->>> board-driver or rather use-case driven with the driver being able to
->>> reroute some of the blocks at runtime?
->>>
->>
->> The driver can already set some blocks to "BYPASS MODE" at runtime, meaning
->> that those will work as simple pass-through, performing *no* processing at
->> all, so that's addressed from the very beginning.
->>
->> This doesn't mean that a specific pipeline must always support the "DISP_GAMMA"
->> or the "DISP_CCOLOR" block(s) alone, or together, or in combination with another
->> specific block.
+On Mon, Apr 15, 2024 at 05:23:28PM +0300, Andy Shevchenko wrote:
+> Update header inclusions to follow IWYU (Include What You Use)
+> principle.
 > 
-> I was thinking about slightly different case: do you have enough
-> colour blocks to drive all outputs or do you have to select them for
-> the particular output only?
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Sorry for the very very very very .. very late reply, your email slipped through
-the cracks and I just noticed it.
+Acked-by: Xu Yilun <yilun.xu@intel.com>
 
-That depends on the SoC, but generally... no, you have to select them for the
-particular output.
+Applied to for-next.
 
-There is a restricted set of outputs that support this block, but between this
-set, there are still not enough blocks for all of them.
-
+> ---
 > 
-> (excuse me, I didn't check the platform details).
-
-You (and me, and everyone else) can't really invest hours of time to check on
-how each and every SoC on the planet works - that's normal.
-
-No worries ;-)
-
-Cheers,
-Angelo
-
+> This is a replacement of previously sent:
+> fpga: ice40-spi: Remove unused of_gpio.h
+> fpga: ice40-spi: Remove redundant of_match_ptr() macros
 > 
->> For any other question, clarification, etc, I'm here :-)
->>
->> Cheers!
->>
->>>>
->>>> Add support for OF graphs to most of the MediaTek DDP (display) bindings
->>>> to add flexibility to build custom hardware paths, hence enabling board
->>>> specific configuration of the display pipeline and allowing to finally
->>>> migrate away from using hardcoded paths.
->>>>
->>>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->>>
->>
+>  drivers/fpga/ice40-spi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
+> diff --git a/drivers/fpga/ice40-spi.c b/drivers/fpga/ice40-spi.c
+> index c0028ae4c5b7..62c30266130d 100644
+> --- a/drivers/fpga/ice40-spi.c
+> +++ b/drivers/fpga/ice40-spi.c
+> @@ -10,8 +10,8 @@
+>  
+>  #include <linux/fpga/fpga-mgr.h>
+>  #include <linux/gpio/consumer.h>
+> +#include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+> -#include <linux/of_gpio.h>
+>  #include <linux/spi/spi.h>
+>  #include <linux/stringify.h>
+>  
+> @@ -199,7 +199,7 @@ static struct spi_driver ice40_fpga_driver = {
+>  	.probe = ice40_fpga_probe,
+>  	.driver = {
+>  		.name = "ice40spi",
+> -		.of_match_table = of_match_ptr(ice40_fpga_of_match),
+> +		.of_match_table = ice40_fpga_of_match,
+>  	},
+>  	.id_table = ice40_fpga_spi_ids,
+>  };
+> -- 
+> 2.43.0.rc1.1336.g36b5255a03ac
 > 
-
-
