@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F3219E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B51C37C;
 	Fri, 19 Apr 2024 00:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713485429; cv=none; b=btFB2VklRbRwTDTn7wDPG6oebcVO472lmexXLKeiavicoqCPVxYEoBD35RjJ+ZoM0p5Ngf/1/7Q+ZrJnNOGM/h/4Ro0qPo22NJZtXFsIe/4hP1w0LHdCL6rHZ/c46GxYF1AliMREQihEMqAJ9tkVOnaGIWdlkTkkZxTn10r9Cas=
+	t=1713485429; cv=none; b=DsT+tbv5xI+3v6pRph+TLlAftoiJeWEemqu7FoCNuvgQehLc/h2atajuCrORWiNJqPc5HU1xItdRe2Wd+C7SMSWKUGrBFHs5WSahW+RnaShda4/ZisKVRyNwTeGS11Poo5wQK3IOd9lBgeyGHVsO6SSIgRVUbpuohCUUWeDxodw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713485429; c=relaxed/simple;
-	bh=RwyQafOy5bEPSex5mtWQhumKrv9v0SO+tyTcFaB6hLo=;
+	bh=AJ20xfofJ8LHkU/pX2d4maXulEd3If4fKQRVvYL9jcU=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=OHhOi2zUZL0FDdExwOVmWS6aahvRkCkCR+MpUdh8UIPA/BAklCdERVtgBpjsNY/L3mm2WdL7/5kP2qQv87GAlHbSVoj59aDMmV4HrN7hN9cboOWsEmkG+m/kGInIwW+YaR1xBRa9SorraVs64CKIZx/BULUPhuKgNJBIkjTsNLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZXFbKoW; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=L2GunUuG6Cr3D6L4LA5P8R+Dlf3aCxJmwEGrxqz/mUd/9s/55366KuW1upb1jw472D6ucQHl9idrjMM/ysr52v/BnGysPIJTbr1JUyELr7Q50OKAzup+Bubpa1ck/k+2xQRtR8ryYmZlpqHO5hKUdxoid6Pof8q01xrWiL8fIQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q04YH+Ab; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZXFbKoW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D21ECC32783;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q04YH+Ab"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D808BC4AF08;
 	Fri, 19 Apr 2024 00:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713485428;
-	bh=RwyQafOy5bEPSex5mtWQhumKrv9v0SO+tyTcFaB6hLo=;
+	bh=AJ20xfofJ8LHkU/pX2d4maXulEd3If4fKQRVvYL9jcU=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=gZXFbKoWMLtQDUwVPJw+cpaCHSV5i/Nxoh6vqR8prFhXoWvZdn9ylo3A7vhHvB3ET
-	 /huY1Q/2MSq+y+E9vMhXy+SmiXfRHULOVHFSutw6dqNE08xgbxTu56jJ50ddx6K4E9
-	 mSJlhn1Z11oCPR51Yiz6wzICMkKQA0BkgBetSTxB0wBCcsFYjiGE8rNdMBfGizbrdQ
-	 WRiK19ISA5XfGOa2wTraHEuV62BC8GXSNETFLh6XVw8lSeeqOzbyog7SPE2teSz7AR
-	 S8ajSV3SG+Ah1+AGU0po4TrpaexY+SBuOlrcWNeL9PN813gZFLSN9MLxStXGECBUYl
-	 FC9JGxzNoCprA==
+	b=q04YH+AbqR59dCKMbmXm1M+zooSCkDPAmMlMeGz+9duZQ1hpRY674bDIxS1jxCAyx
+	 HV5MHYgcbfzxCIBEOkbpK4LeLwFwkEI/AwzEAah/8UoFEDlitjNF7tDKstL6siW1t1
+	 c1PQ/AFpPS1r93REJW1GrCpHlzRLh3YLZ4LBVklTR7+amTnIkoYsWKPj/AbQlKIwDY
+	 MgEv04Qyo08LrMWUIwDdrf2HhC0unhRGOBKEh95l0GhVgi3XzJ6aiW0vX6C+5Bfdib
+	 LcnT4CWw7+EFjGrRSQhis+7T6ijn71nD6k5vQnZr3V9edxinI/fEP96lkuZFL5V2vt
+	 iMdg48omtj3hg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B99E7D5B3C0;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C2538D5B3C5;
 	Fri, 19 Apr 2024 00:10:28 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,25 +37,26 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net: mscc: ocelot: flower: validate control flags
+Subject: Re: [PATCH net-next] net: dsa: felix: flower: validate control flags
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <171348542875.28734.4407750750845103149.git-patchwork-notify@kernel.org>
+ <171348542878.28734.12858852515908004935.git-patchwork-notify@kernel.org>
 Date: Fri, 19 Apr 2024 00:10:28 +0000
-References: <20240417144359.104225-1-ast@fiberby.net>
-In-Reply-To: <20240417144359.104225-1-ast@fiberby.net>
+References: <20240417144407.104241-1-ast@fiberby.net>
+In-Reply-To: <20240417144407.104241-1-ast@fiberby.net>
 To: =?utf-8?b?QXNiasO4cm4gU2xvdGggVMO4bm5lc2VuIDxhc3RAZmliZXJieS5uZXQ+?=@ci.codeaurora.org
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net,
  edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
  vladimir.oltean@nxp.com, claudiu.manoil@nxp.com,
- alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com
+ alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com, andrew@lunn.ch,
+ f.fainelli@gmail.com
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Wed, 17 Apr 2024 14:43:58 +0000 you wrote:
+On Wed, 17 Apr 2024 14:44:06 +0000 you wrote:
 > This driver currently doesn't support any control flags.
 > 
 > Use flow_rule_match_has_control_flags() to check for control flags,
@@ -67,8 +68,8 @@ On Wed, 17 Apr 2024 14:43:58 +0000 you wrote:
 > [...]
 
 Here is the summary with links:
-  - [net-next] net: mscc: ocelot: flower: validate control flags
-    https://git.kernel.org/netdev/net-next/c/435f9fcc0e44
+  - [net-next] net: dsa: felix: flower: validate control flags
+    https://git.kernel.org/netdev/net-next/c/b1bf8600572d
 
 You are awesome, thank you!
 -- 
