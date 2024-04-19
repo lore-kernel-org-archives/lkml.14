@@ -1,99 +1,167 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E787C08E;
-	Fri, 19 Apr 2024 15:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0627E11E;
+	Fri, 19 Apr 2024 15:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713539073; cv=none; b=td5izG+LVAj9KZCFh8zbAcJuw18r/F5gv5GnTN9PDpopZjV+V2SWLk1BS9DsXQ8eSFpjuYk1tnNtzq8z3ee+emPKcUFcmxzquxan3VI9OsIyHfjwqRcZugi5wDGwjXwA1YSKiJk7Fb3aTQ5aJjO76FJlW93PcAq9arqxHbVnpWo=
+	t=1713539249; cv=none; b=AAAcK1fwb1RjGXUZ/1th2zhMrw+m5fG3R4P6d9MGXApjO0gFi0HGgY39aR+mbLl0EvS6yTPSYns0ewuY4sf75wXGxQTdH3JysdJOuQaunkB132pBr9BVLvPh14OO5B64NzMZf4DAA990VDZtM1dpbLmSsD+dJi9+AcxGv8mt5Ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713539073; c=relaxed/simple;
-	bh=kFKf8tNcChxx7D8qXTnVEns97I1cqu8Uv2J5Bx7MT4Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HKRhf9ocffPHvaD95MkFZwuTkhSW7K5FukuY+oWA/gIWnrdWH3IHAZ4X/7vMD4CGaXmgXB5JL5GxAFa/dbIvP4Ch9RdtDLd51sd7i7fp7CdvWF4tgKtrD+0s8AnAIwXigM2oUiP3+yEGWyI/fs6r9fRYJv5knCesYOvaufKRuF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s3ApxoBz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qItYvkou; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1713539249; c=relaxed/simple;
+	bh=Aeux13K27xxEOJgQucGQNnXKrqTxFRbQpmqHcMsSW/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t2REPy8wqsUf3dKTDH3NNbB8l3Ibfw1Hd7HzIqZ6HKNEGo9YKovSz8IGx2fpTqBtjMUpo5LdzacJA6C2Ai3pn1srVyGK4dFRfPzMKJjZNbQPZxa0AKYuwSLH/ovWBBSqAX8gX9nQM+zPLGsomE+BSJ9QrKsPJuhwWhxQu97Bzxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=fjasle.eu; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=ZI8Yy/4I; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s3ApxoBz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qItYvkou"
-Date: Fri, 19 Apr 2024 16:59:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1713538760;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DFy5tOWbJnHTTd/HH6FM6qdDQdeNlfnkJofdVo0X314=;
-	b=s3ApxoBzIv0PB3/Nw0NGixvnGITT3G2fuw5pfNYi04ilb57GqyalvJGnKjwccYgI2fp1kj
-	8HyiAC5Djo3/FrYcKZR4VG0g5Eba2R8RVmKmj7pRCvNpUaWnaKDmBDTMmWMljOiZ0aMmby
-	+2YugeVRvKutvbuEmrIsA0lyWo/KCIPkWLcSr8KYJn+wvIjPtzHKIpeI7/TGhHwkpAlIGA
-	Np6w3qaaICsQrUYFZnKzRtiG00uW26GfPXfnyrargzkMMc2hvBDSWdi6Y92mjKundFjDSc
-	hcpqdjllZN8KLaTveok1mynYjsiJkGjUSVLvIy4R2Ri6fKWR60e/vmW5JBuvvg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1713538760;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DFy5tOWbJnHTTd/HH6FM6qdDQdeNlfnkJofdVo0X314=;
-	b=qItYvkoudQJSixjUBY0qqqIQtxPVYizlro6RKTJGIklkRVZEzDfJBLR65hE0591zo5ajSi
-	rot6xhQP1EZ/AkAg==
-From: Nam Cao <namcao@linutronix.de>
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Cc: jayalk@intworks.biz, Daniel Vetter <daniel@ffwll.ch>, deller@gmx.de,
- linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- tiwai@suse.de, bigeasy@linutronix.de, patrik.r.jakobsson@gmail.com, LKML
- <linux-kernel@vger.kernel.org>, Vegard Nossum <vegard.nossum@oracle.com>,
- George Kennedy <george.kennedy@oracle.com>, Darren Kenny
- <darren.kenny@oracle.com>, chuansheng.liu@intel.com
-Subject: Re: [bug-report] task info hung problem in fb_deferred_io_work()
-Message-ID: <20240419165915.228c76e9@namcao>
-In-Reply-To: <271372d6-e665-4e7f-b088-dee5f4ab341a@oracle.com>
-References: <271372d6-e665-4e7f-b088-dee5f4ab341a@oracle.com>
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="ZI8Yy/4I"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fjasle.eu;
+	s=ds202307; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=DOzN/8e8CTCRv8H3ZSByCxFzdeJC78AmKTVTZIe4QMo=; b=ZI8Yy/4ITJSE4+NRK16R6JIBeM
+	VEbIGV2qv8ZXDoj2z63BwsZgNtml4Zfm1+JyNW4CBeiLY588RMVao3hEACRxbZ02FGwgIsn/v14x0
+	cgfxMfa0Pk+91KsxtZzaIRmv+rLsmX7YX/ywNhXZwXa/R+eBQUHmOJii5SYbbreEXRSSr52rjqGDt
+	LCJDlL+egfocQK9ExxkCAKh4vCEwrpHNgqiHKhBjheiYcTeh4Dglyaqhl2WOIl8DIk6dtfuWKo99c
+	7EJDu33pgnI1EULZ1X7yA2ThT8AfPcqNv/T3dNUJXpP6cauEP/VSrRJ4Pv5OT6PMN3ZlWWoozg3C4
+	gT13SUSg==;
+Received: from [2001:9e8:9f5:cc01:6f0:21ff:fe91:394] (port=47534 helo=bergen.fjasle.eu)
+	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <nicolas@fjasle.eu>)
+	id 1rxppa-0049vQ-Uh;
+	Fri, 19 Apr 2024 17:07:15 +0200
+Date: Fri, 19 Apr 2024 17:07:12 +0200
+From: Nicolas Schier <nicolas@fjasle.eu>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] Makefile: remove some unnecessary header include
+ paths
+Message-ID: <ZiKIoLKtG0suO-8i@bergen.fjasle.eu>
+References: <20240416121838.95427-1-masahiroy@kernel.org>
+ <20240416121838.95427-3-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On 2024-04-18 Harshit Mogalapalli wrote:
-> While fuzzing 5.15.y kernel with Syzkaller, we noticed a INFO: task hung 
-> bug in fb_deferred_io_work()
-
-I think the problem is because of improper offset address calculation.
-The kernel calculate address offset with:
-	offset = vmf->address - vmf->vma->vm_start
-
-Now the problem is that your C program mmap the framebuffer at 2
-different offsets:
-	mmap(ptr, 4096, PROT_WRITE, MAP_FIXED | MAP_SHARED, fd, 0xff000);
-	mmap(ptr, 4096, PROT_WRITE, MAP_FIXED | MAP_SHARED, fd, 0);
-
-but the kernel doesn't take these different offsets into account.
-So, 2 different pages are mistakenly recognized as the same page.
-
-Can you try the following patch?
-
-Best regards,
-Nam
-
-diff --git a/drivers/video/fbdev/core/fb_defio.c b/drivers/video/fbdev/core/fb_defio.c
-index dae96c9f61cf..d5d6cd9e8b29 100644
---- a/drivers/video/fbdev/core/fb_defio.c
-+++ b/drivers/video/fbdev/core/fb_defio.c
-@@ -196,7 +196,8 @@ static vm_fault_t fb_deferred_io_track_page(struct fb_info *info, unsigned long
-  */
- static vm_fault_t fb_deferred_io_page_mkwrite(struct fb_info *info, struct vm_fault *vmf)
- {
--	unsigned long offset = vmf->address - vmf->vma->vm_start;
-+	unsigned long offset = vmf->address - vmf->vma->vm_start
-+			+ (vmf->vma->vm_pgoff << PAGE_SHIFT);
- 	struct page *page = vmf->page;
- 
- 	file_update_time(vmf->vma->vm_file);
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fwy6oIwWUjQAVF0b"
+Content-Disposition: inline
+In-Reply-To: <20240416121838.95427-3-masahiroy@kernel.org>
+X-Operating-System: Debian GNU/Linux trixie/sid
+Jabber-ID: nicolas@jabber.no
 
 
+--fwy6oIwWUjQAVF0b
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue 16 Apr 2024 21:18:36 GMT, Masahiro Yamada wrote:
+> The include directive with the double-quote form, #include "...",
+> first searches for the specified header in the directory containing
+> the source file.
+>=20
+> If all local headers are included using the double-quote form instead
+> of the angle bracket form, there is no need to add the local directory
+> to the header search path.
+>=20
+> drivers/gpu/drm/imagination and drivers/net/ethernet/aquantia/atlantic
+> use only the double-quote form for including the local headers, and
+> there are no generated sources or headers in their directories. Hence,
+> the local header search path is unneeded.
+>=20
+> The same applies to arch/loongarch/kvm/ because TRACE_INCLUDE_PATH is
+> relative to include/trace/.
+>=20
+> I guess there exist more Makefiles with unnecessary header inclusion
+> paths (and more cases where it is possible to delete the header search
+> path by replacing #include <...> with #include "..."), but I do not have
+> an easy way to detect it.
+>=20
+> These are unneeded inclusion paths that I happened to find.
+>=20
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>=20
+>  arch/loongarch/kvm/Makefile                     | 2 --
+>  drivers/gpu/drm/imagination/Makefile            | 2 --
+>  drivers/net/ethernet/aquantia/atlantic/Makefile | 2 --
+>  3 files changed, 6 deletions(-)
+>=20
+> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+> index 244467d7792a..7a0108a721c1 100644
+> --- a/arch/loongarch/kvm/Makefile
+> +++ b/arch/loongarch/kvm/Makefile
+> @@ -3,8 +3,6 @@
+>  # Makefile for LoongArch KVM support
+>  #
+> =20
+> -ccflags-y +=3D -I $(srctree)/$(src)
+> -
+>  include $(srctree)/virt/kvm/Makefile.kvm
+> =20
+>  obj-$(CONFIG_KVM) +=3D kvm.o
+> diff --git a/drivers/gpu/drm/imagination/Makefile b/drivers/gpu/drm/imagi=
+nation/Makefile
+> index ec6db8e9b403..3d9d4d40fb80 100644
+> --- a/drivers/gpu/drm/imagination/Makefile
+> +++ b/drivers/gpu/drm/imagination/Makefile
+> @@ -1,8 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0-only OR MIT
+>  # Copyright (c) 2023 Imagination Technologies Ltd.
+> =20
+> -subdir-ccflags-y :=3D -I$(srctree)/$(src)
+> -
+>  powervr-y :=3D \
+>  	pvr_ccb.o \
+>  	pvr_cccb.o \
+> diff --git a/drivers/net/ethernet/aquantia/atlantic/Makefile b/drivers/ne=
+t/ethernet/aquantia/atlantic/Makefile
+> index 8ebcc68e807f..268a055086c4 100644
+> --- a/drivers/net/ethernet/aquantia/atlantic/Makefile
+> +++ b/drivers/net/ethernet/aquantia/atlantic/Makefile
+> @@ -8,8 +8,6 @@
+> =20
+>  obj-$(CONFIG_AQTION) +=3D atlantic.o
+> =20
+> -ccflags-y +=3D -I$(srctree)/$(src)
+> -
+>  atlantic-objs :=3D aq_main.o \
+>  	aq_nic.o \
+>  	aq_pci_func.o \
+
+I'm afraid drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c,=20
+=2E../hw_atl2/hw_atl2.c and .../hw_atl2/hw_atl2_utills{,_fw}.[ch] need to=
+=20
+be adjusted first.
+
+Except for the atlantic related patch diff:
+Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
+
+--fwy6oIwWUjQAVF0b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmYiiKAACgkQB1IKcBYm
+EmnrQxAAunFD7ET2ixOJ1mZIQH/XqFzErlSihK9sOkn8LU1PLS4NPTNQbyytman0
+I1pomoValbUTr01blxH4l6HH6sg61xj2vVnRCJxU44LU88tr4z5d0O37LO0oQpen
+MM1HUyUxNz7UyrRa+9YMl4lp7YvbSVbAVVIpli48vlfkQ3Zjhrt0mlgv5JxwIhim
+UyoaOIS7iLswsjNhqMicDr5NWg8k7WvRPsHHEaOXfu4rXLc1mNDNxorrK80mDMeb
+YtrJ+a9B9cY5Gr48NCvjfcRh/w0DqBBi2WiRe97pcD5VY7qIAWhMQlRktFaf6pHC
+4Gz9Q8pwVUsCk1dnGfqqBnei+8MZzrCmJ3bJSgcADPVUJ6HCNPfFK28swdy3idfP
+yBd2y7BO32DrGQ9RJJ1A59LlyejjYSOONWLEDKdsnHQJYSpzK9czQ5Bxqb839fMI
+YCAdZRcbyWt0OEHvcv5R4CeopdZdQ4uCRO8SsA/RiqAlCUkInxF3tRV6spPDbheF
+7cO8Ubh7yc3fxLL+3tuVqDr9/rQeJuwUc4816riiWKqVivseJTXtpcDw+eatM+Pb
+L5yZtxYyjHWtpaYI5dXTjiPu20pLZxxIbiox+0SvXYz2ctMr85/VqBGLzFsKHC36
+bgUeI5o7nYCkU5fvKueBnrcK4pJ5lwcAdl8MOmImszrDkWOnbq0=
+=Ct27
+-----END PGP SIGNATURE-----
+
+--fwy6oIwWUjQAVF0b--
