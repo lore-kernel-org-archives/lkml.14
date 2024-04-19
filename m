@@ -1,118 +1,131 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4B764F
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 20:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9651513C9CB;
+	Fri, 19 Apr 2024 20:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713556841; cv=none; b=aMP1YTVz1I2VjpKyKHXfntSnFcpI1hhp6UUt6oLCmDYVkhHhbPrfJ68LGfkfFiHESqeyPoDoA8XiHfhM8q9loosBoFJWVv25xEb2Hx9/Rk0HeCAz94GZp0h79I1RLtAGoFi4+MYcqcTiY0EPpSowW/BCokc6fOdCFjuW5ZXQ5QQ=
+	t=1713556842; cv=none; b=SE3wbmV8qDwQjD/+g32s18FwXpNNAg5Ib0NchlqfXCnmEXss6Cs3CiXoNHbFRyKXK+domDfSOGJ7j5ykMKrX8r+i5mrl7Y6gfD/EnC28zLh5+A/TvgaSxsQXm0ZaPnR0Yjc4kI0/84iN3OASp9gZWIuq5AJbekUxLqLPxpsF8qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713556841; c=relaxed/simple;
-	bh=WARJLbLS+b0RckjFb5ncqqF0QnnCov/ywo2QpuhC1wk=;
+	s=arc-20240116; t=1713556842; c=relaxed/simple;
+	bh=1irIlRUcjlhAgXQYQkJd/oGHdCUHLQFxqqgY1XfLhP4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M3NOb4HtOJBIKdh6M3UUebQxnv2VHrKzZXOOxWSwEbP8CyhdDyScz+ul6J9Y8+Kb5kDZeF8BezMPgr9Yna5EoyjUV5yax7nYR4ny2xV+ts5tGis52VUIe7W191QwZlfdY4ChAaiye+dC8XlbqhW2TvbdgyXmygtTt1RrewxzKuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rxuPE-0006xs-Nr; Fri, 19 Apr 2024 22:00:20 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rxuPD-00DCw7-N9; Fri, 19 Apr 2024 22:00:19 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rxuPD-004N20-21;
-	Fri, 19 Apr 2024 22:00:19 +0200
-Date: Fri, 19 Apr 2024 22:00:19 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Russell King <rmk+kernel@armlinux.org.uk>, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev, kernel test robot <lkp@intel.com>, 
-	kernel@pengutronix.de
-Subject: Re: [PATCH] clk: Provide !COMMON_CLK dummy for
- devm_clk_rate_exclusive_get()
-Message-ID: <y7i7vwl7h2xop2ifh72vj5brtq7vd7tf72tst7k7r74plguhgn@cqs5fzplfk5i>
-References: <202403270305.ydvX9xq1-lkp@intel.com>
- <20240327073310.520950-2-u.kleine-koenig@pengutronix.de>
- <d95554f623f023a2f5499fa2f6f76567.sboyd@kernel.org>
- <xfaf22rf6gnrxpinkciybsyk4dx2bfqgozv6udwymegtcgd26i@jq5be7fm5lhi>
+	 Content-Type:Content-Disposition:In-Reply-To; b=rpQ5GM0/X29Fn+zEyr17iQ0OjGTs8i2rF3WHCXqGpT98PL8igV4sIjBIBCngaK3AtR8lA8RQJXMxqa7GFcyuW1PX1kdBIuIMpi3/3z+hlG9Kz+BzjTClkm52stIqCZ44Qa4JkQY1Ea0y9lZljmporMsntjtjEbYAILm/NXe3dJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hePROBT+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hePROBT+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36E93C116B1;
+	Fri, 19 Apr 2024 20:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713556842;
+	bh=1irIlRUcjlhAgXQYQkJd/oGHdCUHLQFxqqgY1XfLhP4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hePROBT+glizGF2HhWjQfOISipAvaDLeIwoPfB6eB/130EUaYxI8C9JiOZ0p4IuPP
+	 wJr3uvJ18Qdtvzvp+1EN21A1wIYXV57CwgYBWxwwSTpuZVC3Y+zaCK4bAzWjqyz19x
+	 of4ezj0xR0KrcZGKrma2TwE1tPaK9aqfe2f5ZULEd8dNouln7cfqCdOX1Qzu+4TMk8
+	 WLbPp6C0rIz8BNuB+lG6UD/vpJZsyvT1zRcqUNkcRP+vw16ocKGnhDqx8/KxOoGcQD
+	 fvWWbiJ1tqrYnX18IQfVwbrFy6dcbjd61pDUGP6pZkbtq0sqUsgCyvD6UjOkfp09sG
+	 phC1jK7//sNkA==
+Date: Fri, 19 Apr 2024 22:59:22 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Song Liu <song@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Topel <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
+Message-ID: <ZiLNGgVSQ7_cg58y@kernel.org>
+References: <Zh4nJp8rv1qRBs8m@kernel.org>
+ <CAPhsuW6Pbg2k_Gu4dsBx+H8H5XCHvNdtEZJBPiG_eT0qqr9D1w@mail.gmail.com>
+ <ZiE91CJcNw7gBj9g@kernel.org>
+ <CAPhsuW4au6v8k8Ab7Ff6Yj64rGvZ7wkz=Xrgh8ZZtLyscpChqQ@mail.gmail.com>
+ <ZiFd567L4Zzm2okO@kernel.org>
+ <CAPhsuW5SL4_=ZXdHZV8o0KS+5Vf25UMvEKhRgFQLioFtf2pgoQ@mail.gmail.com>
+ <ZiIVVBgaDN4RsroT@kernel.org>
+ <CAPhsuW7WoU+a46FhqqH8f-3=ehxeD4wSgKDWegMin1pT49OSWw@mail.gmail.com>
+ <ZiKjmaDgz_56ovbv@kernel.org>
+ <CAPhsuW7Nj1Sa_9xQtTgHz9AmX39zdh2x2COqA-qmkfpfX9hNWw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="teeq72q7xrfgagpx"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <xfaf22rf6gnrxpinkciybsyk4dx2bfqgozv6udwymegtcgd26i@jq5be7fm5lhi>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW7Nj1Sa_9xQtTgHz9AmX39zdh2x2COqA-qmkfpfX9hNWw@mail.gmail.com>
 
+On Fri, Apr 19, 2024 at 10:32:39AM -0700, Song Liu wrote:
+> On Fri, Apr 19, 2024 at 10:03 AM Mike Rapoport <rppt@kernel.org> wrote:
+> [...]
+> > > >
+> > > > [1] https://lore.kernel.org/all/20240411160526.2093408-1-rppt@kernel.org
+> > >
+> > > For the ROX to work, we need different users (module text, kprobe, etc.) to have
+> > > the same execmem_range. From [1]:
+> > >
+> > > static void *execmem_cache_alloc(struct execmem_range *range, size_t size)
+> > > {
+> > > ...
+> > >        p = __execmem_cache_alloc(size);
+> > >        if (p)
+> > >                return p;
+> > >       err = execmem_cache_populate(range, size);
+> > > ...
+> > > }
+> > >
+> > > We are calling __execmem_cache_alloc() without range. For this to work,
+> > > we can only call execmem_cache_alloc() with one execmem_range.
+> >
+> > Actually, on x86 this will "just work" because everything shares the same
+> > address space :)
+> >
+> > The 2M pages in the cache will be in the modules space, so
+> > __execmem_cache_alloc() will always return memory from that address space.
+> >
+> > For other architectures this indeed needs to be fixed with passing the
+> > range to __execmem_cache_alloc() and limiting search in the cache for that
+> > range.
+> 
+> I think we at least need the "map to" concept (initially proposed by Thomas)
+> to get this work. For example, EXECMEM_BPF and EXECMEM_KPROBE
+> maps to EXECMEM_MODULE_TEXT, so that all these actually share
+> the same range.
 
---teeq72q7xrfgagpx
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Why?
+ 
+> Does this make sense?
+> 
+> Song
 
-Hello Stephen,
-
-On Fri, Apr 12, 2024 at 10:49:35PM +0200, Uwe Kleine-K=F6nig wrote:
-> On Thu, Mar 28, 2024 at 03:35:57PM -0700, Stephen Boyd wrote:
-> > Quoting Uwe Kleine-K=F6nig (2024-03-27 00:33:10)
-> > > To be able to compile drivers using devm_clk_rate_exclusive_get() also
-> > > on platforms without the common clk framework, add a dummy
-> > > implementation that does the same as clk_rate_exclusive_get() in that
-> > > case (i.e. nothing).
-> > >=20
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > > Closes: https://lore.kernel.org/oe-kbuild-all/202403270305.ydvX9xq1-l=
-kp@intel.com/
-> > > Fixes: b0cde62e4c54 ("clk: Add a devm variant of clk_rate_exclusive_g=
-et()")
-> > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > > ---
-> >=20
-> > Applied to clk-fixes
->=20
-> I assume that means it will be sent to Linus before 6.9? That would be
-> great because I want to make use of this function in some drivers and
-> the build bots nag about my for-next branch that in some configurations
-> this function is missing.
-
-Gentle ping. I'd like to get the patches I intend to send to Linus for
-v6.10-rc1 into shape. To have these unmodified in my for-next branch for
-some time it would be great to know your plans for the clk-fixes branch.=20
-Alternatively: Can I expect the commit not to be changed any more and
-pull it into my pwm tree?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---teeq72q7xrfgagpx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYizVIACgkQj4D7WH0S
-/k6SMwgAqHTm3+DCvXNfaGEaCzF14/5MgijejoWEJ/t2RGjvSkfA6etr71sI/ACJ
-Kv8TQ3zgf2DVrE/dyyqCoKU9OrJjADD6TV4S9rQ7gtJ1WJ8kYOEoRSlhzuVcDZQ/
-p96q1wUJQuNNnzyzFdCIlcoNAB3JM5KZDZvZFs39FrAOeYJyrqUIheT6OXQzKWJZ
-SODUmTfCWU7UkSHkTxNltRCJSG+LNXT0/KAJBA6PRHHjl/yIs1akB+IGbh/1aXgm
-wh8W5KbBjwwgkxm3+D2YVScpi+trFTuTvbwhUDVXYat/E9eqOkXaz1Qxf87KaC+Z
-B/F8TWsho0WjrDzcgnhNiFav/c2jaw==
-=Qor4
------END PGP SIGNATURE-----
-
---teeq72q7xrfgagpx--
+-- 
+Sincerely yours,
+Mike.
