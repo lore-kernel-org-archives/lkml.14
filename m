@@ -1,91 +1,202 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CCCAC127
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 06:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E621C121;
+	Fri, 19 Apr 2024 06:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713506831; cv=none; b=lKNiT1nJ+pcCq+OrG/+TlK128rIr+S4paUVVA38VPcSLayeB3+mZkydhKEfW9fuvAUMYBhAspGS8MM+vZzbmGQH7uDR0N4MwZR8gr0pfTWlySnwtII8/mNGxxwwV9DqnYDNccwGwC89lVJy+CtrYzv/Hv1gkiY96VXEwy+hxIrE=
+	t=1713506876; cv=none; b=X2vTPiWcjjDFFrDrxRmTz1vLbixx4r7E+R/tBZS6NNXbL5OcD1Duh/7/wy9WikQKCKTyLCql2Pi+IaKWsdklpQFwJBxMrLPXa6zGupZ0kYfKf5zXNbpzKv6Qm6WTHFcA0qEhLkjkeMO6XOR3Ii57BqhsVS+e4AxhORCxpOonSqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713506831; c=relaxed/simple;
-	bh=Biconojbwy/N+q5BlbJ1LpXkZO01KfzB4PWP+KgVeWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=btaLLUIlT3xkF5XEaIu9eB9mMxAg8GgQCAdQBBXEoWnW8eCJYbHZxfXtHOuzcGWRbQPqjCwO2BE9z7913yiLKU+TBNTW8AJi+wZ61qgt6XspV/Zcs3hzJL5ZMnHEOpTHAAJeNcaYQw9zUndxyvkqBLgLBBNGxAgz/wJ1SDMWgxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-b8-66220a0971e6
-Date: Fri, 19 Apr 2024 15:06:59 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, akpm@linux-foundation.org,
-	ying.huang@intel.com, vernhao@tencent.com,
-	mgorman@techsingularity.net, hughd@google.com, willy@infradead.org,
-	david@redhat.com, peterz@infradead.org, luto@kernel.org,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	rjgolo@gmail.com
-Subject: Re: [PATCH v9 1/8] x86/tlb: add APIs manipulating tlb batch's arch
- data
-Message-ID: <20240419060659.GB48027@system.software.com>
-References: <20240417071847.29584-2-byungchul@sk.com>
- <871q71ykvl.ffs@tglx>
+	s=arc-20240116; t=1713506876; c=relaxed/simple;
+	bh=e8rL9wQCtwcp4ehgNV78lMdeWlBU1r4R6whdUxLxkEU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mrGlqw0xVzy4HJ9Ej989nSIMFou+KX188j4A2g+fJwnN7f2k+egs/ToHLoXmkvWbQKjh8+efujg4QhZSJg5Vh2iiUPX1we3N6UZz1jGOVWufqpStGgkJDfMkoqK1uqC1LbRRC3ScQgczdx5U6N7f1qA1plnNVWaMvYXxFhP6Aac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a523524e5baso165404866b.3;
+        Thu, 18 Apr 2024 23:07:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713506873; x=1714111673;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+QFAFdaeQGhdEPu7ZDYV3U7ePwFNPLImZP7cCf8biZg=;
+        b=KV6IyJVpwEyujCNjxuDwFyngesnYGk9OthWXeyq1lf36UCdo+zI3e4UDUel5QvmoXg
+         njq4CmQrYyj4G2a9Q7N8/8AbXp48w1VqlB3Motkkbm0LJ5mKgQ1nmfwtjLPP6SyST6OC
+         WYZZOJf+WLdGOIRpD6WY9BKhpgmReMOZ5oiGQXVPJyTyP+eAtjWEiuIJkuvDWb8MQt/g
+         FFC0VfQwJgrZ1AHU1OnM8nv8Ye1ZVR8IIzMETvq675czSHFDjDaWEUglX0EfunTFp1Ci
+         oPpHzXN8/ERKAWGsTuRNlxBH31WkxRPCo5ly7sE7SfOB3koIYMQ3KrTI500h2KGuQYzY
+         FoUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWfQa6a1EUxC6RcZgFMwKlQHTMU5DwyVPKnAEIK749JoQYRsl6dNPFY7WMr8MQdUv3HC+pD0AdXrjg5ODmIHiAfoEDeObtjBsm9qS4yoZTV9X1naGjMRJ/ruN8DKlT5y8PS9vHhj0Una+wg
+X-Gm-Message-State: AOJu0YwpLICFcKCTnYNhQDcIVlK0IzXp5cdYK6LVYx6IxsYbol2BgQqK
+	Sz5PNQLFQSghyrCUxy0OvUIHnkK5rPhK4xY6t6iT+/xJhQuRjptbW1EQvG1r
+X-Google-Smtp-Source: AGHT+IHfYbwFSZHp4nTkSxcXJI/0+mqiUsW6BNDF/1+v1th/hc3R51Sgae0vQXJTDrsm722SblYJ3A==
+X-Received: by 2002:a17:906:c9d5:b0:a51:a547:c21f with SMTP id hk21-20020a170906c9d500b00a51a547c21fmr1009664ejb.5.1713506872363;
+        Thu, 18 Apr 2024 23:07:52 -0700 (PDT)
+Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
+        by smtp.gmail.com with ESMTPSA id hg7-20020a170906f34700b00a4e5a6b57a2sm1738093ejb.163.2024.04.18.23.07.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Apr 2024 23:07:51 -0700 (PDT)
+Message-ID: <379d43bd-d5eb-4877-8781-888c82821bb8@kernel.org>
+Date: Fri, 19 Apr 2024 08:07:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <871q71ykvl.ffs@tglx>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDIsWRmVeSWpSXmKPExsXC9ZZnoS4nl1KaQdd0Dos569ewWXze8I/N
-	4sWGdkaLr+t/MVs8/dTHYnF51xw2i3tr/rNanN+1ltVix9J9TBaXDixgsjjee4DJYv69z2wW
-	mzdNZbY4PmUqo8XvH0DFJ2dNZnEQ8Pje2sfisXPWXXaPBZtKPTav0PJYvOclk8emVZ1sHps+
-	TWL3eHfuHLvHiRm/WTzmnQz0eL/vKpvH1l92Ho1Tr7F5fN4kF8AXxWWTkpqTWZZapG+XwJVx
-	e09tQR97xYx3a9gaGE+xdjFyckgImEj8WtbNBGOf+XGLDcRmEVCVON84jRHEZhNQl7hx4ycz
-	iC0ioCGx8dItIJuLg1ngNZPE28tzwZqFBYIknv5tByviFbCQ+P3nMVizkICvxIVvf9kg4oIS
-	J2c+YQGxmQW0JG78ewnUywFkS0ss/8cBEuYUUJJYuOoS2BhRAWWJA9uOM4HskhBYxS5xa91Z
-	FohDJSUOrrjBMoFRYBaSsbOQjJ2FMHYBI/MqRqHMvLLcxMwcE72MyrzMCr3k/NxNjMA4XFb7
-	J3oH46cLwYcYBTgYlXh4F8QrpgmxJpYVV+YeYpTgYFYS4TXjAArxpiRWVqUW5ccXleakFh9i
-	lOZgURLnNfpWniIkkJ5YkpqdmlqQWgSTZeLglGpgXHegKJq9xGRR0UelH8tTFyUedGHIcdi0
-	56/ADbYVG69/3Ns3TS/lZbFYsZiJL0c1x/dMKf09d4T2pIQ8NVyjsdzRx6I4fuLcXfO42tXO
-	tGsdWbXwvVyXRl5U3UmmyVlVK48uvvHtZJB8xoLeD1PNpuuv31/G3KP8d8XGxqTVG9hjm34r
-	q+sfU2Ipzkg01GIuKk4EAOfuHau/AgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsXC5WfdrMvBpZRm0LXVymLO+jVsFp83/GOz
-	eLGhndHi6/pfzBZPP/WxWByee5LV4vKuOWwW99b8Z7U4v2stq8WOpfuYLC4dWMBkcbz3AJPF
-	/Huf2Sw2b5rKbHF8ylRGi98/gIpPzprM4iDo8b21j8Vj56y77B4LNpV6bF6h5bF4z0smj02r
-	Otk8Nn2axO7x7tw5do8TM36zeMw7Gejxft9VNo/FLz4weWz9ZefROPUam8fnTXIB/FFcNimp
-	OZllqUX6dglcGbf31Bb0sVfMeLeGrYHxFGsXIyeHhICJxJkft9hAbBYBVYnzjdMYQWw2AXWJ
-	Gzd+MoPYIgIaEhsv3QKyuTiYBV4zSby9PJcJJCEsECTx9G87WBGvgIXE7z+PwZqFBHwlLnz7
-	ywYRF5Q4OfMJC4jNLKAlcePfS6BeDiBbWmL5Pw6QMKeAksTCVZfAxogKKEsc2HacaQIj7ywk
-	3bOQdM9C6F7AyLyKUSQzryw3MTPHVK84O6MyL7NCLzk/dxMjMKqW1f6ZuIPxy2X3Q4wCHIxK
-	PLwL4hXThFgTy4orcw8xSnAwK4nwmnEAhXhTEiurUovy44tKc1KLDzFKc7AoifN6hacmCAmk
-	J5akZqemFqQWwWSZODilGhjvfE+tafxaa3/zbFbsF32RP5KtHyrzXQ7vfyRu8V1tZdQe/XWa
-	NvedzLN7Qmr9i07sEJcPm+91xC/w4kwFWcPNQZcYa35/M3y1Z4Hq3Aehd7JK1U/NE3e4baz5
-	tWzj+eLrqbxGi/PUlir3XxLZt0Nltd3ve6ZGbGfOrj/gIT6ncco9/aQEeXYlluKMREMt5qLi
-	RAAHI/AEpgIAAA==
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 4/4] serial: exar: change port_type ternary line
+ wrapping
+To: Parker Newman <parker@finest.io>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Cc: Parker Newman <pnewman@connecttech.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <cover.1713452766.git.pnewman@connecttech.com>
+ <0081b6a7bbe1ad6ce114132f9ee86677a761de6d.1713452766.git.pnewman@connecttech.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <0081b6a7bbe1ad6ce114132f9ee86677a761de6d.1713452766.git.pnewman@connecttech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 19, 2024 at 07:36:14AM +0200, Thomas Gleixner wrote:
-> On Wed, Apr 17 2024 at 16:18, Byungchul Park wrote:
-> > This is a preparation for migrc mechanism that needs to recognize
-> > read-only tlb entries during migration by separating tlb batch arch data
-> > into two, one is for read-only entries and the other is for writable
-> > ones, and merging those two when needed.
+On 18. 04. 24, 17:36, Parker Newman wrote:
+> From: Parker Newman <pnewman@connecttech.com>
 > 
-> I have no idea what migrc mechanism means. Please add enough context
-> into the change log so the reviewer does not have to go through loops
-> and hoops to figure out what this is about.
-
-I will add a simple description explaining 'what migrc is' at every
-patch mentioning migrc, from the next spin.  Thank you for the advice.
-
-JFYI, you can see what migrc is in the following link:
-
-   https://lore.kernel.org/lkml/20240418061536.11645-1-byungchul@sk.com/
-
-	Byungchul
-
-> Thanks,
+> Change line wrapping of ternary operators in
+> cti_get_port_type_xr17c15x_xr17v25x() for better readability.
 > 
->         tglx
+> Old example:
+> 
+> 	port_type = port_num == 0 ?
+> 			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
+> 
+> New:
+> 	port_type = port_num == 0 ? CTI_PORT_TYPE_RS232 :
+> 				CTI_PORT_TYPE_RS422_485;
+
+This is worse IMO. Ilpo suggested a bit different alignment. But still...
+
+> Based on feedback from:
+> Link: https://lore.kernel.org/linux-serial/f2353b8c-2079-b895-2707-f6be83161288@linux.intel.com
+
+You should have CCed the author.
+
+> Signed-off-by: Parker Newman <pnewman@connecttech.com>
+> ---
+>   drivers/tty/serial/8250/8250_exar.c | 20 ++++++++++----------
+>   1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
+> index 10725ad0f3ef..a76b4e5bab4e 100644
+> --- a/drivers/tty/serial/8250/8250_exar.c
+> +++ b/drivers/tty/serial/8250/8250_exar.c
+> @@ -741,19 +741,19 @@ static enum cti_port_type cti_get_port_type_xr17c15x_xr17v25x(struct exar8250 *p
+>   		break;
+>   	// 1x RS232, 1x RS422/RS485
+>   	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_1_1:
+> -		port_type = port_num == 0 ?
+> -			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
+> +		port_type = port_num == 0 ? CTI_PORT_TYPE_RS232 :
+> +					CTI_PORT_TYPE_RS422_485;
+
+
+Well, could you initialize port_type = CTI_PORT_TYPE_RS232? And here do 
+only:
+if (port_num > 0)
+     return CTI_PORT_TYPE_RS422_485;
+?
+
+
+>   		break;
+>   	// 2x RS232, 2x RS422/RS485
+>   	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_2:
+> -		port_type = port_num < 2 ?
+> -			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
+> +		port_type = port_num < 2 ? CTI_PORT_TYPE_RS232 :
+> +					CTI_PORT_TYPE_RS422_485;
+
+And so on.
+
+>   		break;
+>   	// 4x RS232, 4x RS422/RS485
+>   	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4:
+>   	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4_SP:
+> -		port_type = port_num < 4 ?
+> -			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
+> +		port_type = port_num < 4 ? CTI_PORT_TYPE_RS232 :
+> +					CTI_PORT_TYPE_RS422_485;
+>   		break;
+>   	// RS232/RS422/RS485 HW (jumper) selectable
+>   	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2:
+> @@ -789,13 +789,13 @@ static enum cti_port_type cti_get_port_type_xr17c15x_xr17v25x(struct exar8250 *p
+>   		break;
+>   	// 6x RS232, 2x RS422/RS485
+>   	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_6_2_SP:
+> -		port_type = port_num < 6 ?
+> -			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
+> +		port_type = port_num < 6 ? CTI_PORT_TYPE_RS232 :
+> +					CTI_PORT_TYPE_RS422_485;
+>   		break;
+>   	// 2x RS232, 6x RS422/RS485
+>   	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_6_SP:
+> -		port_type = port_num < 2 ?
+> -			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
+> +		port_type = port_num < 2 ? CTI_PORT_TYPE_RS232 :
+> +					CTI_PORT_TYPE_RS422_485;
+>   		break;
+>   	default:
+>   		dev_err(&pcidev->dev, "unknown/unsupported device\n");
+> --
+> 2.43.2
+> 
+
+-- 
+js
+suse labs
+
