@@ -1,59 +1,58 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367037C092
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 09:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D9283CCB
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 09:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713520174; cv=none; b=JuDKh1AT+lSsQY2Ht3qGQ6sf/IQdI5VtojymycangR7UdaAtiJToZzzKo7wfajH4LdrMaSIM01ShO91QZUk3Yks22/pY2Pi+qfdb/j8CfvKauBVbTnSEJ3knABsHytPcO4S2QIEfKaT3w6Wmq3M621lQcX3hUjiQ0diON8ApVZo=
+	t=1713520175; cv=none; b=HF3ozrQ6O7NRIiTHGFSa6uPEPId7JDuH0IP2/5L9Lcfmt/snL+Uriy47uRHkEWmtjaD6vS6m60tcZR7n7e9Ab9z8riuxiqNeR5b6LHxUO8A9qkfVS8PoT4lqDuofhmoMeCaDgZSzUbEhGHbGGyCEsaubJ45VSlaovxJXFTpQvws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713520174; c=relaxed/simple;
-	bh=aAxsx+GHEjYnJMiAWqwUDNgaIzi1dYkLjFRqwX4O4Cc=;
+	s=arc-20240116; t=1713520175; c=relaxed/simple;
+	bh=IwVC+qmR5b/10H0elYXxcr5eG/G4ClY19WrOjc/vxJY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Rs5zQU8hjA9I0rfa8qFGedrupQL/Jc9sWIrasxIs4n2g/490U++B+xYPKDFPVf42ocm4pvk16XItvAz6S8UPL7vFxAHxoSR2Rfvw55QWocPLHx72OrflFv/Ly4qgWug5zKGfGqw33dEk0o/fq/m/nY4G3+SKpxn1H4N/+VA3o+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dwHJJPHO; arc=none smtp.client-ip=209.85.160.179
+	 In-Reply-To:To:Cc; b=TYWcaibYLDT9kAhG8mruta3NVFNDDdTWkt9MBsYCSalunVX6O1bp2mZUQEYKdiGmGNOI5aRqZpSfp86Xumu3LE6j1CyCm8USWaXbzRlt3yFL2wZXbN7FOL0k/XJvCqI/lkDC4PQKwwwsdrWEgkE8/hV1ctex+DdO2KmQze+07B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IYWOB4xi; arc=none smtp.client-ip=209.85.222.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dwHJJPHO"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-439073cd4c9so525431cf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 02:49:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IYWOB4xi"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-78f056f928eso115328985a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 02:49:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713520170; x=1714124970; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1713520172; x=1714124972; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PtHT2dnCrKtU2tz1OyJJw1d0hzBN/YL8p+52UQFaJZo=;
-        b=dwHJJPHODXiKSarwV6nm3I3I7P1+j5DULH4hERbmBQjxOW8dPVI+RDJZUUshs1f8Sx
-         FnQG7TFdVgOvfTpO9qxTZ2PdFm1Zpe+LBeM8luYze/vuxxBN06/Y4hxuEaNATaVdT1aA
-         DJ1hYwJj6K8xXoYGNdInHHjg5Zfcq0+/lQfNI=
+        bh=M/K5Byxt1ig+CQr/X/PeYwmg4ty1EjIby+WFZ625f+g=;
+        b=IYWOB4xi57QKQvaMi2xOTTog7GkPX59ZjlhgVswh9TDKqU8F0GJ6dgLaqRJWunFXMb
+         LZ3AePDlpQKXyOP7IZ8ZTUhaGnX0kPSU+HP7azWzi/dgZGtXDlur5NSK2u8zEAU/7SnT
+         0B8UPHcf8qJSaCnzHKteqwOSbUdY9zt5U3VlQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713520170; x=1714124970;
+        d=1e100.net; s=20230601; t=1713520172; x=1714124972;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PtHT2dnCrKtU2tz1OyJJw1d0hzBN/YL8p+52UQFaJZo=;
-        b=t7EfVKAJy4qQpEQWrR0q6OOer3PmHffgCCZZ1DYdCIQbJpmT5fcPkrsKzlykWEm0xO
-         9qQ7D0zjEKh0a1tWW4iKJpB+SQqIlsUdUBaHvIQMs5DPbyype8EDcx5gvrJCc0k85/vB
-         znoFqkmiQ9VkhvCFkMrTQFMPAkZpPtyaYYUARhUU1SG4P1zf9dSOAw0ZTEOtOC26qOnH
-         MYk41e8ZkfqYhG0U/cxrgrhqhKKciW3WBXvpGwPhTjcEZsIKVdAMLe+dvEGusADcKKrf
-         6P8ik7x7SjhVg219ZY5xgL+ZfKqAg1he+3hteu3Zd/+exlkomJrwXAZ9rnHgFS1kjDcs
-         aJ6g==
-X-Forwarded-Encrypted: i=1; AJvYcCWbypCuPQTslNZRL/YpSOc5iQbaADD2EdNxZd4u0fP0lj9BkmT2+MnY8i8dNWl68MLV/8P6QOD2ep0v3al4GR7juU4picgUBF+5geT+
-X-Gm-Message-State: AOJu0Yy5Lsoq0ciUUDoT7AVfBYZ4ZyKPo5421NTQUGlIMueHR0dJSoDo
-	XncV+gJ4XPx/Dj83gin7TIFp6eD35ccGI672WsZXC9jovUr4iSD7fMWJdl3Rv32mCrEzWDNMGdS
-	4aA==
-X-Google-Smtp-Source: AGHT+IEq5/HFwcn26nQnIIJ8VXOEY35h4vBPeSOiEtFFD1Z7vC7s7kPOFrGUrC/lVDARzsxRqq1juw==
-X-Received: by 2002:a05:622a:1386:b0:437:b995:98b5 with SMTP id o6-20020a05622a138600b00437b99598b5mr1747672qtk.57.1713520170255;
-        Fri, 19 Apr 2024 02:49:30 -0700 (PDT)
+        bh=M/K5Byxt1ig+CQr/X/PeYwmg4ty1EjIby+WFZ625f+g=;
+        b=Uleleboe/0kr3U9Xu4AN+LstycVTTw1MSUWGNWQ7v2ZuJL1fiJ5IbbYRXgfhb3mDyN
+         Zzhh3nI1LSJ83cCM76IzNCMZMJiUjng3weERUQMzz2y+hx0bxB7qhqQ+SM5408XGmTX5
+         ZrjhA7YhjevNYCCzP+lD3xasfc+b9OILuGcwu63dShS1k88vmgLYNVxYwNmkaTk+na25
+         9ymCLskkBnFncSgUtbcMbc6EJY4V64QuAI+rZ4dqcRKRWmFE+j99cD0t1hU9gvclafrO
+         M/ngsY205S7SONubZcWItEOsC6imfZF6Mq0GnG6ur23w1eOUA/eshXmfyrtPXl+t97/r
+         rhHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPjTKDGxEe1NBv6Q+4yOXFOkQn5hbsOlbW2MmEl8kIyaHhvgv4bfvuV7LtF7LYdE7Mj68Sgp0S2V1IvLtZFPFqP97YkjraScuL9fee
+X-Gm-Message-State: AOJu0YzCrkuN/HwNWV79ZrucziyJpZwi25CdYskovbWcHpy02Jwo+1mr
+	GWjMyPtWVGTqcLRBcxfEW+pESbdiZarPKIQJt/J/vKi45vpfbsX4NhB9ChCglA==
+X-Google-Smtp-Source: AGHT+IFgAxI3cudbjf7QENem+4os/v4599VNo77B9jF2HzcU/N2a5nFApf/3c3scTYsGro99atnYNQ==
+X-Received: by 2002:a05:620a:8da:b0:78a:68c3:dceb with SMTP id z26-20020a05620a08da00b0078a68c3dcebmr1504339qkz.32.1713520172428;
+        Fri, 19 Apr 2024 02:49:32 -0700 (PDT)
 Received: from denia.c.googlers.com (114.152.245.35.bc.googleusercontent.com. [35.245.152.114])
-        by smtp.gmail.com with ESMTPSA id dt14-20020a05620a478e00b0078d735ca917sm1434532qkb.123.2024.04.19.02.49.29
+        by smtp.gmail.com with ESMTPSA id dt14-20020a05620a478e00b0078d735ca917sm1434532qkb.123.2024.04.19.02.49.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 02:49:29 -0700 (PDT)
+        Fri, 19 Apr 2024 02:49:32 -0700 (PDT)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Fri, 19 Apr 2024 09:47:55 +0000
-Subject: [PATCH v2 09/26] media: v4l: async: refactor
- v4l2_async_create_ancillary_links
+Date: Fri, 19 Apr 2024 09:47:57 +0000
+Subject: [PATCH v2 11/26] media: s2255: Use refcount_t instead of atomic_t
+ for num_channels
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,7 +61,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240419-fix-cocci-v2-9-2119e692309c@chromium.org>
+Message-Id: <20240419-fix-cocci-v2-11-2119e692309c@chromium.org>
 References: <20240419-fix-cocci-v2-0-2119e692309c@chromium.org>
 In-Reply-To: <20240419-fix-cocci-v2-0-2119e692309c@chromium.org>
 To: Martin Tuma <martin.tuma@digiteqautomotive.com>, 
@@ -102,44 +101,100 @@ Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
  Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.12.4
 
-Return 0 without checking IS_ERR or PTR_ERR if CONFIG_MEDIA_CONTROLLER
-is not enabled.
+Use an API that resembles more the actual use of num_channels.
 
-This makes cocci happier:
-
-drivers/media/v4l2-core/v4l2-async.c:331:23-30: ERROR: PTR_ERR applied after initialization to constant on line 319
+Found by cocci:
+drivers/media/usb/s2255/s2255drv.c:2362:5-24: WARNING: atomic_dec_and_test variation before object free at line 2363.
+drivers/media/usb/s2255/s2255drv.c:1557:5-24: WARNING: atomic_dec_and_test variation before object free at line 1558.
 
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/media/v4l2-core/v4l2-async.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/media/usb/s2255/s2255drv.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-index 4bb073587817..915a9f3ea93c 100644
---- a/drivers/media/v4l2-core/v4l2-async.c
-+++ b/drivers/media/v4l2-core/v4l2-async.c
-@@ -316,9 +316,10 @@ v4l2_async_nf_try_all_subdevs(struct v4l2_async_notifier *notifier);
- static int v4l2_async_create_ancillary_links(struct v4l2_async_notifier *n,
- 					     struct v4l2_subdev *sd)
- {
--	struct media_link *link = NULL;
-+	struct media_link *link;
+diff --git a/drivers/media/usb/s2255/s2255drv.c b/drivers/media/usb/s2255/s2255drv.c
+index 8e1de1e8bd12..a6e450181fd0 100644
+--- a/drivers/media/usb/s2255/s2255drv.c
++++ b/drivers/media/usb/s2255/s2255drv.c
+@@ -247,7 +247,7 @@ struct s2255_vc {
+ struct s2255_dev {
+ 	struct s2255_vc         vc[MAX_CHANNELS];
+ 	struct v4l2_device      v4l2_dev;
+-	atomic_t                num_channels;
++	refcount_t		num_channels;
+ 	int			frames;
+ 	struct mutex		lock;	/* channels[].vdev.lock */
+ 	struct mutex		cmdlock; /* protects cmdbuf */
+@@ -1550,11 +1550,11 @@ static void s2255_video_device_release(struct video_device *vdev)
+ 		container_of(vdev, struct s2255_vc, vdev);
  
--#if IS_ENABLED(CONFIG_MEDIA_CONTROLLER)
-+	if (!IS_ENABLED(CONFIG_MEDIA_CONTROLLER))
-+		return 0;
+ 	dprintk(dev, 4, "%s, chnls: %d\n", __func__,
+-		atomic_read(&dev->num_channels));
++		refcount_read(&dev->num_channels));
  
- 	if (sd->entity.function != MEDIA_ENT_F_LENS &&
- 	    sd->entity.function != MEDIA_ENT_F_FLASH)
-@@ -326,8 +327,6 @@ static int v4l2_async_create_ancillary_links(struct v4l2_async_notifier *n,
+ 	v4l2_ctrl_handler_free(&vc->hdl);
  
- 	link = media_create_ancillary_link(&n->sd->entity, &sd->entity);
- 
--#endif
--
- 	return IS_ERR(link) ? PTR_ERR(link) : 0;
+-	if (atomic_dec_and_test(&dev->num_channels))
++	if (refcount_dec_and_test(&dev->num_channels))
+ 		s2255_destroy(dev);
+ 	return;
  }
+@@ -1659,7 +1659,7 @@ static int s2255_probe_v4l(struct s2255_dev *dev)
+ 				"failed to register video device!\n");
+ 			break;
+ 		}
+-		atomic_inc(&dev->num_channels);
++		refcount_inc(&dev->num_channels);
+ 		v4l2_info(&dev->v4l2_dev, "V4L2 device registered as %s\n",
+ 			  video_device_node_name(&vc->vdev));
  
+@@ -1667,11 +1667,11 @@ static int s2255_probe_v4l(struct s2255_dev *dev)
+ 	pr_info("Sensoray 2255 V4L driver Revision: %s\n",
+ 		S2255_VERSION);
+ 	/* if no channels registered, return error and probe will fail*/
+-	if (atomic_read(&dev->num_channels) == 0) {
++	if (refcount_read(&dev->num_channels) == 0) {
+ 		v4l2_device_unregister(&dev->v4l2_dev);
+ 		return ret;
+ 	}
+-	if (atomic_read(&dev->num_channels) != MAX_CHANNELS)
++	if (refcount_read(&dev->num_channels) != MAX_CHANNELS)
+ 		pr_warn("s2255: Not all channels available.\n");
+ 	return 0;
+ }
+@@ -2221,7 +2221,7 @@ static int s2255_probe(struct usb_interface *interface,
+ 		goto errorFWDATA1;
+ 	}
+ 
+-	atomic_set(&dev->num_channels, 0);
++	refcount_set(&dev->num_channels, 0);
+ 	dev->pid = id->idProduct;
+ 	dev->fw_data = kzalloc(sizeof(struct s2255_fw), GFP_KERNEL);
+ 	if (!dev->fw_data)
+@@ -2341,12 +2341,12 @@ static void s2255_disconnect(struct usb_interface *interface)
+ {
+ 	struct s2255_dev *dev = to_s2255_dev(usb_get_intfdata(interface));
+ 	int i;
+-	int channels = atomic_read(&dev->num_channels);
++	int channels = refcount_read(&dev->num_channels);
+ 	mutex_lock(&dev->lock);
+ 	v4l2_device_disconnect(&dev->v4l2_dev);
+ 	mutex_unlock(&dev->lock);
+ 	/*see comments in the uvc_driver.c usb disconnect function */
+-	atomic_inc(&dev->num_channels);
++	refcount_inc(&dev->num_channels);
+ 	/* unregister each video device. */
+ 	for (i = 0; i < channels; i++)
+ 		video_unregister_device(&dev->vc[i].vdev);
+@@ -2359,7 +2359,7 @@ static void s2255_disconnect(struct usb_interface *interface)
+ 		dev->vc[i].vidstatus_ready = 1;
+ 		wake_up(&dev->vc[i].wait_vidstatus);
+ 	}
+-	if (atomic_dec_and_test(&dev->num_channels))
++	if (refcount_dec_and_test(&dev->num_channels))
+ 		s2255_destroy(dev);
+ 	dev_info(&interface->dev, "%s\n", __func__);
+ }
 
 -- 
 2.44.0.769.g3c40516874-goog
