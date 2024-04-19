@@ -1,122 +1,418 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987A312FF6A;
-	Fri, 19 Apr 2024 15:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434EE12FB16;
+	Fri, 19 Apr 2024 15:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713540977; cv=none; b=SN2DRmYR5KQxgvkna+/rbEY8diJ6DTLr/PPtIx6f3M0CAmQDkB3B2QdGwmfv8e7HbLGgR2pzWd8OgJ/pHzYxDUTC4ub/9h6qTRAaQmmJ47pgoKzZl4YntbHpTvkMrLUa6h0Fgo0hv43eNhv63i7pOzDZ8z+lCGi7McnUtwwptKU=
+	t=1713540975; cv=none; b=OkpwM0xUs9mjAZ65z6NorxBNeEsedqJVg8Bd8dr6+v9WpCuTtipdfpZ9UQNrEhHqaym9ju1NOWL4z8ddHV0TCFcpkxx5fld0OcvYP4JF+fEDzskIeIXAoAAN4jqRhQ339frxzGYkrp3sNZ3ESxzm9xiIF062W8pLQRdaHf2kg8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713540977; c=relaxed/simple;
-	bh=AnVpRpILY5Vd9N8iFqR8H3efTBFYjgWKXJUjsusHOgY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XjNohiU+95YJMSvaa1yaYlCnATB/vlbELpdgiJkaJHQz7U5mHxxWsSbSlLvn+rcLr3fj6Zlkx49Y+ysOa538bcGvV9HxUprqZw3hLx+x3i+2bnQnTXjHkpi/aEVWUpNbE0m7RmnmyBve6FwTicf44bQchiyAdxJoORtQELvPlao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bDUTCdso; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713540975; c=relaxed/simple;
+	bh=TGD8yubgvPLgNdh8+oQrQRqsnHoI2UW4XTv9nluRE30=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YdnBuvcd3yWYW0hSa6YQBvRJfqN8bKgaGOUJLgUSkqXvEzjUM500+U2rkroPo0gJs0KY7MC6inU4Z5gRcFtOswprzjinJr08HZ53Yjz534dJlERKwhjtFpsBzDUKSFKJsJ+H7jWrm+ktzZNk/4hs/VYEYDiYxdQQDBh4L2bPF90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=NznjbOOm; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bDUTCdso"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-419c82338abso2909465e9.0;
-        Fri, 19 Apr 2024 08:36:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713540974; x=1714145774; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ogeEX//bHF2HsqLQah7I8pSI5VIDZwGvgsrUulvUgJ8=;
-        b=bDUTCdso4Ndo2faWzi8qemJ6aNywKGeAwtOqh+HfMXmNS0Sl3ShflCgoVFPhE4Eam7
-         +WSHt2ExadNpaVfczOa+iPseg69aeE9ak6KenlO3oMzwd/BqmuWKRlH33hpHHoxEtcIb
-         8RAMNElyWwT3udm17xbfw/PEsMQLxUF3Pyzs0RqbB5rqJhaN4d7JXqnDB5jcVRe2Wklv
-         LuwiAoyzV0gM4adgmIjtJT1N0MidYdgkAc5OX2IBWVLP7II3eU6/slkigm6J8HnTockY
-         VK71UZhUHxqYtRcU+S1GAdLhacCb3Esv4zQ8//PYwiN+hewS9YO3TfMms0rbhSh36s4t
-         0lYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713540974; x=1714145774;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ogeEX//bHF2HsqLQah7I8pSI5VIDZwGvgsrUulvUgJ8=;
-        b=kMvoKk9Cm4Uydn8mZr2jSpB8TQYa5SFCYg6skOzqnCYsxsJ6ZlCnu/W1ExLdK1aKJj
-         wbWDcGJTOcoW5u/TppJ+t0+JqGF0+fhCzT+I6CFFxtzhI1z+UxdfymcOec1gDqpVu/zI
-         pXnjoDMl/9wJ6xksU9RyfaUAi1hNc6ammQkoTTJSgQgNg8vWhmjrxgpBUEt3Ke2v7SAD
-         yqffjbHcFjZ5k2GvIMIEb8Ugc8S13YA0oplvlfR1COxH7h97cDhliUTq0lRsk421yzf2
-         WB6XzypwDRVfgpoVWYS93DnHSMVLUBJB/zTE7o1hH1bmUF/82yVryATGUG4EMOdiF9ee
-         M9dg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLW7CFlkSDbKq8Idl8XHrDXgHgXcpoY9irAdwLyX2k4GCQq1hJej6by/s/aW+N5ANtHh03XQPst8NoMk71wr8CYnCLxPJdjl7stz3YWnM0yLNTWUqMGB48GiPaydjWJMHTbkQ4
-X-Gm-Message-State: AOJu0YyvUF6mmoqGpAzZTbplg823CSPnUfTkbXb8ug5rrR6IMzD+YiOA
-	Bs/UQ5NAxnjECj0CfCE05RjMyjkfdNtx7DDDtwnLdosQ2gu3Z5WM
-X-Google-Smtp-Source: AGHT+IE3HKHiW9UOjFRTmHykV1efO9/FK/dMkjclqhsPuh4hbDq7CJiPMrZLolaE2xHlwmDk3PYWWQ==
-X-Received: by 2002:a05:600c:138c:b0:418:829e:efa5 with SMTP id u12-20020a05600c138c00b00418829eefa5mr2232752wmf.20.1713540973786;
-        Fri, 19 Apr 2024 08:36:13 -0700 (PDT)
-Received: from localhost ([146.70.204.204])
-        by smtp.gmail.com with ESMTPSA id v15-20020adfa1cf000000b0034a81bc5675sm451033wrv.96.2024.04.19.08.36.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 08:36:13 -0700 (PDT)
-From: Richard Gobert <richardbgobert@gmail.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	dsahern@kernel.org,
-	willemdebruijn.kernel@gmail.com,
-	alexander.duyck@gmail.com,
-	aleksander.lobakin@intel.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Richard Gobert <richardbgobert@gmail.com>
-Subject: [PATCH net v2 0/3] net: gro: add flush/flush_id checks and fix wrong offset in udp
-Date: Fri, 19 Apr 2024 17:35:39 +0200
-Message-Id: <20240419153542.121087-1-richardbgobert@gmail.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NznjbOOm"
+Received: from pendragon.ideasonboard.com (117.145-247-81.adsl-dyn.isp.belgacom.be [81.247.145.117])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DFA7563B;
+	Fri, 19 Apr 2024 17:35:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1713540923;
+	bh=TGD8yubgvPLgNdh8+oQrQRqsnHoI2UW4XTv9nluRE30=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NznjbOOmkDjaWbwmJEOfyVj6fdMP3ya9ON9psKpxoYC6F/QnD6nifcle5VqGAy6K2
+	 uT5HBx/phR5u31lbc31e59NuRgv/cLOf/9bfsyTRCCpy2pfm6CzQf5it0XyiAKF3no
+	 vQlzPttj7e6oC11LQu+W5rSiv8bmoIcY1XI64y3s=
+Date: Fri, 19 Apr 2024 18:36:03 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Umang Jain <umang.jain@ideasonboard.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 09/10] media: subdev: Support single-stream case in
+ v4l2_subdev_enable/disable_streams()
+Message-ID: <20240419153603.GE12651@pendragon.ideasonboard.com>
+References: <20240416-enable-streams-impro-v5-0-bd5fcea49388@ideasonboard.com>
+ <20240416-enable-streams-impro-v5-9-bd5fcea49388@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240416-enable-streams-impro-v5-9-bd5fcea49388@ideasonboard.com>
 
-This series fixes a bug in the complete phase of UDP in GRO, in which
-socket lookup fails due to using network_header when parsing encapsulated
-packets. The fix is to add network_offset and inner_network_offset to
-napi_gro_cb and use these offsets for socket lookup.
+Hi Tomi,
 
-In addition p->flush/flush_id should be checked in all UDP flows. The
-same logic from tcp_gro_receive is applied for all the flows in
-udp_gro_receive_segment. This prevents packets with mismatching network
-headers (flush/flush_id turned on) from merging in UDP GRO.
+Thank you for the patch.
 
-The original series includes a change to vxlan test which adds the local
-parameter to prevent similar future bugs. I plan to submit it separately to
-net-next.
+On Tue, Apr 16, 2024 at 04:55:12PM +0300, Tomi Valkeinen wrote:
+> At the moment the v4l2_subdev_enable/disable_streams() functions call
+> fallback helpers to handle the case where the subdev only implements
+> .s_stream(), and the main function handles the case where the subdev
+> implements streams (V4L2_SUBDEV_FL_STREAMS, which implies
+> .enable/disable_streams()).
+> 
+> What is missing is support for subdevs which do not implement streams
+> support, but do implement .enable/disable_streams(). Example cases of
+> these subdevices are single-stream cameras, where using
+> .enable/disable_streams() is not required but helps us remove the users
+> of the legacy .s_stream(), and subdevices with multiple source pads (but
+> single stream per pad), where .enable/disable_streams() allows the
+> subdevice to control the enable/disable state per pad.
+> 
+> The two single-streams cases (.s_stream() and .enable/disable_streams())
+> are very similar, and with small changes we can change the
+> v4l2_subdev_enable/disable_streams() functions to support all three
+> cases, without needing separate fallback functions.
+> 
+> A few potentially problematic details, though:
+> 
+> - For the single-streams cases we use sd->enabled_pads field, which
+>   limits the number of pads for the subdevice to 64. For simplicity I
+>   added the check for this limitation to the beginning of the function,
+>   and it also applies to the streams case.
+> 
+> - The fallback functions only allowed the target pad to be a source pad.
+>   It is not very clear to me why this check was needed, but it was not
+>   needed in the streams case. However, I doubt the
+>   v4l2_subdev_enable/disable_streams() code has ever been tested with
+>   sink pads, so to be on the safe side, I added the same check
+>   to the v4l2_subdev_enable/disable_streams() functions.
+> 
 
-This series is part of a previously submitted series to net-next:
-https://lore.kernel.org/all/20240408141720.98832-1-richardbgobert@gmail.com/
+Now that v4l2_subdev_enable_streams() is usable by (almost) every
+driver, should we update documentation to indicate that manual calls to
+.s_stream() should be avoided ?
 
-v1 -> v2:
- - Use network_offsets instead of p_poff param as suggested by Willem
- - Check flush before postpull, and for all UDP GRO flows (previously
-   reviewed by Willem, and was changed since)
- - v1:
- https://lore.kernel.org/netdev/20240412152120.115067-1-richardbgobert@gmail.com/
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> ---
+>  drivers/media/v4l2-core/v4l2-subdev.c | 187 ++++++++++++++--------------------
+>  1 file changed, 79 insertions(+), 108 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+> index e45fd42da1e3..10406acfb9d0 100644
+> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+> @@ -2106,6 +2106,13 @@ static void v4l2_subdev_collect_streams(struct v4l2_subdev *sd,
+>  					u64 *found_streams,
+>  					u64 *enabled_streams)
+>  {
+> +	if (!(sd->flags & V4L2_SUBDEV_FL_STREAMS)) {
+> +		*found_streams = BIT_ULL(0);
+> +		*enabled_streams =
+> +			(sd->enabled_pads & BIT_ULL(pad)) ? BIT_ULL(0) : 0;
+> +		return;
+> +	}
+> +
+>  	*found_streams = 0;
+>  	*enabled_streams = 0;
+>  
+> @@ -2127,6 +2134,14 @@ static void v4l2_subdev_set_streams_enabled(struct v4l2_subdev *sd,
+>  					    u32 pad, u64 streams_mask,
+>  					    bool enabled)
+>  {
+> +	if (!(sd->flags & V4L2_SUBDEV_FL_STREAMS)) {
+> +		if (enabled)
+> +			sd->enabled_pads |= BIT_ULL(pad);
+> +		else
+> +			sd->enabled_pads &= ~BIT_ULL(pad);
+> +		return;
+> +	}
+> +
+>  	for (unsigned int i = 0; i < state->stream_configs.num_configs; ++i) {
+>  		struct v4l2_subdev_stream_config *cfg =
+>  			&state->stream_configs.configs[i];
+> @@ -2136,51 +2151,6 @@ static void v4l2_subdev_set_streams_enabled(struct v4l2_subdev *sd,
+>  	}
+>  }
+>  
+> -static int v4l2_subdev_enable_streams_fallback(struct v4l2_subdev *sd, u32 pad,
+> -					       u64 streams_mask)
+> -{
+> -	struct device *dev = sd->entity.graph_obj.mdev->dev;
+> -	int ret;
+> -
+> -	/*
+> -	 * The subdev doesn't implement pad-based stream enable, fall back
+> -	 * to the .s_stream() operation.
+> -	 */
+> -	if (!(sd->entity.pads[pad].flags & MEDIA_PAD_FL_SOURCE))
+> -		return -EOPNOTSUPP;
+> -
+> -	/*
+> -	 * .s_stream() means there is no streams support, so the only allowed
+> -	 * stream is the implicit stream 0.
+> -	 */
+> -	if (streams_mask != BIT_ULL(0))
+> -		return -EOPNOTSUPP;
+> -
+> -	/*
+> -	 * We use a 64-bit bitmask for tracking enabled pads, so only subdevices
+> -	 * with 64 pads or less can be supported.
+> -	 */
+> -	if (pad >= sizeof(sd->enabled_pads) * BITS_PER_BYTE)
+> -		return -EOPNOTSUPP;
+> -
+> -	if (sd->enabled_pads & BIT_ULL(pad)) {
+> -		dev_dbg(dev, "pad %u already enabled on %s\n",
+> -			pad, sd->entity.name);
+> -		return -EALREADY;
+> -	}
+> -
+> -	/* Start streaming when the first pad is enabled. */
+> -	if (!sd->enabled_pads) {
+> -		ret = v4l2_subdev_call(sd, video, s_stream, 1);
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+> -	sd->enabled_pads |= BIT_ULL(pad);
+> -
+> -	return 0;
+> -}
+> -
+>  int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
+>  			       u64 streams_mask)
+>  {
+> @@ -2189,21 +2159,33 @@ int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
+>  	bool already_streaming;
+>  	u64 enabled_streams;
+>  	u64 found_streams;
+> +	bool use_s_stream;
+>  	int ret;
+>  
+>  	/* A few basic sanity checks first. */
+>  	if (pad >= sd->entity.num_pads)
+>  		return -EINVAL;
+>  
+> +	if (!(sd->entity.pads[pad].flags & MEDIA_PAD_FL_SOURCE))
+> +		return -EOPNOTSUPP;
+> +
+> +	/*
+> +	 * We use a 64-bit bitmask for tracking enabled pads, so only subdevices
+> +	 * with 64 pads or less can be supported.
+> +	 */
+> +	if (pad >= sizeof(sd->enabled_pads) * BITS_PER_BYTE)
+> +		return -EOPNOTSUPP;
+> +
+>  	if (!streams_mask)
+>  		return 0;
+>  
+>  	/* Fallback on .s_stream() if .enable_streams() isn't available. */
+> -	if (!v4l2_subdev_has_op(sd, pad, enable_streams))
+> -		return v4l2_subdev_enable_streams_fallback(sd, pad,
+> -							   streams_mask);
+> +	use_s_stream = !v4l2_subdev_has_op(sd, pad, enable_streams);
+>  
+> -	state = v4l2_subdev_lock_and_get_active_state(sd);
+> +	if (!use_s_stream)
+> +		state = v4l2_subdev_lock_and_get_active_state(sd);
+> +	else
+> +		state = NULL;
+>  
+>  	/*
+>  	 * Verify that the requested streams exist and that they are not
+> @@ -2231,9 +2213,18 @@ int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
+>  
+>  	already_streaming = v4l2_subdev_is_streaming(sd);
+>  
+> -	/* Call the .enable_streams() operation. */
+> -	ret = v4l2_subdev_call(sd, pad, enable_streams, state, pad,
+> -			       streams_mask);
+> +	if (!use_s_stream) {
+> +		/* Call the .enable_streams() operation. */
+> +		ret = v4l2_subdev_call(sd, pad, enable_streams, state, pad,
+> +				       streams_mask);
+> +	} else {
+> +		/* Start streaming when the first pad is enabled. */
+> +		if (!already_streaming)
+> +			ret = v4l2_subdev_call(sd, video, s_stream, 1);
+> +		else
+> +			ret = 0;
+> +	}
+> +
+>  	if (ret) {
+>  		dev_dbg(dev, "enable streams %u:%#llx failed: %d\n", pad,
+>  			streams_mask, ret);
+> @@ -2243,34 +2234,32 @@ int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
+>  	/* Mark the streams as enabled. */
+>  	v4l2_subdev_set_streams_enabled(sd, state, pad, streams_mask, true);
 
-Richard Gobert (3):
-  net: gro: add {inner_}network_offset to napi_gro_cb
-  net: gro: fix udp bad offset in socket lookup
-  net: gro: add flush check in udp_gro_receive_segment
+state gets set to a non-null value above if the subdev has an
+enable_streams operation, while in v4l2_subdev_set_streams_enabled(),
+you use it if the V4L2_SUBDEV_FL_STREAMS flag is set. The second
+condition is a subset of the first one, so it should be safe now, but I
+wonder if we're at risk of crashes in the future when reworking the
+code. I'm probably worrying needlessly.
 
- drivers/net/geneve.c           |  1 +
- drivers/net/vxlan/vxlan_core.c |  1 +
- include/net/gro.h              | 18 ++++++++++++++++--
- net/8021q/vlan_core.c          |  2 ++
- net/core/gro.c                 |  1 +
- net/ethernet/eth.c             |  1 +
- net/ipv4/af_inet.c             |  5 +----
- net/ipv4/gre_offload.c         |  1 +
- net/ipv4/udp.c                 |  3 ++-
- net/ipv4/udp_offload.c         | 15 +++++++++++++--
- net/ipv6/ip6_offload.c         |  8 ++++----
- net/ipv6/udp.c                 |  3 ++-
- net/ipv6/udp_offload.c         |  3 ++-
- 13 files changed, 47 insertions(+), 15 deletions(-)
+>  
+> -	if (!already_streaming)
+> +	if (!use_s_stream && !already_streaming)
+>  		v4l2_subdev_enable_privacy_led(sd);
+
+Once everybody switches to v4l2_subdev_enable_streams() (am I dreaming?)
+we should move LED handling from the .s_stream() wrapper to here for the
+fallback case too. How about a TODO comment ?
+
+>  
+>  done:
+> -	v4l2_subdev_unlock_state(state);
+> +	if (!use_s_stream)
+
+	if (state)
+
+would be better I think.
+
+> +		v4l2_subdev_unlock_state(state);
+>  
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_subdev_enable_streams);
+>  
+> -static int v4l2_subdev_disable_streams_fallback(struct v4l2_subdev *sd, u32 pad,
+> -						u64 streams_mask)
+> +int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
+> +				u64 streams_mask)
+>  {
+>  	struct device *dev = sd->entity.graph_obj.mdev->dev;
+> +	struct v4l2_subdev_state *state;
+> +	u64 enabled_streams;
+> +	u64 found_streams;
+> +	bool use_s_stream;
+>  	int ret;
+>  
+> -	/*
+> -	 * If the subdev doesn't implement pad-based stream enable, fall back
+> -	 * to the .s_stream() operation.
+> -	 */
+> -	if (!(sd->entity.pads[pad].flags & MEDIA_PAD_FL_SOURCE))
+> -		return -EOPNOTSUPP;
+> +	/* A few basic sanity checks first. */
+> +	if (pad >= sd->entity.num_pads)
+> +		return -EINVAL;
+>  
+> -	/*
+> -	 * .s_stream() means there is no streams support, so the only allowed
+> -	 * stream is the implicit stream 0.
+> -	 */
+> -	if (streams_mask != BIT_ULL(0))
+> +	if (!(sd->entity.pads[pad].flags & MEDIA_PAD_FL_SOURCE))
+>  		return -EOPNOTSUPP;
+>  
+>  	/*
+> @@ -2280,46 +2269,16 @@ static int v4l2_subdev_disable_streams_fallback(struct v4l2_subdev *sd, u32 pad,
+>  	if (pad >= sizeof(sd->enabled_pads) * BITS_PER_BYTE)
+>  		return -EOPNOTSUPP;
+>  
+> -	if (!(sd->enabled_pads & BIT_ULL(pad))) {
+> -		dev_dbg(dev, "pad %u already disabled on %s\n",
+> -			pad, sd->entity.name);
+> -		return -EALREADY;
+> -	}
+> -
+> -	/* Stop streaming when the last streams are disabled. */
+> -	if (!(sd->enabled_pads & ~BIT_ULL(pad))) {
+> -		ret = v4l2_subdev_call(sd, video, s_stream, 0);
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+> -	sd->enabled_pads &= ~BIT_ULL(pad);
+> -
+> -	return 0;
+> -}
+> -
+> -int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
+> -				u64 streams_mask)
+> -{
+> -	struct device *dev = sd->entity.graph_obj.mdev->dev;
+> -	struct v4l2_subdev_state *state;
+> -	u64 enabled_streams;
+> -	u64 found_streams;
+> -	int ret;
+> -
+> -	/* A few basic sanity checks first. */
+> -	if (pad >= sd->entity.num_pads)
+> -		return -EINVAL;
+> -
+>  	if (!streams_mask)
+>  		return 0;
+>  
+>  	/* Fallback on .s_stream() if .disable_streams() isn't available. */
+> -	if (!v4l2_subdev_has_op(sd, pad, disable_streams))
+> -		return v4l2_subdev_disable_streams_fallback(sd, pad,
+> -							    streams_mask);
+> +	use_s_stream = !v4l2_subdev_has_op(sd, pad, disable_streams);
+>  
+> -	state = v4l2_subdev_lock_and_get_active_state(sd);
+> +	if (!use_s_stream)
+> +		state = v4l2_subdev_lock_and_get_active_state(sd);
+> +	else
+> +		state = NULL;
+>  
+>  	/*
+>  	 * Verify that the requested streams exist and that they are not
+> @@ -2345,9 +2304,19 @@ int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
+>  
+>  	dev_dbg(dev, "disable streams %u:%#llx\n", pad, streams_mask);
+>  
+> -	/* Call the .disable_streams() operation. */
+> -	ret = v4l2_subdev_call(sd, pad, disable_streams, state, pad,
+> -			       streams_mask);
+> +	if (!use_s_stream) {
+> +		/* Call the .disable_streams() operation. */
+> +		ret = v4l2_subdev_call(sd, pad, disable_streams, state, pad,
+> +				       streams_mask);
+> +	} else {
+> +		/* Stop streaming when the last streams are disabled. */
+> +
+> +		if (!(sd->enabled_pads & ~BIT_ULL(pad)))
+> +			ret = v4l2_subdev_call(sd, video, s_stream, 0);
+> +		else
+> +			ret = 0;
+> +	}
+> +
+>  	if (ret) {
+>  		dev_dbg(dev, "disable streams %u:%#llx failed: %d\n", pad,
+>  			streams_mask, ret);
+> @@ -2357,10 +2326,12 @@ int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
+>  	v4l2_subdev_set_streams_enabled(sd, state, pad, streams_mask, false);
+>  
+>  done:
+> -	if (!v4l2_subdev_is_streaming(sd))
+> -		v4l2_subdev_disable_privacy_led(sd);
+> +	if (!use_s_stream) {
+> +		if (!v4l2_subdev_is_streaming(sd))
+> +			v4l2_subdev_disable_privacy_led(sd);
+
+Do we want to disable the privacy LED on failure in all cases, in
+particular when the .s_stream() or .disable_streams() operations are not
+even called ?
+
+And now that I wrote that, I realize the !v4l2_subdev_is_streaming()
+condition will not be true if the operations failed, so it should be
+fine.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>  
+> -	v4l2_subdev_unlock_state(state);
+> +		v4l2_subdev_unlock_state(state);
+> +	}
+>  
+>  	return ret;
+>  }
+> 
 
 -- 
-2.36.1
+Regards,
 
+Laurent Pinchart
