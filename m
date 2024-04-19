@@ -1,108 +1,128 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8859F1E893
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 15:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A444912E1E7;
+	Fri, 19 Apr 2024 15:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713541006; cv=none; b=tSHPiqN7genz2sm6ROZuZL6KdSo10OZJeA3Irr7UlNEM2+U7PSulT216IaTq1zbeow8e/5jZmlm+brKLVxHa2vWVnZNfFwX0uBBGeA399E0hcmvXhU4N7mG7pnt9q6o4toQPYwwZvvxbBx+Rd7JR896ij0FJAHwhZ0c8nOHJn1E=
+	t=1713541007; cv=none; b=AXPXSlZ5XzglfLCGa31YumU3ZqdtvPCydyYQy5tmXKXfR89gNJu3FFgW8Q2dbevV6iaSRAyd4ZhOr5+CyubJr8sKY0GUM/GMKVja4I0Ks/L/9dvZcZT+viSCmM+a1Gq5j4hOaWB70egl8F5JcvPC2kYhZB9WKybb2hRYLHwlDqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713541006; c=relaxed/simple;
-	bh=lfG20oqzf+WgdkIHChtaZcLJdG8DTLeewCgNNyYkvEo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U5dEDiNA2L+9cVcrS/QSSpa2pVcHr7GFv1eh4c88bcmCegXXGOVj8yx8ac1FfNdTfWwS2DKlUi0pLHXqRvaD2UHzaXFg/Hk2qblcWfW7EBMR6T2CHWOcJEYBiKpWLZH6uAM3mlCP96ZsK5p8BWAb8ZiDRDBV3Bg+/Re3o6d1stQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eJ7ySSWl; arc=none smtp.client-ip=209.85.216.42
+	s=arc-20240116; t=1713541007; c=relaxed/simple;
+	bh=bXd2cF1r5wGgGn8qjmQ3gV0VuKXhxZccccWQSzrZm9Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kg3g7ZZVAskH32H/WEQbaCXJNKCxvd8f195wXQ0q9MCD6KdsP/n8ggHlM3zbR+MY8waPByRDNy0ARBNXxGVZNBhNUpCy6G0+lEKDFThT9fp6P1YDDefMw7GlNYkE054SOnS7vRPD4FzMsdgmSYb5BhE1uvonJdvzIA0Ca82AquY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hTCtZ/rD; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eJ7ySSWl"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2a2da57ab3aso1707156a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 08:36:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTCtZ/rD"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-34a7e47d164so287928f8f.3;
+        Fri, 19 Apr 2024 08:36:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713541005; x=1714145805; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1713541004; x=1714145804; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s6e7j2WSWs9sC+Ur3lef8hum6RjzipP7Zn2prRaEpPs=;
-        b=eJ7ySSWl56uVJ8wNhFnAEqvhpvDC8zK49EQHh+jQ0wdh5sZO4GHx+KcbeXf+Y2cFU3
-         Ek9MfgxLV5iAVdNVrSPLOi/nxP28VJGVZmzdsaepU5tLfYRGIqzCqTxv4083PQBdL4by
-         PlEypXCe/N7X1IZs1ceaLM7KXY7rado0Zxom9UUdP1DZUpw0QuZPjLKMCsCW2ZUWSXd/
-         LeIHMzQ7GnaJU7LTjBPLMq9ah1lzJSiHgs41q1NDAG5bIrrSUk0t1Q9NCYxxdiYvzEfq
-         dqCvalhxh5Dm1J0coU2q2lM6lyfjmqhOx6m6jcau/BBR9tlNsxpamFMqga4ymyrDjQd4
-         7yDA==
+        bh=dBCxnbysmOgF/ewLoKlev2MPx9AEH27+l/wXXPvFzlE=;
+        b=hTCtZ/rDjFcmpsxKKEFGcRQ8OivwwbPt5Qk0CWkrMgqojFPLVNgxswXfPkbtdX4aVO
+         m8vtNjLn87/eA8w0tM63PCTnVc7dSUKmgjvoUkRdjA1hbisDyQwEFVKesUrINn9VU1p4
+         Q6z1v3ZM3SFJZ6kS5XpN0gM1S1RwmnvXhTjYu2zG+n57MiUkmlLT9tynEdd9sgAkxD/O
+         RWpodTSgNPnyXxvNQvtqjCeUDz4T3oWHHpm8Iz86MFyNQ/1qxLeuI8/xyNqyvS14+SDD
+         HsyD5l8oa2dO/L3j3e6NmeFT7W1oSJSr5KInxPuvb4ZQ50sPtqwJQs4xI8avWOPIQWR9
+         eNSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713541005; x=1714145805;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1713541004; x=1714145804;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=s6e7j2WSWs9sC+Ur3lef8hum6RjzipP7Zn2prRaEpPs=;
-        b=GdXK/zC94f/+LzBVYfdhPcw0g/QIzFbh2LOIBkvVQH8EfMyYRCcz+U9KgTHinukLoh
-         csj1nZWTMxSWN4HUQwcOjgHsqf1u3IvxsXCz1tB6tgptY20VKQ6UlupTegoMdQN8PYQw
-         8T4RaZzIHJ2GQudBkUr57Us/BF9FNz1dEKK9uPZ0pxo27TPYZWZI7a3o+aMqibmuHgGN
-         f2FofuNEfirUdNL/2MrbiJC2zQfkQkGqfYHCQgWv35awyzlhjTNgpREn1TDARND0XEyP
-         OVlEB67hQUcSe1iSEOEWP+fKpTREEfSNGwGFbZRCgOlPQ77EKyxG8j8vzPsUDIp08A+D
-         nDHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXN7zZUPwskh9rgCzlY7n7a7qe76o/F0s1W4rk7kphhL3OvyHCMenN9esqoqUBdS4mXA4Tc1q+nO5JqmgOGaHKk6l4EFygLJMicPVHF
-X-Gm-Message-State: AOJu0YzlynzT7x0Ro81oKaINMfqAOYMD8hTKfD4e92utUigINak3UPWT
-	oEBrDi9v26QoF9Ru8I+cBZg/6hxtEaw5Jt3GxiWQo4jYFRu86t669s52sJWB7HLQtG+tayHoON/
-	Y1JZVdsakY0W/MstCBD0vjD49mOM=
-X-Google-Smtp-Source: AGHT+IHDtLS42hpyEP9uSJwLpq3epQxCgl+pjLxCfyMyr2PiLzXmGhsYXFFccicMl8yIiaaMiKpyNlk+AC+MFBmqn8c=
-X-Received: by 2002:a17:90b:804:b0:2ab:87c3:d12c with SMTP id
- bk4-20020a17090b080400b002ab87c3d12cmr2546212pjb.2.1713541004691; Fri, 19 Apr
- 2024 08:36:44 -0700 (PDT)
+        bh=dBCxnbysmOgF/ewLoKlev2MPx9AEH27+l/wXXPvFzlE=;
+        b=miUnJ4lEtQB4gIfY46dwapmecGN1XjuowgDKHker9qGlvc+nA/ulLhd/s3Xfa9J1KZ
+         VFUavhfH8sXJlQmZFiQJd0fo8vkVy/IdDMc7DBdiQsInwFvE+9BEh1ObjOjHQsgWzROI
+         e/AV7ViMXN2Q8FAcHbIe6VQ3UOQrjzczjT/Xce0vgOONrHWWjyrAvZiP1H24cRhfm7jp
+         DlNgn8I8/Dfhn2li4+x1ntL+lOZExLDYYREk2wYWqw2GFC4RR3H5aZjJs+4vN1QjjLdR
+         A0KwY8yyZYcDs/8qg/Mo6xQxcRWewLWDFsx65ScYBmkesJleof62rC7d7tAWumlAqTCN
+         WjFA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKIe16iGbmQV1EiYhjvRJHKguTVyaSl1ZZ3WB4pDmUMP7CI/UOOgQfCJTiDlUWeVzUjj4eor8d9g+YqpRGq6fz3fRILQ6J2B4n9JV5Uxly6qEA55x0aH+xUIMuKDgZAJHi73ej
+X-Gm-Message-State: AOJu0YyMLO/Bc/1JsYhmCia3OD2JAo3hqoGyQgRXYk8jRIf5eZVXOfF9
+	p0/AsLWVH2CW40y5V32d28FD3qRPt5Ai5uaoZZ2S8xgBC47eIHfm
+X-Google-Smtp-Source: AGHT+IEEsUl+sziq8fG2MR4CX89/a844zgARc3ht6bS6rLiL+jkcyfjhn1daKZQG4bY/FTJ6M1A14Q==
+X-Received: by 2002:adf:f9ce:0:b0:349:bd11:1bf1 with SMTP id w14-20020adff9ce000000b00349bd111bf1mr1690575wrr.46.1713541003830;
+        Fri, 19 Apr 2024 08:36:43 -0700 (PDT)
+Received: from localhost ([146.70.204.204])
+        by smtp.gmail.com with ESMTPSA id u17-20020adfeb51000000b00347321735a6sm4693773wrn.66.2024.04.19.08.36.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Apr 2024 08:36:43 -0700 (PDT)
+From: Richard Gobert <richardbgobert@gmail.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	dsahern@kernel.org,
+	willemdebruijn.kernel@gmail.com,
+	alexander.duyck@gmail.com,
+	aleksander.lobakin@intel.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Richard Gobert <richardbgobert@gmail.com>
+Subject: [PATCH net v2 3/3] net: gro: add flush check in udp_gro_receive_segment
+Date: Fri, 19 Apr 2024 17:35:42 +0200
+Message-Id: <20240419153542.121087-4-richardbgobert@gmail.com>
+In-Reply-To: <20240419153542.121087-1-richardbgobert@gmail.com>
+References: <20240419153542.121087-1-richardbgobert@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240419021847.16585-1-jiapeng.chong@linux.alibaba.com>
-In-Reply-To: <20240419021847.16585-1-jiapeng.chong@linux.alibaba.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Fri, 19 Apr 2024 11:36:32 -0400
-Message-ID: <CADnq5_NnC2ziUe8wwXKpw1yQf9phx36Gb3hm0gRhURZNp0Mo+g@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: Remove duplicate dcn32/dcn32_clk_mgr.h header
-To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc: harry.wentland@amd.com, sunpeng.li@amd.com, Rodrigo.Siqueira@amd.com, 
-	alexander.deucher@amd.com, christian.koenig@amd.com, Xinhui.Pan@amd.com, 
-	airlied@gmail.com, daniel@ffwll.ch, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Abaci Robot <abaci@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+GRO-GSO path is supposed to be transparent and as such L3 flush checks are
+relevant to all UDP flows merging in GRO. This patch uses the same logic
+and code from tcp_gro_receive, terminating merge if flush is non zero.
 
-And applied.  Thanks!
+Fixes: 36707061d6ba ("udp: allow forwarding of plain (non-fraglisted) UDP GRO packets")
+Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
+---
+ net/ipv4/udp_offload.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-Alex
+diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
+index fd29d21d579c..8721fe5beca2 100644
+--- a/net/ipv4/udp_offload.c
++++ b/net/ipv4/udp_offload.c
+@@ -471,6 +471,7 @@ static struct sk_buff *udp_gro_receive_segment(struct list_head *head,
+ 	struct sk_buff *p;
+ 	unsigned int ulen;
+ 	int ret = 0;
++	int flush;
+ 
+ 	/* requires non zero csum, for symmetry with GSO */
+ 	if (!uh->check) {
+@@ -504,13 +505,22 @@ static struct sk_buff *udp_gro_receive_segment(struct list_head *head,
+ 			return p;
+ 		}
+ 
++		flush = NAPI_GRO_CB(p)->flush;
++
++		if (NAPI_GRO_CB(p)->flush_id != 1 ||
++		    NAPI_GRO_CB(p)->count != 1 ||
++		    !NAPI_GRO_CB(p)->is_atomic)
++			flush |= NAPI_GRO_CB(p)->flush_id;
++		else
++			NAPI_GRO_CB(p)->is_atomic = false;
++
+ 		/* Terminate the flow on len mismatch or if it grow "too much".
+ 		 * Under small packet flood GRO count could elsewhere grow a lot
+ 		 * leading to excessive truesize values.
+ 		 * On len mismatch merge the first packet shorter than gso_size,
+ 		 * otherwise complete the GRO packet.
+ 		 */
+-		if (ulen > ntohs(uh2->len)) {
++		if (ulen > ntohs(uh2->len) || flush) {
+ 			pp = p;
+ 		} else {
+ 			if (NAPI_GRO_CB(skb)->is_flist) {
+-- 
+2.36.1
 
-On Thu, Apr 18, 2024 at 10:37=E2=80=AFPM Jiapeng Chong
-<jiapeng.chong@linux.alibaba.com> wrote:
->
-> ./drivers/gpu/drm/amd/display/dc/clk_mgr/dcn32/dcn32_clk_mgr.c: dcn32/dcn=
-32_clk_mgr.h is included more than once.
->
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=3D8789
-> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-> ---
->  drivers/gpu/drm/amd/display/dc/clk_mgr/dcn32/dcn32_clk_mgr.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn32/dcn32_clk_mgr.c=
- b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn32/dcn32_clk_mgr.c
-> index 7eecb3403f74..d7bbb0891398 100644
-> --- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn32/dcn32_clk_mgr.c
-> +++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn32/dcn32_clk_mgr.c
-> @@ -41,7 +41,6 @@
->  #include "dcn/dcn_3_2_0_offset.h"
->  #include "dcn/dcn_3_2_0_sh_mask.h"
->
-> -#include "dcn32/dcn32_clk_mgr.h"
->  #include "dml/dcn32/dcn32_fpu.h"
->
->  #define DCN_BASE__INST0_SEG1                       0x000000C0
-> --
-> 2.20.1.7.g153144c
->
