@@ -1,222 +1,103 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0AB37494
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 06:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3724C8E0;
+	Fri, 19 Apr 2024 06:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713507729; cv=none; b=hfBoFM7zk3Pqr5x+dTmKe4GVjuwckc9y8AukHfiP+p4/XlmuZZtdli7ICJBbPjE2/GNC9HNoHSmAYFvqnMp6d4ERYQwlyLDuq5RIZ65lnpKcFAn0P1Bmc8a1i9p55JYG9B2hAdINn3gn7eEfJiA/qMC+6b9m8996sAUisgxtTfo=
+	t=1713507731; cv=none; b=I2KTOvfO9+yVVqxqGSfNaHtulEWb8HBmV2toCfV2/ZDH/5puLnkUZ+e+QcQIjwA4jg4ld7v6eVNw9EEV3zfqpEfQWo1wgra6o//d5fGY6cbg4wwh98awF6xWDYlDDHxPXwzxpP1LVwa0Qp9mjXF6nqkYVFqVU0fkkJ4f8f31Vgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713507729; c=relaxed/simple;
-	bh=CCTUV2khsqbnKQRPPnORCP2FFCgPHmJyOA/jrQ9ycgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sVnoZel25s5FLPgc7FGdaAvjen56NpFDtXt6DyRO9fEfyaVJQXDwkB24ya2h3+DB/X+NxHhAIRpBFQvU0DgfFvjVds/cl8JJ9kbQkaYqG5rXZGo8+0GHRmSa5m+7WDnD3R0OOcayQATh35BUPTG0J2DBNMm2D9C9R425qYcfeXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-de-66220d871b94
-Date: Fri, 19 Apr 2024 15:21:54 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, akpm@linux-foundation.org,
-	vernhao@tencent.com, mgorman@techsingularity.net, hughd@google.com,
-	willy@infradead.org, david@redhat.com, peterz@infradead.org,
-	luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, rjgolo@gmail.com
-Subject: Re: [PATCH v9 rebase on mm-unstable 0/8] Reduce tlb and interrupt
- numbers over 90% by improving folio migration
-Message-ID: <20240419062154.GA26669@system.software.com>
-References: <20240418061536.11645-1-byungchul@sk.com>
- <87cyqlyjh5.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	s=arc-20240116; t=1713507731; c=relaxed/simple;
+	bh=OgtNH68QHSOCj2Q1N4piVftBi0yqKXVj2TEitr652PM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oQueyN0L16s+cHzvgUHhy6onI0lQl7vqCcXn4UPFX8uuNeQqKxoBoRaOMRi9OpVVHHh/a9sMJs695rQ/ANYM4LDBxJx58crr4bWFed61RBS/GlvTk1Xbm4VIHjwqfLWML9tCWVVxPZUisuO9cRJQpOse0wvsGxBiJfvRRy0Cj9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VLPcJ3b4nz1N87g;
+	Fri, 19 Apr 2024 14:19:12 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id 42AF4180073;
+	Fri, 19 Apr 2024 14:22:07 +0800 (CST)
+Received: from huawei.com (10.175.101.107) by canpemm500010.china.huawei.com
+ (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 19 Apr
+ 2024 14:22:06 +0800
+From: Ye Bin <yebin10@huawei.com>
+To: <djwong@kernel.org>, <linux-xfs@vger.kernel.org>,
+	<chandan.babu@oracle.com>, <dchinner@redhat.com>
+CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
+Subject: [PATCH RFC 2/2] xfs: avoid potenial alloc inode failed
+Date: Fri, 19 Apr 2024 14:18:48 +0800
+Message-ID: <20240419061848.1032366-3-yebin10@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240419061848.1032366-1-yebin10@huawei.com>
+References: <20240419061848.1032366-1-yebin10@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87cyqlyjh5.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNIsWRmVeSWpSXmKPExsXC9ZZnoW4Hr1KawZI5LBZz1q9hs/i84R+b
-	xYsN7YwWX9f/YrZ4+qmPxeLyrjlsFvfW/Ge1OL9rLavFjqX7mCwuHVjAZHG89wCTxfx7n9ks
-	Nm+aymxxfMpURovfP4CKT86azOIg4PG9tY/FY+esu+weCzaVemxeoeWxeM9LJo9NqzrZPDZ9
-	msTu8e7cOXaPEzN+s3jMOxno8X7fVTaPrb/sPBqnXmPz+LxJLoAvissmJTUnsyy1SN8ugSvj
-	6fEXzAUPdSqWbE9tYNyo0MXIwSEhYCLR3B7VxcgJZn7r+swKYrMIqEos7WoAs9kE1CVu3PjJ
-	DGKLCGhIfFq4nL2LkYuDWeA5k8TvN7/ZQRLCAlUS627fZQOxeQUsJA4fXATWICSQKXH3/gYm
-	iLigxMmZT1hAbGYBLYkb/14ygdzALCAtsfwfB0iYU8BO4vGXr2DlogLKEge2HWcC2SUhsI5d
-	Yu6hbkaIQyUlDq64wTKBUWAWkrGzkIydhTB2ASPzKkahzLyy3MTMHBO9jMq8zAq95PzcTYzA
-	KFxW+yd6B+OnC8GHGAU4GJV4eBfEK6YJsSaWFVfmHmKU4GBWEuE14wAK8aYkVlalFuXHF5Xm
-	pBYfYpTmYFES5zX6Vp4iJJCeWJKanZpakFoEk2Xi4JRqYAzzPnkuQUDGd87LaZ/nHgu+ccVh
-	wbxn5lpie0Wl/158Ffd9ofOX+dKVT2bKruPL+/H1ZL5b/6M3O2KWrOxTLdgVJDDVrmY32/xY
-	CQG1eX31ASvuLS9/M3/ZxbmnMo3rUnZP/KHK1ibF0Vbs0dNYMN9YzKNgx5TbQVdC82NcN4ay
-	sBe2fqsOFVFiKc5INNRiLipOBABquc+XvgIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsXC5WfdrNvOq5RmcPaSnsWc9WvYLD5v+Mdm
-	8WJDO6PF1/W/mC2efupjsTg89ySrxeVdc9gs7q35z2pxftdaVosdS/cxWVw6sIDJ4njvASaL
-	+fc+s1ls3jSV2eL4lKmMFr9/ABWfnDWZxUHQ43trH4vHzll32T0WbCr12LxCy2PxnpdMHptW
-	dbJ5bPo0id3j3blz7B4nZvxm8Zh3MtDj/b6rbB6LX3xg8tj6y86jceo1No/Pm+QC+KO4bFJS
-	czLLUov07RK4Mp4ef8Fc8FCnYsn21AbGjQpdjJwcEgImEt+6PrOC2CwCqhJLuxrAbDYBdYkb
-	N34yg9giAhoSnxYuZ+9i5OJgFnjOJPH7zW92kISwQJXEutt32UBsXgELicMHF4E1CAlkSty9
-	v4EJIi4ocXLmExYQm1lAS+LGv5dAcQ4gW1pi+T8OkDCngJ3E4y9fwcpFBZQlDmw7zjSBkXcW
-	ku5ZSLpnIXQvYGRexSiSmVeWm5iZY6pXnJ1RmZdZoZecn7uJERhVy2r/TNzB+OWy+yFGAQ5G
-	JR7eBfGKaUKsiWXFlbmHGCU4mJVEeM04gEK8KYmVValF+fFFpTmpxYcYpTlYlMR5vcJTE4QE
-	0hNLUrNTUwtSi2CyTBycUg2MGb+cN/2/f3PBZJPn828+8X124UX1vAO7fnP/WDNfRuTJObNo
-	5WTPa67x9Yas7CuW/5y8fxJrVfvqBc1+r5fukJm0ZeKsJ5zRgSvu5clczWj84xH1dP/9EI7g
-	vxdWHzy6y31LdUUaW7c994SUeK8FH4Tyj37MO1QmYrWgb+np91vr91tVcHxSU1NiKc5INNRi
-	LipOBACRLonapgIAAA==
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
-On Fri, Apr 19, 2024 at 02:06:30PM +0800, Huang, Ying wrote:
-> Byungchul Park <byungchul@sk.com> writes:
-> 
-> > Hi everyone,
-> >
-> > While I'm working with a tiered memory system e.g. CXL memory, I have
-> > been facing migration overhead esp. tlb shootdown on promotion or
-> > demotion between different tiers.  Yeah..  most tlb shootdowns on
-> > migration through hinting fault can be avoided thanks to Huang Ying's
-> > work, commit 4d4b6d66db ("mm,unmap: avoid flushing tlb in batch if PTE
-> > is inaccessible").  See the following link for more information:
-> >
-> > https://lore.kernel.org/lkml/20231115025755.GA29979@system.software.com/
-> >
-> > However, it's only for ones using hinting fault.  I thought it'd be much
-> > better if we have a general mechanism to reduce all tlb numbers that we
-> > can ultimately apply to any type of migration.
-> >
-> > I'm suggesting a mechanism called MIGRC that stands for 'Migration Read
-> > Copy', to reduce tlb numbers by deferring tlb flush until the source
-> > folios at migration actually become used, of course, only if the target
-> > PTE don't have write permission.
-> >
-> > To achieve that:
-> >
-> >    1. For the folios that map only to non-writable tlb entries, prevent
-> >       tlb flush during migration but perform it just before the source
-> >       folios actually become used out of buddy or pcp.
-> >
-> >    2. When any non-writable tlb entry changes to writable e.g. through
-> >       fault handler, give up migrc mechanism and perform tlb flush
-> >       required right away.
-> >
-> > No matter what type of workload is used for performance evaluation, the
-> > result would be positive thanks to the unconditional reduction of tlb
-> > flushes, tlb misses and interrupts.  For the test, I picked up XSBench
-> > that is widely used for performance analysis on high performance
-> > computing architectures - https://github.com/ANL-CESAR/XSBench.
-> >
-> > The result would depend on memory latency and how often reclaim runs,
-> > which implies tlb miss overhead and how many times migration happens.
-> > The slower the memory is and the more reclaim runs, the better migrc
-> > works so as to obtain the better result.  In my system, the result
-> > shows:
-> >
-> >    1. itlb flushes are reduced over 90%.
-> >    2. itlb misses are reduced over 30%.
-> >    3. All the other tlb numbers also get enhanced.
-> >    4. tlb shootdown interrupts are reduced over 90%.
-> >    5. The test program runtime is reduced over 5%.
-> >
-> > The test envitonment:
-> >
-> >    Architecture - x86_64
-> >    QEMU - kvm enabled, host cpu
-> 
-> The test is run in VM?  Do you have test results in bare metal
-> environment?
+As 'pag->pagf_longest' may be temporarily set to 0. When the AGF buffer
+lock is not held, using 'pag->pagf_longest' to determine whether the space
+is available will cause misjudgment.
+When the fragmentation is not serious and the reserved space exists, using
+'pag->pagf_longest' to determine whether the space is available cannot filter
+out the space that really cannot be allocated.
+So remove judgement about 'pag->pagf_longest' in xfs_dialloc_good_ag().
 
-I will test in a bare metal environment and share the result.
+Signed-off-by: Ye Bin <yebin10@huawei.com>
+---
+ fs/xfs/libxfs/xfs_ialloc.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
-> >    Numa - 2 nodes (16 CPUs 1GB, no CPUs 99GB)
-> 
-> The configuration looks quite abnormal.  Have you tested with other
-> configuration, such 1:4 or 1:8?
+diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
+index e5ac3e5430c4..bb0ce2248386 100644
+--- a/fs/xfs/libxfs/xfs_ialloc.c
++++ b/fs/xfs/libxfs/xfs_ialloc.c
+@@ -1689,7 +1689,6 @@ xfs_dialloc_good_ag(
+ {
+ 	struct xfs_mount	*mp = tp->t_mountp;
+ 	xfs_extlen_t		ineed;
+-	xfs_extlen_t		longest = 0;
+ 	int			needspace;
+ 	int			error;
+ 
+@@ -1717,12 +1716,7 @@ xfs_dialloc_good_ag(
+ 
+ 	/*
+ 	 * Check that there is enough free space for the file plus a chunk of
+-	 * inodes if we need to allocate some. If this is the first pass across
+-	 * the AGs, take into account the potential space needed for alignment
+-	 * of inode chunks when checking the longest contiguous free space in
+-	 * the AG - this prevents us from getting ENOSPC because we have free
+-	 * space larger than ialloc_blks but alignment constraints prevent us
+-	 * from using it.
++	 * inodes if we need to allocate some.
+ 	 *
+ 	 * If we can't find an AG with space for full alignment slack to be
+ 	 * taken into account, we must be near ENOSPC in all AGs.  Hence we
+@@ -1742,12 +1736,9 @@ xfs_dialloc_good_ag(
+ 	ineed = M_IGEO(mp)->ialloc_min_blks;
+ 	if (flags && ineed > 1)
+ 		ineed += M_IGEO(mp)->cluster_align;
+-	longest = pag->pagf_longest;
+-	if (!longest)
+-		longest = pag->pagf_flcount > 0;
+ 	needspace = S_ISDIR(mode) || S_ISREG(mode) || S_ISLNK(mode);
+ 
+-	if (pag->pagf_freeblks < needspace + ineed || longest < ineed)
++	if (pag->pagf_freeblks < needspace + ineed)
+ 		return false;
+ 	return true;
+ }
+-- 
+2.34.1
 
-Okay I will test with the configurations.
-
-> >    Linux Kernel - v6.9-rc4, numa balancing tiering on, demotion enabled
-> >
-> > < measurement: raw data - tlb and interrupt numbers >
-> >
-> >    $ perf stat -a \
-> >            -e itlb.itlb_flush \
-> >            -e tlb_flush.dtlb_thread \
-> >            -e tlb_flush.stlb_any \
-> >            -e dtlb-load-misses \
-> >            -e dtlb-store-misses \
-> >            -e itlb-load-misses \
-> >            XSBench -t 16 -p 50000000
-> >
-> >    $ grep "TLB shootdowns" /proc/interrupts
-> >
-> >    BEFORE
-> >    ------
-> >    40417078     itlb.itlb_flush
-> >    234852566    tlb_flush.dtlb_thread
-> >    153192357    tlb_flush.stlb_any
-> >    119001107892 dTLB-load-misses
-> >    307921167    dTLB-store-misses
-> >    1355272118   iTLB-load-misses
-> >
-> >    TLB: 1364803    1303670    1333921    1349607
-> >         1356934    1354216    1332972    1342842
-> >         1350265    1316443    1355928    1360793
-> >         1298239    1326358    1343006    1340971
-> >         TLB shootdowns
-> >
-> >    AFTER
-> >    -----
-> >    3316495      itlb.itlb_flush
-> >    138912511    tlb_flush.dtlb_thread
-> >    115199341    tlb_flush.stlb_any
-> >    117610390021 dTLB-load-misses
-> >    198042233    dTLB-store-misses
-> >    840066984    iTLB-load-misses
-> >
-> >    TLB: 117257     119219     117178     115737
-> >         117967     118948     117508     116079
-> >         116962     117266     117320     117215
-> >         105808     103934     115672     117610
-> >         TLB shootdowns
-> >
-> > < measurement: user experience - runtime >
-> >
-> >    $ time XSBench -t 16 -p 50000000
-> >
-> >    BEFORE
-> >    ------
-> >    Threads:     16
-> >    Runtime:     968.783 seconds
-> >    Lookups:     1,700,000,000
-> >    Lookups/s:   1,754,778
-> >
-> >    15208.91s user 141.44s system 1564% cpu 16:20.98 total
-> >
-> >    AFTER
-> >    -----
-> >    Threads:     16
-> >    Runtime:     913.210 seconds
-> >    Lookups:     1,700,000,000
-> >    Lookups/s:   1,861,565
-> >
-> >    14351.69s user 138.23s system 1565% cpu 15:25.47 total
-> 
-> IIUC, the memory footprint will be larger with the patchset.  Do you
-> have data?
-
-No. The footprint is, I expect, same as vanilla with this patchset. I
-will share the data.
-
-Last time, since you pointed out that the footprint seemed to be larger
-with the previous patchset becasue it worked anyway based on deferring
-freeing folios.
-
-Which made me rework on it so as to avoid tweaking the original behavior
-of mm.  Instead, the current version of migrc let it go exactly same as
-it is with vanilla until the interesting folios exit from pcp or buddy,
-and do tlb flush if needed.
-
-	Byungchul
-
-> --
-> Best Regards,
-> Huang, Ying
