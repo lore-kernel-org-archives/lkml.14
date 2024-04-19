@@ -1,116 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047AA78276;
-	Fri, 19 Apr 2024 09:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0AD4D131;
+	Fri, 19 Apr 2024 09:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713517825; cv=none; b=Sl3fsseZhsucIGdqQjlry6HPdk5t6fr5sqaZizyl+x/erWHn3h57Dydrvi6gmVHH3QXfjhQ/1xZtYX6GxmbrtHFWSe6iI4JgyxRvX0OZwDtBRVgmb6ZyMB/Xn/AXwn4O9Kpj+g+uYoUOqcpRe0VtarOv65wtj28qatv4NotZE+A=
+	t=1713518043; cv=none; b=CnkRXhTbn7WZurG9Og0z1L70UCjU01Z332ZrvwGlbpTCAiLUiqg5Fr1WwWUKacnc/yfU7uhOAUhpPBTvyLRasH2exzGVrNXFbBiXhJvnIlrUDvnHT2ZMjOZecIKYX038VZbimToTE5bcE00UI56arEqocaegc+eSajVRjdUqDAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713517825; c=relaxed/simple;
-	bh=LZkmvma4B22MpUpSB/Kxjj7wTeNAjYu4yV5s+TYTD2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OAsNk/432sc7QyW7IT5rWxWFkYVXRDTfnszXMUDAzOhnEZQQLSjVzCIg1VO3xcNl4EE1x1ktcwup+/qxL0rUSkz6q//nphROcVsnZnJNP09hCCxOF94w32aqn/0kSKJ1TqfA67vwf4ZnQOBgthFLjspBLWyFyLBpD5/qV3m9uLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hgfJxwHz; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hgfJxwHz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713517824; x=1745053824;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LZkmvma4B22MpUpSB/Kxjj7wTeNAjYu4yV5s+TYTD2A=;
-  b=hgfJxwHzo06nvdMpusV51LNmlbqFIRXFMkWKhgsP4v45VH6EdCid1K0x
-   e2MiKbN5+Yv/R4vVzad2B7qFyR7ZTtIxzajfAlh86lDJ8ZkHlvXwucwqt
-   FX52W2b2Pf5iJZ66jcQfzZiyknyX4si0/hoWJWGbZIyrLCiWeMWYvzCi7
-   fHNdud8dd1DJPqj2oWDnCirzYnTKDx3QxFl8/TLL7/4oU0VS8tSVy46J0
-   SzFK7YBc4zLLqejgkz1q1J3OAaziz9ApPQvjGHT7GD8T/EPP1cvlkZwTI
-   v8ubnk0YsXzMKuVLOqk1wWjWnzM9X2X3dM+MXHNlAjSJc3ccMNqbDL1av
-   w==;
-X-CSE-ConnectionGUID: wBmgFU3tTpKlDp4iYxuCsg==
-X-CSE-MsgGUID: 6mIvrXiISg6n86kn62F/xw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="9268684"
-X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
-   d="scan'208";a="9268684"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 02:10:24 -0700
-X-CSE-ConnectionGUID: ErvI0qQtSZeexIE1DwlAhg==
-X-CSE-MsgGUID: /hFhtf6bQGaJ3kynhS+r9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
-   d="scan'208";a="27930136"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa003.jf.intel.com with ESMTP; 19 Apr 2024 02:10:21 -0700
-Date: Fri, 19 Apr 2024 17:05:06 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Colberg, Peter" <peter.colberg@intel.com>
-Cc: "Xu, Yilun" <yilun.xu@intel.com>,
-	"linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-	"mdf@kernel.org" <mdf@kernel.org>,
-	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
-	"Wu, Hao" <hao.wu@intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"russ.weight@linux.dev" <russ.weight@linux.dev>,
-	"Pagani, Marco" <marpagan@redhat.com>, "Rix, Tom" <trix@redhat.com>,
-	"matthew.gerlach@linux.intel.com" <matthew.gerlach@linux.intel.com>
-Subject: Re: [PATCH RESEND] fpga: dfl: omit unneeded casts of u64 values for
- dev_dbg()
-Message-ID: <ZiIzwjggxFmXvau8@yilunxu-OptiPlex-7050>
-References: <20240329000429.7493-1-peter.colberg@intel.com>
- <Zgt7fA/Jfks/iKYi@yilunxu-OptiPlex-7050>
- <61cf643fda9b983b8a78b9f66c46290becf4f537.camel@intel.com>
+	s=arc-20240116; t=1713518043; c=relaxed/simple;
+	bh=H1XCE8POymxb9O0nL575s1AZcXMw7/i6tvt14CsEffo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mprpwPp9mSsSHZX9kjKE/AP1wbkYhY0/vp13iZUHf2UTK/EiCQlEuzz8bX+TMz0IWnTxg4R2eGFEx6NEGkcGECKNeiC3KQ5l/v11eJ0CsyhXlPq88osUVbTVR9NfvU0CFmDK91nvtp9GcMXCVT8kmbbb5+5FCKptFAEpakD7c7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-61804067da0so18737837b3.0;
+        Fri, 19 Apr 2024 02:14:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713518040; x=1714122840;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9gVMY8E21Fl9ECgjygikdUcrBwHveHTBHkiJds8LbEk=;
+        b=IIbMmn4Dc1t1lTR5ZrUZfzqtgoV3XpmsRJZoq5uQfLpS8/G+alyayPgs6u56u9bzRN
+         IMw0PpnEOS2rz0mlG1MY0QaC/UrUui2vQ/4dLbjD1FCGaRVthpF2J0C0/1Yv3YAJC9Wf
+         vJh52/sj3De4c5/YLTB+1yp3M7/u6jAEmoekf23pP9MFPPeuHFc5dnzrbOn5PD7bZqqu
+         7ygpA3fhciZvp1b3WketftVHc6cabjedraZIl8Z7IlrgnyY+ySloBdi5tnREXYC+1fF2
+         C+5sS6TMCeMQiCmGfdtdDpVWuFywe/9RBeyP63iyxHAGlC0WwjwrbbDtZOhyr1TlIs+P
+         K/Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCUNPO9UDNE+eWBOtaaaW7mXbzPMeIUgKTkmjyOWKELNPnvRjs1aw1wkLVwzLGXF/zLeKeABzqNCx8TTfmv41Hcrsw4oTDeSC0u5eHCsXonr94qNWIh65lXKlOBVGQfNhBsERdeXA48=
+X-Gm-Message-State: AOJu0Yzlxa8tj+yQ8TgWmbszyIAYHACZgpjweoAhpUXYu7laTEPyNFzy
+	dM69gy/Zz+35JvkXBVSN99sfYgeZiIKxVmrTtzExBVNNt+YxhuqQxdNP7OR4
+X-Google-Smtp-Source: AGHT+IFEQJiC0JAJIwBOXvxzOJd8FBY8nlca64lUsWW/hoAZqj2pYbNtGfcuxfYUQKKbKpDLiXGvjw==
+X-Received: by 2002:a05:690c:c02:b0:61a:f127:34c9 with SMTP id cl2-20020a05690c0c0200b0061af12734c9mr1457465ywb.17.1713518040034;
+        Fri, 19 Apr 2024 02:14:00 -0700 (PDT)
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
+        by smtp.gmail.com with ESMTPSA id m3-20020a0de303000000b006152af6131dsm701484ywe.119.2024.04.19.02.13.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Apr 2024 02:13:59 -0700 (PDT)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-de45f3f092bso2224907276.0;
+        Fri, 19 Apr 2024 02:13:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXpcWiTyt/dIuBDgc5hcvgYB2Z3v8haBsRAk699AFdp6zatkvd8VvJXCrN5XfyE6i31IzOAzCpz8coVj1PyEv83hgfqwolPm5XawTp4LI0VLmCJXIN89kR6meTWkSlgxfXTTMiP6xE=
+X-Received: by 2002:a25:8185:0:b0:dd0:972b:d218 with SMTP id
+ p5-20020a258185000000b00dd0972bd218mr1282834ybk.41.1713518039110; Fri, 19 Apr
+ 2024 02:13:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <61cf643fda9b983b8a78b9f66c46290becf4f537.camel@intel.com>
+References: <20240419090259.39542-1-yang.lee@linux.alibaba.com>
+In-Reply-To: <20240419090259.39542-1-yang.lee@linux.alibaba.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 19 Apr 2024 11:13:46 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX-+32mM9pyh+RsH0oUrJrzvLi=x4OZ3MMy-_Xv_9_PKQ@mail.gmail.com>
+Message-ID: <CAMuHMdX-+32mM9pyh+RsH0oUrJrzvLi=x4OZ3MMy-_Xv_9_PKQ@mail.gmail.com>
+Subject: Re: [PATCH -next] dma: Add dev_id parameter description in request_dma_bycap
+To: Yang Li <yang.lee@linux.alibaba.com>
+Cc: ysato@users.sourceforge.jp, dalias@libc.org, glaubitz@physik.fu-berlin.de, 
+	linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 18, 2024 at 09:30:48PM +0000, Colberg, Peter wrote:
-> On Tue, 2024-04-02 at 11:29 +0800, Xu Yilun wrote:
-> > On Thu, Mar 28, 2024 at 08:04:29PM -0400, Peter Colberg wrote:
-> > > Omit unneeded casts of u64 values to unsigned long long for use with
-> > > printk() format specifier %llx. Unlike user space, the kernel defines
-> > > u64 as unsigned long long for all architectures; see commit 2a7930bd77fe
-> > > ("Documentation/printk-formats.txt: No casts needed for u64/s64").
-> > 
-> > The change is OK. But I suggest just delete the unnecessary dev_dbg()
-> > since now people normally don't want these "Hello, I'm here!" info.
-> 
-> How would you like me to proceed? Should I remove dev_dbg() in all DFL
+On Fri, Apr 19, 2024 at 11:03=E2=80=AFAM Yang Li <yang.lee@linux.alibaba.co=
+m> wrote:
+> This patch adds the missing description for the dev_id parameter in the
+> kernel documentation for the request_dma_bycap function.
+>
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
 
-I think do for all DFL would be enough. Usually you want something to
-follow up and do the related clean up in advance.
+Fixes: db9b99d461ddbbaa ("sh: dma-api channel capability extensions.")
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thanks,
-Yilun
+Gr{oetje,eeting}s,
 
-> modules? There are "Hello, I'm here!" in non-DFL FPGA modules, too.
-> 
-> $ rg --sort=path -c dev_dbg drivers/fpga/
-> drivers/fpga/altera-freeze-bridge.c:7
-> drivers/fpga/altera-pr-ip-core.c:1
-> drivers/fpga/dfl-afu-dma-region.c:7
-> drivers/fpga/dfl-afu-error.c:1
-> drivers/fpga/dfl-afu-main.c:8
-> drivers/fpga/dfl-fme-error.c:1
-> drivers/fpga/dfl-fme-main.c:3
-> drivers/fpga/dfl-fme-mgr.c:12
-> drivers/fpga/dfl-fme-perf.c:2
-> drivers/fpga/dfl-fme-pr.c:1
-> drivers/fpga/dfl-fme-region.c:1
-> drivers/fpga/dfl-n3000-nios.c:1
-> drivers/fpga/dfl-pci.c:3
-> drivers/fpga/dfl.c:4
-> drivers/fpga/fpga-bridge.c:4
-> drivers/fpga/fpga-region.c:3
-> drivers/fpga/socfpga-a10.c:2
-> drivers/fpga/stratix10-soc.c:4
-> 
-> Thanks,
-> Peter
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
