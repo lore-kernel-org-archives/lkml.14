@@ -1,100 +1,118 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684D5A23;
-	Fri, 19 Apr 2024 19:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4B764F
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 20:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713556651; cv=none; b=pozvm8iG8pMYRTgzG0eKm0hA+hMI+PWdhvXaXcxdvXD6AJSXwoobCgrM46rIT5m7PlrRwnp+HVTMO944IbL0Gfl7+ZL6b5sA3Z0vw/5N8C6dn0yeyYM3uQZsjrrLUIpA2IndDpn7IVHDqi6hW/JRHcRkRDFSKUin/5iFm+i88NM=
+	t=1713556841; cv=none; b=aMP1YTVz1I2VjpKyKHXfntSnFcpI1hhp6UUt6oLCmDYVkhHhbPrfJ68LGfkfFiHESqeyPoDoA8XiHfhM8q9loosBoFJWVv25xEb2Hx9/Rk0HeCAz94GZp0h79I1RLtAGoFi4+MYcqcTiY0EPpSowW/BCokc6fOdCFjuW5ZXQ5QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713556651; c=relaxed/simple;
-	bh=6Slvd9WP7U67G3VLT+aHOxvttY9ZS+l7ClciTen+Yuc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CCUbTZ31aeHj1RlhgEBhXwgENEsuZ3xa8D6Dp+zZt/9qEN7ClSMtUwtJG+UCi+UKarsDj3V6N17WLAiBrChuwAkjFYNW5cCv5jF4hHkaQLmn+yz573A9wn1HyWDNjgQ4vf79I+d4QtThLT7wi3h/gYVdJ8X7j2E0jNigKCaYbb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=CLbRyo9d; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="CLbRyo9d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1713556618; x=1714161418; i=markus.elfring@web.de;
-	bh=6Slvd9WP7U67G3VLT+aHOxvttY9ZS+l7ClciTen+Yuc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=CLbRyo9dzVNhQ3oFILxFVfdLxwMaG3MUlxRpvJgCTD1G9ABfqDyZAaKKlca6DWgF
-	 sUH440ZnySvzqm3nJtym8DEy0RYN0RnysfrYqmQFYQQ2FUNZak8cf43dZpbEU/bGr
-	 VmzjnhSdI2yhmn+UpUdL/4LwsthQOrGwY62rWUTijMI7POVNa0bug5XwMvdQJe61z
-	 rTOxqYltHt5eV/V6oKrIXMcAThdlRjAFsvSWgLhhOJ98EuDaafNAK1rFGqHQpvhZD
-	 tgeFAz2X3LrfV+/HFE1+8Fen7LoGUnt3hpY+0v9VMgPNzhWvqCrQ1IHBHLijk2X89
-	 D/+Re9p4sJeT8oC19w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MHVaf-1rtptb2Crx-00DV2a; Fri, 19
- Apr 2024 21:56:58 +0200
-Message-ID: <0460d898-689f-4e9a-bd2a-a812ca54acc4@web.de>
-Date: Fri, 19 Apr 2024 21:56:56 +0200
+	s=arc-20240116; t=1713556841; c=relaxed/simple;
+	bh=WARJLbLS+b0RckjFb5ncqqF0QnnCov/ywo2QpuhC1wk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M3NOb4HtOJBIKdh6M3UUebQxnv2VHrKzZXOOxWSwEbP8CyhdDyScz+ul6J9Y8+Kb5kDZeF8BezMPgr9Yna5EoyjUV5yax7nYR4ny2xV+ts5tGis52VUIe7W191QwZlfdY4ChAaiye+dC8XlbqhW2TvbdgyXmygtTt1RrewxzKuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rxuPE-0006xs-Nr; Fri, 19 Apr 2024 22:00:20 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rxuPD-00DCw7-N9; Fri, 19 Apr 2024 22:00:19 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rxuPD-004N20-21;
+	Fri, 19 Apr 2024 22:00:19 +0200
+Date: Fri, 19 Apr 2024 22:00:19 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Russell King <rmk+kernel@armlinux.org.uk>, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev, kernel test robot <lkp@intel.com>, 
+	kernel@pengutronix.de
+Subject: Re: [PATCH] clk: Provide !COMMON_CLK dummy for
+ devm_clk_rate_exclusive_get()
+Message-ID: <y7i7vwl7h2xop2ifh72vj5brtq7vd7tf72tst7k7r74plguhgn@cqs5fzplfk5i>
+References: <202403270305.ydvX9xq1-lkp@intel.com>
+ <20240327073310.520950-2-u.kleine-koenig@pengutronix.de>
+ <d95554f623f023a2f5499fa2f6f76567.sboyd@kernel.org>
+ <xfaf22rf6gnrxpinkciybsyk4dx2bfqgozv6udwymegtcgd26i@jq5be7fm5lhi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Bluetooth: btusb: medaitek: fix double free of skb in coredump
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Sean Wang <sean.wang@mediatek.com>, linux-bluetooth@vger.kernel.org,
- linux-mediatek@lists.infradead.org, kernel-janitors@vger.kernel.org
-Cc: Johan Hedberg <johan.hedberg@gmail.com>,
- Marcel Holtmann <marcel@holtmann.org>, LKML <linux-kernel@vger.kernel.org>,
- Sean Wang <sean.wang@kernel.org>, Chris Lu <chris.lu@mediatek.com>,
- Dan Carpenter <dan.carpenter@linaro.org>, Deren Wu <deren.wu@mediatek.com>,
- Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
- Manish Mandlik <mmandlik@google.com>, Miao-chen Chou <mcchou@chromium.org>,
- Michael Sun <michaelfsun@google.com>, shawnku@google.com,
- frankgor@google.com, jsiuda@google.com
-References: <da0859c4b24d314d9ff38179c26a58ee7e3f16d6.1713395895.git.sean.wang@kernel.org>
- <cb593f2a-7dbe-44aa-b9ff-7fc57a4bd70a@web.de>
- <CABBYNZL1=RyzuXcDpAwcXyOe_8Bh4gJtDzKdS55-3ZF4rZRj7A@mail.gmail.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <CABBYNZL1=RyzuXcDpAwcXyOe_8Bh4gJtDzKdS55-3ZF4rZRj7A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="teeq72q7xrfgagpx"
+Content-Disposition: inline
+In-Reply-To: <xfaf22rf6gnrxpinkciybsyk4dx2bfqgozv6udwymegtcgd26i@jq5be7fm5lhi>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+
+
+--teeq72q7xrfgagpx
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:S8WVsoPLtqYG/ykvrpdfXwxTb9GQ6ddC7R7zsOQbPfIOAPVg5bH
- cMPj7nuSOAH+vCBx5OH4wb42KGMA6DWS72RdGxaVQ6GogDsV6zx1u9KXKVPQ6WDqKqmppbs
- vxrwA7C9+GYDicbVt/kTg85dLhkoRSq0ycv2rJslHIS1PtxilV0j5WC27ds1+k8kIdd178e
- Uw04abQuIawH3E6PHXxXg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:0SfpuT7Zf8o=;uZUyp+Nr+hFB7lgbCA8xf5U6SOd
- G6jAFLKGPouMeLYW4ECJ9Nj3ptXypcKX5dsGcaY4cgMYcFcjmm1XlEuevFyYL99tscs8ucgsb
- 2TCitR49unAcRFalK8OpUepLM+sxcAp8D85ZpEeiQjzGsQ09JyVdC7K3bOOX9azTYS+NJLuTH
- 2QS0weenCJIYoUNbGo5ibW5MTm57SYaxyqTbbzPw03xkWt3Ocl5Ggl6GhNVhsusXSbuBZvK1D
- /edJ3mSUaeEwXQm+2slS9GfpYmCm4HQS/MCt8/1thcYEF7urQCd7pJNfYag4CpESUib3cwygn
- GE/kqPk41/7ldFc4gUhfLRce35yrIzXg9W44EfjQVkPsxYTdEBWxV68yshYOo+pfr6GVsTFbC
- h6mxd3WUJx3j7rZUIykxOLFxoVSFL2bTDPMdyhlstEV+IaxoW5fxKe4RCJKBmNi4qgxuHq6RA
- JqtZkeI80XrK5wiEb0KLHj/uapL9LgO/JTh8dVBNkRr0F+qnAnRtepTQpMODMIAEv+ovtVv5c
- kdqZJ7u/YqZflNTruCf63ZvkjsvDyel/8TqnZ496NZNXTft8Rb+zflWEzJgOOXmxACrI7kvoB
- 7FidVNYsshtC2l+ebPjq7MB7ubEzlRtbIn6J86VKKkV2ST6v/fYbABAV47XHi1fHLg1X+EzPm
- ekgotMOoGSVlHZet9dCO4ydT7+Vc/dmku7qn2wBEV9r+sL3eV3L1XepaoYD4Yw8avZBtzV3VF
- ttrwDx8L+s3sQWwPHOOHeNgLe6LhEmT0YtDfRmwxl2b4yr7U9KHv4jv92Y25a3sbysuYYRbf/
- NNcKcS6YOo/M7ZUFUzPuFUuc4XphAToefC6dayaYh+mzw=
 
->> I hope that a typo will be avoided in the subsystem specification
->> for the final commit.
->
-> Are you talking about medaitek
+Hello Stephen,
 
-Yes.
+On Fri, Apr 12, 2024 at 10:49:35PM +0200, Uwe Kleine-K=F6nig wrote:
+> On Thu, Mar 28, 2024 at 03:35:57PM -0700, Stephen Boyd wrote:
+> > Quoting Uwe Kleine-K=F6nig (2024-03-27 00:33:10)
+> > > To be able to compile drivers using devm_clk_rate_exclusive_get() also
+> > > on platforms without the common clk framework, add a dummy
+> > > implementation that does the same as clk_rate_exclusive_get() in that
+> > > case (i.e. nothing).
+> > >=20
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Closes: https://lore.kernel.org/oe-kbuild-all/202403270305.ydvX9xq1-l=
+kp@intel.com/
+> > > Fixes: b0cde62e4c54 ("clk: Add a devm variant of clk_rate_exclusive_g=
+et()")
+> > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > > ---
+> >=20
+> > Applied to clk-fixes
+>=20
+> I assume that means it will be sent to Linus before 6.9? That would be
+> great because I want to make use of this function in some drivers and
+> the build bots nag about my for-next branch that in some configurations
+> this function is missing.
 
-Do you prefer references for mediatek here?
+Gentle ping. I'd like to get the patches I intend to send to Linus for
+v6.10-rc1 into shape. To have these unmodified in my for-next branch for
+some time it would be great to know your plans for the clk-fixes branch.=20
+Alternatively: Can I expect the commit not to be changed any more and
+pull it into my pwm tree?
 
+Best regards
+Uwe
 
-> or is there another typo?
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-Not yet.
+--teeq72q7xrfgagpx
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Regards,
-Markus
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYizVIACgkQj4D7WH0S
+/k6SMwgAqHTm3+DCvXNfaGEaCzF14/5MgijejoWEJ/t2RGjvSkfA6etr71sI/ACJ
+Kv8TQ3zgf2DVrE/dyyqCoKU9OrJjADD6TV4S9rQ7gtJ1WJ8kYOEoRSlhzuVcDZQ/
+p96q1wUJQuNNnzyzFdCIlcoNAB3JM5KZDZvZFs39FrAOeYJyrqUIheT6OXQzKWJZ
+SODUmTfCWU7UkSHkTxNltRCJSG+LNXT0/KAJBA6PRHHjl/yIs1akB+IGbh/1aXgm
+wh8W5KbBjwwgkxm3+D2YVScpi+trFTuTvbwhUDVXYat/E9eqOkXaz1Qxf87KaC+Z
+B/F8TWsho0WjrDzcgnhNiFav/c2jaw==
+=Qor4
+-----END PGP SIGNATURE-----
+
+--teeq72q7xrfgagpx--
