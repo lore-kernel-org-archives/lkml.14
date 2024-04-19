@@ -1,98 +1,115 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B10127B75
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 13:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAD5126F11;
+	Fri, 19 Apr 2024 13:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713532821; cv=none; b=AIEMxE4cXNmYAstI8oH1n1SwScNMHMNTbFBXzbU+b133MAYxbJRXf4vIWJDuOTncQ4bz6i5uJmvJlwhok4Eh6wko6ngSUkjXQSqmWitAjugTp45hP877scao+ve1OVc2Vi7GB9wnhmKSmlvXVynsUsSxfo33WMmJjdliIWU5NME=
+	t=1713532859; cv=none; b=QRqjo3u/AbBUSLPl3RIyIhPxntX+86M9TQPGFTHOhgrEPQJvBjpX5hyoZ6iNFSpn5+IgGpuQV6crNZ7d9dd+9g6izJ9/j6HUeVP+P3anhaANJYJ/mnOLdx5xB125VeI3ZJZARSgsdgSAQgj6QSUR8/Qll4tN5BHxeZBfZOsks2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713532821; c=relaxed/simple;
-	bh=ukqNim2wR4zF3yUVwL5ebSYvcGgLz6CYpTrNBxxNrNU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zp6yN/vtAkbOOJe3TGtWSMe0ScoVJ8FcWcM4ICtXlGB8I8Y3Azfwnqt4OqLa1XL1YU1MgFH04JmlIX4CsvIXdJyfonVKqeki3sn12HWv1ow6BnNS6CXs99Se3P8WVlOvhEVYrEmOM1nNQJ/8/PlnzcmVaF8eIiTnNyEsABso4wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gyxpWJ7D; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713532859; c=relaxed/simple;
+	bh=9AoVEv+4aXGan7HuUBUV61T8VtGyQUi1t/MC18wWiQM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hnnC3Ay12EU9fuMsLU7YY31kxHbYpVeBXnY8ow/PWZNopnPsworogvAAltaSRFmFZ5Jn9MswliKIJa5acnCUfFQr/XfXBRiLuXgN+l601SEMI54EqLPkSirHnGgcmcXp3kjyNqNvcuuB4iQ9Wf3DO18vUJ7dsC8FpAphnIYh+ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eUyP2S1h; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gyxpWJ7D"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dc742543119so2202069276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 06:20:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713532819; x=1714137619; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ukqNim2wR4zF3yUVwL5ebSYvcGgLz6CYpTrNBxxNrNU=;
-        b=gyxpWJ7DQoONgUIXaVXhsNH+4a//S2TMpfKpHA8nOBSsAifOpd9YXMcffjOfiKsQzC
-         mUtuuhBBe/tauEnU2uRBZkwY8uw5l28Fp/MwFBYQ7VSv4DVK5yGJcfFEKb5aKCEBeTyE
-         P+TtlJCHE+zynCGlX6X5WyZlZyebnHSYyjRz3UChIjxSKz0pHf/G3pvo3CKGcdHzUYHZ
-         zs8AO1E6klEYdRYLJe9TPgsv8OTzW7eCczq8mhdMx14eYv1xEaFNf2jyDhWousRhbHTO
-         CnJHfcwm8eysEdPujMC/a2nDuRTMLric+lDJOllwkxuL4kEoc8pbj0TOd+oCIRnhbkjG
-         ZAUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713532819; x=1714137619;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ukqNim2wR4zF3yUVwL5ebSYvcGgLz6CYpTrNBxxNrNU=;
-        b=ZOx22u3CCsguNcM0oPiljTNwhb1uGy5S1KuyDR5+EAfo3ZEANI2E3dQhTHaR/jRMs6
-         E4bcvd2pH1p863TDcem5bgxO3sSJoRUBl8Z/u53SulKqHIagPdzFjhgGhgCCq4QI+h6O
-         WlQD37Adm0SVW7RQt3JqfC1VEESifOfyu5TCUVvofMMic1g3atNxX8OFazl0cXoGyYAB
-         /ykVC9/KOjcHLnJl/pBoyA1pAyHqIusYpBxOavPZ8b5o9Z3Futgc/6K/p3U45h/dhLHZ
-         VTUnng806J28jjxREWeu5IBjD+dhF1uXz+3R8fs9mp5bC0XdU+OidmnHWTGEfja9WI8i
-         6twg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3UQVQ4NBDGuHDpKj5injkDaiXN7TBcDUXfhOLi/mE+HJoupdBloXD3OgrWtUr2tcoaCuq59CzVXpxpxwijPO3m4qliix21IMBaltc
-X-Gm-Message-State: AOJu0Yy2D0E+pnmJ7SyCWplQFhNXj1UF1mA7nxHzrU6NCwkJDHQxglIx
-	8F3eKLMqA2NvuXHqQaLQtuBdo6brxB6s8/1fnML1qpDRDKQGUUV1cNB2CiAg/J9RPeQZrkvLHCq
-	hrTXTk79st7aYgj3NPJwputOMV/RFlCXmAr2xlQ==
-X-Google-Smtp-Source: AGHT+IEI8D+Rjptnk9iY+KnYSSwY8zcUnaRQkQica2+cfdRoT6xlKYqfZKkb6nl1YXf4Kgi4R3V+bGAEnQx8Wp+MmB0=
-X-Received: by 2002:a25:acdc:0:b0:dc7:4460:878a with SMTP id
- x28-20020a25acdc000000b00dc74460878amr1977072ybd.3.1713532818807; Fri, 19 Apr
- 2024 06:20:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eUyP2S1h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713532858; x=1745068858;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9AoVEv+4aXGan7HuUBUV61T8VtGyQUi1t/MC18wWiQM=;
+  b=eUyP2S1hVE3ApD2/fhOFBCjqlHaXhRwlEMcD2cYPHrUEAdGdxjXGk1CK
+   79zqmefhOafVPs7GO10vYBCdQxk6fNXd/ngz4i+2SVd8qjVpdNSccUWLQ
+   owCyrroIjrK+Q21eYtF1oyPAMb42Zyy7ldu1Px34AicmLhhvXRKbdrT5W
+   +rQ6YR3cnXsPohsDwIesq5/WFSFtyaFPk/eY5aMdxPuaWfpkckDrG/8nX
+   vZxCKnsBXxq0DIYi1dXw4ykA4JmICA+M5i7vxGGRpizMcsdLcmnC8O8ZA
+   k+AkXnUXUfzbgatawc4fBBW/uZJmpvuEkZIFf4TXeOQACTCM9NnaPgxee
+   g==;
+X-CSE-ConnectionGUID: HbiP/61BQ8yrtfbfW1AQuw==
+X-CSE-MsgGUID: KkSMrnRCS4uQDPw+PCr35w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="20524384"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="20524384"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 06:20:58 -0700
+X-CSE-ConnectionGUID: l1Ba9EzxSTqRx/qsd0wjTw==
+X-CSE-MsgGUID: sRof6H5HReWc4pDZ+Zd1fQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="27793667"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 06:20:57 -0700
+Received: from [10.212.13.6] (dojung-mobl.amr.corp.intel.com [10.212.13.6])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 9E8E8206DFDC;
+	Fri, 19 Apr 2024 06:20:54 -0700 (PDT)
+Message-ID: <7df3ff63-a421-42cc-bcaa-b0254ff6a0e8@linux.intel.com>
+Date: Fri, 19 Apr 2024 09:20:53 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240418-pinctrl-scmi-v11-0-499dca9864a7@nxp.com>
-In-Reply-To: <20240418-pinctrl-scmi-v11-0-499dca9864a7@nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 19 Apr 2024 15:20:08 +0200
-Message-ID: <CACRpkdbswetf2Tr6H216nxb8XKX8evyiWiVcsK5E=inqBUUVng@mail.gmail.com>
-Subject: Re: [PATCH v11 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Dhruva Gole <d-gole@ti.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Peng Fan <peng.fan@nxp.com>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>, 
-	Andy Shevchenko <andy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 13/16] perf parse-events: Improvements to modifier
+ parsing
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org,
+ Beeman Strong <beeman@rivosinc.com>
+References: <20240416061533.921723-1-irogers@google.com>
+ <20240416061533.921723-14-irogers@google.com>
+ <e8147f53-1930-44d8-abb8-fee460ec355f@linux.intel.com>
+ <CAP-5=fVXv_gsoq5L08gaEJvU1E8xoihc3-L4taA+bPHyOJfgqw@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fVXv_gsoq5L08gaEJvU1E8xoihc3-L4taA+bPHyOJfgqw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 18, 2024 at 3:24=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
-m> wrote:
 
-> Per Sudeep's reply in v10,
-> "This series looks good overall. Since it has pinctrl driver, I need Linu=
-s
-> to ack/agree to pick the whole series up or I can ack them so that Linus
-> can take the whole series. Either way it is fine for me."
->
-> v11 is just minor update per Andy to patch 4 and Andy's R-b applied.
->
-> Hope v11 is good for you to pick up.
->
-> Linus, would you ack or this patchset go through your tree?
 
-Since most of it is in firmware rather than pinctrl I suppose
-the best is to merge it in the firmware or SoC tree, so:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+On 2024-04-19 2:22 a.m., Ian Rogers wrote:
+>>> +             /* Simple modifiers copied to the evsel. */
+>>> +             if (mod.precise) {
+>>> +                     u8 precise = evsel->core.attr.precise_ip + mod.precise;
+>>> +                     /*
+>>> +                      * precise ip:
+>>> +                      *
+>>> +                      *  0 - SAMPLE_IP can have arbitrary skid
+>>> +                      *  1 - SAMPLE_IP must have constant skid
+>>> +                      *  2 - SAMPLE_IP requested to have 0 skid
+>>> +                      *  3 - SAMPLE_IP must have 0 skid
+>>> +                      *
+>>> +                      *  See also PERF_RECORD_MISC_EXACT_IP
+>>> +                      */
+>>> +                     if (precise > 3) {
+>> The pmu_max_precise() should return the max precise the current kernel
+>> supports. It checks the /sys/devices/cpu/caps/max_precise.
+>>
+>> I think we should use that value rather than hard code it to 3.
+> I'll add an extra patch to do that. I'm a bit concerned it may break
+> event parsing on platforms not supporting max_precise of 3.
 
-Yours,
-Linus Walleij
+The kernel already rejects the precise_ip > max_precise (using the same
+x86_pmu_max_precise()). It should be fine to apply the same logic in the
+tool.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/events/core.c#n566
+
+Will the extra patch be sent separately?
+
+Thanks,
+Kan
