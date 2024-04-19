@@ -1,87 +1,56 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1C523D55B;
-	Fri, 19 Apr 2024 10:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D23537FC;
+	Fri, 19 Apr 2024 10:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713522998; cv=none; b=U3cmIw64f4HnTpxPVlh8cqgb9aDKzg/3CGjE1GLDvceES+Sd2doud9CCpALnnU57RMb337Yy5K0W0sJgHjaaKACk4nLB3MNuLUeKTTFx3DoT8f+zLcXDgQ48shhHX03m2vuM2GELtSvcMd9X2464F2E9elFSaJRlnqaLZgWBGXY=
+	t=1713523035; cv=none; b=ljn0BOBWEFQyeaCA/dZ7vt2uNBkv78wos9q3AIhkhDr/3eJ1n12Cb6YZ48cJ0xymt1C2cl9RW53ltLDIkkqiwvgxJSXWTmGXCPuIi0DkM62gdVkhoNvcLrK95Z/dCHQArtyGWLuBzeNSBxe+Z1EFbzJt33dYJn1BWXMZ4X0UqN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713522998; c=relaxed/simple;
-	bh=YwuYrJiDpMf0xpFrF+ROIqaQPvA8R9O7wX9L8vXB5qY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AgO86g1tIKmZsddBcAqm8UKja9J8UMPoY/0MTpf5RotdGdakdcAGhblUBNTPqOXtdIwZezlXVdbE8km5LHzAZ/f1vikrBH8JfazG1ilSYvnntLV6Q1W9f5cZvv7ek9FrzxxqKPn0Y7I469RvXL+xeOzGxjxLHvPR+wE5qXtwP3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [112.20.112.218])
-	by gateway (Coremail) with SMTP id _____8DxJ+gxSSJmGcIpAA--.8776S3;
-	Fri, 19 Apr 2024 18:36:33 +0800 (CST)
-Received: from [192.168.100.8] (unknown [112.20.112.218])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx1xEvSSJmEyKAAA--.36198S3;
-	Fri, 19 Apr 2024 18:36:31 +0800 (CST)
-Message-ID: <b5d65679-a789-4cf9-b4ba-0db3c0886688@loongson.cn>
-Date: Fri, 19 Apr 2024 18:36:31 +0800
+	s=arc-20240116; t=1713523035; c=relaxed/simple;
+	bh=uUzlRYYg0wBzoCsmrKnn7rE6m+C4E5F+sA4ybRUnFss=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Blj80O2/E7vpPGtAXzS5btITuUZD0VkVUfRGMapcuVRBrbWozOWbfx50ZrgLfphC/82CBH0t3OBIDtOFgv0iTfv9yPQ35iMyTjNw2m/hIYDvtpu+0Z1gEnCGj4+9lJNga5ZMTgy2x9Sx156yTbNC16g3/tvbwbNnnCmehdx7k9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c01:4860:bdbf:c4be:ec53:8f46])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 46CC27E0105;
+	Fri, 19 Apr 2024 18:30:27 +0800 (CST)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Chukun Pan <amadeus@jmu.edu.cn>
+Subject: [PATCH v2 0/1] arm64: dts: rockchip: correct the model name for Radxa ROCK 3A
+Date: Fri, 19 Apr 2024 18:30:17 +0800
+Message-Id: <20240419103019.992586-1-amadeus@jmu.edu.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] docs/zh_CN: add process/cve Chinese translation
-To: Dongliang Mu <dzm91@hust.edu.cn>, Alex Shi <alexs@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240419020114.3391933-1-dzm91@hust.edu.cn>
-Content-Language: en-US
-From: Yanteng Si <siyanteng@loongson.cn>
-In-Reply-To: <20240419020114.3391933-1-dzm91@hust.edu.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bx1xEvSSJmEyKAAA--.36198S3
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrury7JrW5WF47Jw45WrW5CFX_yoWfWFb_A3
-	97JayqkrZ7tF1xtFW8Cr43JrW8ZF4xuw1DtFn0ka98GayI9FWDWa4Uuwn3urn0vFWSvFW5
-	Cr97uryfXFnI9osvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb3xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
-	JF1lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
-	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
-	CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
-	I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
-	8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
-	nUUI43ZEXa7IU8O18PUUUUU==
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZHUwdVh8fHU4fSB8aTRkfTlUTARMWGhIXJBQOD1
+	lXWRgSC1lBWUlPSx5BSBlIQUkYS0pBT0NNS0EZHxkdQRhPGR5BHhhOSEFDHU9NWVdZFhoPEhUdFF
+	lBWU9LSFVKSktISkNVSktLVUtZBg++
+X-HM-Tid: 0a8ef5e853cb03a2kunm46cc27e0105
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6M1E6Mww5OjMRFU9IC0osPw43
+	QgIKCU1VSlVKTEpITklJTUlMQkpPVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
+	Sx5BSBlIQUkYS0pBT0NNS0EZHxkdQRhPGR5BHhhOSEFDHU9NWVdZCAFZQUpJT0M3Bg++
 
+Changes in v2:
+  Collected Reviewed-by.
+  Remove changes to compatible.
 
-在 2024/4/19 10:01, Dongliang Mu 写道:
-> Translate process/cve.rst into Chinese and add it to
-> Documentation/translations/zh_CN directory.
->
-> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
-> ---
-> v1 -> v2: add a newline at then end of cve.rst.
->   .../translations/zh_CN/process/cve.rst        | 89 +++++++++++++++++++
->   .../translations/zh_CN/process/index.rst      |  1 +
->   2 files changed, 90 insertions(+)
->   create mode 100644 Documentation/translations/zh_CN/process/cve.rst
->
-When I apply your patch, git output:
-
-Applying: docs/zh_CN: add process/cve Chinese translation
-.git/rebase-apply/patch:32: trailing whitespace.
-所有分配给Linux内核的CVE列表都可以在linux-cve邮件列表的存档中找到，如
-warning: 1 line adds whitespace errors.
-
-checkpatch.pl also outputs associated noise.
-
-
-Thanks,
-
-Yanteng
+-- 
+2.25.1
 
