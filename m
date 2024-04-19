@@ -1,134 +1,192 @@
-Received: from HK2PR02CU002.outbound.protection.outlook.com (mail-eastasiaazon11010001.outbound.protection.outlook.com [52.101.128.1])
+Received: from smtp-out10.electric.net (smtp-out10.electric.net [185.38.180.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63E57C08B
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 10:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.128.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FAA74BEC;
+	Fri, 19 Apr 2024 10:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=185.38.180.33
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713521825; cv=fail; b=mbbgcVeFIB+gHcqkIawSVCwK+T5Qo7Iv+O+jgPY3nwbnKxutb1xKkilHtbVJ/NjcmMv9Wt3P+rMVfoekKIO7Nh4WwhvThja5WB5U9e4A8d84w1xlxfgmbtZYLQFLyNNZVsDp3LTrlBT00AzbhK4bOOYeadKIQr5HTzcB2fYI8EE=
+	t=1713522007; cv=fail; b=aiPSwnNNv8p0oUOsxZynjwl0voGLrzTDEZuL/1Z+xvhz0LTqf88qp6cZ2YD7OkLhOXnzuxLYLH0Pi9M/lkLXVOILV+GCT7Hk+n0twKRTYvZWUFgXqCXA4oDVFEInbEYIx5Xs1iakwSJ6xfXskVKL4M3RAvhMnTclqtns4NHnn+Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713521825; c=relaxed/simple;
-	bh=KxmqCOET2WCfdL3ocea3pFjpQxhSJvqV82rPCcHuu+I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Z2CuTIcPLMGOHRs7P0srkVEYC5j/iyMF0il6h61wGghzAKwHh9IZpGTBC270RSaSrwuSQpbycHvnvp6B29Wgi7VcWEsF2E7s4Pw/v4MLX/BdE1zoNF+OcT43DiVPotNLcsoiQZYDY17Zd10y3hvALGxk6tj7fBMT0/ttzg1EWNc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com; spf=pass smtp.mailfrom=oppo.com; dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b=Y/oX8hXO; arc=fail smtp.client-ip=52.101.128.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oppo.com
+	s=arc-20240116; t=1713522007; c=relaxed/simple;
+	bh=VqlaXMNZEHoCbY4qy+qN29pEzzqGowjSwaPXGMOBJWw=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=tjBQIC2F3s2gMVHNKDBimguFhPSBMkSuPZB5NRp+XYk+fQAnwHYd31pX0eck4F1R/awFTWiqyUeBupe7U5kLWIo2edOQLFY692O+7nIRwO8eW9Ly1Uw/+091AQUYq/RIZ7TAH0J797/8YPIW1JVNIsM9YsvsJVv4Fx8YrgPgmOs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svedala.se; spf=pass smtp.mailfrom=svedala.se; dkim=pass (1024-bit key) header.d=svedala.se header.i=@svedala.se header.b=oUFVGocY; dkim=pass (1024-bit key) header.d=svedala.se header.i=@svedala.se header.b=SeAmw4/d; arc=fail smtp.client-ip=185.38.180.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svedala.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svedala.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b="Y/oX8hXO"
+	dkim=pass (1024-bit key) header.d=svedala.se header.i=@svedala.se header.b="oUFVGocY";
+	dkim=pass (1024-bit key) header.d=svedala.se header.i=@svedala.se header.b="SeAmw4/d"
+Received: from 1rxl3U-0007Uf-W9 by out10d.electric.net with emc1-ok (Exim 4.96.1)
+	(envelope-from <Niclas.Soderlund@svedala.se>)
+	id 1rxl3X-00081O-TU;
+	Fri, 19 Apr 2024 03:01:19 -0700
+Received: by emcmailer; Fri, 19 Apr 2024 03:01:19 -0700
+Received: from [40.93.214.4] (helo=GVZP280CU001.outbound.protection.outlook.com)
+	by out10d.electric.net with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96.1)
+	(envelope-from <Niclas.Soderlund@svedala.se>)
+	id 1rxl3U-0007Uf-W9;
+	Fri, 19 Apr 2024 03:01:16 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AOACkC3902hvNtW9/SGo1MRborF9fdZhpHWdaRirmi/liAcPr9xPd+OwEpUh6oj5jpxHJBwJ2W2Hrt2orwl5BnBprhazZd9f6aFnsd7DR77ukjm9QsbN9VS1xIa/WGftzKMPFEKpAyAmHS8POTCm9QZiTnFrXGcGPqBkP7pqWKk10awA2NPBXUf6BIbzJgKh9/N4G8lj3PKZgBkBptY050UI6Zpa/WKBXRxmt1F4qwGZhHxhkqaNcTFyvJ3y6DVwZJUpX8smTDCS4lrMEZWHuBBrnHpdeJ8+E1o8T0+Mjf0LXr7BCT6m+NCOOGy05a45NYBz5aFWtY0ETXy7CRVi6g==
+ b=DcOErtMRuDnC77VQBt8vrw3yJXu6zgIKgaa/Zzg47SSEFgfbtvZXVMRKcDKcIHBMYEQ/MR+rsgMTt4l7mb21ZQKmZ7mBpJZ0QVLKSpkrJiN7BwdVH9eD3G26o9k5GFIi8ub7QG2EO2PR7YRJrTG/xL/rf1U9VJnRTgcsWsQ4OKaN52X0c893qg6rfXnpVWcKRnC2DHn6aH+YYZAbqtGc8HB12C9r/7aU4YwewVTfA4pzL8aBPxIi9UnAXODZADJYqv/I6WMAp7DTZMXSbfG4/0OdI1DVm2lOHw0GGDpCIu4ikD5cMdaAvaB0xhRuKSCd6R5fNzPZxzVXXDqXqZdpCA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=D9UxydkTj6zi7CrpC/MsY1FMJqTiZr603AVf+x5Q29Q=;
- b=OWeFG3ombaKdGw+iOWv6KgjLo09DOsP6FTqufmGdMrxwGkV07zxsL2MV5SfEy7PiUnFBxlgnKAS36ARaoDNPNn6k1KxC65yfD2LQHpUnv6E6cAZlZuyWmujkDeneDZ2nXOgcW/sxilsO7rtXZHll1tu57sHsrOuM1WQhivBPfaBH6Zx6ZK2cMk/9QX/MyN1V1tTEm9Fj6MzUAbFNbPwt+msJcQbXgKiMr06E+TlpbKxkWo6VCyFzxpgUOO0qfx1bblvwto9KpXXDeY6hAMv1zwaXv3VWBVffeWwwy2FJ7hEzJUKIbZ1svql+jEFiSWapAhMmZ3dw2GAcKS1/G4yDoA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 58.252.5.68) smtp.rcpttodomain=linux-foundation.org smtp.mailfrom=oppo.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=oppo.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oppo.com; s=selector1;
+ bh=VqlaXMNZEHoCbY4qy+qN29pEzzqGowjSwaPXGMOBJWw=;
+ b=CLM2Rmtns15Ek7EqA0QgRaLVihOVb1Lh4SH2hgU6nZqOP2dWtIFjvevn8tea3z1kyHAJaOqLFZKT5vq7SrBYiqfmsvwi0f5ALMljeR0RIPgoOxwe5rYctE7Kw7p0LiG1984fAK9/MBp1/J/FVfohYLwRa5PRoiSlirdEa61gJZsPBciG4ho6SRnnZzbyUB2LzOE4ptt9gU8jQf6bqifi7OOWca/1rVV08apfH4Ym69DcfUOfFRe9Hetlc1dalHeE0lQkQqPjmpAghQmHGPVOcZ+Hkqiypm+ZRjorOXV8NuZ5/NeQAy0hJlWxig3CL0r0C20eR5RMjpbGFoAx3lAMCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=svedala.se; dmarc=pass action=none header.from=svedala.se;
+ dkim=pass header.d=svedala.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svedala.se;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D9UxydkTj6zi7CrpC/MsY1FMJqTiZr603AVf+x5Q29Q=;
- b=Y/oX8hXOUK1mnodRb94zGZt/V39s94LUd1YvsQ+7jkTgoaFo/kFDWJWHV0HFKnoXlvMUMfaEQfojxZTQS2XjzzhYrNs/ZRtqnxipP7gi3dNMmGyuwEZ9747C2zOkR55kfch3Sucy9YXmOA7/WRFQvcTW7lCCZdsktMyDq/LmNvE=
-Received: from SGXP274CA0002.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::14) by
- TY0PR02MB5573.apcprd02.prod.outlook.com (2603:1096:400:1bb::10) with
+ bh=VqlaXMNZEHoCbY4qy+qN29pEzzqGowjSwaPXGMOBJWw=;
+ b=oUFVGocYXwgtuCzU9o4ank8tS+qzOVHciGFq8wBvw2JCEOFptsidqUDeN/7nwgXP3vt8RlveKpenneZcf/I22iZII0Y0idPfBfeB/MeYtJMK1nMJOTNr+xfMBo0nULbHTwtLsNjzoonDNWtroIdLZuFuB6X8iv7Yt/N2JiNQiY0=
+Received: from GVYP280MB0222.SWEP280.PROD.OUTLOOK.COM (2603:10a6:150:36::13)
+ by GV3P280MB0500.SWEP280.PROD.OUTLOOK.COM (2603:10a6:150:13::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.39; Fri, 19 Apr
- 2024 10:17:00 +0000
-Received: from SG2PEPF000B66D0.apcprd03.prod.outlook.com
- (2603:1096:4:b8:cafe::a) by SGXP274CA0002.outlook.office365.com
- (2603:1096:4:b8::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.29 via Frontend
- Transport; Fri, 19 Apr 2024 10:16:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 58.252.5.68)
- smtp.mailfrom=oppo.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=oppo.com;
-Received-SPF: Pass (protection.outlook.com: domain of oppo.com designates
- 58.252.5.68 as permitted sender) receiver=protection.outlook.com;
- client-ip=58.252.5.68; helo=mail.oppo.com; pr=C
-Received: from mail.oppo.com (58.252.5.68) by
- SG2PEPF000B66D0.mail.protection.outlook.com (10.167.240.26) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Fri, 19 Apr 2024 10:16:59 +0000
-Received: from PH80250894.adc.com (172.16.40.118) by mailappw31.adc.com
- (172.16.56.198) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 19 Apr
- 2024 18:16:58 +0800
-From: <hailong.liu@oppo.com>
-To: <akpm@linux-foundation.org>
-CC: <urezki@gmail.com>, <hch@infradead.org>, <lstoakes@gmail.com>,
-	<21cnbao@gmail.com>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	Hailong.Liu <hailong.liu@oppo.com>
-Subject: [RFC PATCH v2] mm/vmalloc: fix return value of vb_alloc if size is 0.
-Date: Fri, 19 Apr 2024 18:16:43 +0800
-Message-ID: <20240419101643.11534-1-hailong.liu@oppo.com>
-X-Mailer: git-send-email 2.34.1
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.43; Fri, 19 Apr
+ 2024 10:01:05 +0000
+Received: from GVYP280MB0222.SWEP280.PROD.OUTLOOK.COM
+ ([fe80::6ccb:d943:9ebc:1482]) by GVYP280MB0222.SWEP280.PROD.OUTLOOK.COM
+ ([fe80::6ccb:d943:9ebc:1482%3]) with mapi id 15.20.7472.044; Fri, 19 Apr 2024
+ 10:01:03 +0000
+From: =?iso-8859-1?Q?Niclas_S=F6derlund?= <Niclas.Soderlund@svedala.se>
+To: "sbinding@opensource.cirrus.com" <sbinding@opensource.cirrus.com>
+CC: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+	"patches@opensource.cirrus.com" <patches@opensource.cirrus.com>,
+	"perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>
+Subject: Re: [PATCH v1 0/7] Add support for various laptops using CS35L41 HDA
+ without _DSD
+Thread-Topic: [PATCH v1 0/7] Add support for various laptops using CS35L41 HDA
+ without _DSD
+Thread-Index: AQHakkBXmYrYyUl6I0ekb2R7QAGcYQ==
+Date: Fri, 19 Apr 2024 10:01:03 +0000
+Message-ID:
+ <GVYP280MB022216588A6BE8D2E213B8E1E20D2@GVYP280MB0222.SWEP280.PROD.OUTLOOK.COM>
+Accept-Language: sv-SE, en-US
+Content-Language: sv-SE
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=svedala.se;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: GVYP280MB0222:EE_|GV3P280MB0500:EE_
+x-ms-office365-filtering-correlation-id: 68c1708b-feaa-48c9-3128-08dc60579f6a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?aH40jOPRMUhyTZFAJMB63gwfrFAgn63k7yd0FBlnvhO7jR5kw2tdK/plIx?=
+ =?iso-8859-1?Q?wn+eWsNlnIbky9ZF2pRBID/6U3tTJyO6ggi4N3/BlOtiIWq+AH5Fnh77CO?=
+ =?iso-8859-1?Q?MXR+2XD9TxD7YcwZj+yX7zep1P6snDUaBc2yC1GfAGKPgkPRCySIJT/aKq?=
+ =?iso-8859-1?Q?Gf3rlHruHMvW9mL8avCUVx9/MIt0FUpajnMCvNuR7kevNZdDpZSep5G5US?=
+ =?iso-8859-1?Q?K0mJ3UmV6H5uRH69eZQ2KMvErbuFEkkaGNIxRyZIzdKl42znGAVPAGWdSQ?=
+ =?iso-8859-1?Q?fbHpknbhfwv3/ZcPD6wFvDEwU6ETZ7WkuBv+Kos2DGu3yC5xbBXtVPpqo1?=
+ =?iso-8859-1?Q?yYKSts/3MofWs87wI/ecctHpy8S+FEJpAyTCT+cqaLNmLfjO8r4TnmVXw4?=
+ =?iso-8859-1?Q?TY6heKU+nJCJbmhkOTIBt4AUjAiYqgP8CwkyP8hW6u/GWABFnkTNrXob6L?=
+ =?iso-8859-1?Q?7+Oe/nBlfPzqY0eFFb2iiFqTJDDlBdUqw8gKPd8qWyD/zR24k68uw1kw4Z?=
+ =?iso-8859-1?Q?OOOZK0wBvaVA9SnaNeN7aSLisFdSIf/QoEs2FE3DMlpiXe/bDHW8QasJmU?=
+ =?iso-8859-1?Q?lof2pkOdHSIUV+lt8OqlPz6MFklE+cCbHUM/EFbvjUuWfZPuj81zr0Z0iq?=
+ =?iso-8859-1?Q?qcIUQ+3r/GKPWCMM92X92oJvHG/szVMd6wIwIJ0b8voKv0h/sKxMi7ZtZ1?=
+ =?iso-8859-1?Q?tHUhW7BSZ3S2Ho2Z406RUqE/dePCEw6fVCibbK0azinbl7vnQZey3+7KJm?=
+ =?iso-8859-1?Q?nsTPmtsjC4EmNMBU1RwbH20+/d/RSq2Yz+qThtSGotWoE8jcO8ree6KSbS?=
+ =?iso-8859-1?Q?GgPYfzG1Xa6Tv/tUt9KkPwQe09vIeS+YVnIWdP61dprGuDjYsVv26bktd1?=
+ =?iso-8859-1?Q?0awwQTNajyLavWdqvwIhoh2HZkKAgZ9GQpcqaDdidncV5+ytLjiLrPdbxT?=
+ =?iso-8859-1?Q?rI6lYoObEUyg/3Z/TV09AiNkSpV7i+9yxvXESnLf1/99f0RhGKL3+h++VE?=
+ =?iso-8859-1?Q?HFM54Za3Iq/RAwKmwvIJUceLIY8St5yubonFNKIe8ZF5mPzPm7nZZ0PuE0?=
+ =?iso-8859-1?Q?uunzwikTI66FKenFi7pRMlb07/TpQDL39iRpOieQe01e2AY4tCA/fTFcwp?=
+ =?iso-8859-1?Q?2o0ONZ8ctHG8uup34kG7ucYhGDob92KLr1H/4qOmMIA7WmWVlnQ8io4W88?=
+ =?iso-8859-1?Q?81U5rn3N4P5qaewlrkRRI/NwjHlJIRMxRUty6L8AWBtKtsJbH73wqE90cz?=
+ =?iso-8859-1?Q?i4BouQ/KE1sjUGL3QwEv1ETK8t+0Rx30fdnNrgi7eSYSNYJ3/W1G8Y8v7u?=
+ =?iso-8859-1?Q?5vQlbO2hdO/UngXf3qeMnB02ZQdNisfELXjI4sDB6nrro2rvoR3Xy18w3j?=
+ =?iso-8859-1?Q?g5kRj6N9gWe4dMNHkFL/pYl/sPYB5oEg=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GVYP280MB0222.SWEP280.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?vBPbCKj973+QRyb1ZoDpLhFK8HiNepEifk45c2dBaGEyNGS2PFo4OuCoSK?=
+ =?iso-8859-1?Q?dgXUNUKzwn0fsBiHOgWSjsH5Aqn20idB10SMzd9OPC05mUCYwKQ6StGr1w?=
+ =?iso-8859-1?Q?Y8m4RrXmY8gPTDK2zm+zOUHTMK9wDYcElvflenglL4RrqsF+WJcGXRS9wM?=
+ =?iso-8859-1?Q?hVoMdZH82FDcvKbJpUB8NWSgf74TN+E8yzR0ZW/rxngJmZNLh4dX2l9Tw+?=
+ =?iso-8859-1?Q?Lz1rI/JHgCXxbFYd13zFTpXfxqgPPL32L3jwMNLdEcTV4xkYHTcB3jYW04?=
+ =?iso-8859-1?Q?L/vQnVALDIf5CXzaS+qlgKW0GnmDlv+udFGMAogqxxJCD78kP+6EtvFgxX?=
+ =?iso-8859-1?Q?8heJvqabgT+zaZkmlxFroFqoCrg35Ctui/Gxsnv0OPuXcv5n73R5/Rm8ve?=
+ =?iso-8859-1?Q?boU4whmuxlqB5VZYmX1AazaZWzerzjg6mipxLp01OpwHBkHstgaW0NViYI?=
+ =?iso-8859-1?Q?nTkgzWX5Su8FHj65VKcIcSe/RdtWowdbLvM9tWRP/7si/wfCk7lr2idhFL?=
+ =?iso-8859-1?Q?ZOkgRiYeo/L1ThKkWLdoLS0noYELIlimID1al5DjXt0QU9mD5cKUvOWeln?=
+ =?iso-8859-1?Q?R2uuL6qQRxhcy15gfaIALC3DaLTRp5JIiHRiOK+WC0ryqpzY/PCJHN6G6n?=
+ =?iso-8859-1?Q?NObXlGGd0U6N24bZ26sGYhdjgZuPJdSo9TZZeBEKDlrcq7R5ihCN3CSYyr?=
+ =?iso-8859-1?Q?kwG6cDZc99CQ7XhCjSkNcW0efmLlRhSFS+P3zRxEhWfyRR7layLimytBzX?=
+ =?iso-8859-1?Q?nX6vk++MEKiRN+XdcCtg2BCUrp7zwq9ag5fvTVmBGNKE0QRQZWFhGCjphH?=
+ =?iso-8859-1?Q?HIn+R/tqSBwU5SQzJKBFZC0D3W1z4LcnUMT0DIKsG6LnpGRUVYopyRj0qK?=
+ =?iso-8859-1?Q?iwqoudsvzMVz2fN0e6YTLpDoltFnPlJBkbUooMgzN3hBXMyt1Y3ZfKTSB8?=
+ =?iso-8859-1?Q?NePw3xO/JGro9gR0AWfVCExCijd+YGqCNa6/PaFXixsfQ2NzjrKZaIs7xY?=
+ =?iso-8859-1?Q?RW0GXdNXTaXKzmMni/bir57rv8iP1kLXZmZ2a0CdF0OvoIplOFlaeRoZvz?=
+ =?iso-8859-1?Q?+mlegN60oOc4VxAy7hoRPhOi5pZIsU5Vqc0dCKFQzYdKPef+xiXPaZ0GkZ?=
+ =?iso-8859-1?Q?XbceKvxJeNPWiRzvoCbKTU65E0zWp2Vm4Lc6/DcW3svkQnae1MAdhImUmC?=
+ =?iso-8859-1?Q?s5TOxzYlPEzQrDFspTybNrSbhAztyhgLIrryRcJX/qXiDQ26OahX8eHuOH?=
+ =?iso-8859-1?Q?9R2ccHlx0fQZtGUhr0h+MrJAkhz8zdTxHe0QxnxdX9QmNGVBXh5/E9GryZ?=
+ =?iso-8859-1?Q?eCegGXVwvPxD6U04UWNa6dvJYIpwXPo+U6jO8zVpx8811lCkp6E0+Q+7cK?=
+ =?iso-8859-1?Q?Rk2QGmSOiWApq3Ge5ouckDszNgSGGRkeS9XNk4V5JwCa2ITJl/Bc4fik52?=
+ =?iso-8859-1?Q?7Fq00anISCI1eEd0zR2giTJ7XgifUTy9ima+2YOLaCj7LpCRw8cA26d0Gq?=
+ =?iso-8859-1?Q?r/j7Uxwsow+GH43i884Ne59SNXpziUSgOjDvW1YsrAbMdOiNsU6l20gUg+?=
+ =?iso-8859-1?Q?9/z4LbHnLsllSjuEHh/NudQ1Hha3XbU1F+usWTTUreI3OQxyPA607lktpD?=
+ =?iso-8859-1?Q?Ec0SpjhRLE7GDW6Z7LwqBjC96yewNQ7PrJ?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: mailappw31.adc.com (172.16.56.198) To mailappw31.adc.com
- (172.16.56.198)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PEPF000B66D0:EE_|TY0PR02MB5573:EE_
-X-MS-Office365-Filtering-Correlation-Id: 86e89d7d-bab6-4983-eca3-08dc6059d96e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	zEFA+XK84OHm0ksvS1Oa8/5b0xjGncVptXwhoGyHw7pMvrBooR+tJ9ghOB2rrbpadBOmRQOLZS/qtLAWQ0ea3BjmvetQwAzTTyacJic1cmvHMLRAWK5pnFaHFnEjPtjtz78H/d7VY0UYyj04h7WXPy65GYOh7UkiVBa/vEb1uern8u5QS0AhMlTtf8jnzi9jDd2vuZQdfhmbY+7++Z+AD8OEuu/PhPYE+YU7MaRcn/CoCCCzAYH1G0oslXU5YPmsrg+AGlgIzpPr8Q70/MSmnufVTrhwqxM7vjhqTJvgSPlnI5HPP4KLRQN5v3vt/17uWEkleSXoXqMuFdGTdsx7TwmIZwut5Pkc4/c1aJHEX792+0ZgdaDkjzFqCc1xtnszBLPnmea9R88TXeBtSJSoIKwoHi5whv42pZdk1I/7xNMtIFOE32PX1to5k5kcRhXJF10LrTfMB6X0bqrlNEbiB3HjY9E+JcSfvCmbE227I2rQduUksOpUNSP0dr2qjKKR25S2EzHzUI643ZLJYhNXT1oqpTRuZb+splqCf8qfrDBBU+hAsXRI0dBzd4gt5+zwXF1tFvLj6CmZBG8q2U/0nt8YN8cGqHsZRNBQCpZqo4BBd2UyTm4XUuhAfzTPK0G2j1sNYALbH/yRaNbZ0CuK9x0A6y8EG3rJrlpRdKfpAUk2Jxke1expeiskcQVMmfYiF9r+1IJ2FmuA307tJaLRRyOKMS7X+ufXdTSq88pwRSmW/wBqy77o4D7NW9gknESC
-X-Forefront-Antispam-Report:
-	CIP:58.252.5.68;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.oppo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(36860700004)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: oppo.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 10:16:59.4955
+X-OriginatorOrg: svedala.se
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: GVYP280MB0222.SWEP280.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68c1708b-feaa-48c9-3128-08dc60579f6a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2024 10:01:03.2455
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86e89d7d-bab6-4983-eca3-08dc6059d96e
-X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f1905eb1-c353-41c5-9516-62b4a54b5ee6;Ip=[58.252.5.68];Helo=[mail.oppo.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG2PEPF000B66D0.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR02MB5573
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 2a43f767-6833-455f-b87d-61ec9dc036cc
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HGueVQ/6gJNahzuieGMwspfmSo7iIGv4K0keZOxjAEmRAzDYgN84t7VUETVSKdSHL0tGT+Uq0y6FwIiFIoF6akYuqzi1AszYekdo6KaFOyQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV3P280MB0500
+X-Outbound-IP: 40.93.214.4
+X-Env-From: Niclas.Soderlund@svedala.se
+X-Proto: esmtps
+X-Revdns: mail-swedencentralazlp17011004.outbound.protection.outlook.com
+X-HELO: GVZP280CU001.outbound.protection.outlook.com
+X-TLS: TLS1.2:ECDHE-RSA-AES256-GCM-SHA384:256
+X-Authenticated_ID: 
+X-VIPRE-Scanners:virus_clamav;virus_bd;
+X-PolicySMART: 32514092, 30573092, 18988237
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=svedala.se; s=mailanyone20190125;h=MIME-Version:Message-ID:Date:To:From; bh=VqlaXMNZEHoCbY4qy+qN29pEzzqGowjSwaPXGMOBJWw=;b=SeAmw4/dVzTGy9ddM21hHtjGifpA4p9C42slI99T3tbgeQKno3CZF/VtjA2T7e0vqR4OeP4nnWGMKwunFFm13sq1zmnuQjmWoVmslwwuEaTUMs7G8qtXQ2o6fREm2EgjEQO+ePObRBDINPoJXJQm9hZyRaUufrJZZahNuA6/qIo=;
+X-PolicySMART: 32514092, 30573092, 18988237
+X-PolicySMART: 32514092, 30573092, 18988237
+X-PolicySMART: 32514092, 30573092, 18988237
+X-PolicySMART: 32514092, 30573092, 18988237
+X-PolicySMART: 32514092, 30573092, 18988237
+X-PolicySMART: 32514092, 30573092, 18988237
+X-PolicySMART: 32514092, 30573092, 18988237
 
-From: "Hailong.Liu" <hailong.liu@oppo.com>
-
-vm_map_ram check return value of vb_alloc by IS_ERR. if
-vm_map_ram(page, 0, 0) , vb_alloc(0, GFP_KERNEL) would return NULL
-which cause kernel panic by vmap_pages_range_noflush。fix this by
-return ERR_PTR(-EINVAL) if size is 0.
-
-Signed-off-by: Hailong.Liu <hailong.liu@oppo.com>
----
-Changes since v1 [1]:
-- Return ERR_PTR(-EINVAL) or not check IS_ERR_OR_NULL
-
-BTW,  Barry suggests me that if count is 0, return directly, in my
-opinion, change return value is more resonable.
-
-[1] https://lore.kernel.org/all/84d7cd03-1cf8-401a-8edf-2524db0bd6d5@oppo.com/
-
- mm/vmalloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index a3fedb3ee0db..c430a999805b 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2173,7 +2173,7 @@ static void *vb_alloc(unsigned long size, gfp_t gfp_mask)
- 		 * get_order(0) returns funny result. Just warn and terminate
- 		 * early.
- 		 */
--		return NULL;
-+		return ERR_PTR(-EINVAL);
- 	}
- 	order = get_order(size);
-
---
-2.34.1
-
+=0A=
+Hi,=0A=
+=0A=
+amazingly high level of laymanship here and equally high level of dispear. =
+But model after model is added to fix the problem with speakers not working=
+, but nowhere is my model seen. I have the Lenovo 13X G2 model and even at =
+kernel 6.8.7 my speakers still doesnt work.=0A=
+=0A=
+Where can I add a request to also include this model in the patches, so I h=
+ave a hope of having the speakers start working?=0A=
+=0A=
+I do apologise in advance but it would be a huge loss if this laptop is not=
+ appended as being one of the models being fixed.=0A=
+=0A=
+Mvh, Niclas S=F6derlund=0A=
+=0A=
+=0A=
