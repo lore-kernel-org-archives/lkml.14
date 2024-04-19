@@ -1,166 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2055.outbound.protection.outlook.com [40.107.7.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410CE8004B;
-	Fri, 19 Apr 2024 11:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC258004B;
+	Fri, 19 Apr 2024 11:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713524569; cv=fail; b=qo3BfVhpthrntBhBdVNWUzQL3ntXvX+w6Hibi8RMuNFpqf9wbz+SbUv2+mdCAm0/lyCuxQ1Y3kPDN6fjMtPPePJw5s3wZ4VfLjPaWFLVwmRSXAxiNHWPmtgzueiSuTBeDz3Ka1YL+lQZ2dwsMX0ndhgaZ8nu6DRq2cVzGkjV1DQ=
+	t=1713524585; cv=fail; b=GwLdrzZnPUWUJ5qwEn/Y9rhWR14HNe8tZD8ZP+MiuoFs7Ockgt9WnnJuFKniTzVgRmwBhLsIdmxFfdurQvp1ik5ZRDb/fzx6VWMD2ObhKRHAFtMu1Oe6kRwm1xoqpYdC2vTPPXsfeeuj9tvZmQh/UFUQeTsjyJDc2KbDCYP/Tmk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713524569; c=relaxed/simple;
-	bh=21NuqLKztBTqn8wlxcqiwqAQYb7yLyALLYUi47Ae9dM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=K/+UAbS2D2lF5BAm9uxTS9C5RcztbRWGUWmr8gDR+cNYj77g3NCjwAAYUnxebk9tWmyHCdEJym0VU3HFIm7Id1H+jgBvfNAUBchB3jR1M+sunwEVd0wVvkXaSEIIaNhD4mcUEz+E5wLP3HPzy/PoGP9r1WeTsnDCvAIGk23PWEE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QyxaNGkZ; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713524585; c=relaxed/simple;
+	bh=1/d4ajeHnpyub1f35GljZZB4tbyNXNHRkJDH3/RegVc=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=U6pJvr7SV+y9GHw9qs7Purg/42hXe8r+7O92ibM7Y+UCitOewmLW0etQh+hFC955ZQjoi0uKpv6thRZ4S3duausqnNa0lcIQTs62a4ptS0GLg+bvWf+V0B0L5YLDjWyZZRvZat1+sw2/p/RMWukqNzV9oNcNvAX+KpJHR8QNiEg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=cPN6Bvv6; arc=fail smtp.client-ip=40.107.7.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QyxaNGkZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713524567; x=1745060567;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=21NuqLKztBTqn8wlxcqiwqAQYb7yLyALLYUi47Ae9dM=;
-  b=QyxaNGkZ/pprgoMzwviLLTx18pc3xru3Fih/hkq/NAFTVfgNVPTmQH6o
-   6mFdmj/ZxeD7qiLnJOKWpmraH71y/J1l8VIu0vchqvwoNPpUnbxZ5liLG
-   vLtyepHvZp5Fn40nn+4C3ojsd5HgeTBl1vBW5Cw378rWqDys8G1P533Jt
-   eV/Kl8pOqgXiJujQXss7VUAiysRROLQloIyzEXMdCGY5dXSyE0D6439Pf
-   cGi6TYEgsdnJxVhMLUOEeoqgHHPX6+hzwvU1cEVzpeZcoL1f1K5UGd/YP
-   xygysBKEYfARS4br+TXqWXxAAjLxXxJMVaQWkRCCKYSmDABXPR0PL5SUO
-   g==;
-X-CSE-ConnectionGUID: SVLiSMcOT8yAcnQfUVZ76A==
-X-CSE-MsgGUID: S4qS9FttTiuVJDuLg7wYng==
-X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="19683809"
-X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
-   d="scan'208";a="19683809"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 04:02:46 -0700
-X-CSE-ConnectionGUID: CTt5he5yQQWieW7PRi+daw==
-X-CSE-MsgGUID: nuuYljVYRq60KwtmmK8xSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
-   d="scan'208";a="54218497"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Apr 2024 04:02:47 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 19 Apr 2024 04:02:45 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 19 Apr 2024 04:02:45 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 19 Apr 2024 04:02:45 -0700
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="cPN6Bvv6"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Cqov/vnB+PiTTYgumVWTN37rDbvA9tpnhYO2erbuqJexUybm8CuizNYYmqSYodBORd16OvkA1Z+Ke8018k/9Ndu4UxKf1ZodAPlBaXPE9cVXIuYk7BhFIVUtizY8py1DdRqM/htquqEwZ8dQ1s7N1z3W/7USB15Oq5YlEhUquzhCdeecWtMNBeinRozc3G9d1HjZMH6y8CJEproLZU25yJxsOi4ntZXT7ZiNZ0poLytJTLd2PjMxK0ppCVULH4os+c5noS/H1z9+pMyfOkvFb6FsXyk/MeezbGuiKrnoyPyhqH7DnIYGPcPoKEGzToTm4l8z8/uNrbKtuSmYQBJRXA==
+ b=e5rprDiNbQT+7PSfz99lve6mGnPzsyfFofsKVU3zPen8u69Lc7q/BbGvt/LX2gg/wxiRk3JSplf0GskDlPkmSVqjLOjz7KmTgNxIItGMIXnaG9yxUZPoHHhiPEj+fkVwAkfQBYuQTgYiPJdsmMyXFoXcBYUg084fk/IZeBFpgYIkL6OVUjtIz0rPVpNwdmnrKGIpNtpq31IT5HOVEdnHvtJBHdh7fqVQNUd5hk5uXWxTJwgUEde8b+CUBhg9QW4G9cntKvIQ6DbZu4Kcv+DIw31lLAB/NxfGQ228w5SdaN1RYfFY37ejLU7xaTUmKYg322TQ4OoBkuYeGdosLqPLFg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=21NuqLKztBTqn8wlxcqiwqAQYb7yLyALLYUi47Ae9dM=;
- b=PlO2+FGGBZ1oWPxSwDtMq9ZiA278fVupZeujMDQDUrvdy9+uMR1ndBQDGI3E6lxo8ohHwBEegAQWd3b8kG7JyrlA5Wk9wEsoRN4dcdaolXowg/zbujVP9moHsSbfeHCo5PDyVIb2FFUqzrFBfzq3kuJ2pyR6BmtLaY0La5siCuZSDkno9BnxFthr5cG/eEID5kAtOleSb+7BzP69QS5Z60vgaQ/WiAXfI6o1WPDY8/xHoeKCigoTiFRaKLQ24R2ntzP4pYOVvROkpqfZxU/9W7jrpJ0no3W7U/w1sj0Gnv0QJZyZaMXG5KYDxMsUGunZA6YHavZSNcu0Bw3D9dDwAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
- by PH8PR11MB6832.namprd11.prod.outlook.com (2603:10b6:510:22c::8) with
+ bh=PAMZVekFpfoYwUlZO4uuWRrSi2Qj6dwaFSiO9POZdSI=;
+ b=DmCwv+QEFAFeBEi1uVDY0mDEKeyV9pN7hcuiI2kRr8+6XSqnUjLcLXyGzxh5otPdMT5M8f4V7EwtbSzQyJ+IIjUA6oSqBXq+rr5NDLOJVdtoGMBJc6mbiGsdCGlI0ZoSuEhY+vpBBydnwlZcPagOsskVohDTOyvZQzpg7voXCSfavhFmeDrLYcmn791dPKzM9+1aFbhTB58CwaPorZ/VCZu1zmy9957po4oKYsQyghM57B4pNhs5r3XqPqN4gF/KhFG38am530zp+g3+LOPCQvv/tQuyuHwZCZgydGYoxsRj2Sqq/LSypcqM3256Hy+fPIbobezdUehNzsA6nAy2Gg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PAMZVekFpfoYwUlZO4uuWRrSi2Qj6dwaFSiO9POZdSI=;
+ b=cPN6Bvv68TdriBBCgP1Q19gUp21/VfZ8rmiRvYIRbPidZk0pkvZSIIfDYHj1y9ykibgUQbh6BJNyRK1BWkhd9okip1lOhTI1Zuv6K3DgDPtbp8u3eYHMTROPTtvyPXONvQ2VzZiFeWTnalxiDPDzowkpxrGnBM763VUYu3P440I=
+Received: from DU2P251CA0019.EURP251.PROD.OUTLOOK.COM (2603:10a6:10:230::26)
+ by GV2PR02MB8601.eurprd02.prod.outlook.com (2603:10a6:150:75::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Fri, 19 Apr
- 2024 11:02:43 +0000
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::5135:2255:52ba:c64e]) by CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::5135:2255:52ba:c64e%4]) with mapi id 15.20.7519.010; Fri, 19 Apr 2024
- 11:02:43 +0000
-Date: Fri, 19 Apr 2024 19:02:32 +0800
-From: Chao Gao <chao.gao@intel.com>
-To: Xin Li <xin3.li@intel.com>
-CC: <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<seanjc@google.com>, <pbonzini@redhat.com>, <corbet@lwn.net>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-	<shuah@kernel.org>, <vkuznets@redhat.com>, <peterz@infradead.org>,
-	<ravi.v.shankar@intel.com>, <xin@zytor.com>
-Subject: Re: [PATCH v2 06/25] KVM: VMX: Defer enabling FRED MSRs save/load
- until after set CPUID
-Message-ID: <ZiJPSCO+U7iLWiuu@chao-email>
-References: <20240207172646.3981-1-xin3.li@intel.com>
- <20240207172646.3981-7-xin3.li@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240207172646.3981-7-xin3.li@intel.com>
-X-ClientProxiedBy: SG2PR04CA0180.apcprd04.prod.outlook.com
- (2603:1096:4:14::18) To CH3PR11MB8660.namprd11.prod.outlook.com
- (2603:10b6:610:1ce::13)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.39; Fri, 19 Apr
+ 2024 11:02:58 +0000
+Received: from DB5PEPF00014B9E.eurprd02.prod.outlook.com
+ (2603:10a6:10:230:cafe::aa) by DU2P251CA0019.outlook.office365.com
+ (2603:10a6:10:230::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.30 via Frontend
+ Transport; Fri, 19 Apr 2024 11:02:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ DB5PEPF00014B9E.mail.protection.outlook.com (10.167.8.171) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7452.22 via Frontend Transport; Fri, 19 Apr 2024 11:02:56 +0000
+Received: from pc52311-2249 (10.0.5.60) by se-mail01w.axis.com (10.20.40.7)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 19 Apr
+ 2024 13:02:56 +0200
+From: Waqar Hameed <waqar.hameed@axis.com>
+To: <alexandre.belloni@bootlin.com>
+CC: <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] rtc: rx8111: demote warnings to debug level
+In-Reply-To: <20240417191937.33790-1-alexandre.belloni@bootlin.com> (alexandre
+	belloni's message of "Wed, 17 Apr 2024 21:19:35 +0200")
+References: <20240417191937.33790-1-alexandre.belloni@bootlin.com>
+User-Agent: a.out
+Date: Fri, 19 Apr 2024 13:02:55 +0200
+Message-ID: <pndsezhmx7k.fsf@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
+X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail01w.axis.com
+ (10.20.40.7)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|PH8PR11MB6832:EE_
-X-MS-Office365-Filtering-Correlation-Id: e6cb965b-1408-4685-2054-08dc60603cf0
+X-MS-TrafficTypeDiagnostic: DB5PEPF00014B9E:EE_|GV2PR02MB8601:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4d950649-ee1c-4bd8-3840-08dc606044c1
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Rv4Z9HEX9wtmBUiedyPIB8cpZJJS80Yf8nBL6wdph+6Z1rr/ehJrLcW3iZaNDnr3PlBv4dqDsyS8RYi27dgCmw3KiKtOpm3iktLqEO9tIUVUSDa9R6bHpSLB5wV5CA2q/D1pSlrBx/ZJwF/QGrPZtNoKHz/zcnuzG36bsTvGrUgNiynXQ6Qm4UXyX8bXs8TcgmDFOoj8LWgrKLIatn3CdVj8kU7hGgnB6mtSF1jf6fsgvJdNKldiMBziyYrKX+mnNbIKLt1gIVR7cKs/KN675eMWIdN42+LOrKfr470B2oNZZ7hjXgCHtD3xWww43X1DS8+Kgs8SWPPNNHdrp/YN15slRaq61OH44+STxJhVTt/4t2MT7OTF3UoZ9Iqjit6ag5zzEXcahEhqG7wOkN85E/ahnIxR8c0zGXxY2Y/ld6jvc2WXgU6BDZJF9PNaIuhDiQzeRM2p8KBqQh4gT4AggBWFeIYUxJOmIFhH/XHfmXBUjnsRBnH8OsmAgyQbXEp3iipxY3qIqBMJ+bVD7D/pHH9TavV9tcmGx3ev3dRun7T1hlm9Sp9mZ/hJIJRCMgl5TUtPQ6Y9EYR0uha1k6D+9t7sgY2l6ecK/0hzRT/5gNQMYjfTeaaGLa8COWBtJBMED0Qphun8o52WEEX4zVA2OAQOc7w8HkYe5aoDW/XJ7NA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(7416005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2La3TbQyTlfJf1ZK+p/xB4zNJ2LbGluN4sGtYEQhQLWl35CmNhCZ5Bkyqm2t?=
- =?us-ascii?Q?x63imsgdMXPqccJQf2P65u2vj21+7iONJGuIgi8p5v+R2I/Z+KTq6YsdfHID?=
- =?us-ascii?Q?f2/zcqgIuiixS++xBhmQaCJELTekEdEBVmtzT3oEDTimbBlpNWxIz4vkcRcr?=
- =?us-ascii?Q?4Ls3yz/9XMNioFWoaAiVHTOLakcOawb1S2vmZWiTCCamZePca/ukyb6admrr?=
- =?us-ascii?Q?r3sFlh8cGieAo99qez1xz3+5IuCIfsh3SRIhOW6qMABvrOFq8yEVfhpCXmdm?=
- =?us-ascii?Q?aCSbE+fBuUSuHHWJEDiIh+y3WAApoYu1EtI9pGnrLNP0GV5v4W1ucjRYi/Uh?=
- =?us-ascii?Q?2IcfdKbIwtPh2RMl4apM1Eba/0NwaAAaWBAtPVXkD9ijrfSKt+WENLDrxNvm?=
- =?us-ascii?Q?jA88QOc3LWGxE/5yINHi3h+HNs0whbCq8ivSt2+o/Fxy/rakZ0qISK7yCPAl?=
- =?us-ascii?Q?13/RnYub234Tvybw1D5K9y947xfSJGNIcSYte6I/h1gyA4LmCZZaOSQ0egG0?=
- =?us-ascii?Q?2fn1utGI54WfbbFUNy4Zy10gA2sWp/tT0VXbunrtP8whr7TeBtzP5up7HLLu?=
- =?us-ascii?Q?AofRL/H4OtWmLz2pN4oIVqn9JySNDhwgLhXZbNGd+XY3+SZ5YfXHQho1GmOu?=
- =?us-ascii?Q?tw4YOecBeJYa6jJASq5lWIUjR/zF/SlnKlNbRAEjkvbCeUSAWZCqNaFY/5sL?=
- =?us-ascii?Q?QhX4v+nbD8YeA+q4I/1czg6pZiZC2hUMlSvR/ApsX3b8gJyYy4wq0Sjaf2OX?=
- =?us-ascii?Q?waBBUKWwNdVBnqIEVKA7wZhMm2eVvbvrxMmN9TR7GAi/bcygb69K5TYVLS8Y?=
- =?us-ascii?Q?SGanN6+10Xdpmco/P7Ai7tGGuJjv/VN/1ar2VM1qsFU+zh+VFF4PdVbx32KC?=
- =?us-ascii?Q?5yTmZ57hh7e5m72VPEKT85G30JiD7xERu3Kdw5NLgwosNlKhruAp4dlom+SU?=
- =?us-ascii?Q?k8I2dNlJH13YAppx95aF97WG8XSCenhvOZsYRGIBgpfp/3j+utDw0677FLvx?=
- =?us-ascii?Q?Ccsq+EwGg5KLtXBbXAXGQPlxuwvE6n0E1pJFSTkspesfS5C6qPR25BOvYq8x?=
- =?us-ascii?Q?xdcbxFuJ+48MYqCbUcd55CGExMmyLU8f6f7zF3PatpXc/aM5wLoDMEeJfqpq?=
- =?us-ascii?Q?+F6WhB8tsJTKFflZvQw1Q+ayR7qdP58/QlEcfYmlPY4b8HyvAUPZS7zpayiv?=
- =?us-ascii?Q?7et8Szm6cClI2RIiH2UbvE1CjgW3Q+7bMvoVCQkfRIy9aFWD1150RmmD4KT1?=
- =?us-ascii?Q?qpEi/sitXWSvpi5ESMkBZp/4KgwzWkLgjDEHbk39PiU70PkEkBlfuup12o/9?=
- =?us-ascii?Q?1WWBejPtNhfgmNJ+Zo5KXGXgHWz6AJOTTQyb7ujE+1jL4FeiJSo4s9Y03tod?=
- =?us-ascii?Q?0Usb0TpCDMVY46VgXuySWaN4O+izikfmvqtV4H1I7n1FKOnJZtrO4pqufzPi?=
- =?us-ascii?Q?abWZtbHPOX1VRmhYqSuGbhD3eo42xhqitZtfzOZ2ssq9s9pD8fAZjf6dPT0X?=
- =?us-ascii?Q?Cxo+34nZbkFp45GtGKZpVS7DWTJ685TIzOxSFZaummYKYSqJJzYMAiOLTDo2?=
- =?us-ascii?Q?1h99DAKqdEepwrueljKsmdW+v3h7yP4+YxyvVFVO?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6cb965b-1408-4685-2054-08dc60603cf0
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 11:02:43.6402
+X-Microsoft-Antispam-Message-Info:
+	ChbaShvPbfP2HcCQ6OZzfJ8nSiUUviHsX/IWcSJg/7ArWlzcaKpv1y3FoHxikyXB9QUVkUgDIBvvHlD3B2M+l0TdTPCexlioP6x858+uLBYr0oylh3KfUdHZszz+436RHvQ/0+LhT6dKyy+ZrQSM/reClIHC+8SGahsoT941bZiUq+QThQjqjBawWE/nN+2kcRrUMmIh2Xs1RBAzMWBfTwaCwNXrsfGJIj0bGtbU7q2YkpY2ack8UzR2E9geTz2A1UrH6aBzPUbtPp8WI3N7vIFZ6++RyuyXLXF77ueghou03Y4AARV9f0QE+BvKlcjfxNWpBlAzJpWfOmiIsMZdJRdhH2oIJq6coR8sP0/3TZCQJuvRzljfRVe1xZYPeSKtju5fQ7FoieT3af5QJvWeJB82Fya0iWmTNpvJunFpuIjqEcILiZscjO+5uWrPzoi4zTI7gPp8gixoOQHwAfSCEVLVs7HJiyWRoSStu/YgJjJGhHNkN2uHGgYrP5wWdfppo1N8Nerz1H5mt5f0Ykrg+aBjHFsLcq1fhQ2mzF6JufZZciCKMqgPnAJ0RbL13bDYmPQzs5lQycvFxDAz1ejyPNJufLPeXzZJvI7qF7ZglR5s1ljL61b3HRIc1/QlqvJzQFqPdmsFRuZeJJhqdZWAeBPiJgFg4Ii6o2+B+yKX2Q6c4bxpT3O7NeLBmGEdEnh/2ugcQnHVk4nTnUXn/plQ4UjghkEfalKOwwjkkMKQZNq+wAC9rlipqxlixtADmFwD
+X-Forefront-Antispam-Report:
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(376005)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 11:02:56.5626
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mYFInZ43Z8MNq16k+mO1f7FIiSvCEGT4p5UlDe58arXo75tvdblM+EwGDbDzUuxlE6//tPft1P8L2d5z3lmqow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6832
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4d950649-ee1c-4bd8-3840-08dc606044c1
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB5PEPF00014B9E.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR02MB8601
 
-On Wed, Feb 07, 2024 at 09:26:26AM -0800, Xin Li wrote:
->Clear FRED VM entry/exit controls when initializing a vCPU, and set
->these controls only if FRED is enumerated after set CPUID.
->
->FRED VM entry/exit controls need to be set to establish context
->sufficient to support FRED event delivery immediately after VM entry
->and exit. However it is not required to save/load FRED MSRs for
->a non-FRED guest, which aren't supposed to access FRED MSRs.
->
->Signed-off-by: Xin Li <xin3.li@intel.com>
->Tested-by: Shan Kang <shan.kang@intel.com>
+On Wed, Apr 17, 2024 at 21:19 +0200 alexandre.belloni@bootlin.com wrote:
 
-Reviewed-by: Chao Gao <chao.gao@intel.com>
+> From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>
+> The proper way for userspace to react on a read time error is to have a
+> look at the voltage low information. There is no point in cluttering dmesg
+> as it is often not even visible to the end user.
+>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+>  drivers/rtc/rtc-rx8111.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/rtc/rtc-rx8111.c b/drivers/rtc/rtc-rx8111.c
+> index 62d2352de102..4a35bd921b33 100644
+> --- a/drivers/rtc/rtc-rx8111.c
+> +++ b/drivers/rtc/rtc-rx8111.c
+> @@ -170,14 +170,14 @@ static int rx8111_read_time(struct device *dev, struct rtc_time *tm)
+>  	}
+>  
+>  	if (FIELD_GET(RX8111_FLAG_XST_BIT, regval)) {
+> -		dev_warn(data->dev,
+> -			 "Crystal oscillation stopped, time is not reliable\n");
+> +		dev_dbg(data->dev,
+> +			"Crystal oscillation stopped, time is not reliable\n");
+>  		return -EINVAL;
+>  	}
+>  
+>  	if (FIELD_GET(RX8111_FLAG_VLF_BIT, regval)) {
+> -		dev_warn(data->dev,
+> -			 "Low voltage detected, time is not reliable\n");
+> +		dev_dbg(data->dev,
+> +			"Low voltage detected, time is not reliable\n");
+>  		return -EINVAL;
+>  	}
+>  
+> @@ -188,7 +188,7 @@ static int rx8111_read_time(struct device *dev, struct rtc_time *tm)
+>  	}
+>  
+>  	if (regval) {
+> -		dev_warn(data->dev, "Clock stopped, time is not reliable\n");
+> +		dev_dbg(data->dev, "Clock stopped, time is not reliable\n");
+>  		return -EINVAL;
+>  	}
+
+There are several other drivers that uses `dev_warn()` in these cases,
+and it was just followed here as well. I agree with you here though!
+
+Reviewed-by: Waqar Hameed <waqar.hameed@axis.com>
