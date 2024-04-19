@@ -1,142 +1,113 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EC81327E2
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 15:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECC812F59B;
+	Fri, 19 Apr 2024 15:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713539896; cv=none; b=SZTChiRm1iZHKD5hd/8DsyQEw6kjk4nDYammWgWVx6fKpFfLdrFpS22kIqqhzCF1vEbogarTWMwn0X+F/PBUYQfqjEI+NVloPvm4vIoB/Lgjct4eBXjUpjwd1n5RERP1Jz3awnT2HPlotmtoJD9Lm5p92tjaQsVifLkrRoX1MQw=
+	t=1713539919; cv=none; b=qsFeXbsHBT+01ig6xLgUPNUEbLfz22SbwVCBf7n2O8iJydIB40aPV40TnPOUS1Qedb2qREmrZuquDzxNFUu2H6AF4t4RXshxHQ2AvGYpHrU4TwrjKZYRxeCRSE/p0vfrZ7uq+DXnK9GatTCQj0wpD2dsoFIfzvp2Yf7XE5EedW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713539896; c=relaxed/simple;
-	bh=YisC0o7NBuOn0cgVONhypNsd+DSyG4nGqdGcgmtrUzg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R6Gg0CCgXuDlsrjlOSltBSeFS5KGaajS3/zNT0mEjI7C1CU4S4GUoimaPlT2I/e2fTjz9LWYmASidqFVbvtBj6oNHJ7a3ysGb5hh9WVoi2foFcw6Hmx+M/euJlZ0BI7rTVEXfximUl7Qau9x8XFbJeznW7N42jSSslSUMd3sIrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eOZPd+Qg; arc=none smtp.client-ip=209.85.166.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713539919; c=relaxed/simple;
+	bh=v1u6M1I7hfUyhQBN/cwpO9ocGTQ1Qy4P5YzpeMaFhQk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rvZwHVpWsRmtnCd26TSM8ABpEz9q00EydsPlPA8JAY32P3QNdXREoSsQY4YxNBIj8LxXCPjUTbVpy6W78qiRIZdow12xnneBrJ7RvL5mUXo+Hi/vUuLN/la0eCvVm/UA+lAcHzJIij9ZEaJSy8bXlITVWCw8TSPA72KrkZY5jO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xjCz/GSk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GMFja7Ny; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eOZPd+Qg"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7da41c6aa37so59246939f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 08:18:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713539893; x=1714144693; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ki95sU34hn/iZbtQLEcQxjo1Z3fzAhmDa03BSf1KS14=;
-        b=eOZPd+Qg1J/5Xy29wNO8G1/cwD83KSjW2rlMZWrxrQ9wZwqVkoGZdMV8YMv+jwgVMK
-         Z+YVJCezkZFHwEro5l8ICB99ad9uyawFZas60BZoRn15K5okbzBL87yUdsr9ZFKAVoRd
-         5W8Jq8D3PXVkkoFMfGPmASwgzQyueXCapRDL+M3IvOE0xwW4HgRr7BRk59vU73Z9bF7c
-         2iWt7v5zysi+n55HFhLwThgt0vrQqQ1/fsJKRRgVtY7QvNzv5CE4JvdkfwmorGHN1WPQ
-         BswRgxHdUpBA5hOpJWdE+DZcUPAvT7g8xQZumWu/UAvKg2qvRAbjEmf34G/QhkYoYC96
-         wJXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713539893; x=1714144693;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ki95sU34hn/iZbtQLEcQxjo1Z3fzAhmDa03BSf1KS14=;
-        b=IGlO3bIZprHbs54m9i3JM7ymUX1/pQi7Cuna43mKpDU+ABOE0tUTnKKCMcPVL3Kn5J
-         MyKPOnHIWikTh5mJgCsb/NK76YVHwkjEjUAy03/G+AdEjyFQpHe/YqjcjDHzsHjN3akZ
-         gGdJU75RqoHzU/p51OuztTRXSPqAhjTTYnoNAA6Z8d7vJuZfGyOuuHWJMI7mkISThmY5
-         rihSxGn/RwznfEGZSZMlUqpeYl+Djb95WATBT/xRfG6N8Zt/FmjU6DxXekyL+JfFIFWc
-         C3sM3Mwk8PacZR6NSZ4CTxAPa/Bfd0SPDH5CBf5w6iFstjD0GK6PVOhDfUnxM0Ngyw19
-         YeTA==
-X-Forwarded-Encrypted: i=1; AJvYcCXPUJXovGuOTuf8j6HQn6+zVjFt8rIIyjwXuMDwCrzVjzihBmChceHQupyhZlVdQsHNpPWZ2IvwlO7R4QojTnRDGaJRUQmF36F+Ag/u
-X-Gm-Message-State: AOJu0YzwqKbQ6hzvBuhXsHGHkYpAWyrkh9HAgB8JE2rMZsHmRKkzSc5S
-	skFjLIIWGx59bhYRtGvOvYXifaY8uQlfTdpkA7Z7U7svJekmWaR7L9LWmX9RIMw=
-X-Google-Smtp-Source: AGHT+IELxfc7N5E6oEEqqJYaRLhd0NyK8sD8JOzWpxuh38rFalVcKuxOZJ5AihG+/A9vUu1KqCtQpw==
-X-Received: by 2002:a5e:8302:0:b0:7da:3757:8c3e with SMTP id x2-20020a5e8302000000b007da37578c3emr3384592iom.15.1713539893004;
-        Fri, 19 Apr 2024 08:18:13 -0700 (PDT)
-Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id lc8-20020a056638958800b00484e9c7014bsm116126jab.153.2024.04.19.08.18.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 08:18:12 -0700 (PDT)
-From: Alex Elder <elder@linaro.org>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: mka@chromium.org,
-	andersson@kernel.org,
-	quic_cpratapa@quicinc.com,
-	quic_avuyyuru@quicinc.com,
-	quic_jponduru@quicinc.com,
-	quic_subashab@quicinc.com,
-	elder@kernel.org,
-	netdev@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 8/8] net: ipa: kill ipa_version_supported()
-Date: Fri, 19 Apr 2024 10:18:00 -0500
-Message-Id: <20240419151800.2168903-9-elder@linaro.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240419151800.2168903-1-elder@linaro.org>
-References: <20240419151800.2168903-1-elder@linaro.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xjCz/GSk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GMFja7Ny"
+Date: Fri, 19 Apr 2024 17:18:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1713539916;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v1u6M1I7hfUyhQBN/cwpO9ocGTQ1Qy4P5YzpeMaFhQk=;
+	b=xjCz/GSkAs50I+QI7DCxQjyQohYIKc6gfvXM/lOOMOQ9u4NDYv4qdY0z6mGx+hROJgFmKZ
+	9zWABT+BP9mqJwBa9/4yjtYDKpgRik0Cv9GA8jRsyhvXHu/MKWDm8b66esCWPBv2iLgmtT
+	+ClBiXzbUFG/aZE+faPmaO96/IJ0GxLADiEcabH9wroL7jIYAF5/fsnkaYTATpoXx5G1gu
+	UgVOwkWp2/Iqt4SGIo5q/Y+khYcmWoOpDBOZm1LsGnQBxF6IWpUDLvaO9NHxL5ECZ/Fox7
+	Yx5FU8Trbb/wjAuloMMQjlBMJpWky5bQgDrrxWHMEZ7QpqqDNeF6CkxOGonjOA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1713539916;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v1u6M1I7hfUyhQBN/cwpO9ocGTQ1Qy4P5YzpeMaFhQk=;
+	b=GMFja7NyiVFhz0KcOQninz2/TkAOL/1k/FUec7DzdPA2AaqJJSnOAQ/5sXQ/BziLmr/ddB
+	rUE1t7yBUbab7YDw==
+From: Nam Cao <namcao@linutronix.de>
+To: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+ jayalk@intworks.biz, Daniel Vetter <daniel@ffwll.ch>, deller@gmx.de,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ tiwai@suse.de, bigeasy@linutronix.de, LKML <linux-kernel@vger.kernel.org>,
+ Vegard Nossum <vegard.nossum@oracle.com>, George Kennedy
+ <george.kennedy@oracle.com>, Darren Kenny <darren.kenny@oracle.com>,
+ chuansheng.liu@intel.com
+Subject: Re: [bug-report] task info hung problem in fb_deferred_io_work()
+Message-ID: <20240419171835.5f31e32d@namcao>
+In-Reply-To: <CAMeQTsaGXv6hUmXg3ROLb83JZEAfoSuQGCQgz0wG38Me8UtQYA@mail.gmail.com>
+References: <271372d6-e665-4e7f-b088-dee5f4ab341a@oracle.com>
+	<CAMeQTsbCESSTrEyHgqF9HreSuzQ9kMBnGpKLT0QNJ+n4hv9qOw@mail.gmail.com>
+	<20240418160526.3b3c385f@namcao>
+	<CAMeQTsaGXv6hUmXg3ROLb83JZEAfoSuQGCQgz0wG38Me8UtQYA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The only place ipa_version_supported() is called is in the probe
-function.  The version comes from the match data.  Rather than
-checking the version validity separately, just consider anything
-that has match data to be supported.
+On 2024-04-18 Patrik Jakobsson wrote:
+> On Thu, Apr 18, 2024 at 4:05=E2=80=AFPM Nam Cao <namcao@linutronix.de> wr=
+ote:
+> >
+> > On 2024-04-18 Patrik Jakobsson wrote: =20
+> > > This sounds similar to the SUSE bug [1]. We fixed it by reverting [2]
+> > > in the SUSE kernel. The problem seems to be that flush_delayed_work()
+> > > kills the timer and re-queues the work but doesn't guarantee that it
+> > > is finished when returning. So when the device is closed, the
+> > > fb_deferred_io_work() function can still be queued and tries to access
+> > > memory that's been freed. =20
+> >
+> > flush_delayed_work() *does* guarantee the work is finished before
+> > returning. =20
+>=20
+> Right, flush_work() does guarantee that the work is finished, but it
+> doesn't guarantee that the queue is idle if work has been requeued
+> since flush started. So fb_deferred_io_work() should be able to happen
+> after the device is closed. Or am I missing something?
 
-Signed-off-by: Alex Elder <elder@linaro.org>
----
- drivers/net/ipa/ipa_main.c    |  5 -----
- drivers/net/ipa/ipa_version.h | 18 ------------------
- 2 files changed, 23 deletions(-)
+I'm confused: how is it possible for fb_deferred_io_work() to run after
+the device is closed?
 
-diff --git a/drivers/net/ipa/ipa_main.c b/drivers/net/ipa/ipa_main.c
-index 6a0fec873cddf..5f3dd5a2dcf46 100644
---- a/drivers/net/ipa/ipa_main.c
-+++ b/drivers/net/ipa/ipa_main.c
-@@ -810,11 +810,6 @@ static int ipa_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
--	if (!ipa_version_supported(data->version)) {
--		dev_err(dev, "unsupported IPA version %u\n", data->version);
--		return -EINVAL;
--	}
--
- 	if (!data->modem_route_count) {
- 		dev_err(dev, "modem_route_count cannot be zero\n");
- 		return -EINVAL;
-diff --git a/drivers/net/ipa/ipa_version.h b/drivers/net/ipa/ipa_version.h
-index 156388e90a141..38c47f51a50c9 100644
---- a/drivers/net/ipa/ipa_version.h
-+++ b/drivers/net/ipa/ipa_version.h
-@@ -47,24 +47,6 @@ enum ipa_version {
- 	IPA_VERSION_COUNT,			/* Last; not a version */
- };
- 
--static inline bool ipa_version_supported(enum ipa_version version)
--{
--	switch (version) {
--	case IPA_VERSION_3_1:
--	case IPA_VERSION_3_5_1:
--	case IPA_VERSION_4_2:
--	case IPA_VERSION_4_5:
--	case IPA_VERSION_4_7:
--	case IPA_VERSION_4_9:
--	case IPA_VERSION_4_11:
--	case IPA_VERSION_5_0:
--	case IPA_VERSION_5_5:
--		return true;
--	default:
--		return false;
--	}
--}
--
- /* Execution environment IDs */
- enum gsi_ee_id {
- 	GSI_EE_AP		= 0x0,
--- 
-2.40.1
+The workqueue is flushed during closing of device. If more work is
+queued during/after the flushing, then someone must be writing to the
+device during/after the closing of the device. How can that happen?
+
+Best regards,
+Nam
+
+> > =20
+> > > Patch [2] tries to solve the problem of not throwing away pending data
+> > > when closing the device. Perhaps calling cancel_delayed_work_sync()
+> > > and then follow up with a manual call to fb_deferred_io_work() would
+> > > be enough to flush the remaining data?
+> > >
+> > > -Patrik
+> > >
+> > > [1] https://bugzilla.suse.com/show_bug.cgi?id=3D1221814
+> > > [2] 33cd6ea9c067 fbdev: flush deferred IO before closing
+> > > =20
+> > > >
+> > > >
+> > > > Thanks,
+> > > > Harshit =20
+> > =20
 
