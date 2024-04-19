@@ -1,54 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB7D12F378;
-	Fri, 19 Apr 2024 14:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BA612F378;
+	Fri, 19 Apr 2024 14:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713535748; cv=none; b=S16QSlM3YYhQWXv1w/XEPgg5oewfyoC71hTxRwUb020p+cfoqOS7jrbqsE00UrClRHxdtl/tesW8CDRNtlYZkCxCwCOJDMu5lN0hJ2yX9qnNUssc6GkMQI+S/o12WnZrFPd0pr30+QFpmpGQZaZh590xL3sb/V3V2jbRcrBJ1KI=
+	t=1713535754; cv=none; b=KrZ5O5CgFf9EuGXfMIfA5FRJdYI26a4yMLo4pM+Gp4IISdZABIQ+kHvsTs3/d6d6+jmOinKCe9P2qLAper4gT5+bH6o/6a//aXY4vloSDOYcsMRsM878ip2kvbDvDsZNbH5lHk/cHJHDZsI5qHvuRlo4sXTrjZ7hkC0TRC13KGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713535748; c=relaxed/simple;
-	bh=6YWug6x68M7BXf4/XhfVGoo3jB2nXv8G8RXC3Jxp9tQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KLN8ToybjYef9wafBP5uLTc8AsPEf3SKQZ6jkfFWQzgaIcKwPOcsKy+/5QHgLCCHVozub4RxyLELwL/BIShSYY8VipzZ1SgYrkJBryWRGuCmKup20A7kHvBKfdpIG9qanVk/JBMRqXCVmVWw4o62gqQnu+FFbcEOTz0EZ2upeak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=luEKnboB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713535754; c=relaxed/simple;
+	bh=lykCOLKqJjRDe+8Set3BA8BLXqNMhZRHNwizcwwY1R8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=ubsQzStFZtMGG3SdXh1jWiYmzLexQJSPJTU/NCxmwT4yEjW6MQ3vftUfvxNZm5BxuMyuiwg4cq6ykzOrz2uMkkC6XczYRGBvwgY7oJyMXWec8SYMVMlTM2NHvCkebFPjAoVkUG0OqQ4vZ60BlGDbVxrUTgItRJjlXu6H33UFqX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=BXrL+qy7; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="luEKnboB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26883C072AA;
-	Fri, 19 Apr 2024 14:09:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1713535747;
-	bh=6YWug6x68M7BXf4/XhfVGoo3jB2nXv8G8RXC3Jxp9tQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=luEKnboB3pTvnk50W92xC7uq9rgMb3NCHfuYsnN7+3ooilMX6aLGJCoIthfyfY+Vr
-	 613xx+fltQtZycPVsvLNzmd5mgatxNnwWV/HKbonqbJwPrKJBfcuyP7fJ7GC4ZMkSE
-	 5IQ0JLKW+7at2FffSFpJYm8rWV6i3F9ZqTdzd7TQ=
-Date: Fri, 19 Apr 2024 16:09:02 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] USB-serial device ids for 6.9-rc5
-Message-ID: <2024041954-antelope-postal-d515@gregkh>
-References: <ZiJlewYVQiSSSrJ6@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="BXrL+qy7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1713535720; x=1714140520; i=markus.elfring@web.de;
+	bh=lAS9mTVpLnalSm5EePWLAsejXsUvIKNzzANCk7Zyh88=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=BXrL+qy7fKZKSy7vXMNGYc7EmhjKtAJ5OjAQginqikx1Pp94g+yz7C0WAZW9POva
+	 Phxn9z46+j3Trvz4xkZp/TchUKQBgINAmCUBTZB+BL6CUaMbReuXDBfAYww1gAvQi
+	 vikPRSBVxbCDVZ0Yo9nXMUkFSOQxukR69hLSZ1zsEzsJv6FPZKVuIs5xifpuhx1HJ
+	 8YMZ1EuE2YG1fzH0RtxH9ZAOxUW8w3MI6gy42wSOvh9a09uId+uKykhFOI2qelq65
+	 KucGTGQtZjtz/vvI6G7xgUMt/zpB1E0RvYkOoIHqnPUNmTGmFJG+xWTuUNyH6XXQl
+	 fQakCVTh9NuX0nmHNw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mo6O7-1sUcQV2IAN-00mvrD; Fri, 19
+ Apr 2024 16:08:40 +0200
+Message-ID: <4cff158d-b5ac-4dca-9fbb-626237c1eafe@web.de>
+Date: Fri, 19 Apr 2024 16:08:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZiJlewYVQiSSSrJ6@hovoldconsulting.com>
+User-Agent: Mozilla Thunderbird
+To: linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, "Aneesh Kumar K.V"
+ <aneesh.kumar@kernel.org>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Haren Myneni <haren@linux.ibm.com>, Jakub Kicinski <kuba@kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Nicholas Piggin <npiggin@gmail.com>, Nick Child <nnac123@linux.ibm.com>,
+ Paolo Abeni <pabeni@redhat.com>, Rick Lindsley <ricklind@linux.ibm.com>,
+ Thomas Falcon <tlfalcon@linux.ibm.com>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] ibmvnic: Use -EBUSY in __ibmvnic_reset()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:wHaYprIvoklgpYvLAHaNj+zV2sUobvP/1+QGxB/jpFxwfLQ3/qn
+ 32vCTsyWO3nPL2VCwhbpCMJR8j7UPW1FscxEpo8oGbSL/aAgV/PX6Vpr+VEtuUd39Fl9Wwi
+ C04dNziBBise3+TfaEabuRF7AP8kexSpDRo+9sw4iZ7FlHoVp7pytc0thcBAO/GXLQfi2ot
+ HsTWBbbb3UTXqwH16qzxw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:J02Z7QBpCOg=;z+trVArPa8/FGsp1KNJLJcillff
+ hRcWIsH8BcyVEgycHUM44aOJtRmtzAwN6ouXaz79v3pTmbM9d7GSKWrRZ6wnWy6i+vKj0djKA
+ mU+vnmEikbKvaQBqUWsRZzp1MQxOLxf9psQ01whhYma8tGSY7u92a50OvXBn1IlRsngOvttjY
+ qBUZP7pjSVzwwhd3h5QEpCyYQjDC3yDZbs32q8+6WrY7LJcSy7MoDCugO+FpXK/445fvX0Wv5
+ 2qc1FLNzJac7LHzXbyXOSf6AC54e03yo3XF6qf0YXl1xswPXZQ9D/tt/a8upC9tzNlGm30GxY
+ zmJLGtljbL+2GCEzBazjBrhIMvYfEMhTMEury3fLz/7Cef/6VJaNEkTf1H7PfxNMwmxrCSWAN
+ SKexmvUTmcZt233uMeQcGmc5S3BroHa9QxNTKot1ydzi6RdYzJxnuv/5DJN8UFa1T3IFXTyyX
+ aksxT0fyEwkmLDaB0MRhIhhsYteo88NDd2hIJS9LER0OsRgK0J0HSy0lWELkQmF1NNmxNUSGS
+ umUOZ7XUzok6jX+BtbH7DAVIHqgy/IyLQXqBcThg6uHSizSVvXWpbqbztrVByJ1mCyz0bYHWi
+ AtAIYC8SQS5xVRj5E33RR/+BT3xkqVBZSvioSSa25LrG2MHLROt0CAPteRYW0nnZAZHDeZVzN
+ 8WfcVE+jXneHVHX9SGaL5GEHcFNxv6jK1W5TUTD8uqrFnuyRMg81483evRi2wy48cRdUjrbh7
+ NW6pVBHGE6UvKCOYRhyE6xE2mjRUg20S+N3bC0houl+NYlZy9c5Gv9/oRUIrvK/w3mR3+VXbs
+ CyioRbpVKMsnV52g2zH3aKGPSwPO3629RXSYANKTwAWbE=
 
-On Fri, Apr 19, 2024 at 02:37:15PM +0200, Johan Hovold wrote:
-> The following changes since commit 39cd87c4eb2b893354f3b850f916353f2658ae6f:
-> 
->   Linux 6.9-rc2 (2024-03-31 14:32:39 -0700)
-> 
-> are available in the Git repository at:
-> 
->   https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial.git tags/usb-serial-6.9-rc5
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Fri, 19 Apr 2024 15:46:17 +0200
 
-Pulled and pushed out, thanks.
+Add a minus sign before the error code =E2=80=9CEBUSY=E2=80=9D
+so that a negative value will be used as in other cases.
 
-greg k-h
+This issue was transformed by using the Coccinelle software.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/net/ethernet/ibm/ibmvnic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm=
+/ibmvnic.c
+index 5e9a93bdb518..737ae83a836a 100644
+=2D-- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -3212,7 +3212,7 @@ static void __ibmvnic_reset(struct work_struct *work=
+)
+ 		    adapter->state =3D=3D VNIC_REMOVED) {
+ 			spin_unlock_irqrestore(&adapter->state_lock, flags);
+ 			kfree(rwi);
+-			rc =3D EBUSY;
++			rc =3D -EBUSY;
+ 			break;
+ 		}
+
+=2D-
+2.44.0
+
