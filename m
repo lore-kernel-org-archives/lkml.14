@@ -1,123 +1,156 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F02130AD4
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 16:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5751812F59E;
+	Fri, 19 Apr 2024 16:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713542615; cv=none; b=JKJVxvlBcQD12iLLW/qtAk5PDMvV/7YNwLWHNAzONAt19pPi/VpV6WI6rM5eYaRaIKQcDtiVUn79Em5bSL8KFbn9iM8NACkEoHPX/UqOAhg6qjGibE3eRYLE/PgSopMdvmMsDwdMMTpFAedGzVO/qW27oYPVgCZ5q9cKrww5WMU=
+	t=1713542744; cv=none; b=CsOIG8O5Hhrc+x8YV2AqhR23lxqeQTvL+yNaue0yGlLsaiNtJ49R49vMKuSrmrSbVjdOPTtRyQHR0Y1sPcmdxB18iYc+RdB6OfwFiOt9tCgtLl6e6zyzk6Xgu6az/KrsJEdUTkJ2yJHzHti0AqYUYeFuv2DkAC1sxlCAbVWw8gI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713542615; c=relaxed/simple;
-	bh=/eXm0CTaLlshMmOpuJ+Hb0diIo+ynEWJIFTKEePjGU0=;
+	s=arc-20240116; t=1713542744; c=relaxed/simple;
+	bh=3VqTx/MC+ZdPcEqq8wvrQXMLukiRoXnaGbZ1BaGpXo4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q2PvDdQ4xFtYL+73/s75dH8/jvWG69NTHnrSMZ5163Ghe8BzljgKj9Xi+oeEQ92ZAbNuzDERtvlK5kOTdCEFtIEEk0Cgd5ifQu7+GXSN0Femt+R7kqCvU5OlDmP0uAzjnFlvcN7Atl7Hpz57C1JVkKJKeCgUs4KCLvTAx/v07pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zEgQvc+N; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=rslob81SzlcobcpUHZ5NFthCV9tssEwDXIf5tezFVrV3drjkAgxFAwWg3f3io6yQodEqXv7CKToc+Chkhc8kvUDo/b/WiZna+8YkexCUiqekhmTni8SyLzqILFYjO5j3qUDDRibA9FS2G1h+7YZ8mV4Md9chxkVuTrkGsE1hLv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OwCCYdyR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zEgQvc+N"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-418e4cd2196so16339605e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 09:03:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713542612; x=1714147412; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9K87eyQsJcPV+MjC9TGZ0b2ErIOF7s0I6KGHZUdEzoY=;
-        b=zEgQvc+N88bX+glGqWa/yGXwTIooRIidFGDWBPF/SrkYef0Qa+2jEggM/ajYj+ukj3
-         vLpbN4dp5Sinja6c9YNOOQiEhuW5L7NeLa1qQp3ENZVH9jQ7hkx7uOr66F5eFkeLByXi
-         CTLcEM7PwTvt1XLm7iq6H7KNNR3n5uio7mdet26R8bM7Blt0RFXMnaVUreeV0+Q9CPMb
-         lqshwqHiPAHMRGFQHQEgVRF39rQ/HoZLHfl/NFCI4hvVYRWgnxvMkORHfmYejWN9NbEO
-         nfGA+VH6cSsD+gJcIvJhaDNa+5cOZYH1lKAY3tP1Wjm0ioi4lcT89F4UIzWfCuki1oc9
-         BrAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713542612; x=1714147412;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9K87eyQsJcPV+MjC9TGZ0b2ErIOF7s0I6KGHZUdEzoY=;
-        b=Dq4Ng+6Sm1g5p9UZCDWeDCwIR4kHTk0FjqYuxt7FER0pCYjUryjyFRo4ur+uguZ6GB
-         HbAIhHYAJsKfPXj66eUc8A4aKChCzRjjWkz5h9FH62SgCt6s8V02YJcRJ4AyBdxXz7u3
-         zMAdd6UflMz/zG43aTbQ2nt8L+g1YfhzEqjjNPQo472+PE+3xQ5Ynu7BkYhrZqJnooea
-         pj3Vu5cC2WowtcYon1/GARUbiQ7LALHkxK0lI+AtemUkb9PZSE6Z9D9fHBI+00+92Hx8
-         an8JCantmUZQWX1F9tHkVMO/IyjwaxYhH/Ir+6E38w+b4DIrPPcKe0i/ouRcvCU71gbX
-         TYQg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjiMuuzp/63ViJI07g+cYr+cqlsbOXs9E7cr+JZWPK9pqvs5Q8lr6Zhc8bBWnuJTGh+G3MvNcXHGZp+rJsrPrEe/SFVGOEXfaZrN+m
-X-Gm-Message-State: AOJu0Yzq8LUMRU87zE82XWhQQ71/WbiZoZToN1KZTXbv2V2Z0mPdbLNQ
-	/JdOWhsYge8DF8x41kUT24GYrXkhnvmRGWvC/jjDq5UYLhxdfIH+t2gr/hXxNa8=
-X-Google-Smtp-Source: AGHT+IF61j90FxwaOMyvxHlliptjSNEA5j4fWAYLAKVrzRuIp5qzebPKQLaE+h5oX2Q4HLOyia2QSA==
-X-Received: by 2002:a05:600c:154f:b0:417:fbc2:caf8 with SMTP id f15-20020a05600c154f00b00417fbc2caf8mr1783059wmg.23.1713542612133;
-        Fri, 19 Apr 2024 09:03:32 -0700 (PDT)
-Received: from linaro.org ([62.231.100.236])
-        by smtp.gmail.com with ESMTPSA id d20-20020a05600c34d400b00419c4e85b54sm1405965wmq.16.2024.04.19.09.03.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 09:03:31 -0700 (PDT)
-Date: Fri, 19 Apr 2024 19:03:30 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Bjorn Andersson <quic_bjorande@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rajendra Nayak <quic_rjendra@quicinc.com>,
-	Sibi Sankar <quic_sibis@quicinc.com>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] arm64: dts: qcom: x1e80100: Drop the
- link-frequencies from mdss_dp3_in
-Message-ID: <ZiKV0ube6J8pXXfU@linaro.org>
-References: <20240418-x1e80100-dts-fix-mdss-dp3-v1-0-9f8420e395d4@linaro.org>
- <20240418-x1e80100-dts-fix-mdss-dp3-v1-1-9f8420e395d4@linaro.org>
- <ZiFC8d6cD35B+PaC@hu-bjorande-lv.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OwCCYdyR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78379C32781;
+	Fri, 19 Apr 2024 16:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713542743;
+	bh=3VqTx/MC+ZdPcEqq8wvrQXMLukiRoXnaGbZ1BaGpXo4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OwCCYdyRv/+5/Zt90V/3HakgGm2piuce3WMCL8Zx/Kv5xKhKrE2jJIC92F6qogMg2
+	 2h2gqGWpgfgViad0yQPYAzIom6t56N1mf80JkNoe5m1jKHnIL8VDINOTEOGJDbFAYS
+	 Pn1p1DV6ZOUzQ/WG25q1ZF7GNNMALjZE+Z67Fv96tayRRWEsILvRdcxKd1ukgjL2Iw
+	 MNOq5bFmblTiPLgb/RBjcA1HyGiqoG+qsGyTYCWQuuiZSY6mvoFQYFfzcXiKUmJ17X
+	 OOi7/Fi3ufK1uZCNJkIWZsLzHdIKdWgoJ6nMu8npFKsljzNQY5OIZ61JrXkM822k0c
+	 cgmfxtZH/ytiA==
+Date: Fri, 19 Apr 2024 09:05:37 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Peter Zijlstra <peterz@infradead.org>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] cpu: Re-enable CPU mitigations by default for !X86
+ architectures
+Message-ID: <20240419160537.namt5yaxhhvwwa3r@treble>
+References: <20240417001507.2264512-1-seanjc@google.com>
+ <20240417001507.2264512-2-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZiFC8d6cD35B+PaC@hu-bjorande-lv.qualcomm.com>
+In-Reply-To: <20240417001507.2264512-2-seanjc@google.com>
 
-On 24-04-18 08:57:37, Bjorn Andersson wrote:
-> On Thu, Apr 18, 2024 at 01:22:18PM +0300, Abel Vesa wrote:
-> > The link-frequences belong in mdss_dp3_out. Display is broken because of
-> > this. Drop them from mdss_dp3_in.
-> > 
+On Tue, Apr 16, 2024 at 05:15:06PM -0700, Sean Christopherson wrote:
+> Add a generic Kconfig, CPU_MITIGATIONS, to control whether or not CPU
+> mitigations are enabled by default, and force it on for all architectures
+> except x86.  A recent commit to turn mitigations off by default if
+> SPECULATION_MITIGATIONS=n kinda sorta missed that "cpu_mitigations" is
+> completely generic, where as SPECULATION_MITIGATIONS is x86 specific.
 > 
-> Why is display broken because you have this property in the wrong node?
-> Isn't it broken because you don't have it in &mdss_dp3_out and this is
-> just a cleanup of an invalid property?
+> Alternatively, SPECULATION_MITIGATIONS could simply be defined in common
+> code, but that creates weirdness for x86 because SPECULATION_MITIGATIONS
+> ends up being defined twice, and the default behavior would likely depend
+> on the arbitrary include order (if the two definitions diverged).
 > 
-> Perhaps that's what you're trying to say? Would be nice to have that
-> clarified.
+> Ideally, CPU_MITIGATIONS would be unconditionally on by default for all
+> architectures, and manually turned off, but there is no way to unselect a
+> Kconfig.
+> 
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Reported-by: Michael Ellerman <mpe@ellerman.id.au>
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Closes: https://lkml.kernel.org/r/20240413115324.53303a68%40canb.auug.org.au
+> Fixes: f337a6a21e2f ("x86/cpu: Actually turn off mitigations by default for SPECULATION_MITIGATIONS=n")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-Will drop the "Display is broken because of this." part.
+It seems confusing to have two config options which have very similar
+names and similar purposes (with subtle differences depending on the
+arch).
 
-Thanks.
+How about we instead just get rid of the x86-specific
+SPECULATION_MITIGATIONS and replace it with a menu which depends on
+CPU_MITIGATIONS:
 
-> 
-> Regards,
-> Bjorn
-> 
-> > Fixes: 1940c25eaa63 ("arm64: dts: qcom: x1e80100: Add display nodes")
-> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> > index f5a3b39ae70e..0642b5e88639 100644
-> > --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> > @@ -4096,7 +4096,6 @@ port@0 {
-> >  						mdss_dp3_in: endpoint {
-> >  							remote-endpoint = <&mdss_intf5_out>;
-> >  
-> > -							link-frequencies = /bits/ 64 <8100000000>;
-> >  						};
-> >  					};
-> >  
-> > 
-> > -- 
-> > 2.34.1
-> > 
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 4474bf32d0a4..85a4d57bce1e 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2488,17 +2488,8 @@ config PREFIX_SYMBOLS
+ 	def_bool y
+ 	depends on CALL_PADDING && !CFI_CLANG
+ 
+-menuconfig SPECULATION_MITIGATIONS
+-	bool "Mitigations for speculative execution vulnerabilities"
+-	default y
+-	help
+-	  Say Y here to enable options which enable mitigations for
+-	  speculative execution hardware vulnerabilities.
+-
+-	  If you say N, all mitigations will be disabled. You really
+-	  should know what you are doing to say so.
+-
+-if SPECULATION_MITIGATIONS
++menu "CPU speculative execution mitigation defaults"
++	depends on CPU_MITIGATIONS
+ 
+ config MITIGATION_PAGE_TABLE_ISOLATION
+ 	bool "Remove the kernel mapping in user mode"
+@@ -2643,7 +2634,7 @@ config MITIGATION_SPECTRE_BHI
+ 	  indirect branches.
+ 	  See <file:Documentation/admin-guide/hw-vuln/spectre.rst>
+ 
+-endif
++endmenu
+ 
+ config ARCH_HAS_ADD_PAGES
+ 	def_bool y
+diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
+index 2b8fd6bb7da0..70c1e7eb64f0 100644
+--- a/drivers/base/Kconfig
++++ b/drivers/base/Kconfig
+@@ -191,6 +191,16 @@ config GENERIC_CPU_AUTOPROBE
+ config GENERIC_CPU_VULNERABILITIES
+ 	bool
+ 
++config CPU_MITIGATIONS
++	bool "Mitigations for CPU speculative execution vulnerabilities"
++	default y
++	help
++	  Say Y here to enable mitigations for CPU speculative execution
++	  vulnerabilities.
++
++	  If you say N, all mitigations will be disabled. You really
++	  should know what you are doing to say so.
++
+ config SOC_BUS
+ 	bool
+ 	select GLOB
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 07ad53b7f119..bb0ff275fb46 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -3207,8 +3207,8 @@ enum cpu_mitigations {
+ };
+ 
+ static enum cpu_mitigations cpu_mitigations __ro_after_init =
+-	IS_ENABLED(CONFIG_SPECULATION_MITIGATIONS) ? CPU_MITIGATIONS_AUTO :
+-						     CPU_MITIGATIONS_OFF;
++	IS_ENABLED(CONFIG_CPU_MITIGATIONS) ? CPU_MITIGATIONS_AUTO :
++					     CPU_MITIGATIONS_OFF;
+ 
+ static int __init mitigations_parse_cmdline(char *arg)
+ {
