@@ -1,198 +1,369 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BC612F39A;
-	Fri, 19 Apr 2024 15:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713539553; cv=fail; b=Ve9nLP1LK9kbvFA6aDTSEY0vC+HeOc2BTlypZLDGh7ftM23MLOBPkg0EoJKYLfwV4Wie8KkpYKnoiEXY/0M6FqeD1vts/mWRF1r4XK0Yn5eHmero3Sy34S9+NXi1uG6ttrDtnSUWZGOnuRixe5XkrNgX6jALbbDgn6F8D4XYsy8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713539553; c=relaxed/simple;
-	bh=NFzKyR6Ef39DNCwnXH8fy/8S+UpSMOMtNnShXN5cjpg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=SnDZQAdHdc231B4678TaPI22x+OUT4J76FRtKhPb2fafoVBeaApGzxvJ2UqdInoRbhYSQ8/0P+uQqgL6VwElTpb3t6cU1M/bb46UQ/VCxgd0FIiSMADWcbC+jcF/k5iX/jU/+NuuKY7AZcgshDgLc0mY7jPqg03fFSMd3GKOV34=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=artggHeX; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D3A12E1D2;
+	Fri, 19 Apr 2024 15:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713539562; cv=none; b=WWs0tONlLd2G38fxKLZYDrlvNpSChd2gcozmwKkFDiS5wNVVnaKDHnTWOCm78VvUc29Q2rUfNFqlVIBudPlUFesVTTGyXqLeST8lQsFgaZU0XoJDaB1H8/t20Mp7lzwRKxE+ie47sfHbdZ+1BOKC3RG4k6JPg/3dGe3mzU3RGug=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713539562; c=relaxed/simple;
+	bh=e8jDoNGFX0rqlpAvs8UdIrNhZ46T5XKH6s5dmkm16Ng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NuENIdUsKDEq44SK5dfAopyqgOLAAZsti3yadJ6SC8qXR4ZuIPa36nlaz7X8voFl7T9EG+53HQTIjg+kX8ieh38xenCeAnk/kPGH1XWEOWIZZ30SXsBU/kZTYD8QBIDWdofyt+qCMuBCY/4w4icmu4/qPH2JMgiFVizT/MG6wwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QqQiVzdc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="artggHeX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713539551; x=1745075551;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=NFzKyR6Ef39DNCwnXH8fy/8S+UpSMOMtNnShXN5cjpg=;
-  b=artggHeX/KF7anRNzDf/He5tBDY45NDCoPJFQDYJOUlCjkcULdqF6vOW
-   z7hXNCST/SyrWR8zH+ofu5AOOm/fOqYY7rWpSnS898Qqw8fM5TCZ06Lez
-   U3JW6lNtAdEHqPnrwGam6p9K8eR2uAkMzi6/5oczV8Zhhs9REUiaeBMXU
-   Ow8lxtOn8Eu2ni/EemjtMHDk+d1StgUp/ThZiDWHfVtxZeJAanSTVnAN7
-   Q0vGM4HWNJ/G0H2FtjDO1pj2fPz8p4wHZn4xWV9bpjFrJkAVV79GUgdBJ
-   R62E3daplO6UhFhCuvkZglvUUKntAcydNhRN8ubTpXEDXvXTbVDPx19ZQ
-   A==;
-X-CSE-ConnectionGUID: QddPwMagQ5+HgaWs5PF8Gg==
-X-CSE-MsgGUID: XlicRoJyQIOp/g2L6NHF/A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="20536378"
-X-IronPort-AV: E=Sophos;i="6.07,214,1708416000"; 
-   d="scan'208";a="20536378"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 08:12:30 -0700
-X-CSE-ConnectionGUID: g0/LVzlfRtmHMitSxH00tg==
-X-CSE-MsgGUID: E4eFidYSTYOSLlIntv+Ncg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,214,1708416000"; 
-   d="scan'208";a="23800879"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Apr 2024 08:12:30 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 19 Apr 2024 08:12:29 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 19 Apr 2024 08:12:29 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.170)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 19 Apr 2024 08:12:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oI6uYWPkXIr5LVLACCPsbLukLA0GlLlPvd8FEx2vMTl7ngFIfm9Zv2qH9/cwuk3+mC2YrrFWUKQzI751XN5BTFKRZ/oH2cWdvsG+ZVJqIOr8GIr6ecNN0Jd2HEB1r+iXAAomDWYXhCNf9lf42ZibYMg6U4s82vqCWHIGu9N16qcL19I9JC3l172VHewVHnGUrRocHB2uU7SrhDxjG6tE+iZaclOkdxGiGhLAWmHd+jiiAQkjw3fKgr0/4iI1G9op1ZkWM5qyNFUg3qKpE4OiSMfq8CUOvSxr4DCtxJvqNuJP9XAkEr58dGtPoAdYsPsPgzpEPivYINTb+NChwZ9f6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VMlMLhs+yzSvYJvkGb/7Wnekaktr+YNmsstLxPMG6Ww=;
- b=N412Y2kUoX9ri2VweyTQPpXObCxDwcTcm7vdzgQPAY99mJ6KVtgbDHnfe9wPEuj0NBh2iOD2m/t1SsC5QnAslM4AMp9O9Ydou2Se/fTAt4OxTJPxmHZhozsVP2OQ/MqeQ4Tpd0jUt2ZYZ3ubx518qCo5lTgOkqUex58Jtksm8FAPP6gv3oiLYArZKin0JoEw4krrGcwyUR4kXi2ibtRp6exYtZy/sfVg92cKBxQV40zP/MnwIOtNWABQF+Ni4JKws3scbhICIeh+sdpWoYrtkSJNYKyPua1q27ll30TAfOiXVGtvmOpQWbpDlFoCyG0T3ehxan54qi0AKhSeDNydww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DS0PR11MB6373.namprd11.prod.outlook.com (2603:10b6:8:cb::20) by
- PH7PR11MB7593.namprd11.prod.outlook.com (2603:10b6:510:27f::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7472.39; Fri, 19 Apr 2024 15:12:27 +0000
-Received: from DS0PR11MB6373.namprd11.prod.outlook.com
- ([fe80::55de:b95:2c83:7e6c]) by DS0PR11MB6373.namprd11.prod.outlook.com
- ([fe80::55de:b95:2c83:7e6c%7]) with mapi id 15.20.7519.010; Fri, 19 Apr 2024
- 15:12:27 +0000
-From: "Wang, Wei W" <wei.w.wang@intel.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: "pbonzini@redhat.com" <pbonzini@redhat.com>, "kvm@vger.kernel.org"
-	<kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [RFC PATCH v2 4/5] KVM: x86: Remove KVM_X86_OP_OPTIONAL
-Thread-Topic: [RFC PATCH v2 4/5] KVM: x86: Remove KVM_X86_OP_OPTIONAL
-Thread-Index: AQHakkz4v8XEzjLts0GEpU850B7z97FvmgoAgAAKIQA=
-Date: Fri, 19 Apr 2024 15:12:27 +0000
-Message-ID: <DS0PR11MB6373D059F2BB9F196AA9D503DC0D2@DS0PR11MB6373.namprd11.prod.outlook.com>
-References: <20240419112952.15598-1-wei.w.wang@intel.com>
- <20240419112952.15598-5-wei.w.wang@intel.com> <ZiJ0mjZxlRsLwl3E@google.com>
-In-Reply-To: <ZiJ0mjZxlRsLwl3E@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DS0PR11MB6373:EE_|PH7PR11MB7593:EE_
-x-ms-office365-filtering-correlation-id: f4f4239f-42b5-4d5d-88cd-08dc60831fe1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PvXa32IfWMzJtWQ/p4uc+BZwobjGzCqJhSOlG8si7fq1fA0dMiwm38590s4q7a3iqCESBxL1l3fBSbF3VPYufeW3/2vGPGAUtJhOOF24Q/3q8OVx46A2grBTJaFd4OtM4fmnfJ4uLmXckyLOdYuU+I5DfjKVUWwCLCGzzYmt3LZMxY3fL2S3cS6T5rt6JjfjzMXI/A4w1bV4Mc0UTtpdVh5oLPUtPdWn0kA5j0p3Cxr7OasLrHiFI54INJlvXAZiDehGh0sow4kme7wxJq77rdkACugOuvUQJBe/OHZE0L3CYnkZf/0cEzc0GsnfiK3h+0UJqWZ963jX8MAgpfkIvFekhC45lFQSgNP9m4b80On6FmrKj7iWvNMyRDrTxLHVqnbWtsZ8MGBStfiZB2AcMUR8t9LCzWnp9rrCP4O+Us20UgvS3AF5dzK6Zrt6x1N00Hax9bEtmLfK+QzoPT5/S0seVnwxYB4f59Z5W5l3FAz6Q4QsjFOuynDO+nKiaaK5B9Ivjdv+/JTIxbwzV1CD184+LYeUkS66/FioqhwfZCNFHzAsonJl8vtYr7QqwBuWLnkO3KfdI6tsdYZRkxBxrwE/4dSDd3rEpgvlDyDKBWporBKXo2seJQWzWaDJShTLjD4nZdHzmyaDVxM9bKiycF8lkR6cAroMj2u43zl1fb0/8MySWbsPb51RDOJFCEkyC2k3xMKKQXPjMpGdD3hEZVS9mExAq1HqMOlHNBt0A6Q=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB6373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?DhEFUuBnnu5qvvTSHsxndk8jMLSwAJ0NHZ25rmXx8YWWhkP0lc254Ng7ng1t?=
- =?us-ascii?Q?HLlWYo0u4YDBazxh5lPyI/irIN3LyUFG3Osj9Iz439IcfGu+zHlooNZhtbp0?=
- =?us-ascii?Q?tFQnq3fiNs0QeEvVOn4EP8MZMk3el49DYRB5GD4o/yHEh2LyIeVV1eBFUq1X?=
- =?us-ascii?Q?i11nVTdXJrlVVZuPB+ZW45jI85nW3HZvInvO3duMq7U/iprw67pQo8h7RUmJ?=
- =?us-ascii?Q?VtiRjK927TOQ5Bnptd+i7Z/VOuq4Y6IDuUhSCSJ5W8SxDrDw/jPt0i4EN2SV?=
- =?us-ascii?Q?/9aE0iv6X0LmMxv2e+aaS8VRFVXsFabs0BbBxNsh/YqZmc8yxrMoolC8Xu2k?=
- =?us-ascii?Q?A1iecE7LCld84srnsQSylZG3Hewv8KdkFfZ4LPExePL58mxpirK1UHxJmFHe?=
- =?us-ascii?Q?f5LuvN321nLr5gJceLinlU7hHPOvUzJYBEI16mQvylSFcYCr0aqSDOT3TMp/?=
- =?us-ascii?Q?lcK68jYSBmK6I3QsMhSaJq1B7wANKTwgcSnPH4bSN2/DzINBNJtaPqlqpCVe?=
- =?us-ascii?Q?hUJWlRoLkshC2AamBGIv8wT8hdSUd84tO4WHdEx4x5/bAakFNXiXaOvnFzYK?=
- =?us-ascii?Q?TecZI6+s1layACv0+xEOBepP/IVK/c/AcGf/7IvSAnaxlxBJlNbsWknXqlWh?=
- =?us-ascii?Q?bV4i2ioBGU3YHLH3Mg3NAIKxom1YQNT32PsnTgEFlVqBI+Q3iYErvBXTj3XO?=
- =?us-ascii?Q?nBn6ieXDYw0faNXIsTkIBVCmbx5vimogWMrml1wKYpvbBL7qSmJZHJSFkSxV?=
- =?us-ascii?Q?DJhoYZvqU0BpVmzZkg1pvjaXdJYl+lIfWxUqBq5aE7q6+pdmQSHKFW+ByXMB?=
- =?us-ascii?Q?jMEAxopUug7GGMPwD7Ho137n70/WFRve0WJTRNRDCb7lWZeYjbvAzqReybeJ?=
- =?us-ascii?Q?/BBJUkfP3yOkJ3xwc8nYJtukxdYMpRSJ8bgdo4WDvEaM8jsTadRn1jmB2vld?=
- =?us-ascii?Q?aDTTO/pto+mutBElaKUk2EujrGoj+5edIDloeXA+sBAhIZBXx45uC/W5pT1L?=
- =?us-ascii?Q?NOrHcEkomWJSGwhB8GY+IKDH2Ak+4T9pZY1zhNdKLQxR74uqDzARTTDiwbYw?=
- =?us-ascii?Q?chGITlPs4VLS++JCtNkOL9NOAxVcm6ywrHaiXiJ70b0++GLUXcPY5wV4arJ0?=
- =?us-ascii?Q?tm1Bd7sCgJxx5q0IpzXRqPCjdsujONn7iqUawBEbrryRVd6r6G8HIhXshzdW?=
- =?us-ascii?Q?4LU5Paw4PzMb5gNM0+PwqyUa1KfoRn8apa3N3186Jj7lkxnqsvFq7Y6I2qT3?=
- =?us-ascii?Q?k77OajQadG7LCxLSxaynrCD9K6F/cokdRTB4QJxxwOQSILgYgaYl3q95+fYE?=
- =?us-ascii?Q?psFX+2j/YWaaAhjWaxZW9mJaVwAZ4hlW7PGenxz+UXMiSVuc2KQ83iLU95fO?=
- =?us-ascii?Q?Z9BoYuLj/3zO/wyzRO62o0nu4fSUhKiZztmGBo6dYABbrIMPa81fagucOB9i?=
- =?us-ascii?Q?+/j4jWZpDb5Ng3Ltbh6DAfcwe1zx9tqS12ZaUyxJ0hU8TdDKSqJLsPsnWFCt?=
- =?us-ascii?Q?hQfbBPBBo2jKwxYw1d9dAB3DTQ48JvJPKrZKEURTZwprqpANBR933rLl+EFc?=
- =?us-ascii?Q?dzCidRo2LR7V5emdmtDuj3D1z8pygblC2VXqoDp+?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QqQiVzdc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50040C072AA;
+	Fri, 19 Apr 2024 15:12:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713539561;
+	bh=e8jDoNGFX0rqlpAvs8UdIrNhZ46T5XKH6s5dmkm16Ng=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QqQiVzdcJbZSp3BoVKo42KHTESeKANyOYRPmevwjBqeytpDpJirld1vIo630gluEJ
+	 F4Styu9sr1682IIaGmUbizADbK72Gel8pXKnWCeCzjPzIIYNseGGR42fit082EZpyd
+	 1danMCDHTW7wx9eVbc7bVRppN+biIa+I6c0IDj7Zzxg+I3HBxb7bjgs+6/lXI91xL2
+	 JlvxsBD4kjuMbJ8cPE4rHPR3onhiGALV93OT9dSQCjHA64zfKSiXv49m5kZWlTgHjn
+	 4iHlEEG8top2qVgGCrI8rtYFi+2A6c63afpW6AYrYujSP34FvyvRdO4rQjvc4rpBNw
+	 AF7YE683T1l6A==
+Date: Fri, 19 Apr 2024 17:12:35 +0200
+From: Benjamin Tissoires <bentiss@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH bpf-next 11/18] bpf: wq: add bpf_wq_init
+Message-ID: <tqj7biswz4ktars2mjrog35sijfgnm2nmvqrzbldphksbtj4kj@qd3digliqsjm>
+References: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
+ <20240416-bpf_wq-v1-11-c9e66092f842@kernel.org>
+ <f7awluzevpzqhqo5a65dxlfoo3dhkvbpntb4a5uueq2v7gjj7b@ddoyfpeymg3u>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB6373.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4f4239f-42b5-4d5d-88cd-08dc60831fe1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2024 15:12:27.1472
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ofzbtn1LX0ln3HVuMUz95Eqy59sEftl4dq082whDnk++Ps+x0UDfQHIFOL9Nkuk30CeP+CSMwUcOyNCXQ3FLsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7593
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7awluzevpzqhqo5a65dxlfoo3dhkvbpntb4a5uueq2v7gjj7b@ddoyfpeymg3u>
 
-On Friday, April 19, 2024 9:42 PM, Sean Christopherson wrote:
-> On Fri, Apr 19, 2024, Wei Wang wrote:
-> > KVM_X86_OP and KVM_X86_OP_OPTIONAL were utilized to define and
-> execute
-> > static_call_update() calls on mandatory and optional hooks, respectivel=
-y.
-> > Mandatory hooks were invoked via static_call() and necessitated
-> > definition due to the presumption that an undefined hook (i.e., NULL)
-> > would cause
-> > static_call() to fail. This assumption no longer holds true as
-> > static_call() has been updated to treat a "NULL" hook as a NOP on x86.
-> > Consequently, the so-called mandatory hooks are no longer required to
-> > be defined, rendering them non-mandatory.
->=20
-> This is wrong.  They absolutely are mandatory.  The fact that static_call=
-()
-> doesn't blow up doesn't make them optional.  If a vendor neglects to
-> implement a mandatory hook, KVM *will* break, just not immediately on the
-> static_call().
->=20
-> The static_call() behavior is actually unfortunate, as KVM at least would=
- prefer
-> that it does explode on a NULL point.  I.e. better to crash the kernel (h=
-opefully
-> before getting to production) then to have a lurking bug just waiting to =
-cause
-> problems.
->=20
-> > This eliminates the need to differentiate between mandatory and
-> > optional hooks, allowing a single KVM_X86_OP to suffice.
-> >
-> > So KVM_X86_OP_OPTIONAL and the WARN_ON() associated with
-> KVM_X86_OP
-> > are removed to simplify usage,
->=20
-> Just in case it isn't clear, I am very strongly opposed to removing
-> KVM_X86_OP_OPTIONAL() and the WARN_ON() protection to ensure
-> mandatory ops are implemented.
+On Apr 18 2024, Alexei Starovoitov wrote:
+> On Tue, Apr 16, 2024 at 04:08:24PM +0200, Benjamin Tissoires wrote:
+> > We need to teach the verifier about the second argument which is declared
+> > as void * but which is of type KF_ARG_PTR_TO_MAP. We could have dropped
+> > this extra case if we declared the second argument as struct bpf_map *,
+> > but that means users will have to do extra casting to have their program
+> > compile.
+> > 
+> > We also need to duplicate the timer code for the checking if the map
+> > argument is matching the provided workqueue.
+> > 
+> > Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+> > 
+> > ---
+> > 
+> > Note that the timer code when matching for the map is checking for
+> > constant map pointers. I wonder if this needs to be enforced too
+> > (being constant?)
+> > ---
+> >  include/uapi/linux/bpf.h |   9 ++++
+> >  kernel/bpf/helpers.c     | 114 ++++++++++++++++++++++++++++++++++++++++++++++-
+> >  kernel/bpf/verifier.c    |   6 +++
+> >  3 files changed, 127 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> > index e4ae83550fb3..519f6019d158 100644
+> > --- a/include/uapi/linux/bpf.h
+> > +++ b/include/uapi/linux/bpf.h
+> > @@ -7502,4 +7502,13 @@ struct bpf_iter_num {
+> >  	__u64 __opaque[1];
+> >  } __attribute__((aligned(8)));
+> >  
+> > +/*
+> > + * Flags to control bpf_wq_init() and bpf_wq_set_callback() behaviour.
+> > + *     - BPF_F_WQ_SLEEPABLE: the callback needs to run in
+> > + *       a sleepable context
+> > + */
+> > +enum {
+> > +	BPF_F_WQ_SLEEPABLE = (1ULL << 0),
+> > +};
+> 
+> Just started looking at the patch set. The first reaction that
+> this flag is odd. Why add it? wq provides sleepable ctx.
+> Why would the program ask to be non-sleepable in wq?
 
-OK, we can drop patch 4 and 5.
+That was one of my questions: do we need it? Apparently not :)
 
-Btw, may I know what is the boundary between mandatory and optional hooks?
-For example, when adding a new hook, what criteria should we use to determi=
-ne
-whether it's mandatory, thereby requiring both SVM and VMX to implement it =
-(and
-seems need to be merged them together?)
-(I searched a bit, but didn't find it)
+If not, then that simplifies the series by a lot: patch 1/18 can be
+dropped and 14/18 can be stripped down and squashed in 15/18.
+
+> If it needs to callback to run in rcu cs, it can use bpf_rcu_read_lock() kfunc
+> as the first call in such callback and it will be equivalent
+> to not-passing this BPF_F_WQ_SLEEPABLE flag.
+> It seem it can be dropped and complexity reduced.
+
+yep :)
+
+> The verifier complications in later patches due to this flag too...
+> I just don't see the point.
+
+It's something I added while adding the tests. And some tests were passing
+in case I was having a non sleepable callback. But if we have
+bpf_rcu_read_lock(), we are all fine and can reduce the complexity.
+
+> 
+> > +
+> >  #endif /* _UAPI__LINUX_BPF_H__ */
+> > diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+> > index 9fd12d480b8b..9ac1b8bb3a01 100644
+> > --- a/kernel/bpf/helpers.c
+> > +++ b/kernel/bpf/helpers.c
+> > @@ -1109,11 +1109,18 @@ struct bpf_hrtimer {
+> >  	struct hrtimer timer;
+> >  };
+> >  
+> > -/* the actual struct hidden inside uapi struct bpf_timer */
+> > +struct bpf_work {
+> > +	struct bpf_async_cb cb;
+> > +	struct work_struct work;
+> > +	struct work_struct delete_work;
+> > +};
+> > +
+> > +/* the actual struct hidden inside uapi struct bpf_timer and bpf_wq */
+> >  struct bpf_async_kern {
+> >  	union {
+> >  		struct bpf_async_cb *cb;
+> >  		struct bpf_hrtimer *timer;
+> > +		struct bpf_work *work;
+> >  	};
+> >  	/* bpf_spin_lock is used here instead of spinlock_t to make
+> >  	 * sure that it always fits into space reserved by struct bpf_timer
+> > @@ -1124,6 +1131,7 @@ struct bpf_async_kern {
+> >  
+> >  enum bpf_async_type {
+> >  	BPF_ASYNC_TYPE_TIMER = 0,
+> > +	BPF_ASYNC_TYPE_WQ,
+> >  };
+> >  
+> >  static DEFINE_PER_CPU(struct bpf_hrtimer *, hrtimer_running);
+> > @@ -1167,11 +1175,75 @@ static enum hrtimer_restart bpf_timer_cb(struct hrtimer *hrtimer)
+> >  	return HRTIMER_NORESTART;
+> >  }
+> >  
+> > +static void bpf_wq_work(struct work_struct *work)
+> > +{
+> > +	struct bpf_work *w = container_of(work, struct bpf_work, work);
+> > +	struct bpf_tramp_run_ctx __maybe_unused run_ctx;
+> > +	struct bpf_prog *prog = w->cb.prog;
+> > +	unsigned int flags = w->cb.flags;
+> > +	struct bpf_map *map = w->cb.map;
+> > +	bpf_callback_t callback_fn;
+> > +	void *value = w->cb.value;
+> > +	void *key;
+> > +	u32 idx;
+> > +
+> > +	BTF_TYPE_EMIT(struct bpf_wq);
+> > +
+> > +	callback_fn = READ_ONCE(w->cb.callback_fn);
+> > +	if (!callback_fn || !prog)
+> > +		return;
+> > +
+> > +	if (map->map_type == BPF_MAP_TYPE_ARRAY) {
+> > +		struct bpf_array *array = container_of(map, struct bpf_array, map);
+> > +
+> > +		/* compute the key */
+> > +		idx = ((char *)value - array->value) / array->elem_size;
+> > +		key = &idx;
+> > +	} else { /* hash or lru */
+> > +		key = value - round_up(map->key_size, 8);
+> > +	}
+> > +
+> > +	run_ctx.bpf_cookie = 0;
+> > +
+> > +	if (flags & BPF_F_WQ_SLEEPABLE) {
+> > +		if (!__bpf_prog_enter_sleepable_recur(prog, &run_ctx)) {
+> > +			/* recursion detected */
+> > +			__bpf_prog_exit_sleepable_recur(prog, 0, &run_ctx);
+> > +			return;
+> > +		}
+> > +	} else {
+> > +		if (!__bpf_prog_enter_recur(prog, &run_ctx)) {
+> > +			/* recursion detected */
+> > +			__bpf_prog_exit_recur(prog, 0, &run_ctx);
+> > +			return;
+> > +		}
+> > +	}
+> > +
+> > +	callback_fn((u64)(long)map, (u64)(long)key, (u64)(long)value, 0, 0);
+> > +	/* The verifier checked that return value is zero. */
+> > +
+> > +	if (flags & BPF_F_WQ_SLEEPABLE)
+> > +		__bpf_prog_exit_sleepable_recur(prog, 0 /* bpf_prog_run does runtime stats */,
+> > +						&run_ctx);
+> > +	else
+> > +		__bpf_prog_exit_recur(prog, 0, &run_ctx);
+> > +}
+> > +
+> > +static void bpf_wq_delete_work(struct work_struct *work)
+> > +{
+> > +	struct bpf_work *w = container_of(work, struct bpf_work, delete_work);
+> > +
+> > +	cancel_work_sync(&w->work);
+> > +
+> > +	kfree_rcu(w, cb.rcu);
+> > +}
+> > +
+> >  static int __bpf_async_init(struct bpf_async_kern *async, struct bpf_map *map, u64 flags,
+> >  			    enum bpf_async_type type)
+> >  {
+> >  	struct bpf_async_cb *cb;
+> >  	struct bpf_hrtimer *t;
+> > +	struct bpf_work *w;
+> >  	clockid_t clockid;
+> >  	size_t size;
+> >  	int ret = 0;
+> > @@ -1183,6 +1255,9 @@ static int __bpf_async_init(struct bpf_async_kern *async, struct bpf_map *map, u
+> >  	case BPF_ASYNC_TYPE_TIMER:
+> >  		size = sizeof(struct bpf_hrtimer);
+> >  		break;
+> > +	case BPF_ASYNC_TYPE_WQ:
+> > +		size = sizeof(struct bpf_work);
+> > +		break;
+> >  	default:
+> >  		return -EINVAL;
+> >  	}
+> > @@ -1201,13 +1276,22 @@ static int __bpf_async_init(struct bpf_async_kern *async, struct bpf_map *map, u
+> >  		goto out;
+> >  	}
+> >  
+> > -	if (type == BPF_ASYNC_TYPE_TIMER) {
+> > +	switch (type) {
+> > +	case BPF_ASYNC_TYPE_TIMER:
+> >  		clockid = flags & (MAX_CLOCKS - 1);
+> >  		t = (struct bpf_hrtimer *)cb;
+> >  
+> >  		hrtimer_init(&t->timer, clockid, HRTIMER_MODE_REL_SOFT);
+> >  		t->timer.function = bpf_timer_cb;
+> >  		cb->value = (void *)async - map->record->timer_off;
+> > +		break;
+> > +	case BPF_ASYNC_TYPE_WQ:
+> > +		w = (struct bpf_work *)cb;
+> > +
+> > +		INIT_WORK(&w->work, bpf_wq_work);
+> > +		INIT_WORK(&w->delete_work, bpf_wq_delete_work);
+> > +		cb->value = (void *)async - map->record->wq_off;
+> > +		break;
+> >  	}
+> >  	cb->map = map;
+> >  	cb->prog = NULL;
+> > @@ -1473,7 +1557,19 @@ void bpf_timer_cancel_and_free(void *val)
+> >   */
+> >  void bpf_wq_cancel_and_free(void *val)
+> >  {
+> > +	struct bpf_work *work;
+> > +
+> >  	BTF_TYPE_EMIT(struct bpf_wq);
+> > +
+> > +	work = (struct bpf_work *)__bpf_async_cancel_and_free(val);
+> > +	if (!work)
+> > +		return;
+> > +	/* Trigger cancel of the sleepable work, but *do not* wait for
+> > +	 * it to finish if it was running as we might not be in a
+> > +	 * sleepable context.
+> > +	 * kfree will be called once the work has finished.
+> > +	 */
+> > +	schedule_work(&work->delete_work);
+> >  }
+> >  
+> >  BPF_CALL_2(bpf_kptr_xchg, void *, map_value, void *, ptr)
+> > @@ -2612,6 +2708,19 @@ __bpf_kfunc void bpf_throw(u64 cookie)
+> >  	WARN(1, "A call to BPF exception callback should never return\n");
+> >  }
+> >  
+> > +__bpf_kfunc int bpf_wq_init(struct bpf_wq *wq, void *map, unsigned int flags)
+> > +{
+> > +	struct bpf_async_kern *async = (struct bpf_async_kern *)wq;
+> > +
+> > +	BUILD_BUG_ON(sizeof(struct bpf_async_kern) > sizeof(struct bpf_wq));
+> > +	BUILD_BUG_ON(__alignof__(struct bpf_async_kern) != __alignof__(struct bpf_wq));
+> > +
+> > +	if (flags & ~BPF_F_WQ_SLEEPABLE)
+> > +		return -EINVAL;
+> > +
+> > +	return __bpf_async_init(async, map, flags, BPF_ASYNC_TYPE_WQ);
+> > +}
+> > +
+> >  __bpf_kfunc_end_defs();
+> >  
+> >  BTF_KFUNCS_START(generic_btf_ids)
+> > @@ -2689,6 +2798,7 @@ BTF_ID_FLAGS(func, bpf_dynptr_is_rdonly)
+> >  BTF_ID_FLAGS(func, bpf_dynptr_size)
+> >  BTF_ID_FLAGS(func, bpf_dynptr_clone)
+> >  BTF_ID_FLAGS(func, bpf_modify_return_test_tp)
+> > +BTF_ID_FLAGS(func, bpf_wq_init)
+> >  BTF_KFUNCS_END(common_btf_ids)
+> >  
+> >  static const struct btf_kfunc_id_set common_kfunc_set = {
+> > diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> > index 112faf2cd7e9..5e8c1e65fe8c 100644
+> > --- a/kernel/bpf/verifier.c
+> > +++ b/kernel/bpf/verifier.c
+> > @@ -11038,6 +11038,7 @@ enum special_kfunc_type {
+> >  	KF_bpf_percpu_obj_drop_impl,
+> >  	KF_bpf_throw,
+> >  	KF_bpf_iter_css_task_new,
+> > +	KF_bpf_wq_init,
+> >  };
+> >  
+> >  BTF_SET_START(special_kfunc_set)
+> > @@ -11064,6 +11065,7 @@ BTF_ID(func, bpf_throw)
+> >  #ifdef CONFIG_CGROUPS
+> >  BTF_ID(func, bpf_iter_css_task_new)
+> >  #endif
+> > +BTF_ID(func, bpf_wq_init)
+> >  BTF_SET_END(special_kfunc_set)
+> >  
+> >  BTF_ID_LIST(special_kfunc_list)
+> > @@ -11094,6 +11096,7 @@ BTF_ID(func, bpf_iter_css_task_new)
+> >  #else
+> >  BTF_ID_UNUSED
+> >  #endif
+> > +BTF_ID(func, bpf_wq_init)
+> >  
+> >  static bool is_kfunc_ret_null(struct bpf_kfunc_call_arg_meta *meta)
+> >  {
+> > @@ -11171,6 +11174,9 @@ get_kfunc_ptr_arg_type(struct bpf_verifier_env *env,
+> >  	if (is_kfunc_arg_wq(meta->btf, &args[argno]))
+> >  		return KF_ARG_PTR_TO_WORKQUEUE;
+> >  
+> > +	if (meta->func_id == special_kfunc_list[KF_bpf_wq_init] && argno == 1)
+> > +		return KF_ARG_PTR_TO_MAP;
+> > +
+> 
+> Hmm. This function has this bit:
+>         if (is_kfunc_arg_map(meta->btf, &args[argno]))
+>                 return KF_ARG_PTR_TO_MAP;
+> 
+> Just do:
+> +__bpf_kfunc int bpf_wq_init(struct bpf_wq *wq, void *map__map, ...
+
+Oh, nice. I haven't noticed that. I'll try it in v2.
+
+Cheers,
+Benjamin
+
+> 
+> It was specifically added for bpf_arena_alloc_pages to pass pointer to a map.
+> In case of arena map type it's used as:
+> struct {
+>         __uint(type, BPF_MAP_TYPE_ARENA);
+>         ...
+> } arena SEC(".maps");
+> 
+> page = bpf_arena_alloc_pages(&arena, ...)
+> libbpf and the verifier do the right thing.
+> I think it should work here as well.
