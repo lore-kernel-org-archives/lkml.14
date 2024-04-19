@@ -1,32 +1,42 @@
-Received: from mail-m25499.xmail.ntesmail.com (mail-m25499.xmail.ntesmail.com [103.129.254.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4312378285;
-	Fri, 19 Apr 2024 12:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.129.254.99
+Received: from mailhk01.kuaishou.com (mailhk01.kuaishou.com [129.226.226.143])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0689839F1;
+	Fri, 19 Apr 2024 12:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.226.226.143
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713528766; cv=none; b=Fk+MsmtDSYiauG3Wri77oc+a3ZseTDq7m02XcisARHpoOPu/KyX5U80JTl1z1+WwFLwNsHvCXbIH1qPBkqgaKM7o2NZWMNHFwLPEZHWkzV7k0i6gdGdxXfzywCPoJtZ6Ei/Yex4F2QrU5fPwauNT5puFAJEQlTdfVgfN9eEoxhw=
+	t=1713528838; cv=none; b=O4rkD9S15iNl2e+wCYxGeoY4GBJmMZkRYohLjQk5MDZWHFlDIrHI0VxkJyGdbPSeP2VSj37dBHdDEZruRXea4I8LyxHiftR/f8Px/rcq6P7XF8EvzC+nKfSqLaWAq3llSg2TNpcXISyRcClpnYteduiOtFpAcBTJFf9RrhS68aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713528766; c=relaxed/simple;
-	bh=KZGUHlRWEuj7dHpQ9LaQKSzrzqTzErAnF5h96rQdeJo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=df+Wz76eGw2j8kZMQhMIWr1ahw+qZzZ/Rv3QJNrCxgkV4LA3o/cnWZP5274YDUbuaUYbD1eSGIdHszHKGGRjG/3ikKEY0UBgBV2gDY7scFf4sFHc5enl7++pYSY8z3FDPudzJKjLuQtSp/ltonmPKWB3PZgk71QWfXHupAogvIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn; spf=none smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=103.129.254.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=easystack.cn
-Received: from localhost.localdomain (unknown [110.185.170.227])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 6F0EF56025F;
-	Fri, 19 Apr 2024 14:14:28 +0800 (CST)
-From: Jun Gu <jun.gu@easystack.cn>
-To: kuba@kernel.org
-Cc: dev@openvswitch.org,
-	echaudro@redhat.com,
-	jun.gu@easystack.cn,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH net-next v4] net: openvswitch: Check vport netdev name
-Date: Fri, 19 Apr 2024 14:14:25 +0800
-Message-Id: <20240419061425.132723-1-jun.gu@easystack.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1713528838; c=relaxed/simple;
+	bh=kQXlIm+hk7ZcDtTEmOfJwkpRlUhwn8EeE4YRTcIyaZg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dUd0oexIxvJbJvFFzvJIf21gTEpyd2F+9Y+QdNMJprwMwY4aHxYMjTZdiADJ+jsRUINX/bSGJSVNoTn+q39YvjY4SGgKh4EKEShKO5tjoCUgS/hEQMDZYnjIxAZr0w+AtwwL9aZ1ggg31wk6hxyovM/TT8bWYx891UOPenXDgMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kuaishou.com; spf=pass smtp.mailfrom=kuaishou.com; dkim=pass (1024-bit key) header.d=kuaishou.com header.i=@kuaishou.com header.b=eidpqVcu; arc=none smtp.client-ip=129.226.226.143
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kuaishou.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kuaishou.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=kuaishou.com header.i=@kuaishou.com header.b="eidpqVcu"
+Received: from bjm7-spam02.kuaishou.com (smtpcn03.kuaishou.com [103.107.217.217])
+	by mailhk01.kuaishou.com (Postfix) with ESMTP id B3F2461579;
+	Fri, 19 Apr 2024 20:08:06 +0800 (CST)
+Received: from bjm7-pm-mail01.kuaishou.com (unknown [172.28.1.1])
+	by bjm7-spam02.kuaishou.com (Postfix) with ESMTPS id 42EBF19226D0D;
+	Fri, 19 Apr 2024 20:07:51 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; d=kuaishou.com; s=dkim; c=relaxed/relaxed;
+	t=1713528471; h=from:subject:to:date:message-id;
+	bh=0ojQK3AKejzo96bSCef2HP/0kdeYSr7fp5rz2r2c22s=;
+	b=eidpqVcu7qp9qlJL/Ie4vWLUzzqvlJXH5h0f2IXPG5NEstSyRYUfwR71cOcNlTebaG5fobPr0uQ
+	U2GO9iDZe+2HXf2R3CsI2b55oRPbyFxZEhwMVBab8B836foaZ+FwTQ2Din/O+aIUCxQKWdjbWuINE
+	13KaaF0k1iPXIqGmO/Y=
+Received: from rack-retrieve19671.idchb1az3.hb1.kwaidc.com (172.28.1.32) by
+ bjm7-pm-mail01.kuaishou.com (172.28.1.1) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.20; Fri, 19 Apr 2024 20:07:50 +0800
+From: zhoutaiyu <zhoutaiyu@kuaishou.com>
+To: <tj@kernel.org>
+CC: <josef@toxicpanda.com>, <axboe@kernel.dk>, <cgroups@vger.kernel.org>,
+	<linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] blk-throttle: fix repeat limit on bio with BIO_BPS_THROTTLED
+Date: Fri, 19 Apr 2024 20:07:47 +0800
+Message-ID: <20240419120747.38031-1-zhoutaiyu@kuaishou.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,42 +44,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTh8eVk5DGksYGh4dTxgfSlUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUpKS1VKQ05VSkxLVUlJTFlXWRYaDxIVHRRZQVlPS0hVSk1PSUxOVUpLS1VKQktLWQ
-	Y+
-X-HM-Tid: 0a8ef4fdf7cc023dkunm6f0ef56025f
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ok06Pxw5Gjc0Th8uMRwoLA9N
-	GQkaFChVSlVKTEpITktMSU1DQ0JCVTMWGhIXVREOFVUcDjseGggCCA8aGBBVGBVFWVdZEgtZQVlK
-	SktVSkNOVUpMS1VJSUxZV1kIAVlBSkxJSjcG
+Content-Type: text/plain
+X-ClientProxiedBy: bjm7-pm-mail09.kuaishou.com (172.28.1.91) To
+ bjm7-pm-mail01.kuaishou.com (172.28.1.1)
 
-Ensure that the provided netdev name is not one of its aliases to
-prevent unnecessary creation and destruction of the vport by
-ovs-vswitchd.
+Give a concrete example, a bio is throtted because of reaching bps
+limit. It is then dispatched to request layer after a delay. In the
+request layer, it is split and the split bio flagged with
+BIO_BPS_THROTTLED will re-enter blkthrottle.
+The bio with BIO_BPS_THROTTLED should not be throttled for its bytes
+again. However, when the bps_limit and iops_limit are both set and
+sq->queue is not empty, the bio will be throttled again even the tg is
+still within iops limit.
 
-Signed-off-by: Jun Gu <jun.gu@easystack.cn>
-Acked-by: Eelco Chaudron <echaudro@redhat.com>
+Test scrips:
+cgpath=/sys/fs/cgroup/blkio/test0
+mkdir -p $cgpath
+echo "8:0 10485760" > $cgpath/blkio.throttle.write_bps_device
+echo "8:16 100000" > $cgpath/blkio.throttle.write_iops_device
+for ((i=0;i<50;i++));do
+  fio -rw=write -direct=1 -bs=4M -iodepth=8 -size=200M -numjobs=1 \
+-time_based=1 -runtime=30  -name=testt_$i -filename=testf_$i > /dev/null &
+  echo $! > $cgpath/tasks
+done
+
+The output of iostat:
+Device:  ...  wMB/s  ...
+sdb      ...  3.75  ...
+sdb      ...  2.50  ...
+sdb      ...  3.75  ...
+sdb      ...  2.50  ...
+sdb      ...  3.75  ...
+
+In order to fix this problem, early throttled the bio only when
+sq->queue is no empty and the bio is not flagged with BIO_BPS_THROTTLED.
+
+Signed-off-by: zhoutaiyu <zhoutaiyu@kuaishou.com>
 ---
- net/openvswitch/vport-netdev.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ block/blk-throttle.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/openvswitch/vport-netdev.c b/net/openvswitch/vport-netdev.c
-index 903537a5da22..618edc346c0f 100644
---- a/net/openvswitch/vport-netdev.c
-+++ b/net/openvswitch/vport-netdev.c
-@@ -78,7 +78,10 @@ struct vport *ovs_netdev_link(struct vport *vport, const char *name)
- 	int err;
+diff --git a/block/blk-throttle.c b/block/blk-throttle.c
+index f4850a6..499c006 100644
+--- a/block/blk-throttle.c
++++ b/block/blk-throttle.c
+@@ -913,7 +913,8 @@ static bool tg_may_dispatch(struct throtl_grp *tg, struct bio *bio,
+ 	 * queued.
+ 	 */
+ 	BUG_ON(tg->service_queue.nr_queued[rw] &&
+-	       bio != throtl_peek_queued(&tg->service_queue.queued[rw]));
++	       bio != throtl_peek_queued(&tg->service_queue.queued[rw]) &&
++	       !bio_flagged(bio, BIO_BPS_THROTTLED));
  
- 	vport->dev = dev_get_by_name(ovs_dp_get_net(vport->dp), name);
--	if (!vport->dev) {
-+	/* Ensure that the device exists and that the provided
-+	 * name is not one of its aliases.
-+	 */
-+	if (!vport->dev || strcmp(name, ovs_vport_name(vport))) {
- 		err = -ENODEV;
- 		goto error_free_vport;
- 	}
+ 	/* If tg->bps = -1, then BW is unlimited */
+ 	if ((bps_limit == U64_MAX && iops_limit == UINT_MAX) ||
+@@ -2201,7 +2202,7 @@ bool __blk_throtl_bio(struct bio *bio)
+ 		throtl_downgrade_check(tg);
+ 		throtl_upgrade_check(tg);
+ 		/* throtl is FIFO - if bios are already queued, should queue */
+-		if (sq->nr_queued[rw])
++		if (sq->nr_queued[rw] && !bio_flagged(bio, BIO_BPS_THROTTLED))
+ 			break;
+ 
+ 		/* if above limits, break to queue */
 -- 
-2.25.1
+1.8.3.1
 
