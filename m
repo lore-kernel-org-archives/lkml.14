@@ -1,51 +1,52 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A0740BFD;
-	Sat, 20 Apr 2024 19:29:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3093FE4E;
+	Sat, 20 Apr 2024 19:29:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713641394; cv=none; b=Ig0MAbdn/lODxvrprg60AWvrJcaToLIxsNkJ6uMwYEICdsNxfdnhpPbqyw4Et05tFpYJOCi/5soNDVNrXB+t6SdeiKtsAQ+X5uMQa9xy5eK92b0tG+LaEDYxcBbbWXTLw0lqf+a5LcynNJ8LsjWRnx589z9g8hRAZPhByPL5FqU=
+	t=1713641396; cv=none; b=IPwe7BQ0wQVTWqjZsCdG3EHHMydPqN7nZ8KA1to1vIEFg3FZUxQxeKx90Ub4IesLW/N61rjnvMrQNYbRl2uPJra11wbspyJzH96zXiTDdZxI9lzrv84pStD9rbNkWoMNjr4CaDxqpd7xg4nS59E0hHVm44n3VJw/3uV/yjZqYtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713641394; c=relaxed/simple;
-	bh=ue3wSJsGvBdnw1N4bfdmEQKVEAV5JrZU9sFns46sUdU=;
+	s=arc-20240116; t=1713641396; c=relaxed/simple;
+	bh=Ik9EQbMe8HbPkSq9sr1NNJbIkQ1gQWFBQhm04HdPJ9w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=aIumqLr4KKIDJPDa4j8EdVsoa6dIpmqN9mPbWtWzR5WvRn1JKfo+X5D2oVfXWdcgle4IQkqo+f5KVsQSnOPjv8frotO/bxkkdd5e+M6NLMxyJ3v+i2HhgysO6Zy3lejvyPgabXGtwoZwBUROdQYkWZpzC3CkWFnj9FTgdKe81RM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=1RV3/I6t; arc=none smtp.client-ip=68.232.154.123
+	 In-Reply-To:To:CC; b=hQ/qss/DMHj8f+RVOpD3xJoqNzu0iniXKNs+CuxOhxqbhlsM2xsmXUmdqyVMMQT+tQ7KfNjvLyxO/5xL6oJUpv7HhuTZyqMgXnKlI/bLW1JqmqP56e7n7F0La4agOqUUJlxoc08DKcYIoeLfucoKP+Ny5H70zxQmxjOmEht5ObQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=NvuvUZvk; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1RV3/I6t"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="NvuvUZvk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1713641393; x=1745177393;
+  t=1713641395; x=1745177395;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=ue3wSJsGvBdnw1N4bfdmEQKVEAV5JrZU9sFns46sUdU=;
-  b=1RV3/I6t2pWUfyuHqX7lF5UXu7jMdq2bHyZo3uI87mgpPMtenS/eeQhd
-   zggKzsZ7lP5fV11PhOaVPZ2DET7WGJPJp2eqRzC+R6eIP0VdGr9Ri9jcN
-   pZ9A96nx6GiWvd6p55SIvWOB2rMNEHBaElxY9zVQkz/j34hk+X1Chwa5u
-   v3Ov/Ky5ex1P7ijvAVOPkBlO8uRuXIwcpKbUlqNsyNRwu0h+sqXCX4NaK
-   WGh7qZU0ZVA+PvaSUuGZjpRMsmAHglfX3aP+Y0kOBiQFrkPkrcb+WVNc2
-   5toxisznQE6ySeKmXItNqnib6RQVDklPVKeekegQzAWOxWIVdM4gvLBp9
+  bh=Ik9EQbMe8HbPkSq9sr1NNJbIkQ1gQWFBQhm04HdPJ9w=;
+  b=NvuvUZvkhkuTFqpAdrBRpZp/WwNMoNtRt7IGyzaEIlFF/mZKthMM2KpO
+   kFJH3QWgdAHzYbpRw04lBiALvr0s/Xdn7J4SPunLmtVX2DbtSBmbVGlzI
+   RmvX1Np2fRg6kF5koVj6MK/I6hJ9YXYKVYfM5KE9MsJBTpxjBBxHTuurO
+   h5WN7+7tf0e3uJu2gTLxIZnxuq2vPdOE0P04M+4xaw2kWNAn/rNuWU+IX
+   q2R6AXIi3/UiILK7wzv9RGaqqenfwpvFGZmYKMH/Z+c/DMnE42usrln3H
+   dLSEbwX3FVxdrRMDVSIq0A05xX8LUbEnMOg2CKykqTB+wxuP7IQ5d73Ck
    Q==;
 X-CSE-ConnectionGUID: r3PO+GVPQoGyYBK6996e2w==
-X-CSE-MsgGUID: DyOyp7H8TBe6qpBDMhUneA==
+X-CSE-MsgGUID: afDOspa6Qi6pagNpuqwhsg==
 X-IronPort-AV: E=Sophos;i="6.07,217,1708412400"; 
-   d="scan'208";a="22513531"
+   d="scan'208";a="22513532"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
   by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 20 Apr 2024 12:29:52 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sat, 20 Apr 2024 12:29:23 -0700
+ 15.1.2507.35; Sat, 20 Apr 2024 12:29:33 -0700
 Received: from DEN-DL-M70577.microchip.com (10.10.85.11) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Sat, 20 Apr 2024 12:29:19 -0700
+ 15.1.2507.35 via Frontend Transport; Sat, 20 Apr 2024 12:29:30 -0700
 From: Daniel Machon <daniel.machon@microchip.com>
-Date: Sat, 20 Apr 2024 21:29:10 +0200
-Subject: [PATCH net-next v3 1/5] net: sparx5: add new register definitions
+Date: Sat, 20 Apr 2024 21:29:13 +0200
+Subject: [PATCH net-next v3 4/5] net: sparx5: add the tc glue to support
+ port mirroring
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,7 +55,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240420-port-mirroring-v3-1-0fe3ac52006d@microchip.com>
+Message-ID: <20240420-port-mirroring-v3-4-0fe3ac52006d@microchip.com>
 References: <20240420-port-mirroring-v3-0-0fe3ac52006d@microchip.com>
 In-Reply-To: <20240420-port-mirroring-v3-0-0fe3ac52006d@microchip.com>
 To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
@@ -71,101 +72,84 @@ CC: <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<daniel.machon@microchip.com>
 X-Mailer: b4 0.14-dev
 
-In preparation for port mirroring support through tc matchall, add the
-required register definitions.
+Add the necessary tc glue to add and delete mirror rules through tc
+matchall.
 
 Signed-off-by: Daniel Machon <daniel.machon@microchip.com>
 Reviewed-by: Steen Hegelund <Steen.Hegelund@microchip.com>
 ---
- .../ethernet/microchip/sparx5/sparx5_main_regs.h   | 68 ++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+ .../ethernet/microchip/sparx5/sparx5_tc_matchall.c | 38 ++++++++++++++++++++--
+ 1 file changed, 36 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_main_regs.h b/drivers/net/ethernet/microchip/sparx5/sparx5_main_regs.h
-index bd03a0a3c1da..22acc1f3380c 100644
---- a/drivers/net/ethernet/microchip/sparx5/sparx5_main_regs.h
-+++ b/drivers/net/ethernet/microchip/sparx5/sparx5_main_regs.h
-@@ -83,6 +83,64 @@ enum sparx5_target {
- #define ANA_AC_OWN_UPSID_OWN_UPSID_GET(x)\
- 	FIELD_GET(ANA_AC_OWN_UPSID_OWN_UPSID, x)
+diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_tc_matchall.c b/drivers/net/ethernet/microchip/sparx5/sparx5_tc_matchall.c
+index 2a33b347098f..4f9ae026fa47 100644
+--- a/drivers/net/ethernet/microchip/sparx5/sparx5_tc_matchall.c
++++ b/drivers/net/ethernet/microchip/sparx5/sparx5_tc_matchall.c
+@@ -36,6 +36,13 @@ static void sparx5_tc_matchall_parse_action(struct sparx5_port *port,
+ 	entry->cookie = cookie;
+ }
  
-+/*      ANA_AC:MIRROR_PROBE:PROBE_CFG */
-+#define ANA_AC_PROBE_CFG(g) \
-+	__REG(TARGET_ANA_AC, 0, 1, 893696, g, 3, 32, 0, 0, 1, 4)
++static void
++sparx5_tc_matchall_parse_mirror_action(struct sparx5_mall_entry *entry,
++				       struct flow_action_entry *action)
++{
++	entry->mirror.port = netdev_priv(action->dev);
++}
 +
-+#define ANA_AC_PROBE_CFG_PROBE_RX_CPU_AND_VD GENMASK(31, 27)
-+#define ANA_AC_PROBE_CFG_PROBE_RX_CPU_AND_VD_SET(x)\
-+	FIELD_PREP(ANA_AC_PROBE_CFG_PROBE_RX_CPU_AND_VD, x)
-+#define ANA_AC_PROBE_CFG_PROBE_RX_CPU_AND_VD_GET(x)\
-+	FIELD_GET(ANA_AC_PROBE_CFG_PROBE_RX_CPU_AND_VD, x)
-+
-+#define ANA_AC_PROBE_CFG_PROBE_CPU_SET      GENMASK(26, 19)
-+#define ANA_AC_PROBE_CFG_PROBE_CPU_SET_SET(x)\
-+	FIELD_PREP(ANA_AC_PROBE_CFG_PROBE_CPU_SET, x)
-+#define ANA_AC_PROBE_CFG_PROBE_CPU_SET_GET(x)\
-+	FIELD_GET(ANA_AC_PROBE_CFG_PROBE_CPU_SET, x)
-+
-+#define ANA_AC_PROBE_CFG_PROBE_VID          GENMASK(18, 6)
-+#define ANA_AC_PROBE_CFG_PROBE_VID_SET(x)\
-+	FIELD_PREP(ANA_AC_PROBE_CFG_PROBE_VID, x)
-+#define ANA_AC_PROBE_CFG_PROBE_VID_GET(x)\
-+	FIELD_GET(ANA_AC_PROBE_CFG_PROBE_VID, x)
-+
-+#define ANA_AC_PROBE_CFG_PROBE_VLAN_MODE    GENMASK(5, 4)
-+#define ANA_AC_PROBE_CFG_PROBE_VLAN_MODE_SET(x)\
-+	FIELD_PREP(ANA_AC_PROBE_CFG_PROBE_VLAN_MODE, x)
-+#define ANA_AC_PROBE_CFG_PROBE_VLAN_MODE_GET(x)\
-+	FIELD_GET(ANA_AC_PROBE_CFG_PROBE_VLAN_MODE, x)
-+
-+#define ANA_AC_PROBE_CFG_PROBE_MAC_MODE     GENMASK(3, 2)
-+#define ANA_AC_PROBE_CFG_PROBE_MAC_MODE_SET(x)\
-+	FIELD_PREP(ANA_AC_PROBE_CFG_PROBE_MAC_MODE, x)
-+#define ANA_AC_PROBE_CFG_PROBE_MAC_MODE_GET(x)\
-+	FIELD_GET(ANA_AC_PROBE_CFG_PROBE_MAC_MODE, x)
-+
-+#define ANA_AC_PROBE_CFG_PROBE_DIRECTION    GENMASK(1, 0)
-+#define ANA_AC_PROBE_CFG_PROBE_DIRECTION_SET(x)\
-+	FIELD_PREP(ANA_AC_PROBE_CFG_PROBE_DIRECTION, x)
-+#define ANA_AC_PROBE_CFG_PROBE_DIRECTION_GET(x)\
-+	FIELD_GET(ANA_AC_PROBE_CFG_PROBE_DIRECTION, x)
-+
-+/*      ANA_AC:MIRROR_PROBE:PROBE_PORT_CFG */
-+#define ANA_AC_PROBE_PORT_CFG(g) \
-+	__REG(TARGET_ANA_AC, 0, 1, 893696, g, 3, 32, 8, 0, 1, 4)
-+
-+/*      ANA_AC:MIRROR_PROBE:PROBE_PORT_CFG1 */
-+#define ANA_AC_PROBE_PORT_CFG1(g) \
-+	__REG(TARGET_ANA_AC, 0, 1, 893696, g, 3, 32, 12, 0, 1, 4)
-+
-+/*      ANA_AC:MIRROR_PROBE:PROBE_PORT_CFG2 */
-+#define ANA_AC_PROBE_PORT_CFG2(g) \
-+	__REG(TARGET_ANA_AC, 0, 1, 893696, g, 3, 32, 16, 0, 1, 4)
-+
-+#define ANA_AC_PROBE_PORT_CFG2_PROBE_PORT_MASK2 BIT(0)
-+#define ANA_AC_PROBE_PORT_CFG2_PROBE_PORT_MASK2_SET(x)\
-+	FIELD_PREP(ANA_AC_PROBE_PORT_CFG2_PROBE_PORT_MASK2, x)
-+#define ANA_AC_PROBE_PORT_CFG2_PROBE_PORT_MASK2_GET(x)\
-+	FIELD_GET(ANA_AC_PROBE_PORT_CFG2_PROBE_PORT_MASK2, x)
-+
- /*      ANA_AC:SRC:SRC_CFG */
- #define ANA_AC_SRC_CFG(g)         __REG(TARGET_ANA_AC,\
- 					0, 1, 849920, g, 102, 16, 0, 0, 1, 4)
-@@ -6203,6 +6261,16 @@ enum sparx5_target {
- #define QFWD_SWITCH_PORT_MODE_LEARNALL_MORE_GET(x)\
- 	FIELD_GET(QFWD_SWITCH_PORT_MODE_LEARNALL_MORE, x)
+ static int sparx5_tc_matchall_replace(struct net_device *ndev,
+ 				      struct tc_cls_matchall_offload *tmo,
+ 				      bool ingress)
+@@ -65,6 +72,31 @@ static int sparx5_tc_matchall_replace(struct net_device *ndev,
  
-+/*      QFWD:SYSTEM:FRAME_COPY_CFG */
-+#define QFWD_FRAME_COPY_CFG(r)\
-+	__REG(TARGET_QFWD, 0, 1, 0, 0, 1, 340, 284, r, 12, 4)
-+
-+#define QFWD_FRAME_COPY_CFG_FRMC_PORT_VAL   GENMASK(12, 6)
-+#define QFWD_FRAME_COPY_CFG_FRMC_PORT_VAL_SET(x)\
-+	FIELD_PREP(QFWD_FRAME_COPY_CFG_FRMC_PORT_VAL, x)
-+#define QFWD_FRAME_COPY_CFG_FRMC_PORT_VAL_GET(x)\
-+	FIELD_GET(QFWD_FRAME_COPY_CFG_FRMC_PORT_VAL, x)
-+
- /*      QRES:RES_CTRL:RES_CFG */
- #define QRES_RES_CFG(g)           __REG(TARGET_QRES,\
- 					0, 1, 0, g, 5120, 16, 0, 0, 1, 4)
+ 	sparx5 = port->sparx5;
+ 	switch (action->id) {
++	case FLOW_ACTION_MIRRED:
++		sparx5_tc_matchall_parse_mirror_action(mall_entry, action);
++		err = sparx5_mirror_add(mall_entry);
++		if (err) {
++			switch (err) {
++			case -EEXIST:
++				NL_SET_ERR_MSG_MOD(tmo->common.extack,
++						   "Mirroring already exists");
++				break;
++			case -EINVAL:
++				NL_SET_ERR_MSG_MOD(tmo->common.extack,
++						   "Cannot mirror a monitor port");
++				break;
++			case -ENOENT:
++				NL_SET_ERR_MSG_MOD(tmo->common.extack,
++						   "No more mirror probes available");
++				break;
++			default:
++				NL_SET_ERR_MSG_MOD(tmo->common.extack,
++						   "Unknown error");
++				break;
++			}
++			return err;
++		}
++		break;
+ 	case FLOW_ACTION_GOTO:
+ 		err = vcap_enable_lookups(sparx5->vcap_ctrl, ndev,
+ 					  tmo->common.chain_index,
+@@ -108,14 +140,16 @@ static int sparx5_tc_matchall_destroy(struct net_device *ndev,
+ 	struct sparx5_port *port = netdev_priv(ndev);
+ 	struct sparx5 *sparx5 = port->sparx5;
+ 	struct sparx5_mall_entry *entry;
+-	int err;
++	int err = 0;
+ 
+ 	entry = sparx5_tc_matchall_entry_find(&sparx5->mall_entries,
+ 					      tmo->cookie);
+ 	if (!entry)
+ 		return -ENOENT;
+ 
+-	if (entry->type == FLOW_ACTION_GOTO) {
++	if (entry->type == FLOW_ACTION_MIRRED) {
++		sparx5_mirror_del(entry);
++	} else if (entry->type == FLOW_ACTION_GOTO) {
+ 		err = vcap_enable_lookups(sparx5->vcap_ctrl, ndev,
+ 					  0, 0, tmo->cookie, false);
+ 	} else {
 
 -- 
 2.34.1
