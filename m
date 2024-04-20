@@ -1,34 +1,32 @@
-Received: from smtpbg156.qq.com (smtpbg156.qq.com [15.184.82.18])
+Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE89E55F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D62DF59;
 	Sat, 20 Apr 2024 05:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.82.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713590208; cv=none; b=Ofcs3vorNw+3gICfl4iILo8uU0Z5Jbd5DyabAhHsF9U4UeE3TyVpp/OJp/joW2T3IW48sOFLkBQvw9Wfgb/Ex6xbC4JWt7ns5dDRzfDMzdxNxrZ7bMx2yTxxCYcz1BmgOTBmZNLFWK2ehUK+9XHFUxnq1smubneRfBcJDncIVdk=
+	t=1713590208; cv=none; b=NTlgqEgHz4BsYLD45FK/ixARaqsFNooyLztvH1dQ4AfgubPXtQV1Fvdhbhhz20QVQJOmg24YulPJQ5d6YoP7+CQclkrpUqBetJGMIRLBzoiLfVB3hvcdIANC/KXWCLfHABuRvXh39DYiNp0+mOE5ySe0/O5RJM3t9OGgzIR0dCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713590208; c=relaxed/simple;
-	bh=J3xx7uCwxqDnvOjB2f/TyE777o+chO9jhWnCFlaoiFk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iNxWQFsUIuS5z9WwhBnO/fg7D0yXvxOVCCdJoZ9onUTH3L4pidKQzqjMY/K3L2RnKt6T/MHzaefrU8mUbcPZiWh2gBMJsjOcC6jDOmtqLsGzAd+OXcWqe1YyYGD8YHGK/rucZjB7Lk+wtFRpQGX6HXYxlA+ZiJW7XCb9KIjhT6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=15.184.82.18
+	bh=XU2yWoK1WrQqtBnfl3ZITnUQStHR0Uv3u1ddNO9vpgk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ck9entTn0GQu5sibrJRCJGppIJH3dRqditYSdlglHA0eKxPZoIKfwCRt80BHZlRlplNrtVZFQaivhldYqsmJMFR9djy7mCQ9xPUuoWO7rD662x5jZDyBwX5+MHstUTQoL/Wt4xokdng4K8nMw2ar4Z6FJ8SHOyZLau0dwBYtnIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=15.184.224.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp84t1713590173tizhh7rd
-X-QQ-Originating-IP: 8MtURKbY14c/8/zzXdbr2mv34MhaCyJmjCscKsCI8Ts=
+X-QQ-mid: bizesmtpsz10t1713590158trc69o
+X-QQ-Originating-IP: ygxXT8qgCis1aPxzC1hVeFySac1DMyjQDT7ybjxZsG4=
 Received: from localhost ( [112.0.147.129])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sat, 20 Apr 2024 13:16:12 +0800 (CST)
+	id ; Sat, 20 Apr 2024 13:15:56 +0800 (CST)
 X-QQ-SSF: 01400000000000903000000A0000000
-X-QQ-FEAT: 7YFKcddXagjUdEvd7pTyWsQ4VLtezgpliaI64kOzXjRCa35JZRCrMEOCTqGhV
-	qng8CLtYjSU4vPeW/USn80ZBPzeHD5ntGK/QkI3/6S9881J7o1Sr7qqwipZAPGvAVaN+oDt
-	nV3xJ7A/0dPzfaKjQZ379/v77zl5nQmZHQekOCI7hu3vHu622JrM1p3O7AlmMnNzCkwRGd0
-	FvyLmQgGhK8b8nhCbcis+qaayFaQOURFPBTQ7M8aYyryM34uJR0VDbpjNXmxjbKfzz5pdv+
-	FQ2JVxjwjsRwWJbz53Tsqvs0xQIOEjZkPtuTAYUlM3d9FGu6UWzBrzmXqc0ecBpSrMZtasp
-	VBavlsaY+kUu7+IcSbIMKs4afXgfFL/Sd/RkWjRNsMd5JjNVb3dkYi3lVtr/B9jUbESTkJ2
-	jz5FYmU3rfc7AT47u3FsPw==
+X-QQ-FEAT: rl11S5XfjRPSfQM4W5Pyaf/gzHrbMVKf2sydQfEV+SLQNUmsRgrcTwfZNLTHW
+	7ns4FjTNat80pnKXYTtQgqaGsvDQIrnAJ3WAnD6dbyICwR4N6P57gxV22k94bKlnPeX8Ujw
+	hzKhB23S1zcKvpJSpI41KS6GMqPwh8WowsOLtQ7MoR0+flCijONJiKgync2iMuYP6moybGi
+	SPhotQYBHp0FtH0UAbASisYipsfiwFSiwwdHsfWaL8CKCRFGaf8pejOPG/Krn8FqIk2oBeB
+	jlKBpcBGP/UkRosdDlE6mo5XIsqnysVoIrxAhz80vV9E+XRxBblJlBBwFsIaJnluSJBzl8w
+	8ft46A4qcPbgfNe+T53GYjl4FOtyASuSTql2dunStUy6pYkGx5oZwg9YoS1Ml5ylGGe31m6
 X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 15600578157613225618
+X-BIZMAIL-ID: 11763089425837061908
 From: Dawei Li <dawei.li@shingroup.cn>
 To: davem@davemloft.net,
 	andreas@gaisler.com
@@ -36,12 +34,10 @@ Cc: sparclinux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	sam@ravnborg.org,
 	Dawei Li <dawei.li@shingroup.cn>
-Subject: [PATCH v2 3/7] sparc/of: Remove on-stack cpumask var
-Date: Sat, 20 Apr 2024 13:15:43 +0800
-Message-Id: <20240420051547.3681642-4-dawei.li@shingroup.cn>
+Subject: [PATCH v2 0/7] Remove onstack cpumask var for sparc 
+Date: Sat, 20 Apr 2024 13:15:40 +0800
+Message-Id: <20240420051547.3681642-1-dawei.li@shingroup.cn>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20240420051547.3681642-1-dawei.li@shingroup.cn>
-References: <20240420051547.3681642-1-dawei.li@shingroup.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,36 +46,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+Feedback-ID: bizesmtpsz:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
 
-In general it's preferable to avoid placing cpumasks on the stack, as
-for large values of NR_CPUS these can consume significant amounts of
-stack space and make stack overflows more likely.
+Hi,
 
-@cpumask of irq_set_affinity() is read-only and free of change, drop
-unneeded cpumask var.
+This is v2 of previous series[1] on removal of onstack cpumask for sparc
+arch.
 
-Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
----
- arch/sparc/kernel/of_device_64.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Change since v1:
 
-diff --git a/arch/sparc/kernel/of_device_64.c b/arch/sparc/kernel/of_device_64.c
-index c350c58c7f69..f98c2901f335 100644
---- a/arch/sparc/kernel/of_device_64.c
-+++ b/arch/sparc/kernel/of_device_64.c
-@@ -624,10 +624,7 @@ static unsigned int __init build_one_device_irq(struct platform_device *op,
- out:
- 	nid = of_node_to_nid(dp);
- 	if (nid != -1) {
--		cpumask_t numa_mask;
--
--		cpumask_copy(&numa_mask, cpumask_of_node(nid));
--		irq_set_affinity(irq, &numa_mask);
-+		irq_set_affinity(irq, cpumask_of_node(nid));
- 	}
- 
- 	return irq;
+- Fix build warning reported by test bot.
+- Extend scope of removal, as suggested by Sam[2].
+
+  Note: Couldn't figure out proper approach dealing with case of
+  arch/sparc/kernel/ds.c. Just leave it as is.
+
+[1] v1: https://lore.kernel.org/all/20240418104949.3606645-1-dawei.li@shingroup.cn/
+[2] https://lore.kernel.org/all/20240419051350.GA558245@ravnborg.org/
+
+Dawei Li (7):
+  sparc/srmmu: Remove on-stack cpumask var
+  sparc/irq: Remove on-stack cpumask var
+  sparc/of: Remove on-stack cpumask var
+  sparc/pci_msi: Remove on-stack cpumask var
+  sparc: Remove on-stack cpumask var
+  sparc/leon: Remove on-stack cpumask var
+  sparc/smp: Remove on-stack cpumask var
+
+ arch/sparc/include/asm/smp_32.h  | 12 +++++-----
+ arch/sparc/kernel/irq_64.c       | 10 +++-----
+ arch/sparc/kernel/kernel.h       | 11 +++++++++
+ arch/sparc/kernel/leon_kernel.c  |  9 +++----
+ arch/sparc/kernel/leon_smp.c     | 11 ++++-----
+ arch/sparc/kernel/of_device_64.c |  5 +---
+ arch/sparc/kernel/pci_msi.c      |  5 +---
+ arch/sparc/kernel/sun4d_smp.c    | 10 ++++----
+ arch/sparc/kernel/sun4m_smp.c    | 10 ++++----
+ arch/sparc/mm/init_64.c          |  2 +-
+ arch/sparc/mm/srmmu.c            | 40 ++++++++++----------------------
+ 11 files changed, 50 insertions(+), 75 deletions(-)
+
+Thanks,
+
+    Dawei
+
 -- 
 2.27.0
 
