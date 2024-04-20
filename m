@@ -1,57 +1,57 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE606144317
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 23:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B3D145345
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 23:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713570482; cv=none; b=rJmiMCJvySjdz0RVxUJEr9N4l+k9VfFu4rWnCHu+trIR2usr1gXY2lXATsJohKSGCy+xwJW5YyaeXsEpRiF3rr4cP/uhGCtLvU1YzWgLYtTqbtxU8q2xbyBxAEkUEQIZCpUHT+Duh0uGbqz8oNAwRj2uUwPG5o8kIe5KvOKlls4=
+	t=1713570485; cv=none; b=WpmpmGNqI03+vp8GthWpyJYTdyHadAtnUzp0QU0fPvPtmCT6PwxvOyNQfnh9/PFPV7OUfAyFkHc0GmX2BHDPW/kOqE5X+uPYcA7JO1lsqOYwBbwUwIZ2wV331xm1jXDeMCWZlwkCxlAYJ5ZZxdkfOXtZxZZP+3nWCpf2lMaEVo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713570482; c=relaxed/simple;
-	bh=MfjfJpm3VBkwjMm72HsMOvO9UI9tfbob2HC7hMKYzy4=;
+	s=arc-20240116; t=1713570485; c=relaxed/simple;
+	bh=i4/+SnhxIOkVH6jnqRPVGKLSvQvEdBjQqHeh5YP3SQk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=B6PFh22zuiFuykY0jVrZWwH3PU4U31i3/ZRHlkNiTGWtS0vtvcwxmPIIlBGnLdIka3VaptVEgBtPgwXwhKnwCi5S5BfVKOMtpREijx8TNhU+sRZktSQPpcLSYjG9Ot41UbxCtUGIg4idoqqRZ2j712vyv+LSZWmMCmTtb7SxiVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=CGz90VpD; arc=none smtp.client-ip=209.85.214.178
+	 MIME-Version; b=Se9DZd0ZgvXLPR5DY/WYMUBvSJe+wqwCIV6Vo6+zSrSdMImeMHiC9qF5KLqfePNGoomZCGpgi3f0hwr815Cppj2LLrzKRa+xK4c6zm9ejQkHyMJCkZE5E4m+PK7MLLwrDmj0urpf4JfQ9nrCHdnxKFHx777HH/fiT7HkKU4ECdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ovqiwdIm; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="CGz90VpD"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e83a2a4f2cso16913145ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 16:48:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ovqiwdIm"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e40042c13eso21256645ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 16:48:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713570479; x=1714175279; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713570483; x=1714175283; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wkOPph+llp8Otwcwt9B3eiemeK+kGnMbysCIlXdxbFk=;
-        b=CGz90VpDvdqVi8eQyfqgWWuqNbnhGVSLxPjW0WSmFN9Kfpf80dwLnSigUcUN0Y2lFk
-         mFW4C5zV3ZccfO7U/M+Gj1bMZscD3oL3mA1yfsrMcq7jPW3KGrLjGM4SbVFs4f5gmuPI
-         GQn1Ckh2VhaAuLowB3wg+g3WMU1W8JdlQL5Dp/c/tjd9ggV1JwsiltNKXh4RKe3oA8if
-         JYjWrzSdhuahMKkjWsqWHqHI+8/jnqgvJp60eU5aK3eFRsB3kWan9ePnJHDI8aFKFhDq
-         GD/cqBVe8xv/h+2Aogjz3cMhJCrJHrHZyqqSSxZn8JoLNVOLN/LEADmAXHlEYYLtdZV8
-         CgdQ==
+        bh=N3Hu7DESDZEmcgrq2jc0sr2sorL47aa7h3H8SzaxXXM=;
+        b=ovqiwdIm+tdsGciS90weKXkMlO8DwB/UxneEkFaoo1mgU3NtFEq9GEIpJ3XVa/Mm6S
+         3ZOYsl2x5iVjNX97pFAyN4vhzf7q7c1t5XoXq2nKgxpzwfhBApvWe1coJSx5AbgFe2AI
+         ShfAxvxpBDe9pe3CsftZqHSL+WRdSI7oN+RYk5YxOMUEKqS6jSih5ex7GljPZ7LdUlvm
+         i+XrwrppMxr126gsSHB0zAj9YKIR99SBZupyqErK6Lxzs1b1ERFLY4gzpKk8hooNDtrj
+         RWe+8IJ/OdGtO49ugND1qQJUuoZhxo87/3NO1Afc1/UAi1J+5Pdz4TfXKkpRU+gO9nux
+         +voQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713570479; x=1714175279;
+        d=1e100.net; s=20230601; t=1713570483; x=1714175283;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wkOPph+llp8Otwcwt9B3eiemeK+kGnMbysCIlXdxbFk=;
-        b=tS9KfO4Fsilna6wa8lLRjw0aMMSJhZDaE2+N0QoEjhAvNUzqz40Oezr4H5pLMNiOK+
-         4If7qPeOo4bVSf5b34OuzV1dnJnXIAlXEdoh3hMnK0arr6TM0HTm+ENLIovXhZQgsZ+U
-         SK8xZ/scBK8s0mzmUKvQbesm/tPkGVum97G4g7Qf9iNAgHLR+XYf5t6x8BxE1Ay8SXnq
-         LvyYLVnqSmL7bRBs06hapwVJDjJdzfdPBJuSIY/3sXv6/aUkVEea9JQFEwptR8VXQweI
-         NbPfTFMKzaKXqrkzZcpI2CQKJDgse5jX/vMK/tfNlgXdhElOcQTg+ARpp9o4lRu08mdv
-         FMYA==
-X-Gm-Message-State: AOJu0YyOsnpIKxs5kIaeuA6+qXn5dH5E0tfKpv0rQp89QI2yzaymffLB
-	+1Ks6gpaSXmw/2zYQP3pqXxDvY2xxHyFA80AVrFGDB3EFFK/bU+YZbCkEa81z5u0oFufWOWG3lQ
-	S
-X-Google-Smtp-Source: AGHT+IH1qz0aQ7clqAJJ4fHpFjaj37g2CZsxbNmpL8sCd2e71ca+suKQb30C+gPwakigrEbB4x5ueg==
-X-Received: by 2002:a17:902:784f:b0:1e4:a120:14f3 with SMTP id e15-20020a170902784f00b001e4a12014f3mr3799131pln.51.1713570479336;
-        Fri, 19 Apr 2024 16:47:59 -0700 (PDT)
+        bh=N3Hu7DESDZEmcgrq2jc0sr2sorL47aa7h3H8SzaxXXM=;
+        b=C9w3Sqhy5PP5lFW9GcSJQRkTlKF1G7Z7U7sCFFhx1K21TFiUb0dd26PhB0H7cFOyu8
+         rMepT4wzVclY0m20XnN/NGShr4F0KuGsbxmo+HzDadE3nW5QaYb3Lnm7+4zTRsHtpckV
+         FexYaWz7SjGFHfvJtStaUwDz9BNTge8z5/WOshBOl8v8J6o0Tj4IiX3ebPO9Ou7kvXw5
+         4QqNxIwk36c9Nk1c7MFyc1i2t+w/6EfxTdOAjDguEqZ3t53jCA/uVc/ERmrh+TQJPKo6
+         FqNjoYjS5o5dozTBKK7c58dm4AADliORwoAzWjX68DHL3D+QTGDA95K5gS7sajXxVUd2
+         lmVw==
+X-Gm-Message-State: AOJu0YxvzNkOaeViZu3BU17wF1gwt2OEi9W45n2JCQORo1yev9JVs7TJ
+	51qav2C9vmUxDnky1zhgyyyre+tcqkkodrlEBxjVjRgcr1P1/nwvAstBFoZe5de1fplA8kmt4R/
+	A
+X-Google-Smtp-Source: AGHT+IFuxivVAucFqLYqwANgIIbEmyPV0tNMGWLxqaH8776sBq/Go9KZec7LTwKbbmPafjRvAwUZ5w==
+X-Received: by 2002:a17:903:22ca:b0:1e5:2ba9:a667 with SMTP id y10-20020a17090322ca00b001e52ba9a667mr4212130plg.3.1713570483020;
+        Fri, 19 Apr 2024 16:48:03 -0700 (PDT)
 Received: from atishp.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id w17-20020a170902d11100b001e42f215f33sm3924017plw.85.2024.04.19.16.47.57
+        by smtp.gmail.com with ESMTPSA id w17-20020a170902d11100b001e42f215f33sm3924017plw.85.2024.04.19.16.48.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 16:47:58 -0700 (PDT)
+        Fri, 19 Apr 2024 16:48:02 -0700 (PDT)
 From: Atish Patra <atishp@rivosinc.com>
 To: linux-kernel@vger.kernel.org
 Cc: Atish Patra <atishp@rivosinc.com>,
@@ -75,9 +75,9 @@ Cc: Atish Patra <atishp@rivosinc.com>,
 	virtualization@lists.linux.dev,
 	Will Deacon <will@kernel.org>,
 	x86@kernel.org
-Subject: [PATCH v8 08/24] drivers/perf: riscv: Fix counter mask iteration for RV32
-Date: Sat, 20 Apr 2024 08:17:24 -0700
-Message-Id: <20240420151741.962500-9-atishp@rivosinc.com>
+Subject: [PATCH v8 10/24] RISC-V: KVM: Fix the initial sample period value
+Date: Sat, 20 Apr 2024 08:17:26 -0700
+Message-Id: <20240420151741.962500-11-atishp@rivosinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240420151741.962500-1-atishp@rivosinc.com>
 References: <20240420151741.962500-1-atishp@rivosinc.com>
@@ -89,64 +89,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For RV32, used_hw_ctrs can have more than 1 word if the firmware chooses
-to interleave firmware/hardware counters indicies. Even though it's a
-unlikely scenario, handle that case by iterating over all the words
-instead of just using the first word.
+The initial sample period value when counter value is not assigned
+should be set to maximum value supported by the counter width.
+Otherwise, it may result in spurious interrupts.
 
 Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
 Signed-off-by: Atish Patra <atishp@rivosinc.com>
 ---
- drivers/perf/riscv_pmu_sbi.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ arch/riscv/kvm/vcpu_pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index f23501898657..4eacd89141a9 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -652,10 +652,12 @@ static inline void pmu_sbi_stop_all(struct riscv_pmu *pmu)
- static inline void pmu_sbi_stop_hw_ctrs(struct riscv_pmu *pmu)
- {
- 	struct cpu_hw_events *cpu_hw_evt = this_cpu_ptr(pmu->hw_events);
-+	int i;
+diff --git a/arch/riscv/kvm/vcpu_pmu.c b/arch/riscv/kvm/vcpu_pmu.c
+index 86391a5061dd..cee1b9ca4ec4 100644
+--- a/arch/riscv/kvm/vcpu_pmu.c
++++ b/arch/riscv/kvm/vcpu_pmu.c
+@@ -39,7 +39,7 @@ static u64 kvm_pmu_get_sample_period(struct kvm_pmc *pmc)
+ 	u64 sample_period;
  
--	/* No need to check the error here as we can't do anything about the error */
--	sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP, 0,
--		  cpu_hw_evt->used_hw_ctrs[0], 0, 0, 0, 0);
-+	for (i = 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++)
-+		/* No need to check the error here as we can't do anything about the error */
-+		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP, i * BITS_PER_LONG,
-+			  cpu_hw_evt->used_hw_ctrs[i], 0, 0, 0, 0);
- }
+ 	if (!pmc->counter_val)
+-		sample_period = counter_val_mask + 1;
++		sample_period = counter_val_mask;
+ 	else
+ 		sample_period = (-pmc->counter_val) & counter_val_mask;
  
- /*
-@@ -667,7 +669,7 @@ static inline void pmu_sbi_stop_hw_ctrs(struct riscv_pmu *pmu)
- static inline void pmu_sbi_start_overflow_mask(struct riscv_pmu *pmu,
- 					       unsigned long ctr_ovf_mask)
- {
--	int idx = 0;
-+	int idx = 0, i;
- 	struct cpu_hw_events *cpu_hw_evt = this_cpu_ptr(pmu->hw_events);
- 	struct perf_event *event;
- 	unsigned long flag = SBI_PMU_START_FLAG_SET_INIT_VALUE;
-@@ -676,11 +678,12 @@ static inline void pmu_sbi_start_overflow_mask(struct riscv_pmu *pmu,
- 	struct hw_perf_event *hwc;
- 	u64 init_val = 0;
- 
--	ctr_start_mask = cpu_hw_evt->used_hw_ctrs[0] & ~ctr_ovf_mask;
--
--	/* Start all the counters that did not overflow in a single shot */
--	sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, 0, ctr_start_mask,
--		  0, 0, 0, 0);
-+	for (i = 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
-+		ctr_start_mask = cpu_hw_evt->used_hw_ctrs[i] & ~ctr_ovf_mask;
-+		/* Start all the counters that did not overflow in a single shot */
-+		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, i * BITS_PER_LONG, ctr_start_mask,
-+			0, 0, 0, 0);
-+	}
- 
- 	/* Reinitialize and start all the counter that overflowed */
- 	while (ctr_ovf_mask) {
 -- 
 2.34.1
 
