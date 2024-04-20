@@ -1,76 +1,83 @@
-Received: from smtp.smtpout.orange.fr (smtp-13.smtpout.orange.fr [80.12.242.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A99B17BA2;
-	Sat, 20 Apr 2024 09:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68491118A;
+	Sat, 20 Apr 2024 10:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713607005; cv=none; b=qPVWIAXMRDvdf3TthWARkW9AjlFxKPRriC01H6q782ORuDO55I7mJN9NKAjCdOkFKuJ7CtwTj69xJMiAZQtFLpgEB8WMcBiwGRFlctlshJiMD8Lr4L23iTWBNwB+JAIY678H0HcbQOqsdaR7JVwQqUc7G9Nup7+cQaAFZI3+fCc=
+	t=1713607455; cv=none; b=uUOjz+YW9jJnHBnpgOgBlN9Y8H/qIs/eu/JkWYaHfRykB1LLF/0jogP0cNXImdoD3rClpQTpiFW4T7ZARbleAIVwPI2Uw4+F+bs/2IW5WfVuof3uPVnmLzLSgAJ7TpUjGfg+k6bi7exWsnVVrSl2ZKcS6ej3fXyL+DDdlS5HI5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713607005; c=relaxed/simple;
-	bh=YnDJ9iQswre7+Wp5XM9k/4hBgmOQZWPn8D89KIrVcUY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e1vKlg/2zksQRvPRNziN1TaoFFpivIUPZHgZ1r/FGlw7bh0D4CAW+OXHUaswcImE8B2oOzDPTIDw5AExZILGPShMiDU8H5EGff4s88i8LXtEd03zgB3fbetoUJGxKUVKJv1TRtnnSYWfIAp3srpKUitwTU6P4gnZiKrhlVisSg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=EIP+zP69; arc=none smtp.client-ip=80.12.242.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1713607455; c=relaxed/simple;
+	bh=gQ3vuVn4istjWpdMlnw4Q4aBTLHGWO/MOkIZnCPASgs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A6/OCaGmXmRoRUPVmZ0oKKP8y6T+0uK3w0lGsEbtxh03w+ovOQ9dulga0zxSLpDat1LqZZggaz0CKwjIHRPxSO7ibqWnbtqBD8wEMGexPeTyNeTbHh13JQHnwHox/txkfXPi5+qw/OubGAcZ8jOLjaWwxoLHUsUb8w9nTzyKje0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=i168r3qq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="EIP+zP69"
-Received: from fedora.home ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id y7STrmGoLbyODy7STrLNUG; Sat, 20 Apr 2024 11:56:34 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713606994;
-	bh=iIdz/SjudWPu/QGXeFWNz+lXR/mtDYvMXAN2tDXR2p8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=EIP+zP698o4SomTdn3e2e0YBXn9Tf4u7QeLCQ0QDmcI+oppT3+dlRY5lnmqn/6aOu
-	 PPgKdwYlNoZ/ZonTIHvLOmm9XMHZqaDsVBt2ByEp4/13d8UK4D1lta7r20OA8DXWAK
-	 NA4E8FidjfabQNfASxm3lJV6/0+6uQEwTF3kVR6qTe7VQ9YlKkm81moUhn5hiYX9aF
-	 XRx1VJB7qUwY08ZGCmQ5G/cCxvhrMpaUagH6OyUuw51sPAGBIH9wLzuCtdReMDhpwD
-	 VBQkfYWAjBGZtktBZknkMHzX4CxDpknqi6HRaO0u5O5OqXo4z5QrcXlHY5687ahhuo
-	 yDfOIqmsVqm9Q==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 20 Apr 2024 11:56:34 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] nvmem: Update a comment related to struct nvmem_config
-Date: Sat, 20 Apr 2024 11:56:30 +0200
-Message-ID: <032b8035bd1f2dcc13ffc781c8348d9fbdf9e3b2.1713606957.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="i168r3qq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3A29C072AA;
+	Sat, 20 Apr 2024 10:04:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1713607454;
+	bh=gQ3vuVn4istjWpdMlnw4Q4aBTLHGWO/MOkIZnCPASgs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i168r3qqiWPRHTcg2K8sOxa+4ZgdV6FP4PkwdiFNJF8JFqUDJHOh3qvRIQF5P+Cjk
+	 +p13JMih2Bn0zIiiqm4b6QSyB9sgX9ubMLJj+pOR/6nfCNRaaSVBCaGk4G9BYD4mca
+	 ZoMTrL4ej3J1Bo1prXXP1paK3+nNFovglUHaUD9Q=
+Date: Sat, 20 Apr 2024 12:04:06 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: Daniel Okazaki <dtokazaki@google.com>, kernel-team@android.com,
+	linux-i2c@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] eeprom: at24: fix memory corruption race condition
+Message-ID: <2024042055-bucked-dosage-2a8d@gregkh>
+References: <20240419191200.219548-1-dtokazaki@google.com>
+ <939095cb-b9c0-4214-9429-7b45f9a31f36@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <939095cb-b9c0-4214-9429-7b45f9a31f36@web.de>
 
-Update a comment to match the function used in nvmem_register().
-ida_simple_get() was replaced by ida_alloc() in commit 1eb51d6a4fce
-("nvmem: switch to simpler IDA interface")
+On Sat, Apr 20, 2024 at 11:11:05AM +0200, Markus Elfring wrote:
+> > If the eeprom is not accessible, an nvmem device will be registered, the
+> > read will fail, and the device will be torn down.
+> …
+> 
+> Can it be nicer to present the introduction for failure conditions as an enumeration?
+> 
+> 
+> > Move the failure point before registering the nvmem device.
+> …
+> 
+> I would interpret the diff data more in the way that a devm_nvmem_register() call
+> should be performed a bit later in the implementation of the function “at24_probe”.
+> How do you think about to mention the affected function also in the summary phrase?
+> 
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- include/linux/nvmem-provider.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi,
 
-diff --git a/include/linux/nvmem-provider.h b/include/linux/nvmem-provider.h
-index 3ebeaa0ded00..9a5f262d20f5 100644
---- a/include/linux/nvmem-provider.h
-+++ b/include/linux/nvmem-provider.h
-@@ -103,7 +103,7 @@ struct nvmem_cell_info {
-  *
-  * Note: A default "nvmem<id>" name will be assigned to the device if
-  * no name is specified in its configuration. In such case "<id>" is
-- * generated with ida_simple_get() and provided id field is ignored.
-+ * generated with ida_alloc() and provided id field is ignored.
-  *
-  * Note: Specifying name and setting id to -1 implies a unique device
-  * whose name is provided as-is (kept unaltered).
--- 
-2.44.0
+This is the semi-friendly patch-bot of Greg Kroah-Hartman.
 
+Markus, you seem to have sent a nonsensical or otherwise pointless
+review comment to a patch submission on a Linux kernel developer mailing
+list.  I strongly suggest that you not do this anymore.  Please do not
+bother developers who are actively working to produce patches and
+features with comments that, in the end, are a waste of time.
+
+Patch submitter, please ignore Markus's suggestion; you do not need to
+follow it at all.  The person/bot/AI that sent it is being ignored by
+almost all Linux kernel maintainers for having a persistent pattern of
+behavior of producing distracting and pointless commentary, and
+inability to adapt to feedback.  Please feel free to also ignore emails
+from them.
+
+thanks,
+
+greg k-h's patch email bot
