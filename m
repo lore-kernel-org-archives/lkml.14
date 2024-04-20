@@ -1,59 +1,61 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3122B8BEA
-	for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2024 04:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5BFD51D
+	for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2024 04:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713585678; cv=none; b=qYkcaw3++VsvC+TieV4Jw13oZWnQRGT96syXcIgx83B6C77wP1Ti8lnIUObMmKuWfdUiNh3/ZpjEFxvXgR3TRvp30z/hRTdLx30pBP+kjFkGcXrJDNcISqEgotPI3LcXkGL7AVaQs9NjFObIsuAH215dIN/6nzqIPS3GVXbxTFI=
+	t=1713585679; cv=none; b=sEewZHfdkbyZLv5WOtJz8WONTeVwAKicMAYCUF0rQ8vQpN9+vZ1drdNs2oU5bJ+JnBNrro0ZmXx1yXjdze6PINBvtoocccWzOL5r3L4+HpTAktBfqbyQBowgOpA8b8FfRpyxVH9wyu0B2s6POI2XMNU6ZtM8wGpWIkjVS2rjEi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713585678; c=relaxed/simple;
-	bh=rKaZDNh5kxx7GJ2yJxrftfiGZtSLdTIFtoRuKDDePD4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FjsA15bKgJ7PWIRLhI+i49RNufQCTshh7DxdKOsYRCMWn2lGMt+kDxpvvsLE4PjdVwYxVWHIklksPnQYzXsUWNa7A2Na4QOSfAv9aiWtUZE871jax2bHZ28NnGklkRhHCbprbNwJOrEzvp/gDBVl4nFcFMc4xDdMed7bXseT4MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CplZr03J; arc=none smtp.client-ip=209.85.167.41
+	s=arc-20240116; t=1713585679; c=relaxed/simple;
+	bh=M4pHbBHCTk6OXLrTGfKxg4sxEmwBnn+uAuZwKWxdb8I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=S0a8mTRBKcXGfxbmjlo4Zahr/wkbk2p5xCfNA7m/eksPJBju7zsQHZVaqfqZVd9sf3UOmviFNMJ5543Wg7PMhvivohZnGDdz80JGKwbRs9QjlJh5QvZoObYWZuJxpz/uVSg/pCDGyxoT1kBPugoQBCj/5t8gSEVAC/eZnLUcvic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xg33Wtb9; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CplZr03J"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5194a2cf7c2so2898196e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 21:01:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xg33Wtb9"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-516f2e0edb7so3822490e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 21:01:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713585674; x=1714190474; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=c7zMmX875gSAYfPxrt2gup6kdyziGB5KH+g5wBsmz5o=;
-        b=CplZr03Jmbx/zPonAe1q+OK26cmT+lhGacqfQJtIZm6zU5c0eAHg+UGbFIN6VGAZN/
-         IVh1/HQYceYudGM3yXPMVpK7Cc8elFfH8m67A3J2bhFq6BC3ltThLwd+teOm3AUXKrG4
-         74aXiU+Xi9qM/FFmQ8DKeWixxX9+9iniZ7o8HoyGzqDGn6Gb5Kcis8gKpKMZu35krkPQ
-         fT0wg5z0ivYHy3yy9A8DN6K1fnDiJaw91A1PMy/Ermf+K+0htSuj0z4tYSE12EcqSZZ2
-         FUxkAVQ7Qt8XLD/MMzDUt242Fh3AxsZreE6+++4lNTYpIW3LjFT2HWrrAUIISg6vNLLO
-         9V1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713585674; x=1714190474;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1713585676; x=1714190476; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=c7zMmX875gSAYfPxrt2gup6kdyziGB5KH+g5wBsmz5o=;
-        b=OThJb9b971EdQGeb8lbjoRD4KlAz5SL09CbXNatvihiHRUOEbB/h9+9Ac5tdCUlpz3
-         iWoluuCeHxst3MFxLTyUjQqOylhUHqmB9HICp4krU3aIBeW9LFgHPDp+tOGhdJXDUudk
-         QMOB/PQguJ1rNoBOPe0IiXSFFPRUkT0zjziqiMtxw/dxIder6ZAUrL76NjbtfJbxfzxS
-         q02ybSAuIYIIEPM0D7sCvkoW/tP9KBFDherLBJSY1hWpmKRPqDcmCBXW4czzzAD5yApL
-         xgKCXpJj9RNGQPljkOIbYaM5YqUGyGilI1p3YoEmGorizDYECtDidA21puxSDe9fa42t
-         o5HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXLwBwtSUiXKlFvNwqA+VNecRaMox230yXcEv7hRbAYgTJNSDfe+0GBSTS3nVTVKU356dna8tR4EzeOlmE5+x0nP5v6qdyG9aQ1qivw
-X-Gm-Message-State: AOJu0Yx26rIgn95UHESdmBDxpucQBfyM0g/bEybz1OPKyLySOzJqxC80
-	Zy6S9NY0nB2SNIpZiWuN0Wh1+aIcfgdBIELLcvPkaeAHbqykC6uTG5MSyx6s6kA=
-X-Google-Smtp-Source: AGHT+IExMBZwNO2q828JEytFfTTwoyASRHe4cwU14b4d6yyMpKBkYpHI10gdQdohpz86O1ZDestIzQ==
-X-Received: by 2002:a05:6512:548:b0:518:d08c:b44e with SMTP id h8-20020a056512054800b00518d08cb44emr2476060lfl.10.1713585674258;
-        Fri, 19 Apr 2024 21:01:14 -0700 (PDT)
+        bh=oP3zMRO9agkYQSw4kCyfx8zOdyuio6KL48narpY5l5w=;
+        b=xg33Wtb9u67WeMEvvVysZGLios272l4gWoQMC898DMIiyU0yxzrfXCKB/sIbSRLG+v
+         KpPk/s/87PWl8MH6W6YXZDYfrtRIf/g1oVSV7hnH1yO/ledQhS97oqFP4Br89WiaCqqW
+         M0Rb1O+N+HCS5KLhoz06GE8EYwAVCauhlxoHuJR670xBoxfKhpSK8e6FtQGWS/ZxRNh+
+         r0EsisRTReT3g9srTuOW/MVgsdL3lbNErNjvIDJUMbNNWHHCXGlul0ICEIHf1v2RNDR7
+         pm9k6ocxyeJT/H1GO7QuEazNvj3hIKY0anduBzoSqHqwAOly16fxQZRwMbMlmnKpscDF
+         mgwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713585676; x=1714190476;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oP3zMRO9agkYQSw4kCyfx8zOdyuio6KL48narpY5l5w=;
+        b=tfTrQ5HQlr+XvS4nxEGyU9B7SIMnMAdz+j8ylfj2QcS6J4iZcPiS4WQzhKTcI1t25m
+         mdd6iY7aRZO/ifOPrH62v4L2lnFvqG6OpUm949m1Bznftzax8Xu9UTTmTIgTTRDteUCC
+         b8FQoc98uCQ8svBc07hai/fz97vgcqBrSxdud3fYojfQHBdtPGC3VofhqGdVVoJurOSg
+         IdT6I/aD4hG3Ha1YdFh+sKMl5YFFjdlOaJkKjUwYZzrJfYwh3lJdq9wx3zTeTvs4ltan
+         0X0eU87PJNFn5FsPxE6RZZJkE8E9qa+Ze9157FY+u6cOkb9j3NrSmavApw4LD729LL2r
+         sjeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVeMC7tu2Z+4lXbczfW0xMnwRI8HGiRcnvPyGu8fH3oNbPEZo60w2DrJYDwmpWdhjEzhfjIrRVKNjj1GNnB5fleRWVf8G9huY52kIM
+X-Gm-Message-State: AOJu0Yx0mZ3TQHt5cuqDGR2j+r0WzKLX00qFHw74SGGzpbwLJe5rL215
+	LkvI7HG0Kf56gHsS/xu5OsQfDTYWR3+puZH1xlImveK3+28uBL7Iu1+N8l+nu0A=
+X-Google-Smtp-Source: AGHT+IE4ZbNZvfmIXd8Qfqya1V9IQzxNnfLjFjzRPEDn5QGw3fOk4aJG2tv8V+m0Mqe+KePCzO9M/g==
+X-Received: by 2002:a05:6512:4013:b0:518:758f:2610 with SMTP id br19-20020a056512401300b00518758f2610mr3435518lfb.48.1713585675804;
+        Fri, 19 Apr 2024 21:01:15 -0700 (PDT)
 Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id n2-20020a0565120ac200b00518c9ccef2esm1003993lfu.22.2024.04.19.21.01.13
+        by smtp.gmail.com with ESMTPSA id n2-20020a0565120ac200b00518c9ccef2esm1003993lfu.22.2024.04.19.21.01.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 21:01:13 -0700 (PDT)
+        Fri, 19 Apr 2024 21:01:15 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: [PATCH v2 0/9] drm/msm: fold dpu_format into mdp_formats database
-Date: Sat, 20 Apr 2024 07:00:57 +0300
-Message-Id: <20240420-dpu-format-v2-0-9e93226cbffd@linaro.org>
+Date: Sat, 20 Apr 2024 07:00:59 +0300
+Subject: [PATCH v2 2/9] drm/msm: add arrays listing formats supported by
+ MDP4/MDP5 hardware
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,10 +64,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPk9I2YC/zXMQQ6CMBCF4auYWTukHWkxrryHcVFpCxOFkikSC
- eHuNiZuXvIt3r9BDsIhw+WwgYSFM6exgI4HaHs3dgHZFwMpqlVNCv30xphkcDN6a0xr1bkxPkI
- 5TBIif36x2704Shpw7iW4f+Kky5CulbaVJtNY0qjRDzzLWj2crLl/puX64tFJqpJ0sO9f12Z6Q
- 6MAAAA=
+Message-Id: <20240420-dpu-format-v2-2-9e93226cbffd@linaro.org>
+References: <20240420-dpu-format-v2-0-9e93226cbffd@linaro.org>
+In-Reply-To: <20240420-dpu-format-v2-0-9e93226cbffd@linaro.org>
 To: Rob Clark <robdclark@gmail.com>, 
  Abhinav Kumar <quic_abhinavk@quicinc.com>, 
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
@@ -74,87 +75,238 @@ To: Rob Clark <robdclark@gmail.com>,
 Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
  freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3818;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6858;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=rKaZDNh5kxx7GJ2yJxrftfiGZtSLdTIFtoRuKDDePD4=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmIz4Hz64i1wyEy1v1J+UXyvu6pBnDRO6iv2sSL
- aousQ/DgKWJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZiM+BwAKCRCLPIo+Aiko
- 1SQ+CAChq6lq2Ix9i1eeXVe4bbp6TIys8qnGZIcV7rulyB9NcmA3geYQzcEmjMDPS838uViykRX
- y8c9SZaJzTIrmjjIK/xGLQetzGHO0wcETBZQtSbC96Gy0KfELQR+7Zm72p537roFxD4qFq7ISrJ
- 6UHv3M5v2ileMnRxFPW4AGb/g1ST5nuynRWfLa/LuhbGsCFwQBRH6GqM5rmlbr2CeALPLs7vCjj
- FObrvTzRvWUDJ7ih3zq5BHpLW+2+cQDzpAd2KG8ts+a3WcgPBZWjyzVvEIKMt3q+wiUdccK9UgX
- eJGoTcI/iKft/16s46OeDfQ7+vRAU/Eq9109CwV8c9hx3F25
+ bh=M4pHbBHCTk6OXLrTGfKxg4sxEmwBnn+uAuZwKWxdb8I=;
+ b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQ5qyHcdKpmMbzvsca3WVnvivdHHIp9nW+RbPGyU7qi5UP
+ tkrq6zbyWjMwsDIxSArpsjiU9AyNWZTctiHHVPrYQaxMoFMYeDiFICJ8C/jYFiyaYouh1dG2uGq
+ YxOahbq/lWoHn+WdYt2+P0Krwf/2+fV3RAuYIyNeq29SUGZRV/k06c6dMAs9dmW7pNTu59+MC9k
+ 0uWqqa9wTr1UunRvalfJ0zqmO/Kean27tFHt+VrG/UD2S7bDaU6VXG7ov7S6Z3vPjQl67w7N95s
+ FqoupBtjuuqF6uspK8vuKyJIObbuH9NT4l6y+9VVz5LTQv20zXWbBK4s9PLWn154azX4Tqq+g4t
+ 9Sdepz/0nypcOScoraTMq/2fN5x9vZdW+kXdk+cns/8FT53k15UgdA8A67wStadD3PfLRbyrNrQ
+ 7yP20F/P++q8VAXTfA7+K6bX1Y47SSWsD3n0VCcvW/k3AA==
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-During the review of [1] Abhinav pointed out that mdp_rgb_formats and
-mdp_rgb_yuv_formats arrays from patch 1 are directly based on the struct
-mdp_format formats array. This was true, because MDP4 / MDP5 drivers
-used their own (small) list of supported formats. The DPU driver,
-supporting more formats, had larger database of the formats and their
-properties. While we don't have plans to expand MDP5 formats support, it
-make sense to merge these two databases into a common dataset.
+MDP4 and MDP5 drivers enumerate supported formats each time the plane is
+created. In preparation to merger of MDP DPU format databases, define
+precise formats list, so that changes to the database do not cause the
+driver to add unsupported format to the list.
 
-[1] https://patchwork.freedesktop.org/series/120377/
---
-Changes in v2:
-- Rebased on top of msm-next
-- Moved all formats data to the new header mdp_formats.h (Abhinav)
-- Dropped the alpha_enable flag changes (Abhinav)
-- Link to v1: https://lore.kernel.org/r/20231202214016.1257621-1-dmitry.baryshkov@linaro.org
-
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
-Dmitry Baryshkov (9):
-      drm/msm/dpu: use format-related definitions from mdp_common.xml.h
-      drm/msm: add arrays listing formats supported by MDP4/MDP5 hardware
-      drm/msm/dpu: in dpu_format replace bitmap with unsigned long field
-      drm/msm/dpu: pull format flag definitions to mdp_format.h
-      drm/msm: merge dpu_format and mdp_format in struct msm_format
-      drm/msm: convert msm_format::unpack_tight to the flag
-      drm/msm: convert msm_format::unpack_align_msb to the flag
-      drm/msm: merge dpu format database to MDP formats
-      drm/msm: drop msm_kms_funcs::get_format() callback
+ drivers/gpu/drm/msm/disp/mdp4/mdp4_plane.c | 57 +++++++++++++++++++++++++++---
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c | 36 ++++++++++++++-----
+ drivers/gpu/drm/msm/disp/mdp_format.c      | 28 ---------------
+ drivers/gpu/drm/msm/disp/mdp_kms.h         |  1 -
+ 4 files changed, 80 insertions(+), 42 deletions(-)
 
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c           |  12 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        |  20 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h   |   2 +-
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c   |   8 +-
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c    |  10 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c        | 658 +--------------------
- drivers/gpu/drm/msm/disp/dpu1/dpu_formats.h        |  27 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_cdm.c         |   6 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_cdm.h         |   4 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c        |  16 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h        |   2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h        | 124 +---
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c        |  40 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h        |   6 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_util.c        |  14 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_util.h        |   4 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_wb.c          |  22 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_wb.h          |   2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |   1 -
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c          |  75 +--
- drivers/gpu/drm/msm/disp/mdp4/mdp4_crtc.c          |   4 +-
- drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c           |   1 -
- drivers/gpu/drm/msm/disp/mdp4/mdp4_plane.c         |  86 ++-
- drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c          |   7 +-
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c           |   1 -
- drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c         |  95 +--
- drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c           |   4 +-
- drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.h           |   2 +-
- drivers/gpu/drm/msm/disp/mdp_format.c              | 630 +++++++++++++++++---
- drivers/gpu/drm/msm/disp/mdp_format.h              |  77 +++
- drivers/gpu/drm/msm/disp/mdp_kms.h                 |  18 +-
- drivers/gpu/drm/msm/msm_drv.h                      |   4 +-
- drivers/gpu/drm/msm/msm_fb.c                       |   2 +-
- drivers/gpu/drm/msm/msm_kms.h                      |   4 -
- 34 files changed, 913 insertions(+), 1075 deletions(-)
----
-base-commit: a35e92ef04c07bd473404b9b73d489aea19a60a8
-change-id: 20240420-dpu-format-d655c60875df
+diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_plane.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_plane.c
+index b689b618da78..cebe20c82a54 100644
+--- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_plane.c
++++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_plane.c
+@@ -371,6 +371,47 @@ static const uint64_t supported_format_modifiers[] = {
+ 	DRM_FORMAT_MOD_INVALID
+ };
+ 
++const uint32_t mdp4_rgb_formats[] = {
++	DRM_FORMAT_ARGB8888,
++	DRM_FORMAT_ABGR8888,
++	DRM_FORMAT_RGBA8888,
++	DRM_FORMAT_BGRA8888,
++	DRM_FORMAT_XRGB8888,
++	DRM_FORMAT_XBGR8888,
++	DRM_FORMAT_RGBX8888,
++	DRM_FORMAT_BGRX8888,
++	DRM_FORMAT_RGB888,
++	DRM_FORMAT_BGR888,
++	DRM_FORMAT_RGB565,
++	DRM_FORMAT_BGR565,
++};
++
++const uint32_t mdp4_rgb_yuv_formats[] = {
++	DRM_FORMAT_ARGB8888,
++	DRM_FORMAT_ABGR8888,
++	DRM_FORMAT_RGBA8888,
++	DRM_FORMAT_BGRA8888,
++	DRM_FORMAT_XRGB8888,
++	DRM_FORMAT_XBGR8888,
++	DRM_FORMAT_RGBX8888,
++	DRM_FORMAT_BGRX8888,
++	DRM_FORMAT_RGB888,
++	DRM_FORMAT_BGR888,
++	DRM_FORMAT_RGB565,
++	DRM_FORMAT_BGR565,
++
++	DRM_FORMAT_NV12,
++	DRM_FORMAT_NV21,
++	DRM_FORMAT_NV16,
++	DRM_FORMAT_NV61,
++	DRM_FORMAT_VYUY,
++	DRM_FORMAT_UYVY,
++	DRM_FORMAT_YUYV,
++	DRM_FORMAT_YVYU,
++	DRM_FORMAT_YUV420,
++	DRM_FORMAT_YVU420,
++};
++
+ /* initialize plane */
+ struct drm_plane *mdp4_plane_init(struct drm_device *dev,
+ 		enum mdp4_pipe pipe_id, bool private_plane)
+@@ -379,6 +420,8 @@ struct drm_plane *mdp4_plane_init(struct drm_device *dev,
+ 	struct mdp4_plane *mdp4_plane;
+ 	int ret;
+ 	enum drm_plane_type type;
++	const uint32_t *formats;
++	unsigned int nformats;
+ 
+ 	mdp4_plane = kzalloc(sizeof(*mdp4_plane), GFP_KERNEL);
+ 	if (!mdp4_plane) {
+@@ -392,13 +435,17 @@ struct drm_plane *mdp4_plane_init(struct drm_device *dev,
+ 	mdp4_plane->name = pipe_names[pipe_id];
+ 	mdp4_plane->caps = mdp4_pipe_caps(pipe_id);
+ 
+-	mdp4_plane->nformats = mdp_get_formats(mdp4_plane->formats,
+-			ARRAY_SIZE(mdp4_plane->formats),
+-			!pipe_supports_yuv(mdp4_plane->caps));
+-
+ 	type = private_plane ? DRM_PLANE_TYPE_PRIMARY : DRM_PLANE_TYPE_OVERLAY;
++
++	if (pipe_supports_yuv(mdp4_plane->caps)) {
++		formats = mdp4_rgb_yuv_formats;
++		nformats = ARRAY_SIZE(mdp4_rgb_yuv_formats);
++	} else {
++		formats = mdp4_rgb_formats;
++		nformats = ARRAY_SIZE(mdp4_rgb_formats);
++	}
+ 	ret = drm_universal_plane_init(dev, plane, 0xff, &mdp4_plane_funcs,
+-				 mdp4_plane->formats, mdp4_plane->nformats,
++				 formats, nformats,
+ 				 supported_format_modifiers, type, NULL);
+ 	if (ret)
+ 		goto fail;
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
+index 0d5ff03cb091..aa8342d93393 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
+@@ -17,9 +17,6 @@
+ 
+ struct mdp5_plane {
+ 	struct drm_plane base;
+-
+-	uint32_t nformats;
+-	uint32_t formats[32];
+ };
+ #define to_mdp5_plane(x) container_of(x, struct mdp5_plane, base)
+ 
+@@ -1007,6 +1004,32 @@ uint32_t mdp5_plane_get_flush(struct drm_plane *plane)
+ 	return mask;
+ }
+ 
++const uint32_t mdp5_plane_formats[] = {
++	DRM_FORMAT_ARGB8888,
++	DRM_FORMAT_ABGR8888,
++	DRM_FORMAT_RGBA8888,
++	DRM_FORMAT_BGRA8888,
++	DRM_FORMAT_XRGB8888,
++	DRM_FORMAT_XBGR8888,
++	DRM_FORMAT_RGBX8888,
++	DRM_FORMAT_BGRX8888,
++	DRM_FORMAT_RGB888,
++	DRM_FORMAT_BGR888,
++	DRM_FORMAT_RGB565,
++	DRM_FORMAT_BGR565,
++
++	DRM_FORMAT_NV12,
++	DRM_FORMAT_NV21,
++	DRM_FORMAT_NV16,
++	DRM_FORMAT_NV61,
++	DRM_FORMAT_VYUY,
++	DRM_FORMAT_UYVY,
++	DRM_FORMAT_YUYV,
++	DRM_FORMAT_YVYU,
++	DRM_FORMAT_YUV420,
++	DRM_FORMAT_YVU420,
++};
++
+ /* initialize plane */
+ struct drm_plane *mdp5_plane_init(struct drm_device *dev,
+ 				  enum drm_plane_type type)
+@@ -1023,12 +1046,9 @@ struct drm_plane *mdp5_plane_init(struct drm_device *dev,
+ 
+ 	plane = &mdp5_plane->base;
+ 
+-	mdp5_plane->nformats = mdp_get_formats(mdp5_plane->formats,
+-		ARRAY_SIZE(mdp5_plane->formats), false);
+-
+ 	ret = drm_universal_plane_init(dev, plane, 0xff, &mdp5_plane_funcs,
+-			mdp5_plane->formats, mdp5_plane->nformats,
+-			NULL, type, NULL);
++				       mdp5_plane_formats, ARRAY_SIZE(mdp5_plane_formats),
++				       NULL, type, NULL);
+ 	if (ret)
+ 		goto fail;
+ 
+diff --git a/drivers/gpu/drm/msm/disp/mdp_format.c b/drivers/gpu/drm/msm/disp/mdp_format.c
+index 025595336f26..69ab5bcff1a9 100644
+--- a/drivers/gpu/drm/msm/disp/mdp_format.c
++++ b/drivers/gpu/drm/msm/disp/mdp_format.c
+@@ -80,10 +80,6 @@ static struct csc_cfg csc_convert[CSC_MAX] = {
+ 
+ #define BPC0A 0
+ 
+-/*
+- * Note: Keep RGB formats 1st, followed by YUV formats to avoid breaking
+- * mdp_get_rgb_formats()'s implementation.
+- */
+ static const struct mdp_format formats[] = {
+ 	/*  name      a  r  g  b   e0 e1 e2 e3  alpha   tight  cpp cnt ... */
+ 	FMT(ARGB8888, 8, 8, 8, 8,  1, 0, 2, 3,  true,   true,  4,  4,
+@@ -138,30 +134,6 @@ static const struct mdp_format formats[] = {
+ 			MDP_PLANE_PLANAR, CHROMA_420, true),
+ };
+ 
+-/*
+- * Note:
+- * @rgb_only must be set to true, when requesting
+- * supported formats for RGB pipes.
+- */
+-uint32_t mdp_get_formats(uint32_t *pixel_formats, uint32_t max_formats,
+-		bool rgb_only)
+-{
+-	uint32_t i;
+-	for (i = 0; i < ARRAY_SIZE(formats); i++) {
+-		const struct mdp_format *f = &formats[i];
+-
+-		if (i == max_formats)
+-			break;
+-
+-		if (rgb_only && MDP_FORMAT_IS_YUV(f))
+-			break;
+-
+-		pixel_formats[i] = f->base.pixel_format;
+-	}
+-
+-	return i;
+-}
+-
+ const struct msm_format *mdp_get_format(struct msm_kms *kms, uint32_t format,
+ 		uint64_t modifier)
+ {
+diff --git a/drivers/gpu/drm/msm/disp/mdp_kms.h b/drivers/gpu/drm/msm/disp/mdp_kms.h
+index b0286d5d5130..d0718c16de3e 100644
+--- a/drivers/gpu/drm/msm/disp/mdp_kms.h
++++ b/drivers/gpu/drm/msm/disp/mdp_kms.h
+@@ -91,7 +91,6 @@ struct mdp_format {
+ #define to_mdp_format(x) container_of(x, struct mdp_format, base)
+ #define MDP_FORMAT_IS_YUV(mdp_format) ((mdp_format)->is_yuv)
+ 
+-uint32_t mdp_get_formats(uint32_t *formats, uint32_t max_formats, bool rgb_only);
+ const struct msm_format *mdp_get_format(struct msm_kms *kms, uint32_t format, uint64_t modifier);
+ 
+ /* MDP capabilities */
 
-Best regards,
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+2.39.2
 
