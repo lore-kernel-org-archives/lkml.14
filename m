@@ -1,88 +1,133 @@
-Received: from out28-82.mail.aliyun.com (out28-82.mail.aliyun.com [115.124.28.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D4E2747D;
-	Sat, 20 Apr 2024 23:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0539F482D1
+	for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2024 23:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713654353; cv=none; b=s6D6zW5Ot6bnq6ql+yyvAQhgY3Z3bodv1e4Cmy8cj5ayaLk3poen0vFRvna0Be3iVe1VShV5C45h/DTTLqPxFF3ckuYFzGP67QpKO1KCFH8e4qwwUTJNLWzCOhMiCfggMd8qkp5q4hXtRSEH/Baes1F6rMl0EBXt16z3r7nwgmA=
+	t=1713654480; cv=none; b=T1j3nS6Z+HGanpJXNJxrpoXJGJKM1/7lQo5by5bmQewRuajwuAwe7Fph1eI+lV1MKj4NVg+ZFo9cRbO0sr4feCV1GscWJmWXom+WeRswYWazf5dT2zwAcX99W/GG6H4LnL9LgsLdXbSwA6/jfaTDEE3Op5V1D5fW1w7lJJiL4x0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713654353; c=relaxed/simple;
-	bh=OHtgtW8L4Duwwp/TCH/X7YkJd9k0LtJwHCy5dH/qFTQ=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:Message-Id:
-	 MIME-Version:Content-Type; b=HgLi1ZguXG/8/IJVpGtsSQm4NYjhPnkhbn546UqC9msaGzypTQsVeHERKpNtZoraNHqwPDsMz/HYUyPsrDVy/lz9mrJnTQYm1JLU8O5/t0eHA1yBWW0yTzUpuhY6GssB+0ryAz9/jcdmE7GFoL+x+iDaK1GS6hbOFYUN26R5FKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=e16-tech.com; spf=pass smtp.mailfrom=e16-tech.com; arc=none smtp.client-ip=115.124.28.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=e16-tech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=e16-tech.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.1073318|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0311914-0.00265519-0.966153;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047190;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=8;RT=8;SR=0;TI=SMTPD_---.XHDA.xl_1713654025;
-Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.XHDA.xl_1713654025)
-          by smtp.aliyun-inc.com;
-          Sun, 21 Apr 2024 07:00:26 +0800
-Date: Sun, 21 Apr 2024 07:00:26 +0800
-From: Wang Yugui <wangyugui@e16-tech.com>
-To: Shay Drori <shayd@nvidia.com>
-Subject: Re: Linux 6.6.28
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- <linux-kernel@vger.kernel.org>,
- <akpm@linux-foundation.org>,
- <torvalds@linux-foundation.org>,
- <stable@vger.kernel.org>,
- <lwn@lwn.net>,
- <jslaby@suse.cz>
-In-Reply-To: <220e55df-a0a2-4272-b94f-c7c4c6fbf2b7@nvidia.com>
-References: <20240420135914.2AD9.409509F4@e16-tech.com> <220e55df-a0a2-4272-b94f-c7c4c6fbf2b7@nvidia.com>
-Message-Id: <20240421070025.C32F.409509F4@e16-tech.com>
+	s=arc-20240116; t=1713654480; c=relaxed/simple;
+	bh=z6difwhnZxEoVhqGOtYJurOynqmxvUFH5a72r0Wf1ZE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ehxukVc4mRZ+DGKGbTzfz3wKHug6/fs482Oe8W5zzcKWZ7CV5rHKBk3mEtD64EtUxI8oJRrL6Yy031hayZytoYIJkAFGiq1kXGJ5OaCe53pBgD0Jf0sFT9idh56mmaWOkhmueMjEjXBAiNxUHV7Eib7NDHWDYrQsgLFHaRvK6io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oPjt3rKi; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oPjt3rKi"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-346359c8785so2728861f8f.0
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2024 16:07:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713654477; x=1714259277; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=x9hTDE+OmzSnorVJyzQcFNYmLnBIvZgvXWNavzd4DaM=;
+        b=oPjt3rKiNAhso7Wd+M0Hl6d6UB7y7ALR9tmfmQCj+b2aKTQCoEjG4/3fwH3pQI9LWb
+         A0UdjtG8hB/kfXy5JccETkfTaHPJ/WwVHCs918XQdNQfysXeDHvTHLGGyDrCBlXFLMIM
+         z+HGEBQGeTcupf6fYmqoXSfZlDVOMkoJSUiKTLDD+PGeH68lYfIgJPfAIaDe1ZZLbWrD
+         wrFadREqvkke2CDWj9rgU45oVfxX6qpNsblmw1CnAr3706AuZ9UYoa0Q/QWm82C7I2aN
+         iGo2Vg7fY6auzycLFLeeLQl5hOG0KTDdntEigaf+cem4FaxiWDbZfh3+KKDxfMEaS+vp
+         H/xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713654477; x=1714259277;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x9hTDE+OmzSnorVJyzQcFNYmLnBIvZgvXWNavzd4DaM=;
+        b=YWwUMdQ2h8LsEKVxMFajY5Wvy104jVVC/djp/3DkPJDGKm6oG2q/GRdZiV7Sa+TE6l
+         pxDg1xAQEx2uNvOzfY5ZY3q12yMuXXyiNXj1hegt0gAGDGDcF2EScFeNFB+Zogrz/inR
+         xseD8lyfldtPpg0tb7uO5DAxIaLB/gNFBDPSbkr//CTlFBtLBx+/RWnG1MuMcXaBKdnf
+         rKY4rNtM6xautM2He+EbuGHfgv6bwu+EZIJ2ShV5/SGhnzGkYlhDrH0XD94m/MuLW67A
+         KIhLYvJ7R+xaHM7/XLQt3kwcQ/o1uXUffZ5TdJ/1Q4CnrQ/gcTguCNdPJ7st+J9XfrUZ
+         LZCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVFXCxeI78L4QlgCGnxAgbgpbJdIJYZr8F/F7+5+okSxIm1AcwfLy6zkMUeKoIRuxxYZftK6V0NJUU5pPKUKnxiF7fQguGAMAk/bwa
+X-Gm-Message-State: AOJu0YwX5IiQosOHsyIn+EhTvCtgiBEIJpE4x4WvdmKxIH4ZcIOhBUYA
+	Jin/IO54jTOTEyQScXRVMyBz6xKTDN3ErE1OFn3zBQuNnwV1OTO1NgR+l2hxZ44=
+X-Google-Smtp-Source: AGHT+IFGdOa11zFVqyC3KCcGi9RrrofVzZm8cOluppaZLRYUDrIPrVm3Gfdre6MIxYSUZ9KallR7Bw==
+X-Received: by 2002:adf:cd84:0:b0:33e:7f51:c2f8 with SMTP id q4-20020adfcd84000000b0033e7f51c2f8mr3599510wrj.36.1713654477259;
+        Sat, 20 Apr 2024 16:07:57 -0700 (PDT)
+Received: from [192.168.0.102] ([176.61.106.68])
+        by smtp.gmail.com with ESMTPSA id p3-20020a5d6383000000b00341b451a31asm7862874wru.36.2024.04.20.16.07.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 20 Apr 2024 16:07:56 -0700 (PDT)
+Message-ID: <ae9b190c-3961-4704-bc93-cb1c4182672b@linaro.org>
+Date: Sun, 21 Apr 2024 00:07:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/26] media: stb0899: Simplify check
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Martin Tuma <martin.tuma@digiteqautomotive.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Hugues Fruchet <hugues.fruchet@foss.st.com>,
+ Alain Volmat <alain.volmat@foss.st.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Chen-Yu Tsai
+ <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Sowjanya Komatineni <skomatineni@nvidia.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Hans Verkuil <hverkuil@xs4all.nl>, Sergey Kozlov <serjk@netup.ru>,
+ Abylay Ospan <aospan@netup.ru>,
+ Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+ Dmitry Osipenko <digetx@gmail.com>,
+ Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+ Sylvain Petinot <sylvain.petinot@foss.st.com>,
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev,
+ linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org
+References: <20240419-fix-cocci-v2-0-2119e692309c@chromium.org>
+ <20240419-fix-cocci-v2-2-2119e692309c@chromium.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20240419-fix-cocci-v2-2-2119e692309c@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.81.06 [en]
 
-Hi,
-
+On 19/04/2024 10:47, Ricardo Ribalda wrote:
+> chip_id is an unsigned number, it can never be < 0
 > 
+> Fixes cocci check:
+> drivers/media/dvb-frontends/stb0899_drv.c:1280:8-15: WARNING: Unsigned expression compared with zero: chip_id > 0
 > 
-> On 20/04/2024 8:59, Wang Yugui wrote:
-> > External email: Use caution opening links or attachments
-> >
-> >
-> > Hi,
-> >
-> >> I'm announcing the release of the 6.6.28 kernel.
-> >>
-> >> All users of the 6.6 kernel series must upgrade.
-> >>
-> >> The updated 6.6.y git tree can be found at:
-> >>        git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.6.y
-> >> and can be browsed at the normal kernel.org git web browser:
-> >>        https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
-> >
-> > Linux 6.6.28 failed to boot with the following panic *1 on a server with
-> > mellonax CX-6 VPI NIC, but 6.6.27/6.1.87 boot well.
-> >
-> > After reverting 'net/mlx5: Restore mistakenly dropped parts in register devlink
-> > flow', linux boot well.
-> > 
-> there is a similar discussion in net-dev ML[1].
-> In short, it seems this patch is missing from stable, which is prerequisite for the bad patch:
-> 0553e753ea9e
-> "net/mlx5: E-switch, store eswitch pointer before registering devlink_param".
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>   drivers/media/dvb-frontends/stb0899_drv.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Wang, can you test it out please?
+> diff --git a/drivers/media/dvb-frontends/stb0899_drv.c b/drivers/media/dvb-frontends/stb0899_drv.c
+> index 2f4d8fb400cd..35634f9a8ab5 100644
+> --- a/drivers/media/dvb-frontends/stb0899_drv.c
+> +++ b/drivers/media/dvb-frontends/stb0899_drv.c
+> @@ -1277,7 +1277,7 @@ static int stb0899_get_dev_id(struct stb0899_state *state)
+>   	dprintk(state->verbose, FE_ERROR, 1, "Demodulator Core ID=[%s], Version=[%d]", (char *) &demod_str, demod_ver);
+>   	CONVERT32(STB0899_READ_S2REG(STB0899_S2FEC, FEC_CORE_ID_REG), (char *)&fec_str);
+>   	fec_ver = STB0899_READ_S2REG(STB0899_S2FEC, FEC_VER_ID_REG);
+> -	if (! (chip_id > 0)) {
+> +	if (!chip_id) {
+>   		dprintk(state->verbose, FE_ERROR, 1, "couldn't find a STB 0899");
+>   
+>   		return -ENODEV;
+> 
 
-After apply "net/mlx5: E-switch, store eswitch pointer before registering devlink_param"
-to 6.6.28, linux boot well here.
-
-and  "net/mlx5: Restore mistakenly dropped parts in register devlink flow" is
-NOT applied here.
-
-Thanks a lot.
-
-Best Regards
-Wang Yugui (wangyugui@e16-tech.com)
-2024/04/21
-
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
