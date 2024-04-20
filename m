@@ -1,103 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E39DDD9;
-	Sat, 20 Apr 2024 10:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8561B809
+	for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2024 10:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713610530; cv=none; b=C9h9zP41Dkm4/VniftRRkq+muiAxeuvDkhbdpzTCD2dAJgNsvM6ijnYqxLldjMs+tfYGwUMYdX8uRy/wTyx9UfitybEsczUeNvwFCJjNal4oxw+1DyM8QujyNca1/PtyX8KrbaW28yb09AUyWoTOq3Mt0ZSl8ltpwPSBhelBQuo=
+	t=1713610669; cv=none; b=FwTkoL3mF3h19B05RMyHniBTcGt7wET1MaPh/R7lXmLMB07JOMJTSI8i6Th3X+2pYEVhykmy/sB26Zr/KLD22rL6WFRfjbEU9OZlLFqymaaxGIEYxXHtymSEFddC4GEu7Fctl4dS1tibS5JVkSi7YhkeoKP2mtaQ8PiJxEzBu7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713610530; c=relaxed/simple;
-	bh=zTvudgFfH/h0LYFsm8ge6F5OW8AtcgM2CqtKKJJoAFI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PVR3qfynIhuJqSi0AD/21mOari82yYpLan0Kb5c+hpPV6DwUj4Cjc0Hj2aGOr3h/3D6/fS0JaCgDXeDi79DxlKK9y7I0ZnteDyTnN49Xm0iB1wOw/aunS7DE3UluVH9r57kHqMJr11qFsV/iQH+BLsXimcFq3Jl4o3mWi/hmx+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K+xPIczF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713610669; c=relaxed/simple;
+	bh=23hWeEr+W84WKW10MFW2wGv1mxXeR0jauqdsZvPF0GI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O0TwPBcjLLLcDTJGcfq/oTHLLB1ozSj/vnvsqX5moIrmchRmkkvugotjXjsFDjbAcCWp7M8gIQ2ONvZQpsXGuH4+fSfAQohP+zZwANq/fQi4CmlyRQY2JcDrQQl9SpcnCAtvSivq2r+d0TpK1wl3y3teGzuiPsdEKHtxpPY2ZkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=owxG409S; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K+xPIczF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88899C072AA;
-	Sat, 20 Apr 2024 10:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713610529;
-	bh=zTvudgFfH/h0LYFsm8ge6F5OW8AtcgM2CqtKKJJoAFI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=K+xPIczFcKc0b03zVTfBLWnljX+6W2rVvX4lqpSCUmjQtyhiSx8W/GZ7/sqAq9Vth
-	 8cxUJmGzzX0jLpi9iZXm45JqDTQ+/LgD84zFNZj2wKllv/esuC1O+gc7oa5xkpeD1A
-	 j8nfyazAHCWabIAKKCJBJ+VSrhybwPEva7B5sdsTQ5+AEK1m60s4WLvxCgT5Ak/Brj
-	 BZqAq8Z7YGLv/YJCe1rXwzb21D1tk8fkGb0c2ljKD/gkRVOARRe0uG9cY2TucckA9A
-	 Im5MnlnN1BjXS6PbZ4mD1kFT8meceWp6oE8r/TwNRgb94uXz2yPYKM/krZLWlBHugd
-	 n1sU2FSogK41A==
-Date: Sat, 20 Apr 2024 11:55:15 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Alisa-Dariana Roman <alisadariana@gmail.com>,
- michael.hennerich@analog.com, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- alexandru.tachici@analog.com, lars@metafoo.de, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- lgirdwood@gmail.com, broonie@kernel.org, andy@kernel.org,
- nuno.sa@analog.com, marcelo.schmitt@analog.com, bigunclemax@gmail.com,
- dlechner@baylibre.com, okan.sahin@analog.com, fr0st61te@gmail.com,
- alisa.roman@analog.com, marcus.folkesson@gmail.com, schnelle@linux.ibm.com,
- liambeguin@gmail.com
-Subject: Re: [PATCH v6 5/5] iio: adc: ad7192: Add AD7194 support
-Message-ID: <20240420115457.44f558cf@jic23-huawei>
-In-Reply-To: <CAHp75VctFbys8ARoE9ZqsCSCOYWjsZnR80g+YXstbyzo5r6TYw@mail.gmail.com>
-References: <20240417170054.140587-1-alisa.roman@analog.com>
-	<20240417170054.140587-6-alisa.roman@analog.com>
-	<CAHp75VctFbys8ARoE9ZqsCSCOYWjsZnR80g+YXstbyzo5r6TYw@mail.gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="owxG409S"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-34a00533d08so1808752f8f.3
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2024 03:57:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713610666; x=1714215466; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ipeqzc6ZZ02TREHla/6ToLuSgvq7MVUYfKOCJgBT6bM=;
+        b=owxG409SfEpU5cOFtgZcJEhFPcw5NUntZLZBL4vQs9lTeeDnpX62Bc7d4YGtoIdjBJ
+         Eu4ha6pi+t9LwujS2virBMeoVM05N+76ryd4eFqtWigv3cFXof2vmk2HTG7imdl8AcFr
+         TK5lgdcYMtJpiLa/obgpULqJqF9kQxd5nO0sXEGm/9JcVHRjVEiIseBvOfjctV3boKfg
+         fRubbjbs3cvZeyQBqZcPYXlCrytsAYHLv5PRcb2eLwxMDDwDp57ifaTVKIKZDdXAStLU
+         6b3ynl6ikthICRhfwC0IlIwH5c/mKHWsawyh7VPnxDJr206mqw148gF+q66XkcFR/BTg
+         +3tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713610666; x=1714215466;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ipeqzc6ZZ02TREHla/6ToLuSgvq7MVUYfKOCJgBT6bM=;
+        b=S3CuvjkzFF3kTuoJLXib1T5UuBShiKSc8+QxgfTFMVkKwkUp5kuZeB/0MfZWc5Rjng
+         4FbKh2MP087Wlq25M7q8/koc0KO7fETr/IUWQtFkJEPSnRxYHPO0nZJxMgBLy0OEEtx6
+         VjWu0vF9Gj09p0G7XmHyigI4zh653hNsdogye3BvrwoIhGNkSh8OjqfoYVz0muk+d9ql
+         hKq3PPSnx7k7bO2fwle9b8YA0qIg59vPwZJ22C/sOKNpQx4nvTQye4zkUoCAHd9e5kSy
+         P2ui6kgfY0ppQWbTY6JpJNwKaBml7KVTGhaSkeR88mSKsBbGQ2TzUmenyTrohxPWZe8j
+         dzxA==
+X-Forwarded-Encrypted: i=1; AJvYcCXdjRuF4HJCNsFJ0PP9QmIL1Vgf71FoyQVQFTR26rcAnbhsSGupbf/KCytJppHs3dPYy5dPO20ifzNynO5c75Yfwrzjl+LirstL9V6x
+X-Gm-Message-State: AOJu0YwS3juwd/98OlFQikvscxexIBpwioGaqhIYptjB8aEjWnPIlllA
+	qC4elRW8aniAERN257Irsztuv/xWNcvkJe3EJdlniLays9a+nizhnBlBBz6HCN8=
+X-Google-Smtp-Source: AGHT+IFkA8Y7ennaLjq8bZ4n1JCaFKc7IdLrpPRWj5rTDXNWayaiI2eIh0FoCthPJ/SBJ9VRtl2pYg==
+X-Received: by 2002:a5d:49c9:0:b0:343:44d2:3828 with SMTP id t9-20020a5d49c9000000b0034344d23828mr3230642wrs.16.1713610666016;
+        Sat, 20 Apr 2024 03:57:46 -0700 (PDT)
+Received: from [10.236.36.88] ([88.128.88.151])
+        by smtp.gmail.com with ESMTPSA id n17-20020a05600c501100b00419e078677csm2258995wmr.16.2024.04.20.03.57.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 20 Apr 2024 03:57:45 -0700 (PDT)
+Message-ID: <19bee3e2-ea14-4fe9-ba10-497166ab791e@linaro.org>
+Date: Sat, 20 Apr 2024 02:50:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] dt-bindings: power: reset: Convert mode-.*
+ properties to array
+To: Elliot Berman <quic_eberman@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Sebastian Reichel
+ <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Andy Yan <andy.yan@rock-chips.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
+ Melody Olvera <quic_molvera@quicinc.com>,
+ Shivendra Pratap <quic_spratap@quicinc.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Florian Fainelli <florian.fainelli@broadcom.com>, linux-pm@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org
+References: <20240414-arm-psci-system_reset2-vendor-reboots-v2-0-da9a055a648f@quicinc.com>
+ <20240414-arm-psci-system_reset2-vendor-reboots-v2-1-da9a055a648f@quicinc.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240414-arm-psci-system_reset2-vendor-reboots-v2-1-da9a055a648f@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Wed, 17 Apr 2024 20:06:00 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On 14/04/2024 21:30, Elliot Berman wrote:
+> PSCI reboot mode will map a mode name to multiple magic values instead
+> of just one. Convert the mode-.* property to an array. Users of the
+> reboot-mode schema will need to specify the maxItems of the mode-.*
+> properties. Existing users will all be 1.
+> 
+> Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+> ---
+>  .../devicetree/bindings/power/reset/nvmem-reboot-mode.yaml   |  4 ++++
+>  Documentation/devicetree/bindings/power/reset/qcom,pon.yaml  |  4 ++++
+>  .../devicetree/bindings/power/reset/reboot-mode.yaml         | 12 ++++++++++--
+>  .../devicetree/bindings/power/reset/syscon-reboot-mode.yaml  |  4 ++++
+>  4 files changed, 22 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.yaml b/Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.yaml
+> index 627f8a6078c2..03b3b9be36de 100644
+> --- a/Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.yaml
+> +++ b/Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.yaml
+> @@ -30,6 +30,10 @@ properties:
+>  
+>  allOf:
+>    - $ref: reboot-mode.yaml#
+> +  - patternProperties:
+> +      "^mode-.*$":
+> +        items:
+> +          maxItems: 1
 
-> On Wed, Apr 17, 2024 at 8:01=E2=80=AFPM Alisa-Dariana Roman
-> <alisadariana@gmail.com> wrote:
-> >
-> > Unlike the other AD719Xs, AD7194 has configurable differential
-> > channels. The user can dynamically configure them in the devicetree.
-> >
-> > Also modify config AD7192 description for better scaling. =20
->=20
-> ...
->=20
-> > +       device_for_each_child_node(dev, child) { =20
->=20
-> You can use scoped variant AFAIU that's available in Jonathan's tree.
->=20
-> > +               *ad7194_channels =3D ad7194_chan_diff;
-> > +               ad7194_channels->scan_index =3D index++;
-> > +               ret =3D ad7194_parse_channel(child, ad7194_channels);
-> > +               if (ret) { =20
->=20
-> > +                       fwnode_handle_put(child); =20
->=20
-> With the above this wouldn't be needed.
->=20
-As it's a minor improvement, and I tend not to like unnecessary
-interdependence of series in my tree (until they are in char-misc
-and hence no chance of them changing), I'm fine with not using
-that new functionality here.=20
+You still need to limit total number of items. This only defines how
+many items you have in each inner cell of the matrix. What about the
+other cell?
 
-That will change once it's upstream of course!
+I understood that you want something more or less equivalent, but the
+code does not look like.
 
-I will send a pull request to Greg nice and early this cycle
-so that should be in my upstream soon.
 
-I'm also fine with you using this if you want to though!
 
-Jonathan
-
-> > +                       return ret;
-> > +               }
-> > +               ad7194_channels++;
-> > +       } =20
->=20
+Best regards,
+Krzysztof
 
