@@ -1,61 +1,61 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2284DD524
-	for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2024 04:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289C5D529
+	for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2024 04:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713585679; cv=none; b=QECggXuvz7UpVzX38hKTLkZdeA+uEAmuRjQzB1gD0gITKtpGbYNhkSOifYm1/CBgZPMUd7MvJLzptDdbLXl0rqmqDGoHQfaKEYOn/kWCcFdKzYX3qT/nPkRiM/GnOl9LmEgAtefXnFfOSyC0V5RhrNxcUWDNBmry8dbjp257B1c=
+	t=1713585683; cv=none; b=l7ODsqjY4ZU4dezuva9viaG+LgOzVSv8Fj1mnlcLmF48Q5KUmBepsOjar35aEqu7wbcVG5Xs1xHElCK5toUhD9y28w553MaltVgX1TfResEvISyYK9tlEmRnaVw7V6To7r/EuPzLBMCzt2M6uc65qbzd3MJLPZmnT0NEpfuaBS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713585679; c=relaxed/simple;
-	bh=bR+chZ8/vH2q7NiGJkzYGAuWCLJdrkjYEG1yJa8P7EI=;
+	s=arc-20240116; t=1713585683; c=relaxed/simple;
+	bh=xqaqEfOaXrzm0qh8jMjmh7qB545I7zB6szsBh+ORuJc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fujEOnTZIHCoIlxF1idmXIbEjjcqG52XZx69CejEz6WcJr6rkYLjsnOiZRPYAL+WQiMCWumkSlpk65u5jV9rMB42fSV63VcXrdlGxYMCHSzRxNFFBwrrObgY6w6jbzb+jbKyieoH9uZXxAW2E+TKP0PKAusumPqK8AXKZ/KBBwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qcXA3EWj; arc=none smtp.client-ip=209.85.167.41
+	 In-Reply-To:To:Cc; b=qW6LTsHjBP27Sda+/JkS7qQMlccYi2dcxo6YxGjHqtlGVLKA1lV5L+9boPzwy9TaajwcVFHqgI0/KpCPxNtrb1C17ry8G0UO3WPi47S2UREuLK+dc6uK6V/7FLWV6gp2LgAoXLjSaz+9VxcJdieq7IJz0dp4kby37SjzRqKZqlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qyzDHv4Z; arc=none smtp.client-ip=209.85.167.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qcXA3EWj"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-516d2600569so3420527e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 21:01:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qyzDHv4Z"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-51967f75729so3169614e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 21:01:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713585676; x=1714190476; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1713585679; x=1714190479; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+JTNeAPoronT10uplr3S5OnPsS/MansP6FbUgxUU9NU=;
-        b=qcXA3EWj3r5pF8DduDf+7l9NL2k+lJdBAKbSDxQN7wOdG0Q0W7V7pAgDVFG50EcFem
-         CNEHxxMOhCdg+NmBdP5unrZGAy64Og8O8WvN0Fyepk0topAqp5v/T3mAzKw6aPKBeEqN
-         do8fVjYWg8909oqSAQu7B62UBUdsxiq/2mQAy5o3dg4/SNSEkUjP3S6sbTJKAbHH/Nnj
-         LBBdUYeYz1L4o99Qxk5onzt/ZMG2VPeuPVumn2tU6tWqfWJbEW624mJ3FHVImBxKUgXT
-         LTfHSWYFJX16Ggj+urSRpYzbSXC+YBwUOE9zhD1wuAoeD18AToiLwc+3bugR4BntTAkL
-         +kJA==
+        bh=IlCR2/E8btYXcVN5ux6VZAFo+1MPQWKcOcJ/NXb0eoQ=;
+        b=qyzDHv4ZWUn8tkXT5U54I7yrEhGu8nPe8yoe3oid0L+VdTfxlOm3x8b051vp6bJFgh
+         qWYU93h0lTH26+QG2A9wJq5xetS0/NF0Z7Xpd7YSHqNMk66ZAv87gNl1JBLOGVDeOKHl
+         B3cBRcXP/HGemzbXMC5YejA+A9Vhr7GC5+Os4kSldfyffZpBy3edz2KmS2rX73cjSZ5a
+         he4buslywyoCTbgWMVNsPfPYJmfsBCgL49aKNR9jU3NEpvA8PLJvn+ER1PZTCozQCgkt
+         ovc2q26oNLsQXWiYR0LeLPJU/cEioHCsYW9/EshE5XTGRnWG30ybpuCp2cFsd4de+OCA
+         r0bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713585676; x=1714190476;
+        d=1e100.net; s=20230601; t=1713585679; x=1714190479;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+JTNeAPoronT10uplr3S5OnPsS/MansP6FbUgxUU9NU=;
-        b=HTqR9tiiQ2nwmCln86vdVGKcV9GXcxXyQ5pvXU5g8CmuhNML3RDwe18bRfzoWmVdH2
-         06USgcSp4RbQ3EV5mKYURZiIxKd6m65qKK4hktNVPs83JMQyygcf685mC6NMsE/xFmBL
-         YhJNPw4RDrJz9MXxcg5GMedLDsh8CBilRSwOmGQvID6fNgbOXKuPzaEcMCnpu23yGa1E
-         XJ/KR1/mzyY6xmgJNSSZGIFRs3uYNeFCMhwORz8hfyg/GlmtsV0AaeoMEvIoIU/6W0k8
-         HERj3V9qFTHO6CBIw+FQnpDZiWoA8n5f09aNydB+JtwezIKX7tWB8RaGFei5CzNHreZR
-         dmiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWd9U7n+/fR2u3+cqNYOsD8KWKAiagJjea+KhuNSzTZk0L9Fv1wSvX3QVWihrVOotpIQZXuUDAX6Ykqed0qlevIAO5NIQlOln2i6l7T
-X-Gm-Message-State: AOJu0YyH095j+Mlar1L9fyHb8MJJ2yhuSFPQUmywBf7c1BM6mmkeDml0
-	QQOtYpSonqftP4uV1jRAVG0Ky3h2XAIUt2PJ34QMRZmPa0GgxyrcL17VEfyINjU=
-X-Google-Smtp-Source: AGHT+IH/yVDRhbNqCbP/K8C3C5w5IT5HRZsBlcAzaUljogQMcieFXUFDEyLabxtA8kOvOt1fdEmUQw==
-X-Received: by 2002:a19:9157:0:b0:51a:b46c:6e67 with SMTP id y23-20020a199157000000b0051ab46c6e67mr2820504lfj.1.1713585676412;
-        Fri, 19 Apr 2024 21:01:16 -0700 (PDT)
+        bh=IlCR2/E8btYXcVN5ux6VZAFo+1MPQWKcOcJ/NXb0eoQ=;
+        b=S+hQPiV5QFWSBk21CzqIC6mm2F95SzSohkQh+UxRllYmkOjsD72M/S5niEFxthQLtB
+         qNWIi8ay3yFxI1y8WnVkGmiPpSZ1jlKl1MHckkOy5DVs45MVScuBbxKOHU5lHQYBm5Ud
+         yklP/upA4Y/4p0MILSF5ZQgoi1j+37tt/x7ytlorChwS6qy0AIQcoTjk33ezhOIpLdrB
+         e+JwsIZyNLRxA4336NsD1ZWRDEKc2FRBx6KVcqdj1wYYD48lq1V2L/52ZrgFdjxZQCd9
+         zp+HVtIy+D6eVHlWwCOrpDSDRPviHr2VNzoJzN3K0DFh6/fVLN7q9zrSUxcIUzd+wjuL
+         oeng==
+X-Forwarded-Encrypted: i=1; AJvYcCVrEuJoWH42TI6KEBP5QXcEJc6L55vtymq3TAx5C8V2UBFEsewuHBqDayIp/yGgtSHQ6qxexCWA/5fm+a6er56Tf9oBLrHtbdLsJVPW
+X-Gm-Message-State: AOJu0YydN/VRXTrq3ttv0/G7V8+zOCIy5vjuefJAlLuboe98kvQ4WoM/
+	g702KANj7d4bDkOoOAkSCWc5BE/uMR6Mm0qzwuElowTI/qh2IeuuQIt3lo5RH/I=
+X-Google-Smtp-Source: AGHT+IEpnHexbT35jn1HanPCop9w7Xea09PPWd6ix8/T7A9gwooJRKp8zobZrcMvHtM6+E2mzAqovA==
+X-Received: by 2002:a05:6512:3b88:b0:519:6953:2ffc with SMTP id g8-20020a0565123b8800b0051969532ffcmr2870356lfv.42.1713585679380;
+        Fri, 19 Apr 2024 21:01:19 -0700 (PDT)
 Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id n2-20020a0565120ac200b00518c9ccef2esm1003993lfu.22.2024.04.19.21.01.15
+        by smtp.gmail.com with ESMTPSA id n2-20020a0565120ac200b00518c9ccef2esm1003993lfu.22.2024.04.19.21.01.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 21:01:16 -0700 (PDT)
+        Fri, 19 Apr 2024 21:01:18 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sat, 20 Apr 2024 07:01:00 +0300
-Subject: [PATCH v2 3/9] drm/msm/dpu: in dpu_format replace bitmap with
- unsigned long field
+Date: Sat, 20 Apr 2024 07:01:04 +0300
+Subject: [PATCH v2 7/9] drm/msm: convert msm_format::unpack_align_msb to
+ the flag
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240420-dpu-format-v2-3-9e93226cbffd@linaro.org>
+Message-Id: <20240420-dpu-format-v2-7-9e93226cbffd@linaro.org>
 References: <20240420-dpu-format-v2-0-9e93226cbffd@linaro.org>
 In-Reply-To: <20240420-dpu-format-v2-0-9e93226cbffd@linaro.org>
 To: Rob Clark <robdclark@gmail.com>, 
@@ -75,165 +75,171 @@ To: Rob Clark <robdclark@gmail.com>,
 Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
  freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7917;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8913;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=bR+chZ8/vH2q7NiGJkzYGAuWCLJdrkjYEG1yJa8P7EI=;
- b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQ5qyHYfpveLeJ96/s76KTSk2y215oPiYL+7+X6dzBuwV4
- Xytysc7GY1ZGBi5GGTFFFl8ClqmxmxKDvuwY2o9zCBWJpApDFycAjCRZ1vZf7NleBRpsuzaMKNC
- Sdr9N/+Spzrlt0KYD6/aMSV5mvMn5yPSmdGqkpuVG07bn5LsMTDINOY4WfVn0/sSrV1Bu7Qkym8
- aXVV+8N/W5r63S8zSZz/NLfRXGD/rnPaxRSC3r4GzP0z42s22m1+4+B+9Dvtplfyt4qT5Iy2tr5
- ZzMoVk0yVnuGQ47A3e7td3pVF/66UizjPip68G6cxw/8uYuShO0Opj0YI1d4rl/+dkK+tYy286+
- fN4bHXadF7txQ63HP+3Mv6d8I5tn1Kvw5qTmdrzKtf4XrWT1tvGXcl+hI/N5JzxMsH1l0957WLn
- O/q7ZlJaENdqnytrTDpeaAqmHrJytHoXXvtd96+J7Lf7AA==
+ bh=xqaqEfOaXrzm0qh8jMjmh7qB545I7zB6szsBh+ORuJc=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmIz4JhH4dVZgtWEhN5C0adIfxXHR8f3DQj3CIg
+ U5XJ9WN+a2JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZiM+CQAKCRCLPIo+Aiko
+ 1Us+CACvz1UirPYuyhcyJFgzN0KnjuTJQ+G8OEfJLLeMkoGMfUKgpGdElvxy73tS1kEAq9ira8P
+ k/SAWlvFlgiCs9scgjRSgaiAjl8llqZYmMaAS39PM1LW5PD9snvXAkFInPD3KO1p5COrKtJCHKZ
+ jVuGuLOuN0jJAY48WLaBny1Hf4FDldwFm5qFTdcbcGUe3jtooXgxqBwlD9O91zUbKSXr5P1/BQs
+ D6s+C5IeRmph2wIYyw90fQOTQTYi1jIQkzfqpv5UShby5j0/DtlCtozXdPY7N26QY/HsvSU8Vwq
+ rKHfCfN6ChGH4B5Fc6QA9owWCnwKFf+cEPjh55IPH0DXrwxm
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Using bitmap for the flags results in a clumsy syntax on test_bit,
-replace it with unsigned long type and simple binary ops.
+Instead of having a u8 or bool field unpack_align_msb, convert it to the
+flag, this save space in the tables and allows us to handle all booleans
+in the same way.
 
 Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c | 18 +++++++++---------
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h | 16 +++++++---------
- 2 files changed, 16 insertions(+), 18 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c | 12 ++----------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c |  2 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_wb.c   |  2 +-
+ drivers/gpu/drm/msm/disp/mdp_format.h       |  4 ++--
+ 4 files changed, 6 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
-index 87fa14fc5dd0..caf536788ece 100644
+index 705b91582b0f..2bb1584920c6 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
-@@ -45,7 +45,7 @@ bp, flg, fm, np)                                                          \
+@@ -43,7 +43,6 @@ bp, flg, fm, np)                                                          \
+ 	.bpc_r_cr = r,                                                    \
+ 	.bpc_a = a,                                                       \
+ 	.chroma_sample = CHROMA_FULL,                                     \
+-	.unpack_align_msb = 0,                                            \
  	.unpack_count = uc,                                               \
  	.bpp = bp,                                                        \
  	.fetch_mode = fm,                                                 \
--	.flag = {(flg)},                                                  \
-+	.flags = flg,                                                     \
- 	.num_planes = np,                                                 \
- 	.tile_height = DPU_TILE_HEIGHT_DEFAULT                            \
- }
-@@ -64,7 +64,7 @@ alpha, bp, flg, fm, np, th)                                               \
+@@ -64,7 +63,6 @@ alpha, bp, flg, fm, np, th)                                               \
+ 	.bpc_r_cr = r,                                                    \
+ 	.bpc_a = a,                                                       \
+ 	.chroma_sample = CHROMA_FULL,                                     \
+-	.unpack_align_msb = 0,                                            \
  	.unpack_count = uc,                                               \
  	.bpp = bp,                                                        \
  	.fetch_mode = fm,                                                 \
--	.flag = {(flg)},                                                  \
-+	.flags = flg,                                                     \
- 	.num_planes = np,                                                 \
- 	.tile_height = th                                                 \
- }
-@@ -84,7 +84,7 @@ alpha, chroma, count, bp, flg, fm, np)                                    \
+@@ -86,7 +84,6 @@ alpha, chroma, count, bp, flg, fm, np)                                    \
+ 	.bpc_r_cr = r,                                                    \
+ 	.bpc_a = a,                                                       \
+ 	.chroma_sample = chroma,                                          \
+-	.unpack_align_msb = 0,                                            \
  	.unpack_count = count,                                            \
  	.bpp = bp,                                                        \
  	.fetch_mode = fm,                                                 \
--	.flag = {(flg)},                                                  \
-+	.flags = flg,                                                     \
- 	.num_planes = np,                                                 \
- 	.tile_height = DPU_TILE_HEIGHT_DEFAULT                            \
- }
-@@ -102,7 +102,7 @@ alpha, chroma, count, bp, flg, fm, np)                                    \
+@@ -106,7 +103,6 @@ alpha, chroma, count, bp, flg, fm, np)                                    \
+ 	.bpc_r_cr = r,                                                    \
+ 	.bpc_a = a,                                                       \
+ 	.chroma_sample = chroma,                                          \
+-	.unpack_align_msb = 0,                                            \
  	.unpack_count = 2,                                                \
  	.bpp = 2,                                                         \
  	.fetch_mode = fm,                                                 \
--	.flag = {(flg)},                                                  \
-+	.flags = flg,                                                     \
- 	.num_planes = np,                                                 \
- 	.tile_height = DPU_TILE_HEIGHT_DEFAULT                            \
- }
-@@ -121,7 +121,7 @@ flg, fm, np, th)                                                          \
+@@ -127,7 +123,6 @@ flg, fm, np, th)                                                          \
+ 	.bpc_r_cr = r,                                                    \
+ 	.bpc_a = a,                                                       \
+ 	.chroma_sample = chroma,                                          \
+-	.unpack_align_msb = 0,                                            \
  	.unpack_count = 2,                                                \
  	.bpp = 2,                                                         \
  	.fetch_mode = fm,                                                 \
--	.flag = {(flg)},                                                  \
-+	.flags = flg,                                                     \
+@@ -147,11 +142,10 @@ flg, fm, np, th)                                                          \
+ 	.bpc_r_cr = r,                                                    \
+ 	.bpc_a = a,                                                       \
+ 	.chroma_sample = chroma,                                          \
+-	.unpack_align_msb = 1,                                            \
+ 	.unpack_count = 2,                                                \
+ 	.bpp = 2,                                                         \
+ 	.fetch_mode = fm,                                                 \
+-	.flags = flg,                                                     \
++	.flags = MSM_FORMAT_FLAG_UNPACK_ALIGN_MSB | flg,                  \
+ 	.num_planes = np,                                                 \
+ 	.tile_height = DPU_TILE_HEIGHT_DEFAULT                            \
+ }
+@@ -168,11 +162,10 @@ flg, fm, np, th)                                                          \
+ 	.bpc_r_cr = r,                                                    \
+ 	.bpc_a = a,                                                       \
+ 	.chroma_sample = chroma,                                          \
+-	.unpack_align_msb = 1,                                            \
+ 	.unpack_count = 2,                                                \
+ 	.bpp = 2,                                                         \
+ 	.fetch_mode = fm,                                                 \
+-	.flags = flg,                                                     \
++	.flags = MSM_FORMAT_FLAG_UNPACK_ALIGN_MSB | flg,                  \
  	.num_planes = np,                                                 \
  	.tile_height = th                                                 \
  }
-@@ -139,7 +139,7 @@ flg, fm, np, th)                                                          \
- 	.unpack_count = 2,                                                \
- 	.bpp = 2,                                                         \
- 	.fetch_mode = fm,                                                 \
--	.flag = {(flg)},                                                  \
-+	.flags = flg,                                                     \
- 	.num_planes = np,                                                 \
- 	.tile_height = DPU_TILE_HEIGHT_DEFAULT                            \
- }
-@@ -158,7 +158,7 @@ flg, fm, np, th)                                                          \
- 	.unpack_count = 2,                                                \
- 	.bpp = 2,                                                         \
- 	.fetch_mode = fm,                                                 \
--	.flag = {(flg)},                                                  \
-+	.flags = flg,                                                     \
- 	.num_planes = np,                                                 \
- 	.tile_height = th                                                 \
- }
-@@ -178,7 +178,7 @@ flg, fm, np)                                                      \
+@@ -190,7 +183,6 @@ flg, fm, np)                                                      \
+ 	.bpc_r_cr = r,                                                    \
+ 	.bpc_a = a,                                                       \
+ 	.chroma_sample = chroma,                                          \
+-	.unpack_align_msb = 0,                                            \
  	.unpack_count = 1,                                                \
  	.bpp = bp,                                                        \
  	.fetch_mode = fm,                                                 \
--	.flag = {(flg)},                                                  \
-+	.flags = flg,                                                     \
- 	.num_planes = np,                                                 \
- 	.tile_height = DPU_TILE_HEIGHT_DEFAULT                            \
- }
-@@ -1047,7 +1047,7 @@ const struct dpu_format *dpu_get_dpu_format_ext(
- 		DPU_ERROR("unsupported fmt: %4.4s modifier 0x%llX\n",
- 			(char *)&format, modifier);
- 	else
--		DRM_DEBUG_ATOMIC("fmt %4.4s mod 0x%llX ubwc %d yuv %d\n",
-+		DRM_DEBUG_ATOMIC("fmt %4.4s mod 0x%llX ubwc %d yuv %ld\n",
- 				(char *)&format, modifier,
- 				DPU_FORMAT_IS_UBWC(fmt),
- 				DPU_FORMAT_IS_YUV(fmt));
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-index 31f97f535ce9..ed5206652413 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-@@ -40,23 +40,21 @@ enum dpu_format_flags {
- 	DPU_FORMAT_FLAG_YUV_BIT,
- 	DPU_FORMAT_FLAG_DX_BIT,
- 	DPU_FORMAT_FLAG_COMPRESSED_BIT,
--	DPU_FORMAT_FLAG_BIT_MAX,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c
+index d411d70b8cd8..f4b4cd084282 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c
+@@ -264,7 +264,7 @@ static void dpu_hw_sspp_setup_format(struct dpu_sw_pipe *pipe,
+ 		(fmt->element[1] << 8) | (fmt->element[0] << 0);
+ 	src_format |= ((fmt->unpack_count - 1) << 12) |
+ 		((fmt->flags & MSM_FORMAT_FLAG_UNPACK_TIGHT ? 1 : 0) << 17) |
+-		(fmt->unpack_align_msb << 18) |
++		((fmt->flags & MSM_FORMAT_FLAG_UNPACK_ALIGN_MSB ? 1 : 0) << 18) |
+ 		((fmt->bpp - 1) << 9);
+ 
+ 	if (fmt->fetch_mode != MDP_FETCH_LINEAR) {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_wb.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_wb.c
+index 19163634855f..93ff01c889b5 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_wb.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_wb.c
+@@ -97,7 +97,7 @@ static void dpu_hw_wb_setup_format(struct dpu_hw_wb *ctx,
+ 		(fmt->element[1] << 8)  |
+ 		(fmt->element[0] << 0);
+ 
+-	dst_format |= (fmt->unpack_align_msb << 18) |
++	dst_format |= ((fmt->flags & MSM_FORMAT_FLAG_UNPACK_ALIGN_MSB ? 1 : 0) << 18) |
+ 		((fmt->flags & MSM_FORMAT_FLAG_UNPACK_TIGHT ? 1 : 0) << 17) |
+ 		((fmt->unpack_count - 1) << 12) |
+ 		((fmt->bpp - 1) << 9);
+diff --git a/drivers/gpu/drm/msm/disp/mdp_format.h b/drivers/gpu/drm/msm/disp/mdp_format.h
+index 18b2822dd552..d17f63c045a7 100644
+--- a/drivers/gpu/drm/msm/disp/mdp_format.h
++++ b/drivers/gpu/drm/msm/disp/mdp_format.h
+@@ -15,12 +15,14 @@ enum msm_format_flags {
+ 	MSM_FORMAT_FLAG_DX_BIT,
+ 	MSM_FORMAT_FLAG_COMPRESSED_BIT,
+ 	MSM_FORMAT_FLAG_UNPACK_TIGHT_BIT,
++	MSM_FORMAT_FLAG_UNPACK_ALIGN_MSB_BIT,
  };
  
- #define DPU_FORMAT_FLAG_YUV		BIT(DPU_FORMAT_FLAG_YUV_BIT)
- #define DPU_FORMAT_FLAG_DX		BIT(DPU_FORMAT_FLAG_DX_BIT)
- #define DPU_FORMAT_FLAG_COMPRESSED	BIT(DPU_FORMAT_FLAG_COMPRESSED_BIT)
--#define DPU_FORMAT_IS_YUV(X)		\
--	(test_bit(DPU_FORMAT_FLAG_YUV_BIT, (X)->flag))
--#define DPU_FORMAT_IS_DX(X)		\
--	(test_bit(DPU_FORMAT_FLAG_DX_BIT, (X)->flag))
-+
-+#define DPU_FORMAT_IS_YUV(X)		((X)->flags & DPU_FORMAT_FLAG_YUV)
-+#define DPU_FORMAT_IS_DX(X)		((X)->flags & DPU_FORMAT_FLAG_DX)
- #define DPU_FORMAT_IS_LINEAR(X)		((X)->fetch_mode == MDP_FETCH_LINEAR)
- #define DPU_FORMAT_IS_TILE(X) \
- 	(((X)->fetch_mode == MDP_FETCH_UBWC) && \
--			!test_bit(DPU_FORMAT_FLAG_COMPRESSED_BIT, (X)->flag))
-+	 !((X)->flags & DPU_FORMAT_FLAG_COMPRESSED))
- #define DPU_FORMAT_IS_UBWC(X) \
- 	(((X)->fetch_mode == MDP_FETCH_UBWC) && \
--			test_bit(DPU_FORMAT_FLAG_COMPRESSED_BIT, (X)->flag))
-+	 ((X)->flags & DPU_FORMAT_FLAG_COMPRESSED))
+ #define MSM_FORMAT_FLAG_YUV		BIT(MSM_FORMAT_FLAG_YUV_BIT)
+ #define MSM_FORMAT_FLAG_DX		BIT(MSM_FORMAT_FLAG_DX_BIT)
+ #define MSM_FORMAT_FLAG_COMPRESSED	BIT(MSM_FORMAT_FLAG_COMPRESSED_BIT)
+ #define MSM_FORMAT_FLAG_UNPACK_TIGHT	BIT(MSM_FORMAT_FLAG_UNPACK_TIGHT_BIT)
++#define MSM_FORMAT_FLAG_UNPACK_ALIGN_MSB BIT(MSM_FORMAT_FLAG_UNPACK_ALIGN_MSB_BIT)
  
- #define DPU_BLEND_FG_ALPHA_FG_CONST	(0 << 0)
- #define DPU_BLEND_FG_ALPHA_BG_CONST	(1 << 0)
-@@ -334,7 +332,7 @@ enum dpu_3d_blend_mode {
+ /**
+  * struct msm_format: defines the format configuration
+@@ -29,7 +31,6 @@ enum msm_format_flags {
+  * @fetch_type: how the color components are packed in pixel format
+  * @chroma_sample: chroma sub-samplng type
   * @alpha_enable: whether the format has an alpha channel
-  * @num_planes: number of planes (including meta data planes)
-  * @fetch_mode: linear, tiled, or ubwc hw fetch behavior
-- * @flag: usage bit flags
-+ * @flags: usage bit flags
-  * @tile_width: format tile width
-  * @tile_height: format tile height
-  */
-@@ -351,7 +349,7 @@ struct dpu_format {
- 	u8 alpha_enable;
- 	u8 num_planes;
- 	enum mdp_fetch_mode fetch_mode;
--	DECLARE_BITMAP(flag, DPU_FORMAT_FLAG_BIT_MAX);
-+	unsigned long flags;
- 	u16 tile_width;
- 	u16 tile_height;
- };
+- * @unpack_align_msb: unpack aligned to LSB or MSB
+  * @unpack_count: number of the components to unpack
+  * @bpp: bytes per pixel
+  * @flags: usage bit flags
+@@ -45,7 +46,6 @@ struct msm_format {
+ 	enum mdp_fetch_type fetch_type;
+ 	enum mdp_chroma_samp_type chroma_sample;
+ 	bool alpha_enable;
+-	u8 unpack_align_msb;
+ 	u8 unpack_count;
+ 	u8 bpp;
+ 	unsigned long flags;
 
 -- 
 2.39.2
