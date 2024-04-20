@@ -1,97 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward501a.mail.yandex.net (forward501a.mail.yandex.net [178.154.239.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F389625;
-	Sat, 20 Apr 2024 18:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC532032C;
+	Sat, 20 Apr 2024 18:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713636822; cv=none; b=EpAvdfM19QeP/69EDm+w1pdr493Q+pGLs84mDcA4kY9Luhya0QKzDiN3mgEJe+lY66uyHpKJDNsxNYuXGaM6jSS+8GHV2ifL+YNLkxTRDdbhOJOGKWjWQKr+jGhEIz8pccFR28WEv/cJspKl25MXo1wRrlphuMCibZKFzQQ8zOU=
+	t=1713637374; cv=none; b=f+8tAxyUOGtXShzksZS+ZKji8FBeGwZ5bFb6UjJaWjFfrAcCqkiQjFxTYHCRXmLdnzR6PkO1pHqMqN2LL9RLDZG/WZxeeC9jkzz4Vt9E0pWvpNhLBLZ3dWQimvsfD+++C2JI/rShei6O8lxM+xb5hH8lWXJdhdBPektc28fQCaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713636822; c=relaxed/simple;
-	bh=LLY1ufaNAgXRjxi0qxQeE3KwJWeLbKrkAlWFeDzMeEo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=boS9a5J3FMctT8fz0f9YEK4ZiX8hSQzmv9gpzyib3XYJWVXE3M17Y3p0pmYmA/vhJ3uAHEz8wnEdNgud8iL/OAbW+4MSw2GwROn93T9qzeX9sY8binMLFw2xWYNPCC0zdpZyJxBoVrUPpqF08fF6jF/cCh+SFCIsLk965pvOS68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YcDURYgR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713637374; c=relaxed/simple;
+	bh=+NLyQZeymksJv+UdhdpGq+UF4BkKRM/TdxoGx9KLh/E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kBH87q2aW4zvASoQXEITYNT56eEMMkslC0M8ebFu58146Kp57cNdz51jBPdWcPqsAbMnYyz1NmlfzzVnX5qy7GSKMBaKiyDCv2D2vna39e4HPaFuysumP7ymqPCdxeZimjJDSaNlobbTdAeYkI2QpgviI/Ssj0idnO1aOaUjAbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru; spf=pass smtp.mailfrom=ya.ru; dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b=QWl+Nw3e; arc=none smtp.client-ip=178.154.239.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ya.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YcDURYgR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77F65C072AA;
-	Sat, 20 Apr 2024 18:13:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713636820;
-	bh=LLY1ufaNAgXRjxi0qxQeE3KwJWeLbKrkAlWFeDzMeEo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YcDURYgRbGwl2pXd4sTKLUIYHdOD3pLeZwythdxoZnP9G4f24eKBgL9r9+lZyHbcR
-	 DkaitPP2GAdDMafn11I9xN7TZfeyeOusIjDrVc3TF37WDxPlbekF5buhj5HNhED7Hq
-	 EsbWCBmJ6jdLO0si3kcMQ6jdDpcrzsgX+QvT4OiyQt3zNP8RmDQjcZYQfSukEkRoNC
-	 xTvlP46nWwN34BdrW70XlUvSw7PXgI0XPXwIfF5hsg2P/lsmgp3DvCOivgd/Vh7PIj
-	 TzV4pqS8nMM4Yo9Ey3t86Z5ec3+ycoppqmEur5BeASXNphR+S6iRtW+yiyTI8qta13
-	 N2+mxC+/xRWpw==
-Date: Sat, 20 Apr 2024 13:13:38 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] arm64: defconfig: qcom: enable X1E80100 sound card
-Message-ID: <6sfk3n65fbq444ezbuj53litc3lizuhqbmk6mwyngja3orw4fu@ez2bqiub5235>
-References: <20240403094422.15140-1-krzysztof.kozlowski@linaro.org>
+	dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b="QWl+Nw3e"
+Received: from mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net [IPv6:2a02:6b8:c0f:60f:0:640:4965:0])
+	by forward501a.mail.yandex.net (Yandex) with ESMTPS id D93356115A;
+	Sat, 20 Apr 2024 21:22:42 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id WMMqk3Bj1a60-evRdivpm;
+	Sat, 20 Apr 2024 21:22:41 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ya.ru; s=mail;
+	t=1713637361; bh=DsOxzxzCfZeBqcxKPCWjPBT8YlJh1q1TN/5DSawsLCs=;
+	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=QWl+Nw3e0pPtHJdTCIzIiN6q+jsHUopKb0uFbvd7rXQlkcaGHsTK+u34yYLua32kg
+	 XTD4ZBttJRwpw96yLuWUSjruNra+dWkkT63srxxWOV4ac8PimDs3EAu9kl91f9Gjcl
+	 hC0Yw/3Bp3U+13OW/sy8e4FPU5W6BjnNa5IuGWsc=
+Authentication-Results: mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net; dkim=pass header.i=@ya.ru
+From: Konstantin Pugin <rilian.la.te@ya.ru>
+To: 
+Cc: krzk@kernel.org,
+	conor@kernel.org,
+	lkp@intel.com,
+	vz@mleia.com,
+	robh@kernel.org,
+	jcmvbkbc@gmail.com,
+	nicolas.ferre@microchip.com,
+	manikanta.guntupalli@amd.com,
+	corbet@lwn.net,
+	ychuang3@nuvoton.com,
+	u.kleine-koenig@pengutronix.de,
+	Maarten.Brock@sttls.nl,
+	Konstantin Pugin <ria.freelander@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Lech Perczak <lech.perczak@camlingroup.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v5 2/3] dt-bindings: sc16is7xx: Add compatible line for XR20M1172 UART
+Date: Sat, 20 Apr 2024 21:22:05 +0300
+Message-ID: <20240420182223.1153195-3-rilian.la.te@ya.ru>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240420182223.1153195-1-rilian.la.te@ya.ru>
+References: <20240420182223.1153195-1-rilian.la.te@ya.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240403094422.15140-1-krzysztof.kozlowski@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 03, 2024 at 11:44:22AM +0200, Krzysztof Kozlowski wrote:
-> Enable the sound machine driver for Qualcomm X1E80100 sound card, used
-> on several boards with X1E80100 (e.g. X1E80100 CRD).
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
+From: Konstantin Pugin <ria.freelander@gmail.com>
 
-I'm completely lost on your strategy for these sound card drivers!
+EXAR XR20M1172 UART is mostly register-compatible with NXP SPI UARTs.
+It will be handled by same driver, so, it makes sense to add DT
+definition for these block into driver's documentation.
 
-Why is x1e a separate driver when we're shoehorning in qc*6490 into the
-sc8280xp?
-Why does Srini answer me that the compatible should contain the device
-name (qcom,qcs6490-rb3gen2-sndcard) while you're at the same time adding
-a platform-based compatible for x1e.
- 
-PS. The only answer I get out of `diff -u sc8280xp.c x1e80100.c` is that
-we're going to blow some speakers on X1E devices. (And is this
-limitation applicable to qc?6490 devices?)
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+Signed-off-by: Konstantin Pugin <ria.freelander@gmail.com>
+---
+ Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml
+index 5dec15b7e7c3..c4bedf23368b 100644
+--- a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml
++++ b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml
+@@ -12,6 +12,7 @@ maintainers:
+ properties:
+   compatible:
+     enum:
++      - exar,xr20m1172
+       - nxp,sc16is740
+       - nxp,sc16is741
+       - nxp,sc16is750
+-- 
+2.44.0
 
-
-Obviously unrelated to this patch, which I will pick.
-
-Regards,
-Bjorn
-
-> ---
-> 
-> The driver and bindings were posted here:
-> https://lore.kernel.org/alsa-devel/20231204100116.211898-1-krzysztof.kozlowski@linaro.org/T/#t
-> 
-> Resending because I did not Cc Bjorn/Konrad/MSM.
-> ---
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 94e677800899..4df6a724349f 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -956,6 +956,7 @@ CONFIG_SND_SOC_SM8250=m
->  CONFIG_SND_SOC_SC8280XP=m
->  CONFIG_SND_SOC_SC7180=m
->  CONFIG_SND_SOC_SC7280=m
-> +CONFIG_SND_SOC_X1E80100=m
->  CONFIG_SND_SOC_ROCKCHIP=m
->  CONFIG_SND_SOC_ROCKCHIP_I2S_TDM=m
->  CONFIG_SND_SOC_ROCKCHIP_SPDIF=m
-> -- 
-> 2.34.1
-> 
