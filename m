@@ -1,136 +1,164 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E880D1C294
-	for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2024 11:17:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E6A179A8;
+	Sat, 20 Apr 2024 11:19:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713611866; cv=none; b=pLMXGByaei9pDxBdxjppNkavwFiSe2ZPRtC1jNsF4g/G2hBkAipK7Bdhq8A3SnHLojtylK316o+0CNGvukFMWuVsQbDzS7CyqfU0813Q2f4mc6uRTUq6aujKv+NLqveQwo1kY6tBEKfq67uaiGestuhUOX08B/1eaSBW3zEbM2c=
+	t=1713611985; cv=none; b=Q3M44pocgJrNaAAVaz7DnwkG3qarbVpGVTcZrzYNGT593q/QSaeWs4iZdDVM7TYbx/TtD9HcaFvoKu7RxwUVcZSGkPYcgupB1G7iaFa5IFkYLkCwWC7Nsy2W89cVYbSpxz0YtTHsUt/v5BrZjjGZ3TQaGnk98wWrq70ernSVGQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713611866; c=relaxed/simple;
-	bh=p3oWmVyGlcLLzHs5KM/jHHXQg4aBBYt9qMr0gvutLek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N7hKCbTvuXBdZgj3yaWlSZTR1JIKkERXPeA4cxWNX8uIFQ5kq3wDnHRPhpY7kyGtDx0HNfyOhgEL3WZ6nVjvtPPdFBQ+Bs6TzWtDL8ikU/uSrDyJqxFKEjyerx2W0V6Z96fwpAnlvZRc8dZnZ2NHiDwIP1GtS1JoYEV9TQyzq/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VuCv8B1w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713611985; c=relaxed/simple;
+	bh=iBr9YZ8SOZTOAUJpTCJ44n0d905eTuzIANCWXoPwtbk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ctOAveey/Am7104pAnhPbe/c8+tWuKqtKzCueYNIMh2Wyc3pg+Jut+/EWFiifCrWIH4DdPTh0S+tAeXZ7wL2z7X0GInW3nBXRtboIYawodbXeuqbdZw4z/0IXhCG72WClEy8lgFuroGJVpjgx87eiT/lHb7f1X6vxUxqftrZLS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nvtt52Jp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VuCv8B1w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA11C072AA;
-	Sat, 20 Apr 2024 11:17:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nvtt52Jp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C8A5C072AA;
+	Sat, 20 Apr 2024 11:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713611865;
-	bh=p3oWmVyGlcLLzHs5KM/jHHXQg4aBBYt9qMr0gvutLek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VuCv8B1wSmn3Cb5VZNbpxNPm4YYVc8guYhcxwtgZKhau6PXoW44JSJ+5BlWHxoPOR
-	 kc7DGfQLCLG/lytqZeo7FHkPbLV3UbXXfCGAhErDpJgEQIUw9dnKduZBY5LEXrelp+
-	 TZGGVkXANV1QvflZ/e9cyVz68x9Vr1m9LlnQRqgOqC49KjEMl2XVSH5u/IMZgNby3w
-	 35XePNlBH6/InzTXd/kOc7Z7ZdNIlHBfbZa8yskolPc8T7NKQsupqpwWLHiAgIcZM6
-	 okBbyXh0KFl6SGhwKzbwkKpwTZy8SbWdaLlAXwRb+1I6jR0e+o5/n4ZQL4uDibKEng
-	 I9zJJ0BGAhWDg==
-Date: Sat, 20 Apr 2024 19:04:18 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Conor Dooley <conor@kernel.org>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	cleger@rivosinc.com
-Subject: Re: [PATCH v3 0/2] riscv: improve nommu and timer-clint
-Message-ID: <ZiOhMnZ1fdzj2IzE@xhacker>
-References: <20240410142347.964-1-jszhang@kernel.org>
+	s=k20201202; t=1713611984;
+	bh=iBr9YZ8SOZTOAUJpTCJ44n0d905eTuzIANCWXoPwtbk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Nvtt52JpVsLO6yPJGc6piA5JroYfOTIHUvfEBtdNi1EW4F3LSApc2cPdSDJpiATrC
+	 GmRKzsc7mzyd0AE82E+d7FeYR67GSORtem1hFQ4hGUFgkIMxU9gTvTm6GGx3CGg6kE
+	 vY029VZfS6KE/nOJ+GcoD+kYaDQu4rYAqehiR1R9WH2H7XzdM4fDoqAADKlz3n6ORE
+	 C1VmMqr5b5/ZgyCUkj+4udM5bn5mq66D+3iecB+a71rpcbaMk4cy7qFzORUBC2JmUE
+	 OPMryCqHmQwF+D6bCXnUVLi/589scYU0EFojbsiysJshb56sO1JBvVyzGsGcWWa/MY
+	 NkP5K1NCbRswQ==
+Date: Sat, 20 Apr 2024 12:19:33 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Guillaume Stols <gstols@baylibre.com>, dlechner@baylibre.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, jstephan@baylibre.com
+Subject: Re: [PATCH] iio: adc: ad7606: remove frstdata check
+Message-ID: <20240420121933.13a0e22f@jic23-huawei>
+In-Reply-To: <20240417-cleanup-ad7606-v1-1-5c2a29662c0a@baylibre.com>
+References: <20240417-cleanup-ad7606-v1-1-5c2a29662c0a@baylibre.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240410142347.964-1-jszhang@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 10, 2024 at 10:23:45PM +0800, Jisheng Zhang wrote:
-> As is known, the sophgo CV1800B contains so called little core, which
-> is C906 w/o MMU, so I want to run nommu linux on it. This series is
-> the result of the bring up. After this series, w/ proper dts, we can
-> run nommu linux on milkv duo's little core.
-> 
-> First of all, patch1 removes the PAGE_OFFSET hardcoding by introducing
-> DRAM_BASE Kconfig option.
-> 
-> Secondly, to use the T-HEAD C9xx clint in RISCV-M NOMMU env, we need
-> to take care two points:
-> 
-> 1.The mtimecmp in T-Head C9xx clint only supports 32bit read/write,
-> implement such support.
-> 
-> 2. As pointed out by commit ca7810aecdba ("lib: utils/timer: mtimer:
-> add a quirk for lacking mtime register") of opensbi:
-> 
-> "T-Head developers surely have a different understanding of time CSR and
-> CLINT's mtime register with SiFive ones, that they did not implement
-> the mtime register at all -- as shown in openC906 source code, their
-> time CSR value is just exposed at the top of their processor IP block
-> and expects an external continous counter, which makes it not
-> overrideable, and thus mtime register is not implemented, even not for
-> reading. However, if CLINTEE is not enabled in T-Head's MXSTATUS
-> extended CSR, these systems still rely on the mtimecmp registers to
-> generate timer interrupts. This makes it necessary to implement T-Head
-> C9xx CLINT support in OpenSBI MTIMER driver, which skips implementing
-> reading mtime register and falls back to default code that reads time
-> CSR."
-> 
-> So, we need to fall back to read time CSR instead of mtime register.
-> Add riscv_csr_time_available static key for this purpose.
-> 
-> The second patch adds T-Head C9xxx clint support to timer-clint driver
-> by taking care of above two points.
-> 
-> Since v2:
->   - drop CONFIG_CLINT_USE_CSR_INSTEADOF_MTIME, instead we use runtime
->     code patch to dynamically enable CSR TIME code path or MTIME code
->     path.
-> 
-> Since v1:
->   - fix c900_clint_timer_init_dt() defined but not used build warning
->   - add option CONFIG_CLINT_USE_CSR_INSTEADOF_MTIME instead of removing
->     mtime usage for all platforms, since not all platforms implement the
->     time CSR in HW in M mode.
->   - rebase on the timer-clint improvement series
-> https://lore.kernel.org/linux-riscv/20240406111757.1597-1-jszhang@kernel.org/T/#t
+On Wed, 17 Apr 2024 09:11:18 +0000
+Guillaume Stols <gstols@baylibre.com> wrote:
 
-Hi Palmer, Daniel,
+> Frstdata pin is set high during the first sample's transmission and
+> then set low.
+> This code chunk attempts to recover from an eventual glitch in the clock
+> by checking frstdata state after reading the first channel's sample.
+> Currently, in serial mode, this check happens AFTER the 16th pulse, and if
+> frstdata is not set it resets the device and returns EINVAL.
+> According to the datasheet, "The FRSTDATA output returns to a logic low
+> following the 16th SCLK falling edge.", thus after the 16th pulse, the check
+> will always be true, and the driver will not work as expected.
+> Even if it was working, the usefulness of this check is limited, since
+> it would only detect a glitch on the first channel, but not on the
+> following ones, and the convst pulse will reset the communication sequence at
+> each new conversion.
+> 
+> Signed-off-by: Guillaume Stols <gstols@baylibre.com>
 
-This series itself relies on the timer-clint improvement series
-https://lore.kernel.org/linux-riscv/20240406111757.1597-1-jszhang@kernel.org/T/#t
+Michael, I'm sure you remember this well - it was only 13 years ago you wrote
+this...
 
-But as suggested by Clément, it's better to rebase the patch1 on
-the Samuel's work which has been merged into riscv for-next,
-So I have two dependencies now, how do I handle this series then?
+https://lore.kernel.org/all/1296744691-24320-1-git-send-email-michael.hennerich@analog.com/
 
-Could I leave patch1 alone and move patch2 into the timer-clint
-improvement series? Any suggestion?
+Anyhow, I'd like an Ack or a statement of you have no idea any more and i should
+go with what Guillaume has worked out...
 
-Thanks in advance
+Jonathan
+
+> ---
+> This is the first commit of cleanup series. It will be followed by more
+> cleanups and support for more parts and features.
+
+Sounds good.
+
+> ---
+>  drivers/iio/adc/ad7606.c | 30 ------------------------------
+>  drivers/iio/adc/ad7606.h |  3 ---
+>  2 files changed, 33 deletions(-)
 > 
+> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+> index 1928d9ae5bcf..f85eb0832703 100644
+> --- a/drivers/iio/adc/ad7606.c
+> +++ b/drivers/iio/adc/ad7606.c
+> @@ -88,31 +88,6 @@ static int ad7606_read_samples(struct ad7606_state *st)
+>  {
+>  	unsigned int num = st->chip_info->num_channels - 1;
+>  	u16 *data = st->data;
+> -	int ret;
+> -
+> -	/*
+> -	 * The frstdata signal is set to high while and after reading the sample
+> -	 * of the first channel and low for all other channels. This can be used
+> -	 * to check that the incoming data is correctly aligned. During normal
+> -	 * operation the data should never become unaligned, but some glitch or
+> -	 * electrostatic discharge might cause an extra read or clock cycle.
+> -	 * Monitoring the frstdata signal allows to recover from such failure
+> -	 * situations.
+> -	 */
+> -
+> -	if (st->gpio_frstdata) {
+> -		ret = st->bops->read_block(st->dev, 1, data);
+> -		if (ret)
+> -			return ret;
+> -
+> -		if (!gpiod_get_value(st->gpio_frstdata)) {
+> -			ad7606_reset(st);
+> -			return -EIO;
+> -		}
+> -
+> -		data++;
+> -		num--;
+> -	}
+>  
+>  	return st->bops->read_block(st->dev, num, data);
+>  }
+> @@ -450,11 +425,6 @@ static int ad7606_request_gpios(struct ad7606_state *st)
+>  	if (IS_ERR(st->gpio_standby))
+>  		return PTR_ERR(st->gpio_standby);
+>  
+> -	st->gpio_frstdata = devm_gpiod_get_optional(dev, "adi,first-data",
+> -						    GPIOD_IN);
+> -	if (IS_ERR(st->gpio_frstdata))
+> -		return PTR_ERR(st->gpio_frstdata);
+> -
+>  	if (!st->chip_info->oversampling_num)
+>  		return 0;
+>  
+> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+> index 0c6a88cc4695..eacb061de6f8 100644
+> --- a/drivers/iio/adc/ad7606.h
+> +++ b/drivers/iio/adc/ad7606.h
+> @@ -80,8 +80,6 @@ struct ad7606_chip_info {
+>   * @gpio_range		GPIO descriptor for range selection
+>   * @gpio_standby	GPIO descriptor for stand-by signal (STBY),
+>   *			controls power-down mode of device
+> - * @gpio_frstdata	GPIO descriptor for reading from device when data
+> - *			is being read on the first channel
+>   * @gpio_os		GPIO descriptors to control oversampling on the device
+>   * @complete		completion to indicate end of conversion
+>   * @trig		The IIO trigger associated with the device.
+> @@ -108,7 +106,6 @@ struct ad7606_state {
+>  	struct gpio_desc		*gpio_reset;
+>  	struct gpio_desc		*gpio_range;
+>  	struct gpio_desc		*gpio_standby;
+> -	struct gpio_desc		*gpio_frstdata;
+>  	struct gpio_descs		*gpio_os;
+>  	struct iio_trigger		*trig;
+>  	struct completion		completion;
 > 
-> Jisheng Zhang (2):
->   riscv: nommu: remove PAGE_OFFSET hardcoding
->   clocksource/drivers/timer-clint: Add T-Head C9xx clint
+> ---
+> base-commit: 62d3fb9dcc091ccdf25eb3b716e90e07e3ed861f
+> change-id: 20240416-cleanup-ad7606-161e2ed9818b
 > 
->  arch/riscv/Kconfig                |  8 +++++-
->  arch/riscv/include/asm/clint.h    |  2 ++
->  arch/riscv/include/asm/timex.h    | 18 +++++++++---
->  drivers/clocksource/timer-clint.c | 48 +++++++++++++++++++++++++++----
->  4 files changed, 66 insertions(+), 10 deletions(-)
-> 
-> -- 
-> 2.43.0
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> Best regards,
+
