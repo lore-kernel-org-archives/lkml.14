@@ -1,95 +1,215 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from mail-gw3.jing.rocks (mail-gw3.jing.rocks [219.117.250.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1681D2563;
-	Sat, 20 Apr 2024 13:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA7C26AC5;
+	Sat, 20 Apr 2024 13:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=219.117.250.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713618969; cv=none; b=iJtEt68i42qwcOHnR+4dkalqEbCWuP0jOjX+AUCHh2hTPQ9I/KAhihfDQ7Mh+xhnznSlktMEexYfiel7JxCQaJOQcbwARzbWO61n2nGlvPySj+hczkGtaJ5ZzeAEwj00ezPFCecQFamj5e77AJN6FJAAeybiuzCIECsqu9IRN9c=
+	t=1713618984; cv=none; b=DlRxtERxkHglvisvpl+4kROncONgJy0WY96uuQq+RYVsB2Cx06+gzBsIW4H/IDHCJ2De6pkB8NN2gPXZgvHY2hsONF6MJN9X/LvAsYJn1HBiZj5YEWKGHeJJdinN1Bh3Oa0sn0bCbOLpS+/C/tr4ivJXkddh/zRzeEcRxhXfyM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713618969; c=relaxed/simple;
-	bh=FT0t9HE1rL9H9A5o8oALgJBDzziSpKtzAEmi3ZmQPQI=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=RNnWdZRSs0M9clP4p+qdzRfZGu5RyuEbf2aHLyC0NFM+Dl1DscOgnZvm15c8kThR065UPnfwHEUjb4myfKsEJopSLag+xQqwYlOGm4FDp0iOuz9kkvujBCXgs0bZuC6PL+Oi72oT5EMyfTfBwAnP0MRgr54WKk+oWjqaJRRRnXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=b7NmpL2p; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1713618984; c=relaxed/simple;
+	bh=/E2SsRI6+1CnMkzJGqUluzn1ZgdJDM+ZQA8WYx/El34=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mIu9TBzLbmjmUAx6XTKG6R5k7WP7C7a6Fqs28lo2DymQ6e/+I/EgNQuJusIWs/Ao2S2YECuV40vgndSjHO1teK62+F9xirfA/GUGB5BqtEg88txW6AV79qGJ7wfDvyfIPsc/us8+KdBIMGWeDlczJuHATcRxkaedNcBSNpTeil0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jing.rocks; spf=pass smtp.mailfrom=jing.rocks; dkim=pass (2048-bit key) header.d=jing.rocks header.i=@jing.rocks header.b=mxYXu2Pr; dkim=pass (2048-bit key) header.d=jing.rocks header.i=@jing.rocks header.b=PzYpkLDT; arc=none smtp.client-ip=219.117.250.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jing.rocks
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jing.rocks
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="b7NmpL2p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1713618937; x=1714223737; i=markus.elfring@web.de;
-	bh=FT0t9HE1rL9H9A5o8oALgJBDzziSpKtzAEmi3ZmQPQI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=b7NmpL2p3KCnnc7yZjWSMP7LEmvQrWmdL/1xCLAmzm1gqzS6qBreXqlkzb0qp7BY
-	 Rad7pexfjAibdoh55HuNPGpNTHK7Up98IJgWh2Kfpk3JGjJC+JIDAlkvzmz9sctop
-	 PlwV/VgZxWEY2J4A6REZKWr/IIbthMvwkdUcBnFx++sP8vf413316i7F3p0imUWsS
-	 PZ3x0kfOqjUhMMrPvv0lgqOHXfqKMRNGcWsIl23C9ccna40zdn9EgP8WSisj3S/b3
-	 qm0BxyKgrlUdZmdiMnjdipIWEm1nDpMsOpPt8+0ujn0jyDDXPIFuA3bWXCMMNxA+P
-	 rSPFB2mS/WnWo2bkvQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MqIB7-1sRwvi06q3-00n772; Sat, 20
- Apr 2024 15:15:37 +0200
-Message-ID: <aa12c80c-9769-424a-ba2b-8c0f68b1c1e6@web.de>
-Date: Sat, 20 Apr 2024 15:15:16 +0200
+	dkim=pass (2048-bit key) header.d=jing.rocks header.i=@jing.rocks header.b="mxYXu2Pr";
+	dkim=pass (2048-bit key) header.d=jing.rocks header.i=@jing.rocks header.b="PzYpkLDT"
+Received: from mail-gw3.jing.rocks (localhost [127.0.0.1])
+	by mail-gw3.jing.rocks (Proxmox) with ESMTP id AA609EA94;
+	Sat, 20 Apr 2024 22:04:46 +0900 (JST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jing.rocks; h=cc
+	:cc:content-transfer-encoding:date:from:from:message-id
+	:mime-version:reply-to:subject:subject:to:to; s=mail-gw; bh=Ekh+
+	vb1T4uv7G/SoGT6Q0xLqqdJaTLg2htjm/0kf+g8=; b=mxYXu2PrPRUvnggtCw3t
+	T4HRKMEHfrZh1pY/WHlYvhQpwWOHJenyxQ44e43g4liLbWX6WS82bbNvpRTFeMTz
+	4sWdYLuLlTmETtPZX2ixZiG+iTJhVYhZPqtYyfsuiY+j59OVrcMo+BEoxk0AAuV5
+	QpFHoIxPqreR2tU3sZFV34qFOGCMGSwvIf1LeU5QsbjRdy9q4/ehfjfHstVijnmv
+	t7OSFQQBvD54OdWg7tAmWpXJAxyPFGQpF0R8n5M7POT85uX/u8c3vdSzbiKNVKbn
+	SfSyPnFhUc6iTzrxWL65yen3PsOxxjvfY9UiZeq/JknyE+4r27o2qdj5nbmGtPla
+	cQ==
+Received: from mail.jing.rocks (mail.jing.rocks [192.168.0.222])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-gw3.jing.rocks (Proxmox) with ESMTPS id EDCEAE951;
+	Sat, 20 Apr 2024 22:04:43 +0900 (JST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=jing.rocks;
+	s=default; t=1713618283;
+	bh=/E2SsRI6+1CnMkzJGqUluzn1ZgdJDM+ZQA8WYx/El34=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PzYpkLDTdZbu4Bl34ShZimDAkm0Kk0lrub53OqJRg0H7z0mTGHPtCkcChdyAIBP3m
+	 C7jPe0O5fJlksBZl2OufUv8Lb3WrCcevCrF5/UlIiGYLOsizV4qcf9OqBq1/As5cBp
+	 0IkT02fIcZ8XuuZ2A/rclotBXLuJJX3pomKwzDoz7HTW/guYJm0clVPucl8E49X8+l
+	 T3rYawFDymAhrcEtK9M1vqx72Q/erS2Fn3329UAY7fAdQdE6wsisvEMMrtg6kRjY4+
+	 g0hDCdNDfCeUnZzsYCta7DPxhcnH1q0K8oqfDaqv974zVIe9NmPt++a1vcpR66/5aN
+	 ODUkEr8Rl+Uqg==
+Received: from X570AM.jing.rocks (X570AM.jing.rocks [IPv6:240b:10:f00:1b00::7e82])
+	(Authenticated sender: jing@jing.rocks)
+	by mail.jing.rocks (Postfix) with ESMTPSA id B8FB22A509;
+	Sat, 20 Apr 2024 22:04:43 +0900 (JST)
+From: Jing Luo <jing@jing.rocks>
+To: heiko@sntech.de,
+	linux-rockchip@lists.infradead.org
+Cc: robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	sebastian.reichel@collabora.com,
+	cfsworks@gmail.com,
+	jagan@edgeble.ai,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jing Luo <jing@jing.rocks>
+Subject: [PATCH] arm64: dts: rockchip: correct gpio_pwrctrl1 typos on rk3588(s) boards
+Date: Sat, 20 Apr 2024 22:03:55 +0900
+Message-ID: <20240420130355.639406-1-jing@jing.rocks>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
- linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Jameson Thies <jthies@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Benson Leung <bleung@google.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Hans de Goede <hdegoede@redhat.com>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Rajaram Regupathy <rajaram.regupathy@intel.com>,
- Saranya Gopal <saranya.gopal@intel.com>
-References: <20240419211650.2657096-2-jthies@google.com>
-Subject: Re: [PATCH 1/4] usb: typec: ucsi: Fix null deref in trace
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240419211650.2657096-2-jthies@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:qEkpwmTHHNClAQiyVH7IIo+1fbIub7wek8hkarYTnw/srysoz5k
- FWCmqIdoeSWXqIduQee46hRETP3p4iClMdW7GLg12lgnSoQyYAnvKJ0a1FsaKbr7V0JqVpi
- zrTMd2/hMewDGPEX7cqNO5UvLgCim6bR52ciBEgk8s13HR7Dl85rX2YLfAAUZTzP10ugJyf
- 6jhjvxVYMJpfQq4kPioTQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:bQJae6an96A=;Fp4WHDmZ9c/qvFFF+YpBx6n+1b6
- F09OD4Toyato74mg7EXqV9BEXI06hViIh00mBVxC/J+LNAnkU6ehTxAKHFuD1kl0a2AfV+Vw9
- SjqStQFE5AUZEadHUEVFwVwFYsWuo+ZQjO023V/5Tp1NeKI72Ehm8CY41BLQsLT/XmQoxZ8+x
- 5bpLTWHIu6OzXPxpvSp5K3iTSoVdWPvCamN5pxHCbv7kpmADb4l/CYN0cqPThuZcpmeO4Uvxf
- 1Kbmmg+f4orcM1wzOvCr1Hbw791lmLAIfhV9Wkh1PXK9Pzr1sG1PHz9dzW5X/DvFqYT5i+fCI
- wcFID7gcNoGEtBZOMFARHCzUnG3TxuBD0zASjtQv6KAXt1nglRcJFmGrvAYxANfxwglxXWku1
- KeWstBdzwSVxlNVPbOB5dbjmt1ejWlJuusIOQXk+KwW3nq8U9oewnarbqWqznAxyYCgSw1JPY
- a9U8xsQ6MJ8RdDC/BDBLde/KCEBJZtY3d0bG4uLNtvUyvjUVUsqqHP7uJDdmswYI/yJn9jPqo
- EchINxYZdeY59i9jWZX3vCBC1r+v6HTWimVe9F/9JnMke0ouVopFfmjzffatTbvd2/SjexByc
- ktEqoSdEFk1LH6jpNpuYRXONHyXURDsxuGFhnTRvFSok60FPKa+YuA77QR8yId1pSLf3Lf3dz
- rSmCpSCqZ9Adppx8D6XfzexnCEtQyX8JraCoQQsnD1rqyI/CbMLgrj7eMPEbbKbMPm8yjoQrB
- fLSCwvGHrXgWSWjBTO800ZEbRgl5Huv3YYrpf7lyp2M5YmMjnovs+fFeCu/oU8sbqRpp8246k
- oBdu1oLYKYVugPabk5g8bdqJtowYff0UZH4N3Hpp9KbEQ=
+Content-Transfer-Encoding: 8bit
 
-> ucsi_register_altmode checks IS_ERR on returned pointer and treats
-> NULL as valid. This results in a null deref when
-> trace_ucsi_register_altmode is called.
+gpio_pwrctrl2 gets duplicated by both rk806_dvs1_null and rk806_dvs2_null
+gpio_pwrctrl1 is unset. This typo appears in multiple files. Let's fix them.
 
-I find that the change description can be improved further.
-Is another imperative wording desirable?
+Note: I haven't had the chance to test them all because I don't own all
+of these boards (obviously). Please test if it's needed.
 
-Can it be nicer to use the term =E2=80=9Cdereference=E2=80=9D for the fina=
-l commit message?
+Signed-off-by: Jing Luo <jing@jing.rocks>
+---
+ arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5.dtsi           | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588-edgeble-neu6a-common.dtsi | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts                | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi                | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi           | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588s-coolpi-4b.dts            | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588s-indiedroid-nova.dts      | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588s-orangepi-5.dts           | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts              | 2 +-
+ 9 files changed, 9 insertions(+), 9 deletions(-)
 
-Regards,
-Markus
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5.dtsi
+index cce1c8e83..5fc40f16d 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5.dtsi
+@@ -357,7 +357,7 @@ pmic@0 {
+ 		vcca-supply = <&vcc5v0_sys>;
+ 
+ 		rk806_dvs1_null: dvs1-null-pins {
+-			pins = "gpio_pwrctrl2";
++			pins = "gpio_pwrctrl1";
+ 			function = "pin_fun0";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-edgeble-neu6a-common.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-edgeble-neu6a-common.dtsi
+index c0d4a1532..d9bf67525 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-edgeble-neu6a-common.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588-edgeble-neu6a-common.dtsi
+@@ -182,7 +182,7 @@ pmic@0 {
+ 		#gpio-cells = <2>;
+ 
+ 		rk806_dvs1_null: dvs1-null-pins {
+-			pins = "gpio_pwrctrl2";
++			pins = "gpio_pwrctrl1";
+ 			function = "pin_fun0";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts b/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
+index 39d65002a..7d7303f8e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
+@@ -452,7 +452,7 @@ pmic@0 {
+ 		vcca-supply = <&vcc5v0_sys>;
+ 
+ 		rk806_dvs1_null: dvs1-null-pins {
+-			pins = "gpio_pwrctrl2";
++			pins = "gpio_pwrctrl1";
+ 			function = "pin_fun0";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi
+index 1eb2543a5..9a196836e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi
+@@ -396,7 +396,7 @@ pmic@0 {
+ 		vcca-supply = <&vcc5v0_sys>;
+ 
+ 		rk806_dvs1_null: dvs1-null-pins {
+-			pins = "gpio_pwrctrl2";
++			pins = "gpio_pwrctrl1";
+ 			function = "pin_fun0";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi
+index dc08da518..6b9206ce4 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi
+@@ -318,7 +318,7 @@ pmic@0 {
+ 		#gpio-cells = <2>;
+ 
+ 		rk806_dvs1_null: dvs1-null-pins {
+-			pins = "gpio_pwrctrl2";
++			pins = "gpio_pwrctrl1";
+ 			function = "pin_fun0";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-coolpi-4b.dts b/arch/arm64/boot/dts/rockchip/rk3588s-coolpi-4b.dts
+index e037bf9db..7f4d7bb9a 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588s-coolpi-4b.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588s-coolpi-4b.dts
+@@ -479,7 +479,7 @@ pmic@0 {
+ 		vcca-supply = <&vcc5v0_sys>;
+ 
+ 		rk806_dvs1_null: dvs1-null-pins {
+-			pins = "gpio_pwrctrl2";
++			pins = "gpio_pwrctrl1";
+ 			function = "pin_fun0";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-indiedroid-nova.dts b/arch/arm64/boot/dts/rockchip/rk3588s-indiedroid-nova.dts
+index ce8119cbb..a5b76e24c 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588s-indiedroid-nova.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588s-indiedroid-nova.dts
+@@ -528,7 +528,7 @@ pmic@0 {
+ 		vcca-supply = <&vcc5v0_sys>;
+ 
+ 		rk806_dvs1_null: dvs1-null-pins {
+-			pins = "gpio_pwrctrl2";
++			pins = "gpio_pwrctrl1";
+ 			function = "pin_fun0";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-orangepi-5.dts b/arch/arm64/boot/dts/rockchip/rk3588s-orangepi-5.dts
+index 25de4362a..73700d77e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588s-orangepi-5.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588s-orangepi-5.dts
+@@ -336,7 +336,7 @@ pmic@0 {
+ 		#gpio-cells = <2>;
+ 
+ 		rk806_dvs1_null: dvs1-null-pins {
+-			pins = "gpio_pwrctrl2";
++			pins = "gpio_pwrctrl1";
+ 			function = "pin_fun0";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
+index 00afb90d4..5c99636a1 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
+@@ -414,7 +414,7 @@ pmic@0 {
+ 		#gpio-cells = <2>;
+ 
+ 		rk806_dvs1_null: dvs1-null-pins {
+-			pins = "gpio_pwrctrl2";
++			pins = "gpio_pwrctrl1";
+ 			function = "pin_fun0";
+ 		};
+ 
+-- 
+2.44.0
+
+
