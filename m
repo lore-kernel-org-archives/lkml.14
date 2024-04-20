@@ -1,66 +1,66 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C18D530
-	for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2024 06:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9762D205E32
+	for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2024 06:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713593366; cv=none; b=SnDysIw6A+0ZU1wWxwKIMYsffwCdzuRQmbVps7irPmLUPeP/YztkylP5gUCEuBqH/ND3nY0WS5k/D7QEHRUfnqGjmTFLJX6U9TFmausuSTBYkotMfjywKlJ5xphBhEJvhlV4JnxP6gF3zrdu0s8mBBmTuVYfEI6u5zWS0HCqVZU=
+	t=1713593711; cv=none; b=MloC/lroaRJe5MJNQEMwwbJKQXrHoEP81nAIojtDC60xiCSUkh2KKyPZmkau50YiiKjCPJ63l97z1BtwQLT7Qic0+QUwrhrZulv+RSDdelCaOfPXlLxPTMJkyWG5TiZa38ogmeUn8qurpk5wtyIjyblOcdIKpR+MuduvZia3u0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713593366; c=relaxed/simple;
-	bh=tWjsshuqL/FSN2Xo9GvQlgkjq/UO1lzCxdW/bJ5IO7o=;
+	s=arc-20240116; t=1713593711; c=relaxed/simple;
+	bh=ZolRI2ztsSyqYXap63TOzAtzW5UT+oyhSNBzd5uy1Ow=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qt7WDTME2mrHUkW7jgmIp4i6dTYKdfjPJMjWw0yj7DFf/rkZ3K792nbwH/9H4R/xJ39FYTAfjUiVf76UKX8BNfC4S9bP9ZH7BJ1YSlC8gTiNWeq4YRPH6wHflP1x4ggBJce2sl4OCalG9lKt+Ly6M8o2JxylEy5uGo72XCE+gXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XT4LVqY3; arc=none smtp.client-ip=209.85.214.172
+	 MIME-Version; b=n9kcEcliBmDbUDGDYNvgTW0ajR6h8y4NXeBOLXVxqgpFKeA4OWnMIsX0H1EoSDEoIN12H2Q6GeYw+4O0MickP6NnnGalxXEYSGLJmsPAOBtmdUPLNh9fS+EwW1emr8eXKxB+RazyAS1A/mHHP/RTZmWkxVjhG8Dqe/yEB1Mk250=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qg8kF4Gy; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XT4LVqY3"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e3c9300c65so25906185ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 23:09:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qg8kF4Gy"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5cfd95130c6so1797638a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 23:15:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713593363; x=1714198163; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1713593709; x=1714198509; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4nE5w7D/lU8OIxsycPHIsLjk5ZbbABF6HdCzwL7rsxw=;
-        b=XT4LVqY3Koza5oGkyZluALH/3v5a6twM8EcX9bxAA3j7rP4Xh452p4TgztUrTnrz8o
-         FUO1m34iMWQb5CfXFpGm0pnOCmyIQrS1nFozQn0rRYlU5w4wACE8bEBt7Q1cmLktVyhU
-         UyYdoXwdyc230rTbzZCikXBPvI0oapjLl3TTX6U0kjbMHc3RqYcVQzWeDryf03y4vov8
-         t1F/9gvlzZfz5tnTaSe5oC3zsQvvhWM/IesCL4Arg5+9HUh6O+1a8dpOLTk0sZG8lMTR
-         SsWpdIy0S0Qfvm6I0rDDbRd5D2EhthnArgjVBNNWXIzksGbVtXT4nftLG/YUco6Yqn4U
-         u5AA==
+        bh=YlC9FsdeF0rfQMdZj7e6J8+wbY+rNUqhDWpmqrph2kE=;
+        b=Qg8kF4GyrbMYpygolQejTAhpuMEenESv5nZe63GweDAZ/P0duR4famgxiDktUwvbIO
+         MJF3ikz6Fe+WPW00CeA8EYWl1RTDQ3LARbHjB9uu/wAd8LnVWXmvaj+PbaQwxcqtObMY
+         byUlvSR5uf8mxv5y4t6K2dS3unVxNtzj3tH9qWAj7t4N4f5RJdN06Ze8yPPsroGFP1gf
+         iniY1OGtVkMI52Jni/58aVC6dEeqtkk/wZS7xv4kYwVUvRJWqRuA7OAC0jmCOdZOTnuP
+         BMGJ6tkXqyOpO6I6rnbmJQsypF5tClfPhXX6PkSslKXdODmay1EJUwHpaWLGK3D+nlHs
+         4Jmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713593363; x=1714198163;
+        d=1e100.net; s=20230601; t=1713593709; x=1714198509;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4nE5w7D/lU8OIxsycPHIsLjk5ZbbABF6HdCzwL7rsxw=;
-        b=O9qmnH8aFSgcnJAaiI4tfCYBaEhmeosj3ATHDwSMM3RlJdDpUwbWZCUOJy5d61uX8S
-         6KuwlTHuAAZ0i57Fl6SkcCR5QCeZS8UkyTiYDrOvYYPuvAeszrdHSSRHLEbS69uwwZAk
-         wTPZ4urBRAIF16+P/1p2LKZNfG7oOcUK6SxgZJDCsV2zjsxt22jAXYpSGXC+rrBTY1jn
-         5lJ/PMaSCDJle24O0DWGnwdbidKjllsIt39GIgVjgYiNYLXOG8naOEIClYgQYgaLXcMR
-         3iZCCbr4nQrduQ5xBEGQcdm6nblFjsAkyCsyITkJWyrtDWmPXmJ87bUb2eIhgd7XqUWD
-         kvvA==
-X-Gm-Message-State: AOJu0Yx2iM5iUU766QosMG3SfAwHJyn7Sp9O66bCHI4fWlyAb8vP2qR+
-	nU8hqGOXcfRQLNeV88FF5c4jw03pp5zxZKEQFxjUpBhdQ/Ymcrtx
-X-Google-Smtp-Source: AGHT+IH2kES2MIuVxLmHkK2KjZRhIrvTRwA7FdcFaawkyzaCEongK2jb+IE4XuBWUbx8t1++dkrFSg==
-X-Received: by 2002:a17:903:32cf:b0:1e4:45b8:7b6 with SMTP id i15-20020a17090332cf00b001e445b807b6mr5014103plr.48.1713593363212;
-        Fri, 19 Apr 2024 23:09:23 -0700 (PDT)
+        bh=YlC9FsdeF0rfQMdZj7e6J8+wbY+rNUqhDWpmqrph2kE=;
+        b=wKFxmjtOFqyzFUI4VUWrOFFPqwH5+LtW4Y0eT6oZ5kry+CzgyWEGQjA6qHNECdu96Y
+         TXbA0BURPyNibOdqiQIFlLze4hLpIy68u52YXtK/yL/Tyz3Jqku4AYe1hHAFRwCFY7Mk
+         /5y0FkKPgsYbXqeoW9QN0irb1h/Y0PXEJ29xbfL7TkTlOc4hU3vVMfORdhSHZrUYiCIw
+         EKpHnKRlJGkTiU6iH6UQ0RC8t2Y32NLVuA5DKiZj8N2KS9PWf8CHH5GB9Xw2ciJYC6iX
+         IyfRbdn5Z+yByy8MU7aEmt+pUqPt1Yo6ISMVEOreIiz32GYUDQfLBEjCSvQo8vI7Bz5R
+         SUkA==
+X-Gm-Message-State: AOJu0YzLnSFsIGVVg1JWXP5QanbUK+ux0MrAEz0JZR8BsAqBXQLQu3jh
+	mZZpEASf33mRjdrfh3hrbzrNMCknFskd3kr8DHZEvbZlQoGjaNAGXQGeEd4Ymt8=
+X-Google-Smtp-Source: AGHT+IHGpfiTq24KebTzUO6zupQ0+w0WXQlTrWgBUbY7ZE+7booh5eMWYuU4wjQejiGMx8ENm6/XVA==
+X-Received: by 2002:a05:6a20:3951:b0:1aa:a473:3ee0 with SMTP id r17-20020a056a20395100b001aaa4733ee0mr5059294pzg.6.1713593708848;
+        Fri, 19 Apr 2024 23:15:08 -0700 (PDT)
 Received: from kernelexploit-virtual-machine.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id q18-20020a170902dad200b001e0937a77e8sm4332106plx.200.2024.04.19.23.09.21
+        by smtp.gmail.com with ESMTPSA id jv21-20020a170903059500b001e89827e2e8sm3774338plb.305.2024.04.19.23.15.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 23:09:22 -0700 (PDT)
+        Fri, 19 Apr 2024 23:15:08 -0700 (PDT)
 From: Jeongjun Park <aha310510@gmail.com>
-To: syzbot+8e03da5d64bc85098811@syzkaller.appspotmail.com
+To: syzbot+d4c06e848a1c1f9f726f@syzkaller.appspotmail.com
 Cc: linux-kernel@vger.kernel.org,
 	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [hams?] possible deadlock in serial8250_console_write
-Date: Sat, 20 Apr 2024 15:09:19 +0900
-Message-Id: <20240420060919.62280-1-aha310510@gmail.com>
+Subject: Re: [syzbot] possible deadlock in input_event (2)
+Date: Sat, 20 Apr 2024 15:15:05 +0900
+Message-Id: <20240420061505.62849-1-aha310510@gmail.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <0000000000005e18f00615207de6@google.com>
-References: <0000000000005e18f00615207de6@google.com>
+In-Reply-To: <0000000000006d6f4105d2fe05ed@google.com>
+References: <0000000000006d6f4105d2fe05ed@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,31 +69,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-please test deadlock in serial8250_console_write
+please test deadlock in input_event
 
 #syz test git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
 ---
- drivers/net/ppp/ppp_async.c | 4 ++--
+ drivers/input/evdev.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ppp/ppp_async.c b/drivers/net/ppp/ppp_async.c
-index c33c3db3cc08..d12b8155e839 100644
---- a/drivers/net/ppp/ppp_async.c
-+++ b/drivers/net/ppp/ppp_async.c
-@@ -134,11 +134,11 @@ static struct asyncppp *ap_get(struct tty_struct *tty)
- {
- 	struct asyncppp *ap;
+diff --git a/drivers/input/evdev.c b/drivers/input/evdev.c
+index 51e0c4954600..181c798b232b 100644
+--- a/drivers/input/evdev.c
++++ b/drivers/input/evdev.c
+@@ -258,7 +258,7 @@ static void evdev_pass_values(struct evdev_client *client,
+ 	event.input_event_usec = ts.tv_nsec / NSEC_PER_USEC;
  
--	read_lock(&disc_data_lock);
-+	read_lock_irq(&disc_data_lock);
- 	ap = tty->disc_data;
- 	if (ap != NULL)
- 		refcount_inc(&ap->refcnt);
--	read_unlock(&disc_data_lock);
-+	read_unlock_irq(&disc_data_lock);
- 	return ap;
- }
+ 	/* Interrupts are disabled, just acquire the lock. */
+-	spin_lock(&client->buffer_lock);
++	spin_lock_irq(&client->buffer_lock);
  
+ 	for (v = vals; v != vals + count; v++) {
+ 		if (__evdev_is_filtered(client, v->type, v->code))
+@@ -278,7 +278,7 @@ static void evdev_pass_values(struct evdev_client *client,
+ 		__pass_event(client, &event);
+ 	}
+ 
+-	spin_unlock(&client->buffer_lock);
++	spin_unlock_irq(&client->buffer_lock);
+ 
+ 	if (wakeup)
+ 		wake_up_interruptible_poll(&client->wait,
 -- 
 2.34.1
