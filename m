@@ -1,101 +1,88 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from out28-82.mail.aliyun.com (out28-82.mail.aliyun.com [115.124.28.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B752747D;
-	Sat, 20 Apr 2024 23:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D4E2747D;
+	Sat, 20 Apr 2024 23:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713654310; cv=none; b=Ss7bfLpslEnMqxN/qnd6Pjq+cn5gR+wbH8AFfXhwMhO6HkBB7zPyKAdZ5/0Jx4BO/dwntOV6niomuVb4zuvFLzGJUFH7A1avV6QtHA5dvpjpBUgQIynyfkPaEzSQSzCDbw6waL3FJmMd50h1wFPhaj59EAFTCIbLNq9e9v7h+w4=
+	t=1713654353; cv=none; b=s6D6zW5Ot6bnq6ql+yyvAQhgY3Z3bodv1e4Cmy8cj5ayaLk3poen0vFRvna0Be3iVe1VShV5C45h/DTTLqPxFF3ckuYFzGP67QpKO1KCFH8e4qwwUTJNLWzCOhMiCfggMd8qkp5q4hXtRSEH/Baes1F6rMl0EBXt16z3r7nwgmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713654310; c=relaxed/simple;
-	bh=F38SKUGYWrRDuPIzs9ddCyR57T9nI2ldp5piN6FEgHk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jbyBxaqD2RnUwY/xQ+BI7fM0tNwfbCKNvnVG0osRVBMBaY2XGMANeazYZkTWa+26xzIpInnIr7/YWGvtl8+iRX+tcTnmTT/bKINWYS8zr6L20PyeEiySrZqpAEPfGgYcA2Z1od20dQc5KncTRg+1cj+9i2vDfa8drsrfdBaowPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=T7v3CEZq; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="T7v3CEZq"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43KMxgoo009378;
-	Sat, 20 Apr 2024 23:05:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=oDQydHjlrzqxEdjgMjatBOw7FZwCSvSCMa8qrRie8xw=; b=T7
-	v3CEZqb6g1Sk2ugA0X3pn3xuSvten/2nyM2eqLC1EtZMfFkRZxcyGYiUoH+wMHNs
-	S0VxNB0Oo8Usm2yifSuBmmgLIvcRyircGbXy+yErtBSh1fIkAM/+HV/PbTmhPIsy
-	/NAZbIBLsWen6kQ6iPgm39+gJ5cxUORojK8CokLNvnM36tM65bwpqgumCDbff/oO
-	Dzuj/3VustB5Ip/97R6BEFBtwEZHBqk4exmk95EZBqgKwdrgZ4f+XidGWMrjxrWA
-	r8Zi7Z3owVRzMBalNP3/A/lDDSfhv5kkN/sOoefj3JJC2NRz+BMoUXWAWK8XKoW7
-	yqUAZj9nhxY30r1T1dSQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xm4qd9h0f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 20 Apr 2024 23:05:02 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43KN51bc020893
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 20 Apr 2024 23:05:01 GMT
-Received: from [10.110.104.191] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 20 Apr
- 2024 16:05:00 -0700
-Message-ID: <a88fd3d3-eecb-8eff-4c27-29ff235dc338@quicinc.com>
-Date: Sat, 20 Apr 2024 16:04:59 -0700
+	s=arc-20240116; t=1713654353; c=relaxed/simple;
+	bh=OHtgtW8L4Duwwp/TCH/X7YkJd9k0LtJwHCy5dH/qFTQ=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:Message-Id:
+	 MIME-Version:Content-Type; b=HgLi1ZguXG/8/IJVpGtsSQm4NYjhPnkhbn546UqC9msaGzypTQsVeHERKpNtZoraNHqwPDsMz/HYUyPsrDVy/lz9mrJnTQYm1JLU8O5/t0eHA1yBWW0yTzUpuhY6GssB+0ryAz9/jcdmE7GFoL+x+iDaK1GS6hbOFYUN26R5FKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=e16-tech.com; spf=pass smtp.mailfrom=e16-tech.com; arc=none smtp.client-ip=115.124.28.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=e16-tech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=e16-tech.com
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.1073318|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0311914-0.00265519-0.966153;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047190;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=8;RT=8;SR=0;TI=SMTPD_---.XHDA.xl_1713654025;
+Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.XHDA.xl_1713654025)
+          by smtp.aliyun-inc.com;
+          Sun, 21 Apr 2024 07:00:26 +0800
+Date: Sun, 21 Apr 2024 07:00:26 +0800
+From: Wang Yugui <wangyugui@e16-tech.com>
+To: Shay Drori <shayd@nvidia.com>
+Subject: Re: Linux 6.6.28
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ <linux-kernel@vger.kernel.org>,
+ <akpm@linux-foundation.org>,
+ <torvalds@linux-foundation.org>,
+ <stable@vger.kernel.org>,
+ <lwn@lwn.net>,
+ <jslaby@suse.cz>
+In-Reply-To: <220e55df-a0a2-4272-b94f-c7c4c6fbf2b7@nvidia.com>
+References: <20240420135914.2AD9.409509F4@e16-tech.com> <220e55df-a0a2-4272-b94f-c7c4c6fbf2b7@nvidia.com>
+Message-Id: <20240421070025.C32F.409509F4@e16-tech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 3/3] drm/msm/mdp4: correct LCDC regulator name
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Clark
-	<robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Daniel
- Vetter <daniel@ffwll.ch>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20240420-mdp4-fixes-v1-0-96a70f64fa85@linaro.org>
- <20240420-mdp4-fixes-v1-3-96a70f64fa85@linaro.org>
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20240420-mdp4-fixes-v1-3-96a70f64fa85@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: zE-fuUr7QqaHdCFvyPc6csMSRh5DuTKi
-X-Proofpoint-ORIG-GUID: zE-fuUr7QqaHdCFvyPc6csMSRh5DuTKi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-20_20,2024-04-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0
- mlxlogscore=941 bulkscore=0 suspectscore=0 malwarescore=0 clxscore=1015
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404200170
+X-Mailer: Becky! ver. 2.81.06 [en]
 
+Hi,
 
-
-On 4/19/2024 7:33 PM, Dmitry Baryshkov wrote:
-> Correct c&p error from the conversion of LCDC regulators to the bulk
-> API.
 > 
-> Fixes: 54f1fbcb47d4 ("drm/msm/mdp4: use bulk regulators API for LCDC encoder")
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->   drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> On 20/04/2024 8:59, Wang Yugui wrote:
+> > External email: Use caution opening links or attachments
+> >
+> >
+> > Hi,
+> >
+> >> I'm announcing the release of the 6.6.28 kernel.
+> >>
+> >> All users of the 6.6 kernel series must upgrade.
+> >>
+> >> The updated 6.6.y git tree can be found at:
+> >>        git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.6.y
+> >> and can be browsed at the normal kernel.org git web browser:
+> >>        https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+> >
+> > Linux 6.6.28 failed to boot with the following panic *1 on a server with
+> > mellonax CX-6 VPI NIC, but 6.6.27/6.1.87 boot well.
+> >
+> > After reverting 'net/mlx5: Restore mistakenly dropped parts in register devlink
+> > flow', linux boot well.
+> > 
+> there is a similar discussion in net-dev ML[1].
+> In short, it seems this patch is missing from stable, which is prerequisite for the bad patch:
+> 0553e753ea9e
+> "net/mlx5: E-switch, store eswitch pointer before registering devlink_param".
+> 
+> Wang, can you test it out please?
 
-Indeed ! I should have caught this during review :(
+After apply "net/mlx5: E-switch, store eswitch pointer before registering devlink_param"
+to 6.6.28, linux boot well here.
 
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+and  "net/mlx5: Restore mistakenly dropped parts in register devlink flow" is
+NOT applied here.
+
+Thanks a lot.
+
+Best Regards
+Wang Yugui (wangyugui@e16-tech.com)
+2024/04/21
+
