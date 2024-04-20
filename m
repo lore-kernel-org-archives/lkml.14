@@ -1,98 +1,63 @@
-Received: from forward500a.mail.yandex.net (forward500a.mail.yandex.net [178.154.239.80])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265F6205E21;
-	Sat, 20 Apr 2024 18:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186731CF83;
+	Sat, 20 Apr 2024 18:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713637815; cv=none; b=lSEf0V02BKPqEYG34SjZpBgQoWIkuc0Np+2otSocUk5hUegPdRB26NvAR2j4hgdtpW+oK8qOuy2IE62YAy6+IOUWfsqrxd1Qo1VWln/jjUB0s6iBHabsF8JLzqWflj6bBObc6TxupuQI4Xxp0xOq/gRu/XBlWqiZobspTJtyWZo=
+	t=1713637963; cv=none; b=KWf1lJ0LXmdFZLgf/hvdljjCxhua9/zh99ye4oQ8esuhFW+Pq+v0WmXN1DoWYCfkEl4nXx4Qf/LiFC12BrKjr4CTGwQNiA9sjknTfv0MGduyYgSVNcotWjR3fFSaMspN1AMbmjj8Xokw6jQ2kMjHOyux++yU2jhGT4pVetogTWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713637815; c=relaxed/simple;
-	bh=2UXI3UXWMSWsL179RrU0ZdHh+vbCoIwL2H48tpPpyl4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hIh8pVaq9yAizVrWDfLttAqLt+TrcOZQpm+fF3yeLzrEzpmGyx/Xb7aaMDib+VFEAixS7ivR/vRIWdAhfhfc+UcostYNo5U+v1Rkj08J1brZZ9wBsVS4qhThekaOyt1rg5Or9Ade+G6GG3a6e/9PKLR1nqmkyTSDI08C2v/biMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru; spf=pass smtp.mailfrom=ya.ru; dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b=IWaDOOHC; arc=none smtp.client-ip=178.154.239.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ya.ru
+	s=arc-20240116; t=1713637963; c=relaxed/simple;
+	bh=F2CKTvNRlGZV0FEwEWnNN4K+ZYLmDjE9KwRcvbzGrKY=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=fW8yqouyqyPx8YpBKRtjC63NFEb+ZNQDjXHV+sv+PHGEsTAjODYSST2nVFLW0PwjWPDk3XTesJmPNpBoCrzRDRnR6sOStoudEcxHWQDNtO+AhGXrbslYfUwqL1N7qPrsfNhiEY4h2tx+zDPRGUL0P2iqYPQ972PlheDLZ/XYfHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXud0biZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b="IWaDOOHC"
-Received: from mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net [IPv6:2a02:6b8:c0f:60f:0:640:4965:0])
-	by forward500a.mail.yandex.net (Yandex) with ESMTPS id B9BE960E3A;
-	Sat, 20 Apr 2024 21:22:39 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id WMMqk3Bj1a60-d1S7r0UY;
-	Sat, 20 Apr 2024 21:22:38 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ya.ru; s=mail;
-	t=1713637358; bh=4x8tZZTNgOQZNbj0h41gdyn8MEMRqZ5heVzJElKdGdg=;
-	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=IWaDOOHCUj+Xcx09SlxmdtNzwLuObjR0k//8+cd7X3vwQk7UI/s5tQxk907heU8Ip
-	 66Pm+TMuNN4w6pBg7YZ9GJATcXJoeJoZpOyUNvVgW4CBA6R6UVg0TxbOgvtaFd1n86
-	 IDUyL1GAiBF8kd3rXL6NwfUF67cxty5jZ/TnG4sQ=
-Authentication-Results: mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net; dkim=pass header.i=@ya.ru
-From: Konstantin Pugin <rilian.la.te@ya.ru>
-To: 
-Cc: krzk@kernel.org,
-	conor@kernel.org,
-	lkp@intel.com,
-	vz@mleia.com,
-	robh@kernel.org,
-	jcmvbkbc@gmail.com,
-	nicolas.ferre@microchip.com,
-	manikanta.guntupalli@amd.com,
-	corbet@lwn.net,
-	ychuang3@nuvoton.com,
-	u.kleine-koenig@pengutronix.de,
-	Maarten.Brock@sttls.nl,
-	Konstantin Pugin <ria.freelander@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Lech Perczak <lech.perczak@camlingroup.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [PATCH v5 1/3] serial: sc16is7xx: announce support of SER_RS485_RTS_ON_SEND
-Date: Sat, 20 Apr 2024 21:22:04 +0300
-Message-ID: <20240420182223.1153195-2-rilian.la.te@ya.ru>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240420182223.1153195-1-rilian.la.te@ya.ru>
-References: <20240420182223.1153195-1-rilian.la.te@ya.ru>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXud0biZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E5F52C113CE;
+	Sat, 20 Apr 2024 18:32:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713637963;
+	bh=F2CKTvNRlGZV0FEwEWnNN4K+ZYLmDjE9KwRcvbzGrKY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=WXud0biZU1EX2pFbSkuns+viWaQjDAvJNIPP9rcaBTVE073/Lflt/2R/4BnJcVQ5J
+	 fm6MgvnI9RuBLMsyITx2rZsD4ONNf6TzGyd8vhP713kjrrxyBbQFRY2JXwxFBsyAKq
+	 cDV+qZgVIYntA55S1Kyo7iLj2UAB9SnIegXYrPSs0kQ0hwApc42xDYZih9mlof0vcp
+	 yxuaRDnuDVa346a/VYOeIBUG2SMHrraxZul03JiYA85lhJdHQo9KObxXfnElXE1y46
+	 vHxY/cbogI4As3rNlYUC2mY3pvLjLMbLCs4jtdB4nLzKsUPKqF8kAXg9J8cdZjLlxu
+	 pEdMp3TG3to5g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DD1F2C433E9;
+	Sat, 20 Apr 2024 18:32:42 +0000 (UTC)
+Subject: Re: [GIT PULL] clk fixes for v6.9-rc4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240420014853.87829-1-sboyd@kernel.org>
+References: <20240420014853.87829-1-sboyd@kernel.org>
+X-PR-Tracked-List-Id: <linux-clk.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240420014853.87829-1-sboyd@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
+X-PR-Tracked-Commit-Id: d3e8a91a848a5941e3c31ecebd6b2612b37e01a6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 560d4e773850533794c02d388921077fb1407920
+Message-Id: <171363796289.22086.9542743780784571092.pr-tracker-bot@kernel.org>
+Date: Sat, 20 Apr 2024 18:32:42 +0000
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Konstantin Pugin <ria.freelander@gmail.com>
+The pull request you sent on Fri, 19 Apr 2024 18:48:52 -0700:
 
-The hardware supports both RTS_ON_SEND and RTS_AFTER_SEND modes, but
-after the commit 4afeced55baa ("serial: core: fix sanitizing check for
-RTS settings") we always end up with SER_RS485_RTS_AFTER_SEND set and
-always write to the register field SC16IS7XX_EFCR_RTS_INVERT_BIT, which
-breaks some hardware using these chips.
+> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
 
-Fixes: 267913ecf737 ("serial: sc16is7xx: Fill in rs485_supported")
-Signed-off-by: Konstantin Pugin <ria.freelander@gmail.com>
----
- drivers/tty/serial/sc16is7xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/560d4e773850533794c02d388921077fb1407920
 
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index 03cf30e20b75..dfcc804f558f 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -1449,7 +1449,7 @@ static int sc16is7xx_setup_mctrl_ports(struct sc16is7xx_port *s,
- }
- 
- static const struct serial_rs485 sc16is7xx_rs485_supported = {
--	.flags = SER_RS485_ENABLED | SER_RS485_RTS_AFTER_SEND,
-+	.flags = SER_RS485_ENABLED | SER_RS485_RTS_ON_SEND | SER_RS485_RTS_AFTER_SEND,
- 	.delay_rts_before_send = 1,
- 	.delay_rts_after_send = 1,	/* Not supported but keep returning -EINVAL */
- };
+Thank you!
+
 -- 
-2.44.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
