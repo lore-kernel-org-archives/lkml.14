@@ -1,169 +1,299 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB128D527
-	for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 17:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72614F4EB;
+	Sun, 21 Apr 2024 17:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713719932; cv=none; b=tJ4xSZXOxt0/88nW0bWNNIAYtCikQ0W6IpjcQ5F0CQ2/8dChfEV8zUZ3bZVdSPcT0qofHUTo6ROPzud1hauPxulpW+NCGRwOc3Bwj6Dyr4+okabquec6x/CZzLddMc+zos7zV74FUVfA8Q2zJKIzxLiHKVW0wj+Xkp0UH1MlR/k=
+	t=1713720116; cv=none; b=eag84mY1jJi+4BKSNzVvBlt/lhxGLumoTueGsyKBCtBfZnAq/9FOKQVlu2aEYqutOfm/coEEujxKBVVhSNx1Ma/F0DmKTGkdXlePzqtjaKYJzRYqsYKtg6gwLxb+U7QqEKjJyzCTUgMDzwE5tNEGTdOrOJ4RRG6/kGil/Xd22ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713719932; c=relaxed/simple;
-	bh=DHLrs7TTGJjLWnwYgITKxlgY9EdVO1HEbdYy6RvIBH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ta2SVc0jXU3O7NXydxzLA5/f6VltOpi3MQu1mqqaA+pq+9bR5x6UFjQ4Zfi0wlDoJCFr6yYi9eD+wcnJ1XFPCAQY+xKukD9GwFhTZzxUPQe4RHruVQrsgykDGc3yi1NjXDJz5uQQ88MTR9DX04kOirC2k0Vcqow2QRGjQlf/2cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=AVBJwZUA; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1713720116; c=relaxed/simple;
+	bh=jnDPYyUGF8KWZI/acH3h5szYqEd3zd2oWm68bhlT2go=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=cW7RSWHjy1gUT+ghEudRP/Rm3v+kXnfd1Ye5T2FoEdmCVe1k9CaPZGGNI6f4vb9ZzVX+ksGBmskL8oLdO6xfmwzxylanWBJXyEUGNVGDOokh09cmplwjDRxd6qkbf0PUsamlpFLxx+Bj22rNRcGTUEyz+0dsrCb1eTX6KVBwxuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=3kOffwsB; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="AVBJwZUA"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56e477db7fbso5940435a12.3
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 10:18:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1713719929; x=1714324729; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zE3htHHJkncdTmVNKk4IeQEENfnZVVKe/RHKrqQQIA4=;
-        b=AVBJwZUABczdwL977gVg7aTqL7kN15cHq6JStPap5oe6qXjxsaHUnzpbdwYAN63biA
-         0dk+0dz4Q0ELp0HpBjOEEprQBCPyB+W7IDsxtVpsrotO2dNvfNPgrJehEGwTAsW3ev9s
-         ac78WTy7Z7uGCIBX/IfCKbxLKBmXHtzazQwKc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713719929; x=1714324729;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zE3htHHJkncdTmVNKk4IeQEENfnZVVKe/RHKrqQQIA4=;
-        b=PrDqHUojZw+QJ562s9TBG1oHOfyVrLFqRvTXel+Ywhqg/RStc/ryEMCv8O8Vph1V/G
-         9IN2dNx8r3475akQWJrrtrLhMp0yd9mFwaWySQP8FfUyaahj/iDpn/aCt4Y8cwWvVmm5
-         uLO4DO1KFsx8Ccngwj/grYnEEntycHHKpjpRX9LHtLiF2+c5b4rC87YuMklYHKvqstpS
-         iNdpBdAG65p9AyuIea84l6MjpWLc5zxCmNH9ZtTtJku5ATtqqFbq7cQAavFxtHu9s3yn
-         E9TkPKwDRIpFExi7t2bRTKOo4mv2UJxp+xVF3c4muqk/PXi+dRuKSl4jNvvzyN1+3i3q
-         vI8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXzvd6kUzChxnq5SFRmBTmDPx+y+Rp+taPu7L+LD2lZK9JG5oess7suwRphLIUfcV7FsKJtZMg2fUwkJeKAHUD1OD9xxTh0sUlRGyaL
-X-Gm-Message-State: AOJu0YzrmUAkijCbAHlxLBto4gAMhaFP39Dxc/zunpmxQusCWaT7JGXw
-	MBLKtS3gpLCB01XqJq08+WwSZsJwy+21YZwcwySE1Z3WpXiH7aBRPVrBXWxjzwEsFgp1BUJ1DJ8
-	ava2i1A==
-X-Google-Smtp-Source: AGHT+IENPykPJ+lYwLhYDZrkRCjiJu/LKF/XH0zBwHTuIhUvYZXkVVo62zMFmXt5DvnCl0OVvczxHg==
-X-Received: by 2002:a50:c346:0:b0:568:c6a2:f427 with SMTP id q6-20020a50c346000000b00568c6a2f427mr4569907edb.27.1713719928939;
-        Sun, 21 Apr 2024 10:18:48 -0700 (PDT)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
-        by smtp.gmail.com with ESMTPSA id p8-20020a05640243c800b00571fad0647csm1349184edc.74.2024.04.21.10.18.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 21 Apr 2024 10:18:48 -0700 (PDT)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a4702457ccbso405389966b.3
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 10:18:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVAnU/Snn2xnw0KTUKGOx1ndZ9oM6BoHQJj+cTZFkKFRYv9qoSJ7P4A0+Dt2j5ePj1lIDKmFynlku9lK9fgHJb3BmBpTJn/5KOcYtnB
-X-Received: by 2002:a17:906:f21a:b0:a55:88b9:dabd with SMTP id
- gt26-20020a170906f21a00b00a5588b9dabdmr4386645ejb.63.1713719927899; Sun, 21
- Apr 2024 10:18:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="3kOffwsB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
+	Content-Type:Message-ID:Date:Subject:To:From:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=W19+hMh8iCpe7e1YN/BSiDXrEdxITke4MrSyNpzXPhg=; t=1713720114; x=1714152114;
+	 b=3kOffwsBLW6ShF31378W4UkXAFf/ZrxX4/qXSd+Nt+fPFdR87jQ+uTjigyTj1l1mORR/0MmxqU
+	wlR9Noy97njQNdxt4VrrHh/Bk6BSNWir/aFqE7ovulXCjXJqrA1Nvg5c5QYCUSjXNQ38m03eeLvFU
+	8s9FzP2EjQ7iFdCNEaosWDJuuZ3mMwseHRZPGOc38kayz/HNgv2gusIOG9yMKNFq+kAaLnA9o4Tbq
+	3jM4bOvDPiM4dSC8Y0wx/UNOxEFpPwfmw29tkVeGplHSSyeTlucN5PCGWepsCr/+dr58Tts6fN9bx
+	JjPQkb6998VR9JCJMXZiMaF/idUtqGfg2KRFQ==;
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1ryasx-0002Q4-UI; Sun, 21 Apr 2024 19:21:52 +0200
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2024-04-21]
+Date: Sun, 21 Apr 2024 17:21:45 +0000
+Message-ID: <171372007343.4173668.6277096045174922087@leemhuis.info>
+X-Mailer: git-send-email 2.44.0
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <e696e720-0cd3-4505-8469-a94815b39467@I-love.SAKURA.ne.jp>
- <CAHk-=wjEZvnn51dhhLqBKUd=cuFhbYA47_OyfUOPB-0zKToL7Q@mail.gmail.com>
- <CAHk-=wjzqaqcicTtWfBtXyytJs1nqjJNved2JFsLVsVLYgVkuQ@mail.gmail.com>
- <CAHk-=wjW3PdOZ7PJ+RHUKRc8SqQhcWXCACOvmwBkKUKABHKqwg@mail.gmail.com>
- <6103a212-f84f-4dad-9d33-a18235bd970a@I-love.SAKURA.ne.jp> <CAHk-=wgjZ0DJgeo5Sk-Kc5vw8TXGuxXftPV79Wv221ncstk1tA@mail.gmail.com>
-In-Reply-To: <CAHk-=wgjZ0DJgeo5Sk-Kc5vw8TXGuxXftPV79Wv221ncstk1tA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 21 Apr 2024 10:18:31 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg+hJ9Y8AKjp9qD7E_-pgBFdWGLiqzi1qth8LNpuST1cA@mail.gmail.com>
-Message-ID: <CAHk-=wg+hJ9Y8AKjp9qD7E_-pgBFdWGLiqzi1qth8LNpuST1cA@mail.gmail.com>
-Subject: Re: [PATCH v2] tty: n_gsm: restrict tty devices to attach
-To: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Starke, Daniel" <daniel.starke@siemens.com>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="0000000000008c371006169e83f6"
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713720114;6d23299f;
+X-HE-SMSGID: 1ryasx-0002Q4-UI
 
---0000000000008c371006169e83f6
-Content-Type: text/plain; charset="UTF-8"
+Hi Linus, here is the weekly regressions report. Fixes for almost all of
+the tracked regressions are already in next[1] or under review, so there
+is nothing to worry about afaics.
 
-On Sun, 21 Apr 2024 at 09:04, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> The only option is to *mark* the ones that are atomic. Which was my suggestion.
+Ciao, Thorsten
 
-Actually, another option would be to just return an error at 'set_ldisc()' time.
+[1] on of the for more that two weeks now; will prod the maintainer
+tomorrow to ensure it will make it for -rc6: 6677196fb1932e ("clk: qcom:
+gdsc: treat optional supplies as optional") [next-20240404]
 
-Sadly, the actual "tty->ops->set_ldisc()" function not only returns
-'void' (easy enough to change - there aren't that many of them), but
-it's called too late after the old ldisc has already been dropped.
-It's basically a "inform tty about new ldisc" and is not useful for a
-"is this ok"?
+---
 
-But we could trivially add a "ldisc_ok()" function, and have the vt
-driver say "I only accept N_TTY".
+Hi, this is regzbot, the Linux kernel regression tracking bot.
 
-Something like this ENTIRELY UNTESTED patch.
+Currently I'm aware of 13 regressions in linux-mainline. Find the
+current status below and the latest on the web:
 
-Again - this is untested, and maybe there are other tty drivers that
-have issues with the stranger line disciplines, but this at least
-seems simple and fairly easy to explain why we do what we do..
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
 
-And if pty's really need the same thing, that would be easy to add.
-But I actually think that at least pty slaves should *not* limit
-ldiscs, because the whole point of a pty slave is to look like another
-tty. If you want to emulate a serial device over a network, the way to
-do it would be with a pty.
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
 
-Hmm?
 
-                Linus
+======================================================
+current cycle (v6.8.. aka v6.9-rc), culprit identified
+======================================================
 
---0000000000008c371006169e83f6
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lv9siqw80>
-X-Attachment-Id: f_lv9siqw80
 
-IGRyaXZlcnMvdHR5L3R0eV9sZGlzYy5jICAgIHwgIDYgKysrKysrCiBkcml2ZXJzL3R0eS92dC92
-dC5jICAgICAgICB8IDEwICsrKysrKysrKysKIGluY2x1ZGUvbGludXgvdHR5X2RyaXZlci5oIHwg
-IDggKysrKysrKysKIDMgZmlsZXMgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvdHR5L3R0eV9sZGlzYy5jIGIvZHJpdmVycy90dHkvdHR5X2xkaXNjLmMKaW5k
-ZXggM2Y2OGUyMTNkZjFmLi5kODBlOWQ0Yzk3NGIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvdHR5L3R0
-eV9sZGlzYy5jCisrKyBiL2RyaXZlcnMvdHR5L3R0eV9sZGlzYy5jCkBAIC01NDUsNiArNTQ1LDEy
-IEBAIGludCB0dHlfc2V0X2xkaXNjKHN0cnVjdCB0dHlfc3RydWN0ICp0dHksIGludCBkaXNjKQog
-CQlnb3RvIG91dDsKIAl9CiAKKwlpZiAodHR5LT5vcHMtPmxkaXNjX29rKSB7CisJCXJldHZhbCA9
-IHR0eS0+b3BzLT5sZGlzY19vayh0dHksIGRpc2MpOworCQlpZiAocmV0dmFsKQorCQkJZ290byBv
-dXQ7CisJfQorCiAJb2xkX2xkaXNjID0gdHR5LT5sZGlzYzsKIAogCS8qIFNodXRkb3duIHRoZSBv
-bGQgZGlzY2lwbGluZS4gKi8KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdHR5L3Z0L3Z0LmMgYi9kcml2
-ZXJzL3R0eS92dC92dC5jCmluZGV4IDliNWI5OGRmYzhiNC4uY2Q4N2UzZDEyOTFlIDEwMDY0NAot
-LS0gYS9kcml2ZXJzL3R0eS92dC92dC5jCisrKyBiL2RyaXZlcnMvdHR5L3Z0L3Z0LmMKQEAgLTM1
-NzYsNiArMzU3NiwxNSBAQCBzdGF0aWMgdm9pZCBjb25fY2xlYW51cChzdHJ1Y3QgdHR5X3N0cnVj
-dCAqdHR5KQogCXR0eV9wb3J0X3B1dCgmdmMtPnBvcnQpOwogfQogCisvKgorICogV2UgY2FuJ3Qg
-ZGVhbCB3aXRoIGFueXRoaW5nIGJ1dCB0aGUgTl9UVFkgbGRpc2MsCisgKiBiZWNhdXNlIHdlIGNh
-biBzbGVlcCBpbiBvdXIgd3JpdGUoKSByb3V0aW5lLgorICovCitzdGF0aWMgaW50IGNvbl9sZGlz
-Y19vayhzdHJ1Y3QgdHR5X3N0cnVjdCAqdHR5LCBpbnQgbGRpc2MpCit7CisJcmV0dXJuIGxkaXNj
-ID09IE5fVFRZID8gMCA6IC1FSU5WQUw7Cit9CisKIHN0YXRpYyBpbnQgZGVmYXVsdF9jb2xvciAg
-ICAgICAgICAgPSA3OyAvKiB3aGl0ZSAqLwogc3RhdGljIGludCBkZWZhdWx0X2l0YWxpY19jb2xv
-ciAgICA9IDI7IC8vIGdyZWVuIChBU0NJSSkKIHN0YXRpYyBpbnQgZGVmYXVsdF91bmRlcmxpbmVf
-Y29sb3IgPSAzOyAvLyBjeWFuIChBU0NJSSkKQEAgLTM2OTUsNiArMzcwNCw3IEBAIHN0YXRpYyBj
-b25zdCBzdHJ1Y3QgdHR5X29wZXJhdGlvbnMgY29uX29wcyA9IHsKIAkucmVzaXplID0gdnRfcmVz
-aXplLAogCS5zaHV0ZG93biA9IGNvbl9zaHV0ZG93biwKIAkuY2xlYW51cCA9IGNvbl9jbGVhbnVw
-LAorCS5sZGlzY19vayA9IGNvbl9sZGlzY19vaywKIH07CiAKIHN0YXRpYyBzdHJ1Y3QgY2RldiB2
-YzBfY2RldjsKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvdHR5X2RyaXZlci5oIGIvaW5jbHVk
-ZS9saW51eC90dHlfZHJpdmVyLmgKaW5kZXggNzM3MjEyNGZiZjkwLi5kZDRiMzFjZTZkNWQgMTAw
-NjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvdHR5X2RyaXZlci5oCisrKyBiL2luY2x1ZGUvbGludXgv
-dHR5X2RyaXZlci5oCkBAIC0xNTQsNiArMTU0LDEzIEBAIHN0cnVjdCBzZXJpYWxfc3RydWN0Owog
-ICoKICAqCU9wdGlvbmFsLiBDYWxsZWQgdW5kZXIgdGhlIEB0dHktPnRlcm1pb3NfcndzZW0uIE1h
-eSBzbGVlcC4KICAqCisgKiBAbGRpc2Nfb2s6IGBgaW50ICgpKHN0cnVjdCB0dHlfc3RydWN0ICp0
-dHksIGludCBsZGlzYylgYAorICoKKyAqCVRoaXMgcm91dGluZSBhbGxvd3MgdGhlIEB0dHkgZHJp
-dmVyIHRvIGRlY2lkZSBpZiBpdCBjYW4gZGVhbAorICoJd2l0aCBhIHBhcnRpY3VsYXIgQGxkaXNj
-LgorICoKKyAqCU9wdGlvbmFsLiBDYWxsZWQgdW5kZXIgdGhlIEB0dHktPmxkaXNjX3NlbSBhbmQg
-QHR0eS0+dGVybWlvc19yd3NlbS4KKyAqCiAgKiBAc2V0X2xkaXNjOiBgYHZvaWQgKCkoc3RydWN0
-IHR0eV9zdHJ1Y3QgKnR0eSlgYAogICoKICAqCVRoaXMgcm91dGluZSBhbGxvd3MgdGhlIEB0dHkg
-ZHJpdmVyIHRvIGJlIG5vdGlmaWVkIHdoZW4gdGhlIGRldmljZSdzCkBAIC0zNzIsNiArMzc5LDcg
-QEAgc3RydWN0IHR0eV9vcGVyYXRpb25zIHsKIAl2b2lkICgqaGFuZ3VwKShzdHJ1Y3QgdHR5X3N0
-cnVjdCAqdHR5KTsKIAlpbnQgKCpicmVha19jdGwpKHN0cnVjdCB0dHlfc3RydWN0ICp0dHksIGlu
-dCBzdGF0ZSk7CiAJdm9pZCAoKmZsdXNoX2J1ZmZlcikoc3RydWN0IHR0eV9zdHJ1Y3QgKnR0eSk7
-CisJaW50ICgqbGRpc2Nfb2spKHN0cnVjdCB0dHlfc3RydWN0ICp0dHksIGludCBsZGlzYyk7CiAJ
-dm9pZCAoKnNldF9sZGlzYykoc3RydWN0IHR0eV9zdHJ1Y3QgKnR0eSk7CiAJdm9pZCAoKndhaXRf
-dW50aWxfc2VudCkoc3RydWN0IHR0eV9zdHJ1Y3QgKnR0eSwgaW50IHRpbWVvdXQpOwogCXZvaWQg
-KCpzZW5kX3hjaGFyKShzdHJ1Y3QgdHR5X3N0cnVjdCAqdHR5LCB1OCBjaCk7Cg==
---0000000000008c371006169e83f6--
+net: Bluetooth: firmware loading problems with older firmware
+-------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240401144424.1714-1-mike@fireburn.co.uk/
+https://lore.kernel.org/lkml/20240401144424.1714-1-mike@fireburn.co.uk/
+
+By Mike Lothian; 20 days ago; 7 activities, latest 0 days ago.
+Introduced in 1cb63d80fff6 (v6.9-rc1)
+
+Fix incoming:
+* Bluetooth: btusb: Fix the patch for MT7920 the affected to MT7921
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=263296438807ac3b4f829711f056e796dff5f708
+
+
+[ *NEW* ] CA6390 bluetooth doesn't work after warm boot or disable/reenable
+---------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218726/
+https://bugzilla.kernel.org/show_bug.cgi?id=218726
+
+By Wren Turkal; 6 days ago; 95 activities, latest 0 days ago.
+Introduced in 56d074d26c58 (v6.9-rc1)
+
+Fix incoming:
+* Bluetooth: qca: Fix QCA6390 enable failure after reboot or disable
+  https://lore.kernel.org/regressions/92377e46-5eca-4c0b-b0b6-58394916abc3@leemhuis.info/
+
+
+[ *NEW* ] net: wifi: iwlwifi: Thinkpad 480 no Wifi
+--------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/8c3f3a43-ac65-4bd1-9563-cb8d9192b0ce@message-id.googlemail.com/
+https://lore.kernel.org/linux-wireless/8c3f3a43-ac65-4bd1-9563-cb8d9192b0ce@message-id.googlemail.com/
+
+By Stefan Seyfried; 1 days ago; 4 activities, latest 1 days ago.
+Introduced in a8b5d4809b50 (v6.9-rc2)
+
+Fix incoming:
+* wifi: iwlwifi: mvm: fix link ID management
+  https://lore.kernel.org/regressions/c2786db1-a8c9-4323-832e-cffd8373bf68@leemhuis.info/
+
+
+[ *NEW* ] btrfs: snapper fails
+------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/generic/https://github.com/openSUSE/snapper/issues/894/
+https://github.com/openSUSE/snapper/issues/894
+
+By Linux regression tracking (Thorsten Leemhuis); 0 days ago; 1 activities, latest 1 days ago.
+Introduced in 86211eea8ae1 (v6.9-rc1)
+
+Fix incoming:
+* btrfs: qgroup: do not check qgroup inherit if qgroup is disabled
+  https://lore.kernel.org/regressions/c2786db1-a8c9-4323-832e-cffd8373bf68@leemhuis.info/
+
+
+[ *NEW* ] x86/topology: system stopped booting
+----------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com/
+https://lore.kernel.org/lkml/3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com/
+
+By Lyude Paul; 3 days ago; 7 activities, latest 1 days ago.
+Introduced in f0551af02130 (v6.9-rc1)
+
+Fix incoming:
+* x86/topology: Deal with more broken ACPI tables
+  https://lore.kernel.org/regressions/c2786db1-a8c9-4323-832e-cffd8373bf68@leemhuis.info/
+
+
+[ *NEW* ] ACPI: PM: s2idle: sleep broken on 13th Gen Lenovo laptops
+-------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218750/
+https://bugzilla.kernel.org/show_bug.cgi?id=218750
+
+By Mark Pearson; 1 days ago; 1 activities, latest 1 days ago.
+Introduced in 073237281a50 (v6.9-rc1)
+
+Recent activities from: Mark Pearson (1)
+
+
+workqueue: nohz_full=0 prevents booting
+---------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218665/
+https://bugzilla.kernel.org/show_bug.cgi?id=218665
+https://lore.kernel.org/lkml/5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info/
+
+By Friedrich Oslage and Friedrich Oslage; 21 days ago; 29 activities, latest 3 days ago.
+Introduced in 5797b1c18919 (v6.9-rc1)
+
+Recent activities from: Frederic Weisbecker (2), Phil Auld (2)
+
+6 patch postings are associated with this regression, the latest is this:
+* [PATCH] sched/isolation: fix boot crash when maxcpus < first-housekeeping-cpu
+  https://lore.kernel.org/lkml/20240413141746.GA10008@redhat.com/
+  8 days ago, by Oleg Nesterov
+
+Noteworthy links:
+* Re: [PATCH v2 1/1] wq: Avoid using isolated cpus' timers on queue_delayed_work
+  https://lore.kernel.org/lkml/20240402105847.GA24832@redhat.com/
+  21 days ago, by Oleg Nesterov; thread monitored.
+
+
+fs: ntfs: obsolete legacy driver and a bunch of  warnings
+---------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/Zf2zPf5TO5oYt3I3@hovoldconsulting.com/
+https://lore.kernel.org/linux-fsdevel/Zf2zPf5TO5oYt3I3@hovoldconsulting.com/
+https://lore.kernel.org/all/6215a88a-7d78-4abb-911f-8a3e7033da3e@gmx.com/
+
+By Johan Hovold and Artem S. Tashkinov; 30 days ago; 24 activities, latest 3 days ago.
+Introduced in 7ffa8f3d3023 (v6.9-rc1)
+
+Fix incoming:
+* ntfs3: serve as alias for the legacy ntfs driver
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=74871791ffa9562d43567c5ff2ae93def3f39f65
+
+
+leds: hangs on boot
+-------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
+https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
+
+By Ben Greear; 19 days ago; 10 activities, latest 5 days ago.
+Introduced in f5c31bcf604d (v6.9-rc1)
+
+Recent activities from: Lee Jones (1), Johannes Berg (1), Ben Greear (1)
+
+
+[ *NEW* ] CA6390 bluetooth doesn't work after warm boot or disable/reenable
+---------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/a03dace1-ca0f-41d6-8e2c-636e3b053a3a@penguintechs.org/
+https://lore.kernel.org/linux-bluetooth/a03dace1-ca0f-41d6-8e2c-636e3b053a3a@penguintechs.org/
+https://bugzilla.kernel.org/show_bug.cgi?id=218726
+
+By Wren Turkal and Wren Turkal; 16 days ago; 25 activities, latest 6 days ago.
+Introduced in 56d074d26c58 (v6.9-rc1)
+
+Fix incoming:
+* Bluetooth: qca: Fix QCA6390 enable failure after reboot or disable
+  https://lore.kernel.org/regressions/92377e46-5eca-4c0b-b0b6-58394916abc3@leemhuis.info/
+
+
+clk: qcom: gdsc: lockdep splat
+------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/Zf25Sv2x9WaCFuIH@hovoldconsulting.com/
+https://lore.kernel.org/lkml/Zf25Sv2x9WaCFuIH@hovoldconsulting.com/
+
+By Johan Hovold; 30 days ago; 14 activities, latest 16 days ago.
+Introduced in 9187ebb954ab (v6.9-rc1)
+
+Fix incoming:
+* clk: qcom: gdsc: treat optional supplies as optional
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=6677196fb1932e60b88ad0794a7ae532df178654
+
+
+x86/retpoline: MITIGATION_RETHUNK causes boot problems on x86-32 machines
+-------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240403173059.GJZg2SUwS8MXw7CdwF@fat_crate.local/
+https://lore.kernel.org/lkml/20240403173059.GJZg2SUwS8MXw7CdwF@fat_crate.local/
+https://lore.kernel.org/lkml/20240413024956.488d474e@yea/
+
+By Borislav Petkov and Erhard Furtner; 17 days ago; 4 activities, latest 17 days ago.
+Introduced in 4461438a8405 (v6.9-rc1)
+
+Fix incoming:
+* https://lore.kernel.org/regressions/cd12cf1d-f956-4c66-8622-0009d30210b7@leemhuis.info/
+
+
+===================================================
+current cycle (v6.8.. aka v6.9-rc), unknown culprit
+===================================================
+
+
+[ *NEW* ] sched: kernel NULL pointer dereference in pick_next_task_fair
+-----------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZhuYyrh3mweP_Kd8@nz.home/
+https://lore.kernel.org/lkml/ZhuYyrh3mweP_Kd8@nz.home/
+https://lore.kernel.org/lkml/CA%2B9S74jmWiSWaGoMU9AZnJJd1Ck2qNBdkBZG1=J3PC8gsqqWxg@mail.gmail.com/
+
+By Sergei Trofimovich and Igor Raits; 7 days ago; 11 activities, latest 1 days ago.
+Introduced in v6.8..v6.9-rc3
+
+Recent activities from: Peter Zijlstra (4), Chen Yu (3), Xuewen Yan (2),
+  Tim Chen (1)
+
+2 patch postings are associated with this regression, the latest is this:
+* Re: [RFC PATCH] sched/eevdf: Return leftmost entity in pick_eevdf() if no eligible entity is found
+  https://lore.kernel.org/lkml/20240419084520.GE12673@noisy.programming.kicks-ass.net/
+  2 days ago, by Peter Zijlstra
+
+Noteworthy links:
+* Re: [RFC PATCH] sched/eevdf: Return leftmost entity in pick_eevdf() if no eligible entity is found [implicit due to Link/Closes tag]
+  https://lore.kernel.org/lkml/ZiEaKOQwiNEglYtS@chenyu5-mobl2/
+  3 days ago, by Chen Yu; thread monitored.
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/171310482077.3453606.17735678473578439767@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
