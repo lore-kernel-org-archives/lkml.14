@@ -1,92 +1,95 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3B810A35
-	for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 18:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F8579FD
+	for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 18:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713724422; cv=none; b=Ow8Am5CAFTC7r77IJZkiI2Px9cRzGmOFqE0IjUzQy9U7ydVFXk6iBfp2Gl/y18IvnlME4s7nmMHoxth5wuumQQN4yAphCe0gfzlozoCQbOyTJEhi88wD8FtQYrMe5GO073ur0PPO3MNdR1jWDl1VPC0iQ0w9V/keqNL048c8xeE=
+	t=1713724672; cv=none; b=eBxkRJBjdwUtLLIyOIQMFL7aZSw4KZjUx+1cBNkYqaI5R2kD/hoekEQgA8oz4Ec+L2uhHKZLiCu6hfioqCnacYDay+6YHt3O/3kRQXayyCwJL3cBDCKkoETlTMLUirMV8dCwLx15cC7IXXcs9EJFHgK5iUT1voXsKwhV6xuSWhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713724422; c=relaxed/simple;
-	bh=hsd0XsngwlbXYU49bRdK/iSsfg2UjS5QGrVkSmQDT4Q=;
+	s=arc-20240116; t=1713724672; c=relaxed/simple;
+	bh=W0qXdv+3SHyokXrLV1y0MFYXcFm8D5IujwYvjvLIrU4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sMTuNfKepUG5/oGE7hu3+eN1SIFaJY2TSsiy57+INLE/zcYeV+CUMrWXvJg/BFlI63qdtLg7FsnT2+1fZ3oFR+zpKf8EjVKef+iPDEvtR/kJXV+m1HGWheLwchs9oYvxyvKSapDgB0N8AiD99sDzVgCvBxYXOltutGwE7oR/wzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FVYxAKZN; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=qRWhrRNutrxvlRgScRQbsz0p9p/BNq9+IOAcVI+9W09LRRfkNe079PL6B01Xsse+zkjUtVpjBdumMwfPZv2bypaYwBAx+tqM8I5XRIkcnlni7+/2DYqKkeLhh1YSiEqlNmR326/5GhulUwnXMMy2C6gyiwO3szhPas5U4rxMA8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ya9ajvWO; arc=none smtp.client-ip=209.85.222.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FVYxAKZN"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dc742543119so3616649276.0
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 11:33:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ya9ajvWO"
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-7e7af556187so1241435241.1
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 11:37:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713724420; x=1714329220; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1713724670; x=1714329470; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hsd0XsngwlbXYU49bRdK/iSsfg2UjS5QGrVkSmQDT4Q=;
-        b=FVYxAKZNvxVbI1Pbq7z6uyjuRz2H8wGO22Xzf/79tmrb38tSFBLWJr0ctBt0RTEkj0
-         wEkodXUqSxLrWEDakRzq/7tnBn+lHOHuBPb8+SVLlxBrb8HqXviMT6LLRCRkQZ+R1DVS
-         yz8HIenw9ZpvmMXUue+h4hmIpsEIVeKJ2rqgtvpOmk9S5yul+sRd3EibGk/hXcexRzHa
-         tSb1QFCRMwOdH6KhMlkOSxI1Y7TNqJk8Y395IT+pXKe8q6MSYNZqHpxdHq1OyjTbSAnF
-         nCUlWlGDuXaV97r10gy+AxCOK02BpTEjWDIA+OQv59zrEtm+6x4azSiZ5IgudCdLDY5Y
-         5saQ==
+        bh=W0qXdv+3SHyokXrLV1y0MFYXcFm8D5IujwYvjvLIrU4=;
+        b=Ya9ajvWOysApoUVKR/09qKBEwN6FcjPde9U02kMMfGNQw6XMkJb5HehsZsJuErfRAf
+         NBbtf0kFQSkm37X4/ApHH1QCPfP116ECgCqfwiIZ7OTk1LEUb4iD8sRvIKJ3z0qWOOdZ
+         rftdo3/kP+/Gpo9mPwRry7UVwUIS40cVIv/1xcrMiB/3Kk7sh9LcjkmoyMroT4Ce/uB9
+         vW+qKB9XhPxbUrS2+EIHFe1QE764PHgZ+0zPOlfe79kYCyuUHogBe7GMYQrrbSiIf34u
+         t7tDESJMR0XjOq2iDTJkMlZD069pNqdnTz+TmtJEuS8TnUL3sw74+FV8EK4ryd/E46+t
+         KUEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713724420; x=1714329220;
+        d=1e100.net; s=20230601; t=1713724670; x=1714329470;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hsd0XsngwlbXYU49bRdK/iSsfg2UjS5QGrVkSmQDT4Q=;
-        b=ns1jgymxW1tC+aV+/NK2DPXI6G9CIkAIF5i6a3Xc7YaGB218poYrAMEpuVqMqocIYA
-         Fzd96ONYs/eJQauuuDFos5VvESUItf0KXiiU5Qd+9OTBlIzjveoY9J57RN+xJ3+B6Ps9
-         /umqIRLYfp6eDcSd3rSpHIHbzdN8HDRyNBsrgct9XMGU/SbIi7cUOjx8Jb/VF0bgqjZD
-         s96mF91fB7hd0Ha8K7VRxQl/bZJuKT8HrGlMLg01mp5pzSAlpWW7k5wsFKSA1KJWhBee
-         D9eWB0zu7+wV2UaDx5IUJtxXY1TAKCVItfqgPuCzpADvw2XZB8n6aFX8F9zThVWQkYD8
-         M5yw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6s2yXPh68jU9j2ICKTet6fCvffL7vaswwRnvv7Yw4CrNBtzjaC8OVc/bCT3GubYBXye9NambRumffbj9rQZnhPnRvAtZD2BxCoXbY
-X-Gm-Message-State: AOJu0Yw40P1ZgNKhjtcAeX1nJY3ayHJOEFGXagBrNw13fz3SvGNWXTTz
-	P1L/l7RDaalmmiMrR01OyzxntxkEI6TpxCySLmIqFB6Ln150We5DFwK1qpxyBZP8OGTZ/mI+nGU
-	g4l/Jy+A07B018vusEwK1hdvzv6LBsnldOUl2MQ==
-X-Google-Smtp-Source: AGHT+IEBVUribVSY4UKaYpUkmakZRxw/KOBF8S3bALynu/ZOsk+rr2ucErnlvDBowMnVOwVfVqBQlASGwJRKpPIpzuo=
-X-Received: by 2002:a25:b222:0:b0:de4:8c46:e7f9 with SMTP id
- i34-20020a25b222000000b00de48c46e7f9mr6363423ybj.31.1713724420140; Sun, 21
- Apr 2024 11:33:40 -0700 (PDT)
+        bh=W0qXdv+3SHyokXrLV1y0MFYXcFm8D5IujwYvjvLIrU4=;
+        b=MBS8z4qtFDcxfywKez/PH47O6TQTGZ6cd7aR/QQCz6Uxdg/pJ4PyuLKij+tpDex8MH
+         ukBAhedSpxI/xjFC55jdSp0XgA4n0BbnaTKZxij6ECT9by8s2aztBajyFOCt+s8kueiH
+         b67KY6UbrTNQFwjZRNHhy7I+M9PsZTA7gHij1oC9PvlNWY4Zn767d9gLhKRvQjCUGIfA
+         Y7rggWjbxrN4Fg1UUajmzY/e+mvLCG6KQyQhUehysZu0yRQrdLHVWBwPFUJ/0ZsCJI/Z
+         o269wCxlf//aN8nICY/S40HaVxLnpv1F2hgqADwEryLDJP2HlN3ewkg/Xyq6zA+ilE5a
+         AlFA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpekz8pXZxKlSsSmgQDI8OMnLYeAA1D4jhQV+Kb+SUBLW4TxKYh1qpAWDTS5MD62Yv1oUKmmOaxcbb9MZNHm8+vbH6FSpBT8SECvpA
+X-Gm-Message-State: AOJu0YzSlwHGR0y16GpPGdv0Y5d5EHW7yA9XQRacw9El+CEMz+rkoLGP
+	6y5JbXvrNMlNwKsiBAgpgAROaHYi28oXqm+lVvRU0SBz9m4CdWUC1zCAsAgbauPXjpwFHVxFxZ/
+	ac06r5zNvrkWql2oG8gsu+FG4cBPrnC93tjOv
+X-Google-Smtp-Source: AGHT+IE0S7CkW6ce5AaFQOsR60gb8bjk0JT06KmI7f9o8pfwt/TS8eDEruGkyzxb5KdYD+veTuyDkqVJq6m+Eqwjavg=
+X-Received: by 2002:a05:6122:2191:b0:4c9:a9c9:4b3b with SMTP id
+ j17-20020a056122219100b004c9a9c94b3bmr8241148vkd.9.1713724669627; Sun, 21 Apr
+ 2024 11:37:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240419080555.97343-1-aapo.vienamo@linux.intel.com>
- <CACRpkdbSB+JTdhGXViWs-SmR3nUnm6dVXt3WzK-d4zFSz63XxQ@mail.gmail.com> <ljyjvdtzhgug7frkiwbrvobbusnzqu5gpn345n5bjsmbuw5gjd@xex3dznz5jov>
-In-Reply-To: <ljyjvdtzhgug7frkiwbrvobbusnzqu5gpn345n5bjsmbuw5gjd@xex3dznz5jov>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 21 Apr 2024 20:33:28 +0200
-Message-ID: <CACRpkdYKo+HTwrm1BssJ9nm_xsGFsdRoqDkJWJMETTL2fwaP2A@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Add Intel Granite Rapids-D vGPIO driver
-To: Aapo Vienamo <aapo.vienamo@linux.intel.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <Zh2hw0uQrkN5yVVA@boqun-archlinux> <20240416095323.1107928-1-aliceryhl@google.com>
+ <5a45ccc04cae4976900d031989104737@AcuMS.aculab.com>
+In-Reply-To: <5a45ccc04cae4976900d031989104737@AcuMS.aculab.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Sun, 21 Apr 2024 20:37:38 +0200
+Message-ID: <CAH5fLgj9xt9RnohE1fbLfWBAHv47AgwzrMf8cWZO4hEYC2Mnkw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] rust: uaccess: add userspace pointers
+To: David Laight <David.Laight@aculab.com>
+Cc: "boqun.feng@gmail.com" <boqun.feng@gmail.com>, "a.hindborg@samsung.com" <a.hindborg@samsung.com>, 
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "alex.gaynor@gmail.com" <alex.gaynor@gmail.com>, 
+	"arnd@arndb.de" <arnd@arndb.de>, "arve@android.com" <arve@android.com>, 
+	"benno.lossin@proton.me" <benno.lossin@proton.me>, 
+	"bjorn3_gh@protonmail.com" <bjorn3_gh@protonmail.com>, "brauner@kernel.org" <brauner@kernel.org>, 
+	"cmllamas@google.com" <cmllamas@google.com>, "gary@garyguo.net" <gary@garyguo.net>, 
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
+	"joel@joelfernandes.org" <joel@joelfernandes.org>, "keescook@chromium.org" <keescook@chromium.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"maco@android.com" <maco@android.com>, "ojeda@kernel.org" <ojeda@kernel.org>, 
+	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, "surenb@google.com" <surenb@google.com>, 
+	"tkjos@android.com" <tkjos@android.com>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, 
+	"wedsonaf@gmail.com" <wedsonaf@gmail.com>, "willy@infradead.org" <willy@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 19, 2024 at 4:43=E2=80=AFPM Aapo Vienamo
-<aapo.vienamo@linux.intel.com> wrote:
-
-> > Can you rename this:
-> > gnr_gpio_configure_direction()?
+On Sun, Apr 21, 2024 at 8:08=E2=80=AFPM David Laight <David.Laight@aculab.c=
+om> wrote:
 >
-> I do agree that the pad part of the name maybe isn't the best, though
-> this function isn't just for direction control, since it's used for
-> setting the pin output state as well in gnr_gpio_set(). The idea is that
-> locking and masking of the register accesses is factored out of the gpio
-> callbacks and implemented in this function.
+> Should you be implementing 'struct iov_iter' ?
 >
-> Maybe gnr_gpio_configure_pin()?
+> Even if it means creating an IO_UBUF for ioctls?
+> (Although that might take some 'fettling' for read+write for ioctls.)
 
-gnr_gpio_configure_line() in that case, it clearly isn't a pin since it is
-virtual and for that reason called *v*GPIO, right? Pins are a very
-physical thing. It's that kind of confusion I want to avoid in naming.
+That seems to be intended for when you have several chunks of memory
+in userspace that you want to treat as one contiguous chunk. That's
+not something I need in the Android Binder driver.
 
-Yours,
-Linus Walleij
+Alice
