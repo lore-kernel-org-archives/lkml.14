@@ -1,82 +1,85 @@
-Received: from cae.in-ulm.de (cae.in-ulm.de [217.10.14.231])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1429C625;
-	Sun, 21 Apr 2024 09:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.14.231
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB5233E8
+	for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 09:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713692248; cv=none; b=nRXqMLcUazcaHwkCieANqM0gR5VbcYKkLTEsatC780P0ji+NCnpfD4ysZG8K5Heyfw3fQQdF9m+q1jsDFBgBR53qw8DvGje2r87zU21+t+lCGDLtlZI2Es81Sy5jL5g0lkJVhVxomeJygo3NY7fJDbm/2Jt3hiF59xeNmW6Bf/w=
+	t=1713692412; cv=none; b=Pd+9GnDKLr9q4jIlmjNACx9Rg8nsZT6OAapA+ZLQ8RcEYrNhfDU2LAPLJeMggioK4RKsAeTLeyZlEbsrk82+mtTcqkf8hhp79SUdzVR7+sb3Uw4fvYj0M60TMWBSftYOr9TJYGeFaVii55W/hZXZrFGPu+6nTbeByMEDBSy6S4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713692248; c=relaxed/simple;
-	bh=gRcDq0NrGX6/1/kSuxwyYx9WNXiEK2e2hJwS1DZI4W8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AqnG689eUA0qZwsuDfN0iNg6zJm5nuPzckzf7o0hE/LHYzUns07UWmJ42dZ0jVa05jjAX6wkZaxcCyk4WCl6rNHbLfBFDz4Jvvm/Zl4xnBF2r01XliudsecbcG0au8Ju2sbYu1dHnqlhfMI5DYlkM5kWibkbm7Yqc4Gm8uLvjYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de; spf=pass smtp.mailfrom=c--e.de; arc=none smtp.client-ip=217.10.14.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c--e.de
-Received: by cae.in-ulm.de (Postfix, from userid 1000)
-	id 715C014026B; Sun, 21 Apr 2024 11:30:17 +0200 (CEST)
-Date: Sun, 21 Apr 2024 11:30:17 +0200
-From: "Christian A. Ehrhardt" <lk@c--e.de>
-To: Jameson Thies <jthies@google.com>
-Cc: heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org,
-	pmalani@chromium.org, bleung@google.com,
-	abhishekpandit@chromium.org, andersson@kernel.org,
-	dmitry.baryshkov@linaro.org, fabrice.gasnier@foss.st.com,
-	gregkh@linuxfoundation.org, hdegoede@redhat.com,
-	neil.armstrong@linaro.org, rajaram.regupathy@intel.com,
-	saranya.gopal@intel.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/4] usb: typec: ucsi: Fix null deref in trace
-Message-ID: <ZiTcqZYS53ITwNLy@cae.in-ulm.de>
-References: <20240419211650.2657096-1-jthies@google.com>
- <20240419211650.2657096-2-jthies@google.com>
+	s=arc-20240116; t=1713692412; c=relaxed/simple;
+	bh=A+bRmPKjoz96xGNaOFtiFcdMLMA2ZVOlTHGFWBCSG64=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gUSr4ym25Fc4P7AoYnNo0L6zUI+QmLulVFTbVNCQSKtbr7v5F6CuW7caOjRjVyOKUGom1JU7KHW5WWrBT1kFLnctEldLJtowEhMGEl23VaOmS2oB2tcugVXpZI8OrN1VT+sItEoMzZ378BocwPEFWEzS0MZ3I/X95Rh3XzeaEjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RK38kFE3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RK38kFE3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33BBDC113CE;
+	Sun, 21 Apr 2024 09:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713692412;
+	bh=A+bRmPKjoz96xGNaOFtiFcdMLMA2ZVOlTHGFWBCSG64=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RK38kFE3LJvSK7zCn3VlbNvu4ip84JeaPzVMnFJgBVNNUlJVPJSP8JSoT7aZIbL/2
+	 wTGtyk4tDzvh81dliviioBdZ0ntdTXF4vLviKB23XzwqUAjjwFs/aVYjUkwGr3SKxZ
+	 nVHNbQXgAEwJOW6jAzzK1YEVApVE4sz0AaR3M4q5nc46QzoxUifVj4EngekcHRCWsG
+	 YuSrp/ryVfmSGdLSdI8aaBWJCvL1A8YkWHrk4/xjMSUGO758GZtYbQfTWmA0PlaMav
+	 VqqtaQXqyetaL11nV3GOrz6aBa4WE+nsDetuZbcEzDe1a9oGDvwivaDsrS7QFk/RRs
+	 JC6GeGzA6SDYA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1ryTg9-006VoM-TW;
+	Sun, 21 Apr 2024 10:40:10 +0100
+Date: Sun, 21 Apr 2024 10:40:09 +0100
+Message-ID: <86plujqcjq.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Shiqi Liu <shiqiliu@hust.edu.cn>
+Cc: catalin.marinas@arm.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	anshuman.khandual@arm.com,
+	suzuki.poulose@arm.com,
+	miguel.luis@oracle.com,
+	joey.gouly@arm.com,
+	oliver.upton@linux.dev,
+	jingzhangos@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/sysreg: Update PIE permission encodings
+In-Reply-To: <20240421063328.29710-1-shiqiliu@hust.edu.cn>
+References: <20240421063328.29710-1-shiqiliu@hust.edu.cn>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240419211650.2657096-2-jthies@google.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: shiqiliu@hust.edu.cn, catalin.marinas@arm.com, will@kernel.org, broonie@kernel.org, anshuman.khandual@arm.com, suzuki.poulose@arm.com, miguel.luis@oracle.com, joey.gouly@arm.com, oliver.upton@linux.dev, jingzhangos@google.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-
-Hi Jameson,
-
-On Fri, Apr 19, 2024 at 09:16:47PM +0000, Jameson Thies wrote:
-> From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+On Sun, 21 Apr 2024 07:33:28 +0100,
+Shiqi Liu <shiqiliu@hust.edu.cn> wrote:
 > 
-> ucsi_register_altmode checks IS_ERR on returned pointer and treats
-> NULL as valid. This results in a null deref when
-> trace_ucsi_register_altmode is called.
+> Fix left shift overflow issue when the parameter idx is greater than or
+> equal to 8 in the calculation of perm in PIRx_ELx_PERM macro.
 > 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
->  drivers/usb/typec/ucsi/ucsi.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Fix this by modifying the encoding to use a long integer type.
 > 
-> diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
-> index c4d103db9d0f8..c663dce0659ee 100644
-> --- a/drivers/usb/typec/ucsi/ucsi.h
-> +++ b/drivers/usb/typec/ucsi/ucsi.h
-> @@ -496,7 +496,7 @@ ucsi_register_displayport(struct ucsi_connector *con,
->  			  bool override, int offset,
->  			  struct typec_altmode_desc *desc)
->  {
-> -	return NULL;
-> +	return ERR_PTR(-EOPNOTSUPP);
->  }
+> Signed-off-by: Shiqi Liu <shiqiliu@hust.edu.cn>
 
-Hm. This does not look correct to me. Ignoring trace the old code
-would have returned success if displayport is not compiled in and
-all altmodes (except for display port) would be registered.
+Nice catch.
 
-With your code ucsi_register_altmodes will always fail and abort
-altmode registration if it finds a displayport altmode and
-CONFIG_TYPEC_DP_ALTMODE is not set. I don't think this is what we want.
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-Maybe it is better to guard the trace call with an if?
+	M.
 
-Am I missing something?
-
-Best regards,
-Christian
-
+-- 
+Without deviation from the norm, progress is not possible.
