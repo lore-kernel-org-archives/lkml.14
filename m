@@ -1,251 +1,149 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8533B79FD;
-	Sun, 21 Apr 2024 20:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59FF91C280
+	for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 20:16:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713730300; cv=none; b=kkWeRd72Xr8LbSWvmy99XtufEv4+4w7OqOd/zWlH+hmGOOPe/OqjmjIuFTg2OexfcnZ+QNpTCgRVqVyFRQjXIzSBheBxovdjz+C1O56HYPpC92z9jXfJwUU2C0ibDzWpfdbddXuPeyl3NmNIyLfyj2EiY5vJ0/cMgbEx1sMnYgE=
+	t=1713730587; cv=none; b=ifV3/Gj0d0E0sVeXLdSXHBJ/bxI12adi/OlhLu13GI5Yr+8aAmmlwRLiCOUjEfg5w0ltBMgyhXkiNGSkxmGDDG0sQ0QxF3+0C5wycwOAtPFC5JIvqFH5WVuSUP48rp3RanbtVSFOvFeT40S/g+ZZbr9fPPl1qorTipgVnTpnhjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713730300; c=relaxed/simple;
-	bh=t2o17rLSe++urX4SU4i5hevvE/YgLFP38Y7QNFWRusQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bU5EHvFF4O99GqhYRbMlv8ESMKq0UvwuwIGztLKvXc8+eZpDhrMjV7WlyykSLgxa9T8RaqM4LcnghtCctdJx/zqKGt9dTOX+JOeNDWkAU1QLIvuZw36f1XkUfuUXOOns14/gGS0w6JKCh+uOJZ2FfqZR3JdJw5g+3D0H3dPEdf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VxdGJcjn; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VxdGJcjn"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4196c62bb4eso15330515e9.2;
-        Sun, 21 Apr 2024 13:11:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713730297; x=1714335097; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JXVu37VABeK4P83h3UsDVma3/BTYLFUhb8L1GTMIPrw=;
-        b=VxdGJcjnmDfUG5+jKwB8g9qYbph+Wp/4z4+ZN5lRyPDPfFIfimeq/IBEzzAngabKK+
-         bvhqxtIt3SJyiuZUJnOBQ4lphc5bkWHYS91bbK3jq8yISGi5678cab0MbKlEizhy8QYD
-         /6dAg/0FG1E9YelnuENoCNuH7j8oGujurzrNipq02BUf3PiUrwwLf/Ro4RI0erAoAD8R
-         OpwD4rTFYdcdEE9IuEt8VWL3qAH3VLsXHr8kJOyEDNHIHkg4DArFJT7ydqwpRu80VlIk
-         GxHov4ETR3fy/jk0IQInZTLRmAAfcaNT2QL5Fi2rMSKnW8t2zfDMqSnGtbOBKs6gSY5k
-         ESIQ==
+	s=arc-20240116; t=1713730587; c=relaxed/simple;
+	bh=IAMzr3jkf0anKfnmv4d+Iu5diI38hrPTzyhhBjGfgic=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=BH0sfKAJts8Q/6U3iaKAbBMFAyQOMQW8X3U1vgPL1jBjzDzkD3t+2n0k26tqo4u1hTj8dQ5fW0LdpF2Ea18SxIL5sHX7Qmu1IVhp2ggrfy21X2MN2ajRWVW3uJzCMO+lh3vOpGDsN9Ho2EusWDhVGCWCvryGQ0kyvcow6Sr5HsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7dac7122659so21712839f.0
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 13:16:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713730297; x=1714335097;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JXVu37VABeK4P83h3UsDVma3/BTYLFUhb8L1GTMIPrw=;
-        b=qbnhDp/HFQsiWeWQNgpwyHx277S0HgbITm1ll7/GfFJrAtlPolICHX6pWJPJLI52I2
-         BX11bj+F/yzb78eg+6pSv+4JYVAOR5opdR4tDkIEsXRan7c8g4Z9RJ6L+fIg29pCxtKB
-         bqfGyzseyUVSNx4hLW2FCz+K2p636OxjLGizwiT3yVCG+Z3FRGnRS3KEw8G2uFG5GB+e
-         Rl84/NDpB0RutmQqIkFMDszlTLyvOMyFsqoOTtYkrhdwqr8l6xYrLG01UVCYSzGLeHXL
-         cSUTwJkReU2CcHM65FcxM3ED/z5/lm8ACrvJRg9J7Db6Lt8f0GYS1mNVYki1nIyTvJRc
-         7Deg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHZG5ShZZ7x+T9T1Jgwr6Vsr5geBLRySfM03zPsiouH/pwtsbh0BvkaDCA2FlnTUOBeSQhVBIdA9w+8zgcEOk6I1SnCtjf5p//RAQKmjCXKfEm7sC/M54osXca30HELjV/CSCIKLg+zfDMig7ebNwW1uJKsB0bwawWvbS8Uvh8FqgX
-X-Gm-Message-State: AOJu0YzI7O3jKHYxjj4XnTUjt4zoXRYg8bcgqyLCtTE7SdHV7Hsc6h9Z
-	dv+SU2hSqYcx+RPHviu3HQkWK4Cuc+JTAVypXV4BpVuy4fyGRXHh
-X-Google-Smtp-Source: AGHT+IE82YXTNvlh1Eiz1wzOklKZhSo74I21CZGNQRGXTIzoskPyWkAaPXH4xF73p4G/n8DnE1GSOQ==
-X-Received: by 2002:a05:600c:310d:b0:41a:6209:aa03 with SMTP id g13-20020a05600c310d00b0041a6209aa03mr330770wmo.2.1713730296635;
-        Sun, 21 Apr 2024 13:11:36 -0700 (PDT)
-Received: from krava ([83.240.61.103])
-        by smtp.gmail.com with ESMTPSA id ay33-20020a05600c1e2100b0041a4c94db44sm1767662wmb.43.2024.04.21.13.11.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Apr 2024 13:11:36 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Sun, 21 Apr 2024 22:11:33 +0200
-To: Andrea Righi <andrea.righi@canonical.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/bpf: Add ring_buffer__consume_n test.
-Message-ID: <ZiVy9bYrX-w24huD@krava>
-References: <20240420155904.1450768-1-andrea.righi@canonical.com>
+        d=1e100.net; s=20230601; t=1713730585; x=1714335385;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fd5CZmxUkwDmaWGHFeI5GNOvFM9wfzD6ylZzOmzqm2M=;
+        b=v3HhPa37tymbmU6VGEr5K4T4O/3bIR0W0/T3o8OEvmIMjtqDHqn6Xl1KGk8hBRcSfM
+         ec8wYeDXlvMW3piAcYZxD/NOLh6qMHILQ3sFFJ9GVkiBp0t2uJi3yToOkfar/gBbXOo5
+         Qx7a+3aDgBV7uHEP0Ru5QJ/e9oLSBuenYUqMaOhRXYc40hq0eYtal3N+1iLsRnK10rQz
+         f2EZgqxv+cz4MCars2LTp3DTw4xi9UkfKtO/wXSSPQkl3P+bo0TKqd1CYVN2LyddodE5
+         se+L+kGjbJu9EXG8ny5qyirCwTvu7VSZW/8899T6GrcvLx5CxxCQqKm7AAuUq/i5kHDi
+         GiDA==
+X-Forwarded-Encrypted: i=1; AJvYcCXC9885ef6GBk8rGSCKOHyZA0CA2K5TJK0/E9+iYpRXL25WSNj3n31agy7jP2de6ymNi6b23ko35Fx1UeFzs0wdqhpzZn0MSDySwDC/
+X-Gm-Message-State: AOJu0YwuYLrDYNVO1bMM+y1JvOc4XNy6v3dm03RKjUpgDP+7tl63Gwe6
+	hlVKzQ+zNYH5BH2IrS/CgDlgxjcyHK74rfcK7HCTfBnMc1iUhWKLvPTKp6HqB3GC12N3U8ICETL
+	o3gyAY3lHntcNz72T09c19UeV2iGXOblGyO49JwCoTIinZqdLMOvahVc=
+X-Google-Smtp-Source: AGHT+IFw5TV0LG6fE4Fi/9Ce6C5oop9BiaNMExfF1Mby6t849bjg9jJB3eHESjDpYvs+F0YlMfIlUTqRs5pkdhPyyV/V4199nz03
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240420155904.1450768-1-andrea.righi@canonical.com>
+X-Received: by 2002:a5d:874f:0:b0:7c8:264d:5e98 with SMTP id
+ k15-20020a5d874f000000b007c8264d5e98mr149484iol.0.1713730585507; Sun, 21 Apr
+ 2024 13:16:25 -0700 (PDT)
+Date: Sun, 21 Apr 2024 13:16:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ca4df20616a0fe16@google.com>
+Subject: [syzbot] [mm?] WARNING in __page_table_check_ptes_set
+From: syzbot <syzbot+d8426b591c36b21c750e@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, pasha.tatashin@soleen.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Apr 20, 2024 at 05:59:04PM +0200, Andrea Righi wrote:
-> Add a testcase for the ring_buffer__consume_n() API.
-> 
-> The test produces multiple samples in a ring buffer, using a
-> sys_getpid() fentry prog, and consumes them from user-space in batches,
-> rather than consuming all of them greedily, like ring_buffer__consume()
-> does.
-> 
+Hello,
 
-SNIP
+syzbot found the following issue on:
 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/ringbuf.c b/tools/testing/selftests/bpf/prog_tests/ringbuf.c
-> index 48c5695b7abf..7e085bfce9b5 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/ringbuf.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/ringbuf.c
-> @@ -13,6 +13,7 @@
->  #include <linux/perf_event.h>
->  #include <linux/ring_buffer.h>
->  #include "test_ringbuf.lskel.h"
-> +#include "test_ringbuf_n.lskel.h"
->  #include "test_ringbuf_map_key.lskel.h"
->  
->  #define EDONE 7777
-> @@ -60,6 +61,7 @@ static int process_sample(void *ctx, void *data, size_t len)
->  }
->  
->  static struct test_ringbuf_map_key_lskel *skel_map_key;
-> +static struct test_ringbuf_n_lskel *skel_n;
+HEAD commit:    4eab35893071 Add linux-next specific files for 20240417
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1727a61b180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=27920e47287645ff
+dashboard link: https://syzkaller.appspot.com/bug?extid=d8426b591c36b21c750e
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=156da22d180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=163dfec7180000
 
-seems like there's no need for this to be static variable
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/9f7d6c097fb4/disk-4eab3589.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/287b16352982/vmlinux-4eab3589.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/23839c65c573/bzImage-4eab3589.xz
 
->  static struct test_ringbuf_lskel *skel;
->  static struct ring_buffer *ringbuf;
->  
-> @@ -326,6 +328,67 @@ static void ringbuf_subtest(void)
->  	test_ringbuf_lskel__destroy(skel);
->  }
->  
-> +/*
-> + * Test ring_buffer__consume_n() by producing N_TOT_SAMPLES samples in the ring
-> + * buffer, via getpid(), and consuming them in chunks of N_SAMPLES.
-> + */
-> +#define N_TOT_SAMPLES	32
-> +#define N_SAMPLES	4
-> +
-> +/* Sample value to verify the callback validity */
-> +#define SAMPLE_VALUE	42L
-> +
-> +static int process_n_sample(void *ctx, void *data, size_t len)
-> +{
-> +	struct sample *s = data;
-> +
-> +	CHECK(s->value != SAMPLE_VALUE,
-> +	      "sample_value", "exp %ld, got %ld\n", SAMPLE_VALUE, s->value);
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d8426b591c36b21c750e@syzkaller.appspotmail.com
 
-I think we should use ASSERT macros instead in the new code
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5084 at mm/page_table_check.c:199 __page_table_check_pte mm/page_table_check.c:199 [inline]
+WARNING: CPU: 0 PID: 5084 at mm/page_table_check.c:199 __page_table_check_ptes_set+0x1db/0x420 mm/page_table_check.c:213
+Modules linked in:
+CPU: 0 PID: 5084 Comm: syz-executor382 Not tainted 6.9.0-rc4-next-20240417-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+RIP: 0010:__page_table_check_pte mm/page_table_check.c:199 [inline]
+RIP: 0010:__page_table_check_ptes_set+0x1db/0x420 mm/page_table_check.c:213
+Code: 48 8b 7c 24 40 48 c7 c6 80 19 46 8e e8 ee df 8e ff 41 83 fc 1d 74 18 41 83 fc 1a 75 1d e8 5d da 8e ff eb 10 e8 56 da 8e ff 90 <0f> 0b 90 eb 10 e8 4b da 8e ff 90 0f 0b 90 eb 05 e8 40 da 8e ff 48
+RSP: 0018:ffffc9000366f740 EFLAGS: 00010293
+RAX: ffffffff8207833a RBX: ffffc9000366f7c0 RCX: ffff888022af3c00
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000000
+RBP: ffffc9000366f830 R08: ffffffff820782af R09: 1ffffd40000a6a10
+R10: dffffc0000000000 R11: fffff940000a6a11 R12: 0000000000000000
+R13: 0000000014d42c67 R14: 0000000000000001 R15: 0000000000000000
+FS:  0000555567f79380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000066c7e0 CR3: 0000000078cb0000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ page_table_check_ptes_set include/linux/page_table_check.h:74 [inline]
+ set_ptes include/linux/pgtable.h:267 [inline]
+ __ptep_modify_prot_commit include/linux/pgtable.h:1269 [inline]
+ ptep_modify_prot_commit include/linux/pgtable.h:1302 [inline]
+ change_pte_range mm/mprotect.c:194 [inline]
+ change_pmd_range mm/mprotect.c:424 [inline]
+ change_pud_range mm/mprotect.c:457 [inline]
+ change_p4d_range mm/mprotect.c:480 [inline]
+ change_protection_range mm/mprotect.c:508 [inline]
+ change_protection+0x2770/0x3cc0 mm/mprotect.c:542
+ mprotect_fixup+0x740/0xa90 mm/mprotect.c:655
+ do_mprotect_pkey+0x90d/0xe00 mm/mprotect.c:820
+ __do_sys_mprotect mm/mprotect.c:841 [inline]
+ __se_sys_mprotect mm/mprotect.c:838 [inline]
+ __x64_sys_mprotect+0x80/0x90 mm/mprotect.c:838
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f45514bf429
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffe52191598 EFLAGS: 00000246 ORIG_RAX: 000000000000000a
+RAX: ffffffffffffffda RBX: 00007ffe52191768 RCX: 00007f45514bf429
+RDX: 000000000000000f RSI: 0000000000004000 RDI: 0000000020ffc000
+RBP: 00007f4551532610 R08: 00007ffe52191768 R09: 00007ffe52191768
+R10: 00007ffe52191768 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffe52191758 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
 
-> +
-> +	return 0;
-> +}
-> +
-> +static void ringbuf_n_subtest(void)
-> +{
-> +	int err, i;
-> +
-> +	skel_n = test_ringbuf_n_lskel__open();
-> +	if (!ASSERT_OK_PTR(skel_n, "test_ringbuf_n_lskel__open"))
-> +		return;
-> +
-> +	skel_n->maps.ringbuf.max_entries = getpagesize();
-> +	skel_n->bss->pid = getpid();
-> +
-> +	err = test_ringbuf_n_lskel__load(skel_n);
-> +	if (!ASSERT_OK(err, "test_ringbuf_n_lskel__load"))
-> +		goto cleanup;
-> +
-> +	ringbuf = ring_buffer__new(skel_n->maps.ringbuf.map_fd,
-> +				   process_n_sample, NULL, NULL);
-> +	if (!ASSERT_OK_PTR(ringbuf, "ring_buffer__new"))
-> +		goto cleanup;
-> +
-> +	err = test_ringbuf_n_lskel__attach(skel_n);
-> +	if (!ASSERT_OK(err, "test_ringbuf_n_lskel__attach"))
-> +		goto cleanup_ringbuf;
-> +
-> +	/* Produce N_TOT_SAMPLES samples in the ring buffer by calling getpid() */
-> +	skel->bss->value = SAMPLE_VALUE;
 
-skel_n ?
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> +	for (i = 0; i < N_TOT_SAMPLES; i++)
-> +		syscall(__NR_getpgid);
-> +
-> +	/* Consume all samples from the ring buffer in batches of N_SAMPLES */
-> +	for (i = 0; i < N_TOT_SAMPLES; i += err) {
-> +		err = ring_buffer__consume_n(ringbuf, N_SAMPLES);
-> +		ASSERT_EQ(err, N_SAMPLES, "rb_consume");
-> +	}
-> +
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-SNIP
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-> diff --git a/tools/testing/selftests/bpf/progs/test_ringbuf_n.c b/tools/testing/selftests/bpf/progs/test_ringbuf_n.c
-> new file mode 100644
-> index 000000000000..b98b5bb20699
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/test_ringbuf_n.c
-> @@ -0,0 +1,52 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2024 Andrea Righi <andrea.righi@canonical.com>
-> +
-> +#include <linux/bpf.h>
-> +#include <sched.h>
-> +#include <unistd.h>
-> +#include <bpf/bpf_helpers.h>
-> +#include "bpf_misc.h"
-> +
-> +char _license[] SEC("license") = "GPL";
-> +
-> +#define TASK_COMM_LEN 16
-> +
-> +struct sample {
-> +	int pid;
-> +	int seq;
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-seq does not seem to be checked, is it needed?
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-jirka
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-> +	long value;
-> +	char comm[16];
-> +};
-> +
-> +struct {
-> +	__uint(type, BPF_MAP_TYPE_RINGBUF);
-> +} ringbuf SEC(".maps");
-> +
-> +int pid = 0;
-> +long value = 0;
-> +
-> +/* inner state */
-> +long seq = 0;
-> +
-> +SEC("fentry/" SYS_PREFIX "sys_getpgid")
-> +int test_ringbuf_n(void *ctx)
-> +{
-> +	int cur_pid = bpf_get_current_pid_tgid() >> 32;
-> +	struct sample *sample;
-> +
-> +	if (cur_pid != pid)
-> +		return 0;
-> +
-> +	sample = bpf_ringbuf_reserve(&ringbuf, sizeof(*sample), 0);
-> +	if (!sample)
-> +		return 0;
-> +
-> +	sample->pid = pid;
-> +	sample->seq = seq++;
-> +	sample->value = value;
-> +	bpf_get_current_comm(sample->comm, sizeof(sample->comm));
-> +
-> +	bpf_ringbuf_submit(sample, 0);
-> +
-> +	return 0;
-> +}
-> -- 
-> 2.43.0
-> 
-> 
+If you want to undo deduplication, reply with:
+#syz undup
