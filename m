@@ -1,118 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD144C8B;
-	Sun, 21 Apr 2024 03:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB048205E22;
+	Sun, 21 Apr 2024 03:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713670399; cv=none; b=SbsTCkXtFy1M++16cq4SHLwS3BuNAZZPECzG4Y+blj81FuVje3KVH4bIN6Epn3spU4f+/oMtcnmLuC+C0es+SXCxbDcxNHhNsmAiNj9x7b66bT6Iy3ncFYOsg5lTSF7SScQLxwuuK4FvXwHCBfL+RfSZoi4LyQXugCa+jGBwYzg=
+	t=1713670518; cv=none; b=cIA75QptwcsBBk4RYAYGk01PXizqUcK5KGcviMaPd4LgQ9Usiv8pTygQIDUEbwSlaJMqMVEqfNOAB/bjbyitkCOT9mqVIzviZrkWUuZUpO+xevtS2jrVVcY9dQ8lilHrgn4a1JMaZe5n8j26H+45hApbzYzGKkWKfOsVP/4duco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713670399; c=relaxed/simple;
-	bh=LBIQRbltK56dYLTITMXI0bI+xyVYUlz+U20zt2FHxxc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QRf9YndCEel6XwOZXDH8hla5GVpFcubwWM3n3J+pvg6eEePcpUrC85LaBiVGErU20aMp6ysmoEbu0NTk6HpB5dPh2gGDceQP7FQuejbPnFDfrg8Ev72SFgaoXsNef8QzH6/vHQqrYYs4uZdP3ARQh9Hzesyj5jFo9AfxGEWXjwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h/uPVMau; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713670518; c=relaxed/simple;
+	bh=w3BWd/Mb/cQJxsngUQxpZvCJqYSIFwkMtiPa2dhMohE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Cp629rCXlm6zvTLQnnWOVsxn4te0LnINF5bAZpI44H+oSwDqTdJ6a6RYcw1EmTg/RYSDMnt0bS47jzAx5065hzHIBbfQiIu26bV3ks+6GrcoHCYQhRualLo6TJec/y+3/a9bV+e/SmU8eUYsQ/ritSV/w+1SDkRqI7umczKsuCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SE6E2bew; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h/uPVMau"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713670394; x=1745206394;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LBIQRbltK56dYLTITMXI0bI+xyVYUlz+U20zt2FHxxc=;
-  b=h/uPVMau10cK4fV7wt2+g42FAzFuNrXPgEsI8WER0toIO4f4WDH2J0GA
-   xy7TPgMpNERokxzPiuclDBGsfSOvzAFf0FTl7BpAZaW+qUMVSqYyGxPzp
-   O2oamEwd+Ai0vtX2zJjoOdwCJc8dUBJjASoPah1Uo/5Jtq7NNL4qT938e
-   +Fq+NuQdAqELULXWPM+dewhZHBCOenDvTTl/EsHq/ypyIAsqtvwzV/hCq
-   qy0STQ/FSSys99wv8fDL7lvSBDViFtgymulX/vvGjgUu2i9ogBchsJMyq
-   YWvGIN9XLKnFkyWSThBzcBsvTTkQ8PFCmtRd+jNZv5UMGNm9dcJNFsmiX
-   Q==;
-X-CSE-ConnectionGUID: p1/iZguuSu2mKvSM4IqXaQ==
-X-CSE-MsgGUID: 8CNiq9TBSJ6dSL7/J2FRig==
-X-IronPort-AV: E=McAfee;i="6600,9927,11050"; a="9406041"
-X-IronPort-AV: E=Sophos;i="6.07,217,1708416000"; 
-   d="scan'208";a="9406041"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2024 20:33:13 -0700
-X-CSE-ConnectionGUID: jcr1JPZJT4+c6ciAN+dwBA==
-X-CSE-MsgGUID: PsOdNAeKRSSwrcSD91eYTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,217,1708416000"; 
-   d="scan'208";a="24311007"
-Received: from unknown (HELO 23c141fc0fd8) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 20 Apr 2024 20:33:08 -0700
-Received: from kbuild by 23c141fc0fd8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ryNww-000Beu-0C;
-	Sun, 21 Apr 2024 03:33:06 +0000
-Date: Sun, 21 Apr 2024 11:32:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Inochi Amaoto <inochiama@outlook.com>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: oe-kbuild-all@lists.linux.dev, Jisheng Zhang <jszhang@kernel.org>,
-	Liu Gui <kenneth.liu@sophgo.com>,
-	Jingbao Qiu <qiujingbao.dlmu@gmail.com>, dlan@gentoo.org,
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 2/2] phy: sophgo: Add USB 2.0 PHY driver for Sophgo
- CV18XX/SG200X
-Message-ID: <202404211157.zejQ9FZ1-lkp@intel.com>
-References: <IA1PR20MB4953EB2E2BF9D5F1EE30E2D4BB042@IA1PR20MB4953.namprd20.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SE6E2bew"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3c5ee4ce695so1079364b6e.0;
+        Sat, 20 Apr 2024 20:35:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713670512; x=1714275312; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DqTFUStUgUgHwhHTzA1wLZlhW+xV4wEDyDdTFLtabz0=;
+        b=SE6E2bewEJBoRJy6o9B0J3nrA21kZO3PLaE8Wj8G05KO0itYF5782tm8yHUxlHg4Ot
+         e7NkC32sXu7Q3Gjb3RAgA7lIS2QxlNP1pUSrYx6M2n2ni6LUHoqJ0ITXE77PKefwHaRK
+         ox34ZWIIDGwrMRFXwvMEDhml7MD4IeOpaDFM2xmL3pE0ft7mmQvMQ80vvSr54NcUUfOj
+         jdvzUrA/CJeU22e0TxMqXnFrhWJ6PJw1mQ1E80ejU734xfkGb4MSQJfX/x4lsc4h9Mdt
+         gw7rVq7ceFh2wSPGSMayREjWp0UioGEon39gAAw3yEFyilBS94xB48nXgLY56ROd48f1
+         rGeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713670512; x=1714275312;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DqTFUStUgUgHwhHTzA1wLZlhW+xV4wEDyDdTFLtabz0=;
+        b=HlcQwhms+Tf0SsJiJZ6Jjn7Ml9XqEBrB/mFoLHitg6NHWrDwRaUkjTT9D3W9CxPAPv
+         1cab49hhomSGaG5rqUpwlq549jT6JCHOdyEflvk9xq0GO069qm6qgv3+axTf9XDqZGzy
+         EX2QXhXTSxIgXgATc+qWBO60cdxXHuH2fbsv6muuiVDkxx/+nqq9Cn6zZA8Hv8EM7aBf
+         qc4c+7M7S1KdON0ZtGtUj6rTCSwEnucxbbCJwPdh97SYSrhkVaFl9jp5gnRAmFEJq9kS
+         MXdQFdyre1t/amd2vg3IeQV5O/FnRcTRImqGNRlWSzZ4YZWsmeZ1gEecueUd5PmhdCK2
+         zsPA==
+X-Forwarded-Encrypted: i=1; AJvYcCWfBpW359XUPhxMa21AcgybOH8kC/xAslqUGiohluaaSTOW5Lnsk3k3uFZZjixGUozD0oETJUmuj0Ytwx3AqzcnwwKxALXPjTFZlEfoxvlTaO9xVh+pciI0DY1SaZIa/6HqNVmKnBjlVKIQkLRr5yES8BbGGQLrqgy+YbkaUaCdWSiquIYl
+X-Gm-Message-State: AOJu0YxGExj9m9LFV5CQDIdES69stICa2RKwpvyC2c70iT7bkDvZlZ8S
+	RSdsTlcQ1oj1tBiCfLYu4mWHLbjk7pTMX4Io9MJ/5spAB/Ysj8YB
+X-Google-Smtp-Source: AGHT+IEhIi5dpao0M7bfoPbGYTuQ9jJSf6VyRPSAaGoV0oTkl8Eb5w20BzCqE9x96m8tcu3YW0MIkQ==
+X-Received: by 2002:a05:6808:6c1:b0:3c6:4d7:abf9 with SMTP id m1-20020a05680806c100b003c604d7abf9mr7562694oih.55.1713670511864;
+        Sat, 20 Apr 2024 20:35:11 -0700 (PDT)
+Received: from localhost ([117.239.226.201])
+        by smtp.gmail.com with UTF8SMTPSA id b9-20020a056a00114900b006eaaaf5e0a8sm5517386pfm.71.2024.04.20.20.35.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 20 Apr 2024 20:35:11 -0700 (PDT)
+From: Kartik Agarwala <agarwala.kartik@gmail.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com
+Cc: Kartik Agarwala <agarwala.kartik@gmail.com>,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH v2] ASoC: dt-bindings: mt2701-wm8960: Convert to dtschema
+Date: Sun, 21 Apr 2024 09:01:31 +0530
+Message-Id: <20240421033129.13076-1-agarwala.kartik@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <IA1PR20MB4953EB2E2BF9D5F1EE30E2D4BB042@IA1PR20MB4953.namprd20.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Inochi,
+Convert mt2701-wm890 bindings from text to dtschema. This is used by
+MediaTek mt7623a/n SoC.
 
-kernel test robot noticed the following build errors:
+Signed-off-by: Kartik Agarwala <agarwala.kartik@gmail.com>
+---
+Changes for v2:
+- Do not define pinctrl properties as they are implicitly supported.
 
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master v6.9-rc4 next-20240419]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Previous versions:
+v1: https://lore.kernel.org/all/20240401043505.40972-1-agarwala.kartik@gmail.com/
+---
+ .../sound/mediatek,mt2701-wm8960.yaml         | 54 +++++++++++++++++++
+ .../bindings/sound/mt2701-wm8960.txt          | 24 ---------
+ 2 files changed, 54 insertions(+), 24 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt2701-wm8960.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/mt2701-wm8960.txt
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Inochi-Amaoto/dt-bindings-phy-Add-Sophgo-CV1800-USB-phy/20240412-152532
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/IA1PR20MB4953EB2E2BF9D5F1EE30E2D4BB042%40IA1PR20MB4953.namprd20.prod.outlook.com
-patch subject: [PATCH 2/2] phy: sophgo: Add USB 2.0 PHY driver for Sophgo CV18XX/SG200X
-config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20240421/202404211157.zejQ9FZ1-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240421/202404211157.zejQ9FZ1-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404211157.zejQ9FZ1-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/phy/sophgo/phy-cv1800-usb.c:20:10: fatal error: soc/sophgo/cv1800-sysctl.h: No such file or directory
-      20 | #include <soc/sophgo/cv1800-sysctl.h>
-         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   compilation terminated.
-
-
-vim +20 drivers/phy/sophgo/phy-cv1800-usb.c
-
-  > 20	#include <soc/sophgo/cv1800-sysctl.h>
-    21	
-
+diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt2701-wm8960.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt2701-wm8960.yaml
+new file mode 100644
+index 000000000..cf985461a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/mediatek,mt2701-wm8960.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/mediatek,mt2701-wm8960.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MediaTek MT2701 with WM8960 CODEC
++
++maintainers:
++  - Kartik Agarwala <agarwala.kartik@gmail.com>
++
++properties:
++  compatible:
++    const: mediatek,mt2701-wm8960-machine
++
++  mediatek,platform:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: The phandle of MT2701 ASoC platform.
++
++  audio-routing:
++    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
++    description:
++      A list of the connections between audio components. Each entry is a
++      pair of strings, the first being the connection's sink, the second
++      being the connection's source.
++
++  mediatek,audio-codec:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: The phandle of the WM8960 audio codec.
++
++unevaluatedProperties: false
++
++required:
++  - compatible
++  - mediatek,platform
++  - audio-routing
++  - mediatek,audio-codec
++  - pinctrl-names
++  - pinctrl-0
++
++examples:
++  - |
++    sound {
++        compatible = "mediatek,mt2701-wm8960-machine";
++        mediatek,platform = <&afe>;
++        audio-routing =
++            "Headphone", "HP_L",
++            "Headphone", "HP_R",
++            "LINPUT1", "AMIC",
++            "RINPUT1", "AMIC";
++        mediatek,audio-codec = <&wm8960>;
++        pinctrl-names = "default";
++        pinctrl-0 = <&aud_pins_default>;
++    };
+diff --git a/Documentation/devicetree/bindings/sound/mt2701-wm8960.txt b/Documentation/devicetree/bindings/sound/mt2701-wm8960.txt
+deleted file mode 100644
+index 809b609ea..000000000
+--- a/Documentation/devicetree/bindings/sound/mt2701-wm8960.txt
++++ /dev/null
+@@ -1,24 +0,0 @@
+-MT2701 with WM8960 CODEC
+-
+-Required properties:
+-- compatible: "mediatek,mt2701-wm8960-machine"
+-- mediatek,platform: the phandle of MT2701 ASoC platform
+-- audio-routing: a list of the connections between audio
+-- mediatek,audio-codec: the phandles of wm8960 codec
+-- pinctrl-names: Should contain only one value - "default"
+-- pinctrl-0: Should specify pin control groups used for this controller.
+-
+-Example:
+-
+-	sound:sound {
+-		compatible = "mediatek,mt2701-wm8960-machine";
+-		mediatek,platform = <&afe>;
+-		audio-routing =
+-			"Headphone", "HP_L",
+-			"Headphone", "HP_R",
+-			"LINPUT1", "AMIC",
+-			"RINPUT1", "AMIC";
+-		mediatek,audio-codec = <&wm8960>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&aud_pins_default>;
+-	};
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
