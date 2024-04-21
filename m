@@ -1,110 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470FE625;
-	Sun, 21 Apr 2024 13:48:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7732B64E;
+	Sun, 21 Apr 2024 13:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713707301; cv=none; b=b//wm8rHjM/AcJSeoV3M/o23F44GBlbYt5rjyZlFaca+GFejDok+57Ius+zF7cFyYNfHE/UL3d3utJP9VGvtwJT+cInhBv0r6UTgG6dIbBkRznB2x90A5nKgOusMRVULKetDbGJkWb00t9OFBtGH1A4NnUyQ+vozETwBkElnK3w=
+	t=1713707313; cv=none; b=R+PhRr+8HpCTjXzG9mKcGmLYs/4t9ZVwyU6DS69W+/ORXNvUNlD9x/j2LEkkLWnqn1Iz7AeLgKWFKtQnLON5SrF3xR4UxauXuuTUEcPQPdFAI33+0jCRbq2GftKxrGJuUlaln0KzEWTLeKI5Zf/XtSmEDcdgCJTG3lFGwuIaOFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713707301; c=relaxed/simple;
-	bh=LlUgqYs3MCsI8tfMXyODmqS8Vxzo+bhP7dqc9s6OIOs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QhoKJOAHNS55Huy4qMlLadai1Pj8Q9MhGJYVUcav1+3Umlp3ubglNpIu3pljNwItCAl/tQS8rcAaucJEsWjYBxJUapIaeVP4k2wuQUME+8ux+CeNIEcMSR6+E60wREFLHnie32XlEbSJ/9AoFILqYZ3+PLCrI74FwZCI9ChsmjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=E2HQZsOp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713707313; c=relaxed/simple;
+	bh=YRvqVcmwuUP8KQzGkDUkcd/uUAKw1WBPiXOoWNitfhU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VaJKB9Ljks2nv3RpZZijMDqadQ0DEimhMLeoHISulvCue/z2J74ciWXvT76wnmA4AuXkpntPxhFBgni9y8JQiOC1ig5PwtWg3mPisHBBnJ8mvA8Y29W3fyyCRqXejcZGZ4+YaF7HdrQ0XnijbB/Zb8c1RCK9vBeN4Lh6DS3Xbt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jmy/BBsM; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="E2HQZsOp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D77EC113CE;
-	Sun, 21 Apr 2024 13:48:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1713707300;
-	bh=LlUgqYs3MCsI8tfMXyODmqS8Vxzo+bhP7dqc9s6OIOs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E2HQZsOpXkpKHudpdluczuDQnp4aiFdqJ82dLDH1II7kBwQkMvcWNiCIkeSoP5rWm
-	 m9nZ2jQglkE44ukF7sxlCBCK/PQXihvUDzufJomZBn2n9OqRQMJ6Ud/dSxNSDJpwTv
-	 Lg9wQiO5BEJ/8jDnKp9G7q+/3ehh9dAKnAX9ycsg=
-Date: Sun, 21 Apr 2024 15:48:17 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Ricardo Ribalda <ribalda@chromium.org>, linux-media@vger.kernel.org,
-	linux-mediatek@lists.infradead.org, linux-staging@lists.linux.dev,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, Abylay Ospan <aospan@netup.ru>,
-	Alain Volmat <alain.volmat@foss.st.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Chen-Yu Tsai <wens@csie.org>, Dmitry Osipenko <digetx@gmail.com>,
-	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Hugues Fruchet <hugues.fruchet@foss.st.com>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Martin Tuma <martin.tuma@digiteqautomotive.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Sergey Kozlov <serjk@netup.ru>,
-	Sowjanya Komatineni <skomatineni@nvidia.com>,
-	Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-	Sylvain Petinot <sylvain.petinot@foss.st.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Vikash Garodia <quic_vgarodia@quicinc.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 24/26] media: venus: venc: Make explicit the range of
- us_per_frame
-Message-ID: <2024042112-deferred-fantastic-5b4b@gregkh>
-References: <20240419-fix-cocci-v2-24-2119e692309c@chromium.org>
- <0ab13de0-0fde-40e2-958f-6a0818911009@web.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jmy/BBsM"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5dca1efad59so2597837a12.2;
+        Sun, 21 Apr 2024 06:48:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713707311; x=1714312111; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WcTvBG8QtewVblIlyVX39beMUKrTk6jsd2Uev9rHf/0=;
+        b=jmy/BBsMlv0WrcF86mtgKemjEWRhxnp+cw64YKc64bu6qf+3slm7zrM0U6x8yi72Kn
+         xZv8rKlHI/txXODUIsidV4w1rhtT9T017f8rAh00TsiknJTWOezdfqaCPnDm3AnA/u9C
+         30kzTdYapZoQEl/XRKkGtNMXUXJvC6OcLJlIbDOL6moUFBkhYhGiRrGWQOwE4o0iIlyh
+         1j1BsHK61zFu7cQAEc84K0WwmIRRI39k+w4OJoYnF5JkQsTITj3O8xXZBjCzjPJio7TO
+         DaO++i0A/PIn2xIXYRUbqJdqB+m8t2tsrXmgLb4b7zsy5t5P26dq/KMcgCnE26oOWi7t
+         DsNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713707311; x=1714312111;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WcTvBG8QtewVblIlyVX39beMUKrTk6jsd2Uev9rHf/0=;
+        b=h9vfI8t2xZTVBul5sjVjqi4Z1h9LlU55pE3CyDVPQLNLoeXAmVkrZmIj1Ppb70Lc8/
+         jbJvg10KvWMRxaPDYNZXqj2dnkIXdubmtEgtfpuV7apxDQ1V4v+syTxtzqUmCZlFTcnP
+         g9AgnChjeKgIfa3k91Cfc0Nxlv+I01wrrTCWgSx7w559uVsrj4Jgtt6vmeWJpE3fJ1p3
+         3F6KsjEryiCQLBlZcH225dJhKqmH+58g81bC+N0OY4lVDvzkP54RmTgwsfGj5Om+hXPz
+         u0yhq7v943TOcTd6X40n31uYh5O100TnPucnZQ2bWJscN+PMBY75XzqnlkPibEJhB2pI
+         ZlkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXWN593lHdS6daJBe/ENA62uJ0uQ4AWGfWqcziT0DG1HmxjuYU4JU7lIJ3xhmL0yzejjKZ5iD/i+f7iHLenA8HrcBzbc6LhIaktiKWfWlF03ESe3MQWDmuxplNxThQJQynuNC97x8b0n+AHX8fC6Ww/pdpXtm88nV0KB1LFo/UIXst8ckQhQrWOQuA=
+X-Gm-Message-State: AOJu0YysmJ52XycJbWDly64cDysEx5uLnR6kYSPXtuYE0OQBUCmP620m
+	Pfrds+WhsjOjQO38DwhGI13DAMBJQP8Gytijdugu99c22XbjgyrB
+X-Google-Smtp-Source: AGHT+IEyPxwqw/6TXGpzi8WH9F4lH1JxYg6WoBnEpf5NAK/vkuPgmJrfQekLV8WaNKlLanS22PkK4g==
+X-Received: by 2002:a05:6a20:9191:b0:1a3:c3a9:53b7 with SMTP id v17-20020a056a20919100b001a3c3a953b7mr7874675pzd.55.1713707310911;
+        Sun, 21 Apr 2024 06:48:30 -0700 (PDT)
+Received: from localhost.localdomain ([113.30.217.222])
+        by smtp.gmail.com with ESMTPSA id o13-20020a056a001b4d00b006e6c733bde9sm6175043pfv.155.2024.04.21.06.48.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Apr 2024 06:48:30 -0700 (PDT)
+From: Anand Moon <linux.amoon@gmail.com>
+To: Alan Stern <stern@rowland.harvard.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Anand Moon <linux.amoon@gmail.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Johan Hovold <johan@kernel.org>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	linux-usb@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/5] usb: ehci-exynos: Use devm_clk_get_enabled() helpers
+Date: Sun, 21 Apr 2024 19:17:30 +0530
+Message-ID: <20240421134752.2652-2-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240421134752.2652-1-linux.amoon@gmail.com>
+References: <20240421134752.2652-1-linux.amoon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0ab13de0-0fde-40e2-958f-6a0818911009@web.de>
 
-On Sun, Apr 21, 2024 at 03:25:31PM +0200, Markus Elfring wrote:
-> > Unless the fps is smaller than 0.000232829 fps, this fits in a 32 bit number.
-> > Make that explicit.
-> 
-> Would it be more appropriate to move the word “explicit” to the end
-> of the summary phrase?
-> 
-> Regards,
-> Markus
-> 
+The devm_clk_get_enabled() helpers:
+    - call devm_clk_get()
+    - call clk_prepare_enable() and register what is needed in order to
+     call clk_disable_unprepare() when needed, as a managed resource.
 
-Hi,
+This simplifies the code and avoids the calls to clk_disable_unprepare().
 
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+v4: Add Rb Alan Stern
 
-Markus, you seem to have sent a nonsensical or otherwise pointless
-review comment to a patch submission on a Linux kernel developer mailing
-list.  I strongly suggest that you not do this anymore.  Please do not
-bother developers who are actively working to produce patches and
-features with comments that, in the end, are a waste of time.
+v3: drop dev_err_probe to simplify the error handle.
 
-Patch submitter, please ignore Markus's suggestion; you do not need to
-follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and
-inability to adapt to feedback.  Please feel free to also ignore emails
-from them.
+v2: drop the clk_disable_unprepare in suspend/resume functions
+        fix the usb_put_hcd return before the devm_clk_get_enabled
+---
+ drivers/usb/host/ehci-exynos.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-thanks,
+diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
+index f644b131cc0b..e2303757bc0f 100644
+--- a/drivers/usb/host/ehci-exynos.c
++++ b/drivers/usb/host/ehci-exynos.c
+@@ -159,20 +159,16 @@ static int exynos_ehci_probe(struct platform_device *pdev)
+ 
+ 	err = exynos_ehci_get_phy(&pdev->dev, exynos_ehci);
+ 	if (err)
+-		goto fail_clk;
++		goto fail_io;
+ 
+-	exynos_ehci->clk = devm_clk_get(&pdev->dev, "usbhost");
++	exynos_ehci->clk = devm_clk_get_enabled(&pdev->dev, "usbhost");
+ 
+ 	if (IS_ERR(exynos_ehci->clk)) {
+ 		dev_err(&pdev->dev, "Failed to get usbhost clock\n");
+ 		err = PTR_ERR(exynos_ehci->clk);
+-		goto fail_clk;
++		goto fail_io;
+ 	}
+ 
+-	err = clk_prepare_enable(exynos_ehci->clk);
+-	if (err)
+-		goto fail_clk;
+-
+ 	hcd->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+ 	if (IS_ERR(hcd->regs)) {
+ 		err = PTR_ERR(hcd->regs);
+@@ -223,8 +219,6 @@ static int exynos_ehci_probe(struct platform_device *pdev)
+ 	exynos_ehci_phy_disable(&pdev->dev);
+ 	pdev->dev.of_node = exynos_ehci->of_node;
+ fail_io:
+-	clk_disable_unprepare(exynos_ehci->clk);
+-fail_clk:
+ 	usb_put_hcd(hcd);
+ 	return err;
+ }
+@@ -240,8 +234,6 @@ static void exynos_ehci_remove(struct platform_device *pdev)
+ 
+ 	exynos_ehci_phy_disable(&pdev->dev);
+ 
+-	clk_disable_unprepare(exynos_ehci->clk);
+-
+ 	usb_put_hcd(hcd);
+ }
+ 
+-- 
+2.44.0
 
-greg k-h's patch email bot
