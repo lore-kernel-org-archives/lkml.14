@@ -1,143 +1,103 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D411C29F;
-	Sun, 21 Apr 2024 13:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D12D175A7;
+	Sun, 21 Apr 2024 13:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713707339; cv=none; b=HaIH67yBmeXRY/KqGy6tnDHKsBZzW6zWT/ubVefid1ChRAGJfaewdJ6hUIy6573IBqBdG5p+MefNOhyw2VQLw/xiKdbep26eaHEkm6X7DsQOXMxhMxTIDA1/TodivtND3S4dOVGWESoqtW/YgImF73f4Dr7wW3QPsVdWMwoOX6I=
+	t=1713707681; cv=none; b=LJ0Q13Ee55CTzuR8k/4JvaYtoXMHJUHe3DUBOck7v/R6qR5Q176+oluCab2XI0C2VRExpKgCszQU9ZarMT7Q7OGDbGJra8ncPGq2jYSLW/0hpL4XvIP/tv836LhDBybC9fhTecoKvPIvPukGAc0woutWHpj3nyFIZA/g83lWbIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713707339; c=relaxed/simple;
-	bh=Y9jIyElOMp31XHXfaCIVTLoMyn8wDqkA34DCh0awnvg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oinBLTiDXDSL14ka0l2Wwo3jnqvCtylnFqAL4PBSWjpu8v9kykt1SHouYi50v8PXPOnaGryhzVy0xKmaEu9SmP4OW6WWLnc67eYIXBxlYVeMJCGM37hTULXWAGTSFq2er5Jj7qImGxoUTvBZSacIhowaZV+8/S4el5/yGj73URk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tx6zQLop; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713707681; c=relaxed/simple;
+	bh=NA+h1kZ4ZYosSXB9YC2ayj8s4oTUaovMwew+/FDs8yo=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=Anbk4uIzSQDhoeG1Oi1f2fX7BJ+is1SAMf5tBU33VoFxDuTrdOSzyTh1h5KJP9m3vwCIiIW5AFghJhItN1zRPUo5u2vc11LApSt0bpDyXaOOAY3gNvmWQdy6w2nAmZkrghC+XG8asUUprcSEIs+vLVU3YZo3yu1do4IvKEhOMbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=C4CWtl+D; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tx6zQLop"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6ed627829e6so4016303b3a.1;
-        Sun, 21 Apr 2024 06:48:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713707338; x=1714312138; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vAq3AHvWEQFsKDgpu//rdmbRIcBJ6dLOs4RYotedEeg=;
-        b=Tx6zQLopnJkmPQeroWlWtNHVVFP4NZSBfP+CV8kfhhmDeB5pPfh86sFz43FOO2aISl
-         XJTWhIZfwNCaOkV2JxSB/2Kp+VhB75CX9bx6BKzccB/UQIs9VbqfZqX/0kRCLZI7S7de
-         1kYvhPh7MD0zc+G0sCCoA3hTEVug8jK9sr32IderaCqZbHWQlMVKHj1+WeK5OVwqvEub
-         w/8kdSAi/gHHtRQl7pOjxM+AWWeszXFVnZxxIcZ/t9SvUAsba0Z31snoQylO1yqNJYwk
-         jEbr5W9XuDPRAkedjdSKip6agfJy6E9G/Fq9xE61GzYGSEkpV6ehzcltkglaRFpMyQ8o
-         FQWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713707338; x=1714312138;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vAq3AHvWEQFsKDgpu//rdmbRIcBJ6dLOs4RYotedEeg=;
-        b=e7WmupRFU921uCvrnLtLYigQJ76w4ESoOd539E3UsTxfLxXaF3uwMChEG6DjEVel1u
-         +7zNAyhPws//rtzlmsk08S0crhs6hm+w/cx/NCiwm6c4M/gekCNid2R9knP+LWoxFNjK
-         ONnney3Fkyrpm1TGV63XZaCQksTSkUiyZAsgTmA3i0g4c6J1PG3A3b6PTIVAYn1zOfDU
-         1Ms+8pXFNl+8RLOSgUJvhQRcgeFCytIDYsRRBFSTmR6CjQ9ECdlfYF7mM4oLGGzHefQ2
-         DEbV982YhVTkRakN2VCFzVSZvdJddNueg6VKz6wfYJW75/U8sDZjUFp7zDlMusxKhr7r
-         aFMA==
-X-Forwarded-Encrypted: i=1; AJvYcCXBoWA/ya0WcTFFIkn0PToMHCKCDmSfMcUZlCYdc8gitb9a9cltQdTNFUeeW0n2LZGrjnctEazVcXTX3k2vY4BaFLpddiahJKl9I2rN6IC8ZILkt0KUPx4atRRZg3TQx+mwo8Iof6BTgkUgRe11bk41Gv/nHKMCDZ8XKDWCPkABxqjssY6e49zRIiU=
-X-Gm-Message-State: AOJu0YyCEZsUT7bnWOzw+I5Su3m60xozxW/ku7Umyc7FMvOqv8b3BN/i
-	cjYU97miwnm2SWuS68ImMsFe0HPisaoHEj2OFFBle++cKmKtq2wn
-X-Google-Smtp-Source: AGHT+IFqFGNGrYSxduO+G3kiUy/CR5IuQrcVEgPwVltGpWh2slVvuWUY98I8IosXloAx10/SaETCIw==
-X-Received: by 2002:aa7:8883:0:b0:6ea:bf1c:9dfd with SMTP id z3-20020aa78883000000b006eabf1c9dfdmr10512702pfe.27.1713707337795;
-        Sun, 21 Apr 2024 06:48:57 -0700 (PDT)
-Received: from localhost.localdomain ([113.30.217.222])
-        by smtp.gmail.com with ESMTPSA id o13-20020a056a001b4d00b006e6c733bde9sm6175043pfv.155.2024.04.21.06.48.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Apr 2024 06:48:57 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Anand Moon <linux.amoon@gmail.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Johan Hovold <johan@kernel.org>,
-	linux-usb@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 5/5] usb: dwc3: exynos: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
-Date: Sun, 21 Apr 2024 19:17:34 +0530
-Message-ID: <20240421134752.2652-6-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240421134752.2652-1-linux.amoon@gmail.com>
-References: <20240421134752.2652-1-linux.amoon@gmail.com>
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="C4CWtl+D"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1713707675;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/4ooY+dJBDon3+uBiWdkfQ49raa8NLkoa8U8AjhBhvA=;
+	b=C4CWtl+DvcM0SmFngK7FHkT2L/ZMtfaY6AswksaDF51yPAlkJLOg7sc9j+mRdNRjlt4Qqp
+	IdmaYM6OJN8IGQaaHdfUybveyzIOgkjYQPTcaG46wuE2lZWRmWtxb8HmM1NGAgWJ3pM9JQ
+	wKNk6Gn+OA5IDp+jcm0Fk3f+lI/aoQAcK3eEOLZG9KSbl88ppMwjFMyfYedDFfWDrSQ9A8
+	roWBJ2bmEE3Ch2WLVybA4EBG02vYlB8Z+ajPSDL1A0Vrq/a0ngbUlL1cSJvgHHA/c8CEfm
+	lckgPzXyZyoU65b/4Pb2yAR8GuPL2rV2qBCKp/02SE7qECbYyBMywyIlizS12Q==
+Date: Sun, 21 Apr 2024 15:54:32 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+ linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, robh+dt@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, linux-kernel@vger.kernel.org, amadeus@jmu.edu.cn,
+ FUKAUMI Naoki <naoki@radxa.com>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: rockchip: Correct the descriptions
+ for Radxa boards
+In-Reply-To: <20240419-triumph-cheddar-77fc2f6948b0@spud>
+References: <1e148d6cd4486b31b5e7f3824cf6bccf536b74c0.1713457260.git.dsimic@manjaro.org>
+ <1888572.CQOukoFCf9@diego> <20240418-attach-tigress-bc2b9f844fc7@spud>
+ <c3c4a6ad48fbd62b44991c9bfd81570a@manjaro.org>
+ <20240419-triumph-cheddar-77fc2f6948b0@spud>
+Message-ID: <a3930b26634a78888c9fe3013284563c@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-This macro has the advantage over SET_SYSTEM_SLEEP_PM_OPS that we
-don't have to care about when the functions are actually used.
+On 2024-04-19 16:09, Conor Dooley wrote:
+> On Thu, Apr 18, 2024 at 07:12:35PM +0200, Dragan Simic wrote:
+>> On 2024-04-18 19:04, Conor Dooley wrote:
+>> > On Thu, Apr 18, 2024 at 06:59:42PM +0200, Heiko Stübner wrote:
+>> > > Am Donnerstag, 18. April 2024, 18:26:19 CEST schrieb Dragan Simic:
+>> > > > Correct the descriptions of a few Radxa boards, according to the up-to-date
+>> > > > documentation from Radxa and the detailed explanation from Naoki. [1]  To sum
+>> > > > it up, the short naming, as specified by Radxa, is preferred.
+>> > > >
+>> > > > [1] https://lore.kernel.org/linux-rockchip/B26C732A4DCEA9B3+282b8775-601b-4d4a-a513-4924b7940076@radxa.com/
+>> > > >
+>> > > > Suggested-by: FUKAUMI Naoki <naoki@radxa.com>
+>> > > > Signed-off-by: Dragan Simic <dsimic@manjaro.org>
+>> > > > ---
+>> > > >  Documentation/devicetree/bindings/arm/rockchip.yaml | 8 ++++----
+>> > > >  1 file changed, 4 insertions(+), 4 deletions(-)
+>> > > >
+>> > > > diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> > > > index fcf7316ecd74..ae58e25c29ec 100644
+>> > > > --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> > > > +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> > > > @@ -767,22 +767,22 @@ properties:
+>> > > >            - const: radxa,rockpis
+>> > > >            - const: rockchip,rk3308
+>> > > >
+>> > > > -      - description: Radxa Rock2 Square
+>> > > > +      - description: Radxa Rock 2 Square
+>> > >
+>> > > I may be just blind, but what changed here?
+>> >
+>> > There's now a space before the 2.
+>> 
+>> Exactly.  That's part of the Radxa's naming convention, which may be
+>> seen as somewhat similar to the general rule of spacing out values and
+>> their associated units, e.g. "2 MB" is in general preferred over "2MB"
+>> in nearly any kind of a formally correct document.
+> 
+>> As a side note, there's even so-called "half space" as a typographical
+>> convention for spacing out the values and the associated units.  That
+>> makes formatted text with such spacing a bit nicer. :)
+> 
+> Let's not introduce half spaces into the bindings though :)
 
-Also make use of pm_sleep_ptr() to discard all PM_SLEEP related
-stuff if CONFIG_PM_SLEEP isn't enabled.
-
-Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-v4 Fix typo in commit message SIMPLE_DEV_PM_OPS to
-       SET_SYSTEM_SLEEP_PM_OPS
-   Add Acked by Thinh Nguyen
-
-v3: fix using new DEFINE_SIMPLE_DEV_PM_OPS PM macro hence
-    change the $subject and the commit message
-
-v2: add __maybe_unused to suspend/resume functions in case CONFIG_PM
-   is disabled.
----
- drivers/usb/dwc3/dwc3-exynos.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
-index 5d365ca51771..3427522a7c6a 100644
---- a/drivers/usb/dwc3/dwc3-exynos.c
-+++ b/drivers/usb/dwc3/dwc3-exynos.c
-@@ -187,7 +187,6 @@ static const struct of_device_id exynos_dwc3_match[] = {
- };
- MODULE_DEVICE_TABLE(of, exynos_dwc3_match);
- 
--#ifdef CONFIG_PM_SLEEP
- static int dwc3_exynos_suspend(struct device *dev)
- {
- 	struct dwc3_exynos *exynos = dev_get_drvdata(dev);
-@@ -230,14 +229,8 @@ static int dwc3_exynos_resume(struct device *dev)
- 	return 0;
- }
- 
--static const struct dev_pm_ops dwc3_exynos_dev_pm_ops = {
--	SET_SYSTEM_SLEEP_PM_OPS(dwc3_exynos_suspend, dwc3_exynos_resume)
--};
--
--#define DEV_PM_OPS	(&dwc3_exynos_dev_pm_ops)
--#else
--#define DEV_PM_OPS	NULL
--#endif /* CONFIG_PM_SLEEP */
-+static DEFINE_SIMPLE_DEV_PM_OPS(dwc3_exynos_dev_pm_ops,
-+				dwc3_exynos_suspend, dwc3_exynos_resume);
- 
- static struct platform_driver dwc3_exynos_driver = {
- 	.probe		= dwc3_exynos_probe,
-@@ -245,7 +238,7 @@ static struct platform_driver dwc3_exynos_driver = {
- 	.driver		= {
- 		.name	= "exynos-dwc3",
- 		.of_match_table = exynos_dwc3_match,
--		.pm	= DEV_PM_OPS,
-+		.pm	= pm_sleep_ptr(&dwc3_exynos_dev_pm_ops),
- 	},
- };
- 
--- 
-2.44.0
-
+Of course. :)
