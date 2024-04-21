@@ -1,178 +1,129 @@
-Received: from mailout12.t-online.de (mailout12.t-online.de [194.25.134.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C461BF20;
-	Sun, 21 Apr 2024 20:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.25.134.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CCE1BF20;
+	Sun, 21 Apr 2024 20:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713730846; cv=none; b=nyl8F9ym+YFW8O0u39hDEt6pyhbyJoX2gWjp0RiDsLRta4e8wkaChTPNKeoTOvhthrZ/VCYRdkSZUInUPe/1KMUvpQhAxRFuKXIWLCoUwvU8laQPE1yfmT7XEt2wWTRPAtoNDq0lptfxtzwzLcDq6S9jFcVH6i1Ij29B4wLMsuw=
+	t=1713731034; cv=none; b=L6PPgqJ+ndxzmY7J6+IXSDwISU5H/KxdUpnt+VcEz8MzDI2V1+JJx/qAUkPMAnv74p2SJxBBiSI3mpztoAX/v/cJtTxUJrVFnXcP4hIEDYTVafhCvsBKY3KOZ56sE6H4IEbeoNI8vaBZyshcHSSfHznCiV/BKuvrXBXLT4OkGs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713730846; c=relaxed/simple;
-	bh=7ulEOlS3JkhNXQTRzN6bH+s/Benk94+XyHnjn00QtVU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=orhREMwFudQkmRU58ZIhkyxsSc98xHtuozmFL0VK87eU9DypqbPga83QrZK3B6smg7YZwHiCDTS+ZkhPYfAZbzkXbDr8kO8eNNlansNjugGx3VqMjTDSHQlwXza5wsClOD9y7JODiHmru+5ULCbHMOPsjP3f0EZohvIMB2ylk18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=t-online.de; spf=pass smtp.mailfrom=t-online.de; arc=none smtp.client-ip=194.25.134.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=t-online.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-online.de
-Received: from fwd78.aul.t-online.de (fwd78.aul.t-online.de [10.223.144.104])
-	by mailout12.t-online.de (Postfix) with SMTP id 2E71317285;
-	Sun, 21 Apr 2024 22:15:06 +0200 (CEST)
-Received: from delle.local ([77.47.123.226]) by fwd78.t-online.de
-	with (TLSv1.3:TLS_AES_256_GCM_SHA384 encrypted)
-	esmtp id 1rydaZ-2KqNDU0; Sun, 21 Apr 2024 22:15:03 +0200
-Message-ID: <1422c0bcf359a0dcbe09c8954aa4c723511463d0.camel@t-online.de>
-Subject: Re: [PATCH v2 1/1] drivers/rtc: rtc-sun6i: AutoCal Internal OSC
- Clock
-From: Alois Fertl <A.Fertl@t-online.de>
-To: Jernej =?UTF-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>, 
-	a.zummo@towertech.it
-Cc: alexandre.belloni@bootlin.com, wens@csie.org, samuel@sholland.org, 
-	linux-rtc@vger.kernel.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Date: Sun, 21 Apr 2024 22:14:55 +0200
-In-Reply-To: <6035510.lOV4Wx5bFT@jernej-laptop>
-References: <20240421183633.117326-1-a.fertl@t-online.de>
-	 <6035510.lOV4Wx5bFT@jernej-laptop>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1713731034; c=relaxed/simple;
+	bh=YHUxQDucqlt2tZ6/YcmABpo3iYb+1IqsFatlx4/NmYk=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=vEYBNfSo1ovhmiQIhO8JAa75Nyals7VxslO1j62G2ER+/kacYYvRQuxyM+89w5rzuTWdpHAQ6/b4XQm0vkRgdTUPWWQ/1YPMyU00qEU8iL/5VArpP0flPBqIfZWqtizrToSM3LOIHfq3j1BSo2nnifgqKR0GdZ6q+OgoeKXAn0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.105] (178.176.72.135) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Sun, 21 Apr
+ 2024 23:23:33 +0300
+Subject: Re: [net-next RFC v3 4/7] net: ravb: Refactor GbEth RX code path
+To: Paul Barker <paul.barker.ct@bp.renesas.com>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+CC: =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+	Geert Uytterhoeven <geert+renesas@glider.be>, <netdev@vger.kernel.org>,
+	<linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240415094804.8016-1-paul.barker.ct@bp.renesas.com>
+ <20240415094804.8016-5-paul.barker.ct@bp.renesas.com>
+ <897c3e16-7ded-bdea-08c7-14bf497bfc05@omp.ru>
+ <bcddc226-7cbf-4994-94fe-eb70331f2bfa@bp.renesas.com>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <aa375f97-a94a-66bf-e96c-2a8f75e2cf8b@omp.ru>
+Date: Sun, 21 Apr 2024 23:23:33 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TOI-EXPURGATEID: 150726::1713730503-1FFFCD4A-8CF207E9/0/0 CLEAN NORMAL
-X-TOI-MSGID: 428dd07f-58e2-4c9b-a4dc-ecb5c5a5ae97
+In-Reply-To: <bcddc226-7cbf-4994-94fe-eb70331f2bfa@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 04/21/2024 20:06:29
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 184824 [Apr 21 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.4
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 18 0.3.18
+ b9d6ada76958f07c6a68617a7ac8df800bc4166c
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.72.135 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info:
+	lore.kernel.org:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1;178.176.72.135:7.1.2
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.72.135
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 04/21/2024 20:10:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 4/21/2024 5:54:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Sun, 2024-04-21 at 21:57 +0200, Jernej =A6krabec wrote:
-> Dne nedelja, 21. april 2024 ob 20:36:33 GMT +2 je Alois Fertl
-> napisal(a):
-> > I have a M98-8K PLUS Magcubic TV-Box based on the Allwinner H618
-> > SOC.
-> > On board is a Sp6330 wifi/bt module that requires a 32kHz clock to
-> > operate correctly. Without this change the clock from the SOC is
-> > ~29kHz and BT module does not start up. The patch enables the
-> > Internal
-> > OSC Clock Auto Calibration of the H616/H618 which than provides the
-> > necessary 32kHz and the BT module initializes successfully.
-> > Add a flag and set it for H6 AND H616. The H618 is the same as H616
-> > regarding rtc.
-> >=20
-> > v1->v2
-> > - add flag and activate for H6 AND H616
->=20
-> Please move changelog below --- line.
-Thanks for reviewing, will move the changelog
->=20
-> >=20
-> > Signed-off-by: Alois Fertl <a.fertl@t-online.de>
-> > ---
-> > =A0drivers/rtc/rtc-sun6i.c | 16 +++++++++++++++-
-> > =A01 file changed, 15 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> > index e0b85a0d5645..5d0c917b2099 100644
-> > --- a/drivers/rtc/rtc-sun6i.c
-> > +++ b/drivers/rtc/rtc-sun6i.c
-> > @@ -42,6 +42,11 @@
-> > =A0
-> > =A0#define SUN6I_LOSC_CLK_PRESCAL=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A00x0008
-> > =A0
-> > +#define SUN6I_LOSC_CLK_AUTO_CAL=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A00x000c
-> > +#define SUN6I_LOSC_CLK_AUTO_CAL_16MS=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0B=
-IT(2)
-> > +#define SUN6I_LOSC_CLK_AUTO_CAL_EANABLE=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0BIT(1)
->=20
-> EANABLE -> ENABLE
-yes sure
->=20
-> > +#define SUN6I_LOSC_CLK_AUTO_CAL_SEL_CAL=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0BIT(0)
-> > +
-> > =A0/* RTC */
-> > =A0#define SUN6I_RTC_YMD=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A00x0010
-> > =A0#define SUN6I_RTC_HMS=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A00x0014
-> > @@ -126,7 +131,6 @@
-> > =A0 *=A0=A0=A0=A0 registers (R40, H6)
-> > =A0 *=A0=A0 - SYS power domain controls (R40)
-> > =A0 *=A0=A0 - DCXO controls (H6)
-> > - *=A0=A0 - RC oscillator calibration (H6)
-> > =A0 *
-> > =A0 * These functions are not covered by this driver.
-> > =A0 */
-> > @@ -138,6 +142,7 @@ struct sun6i_rtc_clk_data {
-> > =A0=A0=A0=A0=A0=A0=A0=A0unsigned int has_losc_en : 1;
-> > =A0=A0=A0=A0=A0=A0=A0=A0unsigned int has_auto_swt : 1;
-> > =A0=A0=A0=A0=A0=A0=A0=A0unsigned int no_ext_losc : 1;
-> > +=A0=A0=A0=A0=A0=A0=A0unsigned int has_auto_cal : 1;
-> > =A0};
-> > =A0
-> > =A0#define RTC_LINEAR_DAY=A0BIT(0)
-> > @@ -268,6 +273,13 @@ static void __init sun6i_rtc_clk_init(struct
-> > device_node *node,
-> > =A0=A0=A0=A0=A0=A0=A0=A0}
-> > =A0=A0=A0=A0=A0=A0=A0=A0writel(reg, rtc->base + SUN6I_LOSC_CTRL);
-> > =A0
-> > +=A0=A0=A0=A0=A0=A0=A0if (rtc->data->has_auto_cal) {
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0/* Enable internal OSC cl=
-ock auto calibration */
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0reg =3D (SUN6I_LOSC_CLK_A=
-UTO_CAL_16MS |
-> > SUN6I_LOSC_CLK_AUTO_CAL_EANABLE |
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0SUN6I_LOSC_CLK_AUTO_CAL_SEL_CAL);
->=20
-> Remove parenthesis and fix indentation. Since macro names are pretty
-> long,
-> maybe put one per line.
-will do so
->=20
-> Is this safe to be done even on the boards with external 32k crystal?
-Can't tell for sure. I don't have a H6 board. But I would think that
-it's even required because H6 has a feature to autoswitch clock source
-if the external is detected to have failed.
->=20
-> Best regards,
-> Jernej
-Thanks and regards,
-Alois
->=20
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0writel(reg, rtc->base + S=
-UN6I_LOSC_CLK_AUTO_CAL);
-> > +=A0=A0=A0=A0=A0=A0=A0}
-> > +
-> > =A0=A0=A0=A0=A0=A0=A0=A0/* Yes, I know, this is ugly. */
-> > =A0=A0=A0=A0=A0=A0=A0=A0sun6i_rtc =3D rtc;
-> > =A0
-> > @@ -380,6 +392,7 @@ static const struct sun6i_rtc_clk_data
-> > sun50i_h6_rtc_data =3D {
-> > =A0=A0=A0=A0=A0=A0=A0=A0.has_out_clk =3D 1,
-> > =A0=A0=A0=A0=A0=A0=A0=A0.has_losc_en =3D 1,
-> > =A0=A0=A0=A0=A0=A0=A0=A0.has_auto_swt =3D 1,
-> > +=A0=A0=A0=A0=A0=A0=A0.has_auto_cal =3D 1,
-> > =A0};
-> > =A0
-> > =A0static void __init sun50i_h6_rtc_clk_init(struct device_node
-> > *node)
-> > @@ -395,6 +408,7 @@ static const struct sun6i_rtc_clk_data
-> > sun50i_h616_rtc_data =3D {
-> > =A0=A0=A0=A0=A0=A0=A0=A0.has_prescaler =3D 1,
-> > =A0=A0=A0=A0=A0=A0=A0=A0.has_out_clk =3D 1,
-> > =A0=A0=A0=A0=A0=A0=A0=A0.no_ext_losc =3D 1,
-> > +=A0=A0=A0=A0=A0=A0=A0.has_auto_cal =3D 1,
-> > =A0};
-> > =A0
-> > =A0static void __init sun50i_h616_rtc_clk_init(struct device_node
-> > *node)
-> >=20
->=20
->=20
->=20
->=20
+On 4/21/24 6:49 PM, Paul Barker wrote:
+[...]
 
+>>> We can reduce code duplication in ravb_rx_gbeth() and add comments to
+>>> make the code flow easier to understand.
+>>>
+>>> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+>>> ---
+>>>  drivers/net/ethernet/renesas/ravb_main.c | 70 ++++++++++++------------
+>>>  1 file changed, 35 insertions(+), 35 deletions(-)
+>>>
+>>> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+>>> index baa01bd81f2d..12618171f6d5 100644
+>>> --- a/drivers/net/ethernet/renesas/ravb_main.c
+>>> +++ b/drivers/net/ethernet/renesas/ravb_main.c
+>>> @@ -818,47 +818,47 @@ static int ravb_rx_gbeth(struct net_device *ndev, int budget, int q)
+>>>  				stats->rx_missed_errors++;
+>>>  		} else {
+>>>  			die_dt = desc->die_dt & 0xF0;
+>>> -			switch (die_dt) {
+>>> -			case DT_FSINGLE:
+>>> -				skb = ravb_get_skb_gbeth(ndev, entry, desc);
+>>> +			skb = ravb_get_skb_gbeth(ndev, entry, desc);
+>>> +			if (die_dt == DT_FSINGLE || die_dt == DT_FSTART) {
+>>
+>>    No, please keep using *switch* statement here...
+> 
+> That's a shame - I much prefer this version with reduced code
+> duplication, especially when we add page pool support. Duplication with
+> subtle differences leads to bugs, see [1] for an example.
+> 
+> [1]: https://lore.kernel.org/all/20240416120254.2620-4-paul.barker.ct@bp.renesas.com/
+
+   I wasn't clear enough probably, sorry about that.
+   What I meant to say was that your use of the *if* statement
+wasn't  actually justified. Please use the *switch* statement
+instead.
+
+[...]
+
+> Thanks,
+
+MBR, Sergey
