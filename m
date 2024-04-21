@@ -1,77 +1,63 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72DF329CE1
-	for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 17:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB29C182B1
+	for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 17:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713720140; cv=none; b=RQGKEOy4zdyXFlMOzKFhhSkDGdDZ24c4fpnTGNXepe2zyvpisw5rX1XnbbkEkTZvLpXYsiGv81pBhb5vL3iD11HgmqhK90wTOC1qGrKrqi7mIgfUFKf6QTBFhPsjYxUO0M/ATWRokNPrG7QgOzsR+bWQk2QrKoY9nxqRwJEwEco=
+	t=1713720225; cv=none; b=i9dV1gcp4WxhNwNIzqWvO7kd9xAzkc47r3cNOkLVns2ynjyPfmCyBomI0vwhrPZpXf0+hLXj4dmYdLago1ScvfDzekLbPv1B4D6k+wsKQX7xJts9qj4XgvFS/D+7wQwwYcA/OvIaGD132G5Q7XooryGQ+ETe2z83U2+BNCqL3Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713720140; c=relaxed/simple;
-	bh=E1Nho4TNCkRiQ+1z/eEfslZqH0CAmLGWXWNzWODCxYU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=ej/xfVqYdOA7r5I1EhJZkZdxGYIrS5ZHKaPpFwsXxcADmOTKAe99u2dW8t0GUuBNgzzAxu0dtKfwiA0xvFNotsXoqJEBAAq38+jK3VhK1M0IRkxvxqigDlkAjy28zprOxzjLL96YNZ9d6HJOvoHFf+JPpldnHt7ZJhFS0Q6nkO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-130-wqOpvSleMPWkRxXpPk1rMw-1; Sun, 21 Apr 2024 18:22:05 +0100
-X-MC-Unique: wqOpvSleMPWkRxXpPk1rMw-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 21 Apr
- 2024 18:21:32 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sun, 21 Apr 2024 18:21:32 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Christophe JAILLET' <christophe.jaillet@wanadoo.fr>, 'Al Viro'
-	<viro@zeniv.linux.org.uk>
-CC: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: RE: [PATCH] seq_file: Optimize seq_puts()
-Thread-Topic: [PATCH] seq_file: Optimize seq_puts()
-Thread-Index: AQHaj3fscOebCwNNKkWKivYclXgg7bFrX8CggASjjoCAAvw6MA==
-Date: Sun, 21 Apr 2024 17:21:32 +0000
-Message-ID: <e3b8b5d4c43d4d6d88bc8e6d516c1d41@AcuMS.aculab.com>
-References: <5c4f7ad7b88f5026940efa9c8be36a58755ec1b3.1704374916.git.christophe.jaillet@wanadoo.fr>
- <4b1a4cc5-e057-4944-be69-d25f28645256@wanadoo.fr>
- <20240415210035.GW2118490@ZenIV>
- <ba306b2a1b5743bab79b3ebb04ece4df@AcuMS.aculab.com>
- <5e5cde3e-f3ad-4a9b-bc02-1c473affdcb1@wanadoo.fr>
-In-Reply-To: <5e5cde3e-f3ad-4a9b-bc02-1c473affdcb1@wanadoo.fr>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1713720225; c=relaxed/simple;
+	bh=uhk2xLasHZ6rGWS4/dPJQGdMA9WiKNhYBpi9yLDT7T0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=U/rbiHnNjWJulM6Yjo53qozl6V2DFGW7AxqX1SIY81B8oLw0GWkD9Ct6UMaql/vOhd6OefZ0iW0vNQguez74s1R+c+2NV+VZle8+4h6KRTx0BxVfKHkn4TcVcoMkhHPC0VszJo0Q5MSg+Q1WZKEx+LYpbS+soJf1eK5vfnWzZTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1ydGVO7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1ydGVO7"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4360BC113CE;
+	Sun, 21 Apr 2024 17:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713720225;
+	bh=uhk2xLasHZ6rGWS4/dPJQGdMA9WiKNhYBpi9yLDT7T0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=U1ydGVO7vm2wwIXS7JsIcPIZwikouftZSisZvSRt453kxDnVOlvvuMPKokBwtNL7Q
+	 jVLsqMRUYwuKgPya1us8kgaV5CI9AixH1j4H2fwmEIdhPcDQSYX00S0BqYTIJpyOmn
+	 Vus81T6qEXj8MW6qV4hD7y8i3wbEewd+1Yt5JA/jrmtNZVVZADh2iLXR8w+RNi0gse
+	 8S+Me1B9jPm5YDC/PTpIGEfcj3eMPb2l8r28yOQpFYZgSWLuVjAFhCq6ZEPtIexeTP
+	 WJk91Vzyg0IAtXZ5ug9rwq6agfil3xVaShpH6MaP1WBFz++jvoHDHfIJpiH6ojr8DO
+	 vra1PZbOUXsIg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 388C3C43618;
+	Sun, 21 Apr 2024 17:23:45 +0000 (UTC)
+Subject: Re: [GIT PULL] x86/urgent for v6.9-rc5
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240421084149.GAZiTRTSIBCq70LBEN@fat_crate.local>
+References: <20240421084149.GAZiTRTSIBCq70LBEN@fat_crate.local>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240421084149.GAZiTRTSIBCq70LBEN@fat_crate.local>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/x86_urgent_for_v6.9_rc5
+X-PR-Tracked-Commit-Id: 9543f6e26634537997b6e909c20911b7bf4876de
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d07a0b861dfd8a525ffb015b05648fb4065c5bd2
+Message-Id: <171372022522.8168.17331718983607681402.pr-tracker-bot@kernel.org>
+Date: Sun, 21 Apr 2024 17:23:45 +0000
+To: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
 
-RnJvbTogQ2hyaXN0b3BoZSBKQUlMTEVUDQo+IFNlbnQ6IDE5IEFwcmlsIDIwMjQgMjE6MzgNCi4u
-Lg0KPiA+IEkgZGlkIHdvbmRlciBhYm91dCBjaGVja2luZyBzaXplb2YocykgPD0gMiBpbiB0aGUg
-I2RlZmluZSB2ZXJzaW9uLg0KPiANCj4gZ2l0IGdyZXAgc2VxX3B1dHMuKlwiW15cXF0uXCIgfCB3
-YyAtbA0KPiA3Nw0KPiANCj4gV2hhdCB3b3VsZCB5b3UgZG8gaW4gdGhpcyBjYXNlPw0KPiAyIHNl
-cV9wdXRjKCkgaW4gb3JkZXIgdG8gc2F2ZSBhIG1lbWNweSguLi4sIDIpLCB0aGF0J3MgaXQ/DQo+
-IA0KPiBJdCB3b3VsZCBhbHNvIHNsaWdodGx5IGNoYW5nZSB0aGUgYmVoYXZpb3VyLCBhcyBvbmx5
-IHRoZSAxc3QgY2hhciBjb3VsZA0KPiBiZSBhZGRlZC4gQWN0dWFsbHksIGl0IGlzIGFsbCBvciBu
-b3RoaW5nLg0KDQpEb2luZzoNCglpZiAoc2l6ZW9mKHN0cikgPT0gMiAmJiBzdHJbMF0pDQoJCXNl
-cV9wdXRjKG0uIHN0clswXSk7DQoJZWxzZQ0KCQlfX3NlcV9wdXRzKG0sIHN0cik7DQpXb3VsZCBw
-aWNrIHVwIGxvb3BzIHRoYXQgZG86DQoJY2hhciBzZXBbMl0gPSAiIjsNCg0KCWZvciAoOzsgc2Vw
-WzBdID0gJywnKSB7DQoJCS4uLg0KCQlzZXFfcHV0cyhtLCBzZXApOw0KCQkuLi4NCgl9DQphcyB3
-ZWxsIGFzIHNlcV9wdXRzKG0sICJ4Iik7DQoNCldoZXRoZXIgdGhhdCBpcyB3b3J0aHdoaWxlIGlz
-IGFub3RoZXIgbWF0dGVyLg0KQnV0IGl0IG1pZ2h0IGJlIHVzZWQuDQoNCglEYXZpZA0KDQotDQpS
-ZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWls
-dG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMp
-DQo=
+The pull request you sent on Sun, 21 Apr 2024 10:47:22 +0200:
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/x86_urgent_for_v6.9_rc5
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d07a0b861dfd8a525ffb015b05648fb4065c5bd2
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
