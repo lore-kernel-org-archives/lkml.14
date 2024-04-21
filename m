@@ -1,39 +1,39 @@
 Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB8D11190
-	for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 14:36:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFFF18044
+	for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 14:36:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713710198; cv=none; b=dndfv2NeiGy+HkwRBdP1ObbPShtyNV6I7BxVR9XUahyTM5yTmfovc6ER3fKpfkd3/QfGmDxpesnDwDhfDSdU4lLkBWyv98vUE+IpLvGvbVdKraMiB5xxFPEimY/hVe3CwNWAPupFCuJx4Xc2Y+irYjCycp7c8oSkBqAjBcHuENQ=
+	t=1713710200; cv=none; b=FPnoMnR8pSHW/hYZmledOhkn3o1kX85b7Wgg1x4vS/aIjA63j6C6X6kuC38xj6L0TRw1+smsDt1Ec5s8LzSV8ZW3s7njVKBaXlJEBEXqK/jjc1tHk6vVuj2nbCn/UzuCqbLUQv/9IQEFhKRq2E7h8PJ2uO5/fOJKmH/PSqFXBVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713710198; c=relaxed/simple;
-	bh=UeiE5owkBX2h1GBlgtsYVPJ3dV1up/iK+SY3HKhopZY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tdIhVfpdT45YectsaoqD8Yh/QsGJ9RGAabOXSBw03Y6clpHG/jjUrAwTcA2wlY9qBXCZ9vIY5S4bUCZ72d6QoZ8dhID64Tn6r21miSqUt6vUMUxWPqTUIKUAoYsDK2c2qcEtKbSnGE616sRfZKB/FKwSj7jg9wQJ753G1jogBRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=vG8yyUS5; arc=none smtp.client-ip=85.214.62.61
+	s=arc-20240116; t=1713710200; c=relaxed/simple;
+	bh=QWTbZqy5lTrwfWMVMScZBHUEFIHVdDptRtsd0agUg80=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ZDhTJTcVt+jl03mYF7r2p7BLiQFcjBQx+yrisA03/DRumDH5MANcVzRwgw3uZocC+sb7bMebjRijp8Sjr5iRWuQJpbvy1/4eXrZJ9zh36/GWqydm7H/r94Bmp7XUR9Vr4JccXz9dJm5IYxVf48m3Y5hRAjE3WLSGzi58qZHq3oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=VnQuc3mi; arc=none smtp.client-ip=85.214.62.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="vG8yyUS5"
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="VnQuc3mi"
 Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
 	(No client certificate requested)
 	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 45001881E5;
-	Sun, 21 Apr 2024 16:36:33 +0200 (CEST)
+	by phobos.denx.de (Postfix) with ESMTPSA id 7166888276;
+	Sun, 21 Apr 2024 16:36:35 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1713710194;
-	bh=RPV0Iz8yy+LInEIx4qwiC7zvbeZKL5hgL5XRaRhSxPA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vG8yyUS5eItl3QcJPKS9Dpaio8o/QryYvAULFuI7W7vrBY54u21latTBVHDd5DkJL
-	 3KCxJSmdg4RK0mag1Ey0XNZpsqAcVGS4OWH+s36Z8pfwSfafdzEJMCnDX8/sTIsh+3
-	 PdpIcZQCn0z24lTNWr99tBmtRFCh4oRNzAtGJe8/kBWTpNCOCY5qKvUC7dMtTlPQjk
-	 nPuN5b4aZp3wVg6eBPPbTHq1n5pb3CfIMoBZBfhA6rfOHW1aiRa2eLE3aWHVD1ZdAO
-	 D/M9oVd+XuKQbPbtpf8d2Vyyy6UMelVgh44UkwrEGlx9jEPShzHfrU0YtdlEPGDUUJ
-	 3yQ1IANnjSlng==
-Message-ID: <6111fe04-4ecb-428e-9a0c-dc02cadfe3e7@denx.de>
-Date: Sun, 21 Apr 2024 16:06:24 +0200
+	s=phobos-20191101; t=1713710197;
+	bh=qN/AyrbP3w0CH/0SM3qG6WDHoGfkio3UiZLbi7y6Udc=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=VnQuc3miSCXSguOH/iRYdeYU0fsDvh4xLPXcewr4tSaojRZco3vySrGQnGtVameHV
+	 b94pYJPd7NaXk4l3npnPH765JZmXBZY1Vsk+3vT3d0XcvsvE6j1954A1bQleR8O3Ac
+	 YQK+yIn4rwMVy73fkJ/y13X9WXAXCtSaPUjDkcZekTQnvs6KO0/bGQLH1Pil+Vr5n4
+	 y/BSaAs3j2pb6IZvKhdcjbToTKA8tAoryxnD60vTDlt+LnVxk2auCJCcS1vZCrhzvc
+	 faUjIjAsYMv/WKRWHfxYfS/+3vqHh69l3MpPLqlY/Qr4JA18tiWfIddM6zmQmqM/FB
+	 /Hmi1kPgerL6w==
+Message-ID: <4da75f3b-16a7-46f4-97d9-6f51a54fbe7e@denx.de>
+Date: Sun, 21 Apr 2024 16:25:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,63 +41,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/2] drm/bridge: samsung-dsim: Fix porch calcalcuation
- rounding
-To: Adam Ford <aford173@gmail.com>, dri-devel@lists.freedesktop.org
-Cc: aford@beaconembedded.com, Frieder Schrempf <frieder.schrempf@kontron.de>,
- Inki Dae <inki.dae@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+Subject: Re: [RFC][PATCH] drm: bridge: dw-mipi-dsi: Call modeset in modeset
+ callback
+To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megi@xff.cz>,
+ dri-devel@lists.freedesktop.org, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Biju Das <biju.das.jz@bp.renesas.com>, Daniel Vetter <daniel@ffwll.ch>,
+ David Airlie <airlied@gmail.com>, Douglas Anderson <dianders@chromium.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Jonas Karlman <jonas@kwiboo.se>,
  Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Liu Ying <victor.liu@nxp.com>,
  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Marco Felsch <m.felsch@pengutronix.de>,
- Michael Tretter <m.tretter@pengutronix.de>, linux-kernel@vger.kernel.org
-References: <20240211230931.188194-1-aford173@gmail.com>
- <20240211230931.188194-2-aford173@gmail.com>
+ Maxime Ripard <mripard@kernel.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>,
+ Robert Foss <rfoss@kernel.org>, Sam Ravnborg <sam@ravnborg.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
+References: <20240421002330.172723-1-marex@denx.de>
+ <t3dkuckbko5lmkfezhdtcwrynnbcs4yfn5mtmdyirnktellc5a@ktab3j6rvf3u>
 Content-Language: en-US
 From: Marek Vasut <marex@denx.de>
-In-Reply-To: <20240211230931.188194-2-aford173@gmail.com>
+In-Reply-To: <t3dkuckbko5lmkfezhdtcwrynnbcs4yfn5mtmdyirnktellc5a@ktab3j6rvf3u>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
 X-Virus-Status: Clean
 
-On 2/12/24 12:09 AM, Adam Ford wrote:
-> When using video sync pulses, the HFP, HBP, and HSA are divided between
-> the available lanes if there is more than one lane.  For certain
-> timings and lane configurations, the HFP may not be evenly divisible.
-> If the HFP is rounded down, it ends up being too small which can cause
-> some monitors to not sync properly. In these instances, adjust htotal
-> and hsync to round the HFP up, and recalculate the htotal.
-> 
-> Tested-by: Frieder Schrempf <frieder.schrempf@kontron.de> # Kontron BL i.MX8MM with HDMI monitor
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> ---
-> V2:  No changes
-> 
-> diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/bridge/samsung-dsim.c
-> index 8476650c477c..52939211fe93 100644
-> --- a/drivers/gpu/drm/bridge/samsung-dsim.c
-> +++ b/drivers/gpu/drm/bridge/samsung-dsim.c
-> @@ -1606,6 +1606,27 @@ static int samsung_dsim_atomic_check(struct drm_bridge *bridge,
->   		adjusted_mode->flags |= (DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC);
->   	}
->   
-> +	/*
-> +	 * When using video sync pulses, the HFP, HBP, and HSA are divided between
-> +	 * the available lanes if there is more than one lane.  For certain
-> +	 * timings and lane configurations, the HFP may not be evenly divisible.
-> +	 * If the HFP is rounded down, it ends up being too small which can cause
-> +	 * some monitors to not sync properly. In these instances, adjust htotal
-> +	 * and hsync to round the HFP up, and recalculate the htotal. Through trial
-> +	 * and error, it appears that the HBP and HSA do not appearto need the same
-> +	 * correction that HFP does.
-> +	 */
-> +	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE && dsi->lanes > 1) {
+On 4/21/24 1:09 PM, Ondřej Jirman wrote:
+> Hi,
 
-Does this also apply to mode with sync events (I suspect it does), so 
-the condition here should likely be if (!...burst mode) , right ?
+Hi,
+
+> On Sun, Apr 21, 2024 at 02:22:35AM GMT, Marek Vasut wrote:
+>> Doing modeset in .atomic_pre_enable callback instead of dedicated .mode_set
+>> callback does not seem right. Undo this change, which was added as part of
+> 
+> Actually no. If anything, mode_set callback should be dropped entirely:
+> 
+> See https://elixir.bootlin.com/linux/latest/source/include/drm/drm_bridge.h#L231
+> 
+> It's deprecated, and enable callback should just use adjusted_mode:
+> 
+>      This is deprecated, do not use! New drivers shall set their mode in the
+>      &drm_bridge_funcs.atomic_enable operation.
+
+This mentions new drivers ?
+
+>> commit 05aa61334592 ("drm: bridge: dw-mipi-dsi: Fix enable/disable of DSI
+>> controller") as it breaks STM32MP15xx LTDC scanout (DSI)->TC358762 DSI-to-DPI
+>> bridge->PT800480 DPI panel pipeline. The original fix for HX8394 panel likely
+>> requires HX8394 panel side fix instead.
+> 
+> There's nothing wrong with the panel driver. And that commit is not fixing issue
+> with the panel driver, just like the subject hints at. Look at the referenced
+> commit, at "Before:" sequence specifically.
+> 
+> dw_mipi_dsi_mode_set may be named *_mode_set or whatever, but it's basically
+> an enable function that turns on clocks, initalizes phy, etc. etc.
+> 
+> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c#L998
+> 
+> And if you check "Before:" sequence, you'll see that .mode_set callback is just
+> called once at boot and never again. And it's atomic(_pre)_enable/atomic(_post)_disable
+> callbacks that actually are called in ballanced way to enable/disable the
+> controller repeatedly ever after.
+> 
+> Function dw_mipi_dsi_bridge_post_atomic_disable is the inverse of
+> dw_mipi_dsi_mode_set, it undoes everything that dw_mipi_dsi_mode_set does.
+> 
+> You need to find root cause for your issue on STM32MP15xx instead of reverting
+> fixes for resource use bugs in this driver.
+
+Actually, reverting commit 05aa61334592 ("drm: bridge: dw-mipi-dsi: Fix 
+enable/disable of DSI controller") makes the STM32MP15xx work again like 
+it used to since Linux 5.10 or so, so that commit breaks existing 
+working use case.
+
+It seems it is sufficient to revert only this part of the commit to make 
+the STM32MP15xx work as it used to, do you have any idea why ?
