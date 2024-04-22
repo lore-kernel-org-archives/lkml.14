@@ -1,115 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A598B153833;
-	Mon, 22 Apr 2024 15:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C73C153BD4;
+	Mon, 22 Apr 2024 15:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713799687; cv=none; b=aBtLQLhcmqLT1UrX3PW5FiTq2oNpYoY11GAuyYmb+MgCEJs4jWswloUlR+rzOi8fiNbnaIJNRUtToazIV7o8dwp2/7AZ5ga4rc5lbO5eZ4LIa/wX8Z2H2+8VP7YMMRGMaRyLlZX3KBkejlYWrCzoLBE+DI1SVjdcA1ktZa8SN6g=
+	t=1713799691; cv=none; b=S+jgDTsW86SlLfNezdXoCgqokOAImp+LMpBCeFFHMbhpvnuMRkmm9PG6RVH3Zr3Xro70GjIaapafti/y7J78ajQ4L5fR6oSu83gcPWMfIP3Sbnx78siu9TeL6NyKQJU8bk6E8sdD2R/PM1rww8ChQfvKOitj5TVErQILsCw6+ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713799687; c=relaxed/simple;
-	bh=xU07OpbSq5sBF7I9UKLveBB+3+MGri17jbugWRX1SbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NWrNrtQPowoiww8weRVtdGwtWC6Bpkz6CsYEq4uAXwLDuz2lInyszYwbZTQRQ3TPoe/je4nLgV31ypoKNqB4s/h1HjCupc1w9zEflT5XwWcBDYdZMttLn1ZRCY1zv//6cWcfwm6dZWhJimHqj3Li3FyifUztAPIEszk3qaq4r+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TvvF3hkQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713799691; c=relaxed/simple;
+	bh=hQh9FuW56vkudkOGmDgSrmvY96HwoJBQhUhM8CETBGY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G3n+0EoNorbRB3VUG3OPqwNd6q03SlkNPNC2uToufd1bk2UYlpg6xd/vE4mufGHEtcZRjkqj5DGwA25X/Th4foHjhwlVLxPY02gSzOSqNVyY8J+wgDDradrjlcPmx9+7H3yyQFa96q7E6fO2s+fkUWVcshxBii2KZiduuFI5LQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=EmWtq4BC; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TvvF3hkQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C769DC113CC;
-	Mon, 22 Apr 2024 15:28:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713799687;
-	bh=xU07OpbSq5sBF7I9UKLveBB+3+MGri17jbugWRX1SbE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TvvF3hkQPdsUISwIYc/f5YjULbbaEnNKJ5ZtEaUxWcBuF7OWkY1leSN4Q7Fm0R5Mk
-	 pic1Fzy7wQYYUdWlSEsp4/zqP0Vq+RFETX3gPVzdjPJE/J7qAvBN4ek0Qan/fX9VYS
-	 9ttGl89QmQxG8G4nfAQFXLiOZAwyzOt41M839Cxf66RRvxHbuaxJGBaDYrwFg6FXQO
-	 fph32jpQIU9eJBh5dOwRnWZxCUlyR1TLVrYcelkZf4iHEegO+7XVyZ6Tnv+7YuPZHP
-	 kvUsVvgPYzpH6POcHtMyFAjGxVczXVrtnqBzyWhhmhz98bazDe/vMwz+6nQlA+9Zo8
-	 BqMPu+7kePQeg==
-Date: Mon, 22 Apr 2024 16:28:00 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Konstantin Pugin <ria.freelander@gmail.com>
-Cc: krzk@kernel.org, lkp@intel.com, vz@mleia.com, robh@kernel.org,
-	jcmvbkbc@gmail.com, nicolas.ferre@microchip.com,
-	manikanta.guntupalli@amd.com, corbet@lwn.net, ychuang3@nuvoton.com,
-	u.kleine-koenig@pengutronix.de, Maarten.Brock@sttls.nl,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Lech Perczak <lech.perczak@camlingroup.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 2/3] dt-bindings: sc16is7xx: Add compatible line for
- XR20M1172 UART
-Message-ID: <20240422-repackage-popper-8a062acf2610@spud>
-References: <20240422133219.2710061-1-ria.freelander@gmail.com>
- <20240422133219.2710061-3-ria.freelander@gmail.com>
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="EmWtq4BC"
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id BF78C600C8;
+	Mon, 22 Apr 2024 15:27:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1713799688;
+	bh=hQh9FuW56vkudkOGmDgSrmvY96HwoJBQhUhM8CETBGY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EmWtq4BCL95M1z5XhDVo5QGLbrHWa8XJWZPrPmHIY7ioV0JekFUnCn5fAoZWb0Z2J
+	 FtTjlIipqnY7hA4qlK6QbmGH1Jf9YUqIBzPjtlQqrgBUTHBwCy65yhclxdgyuQUIon
+	 JmqXql7VZEhasPzeJ/s0LZBe8nKLPN7Sy1Imb/lfifgCXRGMLLvTbjNtCoYdZCq7Ur
+	 5BRiqFgJQjchggtTVHQ2Bwi/14jwi35HKZyh/qHFdaA1gXVg4tHGAKBj0eYSZm0vD5
+	 soh0oHlKeC7/KkXAP6tYhWOo9N0IjGcRiwzlk8ly/eh1UrI6Jsf9Jk4DcXKqhICVyw
+	 AzKmqK4i0Slqg==
+Received: by x201s (Postfix, from userid 1000)
+	id CA433207A4D; Mon, 22 Apr 2024 15:26:56 +0000 (UTC)
+From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
+To: netdev@vger.kernel.org
+Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
+	linux-kernel@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Ravi Gunasekaran <r-gunasekaran@ti.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	linux-omap@vger.kernel.org
+Subject: [PATCH net-next] net: ethernet: ti: cpsw: flower: validate control flags
+Date: Mon, 22 Apr 2024 15:26:55 +0000
+Message-ID: <20240422152656.175627-1-ast@fiberby.net>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3a3xIlGiZnWRdFvn"
-Content-Disposition: inline
-In-Reply-To: <20240422133219.2710061-3-ria.freelander@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+This driver currently doesn't support any control flags.
 
---3a3xIlGiZnWRdFvn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Use flow_rule_match_has_control_flags() to check for control flags,
+such as can be set through `tc flower ... ip_flags frag`.
 
-On Mon, Apr 22, 2024 at 04:32:14PM +0300, Konstantin Pugin wrote:
-> Add EXAR XR20M1172 UART compatible line into devicetree documentation.
+In case any control flags are masked, flow_rule_match_has_control_flags()
+sets a NL extended error message, and we return -EOPNOTSUPP.
 
-I thought I had already pointed out a need for the commit message to
-explain why this exar device belongs in this file. IIRC you said it was
-in the driver commit and cover letter, but it needs to go here too.
+Only compile-tested.
 
-Thanks,
-Conor.
+Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+---
+ drivers/net/ethernet/ti/cpsw_priv.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
->=20
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
-> Signed-off-by: Konstantin Pugin <ria.freelander@gmail.com>
-> ---
->  Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml =
-b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml
-> index 5dec15b7e7c3..c4bedf23368b 100644
-> --- a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml
-> +++ b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml
-> @@ -12,6 +12,7 @@ maintainers:
->  properties:
->    compatible:
->      enum:
-> +      - exar,xr20m1172
->        - nxp,sc16is740
->        - nxp,sc16is741
->        - nxp,sc16is750
-> --=20
-> 2.34.1
->=20
+diff --git a/drivers/net/ethernet/ti/cpsw_priv.c b/drivers/net/ethernet/ti/cpsw_priv.c
+index 764ed298b570..6fe4edabba44 100644
+--- a/drivers/net/ethernet/ti/cpsw_priv.c
++++ b/drivers/net/ethernet/ti/cpsw_priv.c
+@@ -1404,6 +1404,9 @@ static int cpsw_qos_clsflower_add_policer(struct cpsw_priv *priv,
+ 		return -EOPNOTSUPP;
+ 	}
+ 
++	if (flow_rule_match_has_control_flags(rule, extack))
++		return -EOPNOTSUPP;
++
+ 	if (!flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ETH_ADDRS)) {
+ 		NL_SET_ERR_MSG_MOD(extack, "Not matching on eth address");
+ 		return -EOPNOTSUPP;
+-- 
+2.43.0
 
---3a3xIlGiZnWRdFvn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiaCAAAKCRB4tDGHoIJi
-0phQAQC/0W99wp/ktlJOwwYlunbk0+RgoEpY72PHGNoxO1fm9wD/bODCDwYsKvK+
-lqJLoLK7IVrRzP5m1WAtyNoU3JWfNQs=
-=AOjT
------END PGP SIGNATURE-----
-
---3a3xIlGiZnWRdFvn--
