@@ -1,88 +1,126 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D0126AE6
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 11:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D0926AE6;
+	Mon, 22 Apr 2024 11:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713784677; cv=none; b=ELID0QC/PY2yPci21Owqu2+za99MBIkTB3NIFAzZGKrCeMVBP/dkHUhgEFRbRdKJ+egTcVES8I3PIe/wVpVwZH++5sa0WhvwmYQDCBDr5PEeOeH6WnXhN3+puNqSIgWZdBpiKifvQYsBBFJfQ4ehw9E+ngqyuuY0GPWBZub//+c=
+	t=1713784817; cv=none; b=IvYlw1SFmJrNdCDScLVKeOTP6d7aU/CYBFgQWVT5Wzuwxnn9UUaVl4y0ZpV+z6646eOv6ysaYBF4Yu4v1P6Pk7HLl064HvaHj+Ka71gKZXJtmorwvdz84j23eCYKTaalm/kgHVyftlC7VIM5p+k4AHx8L8ODAgVbSZjoO+hrPMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713784677; c=relaxed/simple;
-	bh=3HTBs8uYzG+qgved11753oIo5smuqzX+aqxjD9LRROU=;
+	s=arc-20240116; t=1713784817; c=relaxed/simple;
+	bh=peJlaEP3npLkD0x6snY34z5YAN5kJtFZrZZcayWj6tU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lz4MbftAjMzIUaH6d5tbsV6MNBjwb3y0deGl6LE8CWMij7d0zdhEL36hzDA65luH5ERHlkdSVZ6gyNHB4QHXoYB6MtlJfCiMudVmWfvYDgSO/1cj2DeWtgG4OBhh4wsPM8R4QGpZ1f97qZ4b4eDZ1nvZRKAdg/Z6BnkJgWtgmX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DvjCbNMJ; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rd2XVfFPgmL6E21HWWInvLJgvEaLL9tl74f4SL2E4b0WyThmNhVa9Y4d9g50SkWb60sCUaIKaFiDU37WNZzRyVQlceojVt3vgKKf61FJciGKVMPNJDihBFzLjePERQFI98CrL4HXamhHGZu7HDp+JfakcNeCG5cgQW2M0otxank=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=klOLCA3C; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DvjCbNMJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=klYVYxoyZc5Ys+G/99+0FWzSz6uZcVcksgl+fOSPZsI=; b=DvjCbNMJOOLlOEL1usO9NelC+/
-	LigroHhnhromLtzpqvoVPA5j7/XzUXZzCP6ZsSe32ELKLsZtxM2J4w1sxxsJiHRDoOGja8AxdzZ+O
-	sxyJSNYDHGIdtUX6SSiXFSZ/VGixYfzqfaURB4YIaA8clgN/RDB1iNyERoNHErV0hcNidC80dsJgv
-	c2cjMvAJT65Tv9TUpTA/zdsBvCXj8w5Qav9xqMPTKFzlElOTbOaE4D+YDDM2EUlvwMLUxe0MEeHqE
-	RVVh9BPR4nfKO4R1u8AVGRWNW13ZkRFRPictgr/X/DCkYVIeQEdXNbXemuCGnVq2XGd5cnsXxPrs4
-	B53esLhg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1ryrg9-0000000Ddzp-0hrO;
-	Mon, 22 Apr 2024 11:17:45 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CF09A30045D; Mon, 22 Apr 2024 13:17:44 +0200 (CEST)
-Date: Mon, 22 Apr 2024 13:17:44 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Xuewen Yan <xuewen.yan94@gmail.com>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, mingo@redhat.com,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-	yu.c.chen@intel.com, ke.wang@unisoc.com, di.shen@unisoc.com,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="klOLCA3C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713784816; x=1745320816;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=peJlaEP3npLkD0x6snY34z5YAN5kJtFZrZZcayWj6tU=;
+  b=klOLCA3CQKuOhXq4yAnOgvEdhT+ZQlxqviJLI8bGdmLW+JjQccITDrs4
+   wv3cv5N+YG39Jv+Zcy7rYOQcLbCXAytXFs1IEXGN94hY02rV6DmheaN2H
+   XoqAOney1gYdg2zt79cc3oRNd/eHXpChmglTC5hmbzDhLVTElarmAJAWd
+   0bUHdfv2fZ58tAp6KJh8gGjVsR4S3PvyiLg3ZV0obEElNaHv94oIAjnPG
+   aSocdy101jOddTjcojxM15Wwh4FcA5DoteJEvgFyNCmHxkRU0likOK7TM
+   5ssXofZhh6HriSih5WFBGRn+Ee8Bx87LpflJtKue45gYy31MaS9NGiJtn
+   g==;
+X-CSE-ConnectionGUID: f6X4ND2USwqEPyYO2opvTw==
+X-CSE-MsgGUID: Q3mA5KnDQTqKiMRsuvVwBA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11051"; a="26767058"
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="26767058"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 04:20:15 -0700
+X-CSE-ConnectionGUID: LGv1o4TXRsqQ7yYIlkrABw==
+X-CSE-MsgGUID: v7aEHxwfTd+40JFgQyNS1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="23955616"
+Received: from kuha.fi.intel.com ([10.237.72.185])
+  by orviesa009.jf.intel.com with SMTP; 22 Apr 2024 04:20:12 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 22 Apr 2024 14:20:11 +0300
+Date: Mon, 22 Apr 2024 14:20:11 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] sched/eevdf: Prevent vlag from going out of bounds
- when reweight_eevdf
-Message-ID: <20240422111744.GO30852@noisy.programming.kicks-ass.net>
-References: <20240422082238.5784-1-xuewen.yan@unisoc.com>
- <CAB8ipk-LhSuMsp0DdzjEJN-4XEBT1_ri6BPH_nvxSgFZONMT2Q@mail.gmail.com>
- <20240422094157.GA34453@noisy.programming.kicks-ass.net>
- <CAB8ipk9M1wLXV7MWMBYGMhKbY71QqwkvchiENeWTg7JERe6kZw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] usb: typec: qcom-pmic: fix pdphy start() error
+ handling
+Message-ID: <ZiZH69N6xou4UXhR@kuha.fi.intel.com>
+References: <20240418145730.4605-1-johan+linaro@kernel.org>
+ <20240418145730.4605-3-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAB8ipk9M1wLXV7MWMBYGMhKbY71QqwkvchiENeWTg7JERe6kZw@mail.gmail.com>
+In-Reply-To: <20240418145730.4605-3-johan+linaro@kernel.org>
 
-On Mon, Apr 22, 2024 at 07:07:25PM +0800, Xuewen Yan wrote:
-> On Mon, Apr 22, 2024 at 5:42 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Mon, Apr 22, 2024 at 04:33:37PM +0800, Xuewen Yan wrote:
-> >
-> > > On the Android system, the nice value of a task will change very
-> > > frequently. The limit can also be exceeded.
-> > > Maybe the !on_rq case is still necessary.
-> > > So I'm planning to propose another patch for !on_rq case later after
-> > > careful testing locally.
-> >
-> > So the scaling is: vlag = vlag * old_Weight / weight
-> >
-> > But given that integer devision is truncating, you could expect repeated
-> > application of such scaling would eventually decrease the vlag instead
-> > of grow it.
-> >
-> > Is there perhaps an invocation of reweight_task() missing? Looking at
+On Thu, Apr 18, 2024 at 04:57:30PM +0200, Johan Hovold wrote:
+> Move disabling of the vdd-pdphy supply to the start() function which
+> enabled it for symmetry and to make sure that it is disabled as intended
+> in all error paths of pmic_typec_pdphy_reset() (i.e. not just when
+> qcom_pmic_typec_pdphy_enable() fails).
 > 
-> Is it necessary to add reweight_task in the prio_changed_fair()?
+> Fixes: a4422ff22142 ("usb: typec: qcom: Add Qualcomm PMIC Type-C driver")
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 
-I think that's the wrong place. Note how __setscheduler_params() already
-has set_load_weight(). And all other callers of ->prio_changed() already
-seem to do set_load_weight() as well.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-But that idle policy thing there still looks wrong, that sets the weight
-very low but doesn't re-adjust anything.
+> ---
+>  drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_pdphy.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_pdphy.c b/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_pdphy.c
+> index 6560f4fc98d5..5b7f52b74a40 100644
+> --- a/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_pdphy.c
+> +++ b/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_pdphy.c
+> @@ -475,10 +475,8 @@ static int qcom_pmic_typec_pdphy_enable(struct pmic_typec_pdphy *pmic_typec_pdph
+>  
+>  	qcom_pmic_typec_pdphy_reset_off(pmic_typec_pdphy);
+>  done:
+> -	if (ret) {
+> -		regulator_disable(pmic_typec_pdphy->vdd_pdphy);
+> +	if (ret)
+>  		dev_err(dev, "pdphy_enable fail %d\n", ret);
+> -	}
+>  
+>  	return ret;
+>  }
+> @@ -524,12 +522,17 @@ static int qcom_pmic_typec_pdphy_start(struct pmic_typec *tcpm,
+>  
+>  	ret = pmic_typec_pdphy_reset(pmic_typec_pdphy);
+>  	if (ret)
+> -		return ret;
+> +		goto err_disable_vdd_pdhy;
+>  
+>  	for (i = 0; i < pmic_typec_pdphy->nr_irqs; i++)
+>  		enable_irq(pmic_typec_pdphy->irq_data[i].irq);
+>  
+>  	return 0;
+> +
+> +err_disable_vdd_pdhy:
+> +	regulator_disable(pmic_typec_pdphy->vdd_pdphy);
+> +
+> +	return ret;
+>  }
+>  
+>  static void qcom_pmic_typec_pdphy_stop(struct pmic_typec *tcpm)
+> -- 
+> 2.43.2
+
+-- 
+heikki
