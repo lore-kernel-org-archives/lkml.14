@@ -1,153 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897C41534F1;
-	Mon, 22 Apr 2024 16:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9134153581
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 16:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713802332; cv=none; b=SIIlKglZ7Yfd4AKqJPp0y3bf3jAV3M/c+k0ZvlRnEUz6mUZfwH4UHYxxUtpcxXh5YWHxH3Kw3ES2Basz6G/AE+8ThCf1LazeT5AzqWLafTQTeBOvFOkovJ8YpciP6Y2MLLM39MSg3StI8m9FL81FF5vg39SPXQ2DlD3a39gk1/A=
+	t=1713802348; cv=none; b=jaW3a8GQHg0SDR7KxUO+YmleSNqPy0Px4Dykq8AHqajUZOsI9xVb0P5Lb0iskMKTRJkPG0DZ4iU9Ngezb/1DigED5jDLXV+IGbMXaf4ula3pMwaIW4DEaMqPvQTC3wQTbTPc2uSVXUe8YHeJ99n4u8UcpIKJSazb6548oIeQK14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713802332; c=relaxed/simple;
-	bh=zKd6nOk6xLV96IdrDKXncG7Ijui655ng20YGaNHnZnk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PpBIlzR6eSkORHYPYzVjaB1Ab0A5hVrnMCFy7EJfCHKVDT6UdtdLpjrJGMZva6fI8Nke7LyTQTzsKIOzq1GXEHZiGhmQHhby62tQ+sdFShck5tPvQF8ksGJd2aXzml27Bm7C9SfvU+jQFGXKcMf48xJWBULoi4mJFVsuffkqtdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DjTbv3hy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713802348; c=relaxed/simple;
+	bh=pyespoIenYOvwr+vFAWDKTKpySEFKhKzEmeVBB6ayjU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d7+h+58kMiMA9T1FTz2mjBRWIoSxDlUqEdKQgcqcgnd9vopgZYW62pEqfAqbNKiiCYxllWKBy+LpxsIFHtQhXamJbK3/MnZDo7NPglPkyW1FJfVvem9O9QzFMjPPUo9DdC+z9FnVXOH+ksGbRsYpAn8tidVpatWtkKEHJm4cj9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gvPQGwEr; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DjTbv3hy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA71C113CC;
-	Mon, 22 Apr 2024 16:12:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713802332;
-	bh=zKd6nOk6xLV96IdrDKXncG7Ijui655ng20YGaNHnZnk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DjTbv3hyMIU+X50/+C8c9CgkwI8GLjg2ayqAOZ1m+mmWuvlCVQOZ9oCZP5i+9iwA4
-	 +wZ2UQGn6h/0mT1o7BNMF7+WpTQWjNmHrYXE6ZVPueho/NOWqlpV/ead5dJE/Keeip
-	 4L7xnp5h8tmXbQqNkg0RqfdxjyV1NVZStKAR7z2I75emJsI7xSkFonVJ/xeT+H95qm
-	 DtuBdoZf3GaS4Lj3aG+c3/qNUVVfEfK8kG/8QIOvml9kuzP/ghNY6qx4bPkjxVNY91
-	 uN0pJ4WEdKjfwPepV+/XPJpXQhbzLoydoSZ+VC5pWobltUiFuOupi0Lbq/trEiPfwV
-	 EOLw1i4TJq/Hw==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH] kconfig: remove SYMBOL_CHOICE flag
-Date: Tue, 23 Apr 2024 01:10:54 +0900
-Message-Id: <20240422161054.2867285-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gvPQGwEr"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-418c2bf2f55so31283075e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 09:12:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713802345; x=1714407145; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PnFFhvINgBkGoeGxt72lLRxIj0jus3I5w0uDFrtanEw=;
+        b=gvPQGwErFwllCkbn3pU4ylHAktTYu3QKFDkqJT/+hHGLEgFPUxS/nPxMXCuhS6pILp
+         o4z5UHtjnhaT8G9kdcaHEq583d1OgaqoTit0w3t4kzCFF3tq3NyCuZRkIo57EmPIDVcn
+         OUzDG5WecjuzyvO6WnpDVU3COv/rNFRiGFS+1rpdYyYPZYcNrDLlweiX8olkJWbDaYR4
+         KPUOr1V33UWn+2MxNz96gQWrbw6Ej7qXhXm4eewwxTEiSRAk107q06gVs9NMVa5Q+VEr
+         6u/5grM9tzGlrEk76WQROD1v8ToIVdoP50c1jeUP4SFfANIuHmjLsua2vx3tnRAFKKh5
+         0SlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713802345; x=1714407145;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PnFFhvINgBkGoeGxt72lLRxIj0jus3I5w0uDFrtanEw=;
+        b=lkdT0bi9Ya7CjNezVMkJPWVOnwbbMd6xX74Fi3wwy+s2iGuVBEaLdoOpgbeglxq0bI
+         O1ZXuAgkFr1B54DnV22f8zlefLdFtY/ekqao6L6bGUn+tR1z2QXoTDj3MGefo0b3ZNEc
+         x/U5nXJ/6Sv79zAxNL+jVw9hoOk315Uw6pIFaAerH2euQf8E5SST/TlVrDeGB2dCB7T9
+         ByNj2eT8/U5/b3p+nI1vcJHwK5YXX9Gqrq6YFPlAI/93ud9AyFFpuDsHwcSHGS8A3I6A
+         rRWazzQ7nSr84lmYsccS4ItiEbgC5raWbHmExXJldOF4wIHxa3wksCBwwu7Ywio7ZWHi
+         aVNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2rmRJEgERWpGvmwTXfaV7T0kB4MiS1ZQaGC3Ihk0F9RMdb52wUGMWz3OaURnfKtTkFXKRH0Bd+75KYl+ssFkozm2dAJTmJj/TQCFC
+X-Gm-Message-State: AOJu0YwbpeonkJJ+pbbyKgCaSSm9tDuy3/p6msmkhjfLCTQcUMjagRaQ
+	4t5f/E7OabXjpiEE4H0+b+OuUO8JxHRvRcGrT6VqEYH6BgjbJU9Rm8SchMMJYzv2/pLRQjtXzLi
+	z
+X-Google-Smtp-Source: AGHT+IHr5ZN8Vuq2/rI8TUkOzEMqB0i773L+TnbVRnQcQznM1VMn2gKZ7tsYNkoxi+P2H8/Ew24caA==
+X-Received: by 2002:a05:600c:1547:b0:418:e08c:817 with SMTP id f7-20020a05600c154700b00418e08c0817mr7012270wmg.32.1713802344362;
+        Mon, 22 Apr 2024 09:12:24 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id v3-20020adfa1c3000000b0034b61423d54sm22412wrv.106.2024.04.22.09.12.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Apr 2024 09:12:24 -0700 (PDT)
+Message-ID: <2acea3c3-5c8f-4f3c-a275-743c3fbfd2e6@linaro.org>
+Date: Mon, 22 Apr 2024 18:12:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/3] thermal/debugfs: Fix and clean up trip point
+ statistics updates
+Content-Language: en-US
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Lukasz Luba <lukasz.luba@arm.com>, "Rafael J. Wysocki"
+ <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>,
+ Linux PM <linux-pm@vger.kernel.org>
+References: <4918025.31r3eYUQgx@kreacher>
+ <3a8f1978-c5df-40d6-91ca-276431bb01e1@arm.com>
+ <e8193798-4c02-423a-a9d8-63d29ebd7faa@linaro.org>
+ <CAJZ5v0i2pvTLwj7jTzwhoQMap_cvjvNnK2Beuje2COo+F4hBzA@mail.gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <CAJZ5v0i2pvTLwj7jTzwhoQMap_cvjvNnK2Beuje2COo+F4hBzA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-All symbols except choices have a name.
+On 22/04/2024 17:48, Rafael J. Wysocki wrote:
+> On Mon, Apr 22, 2024 at 5:34 PM Daniel Lezcano
 
-Previously, choices were allowed to have a name, but commit c83f020973bc
-("kconfig: remove named choice support") eliminated that possibility.
+[ ... ]
 
-Now, it is easy to distinguish choices from normal symbols; if the name
-is NULL, it is a choice.
+>> or we should expect at least the residency to be showed even if the
+>> mitigation state is not closed ?
+> 
+> Well, in fact the device has already been in that state for some time
+> and the mitigation can continue for a while.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+Yes, but when to update the residency time ?
 
- scripts/kconfig/confdata.c | 2 +-
- scripts/kconfig/expr.h     | 4 +---
- scripts/kconfig/gconf.c    | 2 --
- scripts/kconfig/lkc.h      | 3 ++-
- scripts/kconfig/parser.y   | 2 +-
- scripts/kconfig/symbol.c   | 2 +-
- 6 files changed, 6 insertions(+), 9 deletions(-)
+When we cross a trip point point ?
 
-diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-index ce0ef417b71b..a86e71bab5fa 100644
---- a/scripts/kconfig/confdata.c
-+++ b/scripts/kconfig/confdata.c
-@@ -888,7 +888,7 @@ int conf_write(const char *name)
- 				     "# %s\n"
- 				     "#\n", str);
- 			need_newline = false;
--		} else if (!(sym->flags & SYMBOL_CHOICE) &&
-+		} else if (!sym_is_choice(sym) &&
- 			   !(sym->flags & SYMBOL_WRITTEN)) {
- 			sym_calc_value(sym);
- 			if (!(sym->flags & SYMBOL_WRITE))
-diff --git a/scripts/kconfig/expr.h b/scripts/kconfig/expr.h
-index 0158f5eac454..68b3dd65cb08 100644
---- a/scripts/kconfig/expr.h
-+++ b/scripts/kconfig/expr.h
-@@ -72,8 +72,7 @@ enum {
- /*
-  * Represents a configuration symbol.
-  *
-- * Choices are represented as a special kind of symbol and have the
-- * SYMBOL_CHOICE bit set in 'flags'.
-+ * Choices are represented as a special kind of symbol with null name.
-  */
- struct symbol {
- 	/* link node for the hash table */
-@@ -131,7 +130,6 @@ struct symbol {
- 
- #define SYMBOL_CONST      0x0001  /* symbol is const */
- #define SYMBOL_CHECK      0x0008  /* used during dependency checking */
--#define SYMBOL_CHOICE     0x0010  /* start of a choice block (null name) */
- #define SYMBOL_CHOICEVAL  0x0020  /* used as a value in a choice block */
- #define SYMBOL_VALID      0x0080  /* set when symbol.curr is calculated */
- #define SYMBOL_OPTIONAL   0x0100  /* choice is optional - values can be 'n' */
-diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
-index 9709aca3a30f..74f193272a00 100644
---- a/scripts/kconfig/gconf.c
-+++ b/scripts/kconfig/gconf.c
-@@ -83,8 +83,6 @@ static const char *dbg_sym_flags(int val)
- 		strcat(buf, "const/");
- 	if (val & SYMBOL_CHECK)
- 		strcat(buf, "check/");
--	if (val & SYMBOL_CHOICE)
--		strcat(buf, "choice/");
- 	if (val & SYMBOL_CHOICEVAL)
- 		strcat(buf, "choiceval/");
- 	if (val & SYMBOL_VALID)
-diff --git a/scripts/kconfig/lkc.h b/scripts/kconfig/lkc.h
-index cfb7e9ac41a3..5e27432e4939 100644
---- a/scripts/kconfig/lkc.h
-+++ b/scripts/kconfig/lkc.h
-@@ -129,7 +129,8 @@ static inline struct symbol *sym_get_choice_value(struct symbol *sym)
- 
- static inline bool sym_is_choice(struct symbol *sym)
- {
--	return sym->flags & SYMBOL_CHOICE ? true : false;
-+	/* A choice is a symbol with no name */
-+	return sym->name == NULL;
- }
- 
- static inline bool sym_is_choice_value(struct symbol *sym)
-diff --git a/scripts/kconfig/parser.y b/scripts/kconfig/parser.y
-index 8f339b47fe8d..b95993ff3837 100644
---- a/scripts/kconfig/parser.y
-+++ b/scripts/kconfig/parser.y
-@@ -224,7 +224,7 @@ config_option: T_MODULES T_EOL
- 
- choice: T_CHOICE T_EOL
- {
--	struct symbol *sym = sym_lookup(NULL, SYMBOL_CHOICE);
-+	struct symbol *sym = sym_lookup(NULL, 0);
- 	sym->flags |= SYMBOL_NO_WRITE;
- 	menu_add_entry(sym);
- 	menu_add_expr(P_CHOICE, NULL, NULL);
-diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
-index 81fe1884ef8a..8b34992ba5ed 100644
---- a/scripts/kconfig/symbol.c
-+++ b/scripts/kconfig/symbol.c
-@@ -827,7 +827,7 @@ struct symbol *sym_lookup(const char *name, int flags)
- 			if (symbol->name &&
- 			    !strcmp(symbol->name, name) &&
- 			    (flags ? symbol->flags & flags
--				   : !(symbol->flags & (SYMBOL_CONST|SYMBOL_CHOICE))))
-+				   : !(symbol->flags & SYMBOL_CONST)))
- 				return symbol;
- 		}
- 		new_name = xstrdup(name);
+or
+
+When we read the information ?
+
+The former is what we are currently doing AFAIR and the latter must add 
+the delta between the last update and the current time for the current 
+state, right ?
+
+
 -- 
-2.40.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
