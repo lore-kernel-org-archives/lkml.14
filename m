@@ -1,209 +1,124 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC97145FEE;
-	Mon, 22 Apr 2024 11:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90775146A6F;
+	Mon, 22 Apr 2024 11:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713784484; cv=none; b=qOm5ErGn1jT1d3is0G1lBg+ymGLzdEaSfstfC1uVJjJ9StpQ6BMu9t2FG4U3l+/AezDz9Z/QbBs6fyQfpii14b3fFAOWljYtAFLuglO2AQjXgpqRQAEO7sq25jFO/rgfsmRFEZ/VNFCzdtRwUaaDoS+Cj+46EuiI2Ah/FTepHMA=
+	t=1713784491; cv=none; b=Xv//Wums4SbeBkWnmOJFdji8h5xmR+xy0ATEXaFdV5kP2jErkuBjIifdN8Ozo26rLvUavXJyqzHWGu59kcRkIURp59WBpQ66Gg9eZxvuCiJtn5RbLaHprNTMplUI/KbNL6VGDp4VGoRxu97/5dH2iO7lfxp+5dM65z0toa703aQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713784484; c=relaxed/simple;
-	bh=FXfIV83VVaJ0iL2g9EUYsAMxdoqWaYsdzgRWn2e/4fI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sgq/oBL7UitElEpA0p2D0dwcORXIofiR3I7czuVDVn9uB+35iMg+Bbow6r6+LSvQYcIiu2qFBNpnyqIHnojG4Yx01Z0fAXajOqOqpp+hkpoFIJnFUrOAIztZFlzVakyBvYbP9OxDAddhO6m93afzlKw72hJXHTnVw44muCDDmJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=NIne9CeN; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="NIne9CeN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Ps4xwJmPltrMDsDtm0ARPbw6o3LbHGD6iblKXCQrbew=; b=NIne9CeNIBp1lr6ZQwrVefLVq9
-	xmUD/7ZveMf1rNC0ttJNfGiW5RiQOKHMKo+V5fHaIX5N9KnMBwFSBqNjSRJCkocn6s6DbWVGWGX41
-	tlGpRNOMie77NGsXOfZnAqL2vUOZHn/18xtBnVSLacqKMuVpOTvtDWyyo/51E1Y2kt+Yh742hTp5J
-	9GYEmC0qSUpz6HzymNzsIIjenub9CEt6KuRWWYzsqmovipWq7gVSarZ6Wax7o5MK0wwSZ/J8Nob8o
-	7Yy7+z0laWtpFODH3EjMCv5e10xr07q9tEXj7M4ynUmb950onbtVi4Wr8poR54X66htQeVFqBXyYY
-	Z+qaUg6A==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33624)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1ryrcj-00032A-2j;
-	Mon, 22 Apr 2024 12:14:13 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1ryrcj-0002PU-O7; Mon, 22 Apr 2024 12:14:13 +0100
-Date: Mon, 22 Apr 2024 12:14:13 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Puranjay Mohan <puranjay@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, puranjay12@gmail.com
-Subject: Re: [PATCH bpf] arm32, bpf: reimplement sign-extension mov
- instruction
-Message-ID: <ZiZGhVQx2ei/7Xlx@shell.armlinux.org.uk>
-References: <20240419182832.27707-1-puranjay@kernel.org>
+	s=arc-20240116; t=1713784491; c=relaxed/simple;
+	bh=9nemOUTQvwBWQ8gRNksNJmnj7GhJzwX5Qhmg5BnR3RU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rCXDNB6WYh156OLDAs0/xhFY/qs604K+vHWZlrCsrEmTmBOsaiD4S6Yf8rbI2pgR28argKWjtkufv/kbPzWCjk3ITI7E5GBnpx3NQRWzNAWYgApo9cf0F9uQWwPHJK6S0Oc8Itr4nZMzfb9EAUq+zHJ7ASceznaajfPLOi/WFpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DBB6339;
+	Mon, 22 Apr 2024 04:15:17 -0700 (PDT)
+Received: from [10.57.75.149] (unknown [10.57.75.149])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0FBBE3F7BD;
+	Mon, 22 Apr 2024 04:14:47 -0700 (PDT)
+Message-ID: <fcb8851c-9b07-4d4c-bc22-8793bc59a50c@arm.com>
+Date: Mon, 22 Apr 2024 12:14:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240419182832.27707-1-puranjay@kernel.org>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] thermal/debugfs: Avoid excessive updates of trip
+ point statistics
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>
+References: <4918025.31r3eYUQgx@kreacher> <4890052.GXAFRqVoOG@kreacher>
+Content-Language: en-US
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <4890052.GXAFRqVoOG@kreacher>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 19, 2024 at 06:28:32PM +0000, Puranjay Mohan wrote:
-> The current implementation of the mov instruction with sign extension
-> has the following problems:
-> 
->   1. It clobbers the source register if it is not stacked because it
->      sign extends the source and then moves it to the destination.
->   2. If the dst_reg is stacked, the current code doesn't write the value
->      back in case of 64-bit mov.
->   3. There is room for improvement by emitting fewer instructions.
-> 
-> The steps for fixing this and the instructions emitted by the JIT are
-> explained below with examples in all combinations:
-> 
-> Case A: offset == 32:
-> =====================
->   Case A.1: src and dst are stacked registers:
->   --------------------------------------------
->     1. Load src_lo into tmp_lo
->     2. Store tmp_lo into dst_lo
->     3. Sign extend tmp_lo into tmp_hi
->     4. Store tmp_hi to dst_hi
-> 
->     Example: r3 = (s32)r3
-> 	r3 is a stacked register
-> 
-> 	ldr     r6, [r11, #-16]	// Load r3_lo into tmp_lo
-> 	// str to dst_lo is not emitted because src_lo == dst_lo
-> 	asr     r7, r6, #31	// Sign extend tmp_lo into tmp_hi
-> 	str     r7, [r11, #-12] // Store tmp_hi into r3_hi
-> 
->   Case A.2: src is stacked but dst is not:
->   ----------------------------------------
->     1. Load src_lo into dst_lo
->     2. Sign extend dst_lo into dst_hi
-> 
->     Example: r6 = (s32)r3
-> 	r6 maps to {ARM_R5, ARM_R4} and r3 is stacked
-> 
-> 	ldr     r4, [r11, #-16] // Load r3_lo into r6_lo
-> 	asr     r5, r4, #31	// Sign extend r6_lo into r6_hi
-> 
->   Case A.3: src is not stacked but dst is stacked:
->   ------------------------------------------------
->     1. Store src_lo into dst_lo
->     2. Sign extend src_lo into tmp_hi
->     3. Store tmp_hi to dst_hi
-> 
->     Example: r3 = (s32)r6
-> 	r3 is stacked and r6 maps to {ARM_R5, ARM_R4}
-> 
-> 	str     r4, [r11, #-16] // Store r6_lo to r3_lo
-> 	asr     r7, r4, #31	// Sign extend r6_lo into tmp_hi
-> 	str     r7, [r11, #-12]	// Store tmp_hi to dest_hi
-> 
->   Case A.4: Both src and dst are not stacked:
->   -------------------------------------------
->     1. Mov src_lo into dst_lo
->     2. Sign extend src_lo into dst_hi
-> 
->     Example: (bf) r6 = (s32)r6
-> 	r6 maps to {ARM_R5, ARM_R4}
-> 
-> 	// Mov not emitted because dst == src
-> 	asr     r5, r4, #31 // Sign extend r6_lo into r6_hi
-> 
-> Case B: offset != 32:
-> =====================
->   Case B.1: src and dst are stacked registers:
->   --------------------------------------------
->     1. Load src_lo into tmp_lo
->     2. Sign extend tmp_lo according to offset.
->     3. Store tmp_lo into dst_lo
->     4. Sign extend tmp_lo into tmp_hi
->     5. Store tmp_hi to dst_hi
-> 
->     Example: r9 = (s8)r3
-> 	r9 and r3 are both stacked registers
-> 
-> 	ldr     r6, [r11, #-16] // Load r3_lo into tmp_lo
-> 	lsl     r6, r6, #24	// Sign extend tmp_lo
-> 	asr     r6, r6, #24	// ..
-> 	str     r6, [r11, #-56] // Store tmp_lo to r9_lo
-> 	asr     r7, r6, #31	// Sign extend tmp_lo to tmp_hi
-> 	str     r7, [r11, #-52] // Store tmp_hi to r9_hi
-> 
->   Case B.2: src is stacked but dst is not:
->   ----------------------------------------
->     1. Load src_lo into dst_lo
->     2. Sign extend dst_lo according to offset.
->     3. Sign extend tmp_lo into dst_hi
-> 
->     Example: r6 = (s8)r3
-> 	r6 maps to {ARM_R5, ARM_R4} and r3 is stacked
-> 
-> 	ldr     r4, [r11, #-16] // Load r3_lo to r6_lo
-> 	lsl     r4, r4, #24	// Sign extend r6_lo
-> 	asr     r4, r4, #24	// ..
-> 	asr     r5, r4, #31	// Sign extend r6_lo into r6_hi
-> 
->   Case B.3: src is not stacked but dst is stacked:
->   ------------------------------------------------
->     1. Sign extend src_lo into tmp_lo according to offset.
->     2. Store tmp_lo into dst_lo.
->     3. Sign extend src_lo into tmp_hi.
->     4. Store tmp_hi to dst_hi.
-> 
->     Example: r3 = (s8)r1
-> 	r3 is stacked and r1 maps to {ARM_R3, ARM_R2}
-> 
-> 	lsl     r6, r2, #24 	// Sign extend r1_lo to tmp_lo
-> 	asr     r6, r6, #24	// ..
-> 	str     r6, [r11, #-16] // Store tmp_lo to r3_lo
-> 	asr     r7, r6, #31	// Sign extend tmp_lo to tmp_hi
-> 	str     r7, [r11, #-12] // Store tmp_hi to r3_hi
-> 
->   Case B.4: Both src and dst are not stacked:
->   -------------------------------------------
->     1. Sign extend src_lo into dst_lo according to offset.
->     2. Sign extend dst_lo into dst_hi.
-> 
->     Example: r6 = (s8)r1
-> 	r6 maps to {ARM_R5, ARM_R4} and r1 maps to {ARM_R3, ARM_R2}
-> 
-> 	lsl     r4, r2, #24	// Sign extend r1_lo to r6_lo
-> 	asr     r4, r4, #24	// ..
-> 	asr     r5, r4, #31	// Sign extend r6_lo to r6_hi
-> 
-> Fixes: fc832653fa0d ("arm32, bpf: add support for sign-extension mov instruction")
-> Reported-by: syzbot+186522670e6722692d86@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/all/000000000000e9a8d80615163f2a@google.com/
-> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
 
-This looks really great, thanks for putting in the extra effort!
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+On 4/17/24 14:09, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Since thermal_debug_update_temp() is called before invoking
+> thermal_debug_tz_trip_down() for the trips that were crossed by the
+> zone temperature on the way up, it updates the statistics for them
+> as though the current zone temperature was above the low temperature
+> of each of them.  However, if a given trip has just been crossed on the
+> way down, the zone temperature is in fact below its low temperature,
+> but this is handled by thermal_debug_tz_trip_down() running after the
+> update of the trip statistics.
+> 
+> The remedy is to call thermal_debug_update_temp() after
+> thermal_debug_tz_trip_down() has been invoked for all of the
+> trips in question, but then thermal_debug_tz_trip_up() needs to
+> be adjusted, so it does not update the statistics for the trips
+> that has just been crossed on the way up, as that will be taken
+> care of by thermal_debug_update_temp() down the road.
+> 
+> Modify the code accordingly.
+> 
+> Fixes: 7ef01f228c9f ("thermal/debugfs: Add thermal debugfs information for mitigation episodes")
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>   drivers/thermal/thermal_core.c    |    3 ++-
+>   drivers/thermal/thermal_debugfs.c |    7 -------
+>   2 files changed, 2 insertions(+), 8 deletions(-)
+> 
+> Index: linux-pm/drivers/thermal/thermal_core.c
+> ===================================================================
+> --- linux-pm.orig/drivers/thermal/thermal_core.c
+> +++ linux-pm/drivers/thermal/thermal_core.c
+> @@ -427,7 +427,6 @@ static void update_temperature(struct th
+>   	trace_thermal_temperature(tz);
+>   
+>   	thermal_genl_sampling_temp(tz->id, temp);
+> -	thermal_debug_update_temp(tz);
+>   }
+>   
+>   static void thermal_zone_device_check(struct work_struct *work)
+> @@ -505,6 +504,8 @@ void __thermal_zone_device_update(struct
+>   	if (governor->manage)
+>   		governor->manage(tz);
+>   
+> +	thermal_debug_update_temp(tz);
+> +
+>   	monitor_thermal_zone(tz);
+>   }
+>   
+> Index: linux-pm/drivers/thermal/thermal_debugfs.c
+> ===================================================================
+> --- linux-pm.orig/drivers/thermal/thermal_debugfs.c
+> +++ linux-pm/drivers/thermal/thermal_debugfs.c
+> @@ -545,7 +545,6 @@ void thermal_debug_tz_trip_up(struct the
+>   	struct tz_episode *tze;
+>   	struct tz_debugfs *tz_dbg;
+>   	struct thermal_debugfs *thermal_dbg = tz->debugfs;
+> -	int temperature = tz->temperature;
+>   	int trip_id = thermal_zone_trip_id(tz, trip);
+>   	ktime_t now = ktime_get();
+>   
+> @@ -614,12 +613,6 @@ void thermal_debug_tz_trip_up(struct the
+>   
+>   	tze = list_first_entry(&tz_dbg->tz_episodes, struct tz_episode, node);
+>   	tze->trip_stats[trip_id].timestamp = now;
+> -	tze->trip_stats[trip_id].max = max(tze->trip_stats[trip_id].max, temperature);
+> -	tze->trip_stats[trip_id].min = min(tze->trip_stats[trip_id].min, temperature);
+> -	tze->trip_stats[trip_id].count++;
+> -	tze->trip_stats[trip_id].avg = tze->trip_stats[trip_id].avg +
+> -		(temperature - tze->trip_stats[trip_id].avg) /
+> -		tze->trip_stats[trip_id].count;
+>   
+>   unlock:
+>   	mutex_unlock(&thermal_dbg->lock);
+> 
+> 
+> 
+> 
 
-Thanks!
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
