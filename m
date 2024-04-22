@@ -1,326 +1,248 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2082.outbound.protection.outlook.com [40.107.255.82])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E7C13C3F4
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 10:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713780388; cv=fail; b=u6Y+MgrR5rO0TQ9XCde3X3LMU5XLR307Arzl3OmjyD2gN6LBPmSW/1orgjysAUkfij9jQc3uGsnkILKsjLa7kSnHn3/Tn+royv30V4F4NkLLRSnnUmPmEQ8oGIDazrzR4t80XqlfsytFEjUQ7j1E+fUtxE/wcYcoEYDT6qILE3I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713780388; c=relaxed/simple;
-	bh=zh8sgmiVYwsPHPzQ5BzKy0mT2GO6/gUNpR7OrkEKXmc=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=bEx6yOAA9aaAI0e4B03NLO6lCthP9Y1dv83JGXJDfAPuaS0uyFP/6PRA7p291ahp9w/wuwWrFDJ8NvJzVuMu98264f7nvBFDaSFY8q6w0lhesP2bIYnpCOqfbVsO9nyIq5yEhBEr3eOKuDWuVkFej2jggxwFbftxj07nG0M2EZs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=f6cJkofO; arc=fail smtp.client-ip=40.107.255.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9968E612D3
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 10:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713780470; cv=none; b=pOZS2nb4LpHljKNi/TuYX6v0YKEK+RobH9Y5O+EL1lwy8oYqnnftCiUQAUMQO3dj3Ef4fHeHzEv3LgmbMhVV4U0SxrlALcqPbGGbgTYQZaaOszEh4sLpMqFDg7e8EesdR7Pact5px2KkAqfXKwWKigsjkp7FQipKE4BVJ0KWVAg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713780470; c=relaxed/simple;
+	bh=5q/GaamZ7s9hHsEsIGZ+6CewGe4p2uwB8m1F3U2AuDU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Ejh9peEj1AjrlvFx3dWD8k0MtIyyYoIBfAjw7cKqXhzd9yza6zj4kayLlSCJ6zUCeNKeRpPdUFzLkhDWn3rMWhXchdHGhS3wmvRMvRZ/pOIftbIKWdgTtwYxMJrFiHcvOhDdQhBHUv8vY6Cn+ilnSNq4E6i/VUuiT06Ox9341F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ghw0KeRe; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="f6cJkofO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RjaQyNAMu7YoIl0iM4/mXCfpz/3HIJOfBdyueqXH1qmBFgnywoQvIffxjqlWYrJJ3UjuFbm/u7ZAXtgeiLh5pcAkQzpDyu5LoG87lfNfJzJwLJNQ3wf/zvjHOxXgNKy+e3AiQlN5TserxDoELrDA0lbkKnRQBkBC6ESPJv4pjmJKtmzUEwZflNKGl9NF//HZ6Gz5FgpMUvdM6ba1xYqU7U/fTy7hUWEQrnjkWwgVJA1DFakh4lLcA3TEd/gfOb/9ox2VhWO7AFPn1dy9ib6fwBFQUhs2CqfiaEvZjm3/F6R/1K+T5jUX71NDSUdOJ+Y+rMnozbY65BXsn+AeP5n5yw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ihY3yBrqrqDnBnJCg28J+tIaZKQhbxqHnzslFW/KQOI=;
- b=mt4J+FklPgf3LqewaOD8BqktbwMPsR2N4P47mm7q3Od3au5QZkpw2/u5fGSX9pIYL8htypMHkp5ZGYrf8uviX5xWTOo1YDrZjWSytkGBZP9202D66a9qlvCr54x25DBwSc+DNjGkcsRS3e0JJ95nY+UBpYqCfFhqKnfJNQcc0sT/JKbi+2DWDBIJ6eo0gEan+NyXfxPWUu0cfgulZlkpLIm4fZv4spHNoVuqV0z1nWxMaoAq0lTobKeDdZAL1OXD3xaIZEHWvoAbH1ndRN9o5CuJcaCRSP3+Af+EJ9D7poFs+JTT9JNlyw0VmQdzPe3MkxgGxueAGre5jb8kF1qEsw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ihY3yBrqrqDnBnJCg28J+tIaZKQhbxqHnzslFW/KQOI=;
- b=f6cJkofOzw5dMaqV81XHmuaefyxrcvJM37LMUB7HK1mFwaD+GoMpFGZErWhrSubJPUn7CrzPXLqlWKZy77dkuPX5vqs6m7I7RSBa++DubS/fCc3FYVVtkuR0R8zGF16X705+ONAZjEOqRJh3mJpB6cZl5fTYsVfT8UU7LcjtVC2pMsFxOCFmOPKUAgJ1sH+kUsmwDfqoDPXVk2MThZqyalhTFm+dMy43aKNfz+xR/HC4eqa36SfILz0HNCm46U81nVbDwmAd+pCWYVZLHmVv6wlv16BcB7VHM5ha0Wtr/D+0ptpHDrzqkcoTqmTSFofHHpuLT5oA4gxqgsj1G60tBg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from TYSPR06MB6411.apcprd06.prod.outlook.com (2603:1096:400:42a::11)
- by SI2PR06MB5116.apcprd06.prod.outlook.com (2603:1096:4:1ab::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Mon, 22 Apr
- 2024 10:06:19 +0000
-Received: from TYSPR06MB6411.apcprd06.prod.outlook.com
- ([fe80::af33:ff9c:cf31:45e9]) by TYSPR06MB6411.apcprd06.prod.outlook.com
- ([fe80::af33:ff9c:cf31:45e9%3]) with mapi id 15.20.7472.044; Mon, 22 Apr 2024
- 10:06:19 +0000
-From: Yang Yang <yang.yang@vivo.com>
-To: Alasdair Kergon <agk@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>,
-	Mikulas Patocka <mpatocka@redhat.com>,
-	dm-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Yang Yang <yang.yang@vivo.com>
-Subject: [RFC PATCH] dm: Avoid sending redundant empty flush bios to the same block device
-Date: Mon, 22 Apr 2024 18:05:40 +0800
-Message-Id: <20240422100540.2213-1-yang.yang@vivo.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR01CA0046.apcprd01.prod.exchangelabs.com
- (2603:1096:4:193::18) To TYSPR06MB6411.apcprd06.prod.outlook.com
- (2603:1096:400:42a::11)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ghw0KeRe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713780467;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=m2Y/SBW5hpSNevi0x4bWpQAenbaPtI7O72d9jhuXceo=;
+	b=ghw0KeRewgFskMbnEmJ+IVGJ2YP9qJ6NNJMu++vqlic+5zZjhbwhMm9xG/7BAweDZpBt2/
+	Qkm+HUvjIlmAuVK3CcxVUDDpGFQ/7fLcq+mPBlUD3OV/VSmuqUfWuZVjCIlQLDadfSii3D
+	HKEAEn8BzCMDKABi7uxyQuCoUt8rAd4=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-263-chTEEmj4OLyd2gmQup3Ygw-1; Mon, 22 Apr 2024 06:07:45 -0400
+X-MC-Unique: chTEEmj4OLyd2gmQup3Ygw-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2da2f30cb50so29930081fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 03:07:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713780464; x=1714385264;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m2Y/SBW5hpSNevi0x4bWpQAenbaPtI7O72d9jhuXceo=;
+        b=Ut/gaRFOdnu7Mdh6u85k77j3hB9kgVDsx70u9XtSxOWdp3qg81x4MZczQwDRzBUkp0
+         EJSsm1opOuCN9lrfwhfxIY+24kRoSx/aRkhJvsa+KILZPWFCQLWiQRvyFQkgaKguibcA
+         /3fYRRq94RLYNsBJFeZoIOdpBpDPJI6XpxZg8YRQ8pF32G7TxCtEoGIQVOBPQbhtr+KX
+         VYVOKCQpwnEgRrfpGuM5GVmWz3Ns+2KfdEKW1UUzJOXRrIoRfBu0eIgd/prs8v/KO/0o
+         RcnG6dWceOpJm72gZIKF9n15g26NReja6Tt6I97L5VvXOMzfjF2GpEYENIU9NhFPMpgh
+         sgaw==
+X-Forwarded-Encrypted: i=1; AJvYcCX5Gy2Nr8B7apnfQqjgmjVbXuK344kw3bsyuPjY5kgGEzbuEqOEmOFz8CL78x1y3/UHtgb6+iowsB8TCV5Ru19SLLWYTTwpZpqUf28f
+X-Gm-Message-State: AOJu0YzVUeORx+jb4oN3UpH+IpjwiWtoLD+GlV14GTsp3ecfDujo5NPW
+	1m91BmJwD+RcFr75BOgmCWTOOMvKSyi1xM0GtR1550BXeUOm8kyVi+TvSvW7MJO2WD6O0BxAQJ7
+	OLL5Ez0tuHIEvRhs/qe9ydyoqXvP/7EEGAQWCJZ4mxVfW3nJfVRIe8rIGK+LhmQ==
+X-Received: by 2002:a2e:9e0c:0:b0:2d8:dd28:8748 with SMTP id e12-20020a2e9e0c000000b002d8dd288748mr7076246ljk.1.1713780464351;
+        Mon, 22 Apr 2024 03:07:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGd8lzgTXNkLNC5BpuiPeU09nNG1JGfuCGaxcpLNWwO5m1CEwJJ0zsFpGA9Bk+ba1iziJs4iA==
+X-Received: by 2002:a2e:9e0c:0:b0:2d8:dd28:8748 with SMTP id e12-20020a2e9e0c000000b002d8dd288748mr7076226ljk.1.1713780463870;
+        Mon, 22 Apr 2024 03:07:43 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c739:600:d2fb:3a8a:9944:7910? (p200300cbc7390600d2fb3a8a99447910.dip0.t-ipconnect.de. [2003:cb:c739:600:d2fb:3a8a:9944:7910])
+        by smtp.gmail.com with ESMTPSA id v11-20020a05600c470b00b0041a963bf2cdsm25306wmo.36.2024.04.22.03.07.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Apr 2024 03:07:43 -0700 (PDT)
+Message-ID: <71cf84d4-77d2-42d7-a649-b67497b171f6@redhat.com>
+Date: Mon, 22 Apr 2024 12:07:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYSPR06MB6411:EE_|SI2PR06MB5116:EE_
-X-MS-Office365-Filtering-Correlation-Id: ad5b6b13-9915-4321-e6aa-08dc62b3daf1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?v9OpQw4Nu1jjrsAa7K+EB1CLU5519GwlsyXEfSJpdJy3BQ0FWgCe4NImXwgZ?=
- =?us-ascii?Q?R0wRTQkU7cY0pGVnsc3SzpidNJZz/SAJWKSy75w1FL/O5lEZyGB+6DPQHHZ/?=
- =?us-ascii?Q?0+R8Y9+Av6rugebokzNR2xGLtbv8L+Gga2RZ8MuRMnUwloUXMhj53lFzFlrG?=
- =?us-ascii?Q?f1Ql3ltLp4gl+dda1timFABmBGUzoMhR83Cfg1zM56Z0JF7U/AJxSUhHn5iN?=
- =?us-ascii?Q?FibgjoXJpGi53E2am/E+rYCzqq80/VeF11PgyWhCGAQrT4QftGzWK+XK/V8s?=
- =?us-ascii?Q?RSp22vCgeVzQjnqpSBc27l870c8Paw9HPj6TJiPCF1DHkLnKj3V3DVBmNyKa?=
- =?us-ascii?Q?Y65QHntJ8kSLmZ90sg/P9ExeUWSpmI6pCKjet+H/ny/hxi8CBq9bptzuruhu?=
- =?us-ascii?Q?JdYloi7zc31gCOW6z3EigeVBpa+OYri3thaXA+SEitHOGudf14+VLdI6BQ9e?=
- =?us-ascii?Q?040/2oW0IJDiZUXyWYxm/yijugzf7ZqCOpZDBmiSpboaWL7dw/lzVoKZsTHI?=
- =?us-ascii?Q?8n6dmkL9RW4M8t5T+25VURS/rVkSa8wQasN1ncDWk6zdOkH/TcsodNMfJJSM?=
- =?us-ascii?Q?FKXEdxexmX88ksJva+qoTOLIfGiegyy8pACmSAGCT9zceOjJ/Et4S/Fz1GN7?=
- =?us-ascii?Q?iognsE9bGKzF4Z3jwik/nGf/vJTQgFynn4R9l19E2LLk6Qy+mqRurfHl/oII?=
- =?us-ascii?Q?EEittmmL2Q/vbQ+sH+Y7nf4P9AWtC6qK4ej0qenfT0s8tPRoIVYPtWDqOfV0?=
- =?us-ascii?Q?JEv7Her2KZhgJx40PCM8AsFq7tAX0pThlHhKCjMLJIFdm0fxYiaM0059Tw33?=
- =?us-ascii?Q?WFN9E2A6jSaOaYDotk6p2fqCjznyL7tcA9N4icmj61htU4XLmcPI3Sd6iZFE?=
- =?us-ascii?Q?uJC9L+v2hnJGx2gIWSy9sI5cQQF7XfnvE4iQkJdIndSRPXjCtR2DIFtu7ziK?=
- =?us-ascii?Q?OdBizwv3UMYl4+wm1+Tw3o/m2zeWGa+oCJuMuMfdEdKjgL87lx3MzrJo4JJ4?=
- =?us-ascii?Q?tj7hMU3r1XY1e0fNabZ02yxFIel4O5YCCSRocdorxgDFMxP8+bL8vX8XIuoo?=
- =?us-ascii?Q?3j57zX3vp4rAshIi/0eMhlTdnrwtcuQb6lMk7C9m+o4FBJgljtYxjgwZthVg?=
- =?us-ascii?Q?z+sFa4m88x7ro9dvIdVsjbwqdJ7lDC3ZVe6iyqxadBjeTypEn8R5vYwn5qM2?=
- =?us-ascii?Q?a0E1IrCQ8LHnHywGPJR8ayJOVLMAnEJxifgWPYsCSMZBHeLevAbjvvFlrpJT?=
- =?us-ascii?Q?FALRRwjYjSmlXbkAa/YeSUXXtvN0qMyFyuq47ZXQ8ATzpEm1UcFqgZBDcT+Y?=
- =?us-ascii?Q?RfgV9jjVOz5osEXTV2Xl4CEVlmJERVwPOYRUQ3CQbxgZ3g=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYSPR06MB6411.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(52116005)(1800799015)(366007)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jtCXRhi1svph1waMulrcjRAdVoqDiyFA27Gqmgi4DStVDRt9Olw3VPqrtDnl?=
- =?us-ascii?Q?fAfqsohPEDENlFF2WZj201lkK0vhlbGiWtUi/2feHYabDa700L2FfeuZLR7W?=
- =?us-ascii?Q?+Fl/i51MNss2tEQhRYZYtFgfa5hJeDvUIPt85UQ8zHSUQpf6vz3Xr9K9AfzF?=
- =?us-ascii?Q?dOk3lsXptlrGZ/5a6DFnpxxQSUjJDgYAzgfQW7BN7qwxUTyNm7tsprSQ5Zng?=
- =?us-ascii?Q?gkC682PzTKgb3BhwbReEvylBoeu0qCcSjgmJ1G8OABI6XJ+JfymHOqF0SJlb?=
- =?us-ascii?Q?1FlfnhsgT28OOxzpS2ibjUOUcsDXZY7orXeckyHuBNZ2OTlfBY/1RIae4yYt?=
- =?us-ascii?Q?bpFx6L8ghLo4EK4mFFJN5IDSlMJx0kpS/etgvoLRr8SPUgTvVg96rM28L9eY?=
- =?us-ascii?Q?j8mAgzPJhnD2A9kw9PTet8ds3tqurcFZ6l2WjeJEu+x9wxMfI60uCfW46g5D?=
- =?us-ascii?Q?IA3HEl7t3CXuHiSWxZM7tOkRkvgYc6auaqXyuWaPycYtQg4i2MCpVVriTQfa?=
- =?us-ascii?Q?xeMf33TbbmJKgGvJfodD+Ju0T9xvz9KbLUR+URuXKORVpz8jGthZtjW4mvLj?=
- =?us-ascii?Q?zn5pUN9D1FbzoonuNYoIDNs8D27fUkos6M905xlmgU92ptkDccECLszP8w8P?=
- =?us-ascii?Q?py3QDk37XAWRsM/crdiiwjusGhMUuu+tGb9RE1B8LhRkvzRwzCWwHAzalsl8?=
- =?us-ascii?Q?TgB3j7HREZwRCTaa4u4qCMGGM2y4jMq70e5Bmu+MjudSltp6hRUsXSweSMsT?=
- =?us-ascii?Q?DNuJRjLL7KqCAypiM41sYVw4NKJvRGUYWvvPVZHX1mKbKtYCniYlu3TaYDko?=
- =?us-ascii?Q?jO6XMyMEv46Ex6ZmM2xL0pnsKdhQeL9lX16REUY6osXfd7GeAlxliZuq29Gy?=
- =?us-ascii?Q?QTPnOVUxz2aqdQgyRGKACYQS4DF0Rzdt6HwBb+SS7/aSj5M6tr/HukXHF1e3?=
- =?us-ascii?Q?C38YcnsvcW0Xe7BKOHdsPB1XR3PV6NSAoqAyzvS7gxGrpO4kMStBKdDsW1Cs?=
- =?us-ascii?Q?7Hy9M24U63hNCRUFcEgfazUXdeCdy9HiaTlsi3I3J8wcGMwNF15Eu9bFURKy?=
- =?us-ascii?Q?k7djhUDWbMTW4e/r20EunILrYrV4Z4M9uJp1vOdK2QsCOqZdSbsD7rPJQTt5?=
- =?us-ascii?Q?Z7h4D4x7njDrEDBIgV3U567OeK0GL0JAX/1nM4unWBzhu5V4ocLNjr06GYgJ?=
- =?us-ascii?Q?Y7e3b2pG05xPyntClgGcThCGHy/cVr/+zKhRjtwk2dqN+fdWye8kXEt8PqvS?=
- =?us-ascii?Q?RMvtWNjP3dA6hOUk+G/aCxGQwlz7/7i2L1Q8ljQXaU4+rfSAQU/zd2VJXHDe?=
- =?us-ascii?Q?bvg9mqsDp5eBgsvlle1XRL/eR5t9PZLbWdtYBGmQe6NN6NgGvGDmrBhJ6Nk3?=
- =?us-ascii?Q?vJB9+XWwOiosGFiOxShQy/2kwNZhqdzB4fgftdetI2WNyadBZJoeggosXKiY?=
- =?us-ascii?Q?qV5AT+Mj4QonQDoyRZiliUuzW7kdQ0w1fPjURbm22qY6Kbb9BzQo7RA0e0UY?=
- =?us-ascii?Q?ePdzq2LAFr9UJS7LY7tfFSKxKvCmPFJUOV1ajl+xNpEOW8LS1u+XGLZNZ851?=
- =?us-ascii?Q?kxTXIw1Tn8WyHYfTXwItt8OvOCB4I98LgfWy3oxJ?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad5b6b13-9915-4321-e6aa-08dc62b3daf1
-X-MS-Exchange-CrossTenant-AuthSource: TYSPR06MB6411.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2024 10:06:19.3425
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J4rCr9U+c9Y65GdfysmbIH5kEyp39oHTW+s1GG8ocWxAvLUTtf8FfrpUsJVoLUL7yp/2883GHZ6K1vIe40bmBg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB5116
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [mm?] WARNING in __page_table_check_ptes_set
+To: syzbot <syzbot+d8426b591c36b21c750e@syzkaller.appspotmail.com>,
+ akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ pasha.tatashin@soleen.com, syzkaller-bugs@googlegroups.com
+References: <000000000000ca4df20616a0fe16@google.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <000000000000ca4df20616a0fe16@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-__send_empty_flush() sends empty flush bios to every target in the
-dm_table. However, if the num_targets exceeds the number of block
-devices in the dm_table's device list, it could lead to multiple
-invocations of __send_duplicate_bios() for the same block device.
-Typically, a single thread sending numerous empty flush bios to one
-block device is redundant, as these bios are likely to be merged by the
-flush state machine. In scenarios where num_targets significantly
-outweighs the number of block devices, such behavior may result in a
-noteworthy decrease in performance.
+On 21.04.24 22:16, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    4eab35893071 Add linux-next specific files for 20240417
+> git tree:       linux-next
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=1727a61b180000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=27920e47287645ff
+> dashboard link: https://syzkaller.appspot.com/bug?extid=d8426b591c36b21c750e
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=156da22d180000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=163dfec7180000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/9f7d6c097fb4/disk-4eab3589.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/287b16352982/vmlinux-4eab3589.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/23839c65c573/bzImage-4eab3589.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+d8426b591c36b21c750e@syzkaller.appspotmail.com
+> 
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 5084 at mm/page_table_check.c:199 __page_table_check_pte mm/page_table_check.c:199 [inline]
+> WARNING: CPU: 0 PID: 5084 at mm/page_table_check.c:199 __page_table_check_ptes_set+0x1db/0x420 
 
-This issue can be reproduced using this command line:
-  for i in {0..1023}; do
-    echo $((8000*$i)) 8000 linear /dev/sda2 $((16384*$i))
-  done | dmsetup create example
+I think this is
 
-With this fix, a random write with fsync workload executed with the
-following fio command:
+if (pte_present(pte) && pte_uffd_wp(pte))
+	WARN_ON_ONCE(pte_write(pte));
 
-  fio --group_reporting --name=benchmark --filename=/dev/mapper/example \
-      --ioengine=sync --invalidate=1 --numjobs=16 --rw=randwrite \
-      --blocksize=4k --size=2G --time_based --runtime=30 --fdatasync=1
+mm/page_table_check.c:213
+> Modules linked in:
+> CPU: 0 PID: 5084 Comm: syz-executor382 Not tainted 6.9.0-rc4-next-20240417-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+> RIP: 0010:__page_table_check_pte mm/page_table_check.c:199 [inline]
+> RIP: 0010:__page_table_check_ptes_set+0x1db/0x420 mm/page_table_check.c:213
+> Code: 48 8b 7c 24 40 48 c7 c6 80 19 46 8e e8 ee df 8e ff 41 83 fc 1d 74 18 41 83 fc 1a 75 1d e8 5d da 8e ff eb 10 e8 56 da 8e ff 90 <0f> 0b 90 eb 10 e8 4b da 8e ff 90 0f 0b 90 eb 05 e8 40 da 8e ff 48
+> RSP: 0018:ffffc9000366f740 EFLAGS: 00010293
+> RAX: ffffffff8207833a RBX: ffffc9000366f7c0 RCX: ffff888022af3c00
+> RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000000
+> RBP: ffffc9000366f830 R08: ffffffff820782af R09: 1ffffd40000a6a10
+> R10: dffffc0000000000 R11: fffff940000a6a11 R12: 0000000000000000
+> R13: 0000000014d42c67 R14: 0000000000000001 R15: 0000000000000000
+> FS:  0000555567f79380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000000000066c7e0 CR3: 0000000078cb0000 CR4: 00000000003506f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   <TASK>
+>   page_table_check_ptes_set include/linux/page_table_check.h:74 [inline]
+>   set_ptes include/linux/pgtable.h:267 [inline]
+>   __ptep_modify_prot_commit include/linux/pgtable.h:1269 [inline]
+>   ptep_modify_prot_commit include/linux/pgtable.h:1302 [inline]
+>   change_pte_range mm/mprotect.c:194 [inline]
+>   change_pmd_range mm/mprotect.c:424 [inline]
+>   change_pud_range mm/mprotect.c:457 [inline]
+>   change_p4d_range mm/mprotect.c:480 [inline]
+>   change_protection_range mm/mprotect.c:508 [inline]
+>   change_protection+0x2770/0x3cc0 mm/mprotect.c:542
+>   mprotect_fixup+0x740/0xa90 mm/mprotect.c:655
+>   do_mprotect_pkey+0x90d/0xe00 mm/mprotect.c:820
+>   __do_sys_mprotect mm/mprotect.c:841 [inline]
+>   __se_sys_mprotect mm/mprotect.c:838 [inline]
+>   __x64_sys_mprotect+0x80/0x90 mm/mprotect.c:838
+>   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>   do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+>   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f45514bf429
+> Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007ffe52191598 EFLAGS: 00000246 ORIG_RAX: 000000000000000a
+> RAX: ffffffffffffffda RBX: 00007ffe52191768 RCX: 00007f45514bf429
+> RDX: 000000000000000f RSI: 0000000000004000 RDI: 0000000020ffc000
+> RBP: 00007f4551532610 R08: 00007ffe52191768 R09: 00007ffe52191768
+> R10: 00007ffe52191768 R11: 0000000000000246 R12: 0000000000000001
+> R13: 00007ffe52191758 R14: 0000000000000001 R15: 0000000000000001
+>   </TASK>
 
-results in an increase from 857 KB/s to 30.8 MB/s of the write
-throughput (3580% increase).
+Did we find a real issue that involves mprotect()?
 
-Signed-off-by: Yang Yang <yang.yang@vivo.com>
----
- drivers/md/dm-core.h          |  1 +
- drivers/md/dm-table.c         |  7 +++++
- drivers/md/dm.c               | 59 +++++++++++++++++++++++++++++++++++
- include/linux/device-mapper.h |  6 ++++
- 4 files changed, 73 insertions(+)
+At least can_change_pte_writable() should always return "false" for 
+userfaultfd_pte_wp().
 
-diff --git a/drivers/md/dm-core.h b/drivers/md/dm-core.h
-index e6757a30dcca..7e3f2168289f 100644
---- a/drivers/md/dm-core.h
-+++ b/drivers/md/dm-core.h
-@@ -217,6 +217,7 @@ struct dm_table {
- 	/* a list of devices used by this table */
- 	struct list_head devices;
- 	struct rw_semaphore devices_lock;
-+	unsigned short num_devices;
- 
- 	/* events get handed up using this callback */
- 	void (*event_fn)(void *data);
-diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index 41f1d731ae5a..ddc60e498afb 100644
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -2133,6 +2133,8 @@ void dm_table_postsuspend_targets(struct dm_table *t)
- 
- int dm_table_resume_targets(struct dm_table *t)
- {
-+	struct list_head *devices = dm_table_get_devices(t);
-+	struct dm_dev_internal *dd;
- 	unsigned int i;
- 	int r = 0;
- 
-@@ -2159,6 +2161,11 @@ int dm_table_resume_targets(struct dm_table *t)
- 			ti->type->resume(ti);
- 	}
- 
-+	t->num_devices = 0;
-+
-+	list_for_each_entry(dd, devices, list)
-+		dd->dm_dev->index = ++(t->num_devices);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 56aa2a8b9d71..7297235291f6 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -48,6 +48,8 @@
-  */
- #define REQ_DM_POLL_LIST	REQ_DRV
- 
-+#define DM_MAX_TABLE_DEVICES	1024
-+
- static const char *_name = DM_NAME;
- 
- static unsigned int major;
-@@ -1543,10 +1545,38 @@ static unsigned int __send_duplicate_bios(struct clone_info *ci, struct dm_targe
- 	return ret;
- }
- 
-+static inline bool has_redundant_flush(struct dm_table *t,
-+		unsigned long **bitmap)
-+{
-+	if (t->num_devices < t->num_targets) {
-+		/* Add a limit here to prevent excessive memory usage for bitmaps */
-+		if (t->num_devices >= DM_MAX_TABLE_DEVICES)
-+			return false;
-+
-+		/* dm_dev's index starts from 1, so need plus 1 here */
-+		*bitmap = bitmap_zalloc(t->num_devices + 1, GFP_KERNEL);
-+		if (*bitmap)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static int dm_get_dev_index(struct dm_target *ti, struct dm_dev *dev,
-+				     sector_t start, sector_t len, void *data)
-+{
-+	unsigned short *index = data;
-+	*index = dev->index;
-+	return 0;
-+}
-+
- static void __send_empty_flush(struct clone_info *ci)
- {
- 	struct dm_table *t = ci->map;
- 	struct bio flush_bio;
-+	unsigned long *handled_map;
-+	unsigned int nr_handled = 0;
-+	bool check = has_redundant_flush(t, &handled_map);
- 
- 	/*
- 	 * Use an on-stack bio for this, it's safe since we don't
-@@ -1562,17 +1592,46 @@ static void __send_empty_flush(struct clone_info *ci)
- 
- 	for (unsigned int i = 0; i < t->num_targets; i++) {
- 		unsigned int bios;
-+		unsigned short index = 0;
- 		struct dm_target *ti = dm_table_get_target(t, i);
- 
- 		if (unlikely(ti->num_flush_bios == 0))
- 			continue;
- 
-+		/*
-+		 * If the num_targets is greater than the number of block devices
-+		 * in the dm_table's devices list, __send_empty_flush() might
-+		 * invoke __send_duplicate_bios() multiple times for the same
-+		 * block device. This could lead to a substantial decrease in
-+		 * performance when num_targets significantly exceeds the number
-+		 * of block devices.
-+		 * Ensure that __send_duplicate_bios() is only called once for
-+		 * each block device.
-+		 */
-+		if (check) {
-+			if (nr_handled == t->num_devices)
-+				break;
-+
-+			if (ti->type->iterate_devices)
-+				ti->type->iterate_devices(ti, dm_get_dev_index, &index);
-+
-+			if (index > 0) {
-+				if (__test_and_set_bit(index, handled_map))
-+					continue;
-+				else
-+					nr_handled++;
-+			}
-+		}
-+
- 		atomic_add(ti->num_flush_bios, &ci->io->io_count);
- 		bios = __send_duplicate_bios(ci, ti, ti->num_flush_bios,
- 					     NULL, GFP_NOWAIT);
- 		atomic_sub(ti->num_flush_bios - bios, &ci->io->io_count);
- 	}
- 
-+	if (check)
-+		bitmap_free(handled_map);
-+
- 	/*
- 	 * alloc_io() takes one extra reference for submission, so the
- 	 * reference won't reach 0 without the following subtraction
-diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
-index 82b2195efaca..4a54b4f0a609 100644
---- a/include/linux/device-mapper.h
-+++ b/include/linux/device-mapper.h
-@@ -169,6 +169,12 @@ struct dm_dev {
- 	struct dax_device *dax_dev;
- 	blk_mode_t mode;
- 	char name[16];
-+
-+	/*
-+	 * sequential number for each dm_dev in dm_table's devices list,
-+	 * start from 1
-+	 */
-+	unsigned short index;
- };
- 
- /*
+Do we maybe have a uffd-wp PTE outside of a UFFD_WP VMA?
+
+Or was the PTE already writable and we only detect it now as we call 
+mprotect()? (missed to detect it earlier?)
+
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+> 
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+> 
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+> 
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+> 
+> If you want to undo deduplication, reply with:
+> #syz undup
+> 
+
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
