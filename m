@@ -1,157 +1,111 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37C8150999;
-	Mon, 22 Apr 2024 14:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DE1150999
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 14:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713794947; cv=none; b=VWMGisWlvuJuVwK9yR5J/G4tEfHR+nw4jQw2l3XJ56rXSMQpMZkP3Fj3vDuTdFU+kopsmeedN39mH1fGifVURau919cogYRxpk459gPL4f6B2OzVXJFOE+PczhCT3u910d0mqKBKCnJDFDPPwUtQyQcqyrr9hU5ms9sOhkJ6rAg=
+	t=1713795051; cv=none; b=NKgLFQgjVcfk1exXjOogqc3PDx0aVB9H8oabHCpu03XM2ouKv8nUQdc1A292Ju+wwq+y1DadQwjKED3HoH5K4M/hmMyqxmvmMyFXbHjMla9bnbnq49P7eYZ6Ei97WjkiDvLv1YgJReaAIcOa6MVELXuy6XvnwWTEjtD8/ZOLRQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713794947; c=relaxed/simple;
-	bh=EyNcns5pQgclKYHILemdW7rew+42rQDhCJV9u1hRB3Y=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eRyJcO559R3vpvq1nnAnu1+llC42w5mm18guHkAAkcGUr5EZOjf/6pIzwJCrgQv/Bgc3mrP6LSrMUfY2sUUNxVOjSQl9UDSjIaj0x/dlhSOsYRAlshN3AIPUwqQUHO1/IAN43WY65IXbX6MfZ9tEgAgoIKuxxLm5oKsyd2QrC6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VNRQ14g22zNspT;
-	Mon, 22 Apr 2024 21:47:21 +0800 (CST)
-Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0447218007C;
-	Mon, 22 Apr 2024 21:49:51 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.2) by
- kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 22 Apr 2024 21:49:50 +0800
-From: Jijie Shao <shaojijie@huawei.com>
-To: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>
-CC: <shenjian15@huawei.com>, <wangjie125@huawei.com>,
-	<liuyonglong@huawei.com>, <shaojijie@huawei.com>, <chenhao418@huawei.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net 2/7] net: hns3: change type of numa_node_mask as nodemask_t
-Date: Mon, 22 Apr 2024 21:43:22 +0800
-Message-ID: <20240422134327.3160587-3-shaojijie@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240422134327.3160587-1-shaojijie@huawei.com>
-References: <20240422134327.3160587-1-shaojijie@huawei.com>
+	s=arc-20240116; t=1713795051; c=relaxed/simple;
+	bh=zYVHZ/S1XYTcfZgmpvuPgVe4dQIPKZyJvLnKnJPJEkA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RO3nYyP9Wx/3n07QRcGhD1Id4LGiTuG2glz9KomkIQSdNc+8Qw0LqOK2G8oWiQ9QPnLYCpVFwxb5FSEC9M6YW1kLaF0aBjFy912fNSgPulGt/dRmpy4teGtlm+OZ69AnTHyNh/URk5HIPRzm3twWns3JOTzi+eKwxp1Q+4wDflY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QGu/lL7h; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QGu/lL7h"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-434b7ab085fso42220591cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:10:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713795047; x=1714399847; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BgjTo5Gsy0Vsq9HceSa7BTmtZ4tw4e+SgvrPUoLWsZY=;
+        b=QGu/lL7hnirmVyeHycmZWX4ioJ8Q/MU9VkQdiFsZqkB0sFIxz6TQYS7vRi9teIj4qR
+         ywNrtuYp4zvmvc1ur3IDHLb9BzAXKhriLDr1JuLQdq+8sAUZ+ZSzlH6KQ6dXHM88VGjB
+         73S71P1lIlkKKooBV7+YkWoD0Qc1VbSSDfcxE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713795047; x=1714399847;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BgjTo5Gsy0Vsq9HceSa7BTmtZ4tw4e+SgvrPUoLWsZY=;
+        b=njDA6KTA0q+OTKvarGV1hdoNRq8MMTjVlsPoW+4b9dudlhpCHDTjJ3KsAoDx4ZO+Ke
+         mKMsRGnxN/GBj1deqprEEapKl8oBpzbYb0RWFe5E9GhRSQOJ+vwnLcNd09bVRJZLMTsW
+         HYCiGLOGbPDNYEiSIL0y2BpOEu6CAu+91RhcYA/nSTcuBeklU9SqzsWwCxSreo95c4au
+         LgGlvLfAks+HWtoRqztGU6H4Rh8Z/WRUz2sQofazck7/pgclvVXdRTtlbTkSQgPzMQh0
+         IihxLe+xKFUysfYpSLmAUlZLXHQbebDR7Pfe61n55dghjcobAH6PdsfG/oPt2wRMtIo5
+         t6Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2FXcl0SUhWDXtPQXXSKiK5/tGR5MhqDimsKbVJk6d3FIXu5ZdOK446XUfNGPcf5qGOLp3Jyf8M/mLs7NNONMhs1bT/uKiDa3Hrwa5
+X-Gm-Message-State: AOJu0Yy46C0aYTRBXkhr3YuDG2bQ+PYfgwUrYPpQxxTTm7MkKskwf/Hq
+	g+IjFvnL4f9EGxCDMOU2Ht94W5IVOjQncYWL3oM9bqnf2r09myt7ZhVgfkvw4s2vwdYl417l1WA
+	=
+X-Google-Smtp-Source: AGHT+IE4lvicMccpTcZpchrDFdEHt8FtVQpCgRTZEyuLPwXwYdIhSkGlJRgA/FgNG1Via7fZlUTYbQ==
+X-Received: by 2002:ac8:5a0c:0:b0:439:8e4d:356b with SMTP id n12-20020ac85a0c000000b004398e4d356bmr8402259qta.14.1713795046993;
+        Mon, 22 Apr 2024 07:10:46 -0700 (PDT)
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com. [209.85.160.178])
+        by smtp.gmail.com with ESMTPSA id f12-20020ac8498c000000b0043496744c5dsm4286545qtq.52.2024.04.22.07.10.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Apr 2024 07:10:46 -0700 (PDT)
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-439b1c72676so348331cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:10:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWPoNYo80EE/OBedROzEvtQE97a03QlfoONntmxxQx2PILy7NzdcKXHKyS5vaEJYxejuh9BtoIc41mIdzF7GkEtaltiaDJ8hLZnGzp+
+X-Received: by 2002:a05:622a:a081:b0:437:b429:c953 with SMTP id
+ jv1-20020a05622aa08100b00437b429c953mr405598qtb.14.1713795045405; Mon, 22 Apr
+ 2024 07:10:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600007.china.huawei.com (7.193.23.208)
+References: <20240422060811.670693-1-xuxinxiong@huaqin.corp-partner.google.com>
+In-Reply-To: <20240422060811.670693-1-xuxinxiong@huaqin.corp-partner.google.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 22 Apr 2024 07:10:29 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WRLLuOkCJeM6RdAb6xLN-cPH+hfWbOv9-LujB-WMGEFw@mail.gmail.com>
+Message-ID: <CAD=FV=WRLLuOkCJeM6RdAb6xLN-cPH+hfWbOv9-LujB-WMGEFw@mail.gmail.com>
+Subject: Re: [PATCH] drm/panel-edp: Add panel CSOT MNB601LS1-1
+To: Xuxin Xiong <xuxinxiong@huaqin.corp-partner.google.com>
+Cc: sam@ravnborg.org, neil.armstrong@linaro.org, daniel@ffwll.ch, 
+	hsinyi@google.com, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Peiyang Wang <wangpeiyang1@huawei.com>
+Hi,
 
-It provides nodemask_t to describe the numa node mask in kernel. To
-improve transportability, change the type of numa_node_mask as nodemask_t.
+On Sun, Apr 21, 2024 at 11:09=E2=80=AFPM Xuxin Xiong
+<xuxinxiong@huaqin.corp-partner.google.com> wrote:
+>
+> Add support for the following panel:
+> CSOT MNB601LS1-1
+>
+> Signed-off-by: Xuxin Xiong <xuxinxiong@huaqin.corp-partner.google.com>
+> ---
+>  drivers/gpu/drm/panel/panel-edp.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/pa=
+nel-edp.c
+> index d58f90bc48fb..5e0b1c94bc62 100644
+> --- a/drivers/gpu/drm/panel/panel-edp.c
+> +++ b/drivers/gpu/drm/panel/panel-edp.c
+> @@ -2036,6 +2036,8 @@ static const struct edp_panel_entry edp_panels[] =
+=3D {
+>
+>         EDP_PANEL_ENTRY('C', 'S', 'O', 0x1200, &delay_200_500_e50, "MNC20=
+7QS1-1"),
+>
+> +       EDP_PANEL_ENTRY('C', 'S', 'W', 0x1100, &delay_200_500_e80_d50, "M=
+NB601LS1-1"),
 
-Fixes: 38caee9d3ee8 ("net: hns3: Add support of the HNAE3 framework")
-Signed-off-by: Peiyang Wang <wangpeiyang1@huawei.com>
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hnae3.h               | 2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 6 ++++--
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h   | 2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 7 ++++---
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h | 2 +-
- 5 files changed, 11 insertions(+), 8 deletions(-)
+Are you positive that both this panel and the one above it (which you
+also added) are correct? You identified both of them as CSO panels but
+one has "CSO" and one has "CSW". Please double-check and let me know.
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index f19f1e1d1f9f..133c94646c21 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -897,7 +897,7 @@ struct hnae3_handle {
- 		struct hnae3_roce_private_info rinfo;
- 	};
- 
--	u32 numa_node_mask;	/* for multi-chip support */
-+	nodemask_t numa_node_mask; /* for multi-chip support */
- 
- 	enum hnae3_port_base_vlan_state port_base_vlan_state;
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index ff6a2ed23ddb..62ddce05fa2b 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -1766,7 +1766,8 @@ static int hclge_vport_setup(struct hclge_vport *vport, u16 num_tqps)
- 
- 	nic->pdev = hdev->pdev;
- 	nic->ae_algo = &ae_algo;
--	nic->numa_node_mask = hdev->numa_node_mask;
-+	bitmap_copy(nic->numa_node_mask.bits, hdev->numa_node_mask.bits,
-+		    MAX_NUMNODES);
- 	nic->kinfo.io_base = hdev->hw.hw.io_base;
- 
- 	ret = hclge_knic_setup(vport, num_tqps,
-@@ -2458,7 +2459,8 @@ static int hclge_init_roce_base_info(struct hclge_vport *vport)
- 
- 	roce->pdev = nic->pdev;
- 	roce->ae_algo = nic->ae_algo;
--	roce->numa_node_mask = nic->numa_node_mask;
-+	bitmap_copy(roce->numa_node_mask.bits, nic->numa_node_mask.bits,
-+		    MAX_NUMNODES);
- 
- 	return 0;
- }
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index e821dd2f1528..37527b847f2f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -891,7 +891,7 @@ struct hclge_dev {
- 
- 	u16 fdir_pf_filter_count; /* Num of guaranteed filters for this PF */
- 	u16 num_alloc_vport;		/* Num vports this driver supports */
--	u32 numa_node_mask;
-+	nodemask_t numa_node_mask;
- 	u16 rx_buf_len;
- 	u16 num_tx_desc;		/* desc num of per tx queue */
- 	u16 num_rx_desc;		/* desc num of per rx queue */
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index 0aa9beefd1c7..b57111252d07 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -412,7 +412,8 @@ static int hclgevf_set_handle_info(struct hclgevf_dev *hdev)
- 
- 	nic->ae_algo = &ae_algovf;
- 	nic->pdev = hdev->pdev;
--	nic->numa_node_mask = hdev->numa_node_mask;
-+	bitmap_copy(nic->numa_node_mask.bits, hdev->numa_node_mask.bits,
-+		    MAX_NUMNODES);
- 	nic->flags |= HNAE3_SUPPORT_VF;
- 	nic->kinfo.io_base = hdev->hw.hw.io_base;
- 
-@@ -2082,8 +2083,8 @@ static int hclgevf_init_roce_base_info(struct hclgevf_dev *hdev)
- 
- 	roce->pdev = nic->pdev;
- 	roce->ae_algo = nic->ae_algo;
--	roce->numa_node_mask = nic->numa_node_mask;
--
-+	bitmap_copy(roce->numa_node_mask.bits, nic->numa_node_mask.bits,
-+		    MAX_NUMNODES);
- 	return 0;
- }
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
-index a73f2bf3a56a..cccef3228461 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
-@@ -236,7 +236,7 @@ struct hclgevf_dev {
- 	u16 rss_size_max;	/* HW defined max RSS task queue */
- 
- 	u16 num_alloc_vport;	/* num vports this driver supports */
--	u32 numa_node_mask;
-+	nodemask_t numa_node_mask;
- 	u16 rx_buf_len;
- 	u16 num_tx_desc;	/* desc num of per tx queue */
- 	u16 num_rx_desc;	/* desc num of per rx queue */
--- 
-2.30.0
-
+-Doug
