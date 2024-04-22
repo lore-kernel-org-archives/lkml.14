@@ -1,121 +1,151 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C473FBA0;
-	Mon, 22 Apr 2024 06:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C275443ACE
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 06:24:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713767065; cv=none; b=n4nQg62HDgczViR6GeLlrSa1I/OQfL6/0jWwZNL+21F05+pKS2aQRW3j+Yt/+ozCrRo8xJbK+wiLXVzCN3loAQ3VsbtnhjIRRhB5oksg1zBRYbedFv59FSceKfoXxuHzh8r/AWHXRMUR36nCLNPSZqUMAFdg6yHDzwlv9dGC4Fs=
+	t=1713767066; cv=none; b=g7ADro3Ike8aXhs962wviOC+Kx3N+CDoUG70rhHF1d2jNkOClkBwU+kdUAnUnqBGGR9qYzqC85pD2B6QdsLhKFdKNRDJLhlLXUDQIgcxtpYlagSH7farJifeOvbwIbGZRpuPp1Y9oO2HjCm7fcAsOD12S31esCGsjOmH1K2ZOk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713767065; c=relaxed/simple;
-	bh=rrOViBBJsojVDyanVvalso2iEQYg5szP2F0RIMK8g64=;
-	h=Subject:Date:From:To:Cc:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S+bATITUai9cYHquyzjzXFlJZXExHLBlc3bzROexZGEWNuOpp9dXvzHsMz1dFsPE9j5EMfLLu3FQXbAcQkJdDgdNS9SHDCz/mPzrDn3JVfL5bPOnpMBvwCOTeMCEq7uz+nt2KY9jCqpeD7OWCRWUxxL2tVscOHmi5X12a/W64xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=mZzzk5R+; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=iqFMA+Aw reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1713767066; c=relaxed/simple;
+	bh=lq61WtOlYIOBoAAF9mgYkGC8E+tMVi57Ql/mXCqncQg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=IlsMB8nnOnDgvevKA4b+20WRCuDnUiksqnZpjJrxeCrMllKvtFdVcy3CEY894x71bVzIEN9mQKn4vdg8JB5p7Sv+HsTTClIaALpKosGN+RrtVSPucJmJAF2Rd7ZqIDBoUU+bxfDREtSXhKc5QsYlxrJicMr7MJB3cFIqROnMSOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LcaS7Aqb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="mZzzk5R+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="iqFMA+Aw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1713767062; x=1745303062;
-  h=date:from:to:cc:message-id:references:mime-version:
-   in-reply-to:subject;
-  bh=r+XvQYzy6Ph8/Uv8nnwgb09heFwJUgvhjSISPDnv/24=;
-  b=mZzzk5R+T+UbaTYYgGAWY7A8QQEqBxAW8RDH1Nin5rGndHTg1bHcZu67
-   BmiHVbehyww7Sy5480Q3HNiUvm/AEggkvcdMqJHyqdBfzEx8DU6FQTqJk
-   cfnjCXMz34dvFDVBIen8fXe/wKra1ERPS+ZMG9JZ1GDgiZjdfVbKTslTM
-   NBDKTKIVIN2oeGX4262VmVCNapWF0zZsFjChESyIKcFSW/IBBGCD3wGnE
-   gnCh7snRmo2S0ddAyUjltxWthvLrrq+uk/uzHX/11kBr3v3+p9U5/CE3f
-   bA4hBLACVZx2x8r21+arxspl0ru+RmZ46GiT9vuhPupS0UTzytN9q9qsv
-   A==;
-X-IronPort-AV: E=Sophos;i="6.07,220,1708383600"; 
-   d="scan'208";a="36531127"
-Subject: Re: Re: [PATCH v2] net: phy: marvell-88q2xxx: add support for Rev B1 and B2
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 22 Apr 2024 08:24:19 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E0F62160A90;
-	Mon, 22 Apr 2024 08:24:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1713767055;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=r+XvQYzy6Ph8/Uv8nnwgb09heFwJUgvhjSISPDnv/24=;
-	b=iqFMA+AwRSrbb9lzGdRFygud48xPGcj+st02VmodWAKPX5ipz/4IPly6RraG3G70COcyNx
-	GY+tSPx4BCQLxKaMKcEepWzIsKJq+jRC9z0OkfpnvYOkNKDdpen9uiYrn9hVdlj5r9Foou
-	RqVjyeXhCLY5KoxvgD8bDsmvavka9sr5k2Z8dOaqvXFJLI3fxApH1QiyVT3EgJIv35Tryb
-	dHJBDQibamNwSm2WYR4sAhcr97cmXhux0J2Hzm0Po9OdjiHtJewz/Oew50JErj7U4AMmub
-	QtP1b3AEoHcWvc6Y7GOM9NFnvmv/OZmRSruDxByr8IWzhAHBM00077eBv36Z2A==
-Date: Mon, 22 Apr 2024 08:24:07 +0200
-From: Gregor Herburger <gregor.herburger@ew.tq-group.com>
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Stefan Eichenberger <eichest@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux@ew.tq-group.com,
-	alexander.stein@ew.tq-group.com
-Message-ID: <ZiYCh4MbI9kly1mh@herburgerg-w2>
-References: <20240417-mv88q222x-revb1-b2-init-v2-1-7ef41f87722a@ew.tq-group.com>
- <20240418123155.GA248236@debian>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LcaS7Aqb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 544F8C113CC;
+	Mon, 22 Apr 2024 06:24:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713767066;
+	bh=lq61WtOlYIOBoAAF9mgYkGC8E+tMVi57Ql/mXCqncQg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LcaS7AqbEfyPuC8TTV8PfYy3fb2RB0Ta6U/sZx/YeksnX1Csf90pLAIQj1WICfcMG
+	 T7O83eJHF/K/jsbGu8B88bEhvF0MbHVNegVHPd42fgSSAIAUPR4yVIIf7kFynhmIdX
+	 5E4CXH3Ow6J0vDL0ZcqZPsiqQwAiR4tIHmBpWrj6I0syQUfYZT2BIfQd/+cK4VCea4
+	 Ork8W1606pr5MHSW5Jcm5apIpInaPqW0V5XhovqmTJmT7DgyDpkw+ZzGWls6jpjSdO
+	 JwcVBWV5HT6oXhBDzIOYdX1AAuSzYe5yJiSnMg6Hi73aAMc2rnlTsh2iI18q2kww2X
+	 WbDzcwwqKc4kQ==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH v2 2/4] f2fs: convert f2fs_read_single_page() to use folio
+Date: Mon, 22 Apr 2024 14:24:15 +0800
+Message-Id: <20240422062417.2421616-2-chao@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240422062417.2421616-1-chao@kernel.org>
+References: <20240422062417.2421616-1-chao@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240418123155.GA248236@debian>
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 18, 2024 at 02:31:55PM +0200, Dimitri Fedrau wrote:
-> > +static const struct mmd_val mv88q222x_revb1_revb2_init_seq1[] = {
-> > +	{ MDIO_MMD_PCS, 0xFE07, 0x125A },
-> > +	{ MDIO_MMD_PCS, 0xFE09, 0x1288 },
-> > +	{ MDIO_MMD_PCS, 0xFE08, 0x2588 },
-> > +	{ MDIO_MMD_PCS, 0xFE72, 0x042C },
-> > +	{ MDIO_MMD_PCS, 0xFFE4, 0x0071 },
-> > +	{ MDIO_MMD_PCS, 0xFFE4, 0x0001 },
-> > +	{ MDIO_MMD_PCS, 0xFE1B, 0x0048 },
-> > +	{ MDIO_MMD_PMAPMD, 0x0000, 0x0000 },
-> > +	{ MDIO_MMD_PCS, 0x0000, 0x0000 },
-> > +	{ MDIO_MMD_PCS, 0xFFDB, 0xFC10 },
-> > +	{ MDIO_MMD_PCS, 0xFE1B, 0x58 },
-> > +	{ MDIO_MMD_PCS, 0xFCAD, 0x030C },
-> > +	{ MDIO_MMD_PCS, 0x8032, 0x6001 },
-> > +	{ MDIO_MMD_PCS, 0xFDFF, 0x05A5 },
-> > +	{ MDIO_MMD_PCS, 0xFDEC, 0xDBAF },
-> > +	{ MDIO_MMD_PCS, 0xFCAB, 0x1054 },
-> > +	{ MDIO_MMD_PCS, 0xFCAC, 0x1483 },
-> > +	{ MDIO_MMD_PCS, 0x8033, 0xC801 },
-> > +	{ MDIO_MMD_AN, 0x8032, 0x2020 },
-> > +	{ MDIO_MMD_AN, 0x8031, 0xA28 },
-> > +	{ MDIO_MMD_AN, 0x8031, 0xC28 },
-> > +	{ MDIO_MMD_PCS, 0xFBBA, 0x0CB2 },
-> > +	{ MDIO_MMD_PCS, 0xFBBB, 0x0C4A },
-> > +	{ MDIO_MMD_PCS, 0xFE5F, 0xE8 },
-> > +	{ MDIO_MMD_PCS, 0xFE05, 0x755C },
-> > +	{ MDIO_MMD_PCS, 0xFA20, 0x002A },
-> > +	{ MDIO_MMD_PCS, 0xFE11, 0x1105 },
-> > +};
-> > +
-> nit: use small letters for hex values.
-> 
+Convert f2fs_read_single_page() to use folio and related
+functionality.
 
-Ok, will update in next version.
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+v2:
+- no change.
+ fs/f2fs/data.c | 27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
 
-> Hi Gregor,
-> 
-> tested it for rev. B0 and it works as expected.
-> 
-> Tested-by: Dimitri Fedrau <dima.fedrau@gmail.com>
-> 
-> Best regards,
-> Dimitri Fedrau
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 6419cf020327..bb6c0e955d7e 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -2063,7 +2063,7 @@ static inline loff_t f2fs_readpage_limit(struct inode *inode)
+ 	return i_size_read(inode);
+ }
+ 
+-static int f2fs_read_single_page(struct inode *inode, struct page *page,
++static int f2fs_read_single_page(struct inode *inode, struct folio *folio,
+ 					unsigned nr_pages,
+ 					struct f2fs_map_blocks *map,
+ 					struct bio **bio_ret,
+@@ -2076,9 +2076,10 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
+ 	sector_t last_block;
+ 	sector_t last_block_in_file;
+ 	sector_t block_nr;
++	pgoff_t index = folio_index(folio);
+ 	int ret = 0;
+ 
+-	block_in_file = (sector_t)page_index(page);
++	block_in_file = (sector_t)index;
+ 	last_block = block_in_file + nr_pages;
+ 	last_block_in_file = bytes_to_blks(inode,
+ 			f2fs_readpage_limit(inode) + blocksize - 1);
+@@ -2109,7 +2110,7 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
+ got_it:
+ 	if ((map->m_flags & F2FS_MAP_MAPPED)) {
+ 		block_nr = map->m_pblk + block_in_file - map->m_lblk;
+-		SetPageMappedToDisk(page);
++		folio_set_mappedtodisk(folio);
+ 
+ 		if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode), block_nr,
+ 						DATA_GENERIC_ENHANCE_READ)) {
+@@ -2118,15 +2119,15 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
+ 		}
+ 	} else {
+ zero_out:
+-		zero_user_segment(page, 0, PAGE_SIZE);
+-		if (f2fs_need_verity(inode, page->index) &&
+-		    !fsverity_verify_page(page)) {
++		folio_zero_segment(folio, 0, folio_size(folio));
++		if (f2fs_need_verity(inode, index) &&
++		    !fsverity_verify_folio(folio)) {
+ 			ret = -EIO;
+ 			goto out;
+ 		}
+-		if (!PageUptodate(page))
+-			SetPageUptodate(page);
+-		unlock_page(page);
++		if (!folio_test_uptodate(folio))
++			folio_mark_uptodate(folio);
++		folio_unlock(folio);
+ 		goto out;
+ 	}
+ 
+@@ -2136,14 +2137,14 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
+ 	 */
+ 	if (bio && (!page_is_mergeable(F2FS_I_SB(inode), bio,
+ 				       *last_block_in_bio, block_nr) ||
+-		    !f2fs_crypt_mergeable_bio(bio, inode, page->index, NULL))) {
++		    !f2fs_crypt_mergeable_bio(bio, inode, index, NULL))) {
+ submit_and_realloc:
+ 		f2fs_submit_read_bio(F2FS_I_SB(inode), bio, DATA);
+ 		bio = NULL;
+ 	}
+ 	if (bio == NULL) {
+ 		bio = f2fs_grab_read_bio(inode, block_nr, nr_pages,
+-				is_readahead ? REQ_RAHEAD : 0, page->index,
++				is_readahead ? REQ_RAHEAD : 0, index,
+ 				false);
+ 		if (IS_ERR(bio)) {
+ 			ret = PTR_ERR(bio);
+@@ -2158,7 +2159,7 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
+ 	 */
+ 	f2fs_wait_on_block_writeback(inode, block_nr);
+ 
+-	if (bio_add_page(bio, page, blocksize, 0) < blocksize)
++	if (!bio_add_folio(bio, folio, blocksize, 0))
+ 		goto submit_and_realloc;
+ 
+ 	inc_page_count(F2FS_I_SB(inode), F2FS_RD_DATA);
+@@ -2423,7 +2424,7 @@ static int f2fs_mpage_readpages(struct inode *inode,
+ 		goto next_page;
+ read_single_page:
+ #endif
+-		ret = f2fs_read_single_page(inode, &folio->page, max_nr_pages, &map,
++		ret = f2fs_read_single_page(inode, folio, max_nr_pages, &map,
+ 					&bio, &last_block_in_bio, rac);
+ 		if (ret) {
+ #ifdef CONFIG_F2FS_FS_COMPRESSION
+-- 
+2.40.1
 
-Hi Dimitri,
-
-thanks for testing!
