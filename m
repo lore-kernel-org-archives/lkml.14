@@ -1,105 +1,90 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F167625;
-	Mon, 22 Apr 2024 22:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D4810A20
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 22:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713825618; cv=none; b=UFh3BFaTjilzQE9qbjCxRq0TAOSSCy/VH5bhhRXCpAR+8aA1NM0Q75aKeym1HjAP9cZcG2tWW18882/PYJGa/l/DwVUl63mTDRhCAPRH9YGKES4huFpKLBjNNXCUTESxemles82f+U5TrA7+R2rFVgw9qJ7WSp19BtRp8cuegi0=
+	t=1713825706; cv=none; b=DPQ8KPlHtD8wHCO89M7NVhHzSBRb/4nleMM/eaJBsNpjm42VekzbLnxqnCSAC+kvBmFb+3yCOCTDkDJcNGKbMxPAsYglV3K94ZPdmvHsUO3U5fbYJqsME9vfydIN6doJSpl5BErWcagJE6qkUCImu8dOHud9u5Sg1/onO6F0u+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713825618; c=relaxed/simple;
-	bh=YYWQ72Ji1mlYlNcfWfkUgczygjka+1APIsmWDrb2QZ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iQn9igh81PocHHyzcISPx2fNw1atWnT1ZEkXCxINA4pxo6un3kQj+E6+rQF5UbHbGK4Qz03YIIpOxFfDTbUx7nefy4x2sJoLWkNkw2Ou+aXPLHz1K7r8/nbPtjT4j4QU2NNc7OTvC2IJPj9mqIcpqm8YbB0uwRCJzQ3uZRAZA8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F569339;
-	Mon, 22 Apr 2024 15:40:42 -0700 (PDT)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6ABA13F7BD;
-	Mon, 22 Apr 2024 15:40:12 -0700 (PDT)
-Date: Mon, 22 Apr 2024 23:39:58 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Yangtao Li
- <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
- <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>,
- linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>,
- kernel test robot <lkp@intel.com>, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: sun50i: Fix build warning around snprint()
-Message-ID: <20240422233958.0e2d992c@minigeek.lan>
-In-Reply-To: <285de20a187f3e4baeb28f639b5bf55e914a3821.1713756666.git.viresh.kumar@linaro.org>
-References: <285de20a187f3e4baeb28f639b5bf55e914a3821.1713756666.git.viresh.kumar@linaro.org>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+	s=arc-20240116; t=1713825706; c=relaxed/simple;
+	bh=bpJByZixBCRheOe1LQePKtccXwEXtNPwadWoBCKZbsM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To; b=Yehu4LeLMFT6eQC5tQTvzkgl7O4PV9/G3UWlV3DTXt/Vuoxu0eb/ox6b5CxjC9bXx4WS8oKf/diLgaI5CYsjeqYV6c7lqhQBcpIHDYZe0UQi8yK95e3olI6cQeK6zVsQ28lKYbB9G3b0lpgNKpcPh3YkKdN3rHXkBCSERQi+Lgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VFoVgftj; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VFoVgftj"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-51abf1a9332so4804972e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 15:41:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713825702; x=1714430502; darn=vger.kernel.org;
+        h=to:content-transfer-encoding:mime-version:message-id:date:subject
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DnA8X22i2kJ7S49+cOC1P/59QG3FgetaGzDVYWU9k2U=;
+        b=VFoVgftjILaoKVEtCnqEtMxKKjCmV1hIZxHRGT5195NM5A65IbJUtiWGTOrZURfkju
+         oJ8C5bc53ydqbgka5J0RzrvuSeSxA9LNtf5dUxu4OtWItkT/sC9L0Cv4QdnnQyviEc4/
+         XpVti1qvwNgwxbnbVA+LX4Fsr8B+ZtCHfVpq+jZOM9xi6s2d5huTzvvIjwVxhVCWgL2Z
+         nPm0hYHAv61ckN4tPFcMCJLNhGzDPlN5xY+YbeXBGJTEsXFjwsRPSs9MC0XtaGyy6I6C
+         aaHAmuqcYnKdlioLUnX4hew0ErEzL2mILaD/MaCgBAm1NvHKvOzTQWhQWvtzlLsu/kxV
+         hlFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713825702; x=1714430502;
+        h=to:content-transfer-encoding:mime-version:message-id:date:subject
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DnA8X22i2kJ7S49+cOC1P/59QG3FgetaGzDVYWU9k2U=;
+        b=Vimlxt2eZUCYkllQlOhsuq2pNZDQu4pEDfIbb/O3DFQ6/A0PQVGaYrRn3yc/tTvTdE
+         xil3Dx9acZ3mDinbSwUtw8apVNR4reeSrs1BTy/vmkkXezCyEWf3TXfw0QeX2WnJfGEO
+         mawwTnEVH6yp48CtW6TpXBFYNwDamUnkDHXUKZyYG60GwmpgIm13HRMWDMBlBMVU4fdd
+         vdfPPyBSba5grfv9FcvMrwk0buzDyO75/rZ7SyykpqDwRH9IjVcCFtYXDtgI6DzPZgGE
+         nKiFXw9QaN1sqqip4RFNScoDBI1GFBT+gnCWoZeuAV7qAKH+zJp1qKcH2+Mm9BaovHT0
+         YLWw==
+X-Gm-Message-State: AOJu0YzV8mYW/BTsYK++91AAz8ulQpsmTZyO4bVAO5QnQf2/38DB9T9W
+	8+RqCUsKWmlw7I4WLmLoYWEtwlP0N1RaitfrVRiutfjzexzpm2KSdDvxnheOaPI=
+X-Google-Smtp-Source: AGHT+IFr3ze2L9UOXRY+Ko4np4lZ/ON/DU81SEnl00esnQMAOqb2JOt/nReNl7j6SqU9SDgseEwR1w==
+X-Received: by 2002:ac2:5de9:0:b0:518:d829:4bae with SMTP id z9-20020ac25de9000000b00518d8294baemr6813728lfq.32.1713825702513;
+        Mon, 22 Apr 2024 15:41:42 -0700 (PDT)
+Received: from [127.0.1.1] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id q24-20020ac246f8000000b005130ece9099sm1829517lfo.277.2024.04.22.15.41.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 15:41:42 -0700 (PDT)
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: [PATCH 0/2] Adreno MAINTAINERS modifications
+Date: Tue, 23 Apr 2024 00:41:30 +0200
+Message-Id: <20240423-topic-adreno_maintainers-v1-0-21e1adac2c13@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJvnJmYC/x2MMQqAMAwAvyKZLdRYUfyKiNQ2agZbSUUE8e8Wh
+ xtuuHsgkTAl6IsHhC5OHEOWqizAbTaspNhnB9RotMFanfFgp6wXCnHaLYczQ5KU8YjazbZtqIO
+ cH0IL3/96GN/3A+uQsOZqAAAA
+To: linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ freedreno@lists.freedesktop.org, Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.14-dev
 
-On Mon, 22 Apr 2024 09:01:09 +0530
-Viresh Kumar <viresh.kumar@linaro.org> wrote:
+Separate out Adreno from the rest of the drm/msm driver, add myself
+as a reviewer for the former.
 
-Hi,
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+---
+Konrad Dybcio (2):
+      MAINTAINERS: Add a separate entry for Qualcomm Adreno GPU drivers
+      MAINTAINERS: Add Konrad Dybcio as a reviewer for the Adreno driver
 
-> The Sun50i driver generates a warning with W=1:
-> 
-> warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 2 [-Wformat-truncation=]
-> 
-> Fix it by allocating a big enough array to print an integer.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202404191715.LDwMm2gP-lkp@intel.com/
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+ MAINTAINERS | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+---
+base-commit: 6bd343537461b57f3efe5dfc5fc193a232dfef1e
+change-id: 20240423-topic-adreno_maintainers-4d220cba75e8
 
-For the records: as it stands right now, "speed" will always be smaller
-than 10 at the moment, but it's indeed better to play safe here.
-So the fix makes sense to me and fixes the issue:
-
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-Tested-by: Andre Przywara <andre.przywara@arm.com>
-
-Cheers,
-Andre
-
-> ---
->  drivers/cpufreq/sun50i-cpufreq-nvmem.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> index 30e5c337611c..cd50cea16a87 100644
-> --- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> +++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> @@ -19,8 +19,6 @@
->  #include <linux/pm_opp.h>
->  #include <linux/slab.h>
->  
-> -#define MAX_NAME_LEN	7
-> -
->  #define NVMEM_MASK	0x7
->  #define NVMEM_SHIFT	5
->  
-> @@ -208,7 +206,7 @@ static int sun50i_cpufreq_get_efuse(void)
->  static int sun50i_cpufreq_nvmem_probe(struct platform_device *pdev)
->  {
->  	int *opp_tokens;
-> -	char name[MAX_NAME_LEN];
-> +	char name[] = "speedXXXXXXXXXXX"; /* Integers can take 11 chars max */
->  	unsigned int cpu, supported_hw;
->  	struct dev_pm_opp_config config = {};
->  	int speed;
-> @@ -235,7 +233,7 @@ static int sun50i_cpufreq_nvmem_probe(struct platform_device *pdev)
->  		config.supported_hw_count = 1;
->  	}
->  
-> -	snprintf(name, MAX_NAME_LEN, "speed%d", speed);
-> +	snprintf(name, sizeof(name), "speed%d", speed);
->  	config.prop_name = name;
->  
->  	for_each_possible_cpu(cpu) {
+Best regards,
+-- 
+Konrad Dybcio <konrad.dybcio@linaro.org>
 
