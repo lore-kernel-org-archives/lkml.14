@@ -1,132 +1,118 @@
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B8A4D11D;
-	Mon, 22 Apr 2024 07:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67694D58A;
+	Mon, 22 Apr 2024 07:52:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713772311; cv=none; b=nnnQpSUGCt9UlQjmwo1mwtVfvhvip9YL55rzcsv4oV0cJewr3SLEc12F4yGsAWaFykH4OUupeUFoVZrqkHu4IbQDtN86BKMa291hAP9LnSg5ygN+xCv4U5gQDf25ghneLiEQ9Q/Sfbnt2PxM9/4SbXIPE7DVC3NrRZfaBXQ5CF0=
+	t=1713772369; cv=none; b=fkpTRI+IK6+N1AtHbcOVXde91qIRKRPT29LhA3ejhNV+nmSeH+B9HqNpSsdJlsqf+YglXaIZ3Yeit/Y54qwf/iPnDiuqIYBfom1NntcuS9BKJ4/kI7KNq1dPW8RHRmkIxNWBaEY5LCjVLEeJMXHx2MqzXGXYHiZnX46nc+ruQ+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713772311; c=relaxed/simple;
-	bh=V+hmni4mAKTQ8wXjeiMX0dljZgO3ua+RXHTJ7o7gkok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NtDN0cuyNvy/wMr5CiBIT+Z+RnCFzqboVXKxV3K2Vkjhh/toiVz0vrT81NeDzA3+K9FTxePRSTySJ7kZPm/bs8TQ8cy4WL3a48oW818MFC0t9JyG+p3Q9VWAK1ZH998WESgQpQeyGCRld6btZP8aJ5HuN1RrpbjJK3bdzKsluR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=pcucO8P1; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pcucO8P1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1713772309; x=1745308309;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=V+hmni4mAKTQ8wXjeiMX0dljZgO3ua+RXHTJ7o7gkok=;
-  b=pcucO8P1XhEBArvhEO6TBkbOiEKbc7Bli5l8Wt2Iyb6d9cxagxY5pqkE
-   u9khb4jTE0t1zNfzQDYvO8zby8nCyT3/d3uUW0zHjdN0ZCVN2Cwv6x86J
-   scDgMSly2lY+Rhms4ibRKYayqJDxr905HUcOvu4paJjfe4zkPlH8PbOqz
-   o=;
-X-IronPort-AV: E=Sophos;i="6.07,220,1708387200"; 
-   d="scan'208";a="413631555"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 07:51:41 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:8532]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.0.190:2525] with esmtp (Farcaster)
- id 98f6d520-ff55-44d0-a03c-306ba359ccb1; Mon, 22 Apr 2024 07:51:40 +0000 (UTC)
-X-Farcaster-Flow-ID: 98f6d520-ff55-44d0-a03c-306ba359ccb1
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 22 Apr 2024 07:51:36 +0000
-Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
- (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Mon, 22 Apr
- 2024 07:51:33 +0000
-Message-ID: <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
-Date: Mon, 22 Apr 2024 09:51:31 +0200
+	s=arc-20240116; t=1713772369; c=relaxed/simple;
+	bh=WQ05eBBY4p5S3lvd/kNS8zDpZ4FPaOvykDTMjRgeaeY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QuAVFA/AHuwddk2kJYDY+auh2CveD939SWxMTRsDj7CzMZP3NYVFdFkspYtQTEXdbCK2b0eaeY7aQExHGLB7wIgxuszYIBVFoR40sFSyEBskNKX8c3oUxOphh2j5uSXJulPrFOdEucYQqgwdko3gPIDFe5YAgobVD+WkekXQk1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VNHXg5k5Lz4f3n5g;
+	Mon, 22 Apr 2024 15:52:35 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id E12561A016E;
+	Mon, 22 Apr 2024 15:52:44 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP2 (Coremail) with SMTP id Syh0CgCHqg1JFyZmCViLKw--.3978S6;
+	Mon, 22 Apr 2024 15:52:44 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: akpm@linux-foundation.org,
+	willy@infradead.org,
+	jack@suse.cz,
+	bfoster@redhat.com,
+	tj@kernel.org
+Cc: dsterba@suse.com,
+	mjguzik@gmail.com,
+	dhowells@redhat.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH v4 4/4] writeback: rename nr_reclaimable to nr_dirty in balance_dirty_pages
+Date: Tue, 23 Apr 2024 00:48:08 +0800
+Message-Id: <20240422164808.13627-5-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20240422164808.13627-1-shikemeng@huaweicloud.com>
+References: <20240422164808.13627-1-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [REGRESSION] Re: [PATCH] Revert "vmgenid: emit uevent when VMGENID
- updates"
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>, <linux-kernel@vger.kernel.org>
-CC: <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>, Lennart Poettering
-	<mzxreary@0pointer.de>, Babis Chalios <bchalios@amazon.es>, Theodore Ts'o
-	<tytso@mit.edu>, "Cali, Marco" <xmarcalx@amazon.co.uk>, Arnd Bergmann
-	<arnd@arndb.de>, "rostedt@goodmis.org" <rostedt@goodmis.org>, "Christian
- Brauner" <brauner@kernel.org>, <linux@leemhuis.info>,
-	<regressions@lists.linux.dev>
-References: <20240418114814.24601-1-Jason@zx2c4.com>
-Content-Language: en-US
-From: Alexander Graf <graf@amazon.com>
-In-Reply-To: <20240418114814.24601-1-Jason@zx2c4.com>
-X-ClientProxiedBy: EX19D033UWC003.ant.amazon.com (10.13.139.217) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgCHqg1JFyZmCViLKw--.3978S6
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFyxZr1fGF17CrW8WFWkXrb_yoW8Cr15pF
+	ZrGw1jkr4xtayavrn3CFWq9rZxtw48tF43JryUCw4SvwsrWF1UKFyI9ry0vF1xAa4fJrWa
+	vws0qrykJw1vkrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmCb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+	8IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAv
+	FVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3w
+	A2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE
+	3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr2
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7
+	CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E
+	4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+	WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+	Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj4
+	0_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_
+	Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07jVUDXUUUUU=
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-W0FkZGluZyBDQyBsaXN0IG9mIG9yaWdpbmFsIHBhdGNoIHBsdXMgcmVncmVzc2lvbiB0cmFja2Vy
-XQoKSGkgSmFzb24sCgpPbiAxOC4wNC4yNCAxMzo0OCwgSmFzb24gQS4gRG9uZW5mZWxkIHdyb3Rl
-Ogo+IFRoaXMgcmV2ZXJ0cyBjb21taXQgYWQ2YmNkYWQyYjY3MjRlMTEzZjE5MWExMmY4NTlhOWU4
-NDU2YjI2ZC4gSSBoYWQKPiBuYWsnZCBpdCwgYW5kIEdyZWcgc2FpZCBvbiB0aGUgdGhyZWFkIHRo
-YXQgaXQgbGlua3MgdGhhdCBoZSB3YXNuJ3QgZ29pbmcKPiB0byB0YWtlIGl0IGVpdGhlciwgZXNw
-ZWNpYWxseSBzaW5jZSBpdCdzIG5vdCBoaXMgY29kZSBvciBoaXMgdHJlZSwgYnV0Cj4gdGhlbiwg
-c2VlbWluZ2x5IGFjY2lkZW50YWxseSwgaXQgZ290IHB1c2hlZCB1cCBzb21lIG1vbnRocyBsYXRl
-ciwgaW4KPiB3aGF0IGxvb2tzIGxpa2UgYSBtaXN0YWtlLCB3aXRoIG5vIGZ1cnRoZXIgZGlzY3Vz
-c2lvbiBpbiB0aGUgbGlua2VkCj4gdGhyZWFkLiBTbyByZXZlcnQgaXQsIHNpbmNlIGl0J3MgY2xl
-YXJseSBub3QgaW50ZW5kZWQuCgpSZXZlcnRpbmcgdGhpcyBwYXRjaCBjcmVhdGVzIGEgdXNlciBz
-cGFjZSB2aXNpYmxlIHJlZ3Jlc3Npb24gY29tcGFyZWQgdG8gCnY2LjguIFBsZWFzZSB0cmVhdCBp
-dCBhcyBzdWNoLgoKSSdtIHNsaWdodGx5IGNvbmZ1c2VkIHRvIHNlZSB5b3UgcGFzc2lvbmF0ZSBh
-Ym91dCB0aGlzIHBhdGNoIGFmdGVyIHlvdSAKZ2hvc3RlZCB0aGUgY29udmVyc2F0aW9uIHlvdSBy
-ZWZlcmVuY2VkOgoKIApodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzAwZDYxNzJmLWUyOTEt
-NGU5Ni05ZDNlLTYzZWU4ZTYwZDU1NkBhbWF6b24uY29tLwoKVGhlIHB1cnBvc2Ugb2YgdGhpcyB1
-ZXZlbnQgaXMgdG8gbm90aWZ5IHN5c3RlbWRbMV1bMl0gKG9yIHNpbWlsYXIpIHRoYXQgCmEgVk0g
-Y2xvbmUgZXZlbnQgaGFwcGVuZWQsIHNvIGl0IGNhbiBmb3IgZXhhbXBsZSByZWdlbmVyYXRlIE1B
-QyAKYWRkcmVzc2VzIGlmIGl0IGdlbmVyYXRlZCB0aGVtIG9uIGJvb3QsIHJlZ2VuZXJhdGUgaXRz
-IHVuaXF1ZSBtYWNoaW5lIGlkIApvciBzaW1wbHkgZm9yY2UgcmVyZXF1ZXN0IGEgbmV3IERIQ1Ag
-bGVhc2UuCgpJIGRvbid0IHVuZGVyc3RhbmQgaG93IHRoZXJlJ3MgYW55IGNvcnJlbGF0aW9uIG9y
-IGRlcGVuZGVuY3kgdG8gCnZnZXRyYW5kb20oKSBvciBhbnl0aGluZyBSTkcgaW4gdGhpcyBhbmQg
-d2h5IGdldHRpbmcgdmdldHJhbmRvbSgpIG1lcmdlZCAKdXBzdHJlYW0gaXMgZXZlbiBzb21ldGhp
-bmcgdG8gdGFsayBhYm91dCBpbiB0aGUgc2FtZSBsaW5lIGFzIHRoaXMgcGF0Y2ggWzNdLgoKV2Ug
-aGFkIGEgbGVuZ3RoeSwgY29uc3RydWN0aXZlIGNvbnZlcnNhdGlvbiB3aXRoIFRlZCBhdCBMUEMg
-bGFzdCB5ZWFyIAphYm91dCB0aGUgIlBSTkcgYW5kIGNsb25lIiB1c2UgY2FzZSBhbmQgY29uY2x1
-ZGVkIHRoYXQgaXQncyBiZXN0IGZvciAKZXZlcnlvbmUgdG8gc2ltcGx5IGFzc3VtZSB0aGUgc3lz
-dGVtIGNvdWxkIGJlIGNsb25lZCBhdCBhbnkgcG9pbnQsIGhlbmNlIAphbHdheXMgZm9yY2UgaW50
-ZXJtaXggb2YgUkRSQU5EIG9yIGNvbXBhcmFibGUgdG8gYW55IFBSTkcgb3V0cHV0LiBXZSAKc2lu
-Y2Ugbm8gbG9uZ2VyIG5lZWQgYW4gZXZlbnQgZm9yIHRoYXQgY2FzZS4KCgpBbGV4CgpbMV0gaHR0
-cHM6Ly9naXRodWIuY29tL3N5c3RlbWQvc3lzdGVtZC9pc3N1ZXMvMjYzODAKWzJdIGh0dHBzOi8v
-bG9yZS5rZXJuZWwub3JnL2xrbWwvWkpHTlJFTjR0THpRWE9KckBnYXJkZWwtbG9naW4vClszXSAK
-aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC9DQUhtTUU5cHhjLW5PX3hhPTQrMUNudmJudWVm
-YlJUSkh4TTduODE3Y19UUGVveHp1X2dAbWFpbC5nbWFpbC5jb20vCgojcmVnemJvdCBpbnRyb2R1
-Y2VkOiAzYWFkZjEwMGY5M2Q4MDgxCgo+IAo+IEZpeGVzOiBhZDZiY2RhZDJiNjcgKCJ2bWdlbmlk
-OiBlbWl0IHVldmVudCB3aGVuIFZNR0VOSUQgdXBkYXRlcyIpCj4gQ2M6IHN0YWJsZUB2Z2VyLmtl
-cm5lbC5vcmcKPiBDYzogR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9u
-Lm9yZz4KPiBMaW5rOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9yLzIwMjMwNTMxMDk1MTE5LjEx
-MjAyLTItYmNoYWxpb3NAYW1hem9uLmVzCj4gU2lnbmVkLW9mZi1ieTogSmFzb24gQS4gRG9uZW5m
-ZWxkIDxKYXNvbkB6eDJjNC5jb20+Cj4gLS0tCj4gICBkcml2ZXJzL3ZpcnQvdm1nZW5pZC5jIHwg
-MiAtLQo+ICAgMSBmaWxlIGNoYW5nZWQsIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvdmlydC92bWdlbmlkLmMgYi9kcml2ZXJzL3ZpcnQvdm1nZW5pZC5jCj4gaW5kZXgg
-YjY3YTI4ZGE0NzAyLi5hMWM0NjdhMGU5ZjcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy92aXJ0L3Zt
-Z2VuaWQuYwo+ICsrKyBiL2RyaXZlcnMvdmlydC92bWdlbmlkLmMKPiBAQCAtNjgsNyArNjgsNiBA
-QCBzdGF0aWMgaW50IHZtZ2VuaWRfYWRkKHN0cnVjdCBhY3BpX2RldmljZSAqZGV2aWNlKQo+ICAg
-c3RhdGljIHZvaWQgdm1nZW5pZF9ub3RpZnkoc3RydWN0IGFjcGlfZGV2aWNlICpkZXZpY2UsIHUz
-MiBldmVudCkKPiAgIHsKPiAgIAlzdHJ1Y3Qgdm1nZW5pZF9zdGF0ZSAqc3RhdGUgPSBhY3BpX2Ry
-aXZlcl9kYXRhKGRldmljZSk7Cj4gLQljaGFyICplbnZwW10gPSB7ICJORVdfVk1HRU5JRD0xIiwg
-TlVMTCB9Owo+ICAgCXU4IG9sZF9pZFtWTUdFTklEX1NJWkVdOwo+ICAgCj4gICAJbWVtY3B5KG9s
-ZF9pZCwgc3RhdGUtPnRoaXNfaWQsIHNpemVvZihvbGRfaWQpKTsKPiBAQCAtNzYsNyArNzUsNiBA
-QCBzdGF0aWMgdm9pZCB2bWdlbmlkX25vdGlmeShzdHJ1Y3QgYWNwaV9kZXZpY2UgKmRldmljZSwg
-dTMyIGV2ZW50KQo+ICAgCWlmICghbWVtY21wKG9sZF9pZCwgc3RhdGUtPnRoaXNfaWQsIHNpemVv
-ZihvbGRfaWQpKSkKPiAgIAkJcmV0dXJuOwo+ICAgCWFkZF92bWZvcmtfcmFuZG9tbmVzcyhzdGF0
-ZS0+dGhpc19pZCwgc2l6ZW9mKHN0YXRlLT50aGlzX2lkKSk7Cj4gLQlrb2JqZWN0X3VldmVudF9l
-bnYoJmRldmljZS0+ZGV2LmtvYmosIEtPQkpfQ0hBTkdFLCBlbnZwKTsKPiAgIH0KPiAgIAo+ICAg
-c3RhdGljIGNvbnN0IHN0cnVjdCBhY3BpX2RldmljZV9pZCB2bWdlbmlkX2lkc1tdID0gewoKCgoK
-QW1hem9uIERldmVsb3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKS3JhdXNlbnN0ci4gMzgKMTAx
-MTcgQmVybGluCkdlc2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9uYXRo
-YW4gV2Vpc3MKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIg
-SFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
+Commit 8d92890bd6b85 ("mm/writeback: discard NR_UNSTABLE_NFS, use
+NR_WRITEBACK instead") removed NR_UNSTABLE_NFS and nr_reclaimable
+only contains dirty page now.
+Rename nr_reclaimable to nr_dirty properly.
+
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+---
+ mm/page-writeback.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index 3bb3bed102ef..44df5c899a33 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -1694,7 +1694,7 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+ 	struct dirty_throttle_control * const mdtc = mdtc_valid(&mdtc_stor) ?
+ 						     &mdtc_stor : NULL;
+ 	struct dirty_throttle_control *sdtc;
+-	unsigned long nr_reclaimable;	/* = file_dirty */
++	unsigned long nr_dirty;
+ 	long period;
+ 	long pause;
+ 	long max_pause;
+@@ -1715,9 +1715,9 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+ 		unsigned long m_thresh = 0;
+ 		unsigned long m_bg_thresh = 0;
+ 
+-		nr_reclaimable = global_node_page_state(NR_FILE_DIRTY);
++		nr_dirty = global_node_page_state(NR_FILE_DIRTY);
+ 		gdtc->avail = global_dirtyable_memory();
+-		gdtc->dirty = nr_reclaimable + global_node_page_state(NR_WRITEBACK);
++		gdtc->dirty = nr_dirty + global_node_page_state(NR_WRITEBACK);
+ 
+ 		domain_dirty_limits(gdtc);
+ 
+@@ -1768,7 +1768,7 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+ 		 * In normal mode, we start background writeout at the lower
+ 		 * background_thresh, to keep the amount of dirty memory low.
+ 		 */
+-		if (!laptop_mode && nr_reclaimable > gdtc->bg_thresh &&
++		if (!laptop_mode && nr_dirty > gdtc->bg_thresh &&
+ 		    !writeback_in_progress(wb))
+ 			wb_start_background_writeback(wb);
+ 
+-- 
+2.30.0
 
