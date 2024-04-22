@@ -1,200 +1,192 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8691D2E40D;
-	Mon, 22 Apr 2024 15:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0792C1534EB
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 15:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713800418; cv=none; b=aO5ettbZ+tWnbBGRLDPMh64L4n96LMWkCaFs4hZhab7M+WOd8RmoFpFcqTt82kA4rDmCGmdp/cb3kvcETXCS07bMwhSz3zwSIOO+gjk65y6llxHXF+ug58zzT6ZOSijNlhQ8ZtPugtBjen+kksRGXdjdFLa9ejAplf1xtcABNWc=
+	t=1713800553; cv=none; b=ZpqXNJYo+Rb6ua1BLBaI/brn6ZteG1TCFDFBkTambf19Hvkv/ArcwLuMzaHcwX1lEo79WvwJkLDOp0TyHvvH2VIGa+q3FAzDSULCi2yLOoswAaRa62mNmTmgKB8RvkNbVqfQFXAM0kwgywRzOIoqOA9UY5broKR/CfeTjTjsdjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713800418; c=relaxed/simple;
-	bh=MrbHq4CdRI8nAOdmRihgaz+T1q6xBTOrnbs8igIlUs0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gROjazKklheGn0n3wzSTCiZyeyLUP9c5SDndAdzWL5kiO85pJ5soCdcQxgQEO4WVBYZ6rR/r5cNw6k2rIJgPLv9GdVpsYSDOB3K4fEY4qy37sL9AfeSRiZuGEiCmpAYF/kxV9Hg2UfRO2LDcBz8aSdxc1CtTH4yFyQzlTI8xwo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HsLzHZaK; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713800553; c=relaxed/simple;
+	bh=tXjSwVBeGb/Eb0FtFwqpwFwRnMr6GKOhM4c8ow2qQ9Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hRyBg2VgscKLavQaWsWixHN67ETipLRr64qnUiq3abEjOaJcuaKHSDslxvirPPnFsGDzAMp+M74q979cTjWBiyU+3gMIeLLqfy1DTR+z96uZ0fGNzRyuCw/9Qoi7r8lfqjstH5BRjkSpLI2raHzAdzyWC0paYObtgRsUGZ5CHnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PPYY8eI1; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HsLzHZaK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713800417; x=1745336417;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=MrbHq4CdRI8nAOdmRihgaz+T1q6xBTOrnbs8igIlUs0=;
-  b=HsLzHZaK0nedFo/fthiUpaGNAj88CdXsFrGiSfK3t69q3ZPt1vqU3yOl
-   nTImn+xWiknKTYXVlpCkTmfflwxYTwlltk1SvJrU/YeNSIs3PIER7xO3A
-   v++i/2vnZp5e8R2Yf/GY/YYXJNexpEh00GMtzpRv180JvhT+KjpxQq147
-   LLMXCphjAscNTKb5w01kZj00muVDrZyKzyg3tVxQyPSmDss3QXQa+Qm9R
-   A9fasrJJmM1bHG7+Q32Vh0FC0862Fx0rplf2S8V5dw5BRJS90dzCLaWFI
-   5aiek1PPt7+K2DIzeS+tPDxu5EeoyBt0i37HFTpIKe1oZuTE2buP63SCw
-   Q==;
-X-CSE-ConnectionGUID: ChNUcS1XSyKicdghSeKq8g==
-X-CSE-MsgGUID: T4mhb8g6S+eg21A5pt/6/A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="34743754"
-X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
-   d="scan'208";a="34743754"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 08:37:28 -0700
-X-CSE-ConnectionGUID: TdxRRIFDS8OsESi5q3Oa7g==
-X-CSE-MsgGUID: Equdo2TJSw6Ktr7//9aGjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
-   d="scan'208";a="28717697"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.242.48]) ([10.124.242.48])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 08:37:25 -0700
-Message-ID: <d5a6e125-bff4-4d82-ae65-b99d9cb10e90@intel.com>
-Date: Mon, 22 Apr 2024 23:37:22 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PPYY8eI1"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-436ed871225so538951cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:42:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713800550; x=1714405350; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5LWWbUhCinHZ4pRRDKlPFXeIrr7YidOY2PqyCtNwxyA=;
+        b=PPYY8eI1S3O8scbt6x/Zx50IcR/bxB1i8qTziTZ2FJwijamJTwQNKWJSkXCi2HglH0
+         Lsk5sAAXOxKDVhZ/cGjPpGv3iIMbDYjQXsKziJX5ZySsBwe/wpIddI1L8qovi63gJpLQ
+         EmC9eJXp+yVA8SVwth+RhQNDuFZqWMHU5MiYpiv391y8mGeEgmJSAibPA6CRHd+DQxJY
+         zA0Thf1llvmHvZB2gXZRKGnwTG6Tq37zby+kd71UYqG4C2f56PujYbsln1b4tzR1ojBt
+         VhKREBjN/LeepQpNl8RFpoobhiW7i6K7JH8q+sramtnacV1xK/1X6V3pVq1C2dsePtAn
+         oXCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713800550; x=1714405350;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5LWWbUhCinHZ4pRRDKlPFXeIrr7YidOY2PqyCtNwxyA=;
+        b=XzC11KCPPAf2JlbBdSZYE44gCff7+aDUqxSWpz53ctqH+kkYzlTekR2kM46EHHH1j7
+         ld5fwI4v3Ij441AnmREIa4rhQ48h8sgEtbenD5sfZL2/e22VGs+W6LCf1gY2lX4dkUHE
+         ofNPHtxgYSZpJFDImnvRfrQPQmDn2waAoruF+ItB+fJDvwmROQCj/Mif8Do4AARXTATC
+         HroNddjDC4gfhvYBAFzfWSaLJ7H/vFimbtWpyombKQ+QUculR0z6ps4Nqy9UmTfMgk30
+         lB3AM1zVTIzyV6JUkyWUGrm0cMz3e6s+sFIiGbE8DCn2CsMJk/oNyZKUyyLiwhodXm6U
+         6Wow==
+X-Forwarded-Encrypted: i=1; AJvYcCUwcqx43mNfIgf5ZNOufHmkd7Egoe6oN79vtsDiMruzck4/ZYHiMeeMFd1x6p1zBVcJmnH/q5LgL0mMVm3ciIQfI2+VAWD0CYFM0GRV
+X-Gm-Message-State: AOJu0YwxdZB1daLeryZmRBeXydTLMrZwUEhQLhW9D8sB6jAkrp5p2JCz
+	Fmul+3QGGPPzUzNCbSxrGR/6iduIECtSJ6+iOhpu08n/a5RNPWTmOL+kAPa73fR94VEsVQCt7MP
+	hXFUIOX+2TCrbUTQ4xq0PibZm1mLXPBtaaWB3
+X-Google-Smtp-Source: AGHT+IGqGSjYwcJiVDgalrNn9TAUZdU5fgYKsr64wzHajwJV8/cKH1NAZTOsWkwmjf3FzaLTTq7w5Jmo5xwj/l8huMk=
+X-Received: by 2002:ac8:5885:0:b0:437:c4ae:f3b4 with SMTP id
+ t5-20020ac85885000000b00437c4aef3b4mr542257qta.26.1713800549734; Mon, 22 Apr
+ 2024 08:42:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] KVM: x86: Implement kvm_arch_vcpu_pre_fault_memory()
-To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-Cc: isaku.yamahata@intel.com, binbin.wu@linux.intel.com, seanjc@google.com,
- rick.p.edgecombe@intel.com
-References: <20240419085927.3648704-1-pbonzini@redhat.com>
- <20240419085927.3648704-6-pbonzini@redhat.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20240419085927.3648704-6-pbonzini@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240403164818.3431325-1-irogers@google.com> <CAGa8GX5MhP3FUhafN5QivHaE3Fg+p5MgvTq3SW6MQy4NeZ1sYQ@mail.gmail.com>
+In-Reply-To: <CAGa8GX5MhP3FUhafN5QivHaE3Fg+p5MgvTq3SW6MQy4NeZ1sYQ@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 22 Apr 2024 08:42:17 -0700
+Message-ID: <CAP-5=fU_EvN-bSjwbWMP8R+WyG-jeAQ1p4ziyejy2FCH0kgYig@mail.gmail.com>
+Subject: Re: [PATCH v1] perf test: Be more tolerant of metricgroup failures
+To: Veronika Molnarova <vmolnaro@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/19/2024 4:59 PM, Paolo Bonzini wrote:
-> From: Isaku Yamahata <isaku.yamahata@intel.com>
-> 
-> Wire KVM_PRE_FAULT_MEMORY ioctl to __kvm_mmu_do_page_fault() to populate guest
-> memory.  It can be called right after KVM_CREATE_VCPU creates a vCPU,
-> since at that point kvm_mmu_create() and kvm_init_mmu() are called and
-> the vCPU is ready to invoke the KVM page fault handler.
-> 
-> The helper function kvm_mmu_map_tdp_page take care of the logic to
-> process RET_PF_* return values and convert them to success or errno.
-> 
-> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-> Message-ID: <9b866a0ae7147f96571c439e75429a03dcb659b6.1712785629.git.isaku.yamahata@intel.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->   arch/x86/kvm/Kconfig   |  1 +
->   arch/x86/kvm/mmu/mmu.c | 72 ++++++++++++++++++++++++++++++++++++++++++
->   arch/x86/kvm/x86.c     |  3 ++
->   3 files changed, 76 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-> index 7632fe6e4db9..54c155432793 100644
-> --- a/arch/x86/kvm/Kconfig
-> +++ b/arch/x86/kvm/Kconfig
-> @@ -44,6 +44,7 @@ config KVM
->   	select KVM_VFIO
->   	select HAVE_KVM_PM_NOTIFIER if PM
->   	select KVM_GENERIC_HARDWARE_ENABLING
-> +	select KVM_GENERIC_PRE_FAULT_MEMORY
->   	help
->   	  Support hosting fully virtualized guest machines using hardware
->   	  virtualization extensions.  You will need a fairly recent
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 10e90788b263..a045b23964c0 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -4647,6 +4647,78 @@ int kvm_tdp_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
->   	return direct_page_fault(vcpu, fault);
->   }
->   
-> +static int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code,
-> +		     u8 *level)
-> +{
-> +	int r;
-> +
-> +	/* Restrict to TDP page fault. */
-> +	if (vcpu->arch.mmu->page_fault != kvm_tdp_page_fault)
-> +		return -EOPNOTSUPP;
-> +
-> +retry:
-> +	r = __kvm_mmu_do_page_fault(vcpu, gpa, error_code, true, NULL, level);
-> +	if (r < 0)
-> +		return r;
-> +
-> +	switch (r) {
-> +	case RET_PF_RETRY:
-> +		if (signal_pending(current))
-> +			return -EINTR;
-> +		cond_resched();
-> +		goto retry;
-> +
-> +	case RET_PF_FIXED:
-> +	case RET_PF_SPURIOUS:
-> +		break;
-> +
-> +	case RET_PF_EMULATE:
-> +		return -ENOENT;
-> +
-> +	case RET_PF_CONTINUE:
-> +	case RET_PF_INVALID:
-> +	default:
-> +		WARN_ON_ONCE(r);
-> +		return -EIO;
+On Mon, Apr 22, 2024 at 4:51=E2=80=AFAM Veronika Molnarova <vmolnaro@redhat=
+.com> wrote:
+>
+> Hi Ian,
+>
+> On Wed, Apr 3, 2024 at 6:48=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>>
+>> Previously "set -e" meant any non-zero exit code from perf stat would
+>> cause a test failure. As a non-zero exit happens when there aren't
+>> sufficient permissions, check for this case and make the exit code
+>> 2/skip for it.
+>>
+>> Signed-off-by: Ian Rogers <irogers@google.com>
+>> ---
+>>  .../perf/tests/shell/stat_all_metricgroups.sh | 28 +++++++++++++++----
+>>  1 file changed, 22 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/per=
+f/tests/shell/stat_all_metricgroups.sh
+>> index 55ef9c9ded2d..d6db192b9f18 100755
+>> --- a/tools/perf/tests/shell/stat_all_metricgroups.sh
+>> +++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
+>> @@ -1,9 +1,7 @@
+>> -#!/bin/sh
+>> +#!/bin/bash
+>>  # perf all metricgroups test
+>>  # SPDX-License-Identifier: GPL-2.0
+>>
+>> -set -e
+>> -
+>>  ParanoidAndNotRoot()
+>>  {
+>>    [ "$(id -u)" !=3D 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoi=
+d)" -gt $1 ]
+>> @@ -14,11 +12,29 @@ if ParanoidAndNotRoot 0
+>>  then
+>>    system_wide_flag=3D""
+>>  fi
+>> -
+>> +err=3D0
+>>  for m in $(perf list --raw-dump metricgroups)
+>>  do
+>>    echo "Testing $m"
+>> -  perf stat -M "$m" $system_wide_flag sleep 0.01
+>> +  result=3D$(perf stat -M "$m" $system_wide_flag sleep 0.01 2>&1)
+>> +  result_err=3D$?
+>> +  if [[ $result_err -gt 0 ]]
+>> +  then
+>> +    if [[ "$result" =3D~ \
+>> +          "Access to performance monitoring and observability operation=
+s is limited" ]]
+>> +    then
+>> +      echo "Permission failure"
+>> +      echo $result
+>> +      if [[ $err -eq 0 ]]
+>> +      then
+>> +        err=3D2 # Skip
+>> +      fi
+>> +    else
+>> +      echo "Metric group $m failed"
+>> +      echo $result
+>> +      err=3D1 # Fail
+>> +    fi
+>> +  fi
+>>  done
+>>
+>> -exit 0
+>> +exit $err
+>> --
+>> 2.44.0.478.gd926399ef9-goog
+>>
+>>
+>
+> The patch looks good and thanks for taking care of it.
+>
+> Just wanted to check what is the desired outcome for metric groups
+> with events that are invalid in per-thread mode causing the test to fail.
+>
+> ```
+> $ ./stat_all_metricgroups.sh
+> Testing smi
+> Metric group smi failed
+> Error: Invalid event (msr/smi/u) in per-thread mode, enable system wide w=
+ith '-a'.
+> ```
+>
+> Wouldn't it be better if in these cases the test would result in skip ins=
+tead of fail?
 
-Need to update patch 1 for -EIO
+Hi Veronika,
 
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
-> +				    struct kvm_pre_fault_memory *range)
-> +{
-> +	u64 error_code = PFERR_GUEST_FINAL_MASK;
-> +	u8 level = PG_LEVEL_4K;
-> +	u64 end;
-> +	int r;
-> +
-> +	/*
-> +	 * reload is efficient when called repeatedly, so we can do it on
-> +	 * every iteration.
-> +	 */
-> +	kvm_mmu_reload(vcpu);
-> +
-> +	if (kvm_arch_has_private_mem(vcpu->kvm) &&
-> +	    kvm_mem_is_private(vcpu->kvm, gpa_to_gfn(range->gpa)))
-> +		error_code |= PFERR_PRIVATE_ACCESS;
-> +
-> +	/*
-> +	 * Shadow paging uses GVA for kvm page fault, so restrict to
-> +	 * two-dimensional paging.
-> +	 */
-> +	r = kvm_tdp_map_page(vcpu, range->gpa, error_code, &level);
-> +	if (r < 0)
-> +		return r;
-> +
-> +	/*
-> +	 * If the mapping that covers range->gpa can use a huge page, it
-> +	 * may start below it or end after range->gpa + range->size.
-> +	 */
-> +	end = (range->gpa & KVM_HPAGE_MASK(level)) + KVM_HPAGE_SIZE(level);
-> +	return min(range->size, end - range->gpa);
-> +}
-> +
->   static void nonpaging_init_context(struct kvm_mmu *context)
->   {
->   	context->page_fault = nonpaging_page_fault;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 83b8260443a3..619ad713254e 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -4715,6 +4715,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->   	case KVM_CAP_MEMORY_FAULT_INFO:
->   		r = 1;
->   		break;
-> +	case KVM_CAP_PRE_FAULT_MEMORY:
-> +		r = tdp_enabled;
-> +		break;
->   	case KVM_CAP_EXIT_HYPERCALL:
->   		r = KVM_EXIT_HYPERCALL_VALID_MASK;
->   		break;
+I agree that fail isn't best here. I'm wondering:
 
+ - why doesn't msr/smi/ support per-thread mode? Can't we save/restore
+the count on a context switch? The implementation is here:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/arch/x86/events/msr.c?h=3Dperf-tools-next#n234
+There's clearly something going on as pperf appears to have other restricti=
+ons:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/arch/x86/events/msr.c?h=3Dperf-tools-next#n115
+I'm wondering if aggregation is working right if these counters are
+more than per hyperthread (I'm guessing why the restrictions exist).
+
+ - the tool error message is doing pretty good. In the test I guess we
+can spot the per-thread error and turn the fail to a skip. It's a
+shame to bucket things as skip, but it seems easier than listing
+metrics in the test or spotting particular events.
+
+I can do a v2 to add this.
+
+Thanks,
+Ian
+
+> Thanks,
+> Veronika
+>
