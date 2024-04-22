@@ -1,137 +1,116 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E8012837C;
-	Mon, 22 Apr 2024 10:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E40113C3CA
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 10:06:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713780077; cv=none; b=quB8KiCB3RgNGObZaunaIsoHQSkfAcfac9CenUabqJfKN50mHgLwVW/fqSXIy1tElXtTNjs4PJMGudbY2JT8s9uDm84UARCh3Vmc6E7piZDryFFyqhBrYZtD7RK/pKEKtiOANarMM4/uelhFOfhtPGw/e7dnPPnT9F7a0hjlhDk=
+	t=1713780367; cv=none; b=ifImTlozp63iTfVdf89kIwhMWj/JftZ6bxxWyBBXBB7omESgQL06CAUcYkZ2ihKkyJ7FNFe+Pdofgryg2+LM8DcNE3nLxuwDhah8d9/N8ZKb5cTKHtYztJ61gAdhaxRM0rAMTaDn3eAzk+5f9ga5z38qbqhjjyIRdwMsNJxPPd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713780077; c=relaxed/simple;
-	bh=KiS5jBM9kAdav3nfwdQ3HeNKVj2AIlwsVJFHBYU+x+A=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=oJMGWHDFCkL+nyE7aWpUdfyk8sjxhNo+QhK7JGlMlHo+oGRw3LNVvOSbVi4c1xxAdnzxRvJhr9LR31z80u0WJbPxKOY2W/SA7cM+B+gVl8CnaVqwIHq+Mkc/weXn/WT7m32DQS9OHIm7HbTWnLof+ZKIZXW1LquwAgAdaJWOmBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=43hEQLjB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=P0bS7eSC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1713780367; c=relaxed/simple;
+	bh=bL2hSvdJUbEjiVu8mOzngLcfDSFc2sqN+pYwEXjIoRA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Dhsm6wtAfYXEV88MmreuNGv0Cy62ZMwq+0N2HtwZ1y1g9TJPQGCS1bAkiNGBDWCAWXBuUYR0w9+OFJr2vgn0RYYAReqk331eQdKcYXDz4eo0QPxr94cmZDWKvaHlvJhW/ULKEDf9m17LHMsOv0OlKtklvF6K1CzGu3UoowJgkvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u0HotfNE; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="43hEQLjB";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P0bS7eSC"
-Date: Mon, 22 Apr 2024 10:01:08 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1713780071;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k36/OzTuWnVZCdzvGZGEbyXGQwInx3at1IQn4KQjoFk=;
-	b=43hEQLjB4sl/83AyyjjeDLq2Qo6GHWGfQokopMEX/uF9FFwylqNFdxYei8ticn8qfSY4Ng
-	ZlElczdWcd804n0wZTK2XS75VyvcHejlwtid2Vs+/TAuUyUheGADFhMpHO9hwjaKa3wwu5
-	xBoW1uy+kpBSr0gFjv2t1OnhJlqhVdfp/WWrB9FKDDMPWRWM+gOQxZdlIt7sEo9AFM8OJf
-	EgDNeEH/d6xjve3nndtFn0fZkxI4rv9d7GtmmGrwB/tvd7jGBnIexWABtjNyMgISr9y7y1
-	pvsj+9J57ZuHajUB69bb0U2OmFqOh04OOv+Nr62B8Pbqnsvhy2hogFdsS/cmLg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1713780071;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k36/OzTuWnVZCdzvGZGEbyXGQwInx3at1IQn4KQjoFk=;
-	b=P0bS7eSCTvZfeOmsn+/uRwN7sKz6Xfi8aGaX+SmFkbSB8nUeOf7NNs8UVTn9iJj7ZWPawu
-	xh3Jcsy58DwWEkAQ==
-From: "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpu/vfm: Add/initialize x86_vfm field to struct
- cpuinfo_x86
-Cc: Tony Luck <tony.luck@intel.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240416211941.9369-2-tony.luck@intel.com>
-References: <20240416211941.9369-2-tony.luck@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u0HotfNE"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5aa3f0fcd46so2564716eaf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 03:06:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713780364; x=1714385164; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pp9lUQ4HZ5PgJGPmf9IQ95ImHEOQFdQIgczUTfI1TFI=;
+        b=u0HotfNEzSISiyO9rtcg9IMvD2AtAwPquxNa0gaCu+VEpQfh6LFtCsS6MuQ0iNqEIj
+         8EMRrjwljGu0avUC76OW+0jdg8endhqeaoJXGLa4xo+RsIubY65+Z43iCHosG2KbHI9q
+         r9+DMGRdnHsuv88L4olNVnfGnexO9yTRa8ZIlmPrAfMJouw6pSmwzCqnSczoeEa094Vh
+         dX5tnK9qXID3lQlsAkMn1KRsVUYEN8R+hIEB7cmL7FkhhnOzGbsdUIA7XQZ3DTewqgHI
+         n7D3bHLyxMuepgIot7ooTXLjAfBIs2p3MWJQVVZW9dseLj6DRspMApAfDY4DM87qbKeC
+         pALg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713780364; x=1714385164;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pp9lUQ4HZ5PgJGPmf9IQ95ImHEOQFdQIgczUTfI1TFI=;
+        b=ON+RMxwhtlbIO0KlcusaPgcELpndLr4C1m6YeNJOrVWoo7KINIdRhLAQ/ZeLACFQSP
+         +5Sl8ot3qHkYLSbl/1Fb3mzkhakpVCnkbgj/vvv7Qb4tOzsMUb78KoeapAavJ5VNzeSL
+         AANwVFauWPVrlZNyj4iwxvIHZ4++q2ZlEOKFKDADuSaCUdo3L/3sLSN2efkA66yuS0JR
+         XFiNeNBgxxAGTFHOl+tI48ETTu3TgJvHeo6YPNyC7bdEaVLyIZu4lMebdKGbsV2P9xoO
+         LvrZvLb3tmeznbIz2l95L/6/SkjYJ5OK1iawNlhPy2K4mwMr0Nmw7Z7FDx9ZxXzjsdXU
+         AkSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWnKh5eF6SvCOfEkThEbBRLt+mpPCrWaUGtsgPeMXuZpjOI/j6rZhdkWMp0haV/NRs7Gi6CsEHwxus4wvdqwIhT3sTvQftzzn1q0HCs
+X-Gm-Message-State: AOJu0YyfR5C+VaRZ7b+2dIWaRcsEctSlp58tzmyrxG7PBUHlXGkaZ+Y6
+	kEYC19admUv4cJhsBhZkJ7LCNy9zumJNQH6+ljUAJ9Y+Qo2xM+V86qMkNEZrEOXaIqlJ5a+FuY2
+	nWLpnEAUOX4n3JrxXWI7P/WBbtd5Yu/aqSKbl4g==
+X-Google-Smtp-Source: AGHT+IH2cO2rZIY+HwOOnVAFVGLIKgIBh5VFjqWuGGTbO6sx2Y1eZMlp8KcjvsVT5MV0EfKhJfiXJpIcIBTuwaWiisY=
+X-Received: by 2002:a05:6359:4287:b0:183:dda6:4470 with SMTP id
+ kp7-20020a056359428700b00183dda64470mr6527469rwb.12.1713780364561; Mon, 22
+ Apr 2024 03:06:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171378006893.10875.6298031558412078369.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20240405060826.2521-1-jirislaby@kernel.org> <20240405060826.2521-13-jirislaby@kernel.org>
+ <CGME20240415125847eucas1p2bc180c35f40f9c490c713679871af9ae@eucas1p2.samsung.com>
+ <91ac609b-0fae-4856-a2a6-636908d7ad3c@samsung.com> <d70049d5-d0fe-465f-a558-45b6785f6014@kernel.org>
+ <Zh-fgtujwjiSXz7D@monster> <c091da0b-a150-428a-bf96-75f9f3eab2e2@samsung.com>
+ <CADYN=9LCJS0SW4PuF+e356HUxhzJYi093K6U+BdErPohq4RDWQ@mail.gmail.com> <6ef3422c-d931-4993-856d-c080b11d72d5@kernel.org>
+In-Reply-To: <6ef3422c-d931-4993-856d-c080b11d72d5@kernel.org>
+From: Anders Roxell <anders.roxell@linaro.org>
+Date: Mon, 22 Apr 2024 12:05:53 +0200
+Message-ID: <CADYN=9LtODPtcFiuZ_Zv5O9M4S1+pAYJD8Fu8r5__67bPK98RA@mail.gmail.com>
+Subject: Re: [PATCH 12/15] tty: serial: switch from circ_buf to kfifo
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, gregkh@linuxfoundation.org, 
+	linux-amlogic@lists.infradead.org, 
+	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, linux-serial@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The following commit has been merged into the x86/cpu branch of tip:
+On Mon, 22 Apr 2024 at 08:45, Jiri Slaby <jirislaby@kernel.org> wrote:
+>
+> On 17. 04. 24, 13:19, Anders Roxell wrote:
+> >> I'm trying to run on two dragonboard devices db410c and db845c and both
+> >>> fails to boot see the boot failure from db845c [1], linux-next tag: next-20240415.
+> >>> I tried to apply the patch [2] (that you proposed in this thread) ontop of next-20240415. However, that didn't
+> >>> help bootlog on db845c [3].
+> >>
+> >> This is a different issue, which I've reported 2 days ago. See the
+> >> following thread:
+> >>
+> >> https://lore.kernel.org/all/d3eb9f21-f3e1-43ec-bf41-984c6aa5cfc8@samsung.com/
+> >
+> > Oh ok, I did the bisection on db845v, and that led me to this
+> > patch 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
+>
+> Could you re-test with the today's -next?
 
-Commit-ID:     a9d0adce69075192961f3be466c4810a21b7bc9e
-Gitweb:        https://git.kernel.org/tip/a9d0adce69075192961f3be466c4810a21b7bc9e
-Author:        Tony Luck <tony.luck@intel.com>
-AuthorDate:    Tue, 16 Apr 2024 14:19:03 -07:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 22 Apr 2024 11:43:48 +02:00
+Tested todays next and it boots fine.
 
-x86/cpu/vfm: Add/initialize x86_vfm field to struct cpuinfo_x86
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
 
-Refactor struct cpuinfo_x86 so that the vendor, family, and model
-fields are overlaid in a union with a 32-bit field that combines
-all three (together with a one byte reserved field in the upper
-byte).
+Cheers,
+Anders
 
-This will make it easy, cheap, and reliable to check all three
-values at once.
-
-See
-
-  https://lore.kernel.org/r/Zgr6kT8oULbnmEXx@agluck-desk3
-
-for why the ordering is (low-to-high bits):
-
-  (vendor, family, model)
-
-  [ bp: Move comments over the line, add the backstory about the
-    particular order of the fields. ]
-
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240416211941.9369-2-tony.luck@intel.com
----
- arch/x86/include/asm/processor.h | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 811548f..e0f9251 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -108,9 +108,23 @@ struct cpuinfo_topology {
- };
- 
- struct cpuinfo_x86 {
--	__u8			x86;		/* CPU family */
--	__u8			x86_vendor;	/* CPU vendor */
--	__u8			x86_model;
-+	union {
-+		/*
-+		 * The particular ordering (low-to-high) of (vendor,
-+		 * family, model) is done in case range of models, like
-+		 * it is usually done on AMD, need to be compared.
-+		 */
-+		struct {
-+			__u8	x86_model;
-+			/* CPU family */
-+			__u8	x86;
-+			/* CPU vendor */
-+			__u8	x86_vendor;
-+			__u8	x86_reserved;
-+		};
-+		/* combined vendor, family, model */
-+		__u32		x86_vfm;
-+	};
- 	__u8			x86_stepping;
- #ifdef CONFIG_X86_64
- 	/* Number of 4K pages in DTLB/ITLB combined(in pages): */
+>
+> In particular, with this commit:
+> commit f70f95b485d78838ad28dbec804b986d11ad7bb0
+> Author: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> Date:   Fri Apr 19 10:09:31 2024 +0200
+>
+>      serial: msm: check dma_map_sg() return value properly
+>
+>
+> thanks,
+> --
+> js
+> suse labs
+>
