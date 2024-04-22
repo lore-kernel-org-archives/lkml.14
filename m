@@ -1,124 +1,157 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8923DF49
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 03:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D3F2579;
+	Mon, 22 Apr 2024 03:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713756683; cv=none; b=aMwTdOGUgy47NITI6DbNG70xjEUQW1g5c9nAq1MvSoQXrqL719kMti0nTcRPyD340HpB3WyyJ5KNAlL7c+5Bqz8ixPkfY1COhhEnNnqM6QSxzrW5aReJOZ8TikwaATHw1pfeZYfzdX1V6c+KOO27IrMqFCwYFa4B4Wv+viogJgI=
+	t=1713756737; cv=none; b=BP5WOifLEBN5V0LXsicizJi+d/jbqO31hdrSF2jAR8zRbtyb4WrL1ckmt+h5ZtSci2jkFVHJ7DVnFMfQRFJcifB/Y3lTHMkXRHnVzdujpNbOj5muAZBHSg+WHTpNANh5uquoV3TnUuWGVSXucrOJUUsthKag6VHy6Q3DSEcTyMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713756683; c=relaxed/simple;
-	bh=WgJQBh8J1Waa7dt3AUnqHF0bETc6Ofj/zz3UpXYRizY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kJuvqhUOWh/Pv2HOYUMNRIKbdtgVXqdoOw5TaixDS+CF+tf+njtNescvoQKP6Id+3OTf0+YjN6TrWrGNRgDA2SGJ54LEXIv4zEVPcIceX3fRm3G5sRGNooODFX3PFii6vJYMkns288bEnMMXFHqy1ejUkiZagbI76a9OBGzj0UE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Er5qu7FT; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713756737; c=relaxed/simple;
+	bh=8ZxelrFYDpIWsgv+hfq9Z0QBnO4jg4SnHI12pHxjFZA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VMYjilUqHQl/+89fCPM76CDrBdSL0VrO6Xza1/7UpYZdeCfMH9vQMb5fcXJKLFOeZBbdpjerZfs2Sa4TbCQhDMgtZ3vA9J/9dLvm+SqQu9iIGRp9l2OECI6M6Ewfu5AKBid62k4qzFW3CPW+czWkYLmg9YCgD73oVuysp8h4YNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N0g4WYsT; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Er5qu7FT"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e3ca4fe4cfso27271495ad.2
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 20:31:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N0g4WYsT"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5dbd519bde6so2794150a12.1;
+        Sun, 21 Apr 2024 20:32:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713756681; x=1714361481; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Li3+1Ghj2slvXiv+/E7e/F9kDJtZLuXuC3BIKi+jfUc=;
-        b=Er5qu7FTKrIPEWR48uAEX1DLYS3VrpieX1PAzPUN2S1jtCYeQcEqGhZymduJGj6U+t
-         avDkS3SfYje394nnAdXeQX9DD86J8sH2kAd0D1+HfnuqL41j/NULtAJF/IOyrCTFSox2
-         ftmMIQfgnDacyeH+vaHHqdWo2A1t+bRxe5UZhG/zO8bGNRKPjMuOYpUUiZVFCD74ZFua
-         cNfatV6U+bwdYUHaTqJ6d07qjLw9/Y6X1UvoajhziCHJiemYdgFquIkaKqhzdlMcz2Me
-         z84rjr7izdmwmlucBWp7PTsmCKwHRe/mByVCEso/21+FovunMHfQa0vnyomYhkZrVOdY
-         eVLQ==
+        d=gmail.com; s=20230601; t=1713756735; x=1714361535; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4/ZJL1pTmzEwFyLqE8i5v/vS2NbXGhujrhuWi0OmhOc=;
+        b=N0g4WYsTdpDfXjuiDqQo/orzBSZ26QmyasdXvRn91F5Y5QiEZ1v1WYsfQ0ZFEj0E0M
+         zUkTrlkUuhWCsxVUZx+cZh+AZb7mE9fXy97xJ8O32C/Emk7eAieKiLRXlJT9+XsheZzx
+         yn74aSf8Z/J2lFzAp4/HEKf0g6igeXCR5NdJw86PJ4OXkm6I0pOxd1QwBuw2P+PR230T
+         J9a/MnPTQ/JBD/A/LoDUYfiDmuDKbl4IIb3TTXkq9muCAF7R+Na/Zr3anNxgWka6tI1b
+         P3Ics0ZNJCZYY2XWUZ/OrLsjW/4mdve03Vou7YbPbRRvVQ9jKBxfO/zDMisd+OSvdNOZ
+         UJOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713756681; x=1714361481;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Li3+1Ghj2slvXiv+/E7e/F9kDJtZLuXuC3BIKi+jfUc=;
-        b=UVrZEJnlpmal+dNSvh9ZPpznEGjPBLZyQcOEBt2ZF3PL6Q5EDrRMseY9IRtCKL3VFi
-         kbN2oxeEpXxvhq63uwtmv0DYrQrzDABTCTecpU/KM39f2il74CRgje/hfxKacI3EnCYO
-         xmvvjOfzrCwFg7ZsQV/JyKuobll2JNxt5T3oiyxghWVJhJkfoqiqvyVnrYAI99jBMngC
-         MS+ThNlrnunx1X6U81AGMLbe9DI9KtfqFHM9bZn9R6AQqBxpLZzT7mcgZf0ymsRWSymJ
-         NuGstp1Dz9TDAVurTi0SKoqAdDtyiY6RW5K4DGkxWiBH0/V7OZKcTOEipcP216vubQFv
-         zKpA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/bgeXBAtS45wtDELaEnM1k3eVAkPS7yurk+HOK7b/rBpV1ggqUydugJuhpounEezv4z3qcoNwLnZ75MIBUEgvdM9ko6e+Vk2DCmpC
-X-Gm-Message-State: AOJu0YxNqAZRkd9CU1sOk5x53fUFbn24k2pWE277ke4Ft2JZZkKfRl9r
-	YppEARBpVo3wTUObE3tn3Iuf3eQlIeA5U/QBn9hJvh4ZphrIXdvZi6Ox8ipMUYw=
-X-Google-Smtp-Source: AGHT+IEGPELzo18c9HmsXyfk6vYoiNKnZbbOrQi5Dlekvq6DhkR5uumMN7p3RYSBJx4+oqieaxGcdQ==
-X-Received: by 2002:a17:903:244b:b0:1e5:5041:b18a with SMTP id l11-20020a170903244b00b001e55041b18amr11845236pls.40.1713756680930;
-        Sun, 21 Apr 2024 20:31:20 -0700 (PDT)
-Received: from localhost ([122.172.87.52])
-        by smtp.gmail.com with ESMTPSA id w5-20020a1709029a8500b001e435350a7bsm6981020plp.259.2024.04.21.20.31.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Apr 2024 20:31:20 -0700 (PDT)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Yangtao Li <tiny.windzz@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>
-Cc: linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	kernel test robot <lkp@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] cpufreq: sun50i: Fix build warning around snprint()
-Date: Mon, 22 Apr 2024 09:01:09 +0530
-Message-Id: <285de20a187f3e4baeb28f639b5bf55e914a3821.1713756666.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+        d=1e100.net; s=20230601; t=1713756735; x=1714361535;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4/ZJL1pTmzEwFyLqE8i5v/vS2NbXGhujrhuWi0OmhOc=;
+        b=aUhmci8XZ/zDay8e6FjIyKThsxzZDaUhPwZWc3AtUxHZjqF+8+Y4Sh7qazQ/855vEH
+         yOXjyLEy9tb8Z1f/N+LtWzdUZza3F8xDatVPkbNk8EcrAvRSX1X3GZOnZ5NmU7JD+LP0
+         HJxfDpti5UxaXMH28swqve4JVmh10bp1xcPsCgkco3TlguUvL/N7biwdFAdtaEBe+yLU
+         bnb0PDesrPUtmGqlEdx6RyWjSbZ9SYqJK8LNWPcC3cjMJaUp7PrOqoOK+73h0tXUgTGE
+         Mi6wzBoaGbLjqLYOCJISqGnYWUBHFIZpX21jHPEdRXVs6dTwFuHmeI8x8Axkr1g+is3n
+         21pA==
+X-Forwarded-Encrypted: i=1; AJvYcCVBytpF5xSNM9qsRM/L+IMAsZ0PmhlCs3PpCnJCYYjqEfDqkJIxGwtETOjYVzCf/OVm8aeaoU0E4qrV6f7taDdxQX3REWRKH34UJ1QybWfnGeTDdg/0YPwQMMl2oWhg170A92b8EL5EpojfW5FkCa5c2b2BHwThreyFypozbmAUxaBpnEo9iUYf0jeFCLaYHSgfZ6O2
+X-Gm-Message-State: AOJu0YzEI1gJwK0PaFikDs70iJiV2VxA+JO+iUbg9kxjPlX/JftvU5wG
+	vrR1oeBQr9+jiufgnLmx3eTJkHax92G+MDLALah7B65C7To8orI4cxsSMd+MT98l7GXykaXzwm2
+	alcSzs95hgxbDda3HBugEpTf38sQ=
+X-Google-Smtp-Source: AGHT+IEPRvtxI6/g1huUDW70lpXzs8IjQOSCtUsfVTl265mSKB6kl1T3yNXxP4qPGJnDIw87Ykgbrpi4qjFfagWlu/c=
+X-Received: by 2002:a05:6a21:191:b0:1a7:5fe0:1c99 with SMTP id
+ le17-20020a056a21019100b001a75fe01c99mr10040642pzb.46.1713756735513; Sun, 21
+ Apr 2024 20:32:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240420104801.94701-1-usiegl00@gmail.com> <171374175513.12877.8993642908082014881@noble.neil.brown.name>
+In-Reply-To: <171374175513.12877.8993642908082014881@noble.neil.brown.name>
+From: Lex Siegel <usiegl00@gmail.com>
+Date: Mon, 22 Apr 2024 12:32:04 +0900
+Message-ID: <CAHCWhjScokCi7u_98-i6E_xHaSJnFGY6dnkv9-C5-yrpihVJFg@mail.gmail.com>
+Subject: Re: [PATCH] xprtsock: Fix a loop in xs_tcp_setup_socket()
+To: NeilBrown <neilb@suse.de>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, linux-nfs@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The Sun50i driver generates a warning with W=1:
+> Better still would be for kernel_connect() to return a more normal error
+> code - not EPERM.  If that cannot be achieved, then I think it would be
+> best for the sunrpc code to map EPERM to something else at the place
+> where kernel_connect() is called - catch it early.
 
-warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 2 [-Wformat-truncation=]
+The question is whether a permission error, EPERM, should cause a retry or
+return. Currently xs_tcp_setup_socket() is retrying. For the retry to clear=
+,
+the connect call will have to not return a permission error to halt the ret=
+ry
+attempts.
 
-Fix it by allocating a big enough array to print an integer.
+This is a default behavior because EPERM is not an explicit case of the swi=
+tch
+statement. Because bpf appropriately uses EPERM to show that the kernel_con=
+nect
+was not permitted, it highlights the return handling for this case is missi=
+ng.
+It is unlikely that retry was ever the intended result.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202404191715.LDwMm2gP-lkp@intel.com/
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/cpufreq/sun50i-cpufreq-nvmem.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Upstream, the bpf that caused this is at:
+https://github.com/cilium/cilium/blob/v1.15/bpf/bpf_sock.c#L336
 
-diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-index 30e5c337611c..cd50cea16a87 100644
---- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-+++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-@@ -19,8 +19,6 @@
- #include <linux/pm_opp.h>
- #include <linux/slab.h>
- 
--#define MAX_NAME_LEN	7
--
- #define NVMEM_MASK	0x7
- #define NVMEM_SHIFT	5
- 
-@@ -208,7 +206,7 @@ static int sun50i_cpufreq_get_efuse(void)
- static int sun50i_cpufreq_nvmem_probe(struct platform_device *pdev)
- {
- 	int *opp_tokens;
--	char name[MAX_NAME_LEN];
-+	char name[] = "speedXXXXXXXXXXX"; /* Integers can take 11 chars max */
- 	unsigned int cpu, supported_hw;
- 	struct dev_pm_opp_config config = {};
- 	int speed;
-@@ -235,7 +233,7 @@ static int sun50i_cpufreq_nvmem_probe(struct platform_device *pdev)
- 		config.supported_hw_count = 1;
- 	}
- 
--	snprintf(name, MAX_NAME_LEN, "speed%d", speed);
-+	snprintf(name, sizeof(name), "speed%d", speed);
- 	config.prop_name = name;
- 
- 	for_each_possible_cpu(cpu) {
--- 
-2.31.1.272.g89b43f80a514
+This cilium bpf code has two return statuses, EPERM and ENXIO, that fall
+through to the default case of retrying. Here, cilium expects both of these
+statuses to indicate the connect failed. A retry is not the intended result=
+.
 
+Handling this case without a retry aligns this code with the udp behavior. =
+This
+precedence for passing EPERM back up the stack was set in 3dedbb5ca10ef.
+
+I will amend my patch to include an explicit case for ENXIO as well, as thi=
+s is
+also in cilium's bpf and will cause the same bug to occur.
+
+
+On Mon, Apr 22, 2024 at 8:22=E2=80=AFAM NeilBrown <neilb@suse.de> wrote:
+>
+> On Sat, 20 Apr 2024, Lex Siegel wrote:
+> > When using a bpf on kernel_connect(), the call can return -EPERM.
+> > This causes xs_tcp_setup_socket() to loop forever, filling up the
+> > syslog and causing the kernel to freeze up.
+> >
+> > Signed-off-by: Lex Siegel <usiegl00@gmail.com>
+> > ---
+> >  net/sunrpc/xprtsock.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+> > index bb9b747d58a1..47b254806a08 100644
+> > --- a/net/sunrpc/xprtsock.c
+> > +++ b/net/sunrpc/xprtsock.c
+> > @@ -2446,6 +2446,8 @@ static void xs_tcp_setup_socket(struct work_struc=
+t *work)
+> >               /* Happens, for instance, if the user specified a link
+> >                * local IPv6 address without a scope-id.
+> >                */
+> > +     case -EPERM:
+> > +             /* Happens, for instance, if a bpf is preventing the conn=
+ect */
+>
+> This will propagate -EPERM up into other layers which might not be ready
+> to handle it.
+> It might be safer to map EPERM to an error we would be more likely to
+> expect  from the network system - such as ECONNREFUSED or ENETDOWN.
+>
+> Better still would be for kernel_connect() to return a more normal error
+> code - not EPERM.  If that cannot be achieved, then I think it would be
+> best for the sunrpc code to map EPERM to something else at the place
+> where kernel_connect() is called - catch it early.
+>
+> NeilBrown
+>
+>
+> >       case -ECONNREFUSED:
+> >       case -ECONNRESET:
+> >       case -ENETDOWN:
+> > --
+> > 2.39.3
+> >
+> >
+>
