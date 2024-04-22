@@ -1,105 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C72345BFD;
-	Mon, 22 Apr 2024 23:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109144597A
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 23:52:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713829861; cv=none; b=Nn6ztvruXsl8efgIqxwJ30k/Nwi6Jlz7qgYHJkJq+kLo3+MHxaUjt7N5koQzr0Kbn9gHYi2WPK4OBbXemxUzPMb9qWEr2RN2ysOyCHgufMqSbfu31gzB59Yp/RJqz0A9jKbQhaAdkC/1JPuZ8PyatxxkPK3PkwqCGe3/JyyT+3s=
+	t=1713829930; cv=none; b=tHnHRKSQdrvSncg8recuxY0f3JBO41UF8v0X/2YHha64ndBuQv9cq3PY1BxKg4txvsnqJ1LniIcNarKF14cQPiHIePFU6PuFkTeQLd4CKLY2smr20/gYnXdpjXPIV/HR0CGoNf573IcCRJqglK6yvQVlzUoWYiOdDwUnAG7RBtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713829861; c=relaxed/simple;
-	bh=tFEFgMWQs6y1aDNqZ35H+2qCl1i2+BCPQTT7FTmshb0=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=LPP0jPHBiMuqIkJ4kBFdWrlFUNGmsvlD7dpmr/zNfMiDhzRlTWhOEL97LKa3eRONZ9iXcNAxg7A0LYPGAXrZWg4IgVW70eV50WTlG0QHjNNasT2K+bxQLCanjBjUTTg1Wd+VsWuhmAX3TZu/+USySf1rEogE7NsXtjPoBsS3wec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ce/o/vYw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713829930; c=relaxed/simple;
+	bh=4r98zwDgiy1YfXNKtIkT0ExLUuEswdA2nBvFO8XbVmQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PMsm6aIvpksg6Gwi/Xz/vnU82vem+2+BOuy1dWNzwM1YFES/EeFpgZ+IwS1wEKRerPaW4MLHRqPUb+4dY0zbAwh/eXf1Xn609vxB50EOJaKtCSJoiDhZBxm7SkXpx+SGL48C5lg+Glw/9cXCLkBrPZhQmtMsJcOGxmq5aR5tzrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VeZc0T32; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ce/o/vYw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EECDC113CC;
-	Mon, 22 Apr 2024 23:50:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713829861;
-	bh=tFEFgMWQs6y1aDNqZ35H+2qCl1i2+BCPQTT7FTmshb0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Ce/o/vYwPazRINVizV7YNQ6a6u7lRlRxCTBOypp5iGMswAFX1jAFDdZLTFCL1TENd
-	 bNiWh5E+ofBfqyDgd2Q8zWXPXHB1ITv0LC2ugkCJhj+d/HS3vwCcOiTD4qrmEJ06oP
-	 sPSLrD8QOimVVPaLQafO04Tq4eFaxv1NIwpxZzrrMDAVX6GVq10d9RNL1641IKAyx1
-	 og82EvcLz9nC31zcfsHQmts1HKWoJOdrWDlvda0YLIgz4YHzjQVNPFiCFd9z2/XfF0
-	 guq+Q+DA4DHuCbvTqWCrmzq/GAsxzm0dljWC809ubNoiNHHdTDFetLd4yGYSEJWsn+
-	 +WUtDnGHcZRDg==
-Date: Tue, 23 Apr 2024 08:50:56 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- dcook@linux.microsoft.com
-Subject: Re: [PATCH 1/2] tracing/user_events: Fix non-spaced field matching
-Message-Id: <20240423085056.5deb4c21122c5b66e17b21c0@kernel.org>
-In-Reply-To: <20240422215525.GA414-beaub@linux.microsoft.com>
-References: <20240416224102.734-1-beaub@linux.microsoft.com>
-	<20240416224102.734-2-beaub@linux.microsoft.com>
-	<20240419113305.7b0ae2b11395eec16b5c15b6@kernel.org>
-	<20240419211334.GA7774-beaub@linux.microsoft.com>
-	<20240420215052.1f806c8acb5f99ec2f63945c@kernel.org>
-	<20240422215525.GA414-beaub@linux.microsoft.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VeZc0T32"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-78f05afc8d6so347497485a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 16:52:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713829926; x=1714434726; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mFMZDFCKqtRsg+Es89BVufKPl3Pj2valoSZO9ZIhMr8=;
+        b=VeZc0T32WzEUv4/+biDjr0w/2Cbn0OdVnZo3bZVW9GoJDPfIUJgI2cMogIQZdmIIip
+         ZOFTPdMhPLLvN+vYVcUB3FtNba/KZI6ulVTcJQVH+mECP7PVx5kH00blshuymQbA+8SJ
+         uN9cn6wA1GZxP2s9sgwUKATDkMNOSsYTkoEug=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713829926; x=1714434726;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mFMZDFCKqtRsg+Es89BVufKPl3Pj2valoSZO9ZIhMr8=;
+        b=ABbdIvjloC8Mli4olXwyX8R0wU0x5zl9stCwnQuFyosQOs+VQ9nPiaiCicu/BJFlOx
+         t5nCi8eJBNjJebRcoqO0bxdWCcBHb6zrHtHmMOjPuXD7HQIlQ/CZYJPhKZfhLvaDVrg/
+         +f1Hgsy+qft4NrdtTx0/wSl1RtbyPceab5eadXC5zIYDElAIeMSHJj4eQEe40weYBk4D
+         ILEdyov8yKhsThLUnjvatieryKG80y1Ts7bN3cuHNB2QY5nssuHgz+oprnb1rRBuMN/S
+         cymd2TPHuyzVIN+5BJRrHwziYxXrN8jxnAJI+uGqxdVtka1hC2hOyeXcHj+crovojqJS
+         5hxg==
+X-Forwarded-Encrypted: i=1; AJvYcCU4kGtL4J8iHSz8ADP5iHnjRSAnHd54A+1aIjIeRZf7jY70xuOXvF7LCYLAOn8QU9J147nlFBI+jGlZ1Eq0zjMa/W1BIo9s35wVQyJ6
+X-Gm-Message-State: AOJu0Yy+sweFTVZ8sBez6ucb5u+XK/T1rFVHuq1gcdJE6ubI6RiSLWJ2
+	YhBKjE7gqrfs35tn3INhbVpOpHVi01Z6kvAq569Yl8+bTOIrCbmrc8snGoxfBPZWXOhJw6dqoqg
+	2ZGCv
+X-Google-Smtp-Source: AGHT+IGgRySu8OAdpsI+BH1RFH+SrXh73PLdHFwlhfwm1UOrX09Y/KLMO+7qNnVORIIQZ8X+Vlglhg==
+X-Received: by 2002:a05:620a:166f:b0:78f:1583:fde8 with SMTP id d15-20020a05620a166f00b0078f1583fde8mr11333630qko.62.1713829925949;
+        Mon, 22 Apr 2024 16:52:05 -0700 (PDT)
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com. [209.85.160.169])
+        by smtp.gmail.com with ESMTPSA id s28-20020a05620a031c00b0078d61d4c810sm4767478qkm.0.2024.04.22.16.52.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Apr 2024 16:52:05 -0700 (PDT)
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-434ffc2b520so79101cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 16:52:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW6xqWWPIwD+AWoDQAF2KQxLpXiX5fMqVPqRKRsz9co/lKCsDOXRxVaMwHAzrqc7JiT5nroAU5IFJxA/Kj9ECZsssVdZENSp155DCT+
+X-Received: by 2002:a05:622a:50a7:b0:439:a613:c4fa with SMTP id
+ fp39-20020a05622a50a700b00439a613c4famr129884qtb.18.1713829924524; Mon, 22
+ Apr 2024 16:52:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20240422-kgdb_read_refactor-v2-0-ed51f7d145fe@linaro.org> <20240422-kgdb_read_refactor-v2-1-ed51f7d145fe@linaro.org>
+In-Reply-To: <20240422-kgdb_read_refactor-v2-1-ed51f7d145fe@linaro.org>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 22 Apr 2024 16:51:49 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VrOSN8VFaRwH-k4wCLm6Xb=zJyozJac+ijzhDvH8BYxA@mail.gmail.com>
+Message-ID: <CAD=FV=VrOSN8VFaRwH-k4wCLm6Xb=zJyozJac+ijzhDvH8BYxA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] kdb: Fix buffer overflow during tab-complete
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Jason Wessel <jason.wessel@windriver.com>, kgdb-bugreport@lists.sourceforge.net, 
+	linux-kernel@vger.kernel.org, Justin Stitt <justinstitt@google.com>, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 22 Apr 2024 14:55:25 -0700
-Beau Belgrave <beaub@linux.microsoft.com> wrote:
+Hi,
 
-> On Sat, Apr 20, 2024 at 09:50:52PM +0900, Masami Hiramatsu wrote:
-> > On Fri, 19 Apr 2024 14:13:34 -0700
-> > Beau Belgrave <beaub@linux.microsoft.com> wrote:
-> > 
-> > > On Fri, Apr 19, 2024 at 11:33:05AM +0900, Masami Hiramatsu wrote:
-> > > > On Tue, 16 Apr 2024 22:41:01 +0000
-> > > > Beau Belgrave <beaub@linux.microsoft.com> wrote:
-> 
-> *SNIP*
-> 
-> > > > nit: This loop can be simpler, because we are sure fixed has enough length;
-> > > > 
-> > > > /* insert a space after ';' if there is no space. */
-> > > > while(*args) {
-> > > > 	*pos = *args++;
-> > > > 	if (*pos++ == ';' && !isspace(*args))
-> > > > 		*pos++ = ' ';
-> > > > }
-> > > > 
-> > > 
-> > > I was worried that if count_semis_no_space() ever had different logic
-> > > (maybe after this commit) that it could cause an overflow if the count
-> > > was wrong, etc.
-> > > 
-> > > I don't have an issue making it shorter, but I was trying to be more on
-> > > the safe side, since this isn't a fast path (event register).
-> > 
-> > OK, anyway current code looks correct. But note that I don't think
-> > "pos++; len--;" is safer, since it is not atomic. This pattern
-> > easily loose "len--;" in my experience. So please carefully use it ;)
-> > 
-> 
-> I'll stick with your loop. Perhaps others will chime in on the v2 and
-> state a stronger opinion.
-> 
-> You scared me with the atomic comment, I went back and looked at all the
-> paths for this. In the user_events IOCTL the buffer is copied from user
-> to kernel, so it cannot change (and no other threads access it). I also
-> checked trace_parse_run_command() which is the same. So at least in this
-> context the non-atomic part is OK.
+On Mon, Apr 22, 2024 at 9:37=E2=80=AFAM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> Currently, when the user attempts symbol completion with the Tab key, kdb
+> will use strncpy() to insert the completed symbol into the command buffer=
+.
+> Unfortunately it passes the size of the source buffer rather than the
+> destination to strncpy() with predictably horrible results. Most obviousl=
+y
+> if the command buffer is already full but cp, the cursor position, is in
+> the middle of the buffer, then we will write past the end of the supplied
+> buffer.
+>
+> Fix this by replacing the dubious strncpy() calls with memmove()/memcpy()
+> calls plus explicit boundary checks to make sure we have enough space
+> before we start moving characters around.
+>
+> Reported-by: Justin Stitt <justinstitt@google.com>
+> Closes: https://lore.kernel.org/all/CAFhGd8qESuuifuHsNjFPR-Va3P80bxrw+Lqv=
+C8deA8GziUJLpw@mail.gmail.com/
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> ---
+>  kernel/debug/kdb/kdb_io.c | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
 
-Oh, sorry if I scared you. I've seen bugs get introduced into loops like
-this many times (while updating the code), so I try to keep it simple.
-I'm sure that your code has no bugs.
+Boy, this function (and especially the tab handling) is hard to read.
+I spent a bit of time trying to grok it and, as far as I can tell,
+your patch makes things better and I don't see any bugs.
 
-Thank you,
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
