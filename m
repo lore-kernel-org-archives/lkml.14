@@ -1,29 +1,29 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B069614F9FA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FA514F9E1;
 	Mon, 22 Apr 2024 13:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713793796; cv=none; b=uLeZf2boeIA0l2iVhsnLtOGLh0pZys0rOlX3VxFD2MRhKSMmqjD+8inhSiz4HyAOuhuW46b3epRv8V2gOhneNYehqwAl/122aETB6ud0jXLkcihvcH3ZIbdkbKFlryi5DKXxq8NTadeAgSPd9MazEN/p5f1CfXXEg8g6G4/9OtI=
+	t=1713793797; cv=none; b=Kf12NnR19ys1Imab3SBfTnyNwUnOx3PcXlJD+oFgVgeMlMUq+N5ECygDt2nuBsLAd6FqIY9EHSlQ25kMxansfC2olKRHW+Qy/0zr80KgZPUKVfbHkyRQMNQYrbgM4vU6MeugRxe9zaspGVhH7KCUB+QlDRzIMmrhME1OVqUpkX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713793796; c=relaxed/simple;
-	bh=2fCUerJP7jfaJaj+usa/YK7IUw4+3HWZsB+B05Psgcs=;
+	s=arc-20240116; t=1713793797; c=relaxed/simple;
+	bh=1PmetgDd52wT5mS6a1c+oHTd+cEgcFwQ5z45836SnVQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PUrMPwUW0hUYRAqYlAN6DNR8RxiXMwpZq1RZEjfQ55ZRGsJSP1D8z+8fBUKsFbqPay+DwjZTv3xcfbwxirpoQ2gaXA6x1+iywLKpD+GP5BBotXKmVl1zsMSg9yFUKgi/aL+xi4954taBFa9Y8tNGyAdlKNmV5X+XnZuwvBXeEc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	 MIME-Version:Content-Type; b=UyEBGdZptsZH+7kT10TGT7SrXvqdf87t+ojFDO4Q0M/1UgBmAwhvE17KoFcNM9zqmkO09j+HrJlxUWmQfeXekNXOvUlCW0bnmhBNW91TtCN4j3CXrjmsRvBxKw0UhED9jhvoLXYbUgMiku8QEpL7/RaVrHjKZf3Lhc9GW5SoR70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VNRPF5qYszcdcV;
-	Mon, 22 Apr 2024 21:46:41 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VNRPS6qGNz1R8wV;
+	Mon, 22 Apr 2024 21:46:52 +0800 (CST)
 Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
-	by mail.maildlp.com (Postfix) with ESMTPS id 84C7C18007D;
-	Mon, 22 Apr 2024 21:49:50 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 028C718007C;
+	Mon, 22 Apr 2024 21:49:52 +0800 (CST)
 Received: from localhost.localdomain (10.67.165.2) by
  kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 22 Apr 2024 21:49:49 +0800
+ 15.1.2507.35; Mon, 22 Apr 2024 21:49:51 +0800
 From: Jijie Shao <shaojijie@huawei.com>
 To: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
 	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
@@ -31,9 +31,9 @@ To: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
 CC: <shenjian15@huawei.com>, <wangjie125@huawei.com>,
 	<liuyonglong@huawei.com>, <shaojijie@huawei.com>, <chenhao418@huawei.com>,
 	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net 1/7] net: hns3: direct return when receive a unknown mailbox message
-Date: Mon, 22 Apr 2024 21:43:21 +0800
-Message-ID: <20240422134327.3160587-2-shaojijie@huawei.com>
+Subject: [PATCH net 4/7] net: hns3: use appropriate barrier function after setting a bit value
+Date: Mon, 22 Apr 2024 21:43:24 +0800
+Message-ID: <20240422134327.3160587-5-shaojijie@huawei.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20240422134327.3160587-1-shaojijie@huawei.com>
 References: <20240422134327.3160587-1-shaojijie@huawei.com>
@@ -48,40 +48,57 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  kwepemm600007.china.huawei.com (7.193.23.208)
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Peiyang Wang <wangpeiyang1@huawei.com>
 
-Currently, the driver didn't return when receive a unknown
-mailbox message, and continue checking whether need to
-generate a response. It's unnecessary and may be incorrect.
+There is a memory barrier in followed case. When set the port down,
+hclgevf_set_timmer will set DOWN in state. Meanwhile, the service task has
+different behaviour based on whether the state is DOWN. Thus, to make sure
+service task see DOWN, use smp_mb__after_atomic after calling set_bit().
 
-Fixes: bb5790b71bad ("net: hns3: refactor mailbox response scheme between PF and VF")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
+          CPU0                        CPU1
+========================== ===================================
+hclgevf_set_timer_task()    hclgevf_periodic_service_task()
+  set_bit(DOWN,state)         test_bit(DOWN,state)
+
+pf also has this issue.
+
+Fixes: ff200099d271 ("net: hns3: remove unnecessary work in hclgevf_main")
+Fixes: 1c6dfe6fc6f7 ("net: hns3: remove mailbox and reset work in hclge_main")
+Signed-off-by: Peiyang Wang <wangpeiyang1@huawei.com>
 Signed-off-by: Jijie Shao <shaojijie@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 3 +--
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-index d4a0e0be7a72..59c863306657 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-@@ -1077,12 +1077,13 @@ static void hclge_mbx_request_handling(struct hclge_mbx_ops_param *param)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index a068cd745eb4..6eda73f1e6ad 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -7954,8 +7954,7 @@ static void hclge_set_timer_task(struct hnae3_handle *handle, bool enable)
+ 		/* Set the DOWN flag here to disable link updating */
+ 		set_bit(HCLGE_STATE_DOWN, &hdev->state);
  
- 	hdev = param->vport->back;
- 	cmd_func = hclge_mbx_ops_list[param->req->msg.code];
--	if (cmd_func)
--		ret = cmd_func(param);
--	else
-+	if (!cmd_func) {
- 		dev_err(&hdev->pdev->dev,
- 			"un-supported mailbox message, code = %u\n",
- 			param->req->msg.code);
-+		return;
-+	}
-+	ret = cmd_func(param);
+-		/* flush memory to make sure DOWN is seen by service task */
+-		smp_mb__before_atomic();
++		smp_mb__after_atomic(); /* flush memory to make sure DOWN is seen by service task */
+ 		hclge_flush_link_update(hdev);
+ 	}
+ }
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index b57111252d07..08db8e84be4e 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -2181,8 +2181,7 @@ static void hclgevf_set_timer_task(struct hnae3_handle *handle, bool enable)
+ 	} else {
+ 		set_bit(HCLGEVF_STATE_DOWN, &hdev->state);
  
- 	/* PF driver should not reply IMP */
- 	if (hnae3_get_bit(param->req->mbx_need_resp, HCLGE_MBX_NEED_RESP_B) &&
+-		/* flush memory to make sure DOWN is seen by service task */
+-		smp_mb__before_atomic();
++		smp_mb__after_atomic(); /* flush memory to make sure DOWN is seen by service task */
+ 		hclgevf_flush_link_update(hdev);
+ 	}
+ }
 -- 
 2.30.0
 
