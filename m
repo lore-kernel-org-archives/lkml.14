@@ -1,175 +1,161 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619931E49F;
-	Mon, 22 Apr 2024 14:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9FA152186
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 14:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713797726; cv=none; b=RCgRTQYEMJpxlQod8MUz8vAJfvyh1EjIgRAttTgYj4nhaEWw0OC/tr8zOIzl8Ptlal8V6YrR1JqU8Wn7KKRvc/ko8qjsC1XfoaLXfkPKpk0m3HptuLfzFRFemT2Bne22R4gYi98Uif7eTZzII5zcS4OfmAsjRCNXa6QvrKqO0Kg=
+	t=1713797768; cv=none; b=Ld8c0b7C2EC5wD6Rdnid2W6foxqyfaCHWVa77+HjfEtEmpjtL0hAXuDgGIpRv8ANfk5wOaXjl8mgsRyVG3P1VHjMmzVb3np6HKtH+/9zvWgEIPG6i9jllb35Yz7IZqoH36DR868rD4RO2Qj3A6YWVqqFJ9VmkKTlFOIC/+HyikQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713797726; c=relaxed/simple;
-	bh=LJ4OGj/G3ocPwE6LJjXahrtiiWDhc9Z7GXZHiYK1IZ0=;
+	s=arc-20240116; t=1713797768; c=relaxed/simple;
+	bh=imsekkblo55XmgjAaWRpZaTVc+ZBiFNXzC9IucNVpbg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EX3mMZp0eCNEAvavilTbKkZQZqV306lhYbZ32VuZ0G7Dz2VOmIi/Lu0xQrti3Lop41pPbMqgwOgHHVFE7nX40vUsV4QxhVQffVE2sdj+1snlhW/YiIGoDCJoVjKRjt5x1WcIV2N/iuYSkhQSptvTbr93NIfUG3u5KDz/fkLxcXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RWAt1XMc; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=NJFGvVX1oubCw2/S/sLMPAd2IuuH5CIVZngl7DlyXKN3jHxe9vdavSQUgnyBnUjmVg2ybvKIJpCXvYQOwLAwypWZb46KGV6/BvxT3rTqCp0lbRrgVnxy6wKx50xJEhxbCAMOYwkpw/yOKIdjdEQ8IK34HEcoILGtuAs9B2/RExc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U4HjiUXU; arc=none smtp.client-ip=209.85.160.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWAt1XMc"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-572146dd1c8so663146a12.3;
-        Mon, 22 Apr 2024 07:55:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U4HjiUXU"
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-22edbef3b4eso1054189fac.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:56:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713797722; x=1714402522; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1713797765; x=1714402565; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LJ4OGj/G3ocPwE6LJjXahrtiiWDhc9Z7GXZHiYK1IZ0=;
-        b=RWAt1XMcvURv1LC8ZP4yeM0zrTR3a89J0uainZzA8sQnVwRxoisVlvl18OxDGgR3pN
-         7B60nwVLbDR2jToGdiMUJDnwsr7XdymyVwGfdLsnjjwgdrXZFvjisuzQDBnospbEVPKQ
-         qmoYewgFoMU8uGqqT/vCVZfCwbMJ0erJhIYxklYA11pUWirEBil1lfeaUpfMIVFqOTz1
-         Urtl6zoG44y9FaqRo+3SNoS6Om1jYkieqbQDHoao8jDjdO/27cDrtAm1xfOXgdL8Usji
-         WKuVrclkr9CJsztDddPXmaV65hqMyIQCLAQsMlQ1rYf7J53iywPDJh3AoFKC1Oz0r9du
-         UIhg==
+        bh=NTOg8DkAW/3dkpxikcsk436y8h1eZe1SfUF5lmW3ku0=;
+        b=U4HjiUXUk7RxfDBJM02w61BKjrevJJkbVQ4n308mTss7ZrXCgsfziCIwLKxShfByoo
+         hWFUPwgoHrnn3+txvd+/dIRdrUyblWZBxXoIwQ7UOUEt5AXEp3fu6NW1YR9Euv3EQx5h
+         I1rveApyv3uw4B8KPrC6Jknj+jJkMsDnxzmLngWhjRpXz52q9hKfhn6LfI2E+KADBrKI
+         r+uDdkRm9scQAFyNYr+06lPE2DWOuUWWkQvldJVTr7zvmAQ4ictOwHFJ3K+eaL8sVheP
+         2p/ckccpkJIi/sQewygszj8wg3710ivlA+IL92IGQ0r+8UQMLXtriqxQHG6s6r8iYUjm
+         58zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713797722; x=1714402522;
+        d=1e100.net; s=20230601; t=1713797765; x=1714402565;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LJ4OGj/G3ocPwE6LJjXahrtiiWDhc9Z7GXZHiYK1IZ0=;
-        b=Yb2OqVJ+TbgYLUq3B3U7dC9YMfHBAXbEZG3tiaOPJuMV3Fgj6uMi1T1/aIDuk6ACFQ
-         +sLB19ZbPZ8T/HmbCdIp5fJndbiiGKi8dNVUm5rWd1v0u2R38me0BqoAj1uB663xza70
-         kZdYticIhWcXlmgLVt6UaUKZWo84y92iN9wDE1Ocsx6AQ73ajLCl1IjNGO26faV9HgDr
-         PVYg59aJEHzT2+CVLS0AFSbDlmIRaofKMi6bcTRwIiXYR5ICuYwd1qJkeuqqedyTTQpa
-         FIGvWk/h92xA6tGH+lMZOpaKwsenoRt2U7EVtK5jCAUMA91IY3AuY4oGVuM9eQxMT1u0
-         wGiA==
-X-Forwarded-Encrypted: i=1; AJvYcCWnLLlNP6pQxur7dAC0Crx2PbVP1hawVm3Kf8/Ind9J34lCejVkIIyye5enGXlaZIdfROUj9hMzZTFcgfdzyWAUo2qKzRVg+M9z2A3pR5D3uGXOjRXq3Rnksp4iaLu7fbGievJ0EVjkUOQR
-X-Gm-Message-State: AOJu0YzvqUr932Iv2DCqno/XLlnLiv7aNw7xu7+shT/Fcq+qjQm+pcyh
-	RUVtC4li5zuWwX9Q6CEB7+JAar1TUWsAuxfotHWFO8Q9ZTyNM73Zh3ocQz1oal40m9oHMno3V9F
-	a0TknDOCmz9BcqoHkSn1SJprADks=
-X-Google-Smtp-Source: AGHT+IGKeGoNS13fdl+AITowdhp/mZEru+IxeqNOh0ZgzxIisIX8SfoKgQ9i/2+abfEEERa+T9URmJOHPpnXkcl4lZ4=
-X-Received: by 2002:a17:907:9447:b0:a55:c021:e3b6 with SMTP id
- dl7-20020a170907944700b00a55c021e3b6mr1894841ejc.11.1713797722551; Mon, 22
- Apr 2024 07:55:22 -0700 (PDT)
+        bh=NTOg8DkAW/3dkpxikcsk436y8h1eZe1SfUF5lmW3ku0=;
+        b=bJBMrEzZdzDXmJAEE3L2nHmJKoOV7qrq8yceL4x/ZD5ph8j988f6T0KFlVOe8xbv8f
+         W0Y9fe2cR4Nhea7o4c/TmPOfyccw5AGu3k64UfbOu+t4lZeN+KaCW+sxHyYMkyW1aZ2I
+         BbGIYFC4Rh0PWybdo/uCgSbfH9QT2CfdyLJMS7Xrkdex2JFJy2IQEM1h7iqSIuSKfWvx
+         mcQ0ohW6JTkSlij4ft1zKf9u3W6W0DefhlMI7d7Zhn7c5R7iA9+031IGhc+fjjpfkSFO
+         UXa3EsZlu08wlXh0Te6ffdE0dXdJu3mU04v+7SAPi2STKtcCQXcN5KyFbtDKwj8kj7gn
+         EocA==
+X-Forwarded-Encrypted: i=1; AJvYcCWj8awL8mzgyUNVJBbHtILcmBGK+OEnDbnbzUtiN4PE2e5SKdU/ZhnDzIQ9018HVl3b3Xg3EpdeiadHPTvOlXANY3WFBIpn0McSm8kU
+X-Gm-Message-State: AOJu0YxbJANGaC4x9lSfrfffX60BmLe8NEEu+9X/p7ns6vI+9+c0zLMm
+	jSJljQaagaOoBkMnbWgSlfeuE+vgaHUIxIyZxaJ2iGa8NCF1d7JzD2GAN4/jfcN70X7xzN5vUAV
+	8/yUmPjqUCjbT0hGC6Lj0Tw68zTFiPV4XK9QJmw==
+X-Google-Smtp-Source: AGHT+IHTzGHT1v9LeibIhpXISDP5Up0NDJE//bpDlntvJJiW0sMwcyQm0rL5VdwsrhLb5OjnZBVN3sPtCblaMnzwbwM=
+X-Received: by 2002:a05:6870:1318:b0:21f:aba0:772d with SMTP id
+ 24-20020a056870131800b0021faba0772dmr10853360oab.39.1713797765495; Mon, 22
+ Apr 2024 07:56:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240422133219.2710061-1-ria.freelander@gmail.com>
- <e2989aa1-7f2b-4ac3-8fd8-822c87d61a1e@kernel.org> <CAF1WSuzqLxpxwYuNYfHyvXLDMBE-ZU69YLXwBdQokZzhs49xzw@mail.gmail.com>
- <c5fdfc26-b8c7-4e0e-bd15-1299ec052833@kernel.org> <CAF1WSuzzzG_vm5b55zb_ha-Vj7H+i3ZbmPyN1F-EQxS3GLaurg@mail.gmail.com>
- <ZiZ3p8XVjolnzR4U@smile.fi.intel.com>
-In-Reply-To: <ZiZ3p8XVjolnzR4U@smile.fi.intel.com>
-From: "Konstantin P." <ria.freelander@gmail.com>
-Date: Mon, 22 Apr 2024 17:57:31 +0300
-Message-ID: <CAF1WSuyfsjgwnum0SLsCeYVv44w_02JmRYxpe9THgtgff3VXMg@mail.gmail.com>
-Subject: Re: [PATCH v7 0/3] add support for EXAR XR20M1172 UART
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor@kernel.org>, lkp@intel.com, 
-	Vladimir Zapolskiy <vz@mleia.com>, Rob Herring <robh@kernel.org>, jcmvbkbc@gmail.com, 
-	nicolas.ferre@microchip.com, manikanta.guntupalli@amd.com, corbet@lwn.net, 
-	ychuang3@nuvoton.com, u.kleine-koenig@pengutronix.de, Maarten.Brock@sttls.nl, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>, Lech Perczak <lech.perczak@camlingroup.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+References: <20240404122559.898930-1-peter.griffin@linaro.org>
+ <20240404122559.898930-9-peter.griffin@linaro.org> <61f427ab3793def23d80d94457ff1568cae5ee11.camel@linaro.org>
+In-Reply-To: <61f427ab3793def23d80d94457ff1568cae5ee11.camel@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Mon, 22 Apr 2024 15:55:54 +0100
+Message-ID: <CADrjBPqAyWzuw9TmdE1XRQ2BkYojR8r7nnH7JcRWc9_xOpUgHg@mail.gmail.com>
+Subject: Re: [PATCH 08/17] clk: samsung: gs101: add support for cmu_hsi2
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org, 
+	alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org, 
+	s.nawrocki@samsung.com, cw00.choi@samsung.com, jejb@linux.ibm.com, 
+	martin.petersen@oracle.com, chanho61.park@samsung.com, ebiggers@kernel.org, 
+	linux-scsi@vger.kernel.org, linux-phy@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, tudor.ambarus@linaro.org, 
+	saravanak@google.com, willmcvicker@google.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 22, 2024 at 5:45=E2=80=AFPM Andy Shevchenko <andy@kernel.org> w=
-rote:
->
-> On Mon, Apr 22, 2024 at 05:30:13PM +0300, Konstantin P. wrote:
-> > I do not skip it, it added to patch 2, as you requested.
->
-> You still continue top-posting!
-> It's not good.
->
-> You missed _my_ tag.
->
-> But please, please, wait a bit, you really need to slow down.
->
-> > On Mon, Apr 22, 2024, 16:51 Krzysztof Kozlowski <krzk@kernel.org> wrote=
-:
-> > > On 22/04/2024 15:50, Konstantin P. wrote:
-> > > > On Mon, Apr 22, 2024 at 4:45=E2=80=AFPM Krzysztof Kozlowski <krzk@k=
-ernel.org>
-> > > wrote:
-> > > >> On 22/04/2024 15:32, Konstantin Pugin wrote:
->
-> > > >>> EXAR XR20M1172 UART is mostly SC16IS762-compatible, but
-> > > >>> it has additional register which can change UART multiplier
-> > > >>> to 4x and 8x, similar to UPF_MAGIC_MULTIPLIER does. So, I used th=
-is
-> > > >>> flag to guard access to its specific DLD register. It seems than
-> > > >>> other EXAR SPI UART modules also have this register, but I tested
-> > > >>> only XR20M1172.
-> > > >>> Yes, in datasheet this register is called "DLD - Divisor Fraction=
-al"
-> > > >>> or "DLD - Divisor Fractional Register", calling depends on datash=
-eet
-> > > >>> version.
-> > > >>>
-> > > >>> I am sorry about too many submissions and top post reply. About s=
-econd
-> > > -
-> > > >>> I do not know how to reply properly to this ML from GMail phone a=
-pp.
-> > > About first - I just
-> > > >>> get very good feedback from Andy Shevchenko, and want to fix his
-> > > review picks ASAP.
-> > > >>>
-> > > >>
-> > > >> One patchset per 24h.
-> > > >>
-> > > >> Plus, you already got such review comment:
-> > > >>
-> > > >> This is a friendly reminder during the review process.
-> > > >>
-> > > >> It looks like you received a tag and forgot to add it.
-> > > >>
-> > > >> If you do not know the process, here is a short explanation:
-> > > >> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-> > > >> versions, under or above your Signed-off-by tag. Tag is "received"=
-, when
-> > > >> provided in a message replied to you on the mailing list. Tools li=
-ke b4
-> > > >> can help here. However, there's no need to repost patches *only* t=
-o add
-> > > >> the tags. The upstream maintainer will do that for tags received o=
-n the
-> > > >> version they apply.
-> > > >>
-> > > >>
-> > > https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/proces=
-s/submitting-patches.rst#L577
-> > > >>
-> > > >> If a tag was not added on purpose, please state why and what chang=
-ed.
-> > > >>
-> > > >> Just start using b4.
-> > > >
-> > > > There is not only for tag. I submit fixes for version 4 by mistake,
-> > > > so, repost to 7 was necessary, because v6 was not work (as v4). But=
- v7
-> > > > should be based on v5, and v5 is tested better around tty-next.
-> > >
-> > > ???
-> > >
-> > > You got tag, didn't you? Then explain why you decided to skip it. In =
-the
-> > > changelog of patchset which ignores/skips the tag.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+Hi Andr=C3=A9,
 
-I am sorry about your tag, I did not notice it, if I do new version, I
-will for sure add it. About top-posting - I do not know, how not to
-top-post from GMail phone app(
+On Thu, 4 Apr 2024 at 14:24, Andr=C3=A9 Draszik <andre.draszik@linaro.org> =
+wrote:
+>
+> Hi Pete,
+>
+> Thanks for this!
+>
+> I haven't reviewed this, but one immediate comment...
+>
+> On Thu, 2024-04-04 at 13:25 +0100, Peter Griffin wrote:
+> > [...]
+> > diff --git a/drivers/clk/samsung/clk-gs101.c b/drivers/clk/samsung/clk-=
+gs101.c
+> > index d065e343a85d..b9f84c7d5c22 100644
+> > --- a/drivers/clk/samsung/clk-gs101.c
+> > +++ b/drivers/clk/samsung/clk-gs101.c
+> > @@ -22,6 +22,7 @@
+> >  #define CLKS_NR_MISC (CLK_GOUT_MISC_XIU_D_MISC_ACLK + 1)
+> >  #define CLKS_NR_PERIC0       (CLK_GOUT_PERIC0_SYSREG_PERIC0_PCLK + 1)
+> >  #define CLKS_NR_PERIC1       (CLK_GOUT_PERIC1_SYSREG_PERIC1_PCLK + 1)
+> > +#define CLKS_NR_HSI2 (CLK_GOUT_HSI2_XIU_P_HSI2_ACLK + 1)
+>
+> Can you please keep the #defines alphabetical (hsi before misc).
 
-Also, I added a linux-serial mailing list into all my mail, I do not
-know why my emails are missing.
+Will fix
+
+>
+> >
+> >  /* ---- CMU_TOP ------------------------------------------------------=
+------- */
+> >
+> > @@ -3409,6 +3410,560 @@ static const struct samsung_cmu_info peric1_cmu=
+_info __initconst =3D {
+> >       .clk_name               =3D "bus",
+> >  };
+> >
+> > +/* ---- CMU_HSI2 -----------------------------------------------------=
+----- */
+>
+> and this code block should be earlier in the file
+
+Will fix
+>
+> > [..]
+>
+> >  static int __init gs101_cmu_probe(struct platform_device *pdev)
+> > @@ -3432,6 +3987,9 @@ static const struct of_device_id gs101_cmu_of_mat=
+ch[] =3D {
+> >       }, {
+> >               .compatible =3D "google,gs101-cmu-peric1",
+> >               .data =3D &peric1_cmu_info,
+> > +     }, {
+> > +             .compatible =3D "google,gs101-cmu-hsi2",
+> > +             .data =3D &hsi2_cmu_info,
+> >       }, {
+>
+> and this block should move up
+
+Will fix
+>
+> >       },
+> >  };
+> > diff --git a/include/dt-bindings/clock/google,gs101.h b/include/dt-bind=
+ings/clock/google,gs101.h
+> > index 3dac3577788a..ac239ce6821b 100644
+> > --- a/include/dt-bindings/clock/google,gs101.h
+> > +++ b/include/dt-bindings/clock/google,gs101.h
+> > @@ -518,4 +518,67 @@
+> >  #define CLK_GOUT_PERIC1_CLK_PERIC1_USI9_USI_CLK              45
+> >  #define CLK_GOUT_PERIC1_SYSREG_PERIC1_PCLK           46
+> >
+> > +/* CMU_HSI2 */
+>
+> and all these defines, too.
+
+Will fix.
+
+regards,
+
+Peter
