@@ -1,101 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBB2152190;
-	Mon, 22 Apr 2024 14:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B15152190;
+	Mon, 22 Apr 2024 14:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713797845; cv=none; b=aIjhA3PpHViGc0RNfAWE+1XdLii0xbpXSu/51PWYG/Py0tXTMW+3o0vv7jkzrHQMQz8l5q/cM9ZUwgJEjORB79Yr/ntxlbtyu5kuho4J3NMF7Z+o+7PLLE3QmfiS5rlHWUY0WRaI5VwtPpx1nmWehsJSvoiKNxnl3KbLVN0sTY4=
+	t=1713797850; cv=none; b=q3nPlO1HWu2qNsYmo9/TOKXdR948weIwPJZaOCnt58Ub7xEI6N90+wih77U+ffb8YsX5Ys9iYfsZjCyrKv5XlPy/uCJBTvSrv/EgQHyzklKAKFy2CBSsbgP7ruVhFgYxkOF7aNk+8LCpOAMgdY7qcdMvuoHfqtEwUkFWiAnZwZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713797845; c=relaxed/simple;
-	bh=/ys6Pzra7IEywMh4hBfA5xJtu9C9b7qcLANvkfE5cJk=;
+	s=arc-20240116; t=1713797850; c=relaxed/simple;
+	bh=YvcLfVhuM+fUHjKKw8VfVZI423ddk6yCUt2tSKwwS8I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=riGM8UWfDPLCZnJ2v7QQNU3mO5f/vIKZ5eJNOf4cIXNdGPkSv5BUv3yIHPs9xZ3Sx1IOw1Mgoa1f0HQnBljnNHsxj8gsl+cIlgf19ql8LEsOS7G4pSJVIba/B15mI7TWtmmBhEVCZd6geNsx8sELihVJBuaoBa1zuJRpIEtUjmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=erWA+QCB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DXNfLeuuZee6fAODv33pjUHPirq/d10r+VrPAbvScKbR5uyTsflBfA3Dq6O7Mf5v4GUifA+KRMz0hPMlDojzb3y0ct1iSg7c/lYds9M4AuxaBVjqUnZgcCyqEM/6YPx1+78Ci5YGvrAkyJW/1I9KQsKSLFzBVkmHCRPalyw2G6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d7ijfhJr; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="erWA+QCB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4B11C113CC;
-	Mon, 22 Apr 2024 14:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1713797844;
-	bh=/ys6Pzra7IEywMh4hBfA5xJtu9C9b7qcLANvkfE5cJk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=erWA+QCBdHASSENTMbmbCLszQVLSQvPHDCWgfW4TwFE/GVWL7ruM5SR//WtQ1W6QM
-	 d12zJ3HocPCG90okjpoCMBPNiZ4C2wMBghXJf7jiZrH+0zwnbBY2X6rvcNM+wESAuT
-	 kBqxDZqGDGm1bi25Y/5iM9IhfADZv/lx70kLTU88=
-Date: Mon, 22 Apr 2024 10:57:23 -0400
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Joel Granados <j.granados@samsung.com>, Luis Chamberlain <mcgrof@kernel.org>, josh@joshtriplett.org, 
-	Kees Cook <keescook@chromium.org>, Eric Biederman <ebiederm@xmission.com>, 
-	Iurii Zaikin <yzaikin@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andy Lutomirski <luto@amacapital.net>, 
-	Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, 
-	Petr Mladek <pmladek@suse.com>, John Ogness <john.ogness@linutronix.de>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Balbir Singh <bsingharora@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	tools@kernel.org
-Subject: Re: [PATCH v3 00/10] sysctl: Remove sentinel elements from kernel dir
-Message-ID: <20240422-sensible-sambar-of-plenty-ae8afc@lemur>
-References: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
- <36a1ea2f-92c2-4183-a892-00c5b48c419b@linaro.org>
- <311c8b64-be13-4740-a659-3a14cf68774a@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d7ijfhJr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713797849; x=1745333849;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YvcLfVhuM+fUHjKKw8VfVZI423ddk6yCUt2tSKwwS8I=;
+  b=d7ijfhJrLVX++Dcd0K1PQv04fgdK0yI1BKgG2AaeezOP582bwMaD2qLF
+   IjEAsnqoPDzw/rtr1svtsGMaXBMpMtHzi9nyt11FfserD8rQ1JCyD9pKB
+   9jbH84cEj8XhjNBpFIt75vU5lsaXslPsDqaJl36+ZWcDyfgTDdQZx6cYP
+   NGj8JJz+3yi2GfyXlFmE7wAl/EzaPgUbsPW88FMdl3j+NeD2ui1FBterz
+   wHHlZOi2P/7FS9zrQlQhzg54JH1y/wuf0yE7y6QC+52hvpBKbmkmGpMxs
+   Wvht1QnZKj+JtdNG3TZNeDPS0XX1vhQHuG/3wgFNzAxE5tAsbeYlooXzy
+   Q==;
+X-CSE-ConnectionGUID: 1t+V6pQvStS8YmU9csPW+g==
+X-CSE-MsgGUID: /yHXD6+LQZmo0MBOpYno5A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="9460314"
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="9460314"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 07:57:29 -0700
+X-CSE-ConnectionGUID: +umTZGt+RFSo0lTn3SHPTQ==
+X-CSE-MsgGUID: unGuH3jnRLS6TH6s7L8MGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="54975794"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa002.jf.intel.com with ESMTP; 22 Apr 2024 07:57:27 -0700
+Date: Mon, 22 Apr 2024 22:52:07 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, seanjc@google.com,
+	michael.roth@amd.com, isaku.yamahata@intel.com
+Subject: Re: [PATCH 11/11] KVM: x86: Add gmem hook for determining max NPT
+ mapping level
+Message-ID: <ZiZ5l6Czq0JUo2Cn@yilunxu-OptiPlex-7050>
+References: <20240404185034.3184582-1-pbonzini@redhat.com>
+ <20240404185034.3184582-12-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <311c8b64-be13-4740-a659-3a14cf68774a@kernel.org>
+In-Reply-To: <20240404185034.3184582-12-pbonzini@redhat.com>
 
-On Mon, Apr 22, 2024 at 04:49:27PM +0200, Krzysztof Kozlowski wrote:
-> >> These commits remove the sentinel element (last empty element) from 
-> >> the
-> >> sysctl arrays of all the files under the "kernel/" directory that use a
-> >> sysctl array for registration. The merging of the preparation patches
-> >> [1] to mainline allows us to remove sentinel elements without changing
-> >> behavior. This is safe because the sysctl registration code
-> >> (register_sysctl() and friends) use the array size in addition to
-> >> checking for a sentinel [2].
-> > 
-> > Hi,
-> > 
-> > looks like *this* "patch" made it to the sysctl tree [1], breaking b4
-> > for everyone else (as there's a "--- b4-submit-tracking ---" magic in
-> > the tree history now) on next-20240422
-> > 
-> > Please drop it (again, I'm only talking about this empty cover letter).
+On Thu, Apr 04, 2024 at 02:50:33PM -0400, Paolo Bonzini wrote:
+> From: Michael Roth <michael.roth@amd.com>
 > 
-> Just to clarify, in case it is not obvious:
-> Please *do not merge your own trees* into kernel.org repos. Instead use
-> b4 shazam to pick up entire patchset, even if it is yours. b4 allows to
-> merge/apply also the cover letter, if this is your intention.
+> In the case of SEV-SNP, whether or not a 2MB page can be mapped via a
+> 2MB mapping in the guest's nested page table depends on whether or not
+> any subpages within the range have already been initialized as private
+> in the RMP table. The existing mixed-attribute tracking in KVM is
+> insufficient here, for instance:
 > 
-> With b4 shazam you would get proper Link tags and not break everyone's
-> b4 workflow on next. :/
+>   - gmem allocates 2MB page
+>   - guest issues PVALIDATE on 2MB page
+>   - guest later converts a subpage to shared
+>   - SNP host code issues PSMASH to split 2MB RMP mapping to 4K
+>   - KVM MMU splits NPT mapping to 4K
+> 
+> At this point there are no mixed attributes, and KVM would normally
+> allow for 2MB NPT mappings again, but this is actually not allowed
+> because the RMP table mappings are 4K and cannot be promoted on the
+> hypervisor side, so the NPT mappings must still be limited to 4K to
+> match this.
 
-I was expecting this to happen at some point. :/
+Just curious how the mapping could be promoted back in this case?
 
-Note, that you can still use b4 and merge your own trees, but you need 
-to switch to using a different cover letter strategy:
+Thanks,
+Yilun
 
-  [b4]
-  prep-cover-strategy = branch-description
-
--K
+> 
+> Add a hook to determine the max NPT mapping size in situations like
+> this.
+> 
+> Signed-off-by: Michael Roth <michael.roth@amd.com>
+> Message-Id: <20231230172351.574091-31-michael.roth@amd.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/include/asm/kvm-x86-ops.h | 1 +
+>  arch/x86/include/asm/kvm_host.h    | 2 ++
+>  arch/x86/kvm/mmu/mmu.c             | 8 ++++++++
+>  3 files changed, 11 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
+> index c81990937ab4..2db87a6fd52a 100644
+> --- a/arch/x86/include/asm/kvm-x86-ops.h
+> +++ b/arch/x86/include/asm/kvm-x86-ops.h
+> @@ -140,6 +140,7 @@ KVM_X86_OP_OPTIONAL_RET0(vcpu_get_apicv_inhibit_reasons);
+>  KVM_X86_OP_OPTIONAL(get_untagged_addr)
+>  KVM_X86_OP_OPTIONAL(alloc_apic_backing_page)
+>  KVM_X86_OP_OPTIONAL_RET0(gmem_prepare)
+> +KVM_X86_OP_OPTIONAL_RET0(gmem_validate_fault)
+>  KVM_X86_OP_OPTIONAL(gmem_invalidate)
+>  
+>  #undef KVM_X86_OP
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 59c7b95034fc..67dc108dd366 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1811,6 +1811,8 @@ struct kvm_x86_ops {
+>  	void *(*alloc_apic_backing_page)(struct kvm_vcpu *vcpu);
+>  	int (*gmem_prepare)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, int max_order);
+>  	void (*gmem_invalidate)(kvm_pfn_t start, kvm_pfn_t end);
+> +	int (*gmem_validate_fault)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, bool is_private,
+> +				   u8 *max_level);
+>  };
+>  
+>  struct kvm_x86_nested_ops {
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 992e651540e8..13dd367b8af1 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4338,6 +4338,14 @@ static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
+>  			       fault->max_level);
+>  	fault->map_writable = !(fault->slot->flags & KVM_MEM_READONLY);
+>  
+> +	r = static_call(kvm_x86_gmem_validate_fault)(vcpu->kvm, fault->pfn,
+> +						     fault->gfn, fault->is_private,
+> +						     &fault->max_level);
+> +	if (r) {
+> +		kvm_release_pfn_clean(fault->pfn);
+> +		return r;
+> +	}
+> +
+>  	return RET_PF_CONTINUE;
+>  }
+>  
+> -- 
+> 2.43.0
+> 
+> 
