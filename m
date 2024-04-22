@@ -1,251 +1,275 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward501c.mail.yandex.net (forward501c.mail.yandex.net [178.154.239.209])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0BE147C82
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 12:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C202C14A61A;
+	Mon, 22 Apr 2024 12:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713789928; cv=none; b=uQFxz8xlsow2tkxlx/ptci0wsKY9z99YPMXFmdat8GcaK/IcBx4n6Ash7DtSTGp+i4JXEZ5y5shq98F592y4FZn0Y7JVgct3q9mKPUA0l9lbqUY4H/Ooa24unCPE0SE5cJMnPikB1ARjTzb0mry4OgcbYDHiabJggAxVN593qIY=
+	t=1713789932; cv=none; b=HO3MUfMX1jsAPfH5UXOJlnms2SPxKEKT7odKgor1CjF3f3jq953jIq4ycGlVsgJau10Cj/QAWZ6RRUx3L/O5hs/MDBNJCoot1UY1vYJwJ1HDafbqe14JYqSBphBaq0OQsJjcpuqCAgcc+5UCGnyDrz+Z0CYHohQlbGzYsxGAsuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713789928; c=relaxed/simple;
-	bh=7swys0gIUQCA8MyBNxRzR4CgEVC6QbULAKLQhq+trVI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZoWRHlqsRr87jW/iGKOpOVSc4wp11NSE5Mnb3hZQJe0F7OCk/UWKHcfvQHO8lidK9XvyRHqKYn4TX5/2oJ6+ecp8/DKjrR9dfhN7eFu3tTiGk3gL2fza//KQ7Eka1+mtuI5facWVpnXhAQDYDvvggMg7BH4Lh04D4KMUNI/EVR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dAgOEWdK; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713789932; c=relaxed/simple;
+	bh=r3USCwhaeDAaO8vM5iT17mfuUPZhjlL7CZ8LW7Vc22w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Lybcwe5KYdDquqJwuQ08gpM97A4odBzbx77W+bg8ABRWoeFBI5pibeBoKjseo9BWYyCNa3agRE/MHAVPfPQsro+N0DmdgP7m1jy1OMOrkBF404XuOl3BXMhHl5qv6HIKaW+lPS1Z8CGz8jDzqOq086rFqepqyJUluGiOYcDKxQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru; spf=pass smtp.mailfrom=ya.ru; dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b=C7PQjSGS; arc=none smtp.client-ip=178.154.239.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ya.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dAgOEWdK"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-516ef30b16eso5408148e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 05:45:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713789925; x=1714394725; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=D4xGjGmCM1dKlkvc8xI8Q2SlpqnDstcnL9eCefAdYpM=;
-        b=dAgOEWdKaB7NzAmbSw8CIUIf9cDXElGtE7WqULSgePIi0n8DB1Lwl1pgBxCsq6OESD
-         nvvoTIp4RnonSeAUgSUtzfxufVEoJ0ftaEZFqlhQbw1gWQhHnJXHC/GLziUTH342DBOB
-         7832ceOv7qVL51v5RdG06FFGFy5KKx+iL7C98d5hMxk8iyClcDyvLN090M9VAQasmLG2
-         TbDbNPcI5+rSUwmv7f2B7GqoEtDNeB2YQfa0wBWSQ6fXEEfXf8fIblxcd38SVYmin8Uj
-         4BtFkgX6+v/6G7dOURLW2IaGHDXoo4nT4qOcGC+r0lS7M69giNP9WxBX8YAHi0eaOOrq
-         bYbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713789925; x=1714394725;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D4xGjGmCM1dKlkvc8xI8Q2SlpqnDstcnL9eCefAdYpM=;
-        b=w0/aMNKOgYcT0ubCJtAUB9hqSVFR4NIYK5M9Xqb7aPB1WpeNsn0bX59HE4sxDGTAo/
-         thJ8MQ9VP3Sqr7Mk1KSG7n8HzTIKM99qhfaiI7GoelAPWI7zvAzdlQ8fTYFf2PIND0wV
-         BoQBO6LMtDi2/d7S3nQ9WMS2/oIa7RjlugIn+tj9YnfU/m5iHwh85+JycqDqFGa9T/Jh
-         p6JJY3mi4OB5Vtp2qG4e73RvJyYZfOxXfVNBc/h4qkcXrqbPi9aMrUalRFdp26YO2wyA
-         Ku0y8tX9G0WIYboEDFPH+cw7tGVbHGaoCGuKix5wWWoT0oFlNPwjLPeZz8Z83TZB3OVu
-         tECQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVF5j/8Q1xPNXBdnYy4gdj9hGaxdPuwinBGLc1Md8wla993E+NqZVBRZs0dNDhk8gPf8i6hB7RKrbg4kStuO47Mi1yXs/lLTIug6SRi
-X-Gm-Message-State: AOJu0YzI+WhzHfPhin9wCg2JR1aQVNxo6RbpsBUOE9F2s394nZLBk1E2
-	og9GaDrCckKAb4KNs2X8uJSi94yeEjjaoEB2fRud0LABINjWmAJVc9soAfpGujtqbIN1iegGM7O
-	y
-X-Google-Smtp-Source: AGHT+IER5n3zd+unC2/+nLZFWA6BJ20dL00ykgO9rIro/Yb6KEoRo+IQMxzDziptwJXENT0sBonYaw==
-X-Received: by 2002:a05:6512:1595:b0:518:ddc3:b3a8 with SMTP id bp21-20020a056512159500b00518ddc3b3a8mr7249634lfb.61.1713789924617;
-        Mon, 22 Apr 2024 05:45:24 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::8a5])
-        by smtp.gmail.com with ESMTPSA id d16-20020a05651233d000b00517806dccdfsm1742524lfg.34.2024.04.22.05.45.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 05:45:24 -0700 (PDT)
-Date: Mon, 22 Apr 2024 15:45:22 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 7/8] usb: typec: ucsi: glink: merge pmic_glink_altmode
- driver
-Message-ID: <46fktwtp3xers6tcpov3qo4zswptvajewsdltm45zbz2kmmpzp@cthu6ylttup3>
-References: <20240416-ucsi-glink-altmode-v1-0-890db00877ac@linaro.org>
- <20240416-ucsi-glink-altmode-v1-7-890db00877ac@linaro.org>
- <ZiZC/l9nOmzWx+j6@kuha.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b="C7PQjSGS"
+Received: from mail-nwsmtp-smtp-production-main-81.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-81.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:3729:0:640:85f7:0])
+	by forward501c.mail.yandex.net (Yandex) with ESMTPS id 17CED6107C;
+	Mon, 22 Apr 2024 15:38:36 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-81.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 6cIEH34oJ8c0-D5tiB4cm;
+	Mon, 22 Apr 2024 15:38:34 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ya.ru; s=mail;
+	t=1713789514; bh=/bzELXHdxbBKlA4ePuJg/gLgwkqBTSnkJ1/BpBYlKJ4=;
+	h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=C7PQjSGSQ6qWN20DwnMHlR+RJYtjFHk6v2ZZ4S92PPncD2qw81vKrBpTOF4pfyYbD
+	 HQBHyShOfZiXbAaLEvEmMegOK/U3XsmTQyIbJrkm+Q4/ZNr16OSdzMjh901AqeTIYP
+	 /4JMeuzcY0lp0t5MelNjkeLoGDsMayI37lIJdB8I=
+Authentication-Results: mail-nwsmtp-smtp-production-main-81.myt.yp-c.yandex.net; dkim=pass header.i=@ya.ru
+From: Konstantin Pugin <rilian.la.te@ya.ru>
+To: 
+Cc: krzk@kernel.org,
+	conor@kernel.org,
+	lkp@intel.com,
+	vz@mleia.com,
+	robh@kernel.org,
+	jcmvbkbc@gmail.com,
+	nicolas.ferre@microchip.com,
+	manikanta.guntupalli@amd.com,
+	corbet@lwn.net,
+	ychuang3@nuvoton.com,
+	u.kleine-koenig@pengutronix.de,
+	Maarten.Brock@sttls.nl,
+	Konstantin Pugin <ria.freelander@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Lech Perczak <lech.perczak@camlingroup.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: [PATCH v6 3/3] serial: sc16is7xx: add support for EXAR XR20M1172 UART
+Date: Mon, 22 Apr 2024 15:37:57 +0300
+Message-Id: <20240422123801.2695129-4-rilian.la.te@ya.ru>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240422123801.2695129-1-rilian.la.te@ya.ru>
+References: <20240422123801.2695129-1-rilian.la.te@ya.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZiZC/l9nOmzWx+j6@kuha.fi.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 22, 2024 at 01:59:10PM +0300, Heikki Krogerus wrote:
-> Hi Dmitry,
-> 
-> On Tue, Apr 16, 2024 at 05:20:56AM +0300, Dmitry Baryshkov wrote:
-> > Move handling of USB Altmode to the ucsi_glink driver. This way the
-> > altmode is properly registered in the Type-C framework, the altmode
-> > handlers can use generic typec calls, the UCSI driver can use
-> > orientation information from altmode messages and vice versa, the
-> > altmode handlers can use GPIO-based orientation inormation from UCSI
-> > GLINK driver.
-> > 
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > ---
-> >  drivers/soc/qcom/Makefile             |   1 -
-> >  drivers/soc/qcom/pmic_glink_altmode.c | 546 ----------------------------------
-> >  drivers/usb/typec/ucsi/ucsi_glink.c   | 495 ++++++++++++++++++++++++++++--
-> >  3 files changed, 475 insertions(+), 567 deletions(-)
-> > 
+From: Konstantin Pugin <ria.freelander@gmail.com>
 
-[skipped the patch]
+XR20M1172 register set is mostly compatible with SC16IS762, but it has
+a support for additional division rates of UART with special DLD register.
+So, add handling this register by appropriate devicetree bindings.
 
-> > +
-> > +static void pmic_glink_ucsi_register_altmode(struct ucsi_connector *con)
-> > +{
-> > +	static const u8 all_assignments = BIT(DP_PIN_ASSIGN_C) | BIT(DP_PIN_ASSIGN_D) |
-> > +			     BIT(DP_PIN_ASSIGN_E);
-> > +	struct typec_altmode_desc desc;
-> > +	struct typec_altmode *alt;
-> > +
-> > +	mutex_lock(&con->lock);
-> > +
-> > +	if (con->port_altmode[0])
-> > +		goto out;
-> > +
-> > +	memset(&desc, 0, sizeof(desc));
-> > +	desc.svid = USB_TYPEC_DP_SID;
-> > +	desc.mode = USB_TYPEC_DP_MODE;
-> > +
-> > +	desc.vdo = DP_CAP_CAPABILITY(DP_CAP_DFP_D);
-> > +
-> > +	/* We can't rely on the firmware with the capabilities. */
-> > +	desc.vdo |= DP_CAP_DP_SIGNALLING(0) | DP_CAP_RECEPTACLE;
-> > +
-> > +	/* Claiming that we support all pin assignments */
-> > +	desc.vdo |= all_assignments << 8;
-> > +	desc.vdo |= all_assignments << 16;
-> > +
-> > +	alt = typec_port_register_altmode(con->port, &desc);
-> 
->         alt = ucsi_register_displayport(con, 0, 0, &desc);
+Signed-off-by: Konstantin Pugin <ria.freelander@gmail.com>
+---
+ drivers/tty/serial/Kconfig         |  3 +-
+ drivers/tty/serial/sc16is7xx.c     | 61 ++++++++++++++++++++++++++++--
+ drivers/tty/serial/sc16is7xx_i2c.c |  1 +
+ drivers/tty/serial/sc16is7xx_spi.c |  1 +
+ 4 files changed, 61 insertions(+), 5 deletions(-)
 
-Note, the existing UCSI displayport AltMode driver depends on the UCSI
-actually handling the altomode. It needs a partner, etc.
-
-> 
-> You need to export that function, but that should not be a problem:
-> 
-> diff --git a/drivers/usb/typec/ucsi/displayport.c b/drivers/usb/typec/ucsi/displayport.c
-> index d9d3c91125ca..f2754d7b5876 100644
-> --- a/drivers/usb/typec/ucsi/displayport.c
-> +++ b/drivers/usb/typec/ucsi/displayport.c
-> @@ -315,11 +315,13 @@ struct typec_altmode *ucsi_register_displayport(struct ucsi_connector *con,
->         struct ucsi_dp *dp;
->  
->         /* We can't rely on the firmware with the capabilities. */
-> -       desc->vdo |= DP_CAP_DP_SIGNALLING(0) | DP_CAP_RECEPTACLE;
-> +       if (!desc->vdo) {
-> +               desc->vdo = DP_CAP_DP_SIGNALLING(0) | DP_CAP_RECEPTACLE;
->  
-> -       /* Claiming that we support all pin assignments */
-> -       desc->vdo |= all_assignments << 8;
-> -       desc->vdo |= all_assignments << 16;
-> +               /* Claiming that we support all pin assignments */
-> +               desc->vdo |= all_assignments << 8;
-> +               desc->vdo |= all_assignments << 16;
-> +       }
->  
->         alt = typec_port_register_altmode(con->port, desc);
->         if (IS_ERR(alt))
-> @@ -342,3 +344,4 @@ struct typec_altmode *ucsi_register_displayport(struct ucsi_connector *con,
->  
->         return alt;
->  }
-> +EXPORT_SYMBOL_GPL(ucsi_register_displayport);
-> 
-> <snip>
-> 
-> > +static void pmic_glink_ucsi_set_state(struct ucsi_connector *con,
-> > +				      struct pmic_glink_ucsi_port *port)
-> > +{
-> > +	struct typec_displayport_data dp_data = {};
-> > +	struct typec_altmode *altmode = NULL;
-> > +	unsigned long flags;
-> > +	void *data = NULL;
-> > +	int mode;
-> > +
-> > +	spin_lock_irqsave(&port->lock, flags);
-> > +
-> > +	if (port->svid == USB_SID_PD) {
-> > +		mode = TYPEC_STATE_USB;
-> > +	} else if (port->svid == USB_TYPEC_DP_SID && port->mode == DPAM_HPD_OUT) {
-> > +		mode = TYPEC_STATE_SAFE;
-> > +	} else if (port->svid == USB_TYPEC_DP_SID) {
-> > +		altmode = find_altmode(con, port->svid);
-> > +		if (!altmode) {
-> > +			dev_err(con->ucsi->dev, "altmode woth SVID 0x%04x not found\n",
-> > +				port->svid);
-> > +			spin_unlock_irqrestore(&port->lock, flags);
-> > +			return;
-> > +		}
-> > +
-> > +		mode = TYPEC_MODAL_STATE(port->mode - DPAM_HPD_A);
-> > +
-> > +		dp_data.status = DP_STATUS_ENABLED;
-> > +		dp_data.status |= DP_STATUS_CON_DFP_D;
-> > +		if (port->hpd_state)
-> > +			dp_data.status |= DP_STATUS_HPD_STATE;
-> > +		if (port->hpd_irq)
-> > +			dp_data.status |= DP_STATUS_IRQ_HPD;
-> > +		dp_data.conf = DP_CONF_SET_PIN_ASSIGN(port->mode - DPAM_HPD_A);
-> > +
-> > +		data = &dp_data;
-> > +	} else {
-> > +		dev_err(con->ucsi->dev, "Unsupported SVID 0x%04x\n", port->svid);
-> > +		spin_unlock_irqrestore(&port->lock, flags);
-> > +		return;
-> > +	}
-> > +
-> > +	spin_unlock_irqrestore(&port->lock, flags);
-> > +
-> > +	if (altmode)
-> > +		typec_altmode_set_port(altmode, mode, data);
-> 
-> So if the port altmode is using the ucsi_displayport_ops, you can
-> simply register the partner altmode here instead. That should
-> guarantee that it'll bind to the DP altmode driver which will take
-> care of typec_altmode_enter() etc.
-
-In our case the altmode is unfortunately completely hidden inside the
-firmware. It is not exported via the native UCSI interface. Even if I
-plug the DP dongle, there is no partner / altmode being reported by the
-PPM. All DP events are reported via additional GLINK messages.
-
-The goal is to use the core Type-C altmode handling, while keeping UCSI
-out of the altmode business.
-
-This allows the core to handle switches / muxes / retimers, report the
-altmode to the userspace via sysfs, keep the link between the DP part of
-the stack and the typec port, but at the same time we don't get errors
-from UCSI because of the PPM reporting unsupported commands, etc.
-
-> 
-> This will also allow the user space to see the altmode normally in
-> sysfs.
-> 
-> > +	else
-> > +		typec_set_mode(con->port, mode);
-> > +
-> > +	if (port->bridge)
-> > +		drm_aux_hpd_bridge_notify(&port->bridge->dev,
-> > +					  port->hpd_state ?
-> > +					  connector_status_connected :
-> > +					  connector_status_disconnected);
-> > +
-> > +}
-> 
-> thanks,
-> 
-> -- 
-> heikki
-
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 4fdd7857ef4d..9d0438cfe147 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -1029,7 +1029,7 @@ config SERIAL_SC16IS7XX_CORE
+ 	select SERIAL_SC16IS7XX_SPI if SPI_MASTER
+ 	select SERIAL_SC16IS7XX_I2C if I2C
+ 	help
+-	  Core driver for NXP SC16IS7xx UARTs.
++	  Core driver for NXP SC16IS7xx and compatible UARTs.
+ 	  Supported ICs are:
+ 
+ 	    SC16IS740
+@@ -1038,6 +1038,7 @@ config SERIAL_SC16IS7XX_CORE
+ 	    SC16IS752
+ 	    SC16IS760
+ 	    SC16IS762
++	    XR20M1172 (Exar)
+ 
+ 	  The driver supports both I2C and SPI interfaces.
+ 
+diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+index dfcc804f558f..504a6b9ca3ba 100644
+--- a/drivers/tty/serial/sc16is7xx.c
++++ b/drivers/tty/serial/sc16is7xx.c
+@@ -10,6 +10,7 @@
+ #undef DEFAULT_SYMBOL_NAMESPACE
+ #define DEFAULT_SYMBOL_NAMESPACE SERIAL_NXP_SC16IS7XX
+ 
++#include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
+@@ -68,6 +69,7 @@
+ /* Special Register set: Only if ((LCR[7] == 1) && (LCR != 0xBF)) */
+ #define SC16IS7XX_DLL_REG		(0x00) /* Divisor Latch Low */
+ #define SC16IS7XX_DLH_REG		(0x01) /* Divisor Latch High */
++#define XR20M117X_DLD_REG		(0x02) /* Divisor Fractional Register */
+ 
+ /* Enhanced Register set: Only if (LCR == 0xBF) */
+ #define SC16IS7XX_EFR_REG		(0x02) /* Enhanced Features */
+@@ -221,6 +223,20 @@
+ #define SC16IS7XX_TCR_RX_HALT(words)	((((words) / 4) & 0x0f) << 0)
+ #define SC16IS7XX_TCR_RX_RESUME(words)	((((words) / 4) & 0x0f) << 4)
+ 
++/*
++ * Divisor Fractional Register bits (EXAR extension).
++ * EXAR hardware is mostly compatible with SC16IS7XX, but supports additional feature:
++ * 4x and 8x divisor, instead of default 16x. It has a special register to program it.
++ * Bits 0 to 3 is fractional divisor, it used to set value of last 16 bits of
++ * uartclk * (16 / divisor) / baud, in case of default it will be uartclk / baud.
++ * Bits 4 and 5 used as switches, and should not be set to 1 simultaneously.
++ */
++
++#define XR20M117X_DLD_16X			0
++#define XR20M117X_DLD_DIV_MASK			GENMASK(3, 0)
++#define XR20M117X_DLD_8X			BIT(4)
++#define XR20M117X_DLD_4X			BIT(5)
++
+ /*
+  * TLR register bits
+  * If TLR[3:0] or TLR[7:4] are logical 0, the selectable trigger levels via the
+@@ -523,6 +539,13 @@ const struct sc16is7xx_devtype sc16is762_devtype = {
+ };
+ EXPORT_SYMBOL_GPL(sc16is762_devtype);
+ 
++static const struct sc16is7xx_devtype xr20m1172_devtype = {
++	.name		= "XR20M1172",
++	.nr_gpio	= 8,
++	.nr_uart	= 2,
++};
++EXPORT_SYMBOL_GPL(sc16is762_devtype);
++
+ static bool sc16is7xx_regmap_volatile(struct device *dev, unsigned int reg)
+ {
+ 	switch (reg) {
+@@ -555,18 +578,43 @@ static bool sc16is7xx_regmap_noinc(struct device *dev, unsigned int reg)
+ 	return reg == SC16IS7XX_RHR_REG;
+ }
+ 
++static bool sc16is7xx_has_dld(struct device *dev)
++{
++	struct sc16is7xx_port *s = dev_get_drvdata(dev);
++
++	if (s->devtype == &xr20m1172_devtype)
++		return true;
++	return false;
++}
++
+ static int sc16is7xx_set_baud(struct uart_port *port, int baud)
+ {
+ 	struct sc16is7xx_one *one = to_sc16is7xx_one(port, port);
+-	u8 lcr;
++	unsigned long clk = port->uartclk, div, div16;
++	bool has_dld = sc16is7xx_has_dld(port->dev);
++	u8 dld_mode = XR20M117X_DLD_16X;
+ 	u8 prescaler = 0;
+-	unsigned long clk = port->uartclk, div = clk / 16 / baud;
++	u8 divisor = 16;
++	u8 lcr;
++
++	if (has_dld && DIV_ROUND_CLOSEST(clk, baud) < 16)
++		divisor = rounddown_pow_of_two(DIV_ROUND_CLOSEST(clk, baud));
++
++	div16 = (clk * 16) / divisor / baud;
++	div = div16 / 16;
+ 
+ 	if (div >= BIT(16)) {
+ 		prescaler = SC16IS7XX_MCR_CLKSEL_BIT;
+ 		div /= 4;
+ 	}
+ 
++	/* Count additional divisor for EXAR devices */
++	if (divisor == 8)
++		dld_mode = XR20M117X_DLD_8X;
++	if (divisor == 4)
++		dld_mode = XR20M117X_DLD_4X;
++	dld_mode |= FIELD_PREP(XR20M117X_DLD_DIV_MASK, div16);
++
+ 	/* Enable enhanced features */
+ 	sc16is7xx_efr_lock(port);
+ 	sc16is7xx_port_update(port, SC16IS7XX_EFR_REG,
+@@ -587,12 +635,14 @@ static int sc16is7xx_set_baud(struct uart_port *port, int baud)
+ 	regcache_cache_bypass(one->regmap, true);
+ 	sc16is7xx_port_write(port, SC16IS7XX_DLH_REG, div / 256);
+ 	sc16is7xx_port_write(port, SC16IS7XX_DLL_REG, div % 256);
++	if (has_dld)
++		sc16is7xx_port_write(port, XR20M117X_DLD_REG, dld_mode);
+ 	regcache_cache_bypass(one->regmap, false);
+ 
+ 	/* Restore LCR and access to general register set */
+ 	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, lcr);
+ 
+-	return DIV_ROUND_CLOSEST(clk / 16, div);
++	return DIV_ROUND_CLOSEST(clk / divisor, div);
+ }
+ 
+ static void sc16is7xx_handle_rx(struct uart_port *port, unsigned int rxlen,
+@@ -1002,6 +1052,8 @@ static void sc16is7xx_set_termios(struct uart_port *port,
+ 				  const struct ktermios *old)
+ {
+ 	struct sc16is7xx_one *one = to_sc16is7xx_one(port, port);
++	bool has_dld = sc16is7xx_has_dld(port->dev);
++	u8 divisor = has_dld ? 4 : 16
+ 	unsigned int lcr, flow = 0;
+ 	int baud;
+ 	unsigned long flags;
+@@ -1084,7 +1136,7 @@ static void sc16is7xx_set_termios(struct uart_port *port,
+ 	/* Get baud rate generator configuration */
+ 	baud = uart_get_baud_rate(port, termios, old,
+ 				  port->uartclk / 16 / 4 / 0xffff,
+-				  port->uartclk / 16);
++				  port->uartclk / divisor);
+ 
+ 	/* Setup baudrate generator */
+ 	baud = sc16is7xx_set_baud(port, baud);
+@@ -1684,6 +1736,7 @@ void sc16is7xx_remove(struct device *dev)
+ EXPORT_SYMBOL_GPL(sc16is7xx_remove);
+ 
+ const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] = {
++	{ .compatible = "exar,xr20m1172",	.data = &xr20m1172_devtype, },
+ 	{ .compatible = "nxp,sc16is740",	.data = &sc16is74x_devtype, },
+ 	{ .compatible = "nxp,sc16is741",	.data = &sc16is74x_devtype, },
+ 	{ .compatible = "nxp,sc16is750",	.data = &sc16is750_devtype, },
+diff --git a/drivers/tty/serial/sc16is7xx_i2c.c b/drivers/tty/serial/sc16is7xx_i2c.c
+index 3ed47c306d85..839de902821b 100644
+--- a/drivers/tty/serial/sc16is7xx_i2c.c
++++ b/drivers/tty/serial/sc16is7xx_i2c.c
+@@ -46,6 +46,7 @@ static const struct i2c_device_id sc16is7xx_i2c_id_table[] = {
+ 	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
+ 	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
+ 	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
++	{ "xr20m1172",	(kernel_ulong_t)&xr20m1172_devtype, },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, sc16is7xx_i2c_id_table);
+diff --git a/drivers/tty/serial/sc16is7xx_spi.c b/drivers/tty/serial/sc16is7xx_spi.c
+index 73df36f8a7fd..2b278282dbd0 100644
+--- a/drivers/tty/serial/sc16is7xx_spi.c
++++ b/drivers/tty/serial/sc16is7xx_spi.c
+@@ -69,6 +69,7 @@ static const struct spi_device_id sc16is7xx_spi_id_table[] = {
+ 	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
+ 	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
+ 	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
++	{ "xr20m1172",	(kernel_ulong_t)&xr20m1172_devtype, },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(spi, sc16is7xx_spi_id_table);
 -- 
-With best wishes
-Dmitry
+2.34.1
+
