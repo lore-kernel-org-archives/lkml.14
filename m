@@ -1,50 +1,40 @@
-Received: from out199-1.us.a.mail.aliyun.com (out199-1.us.a.mail.aliyun.com [47.90.199.1])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37EDD4E1D2
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B740C482FA;
+	Mon, 22 Apr 2024 07:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713769400; cv=none; b=VqXRYSe7XMwMHBjwSb0DyWVYys6B1XFCO7hh7D/CQ9g9D/VnBsCMiLjC3j0aNhX+M8eOG28BrujsvCMaPPIiDFZEgXhfPkz5T7TYXTKE+s/ZBBJo918E3rgm37D1wh8Df3VgpPwnKUhcyd538vNKRDNl9ewU79ozRzrDZOweoh8=
+	t=1713769661; cv=none; b=FKVp+VqQjBgoCDE5tRVVZZ57ZhdcQOWjhJ2WISi9g+PkfRpeRmCVejrc/EOoV9J7bTZ4SVm9cK4Brxa6zLqiO31OkDIS0ro1ghDNWXCldpdw/Et1iuq77b1t/dNUjeCBUz/jhLQd/BlwxrEb1dGeJMna6LIESE/G1lb65J03UAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713769400; c=relaxed/simple;
-	bh=ItrSE0/IiQfbtdgPm+4vgP6ZkRS2znwH+LvZWGKpYXk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FXmeoi3wE57oTF5MZ/IbwNjRhBhs1Ap6SAIcFJAHTrwdsgB9wowsp18eCwwo36zJwCqDgPMP3Oh/XwooorZZ2c5+wTgGwIdcNfKJR8W2tN3GbzMk0/PmtoCBSVSYFCML37cgrEqjyMN6Eu68flcLCoc0jVoFRgK6PpJAhe1ZyxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=NY06ytDd; arc=none smtp.client-ip=47.90.199.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="NY06ytDd"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1713769384; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=wvGbdG/PyCf+R85lbGysoGrudwoqTXGK9KleQ+1X+Xo=;
-	b=NY06ytDd1TwKFWdcj4xVMFXRlMTqSaQnGa4qKsjTBdRmK+SdrU7+03BVecy6yt3e3p3kw2//FrXrAAZxzS90keLr1mMw5L29u4gF8HLLJmx64pKvV+eqaxxFtkvRdlGYGtm9mEBUT6mGF/OkHk7EKbq7VOJmZBIpmIzNgtyJ9K4=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0W5-amM8_1713769381;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W5-amM8_1713769381)
-          by smtp.aliyun-inc.com;
-          Mon, 22 Apr 2024 15:03:02 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	hughd@google.com
-Cc: willy@infradead.org,
-	david@redhat.com,
-	wangkefeng.wang@huawei.com,
-	21cnbao@gmail.com,
-	ryan.roberts@arm.com,
-	ying.huang@intel.com,
-	shy828301@gmail.com,
-	ziy@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 5/5] mm: shmem: add anonymous share mTHP counters
-Date: Mon, 22 Apr 2024 15:02:43 +0800
-Message-Id: <05d0096e4ec3e572d1d52d33a31a661321ac1551.1713755580.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1713755580.git.baolin.wang@linux.alibaba.com>
-References: <cover.1713755580.git.baolin.wang@linux.alibaba.com>
+	s=arc-20240116; t=1713769661; c=relaxed/simple;
+	bh=RvV8KDMtZorXebKWi+GxrzGmHsJmjPE71XulHd5dPyE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PogAuT6eIkVrGJ8vXT7yMcaw1skvZOMlqw5UMWUVmcbRBaYToOu0XeayP8k9cTUhFAIvOSPiBu62n0Rk7kmPqUvHXD2QOFvANmxGGzr6nX97xGQyB6VLVbzy1USZ5/8fN5+IaOIB8njl6digXe2HJIMs0adAISkJnlg/LiSDq/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VNGXY6C3zz4f3k6M;
+	Mon, 22 Apr 2024 15:07:25 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id A324D1A0568;
+	Mon, 22 Apr 2024 15:07:30 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAn9g6vDCZmwE6RKg--.62553S4;
+	Mon, 22 Apr 2024 15:07:29 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: song@kernel.org,
+	yukuai3@huawei.com,
+	linan122@huawei.com
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH -next] md: fix resync softlockup when bitmap size is less than array size
+Date: Mon, 22 Apr 2024 14:58:24 +0800
+Message-Id: <20240422065824.2516-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,69 +42,106 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAn9g6vDCZmwE6RKg--.62553S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxXw45KFWrWFyfuFWkCr45Wrg_yoW5WF1kpr
+	WUKFW3Cry5t3y5XF4jvry8uFyFvr98trZrKF1xG343Ca4rJFsxGrWkGF1Yga1kWrWfGFZ8
+	Wws8WF95uF1kWaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7Cj
+	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+From: Yu Kuai <yukuai3@huawei.com>
+
+Is is reported that for dm-raid10, lvextend + lvchange --syncaction will
+trigger following softlockup:
+
+kernel:watchdog: BUG: soft lockup - CPU#3 stuck for 26s! [mdX_resync:6976]
+CPU: 7 PID: 3588 Comm: mdX_resync Kdump: loaded Not tainted 6.9.0-rc4-next-20240419 #1
+RIP: 0010:_raw_spin_unlock_irq+0x13/0x30
+Call Trace:
+ <TASK>
+ md_bitmap_start_sync+0x6b/0xf0
+ raid10_sync_request+0x25c/0x1b40 [raid10]
+ md_do_sync+0x64b/0x1020
+ md_thread+0xa7/0x170
+ kthread+0xcf/0x100
+ ret_from_fork+0x30/0x50
+ ret_from_fork_asm+0x1a/0x30
+
+And the detailed process is as follows:
+
+md_do_sync
+ j = mddev->resync_min
+ while (j < max_sectors)
+  sectors = raid10_sync_request(mddev, j, &skipped)
+   if (!md_bitmap_start_sync(..., &sync_blocks))
+    // md_bitmap_start_sync set sync_blocks to 0
+    return sync_blocks + sectors_skippe;
+  // sectors = 0;
+  j += sectors;
+  // j never change
+
+Root cause is that commit 301867b1c168 ("md/raid10: check
+slab-out-of-bounds in md_bitmap_get_counter") return early from
+md_bitmap_get_counter(), without setting returned blocks.
+
+Fix this problem by always set returned blocks from
+md_bitmap_get_counter"(), as it used to be.
+
+Noted that this patch just fix the softlockup problem in kernel, the
+case that bitmap size doesn't match array size still need to be fixed.
+
+Fixes: 301867b1c168 ("md/raid10: check slab-out-of-bounds in md_bitmap_get_counter")
+Reported-and-tested-by: Nigel Croxon <ncroxon@redhat.com>
+Closes: https://lore.kernel.org/all/71ba5272-ab07-43ba-8232-d2da642acb4e@redhat.com/
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- include/linux/huge_mm.h | 2 ++
- mm/huge_memory.c        | 4 ++++
- mm/shmem.c              | 5 ++++-
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ drivers/md/md-bitmap.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 26b6fa98d8ac..67b9c1acad31 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -270,6 +270,8 @@ enum mthp_stat_item {
- 	MTHP_STAT_ANON_SWPOUT,
- 	MTHP_STAT_ANON_SWPOUT_FALLBACK,
- 	MTHP_STAT_ANON_SWPIN_REFAULT,
-+	MTHP_STAT_SHMEM_ANON_ALLOC,
-+	MTHP_STAT_SHMEM_ANON_ALLOC_FALLBACK,
- 	__MTHP_STAT_COUNT
- };
+diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+index 059afc24c08b..f5b66d52cbe3 100644
+--- a/drivers/md/md-bitmap.c
++++ b/drivers/md/md-bitmap.c
+@@ -1424,15 +1424,17 @@ __acquires(bitmap->lock)
+ 	sector_t chunk = offset >> bitmap->chunkshift;
+ 	unsigned long page = chunk >> PAGE_COUNTER_SHIFT;
+ 	unsigned long pageoff = (chunk & PAGE_COUNTER_MASK) << COUNTER_BYTE_SHIFT;
+-	sector_t csize;
++	sector_t csize = ((sector_t)1) << bitmap->chunkshift;
+ 	int err;
  
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 9e52c0db7580..dc15240c1ab3 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -557,6 +557,8 @@ DEFINE_MTHP_STAT_ATTR(anon_alloc_fallback, MTHP_STAT_ANON_ALLOC_FALLBACK);
- DEFINE_MTHP_STAT_ATTR(anon_swpout, MTHP_STAT_ANON_SWPOUT);
- DEFINE_MTHP_STAT_ATTR(anon_swpout_fallback, MTHP_STAT_ANON_SWPOUT_FALLBACK);
- DEFINE_MTHP_STAT_ATTR(anon_swpin_refault, MTHP_STAT_ANON_SWPIN_REFAULT);
-+DEFINE_MTHP_STAT_ATTR(shmem_anon_alloc, MTHP_STAT_SHMEM_ANON_ALLOC);
-+DEFINE_MTHP_STAT_ATTR(shmem_anon_alloc_fallback, MTHP_STAT_SHMEM_ANON_ALLOC_FALLBACK);
++
+ 	if (page >= bitmap->pages) {
+ 		/*
+ 		 * This can happen if bitmap_start_sync goes beyond
+ 		 * End-of-device while looking for a whole page or
+ 		 * user set a huge number to sysfs bitmap_set_bits.
+ 		 */
++		*blocks = csize - (offset & (csize - 1));
+ 		return NULL;
+ 	}
+ 	err = md_bitmap_checkpage(bitmap, page, create, 0);
+@@ -1441,8 +1443,7 @@ __acquires(bitmap->lock)
+ 	    bitmap->bp[page].map == NULL)
+ 		csize = ((sector_t)1) << (bitmap->chunkshift +
+ 					  PAGE_COUNTER_SHIFT);
+-	else
+-		csize = ((sector_t)1) << bitmap->chunkshift;
++
+ 	*blocks = csize - (offset & (csize - 1));
  
- static struct attribute *stats_attrs[] = {
- 	&anon_alloc_attr.attr,
-@@ -564,6 +566,8 @@ static struct attribute *stats_attrs[] = {
- 	&anon_swpout_attr.attr,
- 	&anon_swpout_fallback_attr.attr,
- 	&anon_swpin_refault_attr.attr,
-+	&shmem_anon_alloc_attr.attr,
-+	&shmem_anon_alloc_fallback_attr.attr,
- 	NULL,
- };
- 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 8b009e7040b2..4a0aa75ab29c 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -1706,11 +1706,14 @@ static struct folio *shmem_alloc_and_add_folio(struct vm_fault *vmf,
- 			pages = 1 << order;
- 			index = round_down(index, pages);
- 			folio = shmem_alloc_hugefolio(gfp, info, index, order);
--			if (folio)
-+			if (folio) {
-+				count_mthp_stat(order, MTHP_STAT_SHMEM_ANON_ALLOC);
- 				goto allocated;
-+			}
- 
- 			if (pages == HPAGE_PMD_NR)
- 				count_vm_event(THP_FILE_FALLBACK);
-+			count_mthp_stat(order, MTHP_STAT_SHMEM_ANON_ALLOC_FALLBACK);
- 			order = next_order(&orders, order);
- 		}
- 	} else {
+ 	if (err < 0)
 -- 
-2.39.3
+2.39.2
 
