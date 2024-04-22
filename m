@@ -1,135 +1,95 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82D2481DD;
-	Mon, 22 Apr 2024 11:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9771D145FEE;
+	Mon, 22 Apr 2024 11:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713784325; cv=none; b=oFbM8sGy9hUBSHaSYcQzw/9qeer5nEX85sC3TTK9oAG+Tk+UQXQtAfbdXhyNicgHhdr+N/6JYUZ1VBknvm3GxZql2MCZ06jlC4VXmgPDMqVAWAw7qy2/exOZCASm8E3TduG78h3TqRnjMZ19g8zbalJOunhA6fdFeceGOfqCB7E=
+	t=1713784333; cv=none; b=OhB8V8frt5maNEceX0tOrB14pAWea7Of9ieEf0Yu9nHjf1dYGorhCbOLtRJmslPSzbhByxzxHzuArp8V9/xa+aVa32RQdfC7FPUGjmNbwI6ijzNEOVn/II8/ncwK17lqJ5cLpi/nsLrPqeNwz+/1kwnlDPpfjAqDXcCfpiNa3f0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713784325; c=relaxed/simple;
-	bh=dAPocxet1Oe850nbPG3d6+xiuiTaILe0wrclc0bquhQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WOwJfAi7g1qpOInmGfKF2mAOZxZnPk10zlgAW1W94PxKqQa2xVBKuM2bytiCay8uzhEYQyMESY9/NUx3rdO0OcnY48TGnjEbhvVn+9o5lmg/cvN8o0mqQFnlFCMGIIIbyC69K7nwMfstEL3RxRsdV1PF7sAiSQmq0NKVPDTLZ0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=mqmUocXs; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1713784333; c=relaxed/simple;
+	bh=2hP9Wr46k20/hqo2zftH4vkjOu/C8jNY4dsEV4q3rdc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WDu18cvv9kRcHACDpeY2U8ZtRQ6MAobVukNLiYO4iOoWebIp8RxVUQiZ9Tzz8OklUbhRXCRwH4DHl399gyE9P0s/xl5ttljH9pVeYcjIWGiv1dSp0UB6WPwmsbFHBe+18yTMw7SWVq4Y0ZXNutRK83kRno2quNM7ORuKd3wA7Lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B2MD1ZN7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="mqmUocXs"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4VNMnK3Nksz9svZ;
-	Mon, 22 Apr 2024 13:03:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1713783829;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gcKvfN037TA7hZSa4d4wVaW0uvAV7xIvSo/LgCapk+E=;
-	b=mqmUocXsR3w50nQdtWP075s0eXt8c5DeM+rfi3aUvt846NgO+qnHJo4yQ7QUkHZi+6M1XA
-	oJO0688sir/I+srkC0WLRug6oq1qkVdQAPXuW2ps6tHah0BNuNNq8jh+9+Oy68WDLOiO3o
-	H2fpseCkE5oUuy5GwzGd4m40QKDQ/6Da8cnRhlU0QX17oh6vxC18/hmPqh9nMI3Vq3nyOW
-	lvs5sKHvUnLlcjKR0ZYBIGV+xraV5tvf4//IYSXPvFSP3Sfr3X88gVh5VQBcLAPsMws0Tc
-	0EsYRbVASkL/dJ/7VA9ofv/A1nGnv3IhjqN1K+E+RQaxfTQGpL8w0sogSRT+rw==
-Date: Mon, 22 Apr 2024 13:03:45 +0200
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	gost.dev@samsung.com, chandan.babu@oracle.com, hare@suse.de, mcgrof@kernel.org, 
-	djwong@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	david@fromorbit.com, akpm@linux-foundation.org, Pankaj Raghav <p.raghav@samsung.com>
-Subject: Re: [PATCH v3 05/11] readahead: allocate folios with
- mapping_min_order in readahead
-Message-ID: <i4c6xe6jdei2to6kah4kgjehpjlanaqfulju2jzsu5ny2gmegv@2b2oh44oilnj>
-References: <20240313170253.2324812-1-kernel@pankajraghav.com>
- <20240313170253.2324812-6-kernel@pankajraghav.com>
- <ZgHJxiYHvN9DfD15@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B2MD1ZN7"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 42AB0C3277B;
+	Mon, 22 Apr 2024 11:12:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713784333;
+	bh=2hP9Wr46k20/hqo2zftH4vkjOu/C8jNY4dsEV4q3rdc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=B2MD1ZN7k0Oz211U8eFTKiRwf57BNBBI37UTzWlHjISgw9fEV59mTxyXK59bRlZ8A
+	 CZsRA4yDQy/Hi3tcGLPQaIUGEV4woXTlH5nLPGLPLjYCcNIBi9ujNc2yMU1+tRlXWj
+	 J9cS6qlebiOMweLIX8cvV7OoFUn5nLEH4JXB1CVX1dFeoDeR0F1FwrZFjbXVA38ZXk
+	 UdarBgM8A7+F0oVYhpiJkAEm5NjIHpvyL2l8XowRQdiCiKToP8mjnsQs5ah/EJIKXa
+	 LWmG+Bx4E1lOaCieVKYLJ7Ig0D/Qhhgstpk7p9IsTTYviOfL6sBObZOHcgW9ONZpSS
+	 8ZMmZqPROHmoA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F05C07C79;
+	Mon, 22 Apr 2024 11:12:13 +0000 (UTC)
+From: Kelvin Zhang via B4 Relay <devnull+kelvin.zhang.amlogic.com@kernel.org>
+Date: Mon, 22 Apr 2024 19:11:43 +0800
+Subject: [PATCH v2 1/3] dt-bindings: reset: Add Amlogic T7 reset controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZgHJxiYHvN9DfD15@casper.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240422-t7-reset-v2-1-cb82271d3296@amlogic.com>
+References: <20240422-t7-reset-v2-0-cb82271d3296@amlogic.com>
+In-Reply-To: <20240422-t7-reset-v2-0-cb82271d3296@amlogic.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Zelong Dong <zelong.dong@amlogic.com>, 
+ Kelvin Zhang <kelvin.zhang@amlogic.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713784331; l=942;
+ i=kelvin.zhang@amlogic.com; s=20240329; h=from:subject:message-id;
+ bh=CyHJlDrpjIAL79VP7HKiQbjHBUBNChERmthFTOisS7k=;
+ b=No+L3Aq5VEv4hqOixwhyza7FgSRJ0OGNj0kF4mf0d14MAeHGUGA8GyfSxN0wnQE4etPev/vEx
+ DugVtyb6BUtBHREtlEd+d4JICkCSHNL7yqFZ3tdyyzszIH+hd0f7qXG
+X-Developer-Key: i=kelvin.zhang@amlogic.com; a=ed25519;
+ pk=pgnle7HTNvnNTcOoGejvtTC7BJT30HUNXfMHRRXSylI=
+X-Endpoint-Received: by B4 Relay for kelvin.zhang@amlogic.com/20240329 with
+ auth_id=148
+X-Original-From: Kelvin Zhang <kelvin.zhang@amlogic.com>
+Reply-To: kelvin.zhang@amlogic.com
 
-> > @@ -515,7 +562,7 @@ void page_cache_ra_order(struct readahead_control *ractl,
-> >  		if (index & ((1UL << order) - 1))
-> >  			order = __ffs(index);
-> >  		/* Don't allocate pages past EOF */
-> > -		while (index + (1UL << order) - 1 > limit)
-> > +		while (order > min_order && index + (1UL << order) - 1 > limit)
-> >  			order--;
-> 
-> This raises an interesting question that I don't know if we have a test
-> for.  POSIX says that if we mmap, let's say, the first 16kB of a 10kB
-> file, then we can store into offset 0-12287, but stores to offsets
-> 12288-16383 get a signal (I forget if it's SEGV or BUS).  Thus far,
-> we've declined to even create folios in the page cache that would let us
-> create PTEs for offset 12288-16383, so I haven't paid too much attention
-> to this.  Now we're going to have folios that extend into that range, so
-> we need to be sure that when we mmap(), we only create PTEs that go as
-> far as 12287.
-> 
-> Can you check that we have such an fstest, and that we still pass it
-> with your patches applied and a suitably large block size?
-> 
+From: Zelong Dong <zelong.dong@amlogic.com>
 
-So the mmap is giving the correct SIGBUS error when we try to do this:
-dd if=/dev/zero of=./test bs=10k count=1; 
-xfs_io -c "mmap -w 0 16384" -c "mwrite 13000 10" test
+Add a new compatible for Amlogic T7 reset controller.
 
-Logs on bs=64k ps=4k system:
-root@debian:/media/test# dd if=/dev/zero of=./test bs=10k count=1;
-root@debian:/media/test# du -sh test 
-64K     test
-root@debian:/media/test# ls -l --block-size=k test 
--rw-r--r-- 1 root root 10K Apr 22 10:42 test
-root@debian:/media/test# xfs_io -c "mmap  0 16384" -c "mwrite 13000 10" test
-Bus error
+Signed-off-by: Zelong Dong <zelong.dong@amlogic.com>
+Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
+---
+ Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-The check in filemap_fault takes care of this:
-
-max_idx = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
-if (unlikely(index >= max_idx))
-        return VM_FAULT_SIGBUS;
-
-The same operation for read should also give a bus error, but it didn't.
-Further investigation pointed out that the fault_around() does not take
-this condition into account for LBS configuration. When I set fault_around_bytes
-to 4096, things worked as expected as we skip fault_around for reads. 
-
-I have a patch that return SIGBUS also for the following read operation:
-dd if=/dev/zero of=./test bs=10k count=1; 
-xfs_io -c "mmap -r 0 16384" -c "mread 13000 10" test
-
-This is the patch I have for now that fixes fault_around() logic for LBS
-configuration:
-
-diff --git a/mm/filemap.c b/mm/filemap.c
-index f0c0cfbbd134..259531dd297b 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -3600,12 +3600,15 @@ vm_fault_t filemap_map_pages(struct vm_fault *vmf,
-        }
-        do {
-                unsigned long end;
-+               unsigned long i_size;
+diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+index f0c6c0df0ce3..695ef38a7bb3 100644
+--- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
++++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+@@ -19,6 +19,7 @@ properties:
+       - amlogic,meson-a1-reset # Reset Controller on A1 and compatible SoCs
+       - amlogic,meson-s4-reset # Reset Controller on S4 and compatible SoCs
+       - amlogic,c3-reset # Reset Controller on C3 and compatible SoCs
++      - amlogic,t7-reset
  
-                addr += (xas.xa_index - last_pgoff) << PAGE_SHIFT;
-                vmf->pte += xas.xa_index - last_pgoff;
-                last_pgoff = xas.xa_index;
-                end = folio_next_index(folio) - 1;
--               nr_pages = min(end, end_pgoff) - xas.xa_index + 1;
-+               i_size = DIV_ROUND_UP(i_size_read(mapping->host),
-+                                     PAGE_SIZE) - 1;
-+               nr_pages = min3(end, end_pgoff, i_size) - xas.xa_index + 1;
- 
-                if (!folio_test_large(folio))
-                        ret |= filemap_map_order0_folio(vmf,
+   reg:
+     maxItems: 1
 
-I will send a new version of the series this week after doing some more
-testing.
+-- 
+2.37.1
+
+
