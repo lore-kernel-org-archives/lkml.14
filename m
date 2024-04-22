@@ -1,101 +1,72 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA307155335
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 19:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA9C155335;
+	Mon, 22 Apr 2024 19:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713815840; cv=none; b=u/YnosZThH17bhTj0CX81xRMdUmqohFDZyu9QagJ8x4U/Gia3Nu89ytx6FjK/XrYi1fRU7TFJVcuDgMtCc4j/uonJ1r7C48GeGQKXwMw7z2PzaPdnh50Y4CDpT1M67YGQNq84I1uW/x4P9FhxL554hIOwcoehlczFpa+qe6+/Ow=
+	t=1713815876; cv=none; b=DCNquyufkN132oc0OclxSBfj6T1CzT7SHafhSHQk61yCEOQsPeltbHZIcDWP33AnS0AJIA9VAemcE90lykcDkr8ACT40FfaVu5fDvvYtqLIfFRWzJgaFNSgqCC262cSkGf9xeQUTVggSX7uOxIGAFg8wVvT5PfVeY6i7RY9pGgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713815840; c=relaxed/simple;
-	bh=PKVHfqHJ27bSwUKMRBAbit7T+O5dPyann/zHf+lfiDA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nAwC4UcGDDRMvZOE6MlWPqQtz+dTZkdqEV2WfcI/JD4B1R7oOgtx+neOjQMLxqeqmVAG1MkmcHYtVbz0p27PRRsF4t3T4ZhjcE8R/Ul3W1CX2B5Tu2NCtrm8NOY5ShIcec3rKrL8ORmveQxFmvIGuc4xtJPXPErIAaTOQvz9v1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U6gi85V2; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713815876; c=relaxed/simple;
+	bh=BqexFMnj6FKBjoiD6ebLJAr7HwI2T8jGP8Fq/J0QtZs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eO9U2qplV7OrVgvQaxt28jm9YUC5xB1RBeSdCm+EetQMN1kwa9iM1dxO3Mgz1EAZXZwDJXKicxtgwigMn8IB7x+bEegOs+Okioq6mOvpewa4SvLIKpVs2ysNvvC6FuVquB2DvpVk+PAdsKwqcxEALuIWlzw6Z4n02TpLuJeSYKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ce1AW8py; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U6gi85V2"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2db13ca0363so76116061fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 12:57:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713815837; x=1714420637; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FUZCvgfKswXHZZfz34CDi4hoPT+ow62zr2X4ddEH2SI=;
-        b=U6gi85V2gFUzUL3RjzAJUK7fkx/dzkuL57KR3SlUoS2fdj+CZfofCvHlAkoeNLdn1S
-         T3qdv+2LFHyREDNfUZI/73KXz4yIg3QNARvke5WNzslrKgF3EdlAiPZ/4OkrNqzOl9VN
-         l+IpXEBm2weDuBVhdn/yKcjogOzQJhF7rbneZsNF0b5jA3G/30CICPAXP/Y8qM4TDvRl
-         gXIF57H6RIThih8tseHVgWFOCosIlNycR62ShGAs+9MSVKKG0/6aXNcV+j7xhHi0OeD4
-         mbkzfduiSrWCIipyeLelQiLcxz0kWK6t1qUNteYN1Qxz3BpsaX6bcR3WofvTrzshsPgQ
-         lx8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713815837; x=1714420637;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FUZCvgfKswXHZZfz34CDi4hoPT+ow62zr2X4ddEH2SI=;
-        b=QZDv55jg6TIclCM4kTyUl6Lmcw8RLRHgigULT20T2W/b+UmZSjRJCnVLMlqCdNmfV/
-         cMaiOZHUZe0iMw9ItRYRtOmRgJ0868ghD7erQGmR50FOeRW9iLhA0C0z2HkDjOGZRAsi
-         IB4xS+U7cWknsn4aMHT3pWKg8/LiCilPNUhIvak4Qx67ThyTGX4xgmWOgEQeDa0aPpWL
-         xsWybW/8/QDyA7K4rjy+TwFa9+xJFX7j/vr3YvNv8jKCtNKzklpF7nl2eS7Co1/+mEu0
-         8dGOMNzmLtV0NANLC7DPHm0oZi5fAzi716J0p4PuI/K6oHnctsSpMCqfDyUfIDr7Lj0C
-         VyKg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8pXn6jav8sV83CL14I+3JOVya/3ygbg0EQANXnJsbf1y9s5mEXZoupPQLbS5WSQl/8xtIRNTpqYDkm7IIziunC43mahhsTgMY4gsw
-X-Gm-Message-State: AOJu0YwtF95J2Elo6E5Uout0iM+o6XKeoBFKkBMfg/pFFeuDfJHgpXNM
-	4oZgoLBXbPUo5Rxb4efURcmf/80d8oWw7ggJyTUenDcZJM8XOOlPdB7DvG5/Wy6J6fbtO+EmAt3
-	KXVH1hjNTe4k10IpSsY1Cb+QBXPc=
-X-Google-Smtp-Source: AGHT+IHlAzbUrjE9o+f3VNAPUK//VnKIFcgd3dscEqsAFtPF4Ox+2jXrTQSybveOSkZw1DYlLql/uOQ4XdeZK1elnwM=
-X-Received: by 2002:a05:651c:1046:b0:2d8:6ca7:2165 with SMTP id
- x6-20020a05651c104600b002d86ca72165mr8702112ljm.46.1713815836561; Mon, 22 Apr
- 2024 12:57:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ce1AW8py"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAEFFC113CC;
+	Mon, 22 Apr 2024 19:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713815876;
+	bh=BqexFMnj6FKBjoiD6ebLJAr7HwI2T8jGP8Fq/J0QtZs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ce1AW8pypiK3pIaFn7SUT8wJ6RCXQwE6G+XTSKxu/aTq5K16IOSSm2bomH/rmE3jQ
+	 QMOpLRIv52oQn1vZu3IDM+PVjX7kkPBxjuWrzakOoXSmzj9vOEkWs7qJ2VrTKnWvGY
+	 LqccbCzSd6rB1ccTp/ifLSYMJibLh8sJcPoyIc2tnQmvGIPSwF/0vUMIq1vvnOiSnu
+	 j+wnBhLtT3HBw7ZLN2uvXR03OVg8e18k57m76LH1K6Q6aMEoBHAwynm9EUSbIHdp0M
+	 0DvXRuoxARuYtHXLQfXlNVDEH0IN+M+YtUhfUnRC1HLgG08N3fwP8T+7lbaW0rB5fn
+	 IRtwThwzUJ6uQ==
+Date: Mon, 22 Apr 2024 14:57:53 -0500
+From: Rob Herring <robh@kernel.org>
+To: Kartik Agarwala <agarwala.kartik@gmail.com>
+Cc: linux-kernel@vger.kernel.org, angelogioacchino.delregno@collabora.com,
+	devicetree@vger.kernel.org, matthias.bgg@gmail.com,
+	krzysztof.kozlowski+dt@linaro.org,
+	linux-mediatek@lists.infradead.org, broonie@kernel.org,
+	linux-sound@vger.kernel.org, conor+dt@kernel.org,
+	lgirdwood@gmail.com
+Subject: Re: [PATCH v2] ASoC: dt-bindings: mt2701-wm8960: Convert to dtschema
+Message-ID: <171379813505.1260837.7563285425147959657.robh@kernel.org>
+References: <20240421033129.13076-1-agarwala.kartik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240422151752.53997-1-ubizjak@gmail.com> <Zia-VeObR-m6Bf39@boqun-archlinux>
-In-Reply-To: <Zia-VeObR-m6Bf39@boqun-archlinux>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Mon, 22 Apr 2024 21:57:04 +0200
-Message-ID: <CAFULd4ZhTAY9irw8V=MLZpjQK+q0AM_Aw8g2E=ivHjv7+5m9Zg@mail.gmail.com>
-Subject: Re: [PATCH] locking/pvqspinlock/x86: Use _Q_LOCKED_VAL in
- PV_UNLOCK_ASM macro
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>, 
-	Waiman Long <longman@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240421033129.13076-1-agarwala.kartik@gmail.com>
 
-On Mon, Apr 22, 2024 at 9:45=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
 
-> > diff --git a/arch/x86/include/asm/qspinlock_paravirt.h b/arch/x86/inclu=
-de/asm/qspinlock_paravirt.h
-> > index 466af57b8ed6..0a985784be9b 100644
-> > --- a/arch/x86/include/asm/qspinlock_paravirt.h
-> > +++ b/arch/x86/include/asm/qspinlock_paravirt.h
-> > @@ -40,7 +40,7 @@ __PV_CALLEE_SAVE_REGS_THUNK(__pv_queued_spin_unlock_s=
-lowpath, ".spinlock.text");
-> >  #define PV_UNLOCK_ASM                                                 =
-       \
-> >       FRAME_BEGIN                                                     \
-> >       "push  %rdx\n\t"                                                \
-> > -     "mov   $0x1,%eax\n\t"                                           \
-> > +     "mov   $" __stringify(_Q_LOCKED_VAL) ",%eax\n\t"                \
-> >       "xor   %edx,%edx\n\t"                                           \
-> >       LOCK_PREFIX "cmpxchg %dl,(%rdi)\n\t"                            \
-> >       "jne   .slowpath\n\t"                                           \
->
-> There is also a "cmp $0x1,%al" afterwards.
+On Sun, 21 Apr 2024 09:01:31 +0530, Kartik Agarwala wrote:
+> Convert mt2701-wm890 bindings from text to dtschema. This is used by
+> MediaTek mt7623a/n SoC.
+> 
+> Signed-off-by: Kartik Agarwala <agarwala.kartik@gmail.com>
+> ---
+> Changes for v2:
+> - Do not define pinctrl properties as they are implicitly supported.
+> 
+> Previous versions:
+> v1: https://lore.kernel.org/all/20240401043505.40972-1-agarwala.kartik@gmail.com/
+> ---
+>  .../sound/mediatek,mt2701-wm8960.yaml         | 54 +++++++++++++++++++
+>  .../bindings/sound/mt2701-wm8960.txt          | 24 ---------
+>  2 files changed, 54 insertions(+), 24 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt2701-wm8960.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/sound/mt2701-wm8960.txt
+> 
 
-Not anymore. Please note that the patch is against -tip, where we have:
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=3D91=
-095666125a666c8f20c2323b742c53165c0325
-
-Thanks,
-Uros.
