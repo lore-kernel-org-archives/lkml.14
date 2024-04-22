@@ -1,108 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10F0814F9F8;
-	Mon, 22 Apr 2024 13:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9836514F128
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 13:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713794139; cv=none; b=TY+hKN5YpmQ/vltOFJ5uXc5ZHpksLy1KhCwW+/ZxACnpoJZ61JCvM5Q5gUBXY9fOxxhLtc4ISU9tXmpWHaK6WqlNhvHhUlEuIu7IXy3b5Zlmo9U37DBu786GlWmvntXvBu5MCowFzcn4gMHpnKaipBm+rV0ODmAUYJhQ2xLqZ3g=
+	t=1713794319; cv=none; b=dUdf0VvIMoaoecmC1Eeqtb4wDd+kl1ilSTO+WSft+yQGXzAk2iu1qn7WQu1/4v+7KUv/ET7k8S0Nayi6cTAH5SqKizz0Hl8s1Ad1No0czafWUtGIiwEXhD8fGXy0CyKQuBh/wH0U069GEUhM7aGO5xYEpz/sl1Fks/HjOU1N3Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713794139; c=relaxed/simple;
-	bh=LxjMLSPiqVdSQbJOUuBYUblOWTo6pFvZqG/mb5eNzdA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d4emF6U7WrRIt1/a75VPOcypIA59kfD86L+NgVTNxEtspXNJ8gPryeE+rmx97geaz3oRWhrVdq5QjE+/hLw2jouXAp1Jvo4aLeXRQVN1zcE8mytbZDthq7DI+/TkXxo6a7oHKDiSqjxBqazMyBXqO7HTj1liWyc36IVb768RgQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98FE0339;
-	Mon, 22 Apr 2024 06:56:04 -0700 (PDT)
-Received: from [10.57.75.149] (unknown [10.57.75.149])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0FCC3F73F;
-	Mon, 22 Apr 2024 06:55:34 -0700 (PDT)
-Message-ID: <2aba29c3-2519-4709-9f83-4a74cbfea263@arm.com>
-Date: Mon, 22 Apr 2024 14:55:43 +0100
+	s=arc-20240116; t=1713794319; c=relaxed/simple;
+	bh=AhIzPpS4/x0BXMalxZulG6AWY5tEbwV7bUsloM23qZI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=kMnbETI7Y7S4V1V2JOfo16gD2fieRkEWRkv+sDB6DhjnZrWcQ5HUiCvR2ahN7Yi3Ph0pG7urCX1R1gt+96Ya77fgflPHgBx7sxanQ2ZnKwULYqkqPBy76D+0fW7Wzj27py8YRI+3034mU4/eZx+TLA8imj11FTMHqmJCerGUqQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mol@pengutronix.de>)
+	id 1ryuBV-0004mi-PP; Mon, 22 Apr 2024 15:58:17 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mol@pengutronix.de>)
+	id 1ryuBU-00Dhch-1z; Mon, 22 Apr 2024 15:58:16 +0200
+Received: from mol by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mol@pengutronix.de>)
+	id 1ryuBT-0089hS-37;
+	Mon, 22 Apr 2024 15:58:15 +0200
+Date: Mon, 22 Apr 2024 15:58:15 +0200
+From: Michael Olbrich <m.olbrich@pengutronix.de>
+To: dri-devel@lists.freedesktop.org, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: graphics@pengutronix.de
+Subject: Reliably selecting non-CEA modes on Intel graphics (and maybe others)
+Message-ID: <ZiZs94-ZP1n98RZu@pengutronix.de>
+Mail-Followup-To: dri-devel@lists.freedesktop.org,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, graphics@pengutronix.de
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] cpufreq: scmi: Update Energy Model with allowed
- performance limits
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, sudeep.holla@arm.com,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- cristian.marussi@arm.com, linux-samsung-soc@vger.kernel.org,
- rafael@kernel.org, viresh.kumar@linaro.org, quic_sibis@quicinc.com
-References: <20240403162315.1458337-1-lukasz.luba@arm.com>
- <20240403162315.1458337-3-lukasz.luba@arm.com>
- <780caf10-964c-4a5b-8333-b448e9cbab4b@arm.com>
-Content-Language: en-US
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <780caf10-964c-4a5b-8333-b448e9cbab4b@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mol@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+Hi,
 
+In short: I have a HDMI monitor attached to Intel graphics. I'm trying to
+set a non-CEA mode but the driver always maps it to the corresponding CEA
+mode.
 
-On 4/22/24 14:11, Dietmar Eggemann wrote:
-> On 03/04/2024 18:23, Lukasz Luba wrote:
->> The Energy Model (EM) supports performance limits updates. Use the SCMI
->> notifications to get information from FW about allowed frequency scope for
->> the CPUs.
-> 
-> I'm slightly confused here. IMHO this doesn't seem to be related to the
-> "HW dependency between 'little CPUs & L3 $ in DSU' or similar" usecase.
-> 
-> I assumed that this usecase is rather handled via an additional
-> out-of-tree driver, potentially the same which updates the EM because of
-> temperature change (em_dev_compute_costs(), em_dev_update_perf_domain())
-> or chip binning (em_dev_update_chip_binning()).
+More specifically, the monitor has two 1920x1080@60 modes in the EDID:
+1. The CEA mode with VIC 16
+2. A custom DTD mode with exactly the same timings (this is the preferred
+   mode).
 
-This patch allows to handle relatively simple and straight forward use
-case for updating the perf limits in the EM. The one that you mention,
-which would probably always live out-of-tree, is more complex and
-focused on leakage estimation in different conditions.
+From a userspace perspective, the two modes are mostly identical, except
+for the 16:9 aspect ratio flag in the CEA mode and the preferred type in
+the other.
 
-I see those two drivers separate. We have the DSU+Littles dependency
-always, because it's HW dependency, while the leakage issue can happen
-in some scenarios like gaming and needs more dedicated driver to handle
-it (or rely on FW, but that's another story, orthogonal as well) and
-more information to do it properly.
+I want to select the second (preferred) mode, but that does not seem
+possible:
+intel_hdmi_compute_avi_infoframe() tries to determine which VIC should be
+added to the avi infoframe and if limited or full range is used.
+It uses various DRM helpers here but in the end drm_match_cea_mode() is
+called. And here lies the problem:
+The mode provided by the userspace has explicitly no aspect ratio. But
+here, it is interpreted as "the aspect ration is undefined". So matching
+ignored the aspect ratio and the CEA mode with VIC 16 is found and limited
+range is used.
 
-> 
-> What about other CPUFreq drivers registering an EM via
-> em_dev_register_perf_domain() or 'cpufreq_register_em_with_opp() ->
-> dev_pm_opp_of_register_em()'? Or is this 'limit notification' an SCMI FW
-> only thing?
+The commit that introduces this fuzzy matching
+357768cc9e3fdacf6551da0ae1483bc87dbcb4e8 ("drm/edid: Fix cea mode aspect
+ratio handling") made sense at the time. The capability
+DRM_CLIENT_CAP_ASPECT_RATIO that exposes aspect ratios to userspace was
+introduced later in the same merge request, from what I can tell
+7595bda2fb4378ccbb8db1d0e8de56d15ea7f7fa ("drm: Add DRM client cap for
+aspect-ratio").
 
-Other platforms which use different drivers for CPUfreq will have to
-develop their own code. Although, when we merge this upstream, they
-could follow this pattern as a reference design.
+Am I missing something here, or is it just not possible to select the
+non-CEA mode right now? In my specific example, the selected CEA mode is
+actually supported by the monitor, but as far as I can tell, the CEA mode
+is used even if the monitor does not support it at all.
 
-In our SCMI cpufreq and our SCP firmware we have this situation:
-1. Sending CPUfreq request from Big CPU to SCP e.g. via fast-channel &
-    it's done from sched-util w/o sugov kthread &
-    it has to be super fast, we don't check any other dependency CPU
-    for Littles or something like that.
-2. The SCP firmware receives the frequency request for Big CPU &
-    it checks internal dependencies for other components e.g.
-    L3 cache min speed (DSU+Littles domian frequency)
-3. The SCP changes the Big CPU frequency & changes the DSU+Littles
-    frequency as the depended device
-4. The SCP sends updated performance limits for the depended DSU+Littles
-    domian to the SCMI cpufreq kernel driver, for proper Littles domain
-    cpufreq device
-5. SCMI cpufreq kernel driver gets the SCP notification about updated
-    perf limits & translates the perf limits min value as the lowest
-    currently available frequency for the Littles
-6. The SCMI cpufreq driver updates the EM perf limits for Littles
-    as the currently minimum available frequency.
-    This allows to properly simulate the energy impact when the EAS
-    tries to put a task on that domain, even when that PD's util signals
-    might show lower frequency potentially being used.
+I've only tested this on Intel, but I assume that other drivers that use
+the same helpers have the same problem.
 
-That's why I see this as part of the CPUfreq driver feature.
+So how can this be fixed? I've considered matching the aspect ratio based
+on the DRM_CLIENT_CAP_ASPECT_RATIO capability, but I'm not sure if that is
+valid. The documentation is limited and I found nothing that describes what
+the userspace should do here.
+Or would a new capability make sense here? Or something entirely different?
+I'm not sure how I should proceed here. Any help would be appreciated.
 
-The leakage driver might be better suited for the thermal framework,
-since there is more information available there.
+Regards,
+Michael
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
