@@ -1,284 +1,216 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506005380F
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:48:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752E55674C;
+	Mon, 22 Apr 2024 08:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713775702; cv=none; b=tFkzuvUOePhNgxVJrUsb7SRkvP/DxYF44TwZnks8EGE7sNWI3UIQYn5uw5TF4WES4gblCgH6wjxgcIoMF/Zts9/vfk79qxlIEWO5nPk1at6IewZJR68/fz8OTjkVaQj95/+YsGzhXZz8CRfJvFe7AsAgZC/avX5uHCyOzBcwR7k=
+	t=1713775703; cv=none; b=PWSgelwAM22jIVH1shqEb3rfM7dTgFBdXVboDkQSeQN09/ri4JIdeIHgN0FTfGEYnslZy4qRMuDd0WVaIIg5MvigXRAYZWl/pq2SB3j8WZeGN/qoAVke75ulG0LAY1RK2viUCauhEKYf1Ab48LMUXafvPtUCNQQytxrLFmwSxfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713775702; c=relaxed/simple;
-	bh=gN5G3PL3Hr0bMcAsUHFgDIUicICjazM+18Se751teb8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lZg0/WdKI3Jqvkrh1nWbQKz1At5kpO9RrShLdHc2poAr7BQEkvL8ahWPrAF2sTOhGLg7p+dJRhFxEb9wmFYCi2JOXcpGMbmQA5I5T4Ay52lM7e7g13a9KKBoS+rBOagSk9nvQ/oFMUYZ6CijWfb9IYfojtvEwC8P3N0Uu6/6R9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=w6iXOjok; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713775703; c=relaxed/simple;
+	bh=et4MgsnYGm8cVKv9jXBAzJOVzMpXCbC7LVUAQwPu1L8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fCrnZHIufiHvLbG1BTqc+w09pTStFkJt1SkDQsmQOIK/eamINZrVRm7IBFIJyYSxRfVDl8frtha/4BjPXptjKoyemiQNDJBO0kExrAcZ72xWy69sSDXT7I1a8UCzi8mgxTUPmmG12M81FT8uiTENtFrI/Q29rt8ZvJuqoy0Ay0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AH9/m1aV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w6iXOjok"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4196c62bb4eso18028095e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 01:48:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713775699; x=1714380499; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ornUhS0QRSyp62Es3cf++dbIdn5e8lGz3M/ACkqgRqk=;
-        b=w6iXOjokRt1Qrt6OcrdjuVnWvTWUHEuO33M/CKlnSSBDskGse5adze7ywqi8buOEAr
-         7m8nFDpGWf3b+lgpKVDYlRYwMpbeKWaRX1QrVhewdUY95Im/MSRpGwO8qkXA4Q7KboeM
-         mScimQeiwEvpBbB8SYGkytB+cKyTAkpFgLUzwW6jcNazCnjNTiI33GY8kursGPRWqC/M
-         vPIY63kteAn2HMJ6pOOykcm5pAC2fQvtq3zi2gpc28kRrWVwhHuyqEeDcjoMoxA0xUZI
-         L1VkeyfIFX1DM5PfIMO4rAm8j6xEDX66ovzJjWMpvsJFr3PM1d+w9/jd0AqefdFyuk9y
-         tuZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713775699; x=1714380499;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ornUhS0QRSyp62Es3cf++dbIdn5e8lGz3M/ACkqgRqk=;
-        b=sdoC/EFSwOMNCVayg47mDwe7lo9Lua1EFquLOa8wX1pwfpEzrg7ZYhDYeUveil2isR
-         kj4uqIlycNoR/x1czHzUepfErh5ChjI9ShySD2mTY2di/Z/olvOiRJSXvvKTB4oaC33H
-         2izG7XyCItxw9HJvQtTtE1Ddt+8zASof5+tgLo5DpkWRHJ+MbOtwHYa48QyUPytoXHNN
-         jEuvGp1Iho0xqsc9t7ABTdLnBn+ne1uwhMcwa1QnxNO42e2aysqjeZ7iR6jXCbUOF4OM
-         4IxtEcuC2gFR0fErZfM/mF7u91xRfcyQtzmEKGJa7XYmWy5uGmFJA2bL3rckPB9ZxAe7
-         zP/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVDukErpRUi6rAx1wCCkZLNq38mIRffAlGEnqqJEn0OGq6kpVKdKXggfjmxeNNx1XtvVfRTkdxlYKgdTownrlWeBUeQ4ns/nCEHAOfh
-X-Gm-Message-State: AOJu0YxvkuZNIdxA2rQxtb/oUF6ZAoHSGt6jpBzV13x7mAbOkuFI+lEK
-	gNviHw6O9hfntKGaj+XlwVDeWGwiF1J9q5bN/FGaqXe+sBYY9fadYT+p2fk7xhU=
-X-Google-Smtp-Source: AGHT+IHamdEnSo8Y02TdGZzI/Myu5/1P6fATwFe0kVH/aC6LMI9HEPlNIia9+Rbz/KJCjhVJtBxQqQ==
-X-Received: by 2002:a05:600c:5403:b0:418:be2e:df9e with SMTP id he3-20020a05600c540300b00418be2edf9emr9023423wmb.41.1713775698350;
-        Mon, 22 Apr 2024 01:48:18 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id s6-20020a05600c45c600b00418244d459esm15962650wmo.4.2024.04.22.01.48.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 01:48:18 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Mon, 22 Apr 2024 10:48:14 +0200
-Subject: [PATCH v4 3/3] arch: arm64: dts: sm8650-hdk: add support for the
- Display Card overlay
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AH9/m1aV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A503C4AF0A;
+	Mon, 22 Apr 2024 08:48:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713775703;
+	bh=et4MgsnYGm8cVKv9jXBAzJOVzMpXCbC7LVUAQwPu1L8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AH9/m1aVDHGuGvLI4j3W6Er2jkmhJNQCkQxO4QUroTUv8HHvPv9ax8HkYPpnVXo0H
+	 h6zGqluiK0/MkrlNMYCJHVcZLE6rqq7/wCQ+3sa/mcoqQEa5fVvQSIKcJ2QPIMyFRU
+	 Hj2jR+oLtqdyEiJ7d0ktan3WS/LOmv1DWCbjXCJuyPzrNeHPED/3/ahlFyipBYGtOA
+	 7pMnab4rM0rp+ru673saM/mmkvwnmefJZIKJjtxcnCRw8Bx9/07TTrjYpttQvjrHu/
+	 IFA1udw7VXCwZW0gWcjnWISQ8yMhFl9+3c7cfvwLABBa49RyVYZnSMb/uPlxLJ4/YR
+	 41E6wQ3VoTr9g==
+From: Mike Rapoport <rppt@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Mike Rapoport <rppt@kernel.org>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev,
+	netdev@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH v5 05/15] module: make module_memory_{alloc,free} more self-contained
+Date: Mon, 22 Apr 2024 11:47:13 +0300
+Message-ID: <20240422084717.3602332-5-rppt@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240422084717.3602332-1-rppt@kernel.org>
+References: <20240422084717.3602332-1-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240422-topic-sm8650-upstream-hdk-v4-3-b33993eaa2e8@linaro.org>
-References: <20240422-topic-sm8650-upstream-hdk-v4-0-b33993eaa2e8@linaro.org>
-In-Reply-To: <20240422-topic-sm8650-upstream-hdk-v4-0-b33993eaa2e8@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>, 
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4581;
- i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=gN5G3PL3Hr0bMcAsUHFgDIUicICjazM+18Se751teb8=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmJiROw/anLeQsTKrfcSV5y8hZk82j+BHYlnqs6bst
- ZRoR7aqJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZiYkTgAKCRB33NvayMhJ0RjND/
- 43U9dK7zxbQmw39Zk5LIvBdXfeRgIVG60v+5nJiDY3EuoCKynKWYB13HR63RjQVt58/81MYo8K0NZL
- zye11cjvSzc5Xv5T9bYLNGGYNBW8E/Z8wUer1YV6KHP/iFfI1csIhlUA2XxT3hL1RtEQA4rAlnP/j9
- xGIaruuZvlAPmPkUbYsiVnfSNB9QrXNqynGxbJJg7HrvTlbqn8G+ylSjd9RZkdnLJat+TmcovL1xI0
- XJ0v+8XuYCdkoR0EUsNuRFE5ZqpKHwEvwm/MYlzxPQO2Nj+tJLAogLmplpjl72YzgldB024ozTUd0m
- /uYjSCkvEUWfOCwjl5RCbGHe/8WENDJzdHzqKN9c8rw3HHnzdlhrDOjxXjkwE6c1xcsfcE3UXvDvWe
- TCPrGXZT4meoDx5KcYFehSmZ2Itizqs+cO5mmGYRX1uOUPGVRJL5yiFUjVvB0fJpOOe89pyGdf89Kx
- CuUQ4axWH51qzSoCNdH8OulDNVxrnvFKGZ12Wj9wrXQ0d9r+I7PvXwCwhpHGqd7hS5Y+SVxm8gn4eT
- JGwmHg7vG+1CfgR9AVQN9O2MahLwhKD9HmDOUfEvY4+59MTVfs+1Jbmi+DZEKRmT+gsYf6u/GaqJ+e
- s25GY/xFTDpEk/eDBiSmf5cThxgONvhRAkxvxbSrGeGbLh03milMgP5bZ0Uw==
-X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
- fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
+Content-Transfer-Encoding: 8bit
 
-With the SM8650-HDK, a Display Card kit can be connected to provide
-a VTDR6130 display with Goodix Berlin Touch controller.
+From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 
-In order to route the DSI lanes to the connector for the Display
-Card kit, a switch must be changed on the board.
+Move the logic related to the memory allocation and freeing into
+module_memory_alloc() and module_memory_free().
 
-The HDMI nodes are disabled since the DSI lanes are shared with
-the DSI to HDMI transceiver.
-
-Add support for this card as an overlay and apply it it at
-build-time to the sm8650-hdk dtb.
-
-Reviewed-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-Tested-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/Makefile                  |   4 +
- .../boot/dts/qcom/sm8650-hdk-display-card.dtso     | 144 +++++++++++++++++++++
- 2 files changed, 148 insertions(+)
+ kernel/module/main.c | 64 +++++++++++++++++++++++++++-----------------
+ 1 file changed, 39 insertions(+), 25 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 74e6796eb5eb..640c8fb499fe 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -242,6 +242,10 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-hdk.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-qrd.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-sony-xperia-yodo-pdx234.dtb
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index e1e8a7a9d6c1..5b82b069e0d3 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -1203,15 +1203,44 @@ static bool mod_mem_use_vmalloc(enum mod_mem_type type)
+ 		mod_mem_type_is_core_data(type);
+ }
+ 
+-static void *module_memory_alloc(unsigned int size, enum mod_mem_type type)
++static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
+ {
++	unsigned int size = PAGE_ALIGN(mod->mem[type].size);
++	void *ptr;
 +
-+sm8650-hdk-display-card-dtbs	:= sm8650-hdk.dtb sm8650-hdk-display-card.dtbo
++	mod->mem[type].size = size;
 +
-+dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-hdk-display-card.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-hdk.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-qrd.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sm8650-hdk-display-card.dtso b/arch/arm64/boot/dts/qcom/sm8650-hdk-display-card.dtso
-new file mode 100644
-index 000000000000..83f2338e5bf4
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sm8650-hdk-display-card.dtso
-@@ -0,0 +1,144 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2024, Linaro Limited
-+ */
+ 	if (mod_mem_use_vmalloc(type))
+-		return vzalloc(size);
+-	return module_alloc(size);
++		ptr = vmalloc(size);
++	else
++		ptr = module_alloc(size);
 +
-+/*
-+ * Display Card kit overlay
-+ * This requires S5702 Switch 7 to be turned to OFF to route DSI0 to the display panel
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/dts-v1/;
-+/plugin/;
-+
-+&i2c6 {
-+	status = "disabled";
-+};
-+
-+&lt9611_1v2 {
-+	status = "disabled";
-+};
-+
-+&lt9611_3v3 {
-+	status = "disabled";
-+};
-+
-+&vreg_bob_3v3 {
-+	status = "disabled";
-+};
-+
-+&lt9611_codec {
-+	status = "disabled";
-+};
-+
-+&mdss_dsi0 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	panel@0 {
-+		compatible = "visionox,vtdr6130";
-+		reg = <0>;
-+
-+		reset-gpios = <&tlmm 133 GPIO_ACTIVE_LOW>;
-+
-+		vddio-supply = <&vreg_l12b_1p8>;
-+		vci-supply = <&vreg_l13b_3p0>;
-+		vdd-supply = <&vreg_l11b_1p2>;
-+
-+		pinctrl-0 = <&disp0_reset_n_active>, <&mdp_vsync>;
-+		pinctrl-1 = <&disp0_reset_n_suspend>, <&mdp_vsync>;
-+		pinctrl-names = "default", "sleep";
-+
-+		port {
-+			panel0_in: endpoint {
-+				remote-endpoint = <&mdss_dsi0_out>;
-+			};
-+		};
-+	};
++	if (!ptr)
++		return -ENOMEM;
 +
 +	/*
-+	 * DTC requires to have both endpoints when compiling the overlay
-+	 * and also requires the #address/size-cells + reg properties
++	 * The pointer to these blocks of memory are stored on the module
++	 * structure and we keep that around so long as the module is
++	 * around. We only free that memory when we unload the module.
++	 * Just mark them as not being a leak then. The .init* ELF
++	 * sections *do* get freed after boot so we *could* treat them
++	 * slightly differently with kmemleak_ignore() and only grey
++	 * them out as they work as typical memory allocations which
++	 * *do* eventually get freed, but let's just keep things simple
++	 * and avoid *any* false positives.
 +	 */
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++	kmemleak_not_leak(ptr);
 +
-+		port@1 {
-+			reg = <1>;
++	memset(ptr, 0, size);
++	mod->mem[type].base = ptr;
 +
-+			mdss_dsi0_out: endpoint {
-+				remote-endpoint = <&panel0_in>;
-+			};
-+		};
-+	};
-+};
++	return 0;
+ }
+ 
+-static void module_memory_free(void *ptr, enum mod_mem_type type)
++static void module_memory_free(struct module *mod, enum mod_mem_type type)
+ {
++	void *ptr = mod->mem[type].base;
 +
-+&spi4 {
-+	/* DTC requires the #address/size-cells to compile DTBO */
-+	#address-cells = <1>;
-+	#size-cells = <0>;
+ 	if (mod_mem_use_vmalloc(type))
+ 		vfree(ptr);
+ 	else
+@@ -1229,12 +1258,12 @@ static void free_mod_mem(struct module *mod)
+ 		/* Free lock-classes; relies on the preceding sync_rcu(). */
+ 		lockdep_free_key_range(mod_mem->base, mod_mem->size);
+ 		if (mod_mem->size)
+-			module_memory_free(mod_mem->base, type);
++			module_memory_free(mod, type);
+ 	}
+ 
+ 	/* MOD_DATA hosts mod, so free it at last */
+ 	lockdep_free_key_range(mod->mem[MOD_DATA].base, mod->mem[MOD_DATA].size);
+-	module_memory_free(mod->mem[MOD_DATA].base, MOD_DATA);
++	module_memory_free(mod, MOD_DATA);
+ }
+ 
+ /* Free a module, remove from lists, etc. */
+@@ -2225,7 +2254,6 @@ static int find_module_sections(struct module *mod, struct load_info *info)
+ static int move_module(struct module *mod, struct load_info *info)
+ {
+ 	int i;
+-	void *ptr;
+ 	enum mod_mem_type t = 0;
+ 	int ret = -ENOMEM;
+ 
+@@ -2234,26 +2262,12 @@ static int move_module(struct module *mod, struct load_info *info)
+ 			mod->mem[type].base = NULL;
+ 			continue;
+ 		}
+-		mod->mem[type].size = PAGE_ALIGN(mod->mem[type].size);
+-		ptr = module_memory_alloc(mod->mem[type].size, type);
+-		/*
+-                 * The pointer to these blocks of memory are stored on the module
+-                 * structure and we keep that around so long as the module is
+-                 * around. We only free that memory when we unload the module.
+-                 * Just mark them as not being a leak then. The .init* ELF
+-                 * sections *do* get freed after boot so we *could* treat them
+-                 * slightly differently with kmemleak_ignore() and only grey
+-                 * them out as they work as typical memory allocations which
+-                 * *do* eventually get freed, but let's just keep things simple
+-                 * and avoid *any* false positives.
+-		 */
+-		kmemleak_not_leak(ptr);
+-		if (!ptr) {
 +
-+	status = "okay";
-+
-+	touchscreen@0 {
-+		compatible = "goodix,gt9916";
-+		reg = <0>;
-+
-+		interrupt-parent = <&tlmm>;
-+		interrupts = <162 IRQ_TYPE_LEVEL_LOW>;
-+
-+		reset-gpios = <&tlmm 161 GPIO_ACTIVE_LOW>;
-+
-+		avdd-supply = <&vreg_l14b_3p2>;
-+
-+		spi-max-frequency = <1000000>;
-+
-+		touchscreen-size-x = <1080>;
-+		touchscreen-size-y = <2400>;
-+
-+		pinctrl-0 = <&ts_irq>, <&ts_reset>;
-+		pinctrl-names = "default";
-+	};
-+};
-+
-+&tlmm {
-+	disp0_reset_n_active: disp0-reset-n-active-state {
-+		pins = "gpio133";
-+		function = "gpio";
-+		drive-strength = <8>;
-+		bias-disable;
-+	};
-+
-+	disp0_reset_n_suspend: disp0-reset-n-suspend-state {
-+		pins = "gpio133";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-pull-down;
-+	};
-+
-+	mdp_vsync: mdp-vsync-state {
-+		pins = "gpio86";
-+		function = "mdp_vsync";
-+		drive-strength = <2>;
-+		bias-pull-down;
-+	};
-+
-+	ts_irq: ts-irq-state {
-+		pins = "gpio161";
-+		function = "gpio";
-+		drive-strength = <8>;
-+		bias-pull-up;
-+		output-disable;
-+	};
-+
-+	ts_reset: ts-reset-state {
-+		pins = "gpio162";
-+		function = "gpio";
-+		drive-strength = <8>;
-+		bias-pull-up;
-+	};
-+};
-
++		ret = module_memory_alloc(mod, type);
++		if (ret) {
+ 			t = type;
+ 			goto out_enomem;
+ 		}
+-		memset(ptr, 0, mod->mem[type].size);
+-		mod->mem[type].base = ptr;
+ 	}
+ 
+ 	/* Transfer each section which specifies SHF_ALLOC */
+@@ -2296,7 +2310,7 @@ static int move_module(struct module *mod, struct load_info *info)
+ 	return 0;
+ out_enomem:
+ 	for (t--; t >= 0; t--)
+-		module_memory_free(mod->mem[t].base, t);
++		module_memory_free(mod, t);
+ 	return ret;
+ }
+ 
 -- 
-2.34.1
+2.43.0
 
