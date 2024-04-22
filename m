@@ -1,131 +1,103 @@
-Received: from zg8tmtyylji0my4xnjeumjiw.icoremail.net (zg8tmtyylji0my4xnjeumjiw.icoremail.net [162.243.161.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAB704E1D1;
-	Mon, 22 Apr 2024 08:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.161.220
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0492352F9B
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713773602; cv=none; b=EDd6eHYQj5NYvSHqxPPMc2hd/+I7yo99Yjk+2FbVYP/ojOCU1u68Ir0JCW3ICdSDdG67w0Oa4T8RiFcfA8b2TxMhwrjR8MW/BiftDvIgIM03khZRvKuP67cqBQTkbdLnop1gac0vABjBsIWKNTlxpQRVOF0nF8sZDzDCHPq+/B0=
+	t=1713773608; cv=none; b=UVFMVOfB1OiVN1WSuDoNtEvkmYgIdnErmnHl7ZNjX+cMX6Hs/io3ZGGS3jg5lJcFXQO7/jvDAOTUSNcA30WZdnKo2hSO2EFaHDvjNAjhXBA6R6mSKJB7H0ritbET/rGpvC4mNF6PG1sT+FafT8iF3vNIYWQKI400iZkVjw6wETM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713773602; c=relaxed/simple;
-	bh=Yo3CdUYWhubx1dZ2fMPbosDHiR9hiTW8Sw+icVupxOk=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=W4VyK4Chx4WJYCNbaqj6zOzisTD68nPWjNIFEfmnxZRPPj02AWqEDtBqwEL4hJWUNlopnKq9r1e639aoLQ3qWM95nC+/WtKh2XsegRHXHWy8QG7/fgsNcsgBk/8SVUBj32Al03FgNfWCdp4JPzuXqFWWQ8REXVRrJknDUmpaUZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=162.243.161.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from localhost.localdomain (unknown [10.12.130.31])
-	by app1 (Coremail) with SMTP id TAJkCgBH6OSeGyZmSBIIAA--.61881S4;
-	Mon, 22 Apr 2024 16:11:11 +0800 (CST)
-From: Shenlin Liang <liangshenlin@eswincomputing.com>
-To: anup@brainfault.org,
-	atishp@atishpatra.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org
-Cc: Shenlin Liang <liangshenlin@eswincomputing.com>
-Subject: [PATCH v3 0/2] perf kvm: Add kvm stat support on riscv
-Date: Mon, 22 Apr 2024 08:08:31 +0000
-Message-Id: <20240422080833.8745-1-liangshenlin@eswincomputing.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:TAJkCgBH6OSeGyZmSBIIAA--.61881S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxZr1fZF4ftF4fXF18Aw17trb_yoW5XryrpF
-	W2krn8Kw4rtFy3Kws3C3WDWrWrCw4xCry5tr1Iyryj93yj9ryDJ3Z7Kr9Fk398AF17tFWk
-	CFn8ur1rGrW3JF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvm14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
-	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-	67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
-	x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
-	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
-	UI43ZEXa7VUbQVy7UUUUU==
-X-CM-SenderInfo: xold0whvkh0z1lq6v25zlqu0xpsx3x1qjou0bp/
+	s=arc-20240116; t=1713773608; c=relaxed/simple;
+	bh=FxkEBziKtQxhWojrucgf/WGamgoTlWr+LUFLjNsCl9s=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=P0J0MGWZrslh3jHOx8WwxVgvcAioWFUVCOQUDkq5je/HBxypvr8nJcBUXhtG+eq7m6oJJggLYOiUI6/u8qMmI5BkaVLBeJwVuMDGqLItvaLplj1EEHePSWhexzx+7jpeg49DkXl+rwMMi9TKtEPDA3QgCnOZw59bOFudrp6pTfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zfsV8M9Y; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zfsV8M9Y"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41a5958d7c2so4138005e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 01:13:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713773605; x=1714378405; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SS3mxjJZGylPMQWrV6fjHJvytyShfSYEN+VKk+SCWTk=;
+        b=zfsV8M9Y15XQoTkCI46CIw+QrNcIbc9v8nztBFW83vYHLcQLfS+c0luHVs/6fvmH9z
+         KDKE4F47VXEnxfA3r+aFMznif2560zr3N279qvFNbMdO7onun327KFsnxzNGm4eKVj0r
+         3ngAUrGxRavZIc7IOA4/mTj2zxdjC/vEECtMZMnFadpqJdypIhX2Llaj0v6QWgqIrhxo
+         p/TCeTH0S8gy+D5bI0Rnlw/swRw81k4q81RuLBb4B61YwIhHPQfeHPuple/lbnDWmKKd
+         DoplkS1yufStngZgLN+QSkXyLf695kE3wqjuxJH1sXf6BVbey0lKXnoAnjkHwtASv+Z/
+         vuKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713773605; x=1714378405;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SS3mxjJZGylPMQWrV6fjHJvytyShfSYEN+VKk+SCWTk=;
+        b=Aj+H2HpelUfVpmbxKPP7waUfTrsUemAWqKJilN5NJb4pT7UE4RgbeOdLmspILpjntI
+         6OACQy6cUgbcJPG/Qn5x9Z3ve74LDHAjSqYYtXTZJgK/hfmnWlb4tMwCkSx4xpoET3be
+         ApBqZ1vpzUGymttUTAc3C7c4tjbHuVJuYpmN36KmbJp0KQFySCVjiFfEF64K/TYcoykq
+         vWfqQNo4hHWIgS4Ym1dXJ7Ar/JJm398ne0h2jTk3xdhYf39vX8Ijz2iCY6jkWZBlYWn9
+         Dp6zrWMDoaZgmCBK4AYjkaPS9X+s+MWA7xFrRPfiWTYNZbGv5yXdHHeBPKyfGxaPxvnA
+         H2Gw==
+X-Forwarded-Encrypted: i=1; AJvYcCUvTkd7soFv+EfpXtz0q/82nL4PBgrR8WUceWkGxYNkl78NamVTj/54tDK+QUd/s1ucQ8+uBJytmFChb0PyB4EfoelGhstOSEHJtkCU
+X-Gm-Message-State: AOJu0Yw30LolITVOxapYQm/TxNugiiwqGk2ZQOsp6nQ1cg2rm7w/Rs+G
+	PkDys64ufgtOTSVgd+oMi0Wfb7MONSKvKWeN0qLSiG+FKnZulEUTgZOtvegxjgA=
+X-Google-Smtp-Source: AGHT+IGPrO7v5/lKn4DROPvyQytV03lXmW3pR62NbGJT8AmgPph9yPGqucSHM/Ijoe+qpMFYe5TATA==
+X-Received: by 2002:a05:600c:1394:b0:418:e6a1:c0e8 with SMTP id u20-20020a05600c139400b00418e6a1c0e8mr5978703wmf.7.1713773604900;
+        Mon, 22 Apr 2024 01:13:24 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id r7-20020a05600c35c700b0041638a085d3sm19437504wmq.15.2024.04.22.01.13.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 01:13:24 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: airlied@gmail.com, daniel@ffwll.ch, maarten.lankhorst@linux.intel.com, 
+ mripard@kernel.org, tzimmermann@suse.de, robh@kernel.org, 
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+ Jacobe Zang <jacobe.zang@wesion.com>
+Cc: nick@khadas.com, linux-amlogic@lists.infradead.org, 
+ quic_jesszhan@quicinc.com, sam@ravnborg.org, thierry.reding@gmail.com, 
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240415031408.8150-1-jacobe.zang@wesion.com>
+References: <20240415031408.8150-1-jacobe.zang@wesion.com>
+Subject: Re: [PATCH v2 0/2] drm/panel: add Khadas TS050 V2 panel support
+Message-Id: <171377360401.3418456.5122435310463743780.b4-ty@linaro.org>
+Date: Mon, 22 Apr 2024 10:13:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.4
 
-'perf kvm stat report/record' generates a statistical analysis of KVM
-events and can be used to analyze guest exit reasons. This patch tries
-to add stat support on riscv.
+Hi,
 
-Map the return value of trace_kvm_exit() to the specific cause of the 
-exception, and export it to userspace.
+On Mon, 15 Apr 2024 11:14:06 +0800, Jacobe Zang wrote:
+> Changes from v1 at [1]:
+> - Fix name from "newts050" to "ts050v2"
+> - Add specific description about controller change
+> 
+> [1]https://patchwork.kernel.org/project/linux-amlogic/list/?series=842707
+> 
+> Jacobe Zang (2):
+>   dt-bindings: panel-simple-dsi: add Khadas TS050 V2 panel bindings
+>   drm/panel: add Khadas TS050 V2 panel support
+> 
+> [...]
 
-It records on two available KVM tracepoints for riscv: "kvm:kvm_entry"
-and "kvm:kvm_exit", and reports statistical data which includes events
-handles time, samples, and so on.
+Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
 
-Cross compiling perf in X86 environment may encounter issues with missing
-libraries and tools. Suggest compiling nativly in RISC-V environment
-
-Simple tests go below:
-
-# ./perf kvm record -e "kvm:kvm_entry" -e "kvm:kvm_exit"
-Lowering default frequency rate from 4000 to 2500.
-Please consider tweaking /proc/sys/kernel/perf_event_max_sample_rate.
-[ perf record: Woken up 18 times to write data ]
-[ perf record: Captured and wrote 5.433 MB perf.data.guest (62519 samples) 
-
-# ./perf kvm report
-31K kvm:kvm_entry
-31K kvm:kvm_exit
-
-# ./perf kvm stat record -a
-[ perf record: Woken up 3 times to write data ]
-[ perf record: Captured and wrote 8.502 MB perf.data.guest (99338 samples) ]
-
-# ./perf kvm stat report --event=vmexit
-Event name                Samples   Sample%    Time (ns)     Time%   Max Time (ns)   Min Time (ns)  Mean Time (ns)
-STORE_GUEST_PAGE_FAULT     26968     54.00%    2003031800    40.00%     3361400         27600          74274
-LOAD_GUEST_PAGE_FAULT      17645     35.00%    1153338100    23.00%     2513400         30800          65363
-VIRTUAL_INST_FAULT         1247      2.00%     340820800     6.00%      1190800         43300          273312
-INST_GUEST_PAGE_FAULT      1128      2.00%     340645800     6.00%      2123200         30200          301990
-SUPERVISOR_SYSCALL         1019      2.00%     245989900     4.00%      1851500         29300          241403
-LOAD_ACCESS                986       1.00%     671556200     13.00%     4180200         100700         681091
-INST_ACCESS                655       1.00%     170054800     3.00%      1808300         54600          259625
-HYPERVISOR_SYSCALL         21        0.00%     4276400       0.00%      716500          116000         203638 
-
-Changes from v1->v2:
-- Rebased on Linux 6.9-rc3.
-
-Changes from v2->v3:
-- Add the missing assignment for 'vcpu_id_str' in patch 2.
-- Remove parentheses that cause compilation errors
-
-Shenlin Liang (2):
-  RISCV: KVM: add tracepoints for entry and exit events
-  perf kvm/riscv: Port perf kvm stat to RISC-V
-
- arch/riscv/kvm/trace.h                        | 67 ++++++++++++++++
- arch/riscv/kvm/vcpu.c                         |  7 ++
- tools/perf/arch/riscv/Makefile                |  1 +
- tools/perf/arch/riscv/util/Build              |  1 +
- tools/perf/arch/riscv/util/kvm-stat.c         | 79 +++++++++++++++++++
- .../arch/riscv/util/riscv_exception_types.h   | 35 ++++++++
- 6 files changed, 190 insertions(+)
- create mode 100644 arch/riscv/kvm/trace.h
- create mode 100644 tools/perf/arch/riscv/util/kvm-stat.c
- create mode 100644 tools/perf/arch/riscv/util/riscv_exception_types.h
+[1/2] dt-bindings: panel-simple-dsi: add Khadas TS050 V2 panel bindings
+      (no commit info)
+[2/2] drm/panel: add Khadas TS050 V2 panel support
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/26f9339212db569310d4b0ef4284efcbb462a86f
 
 -- 
-2.37.2
+Neil
 
