@@ -1,100 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9E913D297;
-	Mon, 22 Apr 2024 09:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0325490E;
+	Mon, 22 Apr 2024 09:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713777604; cv=none; b=Oy5WSjBKOhXBj5d7kNr1YKLwoCo9amfoRcgk31b/V8r68AQ5N937amDvcCK2aRgEH62M4MdIrrqWyUuDjCJ4gMogZ0aPBfxlYlkQNxcIAqjH74f3sMbWyAf1gNKeXENBfjyx60AaU8NKU4zYzceNabL63QEaTG6tBZcguZHQrQk=
+	t=1713777618; cv=none; b=QEOCYZrvGOYuoa3BlKNPh2WPx4ramBd3vUCGkSU3U/Ounsw6I/k9MXYB818sFeFPuMQz0WKR/cHHwfKeRrZ4GwWoLaCDKUr5M6kGUjsr+YA/QSfKTmvRuXL9XeCL25v09HGjNgppzVLfY47CZkPLLxV+AZhiCmbT4DpcAgOUXs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713777604; c=relaxed/simple;
-	bh=nZb1WqOKzpgix7JF8C81SkQWvG7tYsydr8OknjFa2/s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JAbpt1SHVX5g/wnb3i6EhVeeZbDwL/a+A3thMc+LhBu2VsDOxCuuGkDDfePBJ5CA+LN2i5HM+z6/AsNbcpj/FXB1WJUJZg7lyARmkqcy+eKto159kHG1zpWmtKTtxNsWgZRh/ExpXHVgBCsQ5ItXtMwoXGACWXOlRzCZ1EP/ox0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dnXjpYmU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dnXjpYmU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA1DEC113CC;
-	Mon, 22 Apr 2024 09:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713777604;
-	bh=nZb1WqOKzpgix7JF8C81SkQWvG7tYsydr8OknjFa2/s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dnXjpYmUkjd+sbGilXiYyKMgQijrPvrQxNUMTxQ3sCteoQlQ9gwJrU+mjHtH7VFLF
-	 vI0fWmNdDFGFUTO2uSdbQAgCsgN0TYLHBv4GgxGsDt6Tdjnkf+8BcV5YTK9dKjJi42
-	 xMqJTi+n5IaSYLNCgyWiOBX+FOWNPapwGiYEXWHNQmKNx56SORlAmAAxDM9WAG/8yj
-	 77Z4zt/izUVens3e3PVA4u2ldSvZTEREiEa0FvNE5L4i+Ic8IuJgTuE6mQw4ANKMfT
-	 0h4kVTKQiijNjfUmYt3wyWUFmZ2XZhi6UqafkbOuSAiKbM+MTIgMAhPnIMMXcfw3dd
-	 iRITs0SPZNKOQ==
-Date: Mon, 22 Apr 2024 12:18:46 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
-	lkp@intel.com, Linux Memory Management List <linux-mm@kvack.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Andreas Dilger <adilger@dilger.ca>, Arnd Bergmann <arnd@arndb.de>,
-	Changbin Du <changbin.du@huawei.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Ingo Molnar <mingo@kernel.org>,
-	Krister Johansen <kjlx@templeofstupid.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>, Tejun Heo <tj@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [linux-next:master] [init]  b8de39bd1b:
- BUG:kernel_failed_in_early-boot_stage,last_printk:early_console_in_setup_code
-Message-ID: <ZiYrdnbw5z1ajeRw@kernel.org>
-References: <202404221524.4954a009-oliver.sang@intel.com>
- <20240422082942.B750cniQ@linutronix.de>
+	s=arc-20240116; t=1713777618; c=relaxed/simple;
+	bh=mQQw5lMBFpwd1ib2VzuyorFSwtH397b/MvRxcKg2qkE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q1SmGkMnwjdaY3DVXKvxYSfTKHHtUhZ0XchSVW7arOJE2RQNJxBwl5aehAF3qNhoNcph8crVaVZB/JzZqW0ACRjWRnP7FswFEMDZNDOZk0W9PgZvmkhwJX5z6CzaoCO6NyUQjkYyEMi6OFyUD+db8OiAUmwUGKIqT7ZYcklTbX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VNKQ772jWz1RCjQ;
+	Mon, 22 Apr 2024 17:17:03 +0800 (CST)
+Received: from dggpemd500003.china.huawei.com (unknown [7.185.36.29])
+	by mail.maildlp.com (Postfix) with ESMTPS id B842C1403D2;
+	Mon, 22 Apr 2024 17:20:06 +0800 (CST)
+Received: from localhost.localdomain (10.175.101.6) by
+ dggpemd500003.china.huawei.com (7.185.36.29) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Mon, 22 Apr 2024 17:20:06 +0800
+From: gaoxingwang <gaoxingwang1@huawei.com>
+To: <gaoxingwang1@huawei.com>
+CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<kuba@kernel.org>, <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <yanan@huawei.com>
+Subject: [PATCH v2] net: ipv6: fix wrong start position when receive hop-by-hop fragment
+Date: Mon, 22 Apr 2024 17:19:17 +0800
+Message-ID: <20240422091917.3221601-1-gaoxingwang1@huawei.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20240422011052.2932165-1-gaoxingwang1@huawei.com>
+References: <20240422011052.2932165-1-gaoxingwang1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240422082942.B750cniQ@linutronix.de>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemd500003.china.huawei.com (7.185.36.29)
 
-On Mon, Apr 22, 2024 at 10:29:42AM +0200, Nam Cao wrote:
-> On Mon, Apr 22, 2024 at 03:45:00PM +0800, kernel test robot wrote:
-> > kernel test robot noticed "BUG:kernel_failed_in_early-boot_stage,last_printk:early_console_in_setup_code" on:
-> > 
-> > commit: b8de39bd1b76faffe7cd91e148a6d7d9bf4e38f7 ("init: fix allocated page overlapping with PTR_ERR")
-> > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
-> 
-> I can reproduce the problem. I rebased this commit onto v6.8.7, I can still
-> observe the problem.
-> 
-> No immediate idea what is the problem. Backtrace from gdb goes crazy:
-> 
-> (gdb) bt
-> #0  0xffffffffb2074ded in ?? ()
-> #1  0x00000000000000a1 in ?? ()
-> #2  0x00000000000000a1 in ?? ()
-> #3  0x000000007ffff000 in ?? ()
-> #4  0x00000000543ff000 in ?? ()
-> #5  0x0000000000000000 in ?? ()
+In IPv6, ipv6_rcv_core will parse the hop-by-hop type extension header and increase skb->transport_header by one extension header length.
+But if there are more other extension headers like fragment header at this time, the skb->transport_header points to the second extension header,
+not the transport layer header or the first extension header.
 
-The kernel config here has CONFIG_DEBUG_VIRTUAL=y, so __pa translates to
-__phys_addr() in arch/x86/mm/physaddr.c and __pa(-PAGE_SIZE) triggers
+This will result in the start and nexthdrp variable not pointing to the same position in ipv6frag_thdr_trunced,
+and ipv6_skip_exthdr returning incorrect offset and frag_off.Sometimes,the length of the last sharded packet is smaller than the calculated incorrect offset, resulting in packet loss.
+We can use network header to offset and calculate the correct position to solve this problem.
 
-		VIRTUAL_BUG_ON(y >= KERNEL_IMAGE_SIZE);
+Fixes: 9d9e937b1c8b (ipv6/netfilter: Discard first fragment not including all headers)
+Signed-off-by: Gao Xingwang <gaoxingwang1@huawei.com>
+---
+ net/ipv6/reassembly.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-x86 has __pa_nodebug() that does not do bounds check, but it cannot be used
-in generic code because no other arch except s390 define it.
-
-For now I don't have ideas how to make this work in the general case, so
-probably we should only fix riscv for now.
- 
-> @akpm: drop this commit until this is figured out?
-> 
-> Best regards,
-> Nam
-> 
-
+diff --git a/net/ipv6/reassembly.c b/net/ipv6/reassembly.c
+index 5ebc47da1000..2af98edef87e 100644
+--- a/net/ipv6/reassembly.c
++++ b/net/ipv6/reassembly.c
+@@ -369,7 +369,7 @@ static int ipv6_frag_rcv(struct sk_buff *skb)
+ 	 * the source of the fragment, with the Pointer field set to zero.
+ 	 */
+ 	nexthdr = hdr->nexthdr;
+-	if (ipv6frag_thdr_truncated(skb, skb_transport_offset(skb), &nexthdr)) {
++	if (ipv6frag_thdr_truncated(skb, skb_network_offset(skb) + sizeof(struct ipv6hdr), &nexthdr)) {
+ 		__IP6_INC_STATS(net, __in6_dev_get_safely(skb->dev),
+ 				IPSTATS_MIB_INHDRERRORS);
+ 		icmpv6_param_prob(skb, ICMPV6_HDR_INCOMP, 0);
 -- 
-Sincerely yours,
-Mike.
+2.27.0
+
