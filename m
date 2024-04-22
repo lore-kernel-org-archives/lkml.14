@@ -1,141 +1,202 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22BE14A8B;
-	Mon, 22 Apr 2024 10:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52C3584DE0;
+	Mon, 22 Apr 2024 10:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713782806; cv=none; b=INhdwBZkxxy/xTGn4pXr4LMN1N8lcBqEhAq/8/diPnnKzPFRL1tj0Br4M/rdkRM+E9cU/ErG5NDuAvcSEDaL9fWf5UM5iBVAiCBnhD9XVIR/WqYjDEROgk0FlDjepTvTMPvISVFXX9UBcVEIYrpGWXUkPwlozrErbd4XJO1NH9M=
+	t=1713782982; cv=none; b=h/Rd/qyO7WkYxUe24h7wVZRqEj9WNY8FC3buhfxIbPd3068NsSHgOEqYWpFAPBzovRrF7eRJu/XDAKgnx+aixEXt4DMP2gq6VRgKfheIkuZOodPQAD3De/QIuSBh5ahwtL2H4MlS9y5VaDoLizfQSchqfJHysKwwIUCz203tWqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713782806; c=relaxed/simple;
-	bh=TBfSszjsYeu8dxmuoA7yzrZI7AlIw4uTE4Ri0Sho5Z4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Se6ioeX757YOHIu6GxsCvU0gxaZXpeQVDFk8WxqMLHhWW/jkvaAvozVzjzvlGsVFVOpqmZqi4lXme15VljhFdGuki/v8O7LLSstJ1t05T6j7IIlLYYawFN8pCr3dZPUozQIvbEoqtlRwQCgzLDfEkFlEd7dxIJBlw3fnh9hpnmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VNMPR49BXz6K9Mn;
-	Mon, 22 Apr 2024 18:46:35 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 382BF1406AC;
-	Mon, 22 Apr 2024 18:46:41 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 22 Apr
- 2024 11:46:40 +0100
-Date: Mon, 22 Apr 2024 11:46:39 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, "James Morse"
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla
-	<sudeep.holla@arm.com>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "Dave
- Hansen" <dave.hansen@linux.intel.com>, <justin.he@arm.com>,
-	<jianyong.wu@arm.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH v7 09/16] arm64: acpi: Move get_cpu_for_acpi_id() to a
- header
-Message-ID: <20240422114639.0000651a@Huawei.com>
-In-Reply-To: <20240418135412.14730-10-Jonathan.Cameron@huawei.com>
-References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
-	<20240418135412.14730-10-Jonathan.Cameron@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1713782982; c=relaxed/simple;
+	bh=YjXWyHSEbgscaEgpxtkOZ2LyLY0BsD2fw1O+wecDHfg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lnnREEgGHMdd9eyz1H/Ujf+xeuyoLXn+MaNACn9oFmX2O3jmjbYscvHVEjXW9Jhmj9WKgZYmgXK7TCz0Hq3H+F6Tbpy6WGlnZ3BMCrg8RJ+Bzn/aYUvXx1RmJ5MUHJ4K/nrwgrRKKp+2ElbhtulVDHw34C0/6V1NC4H0QuY5ew4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA1F51063;
+	Mon, 22 Apr 2024 03:50:07 -0700 (PDT)
+Received: from e126817.cambridge.arm.com (e126817.cambridge.arm.com [10.2.3.5])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8A9333F7BD;
+	Mon, 22 Apr 2024 03:49:37 -0700 (PDT)
+From: Ben Gainey <ben.gainey@arm.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: ak@linux.intel.com,
+	will@kernel.org,
+	james.clark@arm.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Ben Gainey <ben.gainey@arm.com>
+Subject: [RFC PATCH v2 1/4] perf: Allow periodic events to alternate between two sample periods
+Date: Mon, 22 Apr 2024 11:49:26 +0100
+Message-ID: <20240422104929.264241-2-ben.gainey@arm.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240422104929.264241-1-ben.gainey@arm.com>
+References: <20240422104929.264241-1-ben.gainey@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
 
-On Thu, 18 Apr 2024 14:54:05 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+This change modifies perf_event_attr to add a second, alternative
+sample period field, and modifies the core perf overflow handling
+such that when specified an event will alternate between two sample
+periods.
 
-> From: James Morse <james.morse@arm.com>
-> 
-> ACPI identifies CPUs by UID. get_cpu_for_acpi_id() maps the ACPI UID
-> to the Linux CPU number.
-> 
-> The helper to retrieve this mapping is only available in arm64's NUMA
-> code.
-> 
-> Move it to live next to get_acpi_id_for_cpu().
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Gavin Shan <gshan@redhat.com>
-> Tested-by: Miguel Luis <miguel.luis@oracle.com>
-> Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-> Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Another one where we'd been focused on the general ACPI aspects so long
-the CC list didn't include relevant maintainers.
+Currently, perf does not provide a  mechanism for decoupling the period
+over which counters are counted from the period between samples. This is
+problematic for building a tool to measure per-function metrics derived
+from a sampled counter group. Ideally such a tool wants a very small
+sample window in order to correctly attribute the metrics to a given
+function, but prefers a larger sample period that provides representative
+coverage without excessive probe effect, triggering throttling, or
+generating excessive amounts of data.
 
-+CC Lorenzo, Hanjun and Sudeep.
+By alternating between a long and short sample_period and subsequently
+discarding the long samples, tools may decouple the period between
+samples that the tool cares about from the window of time over which
+interesting counts are collected.
 
+It is expected that typically tools would use this feature with the
+cycles or instructions events as an approximation for time, but no
+restrictions are applied to which events this can be applied to.
 
-> ---
-> v7: No change
-> ---
->  arch/arm64/include/asm/acpi.h | 11 +++++++++++
->  arch/arm64/kernel/acpi_numa.c | 11 -----------
->  2 files changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
-> index 6792a1f83f2a..bc9a6656fc0c 100644
-> --- a/arch/arm64/include/asm/acpi.h
-> +++ b/arch/arm64/include/asm/acpi.h
-> @@ -119,6 +119,17 @@ static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
->  	return	acpi_cpu_get_madt_gicc(cpu)->uid;
->  }
->  
-> +static inline int get_cpu_for_acpi_id(u32 uid)
-> +{
-> +	int cpu;
-> +
-> +	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
-> +		if (uid == get_acpi_id_for_cpu(cpu))
-> +			return cpu;
-> +
-> +	return -EINVAL;
-> +}
-> +
->  static inline void arch_fix_phys_package_id(int num, u32 slot) { }
->  void __init acpi_init_cpus(void);
->  int apei_claim_sea(struct pt_regs *regs);
-> diff --git a/arch/arm64/kernel/acpi_numa.c b/arch/arm64/kernel/acpi_numa.c
-> index e51535a5f939..0c036a9a3c33 100644
-> --- a/arch/arm64/kernel/acpi_numa.c
-> +++ b/arch/arm64/kernel/acpi_numa.c
-> @@ -34,17 +34,6 @@ int __init acpi_numa_get_nid(unsigned int cpu)
->  	return acpi_early_node_map[cpu];
->  }
->  
-> -static inline int get_cpu_for_acpi_id(u32 uid)
-> -{
-> -	int cpu;
-> -
-> -	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
-> -		if (uid == get_acpi_id_for_cpu(cpu))
-> -			return cpu;
-> -
-> -	return -EINVAL;
-> -}
-> -
->  static int __init acpi_parse_gicc_pxm(union acpi_subtable_headers *header,
->  				      const unsigned long end)
->  {
+Signed-off-by: Ben Gainey <ben.gainey@arm.com>
+---
+ include/linux/perf_event.h      |  5 +++++
+ include/uapi/linux/perf_event.h |  3 +++
+ kernel/events/core.c            | 39 +++++++++++++++++++++++++++++++++
+ 3 files changed, 47 insertions(+)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index d2a15c0c6f8a..212bd302e548 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -267,6 +267,11 @@ struct hw_perf_event {
+ 	 */
+ 	u64				freq_time_stamp;
+ 	u64				freq_count_stamp;
++
++	/*
++	 * Indicates that the alternative_sample_period is used
++	 */
++	bool				using_alternative_sample_period;
+ #endif
+ };
+ 
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index 3a64499b0f5d..5c1701d091cf 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -379,6 +379,7 @@ enum perf_event_read_format {
+ #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
+ #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
+ #define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
++#define PERF_ATTR_SIZE_VER9	144	/* add: alternative_sample_period */
+ 
+ /*
+  * Hardware event_id to monitor via a performance monitoring event:
+@@ -522,6 +523,8 @@ struct perf_event_attr {
+ 	__u64	sig_data;
+ 
+ 	__u64	config3; /* extension of config2 */
++
++	__u64	alternative_sample_period;
+ };
+ 
+ /*
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 724e6d7e128f..07f1f931e18e 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4100,6 +4100,8 @@ static void perf_adjust_period(struct perf_event *event, u64 nsec, u64 count, bo
+ 	s64 period, sample_period;
+ 	s64 delta;
+ 
++	WARN_ON_ONCE(hwc->using_alternative_sample_period);
++
+ 	period = perf_calculate_period(event, nsec, count);
+ 
+ 	delta = (s64)(period - hwc->sample_period);
+@@ -9552,6 +9554,7 @@ static int __perf_event_overflow(struct perf_event *event,
+ 				 int throttle, struct perf_sample_data *data,
+ 				 struct pt_regs *regs)
+ {
++	struct hw_perf_event *hwc = &event->hw;
+ 	int events = atomic_read(&event->event_limit);
+ 	int ret = 0;
+ 
+@@ -9564,6 +9567,26 @@ static int __perf_event_overflow(struct perf_event *event,
+ 
+ 	ret = __perf_event_account_interrupt(event, throttle);
+ 
++	/*
++	 * Swap the sample period to the alternative period
++	 */
++	if (event->attr.alternative_sample_period) {
++		bool using_alt = hwc->using_alternative_sample_period;
++		u64 sample_period = (using_alt ? event->attr.sample_period
++					       : event->attr.alternative_sample_period);
++
++		hwc->sample_period = sample_period;
++		hwc->using_alternative_sample_period = !using_alt;
++
++		if (local64_read(&hwc->period_left) > 0) {
++			event->pmu->stop(event, PERF_EF_UPDATE);
++
++			local64_set(&hwc->period_left, 0);
++
++			event->pmu->start(event, PERF_EF_RELOAD);
++		}
++	}
++
+ 	/*
+ 	 * XXX event_limit might not quite work as expected on inherited
+ 	 * events
+@@ -12005,6 +12028,12 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 
+ 	local64_set(&hwc->period_left, hwc->sample_period);
+ 
++	/*
++	 * alternative_sample_period cannot be used with freq
++	 */
++	if (attr->freq && attr->alternative_sample_period)
++		goto err_ns;
++
+ 	/*
+ 	 * We currently do not support PERF_SAMPLE_READ on inherited events.
+ 	 * See perf_output_read().
+@@ -12459,9 +12488,19 @@ SYSCALL_DEFINE5(perf_event_open,
+ 	if (attr.freq) {
+ 		if (attr.sample_freq > sysctl_perf_event_sample_rate)
+ 			return -EINVAL;
++		if (attr.alternative_sample_period)
++			return -EINVAL;
+ 	} else {
+ 		if (attr.sample_period & (1ULL << 63))
+ 			return -EINVAL;
++		if (attr.alternative_sample_period) {
++			if (!attr.sample_period)
++				return -EINVAL;
++			if (attr.alternative_sample_period & (1ULL << 63))
++				return -EINVAL;
++			if (attr.alternative_sample_period == attr.sample_period)
++				attr.alternative_sample_period = 0;
++		}
+ 	}
+ 
+ 	/* Only privileged users can get physical addresses */
+-- 
+2.44.0
 
