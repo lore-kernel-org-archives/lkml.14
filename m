@@ -1,87 +1,73 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A013614A0A5;
-	Mon, 22 Apr 2024 13:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ACC914F9D8
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 13:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713792774; cv=none; b=n5m9nLohcIV9JrdnTbSKL1lzUwUdY0RLtqFVKvlupk1igD410yKFdEOJQPaOrn4VMriCRAKyeSeuL/gZ+qEimgt1PJTeAjO/4WKDsixD9pynVtLxo55ZrWjYpqWq64f89VsNz6Iu/cFDxumXPLbMUW+cmSNsmScGH5uzhLpT2D0=
+	t=1713792802; cv=none; b=oEwYyM/+KTJdJfkBKcdorsKyKxf3A0rloXiHI+eEj8q4eyXXXzyUZittTuG4uk0TMzCPOlI5M+NUWDA/46pCHgQ+zJuLq6RrJTW0TUiwRja1TegoIwewA/NZ+iSeAe+fg58XGYfHDfiJkLmfTsf8VBe8Q0/UTKPkdXchNw1HHt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713792774; c=relaxed/simple;
-	bh=fxiwIoJyQQ0yCTKQx1+fLyT9CHX1imPCDSiq9BWJNf4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cbL7QUrz0BIBFFe8JCyyGDL8RXQypOHHwfZO+0NMcRe6vtYYw4t1ryUrd8KmcfZF0ahBf9Y5HlDG/UMszxqUBm71H9WwrDBe6N0yWHzLh8ExPE80D4atghhQTFmjmnw2GH6p8sAwbbmzZhjBbM+f9L76YqFq9rp20q4IdHZSsh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hw8HZpGn; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713792802; c=relaxed/simple;
+	bh=4Ob8Zycf6XNs5PfydV0Z9JFRZRZj+ue557ZvcL3Ls8A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dOJ+IRYNLQ3hc0NY0lm3J6x8SVE7YJWpCF6QMj6Su5H0r9X18zJos6zUo6WQqHC2QUsEXZe8RiGrgdcde/Q653OT/E0XL7da6/AMKDw4J3opmAEa0xoOmS52SzyQQ9xPWba2xTXgMtINdjr5KgupRROgYwsS19YN/4ovQ9oVCVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bTHxds5d; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hw8HZpGn"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51abd580902so2737639e87.1;
-        Mon, 22 Apr 2024 06:32:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713792771; x=1714397571; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g3lK+2Qsf1AX15DW4lwmP/OfFUHwKsLWNqGykdshUGA=;
-        b=Hw8HZpGnWLf5vEfiDqtZKPPvpjWeWzhaldVs1UjakywCGLRbNJvNNwUzqP6SePZXUP
-         d0t/N5lhjFn2ZNp51nnEGZUu/WnBsh2wGtn6LdU794bEYHmbKxKEJR2VYlWLFqEp/2UC
-         WVH/Qmhudq7rTxkYCeFesJhk60Z4a7uR27lvCPcLjl1L3M98OX66rcc7BioM8q7KE7nu
-         qWynkX2wzlYrWu/VhhEV7WkCBR4h9T0lJHWxi/Pvuz7ZERy+sUu8KZaszuiswQB3I058
-         Iy6+ACoifpmFJpSKKNNrfRniiXN5Li8sxxIrfO9E9GADukZIhQN/7idS8yeGtNTobg7Z
-         xqeQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bTHxds5d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713792800;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=TsLvrrpgeWiaazNPsZyT6zMTgXSV8fNIsFxUi4A9ymE=;
+	b=bTHxds5dS/0yGHXTPigfzIiBNBZlIw6w61E8pK7SgzWq2nyrkE/y9qB324bru8E8XDgtz2
+	rpTusST3i1fi7g5NgJp7paH4ii4kVortH7Od4UK5uBzzN9e+n5t1j91uPesuvYmus0S1W8
+	ZbGZU5RHJp1Gz6gpY2qwtZJWAPk8qEM=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-163-jBQQlG_wMMqj3J5Qu783QA-1; Mon, 22 Apr 2024 09:33:18 -0400
+X-MC-Unique: jBQQlG_wMMqj3J5Qu783QA-1
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ade3de68c1so275156a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 06:33:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713792771; x=1714397571;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g3lK+2Qsf1AX15DW4lwmP/OfFUHwKsLWNqGykdshUGA=;
-        b=M5905jvc6KYqz+XajkH5ukVUlFctDUlnBLDO9o2WDN8RApKzm+CIsd2Ryh6L5PAiVY
-         KuUk2A+DSFgBlxruTB2mPQyn/mSwaE9VwfuS53n73m2/aUyLSZFYQDF/5szznMlOIB0o
-         PySHg951Ao4dIoArpYQk8gRl4nXBqn7hJq2rEORrrnH12c6xqap3NFp0pi0Qdj54seNp
-         a+rIkfMjM0FPi0Yax8nYfReWexT/LeoYYtplcLF/S5mJa1JoujiKKy1RKRgi1GZayGSz
-         ITRByAQK5a4lI5TTcz2os68HmSs+IwqNFBymMDihAf0+Wm1amsQxbZLXDnPphB2gP5j6
-         Grfw==
-X-Forwarded-Encrypted: i=1; AJvYcCU0eGC8LbVv0in219vV9zEBkPYSz7HPYsXfWxLp7oOrE09Bce6fFn9D0uaSLRfU7Stiwp5i8Kn66kajDYqBbIbm5rqUisW2xPhDfdu7ayoa1+DZRt/eSc4EVXLX7AC5JuunhpuiPuvmSspd
-X-Gm-Message-State: AOJu0YxNXF++gO/wvie7ZGPV4OUFXkvy4H6ti5xNyWE6OvYoqcZhXy3D
-	lA/7Ym6Q0PcCYOv9jg+H9ZosKcVwXvJpVlIf0WcxNMZn25dPXnTE
-X-Google-Smtp-Source: AGHT+IGFFP1No2Mme1iLYqd8CBMmRNw/WnPGPFq2h9808e4rbakLjFkAyJ+yDYdSYMb2NFdZi2R2Ug==
-X-Received: by 2002:a05:6512:52d:b0:51b:6934:1cba with SMTP id o13-20020a056512052d00b0051b69341cbamr505969lfc.21.1713792770649;
-        Mon, 22 Apr 2024 06:32:50 -0700 (PDT)
-Received: from CVSIT-Server.. ([193.232.173.109])
-        by smtp.gmail.com with ESMTPSA id d22-20020ac241d6000000b0051327d2f5e5sm1729568lfi.119.2024.04.22.06.32.49
+        d=1e100.net; s=20230601; t=1713792797; x=1714397597;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TsLvrrpgeWiaazNPsZyT6zMTgXSV8fNIsFxUi4A9ymE=;
+        b=BmHL6dVc3oa1aW3rqcarcgPDyn9CJ2UMbF4dE95VCWS30HqUOSn/H+PD+XLbMAMDqf
+         y76x8/c/nhMe3U7TgnrF78Ioi53bJPHxkT4VcXdDf3pc09EA0zeObV3eQ9vwHyFAZ25D
+         YiOL9QtBurly2wf3+0K2RBuyXtF9Hz2ZhluhWPlRg7T93vbcm+A++eLKJxcdjp0L1xVz
+         Nwsn8zk4iDkIoFvD/QA8gUlwl3MacH88zzbkpSE5SGBWRlx2OShstfgRwl+2DoCJn1ji
+         ej/4lrO999qVR9fYM96RugTtprfsQc+mSbZlOl/g2n/yI7dcPv9SOtHrSPY5GDAOxxfy
+         s8xw==
+X-Gm-Message-State: AOJu0Yxy9bz6nJV1EQG8UdU5M9hc2D1enTYhn2ZlbVLJrCqRGIegpSFk
+	vgG8ERIAu0Gg76eXHD63xK6waXKXZYTZYs/+xB+gTsV6gIaKkNs4dsw5mAvaM9oRDaBkkqF5hNR
+	7167DMRLMsi38FrFawRpYYL9jyYIlu7xTPC2+/gNuaeaWeTc0oKrjzUYVzEzC1bBijC+ZVMIs/P
+	CKXbiqCPjzvCpkoaL5Hy1q6VAgFgVPagg7BrKm0jvahFk=
+X-Received: by 2002:a17:902:7b87:b0:1dd:e128:16b1 with SMTP id w7-20020a1709027b8700b001dde12816b1mr11644776pll.6.1713792797391;
+        Mon, 22 Apr 2024 06:33:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFs+daoEIT53Szg5CEW494B5kmIIY0NotIcW6GQlEiEV8dnhii0L57FjTPcisCk2Mis3NrHgw==
+X-Received: by 2002:a17:902:7b87:b0:1dd:e128:16b1 with SMTP id w7-20020a1709027b8700b001dde12816b1mr11644713pll.6.1713792796619;
+        Mon, 22 Apr 2024 06:33:16 -0700 (PDT)
+Received: from x1n.redhat.com (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id w17-20020a1709029a9100b001e2a4663179sm8101993plp.258.2024.04.22.06.33.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 06:32:49 -0700 (PDT)
-From: Konstantin Pugin <ria.freelander@gmail.com>
-To: 
-Cc: krzk@kernel.org,
-	conor@kernel.org,
-	lkp@intel.com,
-	vz@mleia.com,
-	robh@kernel.org,
-	jcmvbkbc@gmail.com,
-	nicolas.ferre@microchip.com,
-	manikanta.guntupalli@amd.com,
-	corbet@lwn.net,
-	ychuang3@nuvoton.com,
-	u.kleine-koenig@pengutronix.de,
-	Maarten.Brock@sttls.nl,
-	Konstantin Pugin <ria.freelander@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Lech Perczak <lech.perczak@camlingroup.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [PATCH v7 3/3] serial: sc16is7xx: add support for EXAR XR20M1172 UART
-Date: Mon, 22 Apr 2024 16:32:15 +0300
-Message-Id: <20240422133219.2710061-4-ria.freelander@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240422133219.2710061-1-ria.freelander@gmail.com>
-References: <20240422133219.2710061-1-ria.freelander@gmail.com>
+        Mon, 22 Apr 2024 06:33:15 -0700 (PDT)
+From: Peter Xu <peterx@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: peterx@redhat.com,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	syzbot+d8426b591c36b21c750e@syzkaller.appspotmail.com
+Subject: [PATCH] mm/userfaultfd: Reset ptes when close() for wr-protected ones
+Date: Mon, 22 Apr 2024 09:33:11 -0400
+Message-ID: <20240422133311.2987675-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,219 +76,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-XR20M1172 register set is mostly compatible with SC16IS762, but it has
-a support for additional division rates of UART with special DLD register.
-So, add handling this register by appropriate devicetree bindings.
+Userfaultfd unregister includes a step to remove wr-protect bits from all
+the relevant pgtable entries, but that only covered an explicit
+UFFDIO_UNREGISTER ioctl, not a close() on the userfaultfd itself.  Cover
+that too.
 
-Signed-off-by: Konstantin Pugin <ria.freelander@gmail.com>
+Link: https://lore.kernel.org/all/000000000000ca4df20616a0fe16@google.com/
+Analyzed-by: David Hildenbrand <david@redhat.com>
+Reported-by: syzbot+d8426b591c36b21c750e@syzkaller.appspotmail.com
+Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- drivers/tty/serial/Kconfig         |  3 +-
- drivers/tty/serial/sc16is7xx.c     | 61 ++++++++++++++++++++++++++++--
- drivers/tty/serial/sc16is7xx.h     |  1 +
- drivers/tty/serial/sc16is7xx_i2c.c |  1 +
- drivers/tty/serial/sc16is7xx_spi.c |  1 +
- 5 files changed, 62 insertions(+), 5 deletions(-)
+ fs/userfaultfd.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 4fdd7857ef4d..9d0438cfe147 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1029,7 +1029,7 @@ config SERIAL_SC16IS7XX_CORE
- 	select SERIAL_SC16IS7XX_SPI if SPI_MASTER
- 	select SERIAL_SC16IS7XX_I2C if I2C
- 	help
--	  Core driver for NXP SC16IS7xx UARTs.
-+	  Core driver for NXP SC16IS7xx and compatible UARTs.
- 	  Supported ICs are:
- 
- 	    SC16IS740
-@@ -1038,6 +1038,7 @@ config SERIAL_SC16IS7XX_CORE
- 	    SC16IS752
- 	    SC16IS760
- 	    SC16IS762
-+	    XR20M1172 (Exar)
- 
- 	  The driver supports both I2C and SPI interfaces.
- 
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index dfcc804f558f..09c9e52d7ec2 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -10,6 +10,7 @@
- #undef DEFAULT_SYMBOL_NAMESPACE
- #define DEFAULT_SYMBOL_NAMESPACE SERIAL_NXP_SC16IS7XX
- 
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-@@ -68,6 +69,7 @@
- /* Special Register set: Only if ((LCR[7] == 1) && (LCR != 0xBF)) */
- #define SC16IS7XX_DLL_REG		(0x00) /* Divisor Latch Low */
- #define SC16IS7XX_DLH_REG		(0x01) /* Divisor Latch High */
-+#define XR20M117X_DLD_REG		(0x02) /* Divisor Fractional Register */
- 
- /* Enhanced Register set: Only if (LCR == 0xBF) */
- #define SC16IS7XX_EFR_REG		(0x02) /* Enhanced Features */
-@@ -221,6 +223,20 @@
- #define SC16IS7XX_TCR_RX_HALT(words)	((((words) / 4) & 0x0f) << 0)
- #define SC16IS7XX_TCR_RX_RESUME(words)	((((words) / 4) & 0x0f) << 4)
- 
-+/*
-+ * Divisor Fractional Register bits (EXAR extension).
-+ * EXAR hardware is mostly compatible with SC16IS7XX, but supports additional feature:
-+ * 4x and 8x divisor, instead of default 16x. It has a special register to program it.
-+ * Bits 0 to 3 is fractional divisor, it used to set value of last 16 bits of
-+ * uartclk * (16 / divisor) / baud, in case of default it will be uartclk / baud.
-+ * Bits 4 and 5 used as switches, and should not be set to 1 simultaneously.
-+ */
-+
-+#define XR20M117X_DLD_16X			0
-+#define XR20M117X_DLD_DIV_MASK			GENMASK(3, 0)
-+#define XR20M117X_DLD_8X			BIT(4)
-+#define XR20M117X_DLD_4X			BIT(5)
-+
- /*
-  * TLR register bits
-  * If TLR[3:0] or TLR[7:4] are logical 0, the selectable trigger levels via the
-@@ -523,6 +539,13 @@ const struct sc16is7xx_devtype sc16is762_devtype = {
- };
- EXPORT_SYMBOL_GPL(sc16is762_devtype);
- 
-+const struct sc16is7xx_devtype xr20m1172_devtype = {
-+	.name		= "XR20M1172",
-+	.nr_gpio	= 8,
-+	.nr_uart	= 2,
-+};
-+EXPORT_SYMBOL_GPL(xr20m1172_devtype);
-+
- static bool sc16is7xx_regmap_volatile(struct device *dev, unsigned int reg)
- {
- 	switch (reg) {
-@@ -555,18 +578,43 @@ static bool sc16is7xx_regmap_noinc(struct device *dev, unsigned int reg)
- 	return reg == SC16IS7XX_RHR_REG;
- }
- 
-+static bool sc16is7xx_has_dld(struct device *dev)
-+{
-+	struct sc16is7xx_port *s = dev_get_drvdata(dev);
-+
-+	if (s->devtype == &xr20m1172_devtype)
-+		return true;
-+	return false;
-+}
-+
- static int sc16is7xx_set_baud(struct uart_port *port, int baud)
- {
- 	struct sc16is7xx_one *one = to_sc16is7xx_one(port, port);
--	u8 lcr;
-+	unsigned long clk = port->uartclk, div, div16;
-+	bool has_dld = sc16is7xx_has_dld(port->dev);
-+	u8 dld_mode = XR20M117X_DLD_16X;
- 	u8 prescaler = 0;
--	unsigned long clk = port->uartclk, div = clk / 16 / baud;
-+	u8 divisor = 16;
-+	u8 lcr;
-+
-+	if (has_dld && DIV_ROUND_CLOSEST(clk, baud) < 16)
-+		divisor = rounddown_pow_of_two(DIV_ROUND_CLOSEST(clk, baud));
-+
-+	div16 = (clk * 16) / divisor / baud;
-+	div = div16 / 16;
- 
- 	if (div >= BIT(16)) {
- 		prescaler = SC16IS7XX_MCR_CLKSEL_BIT;
- 		div /= 4;
- 	}
- 
-+	/* Count additional divisor for EXAR devices */
-+	if (divisor == 8)
-+		dld_mode = XR20M117X_DLD_8X;
-+	if (divisor == 4)
-+		dld_mode = XR20M117X_DLD_4X;
-+	dld_mode |= FIELD_PREP(XR20M117X_DLD_DIV_MASK, div16);
-+
- 	/* Enable enhanced features */
- 	sc16is7xx_efr_lock(port);
- 	sc16is7xx_port_update(port, SC16IS7XX_EFR_REG,
-@@ -587,12 +635,14 @@ static int sc16is7xx_set_baud(struct uart_port *port, int baud)
- 	regcache_cache_bypass(one->regmap, true);
- 	sc16is7xx_port_write(port, SC16IS7XX_DLH_REG, div / 256);
- 	sc16is7xx_port_write(port, SC16IS7XX_DLL_REG, div % 256);
-+	if (has_dld)
-+		sc16is7xx_port_write(port, XR20M117X_DLD_REG, dld_mode);
- 	regcache_cache_bypass(one->regmap, false);
- 
- 	/* Restore LCR and access to general register set */
- 	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, lcr);
- 
--	return DIV_ROUND_CLOSEST(clk / 16, div);
-+	return DIV_ROUND_CLOSEST(clk / divisor, div);
- }
- 
- static void sc16is7xx_handle_rx(struct uart_port *port, unsigned int rxlen,
-@@ -1002,6 +1052,8 @@ static void sc16is7xx_set_termios(struct uart_port *port,
- 				  const struct ktermios *old)
- {
- 	struct sc16is7xx_one *one = to_sc16is7xx_one(port, port);
-+	bool has_dld = sc16is7xx_has_dld(port->dev);
-+	u8 divisor = has_dld ? 4 : 16
- 	unsigned int lcr, flow = 0;
- 	int baud;
- 	unsigned long flags;
-@@ -1084,7 +1136,7 @@ static void sc16is7xx_set_termios(struct uart_port *port,
- 	/* Get baud rate generator configuration */
- 	baud = uart_get_baud_rate(port, termios, old,
- 				  port->uartclk / 16 / 4 / 0xffff,
--				  port->uartclk / 16);
-+				  port->uartclk / divisor);
- 
- 	/* Setup baudrate generator */
- 	baud = sc16is7xx_set_baud(port, baud);
-@@ -1684,6 +1736,7 @@ void sc16is7xx_remove(struct device *dev)
- EXPORT_SYMBOL_GPL(sc16is7xx_remove);
- 
- const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] = {
-+	{ .compatible = "exar,xr20m1172",	.data = &xr20m1172_devtype, },
- 	{ .compatible = "nxp,sc16is740",	.data = &sc16is74x_devtype, },
- 	{ .compatible = "nxp,sc16is741",	.data = &sc16is74x_devtype, },
- 	{ .compatible = "nxp,sc16is750",	.data = &sc16is750_devtype, },
-diff --git a/drivers/tty/serial/sc16is7xx.h b/drivers/tty/serial/sc16is7xx.h
-index afb784eaee45..eb2e3bc86f15 100644
---- a/drivers/tty/serial/sc16is7xx.h
-+++ b/drivers/tty/serial/sc16is7xx.h
-@@ -28,6 +28,7 @@ extern const struct sc16is7xx_devtype sc16is750_devtype;
- extern const struct sc16is7xx_devtype sc16is752_devtype;
- extern const struct sc16is7xx_devtype sc16is760_devtype;
- extern const struct sc16is7xx_devtype sc16is762_devtype;
-+extern const struct sc16is7xx_devtype xr20m1172_devtype;
- 
- const char *sc16is7xx_regmap_name(u8 port_id);
- 
-diff --git a/drivers/tty/serial/sc16is7xx_i2c.c b/drivers/tty/serial/sc16is7xx_i2c.c
-index 3ed47c306d85..839de902821b 100644
---- a/drivers/tty/serial/sc16is7xx_i2c.c
-+++ b/drivers/tty/serial/sc16is7xx_i2c.c
-@@ -46,6 +46,7 @@ static const struct i2c_device_id sc16is7xx_i2c_id_table[] = {
- 	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
- 	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
- 	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
-+	{ "xr20m1172",	(kernel_ulong_t)&xr20m1172_devtype, },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, sc16is7xx_i2c_id_table);
-diff --git a/drivers/tty/serial/sc16is7xx_spi.c b/drivers/tty/serial/sc16is7xx_spi.c
-index 73df36f8a7fd..2b278282dbd0 100644
---- a/drivers/tty/serial/sc16is7xx_spi.c
-+++ b/drivers/tty/serial/sc16is7xx_spi.c
-@@ -69,6 +69,7 @@ static const struct spi_device_id sc16is7xx_spi_id_table[] = {
- 	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
- 	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
- 	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
-+	{ "xr20m1172",	(kernel_ulong_t)&xr20m1172_devtype, },
- 	{ }
- };
- MODULE_DEVICE_TABLE(spi, sc16is7xx_spi_id_table);
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index 3e6ddda6f159..d2c3879745e5 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -898,6 +898,10 @@ static int userfaultfd_release(struct inode *inode, struct file *file)
+ 			prev = vma;
+ 			continue;
+ 		}
++		/* Reset ptes for the whole vma range if wr-protected */
++		if (userfaultfd_wp(vma))
++			uffd_wp_range(vma, vma->vm_start,
++				      vma->vm_end - vma->vm_start, false);
+ 		new_flags = vma->vm_flags & ~__VM_UFFD_FLAGS;
+ 		vma = vma_modify_flags_uffd(&vmi, prev, vma, vma->vm_start,
+ 					    vma->vm_end, new_flags,
 -- 
-2.34.1
+2.44.0
 
