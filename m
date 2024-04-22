@@ -1,45 +1,45 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB37446D2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1919155726;
 	Mon, 22 Apr 2024 22:50:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713826209; cv=none; b=hUtoLnSeVy41yB70Pbxgr5CRfjHQ0cwmU0tayXZBFf4yPMeHfOKRn2Sjs+ctA7B3VCTwPjGIShbwtuxXAUJ+b6xO5F1Dxn9NbgXRvtwFS0p911vsOF8Wqwlrbs5y8PB9IfS885Eqln7FZjgVMe3yGCjI5W2cwBdmCGKQbg1JoYY=
+	t=1713826209; cv=none; b=BUUHUclnF/MzUu0hCocGzkI0I1BdEq1i0bWPY4siN6AshS97vC92S90M0KJ6S5875cek3OVE0prsQZKQ7nHImhX8uVSV780b75zOoEjUhtMgJq0Uc7dW/At2fR8YrVdBzpBLPta0S199weOGuEs2fzhHBIeqEb8/1ecT2wcUQPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713826209; c=relaxed/simple;
-	bh=ByiIc7YY39/+Ozgdnf6uOIrkHURuL4HgdYAPIFWEp8c=;
+	bh=wMg/yooJampZGgA3jnDjM7vmFu2HMC0hTX4YlMJF8tY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M3Gtrm2vpSZGuzpMi3IagQENXHswfpicY9BXKJSnPZYz+2wXQJMWX5XuR84uAj/lDDfif7NFxEVcJy+6dyBz292IMdz/eV1kY/IOPqr/xXw7QSGIW0WqTqbVVA4JAsQ2QaHDG9M2Nj+iNCATUBM8ag78px4weh4Cu/UMhvkfR50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZDXXFgXV; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=MPFTX/7h3aRiduCRwqUSzEx8mvetrlpsN3+w248hOzPAMmYkC0deFvwPR8KIyuhOliMj9NJm9rDFW45tg3/C0IvboytR8UvYNR8v+m9PRm95R3LMf46Hy0hWdCrkG1xBNQvPtPWsfp7jS9uDzExT3nDHfaTADW85iG2epjTEJ7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lVhzyJgN; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZDXXFgXV"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43MKDvMW015084;
-	Mon, 22 Apr 2024 22:49:41 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lVhzyJgN"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43MMkUoe016310;
+	Mon, 22 Apr 2024 22:49:42 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=NpHBeykq8LdzEryj6A1i
-	QTR5qcXhklfggTOoYTCUb0o=; b=ZDXXFgXVHtZymvXQ7D1QA1l5C+QEWOawF+XI
-	HGIy32INCJ7MC3Qv5oxjO7kDakp4L57WwY57BVv4LmvwJExndKOeNUMcOhSgG5Iq
-	Om5kZMn+qpnz5DHE1WTB2UTTtRRxy3X296uaSWWUxVv5HOGhFif7kOX2gMO1r60b
-	serYtjwHgT8KZ/xCXk+pgI+fW+kZgnkrZC1r+wlaJ2vkWgPnQQno5jiyfaLa/olR
-	62XQ2EAYwYSWJPatDBKea9nISVIcGpNCRlnbbIhwY/UvT85VlwGgE11/zLSuDwih
-	kBRJASmjHWz8H+QMmRM9wcEdAz1kLbUQPjahVttPQyH3XD+Heg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xnr49s99k-1
+	:mime-version:content-type; s=qcppdkim1; bh=Fjij2G5ZCz2q1GRx9e4E
+	EjDB9mY5WYBmc7zvGN19t2k=; b=lVhzyJgN7Oiofkb+2UBE9j3sCwuKXMuWCKMg
+	WT5gsrjXxu/SdGqiA8+rVpZFJMWiWzu/KKauhkfDzxuVNxGD4Wh8YXU6dhQ14Tsa
+	b+PZBJ0rv6pWsNU+xmP5d88mkvwl88GqPgmaO0W+lpwsqZ27R/avyaZaOo5VOVEo
+	/Ordub0unzbRKZRicrx+vCZbmGgP5oRLmQn3pnuA19j9U/Y63J89TZYwQXGwpVJj
+	RNp/GfGdWliCaJWzQlR5SFPf6A9uAFRHEHJPEsYrBqD6aG75IR43vPCMQfdh8O6o
+	aTcAkGd4oLezwsG+rGHtpvIPfhQJMhXfsabSi/4HJdKXszYHvA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xnn82hskh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 22:49:41 +0000 (GMT)
+	Mon, 22 Apr 2024 22:49:40 +0000 (GMT)
 Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43MMnHPW012042
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43MMnNPs021910
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 22:49:17 GMT
+	Mon, 22 Apr 2024 22:49:23 GMT
 Received: from hu-wcheng-lv.qualcomm.com (10.49.16.6) by
  nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 22 Apr 2024 15:49:16 -0700
+ 15.2.1544.9; Mon, 22 Apr 2024 15:49:22 -0700
 From: Wesley Cheng <quic_wcheng@quicinc.com>
 To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
         <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
@@ -51,12 +51,10 @@ To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
 CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Wesley Cheng <quic_wcheng@quicinc.com>
-Subject: [PATCH v19 01/41] xhci: add helper to stop endpoint and wait for completion
-Date: Mon, 22 Apr 2024 15:48:26 -0700
-Message-ID: <20240422224906.15868-2-quic_wcheng@quicinc.com>
+        <alsa-devel@alsa-project.org>, Wesley Cheng <quic_wcheng@quicinc.com>
+Subject: [PATCH v19 23/41] ASoC: qcom: qdsp6: Ensure PCM format is supported by USB audio device
+Date: Mon, 22 Apr 2024 15:48:48 -0700
+Message-ID: <20240422224906.15868-24-quic_wcheng@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240422224906.15868-1-quic_wcheng@quicinc.com>
 References: <20240422224906.15868-1-quic_wcheng@quicinc.com>
@@ -71,92 +69,40 @@ X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
  nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: uF39gMOcVuofiWDGFWx1wtIHD_Zw5uFW
-X-Proofpoint-GUID: uF39gMOcVuofiWDGFWx1wtIHD_Zw5uFW
+X-Proofpoint-GUID: qLmr6fAarupda-AAy_uJCes5M-hrquCK
+X-Proofpoint-ORIG-GUID: qLmr6fAarupda-AAy_uJCes5M-hrquCK
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-04-22_16,2024-04-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 adultscore=0 lowpriorityscore=0 malwarescore=0
- spamscore=0 impostorscore=0 mlxscore=0 phishscore=0 clxscore=1011
- mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2404010003 definitions=main-2404220096
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 priorityscore=1501 clxscore=1015 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 adultscore=0 spamscore=0 phishscore=0
+ mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404220096
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Check for if the PCM format is supported during the hw_params callback.  If
+the profile is not supported then the userspace ALSA entity will receive an
+error, and can take further action.
 
-Expose xhci_stop_endpoint_sync() which is a synchronous variant of
-xhci_queue_stop_endpoint().  This is useful for client drivers that are
-using the secondary interrupters, and need to stop/clean up the current
-session.  The stop endpoint command handler will also take care of cleaning
-up the ring.
-
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
 ---
- drivers/usb/host/xhci.c | 39 +++++++++++++++++++++++++++++++++++++++
- drivers/usb/host/xhci.h |  2 ++
- 2 files changed, 41 insertions(+)
+ sound/soc/qcom/qdsp6/q6usb.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 8579603edaff..0680f4703c92 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -2784,6 +2784,45 @@ static int xhci_reserve_bandwidth(struct xhci_hcd *xhci,
- 	return -ENOMEM;
+diff --git a/sound/soc/qcom/qdsp6/q6usb.c b/sound/soc/qcom/qdsp6/q6usb.c
+index 00cba1021dc6..833a57deb321 100644
+--- a/sound/soc/qcom/qdsp6/q6usb.c
++++ b/sound/soc/qcom/qdsp6/q6usb.c
+@@ -46,7 +46,11 @@ static int q6usb_hw_params(struct snd_pcm_substream *substream,
+ 			   struct snd_pcm_hw_params *params,
+ 			   struct snd_soc_dai *dai)
+ {
+-	return 0;
++	struct q6usb_port_data *data = dev_get_drvdata(dai->dev);
++	int direction = substream->stream;
++
++	return snd_soc_usb_find_format(data->active_usb_chip_idx, params,
++					direction);
  }
  
-+/*
-+ * Synchronous XHCI stop endpoint helper.  Issues the stop endpoint command and
-+ * waits for the command completion before returning.
-+ */
-+int xhci_stop_endpoint_sync(struct xhci_hcd *xhci, struct xhci_virt_ep *ep, int suspend,
-+			    gfp_t gfp_flags)
-+{
-+	struct xhci_command *command;
-+	unsigned long flags;
-+	int ret;
-+
-+	command = xhci_alloc_command(xhci, true, gfp_flags);
-+	if (!command)
-+		return -ENOMEM;
-+
-+	spin_lock_irqsave(&xhci->lock, flags);
-+	ret = xhci_queue_stop_endpoint(xhci, command, ep->vdev->slot_id,
-+				       ep->ep_index, suspend);
-+	if (ret < 0) {
-+		spin_unlock_irqrestore(&xhci->lock, flags);
-+		goto out;
-+	}
-+
-+	xhci_ring_cmd_db(xhci);
-+	spin_unlock_irqrestore(&xhci->lock, flags);
-+
-+	wait_for_completion(command->completion);
-+
-+	if (command->status == COMP_COMMAND_ABORTED ||
-+	    command->status == COMP_COMMAND_RING_STOPPED) {
-+		xhci_warn(xhci, "Timeout while waiting for stop endpoint command\n");
-+		ret = -ETIME;
-+	}
-+out:
-+	xhci_free_command(xhci, command);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(xhci_stop_endpoint_sync);
- 
- /* Issue a configure endpoint command or evaluate context command
-  * and wait for it to finish.
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 6f4bf98a6282..0f3ae08507ed 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1921,6 +1921,8 @@ void xhci_ring_doorbell_for_active_rings(struct xhci_hcd *xhci,
- void xhci_cleanup_command_queue(struct xhci_hcd *xhci);
- void inc_deq(struct xhci_hcd *xhci, struct xhci_ring *ring);
- unsigned int count_trbs(u64 addr, u64 len);
-+int xhci_stop_endpoint_sync(struct xhci_hcd *xhci, struct xhci_virt_ep *ep,
-+			    int suspend, gfp_t gfp_flags);
- 
- /* xHCI roothub code */
- void xhci_set_link_state(struct xhci_hcd *xhci, struct xhci_port *port,
+ static const struct snd_soc_dai_ops q6usb_ops = {
