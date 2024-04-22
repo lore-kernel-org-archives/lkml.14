@@ -1,504 +1,426 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9FB52F92;
-	Mon, 22 Apr 2024 08:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A6A5FB8B
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713775726; cv=none; b=d78LWlnmMSWKZ0N+DRzP0BrZOFZRUP+bWRx8oU0u+xuZNb88We4XYtsTWAA50z65sMfSSVkea86HloCKB77NwC/kOhf6/qyeSj9pSn5NHaGIOI7cOug/tjWR2SBTscgkSQ4gOW0kanvfF7GMr2fZukIToQQj3MTMmJmN1ur/osE=
+	t=1713775735; cv=none; b=k7UlHYrFHLDyMpyQxS51yInx1H3QrEa1A5aJmRwoIf/wqG9LtW14A9iDAAyIFkgK0ggZ/l5/8cmQCqPKEuXqnWHjQYibDJnui7Bl8UoXPSmvpCTWIU9QO05CrKHma4VPYBRlUX+pNuMe9pyUmB6u+NCLagOTDYnTKuOER9MSO4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713775726; c=relaxed/simple;
-	bh=gfErhFRatdpAY1f4SRbflXk98ZKEgFQtUzV/JJxA0VI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gRHUIklrpISQMv+Lh9XaHG9h/c65k01JaCXNWx1qrjhn48drea3wf1DYnozZM/s593hP8nrvOgKlFGCLjTIM9RVwYuFkvRyW7AF6WGHO6Q1eWOmH8T53EAyGPqVdGR+rEYr9i9pY2Qy+6SsyNt5TyUE7Gprzq+KO9IRqZz3odTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PClOfv5c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713775735; c=relaxed/simple;
+	bh=9iHNxwxomnrMfGQgNFjZ3CG66BTHVDDH0Ni7B12K9Uk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bRhdfzGfUSOVnUNx+THe4wIS3wtN7i5ZNDHz9Ywjsjc39+arN7uoByldACzRgI4dL/22QkAzW/cTJEaGQVkSoV3Ydsba0O2HyEzSjOGKcUXOinvYGajw7mfPUt+aMhgECDTDrtbugAEakO5crdptYfvFvNtk5kCODZy25vrYY7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aK8tzghh; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PClOfv5c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4709AC32786;
-	Mon, 22 Apr 2024 08:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713775726;
-	bh=gfErhFRatdpAY1f4SRbflXk98ZKEgFQtUzV/JJxA0VI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PClOfv5c2DLMDhfec5Pnkhi7gymfa2HPPAQ81g/nIezkTlZcud/IQHVb5JbM+Ox7T
-	 cNKutatS9g4BYMs4UrrDedBwXam/RektcZFoEwAJ8ZCSfD7MTkqgNSoX87tZNgRNjy
-	 +fopJ/WD/G69bYzeplblmGSBVZsksvbWTWl52ThtcH9WtMB/U+oPbhtlh+IYIIGvmA
-	 uj4hq09+znwleWKnkv04IYC1iBvy1G5+AYq/z8FMXc6X1EXCdEuB17ycuPdiwKayU8
-	 W8UW8Cy6NNZgWtWF8Dc2ESRappRpr2zFPb92eYa9HcEeFfEDAKyQbZwxfc+OuvC8G/
-	 zqws1zN0Z4cnQ==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mike Rapoport <rppt@kernel.org>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v5 07/15] mm/execmem, arch: convert simple overrides of module_alloc to execmem
-Date: Mon, 22 Apr 2024 11:47:15 +0300
-Message-ID: <20240422084717.3602332-7-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240422084717.3602332-1-rppt@kernel.org>
-References: <20240422084717.3602332-1-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aK8tzghh"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5aa1e9527d1so3480291eaf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 01:48:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713775731; x=1714380531; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lgxzw58wvLAM03SMFXqqLH2EsCFNJlWqlh0Z96TDb1E=;
+        b=aK8tzghh5OyPAUgB2LQ3TiFnvvovjWjUufNUQ22zVUwYDjV0M7pNoIpumdnlEXcsvR
+         035la+bLTYAJ2AMXcOEqiGxZcytr3OML20E9rNEqCS1HKmtlU/3cc2RDD0Wgc3aMCcat
+         VHBTWifj4VDNWUUJ6GbShvwGbGdNgAVMbbf4DVc1HXj+aahUrvd0Lxi2WSVCsMClXEWB
+         JCLAtp8VeG8Xyf72H4K5FyuvjOSelNUKsuicAXZH3xPzrRmrvgIq/uGo0pFnkguPF3In
+         +4jAR7yPDsGMQa8iCBgUmX2uwQva2hVOW7WNBxGHO9StYchGAA3KqQHsTwdS9mAkn/H0
+         SStA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713775731; x=1714380531;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lgxzw58wvLAM03SMFXqqLH2EsCFNJlWqlh0Z96TDb1E=;
+        b=kL/FlXX+ZVXC+3sgdAldwvDz+GYFucf1rB2OFxkfXWUbfmTNYcJSCofmf023hX+cAv
+         wCfvK2wtdxE13C3086aEieZeTg/34/I7BrtduoLf07bUAKDPp8+kqX4Vg356YV4L8Amk
+         u3CMBamdp6EEreXY7I7Vm5t1D6xOgTLC4tY90s7Ym5D8+nJJGc/iNtpGcU6TLOWGfeVq
+         bQxokpXH15AcNMr1NoGYZ8dKDbQhFIDX5J1qXrip5LaeuieVNZr8/FVi1H9uOPQMbRWX
+         axNsG99dOoaVxhtdYPXo6ofHaPUX1zjrOznW95Ycwsp9GP++uSe5G++vssgy2H48s57d
+         kdmA==
+X-Gm-Message-State: AOJu0YyVGHwqkTYbTQil8dntYRhSteQ9/51QPHxqUvrYZoIcRBv+mZPG
+	H5/WnMmW2+mJDV56Fo0pcZ6B4RD7b/OVhn7NbsUs7duSO9XTiSoxLJI0JAigUPBQX1mA15WASmX
+	QW1QoLhrQNWJqScNOwOeN7TNmSRh5vvx98jwJMw==
+X-Google-Smtp-Source: AGHT+IGtiUmkgKyKouzY5KwBF9uou/45N2hHUFpx5r/6a1FkRRwbnS4Y0yacyb3vq2oDy7UVjQilXVIcMBYuRx484WI=
+X-Received: by 2002:a05:6820:27c2:b0:5ad:ec6:bef1 with SMTP id
+ dd2-20020a05682027c200b005ad0ec6bef1mr9560355oob.0.1713775731089; Mon, 22 Apr
+ 2024 01:48:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240405115318.904143-1-jens.wiklander@linaro.org>
+ <20240405115318.904143-4-jens.wiklander@linaro.org> <CAFA6WYPhe=Rqb50LQWu1H7D-WZw8dd7Ky3JgqOPFdmqbuKoVnQ@mail.gmail.com>
+ <CAHUa44GE=0ggR-P52AnSfx0rSQcuN2_SNGn35knROkD91WpBGQ@mail.gmail.com> <CAFA6WYPyTAKr7G1RFtASkJf2qYRqMyHRcAphGn35ynQCyemQjQ@mail.gmail.com>
+In-Reply-To: <CAFA6WYPyTAKr7G1RFtASkJf2qYRqMyHRcAphGn35ynQCyemQjQ@mail.gmail.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Mon, 22 Apr 2024 10:48:39 +0200
+Message-ID: <CAHUa44G+54ao-ZxBrh4Lrtv8po3aCsu8JQxEKGLjrmeO7F6HSw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] optee: probe RPMB device using RPMB subsystem
+To: Sumit Garg <sumit.garg@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	op-tee@lists.trustedfirmware.org, 
+	Shyam Saini <shyamsaini@linux.microsoft.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Jerome Forissier <jerome.forissier@linaro.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Bart Van Assche <bvanassche@acm.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+On Fri, Apr 12, 2024 at 9:06=E2=80=AFAM Sumit Garg <sumit.garg@linaro.org> =
+wrote:
+>
+> On Thu, 11 Apr 2024 at 12:23, Jens Wiklander <jens.wiklander@linaro.org> =
+wrote:
+> >
+> > Hi Sumit,
+> >
+> > On Wed, Apr 10, 2024 at 12:48=E2=80=AFPM Sumit Garg <sumit.garg@linaro.=
+org> wrote:
+> > >
+> > > Hi Jens,
+> > >
+> > > On Fri, 5 Apr 2024 at 17:23, Jens Wiklander <jens.wiklander@linaro.or=
+g> wrote:
+> > > >
+> > > > Adds support in the OP-TEE drivers (both SMC and FF-A ABIs) to prob=
+e and
+> > > > use an RPMB device via the RPBM subsystem instead of passing the RP=
+MB
+> > >
+> > > s/RPBM/RPMB/
+> >
+> > Thanks, I'll fix it.
+> >
+> > >
+> > > > frames via tee-supplicant in user space. A fallback mechanism is ke=
+pt to
+> > > > route RPMB frames via tee-supplicant if the RPMB subsystem isn't
+> > > > available.
+> > > >
+> > > > The OP-TEE RPC ABI is extended to support iterating over all RPMB
+> > > > devices until one is found with the expected RPMB key already
+> > > > programmed.
+> > > >
+> > > > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> > > > ---
+> > > >  drivers/tee/optee/core.c          |  30 ++++
+> > > >  drivers/tee/optee/device.c        |   7 +
+> > > >  drivers/tee/optee/ffa_abi.c       |   8 +
+> > > >  drivers/tee/optee/optee_private.h |  21 ++-
+> > > >  drivers/tee/optee/optee_rpc_cmd.h |  35 +++++
+> > > >  drivers/tee/optee/rpc.c           | 233 ++++++++++++++++++++++++++=
+++++
+> > > >  drivers/tee/optee/smc_abi.c       |   7 +
+> > > >  7 files changed, 340 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
+> > > > index 3aed554bc8d8..082691c10a90 100644
+> > > > --- a/drivers/tee/optee/core.c
+> > > > +++ b/drivers/tee/optee/core.c
+> > > > @@ -11,6 +11,7 @@
+> > > >  #include <linux/io.h>
+> > > >  #include <linux/mm.h>
+> > > >  #include <linux/module.h>
+> > > > +#include <linux/rpmb.h>
+> > > >  #include <linux/slab.h>
+> > > >  #include <linux/string.h>
+> > > >  #include <linux/tee_drv.h>
+> > > > @@ -80,6 +81,31 @@ void optee_pool_op_free_helper(struct tee_shm_po=
+ol *pool, struct tee_shm *shm,
+> > > >         shm->pages =3D NULL;
+> > > >  }
+> > > >
+> > > > +void optee_bus_scan_rpmb(struct work_struct *work)
+> > > > +{
+> > > > +       struct optee *optee =3D container_of(work, struct optee,
+> > > > +                                          rpmb_scan_bus_work);
+> > > > +       int ret;
+> > > > +
+> > > > +       if (!optee->rpmb_scan_bus_done) {
+> > > > +               ret =3D optee_enumerate_devices(PTA_CMD_GET_DEVICES=
+_RPMB);
+> > > > +               optee->rpmb_scan_bus_done =3D !ret;
+> > > > +               if (ret && ret !=3D -ENODEV)
+> > > > +                       pr_info("Scanning for RPMB device: ret %d\n=
+", ret);
+> > > > +       }
+> > > > +}
+> > > > +
+> > > > +int optee_rpmb_intf_rdev(struct notifier_block *intf, unsigned lon=
+g action,
+> > > > +                        void *data)
+> > > > +{
+> > > > +       struct optee *optee =3D container_of(intf, struct optee, rp=
+mb_intf);
+> > > > +
+> > > > +       if (action =3D=3D RPMB_NOTIFY_ADD_DEVICE)
+> > > > +               schedule_work(&optee->rpmb_scan_bus_work);
+> > > > +
+> > > > +       return 0;
+> > > > +}
+> > > > +
+> > > >  static void optee_bus_scan(struct work_struct *work)
+> > > >  {
+> > > >         WARN_ON(optee_enumerate_devices(PTA_CMD_GET_DEVICES_SUPP));
+> > > > @@ -161,6 +187,8 @@ void optee_release_supp(struct tee_context *ctx=
+)
+> > > >
+> > > >  void optee_remove_common(struct optee *optee)
+> > > >  {
+> > > > +       rpmb_interface_unregister(&optee->rpmb_intf);
+> > > > +       cancel_work_sync(&optee->rpmb_scan_bus_work);
+> > > >         /* Unregister OP-TEE specific client devices on TEE bus */
+> > > >         optee_unregister_devices();
+> > > >
+> > > > @@ -177,6 +205,8 @@ void optee_remove_common(struct optee *optee)
+> > > >         tee_shm_pool_free(optee->pool);
+> > > >         optee_supp_uninit(&optee->supp);
+> > > >         mutex_destroy(&optee->call_queue.mutex);
+> > > > +       rpmb_dev_put(optee->rpmb_dev);
+> > > > +       mutex_destroy(&optee->rpmb_dev_mutex);
+> > > >  }
+> > > >
+> > > >  static int smc_abi_rc;
+> > > > diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.=
+c
+> > > > index 4b1092127694..4274876857c8 100644
+> > > > --- a/drivers/tee/optee/device.c
+> > > > +++ b/drivers/tee/optee/device.c
+> > > > @@ -43,6 +43,13 @@ static int get_devices(struct tee_context *ctx, =
+u32 session,
+> > > >         ret =3D tee_client_invoke_func(ctx, &inv_arg, param);
+> > > >         if ((ret < 0) || ((inv_arg.ret !=3D TEEC_SUCCESS) &&
+> > > >                           (inv_arg.ret !=3D TEEC_ERROR_SHORT_BUFFER=
+))) {
+> > > > +               /*
+> > > > +                * TEE_ERROR_STORAGE_NOT_AVAILABLE is returned when=
+ getting
+> > > > +                * the list of device TAs that depends on RPMB but =
+a usable
+> > > > +                * RPMB device isn't found.
+> > > > +                */
+> > > > +               if (inv_arg.ret =3D=3D TEE_ERROR_STORAGE_NOT_AVAILA=
+BLE)
+> > > > +                       return -ENODEV;
+> > > >                 pr_err("PTA_CMD_GET_DEVICES invoke function err: %x=
+\n",
+> > > >                        inv_arg.ret);
+> > > >                 return -EINVAL;
+> > > > diff --git a/drivers/tee/optee/ffa_abi.c b/drivers/tee/optee/ffa_ab=
+i.c
+> > > > index ecb5eb079408..a8dfdb30b4e8 100644
+> > > > --- a/drivers/tee/optee/ffa_abi.c
+> > > > +++ b/drivers/tee/optee/ffa_abi.c
+> > > > @@ -7,6 +7,7 @@
+> > > >
+> > > >  #include <linux/arm_ffa.h>
+> > > >  #include <linux/errno.h>
+> > > > +#include <linux/rpmb.h>
+> > > >  #include <linux/scatterlist.h>
+> > > >  #include <linux/sched.h>
+> > > >  #include <linux/slab.h>
+> > > > @@ -934,6 +935,7 @@ static int optee_ffa_probe(struct ffa_device *f=
+fa_dev)
+> > > >         optee_cq_init(&optee->call_queue, 0);
+> > > >         optee_supp_init(&optee->supp);
+> > > >         optee_shm_arg_cache_init(optee, arg_cache_flags);
+> > > > +       mutex_init(&optee->rpmb_dev_mutex);
+> > > >         ffa_dev_set_drvdata(ffa_dev, optee);
+> > > >         ctx =3D teedev_open(optee->teedev);
+> > > >         if (IS_ERR(ctx)) {
+> > > > @@ -955,6 +957,9 @@ static int optee_ffa_probe(struct ffa_device *f=
+fa_dev)
+> > > >         if (rc)
+> > > >                 goto err_unregister_devices;
+> > > >
+> > > > +       INIT_WORK(&optee->rpmb_scan_bus_work, optee_bus_scan_rpmb);
+> > > > +       optee->rpmb_intf.notifier_call =3D optee_rpmb_intf_rdev;
+> > > > +       rpmb_interface_register(&optee->rpmb_intf);
+> > > >         pr_info("initialized driver\n");
+> > > >         return 0;
+> > > >
+> > > > @@ -968,6 +973,9 @@ static int optee_ffa_probe(struct ffa_device *f=
+fa_dev)
+> > > >         teedev_close_context(ctx);
+> > > >  err_rhashtable_free:
+> > > >         rhashtable_free_and_destroy(&optee->ffa.global_ids, rh_free=
+_fn, NULL);
+> > > > +       rpmb_dev_put(optee->rpmb_dev);
+> > > > +       mutex_destroy(&optee->rpmb_dev_mutex);
+> > > > +       rpmb_interface_unregister(&optee->rpmb_intf);
+> > > >         optee_supp_uninit(&optee->supp);
+> > > >         mutex_destroy(&optee->call_queue.mutex);
+> > > >         mutex_destroy(&optee->ffa.mutex);
+> > > > diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/=
+optee_private.h
+> > > > index 7a5243c78b55..ae72f3dda1d2 100644
+> > > > --- a/drivers/tee/optee/optee_private.h
+> > > > +++ b/drivers/tee/optee/optee_private.h
+> > > > @@ -8,6 +8,7 @@
+> > > >
+> > > >  #include <linux/arm-smccc.h>
+> > > >  #include <linux/rhashtable.h>
+> > > > +#include <linux/rpmb.h>
+> > > >  #include <linux/semaphore.h>
+> > > >  #include <linux/tee_drv.h>
+> > > >  #include <linux/types.h>
+> > > > @@ -20,11 +21,13 @@
+> > > >  /* Some Global Platform error codes used in this driver */
+> > > >  #define TEEC_SUCCESS                   0x00000000
+> > > >  #define TEEC_ERROR_BAD_PARAMETERS      0xFFFF0006
+> > > > +#define TEEC_ERROR_ITEM_NOT_FOUND      0xFFFF0008
+> > > >  #define TEEC_ERROR_NOT_SUPPORTED       0xFFFF000A
+> > > >  #define TEEC_ERROR_COMMUNICATION       0xFFFF000E
+> > > >  #define TEEC_ERROR_OUT_OF_MEMORY       0xFFFF000C
+> > > >  #define TEEC_ERROR_BUSY                        0xFFFF000D
+> > > >  #define TEEC_ERROR_SHORT_BUFFER                0xFFFF0010
+> > > > +#define TEE_ERROR_STORAGE_NOT_AVAILABLE 0xF0100003
+> > > >
+> > > >  #define TEEC_ORIGIN_COMMS              0x00000002
+> > > >
+> > > > @@ -197,6 +200,12 @@ struct optee_ops {
+> > > >   * @notif:             notification synchronization struct
+> > > >   * @supp:              supplicant synchronization struct for RPC t=
+o supplicant
+> > > >   * @pool:              shared memory pool
+> > > > + * @mutex:             mutex protecting @rpmb_dev
+> > > > + * @rpmb_dev:          current RPMB device or NULL
+> > > > + * @rpmb_scan_bus_done flag if device registation of RPMB dependen=
+t devices
+> > > > + *                     was already done
+> > > > + * @rpmb_scan_bus_work workq to for an RPMB device and to scan opt=
+ee bus
+> > > > + *                     and register RPMB dependent optee drivers
+> > > >   * @rpc_param_count:   If > 0 number of RPC parameters to make roo=
+m for
+> > > >   * @scan_bus_done      flag if device registation was already done=
+.
+> > > >   * @scan_bus_work      workq to scan optee bus and register optee =
+drivers
+> > > > @@ -215,9 +224,15 @@ struct optee {
+> > > >         struct optee_notif notif;
+> > > >         struct optee_supp supp;
+> > > >         struct tee_shm_pool *pool;
+> > > > +       /* Protects rpmb_dev pointer */
+> > > > +       struct mutex rpmb_dev_mutex;
+> > > > +       struct rpmb_dev *rpmb_dev;
+> > > > +       struct notifier_block rpmb_intf;
+> > > >         unsigned int rpc_param_count;
+> > > > -       bool   scan_bus_done;
+> > > > +       bool scan_bus_done;
+> > > > +       bool rpmb_scan_bus_done;
+> > > >         struct work_struct scan_bus_work;
+> > > > +       struct work_struct rpmb_scan_bus_work;
+> > > >  };
+> > > >
+> > > >  struct optee_session {
+> > > > @@ -280,8 +295,12 @@ int optee_cancel_req(struct tee_context *ctx, =
+u32 cancel_id, u32 session);
+> > > >
+> > > >  #define PTA_CMD_GET_DEVICES            0x0
+> > > >  #define PTA_CMD_GET_DEVICES_SUPP       0x1
+> > > > +#define PTA_CMD_GET_DEVICES_RPMB       0x2
+> > > >  int optee_enumerate_devices(u32 func);
+> > > >  void optee_unregister_devices(void);
+> > > > +void optee_bus_scan_rpmb(struct work_struct *work);
+> > > > +int optee_rpmb_intf_rdev(struct notifier_block *intf, unsigned lon=
+g action,
+> > > > +                        void *data);
+> > > >
+> > > >  int optee_pool_op_alloc_helper(struct tee_shm_pool *pool, struct t=
+ee_shm *shm,
+> > > >                                size_t size, size_t align,
+> > > > diff --git a/drivers/tee/optee/optee_rpc_cmd.h b/drivers/tee/optee/=
+optee_rpc_cmd.h
+> > > > index f3f06e0994a7..f351a8ac69fc 100644
+> > > > --- a/drivers/tee/optee/optee_rpc_cmd.h
+> > > > +++ b/drivers/tee/optee/optee_rpc_cmd.h
+> > > > @@ -16,6 +16,14 @@
+> > > >   * and sends responses.
+> > > >   */
+> > > >
+> > > > +/*
+> > > > + * Replay Protected Memory Block access
+> > > > + *
+> > > > + * [in]     memref[0]      Frames to device
+> > > > + * [out]    memref[1]      Frames from device
+> > > > + */
+> > > > +#define OPTEE_RPC_CMD_RPMB             1
+> > > > +
+> > > >  /*
+> > > >   * Get time
+> > > >   *
+> > > > @@ -103,4 +111,31 @@
+> > > >  /* I2C master control flags */
+> > > >  #define OPTEE_RPC_I2C_FLAGS_TEN_BIT    BIT(0)
+> > > >
+> > > > +/*
+> > > > + * Reset RPMB probing
+> > > > + *
+> > > > + * Releases an eventually already used RPMB devices and starts ove=
+r searching
+> > > > + * for RPMB devices. Returns the kind of shared memory to use in s=
+ubsequent
+> > > > + * OPTEE_RPC_CMD_RPMB_PROBE_NEXT and OPTEE_RPC_CMD_RPMB calls.
+> > > > + *
+> > > > + * [out]    value[0].a     OPTEE_RPC_SHM_TYPE_*, the parameter for
+> > > > + *                         OPTEE_RPC_CMD_SHM_ALLOC
+> > > > + */
+> > > > +#define OPTEE_RPC_CMD_RPMB_PROBE_RESET 22
+> > > > +
+> > >
+> > > AFAICS from [1], this RPMB reset probing is only used to check if the
+> > > kernel supports RPMB probing or not. I suppose that should be detecte=
+d
+> > > via a single RPC call like: OPTEE_RPC_CMD_RPMB_PROBE. Other than that
+> > > the shared memory allocation type can be used as
+> > > THREAD_SHM_TYPE_KERNEL_PRIVATE if OPTEE_RPC_CMD_RPMB_PROBE works
+> > > otherwise THREAD_SHM_TYPE_APPLICATION can be used for legacy RPMB ini=
+t
+> > > via tee-supplicant.
+> > >
+> > > Is there any other specific scenario I am missing which requires an
+> > > explicit RPMB probe reset call?
+> >
+> > That assumes that we're not going to implement
+> > OPTEE_RPC_CMD_RPMB_PROBE_RESET and OPTEE_RPC_CMD_RPMB_PROBE_NEXT in
+> > the tee-supplicant. We should implement those RPCs in the
+> > tee-supplicant too since it solves the problem with finding the RPMB
+> > device without device-specific runtime arguments for the
+> > tee-supplicant.
+>
+> IMO, we should try to deprecate the tee-supplicant accesses to
+> hardware RPMB. The tee-supplicant can be useful for RPMB emulation
+> scenarios where we shouldn't require the dynamic discovery of RPMB.
 
-Several architectures override module_alloc() only to define address
-range for code allocations different than VMALLOC address space.
+There's no rush to do that, there's not too much maintenance. We can
+discuss the next step once this is upstream.
 
-Provide a generic implementation in execmem that uses the parameters for
-address space ranges, required alignment and page protections provided
-by architectures.
+>
+> >
+> > I'd also like to keep the ABI flexible so we for instance can handle a
+> > removable RPMB from the secure world.
+>
+> That's an interesting scenario but I am not sure if we really would
+> like to deal with the complications of removable RPMB like what we
+> should do if a TA is accessing RPMB during which it is hot plugged?
 
-The architectures must fill execmem_info structure and implement
-execmem_arch_setup() that returns a pointer to that structure. This way the
-execmem initialization won't be called from every architecture, but rather
-from a central place, namely a core_initcall() in execmem.
+We may need to panic the TA if the RPMB is unplugged at an unfavorable
+moment. It's a special case, but it would be nice to resume RPMB
+access once it's plugged in.
 
-The execmem provides execmem_alloc() API that wraps __vmalloc_node_range()
-with the parameters defined by the architectures.  If an architecture does
-not implement execmem_arch_setup(), execmem_alloc() will fall back to
-module_alloc().
+>
+> However, I am in favour of an ABI which is simple enough to maintain
+> and allow flexibility for extension like adding a new RPC when it's
+> really needed etc.
 
-Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
----
- arch/loongarch/kernel/module.c | 19 +++++++--
- arch/mips/kernel/module.c      | 20 ++++++++--
- arch/nios2/kernel/module.c     | 21 +++++++---
- arch/parisc/kernel/module.c    | 24 +++++++----
- arch/riscv/kernel/module.c     | 24 +++++++----
- arch/sparc/kernel/module.c     | 20 ++++++++--
- include/linux/execmem.h        | 41 +++++++++++++++++++
- mm/execmem.c                   | 73 ++++++++++++++++++++++++++++++++--
- 8 files changed, 208 insertions(+), 34 deletions(-)
-
-diff --git a/arch/loongarch/kernel/module.c b/arch/loongarch/kernel/module.c
-index c7d0338d12c1..ca6dd7ea1610 100644
---- a/arch/loongarch/kernel/module.c
-+++ b/arch/loongarch/kernel/module.c
-@@ -18,6 +18,7 @@
- #include <linux/ftrace.h>
- #include <linux/string.h>
- #include <linux/kernel.h>
-+#include <linux/execmem.h>
- #include <asm/alternative.h>
- #include <asm/inst.h>
- #include <asm/unwind.h>
-@@ -490,10 +491,22 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
- 	return 0;
- }
- 
--void *module_alloc(unsigned long size)
-+static struct execmem_info execmem_info __ro_after_init;
-+
-+struct execmem_info __init *execmem_arch_setup(void)
- {
--	return __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END,
--			GFP_KERNEL, PAGE_KERNEL, 0, NUMA_NO_NODE, __builtin_return_address(0));
-+	execmem_info = (struct execmem_info){
-+		.ranges = {
-+			[EXECMEM_DEFAULT] = {
-+				.start	= MODULES_VADDR,
-+				.end	= MODULES_END,
-+				.pgprot	= PAGE_KERNEL,
-+				.alignment = 1,
-+			},
-+		},
-+	};
-+
-+	return &execmem_info;
- }
- 
- static void module_init_ftrace_plt(const Elf_Ehdr *hdr,
-diff --git a/arch/mips/kernel/module.c b/arch/mips/kernel/module.c
-index 9a6c96014904..59225a3cf918 100644
---- a/arch/mips/kernel/module.c
-+++ b/arch/mips/kernel/module.c
-@@ -20,6 +20,7 @@
- #include <linux/kernel.h>
- #include <linux/spinlock.h>
- #include <linux/jump_label.h>
-+#include <linux/execmem.h>
- #include <asm/jump_label.h>
- 
- struct mips_hi16 {
-@@ -32,11 +33,22 @@ static LIST_HEAD(dbe_list);
- static DEFINE_SPINLOCK(dbe_lock);
- 
- #ifdef MODULES_VADDR
--void *module_alloc(unsigned long size)
-+static struct execmem_info execmem_info __ro_after_init;
-+
-+struct execmem_info __init *execmem_arch_setup(void)
- {
--	return __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END,
--				GFP_KERNEL, PAGE_KERNEL, 0, NUMA_NO_NODE,
--				__builtin_return_address(0));
-+	execmem_info = (struct execmem_info){
-+		.ranges = {
-+			[EXECMEM_DEFAULT] = {
-+				.start	= MODULES_VADDR,
-+				.end	= MODULES_END,
-+				.pgprot	= PAGE_KERNEL,
-+				.alignment = 1,
-+			},
-+		},
-+	};
-+
-+	return &execmem_info;
- }
- #endif
- 
-diff --git a/arch/nios2/kernel/module.c b/arch/nios2/kernel/module.c
-index 9c97b7513853..0d1ee86631fc 100644
---- a/arch/nios2/kernel/module.c
-+++ b/arch/nios2/kernel/module.c
-@@ -18,15 +18,26 @@
- #include <linux/fs.h>
- #include <linux/string.h>
- #include <linux/kernel.h>
-+#include <linux/execmem.h>
- 
- #include <asm/cacheflush.h>
- 
--void *module_alloc(unsigned long size)
-+static struct execmem_info execmem_info __ro_after_init;
-+
-+struct execmem_info __init *execmem_arch_setup(void)
- {
--	return __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END,
--				    GFP_KERNEL, PAGE_KERNEL_EXEC,
--				    VM_FLUSH_RESET_PERMS, NUMA_NO_NODE,
--				    __builtin_return_address(0));
-+	execmem_info = (struct execmem_info){
-+		.ranges = {
-+			[EXECMEM_DEFAULT] = {
-+				.start	= MODULES_VADDR,
-+				.end	= MODULES_END,
-+				.pgprot	= PAGE_KERNEL_EXEC,
-+				.alignment = 1,
-+			},
-+		},
-+	};
-+
-+	return &execmem_info;
- }
- 
- int apply_relocate_add(Elf32_Shdr *sechdrs, const char *strtab,
-diff --git a/arch/parisc/kernel/module.c b/arch/parisc/kernel/module.c
-index d214bbe3c2af..bdfa85e10c1b 100644
---- a/arch/parisc/kernel/module.c
-+++ b/arch/parisc/kernel/module.c
-@@ -49,6 +49,7 @@
- #include <linux/bug.h>
- #include <linux/mm.h>
- #include <linux/slab.h>
-+#include <linux/execmem.h>
- 
- #include <asm/unwind.h>
- #include <asm/sections.h>
-@@ -173,15 +174,22 @@ static inline int reassemble_22(int as22)
- 		((as22 & 0x0003ff) << 3));
- }
- 
--void *module_alloc(unsigned long size)
-+static struct execmem_info execmem_info __ro_after_init;
-+
-+struct execmem_info __init *execmem_arch_setup(void)
- {
--	/* using RWX means less protection for modules, but it's
--	 * easier than trying to map the text, data, init_text and
--	 * init_data correctly */
--	return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
--				    GFP_KERNEL,
--				    PAGE_KERNEL_RWX, 0, NUMA_NO_NODE,
--				    __builtin_return_address(0));
-+	execmem_info = (struct execmem_info){
-+		.ranges = {
-+			[EXECMEM_DEFAULT] = {
-+				.start	= VMALLOC_START,
-+				.end	= VMALLOC_END,
-+				.pgprot	= PAGE_KERNEL_RWX,
-+				.alignment = 1,
-+			},
-+		},
-+	};
-+
-+	return &execmem_info;
- }
- 
- #ifndef CONFIG_64BIT
-diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
-index 5e5a82644451..182904127ba0 100644
---- a/arch/riscv/kernel/module.c
-+++ b/arch/riscv/kernel/module.c
-@@ -14,6 +14,7 @@
- #include <linux/vmalloc.h>
- #include <linux/sizes.h>
- #include <linux/pgtable.h>
-+#include <linux/execmem.h>
- #include <asm/alternative.h>
- #include <asm/sections.h>
- 
-@@ -906,13 +907,22 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
- }
- 
- #if defined(CONFIG_MMU) && defined(CONFIG_64BIT)
--void *module_alloc(unsigned long size)
--{
--	return __vmalloc_node_range(size, 1, MODULES_VADDR,
--				    MODULES_END, GFP_KERNEL,
--				    PAGE_KERNEL, VM_FLUSH_RESET_PERMS,
--				    NUMA_NO_NODE,
--				    __builtin_return_address(0));
-+static struct execmem_info execmem_info __ro_after_init;
-+
-+struct execmem_info __init *execmem_arch_setup(void)
-+{
-+	execmem_info = (struct execmem_info){
-+		.ranges = {
-+			[EXECMEM_DEFAULT] = {
-+				.start	= MODULES_VADDR,
-+				.end	= MODULES_END,
-+				.pgprot	= PAGE_KERNEL,
-+				.alignment = 1,
-+			},
-+		},
-+	};
-+
-+	return &execmem_info;
- }
- #endif
- 
-diff --git a/arch/sparc/kernel/module.c b/arch/sparc/kernel/module.c
-index d37adb2a0b54..8b7ee45defc3 100644
---- a/arch/sparc/kernel/module.c
-+++ b/arch/sparc/kernel/module.c
-@@ -14,6 +14,7 @@
- #include <linux/string.h>
- #include <linux/ctype.h>
- #include <linux/mm.h>
-+#include <linux/execmem.h>
- 
- #include <asm/processor.h>
- #include <asm/spitfire.h>
-@@ -21,11 +22,22 @@
- 
- #include "entry.h"
- 
--void *module_alloc(unsigned long size)
-+static struct execmem_info execmem_info __ro_after_init;
-+
-+struct execmem_info __init *execmem_arch_setup(void)
- {
--	return __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END,
--				GFP_KERNEL, PAGE_KERNEL, 0, NUMA_NO_NODE,
--				__builtin_return_address(0));
-+	execmem_info = (struct execmem_info){
-+		.ranges = {
-+			[EXECMEM_DEFAULT] = {
-+				.start	= MODULES_VADDR,
-+				.end	= MODULES_END,
-+				.pgprot	= PAGE_KERNEL,
-+				.alignment = 1,
-+			},
-+		},
-+	};
-+
-+	return &execmem_info;
- }
- 
- /* Make generic code ignore STT_REGISTER dummy undefined symbols.  */
-diff --git a/include/linux/execmem.h b/include/linux/execmem.h
-index 8eebc8ef66e7..ad5d99bb2871 100644
---- a/include/linux/execmem.h
-+++ b/include/linux/execmem.h
-@@ -33,6 +33,47 @@ enum execmem_type {
- 	EXECMEM_TYPE_MAX,
- };
- 
-+/**
-+ * struct execmem_range - definition of an address space suitable for code and
-+ *			  related data allocations
-+ * @start:	address space start
-+ * @end:	address space end (inclusive)
-+ * @pgprot:	permissions for memory in this address space
-+ * @alignment:	alignment required for text allocations
-+ */
-+struct execmem_range {
-+	unsigned long   start;
-+	unsigned long   end;
-+	pgprot_t        pgprot;
-+	unsigned int	alignment;
-+};
-+
-+/**
-+ * struct execmem_info - architecture parameters for code allocations
-+ * @ranges: array of parameter sets defining architecture specific
-+ * parameters for executable memory allocations. The ranges that are not
-+ * explicitly initialized by an architecture use parameters defined for
-+ * @EXECMEM_DEFAULT.
-+ */
-+struct execmem_info {
-+	struct execmem_range	ranges[EXECMEM_TYPE_MAX];
-+};
-+
-+/**
-+ * execmem_arch_setup - define parameters for allocations of executable memory
-+ *
-+ * A hook for architectures to define parameters for allocations of
-+ * executable memory. These parameters should be filled into the
-+ * @execmem_info structure.
-+ *
-+ * For architectures that do not implement this method a default set of
-+ * parameters will be used
-+ *
-+ * Return: a structure defining architecture parameters and restrictions
-+ * for allocations of executable memory
-+ */
-+struct execmem_info *execmem_arch_setup(void);
-+
- /**
-  * execmem_alloc - allocate executable memory
-  * @type: type of the allocation
-diff --git a/mm/execmem.c b/mm/execmem.c
-index 480adc69b20d..d062bc21c6b2 100644
---- a/mm/execmem.c
-+++ b/mm/execmem.c
-@@ -11,14 +11,30 @@
- #include <linux/execmem.h>
- #include <linux/moduleloader.h>
- 
--static void *__execmem_alloc(size_t size)
-+static struct execmem_info *execmem_info __ro_after_init;
-+
-+static void *__execmem_alloc(struct execmem_range *range, size_t size)
- {
--	return module_alloc(size);
-+	unsigned long start = range->start;
-+	unsigned long end = range->end;
-+	unsigned int align = range->alignment;
-+	pgprot_t pgprot = range->pgprot;
-+
-+	return __vmalloc_node_range(size, align, start, end,
-+				    GFP_KERNEL, pgprot, VM_FLUSH_RESET_PERMS,
-+				    NUMA_NO_NODE, __builtin_return_address(0));
- }
- 
- void *execmem_alloc(enum execmem_type type, size_t size)
- {
--	return __execmem_alloc(size);
-+	struct execmem_range *range;
-+
-+	if (!execmem_info)
-+		return module_alloc(size);
-+
-+	range = &execmem_info->ranges[type];
-+
-+	return __execmem_alloc(range, size);
- }
- 
- void execmem_free(void *ptr)
-@@ -30,3 +46,54 @@ void execmem_free(void *ptr)
- 	WARN_ON(in_interrupt());
- 	vfree(ptr);
- }
-+
-+static bool execmem_validate(struct execmem_info *info)
-+{
-+	struct execmem_range *r = &info->ranges[EXECMEM_DEFAULT];
-+
-+	if (!r->alignment || !r->start || !r->end || !pgprot_val(r->pgprot)) {
-+		pr_crit("Invalid parameters for execmem allocator, module loading will fail");
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static void execmem_init_missing(struct execmem_info *info)
-+{
-+	struct execmem_range *default_range = &info->ranges[EXECMEM_DEFAULT];
-+
-+	for (int i = EXECMEM_DEFAULT + 1; i < EXECMEM_TYPE_MAX; i++) {
-+		struct execmem_range *r = &info->ranges[i];
-+
-+		if (!r->start) {
-+			r->pgprot = default_range->pgprot;
-+			r->alignment = default_range->alignment;
-+			r->start = default_range->start;
-+			r->end = default_range->end;
-+		}
-+	}
-+}
-+
-+struct execmem_info * __weak execmem_arch_setup(void)
-+{
-+	return NULL;
-+}
-+
-+static int __init execmem_init(void)
-+{
-+	struct execmem_info *info = execmem_arch_setup();
-+
-+	if (!info)
-+		return 0;
-+
-+	if (!execmem_validate(info))
-+		return -EINVAL;
-+
-+	execmem_init_missing(info);
-+
-+	execmem_info = info;
-+
-+	return 0;
-+}
-+core_initcall(execmem_init);
--- 
-2.43.0
-
+Thanks,
+Jens
