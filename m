@@ -1,94 +1,156 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5166714F9D9;
-	Mon, 22 Apr 2024 13:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88F9282E2;
+	Mon, 22 Apr 2024 13:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713792745; cv=none; b=OS2HH8zl58kltUI2I+DQBWCjujcIYE3Mnx+sruvZCMg0/w3OXUfOOwHDGJclhWJl4FFl7s1cMhQu1goBdLyCyLlgr3+ChucD708e2SDDY05KbdQCWhKcSUVte7Ayk9Di3bbKq4jT0XqaNqz880E2m6Rhy0ELmyKnSaBrubCkfpk=
+	t=1713792745; cv=none; b=RAyjbomiHsTNumarnj5U4h6HzKQqAKrXhMpYUokozst7uD7sk3dgjhbb3d5TRh+K3zZxrHKou8zZ50VZ6JUQKgqudYBgtQlx9CSATQpyvb0hahe3uzuxUXtvLwtshg/o8ckvxIDNztxqjjizClZP7aTrOx+67ykHkY8uYQ9SiNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713792745; c=relaxed/simple;
-	bh=MKR5Lo9BnmJ3qVhI4ZQde4lFiXD+bqDR2A0VRwJiKeo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ihujcbHE2vDrCe1APNFvIMHU4Ktkb67kdGvlenoN7jNuonWy4iTzTNBT/z861qqrkjIxBk5avp1u9I2akgIwy9D/HsHCaUCrCS8rrguDACUmbmznp1FmgtK7uePdYmtxwY49Q9W90V/KZYZckjwQ60F0U9rCBCGN/R1jR0itbdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Wpb4UBjr; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	bh=TD0Nr7R0rbKpnTkC7WxSdse7cjReHTcsGWkAiAMmT7c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HC5ee5jfZwQgusi5rljZ75q62UgVyLJCuurdG/UXgPkCRfZEfbTls+r9BA78Lh2iHuncx3CA7MHhV/bd/OWBSDIsPWUZC2z5X7di42pgcYF69+h9xucsyBrqLplpjOyEZ0K0MKg5MavH5LSOOI40MZC/FcpFQXqDXEKsUOaVHxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=budmtEfK; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Wpb4UBjr"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D565FE000B;
-	Mon, 22 Apr 2024 13:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713792741;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MKR5Lo9BnmJ3qVhI4ZQde4lFiXD+bqDR2A0VRwJiKeo=;
-	b=Wpb4UBjrTKNJP8VZ7yd6ASEDgyWx5+P3FLLgGD8Typl2Wl0brxY/asvOtbQVS858t0vSXE
-	qlPvI0E3DMg2VZJkBBi2XQHMy5qVPqW3JsDVXJ2N9i4i65YYbIOdR5eGyedgLiCNfOlLqa
-	tNtO41Cei5WT4Z83Dmbw62MS4yw8HW0Ya0MblWxoBUvZh0Gmb/31ciRigiQpEyIVbdsvx+
-	NAa67yMYuHSyiJSVZ7n3PCYr0pRtFXVeFixHgu5JsP6Wu0cXYh9CJr9j0rQ0f+145Yzk8I
-	hCucljSsVe+7YzH3oYJaz/dFtRqyaKKNgbvI5DN1s9U34X3OLe8sr3IOGmlHxw==
-Date: Mon, 22 Apr 2024 15:32:20 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, kernel
- test robot <lkp@intel.com>
-Subject: Re: [PATCH net-next 3/3] net: pse-pd: Kconfig: Add missing
- Regulator API dependency
-Message-ID: <20240422153220.1697f2d1@kmaincent-XPS-13-7390>
-In-Reply-To: <6a88f4f0-940c-4e63-8520-5ab23e96c480@lunn.ch>
-References: <20240422-fix_poe-v1-0-811c8c0b9da7@bootlin.com>
-	<20240422-fix_poe-v1-3-811c8c0b9da7@bootlin.com>
-	<6a88f4f0-940c-4e63-8520-5ab23e96c480@lunn.ch>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="budmtEfK"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51967f75729so5034791e87.0;
+        Mon, 22 Apr 2024 06:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713792742; x=1714397542; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GP4sJ74Pr9f8yHIahiytzgErpIywlsdSu7yAa7u/Jhg=;
+        b=budmtEfK0ywuOk4qGHS+Px51/AWFU6h/PvPJLrNeGKyZA0XN1pfe7BfcwAkY5RKInA
+         GWMQUj0pXFxh5f/C0UsPs8zTCq1Ns/JAoUbwwWsbkykb8liXfpcCqHbw+da2/huZSxA2
+         2XSgKwYL3i917Z+/wBPN2RWl+PJ/81xYTedFOh+XruZuX/doPSEKV8hSGvPYTg3cLe8B
+         wLHdTcq4pKa4jtKLrZWTLqjiv6GsADtHrXk/jYhe9dHKoDRWcRxPiwjHfHJm6I4aFrKk
+         rd/9VG1FUqO2zf7F95X+mbdUGwwTKcvZEnhOr/zqYSTJJFmRt5SLm73/kjZJ1tOMJKl5
+         hvyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713792742; x=1714397542;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GP4sJ74Pr9f8yHIahiytzgErpIywlsdSu7yAa7u/Jhg=;
+        b=FSuthQpNFLF5rwc2crd/Q4GsDUeXWQ/CUMTJ+42OV/zf5HRCApJ0ScgHTX2yNfobpi
+         qk8x+wTD1dgbt4XiYAaPcF5ar/4+jgaVaUXCz4UT+8Akt8maI+BCvslm81L+jDRgbi+J
+         DgnRjZ6dgdf4dlE1tRUip8VYZGDldqT/wubcIqcf3le78iGalBYI9ttl9nHU1vJ3HjNb
+         /RGQb/4VjF7TSOLewV8MLVvc1BrQj2zm5I7UjKpRtJl5N1XnZVqHx3+z/vb6iAqPBHV7
+         SDVFQpo+7zOPgVnBXUkJUDCWhN6EbGN7vZBpCuIbBKYqxDkOgfZ7OQSq5UJOMg26w6b+
+         elYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVDvch7CPfdEiB2uIDvlHUpvZ4ILO8gEjNstTNhyfq1EVqt5xVmXI+XlFoYJQpqBGAdGOa7TDw1ojnyOSD9Ne7RQJ9gmBY4VwYddxzQcoAdwl669KOtwt/AGlJ/4Q017+AMSCiFSGaMnoCj
+X-Gm-Message-State: AOJu0YxIHE3QpW9s/94qXhBlEfZ1SVz7BX8BiqUBtTvSLDk3vessh6b3
+	6EJ/wkejoN+mHIqzMyA71+uIgksgi2SA2mPDo920diQ9ntwrFRXa
+X-Google-Smtp-Source: AGHT+IE7u7y6CGwPjcSkWjSR/F+mMG951zmw9TyKaxfgzFzz0SBlq5cmhp/BRuOVynZnPYI0axZEwg==
+X-Received: by 2002:ac2:5963:0:b0:518:ddc3:b3a2 with SMTP id h3-20020ac25963000000b00518ddc3b3a2mr5383160lfp.28.1713792741850;
+        Mon, 22 Apr 2024 06:32:21 -0700 (PDT)
+Received: from CVSIT-Server.. ([193.232.173.109])
+        by smtp.gmail.com with ESMTPSA id d22-20020ac241d6000000b0051327d2f5e5sm1729568lfi.119.2024.04.22.06.32.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 06:32:21 -0700 (PDT)
+From: Konstantin Pugin <ria.freelander@gmail.com>
+To: 
+Cc: krzk@kernel.org,
+	conor@kernel.org,
+	lkp@intel.com,
+	vz@mleia.com,
+	robh@kernel.org,
+	jcmvbkbc@gmail.com,
+	nicolas.ferre@microchip.com,
+	manikanta.guntupalli@amd.com,
+	corbet@lwn.net,
+	ychuang3@nuvoton.com,
+	u.kleine-koenig@pengutronix.de,
+	Maarten.Brock@sttls.nl,
+	Konstantin Pugin <ria.freelander@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Lech Perczak <lech.perczak@camlingroup.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: [PATCH v7 0/3] add support for EXAR XR20M1172 UART
+Date: Mon, 22 Apr 2024 16:32:12 +0300
+Message-Id: <20240422133219.2710061-1-ria.freelander@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-On Mon, 22 Apr 2024 15:17:27 +0200
-Andrew Lunn <andrew@lunn.ch> wrote:
+EXAR XR20M1172 UART is mostly SC16IS762-compatible, but
+it has additional register which can change UART multiplier
+to 4x and 8x, similar to UPF_MAGIC_MULTIPLIER does. So, I used this
+flag to guard access to its specific DLD register. It seems than
+other EXAR SPI UART modules also have this register, but I tested
+only XR20M1172.
+Yes, in datasheet this register is called "DLD - Divisor Fractional"
+or "DLD - Divisor Fractional Register", calling depends on datasheet
+version.
 
-> On Mon, Apr 22, 2024 at 02:50:50PM +0200, Kory Maincent (Dent Project) wr=
-ote:
-> > From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
-> >=20
-> > The PSE (Power Sourcing Equipment) API now relies on the Regulator API.
-> > However, the Regulator dependency was missing from Kconfig. This patch
-> > adds the necessary dependency, resolving the issue of the missing
-> > dependency and ensuring proper functionality of the PSE API.
-> >=20
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes:
-> > https://lore.kernel.org/oe-kbuild-all/202404201020.mqX2IOu7-lkp@intel.c=
-om/
-> > Closes:
-> > https://lore.kernel.org/oe-kbuild-all/202404200036.D8ap1Mf5-lkp@intel.c=
-om/
-> > Fixes: d83e13761d5b ("net: pse-pd: Use regulator framework within PSE
-> > framework") Signed-off-by: Kory Maincent (Dent Project)
-> > <kory.maincent@bootlin.com> =20
->=20
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+I am sorry about too many submissions and top post reply. About second -
+I do not know how to reply properly to this ML from GMail phone app. About first - I just
+get very good feedback from Andy Shevchenko, and want to fix his review picks ASAP.
 
-Oh you already put your reviewed-by on the whole series!
-So efficient!! Thank you!
-I can send the v2 then.
+Changes in v2:
+  - use full name in git authorship
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Changes in v3:
+  - change formatting of commit messages to unify width
+  - rework commit messages according to code review
+  - add XR20M117X namespace for EXAR-specific register
+  - do not use UPF_MAGIC_MULTIPLIER for checking EXAR chip,
+    use s->devtype directly
+  - replace while loop to fls function and expanded check
+  - sort compatibles
+  - reformat multiline comment.
+
+Changes in v4:
+  - rebase onto tty-next branch
+  - added Kconfig mention of the chip
+  - used rounddown_power_of_two instead of fls and manual shift
+  - used FIELD_PREP instead of custom macro
+  - removed has_dld bit from common struct, replaced by check function,
+    which checks directly by s->devtype
+  - fixed tab count
+  - properly apply Vladimir Zapolskiy's tag to patch 2 only
+
+Changes in v5:
+  - fixes for tty-next branch
+  - address a new code review picks
+  - send properly to all participants
+  - added Ack tag
+
+Changes in v6:
+  - KConfig fixes
+  - New code review fixes
+
+Changes in v7:
+  - Added missed tag
+  - Added missed v5 fixes
+
+Konstantin Pugin (3):
+  serial: sc16is7xx: announce support of SER_RS485_RTS_ON_SEND
+  dt-bindings: sc16is7xx: Add compatible line for XR20M1172 UART
+  serial: sc16is7xx: add support for EXAR XR20M1172 UART
+
+ .../bindings/serial/nxp,sc16is7xx.yaml        |  1 +
+ drivers/tty/serial/Kconfig                    |  3 +-
+ drivers/tty/serial/sc16is7xx.c                | 63 +++++++++++++++++--
+ drivers/tty/serial/sc16is7xx.h                |  1 +
+ drivers/tty/serial/sc16is7xx_i2c.c            |  1 +
+ drivers/tty/serial/sc16is7xx_spi.c            |  1 +
+ 6 files changed, 64 insertions(+), 6 deletions(-)
+
+
+base-commit: f70f95b485d78838ad28dbec804b986d11ad7bb0
+-- 
+2.34.1
+
