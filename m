@@ -1,26 +1,26 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6354CB55
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:46:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B5353380
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:46:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713775594; cv=none; b=mGTvCZ3wzZCGtE3udeMYLlizoEYyAZ5hPvin/x0/LJ0elBfWFY4daevNP9FMj0F4uSrmjfWKwWdX1zmGSEkATgM9vJtQpxlU20vydBKq4ynp7wOAsrIL5+DAM19Z4Try7vGa09bXHr8dEfRA+RoZnmlSFCAmto4sPnYorKBLlxk=
+	t=1713775596; cv=none; b=k6h7sKvJhEEEYLQTxjerSZGYlTk6X8iyxJVG9KkVMgIT5uea9XV21K4AmmyHZ/HwujOGC8MIbV2WxV5+hdHnz5cXIS6q2pj+JHwcd52qn7jD6wBu4exSi0Je/A7KEel3nvb6Wizucwf8eQX9RiteupNmuInMZNmL/8bb3l4SZzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713775594; c=relaxed/simple;
-	bh=ogSLbt7Encj8rgVX9Gt1hy8GweRcMDYi4zjkFZ+QSFE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=esGJI+q6T/oX0+CM1u38zPQ1zwKMwtth9SIA7euwOF4I4fo+L5XLXaK+0wu9UGUxJZNLBBdZx+HjNYZiZzMs4lNOAQwHpuzzaatAxBQRuIdqcU0coj6949hBNoEdaaSt3lA+Wuna35f/oaQOMypFkdvtUdFuI7fJXfPWriD6dHc=
+	s=arc-20240116; t=1713775596; c=relaxed/simple;
+	bh=IU6x0P+j4+jOHSGmx6FtiHna/5kD7S4rVr4bL7nsngg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qoPcjhtQ9IK8Dd9kOAnkt+fuVM2aUXfWPSZ0k1Xa66lQhCtIqR0SFCLfM9Z5C2P+YZJZ88D91zifAJOh6tBcdIQ9e6poKzSkumeDtvNV3g+wT8MgKkzBmvSuUwrtPOjkk0GT5qhUJLHe5ljII+/1u6x+Pj1P9kEjOJQENBb5hwg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=ratatoskr.trumtrar.info)
 	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
 	(envelope-from <s.trumtrar@pengutronix.de>)
-	id 1rypJd-0000ML-BZ; Mon, 22 Apr 2024 10:46:21 +0200
+	id 1rypJf-0000ML-Dr; Mon, 22 Apr 2024 10:46:23 +0200
 From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: [PATCH 0/3] arm64: mx93: etherrnet: set TX_CLK in RMII mode
-Date: Mon, 22 Apr 2024 10:46:16 +0200
-Message-Id: <20240422-v6-9-topic-imx93-eqos-rmii-v1-0-30151fca43d2@pengutronix.de>
+Date: Mon, 22 Apr 2024 10:46:18 +0200
+Subject: [PATCH 2/3] arm64: dts: imx93: add enet_clk_sel
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -29,9 +29,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANgjJmYC/x3MMQqEMBAF0KvI1A6YMSzqVcRC4+zuLzSaSBDEu
- xssX/MuihqgkbrioqAJEX7NMGVB7j+uP2XM2SSV2MqKcPpwy4ff4BjL2dasu48cFoDrUdxkxbj
- GzJSDLegX55v3w30/Y2IXDWwAAAA=
+Message-Id: <20240422-v6-9-topic-imx93-eqos-rmii-v1-2-30151fca43d2@pengutronix.de>
+References: <20240422-v6-9-topic-imx93-eqos-rmii-v1-0-30151fca43d2@pengutronix.de>
+In-Reply-To: <20240422-v6-9-topic-imx93-eqos-rmii-v1-0-30151fca43d2@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>, 
  Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
  Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
@@ -53,31 +53,27 @@ X-SA-Exim-Mail-From: s.trumtrar@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-This series adds support for setting the TX_CLK direction in the eQOS
-ethernet core on the i.MX93 when RMII mode is used.
-
-According to AN14149, when the i.MX93 ethernet controller is used in
-RMII mode, the TX_CLK *must* be set to output mode. 
-
-Add a devicetree property with the register to set this bit and parse it
-in the dwmac-imx driver.
+The ENET_CLK_SEL register is at offset 0x2c in the wakeupmix_gpr
+register and needed to set the TX_CLK direction in case of RMII mode.
 
 Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 ---
-Steffen Trumtrar (3):
-      dt-bindings: net: mx93: add enet_clk_sel binding
-      arm64: dts: imx93: add enet_clk_sel
-      net: stmicro: imx: set TX_CLK direction in RMII mode
+ arch/arm64/boot/dts/freescale/imx93.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
- .../devicetree/bindings/net/nxp,dwmac-imx.yaml     | 10 ++++++++
- arch/arm64/boot/dts/freescale/imx93.dtsi           |  1 +
- drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c    | 27 ++++++++++++++++++++++
- 3 files changed, 38 insertions(+)
----
-base-commit: 4cece764965020c22cff7665b18a012006359095
-change-id: 20240422-v6-9-topic-imx93-eqos-rmii-3a2cb421c81d
+diff --git a/arch/arm64/boot/dts/freescale/imx93.dtsi b/arch/arm64/boot/dts/freescale/imx93.dtsi
+index 601c94e1fac8e..116ff9c15709b 100644
+--- a/arch/arm64/boot/dts/freescale/imx93.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx93.dtsi
+@@ -1051,6 +1051,7 @@ eqos: ethernet@428a0000 {
+ 							 <&clk IMX93_CLK_SYS_PLL_PFD0_DIV2>;
+ 				assigned-clock-rates = <100000000>, <250000000>;
+ 				intf_mode = <&wakeupmix_gpr 0x28>;
++				enet_clk_sel = <&wakeupmix_gpr 0x2c>;
+ 				snps,clk-csr = <0>;
+ 				status = "disabled";
+ 			};
 
-Best regards,
 -- 
-Steffen Trumtrar <s.trumtrar@pengutronix.de>
+2.43.2
 
