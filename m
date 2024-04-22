@@ -1,101 +1,78 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3CE26286
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 12:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5948D3D3B3;
+	Mon, 22 Apr 2024 12:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713789306; cv=none; b=bEuvpzeiQFeZ+2M/V3PLhiiCgu81uN5lT7gWbloWykHrGGnrnWWiNPuOY7uvWrBOZWyDo44Je3cFss6JALZyrZBXfaZMBYIkSN/O+9oIxTtqSC1Twc+QJosdrvU8FRrbtL3/HUwHn4Mr0A1/nqzM8g3NTk2/lpJa15U1+zLzNXA=
+	t=1713789369; cv=none; b=Ka5tQoStCT82uIycUuEokbivpVwbi9sNXVKniL/VPxB0F9CXBiL/gAnTasaTXYVlgOnxOikDI615LBHGNDGb/R9MXgoYBJx3WkRMoCmLUMKyPUSiLNlyhjwFabHgpIEGHbGvh7lwpSShUnOViYaPgSHStzs3sKHZgZ6iCcsrNdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713789306; c=relaxed/simple;
-	bh=Dvbbv2Euyl1iu4XSriZ6KMne/lsk0oCWL2ADEZMNJXo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fD3QATbjR9PyINuargs1Boj2IbX8o22KmMbsD64XwnMywI4uovZSWm2ZMTUNDDDB1GjyMQcevbpVvPdD/sMmB9/TW+BwB4ROFOaVovWcFdbd/vPSnkBb/VcTqBb9wESpj26vRhCfdXAf7fbmlAJ+QH4GnYj+/bgt89NX556N3r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <sha@pengutronix.de>)
-	id 1ryssp-0005Bq-G4; Mon, 22 Apr 2024 14:34:55 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <sha@pengutronix.de>)
-	id 1ryssl-00Dh4a-6t; Mon, 22 Apr 2024 14:34:51 +0200
-Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <sha@pengutronix.de>)
-	id 1ryssl-0088Ib-0N;
-	Mon, 22 Apr 2024 14:34:51 +0200
-Date: Mon, 22 Apr 2024 14:34:51 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
-To: Andy Yan <andyshrk@163.com>
-Cc: heiko@sntech.de, tzimmermann@suse.de, mripard@kernel.org,
-	hjc@rock-chips.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-rockchip@lists.infradead.org,
-	Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH 1/1] drm/rockchip: vop2: Fix the port mux of VP2
-Message-ID: <ZiZZaxr1KTmWc9CM@pengutronix.de>
-References: <20240422101905.32703-1-andyshrk@163.com>
- <20240422101905.32703-2-andyshrk@163.com>
+	s=arc-20240116; t=1713789369; c=relaxed/simple;
+	bh=bN2M+DqHgZ9izPWJVBySKXP2zEB6NbECifPMiFQFCjg=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=BY52n0lWnsktNzlMKAogNBramqtKm9wtTNMnWOE+1jRi0PURWdRY4P6YJrEUzMht8LphrIgx7SHkzaMmOFwd36xFfGX5V1MG1LWpFzZ3jSwo0cj+uDzGCEqNuiEO949jpOXhry03y13g28w2JFKeQouF4FCscdRDg23jlLlz3MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=P3gPZ4q4; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="P3gPZ4q4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1713789366;
+	bh=bN2M+DqHgZ9izPWJVBySKXP2zEB6NbECifPMiFQFCjg=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=P3gPZ4q4iXLYOmYJaGl1rQ0gw5fe8e6v7pgcXKgfyieS8JVat0ycYYGcGyIPZtEqa
+	 iunwX3Ouktro/DGnGmoUQVRFb2cB1ez8DIe9FeC650tmw7k5gsktUbPe+NNLfmuZjE
+	 43G3vaSjtg4JWT0jrkhBITFuItxFWSSFWQw5Llzx2BB9TdfZI+VUWhlQinh7OfMhF+
+	 WD/0SXmwFY8i96vbFIqzTqZMOPyds4QTf1IM6G8bOhHSxDlIndZOfbt93erSG5aaPR
+	 OD0XzfXGx9TEP18QX3rSLnP/EygEtNc0AbA8NFqqoawVeSjD3UuOh8rcbuyUx5E0i5
+	 B9Sb0xu4p+lHg==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 3B9AA37820B6;
+	Mon, 22 Apr 2024 12:36:03 +0000 (UTC)
+Message-ID: <f461519b-34a0-4bbc-b528-8a137d833c08@collabora.com>
+Date: Mon, 22 Apr 2024 17:36:31 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240422101905.32703-2-andyshrk@163.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com
+Subject: Re: [PATCH 0/4] selftest: x86: conform tests to TAP format output
+To: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240414131807.2253344-1-usama.anjum@collabora.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20240414131807.2253344-1-usama.anjum@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 22, 2024 at 06:19:05PM +0800, Andy Yan wrote:
-> From: Andy Yan <andy.yan@rock-chips.com>
-> 
-> The port mux of VP2 should be RK3568_OVL_PORT_SET__PORT2_MUX.
-> 
-> Fixes: 604be85547ce ("drm/rockchip: Add VOP2 driver")
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+Reminder
 
-Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
-
-Sascha
-
+On 4/14/24 6:18 PM, Muhammad Usama Anjum wrote:
+> In this series, 4 tests are being conformed to TAP.
 > 
-> ---
+> Muhammad Usama Anjum (4):
+>   selftests: x86: check_initial_reg_state: conform test to TAP format
+>     output
+>   selftests: x86: corrupt_xstate_header: conform test to TAP format
+>     output
+>   selftests: fsgsbase_restore: conform test to TAP format output
+>   selftests: entry_from_vm86: conform test to TAP format output
 > 
->  drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-> index 97b0ab4b6db8..1f4250de570f 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-> @@ -2377,7 +2377,7 @@ static void vop2_setup_layer_mixer(struct vop2_video_port *vp)
->  		port_sel |= FIELD_PREP(RK3568_OVL_PORT_SET__PORT2_MUX,
->  			(vp2->nlayers + vp1->nlayers + vp0->nlayers - 1));
->  	else
-> -		port_sel |= FIELD_PREP(RK3568_OVL_PORT_SET__PORT1_MUX, 8);
-> +		port_sel |= FIELD_PREP(RK3568_OVL_PORT_SET__PORT2_MUX, 8);
->  
->  	layer_sel = vop2_readl(vop2, RK3568_OVL_LAYER_SEL);
->  
-> -- 
-> 2.34.1
-> 
+>  .../selftests/x86/check_initial_reg_state.c   |  24 ++--
+>  .../selftests/x86/corrupt_xstate_header.c     |  30 +++--
+>  tools/testing/selftests/x86/entry_from_vm86.c | 109 ++++++++--------
+>  .../testing/selftests/x86/fsgsbase_restore.c  | 117 +++++++++---------
+>  4 files changed, 139 insertions(+), 141 deletions(-)
 > 
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+BR,
+Muhammad Usama Anjum
