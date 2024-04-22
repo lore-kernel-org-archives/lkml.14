@@ -1,132 +1,157 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423E751037
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0C851037;
+	Mon, 22 Apr 2024 07:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713770678; cv=none; b=LfqUqGtAErEeNrp3dwZRSYBKNyGFt0ojmPZt26VrxAMIW6xxRFa6HkaAHF+EnEWVwUIMLLaVjSOWl3cR2ACXuBa9rwfapkxsa3irda90Q29B/dJUHiua7hEoaaCBbdbXRk9TCgCxgQW87ITwL/ox+vdTgEbOxC7PSOu4XzxdNkQ=
+	t=1713770700; cv=none; b=BKCBh4PAdTWAJQ9ausCLRQBY0AFR9TTD/1xqP6rBacvZ7wxKZMUpMqtNyHL7o81C2dA93BpEEc241u677mufFhYnxIqlrULFodbclBqI00vFoDIRNH0sCkwun4eHhAe//ZfiYWcDgPLZZKl7fKOSVvGlXYItOb3uMOAFwy6+AAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713770678; c=relaxed/simple;
-	bh=dpgOmQJHRrHOsYFgWaLnsjp9j6Ut9V7hlwOOQWs5FWQ=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=pNgzYdaigqOfX+/WngK2hhibAhMFJ8zvh9wX9GVDGBvCLIjcMKWIZOotF3WT5ctnYYVmH7EEuNAUJNOB/N0FXiITXOArA9pAlvyoL4HhMB20LXVQ+cnMulXRxvBqG3kbcTQfS71G3/xs26Qq5b0MhwRldwjUMmGqTHz3imtO5h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--apusaka.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RL8CBo9E; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--apusaka.bounces.google.com
+	s=arc-20240116; t=1713770700; c=relaxed/simple;
+	bh=n1rgUnp+TQN8uWTIEcVitLd7jUdMIkcsybmOH7TAZDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SXtVY8MCYE+kMRlXEyiQBLVYayOUQDXr3zymxKHHHTwBkmbbw2ANcC0oZjnMwcXmPo+vAuDmZmSAseD2Bj4/PwoKmAbwjjuY50Mdq+t0PQE+kYG4bgd95VOKudC/bQHUJjDzZCxu01p6JegQqCvldIKE4+GgvV6TsGqnC8fHXOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNdDQvcq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RL8CBo9E"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de45daf49deso9440726276.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 00:24:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713770676; x=1714375476; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=i9wOGbBfat1hzQwTRQUOOQ0qZfxZpdbfky7UyfMjHY0=;
-        b=RL8CBo9ESvvBEBmUy5HVNnW1d1umQxu+ZB4iQ2x3VpRAPEFC9wb8C3/2v4JAnSCHMP
-         ZdbrPtXLS+/FemPXQiY2z586oSZ8ayiAkizy6buffwUV7n9HA+Mu2TwmrlPOy+95BHYB
-         9lD4T4CsdQPdminAwivWiXZPFumwRnGjMCVF/uUErruhTVg4kO8eUPj75awZb1TlflkX
-         2M+Wg8YZKiWXXjmt5yYTifm6JO8gTuKIeWb3+T6qmAj3lAhFRVInCwPnBcuZ0fNYGzns
-         QczV1YDs5MbNlD/wMCHgv43vGhJXOqRNnco/NMVinihogTfViaHCzqO32lFda//wqBlq
-         yx+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713770676; x=1714375476;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i9wOGbBfat1hzQwTRQUOOQ0qZfxZpdbfky7UyfMjHY0=;
-        b=qAcEXgGdZN0htnFTxRDsSYg2xbQG4d9GPgWezMp4Gl302iCZM/YRUCLbSwNySIomRi
-         Zf2ZdwkbcI5fYzhGMo/Ijxed5UY+ahMMXPoNIzGhKp+Wa8rYoZasfghvOWCkpQwdKruT
-         gszZJJKyuyQXXP33ar8mY/Rn/t3UGNy8zXPUH+DWL6ZD/gHEj9BE5dtb0DjJCs6vVr8y
-         xSYJ3AoUVlIQ2AOkg9XqVhISnQO5tyTUBuL/rRZHwSqsBT6qYztyOA9Cwax/t2a34I1s
-         3MDJ4zlUbEB2No/KQ/HVRFVfBNza8GTxRxII9xKWh9qfRiz3IRZZwhoWW6bOmmshdpe1
-         quPg==
-X-Forwarded-Encrypted: i=1; AJvYcCWWP+OTXHKfmHdbR1jh9ylx6LoEhad+FOiOPZ1ab7IBSWOJj/lbSiTRR5gTdcJ6XvKEe3n4txNH5jLRiyJh+6ir3Ly+pp67HqkYcsJX
-X-Gm-Message-State: AOJu0YyJjRy3zfXqrMGqvjl1XaUFaOatsyd07+EZcCSUOVony6PEcyJu
-	m79PcxeHz2bYmjjRtKmmdvIirFH2RoR8r27sR0ipQUPQjoZOBoTJv5+iF2xhIizbRuDeVEL7BRg
-	K2li4Gg==
-X-Google-Smtp-Source: AGHT+IE/hTCb8Slwze2loKhFJ/zmVV1DW7WbkF5OHZy4fac2xvijx0KJZp+i9C6xdb+Gib9KNLezOi0V4aQV
-X-Received: from apusaka-p920.tpe.corp.google.com ([2401:fa00:1:17:59d7:73d5:a990:d869])
- (user=apusaka job=sendgmr) by 2002:a05:6902:c0a:b0:de5:2694:45ba with SMTP id
- fs10-20020a0569020c0a00b00de5269445bamr759614ybb.0.1713770676156; Mon, 22 Apr
- 2024 00:24:36 -0700 (PDT)
-Date: Mon, 22 Apr 2024 15:24:14 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNdDQvcq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9C12C113CC;
+	Mon, 22 Apr 2024 07:24:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713770699;
+	bh=n1rgUnp+TQN8uWTIEcVitLd7jUdMIkcsybmOH7TAZDM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BNdDQvcq3vorF+4E/GkyW3Slc1cKMfuikW6UJWa5Q1Nw/MLXBBskJVr3CZVE/FrVV
+	 ujwUNsRTCw2V3HEFMEC1kv7Ly9C2a3MsxXtSejilKS3nJfam3MajMs9Gezu1iRA4g4
+	 41xUqxSy8StJ/+EiwVk89Y3tUAr4Qj6IpygcUTS33Q5zbFj8osSJh9s0SLmGdp0DWw
+	 OgBnpzQO5j97U9QRYYLWMsaPP61b0c/MshrGnd7VnYynl/klGnImS/IU+n2zkFjWtK
+	 AiK76IXJhUkO67rWRMv05RmNq6rP+x11SaRt1kWkzKbElKJY+ATvTtKhNlxDD/ba4R
+	 fx8S+ZGbdzyQQ==
+Date: Mon, 22 Apr 2024 12:54:46 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Qiang Yu <quic_qianyu@quicinc.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, quic_jhugo@quicinc.com,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_cang@quicinc.com,
+	quic_mrana@quicinc.com
+Subject: Re: [PATCH v3 1/3] bus: mhi: host: Add sysfs entry to force device
+ to enter EDL
+Message-ID: <20240422072446.GA9775@thinkpad>
+References: <1713170945-44640-1-git-send-email-quic_qianyu@quicinc.com>
+ <1713170945-44640-2-git-send-email-quic_qianyu@quicinc.com>
+ <20240415115616.GF7537@thinkpad>
+ <a62cb28a-e6ab-4f60-9210-b7aa8e0c34e0@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Message-ID: <20240422152413.1.Ib96985e197f3db620a127a84aa20f3f3017aaf57@changeid>
-Subject: [PATCH] Bluetooth: Populate hci_set_hw_info for Intel and Realtek
-From: Archie Pusaka <apusaka@google.com>
-To: linux-bluetooth <linux-bluetooth@vger.kernel.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Marcel Holtmann <marcel@holtmann.org>
-Cc: CrosBT Upstreaming <chromeos-bluetooth-upstreaming@chromium.org>, 
-	Archie Pusaka <apusaka@chromium.org>, Abhishek Pandit-Subedi <abhishekpandit@google.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a62cb28a-e6ab-4f60-9210-b7aa8e0c34e0@quicinc.com>
 
-From: Archie Pusaka <apusaka@chromium.org>
+On Tue, Apr 16, 2024 at 01:45:18PM +0800, Qiang Yu wrote:
+> 
+> On 4/15/2024 7:56 PM, Manivannan Sadhasivam wrote:
+> > On Mon, Apr 15, 2024 at 04:49:03PM +0800, Qiang Yu wrote:
+> > > Add sysfs entry to allow users of MHI bus force device to enter EDL.
+> > > Considering that the way to enter EDL mode varies from device to device and
+> > > some devices even do not support EDL. Hence, add a callback edl_trigger in
+> > > mhi controller as part of the sysfs entry to be invoked and MHI core will
+> > > only create EDL sysfs entry for mhi controller that provides edl_trigger
+> > > callback. All of the process a specific device required to enter EDL mode
+> > > can be placed in this callback.
+> > > 
+> > > Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+> > > ---
+> > >   Documentation/ABI/stable/sysfs-bus-mhi | 11 +++++++++++
+> > >   drivers/bus/mhi/host/init.c            | 35 ++++++++++++++++++++++++++++++++++
+> > >   include/linux/mhi.h                    |  2 ++
+> > >   3 files changed, 48 insertions(+)
+> > > 
+> > > diff --git a/Documentation/ABI/stable/sysfs-bus-mhi b/Documentation/ABI/stable/sysfs-bus-mhi
+> > > index 1a47f9e..d0bf9ae 100644
+> > > --- a/Documentation/ABI/stable/sysfs-bus-mhi
+> > > +++ b/Documentation/ABI/stable/sysfs-bus-mhi
+> > > @@ -29,3 +29,14 @@ Description:	Initiates a SoC reset on the MHI controller.  A SoC reset is
+> > >                   This can be useful as a method of recovery if the device is
+> > >                   non-responsive, or as a means of loading new firmware as a
+> > >                   system administration task.
+> > > +
+> > > +What:           /sys/bus/mhi/devices/.../force_edl
+> > s/force_edl/trigger_edl
+> > 
+> > > +Date:           April 2024
+> > > +KernelVersion:  6.9
+> > > +Contact:        mhi@lists.linux.dev
+> > > +Description:    Force devices to enter EDL (emergency download) mode. Only MHI
+> > How can the user trigger EDL mode? Writing to this file? If so, what is the
+> > value?
+> 
+> User can trigger EDL mode by writing a non-zero value to this file.
+> 
+> > 
+> > 'Emergency Download'
+> > 
+> > > +                controller that supports EDL mode and provides a mechanism for
+> > > +                manually triggering EDL contains this file. Once in EDL mode,
+> > 'This entry only exists for devices capable of entering the EDL mode using the
+> > standard EDL triggering mechanism defined in the MHI spec <insert the version>.'
+> > 
+> > > +                the flash programmer image can be downloaded to the device to
+> > > +                enter the flash programmer execution environment. This can be
+> > > +                useful if user wants to update firmware.
+> > It'd be good to mention the OS tool like QDL that is used to download firmware
+> > over EDL.
+> 
+> OK, can I add an additionnal line like this
+> Users:          Any OS tools that is used to download firmware over EDL like
+> QDL.
+> 
+> > 
+> > > diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
+> > > index 44f9349..333ac94 100644
+> > > --- a/drivers/bus/mhi/host/init.c
+> > > +++ b/drivers/bus/mhi/host/init.c
+> > > @@ -127,6 +127,32 @@ static ssize_t soc_reset_store(struct device *dev,
+> > >   }
+> > >   static DEVICE_ATTR_WO(soc_reset);
+> > > +static ssize_t force_edl_store(struct device *dev,
+> > s/force_edl/trigger_edl
+> > 
+> > > +			       struct device_attribute *attr,
+> > > +			       const char *buf, size_t count)
+> > > +{
+> > > +	struct mhi_device *mhi_dev = to_mhi_device(dev);
+> > > +	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
+> > > +	unsigned long val;
+> > > +	int ret;
+> > > +
+> > > +	ret = kstrtoul(buf, 10, &val);
+> > > +	if (ret < 0) {
+> > > +		dev_err(dev, "Could not parse string: %d\n", ret);
+> > No need to print error.
+> > 
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	if (!val)
+> > > +		return count;
+> > What does this mean?
+> 
+> If user want to trigger EDL mode,he has to write a non-zero value to this
+> file. If he writes zero, nothing will happen.
+> 
 
-The hardware information surfaced via debugfs might be usable by the
-userspace to set some configuration knobs. This patch sets the hw_info
-for Intel and Realtek chipsets.
+You need to throw -EINVAL for invalid inputs ie., <= 0.
 
-Signed-off-by: Archie Pusaka <apusaka@chromium.org>
-Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@google.com>
+> Do we need to limit the valid value to a specific value like 1?
+> 
 
----
+That's not needed.
 
- drivers/bluetooth/btintel.c | 9 +++++++++
- drivers/bluetooth/btrtl.c   | 7 +++++++
- 2 files changed, 16 insertions(+)
+- Mani
 
-diff --git a/drivers/bluetooth/btintel.c b/drivers/bluetooth/btintel.c
-index a19ebe47bd951..dc48352166a52 100644
---- a/drivers/bluetooth/btintel.c
-+++ b/drivers/bluetooth/btintel.c
-@@ -2956,6 +2956,11 @@ static int btintel_setup_combined(struct hci_dev *hdev)
- 			err = -EINVAL;
- 		}
- 
-+		hci_set_hw_info(hdev,
-+				"INTEL platform=%u variant=%u revision=%u",
-+				ver.hw_platform, ver.hw_variant,
-+				ver.hw_revision);
-+
- 		goto exit_error;
- 	}
- 
-@@ -3060,6 +3065,10 @@ static int btintel_setup_combined(struct hci_dev *hdev)
- 		break;
- 	}
- 
-+	hci_set_hw_info(hdev, "INTEL platform=%u variant=%u",
-+			INTEL_HW_PLATFORM(ver_tlv.cnvi_bt),
-+			INTEL_HW_VARIANT(ver_tlv.cnvi_bt));
-+
- exit_error:
- 	kfree_skb(skb);
- 
-diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-index cc50de69e8dc9..4f1e37b4f7802 100644
---- a/drivers/bluetooth/btrtl.c
-+++ b/drivers/bluetooth/btrtl.c
-@@ -1339,6 +1339,13 @@ int btrtl_setup_realtek(struct hci_dev *hdev)
- 
- 	btrtl_set_quirks(hdev, btrtl_dev);
- 
-+	hci_set_hw_info(hdev,
-+			"RTL lmp_subver=%u hci_rev=%u hci_ver=%u hci_bus=%u",
-+			btrtl_dev->ic_info->lmp_subver,
-+			btrtl_dev->ic_info->hci_rev,
-+			btrtl_dev->ic_info->hci_ver,
-+			btrtl_dev->ic_info->hci_bus);
-+
- 	btrtl_free(btrtl_dev);
- 	return ret;
- }
 -- 
-2.44.0.769.g3c40516874-goog
-
+மணிவண்ணன் சதாசிவம்
