@@ -1,150 +1,147 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6722114F9EA
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 13:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13FD746E
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 13:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713792803; cv=none; b=cm5kb1I7FeYTp9KNIKd6LM0AnVq2dcJPl5JlcBDvUd/45LITR7E7+jyO2a12uSg+5f44CYYSwo1ybW12Whyp4LgwMn2xjTm7xnVFNArCaani6owT2b2wlP+VDLpCxxvvJsrgBxsz/Qv+2AO3Jz42o2DLcJOHnFDgyfJlksEBqBo=
+	t=1713792918; cv=none; b=CqfAZiR8mfH01WIVYR9ZjUmoYR1hZ33n+VC8qahZF4hZVzkAxO7hrgD0ZFEWrB1hWUdtt2Ufcqafb0HLVyK27MNT26vkrbz9CLOfGUVFNQ9uiXjpKXIkI5hsLXEXq+P3V3VpIezF0RBFRpL95IkeIqcDJaEDEfeDMtIzRpiFlkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713792803; c=relaxed/simple;
-	bh=cUik/XF4WicAOpO3Eaf38j1OJaTwK4HQ23A3jNVArdw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KFlOsIxOumGb1zbZWn+gfBziGFbSBFbw/kjQJOPrrbdL8DnYz3Tmro263SE0C96ENpgqIr4EkczD6ihNbnX+aHiDkeey+TgIP/4wF6PrAGiQciqs3VITGo8pupp1h6ULDQGIEDe6oKXAfo96mBQFgfgRIacEdHtIah8dS9ShvMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RdTm2LVB; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RdTm2LVB"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56e1baf0380so5228428a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 06:33:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713792800; x=1714397600; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LwZc+ZBbmXu3G214pCU0lzqpNX0oYZU+cn+mUyu9Nmg=;
-        b=RdTm2LVBMZZJKIDWaJFf0v+osiyC+uAyzogYVJS0QnaIPIwy/7FvxHgfP8A9vII2fg
-         6PWGk294v5mcdz6u0gA9z7RgeVx/QiiMP5BGvOEyBFPC8b6qllGOEgsh09f0MVS+9XQr
-         bZVfbZEDMJPmAulBGKPRJhbdT1DYql1paPZ8onPiOabtkJiMqP5oYAc0Y2ATfvnwZY43
-         47+LeLpiwlMV3NsRp/dkmEdQqviH/JjikcE+Ti3/zGSS/A1Lue0V6xJai/7Qw7pi/Tvo
-         e4zhFN6P89JpGXXdX0L4oLbjbX3VpsReyLsAIjWrSumiygQ5yS5B1TNo5dpdjvH1MoGB
-         uw2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713792800; x=1714397600;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LwZc+ZBbmXu3G214pCU0lzqpNX0oYZU+cn+mUyu9Nmg=;
-        b=PgdsTgjndzuylHiK43nvauNb/p4uudeDBz3lC1YL/bPp5Rls2DfHcD6Cy5KBIwkg6R
-         zdMPyy+Dx63x4rO2Tf8GEPVuiz/17pd45xB0TxoOWOp8pQNSkZc2uFbDXu0v00zypDED
-         zyPTLO5r5JhKuHQ/l1ac+0iClCRQoqMIR4yoyXnw5H7+oseUIWUgNPr9Cv+bEr2tYEXA
-         vlEzHcrOdYvZKhAD9SywkalAKmmgStljYUPKEPx7vOL1OjmwxBUSeCtD73vDKUOdrIpk
-         MtUSKB6Tkdgu1/pF+BZhtQRg9pQot8ys91pYXlyxaPV7NrugtlCa3dFs/SddzD0j4rEh
-         pL/A==
-X-Forwarded-Encrypted: i=1; AJvYcCX4THnILAM2Jm4ESvxACnrGMp0M1I3SbT5BpHpY3A7GX+tZATUAXH4edScrTipCSHVT7CTq8UsT3QUnmi9OmoZcw+RafQAa3LLTEEKx
-X-Gm-Message-State: AOJu0YyyOlIc4BbuUKoMutzKtkPBTwnaDsgg6zQDPqJMtbvZE8fUkeyP
-	AyjRJxqrLRHU85ZjOp67v75Ai3ex8qYGRkfvyqfgdfQzOoTm4/faRmDrfPrW9o5ok2JG71aGlD0
-	OVwUCJ85Y/YuF1/JsbwDovUlolKcCV9dys5VsKA==
-X-Google-Smtp-Source: AGHT+IFfa5I8uWCyTOd8o7O7qiE3AgHBvfTCTUQ+++NWs2D/Vx2u1bA4fLgcCTpeCddH7HAbZdY1qTSY4Fs49oNO/qA=
-X-Received: by 2002:a17:906:5857:b0:a52:2772:b9cb with SMTP id
- h23-20020a170906585700b00a522772b9cbmr6375318ejs.24.1713792799626; Mon, 22
- Apr 2024 06:33:19 -0700 (PDT)
+	s=arc-20240116; t=1713792918; c=relaxed/simple;
+	bh=/y9qW4hIix5cjXrfGbOv7+ow7SQkwW7cRxbCcjFGvxw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ShsXMByOFyY8w2Ti+++tJfauzsP8dDWVYhVPi2Iak1LmiOiAmvzZ7MVcX4IY92y71r2zKs+5V1ZqDPHovLhrDkMF8EDFV3sWKvTh5GGjlfrxt7jMDg0r2dNN5JZ187DGd2ipsVGMwPkW872Aokh3Nf4yz6UCstCXsJfXjbwpGL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i5e861d85.versanet.de ([94.134.29.133] helo=phil.lan)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1rytp3-0003PX-SH; Mon, 22 Apr 2024 15:35:05 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: heiko@sntech.de
+Cc: quentin.schulz@theobroma-systems.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Heiko Stuebner <heiko.stuebner@cherry.de>
+Subject: [PATCH v3] arm64: dts: rockchip: add PCIe3 support on rk3588-jaguar
+Date: Mon, 22 Apr 2024 15:35:02 +0200
+Message-Id: <20240422133502.2592975-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240422112711.362779-1-mikko.rapeli@linaro.org>
- <6e751959b9056884c1b9d3ba23e303d1737d8763.camel@HansenPartnership.com> <ZiZhSfgeAdrbnaVL@nuoska>
-In-Reply-To: <ZiZhSfgeAdrbnaVL@nuoska>
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Date: Mon, 22 Apr 2024 16:32:43 +0300
-Message-ID: <CAC_iWjKA-xRH=3FK+=woXsB8AW4+_mVhJhUQnL8iFKxGzOwKiA@mail.gmail.com>
-Subject: Re: [PATCH] efi: expose TPM event log to userspace via sysfs
-To: Mikko Rapeli <mikko.rapeli@linaro.org>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Lennart Poettering <lennart@poettering.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi all,
+From: Heiko Stuebner <heiko.stuebner@cherry.de>
 
-On Mon, 22 Apr 2024 at 16:08, Mikko Rapeli <mikko.rapeli@linaro.org> wrote:
->
-> Hi,
->
-> On Mon, Apr 22, 2024 at 08:42:41AM -0400, James Bottomley wrote:
-> > On Mon, 2024-04-22 at 14:27 +0300, Mikko Rapeli wrote:
-> > > Userspace needs to know if TPM kernel drivers need to be loaded
-> > > and related services started early in the boot if TPM device
-> > > is used and available.
-> >
-> > This says what but not why.  We already have module autoloading that
-> > works correctly for TPM devices, so why is this needed?
-> >
-> > We do have a chicken and egg problem with IMA in that the TPM driver
-> > needs to be present *before* any filesystem, including the one the TPM
-> > modules would be on, is mounted so executions can be measured into IMA
-> > (meaning that if you use IMA the TPM drivers must be built in) but this
-> > sounds to be something different. However, because of the IMA problem,
-> > most distributions don't end up compiling TPM drivers as modules
-> > anyway.
-> >
-> > Is what you want simply that tpm modules be loaded earlier?
->
-> Yes, ealier is the problem. In my specific testing case the machine is
-> qemu arm64 with swtpm with EFI firmware for secure boot and TPM support.
->
-> Firmware uses TPM and does measurements and thus TPM event log is available
-> on this machine and a bunch of other arm64 boards. Visible in early boot
-> dmesg as TPMEventLog lines like:
->
-> [    0.000000] efi: ESRT=0xf0ea5040 TPMFinalLog=0xf0ea9040 RTPROP=0xf0ea7040 SMBIOS=0xf0ea3000 TPMEventLog=0xeb3b3040 INITRD=0xeb3b2040 RNG=0xe5c0f040 MEMRESERVE=0xe5c0e040
->
-> Different boards use different TPM HW and drivers so compiling all these in is
-> possible but a bit ugly. systemd recently gained support for a specific
-> tpm2.target which makes TPM support modular and also works with kernel modules for some
-> TPM use cases but not rootfs encryption.
->
-> In my test case we have a kernel+initramfs uki binary which is loaded by EFI firmware
-> as a secure boot binary. TPM support on various boards is visible in devicetree but
-> not as ACPI table entries. systemd currently detect TPM2 support either via ACPI table
-> /sys/firmware/acpi/tables/TPM2 or TPM entry or via firmware measurement via
-> /sys/kernel/security/tpm0/binary_bios_measurements .
+The Jaguar SBC provides an M.2 slot connected to the pcie3 controller.
+In contrast to a number of other boards the pcie-refclk is gpio-controlled,
+so the necessary clock and is added to the list of pcie3 clocks.
 
-One corner case worth noting here is that scanning the device tree
-won't always work for non-ACPI systems... The reason is that a
-firmware TPM (running in OP-TEE) might or might not have a DT entry,
-since OP-TEE can discover the device dynamically and doesn't always
-rely on a DT entry.
+Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+Reviewed-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+---
+changes in v3:
+- drop unnecessary pinctrl comment (Quentin)
+- add Quentin's review
 
-I don't particularly love the idea that an EventLog existence
-automatically means a TPM will be there, but it seems that systemd
-already relies on that and it does solve the problem we have.
+changes in v2:
+- "an" M.2 slot (Dragan)
+- pinctrl for refclk-en and reset pin (Quentin)
+- don't repurpose the pcie30x4_pins pinctrl entry for only wake (Quentin)
 
-/Ilias
+ .../arm64/boot/dts/rockchip/rk3588-jaguar.dts | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts b/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
+index 4076c92668ba..0ad53d7768a3 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
+@@ -72,6 +72,27 @@ led-1 {
+ 		};
+ 	};
+ 
++	/*
++	 * 100MHz reference clock for PCIe peripherals from PI6C557-05BLE
++	 * clock generator.
++	 * The clock output is gated via the OE pin on the clock generator.
++	 * This is modeled as a fixed-clock plus a gpio-gate-clock.
++	 */
++	pcie_refclk_gen: pcie-refclk-gen-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <1000000000>;
++	};
++
++	pcie_refclk: pcie-refclk-clock {
++		compatible = "gpio-gate-clock";
++		clocks = <&pcie_refclk_gen>;
++		#clock-cells = <0>;
++		enable-gpios = <&gpio0 RK_PC6 GPIO_ACTIVE_LOW>; /* PCIE30X4_CLKREQN_M0 */
++		pinctrl-names = "default";
++		pinctrl-0 = <&pcie30x4_clkreqn_m0>;
++	};
++
+ 	pps {
+ 		compatible = "pps-gpio";
+ 		gpios = <&gpio0 RK_PD5 GPIO_ACTIVE_HIGH>;
+@@ -358,6 +379,30 @@ &pcie2x1l0 {
+ 	status = "okay";
+ };
+ 
++&pcie30phy {
++	status = "okay";
++};
++
++&pcie3x4 {
++	/*
++	 * The board has a gpio-controlled "pcie_refclk" generator,
++	 * so add it to the list of clocks.
++	 */
++	clocks = <&cru ACLK_PCIE_4L_MSTR>, <&cru ACLK_PCIE_4L_SLV>,
++		 <&cru ACLK_PCIE_4L_DBI>, <&cru PCLK_PCIE_4L>,
++		 <&cru CLK_PCIE_AUX0>, <&cru CLK_PCIE4L_PIPE>,
++		 <&pcie_refclk>;
++	clock-names = "aclk_mst", "aclk_slv",
++		      "aclk_dbi", "pclk",
++		      "aux", "pipe",
++		      "ref";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie30x4_waken_m0 &pcie30x4_perstn_m0>;
++	reset-gpios = <&gpio0 RK_PD0 GPIO_ACTIVE_HIGH>; /* PCIE30X4_PERSTN_M0 */
++	vpcie3v3-supply = <&vcc3v3_mdot2>;
++	status = "okay";
++};
++
+ &pinctrl {
+ 	emmc {
+ 		emmc_reset: emmc-reset {
+@@ -376,6 +421,20 @@ led1_pin: led1-pin {
+ 			rockchip,pins = <1 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
++
++	pcie30x4 {
++		pcie30x4_clkreqn_m0: pcie30x4-clkreqn-m0 {
++			rockchip,pins = <0 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		pcie30x4_perstn_m0: pcie30x4-perstn-m0 {
++			rockchip,pins = <0 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		pcie30x4_waken_m0: pcie30x4-waken-m0 {
++			rockchip,pins = <0 RK_PC7 12 &pcfg_pull_none>;
++		};
++	};
+ };
+ 
+ &saradc {
+-- 
+2.39.2
 
-> If either one of these exist,
-> then systemd evaluates ConditionSecurity=measured-uki in services correctly and
-> rolls out TPM services, cryptsetup etc. But the ACPI table entry for TPM isn't mandatory
-> and many boards don't support it. Then latter requies TPM kernel driver to be loaded
-> before systemd evaluates ConditionSecurity=measured-uki the first time, or basically
-> the driver needs to be compiled into the kernel.
->
-> In my case the uki initramfs is also based on systemd and does things like
-> creating a TPM encrypted rootfs and this should work on a number of boards
-> automatically, and none of the boards have ACPI table entries for TPM2, but
-> all of them with real, swtpm or fTPM based TPM devices provide the TPM Event Log
-> to the kernel. Thus systemd could use this as an indicator for TPM support in addition
-> to the server grade HW standard ACPI table entry. And once this is in place
-> TPM drivers and module loading work and initramfs can create a TPM backed rootfs
-> on first boot. The catch is to install needed kernel modules to the initramfs but
-> after that, all things work nicely.
->
-> Hope this clarifies this change a bit more.
->
-> Cheers,
->
-> -Mikko
