@@ -1,178 +1,125 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from e2i187.smtp2go.com (e2i187.smtp2go.com [103.2.140.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46089548EC
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 09:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1FC13DB83
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 09:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.140.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713776719; cv=none; b=B3DB4FVChoTVm4QNaCSOEmd5SHJh+2O9FihG5KQp7rlw6WEMy7vyCMJ3TkPF80MH3dWOswqU7VJlUG5pRJglB9VByq88WS3kCgsWnhEJGP2s70FLSg5mlQ5qg4bMCB9rqRrVrZziVlWg69towBrFzVG58HP0uIyRq/Q92VSTKTg=
+	t=1713776729; cv=none; b=e2PDoWmvru6RYxq42X7Wpvxv/OI7UtnaynWCGgphcSI2nGRPBLoWhLZChWmamfLNuISIuX1gog5CWxE9yicEv/zHQAkpB48Uj9gm6SCmT4F5Th3puV4f2Aebz2VCZIruBs4K6tIKnoQxfTCOOWcKCnORMxIqOmMo7Vn9TqtVIjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713776719; c=relaxed/simple;
-	bh=pNJQKBOLWs8rDZ/RhtvowRqOazYDQAhBrisc2ohw9Ck=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uVp3z2yvlUsWp2HXgJ23qLsazGEcVxszQiP2Cg+g8Z8pL+MinrMSxrV4oSBPVe3hCx3XwgQWNkxwJrQqVdDZTj24s1HLb8szZTreRzgr6Azsd8+U7Pg5kl/BhrRGaas7kPV6EBJCfYztNif7arupwOQLAa9ExL5DX0+ZjBgjmR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rypal-0000jv-Fo; Mon, 22 Apr 2024 11:04:03 +0200
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rypaj-00Desi-1p; Mon, 22 Apr 2024 11:04:01 +0200
-Received: from pengutronix.de (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 7FC1A2BCE42;
-	Mon, 22 Apr 2024 09:04:00 +0000 (UTC)
-Date: Mon, 22 Apr 2024 11:04:00 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Clark Wang <xiaoning.wang@nxp.com>, Linux Team <linux-imx@nxp.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, imx@lists.linux.dev, devicetree@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] net: stmicro: imx: set TX_CLK direction in RMII mode
-Message-ID: <20240422-vigilant-chupacabra-of-lightning-f11220-mkl@pengutronix.de>
-References: <20240422-v6-9-topic-imx93-eqos-rmii-v1-0-30151fca43d2@pengutronix.de>
- <20240422-v6-9-topic-imx93-eqos-rmii-v1-3-30151fca43d2@pengutronix.de>
+	s=arc-20240116; t=1713776729; c=relaxed/simple;
+	bh=Pwq11WzAHtrQvtPi60VnmJqM0H3zSLr77uZezUo8xd0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P0j00bqMrDW0aJTiQ0asI/7ZfS8Z9sGCd9fNOmdPGQdLnPoAEJ5cyuIIX9AKtIE6zZwA07u7yI43SUyilkANRylj3bzYO7rkCs+VC3WH63+JZSyg8A7D/9Ba3m8OXix4oJCReWF5jHaNEEgf5dNuPZEEYonrwf6tnCogMSCGfuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it; spf=pass smtp.mailfrom=em1174574.asem.it; dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b=f3EvZ2Rn; dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b=RGi0he5o; arc=none smtp.client-ip=103.2.140.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174574.asem.it
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b="f3EvZ2Rn";
+	dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b="RGi0he5o"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=smtpcorp.com; s=a1-4; h=Feedback-ID:X-Smtpcorp-Track:Message-Id:Date:
+	Subject:To:From:Reply-To:Sender:List-Unsubscribe;
+	bh=DUgI6FiI10ay0TPqWNHINphhvGFSuWao6S97h7oSrow=; b=f3EvZ2RnIERT7493+4E6/utPfp
+	Eodt37tHBBUTLUV9X/CVbvRa0vgF4k8vQmrcmBorgYlrL8EiJ//m988yWDBtYRYHfJw0ysoLiUBb1
+	7E0OrLocF1M1Uny4HYXrzPoZPjaMD6RV/riJdu2UR1YrGeYyBfvqkrqmeYkr+WX8Gs0QTMzjnNFv9
+	DbEkTg396oM6X2wSY+d3pURuuRo8fnCa+7Q4xyS31Ls6kaQGMTEQczIfuzAqqWpIPupRDM7wUGZhM
+	+2j6h/6GCypykv9zoNmE3oHwQtHy6L1SSg7PuWk74AczfcMOKPEWhcRo0Hlj6OXEHGeCGMaRYAODG
+	EQmWsBBA==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=asem.it;
+ i=@asem.it; q=dns/txt; s=s1174574; t=1713776708; h=from : subject : to
+ : message-id : date; bh=DUgI6FiI10ay0TPqWNHINphhvGFSuWao6S97h7oSrow=;
+ b=RGi0he5o67UzavqiXPOkTktycYiQmrv1fXZOIFTjkpePQ0M8mOGFGeUgfXr1VAGmAq1sZ
+ RfUDRvZlCTnP62M1m/dXSGpddNSEhpvtD9ihMVBNv0qG11lAFCWtHyxQUa95Ayx+1fDqLfN
+ 77b4bDREnLHf2/GafmVihV1PbxdTchq3akladwuoZlq6Cvmp9m8x51SYyWHK+V4wlrj+uQa
+ fNIg6cOZ7EP1Dtn5Cfm4VVIDPNVQI+H+bXV9o/0jei4RyWTnVKON72s60hYcGj8QnaTHHb5
+ zqM4oW+p9hRccZ4n7Hb+pihXZP3hdH+w9jJ1Q7YxCT1ZMmzSb9CD8ZLxAErA==
+Received: from [10.143.42.182] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.94.2-S2G) (envelope-from <f.suligoi@asem.it>)
+ id 1rypas-Y8PDu4-Nh; Mon, 22 Apr 2024 09:04:10 +0000
+Received: from [10.86.249.198] (helo=asas054.asem.intra)
+ by smtpcorp.com with esmtpa (Exim 4.97-S2G)
+ (envelope-from <f.suligoi@asem.it>) id 1rypar-FnQW0hPpvx6-jaYr;
+ Mon, 22 Apr 2024 09:04:09 +0000
+Received: from flavio-x.asem.intra ([172.16.18.47]) by asas054.asem.intra with
+ Microsoft SMTPSVC(10.0.14393.4169); Mon, 22 Apr 2024 11:04:08 +0200
+From: Flavio Suligoi <f.suligoi@asem.it>
+To: "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+ Jose Abreu <joabreu@synopsys.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH v3 0/5] arm64: dts: remove tx-sched-sp property in snps,dwmac
+Date: Mon, 22 Apr 2024 11:03:57 +0200
+Message-Id: <20240422090402.33397-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="54trwo3z7e7ncsqb"
-Content-Disposition: inline
-In-Reply-To: <20240422-v6-9-topic-imx93-eqos-rmii-v1-3-30151fca43d2@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+X-OriginalArrivalTime: 22 Apr 2024 09:04:08.0714 (UTC)
+ FILETIME=[08F426A0:01DA9494]
+X-Smtpcorp-Track: js9P4QpV3-4F.deZ2hOMntGqk._NMrgQPMIII
+Feedback-ID: 1174574m:1174574aXfMg4B:1174574sxe1HhfNLf
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
 
+In the ethernet stmmac device driver:
 
---54trwo3z7e7ncsqb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+- drivers/net/ethernet/stmicro/stmmac/
 
-On 22.04.2024 10:46:19, Steffen Trumtrar wrote:
-> In case of RMII connection, the TX_CLK must be set to output direction.
-> Parse the register and offset from the devicetree and set the direction
-> of the TX_CLK when the property was provided.
->=20
-> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> ---
->  drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c | 27 +++++++++++++++++++=
-++++++
->  1 file changed, 27 insertions(+)
->=20
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/ne=
-t/ethernet/stmicro/stmmac/dwmac-imx.c
-> index 6b65420e11b5c..0fc81a626a664 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
-> @@ -37,6 +37,9 @@
->  #define MX93_GPR_ENET_QOS_INTF_SEL_RGMII	(0x1 << 1)
->  #define MX93_GPR_ENET_QOS_CLK_GEN_EN		(0x1 << 0)
-> =20
-> +#define MX93_GPR_ENET_QOS_TX_CLK_SEL_MASK	GENMASK(1, 1)
-> +#define MX93_GPR_ENET_QOS_TX_CLK_SEL		(0x1 << 1)
-> +
->  #define DMA_BUS_MODE			0x00001000
->  #define DMA_BUS_MODE_SFT_RESET		(0x1 << 0)
->  #define RMII_RESET_SPEED		(0x3 << 14)
-> @@ -57,7 +60,9 @@ struct imx_priv_data {
->  	struct clk *clk_tx;
->  	struct clk *clk_mem;
->  	struct regmap *intf_regmap;
-> +	struct regmap *enet_clk_regmap;
->  	u32 intf_reg_off;
-> +	u32 enet_clk_reg_off;
->  	bool rmii_refclk_ext;
->  	void __iomem *base_addr;
-> =20
-> @@ -116,6 +121,18 @@ static int imx93_set_intf_mode(struct plat_stmmacene=
-t_data *plat_dat)
->  		break;
->  	case PHY_INTERFACE_MODE_RMII:
->  		val =3D MX93_GPR_ENET_QOS_INTF_SEL_RMII;
-> +
-> +		/* According to NXP AN14149, the direction of the
-> +		 * TX_CLK must be set to output in RMII mode.
-> +		 */
-> +		if (dwmac->enet_clk_regmap)
-> +			regmap_update_bits(dwmac->enet_clk_regmap,
-> +					   dwmac->enet_clk_reg_off,
-> +					   MX93_GPR_ENET_QOS_TX_CLK_SEL_MASK,
-> +					   MX93_GPR_ENET_QOS_TX_CLK_SEL);
+The "Strict priority" for the tx scheduler is by default in Linux driver,
+so the tx-sched-sp property was removed in commit aed6864035b1 ("net:
+stmmac: platform: Delete a redundant condition branch").
 
-Please add error handling.
+This patch series remove this property from the following device-tree
+files:
 
-> +		else
-> +			dev_warn(dwmac->dev, "TX_CLK can't be set to output mode.\n");
+- arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi
+- arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+- arch/arm64/boot/dts/freescale/imx8mp-verdin.dtsi
+- arch/arm64/boot/dts/qcom/sa8540p-ride.dts
+- arch/arm64/boot/dts/qcom/sa8775p-ride.dts
 
-As far as I understand the AN14149, setting the TX_CLK_SEL is mandatory
-for PHY_INTERFACE_MODE_RMII. IMHO this should be error, shouldn't it?
+There is no problem if that property is still used in these DTS,
+since, as seen above, it is a default property of the driver.
 
-> +
->  		break;
->  	case PHY_INTERFACE_MODE_RGMII:
->  	case PHY_INTERFACE_MODE_RGMII_ID:
-> @@ -310,6 +327,16 @@ imx_dwmac_parse_dt(struct imx_priv_data *dwmac, stru=
-ct device *dev)
->  			dev_err(dev, "Can't get intf mode reg offset (%d)\n", err);
->  			return err;
->  		}
-> +
-> +		dwmac->enet_clk_regmap =3D syscon_regmap_lookup_by_phandle(np, "enet_c=
-lk_sel");
-> +		if (IS_ERR(dwmac->enet_clk_regmap))
-> +			return PTR_ERR(dwmac->enet_clk_regmap);
-> +
-> +		err =3D of_property_read_u32_index(np, "enet_clk_sel", 1, &dwmac->enet=
-_clk_reg_off);
-> +		if (err) {
-> +			dev_err(dev, "Can't get enet clk sel reg offset (%d)\n", err);
-> +			return err;
-> +		}
+The property is also removed, in a separate patch, from the corresponding
+dt_bindings file:
+- Documentation/devicetree/bindings/net/snps,dwmac.yaml
 
-regards,
-Marc
+v3 - Removed the tag "Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>"
+     in patches num. 1/5, 2/5, 3/5 and 5/5 (it was added by mistake).
+     Added history in each of the patches, as well as in the cover-letter.
+v2 - This patch is the 2nd version of a previous patch, where both the DTS
+     and the yaml files were included toghether. Then I split this 1st
+     patch series in two, as suggested by Krzysztof.
+v1 - Original version of the patch where, in addition to these DTS patches,
+     there was also the one related to the correspondent snps,dwmac.yaml
+     dt_binding file.
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+Flavio Suligoi (5):
+  arm64: dts: freescale: imx8mp-beacon: remove tx-sched-sp property
+  arm64: dts: freescale: imx8mp-evk: remove tx-sched-sp property
+  arm64: dts: freescale: imx8mp-verdin: remove tx-sched-sp property
+  arm64: dts: qcom: sa8540p-ride: remove tx-sched-sp property
+  arm64: dts: qcom: sa8775p-ride: remove tx-sched-sp property
 
---54trwo3z7e7ncsqb
-Content-Type: application/pgp-signature; name="signature.asc"
+ arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi | 1 -
+ arch/arm64/boot/dts/freescale/imx8mp-evk.dts         | 1 -
+ arch/arm64/boot/dts/freescale/imx8mp-verdin.dtsi     | 1 -
+ arch/arm64/boot/dts/qcom/sa8540p-ride.dts            | 2 --
+ arch/arm64/boot/dts/qcom/sa8775p-ride.dts            | 2 --
+ 5 files changed, 7 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.34.1
 
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmYmJ/0ACgkQKDiiPnot
-vG+rRAf/TCKV4SbXHqD5urbJNkZpU+ifAdUP8XnGCC49D+SYNZCjA4f8QR3fZ6Nc
-cfBefjXWzvGrGQPcDx0oEssnxQXSXLGYsm68ZDuHJXoZyEqwuPr2g4KNYmKidHT/
-bcUXJGJi8joRtN6RsQ8O/tkjC5OtfP2ydBNaZT8Vw3xxwHtv2PT9x7O66lGWVYLW
-0FRe2Jva6Gq3MYr/SpVi16FrUDIMjyQPGuOuqWergNCESFEwPwcqK6vjHNXj2h3c
-MUDoLwWv/Iuz/fohieOBSTSZIbIp7kbDZr23Pbc89XRI7ts6XtguerNGw6tEmefQ
-Uqe8uR3JnqblFK2pOEeelWhnp+tFKQ==
-=WXS4
------END PGP SIGNATURE-----
-
---54trwo3z7e7ncsqb--
