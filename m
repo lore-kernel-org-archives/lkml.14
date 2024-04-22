@@ -1,92 +1,97 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6951F4F215
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790D8205E0E
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713774597; cv=none; b=Q14a+uEPFSMm9nzvKLVid2R38MtspwPaDaOzYDgmOVssyrUEbwYvLkQkSg6nmxjkJRLL/T/9x+OMOLkL0YL+hkxLBneVgVPUzMjnARJZ3MhvHSbsBSRRDAJj7REi9H4q6NtAv2MisTYUbIZ7BisKp3CHyF3rTgyNoc9d+RAhsnA=
+	t=1713774641; cv=none; b=rRoH/W43EcGoPO4HYdqX7/1ADGNkVOwofhln+SJLJxt2MbwVMJUqB6UnF4da1+KXTbXaVsPuGkqjb/pXVE8WsZCqbuUeV6Dxf2zM/c3GSVPnnPcYnvEdzV5+NXoqwu9baupHTVKue5Ja2UHAR3TL4AoVwptSzc8DDUP3FQ7kEck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713774597; c=relaxed/simple;
-	bh=2Q+GsI81RxBSh5dAPRCFKaQzKFMmpan/FzWbPRpm2tg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VqHQb38Z9aEPWssB6YwZSDypPRLIiti/K1CG+QCnAPQaqkR0qkCLfP1w0PaDxz48qPckZ775G/sTvTbp5l2ZEe68VFrTXvEEDq6F1iwAPMBQGA3FAdi85nfdjx9hjBV0TRJhhKISJK0m4OX7/PF1laP71b217+4H0l2rfuSyzLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=R82zOWov; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I5N49lT2; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R82zOWov";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I5N49lT2"
-Date: Mon, 22 Apr 2024 10:29:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1713774588;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UZ3vNrg6LkJmCfd4kbrlbAp8FYYBh2MPW5kt0SJRSDQ=;
-	b=R82zOWovpLq3J+CAZxZbzTag20ooCoG31dk2EEH4hd8xPvX6ZZQKlqNxkhimxnuEjnTpzO
-	bNyy70TKiqu097w7KMyqglEpYw/G/ZLzK30kyHS83wF+RFw1iR7+wvEf29vXdHQBG9TP+M
-	ZHlRojnwKZuz+Q1q+4n2fpwakwsL0GohjVoHaFPPhS73SGvdu71bRx8G5NvYHqGmn+6OAp
-	Q/DiCFLThwBSB+dl/evUOJl8hpwYH4z3JvckjbpNJGYLsqsBk63annj9yQlBdx0V3iIOvV
-	KRJs0hf6cGNlti8fwbytEOqPMmhMHNNThuOwvF9iOWvhEWraE4fwqWUCqpXp6Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1713774588;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UZ3vNrg6LkJmCfd4kbrlbAp8FYYBh2MPW5kt0SJRSDQ=;
-	b=I5N49lT2OByVQT1BKPOQsV0nwclJE64EgGPSLEe3PVISINltbgol0SNxArVLDuai5ErU6b
-	reYFnpMyqv3BUVAA==
-From: Nam Cao <namcao@linutronix.de>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>, Andreas Dilger <adilger@dilger.ca>,
-	Arnd Bergmann <arnd@arndb.de>, Changbin Du <changbin.du@huawei.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Ingo Molnar <mingo@kernel.org>,
-	Krister Johansen <kjlx@templeofstupid.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>, Tejun Heo <tj@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [linux-next:master] [init]  b8de39bd1b:
- BUG:kernel_failed_in_early-boot_stage,last_printk:early_console_in_setup_code
-Message-ID: <20240422082942.B750cniQ@linutronix.de>
-References: <202404221524.4954a009-oliver.sang@intel.com>
+	s=arc-20240116; t=1713774641; c=relaxed/simple;
+	bh=EK+dqgsbNtopGk47Jcbq9GlupmjarL1gVr2btr6y34s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OmdAjcSEcPzuPnxT66AOmQ6rPSW5v2m5ucIGHzFDRGtEQb0VCdjHbDdFR2CatlCf/7Gz8UuV7OaZ8y2Odfvpb5x7hNI1YICJXg28HlgxvxpH/S7dEypXR6J5AWH7tU5P3aYD3PSTKBsV8kpH4SsuaLHLpzOqguEvyTpZfy1m0is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i5e861d85.versanet.de ([94.134.29.133] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1ryp4H-0000f8-Cv; Mon, 22 Apr 2024 10:30:29 +0200
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, quentin.schulz@theobroma-systems.com
+Subject:
+ Re: [PATCH 0/2] Add support for the dual-role dwc3 controllers on
+ rk3588-tiger
+Date: Mon, 22 Apr 2024 09:43:12 +0200
+Message-ID: <2108948.KlZ2vcFHjT@diego>
+In-Reply-To: <171356537191.48026.7238978785873260892.robh@kernel.org>
+References:
+ <20240418210332.2394871-1-heiko@sntech.de>
+ <171356537191.48026.7238978785873260892.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202404221524.4954a009-oliver.sang@intel.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Apr 22, 2024 at 03:45:00PM +0800, kernel test robot wrote:
-> kernel test robot noticed "BUG:kernel_failed_in_early-boot_stage,last_printk:early_console_in_setup_code" on:
+Hi Rob,
+
+Am Samstag, 20. April 2024, 00:24:23 CEST schrieb Rob Herring:
+> On Thu, 18 Apr 2024 23:03:30 +0200, Heiko Stuebner wrote:
+> > A comment fix and then the addition of the nodes for the dwc3 controllers
+> > using the newly merged usbdp phys.
+> > 
+> > Heiko Stuebner (2):
+> >   arm64: dts: rockchip: fix comment for upper usb3 port
+> >   arm64: dts: rockchip: add dual-role usb3 hosts to rk3588 Tiger-Haikou
+> > 
+> >  .../boot/dts/rockchip/rk3588-tiger-haikou.dts | 60 ++++++++++++++++++-
+> >  .../arm64/boot/dts/rockchip/rk3588-tiger.dtsi | 15 +++++
+> >  2 files changed, 74 insertions(+), 1 deletion(-)
+> > 
+> > --
+> > 2.39.2
+> > 
+> > 
+> > 
 > 
-> commit: b8de39bd1b76faffe7cd91e148a6d7d9bf4e38f7 ("init: fix allocated page overlapping with PTR_ERR")
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> 
+> My bot found new DTB warnings on the .dts files added or changed in this
+> series.
+> 
+> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+> are fixed by another series. Ultimately, it is up to the platform
+> maintainer whether these warnings are acceptable or not. No need to reply
+> unless the platform maintainer has comments.
+> 
+> If you already ran DT checks and didn't see these error(s), then
+> make sure dt-schema is up to date:
+> 
+>   pip3 install dtschema --upgrade
+> 
+> 
+> New warnings running 'make CHECK_DTBS=y rockchip/rk3588-tiger-haikou.dtb' for 20240418210332.2394871-1-heiko@sntech.de:
+> 
+> arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou.dtb: /extcon-usb3: failed to match any schema with compatible: ['linux,extcon-usb-gpio']
 
-I can reproduce the problem. I rebased this commit onto v6.8.7, I can still
-observe the problem.
+This follows the txt-binding from
+	https://www.kernel.org/doc/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+so in mainline there is no yaml binding yet for the usb-id-extcon.
 
-No immediate idea what is the problem. Backtrace from gdb goes crazy:
+Though I did find a still pending yaml conversion for it in
+	https://lore.kernel.org/linux-arm-kernel/20240215093214.796821-1-alexander.stein@ew.tq-group.com/T/
 
-(gdb) bt
-#0  0xffffffffb2074ded in ?? ()
-#1  0x00000000000000a1 in ?? ()
-#2  0x00000000000000a1 in ?? ()
-#3  0x000000007ffff000 in ?? ()
-#4  0x00000000543ff000 in ?? ()
-#5  0x0000000000000000 in ?? ()
+Though not sure what the holdup is there as it got a Review from you?
+Can you just pick this for the main dt-tree?
 
-@akpm: drop this commit until this is figured out?
 
-Best regards,
-Nam
+Heiko
+
+
