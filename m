@@ -1,55 +1,55 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B7C1836FA
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 22:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C50D1CF8B
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 22:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713826636; cv=none; b=OiEefYrHESxgUglLbbfQEZUwNkYymNjcQ1oWBsf4qHEzDph7lK45SC9urlgGavMZY0igIJtqfOQa7uraopvys3iWlPRUYTDT0gJ3c8c7R03cvlWn9pECAl5nAaIwWByF0kUhV8v85ppTRaEH+OjrOBc+EC3mqoOhXw9j5hpCHJk=
+	t=1713826640; cv=none; b=r2f1OvweruoRTxol4NsMAKDLiIsbSTLeoFbJeojPfJegNNlRoU4BflNHp2q5lW7RRHpG8PgJTu573H7LS5MLbYaEnrQIYFUXlhb4+WTtMcHsX2fQjYmqLtDLjLWUVsb1SwI0gowWTnNiyMBAIW2zLu0RcyXJQRtv7Wf0ygFil0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713826636; c=relaxed/simple;
-	bh=AaTSdLTU5IS2fCn3gT0oGz8w7S7lirmHvK0GGQy1BqM=;
+	s=arc-20240116; t=1713826640; c=relaxed/simple;
+	bh=bfFhpQ5EYefCcVR9G/dMzMdiH6v/IsMO66uK+uCQ3MU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fW4x6kcV7gHLxMuf3xccd5+oHFJxrc0mFNubYFn8ApF2UYxOdqxjWvnCDue1152WHKuwZIANoyMGmrbPUqcFbwAf9bGsrIFiu9AnFMAIvjR+fb8XeW9AgcfhYJinsP/8UUuh4RAPeoF6dp+M72VFo01I+sUPBq2RwfTRhb3SAzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=AGclSLDB; arc=none smtp.client-ip=209.85.210.51
+	 MIME-Version; b=Gy4+QJRTBLj/eVwFmNV0gBkisms5Mz7o1LHLzGHXNU/H+v9HFC9x+i1ACjkCXaPpE6DhabQXwEWtOnue5bCzExYoorCKj1J4XFB+R/uivV91dC23msJsyvs0cun6r7r57w7LMQcOSADM8hF9bW6QNf6iNwCMbF0Flun3cQNNuc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=VaHx9T4r; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AGclSLDB"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6ea2375d8d0so4099391a34.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 15:57:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="VaHx9T4r"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ed0e9ccca1so4605754b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 15:57:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1713826633; x=1714431433; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1713826638; x=1714431438; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d56+36wVwE/MIKYA5XypQSB1J3UfoHdmbEtY9mGoO/c=;
-        b=AGclSLDBKjR46pR9dt2IBGyytTJk8DIcvKorTWXtRcLJntJCZi1LSBVkcuCdy44BpI
-         KwpoDk2/A0VGB6Mrlo7MLIEj6w2bOzrHj9id/xHFJ1/CmYXo/xouZLdjBDVocLNECdLx
-         6QQqgM867afZqjBVhYjpemm1FjDH5NkD4Ttc0=
+        bh=fJPGtZqzdd9ZJG8gTToIxNsoCLvLLMCdMU2sH61J3oA=;
+        b=VaHx9T4rwQzCMLSD8PxxhqYHgfnFnZfvM1XwLAH2fdLYe9VuOvEgBv8oyZITUOTw1u
+         Hv6vMH6oPl9Fs0m+Cvk1eps3csXhnTfBzmbmfZBDPwD/hoInr2TiI/Qq+TMPohBWkgva
+         Ss65UZyIbwwtFP4bfv24zgJ5/Syey4FUET0hU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713826633; x=1714431433;
+        d=1e100.net; s=20230601; t=1713826638; x=1714431438;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d56+36wVwE/MIKYA5XypQSB1J3UfoHdmbEtY9mGoO/c=;
-        b=b/+rfjKBnDFbQGEzOfd/bPj6b6In8/LLZ3lJk92jNd/9Zl2SxWsFxpkfebCembuD6r
-         7qP854qTZYJH8xafwD3BXOldUUcvLwxVXTwo4n2ACgcw6Wxv/bLxAHEtSWz23nen5dNE
-         V6D9dVeMj9kAUCBHi03wkBD15YdEBH6COJ5ZZZBZEzl+avMUe7qjlphsivecsflfUxp6
-         +zwY6ZJxwTuULDFhikysKBfV3v/pSEscoKN9n2wa/IuHk/D7bW58y86/hDNi152jMZog
-         C/LEhg4w9Xo4QUjVf38E8/meHsIc1UzCqEyEQweGay+ARGNm484slWCifbpvnPakR7Th
-         4EQw==
-X-Gm-Message-State: AOJu0Yw6/Ua4IVmY7JrDRvsqB01zfOtCNnEvlHsnl9PDh/8noteVNZve
-	yeqcrhyuOmEWPMwBe6dmeVnFn4uth47fVRE1MGXu7+JwFmwcWL57kRFxAD+sShKrO9170LkQYyP
-	0oUjaEHEykp9JHMkNLOHxNBu1mDdqt6ZoKrsAJroYOueTWhRSgATGm8DngCUtns1seZx29ueem4
-	59JUpYcFH0vDW/vvNMvnxUxZyxTH8yBZsnQKABEU+w1NKtBOVk7tGxnJc=
-X-Google-Smtp-Source: AGHT+IELtXxhkzfgoGVT3shsAxPC+ANFq8SWjv57KwEw2EALmhcXW9DgBqiHxGObS9DT9gBgU0rHaQ==
-X-Received: by 2002:a05:6830:1697:b0:6ea:1bba:9622 with SMTP id k23-20020a056830169700b006ea1bba9622mr14195740otr.35.1713826632864;
-        Mon, 22 Apr 2024 15:57:12 -0700 (PDT)
+        bh=fJPGtZqzdd9ZJG8gTToIxNsoCLvLLMCdMU2sH61J3oA=;
+        b=ud2xxW6g7op1uF0vWr60p4/GeRZ0KehFPg79s7hSrHoBitIps+rlZdOgCV1BxtnLpt
+         +VgGDL0rHZI/i+h3CUCiwhykRRAkN1C25fSEG9Zkqhg/Cjo8nYFberUzKf01bATlIXX8
+         H8Tp2j8g1qQhI1mgx8P5+ExY6YoO07gvpT+F528o4cFHZi6no2sgRPG+ZIAZpsb0fXy6
+         sDnMBvADp5wcEZ/VBB6NBa0eSKLyhlxU2GFOHzdWeKIn0+FvS8fSHxbg2gKptrRcJYOl
+         58BRHJjld+dZrWQHNQP+mGFg/jT0RYC8Z2O6on0aTk8u6Kk65eVdlrloqgsmpVh2FYr0
+         yH6A==
+X-Gm-Message-State: AOJu0Yx0kImv/OwJgyjxGTLMHjSrX+PYhOwzV9SokjfFMGW4/IAQeT8E
+	eB8cp0IqocnkwomeJ5/6mCAFlFttwt3o5owNZQ8+1WG7l7Ftij2mvPuyN4mCk72eF0W00PUNeWz
+	G3gNf16plEoG0QYtt5U1wJGaqW+zrSweZp6YNXW7rG64rkOVYWv1x6KPe8JkAhavf2MKNhQXC6w
+	h1ZZ0scwGL+XC0RYDhlcOyT0llZECmyRbRzolKv5CwQmWr6pKFUnufRYs=
+X-Google-Smtp-Source: AGHT+IGNUpwAUbtSH6ag9ujMWSWTNOmdUSXWH8FotgcUA58NTT/rC3cr+iqC9zObQedKz+chYLq7AA==
+X-Received: by 2002:a05:6a21:4995:b0:1aa:930d:3dd7 with SMTP id ax21-20020a056a21499500b001aa930d3dd7mr11425748pzc.6.1713826637879;
+        Mon, 22 Apr 2024 15:57:17 -0700 (PDT)
 Received: from amakhalov-build-vm.eng.vmware.com ([128.177.82.146])
-        by smtp.gmail.com with ESMTPSA id e131-20020a636989000000b005e43cce33f8sm8093597pgc.88.2024.04.22.15.57.10
+        by smtp.gmail.com with ESMTPSA id e131-20020a636989000000b005e43cce33f8sm8093597pgc.88.2024.04.22.15.57.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 15:57:12 -0700 (PDT)
+        Mon, 22 Apr 2024 15:57:17 -0700 (PDT)
 From: Alexey Makhalov <alexey.makhalov@broadcom.com>
 To: linux-kernel@vger.kernel.org,
 	virtualization@lists.linux.dev,
@@ -78,10 +78,10 @@ Cc: x86@kernel.org,
 	kirill.shutemov@linux.intel.com,
 	Alexey Makhalov <alexey.makhalov@broadcom.com>,
 	Nadav Amit <nadav.amit@gmail.com>,
-	Jeff Sipek <jsipek@vmware.com>
-Subject: [PATCH v8 2/7] x86/vmware: Introduce VMware hypercall API
-Date: Mon, 22 Apr 2024 15:56:51 -0700
-Message-Id: <20240422225656.10309-3-alexey.makhalov@broadcom.com>
+	Zack Rusin <zack.rusin@broadcom.com>
+Subject: [PATCH v8 4/7] input/vmmouse: Use VMware hypercall API
+Date: Mon, 22 Apr 2024 15:56:53 -0700
+Message-Id: <20240422225656.10309-5-alexey.makhalov@broadcom.com>
 X-Mailer: git-send-email 2.39.0
 In-Reply-To: <20240422225656.10309-1-alexey.makhalov@broadcom.com>
 References: <20240422225656.10309-1-alexey.makhalov@broadcom.com>
@@ -93,485 +93,189 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce vmware_hypercall family of functions. It is a common
-implementation to be used by the VMware guest code and virtual
-device drivers in architecture independent manner.
-
-The API consists of vmware_hypercallX and vmware_hypercall_hb_{out,in}
-set of functions by analogy with KVM hypercall API. Architecture
-specific implementation is hidden inside.
-
-It will simplify future enhancements in VMware hypercalls such
-as SEV-ES and TDX related changes without needs to modify a
-caller in device drivers code.
-
-Current implementation extends an idea from commit bac7b4e84323
-("x86/vmware: Update platform detection code for VMCALL/VMMCALL
-hypercalls") to have a slow, but safe path in VMWARE_HYPERCALL
-earlier during the boot when alternatives are not yet applied.
-This logic was inherited from VMWARE_CMD from the commit mentioned
-above. Default alternative code was optimized by size to reduce
-excessive nop alignment once alternatives are applied. Total
-default code size is 26 bytes, in worse case (3 bytes alternative)
-remaining 23 bytes will be aligned by only 3 long NOP instructions.
+Switch from VMWARE_HYPERCALL macro to vmware_hypercall API.
+Eliminate arch specific code. No functional changes intended.
 
 Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
 Reviewed-by: Nadav Amit <nadav.amit@gmail.com>
-Reviewed-by: Jeff Sipek <jsipek@vmware.com>
+Reviewed-by: Zack Rusin <zack.rusin@broadcom.com>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- arch/x86/include/asm/vmware.h           | 288 +++++++++++++++++++-----
- arch/x86/kernel/cpu/vmware.c            |  35 ++-
- drivers/gpu/drm/vmwgfx/vmwgfx_msg_x86.h |   6 +-
- drivers/input/mouse/vmmouse.c           |   2 +
- drivers/ptp/ptp_vmw.c                   |   2 +
- 5 files changed, 252 insertions(+), 81 deletions(-)
+ drivers/input/mouse/vmmouse.c | 78 ++++++++++-------------------------
+ 1 file changed, 22 insertions(+), 56 deletions(-)
 
-diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
-index de2533337611..2ac87068184a 100644
---- a/arch/x86/include/asm/vmware.h
-+++ b/arch/x86/include/asm/vmware.h
-@@ -7,14 +7,37 @@
- #include <linux/stringify.h>
- 
- /*
-- * The hypercall definitions differ in the low word of the %edx argument
-+ * VMware hypercall ABI.
-+ *
-+ * - Low bandwidth (LB) hypercalls (I/O port based, vmcall and vmmcall)
-+ * have up to 6 input and 6 output arguments passed and returned using
-+ * registers: %eax (arg0), %ebx (arg1), %ecx (arg2), %edx (arg3),
-+ * %esi (arg4), %edi (arg5).
-+ * The following input arguments must be initialized by the caller:
-+ * arg0 - VMWARE_HYPERVISOR_MAGIC
-+ * arg2 - Hypercall command
-+ * arg3 bits [15:0] - Port number, LB and direction flags
-+ *
-+ * - High bandwidth (HB) hypercalls are I/O port based only. They have
-+ * up to 7 input and 7 output arguments passed and returned using
-+ * registers: %eax (arg0), %ebx (arg1), %ecx (arg2), %edx (arg3),
-+ * %esi (arg4), %edi (arg5), %ebp (arg6).
-+ * The following input arguments must be initialized by the caller:
-+ * arg0 - VMWARE_HYPERVISOR_MAGIC
-+ * arg1 - Hypercall command
-+ * arg3 bits [15:0] - Port number, HB and direction flags
-+ *
-+ * For compatibility purposes, x86_64 systems use only lower 32 bits
-+ * for input and output arguments.
-+ *
-+ * The hypercall definitions differ in the low word of the %edx (arg3)
-  * in the following way: the old I/O port based interface uses the port
-  * number to distinguish between high- and low bandwidth versions, and
-  * uses IN/OUT instructions to define transfer direction.
-  *
-  * The new vmcall interface instead uses a set of flags to select
-  * bandwidth mode and transfer direction. The flags should be loaded
-- * into %dx by any user and are automatically replaced by the port
-+ * into arg3 by any user and are automatically replaced by the port
-  * number if the I/O port method is used.
-  */
- 
-@@ -37,69 +60,218 @@
- 
- extern u8 vmware_hypercall_mode;
- 
--/* The low bandwidth call. The low word of edx is presumed clear. */
--#define VMWARE_HYPERCALL						\
--	ALTERNATIVE_2("movw $" __stringify(VMWARE_HYPERVISOR_PORT) ", %%dx; " \
--		      "inl (%%dx), %%eax",				\
--		      "vmcall", X86_FEATURE_VMCALL,			\
--		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
--
- /*
-- * The high bandwidth out call. The low word of edx is presumed to have the
-- * HB and OUT bits set.
-+ * The low bandwidth call. The low word of %edx is presumed to have OUT bit
-+ * set. The high word of %edx may contain input data from the caller.
-  */
--#define VMWARE_HYPERCALL_HB_OUT						\
--	ALTERNATIVE_2("movw $" __stringify(VMWARE_HYPERVISOR_PORT_HB) ", %%dx; " \
--		      "rep outsb",					\
-+#define VMWARE_HYPERCALL						\
-+	ALTERNATIVE_3("cmpb $"						\
-+			__stringify(CPUID_VMWARE_FEATURES_ECX_VMMCALL)	\
-+			", %[mode]\n\t"					\
-+		      "jg 2f\n\t"					\
-+		      "je 1f\n\t"					\
-+		      "movw %[port], %%dx\n\t"				\
-+		      "inl (%%dx), %%eax\n\t"				\
-+		      "jmp 3f\n\t"					\
-+		      "1: vmmcall\n\t"					\
-+		      "jmp 3f\n\t"					\
-+		      "2: vmcall\n\t"					\
-+		      "3:\n\t",						\
-+		      "movw %[port], %%dx\n\t"				\
-+		      "inl (%%dx), %%eax", X86_FEATURE_HYPERVISOR,	\
- 		      "vmcall", X86_FEATURE_VMCALL,			\
- 		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
- 
-+static inline
-+unsigned long vmware_hypercall1(unsigned long cmd, unsigned long in1)
-+{
-+	unsigned long out0;
-+
-+	asm_inline volatile (VMWARE_HYPERCALL
-+		: "=a" (out0)
-+		: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+		  [mode] "m" (vmware_hypercall_mode),
-+		  "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (in1),
-+		  "c" (cmd),
-+		  "d" (0)
-+		: "cc", "memory");
-+	return out0;
-+}
-+
-+static inline
-+unsigned long vmware_hypercall3(unsigned long cmd, unsigned long in1,
-+				uint32_t *out1, uint32_t *out2)
-+{
-+	unsigned long out0;
-+
-+	asm_inline volatile (VMWARE_HYPERCALL
-+		: "=a" (out0), "=b" (*out1), "=c" (*out2)
-+		: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+		  [mode] "m" (vmware_hypercall_mode),
-+		  "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (in1),
-+		  "c" (cmd),
-+		  "d" (0)
-+		: "cc", "memory");
-+	return out0;
-+}
-+
-+static inline
-+unsigned long vmware_hypercall4(unsigned long cmd, unsigned long in1,
-+				uint32_t *out1, uint32_t *out2,
-+				uint32_t *out3)
-+{
-+	unsigned long out0;
-+
-+	asm_inline volatile (VMWARE_HYPERCALL
-+		: "=a" (out0), "=b" (*out1), "=c" (*out2), "=d" (*out3)
-+		: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+		  [mode] "m" (vmware_hypercall_mode),
-+		  "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (in1),
-+		  "c" (cmd),
-+		  "d" (0)
-+		: "cc", "memory");
-+	return out0;
-+}
-+
-+static inline
-+unsigned long vmware_hypercall5(unsigned long cmd, unsigned long in1,
-+				unsigned long in3, unsigned long in4,
-+				unsigned long in5, uint32_t *out2)
-+{
-+	unsigned long out0;
-+
-+	asm_inline volatile (VMWARE_HYPERCALL
-+		: "=a" (out0), "=c" (*out2)
-+		: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+		  [mode] "m" (vmware_hypercall_mode),
-+		  "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (in1),
-+		  "c" (cmd),
-+		  "d" (in3),
-+		  "S" (in4),
-+		  "D" (in5)
-+		: "cc", "memory");
-+	return out0;
-+}
-+
-+static inline
-+unsigned long vmware_hypercall6(unsigned long cmd, unsigned long in1,
-+				unsigned long in3, uint32_t *out2,
-+				uint32_t *out3, uint32_t *out4,
-+				uint32_t *out5)
-+{
-+	unsigned long out0;
-+
-+	asm_inline volatile (VMWARE_HYPERCALL
-+		: "=a" (out0), "=c" (*out2), "=d" (*out3), "=S" (*out4),
-+		  "=D" (*out5)
-+		: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+		  [mode] "m" (vmware_hypercall_mode),
-+		  "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (in1),
-+		  "c" (cmd),
-+		  "d" (in3)
-+		: "cc", "memory");
-+	return out0;
-+}
-+
-+static inline
-+unsigned long vmware_hypercall7(unsigned long cmd, unsigned long in1,
-+				unsigned long in3, unsigned long in4,
-+				unsigned long in5, uint32_t *out1,
-+				uint32_t *out2, uint32_t *out3)
-+{
-+	unsigned long out0;
-+
-+	asm_inline volatile (VMWARE_HYPERCALL
-+		: "=a" (out0), "=b" (*out1), "=c" (*out2), "=d" (*out3)
-+		: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+		  [mode] "m" (vmware_hypercall_mode),
-+		  "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (in1),
-+		  "c" (cmd),
-+		  "d" (in3),
-+		  "S" (in4),
-+		  "D" (in5)
-+		: "cc", "memory");
-+	return out0;
-+}
-+
-+
-+#ifdef CONFIG_X86_64
-+#define VMW_BP_REG "%%rbp"
-+#define VMW_BP_CONSTRAINT "r"
-+#else
-+#define VMW_BP_REG "%%ebp"
-+#define VMW_BP_CONSTRAINT "m"
-+#endif
-+
- /*
-- * The high bandwidth in call. The low word of edx is presumed to have the
-- * HB bit set.
-+ * High bandwidth calls are not supported on encrypted memory guests.
-+ * The caller should check cc_platform_has(CC_ATTR_MEM_ENCRYPT) and use
-+ * low bandwidth hypercall it memory encryption is set.
-+ * This assumption simplifies HB hypercall impementation to just I/O port
-+ * based approach without alternative patching.
-  */
--#define VMWARE_HYPERCALL_HB_IN						\
--	ALTERNATIVE_2("movw $" __stringify(VMWARE_HYPERVISOR_PORT_HB) ", %%dx; " \
--		      "rep insb",					\
--		      "vmcall", X86_FEATURE_VMCALL,			\
--		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
-+static inline
-+unsigned long vmware_hypercall_hb_out(unsigned long cmd, unsigned long in2,
-+				      unsigned long in3, unsigned long in4,
-+				      unsigned long in5, unsigned long in6,
-+				      uint32_t *out1)
-+{
-+	unsigned long out0;
-+
-+	asm_inline volatile (
-+		UNWIND_HINT_SAVE
-+		"push " VMW_BP_REG "\n\t"
-+		UNWIND_HINT_UNDEFINED
-+		"mov %[in6], " VMW_BP_REG "\n\t"
-+		"rep outsb\n\t"
-+		"pop " VMW_BP_REG "\n\t"
-+		UNWIND_HINT_RESTORE
-+		: "=a" (out0), "=b" (*out1)
-+		: "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (cmd),
-+		  "c" (in2),
-+		  "d" (in3 | VMWARE_HYPERVISOR_PORT_HB),
-+		  "S" (in4),
-+		  "D" (in5),
-+		  [in6] VMW_BP_CONSTRAINT (in6)
-+		: "cc", "memory");
-+	return out0;
-+}
-+
-+static inline
-+unsigned long vmware_hypercall_hb_in(unsigned long cmd, unsigned long in2,
-+				     unsigned long in3, unsigned long in4,
-+				     unsigned long in5, unsigned long in6,
-+				     uint32_t *out1)
-+{
-+	unsigned long out0;
- 
--#define VMWARE_PORT(cmd, eax, ebx, ecx, edx)				\
--	__asm__("inl (%%dx), %%eax" :					\
--		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
--		"a"(VMWARE_HYPERVISOR_MAGIC),				\
--		"c"(VMWARE_CMD_##cmd),					\
--		"d"(VMWARE_HYPERVISOR_PORT), "b"(UINT_MAX) :		\
--		"memory")
--
--#define VMWARE_VMCALL(cmd, eax, ebx, ecx, edx)				\
--	__asm__("vmcall" :						\
--		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
--		"a"(VMWARE_HYPERVISOR_MAGIC),				\
--		"c"(VMWARE_CMD_##cmd),					\
--		"d"(0), "b"(UINT_MAX) :					\
--		"memory")
--
--#define VMWARE_VMMCALL(cmd, eax, ebx, ecx, edx)				\
--	__asm__("vmmcall" :						\
--		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
--		"a"(VMWARE_HYPERVISOR_MAGIC),				\
--		"c"(VMWARE_CMD_##cmd),					\
--		"d"(0), "b"(UINT_MAX) :					\
--		"memory")
--
--#define VMWARE_CMD(cmd, eax, ebx, ecx, edx) do {		\
--	switch (vmware_hypercall_mode) {			\
--	case CPUID_VMWARE_FEATURES_ECX_VMCALL:			\
--		VMWARE_VMCALL(cmd, eax, ebx, ecx, edx);		\
--		break;						\
--	case CPUID_VMWARE_FEATURES_ECX_VMMCALL:			\
--		VMWARE_VMMCALL(cmd, eax, ebx, ecx, edx);	\
--		break;						\
--	default:						\
--		VMWARE_PORT(cmd, eax, ebx, ecx, edx);		\
--		break;						\
--	}							\
--	} while (0)
-+	asm_inline volatile (
-+		UNWIND_HINT_SAVE
-+		"push " VMW_BP_REG "\n\t"
-+		UNWIND_HINT_UNDEFINED
-+		"mov %[in6], " VMW_BP_REG "\n\t"
-+		"rep insb\n\t"
-+		"pop " VMW_BP_REG "\n\t"
-+		UNWIND_HINT_RESTORE
-+		: "=a" (out0), "=b" (*out1)
-+		: "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (cmd),
-+		  "c" (in2),
-+		  "d" (in3 | VMWARE_HYPERVISOR_PORT_HB),
-+		  "S" (in4),
-+		  "D" (in5),
-+		  [in6] VMW_BP_CONSTRAINT (in6)
-+		: "cc", "memory");
-+	return out0;
-+}
-+#undef VMW_BP_REG
-+#undef VMW_BP_CONSTRAINT
- 
- #endif
-diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-index 4db8e1daa4a1..3aa1adaed18f 100644
---- a/arch/x86/kernel/cpu/vmware.c
-+++ b/arch/x86/kernel/cpu/vmware.c
-@@ -67,9 +67,10 @@ EXPORT_SYMBOL_GPL(vmware_hypercall_mode);
- 
- static inline int __vmware_platform(void)
- {
--	uint32_t eax, ebx, ecx, edx;
--	VMWARE_CMD(GETVERSION, eax, ebx, ecx, edx);
--	return eax != (uint32_t)-1 && ebx == VMWARE_HYPERVISOR_MAGIC;
-+	uint32_t eax, ebx, ecx;
-+
-+	eax = vmware_hypercall3(VMWARE_CMD_GETVERSION, 0, &ebx, &ecx);
-+	return eax != UINT_MAX && ebx == VMWARE_HYPERVISOR_MAGIC;
- }
- 
- static unsigned long vmware_get_tsc_khz(void)
-@@ -121,21 +122,12 @@ static void __init vmware_cyc2ns_setup(void)
- 	pr_info("using clock offset of %llu ns\n", d->cyc2ns_offset);
- }
- 
--static int vmware_cmd_stealclock(uint32_t arg1, uint32_t arg2)
-+static int vmware_cmd_stealclock(uint32_t addr_hi, uint32_t addr_lo)
- {
--	uint32_t result, info;
--
--	asm volatile (VMWARE_HYPERCALL :
--		"=a"(result),
--		"=c"(info) :
--		"a"(VMWARE_HYPERVISOR_MAGIC),
--		"b"(0),
--		"c"(VMWARE_CMD_STEALCLOCK),
--		"d"(0),
--		"S"(arg1),
--		"D"(arg2) :
--		"memory");
--	return result;
-+	uint32_t info;
-+
-+	return vmware_hypercall5(VMWARE_CMD_STEALCLOCK, 0, 0, addr_hi, addr_lo,
-+				 &info);
- }
- 
- static bool stealclock_enable(phys_addr_t pa)
-@@ -344,10 +336,10 @@ static void __init vmware_set_capabilities(void)
- 
- static void __init vmware_platform_setup(void)
- {
--	uint32_t eax, ebx, ecx, edx;
-+	uint32_t eax, ebx, ecx;
- 	uint64_t lpj, tsc_khz;
- 
--	VMWARE_CMD(GETHZ, eax, ebx, ecx, edx);
-+	eax = vmware_hypercall3(VMWARE_CMD_GETHZ, UINT_MAX, &ebx, &ecx);
- 
- 	if (ebx != UINT_MAX) {
- 		lpj = tsc_khz = eax | (((uint64_t)ebx) << 32);
-@@ -429,8 +421,9 @@ static uint32_t __init vmware_platform(void)
- /* Checks if hypervisor supports x2apic without VT-D interrupt remapping. */
- static bool __init vmware_legacy_x2apic_available(void)
- {
--	uint32_t eax, ebx, ecx, edx;
--	VMWARE_CMD(GETVCPU_INFO, eax, ebx, ecx, edx);
-+	uint32_t eax;
-+
-+	eax = vmware_hypercall1(VMWARE_CMD_GETVCPU_INFO, 0);
- 	return !(eax & BIT(VCPU_RESERVED)) &&
- 		(eax & BIT(VCPU_LEGACY_X2APIC));
- }
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_msg_x86.h b/drivers/gpu/drm/vmwgfx/vmwgfx_msg_x86.h
-index 23899d743a90..e040ee21ea1a 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_msg_x86.h
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_msg_x86.h
-@@ -68,6 +68,8 @@
-                 "=d"(edx),			\
-                 "=S"(si),			\
-                 "=D"(di) :			\
-+         [port] "i" (VMWARE_HYPERVISOR_PORT),	\
-+         [mode] "m" (vmware_hypercall_mode),	\
-                 "a"(magic),			\
-                 "b"(in_ebx),			\
-                 "c"(cmd),			\
-@@ -110,7 +112,7 @@
- 		"push %%rbp;"				\
- 		UNWIND_HINT_UNDEFINED			\
-                 "mov %12, %%rbp;"			\
--                VMWARE_HYPERCALL_HB_OUT			\
-+                "rep outsb;"				\
-                 "pop %%rbp;"				\
- 		UNWIND_HINT_RESTORE :			\
-                 "=a"(eax),				\
-@@ -139,7 +141,7 @@
- 		"push %%rbp;"				\
- 		UNWIND_HINT_UNDEFINED			\
-                 "mov %12, %%rbp;"			\
--                VMWARE_HYPERCALL_HB_IN			\
-+                "rep insb;"				\
-                 "pop %%rbp;"				\
- 		UNWIND_HINT_RESTORE :			\
-                 "=a"(eax),				\
 diff --git a/drivers/input/mouse/vmmouse.c b/drivers/input/mouse/vmmouse.c
-index ea9eff7c8099..ad94c835ee66 100644
+index ad94c835ee66..fb1d986a6895 100644
 --- a/drivers/input/mouse/vmmouse.c
 +++ b/drivers/input/mouse/vmmouse.c
-@@ -91,6 +91,8 @@ struct vmmouse_data {
- 		"=d"(out4),				\
- 		"=S"(__dummy1),				\
- 		"=D"(__dummy2) :			\
-+         [port] "i" (VMWARE_HYPERVISOR_PORT),		\
-+         [mode] "m" (vmware_hypercall_mode),		\
- 		"a"(VMMOUSE_PROTO_MAGIC),		\
- 		"b"(in1),				\
- 		"c"(VMMOUSE_PROTO_CMD_##cmd),		\
-diff --git a/drivers/ptp/ptp_vmw.c b/drivers/ptp/ptp_vmw.c
-index 27c5547aa8a9..279d191d2df9 100644
---- a/drivers/ptp/ptp_vmw.c
-+++ b/drivers/ptp/ptp_vmw.c
-@@ -29,6 +29,8 @@ static int ptp_vmw_pclk_read(u64 *ns)
- 	asm volatile (VMWARE_HYPERCALL :
- 		"=a"(ret), "=b"(nsec_hi), "=c"(nsec_lo), "=d"(unused1),
- 		"=S"(unused2), "=D"(unused3) :
-+		[port] "i" (VMWARE_HYPERVISOR_PORT),
-+		[mode] "m" (vmware_hypercall_mode),
- 		"a"(VMWARE_MAGIC), "b"(0),
- 		"c"(VMWARE_CMD_PCLK_GETTIME), "d"(0) :
- 		"memory");
+@@ -21,19 +21,16 @@
+ #include "psmouse.h"
+ #include "vmmouse.h"
+ 
+-#define VMMOUSE_PROTO_MAGIC			0x564D5868U
+-
+ /*
+  * Main commands supported by the vmmouse hypervisor port.
+  */
+-#define VMMOUSE_PROTO_CMD_GETVERSION		10
+-#define VMMOUSE_PROTO_CMD_ABSPOINTER_DATA	39
+-#define VMMOUSE_PROTO_CMD_ABSPOINTER_STATUS	40
+-#define VMMOUSE_PROTO_CMD_ABSPOINTER_COMMAND	41
+-#define VMMOUSE_PROTO_CMD_ABSPOINTER_RESTRICT   86
++#define VMWARE_CMD_ABSPOINTER_DATA	39
++#define VMWARE_CMD_ABSPOINTER_STATUS	40
++#define VMWARE_CMD_ABSPOINTER_COMMAND	41
++#define VMWARE_CMD_ABSPOINTER_RESTRICT	86
+ 
+ /*
+- * Subcommands for VMMOUSE_PROTO_CMD_ABSPOINTER_COMMAND
++ * Subcommands for VMWARE_CMD_ABSPOINTER_COMMAND
+  */
+ #define VMMOUSE_CMD_ENABLE			0x45414552U
+ #define VMMOUSE_CMD_DISABLE			0x000000f5U
+@@ -76,30 +73,6 @@ struct vmmouse_data {
+ 	char dev_name[128];
+ };
+ 
+-/*
+- * Hypervisor-specific bi-directional communication channel
+- * implementing the vmmouse protocol. Should never execute on
+- * bare metal hardware.
+- */
+-#define VMMOUSE_CMD(cmd, in1, out1, out2, out3, out4)	\
+-({							\
+-	unsigned long __dummy1, __dummy2;		\
+-	__asm__ __volatile__ (VMWARE_HYPERCALL :	\
+-		"=a"(out1),				\
+-		"=b"(out2),				\
+-		"=c"(out3),				\
+-		"=d"(out4),				\
+-		"=S"(__dummy1),				\
+-		"=D"(__dummy2) :			\
+-         [port] "i" (VMWARE_HYPERVISOR_PORT),		\
+-         [mode] "m" (vmware_hypercall_mode),		\
+-		"a"(VMMOUSE_PROTO_MAGIC),		\
+-		"b"(in1),				\
+-		"c"(VMMOUSE_PROTO_CMD_##cmd),		\
+-		"d"(0) :			        \
+-		"memory");		                \
+-})
+-
+ /**
+  * vmmouse_report_button - report button state on the correct input device
+  *
+@@ -147,14 +120,12 @@ static psmouse_ret_t vmmouse_report_events(struct psmouse *psmouse)
+ 	struct input_dev *abs_dev = priv->abs_dev;
+ 	struct input_dev *pref_dev;
+ 	u32 status, x, y, z;
+-	u32 dummy1, dummy2, dummy3;
+ 	unsigned int queue_length;
+ 	unsigned int count = 255;
+ 
+ 	while (count--) {
+ 		/* See if we have motion data. */
+-		VMMOUSE_CMD(ABSPOINTER_STATUS, 0,
+-			    status, dummy1, dummy2, dummy3);
++		status = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_STATUS, 0);
+ 		if ((status & VMMOUSE_ERROR) == VMMOUSE_ERROR) {
+ 			psmouse_err(psmouse, "failed to fetch status data\n");
+ 			/*
+@@ -174,7 +145,8 @@ static psmouse_ret_t vmmouse_report_events(struct psmouse *psmouse)
+ 		}
+ 
+ 		/* Now get it */
+-		VMMOUSE_CMD(ABSPOINTER_DATA, 4, status, x, y, z);
++		status = vmware_hypercall4(VMWARE_CMD_ABSPOINTER_DATA, 4,
++					   &x, &y, &z);
+ 
+ 		/*
+ 		 * And report what we've got. Prefer to report button
+@@ -249,14 +221,10 @@ static psmouse_ret_t vmmouse_process_byte(struct psmouse *psmouse)
+ static void vmmouse_disable(struct psmouse *psmouse)
+ {
+ 	u32 status;
+-	u32 dummy1, dummy2, dummy3, dummy4;
+-
+-	VMMOUSE_CMD(ABSPOINTER_COMMAND, VMMOUSE_CMD_DISABLE,
+-		    dummy1, dummy2, dummy3, dummy4);
+ 
+-	VMMOUSE_CMD(ABSPOINTER_STATUS, 0,
+-		    status, dummy1, dummy2, dummy3);
++	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_COMMAND, VMMOUSE_CMD_DISABLE);
+ 
++	status = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_STATUS, 0);
+ 	if ((status & VMMOUSE_ERROR) != VMMOUSE_ERROR)
+ 		psmouse_warn(psmouse, "failed to disable vmmouse device\n");
+ }
+@@ -273,26 +241,24 @@ static void vmmouse_disable(struct psmouse *psmouse)
+ static int vmmouse_enable(struct psmouse *psmouse)
+ {
+ 	u32 status, version;
+-	u32 dummy1, dummy2, dummy3, dummy4;
+ 
+ 	/*
+ 	 * Try enabling the device. If successful, we should be able to
+ 	 * read valid version ID back from it.
+ 	 */
+-	VMMOUSE_CMD(ABSPOINTER_COMMAND, VMMOUSE_CMD_ENABLE,
+-		    dummy1, dummy2, dummy3, dummy4);
++	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_COMMAND, VMMOUSE_CMD_ENABLE);
+ 
+ 	/*
+ 	 * See if version ID can be retrieved.
+ 	 */
+-	VMMOUSE_CMD(ABSPOINTER_STATUS, 0, status, dummy1, dummy2, dummy3);
++	status = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_STATUS, 0);
+ 	if ((status & 0x0000ffff) == 0) {
+ 		psmouse_dbg(psmouse, "empty flags - assuming no device\n");
+ 		return -ENXIO;
+ 	}
+ 
+-	VMMOUSE_CMD(ABSPOINTER_DATA, 1 /* single item */,
+-		    version, dummy1, dummy2, dummy3);
++	version = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_DATA,
++				    1 /* single item */);
+ 	if (version != VMMOUSE_VERSION_ID) {
+ 		psmouse_dbg(psmouse, "Unexpected version value: %u vs %u\n",
+ 			    (unsigned) version, VMMOUSE_VERSION_ID);
+@@ -303,11 +269,11 @@ static int vmmouse_enable(struct psmouse *psmouse)
+ 	/*
+ 	 * Restrict ioport access, if possible.
+ 	 */
+-	VMMOUSE_CMD(ABSPOINTER_RESTRICT, VMMOUSE_RESTRICT_CPL0,
+-		    dummy1, dummy2, dummy3, dummy4);
++	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_RESTRICT,
++			  VMMOUSE_RESTRICT_CPL0);
+ 
+-	VMMOUSE_CMD(ABSPOINTER_COMMAND, VMMOUSE_CMD_REQUEST_ABSOLUTE,
+-		    dummy1, dummy2, dummy3, dummy4);
++	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_COMMAND,
++			  VMMOUSE_CMD_REQUEST_ABSOLUTE);
+ 
+ 	return 0;
+ }
+@@ -344,7 +310,7 @@ static bool vmmouse_check_hypervisor(void)
+  */
+ int vmmouse_detect(struct psmouse *psmouse, bool set_properties)
+ {
+-	u32 response, version, dummy1, dummy2;
++	u32 response, version, type;
+ 
+ 	if (!vmmouse_check_hypervisor()) {
+ 		psmouse_dbg(psmouse,
+@@ -353,9 +319,9 @@ int vmmouse_detect(struct psmouse *psmouse, bool set_properties)
+ 	}
+ 
+ 	/* Check if the device is present */
+-	response = ~VMMOUSE_PROTO_MAGIC;
+-	VMMOUSE_CMD(GETVERSION, 0, version, response, dummy1, dummy2);
+-	if (response != VMMOUSE_PROTO_MAGIC || version == 0xffffffffU)
++	response = ~VMWARE_HYPERVISOR_MAGIC;
++	version = vmware_hypercall3(VMWARE_CMD_GETVERSION, 0, &response, &type);
++	if (response != VMWARE_HYPERVISOR_MAGIC || version == 0xffffffffU)
+ 		return -ENXIO;
+ 
+ 	if (set_properties) {
 -- 
 2.39.0
 
