@@ -1,105 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9424AEFE;
-	Mon, 22 Apr 2024 07:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1066A4CE05
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713771661; cv=none; b=b5NOrs7Hqae6Sbd3nghzBy/f6Dj5RiESMZaFLKs6hwNmwVvPrWj/Z1xB6lqCMiBRGAqKkCY/VQkGJ/GvFk/5U8uEE5H38RQQHVObH2m/hvk3TwMLaLg2ojRX27CKQ8hFUK8iJM0xCjVS3HpCFLJjorLTxpGEKCkNTo9DvykXhZM=
+	t=1713771785; cv=none; b=JI2iGAjLAyrqOgBJqRvhnJDDrfWN3hKWyf5YZok0B8AiQgREpxjIw0m2qbVubkh9m8Zy9tUCTCHut2sWXo0fn8ML0cbzkV9RncGWhRo6BlnF1G8TwoLpmEDfqRuk47wBmI67m/WOjrbhaSw2Ay22H6babaRc9SWN1hWK/BDlXjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713771661; c=relaxed/simple;
-	bh=USR3bFEd40WckrOHmGi8VAlZeJ/vjjPTOFMN/FwP1iw=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=EftwOw/71Y1LoVh3tHlx9VM5luiTqG96RktmsfDERqjhQ2qTC0oUjg3yYM1KuLDxfunetcp3UnZQO+QEwJwywW8d+LDbNksBfq7QBGlFESRw7VKJpIoRmjP0FGEextKpyvaLSu6Pk+/cY95P3wVLl8jWBwYoxEuLqEmYv1DKuU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S0qklbmS; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713771785; c=relaxed/simple;
+	bh=BL2/0H6F8WBTWUlSs53lzMzQSUcfTxv4A65JDP4NViU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a9wi8feU6jlPOAOAuzUiWOOQ/9tFKYGHQzKXQL9uWDWq/oh488TvF2cG4SP5hKw5uEGUV8u8jAPDmjO5hbRYoYGPY1GOHSTdJ07uFHxMgPG1gxntInUGnSCfYZRJH9JhO//qIyMMFyI299QSbKB5JbpKNqIwcl9emafMRwQuKsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=EbozUQJB; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S0qklbmS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713771660; x=1745307660;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=USR3bFEd40WckrOHmGi8VAlZeJ/vjjPTOFMN/FwP1iw=;
-  b=S0qklbmSM8d0bIkXWJ5FAudZDbh55r1v7Q4NUooJh+XBKGrfPWHacSye
-   u1KZ4gDKgXUu5Vt9Slor/EAjyJLTKfw4jQMxCCenVHhM3x9qIJOBp5bRP
-   r5ysrWGFTEvQkrM9tOYZLdD2zH/b3eGjdCH6c3dl4FXoBmBWu3Q4pBldO
-   2JGsOrDfnlxExNmfZs82RgL1XldRpcwfbl5xUai2pA9R4aKGxWDG3lEKN
-   jrmu7b9lIWOtTFflfzDiuHhcUot9nFb90gDmJOI3t0+FqNupLlwqOrwET
-   1GL7eh/8oDN5VvcqLwCj50G2YNZAmP3t8XcYAqjQZxrf2LdYyeTcyZdX4
-   w==;
-X-CSE-ConnectionGUID: NYkUW69STGq2tfXR+ozkRg==
-X-CSE-MsgGUID: C/1kWFZYSqOBJhOMEI+UyQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11051"; a="20436786"
-X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
-   d="scan'208";a="20436786"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 00:40:59 -0700
-X-CSE-ConnectionGUID: Bhjbqn5PRx+ExxI/+DpaQg==
-X-CSE-MsgGUID: I0j9NBpPT8OLzM2aqsevpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
-   d="scan'208";a="24012803"
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.225.176]) ([10.124.225.176])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 00:40:54 -0700
-Message-ID: <23ef7fbd-7498-4fb0-895b-81c618acedc1@linux.intel.com>
-Date: Mon, 22 Apr 2024 15:40:51 +0800
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="EbozUQJB"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e4bf0b3e06so39388095ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 00:43:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1713771782; x=1714376582; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eYgATfqd8PwpzBjyvQ3X5QGhq7/z0CGn9EB+eG5v+V4=;
+        b=EbozUQJBYUh4fUpK+2p1CnDkeSrpdZ+M3vquyElZMeDhP3xJoS/evdwZu3YJeUluF0
+         9q7TKSA3U1L8WgexXa7thOovWUVUHOz4LhrRPhMiAyMCWBQ+eUjJdNOuUTVeEMPGzHKf
+         zyxrJecgVsvOlnQEtaZhQsxzK0v1IPL1ndYZmfhQtnUps0UJB0nTBCD3/XyVSddLgWhj
+         V2S12kkVmksbRo0Fl41C5/2mbSTvHSr9oZQUby2YhSqIU2B1j7wULs7W5F8WzQe/F94+
+         MYFkPDM8QeF0D5V+ILZimjdARoCNUz6mALI+Ug/0EcVS5PH0NUrsT8a4/4juRqCzVGzv
+         yLzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713771782; x=1714376582;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eYgATfqd8PwpzBjyvQ3X5QGhq7/z0CGn9EB+eG5v+V4=;
+        b=J8Iq8zigNJwMHmGiw/V1vjlZtNhjI8iPlNFhfWDsiIuhmm+1C+96xPrbEzTarQfwMi
+         d8+i/6Yp/A1j0esqxGoNZLFLGjSxx00QWxoyXAQzJuNVewlxkFB+bIrlvAMohMMZGtHP
+         vm9L+M3Sf2DUd0w7dCYRp4jiKjJlMQkhfRr2i39JZamR1FYZ1M8qF/EGEDP2wCJgZWLf
+         whSsKC9Q0gjEF4LKDv+upnbY2nKWJqGxLKb0Z2wHkIjzOm0D6d2C0KX3zEN1oQXMhzDp
+         FLNe9hWoKZ1cPCfy2j5q1LB7+810+TaL2cDN0yxBgzoojDpjIap8jO+wrfmTiIkzKHrU
+         Wl3Q==
+X-Gm-Message-State: AOJu0YzNzHudq5NLEJcXBZjL8EIp/8Mz6mLNeY1QoOGmSm18ifVAcStd
+	M/01ty5acxM5bk5obgDT2q3JszR4YTNYy9MynC5XFE3h5A7eSgPSVp+ibnEwWCgEdqDZLquxcxK
+	6
+X-Google-Smtp-Source: AGHT+IFol5Y5ktMWyOI2cuPBIxmgu7AtxVOQpJvNM6eO27t1EtFMPHBED8lk/OFCqWjv6MNhStM2qg==
+X-Received: by 2002:a17:902:ec8a:b0:1e9:a0ce:f60e with SMTP id x10-20020a170902ec8a00b001e9a0cef60emr3671572plg.19.1713771781857;
+        Mon, 22 Apr 2024 00:43:01 -0700 (PDT)
+Received: from libai.bytedance.net ([61.213.176.11])
+        by smtp.gmail.com with ESMTPSA id e11-20020a170902784b00b001e0bae4490fsm7595634pln.154.2024.04.22.00.42.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 00:43:01 -0700 (PDT)
+From: zhenwei pi <pizhenwei@bytedance.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	virtualization@lists.linux.dev
+Cc: mst@redhat.com,
+	david@redhat.com,
+	jasowang@redhat.com,
+	xuanzhuo@linux.alibaba.com,
+	akpm@linux-foundation.org,
+	zhenwei pi <pizhenwei@bytedance.com>
+Subject: [PATCH v2 0/4] Improve memory statistics for virtio balloon
+Date: Mon, 22 Apr 2024 15:42:50 +0800
+Message-Id: <20240422074254.1440457-1-pizhenwei@bytedance.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Anup Patel <apatel@ventanamicro.com>, Sunil V L <sunilvl@ventanamicro.com>,
- Nick Kossifidis <mick@ics.forth.gr>, Sebastien Boeuf <seb@rivosinc.com>,
- Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
- iommu@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux@rivosinc.com
-Subject: Re: [PATCH v2 7/7] iommu/riscv: Paging domain support
-To: Jason Gunthorpe <jgg@ziepe.ca>, Tomasz Jeznach <tjeznach@rivosinc.com>
-References: <cover.1713456597.git.tjeznach@rivosinc.com>
- <301244bc3ff5da484b46d3fecc931cdad7d2806f.1713456598.git.tjeznach@rivosinc.com>
- <20240419125627.GD223006@ziepe.ca>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20240419125627.GD223006@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2024/4/19 20:56, Jason Gunthorpe wrote:
->> +		riscv_iommu_cmd_inval_vma(&cmd);
->> +		riscv_iommu_cmd_inval_set_pscid(&cmd, domain->pscid);
->> +		if (len > 0 && len < RISCV_IOMMU_IOTLB_INVAL_LIMIT) {
->> +			for (iova = start; iova < end; iova += PAGE_SIZE) {
->> +				riscv_iommu_cmd_inval_set_addr(&cmd, iova);
->> +				riscv_iommu_cmd_send(iommu, &cmd, 0);
->> +			}
->> +		} else {
->> +			riscv_iommu_cmd_send(iommu, &cmd, 0);
->> +		}
->> +	}
-> This seems suboptimal, you probably want to copy the new design that
-> Intel is doing where you allocate "bonds" that are already
-> de-duplicated. Ie if I have 10 devices on the same iommu sharing the
-> domain the above will invalidate the PSCID 10 times. It should only be
-> done once.
-> 
-> ie add a "bond" for the (iommu,pscid) and refcount that based on how
-> many devices are used. Then another "bond" for the ATS stuff eventually.
+Hi,
 
-The latest version is under discussion here.
+v1 -> v2:
+- Add a new patch 'virtio_balloon: separate vm events into a function'
+  to avoid any compiler warnings(unused stack variable on
+  CONFIG_VM_EVENT_COUNTERS=n)
+- Suggested by David, use a loop 'for (zid = 0; zid < MAX_NR_ZONES; zid++)'
+  to obtain all the stall events.
 
-https://lore.kernel.org/linux-iommu/20240416080656.60968-1-baolu.lu@linux.intel.com/
+RFC -> v1:
+- several text changes: oom-kill -> oom-kills, SCAN_ASYNC -> ASYN_SCAN.
+- move vm events codes into '#ifdef CONFIG_VM_EVENT_COUNTERS'
 
-Supposedly, you can make such optimization after the base code is landed
-in the mainline tree if the change is big.
+RFC version:
+Link: https://lore.kernel.org/lkml/20240415084113.1203428-1-pizhenwei@bytedance.com/T/#m1898963b3c27a989b1123db475135c3ca687ca84
 
-Best regards,
-baolu
+zhenwei pi (4):
+  virtio_balloon: separate vm events into a function
+  virtio_balloon: introduce oom-kill invocations
+  virtio_balloon: introduce memory allocation stall counter
+  virtio_balloon: introduce memory scan/reclaim info
+
+ drivers/virtio/virtio_balloon.c     | 62 ++++++++++++++++++++++-------
+ include/uapi/linux/virtio_balloon.h | 16 +++++++-
+ 2 files changed, 61 insertions(+), 17 deletions(-)
+
+-- 
+2.34.1
+
