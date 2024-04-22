@@ -1,46 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B6848CF2;
-	Mon, 22 Apr 2024 08:09:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E655027B;
+	Mon, 22 Apr 2024 08:09:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713773356; cv=none; b=cIr8pRk7r+OktaBxjZZR0/MWVTsLGQ4PqA3UA249J+XEqSLSkTjnjp+UR7/vfyyBCilw+T5rdzNGxiGbbZ95CCX37WtZtp+H5C56kzWBxv/6fhn5hsd28Sf2EisyzdQfiaNiuALGgnbzM2ha+WK7xyc39Mq36ZxvQuGjMEBLf8M=
+	t=1713773361; cv=none; b=NRm7CJ6/RZdDw8YGczQ6FI7ROdGYruPFQieT2xC97OtH9wCfGupVFXFabroAugOauL17JT6IjhTpHsR0eHiwnFiHCJ+mUqvcRgYbPvSoB2P9COqszIuRw107dMfhMmm9w1k5m/Boz3xb0uD1KEvoRaZp6al1ECZSTp8e0zyniww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713773356; c=relaxed/simple;
-	bh=lrAtAACNMRKkPVl9BmgLOc7v8tggNspHY9s2WWLZpRc=;
+	s=arc-20240116; t=1713773361; c=relaxed/simple;
+	bh=Z+gobst+gl3RwD4kqNC/52sndjOYrZEr5SeXwVNmrL4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ecYLJVtYALrHknEhC6AJMv9RH76zLAD7dMU6nytwvK72+BU5SxZTnRgHRZ0Gt6tmJRcuO1Q/yWy0TD+eT0i7mcNIJzHQGYeRljvOG9XRTvUJ2Nl9hh3Rcsl8jLy4SRp4dNiZmeZWkcX/K7CjWxA/nFvNeSnWrM4nXSq/q4AbE1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rK/qq5vb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Ydy5cArqV0GZ5ss+rL/dTCEUA/w02hesg7xhcE4iA7b9dZBfORFHFrXhxql5rZJr2blg5n5t5k7wqhz8v5RJrl4MkaPlFWHuHSnxG5X0n1N67M9dJ59wIHDOWpe2lTN35r15tjbmMh5qBXaFpRt5fPN/8nclr0uaz88mEeNtIc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGryFtmC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rK/qq5vb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1F09C32782;
-	Mon, 22 Apr 2024 08:09:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGryFtmC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A02D3C32783;
+	Mon, 22 Apr 2024 08:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713773356;
-	bh=lrAtAACNMRKkPVl9BmgLOc7v8tggNspHY9s2WWLZpRc=;
+	s=k20201202; t=1713773360;
+	bh=Z+gobst+gl3RwD4kqNC/52sndjOYrZEr5SeXwVNmrL4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=rK/qq5vbzE6YvdpbLr0+h98Gn4+fgRViM07W9nW0ift0iRF3HXn+4281wnYI5N/5d
-	 b8Q39bOySrS1oC1EoBJuOyxnALVuxMXGmAA3YI9StNnzj4JBivuZrpGhKWcQE1pTqh
-	 r6TA6UfuzQFscpNiikKuSc3t/X9aIP0dXKmyIJc4ltbIP9qwi9eyvgDh4G9e3HZXsN
-	 Z5nDpViHP0hy+kVzxMWhB7Fmx7K749dIj81sMELMe30nP9Z8jCSZYc8gfAu0ttWtsD
-	 pQM2DKUtGg+Tod6FSxjfdExLpIf5I/VHCREKp9814wVE52g1JYsaniQ6nmzr/kGBu0
-	 sHNsgGpydNDcA==
+	b=iGryFtmCiyuRTfDlwWMA5QuI0ue7v1nIbLXHhOU8wMIrMtIlIj8iOB1MdAXnvNT17
+	 fgqOJwwAuWm+KAaxYi4sFCs4MTM/B5vUP3mk8riAZ7rcxJvuZiydhxs1XiZG9t8i07
+	 FLerPVvSsK5d11ujBo5WYgh4qDuZFcG3CCmCq5j37aZwW/34sjaoMDjNOi/wKlhac2
+	 MLypzJ/khRgXaSMU5HTiDoBhswql80K5RkGwNTpAdVQZhg8QRc3sJF3bq3Jigqvsth
+	 8fxoMFA2wlE0qLcoPfsgopWGAdE3l/ItVZMrri7q11+O8vVPZuiuXM+MoK6Btp19FT
+	 8a2KC1P3B256Q==
 From: Mark Brown <broonie@kernel.org>
-To: Seven Lee <wtli@nuvoton.com>
-Cc: lgirdwood@gmail.com, alsa-devel@alsa-project.org, 
- devicetree@vger.kernel.org, linux-sound@vger.kernel.org, 
- krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org, 
- robh+dt@kernel.org, conor+dt@kernel.org, perex@perex.cz, tiwai@suse.com, 
- edson.drosdeck@gmail.com, u.kleine-koenig@pengutronix.de, 
- YHCHuang@nuvoton.com, KCHSU0@nuvoton.com, CTLIN0@nuvoton.com, 
- SJLIN0@nuvoton.com, scott6986@gmail.com, supercraig0719@gmail.com, 
- dardar923@gmail.com
-In-Reply-To: <20240415070649.3496487-1-wtli@nuvoton.com>
-References: <20240415070649.3496487-1-wtli@nuvoton.com>
-Subject: Re: [PATCH v2 0/3] ASoC: nau8821: Add delay control for ADC
-Message-Id: <171377335152.1755143.9849585932457146523.b4-ty@kernel.org>
-Date: Mon, 22 Apr 2024 17:09:11 +0900
+To: linux-kernel@vger.kernel.org, Shenghao Ding <shenghao-ding@ti.com>
+Cc: lgirdwood@gmail.com, robh+dt@kernel.org, 
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org, perex@perex.cz, 
+ tiwai@suse.com, 13916275206@139.com, mohit.chawla@ti.com, soyer@irl.hu, 
+ jkhuang3@ti.com, tiwai@suse.de, pdjuandi@ti.com, manisha.agrawal@ti.com, 
+ aviel@ti.com, hnagalla@ti.com, praneeth@ti.com, Baojun.Xu@fpt.com
+In-Reply-To: <20240407091846.1299-1-shenghao-ding@ti.com>
+References: <20240407091846.1299-1-shenghao-ding@ti.com>
+Subject: Re: [PATCH v9 0/4] ASoc: PCM6240: mixer-test report
+Message-Id: <171377335622.1755143.2290939269459235170.b4-ty@kernel.org>
+Date: Mon, 22 Apr 2024 17:09:16 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,15 +49,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14-dev
 
-On Mon, 15 Apr 2024 15:06:46 +0800, Seven Lee wrote:
-> Change the original fixed delay to the assignment from the property. It
-> will make it more flexible to different platforms to avoid pop noise at
-> the beginning of recording.
-> 
-> Change:
-> V1 -> V2:
-> - Revise adc-delay-ms properties description.
-> - Fix examples of bugs found by bots.
+On Sun, 07 Apr 2024 17:18:41 +0800, Shenghao Ding wrote:
+> v9:
+>  - Retest with the code with Volume kcontrol
+> v8:
+>  - use some reasonable format of changelog.
+>  - fixed the format of subject
+>  - remove *** BLURB HERE ***
 > 
 > [...]
 
@@ -69,12 +65,14 @@ Applied to
 
 Thanks!
 
-[1/3] ASoC: dt-bindings: nau8821: Add delay control for ADC
-      commit: 467d2528d64e8fcf784850ac94f665efae2af149
-[2/3] ASoC: nau8821: Add delay control for ADC
-      commit: bd74e9c31f0d1880ff4482f1a7ce33a006d870ed
-[3/3] ASoC: nau8821: Remove redundant ADC controls
-      commit: ad8ba241bc93536a2c8af150b237c5be8fafe942
+[1/4] ASoc: PCM6240: Create PCM6240 Family driver code
+      commit: 1324eafd37aa5c5b970c1b48a857acc81f0685c8
+[2/4] ASoc: PCM6240: Create header file for PCM6240 Family driver code
+      commit: d537f7b52d71110a98cd7230cce1b56ae7c8ea71
+[3/4] ASoc: PCM6240: Add compile item for PCM6240 Family driver
+      commit: 6bb1b70690766367e166b8ff59f4b5f9739f7964
+[4/4] ASoc: dt-bindings: PCM6240: Add initial DT binding
+      commit: cee56a8e9cf89fd690e18eb2e6f09d3f8a6442fb
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
