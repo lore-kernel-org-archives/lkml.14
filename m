@@ -1,39 +1,39 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761FE1509B8;
-	Mon, 22 Apr 2024 12:50:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B10152198;
+	Mon, 22 Apr 2024 12:50:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713790249; cv=none; b=jeeqZT0FhFhJAPXnRCdzGrhgsQXRRit3Gm+aD3E6nmB+dopezi9C+sIJCz1H6cSO1vSYtaylqXbFBP/0KA9r7AkS2EFyaXhKUzREA4r+Kdd92Xo1MQutP4ckALO1yDcJafndXxQ9be29VcbdJzAcNDh6k2W4wZwmVLRanPPbkDU=
+	t=1713790252; cv=none; b=jLZrQn9c9FKdPLZsxgsLyt+VM7CA/lgaBsJdzIcLhsGZrlktuaGsn7nsKXMzHnUaifkvCUOB+uyznwEGDZsgMfSJey5jaFFiD/JCGVSVFZ8oyYIWJMCQjBub4N/wUmbNUIAPFZhgLd2irsewWNh+H1xsWfwutT4vB6E9ZWSS7gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713790249; c=relaxed/simple;
-	bh=E+ceHwg51+x8TZoy98PGrZnlUUIAExA9XNbfjHl/3fg=;
+	s=arc-20240116; t=1713790252; c=relaxed/simple;
+	bh=MR4T+aVryHDlCdLIA+7+MzjoHtX5UbAViJjBqaEXzNI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Wm3nBKiVtJowvFrRGJW81cuJ+ZGvF2DL51oqWhgAvMzHcf5T/3dcr7gvn78ekwES8HYzF0nDc0poX/Y3afUSQcHw91YUy/yc4uunLyk9oAWIHSyyteB8D0z5lkz57mStSXmPsS09ScI21TyF7BTElMyWuZoLbHpq8THAdiolQJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mISpvTLl; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=b3YpPXDsjWiMb5UQRSzsDwGe6gOhPCC2BTWSrUMgLjCAITqAPX5pHUod0lghDfcGfjxJ4lRggDcmhJ2/qvhQgA4+wc9B2DPcuaWWTteeACiFq5dJ9hmDYlaIU6IS46En4lgEEvkJitPWOhag9MbMJWLOiYVDifcE9FhHV6UMB+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=h79QtJDL; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mISpvTLl"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 82DC1E0017;
-	Mon, 22 Apr 2024 12:50:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="h79QtJDL"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 65D27E000B;
+	Mon, 22 Apr 2024 12:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713790245;
+	t=1713790248;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=icaFBDLb05mWT7QjMe3S991XiW036luksX3lEDusFjU=;
-	b=mISpvTLlE66xgmOXhkhG8Jjk2hDiWJCiin0QM3M1/ggiuo0BKPSCMuJvRsCgTlpZxO/OoS
-	mXKNIuEWTiBNBnYECX5/0EIcd+miZ/75XTIP72qoyeIbRHna/Wk8aP/hWpeC2SE/99FLgQ
-	gtopic/NWtfITV47dVTSqSFOVf4X6yz2uzQEF51lhgpwZpqNloOMWdVI1OazoshGpwhLcK
-	Q7grL2w16u6F0DYvE7Hlj+KUB6ZGYfGuoEDmqLjHpxHBhFLHblyw5DTBpC+Q9DiKkBxJOY
-	Hup/f/tSMDYOO8B7Z0LLRVvll+8ZT+zzC0Vv8TMTynuvnwwnKBlxTIucMrfocw==
+	bh=EtjDyVeqqMgYUVSHB7nyuZRP2kSxS8c/e1unyRtkL5I=;
+	b=h79QtJDLob/AyUf2p8I1De9yjzuaOcTSes1Lj5A9nA9telm1PNO0tGp/jdihCQfy1IttfI
+	GKtc3H3J9ybMjrWkptNdYRLiiLdatKTXQpPXClIvCv9n9/8pHZAYnUWwG4/mDjFpWkPS5q
+	2wC6xxbS4HKKeiyh8gCmiH8S8CwZhtYR5Rrr9OeNP532xNCG5TGMQbPp5BjsVYSeRo+g0v
+	x7vA2LrKrlbSHTn7ye9UeihxCImHDHIPQjcOTrD5DrXoPoMXzlKumn1OnMSK/lRc/h5bVv
+	KAIz2Ad2yfxyJ6pJYCr9uSDyqhh08GW/usjF/EK00FamU1sKTMbYtbonn9zIXw==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Mon, 22 Apr 2024 14:50:23 +0200
-Subject: [PATCH net-next v11 08/13] ptp: Add phc source and helpers to
- register specific PTP clock or get information
+Date: Mon, 22 Apr 2024 14:50:25 +0200
+Subject: [PATCH net-next v11 10/13] net: netdevsim: ptp_mock: Convert to
+ netdev_ptp_clock_register
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240422-feature_ptp_netnext-v11-8-f14441f2a1d8@bootlin.com>
+Message-Id: <20240422-feature_ptp_netnext-v11-10-f14441f2a1d8@bootlin.com>
 References: <20240422-feature_ptp_netnext-v11-0-f14441f2a1d8@bootlin.com>
 In-Reply-To: <20240422-feature_ptp_netnext-v11-0-f14441f2a1d8@bootlin.com>
 To: Florian Fainelli <florian.fainelli@broadcom.com>, 
@@ -68,301 +68,116 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: kory.maincent@bootlin.com
 
-Prepare for future hardware timestamp selection by adding source and
-corresponding pointers to ptp_clock structure. Additionally, introduce
-helpers for registering specific phydev or netdev PTP clocks, retrieving
-PTP clock information such as hwtstamp source or phydev/netdev pointers,
-and obtaining the ptp_clock structure from the phc index.
+The hardware registration clock for net device is now using
+netdev_ptp_clock_register to save the net_device pointer within the PTP
+clock xarray. netdevsim is registering its ptp through the mock driver.
+It is the only driver using the mock driver to register a ptp clock.
+Convert the mock driver to the new API.
 
+Reviewed-by: Rahul Rameshbabu <rrameshbabu@nvidia.com>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
-
-Change in v8:
-- New patch.
-
-Change in v10:
-- Add get and put function to avoid unregistering a ptp clock object used.
-- Fix kdoc issues.
-
-Change in v11:
-- Remove useless extern.
+Changes in v8:
+- New patch
 ---
- drivers/ptp/ptp_clock.c          | 114 +++++++++++++++++++++++++++++++++++++++
- drivers/ptp/ptp_private.h        |   5 ++
- include/linux/ptp_clock_kernel.h | 104 +++++++++++++++++++++++++++++++++++
- 3 files changed, 223 insertions(+)
+ drivers/net/netdevsim/netdev.c | 19 +++++++++++--------
+ drivers/ptp/ptp_mock.c         |  4 ++--
+ include/linux/ptp_mock.h       |  4 ++--
+ 3 files changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
-index c56cd0f63909..f962f460ec9d 100644
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -512,6 +512,120 @@ void ptp_cancel_worker_sync(struct ptp_clock *ptp)
+diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
+index d127856f8f36..c53d2163022e 100644
+--- a/drivers/net/netdevsim/netdev.c
++++ b/drivers/net/netdevsim/netdev.c
+@@ -482,17 +482,12 @@ static int nsim_init_netdevsim(struct netdevsim *ns)
+ 	struct mock_phc *phc;
+ 	int err;
+ 
+-	phc = mock_phc_create(&ns->nsim_bus_dev->dev);
+-	if (IS_ERR(phc))
+-		return PTR_ERR(phc);
+-
+-	ns->phc = phc;
+ 	ns->netdev->netdev_ops = &nsim_netdev_ops;
+ 	ns->netdev->stat_ops = &nsim_stat_ops;
+ 
+ 	err = nsim_udp_tunnels_info_create(ns->nsim_dev, ns->netdev);
+ 	if (err)
+-		goto err_phc_destroy;
++		return err;
+ 
+ 	rtnl_lock();
+ 	err = nsim_bpf_init(ns);
+@@ -506,8 +501,18 @@ static int nsim_init_netdevsim(struct netdevsim *ns)
+ 	if (err)
+ 		goto err_ipsec_teardown;
+ 	rtnl_unlock();
++
++	phc = mock_phc_create(ns->netdev);
++	if (IS_ERR(phc)) {
++		err = PTR_ERR(phc);
++		goto err_register_netdevice;
++	}
++
++	ns->phc = phc;
+ 	return 0;
+ 
++err_register_netdevice:
++	unregister_netdevice(ns->netdev);
+ err_ipsec_teardown:
+ 	nsim_ipsec_teardown(ns);
+ 	nsim_macsec_teardown(ns);
+@@ -515,8 +520,6 @@ static int nsim_init_netdevsim(struct netdevsim *ns)
+ err_utn_destroy:
+ 	rtnl_unlock();
+ 	nsim_udp_tunnels_info_destroy(ns->netdev);
+-err_phc_destroy:
+-	mock_phc_destroy(ns->phc);
+ 	return err;
  }
- EXPORT_SYMBOL(ptp_cancel_worker_sync);
  
-+struct ptp_clock *netdev_ptp_clock_register(struct ptp_clock_info *info,
-+					    struct net_device *dev)
-+{
-+	struct ptp_clock *ptp;
-+
-+	ptp = ptp_clock_register(info, &dev->dev);
-+	if (IS_ERR(ptp))
-+		return ptp;
-+
-+	ptp->phc_source = HWTSTAMP_SOURCE_NETDEV;
-+	ptp->netdev = dev;
-+
-+	return ptp;
-+}
-+EXPORT_SYMBOL(netdev_ptp_clock_register);
-+
-+struct ptp_clock *phydev_ptp_clock_register(struct ptp_clock_info *info,
-+					    struct phy_device *phydev)
-+{
-+	struct ptp_clock *ptp;
-+
-+	ptp = ptp_clock_register(info, &phydev->mdio.dev);
-+	if (IS_ERR(ptp))
-+		return ptp;
-+
-+	ptp->phc_source = HWTSTAMP_SOURCE_PHYLIB;
-+	ptp->phydev = phydev;
-+
-+	return ptp;
-+}
-+EXPORT_SYMBOL(phydev_ptp_clock_register);
-+
-+bool ptp_clock_from_phylib(struct ptp_clock *ptp)
-+{
-+	return ptp->phc_source == HWTSTAMP_SOURCE_PHYLIB;
-+}
-+EXPORT_SYMBOL(ptp_clock_from_phylib);
-+
-+bool ptp_clock_from_netdev(struct ptp_clock *ptp)
-+{
-+	return ptp->phc_source == HWTSTAMP_SOURCE_NETDEV;
-+}
-+EXPORT_SYMBOL(ptp_clock_from_netdev);
-+
-+struct net_device *ptp_clock_netdev(struct ptp_clock *ptp)
-+{
-+	if (ptp->phc_source != HWTSTAMP_SOURCE_NETDEV)
-+		return NULL;
-+
-+	return ptp->netdev;
-+}
-+EXPORT_SYMBOL(ptp_clock_netdev);
-+
-+struct phy_device *ptp_clock_phydev(struct ptp_clock *ptp)
-+{
-+	if (ptp->phc_source != HWTSTAMP_SOURCE_PHYLIB)
-+		return NULL;
-+
-+	return ptp->phydev;
-+}
-+EXPORT_SYMBOL(ptp_clock_phydev);
-+
-+int ptp_clock_get(struct device *dev, struct ptp_clock *ptp)
-+{
-+	struct device_link *link;
-+
-+	if (!ptp)
-+		return 0;
-+
-+	if (!try_module_get(ptp->info->owner))
-+		return -EPROBE_DEFER;
-+
-+	get_device(&ptp->dev);
-+
-+	link = device_link_add(dev, &ptp->dev, DL_FLAG_STATELESS);
-+	if (!link)
-+		dev_warn(dev, "failed to create device link to %s\n",
-+			 dev_name(&ptp->dev));
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(ptp_clock_get);
-+
-+struct ptp_clock *ptp_clock_get_by_index(struct device *dev, int index)
-+{
-+	struct ptp_clock *ptp;
-+	int ret;
-+
-+	if (index < 0)
-+		return NULL;
-+
-+	ptp = xa_load(&ptp_clocks_map, (unsigned long)index);
-+	if (IS_ERR_OR_NULL(ptp))
-+		return ptp;
-+
-+	ret = ptp_clock_get(dev, ptp);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return ptp;
-+}
-+EXPORT_SYMBOL(ptp_clock_get_by_index);
-+
-+void ptp_clock_put(struct device *dev, struct ptp_clock *ptp)
-+{
-+	if (!ptp)
-+		return;
-+
-+	device_link_remove(dev, &ptp->dev);
-+	put_device(&ptp->dev);
-+	module_put(ptp->info->owner);
-+}
-+EXPORT_SYMBOL(ptp_clock_put);
-+
- /* module operations */
+diff --git a/drivers/ptp/ptp_mock.c b/drivers/ptp/ptp_mock.c
+index e7b459c846a2..1dcbe7426746 100644
+--- a/drivers/ptp/ptp_mock.c
++++ b/drivers/ptp/ptp_mock.c
+@@ -115,7 +115,7 @@ int mock_phc_index(struct mock_phc *phc)
+ }
+ EXPORT_SYMBOL_GPL(mock_phc_index);
  
- static void __exit ptp_exit(void)
-diff --git a/drivers/ptp/ptp_private.h b/drivers/ptp/ptp_private.h
-index 18934e28469e..64d4bfafabfc 100644
---- a/drivers/ptp/ptp_private.h
-+++ b/drivers/ptp/ptp_private.h
-@@ -41,6 +41,11 @@ struct ptp_clock {
- 	struct ptp_clock_info *info;
- 	dev_t devid;
- 	int index; /* index into clocks.map */
-+	enum hwtstamp_source phc_source;
-+	union { /* Pointer of the phc_source device */
-+		struct net_device *netdev;
-+		struct phy_device *phydev;
-+	};
- 	struct pps_device *pps_source;
- 	long dialed_frequency; /* remembers the frequency adjustment */
- 	struct list_head tsevqs; /* timestamp fifo list */
-diff --git a/include/linux/ptp_clock_kernel.h b/include/linux/ptp_clock_kernel.h
-index 6e4b8206c7d0..23b43f59fcfb 100644
---- a/include/linux/ptp_clock_kernel.h
-+++ b/include/linux/ptp_clock_kernel.h
-@@ -9,7 +9,9 @@
- #define _PTP_CLOCK_KERNEL_H_
+-struct mock_phc *mock_phc_create(struct device *dev)
++struct mock_phc *mock_phc_create(struct net_device *dev)
+ {
+ 	struct mock_phc *phc;
+ 	int err;
+@@ -147,7 +147,7 @@ struct mock_phc *mock_phc_create(struct device *dev)
+ 	spin_lock_init(&phc->lock);
+ 	timecounter_init(&phc->tc, &phc->cc, 0);
  
- #include <linux/device.h>
-+#include <linux/netdevice.h>
- #include <linux/pps_kernel.h>
-+#include <linux/phy.h>
- #include <linux/ptp_clock.h>
- #include <linux/timecounter.h>
- #include <linux/skbuff.h>
-@@ -340,6 +342,90 @@ extern void ptp_clock_event(struct ptp_clock *ptp,
+-	phc->clock = ptp_clock_register(&phc->info, dev);
++	phc->clock = netdev_ptp_clock_register(&phc->info, dev);
+ 	if (IS_ERR(phc->clock)) {
+ 		err = PTR_ERR(phc->clock);
+ 		goto out_free_phc;
+diff --git a/include/linux/ptp_mock.h b/include/linux/ptp_mock.h
+index 72eb401034d9..e226011071f8 100644
+--- a/include/linux/ptp_mock.h
++++ b/include/linux/ptp_mock.h
+@@ -13,13 +13,13 @@ struct mock_phc;
  
- extern int ptp_clock_index(struct ptp_clock *ptp);
+ #if IS_ENABLED(CONFIG_PTP_1588_CLOCK_MOCK)
  
-+/**
-+ * netdev_ptp_clock_register() - register a PTP hardware clock driver for
-+ *				 a net device
-+ *
-+ * @info: Structure describing the new clock.
-+ * @dev:  Pointer of the net device
-+ */
-+
-+struct ptp_clock *
-+netdev_ptp_clock_register(struct ptp_clock_info *info,
-+			  struct net_device *dev);
-+
-+/**
-+ * phydev_ptp_clock_register() - register a PTP hardware clock driver for
-+ *				 a phy device
-+ *
-+ * @info:   Structure describing the new clock.
-+ * @phydev:  Pointer of the phy device
-+ */
-+
-+struct ptp_clock *
-+phydev_ptp_clock_register(struct ptp_clock_info *info,
-+			  struct phy_device *phydev);
-+
-+/**
-+ * ptp_clock_from_phylib() - return true if the PTP clock comes from phylib
-+ *
-+ * @ptp:  The clock obtained from net/phy_ptp_clock_register().
-+ */
-+
-+bool ptp_clock_from_phylib(struct ptp_clock *ptp);
-+
-+/**
-+ * ptp_clock_from_netdev() - return true if the PTP clock comes from netdev
-+ *
-+ * @ptp:  The clock obtained from net/phy_ptp_clock_register().
-+ */
-+
-+bool ptp_clock_from_netdev(struct ptp_clock *ptp);
-+
-+/**
-+ * ptp_clock_netdev() - obtain the net_device of PTP clock
-+ *
-+ * @ptp:  The clock obtained from netdev_ptp_clock_register().
-+ */
-+
-+struct net_device *ptp_clock_netdev(struct ptp_clock *ptp);
-+
-+/**
-+ * ptp_clock_phydev() - obtain the phy_device of a PTP clock
-+ *
-+ * @ptp:  The clock obtained from phydev_ptp_clock_register().
-+ */
-+
-+struct phy_device *ptp_clock_phydev(struct ptp_clock *ptp);
-+
-+/**
-+ * ptp_clock_get() - increment refcount of the PTP clock
-+ *
-+ * @dev:  The device which get the PTP clock.
-+ * @ptp:  Pointer of a PTP clock.
-+ */
-+
-+int ptp_clock_get(struct device *dev, struct ptp_clock *ptp);
-+
-+/**
-+ * ptp_clock_get_by_index() - obtain the PTP clock reference from a given
-+ *			      PHC index
-+ *
-+ * @dev:  The device which get the PTP clock.
-+ * @index:  The device index of a PTP clock.
-+ */
-+
-+struct ptp_clock *ptp_clock_get_by_index(struct device *dev, int index);
-+
-+/**
-+ * ptp_clock_put() - decrement refcount of the PTP clock
-+ *
-+ * @dev:  The device which get the PTP clock.
-+ * @ptp:  Pointer of a PTP clock.
-+ */
-+
-+void ptp_clock_put(struct device *dev, struct ptp_clock *ptp);
-+
- /**
-  * ptp_find_pin() - obtain the pin index of a given auxiliary function
-  *
-@@ -405,6 +491,24 @@ static inline void ptp_clock_event(struct ptp_clock *ptp,
- { }
- static inline int ptp_clock_index(struct ptp_clock *ptp)
- { return -1; }
-+static inline struct ptp_clock *
-+netdev_ptp_clock_register(struct ptp_clock_info *info,
-+			  struct net_device *dev)
-+{ return NULL; }
-+static inline struct ptp_clock *
-+phydev_ptp_clock_register(struct ptp_clock_info *info,
-+			  struct phy_device *phydev)
-+{ return NULL; }
-+static inline bool ptp_clock_from_phylib(struct ptp_clock *ptp)
-+{ return false; }
-+static inline bool ptp_clock_from_netdev(struct ptp_clock *ptp)
-+{ return false; }
-+static inline struct net_device *ptp_clock_netdev(struct ptp_clock *ptp)
-+{ return NULL; }
-+static inline struct phy_device *ptp_clock_phydev(struct ptp_clock *ptp);
-+{ return NULL; }
-+static inline struct ptp_clock *ptp_clock_get_by_index(int index);
-+{ return NULL; }
- static inline int ptp_find_pin(struct ptp_clock *ptp,
- 			       enum ptp_pin_function func, unsigned int chan)
- { return -1; }
+-struct mock_phc *mock_phc_create(struct device *dev);
++struct mock_phc *mock_phc_create(struct net_device *dev);
+ void mock_phc_destroy(struct mock_phc *phc);
+ int mock_phc_index(struct mock_phc *phc);
+ 
+ #else
+ 
+-static inline struct mock_phc *mock_phc_create(struct device *dev)
++static inline struct mock_phc *mock_phc_create(struct net_device *dev)
+ {
+ 	return NULL;
+ }
 
 -- 
 2.34.1
