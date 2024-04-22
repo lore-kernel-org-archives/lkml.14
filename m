@@ -1,128 +1,132 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A54153588
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 16:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F6615357B;
+	Mon, 22 Apr 2024 16:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.190.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713802103; cv=none; b=fNb+cLpyQQmhJEeTEenBUvKm6LCjQMURb+Uwz/V9HwdQgN/BuZJRv2mkvrpSMuCv9cF3T8f2v6yOGObxG05tgEH8Cd18/DiJbuGOlE17gbbq51LRuLc2K31xw8MBy2tq/xBH+QZ0EUuzJqp/Sg2VfMaW/K9F1of2maC2E5Ok37M=
+	t=1713802290; cv=none; b=Bm/fk85GGthtwlkL15mrKG9bbrdfUbJzlXN5XzNCPdsRSKrux9WG3POScgojUTSDF5Stp/oSxGhS8IjW+YOahRTHIsCVNI0k81kEIuYPQctRU7tp8dE+IZ5Sf+eAyyHdi2WnM4GPKBWcit4ZxReiDHkv636OKMSzSQpXKXfX7Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713802103; c=relaxed/simple;
-	bh=lfCxICFGy+LS9hJNxD2DgWqIfrC2kPB4vVbEqlpMc5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J8N0qB4GBpesMdV8gaIS6JJrZR+JnGbFC+Uvjeq12kmjuifmMpMf3Br55YwH2aaNHjthUnIMFwgXmnYXQILxIX4+/QbzBIsBIKaNCKgi6YoEiJ097JGdxsZEmQqn/arL7I+u5NoJr5XMyhcxSsKgqBv739vyrCY8pYVNHl7uRVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=3aHfUaQl; arc=none smtp.client-ip=209.85.161.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1713802290; c=relaxed/simple;
+	bh=3le542UJeSfYGDRoP90qKz4Zy3WYFGW+CJlvN5OAxOs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HW6T4F9TONOm1JuiWOacM+82iYuiPal65NZh6Q7E6VLjtWhXisR3q9djQOjl2B6FO9dmFSzd6/dvntPkulZ4/e8LfTjBG4GhthwhQHtuMyzIUDZ5aqce8Uv8UK8NquoutCbHHMjD3N+eVYRThIo8AKxlKrfQ+RaDhFHxjZKtUQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=X70YJ8xX; arc=none smtp.client-ip=207.171.190.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="3aHfUaQl"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5aa4204bacdso2783497eaf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 09:08:20 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="X70YJ8xX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713802100; x=1714406900; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bMyhnDCrHyV4qyizjWenu586ccID3T1Re44yDyknMgo=;
-        b=3aHfUaQln4PM0rUUsSmEpfHrxZ1V4d9dwcJU0q0KXP6wpKYH9xPv+4a8m92YqIq+Nk
-         A6QJ9DwOHf3PD7M0lmup0oFUZ2agIgm/wmvz/sRM4oYQP1OPGtrV800CR6+GTUQx0z0Y
-         uEiePBYu8XpK753MvPxbBgTs7J0KFTOqfQ5pKuorhKGMYd6FeqyMWAtgoGAEiUXltC5Q
-         3eMWcCDeyuAe3sDUGaanGKE5fHU7xS8uP0/OEqEG4DnwFprc7uCFL1jlB+7DfFdQaMvW
-         gQGAH56BhlcxokAj5WrMXglQzv2LPGz3thKVbx1pz+Y1ugK30boMFOZVcTsyFz5/Vto2
-         oKwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713802100; x=1714406900;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bMyhnDCrHyV4qyizjWenu586ccID3T1Re44yDyknMgo=;
-        b=JPguNh94DXBUj1ZSdxhOlp0icfr/QGnR5rsTR/a4zsvTWquw9t0Q+JXGdwFTNKibjZ
-         lEzbgAb7M/TONSDyePHPCy+Opjth8TuyTcoyoHwDjUjl7U+MuaeUQt+8tW4Hy7wNCKoi
-         XsfAY5ferVOPShT/OleVjxZFdz0nKpRF/akDZ1jdLdKMSk3N1h87VmKceATudiS1Lp4z
-         hTLeCa17yUWnjtYf7vABparHnEfwQ1Z4yEg1eJxEQdmYa7dEbjAX5mf0Lc9nNUl+ONn0
-         facPU9hWvg/ROaP5+dnaaoayLPM/y6bYtA4Zj3QMc5GN0Pgt0mr2a+qLrwqNbv61g6RA
-         0Uew==
-X-Gm-Message-State: AOJu0Yz0VNuagsDgExeocQqqENzO1yWbAGRzZ/vZBV//ebPgPEWUTcoR
-	yeCxM3wGYBZbczbZKYVRV3N6MrwsHYQhK1vsZw7lqI5TDCCbbZE2Qd8wXHAh+gk=
-X-Google-Smtp-Source: AGHT+IEk5jms5r3rvB1qzw8YQ+YVRly/gMNB1pW+j4Ieau6IBs3d3/y066TBXoaCbq31F9igsdhObA==
-X-Received: by 2002:a05:6358:78d:b0:186:2852:a923 with SMTP id n13-20020a056358078d00b001862852a923mr11995590rwj.27.1713802099983;
-        Mon, 22 Apr 2024 09:08:19 -0700 (PDT)
-Received: from ghost ([50.146.0.2])
-        by smtp.gmail.com with ESMTPSA id b24-20020a25ae98000000b00db41482d349sm2103941ybj.57.2024.04.22.09.08.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 09:08:19 -0700 (PDT)
-Date: Mon, 22 Apr 2024 12:08:17 -0400
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: enh <enh@google.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] Clarify risc-v hwprobe RISCV_HWPROBE_MISALIGNED_* docs.
-Message-ID: <ZiaLcRimjNY8F0sF@ghost>
-References: <CAJgzZorn5anPH8dVPqvjVWmLKqTi5bkLDR=FH-ZAcdXFnNe8Eg@mail.gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1713802290; x=1745338290;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=FUemsqeaBxTFXlHFc7wvr33AU2ZxcVwt25g4PMBCnzc=;
+  b=X70YJ8xXV4QYubRaYN1EHQwuqbjwFacIOCMtQ2K9EtsQjhbyiufYQO8P
+   jegQRKXlbkirrKkpt75duLH23D2xhrFbnnH3GEA3p88KLr4bZ8N0/QF8F
+   96hkXlZAbVIxZIm3FGcWy/7PvDW6GNsbju8lQm7CxzLz1Xr07Zur4YPkq
+   k=;
+X-IronPort-AV: E=Sophos;i="6.07,221,1708387200"; 
+   d="scan'208";a="340362836"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 16:11:22 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.21.151:54137]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.31.31:2525] with esmtp (Farcaster)
+ id b5dd08d2-1c1d-4c47-bb35-ab706d63a8fa; Mon, 22 Apr 2024 16:11:20 +0000 (UTC)
+X-Farcaster-Flow-ID: b5dd08d2-1c1d-4c47-bb35-ab706d63a8fa
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Mon, 22 Apr 2024 16:11:20 +0000
+Received: from 88665a182662.ant.amazon.com (10.106.101.48) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.28;
+ Mon, 22 Apr 2024 16:11:17 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <syzbot+c298c9f0e46a3c86332b@syzkaller.appspotmail.com>
+CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<fw@strlen.de>, <horms@kernel.org>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <syzkaller-bugs@googlegroups.com>
+Subject: Re: [syzbot] [net?] WARNING in gre_tap_xmit (2)
+Date: Mon, 22 Apr 2024 09:11:08 -0700
+Message-ID: <20240422161108.83595-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <0000000000007aa28106168b76c9@google.com>
+References: <0000000000007aa28106168b76c9@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJgzZorn5anPH8dVPqvjVWmLKqTi5bkLDR=FH-ZAcdXFnNe8Eg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D037UWC002.ant.amazon.com (10.13.139.250) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On Thu, Apr 11, 2024 at 12:18:25PM -0700, enh wrote:
-> These only tell you about scalar accesses, not vector accesses.
+From: syzbot <syzbot+c298c9f0e46a3c86332b@syzkaller.appspotmail.com>
+Date: Sat, 20 Apr 2024 11:35:04 -0700
+> syzbot has bisected this issue to:
 > 
-> Signed-off-by: Elliott Hughes <enh@google.com>
-> ---
->  Documentation/arch/riscv/hwprobe.rst | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+> commit 219eee9c0d16f1b754a8b85275854ab17df0850a
+> Author: Florian Westphal <fw@strlen.de>
+> Date:   Fri Feb 16 11:36:57 2024 +0000
 > 
-> diff --git a/Documentation/arch/riscv/hwprobe.rst
-> b/Documentation/arch/riscv/hwprobe.rst
-> index b2bcc9eed9aa..239be63f5089 100644
-> --- a/Documentation/arch/riscv/hwprobe.rst
-> +++ b/Documentation/arch/riscv/hwprobe.rst
-> @@ -192,21 +192,21 @@ The following keys are defined:
->    information about the selected set of processors.
+>     net: skbuff: add overflow debug check to pull/push helpers
 > 
->    * :c:macro:`RISCV_HWPROBE_MISALIGNED_UNKNOWN`: The performance of misaligned
-> -    accesses is unknown.
-> +    scalar accesses is unknown.
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=167a954f180000
+> start commit:   443574b03387 riscv, bpf: Fix kfunc parameters incompatibil..
+> git tree:       bpf
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=157a954f180000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=117a954f180000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
+> dashboard link: https://syzkaller.appspot.com/bug?extid=c298c9f0e46a3c86332b
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a94f00980000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15bce6ab180000
 > 
-> -  * :c:macro:`RISCV_HWPROBE_MISALIGNED_EMULATED`: Misaligned accesses are
-> +  * :c:macro:`RISCV_HWPROBE_MISALIGNED_EMULATED`: Misaligned scalar
-> accesses are
->      emulated via software, either in or below the kernel.  These accesses are
->      always extremely slow.
-> 
-> -  * :c:macro:`RISCV_HWPROBE_MISALIGNED_SLOW`: Misaligned accesses are slower
-> -    than equivalent byte accesses.  Misaligned accesses may be supported
-> +  * :c:macro:`RISCV_HWPROBE_MISALIGNED_SLOW`: Misaligned scalar accesses are
-> +    slower than equivalent byte accesses.  Misaligned accesses may be supported
->      directly in hardware, or trapped and emulated by software.
-> 
-> -  * :c:macro:`RISCV_HWPROBE_MISALIGNED_FAST`: Misaligned accesses are faster
-> -    than equivalent byte accesses.
-> +  * :c:macro:`RISCV_HWPROBE_MISALIGNED_FAST`: Misaligned scalar accesses are
-> +    faster than equivalent byte accesses.
-> 
-> -  * :c:macro:`RISCV_HWPROBE_MISALIGNED_UNSUPPORTED`: Misaligned accesses are
-> -    not supported at all and will generate a misaligned address fault.
-> +  * :c:macro:`RISCV_HWPROBE_MISALIGNED_UNSUPPORTED`: Misaligned scalar accesses
-> +    are not supported at all and will generate a misaligned address fault.
-> 
->  * :c:macro:`RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE`: An unsigned int which
->    represents the size of the Zicboz block in bytes.
-> -- 
-> 2.44.0.478.gd926399ef9-goog
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> Reported-by: syzbot+c298c9f0e46a3c86332b@syzkaller.appspotmail.com
+> Fixes: 219eee9c0d16 ("net: skbuff: add overflow debug check to pull/push helpers")
 
-Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+Testing same patch for this
 
-- Charlie
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 219eee9c0d16
 
+diff --git a/net/nsh/nsh.c b/net/nsh/nsh.c
+index f4a38bd6a7e0..1344653916c4 100644
+--- a/net/nsh/nsh.c
++++ b/net/nsh/nsh.c
+@@ -77,13 +77,15 @@ EXPORT_SYMBOL_GPL(nsh_pop);
+ static struct sk_buff *nsh_gso_segment(struct sk_buff *skb,
+ 				       netdev_features_t features)
+ {
++	unsigned int tnl_hlen, mac_len, nsh_len;
+ 	struct sk_buff *segs = ERR_PTR(-EINVAL);
+ 	u16 mac_offset = skb->mac_header;
+-	unsigned int nsh_len, mac_len;
+-	__be16 proto;
++	__be16 tnl_proto, proto;
+ 
+ 	skb_reset_network_header(skb);
+ 
++	tnl_proto = skb->protocol;
++	tnl_hlen = skb->network_header - skb->mac_header;
+ 	mac_len = skb->mac_len;
+ 
+ 	if (unlikely(!pskb_may_pull(skb, NSH_BASE_HDR_LEN)))
+@@ -113,11 +115,11 @@ static struct sk_buff *nsh_gso_segment(struct sk_buff *skb,
+ 	}
+ 
+ 	for (skb = segs; skb; skb = skb->next) {
+-		skb->protocol = htons(ETH_P_NSH);
+-		__skb_push(skb, nsh_len);
+-		skb->mac_header = mac_offset;
+-		skb->network_header = skb->mac_header + mac_len;
++		__skb_push(skb, nsh_len + tnl_hlen);
++		skb_reset_mac_header(skb);
++		skb->network_header = skb->mac_header + tnl_hlen;
+ 		skb->mac_len = mac_len;
++		skb->protocol = tnl_proto;
+ 	}
+ 
+ out:
