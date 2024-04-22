@@ -1,62 +1,55 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp-42ad.mail.infomaniak.ch (smtp-42ad.mail.infomaniak.ch [84.16.66.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45FE14F120;
-	Mon, 22 Apr 2024 13:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69D914F128
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 13:15:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713791726; cv=none; b=d2UnFOHGpeeb1r8mAwP/LaAaCsD6cCCrWcjqV5S0fcAK3xymNurmrxwyL4nFHmKc/Te5GBcnKyr00yQ0lrb5d+uPGGaZzDcFCsKKDT+yvb17ns3Mjrsb3Aj9MvRTKaMMhSLC59Eb1BlYl25Z8E/325PKG2b+ICoJKXQ2tjxMKIo=
+	t=1713791744; cv=none; b=VNcPYYhYi32a/CNyGgqDwjCRac2QhTQe+/UQvhqdstfxxYkyycLzkF1TXb8glXKUaRPf0oW3cV43zN8U2wf3TRsD3ThfqU/WkeF/YmmZ5RMN9h+caWxnA1GXLOJVEl6MDM9h87eXqvcn/UjNY28UdtX9Er4EzrsNizz1UeXrDT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713791726; c=relaxed/simple;
-	bh=Bsi2yrP9GspUNdvxo00t0OABd9LalWnEPytFUjRckpI=;
+	s=arc-20240116; t=1713791744; c=relaxed/simple;
+	bh=GjhTJjoSiC3IDIVXzgKQ4P+qNveHUQ6lI+EgnHlfUqo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZHqJhSGPg1sP9jY1FnEV91J6hT9fYa1RyvVaY0ogSWHWbuifE4k6W9ZcJHp3ef/utyvXLnEd8F5q9GaTLTSnIM9kcJbCo3OV+1cW4DPYu+cenwtrAPo1n1Jf6ClMzlslj9Bb5A9Q1CBksk6TqzpmHM7hRojIsbqN+nnG5LA8Jpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=NKdxfYzU; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=GDKgLq+FHw4CFJPld3NLjQmo+y6zhUMvGDJUQI0l9ZaPdeoYjRRlGxPxE1yrHrae+y6zKCTeLll5wOpwp8C1FMS0xN4Rs6XpfmcViPhiLld6yekCBwFazAFBwEsRaOMsEuTOQX6vLgfxO1SQM9XdnPEndkLjMQdqF6n6LWICy0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=XaC5f4gj; arc=none smtp.client-ip=84.16.66.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NKdxfYzU"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5659840E00B2;
-	Mon, 22 Apr 2024 13:15:22 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id tSmzaJxpVIeN; Mon, 22 Apr 2024 13:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1713791717; bh=6GcGWsNB6KQVPHBxhsurkToAwd7K4BfgUopftbZCrT4=;
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="XaC5f4gj"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VNQYc6JShz3q7;
+	Mon, 22 Apr 2024 15:08:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1713791332;
+	bh=GjhTJjoSiC3IDIVXzgKQ4P+qNveHUQ6lI+EgnHlfUqo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NKdxfYzUGlllLZtmk5Dvimol6pTVI2TXeBwm/NuJOg8amoKGgPjr78IyU9JNKaGG8
-	 KNBjIOxe7l2o5M+WNQivj6fygOzNcvEMDyTsvmYIbL54WK4RIZcYyAaszWrINh1IjI
-	 kGtlnZFBrV+nx8CFeX7EGe3m1QeOJAoLWRk7icQWefFOJRuPKvvVmJdzd2HcxQSVTM
-	 bnWpisSQ0LHcFNWTyM4g7zxipoTJH1O499dXrFAse3ifbgzXufai5f2in6PEiH5C0s
-	 44p5eZDX9+DKFEHmcO+GOv4/o+2pDzJaB+8gByQpXetS0Hi4lbXEWVaR48BdDjmFlt
-	 TLmbGxumfn2uJ0IgXxv1FlsOZ6byrxICz6a9lwv5QWs7zEYVKUvRzj0Q8gHh0i3ZzN
-	 Q44+c0rmBeQFm2EAh5bhgCmL6OJOZblTEV9O01VAN2dGHcTJxb4ITqlqBwKxM15Xga
-	 tSmlBkxjwxzm4CgS1E1W5FbvXSFdpAP9wu+JUqJiIWaJB7oCvvd34YHRD7T/5YetP/
-	 UyVuIJmeZoWD6OkwSU0LW/THbdhCVV0frlrxj0TNbUmU1qUADCmfHuhkswigWq6iXI
-	 SebUNfU6pM7QKoTALRcofguRwMFkTIcDPT81mHdfazBzeLTrCRnxngdBFYGUFJv6LF
-	 VgNpZFYLYFZkuSwxbelKphCI=
-Received: from nazgul.tnic (unknown [IPv6:2a02:3038:209:d596:9e4e:36ff:fe9e:77ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C464140E016C;
-	Mon, 22 Apr 2024 13:15:05 +0000 (UTC)
-Date: Mon, 22 Apr 2024 15:14:59 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Nikunj A Dadhania <nikunj@amd.com>
-Cc: linux-kernel@vger.kernel.org, thomas.lendacky@amd.com, x86@kernel.org,
-	kvm@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-	dave.hansen@linux.intel.com, pgonda@google.com, seanjc@google.com,
-	pbonzini@redhat.com
-Subject: Re: [PATCH v8 07/16] x86/sev: Move and reorganize sev guest request
- api
-Message-ID: <20240422131459.GAZiZi0wUtpx2r0M6-@fat_crate.local>
-References: <20240215113128.275608-1-nikunj@amd.com>
- <20240215113128.275608-8-nikunj@amd.com>
+	b=XaC5f4gjQmTg7HWgvo8OaBYgvZVVaUnv+Y6B/jdsg0Q4f2OLDr4AYla0dAr871yUg
+	 SXigC7/aA4mp4zabDYUfQYwz/kj2V8GznfSGfeIslpVajiSP9OYd5T8+9TTpiL7YOt
+	 axM86vO0S3TpXTEvr00XTnMRotQwMoJZqzDgMjqE=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4VNQYb16q2zrw3;
+	Mon, 22 Apr 2024 15:08:50 +0200 (CEST)
+Date: Mon, 22 Apr 2024 15:08:50 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Guenter Roeck <linux@roeck-us.net>, David Gow <davidgow@google.com>
+Cc: Brendan Higgins <brendanhiggins@google.com>, 
+	Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Ingo Molnar <mingo@redhat.com>, James Morris <jamorris@linux.microsoft.com>, 
+	Kees Cook <keescook@chromium.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marco Pagani <marpagan@redhat.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Thara Gopinath <tgopinath@microsoft.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Wanpeng Li <wanpengli@tencent.com>, Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-um@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v3 7/7] kunit: Add tests for fault
+Message-ID: <20240422.thesh7quoo0U@digikod.net>
+References: <20240319104857.70783-1-mic@digikod.net>
+ <20240319104857.70783-8-mic@digikod.net>
+ <928249cc-e027-4f7f-b43f-502f99a1ea63@roeck-us.net>
+ <b70332b0-3e55-4375-935f-35ef3167a151@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,34 +58,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240215113128.275608-8-nikunj@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b70332b0-3e55-4375-935f-35ef3167a151@roeck-us.net>
+X-Infomaniak-Routing: alpha
 
-On Thu, Feb 15, 2024 at 05:01:19PM +0530, Nikunj A Dadhania wrote:
-> Subject: Re: [PATCH v8 07/16] x86/sev: Move and reorganize sev guest request api
+On Fri, Apr 19, 2024 at 04:38:01PM -0700, Guenter Roeck wrote:
+> On Fri, Apr 19, 2024 at 03:33:49PM -0700, Guenter Roeck wrote:
+> > Hi,
+> > 
+> > On Tue, Mar 19, 2024 at 11:48:57AM +0100, Mickaël Salaün wrote:
+> > > Add a test case to check NULL pointer dereference and make sure it would
+> > > result as a failed test.
+> > > 
+> > > The full kunit_fault test suite is marked as skipped when run on UML
+> > > because it would result to a kernel panic.
+> > > 
+> > > Tested with:
+> > > ./tools/testing/kunit/kunit.py run --arch x86_64 kunit_fault
+> > > ./tools/testing/kunit/kunit.py run --arch arm64 \
+> > >   --cross_compile=aarch64-linux-gnu- kunit_fault
+> > > 
+> > 
+> > What is the rationale for adding those tests unconditionally whenever
+> > CONFIG_KUNIT_TEST is enabled ? This completely messes up my test system
+> > because it concludes that it is pointless to continue testing
+> > after the "Unable to handle kernel NULL pointer dereference" backtrace.
+> > At the same time, it is all or nothing, meaning I can not disable
+> > it but still run other kunit tests.
+> > 
 
-s/api/API/g
+CONFIG_KUNIT_TEST is to test KUnit itself.  Why does this messes up your
+test system, and what is your test system?  Is it related to the kernel
+warning and then the message you previously sent?
+https://lore.kernel.org/r/fd604ae0-5630-4745-acf2-1e51c69cf0c0@roeck-us.net
+It seems David has a solution to suppress such warning.
 
-Please check your whole patchset for proper naming/abbreviations
-spelling, etc.
-
-Another one: s/sev/SEV/g and so on. You should know the drill by now.
-
-> For enabling Secure TSC, SEV-SNP guests need to communicate with the
-> AMD Security Processor early during boot. Many of the required
-> functions are implemented in the sev-guest driver and therefore not
-> available at early boot. Move the required functions and provide
-> API to the sev guest driver for sending guest message and vmpck
-> routines.
-
-Patches which move and reorganize must always be split: first patch(es):
-you do *purely* *mechanical* move without any code changes. Then you do
-the code changes ontop so that a reviewer can have a chance of seeing
-what you're doing.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> 
+> Oh, never mind. I just disabled CONFIG_KUNIT_TEST in my test bed
+> to "solve" the problem. I'll take that as one of those "unintended
+> consequences" items: Instead of more tests, there are fewer.
+> 
+> Guenter
+> 
