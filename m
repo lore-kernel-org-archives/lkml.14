@@ -1,33 +1,32 @@
-Received: from gauss.telenet-ops.be (gauss.telenet-ops.be [195.130.132.49])
+Received: from weierstrass.telenet-ops.be (weierstrass.telenet-ops.be [195.130.137.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8790E146A64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9439E146A74
 	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 10:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713781861; cv=none; b=JgwiDrjmbrev8JzDornlF6fMhoCD+dnAMQnfPcJz3Te5MsuDsK9feI8GVPclUJg1A4sVLQtG5YnOsYrnNLRxeQQwxiTqeAh+2OsvZVT/JuhHObAbLlAbw8yfCMa9zFnzcuRKMysNLHPPONC56DC+2y/WSF07KAa3j7OPAkCb8I8=
+	t=1713781861; cv=none; b=mVLspzZsu01R1sP3d0x+X0ZV7HmgUrCCpTXYGTSXFenPztp6+MwEuCRujfl5BnBPSZKS6yZD9b51eqP8HmGfhkilL8N1HneAm3JqMech7M6LP47jtsj8kAKbsgYzOmwVFxqN3iVUPCUrYsicHnrMF2HxW41hHRzmFSxufgD4S+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713781861; c=relaxed/simple;
-	bh=t6bE9D/9V+hTMJnLOjbZez/lE8xZv1fJAq5Agn8AEu4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jXkDLvwCJopRoCnUkMKJRnd1T+wsV1a8sxAM2cFzwj9cUN+J8jAbBgDfuMDPWmpXgxIh4+jFpET4j1GjdS8a6U+YrmW/r4a3fhg9u9adst7Xs+z/8LGyMQeVAg9ftqeQOqISL3AeRQt6OPwj/0280j2KeC2IKyhu+PrxKv26coM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.49
+	bh=1CXNvotAMQnIGPSbHcaV7HaPO7twZYw/r9xyNVOHBdE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Sqm6LHXAsd6TrU8GlbkGEBbV3BgNlKiB8EalfUp2bRkaolIeJd73awYIUuCW9G3aj4gIVA24zxFFGoEeHw+tTe0S0bUyvPJrDJYv2r4B9uroe2aqpT2rxiC2ataJy7oiwQfxiUNECkjLfhMMXX7o8gOuO2OGVXtxdtlkWGO13LM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
-	by gauss.telenet-ops.be (Postfix) with ESMTPS id 4VNM3J2VHDz4wxLq
+	by weierstrass.telenet-ops.be (Postfix) with ESMTPS id 4VNM3J2GgBz4wyVd
 	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 12:30:52 +0200 (CEST)
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
 	by michel.telenet-ops.be with bizsmtp
-	id EAWj2C00C0SSLxL06AWjTs; Mon, 22 Apr 2024 12:30:45 +0200
+	id EAWj2C00B0SSLxL06AWjTr; Mon, 22 Apr 2024 12:30:45 +0200
 Received: from rox.of.borg ([192.168.97.57])
 	by ramsan.of.borg with esmtp (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1ryqw1-001cvu-64;
+	id 1ryqw1-001cvn-4S;
 	Mon, 22 Apr 2024 12:30:43 +0200
 Received: from geert by rox.of.borg with local (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1ryqwd-005i3d-7J;
+	id 1ryqwd-005i3S-3e;
 	Mon, 22 Apr 2024 12:30:43 +0200
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -41,12 +40,10 @@ Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org,
 	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 03/11] Revert "drm/bridge: dw-hdmi: Make DRM_DW_HDMI selectable"
-Date: Mon, 22 Apr 2024 12:30:31 +0200
-Message-Id: <b2d1a7a765e4af249f4c450383de6e8422647e2e.1713780345.git.geert+renesas@glider.be>
+Subject: [PATCH 00/11] drm: Restore helper usability
+Date: Mon, 22 Apr 2024 12:30:28 +0200
+Message-Id: <cover.1713780345.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1713780345.git.geert+renesas@glider.be>
-References: <cover.1713780345.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,27 +52,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This reverts commit 0209df3b4731516fe77638bfc52ba2e9629c67cd, as the
-commit it fixes (which is BTW not the commit in the Fixes: tag!) will be
-reverted, too.
+	Hi all,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/gpu/drm/bridge/synopsys/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+As discussed on IRC with Maxime and Arnd, this series reverts the
+conversion of select to depends for various DRM helpers in series
+"[PATCH v3 00/13] drm/display: Convert helpers Kconfig symbols to
+depends on"[1], and various fixes for it.  This conversion introduced a
+big usability issue when configuring a kernel and enabling DRM drivers
+that use DRM helper code: as drivers now depend on helpers, the user
+needs to know which helpers to enable, before the driver he is
+interested even becomes visible.  The user should not need to know that,
+and drivers should select the helpers they need.
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/Kconfig b/drivers/gpu/drm/bridge/synopsys/Kconfig
-index 1252fd30d4a4b461..387f5bd86089fb5c 100644
---- a/drivers/gpu/drm/bridge/synopsys/Kconfig
-+++ b/drivers/gpu/drm/bridge/synopsys/Kconfig
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config DRM_DW_HDMI
--	tristate "Synopsys Designware HDMI TX Controller"
-+	tristate
- 	depends on DRM_DISPLAY_HDMI_HELPER
- 	depends on DRM_DISPLAY_HELPER
- 	select DRM_KMS_HELPER
+Hence revert back to what we had before, where drivers selected the
+helpers (and any of their dependencies, if they can be met) they need.
+In general, when a symbol selects another symbol, it should just make
+sure the dependencies of the target symbol are met, which may mean
+adding dependencies to the source symbol.
+
+Thanks for applying!
+
+[1] https://lore.kernel.org/r/20240327-kms-kconfig-helpers-v3-0-eafee11b84b3@kernel.org/
+
+Geert Uytterhoeven (11):
+  Revert "drm: fix DRM_DISPLAY_DP_HELPER dependencies, part 2"
+  Revert "drm/display: Select DRM_KMS_HELPER for DP helpers"
+  Revert "drm/bridge: dw-hdmi: Make DRM_DW_HDMI selectable"
+  Revert "drm: fix DRM_DISPLAY_DP_HELPER dependencies"
+  Revert "drm: Switch DRM_DISPLAY_HDMI_HELPER to depends on"
+  Revert "drm: Switch DRM_DISPLAY_HDCP_HELPER to depends on"
+  Revert "drm: Switch DRM_DISPLAY_DP_HELPER to depends on"
+  Revert "drm: Switch DRM_DISPLAY_DP_AUX_BUS to depends on"
+  Revert "drm: Switch DRM_DISPLAY_HELPER to depends on"
+  Revert "drm: Make drivers depends on DRM_DW_HDMI"
+  Revert "drm/display: Make all helpers visible and switch to depends
+    on"
+
+ drivers/gpu/drm/Kconfig                 |  8 +++----
+ drivers/gpu/drm/amd/amdgpu/Kconfig      | 12 ++++------
+ drivers/gpu/drm/bridge/Kconfig          | 28 +++++++++++-----------
+ drivers/gpu/drm/bridge/analogix/Kconfig | 18 +++++++-------
+ drivers/gpu/drm/bridge/cadence/Kconfig  |  8 +++----
+ drivers/gpu/drm/bridge/imx/Kconfig      |  4 ++--
+ drivers/gpu/drm/bridge/synopsys/Kconfig |  6 ++---
+ drivers/gpu/drm/display/Kconfig         | 32 ++++++++++---------------
+ drivers/gpu/drm/exynos/Kconfig          |  4 ++--
+ drivers/gpu/drm/i915/Kconfig            |  8 +++----
+ drivers/gpu/drm/imx/ipuv3/Kconfig       |  5 ++--
+ drivers/gpu/drm/ingenic/Kconfig         |  2 +-
+ drivers/gpu/drm/mediatek/Kconfig        |  6 ++---
+ drivers/gpu/drm/meson/Kconfig           |  2 +-
+ drivers/gpu/drm/msm/Kconfig             |  8 +++----
+ drivers/gpu/drm/nouveau/Kconfig         | 10 ++++----
+ drivers/gpu/drm/panel/Kconfig           | 32 ++++++++++++-------------
+ drivers/gpu/drm/radeon/Kconfig          |  8 +++----
+ drivers/gpu/drm/renesas/rcar-du/Kconfig |  2 +-
+ drivers/gpu/drm/rockchip/Kconfig        | 10 ++++----
+ drivers/gpu/drm/sun4i/Kconfig           |  2 +-
+ drivers/gpu/drm/tegra/Kconfig           |  8 +++----
+ drivers/gpu/drm/vc4/Kconfig             | 10 ++++----
+ drivers/gpu/drm/xe/Kconfig              | 13 ++++------
+ drivers/gpu/drm/xlnx/Kconfig            |  8 +++----
+ 25 files changed, 116 insertions(+), 138 deletions(-)
+
 -- 
 2.34.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
