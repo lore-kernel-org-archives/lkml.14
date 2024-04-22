@@ -1,86 +1,249 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFAF152168;
-	Mon, 22 Apr 2024 15:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C004F1514E2;
+	Mon, 22 Apr 2024 15:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713798751; cv=none; b=V784d7dNEpzuncGBpKvefv/lBaNIVL7EKK1dC5LTE0xLQOrP/wmlv44+3+Wt2tfncEV1Nn4vc5x0rhmI7IrP5N7qFSUBWm9zLJoluP56YiHvlE28g5ERb0ebpnVG6jI0M8hm8JD3Vilyl23s5SQWWVW+apmDlHIhgxQLLsSRzaA=
+	t=1713798774; cv=none; b=Ngtxi+r49sp6hN1IcWLLKd3n8u09f+yUMiROyiIZHz8oWMJki6FVnDFfF+H8p61qcI508Zl6qFoGliim0f1DluEGBvX4vsVBL/CPIuafNg1n64yHXBMWdaRz5aDgPxi4NsxnnXwgFoKoNAQuAL7mWnWM8JzxEH/ObVbnq+I7u7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713798751; c=relaxed/simple;
-	bh=n2QljjJIxPxXYwFqyVO0pm8jMVl5uWaqpEKlS07dSKc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aBDb+bazNnbULdvWqxqZyD0ETl2KIatLnGOWWPX5hzqEvNcgbketnRUox2FyXKKHwPR9K4L60HFJY6bW2tOygLmc+9TTBiGiBDWrr23JkhPhPmO25uUiJ55NU7BsoKb8xdCnW8HEjDnDU0WRJyuiHR2RTRKHZhzECyo+n25jGSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iiNJ4ti9; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1713798774; c=relaxed/simple;
+	bh=gIKlh6iN6ywZIhIu86yzFov1xM7l1+qxfUxY8EpWUtU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Q4Hqdy1RqldTB1T39tE2ETBFg+WSM9HO5oYUnijX2rz42t3EfabezZIBgmM5Y4u1snyMDnPcFoZ5h/KUr//eppVHaWQ1oNANwqNTi4uyhCbk3aGOC9HcIjoqjIhb7IzHweZ32mvN9G+iWU7+Dh1m9X/oDZH9f3c40Bj6e+GkuaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jq8POce7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iiNJ4ti9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=55qjHqIZitfTw5V8j2PoWpsRdoXOQTx60fjmhVXBN3o=; b=iiNJ4ti90zPQUh9KK7F1pVBY9W
-	Z4ifwzEOGTd2q+GwBf/Gh4kjLs9PKJ4hBMJb7oiRAJqpAe39gYL7uUkF+50XgrcXeFvYAop0WGspi
-	MrSWkPyI48x4tIVb85jXCNl4DeLYXuSRi7bUnfGvG44t0VMKY7ogFKZ4UFt0fg2mXGWa9SjMIrnId
-	L2CCnpGej3nH0PNiVgXWtzLw39G8huLiE0SzQONbfsA442oq9lrxARCNMDkcDGR/QvQNq1CHnR1pC
-	ZxFvhjd/wbGMoSOQoon6OomaS4pIfLRVVtTMykwkQDo368KUg79gmy357hiFT5p9yA7XKcfrmiJgL
-	Ks+zOQ5g==;
-Received: from [50.53.4.147] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1ryvLH-0000000E4Pf-1m44;
-	Mon, 22 Apr 2024 15:12:27 +0000
-Message-ID: <7aa0e3ca-ec2c-4da7-a6f3-94163edb54c9@infradead.org>
-Date: Mon, 22 Apr 2024 08:12:23 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jq8POce7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F375C113CC;
+	Mon, 22 Apr 2024 15:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713798774;
+	bh=gIKlh6iN6ywZIhIu86yzFov1xM7l1+qxfUxY8EpWUtU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jq8POce7anGGzwUepoaKwnoCl8OVeSe2En4Jr7iILwAokwGro/mF/z2nInFcGmOFm
+	 fcKp7MzZluxTk+O0jYVIIuFZfJY5X/LNOHdGY5d+kaRU4iVr1/LRk0WHCizIV8aRFG
+	 x/dX8q8H95ZRIxLH3kjDMPSRh+qBnA+BNFHjgvrjMNVRilpHlI7ETDycIzXkau5rGb
+	 vP3NGDaw5rI10EyCOvkMcBUUZxujTAJAUhY1cVOQ4ytwhjJNwtu9qU0gpFeYbNEkAf
+	 j1MlIpUp23AC0XDxmI+c25RP6Oek+fq3onu3P3iTbKkcPm2aaCz6vf4lKWJ07g/TZ3
+	 0Oqd3AfiJBuxQ==
+Date: Tue, 23 Apr 2024 00:12:48 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Jonathan Haslam <jonathan.haslam@gmail.com>,
+ linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org, andrii@kernel.org,
+ bpf@vger.kernel.org, rostedt@goodmis.org, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] uprobes: reduce contention on uprobes_tree access
+Message-Id: <20240423001248.161933b7646e1170f106400c@kernel.org>
+In-Reply-To: <ZiZMdLIK55q3EvMP@krava>
+References: <20240422102306.6026-1-jonathan.haslam@gmail.com>
+	<ZiZMdLIK55q3EvMP@krava>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs/MAINTAINERS: Update my email address
-To: Carlos Bilbao <carlos.bilbao@amd.com>, corbet@lwn.net,
- elena.reshetova@intel.com
-Cc: cabilbao@amd.com, bilbao@vt.edu, avadhut.naik@amd.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240422133726.129074-1-carlos.bilbao@amd.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240422133726.129074-1-carlos.bilbao@amd.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+On Mon, 22 Apr 2024 13:39:32 +0200
+Jiri Olsa <olsajiri@gmail.com> wrote:
 
-
-On 4/22/24 6:37 AM, Carlos Bilbao wrote:
-> In the near future, I will not have access to the email address I used as
-> maintainer of a number of things, mostly in the documentation. Update that
-> address to my personal email address (see Link) so I can continue
-> contributing.
+> On Mon, Apr 22, 2024 at 03:23:05AM -0700, Jonathan Haslam wrote:
+> > Active uprobes are stored in an RB tree and accesses to this tree are
+> > dominated by read operations. Currently these accesses are serialized by
+> > a spinlock but this leads to enormous contention when large numbers of
+> > threads are executing active probes.
+> > 
+> > This patch converts the spinlock used to serialize access to the
+> > uprobes_tree RB tree into a reader-writer spinlock. This lock type
+> > aligns naturally with the overwhelmingly read-only nature of the tree
+> > usage here. Although the addition of reader-writer spinlocks are
+> > discouraged [0], this fix is proposed as an interim solution while an
+> > RCU based approach is implemented (that work is in a nascent form). This
+> > fix also has the benefit of being trivial, self contained and therefore
+> > simple to backport.
+> > 
+> > We have used a uprobe benchmark from the BPF selftests [1] to estimate
+> > the improvements. Each block of results below show 1 line per execution
+> > of the benchmark ("the "Summary" line) and each line is a run with one
+> > more thread added - a thread is a "producer". The lines are edited to
+> > remove extraneous output.
+> > 
+> > The tests were executed with this driver script:
+> > 
+> > for num_threads in {1..20}
+> > do
+> >   sudo ./bench -a -p $num_threads trig-uprobe-nop | grep Summary
+> > done
+> > 
+> > SPINLOCK (BEFORE)
+> > ==================
+> > Summary: hits    1.396 ± 0.007M/s (  1.396M/prod)
+> > Summary: hits    1.656 ± 0.016M/s (  0.828M/prod)
+> > Summary: hits    2.246 ± 0.008M/s (  0.749M/prod)
+> > Summary: hits    2.114 ± 0.010M/s (  0.529M/prod)
+> > Summary: hits    2.013 ± 0.009M/s (  0.403M/prod)
+> > Summary: hits    1.753 ± 0.008M/s (  0.292M/prod)
+> > Summary: hits    1.847 ± 0.001M/s (  0.264M/prod)
+> > Summary: hits    1.889 ± 0.001M/s (  0.236M/prod)
+> > Summary: hits    1.833 ± 0.006M/s (  0.204M/prod)
+> > Summary: hits    1.900 ± 0.003M/s (  0.190M/prod)
+> > Summary: hits    1.918 ± 0.006M/s (  0.174M/prod)
+> > Summary: hits    1.925 ± 0.002M/s (  0.160M/prod)
+> > Summary: hits    1.837 ± 0.001M/s (  0.141M/prod)
+> > Summary: hits    1.898 ± 0.001M/s (  0.136M/prod)
+> > Summary: hits    1.799 ± 0.016M/s (  0.120M/prod)
+> > Summary: hits    1.850 ± 0.005M/s (  0.109M/prod)
+> > Summary: hits    1.816 ± 0.002M/s (  0.101M/prod)
+> > Summary: hits    1.787 ± 0.001M/s (  0.094M/prod)
+> > Summary: hits    1.764 ± 0.002M/s (  0.088M/prod)
+> > 
+> > RW SPINLOCK (AFTER)
+> > ===================
+> > Summary: hits    1.444 ± 0.020M/s (  1.444M/prod)
+> > Summary: hits    2.279 ± 0.011M/s (  1.139M/prod)
+> > Summary: hits    3.422 ± 0.014M/s (  1.141M/prod)
+> > Summary: hits    3.565 ± 0.017M/s (  0.891M/prod)
+> > Summary: hits    2.671 ± 0.013M/s (  0.534M/prod)
+> > Summary: hits    2.409 ± 0.005M/s (  0.401M/prod)
+> > Summary: hits    2.485 ± 0.008M/s (  0.355M/prod)
+> > Summary: hits    2.496 ± 0.003M/s (  0.312M/prod)
+> > Summary: hits    2.585 ± 0.002M/s (  0.287M/prod)
+> > Summary: hits    2.908 ± 0.011M/s (  0.291M/prod)
+> > Summary: hits    2.346 ± 0.016M/s (  0.213M/prod)
+> > Summary: hits    2.804 ± 0.004M/s (  0.234M/prod)
+> > Summary: hits    2.556 ± 0.001M/s (  0.197M/prod)
+> > Summary: hits    2.754 ± 0.004M/s (  0.197M/prod)
+> > Summary: hits    2.482 ± 0.002M/s (  0.165M/prod)
+> > Summary: hits    2.412 ± 0.005M/s (  0.151M/prod)
+> > Summary: hits    2.710 ± 0.003M/s (  0.159M/prod)
+> > Summary: hits    2.826 ± 0.005M/s (  0.157M/prod)
+> > Summary: hits    2.718 ± 0.001M/s (  0.143M/prod)
+> > Summary: hits    2.844 ± 0.006M/s (  0.142M/prod)
 > 
-> Link: https://lore.kernel.org/all/BL1PR12MB58749FF2BFEDB817DE1FE6CBF82A2@BL1PR12MB5874.namprd12.prod.outlook.com/
-> Signed-off-by: Carlos Bilbao <carlos.bilbao@amd.com>
-> ---
->  Documentation/security/snp-tdx-threat-model.rst           | 2 +-
->  Documentation/translations/sp_SP/index.rst                | 2 +-
->  Documentation/translations/sp_SP/memory-barriers.txt      | 4 ++--
->  .../translations/sp_SP/process/code-of-conduct.rst        | 2 +-
->  Documentation/translations/sp_SP/process/coding-style.rst | 2 +-
->  .../translations/sp_SP/process/email-clients.rst          | 2 +-
->  Documentation/translations/sp_SP/process/howto.rst        | 2 +-
->  Documentation/translations/sp_SP/process/kernel-docs.rst  | 2 +-
->  .../sp_SP/process/kernel-enforcement-statement.rst        | 2 +-
->  Documentation/translations/sp_SP/process/magic-number.rst | 2 +-
->  .../translations/sp_SP/process/programming-language.rst   | 2 +-
->  .../translations/sp_SP/process/submitting-patches.rst     | 2 +-
->  MAINTAINERS                                               | 8 ++++----
->  13 files changed, 17 insertions(+), 17 deletions(-)
+> nice, I'm assuming Masami will take this one.. in any case:
+> 
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Maybe also update .mailmap ?
+Thanks Jiri!
 
-thanks.
+This looks good to me too.
+Let me pick this for probes/for-next.
+
+Thank you,
+
+> 
+> thanks,
+> jirka
+> 
+> > 
+> > The numbers in parenthesis give averaged throughput per thread which is
+> > of greatest interest here as a measure of scalability. Improvements are
+> > in the order of 22 - 68% with this particular benchmark (mean = 43%).
+> > 
+> > V2:
+> >  - Updated commit message to include benchmark results.
+> > 
+> > [0] https://docs.kernel.org/locking/spinlocks.html
+> > [1] https://github.com/torvalds/linux/blob/master/tools/testing/selftests/bpf/benchs/bench_trigger.c
+> > 
+> > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
+> > ---
+> >  kernel/events/uprobes.c | 22 +++++++++++-----------
+> >  1 file changed, 11 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index e4834d23e1d1..8ae0eefc3a34 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
+> >   */
+> >  #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
+> >  
+> > -static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
+> > +static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
+> >  
+> >  #define UPROBES_HASH_SZ	13
+> >  /* serialize uprobe->pending_list */
+> > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
+> >  {
+> >  	struct uprobe *uprobe;
+> >  
+> > -	spin_lock(&uprobes_treelock);
+> > +	read_lock(&uprobes_treelock);
+> >  	uprobe = __find_uprobe(inode, offset);
+> > -	spin_unlock(&uprobes_treelock);
+> > +	read_unlock(&uprobes_treelock);
+> >  
+> >  	return uprobe;
+> >  }
+> > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
+> >  {
+> >  	struct uprobe *u;
+> >  
+> > -	spin_lock(&uprobes_treelock);
+> > +	write_lock(&uprobes_treelock);
+> >  	u = __insert_uprobe(uprobe);
+> > -	spin_unlock(&uprobes_treelock);
+> > +	write_unlock(&uprobes_treelock);
+> >  
+> >  	return u;
+> >  }
+> > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
+> >  	if (WARN_ON(!uprobe_is_active(uprobe)))
+> >  		return;
+> >  
+> > -	spin_lock(&uprobes_treelock);
+> > +	write_lock(&uprobes_treelock);
+> >  	rb_erase(&uprobe->rb_node, &uprobes_tree);
+> > -	spin_unlock(&uprobes_treelock);
+> > +	write_unlock(&uprobes_treelock);
+> >  	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
+> >  	put_uprobe(uprobe);
+> >  }
+> > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
+> >  	min = vaddr_to_offset(vma, start);
+> >  	max = min + (end - start) - 1;
+> >  
+> > -	spin_lock(&uprobes_treelock);
+> > +	read_lock(&uprobes_treelock);
+> >  	n = find_node_in_range(inode, min, max);
+> >  	if (n) {
+> >  		for (t = n; t; t = rb_prev(t)) {
+> > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
+> >  			get_uprobe(u);
+> >  		}
+> >  	}
+> > -	spin_unlock(&uprobes_treelock);
+> > +	read_unlock(&uprobes_treelock);
+> >  }
+> >  
+> >  /* @vma contains reference counter, not the probed instruction. */
+> > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
+> >  	min = vaddr_to_offset(vma, start);
+> >  	max = min + (end - start) - 1;
+> >  
+> > -	spin_lock(&uprobes_treelock);
+> > +	read_lock(&uprobes_treelock);
+> >  	n = find_node_in_range(inode, min, max);
+> > -	spin_unlock(&uprobes_treelock);
+> > +	read_unlock(&uprobes_treelock);
+> >  
+> >  	return !!n;
+> >  }
+> > -- 
+> > 2.43.0
+> > 
+> 
+
+
 -- 
-#Randy
-https://people.kernel.org/tglx/notes-about-netiquette
-https://subspace.kernel.org/etiquette.html
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
