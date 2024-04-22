@@ -1,139 +1,149 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8D63D3B3;
-	Mon, 22 Apr 2024 12:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE9A13D623;
+	Mon, 22 Apr 2024 12:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713789447; cv=none; b=WtbcaKktHavDgUSs0rrn2Mqlfu0YK1MiwLrTvi+PC1ZN+7QL4kNH1nBgUa49FmAbWjqcy6YFtzN8NkGJ4e/+fL25PYQdkQ2eXD4c39BAK4iCQAQS/cf1ZAOcqGiWaXrUWKZsQTJWEqNP/ELm9hFYJO66TSNGx2UrCX8q5412frs=
+	t=1713789458; cv=none; b=jYJwZMAdATsUoOjX/5INbrI0tpHRArmS9TSmC8qsTQIDesQULaRrV65mN+mudwyaB7ui/CAQM51jqjhpmubUOEU8TfHLef2iuAqtRulIvuqHsWiHxjxNoVzBkdNElht7ncCO7rdlVjafbhRCS6tL1MxXI6YDcvt2XCr2qw5JgEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713789447; c=relaxed/simple;
-	bh=YXfnY3uXb0kk2ZUXCnaUYrvxflw+efPYVi7JZ98E4+w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KCcco0Rz3kRU5dJENMrnf54X08C49qpOcNkxA+2hkVh+9JSi1L2sxdI2fcbJU/oY6oebPz9X5lfAX2HX5+yHjr7UxMxPIFxwbqBQvmKUEApoHW8g4Bx861nrAXES+5fp5LktT5ZYqrh0hHYXZE+stppN44TPNFKJ32dhW5BxM3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ALq0nZP2; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1713789458; c=relaxed/simple;
+	bh=nKi3nDBQfqTD2aouZarLfxHKW8Nu4xjaj/P4r3wdh1I=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=a9myEw+e4hmmuUbIMI8o7wo9VE2Io1aJ8D+fQkH9v8MKY2sTpCHU60NkO4Gu4mTPwyKv9zFUjYOyOwSNM50hfpZeR5hu0GfVk2a0l6h44tbmR75YeUVzGBpFfXnqePwuTYA5H+bnwhCt54uefC7LzRXbnbvc274C+LbcedukhTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gBA6MnRY; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ALq0nZP2"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43MBZ7Ee007942;
-	Mon, 22 Apr 2024 12:37:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pp1;
- bh=GxnnFQoz94BKJ9kB/lpuOb10NsdHZD2kbzSsvQhsOYU=;
- b=ALq0nZP2CMCyQWlfGy9HYepQimkgcTwviEsdnS26+Za4VQFJO0VonuCLsIGaRNuqLNiO
- 4yCjqrH+rTx7wnDZAgnhhnb2Gmsa6UrCjDvVppQKsFLF9HqkwAspuQdPOYCm9oq2YNSW
- g4C2huMfqbauGE0IWA0QOLIxZCuVswOiiJGcFfUuhF6NbZQEuyUinkUgmfX105Seq2Mc
- w/ClBUAtDbyjOkXawyi31ChYT2QcPqHzYWlYq4ASdrxxSb4PlY2EMtNJe66RWpz8KLrU
- 6SJuWsgx9KTEWg/gzP10uO6ZZsXjfQZlzb87k+UCXQ3fvi1DvxEbtwl+s4NPJ7hC5Njc 1w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xnq4sr59a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 12:37:18 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43MCbIDd006776;
-	Mon, 22 Apr 2024 12:37:18 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xnq4sr599-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 12:37:18 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43M9RG83020907;
-	Mon, 22 Apr 2024 12:37:17 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xmrdyqshg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 12:37:17 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43MCbCn314025168
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 22 Apr 2024 12:37:14 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EE2ED2004B;
-	Mon, 22 Apr 2024 12:37:11 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C9C6B20040;
-	Mon, 22 Apr 2024 12:37:11 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 22 Apr 2024 12:37:11 +0000 (GMT)
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>
-Cc: linux-integrity@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>
-Subject: [PATCH] char: tpm: Keep TPM_INF_IO_PORT define for HAS_IOPORT=n
-Date: Mon, 22 Apr 2024 14:37:11 +0200
-Message-Id: <20240422123711.1739063-1-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: hcDaol3j_f_7tNnnIzjgAbeHkfE519_I
-X-Proofpoint-GUID: 3Am2FGgfmbcM0n005wPIJveUQmJV9aav
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gBA6MnRY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1713789455;
+	bh=nKi3nDBQfqTD2aouZarLfxHKW8Nu4xjaj/P4r3wdh1I=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=gBA6MnRYR/R/xlDKV/1GJQyeDQDcN2hVUmtmjdo2LA03yMYEgmax83ytGK8M5dMWj
+	 Fzsh5IadF+jxiJqp79KFR9VrR5cO/XIqx9p7RjEbbQhCEp2ldGe0OSKE/xHabI/8kR
+	 26ottZjMIymtuxHA7eDhNj7PXXdxNdBNDcatSufrMxWLhkq3Q1WZmuV7Z315eJNs1U
+	 NQ1auEOw8uOGc6ETrcPNl/Vke+aFP+IeWWlKhwNwoMc2TTC3rpB1o4bPpMCNsuO70T
+	 J7+oX4rgA4e7gfIZ5BcgyWsXOh3e19ffx0XAmJHurWHSsUP+bT+JSXPHdLs8mLLXNS
+	 xelRXKOkAY5iw==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 923C337820C2;
+	Mon, 22 Apr 2024 12:37:32 +0000 (UTC)
+Message-ID: <10950830-3e85-45cd-b668-060fad942ae4@collabora.com>
+Date: Mon, 22 Apr 2024 17:38:02 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-22_09,2024-04-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 phishscore=0 mlxscore=0 adultscore=0 malwarescore=0
- suspectscore=0 clxscore=1011 mlxlogscore=999 spamscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404220056
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests: x86: conform test to TAP format output
+To: Shuah Khan <shuah@kernel.org>
+References: <20240307183708.2857513-1-usama.anjum@collabora.com>
+ <9aed3669-559b-4b9f-a1b5-0349463739d6@collabora.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <9aed3669-559b-4b9f-a1b5-0349463739d6@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The recent change to handle HAS_IOPORT removed the TPM_INF_IO_PORT
-define for the HAS_IOPORT=n case despite the define being used in
-sections of code not covered by the same ifdef check. This was missed
-because at the moment TCG_INFINEON indirectly depends on HAS_IOPORT via
-PNP which depends on ACPI || ISA. As TCG_INFINEON does in principle
-support MMIO only use add it for COMPILE_TEST to cover the HAS_IOPORT=n
-case.
+Reminder
 
-Link: https://lore.kernel.org/lkml/9d9fa267-067e-421b-9a39-aa178b913298@app.fastmail.com/
-Fixes: dab56f80e7f9 ("char: tpm: handle HAS_IOPORT dependencies")
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
-Note 0: I compile tested this with allyesconfig on s390 using my branch with
-        compile-time disabled in*()/out*() and verified that TCG_INFINEON was
-        built
-Note 1: The SHA of the fixed commit is from linux-next
+On 4/14/24 6:21 PM, Muhammad Usama Anjum wrote:
+> Soft reminder for this patch
+> 
+> On 3/7/24 11:37 PM, Muhammad Usama Anjum wrote:
+>> Conform the layout, informational and status messages to TAP. No
+>> functional change is intended other than the layout of output messages.
+>>
+>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>> ---
+>>  tools/testing/selftests/x86/vdso_restorer.c | 29 +++++++++------------
+>>  1 file changed, 12 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/x86/vdso_restorer.c b/tools/testing/selftests/x86/vdso_restorer.c
+>> index fe99f24341554..f621167424a9c 100644
+>> --- a/tools/testing/selftests/x86/vdso_restorer.c
+>> +++ b/tools/testing/selftests/x86/vdso_restorer.c
+>> @@ -21,6 +21,7 @@
+>>  #include <unistd.h>
+>>  #include <syscall.h>
+>>  #include <sys/syscall.h>
+>> +#include "../kselftest.h"
+>>  
+>>  /* Open-code this -- the headers are too messy to easily use them. */
+>>  struct real_sigaction {
+>> @@ -44,17 +45,19 @@ static void handler_without_siginfo(int sig)
+>>  
+>>  int main()
+>>  {
+>> -	int nerrs = 0;
+>>  	struct real_sigaction sa;
+>>  
+>> +	ksft_print_header();
+>> +	ksft_set_plan(2);
+>> +
+>>  	void *vdso = dlopen("linux-vdso.so.1",
+>>  			    RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
+>>  	if (!vdso)
+>>  		vdso = dlopen("linux-gate.so.1",
+>>  			      RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
+>>  	if (!vdso) {
+>> -		printf("[SKIP]\tFailed to find vDSO.  Tests are not expected to work.\n");
+>> -		return 0;
+>> +		ksft_print_msg("[SKIP]\tFailed to find vDSO. Tests are not expected to work.\n");
+>> +		return KSFT_SKIP;
+>>  	}
+>>  
+>>  	memset(&sa, 0, sizeof(sa));
+>> @@ -62,21 +65,16 @@ int main()
+>>  	sa.flags = SA_SIGINFO;
+>>  	sa.restorer = NULL;	/* request kernel-provided restorer */
+>>  
+>> -	printf("[RUN]\tRaise a signal, SA_SIGINFO, sa.restorer == NULL\n");
+>> +	ksft_print_msg("Raise a signal, SA_SIGINFO, sa.restorer == NULL\n");
+>>  
+>>  	if (syscall(SYS_rt_sigaction, SIGUSR1, &sa, NULL, 8) != 0)
+>>  		err(1, "raw rt_sigaction syscall");
+>>  
+>>  	raise(SIGUSR1);
+>>  
+>> -	if (handler_called) {
+>> -		printf("[OK]\tSA_SIGINFO handler returned successfully\n");
+>> -	} else {
+>> -		printf("[FAIL]\tSA_SIGINFO handler was not called\n");
+>> -		nerrs++;
+>> -	}
+>> +	ksft_test_result(handler_called, "SA_SIGINFO handler returned\n");
+>>  
+>> -	printf("[RUN]\tRaise a signal, !SA_SIGINFO, sa.restorer == NULL\n");
+>> +	ksft_print_msg("Raise a signal, !SA_SIGINFO, sa.restorer == NULL\n");
+>>  
+>>  	sa.flags = 0;
+>>  	sa.handler = handler_without_siginfo;
+>> @@ -86,10 +84,7 @@ int main()
+>>  
+>>  	raise(SIGUSR1);
+>>  
+>> -	if (handler_called) {
+>> -		printf("[OK]\t!SA_SIGINFO handler returned successfully\n");
+>> -	} else {
+>> -		printf("[FAIL]\t!SA_SIGINFO handler was not called\n");
+>> -		nerrs++;
+>> -	}
+>> +	ksft_test_result(handler_called, "SA_SIGINFO handler returned\n");
+>> +
+>> +	ksft_finished();
+>>  }
+> 
 
- drivers/char/tpm/Kconfig        | 2 +-
- drivers/char/tpm/tpm_infineon.c | 2 --
- 2 files changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index 418c9ed59ffd..852bb9344788 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -157,7 +157,7 @@ config TCG_ATMEL
- 
- config TCG_INFINEON
- 	tristate "Infineon Technologies TPM Interface"
--	depends on PNP
-+	depends on PNP || COMPILE_TEST
- 	help
- 	  If you have a TPM security chip from Infineon Technologies
- 	  (either SLD 9630 TT 1.1 or SLB 9635 TT 1.2) say Yes and it
-diff --git a/drivers/char/tpm/tpm_infineon.c b/drivers/char/tpm/tpm_infineon.c
-index 99c6e565ec8d..2d2ae37153ba 100644
---- a/drivers/char/tpm/tpm_infineon.c
-+++ b/drivers/char/tpm/tpm_infineon.c
-@@ -26,9 +26,7 @@
- #define	TPM_MAX_TRIES		5000
- #define	TPM_INFINEON_DEV_VEN_VALUE	0x15D1
- 
--#ifdef CONFIG_HAS_IOPORT
- #define TPM_INF_IO_PORT		0x0
--#endif
- #define TPM_INF_IO_MEM		0x1
- 
- #define TPM_INF_ADDR		0x0
 -- 
-2.40.1
-
+BR,
+Muhammad Usama Anjum
