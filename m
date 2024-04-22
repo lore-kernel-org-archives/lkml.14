@@ -1,16 +1,16 @@
 Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2F04F898
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:18:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BF150A77
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:18:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713773919; cv=none; b=ToyZ9XomjgsBJJxPMBtq/8dH7Q2HtxLrn6geneRuT4lRwU3DnK1ZQh2yeWyADAv/rzenWA2YlahLvciOWLYFbm+EOplDtjl7ZIA4duuWKSRiEzGO7A50Dgt0YFuRzvrjYfR/VSSciC2/cYCLcU10Rjtk9Xc6ui/SO4rwBC109Dc=
+	t=1713773930; cv=none; b=XF0U/+C6UtvkavNZLqXQZr2w6D0Kzb3EJ4ddVGAacnVJeNIp5jz/4DPKks3hWMwVfrpQM0s+h7yKATGB/WEnFJPHL+AIOrQtS/0VA9dpugeN0/eK6Xo6mOQdH7Ary16PFS70b2tXQ6bPuaBVEpCQVR9bPt2Vfh2+bOW2h0qdyS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713773919; c=relaxed/simple;
-	bh=4bJRhW1KZ/EKZw6F8c6R+B7TptdBV4jRIe8IRlLKovA=;
+	s=arc-20240116; t=1713773930; c=relaxed/simple;
+	bh=J3Vo0dPp9DaOA8VOKKGz2d/zYNWjY1FVMPKqn/vx/pc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qoMi5LezcsoeNasUg9goGQKFVdRh/RCWvOobP9CWrYZ2mnNjLywM6nWoMG+SN0khidgW+n0RsT8CQAtFOiNVO4QwvdBNvbwX9j/wY0+o+SDaajQg8to9hjcFQwIJw0CFWGrwTYHi2fIM0WO8XcoB4iWr4Zwcxew079k6qlylP5o=
+	 MIME-Version:Content-Type; b=tWxx/m6BkdN6QtFpuocikS9Yk++mGLxD0FChp+qm/WHPCuY/cZyY/aCykUM7JuR0JPAnOK60Bz/vMxzYPS9aw4NV+lkuLxeGjY0a/cCgBoFbEHEeiPZSzlkpO8P87cja8ksq/YAyMj0fwan7f9UEiMAxUII17iLJcWZoIDuJd7U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
@@ -18,15 +18,15 @@ Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VNJ6d34MFz4x0K;
-	Mon, 22 Apr 2024 18:18:33 +1000 (AEST)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VNJ6v0Zlxz4x1Y;
+	Mon, 22 Apr 2024 18:18:47 +1000 (AEST)
 From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: Rob Herring <robh@kernel.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Anatolij Gustschin <agust@denx.de>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-In-Reply-To: <20240313135645.2066362-1-andriy.shevchenko@linux.intel.com>
-References: <20240313135645.2066362-1-andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 1/1] powerpc/52xx: Replace of_gpio.h by proper one
-Message-Id: <171377378380.1025456.7660942361911740845.b4-ty@ellerman.id.au>
+To: Arnd Bergmann <arnd@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Nathan Chancellor <nathan@kernel.org>, Paul Mackerras <paulus@ozlabs.org>, Geoff Levand <geoff@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Kevin Hao <haokexin@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+In-Reply-To: <d64f06f4-81ae-4ec5-ab3b-d7f7f091e0ac@infradead.org>
+References: <20240320180333.151043-1-arnd@kernel.org> <415f4af0-f44a-49fb-b1fa-76f64ed09ec6@infradead.org> <d64f06f4-81ae-4ec5-ab3b-d7f7f091e0ac@infradead.org>
+Subject: Re: [PATCH v2] powerpc: Fix PS3 allmodconfig warning
+Message-Id: <171377378379.1025456.13649802272990358966.b4-ty@ellerman.id.au>
 Date: Mon, 22 Apr 2024 18:16:23 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,16 +37,19 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Wed, 13 Mar 2024 15:56:45 +0200, Andy Shevchenko wrote:
-> of_gpio.h is deprecated and subject to remove.
-> The driver doesn't use it directly, replace it
-> with what is really being used.
+On Mon, 01 Apr 2024 16:08:31 +0900, Geoff Levand wrote:
+> The struct ps3_notification_device in the ps3_probe_thread routine
+> is too large to be on the stack, causing a warning for an
+> allmodconfig build with clang.
 > 
+> Change the struct ps3_notification_device from a variable on the stack
+> to a dynamically allocated variable.
 > 
+> [...]
 
 Applied to powerpc/next.
 
-[1/1] powerpc/52xx: Replace of_gpio.h by proper one
-      https://git.kernel.org/powerpc/c/676abf7c39267080ab81597c6d4f372a10c0fc21
+[1/1] powerpc: Fix PS3 allmodconfig warning
+      https://git.kernel.org/powerpc/c/bfe51886ca544956eb4ff924d1937ac01d0ca9c8
 
 cheers
