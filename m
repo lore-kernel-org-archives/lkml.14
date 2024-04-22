@@ -1,102 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0F26A357;
-	Mon, 22 Apr 2024 09:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5134753E12
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 09:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713777199; cv=none; b=Y01sCbZ2dkCWLuKleejDo3IbE4ENMsM1fj6+JLOVyX0gyNnWeluyjI7L5Wzg5CRDPuphWWEI7xrDUXaED2W1oHUHLHYohfpNKjLpw4HVw6Kxk6D5J75nR3mUAhsxlLuJpvOPK9p6Wp3V10aRyjgYPLui9YWbVKs5YEFeJ6TVxAI=
+	t=1713777249; cv=none; b=VQ1sxQmP3Jcx3UmjQRZ5GI6H5FhCgLjTVBN73xj/A+reS3xjJpronM059Wb4YXjiG+ai6rH9MfFCY4qt3kVkjK7pCGpghNbHLD18McJadTs9SXv0hUQcOvMhM3pc7iyRLI7UXp2Rm0ojCBi9jxf0qjNzKmUCIAdYGoyjI4jL9ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713777199; c=relaxed/simple;
-	bh=h+0TdiOoBIhL8Yk6uDMcMRBFY0m2Momhy8WVqNP3frk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eP5k9eb6R735UYu4eulnIgYg+XknniG/zdALyegtGyC2shrrLxOHpBCrTHoo4CMO36g+IH286xpt2CP3jk0YX4p8H1Pwvd/EE0E1EKYeZUCXSyO+Fm83xNpfr+wLhM2H/mjcgaxmF9FJYaqYJitj8LrrV2Kb8TF5aWW68k2LcXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hfkMItuY; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hfkMItuY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA8EBC2BD11;
-	Mon, 22 Apr 2024 09:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713777198;
-	bh=h+0TdiOoBIhL8Yk6uDMcMRBFY0m2Momhy8WVqNP3frk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hfkMItuYFVqGqwq4VadYltIuthdj7v5gWhLUfhDXfGVa/HIMXN9razQLhYRbiThlz
-	 7ACC5+FyRTVUt7mEhQ3mVeyWpofHQur7EbbNgat5FwOBNntjn620iowPglbRAhWhJR
-	 NqBox5hVrh9KfjdZvhojrGa7w6W4TQ0AnELUVi2ehvzL0dz0yXWd58iI6sF+hHOOGQ
-	 W5BXOc4ZCqgf85QpKwQO+7nhWBWs81RiCkVRWtfs+Cb0wLqnLfiE2qZgUkc3EvcrI1
-	 81jfC/t3PLZlf2lYWwAl0Z7twglj4Wr/TVo5INKhcyQnZvkyTPMOPbAw0FBb9xViFl
-	 6ODxp68gvQ8gg==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	David Gow <davidgow@google.com>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	linux-kbuild@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	kunit-dev@googlegroups.com,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: [PATCH] kbuild: rust: remove unneeded `@rustc_cfg` to avoid ICE
-Date: Mon, 22 Apr 2024 11:12:15 +0200
-Message-ID: <20240422091215.526688-1-ojeda@kernel.org>
+	s=arc-20240116; t=1713777249; c=relaxed/simple;
+	bh=bSB47jiEPbjn+2RJwxgCUv2A6TZ3BEAuszXFpzjGwdE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XqHJDSxWp5RXb2ep/q7894ubxLj6OqmO7m+xaDV6rHykdwMdnQzoodt86rrpSkQTnpnZIVqDmvG6yX5uCY4DettFp/zBmROIzfHk01oAUPohaaQ0godWOuN6Htbj9qb6CsKhBfrSe7X4pIoqfh8wWwLjZNdF3An/huZIgf2X6jU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19D1F339;
+	Mon, 22 Apr 2024 02:14:35 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.21.63])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE2253F64C;
+	Mon, 22 Apr 2024 02:14:04 -0700 (PDT)
+Date: Mon, 22 Apr 2024 10:13:59 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Marc Zyngier <maz@kernel.org>, joey.gouly@arm.com,
+	Oliver Upton <oliver.upton@linux.dev>
+Subject: Re: gcc-8: arm64/kvm/pauth.: Error: unknown architectural extension
+ `pauth'
+Message-ID: <ZiYqV-5BWmPwgqbU@FVFF77S0Q05N>
+References: <CA+G9fYsCL5j-9JzqNH5X03kikL=O+BaCQQ8Ao3ADQvxDuZvqcg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYsCL5j-9JzqNH5X03kikL=O+BaCQQ8Ao3ADQvxDuZvqcg@mail.gmail.com>
 
-When KUnit tests are enabled, under very big kernel configurations
-(e.g. `allyesconfig`), we can trigger a `rustdoc` ICE [1]:
+On Mon, Apr 22, 2024 at 02:04:43PM +0530, Naresh Kamboju wrote:
+> The arm64 defconfig build failed with gcc-8 and passed with gcc-13.
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> Build log:
+> ---
+> /tmp/ccSUNNZy.s: Assembler messages:
+> /tmp/ccSUNNZy.s:3159: Error: unknown architectural extension `pauth'
+> make[5]: *** [scripts/Makefile.build:244: arch/arm64/kvm/pauth.o] Error 1
+> 
+> Steps to reproduce:
+> ---
+> # tuxmake --runtime podman --target-arch arm64 --toolchain gcc-8
+> --kconfig defconfig
 
-      RUSTDOC TK rust/kernel/lib.rs
-    error: the compiler unexpectedly panicked. this is a bug.
+I think the key thing here is GCC 8; the associated assembler won't necessarily
+have ARMv8.3-A support, since all the relevant bits got added around GCC 9.
 
-The reason is that this build step has a duplicated `@rustc_cfg` argument,
-which contains the kernel configuration, and thus a lot of arguments. The
-factor 2 happens to be enough to reach the ICE.
+Looking at the commits, I think this is broken since its introduction in commit:
 
-Thus remove the unneeded `@rustc_cfg`. By doing so, we clean up the
-command and workaround the ICE.
+  6ccc971ee2c61a1f  ("KVM: arm64: nv: Add emulation for ERETAx instructions")
 
-The ICE has been fixed in the upcoming Rust 1.79 [2].
+... where the pauth.c file only depends on ARM64_PTR_AUTH (which doesn't imply
+AS_HAS_ARMV8_3), but in the file we do:
 
-Cc: stable@vger.kernel.org
-Fixes: a66d733da801 ("rust: support running Rust documentation tests as KUnit ones")
-Link: https://github.com/rust-lang/rust/issues/122722 [1]
-Link: https://github.com/rust-lang/rust/pull/122840 [2]
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
----
- rust/Makefile | 1 -
- 1 file changed, 1 deletion(-)
+  asm volatile(ARM64_ASM_PREAMBLE ".arch_extension pauth\n"
+               "pacga %0, %1, %2" : "=r" (pac) : "r" (ptr), "r" (mod));
 
-diff --git a/rust/Makefile b/rust/Makefile
-index 846e6ab9d5a9..86a125c4243c 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -175,7 +175,6 @@ quiet_cmd_rustdoc_test_kernel = RUSTDOC TK $<
- 	mkdir -p $(objtree)/$(obj)/test/doctests/kernel; \
- 	OBJTREE=$(abspath $(objtree)) \
- 	$(RUSTDOC) --test $(rust_flags) \
--		@$(objtree)/include/generated/rustc_cfg \
- 		-L$(objtree)/$(obj) --extern alloc --extern kernel \
- 		--extern build_error --extern macros \
- 		--extern bindings --extern uapi \
+Given the minimum supported toolchain comes with an assembler that doesn't
+necessarily support ARMv8.3, I reckon we'll either have to make NV pauth
+support depend upon AS_HAS_ARMV8_3, or manually assemble the PACGA instruction.
 
-base-commit: 4cece764965020c22cff7665b18a012006359095
--- 
-2.44.0
+I suspect the latter is the better option.
 
+Mark.
+
+
+> 
+> Links:
+>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240422/testrun/23551634/suite/build/test/gcc-8-defconfig/details/
+>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240422/testrun/23551634/suite/build/test/gcc-8-defconfig/log
+>   - https://storage.tuxsuite.com/public/linaro/lkft/builds/2fRe0ZWWmise7cetIz0aXdnq4jJ/
+> 
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
+> 
