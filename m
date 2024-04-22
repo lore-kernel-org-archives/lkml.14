@@ -1,64 +1,90 @@
-Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66EB8DDC3;
-	Mon, 22 Apr 2024 03:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
+Received: from mail.nfschina.com (unknown [42.101.60.195])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 3E4984C97;
+	Mon, 22 Apr 2024 03:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713756738; cv=none; b=E+9Y4OUrcoU3DP54rr1T32nSCkpvpVvglVJNa4Mi9ECkm2toKYG19D6/22BWWsyf7vt2x7daiGnKzC8UEKcEwOFsDeUljxMXyONwHPsSctj6X0attXv6WzonTx9UxkP26sn9aSV1F0PkujD7iJbYsq/CvIge/t47AJS5e8J1QiI=
+	t=1713756810; cv=none; b=oj9ZsHgOZzJqnP9CobZnMP2vaaGehDpX/CdR49kuAKQmBsriEGT36DEF7Ay8QKFnSpwXi9MzCWAVd1GP66nIL+epHx8vnfBnZLaoIH7X0RsGwxqNArKPxW3tmfAwBLAjJFa7AqN+BY+HphHkx6ndkUbsGymqjH9yUc/+BUsUUhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713756738; c=relaxed/simple;
-	bh=cgvVnOJwSqppiRYMyowCy4bS37KD0SONJ+bAG97oKHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=swEuqAZwbprecMjH4CyA7rbwAk8AgQyBVlb438aubvzSwjcfc1onX7AquaXta2/fWphgwWwBajfc4CAXifPZoRZrzhqpZbiXrtJR+CWoUs1Cyc+C9RuZwNSJQAm4e5TQLppHd35Vg8e5lDYVTzkD2hjcDMRY/vQBeQ6V1QrL9e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=Kkbn6fSL; arc=none smtp.client-ip=123.58.177.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="Kkbn6fSL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=zXYjhFJrfJrOFJVIHpqe8pUDrSVH85/rIRMIUD46vag=;
-	b=Kkbn6fSL2v0XjZzmcDc1Mxa1/1fGzoLT3Ex5EuIOjO6+hb36vUsOi3EpHbzwtV
-	e8TrZxf6DokS1GXMX/ZGMWeWeBAjF9WbJOu0gFOksL68fsdXEBOZMEJEMBoDAp+I
-	K4r/p6KMEpOrgBxaK9PFRN8rYde5ea6HxC9aswTHxW+nQ=
-Received: from dragon (unknown [223.68.79.243])
-	by smtp2 (Coremail) with SMTP id C1UQrADHLxkh2iVmFM0xBA--.28399S3;
-	Mon, 22 Apr 2024 11:31:46 +0800 (CST)
-Date: Mon, 22 Apr 2024 11:31:44 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ARM: dts: imx27-phytec: Add USB support
-Message-ID: <ZiXaIMCatpF6jPUY@dragon>
-References: <20240328-pca100-v2-1-d7ff1679f75b@pengutronix.de>
+	s=arc-20240116; t=1713756810; c=relaxed/simple;
+	bh=zI6AXceJfEK/L8fmn63vHcXTweS/N0utaLuM9iw/3cc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type; b=g7cdl5usLabn9l1TlgG0xlL+r79iQvT6WMEb386A5uucdp1Z28leWV9bYgd/iPgEGkvLMvfP9SndsNGMNnGGetsnysfh6c2eAo4XQs3z+nCnTXwUqpMWZAUmvGZlK7UMWWwLYqH3jXXYRjkcwJUkVYDGdaqVdsWokZlSNNWDa8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from [172.30.11.106] (unknown [180.167.10.98])
+	by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPSA id 0B5136068094E;
+	Mon, 22 Apr 2024 11:32:43 +0800 (CST)
+Message-ID: <6d311a40-05b9-3958-673d-e4c4d154ce4f@nfschina.com>
+Date: Mon, 22 Apr 2024 11:32:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240328-pca100-v2-1-d7ff1679f75b@pengutronix.de>
-X-CM-TRANSID:C1UQrADHLxkh2iVmFM0xBA--.28399S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU4IJmUUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDgLIZVszYg77igAAsU
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH wireless] wifi: ath10k: Fix an error code problem in
+ ath10k_dbg_sta_write_peer_debug_trigger()
+Content-Language: en-US
+To: Jeff Johnson <quic_jjohnson@quicinc.com>, kvalo@kernel.org,
+ jjohnson@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
+ morbo@google.com, justinstitt@google.com
+Cc: c_mkenna@qti.qualcomm.com, linux-wireless@vger.kernel.org,
+ ath10k@lists.infradead.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, kernel-janitors@vger.kernel.org
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+In-Reply-To: <a4c2cb8c-dd80-457f-82b5-2eb58a9b55b5@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 03, 2024 at 10:18:27AM +0200, Michael Grzeschik wrote:
-> This patch adds the pinmux and nodes for usbotg and usbh2.
-> 
-> In v6 revision of the pca100 the usb phys were changed to usb3320 which
-> are connected by their reset pins. We add the phy configuration to the
-> description.
-> 
-> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+On 2024/4/19 23:09, Jeff Johnson wrote:
+> On 4/17/2024 1:17 AM, Su Hui wrote:
+>>   	u8 peer_debug_trigger;
+>> -	int ret;
+>> +	int ret = 0;
+> this is unnecessary since this will be written in all paths that lead to the
+> return that reads it
+Yes, this is my fault. I will remove this in v2 patch.
+>>   
+>>   	if (kstrtou8_from_user(user_buf, count, 0, &peer_debug_trigger))
+>>   		return -EINVAL;
+>> @@ -432,14 +432,12 @@ ath10k_dbg_sta_write_peer_debug_trigger(struct file *file,
+>>   
+>>   	ret = ath10k_wmi_peer_set_param(ar, arsta->arvif->vdev_id, sta->addr,
+>>   					ar->wmi.peer_param->debug, peer_debug_trigger);
+>> -	if (ret) {
+>> +	if (ret)
+>>   		ath10k_warn(ar, "failed to set param to trigger peer tid logs for station ret: %d\n",
+>>   			    ret);
+>> -		goto out;
+>> -	}
+>>   out:
+>>   	mutex_unlock(&ar->conf_mutex);
+>> -	return count;
+>> +	return ret ?: count;
+>>   }
+>>   
+>>   static const struct file_operations fops_peer_debug_trigger = {
+> I'd suggest as an alternate solution that this function is a good candidate
+> for the the cleanup.h functionality. By scoping the mutex_lock() you can
+> simply return at each error location, and remove the explicit mutex_unlock().
 
-Applied, thanks!
+like guard(mutex)(&ar->conf_mutex)?
+
+Maybe I can send a separate patch for this,  because there are more than 
+one candidates
+
+for the cleanup.h functionality.
+
+> But I'd accept this with the initializer change removed as well since I don't
+> think ath10k has any cleanup.h usages yet.
+
+I will send v2 patch soon , thanks for your reply!
+
+Su Hui
+
 
