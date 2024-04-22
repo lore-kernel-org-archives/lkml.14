@@ -1,141 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C231614F13D
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 13:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5166714F9D9;
+	Mon, 22 Apr 2024 13:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713792721; cv=none; b=t7xDjY2AisQNjbd40j8Gqqec6H6yMQmiSMWY6WIZcQwIyOtlKVypTLkSSzqcmuLR5D27y7xKetsdVZYEfFc6aLlmT1tHAYjAL2p4iVE2R7u5ZGn477kmQ1ORKOql1sLj6YZq/UzYVoXAxqIEq0gZoNGWzHLDIdjO3ls6s7my29I=
+	t=1713792745; cv=none; b=OS2HH8zl58kltUI2I+DQBWCjujcIYE3Mnx+sruvZCMg0/w3OXUfOOwHDGJclhWJl4FFl7s1cMhQu1goBdLyCyLlgr3+ChucD708e2SDDY05KbdQCWhKcSUVte7Ayk9Di3bbKq4jT0XqaNqz880E2m6Rhy0ELmyKnSaBrubCkfpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713792721; c=relaxed/simple;
-	bh=awX5B76+HzKgX2w5I2DsXCUaJAK/mYe3tND15fSkqMY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ARH32/FiFCpwcRmVObkH3jr87Bknwmxl8wBiugx5L1RtXQI7u5u/+vOfbNCBCGK6lBQAUEGmsf849Z+57XHqgECvbhdPvtuQW3xGF4Y41DP1z8uArojWI6uZ8VUgDbzIAK+XaknmM5pAJc1OMjCLTCKWACdRAeErw3XILVO23nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W8oE0p4e; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713792745; c=relaxed/simple;
+	bh=MKR5Lo9BnmJ3qVhI4ZQde4lFiXD+bqDR2A0VRwJiKeo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ihujcbHE2vDrCe1APNFvIMHU4Ktkb67kdGvlenoN7jNuonWy4iTzTNBT/z861qqrkjIxBk5avp1u9I2akgIwy9D/HsHCaUCrCS8rrguDACUmbmznp1FmgtK7uePdYmtxwY49Q9W90V/KZYZckjwQ60F0U9rCBCGN/R1jR0itbdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Wpb4UBjr; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W8oE0p4e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713792718;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Wpb4UBjr"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D565FE000B;
+	Mon, 22 Apr 2024 13:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713792741;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ANX+xaTgZeaaXkTxg9wkNgDys/2r+xl16Yffp7Qdk4w=;
-	b=W8oE0p4e+q2AHpKrGFMa4jIrLVt5fmmg2KobVjK3L/ws9lz6UZLyX/gI1f78zfP9yGBkvA
-	OsbrXAHgkb9luLRZeJUGN3B7Ia5x0xqPz7lHbY6LdOu4fPXdNURRrUieVcTUSKn5OLzd+a
-	eea2fSZR9coB51Rogp6EiQMmh+XUaiU=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-582-Kq-Cp6F-PcuokZSkd0-8rA-1; Mon, 22 Apr 2024 09:31:56 -0400
-X-MC-Unique: Kq-Cp6F-PcuokZSkd0-8rA-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a5872678bd2so7538266b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 06:31:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713792715; x=1714397515;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ANX+xaTgZeaaXkTxg9wkNgDys/2r+xl16Yffp7Qdk4w=;
-        b=YvFjdkMe9c9OVWOG9hLioOrStRGX0n7EZmtDVx7OUMN7F9h9XpeREiWv7wDkQkN2hX
-         pdpCxPWz2cBq+GH4QjMk8531spP89KULj1TIgDla3LaMFku3KuooWZ3udy/0e7bWpT/d
-         5hB+fwNEBxHYhpQ4YF0NQXT50IEOXAda49wLUI2bBb47qFxZgE/hrkM5cxIfsDCGMNee
-         AfVJVjQuUq1EgWWaaWJxyiJ0yguolSTsz0T45LEDKh7AsrzO1JpvZfTbAdQf0eLobwWs
-         Lr4aF4oMIWNLgAdCCIxwycN5KARjMrpYHHjeOsQPwTVvgbJMswIiZsfLbjsQeLYsJdsU
-         H3xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPBi5jDCrSvZersvKebOtLaPUaoJmNcltvwrUJh2YWfdoMooNm5KduZRM0E1QGLeKXPa2HPjbznGttAYYuT3rnaWFA9NMGarZOHDbQ
-X-Gm-Message-State: AOJu0YxPGuFBe105N8qwo5G7IqUtaFzFNp4FWVAybhFkKvMAeSkDR5S1
-	podFkeoz/0s9kG0wFyAIQe1OxrRVaQLdTt+FsSgmqBS39pCkJNPkcrEKD20eGkDW7+ny4ds3bLA
-	hWLkw2r3+2PxWC9EjAmDm+e/Q9XTnxz3UmfPBZblQFcoWwV6R6nsWHPGVBeHGmA==
-X-Received: by 2002:a17:907:94cb:b0:a55:b272:ea02 with SMTP id dn11-20020a17090794cb00b00a55b272ea02mr2618069ejc.75.1713792714915;
-        Mon, 22 Apr 2024 06:31:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG82ZH8/Jtju0mhAdG8/PW4XqvBdwQxaB7D0jxdPhLmOnBwNV/D0nX8zuy+43rjCw52vpCfaQ==
-X-Received: by 2002:a17:907:94cb:b0:a55:b272:ea02 with SMTP id dn11-20020a17090794cb00b00a55b272ea02mr2618055ejc.75.1713792714632;
-        Mon, 22 Apr 2024 06:31:54 -0700 (PDT)
-Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id bk2-20020a170907360200b00a55a8ec5879sm2130351ejc.116.2024.04.22.06.31.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Apr 2024 06:31:54 -0700 (PDT)
-Message-ID: <25965583-4d8a-4e7a-9a2e-83ec2faa4187@redhat.com>
-Date: Mon, 22 Apr 2024 15:31:53 +0200
+	bh=MKR5Lo9BnmJ3qVhI4ZQde4lFiXD+bqDR2A0VRwJiKeo=;
+	b=Wpb4UBjrTKNJP8VZ7yd6ASEDgyWx5+P3FLLgGD8Typl2Wl0brxY/asvOtbQVS858t0vSXE
+	qlPvI0E3DMg2VZJkBBi2XQHMy5qVPqW3JsDVXJ2N9i4i65YYbIOdR5eGyedgLiCNfOlLqa
+	tNtO41Cei5WT4Z83Dmbw62MS4yw8HW0Ya0MblWxoBUvZh0Gmb/31ciRigiQpEyIVbdsvx+
+	NAa67yMYuHSyiJSVZ7n3PCYr0pRtFXVeFixHgu5JsP6Wu0cXYh9CJr9j0rQ0f+145Yzk8I
+	hCucljSsVe+7YzH3oYJaz/dFtRqyaKKNgbvI5DN1s9U34X3OLe8sr3IOGmlHxw==
+Date: Mon, 22 Apr 2024 15:32:20 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, kernel
+ test robot <lkp@intel.com>
+Subject: Re: [PATCH net-next 3/3] net: pse-pd: Kconfig: Add missing
+ Regulator API dependency
+Message-ID: <20240422153220.1697f2d1@kmaincent-XPS-13-7390>
+In-Reply-To: <6a88f4f0-940c-4e63-8520-5ab23e96c480@lunn.ch>
+References: <20240422-fix_poe-v1-0-811c8c0b9da7@bootlin.com>
+	<20240422-fix_poe-v1-3-811c8c0b9da7@bootlin.com>
+	<6a88f4f0-940c-4e63-8520-5ab23e96c480@lunn.ch>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] platform/x86/intel/pmc: Fix PCH names in comments
-To: Colin Ian King <colin.i.king@gmail.com>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240418215202.879171-1-colin.i.king@gmail.com>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240418215202.879171-1-colin.i.king@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Hi,
+On Mon, 22 Apr 2024 15:17:27 +0200
+Andrew Lunn <andrew@lunn.ch> wrote:
 
-On 4/18/24 11:52 PM, Colin Ian King wrote:
-> The PCH names in the pmc drivers are incorrect in the comments,
-> fix these.
-> 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> On Mon, Apr 22, 2024 at 02:50:50PM +0200, Kory Maincent (Dent Project) wr=
+ote:
+> > From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+> >=20
+> > The PSE (Power Sourcing Equipment) API now relies on the Regulator API.
+> > However, the Regulator dependency was missing from Kconfig. This patch
+> > adds the necessary dependency, resolving the issue of the missing
+> > dependency and ensuring proper functionality of the PSE API.
+> >=20
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes:
+> > https://lore.kernel.org/oe-kbuild-all/202404201020.mqX2IOu7-lkp@intel.c=
+om/
+> > Closes:
+> > https://lore.kernel.org/oe-kbuild-all/202404200036.D8ap1Mf5-lkp@intel.c=
+om/
+> > Fixes: d83e13761d5b ("net: pse-pd: Use regulator framework within PSE
+> > framework") Signed-off-by: Kory Maincent (Dent Project)
+> > <kory.maincent@bootlin.com> =20
+>=20
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Oh you already put your reviewed-by on the whole series!
+So efficient!! Thank you!
+I can send the v2 then.
 
 Regards,
-
-Hans
-
-
-
-> ---
->  drivers/platform/x86/intel/pmc/arl.c | 2 +-
->  drivers/platform/x86/intel/pmc/lnl.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
-> index 34b4cd23bfe5..e10527c4e3e0 100644
-> --- a/drivers/platform/x86/intel/pmc/arl.c
-> +++ b/drivers/platform/x86/intel/pmc/arl.c
-> @@ -1,7 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
->   * This file contains platform specific structure definitions
-> - * and init function used by Meteor Lake PCH.
-> + * and init function used by Arrow Lake PCH.
->   *
->   * Copyright (c) 2022, Intel Corporation.
->   * All Rights Reserved.
-> diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
-> index 068d72504683..ec89e7dda103 100644
-> --- a/drivers/platform/x86/intel/pmc/lnl.c
-> +++ b/drivers/platform/x86/intel/pmc/lnl.c
-> @@ -1,7 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
->   * This file contains platform specific structure definitions
-> - * and init function used by Meteor Lake PCH.
-> + * and init function used by Lunar Lake PCH.
->   *
->   * Copyright (c) 2022, Intel Corporation.
->   * All Rights Reserved.
-
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
