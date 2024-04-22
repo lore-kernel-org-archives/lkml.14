@@ -1,89 +1,112 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7632C14F122;
-	Mon, 22 Apr 2024 13:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E4314A4C1
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 13:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713790845; cv=none; b=XBGdOxVQVdafijTw8+CU7kJfTFg9guj4HUqt0psPq0TipVFywsHq4j8OPGxJIAIAp6vKurFfR4mFhyOeRoIXpoypFavZSJ3+HsV/j/u2Rb3q+AhsZixyWWXdMnGsaBJwETYLnj5JQkRuOEFrnn/vmbSA/BFqNo2jVHDEjDKxxrM=
+	t=1713790851; cv=none; b=k0n9wRLc2FZ1VklZubwzLCcjrz+TCBRkJ1Zi9ZEXryf3p6r8CIPmmzmZ0HwnxqHB4PZuzd9/Ntp4tqf7OrrtIlbcB1IqOYlIhApjfjCCXIHz1PFSNNTVlFsaCPr5Caev8Ch+l3N8KTIw4OuZ/M8obg56xyvirwMxQ1eiIsHcR6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713790845; c=relaxed/simple;
-	bh=iETkUvyaaIplvnaSBNoV8Wvwia4mTtvh1JmWeUWBlg4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kHnotzNjbFgj8gi8R5svYs0VZkqSVDgRUn9tULcUkOu72wBrmDDKIexiemQVSLtLyUXJQbqOvLmeBjo/8NN4A7Tl0mbf+DCDRYCCyIFSXbi+98QY716tp08gGe/uE8bzPdQG9DeQ7BJTc1riWvZ6RnJFd0Bwgu4ReiERQb2ADxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jE9sZ4l8; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1713790851; c=relaxed/simple;
+	bh=Yq/JhB+Lrc/miD6DiFv71QXBz/idDrjXRkpufPo8K/0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ufz5ZfUHr+vgwmecxQwjuMINGkUlFIDmAfqrADz0jz8y3lUUxx7U8TC9K80OeJGQZSQslYSP8yGRgjJwIYrKxofmNBo5FYX0t39djxgA1/6xluX+2tT+4G1t5vTb4ErqrsINT7nRx+i7VnFRH5zPxyUVkBvf6RZYzyBwe68LB3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=j3+JlENr; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jE9sZ4l8"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DB2A640E0240;
-	Mon, 22 Apr 2024 13:00:39 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 0lZQlEM3nRtm; Mon, 22 Apr 2024 13:00:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1713790834; bh=4ZyktgLFRsNIXjDm7Mz1wlAPtu+JYmmQ12NOnDr62JU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jE9sZ4l8NBSgDAedIGM72lkyzcPoP+7JNg9QKXdxranXa2QC2FZdx5VsbsarXMv7S
-	 Fm8Ag/gbHGbaavFId7PQuZIb5E46Hi+XZ4kL8sNuMCqP1cqFwWA7Vb3D6LjtfuI+7a
-	 DrCKZh23HC28uwKxmWBIXMM5q4WUxBS5hgaieTV5fHXpP5lFVn3ODIbKxNdcMlnsW+
-	 E76/ypmYySguL0+oMsk7XDJ7wTx0P9j870WQx+EWTMTr7jL1HXGElCfQdERaqgB8sC
-	 GibT7Eo2vDfQYtLG4AmxE34EWyd8DeuZLAI7Ew+foWt8aKpNiLus36lJ5QJypeUuEc
-	 ub+lbdzixjpPNdZww/+lhxxZmkRAMr3ry5pP74SbpYlhlHmpCA9EsH79KFs+EXHew3
-	 bpR9wG1MVeSQmhrgAVujIezOl8DwZEmrLNDHI0QoDmtSs74KSlSg96X7z2Ft0xvLWg
-	 nqS6l6ucSz1q6vdx22/SgVkfQ3ZKQrjVRsqS7KG+Eo1e9Xj0OJBhUERBz16c6K844G
-	 EZ0NRIXDKGIllL1cojNKQBcFNoXJFG3bMCPgIKsIV7zTkryGMGPb7xHcEjXGF5FHsT
-	 qHETvQIQL1i1npwKoCtCmYsvkWJtHpGlGqjJ8IYyCfXY2n5euBL5KU69tkMUkqztNP
-	 8WomUEjATwsI/5nh4kLCON9A=
-Received: from nazgul.tnic (unknown [IPv6:2a02:3038:209:d596:9e4e:36ff:fe9e:77ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 17F0640E0249;
-	Mon, 22 Apr 2024 13:00:22 +0000 (UTC)
-Date: Mon, 22 Apr 2024 15:00:12 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Nikunj A Dadhania <nikunj@amd.com>
-Cc: linux-kernel@vger.kernel.org, thomas.lendacky@amd.com, x86@kernel.org,
-	kvm@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-	dave.hansen@linux.intel.com, pgonda@google.com, seanjc@google.com,
-	pbonzini@redhat.com
-Subject: Re: [PATCH v8 06/16] virt: sev-guest: Move SNP Guest command mutex
-Message-ID: <20240422130012.GAZiZfXM5Z2yRvw7Cx@fat_crate.local>
-References: <20240215113128.275608-1-nikunj@amd.com>
- <20240215113128.275608-7-nikunj@amd.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="j3+JlENr"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-346b96f1483so2281732f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 06:00:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1713790846; x=1714395646; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=I/gyfw9gI/bmdg08KWcL093IxCvqzBUYKqsRkm5VLSU=;
+        b=j3+JlENrWQ9AxArq5CDU3nd1hhHgrjJxbST4FXGDSSRF/dU4hrG0UCWqJE5IYDZq/E
+         p3I4U+1LvG6k9x8rZMgRIfRQR97TIdsxOJ/eycM6sM6rgiIhcQ3op27v4Q5xaznYYQAQ
+         vWX6pVCE3Ut96QVJjUxlSzKxalJCID9dcW308kDbPCWyNmy4ryeQA3PM/NTXmr13w09p
+         93zaxWrkdTLdtG4QNNOkP5JH3BM9VxaxzstkeWN25XL2ThBySI7Mg4U7AVack4w6qzIs
+         LcQgD10LnboAduLMiBzYNA/3bMKJvLDAllEPZNS8U3SF3HKtQMJ9azEZqNtQjH+fSfSX
+         cOIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713790846; x=1714395646;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=I/gyfw9gI/bmdg08KWcL093IxCvqzBUYKqsRkm5VLSU=;
+        b=UrZ/EScClxxCBI6+lDdbYtlbYmqibmQdQJXpIzUrkXN2Aja+xeMRbrkVNn51fAdjch
+         osPStrH2sBpaX/4eKMtbDIcB5gfHLkBKcfRoIwK5M0pdqQvLAVsyMKi2ROtL7cc1Hfp3
+         vPcizeQXXN/RDuwvRJX7Y6wchFg7vYMs+7y9C+PJoGvLo+5bloxjBiUiTcKkLnyKsI3N
+         hMgGatYTPsczvxpr4PQJwCORLDnwp+5hlYByAD9LLTS7aVbVKtF1ZokWXBjCgNb0WzTK
+         Xt4WCw0aUh3wX0wN5ELI8pp/0DAEV0DHkQfNmATZeszPmkNmwQWRMOwxY0PioHyDhKvj
+         brow==
+X-Forwarded-Encrypted: i=1; AJvYcCXTo9Nvfgr7YT9eafJZBhUUEblNgWXj3cAWRk+JO7LNYW60pEEV9Fmf9HnaLzWrhZ88MlE0o9DlsbK12fPGX9T019ICBliAhlri7ZZo
+X-Gm-Message-State: AOJu0YxAL+1NqPzETApkttRBAYYFSlaE9qa2ERkpHv9nz6o40Pjd+ypy
+	gGL9pyR/7u9nJiXnBQBbaQ1+FekzUvpHamxNx08TQQD1Ks+NjjEzh1iv0LP9HwU=
+X-Google-Smtp-Source: AGHT+IGr4KfXdTc9P+tUqOlPT1oTTntEG1xJ+qUnk/c9fCN4nizt5pKj5b0MOuQknSB8WsQfCV29lA==
+X-Received: by 2002:adf:ef07:0:b0:33e:c91b:9083 with SMTP id e7-20020adfef07000000b0033ec91b9083mr8231244wro.16.1713790846220;
+        Mon, 22 Apr 2024 06:00:46 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:6981:a121:4529:6e42])
+        by smtp.gmail.com with ESMTPSA id a16-20020a5d4d50000000b0034a9b75e272sm6761942wru.45.2024.04.22.06.00.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 06:00:45 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Wren Turkal <wt@penguintechs.org>,
+	Zijun Hu <quic_zijuhu@quicinc.com>
+Subject: [PATCH] Bluetooth: qca: set power_ctrl_enabled on NULL returned by gpiod_get_optional()
+Date: Mon, 22 Apr 2024 15:00:36 +0200
+Message-Id: <20240422130036.31856-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240215113128.275608-7-nikunj@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 15, 2024 at 05:01:18PM +0530, Nikunj A Dadhania wrote:
-> SNP command mutex is used to serialize the shared buffer access, command
-> handling and message sequence number races. Move the SNP guest command
-> mutex out of the sev guest driver and provide accessors to sev-guest
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-And why in the hell are we doing this?
+Any return value from gpiod_get_optional() other than a pointer to a
+GPIO descriptor or a NULL-pointer is an error and the driver should
+abort probing. That being said: commit 56d074d26c58 ("Bluetooth: hci_qca:
+don't use IS_ERR_OR_NULL() with gpiod_get_optional()") no longer sets
+power_ctrl_enabled on NULL-pointer returned by
+devm_gpiod_get_optional(). Restore this behavior but bail-out on errors.
 
-Always, *ALWAYS* make sure a patch's commit message answers *why*
-a change is done. This doesn't explain why so I'm reading "just because"
-and "just because" doesn't fly.
+Reported-by: Wren Turkal <wt@penguintechs.org>
+Reported-by: Zijun Hu <quic_zijuhu@quicinc.com>
+Closes: https://lore.kernel.org/linux-bluetooth/1713449192-25926-2-git-send-email-quic_zijuhu@quicinc.com/
+Fixes: 56d074d26c58 ("Bluetooth: hci_qca: don't use IS_ERR_OR_NULL() with gpiod_get_optional()")
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/bluetooth/hci_qca.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-> driver. Remove multiple lockdep check in sev-guest driver, next patch adds
-> a single lockdep check in snp_send_guest_request().
-
-The concept of "next patch" is meaningless once the patch is in git.
-
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 92fa20f5ac7d..739248c6d6b9 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -2327,9 +2327,12 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 		    (data->soc_type == QCA_WCN6750 ||
+ 		     data->soc_type == QCA_WCN6855)) {
+ 			dev_err(&serdev->dev, "failed to acquire BT_EN gpio\n");
+-			power_ctrl_enabled = false;
++			return PTR_ERR(qcadev->bt_en);
+ 		}
+ 
++		if (!qcadev->bt_en)
++			power_ctrl_enabled = false;
++
+ 		qcadev->sw_ctrl = devm_gpiod_get_optional(&serdev->dev, "swctrl",
+ 					       GPIOD_IN);
+ 		if (IS_ERR(qcadev->sw_ctrl) &&
 -- 
-Regards/Gruss,
-    Boris.
+2.40.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
