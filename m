@@ -1,30 +1,32 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E081553A1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87961155354
 	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 19:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713815959; cv=none; b=CeWc1uyCL8vkbW3+eFhL9juISuezLUuSX9MscOSgdy9pSHXagTsrhf6KvIdfsiczFu2A/zd5UbrYSTdZAHfAOeaN4SUUs60/Q1ObUOxB1lbTjLtTVHSmhh1kS3oN7c/k5Yj4704QIxtE8C59eODdFnpvUz5GoZs//ats7miah7k=
+	t=1713815960; cv=none; b=VWlPv/XeIn8HrESgLz4UL5sxxQkV5Pk1ChOx8ypGJ2qBeORE4SAsznCGtS1tN2eM9DRXkkFmR1q/h57jKSS5AUKJt8Zcey+72+WJYesUprybilk8KxYBBcU59xXpncs+iY7Kx1n9UWLVkH2OGMjDHVlMeVn3gfuj8HuamNsTwrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713815959; c=relaxed/simple;
-	bh=6c/Kg1xNo27Op6XkICBNXx/Xoyvd+dKCNm9t6A13Ocw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=sJVUbrMlSMimtTmD9gyqfJuXIVAE9M0+fwsjCFdzVivD6x7S7vNI0T/yIprrsvP8l2qgJMtsSejnO7S6AH6/MfKGQVICuOsYp2Uj4kIM0AZKQnx74huPXaFusg1DCegvh9q6hqBZXs/4R7OYX9L+k8jGgwpiQQ4vXxk+Irj+h50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pKoFKO/r; arc=none smtp.client-ip=95.215.58.172
+	s=arc-20240116; t=1713815960; c=relaxed/simple;
+	bh=1vNlEqox6uMgRn3Af21glmZB/Nwjhj2D/nnw+8Etiw0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=rcuxfWRkSunYZ4eE+l0dELy7k/M/EvxthMDjj/BWMnA1MGaa56P+Ez1ud2ODzd80Jxo300X9h+wDGZtCf1E9l+jbWOKeBOvkngtr6zskISNOwC5bhALAMxKfQ7vbNKJeGC+Ru4fFlYPViYxuZC3/Xh4Kz2j6OwUwF5IjQEjtKso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uEIe/Tr0; arc=none smtp.client-ip=95.215.58.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pKoFKO/r"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uEIe/Tr0"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1713815951;
+	t=1713815953;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=byDQ0svV42bhS8jcWYgt9aqMD2j5B1jNfc8xTp24NdI=;
-	b=pKoFKO/rCk+PlT2syTZQJWC9a3QSaWH+X24OJrcb1WlOssy1sdVXsdQOVZ/0ob45ylnstf
-	uPK6RKkVRdE4PQHYD86pWseL08FTjPuSvnVaqQvDJceMaKEwquqxjITnfKZbIHmtE+IaK2
-	sXg97FLsZhhlc6kXuxxFH68EOhiwApU=
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nYP4mxOavzB2qCcAfv7/Ktjba9PcHe+yH0s2PIMDZB8=;
+	b=uEIe/Tr0sG+X3pEYz52rCl5ct5Jhk9nzexkpGCZQWsET51HmpeimmiF+Fsyf+/4p4qsHkS
+	9/Iy2JbaPb8pxfEI5/RwleQYqATXn392ST9a2XddVy6eK4QBi2r+OYM6QKcj6clWDJPIbz
+	Lalxu2MGoR7KZWYcpNywIDJyp9V8PAo=
 From: Sean Anderson <sean.anderson@linux.dev>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
@@ -36,46 +38,51 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	Michal Simek <michal.simek@amd.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Sean Anderson <sean.anderson@linux.dev>,
-	Ashok Reddy Soma <ashok.reddy.soma@xilinx.com>,
-	Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-	Bharat Kumar Gogada <bharatku@xilinx.com>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Hyun Kwon <hyun.kwon@xilinx.com>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Michal Simek <michal.simek@xilinx.com>,
 	devicetree@vger.kernel.org
-Subject: [PATCH 0/7] PCI: xilinx-nwl: Add phy support
-Date: Mon, 22 Apr 2024 15:58:57 -0400
-Message-Id: <20240422195904.3591683-1-sean.anderson@linux.dev>
+Subject: [PATCH 1/7] dt-bindings: pci: xilinx-nwl: Add phys
+Date: Mon, 22 Apr 2024 15:58:58 -0400
+Message-Id: <20240422195904.3591683-2-sean.anderson@linux.dev>
+In-Reply-To: <20240422195904.3591683-1-sean.anderson@linux.dev>
+References: <20240422195904.3591683-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Add phy subsystem support for the xilinx-nwl PCIe controller. This
-series also includes several small fixes and improvements.
+Add phys properties so Linux can power-on/configure the GTR
+transcievers.
 
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+---
 
-Sean Anderson (7):
-  dt-bindings: pci: xilinx-nwl: Add phys
-  PCI: xilinx-nwl: Fix off-by-one
-  PCI: xilinx-nwl: Fix register misspelling
-  PCI: xilinx-nwl: Rate-limit misc interrupt messages
-  PCI: xilinx-nwl: Clean up clock on probe failure/removal
-  PCI: xilinx-nwl: Add phy support
-  [RFT] arm64: zynqmp: Add PCIe phys
+ Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
- .../bindings/pci/xlnx,nwl-pcie.yaml           |   8 ++
- .../boot/dts/xilinx/zynqmp-zcu102-revA.dts    |   2 +
- drivers/pci/controller/pcie-xilinx-nwl.c      | 124 ++++++++++++++----
- 3 files changed, 111 insertions(+), 23 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml b/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
+index 426f90a47f35..02315669b831 100644
+--- a/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
+@@ -61,6 +61,14 @@ properties:
+   interrupt-map:
+     maxItems: 4
+ 
++  phys:
++    maxItems: 4
++
++  phy-names:
++    maxItems: 4
++    items:
++      - pattern: '^pcie-phy[0-3]$'
++
+   power-domains:
+     maxItems: 1
+ 
 -- 
 2.35.1.1320.gc452695387.dirty
 
