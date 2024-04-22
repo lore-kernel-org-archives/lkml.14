@@ -1,59 +1,46 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D551802B
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 06:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BD41F61C;
+	Mon, 22 Apr 2024 06:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713768181; cv=none; b=VT0Cs5iNHOlOmV2ENcglnJx2MP0FL/R8xgP0v2t7ftT3k8bmx6G2RvwqbQNGQtBlAa/0mhrqksiC96aJY2jizstLDWX8WVFQuhhVrCcHjJpB0Bvjm8H8cxdIYLUQn79Oyoo/rhXV3MENSGm0du1J4QJPy+AdtIHNa4duChm7eio=
+	t=1713768353; cv=none; b=NDOxH124baUycsFYDZfMn5LMH/XKCei0madf73VqFQhMdKSiJXpuG31FijecF0/T45Sd8T9nuGilGN3DJ1BaGHkYvG+w18T0spXeiPPQ+XK5+sChPXQKjKe5ZRjk+NiJDqEIwD3RGM9QlpYFN4rQJpv3HiiYiXFJFjsfJJ4rmAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713768181; c=relaxed/simple;
-	bh=dzT2yIOltpCHuS9Qh2mNMPG/SJhkp/5Q1dBbriodTpE=;
+	s=arc-20240116; t=1713768353; c=relaxed/simple;
+	bh=55gYPbLVDIntV96sOLdLdGIt6h1AKDgfjZMY+knQ09Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mht0GOg6V1Q48OpnOmm5pmoiIbUP8rNYuMAaNY0/XM0lk3wy4UfI19EBUBbNgZv1sH2O/OTURMAVeXqwAZyaHkfghNOG3vQDvIqiLzs+LiKxah2Qk7ngu+/bo7UvSa0jyfbRHhhS87uBkk1l/84GmnPrR2muwWOQEK7lz5SnoCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qpxYVdQM; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qpxYVdQM"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-41a523e2888so3655995e9.1
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 23:42:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713768178; x=1714372978; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JPvL4iKAh8EMRrWGhZ4Kx+fWBqS9MQHGS0oDFyItitE=;
-        b=qpxYVdQMcNTokYrwawmom4MaMM+nnWAD9WaDs1dlzKQQ7s79Tb+vufdOylDrnr/pEn
-         jXFz48YMi+uyTnB3noKGzZqfntSC+t8O5iNggtAXNV1Rfdv6NfeuXeyNqfp+lvL8amTd
-         AUrB6DN6eXoOMdQWRVQxOtlvZvbEKfbwuaj3l26v2jyBD/q/6YmTKG1qopYfDeHPRzd8
-         mWsSq9jksreGlXFnd6ha6UH28BnZH/BrOtBBZ4zwkvU4zknpANWuh3dcFOXuxMR2FmPW
-         x9hlgjom2OQoe3DrvkrtFfIvFMY+cArnCP5xICdir/x/vYCxOUAxzjmfDM4rJSK1qE/l
-         Q8ng==
+	 In-Reply-To:Content-Type; b=MBTH0krRx5KaMeIJJaGmjDayvwHp7+yRfxaR0a7+iCQ31u/OMZlrvCzQ9GhNNq0vW3+MqCPq99titdMHtSd+N4ho5Kc5RcGodMaaZg6hKMynoSsqi6KABo8M/ptH/7Y15asL/46vXtCwBhjMC8QGcor7t8JRrjfnL2P7T+2sNyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-571bddd74c1so3684125a12.0;
+        Sun, 21 Apr 2024 23:45:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713768178; x=1714372978;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JPvL4iKAh8EMRrWGhZ4Kx+fWBqS9MQHGS0oDFyItitE=;
-        b=WPNbnXWveL0TobJtevJEpfwe8jijICQDPfDMm77+N60OQQrT0MWrpApUCmHxiIvETb
-         DHWon+z81b3vsZ/cfkYJhxrU6rVkPY4rf75+GlJM+yBxsyea2r45ouhBT8APv4nRKt+7
-         jknE4jTMN3SDZ6W/tOZS37P6jBuuMtFq2FpWyzOlv0NrVMxDmOTWEx2uvKA8f5HLjkwD
-         3LJYuwLTZ0st40lQqC3v5A4RIkIeIpN2BS7aqcLUtz4DKSnPvqL3r559KClsbtgcfoEw
-         t0BerI6cxdxlujHoknJTbFpG4RWZuPe5Xn4ptgFmIXwA2AWuxbf+nq1hmPyNbmq/DUXY
-         OZ+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWZL/hIuUiWpuLemnbADxXE58PM97t29rC7qbE9m/l/H/8nkketAfSD+dRZtgUgj8jxjvtUk+KPflDuJU1IB0NJr79xoaBV/lmT0O2R
-X-Gm-Message-State: AOJu0YwneekoQ+rRoDtGIwKfujXLfAX1B6xYzb9EfB3ZnJMLzQ0nPLgW
-	LrA9Z0BXY+Gq1hsG2GSohBEB7614ZJEIYbddheN6MX1nWaeegT9y6+iDydZr0HA=
-X-Google-Smtp-Source: AGHT+IGQHa0Bt9yZK33Ud0O7Ofrtd7OS2UlZDk4os8laOOr7Q7vEbiDq8lBjlyf3QFF1SDPR3MBzBw==
-X-Received: by 2002:a05:600c:4f10:b0:41a:1b3f:b465 with SMTP id l16-20020a05600c4f1000b0041a1b3fb465mr3255435wmq.26.1713768177943;
-        Sun, 21 Apr 2024 23:42:57 -0700 (PDT)
-Received: from [192.168.2.107] ([79.115.63.100])
-        by smtp.gmail.com with ESMTPSA id be7-20020a05600c1e8700b0041a5b68ea32sm2191668wmb.27.2024.04.21.23.42.56
+        d=1e100.net; s=20230601; t=1713768350; x=1714373150;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GhIyK0k38NfXA3SQgYdyxr+nopAq4gC1c596LtQxjg8=;
+        b=ctGozYDCH0TaCJGcuh/aMGEFDabSRe4eTqFQU48J5DwUXO8f4XB7t8mu7f1ij3jAMi
+         Y3BRbCuba0xV7I3nmYSxN9y3jBalIEKVAmP9PyuWhJ4xb6zF35s1MGjat9l/pNAUOfeA
+         R+5yWHnkw5CvRvpP0uKaMCiW1bp6fNrl5OTfu8p+WZwYNnhWOPdikD/MCsxAt6OqvW4u
+         4NzbZZHzTkTnnHsFDqsCutwlFwpso4U6PkYs6N77TyltzXUF2wX5xeXG/ljduA3VatLY
+         HwCTTo3ebGrdKurej6tLJLTUZYT32Sir7na7ySyL6wkHfpZFJtUqwQoMSK5vD1MuEo75
+         Vdsg==
+X-Forwarded-Encrypted: i=1; AJvYcCXMLJQSoL/+6wOhWO4V92cRX5qC2vtUoPmkkAA20fF9BF654U1mCBl6e9CzIw1x3V6tiINOmTzlO0oVuV5iqCYh8QBBaE6kSFHSu6qbWdTrpgBYyeT0zXxmnmOb0MStN6qdW4+ea0XYwpiZKYbfg/fL+lChwGba4pwVl2Ou7Mlm9UW1MIcl7dULJw==
+X-Gm-Message-State: AOJu0YzwWdjXhFyINGUJey7pfPojA9Bo/ZWdt2WnR8nndoEoi368lfNp
+	laHGIpTWsfBtxyXRORDxkRLPeS4QYlT2EhRqLpV59aP32VL75Pqh
+X-Google-Smtp-Source: AGHT+IF6pFeOYyFJcUR2YYwktzKqqEsVL+7YNw2LCDfI4a+snMHD6EFtqrqfydxM5T1KrxphxXBijw==
+X-Received: by 2002:a17:907:1b1e:b0:a55:ac3d:5871 with SMTP id mp30-20020a1709071b1e00b00a55ac3d5871mr2083265ejc.77.1713768350171;
+        Sun, 21 Apr 2024 23:45:50 -0700 (PDT)
+Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
+        by smtp.gmail.com with ESMTPSA id sa40-20020a1709076d2800b00a5255afc856sm5357362ejc.84.2024.04.21.23.45.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 21 Apr 2024 23:42:57 -0700 (PDT)
-Message-ID: <f1cc8da4-db4e-47b0-b1e9-d3b153fa655f@linaro.org>
-Date: Mon, 22 Apr 2024 07:42:56 +0100
+        Sun, 21 Apr 2024 23:45:49 -0700 (PDT)
+Message-ID: <6ef3422c-d931-4993-856d-c080b11d72d5@kernel.org>
+Date: Mon, 22 Apr 2024 08:45:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,24 +48,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/6] mtd: spi-nor: introduce support for displaying
- deprecation message
-To: Michael Walle <mwalle@kernel.org>, Pratyush Yadav <pratyush@kernel.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
-Cc: Ricardo Ribalda <ribalda@kernel.org>, linux-kernel@vger.kernel.org,
- linux-mtd@lists.infradead.org
-References: <20240419141249.609534-1-mwalle@kernel.org>
- <20240419141249.609534-7-mwalle@kernel.org>
+Subject: Re: [PATCH 12/15] tty: serial: switch from circ_buf to kfifo
+To: Anders Roxell <anders.roxell@linaro.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: gregkh@linuxfoundation.org, linux-amlogic@lists.infradead.org,
+ "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+References: <20240405060826.2521-1-jirislaby@kernel.org>
+ <20240405060826.2521-13-jirislaby@kernel.org>
+ <CGME20240415125847eucas1p2bc180c35f40f9c490c713679871af9ae@eucas1p2.samsung.com>
+ <91ac609b-0fae-4856-a2a6-636908d7ad3c@samsung.com>
+ <d70049d5-d0fe-465f-a558-45b6785f6014@kernel.org> <Zh-fgtujwjiSXz7D@monster>
+ <c091da0b-a150-428a-bf96-75f9f3eab2e2@samsung.com>
+ <CADYN=9LCJS0SW4PuF+e356HUxhzJYi093K6U+BdErPohq4RDWQ@mail.gmail.com>
 Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20240419141249.609534-7-mwalle@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <CADYN=9LCJS0SW4PuF+e356HUxhzJYi093K6U+BdErPohq4RDWQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+On 17. 04. 24, 13:19, Anders Roxell wrote:
+>> I'm trying to run on two dragonboard devices db410c and db845c and both
+>>> fails to boot see the boot failure from db845c [1], linux-next tag: next-20240415.
+>>> I tried to apply the patch [2] (that you proposed in this thread) ontop of next-20240415. However, that didn't
+>>> help bootlog on db845c [3].
+>>
+>> This is a different issue, which I've reported 2 days ago. See the
+>> following thread:
+>>
+>> https://lore.kernel.org/all/d3eb9f21-f3e1-43ec-bf41-984c6aa5cfc8@samsung.com/
+> 
+> Oh ok, I did the bisection on db845v, and that led me to this
+> patch 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
+
+Could you re-test with the today's -next?
+
+In particular, with this commit:
+commit f70f95b485d78838ad28dbec804b986d11ad7bb0
+Author: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Date:   Fri Apr 19 10:09:31 2024 +0200
+
+     serial: msm: check dma_map_sg() return value properly
 
 
-On 4/19/24 15:12, Michael Walle wrote:
-> +	if (info && info->deprecation_version)
+thanks,
+-- 
+js
+suse labs
 
-and here you won't need to check for info again
