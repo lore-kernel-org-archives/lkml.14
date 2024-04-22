@@ -1,111 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AE12579;
-	Mon, 22 Apr 2024 03:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6B3EDDAB;
+	Mon, 22 Apr 2024 03:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713756530; cv=none; b=hCseeMW2O9lUXj+SU71r0aQe4Zq007W6NkMMbPsgRP6dK2EWwwSOkpYFTCT48/R+y/LC0WARqJtGtDW5nmXlmfdFPmxZjXQ6v+2dGMtR+PIcKV2OokoClqMpIJASVzjK8S1hUz5yBS4kNYcMCCb1wpvLmmwRCFRKkEPKd95nQzk=
+	t=1713756568; cv=none; b=cKuzXz7bmQ7IKm+0NaN7LqhU2VM4oupvVev/ldXuECZFrU4T7gn68TfUtOKuXYpqasbmzYJ+RAJpz28KNNuLUoO5P0kqDRyPCuzT7jHRGqoBPKlR3iwMVdTTXoROXqnUfLDA+VDukmd5uTHKuSl/ZUKQ6vyhw/vlVaM95698o4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713756530; c=relaxed/simple;
-	bh=+Ktb/IsPaoqwJhfwXUUrTC6XLdOCvL/6K6NVdF2venw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KqFPsOTM12Qeh5fyzGMnkRAomTreU+5uPx8rySnhTbRlf6K2gR2+H7qaJNcqgLQIVLNiaDNkj5WnRO6U/JkV8JN4zL1CVO8CswR0zoKPzElUehAcgUOjFAW2ENfyiuuveydKBMZTlHS+MUViAhZlGtpTMDzJFZd9Uuff9FRNOPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXY9qgHI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713756568; c=relaxed/simple;
+	bh=r8Qpr4ucM7+Hwg9wj59p5hxKfCnDkIHvT3XZ3KCX2iM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lCV84gIxN7EnW5sXIWwX842Bo+/WP3FIWtgSxMONkPAaUaQHgI/VD3tMZzUqGshVCRH/3Pa0XbWO5Cz2J7ThL+lD75a3tCPGATYtllCfuvlbYCJN/PAjHrjz8XJ6qVvBDuJqang/ZoXbYtJxGLvaHPSJ28f/+4My5sVnkKk/OP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=a+HYj5sp; arc=none smtp.client-ip=123.58.177.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXY9qgHI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9C14C113CE;
-	Mon, 22 Apr 2024 03:28:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713756529;
-	bh=+Ktb/IsPaoqwJhfwXUUrTC6XLdOCvL/6K6NVdF2venw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YXY9qgHIVKCYMuEUBfRTb1sUxePxIBrehmLXnzeSA8cTU13V66krpliIqRXZSxMrW
-	 Jcc2vEmw/9VAOC3if5ovcipCrnL9S7eN8roBgQzeisyMSKF27rUxbjkD8Jg7Rraz+h
-	 X6Op6luDblMwZNVlAwgEDIPVCfGvVpRNQp6UZSGj+jz/KrNkLDqaZSD+/sCdfcawEQ
-	 M+M9BObz0Q1kCXrTwjmgb+kZO9czGi9x2gMh3cfFSJFuUVbVHFfRK4HntT8QdkjAST
-	 tpSIf9l6Uw+vNmiosehTVdgAX3Awo+sD2Xs9xqeAnkUW8afu39aiWA2c09R8BJsEQj
-	 GTfoCywv7P2og==
-Message-ID: <9b95f926-b96c-4266-b292-3c3cd362905e@kernel.org>
-Date: Mon, 22 Apr 2024 05:28:43 +0200
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="a+HYj5sp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=Mg4GQsUB46WfDA6t6amPXP/MvXAaedMjLDYmCMx+L18=;
+	b=a+HYj5spNqtVeC7pMXyJgHFhcX5xpi183EfoCkgTUcCa8JDTnw6hP8CMprcz5N
+	RpzA809xqd9UdbpJpyPtkQtgNHtFZbgZVZ1SrfXnnGv6COkJIgIWP5TnSsfcpWT4
+	5dHVtuxPE8e0q4WTd72thqRBkRTAUAXgfZKMhhRq9kmsU=
+Received: from dragon (unknown [223.68.79.243])
+	by smtp1 (Coremail) with SMTP id ClUQrADXn0QR1yVmBSErAw--.21732S3;
+	Mon, 22 Apr 2024 11:18:43 +0800 (CST)
+Date: Mon, 22 Apr 2024 11:18:41 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Michael Walle <mwalle@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: ls1028a: sl28: split variant 3/ads2 carrier
+Message-ID: <ZiXXETdD7Q+9ldQr@dragon>
+References: <20240403083812.3898480-1-mwalle@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] Add adm1281 support
-To: Jose Ramon San Buenaventura <jose.sanbuenaventura@analog.com>,
- linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-i2c@vger.kernel.org
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>
-References: <20240422025123.29770-1-jose.sanbuenaventura@analog.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240422025123.29770-1-jose.sanbuenaventura@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403083812.3898480-1-mwalle@kernel.org>
+X-CM-TRANSID:ClUQrADXn0QR1yVmBSErAw--.21732S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrXw1UCw1xGr4kAF17KF48JFb_yoWxXrc_WF
+	n8ur1kCws3JF4vqw1akFn3ZFyUGa47X3srCw1fJF97ArykJayqgF95K34vyrZ7AFs2yasx
+	Zw13JrnrWrW5WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUb8hL5UUUUU==
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDhTIZVszYg7p3AAAsG
 
-On 22/04/2024 04:51, Jose Ramon San Buenaventura wrote:
-> This patch removes the extra case added in the adm1275_read_byte_data
-> for STATUS_CML reads. Upon checking, the reads for the STATUS_CML register
-> is already handled in the pmbus_core. 
+On Wed, Apr 03, 2024 at 10:38:12AM +0200, Michael Walle wrote:
+> The devicetree files can be (re-)used in u-boot now, they are imported
+> on a regular basis (see OF_UPSTREAM option) there. Up until now, it
+> didn't matter for linux and there was just a combined devicetree
+> "-var3-ads2" (with ads2 being the carrier board). But if the devicetree
+> files are now reused in u-boot, we need to have an individual "-var3"
+> variant, because the bootloader is just using the bare "varN" devicetree
+> files. Split the "var3" off of the "-var3-ads2" devicetree.
 > 
-> It was also clarified and agreed upon that any other actionable steps
-> involving the STATUS_CML error flags should be added in the pmbus_core
-> and not on the specific chip driver.
-> 
+> Signed-off-by: Michael Walle <mwalle@kernel.org>
 
-Where is the changelog? It's v2, so what happened here?
-
-Best regards,
-Krzysztof
+Applied, thanks!
 
