@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1214F213;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539744E1DD;
 	Mon, 22 Apr 2024 07:15:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713770131; cv=none; b=sKI1/X5k2QSQoWjPSPeMlo6fJ9KtOrngzj+n6QSm1ilQ9ZJfs6VtfyRTOWfh+zcfh7XvOGtdfKuKY0vwuSklbw8ICViRm8gdGxmLhYh2qk3H7oiZIrxbB/EpTRUMpoTUMFBNY2ufMts7HjUXMzGUMIEk7WPaQisvy7+C42LuThQ=
+	t=1713770131; cv=none; b=BvUYbMyPEDQ7wMEp1h1urqRcxFvt2HYSzgrffmpSHmYsvSsiDXHHymsXTawcOr7iPBvO2Lp0eBIuGGtRM5QPsekkHnJS6n/L9txC5EbpT+p9Nv9yH7zc/ojdxjlLiG1XeA1RkR3zoZoXegexerVwbho9ZL3Cmv4L+MojYWIUh7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713770131; c=relaxed/simple;
-	bh=E4bOiJx1q+nQyx91LA+lMd4HNz7Gscld/4vQtZGnbwQ=;
+	bh=Oh54loCHRJVtFGJB4q2HCwiYLcs9oRYxgNGQDVhsNV0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iNjSEU4F4j1VHKYl65YDkJ+CWwXVhz4dy3752LW1cWJ9+tyPhS3gSe0uCEweb+0qQ6TJ9phDzoYsa3AXcKBGA+OFYgrQ+g012ySFg2uNMBOyJEALDj6c1ZmaYxc5jnS86oBfrmU2VVPkEktzGUX06+s5TrCi9mKVxjp0k/yPSPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ajM1UMJ2; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=qgTnLQdnG+EnAh/jjxf4F58AFOvcA4Nk8C6hRO2u5LwsRKwGiu7bweB5SVMXazswqmEiL44ceEqpTfdPAwoaQ7DKHecWaJwz2K98LWeIYR6fYbHmhEWFoakQV+8x+sPWqh2EhxRGGHjj/36+IeRXHXTKajZhBJmg8ct3MYFs83M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kCDdCw93; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ajM1UMJ2"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4CFE9C4AF61;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kCDdCw93"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2D728C4AF4D;
 	Mon, 22 Apr 2024 07:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713770131;
-	bh=E4bOiJx1q+nQyx91LA+lMd4HNz7Gscld/4vQtZGnbwQ=;
+	bh=Oh54loCHRJVtFGJB4q2HCwiYLcs9oRYxgNGQDVhsNV0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ajM1UMJ2pU9y8p0WzVLRgrTnFqnBgLHP56xFT+M5+xuc6vUkf2Xc8GCvl4ZOCqQSr
-	 ALjNg3hM0HgykkcnBsOhk2Pq+wRHEozYfeukHOLG9XVN/GErHZeGraFB073hiA/QAy
-	 174e36wrHQot9JZv4SuYSGHZYKlSPcXXXs3YTRzxC9Vji6Ut28pnKXwB/kQIFtRbf8
-	 CtolqRWeJhUOQmw2jGpRGHX/lrmliu5abN7l5xIrw84ZOKFqIjYbp0Rm/bgRctbbJA
-	 i7jglt+Wr1agneYewuOh1x4vEaIGTFgxWFIET9BF3LzgprQWhWKHyWHNYiODQa8aYz
-	 yAxFN7iijpqsg==
+	b=kCDdCw93JWvyM6ixr4pcLCLU7ZgunKeA6lAT5dtgUjcSGBJfPtP8Z+sxU53JllujR
+	 4VPeb8RiYF2RlEVba9WWCUnOlheg3ZY3dZxiXszyZComjgKJVkNV+i2fpV5x73B8yS
+	 L8RnNIzDrJkGKGP2YG5Lzfl9Ujt0dRtPZP7jdopYwOJdXrYbc3Wvru4LpDH9OZpPrG
+	 YJjfWsgryeCPmLyOJI0Xjo2+x9RT/yC95qH5etmXJTkSWLCSd6eNGmP3OQdiZBJHGI
+	 eH0k4KiPB3Lt+E0JjxgMvB9RNyoRmqckQC1K/Ea7wv2j8Lk9lHTu5kDpD5NviRJ/g6
+	 zGUju2Hke4RdQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB70C10F16;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3B4C10F15;
 	Mon, 22 Apr 2024 07:15:31 +0000 (UTC)
 From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL_via_B4_Relay?= <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Mon, 22 Apr 2024 10:15:20 +0300
-Subject: [PATCH net-next v2 13/15] net: dsa: mt7530: use
- priv->ds->num_ports instead of MT7530_NUM_PORTS
+Date: Mon, 22 Apr 2024 10:15:18 +0300
+Subject: [PATCH net-next v2 11/15] net: dsa: mt7530: refactor
+ MT7530_PMEEECR_P()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240422-for-netnext-mt7530-improvements-4-v2-13-a75157ba76ad@arinc9.com>
+Message-Id: <20240422-for-netnext-mt7530-improvements-4-v2-11-a75157ba76ad@arinc9.com>
 References: <20240422-for-netnext-mt7530-improvements-4-v2-0-a75157ba76ad@arinc9.com>
 In-Reply-To: <20240422-for-netnext-mt7530-improvements-4-v2-0-a75157ba76ad@arinc9.com>
 To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
@@ -59,11 +59,11 @@ Cc: Bartel Eerdekens <bartel.eerdekens@constell8.be>,
  linux-mediatek@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713770127; l=2051;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713770127; l=2734;
  i=arinc.unal@arinc9.com; s=arinc9-Xeront; h=from:subject:message-id;
- bh=LO57rTtyBbOCREdPUpi6qHUsoyqRRLXYGv733cnzF7I=;
- b=qqzctkZQES8NF5LlMYDv98BTmFXbTZaEoakWJoA2/kDTUoi9+aBTltYqJHlK1JsL0us/ZvI7Q
- +CO9tadFy7qCeAsJ9tbPawfjSyWV1IroyQul4j0q174vvcq7p9mKQjL
+ bh=5wCatVwUOJ5yoMFPAyKVGUVnt4uS95CCabQrn8tU2fM=;
+ b=5beEIWBivPh4rRHz4OMOaEN1r7a0OYapK3UVyu+r6c5GA8zk2noPQhtTrOL4SI3QrfcqqoQRu
+ dNQNCPIfgwBBDrcNAOsGEBie7nrvPUo7pjv+ZxdeaqvCFd0w4SvXK9R
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=z49tLn29CyiL4uwBTrqH9HO1Wu3sZIuRp4DaLZvtP9M=
 X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-Xeront
@@ -73,56 +73,73 @@ Reply-To: arinc.unal@arinc9.com
 
 From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-Use priv->ds->num_ports on all for loops which configure the switch
-registers. In the future, the value of MT7530_NUM_PORTS will depend on
-priv->id. Therefore, this change prepares the subdriver for a simpler
-implementation.
+The MT7530_PMEEECR_P() register is on MT7530, MT7531, and the switch on the
+MT7988 SoC. Rename the definition for them to MT753X_PMEEECR_P(). Use the
+FIELD_PREP and FIELD_GET macros. Rename GET_LPI_THRESH() and
+SET_LPI_THRESH() to LPI_THRESH_GET() and LPI_THRESH_SET().
 
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 ---
- drivers/net/dsa/mt7530.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/dsa/mt7530.c |  8 ++++----
+ drivers/net/dsa/mt7530.h | 13 +++++++------
+ 2 files changed, 11 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 5e69ff0a4b24..55954a165a15 100644
+index 842c2573dfe4..5e69ff0a4b24 100644
 --- a/drivers/net/dsa/mt7530.c
 +++ b/drivers/net/dsa/mt7530.c
-@@ -1411,7 +1411,7 @@ mt7530_port_set_vlan_unaware(struct dsa_switch *ds, int port)
- 	mt7530_rmw(priv, MT7530_PPBV1_P(port), G0_PORT_VID_MASK,
- 		   G0_PORT_VID_DEF);
+@@ -3051,10 +3051,10 @@ static int mt753x_get_mac_eee(struct dsa_switch *ds, int port,
+ 			      struct ethtool_keee *e)
+ {
+ 	struct mt7530_priv *priv = ds->priv;
+-	u32 eeecr = mt7530_read(priv, MT7530_PMEEECR_P(port));
++	u32 eeecr = mt7530_read(priv, MT753X_PMEEECR_P(port));
  
--	for (i = 0; i < MT7530_NUM_PORTS; i++) {
-+	for (i = 0; i < priv->ds->num_ports; i++) {
- 		if (dsa_is_user_port(ds, i) &&
- 		    dsa_port_is_vlan_filtering(dsa_to_port(ds, i))) {
- 			all_user_ports_removed = false;
-@@ -2428,7 +2428,7 @@ mt7530_setup(struct dsa_switch *ds)
- 	/* Enable and reset MIB counters */
- 	mt7530_mib_reset(ds);
+ 	e->tx_lpi_enabled = !(eeecr & LPI_MODE_EN);
+-	e->tx_lpi_timer = GET_LPI_THRESH(eeecr);
++	e->tx_lpi_timer = LPI_THRESH_GET(eeecr);
  
--	for (i = 0; i < MT7530_NUM_PORTS; i++) {
-+	for (i = 0; i < priv->ds->num_ports; i++) {
- 		/* Clear link settings and enable force mode to force link down
- 		 * on all ports until they're enabled later.
- 		 */
-@@ -2539,7 +2539,7 @@ mt7531_setup_common(struct dsa_switch *ds)
- 	mt7530_clear(priv, MT753X_MFC, BC_FFP_MASK | UNM_FFP_MASK |
- 		     UNU_FFP_MASK);
+ 	return 0;
+ }
+@@ -3068,11 +3068,11 @@ static int mt753x_set_mac_eee(struct dsa_switch *ds, int port,
+ 	if (e->tx_lpi_timer > 0xFFF)
+ 		return -EINVAL;
  
--	for (i = 0; i < MT7530_NUM_PORTS; i++) {
-+	for (i = 0; i < priv->ds->num_ports; i++) {
- 		/* Clear link settings and enable force mode to force link down
- 		 * on all ports until they're enabled later.
- 		 */
-@@ -2626,7 +2626,7 @@ mt7531_setup(struct dsa_switch *ds)
- 	priv->p5_sgmii = !!(val & PAD_DUAL_SGMII_EN);
+-	set = SET_LPI_THRESH(e->tx_lpi_timer);
++	set = LPI_THRESH_SET(e->tx_lpi_timer);
+ 	if (!e->tx_lpi_enabled)
+ 		/* Force LPI Mode without a delay */
+ 		set |= LPI_MODE_EN;
+-	mt7530_rmw(priv, MT7530_PMEEECR_P(port), mask, set);
++	mt7530_rmw(priv, MT753X_PMEEECR_P(port), mask, set);
  
- 	/* Force link down on all ports before internal reset */
--	for (i = 0; i < MT7530_NUM_PORTS; i++)
-+	for (i = 0; i < priv->ds->num_ports; i++)
- 		mt7530_write(priv, MT753X_PMCR_P(i), MT7531_FORCE_MODE_LNK);
+ 	return 0;
+ }
+diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
+index 1f3aeccc77be..6a6ef34b48c4 100644
+--- a/drivers/net/dsa/mt7530.h
++++ b/drivers/net/dsa/mt7530.h
+@@ -364,13 +364,14 @@ enum mt7530_vlan_port_acc_frm {
+ 					 PMCR_FORCE_SPEED_100 | \
+ 					 PMCR_FORCE_FDX | PMCR_FORCE_LNK)
  
- 	/* Reset the switch through internal reset */
+-#define MT7530_PMEEECR_P(x)		(0x3004 + (x) * 0x100)
+-#define  WAKEUP_TIME_1000(x)		(((x) & 0xFF) << 24)
+-#define  WAKEUP_TIME_100(x)		(((x) & 0xFF) << 16)
++#define MT753X_PMEEECR_P(x)		(0x3004 + (x) * 0x100)
++#define  WAKEUP_TIME_1000_MASK		GENMASK(31, 24)
++#define  WAKEUP_TIME_1000(x)		FIELD_PREP(WAKEUP_TIME_1000_MASK, x)
++#define  WAKEUP_TIME_100_MASK		GENMASK(23, 16)
++#define  WAKEUP_TIME_100(x)		FIELD_PREP(WAKEUP_TIME_100_MASK, x)
+ #define  LPI_THRESH_MASK		GENMASK(15, 4)
+-#define  LPI_THRESH_SHT			4
+-#define  SET_LPI_THRESH(x)		(((x) << LPI_THRESH_SHT) & LPI_THRESH_MASK)
+-#define  GET_LPI_THRESH(x)		(((x) & LPI_THRESH_MASK) >> LPI_THRESH_SHT)
++#define  LPI_THRESH_GET(x)		FIELD_GET(LPI_THRESH_MASK, x)
++#define  LPI_THRESH_SET(x)		FIELD_PREP(LPI_THRESH_MASK, x)
+ #define  LPI_MODE_EN			BIT(0)
+ 
+ #define MT7530_PMSR_P(x)		(0x3008 + (x) * 0x100)
 
 -- 
 2.40.1
