@@ -1,99 +1,63 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE31815380C;
-	Mon, 22 Apr 2024 17:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5D0153BCD;
+	Mon, 22 Apr 2024 17:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713805713; cv=none; b=n5/kW9sbqj+yPxYkrQjg3QPZ8L2GnybPYAlL2gROaN+faIu80BdfKGhQLghCxQl8hDzZcHDbpLytIqyo8EIw59LzcppwZ3xYl30c3C55YHnw8MBXcIpkFAwGA6yc2fkMJjkW+6b7rzZGXmEPSxy8kIlkRk3VZaIRAYLuWWTZ/iw=
+	t=1713805739; cv=none; b=muGrlU62UkmwibRzMuK1YM/ipIK6oI+Qc4pIPwOnBRDd8vRSc2Ln4ffkkCrpCfH/wGj/cd52hvsEvv7TvWjyqT8cDVM8wbz0AzXEQ7pUeG0dIYMoOtLDumo4zF+hDxS90Nza5C3Um4FyqHad89ZLpv7523FvzNq/BP2lKYuJemU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713805713; c=relaxed/simple;
-	bh=CpRjxn+7n9MiCWeFV86YpJfJEt1nihvk65CDyghsTR4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cvMo/GxawJ9F4tCCnrxVbmM3N7AgmxouUNPUlYljJHLJkOLT+py5EjhiFQZP4e9p646cP2erL+wP8JUm1OM+LGhjXDzE/bU/lvKer3Nb0zo8azSEOUOQ6y9GQTPBbZgw6HhnN368gCIL51k5K/lAzseUMxIPtfPVkYxH5i9JcMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MybUg73y; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1713805739; c=relaxed/simple;
+	bh=x9HobTdnWLZJFyX1tDHq4pvUAAi7hENLILUN2xNFpd4=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=T8k3bcCVyMMctP5l4cjllhe4ETMiJbfsbZ5H3Bys3cCq5pYVB0QX7nuiLCvKlmc7DTUvLBf+eNV4DsSIJfDHxHfcfUxNyZMR0CklXW6pmVYcKMEyxyXFNBMRh1tjU6ZjduJE/i+ksxV9elCr2EdHswJJk7iuNOx4MmMGfBr2gcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jpxuaeYP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MybUg73y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713805703;
-	bh=CpRjxn+7n9MiCWeFV86YpJfJEt1nihvk65CDyghsTR4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MybUg73yac1GBnq24R27cKOgM2lqmEswhEQB0t3ihw9uDCCZ2fsW+Vd9FapDb6rG4
-	 xsR2mmgLBHnhGVxw40zH4RhVH1VZwxqxVsdFPjgwdJF+9/MdS0xE4FtzQjwGjkW3rM
-	 R78FPxaaFidlORkNIBs5w+nIdSZjIovCTbsdCAtTD8ieyoyMWjpDrDAuDM5hsgv89H
-	 wJolXV2WvfcmwmXOITekaDbhUVmQMdILVZqNibGEZwxLl8lLp9r8Qsvv/6fMzTnOW8
-	 n0XHLePgWVgN1chDKO1dgPAlEk8JvaVCdkULPeL1oqZE8ZoRFO12dsN/joCHCFeDvL
-	 d9JEgFgcAOCBg==
-Received: from localhost.localdomain (broslavsky.collaboradmins.com [68.183.210.73])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C6F7037820E2;
-	Mon, 22 Apr 2024 17:08:19 +0000 (UTC)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	kernel@collabora.com,
-	kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] selftests: kvm: fix undeclared function error
-Date: Mon, 22 Apr 2024 22:08:42 +0500
-Message-Id: <20240422170842.2073979-1-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jpxuaeYP"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D0BE6C32781;
+	Mon, 22 Apr 2024 17:08:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713805738;
+	bh=x9HobTdnWLZJFyX1tDHq4pvUAAi7hENLILUN2xNFpd4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=jpxuaeYPtIg6R3pe78OZbZFi6GK6KD9j8R/Ua5+O7H6hRZQVCEfpv7oefSwMZ4I7q
+	 6Q9S7kX9X24rO5Q1cKZmrQLiAd9VVNCjnW7fwm5KYKmtw/ab22iNgOAHT7gFThbw1H
+	 Honn8t9iju9V3u7iYUSS0xqlUqdJy1WKAsAkbUeMuMO+6/IUUIUsMIan8Wki25JEPT
+	 d7byA8jBibk1aIj2X9jfFr8QsfO2BTN2D6lB6J7W5XBFT4l0yFFHbtq1gzXZb3tmcg
+	 qyeyetGUxgbjmPbdxaKKTlkSEgi/7OnT7onwyaikwvtFc5PcGMS2Za3C7GcToWtGJy
+	 OmG7xPo2e06pg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C62B3C433A2;
+	Mon, 22 Apr 2024 17:08:58 +0000 (UTC)
+Subject: Re: [GIT PULL] Documentation fixes for 6.9
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <87le5530xk.fsf@meer.lwn.net>
+References: <87le5530xk.fsf@meer.lwn.net>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <87le5530xk.fsf@meer.lwn.net>
+X-PR-Tracked-Remote: git://git.lwn.net/linux.git tags/docs-6.9-fixes2
+X-PR-Tracked-Commit-Id: 8d939ae349343b55984ea821164e2be526d48cd1
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4d2008430ce87061c9cefd4f83daf2d5bb323a96
+Message-Id: <171380573880.25457.17886683186401293703.pr-tracker-bot@kernel.org>
+Date: Mon, 22 Apr 2024 17:08:58 +0000
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Linus Torvalds <torvalds@linuxfoundation.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Include kvm_test_harness.h first which will include kselftest_harness.h
-for _GNU_SOURCE to get defined first before inclusion of stdio.h. It
-is required for declaration of asprintf(). It removes the following
-build error caught by clang-17:
+The pull request you sent on Mon, 22 Apr 2024 08:51:51 -0600:
 
-In file included from x86_64/fix_hypercall_test.c:12:
-In file included from include/kvm_test_harness.h:11:
-../kselftest_harness.h:1169:2: error: call to undeclared function
-'asprintf'; ISO C99 and later do not support implicit function declarations
-[-Wimplicit-function-declaration]
- 1169 |         asprintf(&test_name, "%s%s%s.%s", f->name,
-      |         ^
+> git://git.lwn.net/linux.git tags/docs-6.9-fixes2
 
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
- tools/testing/selftests/kvm/x86_64/fix_hypercall_test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4d2008430ce87061c9cefd4f83daf2d5bb323a96
 
-diff --git a/tools/testing/selftests/kvm/x86_64/fix_hypercall_test.c b/tools/testing/selftests/kvm/x86_64/fix_hypercall_test.c
-index f3c2239228b10..75306dcfaad6c 100644
---- a/tools/testing/selftests/kvm/x86_64/fix_hypercall_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/fix_hypercall_test.c
-@@ -4,12 +4,12 @@
-  *
-  * Tests for KVM paravirtual feature disablement
-  */
-+#include "kvm_test_harness.h"
- #include <asm/kvm_para.h>
- #include <linux/kvm_para.h>
- #include <linux/stringify.h>
- #include <stdint.h>
- 
--#include "kvm_test_harness.h"
- #include "apic.h"
- #include "test_util.h"
- #include "kvm_util.h"
+Thank you!
+
 -- 
-2.39.2
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
