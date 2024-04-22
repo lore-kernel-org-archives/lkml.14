@@ -1,123 +1,150 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D464F213;
-	Mon, 22 Apr 2024 08:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291014AEC1;
+	Mon, 22 Apr 2024 08:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713773794; cv=none; b=K8BMNYpdXOZpTg+tEDc8F8gVDq/2sxxwFNrmFLs3FLP3T0M/+13J0k+GK/J9Io6ocXbdxV9snoTMbbgRdvfd0mcqX9KLhVgEdNh3QDcv4gFhKB/UeDyW2F3tJqPBRYowLcjYYybV1yI/KtSez/LIZ2feWt7NzEV8OD3UU/yxwb0=
+	t=1713773830; cv=none; b=ENQSNuATw0UtSwMpZLqKb2Z2P4E0G9JrfD8aDcCDcUj1URBni/wQQrKYmqpuqjkPfieF+GnpMqFnNxG9SXplxHPYpnrRSvy8PHYztCLarZEPGZMwAw8o+tj1eMV3OaaoEcT1KiXoQXKlKna8yv/fIIDYrWjaN3nUS84DrPeSzwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713773794; c=relaxed/simple;
-	bh=1+KShvQP4L8S+qf+ibZ2UzbkiqYy9rj6zXwYoGsfv9A=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZpbAxokAYGxf1RDixhtVMDLgvFFwLEo7kFxOGW7N3MlH2MP+ruZHATNCLM3KeuFWJa+qQ28kIO04zGxHl7LH4x79Xs5ZWD/VeNmruH7xRUtHMoYXA0UJ1hM8iKPqnDcZYY1alVifOe0ly8Jj52xAaf8xiLYk+zWjzyPi6I5vGD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JdClS3BP; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1713773830; c=relaxed/simple;
+	bh=M9B7WRjrvk2JAsBFwlrLC6qkllLzalEbntZIoYH3cKw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cNrRqNfzryRIzRpsiT/XFHoAagKms8zKTfgxaBxqUgxpf5VqB7oK/TjiNlu0xTrUon7cK9rrmZgGWi1lt6pGG8LffEDXJx40i55kU2d27/yOIA3r8+0vh22b0GKmLmWIaoSZMn1p3IRxexKU8dE+647B+PBjyqkZF+25sdnFR4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=itu84G3X; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JdClS3BP"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43M7lbFb017532;
-	Mon, 22 Apr 2024 08:16:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=1+KShvQP4L8S+qf+ibZ2UzbkiqYy9rj6zXwYoGsfv9A=;
- b=JdClS3BPqb8zfTrWNX5gZ2UWBRnOXNPnNGUOrHkc54CvcObt2m0Rgeh9296krYbKNV0D
- 2Y1+ANtdFu+SaiI3dyuv/kHzfswADfua358EiWveTg+keK4Eud7AkJb3xMM/N/AQgJoX
- GNIUh+tQnXJE/DyDdj91y9tcELRzLylLleU1vk+HQgYDjufH8EjYK0XYr7va1kYveCE+
- 80weu2kLrz3/PIpYZXRR8t0xl4IscAxI1XxAc94PbQ938oS1hmg5wdSeDYBnjtcNQ/H7
- zzScsanJEE6FWx5demNouBrRC11exDwhhM4NBiL/B/dl/o2RJY9rmVRs+eRPspiiJPSs bg== 
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xnkta023q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 08:16:07 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43M5I2PG029898;
-	Mon, 22 Apr 2024 08:16:06 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xmr1t6skn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 08:16:06 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43M8G2ni55247270
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 22 Apr 2024 08:16:04 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 853C520040;
-	Mon, 22 Apr 2024 08:16:02 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 50AF42004D;
-	Mon, 22 Apr 2024 08:16:02 +0000 (GMT)
-Received: from [9.152.212.236] (unknown [9.152.212.236])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 22 Apr 2024 08:16:02 +0000 (GMT)
-Message-ID: <5caa45a40659dd772f63d9674bfc915c98efdecc.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/1] watchdog: add HAS_IOPORT dependencies
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, linux-watchdog@vger.kernel.org,
-        Arnd Bergmann <arnd@kernel.org>, Heiko
- Carstens <hca@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Date: Mon, 22 Apr 2024 10:16:02 +0200
-In-Reply-To: <13ef0edf-e923-4139-8c6e-91bcb8193a9e@roeck-us.net>
-References: <20240410084201.1481930-1-schnelle@linux.ibm.com>
-	 <20240410084201.1481930-2-schnelle@linux.ibm.com>
-	 <13ef0edf-e923-4139-8c6e-91bcb8193a9e@roeck-us.net>
-Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itu84G3X"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a4702457ccbso455388366b.3;
+        Mon, 22 Apr 2024 01:17:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713773827; x=1714378627; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=POE7+7bDdgxJYrWynyeU3Cirtp8tecozyW6D2rsQgo8=;
+        b=itu84G3XOf6V0qGmoMJMy7DGC5TUJ9Qbh6K2ZoLABhklzCNZ+TZmv0cJrNyrxqVHzU
+         1yvtgaNnahz1KQHXf8cKKMw7LeOKqkArp5nTjZWgSA/WZF3+tlOwwXAfg0B5QiMkjzss
+         KYejzdOaJlzTZlTDpIY6ODaCiB73/w62GkZ8muFvblBGjfi1nmB6ZoO6OckfKLPo/tNL
+         kb0bvPoHW3IvZR+mVX7suU1nOAUoFKGxNoNpMPMSen//uXavL2jhTtCkgYGWS4jwPC5z
+         go5rcJCoKLLhTRgduekGS9l67LajAnv2NKPuAI2W0eBG+DR0sBzWgxE4u/JjtJBmtC8b
+         XvJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713773827; x=1714378627;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=POE7+7bDdgxJYrWynyeU3Cirtp8tecozyW6D2rsQgo8=;
+        b=iB4LmxspRV3x7DSJNE2SW0tlT1ysW/trdsxQfOrPZnUvRhOqLxAutpEg8k+Bx04p3g
+         bFDSXwQytBe6f5nYiSBJ3DLIcsnaBjcX/q3TWlQslmYnJiqQhCpPS+8yygNAFM5TRR+w
+         EyR82vU2mKthBmL0m/17SToooGkBN+6yA6jNo+n47WR8EVInUKNFtHzDy8M9VlnqIVYm
+         RvkcSFzEyAL9EBONCYeAkeKckmuWfs7j8bMR1ZSu9OwE9i9xA3yinL/WMxxkFIjcR4Pj
+         faCKrDOQqR/+5bXDZmmOp895glIrhicB4vO4gwZllyftZAnt3C0ec3vrbqZ562XzDfEu
+         xU0g==
+X-Forwarded-Encrypted: i=1; AJvYcCV9sTC/7oN4FAXn6THEZTRpdFBEO4L9njeyOr8ns2BVsv3i2uayecnSGHn3pnpyHr6AuN74z9H9b8h5Ui1L5gkdmXEQkefVhghlxe+jMWijin6xfe71UYqxOahnW5MaRiweZEHUGhUk5EAFM+uPnGUwuzUE92GZrlTITFH/vKj6EB7azWE=
+X-Gm-Message-State: AOJu0Ywu6/k2bzDxcJ80rAECABHbuqKqFC0hQnE1Avk3Mlcr8Pb+Ypq6
+	BSsvlAjEQrm254rh08261S5SxJ1irFsKt8Jp/V5X+8ZDTnbiIIM4cItFIPQZLLVR//lJyJ9Ju0e
+	eUG1bhNyMddJ56qoIog/Cxj+n8ms=
+X-Google-Smtp-Source: AGHT+IGdGb378Q6HBFI7vnqwgZAe/ou95qevOvoX9Sk6JXOvi4Phmy2Xhg+rj7Z4WCygmd7t+cDyddlSEuxBKKtbxVQ=
+X-Received: by 2002:a17:907:2d9f:b0:a56:cb24:fbb9 with SMTP id
+ gt31-20020a1709072d9f00b00a56cb24fbb9mr388348ejc.20.1713773827167; Mon, 22
+ Apr 2024 01:17:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: UVzw-4DWp8ZK1iN4txYd4egFVDJp_Tpt
-X-Proofpoint-GUID: UVzw-4DWp8ZK1iN4txYd4egFVDJp_Tpt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-22_05,2024-04-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- malwarescore=0 impostorscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0
- mlxlogscore=935 spamscore=0 suspectscore=0 priorityscore=1501 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
- definitions=main-2404220037
+References: <20240409095637.2135-1-ychuang570808@gmail.com>
+ <20240409095637.2135-4-ychuang570808@gmail.com> <ZhZTsV3RKpuyeUr4@surfacebook.localdomain>
+ <643a0d80-3d99-420e-9e77-acc67728fbe7@gmail.com>
+In-Reply-To: <643a0d80-3d99-420e-9e77-acc67728fbe7@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 22 Apr 2024 11:16:31 +0300
+Message-ID: <CAHp75VfMb_=XKoQNbbVphLg-eQgc6eJbZOW36g_hU=-iK2bSOQ@mail.gmail.com>
+Subject: Re: [PATCH v7 3/3] pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO driver
+To: Jacky Huang <ychuang570808@gmail.com>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	p.zabel@pengutronix.de, j.neuschaefer@gmx.net, 
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ychuang3@nuvoton.com, schung@nuvoton.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2024-04-10 at 07:55 -0700, Guenter Roeck wrote:
-> On Wed, Apr 10, 2024 at 10:42:01AM +0200, Niklas Schnelle wrote:
-> > In a future patch HAS_IOPORT=3Dn will disable inb()/outb() and friends =
-at
-> > compile time. We thus need to add HAS_IOPORT as dependency for those
-> > drivers using them.
-> >=20
-> > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> > Signed-off-by: Arnd Bergmann <arnd@kernel.org>
-> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> > ---
-> > Note: This patch does not depend any not-yet-mainline HAS_IOPORT change=
-s
-> > and may be merged via subsystem specific trees at your earliest
-> > convenience.
->=20
-> Seems like the COMPILE_TEST / HAS_IOPORT problem is watchdog and
-> hwmon specific, so I'll just let it go.
->=20
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->=20
-> Guenter
+On Mon, Apr 22, 2024 at 7:10=E2=80=AFAM Jacky Huang <ychuang570808@gmail.co=
+m> wrote:
+> On 2024/4/10 =E4=B8=8B=E5=8D=88 04:54, Andy Shevchenko wrote:
 
-Thank you. What tree should this go via?
+...
 
-Thanks,
-Niklas
+> >> +#define MA35_GP_MODE_MASK_WIDTH              2
+> >> +
+> >> +#define MA35_GP_SLEWCTL_MASK_WIDTH   2
+> > I looked at the code how you use these... Oh, please switch to FIELD_GE=
+T() /
+> > FIELD_PREP() (don't forget to include bitfield.h)
+> >
+> > ...
+> >
+> > ...
+> >> +             regval &=3D ~GENMASK(setting->shift + MA35_MFP_BITS_PER_=
+PORT - 1,
+> >> +                                setting->shift);
+> > This will generate an awful code. Use respective FIELD_*() macros.
+> >
+> > ...
+> >
+> >> +     regval &=3D ~GENMASK(gpio * MA35_GP_MODE_MASK_WIDTH - 1,
+> >> +                        gpio * MA35_GP_MODE_MASK_WIDTH);
+> >> +     regval |=3D mode << gpio * MA35_GP_MODE_MASK_WIDTH;
+> > Ditto.
+> >
+> > ...
+> >
+> >> +     regval &=3D GENMASK(gpio * MA35_GP_MODE_MASK_WIDTH - 1,
+> >> +                       gpio * MA35_GP_MODE_MASK_WIDTH);
+> >> +
+> >> +     return regval >> gpio * MA35_GP_MODE_MASK_WIDTH;
+> > Ditto.
+
+...
+
+> Allow me to remove irrelevant parts.
+>
+> I attempted to follow your advice and use FIELD_GET() and FIELD_PREP(),
+> but found
+> it impractical. The reason is that these two macros require their 'mask'
+> argument
+> to be a constant, otherwise compilation errors occur, which is the issue
+> I encountered.
+> Since the mask here is calculated and not a constant, compilation errors
+> occur.
+>
+> Taking MA35_GP_REG_MODE as an example, within 32 bits, every 2 bits
+> represent
+> the mode of a GPIO pin, and the mask is obtained by GENMASK(gpio * 2 -1,
+> gpio * 2),
+
+This is not good for the compiler, it can't figure out (at least in
+some _supported_ by Linux kernel versions on some architectures) that
+GENMASK can be constant here just left-shifted by arbitrary bits.
+
+> where the 'gpio' argument is a variable, not a constant, leading to
+> compilation
+> errors.
+>
+> Due to this reason, I will leave this part unchanged, or do you have any
+> other suggestions?
+
+If you need non-constant field_get()/field_prep(), add a new patch
+that moves them from drivers/iio/temperature/mlx90614.c (and there are
+more custom implementations:
+https://elixir.bootlin.com/linux/latest/A/ident/field_get) to the
+bitfield.h and use them in your code.
+
+--=20
+With Best Regards,
+Andy Shevchenko
