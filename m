@@ -1,59 +1,59 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0000453E1E
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDF454FA0
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713775990; cv=none; b=F4pA7BwUBtc8/Yke6xG0prHalQ88lNn4Ex9TbguOVn8lMVtRkmmlfTHm/9xtm0PfJdhoV6sGjlUQWDKR5HAfrO+UfXriPv27YNB/ADw/LQ7+XBFrjJgi2sX1O/iesF7aFMD2nR0O2ZGNZM+R9g6aGlWoysoTWwgvW1javNP3PU4=
+	t=1713775995; cv=none; b=RU/ZT27JI627SF06L5JDDy/jV0AYoCxjhG0HHmkHfiaYan/3vOL7ZKTWCFxlrkYLmQkp8/l9cmLIEQJ+E3EMMwBozLeGyRY0i+gRVv1vrq9b0E7lQRziEk8Ce6IY/MxTfnicSHJnpXSxfo64YPHL/M1R6YMlhN4Z4eaAJf306a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713775990; c=relaxed/simple;
-	bh=nleU09vurZd5AuLxgNnsP+QcvquS4B0Ob3oAXLFJzZc=;
+	s=arc-20240116; t=1713775995; c=relaxed/simple;
+	bh=knFRrVHv/hXP0hrnXxi3FsPJj1U2CbJeo94T4pn0sEs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ETM+mTeSr2xDXNXGvnorCv5sTEjHQOiuK6bTXYCE5CGb72gxC9tiOiNsUTy5k0OnTn1TL9SQ+FcqMziFeLC9SEdprd1wSRhUxO+1gHNBnDiqngWaOhiqsxxU/lhMM7D1Sg70oN0gNpfUOmnWgLo1t/fwW9zazt8neJHsA/AC7W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Zq86nSpI; arc=none smtp.client-ip=209.85.221.42
+	 In-Reply-To:Content-Type; b=uVwiutFZ03BH0kXgVHEcpFRSLEjFZpd3fIpMCCwWZrPb5gONzrW0XxAaWogTIn8AZ3IqOD34ImCRkjAg51olb7mYizRVoDXiuEurrLMlWG5zmpOpv7VyM0lFXr5QDR7hZkF5Wm0In9GrXQ+CZzcou/GiSm3IpWLXQB0ue1JpAPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=CEMHhUch; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Zq86nSpI"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-346a5dea2f4so972931f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 01:53:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="CEMHhUch"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-34b39ecbcccso53132f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 01:53:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713775986; x=1714380786; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713775992; x=1714380792; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=+/fvR+HwOJPjnOfbOHG69UP92YiSjqkbM928Puj2/Go=;
-        b=Zq86nSpI55jjwJBRIYNddD+VzEJWuOhqk1Rm2LOKURki/miaj2WjRcgZrFyL/IRSAj
-         JfGEWF4V33MWATfv/PFv+mv9F8CjDCj+EfC4w2BxLGxkWh8+ZgDoA/o4OnEuSEG2fVWV
-         Id18sPk7FGHd1NQLtaQ8DJsUR5s/MLRNMTLBM5qyPf9UuKihYqJvT3UFBNoGmRWttFl1
-         POrkx1e2leTn1ELL6x0Jf8KNS5Mo8LWcar9E5RpqCv+V1ZbDJH6ngspMixoTYJClZsNa
-         OgZ3e23QXU7NipSQJ9HpWkIP85vMu22LTRo1VpzATES+Z7nmA8uCdbQKx765d/ZZhIH1
-         xjug==
+        bh=BSJifQLOOtjWe2caLguw5JxOp3zY6VKsL2huHk/+dLw=;
+        b=CEMHhUchJNQvjTBZSnWxa7JlW45AdnicxGM+sHRNdpG1+LKLOPYb4xITd0rL0jIdHe
+         S4pxZqdrFFzKGeGJib+2edypzIEAjo/0g3CDY1AhJUBklADPmPp6Jzh06Awlx65aDdjM
+         XWGDJUW7MzDHZXbutnNghNLiyyjxxgZbrlqka6XzPcGVNXJ3J+vDQ9ImGQa033nDfE4x
+         VUnDi2xDFhXEYq5EbhNg6uNixK5eBsiB/iNT2K8Qa2bTwp6sh5ao7QHTXhDiNK464lA0
+         nlYs81raAp67lAo8YoA1e7ysTStznB7LSv597bPrlFWjE3zj0k7m6lOJ78E6Tuocs2JB
+         KSWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713775986; x=1714380786;
+        d=1e100.net; s=20230601; t=1713775992; x=1714380792;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+/fvR+HwOJPjnOfbOHG69UP92YiSjqkbM928Puj2/Go=;
-        b=ib0mfMRCtIR6QmJWy/yLymQN/H5fHd0PJAjbsx2sayAMUUS1DSaZmt/MjGxs3Q84UQ
-         Ih0ZL6P9oZ2iiheBlFSy+vnArgWO8LyLE4P+fv6vk9iUJps9RcPRBxGmc6ZPOJkzdBNx
-         weCMYcAxqTEwMC8qe/TR+VNEhvkWZ74zvooGA9MvmCUarzGV8Vgp9jF/XM+c7jp5MGc8
-         mrwgdZxBeITff1WviUrQWEG9eFQvFjFIxa3ctY/Jt8rU81BMfFoIHZEEfMG9r7pBD2Ze
-         05pg4Z0EeapME7COr0Aqsgzzmf+iLd15csF7UavPXiRsuZtkGcENdkysgFC19D/JWVy/
-         1LHg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQCvPWIsEdM3lOjKrAMHcO4oLw3KQzQOQfPvsrGwngOeKm8XJ5KZckAVO1l4Rygw1S/XF/g8Vg8iCwp3NjyJnj+SbHSpLotUTt0/Ql
-X-Gm-Message-State: AOJu0YwmqM0f834sYROnSIzgelqLfNaNe4qxWIQPi2PJdq02Yd/DVMtW
-	+/75zAPX+KHlPmPy0Lw52g2OvNMbXoihIHW0QQbyjqi9FK6tPPiW6vAyuMPVxYc=
-X-Google-Smtp-Source: AGHT+IFE4R9zCUkzHMX1ToR2kyTpvZV9gQXHpyVa4BPp1ldGkiKbLmpz+4IIFAyNc6nOuO6PT/9Ayg==
-X-Received: by 2002:a05:600c:3baa:b0:418:1303:c3d1 with SMTP id n42-20020a05600c3baa00b004181303c3d1mr7145059wms.3.1713775986113;
-        Mon, 22 Apr 2024 01:53:06 -0700 (PDT)
+        bh=BSJifQLOOtjWe2caLguw5JxOp3zY6VKsL2huHk/+dLw=;
+        b=lHN+aGyMQW+csb4T6vbXmYjjSFwl4X/Ay6MXKeDs2xdQHwQf+4/MJaS1mOMm3GbfXn
+         7xoJZ8ie1IQqq5nFzSit5ZFW/WBmfZcpqwZLpajQI056FS3Et3sznbd00E1su3M1YhPm
+         KZ2FZckzwYwJSPijHYcWTRrSvQJw8DJriHOIT5TpBJFzRyKSszP8oMqdR9q46L+gz6uN
+         92C9D7Qe+vKdoB7QzA0xiS/rqeRPFTz3ge4zb/j69w4bVmtwjmEKNKEloO3v/y1uEu/H
+         Vve7UHePFIdj7dRVEBUuouGN43BXgpeeKYXHAzZQKM2OMEQWSWbb1qMOguCcwzv8JKRD
+         /CTA==
+X-Forwarded-Encrypted: i=1; AJvYcCXZhq5fTODV0pVaIJy29qqEEU7eQjrjAGWivhv8F5pjScPr+1BrzvvXnLeb3gRlhnWxiE5pLZ4rEx7A7KAcfMH2BYpdaYXjQ4w8iqmP
+X-Gm-Message-State: AOJu0Yw2u2VaSpGYcgiiDGOlsIBH2ifXs7++sFz/ItlkvFCZYLe5SC3B
+	5OuloHbVYl1ru2bjw+xhM7Nt4Mmi3hRcSrcnu5bPTppotvrBEVh4/pGe7/gQ8Wc=
+X-Google-Smtp-Source: AGHT+IHRas3l39C/N5OldWvLjh8/Ocyg0dgZzgEEfR5deo9HXajPzyL+wuWZHMyf6dRNz3xpRu97wA==
+X-Received: by 2002:a05:600c:3b09:b0:418:ef65:4b11 with SMTP id m9-20020a05600c3b0900b00418ef654b11mr7146190wms.2.1713775991653;
+        Mon, 22 Apr 2024 01:53:11 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:999:a3a0:dc65:11af:998:225e? ([2a01:e0a:999:a3a0:dc65:11af:998:225e])
-        by smtp.gmail.com with ESMTPSA id g7-20020a05600c310700b0041a92bb0c10sm25826wmo.2.2024.04.22.01.53.05
+        by smtp.gmail.com with ESMTPSA id g7-20020a05600c310700b0041a92bb0c10sm25826wmo.2.2024.04.22.01.53.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Apr 2024 01:53:05 -0700 (PDT)
-Message-ID: <f89c79f7-a09e-4fcf-8e16-0875202ade4a@rivosinc.com>
-Date: Mon, 22 Apr 2024 10:53:04 +0200
+        Mon, 22 Apr 2024 01:53:11 -0700 (PDT)
+Message-ID: <6ab9e591-f2f2-4267-8bdd-169ef0243e14@rivosinc.com>
+Date: Mon, 22 Apr 2024 10:53:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,8 +61,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/12] dt-bindings: riscv: add Zc* extension rules
- implied by C extension
+Subject: Re: [PATCH v2 04/12] riscv: add ISA parsing for Zca, Zcf, Zcd and Zcb
 To: Conor Dooley <conor@kernel.org>
 Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley
  <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
@@ -74,176 +73,67 @@ Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley
  devicetree@vger.kernel.org, kvm@vger.kernel.org,
  kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org
 References: <20240418124300.1387978-1-cleger@rivosinc.com>
- <20240418124300.1387978-4-cleger@rivosinc.com>
- <20240419-blinked-timid-da722ec6ddc4@spud>
+ <20240418124300.1387978-5-cleger@rivosinc.com>
+ <20240419-clinic-amusing-d23b1b6d2af2@spud>
 Content-Language: en-US
 From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20240419-blinked-timid-da722ec6ddc4@spud>
+In-Reply-To: <20240419-clinic-amusing-d23b1b6d2af2@spud>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
 
-On 19/04/2024 17:49, Conor Dooley wrote:
-> On Thu, Apr 18, 2024 at 02:42:26PM +0200, Clément Léger wrote:
->> As stated by Zc* spec:
->>
->> "As C defines the same instructions as Zca, Zcf and Zcd, the rule is that:
->>  - C always implies Zca
->>  - C+F implies Zcf (RV32 only)
->>  - C+D implies Zcd"
->>
->> Add additionnal validation rules to enforce this in dts.
-> 
-> I'll get it out of the way: NAK, and the dts patch is the perfect
-> example of why. I don't want us to have to continually update
-> devicetrees. If these are implied due to being subsets of other
-> extensions, then software should be able to enable them when that
-> other extension is present.
-
-Acked.
-
-> 
-> My fear is that, and a quick look at the "add probing" commit seemed to
-> confirm it, new subsets would require updates to the dts, even though
-> the existing extension is perfectly sufficient to determine presence.
-> 
-> I definitely want to avoid continual updates to the devicetree for churn
-> reasons whenever subsets are added, but not turning on the likes of Zca
-> when C is present because "the bindings were updated to enforce this"
-> is a complete blocker. I do concede that having two parents makes that
-> more difficult and will likely require some changes to how we probe - do
-> we need to have a "second round" type thing?
-
-Yeah, I understand. At first, I actually did the modifications in the
-ISA probing loop with some dependency probing (ie loop while we don't
-have a stable extension state). But I thought that it was not actually
-our problem but rather the ISA string provider. For instance, Qemu
-provides them.
-
-
-> Taking Zcf as an example, maybe something like making both of C and F into
-> "standard" supersets and adding a case to riscv_isa_extension_check()
-> that would mandate that Zca and F are enabled before enabling it, and we
-> would ensure that C implies Zca before it implies Zcf?
-
-I'm afraid that riscv_isa_extension_check() will become a rat nest so
-rather than going that way, I would be in favor of adding a validation
-callback for the extensions if needed.
-
-> 
-> Given we'd be relying on ordering, we have to perform the same implication
-> for both F and C and make sure that the "implies" struct has Zca before Zcf.
-> I don't really like that suggestion, hopefully there's a nicer way of doing
-> that, but I don't like the dt stuff here.
-
-I guess the "cleanest" way would be to have some "defered-like"
-mechanism in ISA probing which would allow to handle ordering as well as
-dependencies/implies for extensions. For Zca, Zcf, we actually do not
-have ordering problems but I think it would be a bit broken not to
-support that as well.
-
-I can actually revive the work mentioned above to handle that and see if
-it works ok.
-
-Clément
-
-> 
-> Thanks,
-> Conor.
-> 
+On 19/04/2024 17:51, Conor Dooley wrote:
+> On Thu, Apr 18, 2024 at 02:42:27PM +0200, Clément Léger wrote:
+>> The Zc* standard extension for code reduction introduces new extensions.
+>> This patch adds support for Zca, Zcf, Zcd and Zcb. Zce, Zcmt and Zcmp
+>> are left out of this patch since they are targeting microcontrollers/
+>> embedded CPUs instead of application processors.
 >>
 >> Signed-off-by: Clément Léger <cleger@rivosinc.com>
 >> ---
->>  .../devicetree/bindings/riscv/cpus.yaml       |  8 +++--
->>  .../devicetree/bindings/riscv/extensions.yaml | 34 +++++++++++++++++++
->>  2 files changed, 39 insertions(+), 3 deletions(-)
+>>  arch/riscv/include/asm/hwcap.h | 4 ++++
+>>  arch/riscv/kernel/cpufeature.c | 4 ++++
+>>  2 files changed, 8 insertions(+)
 >>
->> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
->> index d87dd50f1a4b..c4e2c65437b1 100644
->> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
->> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
->> @@ -168,7 +168,7 @@ examples:
->>                  i-cache-size = <16384>;
->>                  reg = <0>;
->>                  riscv,isa-base = "rv64i";
->> -                riscv,isa-extensions = "i", "m", "a", "c";
->> +                riscv,isa-extensions = "i", "m", "a", "c", "zca";
+>> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+>> index 543e3ea2da0e..b7551bad341b 100644
+>> --- a/arch/riscv/include/asm/hwcap.h
+>> +++ b/arch/riscv/include/asm/hwcap.h
+>> @@ -82,6 +82,10 @@
+>>  #define RISCV_ISA_EXT_ZACAS		73
+>>  #define RISCV_ISA_EXT_XANDESPMU		74
+>>  #define RISCV_ISA_EXT_ZIMOP		75
+>> +#define RISCV_ISA_EXT_ZCA		76
+>> +#define RISCV_ISA_EXT_ZCB		77
+>> +#define RISCV_ISA_EXT_ZCD		78
+>> +#define RISCV_ISA_EXT_ZCF		79
 >>  
->>                  cpu_intc0: interrupt-controller {
->>                          #interrupt-cells = <1>;
->> @@ -194,7 +194,8 @@ examples:
->>                  reg = <1>;
->>                  tlb-split;
->>                  riscv,isa-base = "rv64i";
->> -                riscv,isa-extensions = "i", "m", "a", "f", "d", "c";
->> +                riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "zca",
->> +                                       "zcd";
+>>  #define RISCV_ISA_EXT_XLINUXENVCFG	127
 >>  
->>                  cpu_intc1: interrupt-controller {
->>                          #interrupt-cells = <1>;
->> @@ -215,7 +216,8 @@ examples:
->>                  compatible = "riscv";
->>                  mmu-type = "riscv,sv48";
->>                  riscv,isa-base = "rv64i";
->> -                riscv,isa-extensions = "i", "m", "a", "f", "d", "c";
->> +                riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "zca",
->> +                                       "zcd";
->>  
->>                  interrupt-controller {
->>                          #interrupt-cells = <1>;
->> diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
->> index db7daf22b863..0172cbaa13ca 100644
->> --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
->> +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
->> @@ -549,6 +549,23 @@ properties:
->>                  const: zca
->>              - contains:
->>                  const: f
->> +      # C extension implies Zca
->> +      - if:
->> +          contains:
->> +            const: c
->> +        then:
->> +          contains:
->> +            const: zca
->> +      # C extension implies Zcd if d
->> +      - if:
->> +          allOf:
->> +            - contains:
->> +                const: c
->> +            - contains:
->> +                const: d
->> +        then:
->> +          contains:
->> +            const: zcd
->>  
->>  allOf:
->>    # Zcf extension does not exists on rv64
->> @@ -566,6 +583,23 @@ allOf:
->>            not:
->>              contains:
->>                const: zcf
->> +  # C extension implies Zcf if f on rv32 only
->> +  - if:
->> +      properties:
->> +        riscv,isa-extensions:
->> +          allOf:
->> +            - contains:
->> +                const: c
->> +            - contains:
->> +                const: f
->> +        riscv,isa-base:
->> +          contains:
->> +            const: rv32i
->> +    then:
->> +      properties:
->> +        riscv,isa-extensions:
->> +          contains:
->> +            const: zcf
->>  
->>  additionalProperties: true
->>  ...
->> -- 
->> 2.43.0
->>
+>> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+>> index 115ba001f1bc..09dee071274d 100644
+>> --- a/arch/riscv/kernel/cpufeature.c
+>> +++ b/arch/riscv/kernel/cpufeature.c
+>> @@ -261,6 +261,10 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+>>  	__RISCV_ISA_EXT_DATA(zfa, RISCV_ISA_EXT_ZFA),
+>>  	__RISCV_ISA_EXT_DATA(zfh, RISCV_ISA_EXT_ZFH),
+>>  	__RISCV_ISA_EXT_DATA(zfhmin, RISCV_ISA_EXT_ZFHMIN),
+>> +	__RISCV_ISA_EXT_DATA(zca, RISCV_ISA_EXT_ZCA),
+>> +	__RISCV_ISA_EXT_DATA(zcb, RISCV_ISA_EXT_ZCB),
+>> +	__RISCV_ISA_EXT_DATA(zcd, RISCV_ISA_EXT_ZCD),
+>> +	__RISCV_ISA_EXT_DATA(zcf, RISCV_ISA_EXT_ZCF),
+>>  	__RISCV_ISA_EXT_DATA(zba, RISCV_ISA_EXT_ZBA),
+>>  	__RISCV_ISA_EXT_DATA(zbb, RISCV_ISA_EXT_ZBB),
+>>  	__RISCV_ISA_EXT_DATA(zbc, RISCV_ISA_EXT_ZBC),
+> 
+> Ye, this looks exactly like what I "feared".
+
+Ok but for instance, Qemu actually set Zc* based on C/F/D. So the ISA
+string containing theses dependencies should actually also be allowed.
+So should we simply ignore them in the ISA string and always do our own
+"post-processing" based on C/F/D ?
+
+Thanks,
+
+Clément
