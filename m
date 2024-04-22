@@ -1,128 +1,106 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2B85028B;
-	Mon, 22 Apr 2024 13:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B001A14F9FF;
+	Mon, 22 Apr 2024 13:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713793724; cv=none; b=pmu4lXuOXDF+UsXjGBmK+t3UHHyxMbutfgqvpeXhzS+pGa0V6j8jphf9kB10yDXB7R8Y8t0P7oOUGNt3UQ23h0SUopvNQ86eUH77DD4t5gGed9AMlUBtbaQFWplg58y3/btWAnxoqdYWBVlROWocCHipdLDpiNhQ34yDGBky1Yc=
+	t=1713793748; cv=none; b=WgCIf1UVdeTbPxatxpYnyj1FBMFEql2LkNCvY6caVs3VhXoZrwqMCgL/S9kiXP/xsZohOHdcTL7y/YtBS2OEXtx93cbYXMzEPrmpK/htD2HyQdMs9r2D8MxlBst+B8kzGHCROnfaEkrlsuDC7AL2v+aZYUWxjQLVNvULs+GyO6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713793724; c=relaxed/simple;
-	bh=LA9NpgkN2YWBJpJx6+P7+pYt6WwKEiygjRfGrqXOsZE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FoDWPFn41H2YFSpj6R+zu7/h8dxz9AkYMiVN2HTyKWY6k8fmd1qQw6I4b2w699dpVtPdLSW4kF1ZMe+vFdJMVHds8pFO8XQfkeKtHOvE3xVeRpRprn0FiIFYGgtYsy1JNVDCYYBcDepIzmNB4QBl6eQqqILmSCOORggoDnwCeIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vlfi6QPn; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713793748; c=relaxed/simple;
+	bh=TquHs7URRWUMNqGjefXsApBJcgMXy4dLpEqb8Yor0AE=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=oW2SWGEyB4T4miVoDTgE9Wep3u/4Nq/NbqxdJOyzHiCgRpOcDCoparTMoPbEr2o1dRSTFhq+w2majLPVBJrPkMPr3OiqHj0AW1fBD28qO+rnVT62HeButkc3qw+gHFo67bVfdQNTgTbBMLi0eb3GRkvi1ySXnPQ0jQstKaFxKvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=QDXBjjql; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vlfi6QPn"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a5200afe39eso485868866b.1;
-        Mon, 22 Apr 2024 06:48:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713793721; x=1714398521; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LA9NpgkN2YWBJpJx6+P7+pYt6WwKEiygjRfGrqXOsZE=;
-        b=Vlfi6QPnerD5MeEd1FPOs8/w/TlrMnXTrIQcSyHeDklLgCfNP2gBeN9h5M106CWal/
-         fBL8/K/lPLwjKOa30PYrp1zxDPht2G67jqUIohELg8+wJz5o5VbKRH1xGsdF6PDD95qj
-         8EstCi1shnhwfpv6nuV+t1nD9OiWS0UhfLfoxlkXrhfDzLvqyy1hjU/cpRjG/ycuQMDE
-         GO7FqnoBv5bpS0Lf5koPATybksf2RuKF1kdjGbanvVfW40wbSVamSFbpgw5PRsgaqcr5
-         EVIbvjV8tMWc55xNqampUZ1tHrkRkPt36gbCllwEAdhd0C5pYEatFi3L8vr37K+WxdCY
-         vdgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713793721; x=1714398521;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LA9NpgkN2YWBJpJx6+P7+pYt6WwKEiygjRfGrqXOsZE=;
-        b=DIhKN+29osuto1wBrHr5Eb1aYDvoxJ8cfzKOd/SiCDGuHj41zFdW3V6ccyblmpR19h
-         xrG5aBmZRg9eJQ4xWvpW/jkYUIvY7UOWbM1ix4+oD+KM5CTJeVxc6nHSmLyFjnt6Fe4G
-         u8FSnNSBFg/SE6TY6g/xB6bNqZLOeZfxel5My01f7ctuwnnuTpLelZscyVX6lRGezrKo
-         q8/Nx+BkG6hJVM9AXkATzdjN6S+BCvUOhZoElEWgZkW9Zx+ToLT37GiG7WAlgtY4aA2M
-         rUFhp3iWNc+ipnSNKrVMKk52aXHi5O8Sll/RrbHD+DRokBwUmW5OqRqJsqC6JRT1skRw
-         gGzg==
-X-Forwarded-Encrypted: i=1; AJvYcCW1XwOK3cCOJcZCMaQnrlpe9aaDI0TTwBvTEGXHLHSB4Ti6XlU3fcu0AAWQlZHdlt92Nyc7wii7SEkylfljK1InqwK2dmoEXbp5Zt8j5HcZdWhVHhefHMrXQuZeXsY+GqUjndcJmexcNIg6
-X-Gm-Message-State: AOJu0Ywz8pzUjHAsOZ1b+3VQJEjdtD7tHrhp7I1P4RCJPH4m9E2MZRqb
-	Qs5jm/HWbr00qUps356m7987Zi9t+29JC/29emhVHVJBHgFafjgpLdd2Nw6FnNdkIfIvBQDyrPj
-	OMusKhEhSwRT3vNLVkBYhjkP+c9g=
-X-Google-Smtp-Source: AGHT+IEy13vNN2q9EzMOBwsWc3IbfmMAtNbtdv1gNuwjQ/ElweR5KDU5V1pgzEgg2hJsQxRWwWp9f5ZhkzAXjdDBoyk=
-X-Received: by 2002:a17:906:589:b0:a51:de95:f592 with SMTP id
- 9-20020a170906058900b00a51de95f592mr9376424ejn.63.1713793721421; Mon, 22 Apr
- 2024 06:48:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="QDXBjjql"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1713793744;
+	bh=TquHs7URRWUMNqGjefXsApBJcgMXy4dLpEqb8Yor0AE=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=QDXBjjqlWcEdRmYHyX7ArYRnBRD84bIGhiYEgGTkG5yGUyA9nFKMtJ6tZXmgNQpb8
+	 d3/nQRbHbjUAdgsyzQavpNbo/DJfNBy45op8+GQVBHqJ5B64IqkknqfPa87uQbfc74
+	 0ChWRGVmdT2t99Am2+7crmKDfeeReWvEYCrgdAmNDg8PALspUw5wPYqqe0wQ/SslnS
+	 YpsFE7OpDLXJmB2Jhzuu3FxHCdNlD5KhMhujvVkSuxpCkqIRizeYhQBewwOLNbttS8
+	 8wO+PGfcUFL6TxweuwmLCuq5bXvpXhQQ+RZxBS4hAVJxeFHdcjtB1MKRyof75Ll8Tu
+	 3R1t7jTALkxtg==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 3D69237820E2;
+	Mon, 22 Apr 2024 13:49:01 +0000 (UTC)
+Message-ID: <9cba6633-b1dc-4cde-b326-609855c6418a@collabora.com>
+Date: Mon, 22 Apr 2024 18:49:30 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240422133219.2710061-1-ria.freelander@gmail.com> <e2989aa1-7f2b-4ac3-8fd8-822c87d61a1e@kernel.org>
-In-Reply-To: <e2989aa1-7f2b-4ac3-8fd8-822c87d61a1e@kernel.org>
-From: "Konstantin P." <ria.freelander@gmail.com>
-Date: Mon, 22 Apr 2024 16:50:53 +0300
-Message-ID: <CAF1WSuzqLxpxwYuNYfHyvXLDMBE-ZU69YLXwBdQokZzhs49xzw@mail.gmail.com>
-Subject: Re: [PATCH v7 0/3] add support for EXAR XR20M1172 UART
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: conor@kernel.org, lkp@intel.com, vz@mleia.com, robh@kernel.org, 
-	jcmvbkbc@gmail.com, nicolas.ferre@microchip.com, manikanta.guntupalli@amd.com, 
-	corbet@lwn.net, ychuang3@nuvoton.com, u.kleine-koenig@pengutronix.de, 
-	Maarten.Brock@sttls.nl, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Hugo Villeneuve <hvilleneuve@dimonoff.com>, 
-	Andy Shevchenko <andy@kernel.org>, Lech Perczak <lech.perczak@camlingroup.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Subject: Re: [PATCH v2] selftests: filesystems: add missing stddef header
+To: Amer Al Shanawany <amer.shanawany@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Christian Brauner <brauner@kernel.org>,
+ Miklos Szeredi <mszeredi@redhat.com>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <df1df586-188e-4290-9986-7b7cd31710e3@collabora.com>
+ <20240422131659.30222-1-amer.shanawany@gmail.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20240422131659.30222-1-amer.shanawany@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 22, 2024 at 4:45=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On 22/04/2024 15:32, Konstantin Pugin wrote:
-> > EXAR XR20M1172 UART is mostly SC16IS762-compatible, but
-> > it has additional register which can change UART multiplier
-> > to 4x and 8x, similar to UPF_MAGIC_MULTIPLIER does. So, I used this
-> > flag to guard access to its specific DLD register. It seems than
-> > other EXAR SPI UART modules also have this register, but I tested
-> > only XR20M1172.
-> > Yes, in datasheet this register is called "DLD - Divisor Fractional"
-> > or "DLD - Divisor Fractional Register", calling depends on datasheet
-> > version.
-> >
-> > I am sorry about too many submissions and top post reply. About second =
--
-> > I do not know how to reply properly to this ML from GMail phone app. Ab=
-out first - I just
-> > get very good feedback from Andy Shevchenko, and want to fix his review=
- picks ASAP.
-> >
->
-> One patchset per 24h.
->
-> Plus, you already got such review comment:
->
-> This is a friendly reminder during the review process.
->
-> It looks like you received a tag and forgot to add it.
->
-> If you do not know the process, here is a short explanation:
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-> versions, under or above your Signed-off-by tag. Tag is "received", when
-> provided in a message replied to you on the mailing list. Tools like b4
-> can help here. However, there's no need to repost patches *only* to add
-> the tags. The upstream maintainer will do that for tags received on the
-> version they apply.
->
-> https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/su=
-bmitting-patches.rst#L577
->
-> If a tag was not added on purpose, please state why and what changed.
->
-> Just start using b4.
+On 4/22/24 6:16 PM, Amer Al Shanawany wrote:
+> fix compiler warning and errors when compiling statmount test.
+> 
+> gcc 12.3 (Ubuntu 12.3.0-1ubuntu1~22.04)
+> 
+> statmount_test.c:572:24: warning: implicit declaration of function
+> ‘offsetof’ [-Wimplicit-function-declaration]
+>   572 | #define str_off(memb) (offsetof(struct statmount, memb) /
+> sizeof(uint32_t))
+>       |                        ^~~~~~~~
+> statmount_test.c:598:51: note: in expansion of macro ‘str_off’
+>   598 |         test_statmount_string(STATMOUNT_MNT_ROOT,
+> str_off(mnt_root), "mount root");
+>       |
+> ^~~~~~~
+> statmount_test.c:18:1: note: ‘offsetof’ is defined in header
+> ‘<stddef.h>’; did you forget to ‘#include <stddef.h>’?
+>    17 | #include "../../kselftest.h"
+>   +++ |+#include <stddef.h>
+> 
+> Signed-off-by: Amer Al Shanawany <amer.shanawany@gmail.com>
+You missed the reviewed-by tag from previous iteration. Putting it here again:
 
-There is not only for tag. I submit fixes for version 4 by mistake,
-so, repost to 7 was necessary, because v6 was not work (as v4). But v7
-should be based on v5, and v5 is tested better around tty-next.
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 
-> Best regards,
-> Krzysztof
->
+> ---
+> V1 -> V2 added compiler warning in the patch message
+> 
+>  tools/testing/selftests/filesystems/statmount/statmount_test.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/testing/selftests/filesystems/statmount/statmount_test.c b/tools/testing/selftests/filesystems/statmount/statmount_test.c
+> index 3eafd7da58e2..e6d7c4f1c85b 100644
+> --- a/tools/testing/selftests/filesystems/statmount/statmount_test.c
+> +++ b/tools/testing/selftests/filesystems/statmount/statmount_test.c
+> @@ -3,6 +3,7 @@
+>  #define _GNU_SOURCE
+>  
+>  #include <assert.h>
+> +#include <stddef.h>
+>  #include <stdint.h>
+>  #include <sched.h>
+>  #include <fcntl.h>
+
+-- 
+BR,
+Muhammad Usama Anjum
