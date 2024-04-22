@@ -1,143 +1,167 @@
-Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429641E485;
-	Mon, 22 Apr 2024 12:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA644317B
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 12:34:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713789042; cv=none; b=pakidO12nxNKbcZmdzFMwEbbaAuHO7ADEZd4OBAxciRV+w12UloaZymvsRKJrWZOxs4laoJJgVR6CyvItQ/f2AT0rada5li0Z2WCRMoO0ZnbTloBFONemCe2CQ/rYGy9tg33Fk2HesDmEWjwAOBJQNrZC9AXqZfndZLGJ8Pxv/w=
+	t=1713789250; cv=none; b=h52SGCpduJ5VXJtjirBtN4/Nv8oFEuVGTPt0tntfJlJfJ4pyjHS3mGkKknrtpLp6zSbak5HQihnjdO0yblMIlJCDhmLtvsRDu9PKH6RLa/o08Tw+1mWn8kY5xNA/lzzGSkYJnG/s/cZGt0AwR5EguqQxIaEJzK37XTunw5Wj7TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713789042; c=relaxed/simple;
-	bh=sD2ON1CQL6WsL62It2B98FvxtE3K8xXYq2rJQ4OJEEc=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=K2CajCm1WlQNV3Wvch/In9xmEpmK40wH5sAXB/7ZHtDb0vgXBs2gM9mN+4ZoizzNlyS8fbzeE3aadJCMpU/hAVlR2aHIo4ipxSK0d/95SMA4FuEBiDVgmqHPCMAXT3YsdTVMfXT0ISmNuvFjgDWspSqxWyqQAGB+tluLznNfsKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=L7klJsWN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=W6VpGQiw; arc=none smtp.client-ip=64.147.123.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="L7klJsWN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="W6VpGQiw"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id 971321C00144;
-	Mon, 22 Apr 2024 08:30:39 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 22 Apr 2024 08:30:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1713789039; x=1713875439; bh=8ugVFk+Zkc
-	D//rYYfTG6/QQI1nngqkt6LSHTwxmvrd0=; b=L7klJsWNtidH6l7sSU7XBax2QE
-	kssLsGQ9VOkRGD3D33MwEvbCJszjBEcdxhvvjvzd2NQ8Gkuskuv9Ykg91djjRZ/E
-	Ha4PSfm6AlUoWRwlDjubByrDZ3W7jXhlI+hgwCeswy1Rg24Tttc9k74ZyhkGeXO9
-	V19PeC3E/76Oh18YtdtCoyW8Q38CMsTUvKkU/oddWrEJD/ejyUvLUicLZ/mTukBg
-	+xQllc490tqb/44vzn5wlZKVY85aH1+QHg/xetyjhR1BuDDGb2oYlZRLJZsNuAn8
-	ZL9AY8OkefLcNHiF+GdEvON1jf7LvLj1ryVwtcn2uOpWulh56uKvVEBsbn6w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1713789039; x=1713875439; bh=8ugVFk+ZkcD//rYYfTG6/QQI1nng
-	qkt6LSHTwxmvrd0=; b=W6VpGQiwUHgeYJhs+GX+FE50swdWYFDJ+eNVUu4aCAQC
-	gPGTkpQd0EXQEe7O/pDeBcxmDVIGvrQ8oeMw5SjrZrWyVgMm56MzSVgdbCJwa7VB
-	uoU0krJfz2aKfYziqx5nuNZBUjhdJkt63sZQIg17ss5LRzyOXqYQcdldCZX9h8a6
-	mDcHOpYPt6HGjaoXQ6PdXI6bhJT10isoK+yoIpxVgu22anAegQI4LKCI1zHs4ayB
-	VkXn3xH3E314DkQknMEgkmSyJEYbxrrsEJc79h4mobA90ZWAXbhv1RA+RC4PKHHT
-	xSF5rOhxjSV2MNCN4hFzyOnHqfyCF/ZOV3HN8RfS1g==
-X-ME-Sender: <xms:blgmZiu6wzzdWf6Cw_85Jc8apalXn-VGVRG3P5gFEl3R0azkRI5EXA>
-    <xme:blgmZncCM-rwzHpqmNjDUgPp8jpwwMXOINXRYVCaAc-5Vv0xsh3QhLAdApe_j4TZa
-    0Vdd09z1KArycLy8A8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudekledgheegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:blgmZtxOA_tTKIAXeCjaZ1fsn6kkBzugtKiH0FX-uTChmguCYo_ycQ>
-    <xmx:blgmZtOn9ZjOUqYQMgm8syoZ1c__8uq8P7SAngoLEXU_Q2vVB82tBw>
-    <xmx:blgmZi_LJ8KfUAhrxlOJRcsK6AgSHNKQs06CpsJDAJIA4C6Me56oPw>
-    <xmx:blgmZlVZuP27eRUG-F9S0vRVERD9umVaIGtMk_RfYslp6aD5-g4IOQ>
-    <xmx:b1gmZlZjYApXpdzk0A4sDQjQHQIPFW88OdWKezOWI2T1oW3D4M_7z0ns>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id B204BB6008F; Mon, 22 Apr 2024 08:30:38 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
+	s=arc-20240116; t=1713789250; c=relaxed/simple;
+	bh=f3H5pxvDmuQF0CSFx5U8tadrVoOxawUoApqqklC8Um8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D2kRM0UVml4taE0RVMMWwdswsNUx0MXuvkieUfQ2ajeMA8UnlA9GKAs2Uhx1j0gqHJN91RG4QFsCYMPdHZUiDTRc6Xb20ciNMF/NhGiDNSrDK22TJnQ1y21fBiBdF2o4PN/IlCjbE3DrCJkHrq8JBbJf5kSZal4+sK3VXva8dks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+X-QQ-mid: bizesmtp78t1713789213twu623c6
+X-QQ-Originating-IP: SgAL1Fy0MsgGKP0Q72PwOFeCfZvjOSyZkPnWSd2RTOc=
+Received: from john-PC ( [123.114.60.34])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 22 Apr 2024 20:33:31 +0800 (CST)
+X-QQ-SSF: 01400000000000E0L000000A0000000
+X-QQ-FEAT: qO3Ke1AXI6FiX0mGox2a5JZ77O06KnVfxkdt7WtRNjoT1WRzGh5l1fnB0ZwWu
+	CdROfDylGJoUzIMN80a1mSt3qhH4vbxVy8ODa3oAv79JlhAhl8aROUnVD47efmI2SLS1Lua
+	3yAquli3UAvvvQvTlZ+/XfNZwK5cbQfZErFg3LXaD4oVu035s5PhflGhnhJP3yJKjSP0Hvu
+	fHdv+9OnNJIt9B2YAoWxO/JbtzLR2FsLgIde47bINZO0UkIwpjvVs+lepIdXLmTjnpqSU5j
+	y+tdONxLDd38Dv3OfFGenyYvjQAzPSlt7Rf2ijMIctPuXxzAKGh7cP380S0I5iRryoadHgi
+	WL9UvsQ/w5tf7OJJv+0OKfdoYkyqkUSfKPQhDXUIPcFTjyw4Fqh/9N8ovpwzuZOeic4XqyY
+	bYAyUFOm7rZjNCxga892TYmsBl/gAz3S
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 13358882969841256668
+Date: Mon, 22 Apr 2024 20:33:29 +0800
+From: Qiang Ma <maqianga@uniontech.com>
+To: Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>
+Cc: alexander.deucher@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
+ daniel@ffwll.ch, srinivasan.shanmugam@amd.com,
+ Arunpravin.PaneerSelvam@amd.com, le.ma@amd.com, Felix.Kuehling@amd.com,
+ mukul.joshi@amd.com, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/amdgpu: Fixup bad vram size on gmc v6 and v7
+Message-ID: <D94775003178862D+20240422203329.49844e71@john-PC>
+In-Reply-To: <68f02c5c-5591-4d6f-9926-b0fc6f9f6287@amd.com>
+References: <20240422052608.5297-1-maqianga@uniontech.com>
+	<68f02c5c-5591-4d6f-9926-b0fc6f9f6287@amd.com>
+Organization: UOS
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <ff4f9e8f-0825-4421-adf9-e3914b108da7@app.fastmail.com>
-In-Reply-To: <87il09ty4u.fsf@intel.com>
-References: <cover.1713780345.git.geert+renesas@glider.be>
- <87il09ty4u.fsf@intel.com>
-Date: Mon, 22 Apr 2024 14:30:18 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Jani Nikula" <jani.nikula@linux.intel.com>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>,
- "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
- "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>, "Dave Airlie" <airlied@gmail.com>,
- "Daniel Vetter" <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 00/11] drm: Restore helper usability
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrsz:qybglogicsvrsz4a-0
 
-On Mon, Apr 22, 2024, at 13:50, Jani Nikula wrote:
-> On Mon, 22 Apr 2024, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
->> 	Hi all,
->>
->> As discussed on IRC with Maxime and Arnd, this series reverts the
->> conversion of select to depends for various DRM helpers in series
->> "[PATCH v3 00/13] drm/display: Convert helpers Kconfig symbols to
->> depends on"[1], and various fixes for it.  This conversion introduced a
->> big usability issue when configuring a kernel and enabling DRM drivers
->> that use DRM helper code: as drivers now depend on helpers, the user
->> needs to know which helpers to enable, before the driver he is
->> interested even becomes visible.  The user should not need to know that,
->> and drivers should select the helpers they need.
->>
->> Hence revert back to what we had before, where drivers selected the
->> helpers (and any of their dependencies, if they can be met) they need.
->> In general, when a symbol selects another symbol, it should just make
->> sure the dependencies of the target symbol are met, which may mean
->> adding dependencies to the source symbol.
+On Mon, 22 Apr 2024 11:40:26 +0200
+Christian K=C3=B6nig <christian.koenig@amd.com> wrote:
 
-Thanks for doing this.
+> Am 22.04.24 um 07:26 schrieb Qiang Ma:
+> > Some boards(like Oland PRO: 0x1002:0x6613) seem to have
+> > garbage in the upper 16 bits of the vram size register,
+> > kern log as follows:
+> >
+> > [    6.000000] [drm] Detected VRAM RAM=3D2256537600M, BAR=3D256M
+> > [    6.007812] [drm] RAM width 64bits GDDR5
+> > [    6.031250] [drm] amdgpu: 2256537600M of VRAM memory ready
+> >
+> > This is obviously not true, check for this and clamp the size
+> > properly. Fixes boards reporting bogus amounts of vram,
+> > kern log as follows:
+> >
+> > [    2.789062] [drm] Probable bad vram size: 0x86800800
+> > [    2.789062] [drm] Detected VRAM RAM=3D2048M, BAR=3D256M
+> > [    2.789062] [drm] RAM width 64bits GDDR5
+> > [    2.789062] [drm] amdgpu: 2048M of VRAM memory ready =20
+>=20
+> Well we had patches like this one here before and so far we always=20
+> rejected them.
+>=20
+> When the mmCONFIG_MEMSIZE register isn't properly initialized then
+> there is something wrong with your hardware.
+>=20
+> Working around that in the software driver is not going to fly.
+>=20
+> Regards,
+> Christian.
+>=20
+Hi Christian:
+I see that two patches for this issue have been merged, and the
+patches are as follows:
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+11544d77e397 drm/amdgpu: fixup bad vram size on gmc v8
+0ca223b029a2 drm/radeon: fixup bad vram size on SI
 
-> I still disagree with this, because fundamentally the source symbol
-> really should not have to care about the dependencies of the target
-> symbol.
+Qiang Ma
 
-Sorry you missed the IRC discussion on #armlinux, we should have
-included you as well since you applied the original patch.
+> > Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+> > ---
+> >   drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c | 11 +++++++++--
+> >   drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c | 13 ++++++++++---
+> >   2 files changed, 19 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
+> > b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c index
+> > 23b478639921..3703695f7789 100644 ---
+> > a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c +++
+> > b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c @@ -309,8 +309,15 @@ static
+> > int gmc_v6_0_mc_init(struct amdgpu_device *adev) }
+> >   	adev->gmc.vram_width =3D numchan * chansize;
+> >   	/* size in MB on si */
+> > -	adev->gmc.mc_vram_size =3D RREG32(mmCONFIG_MEMSIZE) *
+> > 1024ULL * 1024ULL;
+> > -	adev->gmc.real_vram_size =3D RREG32(mmCONFIG_MEMSIZE) *
+> > 1024ULL * 1024ULL;
+> > +	tmp =3D RREG32(mmCONFIG_MEMSIZE);
+> > +	/* some boards may have garbage in the upper 16 bits */
+> > +	if (tmp & 0xffff0000) {
+> > +		DRM_INFO("Probable bad vram size: 0x%08x\n", tmp);
+> > +		if (tmp & 0xffff)
+> > +			tmp &=3D 0xffff;
+> > +	}
+> > +	adev->gmc.mc_vram_size =3D tmp * 1024ULL * 1024ULL;
+> > +	adev->gmc.real_vram_size =3D adev->gmc.mc_vram_size;
+> >  =20
+> >   	if (!(adev->flags & AMD_IS_APU)) {
+> >   		r =3D amdgpu_device_resize_fb_bar(adev);
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+> > b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c index
+> > 3da7b6a2b00d..1df1fc578ff6 100644 ---
+> > a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c +++
+> > b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c @@ -316,10 +316,10 @@
+> > static void gmc_v7_0_mc_program(struct amdgpu_device *adev) static
+> > int gmc_v7_0_mc_init(struct amdgpu_device *adev) {
+> >   	int r;
+> > +	u32 tmp;
+> >  =20
+> >   	adev->gmc.vram_width =3D
+> > amdgpu_atombios_get_vram_width(adev); if (!adev->gmc.vram_width) {
+> > -		u32 tmp;
+> >   		int chansize, numchan;
+> >  =20
+> >   		/* Get VRAM informations */
+> > @@ -363,8 +363,15 @@ static int gmc_v7_0_mc_init(struct
+> > amdgpu_device *adev) adev->gmc.vram_width =3D numchan * chansize;
+> >   	}
+> >   	/* size in MB on si */
+> > -	adev->gmc.mc_vram_size =3D RREG32(mmCONFIG_MEMSIZE) *
+> > 1024ULL * 1024ULL;
+> > -	adev->gmc.real_vram_size =3D RREG32(mmCONFIG_MEMSIZE) *
+> > 1024ULL * 1024ULL;
+> > +	tmp =3D RREG32(mmCONFIG_MEMSIZE);
+> > +	/* some boards may have garbage in the upper 16 bits */
+> > +	if (tmp & 0xffff0000) {
+> > +		DRM_INFO("Probable bad vram size: 0x%08x\n", tmp);
+> > +		if (tmp & 0xffff)
+> > +			tmp &=3D 0xffff;
+> > +	}
+> > +	adev->gmc.mc_vram_size =3D tmp * 1024ULL * 1024ULL;
+> > +	adev->gmc.real_vram_size =3D adev->gmc.mc_vram_size;
+> >  =20
+> >   	if (!(adev->flags & AMD_IS_APU)) {
+> >   		r =3D amdgpu_device_resize_fb_bar(adev); =20
+>=20
+>=20
 
-I think the reason for this revert is a bit more nuanced than
-just the usability problem. Sorry if I'm dragging this out too
-much, but I want to be sure that two points come across:
-
-1. There is a semantic problem that is mostly subjective, but
-   with the naming as "helper", I generally expect it as a hidden
-   symbol that gets selected by its users, while calling same module
-   "feature" would be something that is user-enabled and that
-   other modules depend on. Both ways are commonly used in the
-   kernel and are not mistakes on their own.
-
-2. Using "select" on user visible symbols that have dependencies
-   is a common source for bugs, and this is is a problem in
-   drivers/gpu/drm more than elsewhere in the kernel, as these
-   drivers traditionally select entire subsystems or drivers
-   (I2C, VIRTIO, INPUT, ACPI_WMI, BACKLIGHT_CLASS_DEVICE,
-   POWER_SUPPLY, SND_PCM, INTERCONNECT, ...). This regularly
-   leads to circular dependencies and we should fix all of them.
-   The display helpers however don't have this problem because
-   they do not have any dependencies outside of drivers/gpu/
-
-        Arnd
