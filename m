@@ -1,134 +1,330 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8513515351B
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 15:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4512314F10F;
+	Mon, 22 Apr 2024 15:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713800787; cv=none; b=nRaRhtun/2av4VwB2bVknfILbJtuzws8iq4Fqnbi4u4wtm3FKh34Q0mQ7u885Knc5v16CNSjjl4+FjcCvWhMaIAnC22EgcTAYtLl+s9Ri5Sy5jtkrsuufTFl3AtwQYw4ma61o4R3QVW6r/7lW+NhBsYHA01baiqDhva13FXhW2w=
+	t=1713800785; cv=none; b=NAhz7LWqh2ps1GCB29rBhCVbmakJNWkJdaQgubutPQrDNJVl43u2i2ZKZJfn3cTBAdkBEoy+ARrN/n7B/W87z15h0du+dfGdAwdd4LvTZl4+JkMEIh3pqkvnveYekDadHWVEo9T/vgN9sJeY2PmXVjOGSlvU7b4uXZw9V4H6f2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713800787; c=relaxed/simple;
-	bh=99jWSURdElXqjltBDycI0VysY0rM88Y/35jVpXhh56Q=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=CL9LisjnSSYIj/LhXRZDNcJt1iCEetQHo5Zl6l42wxz1ZKDMrQhh45dH4JycElFOptHgTnP6W1boyhWUBeeW3uTJHi7EEEcM7hDskZbTMgkxdIgaHO9BZwOIInnQvEW+vbhnllVuhU+CAsR+OXfHi4DIsrf5MMX6fDIxF9LmLRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7da7d4ccb67so307610939f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:46:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713800785; x=1714405585;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HgSoz0wJSTmNhqMe2ut0HiEScT+ZiSLQfXLEB96LFJk=;
-        b=Szw6EXaUf4HfCvBPKEioZ/r1s6pvd/0Jun0b4LNHgZdlMz5nN6Hyd6Gf/b8GVarZy/
-         lIMmEvDYfonbXLm2nn3WOZIj8TGmJ7Y7BRxaT+H3B6pr6wVoHeep3VnCT0hAJfDKphhA
-         CCT3JHF6WSOuLxeomDrg8QaPKatY4JPyyWuCxOUjPf3djBandpJfmuQasrWw6DADKRXt
-         uAEWOZkF9gTQJgevqpplCUz3EM6WsYsn3B0gGiRSgMQACYdB3sZb3UApHB0AgKOnz4Ju
-         ftElckiep6q4hZQj0Oe9Q/dpx7u7zI5kVK7wvJG7YTN18QiYHtPbyP8aWdAuH2ETuHWo
-         Z7/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUArjdPuEK/1KwKRbKGIOzl4aOCpyf7lX0nGZfWT/Kae5wRVj2tIxPZZUPxPUUOaPpK6TgEqBdl11wKLTslnIYW/JfaKGCJY4Xvuuuv
-X-Gm-Message-State: AOJu0YylLwjkmonaBw15ghswtX/828579wcbyPvqCZB49FcbgJDasj+u
-	0tx270eY12STgR5dQ+qFGAR76CYq6fheKcacJLbC2kMavaIPZRA1BnWvzZGPpWvrqTPyVyQqpxf
-	bKoXC+6QbLxLYsrUbAD9cdJuIVQMOVlOV85dZTh8q09sTbiR8uq7A/9g=
-X-Google-Smtp-Source: AGHT+IEvso29/YmG0tiGf7AAZJ58PHPb0owoJoqLxqQ2dtUfR7uhw83Q2jRn4tzrRpzK4h/BF3jLY6wbWa1fhAYLt7lrM3U0roFk
+	s=arc-20240116; t=1713800785; c=relaxed/simple;
+	bh=AFMisq5Sdxp1gKXAMU2mShBZLEUodYxJtyLg4irlzAY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=EvEdY9mBO09CKukD8/l0Yk44cCirZy6nERaaVErR7H8bLMggosFPLT317cHmu9HVj6oJweda5AUTpAx58RKO0dX0kx9ubLxBER9gp3NGjVuBUt/oxDDbOSTVqnjRLN8CiB4MWYVOOfoVqnNVAwzhJfpBDY0dl1B5+ccNT3w8Phs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=Z353ZiPs; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="Z353ZiPs"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 6B224120002;
+	Mon, 22 Apr 2024 18:46:12 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 6B224120002
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1713800772;
+	bh=td+cQQmmoWiC0135uzzD4HbFAfBHnTihVjdufMcC/aA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type:From;
+	b=Z353ZiPsX3DKx5GGU19HXFiKFfkXBuI823ffer1CpWKOAsfIuWaTVKmdozJpkIKgR
+	 fv4UwOzxiyeyzmJHEB8Dl7GK1l5R5rqgD6b8e00d/j/TAg9kZUiHzfErmoiFL9BnA8
+	 eG5rTU9hNG+J2YzFtROL1C8YGQm8QRarEMwr20LDzQcT4rCubQZkzySunYuOwiYju0
+	 T8uEQSLtZMJ5eV1nCHJKpG2I2LkCys+tTdO+63axq/Gt0UyLLoMSNvOgdoBlcN6uoH
+	 AZSNXy72iEIcnOtA9x5zg5PLatbClXr4GilHpsP4SXsM0+7Z469Hyp3bRo8Ljaehhm
+	 DV/knpHkPIDvw==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Mon, 22 Apr 2024 18:46:12 +0300 (MSK)
+Received: from [172.28.225.118] (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 22 Apr 2024 18:46:11 +0300
+Message-ID: <f915e062-0c17-4961-b242-1d94794c89c5@salutedevices.com>
+Date: Mon, 22 Apr 2024 18:43:54 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:238b:b0:485:67be:97d0 with SMTP id
- q11-20020a056638238b00b0048567be97d0mr64340jat.1.1713800785766; Mon, 22 Apr
- 2024 08:46:25 -0700 (PDT)
-Date: Mon, 22 Apr 2024 08:46:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000d3cfa0616b1576a@google.com>
-Subject: [syzbot] [fs?] WARNING in netdev_queue_update_kobjects (2)
-From: syzbot <syzbot+41cf3f847df2c5f600a3@syzkaller.appspotmail.com>
-To: gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, rafael@kernel.org, 
-	syzkaller-bugs@googlegroups.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 4/6] dt-bindings: clock: meson: document A1 SoC
+ audio clock controller driver
+Content-Language: en-US
+From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+To: Jerome Brunet <jbrunet@baylibre.com>
+CC: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, Neil
+ Armstrong <neil.armstrong@linaro.org>, Michael Turquette
+	<mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Kevin
+ Hilman <khilman@baylibre.com>, Martin Blumenstingl
+	<martin.blumenstingl@googlemail.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+	Jiucheng Xu <jiucheng.xu@amlogic.com>, <linux-amlogic@lists.infradead.org>,
+	<linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+References: <20240419125812.983409-1-jan.dakinevich@salutedevices.com>
+ <20240419125812.983409-5-jan.dakinevich@salutedevices.com>
+ <20240419210949.GA3979121-robh@kernel.org>
+ <b86f1058-da53-4a9c-bc12-e7297351b482@salutedevices.com>
+ <48e9f035-390b-40c9-a3ad-49880c0b972d@kernel.org>
+ <1jle55c0bl.fsf@starbuckisacylon.baylibre.com>
+ <1jzftlakgg.fsf@starbuckisacylon.baylibre.com>
+ <0272deb1-5427-4805-a6f1-df223a5c14f5@salutedevices.com>
+In-Reply-To: <0272deb1-5427-4805-a6f1-df223a5c14f5@salutedevices.com>
 Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    f99c5f563c17 Merge tag 'nf-24-03-21' of git://git.kernel.o..
-git tree:       net
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=152c0d20980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
-dashboard link: https://syzkaller.appspot.com/bug?extid=41cf3f847df2c5f600a3
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d3d1fd180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=141dd66f180000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/65d3f3eb786e/disk-f99c5f56.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/799cf7f28ff8/vmlinux-f99c5f56.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/ab26c60c3845/bzImage-f99c5f56.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+41cf3f847df2c5f600a3@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-sysfs group 'byte_queue_limits' not found for kobject 'tx-0'
-WARNING: CPU: 0 PID: 5073 at fs/sysfs/group.c:284 sysfs_remove_group+0x17f/0x2b0 fs/sysfs/group.c:282
-Modules linked in:
-CPU: 0 PID: 5073 Comm: kbnepd bnep0 Not tainted 6.8.0-syzkaller-05271-gf99c5f563c17 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-RIP: 0010:sysfs_remove_group+0x17f/0x2b0 fs/sysfs/group.c:282
-Code: 36 4c 89 e0 48 c1 e8 03 80 3c 28 00 74 08 4c 89 e7 e8 b5 f4 c2 ff 49 8b 14 24 48 c7 c7 c0 33 bb 8b 4c 89 f6 e8 b2 87 22 ff 90 <0f> 0b 90 90 48 83 c4 08 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc
-RSP: 0018:ffffc90003a3f8a0 EFLAGS: 00010246
-RAX: 665251c6ceee3200 RBX: ffff888076fb7050 RCX: ffff88802254bc00
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: dffffc0000000000 R08: ffffffff8157cc12 R09: 1ffff92000747e68
-R10: dffffc0000000000 R11: fffff52000747e69 R12: ffff888076fb7020
-R13: 1ffffffff1941fac R14: ffffffff8ca10560 R15: ffff88802d2fc740
-FS:  0000000000000000(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffdbcd9e8a8 CR3: 000000002bf2a000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- netdev_queue_update_kobjects+0x532/0x5f0 net/core/net-sysfs.c:1852
- remove_queue_kobjects net/core/net-sysfs.c:1951 [inline]
- netdev_unregister_kobject+0x110/0x250 net/core/net-sysfs.c:2104
- unregister_netdevice_many_notify+0x11d4/0x16d0 net/core/dev.c:11129
- unregister_netdevice_many net/core/dev.c:11157 [inline]
- unregister_netdevice_queue+0x303/0x370 net/core/dev.c:11036
- unregister_netdevice include/linux/netdevice.h:3115 [inline]
- unregister_netdev+0x1c/0x30 net/core/dev.c:11175
- bnep_session+0x2e09/0x3000 net/bluetooth/bnep/core.c:525
- kthread+0x2f0/0x390 kernel/kthread.c:388
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
- </TASK>
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184856 [Apr 22 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_smtp_not_equal_from}, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:5.0.1,7.1.1;salutedevices.com:7.1.1;100.64.160.123:7.1.2;127.0.0.199:7.1.2;lore.kernel.org:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;sberdevices.ru:5.0.1,7.1.1, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/04/22 14:47:00
+X-KSMG-LinksScanning: Clean, bases: 2024/04/22 14:47:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/22 13:36:00 #24921842
+X-KSMG-AntiVirus-Status: Clean, skipped
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On 4/22/24 17:31, Jan Dakinevich wrote:
+> 
+> 
+> On 4/22/24 10:57, Jerome Brunet wrote:
+>>
+>> On Mon 22 Apr 2024 at 09:16, Jerome Brunet <jbrunet@baylibre.com> wrote:
+>>
+>>> On Sun 21 Apr 2024 at 20:14, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>
+>>>> On 20/04/2024 18:15, Jan Dakinevich wrote:
+>>>>>
+>>>>>
+>>>>> On 4/20/24 00:09, Rob Herring wrote:
+>>>>>> On Fri, Apr 19, 2024 at 03:58:10PM +0300, Jan Dakinevich wrote:
+>>>>>>> Add device tree bindings for A1 SoC audio clock and reset controllers.
+>>>>>>>
+>>>>>>> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+>>>>>>> ---
+>>>>>>>
+>>>>>>> This controller has 6 mandatory and up to 20 optional clocks. To describe
+>>>>>>> this, I use 'additionalItems'. It produces correct processed-schema.json:
+>>>>>>>
+>>>>>>>   "clock-names": {
+>>>>>>>       "maxItems": 26,
+>>>>>>>       "items": [
+>>>>>>>           {
+>>>>>>>               "const": "pclk"
+>>>>>>>           },
+>>>>>>>           {
+>>>>>>>               "const": "dds_in"
+>>>>>>>           },
+>>>>>>>           {
+>>>>>>>               "const": "fclk_div2"
+>>>>>>>           },
+>>>>>>>           {
+>>>>>>>               "const": "fclk_div3"
+>>>>>>>           },
+>>>>>>>           {
+>>>>>>>               "const": "hifi_pll"
+>>>>>>>           },
+>>>>>>>           {
+>>>>>>>               "const": "xtal"
+>>>>>>>           }
+>>>>>>>       ],
+>>>>>>>       "additionalItems": {
+>>>>>>>           "oneOf": [
+>>>>>>>               {
+>>>>>>>                   "pattern": "^slv_sclk[0-9]$"
+>>>>>>>               },
+>>>>>>>               {
+>>>>>>>                   "pattern": "^slv_lrclk[0-9]$"
+>>>>>>>               }
+>>>>>>>           ]
+>>>>>>>       },
+>>>>>>>       "type": "array",
+>>>>>>>       "minItems": 6
+>>>>>>>   },
+>>>>>>>
+>>>>>>> and it behaves as expected. However, the checking is followed by
+>>>>>>> complaints like this:
+>>>>>>>
+>>>>>>>   Documentation/devicetree/bindings/clock/amlogic,a1-audio-clkc.yaml: properties:clock-names:additionalItems: {'oneOf': [{'pattern': '^slv_sclk[0-9]$'}, {'pattern': '^slv_lrclk[0-9]$'}]} is not of type 'boolean'
+>>>>>>>
+>>>>>>> And indeed, 'additionalItems' has boolean type in meta-schema. So, how to
+>>>>>>> do it right?
+>>>>>>
+>>>>>> The meta-schemas are written both to prevent nonsense that json-schema 
+>>>>>> allows by default (e.g additionalitems (wrong case)) and constraints to 
+>>>>>> follow the patterns we expect. I'm happy to loosen the latter case if 
+>>>>>> there's really a need. 
+>>>>>>
+>>>>>> Generally, most bindings shouldn't be using 'additionalItems' at all as 
+>>>>>> all entries should be defined, but there's a few exceptions. Here, the 
+>>>>>> only reasoning I see is 26 entries is a lot to write out, but that 
+>>>>>> wouldn't really justify it. 
+>>>>>
+>>>>> Writing a lot of entries don't scary me too much, but the reason is that
+>>>>> the existence of optional clock sources depends on schematics. Also, we
+>>>>
+>>>> Aren't you documenting SoC component, not a board? So how exactly it
+>>>> depends on schematics? SoC is done or not done...
+>>>>
+>>>>> unable to declare dt-nodes for 'clocks' array in any generic way,
+>>>>> because their declaration would depends on that what is actually
+>>>>> connected to the SoC (dt-node could be "fixed-clock" with specific rate
+>>>>> or something else).
+>>>>
+>>>> So these are clock inputs to the SoC?
+>>>>
+>>>
+>>> Yes, possibly.
+>>> Like an external crystal or a set clocks provided by an external codec
+>>> where the codec is the clock master of the link.
+>>>
+>>> This is same case as the AXG that was discussed here:
+>>> https://lore.kernel.org/linux-devicetree/20230808194811.113087-1-alexander.stein@mailbox.org/
+>>>
+>>> IMO, like the AXG, only the pclk is a required clock.
+>>> All the others - master and slave clocks - are optional.
+>>> The controller is designed to operate with grounded inputs
+>>
+>> Looking again at the implementation of the controller, there is a clear
+>> indication in patch 3 that the controller interface is the same as the
+>> AXG and that the above statement is true.
+>>> The AXG had 8 master clocks wired in. The A1 just has 5 - and 3 grounded
+>> master clocks. This is why you to had to provide a mux input table to
+>> skip the grounded inputs. You would not have to do so if the controller was
+>> properly declared with the 8 master clock input, as it actually is.
+>>
+> 
+> For simplicity, I could make something like this in device tree:
+> 
+> clocks = <&clk0,
+>           &clk1,
+>           &clk2,
+>           &clk3,
+>           &clk4,
+>           0,
+>           0,
+>           0>
+> clock-names = <"mst_in0",
+>                "mst_in1",
+>                "mst_in2"
+>                "mst_in2"
+>                "mst_in3"
+>                "mst_in4"
+>                "mst_in5"
+>                "mst_in6"
+>                "mst_in7">
+> 
+> But I don't see in the doc that the last 3 clocks are grounded to
+> anywhere. It will be just community's assumption about internals of the
+> controller.
+> 
+> Anyway, I still don't understand what to do with external slv_* clocks.
+> I can do the same as in example above: list slv_(s|lr)clk[0-9] in
+> "clock-names" and fill the rest if "clocks" by "0" phandles.
+> 
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Sorry, I missed that you suggested similar thing:
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+>>> I think the simpliest way to deal with this to just list all the clocks
+>>> with 'minItems = 1'. It is going be hard to read with a lot of '<0>,' in
+>>> the DTS when do need those slave clocks but at least the binding doc
+>>> will be simple.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+But, may be it could be better to claim that all clocks are mandatory
+and list all of them (including slv_*)? So, 'minItems = 1' can be
+omitted. What do you think?
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+clocks = <&pclk,
+          &clk0,
+          &clk1,
+          &clk2,
+          &clk3,
+          &clk4,
+          0,
+          0,
+          0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
+clock-names = <"pclk",
+               "mst_in0",
+               "mst_in1",
+               "mst_in2"
+               "mst_in2"
+               "mst_in3"
+               "mst_in4"
+               "mst_in5"
+               "mst_in6"
+               "mst_in7",
+               "slv_sclk0",
+               "slv_sclk1",
+               "slv_sclk2",
+               "slv_sclk3",
+               "slv_sclk4",
+               "slv_sclk5",
+               "slv_sclk6",
+               "slv_sclk7",
+               "slv_sclk8",
+               "slv_sclk9",
+               "slv_lrclk0",
+               "slv_lrclk1",
+               "slv_lrclk2",
+               "slv_lrclk3",
+               "slv_lrclk4",
+               "slv_lrclk5",
+               "slv_lrclk6",
+               "slv_lrclk7",
+               "slv_lrclk8",
+               "slv_lrclk9">;
 
-If you want to undo deduplication, reply with:
-#syz undup
+>> It also shows that it is a bad idea to name input after what is coming
+>> in (like you do with "dds_in" or "fclk_div2") instead of what they
+>> actually are like in the AXG (mst0, mst1, etc ...)
+>>
+> 
+> I agree, these are not the best names.
+> 
+>>>
+>>>>>
+>>>>> By the way, I don't know any example (neither for A1 SoC nor for other
+>>>>> Amlogic's SoCs) where these optional clocks are used, but they are
+>>>>> allowed by hw.
+>>>
+>>> Those scenario exists and have been tested. There is just no dts using
+>>> that upstream because they are all mostly copy of the AML ref design.
+>>>
+>>>>>
+>>>>> This is my understanding of this controller. I hope, Jerome Brunet will
+>>>>> clarify how it actually works.
+>>>>
+>>>
+>>> I think the simpliest way to deal with this to just list all the clocks
+>>> with 'minItems = 1'. It is going be hard to read with a lot of '<0>,' in
+>>> the DTS when do need those slave clocks but at least the binding doc
+>>> will be simple.
+>>>
+>>>> Best regards,
+>>>> Krzysztof
+>>>
+>>> If you are going ahead with this, please name the file
+>>> amlogic,axg-audio-clkc.yaml because this is really the first controller
+>>> of the type and is meant to be documented in the same file.
+>>>
+>>> You are free to handle the conversion of the AXG at the same time if
+>>> you'd like. It would be much appreciated if you do.
+>>
+>>
+> 
+
+-- 
+Best regards
+Jan Dakinevich
