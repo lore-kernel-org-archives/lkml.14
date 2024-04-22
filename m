@@ -1,38 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE884F60D;
-	Mon, 22 Apr 2024 07:15:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DEF4B5CD;
+	Mon, 22 Apr 2024 07:16:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713770131; cv=none; b=rwdJPdSe1AAmry+0Xr4Hk5pJvDSC2MqGqW66LeefSrAVB/nZoQb/IyTUXaVOdABp378ELmHblEfD7txFhLpA1dpTZm0Jq5i1bKKJG58KsR9MC/76WHsPNLG5vGx9uKWYfajLMSSt7Qk+2MfTSCoDC0FU5HZlj144Y1re+hwMZSA=
+	t=1713770195; cv=none; b=MpgbN9UH022/U8Y0etB/hRIxWZKDa7lXhcHbnWLfdtxCrQ5lFQ5aTynpdJj2x5fPcpPWP67iygHrKIVusmoXG+7G0S6JPYgVpwqoWTA0GhqggIiih+C3n8BtiGHClxHXf1KDDARG14XhQNXTLMuBIOE5RS8+izFO209hM8ZB/88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713770131; c=relaxed/simple;
-	bh=cg3WzltntgM9sJaif7yixpNGnhWKABN+vYsiEpkpVJs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZF1z/LQh1xJWtIPXNziJJv37NeML3Yhagd1ftGRjuj8sj0NDJubhM6NUaKPQodCX7zb3wpkaldqJcoy5FceZv5+CycLp6pa9LXh7L3qglLkJ3S/robWl4H+9n49vO6iuuHkGldPsbsgcIoAmyMQgSw/FnJQf6D3mCSXkFsawXhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gp5i4Wjb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713770195; c=relaxed/simple;
+	bh=NfAfxY4XqZehCfrVo6N7fe6sz8Rh1GXdjQSYW+wwx44=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ld6RmEiBhx1AVGw7rtMB+tp9+wj+MGLyjYQ3dX0pDoDTFuPTLTMr3nH8fIEEpm/ZxRE1epK8DCxusBKO2kl6iyBD2X4f7ACGIWz7UgpzEp+LrtmsLRCeaot6jKOPuLeWUvy0Km1vq5r6AC8/9fPzCK+xkgj3u7cQSuXPU72i/o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DHn3HXH2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gp5i4Wjb"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6B10DC3277B;
-	Mon, 22 Apr 2024 07:15:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DHn3HXH2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40A6AC113CC;
+	Mon, 22 Apr 2024 07:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713770131;
-	bh=cg3WzltntgM9sJaif7yixpNGnhWKABN+vYsiEpkpVJs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=gp5i4WjbIb/VLanMYMuvzox2mfHc+rqg2JLUGYzBW3vM8FOOZSjpaEPCRZj54LfrN
-	 NeOqrI8oDN2FR8AbX9uNdTv9jygAqNYOcy8tdni3vhwQXP7AkmacEwxBhspFC7W3jL
-	 8ijXWOmfBtcpiEEqBMj4/6Sik7rNnSku6YumbSFxjTMnE+1EQ2wDojf2Es4v6FJBqw
-	 Y8NdbOpEcE6kPJO6Ep7fc/rxM1fBDWkv2xIJ3GAvlmR6ZhPBjJ5oa7ge/IcyN7POPN
-	 lDPuwRI0eQG2aiUx4iBY2xhp8uTPuNwbJOplNUlDHld+TGx554eA7A8Dq3l4bXCo6L
-	 kYAjJdInQhL3w==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608C2C4345F;
-	Mon, 22 Apr 2024 07:15:31 +0000 (UTC)
-From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL_via_B4_Relay?= <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Mon, 22 Apr 2024 10:15:22 +0300
-Subject: [PATCH net-next v2 15/15] net: dsa: mt7530: explain exposing MDIO
- bus of MT7531AE better
+	s=k20201202; t=1713770195;
+	bh=NfAfxY4XqZehCfrVo6N7fe6sz8Rh1GXdjQSYW+wwx44=;
+	h=From:Date:Subject:To:Cc:From;
+	b=DHn3HXH2eCN2Mb4w2HpzvQHTeCkLsaR/+ccsCUzukakQ4Tq82aKmoFrqyui3aEsdi
+	 tvm+AmP4HXZpsCiZLs4Bv/xzQ1EYRcFF0grrqjysrb528ZfaUQ5dQpM0ca0InUsY9Y
+	 j4h1Xe28vB7M1l7Fz7RCmMR4bSIU+Zf+zbfS9s37g+jh/5HzDUZul17XGJamEmOw6+
+	 ib+TGfN2Bv4JpQO6QLPze5WOWj/VnJ+5vpjeRtTb0mh+Oz3WZeaTFxEJFbBOl0GGX2
+	 COfNVMUDcIF5ypOY+aIXByE6TeSdkQV/zQN/IMQ8GYkhVLTsEq4wWPt71WQROb5Jy0
+	 AhjPz237m8Bdw==
+From: Benjamin Tissoires <bentiss@kernel.org>
+Date: Mon, 22 Apr 2024 09:16:28 +0200
+Subject: [PATCH] bpf: verifier: allow arrays of progs to be used in
+ sleepable context
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,67 +36,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240422-for-netnext-mt7530-improvements-4-v2-15-a75157ba76ad@arinc9.com>
-References: <20240422-for-netnext-mt7530-improvements-4-v2-0-a75157ba76ad@arinc9.com>
-In-Reply-To: <20240422-for-netnext-mt7530-improvements-4-v2-0-a75157ba76ad@arinc9.com>
-To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
- Florian Fainelli <f.fainelli@gmail.com>, 
- Vladimir Oltean <olteanv@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Russell King <linux@armlinux.org.uk>
-Cc: Bartel Eerdekens <bartel.eerdekens@constell8.be>, 
- mithat.guner@xeront.com, erkin.bozoglu@xeront.com, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713770127; l=1109;
- i=arinc.unal@arinc9.com; s=arinc9-Xeront; h=from:subject:message-id;
- bh=vLvtlbHMBxKy/N+5hO2kjs9XkvkZFD7LvDK5jmVwOt0=;
- b=rrMcStwgZhwRYkv1smaK4/6fyCCBXYnzMSeDeY5COCE0JpnpNyuwBmAa+EH2zLbVYygTr8jEZ
- xmxYYbP6SFjBC2xJ1TKMAKURIjla8Ln7p8UXbk0E9eIB0v4YTX21ANp
-X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
- pk=z49tLn29CyiL4uwBTrqH9HO1Wu3sZIuRp4DaLZvtP9M=
-X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-Xeront
- with auth_id=137
-X-Original-From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-Reply-To: arinc.unal@arinc9.com
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240422-sleepable_array_progs-v1-1-7c46ccbaa6e2@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAMsOJmYC/x3MQQqDMBBG4avIrBuIISB4lVJkkv6NA6JhBsQiu
+ XtDl9/ivZsMKjCah5sUp5gce8f4GCivvBc4eXdT8CH6GIKzDaicNiysyt+l6lHMwWc/pXHKnBL
+ 1tio+cv2/z1drP7hSVYdnAAAA
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Benjamin Tissoires <bentiss@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713770191; l=1344;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=NfAfxY4XqZehCfrVo6N7fe6sz8Rh1GXdjQSYW+wwx44=;
+ b=BOoh+3TwqNJ3VgIIKuFS0X05BWosUogOThOQNNnoxXo2ZDKy2YK8wSwezXl2YpCCvtTMDFrbv
+ nV7g17D1owCCy/3fLmUPTxsHFWWflmCJJ5mxb/Lhwb5Vqj5dSIfPKc1
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+Arrays of progs are underlying using regular arrays, but they can only
+be updated from a syscall.
+Therefore, they should be safe to use while in a sleepable context.
 
-Unlike MT7531BE, the GPIO 6-12 pins are not used for RGMII on MT7531AE.
-Therefore, the GPIO 11-12 pins are set to function as MDC and MDIO to
-expose the MDIO bus of the switch. Replace the comment with a better
-explanation.
+This is required to be able to call bpf_tail_call() from a sleepable
+tracing bpf program.
 
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
 ---
- drivers/net/dsa/mt7530.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Hi,
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 1f6cd24de4b7..2b9f904a98f0 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -2635,7 +2635,10 @@ mt7531_setup(struct dsa_switch *ds)
- 	if (!priv->p5_sgmii) {
- 		mt7531_pll_setup(priv);
- 	} else {
--		/* Let ds->user_mii_bus be able to access external phy. */
-+		/* Unlike MT7531BE, the GPIO 6-12 pins are not used for RGMII on
-+		 * MT7531AE. Set the GPIO 11-12 pins to function as MDC and MDIO
-+		 * to expose the MDIO bus of the switch.
-+		 */
- 		mt7530_rmw(priv, MT7531_GPIO_MODE1, MT7531_GPIO11_RG_RXD2_MASK,
- 			   MT7531_EXT_P_MDC_11);
- 		mt7530_rmw(priv, MT7531_GPIO_MODE1, MT7531_GPIO12_RG_RXD3_MASK,
+a small patch to allow to have:
 
+```
+SEC("fmod_ret.s/__hid_bpf_tail_call_sleepable")
+int BPF_PROG(hid_tail_call_sleepable, struct hid_bpf_ctx *hctx)
+{
+	bpf_tail_call(ctx, &hid_jmp_table, hctx->index);
+
+	return 0;
+}
+```
+
+This should allow me to add bpf hooks to functions that communicate with
+the hardware.
+
+Cheers,
+Benjamin
+---
+ kernel/bpf/verifier.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 68cfd6fc6ad4..880b32795136 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -18171,6 +18171,7 @@ static int check_map_prog_compatibility(struct bpf_verifier_env *env,
+ 		case BPF_MAP_TYPE_QUEUE:
+ 		case BPF_MAP_TYPE_STACK:
+ 		case BPF_MAP_TYPE_ARENA:
++		case BPF_MAP_TYPE_PROG_ARRAY:
+ 			break;
+ 		default:
+ 			verbose(env,
+
+---
+base-commit: 735f5b8a7ccf383e50d76f7d1c25769eee474812
+change-id: 20240422-sleepable_array_progs-e0c07b17cabb
+
+Best regards,
 -- 
-2.40.1
-
+Benjamin Tissoires <bentiss@kernel.org>
 
