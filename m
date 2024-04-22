@@ -1,34 +1,53 @@
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CA14AEC8
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B4C4AEFE;
+	Mon, 22 Apr 2024 07:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713771374; cv=none; b=HFoVAiqgjn3Hh8vW3Z1AA/IjW6z06dKgkbkn1CtOquJukJFVIjx3ZOcwY9du8KgCVsmFHlHVe6t1uxqYHrlRlJRpdhjoqONwBpfBGrZniwcOhMS4AGtPxJbzUIF4qPe4+LIYhlWFTQnfJ/NKEptXv3kqW4PoFXTCkSr6mJ4TsZA=
+	t=1713771618; cv=none; b=klxtUydSbd/s+NzBr4e5EzTaohNtguHHkNhixB9ZtnNJ5vf2G5HHC+TYwprWGJzu3VNV2uBHYhkcbmpVQ+27EAZjQDmrJFr1LHQl6X4H01i8H5UcrRuaSVXZseOm9Ej8vwnflvCrN8W6HOSSym9I5lk7rKREjoZlw7E/YOAoKjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713771374; c=relaxed/simple;
-	bh=PgbWEJHun8Ts3a0s4MSrzmK3KsjjTkmdPjaOC8mw7eU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z4Hmc+ib7bK4uHAKnkWqaEVPF7BPMEe35HGWIqi0Ujp8KiioiQAUsRwJoJgFniQoGEZageU8rLTUy1Ix/Hk5BUJrw5/zXh8j8M1BJWOE5pMUhl7AbP6tDMwbEwX9h2AcglpDIwp8vpsZp8YQO/UZhV4Ucok1jam3SdOj2/JLHZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-25-208.elisa-laajakaista.fi [88.113.25.208])
-	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
-	id d3ab1112-007a-11ef-a9de-005056bdf889;
-	Mon, 22 Apr 2024 10:35:02 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 22 Apr 2024 10:35:00 +0300
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: mlj@danelec.com, rafael.j.wysocki@intel.com, lenb@kernel.org,
-	jdelvare@suse.com, linux@roeck-us.net, linux@weissschuh.net,
-	ilpo.jarvinen@linux.intel.com, linux-acpi@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH RESEND v5] ACPI: fan: Add hwmon support
-Message-ID: <ZiYTJOmwDVaws3lh@surfacebook.localdomain>
-References: <20240422060835.71708-1-W_Armin@gmx.de>
+	s=arc-20240116; t=1713771618; c=relaxed/simple;
+	bh=3p99fopQtEIZdwt4QoUoj1J66fCCoXwK2F+w8THHEDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=US8REULLmLjnXah2y1JAa9QmN4eGzCwRdxGu45LwE7brA7AYKrcKsijNAZVrAyKCUlffTOBMgO2l50lu00EVh2lCH89p5GILD6BB/B9g95+CimeO6it9pjmHYIPv4SDQbH0wfMEYenx/vINOfDWyk9R3NC26u0RNhjzl9uw4SMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=be+2sgZy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="be+2sgZy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24630C32782;
+	Mon, 22 Apr 2024 07:40:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713771618;
+	bh=3p99fopQtEIZdwt4QoUoj1J66fCCoXwK2F+w8THHEDw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=be+2sgZyy0L9gj3jytR1FK4MPVcb9ZLAlfHqWiaDH7MC4Lv1TbfuZNnnQaeJXzSZv
+	 VPHF9h4aN6Z2iBy+sngyZ1gUkYzcdWzXF2DDPdmyWuYre+Jj3UXzrlT8FyKu08X7rW
+	 yS1r9jiHUi9nQktfDfFasCRtfbpQ312zdzaxS9UlKo0xZDtGtW41bSd/35A/izdQYu
+	 x0t8G3zXHIHRm1t0r9bm6PF04q4jzxJWKPGKNKt02oE+lOrZaQcuIgjovS7XbdYYsP
+	 dFoP1wc6+awLNV6Zi4orHWfIeQv1vRQGlmRIr1KuNv9/FlGhV+BREGyto0eZgAt+Eg
+	 GPuUJSkueLFCA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1ryoHc-00000000487-0cmS;
+	Mon, 22 Apr 2024 09:40:12 +0200
+Date: Mon, 22 Apr 2024 09:40:12 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Krishna Kurapati <quic_kriskura@quicinc.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_ppratap@quicinc.com,
+	quic_jackp@quicinc.com
+Subject: Re: [PATCH v21 0/9] Add multiport support for DWC3 controllers
+Message-ID: <ZiYUXCHGlUKSnXXM@hovoldconsulting.com>
+References: <20240420044901.884098-1-quic_kriskura@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,223 +56,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240422060835.71708-1-W_Armin@gmx.de>
+In-Reply-To: <20240420044901.884098-1-quic_kriskura@quicinc.com>
 
-Mon, Apr 22, 2024 at 08:08:35AM +0200, Armin Wolf kirjoitti:
-> Currently, the driver does only support a custom sysfs
-> interface to allow userspace to read the fan speed.
-> Add support for the standard hwmon interface so users
-> can read the fan speed with standard tools like "sensors".
-> 
-> Tested with a custom ACPI SSDT.
+On Sat, Apr 20, 2024 at 10:18:52AM +0530, Krishna Kurapati wrote:
 
-...
+> Krishna Kurapati (9):
+>   dt-bindings: usb: Add bindings for multiport properties on DWC3
+>     controller
+>   usb: dwc3: core: Access XHCI address space temporarily to read port
+>     info
+>   usb: dwc3: core: Skip setting event buffers for host only controllers
+>   usb: dwc3: core: Refactor PHY logic to support Multiport Controller
+>   dt-bindings: usb: qcom,dwc3: Add bindings for SC8280 Multiport
+>   usb: dwc3: qcom: Add helper function to request wakeup interrupts
+>   usb: dwc3: qcom: Refactor IRQ handling in glue driver
+>   usb: dwc3: qcom: Enable wakeup for applicable ports of multiport
+>   usb: dwc3: qcom: Add multiport suspend/resume support for wrapper
 
-> +/*
-> + * fan_hwmon.c - hwmon interface for the ACPI Fan driver
+Verified that the finger print reader on the Lenovo ThinkPad X13s works
+with this series (and not yet merged devicetree changes). 
 
-No file name in the file, it makes an unneeded burden if file is going to be
-renamed.
+Not sure when or why, but the error message I previously reported seeing
+during suspend is now also gone:
 
-> + *
-> + * Copyright (C) 2024 Armin Wolf <W_Armin@gmx.de>
-> + */
+	dwc3-qcom a4f8800.usb: HS-PHY2 not in L2
 
-...
+Tested-by: Johan Hovold <johan+linaro@kernel.org>
 
-> +#include <linux/acpi.h>
-> +#include <linux/hwmon.h>
+Thanks for sticking with it, Krishna.
 
-Please, follow IWYU pronciple, e.g., missing err.h here.
-
-> +#include <linux/limits.h>
-> +#include <linux/units.h>
-
-...
-
-> +/* Returned when the ACPI fan does not support speed reporting */
-> +#define FAN_SPEED_UNAVAILABLE	0xffffffff
-> +#define FAN_POWER_UNAVAILABLE	0xffffffff
-
-Shouldn't these be rather as ~0 of the respective types or _MAX (from limits.h)
-or something like that?
-
-...
-
-> +static struct acpi_fan_fps *acpi_fan_get_current_fps(struct acpi_fan *fan, u64 control)
-> +{
-> +	int i;
-
-unsigned
-
-> +	for (i = 0; i < fan->fps_count; i++) {
-> +		if (fan->fps[i].control == control)
-> +			return &fan->fps[i];
-> +	}
-> +
-> +	return NULL;
-> +}
-
-...
-
-> +static umode_t acpi_fan_is_visible(const void *drvdata, enum hwmon_sensor_types type, u32 attr,
-> +				   int channel)
-> +{
-> +	const struct acpi_fan *fan = drvdata;
-> +	int i;
-
-unsigned
-
-> +	switch (type) {
-> +	case hwmon_fan:
-> +		switch (attr) {
-> +		case hwmon_fan_input:
-> +			return 0444;
-> +		case hwmon_fan_target:
-> +			/* When in fine grain control mode, not every fan control value
-> +			 * has an associated fan performance state.
-> +			 */
-> +			if (fan->fif.fine_grain_ctrl)
-> +				return 0;
-> +
-> +			return 0444;
-> +		default:
-
-> +			break;
-> +		}
-> +		break;
-
-Instead of two breaks, just return 0 from 'default' case.
-
-> +	case hwmon_power:
-> +		switch (attr) {
-> +		case hwmon_power_input:
-> +			/* When in fine grain control mode, not every fan control value
-> +			 * has an associated fan performance state.
-> +			 */
-
-/*
- * Use correct style for multi-line
- * comment blocks. As in this example.
- */
-
-> +			if (fan->fif.fine_grain_ctrl)
-> +				return 0;
-> +
-> +			/* When all fan performance states contain no valid power data,
-> +			 * when the associated attribute should not be created.
-> +			 */
-> +			for (i = 0; i < fan->fps_count; i++) {
-> +				if (fan->fps[i].power != FAN_POWER_UNAVAILABLE)
-> +					return 0444;
-> +			}
-> +
-> +			return 0;
-> +		default:
-
-> +			break;
-> +		}
-> +		break;
-
-Ditto.
-
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return 0;
-
-Return from the default.
-
-With the above we got rid of 2 LoCs for free.
-
-> +}
-
-...
-
-> +	switch (type) {
-> +	case hwmon_fan:
-> +		switch (attr) {
-> +		case hwmon_fan_input:
-> +			if (fst.speed == FAN_SPEED_UNAVAILABLE)
-> +				return -ENODATA;
-> +
-> +			if (fst.speed > LONG_MAX)
-> +				return -EOVERFLOW;
-> +
-> +			*val = fst.speed;
-> +			return 0;
-> +		case hwmon_fan_target:
-> +			fps = acpi_fan_get_current_fps(fan, fst.control);
-> +			if (!fps)
-> +				return -ENODATA;
-> +
-> +			if (fps->speed > LONG_MAX)
-> +				return -EOVERFLOW;
-> +
-> +			*val = fps->speed;
-> +			return 0;
-> +		default:
-
-> +			break;
-> +		}
-> +		break;
-
-As per above.
-
-> +	case hwmon_power:
-> +		switch (attr) {
-> +		case hwmon_power_input:
-> +			fps = acpi_fan_get_current_fps(fan, fst.control);
-> +			if (!fps)
-> +				return -ENODATA;
-> +
-> +			if (fps->power == FAN_POWER_UNAVAILABLE)
-> +				return -ENODATA;
-> +
-> +			if (fps->power > LONG_MAX / MICROWATT_PER_MILLIWATT)
-> +				return -EOVERFLOW;
-> +
-> +			*val = fps->power * MICROWATT_PER_MILLIWATT;
-> +			return 0;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-
-Ditto.
-
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return -EOPNOTSUPP;
-
-Ditto.
-
-Again, 2 LoCs less here.
-
-> +}
-
-...
-
-> +int devm_acpi_fan_create_hwmon(struct acpi_device *device)
-> +{
-> +	struct acpi_fan *fan = acpi_driver_data(device);
-> +	struct device *hdev;
-> +
-> +	hdev = devm_hwmon_device_register_with_info(&device->dev, "acpi_fan", fan,
-> +						    &acpi_fan_chip_info, NULL);
-
-> +
-
-Redundant blank line.
-
-> +	return PTR_ERR_OR_ZERO(hdev);
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Johan
