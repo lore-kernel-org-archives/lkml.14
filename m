@@ -1,168 +1,887 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m1022.netease.com (mail-m1022.netease.com [154.81.10.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262AD1509BC
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 14:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D5415099E;
+	Mon, 22 Apr 2024 14:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.81.10.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713795685; cv=none; b=ZsOQWgBu+nTI2jlNXl+bkczaAhA3ME32tx+gUrtq72rdh3TlD5tZIbCmtUjf1vtz9hwh48Fuyt1Mt98ngY0z5Ojj664SUAr8RXrtLHBPLOiWUSeWmlFRJNuofxCEkuvmja2Hu7EOGqbdKLvcArkEBycUMM1ggP2hXP1Czz4IaKQ=
+	t=1713795781; cv=none; b=f7kxxHEI5Pa/1FKbdtBFZX0EXQEC9rBGV7/5ifQ9slBkKduaKnsI1d0cGiJhJZ28PLPdaSfwC1yc4mafAwdc4Zpp400ATDZjYH+HdPpYvkdzKDf9WeGzMP5EzPXzurIn2Ri9raAhgBv5WSwDNWXkqx7ztKPoK/dv5UxDQossOcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713795685; c=relaxed/simple;
-	bh=Qy//AdmxEgHP3psLoUo+TYNKkRALUtkqAmoJKbj8rrQ=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=cIXEjak9u7OofP8u9YJwRstUF9yvLVhbj4AoMvNOVaClrSfCQedwNWd9q04tmrkaq1EbEwPmeLRZDJ3bMxY2qic454xb4Aufv581A5YSmeKGmC/xB/js4QDA8lw07K6suvIzDIMr4zC3lb7EXW34IqErSWM06MagEIummZBo2bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7da42114485so494949239f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:21:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713795683; x=1714400483;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1yKoEUmreO/jxEhsqvfi/lpCnpHH8jnP+ZOdlyL7veY=;
-        b=BK6cInWyjTGr1rD/MReCt43hHa2o3LELJe+831TUlaqIiVN4sCktWlr+n9nSI2Gx68
-         MzNLWmF3CTuton8Upj7hX0STvF0ntTYOtIFiQ6exSACGGt3ShjruCZLiWW/dgJXXXRFs
-         R0ZSOGjPgKH9Ec5ETYJMR0gLNO2YVzhUVwPUeHhej4YMPsgBp+WaOd6Zd7i8tzsf0DmP
-         pOUjkELJYxGCvmQdQVXtr99dQLXvomlgpyXGwT/xfIWLdii80ks5jgcp2zwzF7syCeU9
-         ObYDBSTqYDslPky/PlZGwotLU7pLzLLZ3Eu7MU7Z8AtedgHFX7K93nu24WUqe1hBjz4X
-         nkJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXgiBu6FDw6U2goLlqiPzXQQ1m/0hEN/KUrEnxcc1PY3qcu7Y/PaIncn41mCPZtm2fvdhziiEZrsLBwZM6stxJkcfxa1ev0bRWbmQhK
-X-Gm-Message-State: AOJu0YwuJdyiPfL2gOaIoL2fthJaJ+sgMT7N33SERtjpGty4vgoMZHgQ
-	Jgd1iBRD+8vnB2DiQR4YO2qWAZbDiMTvKSyEKVdQyPotPZm2hI4hm5tVYBWkFXcVpBrV5DWnAl/
-	kAP+wDLR+Rz6WX9zls+mX3KvId8ZqFD6BSElqjnk9u621CUwrGhuiuS4=
-X-Google-Smtp-Source: AGHT+IFx4XZUnDLRtz1C/Ng5arXiCpIa7t+/uscrSJudFp4Q7+OF/5yd8SHiEj/XxK3O44Hvn/K5fRyvioamZvbwXzLBhAdQqu5q
+	s=arc-20240116; t=1713795781; c=relaxed/simple;
+	bh=eS2SxKIEWVwxVedGljMejQPDPTJL/HhRgUiWZbhE+dI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s3Vu3tFPccGvmyhmD+FjrzaRN+crk4kBX2KVWNge07Zmbx6rm3wsLgAcatskXYLl8NF2sXsKCaP3WYEiPyKcuG6wcfq9XncKXiqplzikDn3Rg/xqlgQTXnrhnhX1CebmdzZXyMlsK3KdAkKTpt+wsmWyfkgMM34MJcFwyC2LleA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=154.81.10.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
+Received: from ubuntu-22-04.. (unknown [218.94.118.90])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 18D27860264;
+	Mon, 22 Apr 2024 15:16:11 +0800 (CST)
+From: Dongsheng Yang <dongsheng.yang@easystack.cn>
+To: dan.j.williams@intel.com,
+	axboe@kernel.dk
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	Dongsheng Yang <dongsheng.yang.linux@gmail.com>
+Subject: [PATCH 2/7] cbd: introduce cbd_transport
+Date: Mon, 22 Apr 2024 07:16:01 +0000
+Message-Id: <20240422071606.52637-3-dongsheng.yang@easystack.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
+References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6c12:b0:7da:ce78:a1be with SMTP id
- ik18-20020a0566026c1200b007dace78a1bemr55003iob.3.1713795683234; Mon, 22 Apr
- 2024 07:21:23 -0700 (PDT)
-Date: Mon, 22 Apr 2024 07:21:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000eac28e0616b026d1@google.com>
-Subject: [syzbot] [bpf?] [net?] WARNING in skb_ensure_writable
-From: syzbot <syzbot+0c4150bff9fff3bf023c@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, davem@davemloft.net, eddyz87@gmail.com, 
-	edumazet@google.com, fw@strlen.de, haoluo@google.com, horms@kernel.org, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, martin.lau@linux.dev, 
-	netdev@vger.kernel.org, pabeni@redhat.com, sdf@google.com, song@kernel.org, 
-	syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZQ0MZVhlIGEwfQhkaSB5KT1UZERMWGhIXJBQOD1
+	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpKS0hKQ1VKS0tVS1kG
+X-HM-Tid: 0a8f04a98bb7023ckunm18d27860264
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NBQ6UTo*KDcrCRxNCysMCygK
+	F0gwCk1VSlVKTEpITExLSkxJS0tCVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
+	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBSU5PT0s3Bg++
 
-Hello,
+From: Dongsheng Yang <dongsheng.yang.linux@gmail.com>
 
-syzbot found the following issue on:
+cbd_transport represents the layout of the entire shared memory, as shown below.
 
-HEAD commit:    4ac828960a60 Merge branch 'eee-linkmode-bitmaps'
-git tree:       net-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=14710a54180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=57c41f64f37f51c5
-dashboard link: https://syzkaller.appspot.com/bug?extid=0c4150bff9fff3bf023c
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17cc49d8180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c88616180000
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                           cbd transport                                                                                       │
+├────────────────────┬───────────────────────┬───────────────────────┬──────────────────────┬───────────────────────────────────┤
+│                    │       hosts           │      backends         │       blkdevs        │        channels                   │
+│ cbd transport info ├────┬────┬────┬────────┼────┬────┬────┬────────┼────┬────┬────┬───────┼───────┬───────┬───────┬───────────┤
+│                    │    │    │    │  ...   │    │    │    │  ...   │    │    │    │  ...  │       │       │       │   ...     │
+└────────────────────┴────┴────┴────┴────────┴────┴────┴────┴────────┴────┴────┴────┴───────┴───┬───┴───────┴───────┴───────────┘
+                                                                                                │
+                                                                                                │
+                                                                                                │
+                                                                                                │
+          ┌─────────────────────────────────────────────────────────────────────────────────────┘
+          │
+          │
+          ▼
+    ┌───────────────────────────────────────────────────────────┐
+    │                     channel                               │
+    ├────────────────────┬──────────────────────────────────────┤
+    │    channel meta    │              channel data            │
+    └─────────┬──────────┴────────────────────────────────-─────┘
+              │
+              │
+              │
+              ▼
+    ┌──────────────────────────────────────────────────────────┐
+    │                 channel meta                             │
+    ├───────────┬──────────────┬───────────────────────────────┤
+    │ meta ctrl │  comp ring   │       cmd ring                │
+    └───────────┴──────────────┴───────────────────────────────┘
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/f1bd74942969/disk-4ac82896.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/c99cbac61b8b/vmlinux-4ac82896.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/fa3d589c2a1c/bzImage-4ac82896.xz
+The shared memory is divided into five regions:
 
-The issue was bisected to:
+    a) Transport_info:
+	Information about the overall transport, including the layout
+of the transport.
+    b) Hosts:
+	Each host wishing to utilize this transport needs to register
+its own information within a host entry in this region.
+    c) Backends:
+	Starting a backend on a host requires filling in information
+in a backend entry within this region.
+    d) Blkdevs:
+	Once a backend is established, it can be mapped to CBD device
+on any associated host. The information about the blkdevs is then
+filled into the blkdevs region.
+    e) Channels:
+	This is the actual data communication area, where communication
+between blkdev and backend occurs. Each queue of a block device uses
+a channel, and each backend has a corresponding handler interacting
+with this queue.
+    f) Channel:
+	Channel is further divided into meta and data regions.
+	The meta region includes cmd rings and comp rings.
+The blkdev converts upper-layer requests into cbd_se and fills
+them into the cmd ring. The handler accepts the cbd_se from
+the cmd ring and sends them to the local actual block device
+of the backend (e.g., sda). After completion, the results are
+formed into cbd_ce and filled into the comp ring. The blkdev
+then receives the cbd_ce and returns the results to the upper-layer
+IO sender.
 
-commit 219eee9c0d16f1b754a8b85275854ab17df0850a
-Author: Florian Westphal <fw@strlen.de>
-Date:   Fri Feb 16 11:36:57 2024 +0000
-
-    net: skbuff: add overflow debug check to pull/push helpers
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=166b3a4c180000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=156b3a4c180000
-console output: https://syzkaller.appspot.com/x/log.txt?x=116b3a4c180000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+0c4150bff9fff3bf023c@syzkaller.appspotmail.com
-Fixes: 219eee9c0d16 ("net: skbuff: add overflow debug check to pull/push helpers")
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 5074 at include/linux/skbuff.h:2723 pskb_may_pull_reason include/linux/skbuff.h:2723 [inline]
-WARNING: CPU: 1 PID: 5074 at include/linux/skbuff.h:2723 pskb_may_pull include/linux/skbuff.h:2739 [inline]
-WARNING: CPU: 1 PID: 5074 at include/linux/skbuff.h:2723 skb_ensure_writable+0x2ef/0x440 net/core/skbuff.c:6103
-Modules linked in:
-CPU: 1 PID: 5074 Comm: syz-executor365 Not tainted 6.8.0-rc5-syzkaller-01654-g4ac828960a60 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-RIP: 0010:pskb_may_pull_reason include/linux/skbuff.h:2723 [inline]
-RIP: 0010:pskb_may_pull include/linux/skbuff.h:2739 [inline]
-RIP: 0010:skb_ensure_writable+0x2ef/0x440 net/core/skbuff.c:6103
-Code: e8 b6 f7 57 f8 4c 89 ef 31 f6 31 d2 b9 20 08 00 00 48 83 c4 28 5b 41 5c 41 5d 41 5e 41 5f 5d e9 17 04 fe ff e8 92 f7 57 f8 90 <0f> 0b 90 e9 3e fd ff ff 44 89 f7 44 89 e6 e8 3e f9 57 f8 45 39 e6
-RSP: 0018:ffffc900039ef8f8 EFLAGS: 00010293
-RAX: ffffffff893b75de RBX: ffff88802c8a1000 RCX: ffff88802a155940
-RDX: 0000000000000000 RSI: 00000000fb6014e4 RDI: 0000000000000000
-RBP: 00000000fb6014e4 R08: ffffffff893b7317 R09: 1ffffffff1f0bcb5
-R10: dffffc0000000000 R11: ffffffffa0000954 R12: 00000000fb6014e4
-R13: ffff88802c8a1000 R14: ffffc90000b06030 R15: dffffc0000000000
-FS:  0000555556fa9380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000001b7b398 CR3: 00000000241e8000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __bpf_try_make_writable net/core/filter.c:1665 [inline]
- bpf_try_make_writable net/core/filter.c:1671 [inline]
- ____bpf_skb_pull_data net/core/filter.c:1862 [inline]
- bpf_skb_pull_data+0x7c/0x230 net/core/filter.c:1851
- bpf_prog_ca74b6b79e086095+0x1d/0x1f
- bpf_dispatcher_nop_func include/linux/bpf.h:1235 [inline]
- __bpf_prog_run include/linux/filter.h:651 [inline]
- bpf_prog_run include/linux/filter.h:658 [inline]
- bpf_test_run+0x408/0x900 net/bpf/test_run.c:423
- bpf_prog_test_run_skb+0xaf9/0x13a0 net/bpf/test_run.c:1056
- bpf_prog_test_run+0x33a/0x3b0 kernel/bpf/syscall.c:4188
- __sys_bpf+0x48d/0x810 kernel/bpf/syscall.c:5591
- __do_sys_bpf kernel/bpf/syscall.c:5680 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:5678 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5678
- do_syscall_64+0xf9/0x240
- entry_SYSCALL_64_after_hwframe+0x6f/0x77
-RIP: 0033:0x7f6a0471c4a9
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffcdcead7e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00007ffcdcead9b8 RCX: 00007f6a0471c4a9
-RDX: 0000000000000050 RSI: 0000000020000080 RDI: 000000000000000a
-RBP: 00007f6a0478f610 R08: 0000000000000000 R09: 00007ffcdcead9b8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffcdcead9a8 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-
-
+Signed-off-by: Dongsheng Yang <dongsheng.yang.linux@gmail.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/block/cbd/Makefile        |   2 +-
+ drivers/block/cbd/cbd_main.c      |   8 +
+ drivers/block/cbd/cbd_transport.c | 721 ++++++++++++++++++++++++++++++
+ 3 files changed, 730 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/block/cbd/cbd_transport.c
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+diff --git a/drivers/block/cbd/Makefile b/drivers/block/cbd/Makefile
+index 2765325486a2..a22796bfa7db 100644
+--- a/drivers/block/cbd/Makefile
++++ b/drivers/block/cbd/Makefile
+@@ -1,3 +1,3 @@
+-cbd-y := cbd_main.o
++cbd-y := cbd_main.o cbd_transport.o
+ 
+ obj-$(CONFIG_BLK_DEV_CBD) += cbd.o
+diff --git a/drivers/block/cbd/cbd_main.c b/drivers/block/cbd/cbd_main.c
+index 0a87c95d749d..8cfa60dde7c5 100644
+--- a/drivers/block/cbd/cbd_main.c
++++ b/drivers/block/cbd/cbd_main.c
+@@ -109,6 +109,10 @@ static ssize_t transport_unregister_store(const struct bus_type *bus, const char
+ 		return -EINVAL;
+ 	}
+ 
++	ret = cbdt_unregister(transport_id);
++	if (ret < 0)
++		return ret;
++
+ 	return size;
+ }
+ 
+@@ -136,6 +140,10 @@ static ssize_t transport_register_store(const struct bus_type *bus, const char *
+ 	}
+ 	kfree(buf);
+ 
++	ret = cbdt_register(&opts);
++	if (ret < 0)
++		return ret;
++
+ 	return size;
+ }
+ 
+diff --git a/drivers/block/cbd/cbd_transport.c b/drivers/block/cbd/cbd_transport.c
+new file mode 100644
+index 000000000000..3a4887afab08
+--- /dev/null
++++ b/drivers/block/cbd/cbd_transport.c
+@@ -0,0 +1,721 @@
++#include <linux/pfn_t.h>
++
++#include "cbd_internal.h"
++
++#define CBDT_OBJ(OBJ, OBJ_SIZE)							\
++										\
++static inline struct cbd_##OBJ##_info						\
++*__get_##OBJ##_info(struct cbd_transport *cbdt, u32 id)				\
++{										\
++	struct cbd_transport_info *info = cbdt->transport_info;			\
++	void *start = cbdt->transport_info;					\
++										\
++	start += info->OBJ##_area_off;						\
++										\
++	return start + (info->OBJ_SIZE * id);					\
++}										\
++										\
++struct cbd_##OBJ##_info 							\
++*cbdt_get_##OBJ##_info(struct cbd_transport *cbdt, u32 id)			\
++{										\
++	struct cbd_##OBJ##_info *info;						\
++										\
++	mutex_lock(&cbdt->lock);						\
++	info = __get_##OBJ##_info(cbdt, id);					\
++	mutex_unlock(&cbdt->lock);						\
++										\
++	return info;								\
++}										\
++										\
++int cbdt_get_empty_##OBJ##_id(struct cbd_transport *cbdt, u32 *id)		\
++{										\
++	struct cbd_transport_info *info = cbdt->transport_info;			\
++	struct cbd_##OBJ##_info *_info;						\
++	int ret = 0;								\
++	int i;									\
++										\
++	mutex_lock(&cbdt->lock);						\
++	for (i = 0; i < info->OBJ##_num; i++) {					\
++		_info = __get_##OBJ##_info(cbdt, i);				\
++		cbdt_flush_range(cbdt, _info, sizeof(*_info));			\
++		if (_info->state == cbd_##OBJ##_state_none) {			\
++			*id = i;						\
++			goto out;						\
++		}								\
++	}									\
++										\
++	cbdt_err(cbdt, "No available " #OBJ "_id found.");			\
++	ret = -ENOENT;								\
++out:										\
++	mutex_unlock(&cbdt->lock);						\
++										\
++	return ret;								\
++}
++
++CBDT_OBJ(host, host_info_size);
++CBDT_OBJ(backend, backend_info_size);
++CBDT_OBJ(blkdev, blkdev_info_size);
++CBDT_OBJ(channel, channel_size);
++
++static struct cbd_transport *cbd_transports[CBD_TRANSPORT_MAX];
++static DEFINE_IDA(cbd_transport_id_ida);
++static DEFINE_MUTEX(cbd_transport_mutex);
++
++extern struct bus_type cbd_bus_type;
++extern struct device cbd_root_dev;
++
++static ssize_t cbd_myhost_show(struct device *dev,
++			       struct device_attribute *attr,
++			       char *buf)
++{
++	struct cbd_transport *cbdt;
++	struct cbd_host *host;
++
++	cbdt = container_of(dev, struct cbd_transport, device);
++
++	host = cbdt->host;
++	if (!host)
++		return 0;
++
++	return sprintf(buf, "%d\n", host->host_id);
++}
++
++static DEVICE_ATTR(my_host_id, 0400, cbd_myhost_show, NULL);
++
++enum {
++	CBDT_ADM_OPT_ERR		= 0,
++	CBDT_ADM_OPT_OP,
++	CBDT_ADM_OPT_FORCE,
++	CBDT_ADM_OPT_PATH,
++	CBDT_ADM_OPT_BID,
++	CBDT_ADM_OPT_DID,
++	CBDT_ADM_OPT_QUEUES,
++};
++
++enum {
++	CBDT_ADM_OP_B_START,
++	CBDT_ADM_OP_B_STOP,
++	CBDT_ADM_OP_B_CLEAR,
++	CBDT_ADM_OP_DEV_START,
++	CBDT_ADM_OP_DEV_STOP,
++};
++
++static const char *const adm_op_names[] = {
++	[CBDT_ADM_OP_B_START] = "backend-start",
++	[CBDT_ADM_OP_B_STOP] = "backend-stop",
++	[CBDT_ADM_OP_B_CLEAR] = "backend-clear",
++	[CBDT_ADM_OP_DEV_START] = "dev-start",
++	[CBDT_ADM_OP_DEV_STOP] = "dev-stop",
++};
++
++static const match_table_t adm_opt_tokens = {
++	{ CBDT_ADM_OPT_OP,		"op=%s"	},
++	{ CBDT_ADM_OPT_FORCE,		"force=%u" },
++	{ CBDT_ADM_OPT_PATH,		"path=%s" },
++	{ CBDT_ADM_OPT_BID,		"backend_id=%u" },
++	{ CBDT_ADM_OPT_DID,		"devid=%u" },
++	{ CBDT_ADM_OPT_QUEUES,		"queues=%u" },
++	{ CBDT_ADM_OPT_ERR,		NULL	}
++};
++
++
++struct cbd_adm_options {
++	u16 op;
++	u16 force:1;
++	u32 backend_id;
++	union {
++		struct host_options {
++			u32 hid;
++		} host;
++		struct backend_options {
++			char path[CBD_PATH_LEN];
++		} backend;
++		struct channel_options {
++			u32 cid;
++		} channel;
++		struct blkdev_options {
++			u32 devid;
++			u32 queues;
++		} blkdev;
++	};
++};
++
++static int parse_adm_options(struct cbd_transport *cbdt,
++		char *buf,
++		struct cbd_adm_options *opts)
++{
++	substring_t args[MAX_OPT_ARGS];
++	char *o, *p;
++	int token, ret = 0;
++
++	o = buf;
++
++	while ((p = strsep(&o, ",\n")) != NULL) {
++		if (!*p)
++			continue;
++
++		token = match_token(p, adm_opt_tokens, args);
++		switch (token) {
++		case CBDT_ADM_OPT_OP:
++			ret = match_string(adm_op_names, ARRAY_SIZE(adm_op_names), args[0].from);
++			if (ret < 0) {
++				pr_err("unknown op: '%s'\n", args[0].from);
++			        ret = -EINVAL;
++			        break;
++			}
++			opts->op = ret;
++			break;
++		case CBDT_ADM_OPT_PATH:
++			if (match_strlcpy(opts->backend.path, &args[0],
++			        CBD_PATH_LEN) == 0) {
++			        ret = -EINVAL;
++			        break;
++			}
++			break;
++		case CBDT_ADM_OPT_FORCE:
++			if (match_uint(args, &token) || token != 1) {
++				ret = -EINVAL;
++				goto out;
++			}
++			opts->force = 1;
++			break;
++		case CBDT_ADM_OPT_BID:
++			if (match_uint(args, &token)) {
++				ret = -EINVAL;
++				goto out;
++			}
++			opts->backend_id = token;
++			break;
++		case CBDT_ADM_OPT_DID:
++			if (match_uint(args, &token)) {
++				ret = -EINVAL;
++				goto out;
++			}
++			opts->blkdev.devid = token;
++			break;
++		case CBDT_ADM_OPT_QUEUES:
++			if (match_uint(args, &token)) {
++				ret = -EINVAL;
++				goto out;
++			}
++			opts->blkdev.queues = token;
++			break;
++		default:
++			pr_err("unknown parameter or missing value '%s'\n", p);
++			ret = -EINVAL;
++			goto out;
++		}
++	}
++
++out:
++	return ret;
++}
++
++static void transport_zero_range(struct cbd_transport *cbdt, void *pos, u64 size)
++{
++	memset(pos, 0, size);
++	cbdt_flush_range(cbdt, pos, size);
++}
++
++static void channels_format(struct cbd_transport *cbdt)
++{
++	struct cbd_transport_info *info = cbdt->transport_info;
++	struct cbd_channel_info *channel_info;
++	int i;
++
++	for (i = 0; i < info->channel_num; i++) {
++		channel_info = __get_channel_info(cbdt, i);
++		transport_zero_range(cbdt, channel_info, CBDC_META_SIZE);
++	}
++}
++
++static int cbd_transport_format(struct cbd_transport *cbdt, bool force)
++{
++	struct cbd_transport_info *info = cbdt->transport_info;
++	u64 magic;
++
++	magic = le64_to_cpu(info->magic);
++	if (magic && !force) {
++		return -EEXIST;
++	}
++
++	/* TODO make these configureable */
++	info->magic = cpu_to_le64(CBD_TRANSPORT_MAGIC);
++	info->version = cpu_to_le16(CBD_TRANSPORT_VERSION);
++#if defined(__BYTE_ORDER) ? __BYTE_ORDER == __GIT_ENDIAN : defined(__BIG_ENDIAN)
++	info->flags = cpu_to_le16(CBDT_INFO_F_BIGENDIAN);
++#endif
++	info->host_area_off = CBDT_HOST_AREA_OFF;
++	info->host_info_size = CBDT_HOST_INFO_SIZE;
++	info->host_num = CBDT_HOST_NUM;
++
++	info->backend_area_off = CBDT_BACKEND_AREA_OFF;
++	info->backend_info_size = CBDT_BACKEND_INFO_SIZE;
++	info->backend_num = CBDT_BACKEND_NUM;
++
++	info->blkdev_area_off = CBDT_BLKDEV_AREA_OFF;
++	info->blkdev_info_size = CBDT_BLKDEV_INFO_SIZE;
++	info->blkdev_num = CBDT_BLKDEV_NUM;
++
++	info->channel_area_off = CBDT_CHANNEL_AREA_OFF;
++	info->channel_size = CBDT_CHANNEL_SIZE;
++	info->channel_num = CBDT_CHANNEL_NUM;
++
++	cbdt_flush_range(cbdt, info, sizeof(*info));
++
++	transport_zero_range(cbdt, (void *)info + info->host_area_off,
++			     info->channel_area_off - info->host_area_off);
++
++	channels_format(cbdt);
++
++	return 0;
++}
++
++
++
++static ssize_t cbd_adm_store(struct device *dev,
++				 struct device_attribute *attr,
++				 const char *ubuf,
++				 size_t size)
++{
++	int ret;
++	char *buf;
++	struct cbd_adm_options opts = { 0 };
++	struct cbd_transport *cbdt;
++
++	if (!capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	cbdt = container_of(dev, struct cbd_transport, device);
++
++	buf = kmemdup(ubuf, size + 1, GFP_KERNEL);
++	if (IS_ERR(buf)) {
++		pr_err("failed to dup buf for adm option: %d", (int)PTR_ERR(buf));
++		return PTR_ERR(buf);
++	}
++	buf[size] = '\0';
++	ret = parse_adm_options(cbdt, buf, &opts);
++	if (ret < 0) {
++		kfree(buf);
++		return ret;
++	}
++	kfree(buf);
++
++	switch (opts.op) {
++	case CBDT_ADM_OP_B_START:
++		break;
++	case CBDT_ADM_OP_B_STOP:
++		break;
++	case CBDT_ADM_OP_B_CLEAR:
++		break;
++	case CBDT_ADM_OP_DEV_START:
++		break;
++	case CBDT_ADM_OP_DEV_STOP:
++		break;
++	default:
++		pr_err("invalid op: %d\n", opts.op);
++		return -EINVAL;
++	}
++
++	if (ret < 0)
++		return ret;
++
++	return size;
++}
++
++static DEVICE_ATTR(adm, 0200, NULL, cbd_adm_store);
++
++static ssize_t cbd_transport_info(struct cbd_transport *cbdt, char *buf)
++{
++	struct cbd_transport_info *info = cbdt->transport_info;
++	ssize_t ret;
++
++	mutex_lock(&cbdt->lock);
++	info = cbdt->transport_info;
++	mutex_unlock(&cbdt->lock);
++
++	ret = sprintf(buf, "magic: 0x%llx\n"		\
++			"version: %u\n"			\
++			"flags: %x\n\n"			\
++			"host_area_off: %llu\n"		\
++			"bytes_per_host_info: %u\n"	\
++			"host_num: %u\n\n"		\
++			"backend_area_off: %llu\n"	\
++			"bytes_per_backend_info: %u\n"	\
++			"backend_num: %u\n\n"		\
++			"blkdev_area_off: %llu\n"	\
++			"bytes_per_blkdev_info: %u\n"	\
++			"blkdev_num: %u\n\n"		\
++			"channel_area_off: %llu\n"	\
++			"bytes_per_channel: %u\n"	\
++			"channel_num: %u\n",
++			le64_to_cpu(info->magic),
++			le16_to_cpu(info->version),
++			le16_to_cpu(info->flags),
++			info->host_area_off,
++			info->host_info_size,
++			info->host_num,
++			info->backend_area_off,
++			info->backend_info_size,
++			info->backend_num,
++			info->blkdev_area_off,
++			info->blkdev_info_size,
++			info->blkdev_num,
++			info->channel_area_off,
++			info->channel_size,
++			info->channel_num);
++
++	return ret;
++}
++
++static ssize_t cbd_info_show(struct device *dev,
++			       struct device_attribute *attr,
++			       char *buf)
++{
++	struct cbd_transport *cbdt;
++
++	cbdt = container_of(dev, struct cbd_transport, device);
++
++	return cbd_transport_info(cbdt, buf);
++}
++static DEVICE_ATTR(info, 0400, cbd_info_show, NULL);
++
++static struct attribute *cbd_transport_attrs[] = {
++	&dev_attr_adm.attr,
++	&dev_attr_info.attr,
++	&dev_attr_my_host_id.attr,
++	NULL
++};
++
++static struct attribute_group cbd_transport_attr_group = {
++	.attrs = cbd_transport_attrs,
++};
++
++static const struct attribute_group *cbd_transport_attr_groups[] = {
++	&cbd_transport_attr_group,
++	NULL
++};
++
++static void cbd_transport_release(struct device *dev)
++{
++}
++
++struct device_type cbd_transport_type = {
++	.name		= "cbd_transport",
++	.groups		= cbd_transport_attr_groups,
++	.release	= cbd_transport_release,
++};
++
++static int
++cbd_dax_notify_failure(
++	struct dax_device	*dax_devp,
++	u64			offset,
++	u64			len,
++	int			mf_flags)
++{
++
++	pr_err("%s: dax_devp %llx offset %llx len %lld mf_flags %x\n",
++	       __func__, (u64)dax_devp, (u64)offset, (u64)len, mf_flags);
++	return -EOPNOTSUPP;
++}
++
++const struct dax_holder_operations cbd_dax_holder_ops = {
++	.notify_failure		= cbd_dax_notify_failure,
++};
++
++static struct cbd_transport *cbdt_alloc(void)
++{
++	struct cbd_transport *cbdt;
++	int ret;
++
++	cbdt = kzalloc(sizeof(struct cbd_transport), GFP_KERNEL);
++	if (!cbdt) {
++		return NULL;
++	}
++
++	ret = ida_simple_get(&cbd_transport_id_ida, 0, CBD_TRANSPORT_MAX,
++				GFP_KERNEL);
++	if (ret < 0) {
++		goto cbdt_free;
++	}
++
++	cbdt->id = ret;
++	cbd_transports[cbdt->id] = cbdt;
++
++	return cbdt;
++
++cbdt_free:
++	kfree(cbdt);
++	return NULL;
++}
++
++static void cbdt_destroy(struct cbd_transport *cbdt)
++{
++	cbd_transports[cbdt->id] = NULL;
++	ida_simple_remove(&cbd_transport_id_ida, cbdt->id);
++	kfree(cbdt);
++}
++
++static int cbdt_dax_init(struct cbd_transport *cbdt, char *path)
++{
++	struct dax_device *dax_dev = NULL;
++	struct bdev_handle *handle = NULL;
++	long access_size;
++	void *kaddr;
++	u64 nr_pages = CBD_TRASNPORT_SIZE >> PAGE_SHIFT;
++	u64 start_off = 0;
++	int ret;
++
++	handle = bdev_open_by_path(path, BLK_OPEN_READ | BLK_OPEN_WRITE, cbdt, NULL);
++	if (IS_ERR(handle)) {
++		pr_err("%s: failed blkdev_get_by_path(%s)\n", __func__, path);
++		ret = PTR_ERR(handle);
++		goto err;
++	}
++
++	dax_dev = fs_dax_get_by_bdev(handle->bdev, &start_off,
++				     cbdt,
++				     &cbd_dax_holder_ops);
++	if (IS_ERR(dax_dev)) {
++		pr_err("%s: unable to get daxdev from handle->bdev\n", __func__);
++		ret = -ENODEV;
++		goto bdev_release;
++	}
++
++	access_size = dax_direct_access(dax_dev, 0, nr_pages, DAX_ACCESS, &kaddr, NULL);
++	if (access_size != nr_pages) {
++		ret = -EINVAL;
++		goto dax_put;
++	}
++
++	cbdt->bdev_handle = handle;
++	cbdt->dax_dev = dax_dev;
++	cbdt->transport_info = (struct cbd_transport_info *)kaddr;
++
++	return 0;
++
++dax_put:
++	fs_put_dax(dax_dev, cbdt);
++bdev_release:
++	bdev_release(handle);
++err:
++	return ret;
++}
++
++static void cbdt_dax_release(struct cbd_transport *cbdt)
++{
++	if (cbdt->dax_dev)
++		fs_put_dax(cbdt->dax_dev, cbdt);
++
++	if (cbdt->bdev_handle)
++		bdev_release(cbdt->bdev_handle);
++}
++
++static int cbd_transport_init(struct cbd_transport *cbdt)
++{
++	struct device *dev;
++
++	mutex_init(&cbdt->lock);
++	INIT_LIST_HEAD(&cbdt->backends);
++	INIT_LIST_HEAD(&cbdt->devices);
++
++	dev = &cbdt->device;
++	device_initialize(dev);
++	device_set_pm_not_required(dev);
++	dev->bus = &cbd_bus_type;
++	dev->type = &cbd_transport_type;
++	dev->parent = &cbd_root_dev;
++
++	dev_set_name(&cbdt->device, "transport%d", cbdt->id);
++
++	return device_add(&cbdt->device);
++}
++
++
++static int cbdt_validate(struct cbd_transport *cbdt)
++{
++	u16 flags;
++
++	if (le64_to_cpu(cbdt->transport_info->magic) != CBD_TRANSPORT_MAGIC) {
++		return -EINVAL;
++	}
++
++	flags = le16_to_cpu(cbdt->transport_info->flags);
++#if defined(__BYTE_ORDER) ? __BYTE_ORDER == __GIT_ENDIAN : defined(__BIG_ENDIAN)
++	if (!(flags & CBDT_INFO_F_BIGENDIAN)) {
++		return -EINVAL;
++	}
++#else
++	if ((flags & CBDT_INFO_F_BIGENDIAN)) {
++		return -EINVAL;
++	}
++#endif
++
++	return 0;
++}
++
++int cbdt_unregister(u32 tid)
++{
++	struct cbd_transport *cbdt;
++
++	cbdt = cbd_transports[tid];
++	if (!cbdt) {
++		pr_err("tid: %u, is not registered\n", tid);
++		return -EINVAL;
++	}
++
++	mutex_lock(&cbdt->lock);
++	if (!list_empty(&cbdt->backends) || !list_empty(&cbdt->devices)) {
++		mutex_unlock(&cbdt->lock);
++		return -EBUSY;
++	}
++	mutex_unlock(&cbdt->lock);
++
++	device_unregister(&cbdt->device);
++	cbdt_dax_release(cbdt);
++	cbdt_destroy(cbdt);
++	module_put(THIS_MODULE);
++
++	return 0;
++}
++
++
++int cbdt_register(struct cbdt_register_options *opts)
++{
++	struct cbd_transport *cbdt;
++	int ret;
++
++	if (!try_module_get(THIS_MODULE))
++		return -ENODEV;
++
++	/* TODO support /dev/dax */
++	if (!strstr(opts->path, "/dev/pmem")) {
++		pr_err("%s: path (%s) is not pmem\n",
++		       __func__, opts->path);
++		ret = -EINVAL;
++		goto module_put;
++	}
++
++	cbdt = cbdt_alloc();
++	if (!cbdt) {
++		ret = -ENOMEM;
++		goto module_put;
++	}
++
++	ret = cbdt_dax_init(cbdt, opts->path);
++	if (ret) {
++		goto cbdt_destroy;
++	}
++
++	if (opts->format) {
++		ret = cbd_transport_format(cbdt, opts->force);
++		if (ret < 0) {
++			goto dax_release;
++		}
++	}
++
++	ret = cbdt_validate(cbdt);
++	if (ret) {
++		goto dax_release;
++	}
++
++	ret = cbd_transport_init(cbdt);
++	if (ret) {
++		goto dax_release;
++	}
++
++	return 0;
++
++dev_unregister:
++	device_unregister(&cbdt->device);
++dax_release:
++	cbdt_dax_release(cbdt);
++cbdt_destroy:
++	cbdt_destroy(cbdt);
++module_put:
++	module_put(THIS_MODULE);
++
++	return ret;
++}
++
++void cbdt_add_backend(struct cbd_transport *cbdt, struct cbd_backend *cbdb)
++{
++	mutex_lock(&cbdt->lock);
++	list_add(&cbdb->node, &cbdt->backends);
++	mutex_unlock(&cbdt->lock);
++}
++
++void cbdt_del_backend(struct cbd_transport *cbdt, struct cbd_backend *cbdb)
++{
++	if (list_empty(&cbdb->node))
++		return;
++
++	mutex_lock(&cbdt->lock);
++	list_del_init(&cbdb->node);
++	mutex_unlock(&cbdt->lock);
++}
++
++struct cbd_backend *cbdt_get_backend(struct cbd_transport *cbdt, u32 id)
++{
++	struct cbd_backend *backend;
++
++	mutex_lock(&cbdt->lock);
++	list_for_each_entry(backend, &cbdt->backends, node) {
++		if (backend->backend_id == id) {
++			goto out;
++		}
++	}
++	backend = NULL;
++out:
++	mutex_unlock(&cbdt->lock);
++	return backend;
++}
++
++void cbdt_add_blkdev(struct cbd_transport *cbdt, struct cbd_blkdev *blkdev)
++{
++	mutex_lock(&cbdt->lock);
++	list_add(&blkdev->node, &cbdt->devices);
++	mutex_unlock(&cbdt->lock);
++}
++
++struct cbd_blkdev *cbdt_fetch_blkdev(struct cbd_transport *cbdt, u32 id)
++{
++	struct cbd_blkdev *dev;
++
++	mutex_lock(&cbdt->lock);
++	list_for_each_entry(dev, &cbdt->devices, node) {
++		if (dev->blkdev_id == id) {
++			list_del(&dev->node);
++			goto out;
++		}
++	}
++	dev = NULL;
++out:
++	mutex_unlock(&cbdt->lock);
++	return dev;
++}
++
++struct page *cbdt_page(struct cbd_transport *cbdt, u64 transport_off)
++{
++	long access_size;
++	pfn_t pfn;
++
++	access_size = dax_direct_access(cbdt->dax_dev, transport_off >> PAGE_SHIFT, 1, DAX_ACCESS, NULL, &pfn);
++
++	return pfn_t_to_page(pfn);
++}
++
++void cbdt_flush_range(struct cbd_transport *cbdt, void *pos, u64 size)
++{
++	u64 offset = pos - (void *)cbdt->transport_info;
++	u32 off_in_page = (offset & CBD_PAGE_MASK);
++
++	offset -= off_in_page;
++	size = round_up(off_in_page + size, PAGE_SIZE);
++
++	while (size) {
++		flush_dcache_page(cbdt_page(cbdt, offset));
++		offset += PAGE_SIZE;
++		size -= PAGE_SIZE;
++	}
++}
+-- 
+2.34.1
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
