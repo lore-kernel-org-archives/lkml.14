@@ -1,60 +1,61 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B8354F9D
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506005380F
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713775699; cv=none; b=sIC0GubyleFXiS9+pR2ImUcaVj1jrNccCggkHdhDtvXOKqHMR3PK5CZy8WqqTk0oBJ9+r5Htg+YwYUrXfb0nsrWvo+I1x05oFEz+9M5o74ag1Mdt9M+6lEzh4CzqxlbrfkvwCWexx0xJLxdS/iVHuqawUousvIUqN6cEMBclskA=
+	t=1713775702; cv=none; b=tFkzuvUOePhNgxVJrUsb7SRkvP/DxYF44TwZnks8EGE7sNWI3UIQYn5uw5TF4WES4gblCgH6wjxgcIoMF/Zts9/vfk79qxlIEWO5nPk1at6IewZJR68/fz8OTjkVaQj95/+YsGzhXZz8CRfJvFe7AsAgZC/avX5uHCyOzBcwR7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713775699; c=relaxed/simple;
-	bh=+GCSZEYws60Xg6jmbcSfmS7UnpFbPUnHzO/8UMSzfbw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ok1XUSK04sooEJcAI8S25M7nA/GgP5sL8ElARsNV5ZA8RQ1qITtoST+z1PAyzyziBoQjY5O9mCoNiyogBdbU6G07hq4+URIBFK3Hq0pfDwtLXOD+5expecfS2n+ziUxeBgMShq9xYitHqtiV49YLvp+f83/A50EjxN2GEcxrq6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QNLckge3; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1713775702; c=relaxed/simple;
+	bh=gN5G3PL3Hr0bMcAsUHFgDIUicICjazM+18Se751teb8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=lZg0/WdKI3Jqvkrh1nWbQKz1At5kpO9RrShLdHc2poAr7BQEkvL8ahWPrAF2sTOhGLg7p+dJRhFxEb9wmFYCi2JOXcpGMbmQA5I5T4Ay52lM7e7g13a9KKBoS+rBOagSk9nvQ/oFMUYZ6CijWfb9IYfojtvEwC8P3N0Uu6/6R9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=w6iXOjok; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QNLckge3"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-41a4f291f60so5236035e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 01:48:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w6iXOjok"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4196c62bb4eso18028095e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 01:48:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713775696; x=1714380496; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IE4GGhm3DdiBU0OVOK5nTpZIg7dHtuowB+Eju2c0Th8=;
-        b=QNLckge3BEOy0kQIwDLR9x3a9JjzGg2x0CZvcfVmxv/zc6ksYfLBbMZMX3YekoUJrG
-         pd8WLLhNFSNZJ9+x4/CY4w1FB1cVMbF04fF+OGU7qHIGe9sbbisTNktMX4iSGVUYBRIv
-         HEMVvbLpg8o3UrW2CqpkMcwxGZrYTn1Wde20ZFKqgl2OZeMN9x/Qdpt4NeOgG00JZNZR
-         DdRAdrjSr9SO7pkbKvn2GnHR9ahMdCCXJfmFqKiKk6uxIxbc8EtmHYAS5SW1r87g0uKj
-         953OMEP0QmRTHJy18j9zY5qnbZwG5xR5+ddc5vIq3sRHep8gDeRQCXhRkA5AieEUT4t/
-         8tbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713775696; x=1714380496;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1713775699; x=1714380499; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IE4GGhm3DdiBU0OVOK5nTpZIg7dHtuowB+Eju2c0Th8=;
-        b=Gfx08r7Bv5FJmZTZiZs+4cL65CLvHGmnb+T4Ic8KlHaDdoqzg7Wc8/LGAlXyOzl5kC
-         povbY6TGWM9dNs/Neg4FHI234gxEmsPGDHbQy3N9baGIOzfCAhcfIu5SVajDzlR4kxUw
-         qkCmbAVvguP+P956dYtt06UkvmLsg8pIP7SlFEUP5fK/+cfxRCG034HsEtW90rcqie6H
-         I8zgfdh1Jschcn8uh2ieG2cjp1cX+N/hQqZKOUc6JfrSsnXnh91VDrudxHj+c5DWrRXA
-         e+HD9Xoy7XV/R0jxa/5xkWkyhwNZJ9n4vneo4Ukd3jp52hctQvesxAkChSY5Ob9wNuro
-         X0sg==
-X-Forwarded-Encrypted: i=1; AJvYcCUW0XZdDjxpYA6llHuFJoP0XHbd4oCg1J9s1lGyxnrVRnoYzXqNq0hRVrXD74ukcsDuyqiyWn+ijQUX3ohRy/ypHA1ZMo98rKEnkAKm
-X-Gm-Message-State: AOJu0Ywmk1e4bvafWzVOyRTUU+UVO6HXwhqRxn2f7e1YjqrCqv2sLKnr
-	WI/2eS7kpoJMzryEjBVuF4G9zFxsf17H+LJq4n1QEdCQRCtEVgqf90YG+St5wi8=
-X-Google-Smtp-Source: AGHT+IFmh1tFvCXRjZorQmarkr/UaXAbDussIdxP5vN4Sj+h4qHKErwiznF0mE4GblLaQipsK5a0CA==
-X-Received: by 2002:a05:600c:154f:b0:417:fbc2:caf8 with SMTP id f15-20020a05600c154f00b00417fbc2caf8mr6296840wmg.23.1713775695638;
-        Mon, 22 Apr 2024 01:48:15 -0700 (PDT)
+        bh=ornUhS0QRSyp62Es3cf++dbIdn5e8lGz3M/ACkqgRqk=;
+        b=w6iXOjokRt1Qrt6OcrdjuVnWvTWUHEuO33M/CKlnSSBDskGse5adze7ywqi8buOEAr
+         7m8nFDpGWf3b+lgpKVDYlRYwMpbeKWaRX1QrVhewdUY95Im/MSRpGwO8qkXA4Q7KboeM
+         mScimQeiwEvpBbB8SYGkytB+cKyTAkpFgLUzwW6jcNazCnjNTiI33GY8kursGPRWqC/M
+         vPIY63kteAn2HMJ6pOOykcm5pAC2fQvtq3zi2gpc28kRrWVwhHuyqEeDcjoMoxA0xUZI
+         L1VkeyfIFX1DM5PfIMO4rAm8j6xEDX66ovzJjWMpvsJFr3PM1d+w9/jd0AqefdFyuk9y
+         tuZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713775699; x=1714380499;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ornUhS0QRSyp62Es3cf++dbIdn5e8lGz3M/ACkqgRqk=;
+        b=sdoC/EFSwOMNCVayg47mDwe7lo9Lua1EFquLOa8wX1pwfpEzrg7ZYhDYeUveil2isR
+         kj4uqIlycNoR/x1czHzUepfErh5ChjI9ShySD2mTY2di/Z/olvOiRJSXvvKTB4oaC33H
+         2izG7XyCItxw9HJvQtTtE1Ddt+8zASof5+tgLo5DpkWRHJ+MbOtwHYa48QyUPytoXHNN
+         jEuvGp1Iho0xqsc9t7ABTdLnBn+ne1uwhMcwa1QnxNO42e2aysqjeZ7iR6jXCbUOF4OM
+         4IxtEcuC2gFR0fErZfM/mF7u91xRfcyQtzmEKGJa7XYmWy5uGmFJA2bL3rckPB9ZxAe7
+         zP/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVDukErpRUi6rAx1wCCkZLNq38mIRffAlGEnqqJEn0OGq6kpVKdKXggfjmxeNNx1XtvVfRTkdxlYKgdTownrlWeBUeQ4ns/nCEHAOfh
+X-Gm-Message-State: AOJu0YxvkuZNIdxA2rQxtb/oUF6ZAoHSGt6jpBzV13x7mAbOkuFI+lEK
+	gNviHw6O9hfntKGaj+XlwVDeWGwiF1J9q5bN/FGaqXe+sBYY9fadYT+p2fk7xhU=
+X-Google-Smtp-Source: AGHT+IHamdEnSo8Y02TdGZzI/Myu5/1P6fATwFe0kVH/aC6LMI9HEPlNIia9+Rbz/KJCjhVJtBxQqQ==
+X-Received: by 2002:a05:600c:5403:b0:418:be2e:df9e with SMTP id he3-20020a05600c540300b00418be2edf9emr9023423wmb.41.1713775698350;
+        Mon, 22 Apr 2024 01:48:18 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id s6-20020a05600c45c600b00418244d459esm15962650wmo.4.2024.04.22.01.48.14
+        by smtp.gmail.com with ESMTPSA id s6-20020a05600c45c600b00418244d459esm15962650wmo.4.2024.04.22.01.48.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 01:48:15 -0700 (PDT)
+        Mon, 22 Apr 2024 01:48:18 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: [PATCH v4 0/3] arm64: qcom: sm8650: add support for the SM8650-HDK
- board
-Date: Mon, 22 Apr 2024 10:48:11 +0200
-Message-Id: <20240422-topic-sm8650-upstream-hdk-v4-0-b33993eaa2e8@linaro.org>
+Date: Mon, 22 Apr 2024 10:48:14 +0200
+Subject: [PATCH v4 3/3] arch: arm64: dts: sm8650-hdk: add support for the
+ Display Card overlay
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,10 +64,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAEskJmYC/43NSwrCMBSF4a1IxkaSm4etI/chDmIebdA2JalFK
- d27aScqQnH4H7jfHVGy0duEDpsRRTv45EObg283SNeqrSz2JjcCApwAMNyHzmucmkIKgu9d6qN
- VDa7NFVug2hnpqLEFyvddtM4/Fvt0zl371If4XF4NdF7/UQeKCdZaK8mFNiWhx5tvVQy7ECs0s
- wO8KUaLNQoydZFMCcOF2hf8h2IfFIg1imWKOyaF2ZcMlPuipml6AbpMFcNZAQAA
+Message-Id: <20240422-topic-sm8650-upstream-hdk-v4-3-b33993eaa2e8@linaro.org>
+References: <20240422-topic-sm8650-upstream-hdk-v4-0-b33993eaa2e8@linaro.org>
+In-Reply-To: <20240422-topic-sm8650-upstream-hdk-v4-0-b33993eaa2e8@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
@@ -74,101 +74,211 @@ To: Bjorn Andersson <andersson@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
  Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3120;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4581;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=+GCSZEYws60Xg6jmbcSfmS7UnpFbPUnHzO/8UMSzfbw=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmJiRNu2DElSmAQj29EEcPOuxyP5PlD/CAxlFP/8ZE
- mfYe+4CJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZiYkTQAKCRB33NvayMhJ0ZG5EA
- CH3JY+PgVTzkWfL7afQJcofHBVFdgT9I281ySzaA/C5ZFesLHcX7ewQwMdYgIrhK9UfaH7eYoaontv
- W16u975P2iHzG0haVly3er6Jw5YQg5Fw2z/WzhR8DQGXNm57yW/q/UfH8UCdF83WxgyVslFUKQPrgm
- 2zgk5+axicbMApEA22BTQqPNtHwfWERozqskoKhEuuy9lXrFT7KQZLtPjkWea43X6bplGZ0NhE/AJi
- lemeVzEKSPskctWB0m+/fuhyfpy6xNhNdIerfWeLdmR8aQsQ+CKVmgvfi6ud0FNt0an5LMpeq5l27p
- n12hJGov+oZhA5EKWIw1K70W2bOpAIStMJU/ULvJhttO+01UrSXcYsV2HU8GeupZOA6dIQyrzeZLiB
- czIQIwpl3gMEmkWhP6VnWcUnxqy1yYqLlXMDutBqYoSTf2BGsAofm/YuXCdwHDMMprzVzsJ4tLUKH4
- 9eeJLYTMkI7CYQb4yPoQNyqJRFlZxNsX5T3lX8i2ToQsXWNvj6AA4f3g8GNuoJs0eRpVDDlZBZddux
- v85fmbKseLXNz/EeCN+B+AeDHxa52ZNE3ueJ2bTdqr3X0tIEkB8tsHm+EPbzRzV4d8LlEbA2MV0GUh
- kby1oss11fm68ujfrNKzqKxUH9DvvjAUkki3+KsCr5HoROyk6V2LDmIFM2wQ==
+ bh=gN5G3PL3Hr0bMcAsUHFgDIUicICjazM+18Se751teb8=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmJiROw/anLeQsTKrfcSV5y8hZk82j+BHYlnqs6bst
+ ZRoR7aqJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZiYkTgAKCRB33NvayMhJ0RjND/
+ 43U9dK7zxbQmw39Zk5LIvBdXfeRgIVG60v+5nJiDY3EuoCKynKWYB13HR63RjQVt58/81MYo8K0NZL
+ zye11cjvSzc5Xv5T9bYLNGGYNBW8E/Z8wUer1YV6KHP/iFfI1csIhlUA2XxT3hL1RtEQA4rAlnP/j9
+ xGIaruuZvlAPmPkUbYsiVnfSNB9QrXNqynGxbJJg7HrvTlbqn8G+ylSjd9RZkdnLJat+TmcovL1xI0
+ XJ0v+8XuYCdkoR0EUsNuRFE5ZqpKHwEvwm/MYlzxPQO2Nj+tJLAogLmplpjl72YzgldB024ozTUd0m
+ /uYjSCkvEUWfOCwjl5RCbGHe/8WENDJzdHzqKN9c8rw3HHnzdlhrDOjxXjkwE6c1xcsfcE3UXvDvWe
+ TCPrGXZT4meoDx5KcYFehSmZ2Itizqs+cO5mmGYRX1uOUPGVRJL5yiFUjVvB0fJpOOe89pyGdf89Kx
+ CuUQ4axWH51qzSoCNdH8OulDNVxrnvFKGZ12Wj9wrXQ0d9r+I7PvXwCwhpHGqd7hS5Y+SVxm8gn4eT
+ JGwmHg7vG+1CfgR9AVQN9O2MahLwhKD9HmDOUfEvY4+59MTVfs+1Jbmi+DZEKRmT+gsYf6u/GaqJ+e
+ s25GY/xFTDpEk/eDBiSmf5cThxgONvhRAkxvxbSrGeGbLh03milMgP5bZ0Uw==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-The SM8650-HDK is an embedded development platforms for the
-Snapdragon 8 Gen 3 SoC aka SM8650, with the following features:
-- Qualcomm SM8650 SoC
-- 16GiB On-board LPDDR5
-- On-board WiFi 7 + Bluetooth 5.3/BLE
-- On-board UFS4.0
-- M.2 Key B+M Gen3x2 PCIe Slot
-- HDMI Output
-- USB-C Connector with DP Almode & Audio Accessory mode
-- Micro-SDCard Slot
-- Audio Jack with Playback and Microphone
-- 2 On-board Analog microphones
-- 2 On-board Speakers
-- 96Boards Compatible Low-Speed and High-Speed connectors [1]
-- For Camera, Sensors and external Display cards
-- Compatible with the Linaro Debug board [2]
-- SIM Slot for Modem
-- Debug connectors
-- 6x On-Board LEDs
+With the SM8650-HDK, a Display Card kit can be connected to provide
+a VTDR6130 display with Goodix Berlin Touch controller.
 
-An optional Display Card kit can be connected on top,
-an overlay is handled to add support for the DSI Display
-and Touch Controller.
+In order to route the DSI lanes to the connector for the Display
+Card kit, a switch must be changed on the board.
 
-Product Page: [3]
+The HDMI nodes are disabled since the DSI lanes are shared with
+the DSI to HDMI transceiver.
 
-Build Dependencies: None
+Add support for this card as an overlay and apply it it at
+build-time to the sm8650-hdk dtb.
 
-Functional Dependencies:
-- PCIe 1 PHY AUX Clock: https://lore.kernel.org/all/20240322-topic-sm8x50-upstream-pcie-1-phy-aux-clk-v2-0-3ec0a966d52f@linaro.org/
-- PCI-MSI Fix: https://lore.kernel.org/all/20240318-pci-bdf-sid-fix-v1-3-acca6c5d9cf1@linaro.org/
-- UCSI Fix: https://lore.kernel.org/all/20240315171836.343830-1-jthies@google.com/
-- USB IRQs DT check fix: https://lore.kernel.org/all/20240314-topic-sm8650-upstream-usb-dt-irq-fix-v1-1-ea8ab2051869@linaro.org/
-
-[1] https://www.96boards.org/specifications/
-[2] https://git.codelinaro.org/linaro/qcomlt/debugboard
-[3] https://www.lantronix.com/products/snapdragon-8-gen-3-mobile-hardware-development-kit/
-
+Reviewed-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+Tested-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
-Changes in v4:
-- Rebased on next and fixed the apply failures
-- Link to v3: https://lore.kernel.org/r/20240325-topic-sm8650-upstream-hdk-v3-0-4f365d7932af@linaro.org
+ arch/arm64/boot/dts/qcom/Makefile                  |   4 +
+ .../boot/dts/qcom/sm8650-hdk-display-card.dtso     | 144 +++++++++++++++++++++
+ 2 files changed, 148 insertions(+)
 
-Changes in v3:
-- fixed regulator node name to fix ordering
-- deleted pcie_1_phy_aux clock
-- removed undeeded mdss_mdp status okay
-- collected revied & tested tags
-- Link to v2: https://lore.kernel.org/r/20240318-topic-sm8650-upstream-hdk-v2-0-b63a5d45a784@linaro.org
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 74e6796eb5eb..640c8fb499fe 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -242,6 +242,10 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-hdk.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-qrd.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-sony-xperia-yodo-pdx234.dtb
++
++sm8650-hdk-display-card-dtbs	:= sm8650-hdk.dtb sm8650-hdk-display-card.dtbo
++
++dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-hdk-display-card.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-hdk.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-qrd.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sm8650-hdk-display-card.dtso b/arch/arm64/boot/dts/qcom/sm8650-hdk-display-card.dtso
+new file mode 100644
+index 000000000000..83f2338e5bf4
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sm8650-hdk-display-card.dtso
+@@ -0,0 +1,144 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2024, Linaro Limited
++ */
++
++/*
++ * Display Card kit overlay
++ * This requires S5702 Switch 7 to be turned to OFF to route DSI0 to the display panel
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++
++/dts-v1/;
++/plugin/;
++
++&i2c6 {
++	status = "disabled";
++};
++
++&lt9611_1v2 {
++	status = "disabled";
++};
++
++&lt9611_3v3 {
++	status = "disabled";
++};
++
++&vreg_bob_3v3 {
++	status = "disabled";
++};
++
++&lt9611_codec {
++	status = "disabled";
++};
++
++&mdss_dsi0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	panel@0 {
++		compatible = "visionox,vtdr6130";
++		reg = <0>;
++
++		reset-gpios = <&tlmm 133 GPIO_ACTIVE_LOW>;
++
++		vddio-supply = <&vreg_l12b_1p8>;
++		vci-supply = <&vreg_l13b_3p0>;
++		vdd-supply = <&vreg_l11b_1p2>;
++
++		pinctrl-0 = <&disp0_reset_n_active>, <&mdp_vsync>;
++		pinctrl-1 = <&disp0_reset_n_suspend>, <&mdp_vsync>;
++		pinctrl-names = "default", "sleep";
++
++		port {
++			panel0_in: endpoint {
++				remote-endpoint = <&mdss_dsi0_out>;
++			};
++		};
++	};
++
++	/*
++	 * DTC requires to have both endpoints when compiling the overlay
++	 * and also requires the #address/size-cells + reg properties
++	 */
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@1 {
++			reg = <1>;
++
++			mdss_dsi0_out: endpoint {
++				remote-endpoint = <&panel0_in>;
++			};
++		};
++	};
++};
++
++&spi4 {
++	/* DTC requires the #address/size-cells to compile DTBO */
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	status = "okay";
++
++	touchscreen@0 {
++		compatible = "goodix,gt9916";
++		reg = <0>;
++
++		interrupt-parent = <&tlmm>;
++		interrupts = <162 IRQ_TYPE_LEVEL_LOW>;
++
++		reset-gpios = <&tlmm 161 GPIO_ACTIVE_LOW>;
++
++		avdd-supply = <&vreg_l14b_3p2>;
++
++		spi-max-frequency = <1000000>;
++
++		touchscreen-size-x = <1080>;
++		touchscreen-size-y = <2400>;
++
++		pinctrl-0 = <&ts_irq>, <&ts_reset>;
++		pinctrl-names = "default";
++	};
++};
++
++&tlmm {
++	disp0_reset_n_active: disp0-reset-n-active-state {
++		pins = "gpio133";
++		function = "gpio";
++		drive-strength = <8>;
++		bias-disable;
++	};
++
++	disp0_reset_n_suspend: disp0-reset-n-suspend-state {
++		pins = "gpio133";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-pull-down;
++	};
++
++	mdp_vsync: mdp-vsync-state {
++		pins = "gpio86";
++		function = "mdp_vsync";
++		drive-strength = <2>;
++		bias-pull-down;
++	};
++
++	ts_irq: ts-irq-state {
++		pins = "gpio161";
++		function = "gpio";
++		drive-strength = <8>;
++		bias-pull-up;
++		output-disable;
++	};
++
++	ts_reset: ts-reset-state {
++		pins = "gpio162";
++		function = "gpio";
++		drive-strength = <8>;
++		bias-pull-up;
++	};
++};
 
-Changes in v2:
-- Fixed commit messages with links, and recently added product page URL
-- Swapped i2c3/i2c6 nodes
-- Moved pcie_1_phy_aux_clk under pcie1_phy
-- Removed duplicate mdp_vsync pinctrl state
-- Collected review & tested tags
-- Link to v1: https://lore.kernel.org/r/20240223-topic-sm8650-upstream-hdk-v1-0-ccca645cd901@linaro.org
-
----
-Neil Armstrong (3):
-      dt-bindings: arm: qcom: Document the HDK8650 board
-      arm64: dts: qcom: sm8650: add support for the SM8650-HDK board
-      arch: arm64: dts: sm8650-hdk: add support for the Display Card overlay
-
- Documentation/devicetree/bindings/arm/qcom.yaml    |    1 +
- arch/arm64/boot/dts/qcom/Makefile                  |    5 +
- .../boot/dts/qcom/sm8650-hdk-display-card.dtso     |  144 +++
- arch/arm64/boot/dts/qcom/sm8650-hdk.dts            | 1251 ++++++++++++++++++++
- 4 files changed, 1401 insertions(+)
----
-base-commit: a8e1147ee205e7b8dfe18094ed39552a982857f1
-change-id: 20240223-topic-sm8650-upstream-hdk-e21cfd6f1de8
-
-Best regards,
 -- 
-Neil Armstrong <neil.armstrong@linaro.org>
+2.34.1
 
