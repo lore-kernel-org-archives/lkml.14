@@ -1,156 +1,169 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F189F1465A7
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 12:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FAB1465A6;
+	Mon, 22 Apr 2024 12:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713787267; cv=none; b=GZdqoez8jcSc/f7tZlGw3qcY/3C/JN4ARDSu92txkXt3rtlAldG7r0u1eEknlahVgiAHlKzFCYtsabSI0Zcisdsy2K7wQizcpeJJBwUgS8WdHgGv5m5VdIxsMntLIyIswuE3Dr0NN8PW+KGtMkEPJI8ei19VjuScrf9udVBrKU8=
+	t=1713787580; cv=none; b=omKz4XGAnPXC79JH9EoDeUFaozHQ6KVR//YLXsq/fZGtTl2clt2Rnfhu3Gac1JqQulmyw1/JVPuc5qaTj81PrzFAiUeByZedS78xqs7x6DXcxWzpBEBl65T3uG1RdEuFC0nq26Lc55IFUUZwyalO2m7+YT/gW54/jxDkKHfuJI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713787267; c=relaxed/simple;
-	bh=4UFUDrnZaiEppiwH3I4zA+17+x8DNbh2KbHYULiw1JE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=allMO5OgnBFZDX0ieVHZlgkDkm5z9PtUWHWwvdrHBQ6DSIyRo83L7mpk3DAJjpmEZz5oSGLtERMqHPAPGO0/CKCeSjEXyRgHaa74XohKr4I90nN3EkR2MHcE4tIQ10RC6Mu85EXzXdeofovUUmPXwwdmlcEHeLW4/F9/12rqgVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WH9ul2tG; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713787580; c=relaxed/simple;
+	bh=c+ec/JzT6ZChnI8VNR+kjXpMJ5qQ8sRKNMGsYEOD6ps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=BCLmtG6d69Nsd6Ltjnk4E3jVsdcz5ZId/puOYrBbVXb/c3PMmvh3oUvt5e+it0SoSDfFIjroFZ/L64SkAFtUqBJ+pCmJmWCdrjXJ1hVioLVpob2RJgUdp/nO11Uzd2KBjICmJ1ka2MUAM4pHET+TT8u3qUqy34cj5DP4ggvCMxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Po5YNxFO; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WH9ul2tG"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a55bdf477e5so62686066b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 05:01:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713787260; x=1714392060; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=h6fd5i+0JvXAyxfGeQJKy8pR12A2rl+HE+2Dsk7AGwM=;
-        b=WH9ul2tGdH7zLU11MIZOOO5frDLuOFh2b4iXnSaF8gqWLV8Bg1aNttZNNMxvxnqLKx
-         +6XbQr2ABxOjjNzsz9vImDXdwynQiFyqqWuWMJFqD1wJ0KSRIgIWop7eXsr/gaCCKkcj
-         3ssL5DK1QbOlA73s2yPpvyMncHXsuDx0VtjA/HxOXPvQlXhxNvDysbhg3jeus4PxE1Pt
-         rc3IgAb/RzdI6s27SuDi40ZzxmluMoeoy7l57auw/MC4DNqmFFxH585tdoWa4Wb4hGwk
-         NvQT+gnwTBjTWoAO+QAar7NVdvlx5PRYyPZzmmt5ovpXTomyS7pRtG3Eah+Ore6y14N4
-         Lwvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713787260; x=1714392060;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h6fd5i+0JvXAyxfGeQJKy8pR12A2rl+HE+2Dsk7AGwM=;
-        b=dXb4v9M2V5HrY37lbQI+Jry0GJFU/gjVL/5kLQCVJIH8kX3iVGrGl7z8zuyz9lvZE/
-         KP2/o1h9/qzZ4RQnhRhkgccUw/xBMqK5c1eT1omy2ShoY1pTry+6VMvgv8lGVnH1qa+c
-         WQXudZUFlJ7gx17MGzHZ/QRJAXTb1LnyCIE0Z+7ck8QJovTwXJcy53JRSktwwxPlEqmZ
-         n+c/3PJ+O6xsqeAuZPdPm2ffyCUfRFaRNs8iViuPtdnc9v1WY8KmSh8ywS1H2oS62/Fp
-         bRGjdaAMWYXwB8KX3iBKqqkytjglMIoAqIeyWbOd0w+hHNV8MU+0KPghA0DeH3/vC7lh
-         bzBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUt1vScxoWLk/24xEi0GOlzFtBRt/BpPF7BLUiRILQXgklCX3v0BTcxgvK8gOTei2MrY8lklDWhNHibBuwK1vKalHzDcjb+3ZeRmUUC
-X-Gm-Message-State: AOJu0YzAQg1+QDM8CedAYjtsoqAPPpHbEUOy5facQWJpej271gHuwfqd
-	Z96ehFq7voEqmc3y9H0YHY5YkufsBZ/ksy8FAHjsufFACxHPSPMm
-X-Google-Smtp-Source: AGHT+IH0eLbh0z4T48v+/R6epjAWIqIwEIZBTeL/rAT/X+8MogZu6F69KsSLjqUYUd8Gw0Uf+GHtTA==
-X-Received: by 2002:a17:906:16cb:b0:a52:6159:5064 with SMTP id t11-20020a17090616cb00b00a5261595064mr9528762ejd.52.1713787259961;
-        Mon, 22 Apr 2024 05:00:59 -0700 (PDT)
-Received: from fedora.iskraemeco.si ([193.77.86.250])
-        by smtp.gmail.com with ESMTPSA id h6-20020a170906110600b00a5827d2f6f4sm172070eja.115.2024.04.22.05.00.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 05:00:59 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] locking/qspinlock/x86: Micro-optimize virt_spin_lock()
-Date: Mon, 22 Apr 2024 14:00:38 +0200
-Message-ID: <20240422120054.199092-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Po5YNxFO"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43M9OoWK026512;
+	Mon, 22 Apr 2024 12:06:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=c+ec/JzT6ZChnI8VNR+kjXpMJ5qQ8sRKNMGsYEOD6ps=; b=Po
+	5YNxFOwSo/3k54iwijC0BRwiz5CeukeGjKGQh2WPyCwUeDfzIOQ8BAZN4QwT1Gy7
+	x1BGj1gRpZJ6c7D06BVBNqziqc9qk2LtU7REOzc/5qA/oMjAaIL4AHWgYewVydrv
+	YuMV8p7wsvnsAzGlUVKvYy4f84HllT6Tb/UKDy/imIHI0qM33GlnHu+X7d7AckJ1
+	pn0QcRXwkgjckDEiXcSc07m4gP0xGgq8+VnEyq5S6vCKWLtmR0zOdKQKxopBc87f
+	nN/KTjZAqoJ4NCDA5AS/SGyNz8TKUcA67bwxpcHgBl5pxtae+oQ0DUehpvzGMp65
+	nWMu/9b+ygmkZODSEvBQ==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xnn82gdt5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Apr 2024 12:06:11 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43MC6AuM024085
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Apr 2024 12:06:10 GMT
+Received: from [10.253.39.160] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 22 Apr
+ 2024 05:06:08 -0700
+Message-ID: <d9908e10-66d6-4737-b366-80cbc9df1801@quicinc.com>
+Date: Mon, 22 Apr 2024 20:06:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] bus: mhi: host: pci_generic: Add edl callback to
+ enter EDL
+To: Manivannan Sadhasivam <mani@kernel.org>
+CC: Mayank Rana <quic_mrana@quicinc.com>, <quic_jhugo@quicinc.com>,
+        <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_cang@quicinc.com>
+References: <1713170945-44640-1-git-send-email-quic_qianyu@quicinc.com>
+ <1713170945-44640-4-git-send-email-quic_qianyu@quicinc.com>
+ <17d94b91-137c-409c-8af3-f32f1af2eb71@quicinc.com>
+ <4b684db2-d384-404a-9c54-60d79ac7cf9f@quicinc.com>
+ <adb9ab3d-0fd2-4afe-96d7-573b1822e0c3@quicinc.com>
+ <ab27b383-dcbf-4337-b3ea-da91763e834a@quicinc.com>
+ <a5ea5263-8acb-48dd-a4e1-bc48a9bdf791@quicinc.com>
+ <20240422080837.GC9775@thinkpad>
+Content-Language: en-US
+From: Qiang Yu <quic_qianyu@quicinc.com>
+In-Reply-To: <20240422080837.GC9775@thinkpad>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: GTsngNAd7myf_oDO4773FwzjWvB_ZHt3
+X-Proofpoint-ORIG-GUID: GTsngNAd7myf_oDO4773FwzjWvB_ZHt3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-22_09,2024-04-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 priorityscore=1501 clxscore=1015 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 adultscore=0 spamscore=0 phishscore=0
+ mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404220054
 
-Optimize virt_spin_lock() to use simpler and faster:
 
-  atomic_try_cmpxchg(*ptr, &val, new)
+On 4/22/2024 4:08 PM, Manivannan Sadhasivam wrote:
+> On Wed, Apr 17, 2024 at 12:41:25PM +0800, Qiang Yu wrote:
+>
+> [...]
+>
+>>>>>>> +    ret = mhi_get_channel_doorbell(mhi_cntrl, &val);
+>>>>>>> +    if (ret)
+>>>>>>> +        return ret;
+>>>>>> Don't we need error handling part here i.e. calling
+>>>>>> mhi_cntrl->runtime_put() as well mhi_device_put() ?
+>>>>> Hi Mayank
+>>>>>
+>>>>> After soc_reset, device will reboot to EDL mode and MHI state
+>>>>> will be SYSERR. So host will fail to suspend
+>>>>> anyway. The "error handling" we need here is actually to enter
+>>>>> EDL mode, this will be done by SYSERR irq.
+>>>>> Here, mhi_cntrl->runtime_put() and mhi_device_put() are only to
+>>>>> balance mhi_cntrl->runtime_get() and
+>>>>> mhi_device_get_sync().
+>>>>>
+>>>>> Thanks,
+>>>>> Qiang
+>>>> I am saying is there possibility that mhi_get_channel_doorbell()
+>>>> returns error ?
+>>>> If yes, then why don't we need error handling as part of it. you are
+>>>> exiting if this API return error without doing anything.
+>>> I think here mhi_get_channel_doorbell will not return error. But I still
+>>> add a error checking because it invoked mhi_read_reg, which is a must
+>>> check
+>>> API. For modem mhi controller, this API eventually does a memory read.
+>>> This memory read will return a normal value if link is up and all f's if
+>>> link
+>>> is bad.
+>>>
+>>> Thanks,
+>>> Qiang
+>> Actually, mhi_get_channel_doorbell should also be used in mhi_init_mmio to
+>> replace the getting chdb operation by invoking mhi_read_reg as Mani
+>> commented.
+>> In mhi_init_mmio, we invoke mhi_read_reg many times, but there is also not
+>> additionnal error handling.
+>>
+>> I'm not very sure the reason but perhaps if mhi_read_reg returns error (I
+>> don't
+>> know which controller will provide a memory read callback returning errors),
+> Take a look at AIC100 driver: drivers/accel/qaic/mhi_controller.c
+>
+>> most
+>> probably something is wrong in PCIe, which is not predictable by MHI and we
+>> can
+>> not add err handling every time invoking mhi_read_reg. But we have a timer
+>> to
+>> do health_check in pci_generic.c. If link is down, we will do
+>> pci_function_reset
+>> to try to reovery.
+>>
+> Right, but the MHI stack is designed to be bus agnostic. So if we happen to use
+> it with other busses like USB, I2C etc... then read APIs may fail.
+>
+> Even with PCIe, read transaction may return all 1 response and MHI needs to
+> treat it as an error condition. But sadly, both pci_generic and ath controllers
+> are not checking for invalid read value. But those need to be fixed.
+>
+> Regarding Mayank's query, you should do error cleanups if
+> mhi_get_channel_doorbell() API fails.
+>
+> - Mani
+Hi Mani, Mayank
 
-instead of:
+Checked drivers/accel/qaic/mhi_controller.c, the mhi_read_reg
+callback of AIC100 does return -EIO if it reads out all'f.
 
-  atomic_cmpxchg(*ptr, val, new) == val.
+Considering that pci_generic controller also needs to check for
+invalid read value which is not fixed though. It's better to invoke
+mhi_cntrl->runtime_put() and mhi_device_put() as error cleanups if
+mhi_get_channel_doorbell returns error here.
 
-The x86 CMPXCHG instruction returns success in the ZF flag, so
-this change saves a compare after the CMPXCHG.
+Let me address all your comments and prepare next version patch.
 
-Also optimize retry loop a bit. atomic_try_cmpxchg() fails iff
-&lock->val != 0, so there is no need to load and compare the
-lock value again - cpu_relax() can be unconditinally called in
-this case. This allows us to generate optimized:
-
-  1f:	ba 01 00 00 00       	mov    $0x1,%edx
-  24:	8b 03                	mov    (%rbx),%eax
-  26:	85 c0                	test   %eax,%eax
-  28:	75 63                	jne    8d <...>
-  2a:	f0 0f b1 13          	lock cmpxchg %edx,(%rbx)
-  2e:	75 5d                	jne    8d <...>
-...
-  8d:	f3 90                	pause
-  8f:	eb 93                	jmp    24 <...>
-
-instead of:
-
-  1f:	ba 01 00 00 00       	mov    $0x1,%edx
-  24:	8b 03                	mov    (%rbx),%eax
-  26:	85 c0                	test   %eax,%eax
-  28:	75 13                	jne    3d <...>
-  2a:	f0 0f b1 13          	lock cmpxchg %edx,(%rbx)
-  2e:	85 c0                	test   %eax,%eax
-  30:	75 f2                	jne    24 <...>
-...
-  3d:	f3 90                	pause
-  3f:	eb e3                	jmp    24 <...>
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
- arch/x86/include/asm/qspinlock.h | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
-index cde8357bb226..a053c1293975 100644
---- a/arch/x86/include/asm/qspinlock.h
-+++ b/arch/x86/include/asm/qspinlock.h
-@@ -85,6 +85,8 @@ DECLARE_STATIC_KEY_TRUE(virt_spin_lock_key);
- #define virt_spin_lock virt_spin_lock
- static inline bool virt_spin_lock(struct qspinlock *lock)
- {
-+	int val;
-+
- 	if (!static_branch_likely(&virt_spin_lock_key))
- 		return false;
- 
-@@ -94,10 +96,13 @@ static inline bool virt_spin_lock(struct qspinlock *lock)
- 	 * horrible lock 'holder' preemption issues.
- 	 */
- 
--	do {
--		while (atomic_read(&lock->val) != 0)
--			cpu_relax();
--	} while (atomic_cmpxchg(&lock->val, 0, _Q_LOCKED_VAL) != 0);
-+ __retry:
-+	val = atomic_read(&lock->val);
-+
-+	if (val || !atomic_try_cmpxchg(&lock->val, &val, _Q_LOCKED_VAL)) {
-+		cpu_relax();
-+		goto __retry;
-+	}
- 
- 	return true;
- }
--- 
-2.44.0
-
+Thanks,
+Qiang
+>
