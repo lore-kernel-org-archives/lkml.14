@@ -1,80 +1,71 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C221653814;
-	Mon, 22 Apr 2024 10:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC0B513E3F6
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 10:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713781190; cv=none; b=RhXqzbvrsDzj6aBBWfd1hh618xAOps7kUI94PiLW4O/T7FoYochsgqr+2rM0grXcFDqn/3O83hhrYNn5ojVeBIr4Qgv1MyQuuk2lTQPer2wIxwJTsRWPtY9w14fayMo34nHTZdTKpZeamhJp0WvHnPdRAJbygJ6v+j3vWSrPyzU=
+	t=1713781219; cv=none; b=kpz65ekcL+GzhPdPrzpfLIOY/5gPXW0HBZgZfdsPIDF/BsXG8HvBHKrlxGMUSL5gk//ClLhPCgYCV5j1gpjAuLyyAYVES46/3ARpyZlNKYiAL6/0ArmNQYvtfe4WpyqnuZ/nbiPNNXuIcK4otTT/cKrjPK+kxQzDwLUwhIuMKxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713781190; c=relaxed/simple;
-	bh=2be7ddOYKWR8xs1YeIaNBfdWx9fkiLTHGB9jAzYsguI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sPOoSjraSpOXQTKnZYrUsmyzpLJAMQ+fr9VLVL7yFaRUK+CRDHzYf/svoPbknUh+Hsp4SNYNzlPHCnPCrcdvpwoWnk0SUI7UawzD9me+5dlcSPFwuf31mzeAXjZWuRuvKUSJpPhXGHsFA/qXD70e5qWKa/bm6wlPy/n+aa3tFZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=iSHRSSuN; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1713781219; c=relaxed/simple;
+	bh=5+rGn6vFhgDlks2UVvl01vucZ3eSZzhL4KNn8cLJidA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DjoC4JPll4PS7N6ljIquBvDEWT7lfPuFUUui3u00f0H0VMSoraTnwan1J18Mmj1wHzV7y+OWV+RDvFytRsVmNmTCyCOqHykPdOYcR4z83Pp31uQI1ppnE9IN6xwsxh2pKjSmTTTYxN9YIGQlumC/Gw93FQ8H3m8k7Do8fTF4LbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XhedbwYI; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="iSHRSSuN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713781186;
-	bh=2be7ddOYKWR8xs1YeIaNBfdWx9fkiLTHGB9jAzYsguI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iSHRSSuNm4NDYQp300eygwILxcfazcpyBUpeCh3Szo641XH9kz2+9gSrY/wqEfNdY
-	 e9D3F9j+J99thS5c58zJEqGm48rJeKqOFMVacHqbEW9yRZsa1TOVHrwSUKj+OGexWv
-	 DFtDrxmsI/QFDPO5ru7SX4g/0Nk3YthxnA+GCvZbdfqg5q/y69qqbzrRovOd9kFaec
-	 +uhdAz9De7DNltnyLgJYJgh0Y/6WT5Sr3kcj4ASnx31+VPNxseWgZthgIRbmV+FJDn
-	 qo5X4PRwJ0QxtxcWFzZeTjt6MgAKt0kjSEYfeLIuOZFMXZpD4w2f7795fD9pNqXjSy
-	 6/o6Tbqs0RZWA==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id AEB4337813C0;
-	Mon, 22 Apr 2024 10:19:45 +0000 (UTC)
-Message-ID: <8de67c04-6f5c-4c0c-9162-e5c4dfdc7374@collabora.com>
-Date: Mon, 22 Apr 2024 12:19:38 +0200
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XhedbwYI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=twF0f
+	VgcdFbRYd/8dnq/6sOb23kJ0H7GRTQUDCTRWBs=; b=XhedbwYIfrJsCpytTVmBT
+	SkUg6r7FCcyJ9FMdWtN6caV/Kl7evm6meMcy8/oktADqbZ0x8dMXHvrAKukQMqsn
+	wODY0j/7hUPTieJA1v75vb2jp6MHjppMUbinip34iTpv0yw7th47gygJgAipiIT6
+	FXbpeDxdRNrDxEpLV7gXLQ=
+Received: from ProDesk.. (unknown [58.22.7.114])
+	by gzga-smtp-mta-g1-3 (Coremail) with SMTP id _____wB3fymbOSZmRwO9Bw--.23790S2;
+	Mon, 22 Apr 2024 18:19:10 +0800 (CST)
+From: Andy Yan <andyshrk@163.com>
+To: heiko@sntech.de
+Cc: tzimmermann@suse.de,
+	mripard@kernel.org,
+	hjc@rock-chips.com,
+	s.hauer@pengutronix.de,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-rockchip@lists.infradead.org,
+	Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH 0/1] Fix the port mux of VP2
+Date: Mon, 22 Apr 2024 18:19:04 +0800
+Message-Id: <20240422101905.32703-1-andyshrk@163.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: remoteproc: mediatek: Support MT8188
- dual-core SCP
-To: Olivia Wen <olivia.wen@mediatek.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Tinghan Shen <tinghan.shen@mediatek.com>,
- linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org,
- Project_Global_Chrome_Upstream_Group@mediatek.com,
- jason-ch.chen@mediatek.com, yaya.chang@mediatek.com, teddy.chen@mediatek.com
-References: <20240419084211.31901-1-olivia.wen@mediatek.com>
- <20240419084211.31901-2-olivia.wen@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-X-Mozilla-Draft-Info: internal/draft; vcard=0; receipt=0; DSN=0; uuencode=0;
- attachmentreminder=0; deliveryformat=0
-X-Identity-Key: id4
-Fcc: imap://kholk11@mail.collabora.com/Sent
-In-Reply-To: <20240419084211.31901-2-olivia.wen@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wB3fymbOSZmRwO9Bw--.23790S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU3FksUUUUU
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiMwDIXmXAkyK0RAAAsB
 
-Il 19/04/24 10:42, Olivia Wen ha scritto:
-> From: "olivia.wen" <olivia.wen@mediatek.com>
-> 
-> Under different applications, the MT8188 SCP can be used as single-core
-> or dual-core.
-> 
-> Signed-off-by: olivia.wen <olivia.wen@mediatek.com>
+From: Andy Yan <andy.yan@rock-chips.com>
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
+The port mux bits of VP2 should be defined by RK3568_OVL_PORT_SET__PORT2_MUX,
+this maybe a copy and paste error when this driver first introduced.
+Hi Heiko:
+   Maybe thi is the problem you met when you porting the dsi2 driver.
+I previously sent you this patch when you ask me about this issue on
+email,but I'm not sure if you received it.
+
+
+Andy Yan (1):
+  drm/rockchip: vop2: Fix the port mux of VP2
+
+ drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+-- 
+2.34.1
 
