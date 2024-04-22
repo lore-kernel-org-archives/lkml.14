@@ -1,120 +1,122 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E6B14EC5F
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 12:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF31214F9CE;
+	Mon, 22 Apr 2024 12:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713789586; cv=none; b=tvqd+8F1RqpDoVZ/5hbIcpTDEeG0Iic0HX6Hd/WIF21sXfG7l3ZFkAm3mbW9w4UlRZOEfwQT783+WJ3mkfLHTsaEaOQNVZVAHIb1UHM4BJCwZPJ3i2pIejhOjiArDC5YKH+1cOGN6wCbZgpBi8HM78MTo9KujwQCHTwgdpKmDLA=
+	t=1713789590; cv=none; b=PZMy2tjW/y2ZjOKpFb2W+IuQVxtaXhLpruHBWf+G8LAR6syd1yRTCnKVQAz7ZaCSjqcAuS2eGUWtciAOmbZxNQpnZRM6vUII5iOI7gPt/xKvpx9o9tn0zfzj+25ioCxe3uj+mzocO4G2XiZQgfiNt+0WFVJNFBvk2kczyUDfoe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713789586; c=relaxed/simple;
-	bh=iyTsIMR6AeJPVBmq77RzZGnEgc860sS11RT6shdDDRw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dYGxJagttyEx7+c1AcVeZ4GEXUzS3TIgQj39FUGq49WYjy/Vzgb3otGEAcWxJgspdXB8GUq2a6EudKtYPhD35IKSEqPoRuwSvB8r0BaoO35nv3PaZqPI1o88oiDWwm7SuJrKBWwZ5TyiRG7hEcca5TEmpz1YiZmnOkds53uxuTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GJzqxMnA; arc=none smtp.client-ip=209.85.167.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GJzqxMnA"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3c74b643aebso1733000b6e.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 05:39:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713789580; x=1714394380; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=S4ySNq3QesUCzbAIR2RY0fipn3yuib781ddLRiaF6bc=;
-        b=GJzqxMnAZlXFvpw/W7OFie1lW1lGs+B0rbRo4x7hIvcbGkrjUln9INDuLK9g+IphIX
-         aDaGsgDTGZz8E3msvjjzd9yYcp099GvrB/UGkBdmNOtH7gKA2ZPil83GTGt565zZZM2g
-         gOdHABj3iBLS2Zi1E4ke2ksQnniHGN7OpVehFs4ENiDNGsCQyhJG98hpaWt7zLe1cT/R
-         8E/TB78cAXPp5kS/2DjzOxhcJSfXIvwTLvDJ4wHaonghCQYUDNlQdR3pS2jANq2moE4z
-         0NM04olMYW4649SS9KYm7iKnSAyZCXe3IwIH9ma6AwZadKy30icRDpGmaarKoPIy5DIr
-         JilQ==
+	s=arc-20240116; t=1713789590; c=relaxed/simple;
+	bh=ohtJ7y8zw787zEakQ6YFydMwx+wGInwZuDF1X+mdHss=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=o19sxg4dIs/VWvzQtwkEnV8AqVf41uMQMyzhXnASgNfN7uajJXP66c4Fqia0XCevckF/z5icBVgPDTJvR/T9g2tCM0UcbmrDFtgijTe2wXEh1rAnHYn0uHbaGUpwRR7mj6/yAZTc3bTlebrht7Vo+PGBgcri4krk/1Dl8/JFIGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a56d7d457a1so57566266b.1;
+        Mon, 22 Apr 2024 05:39:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713789580; x=1714394380;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S4ySNq3QesUCzbAIR2RY0fipn3yuib781ddLRiaF6bc=;
-        b=dGtscdIvyCVWi7Au1H41DUjGuZwEM6nH5eQndzDgs8EQd27wTy4J6WdUzpkf+E4g9D
-         r8EzFvGEHaYejaDEo+SaILNzhmGgkLrIusKd9yZEAbBjy3LdRlQxtpPZ4m3r68qn2dkQ
-         C2b/X4d6QEAIi48Q/yh4ieXD5y/iFedjS1z0sRGIhHslQcA8DePPaPnjZk+qUjWbHJUN
-         YBb8aUYnBG1/og2p8UiCQK87zUES380PtmkFzkpIuf5IeEW2zm3TKJOdRKe3IivxeG7z
-         LeHpORM9WU24FwUY5SfQyogSJP5lLqLkJHLpz58Ia0zW4yazAh4GqhUfnl7Zq0Eq/xK6
-         zk0A==
-X-Forwarded-Encrypted: i=1; AJvYcCXjtCOeXD4+P0MEd+N0Z9BZ2yVz1/wl6knrRXpA9Rlm+VPqzW/8fqmfiDsIOR2ZapYXyTwzbGXHduaPvGhBvXMle8mfmfvs3hV78XHJ
-X-Gm-Message-State: AOJu0YxGGQZFiZQuqebco4bmLTHCXNPDUNAsaBBGm2fv3UMBWikVLT2S
-	umMOnp4vNKnpjc+rdvJ0hdGr6VCO+UuKOTtEn7yNZejYK6eEUvznxJLM685oeSu/OPZCQMArPnV
-	BDyCSkF3DWjZqdKj9bIcX+2mUWhVYc5dTBbW6vw==
-X-Google-Smtp-Source: AGHT+IFRVyCeWFThbOBOiFgmqUhy26Z9HP2Lw9XMRIZylBypB7g6tOUorMkXN+WcL7sQuHVha6TScv+q+Y0CqpP+4uw=
-X-Received: by 2002:a05:6870:c1cf:b0:21f:d2a2:7ff4 with SMTP id
- i15-20020a056870c1cf00b0021fd2a27ff4mr14344315oad.17.1713789580152; Mon, 22
- Apr 2024 05:39:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713789587; x=1714394387;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bbJZnQssCi/hJC/xoZUOS5idPxjZFYtuFqS1Ajkusf4=;
+        b=dHvZcKgMjxXfdZiudT99v9iHufjpy7qZi0d/smjq1q4v6w98G6QggcM+tEpDvCzuR0
+         Gjs5+YjCADxSrum74mbv28Pjhacn0fN3QxctswedHpdwQ6g4kvo7E6Axh8ab5NKSx/KB
+         ldzDr9N1l4kLGXQpJZeDXodz9sjixmIJagKo8G8HMBHb3Mrp5431DjQJ0Siff2IGPGns
+         BmsXQoZBQJmBgZ5w6rNx64+8ih8NQGKQuvozXB8WmUo0f5YsA0AtVfjbQQMujafz5Je4
+         z60pOWvLevJkZ3zZmaHciRj5kie94sb0fV8vFLjt/ByXRrCrK2DoxUZK+vPV8GzlVTVU
+         ELmA==
+X-Forwarded-Encrypted: i=1; AJvYcCVaUn6cVsM0LMV6P7BC+Pefw1YWLTzoo3sqzWhAACYvou8JGvrgF4silNzlsUIwBAQPhidmTc7cppOwS4ZWAaEADoaTQEqDE7Q4ycrEqMVqzJpGr+Rfl8Ja+ePejgLIQAQjjYNPVMgYduqx/LYUUIk7OBmBRUtGp2+JynXidvOdf3uDHUFWQmS+XS0G+/HR+aWgnroFENLpxyo=
+X-Gm-Message-State: AOJu0YypIbWMtuh9gbvfFZxyT1sY7muEsvUvCfXIt+Nl0IsKzZcfsMnb
+	KXSObceM6+bsCRmqIFUB82p4EWScs7S/x1iwf1k4bZ+LC3yodTdV
+X-Google-Smtp-Source: AGHT+IFgz1cSAQ4ZHhLBiz7E/9ZRPzAm7gHu5+JNi39+LH9FDyOn8sfX5i//ePdYd5DWE+bbIInw4Q==
+X-Received: by 2002:a17:906:5292:b0:a55:90f0:bdf2 with SMTP id c18-20020a170906529200b00a5590f0bdf2mr5064912ejm.32.1713789586720;
+        Mon, 22 Apr 2024 05:39:46 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-002.fbsv.net. [2a03:2880:30ff:2::face:b00c])
+        by smtp.gmail.com with ESMTPSA id sa40-20020a1709076d2800b00a5255afc856sm5708684ejc.84.2024.04.22.05.39.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 05:39:46 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: aleksander.lobakin@intel.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	elder@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	nbd@nbd.name,
+	sean.wang@mediatek.com,
+	Mark-MC.Lee@mediatek.com,
+	lorenzo@kernel.org,
+	taras.chornyi@plvision.eu,
+	ath11k@lists.infradead.org,
+	ath10k@lists.infradead.org,
+	linux-wireless@vger.kernel.org,
+	geomatsi@gmail.com,
+	kvalo@kernel.org
+Cc: quic_jjohnson@quicinc.com,
+	leon@kernel.org,
+	dennis.dalessandro@cornelisnetworks.com,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	bpf@vger.kernel.org,
+	idosch@idosch.org,
+	leitao@debian.org,
+	angelogioacchino.delregno@collabora.com,
+	matthias.bgg@gmail.com,
+	Ido Schimmel <idosch@nvidia.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Simon Horman <horms@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH net-next v7 02/10] net: free_netdev: exit earlier if dummy
+Date: Mon, 22 Apr 2024 05:38:55 -0700
+Message-ID: <20240422123921.854943-3-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240422123921.854943-1-leitao@debian.org>
+References: <20240422123921.854943-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240404122559.898930-1-peter.griffin@linaro.org>
- <20240404122559.898930-11-peter.griffin@linaro.org> <75b1b063-e8d4-417d-99a8-4320d72297cf@moroto.mountain>
-In-Reply-To: <75b1b063-e8d4-417d-99a8-4320d72297cf@moroto.mountain>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Mon, 22 Apr 2024 13:39:28 +0100
-Message-ID: <CADrjBPputDQWpQZgPiuUDLTWZA83KJEMp-X8ZtXAwt6ivTOG9g@mail.gmail.com>
-Subject: Re: [PATCH 10/17] phy: samsung-ufs: ufs: Add SoC callbacks for
- calibration and clk data recovery
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org, 
-	alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org, 
-	s.nawrocki@samsung.com, cw00.choi@samsung.com, jejb@linux.ibm.com, 
-	martin.petersen@oracle.com, chanho61.park@samsung.com, ebiggers@kernel.org, 
-	linux-scsi@vger.kernel.org, linux-phy@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, tudor.ambarus@linaro.org, 
-	andre.draszik@linaro.org, saravanak@google.com, willmcvicker@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Dan,
+For dummy devices, exit earlier at free_netdev() instead of executing
+the whole function. This is necessary, because dummy devices are
+special, and shouldn't have the second part of the function executed.
 
-Thanks for the review.
+Otherwise reg_state, which is NETREG_DUMMY, will be overwritten and
+there will be no way to identify that this is a dummy device. Also, this
+device do not need the final put_device(), since dummy devices are not
+registered (through register_netdevice()), where the device reference is
+increased (at netdev_register_kobject()/device_add()).
 
-On Wed, 17 Apr 2024 at 10:52, Dan Carpenter <dan.carpenter@linaro.org> wrote:
->
-> On Thu, Apr 04, 2024 at 01:25:52PM +0100, Peter Griffin wrote:
-> > diff --git a/drivers/phy/samsung/phy-samsung-ufs.c b/drivers/phy/samsung/phy-samsung-ufs.c
-> > index c567efafc30f..f57a2f2a415d 100644
-> > --- a/drivers/phy/samsung/phy-samsung-ufs.c
-> > +++ b/drivers/phy/samsung/phy-samsung-ufs.c
-> > @@ -46,7 +46,7 @@ static void samsung_ufs_phy_config(struct samsung_ufs_phy *phy,
-> >       }
-> >  }
-> >
-> > -static int samsung_ufs_phy_wait_for_lock_acq(struct phy *phy)
-> > +int samsung_ufs_phy_wait_for_lock_acq(struct phy *phy, u8 lane)
-> >  {
-> >       struct samsung_ufs_phy *ufs_phy = get_samsung_ufs_phy(phy);
-> >       const unsigned int timeout_us = 100000;
-> > @@ -98,8 +98,15 @@ static int samsung_ufs_phy_calibrate(struct phy *phy)
-> >               }
-> >       }
-> >
-> > -     if (ufs_phy->ufs_phy_state == CFG_POST_PWR_HS)
-> > -             err = samsung_ufs_phy_wait_for_lock_acq(phy);
-> > +     for_each_phy_lane(ufs_phy, i) {
-> > +             if (ufs_phy->ufs_phy_state == CFG_PRE_INIT &&
-> > +                 ufs_phy->drvdata->wait_for_cal)
-> > +                     err = ufs_phy->drvdata->wait_for_cal(phy, i);
-> > +
-> > +             if (ufs_phy->ufs_phy_state == CFG_POST_PWR_HS &&
-> > +                 ufs_phy->drvdata->wait_for_cdr)
-> > +                     err = ufs_phy->drvdata->wait_for_cdr(phy, i);
->
-> The "err" value is only preserved from the last iteration in this loop.
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Reviewed-by: Ido Schimmel <idosch@nvidia.com>
+---
+ net/core/dev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-I'll send a follow up patch for this as it's already applied.
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 44c2d698fd1b..62b39d6b1d8f 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -11066,7 +11066,8 @@ void free_netdev(struct net_device *dev)
+ 	phy_link_topo_destroy(dev->link_topo);
+ 
+ 	/*  Compatibility with error handling in drivers */
+-	if (dev->reg_state == NETREG_UNINITIALIZED) {
++	if (dev->reg_state == NETREG_UNINITIALIZED ||
++	    dev->reg_state == NETREG_DUMMY) {
+ 		netdev_freemem(dev);
+ 		return;
+ 	}
+-- 
+2.43.0
 
-Thanks,
-
-Peter
