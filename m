@@ -1,148 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D6351C4D;
-	Mon, 22 Apr 2024 08:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301ED5A11F
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713775873; cv=none; b=P95LeNE1bonDF7fIlUhdVvNiotN/iq1OgA40MYkP/rDvRz7qlw4Pbyt9G7srHkEZ74gwd8pBKxYzhMilH7IRB0CJN1zstB+pDbfdX0gJ9q6xfZD7hX4MeBgume9B7GwRwFF2+skQuxsMM3D6HS8HCTDkEHTxOrAhnY2yj6vOdeA=
+	t=1713775882; cv=none; b=ny3fYmXc6wd2m9vjB5iDKUVOMVtiVPl0CLrQwKUh9raxCNcC6AFrpm3SFAcRA9VyOgLA0zR7W0pKeLu06sEcD2SkRpbRKX7N6GRmjoCYhTSYe6+zMO4eT/736XS6N6+8seysBaHitPOSEzEp1eusSDFcd5kQTnetezrAx7NuNVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713775873; c=relaxed/simple;
-	bh=lHpN+d0QRuUVXJIB1eReja4FWUfXvpd+hME9aJI8tNM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KCQ4QGTPQWIe2Jx3k2aK2/vJX9Im2855mKdu/2RKkXfmArgMVPdR2tdHOzery1FOA5y4Hr8IMklwEmO8gu5GF0R4UyOaMq+7TYZzVXBlTtvUpxaRurq4mfRT1448zS8D+lIikq39lDn6NsInse578GBd+UTdyGD0Z2QNQgXmqXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sO4wTbB+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sO4wTbB+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D54B0C113CC;
-	Mon, 22 Apr 2024 08:51:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713775873;
-	bh=lHpN+d0QRuUVXJIB1eReja4FWUfXvpd+hME9aJI8tNM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sO4wTbB+Milo3xS+lLBG3XWGzAtuQNj9vPNus4JsUmgfbe8gEP4GhjKuaPghll8ad
-	 AIL4PHWve7PCKN2gpwuzIrT1A0qMYLaMmX9Mbk5GP1i+0ImBflhvG/HDKJ89MJLS7C
-	 NSegGqr+fYAhlsYGHPsTd4qCsBTID69/OIaM+hwcwpdK/vdai/Cmc3WZQUIwFKMf2l
-	 sH+rF9Y+jCRKBnnUGS6fxPjHVdYE9oR4TuuD1NzcbrL1Uo008iZkwtxC47vH1y20ws
-	 N/AdwVXRGgfWFdYdBbqVwJ9sHu6lojECBJYUuES8MHpkRwaKf/ofhZDClHBd2mup1e
-	 zf4ynpfxlW1VA==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mike Rapoport <rppt@kernel.org>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v5 12/15] x86/ftrace: enable dynamic ftrace without CONFIG_MODULES
-Date: Mon, 22 Apr 2024 11:50:25 +0300
-Message-ID: <20240422085028.3602777-3-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240422085028.3602777-1-rppt@kernel.org>
-References: <20240422085028.3602777-1-rppt@kernel.org>
+	s=arc-20240116; t=1713775882; c=relaxed/simple;
+	bh=cPSG5BM69SWk6+aZtIIQTDm7qTEsLsxXRx6y4/OB6Eo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PaJ9av2S7LxySsQNwRICqYO4WGb2nVQU8Dk496qLgyjvWxCExF45vUBtGQMZkPbG+DRLRkb7D5XR7xKZt+fhRaZXPBovBRMu35QlsxcqT7sNE8i3aEoMvVN0LRYaotZwomPEJM1IGRdU3GdXAGrC2h6gXkxiKAJTIbxq9M4o4Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1rypOA-0005Bp-Pg; Mon, 22 Apr 2024 10:51:02 +0200
+Message-ID: <5264bec0-8ff4-4b39-81bc-eb5226cbec6b@pengutronix.de>
+Date: Mon, 22 Apr 2024 10:51:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] net: stmicro: imx: set TX_CLK direction in RMII mode
+Content-Language: en-US
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Clark Wang <xiaoning.wang@nxp.com>,
+ Linux Team <linux-imx@nxp.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jose Abreu <joabreu@synopsys.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: imx@lists.linux.dev, devicetree@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20240422-v6-9-topic-imx93-eqos-rmii-v1-0-30151fca43d2@pengutronix.de>
+ <20240422-v6-9-topic-imx93-eqos-rmii-v1-3-30151fca43d2@pengutronix.de>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <20240422-v6-9-topic-imx93-eqos-rmii-v1-3-30151fca43d2@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+Hello Steffen,
 
-Dynamic ftrace must allocate memory for code and this was impossible
-without CONFIG_MODULES.
+On 22.04.24 10:46, Steffen Trumtrar wrote:
+> +		dwmac->enet_clk_regmap = syscon_regmap_lookup_by_phandle(np, "enet_clk_sel");
+> +		if (IS_ERR(dwmac->enet_clk_regmap))
+> +			return PTR_ERR(dwmac->enet_clk_regmap);
+> +
+> +		err = of_property_read_u32_index(np, "enet_clk_sel", 1, &dwmac->enet_clk_reg_off);
+> +		if (err) {
+> +			dev_err(dev, "Can't get enet clk sel reg offset (%d)\n", err);
+> +			return err;
+> +		}
 
-With execmem separated from the modules code, execmem_text_alloc() is
-available regardless of CONFIG_MODULES.
+This looks like the property is not optional. The property needs to stay optional
+as not to break backwards compatibility with older device trees.
 
-Remove dependency of dynamic ftrace on CONFIG_MODULES and make
-CONFIG_DYNAMIC_FTRACE select CONFIG_EXECMEM in Kconfig.
+Cheers,
+Ahmad
 
-Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
----
- arch/x86/Kconfig         |  1 +
- arch/x86/kernel/ftrace.c | 10 ----------
- 2 files changed, 1 insertion(+), 10 deletions(-)
+>  	}
+>  
+>  	return err;
+> 
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 3f5ba72c9480..cd8addb96a0b 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -34,6 +34,7 @@ config X86_64
- 	select SWIOTLB
- 	select ARCH_HAS_ELFCORE_COMPAT
- 	select ZONE_DMA32
-+	select EXECMEM if DYNAMIC_FTRACE
- 
- config FORCE_DYNAMIC_FTRACE
- 	def_bool y
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index c8ddb7abda7c..8da0e66ca22d 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -261,8 +261,6 @@ void arch_ftrace_update_code(int command)
- /* Currently only x86_64 supports dynamic trampolines */
- #ifdef CONFIG_X86_64
- 
--#ifdef CONFIG_MODULES
--/* Module allocation simplifies allocating memory for code */
- static inline void *alloc_tramp(unsigned long size)
- {
- 	return execmem_alloc(EXECMEM_FTRACE, size);
-@@ -271,14 +269,6 @@ static inline void tramp_free(void *tramp)
- {
- 	execmem_free(tramp);
- }
--#else
--/* Trampolines can only be created if modules are supported */
--static inline void *alloc_tramp(unsigned long size)
--{
--	return NULL;
--}
--static inline void tramp_free(void *tramp) { }
--#endif
- 
- /* Defined as markers to the end of the ftrace default trampolines */
- extern void ftrace_regs_caller_end(void);
 -- 
-2.43.0
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
