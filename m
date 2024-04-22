@@ -1,97 +1,110 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790D8205E0E
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763A53D6B;
+	Mon, 22 Apr 2024 08:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713774641; cv=none; b=rRoH/W43EcGoPO4HYdqX7/1ADGNkVOwofhln+SJLJxt2MbwVMJUqB6UnF4da1+KXTbXaVsPuGkqjb/pXVE8WsZCqbuUeV6Dxf2zM/c3GSVPnnPcYnvEdzV5+NXoqwu9baupHTVKue5Ja2UHAR3TL4AoVwptSzc8DDUP3FQ7kEck=
+	t=1713774719; cv=none; b=tOGR7Mq8EeMUAxv+VT9oATu5scMESKETDS4FAG4sxwTAYLDh+FOqUG6LxveUf0R/mADMDsq2xzoutAf1ITRtjsFD3sD1vBTVssyIjOArqQBbL54g+aACiyhbEedHskqWyhnbsXg4EBIslkgfRL/HF1ADXVfmC5487sn50GEtitk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713774641; c=relaxed/simple;
-	bh=EK+dqgsbNtopGk47Jcbq9GlupmjarL1gVr2btr6y34s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OmdAjcSEcPzuPnxT66AOmQ6rPSW5v2m5ucIGHzFDRGtEQb0VCdjHbDdFR2CatlCf/7Gz8UuV7OaZ8y2Odfvpb5x7hNI1YICJXg28HlgxvxpH/S7dEypXR6J5AWH7tU5P3aYD3PSTKBsV8kpH4SsuaLHLpzOqguEvyTpZfy1m0is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i5e861d85.versanet.de ([94.134.29.133] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1ryp4H-0000f8-Cv; Mon, 22 Apr 2024 10:30:29 +0200
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Rob Herring <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, quentin.schulz@theobroma-systems.com
-Subject:
- Re: [PATCH 0/2] Add support for the dual-role dwc3 controllers on
- rk3588-tiger
-Date: Mon, 22 Apr 2024 09:43:12 +0200
-Message-ID: <2108948.KlZ2vcFHjT@diego>
-In-Reply-To: <171356537191.48026.7238978785873260892.robh@kernel.org>
-References:
- <20240418210332.2394871-1-heiko@sntech.de>
- <171356537191.48026.7238978785873260892.robh@kernel.org>
+	s=arc-20240116; t=1713774719; c=relaxed/simple;
+	bh=jrYGl7sNNl2Fe3kJVpIabxToZJezOrrnFG6Xq1JJMF4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jw4W5xexYU209Xw0EKv+S6rFuKjKHbNjTYoygde5fDoa/6QgYsw1QPmCrgT3e6DosT1XEa3JxeKmKawbDUVV2pmeYJ/1YYiZTuydpDgXTzWpg+a9FD1q/uB+P0SgOm5PVsgeNyrnet9uwZofOtpe1c9snv6CICp8YOGHNOvyUA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=Qb0JHkTD; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="Qb0JHkTD"
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id E20D2600A7;
+	Mon, 22 Apr 2024 08:31:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1713774708;
+	bh=jrYGl7sNNl2Fe3kJVpIabxToZJezOrrnFG6Xq1JJMF4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Qb0JHkTDjW8hRfXpMa33I+3+HBesPdqMHTjX6d++1dk+C3e9I9dqMR0SoF9esi42j
+	 XBxpqVUea9ZWDRon2SCuKx7F+p0uJfSx9z2aCe1/2USAnQZG5W7mF0lGCVJ79vsQwG
+	 HEw3hzlvAvXPArqTS6sRhSnYKHmFkQMWWlVhgWbrgHkSqZ2KQ4nN2fCY+5Pab1g2TY
+	 SY+oEey2PG4mSAd+ubFJz5TraEko8E674J8QFj/KLcI+/sKQ8Eee/0WhcI2axAiGUy
+	 9PU52HnSCVWV9pMhCCUnKa9MZkYx4kfOtYPYDupuvgWK5l1Z8nzpjlyFpU4Udqy7V+
+	 sFx2geXFpAmGQ==
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by x201s (Postfix) with ESMTP id E930D20401F;
+	Mon, 22 Apr 2024 08:31:35 +0000 (UTC)
+Message-ID: <5fbbedde-92c1-4b0a-aeb4-cb17ecd01d5b@fiberby.net>
+Date: Mon, 22 Apr 2024 08:31:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] net/mlx5e: flower: check for unsupported control
+ flags
+To: Jianbo Liu <jianbol@nvidia.com>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Cc: "davem@davemloft.net" <davem@davemloft.net>,
+ Tariq Toukan <tariqt@nvidia.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, "edumazet@google.com" <edumazet@google.com>,
+ Saeed Mahameed <saeedm@nvidia.com>, "leon@kernel.org" <leon@kernel.org>
+References: <20240417135110.99900-1-ast@fiberby.net>
+ <16bc67f3767644005a26affad3cbd96f6319ca98.camel@nvidia.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>
+In-Reply-To: <16bc67f3767644005a26affad3cbd96f6319ca98.camel@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Rob,
+Hi Jianbo,
 
-Am Samstag, 20. April 2024, 00:24:23 CEST schrieb Rob Herring:
-> On Thu, 18 Apr 2024 23:03:30 +0200, Heiko Stuebner wrote:
-> > A comment fix and then the addition of the nodes for the dwc3 controllers
-> > using the newly merged usbdp phys.
-> > 
-> > Heiko Stuebner (2):
-> >   arm64: dts: rockchip: fix comment for upper usb3 port
-> >   arm64: dts: rockchip: add dual-role usb3 hosts to rk3588 Tiger-Haikou
-> > 
-> >  .../boot/dts/rockchip/rk3588-tiger-haikou.dts | 60 ++++++++++++++++++-
-> >  .../arm64/boot/dts/rockchip/rk3588-tiger.dtsi | 15 +++++
-> >  2 files changed, 74 insertions(+), 1 deletion(-)
-> > 
-> > --
-> > 2.39.2
-> > 
-> > 
-> > 
+Thank you for the review.
+
+On 4/22/24 6:58 AM, Jianbo Liu wrote:
+> On Wed, 2024-04-17 at 13:51 +0000, Asbjørn Sloth Tønnesen wrote:
+>> Use flow_rule_is_supp_control_flags() to reject filters with
+>> unsupported control flags.
+>>
+>> In case any unsupported control flags are masked,
+>> flow_rule_is_supp_control_flags() sets a NL extended
+>> error message, and we return -EOPNOTSUPP.
+>>
+>> Only compile-tested.
+>>
+>> Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+>> ---
+>>   drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+>> b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+>> index aeb32cb27182..5019280cfcdd 100644
+>> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+>> @@ -2819,6 +2819,11 @@ static int __parse_cls_flower(struct
+>> mlx5e_priv *priv,
+>>                          else
+>>                                  *match_level = MLX5_MATCH_L3;
+>>                  }
+>> +
+>> +               if
+>> (!flow_rule_is_supp_control_flags(FLOW_DIS_IS_FRAGMENT |
+>> +
+>> FLOW_DIS_FIRST_FRAG,
 > 
-> 
-> My bot found new DTB warnings on the .dts files added or changed in this
-> series.
-> 
-> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-> are fixed by another series. Ultimately, it is up to the platform
-> maintainer whether these warnings are acceptable or not. No need to reply
-> unless the platform maintainer has comments.
-> 
-> If you already ran DT checks and didn't see these error(s), then
-> make sure dt-schema is up to date:
-> 
->   pip3 install dtschema --upgrade
-> 
-> 
-> New warnings running 'make CHECK_DTBS=y rockchip/rk3588-tiger-haikou.dtb' for 20240418210332.2394871-1-heiko@sntech.de:
-> 
-> arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou.dtb: /extcon-usb3: failed to match any schema with compatible: ['linux,extcon-usb-gpio']
+> We reject FLOW_DIS_FIRST_FRAG at several lines above. I think you can
+> remove those lines and add FLOW_DIS_IS_FRAGMENT as the only supported
+> flag here.
 
-This follows the txt-binding from
-	https://www.kernel.org/doc/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-so in mainline there is no yaml binding yet for the usb-id-extcon.
-
-Though I did find a still pending yaml conversion for it in
-	https://lore.kernel.org/linux-arm-kernel/20240215093214.796821-1-alexander.stein@ew.tq-group.com/T/
-
-Though not sure what the holdup is there as it got a Review from you?
-Can you just pick this for the main dt-tree?
+Sure, I can do that. I originally kept it, since the error message was
+more user-friendly.
 
 
-Heiko
-
-
+-- 
+Best regards
+Asbjørn Sloth Tønnesen
+Network Engineer
+Fiberby - AS42541
