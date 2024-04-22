@@ -1,39 +1,39 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFBA14EC6E;
-	Mon, 22 Apr 2024 12:50:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8596B14F108;
+	Mon, 22 Apr 2024 12:50:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713790246; cv=none; b=sRFDLUCXlZTn5vfWjY6kSn6bM9BDKduEvKh+qH6ejotS4+zow0L9utj0nAISFFL3CY34/V/L+6gubcw1eTqqJs8NyMhxZ0znaZxYxjQuAF1BStkMB6REa2zyYxJuAEssZvTe9nWPM+MFQkmQlOJh0A9+H2cMsX4qlkZp6/Qq1Jo=
+	t=1713790246; cv=none; b=KFt4KjjE3H/q9ZJ2RDiMl1b3trEs47PkNeqgZAk1OXw20lxQjrvD24mZc0hyzdYclw7i5zODr61REZjaC6V3Oxsvw43HfFDroweESChJxGZSPJyhKSj1y2Lz1n5jqiEwyDFKFZPqpyx1urgO1dVrRcHW0vjvWmJryO74aqeOQ3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713790246; c=relaxed/simple;
-	bh=fAoFXYYkIkdenvWHNgGiSslpve99mgAMustoo4fOjKM=;
+	bh=IjMflVvqVRERvYARWe4LKlkVuXmMgcYCDaoitd2X9iQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oVc7FpUOGaX2gStVinc+VdWtUqTGOtz1V3inHfpbklFgpvw+qji38H1URv1U6ZWGUQ2bb+4PYKKBcTmFw7z0CXCwatm8w6jUMR5f0WxDrKSYTnVhbkf1giei7RHvMFoVidBmxzCN/Zgnv3+6WHb5jjUPesAB2Yh1GqJk7AoaH9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pHxGi55q; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=udYF/6sJNhTQeeL9FZeOdRVhqHtrekqh4r+0o1966T4+ID7bIWQKMdKaCzcmliBQqNj4chUxmSvTaGWsjQ5YiBaRm2sFn6vqyYDPA54W4uL1NknePNF0fHww0vy+dihCwr4M9xuw5Eei1W2tklXPwkRrSjHhis01et8FcMOkRoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MKwCKHCe; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pHxGi55q"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 57BA1E0002;
-	Mon, 22 Apr 2024 12:50:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MKwCKHCe"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 93D8EE0013;
+	Mon, 22 Apr 2024 12:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713790235;
+	t=1713790242;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fA411foyqLMzZ1hKOUW4fEs/FNUN6uX3elekeFZ7ooQ=;
-	b=pHxGi55qmLdZZ2C8RdRi6zl8R6Q8VK+G2XFv+pySh9gwsFU0elHn3rI+v8GX7cDPlAbzkV
-	R06U9/aMNscBiSGZToib0YlPbG0lLsWP4u2wsffISaCtOBQOSyZ2hMaMnEk+SP+CSlD91m
-	lZA4X2J+3BrZN1s0EENFCw41Ec4b0yrUfCpBFGABASxnAkYn12BfdgqekAJspKqvNS549n
-	mdUUhdYCELPGFufCsNb0TgYUg1ne0XYrGEKI6tRb7kadRAz788u28rQ22N8paLOmysHWBs
-	BGcC39tj1201aOUb1rdncmSSioE2TfJQT2IuxedJ6l9S1GQaST4CrLZtO4SpMA==
+	bh=HrY8w0IMosIqtvCpNeKN+wcauJqxms1gGg8T+SvT1J8=;
+	b=MKwCKHCe8cg1oY0alXw9UkshmBhJ+3zzG24lToO0V4TOPu7D35PVfvW7CB1DTPNBGa+fvE
+	+Fo8s3WdgBqlOAqW5/cP/tcptGSeqfoOtkYg7MST03CyJEAKIZZBIubM5bR6qpFp1Ni43K
+	ji795ZJbiZO9zqKSVLISi8ZB0rBF0IRnxMtmdsTnPP8zZY49Z0XBfVLmjVMMUSeLx6kJeZ
+	PuzseVBzel9oRLla02RRMwUrMyePn6BeuyqD6QkpMLGMjs0sEMkWAnacnmLQudnc1BjtxY
+	qwCbruvjFhpBuUm2B7pUpesehFfg/TIBe0i3DLSsKXNnzm+JVZj2hReqO/oU+w==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Mon, 22 Apr 2024 14:50:16 +0200
-Subject: [PATCH net-next v11 01/13] net_tstamp: Add TIMESTAMPING SOFTWARE
- and HARDWARE mask
+Date: Mon, 22 Apr 2024 14:50:21 +0200
+Subject: [PATCH net-next v11 06/13] net: net_tstamp: Add unspec field to
+ hwtstamp_source enumeration
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240422-feature_ptp_netnext-v11-1-f14441f2a1d8@bootlin.com>
+Message-Id: <20240422-feature_ptp_netnext-v11-6-f14441f2a1d8@bootlin.com>
 References: <20240422-feature_ptp_netnext-v11-0-f14441f2a1d8@bootlin.com>
 In-Reply-To: <20240422-feature_ptp_netnext-v11-0-f14441f2a1d8@bootlin.com>
 To: Florian Fainelli <florian.fainelli@broadcom.com>, 
@@ -64,50 +64,35 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
  Maxime Chevallier <maxime.chevallier@bootlin.com>, 
  Rahul Rameshbabu <rrameshbabu@nvidia.com>, 
- Kory Maincent <kory.maincent@bootlin.com>, 
- Willem de Bruijn <willemb@google.com>
+ Kory Maincent <kory.maincent@bootlin.com>
 X-Mailer: b4 0.13.0
 X-GND-Sasl: kory.maincent@bootlin.com
 
-Timestamping software or hardware flags are often used as a group,
-therefore adding these masks will ease future use.
+Prepare for future support of saving hwtstamp source in PTP xarray by
+introducing HWTSTAMP_SOURCE_UNSPEC to hwtstamp_source enum, setting it
+to 0 to match old behavior of no source defined.
 
-I did not use SOF_TIMESTAMPING_SYS_HARDWARE flag as it is deprecated and
-not used at all.
-
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
 
-Changes in v7:
-- Move the masks out of uapi to include/linux/net_tstamp.h
-
-Changes in v9:
-- Fix commit message typos
+Change in v8:
+- New patch
 ---
- include/linux/net_tstamp.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ include/linux/net_tstamp.h | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/include/linux/net_tstamp.h b/include/linux/net_tstamp.h
-index eb01c37e71e0..3799c79b6c83 100644
+index 3799c79b6c83..662074b08c94 100644
 --- a/include/linux/net_tstamp.h
 +++ b/include/linux/net_tstamp.h
-@@ -5,6 +5,14 @@
+@@ -14,6 +14,7 @@
+ 					 SOF_TIMESTAMPING_RAW_HARDWARE)
  
- #include <uapi/linux/net_tstamp.h>
- 
-+#define SOF_TIMESTAMPING_SOFTWARE_MASK	(SOF_TIMESTAMPING_RX_SOFTWARE | \
-+					 SOF_TIMESTAMPING_TX_SOFTWARE | \
-+					 SOF_TIMESTAMPING_SOFTWARE)
-+
-+#define SOF_TIMESTAMPING_HARDWARE_MASK	(SOF_TIMESTAMPING_RX_HARDWARE | \
-+					 SOF_TIMESTAMPING_TX_HARDWARE | \
-+					 SOF_TIMESTAMPING_RAW_HARDWARE)
-+
  enum hwtstamp_source {
++	HWTSTAMP_SOURCE_UNSPEC,
  	HWTSTAMP_SOURCE_NETDEV,
  	HWTSTAMP_SOURCE_PHYLIB,
+ };
 
 -- 
 2.34.1
