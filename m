@@ -1,152 +1,229 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FEA2AD2D;
-	Mon, 22 Apr 2024 14:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369B8152195;
+	Mon, 22 Apr 2024 14:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713797380; cv=none; b=DmBft5u7ny3+FFPhmgN+Q1Ie+w3R0C7niuYKnLH7ndDnEBQI2+ZjYSzoI1q1Bht30LDdvrfWQpwQx3hFgzYS+PGO7y8xRJ2+Q5KJBtfOx6rnHXZyOFnsNyTlrB33CcbeJxgMp7X4+maWf7Lo4aHWOyUy67E5Jp63BxuOlDdYoic=
+	t=1713797388; cv=none; b=p3CsfTzFkfvqpiZuNkLBRrR1qqPKr7wjGy/KiwMvJaKDmwhzGhR8/vGiBQNqkCRGTS+2vUQ2CfuoQhKRVS1v0fjNYZ7fD8v10IbmcmyIW3p6DK42NAxKFTET/WydP6ZNFcKWIvOp53cLggn2gGV4ttKvhsN/+c7f2EO6GIvPI5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713797380; c=relaxed/simple;
-	bh=W1EiwE9ebnO+fWvv7xjX1fGRlVmYlkU71qMkrB1ko1Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nrf0FPV1flPbJcQmc4pESAnC0aH3ja1ocPRn0nG0Dop7ePlRGLXzdhVzxg4bXxi1B+X6N3Z0/8YZ6Qn49OKEUNUdr/Ws5taRcWwpwkEKihxEDYnwtlL3VwGcXHIh08yVP0d+aTgd806D7ztWceqgBnNDqJtxikgHueNnzYit3Qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OUT9a+ux; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713797388; c=relaxed/simple;
+	bh=hSW6/00CexkAj4yr/ss/j1zrPQ6JrexwJDPsR17Ywmc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hd6/mXnyNh4RH4Ql773mXSYWYFtonXKRX/eQTgHfQQDttAnS07gKny5N1HTeCasGmdM+QvX1cuV1Aj4AG1MfE42JbCfNSgtROaQBdhgh/HalXmmtrI2C4l3G3DBwyKaEnkBCsOG1Rc6ZYm9qPgaXXR4e9rwA4BuKZ2mk70SjqbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DCA5iY34; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OUT9a+ux"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7725C113CC;
-	Mon, 22 Apr 2024 14:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713797380;
-	bh=W1EiwE9ebnO+fWvv7xjX1fGRlVmYlkU71qMkrB1ko1Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OUT9a+uxzdAupPFPcsZjuKXNDC6WwK74ZB4UV/AWLqjhBNW3o0uQ1u7+sadwpTqMO
-	 wkPGem+umIM8vIlJvUCaTORjMhfBU9b3EbXyTwjs3Gx977LBB7enFgfOxLa0gLU6n0
-	 5u6AA5zjHgZraz7iZiVTj8c//mu8FIkZJL4RCAwkgetxRHZLA9tLIIdsVXKHh4waHL
-	 WTUse+Fax2pOV1gtMJzeOGvTUErV/6HSsAKluCsa9mkqPyl+I2COgbQtD63kkK3mv+
-	 wJTQniGe9U9dYJx7A5LWK4d3M0agc+/v4k40wTnHS1aur3yWQ22accOgKVP1McrICj
-	 ZLBQInAQ4fRzw==
-Message-ID: <311c8b64-be13-4740-a659-3a14cf68774a@kernel.org>
-Date: Mon, 22 Apr 2024 16:49:27 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DCA5iY34"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713797387; x=1745333387;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hSW6/00CexkAj4yr/ss/j1zrPQ6JrexwJDPsR17Ywmc=;
+  b=DCA5iY34ZxfJGABPA1vitXsleRT4kdVTa00CtKvrI8+0VRCzKpXylCPd
+   IHh3BE0Hx7B8W0T5muQjNzTcwrS0fo0yzzge0kZWj4fFUjU068efeaLHh
+   49JAjxmLJjgOukWA50TCfuawRMw8n2Kwz8ptjEBE4jO7KRUelnHMvNZ5s
+   y2lzibYiSzqWLd1wNnHY8ZhmE6PjD9Y258I0G8zoWNZJvUn5orkeBB40p
+   5NoWbF/0xryL2br5NvADj4DagH7dY3dfBAuEUFeBxg3qfRt4vbJXhHvYD
+   Yz1CkKN/U6VDKpyOHEi2oyVFbnGGXQTconLjrLiwd29cF9MSEYbutNRKS
+   Q==;
+X-CSE-ConnectionGUID: NDamN9LWT3K4PM+mTX2VuA==
+X-CSE-MsgGUID: dYszhE4iS8GB9LgFbBuBDw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="20033641"
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="20033641"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 07:49:45 -0700
+X-CSE-ConnectionGUID: Hz+KqllpRdmDG/nq7k5yuw==
+X-CSE-MsgGUID: F/ISxkcXQFCr4hBb59nOEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="24067383"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa009.fm.intel.com with ESMTP; 22 Apr 2024 07:49:44 -0700
+Date: Mon, 22 Apr 2024 22:44:24 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, seanjc@google.com,
+	michael.roth@amd.com, isaku.yamahata@intel.com
+Subject: Re: [PATCH 09/11] KVM: guest_memfd: Add interface for populating
+ gmem pages with user data
+Message-ID: <ZiZ3yDxEX+n6Za9b@yilunxu-OptiPlex-7050>
+References: <20240404185034.3184582-1-pbonzini@redhat.com>
+ <20240404185034.3184582-10-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/10] sysctl: Remove sentinel elements from kernel dir
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
- Joel Granados <j.granados@samsung.com>, Luis Chamberlain
- <mcgrof@kernel.org>, josh@joshtriplett.org, Kees Cook
- <keescook@chromium.org>, Eric Biederman <ebiederm@xmission.com>,
- Iurii Zaikin <yzaikin@google.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>,
- Stephen Boyd <sboyd@kernel.org>, Andy Lutomirski <luto@amacapital.net>,
- Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
- <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Valentin Schneider <vschneid@redhat.com>, Petr Mladek <pmladek@suse.com>,
- John Ogness <john.ogness@linutronix.de>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Balbir Singh
- <bsingharora@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
- linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, tools@kernel.org
-References: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
- <36a1ea2f-92c2-4183-a892-00c5b48c419b@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <36a1ea2f-92c2-4183-a892-00c5b48c419b@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240404185034.3184582-10-pbonzini@redhat.com>
 
-On 22/04/2024 16:27, Konrad Dybcio wrote:
+On Thu, Apr 04, 2024 at 02:50:31PM -0400, Paolo Bonzini wrote:
+> During guest run-time, kvm_arch_gmem_prepare() is issued as needed to
+> prepare newly-allocated gmem pages prior to mapping them into the guest.
+> In the case of SEV-SNP, this mainly involves setting the pages to
+> private in the RMP table.
+> 
+> However, for the GPA ranges comprising the initial guest payload, which
+> are encrypted/measured prior to starting the guest, the gmem pages need
+> to be accessed prior to setting them to private in the RMP table so they
+> can be initialized with the userspace-provided data. Additionally, an
+> SNP firmware call is needed afterward to encrypt them in-place and
+> measure the contents into the guest's launch digest.
+> 
+> While it is possible to bypass the kvm_arch_gmem_prepare() hooks so that
+> this handling can be done in an open-coded/vendor-specific manner, this
+> may expose more gmem-internal state/dependencies to external callers
+> than necessary. Try to avoid this by implementing an interface that
+> tries to handle as much of the common functionality inside gmem as
+> possible, while also making it generic enough to potentially be
+> usable/extensible for TDX as well.
+> 
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Michael Roth <michael.roth@amd.com>
+> Co-developed-by: Michael Roth <michael.roth@amd.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  include/linux/kvm_host.h | 26 ++++++++++++++
+>  virt/kvm/guest_memfd.c   | 78 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 104 insertions(+)
+> 
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 33ed3b884a6b..97d57ec59789 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -2450,4 +2450,30 @@ int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_ord
+>  bool kvm_arch_gmem_prepare_needed(struct kvm *kvm);
+>  #endif
+>  
+> +/**
+> + * kvm_gmem_populate() - Populate/prepare a GPA range with guest data
+> + *
+> + * @kvm: KVM instance
+> + * @gfn: starting GFN to be populated
+> + * @src: userspace-provided buffer containing data to copy into GFN range
+> + *       (passed to @post_populate, and incremented on each iteration
+> + *       if not NULL)
+> + * @npages: number of pages to copy from userspace-buffer
+> + * @post_populate: callback to issue for each gmem page that backs the GPA
+> + *                 range
+> + * @opaque: opaque data to pass to @post_populate callback
+> + *
+> + * This is primarily intended for cases where a gmem-backed GPA range needs
+> + * to be initialized with userspace-provided data prior to being mapped into
+> + * the guest as a private page. This should be called with the slots->lock
+> + * held so that caller-enforced invariants regarding the expected memory
+> + * attributes of the GPA range do not race with KVM_SET_MEMORY_ATTRIBUTES.
+> + *
+> + * Returns the number of pages that were populated.
+> + */
+> +long kvm_gmem_populate(struct kvm *kvm, gfn_t gfn, void __user *src, long npages,
+> +		       int (*post_populate)(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
+> +					    void __user *src, int order, void *opaque),
+> +		       void *opaque);
+> +
+>  #endif
+> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+> index 51c99667690a..e7de97382a67 100644
+> --- a/virt/kvm/guest_memfd.c
+> +++ b/virt/kvm/guest_memfd.c
+> @@ -602,3 +602,81 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+>  	return r;
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_gmem_get_pfn);
+> +
+> +static int kvm_gmem_undo_get_pfn(struct file *file, struct kvm_memory_slot *slot,
+> +				 gfn_t gfn, int order)
+> +{
+> +	pgoff_t index = gfn - slot->base_gfn + slot->gmem.pgoff;
+> +	struct kvm_gmem *gmem = file->private_data;
+> +
+> +	/*
+> +	 * Races with kvm_gmem_unbind() must have been detected by
+> +	 * __kvm_gmem_get_gfn(), because the invalidate_lock is
+> +	 * taken between __kvm_gmem_get_gfn() and kvm_gmem_undo_get_pfn().
+> +	 */
+> +	if (WARN_ON_ONCE(xa_load(&gmem->bindings, index) != slot))
+> +		return -EIO;
+> +
+> +	return __kvm_gmem_punch_hole(file_inode(file), index << PAGE_SHIFT, PAGE_SIZE << order);
+> +}
+> +
+> +long kvm_gmem_populate(struct kvm *kvm, gfn_t gfn, void __user *src, long npages,
+> +		       int (*post_populate)(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
+> +					    void __user *src, int order, void *opaque),
+> +		       void *opaque)
+> +{
+> +	struct file *file;
+> +	struct kvm_memory_slot *slot;
+> +
+> +	int ret = 0, max_order;
+> +	long i;
+> +
+> +	lockdep_assert_held(&kvm->slots_lock);
+> +	if (npages < 0)
+> +		return -EINVAL;
+> +
+> +	slot = gfn_to_memslot(kvm, gfn);
+> +	if (!kvm_slot_can_be_private(slot))
+> +		return -EINVAL;
+> +
+> +	file = kvm_gmem_get_file(slot);
+> +	if (!file)
+> +		return -EFAULT;
+> +
+> +	filemap_invalidate_lock(file->f_mapping);
+> +
+> +	npages = min_t(ulong, slot->npages - (gfn - slot->base_gfn), npages);
+> +	for (i = 0; i < npages; i += (1 << max_order)) {
+> +		gfn_t this_gfn = gfn + i;
+> +		kvm_pfn_t pfn;
+> +
+> +		ret = __kvm_gmem_get_pfn(file, slot, this_gfn, &pfn, &max_order, false);
+> +		if (ret)
+> +			break;
+> +
+> +		if (!IS_ALIGNED(this_gfn, (1 << max_order)) ||
+> +		    (npages - i) < (1 << max_order))
+> +			max_order = 0;
+> +
+> +		if (post_populate) {
+> +			void __user *p = src ? src + i * PAGE_SIZE : NULL;
+> +			ret = post_populate(kvm, this_gfn, pfn, p, max_order, opaque);
+
+I don't see the main difference between gmem_prepare() and post_populate()
+from gmem's point of view.  They are all vendor callbacks invoked after
+__filemap_get_folio(). Is it possible gmem choose to call gmem_prepare()
+or post_populate() outside __kvm_gmem_get_pfn()? Or even pass all
+parameters to a single gmem_prepare() and let vendor code decide what to
+do.
+
+> +		}
+> +
+> +		put_page(pfn_to_page(pfn));
+> +		if (ret) {
+> +			/*
+> +			 * Punch a hole so that FGP_CREAT_ONLY can succeed
+> +			 * again.
+> +			 */
+> +			kvm_gmem_undo_get_pfn(file, slot, this_gfn, max_order);
+> +			break;
+> +		}
+> +	}
+> +
+> +	filemap_invalidate_unlock(file->f_mapping);
+> +
+> +	fput(file);
+> +	return ret && !i ? ret : i;
+> +}
+> +EXPORT_SYMBOL_GPL(kvm_gmem_populate);
+> -- 
+> 2.43.0
 > 
 > 
-> On 3/28/24 16:44, Joel Granados wrote:
->> What?
->> These commits remove the sentinel element (last empty element) from the
->> sysctl arrays of all the files under the "kernel/" directory that use a
->> sysctl array for registration. The merging of the preparation patches
->> [1] to mainline allows us to remove sentinel elements without changing
->> behavior. This is safe because the sysctl registration code
->> (register_sysctl() and friends) use the array size in addition to
->> checking for a sentinel [2].
 > 
-> Hi,
-> 
-> looks like *this* "patch" made it to the sysctl tree [1], breaking b4
-> for everyone else (as there's a "--- b4-submit-tracking ---" magic in
-> the tree history now) on next-20240422
-> 
-> Please drop it (again, I'm only talking about this empty cover letter).
-
-Just to clarify, in case it is not obvious:
-Please *do not merge your own trees* into kernel.org repos. Instead use
-b4 shazam to pick up entire patchset, even if it is yours. b4 allows to
-merge/apply also the cover letter, if this is your intention.
-
-With b4 shazam you would get proper Link tags and not break everyone's
-b4 workflow on next. :/
-
-Best regards,
-Krzysztof
-
