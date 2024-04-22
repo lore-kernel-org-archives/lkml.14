@@ -1,294 +1,81 @@
-Received: from forward200b.mail.yandex.net (forward200b.mail.yandex.net [178.154.239.157])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6327153380;
-	Mon, 22 Apr 2024 08:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7057D4CB55
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713775840; cv=none; b=m2UEXgG7eLA9BREXILsYH2QnJH9hYn4jyWLrm4mfo2biIGSs3+1gkMw7lHcvjO7eoP2g9JkCTkSDH26mACHdLf8cGKnqN6mtny4ycTdxleWwtYT24jqktImKSlQ8LEYsGo8MNbpSu/hvi1itL5GYNHbLOTq98H1NsK13naICc/Q=
+	t=1713775848; cv=none; b=brsWEFYmv7dyNBW3jHYnhEfWaVyp3IYk/aRch0goPLSQuQ3PzNlvUljI1MaA5nLdbhdTR1LjSqkXxD0cnN207bb2vebE7kRkV76nzKwmVH1JnPv76i6TXpK8dYbLQjNd3Cv7LUyrOZDjeb7f1Agx89tuWZk7KKwL8LvuEidj1CM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713775840; c=relaxed/simple;
-	bh=aMDFqI1QHzMdU3LnfCn0Y4nQGaZwj7/Cpqj6M74qTjk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NAq3l9oY0UX1f6TCwyMOfA53kfTQO+e8aHngUzesqISMs4VMJu2cu84SBFCSk+snTIj9tLX6gf4Xyl3kF3vtGjV59D64hq6R6oVIeJpnz9v8IEYNuaobx4hmNzrIM1KpMW7IZEOVcV3WUTRPX2HQebvQUtVhBmJjqQofu9Bg5FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=T0pavIqK; arc=none smtp.client-ip=178.154.239.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="T0pavIqK"
-Received: from forward100b.mail.yandex.net (forward100b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d100])
-	by forward200b.mail.yandex.net (Yandex) with ESMTPS id E16FB6735C;
-	Mon, 22 Apr 2024 11:45:26 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-39.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-39.sas.yp-c.yandex.net [IPv6:2a02:6b8:c08:f220:0:640:b85:0])
-	by forward100b.mail.yandex.net (Yandex) with ESMTPS id 803BB60B5C;
-	Mon, 22 Apr 2024 11:45:18 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-39.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id FjEovW2OjiE0-hgQo78bt;
-	Mon, 22 Apr 2024 11:45:17 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1713775517; bh=zoDO3lBqhyc8A5W4wSrhQd8zHHet7r7I6aC+G/nOKTQ=;
-	h=Cc:Message-ID:References:Date:In-Reply-To:Subject:To:From;
-	b=T0pavIqK9Kzdy0aCbUzPIFOKUzd3gvHHTObOGBeYmAKN/bqEbg1CfEKG1S9hz5q14
-	 dMt6w1LFcbvdDTYQOd09hmsFPAUAiyj0rpnaUm6Soc4IbIYUbOpPjBxudEi7AC0bwH
-	 4TSS95BoT+ip4nFBMPda4jWaIsxoWGFdxs/sKbK0=
-Authentication-Results: mail-nwsmtp-smtp-production-main-39.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Stas Sergeev <stsp2@yandex.ru>
-To: linux-kernel@vger.kernel.org
-Cc: Stas Sergeev <stsp2@yandex.ru>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Andy Lutomirski <luto@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	linux-fsdevel@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	=?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>
-Subject: [PATCH 2/2] openat2: add OA2_INHERIT_CRED flag
-Date: Mon, 22 Apr 2024 11:45:05 +0300
-Message-ID: <20240422084505.3465238-2-stsp2@yandex.ru>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240422084505.3465238-1-stsp2@yandex.ru>
-References: <20240422084505.3465238-1-stsp2@yandex.ru>
+	s=arc-20240116; t=1713775848; c=relaxed/simple;
+	bh=tMuArfUg4yNP9rpwT19TkytDu+F4m2XaxBWxDO8wEtA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FWhgEhJ86jbyiLRHFFR25dUhxPJOi+FlaaEjDvefE4W+lKububpZtWR20Qoxk9BieMKA8AJNo2eOn4TTRSWSmD+x3sWwbqqOBD3p9+ZuN15WV8S82/7vluXBF04mgJKfZklHj7o4gos6NGWWoQ8vLMyI8JJ7XAGjF6kX/LEC1ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7C3796000C;
+	Mon, 22 Apr 2024 08:50:34 +0000 (UTC)
+Message-ID: <f6488073-b93f-4945-9d30-1ceb548d6bb4@ghiti.fr>
+Date: Mon, 22 Apr 2024 10:50:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/9] Merge arm64/riscv hugetlbfs contpte support
+Content-Language: en-US
+To: Will Deacon <will@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>
+Cc: alexghiti@rivosinc.com, ryan.roberts@arm.com,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+ akpm@linux-foundation.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-mm@kvack.org
+References: <CAHVXubiH64beFuB_GHSq5BKCus=O_+bqYTCwWQ+=2Q-F=T=ctQ@mail.gmail.com>
+ <mhng-911ba065-e6c8-4d42-978c-e47897bcb493@palmer-ri-x1c9a>
+ <20240419110306.GA2972@willie-the-truck>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20240419110306.GA2972@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-GND-Sasl: alex@ghiti.fr
 
-This flag performs the open operation with the fsuid/fsgid that
-were in effect when dir_fd was opened.
-This allows the process to pre-open some directories and then
-change eUID (and all other UIDs/GIDs) to a less-privileged user,
-retaining the ability to open/create files within these directories.
+Hi,
 
-Design goal:
-The idea is to provide a very light-weight sandboxing, where the
-process, without the use of any heavy-weight techniques like chroot
-within namespaces, can restrict the access to the set of pre-opened
-directories.
-This patch is just a first step to such sandboxing. If things go
-well, in the future the same extension can be added to more syscalls.
-These should include at least unlinkat(), renameat2() and the
-not-yet-upstreamed setxattrat().
+On 19/04/2024 13:03, Will Deacon wrote:
+> On Thu, Apr 18, 2024 at 03:11:56PM -0700, Palmer Dabbelt wrote:
+>> On Fri, 01 Mar 2024 03:29:18 PST (-0800), alexghiti@rivosinc.com wrote:
+>>> On Fri, Mar 1, 2024 at 11:45 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>> I confess I haven't looked at the patches yet, but this cover letter raises a
+>>>> few quesions for me. I'll aim to look at the actual patches in due course.
+>> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+>>
+>> in case someone wants to pick them up via a generic tree.  I'm happy to take
+>> them via the RISC-V tree if folk want, no rush on my end I'm just scrubbing
+>> through old stuff.
+> I'd definitely like to take the arm64 parts via the arm64 tree (on a
+> shared branch), as it's a non-trivial amount of mm code which may end up
+> conflicting. I'd also like to see Ryan's Ack on the changes before these
+> end up in -next.
+>
+> Will
 
-Security considerations:
-To avoid sandboxing escape, this patch makes sure the restricted
-lookup modes are used. Namely, RESOLVE_BENEATH or RESOLVE_IN_ROOT.
-To avoid leaking creds across exec, this patch requires O_CLOEXEC
-flag on a directory.
 
-Use cases:
-Virtual machines that deal with untrusted code, can use that
-instead of a more heavy-weighted approaches.
-Currently the approach is being tested on a dosemu2 VM.
+The rebase on top of the contpte mTHP support changed quite a few 
+things, I have something working and will send it soon, so no need to 
+review this patchset.
 
-Signed-off-by: Stas Sergeev <stsp2@yandex.ru>
+Thanks,
 
-CC: Eric Biederman <ebiederm@xmission.com>
-CC: Alexander Viro <viro@zeniv.linux.org.uk>
-CC: Andy Lutomirski <luto@kernel.org>
-CC: Christian Brauner <brauner@kernel.org>
-CC: Jan Kara <jack@suse.cz>
-CC: Jeff Layton <jlayton@kernel.org>
-CC: Chuck Lever <chuck.lever@oracle.com>
-CC: Alexander Aring <alex.aring@gmail.com>
-CC: linux-fsdevel@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-CC: Paolo Bonzini <pbonzini@redhat.com>
-CC: Christian Göttsche <cgzones@googlemail.com>
----
- fs/file_table.c              |  2 ++
- fs/internal.h                |  2 +-
- fs/namei.c                   | 54 ++++++++++++++++++++++++++++++++++--
- fs/open.c                    |  2 +-
- include/linux/fcntl.h        |  2 ++
- include/linux/fs.h           |  2 ++
- include/uapi/linux/openat2.h |  3 ++
- 7 files changed, 63 insertions(+), 4 deletions(-)
+Alex
 
-diff --git a/fs/file_table.c b/fs/file_table.c
-index 4f03beed4737..9991bdd538e9 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -160,6 +160,8 @@ static int init_file(struct file *f, int flags, const struct cred *cred)
- 	mutex_init(&f->f_pos_lock);
- 	f->f_flags = flags;
- 	f->f_mode = OPEN_FMODE(flags);
-+	f->f_fsuid = cred->fsuid;
-+	f->f_fsgid = cred->fsgid;
- 	/* f->f_version: 0 */
- 
- 	/*
-diff --git a/fs/internal.h b/fs/internal.h
-index 7ca738904e34..692b53b19aad 100644
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -169,7 +169,7 @@ static inline void sb_end_ro_state_change(struct super_block *sb)
-  * open.c
-  */
- struct open_flags {
--	int open_flag;
-+	u64 open_flag;
- 	umode_t mode;
- 	int acc_mode;
- 	int intent;
-diff --git a/fs/namei.c b/fs/namei.c
-index 2fde2c320ae9..d1db6ceee4bd 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -586,6 +586,8 @@ struct nameidata {
- 	int		dfd;
- 	vfsuid_t	dir_vfsuid;
- 	umode_t		dir_mode;
-+	kuid_t		dir_open_fsuid;
-+	kgid_t		dir_open_fsgid;
- } __randomize_layout;
- 
- #define ND_ROOT_PRESET 1
-@@ -2414,6 +2416,8 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
- 			get_fs_pwd(current->fs, &nd->path);
- 			nd->inode = nd->path.dentry->d_inode;
- 		}
-+		nd->dir_open_fsuid = current_cred()->fsuid;
-+		nd->dir_open_fsgid = current_cred()->fsgid;
- 	} else {
- 		/* Caller must check execute permissions on the starting path component */
- 		struct fd f = fdget_raw(nd->dfd);
-@@ -2437,6 +2441,8 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
- 			path_get(&nd->path);
- 			nd->inode = nd->path.dentry->d_inode;
- 		}
-+		nd->dir_open_fsuid = f.file->f_fsuid;
-+		nd->dir_open_fsgid = f.file->f_fsgid;
- 		fdput(f);
- 	}
- 
-@@ -3653,6 +3659,28 @@ static int do_open(struct nameidata *nd,
- 	return error;
- }
- 
-+static const struct cred *openat2_override_creds(struct nameidata *nd)
-+{
-+	const struct cred *old_cred;
-+	struct cred *override_cred;
-+
-+	override_cred = prepare_creds();
-+	if (!override_cred)
-+		return NULL;
-+
-+	override_cred->fsuid = nd->dir_open_fsuid;
-+	override_cred->fsgid = nd->dir_open_fsgid;
-+
-+	override_cred->non_rcu = 1;
-+
-+	old_cred = override_creds(override_cred);
-+
-+	/* override_cred() gets its own ref */
-+	put_cred(override_cred);
-+
-+	return old_cred;
-+}
-+
- /**
-  * vfs_tmpfile - create tmpfile
-  * @idmap:	idmap of the mount the inode was found from
-@@ -3794,8 +3822,28 @@ static struct file *path_openat(struct nameidata *nd,
- 		error = do_o_path(nd, flags, file);
- 	} else {
- 		const char *s = path_init(nd, flags);
--		file = alloc_empty_file(op->open_flag, current_cred());
--		error = PTR_ERR_OR_ZERO(file);
-+		const struct cred *old_cred = NULL;
-+
-+		error = 0;
-+		if (op->open_flag & OA2_INHERIT_CRED) {
-+			/* Make sure to work only with restricted
-+			 * look-up modes.
-+			 */
-+			if (!(nd->flags & (LOOKUP_BENEATH | LOOKUP_IN_ROOT)))
-+				error = -EPERM;
-+			/* Only work with O_CLOEXEC dirs. */
-+			if (!get_close_on_exec(nd->dfd))
-+				error = -EPERM;
-+
-+			if (!error)
-+				old_cred = openat2_override_creds(nd);
-+		}
-+		if (!error) {
-+			file = alloc_empty_file(op->open_flag, current_cred());
-+			error = PTR_ERR_OR_ZERO(file);
-+		} else {
-+			file = ERR_PTR(error);
-+		}
- 		if (!error) {
- 			while (!(error = link_path_walk(s, nd)) &&
- 			       (s = open_last_lookups(nd, file, op)) != NULL)
-@@ -3803,6 +3851,8 @@ static struct file *path_openat(struct nameidata *nd,
- 		}
- 		if (!error)
- 			error = do_open(nd, file, op);
-+		if (old_cred)
-+			revert_creds(old_cred);
- 		terminate_walk(nd);
- 		if (IS_ERR(file))
- 			return file;
-diff --git a/fs/open.c b/fs/open.c
-index ee8460c83c77..6be013182a35 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -1225,7 +1225,7 @@ inline int build_open_flags(const struct open_how *how, struct open_flags *op)
- 	 * values before calling build_open_flags(), but openat2(2) checks all
- 	 * of its arguments.
- 	 */
--	if (flags & ~VALID_OPEN_FLAGS)
-+	if (flags & ~VALID_OPENAT2_FLAGS)
- 		return -EINVAL;
- 	if (how->resolve & ~VALID_RESOLVE_FLAGS)
- 		return -EINVAL;
-diff --git a/include/linux/fcntl.h b/include/linux/fcntl.h
-index a332e79b3207..b71f8b162102 100644
---- a/include/linux/fcntl.h
-+++ b/include/linux/fcntl.h
-@@ -12,6 +12,8 @@
- 	 FASYNC	| O_DIRECT | O_LARGEFILE | O_DIRECTORY | O_NOFOLLOW | \
- 	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE)
- 
-+#define VALID_OPENAT2_FLAGS (VALID_OPEN_FLAGS | OA2_INHERIT_CRED)
-+
- /* List of all valid flags for the how->resolve argument: */
- #define VALID_RESOLVE_FLAGS \
- 	(RESOLVE_NO_XDEV | RESOLVE_NO_MAGICLINKS | RESOLVE_NO_SYMLINKS | \
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 8dfd53b52744..ea954b6945d0 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1028,6 +1028,8 @@ struct file {
- 	struct address_space	*f_mapping;
- 	errseq_t		f_wb_err;
- 	errseq_t		f_sb_err; /* for syncfs */
-+	kuid_t			f_fsuid;  /* fsUID of the opener */
-+	kgid_t			f_fsgid;  /* fsGID of the opener */
- } __randomize_layout
-   __attribute__((aligned(4)));	/* lest something weird decides that 2 is OK */
- 
-diff --git a/include/uapi/linux/openat2.h b/include/uapi/linux/openat2.h
-index a5feb7604948..cdd676a10b62 100644
---- a/include/uapi/linux/openat2.h
-+++ b/include/uapi/linux/openat2.h
-@@ -40,4 +40,7 @@ struct open_how {
- 					return -EAGAIN if that's not
- 					possible. */
- 
-+/* openat2-specific flags go to upper 4 bytes. */
-+#define OA2_INHERIT_CRED		(1ULL << 32)
-+
- #endif /* _UAPI_LINUX_OPENAT2_H */
--- 
-2.44.0
 
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
