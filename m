@@ -1,178 +1,235 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BE8152180;
-	Mon, 22 Apr 2024 15:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFBE152180;
+	Mon, 22 Apr 2024 15:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713799240; cv=none; b=L2/MRJ1PwwT1fAt3mrpwK3b+gGpx+OHbQUkaYm8ADrHEyftlCeUnj8BYqOv8gcA2vE2qFLU6CfBZfT2Kg+44vHC2O5p513d60RIVXgToW5ZAWilEuJeaLxHvrKj5oVwemGMDKfZqu6undKmfPaKgIhXsBZwYYk+jQxB9qu4jeps=
+	t=1713799361; cv=none; b=BVuc+cTNms2lOpHRe1TjvFAzobvCXMtvCANZMQ99pMuUR8/hoyGGFVqOLmRh2252kGJ0ZCJIONIfgIQBIJk90NExcQlLyqOjQcuQDi0JBGTDXoj994eWCwrAqopi0ZLubaSNpZWgSnVllruqcwfW8Kb6Ca/p4YplDTahyO2o1cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713799240; c=relaxed/simple;
-	bh=Mwaw02jUeFGzhexemdEHDycW4vgz4Ywj3HSwss/wKGI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OXgYMy4eSSPBjSUm+TIl75/u+rN4rG8xqmrJm9NrHxHS5BOgrpjhWfhzyXa8FYECBPqX4wH2QuqcIWA7y4fnDaiVjui3xseGnLm81ztDCafsiNrlwbXEwBVCu15MQ6YG0zFH/UFfYt/iBxlOv+wguWKtzKzb8n29/B7OGYDCkl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NXSm9DE+; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713799361; c=relaxed/simple;
+	bh=//8KcpjpbvYDgi/6QOo9g1ClZ/5OAjmHm3CIAJSIR9w=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Jv1HrTsSu3nCVhbKnfkoMG0tYiPWOv+S+Ih19fQlyoo/Xt8as2ZB9jvqRWOqGvOPIC2Q7QmLVrT/foytkrk1b8j1rluK9sRseKxPIxN5AsgEAYih7nctWiRmDUMnQWv99ysXQ6kXjTvgi9/42D5oQn2KdCgzauFcLGz9jeiYgz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4Y9gaGb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXSm9DE+"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2dde561f852so2800461fa.2;
-        Mon, 22 Apr 2024 08:20:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713799236; x=1714404036; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vuzvRER/eRgyRC6zF+Dn/+Ln6gq/IXAuegKQubeLgkk=;
-        b=NXSm9DE+8j9PA5Kz40ujPfl8k10XRD4Sv9DuAKZRSKLtTvK/dYoxI27vyY38RK0gM9
-         85R0j4AAvVi/UbwEFfFCd0I/Esy+EdTDPfuJK/YNOEyHOrueidKoUUCfCYfW6fD+l1SB
-         elJCSp2g/p58ZxMrrp51DMtkBFb/pFloe0yXKUPir1+8COKQGfpA+Ym4YVgXcJrtsx8g
-         vM+3WGj9iSij/h3iCqzBSUMmI0Bss+brXc0IXcVZZ7bmKd4OCDZ02PK7GzkDl57tqYNZ
-         D3LcSB/8BIsyv6prffLdqfgWZrVeLkvXDhYTxjEybhXKERl1WzWPmllgJQsCmtHMzyFz
-         fAQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713799236; x=1714404036;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vuzvRER/eRgyRC6zF+Dn/+Ln6gq/IXAuegKQubeLgkk=;
-        b=hzBTB/72bEhBGfbY7Ovj74TYPbQSCZBt7YK/4tRP0ZFPXmLR17q9d8moNQIqEURG6X
-         pQc7MkrGFOueGO8hTomsw4thH1mtK5PpmeJvN0sjCbiU2wswEecXTmHFE8eniQAGgdjb
-         dQLDo78eIbeD8ynDrBGzHymjdZwpeAPLIpXRYToZgNo3SXG/ITxTJrII1wTfil87kmX6
-         /2dG4RR6o6kZz7zi9G/mTvPHXPaze0QzML+XPXLzCPGuV8YLGdVEn0vqIFds9k2D8ejO
-         63+wzHIDnI5Vdg53fgF2/a1gnUpsz+7E3fo7e06rvfY7JWZTggsS5+7Ar1H1GvTzxByT
-         8oMg==
-X-Forwarded-Encrypted: i=1; AJvYcCVyuFZu1SYn+VE4Qj2okfJVe4fcic+ctihOUx8T68PuvsELO8aYF3rcvMBeFoeNa7ZUCHln5EyO3sdSb8xznOQ3Dsc2xaoKX96xzI5fp3NDRMSZRlVDcTxLHbnnzndEmxQ2AtEjDVQSYEE3+g==
-X-Gm-Message-State: AOJu0YxsUzRX9QCyQRD+tNNteFTu8WOIHY1H7Ng7WoI33DYcwC0zKfEW
-	/Mb3zibvYnaS+7CEuEp2SFMeau5+OYP63RubEvbXpGSU7NR98xGk26/YDiHQNKrLNTLDykhi6cE
-	H8cFD3G3bnWRJZz2fjt1z2Bf2PQs=
-X-Google-Smtp-Source: AGHT+IGmn/mToNtPSu8NqpDUFrNYhzadt7vHWmwuQWYgdxJO4KVqIZ51GyywFjqOjpCMtpoxvPmrN5nQYIoT0qz/nL4=
-X-Received: by 2002:a2e:97d4:0:b0:2d8:74c6:c44c with SMTP id
- m20-20020a2e97d4000000b002d874c6c44cmr6429232ljj.46.1713799236152; Mon, 22
- Apr 2024 08:20:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4Y9gaGb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE60CC113CC;
+	Mon, 22 Apr 2024 15:22:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713799360;
+	bh=//8KcpjpbvYDgi/6QOo9g1ClZ/5OAjmHm3CIAJSIR9w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=t4Y9gaGbcPig7Mdz+LEqNoPlC4cnjArOJwRu5PaTXNJM863eIgFwMZcNkZH2wD+xf
+	 kANHiNvsMwpyRee3B8kJFco0aLqPEj9cnwQ7bvQnl+Onc9cuuTAlN0EBqoYqG4GD1K
+	 Uq06fxqySyGqrw4bTCBBz3lxoCwSwvQ+w/Moka8jk6OisDm8TCmV1HFjPVLnqP3mM2
+	 m4DDvLwuDzyNTM3J4scNNiWJPH+u8HOSTYu7nSEa5MMiqTWBXnRO0Jt6kvr5vllvh8
+	 IiXT6yl9ZpmaE5gviSwAwoRJg9AYQFB9plw4gCzSY3pG/zlcO4UnIqAWMR7XdTop3i
+	 7X6EKYTKe0ZfQ==
+Date: Tue, 23 Apr 2024 00:22:34 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jonathan Haslam <jonathan.haslam@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org, andrii@kernel.org,
+ bpf@vger.kernel.org, rostedt@goodmis.org, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] uprobes: reduce contention on uprobes_tree access
+Message-Id: <20240423002234.6104df82cb3f96c9d485d5b1@kernel.org>
+In-Reply-To: <20240422102306.6026-1-jonathan.haslam@gmail.com>
+References: <20240422102306.6026-1-jonathan.haslam@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240417160842.76665-1-ryncsn@gmail.com> <87zftlx25p.fsf@yhuang6-desk2.ccr.corp.intel.com>
-In-Reply-To: <87zftlx25p.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Mon, 22 Apr 2024 23:20:19 +0800
-Message-ID: <CAMgjq7B1YTrvZOrnbtVYfVMVAmtMkkwiqcqc1AGup4=gvgxKhQ@mail.gmail.com>
-Subject: Re: [PATCH 0/8] mm/swap: optimize swap cache search space
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Barry Song <v-songbaohua@oppo.com>, Ryan Roberts <ryan.roberts@arm.com>, Neil Brown <neilb@suse.de>, 
-	Minchan Kim <minchan@kernel.org>, Hugh Dickins <hughd@google.com>, 
-	David Hildenbrand <david@redhat.com>, Yosry Ahmed <yosryahmed@google.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 22, 2024 at 3:56=E2=80=AFPM Huang, Ying <ying.huang@intel.com> =
-wrote:
->
-> Hi, Kairui,
->
-> Kairui Song <ryncsn@gmail.com> writes:
->
-> > From: Kairui Song <kasong@tencent.com>
-> >
-> > Currently we use one swap_address_space for every 64M chunk to reduce l=
-ock
-> > contention, this is like having a set of smaller swap files inside one
-> > big swap file. But when doing swap cache look up or insert, we are
-> > still using the offset of the whole large swap file. This is OK for
-> > correctness, as the offset (key) is unique.
-> >
-> > But Xarray is specially optimized for small indexes, it creates the
-> > redix tree levels lazily to be just enough to fit the largest key
-> > stored in one Xarray. So we are wasting tree nodes unnecessarily.
-> >
-> > For 64M chunk it should only take at most 3 level to contain everything=
-.
-> > But we are using the offset from the whole swap file, so the offset (ke=
-y)
-> > value will be way beyond 64M, and so will the tree level.
-> >
-> > Optimize this by reduce the swap cache search space into 64M scope.
->
+On Mon, 22 Apr 2024 03:23:05 -0700
+Jonathan Haslam <jonathan.haslam@gmail.com> wrote:
 
-Hi,
+> Active uprobes are stored in an RB tree and accesses to this tree are
+> dominated by read operations. Currently these accesses are serialized by
+> a spinlock but this leads to enormous contention when large numbers of
+> threads are executing active probes.
+> 
+> This patch converts the spinlock used to serialize access to the
+> uprobes_tree RB tree into a reader-writer spinlock. This lock type
+> aligns naturally with the overwhelmingly read-only nature of the tree
+> usage here. Although the addition of reader-writer spinlocks are
+> discouraged [0], this fix is proposed as an interim solution while an
+> RCU based approach is implemented (that work is in a nascent form). This
+> fix also has the benefit of being trivial, self contained and therefore
+> simple to backport.
+> 
+> We have used a uprobe benchmark from the BPF selftests [1] to estimate
+> the improvements. Each block of results below show 1 line per execution
+> of the benchmark ("the "Summary" line) and each line is a run with one
+> more thread added - a thread is a "producer". The lines are edited to
+> remove extraneous output.
+> 
+> The tests were executed with this driver script:
+> 
+> for num_threads in {1..20}
+> do
+>   sudo ./bench -a -p $num_threads trig-uprobe-nop | grep Summary
+> done
+> 
+> SPINLOCK (BEFORE)
+> ==================
+> Summary: hits    1.396 ± 0.007M/s (  1.396M/prod)
+> Summary: hits    1.656 ± 0.016M/s (  0.828M/prod)
+> Summary: hits    2.246 ± 0.008M/s (  0.749M/prod)
+> Summary: hits    2.114 ± 0.010M/s (  0.529M/prod)
+> Summary: hits    2.013 ± 0.009M/s (  0.403M/prod)
+> Summary: hits    1.753 ± 0.008M/s (  0.292M/prod)
+> Summary: hits    1.847 ± 0.001M/s (  0.264M/prod)
+> Summary: hits    1.889 ± 0.001M/s (  0.236M/prod)
+> Summary: hits    1.833 ± 0.006M/s (  0.204M/prod)
+> Summary: hits    1.900 ± 0.003M/s (  0.190M/prod)
+> Summary: hits    1.918 ± 0.006M/s (  0.174M/prod)
+> Summary: hits    1.925 ± 0.002M/s (  0.160M/prod)
+> Summary: hits    1.837 ± 0.001M/s (  0.141M/prod)
+> Summary: hits    1.898 ± 0.001M/s (  0.136M/prod)
+> Summary: hits    1.799 ± 0.016M/s (  0.120M/prod)
+> Summary: hits    1.850 ± 0.005M/s (  0.109M/prod)
+> Summary: hits    1.816 ± 0.002M/s (  0.101M/prod)
+> Summary: hits    1.787 ± 0.001M/s (  0.094M/prod)
+> Summary: hits    1.764 ± 0.002M/s (  0.088M/prod)
+> 
+> RW SPINLOCK (AFTER)
+> ===================
+> Summary: hits    1.444 ± 0.020M/s (  1.444M/prod)
+> Summary: hits    2.279 ± 0.011M/s (  1.139M/prod)
+> Summary: hits    3.422 ± 0.014M/s (  1.141M/prod)
+> Summary: hits    3.565 ± 0.017M/s (  0.891M/prod)
+> Summary: hits    2.671 ± 0.013M/s (  0.534M/prod)
+> Summary: hits    2.409 ± 0.005M/s (  0.401M/prod)
+> Summary: hits    2.485 ± 0.008M/s (  0.355M/prod)
+> Summary: hits    2.496 ± 0.003M/s (  0.312M/prod)
+> Summary: hits    2.585 ± 0.002M/s (  0.287M/prod)
+> Summary: hits    2.908 ± 0.011M/s (  0.291M/prod)
+> Summary: hits    2.346 ± 0.016M/s (  0.213M/prod)
+> Summary: hits    2.804 ± 0.004M/s (  0.234M/prod)
+> Summary: hits    2.556 ± 0.001M/s (  0.197M/prod)
+> Summary: hits    2.754 ± 0.004M/s (  0.197M/prod)
+> Summary: hits    2.482 ± 0.002M/s (  0.165M/prod)
+> Summary: hits    2.412 ± 0.005M/s (  0.151M/prod)
+> Summary: hits    2.710 ± 0.003M/s (  0.159M/prod)
+> Summary: hits    2.826 ± 0.005M/s (  0.157M/prod)
+> Summary: hits    2.718 ± 0.001M/s (  0.143M/prod)
+> Summary: hits    2.844 ± 0.006M/s (  0.142M/prod)
+> 
+> The numbers in parenthesis give averaged throughput per thread which is
+> of greatest interest here as a measure of scalability. Improvements are
+> in the order of 22 - 68% with this particular benchmark (mean = 43%).
+> 
+> V2:
+>  - Updated commit message to include benchmark results.
+> 
+> [0] https://docs.kernel.org/locking/spinlocks.html
+> [1] https://github.com/torvalds/linux/blob/master/tools/testing/selftests/bpf/benchs/bench_trigger.c
 
-Thanks for the comments!
+Thanks for update! This looks good to me.
+Let me pick this for probes/for-next.
 
-> In general, I think that it makes sense to reduce the depth of the
-> xarray.
->
-> One concern is that IIUC we make swap cache behaves like file cache if
-> possible.  And your change makes swap cache and file cache diverge more.
-> Is it possible for us to keep them similar?
+Thank you,
 
-So far in this series, I think there is no problem for that, the two
-main helpers for retrieving file & cache offset: folio_index and
-folio_file_pos will work fine and be compatible with current users.
+> 
+> Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
+> ---
+>  kernel/events/uprobes.c | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index e4834d23e1d1..8ae0eefc3a34 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
+>   */
+>  #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
+>  
+> -static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
+> +static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
+>  
+>  #define UPROBES_HASH_SZ	13
+>  /* serialize uprobe->pending_list */
+> @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
+>  {
+>  	struct uprobe *uprobe;
+>  
+> -	spin_lock(&uprobes_treelock);
+> +	read_lock(&uprobes_treelock);
+>  	uprobe = __find_uprobe(inode, offset);
+> -	spin_unlock(&uprobes_treelock);
+> +	read_unlock(&uprobes_treelock);
+>  
+>  	return uprobe;
+>  }
+> @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
+>  {
+>  	struct uprobe *u;
+>  
+> -	spin_lock(&uprobes_treelock);
+> +	write_lock(&uprobes_treelock);
+>  	u = __insert_uprobe(uprobe);
+> -	spin_unlock(&uprobes_treelock);
+> +	write_unlock(&uprobes_treelock);
+>  
+>  	return u;
+>  }
+> @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
+>  	if (WARN_ON(!uprobe_is_active(uprobe)))
+>  		return;
+>  
+> -	spin_lock(&uprobes_treelock);
+> +	write_lock(&uprobes_treelock);
+>  	rb_erase(&uprobe->rb_node, &uprobes_tree);
+> -	spin_unlock(&uprobes_treelock);
+> +	write_unlock(&uprobes_treelock);
+>  	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
+>  	put_uprobe(uprobe);
+>  }
+> @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
+>  	min = vaddr_to_offset(vma, start);
+>  	max = min + (end - start) - 1;
+>  
+> -	spin_lock(&uprobes_treelock);
+> +	read_lock(&uprobes_treelock);
+>  	n = find_node_in_range(inode, min, max);
+>  	if (n) {
+>  		for (t = n; t; t = rb_prev(t)) {
+> @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
+>  			get_uprobe(u);
+>  		}
+>  	}
+> -	spin_unlock(&uprobes_treelock);
+> +	read_unlock(&uprobes_treelock);
+>  }
+>  
+>  /* @vma contains reference counter, not the probed instruction. */
+> @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
+>  	min = vaddr_to_offset(vma, start);
+>  	max = min + (end - start) - 1;
+>  
+> -	spin_lock(&uprobes_treelock);
+> +	read_lock(&uprobes_treelock);
+>  	n = find_node_in_range(inode, min, max);
+> -	spin_unlock(&uprobes_treelock);
+> +	read_unlock(&uprobes_treelock);
+>  
+>  	return !!n;
+>  }
+> -- 
+> 2.43.0
+> 
 
-And if we convert to share filemap_* functions for swap cache / page
-cache, they are mostly already accepting index as an argument so no
-trouble at all.
 
->
-> For example,
->
-> Is it possible to return the offset inside 64M range in
-> __page_file_index() (maybe rename it)?
-
-Not sure what you mean by this, __page_file_index will be gone as we
-convert to folio.
-And this series did delete / rename it (it might not be easy to see
-this, the usage of these helpers is not very well organized before
-this series so some clean up is involved).
-It was previously only used through page_index (deleted) /
-folio_index, and, now folio_index will be returning the offset inside
-the 64M range.
-
-I guess I just did what you wanted? :)
-
-My cover letter and commit message might be not clear enough, I can update =
-it.
-
->
-> Is it possible to add "start_offset" support in xarray, so "index"
-> will subtract "start_offset" before looking up / inserting?
-
-xarray struct seems already very full, and this usage doesn't look
-generic to me, might be better to fix this kind of issue case by case.
-
->
-> Is it possible to use multiple range locks to protect one xarray to
-> improve the lock scalability?  This is why we have multiple "struct
-> address_space" for one swap device.  And, we may have same lock
-> contention issue for large files too.
-
-Good question, this series can improve the tree depth issue for swap
-cache, but contention in address space is still a thing.
-
-A more generic solution might involve changes of xarray API or use
-some other data struct?
-
-(BTW I think reducing the search space and resolving lock contention
-is not necessarily related, reducing the search space by having a
-large table of small trees should still perform better for swap
-cache).
-
-
->
-> I haven't look at the code in details.  So, my idea may not make sense
-> at all.  If so, sorry about that.
->
-> Hi, Matthew,
->
-> Can you teach me on this too?
->
-> --
-> Best Regards,
-> Huang, Ying
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
