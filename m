@@ -1,56 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276391474D2;
-	Mon, 22 Apr 2024 16:20:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC43B153BE2;
+	Mon, 22 Apr 2024 16:21:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713802858; cv=none; b=E+RpiZPhBndCwvqg/F0fEQ7HJUkAQ1lrA+i5C6/kzLAD4ntNQjWRrEJVaZxq1IuBaK51/+wmg0db14idRqcVraog8wYUPXJh3U281JOc5zrko+mH3yLlQL681XFNgRMT5zwAoQp43hauv8Zsslsp7Ds1EoTBb8FNbJBXkDEENe4=
+	t=1713802863; cv=none; b=FGmUFAIfmjKU8uDZNwJe3uUOlkhJmflZrFLf6SzS6NXaDYbqCpGvqkNPVxAjg7OlV+WJ2IVC6I8VOG0UkoOXOgGO4A/jubYv2Iay1x3q4jJjCPuBzyM7acunOWPKSeulnetWZROsp8g16ovSLVDvm7eqWGwz2QfvcHvX62jzSm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713802858; c=relaxed/simple;
-	bh=euB9xiHJ0ccVpu4VLR6T/Kab+BOh3URfAC/WOlN5Gos=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BRojWiEVQi6zajZI/Kp/4++oBKhHsludZ6DKalh1n3Nc7h4I4tixjZvvKTCk23Em4leSQnzq2c1HqDre8hbGCziYWtpHd+ckM0u3dAR4f6LlKKlFVfeJFJzD/KTgq4GezibD58DaILd4ocMinU/DFD1MCiami3zZ1RTu8hPX/pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GRd38Ero; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1713802863; c=relaxed/simple;
+	bh=b99iJg1A5bvxRUOumWSxLIxtvCLHK+sA+lw4WRmUyxA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GxdbqOgnugw8nu/4JrjXBVNEILePBLKZbyPU+EcjePRFSaqrhZ6qxRx/VT6ReT6BxldTbCve0LbdENbNA3xIIQfTFdh3J3lGKcux5Yp7Nr0D/7nAOaDW+PxStE7VCYfODxMmboLP0gQ3AbxsQPrRVmPd8H4DMR/1ghJrB8d4tQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=abI9eV8l; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GRd38Ero"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="abI9eV8l"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713802856; x=1745338856;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=euB9xiHJ0ccVpu4VLR6T/Kab+BOh3URfAC/WOlN5Gos=;
-  b=GRd38EroC5vttlIJOKESCxBQap3MYzs7kgFQMtvcAR2r/DNXzeR3IhTr
-   20L2E7POx8okIxl0yLcmyV6Uns2Mkypi90qH9R+EUO0t4z1ajXlruZ6On
-   6QsTVeZBBM2JG9KQd9fW/c+tI7l3/HE9QEuy7RcEi8tD70d6DlyLrit9r
-   URq7hk4I6ZJKM3BuaQCjOPUGZUtjyhpObOwukw5dvNV+LPWeWmWcr24QH
-   H5obKlw8q+ad7o2R9/vNq/yIPPmA0dA1gCiOTAG/3+MuDKb7H5pk/aQS3
-   zQTy4ljXvR7XtxGKqSBfLU+NmzYHXL+8N/8n2kESS3vStIhAquj0dsW2l
-   Q==;
-X-CSE-ConnectionGUID: cCzaZf3jRmq7DuoRFsswiA==
-X-CSE-MsgGUID: u/0C10ppRZmSGe3zPbLCWA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="20754868"
+  t=1713802862; x=1745338862;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=b99iJg1A5bvxRUOumWSxLIxtvCLHK+sA+lw4WRmUyxA=;
+  b=abI9eV8lgrA/dP6MidSyhcQWGNX6316W4JhThR9M2sb2ZZSYce0JHJjt
+   QTe4RbgLAa9hLLKmOgPkH8pht3dKaB+LqXm2yi1N+wUBdcsRDW9JSRq9g
+   oIzTOfXs/tVgu8skCT6xX2//3/+N9RKkTd6Xmq6U2FG0vL2Eg3E/Cy6xy
+   Gr66ZVHJJxvsZv7Cv1XAomN5huD7zqUZBFUCgnUv6UyOg0LNOrjZLjtj3
+   YBus74z1iYKUtMqHxwCAuAOlSSzzLwqEOhohtIvbJ5LlAonH5ETKOkypf
+   T6vXaH0oQ4OORndkh3ZsXQ2Fp+y9cj+FLZFXXfv1DEtm9RG5ootxgOYVc
+   w==;
+X-CSE-ConnectionGUID: 1mvpljJCSr6Thr6Bd2HQOg==
+X-CSE-MsgGUID: GnwpNsDYSCWr+ivU9Q4U7Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="20754874"
 X-IronPort-AV: E=Sophos;i="6.07,221,1708416000"; 
-   d="scan'208";a="20754868"
+   d="scan'208";a="20754874"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 09:20:55 -0700
-X-CSE-ConnectionGUID: S5DNLaSiSFaelJ20/iLS0g==
-X-CSE-MsgGUID: 1izRHuorTDuGqouMcS3uPw==
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 09:21:01 -0700
+X-CSE-ConnectionGUID: Gi48XVGxT1qxGkQse80rNA==
+X-CSE-MsgGUID: J6n7HzKHSnyQcialVOO2Tw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,221,1708416000"; 
-   d="scan'208";a="28738993"
+   d="scan'208";a="28739005"
 Received: from lxia1-mobl2.ccr.corp.intel.com (HELO rzhang1-mobl7.ccr.corp.intel.com) ([10.254.209.16])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 09:20:53 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 09:21:00 -0700
 From: Zhang Rui <rui.zhang@intel.com>
 To: rafael.j.wysocki@intel.com
 Cc: linux-kernel@vger.kernel.org,
 	linux-pm@vger.kernel.org,
 	srinivas.pandruvada@intel.com
-Subject: [PATCH V3 0/2] powercap: Introduce TPMI RAPL PMU support
-Date: Tue, 23 Apr 2024 00:20:38 +0800
-Message-Id: <20240422162040.1502626-1-rui.zhang@intel.com>
+Subject: [PATCH V3 2/2] powercap: intel_rapl_tpmi: Enable PMU support
+Date: Tue, 23 Apr 2024 00:20:40 +0800
+Message-Id: <20240422162040.1502626-3-rui.zhang@intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240422162040.1502626-1-rui.zhang@intel.com>
+References: <20240422162040.1502626-1-rui.zhang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,43 +62,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-RAPL energy counter MSRs are exposed via perf PMU. But this is done by
-separate code which is not part of RAPL framework, and it cannot be
-reused by other RAPL Interface drivers like TPMI RAPL.
+Enable RAPL PMU support for TPMI RAPL driver.
 
-Introduce two new APIs for PMU support in RAPL framework. This allows
-TPMI RAPL PMU support and also makes it possible for future cleanups of
-MSR RAPL PMU code.
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+---
+ drivers/powercap/intel_rapl_tpmi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Changes since V2:
-- drop patch 1/3 and rebase on PM tree bleeding-edge branch.
-- fix a regression introduced in patch V2 that RAPL PMU is not
-  successfully unregisted when unbinding the device. This causes kernel
-  calltrace about duplicate PMU name in sysfs when reloading the module.
-  Our unit test cases reproduced this but the test framework failed to
-  catch it, and now that problem is also fixed.
-- add comment for RAPL PMU implementation details.
-- add comment/document for struct rapl_pmu and rapl_package_pmu_data.
-- remove unneeded global RAPL PMU cpumask.
-- use an array to map RAPL PMU events to RAPL Domains.
-- Other minor improvements.
+diff --git a/drivers/powercap/intel_rapl_tpmi.c b/drivers/powercap/intel_rapl_tpmi.c
+index f6b7f085977c..947544e4d229 100644
+--- a/drivers/powercap/intel_rapl_tpmi.c
++++ b/drivers/powercap/intel_rapl_tpmi.c
+@@ -302,6 +302,8 @@ static int intel_rapl_tpmi_probe(struct auxiliary_device *auxdev,
+ 		goto err;
+ 	}
+ 
++	rapl_package_add_pmu(trp->rp);
++
+ 	auxiliary_set_drvdata(auxdev, trp);
+ 
+ 	return 0;
+@@ -314,6 +316,7 @@ static void intel_rapl_tpmi_remove(struct auxiliary_device *auxdev)
+ {
+ 	struct tpmi_rapl_package *trp = auxiliary_get_drvdata(auxdev);
+ 
++	rapl_package_remove_pmu(trp->rp);
+ 	rapl_remove_package(trp->rp);
+ 	trp_release(trp);
+ }
+-- 
+2.34.1
 
-Changes since V1:
-- remove the MSR RAPL PMU conversion because it is a separate work that
-  can be done later.
-- instead of using a flag to indicate the need of PMU support, introduce
-  two APIs for the RAPL Interface driver to invoke explicitly.
-- minor code/comments/changelog improvements.
-
-thanks,
-rui
-
-----------------------------------------------------------------
-Zhang Rui (2):
-      powercap: intel_rapl: Introduce APIs for PMU support
-      powercap: intel_rapl_tpmi: Enable PMU support
-
- drivers/powercap/intel_rapl_common.c | 578 +++++++++++++++++++++++++++++++++++
- drivers/powercap/intel_rapl_tpmi.c   |   3 +
- include/linux/intel_rapl.h           |  32 ++
- 3 files changed, 613 insertions(+)
