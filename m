@@ -1,122 +1,168 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0E815099A;
-	Mon, 22 Apr 2024 14:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262AD1509BC
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 14:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713795665; cv=none; b=bD6jSYtho7n4LQfdCU8fvG/I3mWU7tWvtWq9qrAWU/qnKTE95qN/iycdh+igo5KCjyfVru0cwk/2CZGLmaoOa4G5bJwhxMmv/08HLuTwD747j6LBvAnqCynQrfaLUED9mPNbO7UP51ZS/5dFHitZFuhYt5oWVSISdCEcBxcJNxA=
+	t=1713795685; cv=none; b=ZsOQWgBu+nTI2jlNXl+bkczaAhA3ME32tx+gUrtq72rdh3TlD5tZIbCmtUjf1vtz9hwh48Fuyt1Mt98ngY0z5Ojj664SUAr8RXrtLHBPLOiWUSeWmlFRJNuofxCEkuvmja2Hu7EOGqbdKLvcArkEBycUMM1ggP2hXP1Czz4IaKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713795665; c=relaxed/simple;
-	bh=kRCc2qB+QRN81Y9A6rydtQv4DOylAlEkQPIWVCVxyh0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=omt2vBPGM4NY/OIK4mlDFeY5XcVqGq2Q72wF/tcfcT2FB5dDviMR+1hJMWArD97CHRY/KzyeX3v86OvEqHkl/oMB1O9d6T0ddoNO/ARWdln+Ot0k5Csee2szE/34b6GRCV7EFwGxNkizHy2iaNkQ9OyzChJrpw7nabAmZzkvi7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ms1kULvc; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ms1kULvc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=gDB1GmbLM1RgLFgDDRHYfTCreFTNn/hu28SEK8oaIj0=; b=ms1kULvct7a4ce6WyMgmW1r7nl
-	cfRnf6+dSPUkoWok5LeTV6xdjjUPDGIGDB65WOhPGGg3lxvqSkuQYCTyvJu8//VZ1Qs2oOHHbm+7O
-	9sYNCsJu1RGwd/R8LJNK+uoGdC+OYuNjgvYWjlEgLW4+rQ/xYbmhnqED72RkJM/pNA2bYrpjMJJ+O
-	HdgrA5HBqJ0w1tctOJsEo1XDl1L8LcrPMWlFT6sbv4lPo6MaYy92wuvSxC1XCqkFYhQAxc5whQHBn
-	Lf+ydJ1HccDQRkx+zjZe0BQpTaPSz2xGS75VAzXB5gk8zW0a3cOeCfB5Gh0p8HCil2iEGY4y82TzM
-	lf52I8CA==;
-Received: from [179.234.232.152] (helo=morissey..)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1ryuWz-007HEu-GN; Mon, 22 Apr 2024 16:20:30 +0200
-From: =?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Wei Yang <richard.weiyang@linux.alibaba.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Minchan Kim <minchan@kernel.org>,
-	Huang Ying <ying.huang@intel.com>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel-dev@igalia.com,
-	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>
-Subject: [PATCH] mm: Update shuffle documentation to match its current state
-Date: Mon, 22 Apr 2024 11:18:40 -0300
-Message-ID: <20240422142007.1062231-1-mcanal@igalia.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1713795685; c=relaxed/simple;
+	bh=Qy//AdmxEgHP3psLoUo+TYNKkRALUtkqAmoJKbj8rrQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=cIXEjak9u7OofP8u9YJwRstUF9yvLVhbj4AoMvNOVaClrSfCQedwNWd9q04tmrkaq1EbEwPmeLRZDJ3bMxY2qic454xb4Aufv581A5YSmeKGmC/xB/js4QDA8lw07K6suvIzDIMr4zC3lb7EXW34IqErSWM06MagEIummZBo2bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7da42114485so494949239f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:21:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713795683; x=1714400483;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1yKoEUmreO/jxEhsqvfi/lpCnpHH8jnP+ZOdlyL7veY=;
+        b=BK6cInWyjTGr1rD/MReCt43hHa2o3LELJe+831TUlaqIiVN4sCktWlr+n9nSI2Gx68
+         MzNLWmF3CTuton8Upj7hX0STvF0ntTYOtIFiQ6exSACGGt3ShjruCZLiWW/dgJXXXRFs
+         R0ZSOGjPgKH9Ec5ETYJMR0gLNO2YVzhUVwPUeHhej4YMPsgBp+WaOd6Zd7i8tzsf0DmP
+         pOUjkELJYxGCvmQdQVXtr99dQLXvomlgpyXGwT/xfIWLdii80ks5jgcp2zwzF7syCeU9
+         ObYDBSTqYDslPky/PlZGwotLU7pLzLLZ3Eu7MU7Z8AtedgHFX7K93nu24WUqe1hBjz4X
+         nkJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXgiBu6FDw6U2goLlqiPzXQQ1m/0hEN/KUrEnxcc1PY3qcu7Y/PaIncn41mCPZtm2fvdhziiEZrsLBwZM6stxJkcfxa1ev0bRWbmQhK
+X-Gm-Message-State: AOJu0YwuJdyiPfL2gOaIoL2fthJaJ+sgMT7N33SERtjpGty4vgoMZHgQ
+	Jgd1iBRD+8vnB2DiQR4YO2qWAZbDiMTvKSyEKVdQyPotPZm2hI4hm5tVYBWkFXcVpBrV5DWnAl/
+	kAP+wDLR+Rz6WX9zls+mX3KvId8ZqFD6BSElqjnk9u621CUwrGhuiuS4=
+X-Google-Smtp-Source: AGHT+IFx4XZUnDLRtz1C/Ng5arXiCpIa7t+/uscrSJudFp4Q7+OF/5yd8SHiEj/XxK3O44Hvn/K5fRyvioamZvbwXzLBhAdQqu5q
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:6c12:b0:7da:ce78:a1be with SMTP id
+ ik18-20020a0566026c1200b007dace78a1bemr55003iob.3.1713795683234; Mon, 22 Apr
+ 2024 07:21:23 -0700 (PDT)
+Date: Mon, 22 Apr 2024 07:21:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000eac28e0616b026d1@google.com>
+Subject: [syzbot] [bpf?] [net?] WARNING in skb_ensure_writable
+From: syzbot <syzbot+0c4150bff9fff3bf023c@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, davem@davemloft.net, eddyz87@gmail.com, 
+	edumazet@google.com, fw@strlen.de, haoluo@google.com, horms@kernel.org, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, martin.lau@linux.dev, 
+	netdev@vger.kernel.org, pabeni@redhat.com, sdf@google.com, song@kernel.org, 
+	syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Commit 839195352d82 ("mm/shuffle: remove dynamic reconfiguration")
-removed the dynamic reconfiguration capabilities from the shuffle page
-allocator. This means that, now, we don't have any perspective of an
-"autodetection of memory-side-cache" that triggers the enablement of the
-shuffle page allocator.
+Hello,
 
-Therefore, let the documentation reflect that the only way to enable
-the shuffle page allocator is by setting `page_alloc.shuffle=1`.
+syzbot found the following issue on:
 
-Signed-off-by: Maíra Canal <mcanal@igalia.com>
+HEAD commit:    4ac828960a60 Merge branch 'eee-linkmode-bitmaps'
+git tree:       net-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=14710a54180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=57c41f64f37f51c5
+dashboard link: https://syzkaller.appspot.com/bug?extid=0c4150bff9fff3bf023c
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17cc49d8180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c88616180000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/f1bd74942969/disk-4ac82896.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/c99cbac61b8b/vmlinux-4ac82896.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/fa3d589c2a1c/bzImage-4ac82896.xz
+
+The issue was bisected to:
+
+commit 219eee9c0d16f1b754a8b85275854ab17df0850a
+Author: Florian Westphal <fw@strlen.de>
+Date:   Fri Feb 16 11:36:57 2024 +0000
+
+    net: skbuff: add overflow debug check to pull/push helpers
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=166b3a4c180000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=156b3a4c180000
+console output: https://syzkaller.appspot.com/x/log.txt?x=116b3a4c180000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+0c4150bff9fff3bf023c@syzkaller.appspotmail.com
+Fixes: 219eee9c0d16 ("net: skbuff: add overflow debug check to pull/push helpers")
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 5074 at include/linux/skbuff.h:2723 pskb_may_pull_reason include/linux/skbuff.h:2723 [inline]
+WARNING: CPU: 1 PID: 5074 at include/linux/skbuff.h:2723 pskb_may_pull include/linux/skbuff.h:2739 [inline]
+WARNING: CPU: 1 PID: 5074 at include/linux/skbuff.h:2723 skb_ensure_writable+0x2ef/0x440 net/core/skbuff.c:6103
+Modules linked in:
+CPU: 1 PID: 5074 Comm: syz-executor365 Not tainted 6.8.0-rc5-syzkaller-01654-g4ac828960a60 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+RIP: 0010:pskb_may_pull_reason include/linux/skbuff.h:2723 [inline]
+RIP: 0010:pskb_may_pull include/linux/skbuff.h:2739 [inline]
+RIP: 0010:skb_ensure_writable+0x2ef/0x440 net/core/skbuff.c:6103
+Code: e8 b6 f7 57 f8 4c 89 ef 31 f6 31 d2 b9 20 08 00 00 48 83 c4 28 5b 41 5c 41 5d 41 5e 41 5f 5d e9 17 04 fe ff e8 92 f7 57 f8 90 <0f> 0b 90 e9 3e fd ff ff 44 89 f7 44 89 e6 e8 3e f9 57 f8 45 39 e6
+RSP: 0018:ffffc900039ef8f8 EFLAGS: 00010293
+RAX: ffffffff893b75de RBX: ffff88802c8a1000 RCX: ffff88802a155940
+RDX: 0000000000000000 RSI: 00000000fb6014e4 RDI: 0000000000000000
+RBP: 00000000fb6014e4 R08: ffffffff893b7317 R09: 1ffffffff1f0bcb5
+R10: dffffc0000000000 R11: ffffffffa0000954 R12: 00000000fb6014e4
+R13: ffff88802c8a1000 R14: ffffc90000b06030 R15: dffffc0000000000
+FS:  0000555556fa9380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000001b7b398 CR3: 00000000241e8000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __bpf_try_make_writable net/core/filter.c:1665 [inline]
+ bpf_try_make_writable net/core/filter.c:1671 [inline]
+ ____bpf_skb_pull_data net/core/filter.c:1862 [inline]
+ bpf_skb_pull_data+0x7c/0x230 net/core/filter.c:1851
+ bpf_prog_ca74b6b79e086095+0x1d/0x1f
+ bpf_dispatcher_nop_func include/linux/bpf.h:1235 [inline]
+ __bpf_prog_run include/linux/filter.h:651 [inline]
+ bpf_prog_run include/linux/filter.h:658 [inline]
+ bpf_test_run+0x408/0x900 net/bpf/test_run.c:423
+ bpf_prog_test_run_skb+0xaf9/0x13a0 net/bpf/test_run.c:1056
+ bpf_prog_test_run+0x33a/0x3b0 kernel/bpf/syscall.c:4188
+ __sys_bpf+0x48d/0x810 kernel/bpf/syscall.c:5591
+ __do_sys_bpf kernel/bpf/syscall.c:5680 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5678 [inline]
+ __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5678
+ do_syscall_64+0xf9/0x240
+ entry_SYSCALL_64_after_hwframe+0x6f/0x77
+RIP: 0033:0x7f6a0471c4a9
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffcdcead7e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00007ffcdcead9b8 RCX: 00007f6a0471c4a9
+RDX: 0000000000000050 RSI: 0000000020000080 RDI: 000000000000000a
+RBP: 00007f6a0478f610 R08: 0000000000000000 R09: 00007ffcdcead9b8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffcdcead9a8 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+
+
 ---
- Documentation/admin-guide/kernel-parameters.txt | 10 ++++------
- mm/Kconfig                                      |  7 +++----
- 2 files changed, 7 insertions(+), 10 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 902ecd92a29f..924bb8ddd8a8 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4170,13 +4170,11 @@
- 
- 	page_alloc.shuffle=
- 			[KNL] Boolean flag to control whether the page allocator
--			should randomize its free lists. The randomization may
--			be automatically enabled if the kernel detects it is
--			running on a platform with a direct-mapped memory-side
--			cache, and this parameter can be used to
--			override/disable that behavior. The state of the flag
--			can be read from sysfs at:
-+			should randomize its free lists. This parameter can be
-+			used to enable/disable page randomization. The state of
-+			the flag can be read from sysfs at:
- 			/sys/module/page_alloc/parameters/shuffle.
-+			This parameter is only available if CONFIG_SHUFFLE_PAGE_ALLOCATOR=y.
- 
- 	page_owner=	[KNL,EARLY] Boot-time page_owner enabling option.
- 			Storage of the information about who allocated
-diff --git a/mm/Kconfig b/mm/Kconfig
-index b1448aa81e15..f30a18a0e37d 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -333,10 +333,9 @@ config SHUFFLE_PAGE_ALLOCATOR
- 
- 	  While the randomization improves cache utilization it may
- 	  negatively impact workloads on platforms without a cache. For
--	  this reason, by default, the randomization is enabled only
--	  after runtime detection of a direct-mapped memory-side-cache.
--	  Otherwise, the randomization may be force enabled with the
--	  'page_alloc.shuffle' kernel command line parameter.
-+	  this reason, by default, the randomization is not enabled even
-+	  if SHUFFLE_PAGE_ALLOCATOR=y. The randomization may be force enabled
-+	  with the 'page_alloc.shuffle' kernel command line parameter.
- 
- 	  Say Y if unsure.
- 
--- 
-2.44.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
