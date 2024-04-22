@@ -1,374 +1,204 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F45D15216D;
-	Mon, 22 Apr 2024 14:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713796858; cv=fail; b=sosn2jCnbcAk7Y25JG4amCBxqF1L53i07ZCsDAC5WYnjp/l7ZQBlOwpvT/ujJZUs3AT1F62qtYrG9Tx7BGmt9+qILeyiLn7HvBg7m98fwLQu+KGbbSErW4xECc+mDc6+qBXcKPWM1qEWxt/yNMdu0jf5H1m6L4+cXlKPwKd5OdA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713796858; c=relaxed/simple;
-	bh=LQNTJS2Dl9j8hWesCuTuvvFAVzuhESZ6PR7W0z7t758=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uTEWqD6xq1MLIjJE9TtaC7SMuPZ9CS+Ign50dmCjiUMAp1+lZgjUBV4G3F6Fx1lOSLIWcHoyzjw2e8F6wKVJojknWqE4mNHRxuunE2hDk+lWFA4uNOsQXlUF0KnlGyN6NuqvGz+4KoFYuDLQhY8kQUuojc0ZRktfoDRs7RKZlEk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=BhwPhjuq; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=gwvtoXby; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F16F1534F4
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 14:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713796863; cv=none; b=mHQb7okxJWtcVufsQ5/VgbS6ctO04uQgWJ1ZDBVA7XETmfP6wfapYaX3AYN7Hht+RyHm2PD3EL0QYbR4CGVh+G6JABfFJaRkMryTEOIMZSl2K/9sLaljuhdhfjHvOLf4Ent/nw0P0lRpRGOpCWBGreo/CcQDAPjQnHvQNgWPGQ4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713796863; c=relaxed/simple;
+	bh=nIMUuvEk/DgX3yywYvi5JJnIRhP+5O4wt358I0E1PeI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Yly1lVHHAd19cq4Pt+dg2t2g+/MPXKFBGdbITvw0o/MH1X1hoBSp63frb/rXJYRkSEtipq/u0e4/+XgpEJ2Jq8QUYfdJCeKR8b9CoJtD3J3czaclEP8yBJLhQ4Z4JcjZr+5LPOwBeAlElbOhDYoXQpiZD8KsEHZiXZCkBZJD2a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DXD72odo; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BhwPhjuq";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="gwvtoXby"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43MDY0xb005886;
-	Mon, 22 Apr 2024 14:40:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version;
- s=corp-2023-11-20; bh=taroF7H7egrJK7Pw/kJDYZMg7eDmZ06EnDskm+PiDNQ=;
- b=BhwPhjuqA2w59yTi3pOKNql2zPHiMdb44iHJtEu/VGvDIkO7lFO3adSTjeavzWRKO3AT
- vl/TS2AqsuK0WerUVG8Wo3w2MRAN3MotD3gNSgZhCdkrp3Mzvg2u8oSFcsDQvAuO3oSN
- 4HtWOGDft3QlGb498jTn6ohj4l7lGunv0wbQAtv/IJQVz+Bwp4hpEg92JwA//+u2f+r3
- DrEprtN8Mf1TS6qFYjmRiPQcMO50W5DcoAv+6a4xlmJliccrO+QAuvbGOYM5o3MJqGSg
- OTiUYXCZawx617OYoUbLPIJNTKxTC8KM4pypUW+8P2w496nuotEMoMvjd9qmq5z8EYAb pQ== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xm44ettkn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 22 Apr 2024 14:40:28 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43ME73O6009698;
-	Mon, 22 Apr 2024 14:40:28 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2168.outbound.protection.outlook.com [104.47.56.168])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3xm45byksu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 22 Apr 2024 14:40:27 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mwAtI3CEaGPPWnGHKziNieOCqMQbroxTDMRxBx/JUdOvb7noVfEWwUaocKztXUnx/3z7Snrr7RCjXE3MVRDSgjtI5Kpevi6JF2jo0tHhh8ouBiYrcmSXNO/DdoMJUfmof3c+WufKIuo40C06XqEA417QNKp+Lu4YXPXKB4Cx8xUsxP8YruF5n6GxNTL6gjnKPlc1BEWnQw4Qn1XuMGE1pI377XDvtDJUYaeMCvdQwbUV7VmVtlMyBqZfzuAbc6oglQ/TloHj5VJpA+LUli2t4RK73EFABk+kB5ub+8mlr6+0Qk43NaAfYXD/4ZU4/6+Hm4LLwzwOgQWyzhwr6CG2Wg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=taroF7H7egrJK7Pw/kJDYZMg7eDmZ06EnDskm+PiDNQ=;
- b=jlEevv2OWZMz2z6zBk+x5vRX0Ihw73Wx88kmQ7jeuOVVKSt0CTbYfUGaaDViBVE++IemGS79qss5lI23obwkXrVgzdjgATXdvChJT1yak7+rIh7XbRUbuxAolCsNKzBJN72Jr5Oz2s/q9e94zRManbO8isTD1wRf/3s7ZQYY4FRhTwa6gws3r0wjTIAXUeD0lvbf8XKCXE+iiIkUr9MYWfK3n2xaoOpKxC9fF8tJNRX4zND4zsBVGqeSRha0KdTCF0uhf3FlMuiAOA50TqZKcR1xf2rlYjA3zMyW5ctrMgPh7jdgATIvz6ronfA6tjuU+YsWUjQNoHIMsCV5pWZupg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXD72odo"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2a55a3d0b8eso3011051a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:41:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=taroF7H7egrJK7Pw/kJDYZMg7eDmZ06EnDskm+PiDNQ=;
- b=gwvtoXbycNJ5Rsk+5JGG1KpyyiIZ+X70TYG4R7t5INa7Qp18jI1h/jFjKX1WU/rzPZlZgh22RjEGjU7uklLmz9dtPNnOx55kVRK05EVt2EqItXcjgxIZ/2aFl+5w40KOEWO8vcbpq3abre4O2EhdiSg84+3F802WD2RntGK67D8=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by DS7PR10MB5039.namprd10.prod.outlook.com (2603:10b6:5:3a6::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Mon, 22 Apr
- 2024 14:40:25 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::ae68:7d51:133f:324]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::ae68:7d51:133f:324%4]) with mapi id 15.20.7472.044; Mon, 22 Apr 2024
- 14:40:25 +0000
-From: John Garry <john.g.garry@oracle.com>
-To: axboe@kernel.dk, brauner@kernel.org, djwong@kernel.org,
-        viro@zeniv.linux.org.uk, jack@suse.cz, akpm@linux-foundation.org,
-        willy@infradead.org, dchinner@redhat.com, tytso@mit.edu, hch@lst.de,
-        martin.petersen@oracle.com, nilay@linux.ibm.com, ritesh.list@gmail.com,
-        mcgrof@kernel.org
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, ojaswin@linux.ibm.com, p.raghav@samsung.com,
-        jbongio@google.com, okiselev@amazon.com,
-        John Garry <john.g.garry@oracle.com>
-Subject: [PATCH RFC 5/7] fs: iomap: buffered atomic write support
-Date: Mon, 22 Apr 2024 14:39:21 +0000
-Message-Id: <20240422143923.3927601-6-john.g.garry@oracle.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240422143923.3927601-1-john.g.garry@oracle.com>
-References: <20240422143923.3927601-1-john.g.garry@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR03CA0024.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::37) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+        d=gmail.com; s=20230601; t=1713796861; x=1714401661; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R9LOOxnp6uDCj3fmcKccLPiFpdOHLZ+RePrbPeCtdEE=;
+        b=DXD72odoSH97T6PmmX00/xfQ8ONeUEUfFq/mvEl6nup7LA8Oa1feXvcSQjdhhEdfET
+         MaoVI5VdFkegaliCWUHQWKBN7u3KEDIEmV8gZR+iUqaTMIdarroY89LQXq5GAWdzvege
+         /YGfxiGy01GJCz0cPSZJYd2mASh3X9vL5KbBAsTnAIjsNs6BkGQZ5Z4rpsakZ5iTF4Tm
+         5LhUctTwmISFQScBYoiaawQNsuy7+KwIASp6I/hScsgvO79gDqFSL21emVke3G7gYrhK
+         Gv89X3s8dd4Vs0YZYH1O6MJJ7YrF957rQXo7AhykXfdCa4R9p30IaQcPCzFfuU93YSFL
+         W/pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713796861; x=1714401661;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R9LOOxnp6uDCj3fmcKccLPiFpdOHLZ+RePrbPeCtdEE=;
+        b=DMUlMBcnsvCkBcGIFUx5V6nTZ2piWUScvagfmtHkxIP4A2FBWRO0bBDKbObaeEQEb9
+         VTFDub5bO2HUGUoaT3MrjeF4POPkbcGjtOKmLP/xK4/12BBL7nMjAGO2tbqUNUj09owt
+         TNbJuB44vnW+fs96hU0EFpgPZjuHAU10kmQ2+XVfuKPmxE0FrRSL7JuwO5d2eKR6D0H7
+         Kra5PSAOtvKHuNrpvRrzKKe5ytwXfRVlRnIcLLRmd6XLQjzkDg4xRWTfq1y6je/q4m3R
+         KGP2jkZc3ChitScwd3Sh+ZcF+EOF2o7FSrVY/jey3VuDQR+gUyzsKD6gtwGP1iaAp6eM
+         6YDw==
+X-Forwarded-Encrypted: i=1; AJvYcCXE8Qz5A2Js1GgzjPB5glkJ+/9+xMSAjeZkznudQCzLPwzfDX8HVtC3sNBhxY0b4kuqMJ0tmis5zc9Z1aE0pWZJayI6M88yDD5dIzUo
+X-Gm-Message-State: AOJu0YxCB8zNu8KU5+hfMDWTanMwAtQxILQ0waLpEnInq1uxDymMhMrq
+	tomi5I9A1V7uOYTr43W1Ixm/kbHZqkRVG6gOY+i0cTXVWaakPdhlA19HSMWb0Jcq/13ZVKqinHG
+	b+ItWmZePWYHgoeH3N6n3Dw1jQInD3Q==
+X-Google-Smtp-Source: AGHT+IEgc0XiwfDp8RVTyTAd5lS2sDXiuF3v9HjTRhVsGc5NIcwymNn2hdprUQwLiFncA8Ojla8Wfuwk9H/w2el4HR8=
+X-Received: by 2002:a17:90b:4aca:b0:29b:c31:1fe1 with SMTP id
+ mh10-20020a17090b4aca00b0029b0c311fe1mr14464782pjb.10.1713796861204; Mon, 22
+ Apr 2024 07:41:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|DS7PR10MB5039:EE_
-X-MS-Office365-Filtering-Correlation-Id: eb47ac47-80ae-4058-f4c4-08dc62da2548
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?rB1eh7mcGR5wskUc5CTOWu8lvYeN1OtwR5jSSIhzmB4Ljyz6qk9wQldClS78?=
- =?us-ascii?Q?3w5ZKU3EjeuUMcyJ9ZvMN/TLiMwb7CEunEOm9etFGQKSrVZ0tDSG/vJJuJLP?=
- =?us-ascii?Q?voPunKLsxCFtwOkmy0XBbbAIrs7PjI35jJvxFaT/3RBiAeKq/99tJBTeF5PS?=
- =?us-ascii?Q?/n5kIvLim6bAYlr0yImUzLyZYGnX6/3cindh8YCETNnqpSSFYHpbSuNboYxk?=
- =?us-ascii?Q?roXoY044f6nYD3s7VRd5CHjs8OXHVvRDa+rVmuCAITBDGEvG7riZpfTVkG6c?=
- =?us-ascii?Q?dAHiKKnfSjaXaIfuA61+GDD2EtUz/jTrBRDoPQOskiGltlew0a/u+GIS2dR2?=
- =?us-ascii?Q?Bn29741JO3/77cL3frHz6LzsSA8L9+pMS+H5z0OHeeXZZYueMu00W4rfv8oK?=
- =?us-ascii?Q?FHYsrPoygD07LMGtRHCCora/Bi4KC1lWybH+RS63Zk09yVpF8T3Ui1WNOoX7?=
- =?us-ascii?Q?Vh+ui/fSoKhWOZ8RvGYr+ZeCTwugOCRZi5u7p4flqTVdNSchSvCiiylNSIjJ?=
- =?us-ascii?Q?u3REIiuYue0OgtYWHlhgQ91PGygkDZqisWCNSXvbROkLd1saI5IteITJC9Od?=
- =?us-ascii?Q?+5Y1Vv6QQJpZGknJ5n1HXB7EXZnTelHRq/1TwZwNkw41xaU8DBLNQ9QIfGMs?=
- =?us-ascii?Q?QPin5kdOmWeuws82Wzcu3OuSraGWLYOeaSOWcw1IDzChr3d7ZUVxANT9ODGB?=
- =?us-ascii?Q?ApPju5qaaSWmjtHfmTZEaihjPfruZOlhrk2wnw+pl8c7eMS758RKHycbR2Rc?=
- =?us-ascii?Q?sxB0av22CBkEuLaGQZyIPk4k2hWwuQ4rLvy46+Ub+vGhmOy753jSsG2Yd/o6?=
- =?us-ascii?Q?CSRtL/Z4vGcHuzHv0bvc/EGlHvzNq8scg+JUa2nPZI3ZkWfC1hucSIsaUwP0?=
- =?us-ascii?Q?LlYxl2itZcaatyBStpbueoWHPQel1x0VgXVDe7I4Gq/FZQNm4WwGi0Lcq/gV?=
- =?us-ascii?Q?xwBbnKlgHEFPAMo79tPbCJNaooR9y63H1MQGaG78yYP7yP2+vdNMTIAEqWnN?=
- =?us-ascii?Q?Za0TAd9XqCoLu5CYsL5ozM0SEUvDDlxJVz+ESLrQbGC4/MNo/wl3O/N2uUWF?=
- =?us-ascii?Q?wgVdI5r2uLBqA9H15k5K0SkKWdxgRqAugAGI0GEvbsfMMM3pT/K/Xs5ey6si?=
- =?us-ascii?Q?9EbFwrMCoHAnL96Y8K2QHMFah/7xWw5/uys0YKuf3IO4wB4+2+9YckqnOSEZ?=
- =?us-ascii?Q?DymblTT1Zu62EvwyzyYmhy5rahTOBdA8WS+TvetpsnsYuGor71j9t9LXfu8n?=
- =?us-ascii?Q?kNWUVIukh8AjF2Gzkm21KkZYQgvYC5RX7djDY5pg4lMw88+CtcSLhAH2tvYE?=
- =?us-ascii?Q?ARfYE/cQwGagikJT9C1ysDhP?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007)(921011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?w8gviT6NdX1aPPpzDJ+HJITzUAvCC5Vd7mzgfsmPlnBx2ZpeMhSbqaWsL8SQ?=
- =?us-ascii?Q?mKnUGpvgOFiIxhYVH8IopqDLLXnG3lrZ6H2pUAAMLUu5atujv/uYy8n88003?=
- =?us-ascii?Q?DMJkXTX8MHvchtIzc+WqSI3LJWq8HslIOHYKuJB57GlRuayMXKD2VHwbkBAC?=
- =?us-ascii?Q?POyjl6H/p5Qn6pOYsGRvDCYnGr5WZH0Ou+0eUnJtKQ52HYNyea8XAZYBGAiV?=
- =?us-ascii?Q?pkhJR9x8uY+m84+9hNzv2+6k06fKBUETCyZmVmNcORBJicjUbK3hez6V+OXh?=
- =?us-ascii?Q?HZUlI4iaQRgFAGapnDvpwIPXncjuK+ZPWhD1HMtRFUhQEfPkYY39M3rEBn5s?=
- =?us-ascii?Q?0gx/QRRV8inIZXgGE0p0iL4aIOalxIsWiCS2lOVIwyd6Rw566N5UnGTdw3xp?=
- =?us-ascii?Q?RvFndoXx9BMNuqWeKPbvpTpI++W9s3vnlLKpH5Z1+XG9VG8WWEuEPS4PlGya?=
- =?us-ascii?Q?TmyUqOVlEvzdvYqa+PcXJgqxmkdl8bkViPUxHYbV0ZjuGWTc/TPE3kpbTs9W?=
- =?us-ascii?Q?vdiGOc1GlAPnJFdL3V1BegcjRYZHvzHX0q3xsdEby7TB6hO/uvpAbhJQILBT?=
- =?us-ascii?Q?T8/muFLmeaj/v3IhhfMPJxLzdzL0bXutCF9WiYwHoFX0H8+DnPYil+h9tbjr?=
- =?us-ascii?Q?MyVM3UqKXxC9vEX7kvA6qRwuFbrIY2PU2H+nCGD8xam4XIbrj5LBCs5c2m1q?=
- =?us-ascii?Q?Gk8EBVRoPVPow1Idd7azLn3sA7dzQCG3AuPTm3m9M0GGtjkeEyZMybOEVCaB?=
- =?us-ascii?Q?QcBf+gflqG2PAZ2op0DO8TcbmOOLUlIvJM/KBzPqaoVVclesVJBh0c3kRxxy?=
- =?us-ascii?Q?lieYPRQoxnZh2H8E9Uyfp/pihpls7WgtgMVReM8Fe8BzTpO6vojo2LnLsDfo?=
- =?us-ascii?Q?1diwHEEL5Wc7ZO84UdOzVmJsbwhyWamdAP6kkMk+oit7+71L64oqfbgjWxRP?=
- =?us-ascii?Q?ZnAUKVI/TDRQR79SILRvrqf5h/SneWGB6NwPhJfV3t8LxmqLP0buCtK63fBg?=
- =?us-ascii?Q?1hncqxjrmriDmtEbMxA7onO8Qx8BPfJ942fx+Ln/v2h+SsxtHN/oheSV3kzK?=
- =?us-ascii?Q?tva8ftJdVLUBdGCuz0l7rGFDzWOjkAJKpfovd/xcPWl0hInaDRItkj2NCTQu?=
- =?us-ascii?Q?frS/1tna9mJDe77n+kr5tAZHkF6D1MPLme5p+HSA+sb4edBkdxcfo5fGuLjL?=
- =?us-ascii?Q?JSKYPOR6bcsEWXqPKgZ1/FJwun/WbttvgH+IUDN/EpwJCmJ14CSC/OUjlc7R?=
- =?us-ascii?Q?L7POKcC9gry/BGim7GYpbWzLvIpRouzv4NYufntsj6C+wjRTGBsCwwBsie1+?=
- =?us-ascii?Q?rhFtclImPIA1X6Gb2Zqh2hAd6L1JqilhYe3JL0h2f9CdKa71mcErlzTEIOtF?=
- =?us-ascii?Q?3JjozNkb4ZnOs1OfXKBnU7d6zFtI427L/w4K2WsKmMQ22uzep+DPfTHzUjNP?=
- =?us-ascii?Q?MBoRjLU5Y27558Vx01wo6vn+VvNJYf7Y5w8zWlSeVj+8TnJCJWS43iuYsYdd?=
- =?us-ascii?Q?3/LQeSHsddLZICPy4jYmPzklNQMMtZZjHx3xfPlYY6WOnu289W9zL/oie7T8?=
- =?us-ascii?Q?ifzEmJ6xTw+q0AsziHXG93gBfAGnHu9w6Lk4hreJRb4mOYEL2P4wZNO5MXCQ?=
- =?us-ascii?Q?tA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	iMQ1leu0l6zcaMq5gYg8MwdJafGfmO+Tg8rkrUVaokUubVJfp6BvBCGHJAUcSJdggzUrpH69d1HTge/ZT2Y3zvxTm3rydZTtnTEsip83fkpYlGeiep+oecH4RK7PharPcQAf6gRT7rOyEZLg76t1VEADyR0RPTpq0r4JsMubT6kFtpS8sCLnPpDqfg9AKyUwlHbx+j1H8Y3V1xBlHfjJ9rI0Sv1iayPSuDgbMYGuVcG+0gjskz/N+2z1fva85a9Ici9uBjBpkanLb6f6NMPM5ycEzAL0HCOnvjfb8zd8CXk+7CNAqNFK/v2WbDvgOPhbTvkYr7sjK3s1IxGJMb4qAJMnIWq001L7sA+vUcerJDLHQRvJNrrmsZah6/hEMgH6IE6ICdvZW+mnvDGLMh/jkkJiG4B6xGtiEkf9AI5SgpswYxFk06HvN2YJ+Ae+m1oAxLfgC21aOMeLAEK479RKs5v3vOIGiu0Rdiwf4PnvaWFqeAocWaTLlB2zziRLlNoZrxgUNKZKYwlLe4cAf/KCYlFaKaqxlMbo3+1hwTudWUZpyRL1Opb6gCNVXIvSmnUOmKn60stzsX8cLzXtSa9M+wkygRStb2CN0xn1h9vtois=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb47ac47-80ae-4058-f4c4-08dc62da2548
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2024 14:40:24.9493
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EyU4QUJSaQShh/uz0X8SuIHChrzKdgWW4JnX4FDZqVPcC9M6VzKos8zWICuVqoH2/i1W16eHhi/cjgc6nppZKg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5039
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-22_09,2024-04-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
- mlxscore=0 phishscore=0 spamscore=0 malwarescore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404220063
-X-Proofpoint-ORIG-GUID: de4RcoK0WpeaFunLdETakunvmUYU-xgk
-X-Proofpoint-GUID: de4RcoK0WpeaFunLdETakunvmUYU-xgk
+References: <20240422052608.5297-1-maqianga@uniontech.com> <68f02c5c-5591-4d6f-9926-b0fc6f9f6287@amd.com>
+ <D94775003178862D+20240422203329.49844e71@john-PC> <bde48eef-4d8a-4cfa-b824-6de88c0f87fd@amd.com>
+In-Reply-To: <bde48eef-4d8a-4cfa-b824-6de88c0f87fd@amd.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 22 Apr 2024 10:40:48 -0400
+Message-ID: <CADnq5_PQ67J9ytb89-DqOgDw5V-s98TOyVjT5BGfkWMYv5sMQg@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdgpu: Fixup bad vram size on gmc v6 and v7
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Qiang Ma <maqianga@uniontech.com>, alexander.deucher@amd.com, Xinhui.Pan@amd.com, 
+	airlied@gmail.com, daniel@ffwll.ch, srinivasan.shanmugam@amd.com, 
+	Arunpravin.PaneerSelvam@amd.com, le.ma@amd.com, Felix.Kuehling@amd.com, 
+	mukul.joshi@amd.com, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add special handling of PG_atomic flag to iomap buffered write path.
+On Mon, Apr 22, 2024 at 9:00=E2=80=AFAM Christian K=C3=B6nig
+<christian.koenig@amd.com> wrote:
+>
+> Am 22.04.24 um 14:33 schrieb Qiang Ma:
+> > On Mon, 22 Apr 2024 11:40:26 +0200
+> > Christian K=C3=B6nig <christian.koenig@amd.com> wrote:
+> >
+> >> Am 22.04.24 um 07:26 schrieb Qiang Ma:
+> >>> Some boards(like Oland PRO: 0x1002:0x6613) seem to have
+> >>> garbage in the upper 16 bits of the vram size register,
+> >>> kern log as follows:
+> >>>
+> >>> [    6.000000] [drm] Detected VRAM RAM=3D2256537600M, BAR=3D256M
+> >>> [    6.007812] [drm] RAM width 64bits GDDR5
+> >>> [    6.031250] [drm] amdgpu: 2256537600M of VRAM memory ready
+> >>>
+> >>> This is obviously not true, check for this and clamp the size
+> >>> properly. Fixes boards reporting bogus amounts of vram,
+> >>> kern log as follows:
+> >>>
+> >>> [    2.789062] [drm] Probable bad vram size: 0x86800800
+> >>> [    2.789062] [drm] Detected VRAM RAM=3D2048M, BAR=3D256M
+> >>> [    2.789062] [drm] RAM width 64bits GDDR5
+> >>> [    2.789062] [drm] amdgpu: 2048M of VRAM memory ready
+> >> Well we had patches like this one here before and so far we always
+> >> rejected them.
+> >>
+> >> When the mmCONFIG_MEMSIZE register isn't properly initialized then
+> >> there is something wrong with your hardware.
+> >>
+> >> Working around that in the software driver is not going to fly.
+> >>
+> >> Regards,
+> >> Christian.
+> >>
+> > Hi Christian:
+> > I see that two patches for this issue have been merged, and the
+> > patches are as follows:
+> >
+> > 11544d77e397 drm/amdgpu: fixup bad vram size on gmc v8
+> > 0ca223b029a2 drm/radeon: fixup bad vram size on SI
+>
+> Mhm, I remember that we discussed reverting those but it looks like that
+> never happened. I need to ask around internally.
+>
+> Question is do you see any other problems with the board? E.g. incorrect
+> connector or harvesting configuration?
 
-To flag an iomap iter for an atomic write, set IOMAP_ATOMIC.
+I'll need to dig up the past discussion again, but IIRC, the issue was
+only seen on some non-x86 platforms.  Maybe something specific to MMIO
+on those?
 
-For a folio associated with a write which has IOMAP_ATOMIC set, set
-PG_atomic.
+Alex
 
-Otherwise, when IOMAP_ATOMIC is unset, clear PG_atomic.
 
-This means that for an "atomic" folio which has not been written back, it
-loses it "atomicity". So if userspace issues a write with RWF_ATOMIC set
-and another write with RWF_ATOMIC unset and which fully or partially
-overwrites that same region as the first write, that folio is not written
-back atomically. For such a scenario to occur, it would be considered a
-userspace usage error.
-
-To ensure that a buffered atomic write is written back atomically when
-the write syscall returns, RWF_SYNC or similar needs to be used (in
-conjunction with RWF_ATOMIC).
-
-As a safety check, when getting a folio for an atomic write in
-iomap_get_folio(), ensure that the length matches the inode mapping folio
-order-limit.
-
-Only a single BIO should ever be submitted for an atomic write. So modify
-iomap_add_to_ioend() to ensure that we don't try to write back an atomic
-folio as part of a larger mixed-atomicity BIO.
-
-In iomap_alloc_ioend(), handle an atomic write by setting REQ_ATOMIC for
-the allocated BIO.
-
-When a folio is written back, again clear PG_atomic, as it is no longer
-required. I assume it will not be needlessly written back a second time...
-
-Signed-off-by: John Garry <john.g.garry@oracle.com>
----
- fs/iomap/buffered-io.c | 53 ++++++++++++++++++++++++++++++++++++------
- fs/iomap/trace.h       |  3 ++-
- include/linux/iomap.h  |  1 +
- 3 files changed, 49 insertions(+), 8 deletions(-)
-
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 4e8e41c8b3c0..ac2a014c91a9 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -586,13 +586,25 @@ EXPORT_SYMBOL_GPL(iomap_is_partially_uptodate);
-  */
- struct folio *iomap_get_folio(struct iomap_iter *iter, loff_t pos, size_t len)
- {
-+	struct address_space *mapping = iter->inode->i_mapping;
- 	fgf_t fgp = FGP_WRITEBEGIN | FGP_NOFS;
- 
- 	if (iter->flags & IOMAP_NOWAIT)
- 		fgp |= FGP_NOWAIT;
- 	fgp |= fgf_set_order(len);
- 
--	return __filemap_get_folio(iter->inode->i_mapping, pos >> PAGE_SHIFT,
-+	if (iter->flags & IOMAP_ATOMIC) {
-+		unsigned int min_order = mapping_min_folio_order(mapping);
-+		unsigned int max_order = mapping_max_folio_order(mapping);
-+		unsigned int order = FGF_GET_ORDER(fgp);
-+
-+		if (order != min_order)
-+			return ERR_PTR(-EINVAL);
-+		if (order != max_order)
-+			return ERR_PTR(-EINVAL);
-+	}
-+
-+	return __filemap_get_folio(mapping, pos >> PAGE_SHIFT,
- 			fgp, mapping_gfp_mask(iter->inode->i_mapping));
- }
- EXPORT_SYMBOL_GPL(iomap_get_folio);
-@@ -769,6 +781,7 @@ static int iomap_write_begin(struct iomap_iter *iter, loff_t pos,
- {
- 	const struct iomap_folio_ops *folio_ops = iter->iomap.folio_ops;
- 	const struct iomap *srcmap = iomap_iter_srcmap(iter);
-+	bool is_atomic = iter->flags & IOMAP_ATOMIC;
- 	struct folio *folio;
- 	int status = 0;
- 
-@@ -786,6 +799,11 @@ static int iomap_write_begin(struct iomap_iter *iter, loff_t pos,
- 	if (IS_ERR(folio))
- 		return PTR_ERR(folio);
- 
-+	if (is_atomic)
-+		folio_set_atomic(folio);
-+	else
-+		folio_clear_atomic(folio);
-+
- 	/*
- 	 * Now we have a locked folio, before we do anything with it we need to
- 	 * check that the iomap we have cached is not stale. The inode extent
-@@ -1010,6 +1028,8 @@ iomap_file_buffered_write(struct kiocb *iocb, struct iov_iter *i,
- 
- 	if (iocb->ki_flags & IOCB_NOWAIT)
- 		iter.flags |= IOMAP_NOWAIT;
-+	if (iocb->ki_flags & IOCB_ATOMIC)
-+		iter.flags |= IOMAP_ATOMIC;
- 
- 	while ((ret = iomap_iter(&iter, ops)) > 0)
- 		iter.processed = iomap_write_iter(&iter, i);
-@@ -1499,8 +1519,10 @@ static void iomap_finish_folio_write(struct inode *inode, struct folio *folio,
- 	WARN_ON_ONCE(i_blocks_per_folio(inode, folio) > 1 && !ifs);
- 	WARN_ON_ONCE(ifs && atomic_read(&ifs->write_bytes_pending) <= 0);
- 
--	if (!ifs || atomic_sub_and_test(len, &ifs->write_bytes_pending))
-+	if (!ifs || atomic_sub_and_test(len, &ifs->write_bytes_pending)) {
-+		folio_clear_atomic(folio);
- 		folio_end_writeback(folio);
-+	}
- }
- 
- /*
-@@ -1679,14 +1701,18 @@ static int iomap_submit_ioend(struct iomap_writepage_ctx *wpc, int error)
- }
- 
- static struct iomap_ioend *iomap_alloc_ioend(struct iomap_writepage_ctx *wpc,
--		struct writeback_control *wbc, struct inode *inode, loff_t pos)
-+		struct writeback_control *wbc, struct inode *inode, loff_t pos,
-+		bool atomic)
- {
-+	blk_opf_t opf = REQ_OP_WRITE | wbc_to_write_flags(wbc);
- 	struct iomap_ioend *ioend;
- 	struct bio *bio;
- 
-+	if (atomic)
-+		opf |= REQ_ATOMIC;
-+
- 	bio = bio_alloc_bioset(wpc->iomap.bdev, BIO_MAX_VECS,
--			       REQ_OP_WRITE | wbc_to_write_flags(wbc),
--			       GFP_NOFS, &iomap_ioend_bioset);
-+			       opf, GFP_NOFS, &iomap_ioend_bioset);
- 	bio->bi_iter.bi_sector = iomap_sector(&wpc->iomap, pos);
- 	bio->bi_end_io = iomap_writepage_end_bio;
- 	wbc_init_bio(wbc, bio);
-@@ -1744,14 +1770,27 @@ static int iomap_add_to_ioend(struct iomap_writepage_ctx *wpc,
- {
- 	struct iomap_folio_state *ifs = folio->private;
- 	size_t poff = offset_in_folio(folio, pos);
-+	bool is_atomic = folio_test_atomic(folio);
- 	int error;
- 
--	if (!wpc->ioend || !iomap_can_add_to_ioend(wpc, pos)) {
-+	if (!wpc->ioend || is_atomic || !iomap_can_add_to_ioend(wpc, pos)) {
- new_ioend:
- 		error = iomap_submit_ioend(wpc, 0);
- 		if (error)
- 			return error;
--		wpc->ioend = iomap_alloc_ioend(wpc, wbc, inode, pos);
-+		wpc->ioend = iomap_alloc_ioend(wpc, wbc, inode, pos, is_atomic);
-+	}
-+
-+	/* We must not append anything later if atomic, so submit now */
-+	if (is_atomic) {
-+		if (!bio_add_folio(&wpc->ioend->io_bio, folio, len, poff))
-+			return -EINVAL;
-+		wpc->ioend->io_size = len;
-+		wbc_account_cgroup_owner(wbc, &folio->page, len);
-+		if (ifs)
-+			atomic_add(len, &ifs->write_bytes_pending);
-+
-+		return iomap_submit_ioend(wpc, 0);
- 	}
- 
- 	if (!bio_add_folio(&wpc->ioend->io_bio, folio, len, poff))
-diff --git a/fs/iomap/trace.h b/fs/iomap/trace.h
-index 0a991c4ce87d..4118a42cdab0 100644
---- a/fs/iomap/trace.h
-+++ b/fs/iomap/trace.h
-@@ -98,7 +98,8 @@ DEFINE_RANGE_EVENT(iomap_dio_rw_queued);
- 	{ IOMAP_REPORT,		"REPORT" }, \
- 	{ IOMAP_FAULT,		"FAULT" }, \
- 	{ IOMAP_DIRECT,		"DIRECT" }, \
--	{ IOMAP_NOWAIT,		"NOWAIT" }
-+	{ IOMAP_NOWAIT,		"NOWAIT" }, \
-+	{ IOMAP_ATOMIC,		"ATOMIC" }
- 
- #define IOMAP_F_FLAGS_STRINGS \
- 	{ IOMAP_F_NEW,		"NEW" }, \
-diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-index f726f0058fd6..2f50abe06f27 100644
---- a/include/linux/iomap.h
-+++ b/include/linux/iomap.h
-@@ -179,6 +179,7 @@ struct iomap_folio_ops {
- #else
- #define IOMAP_DAX		0
- #endif /* CONFIG_FS_DAX */
-+#define IOMAP_ATOMIC	(1 << 9)
- 
- struct iomap_ops {
- 	/*
--- 
-2.31.1
-
+>
+> Regards,
+> Christian.
+>
+> >
+> > Qiang Ma
+> >
+> >>> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+> >>> ---
+> >>>    drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c | 11 +++++++++--
+> >>>    drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c | 13 ++++++++++---
+> >>>    2 files changed, 19 insertions(+), 5 deletions(-)
+> >>>
+> >>> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
+> >>> b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c index
+> >>> 23b478639921..3703695f7789 100644 ---
+> >>> a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c +++
+> >>> b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c @@ -309,8 +309,15 @@ static
+> >>> int gmc_v6_0_mc_init(struct amdgpu_device *adev) }
+> >>>     adev->gmc.vram_width =3D numchan * chansize;
+> >>>     /* size in MB on si */
+> >>> -   adev->gmc.mc_vram_size =3D RREG32(mmCONFIG_MEMSIZE) *
+> >>> 1024ULL * 1024ULL;
+> >>> -   adev->gmc.real_vram_size =3D RREG32(mmCONFIG_MEMSIZE) *
+> >>> 1024ULL * 1024ULL;
+> >>> +   tmp =3D RREG32(mmCONFIG_MEMSIZE);
+> >>> +   /* some boards may have garbage in the upper 16 bits */
+> >>> +   if (tmp & 0xffff0000) {
+> >>> +           DRM_INFO("Probable bad vram size: 0x%08x\n", tmp);
+> >>> +           if (tmp & 0xffff)
+> >>> +                   tmp &=3D 0xffff;
+> >>> +   }
+> >>> +   adev->gmc.mc_vram_size =3D tmp * 1024ULL * 1024ULL;
+> >>> +   adev->gmc.real_vram_size =3D adev->gmc.mc_vram_size;
+> >>>
+> >>>     if (!(adev->flags & AMD_IS_APU)) {
+> >>>             r =3D amdgpu_device_resize_fb_bar(adev);
+> >>> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+> >>> b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c index
+> >>> 3da7b6a2b00d..1df1fc578ff6 100644 ---
+> >>> a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c +++
+> >>> b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c @@ -316,10 +316,10 @@
+> >>> static void gmc_v7_0_mc_program(struct amdgpu_device *adev) static
+> >>> int gmc_v7_0_mc_init(struct amdgpu_device *adev) {
+> >>>     int r;
+> >>> +   u32 tmp;
+> >>>
+> >>>     adev->gmc.vram_width =3D
+> >>> amdgpu_atombios_get_vram_width(adev); if (!adev->gmc.vram_width) {
+> >>> -           u32 tmp;
+> >>>             int chansize, numchan;
+> >>>
+> >>>             /* Get VRAM informations */
+> >>> @@ -363,8 +363,15 @@ static int gmc_v7_0_mc_init(struct
+> >>> amdgpu_device *adev) adev->gmc.vram_width =3D numchan * chansize;
+> >>>     }
+> >>>     /* size in MB on si */
+> >>> -   adev->gmc.mc_vram_size =3D RREG32(mmCONFIG_MEMSIZE) *
+> >>> 1024ULL * 1024ULL;
+> >>> -   adev->gmc.real_vram_size =3D RREG32(mmCONFIG_MEMSIZE) *
+> >>> 1024ULL * 1024ULL;
+> >>> +   tmp =3D RREG32(mmCONFIG_MEMSIZE);
+> >>> +   /* some boards may have garbage in the upper 16 bits */
+> >>> +   if (tmp & 0xffff0000) {
+> >>> +           DRM_INFO("Probable bad vram size: 0x%08x\n", tmp);
+> >>> +           if (tmp & 0xffff)
+> >>> +                   tmp &=3D 0xffff;
+> >>> +   }
+> >>> +   adev->gmc.mc_vram_size =3D tmp * 1024ULL * 1024ULL;
+> >>> +   adev->gmc.real_vram_size =3D adev->gmc.mc_vram_size;
+> >>>
+> >>>     if (!(adev->flags & AMD_IS_APU)) {
+> >>>             r =3D amdgpu_device_resize_fb_bar(adev);
+> >>
+>
