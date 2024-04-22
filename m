@@ -1,44 +1,46 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 753F34AEE0;
-	Mon, 22 Apr 2024 07:09:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDA248787;
+	Mon, 22 Apr 2024 07:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713769748; cv=none; b=Zcr3Fo3etY1vYCUwDWpZFpCgMqDwFb+Iq0oPkTM0upHJ9yCNG+IW1RBtzULwJK9TATh32oNswAaf2NsSHDvFFCTZF7X7EvyGz7hh7/bVqE3zUas+4HX0hP98T2Lrg21r4nN9PwmEaRan8tsI3DfHGpcMgJ0yxmXGmivqv50bb6E=
+	t=1713769820; cv=none; b=P5DPxMb8jqJX2wdpAVW2YqoPaRsiL7Ol/BT+aezCYwQw0yurRufTR2DolE2CYuAUX2kJWXTVNoAKLLpWUFO+KfbI1rpiJqoHGae5dHznYOuXEAtW/ePiETStmCGQo4Yn7SuBdZ5lsZZ1PGfSm76fz2TNOWMSzSCRGCbysNi8UH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713769748; c=relaxed/simple;
-	bh=28b+Uc5vS3cu/g0Cy9Nux8bRU5W6BmMuyGIHQvZIBjc=;
+	s=arc-20240116; t=1713769820; c=relaxed/simple;
+	bh=iHcNO1X3e6+vWDzcfcynCoD9g0kl/l0PFPnGja/xXPQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Xhclm5pHm5dKyrwmyfuj2qOTztn9zdFwKTLLZi7SM+z/ebvMh28fehaZ8+b6aO6hP2fwsCyrL+rx8/+k52I7aWZvfbaq4PG8PX7qRFFvnBAvwl2u7mPDi2eFH7xxmSAkOOECtvHLJEFc7V+L1yZYtqOsNQT8zp5LzjYeQsHF1TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33D641476;
-	Mon, 22 Apr 2024 00:09:34 -0700 (PDT)
-Received: from e116581.blr.arm.com (e116581.arm.com [10.162.41.8])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 24BCB3F7BD;
-	Mon, 22 Apr 2024 00:09:00 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: shuah@kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: linux-kselftest@vger.kernel.org,
+	 MIME-Version; b=K2mQsSF0XW37VCVtSejD31HNU7djf6xSfsyH/iJ7BZ7i7G1wTwLiQrFkoE+Drw/TiBeTP+tq6TIliCijFecHz5bYZHLdv64jEBS2YOSeIYnSilphEXfie6X59KrT6vIPijEbJEgpSQ6JYa8bFSnDC4HqXHDXsflg42XYi7ybr30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VNGbf33tFz4f3mHy;
+	Mon, 22 Apr 2024 15:10:06 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 874851A0C79;
+	Mon, 22 Apr 2024 15:10:15 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP2 (Coremail) with SMTP id Syh0CgAHdwpTDSZmt5eIKw--.7343S6;
+	Mon, 22 Apr 2024 15:10:15 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: akpm@linux-foundation.org,
+	willy@infradead.org,
+	jack@suse.cz,
+	bfoster@redhat.com,
+	tj@kernel.org
+Cc: dsterba@suse.com,
+	mjguzik@gmail.com,
+	dhowells@redhat.com,
 	linux-kernel@vger.kernel.org,
-	Anshuman.Khandual@arm.com,
-	suzuki.poulose@arm.com,
-	ryan.roberts@arm.com,
-	rob.herring@arm.com,
-	Catalin.Marinas@arm.com,
-	broonie@kernel.org,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	linux@armlinux.org.uk,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v2 4/4] selftests: Add build infrastructure along with README
-Date: Mon, 22 Apr 2024 12:37:17 +0530
-Message-Id: <20240422070717.2194201-5-dev.jain@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240422070717.2194201-1-dev.jain@arm.com>
-References: <20240422070717.2194201-1-dev.jain@arm.com>
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org
+Subject: [ATCH v3 4/4] writeback: rename nr_reclaimable to nr_dirty in balance_dirty_pages
+Date: Tue, 23 Apr 2024 00:05:39 +0800
+Message-Id: <20240422160539.3340-5-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20240422160539.3340-1-shikemeng@huaweicloud.com>
+References: <20240422160539.3340-1-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,237 +48,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgAHdwpTDSZmt5eIKw--.7343S6
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFyxZr1fGF17CrW8WFWkXrb_yoW8Cr15pF
+	ZrGw4jkF4Iyayavrn3CFWq9rZxtw4xtF4fJry7Cw4avanrWF1UKFyI9ry0vF1xAa4fJrWa
+	qws0qrykXw4vkrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPmb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+	8IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAv
+	FVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3w
+	A2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE
+	3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr2
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7
+	CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY
+	6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aV
+	AFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZE
+	Xa7IU0TqcUUUUUU==
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-Add arm target, individual Makefile targets, and instructions to build the
-tests, along with .gitignore files and a config file.
+Commit 8d92890bd6b85 ("mm/writeback: discard NR_UNSTABLE_NFS, use
+NR_WRITEBACK instead") removed NR_UNSTABLE_NFS and nr_reclaimable
+only contains dirty page now.
+Rename nr_reclaimable to nr_dirty properly.
 
-Signed-off-by: Dev Jain <dev.jain@arm.com>
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
 ---
- tools/testing/selftests/Makefile              |  1 +
- tools/testing/selftests/arm/Makefile          | 57 +++++++++++++++++++
- tools/testing/selftests/arm/README            | 31 ++++++++++
- tools/testing/selftests/arm/config            |  1 +
- tools/testing/selftests/arm/elf/.gitignore    |  2 +
- tools/testing/selftests/arm/elf/Makefile      |  6 ++
- tools/testing/selftests/arm/mm/.gitignore     |  2 +
- tools/testing/selftests/arm/mm/Makefile       |  6 ++
- tools/testing/selftests/arm/signal/.gitignore |  3 +
- tools/testing/selftests/arm/signal/Makefile   | 30 ++++++++++
- 10 files changed, 139 insertions(+)
- create mode 100644 tools/testing/selftests/arm/Makefile
- create mode 100644 tools/testing/selftests/arm/README
- create mode 100644 tools/testing/selftests/arm/config
- create mode 100644 tools/testing/selftests/arm/elf/.gitignore
- create mode 100644 tools/testing/selftests/arm/elf/Makefile
- create mode 100644 tools/testing/selftests/arm/mm/.gitignore
- create mode 100644 tools/testing/selftests/arm/mm/Makefile
- create mode 100644 tools/testing/selftests/arm/signal/.gitignore
- create mode 100644 tools/testing/selftests/arm/signal/Makefile
+ mm/page-writeback.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index e1504833654d..3966d2541ef7 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- TARGETS += alsa
- TARGETS += amd-pstate
-+TARGETS += arm
- TARGETS += arm64
- TARGETS += bpf
- TARGETS += breakpoints
-diff --git a/tools/testing/selftests/arm/Makefile b/tools/testing/selftests/arm/Makefile
-new file mode 100644
-index 000000000000..039224bc006e
---- /dev/null
-+++ b/tools/testing/selftests/arm/Makefile
-@@ -0,0 +1,57 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+# When ARCH not overridden for crosscompiling, lookup machine
-+ARCH ?= $(shell uname -m 2>/dev/null || echo not)
-+
-+ifneq (,$(filter $(ARCH),aarch64 arm64 arm armv7l armv8l))
-+ARM_SUBTARGETS ?= mm signal elf
-+else
-+ARM_SUBTARGETS :=
-+endif
-+
-+CFLAGS := -Wall -O2 -g -static
-+
-+# A proper top_srcdir is needed by KSFT(lib.mk)
-+top_srcdir = $(realpath ../../../../)
-+
-+# Additional include paths needed by kselftest.h and local headers
-+CFLAGS += -I$(top_srcdir)/tools/testing/selftests/
-+
-+CFLAGS += -I$(top_srcdir)/tools/include
-+
-+export CFLAGS
-+export top_srcdir
-+
-+all:
-+	@for DIR in $(ARM_SUBTARGETS); do				\
-+		BUILD_TARGET=$(OUTPUT)/$$DIR;			\
-+		mkdir -p $$BUILD_TARGET;			\
-+		make OUTPUT=$$BUILD_TARGET -C $$DIR $@;		\
-+	done
-+
-+install: all
-+	@for DIR in $(ARM_SUBTARGETS); do				\
-+		BUILD_TARGET=$(OUTPUT)/$$DIR;			\
-+		make OUTPUT=$$BUILD_TARGET -C $$DIR $@;		\
-+	done
-+
-+run_tests: all
-+	@for DIR in $(ARM_SUBTARGETS); do				\
-+		BUILD_TARGET=$(OUTPUT)/$$DIR;			\
-+		make OUTPUT=$$BUILD_TARGET -C $$DIR $@;		\
-+	done
-+
-+# Avoid any output on non arm on emit_tests
-+emit_tests:
-+	@for DIR in $(ARM_SUBTARGETS); do				\
-+		BUILD_TARGET=$(OUTPUT)/$$DIR;			\
-+		make OUTPUT=$$BUILD_TARGET -C $$DIR $@;		\
-+	done
-+
-+clean:
-+	@for DIR in $(ARM_SUBTARGETS); do				\
-+		BUILD_TARGET=$(OUTPUT)/$$DIR;			\
-+		make OUTPUT=$$BUILD_TARGET -C $$DIR $@;		\
-+	done
-+
-+.PHONY: all clean install run_tests emit_tests
-diff --git a/tools/testing/selftests/arm/README b/tools/testing/selftests/arm/README
-new file mode 100644
-index 000000000000..1a05c043d7ee
---- /dev/null
-+++ b/tools/testing/selftests/arm/README
-@@ -0,0 +1,31 @@
-+KSelfTest ARM
-+===============
-+
-+- This is a series of compatibility tests, wherein the source files are
-+  built statically into a 32 bit ELF; they should pass on both 32 and 64
-+  bit kernels. They are not built or run but just skipped completely when
-+  env-variable ARCH is found to be different than 'arm64' or 'arm' and
-+  `uname -m` reports other than 'aarch64', 'armv7l' or 'armv8l'.
-+
-+- Please ensure that the test kernel is built with CONFIG_COMPAT enabled.
-+
-+- Holding true the above, ARM KSFT tests can be run within the KSelfTest
-+  framework using standard Linux top-level-makefile targets. Please set
-+  $(CROSS_COMPILE) to 'arm-linux-gnueabi-' or 'arm-linux-gnueabihf-'.
-+
-+      $ make TARGETS=arm kselftest-clean
-+      $ make $(CROSS_COMPILE) TARGETS=arm kselftest
-+
-+      or
-+
-+      $ make $(CROSS_COMPILE) -C tools/testing/selftests TARGETS=arm \
-+		INSTALL_PATH=<your-installation-path> install
-+
-+      or, alternatively, only specific arm/ subtargets can be picked:
-+
-+      $ make $(CROSS_COMPILE) -C tools/testing/selftests TARGETS=arm \
-+		ARM_SUBTARGETS="signal" INSTALL_PATH=<your-installation-path> \
-+			install
-+
-+   Further details on building and running KFST can be found in:
-+     Documentation/dev-tools/kselftest.rst
-diff --git a/tools/testing/selftests/arm/config b/tools/testing/selftests/arm/config
-new file mode 100644
-index 000000000000..9b072bae787e
---- /dev/null
-+++ b/tools/testing/selftests/arm/config
-@@ -0,0 +1 @@
-+CONFIG_COMPAT=y
-diff --git a/tools/testing/selftests/arm/elf/.gitignore b/tools/testing/selftests/arm/elf/.gitignore
-new file mode 100644
-index 000000000000..41458ecbcd72
---- /dev/null
-+++ b/tools/testing/selftests/arm/elf/.gitignore
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+parse_elf
-diff --git a/tools/testing/selftests/arm/elf/Makefile b/tools/testing/selftests/arm/elf/Makefile
-new file mode 100644
-index 000000000000..86636fe02994
---- /dev/null
-+++ b/tools/testing/selftests/arm/elf/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2024 ARM Limited
-+
-+TEST_GEN_PROGS := parse_elf
-+
-+include ../../lib.mk
-diff --git a/tools/testing/selftests/arm/mm/.gitignore b/tools/testing/selftests/arm/mm/.gitignore
-new file mode 100644
-index 000000000000..eb28169bb1b5
---- /dev/null
-+++ b/tools/testing/selftests/arm/mm/.gitignore
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+compat_va
-diff --git a/tools/testing/selftests/arm/mm/Makefile b/tools/testing/selftests/arm/mm/Makefile
-new file mode 100644
-index 000000000000..d8bfa45df98c
---- /dev/null
-+++ b/tools/testing/selftests/arm/mm/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2024 ARM Limited
-+
-+TEST_GEN_PROGS := compat_va
-+
-+include ../../lib.mk
-diff --git a/tools/testing/selftests/arm/signal/.gitignore b/tools/testing/selftests/arm/signal/.gitignore
-new file mode 100644
-index 000000000000..26929e3c20ea
---- /dev/null
-+++ b/tools/testing/selftests/arm/signal/.gitignore
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+mangle_cpsr_aif_bits
-+mangle_cpsr_invalid_compat_toggle
-diff --git a/tools/testing/selftests/arm/signal/Makefile b/tools/testing/selftests/arm/signal/Makefile
-new file mode 100644
-index 000000000000..3540a25de75a
---- /dev/null
-+++ b/tools/testing/selftests/arm/signal/Makefile
-@@ -0,0 +1,30 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2024 ARM Limited
-+
-+# Additional include paths needed by kselftest.h and local headers
-+CFLAGS += -D_GNU_SOURCE -std=gnu99 -I.
-+
-+SRCS := $(filter-out testcases/testcases.c,$(wildcard testcases/*.c))
-+PROGS := $(patsubst %.c,%,$(SRCS))
-+
-+# Generated binaries to be installed by top KSFT script
-+TEST_GEN_PROGS := $(notdir $(PROGS))
-+
-+# Get Kernel headers installed and use them.
-+
-+# Including KSFT lib.mk here will also mangle the TEST_GEN_PROGS list
-+# to account for any OUTPUT target-dirs optionally provided by
-+# the toplevel makefile
-+include ../../lib.mk
-+
-+$(TEST_GEN_PROGS): $(PROGS)
-+	cp $(PROGS) $(OUTPUT)/
-+
-+# Common test-unit targets to build common-layout test-cases executables
-+# Needs secondary expansion to properly include the testcase c-file in pre-reqs
-+COMMON_SOURCES := test_signals.c test_signals_utils.c
-+COMMON_HEADERS := test_signals.h test_signals_utils.h
-+
-+.SECONDEXPANSION:
-+$(PROGS): $$@.c ${COMMON_SOURCES} ${COMMON_HEADERS}
-+	$(CC) $(CFLAGS) ${@}.c ${COMMON_SOURCES} -o $@
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index 38f143195bcb..f2c0237be602 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -1694,7 +1694,7 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+ 	struct dirty_throttle_control * const mdtc = mdtc_valid(&mdtc_stor) ?
+ 						     &mdtc_stor : NULL;
+ 	struct dirty_throttle_control *sdtc;
+-	unsigned long nr_reclaimable;	/* = file_dirty */
++	unsigned long nr_dirty;
+ 	long period;
+ 	long pause;
+ 	long max_pause;
+@@ -1715,9 +1715,9 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+ 		unsigned long m_thresh = 0;
+ 		unsigned long m_bg_thresh = 0;
+ 
+-		nr_reclaimable = global_node_page_state(NR_FILE_DIRTY);
++		nr_dirty = global_node_page_state(NR_FILE_DIRTY);
+ 		gdtc->avail = global_dirtyable_memory();
+-		gdtc->dirty = nr_reclaimable + global_node_page_state(NR_WRITEBACK);
++		gdtc->dirty = nr_dirty + global_node_page_state(NR_WRITEBACK);
+ 
+ 		domain_dirty_limits(gdtc);
+ 
+@@ -1768,7 +1768,7 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+ 		 * In normal mode, we start background writeout at the lower
+ 		 * background_thresh, to keep the amount of dirty memory low.
+ 		 */
+-		if (!laptop_mode && nr_reclaimable > gdtc->bg_thresh &&
++		if (!laptop_mode && nr_dirty > gdtc->bg_thresh &&
+ 		    !writeback_in_progress(wb))
+ 			wb_start_background_writeback(wb);
+ 
 -- 
-2.39.2
+2.30.0
 
