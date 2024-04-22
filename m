@@ -1,231 +1,465 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A58145FFE;
-	Mon, 22 Apr 2024 10:38:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D23145FF8;
+	Mon, 22 Apr 2024 10:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713782307; cv=none; b=HCvh5VESKT3+3Wc9fWNgMsUIaadJawlmR4TEywy9RfUeAn90SARO6WsqG2M2paeeIOsLlJEPSYM5purhk3+GEGOvhtbvhMuP/DmtyIWiz9ql/Aqou8O5aKCH7z8aVti66eN2T8oe83WK9r4cj/IjAEetWKbdWfAhSmyt8KplyDE=
+	t=1713782306; cv=none; b=WY9eZnTYHLSdIpRFDeX3oSWziWoI8xQGt8MKIg4Hetjguv/uKEfLWuPZt5CkEJ3JvXW7Xtlhkk4LlYrG8x9a8nFjmqucK1X4qK6CSSm7jz0OY+eloO6xsTM2TyimU/DL/CzBKUvKRgE6NckSrvTXNTNdHKxS0sFnZmmk684ldHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713782307; c=relaxed/simple;
-	bh=q/00YOU88u3Zmpm8wkpicJ6lwNSaTO8+ZG7NhTlGPS8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lkT76ca6f1f2kXFWnV7qyDWj17N2y5AGjWDSSSL1IrAc7Q6DsAZaiXe3LxgmtQVhAkHECczOMAXGml7E+vGmy+g9cPYrMCawHkxxXyR9RuYBJQsGE6UzU4YbeTpYZ+E2cC6CCZ87lsN1nJKLT+NnYvgWL1Bcv4IBv1LuJUleAMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pMX2P/dO; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713782306; c=relaxed/simple;
+	bh=qLFqFaWZRNZANV6+Y0C3bX54CfS17Vxiz5twqsRCqoQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KjCzrqcSJOMBR6q6VX4jvx5KXVts70P4kYHky8KkGaPxPoGfNK6D6xITj6tadmLB03Nzz8GlWIlczUtBwjQqsb+M2LMRdlpoWyBjxb63jpONNvwMa/Qhofpa3P60wixRFsKDEW0WvVZiufI0juhu67cbEW4O5D2IkPGttvMfrww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZMMkJuM4; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pMX2P/dO"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43M9Okt4012232;
-	Mon, 22 Apr 2024 10:38:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=QzHrQbucuEK6n03pMLytmAk+wB/HJQb+xXrNsqqX0zw=; b=pM
-	X2P/dOA/igi0+GhGy5jvLREkri8m80CU4+8WJ/jNI//W5QICtJbDM/ugm1isGsEA
-	381c4i/IE1kveN4A3J5B2vD6YaCkv7c7hgyD55I/aoqx5PGA8E4AMlrP+SzefAFk
-	zwDcRdquhQvp8xK4apwwprXVl4Fw4TecfyARVwKqicn3VzS2WNVIPwjHkjYWUzJf
-	Va24K0pOK+34lDwcO/2bdvvHfcrGRTWSXe/GY3HGEx1YOenxcBC2Bh2JoYiaF9cm
-	kHdIsbJbGs8RvL1XJAmCLss+D9Ssrw945MOIFjK5PbgU5Id5184J5+XkFe+aehJI
-	+2o1VongqUQtq1bxYTIQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xnn82r80e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 10:38:05 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43MAc4d2027818
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 10:38:04 GMT
-Received: from [10.216.28.79] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 22 Apr
- 2024 03:37:59 -0700
-Message-ID: <ced05784-79f8-2ec5-59ef-7fcbb3ac1988@quicinc.com>
-Date: Mon, 22 Apr 2024 16:07:56 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZMMkJuM4"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e651a9f3ffso22681535ad.1;
+        Mon, 22 Apr 2024 03:38:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713782304; x=1714387104; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eytV7GqWJTkMd8lcxb2/XW9GoLoqIJhOygRT1j79hRs=;
+        b=ZMMkJuM4cpwGFko3zNJgkd3H13AVMjpjCuqWxaEt/eQ8zI4meE3zoL/TNL2HSTgFsz
+         3n80Opb8eXHYydq9TDR/thI4IBj13dhVOAcJWzkuK4u7qK7tamZ+K38Yygora4jvbUaV
+         DV4hCRXxIPlugxooA/n2sCzypZLa3h+KsUlF6T1kqd4ltkVXqbPjLej+kYVq+nMvSgFe
+         mpMajEY0CyPa9WM11hlImO2tPCqlyQ+lNVQ87Ocu6Sc/1ABHlrESPwb+HMK0BeQBPxnz
+         324XgY+En0jW/8M5SerrOZTStSBkNxmmO/Z0m/KXqjZd4PKqFPEFuI6G1TYaDr8pWsOZ
+         1CpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713782304; x=1714387104;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eytV7GqWJTkMd8lcxb2/XW9GoLoqIJhOygRT1j79hRs=;
+        b=o/Zyg620ft+xwImvT3OLak+yhNSLUumUdrlUr0rxTxPzMZ0aaO9gZG4CVipwi60Spo
+         DId4ltNwMUCuo5MZOXAgJT4LSFzzE6jm3F0PxArsk2K8kvu4zEXdYWYDnazd3AjTtPL8
+         /7qeuKuTUodCKNubRRibEKnleRdXu8H3MFJul02WQ0CB7y0IaXNoEDr46P/TMhe2Kdza
+         yFO4RZ20v1/AArxAtprnX2QlNIfOIN+ighAsrYzTCLUfhSXIUaoWaudC5qykmMCqiPXr
+         w8/HvKHmDftMNi6JGAVi55UpkrqrjAtYJy8cdLLL7cRiR36NmwSb5YhA/fw01Lu44YCH
+         QPUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVjSvaadtqXNCUpe+CX6WabE3/Xmd1YFaC5cboOeb2UswmqH2Q9cPlC8cpq/JlDDJ1Vq7NnlkD9zZG/k3d65oSxO70Q2o/a9LlDY5pq
+X-Gm-Message-State: AOJu0Yx5/TboAh6Lv7qSsFREwyy5N981PLai36oGiH+oNJzinOMw4pFS
+	0nC8HHgqX5PHE6ZksrbF5SljWIGU7CGpraKHN/WBExeBcP7TcYBj
+X-Google-Smtp-Source: AGHT+IEtKi4MKnmzW8GA8r1hEEwoYxMD9+8y9OgBdz2yfyb3q3agCBuvqZWUG9tVBgUD4e80rEo48g==
+X-Received: by 2002:a17:902:cec8:b0:1e5:62:7ac0 with SMTP id d8-20020a170902cec800b001e500627ac0mr12726179plg.14.1713782304347;
+        Mon, 22 Apr 2024 03:38:24 -0700 (PDT)
+Received: from localhost.localdomain (2001-b400-e33b-6ac4-2bfb-4656-8624-cdbd.emome-ip6.hinet.net. [2001:b400:e33b:6ac4:2bfb:4656:8624:cdbd])
+        by smtp.gmail.com with ESMTPSA id c1-20020a170903234100b001e3dff1e4d5sm7807904plh.135.2024.04.22.03.38.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 03:38:24 -0700 (PDT)
+From: Victor Shih <victorshihgli@gmail.com>
+To: ulf.hansson@linaro.org,
+	adrian.hunter@intel.com
+Cc: linux-mmc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	benchuanggli@gmail.com,
+	HL.Liu@genesyslogic.com.tw,
+	Greg.tu@genesyslogic.com.tw,
+	takahiro.akashi@linaro.org,
+	dlunev@chromium.org,
+	Victor Shih <victorshihgli@gmail.com>,
+	Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+	Victor Shih <victor.shih@genesyslogic.com.tw>
+Subject: [PATCH V15 08/22] mmc: sdhci: add UHS-II related definitions in headers
+Date: Mon, 22 Apr 2024 18:37:31 +0800
+Message-Id: <20240422103745.14725-9-victorshihgli@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240422103745.14725-1-victorshihgli@gmail.com>
+References: <20240422103745.14725-1-victorshihgli@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v2 3/8] ASoC: dt-bindings: wcd937x-sdw: add bindings for
- wcd937x-sdw
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Srinivas Kandagatla
-	<srinivas.kandagatla@linaro.org>,
-        Banajit Goswami <bgoswami@quicinc.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor
- Dooley" <conor+dt@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
-	<tiwai@suse.com>
-CC: <alsa-devel@alsa-project.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_rohkumar@quicinc.com>,
-        <quic_pkumpatl@quicinc.com>
-References: <20240416063600.309747-1-quic_mohs@quicinc.com>
- <20240416063600.309747-4-quic_mohs@quicinc.com>
- <20acec19-0dc9-4926-aac5-f24fcc09cba3@kernel.org>
-From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-In-Reply-To: <20acec19-0dc9-4926-aac5-f24fcc09cba3@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: BmvezGpEuMkSvJ_mXWp02lNoRtRdZ62X
-X-Proofpoint-ORIG-GUID: BmvezGpEuMkSvJ_mXWp02lNoRtRdZ62X
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-22_08,2024-04-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- suspectscore=0 adultscore=0 clxscore=1015 bulkscore=0 malwarescore=0
- spamscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404220049
+Content-Transfer-Encoding: 8bit
 
-On 4/17/2024 9:26 PM, Krzysztof Kozlowski wrote:
-> On 16/04/2024 08:35, Mohammad Rafi Shaik wrote:
->> From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->>
->> Qualcomm WCD9370/WCD9375 Codec is a standalone Hi-Fi audio codec IC
->> connected over SoundWire. This device has two SoundWire devices RX and
->> TX respectively.
->> This binding is for those slave devices on WCD9370/WCD9375.
->>
->> Co-developed-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
->> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
->> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->> ---
->>   .../bindings/sound/qcom,wcd937x-sdw.yaml      | 71 +++++++++++++++++++
->>   1 file changed, 71 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml b/Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml
->> new file mode 100644
->> index 000000000000..2b7358e266ba
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml
->> @@ -0,0 +1,71 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/sound/qcom,wcd937x-sdw.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm SoundWire Slave devices on WCD9370
->> +
->> +maintainers:
->> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> +
->> +description: |
-> 
-> Do not need '|' unless you need to preserve formatting.
+From: Victor Shih <victor.shih@genesyslogic.com.tw>
 
-ACK
+Add UHS-II related definitions in sdhci.h and sdhci-uhs2.h.
 
-will remove '|' in next version patch set.
+Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Signed-off-by: Victor Shih <victor.shih@genesyslogic.com.tw>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+---
 
-> 
->> +  Qualcomm WCD9370 Codec is a standalone Hi-Fi audio codec IC.
->> +  It has RX and TX Soundwire slave devices. This bindings is for the
->> +  slave devices.
->> +
->> +properties:
->> +  compatible:
->> +    const: sdw20217010a00
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  qcom,tx-port-mapping:
->> +    description: |
->> +      Specifies static port mapping between slave and master tx ports.
->> +      In the order of slave port index.
-> 
-> Use inclusive terminology. Describe what is here - what is the index?
-> What is the value?
+Updates in V9:
+ - Modify the commit message.
 
-ACK
+Updates in V8:
+ - Use tabs instead of spaces.
 
-> 
->> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->> +    minItems: 4
->> +    maxItems: 4
-> 
-> Add constraints on values. You have maximum 15 TX ports, don't you?
-> 
->> +
->> +  qcom,rx-port-mapping:
->> +    description: |
->> +      Specifies static port mapping between slave and master rx ports.
->> +      In the order of slave port index.
->> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->> +    minItems: 5
->> +    maxItems: 5
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - qcom,port-mapping
-> 
-> Test your binding. There is no need to engage reviewers for reviewing
-> simple mistakes which *tools* can point. Respect reviewers time and use
-> the tools first.
-> 
-> You need oneOf: with required for TX and RX... or just unify the
-> properties. Why do you need two?
-> 
-ACK,
+Updates in V7:
+ - Reorder values and positions of definitions.
 
-will fix the binding errors.
-> 
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    soundwire@3210000 {
-> Drop unit address.
+Updates in V6:
+ - Rename definitions.
+ - Use BIT() GENMASK() instead of bitwise operations.
 
+---
 
-actually took the reference from wcd938x.
+ drivers/mmc/host/sdhci-uhs2.h | 177 ++++++++++++++++++++++++++++++++++
+ drivers/mmc/host/sdhci.h      |  54 ++++++++++-
+ 2 files changed, 230 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/mmc/host/sdhci-uhs2.h
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/sound/qcom,wcd938x-sdw.yaml#n48
+diff --git a/drivers/mmc/host/sdhci-uhs2.h b/drivers/mmc/host/sdhci-uhs2.h
+new file mode 100644
+index 000000000000..e993f41ffb7f
+--- /dev/null
++++ b/drivers/mmc/host/sdhci-uhs2.h
+@@ -0,0 +1,177 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ *  linux/drivers/mmc/host/sdhci-uhs2.h - Secure Digital Host Controller Interface driver
++ *
++ * Header file for Host Controller UHS2 related registers.
++ *
++ *  Copyright (C) 2014 Intel Corp, All Rights Reserved.
++ */
++#ifndef __SDHCI_UHS2_H
++#define __SDHCI_UHS2_H
++
++#include <linux/bits.h>
++
++/* SDHCI Category C registers : UHS2 usage */
++
++#define  SDHCI_UHS2_CM_TRAN_RESP		0x10
++#define  SDHCI_UHS2_SD_TRAN_RESP		0x18
++#define  SDHCI_UHS2_SD_TRAN_RESP_1		0x1C
++
++/* SDHCI Category B registers : UHS2 only */
++
++#define SDHCI_UHS2_BLOCK_SIZE			0x80
++#define  SDHCI_UHS2_MAKE_BLKSZ(dma, blksz)	((((dma) & 0x7) << 12) | ((blksz) & 0xFFF))
++
++#define SDHCI_UHS2_BLOCK_COUNT			0x84
++
++#define SDHCI_UHS2_CMD_PACKET			0x88
++#define  SDHCI_UHS2_CMD_PACK_MAX_LEN		20
++
++#define SDHCI_UHS2_TRANS_MODE			0x9C
++#define  SDHCI_UHS2_TRNS_DMA			BIT(0)
++#define  SDHCI_UHS2_TRNS_BLK_CNT_EN		BIT(1)
++#define  SDHCI_UHS2_TRNS_DATA_TRNS_WRT		BIT(4)
++#define  SDHCI_UHS2_TRNS_BLK_BYTE_MODE		BIT(5)
++#define  SDHCI_UHS2_TRNS_RES_R5			BIT(6)
++#define  SDHCI_UHS2_TRNS_RES_ERR_CHECK_EN	BIT(7)
++#define  SDHCI_UHS2_TRNS_RES_INT_DIS		BIT(8)
++#define  SDHCI_UHS2_TRNS_WAIT_EBSY		BIT(14)
++#define  SDHCI_UHS2_TRNS_2L_HD			BIT(15)
++
++#define SDHCI_UHS2_CMD				0x9E
++#define  SDHCI_UHS2_CMD_SUB_CMD			BIT(2)
++#define  SDHCI_UHS2_CMD_DATA			BIT(5)
++#define  SDHCI_UHS2_CMD_TRNS_ABORT		BIT(6)
++#define  SDHCI_UHS2_CMD_CMD12			BIT(7)
++#define  SDHCI_UHS2_CMD_DORMANT			GENMASK(7, 6)
++#define  SDHCI_UHS2_CMD_PACK_LEN_MASK		GENMASK(12, 8)
++
++#define SDHCI_UHS2_RESPONSE			0xA0
++#define  SDHCI_UHS2_RESPONSE_MAX_LEN		20
++
++#define SDHCI_UHS2_MSG_SELECT			0xB4
++#define SDHCI_UHS2_MSG_SELECT_CURR		0x0
++#define SDHCI_UHS2_MSG_SELECT_ONE		0x1
++#define SDHCI_UHS2_MSG_SELECT_TWO		0x2
++#define SDHCI_UHS2_MSG_SELECT_THREE		0x3
++
++#define SDHCI_UHS2_MSG				0xB8
++
++#define SDHCI_UHS2_DEV_INT_STATUS		0xBC
++
++#define SDHCI_UHS2_DEV_SELECT			0xBE
++#define SDHCI_UHS2_DEV_SEL_MASK			GENMASK(3, 0)
++#define SDHCI_UHS2_DEV_SEL_INT_MSG_EN		BIT(7)
++
++#define SDHCI_UHS2_DEV_INT_CODE			0xBF
++
++#define SDHCI_UHS2_SW_RESET			0xC0
++#define SDHCI_UHS2_SW_RESET_FULL		BIT(0)
++#define SDHCI_UHS2_SW_RESET_SD			BIT(1)
++
++#define SDHCI_UHS2_TIMER_CTRL			0xC2
++#define SDHCI_UHS2_TIMER_CTRL_DEADLOCK_MASK	GENMASK(7, 4)
++
++#define SDHCI_UHS2_INT_STATUS			0xC4
++#define SDHCI_UHS2_INT_STATUS_ENABLE		0xC8
++#define SDHCI_UHS2_INT_SIGNAL_ENABLE		0xCC
++#define SDHCI_UHS2_INT_HEADER_ERR		BIT(0)
++#define SDHCI_UHS2_INT_RES_ERR			BIT(1)
++#define SDHCI_UHS2_INT_RETRY_EXP		BIT(2)
++#define SDHCI_UHS2_INT_CRC			BIT(3)
++#define SDHCI_UHS2_INT_FRAME_ERR		BIT(4)
++#define SDHCI_UHS2_INT_TID_ERR			BIT(5)
++#define SDHCI_UHS2_INT_UNRECOVER		BIT(7)
++#define SDHCI_UHS2_INT_EBUSY_ERR		BIT(8)
++#define SDHCI_UHS2_INT_ADMA_ERROR		BIT(15)
++#define SDHCI_UHS2_INT_CMD_TIMEOUT		BIT(16)
++#define SDHCI_UHS2_INT_DEADLOCK_TIMEOUT		BIT(17)
++#define SDHCI_UHS2_INT_VENDOR_ERR		BIT(27)
++#define SDHCI_UHS2_INT_ERROR_MASK	       ( \
++		SDHCI_UHS2_INT_HEADER_ERR      | \
++		SDHCI_UHS2_INT_RES_ERR	       | \
++		SDHCI_UHS2_INT_RETRY_EXP       | \
++		SDHCI_UHS2_INT_CRC	       | \
++		SDHCI_UHS2_INT_FRAME_ERR       | \
++		SDHCI_UHS2_INT_TID_ERR	       | \
++		SDHCI_UHS2_INT_UNRECOVER       | \
++		SDHCI_UHS2_INT_EBUSY_ERR       | \
++		SDHCI_UHS2_INT_ADMA_ERROR      | \
++		SDHCI_UHS2_INT_CMD_TIMEOUT     | \
++		SDHCI_UHS2_INT_DEADLOCK_TIMEOUT)
++#define SDHCI_UHS2_INT_CMD_ERR_MASK	  ( \
++		SDHCI_UHS2_INT_HEADER_ERR | \
++		SDHCI_UHS2_INT_RES_ERR	  | \
++		SDHCI_UHS2_INT_FRAME_ERR  | \
++		SDHCI_UHS2_INT_TID_ERR	  | \
++		SDHCI_UHS2_INT_CMD_TIMEOUT)
++/* CRC Error occurs during a packet receiving */
++#define SDHCI_UHS2_INT_DATA_ERR_MASK	       ( \
++		SDHCI_UHS2_INT_RETRY_EXP       | \
++		SDHCI_UHS2_INT_CRC	       | \
++		SDHCI_UHS2_INT_UNRECOVER       | \
++		SDHCI_UHS2_INT_EBUSY_ERR       | \
++		SDHCI_UHS2_INT_ADMA_ERROR      | \
++		SDHCI_UHS2_INT_DEADLOCK_TIMEOUT)
++
++#define SDHCI_UHS2_SETTINGS_PTR			0xE0
++#define   SDHCI_UHS2_GEN_SETTINGS_POWER_LOW	BIT(0)
++#define   SDHCI_UHS2_GEN_SETTINGS_N_LANES_MASK	GENMASK(11, 8)
++#define   SDHCI_UHS2_FD_OR_2L_HD		0x0 /* 2 lanes */
++#define   SDHCI_UHS2_2D1U_FD			0x2 /* 3 lanes, 2 down, 1 up, full duplex */
++#define   SDHCI_UHS2_1D2U_FD			0x3 /* 3 lanes, 1 down, 2 up, full duplex */
++#define   SDHCI_UHS2_2D2U_FD			0x4 /* 4 lanes, 2 down, 2 up, full duplex */
++
++#define   SDHCI_UHS2_PHY_SET_SPEED_B		BIT(6)
++#define   SDHCI_UHS2_PHY_HIBERNATE_EN		BIT(12)
++#define   SDHCI_UHS2_PHY_N_LSS_SYN_MASK		GENMASK(19, 16)
++#define   SDHCI_UHS2_PHY_N_LSS_DIR_MASK		GENMASK(23, 20)
++
++#define   SDHCI_UHS2_TRAN_N_FCU_MASK		GENMASK(15, 8)
++#define   SDHCI_UHS2_TRAN_RETRY_CNT_MASK	GENMASK(17, 16)
++#define   SDHCI_UHS2_TRAN_1_N_DAT_GAP_MASK	GENMASK(7, 0)
++
++#define SDHCI_UHS2_CAPS_PTR			0xE2
++#define   SDHCI_UHS2_CAPS_OFFSET		0
++#define   SDHCI_UHS2_CAPS_DAP_MASK		GENMASK(3, 0)
++#define   SDHCI_UHS2_CAPS_GAP_MASK		GENMASK(7, 4)
++#define   SDHCI_UHS2_CAPS_GAP(gap)		((gap) * 360)
++#define   SDHCI_UHS2_CAPS_LANE_MASK		GENMASK(13, 8)
++#define   SDHCI_UHS2_CAPS_2L_HD_FD		1
++#define   SDHCI_UHS2_CAPS_2D1U_FD		2
++#define   SDHCI_UHS2_CAPS_1D2U_FD		4
++#define   SDHCI_UHS2_CAPS_2D2U_FD		8
++#define   SDHCI_UHS2_CAPS_ADDR_64		BIT(14)
++#define   SDHCI_UHS2_CAPS_BOOT			BIT(15)
++#define   SDHCI_UHS2_CAPS_DEV_TYPE_MASK		GENMASK(17, 16)
++#define   SDHCI_UHS2_CAPS_DEV_TYPE_RMV		0
++#define   SDHCI_UHS2_CAPS_DEV_TYPE_EMB		1
++#define   SDHCI_UHS2_CAPS_DEV_TYPE_EMB_RMV	2
++#define   SDHCI_UHS2_CAPS_NUM_DEV_MASK		GENMASK(21, 18)
++#define   SDHCI_UHS2_CAPS_BUS_TOPO_MASK		GENMASK(23, 22)
++#define   SDHCI_UHS2_CAPS_BUS_TOPO_SHIFT	22
++#define   SDHCI_UHS2_CAPS_BUS_TOPO_P2P		0
++#define   SDHCI_UHS2_CAPS_BUS_TOPO_RING		1
++#define   SDHCI_UHS2_CAPS_BUS_TOPO_HUB		2
++#define   SDHCI_UHS2_CAPS_BUS_TOPO_HUB_RING	3
++
++#define  SDHCI_UHS2_CAPS_PHY_OFFSET		4
++#define   SDHCI_UHS2_CAPS_PHY_REV_MASK		GENMASK(5, 0)
++#define   SDHCI_UHS2_CAPS_PHY_RANGE_MASK	GENMASK(7, 6)
++#define   SDHCI_UHS2_CAPS_PHY_RANGE_A		0
++#define   SDHCI_UHS2_CAPS_PHY_RANGE_B		1
++#define   SDHCI_UHS2_CAPS_PHY_N_LSS_SYN_MASK	GENMASK(19, 16)
++#define   SDHCI_UHS2_CAPS_PHY_N_LSS_DIR_MASK	GENMASK(23, 20)
++#define  SDHCI_UHS2_CAPS_TRAN_OFFSET		8
++#define   SDHCI_UHS2_CAPS_TRAN_LINK_REV_MASK	GENMASK(5, 0)
++#define   SDHCI_UHS2_CAPS_TRAN_N_FCU_MASK	GENMASK(15, 8)
++#define   SDHCI_UHS2_CAPS_TRAN_HOST_TYPE_MASK	GENMASK(18, 16)
++#define   SDHCI_UHS2_CAPS_TRAN_BLK_LEN_MASK	GENMASK(31, 20)
++
++#define  SDHCI_UHS2_CAPS_TRAN_1_OFFSET		12
++#define  SDHCI_UHS2_CAPS_TRAN_1_N_DATA_GAP_MASK	GENMASK(7, 0)
++
++#define SDHCI_UHS2_EMBED_CTRL_PTR		0xE6
++#define SDHCI_UHS2_VENDOR_PTR			0xE8
++
++#endif /* __SDHCI_UHS2_H */
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index a20864fc0641..51751e82434d 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -43,8 +43,23 @@
+ #define  SDHCI_TRNS_READ	0x10
+ #define  SDHCI_TRNS_MULTI	0x20
+ 
++/*
++ * Defined in Host Version 4.0.
++ */
++#define  SDHCI_TRNS_RES_TYPE		0x40
++#define  SDHCI_TRNS_RES_ERR_CHECK	0x80
++#define  SDHCI_TRNS_RES_INT_DIS		0x0100
++
+ #define SDHCI_COMMAND		0x0E
+ #define  SDHCI_CMD_RESP_MASK	0x03
++
++/*
++ * Host Version 4.10 adds this bit to distinguish a main command or
++ * sub command.
++ * For example with SDIO, CMD52 (sub command) issued during CMD53 (main command).
++ */
++#define  SDHCI_CMD_SUB_CMD	0x04
++
+ #define  SDHCI_CMD_CRC		0x08
+ #define  SDHCI_CMD_INDEX	0x10
+ #define  SDHCI_CMD_DATA		0x20
+@@ -65,6 +80,9 @@
+ #define SDHCI_PRESENT_STATE	0x24
+ #define  SDHCI_CMD_INHIBIT	0x00000001
+ #define  SDHCI_DATA_INHIBIT	0x00000002
++
++#define  SDHCI_DAT_4_TO_7_LVL_MASK	0x000000F0
++
+ #define  SDHCI_DOING_WRITE	0x00000100
+ #define  SDHCI_DOING_READ	0x00000200
+ #define  SDHCI_SPACE_AVAILABLE	0x00000400
+@@ -80,6 +98,15 @@
+ #define   SDHCI_DATA_0_LVL_MASK	0x00100000
+ #define  SDHCI_CMD_LVL		0x01000000
+ 
++/* Host Version 4.10 */
++
++#define  SDHCI_HOST_REGULATOR_STABLE	0x02000000
++#define  SDHCI_CMD_NOT_ISSUED_ERR	0x08000000
++#define  SDHCI_SUB_CMD_STATUS		0x10000000
++#define  SDHCI_UHS2_IN_DORMANT_STATE	0x20000000
++#define  SDHCI_UHS2_LANE_SYNC		0x40000000
++#define  SDHCI_UHS2_IF_DETECT		0x80000000
++
+ #define SDHCI_HOST_CONTROL	0x28
+ #define  SDHCI_CTRL_LED		0x01
+ #define  SDHCI_CTRL_4BITBUS	0x02
+@@ -117,7 +144,7 @@
+ #define SDHCI_CLOCK_CONTROL	0x2C
+ #define  SDHCI_DIVIDER_SHIFT	8
+ #define  SDHCI_DIVIDER_HI_SHIFT	6
+-#define  SDHCI_DIV_MASK	0xFF
++#define  SDHCI_DIV_MASK		0xFF
+ #define  SDHCI_DIV_MASK_LEN	8
+ #define  SDHCI_DIV_HI_MASK	0x300
+ #define  SDHCI_PROG_CLOCK_MODE	0x0020
+@@ -146,6 +173,10 @@
+ #define  SDHCI_INT_CARD_REMOVE	0x00000080
+ #define  SDHCI_INT_CARD_INT	0x00000100
+ #define  SDHCI_INT_RETUNE	0x00001000
++
++/* Host Version 4.10 */
++#define  SDHCI_INT_FX_EVENT	0x00002000
++
+ #define  SDHCI_INT_CQE		0x00004000
+ #define  SDHCI_INT_ERROR	0x00008000
+ #define  SDHCI_INT_TIMEOUT	0x00010000
+@@ -159,6 +190,9 @@
+ #define  SDHCI_INT_AUTO_CMD_ERR	0x01000000
+ #define  SDHCI_INT_ADMA_ERROR	0x02000000
+ 
++/* Host Version 4.0 */
++#define  SDHCI_INT_RESP_ERR	0x08000000
++
+ #define  SDHCI_INT_NORMAL_MASK	0x00007FFF
+ #define  SDHCI_INT_ERROR_MASK	0xFFFF8000
+ 
+@@ -185,6 +219,9 @@
+ #define  SDHCI_AUTO_CMD_END_BIT	0x00000008
+ #define  SDHCI_AUTO_CMD_INDEX	0x00000010
+ 
++/* Host Version 4.10 */
++#define  SDHCI_AUTO_CMD_RESP_ERR	0x0020
++
+ #define SDHCI_HOST_CONTROL2		0x3E
+ #define  SDHCI_CTRL_UHS_MASK		0x0007
+ #define   SDHCI_CTRL_UHS_SDR12		0x0000
+@@ -193,6 +230,7 @@
+ #define   SDHCI_CTRL_UHS_SDR104		0x0003
+ #define   SDHCI_CTRL_UHS_DDR50		0x0004
+ #define   SDHCI_CTRL_HS400		0x0005 /* Non-standard */
++#define   SDHCI_CTRL_UHS2		0x0007
+ #define  SDHCI_CTRL_VDD_180		0x0008
+ #define  SDHCI_CTRL_DRV_TYPE_MASK	0x0030
+ #define   SDHCI_CTRL_DRV_TYPE_B		0x0000
+@@ -201,9 +239,12 @@
+ #define   SDHCI_CTRL_DRV_TYPE_D		0x0030
+ #define  SDHCI_CTRL_EXEC_TUNING		0x0040
+ #define  SDHCI_CTRL_TUNED_CLK		0x0080
++#define  SDHCI_CTRL_UHS2_ENABLE		0x0100
++#define  SDHCI_CTRL_ADMA2_LEN_MODE	0x0400
+ #define  SDHCI_CMD23_ENABLE		0x0800
+ #define  SDHCI_CTRL_V4_MODE		0x1000
+ #define  SDHCI_CTRL_64BIT_ADDR		0x2000
++#define  SDHCI_CTRL_ASYNC_INT_ENABLE	0x4000
+ #define  SDHCI_CTRL_PRESET_VAL_ENABLE	0x8000
+ 
+ #define SDHCI_CAPABILITIES	0x40
+@@ -226,11 +267,13 @@
+ #define  SDHCI_CAN_VDD_180	0x04000000
+ #define  SDHCI_CAN_64BIT_V4	0x08000000
+ #define  SDHCI_CAN_64BIT	0x10000000
++#define  SDHCI_CAN_ASYNC_INT	0x20000000
+ 
+ #define SDHCI_CAPABILITIES_1	0x44
+ #define  SDHCI_SUPPORT_SDR50	0x00000001
+ #define  SDHCI_SUPPORT_SDR104	0x00000002
+ #define  SDHCI_SUPPORT_DDR50	0x00000004
++#define  SDHCI_SUPPORT_UHS2	0x00000008
+ #define  SDHCI_DRIVER_TYPE_A	0x00000010
+ #define  SDHCI_DRIVER_TYPE_C	0x00000020
+ #define  SDHCI_DRIVER_TYPE_D	0x00000040
+@@ -239,6 +282,7 @@
+ #define  SDHCI_RETUNING_MODE_MASK		GENMASK(15, 14)
+ #define  SDHCI_CLOCK_MUL_MASK			GENMASK(23, 16)
+ #define  SDHCI_CAN_DO_ADMA3	0x08000000
++#define  SDHCI_CAN_VDD2_180	0x10000000 /* UHS-2 1.8V VDD2 */
+ #define  SDHCI_SUPPORT_HS400	0x80000000 /* Non-standard */
+ 
+ #define SDHCI_MAX_CURRENT		0x48
+@@ -246,11 +290,14 @@
+ #define  SDHCI_MAX_CURRENT_330_MASK	GENMASK(7, 0)
+ #define  SDHCI_MAX_CURRENT_300_MASK	GENMASK(15, 8)
+ #define  SDHCI_MAX_CURRENT_180_MASK	GENMASK(23, 16)
++#define SDHCI_MAX_CURRENT_1		0x4C
++#define  SDHCI_MAX_CURRENT_VDD2_180_MASK	GENMASK(7, 0) /* UHS2 */
+ #define   SDHCI_MAX_CURRENT_MULTIPLIER	4
+ 
+ /* 4C-4F reserved for more max current */
+ 
+ #define SDHCI_SET_ACMD12_ERROR	0x50
++/* Host Version 4.10 */
+ #define SDHCI_SET_INT_ERROR	0x52
+ 
+ #define SDHCI_ADMA_ERROR	0x54
+@@ -269,10 +316,15 @@
+ #define SDHCI_PRESET_FOR_SDR104        0x6C
+ #define SDHCI_PRESET_FOR_DDR50 0x6E
+ #define SDHCI_PRESET_FOR_HS400 0x74 /* Non-standard */
++
++/* UHS2 */
++#define SDHCI_PRESET_FOR_UHS2  0x74
+ #define SDHCI_PRESET_DRV_MASK		GENMASK(15, 14)
+ #define SDHCI_PRESET_CLKGEN_SEL		BIT(10)
+ #define SDHCI_PRESET_SDCLK_FREQ_MASK	GENMASK(9, 0)
+ 
++#define SDHCI_ADMA3_ADDRESS	0x78
++
+ #define SDHCI_SLOT_INT_STATUS	0xFC
+ 
+ #define SDHCI_HOST_VERSION	0xFE
+-- 
+2.25.1
 
-
-> 
->> +        #address-cells = <2>;
->> +        #size-cells = <0>;
->> +        reg = <0x03210000 0x2000>;
-> 
-> Drop, not relevant and not placed correctly (see DTS coding style).
-
->> +        wcd937x_rx: codec@0,4 {
-> 
-> Drop label, not used.
-> 
->> +            compatible = "sdw20217010a00";
->> +            reg  = <0 4>;
->> +            qcom,rx-port-mapping = <1 2 3 4 5>;
->> +        };
->> +    };
->> +
->> +    soundwire@3230000 {
-> 
-> Drop this example, it's almost identical.
-> 
-> Best regards,
-> Krzysztof
-> 
-
-Thanks & Regards,
-Rafi
