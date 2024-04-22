@@ -1,55 +1,55 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E026A1422DA;
-	Mon, 22 Apr 2024 09:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CE413DDC5;
+	Mon, 22 Apr 2024 09:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713779679; cv=none; b=ax2A8IG7rZztIBs8nf+l3y8A+3OnJUQ0DWQaxZ7Gn207pHcu6W0Pk7FMlH2yj14Pg9S2zaRU2Jg4iC2MmIKh+7AqmCy1ENq6uS3KY9FSljUZOzs7QAMWdjVqQ0b5JjqDLWLqSsGVXREh1P2wS08xw4kIV1YhZ7u9gR3DVbso4sM=
+	t=1713779687; cv=none; b=jezgxS/SkAtDiueLmjpKdGu+9M60SPue2KIPEVUVLzTPHupySrPMiWE/2hTlyUyBRO7zRlThYBsUoPKnZf0XXxhAkeDQ8kpxrY1flyaYNuCr4O29JuiPp/a51k/nhjjZdxu3J7zwMLCN0FV9oeNO1r/+P3R2P0Mnm4N5UsJoDPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713779679; c=relaxed/simple;
-	bh=FqhrpsilaeuF7XILiY3SPsXT5YOXcNJu5rGBxUqwThs=;
+	s=arc-20240116; t=1713779687; c=relaxed/simple;
+	bh=xCItyPOZt47DvHnDvFfbf/UJDM6UburoaN7IAbUxGqU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vDEKjIJftraRag+EoUXL7E4doOdrN8j98Bc5BrtInsVybWbx8UGiLzh9zWEeJ0a65T8VTYLCcum5744PRahu4maYNDN2R6tnLkHrX3SOfMuGdfzvDJYT7nMIOd8tJxElfZusKJ+YehBPO5IhiNHE9UOzMhWM/X+Z9btiTNZpdg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=SMRvyTSK; arc=none smtp.client-ip=67.231.156.173
+	 MIME-Version:Content-Type; b=q6qPQEwUbmkuRYjNFONGKJx6XiZCWB5HcazRieEqQO78YRNiIL1UKpc55vqK+3t45oR+Md3Tpsg9hFtfDeiJvOJgZ1ipb9SfxH1Paa04yy0DMIZ4KQtkeKB7LObrexvZ+p0wCPHlLuI/6tEU0yHAkEZe+hPJjoAEfjnUlXmaTO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=YRQte9lF; arc=none smtp.client-ip=67.231.148.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="SMRvyTSK"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43LN09uD026597;
-	Mon, 22 Apr 2024 02:54:25 -0700
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="YRQte9lF"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43M9gIk3011034;
+	Mon, 22 Apr 2024 02:54:39 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=pfpt0220; bh=QSM87SaVEXjDo+JHhuvUV
-	GO+OxpubQo+1FV9Ivkmk04=; b=SMRvyTSKkiZT3azdur7dAeZSdN0q6+yMz2wbh
-	lMp6+Hjas80PKfvFp3PEEUwPzZmaGtw9XXGZqJTD6T8LpirZe+GCqFFA29nTKgVZ
-	gQ23RyzsQEDrnoiKv6LVvtQ7CFRLED1+xsYxniNvt9zImSXmdqA+ri4Tm71lrjlL
-	ZKf++ZQYVsZIY6HJzjox42ris6y9oIQMYuappphwqnCwdWwzwrhJnTEJZ8T0Soir
-	+goe5WtoO0GpafgHnWHPRrYwkB2lu9iQZFVCNTRUySJymvareLr3PTTcqsd6hBjR
-	gDpMdbmvNCRSkS6WE7pKCgYQeoLuNcGehsCJdLkzJNedfTypw==
+	:mime-version:content-type; s=pfpt0220; bh=fdMP/ueQqpZfNPTidB1Cs
+	pflK8b37KJsaomZkfW/WlA=; b=YRQte9lFtn98ACe8BXloxNI4eQoj9N9ZE/Uk4
+	3Gzo4XOCDRTRy1g/XDsNK1TODp68V8ZirUu0ye9qlPm3ieJ4PMdxixDpzKvTKUK+
+	6xP1y4VYliU+TMaQG7cavVJH00bfsEQQRgtZW6HAnWX21EbL8HBkMSqI0Sk94suu
+	nkhj+CO5BKhiaPyznr9Xa6we/FuxO3l2SNPvVb+5s24JrKHnQbV7HcuUe49Lh2V2
+	6Ka5jjLuLOGUYbMtUbXrH2wUvkLRvGnmGyyp5MqTloWL8RBoVEBQLLv4h6vDUMEu
+	4Te91wyWSQfh9lZZJPSrB27mB3j5xqC9CjRM+HgdIj5Qmp8kg==
 Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3xmd7gcfdk-1
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3xnngcr186-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 02:54:24 -0700 (PDT)
+	Mon, 22 Apr 2024 02:54:39 -0700 (PDT)
 Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
  DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 22 Apr 2024 02:54:24 -0700
+ 15.2.1544.4; Mon, 22 Apr 2024 02:54:38 -0700
 Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
  (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Mon, 22 Apr 2024 02:54:24 -0700
+ Transport; Mon, 22 Apr 2024 02:54:38 -0700
 Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
-	by maili.marvell.com (Postfix) with ESMTP id C215D3F705C;
-	Mon, 22 Apr 2024 02:54:20 -0700 (PDT)
+	by maili.marvell.com (Postfix) with ESMTP id DF4DD3F705C;
+	Mon, 22 Apr 2024 02:54:34 -0700 (PDT)
 From: Geetha sowjanya <gakula@marvell.com>
 To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
         <edumazet@google.com>, <sgoutham@marvell.com>, <gakula@marvell.com>,
         <sbhatta@marvell.com>, <hkelam@marvell.com>
-Subject: [net-next PATCH v2 5/9] octeontx2-af: Add packet path between representor and VF
-Date: Mon, 22 Apr 2024 15:23:57 +0530
-Message-ID: <20240422095401.14245-6-gakula@marvell.com>
+Subject: [net-next PATCH v2 9/9] octeontx2-pf: Add representors for sdp MAC
+Date: Mon, 22 Apr 2024 15:24:01 +0530
+Message-ID: <20240422095401.14245-10-gakula@marvell.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240422095401.14245-1-gakula@marvell.com>
 References: <20240422095401.14245-1-gakula@marvell.com>
@@ -60,532 +60,372 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: YLMlyyB28I_C4oOo43ibu1tTUK4fhMDg
-X-Proofpoint-GUID: YLMlyyB28I_C4oOo43ibu1tTUK4fhMDg
+X-Proofpoint-GUID: hHneKugq6RZIBXQPHnODi92bCd_w0mLy
+X-Proofpoint-ORIG-GUID: hHneKugq6RZIBXQPHnODi92bCd_w0mLy
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-04-22_07,2024-04-19_01,2023-05-22_02
 
-This patch installs tcam rules to stree traffic representors
-and VF when swicthdev mode is set. To support this a HW loopback
-channel is reserved. Through this channel packet are routed
-between representor and VFs. "ESW_CFG" mbox is defined to
-notify AF for installing rules.
+Current silicons support 2 types of MACs, SDP and
+RPM MAC.  This patch adds representors for SDP MAC
+interfaces.
 
 Signed-off-by: Geetha sowjanya <gakula@marvell.com>
 ---
- .../net/ethernet/marvell/octeontx2/af/mbox.h  |   7 +
- .../net/ethernet/marvell/octeontx2/af/rvu.h   |   7 +-
- .../marvell/octeontx2/af/rvu_devlink.c        |   6 +
- .../ethernet/marvell/octeontx2/af/rvu_nix.c   |   7 +-
- .../ethernet/marvell/octeontx2/af/rvu_rep.c   | 241 +++++++++++++++++-
- .../marvell/octeontx2/af/rvu_switch.c         |  18 +-
- .../net/ethernet/marvell/octeontx2/nic/rep.c  |  23 +-
- 7 files changed, 298 insertions(+), 11 deletions(-)
+ .../ethernet/marvell/octeontx2/nic/cn10k.c    |  4 +-
+ .../ethernet/marvell/octeontx2/nic/cn10k.h    |  2 +-
+ .../marvell/octeontx2/nic/otx2_common.c       | 47 ++++++++++++++-----
+ .../marvell/octeontx2/nic/otx2_common.h       | 26 +++++++---
+ .../ethernet/marvell/octeontx2/nic/otx2_pf.c  | 13 +++--
+ .../ethernet/marvell/octeontx2/nic/otx2_reg.h |  1 +
+ .../ethernet/marvell/octeontx2/nic/otx2_vf.c  | 11 ++++-
+ 7 files changed, 79 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-index c77c02730cf9..3b36da28a8f4 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-@@ -144,6 +144,7 @@ M(LMTST_TBL_SETUP,	0x00a, lmtst_tbl_setup, lmtst_tbl_setup_req,    \
- M(SET_VF_PERM,		0x00b, set_vf_perm, set_vf_perm, msg_rsp)	\
- M(PTP_GET_CAP,		0x00c, ptp_get_cap, msg_req, ptp_get_cap_rsp)	\
- M(GET_REP_CNT,		0x00d, get_rep_cnt, msg_req, get_rep_cnt_rsp)	\
-+M(ESW_CFG,		0x00e, esw_cfg, esw_cfg_req, msg_rsp)	\
- /* CGX mbox IDs (range 0x200 - 0x3FF) */				\
- M(CGX_START_RXTX,	0x200, cgx_start_rxtx, msg_req, msg_rsp)	\
- M(CGX_STOP_RXTX,	0x201, cgx_stop_rxtx, msg_req, msg_rsp)		\
-@@ -1532,6 +1533,12 @@ struct get_rep_cnt_rsp {
- 	u64 rsvd;
- };
- 
-+struct esw_cfg_req {
-+	struct mbox_msghdr hdr;
-+	u8 ena;
-+	u64 rsvd;
-+};
-+
- struct flow_msg {
- 	unsigned char dmac[6];
- 	unsigned char smac[6];
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.h b/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
-index 1d76d52d7a5d..c8572d79a968 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
-@@ -596,6 +596,7 @@ struct rvu {
- 	u16			rep_pcifunc;
- 	int			rep_cnt;
- 	u16			*rep2pfvf_map;
-+	u8			rep_mode;
- };
- 
- static inline void rvu_write64(struct rvu *rvu, u64 block, u64 offset, u64 val)
-@@ -1025,7 +1026,7 @@ int rvu_ndc_fix_locked_cacheline(struct rvu *rvu, int blkaddr);
- /* RVU Switch */
- void rvu_switch_enable(struct rvu *rvu);
- void rvu_switch_disable(struct rvu *rvu);
--void rvu_switch_update_rules(struct rvu *rvu, u16 pcifunc);
-+void rvu_switch_update_rules(struct rvu *rvu, u16 pcifunc, bool ena);
- void rvu_switch_enable_lbk_link(struct rvu *rvu, u16 pcifunc, bool ena);
- 
- int rvu_npc_set_parse_mode(struct rvu *rvu, u16 pcifunc, u64 mode, u8 dir,
-@@ -1039,4 +1040,8 @@ int rvu_mcs_flr_handler(struct rvu *rvu, u16 pcifunc);
- void rvu_mcs_ptp_cfg(struct rvu *rvu, u8 rpm_id, u8 lmac_id, bool ena);
- void rvu_mcs_exit(struct rvu *rvu);
- 
-+/* Representor APIs */
-+int rvu_rep_pf_init(struct rvu *rvu);
-+int rvu_rep_install_mcam_rules(struct rvu *rvu);
-+void rvu_rep_update_rules(struct rvu *rvu, u16 pcifunc, bool ena);
- #endif /* RVU_H */
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c
-index 96c04f7d93f8..8a3b7fb61883 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c
-@@ -1464,6 +1464,9 @@ static int rvu_devlink_eswitch_mode_get(struct devlink *devlink, u16 *mode)
- 	struct rvu *rvu = rvu_dl->rvu;
- 	struct rvu_switch *rswitch;
- 
-+	if (rvu->rep_mode)
-+		return -EOPNOTSUPP;
-+
- 	rswitch = &rvu->rswitch;
- 	*mode = rswitch->mode;
- 
-@@ -1477,6 +1480,9 @@ static int rvu_devlink_eswitch_mode_set(struct devlink *devlink, u16 mode,
- 	struct rvu *rvu = rvu_dl->rvu;
- 	struct rvu_switch *rswitch;
- 
-+	if (rvu->rep_mode)
-+		return -EOPNOTSUPP;
-+
- 	rswitch = &rvu->rswitch;
- 	switch (mode) {
- 	case DEVLINK_ESWITCH_MODE_LEGACY:
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-index 988c0920d6ca..df019c68ae6c 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-@@ -2741,7 +2741,7 @@ void rvu_nix_tx_tl2_cfg(struct rvu *rvu, int blkaddr, u16 pcifunc,
- 	int schq;
- 	u64 cfg;
- 
--	if (!is_pf_cgxmapped(rvu, pf))
-+	if (!is_pf_cgxmapped(rvu, pf) && !is_rep_dev(rvu, pcifunc))
- 		return;
- 
- 	cfg = enable ? (BIT_ULL(12) | RVU_SWITCH_LBK_CHAN) : 0;
-@@ -4371,8 +4371,6 @@ int rvu_mbox_handler_nix_set_mac_addr(struct rvu *rvu,
- 	if (test_bit(PF_SET_VF_TRUSTED, &pfvf->flags) && from_vf)
- 		ether_addr_copy(pfvf->default_mac, req->mac_addr);
- 
--	rvu_switch_update_rules(rvu, pcifunc);
--
- 	return 0;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
+index c1c99d7054f8..777e123e69c7 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
+@@ -72,7 +72,7 @@ int cn10k_lmtst_init(struct otx2_nic *pfvf)
  }
+ EXPORT_SYMBOL(cn10k_lmtst_init);
  
-@@ -5163,7 +5161,7 @@ int rvu_mbox_handler_nix_lf_start_rx(struct rvu *rvu, struct msg_req *req,
- 	pfvf = rvu_get_pfvf(rvu, pcifunc);
- 	set_bit(NIXLF_INITIALIZED, &pfvf->flags);
- 
--	rvu_switch_update_rules(rvu, pcifunc);
-+	rvu_switch_update_rules(rvu, pcifunc, true);
- 
- 	return rvu_cgx_start_stop_io(rvu, pcifunc, true);
- }
-@@ -5191,6 +5189,7 @@ int rvu_mbox_handler_nix_lf_stop_rx(struct rvu *rvu, struct msg_req *req,
- 	if (err)
- 		return err;
- 
-+	rvu_switch_update_rules(rvu, pcifunc, false);
- 	rvu_cgx_tx_enable(rvu, pcifunc, true);
- 
- 	return 0;
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c
-index d07cb356d3d6..d075bbcfa451 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c
-@@ -13,6 +13,246 @@
- #include "rvu.h"
- #include "rvu_reg.h"
- 
-+static int rvu_rep_get_vlan_id(struct rvu *rvu, u16 pcifunc)
-+{
-+	int id;
-+
-+	for (id = 0; id < rvu->rep_cnt; id++)
-+		if (rvu->rep2pfvf_map[id] == pcifunc)
-+			return id;
-+	return -ENODEV;
-+}
-+
-+static int rvu_rep_tx_vlan_cfg(struct rvu *rvu,  u16 pcifunc,
-+			       u16 vlan_tci, int *vidx)
-+{
-+	struct nix_vtag_config_rsp rsp = {};
-+	struct nix_vtag_config req = {};
-+	u64 etype = ETH_P_8021Q;
-+	int err;
-+
-+	/* Insert vlan tag */
-+	req.hdr.pcifunc = pcifunc;
-+	req.vtag_size = VTAGSIZE_T4;
-+	req.cfg_type = 0; /* tx vlan cfg */
-+	req.tx.cfg_vtag0 = true;
-+	req.tx.vtag0 = etype << 48 | ntohs(vlan_tci);
-+
-+	err = rvu_mbox_handler_nix_vtag_cfg(rvu, &req, &rsp);
-+	if (err) {
-+		dev_err(rvu->dev, "Tx vlan config failed\n");
-+		return err;
-+	}
-+	*vidx = rsp.vtag0_idx;
-+	return 0;
-+}
-+
-+static int rvu_rep_rx_vlan_cfg(struct rvu *rvu, u16 pcifunc)
-+{
-+	struct nix_vtag_config req = {};
-+	struct nix_vtag_config_rsp rsp;
-+
-+	/* config strip, capture and size */
-+	req.hdr.pcifunc = pcifunc;
-+	req.vtag_size = VTAGSIZE_T4;
-+	req.cfg_type = 1; /* rx vlan cfg */
-+	req.rx.vtag_type = NIX_AF_LFX_RX_VTAG_TYPE0;
-+	req.rx.strip_vtag = true;
-+	req.rx.capture_vtag = false;
-+
-+	return rvu_mbox_handler_nix_vtag_cfg(rvu, &req, &rsp);
-+}
-+
-+static int rvu_rep_install_rx_rule(struct rvu *rvu, u16 pcifunc,
-+				   u16 entry, bool rte)
-+{
-+	struct npc_install_flow_req req = {};
-+	struct npc_install_flow_rsp rsp = {};
-+	struct rvu_pfvf *pfvf;
-+	u16 vlan_tci, rep_id;
-+
-+	pfvf = rvu_get_pfvf(rvu, pcifunc);
-+
-+	/* To stree the traffic from Representee to Representor */
-+	rep_id = (u16)rvu_rep_get_vlan_id(rvu, pcifunc);
-+	if (rte) {
-+		vlan_tci = rep_id | 0x1ull << 8;
-+		req.vf = rvu->rep_pcifunc;
-+		req.op = NIX_RX_ACTIONOP_UCAST;
-+		req.index = rep_id;
-+	} else {
-+		vlan_tci = rep_id;
-+		req.vf = pcifunc;
-+		req.op = NIX_RX_ACTION_DEFAULT;
-+	}
-+
-+	rvu_rep_rx_vlan_cfg(rvu, req.vf);
-+	req.entry = entry;
-+	req.hdr.pcifunc = 0; /* AF is requester */
-+	req.features = BIT_ULL(NPC_OUTER_VID) | BIT_ULL(NPC_VLAN_ETYPE_CTAG);
-+	req.vtag0_valid = true;
-+	req.vtag0_type = NIX_AF_LFX_RX_VTAG_TYPE0;
-+	req.packet.vlan_etype = ETH_P_8021Q;
-+	req.mask.vlan_etype = ETH_P_8021Q;
-+	req.packet.vlan_tci = vlan_tci;
-+	req.mask.vlan_tci = 0xffff;
-+
-+	req.channel = RVU_SWITCH_LBK_CHAN;
-+	req.chan_mask = 0xffff;
-+	req.intf = pfvf->nix_rx_intf;
-+
-+	return rvu_mbox_handler_npc_install_flow(rvu, &req, &rsp);
-+}
-+
-+static int rvu_rep_install_tx_rule(struct rvu *rvu, u16 pcifunc, u16 entry,
-+				   bool rte)
-+{
-+	struct npc_install_flow_req req = {};
-+	struct npc_install_flow_rsp rsp = {};
-+	struct rvu_pfvf *pfvf;
-+	int vidx, err;
-+	u16 vlan_tci;
-+	u8 lbkid;
-+
-+	pfvf = rvu_get_pfvf(rvu, pcifunc);
-+	vlan_tci = rvu_rep_get_vlan_id(rvu, pcifunc);
-+	if (rte)
-+		vlan_tci |= 0x1ull << 8;
-+
-+	err = rvu_rep_tx_vlan_cfg(rvu, pcifunc, vlan_tci, &vidx);
-+	if (err)
-+		return err;
-+
-+	lbkid = pfvf->nix_blkaddr == BLKADDR_NIX0 ? 0 : 1;
-+	req.hdr.pcifunc = 0; /* AF is requester */
-+	if (rte) {
-+		req.vf = pcifunc;
-+	} else {
-+		req.vf = rvu->rep_pcifunc;
-+		req.packet.sq_id = vlan_tci;
-+		req.mask.sq_id = 0xffff;
-+	}
-+
-+	req.entry = entry;
-+	req.intf = pfvf->nix_tx_intf;
-+	req.op = NIX_TX_ACTIONOP_UCAST_CHAN;
-+	req.index = (lbkid << 8) | RVU_SWITCH_LBK_CHAN;
-+	req.set_cntr = 1;
-+	req.vtag0_def = vidx;
-+	req.vtag0_op = 1;
-+	return rvu_mbox_handler_npc_install_flow(rvu, &req, &rsp);
-+}
-+
-+int rvu_rep_install_mcam_rules(struct rvu *rvu)
-+{
-+	struct rvu_switch *rswitch = &rvu->rswitch;
-+	u16 start = rswitch->start_entry;
-+	struct rvu_hwinfo *hw = rvu->hw;
-+	u16 pcifunc, entry = 0;
-+	int pf, vf, numvfs;
-+	int err, nixlf, i;
-+	u8 rep;
-+
-+	for (pf = 1; pf < hw->total_pfs; pf++) {
-+		if (!is_pf_cgxmapped(rvu, pf))
-+			continue;
-+
-+		pcifunc = pf << RVU_PFVF_PF_SHIFT;
-+		rvu_get_nix_blkaddr(rvu, pcifunc);
-+		rep = true;
-+		for (i = 0; i < 2; i++) {
-+			err = rvu_rep_install_rx_rule(rvu, pcifunc, start + entry, rep);
-+			if (err)
-+				return err;
-+			rswitch->entry2pcifunc[entry++] = pcifunc;
-+
-+			err = rvu_rep_install_tx_rule(rvu, pcifunc, start + entry, rep);
-+			if (err)
-+				return err;
-+			rswitch->entry2pcifunc[entry++] = pcifunc;
-+			rep = false;
-+		}
-+
-+		rvu_get_pf_numvfs(rvu, pf, &numvfs, NULL);
-+		for (vf = 0; vf < numvfs; vf++) {
-+			pcifunc = pf << RVU_PFVF_PF_SHIFT |
-+				  ((vf + 1) & RVU_PFVF_FUNC_MASK);
-+			rvu_get_nix_blkaddr(rvu, pcifunc);
-+
-+			/* Skip installimg rules if nixlf is not attached */
-+			err = nix_get_nixlf(rvu, pcifunc, &nixlf, NULL);
-+			if (err)
-+				continue;
-+			rep = true;
-+			for (i = 0; i < 2; i++) {
-+				err = rvu_rep_install_rx_rule(rvu, pcifunc, start + entry, rep);
-+				if (err)
-+					return err;
-+				rswitch->entry2pcifunc[entry++] = pcifunc;
-+
-+				err = rvu_rep_install_tx_rule(rvu, pcifunc, start + entry, rep);
-+				if (err)
-+					return err;
-+				rswitch->entry2pcifunc[entry++] = pcifunc;
-+				rep = false;
-+			}
-+		}
-+	}
-+	return 0;
-+}
-+
-+void rvu_rep_update_rules(struct rvu *rvu, u16 pcifunc, bool ena)
-+{
-+	struct rvu_switch *rswitch = &rvu->rswitch;
-+	struct npc_mcam *mcam = &rvu->hw->mcam;
-+	u32 max = rswitch->used_entries;
-+	int blkaddr;
-+	u16 entry;
-+
-+	if (!rswitch->used_entries)
-+		return;
-+
-+	blkaddr = rvu_get_blkaddr(rvu, BLKTYPE_NPC, 0);
-+
-+	if (blkaddr < 0)
-+		return;
-+
-+	rvu_switch_enable_lbk_link(rvu, pcifunc, ena);
-+	mutex_lock(&mcam->lock);
-+	for (entry = 0; entry < max; entry++) {
-+		if (rswitch->entry2pcifunc[entry] == pcifunc)
-+			npc_enable_mcam_entry(rvu, mcam, blkaddr, entry, ena);
-+	}
-+	mutex_unlock(&mcam->lock);
-+}
-+
-+int rvu_rep_pf_init(struct rvu *rvu)
-+{
-+	u16 pcifunc = rvu->rep_pcifunc;
-+	struct rvu_pfvf *pfvf = rvu_get_pfvf(rvu, pcifunc);
-+
-+	set_bit(NIXLF_INITIALIZED, &pfvf->flags);
-+	rvu_switch_enable_lbk_link(rvu, pcifunc, true);
-+	rvu_rep_rx_vlan_cfg(rvu, pcifunc);
-+	return 0;
-+}
-+
-+int rvu_mbox_handler_esw_cfg(struct rvu *rvu, struct esw_cfg_req *req,
-+			     struct msg_rsp *rsp)
-+{
-+	if (req->hdr.pcifunc != rvu->rep_pcifunc)
-+		return 0;
-+
-+	rvu->rep_mode = req->ena;
-+
-+	if (req->ena)
-+		rvu_switch_enable(rvu);
-+	else
-+		rvu_switch_disable(rvu);
-+
-+	return 0;
-+}
-+
- int rvu_mbox_handler_get_rep_cnt(struct rvu *rvu, struct msg_req *req,
- 				 struct get_rep_cnt_rsp *rsp)
+-int cn10k_sq_aq_init(void *dev, u16 qidx, u16 sqb_aura)
++int cn10k_sq_aq_init(void *dev, u16 qidx, u8 chan_offset, u16 sqb_aura)
  {
-@@ -45,4 +285,3 @@ int rvu_mbox_handler_get_rep_cnt(struct rvu *rvu, struct msg_req *req,
- 	}
- 	return 0;
- }
--
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_switch.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_switch.c
-index ceb81eebf65e..268efb7c1c15 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_switch.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_switch.c
-@@ -166,6 +166,8 @@ void rvu_switch_enable(struct rvu *rvu)
+ 	struct nix_cn10k_aq_enq_req *aq;
+ 	struct otx2_nic *pfvf = dev;
+@@ -88,7 +88,7 @@ int cn10k_sq_aq_init(void *dev, u16 qidx, u16 sqb_aura)
+ 	aq->sq.ena = 1;
+ 	aq->sq.smq = otx2_get_smq_idx(pfvf, qidx);
+ 	aq->sq.smq_rr_weight = mtu_to_dwrr_weight(pfvf, pfvf->tx_max_pktlen);
+-	aq->sq.default_chan = pfvf->hw.tx_chan_base;
++	aq->sq.default_chan = pfvf->hw.tx_chan_base + chan_offset;
+ 	aq->sq.sqe_stype = NIX_STYPE_STF; /* Cache SQB */
+ 	aq->sq.sqb_aura = sqb_aura;
+ 	aq->sq.sq_int_ena = NIX_SQINT_BITS;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.h b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.h
+index c1861f7de254..e3f0bce9908f 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.h
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.h
+@@ -26,7 +26,7 @@ static inline int mtu_to_dwrr_weight(struct otx2_nic *pfvf, int mtu)
  
- 	alloc_req.contig = true;
- 	alloc_req.count = rvu->cgx_mapped_pfs + rvu->cgx_mapped_vfs;
-+	if (rvu->rep_mode)
-+		alloc_req.count = alloc_req.count * 4;
- 	ret = rvu_mbox_handler_npc_mcam_alloc_entry(rvu, &alloc_req,
- 						    &alloc_rsp);
- 	if (ret) {
-@@ -189,7 +191,12 @@ void rvu_switch_enable(struct rvu *rvu)
- 	rswitch->used_entries = alloc_rsp.count;
- 	rswitch->start_entry = alloc_rsp.entry;
+ int cn10k_refill_pool_ptrs(void *dev, struct otx2_cq_queue *cq);
+ void cn10k_sqe_flush(void *dev, struct otx2_snd_queue *sq, int size, int qidx);
+-int cn10k_sq_aq_init(void *dev, u16 qidx, u16 sqb_aura);
++int cn10k_sq_aq_init(void *dev, u16 qidx, u8 chan_offset, u16 sqb_aura);
+ int cn10k_lmtst_init(struct otx2_nic *pfvf);
+ int cn10k_free_all_ipolicers(struct otx2_nic *pfvf);
+ int cn10k_alloc_matchall_ipolicer(struct otx2_nic *pfvf);
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+index 4b53af087cb4..f0f0d18ab302 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+@@ -253,7 +253,7 @@ int otx2_config_pause_frm(struct otx2_nic *pfvf)
+ 	struct cgx_pause_frm_cfg *req;
+ 	int err;
  
--	ret = rvu_switch_install_rules(rvu);
-+	if (rvu->rep_mode) {
-+		rvu_rep_pf_init(rvu);
-+		ret = rvu_rep_install_mcam_rules(rvu);
-+	} else {
-+		ret = rvu_switch_install_rules(rvu);
-+	}
- 	if (ret)
- 		goto uninstall_rules;
+-	if (is_otx2_lbkvf(pfvf->pdev))
++	if (is_otx2_lbkvf(pfvf->pdev) || is_otx2_sdp_rep(pfvf->pdev))
+ 		return 0;
  
-@@ -222,6 +229,9 @@ void rvu_switch_disable(struct rvu *rvu)
- 	if (!rswitch->used_entries)
- 		return;
- 
-+	if (rvu->rep_mode)
-+		goto free_ents;
+ 	mutex_lock(&pfvf->mbox.lock);
+@@ -647,12 +647,21 @@ int otx2_txschq_config(struct otx2_nic *pfvf, int lvl, int prio, bool txschq_for
+ 		req->reg[2] = NIX_AF_MDQX_SCHEDULE(schq);
+ 		req->regval[2] =  dwrr_val;
+ 	} else if (lvl == NIX_TXSCH_LVL_TL4) {
++		int sdp_chan =  hw->tx_chan_base + prio;
 +
- 	for (pf = 1; pf < hw->total_pfs; pf++) {
- 		if (!is_pf_cgxmapped(rvu, pf))
- 			continue;
-@@ -249,6 +259,7 @@ void rvu_switch_disable(struct rvu *rvu)
++		if (is_otx2_sdp_rep(pfvf->pdev))
++			prio = 0;
+ 		parent = schq_list[NIX_TXSCH_LVL_TL3][prio];
+ 		req->reg[0] = NIX_AF_TL4X_PARENT(schq);
+ 		req->regval[0] = parent << 16;
+ 		req->num_regs++;
+ 		req->reg[1] = NIX_AF_TL4X_SCHEDULE(schq);
+ 		req->regval[1] = dwrr_val;
++		if (is_otx2_sdp_rep(pfvf->pdev)) {
++			req->num_regs++;
++			req->reg[2] = NIX_AF_TL4X_SDP_LINK_CFG(schq);
++			req->regval[2] = BIT_ULL(12) | BIT_ULL(13) | (sdp_chan & 0xff);
++		}
+ 	} else if (lvl == NIX_TXSCH_LVL_TL3) {
+ 		parent = schq_list[NIX_TXSCH_LVL_TL2][prio];
+ 		req->reg[0] = NIX_AF_TL3X_PARENT(schq);
+@@ -660,7 +669,7 @@ int otx2_txschq_config(struct otx2_nic *pfvf, int lvl, int prio, bool txschq_for
+ 		req->num_regs++;
+ 		req->reg[1] = NIX_AF_TL3X_SCHEDULE(schq);
+ 		req->regval[1] = dwrr_val;
+-		if (lvl == hw->txschq_link_cfg_lvl) {
++		if (lvl == hw->txschq_link_cfg_lvl && !is_otx2_sdp_rep(pfvf->pdev)) {
+ 			req->num_regs++;
+ 			req->reg[2] = NIX_AF_TL3_TL2X_LINKX_CFG(schq, hw->tx_link);
+ 			/* Enable this queue and backpressure
+@@ -677,7 +686,7 @@ int otx2_txschq_config(struct otx2_nic *pfvf, int lvl, int prio, bool txschq_for
+ 		req->reg[1] = NIX_AF_TL2X_SCHEDULE(schq);
+ 		req->regval[1] = TXSCH_TL1_DFLT_RR_PRIO << 24 | dwrr_val;
+ 
+-		if (lvl == hw->txschq_link_cfg_lvl) {
++		if (lvl == hw->txschq_link_cfg_lvl && !is_otx2_sdp_rep(pfvf->pdev)) {
+ 			req->num_regs++;
+ 			req->reg[2] = NIX_AF_TL3_TL2X_LINKX_CFG(schq, hw->tx_link);
+ 			/* Enable this queue and backpressure
+@@ -736,6 +745,7 @@ EXPORT_SYMBOL(otx2_smq_flush);
+ 
+ int otx2_txsch_alloc(struct otx2_nic *pfvf)
+ {
++	int chan_cnt = pfvf->hw.tx_chan_cnt;
+ 	struct nix_txsch_alloc_req *req;
+ 	struct nix_txsch_alloc_rsp *rsp;
+ 	int lvl, schq, rc;
+@@ -748,6 +758,12 @@ int otx2_txsch_alloc(struct otx2_nic *pfvf)
+ 	/* Request one schq per level */
+ 	for (lvl = 0; lvl < NIX_TXSCH_LVL_CNT; lvl++)
+ 		req->schq[lvl] = 1;
++
++	if (is_otx2_sdp_rep(pfvf->pdev) && chan_cnt > 1) {
++		req->schq[NIX_TXSCH_LVL_SMQ] = chan_cnt;
++		req->schq[NIX_TXSCH_LVL_TL4] = chan_cnt;
++	}
++
+ 	rc = otx2_sync_mbox_msg(&pfvf->mbox);
+ 	if (rc)
+ 		return rc;
+@@ -758,10 +774,12 @@ int otx2_txsch_alloc(struct otx2_nic *pfvf)
+ 		return PTR_ERR(rsp);
+ 
+ 	/* Setup transmit scheduler list */
+-	for (lvl = 0; lvl < NIX_TXSCH_LVL_CNT; lvl++)
++	for (lvl = 0; lvl < NIX_TXSCH_LVL_CNT; lvl++) {
++		pfvf->hw.txschq_cnt[lvl] = rsp->schq[lvl];
+ 		for (schq = 0; schq < rsp->schq[lvl]; schq++)
+ 			pfvf->hw.txschq_list[lvl][schq] =
+ 				rsp->schq_list[lvl][schq];
++	}
+ 
+ 	pfvf->hw.txschq_link_cfg_lvl = rsp->link_cfg_lvl;
+ 	pfvf->hw.txschq_aggr_lvl_rr_prio = rsp->aggr_lvl_rr_prio;
+@@ -799,12 +817,15 @@ EXPORT_SYMBOL(otx2_txschq_free_one);
+ 
+ void otx2_txschq_stop(struct otx2_nic *pfvf)
+ {
+-	int lvl, schq;
++	int lvl, schq, idx;
+ 
+ 	/* free non QOS TLx nodes */
+-	for (lvl = 0; lvl < NIX_TXSCH_LVL_CNT; lvl++)
+-		otx2_txschq_free_one(pfvf, lvl,
+-				     pfvf->hw.txschq_list[lvl][0]);
++	for (lvl = 0; lvl < NIX_TXSCH_LVL_CNT; lvl++) {
++		for (idx = 0; idx < pfvf->hw.txschq_cnt[lvl]; idx++) {
++			otx2_txschq_free_one(pfvf, lvl,
++					     pfvf->hw.txschq_list[lvl][idx]);
++		}
++	}
+ 
+ 	/* Clear the txschq list */
+ 	for (lvl = 0; lvl < NIX_TXSCH_LVL_CNT; lvl++) {
+@@ -884,7 +905,7 @@ static int otx2_rq_init(struct otx2_nic *pfvf, u16 qidx, u16 lpb_aura)
+ 	return otx2_sync_mbox_msg(&pfvf->mbox);
+ }
+ 
+-int otx2_sq_aq_init(void *dev, u16 qidx, u16 sqb_aura)
++int otx2_sq_aq_init(void *dev, u16 qidx, u8 chan_offset, u16 sqb_aura)
+ {
+ 	struct otx2_nic *pfvf = dev;
+ 	struct otx2_snd_queue *sq;
+@@ -903,7 +924,7 @@ int otx2_sq_aq_init(void *dev, u16 qidx, u16 sqb_aura)
+ 	aq->sq.ena = 1;
+ 	aq->sq.smq = otx2_get_smq_idx(pfvf, qidx);
+ 	aq->sq.smq_rr_quantum = mtu_to_dwrr_weight(pfvf, pfvf->tx_max_pktlen);
+-	aq->sq.default_chan = pfvf->hw.tx_chan_base;
++	aq->sq.default_chan = pfvf->hw.tx_chan_base + chan_offset;
+ 	aq->sq.sqe_stype = NIX_STYPE_STF; /* Cache SQB */
+ 	aq->sq.sqb_aura = sqb_aura;
+ 	aq->sq.sq_int_ena = NIX_SQINT_BITS;
+@@ -926,6 +947,7 @@ int otx2_sq_init(struct otx2_nic *pfvf, u16 qidx, u16 sqb_aura)
+ 	struct otx2_qset *qset = &pfvf->qset;
+ 	struct otx2_snd_queue *sq;
+ 	struct otx2_pool *pool;
++	u8 chan_offset;
+ 	int err;
+ 
+ 	pool = &pfvf->qset.pool[sqb_aura];
+@@ -972,7 +994,8 @@ int otx2_sq_init(struct otx2_nic *pfvf, u16 qidx, u16 sqb_aura)
+ 	sq->stats.bytes = 0;
+ 	sq->stats.pkts = 0;
+ 
+-	err = pfvf->hw_ops->sq_aq_init(pfvf, qidx, sqb_aura);
++	chan_offset = qidx % pfvf->hw.tx_chan_cnt;
++	err = pfvf->hw_ops->sq_aq_init(pfvf, qidx, chan_offset, sqb_aura);
+ 	if (err) {
+ 		kfree(sq->sg);
+ 		sq->sg = NULL;
+@@ -1739,6 +1762,8 @@ void mbox_handler_nix_lf_alloc(struct otx2_nic *pfvf,
+ 	pfvf->hw.sqb_size = rsp->sqb_size;
+ 	pfvf->hw.rx_chan_base = rsp->rx_chan_base;
+ 	pfvf->hw.tx_chan_base = rsp->tx_chan_base;
++	pfvf->hw.rx_chan_cnt = rsp->rx_chan_cnt;
++	pfvf->hw.tx_chan_cnt = rsp->tx_chan_cnt;
+ 	pfvf->hw.lso_tsov4_idx = rsp->lso_tsov4_idx;
+ 	pfvf->hw.lso_tsov6_idx = rsp->lso_tsov6_idx;
+ 	pfvf->hw.cgx_links = rsp->cgx_links;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+index 865d5d3146a9..1d6939786495 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+@@ -42,6 +42,8 @@
+ #define PCI_SUBSYS_DEVID_96XX_RVU_PFVF		0xB200
+ #define PCI_SUBSYS_DEVID_CN10K_B_RVU_PFVF	0xBD00
+ 
++#define PCI_DEVID_OCTEONTX2_SDP_REP		0xA0F7
++
+ /* PCI BAR nos */
+ #define PCI_CFG_REG_BAR_NUM                     2
+ #define PCI_MBOX_BAR_NUM                        4
+@@ -198,6 +200,7 @@ struct otx2_hw {
+ 
+ 	/* NIX */
+ 	u8			txschq_link_cfg_lvl;
++	u8			txschq_cnt[NIX_TXSCH_LVL_CNT];
+ 	u8			txschq_aggr_lvl_rr_prio;
+ 	u16			txschq_list[NIX_TXSCH_LVL_CNT][MAX_TXSCHQ_PER_FUNC];
+ 	u16			matchall_ipolicer;
+@@ -208,6 +211,8 @@ struct otx2_hw {
+ 	/* HW settings, coalescing etc */
+ 	u16			rx_chan_base;
+ 	u16			tx_chan_base;
++	u8			rx_chan_cnt;
++	u8			tx_chan_cnt;
+ 	u16			cq_qcount_wait;
+ 	u16			cq_ecount_wait;
+ 	u16			rq_skid;
+@@ -343,7 +348,7 @@ struct otx2_flow_config {
+ };
+ 
+ struct dev_hw_ops {
+-	int	(*sq_aq_init)(void *dev, u16 qidx, u16 sqb_aura);
++	int	(*sq_aq_init)(void *dev, u16 qidx, u8 chan_offset, u16 sqb_aura);
+ 	void	(*sqe_flush)(void *dev, struct otx2_snd_queue *sq,
+ 			     int size, int qidx);
+ 	int	(*refill_pool_ptrs)(void *dev, struct otx2_cq_queue *cq);
+@@ -536,6 +541,11 @@ static inline bool is_96xx_B0(struct pci_dev *pdev)
+ 		(pdev->subsystem_device == PCI_SUBSYS_DEVID_96XX_RVU_PFVF);
+ }
+ 
++static inline bool is_otx2_sdp_rep(struct pci_dev *pdev)
++{
++	return pdev->device == PCI_DEVID_OCTEONTX2_SDP_REP;
++}
++
+ /* REVID for PCIe devices.
+  * Bits 0..1: minor pass, bit 3..2: major pass
+  * bits 7..4: midr id
+@@ -898,15 +908,19 @@ static inline void otx2_dma_unmap_page(struct otx2_nic *pfvf,
+ static inline u16 otx2_get_smq_idx(struct otx2_nic *pfvf, u16 qidx)
+ {
+ 	u16 smq;
++	int idx;
++
+ #ifdef CONFIG_DCB
+ 	if (qidx < NIX_PF_PFC_PRIO_MAX && pfvf->pfc_alloc_status[qidx])
+ 		return pfvf->pfc_schq_list[NIX_TXSCH_LVL_SMQ][qidx];
+ #endif
+ 	/* check if qidx falls under QOS queues */
+-	if (qidx >= pfvf->hw.non_qos_queues)
++	if (qidx >= pfvf->hw.non_qos_queues) {
+ 		smq = pfvf->qos.qid_to_sqmap[qidx - pfvf->hw.non_qos_queues];
+-	else
+-		smq = pfvf->hw.txschq_list[NIX_TXSCH_LVL_SMQ][0];
++	} else {
++		idx = qidx % pfvf->hw.txschq_cnt[NIX_TXSCH_LVL_SMQ];
++		smq = pfvf->hw.txschq_list[NIX_TXSCH_LVL_SMQ][idx];
++	}
+ 
+ 	return smq;
+ }
+@@ -973,8 +987,8 @@ int otx2_nix_config_bp(struct otx2_nic *pfvf, bool enable);
+ void otx2_cleanup_rx_cqes(struct otx2_nic *pfvf, struct otx2_cq_queue *cq, int qidx);
+ void otx2_cleanup_tx_cqes(struct otx2_nic *pfvf, struct otx2_cq_queue *cq);
+ int otx2_sq_init(struct otx2_nic *pfvf, u16 qidx, u16 sqb_aura);
+-int otx2_sq_aq_init(void *dev, u16 qidx, u16 sqb_aura);
+-int cn10k_sq_aq_init(void *dev, u16 qidx, u16 sqb_aura);
++int otx2_sq_aq_init(void *dev, u16 qidx, u8 chan_offset, u16 sqb_aura);
++int cn10k_sq_aq_init(void *dev, u16 qidx, u8 chan_offset, u16 sqb_aura);
+ int otx2_alloc_buffer(struct otx2_nic *pfvf, struct otx2_cq_queue *cq,
+ 		      dma_addr_t *dma);
+ int otx2_pool_init(struct otx2_nic *pfvf, u16 pool_id,
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+index 8fc26a95a871..b46ea92a1ba5 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+@@ -1593,10 +1593,15 @@ int otx2_init_hw_resources(struct otx2_nic *pf)
+ 	}
+ 
+ 	for (lvl = 0; lvl < NIX_TXSCH_LVL_CNT; lvl++) {
+-		err = otx2_txschq_config(pf, lvl, 0, false);
+-		if (err) {
+-			mutex_unlock(&mbox->lock);
+-			goto err_free_nix_queues;
++		int idx;
++
++		for (idx = 0; idx < pf->hw.txschq_cnt[lvl]; idx++) {
++			err = otx2_txschq_config(pf, lvl, idx, false);
++			if (err) {
++				dev_err(pf->dev, "Failed to config TXSCH\n");
++				mutex_unlock(&mbox->lock);
++				goto err_free_nix_queues;
++			}
  		}
  	}
  
-+free_ents:
- 	uninstall_req.start = rswitch->start_entry;
- 	uninstall_req.end =  rswitch->start_entry + rswitch->used_entries - 1;
- 	free_req.all = 1;
-@@ -258,12 +269,15 @@ void rvu_switch_disable(struct rvu *rvu)
- 	kfree(rswitch->entry2pcifunc);
- }
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_reg.h b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_reg.h
+index 45a32e4b49d1..defcb9ea21e1 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_reg.h
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_reg.h
+@@ -140,6 +140,7 @@
  
--void rvu_switch_update_rules(struct rvu *rvu, u16 pcifunc)
-+void rvu_switch_update_rules(struct rvu *rvu, u16 pcifunc, bool ena)
- {
- 	struct rvu_switch *rswitch = &rvu->rswitch;
- 	u32 max = rswitch->used_entries;
- 	u16 entry;
+ /* NIX AF transmit scheduler registers */
+ #define NIX_AF_SMQX_CFG(a)		(0x700 | (a) << 16)
++#define NIX_AF_TL4X_SDP_LINK_CFG(a)	(0xB10 | (a) << 16)
+ #define NIX_AF_TL1X_SCHEDULE(a)		(0xC00 | (a) << 16)
+ #define NIX_AF_TL1X_CIR(a)		(0xC20 | (a) << 16)
+ #define NIX_AF_TL1X_TOPOLOGY(a)		(0xC80 | (a) << 16)
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
+index 048f9a744542..fd093c4c3289 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
+@@ -21,6 +21,7 @@
+ static const struct pci_device_id otx2_vf_id_table[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, PCI_DEVID_OCTEONTX2_RVU_AFVF) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, PCI_DEVID_OCTEONTX2_RVU_VF) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, PCI_DEVID_OCTEONTX2_SDP_REP) },
+ 	{ }
+ };
  
-+	if (rvu->rep_mode)
-+		return rvu_rep_update_rules(rvu, pcifunc, ena);
+@@ -371,7 +372,7 @@ static int otx2vf_open(struct net_device *netdev)
+ 
+ 	/* LBKs do not receive link events so tell everyone we are up here */
+ 	vf = netdev_priv(netdev);
+-	if (is_otx2_lbkvf(vf->pdev)) {
++	if (is_otx2_lbkvf(vf->pdev) || is_otx2_sdp_rep(vf->pdev)) {
+ 		pr_info("%s NIC Link is UP\n", netdev->name);
+ 		netif_carrier_on(netdev);
+ 		netif_tx_start_all_queues(netdev);
+@@ -683,6 +684,14 @@ static int otx2vf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		snprintf(netdev->name, sizeof(netdev->name), "lbk%d", n);
+ 	}
+ 
++	if (is_otx2_sdp_rep(vf->pdev)) {
++		int n;
 +
- 	if (!rswitch->used_entries)
- 		return;
- 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
-index 4515f1aebea1..6e62d3b30d8d 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
-@@ -28,6 +28,22 @@ MODULE_DESCRIPTION(DRV_STRING);
- MODULE_LICENSE("GPL");
- MODULE_DEVICE_TABLE(pci, rvu_rep_id_table);
- 
-+static int rvu_eswitch_config(struct otx2_nic *priv, u8 ena)
-+{
-+	struct esw_cfg_req *req;
-+
-+	mutex_lock(&priv->mbox.lock);
-+	req = otx2_mbox_alloc_msg_esw_cfg(&priv->mbox);
-+	if (!req) {
-+		mutex_unlock(&priv->mbox.lock);
-+		return -ENOMEM;
++		n = (vf->pcifunc >> RVU_PFVF_FUNC_SHIFT) & RVU_PFVF_FUNC_MASK;
++		n -= 1;
++		snprintf(netdev->name, sizeof(netdev->name), "sdp%d-%d", pdev->bus->number, n);
 +	}
-+	req->ena = ena;
-+	otx2_sync_mbox_msg(&priv->mbox);
-+	mutex_unlock(&priv->mbox.lock);
-+	return 0;
-+}
 +
- static netdev_tx_t rvu_rep_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct rep_dev *rep = netdev_priv(dev);
-@@ -158,6 +174,7 @@ void rvu_rep_destroy(struct otx2_nic *priv)
- 	struct rep_dev *rep;
- 	int rep_id;
- 
-+	rvu_eswitch_config(priv, false);
- 	rvu_rep_free_cq_rsrc(priv);
- 	for (rep_id = 0; rep_id < priv->rep_cnt; rep_id++) {
- 		rep = priv->reps[rep_id];
-@@ -212,6 +229,7 @@ int rvu_rep_create(struct otx2_nic *priv)
- 	if (err)
- 		goto exit;
- 
-+	rvu_eswitch_config(priv, true);
- 	return 0;
- exit:
- 	while (--rep_id >= 0) {
-@@ -222,7 +240,7 @@ int rvu_rep_create(struct otx2_nic *priv)
- 	return err;
- }
- 
--static int rvu_rep_rsrc_free(struct otx2_nic *priv)
-+static void rvu_rep_rsrc_free(struct otx2_nic *priv)
- {
- 	struct otx2_qset *qset = &priv->qset;
- 	int wrk;
-@@ -233,13 +251,12 @@ static int rvu_rep_rsrc_free(struct otx2_nic *priv)
- 
- 	otx2_free_hw_resources(priv);
- 	otx2_free_queue_mem(qset);
--	return 0;
- }
- 
- static int rvu_rep_rsrc_init(struct otx2_nic *priv)
- {
- 	struct otx2_qset *qset = &priv->qset;
--	int err = 0;
-+	int err;
- 
- 	err = otx2_alloc_queue_mem(priv);
- 	if (err)
+ 	err = register_netdev(netdev);
+ 	if (err) {
+ 		dev_err(dev, "Failed to register netdevice\n");
 -- 
 2.25.1
 
