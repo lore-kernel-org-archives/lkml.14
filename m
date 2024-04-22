@@ -1,79 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1261F1534EB;
-	Mon, 22 Apr 2024 15:30:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB79514EC61;
+	Mon, 22 Apr 2024 15:32:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713799829; cv=none; b=DV8VM0QI4KLiKswwdMiHSTC9onS5vU2cP+WX8NSV7+N3bNjdSZmEcI5pLiqwojWZc1qiMC+03Pkeh3TFQQjj0j4v0wa7F3/8cQp8MZ1YQGwXdpzMGyQVQyvgbNMW3V5nPcqr+bjIdYZfdnA4bLrMIx08USrBSDVaRY3hf4sudRI=
+	t=1713799922; cv=none; b=RJe7PK1ZmsTUx9A+5LwJdsYo8XvVigGxb2SSRtO0qPH2vXhYbvcOLeasukSHhwygld2CSb46L8B/H/Oon4x2kpGvANhK2VdRcvFmy3UgYBlkcNOwLHu6/cHPsgBFw9eYehpHXDmqICsWXztDICwmJcRqYg1xtKy/0SpZW55AnF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713799829; c=relaxed/simple;
-	bh=kBOdztBuRx3LyBj/ka6DXaMiCnKJ+c2up6OXDtfALQg=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ZapLorEV7CKZCH5Ak8dgdhfcA2xRkX24Hs2wD1C1BoPzZXgi1z1+FVt3z8F8jwhVBlY1ulYodx9X/zq4vqVc7uHFqfrVCpKXOAapGpVFF7ccwfHdwI/V42KIBrT8Q5CPGbYsM7B+QqBO3adOJNlryes9YoaBS0IkBO93LJ0KqVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VsByQft0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713799922; c=relaxed/simple;
+	bh=UvmIfCiITCcdyzxsZMMrgYWKx8FzLEXrnqmTNkMaMaY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LwPvfwCb5XYxz1jN1A/LhQwefNHmcZwRBkH2pWcX2Zm3mzZkPCFpuPbVK2QsGTzLHHWXsqE+FFLMmRAy9WxA3s+ycJGaYUXy4QXJsfydslAZFQLUJHg7MUGbGBZzLIo4mlihYMVwGvIgZZqmmh/oO3fIU2HkXz6Pzfph0pJ3U8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=te+a3h/g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VsByQft0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E3D8BC4AF09;
-	Mon, 22 Apr 2024 15:30:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="te+a3h/g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBF42C113CC;
+	Mon, 22 Apr 2024 15:31:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713799828;
-	bh=kBOdztBuRx3LyBj/ka6DXaMiCnKJ+c2up6OXDtfALQg=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=VsByQft0K9J5inVAsL7BWPEW0omu/N0N2cmpV7gVRutXaO01+Bidl3LtrFceJuX8+
-	 9ysl3inBH/gCyrgoVx53EwQSWKgzUTyw6FJIh968pT6JPv5X32ICwwhb7gJI7+aKGQ
-	 s/Yu6Q3+yUOqxCx1bh5sVQO4O8HhTdcj8Ashovaui6N1AWS3u4VZZ9oJoB0eTQjBKM
-	 q3i3RQsh8p87oqFswzXV6PhDkbe8hSgS3dXdbmg7NnlMNXUqtqSIU+IOkYGnRdHLa3
-	 r666z73wyUhUFR1QpJexflj839/VV/Gl3ffHNC0Up0nvCeyfbwLCecbAvl/wVcmWad
-	 7DWL30YUTRL0g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D8678C433A2;
-	Mon, 22 Apr 2024 15:30:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1713799922;
+	bh=UvmIfCiITCcdyzxsZMMrgYWKx8FzLEXrnqmTNkMaMaY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=te+a3h/gS8fUUis5ddHZ1+T6SNiYNG/yCMPhmrcLcA9c0XNiYlXgTAohCu59EV0uP
+	 yDA6i3FchjzUMC0jT0z9muuac/dDSnPlboA7BCsepHnoscx48lVUTH58MKf49rWvsb
+	 JH7iLX+uOxmJj2rDwrDKetSxzBEf9cgZVKs9litqnb6A9vOoc1nIsW3SL/2hhfbzar
+	 ruOXYQV4JmP52gvKEzWEtY9STxF4ifuFM3DkG4Yis69WXNwSpckTwKfINEW7QjG1ws
+	 pqAHyZrqxERLCsVjcbmojT9Zgx4IP6OszxgZKSitE/IVraV5dE+kVDroliMA6NWYXp
+	 becZgB7l6n/2g==
+Date: Mon, 22 Apr 2024 16:31:57 +0100
+From: Conor Dooley <conor@kernel.org>
+To: kelvin.zhang@amlogic.com
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Zelong Dong <zelong.dong@amlogic.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: reset: Add Amlogic T7 reset
+ controller
+Message-ID: <20240422-unbridle-busybody-1ac4abc20843@spud>
+References: <20240422-t7-reset-v2-0-cb82271d3296@amlogic.com>
+ <20240422-t7-reset-v2-1-cb82271d3296@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH RESEND 0/2] Bluetooth: qca: fix NULL-deref on non-serdev setup
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <171379982888.28518.5007665871256276343.git-patchwork-notify@kernel.org>
-Date: Mon, 22 Apr 2024 15:30:28 +0000
-References: <20240422135748.23081-1-johan+linaro@kernel.org>
-In-Reply-To: <20240422135748.23081-1-johan+linaro@kernel.org>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: marcel@holtmann.org, luiz.dentz@gmail.com, jiangzp@google.com,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
-
-Hello:
-
-This series was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
-
-On Mon, 22 Apr 2024 15:57:46 +0200 you wrote:
-> Qualcomm Bluetooth controllers can be registered either from a serdev
-> driver or from the Bluetooth line discipline. In the latter case, the
-> HCI UART serdev pointer is NULL, something which the driver needs to
-> handle without crashing.
-> 
-> This series fixes one such issue at setup() time which incidentally
-> masked a similar crash at suspend. Fix this in two separate patches so
-> that the latter issue is addressed in pre-6.2 stable kernels.
-> 
-> [...]
-
-Here is the summary with links:
-  - [RESEND,1/2] Bluetooth: qca: fix NULL-deref on non-serdev suspend
-    https://git.kernel.org/bluetooth/bluetooth-next/c/8185331e953d
-  - [RESEND,2/2] Bluetooth: qca: fix NULL-deref on non-serdev setup
-    https://git.kernel.org/bluetooth/bluetooth-next/c/9201f29be2c9
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="st57Evgp6eg7VOFY"
+Content-Disposition: inline
+In-Reply-To: <20240422-t7-reset-v2-1-cb82271d3296@amlogic.com>
 
 
+--st57Evgp6eg7VOFY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Apr 22, 2024 at 07:11:43PM +0800, Kelvin Zhang via B4 Relay wrote:
+> From: Zelong Dong <zelong.dong@amlogic.com>
+>=20
+> Add a new compatible for Amlogic T7 reset controller.
+>=20
+> Signed-off-by: Zelong Dong <zelong.dong@amlogic.com>
+> Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Thanks,
+Conor.
+
+--st57Evgp6eg7VOFY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiaC7QAKCRB4tDGHoIJi
+0gu7AP9QZ6oXIIzIK8YedKjepYRFL4uNI4BB05WmkRTGeCKSTwD9FitSjjV78XBr
+dqFLrp1pz7ps0KLscW8UUSS/Uq9TuQk=
+=AVLI
+-----END PGP SIGNATURE-----
+
+--st57Evgp6eg7VOFY--
