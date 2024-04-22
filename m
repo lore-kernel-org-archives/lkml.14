@@ -1,97 +1,196 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EC923A9;
-	Mon, 22 Apr 2024 08:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F46C23A9
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713776289; cv=none; b=O5Bp0Ru11WAJpydu3dgWE4kphZHy/tjOaDOKS4mnCtnyoM4p3xIZ1CuVcwXGs+oAm23SToD1mlfGG6ak1N/dYb85mqUS4N3BeixeEfvdOVSEtOoFyzPsiRGcaqsMho2vPWiomSL/9bGHXNjEqTeAospV8brGRCsjwvk/QeJb36o=
+	t=1713776311; cv=none; b=BUzro72THCZeTmvcgWyFBYW+KLoQPSLoPVUmEzHr+e4oMP7uBNmk5L2mTFSAFVmVXI2b5QqIN81+/G3DD8E68WEisLwShv4pB/mqQHRMgFW2W04cJlPGv8jLA/BX/MkYjRSnmCQKIPEW0ik7HQ9PGtotGKOzEYJoWEY0L9HJ3fE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713776289; c=relaxed/simple;
-	bh=Ap3HX7usqppks+6r6AnE3+EOtHNtpTo0nvOHWkQP/mU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I7UM74hJSJvt2+SLAIwE8lUJAXMKwJNoXDpPJ6oB2AzDU0OKco8lMQYzp+MJ/suBWq0gs2nUMeWTUhFRaBvsrTiqpdi23uuTXPb+ad7ZM2z3fsjOUlxyDJEjbz76JZ4I/Y04IKXJJlkaMEQE8iCJenlVNebOQEA5nvKb0m7u51s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XuQ7Q7V5; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713776311; c=relaxed/simple;
+	bh=gVwCH2r6/wSj8nNUi41yXnZY3OdmR9b7KNvzuSL9jDY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BBcZyFzEUeIVhTA8gT3siIzw6MPSGkcjydFdhapiMhCMxYan5CXzE4zejeF/qOfxGwo36gItWpjLEi64KsRIwdDNbbwIXNkNvyTleKUm97hGvvdMk/IK0eiwpoPWzRWQsHacUthIddjGw6jtPm6XmiFcFKrWNDP8UjPHhQ4MLI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FM7YK9UR; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XuQ7Q7V5"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e65b29f703so29369745ad.3;
-        Mon, 22 Apr 2024 01:58:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713776287; x=1714381087; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EDvNk3KFFi5iNtt67egvus9yTR8HOXf5HBSszFwHK/s=;
-        b=XuQ7Q7V5B8F9ib5MTVV7auEYOudhll5uzNSQk5PyoG0vNV2AidK+PtI365IiJsWtWB
-         wBrsv7V3SvGA2BMGSC0DC4DM55lxMlUmqhHvjy5shD9lzhHWt2pp7nAhn8PsTFPmrxq+
-         Godue09A5krvaEnqH1CI1cr3V5l0aotwnzveuK3z3Ji65WtYQJUh5gghIfz4QlC0ZXDZ
-         0Tvn8p7ehTA+oEGBJI9BRJ7lZwNnF40c/ArUDXSJiRyyECxnjZNPjm9S1XeCOV02P4oW
-         VdR2umaEgF9nUaDhGvkZHxiFdoM4jdu+WvCp22XZaFa0hsW8IURzAmAuWhMwkjjSGdO5
-         HIqg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FM7YK9UR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713776307;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QD7iRawZyTFIvjusEWyW4L845dvTHcZHV/ye2ilyQhw=;
+	b=FM7YK9UREgsgjagAFAQr4UzCwdqp4eKE9y4Zy13fseZafQguEjd2045ste0PomoUx5QZeK
+	q2B0T6GHJwbb3ScLbcMJ1OTOo0cwTUx0v7WdUSKZimZs0eNZpGXWQgxsILpeABn4s5A8tV
+	mjaHSkOEPq6Wnx3QIvxJXMoaLx2I+4I=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-31-qQJXB6h0MkOaWGM1rusVow-1; Mon, 22 Apr 2024 04:58:25 -0400
+X-MC-Unique: qQJXB6h0MkOaWGM1rusVow-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-343e46df264so2892152f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 01:58:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713776287; x=1714381087;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EDvNk3KFFi5iNtt67egvus9yTR8HOXf5HBSszFwHK/s=;
-        b=nnrORwzQblXvduu9tZFUZW7jg3OchmpIqHqfKmr471z4xF3n+yqzX+4QrFQilFxi/m
-         UNVXHu/6vI+ciNunOu0v0XGpOmM4kbJg9gkY1Le49VTx8iVxGhiZnS6MRHA94MdXokef
-         JlMYJ2qsit0uHIpkoWOLlAgdu6TvYjpGB3EoSIY1MZH/JgvrysHEwpviQSaANwTS8Gu3
-         xBgqQ1F49gYB9Qz02YCwrCvMH/4IZVBb+U3g8zAJ6QGHqXQASZa4TfL7u7At5Xaeeih/
-         fT8vMGSV2AVrXmtfl0VIra6PHif2LWSZPSOuYNfHApRo1SU0YnIRE9AZq1jDA4wsbr/q
-         8FCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVzm2GC2LZBgPDxakxkwn2e5FfI0razZh/7yv6t8ZF1J96++5thsAI3h6PXew6UYMg9jU3P4qQfKA2PCaIK9KmiOhjxsFO7FJqadOGzQf5SGCyvaAsl0OeEyvP9Qi3HCcvrw5wHdh5f44FLs6WyKKD2bHlzzSHL66lz+I6BxpCE
-X-Gm-Message-State: AOJu0YzT4QUHid8VTtTbs8s+8iToq7Mc/9Mw9S46SBtVyvJsTU93gaYy
-	IyntdYrrfu0CbGvfd8KWtRv7XVY6f/zAnAeutwR4P7SA8qU9xZHIX9McKpGgEDs=
-X-Google-Smtp-Source: AGHT+IFiUKcQbEbEswqmEa7FF5Be+uhP6zbP7zIAy81U2IK1yxVzYtLaXWaUC0KFwf7R/8gd0wKAEg==
-X-Received: by 2002:a17:902:b086:b0:1e3:e563:57ed with SMTP id p6-20020a170902b08600b001e3e56357edmr9149593plr.36.1713776287157;
-        Mon, 22 Apr 2024 01:58:07 -0700 (PDT)
-Received: from kernelexploit-virtual-machine.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id x6-20020a170902a38600b001e79072ee58sm7769887pla.62.2024.04.22.01.58.04
+        d=1e100.net; s=20230601; t=1713776304; x=1714381104;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QD7iRawZyTFIvjusEWyW4L845dvTHcZHV/ye2ilyQhw=;
+        b=dBW/LBY12JsMmCNIVyxXRlszPKsrWoUeNu64pFwOsVmqbkmdF0PSbNjCOmGmbGQyGY
+         ag1aUDDGLzvKO6dqqX5krx0VCewE/MXsWWxwIgvYXSsDNMRrw8loWsti7ND+IycTBvvA
+         5PFQ9teC1WmkeoahqqAw0DzH6ji4wPmC1rCXDYe5KTHzWpSX7y+GUm5jrl/zhrNR7Kwy
+         yqnkhiP9FQRik5tl5Tvpqb5UXQmjZODgkeE8l/QqlFlJG4HbOMY4DhSmtkwOYNtKjT0L
+         uuiyYsEMHosHVY0yHaquuRnHJutvzDV3II6pcprsy5I9UC6GkgThp2mHmxsHU8bLXiMO
+         dEvw==
+X-Gm-Message-State: AOJu0YwaU3ouNU+UreIcFtgorEu0bP021/loZlyu54XnBVrPl9yFwpzB
+	DuMjWjX+cMynGKnb2TAVTome1ZaFLDx/WSuQXMyFzZ7mrTqNWnymGW3Y9CLbSybyBCSOoTvpwLl
+	qWP8qjOmeqPWUAJdaeA3ZAlxHvCN5W5tzdHKTSzf4y3Wupr7h5LazpBb1wSZ/mw==
+X-Received: by 2002:a5d:6991:0:b0:34a:2a90:c45 with SMTP id g17-20020a5d6991000000b0034a2a900c45mr6673365wru.31.1713776304432;
+        Mon, 22 Apr 2024 01:58:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFJWXJnyNZas+WvMPjlNqBM0s//s3DLYCnkbxPHoJE4uXiiTGHjbnyPXkL4hkVSoUsd66znuQ==
+X-Received: by 2002:a5d:6991:0:b0:34a:2a90:c45 with SMTP id g17-20020a5d6991000000b0034a2a900c45mr6673338wru.31.1713776303856;
+        Mon, 22 Apr 2024 01:58:23 -0700 (PDT)
+Received: from redhat.com ([2a06:c701:7429:3c00:dc4a:cd5:7b1c:f7c2])
+        by smtp.gmail.com with ESMTPSA id y18-20020a056000109200b00343300a4eb8sm10492124wrw.49.2024.04.22.01.58.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 01:58:06 -0700 (PDT)
-From: Jeongjun Park <aha310510@gmail.com>
-To: jirislaby@kernel.org
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	gregkh@linuxfoundation.org,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-ppp@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	syzbot+393d0ef63475d9bb1f16@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH net,v3] net: ppp: Fix deadlock caused by unsafe-irq lock in ap_get()
-Date: Mon, 22 Apr 2024 17:58:01 +0900
-Message-Id: <20240422085801.140509-1-aha310510@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <bb5c1fd1-c3e7-4aaf-b28d-a45479ff0815@kernel.org>
-References: <bb5c1fd1-c3e7-4aaf-b28d-a45479ff0815@kernel.org>
+        Mon, 22 Apr 2024 01:58:23 -0700 (PDT)
+Date: Mon, 22 Apr 2024 04:58:20 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: zhenwei pi <pizhenwei@bytedance.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	virtualization@lists.linux.dev, david@redhat.com,
+	jasowang@redhat.com, xuanzhuo@linux.alibaba.com,
+	akpm@linux-foundation.org
+Subject: Re: [PATCH v2 1/4] virtio_balloon: separate vm events into a function
+Message-ID: <20240422045442-mutt-send-email-mst@kernel.org>
+References: <20240422074254.1440457-1-pizhenwei@bytedance.com>
+ <20240422074254.1440457-2-pizhenwei@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240422074254.1440457-2-pizhenwei@bytedance.com>
 
-Jiri Slaby wrote:
-> OK, but read_unlock_irq() is not the right way to do it. It would enable
-> irqs unconditionally, so serial8250_tx_chars() would not thank you in
-> the above call chain.
+On Mon, Apr 22, 2024 at 03:42:51PM +0800, zhenwei pi wrote:
+> All the VM events related statistics have dependence on
+> 'CONFIG_VM_EVENT_COUNTERS', once any stack variable is required by any
+> VM events in future, we would have codes like:
+>  #ifdef CONFIG_VM_EVENT_COUNTERS
+>       unsigned long foo;
+>  #endif
+>       ...
+>  #ifdef CONFIG_VM_EVENT_COUNTERS
+>       foo = events[XXX] + events[YYY];
+>       update_stat(vb, idx++, VIRTIO_BALLOON_S_XXX, foo);
+>  #endif
 > 
-> Plus the issues Jakub had with the patch.
+> Separate vm events into a single function, also remove
+> 'CONFIG_VM_EVENT_COUNTERS' from 'update_balloon_stats'.
 > 
-> And what about ppp_synctty?
+> Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
+> ---
+>  drivers/virtio/virtio_balloon.c | 44 ++++++++++++++++++++++-----------
+>  1 file changed, 29 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index 1f5b3dd31fcf..59fe157e5722 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -316,34 +316,48 @@ static inline void update_stat(struct virtio_balloon *vb, int idx,
+>  
+>  #define pages_to_bytes(x) ((u64)(x) << PAGE_SHIFT)
+>  
+> -static unsigned int update_balloon_stats(struct virtio_balloon *vb)
+> +/* Return the number of entries filled by vm events */
+> +static inline unsigned int update_balloon_vm_stats(struct virtio_balloon *vb,
+> +						   unsigned int start)
+>  {
+> +#ifdef CONFIG_VM_EVENT_COUNTERS
+>  	unsigned long events[NR_VM_EVENT_ITEMS];
+> -	struct sysinfo i;
+> -	unsigned int idx = 0;
+> -	long available;
+> -	unsigned long caches;
+> +	unsigned int idx = start;
+>  
+>  	all_vm_events(events);
+> -	si_meminfo(&i);
+> -
+> -	available = si_mem_available();
+> -	caches = global_node_page_state(NR_FILE_PAGES);
+> -
+> -#ifdef CONFIG_VM_EVENT_COUNTERS
+>  	update_stat(vb, idx++, VIRTIO_BALLOON_S_SWAP_IN,
+> -				pages_to_bytes(events[PSWPIN]));
+> +		    pages_to_bytes(events[PSWPIN]));
+>  	update_stat(vb, idx++, VIRTIO_BALLOON_S_SWAP_OUT,
+> -				pages_to_bytes(events[PSWPOUT]));
+> +		    pages_to_bytes(events[PSWPOUT]));
+>  	update_stat(vb, idx++, VIRTIO_BALLOON_S_MAJFLT, events[PGMAJFAULT]);
+>  	update_stat(vb, idx++, VIRTIO_BALLOON_S_MINFLT, events[PGFAULT]);
+> +
+>  #ifdef CONFIG_HUGETLB_PAGE
+>  	update_stat(vb, idx++, VIRTIO_BALLOON_S_HTLB_PGALLOC,
+>  		    events[HTLB_BUDDY_PGALLOC]);
+>  	update_stat(vb, idx++, VIRTIO_BALLOON_S_HTLB_PGFAIL,
+>  		    events[HTLB_BUDDY_PGALLOC_FAIL]);
+> -#endif
+> -#endif
+> +#endif /* CONFIG_HUGETLB_PAGE */
+> +
+> +	return idx - start;
+> +#else /* CONFIG_VM_EVENT_COUNTERS */
+> +
+> +	return 0;
+> +#endif /* CONFIG_VM_EVENT_COUNTERS */
+> +}
+> +
 
-Hmm... If the problem is the case of calling the function in 
-serial8250_tx_chars(), I think it can be solved by continuing to use 
-read_lock() in ppp_asynctty_wakeup() and getting the ap by not calling
-ap_get().
+Generally the preferred style is this:
 
-If I do this, will I be able to apply the existing patch to ap_get()?
+#ifdef .....
 
-Thanks.
+static inline unsigned int update_balloon_vm_stats(struct virtio_balloon *vb,
+						   unsigned int start)
+{
+	....
+}
+
+#else /* CONFIG_VM_EVENT_COUNTERS */
+
+static inline unsigned int update_balloon_vm_stats(struct virtio_balloon *vb,
+						   unsigned int start)
+{
+	return 0;
+}
+
+#endif
+
+however given it was a spaghetti of ifdefs even before that,
+the patch's ok I think.
+
+
+> +static unsigned int update_balloon_stats(struct virtio_balloon *vb)
+> +{
+> +	struct sysinfo i;
+> +	unsigned int idx = 0;
+> +	long available;
+> +	unsigned long caches;
+> +
+> +	idx += update_balloon_vm_stats(vb, idx);
+> +
+> +	si_meminfo(&i);
+> +	available = si_mem_available();
+> +	caches = global_node_page_state(NR_FILE_PAGES);
+>  	update_stat(vb, idx++, VIRTIO_BALLOON_S_MEMFREE,
+>  				pages_to_bytes(i.freeram));
+>  	update_stat(vb, idx++, VIRTIO_BALLOON_S_MEMTOT,
+> -- 
+> 2.34.1
+
