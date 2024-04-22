@@ -1,89 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7FD149C6C;
-	Mon, 22 Apr 2024 12:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB3E14A0A0;
+	Mon, 22 Apr 2024 12:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713790242; cv=none; b=jQbdd1bjXBfMwGVZBWhVGSgWAxXS9ezjP5aw+XOAoxmWGfwgWYX4M1JCwI6F5M2iZrubbjOswjXvLGVNHFl54nzwKfQ77FHEvg3iVYGf/yuqEthk6HUWRpXqraO/OSo1mQoRDmYj1cKBbQrPEwMcwNYbttKZyx37gxT5sb2GR68=
+	t=1713790245; cv=none; b=jqHbh76cC/yB/AhD9mgybCpnaa1q9kWQmgUfGuopwnlJl7xhMt22kyWDvjSJb39t2DfgyjKg3fFemLEY3LOMDVTpQ+Vl+l0HKRk7wBzcCxSfbyUQatrZduOFDk5cZoZEUtsTRKSaEdqm8ZGtYLIsXy62hKiEjw+SeFM4Nrzv5pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713790242; c=relaxed/simple;
-	bh=qSWR9D2pGiWFZWTBqoJhjCRX7YaTWRZIJb8Zb5i2Iu8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h5JQd2MVgZdzHGDH1DqXz/AUGJho4nIX7MiqtCd9lnUXXrkfo6Um5aYfDief1jWyFSSIe5xJbQU/+9ztfS2T/XDraBsLwcg0X16ThAQT7KJVd5IyMNMkqAK87sg8dMN7w3KDIqElpYpWNObwSWTnV5r0IgcYsn/TBs449izMeSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: JOM8JGhrT4y4N5nWBvy1yg==
-X-CSE-MsgGUID: 2x35e12PRyCVUrBWUpgbWQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="20725354"
-X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
-   d="scan'208";a="20725354"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 05:50:40 -0700
-X-CSE-ConnectionGUID: kHih8TYcRYe8HlpPjqKK3g==
-X-CSE-MsgGUID: CYlww7x+RvmerIjmJl1q/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
-   d="scan'208";a="23878211"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 05:50:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1ryt7v-000000003fb-2dNY;
-	Mon, 22 Apr 2024 15:50:31 +0300
-Date: Mon, 22 Apr 2024 15:50:31 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Konstantin Pugin <rilian.la.te@ya.ru>
-Cc: krzk@kernel.org, conor@kernel.org, lkp@intel.com, vz@mleia.com,
-	robh@kernel.org, jcmvbkbc@gmail.com, nicolas.ferre@microchip.com,
-	manikanta.guntupalli@amd.com, corbet@lwn.net, ychuang3@nuvoton.com,
-	u.kleine-koenig@pengutronix.de, Maarten.Brock@sttls.nl,
-	Konstantin Pugin <ria.freelander@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Lech Perczak <lech.perczak@camlingroup.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v6 0/3]  add support for EXAR XR20M1172 UART
-Message-ID: <ZiZdF7FWsQcTpxYy@smile.fi.intel.com>
-References: <20240422123801.2695129-1-rilian.la.te@ya.ru>
+	s=arc-20240116; t=1713790245; c=relaxed/simple;
+	bh=+7AuBfrkVfvvlqBbnWwiB4WC75JvgZX/iPRvTxQaD3g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ZrRVUJMKBpaazbUTFiMeH8qDHe2EU3YjPINluUvFqQObCbmRU5x29+wyyroldgE1FhiCj5O6kyfu9MNtEyIqRwMjt4LpYzOHIn9bvQXufv6FA0F1aHeO3C8kzH1SMhw1S6E9tMoLyIsfA+xFpIsxmAeEPK8Gx9w5VHJQ2d91mcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=EkSoMcXX; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="EkSoMcXX"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CF84AE0010;
+	Mon, 22 Apr 2024 12:50:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713790240;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OvSPqbTravq+uXV8NX6wI95ClFv5FR4JYxaALnEYaFI=;
+	b=EkSoMcXXV8If3yHSYgNJLHAgv4KZzt0u5nDo4chcF7qbBy2bg9ioBv6ov6t5BJxuHuhmX7
+	9WNH8SSSrtDZCgWWg6z94fxRO+GQ9MyPDnP8L5nUU7y4T6gJU/lJDlwyvD+9eChpSCvfFp
+	z+rWJF52nCpHAOyezsLa1IaZJ4vSo9wTt2pEOMvulrdkO4pr7RM2xBglvqsBKbdGeEna2f
+	AwPoYsmamnd7oSs0wS0j6BxPcatfhsgDHXOyc4MUB0DR2da/EZCIgIhnia2j7op2hZ1bFv
+	O++nZKrIBDQeR7FtiTKMw+OUjjia8hc3AS/PvnxIkPSHkwc2bOPQrpPwodtIVg==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Mon, 22 Apr 2024 14:50:19 +0200
+Subject: [PATCH net-next v11 04/13] net: Make net_hwtstamp_validate
+ accessible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240422123801.2695129-1-rilian.la.te@ya.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240422-feature_ptp_netnext-v11-4-f14441f2a1d8@bootlin.com>
+References: <20240422-feature_ptp_netnext-v11-0-f14441f2a1d8@bootlin.com>
+In-Reply-To: <20240422-feature_ptp_netnext-v11-0-f14441f2a1d8@bootlin.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Richard Cochran <richardcochran@gmail.com>, 
+ Radu Pirea <radu-nicolae.pirea@oss.nxp.com>, 
+ Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Horatiu Vultur <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, 
+ Simon Horman <horms@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Rahul Rameshbabu <rrameshbabu@nvidia.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Mon, Apr 22, 2024 at 03:37:54PM +0300, Konstantin Pugin wrote:
-> From: Konstantin Pugin <ria.freelander@gmail.com>
-> 
-> EXAR XR20M1172 UART is mostly SC16IS762-compatible, but
-> it has additional register which can change UART multiplier
-> to 4x and 8x, similar to UPF_MAGIC_MULTIPLIER does. So, I used this
-> flag to guard access to its specific DLD register. It seems than
-> other EXAR SPI UART modules also have this register, but I tested
-> only XR20M1172.
-> Yes, in datasheet this register is called "DLD - Divisor Fractional"
-> or "DLD - Divisor Fractional Register", calling depends on datasheet
-> version.
-> 
-> I am sorry about too many submissions and top post reply. About second -
-> I do not know how to reply properly to this ML from GMail phone app.
+Make the net_hwtstamp_validate function accessible in prevision to use
+it from ethtool to validate the hwtstamp configuration before setting it.
 
-Isn't it as simple as moving cursor right after the quoted line and replying
-there? It might require to remove --- cutter at the top manually.
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
 
-> About first - I just get very good feedback from Andy Shevchenko, and want to
-> fix his review picks ASAP.
+Change in v8:
+- New patch
+
+Change in v10:
+- Remove export symbol as ethtool can't be built as a module.
+- Move the declaration to net/core/dev.h instead of netdevice.h
+---
+ net/core/dev.h       | 1 +
+ net/core/dev_ioctl.c | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/core/dev.h b/net/core/dev.h
+index 2236b14b798f..44004f17b32b 100644
+--- a/net/core/dev.h
++++ b/net/core/dev.h
+@@ -172,5 +172,6 @@ int dev_set_hwtstamp_phylib(struct net_device *dev,
+ 			    struct netlink_ext_ack *extack);
+ int dev_get_hwtstamp_phylib(struct net_device *dev,
+ 			    struct kernel_hwtstamp_config *cfg);
++int net_hwtstamp_validate(const struct kernel_hwtstamp_config *cfg);
+ 
+ #endif
+diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
+index b8cf8c55fa2d..6aaa8326bf8f 100644
+--- a/net/core/dev_ioctl.c
++++ b/net/core/dev_ioctl.c
+@@ -184,7 +184,7 @@ static int dev_ifsioc_locked(struct net *net, struct ifreq *ifr, unsigned int cm
+ 	return err;
+ }
+ 
+-static int net_hwtstamp_validate(const struct kernel_hwtstamp_config *cfg)
++int net_hwtstamp_validate(const struct kernel_hwtstamp_config *cfg)
+ {
+ 	enum hwtstamp_tx_types tx_type;
+ 	enum hwtstamp_rx_filters rx_filter;
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
