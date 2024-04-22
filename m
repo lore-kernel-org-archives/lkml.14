@@ -1,141 +1,121 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BFB1509AB;
-	Mon, 22 Apr 2024 18:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D25153BC6
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 18:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713808952; cv=none; b=ZGy6YPcQHzm5ivrhHYTrW9q2v6Hkz1sV5r8EIP0pghnDMUDCIdfNiIip2WWLf7AIclJsbGCAkspnnZlln2MwU2Q5FYc7dbkU31k0+guSzL66dKYXTyXelaUZuG9HHIjPpG0qwmcVCN80xQZ6+ikTqUMj5k0hChbFZgWbNs/PdIA=
+	t=1713809255; cv=none; b=ebHj6YCJ4x37hdPQqVP8+xk7Cyo1Z814y4YUFafqFd3pBEY+abCjkLBCI7Pj6CU4sW/JTXMmYorkVWeXIvt7zaPU0uGNr+upD0qm6DB+Xk/7s/V7Tp6XocTWX2MwZlTKG523OG7gA8KgsFYN+e8vN/zwNFSLqXTJw1Ffz/UVqZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713808952; c=relaxed/simple;
-	bh=2+RQ652HU2UwexwX83Sky53pkNtRZSpJtK+AlPVwoBI=;
+	s=arc-20240116; t=1713809255; c=relaxed/simple;
+	bh=mp5nOahML70hB9ODfs6Ll0+q3JEa0PXvH3k7986kQnk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A8klteKy3J7YFm96j4e28PWgphx38Aozrlo5Uq9xG1ikDTBbiHKhVfSkGACkeyEeuG8s2cNfISHslRKrvVPc9F707sPUZBPu2eki7lSmTD639vLZKMrR/kujwr2EY2HH8D6PUE1DTj6NXZLhu0+Sk0x/uek1xlBAEoUlq0ae3SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=XAOBZkUxDWb5ZCXEk9lbnYqNuamzvTSn9GHbVk1G9gpg84ifvPeGfkjA+nRweaYj2qurAeztT0My/IuHhhBKT8G8AtYdISDQpURGYqCsK/3JzQSFtXJ8bvQtX6ra88tfCCpBSX3K3aRsvc56m5Wuqt/3U72oyzeh4tzx4Warezw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ckEjR+Qm; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5ad2a15374eso1715435eaf.3;
-        Mon, 22 Apr 2024 11:02:30 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ckEjR+Qm"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5721221b0d5so1338803a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 11:07:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713809252; x=1714414052; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jWiUOjQt4xoCGElSGzu3IzSt3boCV/cDK6apkE0DR0k=;
+        b=ckEjR+QmXMKtmHupgZJcb8NyFLlGwEZKrZAfqqhsA7Cl+zAyGdHEEknrWpbD1XNs+2
+         XtM+H1ajmr7OIB0+FycurJ9Jw9ohphx/GXMK2iwEckzvYNYim2U1Gs+BldIcsrSZiJvw
+         XKTnDYObjwLGtas/odTWR72sYV9WjT8VixzE3N9mT1zm8ho1vek/WULIkzWySUxRH31e
+         DtlXQAnhy05dQ1TifFd227U29p4oW/0vrniVLeClB2sy7J9pk5yx9Npp3rzQoJVVH5BU
+         lD6zi9z/TDv5zpQRU7oNENNBl2NNjh7HUzizfoQSi6eiu8YFzVtRO02dBN1TZ1b6vMfg
+         G4YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713808947; x=1714413747;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MIzcre4L/EBUlEtvCuRrxfW3XnVYCAdmaiVZhZRHwg0=;
-        b=fKADZKW2kLnvYQbgM85uJEaragZ4NbSM4qV3TNkO41nKYcdTwXSvpGzsiJHGfpMB/x
-         fOGZwQ00QXcNKfrxXxYrWgmywxS/kfKad0Mow1z5h7xGoYL5E8ReRGrHLzn62Hl/rCdq
-         lcPytCgVKxlE/wmWQyKC/QCKj1My1fVx4HUsilgdDkDiZZGoCvGEkAJUGqm1E9pPe46x
-         BrLQ08IIBsalgn5LJKpXnpOWdNcl6maFyqytSz4OP8vMhrfFym5vzkjASn3Gtxo8r4JK
-         GxFm2Q8iDQjPK3977AYld1MdaBRLXJCY+LXg65oDSuv/LnG3vgtUewmJZEGQjbcm6lxQ
-         9mDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURMNUc5f/A6UdpEBjYdHKLTYbR72iq26lV8/f4BuxiV9K3aX/9a2hhK2KIhRa8jl9+gmoSZuraJ4A0C8RVYFQNgXXaiRRVsl3I0y8kjP9coBTPg41PR1Skv+xUDXRyP6E7XmEljC/4u6Q7/6k4wBe0/c0Miz8JKhbZHdoQrYkdxggWmJ/l5G5N0u+vhpU=
-X-Gm-Message-State: AOJu0YxgG9bcyS5ePMpluLAfGneX2WoML68CuO0yeWP+Ig/TNOjK3g5b
-	5aYKo4YZHz49psI3KmGzv7TDuurUqczSq5EIPYYDw9ambv+eaqlN0btZjK7P
-X-Google-Smtp-Source: AGHT+IEh1Dlo4g8PiTAuWzYEPyzhmuf6UUUQKXr9MHlggzV1Tifiexe1oRXfjTldlok3TU9YqNM1Jg==
-X-Received: by 2002:a05:6358:5d8b:b0:186:b6ac:8ce2 with SMTP id s11-20020a0563585d8b00b00186b6ac8ce2mr16129317rwm.6.1713808947263;
-        Mon, 22 Apr 2024 11:02:27 -0700 (PDT)
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
-        by smtp.gmail.com with ESMTPSA id z13-20020a81d40d000000b0061b0c844dd9sm2044949ywi.5.2024.04.22.11.02.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Apr 2024 11:02:26 -0700 (PDT)
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dc742543119so4662652276.0;
-        Mon, 22 Apr 2024 11:02:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXW3itUIMAPruC23ltckGm0sHbQsn9pIIVQsFs8YZIVJP+crPONdveqXWkLEmNUvhcwzi0vwg246gCijEwufC6nBlYzaxlt6KLMZhgmmuJNKWaI3qK7r4e//Qv011z46xmKsHg+p+kjb9RUhChKD6Z32Nr5nvN4x6iB79SXgTLOngWqXP7Jmb8GU2sv4lU=
-X-Received: by 2002:a25:fc08:0:b0:de4:6efa:debd with SMTP id
- v8-20020a25fc08000000b00de46efadebdmr9818662ybd.29.1713808946217; Mon, 22 Apr
- 2024 11:02:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713809252; x=1714414052;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jWiUOjQt4xoCGElSGzu3IzSt3boCV/cDK6apkE0DR0k=;
+        b=kgaFmPBGmeUbt+YFzFmBeE+26fRRdiM+Hv0j3bfZUQ+NWnnJ75sQb6YJLkizQeLJJH
+         lhvie4dx1oJPGEVthNwgc2bikhy5eakBceNf7asfViA9AS7RfXDz66V43B7sG6HxOjnM
+         oV2oKduKMjC8w1YOk6TnBZ3pn+GzYDvqJXyQTMv9HtGLWTzgdKoxHbuICQEQvLhxDZyY
+         NB56DkfzLKURnZ0y6x8VGFn17J7dlLaMfTZICwCL/WHCWOsgk9pXK/xTe/xrvfAMO+HN
+         A3qm7+xbq84zBUuTDdK5IUWEB+grVgTY08prdSwKfsyaiJywYFASO0yMFjqcmxxGkSJI
+         GcbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWhrQ9eONHVs+oOzu42qDVDbIAz0Nhq6guw3OZq57FFyku8b1r5WlZKZSmkno/GXEmviUniNJMp+36sbBDhDT6MEAZYJUNo18GQxTXV
+X-Gm-Message-State: AOJu0Yw7SOEOU7XrQimRll3/kOwpL7rSOuNirXJoexS7+ZMyo8wzHkEs
+	iySP9lqPEnO7GOpElcBUxk9CsKUf/ETd45wz5Ye4sTEER0WjaOyy7sN8OYIF1Za7Khz/9hHow+x
+	KlHPZmwF0/kDayaF37RbbLKJsLDV9+lSczXI=
+X-Google-Smtp-Source: AGHT+IGAe1lHopBDKrGiT79eAqKkzD8Cl6oGORZoZpBxdojv9WzH+0MrCLBw68jY1jif1fS/eS0HUyU3s0ZWpGtxeRk=
+X-Received: by 2002:aa7:d04e:0:b0:571:badc:203d with SMTP id
+ n14-20020aa7d04e000000b00571badc203dmr441218edo.16.1713809252013; Mon, 22 Apr
+ 2024 11:07:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1713780345.git.geert+renesas@glider.be> <87il09ty4u.fsf@intel.com>
- <ff4f9e8f-0825-4421-adf9-e3914b108da7@app.fastmail.com> <875xw9ttl6.fsf@intel.com>
- <af6e26d1-1402-4ed2-a650-b58eae77273e@app.fastmail.com> <CAMuHMdXCL-gbKr6mUBPWONtRjz=X0vZQgiS=02WXXSFf67yBww@mail.gmail.com>
- <87ttjts4j6.fsf@intel.com>
-In-Reply-To: <87ttjts4j6.fsf@intel.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 22 Apr 2024 20:02:16 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWb5sqhk1m4kD_72k0OzB5MTEFcP+QHFo+4rs8j8WEzPQ@mail.gmail.com>
-Message-ID: <CAMuHMdWb5sqhk1m4kD_72k0OzB5MTEFcP+QHFo+4rs8j8WEzPQ@mail.gmail.com>
-Subject: Re: [PATCH 00/11] drm: Restore helper usability
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Dave Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	linux-kbuild <linux-kbuild@vger.kernel.org>
+References: <CAJg=8jyuSxDL6XvqEXY_66M20psRK2J53oBTP+fjV5xpW2-R6w@mail.gmail.com>
+ <uekqafv4wx5axijnnfybnxixui3ruzy3mkxirflv7tb3ovrtbk@ounqurycykuv>
+ <CAJg=8jzRT=oA9g6AGd1KmAY3GBkKkczj1rCqQ+pik5LmUQYd_A@mail.gmail.com>
+ <7jhx44ynje54wfcq3bkaui5w6oox7ypd7cgg4u5zhue6rf5tok@nj6jaxppzq2b> <usubtr2bibcnwca3rk3ytbd2jbpvshgu44faujrrrcnidnrr25@ttdhvhrz34vs>
+In-Reply-To: <usubtr2bibcnwca3rk3ytbd2jbpvshgu44faujrrrcnidnrr25@ttdhvhrz34vs>
+From: Marius Fleischer <fleischermarius@gmail.com>
+Date: Mon, 22 Apr 2024 11:07:20 -0700
+Message-ID: <CAJg=8jyaV20PannVxVQrqasmo3RCTAjOWfmkdm3ehviMoc=V-w@mail.gmail.com>
+Subject: Re: general protection fault in mas_empty_area_rev
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, maple-tree@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, syzkaller@googlegroups.com, 
+	harrisonmichaelgreen@gmail.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Jani,
+Hi Liam,
 
-On Mon, Apr 22, 2024 at 7:15=E2=80=AFPM Jani Nikula <jani.nikula@linux.inte=
-l.com> wrote:
-> On Mon, 22 Apr 2024, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Mon, Apr 22, 2024 at 3:55=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> w=
-rote:
-> >> I'm not sure where this misunderstanding comes from, as you
-> >> seem to be repeating the same incorrect assumption about
-> >> how select works that Maxime wrote in his changelog. To clarify,
-> >> this works exactly as one would expect:
-> >>
-> >> config HELPER_A
-> >>        tristate
-> >>
-> >> config HELPER_B
-> >>        tristate
-> >>        select HELPER_A
-> >>
-> >> config DRIVER
-> >>        tristate "Turn on the driver and the helpers it uses"
-> >>        select HELPER_B # this recursively selects HELPER_A
-> >>
-> >> Whereas this one is broken:
-> >>
-> >> config FEATURE_A
-> >>        tristate "user visible if I2C is enabled"
-> >>        depends on I2C
-> >>
-> >> config HELPER_B
-> >>        tristate # hidden
-> >>        select FEATURE_A
-> >>
-> >> config DRIVER
-> >>        tristate "This driver is broken if I2C is disabled"
-> >>        select HELPER_B
+On Mon, 22 Apr 2024 at 10:05, Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
+> * Liam R. Howlett <Liam.Howlett@oracle.com> [240422 11:25]:
+> > * Marius Fleischer <fleischermarius@gmail.com> [240422 11:11]:
+> > > Hi Liam,
+> > >
+> > > Thank you so much for the response!
+> > >
+> > > > >
+> > > > > Crash log:
+> > > > >
+> > > > > general protection fault, probably for non-canonical address
+> > > > > 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN NOPTI
+> > > > >
+> > > > > KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+> > > > >
+> > > > > CPU: 0 PID: 79545 Comm: syz-executor.0 Not tainted 6.9.0-rc4-dirty #3
+> > > >
+> > > > This indicates that you built with your own patches.  Could you test an
+> > > > unmodified 6.9.0-rc4 with your setup?
+> > > >
+> > >
+> > > I'm very sorry for this oversight. I had applied the patches for another bug
+> > > from this conversation
+> > > (https://lore.kernel.org/all/20240404070702.2744-3-osalvador@suse.de/T/#m480f21ab850996395082d0faab7f624f45b83781)
+> > > I will test the reproducer without these patches and get back to you!
 > >
-> > So the DRIVER section should gain a "depends on I2C" statement.
+> > After testing with your config, I can see that those fixes are needed to
+> > boot.
+> >
+> > I am going to try 6.9-rc5 with your configuration and see if I can
+> > trigger the issue there.
+> >
 >
-> Why should DRIVER have to care that HELPER_B needs either FEATURE_A or
-> I2C? It should only have to care about HELPER_B. And if the dependencies
-> of FEATURE_A or HELPER_B later change, that's their business, not
-> DRIVER's.
+> The reproducer does not trigger for me with your configuration and
+> reproducer.
+>
+> Does it still happen for you in 6.9-rc5?
+>
+You are right, indeed, I was not able to boot v6.9-rc4 without the fixes.
 
-That's correct. But currently the dependency on I2C is not handled
-automatically.
+I tested the reproducer on 6.9-rc5 (ed30a4a51bb196781c8058073ea720133a65596f)
+and it still triggers the crash in my setup. How can I help you
+further troubleshoot
+this issue?
 
-> > Yamada-san: would it be difficult to modify Kconfig to ignore symbols
-> > like DRIVER that select other symbols with unmet dependencies?
-> > Currently it already warns about that.
-> >
-> > Handling this implicitly (instead of the current explict "depends
-> > on") would have the disadvantage though: a user who is not aware of
-> > the implicit dependency may wonder why DRIVER is invisible in his
-> > config interface.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Thanks,
+Marius
