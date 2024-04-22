@@ -1,135 +1,120 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2989153BEB;
-	Mon, 22 Apr 2024 15:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AA1153583;
+	Mon, 22 Apr 2024 15:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713799694; cv=none; b=Fj5HgOKoNud6FN4+0PZi9r3O19Tn934OmysW+2jgCHlVVWeJTy53iMCZYHevrymbHZ3Ho3dFuJMySAEih+X5nblJQVk584PElfaxaMh83rNd3VW9htUAvcK/LuBNKebKXL2Lor5At5jBXsC9NaDLXZrbZst5Zhm0PDymRCsjIwg=
+	t=1713799788; cv=none; b=W1lWODqleM85BzXKByzQKAAH4P/gWmmVO12EpBVdRBPVAZzAE2Gcvz+PNQGn7Wzuof5qKjSZPmdnUSjJtiQi+rHcZiV+Plux1tVCLuhO1f/gzrQziYEvOwN/luloLKi6+OLXnHUToFXrJ2mHU1LKGGQFrxBcrUpR82O6huboIPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713799694; c=relaxed/simple;
-	bh=8CMLhBa/Jv+VnG6a3YiAvNFaNjvvD6CI0McXJiVGWO4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HOX0Y4TZqOWPg/2HgMxMxyHouGyqzxQu8+azs+YMM00SC4cq23eG6JV8I+VQkKtoZ+aD/YlBObIyY8z7N/KSJIVvyhyRWeWTiRV50rWj9W6wPhl5Gv75SWAFSoFemCGBYP486fsyyt3lJsYCy1YzBLPWvz9BOQOz3otY0jgTQ+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=KJ6VrDSx; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+	s=arc-20240116; t=1713799788; c=relaxed/simple;
+	bh=Jv2S9yMzO8ppdharj3oJu7fflP9TsF4FXzRkWtvwn4Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cuIWgpeLXUUuS+ZcgDu543mHNyIfhFa/IEDbgYE6FtIds/AWpzS48cOrcVOyYNGEKzNhg5VyQcR1d97aG+vuIph5d6rzY4J3cVEJjgKDEgWPCpGAjw/bE1ZhuIMj5AsieibTsmBEXfUWMdW1C+vK7o4XJlStXudeNa2SToX2MAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GxWNbAbm; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="KJ6VrDSx"
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 867CF600AF;
-	Mon, 22 Apr 2024 15:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1713799690;
-	bh=8CMLhBa/Jv+VnG6a3YiAvNFaNjvvD6CI0McXJiVGWO4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KJ6VrDSxYoqE6NXW099g5eSM9FXZzTpjCRY/6nr3x+Lln7LxkTciSsB3D3WwrKvj9
-	 4I2fySynfrCOcV0uca8LtyjqIoq9VuJOgVhHr2u45VoK+JmBlJDAr+DyyUY+xnZMhm
-	 rpo9IukDAo7EiVxFkWRyuHWORaYJEjl+XPilgDB+xAOJz4UgQRhvN7OhEHoe4UprHH
-	 zQAQZ/h1NTy3kZ9fM/yhXZpozWCC/k0hBN6g5GF15AwPIqERhJ5mMRlYBJ+xGclzFT
-	 xjuDLdw2edCxSDtFHRRPtGwbIYoxEg9zBEJIDHMaMdsYgIi0HV70MIbq8RqNIErGED
-	 5e7NWshfn23tQ==
-Received: by x201s (Postfix, from userid 1000)
-	id 1670E208EB4; Mon, 22 Apr 2024 15:27:17 +0000 (UTC)
-From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
-To: netdev@vger.kernel.org
-Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
-	linux-kernel@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Yisen Zhuang <yisen.zhuang@huawei.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jijie Shao <shaojijie@huawei.com>
-Subject: [PATCH net-next] net: hns3: flower: validate control flags
-Date: Mon, 22 Apr 2024 15:27:16 +0000
-Message-ID: <20240422152717.175659-1-ast@fiberby.net>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GxWNbAbm"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57211441361so740159a12.2;
+        Mon, 22 Apr 2024 08:29:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713799785; x=1714404585; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mdHzDpUOFI2yT9VOMYqjnhUk7dvRzBFVEW3k0AD1FFc=;
+        b=GxWNbAbmZMv0HzJYE+tK+WkJ4D3L6lBrL+79BI2U5S/rQV14q7IB6o9pMEzRHV2mLM
+         gJ3e5uLeiQGDlBWdc7GgrnI/O6B8pVvPTnOzDmd0EOin/6SSyWdNlzpYR/OCwkPDF41P
+         BVxbxLTDhSLxE62nfFCRFzGrpMhOb09tHFwot8/rAHZeu/RdFvV31Tn1z7+vzIHM/prR
+         ZBpYBX877R3pKVthN/cD0MdaGMVwzG7eavS3Ux0XqRqFBHA2A4ussPytl3CnQLiXJgP0
+         lB5Fh9TPjvop4+1nmhh7tuJsc01KuTuEUkuDgUq9Y0ultyuJFTnjvRqSQ1Q5HSHGlYa8
+         /hBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713799785; x=1714404585;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mdHzDpUOFI2yT9VOMYqjnhUk7dvRzBFVEW3k0AD1FFc=;
+        b=NSpM4LT3nYySoVwDAxKfxP8SxQidTKZPSKQ1TxvtRy2G/mew7BNQp1TRsyYSQBi0uf
+         kRwIyedS60B+rUtHWfyAArUt5OnyiJQ1uH7EfuEyiSMlE6ZikBRfTMC59R8xcT9aER9H
+         ULhy4FutHSBtk1Pim8WWlTYCTM4YvEVWF3dQo6v4wx2xGvujWlYsM7KyNKg4EBRlJSKS
+         eEcfpteUO2AxolHkQ/uHmrrM1g0Qdu6VI1wedl4dM+FhERZMyh4M0sCGfbCX3iyf6rFs
+         BvW2ay/XDTT5kcu8eSgIHSD8UQujXc9eiJ8ybfWNPyFPP/0OW2QCxgfVXFCz/Cve2hqn
+         oy7w==
+X-Forwarded-Encrypted: i=1; AJvYcCWHcroJ4U76m+lbIFr4XI7Lt4CyeTPRK4WYTsM80zjmO5q98onaVHw9VtESpfYuxBkk3egNq6BPdtLt00lG44VJWDj0FPIINZuufMq25V1fJ00JpTRmwjhysllhxjmUKvETGWkERpLeCcw9+BUZ56DBBDhqe8EjGqF99bS+gvMnVUZy5taSQQ==
+X-Gm-Message-State: AOJu0YzKQOrQwfmJfWew7q0Q0DyYDO4bMtlYHmE/WOp4oEq5/JOTdY7k
+	QSMhtJQhxRB/pfQSkP+K8bfoHM1YbyD03/DdfwYQH7RQ07kGob/2t+xon6ifM59zGHrrsLm6JXw
+	VQ7gQwVHMYofmMx4ldLEzW7j+Cmg=
+X-Google-Smtp-Source: AGHT+IEZSLvTMjCLgMLIcDN3ZiFuYxI1WCaTMm+8u32j5C+BSsg9XYh/rYSPPrOSNCVlhUOTvOvFeiIunFf2Jd0pNUY=
+X-Received: by 2002:a17:906:3057:b0:a55:73c3:f818 with SMTP id
+ d23-20020a170906305700b00a5573c3f818mr6423702ejd.14.1713799785368; Mon, 22
+ Apr 2024 08:29:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240422133219.2710061-1-ria.freelander@gmail.com>
+ <20240422133219.2710061-3-ria.freelander@gmail.com> <20240422-repackage-popper-8a062acf2610@spud>
+In-Reply-To: <20240422-repackage-popper-8a062acf2610@spud>
+From: "Konstantin P." <ria.freelander@gmail.com>
+Date: Mon, 22 Apr 2024 18:31:56 +0300
+Message-ID: <CAF1WSuy=zuTjDGEKGUtAb79J28FydYfuvB=OuR1yx5PtuPHz7A@mail.gmail.com>
+Subject: Re: [PATCH v7 2/3] dt-bindings: sc16is7xx: Add compatible line for
+ XR20M1172 UART
+To: Conor Dooley <conor@kernel.org>
+Cc: krzk@kernel.org, lkp@intel.com, vz@mleia.com, robh@kernel.org, 
+	jcmvbkbc@gmail.com, nicolas.ferre@microchip.com, manikanta.guntupalli@amd.com, 
+	corbet@lwn.net, ychuang3@nuvoton.com, u.kleine-koenig@pengutronix.de, 
+	Maarten.Brock@sttls.nl, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>, Andy Shevchenko <andy@kernel.org>, 
+	Lech Perczak <lech.perczak@camlingroup.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This driver currently doesn't support any control flags.
+On Mon, Apr 22, 2024 at 6:28=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
+te:
+>
+> On Mon, Apr 22, 2024 at 04:32:14PM +0300, Konstantin Pugin wrote:
+> > Add EXAR XR20M1172 UART compatible line into devicetree documentation.
+>
+> I thought I had already pointed out a need for the commit message to
+> explain why this exar device belongs in this file. IIRC you said it was
+> in the driver commit and cover letter, but it needs to go here too.
+>
+> Thanks,
+> Conor.
+>
+> >
+> > Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+> > Signed-off-by: Konstantin Pugin <ria.freelander@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yam=
+l b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml
+> > index 5dec15b7e7c3..c4bedf23368b 100644
+> > --- a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml
+> > +++ b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml
+> > @@ -12,6 +12,7 @@ maintainers:
+> >  properties:
+> >    compatible:
+> >      enum:
+> > +      - exar,xr20m1172
+> >        - nxp,sc16is740
+> >        - nxp,sc16is741
+> >        - nxp,sc16is750
+> > --
+> > 2.34.1
+> >
 
-Use flow_rule_has_control_flags() to check for control flags,
-such as can be set through `tc flower ... ip_flags frag`.
-
-In case any control flags are masked, flow_rule_has_control_flags()
-sets a NL extended error message, and we return -EOPNOTSUPP.
-
-Also propagate extack to hclge_get_cls_key_ip(), and convert it to
-return error code.
-
-Only compile-tested.
-
-Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
----
- .../hisilicon/hns3/hns3pf/hclge_main.c         | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 28336cf17170..85b5d2331fc9 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -7222,8 +7222,9 @@ static void hclge_get_cls_key_vlan(const struct flow_rule *flow,
- 	}
- }
- 
--static void hclge_get_cls_key_ip(const struct flow_rule *flow,
--				 struct hclge_fd_rule *rule)
-+static int hclge_get_cls_key_ip(const struct flow_rule *flow,
-+				struct hclge_fd_rule *rule,
-+				struct netlink_ext_ack *extack)
- {
- 	u16 addr_type = 0;
- 
-@@ -7232,6 +7233,9 @@ static void hclge_get_cls_key_ip(const struct flow_rule *flow,
- 
- 		flow_rule_match_control(flow, &match);
- 		addr_type = match.key->addr_type;
-+
-+		if (flow_rule_has_control_flags(match.mask->flags, extack))
-+			return -EOPNOTSUPP;
- 	}
- 
- 	if (addr_type == FLOW_DISSECTOR_KEY_IPV4_ADDRS) {
-@@ -7260,6 +7264,8 @@ static void hclge_get_cls_key_ip(const struct flow_rule *flow,
- 		rule->unused_tuple |= BIT(INNER_SRC_IP);
- 		rule->unused_tuple |= BIT(INNER_DST_IP);
- 	}
-+
-+	return 0;
- }
- 
- static void hclge_get_cls_key_port(const struct flow_rule *flow,
-@@ -7285,7 +7291,9 @@ static int hclge_parse_cls_flower(struct hclge_dev *hdev,
- 				  struct hclge_fd_rule *rule)
- {
- 	struct flow_rule *flow = flow_cls_offload_flow_rule(cls_flower);
-+	struct netlink_ext_ack *extack = cls_flower->common.extack;
- 	struct flow_dissector *dissector = flow->match.dissector;
-+	int ret;
- 
- 	if (dissector->used_keys &
- 	    ~(BIT_ULL(FLOW_DISSECTOR_KEY_CONTROL) |
-@@ -7303,7 +7311,11 @@ static int hclge_parse_cls_flower(struct hclge_dev *hdev,
- 	hclge_get_cls_key_basic(flow, rule);
- 	hclge_get_cls_key_mac(flow, rule);
- 	hclge_get_cls_key_vlan(flow, rule);
--	hclge_get_cls_key_ip(flow, rule);
-+
-+	ret = hclge_get_cls_key_ip(flow, rule, extack);
-+	if (ret)
-+		return ret;
-+
- 	hclge_get_cls_key_port(flow, rule);
- 
- 	return 0;
--- 
-2.43.0
-
+Okay, will add again (another v6 missed).
