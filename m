@@ -1,109 +1,158 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2632515382C
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 16:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58171DDE9;
+	Mon, 22 Apr 2024 16:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713805073; cv=none; b=mJa5DTWUbU04kfVTk86Q2zPak9BibNBTiirhFJH3qQ+Eq+7SUlNMa03rD1W2LblNSLKlQ3dvDR0GRQDxkpIHiCNYm1BX80Y7iZCzsjqAjDOm0ONULh8Kx2gYqSR26L/4mhktMi2FU0RDvxNFibwWrVWhAzkD0JLq1NOIoaNUe4A=
+	t=1713805119; cv=none; b=YZWI0b9DAyunRLUl6YEQ0v5Aw1QQBYqMwiII8YmJhEHSz7uSHqn8oC8IXD6de+ox1/xujrRrSvreUQ+7nhFdCJ0BzInhqZaHrH1QwmI2jynbtoXY8zlAM1DL17Ck++DKvLnZyjf0Gji1YrGDNANBGrOG2Vj59yq6oeMsI3Glgoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713805073; c=relaxed/simple;
-	bh=Ptp2ftOZAGscOLVcZ1Evx+agdRuYHjLibG7LykakzGk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GfFbpxIlpQ48fiHjoV7wWSL3604ScOjdJloIlaGX7IG8NPvuj+cEB6Vd65+hfm68QB2lJE6FWd19vVHkoLMMd4ihLbmk5V7lEOEQyS9iI9ytk0p5KOAarUgMi7KcJuJ2yEd4OMkFt0SPuds0Z15Se28G7tKTAN79+V1cgHiVN/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cXFHNh7S; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cXFHNh7S"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-34b1e35155aso1186030f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 09:57:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713805070; x=1714409870; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XFejkMe0OVlEaHFS27AO4JIPaFi1PczIDcBY/+c6L4w=;
-        b=cXFHNh7SikVSS7Q+R+Bg0ZL+ccO4WcBLsmjuZd8zgoBczvlriEP+jDRqbjfmVLvbR9
-         dgLHm/Jxuq1sGUZsNyKIcfDAzwDpQJQaJYxXPTWIi4yQAF52CKDCvsv18ULFhV/y6LAj
-         GSgQl7yzWNgU1VdbgWxWLMxWD1eEXYXas6uIPXjD2mkVcikqgchVFSbH/EsrQhNWaxTe
-         BJBdhkitIm/bPYIZML5PXJBU2tjP/5dLi4ghrLqWU5VnNFvzK4hiXHHAKI0pAX8lFUn9
-         +uuemcEPUMgXwVTfvoU6vniAfQi6cdp87WNItPkd+et34VBGSJu415D5e0Pxu2N3DvTL
-         mC5A==
+	s=arc-20240116; t=1713805119; c=relaxed/simple;
+	bh=2MM87vb1RriR8f7HL8tf1uYoQdwU6zKEoIT1IrsLPvo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rq8bxpPHk2/cla+Zt23rk60G+ZhezAT540njzDjfzpMSjCOiGj956slqoIkZVh8M6xZouIkaECOssZjns8b2mO1+V7+1Yu0TtO8DkRDMPlpxyNMLaBcj8DWzVNw27ow1ISmnwWmpztBv7jDGXHStEKsQZ0EqPwiwvJ1UQwOzBn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-de45e5c3c68so5000526276.0;
+        Mon, 22 Apr 2024 09:58:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713805070; x=1714409870;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1713805115; x=1714409915;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XFejkMe0OVlEaHFS27AO4JIPaFi1PczIDcBY/+c6L4w=;
-        b=N82gF6pwzXG0dahms3qC6OlEMJQ89GvKoYj/LWt4KjEXHkS+TQMVFVlKDrj3KgeOSS
-         RNe9q3GThiNlrkwJsQZIUq9qUF2c+SSxb7aPXQUUUd6wewPd1mIOIZAqH8vKSI4ZByWC
-         Ell9aXPEQjRPT9+hKsJIvzv2Az9/uISYSrYFYpYlEIfg9+6pMRSnU3rLtXNo8RIAVXth
-         tca88LWqfGZdocHdwWIekA4+AIQ6XMH4608qv6HDsYpxwbPaiYtnFXFMGTI5xtdtprju
-         NmCmT5djzAqAfoT5UhoeRjF+0jWsf5yhTRqqtpis+OoK1I2sSsvDMjU2K3dj25sL7Sjm
-         HcBA==
-X-Forwarded-Encrypted: i=1; AJvYcCXY4jyg8a9riwHII7rwFybIKIUujs7DdUYEuSiQZMeXxD3rDdiouGzfK0vsS15TQpADmcMveaA9ZRLxZt1MnaL+YjVuUcL6ZdRY/pkP
-X-Gm-Message-State: AOJu0Yw13xoUgWgOTHvy59eMUtsmIp0pLTRGqBrhUeRg00E/TcgtROon
-	eIW5BfvzKo0iA4r8rTw2byL15/ULZkqlJoG4tVnc8bslM3OImjhB3Cscbln3OcE=
-X-Google-Smtp-Source: AGHT+IFPgoNY7jL28vA9FqUBo9t0jArnUgL+gophkF/W85BBll+VXJnnlKToYJDSJz0chYDGNDGGmw==
-X-Received: by 2002:a5d:4082:0:b0:34a:2c89:8517 with SMTP id o2-20020a5d4082000000b0034a2c898517mr7612659wrp.10.1713805070257;
-        Mon, 22 Apr 2024 09:57:50 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id y7-20020a5d6207000000b00346f9071405sm12509330wru.21.2024.04.22.09.57.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 09:57:49 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Jagan Teki <jagan@amarulasolutions.com>, 
- Nicolas Belin <nbelin@baylibre.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, 
- Conor Dooley <conor.dooley@microchip.com>, 
- "Lukas F. Hartmann" <lukas@mntre.com>
-In-Reply-To: <20240403-amlogic-v6-4-upstream-dsi-ccf-vim3-v12-0-99ecdfdc87fc@linaro.org>
-References: <20240403-amlogic-v6-4-upstream-dsi-ccf-vim3-v12-0-99ecdfdc87fc@linaro.org>
-Subject: Re: (subset) [PATCH v12 0/7] drm/meson: add support for MIPI DSI
- Display
-Message-Id: <171380506905.4152979.12753297685732463141.b4-ty@linaro.org>
-Date: Mon, 22 Apr 2024 18:57:49 +0200
+        bh=bXJbCXLErVWaJBLn0gFAgxou+WnOajhqe1V1IAmICA4=;
+        b=W3QfRIKDvC4EaODIGE2M5ULOnuaDoIAut1kJ7Iy8uyU2s4/VeLzluarABaI2sXWYX5
+         9BFprf0ik9PDFuHLHHxNTMtRh36/7MqeySRDVTS393M4kt/NZluzUoJA9gZ1dUDeEFaY
+         /A0uFii24qmGebPX75lZJvp2Imcwbv3F2KNb8tK+ZeE/60m41AaqrUXCphhYzV1fCnTy
+         nIFHDajph2Bf9HEAKndhvVexpJw9Ne2+KjuZP6A1MQ7UQVKQALoaMRx8gFYWrlXf+Kr0
+         b/CoJgeXdqGDYK7jgY/o9p4sAMA5+zDnQ7XY/DGdlEtsi5Eu6FDfeVE07CJe2wvWOg6z
+         mOoA==
+X-Forwarded-Encrypted: i=1; AJvYcCW0EuFbDUC6frF9jSjMaQjwPGyvHqDhjgQ33g5mVspolBSeNZa/J8I8W5FSZqV+1Y3V7KcA4pzVtGlbX8McI6tGF9uH7UQn3EvhjUCr7W5RJrGPzj1wUVphnBTUj8SbymgTh4WsqVuu8CCntUvPp0KiMq1yluCa1bBdK0m0DDKYEPnf5hPsEzNUddR10qI=
+X-Gm-Message-State: AOJu0YyuHFnGT5echqwJIA2qEfT0XMYoO7yzloRqQCT+QGUgcZ3fkx9P
+	7kQWntFgMFVU7TOec9DZWBxn35tuYPHqI7UpYAhRc2lfAyRuQvP2h3pIzrIU
+X-Google-Smtp-Source: AGHT+IEVSiqwfgzLYa3jXG1W9lHYUc/Gt3hNKRLN+rKTFRSjy/yMtSAheFb9y5lO47W8eDl0AsnMVA==
+X-Received: by 2002:a25:b21b:0:b0:dc6:bbbd:d4f4 with SMTP id i27-20020a25b21b000000b00dc6bbbdd4f4mr10636291ybj.33.1713805114799;
+        Mon, 22 Apr 2024 09:58:34 -0700 (PDT)
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
+        by smtp.gmail.com with ESMTPSA id l5-20020a056902072500b00de4f779bb2dsm1204462ybt.6.2024.04.22.09.58.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Apr 2024 09:58:34 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dbed0710c74so4097831276.1;
+        Mon, 22 Apr 2024 09:58:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUcqOAkNu8gnGeKdnGPqWQOLBhc119bZ08GmYIoaxLJQhmLWq1Mlx2OyTABA6WgboHCArH/IV4R0Vi5Hn4J9u1m5wJlZXxirezLS1g7ycxnyv+lQPgxk+XU6ur7J/IKN6iVPA7svORwHuo2zLsh6SnK0gxpTmnHwWHBPhKetlo2QxkzMXMlLlEzYG08eFM=
+X-Received: by 2002:a25:292:0:b0:de3:cce6:5dce with SMTP id
+ 140-20020a250292000000b00de3cce65dcemr11262187ybc.36.1713805113975; Mon, 22
+ Apr 2024 09:58:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.4
+References: <cover.1713780345.git.geert+renesas@glider.be> <87il09ty4u.fsf@intel.com>
+ <ff4f9e8f-0825-4421-adf9-e3914b108da7@app.fastmail.com> <875xw9ttl6.fsf@intel.com>
+ <af6e26d1-1402-4ed2-a650-b58eae77273e@app.fastmail.com>
+In-Reply-To: <af6e26d1-1402-4ed2-a650-b58eae77273e@app.fastmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 22 Apr 2024 18:58:21 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXCL-gbKr6mUBPWONtRjz=X0vZQgiS=02WXXSFf67yBww@mail.gmail.com>
+Message-ID: <CAMuHMdXCL-gbKr6mUBPWONtRjz=X0vZQgiS=02WXXSFf67yBww@mail.gmail.com>
+Subject: Re: [PATCH 00/11] drm: Restore helper usability
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Dave Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	linux-kbuild <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Arnd,
 
-On Wed, 03 Apr 2024 09:46:31 +0200, Neil Armstrong wrote:
-> The Amlogic G12A, G12B & SM1 SoCs embeds a Synopsys DW-MIPI-DSI transceiver (ver 1.21a),
-> with a custom glue managing the IP resets, clock and data input similar to the DW-HDMI
-> glue on the same Amlogic SoCs.
-> 
-> This is a follow-up of v5 now the DRM patches are applied, the clk & DT changes
-> remains for a full DSI support on G12A & SM1 platforms.
-> 
-> [...]
+CC kbuild
 
-Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
+On Mon, Apr 22, 2024 at 3:55=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
+:
+> On Mon, Apr 22, 2024, at 15:28, Jani Nikula wrote:
+> > On Mon, 22 Apr 2024, "Arnd Bergmann" <arnd@arndb.de> wrote:
+> >> 2. Using "select" on user visible symbols that have dependencies
+> >>    is a common source for bugs, and this is is a problem in
+> >>    drivers/gpu/drm more than elsewhere in the kernel, as these
+> >>    drivers traditionally select entire subsystems or drivers
+> >>    (I2C, VIRTIO, INPUT, ACPI_WMI, BACKLIGHT_CLASS_DEVICE,
+> >>    POWER_SUPPLY, SND_PCM, INTERCONNECT, ...). This regularly
+> >>    leads to circular dependencies and we should fix all of them.
+> >
+> > What annoys me is that the fixes tend to fall in two categories:
+> >
+> > - Play catch with selecting the dependencies of the selected
+> >   symbols. "depends on" handles this recursively, while select does
+> >   not.
+>
+> I'm not sure where this misunderstanding comes from, as you
+> seem to be repeating the same incorrect assumption about
+> how select works that Maxime wrote in his changelog. To clarify,
+> this works exactly as one would expect:
+>
+> config HELPER_A
+>        tristate
+>
+> config HELPER_B
+>        tristate
+>        select HELPER_A
+>
+> config DRIVER
+>        tristate "Turn on the driver and the helpers it uses"
+>        select HELPER_B # this recursively selects HELPER_A
+>
+> Whereas this one is broken:
+>
+> config FEATURE_A
+>        tristate "user visible if I2C is enabled"
+>        depends on I2C
+>
+> config HELPER_B
+>        tristate # hidden
+>        select FEATURE_A
+>
+> config DRIVER
+>        tristate "This driver is broken if I2C is disabled"
+>        select HELPER_B
 
-[4/7] drm/meson: gate px_clk when setting rate
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/5c9837374ecf55a1fa3b7622d365a0456960270f
+So the DRIVER section should gain a "depends on I2C" statement.
 
--- 
-Neil
+Yamada-san: would it be difficult to modify Kconfig to ignore symbols
+like DRIVER that select other symbols with unmet dependencies?
+Currently it already warns about that.
 
+Handling this implicitly (instead of the current explict "depends
+on") would have the disadvantage though: a user who is not aware of
+the implicit dependency may wonder why DRIVER is invisible in his
+config interface.
+
+>
+> >   There is no end to this, it just goes on and on, as the
+> >   dependencies of the selected symbols change over time. Often the
+> >   selects require unintuitive if patterns that are about the
+> >   implementation details of the symbol being selected.
+>
+> Agreed, that is the problem I frequently face with drivers/gpu/drm,
+> and most of the time it can only be solved by rewriting the whole
+> system to not select user-visible symbol at all.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
