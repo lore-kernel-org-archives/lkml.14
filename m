@@ -1,260 +1,102 @@
-Received: from hust.edu.cn (unknown [202.114.0.240])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0B861391;
-	Mon, 22 Apr 2024 06:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.114.0.240
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11568482ED
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713769167; cv=none; b=aYIMXeWIxK/ng521eBnYGo271b7cu4uSTBKipmG/46B5DkUTwQXddcYPNbEDC+7HaovR9YMEYbZQXzL1TsCjlnwzIpeV6/FHfw+zF7qg/UJ7vqY7ytRQCIX8wYqfSBaqrdHXqqrYjluRgJqO2WGlEH13Zg5ou6KJ9XNVEQQz5Y0=
+	t=1713769273; cv=none; b=geQkh8f83PcLDsI27JParjp2lTzrTHqHksmmoQvA7YV1dV7Mrx56oi9RGyCqaOal7vCTU7UaPSv1ndU5enuZTMbyqVEgJp57FHq0ZQHkrhxd0Dc++5OU1V026eZl1fWliIuEUukf8WxYtb1eDiUjaS5i0vMy9TxEINrq9N0BCHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713769167; c=relaxed/simple;
-	bh=2ogYp+srszOcE6Ovo5GFA3DdV2gZfv5XNhxq6YQGH/A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iI9BFdB/lcqkBUX41q703ERgYZrr1DOCIMwEoJgC+WpefQ8Nxtp5SAORbxgghJXMUPzLzfTcdqdYXMZ/zOjSwJ5CgeDQgwQswNrseUBdGZOUCemGEFkyRaJnbg21HfU05bn1Du3a3NNyjYJpecs2DjdLbZxhZDwPR2r2ys2t1JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=202.114.0.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
-Received: from hust.edu.cn (unknown [172.16.0.50])
-	by app1 (Coremail) with SMTP id HgEQrAAnLoKoCiZmBRBGBQ--.60769S2;
-	Mon, 22 Apr 2024 14:58:48 +0800 (CST)
-Received: from Chengziqiu-Lab-Desktop.. (unknown [10.12.190.56])
-	by gateway (Coremail) with SMTP id _____wCHcC6QCiZm3LchAQ--.51477S2;
-	Mon, 22 Apr 2024 14:58:46 +0800 (CST)
-From: Cheng Ziqiu <chengziqiu@hust.edu.cn>
-To: Alex Shi <alexs@kernel.org>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Dongliang Mu <dzm91@hust.edu.cn>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	hust-os-kernel-patches@googlegroups.com,
-	Cheng Ziqiu <chengziqiu@hust.edu.cn>
-Subject: [PATCH] scripts: add `check-trans-update.py`
-Date: Mon, 22 Apr 2024 14:58:22 +0800
-Message-Id: <20240422065822.1441611-1-chengziqiu@hust.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1713769273; c=relaxed/simple;
+	bh=XNuK4qbKnADfMXviTzs6nnvQDFLAwer8iqIgdbyp8hU=;
+	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
+	 References:Message-ID; b=fm24h0W1uQhT86qf12qHk/uW+a5ByacHPQxcDcf3tTfqyK8Lnh9eiyvdmMfpF8alSGICOlY9dV+2tC3HH8OREftJIeGjxJ6OfmYcJSQECSN3+DNSrWgNx3oAcy1pAeswk0fuoWBykrBScL7eQzgfuNAgmlBd32zKF40KHAGMvzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=A6TNrzvi; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="A6TNrzvi"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 4E3E6240104
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 09:01:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+	t=1713769264; bh=XNuK4qbKnADfMXviTzs6nnvQDFLAwer8iqIgdbyp8hU=;
+	h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:
+	 Cc:Subject:Message-ID:From;
+	b=A6TNrzviFhHFrYszwgREJ5iTO94EMYzAXNLzJdxNHfYsP2tXLcSvIjYoBs2lFWMxP
+	 /uROVMewqcHGK9ZMgZ2H+7qS0+K9LUpgMgI3267ZYFUfOQhcE6sApHpHajgkx5s5uA
+	 MXNUZj2Iqg8l5DATZRVRlpHMZnaCrV+OTbqZ8tUXtDZNKtX/BGKnH/g1PXeUF9HvCy
+	 +mB/3nBKzSH9S9OWXN4sDLZnd4ndMB+WN+GxbZjiOIOXwgWOOjNFC/r6oUf7Nni8k7
+	 3uwNQRv7f3LJplC4qBbIA8qfbG8W5IcmK/UY/hqkxrEdtbNi4Lzcjzqcr2zdg/jACb
+	 CUez8t9gnZNsg==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4VNGPB6MLPz6tsf;
+	Mon, 22 Apr 2024 09:01:02 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:HgEQrAAnLoKoCiZmBRBGBQ--.60769S2
-Authentication-Results: app1; spf=neutral smtp.mail=chengziqiu@hust.ed
-	u.cn;
-X-Coremail-Antispam: 1UD129KBjvJXoW3GFWrtr17Jw18Kry8Jw15twb_yoW7Cr4Upa
-	45Cay2yr4rAFZrJrs3Ja15uFWayrnxJF4jqryIgr9rArW7K34F9FWIkrySvrZ7WF1rX3sI
-	g3WFyF1jkF17uaDanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmFb7Iv0xC_Zr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
-	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
-	v20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK
-	6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1ln4kS14v26r
-	126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8C
-	rVACY4xI64kE6c02F40Ex7xfMcIj64x0Y40En7xvr7AKxVW8Jr0_Cr1UMcIj6x8ErcxFaV
-	Av8VW8uFyUJr1UMcIj6xkF7I0En7xvr7AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxAIw2
-	8IcVCjz48v1sIEY20_GFW3Jr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
-	xVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IUnYYLPUUUUU==
-X-CM-SenderInfo: bpsqjjaxrxkmo6kx23oohg3hdfq/
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date: Mon, 22 Apr 2024 07:01:02 +0000
+From: a-development@posteo.de
+To: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
+ David.Kaplan@amd.com, Andrew.Cooper3@citrix.com, jpoimboe@kernel.org,
+ gregkh@linuxfoundation.org
+Subject: Re: [RFC][PATCH 00/17] Fix up the recent SRSO patches
+In-Reply-To: <20240417091200.GAZh-SYOGABCnsqpKj@fat_crate.local>
+References: <cbad6acb30e33e8dd387080e5936cc38@posteo.net>
+ <20240127191942.GEZbVXTtDNzLB9hTpr@fat_crate.local>
+ <181005cf4a78a4c3c5e1de77498f6c23@posteo.net>
+ <20240127194139.GFZbVcc2RxhNtO3ZHD@fat_crate.local>
+ <6170a3f60cd1ca68bca5829db4a8568a@posteo.net>
+ <20240326222134.GNZgNKbgdBUsAU98RV@fat_crate.local>
+ <d0dfa77ba8231652554c4e6088f985d1@posteo.net>
+ <20240416084544.GAZh46uKW6ijAfftmI@fat_crate.local>
+ <a49e7560f982f00ef1c5452483459b26@posteo.net>
+ <0065fda592b2652d1a2730ddbc81cea6@posteo.net>
+ <20240417091200.GAZh-SYOGABCnsqpKj@fat_crate.local>
+Message-ID: <98d6c53b244c579b7c7e28872d5cb665@posteo.net>
 
-The `check-trans-update.py` scripts check whether a translated version
-of a documentation is up-to-date with the english version.
+Hello. I have installed the kernel through 
+https://aur.archlinux.org/packages/linux-mainline and noticed that SRSO 
+is disabled. "Speculative Return Stack Overflow: IBPB-extending 
+microcode not applied!"
 
-The scripts use `git log` commit to find the latest english commit from
-the translation commit (order by author date) and the latest english
-commits from HEAD. If differences occurs, report the file and commits
-need to be updated.
+cat /sys/devices/system/cpu/vulnerabilities/spec_rstack_overflow
+Vulnerable: Safe RET, no microcode
 
-Signed-off-by: Cheng Ziqiu <chengziqiu@hust.edu.cn>
----
- scripts/check-trans-update.py | 176 ++++++++++++++++++++++++++++++++++
- 1 file changed, 176 insertions(+)
- create mode 100755 scripts/check-trans-update.py
+So far, I have been succesfully suspending the one night I used it.
 
-diff --git a/scripts/check-trans-update.py b/scripts/check-trans-update.py
-new file mode 100755
-index 000000000000..0f913c5c4555
---- /dev/null
-+++ b/scripts/check-trans-update.py
-@@ -0,0 +1,176 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+
-+import os
-+from argparse import ArgumentParser, BooleanOptionalAction
-+from datetime import datetime
-+
-+flag_p_c = False
-+flag_p_uf = False
-+flag_debug = False
-+
-+
-+def dprint(*args, **kwargs):
-+    if flag_debug:
-+        print("[DEBUG] ", end="")
-+        print(*args, **kwargs)
-+
-+
-+def get_origin_path(file_path):
-+    paths = file_path.split("/")
-+    tidx = paths.index("translations")
-+    opaths = paths[:tidx]
-+    opaths += paths[tidx + 2 :]
-+    return "/".join(opaths)
-+
-+
-+def get_latest_commit_from(file_path, commit):
-+    command = "git log --pretty=format:%H%n%aD%n%cD%n%n%B {} -1 -- {}".format(
-+        commit, file_path
-+    )
-+    dprint(command)
-+    pipe = os.popen(command)
-+    result = pipe.read()
-+    result = result.split("\n")
-+    if len(result) <= 1:
-+        return None
-+
-+    dprint("Result: {}".format(result[0]))
-+
-+    return {
-+        "hash": result[0],
-+        "author_date": datetime.strptime(result[1], "%a, %d %b %Y %H:%M:%S %z"),
-+        "commit_date": datetime.strptime(result[2], "%a, %d %b %Y %H:%M:%S %z"),
-+        "message": result[4:],
-+    }
-+
-+
-+def get_origin_from_trans(origin_path, t_from_head):
-+    o_from_t = get_latest_commit_from(origin_path, t_from_head["hash"])
-+    while o_from_t is not None and o_from_t["author_date"] > t_from_head["author_date"]:
-+        o_from_t = get_latest_commit_from(origin_path, o_from_t["hash"] + "^")
-+    if o_from_t is not None:
-+        dprint("tracked origin commit id: {}".format(o_from_t["hash"]))
-+    return o_from_t
-+
-+
-+def get_commits_count_between(opath, commit1, commit2):
-+    command = "git log --pretty=format:%H {}...{} -- {}".format(commit1, commit2, opath)
-+    dprint(command)
-+    pipe = os.popen(command)
-+    result = pipe.read().split("\n")
-+    # filter out empty lines
-+    result = list(filter(lambda x: x != "", result))
-+    return result
-+
-+
-+def check_per_file(file_path):
-+    opath = get_origin_path(file_path)
-+
-+    if not os.path.isfile(opath):
-+        dprint("Error: Cannot find the origin path for {}".format(file_path))
-+        return
-+
-+    o_from_head = get_latest_commit_from(opath, "HEAD")
-+    t_from_head = get_latest_commit_from(file_path, "HEAD")
-+
-+    if o_from_head is None or t_from_head is None:
-+        print("Error: Cannot find the latest commit for {}".format(file_path))
-+        return
-+
-+    o_from_t = get_origin_from_trans(opath, t_from_head)
-+
-+    if o_from_t is None:
-+        print("Error: Cannot find the latest origin commit for {}".format(file_path))
-+        return
-+
-+    if o_from_head["hash"] == o_from_t["hash"]:
-+        if flag_p_uf:
-+            print("No update needed for {}".format(file_path))
-+        return
-+    else:
-+        print("{}".format(file_path), end="\t")
-+        commits = get_commits_count_between(
-+            opath, o_from_t["hash"], o_from_head["hash"]
-+        )
-+        print("({} commits)".format(len(commits)))
-+        if flag_p_c:
-+            print("\t", end="")
-+            print("\n\t".join(commits))
-+
-+
-+def main():
-+    script_path = os.path.dirname(os.path.abspath(__file__))
-+    linux_path = os.path.join(script_path, "..")
-+
-+    parser = ArgumentParser(description="Check the translation update")
-+    parser.add_argument(
-+        "-l",
-+        "--locale",
-+        help="Locale to check when file is not specified",
-+    )
-+    parser.add_argument(
-+        "--print-commits",
-+        action=BooleanOptionalAction,
-+        default=True,
-+        help="Print commits between origin and translation",
-+    )
-+
-+    parser.add_argument(
-+        "--print-updated-files",
-+        action=BooleanOptionalAction,
-+        default=False,
-+        help="Print files no need to be updated",
-+    )
-+
-+    parser.add_argument(
-+        "--debug",
-+        action=BooleanOptionalAction,
-+        help="Print debug information",
-+        default=False,
-+    )
-+
-+    parser.add_argument(
-+        "files", nargs="*", help="File to check, if not specified, check all"
-+    )
-+    args = parser.parse_args()
-+
-+    global flag_p_c, flag_p_uf, flag_debug
-+    flag_p_c = args.print_commits
-+    flag_p_uf = args.print_updated_files
-+    flag_debug = args.debug
-+
-+    # get files related to linux path
-+    files = args.files
-+    if len(files) == 0:
-+        if args.locale is not None:
-+            files = (
-+                os.popen(
-+                    "find {}/Documentation/translations/{} -type f".format(
-+                        linux_path, args.locale
-+                    )
-+                )
-+                .read()
-+                .split("\n")
-+            )
-+        else:
-+            files = (
-+                os.popen(
-+                    "find {}/Documentation/translations -type f".format(linux_path)
-+                )
-+                .read()
-+                .split("\n")
-+            )
-+
-+    files = list(filter(lambda x: x != "", files))
-+    files = list(map(lambda x: os.path.relpath(os.path.abspath(x), linux_path), files))
-+
-+    # cd to linux root directory
-+    os.chdir(linux_path)
-+
-+    for file in files:
-+        check_per_file(file)
-+
-+
-+if __name__ == "__main__":
-+    main()
--- 
-2.34.1
+Assuming this is per-default, I've installed the kernel module for my 
+PCIe Capture card and testing it.
 
+Any new instructions?
+
+Thanks
+
+On 17.04.2024 11:12, Borislav Petkov wrote:
+> On Wed, Apr 17, 2024 at 08:08:53AM +0000, a-development@posteo.de 
+> wrote:
+>> Today I failed to suspend, and the spec_rstack thing was off.
+>> 
+>> https://up.tail.ws/txt/non-working-suspend-2.txt
+> 
+> Ok, but please do not top-post. Put your reply underneath the next
+> you're replying to and remove the rest of the quoted text like I just
+> did.
+> 
+> So this could be caused by the proprietary module or something else.
+> 
+> If you want this debugged, you'd have to try to reproduce it with the
+> latest upstream kernel from here:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> 
+> after having removed the propietary module.
+> 
+> HTH.
