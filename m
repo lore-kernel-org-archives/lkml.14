@@ -1,93 +1,161 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6D2146011;
-	Mon, 22 Apr 2024 12:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E30146A93;
+	Mon, 22 Apr 2024 12:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713789557; cv=none; b=kiH9CDwaDNyVYXWqrLbrGRf/dItdonXVJ3bUP5AUUxZQO/DvZ4XG9ehdppuVBfByCpL3kEk48KUC5G2DOcmMCFQCAeJv+HM5ovRG0GCLYLjSV5vvl3fWUMlcjp8pcr5ghwBFJVhf7oG8s8W3d8UIg79LSPiw/Fmg9EDY3jXyPK8=
+	t=1713789579; cv=none; b=SOfGwSjTplOrgBBe/be17lMN39059U8J5KG3JK39VXFMGwcZeQ4U3nuvsrO2eaP2Reb5ggt/gngs3zXEb1Lm4JRyZBHRsYx8UlQjupetVIFNn07IfxPdh65WLQ2/zeEsWzmqWkPTbi6fjLdtJ9SWmJAtjIzlzwWA5Co+h0XwMvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713789557; c=relaxed/simple;
-	bh=1xYqXXOCg8cH+eLna2SIoRUtXjWDA5Opt7wSg5dXJww=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H1sjGbwc/K1g083iRyy8Gb4OFX6oSCrMKGaEMTqRgrYRLkZD4NRB2BWKDBd+d1t71D5L4P9yWg4WnywDoT20NJr2P8o1VBPizaeLprHt21Ed+mn8VSDRyxNcoG2zwv1MTT4YJHs/+Z4RYXCxBdQvpE6XFobqsxSDVu4IR4hUhE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1713789579; c=relaxed/simple;
+	bh=yxR46rGU3Aqnq5NTBddw5GE+9vGxcjEQcLz0queXR3E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FjUewH5PzV0fserXKHpiyjni8DLNrwXH4gTo/LwxofeZNcgln02ijpnBIoFlNWwImuQqCqVGpmDcp4W3gmdtosXiEIvhM9Weg7wjOnYuy+qfgW9viWiBl4OGGR4mwD9etKS9gEVeMVja7i5PjSP5HSysfZmaSfR+5/HRNUC8eE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-de466c64161so4552369276.3;
-        Mon, 22 Apr 2024 05:39:15 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-518a56cdc03so5281683e87.1;
+        Mon, 22 Apr 2024 05:39:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713789555; x=1714394355;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xMBL1qo4g2eaajNMXZyEJbZLC89YfXgje/CzAO+pyC4=;
-        b=SREk4G04Vr51JcLtUHKsjiB5DseaT1u0y0wMla7SMOlvl2R4iWaArfJHJSb0Y0g/S3
-         o0MwTX3EdZPJuZboEnTOqrI160q3Jw3DpYYNNy4wjrNE21qS3njk2P3Lw0fOnE+t+RtV
-         uBosZ6QGrVdAxrWL9FLljseDdKAaoFz3QikjrfgBZU5SsAJMVe1VqmJRf2j1kWp2i752
-         dzD6mwQV2rDo1iHYvEID5Ywi3VoypNlpQtnXlde55qzAXQ/lSNac4W0D3nNuIQ29/pl2
-         kWQCR9s8z1ZUXBGsEe4UyGqoBvgNB8omSA/+YilXPkSd4nKO7s9z4KH/zXHwlbxgkuPh
-         nGIw==
-X-Gm-Message-State: AOJu0YyPhzeNP1ySJHj5+kLIrQAcS6MAV/u9Hda8plJeO+2qo5g6aQ1b
-	j81VLAVIrhoKkrNUkX3I8GX68UD8Y2AitoNgKc6dFt9FFedIr0DdHTIDtLHv
-X-Google-Smtp-Source: AGHT+IFoYQxllOPUi1dR8w+zve6uhTrIjk0cU8qEEDxWhi9OWbIVixZwRWJq5ch+SGSeIB57nVEiiA==
-X-Received: by 2002:a25:5f45:0:b0:de0:ea71:9ec9 with SMTP id h5-20020a255f45000000b00de0ea719ec9mr9228855ybm.1.1713789554630;
-        Mon, 22 Apr 2024 05:39:14 -0700 (PDT)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id y9-20020a2586c9000000b00dc9c5991ecdsm1920014ybm.50.2024.04.22.05.39.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Apr 2024 05:39:14 -0700 (PDT)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-de469a634fbso4432496276.2;
-        Mon, 22 Apr 2024 05:39:14 -0700 (PDT)
-X-Received: by 2002:a25:213:0:b0:de4:5f9a:157a with SMTP id
- 19-20020a250213000000b00de45f9a157amr10282671ybc.36.1713789554244; Mon, 22
- Apr 2024 05:39:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713789576; x=1714394376;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iz0ikdoTMPeoGlY7AzEyABEuqkNB0Gjgw6bWzoieFE4=;
+        b=FHH9Cz9NESk4CUdnzGBzUPoGF/71XXkUlZcSlqnw1ThuPdAVTkcg2LtUPZcZHkQrhG
+         qCcISFYRZRsEqHZQSvgHC/iZbj7AP3ZqMIVwn7ykXFGiLXOcijL9axonheGNQwcxX5VP
+         aPwYP+eL91QZpG7KhTNy7kO7LmEA3FC7icknlr8E8Y1Iuv17dS7odp6aw2u9t7Nwequ+
+         +TDXv6yRqacCZ0N/I3sIxOX+U3KtK7/9pvJczt7TRFvuTaBOguua4w/SQVrjEYSwrwFP
+         qBFdDzIbWr0HFmHg5wRTlJG22dYiJxnz6QZcqbtx4aobRqcD14jBKB3HfX4HkUeTbyii
+         KykQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV3fitlaIUpjwnoUUZ5I5RTi8ccjLVCqti3pDJZ0NorDV50X/d7BohPWGTFAzVVLva/eE9BKmVHjSu417DjWVS+Ep+pmStWBxWQdTN3j86Mrl1JQWKyTrjoNma44pNCLUQKgWEYuKWWdNpncHT0Ri4R4y5ncKaHnrm+3VTNKx5CkHbNXhhr4Ctq02qjLaSnC3UzyrmXzE/kOEc=
+X-Gm-Message-State: AOJu0YwEln7ff7cUg7LRTYedsHx8SkqV1qU2ihnHX771xd4hhfyRPo++
+	h+aFJwLP4cxfsMP9wUH+1jlBbMT98O2an5ygrVHl5H6HQcA+l+GR
+X-Google-Smtp-Source: AGHT+IF5YTCCg6KEsN0PmqluDOTi/5NrwJEUq5lvraAub+lxIQJqUtef+oDOn/RubcUZafX5KbdePw==
+X-Received: by 2002:a19:ca4f:0:b0:515:c195:d6b8 with SMTP id h15-20020a19ca4f000000b00515c195d6b8mr5518092lfj.60.1713789575968;
+        Mon, 22 Apr 2024 05:39:35 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-117.fbsv.net. [2a03:2880:30ff:75::face:b00c])
+        by smtp.gmail.com with ESMTPSA id og14-20020a1709071dce00b00a55ac4c4550sm1906884ejc.211.2024.04.22.05.39.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 05:39:35 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: aleksander.lobakin@intel.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	elder@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	nbd@nbd.name,
+	sean.wang@mediatek.com,
+	Mark-MC.Lee@mediatek.com,
+	lorenzo@kernel.org,
+	taras.chornyi@plvision.eu,
+	ath11k@lists.infradead.org,
+	ath10k@lists.infradead.org,
+	linux-wireless@vger.kernel.org,
+	geomatsi@gmail.com,
+	kvalo@kernel.org,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: quic_jjohnson@quicinc.com,
+	leon@kernel.org,
+	dennis.dalessandro@cornelisnetworks.com,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	bpf@vger.kernel.org,
+	idosch@idosch.org,
+	leitao@debian.org
+Subject: [PATCH net-next v7 00/10] allocate dummy device dynamically
+Date: Mon, 22 Apr 2024 05:38:53 -0700
+Message-ID: <20240422123921.854943-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=whdUP62_7N6s837tTFjvmcGxyRnMGwnVnZwn2fDVf5E8A@mail.gmail.com>
- <20240422123617.1363267-1-geert@linux-m68k.org>
-In-Reply-To: <20240422123617.1363267-1-geert@linux-m68k.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 22 Apr 2024 14:39:02 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV0yf++WWeih15YVHomAaji9mW+VYg0B4sTDNhD28FY3A@mail.gmail.com>
-Message-ID: <CAMuHMdV0yf++WWeih15YVHomAaji9mW+VYg0B4sTDNhD28FY3A@mail.gmail.com>
-Subject: Re: Build regressions/improvements in v6.9-rc4
-To: linux-kernel@vger.kernel.org
-Cc: Linux-sh list <linux-sh@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 22, 2024 at 2:36=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
-> Below is the list of build error/warning regressions/improvements in
-> v6.9-rc4[1] compared to v6.8[2].
-> JFYI, when comparing v6.9-rc4[1] to v6.9-rc3[3], the summaries are:
->   - build errors: +1/-0
+struct net_device shouldn't be embedded into any structure, instead,
+the owner should use the private space to embed their state into
+net_device.
 
-  + /kisskb/src/arch/sh/kernel/return_address.c: error: no previous
-prototype for 'return_address' [-Werror=3Dmissing-prototypes]:  =3D> 14:7
+But, in some cases the net_device is embedded inside the private
+structure, which blocks the usage of zero-length arrays inside
+net_device.
 
-sh4-gcc13/sh-allmodconfig (seen before in other sh configs)
+Create a helper to allocate a dummy device at dynamically runtime, and
+move the Ethernet devices to use it, instead of embedding the dummy
+device inside the private structure.
 
-> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/0bbac3facb5d6cc=
-0171c45c9873a2dc96bea9680/ (all 138 configs)
-> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/fec50db7033ea47=
-8773b159e0e2efb135270e3b7/ (all 138 configs)
+This fixes all the network cases plus some wireless drivers.
 
-Gr{oetje,eeting}s,
+PS: Due to lack of hardware, unfortunately most these patches are
+compiled tested only, except ath11k that was kindly tested by Kalle Valo.
 
-                        Geert
+---
+Changelog:
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+v7:
+	* Document the return value of alloc_netdev_dummy()
+v6:
+	* No code change. Just added Reviewed-by: and fix a commit message
+v5:
+	* Added a new patch to fix some typos in the previous code
+	* Rebased to net-net/main
+v4:
+	* Added a new patch to add dummy device at free_netdev(), as suggested
+	  by Jakub.
+	* Added support for some wireless driver.
+	* Added some Acked-by and Reviewed-by.
+v3:
+	* Use free_netdev() instead of kfree() as suggested by Jakub.
+	* Change the free_netdev() place in ipa driver, as suggested by
+	  Alex Elder.
+	* Set err in the error path in the Marvell driver, as suggested
+	  by Simon Horman.
+v2:
+	* Patch 1: Use a pre-defined name ("dummy#") for the dummy
+	  net_devices.
+	* Patch 2-5: Added users for the new helper.
+v1:
+	* https://lore.kernel.org/all/20240327200809.512867-1-leitao@debian.org/
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Breno Leitao (10):
+  net: core: Fix documentation
+  net: free_netdev: exit earlier if dummy
+  net: create a dummy net_device allocator
+  net: marvell: prestera: allocate dummy net_device dynamically
+  net: mediatek: mtk_eth_sock: allocate dummy net_device dynamically
+  net: ipa: allocate dummy net_device dynamically
+  net: ibm/emac: allocate dummy net_device dynamically
+  wifi: qtnfmac: Use netdev dummy allocator helper
+  wifi: ath10k: allocate dummy net_device dynamically
+  wifi: ath11k: allocate dummy net_device dynamically
+
+ drivers/net/ethernet/ibm/emac/mal.c           | 14 ++++-
+ drivers/net/ethernet/ibm/emac/mal.h           |  2 +-
+ .../ethernet/marvell/prestera/prestera_rxtx.c | 15 ++++-
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c   | 17 ++++--
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h   |  2 +-
+ drivers/net/ipa/gsi.c                         | 12 ++--
+ drivers/net/ipa/gsi.h                         |  2 +-
+ drivers/net/wireless/ath/ath10k/core.c        |  9 ++-
+ drivers/net/wireless/ath/ath10k/core.h        |  2 +-
+ drivers/net/wireless/ath/ath10k/pci.c         |  2 +-
+ drivers/net/wireless/ath/ath10k/sdio.c        |  2 +-
+ drivers/net/wireless/ath/ath10k/snoc.c        |  4 +-
+ drivers/net/wireless/ath/ath10k/usb.c         |  2 +-
+ drivers/net/wireless/ath/ath11k/ahb.c         |  9 ++-
+ drivers/net/wireless/ath/ath11k/core.h        |  2 +-
+ drivers/net/wireless/ath/ath11k/pcic.c        | 21 +++++--
+ .../wireless/quantenna/qtnfmac/pcie/pcie.c    |  3 +-
+ include/linux/netdevice.h                     |  3 +
+ net/core/dev.c                                | 59 +++++++++++++------
+ 19 files changed, 129 insertions(+), 53 deletions(-)
+
+-- 
+2.43.0
+
