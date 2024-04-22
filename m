@@ -1,172 +1,167 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463D21465A2;
-	Mon, 22 Apr 2024 11:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A531465A2;
+	Mon, 22 Apr 2024 11:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713785853; cv=none; b=M4KDAZmxt92HXAgeYNacJ6FJW1vr6V9PZV/F9ONGtROkmj+gcqtzTVtjEIwej0LcrE4EUluBwkih5ChUUogKD/GctVYta98hCkcq+edoeXmygTsGh8E0LrpzqBEWfvbyR8hPhnDU/1Z1pFVemEg2I3m4jFFQTcaTUbr++7DpdJI=
+	t=1713785889; cv=none; b=u6KUQSqC40A+odhSSZ78zzVm37wccRNQ9a6JsHhhPDPhSgjZWSPuhDB/QXqtkb7kBedgNPHtbe2f8ay3S+4liA6TC/Fh7DtKvqpmpsD4OWk6cyJPV3GY8ZJw4af5UXCDMFTLWKtElqIgkiMtwTQAuxG0+Y9Aazxj4PAagotwla4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713785853; c=relaxed/simple;
-	bh=JirxwaUTPZ7gRRTADFPsE4LALCUoW+coAPWl1mh0lv4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tCDK9w44yM3rQ4iSeAzUR7SZ41WHz8dcFyEWaqyZZwOY3GFkGehUINZspsRQSbsBOx7+gIlT6X5GlrW7Rc8vypzfCPJQfBNTB9EKu1W+qZWy0oS0qYmmnlp5avs1vDJlu7KUwditiZpkr0ici+lQ7eyvpKW36QaSbajBAw/Y4AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=WIN6TNL0; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1713785889; c=relaxed/simple;
+	bh=EZYhNhz96eKHn2cEDh2N0ULGq94X/lfU2OLdeurzxwg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EWeT+zlf6jn+zvyoWR0eVZm41ZeAxIdfnkbPScvQ3/UQMRpdLUCSBQDex5zoWuSaCMOk/5skZB+dfejwaT/qMkbwzuX9d8vLLkEVKd0E6uzHGBpRhNLrJ7FeJAHTvdNCW6jhdK49mfrK2aZJTKDjhnKsOyKxwntWbFc4RyUWsR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PXc8L1p3; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="WIN6TNL0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PXc8L1p3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1713785851; x=1745321851;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713785888; x=1745321888;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=JirxwaUTPZ7gRRTADFPsE4LALCUoW+coAPWl1mh0lv4=;
-  b=WIN6TNL03JCsd7HKa0aw3VOEEuMCrHdC+t4+50oDi+OAczxbg4ptWVMj
-   IeT58zkDtOaLps1dtLG7t4B4RxgBjs3HgoSeZF9lLtqPbCmSLz5P8sY7x
-   fHoo1qFNrHBttf1r6QZvGABPMfRHQIlEFF1QEpsnW+2Bkd0gMMqqmfjRT
-   9vslTZO88+WMbvvrsHMA2X04y4WaHAxhdumql9cEWiNKXTDMb7HRM7KH4
-   D84ZS6R5Z8byef3xFrQh0dQ6/gDlk61smcDOSMUUZYOSNGYu+boWZIF5v
-   qEqF1S7+gZw9Z8bDiyLhcfs1lLRngr8jR+O6Id2l5UTx4ez14EVJmoOdJ
-   w==;
-X-CSE-ConnectionGUID: RWC0UfowTpGbeC6DP7jNJg==
-X-CSE-MsgGUID: E2DBmtQjS3e/5QeweITlcg==
-X-IronPort-AV: E=Sophos;i="6.07,220,1708412400"; 
-   d="asc'?scan'208";a="22099120"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 22 Apr 2024 04:37:27 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 22 Apr 2024 04:37:01 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Mon, 22 Apr 2024 04:36:58 -0700
-Date: Mon, 22 Apr 2024 12:36:42 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
-CC: Conor Dooley <conor@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Anup Patel
-	<anup@brainfault.org>, Shuah Khan <shuah@kernel.org>, Atish Patra
-	<atishp@atishpatra.org>, <linux-doc@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <kvm@vger.kernel.org>,
-	<kvm-riscv@lists.infradead.org>, <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v2 04/12] riscv: add ISA parsing for Zca, Zcf, Zcd and Zcb
-Message-ID: <20240422-matchbook-unlikable-59987a8d8b1f@wendy>
-References: <20240418124300.1387978-1-cleger@rivosinc.com>
- <20240418124300.1387978-5-cleger@rivosinc.com>
- <20240419-clinic-amusing-d23b1b6d2af2@spud>
- <6ab9e591-f2f2-4267-8bdd-169ef0243e14@rivosinc.com>
- <20240422-daylight-sassy-ff3b0d867fef@wendy>
- <032530b8-a26e-494f-bd9c-3e1661add5d4@rivosinc.com>
+  bh=EZYhNhz96eKHn2cEDh2N0ULGq94X/lfU2OLdeurzxwg=;
+  b=PXc8L1p3IVK9Sv5JkLWWLNJOAO0vAiF4D/w+xLBLOW3AVOL3jwlAy6Zq
+   +JqVdXG/2+VE+Kc9RMy47DowBviHOowT7blYSh+m9HTcGU20jZwxDT+p4
+   ++0LMWcd3JvkwrlL/EunD90nGuDgEtDtEQay8qvSDzlhvRWWFcY6LFnyR
+   Ge4Rusazspa0/Sa2Pe/PN0sQhM3p4jQ8m+M9PTUjjXIHqDtHGI5WNvdXs
+   YQGo45wPRLgZn472YlO/WEMTOJOmHLeF8X+jI4V2naW+i+3ry4Th5Pr2Q
+   eLLtnLTlFuT7zw8AstPtYJvhJz6P21+bScYpF58ELYZfEIYDLU+aPkqni
+   A==;
+X-CSE-ConnectionGUID: /OOzS0u8R5yg+EfiHBxVCQ==
+X-CSE-MsgGUID: NjBFy074R+GTf63hAc8a0A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11051"; a="13093187"
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="13093187"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 04:38:07 -0700
+X-CSE-ConnectionGUID: AzfJOScRSk+rvG5OBKfSNg==
+X-CSE-MsgGUID: T/dk9JejQBuZbswcv6UCQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="28665225"
+Received: from kuha.fi.intel.com ([10.237.72.185])
+  by orviesa003.jf.intel.com with SMTP; 22 Apr 2024 04:38:02 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 22 Apr 2024 14:38:01 +0300
+Date: Mon, 22 Apr 2024 14:38:01 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Jameson Thies <jthies@google.com>
+Cc: linux-usb@vger.kernel.org, pmalani@chromium.org, bleung@google.com,
+	abhishekpandit@chromium.org, andersson@kernel.org,
+	dmitry.baryshkov@linaro.org, fabrice.gasnier@foss.st.com,
+	gregkh@linuxfoundation.org, hdegoede@redhat.com,
+	neil.armstrong@linaro.org, rajaram.regupathy@intel.com,
+	saranya.gopal@intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/4] usb: typec: Update sysfs when setting ops
+Message-ID: <ZiZMGZxqKDpWUSqk@kuha.fi.intel.com>
+References: <20240419211650.2657096-1-jthies@google.com>
+ <20240419211650.2657096-3-jthies@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="BQeFG0OJOWz1hKp9"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <032530b8-a26e-494f-bd9c-3e1661add5d4@rivosinc.com>
+In-Reply-To: <20240419211650.2657096-3-jthies@google.com>
 
---BQeFG0OJOWz1hKp9
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Apr 19, 2024 at 09:16:48PM +0000, Jameson Thies wrote:
+> From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> 
+> When adding altmode ops, update the sysfs group so that visibility is
+> also recalculated.
+> 
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 
-On Mon, Apr 22, 2024 at 01:14:26PM +0200, Cl=E9ment L=E9ger wrote:
-> On 22/04/2024 11:35, Conor Dooley wrote:
-> > On Mon, Apr 22, 2024 at 10:53:10AM +0200, Cl=E9ment L=E9ger wrote:
-> >> On 19/04/2024 17:51, Conor Dooley wrote:
-> >>> On Thu, Apr 18, 2024 at 02:42:27PM +0200, Cl=E9ment L=E9ger wrote:
-> >>>> The Zc* standard extension for code reduction introduces new extensi=
-ons.
-> >>>> This patch adds support for Zca, Zcf, Zcd and Zcb. Zce, Zcmt and Zcmp
-> >>>> are left out of this patch since they are targeting microcontrollers/
-> >>>> embedded CPUs instead of application processors.
-> >>>>
-> >>>> Signed-off-by: Cl=E9ment L=E9ger <cleger@rivosinc.com>
-> >>>> ---
-> >>>>  arch/riscv/include/asm/hwcap.h | 4 ++++
-> >>>>  arch/riscv/kernel/cpufeature.c | 4 ++++
-> >>>>  2 files changed, 8 insertions(+)
-> >>>>
-> >>>> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm=
-/hwcap.h
-> >>>> index 543e3ea2da0e..b7551bad341b 100644
-> >>>> --- a/arch/riscv/include/asm/hwcap.h
-> >>>> +++ b/arch/riscv/include/asm/hwcap.h
-> >>>> @@ -82,6 +82,10 @@
-> >>>>  #define RISCV_ISA_EXT_ZACAS		73
-> >>>>  #define RISCV_ISA_EXT_XANDESPMU		74
-> >>>>  #define RISCV_ISA_EXT_ZIMOP		75
-> >>>> +#define RISCV_ISA_EXT_ZCA		76
-> >>>> +#define RISCV_ISA_EXT_ZCB		77
-> >>>> +#define RISCV_ISA_EXT_ZCD		78
-> >>>> +#define RISCV_ISA_EXT_ZCF		79
-> >>>> =20
-> >>>>  #define RISCV_ISA_EXT_XLINUXENVCFG	127
-> >>>> =20
-> >>>> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpuf=
-eature.c
-> >>>> index 115ba001f1bc..09dee071274d 100644
-> >>>> --- a/arch/riscv/kernel/cpufeature.c
-> >>>> +++ b/arch/riscv/kernel/cpufeature.c
-> >>>> @@ -261,6 +261,10 @@ const struct riscv_isa_ext_data riscv_isa_ext[]=
- =3D {
-> >>>>  	__RISCV_ISA_EXT_DATA(zfa, RISCV_ISA_EXT_ZFA),
-> >>>>  	__RISCV_ISA_EXT_DATA(zfh, RISCV_ISA_EXT_ZFH),
-> >>>>  	__RISCV_ISA_EXT_DATA(zfhmin, RISCV_ISA_EXT_ZFHMIN),
-> >>>> +	__RISCV_ISA_EXT_DATA(zca, RISCV_ISA_EXT_ZCA),
-> >>>> +	__RISCV_ISA_EXT_DATA(zcb, RISCV_ISA_EXT_ZCB),
-> >>>> +	__RISCV_ISA_EXT_DATA(zcd, RISCV_ISA_EXT_ZCD),
-> >>>> +	__RISCV_ISA_EXT_DATA(zcf, RISCV_ISA_EXT_ZCF),
-> >>>>  	__RISCV_ISA_EXT_DATA(zba, RISCV_ISA_EXT_ZBA),
-> >>>>  	__RISCV_ISA_EXT_DATA(zbb, RISCV_ISA_EXT_ZBB),
-> >>>>  	__RISCV_ISA_EXT_DATA(zbc, RISCV_ISA_EXT_ZBC),
-> >>>
-> >>> Ye, this looks exactly like what I "feared".
-> >>
-> >> Ok but for instance, Qemu actually set Zc* based on C/F/D. So the ISA
-> >> string containing theses dependencies should actually also be allowed.
-> >> So should we simply ignore them in the ISA string and always do our own
-> >> "post-processing" based on C/F/D?
-> >=20
-> > I'm not familiar with the contents of all of these extensions, but I
-> > assume the reasoning for splitting them out is that you can implement
-> > them but not maybe not implement C (or something similar)? If that's the
-> > case, you cannot always imply.
->=20
-> Yeah, they can be implemented independently so we need to be able to
-> parse them independently.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-> However, the kernel currently requires C
+> ---
+>  drivers/usb/typec/altmodes/displayport.c |  2 +-
+>  drivers/usb/typec/class.c                | 18 +++++++++++++++++-
+>  drivers/usb/typec/ucsi/displayport.c     |  2 +-
+>  include/linux/usb/typec.h                |  3 +++
+>  4 files changed, 22 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec/altmodes/displayport.c
+> index 596cd4806018b..92cc1b1361208 100644
+> --- a/drivers/usb/typec/altmodes/displayport.c
+> +++ b/drivers/usb/typec/altmodes/displayport.c
+> @@ -746,7 +746,7 @@ int dp_altmode_probe(struct typec_altmode *alt)
+>  	dp->alt = alt;
+>  
+>  	alt->desc = "DisplayPort";
+> -	alt->ops = &dp_altmode_ops;
+> +	typec_altmode_set_ops(alt, &dp_altmode_ops);
+>  
+>  	if (plug) {
+>  		plug->desc = "Displayport";
+> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+> index 9610e647a8d48..9262fcd4144f8 100644
+> --- a/drivers/usb/typec/class.c
+> +++ b/drivers/usb/typec/class.c
+> @@ -467,6 +467,22 @@ static const struct attribute_group *typec_altmode_groups[] = {
+>  	NULL
+>  };
+>  
+> +/**
+> + * typec_altmode_set_ops - Set ops for altmode
+> + * @adev: Handle to the alternate mode
+> + * @ops: Ops for the alternate mode
+> + *
+> + * After setting ops, attribute visiblity needs to be refreshed if the alternate
+> + * mode can be activated.
+> + */
+> +void typec_altmode_set_ops(struct typec_altmode *adev,
+> +			   const struct typec_altmode_ops *ops)
+> +{
+> +	adev->ops = ops;
+> +	sysfs_update_group(&adev->dev.kobj, &typec_altmode_group);
+> +}
+> +EXPORT_SYMBOL_GPL(typec_altmode_set_ops);
+> +
+>  static int altmode_id_get(struct device *dev)
+>  {
+>  	struct ida *ids;
+> @@ -2317,7 +2333,7 @@ void typec_port_register_altmodes(struct typec_port *port,
+>  			continue;
+>  		}
+>  
+> -		alt->ops = ops;
+> +		typec_altmode_set_ops(alt, ops);
+>  		typec_altmode_set_drvdata(alt, drvdata);
+>  		altmodes[index] = alt;
+>  		index++;
+> diff --git a/drivers/usb/typec/ucsi/displayport.c b/drivers/usb/typec/ucsi/displayport.c
+> index d9d3c91125ca8..eb7b8d6e47d00 100644
+> --- a/drivers/usb/typec/ucsi/displayport.c
+> +++ b/drivers/usb/typec/ucsi/displayport.c
+> @@ -337,7 +337,7 @@ struct typec_altmode *ucsi_register_displayport(struct ucsi_connector *con,
+>  	dp->con = con;
+>  	dp->alt = alt;
+>  
+> -	alt->ops = &ucsi_displayport_ops;
+> +	typec_altmode_set_ops(alt, &ucsi_displayport_ops);
+>  	typec_altmode_set_drvdata(alt, dp);
+>  
+>  	return alt;
+> diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
+> index b35b427561ab5..549275f8ac1b3 100644
+> --- a/include/linux/usb/typec.h
+> +++ b/include/linux/usb/typec.h
+> @@ -167,6 +167,9 @@ struct typec_port *typec_altmode2port(struct typec_altmode *alt);
+>  
+>  void typec_altmode_update_active(struct typec_altmode *alt, bool active);
+>  
+> +void typec_altmode_set_ops(struct typec_altmode *alt,
+> +			   const struct typec_altmode_ops *ops);
+> +
+>  enum typec_plug_index {
+>  	TYPEC_PLUG_SOP_P,
+>  	TYPEC_PLUG_SOP_PP,
+> -- 
+> 2.44.0.769.g3c40516874-goog
 
-No it doesn't!
-There's a Kconfig option that controls whether or not we build with
-compressed instructions.
-
-> so we
-> should always have Zca/Zcf/Zcd. But if that changes in the future, then,
-> that won't be true anymore. Better keep it generic probably
-
-
---BQeFG0OJOWz1hKp9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiZLygAKCRB4tDGHoIJi
-0rZqAPsH+rOY+xwtmy02hvEj5S0LCo5WHbH42moKe/rg2JsecQD9Efgn3/dHRehg
-SrE0p8oOablre3zPC16fRvmLyILrMAw=
-=iMqf
------END PGP SIGNATURE-----
-
---BQeFG0OJOWz1hKp9--
+-- 
+heikki
