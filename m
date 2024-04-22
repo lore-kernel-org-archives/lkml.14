@@ -1,83 +1,49 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward202c.mail.yandex.net (forward202c.mail.yandex.net [178.154.239.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCE5537E7;
-	Mon, 22 Apr 2024 08:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5AB5337F;
+	Mon, 22 Apr 2024 08:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713775750; cv=none; b=AFOGkQuhnwhQ+f40+OgMaiKZ1KtO+HIXqqqMPviHUoVPAwQ5qlF9F8GSTVAdaD7B3C8bxZS0bX4U3LQz3DX1bFoMEXdYXEGbZar+32rNoDH4+BMLUBfycsK5CJmM4y9si8zg1uv4e22iv0cf3yfh5BnPqa38OVR5OVbKabyNw9o=
+	t=1713775841; cv=none; b=RoK3vgFlhpTniApfRZMnRs2uWFqSsiptk0izcaFikJj9Y7rphNtdOxBKZZWvA4jJTbjdJQYJeTCWuP6hJ4Gvr/U/JsslTwHZfIABVYat+B0I98PyvXYAPfbQkHKulo5tTqabWF6rA/ET08NSS9JooTiHEdHy6MQf2Q9qGSIqSeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713775750; c=relaxed/simple;
-	bh=rAIWAHsYUw427kTFrCCQC+4mkWqWWUZB9Zh1fdelySY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P3bNskT9jLaCaXxA2FZ5VKDELJeMyWDdVxl0hNPku/JBByGBW5Le1y3tiNBRr5RRXgg/8/gxCiqZO/abloE9hJuVb+UMp6A3VoZZdquQlmzZARn/NZ2nvcCDNIE3/J1/V5GSRRShFiu9ZL+hVh9YT6nQCWBYhfoj79TPL56OEYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dn71W4OK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713775841; c=relaxed/simple;
+	bh=t2/9kzu5cn37NlBr754kfbC9x4lMRcCfuiRc7DMS7GA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FGNKMg44e7EUA0iUEh1KwbEZhFjbfjp4IJjkqfXWGv1r5C54zPwP2sZvJnYXGwZ4IYvyl7VDMERuTT7EqVhrj7N8DWrvktGKscgnksAFDTKce+E8B1otuxs6t72tGxUrT9gJX9zQpBoY5OX2yPvZHsLuz7i/068OPKt5p01rZJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=ObvEmjJ0; arc=none smtp.client-ip=178.154.239.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dn71W4OK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4061CC4AF0E;
-	Mon, 22 Apr 2024 08:48:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713775749;
-	bh=rAIWAHsYUw427kTFrCCQC+4mkWqWWUZB9Zh1fdelySY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dn71W4OKd+E1jU8AOQO3vEqkED6NiiJx01MbqH7O6BhJ6ul5CWzoHVwmfA1PUzgIK
-	 SSKpbfA2M/8pGqRyM5fdHCHVDbKkL2Cjtrmo11M6nhzExDz2TxeHXHEzkpf40NxY4P
-	 dYjsztuczcVmu9C1LsjYL3hbvTcfrQxixUL5HNhC/T+qB7NtRwxqLdJdbRINKIBbE4
-	 N1G6niXAZn35JtrVFjaECk4Sp6vRe+YX08Eg45GrlnXbyrNv0dojoYMa1K1yT8TkP6
-	 3cbk92qOHGiqlX2X86q18VjvsOa3FtgB9mlTJMEv1W9hFwmHPX5ikgDEmFooBfN/WN
-	 XY3RRXrhX0gxw==
-From: Mike Rapoport <rppt@kernel.org>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="ObvEmjJ0"
+Received: from forward102b.mail.yandex.net (forward102b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d102])
+	by forward202c.mail.yandex.net (Yandex) with ESMTPS id 66E0C64AEE;
+	Mon, 22 Apr 2024 11:45:25 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-39.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-39.sas.yp-c.yandex.net [IPv6:2a02:6b8:c08:f220:0:640:b85:0])
+	by forward102b.mail.yandex.net (Yandex) with ESMTPS id 05F1A609C3;
+	Mon, 22 Apr 2024 11:45:17 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-39.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id FjEovW2OjiE0-dGbQCA9m;
+	Mon, 22 Apr 2024 11:45:16 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1713775516; bh=5kgbLMAE980GVvENsTEIPE4CBNTxsGKzzeodVahHYoU=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=ObvEmjJ0lkv8C/q4v7NpJijo21BTW5495IkxfhW9ozV8fJYF6NC418d0HkeuGRse9
+	 SNu2Duz1Hqsf3mB+ULgpt6ikY1kPl5moJ8mmms8eJy1eBTr6ZT4FnN7gmzJwoz0Ecr
+	 Di/zpjzACSTXUbU6UJoUbvSatw5coHKwl7QYkQQg=
+Authentication-Results: mail-nwsmtp-smtp-production-main-39.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Stas Sergeev <stsp2@yandex.ru>
 To: linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mike Rapoport <rppt@kernel.org>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v5 09/15] riscv: extend execmem_params for generated code allocations
-Date: Mon, 22 Apr 2024 11:47:17 +0300
-Message-ID: <20240422084717.3602332-9-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240422084717.3602332-1-rppt@kernel.org>
-References: <20240422084717.3602332-1-rppt@kernel.org>
+Cc: Stas Sergeev <stsp2@yandex.ru>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Andy Lutomirski <luto@kernel.org>,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH 1/2] fs: reorganize path_openat()
+Date: Mon, 22 Apr 2024 11:45:04 +0300
+Message-ID: <20240422084505.3465238-1-stsp2@yandex.ru>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,119 +52,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+This patch moves the call to alloc_empty_file() below the call to
+path_init(). That changes is needed for the next patch, which adds
+a cred override for alloc_empty_file(). The needed cred info is only
+available after the call to path_init().
 
-The memory allocations for kprobes and BPF on RISC-V are not placed in
-the modules area and these custom allocations are implemented with
-overrides of alloc_insn_page() and  bpf_jit_alloc_exec().
+No functional changes are intended by that patch.
 
-Slightly reorder execmem_params initialization to support both 32 and 64
-bit variants, define EXECMEM_KPROBES and EXECMEM_BPF ranges in
-riscv::execmem_params and drop overrides of alloc_insn_page() and
-bpf_jit_alloc_exec().
+Signed-off-by: Stas Sergeev <stsp2@yandex.ru>
 
-Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+CC: Eric Biederman <ebiederm@xmission.com>
+CC: Alexander Viro <viro@zeniv.linux.org.uk>
+CC: Christian Brauner <brauner@kernel.org>
+CC: Jan Kara <jack@suse.cz>
+CC: Andy Lutomirski <luto@kernel.org>
+CC: linux-fsdevel@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
 ---
- arch/riscv/kernel/module.c         | 28 +++++++++++++++++++++++++---
- arch/riscv/kernel/probes/kprobes.c | 10 ----------
- arch/riscv/net/bpf_jit_core.c      | 13 -------------
- 3 files changed, 25 insertions(+), 26 deletions(-)
+ fs/namei.c | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
-diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
-index 182904127ba0..2ecbacbc9993 100644
---- a/arch/riscv/kernel/module.c
-+++ b/arch/riscv/kernel/module.c
-@@ -906,19 +906,41 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
- 	return 0;
- }
+diff --git a/fs/namei.c b/fs/namei.c
+index c5b2a25be7d0..2fde2c320ae9 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -3782,22 +3782,30 @@ static struct file *path_openat(struct nameidata *nd,
+ 	struct file *file;
+ 	int error;
  
--#if defined(CONFIG_MMU) && defined(CONFIG_64BIT)
-+#ifdef CONFIG_MMU
- static struct execmem_info execmem_info __ro_after_init;
- 
- struct execmem_info __init *execmem_arch_setup(void)
- {
-+	unsigned long start, end;
-+
-+	if (IS_ENABLED(CONFIG_64BIT)) {
-+		start = MODULES_VADDR;
-+		end = MODULES_END;
-+	} else {
-+		start = VMALLOC_START;
-+		end = VMALLOC_END;
-+	}
-+
- 	execmem_info = (struct execmem_info){
- 		.ranges = {
- 			[EXECMEM_DEFAULT] = {
--				.start	= MODULES_VADDR,
--				.end	= MODULES_END,
-+				.start	= start,
-+				.end	= end,
- 				.pgprot	= PAGE_KERNEL,
- 				.alignment = 1,
- 			},
-+			[EXECMEM_KPROBES] = {
-+				.start	= VMALLOC_START,
-+				.end	= VMALLOC_END,
-+				.pgprot	= PAGE_KERNEL_READ_EXEC,
-+				.alignment = 1,
-+			},
-+			[EXECMEM_BPF] = {
-+				.start	= BPF_JIT_REGION_START,
-+				.end	= BPF_JIT_REGION_END,
-+				.pgprot	= PAGE_KERNEL,
-+				.alignment = PAGE_SIZE,
-+			},
- 		},
- 	};
- 
-diff --git a/arch/riscv/kernel/probes/kprobes.c b/arch/riscv/kernel/probes/kprobes.c
-index 2f08c14a933d..e64f2f3064eb 100644
---- a/arch/riscv/kernel/probes/kprobes.c
-+++ b/arch/riscv/kernel/probes/kprobes.c
-@@ -104,16 +104,6 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
- 	return 0;
- }
- 
--#ifdef CONFIG_MMU
--void *alloc_insn_page(void)
--{
--	return  __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
--				     GFP_KERNEL, PAGE_KERNEL_READ_EXEC,
--				     VM_FLUSH_RESET_PERMS, NUMA_NO_NODE,
--				     __builtin_return_address(0));
--}
--#endif
+-	file = alloc_empty_file(op->open_flag, current_cred());
+-	if (IS_ERR(file))
+-		return file;
 -
- /* install breakpoint in text */
- void __kprobes arch_arm_kprobe(struct kprobe *p)
- {
-diff --git a/arch/riscv/net/bpf_jit_core.c b/arch/riscv/net/bpf_jit_core.c
-index 6b3acac30c06..e238fdbd5dbc 100644
---- a/arch/riscv/net/bpf_jit_core.c
-+++ b/arch/riscv/net/bpf_jit_core.c
-@@ -219,19 +219,6 @@ u64 bpf_jit_alloc_exec_limit(void)
- 	return BPF_JIT_REGION_SIZE;
- }
- 
--void *bpf_jit_alloc_exec(unsigned long size)
--{
--	return __vmalloc_node_range(size, PAGE_SIZE, BPF_JIT_REGION_START,
--				    BPF_JIT_REGION_END, GFP_KERNEL,
--				    PAGE_KERNEL, 0, NUMA_NO_NODE,
--				    __builtin_return_address(0));
--}
--
--void bpf_jit_free_exec(void *addr)
--{
--	return vfree(addr);
--}
--
- void *bpf_arch_text_copy(void *dst, void *src, size_t len)
- {
- 	int ret;
+-	if (unlikely(file->f_flags & __O_TMPFILE)) {
++	if (unlikely(op->open_flag & __O_TMPFILE)) {
++		file = alloc_empty_file(op->open_flag, current_cred());
++		if (IS_ERR(file))
++			return file;
+ 		error = do_tmpfile(nd, flags, op, file);
+-	} else if (unlikely(file->f_flags & O_PATH)) {
++	} else if (unlikely(op->open_flag & O_PATH)) {
++		file = alloc_empty_file(op->open_flag, current_cred());
++		if (IS_ERR(file))
++			return file;
+ 		error = do_o_path(nd, flags, file);
+ 	} else {
+ 		const char *s = path_init(nd, flags);
+-		while (!(error = link_path_walk(s, nd)) &&
+-		       (s = open_last_lookups(nd, file, op)) != NULL)
+-			;
++		file = alloc_empty_file(op->open_flag, current_cred());
++		error = PTR_ERR_OR_ZERO(file);
++		if (!error) {
++			while (!(error = link_path_walk(s, nd)) &&
++			       (s = open_last_lookups(nd, file, op)) != NULL)
++				;
++		}
+ 		if (!error)
+ 			error = do_open(nd, file, op);
+ 		terminate_walk(nd);
++		if (IS_ERR(file))
++			return file;
+ 	}
+ 	if (likely(!error)) {
+ 		if (likely(file->f_mode & FMODE_OPENED))
 -- 
-2.43.0
+2.44.0
 
