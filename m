@@ -1,457 +1,305 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D72146D50;
-	Mon, 22 Apr 2024 10:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD66146D5C
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 10:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713782295; cv=none; b=J7PzwLuwMX6eO8OD+xx/xlMgFvvcXqrk3Gbf9ykbwC+WZZWr8dnWq8k0Jleob+3v28+NRsgGqrt8UTGTgyNTi2dMbdPnIGmETurOZRxpSMzQn5v/RcnfisVHFHnime2MaziVTLRZu0U5qWOMdSaNvSOPlpY9gNgHkobQtXWSVVI=
+	t=1713782295; cv=none; b=Mrn9ViFOsBy4JGa2VIGpdmAwmBS3k4i5lDVA6YpnOAdNs9vkb8w0oYwqSIThiffaygwMJ21bc7NignHCJS0mZUDtpN7WGHk1KdAwd8lxrLQeWIpkj8WoITSQLuZnyH72ds9IMnSZZwywY8gdPBw7yHc0rbXuEz11i6LyUlEt5+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713782295; c=relaxed/simple;
-	bh=l0lSTq3ocWxDkAmQ2r38sdgXT5cPBBRMfSl0s1pW3Pk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dUQrfNQGBlc+OxqLnqonx+JZ6pQHcbVG4U9yyHlmRBni+zTQexARnzhW+NI2Z8zMjEp9rylTeJoUzxeIpz96O0yC6nDj/xC7I+xtyDH5iM0tYHFRkA2Dp+DjLiBBzS1mg/Los6/bQmHhPGB4cl5dIjiTXW+Jjq1UiNzVleKMK6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ux2kD9/5; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=9tLdagrGHi4mH9SmEHjZeYglkhaE362nSdOLFdj09To=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=sKN0H+Xu9cvwIc19BZKWOBNkE8rA5DDUCLmYp3P+n48t3STW4m/ooEs6+RUGF0vlcP9pYbTWzHaKrdOe5kRTKUZjTjP3R0D65HBWb6dUUEB3fmsYJ/T/LMnBnjlh+wmPr94sUDY+fpc++hKGFup6+H98vpW8a556n+jcDxkUGes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CuABWs/H; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ux2kD9/5"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e2b137d666so33033555ad.2;
-        Mon, 22 Apr 2024 03:38:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713782293; x=1714387093; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DXUMs8Fu4RGWtksAfTE41ira1TLNnTOYGbHcF0bjR1c=;
-        b=Ux2kD9/5Ar7YrHZ8Hyvc4LLmnH/N0BaeK03CrAsPGrbKCVLe/zZUFzvMzf3+ThkS9T
-         D+fYjvD0HS8qdUBbloqrbgjdei3rjWsiXdUDcjsYTHFFOUWGC8mkHBiBigSj+aZpcBrJ
-         lKtQ7jva0RgHCtUxIy2kQXL5bnbb0/bU9/9Jh2fOMUTqHBOFRUyJgK/4Vg2S6dU0efa1
-         V34co/cZnPEY3koCvKTHqHTMMx9Us/X/++YmyMQgZmEt/QTmeI+MGX5ORGsrrMloSdce
-         +vA0dsO5WsIgAU2+dT4tspPXIx2oLwKPSqRCh4gtcc5AZ2C17AQyTP6Q1c+AyvkOfpLC
-         jEpw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CuABWs/H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713782292;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=7MMWh47swA+6Z7KCzVklsdCCXx+w9xPj+Op78Gt87M0=;
+	b=CuABWs/HysMRW0iEpihqRFx84Zb19nBKbWBpr6D2wjzO0F++h6t3KMPpPDLwC7F+Fe/fb0
+	Xc0A/p3wAV07K+tKALpkpjz0iXC38fDdbo7zMfP2mNiVFrT4FFUZRwjKvOlRK6LqCEp06N
+	OfADzguqY6ENvNi4BoiIIolmwWZTHtY=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-679-1Z-ExPiNNlqcUete1UzHug-1; Mon, 22 Apr 2024 06:38:11 -0400
+X-MC-Unique: 1Z-ExPiNNlqcUete1UzHug-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-34b3fe78c59so222170f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 03:38:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713782293; x=1714387093;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DXUMs8Fu4RGWtksAfTE41ira1TLNnTOYGbHcF0bjR1c=;
-        b=lRaMkZc2BGEgFeEXpsej6pTrP6A+KETJ15PBpN3oXcfTB9ubQw8ki61OfIt/5jFvw2
-         BPngvXl8X41WipqlTGMIKb7KG4nFsKC+vROj4nwmR8K4dlsJo8c6zyxz0Mfs7oVH4OuA
-         xxfV5lspQ0iuSi8/XfkqlVUZOxLHaC5omvikkcrIoNwl8WTkD2GBAfRzD80kIlM/8nq2
-         PKcmWcl332F+OAFM3b+0WGd6sZFGf1nITDq0yC4UO+br5dVjXWNAel8/Pd0APEQcbW1B
-         s3kmQz8SuutEhbYFi4NQZGqDtcfOhxdhhH+4MTjtt3zsNkhRsnFrVevMiBcajs9w+dva
-         FCwg==
-X-Forwarded-Encrypted: i=1; AJvYcCXRThAIREB/zwp1SH6nqafTdUX29m90cSSaZaqxHmyOhYrThTHlvKSdPaFAGHRmgwwzsXjhmiL9QyGBfmbzzg316VxTTlBNuraCCt+n
-X-Gm-Message-State: AOJu0Yx543g1VDwdYvpX3TX2k9gQoHah7si2Lfaf5t7wKPcM8TgsiF9C
-	6ecBF18k4uqzLRr7xm89qwL3HcujK/19EIWrYCPAKAIpzlRn3WPG
-X-Google-Smtp-Source: AGHT+IHdOQykH3H/SMR0j9Yhh9yP+3layfXe4I9pC2GeqM4fmr8zC+6Ujs9zUy7PljUlwWPerBfESw==
-X-Received: by 2002:a17:902:e5d2:b0:1e4:a9c2:6f64 with SMTP id u18-20020a170902e5d200b001e4a9c26f64mr12851099plf.1.1713782292638;
-        Mon, 22 Apr 2024 03:38:12 -0700 (PDT)
-Received: from localhost.localdomain (2001-b400-e33b-6ac4-2bfb-4656-8624-cdbd.emome-ip6.hinet.net. [2001:b400:e33b:6ac4:2bfb:4656:8624:cdbd])
-        by smtp.gmail.com with ESMTPSA id c1-20020a170903234100b001e3dff1e4d5sm7807904plh.135.2024.04.22.03.38.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 03:38:12 -0700 (PDT)
-From: Victor Shih <victorshihgli@gmail.com>
-To: ulf.hansson@linaro.org,
-	adrian.hunter@intel.com
-Cc: linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	benchuanggli@gmail.com,
-	HL.Liu@genesyslogic.com.tw,
-	Greg.tu@genesyslogic.com.tw,
-	takahiro.akashi@linaro.org,
-	dlunev@chromium.org,
-	Victor Shih <victorshihgli@gmail.com>,
-	Jason Lai <jason.lai@genesyslogic.com.tw>,
-	Victor Shih <victor.shih@genesyslogic.com.tw>
-Subject: [PATCH V15 05/22] mmc: core: Add definitions for SD UHS-II cards
-Date: Mon, 22 Apr 2024 18:37:28 +0800
-Message-Id: <20240422103745.14725-6-victorshihgli@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240422103745.14725-1-victorshihgli@gmail.com>
-References: <20240422103745.14725-1-victorshihgli@gmail.com>
+        d=1e100.net; s=20230601; t=1713782290; x=1714387090;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:to:from:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7MMWh47swA+6Z7KCzVklsdCCXx+w9xPj+Op78Gt87M0=;
+        b=mpScWq8yKEbknu48o3GHeKEAnHb+JOYeUTvGQnPKn77bKJ0w1ris9ef4kpdl3KQ17r
+         7ygB1ZUdC1t0YEp6ZQOOBXztmCtKSWFy0+Om9b7XnHwJI7NdQVYTEnwSCJ3Z2ySlff+f
+         8L0l2oLM/OQl+4SvdrKyML1JOSIgTSCInucMZ+weZpdU2GvFd3jsmbrD5AeXEtkd3FKl
+         JHkWQvVX1X3cNoQVTHf3wqbZnXBam6hbq9L3MY8ItadflIIG3bdx6lixsdN1epU72OMm
+         NPp+WKWHViCf13I6RdzQWpqFOtXqTgMwkawaiaIrBvS37j/rDGM7XLalQXvmawcvs62/
+         kA3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXOZL+T8mJdXUYVcydozDHOFEOQPMCy8cK22edf1ST1g+Zmnp3oScOD2EMXfTC2lGySF5QIS7kcjmME2cUrtTQIEDqSs/PEF+LfMQgS
+X-Gm-Message-State: AOJu0YyspDx8mz/Cqc1C6/If2R2rSHCyUaUWa5pwqHho3zExnYeRxrGX
+	OjDEdRA8rrG7K+sgMw0tC12VuEVgAZ9Y/eXIrRP83xBRE0sTxuuCdHMnW8SFUdtre5x6h+M+swk
+	0ShfvzJBOEtl0UC44AJ7uqJu/0Faiqo7HYAYoI2kX0NQCGETFCda/psRvYgdUsg==
+X-Received: by 2002:a5d:5643:0:b0:346:f79c:4e1c with SMTP id j3-20020a5d5643000000b00346f79c4e1cmr5922191wrw.3.1713782290356;
+        Mon, 22 Apr 2024 03:38:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHexy2UUVt+OewUvPlW0dNIMYU2FkZQjeYWWjxg40NViPXci639xsxCvOq/dRecU9PZZYchOg==
+X-Received: by 2002:a5d:5643:0:b0:346:f79c:4e1c with SMTP id j3-20020a5d5643000000b00346f79c4e1cmr5922170wrw.3.1713782289854;
+        Mon, 22 Apr 2024 03:38:09 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c739:600:d2fb:3a8a:9944:7910? (p200300cbc7390600d2fb3a8a99447910.dip0.t-ipconnect.de. [2003:cb:c739:600:d2fb:3a8a:9944:7910])
+        by smtp.gmail.com with ESMTPSA id a7-20020adfeec7000000b00349cadc5024sm11659985wrp.61.2024.04.22.03.38.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Apr 2024 03:38:09 -0700 (PDT)
+Message-ID: <a4c4c508-0d04-428c-b674-ec6e8847ea9f@redhat.com>
+Date: Mon, 22 Apr 2024 12:38:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [mm?] WARNING in __page_table_check_ptes_set
+From: David Hildenbrand <david@redhat.com>
+To: syzbot <syzbot+d8426b591c36b21c750e@syzkaller.appspotmail.com>,
+ akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ pasha.tatashin@soleen.com, syzkaller-bugs@googlegroups.com
+References: <000000000000ca4df20616a0fe16@google.com>
+ <71cf84d4-77d2-42d7-a649-b67497b171f6@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <71cf84d4-77d2-42d7-a649-b67497b171f6@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Victor Shih <victor.shih@genesyslogic.com.tw>
+On 22.04.24 12:07, David Hildenbrand wrote:
+> On 21.04.24 22:16, syzbot wrote:
+>> Hello,
+>>
+>> syzbot found the following issue on:
+>>
+>> HEAD commit:    4eab35893071 Add linux-next specific files for 20240417
+>> git tree:       linux-next
+>> console+strace: https://syzkaller.appspot.com/x/log.txt?x=1727a61b180000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=27920e47287645ff
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=d8426b591c36b21c750e
+>> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=156da22d180000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=163dfec7180000
+>>
+>> Downloadable assets:
+>> disk image: https://storage.googleapis.com/syzbot-assets/9f7d6c097fb4/disk-4eab3589.raw.xz
+>> vmlinux: https://storage.googleapis.com/syzbot-assets/287b16352982/vmlinux-4eab3589.xz
+>> kernel image: https://storage.googleapis.com/syzbot-assets/23839c65c573/bzImage-4eab3589.xz
+>>
+>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>> Reported-by: syzbot+d8426b591c36b21c750e@syzkaller.appspotmail.com
+>>
+>> ------------[ cut here ]------------
+>> WARNING: CPU: 0 PID: 5084 at mm/page_table_check.c:199 __page_table_check_pte mm/page_table_check.c:199 [inline]
+>> WARNING: CPU: 0 PID: 5084 at mm/page_table_check.c:199 __page_table_check_ptes_set+0x1db/0x420
+> 
+> I think this is
+> 
+> if (pte_present(pte) && pte_uffd_wp(pte))
+> 	WARN_ON_ONCE(pte_write(pte));
+> 
+> mm/page_table_check.c:213
+>> Modules linked in:
+>> CPU: 0 PID: 5084 Comm: syz-executor382 Not tainted 6.9.0-rc4-next-20240417-syzkaller #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+>> RIP: 0010:__page_table_check_pte mm/page_table_check.c:199 [inline]
+>> RIP: 0010:__page_table_check_ptes_set+0x1db/0x420 mm/page_table_check.c:213
+>> Code: 48 8b 7c 24 40 48 c7 c6 80 19 46 8e e8 ee df 8e ff 41 83 fc 1d 74 18 41 83 fc 1a 75 1d e8 5d da 8e ff eb 10 e8 56 da 8e ff 90 <0f> 0b 90 eb 10 e8 4b da 8e ff 90 0f 0b 90 eb 05 e8 40 da 8e ff 48
+>> RSP: 0018:ffffc9000366f740 EFLAGS: 00010293
+>> RAX: ffffffff8207833a RBX: ffffc9000366f7c0 RCX: ffff888022af3c00
+>> RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000000
+>> RBP: ffffc9000366f830 R08: ffffffff820782af R09: 1ffffd40000a6a10
+>> R10: dffffc0000000000 R11: fffff940000a6a11 R12: 0000000000000000
+>> R13: 0000000014d42c67 R14: 0000000000000001 R15: 0000000000000000
+>> FS:  0000555567f79380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 000000000066c7e0 CR3: 0000000078cb0000 CR4: 00000000003506f0
+>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> Call Trace:
+>>    <TASK>
+>>    page_table_check_ptes_set include/linux/page_table_check.h:74 [inline]
+>>    set_ptes include/linux/pgtable.h:267 [inline]
+>>    __ptep_modify_prot_commit include/linux/pgtable.h:1269 [inline]
+>>    ptep_modify_prot_commit include/linux/pgtable.h:1302 [inline]
+>>    change_pte_range mm/mprotect.c:194 [inline]
+>>    change_pmd_range mm/mprotect.c:424 [inline]
+>>    change_pud_range mm/mprotect.c:457 [inline]
+>>    change_p4d_range mm/mprotect.c:480 [inline]
+>>    change_protection_range mm/mprotect.c:508 [inline]
+>>    change_protection+0x2770/0x3cc0 mm/mprotect.c:542
+>>    mprotect_fixup+0x740/0xa90 mm/mprotect.c:655
+>>    do_mprotect_pkey+0x90d/0xe00 mm/mprotect.c:820
+>>    __do_sys_mprotect mm/mprotect.c:841 [inline]
+>>    __se_sys_mprotect mm/mprotect.c:838 [inline]
+>>    __x64_sys_mprotect+0x80/0x90 mm/mprotect.c:838
+>>    do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>>    do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+>>    entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>> RIP: 0033:0x7f45514bf429
+>> Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+>> RSP: 002b:00007ffe52191598 EFLAGS: 00000246 ORIG_RAX: 000000000000000a
+>> RAX: ffffffffffffffda RBX: 00007ffe52191768 RCX: 00007f45514bf429
+>> RDX: 000000000000000f RSI: 0000000000004000 RDI: 0000000020ffc000
+>> RBP: 00007f4551532610 R08: 00007ffe52191768 R09: 00007ffe52191768
+>> R10: 00007ffe52191768 R11: 0000000000000246 R12: 0000000000000001
+>> R13: 00007ffe52191758 R14: 0000000000000001 R15: 0000000000000001
+>>    </TASK>
+> 
+> Did we find a real issue that involves mprotect()?
+> 
+> At least can_change_pte_writable() should always return "false" for
+> userfaultfd_pte_wp().
+> 
+> Do we maybe have a uffd-wp PTE outside of a UFFD_WP VMA?
+> 
+> Or was the PTE already writable and we only detect it now as we call
+> mprotect()? (missed to detect it earlier?)
 
-Add UHS-II specific data structures for commands and defines for
-registers, as described in Part 1 UHS-II Addendum Version 1.01.
+Staring at the reproducer, we do
 
-UHS-II related definitions are listed below:
-  1. UHS-II card capability: sd_uhs2_caps{}
-  2. UHS-II configuration: sd_uhs2_config{}
-  3. UHS-II register I/O address and register field definitions: sd_uhs2.h
 
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Jason Lai <jason.lai@genesyslogic.com.tw>
-Signed-off-by: Victor Shih <victor.shih@genesyslogic.com.tw>
----
+   syscall(__NR_mmap, /*addr=*/0x1ffff000ul, /*len=*/0x1000ul, /*prot=*/0ul,
+           /*flags=MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE*/ 0x32ul, /*fd=*/-1,
+           /*offset=*/0ul);
+   syscall(__NR_mmap, /*addr=*/0x20000000ul, /*len=*/0x1000000ul,
+           /*prot=PROT_WRITE|PROT_READ|PROT_EXEC*/ 7ul,
+           /*flags=MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE*/ 0x32ul, /*fd=*/-1,
+           /*offset=*/0ul);
 
-Updates in V12:
- - Remove unused max_current_180_vdd2.
+-> Writable anonymous memmory
 
-Updates in V10:
- - Drop unnecessary definitions.
+   syscall(__NR_mmap, /*addr=*/0x21000000ul, /*len=*/0x1000ul, /*prot=*/0ul,
+           /*flags=MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE*/ 0x32ul, /*fd=*/-1,
+           /*offset=*/0ul);
+   intptr_t res = 0;
+   res = syscall(__NR_userfaultfd,
+                 /*flags=UFFD_USER_MODE_ONLY|O_NONBLOCK*/ 0x801ul);
+   if (res != -1)
+     r[0] = res;
+   *(uint64_t*)0x200004c0 = 0xaa;
+   *(uint64_t*)0x200004c8 = 0;
+   *(uint64_t*)0x200004d0 = 0;
+   syscall(__NR_ioctl, /*fd=*/r[0], /*cmd=*/0xc018aa3f, /*arg=*/0x200004c0ul);
 
-Updates in V7:
- - Remove unnecessary definitions.
+-> _UFFDIO_API handshake?
 
-Updates in V6:
- - Remove unnecessary definitions and functions.
+   syscall(__NR_mprotect, /*addr=*/0x20ffc000ul, /*len=*/0x3000ul,
+           /*prot=PROT_SEM|PROT_EXEC*/ 0xcul);
 
----
+-> Protect target range R/O. I assume: no page populated yet?
+-> 3 pages starting at 0x20ffc000ul;
 
- include/linux/mmc/card.h    |  31 ++++-
- include/linux/mmc/host.h    |  25 +++-
- include/linux/mmc/sd_uhs2.h | 240 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 294 insertions(+), 2 deletions(-)
- create mode 100644 include/linux/mmc/sd_uhs2.h
+   *(uint64_t*)0x20000180 = 0x20ffc000;
+   *(uint64_t*)0x20000188 = 0x3000;
+   *(uint64_t*)0x20000190 = 3;
+   *(uint64_t*)0x20000198 = 0;
+   syscall(__NR_ioctl, /*fd=*/r[0], /*cmd=*/0xc020aa00, /*arg=*/0x20000180ul);
 
-diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
-index e256b1e70c6e..9b90d3467961 100644
---- a/include/linux/mmc/card.h
-+++ b/include/linux/mmc/card.h
-@@ -188,6 +188,12 @@ struct sd_switch_caps {
- #define SD_MAX_CURRENT_400	(1 << SD_SET_CURRENT_LIMIT_400)
- #define SD_MAX_CURRENT_600	(1 << SD_SET_CURRENT_LIMIT_600)
- #define SD_MAX_CURRENT_800	(1 << SD_SET_CURRENT_LIMIT_800)
-+
-+#define SD4_SET_POWER_LIMIT_0_72W	0
-+#define SD4_SET_POWER_LIMIT_1_44W	1
-+#define SD4_SET_POWER_LIMIT_2_16W	2
-+#define SD4_SET_POWER_LIMIT_2_88W	3
-+#define SD4_SET_POWER_LIMIT_1_80W	4
- };
- 
- struct sd_ext_reg {
-@@ -211,7 +217,30 @@ struct sd_ext_reg {
- 
- struct sd_uhs2_config {
- 	u32			node_id;
--	/* TODO: Extend with more register configs. */
-+
-+	u32			n_fcu;
-+	u32			maxblk_len;
-+	u8			n_lanes;
-+	u8			dadr_len;
-+	u8			app_type;
-+	u8			phy_minor_rev;
-+	u8			phy_major_rev;
-+	u8			can_hibernate;
-+	u8			n_lss_sync;
-+	u8			n_lss_dir;
-+	u8			link_minor_rev;
-+	u8			link_major_rev;
-+	u8			dev_type;
-+	u8			n_data_gap;
-+
-+	u32			n_fcu_set;
-+	u32			maxblk_len_set;
-+	u8			n_lanes_set;
-+	u8			speed_range_set;
-+	u8			n_lss_sync_set;
-+	u8			n_lss_dir_set;
-+	u8			n_data_gap_set;
-+	u8			max_retry_set;
- };
- 
- struct sdio_cccr {
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index f60cce75af57..4a56f76a8c0c 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -16,6 +16,7 @@
- #include <linux/mmc/pm.h>
- #include <linux/dma-direction.h>
- #include <linux/blk-crypto-profile.h>
-+#include <linux/mmc/sd_uhs2.h>
- 
- struct mmc_ios {
- 	unsigned int	clock;			/* clock rate */
-@@ -99,7 +100,29 @@ struct mmc_clk_phase_map {
- };
- 
- struct sd_uhs2_caps {
--	/* TODO: Add UHS-II capabilities for the host. */
-+	u32	dap;
-+	u32	gap;
-+	u32	group_desc;
-+	u32	maxblk_len;
-+	u32	n_fcu;
-+	u8	n_lanes;
-+	u8	addr64;
-+	u8	card_type;
-+	u8	phy_rev;
-+	u8	speed_range;
-+	u8	n_lss_sync;
-+	u8	n_lss_dir;
-+	u8	link_rev;
-+	u8	host_type;
-+	u8	n_data_gap;
-+
-+	u32	maxblk_len_set;
-+	u32	n_fcu_set;
-+	u8	n_lanes_set;
-+	u8	n_lss_sync_set;
-+	u8	n_lss_dir_set;
-+	u8	n_data_gap_set;
-+	u8	max_retry_set;
- };
- 
- enum sd_uhs2_operation {
-diff --git a/include/linux/mmc/sd_uhs2.h b/include/linux/mmc/sd_uhs2.h
-new file mode 100644
-index 000000000000..7abe9bd870c7
---- /dev/null
-+++ b/include/linux/mmc/sd_uhs2.h
-@@ -0,0 +1,240 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Header file for UHS-II packets, Host Controller registers and I/O
-+ * accessors.
-+ *
-+ *  Copyright (C) 2014 Intel Corp, All Rights Reserved.
-+ */
-+#ifndef LINUX_MMC_UHS2_H
-+#define LINUX_MMC_UHS2_H
-+
-+/* LINK Layer definition */
-+/*
-+ * UHS2 Header:
-+ * Refer to UHS-II Addendum Version 1.02 Figure 5-2, the format of CCMD Header is described below:
-+ *      bit [3:0]  : DID(Destination ID = Node ID of UHS2 card)
-+ *      bit [6:4]  : TYP(Packet Type)
-+ *                   000b: CCMD(Control command packet)
-+ *                   001b: DCMD(Data command packet)
-+ *                   010b: RES(Response packet)
-+ *                   011b: DATA(Data payload packet)
-+ *                   111b: MSG(Message packet)
-+ *                   Others: Reserved
-+ *      bit [7]    : NP(Native Packet)
-+ *      bit [10:8] : TID(Transaction ID)
-+ *      bit [11]   : Reserved
-+ *      bit [15:12]: SID(Source ID 0: Node ID of Host)
-+ *
-+ * Broadcast CCMD issued by Host is represented as DID=SID=0.
-+ */
-+/*
-+ * UHS2 Argument:
-+ * Refer to UHS-II Addendum Version 1.02 Figure 6-5, the format of CCMD Argument is described below:
-+ *      bit [3:0]  : MSB of IOADR
-+ *      bit [5:4]  : PLEN(Payload Length)
-+ *                   00b: 0 byte
-+ *                   01b: 4 bytes
-+ *                   10b: 8 bytes
-+ *                   11b: 16 bytes
-+ *      bit [6]    : Reserved
-+ *      bit [7]    : R/W(Read/Write)
-+ *                   0: Control read command
-+ *                   1: Control write command
-+ *      bit [15:8] : LSB of IOADR
-+ *
-+ * I/O Address specifies the address of register in UHS-II I/O space accessed by CCMD.
-+ * The unit of I/O Address is 4 Bytes. It is transmitted in MSB first, LSB last.
-+ */
-+#define UHS2_NATIVE_PACKET_POS	7
-+#define UHS2_NATIVE_PACKET	(1 << UHS2_NATIVE_PACKET_POS)
-+
-+#define UHS2_PACKET_TYPE_POS	4
-+#define UHS2_PACKET_TYPE_CCMD	(0 << UHS2_PACKET_TYPE_POS)
-+#define UHS2_PACKET_TYPE_DCMD	(1 << UHS2_PACKET_TYPE_POS)
-+#define UHS2_PACKET_TYPE_RES	(2 << UHS2_PACKET_TYPE_POS)
-+#define UHS2_PACKET_TYPE_DATA	(3 << UHS2_PACKET_TYPE_POS)
-+#define UHS2_PACKET_TYPE_MSG	(7 << UHS2_PACKET_TYPE_POS)
-+
-+#define UHS2_DEST_ID_MASK	0x0F
-+#define UHS2_DEST_ID		0x1
-+
-+#define UHS2_SRC_ID_POS		12
-+#define UHS2_SRC_ID_MASK	0xF000
-+
-+#define UHS2_TRANS_ID_POS	8
-+#define UHS2_TRANS_ID_MASK	0x0700
-+
-+/* UHS2 MSG */
-+#define UHS2_MSG_CTG_POS	5
-+#define UHS2_MSG_CTG_LMSG	0x00
-+#define UHS2_MSG_CTG_INT	0x60
-+#define UHS2_MSG_CTG_AMSG	0x80
-+
-+#define UHS2_MSG_CTG_FCREQ	0x00
-+#define UHS2_MSG_CTG_FCRDY	0x01
-+#define UHS2_MSG_CTG_STAT	0x02
-+
-+#define UHS2_MSG_CODE_POS			8
-+#define UHS2_MSG_CODE_FC_UNRECOVER_ERR		0x8
-+#define UHS2_MSG_CODE_STAT_UNRECOVER_ERR	0x8
-+#define UHS2_MSG_CODE_STAT_RECOVER_ERR		0x1
-+
-+/* TRANS Layer definition */
-+
-+/* Native packets*/
-+#define UHS2_NATIVE_CMD_RW_POS	7
-+#define UHS2_NATIVE_CMD_WRITE	(1 << UHS2_NATIVE_CMD_RW_POS)
-+#define UHS2_NATIVE_CMD_READ	(0 << UHS2_NATIVE_CMD_RW_POS)
-+
-+#define UHS2_NATIVE_CMD_PLEN_POS	4
-+#define UHS2_NATIVE_CMD_PLEN_4B		(1 << UHS2_NATIVE_CMD_PLEN_POS)
-+#define UHS2_NATIVE_CMD_PLEN_8B		(2 << UHS2_NATIVE_CMD_PLEN_POS)
-+#define UHS2_NATIVE_CMD_PLEN_16B	(3 << UHS2_NATIVE_CMD_PLEN_POS)
-+
-+#define UHS2_NATIVE_CCMD_GET_MIOADR_MASK	0xF00
-+#define UHS2_NATIVE_CCMD_MIOADR_MASK		0x0F
-+
-+#define UHS2_NATIVE_CCMD_LIOADR_POS		8
-+#define UHS2_NATIVE_CCMD_GET_LIOADR_MASK	0x0FF
-+
-+#define UHS2_CCMD_DEV_INIT_COMPLETE_FLAG	BIT(11)
-+#define UHS2_DEV_INIT_PAYLOAD_LEN		1
-+#define UHS2_DEV_INIT_RESP_LEN			6
-+#define UHS2_DEV_ENUM_PAYLOAD_LEN		1
-+#define UHS2_DEV_ENUM_RESP_LEN			8
-+#define UHS2_CFG_WRITE_PAYLOAD_LEN		2
-+#define UHS2_CFG_WRITE_PHY_SET_RESP_LEN		4
-+#define UHS2_CFG_WRITE_GENERIC_SET_RESP_LEN	5
-+#define UHS2_GO_DORMANT_PAYLOAD_LEN		1
-+
-+/*
-+ * UHS2 Argument:
-+ * Refer to UHS-II Addendum Version 1.02 Figure 6-8, the format of DCMD Argument is described below:
-+ *      bit [3:0]  : Reserved
-+ *      bit [6:3]  : TMODE(Transfer Mode)
-+ *                   bit 3: DAM(Data Access Mode)
-+ *                   bit 4: TLUM(TLEN Unit Mode)
-+ *                   bit 5: LM(Length Mode)
-+ *                   bit 6: DM(Duplex Mode)
-+ *      bit [7]    : R/W(Read/Write)
-+ *                   0: Control read command
-+ *                   1: Control write command
-+ *      bit [15:8] : Reserved
-+ *
-+ * I/O Address specifies the address of register in UHS-II I/O space accessed by CCMD.
-+ * The unit of I/O Address is 4 Bytes. It is transmitted in MSB first, LSB last.
-+ */
-+#define UHS2_DCMD_DM_POS		6
-+#define UHS2_DCMD_2L_HD_MODE		(1 << UHS2_DCMD_DM_POS)
-+#define UHS2_DCMD_LM_POS		5
-+#define UHS2_DCMD_LM_TLEN_EXIST		(1 << UHS2_DCMD_LM_POS)
-+#define UHS2_DCMD_TLUM_POS		4
-+#define UHS2_DCMD_TLUM_BYTE_MODE	(1 << UHS2_DCMD_TLUM_POS)
-+#define UHS2_NATIVE_DCMD_DAM_POS	3
-+#define UHS2_NATIVE_DCMD_DAM_IO		(1 << UHS2_NATIVE_DCMD_DAM_POS)
-+
-+#define UHS2_RES_NACK_POS	7
-+#define UHS2_RES_NACK_MASK	(0x1 << UHS2_RES_NACK_POS)
-+
-+#define UHS2_RES_ECODE_POS	4
-+#define UHS2_RES_ECODE_MASK	0x7
-+#define UHS2_RES_ECODE_COND	1
-+#define UHS2_RES_ECODE_ARG	2
-+#define UHS2_RES_ECODE_GEN	3
-+
-+/* IOADR of device registers */
-+#define UHS2_IOADR_GENERIC_CAPS		0x00
-+#define UHS2_IOADR_PHY_CAPS		0x02
-+#define UHS2_IOADR_LINK_CAPS		0x04
-+#define UHS2_IOADR_RSV_CAPS		0x06
-+#define UHS2_IOADR_GENERIC_SETTINGS	0x08
-+#define UHS2_IOADR_PHY_SETTINGS		0x0A
-+#define UHS2_IOADR_LINK_SETTINGS	0x0C
-+#define UHS2_IOADR_PRESET		0x40
-+
-+/* SD application packets */
-+#define UHS2_SD_CMD_INDEX_POS	8
-+
-+#define UHS2_SD_CMD_APP_POS	14
-+#define UHS2_SD_CMD_APP		(1 << UHS2_SD_CMD_APP_POS)
-+
-+/* UHS-II Device Registers */
-+#define UHS2_DEV_CONFIG_REG	0x000
-+
-+/* General Caps and Settings registers */
-+#define UHS2_DEV_CONFIG_GEN_CAPS	(UHS2_DEV_CONFIG_REG + 0x000)
-+#define UHS2_DEV_CONFIG_N_LANES_POS	8
-+#define UHS2_DEV_CONFIG_N_LANES_MASK	0x3F
-+#define UHS2_DEV_CONFIG_2L_HD_FD	0x1
-+#define UHS2_DEV_CONFIG_2D1U_FD		0x2
-+#define UHS2_DEV_CONFIG_1D2U_FD		0x4
-+#define UHS2_DEV_CONFIG_2D2U_FD		0x8
-+#define UHS2_DEV_CONFIG_DADR_POS	14
-+#define UHS2_DEV_CONFIG_DADR_MASK	0x1
-+#define UHS2_DEV_CONFIG_APP_POS		16
-+#define UHS2_DEV_CONFIG_APP_MASK	0xFF
-+#define UHS2_DEV_CONFIG_APP_SD_MEM	0x1
-+
-+#define UHS2_DEV_CONFIG_GEN_SET			(UHS2_DEV_CONFIG_REG + 0x008)
-+#define UHS2_DEV_CONFIG_GEN_SET_N_LANES_POS	8
-+#define UHS2_DEV_CONFIG_GEN_SET_2L_FD_HD	0x0
-+#define UHS2_DEV_CONFIG_GEN_SET_2D1U_FD		0x2
-+#define UHS2_DEV_CONFIG_GEN_SET_1D2U_FD		0x3
-+#define UHS2_DEV_CONFIG_GEN_SET_2D2U_FD		0x4
-+#define UHS2_DEV_CONFIG_GEN_SET_CFG_COMPLETE	BIT(31)
-+
-+/* PHY Caps and Settings registers */
-+#define UHS2_DEV_CONFIG_PHY_CAPS	(UHS2_DEV_CONFIG_REG + 0x002)
-+#define UHS2_DEV_CONFIG_PHY_MINOR_MASK	0xF
-+#define UHS2_DEV_CONFIG_PHY_MAJOR_POS	4
-+#define UHS2_DEV_CONFIG_PHY_MAJOR_MASK	0x3
-+#define UHS2_DEV_CONFIG_CAN_HIBER_POS	15
-+#define UHS2_DEV_CONFIG_CAN_HIBER_MASK	0x1
-+#define UHS2_DEV_CONFIG_PHY_CAPS1	(UHS2_DEV_CONFIG_REG + 0x003)
-+#define UHS2_DEV_CONFIG_N_LSS_SYN_MASK	0xF
-+#define UHS2_DEV_CONFIG_N_LSS_DIR_POS	4
-+#define UHS2_DEV_CONFIG_N_LSS_DIR_MASK	0xF
-+
-+#define UHS2_DEV_CONFIG_PHY_SET			(UHS2_DEV_CONFIG_REG + 0x00A)
-+#define UHS2_DEV_CONFIG_PHY_SET_SPEED_POS	6
-+#define UHS2_DEV_CONFIG_PHY_SET_SPEED_A		0x0
-+#define UHS2_DEV_CONFIG_PHY_SET_SPEED_B		0x1
-+
-+/* LINK-TRAN Caps and Settings registers */
-+#define UHS2_DEV_CONFIG_LINK_TRAN_CAPS		(UHS2_DEV_CONFIG_REG + 0x004)
-+#define UHS2_DEV_CONFIG_LT_MINOR_MASK		0xF
-+#define UHS2_DEV_CONFIG_LT_MAJOR_POS		4
-+#define UHS2_DEV_CONFIG_LT_MAJOR_MASK		0x3
-+#define UHS2_DEV_CONFIG_N_FCU_POS		8
-+#define UHS2_DEV_CONFIG_N_FCU_MASK		0xFF
-+#define UHS2_DEV_CONFIG_DEV_TYPE_POS		16
-+#define UHS2_DEV_CONFIG_DEV_TYPE_MASK		0x7
-+#define UHS2_DEV_CONFIG_MAX_BLK_LEN_POS		20
-+#define UHS2_DEV_CONFIG_MAX_BLK_LEN_MASK	0xFFF
-+#define UHS2_DEV_CONFIG_LINK_TRAN_CAPS1		(UHS2_DEV_CONFIG_REG + 0x005)
-+#define UHS2_DEV_CONFIG_N_DATA_GAP_MASK		0xFF
-+
-+#define UHS2_DEV_CONFIG_LINK_TRAN_SET		(UHS2_DEV_CONFIG_REG + 0x00C)
-+#define UHS2_DEV_CONFIG_LT_SET_MAX_BLK_LEN	0x200
-+#define UHS2_DEV_CONFIG_LT_SET_MAX_RETRY_POS	16
-+
-+/* Preset register */
-+#define UHS2_DEV_CONFIG_PRESET	(UHS2_DEV_CONFIG_REG + 0x040)
-+
-+#define UHS2_DEV_INT_REG	0x100
-+
-+#define UHS2_DEV_STATUS_REG	0x180
-+
-+#define UHS2_DEV_CMD_REG		0x200
-+#define UHS2_DEV_CMD_FULL_RESET		(UHS2_DEV_CMD_REG + 0x000)
-+#define UHS2_DEV_CMD_GO_DORMANT_STATE	(UHS2_DEV_CMD_REG + 0x001)
-+#define UHS2_DEV_CMD_DORMANT_HIBER	BIT(7)
-+#define UHS2_DEV_CMD_DEVICE_INIT	(UHS2_DEV_CMD_REG + 0x002)
-+#define UHS2_DEV_INIT_COMPLETE_FLAG	BIT(11)
-+#define UHS2_DEV_CMD_ENUMERATE		(UHS2_DEV_CMD_REG + 0x003)
-+#define UHS2_DEV_CMD_TRANS_ABORT	(UHS2_DEV_CMD_REG + 0x004)
-+
-+#define UHS2_RCLK_MAX	52000000
-+#define UHS2_RCLK_MIN	26000000
-+
-+#endif /* LINUX_MMC_UHS2_H */
+-> _UFFDIO_REGISTER (aa00)
+-> _range = 3 pages starting at 0x20ffc000ul
+-> _mode = UFFDIO_REGISTER_MODE_WP | UFFDIO_REGISTER_MODE_MINOR
+
+   *(uint64_t*)0x20000000 = 0x20ffd000;
+   *(uint64_t*)0x20000008 = 0x20ffb000;
+   *(uint64_t*)0x20000010 = 0x1000;
+   *(uint64_t*)0x20000018 = 3;
+   *(uint64_t*)0x20000020 = 0;
+   syscall(__NR_ioctl, /*fd=*/r[0], /*cmd=*/0xc028aa03, /*arg=*/0x20000000ul);
+
+-> _UFFDIO_COPY (aa03)
+-> dst = 0x20ffd000
+-> src = 0x20ffb000
+-> len = 0x1000 (single page)
+-> mode = UFFDIO_COPY_MODE_DONTWAKE|UFFDIO_COPY_MODE_WP
+
+-> We are copying into the R/O range. src should be R/W and trigger a page fault
+    on access where we get a fresh page.
+
+   *(uint16_t*)0x200000c0 = 1;
+   *(uint64_t*)0x200000c8 = 0x20000040;
+   *(uint16_t*)0x20000040 = 6;
+   *(uint8_t*)0x20000042 = 0;
+   *(uint8_t*)0x20000043 = 0;
+   *(uint32_t*)0x20000044 = 0x7fffffff;
+   res = syscall(__NR_seccomp, /*op=*/1ul, /*flags=*/0ul, /*arg=*/0x200000c0ul);
+   if (res != -1)
+     r[1] = res;
+   syscall(__NR_open_tree, /*dfd=*/-1, /*filename=*/0ul, /*flags=*/0ul);
+
+-> No idea what happens here and if it is relevant. If __NR_seccomp failed, we would
+    no set r[1].
+
+   syscall(__NR_close_range, /*fd=*/r[1], /*max_fd=*/-1, /*flags=*/0ul);
+
+-> Is that closing uffd as well, especially if __NR_seccomp failed?
+
+   syscall(__NR_mprotect, /*addr=*/0x20ffc000ul, /*len=*/0x4000ul,
+           /*prot=PROT_SEM|PROT_WRITE|PROT_READ|PROT_EXEC*/ 0xful);
+
+-> Restore write permissions. This seems to fire the uffd-wp page table check I assume.
+
 -- 
-2.25.1
+Cheers,
+
+David / dhildenb
 
