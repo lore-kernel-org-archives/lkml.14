@@ -1,98 +1,65 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AAB746E;
-	Mon, 22 Apr 2024 13:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F5514658A;
+	Mon, 22 Apr 2024 13:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713791561; cv=none; b=ig4RJeHdm4+5ff2mKVmR/BYO3S9iHf/8wvL1cUn2VvBs7dx8gAwzugznJyqQjOmEqMJVNNrmWEPAiX9u23dp81ekG5rk2cWPcnYswOvaKGw32REF+kPGx0Ox6FPRY0Vl1k3+8DFN9U6udIduDzb6kRudps67AR7hS67/SB6F3VY=
+	t=1713791633; cv=none; b=hjRaUStNoFP8a44myOL3EkMbHqQlOHHLVP/XjomwCNYLNXk1j9h8YkU8Fnhpnnejv3JFOCjM0qWruW2GcKSU2kuU7U3oeOxNp4uR40LA5i2cHxbCnOvbvpIaVEhtjULfkfQA4cugjcsh6ks3M4WpdAyZ4lNONlbm/9FQgBcD9tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713791561; c=relaxed/simple;
-	bh=vh9tWXodnbpcT6raemZtVHF35ckaYeZIJFmmWagnfYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RRQ2C7y3dT4dYLad2IpuBChBDecIoe0bPOeUXYOXsGgIMjNGaLY9NLCbuZT+nHGqVoBmt71g+BTo3noxJDQ9R074OCR1uSg0At6D+LD51bQFZvSofUVcCtjyNXt1JojYYYT1hKSk3fo7wBte+d5wHBy4mjKoJ9p83k4BCud/uRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dgv2A9N2; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1713791633; c=relaxed/simple;
+	bh=TJQh1ADD/TSrkcvnzZ7emzpjU95BZJD0dcxvuRp3blU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a9SucA9ow4AXlrCbE+YX04xggtZfjJWyhiWkzHiemk/a/d3tE5abpaHbPgL6pgme1p+udRHwinNECDQAkgpALbeJDTCwiFUNGK5T4D+PoQCx5mu6x0t/5dhfEVdWX+m93M0MywYre5fPqRXayGDEc1tKclA2cCnbCuSPlsOdZ+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Cm0hEvLG; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dgv2A9N2"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CC94B1BF210;
-	Mon, 22 Apr 2024 13:12:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713791558;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QfDcOgyXobZUAXkU4kPhqBGrMe9U6j4aGaIUPwXOx/A=;
-	b=dgv2A9N2mNiBSrfw6tyKSigtQzpq00KymktMemQIN+3ZTsHb80O8X4QsCrVa+MLs+qW1c1
-	7bdSL5B7CussSHhmHYm6hXpstvHEz2wLPbb5rh46mBYQVsDJq99JPAfOfOPPx/GxtL7VLE
-	u0YKWlSz2Nv4M8kvIPM00Vpb7SrZLr4A8VcmjHQgZz08bETs7azIodDc5kWpo1waPUCX0C
-	+ZGjRTlTqVYVJrn14Wl/KXP0BRoaHtWdH8wHiXDsdqmm0lti1yZQ5Jz/E7uKIgNbaLt9tw
-	rWKw8jBpuA54QCSTedDgTuGk6OktCROyqSEfoybCmEnUNpg6De4oWiPDjlTzPg==
-Date: Mon, 22 Apr 2024 15:12:37 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, kernel
- test robot <lkp@intel.com>
-Subject: Re: [PATCH net-next 0/3] net: pse-pd: Fixes for few small issues
-Message-ID: <20240422151237.2bdf6dfb@kmaincent-XPS-13-7390>
-In-Reply-To: <3614267f-4d0e-43af-8237-568d294172fd@lunn.ch>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Cm0hEvLG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=lqh3lXxat5JOwnSVIY/snEUX8+W3d9tAXaIgm8E4lbo=; b=Cm0hEvLG2ypeXAORhOA9NzpDqX
+	6x0tKb/MQiOVS1N63AnNu9EvUgti59UAbmqpiTXqgU3YdZMuiueyooE+vrZNiteIJqFR71cyR+GSJ
+	9YevbPv0+q9XcVL9Z8s7ge0XuVY9g3kH4ym05S0A1weASH0eH6DopDO30afbSUcXQiUo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rytUP-00DcPY-7u; Mon, 22 Apr 2024 15:13:45 +0200
+Date: Mon, 22 Apr 2024 15:13:45 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Kyle Swenson <kyle.swenson@est.tech>
+Subject: Re: [PATCH net-next 1/3] net: pse-pd: pse_core: Add missing kdoc
+ return description
+Message-ID: <bd88df2b-0e7b-48fd-8f5b-701df58458b4@lunn.ch>
 References: <20240422-fix_poe-v1-0-811c8c0b9da7@bootlin.com>
-	<20240422150234.49d98b73@kmaincent-XPS-13-7390>
-	<3614267f-4d0e-43af-8237-568d294172fd@lunn.ch>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+ <20240422-fix_poe-v1-1-811c8c0b9da7@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240422-fix_poe-v1-1-811c8c0b9da7@bootlin.com>
 
-On Mon, 22 Apr 2024 15:05:39 +0200
-Andrew Lunn <andrew@lunn.ch> wrote:
+On Mon, Apr 22, 2024 at 02:50:48PM +0200, Kory Maincent (Dent Project) wrote:
+> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+> 
+> Add missing kernel documentation return description.
+> This allows to remove all warning from kernel-doc test script.
+> 
+> Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-> On Mon, Apr 22, 2024 at 03:02:34PM +0200, Kory Maincent wrote:
-> > On Mon, 22 Apr 2024 14:50:47 +0200
-> > "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com> wrote:
-> >  =20
-> > > From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
-> > >=20
-> > > This patch series fix few issues in PSE net subsystem like Regulator
-> > > dependency, PSE regulator type and kernel Documentation.
-> > >=20
-> > > Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.co=
-m> =20
-> >=20
-> > Found out I had a git configuration that adds "Dent Project" to my sob.=
- I
-> > don't want that, and will send a v2 without it.=20
-> > I will wait a week for review before the v2, so please do not merge this
-> > version. =20
->=20
-> Hi Kory
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Hi Andrew,=20
-=20
-> You should be able to send:
->=20
-> pw-bot: cr
->=20
-> to your own patch series and patchwork will mark the series are Change
-> Requested. That will stop it from being merged.
-
-Oh thanks, I didn't know that.
-
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+    Andrew
