@@ -1,102 +1,84 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4A73399F;
-	Mon, 22 Apr 2024 13:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F9E3399F;
+	Mon, 22 Apr 2024 13:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713791911; cv=none; b=RAo7KntiwdSBDtrbf1g1eNFGZAXPjiSnjXuUSqlugxgFSud0SAbyKQpOJSOeDqWs4ceg6v7kmwfx3xPXyBOHnhmXsfAdnISchX8kAzYwniDZseThlJpoSeSXakG5sgJpeuVNwqvlr3kwPor7CH9niLgyhUQeGhjGUHtdsQg9cAA=
+	t=1713791944; cv=none; b=KtzljrsLL0AG5gHodKPa9/n8RSTIyb2ZYCXKYxY4i6BRwskM45Jjs40BuoCj0C5hxTyZIOFkNR8HKmqYCzuyHHWwTaqVWRAko3txlXXhfct9tlttTQ8eraT8ZcsGFb6SU0Z0Uwk3bH8j+IaFX6gy7qcfQ58EL1TQ6U0XMV1WfHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713791911; c=relaxed/simple;
-	bh=oH1R0IQ5okr+fcRE693xdM6cp7GPSY26awGZ2I/bPyA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PqDswts65feBKtKtosgVnTuQJPlNtlse1emLYMGXPwpzW0r+2fr6My6GK4BnScWMXB+b4CMgUaLjmlGD4jjZcTLqlSRkUnPfr4EgjUlUSHukC9bl7oQwrFiXDBuJRH2dqITnrOe7ISZL+0Z/nNsHqwuXtfOq3jypI3X5n6I+Ei8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hG9kbzbv; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713791944; c=relaxed/simple;
+	bh=nEIImInbgCdKAwG1S5PDkhkW78nGxj3mhR5gm/NG8rc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QWGuiKZ+zgeGD4ywilnH0FnWLMzB6X03HvYIi73mktcCn9MTu+PH20go2j5erXVV8R04u/3V3tgmto4DYDdb67Ok8Dct7NjO9JxyWVebSUIN9ngTtl8KtHCNCYAytOhog6Ojpy3ELwdjnIk2Z13tDJ0ZrhJ6H+noGeP8abCWEDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=r57bAFbA; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hG9kbzbv"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-518a56cdbcfso6842564e87.2;
-        Mon, 22 Apr 2024 06:18:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713791908; x=1714396708; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oH1R0IQ5okr+fcRE693xdM6cp7GPSY26awGZ2I/bPyA=;
-        b=hG9kbzbv6mhe5DAmWl8v1yDByzrRRLCBG/t5SchjEGtprRwbxeC0Lv7PyWf49afEsb
-         PNmsfgTRsLZ5h/ms6E9zsVfvhNcFkozC0L7xMl2CdMTjX5KE3ZVVlDvdq4gHOv0hTY0Q
-         oBUXi0QvitzV75Tp+urqQj5qjBjE2ltE/JpvOo8yU2hWmpY48ZIL2YKD10hjPfhVge+B
-         v8/SS/ca5z5UpkpWms6iBUSBnBU/DPXCiOcqc1gxySFS057fZf7ekR/Pyq4iG9DMNlxj
-         KGxno4hklnYfNFtXI2vX4+ipcIz/KfWOfeJ/WLcUMJIOXqC6GiYalKREiKqCPB3btUvp
-         RMPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713791908; x=1714396708;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oH1R0IQ5okr+fcRE693xdM6cp7GPSY26awGZ2I/bPyA=;
-        b=marvfVVVJ8C1rEXeH9l7lyb1QOZwSAzRH8yQ7JT20UVhpGJgBWqKKs8f8CXyX3yE7x
-         /idy57nC0wQt6tGStymd92eEPrbNzNzK22Q/TQ9NU6g5jwvHLoOibmMI3xS+bs1TSi+P
-         yPnHE5L/KHc5QrQZ7l1J7NVim4PDGIwdVkY+GOTz2emGDfN64TGG1GWZeKDX864duskg
-         GfI1NzNipVoRRfXDccgvXvdfH5wGHhxqjxwDKTR9HGzokXKJCuWUZJUyvPOEfXuafLqr
-         8Njn2RKne7SQ5/Gmu7sSifv+ZgcOcq1cKWPMNrd9vmfqow8jn/PCG/6WG3qSndyDdOvg
-         DY1g==
-X-Forwarded-Encrypted: i=1; AJvYcCW8c2Axov2+VignWgtNIrLZWGZOd1fU8s0sbqALMnDBO0lqcuMTb0bJx3ziSFtNSqg4+YNecxSTWUvP1d9gA8X0BTKaoB0B5bfoqM2UdkexHGQ0HRq5LU8txeqd0pp8TvdVPVTT6pcX/IrA
-X-Gm-Message-State: AOJu0YwG1CZbXj3R3lewdj6Fpph80ST0EyhCaN39n6/y/Ticir7WJnCf
-	jzbjkLyonmzz/5ols84q464snAEhzYR/ndDekoSAhDYxlYNAhcCCiBAMRsVUomgUqqo7hM/VP9W
-	eUpn/ouZWqfb3PxnuEYfHvQesYMs=
-X-Google-Smtp-Source: AGHT+IHiF+CJbeJBpnqiMIUJlPP+HthhFpz+ac8LBycAWGHna+D5nbZF4aeIUQwuUL1OmY0B6OQGNutg+LajTART5Ug=
-X-Received: by 2002:ac2:41d6:0:b0:51a:c490:8d55 with SMTP id
- d22-20020ac241d6000000b0051ac4908d55mr6695585lfi.13.1713791908094; Mon, 22
- Apr 2024 06:18:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r57bAFbA"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43MDIhLm026330;
+	Mon, 22 Apr 2024 08:18:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1713791923;
+	bh=qbn10NRmBdiC8cpl9UdEzAERTYd1gkIgankGkqfzrRE=;
+	h=From:To:CC:Subject:Date;
+	b=r57bAFbABQPhFOPr4tEUysnw8+14302h0+Bdj0Sez3Zod7Ti3qoQyPpdJALLad+Gc
+	 pUiKxfpjZFnm3dsBrwxO8CUStzEGVWbgMxJz1hFm+T7E4D8VbVCs+hV0eNMl5C1hwR
+	 0hdocmohGlUfdqHeHpAHvoXvVujSeJi1yo2+rWPc=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43MDIhDb078973
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 22 Apr 2024 08:18:43 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 22
+ Apr 2024 08:18:42 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 22 Apr 2024 08:18:42 -0500
+Received: from localhost ([10.250.148.22])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43MDIfwc080761;
+	Mon, 22 Apr 2024 08:18:42 -0500
+From: Bhavya Kapoor <b-kapoor@ti.com>
+To: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC: <b-kapoor@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <conor+dt@kernel.org>, <krzk+dt@kernel.org>, <robh@kernel.org>,
+        <kristo@kernel.org>, <vigneshr@ti.com>, <nm@ti.com>
+Subject: [PATCH] arm64: dts: ti: k3-j722s-evm: Enable UHS support for MMCSD
+Date: Mon, 22 Apr 2024 18:48:40 +0530
+Message-ID: <20240422131840.34642-1-b-kapoor@ti.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240422123801.2695129-1-rilian.la.te@ya.ru> <20240422123801.2695129-2-rilian.la.te@ya.ru>
- <ZiZcyhoKRgfteO5d@smile.fi.intel.com>
-In-Reply-To: <ZiZcyhoKRgfteO5d@smile.fi.intel.com>
-From: "Konstantin P." <ria.freelander@gmail.com>
-Date: Mon, 22 Apr 2024 16:20:40 +0300
-Message-ID: <CAF1WSuxPmzWYhCQU3tiA_GYMLowxMuvEJWRv83atithv8NCRxg@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] serial: sc16is7xx: announce support of SER_RS485_RTS_ON_SEND
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Konstantin Pugin <rilian.la.te@ya.ru>, krzk@kernel.org, conor@kernel.org, lkp@intel.com, 
-	vz@mleia.com, robh@kernel.org, jcmvbkbc@gmail.com, 
-	nicolas.ferre@microchip.com, manikanta.guntupalli@amd.com, corbet@lwn.net, 
-	ychuang3@nuvoton.com, u.kleine-koenig@pengutronix.de, Maarten.Brock@sttls.nl, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>, Lech Perczak <lech.perczak@camlingroup.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Mon, Apr 22, 2024 at 3:56=E2=80=AFPM Andy Shevchenko <andy@kernel.org> w=
-rote:
->
-> On Mon, Apr 22, 2024 at 03:37:55PM +0300, Konstantin Pugin wrote:
-> > From: Konstantin Pugin <ria.freelander@gmail.com>
-> >
-> > The hardware supports both RTS_ON_SEND and RTS_AFTER_SEND modes, but
-> > after the commit 4afeced55baa ("serial: core: fix sanitizing check for
-> > RTS settings") we always end up with SER_RS485_RTS_AFTER_SEND set and
-> > always write to the register field SC16IS7XX_EFCR_RTS_INVERT_BIT, which
-> > breaks some hardware using these chips.
->
-> LGTM, but I leave it to Hugo for testing and other comments, if any,
-> as I don't have a HW.
->
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+Enable the UHS modes for MMCSD in J722S by removing the
+no-1-8-v property.
 
-Andy, I need to do v7 (because there is a missed fix), but Yandex do
-not allow me to send more mail( So, can it be sent next day?
+Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+index 78032caeb5fc..bf3c246d13d1 100644
+--- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
++++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+@@ -381,7 +381,6 @@ &sdhci1 {
+ 	pinctrl-0 = <&main_mmc1_pins_default>;
+ 	ti,driver-strength-ohm = <50>;
+ 	disable-wp;
+-	no-1-8-v;
+ 	status = "okay";
+ 	bootph-all;
+ };
+-- 
+2.40.1
+
