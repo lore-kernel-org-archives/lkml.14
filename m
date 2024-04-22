@@ -1,215 +1,121 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E069B4DA0C
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986C24CB35;
+	Mon, 22 Apr 2024 07:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713772585; cv=none; b=Pw10i/jdycOSVIk0gxj45WOOLMOBUc6N8EQhYKQMSXslsuK8TYApN6p1CJA6XfZSbvcbaKYNTrQjlVut5Xm2EXcwWb6ugH22yz9gpwfNl1N4lvZlE6hV6iX5mE2RnrqGG2fa8gyShi1BclynrUVsnjhhoTE0XCyY6epmZJjc9As=
+	t=1713772616; cv=none; b=uSRrlcOBnt1kHFQwvgQ0v+fQ5AYy8De4BBs4JWvqmLgBXoEjZdVFzQ5JUMo728c/4zXK6B4jsTWVF34xn3jd6JU8WEhDR7/YPLqHhe3sy9fdceMMf9FP5ubS+mh436Jl6eoUPvm+9LcFh2oIzIIDDXr6VTtJau9Cg8ywzzGcL/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713772585; c=relaxed/simple;
-	bh=eH5YBZDLZb+IHC6BdYl7rNXZipeAzNT0dR2BGwzIvA0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jsq4TmiiUyO2NGVyjcT8aXD/DBfP9Tn8wOx2rJ9qEfQHmsGFfDFl8vvobZa8GgDuVbWjIvrPzgHIsHWS0ke8ERc2Zt78r7P9Rqjs1w4oF3bvkjxqi9v70PBfe/qZ9wlJeVOPo/I5yTLBN7AOhmMrzfGKD4EWRzJzc0hC+fbaCD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=I+VfQH3i; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8Pl/kUb2; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qYPWxJdw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=wrC8BUmt; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1713772616; c=relaxed/simple;
+	bh=ReeVKZSFAA2TgPLpJsgH6vWWoeK6ccoz8J1wehOOJc4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fHivx7rH1uZVi+bigB0Q83O7mLJ+JCG3NP9gV0OC8shPSZ78E9Kn1FitJbHwSQr7NH9QaI1CeothHiVRxzhg8/mAmsgqjoc6G9N/hqsYSG9JSmrkmWWhh3T8KGzecv9ERtDStiwq2Kd+MS6WZNQa7pFKu4+aaCaQgDa2pBs8qv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VpTDjf5j; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="I+VfQH3i";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8Pl/kUb2";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qYPWxJdw";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="wrC8BUmt"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D529A5CC24;
-	Mon, 22 Apr 2024 07:56:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1713772582; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ujRma/fKgO5i3zhhNhcoTNztHiCwY7JpOFiOdQTKLnc=;
-	b=I+VfQH3iAVKq7dLqU6Yk2o19yoS0f6YBux0E3GT4lWTpKjRq+EVsWQymGV8gc5ElL5RETc
-	XNhNRUP9fqEQPhHc7BViB6J2w49ObmDtZdCf+hemJewl+HPDTwQtEUBpzNhyTqkeM6HViT
-	Hna0pcARVsdxGjANco3VxSGRGJzplPY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1713772582;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ujRma/fKgO5i3zhhNhcoTNztHiCwY7JpOFiOdQTKLnc=;
-	b=8Pl/kUb241oL5Ucztb8aC2ENFvrw1krs7IFUagzoA35AJ0Cm2nbkNQtSKaDvKAWvXAC1gr
-	w80knI39i9bZfTDg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=qYPWxJdw;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=wrC8BUmt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1713772580; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ujRma/fKgO5i3zhhNhcoTNztHiCwY7JpOFiOdQTKLnc=;
-	b=qYPWxJdw2mCwNPqsR1cuh71L5dUX+3YbymAOOBGD28tbQnVwsoGhznxuaN2Xv1dLClVT2l
-	DqoPAPu3LKwIMf2krXtR+bpxf+0P+drvTlXximZenuzCT1ICWKAoCPftbGIInrh1tOr8cv
-	QOYHQqsOGdU2a5i0A+DZVVaO7AKADqk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1713772580;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ujRma/fKgO5i3zhhNhcoTNztHiCwY7JpOFiOdQTKLnc=;
-	b=wrC8BUmt9oEgC2AN7H540tRgYj8RULdx8Q/dnPg+QUVH3nsMvNT32VvoOPyGlxJliaqoFy
-	18zGcdDOTF2i+hAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C56D9136ED;
-	Mon, 22 Apr 2024 07:56:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id +NSwLyQYJmb/cgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 22 Apr 2024 07:56:20 +0000
-Message-ID: <1d795e22-cbcd-4107-978e-96bb459629a4@suse.cz>
-Date: Mon, 22 Apr 2024 09:56:20 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VpTDjf5j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713772614; x=1745308614;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=ReeVKZSFAA2TgPLpJsgH6vWWoeK6ccoz8J1wehOOJc4=;
+  b=VpTDjf5jE4SdFYGRJM1J5rjJFewlkwVgYKOoDNkjsUitV5+rhDzDkeRZ
+   F9zB2mUDGlTWV9d8n+R2KMX/CvHw8Chc58elj0wG0koL7fDd76yCCOWz3
+   hFqxEnx6/ZwkliKRgTWKrF8wTGVGyn8iRC9+nWQDdTmkNak2Q3UmOfxJR
+   ImESskXZmtx4ZBzLf9twbsPGVNj+qJdrdOEzc4WXq63dyTdcT7RvTFRd+
+   0loWMjZrDryplXjUuYXxWqc0Nl4rzLMc+riGTBI6d94j4N9p6AjSkla4c
+   SJm9nUY6tGNpzvyR/sRiBzzS60bJH89QqJInBz+zyGn1qazohsabtVWOj
+   Q==;
+X-CSE-ConnectionGUID: i94jb0COSDOmwVJLm0wqqQ==
+X-CSE-MsgGUID: B3vzWeF3QDeEqHqxIBV06g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11051"; a="20437638"
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="20437638"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 00:56:53 -0700
+X-CSE-ConnectionGUID: MMO+r1HCTdmStEKaAQMcDw==
+X-CSE-MsgGUID: svSs77+HQy2ghrhGboEg2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="24015095"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 00:56:50 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Kairui Song <ryncsn@gmail.com>, Matthew Wilcox <willy@infradead.org>
+Cc: linux-mm@kvack.org,  Kairui Song <kasong@tencent.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Chris Li <chrisl@kernel.org>,  Barry Song
+ <v-songbaohua@oppo.com>,  Ryan Roberts <ryan.roberts@arm.com>,  Neil Brown
+ <neilb@suse.de>,  Minchan Kim <minchan@kernel.org>,  Hugh Dickins
+ <hughd@google.com>,  David Hildenbrand <david@redhat.com>,  Yosry Ahmed
+ <yosryahmed@google.com>,  linux-fsdevel@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/8] mm/swap: optimize swap cache search space
+In-Reply-To: <20240417160842.76665-1-ryncsn@gmail.com> (Kairui Song's message
+	of "Thu, 18 Apr 2024 00:08:34 +0800")
+References: <20240417160842.76665-1-ryncsn@gmail.com>
+Date: Mon, 22 Apr 2024 15:54:58 +0800
+Message-ID: <87zftlx25p.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] slub: introduce count_partial_free_approx()
-Content-Language: en-US
-To: Jianfeng Wang <jianfeng.w.wang@oracle.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Cc: cl@linux.com, akpm@linux-foundation.org, penberg@kernel.org,
- rientjes@google.com
-References: <20240419175611.47413-1-jianfeng.w.wang@oracle.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <20240419175611.47413-1-jianfeng.w.wang@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: D529A5CC24
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -4.50
+Content-Type: text/plain; charset=ascii
 
-On 4/19/24 7:56 PM, Jianfeng Wang wrote:
-> This patch fixes a known issue in get_slabinfo() which relies on
-> count_partial() to get the exact count of free objects in a
-> kmem_cache_node's partial list. For some slubs, their partial lists
-> can be extremely long. Currently, count_partial() traverses a partial
-> list to get the exact count of objects. This process may take a long
-> time, during which slab allocations are blocked and IRQs are disabled.
-> In production, even NMI watchdog can be triggered due to this matter.
-> 
-> The proposed fix is to limit the number of slabs to scan and output an
-> approximated count for a long partial list. The v1 patch counts N slabs
-> from the list's head and then uses it to estimate the total object
-> count in the list. As suggested by Vlastimil, the v2 patch uses an
-> alternative, i.e., counting N/2 from the list's head and tail, produces
-> a more accurate approximation after the partial list is sorted by
-> kmem_cache_shrink(). In this version, the implementation is moved to a
-> new function count_partial_free_approx(). count_partial() is still used
-> in sysfs for users who still want the exact object count.
+Hi, Kairui,
 
-Added to slab/for-next, thanks!
+Kairui Song <ryncsn@gmail.com> writes:
 
-> 
-> ---
-> Changes since v2 [2]
->  - Introduce count_partial_free_approx() and keep count_partial()
->  - Use count_partial_free_approx() in get_slabinfo() and slab_out_of_memory()
-> 
-> Changes since v1 [1]
->  - Update the approximation method by counting from the list's head and tail
->  - Cap the approximation by the total object count
->  - Update the commit message to add benchmark results and explain the choice
-> 
-> [1] https://lore.kernel.org/linux-mm/20240411164023.99368-1-jianfeng.w.wang@oracle.com/
-> [2] https://lore.kernel.org/linux-mm/20240417185938.5237-2-jianfeng.w.wang@oracle.com/
-> 
-> Thanks,
-> --Jianfeng
-> 
-> Jianfeng Wang (2):
->   slub: introduce count_partial_free_approx()
->   slub: use count_partial_free_approx() in slab_out_of_memory()
-> 
->  mm/slub.c | 41 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 39 insertions(+), 2 deletions(-)
-> 
+> From: Kairui Song <kasong@tencent.com>
+>
+> Currently we use one swap_address_space for every 64M chunk to reduce lock
+> contention, this is like having a set of smaller swap files inside one
+> big swap file. But when doing swap cache look up or insert, we are
+> still using the offset of the whole large swap file. This is OK for
+> correctness, as the offset (key) is unique.
+>
+> But Xarray is specially optimized for small indexes, it creates the
+> redix tree levels lazily to be just enough to fit the largest key
+> stored in one Xarray. So we are wasting tree nodes unnecessarily.
+>
+> For 64M chunk it should only take at most 3 level to contain everything.
+> But we are using the offset from the whole swap file, so the offset (key)
+> value will be way beyond 64M, and so will the tree level.
+>
+> Optimize this by reduce the swap cache search space into 64M scope.
 
+In general, I think that it makes sense to reduce the depth of the
+xarray.
+
+One concern is that IIUC we make swap cache behaves like file cache if
+possible.  And your change makes swap cache and file cache diverge more.
+Is it possible for us to keep them similar?
+
+For example,
+
+Is it possible to return the offset inside 64M range in
+__page_file_index() (maybe rename it)?
+
+Is it possible to add "start_offset" support in xarray, so "index"
+will subtract "start_offset" before looking up / inserting?
+
+Is it possible to use multiple range locks to protect one xarray to
+improve the lock scalability?  This is why we have multiple "struct
+address_space" for one swap device.  And, we may have same lock
+contention issue for large files too.
+
+I haven't look at the code in details.  So, my idea may not make sense
+at all.  If so, sorry about that.
+
+Hi, Matthew,
+
+Can you teach me on this too?
+
+--
+Best Regards,
+Huang, Ying
