@@ -1,99 +1,138 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FDF746E;
-	Mon, 22 Apr 2024 13:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776861DFF0;
+	Mon, 22 Apr 2024 13:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713792971; cv=none; b=Msdt49HAGkvs0DSxtMCQ0hazTPxEBxGidv2EA0Wdh6mz3vTCY8LJx5jd4vvxe/6gnkW/CBZLqG+U9p3+at8XBUlujuYHoEO3E6HM/EZ74CvEIG5JE2hNxs/uhl0vYQDLA14VCMPAyYJ4Kht3G8ez91vMMAgDBfwgpEHPFLig070=
+	t=1713793087; cv=none; b=KiFG8VQXe/xvL5Cjd9ekTbeXhcYM2RvzoON3DQ3Y5Y5S7iXqhkq9cwdE7KiAsyY+cDqLzocHZsAlbc1XlrhQPFwDqsuBTMfkX5H+g0FnuLrs7GrJTiwJNJILdphg1soE0vQvFSEo6TceRChue6jkrKbm8LCeqMKkN55XOssr9Ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713792971; c=relaxed/simple;
-	bh=MOieSkGFlLap9YqZh1kDWE4xoA3yyZ85BdHa4q/AEjY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sQyqbpvdTNNoG9z7gWqmeFWMymNCXFrFc1XdcjXkQ3JQau7IulN/N527wqqY7NhZgVcPaDKUr5yzTjbze0wsOMRNqKHSL463UmgIwgx+n2TNSHvpeyJ8cxa7+HZHLOCp2QhpTWMs8XkbnhCMOwnMAju+34FokZg8ppp8OUae/Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jIH1GQXi; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1713793087; c=relaxed/simple;
+	bh=/b9wDmN1JJVm3q4XIJa9ojb9o9zQd1sK0dbVkNVYTxg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ObBKVilw2CZ6aUb/qfVwwAYoc/SDh5pxA4P7Z/dy8xcOD5ZH3cMEtXkiWmUynmleFcJhllyJ9jnuu81j/b1s07+o5/7a9xiXwZMRwrkwiaSIowBHx2xPVbDuO0KQ83oTs6sTUVuNWXlFe6G9iX/eXsBxJ2zfqozKuPOJN1GXh2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=riMPnVD9; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jIH1GQXi"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0140E1C0012;
-	Mon, 22 Apr 2024 13:36:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713792962;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k2f64ANu3PLImfYGjhtzlKzsVrMAXXlyB8IVnzSIbzQ=;
-	b=jIH1GQXi2hnbWCvqH9FvnVxSgSQbO+u0U4T7PfJRF8cSZ/ciZ6Bt8ZEjh87MJ3UiP8Ohgi
-	xr3K3izrHsmttmBYS03DJigcLXh+KWJQKnTV1CN1qbsBx33ULXJ/WPGnjh6v3rTZsopnsB
-	CB3pYpI7nikrB3+/Ve42SocQGUNjTb1BoBgSTsnId/iWrjPjVoy2za593Q0goTXILNdSek
-	0SPcjzNZHNZ70LQ/qywQOlig1OBhQdVZpy+lyWivMuubPCngBBk5EMOdnG4VyyYOW2zOZ3
-	gdvPfh4PiRCkuNLjdscVYQ7iCU9On9m8SMEpuFdqg60zFyOhZzNms/zuadY8KA==
-From: "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
-Date: Mon, 22 Apr 2024 15:35:48 +0200
-Subject: [PATCH net-next v2 3/3] net: pse-pd: Kconfig: Add missing
- Regulator API dependency
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="riMPnVD9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Z81Hn2wA/+Uj7Uzyftbfopp02iSniH0rYdaqzFMODuI=; b=riMPnVD9u/RcXfaiLo4d/CRKmo
+	4guu9gHfcHVjEF1erkrkafPTNNnl+ZNKeVNi6LlLK7k6vtx4gjGjOFbTZs7C5+/+0p/czOPYZmoL0
+	n3hrrDW4Sdcgtb7h+Pkq91Oe5cNiZDF89FfeImw7+/4DEuaITIdhtG+piwiTg/vKkxt0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rytro-00DcZa-Pq; Mon, 22 Apr 2024 15:37:56 +0200
+Date: Mon, 22 Apr 2024 15:37:56 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Josua Mayer <josua@solid-run.com>
+Cc: Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	Yazan Shhady <yazan.shhady@solid-run.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 4/4] arm64: dts: add description for solidrun cn9131
+ solidwan board
+Message-ID: <fd466583-3221-4b94-b66b-18840615fb71@lunn.ch>
+References: <20240414-cn9130-som-v3-0-350a67d44e0a@solid-run.com>
+ <20240414-cn9130-som-v3-4-350a67d44e0a@solid-run.com>
+ <3958052d-fc09-4c4c-a9e3-4923871cff44@solid-run.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240422-fix_poe-v2-3-e58325950f07@bootlin.com>
-References: <20240422-fix_poe-v2-0-e58325950f07@bootlin.com>
-In-Reply-To: <20240422-fix_poe-v2-0-e58325950f07@bootlin.com>
-To: Oleksij Rempel <o.rempel@pengutronix.de>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Andrew Lunn <andrew@lunn.ch>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, 
- Kory Maincent <kory.maincent@bootlin.com>, 
- kernel test robot <lkp@intel.com>
-X-Mailer: b4 0.14-dev
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3958052d-fc09-4c4c-a9e3-4923871cff44@solid-run.com>
 
-From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+On Sun, Apr 14, 2024 at 01:18:56PM +0000, Josua Mayer wrote:
+> Am 14.04.24 um 14:58 schrieb Josua Mayer:
+> > Add description for the SolidRun CN9131 SolidWAN, based on CN9130 SoM
+> > with an extra communication  processor on the carrier board.
+> >
+> > This board differentiates itself from CN9130 Clearfog by providing
+> > additional SoC native network interfaces and pci buses:
+> > 2x 10Gbps SFP+
+> > 4x 1Gbps RJ45
+> > 1x miniPCI-E
+> > 1x m.2 b-key with sata, usb-2.0 and usb-3.0
+> > 1x m.2 m-key with pcie and usb-2.0
+> > 1x m.2 b-key with pcie, usb-2.0, usb-3.0 and 2x sim slots
+> > 1x mpcie with pcie only
+> > 2x type-a usb-2.0/3.0
+> >
+> > Signed-off-by: Josua Mayer <josua@solid-run.com>
+> > ---
+> >  arch/arm64/boot/dts/marvell/Makefile               |   1 +
+> >  arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dts | 653 +++++++++++++++++++++
+> >  2 files changed, 654 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+> > index 019f2251d696..16f9d7156d9f 100644
+> > --- a/arch/arm64/boot/dts/marvell/Makefile
+> > +++ b/arch/arm64/boot/dts/marvell/Makefile
+> > @@ -30,3 +30,4 @@ dtb-$(CONFIG_ARCH_MVEBU) += ac5x-rd-carrier-cn9131.dtb
+> >  dtb-$(CONFIG_ARCH_MVEBU) += ac5-98dx35xx-rd.dtb
+> >  dtb-$(CONFIG_ARCH_MVEBU) += cn9130-cf-base.dtb
+> >  dtb-$(CONFIG_ARCH_MVEBU) += cn9130-cf-pro.dtb
+> > +dtb-$(CONFIG_ARCH_MVEBU) += cn9131-cf-solidwan.dtb
+> > diff --git a/arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dts b/arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dts
+> cut
+> > +	leds {
+> > +		compatible = "gpio-leds";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&cp0_led_pins &cp1_led_pins>;
+> > +
+> > +		/* for sfp-1 (J42) */
+> > +		led-sfp1-activity {
+> > +			label = "sfp1";
+> > +			gpios = <&cp0_gpio1 7 GPIO_ACTIVE_HIGH>;
+> > +			color = <LED_COLOR_ID_GREEN>;
+> > +		};
+> > +
+> > +		/* for sfp-1 (J42) */
+> > +		led-sfp1-link {
+> > +			label = "sfp1";
+> > +			gpios = <&cp0_gpio1 4 GPIO_ACTIVE_HIGH>;
+> > +			color = <LED_COLOR_ID_YELLOW>;
+> > +		};
+> > +
+> > +		/* (J28) */
+> > +		led-sfp0-activity {
+> > +			label = "sfp0";
+> > +			gpios = <&cp1_gpio2 22 GPIO_ACTIVE_HIGH>;
+> > +			color = <LED_COLOR_ID_GREEN>;
+> > +		};
+> > +
+> > +		/* (J28) */
+> > +		led-sfp0-link {
+> > +			label = "sfp0";
+> > +			gpios = <&cp1_gpio2 23 GPIO_ACTIVE_HIGH>;
+> > +			color = <LED_COLOR_ID_YELLOW>;
+> > +		};
+> > +	};
+> > +
+> Here I am uncertain what to put in the label.
+> Each SFP has a single dual-color (3 terminals) LED,
+> with one gpio controlling each colour.
+> 
+> Colours are similar to RJ45 connectors (yellow, green),
+> and are intended for the same purpose: link, activity.
 
-The PSE (Power Sourcing Equipment) API now relies on the Regulator API.
-However, the Regulator dependency was missing from Kconfig. This patch
-adds the necessary dependency, resolving the issue of the missing
-dependency and ensuring proper functionality of the PSE API.
+For the switch LEDs you used label = "LED10"; Does the silk screen
+have similar numbers for these LEDs?
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202404201020.mqX2IOu7-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202404200036.D8ap1Mf5-lkp@intel.com/
-Fixes: d83e13761d5b ("net: pse-pd: Use regulator framework within PSE framework")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
----
- drivers/net/pse-pd/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+     Andrew
 
-diff --git a/drivers/net/pse-pd/Kconfig b/drivers/net/pse-pd/Kconfig
-index 80cf373a5a0e..577ea904b3d9 100644
---- a/drivers/net/pse-pd/Kconfig
-+++ b/drivers/net/pse-pd/Kconfig
-@@ -5,6 +5,7 @@
- 
- menuconfig PSE_CONTROLLER
- 	bool "Ethernet Power Sourcing Equipment Support"
-+	depends on REGULATOR
- 	help
- 	  Generic Power Sourcing Equipment Controller support.
- 
-@@ -14,7 +15,6 @@ if PSE_CONTROLLER
- 
- config PSE_REGULATOR
- 	tristate "Regulator based PSE controller"
--	depends on REGULATOR || COMPILE_TEST
- 	help
- 	  This module provides support for simple regulator based Ethernet Power
- 	  Sourcing Equipment without automatic classification support. For
 
--- 
-2.34.1
 
