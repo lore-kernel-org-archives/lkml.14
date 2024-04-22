@@ -1,110 +1,267 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB8D5028B;
-	Mon, 22 Apr 2024 13:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+Received: from localhost.localdomain (unknown [165.204.184.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B637A15099A;
+	Mon, 22 Apr 2024 13:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.204.184.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713793516; cv=none; b=h+9bRLjK5tTm/D36VZZY56MhP18yfOY8YV7gx81bNFNlsDDXHTJnmaeFw97Boyfre8u2EIfICwUB7gvuFGXXpc19IEYlSSL1u5jFjym5V4YcFi0nr13Zzfyh8nj5O+bY6yBqkrFoB/0nWJlvRT6dAndbNFW24doqeS6iWwXY5DY=
+	t=1713793520; cv=none; b=BdK+VNIJ5qKzRmLx4bZspQoNg5JaGvZw9y5CUskoLoJxwO33MHuV+abvAdH4rSzU6EUBxz2mWJnkL2fzM12PxNWh6KKs3ufpSKFb+PChJ93cnkSMex8TPWgH1Eju9SengKFMuMjPNGn+r/ab63YyC3EJmToA5XSvTsqwCzsNfhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713793516; c=relaxed/simple;
-	bh=Xv+I/AWrnfGbuhd3Su1CfOwuNvsQXMXHzG4M4Oi9wL4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UhlHObPC87iQFSrcisNTdW6PHBKY207628Mb7LHtLyPFEjmtfVrE7mgV7tffoM2KQQbc2PtPFvPfV/956BfoaUeTlszGH/nf2DPjcl9gSf/ez13uzv7IU5D17xMR+DQtbqCVhlFWAkQ2MNxh8CfJWYHfsWYnr2CvhsTajEtllM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jExadde+; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jExadde+"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2dd6a7ae2dcso19769761fa.1;
-        Mon, 22 Apr 2024 06:45:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713793513; x=1714398313; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hBOxLfLCI8MpZaNvMa3DGb5sURgs6UxpjUu52caJphg=;
-        b=jExadde+izGkesQ08yTaZz1t846lmLHCva0NTXwSBj/qVOJ8GBwxXvLrHgOs52PDlA
-         iaM3beF0xrfaeEdlG3SGnXVjLByeTVKilGK2IsRjUzjGFIurdcaxCGedYRGpFvCtrf59
-         o8Z03mAM85OYiopB+/QXWkBgjNFJcAPXUrujlN3NITgpGJUsKReZIxBb2mw0JqQXhMDk
-         y31Rgx5zs2rna7z2dk1flvnnV03sYP1T8QgJWPSnjyCzEoSWAQ9AzZ54ZjC7H6YOZqIq
-         AQo27zTzodiBCyUYwVtOyehtKo55/v97LAfKh9FZtsNck7/x76Ea2sTLnMhaV8jYtiUR
-         Ss7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713793513; x=1714398313;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hBOxLfLCI8MpZaNvMa3DGb5sURgs6UxpjUu52caJphg=;
-        b=lVfUjfpMhZ8+8ypGl6/7RJTN9UqRYEXI9cXLoyjNUCzQcNJ5UOG+gw868UYBvy32Dk
-         YezhlPsDTYUaESeAFB8j1knudkX5zZQveVq27gx1O8WNCMLFL04wsXj/1kiFamiwgUV6
-         b6Ap7g4tyPlDdsmXjY1TIKEwW4s58DmxZ0x04Sa8C10buzGJWRbrpLF1x/zADW4mAlMR
-         yHAsBhU2qdSBkfCmy2d0CerP6XeVCP5ojMlbacZrKapcq4SCfyHeXLyIy3F6W1H6nmel
-         bK2f7v27K6lvqf7u65lXm6PLZyI670+6ES2FDPlzF97+oN7vBQHkMwOW2OUCDPAZqR6j
-         l9AQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXmUWTvFAqlafr9SL22g4MkYVaFEINrwXASTg6LgiowiwOKtlQ9y9aunI0qnU9o0R9vIJ+FbyMOWFq2VErg1GmovpwSNPNkxqxJwZmz5QyimFOFIJpqerJ+Y+cvEIeRa0a5EuD10tOrKRd9ShQB
-X-Gm-Message-State: AOJu0Yxx/GAgWQ2Kftx9QZjVZ6tUi+H7CoSwBjgOZhn5gsm1Umh0DZdy
-	HNNvoQEHdW26QDD33SGQoEGWbrY+oyK/0BUiaA/kv30Jq8LLqrl9UFRE6hLfA48vL2vcoiTax7i
-	RlH1AEDX5NQJPBQ9+IiZ494oN/EDJTXmT
-X-Google-Smtp-Source: AGHT+IEFfGhxb6ipU7LWemFA+rw18CyH7IvwYZVUA6pAOBjmsuhMiDjp127ta1Tiw5nij2AbpaPPDx2TWU7AeL0xdak=
-X-Received: by 2002:a2e:740e:0:b0:2d8:2d0a:7b9b with SMTP id
- p14-20020a2e740e000000b002d82d0a7b9bmr8148616ljc.14.1713793512309; Mon, 22
- Apr 2024 06:45:12 -0700 (PDT)
+	s=arc-20240116; t=1713793520; c=relaxed/simple;
+	bh=KJtLJ1PiXTSiUhXEI+u8c8gH/+X5sjYmBdrsu7oo7NE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M1BV4IuUGMrTJR+HTLPA7Q9Pe0kjcsIUpf/8y0o5Ll+GNU5j8zcFw0JRjVDAkpaeCUQFiHpZjEhyDio5490h3hlOte+94Ur+mNkCdlTUz5Pg/MCsMGI6y80/+SRxf1YKCKhcfr6hU7nKfCODO2weIHeb1EHqfml/7nffRR/symI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=none smtp.mailfrom=localhost.localdomain; arc=none smtp.client-ip=165.204.184.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=localhost.localdomain
+Received: by localhost.localdomain (Postfix, from userid 1000)
+	id 1A8EC137EF; Mon, 22 Apr 2024 08:37:31 -0500 (CDT)
+From: Carlos Bilbao <carlos.bilbao@amd.com>
+To: corbet@lwn.net,
+	elena.reshetova@intel.com
+Cc: cabilbao@amd.com,
+	bilbao@vt.edu,
+	avadhut.naik@amd.com,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Carlos Bilbao <carlos.bilbao@amd.com>
+Subject: [PATCH] docs/MAINTAINERS: Update my email address
+Date: Mon, 22 Apr 2024 08:37:23 -0500
+Message-ID: <20240422133726.129074-1-carlos.bilbao@amd.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240319154611.2492-1-johan+linaro@kernel.org>
- <ZiZdag8fw8H1haCb@hovoldconsulting.com> <438844e9-47e8-486e-9611-ae524d6974b3@quicinc.com>
- <ZiZkK4BAoqxNg7yG@hovoldconsulting.com>
-In-Reply-To: <ZiZkK4BAoqxNg7yG@hovoldconsulting.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Mon, 22 Apr 2024 09:44:59 -0400
-Message-ID: <CABBYNZJ1H7eEi8qsZUAxOa5HoE=xQ0wb2YFx0g7-SxxkNAS3Bg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Bluetooth: qca: fix NULL-deref on non-serdev setup
-To: Johan Hovold <johan@kernel.org>
-Cc: quic_zijuhu <quic_zijuhu@quicinc.com>, Marcel Holtmann <marcel@holtmann.org>, 
-	Zhengping Jiang <jiangzp@google.com>, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Johan,
+In the near future, I will not have access to the email address I used as
+maintainer of a number of things, mostly in the documentation. Update that
+address to my personal email address (see Link) so I can continue
+contributing.
 
-On Mon, Apr 22, 2024 at 9:20=E2=80=AFAM Johan Hovold <johan@kernel.org> wro=
-te:
->
-> On Mon, Apr 22, 2024 at 09:04:58PM +0800, quic_zijuhu wrote:
-> > On 4/22/2024 8:51 PM, Johan Hovold wrote:
-> > > On Tue, Mar 19, 2024 at 04:46:09PM +0100, Johan Hovold wrote:
->
-> > >> Johan Hovold (2):
-> > >>   Bluetooth: qca: fix NULL-deref on non-serdev suspend
-> > >>   Bluetooth: qca: fix NULL-deref on non-serdev setup
-> > >
-> > > Could you pick these up for 6.9 or 6.10?
-> > >
-> > > The patches are marked for stable backport and only privileged users =
-can
-> > > set the N_HCI line discipline these days (even if I'm not sure about
-> > > pre-5.14 kernels...) so it may be fine to wait for 6.10 if you prefer=
-.
->
-> > could you share the patch links for me to review. i can
-> > 't find them now
->
-> Sure, but you should bookmark lore.kernel.org in your browser as you can
-> search the archives there yourself:
->
->         https://lore.kernel.org/lkml/20240319154611.2492-1-johan+linaro@k=
-ernel.org/
+Link: https://lore.kernel.org/all/BL1PR12MB58749FF2BFEDB817DE1FE6CBF82A2@BL1PR12MB5874.namprd12.prod.outlook.com/
+Signed-off-by: Carlos Bilbao <carlos.bilbao@amd.com>
+---
+ Documentation/security/snp-tdx-threat-model.rst           | 2 +-
+ Documentation/translations/sp_SP/index.rst                | 2 +-
+ Documentation/translations/sp_SP/memory-barriers.txt      | 4 ++--
+ .../translations/sp_SP/process/code-of-conduct.rst        | 2 +-
+ Documentation/translations/sp_SP/process/coding-style.rst | 2 +-
+ .../translations/sp_SP/process/email-clients.rst          | 2 +-
+ Documentation/translations/sp_SP/process/howto.rst        | 2 +-
+ Documentation/translations/sp_SP/process/kernel-docs.rst  | 2 +-
+ .../sp_SP/process/kernel-enforcement-statement.rst        | 2 +-
+ Documentation/translations/sp_SP/process/magic-number.rst | 2 +-
+ .../translations/sp_SP/process/programming-language.rst   | 2 +-
+ .../translations/sp_SP/process/submitting-patches.rst     | 2 +-
+ MAINTAINERS                                               | 8 ++++----
+ 13 files changed, 17 insertions(+), 17 deletions(-)
 
-Did you send these to linux-bluetooth? I don't see them in:
+diff --git a/Documentation/security/snp-tdx-threat-model.rst b/Documentation/security/snp-tdx-threat-model.rst
+index ec66f2ed80c9..3a2d41d2e645 100644
+--- a/Documentation/security/snp-tdx-threat-model.rst
++++ b/Documentation/security/snp-tdx-threat-model.rst
+@@ -4,7 +4,7 @@ Confidential Computing in Linux for x86 virtualization
+ 
+ .. contents:: :local:
+ 
+-By: Elena Reshetova <elena.reshetova@intel.com> and Carlos Bilbao <carlos.bilbao@amd.com>
++By: Elena Reshetova <elena.reshetova@intel.com> and Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ 
+ Motivation
+ ==========
+diff --git a/Documentation/translations/sp_SP/index.rst b/Documentation/translations/sp_SP/index.rst
+index c543b495c042..274ef4ad96b9 100644
+--- a/Documentation/translations/sp_SP/index.rst
++++ b/Documentation/translations/sp_SP/index.rst
+@@ -7,7 +7,7 @@ Traducción al español
+ 
+ 	\kerneldocCJKoff
+ 
+-:maintainer: Carlos Bilbao <carlos.bilbao@amd.com>
++:maintainer: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ 
+ .. _sp_disclaimer:
+ 
+diff --git a/Documentation/translations/sp_SP/memory-barriers.txt b/Documentation/translations/sp_SP/memory-barriers.txt
+index 27097a808c88..153e57130775 100644
+--- a/Documentation/translations/sp_SP/memory-barriers.txt
++++ b/Documentation/translations/sp_SP/memory-barriers.txt
+@@ -1,6 +1,6 @@
+ NOTE:
+ This is a version of Documentation/memory-barriers.txt translated into
+-Spanish by Carlos Bilbao <carlos.bilbao@amd.com>. If you find any
++Spanish by Carlos Bilbao <carlos.bilbao.osdev@gmail.com>. If you find any
+ difference between this document and the original file or a problem with
+ the translation, please contact the maintainer of this file. Please also
+ note that the purpose of this file is to be easier to read for non English
+@@ -18,7 +18,7 @@ Documento original: David Howells <dhowells@redhat.com>
+     Will Deacon <will.deacon@arm.com>
+     Peter Zijlstra <peterz@infradead.org>
+ 
+-Traducido por: Carlos Bilbao <carlos.bilbao@amd.com>
++Traducido por: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ Nota: Si tiene alguna duda sobre la exactitud del contenido de esta
+ traducción, la única referencia válida es la documentación oficial en
+ inglés.
+diff --git a/Documentation/translations/sp_SP/process/code-of-conduct.rst b/Documentation/translations/sp_SP/process/code-of-conduct.rst
+index adc6c770cc37..a6c08613aefc 100644
+--- a/Documentation/translations/sp_SP/process/code-of-conduct.rst
++++ b/Documentation/translations/sp_SP/process/code-of-conduct.rst
+@@ -1,7 +1,7 @@
+ .. include:: ../disclaimer-sp.rst
+ 
+ :Original: :ref:`Documentation/process/code-of-conduct.rst <code_of_conduct>`
+-:Translator: Contributor Covenant and Carlos Bilbao <carlos.bilbao@amd.com>
++:Translator: Contributor Covenant and Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ 
+ .. _sp_code_of_conduct:
+ 
+diff --git a/Documentation/translations/sp_SP/process/coding-style.rst b/Documentation/translations/sp_SP/process/coding-style.rst
+index a37274764371..b5a84df44cea 100644
+--- a/Documentation/translations/sp_SP/process/coding-style.rst
++++ b/Documentation/translations/sp_SP/process/coding-style.rst
+@@ -1,7 +1,7 @@
+ .. include:: ../disclaimer-sp.rst
+ 
+ :Original: :ref:`Documentation/process/coding-style.rst <submittingpatches>`
+-:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
++:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ 
+ .. _sp_codingstyle:
+ 
+diff --git a/Documentation/translations/sp_SP/process/email-clients.rst b/Documentation/translations/sp_SP/process/email-clients.rst
+index fdf1e51b84e4..55d5803daf41 100644
+--- a/Documentation/translations/sp_SP/process/email-clients.rst
++++ b/Documentation/translations/sp_SP/process/email-clients.rst
+@@ -1,7 +1,7 @@
+ .. include:: ../disclaimer-sp.rst
+ 
+ :Original: :ref:`Documentation/process/email-clients.rst <email_clients>`
+-:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
++:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ 
+ .. _sp_email_clients:
+ 
+diff --git a/Documentation/translations/sp_SP/process/howto.rst b/Documentation/translations/sp_SP/process/howto.rst
+index dd793c0f8574..72ea855ac9dc 100644
+--- a/Documentation/translations/sp_SP/process/howto.rst
++++ b/Documentation/translations/sp_SP/process/howto.rst
+@@ -1,7 +1,7 @@
+ .. include:: ../disclaimer-sp.rst
+ 
+ :Original: :ref:`Documentation/process/howto.rst <process_howto>`
+-:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
++:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ 
+ .. _sp_process_howto:
+ 
+diff --git a/Documentation/translations/sp_SP/process/kernel-docs.rst b/Documentation/translations/sp_SP/process/kernel-docs.rst
+index 2f9b3df8f8fa..a62c6854f59b 100644
+--- a/Documentation/translations/sp_SP/process/kernel-docs.rst
++++ b/Documentation/translations/sp_SP/process/kernel-docs.rst
+@@ -1,7 +1,7 @@
+ .. include:: ../disclaimer-sp.rst
+ 
+ :Original: :ref:`Documentation/process/kernel-docs.rst <kernel_docs>`
+-:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
++:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ 
+ .. _sp_kernel_docs:
+ 
+diff --git a/Documentation/translations/sp_SP/process/kernel-enforcement-statement.rst b/Documentation/translations/sp_SP/process/kernel-enforcement-statement.rst
+index d66902694089..d47a1c154610 100644
+--- a/Documentation/translations/sp_SP/process/kernel-enforcement-statement.rst
++++ b/Documentation/translations/sp_SP/process/kernel-enforcement-statement.rst
+@@ -1,7 +1,7 @@
+ .. include:: ../disclaimer-sp.rst
+ 
+ :Original: :ref:`Documentation/process/kernel-enforcement-statement.rst <process_statement_kernel>`
+-:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
++:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ 
+ .. _sp_process_statement_kernel:
+ 
+diff --git a/Documentation/translations/sp_SP/process/magic-number.rst b/Documentation/translations/sp_SP/process/magic-number.rst
+index 7c7dfb4ba80b..32a99aac2f6c 100644
+--- a/Documentation/translations/sp_SP/process/magic-number.rst
++++ b/Documentation/translations/sp_SP/process/magic-number.rst
+@@ -1,7 +1,7 @@
+ .. include:: ../disclaimer-sp.rst
+ 
+ :Original: :ref:`Documentation/process/magic-number.rst <magicnumbers>`
+-:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
++:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ 
+ .. _sp_magicnumbers:
+ 
+diff --git a/Documentation/translations/sp_SP/process/programming-language.rst b/Documentation/translations/sp_SP/process/programming-language.rst
+index 301f525372d8..ba2164057f45 100644
+--- a/Documentation/translations/sp_SP/process/programming-language.rst
++++ b/Documentation/translations/sp_SP/process/programming-language.rst
+@@ -1,7 +1,7 @@
+ .. include:: ../disclaimer-sp.rst
+ 
+ :Original: :ref:`Documentation/process/programming-language.rst <programming_language>`
+-:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
++:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ 
+ .. _sp_programming_language:
+ 
+diff --git a/Documentation/translations/sp_SP/process/submitting-patches.rst b/Documentation/translations/sp_SP/process/submitting-patches.rst
+index c2757d9ab216..18bb3413c3ca 100644
+--- a/Documentation/translations/sp_SP/process/submitting-patches.rst
++++ b/Documentation/translations/sp_SP/process/submitting-patches.rst
+@@ -1,7 +1,7 @@
+ .. include:: ../disclaimer-sp.rst
+ 
+ :Original: :ref:`Documentation/process/submitting-patches.rst <submittingpatches>`
+-:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
++:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ 
+ .. _sp_submittingpatches:
+ 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d818866d6d73..8e9c2fd7a8a0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -987,7 +987,7 @@ F:	drivers/video/fbdev/geode/
+ 
+ AMD HSMP DRIVER
+ M:	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+-R:	Carlos Bilbao <carlos.bilbao@amd.com>
++R:	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/arch/x86/amd_hsmp.rst
+@@ -5325,7 +5325,7 @@ F:	drivers/usb/atm/cxacru.c
+ 
+ CONFIDENTIAL COMPUTING THREAT MODEL FOR X86 VIRTUALIZATION (SNP/TDX)
+ M:	Elena Reshetova <elena.reshetova@intel.com>
+-M:	Carlos Bilbao <carlos.bilbao@amd.com>
++M:	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ S:	Maintained
+ F:	Documentation/security/snp-tdx-threat-model.rst
+ 
+@@ -10549,7 +10549,7 @@ S:	Orphan
+ F:	drivers/video/fbdev/imsttfb.c
+ 
+ INDEX OF FURTHER KERNEL DOCUMENTATION
+-M:	Carlos Bilbao <carlos.bilbao@amd.com>
++M:	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ S:	Maintained
+ F:	Documentation/process/kernel-docs.rst
+ 
+@@ -20549,7 +20549,7 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
+ F:	drivers/media/dvb-frontends/sp2*
+ 
+ SPANISH DOCUMENTATION
+-M:	Carlos Bilbao <carlos.bilbao@amd.com>
++M:	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+ R:	Avadhut Naik <avadhut.naik@amd.com>
+ S:	Maintained
+ F:	Documentation/translations/sp_SP/
+-- 
+2.41.0
 
-https://patchwork.kernel.org/project/bluetooth/list/
-
-
---=20
-Luiz Augusto von Dentz
