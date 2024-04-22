@@ -1,106 +1,215 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from smtp.smtpout.orange.fr (smtp-16.smtpout.orange.fr [80.12.242.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92E513E021
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 10:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7869613E3E5;
+	Mon, 22 Apr 2024 10:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713781528; cv=none; b=C1bV+HTEMNEvcPct1jcOnrfH/f2NLawy7e33P4t32NBvSQ35BYmOSGaHl6AUmDJ3/hQkkDm7CCnySTKNo2hknYHChqxohgBhSL42TgzL021LX7Pff7XQRtDXRDzVE3jYQoAyZCMrKbPrVF5M7BE/o9NNymFTI/61gezlKn/wxec=
+	t=1713781531; cv=none; b=ibzXr+AwBO1RYVjD+YeuoNYlED7fgME/OcafyxqVm0ko9o9Nzo4c17C1BXCv6r4cCn8kB6d8aSVGFZDfw7CnWGWDC7tEfIaqG1rO+0fCOufVKSLUww91SUy8ATrloDE6t28ToG4qmf4C1H3VTRLZMc9tRRTCr+5C3qT+m0OP7gU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713781528; c=relaxed/simple;
-	bh=jJqY3EzcXGU+nKakTn7MTvOCbow73aPwa+neDvl0lh8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=XsWkWl5FO9n98JuvRxT2BY3sch9LhT/S3EtB1pITqjdT7DtsdH0J1rwUURbsOkgNzwxTmcrwHmqoiWHFSTige5ybqog6XKPjphDvL9q9qHAwUFZRx7NRJUnZHHP/A9/WoZ8ZJMNhYxMXLmnVo0ZW+i6BMQJMx99pwQjzh0gZ7mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b5yt1zYl; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713781531; c=relaxed/simple;
+	bh=PEe4CtOIrKOA5J/Q+3pJlXyDw+pimrK40GN8HRR88Cs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ga4KxYfVisOteTzu4ky3FGJ6y2V0EWYdGGNC4DfFXQ0StfmImdTta/HKyDFT0pU6KMnCFWjRNZdQADbsW8PkowDfI10FxJ1VOL2z5PgG3DtDp8pXhxTetvvFz4liBOHeaGRNX/N5g7kvlLhMnZrIPzM+GQ6QGR9VViMotpua6zM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=kaQ9gEiM; arc=none smtp.client-ip=80.12.242.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b5yt1zYl"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a5200afe39eso460516966b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 03:25:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713781525; x=1714386325; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kjOFtSdcuWQZYN13n2HXTmueHu30sawDV2mP2f/7YqE=;
-        b=b5yt1zYlTK/gPb6cEjOq/3J0TN0egOXVIQjvE4tWCelmB0HI7P4bBEc39GySaFNB+i
-         WtB4lnLZS/2xTztLeLRwWhA/niqSMy3AlOf3MktCrxTSrZ7HKLtSwjSs5N4uP1U3Weaw
-         H5JBVPKtzHgQ6KVyQw5ObO/ZD5CswaJ7Yi812kmjzgMMzBpy0VBMDw8kpzZ3EEhrHgHE
-         3vCuLUs0Y/7H/lH7RHO2RzuDmrxauDlliNE4VRmbYI/cEEQ52csVyhxv1s94iY0NYEh4
-         dXU3oeoC5gfykcQZ0DibYURmyiPxeIm4X6Woy31emwt9sn8koLdLgR4PGXhh0JzJ0pRB
-         XQJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713781525; x=1714386325;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kjOFtSdcuWQZYN13n2HXTmueHu30sawDV2mP2f/7YqE=;
-        b=cWWaiG9ZOB7i7rsxIM6+Gr0mdCzQkfUpz1oSG9kyKkYYAJR/E5FSfMLqKraMz6Ubmd
-         eURErEYhjQntjLabwH72e5MyUoCoLtnC5r3YbFxdmP8v797EgKeXtk2+qePpqtgCbfV7
-         Kisg9FXOnQndUAqUaN7ijvp1vkIcNdK28j5vOhPG5JNqaAUkH2nm2rTESyGslIM5rK5u
-         iEcYimiZStpsqrKnN6XncCZsga0/U32CSJTUkpQJYKIvKykpAKjnShWee5Rw+qut1TOY
-         5eOPCYEwxulEplXNwqi4qig4VWzN/dTmf+Jxfmuxzf+OWMl+t6KDVoE06zpA+2JdZGi5
-         TyDA==
-X-Forwarded-Encrypted: i=1; AJvYcCVzhSHch1AFB0hi4C0C9Q9d83mZ1Hlxl5N2M2LjU8Rbb6jFO/5TFulB5I0Y3VtfKfDRFgrRf22I7EgLOFYpCWd6Msn3y3nb5RzmGyQ5
-X-Gm-Message-State: AOJu0YxofNPMIaxEfMUsJ0z1JtVbA7WoEzWwt6eNlapY6SQMiUukIWJk
-	cbIqKtwSSlNkcq4rTwlOEOn0Ffs/TENKb6cPlFTq3Hw5EWWSDuf8XPB7UW/Y9vM=
-X-Google-Smtp-Source: AGHT+IGJbFE/xk27S/lBooXeZazvrQf8V1BxKpteLDJyf6SzZbXaMCLpiQbsqNz9JHTqiEI/1HgXqA==
-X-Received: by 2002:a17:906:3ad0:b0:a52:57a6:2f45 with SMTP id z16-20020a1709063ad000b00a5257a62f45mr7820235ejd.21.1713781524763;
-        Mon, 22 Apr 2024 03:25:24 -0700 (PDT)
-Received: from [127.0.1.1] ([62.231.100.236])
-        by smtp.gmail.com with ESMTPSA id k18-20020a1709063fd200b00a524b33fd9asm5553172ejj.68.2024.04.22.03.25.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 03:25:24 -0700 (PDT)
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Abel Vesa <abelvesa@kernel.org>, 
- "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240401-imx95-blk-ctl-v6-0-84d4eca1e759@nxp.com>
-References: <20240401-imx95-blk-ctl-v6-0-84d4eca1e759@nxp.com>
-Subject: Re: [PATCH v6 0/4] Add support i.MX95 BLK CTL module clock
- features
-Message-Id: <171378152318.2944518.13528932834119248200.b4-ty@linaro.org>
-Date: Mon, 22 Apr 2024 13:25:23 +0300
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="kaQ9gEiM"
+Received: from fedora.home ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id yqqPr8npHhQSByqqPrJn2k; Mon, 22 Apr 2024 12:24:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1713781458;
+	bh=WDS/cJIF3u/b8hKGhrIR45S+kJmGLDvRuuuBC4I4XyY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=kaQ9gEiMqMz2fUPdb+cygTCdJytCqki5fJpgw8E/zgZZfy5hc6+RBYeHtX9LMYzie
+	 0kn0DwUKqBwFgbA0DwkQBf9JkRHVGrq3z7ypX+hquI7Gu6yhU5Q16ZdmNvAHUmcoJ0
+	 6rs/y47hUKC6w4EKdBR9Oa1BaergyneOdGsQk0cX5njFtod7RsiMk3F/OSNIQshhzh
+	 at0DKr6ME9bQ4nGZI4K8vNPtUbxDaFBSX3EYuWRC2mBYk4FqTv/xszsxUrI4G2/14l
+	 WjEb2MwDgQXFuZhDTDbA8lGX0S7CqBGS3HxkAqf2Xp8XEWJUojGiSXbUDtZc4mFBRl
+	 pU5P603po9jbQ==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 22 Apr 2024 12:24:18 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: David.Laight@ACULAB.COM,
+	rasmus.villemoes@prevas.dk,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH v2 1/2] seq_file: Optimize seq_puts()
+Date: Mon, 22 Apr 2024 12:24:06 +0200
+Message-ID: <a8589bffe4830dafcb9111e22acf06603fea7132.1713781332.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
+
+Most of seq_puts() usages are done with a string literal. In such cases,
+the length of the string car be computed at compile time in order to save
+a strlen() call at run-time. seq_putc() or seq_write() can then be used
+instead.
+
+This saves a few cycles.
+
+To have an estimation of how often this optimization triggers:
+   $ git grep seq_puts.*\" | wc -l
+   3436
+
+   $ git grep seq_puts.*\".\" | wc -l
+   84
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Changes in v2:
+   - Use a function, instead of a macro   [Al Viro]
+   - Handle the case of 1 char only strings, in order to use seq_putc()   [Al Viro]
+   - Use __always_inline   [David Laight]
+
+V1: https://lore.kernel.org/all/5c4f7ad7b88f5026940efa9c8be36a58755ec1b3.1704374916.git.christophe.jaillet@wanadoo.fr/
 
 
-On Mon, 01 Apr 2024 21:28:14 +0800, Peng Fan (OSS) wrote:
-> i.MX95's several MIXes has BLK CTL module which could be used for
-> clk settings, QoS settings, Misc settings for a MIX. This patchset
-> is to add the clk feature support, including dt-bindings
-> 
-> 
+Checked by comparing the output of a few .s files.
+Here is one of these outputs:
 
-Applied, thanks!
+$ diff -u drivers/clk/clk.s.old drivers/clk/clk.s | grep -C6 seq_w
 
-[1/4] dt-bindings: clock: add i.MX95 clock header
-      commit: 977b07f769970aec97b907cfc93fb681ecffc9fe
-[2/4] dt-bindings: clock: support i.MX95 BLK CTL module
-      commit: b773f5ad2bfd2d00bd2c5ea7022bc5b86d23a1b7
-[3/4] dt-bindings: clock: support i.MX95 Display Master CSR module
-      commit: c6e87b066756ec4b3f5f9061b508f3bd724ec652
-[4/4] clk: imx: add i.MX95 BLK CTL clk driver
-      commit: 5224b189462ff70df328f173b71acfd925092c3c
+ .L2918:
+@@ -46072,10 +46073,11 @@
+ 	call	clk_prepare_unlock	#
+ # drivers/clk/clk.c:3438: 	clk_pm_runtime_put_all();
+ 	call	clk_pm_runtime_put_all	#
+-# drivers/clk/clk.c:3440: 	seq_puts(s, "}\n");
++# ./include/linux/seq_file.h:130: 		seq_write(m, s, __builtin_strlen(s));
++	movl	$2, %edx	#,
+ 	movq	$.LC94, %rsi	#,
+ 	movq	%rbp, %rdi	# s,
+-	call	seq_puts	#
++	call	seq_write	#
+ # drivers/clk/clk.c:3441: 	return 0;
+ 	jmp	.L2917	#
+ 	.size	clk_dump_show, .-clk_dump_show
+@@ -46200,7 +46202,7 @@
+ 	leaq	128(%rbx), %r15	#, _97
+ 	movq	%r15, %rdi	# _97,
+--
+ # drivers/clk/clk.c:1987: 		__clk_recalc_rates(core, false, 0);
+@@ -46480,15 +46482,17 @@
+ 	call	seq_printf	#
+ 	jmp	.L2950	#
+ .L2946:
+-# drivers/clk/clk.c:3315: 		seq_puts(s, "-----");
++# ./include/linux/seq_file.h:130: 		seq_write(m, s, __builtin_strlen(s));
+ 	call	__sanitizer_cov_trace_pc	#
++	movl	$5, %edx	#,
+ 	movq	$.LC100, %rsi	#,
+ 	movq	%rbp, %rdi	# s,
+-	call	seq_puts	#
++	call	seq_write	#
++# ./include/linux/seq_file.h:131: }
+ 	jmp	.L2947	#
+ .L2957:
+ # drivers/clk/clk.c:1903: 	return clk_core_get_accuracy_no_lock(core);
+-	xorl	%r14d, %r14d	# _34
++	xorl	%r14d, %r14d	# _35
+--
+@@ -46736,21 +46740,22 @@
+ 	call	__sanitizer_cov_trace_pc	#
+ 	leaq	240(%r12), %rdi	#, tmp101
+ 	call	__tsan_read8	#
+-# drivers/clk/clk.c:3355: 	seq_puts(s, "                                 enable  prepare  protect                                duty  hardware                            connection\n");
+-	movq	$.LC104, %rsi	#,
++# ./include/linux/seq_file.h:130: 		seq_write(m, s, __builtin_strlen(s));
++	movl	$142, %edx	#,
+ 	movq	%r12, %rdi	# s,
++	movq	$.LC104, %rsi	#,
+ # drivers/clk/clk.c:3352: 	struct hlist_head **lists = s->private;
+ 	movq	240(%r12), %r13	# s_10(D)->private, lists
+-# drivers/clk/clk.c:3355: 	seq_puts(s, "                                 enable  prepare  protect                                duty  hardware                            connection\n");
+-	call	seq_puts	#
+-# drivers/clk/clk.c:3356: 	seq_puts(s, "   clock                          count    count    count        rate   accuracy phase  cycle    enable   consumer                         id\n");
++# ./include/linux/seq_file.h:130: 		seq_write(m, s, __builtin_strlen(s));
++	call	seq_write	#
++	movl	$142, %edx	#,
+ 	movq	$.LC105, %rsi	#,
+ 	movq	%r12, %rdi	# s,
+-	call	seq_puts	#
+-# drivers/clk/clk.c:3357: 	seq_puts(s, "---------------------------------------------------------------------------------------------------------------------------------------------\n");
++	call	seq_write	#
+ 	movq	$.LC106, %rsi	#,
+ 	movq	%r12, %rdi	# s,
+-	call	seq_puts	#
++	movl	$142, %edx	#,
++	call	seq_write	#
+ # drivers/clk/clk.c:3359: 	ret = clk_pm_runtime_get_all();
+ 	call	clk_pm_runtime_get_all	#
+ # drivers/clk/clk.c:3360: 	if (ret)
+@@ -57943,7 +57948,7 @@
+ 	subq	$88, %rsp	#,
+ # drivers/clk/clk.c:5338: {
 
-Best regards,
+
+The output for seq_putc() generation has also be checked and works.
+---
+ fs/seq_file.c            |  4 ++--
+ include/linux/seq_file.h | 13 ++++++++++++-
+ 2 files changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/fs/seq_file.c b/fs/seq_file.c
+index f5fdaf3b1572..8ef0a07033ca 100644
+--- a/fs/seq_file.c
++++ b/fs/seq_file.c
+@@ -669,7 +669,7 @@ void seq_putc(struct seq_file *m, char c)
+ }
+ EXPORT_SYMBOL(seq_putc);
+ 
+-void seq_puts(struct seq_file *m, const char *s)
++void __seq_puts(struct seq_file *m, const char *s)
+ {
+ 	int len = strlen(s);
+ 
+@@ -680,7 +680,7 @@ void seq_puts(struct seq_file *m, const char *s)
+ 	memcpy(m->buf + m->count, s, len);
+ 	m->count += len;
+ }
+-EXPORT_SYMBOL(seq_puts);
++EXPORT_SYMBOL(__seq_puts);
+ 
+ /**
+  * seq_put_decimal_ull_width - A helper routine for putting decimal numbers
+diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
+index 234bcdb1fba4..8bd4fda6e027 100644
+--- a/include/linux/seq_file.h
++++ b/include/linux/seq_file.h
+@@ -118,7 +118,18 @@ void seq_vprintf(struct seq_file *m, const char *fmt, va_list args);
+ __printf(2, 3)
+ void seq_printf(struct seq_file *m, const char *fmt, ...);
+ void seq_putc(struct seq_file *m, char c);
+-void seq_puts(struct seq_file *m, const char *s);
++void __seq_puts(struct seq_file *m, const char *s);
++
++static __always_inline void seq_puts(struct seq_file *m, const char *s)
++{
++	if (!__builtin_constant_p(*s))
++		__seq_puts(m, s);
++	else if (s[0] && !s[1])
++		seq_putc(m, s[0]);
++	else
++		seq_write(m, s, __builtin_strlen(s));
++}
++
+ void seq_put_decimal_ull_width(struct seq_file *m, const char *delimiter,
+ 			       unsigned long long num, unsigned int width);
+ void seq_put_decimal_ull(struct seq_file *m, const char *delimiter,
 -- 
-Abel Vesa <abel.vesa@linaro.org>
+2.44.0
 
