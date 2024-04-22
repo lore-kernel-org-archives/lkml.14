@@ -1,80 +1,77 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D884E14A0A5;
-	Mon, 22 Apr 2024 13:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742FF14A0A5;
+	Mon, 22 Apr 2024 13:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713792039; cv=none; b=P6ZGkrDcnXws5vWXgic3fBdVXgmG8yjL1UbU0vHy8lEmRkIXD+OaR5G3/NcWYed2kBFP4seXHHXaUz31c4IEJm9Ys9m3xSWnPk28frAOcFUBr+PB2L3yxKz5/p1lqpaU+N7Oal7FBLOgmQQVGku82oDZyuZDgEzZvQPyDOO546o=
+	t=1713792049; cv=none; b=Odd3xk4YImQm1llr3SpzdrV1hRCtsJhWUxwvjiLEHP1zE/tWmFS5xkR3cMU/doCdcbhyD3CWV5MSn6bd38uif8EDRxozqz3h8NvCBOt1GuOxh84MusezZPMSPKT1wP3+VVLpyQVJ3sKWI+dRn7UHfHmLKTIqeoFsGZCah3wHMSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713792039; c=relaxed/simple;
-	bh=9PTDdzlg3J4GICnkr5pu6YI2krA76YloflEU0yaageA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lVXOW1MsX26JKxmYTilfyDOAyUxzP5/ZNAYA1cxGsVTP0d8NK1OxIaM/hiEh9IiyWoGaiShb0aMqfnJeBPDnDLs0FnqFZJOvxEv6keM/H9RAKXrRHKskeh62VwUY+516yLBPYY5CUuuFD9sgkCahNm++O+1NrUksoeFWqiBoenI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=nRVLNgXG; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1713792049; c=relaxed/simple;
+	bh=hWCwjGT5sP5+zSGORK1zGhuuRF7d0frJiwFI0KinOds=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TDv6MD7d8F7wCIz17WOYeKbzQjY1fbVYbWgnZfLF9ynyavJYy83dpx4tpoETXmJfnINcar777L/qu4B/LGp7eIFpgMHZsM9Yc+owSNkY+B/ieivmjhN/uQtKBYgbJ0od+cyH8ukMlfkjNBJs4I3PAETOxTvuBf0dvOAOZ81aNwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DPzNy8mc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="nRVLNgXG"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 8254247C2E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1713792031; bh=d1TbXgvvEeqhBi240obyjEDSrnasnWvPwS8968bPFyw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=nRVLNgXGpHERBp1Vpmhh3lyAjt0KCYz+KNio/hQxfK+dn6PdB+f4ZjEKkYjmknzKr
-	 u9MmU3zcjpWvUwxXV4spd62he3bUuPgxd0mBNj3410B/9uIUc4VbRTWKL9dijuYK7o
-	 2384fli3tvggIn33DTN2CgnQVIesjqplj280MsfOV1k9D43UqGF6XmZw92sJ+KkMhM
-	 eqZTxDKhxtXidU/6oXo6OFh4KW+pTe1zuc7iOWLmfPr03zjwkSp+g9SP2fc4NKwMFb
-	 rc38Xhphmw6EMxpEw63jqvgblp10yylNPmXL2JLoRTzUuWBCnboXyQ23oHNo0NXufU
-	 4SYnvwdTVdWyg==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 8254247C2E;
-	Mon, 22 Apr 2024 13:20:31 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Cheng Ziqiu <chengziqiu@hust.edu.cn>, Alex Shi <alexs@kernel.org>,
- Yanteng Si <siyanteng@loongson.cn>
-Cc: Dongliang Mu <dzm91@hust.edu.cn>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, hust-os-kernel-patches@googlegroups.com,
- Cheng Ziqiu <chengziqiu@hust.edu.cn>
-Subject: Re: [PATCH] scripts: add `check-trans-update.py`
-In-Reply-To: <20240422065822.1441611-1-chengziqiu@hust.edu.cn>
-References: <20240422065822.1441611-1-chengziqiu@hust.edu.cn>
-Date: Mon, 22 Apr 2024 07:20:30 -0600
-Message-ID: <8734rd4jq9.fsf@meer.lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DPzNy8mc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5FACC2BD11;
+	Mon, 22 Apr 2024 13:20:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713792048;
+	bh=hWCwjGT5sP5+zSGORK1zGhuuRF7d0frJiwFI0KinOds=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DPzNy8mcpLidbC5CUMtFoR62kMvHl3Gr7zYmWIh6fXaydq2vSxq2n3e8kbMnu0AXL
+	 sSndbuevdHm9ZsCm52VwLFR4hshv3Ybb/foKHXog9DVbMbNzjkThW/G9ryxAlowPVt
+	 Oq6kdbcIWmtI9Z/rD/O9XAc9wQrg0wxTHcWxW9bS74A9h0BQuTg5j0hP5dJ+4xDvd5
+	 COzAQedIB63v2o/HSv1oZD9NLwdAKDUyPsqCnt4BvfzLw0pIiNJRCLR/GUYthQPnKi
+	 XRUrJi5m3hDfZd0xbZcf0aCAwwfqUS9EQAnr97qy+FroWivlqvc1VUUWazPLLK9IDh
+	 nU+cRYFrgUpMA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rytb9-000000005Nn-2nXU;
+	Mon, 22 Apr 2024 15:20:44 +0200
+Date: Mon, 22 Apr 2024 15:20:43 +0200
+From: Johan Hovold <johan@kernel.org>
+To: quic_zijuhu <quic_zijuhu@quicinc.com>
+Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Zhengping Jiang <jiangzp@google.com>,
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Bluetooth: qca: fix NULL-deref on non-serdev setup
+Message-ID: <ZiZkK4BAoqxNg7yG@hovoldconsulting.com>
+References: <20240319154611.2492-1-johan+linaro@kernel.org>
+ <ZiZdag8fw8H1haCb@hovoldconsulting.com>
+ <438844e9-47e8-486e-9611-ae524d6974b3@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <438844e9-47e8-486e-9611-ae524d6974b3@quicinc.com>
 
-Cheng Ziqiu <chengziqiu@hust.edu.cn> writes:
+On Mon, Apr 22, 2024 at 09:04:58PM +0800, quic_zijuhu wrote:
+> On 4/22/2024 8:51 PM, Johan Hovold wrote:
+> > On Tue, Mar 19, 2024 at 04:46:09PM +0100, Johan Hovold wrote:
 
-> The `check-trans-update.py` scripts check whether a translated version
-> of a documentation is up-to-date with the english version.
->
-> The scripts use `git log` commit to find the latest english commit from
-> the translation commit (order by author date) and the latest english
-> commits from HEAD. If differences occurs, report the file and commits
-> need to be updated.
->
-> Signed-off-by: Cheng Ziqiu <chengziqiu@hust.edu.cn>
-> ---
->  scripts/check-trans-update.py | 176 ++++++++++++++++++++++++++++++++++
->  1 file changed, 176 insertions(+)
->  create mode 100755 scripts/check-trans-update.py
+> >> Johan Hovold (2):
+> >>   Bluetooth: qca: fix NULL-deref on non-serdev suspend
+> >>   Bluetooth: qca: fix NULL-deref on non-serdev setup
+> > 
+> > Could you pick these up for 6.9 or 6.10?
+> > 
+> > The patches are marked for stable backport and only privileged users can
+> > set the N_HCI line discipline these days (even if I'm not sure about
+> > pre-5.14 kernels...) so it may be fine to wait for 6.10 if you prefer.
 
-From a *quick* look I see how this could be a useful tool.  I think a
-real requirement, though, is that a script like this start with a nice
-comment saying what it does and how to use it.  Most people will simply
-stumble across it while looking at files in scripts/; without such a
-comment, they will be hard put to know what it's for.
+> could you share the patch links for me to review. i can
+> 't find them now
 
-Scripts for the documentation should be well documented :)
+Sure, but you should bookmark lore.kernel.org in your browser as you can
+search the archives there yourself:
 
-Thanks,
+	https://lore.kernel.org/lkml/20240319154611.2492-1-johan+linaro@kernel.org/
 
-jon
+Johan
