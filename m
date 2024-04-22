@@ -1,299 +1,303 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF49482C1;
-	Mon, 22 Apr 2024 10:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9061D482C1;
+	Mon, 22 Apr 2024 10:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713783497; cv=none; b=maV2D+2yuz3Kn+aZYKdy09KEbJAlrW6L/6pDqPYtE3RkXURBiCLSY2u/NNi64+BmSKy8X9SjpgsUpSOEJ9FfQ5WNgCYDbR8cWzSt0R3rKPBoIuLWgMZbsDRRatgWQHoTp7ovLJo1uijSI8rksgnGhcvOknkF1kp4npLDIG07gvQ=
+	t=1713783506; cv=none; b=iGqdEPG8U0HLXvtI3JtnO7a38WAzrIsgDGsZbYolCm1BEXjiDO3L4Q4M6wJM6zdofFTxxJsM7WiEvVcOtwwegSdJusN1trWtoYCqjTFjWbvufDU3cxf6vK50MzcVLAj38ntlV7yjkW8VJjxnEqab0SPHnZ6WaMcV3ipQi8ZITyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713783497; c=relaxed/simple;
-	bh=0rNt3QdClu+MsiAcTHPsILQpK5sBVa6rNFHj/WQ4GRE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KdcYORfyVCuuSfcRceJAbvgIGp5dSmYq9NUazBd7FbWbPl4hHgoXqHvwm74oh5SiuUBIkdTy37eqgtPy8r6SYNFcJgSnCLR3Vcsc7W672NTP0UxgcJSFxbRl8BvEbKeLtBBy6y0FJSruHipzo5lv35zHRycZt3SpuLaHQWs9238=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hXbvKiMM; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713783506; c=relaxed/simple;
+	bh=lPATZdfC4lvu1dgYEE2BFqtfBxeTwRg2JFrdpCPXZMs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rUlS8RkBBRU762cIpp/jTxH6heOUB/X5oimK381yBnjEWYaFKV0kCXS4+OZ7E92r4VzGHUaTDlnQmMJkp14a4of4t0yvJ65D1zavWTo3crutxDIgThygRMxpC+Y51mq16CLZYmIi6sIxoxJLABntjJ8mwj5RSbxO5x+18hR/VFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ASXSqTH4; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hXbvKiMM"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43M2lDBa014858;
-	Mon, 22 Apr 2024 10:58:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=2p0cjqRkP2V6AC42/7fG/rRA8VzQJI3JHBbxLYZfJSk=; b=hX
-	bvKiMMrqOJt1gW9BL63MD+jIPJo3iN8wSrZQlSF6Mv7oZWKZhm2/Su9leegcBT/S
-	9ExTmNNuVmUMS6NWBdsFCWIYKInA1hwF39PP84c/YqlUBngTW7JPJpZRN6Ym7oz5
-	lXVzOM313CvebpBZCtUNV2Z4DqXGv6FuNf70E9233MNhATXeZgoPfoQjnS6hPyKE
-	RnlKr77jyAHimyKHuouxbiLrygiQjMiDig2BdvnSs0oaUp6eDamFe/E0XyMZPhnR
-	DAoT8EE2O1fTJX4J35OEs8kt7cbxl8SxzJ6g4Xhw/iC1rWNKAM8G7bSVNKdLuEAo
-	7X2oDIsCO/IyKHLbAXcg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xnet792mn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 10:58:11 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43MAwA0T028661
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 10:58:10 GMT
-Received: from [10.218.5.19] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 22 Apr
- 2024 03:58:05 -0700
-Message-ID: <4b2e0c76-e455-40f8-b652-a4b723cc8601@quicinc.com>
-Date: Mon, 22 Apr 2024 16:27:54 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ASXSqTH4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713783504; x=1745319504;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lPATZdfC4lvu1dgYEE2BFqtfBxeTwRg2JFrdpCPXZMs=;
+  b=ASXSqTH4jAXmykN3u03L8Arf+wT62uGC5n7SxrAZ6RMttYFzoHSDgqEF
+   LQvr/xnYurI7T1q8gdThfTD8jXZjOu/Nqr5zitV5i1T0PAYCN7t6+2qQt
+   7UC3EvNUsysGClSrbDLoa5SnhOQEgG521vnOoE/fiKUFCMkFICs5jdAo2
+   qgV1DGhWMQQtjir3jWVg772xY/19rCxWZmLShUUJRbsD3dY7DWBlNxRR/
+   xbeLYrJrY4Ts7PvjP4uKLJBXKx84EFJCKqJvvUFIe8xYj6sYB91NDq3pi
+   VS+d+AwmgKPTjNDf/5UZVb7PNASSTdWk5BftrBgqUUaxQDYoY7ZRNnqcK
+   A==;
+X-CSE-ConnectionGUID: Wm5bgdjzQVy1kUrOsJMJMg==
+X-CSE-MsgGUID: jnRm82qnSFC8qkjf7BYPaQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11051"; a="20453682"
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="20453682"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 03:58:23 -0700
+X-CSE-ConnectionGUID: yrgtAYVYS1SH1HzMkvUDxQ==
+X-CSE-MsgGUID: fQWUNgQ4SXmCgHFcx2AAxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="24017009"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa010.fm.intel.com with ESMTP; 22 Apr 2024 03:58:21 -0700
+Date: Mon, 22 Apr 2024 18:53:02 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, seanjc@google.com,
+	michael.roth@amd.com, isaku.yamahata@intel.com
+Subject: Re: [PATCH 06/11] KVM: guest_memfd: Add hook for initializing memory
+Message-ID: <ZiZBjtQvUuuqqKNF@yilunxu-OptiPlex-7050>
+References: <20240404185034.3184582-1-pbonzini@redhat.com>
+ <20240404185034.3184582-7-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 RESEND 5/6] clk: qcom: camcc-sm8650: Add SM8650 camera
- clock controller driver
-To: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Michael
- Turquette" <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, "Rob
- Herring" <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Taniya Das
-	<quic_tdas@quicinc.com>,
-        Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-        Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-References: <20240321092529.13362-1-quic_jkona@quicinc.com>
- <20240321092529.13362-6-quic_jkona@quicinc.com>
- <d3d3be20-7ec0-419c-b5a3-77047d8bc7bf@linaro.org>
-Content-Language: en-US
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-In-Reply-To: <d3d3be20-7ec0-419c-b5a3-77047d8bc7bf@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: tO_2aQsLXLe0gpglmVOZK7bt-DqU4HPo
-X-Proofpoint-ORIG-GUID: tO_2aQsLXLe0gpglmVOZK7bt-DqU4HPo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-22_09,2024-04-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 suspectscore=0 spamscore=0 priorityscore=1501 mlxscore=0
- bulkscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404220050
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240404185034.3184582-7-pbonzini@redhat.com>
 
+On Thu, Apr 04, 2024 at 02:50:28PM -0400, Paolo Bonzini wrote:
+> guest_memfd pages are generally expected to be in some arch-defined
+> initial state prior to using them for guest memory. For SEV-SNP this
+> initial state is 'private', or 'guest-owned', and requires additional
+> operations to move these pages into a 'private' state by updating the
+> corresponding entries the RMP table.
+> 
+> Allow for an arch-defined hook to handle updates of this sort, and go
+> ahead and implement one for x86 so KVM implementations like AMD SVM can
+> register a kvm_x86_ops callback to handle these updates for SEV-SNP
+> guests.
+> 
+> The preparation callback is always called when allocating/grabbing
+> folios via gmem, and it is up to the architecture to keep track of
+> whether or not the pages are already in the expected state (e.g. the RMP
+> table in the case of SEV-SNP).
+> 
+> In some cases, it is necessary to defer the preparation of the pages to
+> handle things like in-place encryption of initial guest memory payloads
+> before marking these pages as 'private'/'guest-owned'.  Add an argument
+> (always true for now) to kvm_gmem_get_folio() that allows for the
+> preparation callback to be bypassed.  To detect possible issues in
 
+IIUC, we have 2 dedicated flows.
+1 kvm_gmem_get_pfn() or kvm_gmem_allocate()
+  a. kvm_gmem_get_folio()
+  b. gmem_prepare() for RMP
 
-On 4/19/2024 3:00 AM, Vladimir Zapolskiy wrote:
-> Hello Jagadeesh,
-> 
-> thank you for submitting the clock driver.
-> 
-> On 3/21/24 11:25, Jagadeesh Kona wrote:
->> Add support for the camera clock controller for camera clients to
->> be able to request for camcc clocks on SM8650 platform.
->>
->> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
->> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->> ---
->>   drivers/clk/qcom/Kconfig        |    8 +
->>   drivers/clk/qcom/Makefile       |    1 +
->>   drivers/clk/qcom/camcc-sm8650.c | 3591 +++++++++++++++++++++++++++++++
->>   3 files changed, 3600 insertions(+)
->>   create mode 100644 drivers/clk/qcom/camcc-sm8650.c
->>
->> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
->> index 8ab08e7b5b6c..6257f4a02ec4 100644
->> --- a/drivers/clk/qcom/Kconfig
->> +++ b/drivers/clk/qcom/Kconfig
->> @@ -826,6 +826,14 @@ config SM_CAMCC_8550
->>         Support for the camera clock controller on SM8550 devices.
->>         Say Y if you want to support camera devices and camera 
->> functionality.
->> +config SM_CAMCC_8650
->> +    tristate "SM8650 Camera Clock Controller"
->> +    depends on ARM64 || COMPILE_TEST
->> +    select SM_GCC_8650
->> +    help
->> +      Support for the camera clock controller on SM8650 devices.
->> +      Say Y if you want to support camera devices and camera 
->> functionality.
->> +
->>   config SM_DISPCC_6115
->>       tristate "SM6115 Display Clock Controller"
->>       depends on ARM64 || COMPILE_TEST
->> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
->> index dec5b6db6860..28bffa1eb8dd 100644
->> --- a/drivers/clk/qcom/Makefile
->> +++ b/drivers/clk/qcom/Makefile
->> @@ -109,6 +109,7 @@ obj-$(CONFIG_SM_CAMCC_6350) += camcc-sm6350.o
->>   obj-$(CONFIG_SM_CAMCC_8250) += camcc-sm8250.o
->>   obj-$(CONFIG_SM_CAMCC_8450) += camcc-sm8450.o
->>   obj-$(CONFIG_SM_CAMCC_8550) += camcc-sm8550.o
->> +obj-$(CONFIG_SM_CAMCC_8650) += camcc-sm8650.o
->>   obj-$(CONFIG_SM_DISPCC_6115) += dispcc-sm6115.o
->>   obj-$(CONFIG_SM_DISPCC_6125) += dispcc-sm6125.o
->>   obj-$(CONFIG_SM_DISPCC_6350) += dispcc-sm6350.o
->> diff --git a/drivers/clk/qcom/camcc-sm8650.c 
->> b/drivers/clk/qcom/camcc-sm8650.c
->> new file mode 100644
->> index 000000000000..1b28e086e519
->> --- /dev/null
->> +++ b/drivers/clk/qcom/camcc-sm8650.c
->> @@ -0,0 +1,3591 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights 
->> reserved.
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/mod_devicetable.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/regmap.h>
->> +
->> +#include <dt-bindings/clock/qcom,sm8650-camcc.h>
->> +
->> +#include "clk-alpha-pll.h"
->> +#include "clk-branch.h"
->> +#include "clk-rcg.h"
->> +#include "clk-regmap.h"
->> +#include "common.h"
->> +#include "gdsc.h"
->> +#include "reset.h"
->> +
->> +enum {
->> +    DT_IFACE,
->> +    DT_BI_TCXO,
->> +    DT_BI_TCXO_AO,
->> +    DT_SLEEP_CLK,
->> +};
->> +
->> +enum {
->> +    P_BI_TCXO,
->> +    P_BI_TCXO_AO,
->> +    P_CAM_CC_PLL0_OUT_EVEN,
->> +    P_CAM_CC_PLL0_OUT_MAIN,
->> +    P_CAM_CC_PLL0_OUT_ODD,
->> +    P_CAM_CC_PLL1_OUT_EVEN,
->> +    P_CAM_CC_PLL2_OUT_EVEN,
->> +    P_CAM_CC_PLL2_OUT_MAIN,
->> +    P_CAM_CC_PLL3_OUT_EVEN,
->> +    P_CAM_CC_PLL4_OUT_EVEN,
->> +    P_CAM_CC_PLL5_OUT_EVEN,
->> +    P_CAM_CC_PLL6_OUT_EVEN,
->> +    P_CAM_CC_PLL7_OUT_EVEN,
->> +    P_CAM_CC_PLL8_OUT_EVEN,
->> +    P_CAM_CC_PLL9_OUT_EVEN,
->> +    P_CAM_CC_PLL9_OUT_ODD,
->> +    P_CAM_CC_PLL10_OUT_EVEN,
->> +    P_SLEEP_CLK,
->> +};
->> +
->> +static const struct pll_vco lucid_ole_vco[] = {
->> +    { 249600000, 2300000000, 0 },
->> +};
-> 
-> I've noticed that a downstream Android kernel v6.1.25 defines this clock as
-> 
->      static const struct pll_vco lucid_ole_vco[] = {
->          { 249600000, 2100000000, 0 },
->      };
-> 
-> Do you know any particular reason why here the clock frequencies are 
-> different?
-> 
+2 in-place encryption or whatever
+  a. kvm_gmem_get_folio(FGP_CREAT_ONLY)
+  b. in-place encryption
+  c. gmem_prepare() for RMP
 
-Thanks Vladimir for your review!
+Could we move gmem_prepare() out of kvm_gmem_get_folio(), then we could
+have straightforward flow for each case, and don't have to have an
+argument to pospone gmem_prepare().
 
-The min and max supported frequencies of PLL mentioned above are taken 
-from the HW specification, and as per the latest HW spec, the maximum 
-supported frequency for lucid OLE PLL is 2300MHz, hence used 2300MHz above.
+> the way userspace initializes memory, it is only possible to add an
+> unprepared page if it is not already included in the filemap.
+> 
+> Link: https://lore.kernel.org/lkml/ZLqVdvsF11Ddo7Dq@google.com/
+> Co-developed-by: Michael Roth <michael.roth@amd.com>
+> Signed-off-by: Michael Roth <michael.roth@amd.com>
+> Message-Id: <20231230172351.574091-5-michael.roth@amd.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/include/asm/kvm-x86-ops.h |  1 +
+>  arch/x86/include/asm/kvm_host.h    |  1 +
+>  arch/x86/kvm/x86.c                 |  6 +++
+>  include/linux/kvm_host.h           |  5 +++
+>  virt/kvm/Kconfig                   |  4 ++
+>  virt/kvm/guest_memfd.c             | 65 ++++++++++++++++++++++++++++--
+>  6 files changed, 78 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
+> index 5187fcf4b610..d26fcad13e36 100644
+> --- a/arch/x86/include/asm/kvm-x86-ops.h
+> +++ b/arch/x86/include/asm/kvm-x86-ops.h
+> @@ -139,6 +139,7 @@ KVM_X86_OP(vcpu_deliver_sipi_vector)
+>  KVM_X86_OP_OPTIONAL_RET0(vcpu_get_apicv_inhibit_reasons);
+>  KVM_X86_OP_OPTIONAL(get_untagged_addr)
+>  KVM_X86_OP_OPTIONAL(alloc_apic_backing_page)
+> +KVM_X86_OP_OPTIONAL_RET0(gmem_prepare)
+>  
+>  #undef KVM_X86_OP
+>  #undef KVM_X86_OP_OPTIONAL
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 01c69840647e..f101fab0040e 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1809,6 +1809,7 @@ struct kvm_x86_ops {
+>  
+>  	gva_t (*get_untagged_addr)(struct kvm_vcpu *vcpu, gva_t gva, unsigned int flags);
+>  	void *(*alloc_apic_backing_page)(struct kvm_vcpu *vcpu);
+> +	int (*gmem_prepare)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, int max_order);
+>  };
+>  
+>  struct kvm_x86_nested_ops {
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 2d2619d3eee4..972524ddcfdb 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -13598,6 +13598,12 @@ bool kvm_arch_no_poll(struct kvm_vcpu *vcpu)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_arch_no_poll);
+>  
+> +#ifdef CONFIG_HAVE_KVM_GMEM_PREPARE
+> +int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_order)
+> +{
+> +	return static_call(kvm_x86_gmem_prepare)(kvm, pfn, gfn, max_order);
+> +}
+> +#endif
+>  
+>  int kvm_spec_ctrl_test_value(u64 value)
+>  {
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 48f31dcd318a..33ed3b884a6b 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -2445,4 +2445,9 @@ static inline int kvm_gmem_get_pfn(struct kvm *kvm,
+>  }
+>  #endif /* CONFIG_KVM_PRIVATE_MEM */
+>  
+> +#ifdef CONFIG_HAVE_KVM_GMEM_PREPARE
+> +int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_order);
+> +bool kvm_arch_gmem_prepare_needed(struct kvm *kvm);
+> +#endif
+> +
+>  #endif
+> diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
+> index 29b73eedfe74..ca870157b2ed 100644
+> --- a/virt/kvm/Kconfig
+> +++ b/virt/kvm/Kconfig
+> @@ -109,3 +109,7 @@ config KVM_GENERIC_PRIVATE_MEM
+>         select KVM_GENERIC_MEMORY_ATTRIBUTES
+>         select KVM_PRIVATE_MEM
+>         bool
+> +
+> +config HAVE_KVM_GMEM_PREPARE
+> +       bool
+> +       depends on KVM_PRIVATE_MEM
+> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+> index e5b3cd02b651..486748e65f36 100644
+> --- a/virt/kvm/guest_memfd.c
+> +++ b/virt/kvm/guest_memfd.c
+> @@ -13,12 +13,60 @@ struct kvm_gmem {
+>  	struct list_head entry;
+>  };
+>  
+> -static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
+> +#ifdef CONFIG_HAVE_KVM_GMEM_PREPARE
+> +bool __weak kvm_arch_gmem_prepare_needed(struct kvm *kvm)
+> +{
+> +	return false;
+> +}
+> +#endif
 
->> +
->> +static const struct pll_vco rivian_ole_vco[] = {
->> +    { 777000000, 1285000000, 0 },
->> +};
->> +
-> 
-> <snip>
-> 
->> +static struct clk_rcg2 cam_cc_bps_clk_src = {
->> +    .cmd_rcgr = 0x10050,
->> +    .mnd_width = 0,
->> +    .hid_width = 5,
->> +    .parent_map = cam_cc_parent_map_2,
->> +    .freq_tbl = ftbl_cam_cc_bps_clk_src,
->> +    .clkr.hw.init = &(const struct clk_init_data) {
->> +        .name = "cam_cc_bps_clk_src",
->> +        .parent_data = cam_cc_parent_data_2,
->> +        .num_parents = ARRAY_SIZE(cam_cc_parent_data_2),
->> +        .flags = CLK_SET_RATE_PARENT,
->> +        .ops = &clk_rcg2_shared_ops,
->> +    },
->> +};
-> 
-> Please let me ask after Dmitry about your rationale to select
-> &clk_rcg2_shared_ops here and below for all *_src clocks introduced in
-> the driver, I do remember you've did it in v1, could you please
-> elaborate it a bit more?
-> 
-> I have a concern that it's not possible to get an .is_enabled status
-> of the shared clocks, however at least in this particular case of
-> camcc clocks it seems to be technically possible.
-> 
-> It might indicate that there is an incompleteness in clk-rcg2.c driver
-> also, if it's really possible to get is_enabled runtime status at least
-> for some of the shared clocks.
-> 
+In which case HAVE_KVM_GMEM_PREPARE is selected but
+gmem_prepare_needed() is never implemented?  Then all gmem_prepare stuff
+are actually dead code.  Maybe we don't need this weak stub?
 
-The recommendation from HW team is to park the RCG's at XO clock source 
-when RCG is in disabled state and clk_rcg2_shared_ops is the closest 
-implementation for achieving the same, hence used clk_rcg2_shared_ops 
-for all the RCG's.
+> +
+> +static int kvm_gmem_prepare_folio(struct inode *inode, pgoff_t index, struct folio *folio)
+> +{
+> +#ifdef CONFIG_HAVE_KVM_GMEM_PREPARE
+> +	struct list_head *gmem_list = &inode->i_mapping->i_private_list;
+> +	struct kvm_gmem *gmem;
+> +
+> +	list_for_each_entry(gmem, gmem_list, entry) {
+> +		struct kvm_memory_slot *slot;
+> +		struct kvm *kvm = gmem->kvm;
+> +		struct page *page;
+> +		kvm_pfn_t pfn;
+> +		gfn_t gfn;
+> +		int rc;
+> +
+> +		if (!kvm_arch_gmem_prepare_needed(kvm))
+> +			continue;
+> +
+> +		slot = xa_load(&gmem->bindings, index);
+> +		if (!slot)
+> +			continue;
+> +
+> +		page = folio_file_page(folio, index);
+> +		pfn = page_to_pfn(page);
+> +		gfn = slot->base_gfn + index - slot->gmem.pgoff;
+> +		rc = kvm_arch_gmem_prepare(kvm, gfn, pfn, compound_order(compound_head(page)));
+> +		if (rc) {
+> +			pr_warn_ratelimited("gmem: Failed to prepare folio for index %lx, error %d.\n",
+> +					    index, rc);
+> +			return rc;
+> +		}
+> +	}
+> +
+> +#endif
+> +	return 0;
+> +}
+> +
+> +static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index, bool prepare)
+>  {
+>  	struct folio *folio;
+> +	fgf_t fgp_flags = FGP_LOCK | FGP_ACCESSED | FGP_CREAT;
+> +
+> +	if (!prepare)
+> +		fgp_flags |= FGP_CREAT_ONLY;
+>  
+>  	/* TODO: Support huge pages. */
+> -	folio = filemap_grab_folio(inode->i_mapping, index);
+> +	folio = __filemap_get_folio(inode->i_mapping, index, fgp_flags,
+> +				    mapping_gfp_mask(inode->i_mapping));
+>  	if (IS_ERR_OR_NULL(folio))
+>  		return folio;
+>  
+> @@ -41,6 +89,15 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
+>  		folio_mark_uptodate(folio);
+>  	}
+>  
+> +	if (prepare) {
+> +		int r =	kvm_gmem_prepare_folio(inode, index, folio);
+> +		if (r < 0) {
+> +			folio_unlock(folio);
+> +			folio_put(folio);
+> +			return ERR_PTR(r);
+> +		}
+> +	}
+> +
 
-I will check if .is_enabled callback can be added to shared_ops and post 
-a separate series for it based on the requirement.
-
->> +
->> +static const struct freq_tbl ftbl_cam_cc_camnoc_axi_rt_clk_src[] = {
->> +    F(300000000, P_CAM_CC_PLL0_OUT_EVEN, 2, 0, 0),
->> +    F(400000000, P_CAM_CC_PLL0_OUT_ODD, 1, 0, 0),
->> +    { }
->> +};
->> +
-> 
-> <snip>
-> 
-> Other than two my open questions above I don't see any issues with the
-> driver, if you be kind to provide the answers, please feel free to add
-> my
-> 
-> Reviewed-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-> Tested-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-> 
-
-Thanks, sure will add these tags in next series.
+Do we still need to prepare the page if it is hwpoisoned? I see the
+hwpoisoned check is outside, in kvm_gmem_get_pfn().
 
 Thanks,
-Jagadeesh
+Yilun
 
+>  	/*
+>  	 * Ignore accessed, referenced, and dirty flags.  The memory is
+>  	 * unevictable and there is no storage to write back to.
+> @@ -145,7 +202,7 @@ static long kvm_gmem_allocate(struct inode *inode, loff_t offset, loff_t len)
+>  			break;
+>  		}
+>  
+> -		folio = kvm_gmem_get_folio(inode, index);
+> +		folio = kvm_gmem_get_folio(inode, index, true);
+>  		if (IS_ERR_OR_NULL(folio)) {
+>  			r = folio ? PTR_ERR(folio) : -ENOMEM;
+>  			break;
+> @@ -505,7 +562,7 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+>  		goto out_fput;
+>  	}
+>  
+> -	folio = kvm_gmem_get_folio(file_inode(file), index);
+> +	folio = kvm_gmem_get_folio(file_inode(file), index, true);
+>  	if (!folio) {
+>  		r = -ENOMEM;
+>  		goto out_fput;
 > -- 
-> Best wishes,
-> Vladimir
+> 2.43.0
+> 
+> 
 > 
