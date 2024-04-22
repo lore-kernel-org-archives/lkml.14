@@ -1,129 +1,136 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9093F8F1;
-	Mon, 22 Apr 2024 21:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239E21CD37
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 21:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713821440; cv=none; b=NjnXhUigLCTtIJIZSHsTD5Af2gOMwrNMSbtCCo8WXi6Bq+si585PAApbmMGt8/FsYxGJwakGqoyzLVhCZ0xP498fgTgnZKPUCqcAuBWiXqXvB5geTvRJkOrghSziWvn4kcGJjWq+iQSODFPU8vOI/+OFnXV0Okfrhl7EEVZQgmg=
+	t=1713821544; cv=none; b=FDBsnwDw+DVZv1l7PO75OsnmPyKecyxXkmo3W1XmdXvSSMJWkO8iguWG4ICw9jfP3NAGb6aMEbiOoTwJZyPrltby9BJh6P/Q9hHNf++ZK37nL2F89RKXXt1V1blH88dfOoIeJTELQykhqBA291ygWTtKV/iokv5FnHKk7UOHORc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713821440; c=relaxed/simple;
-	bh=OKGocTs3wvb3i/LU9C4kKygbgIvS929FJW/CU8uyACQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IfxwWS4baNIXnNHrSuHONJ+4D608/ndHOvCoESCQl+NFuzAW9Kh6PbLxeVILHoQyuVdStNFJA9gTSRtVs7UH4gUDIhRr4WMuxyTXm8kiZUMo0TA4umTfSQcwVdgk91aikVRJZLiEJ+yxTU0kfdesa+iQpJNifAfqhnDlUGMZxaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H8FeMuID; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713821544; c=relaxed/simple;
+	bh=IRsFuwn6dQzU9I5rLPauWk/unA6s6gPNbq/SefNksJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tMYVJcREjHTdXpUUtqieYHTyenAOXwci8V/7H++mCpis8tabdFjV52GcD3YwOnnH8u2NZJbOGcUy6e6m0PvLhk4JabaVV3bme/1TvbI32Y/thFbJEqYpAcmjEdWKSez8jyP0sQln/59ZOmY9MLfMu3XnQLPWpo21dZB6iHhy7qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=glYgGSXA; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8FeMuID"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-343d1003106so4140392f8f.1;
-        Mon, 22 Apr 2024 14:30:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713821437; x=1714426237; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6uD6c0ErLUmH66mx7g4ZxASc8upF0vA5uwn6xXQa6Dg=;
-        b=H8FeMuIDprjoX0i9JDD2fIC3Bw+drttPqK2R9GOdKk3+u7TleAXTWf4u6Vmbl3aoGZ
-         WeBbcaWvKbYdP5c2oWRaeu6S89HI9EUm+TUf6SJ8NsA2vl7rNpCl/IBasad6wKbXrEQk
-         fdk2OCSG+42EOx5CCV2JwjRFdBnQQk4GyuynN8BOwGJN+OuvCUZqdPh+dyHLjRTEMd1v
-         aXV9DJWP4d/b4LrW9UVqWMWRuMx8bl/CowMOkmR5pWLjbfWkVMMUMjSv/iralX8zdIaB
-         jNi94QyLljHASiLZ3csuwv9l7wiQZLpOC2hb9RH6TZMa09dhidrZaZ6blauVabUNea2D
-         aZnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713821437; x=1714426237;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6uD6c0ErLUmH66mx7g4ZxASc8upF0vA5uwn6xXQa6Dg=;
-        b=IlMG8TuGbtESt9z1Kl4F50rz5eqz2HOtMsZq7wNzZYh1hvoslr1gSHvFqILuLG1ZTW
-         MIrWDfYHQr993wu7dvekOndB4rAIoWYH/UYq8M/850XFbVjcPHGm+1TpNkVenZFMNpSa
-         g+IKVvs5d6YYEHt7NJdyrkLbufFZR7+B0ftwW1PLmVGc/kppNoo2dqaLQ3t66k/Bg4Wl
-         zeeWfub73kdIj3WHXjLWNrh1Pkb/8tFeFcuk+bcUwDmJT9Szg1gnJPkWWo1z6zpTuf51
-         HnCkpjOO/Z4uETRkYnJs1sTR/ljzRWF+88v9L8LhnCv8Map3qnAbEGdfIfEF1OF8Idlo
-         KdvA==
-X-Forwarded-Encrypted: i=1; AJvYcCXTAJQhYxnZPqg0DK60JIf5XQUQlyGRLfjh0ApUZp7W3uR2frep76W6RPz8oJHenzKrbbwM10Lfdw2Ke7i2N9SvLh9daDplGBjEPDNirriyUdc06RKzjMW156j7chCawkgDhraQWq1MBDjJEJebnj3vqyTXRIvcLiFZqwzCFnvXC+Qw4r0ecPOvL9c=
-X-Gm-Message-State: AOJu0YzDA618zS5C9U1d51q3OBHe2JpENJMNxKaSWfN37XMh3rdKG5k6
-	qRV9v1WIa88uwGU5y1GWRoE0f4Sv5ty1tsHRUSYX6ZA1SfgODEaC
-X-Google-Smtp-Source: AGHT+IGVGJkxPueKpI6ONkATXh7YUVlSjFK9KdIYsor40QaumM6HoubFuig4IeeFRxpth0CK7JdN5A==
-X-Received: by 2002:adf:f9c7:0:b0:349:d779:3d60 with SMTP id w7-20020adff9c7000000b00349d7793d60mr9568432wrr.57.1713821437219;
-        Mon, 22 Apr 2024 14:30:37 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:ab0d:124:447c:bf37])
-        by smtp.gmail.com with ESMTPSA id n4-20020a5d4844000000b00349f098f4a6sm12886793wrs.53.2024.04.22.14.30.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 14:30:36 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-mmc@vger.kernel.org
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 6/6] arm64: dts: renesas: r9a08g045: Update fallback string for SDHI nodes
-Date: Mon, 22 Apr 2024 22:30:06 +0100
-Message-Id: <20240422213006.505576-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240422213006.505576-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240422213006.505576-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="glYgGSXA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713821543; x=1745357543;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IRsFuwn6dQzU9I5rLPauWk/unA6s6gPNbq/SefNksJs=;
+  b=glYgGSXAtIh8hAcB3X4l92SdOiTePzTMWsw2Yesn0eIKLVs8OkhPE9ZH
+   fwPfsXCxXiPbYFzZJ4i1QFuz0bIbH5rRELR59n2hy0AgzOP9jNv7AN22z
+   8AfloMzD9UZuEbLN5b27Xf6GlBVHz3EiS7Mpqv0I/zYT8XOv1aagquEyD
+   34AvQBmc+0MlM0t60GhmUztAYO02u83krO2Ii4uMdNs7qGtA6cAqpyau6
+   52wYmuy/lqBOSXc8ROqWMMQTZxL6QKLTzF8V8ACWZl5X3bP30rW0uw/8J
+   GZ9oomvZli+iA8O9OLygneOF5rZpzw4YJl5Usf9gAaBAMkHSUlQgQmCyi
+   g==;
+X-CSE-ConnectionGUID: oTpSlzzSR8SVYJBC9p00rQ==
+X-CSE-MsgGUID: ys5XZwZgQFCV/sG3dQvIVw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="26898367"
+X-IronPort-AV: E=Sophos;i="6.07,221,1708416000"; 
+   d="scan'208";a="26898367"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 14:32:22 -0700
+X-CSE-ConnectionGUID: HZ0B6eXYSA6zky5jPtNC3w==
+X-CSE-MsgGUID: G/20tqFXTKeF4lKFG5yfJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,221,1708416000"; 
+   d="scan'208";a="24652505"
+Received: from mhknutso-mobl.amr.corp.intel.com (HELO desk) ([10.209.121.126])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 14:32:22 -0700
+Date: Mon, 22 Apr 2024 14:32:13 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: "Chang S. Bae" <chang.seok.bae@intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, dan.j.williams@intel.com,
+	bernie.keany@intel.com, charishma1.gairuboyina@intel.com,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	daniel.sneddon@linux.intel.com,
+	antonio.gomez.iglesias@linux.intel.com
+Subject: Re: [PATCH 15/14] x86/gds: Lock GDS mitigation when keylocker
+ feature is present
+Message-ID: <20240422213213.7og6adib7zcbpnys@desk>
+References: <20240407230432.912290-1-chang.seok.bae@intel.com>
+ <20240419-gds-lock-v1-1-adcbef6ce24b@linux.intel.com>
+ <142380d5-27bd-4ddc-8c33-03a2f8701fa2@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <142380d5-27bd-4ddc-8c33-03a2f8701fa2@intel.com>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Mon, Apr 22, 2024 at 12:35:45AM -0700, Chang S. Bae wrote:
+> On 4/19/2024 10:47 AM, Pawan Gupta wrote:
+> >   	/*
+> > @@ -840,6 +843,11 @@ static void __init gds_select_mitigation(void)
+> >   		gds_mitigation = GDS_MITIGATION_FULL_LOCKED;
+> >   	}
+> > +	/* Keylocker can only be enabled when GDS mitigation is locked */
+> > +	if (boot_cpu_has(X86_FEATURE_KEYLOCKER) &&
+> > +	    gds_mitigation == GDS_MITIGATION_FULL)
+> > +		gds_mitigation = GDS_MITIGATION_FULL_LOCKED;
+> > +
+> 
+> I'm having trouble understanding this change:
+> 
+> gds_select_mitigation()
+> {
+> 	...
+> 	if (gds_mitigation == GDS_MITIGATION_FORCE)
+> 		gds_mitigation = GDS_MITIGATION_FULL;
+> 
+> 	rdmsrl(MSR_IA32_MCU_OPT_CTRL, mcu_ctrl);
+> 	if (mcu_ctrl & GDS_MITG_LOCKED) {
+> 		...
+> 		gds_mitigation = GDS_MITIGATION_FULL_LOCKED;
+> 	}
+> 
+> 	if (boot_cpu_has(X86_FEATURE_KEYLOCKER) &&
+> 	    gds_mitigation == GDS_MITIGATION_FULL)
+> 		gds_mitigation = GDS_MITIGATION_FULL_LOCKED;
+> 
+> As I understand it, gds_mitigation is set to GDS_MITIGATION_FULL only if the
+> gds force option is enabled but IA32_MCU_OPT_CTRL[GDS_MITG_LOCK] is not set.
 
-Use 'renesas,rzg2l-sdhi' as a fallback string for SDHI nodes, where
-hs400_disabled and fixed_addr_mode quirks are applied.
+Not true, GDS_MITIGATION_FULL is the default. Cmdline
+gather_data_sampling=force deploys a software fallback mitigation when
+the microcode mitigation is not present. But, when microcode mitigation
+is present, mitigation is set to GDS_MITIGATION_FULL.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r9a08g045.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> Then, if the CPU has Key Locker, this code sets gds_mitigation to
+> GDS_MITIGATION_FULL_LOCKED, which seems contradictory. I'm not sure why this
+> change is necessary.
+>
+> I'm also not convinced that the Key Locker series needs to modify this
+> function. The Key Locker setup code should simply check the current
+> mitigation status and enable the feature only if proper mitigation is in
+> place. Am I missing something here?
 
-diff --git a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-index f5f3f4f4c8d6..2162c247d6de 100644
---- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-@@ -182,7 +182,7 @@ irqc: interrupt-controller@11050000 {
- 		};
- 
- 		sdhi0: mmc@11c00000  {
--			compatible = "renesas,sdhi-r9a08g045", "renesas,rcar-gen3-sdhi";
-+			compatible = "renesas,sdhi-r9a08g045", "renesas,rzg2l-sdhi";
- 			reg = <0x0 0x11c00000 0 0x10000>;
- 			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-@@ -197,7 +197,7 @@ sdhi0: mmc@11c00000  {
- 		};
- 
- 		sdhi1: mmc@11c10000 {
--			compatible = "renesas,sdhi-r9a08g045", "renesas,rcar-gen3-sdhi";
-+			compatible = "renesas,sdhi-r9a08g045", "renesas,rzg2l-sdhi";
- 			reg = <0x0 0x11c10000 0 0x10000>;
- 			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-@@ -212,7 +212,7 @@ sdhi1: mmc@11c10000 {
- 		};
- 
- 		sdhi2: mmc@11c20000 {
--			compatible = "renesas,sdhi-r9a08g045", "renesas,rcar-gen3-sdhi";
-+			compatible = "renesas,sdhi-r9a08g045", "renesas,rzg2l-sdhi";
- 			reg = <0x0 0x11c20000 0 0x10000>;
- 			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.34.1
+To enable Key Locker feature, "proper mitigation" is microcode mitigation
+enabled and the GDS_MITG_LOCK bit set in MSR_IA32_MCU_OPT_CTRL. Do you
+agree?
 
+If not via this patch, how is GDS_MITG_LOCK going to be set?
+
+Below is from Intel's documentation:
+
+  "Intel recommends that system software does not enable Key Locker (by
+  setting CR4.KL) unless the GDS mitigation is enabled (IA32_MCU_OPT_CTRL
+  [GDS_MITG_DIS] (bit 4) is 0) and locked (IA32_MCU_OPT_CTRL
+  [GDS_MITG_LOCK](bit 5) is 1). This will prevent an adversary that takes
+  control of the system from turning off the mitigation in order to infer
+  the keys behind Key Locker handles.
+
+  To support GDS mitigation locking for Key Locker, microcode updates
+  for Tiger Lake systems enable the following model-specific behavior
+  for GDS_MITG_LOCK. On these systems, a write to IA32_MCU_OPT_CTRL MSR
+  with GDS_MITG_DIS (bit 4) value 0 and GDS_MITG_LOCK (bit 5) value 1
+  will lock both bits at these values until reset."
