@@ -1,118 +1,157 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC53F1B947
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 20:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F681BC41;
+	Mon, 22 Apr 2024 20:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713818530; cv=none; b=H5z73baIJAmhzpezlWR2R3NsOKbRpcG0V44dFwLlPerdABTrIXq/yeDOJDoEhuHCR2eq2lV/KaV1oZW029DuaG1c/aZJeI8aUf83GENI33hkV0XqNFJCnZ7hyNhR7DAoFpcBajDJLbJuEy1QkH7mjqrq48xD12fpuk+Z4TdDgXI=
+	t=1713818547; cv=none; b=UVx3E0MoBBlbMiX10qBJRBtTIiwUd6MWkYtHvDHqLQ34r5ootuUFIxqMlnqyvkfAQC4tBJzYWCrAxssOfmyIyN3sZ/C1vnLXlDP0X/LeCX/Oe3MCbdwrlWpgR7m2EnWT6KbyZmYCt9TjvNFF40s5X0NSGKAvTE4yPrC+5+HwVWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713818530; c=relaxed/simple;
-	bh=51xIj97O9lQ9Y9TaGc9pJwYMYuzv07feAOfehZkC93U=;
+	s=arc-20240116; t=1713818547; c=relaxed/simple;
+	bh=qhK/xyI0znuaULfWmCQs605RLjIK84N6jBnKTLXgc9E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LxsSbHE5EMXuZ9AI2pJ0mEp+OTM2miodh4B3uJj3zRrQ8GWvG+NV9NxYOYHfTPDwFHAS/STr7ylaxgf/RNEkKyAGbStMBsc/5F7IHWK58F4OFVikZiPyaVfWMrrbe1clv4W1xQiRcX79OUAl/0C+gCPD/yGI/53KuIrBE/jXPCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=itm6atDQ; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=khVBTBYbZ+dJz4G+wflpC7QOzyvAqNZZRTSp1YmsSxMlkfuTrAseHAXJbBUuZ5+fF5KsDwAJODQB5XmY8NarxS7Os7BR2tIALZKX6veKyLiXKPBGgzCkli0Diw9z2Y9q/3tjR5RRcXnLjEBCi6oO4WiXn3hTuinqZulVNnqI+OE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u8NIHaco; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="itm6atDQ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 021E040E0240;
-	Mon, 22 Apr 2024 20:42:05 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Ml7F_4ndxso4; Mon, 22 Apr 2024 20:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1713818521; bh=OlkiVCvteYN4pxgphraaSRuyPSDJ4D5rYH0N0OYe2js=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u8NIHaco"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F6D3C113CC;
+	Mon, 22 Apr 2024 20:42:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713818546;
+	bh=qhK/xyI0znuaULfWmCQs605RLjIK84N6jBnKTLXgc9E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=itm6atDQjc+oW7a6N5Ron8h+aHooV2kdwWEFi8HBx/+i4P3bT3uqGvHMHRFP7PM+m
-	 u1Y70F15Dqpuf1C8Y3sOYHclM55/rCpDES7XF2noYyq70s3HpAKQkxNatL4E9iEaRO
-	 3yGOYwBr6FbkCeAnPLFkeaPhcAevdvUuNhvR6wVfrlccAPcKantz8EzLh/bS6XOeeH
-	 RBSaaOWLjHG76k9nrZIqv8O36ByTz9wPUyQKY2F8ANKLUH5kdYZKjhO9Zi6Todw6uZ
-	 /wUHnVFLAtgLN4tKjc+83flYHHwnPxhhkoU8ekZr3JKb2jT3lm+Urt5IlMFlj43k3t
-	 2yRGTbn1dbat1yt1ZJS+69LgPTFizYbHvlIou9o/w1tep1cYr9fNJugye4oWgsrXXT
-	 7fiSzAZWyXmb7N7Y2WiZ68N7oRB3kWY1t/SZFsjNSLV6qgPm3kS/nzrXeRsAS6Oo4/
-	 pPuA5RUf0blCD1gEuSBPmmRSLHyLqAFtFEsmgARvKie62v7/gbsSxzCDDGuxu7c4m9
-	 yVJDFzWQv3hwbDTpQWse9+8dCnDUXl02qpQXEAj+TY7NWDllfVRdb5VWGUtdvUXeir
-	 12r4CmYerySbiv1bDKSPVTgP6LnrACV83xJtnylYHABI5XqNbkorK+CmGC7JCkrhqG
-	 TiZeoRuK2SDt/MbF1aEgk+b0=
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DA14640E00B2;
-	Mon, 22 Apr 2024 20:41:51 +0000 (UTC)
-Date: Mon, 22 Apr 2024 22:41:46 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Robert Richter <rrichter@amd.com>
-Cc: Dave Hansen <dave.hansen@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	linux-kernel@vger.kernel.org, jgross@suse.com, tglx@linutronix.de,
-	x86@kernel.org, Kim Phillips <kim.phillips@amd.com>,
-	Robert Richter <rric@kernel.org>
-Subject: Re: [PATCH 2/4] perf/x86/ibs: Use CPUID region helper
-Message-ID: <20240422204146.GCZibLiqZhbY1J4qFJ@fat_crate.local>
-References: <20240403153508.7328E749@davehans-spike.ostc.intel.com>
- <20240403153511.75CB9DA0@davehans-spike.ostc.intel.com>
- <20240416151242.GGZh6VaiO2gC4ej2BT@fat_crate.local>
- <f142e9c4-4829-4ace-8757-485246ad3572@intel.com>
- <20240416174850.GEZh66AmnDjrLxoXaw@fat_crate.local>
- <ZiEMnWaHkn99_oyW@rric.localdomain>
- <20240422172055.GAZiacdxkQU0XAbybW@fat_crate.local>
- <ZibEFZ6DoxDeBxxp@rric.localdomain>
+	b=u8NIHaco8Lh+wWUK53bG85Cl7txTWMyWoo8o4kEpZemgV96kdOgSOOvlFHpUCvZN2
+	 9zWha28gPiHGE1Jks74qG0oOYpJGyhGrnsbcPtDqdg+SyWlHoJW+tYLM3BUr8WWEwY
+	 JXgSvmUze9igyfEQyqINKNkSFGc9h6D6time6KCE9/uJSeChzOzrpzKN9AYCJovVm5
+	 uJCFOOuoXlL5MvcDNwy15jCfdVZ7g1862Y4JVzqirsP6gf5kFpFbOHmIGuBvuojS7y
+	 YoUI8lumh7Th/36frzx0j4//sKOHB7eXXwyvFA16WFE/Vw+p5ZEF/+UHZUr4/EzFIz
+	 zx0lUkN8zx3zw==
+Date: Mon, 22 Apr 2024 13:42:24 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Cc: ntfs3@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+	Linux-fsdevel <linux-fsdevel@vger.kernel.org>, llvm@lists.linux.dev
+Subject: Re: [PATCH 10/11] fs/ntfs3: Remove cached label from sbi
+Message-ID: <20240422204224.GA770800@dev-arch.thelio-3990X>
+References: <6c99c1bd-448d-4301-8404-50df34e8df8e@paragon-software.com>
+ <890cc224-fdb8-4c5e-a22e-b96dc86e6908@paragon-software.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <ZibEFZ6DoxDeBxxp@rric.localdomain>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <890cc224-fdb8-4c5e-a22e-b96dc86e6908@paragon-software.com>
 
-On Mon, Apr 22, 2024 at 10:09:57PM +0200, Robert Richter wrote:
-> Since we check get_cpuid_region_leaf()'s return code here we know if
-> the cpud leaf exists and return IBS_CAPS_DEFAULT if not. That would
-> not change the refB behaviour.
+Hi Konstantin,
 
-Yes.
-
-> Though I think that case is rare or even not existing, I would just
-> keep the implementation like that and as it was for for years.
-
-Yes.
-
-> > > This slightly modifies the functionality so that 0 is return if
-> > > !IBS_CAPS_AVAIL (instead of IBS_CAPS_DEFAULT).
-> > 
-> > If !IBS_CAPS_AVAIL, then this is revB. But then you want to return
-> > IBS_CAPS_DEFAULT there.
+On Wed, Apr 17, 2024 at 04:09:00PM +0300, Konstantin Komarov wrote:
+> Add more checks using $AttrDef.
 > 
-> No, on a rebB get_cpuid_region_leaf() would be false, meaning the
-> cpuid leaf is missing, function returns with IBS_CAPS_DEFAULT then.
+> Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
 
-So what functionality modification do you mean then?
+<snip>
 
-When will IBS_CAPS_AVAIL be not set?
+> diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
+> index 8beefbca5769..dae961d2d6f8 100644
+> --- a/fs/ntfs3/super.c
+> +++ b/fs/ntfs3/super.c
+> @@ -481,11 +481,39 @@ static int ntfs3_volinfo_open(struct inode *inode,
+> struct file *file)
+>  /* read /proc/fs/ntfs3/<dev>/label */
+>  static int ntfs3_label_show(struct seq_file *m, void *o)
+>  {
+> +    int len;
+>      struct super_block *sb = m->private;
+>      struct ntfs_sb_info *sbi = sb->s_fs_info;
+> +    struct ATTRIB *attr;
+> +    u8 *label = kmalloc(PAGE_SIZE, GFP_NOFS);
+> +
+> +    if (!label)
+> +        return -ENOMEM;
+> +
+> +    attr = ni_find_attr(sbi->volume.ni, NULL, NULL, ATTR_LABEL, NULL, 0,
+> +                NULL, NULL);
+> +
+> +    if (!attr) {
+> +        /* It is ok if no ATTR_LABEL */
+> +        label[0] = 0;
+> +        len = 0;
+> +    } else if (!attr_check(attr, sbi, sbi->volume.ni)) {
+> +        len = sprintf(label, "%pg: failed to get label", sb->s_bdev);
+> +    } else {
+> +        len = ntfs_utf16_to_nls(sbi, resident_data(attr),
+> +                    le32_to_cpu(attr->res.data_size) >> 1,
+> +                    label, PAGE_SIZE);
+> +        if (len < 0) {
+> +            label[0] = 0;
+> +            len = 0;
+> +        } else if (len >= PAGE_SIZE) {
+> +            len = PAGE_SIZE - 1;
+> +        }
+> +    }
+> 
+> -    seq_printf(m, "%s\n", sbi->volume.label);
+> +    seq_printf(m, "%.*s\n", len, label);
+> 
+> +    kfree(label);
+>      return 0;
+>  }
+> 
+> @@ -1210,25 +1238,6 @@ static int ntfs_fill_super(struct super_block *sb,
+> struct fs_context *fc)
+> 
+>      ni = ntfs_i(inode);
+> 
+> -    /* Load and save label (not necessary). */
+> -    attr = ni_find_attr(ni, NULL, NULL, ATTR_LABEL, NULL, 0, NULL, NULL);
+> -
+> -    if (!attr) {
+> -        /* It is ok if no ATTR_LABEL */
+> -    } else if (!attr->non_res && !is_attr_ext(attr)) {
+> -        /* $AttrDef allows labels to be up to 128 symbols. */
+> -        err = utf16s_to_utf8s(resident_data(attr),
+> -                      le32_to_cpu(attr->res.data_size) >> 1,
+> -                      UTF16_LITTLE_ENDIAN, sbi->volume.label,
+> -                      sizeof(sbi->volume.label));
+> -        if (err < 0)
+> -            sbi->volume.label[0] = 0;
+> -    } else {
+> -        /* Should we break mounting here? */
+> -        //err = -EINVAL;
+> -        //goto put_inode_out;
+> -    }
+> -
 
-GH BKDG says about that bit:
+The attr initialization above causes the use in the ni_find_attr() to be
+uninitialized, which results in the following clang warning (or error
+when CONFIG_WERROR is enabled):
 
-"IBSFFV. IBS feature flags valid. Revision B = 0. Revision C = 1."
+  fs/ntfs3/super.c:1247:26: error: variable 'attr' is uninitialized when used here [-Werror,-Wuninitialized]
+   1247 |         attr = ni_find_attr(ni, attr, NULL, ATTR_VOL_INFO, NULL, 0, NULL, NULL);
+        |                                 ^~~~
+  fs/ntfs3/super.c:1192:21: note: initialize the variable 'attr' to silence this warning
+   1192 |         struct ATTRIB *attr;
+        |                            ^
+        |                             = NULL
+  1 error generated.
 
-so that has been set ever since on >= revC.
+Please either fix this quickly (as this isn't the first time an ntfs3
+change has broken us for some time in -next for a similar reason [1]) or
+remove this series from -next. Given the issues that Johan has brought
+up in other comments in this thread, I feel like the latter may be
+better, as this series is clearly not ready for Linus (which is one of
+-next's general requirements AFAIUI).
 
-And on revB we'll return IBS_CAPS_DEFAULT which has IBS_CAPS_AVAIL.
+>      attr = ni_find_attr(ni, attr, NULL, ATTR_VOL_INFO, NULL, 0, NULL,
+> NULL);
+>      if (!attr || is_attr_ext(attr) ||
+>          !(info = resident_data_ex(attr, SIZEOF_ATTRIBUTE_VOLUME_INFO))) {
 
-IOW, I don't see how we'll return 0 if !IBS_CAPS_AVAIL because latter
-doesn't happen practically with that flow.
+[1]: https://github.com/ClangBuiltLinux/linux/issues/1729
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Cheers,
+Nathan
