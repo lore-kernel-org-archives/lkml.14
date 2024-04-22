@@ -1,215 +1,75 @@
-Received: from smtp.smtpout.orange.fr (smtp-16.smtpout.orange.fr [80.12.242.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7869613E3E5;
-	Mon, 22 Apr 2024 10:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDC7140E2F
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 10:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713781531; cv=none; b=ibzXr+AwBO1RYVjD+YeuoNYlED7fgME/OcafyxqVm0ko9o9Nzo4c17C1BXCv6r4cCn8kB6d8aSVGFZDfw7CnWGWDC7tEfIaqG1rO+0fCOufVKSLUww91SUy8ATrloDE6t28ToG4qmf4C1H3VTRLZMc9tRRTCr+5C3qT+m0OP7gU=
+	t=1713781534; cv=none; b=DDq19SBEHs9UKki98FuzaKK8mf9KrzWD4Ud55/mTHoE3tBvJa16zth3TlDnmUR3h0hsGC/IA32NXcfh8d57wj3an3BDhrXWTYep6DYHsC6pcmxmQ3Qu1xXUza18i9jeaWKnYL88UdRcj0jxGaOYAOzt9X2KUvUv9+QZaJW31qus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713781531; c=relaxed/simple;
-	bh=PEe4CtOIrKOA5J/Q+3pJlXyDw+pimrK40GN8HRR88Cs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ga4KxYfVisOteTzu4ky3FGJ6y2V0EWYdGGNC4DfFXQ0StfmImdTta/HKyDFT0pU6KMnCFWjRNZdQADbsW8PkowDfI10FxJ1VOL2z5PgG3DtDp8pXhxTetvvFz4liBOHeaGRNX/N5g7kvlLhMnZrIPzM+GQ6QGR9VViMotpua6zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=kaQ9gEiM; arc=none smtp.client-ip=80.12.242.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1713781534; c=relaxed/simple;
+	bh=jWmT5lxfQifexFCNNjVJXfUlsC5ZHfg49HTAwaoia34=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GazWfWYAXfNls9emaGwthGRvW8TTuWt18O9WJn7Aq9gcGUA2P3hvc5ClHiK+Mq3B4Zw7iKlqfortF9D6Mmay+hsF9EuXlHVugDWlsvW+hdQnNA5fY2xTXBqNIIkgJJPMBRckUmIQbzBD/0Orpoq8mT+XUVtdN00OT/LhzBIQBPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=PcF2evvv; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="kaQ9gEiM"
-Received: from fedora.home ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id yqqPr8npHhQSByqqPrJn2k; Mon, 22 Apr 2024 12:24:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713781458;
-	bh=WDS/cJIF3u/b8hKGhrIR45S+kJmGLDvRuuuBC4I4XyY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=kaQ9gEiMqMz2fUPdb+cygTCdJytCqki5fJpgw8E/zgZZfy5hc6+RBYeHtX9LMYzie
-	 0kn0DwUKqBwFgbA0DwkQBf9JkRHVGrq3z7ypX+hquI7Gu6yhU5Q16ZdmNvAHUmcoJ0
-	 6rs/y47hUKC6w4EKdBR9Oa1BaergyneOdGsQk0cX5njFtod7RsiMk3F/OSNIQshhzh
-	 at0DKr6ME9bQ4nGZI4K8vNPtUbxDaFBSX3EYuWRC2mBYk4FqTv/xszsxUrI4G2/14l
-	 WjEb2MwDgQXFuZhDTDbA8lGX0S7CqBGS3HxkAqf2Xp8XEWJUojGiSXbUDtZc4mFBRl
-	 pU5P603po9jbQ==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 22 Apr 2024 12:24:18 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: David.Laight@ACULAB.COM,
-	rasmus.villemoes@prevas.dk,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 1/2] seq_file: Optimize seq_puts()
-Date: Mon, 22 Apr 2024 12:24:06 +0200
-Message-ID: <a8589bffe4830dafcb9111e22acf06603fea7132.1713781332.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="PcF2evvv"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1713781529; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=TvioAWeIxSSIl9wCtF/pXYCI+u21pfzAVY3/7/ShKE8=;
+	b=PcF2evvvCfH5a6NBMW4AOknxdJZPAxRlzaAMBE6J1u9KAQB1CysKLljV+FwIIHM6gfbwup0WXXEGOwAAsMmg/ZOZ/1R4QixKRZoWIAMhHcZmw3kSCf8e6LMrnhUUfph/HmytKkMjTt5I7zV6EYa1W7C6NtbgmvjJt+0aR1ytomI=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W51vfY7_1713781527;
+Received: from 30.221.150.42(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W51vfY7_1713781527)
+          by smtp.aliyun-inc.com;
+          Mon, 22 Apr 2024 18:25:28 +0800
+Message-ID: <8d751a33-af11-4aa8-8fad-cc24e825bde7@linux.alibaba.com>
+Date: Mon, 22 Apr 2024 18:25:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-
-Most of seq_puts() usages are done with a string literal. In such cases,
-the length of the string car be computed at compile time in order to save
-a strlen() call at run-time. seq_putc() or seq_write() can then be used
-instead.
-
-This saves a few cycles.
-
-To have an estimation of how often this optimization triggers:
-   $ git grep seq_puts.*\" | wc -l
-   3436
-
-   $ git grep seq_puts.*\".\" | wc -l
-   84
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Changes in v2:
-   - Use a function, instead of a macro   [Al Viro]
-   - Handle the case of 1 char only strings, in order to use seq_putc()   [Al Viro]
-   - Use __always_inline   [David Laight]
-
-V1: https://lore.kernel.org/all/5c4f7ad7b88f5026940efa9c8be36a58755ec1b3.1704374916.git.christophe.jaillet@wanadoo.fr/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next v3 1/2] erofs: get rid of erofs_fs_context
+To: Baokun Li <libaokun1@huawei.com>, linux-erofs@lists.ozlabs.org
+Cc: xiang@kernel.org, chao@kernel.org, huyue2@coolpad.com,
+ viro@zeniv.linux.org.uk, brauner@kernel.org, linux-kernel@vger.kernel.org,
+ yangerkun@huawei.com, houtao1@huawei.com
+References: <20240419123611.947084-1-libaokun1@huawei.com>
+ <20240419123611.947084-2-libaokun1@huawei.com>
+Content-Language: en-US
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+In-Reply-To: <20240419123611.947084-2-libaokun1@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-Checked by comparing the output of a few .s files.
-Here is one of these outputs:
 
-$ diff -u drivers/clk/clk.s.old drivers/clk/clk.s | grep -C6 seq_w
+On 4/19/24 8:36 PM, Baokun Li wrote:
 
- .L2918:
-@@ -46072,10 +46073,11 @@
- 	call	clk_prepare_unlock	#
- # drivers/clk/clk.c:3438: 	clk_pm_runtime_put_all();
- 	call	clk_pm_runtime_put_all	#
--# drivers/clk/clk.c:3440: 	seq_puts(s, "}\n");
-+# ./include/linux/seq_file.h:130: 		seq_write(m, s, __builtin_strlen(s));
-+	movl	$2, %edx	#,
- 	movq	$.LC94, %rsi	#,
- 	movq	%rbp, %rdi	# s,
--	call	seq_puts	#
-+	call	seq_write	#
- # drivers/clk/clk.c:3441: 	return 0;
- 	jmp	.L2917	#
- 	.size	clk_dump_show, .-clk_dump_show
-@@ -46200,7 +46202,7 @@
- 	leaq	128(%rbx), %r15	#, _97
- 	movq	%r15, %rdi	# _97,
---
- # drivers/clk/clk.c:1987: 		__clk_recalc_rates(core, false, 0);
-@@ -46480,15 +46482,17 @@
- 	call	seq_printf	#
- 	jmp	.L2950	#
- .L2946:
--# drivers/clk/clk.c:3315: 		seq_puts(s, "-----");
-+# ./include/linux/seq_file.h:130: 		seq_write(m, s, __builtin_strlen(s));
- 	call	__sanitizer_cov_trace_pc	#
-+	movl	$5, %edx	#,
- 	movq	$.LC100, %rsi	#,
- 	movq	%rbp, %rdi	# s,
--	call	seq_puts	#
-+	call	seq_write	#
-+# ./include/linux/seq_file.h:131: }
- 	jmp	.L2947	#
- .L2957:
- # drivers/clk/clk.c:1903: 	return clk_core_get_accuracy_no_lock(core);
--	xorl	%r14d, %r14d	# _34
-+	xorl	%r14d, %r14d	# _35
---
-@@ -46736,21 +46740,22 @@
- 	call	__sanitizer_cov_trace_pc	#
- 	leaq	240(%r12), %rdi	#, tmp101
- 	call	__tsan_read8	#
--# drivers/clk/clk.c:3355: 	seq_puts(s, "                                 enable  prepare  protect                                duty  hardware                            connection\n");
--	movq	$.LC104, %rsi	#,
-+# ./include/linux/seq_file.h:130: 		seq_write(m, s, __builtin_strlen(s));
-+	movl	$142, %edx	#,
- 	movq	%r12, %rdi	# s,
-+	movq	$.LC104, %rsi	#,
- # drivers/clk/clk.c:3352: 	struct hlist_head **lists = s->private;
- 	movq	240(%r12), %r13	# s_10(D)->private, lists
--# drivers/clk/clk.c:3355: 	seq_puts(s, "                                 enable  prepare  protect                                duty  hardware                            connection\n");
--	call	seq_puts	#
--# drivers/clk/clk.c:3356: 	seq_puts(s, "   clock                          count    count    count        rate   accuracy phase  cycle    enable   consumer                         id\n");
-+# ./include/linux/seq_file.h:130: 		seq_write(m, s, __builtin_strlen(s));
-+	call	seq_write	#
-+	movl	$142, %edx	#,
- 	movq	$.LC105, %rsi	#,
- 	movq	%r12, %rdi	# s,
--	call	seq_puts	#
--# drivers/clk/clk.c:3357: 	seq_puts(s, "---------------------------------------------------------------------------------------------------------------------------------------------\n");
-+	call	seq_write	#
- 	movq	$.LC106, %rsi	#,
- 	movq	%r12, %rdi	# s,
--	call	seq_puts	#
-+	movl	$142, %edx	#,
-+	call	seq_write	#
- # drivers/clk/clk.c:3359: 	ret = clk_pm_runtime_get_all();
- 	call	clk_pm_runtime_get_all	#
- # drivers/clk/clk.c:3360: 	if (ret)
-@@ -57943,7 +57948,7 @@
- 	subq	$88, %rsp	#,
- # drivers/clk/clk.c:5338: {
+> @@ -761,12 +747,15 @@ static void erofs_free_dev_context(struct erofs_dev_context *devs)
+>  
+>  static void erofs_fc_free(struct fs_context *fc)
+>  {
+> -	struct erofs_fs_context *ctx = fc->fs_private;
+> +	struct erofs_sb_info *sbi = fc->s_fs_info;
+> +
+> +	if (!sbi)
+> +		return;
 
 
-The output for seq_putc() generation has also be checked and works.
----
- fs/seq_file.c            |  4 ++--
- include/linux/seq_file.h | 13 ++++++++++++-
- 2 files changed, 14 insertions(+), 3 deletions(-)
+This is the only difference comparing to the original code literally.
+Is there any chance that fc->s_fs_info can be NULL when erofs_fc_free()
+is called?
 
-diff --git a/fs/seq_file.c b/fs/seq_file.c
-index f5fdaf3b1572..8ef0a07033ca 100644
---- a/fs/seq_file.c
-+++ b/fs/seq_file.c
-@@ -669,7 +669,7 @@ void seq_putc(struct seq_file *m, char c)
- }
- EXPORT_SYMBOL(seq_putc);
- 
--void seq_puts(struct seq_file *m, const char *s)
-+void __seq_puts(struct seq_file *m, const char *s)
- {
- 	int len = strlen(s);
- 
-@@ -680,7 +680,7 @@ void seq_puts(struct seq_file *m, const char *s)
- 	memcpy(m->buf + m->count, s, len);
- 	m->count += len;
- }
--EXPORT_SYMBOL(seq_puts);
-+EXPORT_SYMBOL(__seq_puts);
- 
- /**
-  * seq_put_decimal_ull_width - A helper routine for putting decimal numbers
-diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
-index 234bcdb1fba4..8bd4fda6e027 100644
---- a/include/linux/seq_file.h
-+++ b/include/linux/seq_file.h
-@@ -118,7 +118,18 @@ void seq_vprintf(struct seq_file *m, const char *fmt, va_list args);
- __printf(2, 3)
- void seq_printf(struct seq_file *m, const char *fmt, ...);
- void seq_putc(struct seq_file *m, char c);
--void seq_puts(struct seq_file *m, const char *s);
-+void __seq_puts(struct seq_file *m, const char *s);
-+
-+static __always_inline void seq_puts(struct seq_file *m, const char *s)
-+{
-+	if (!__builtin_constant_p(*s))
-+		__seq_puts(m, s);
-+	else if (s[0] && !s[1])
-+		seq_putc(m, s[0]);
-+	else
-+		seq_write(m, s, __builtin_strlen(s));
-+}
-+
- void seq_put_decimal_ull_width(struct seq_file *m, const char *delimiter,
- 			       unsigned long long num, unsigned int width);
- void seq_put_decimal_ull(struct seq_file *m, const char *delimiter,
+Otherwise looks good to me.
+
+
+
 -- 
-2.44.0
-
+Thanks,
+Jingbo
