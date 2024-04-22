@@ -1,42 +1,43 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F71B153BC6
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 17:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27616153BCF;
+	Mon, 22 Apr 2024 17:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713806454; cv=none; b=rhzKandtA29EKhhmcJbS/Lluo5ATSkg0G5QnGFts/NboBTTW+Jx2DEH091GyChkrWRkHRyO2lDeJqmQMeP4WKA1tNUbSAXATwbbFQoQcjBD6CVFVD2NGS2c+58kqJtRrUi9AUZxmgNRz9XsqpoWOsNZY2DX0pwLE5yfPKdXmsrU=
+	t=1713806475; cv=none; b=p9TdXOTd0e3ST7xm2gA5CX7vT8aCiwhIRBUfK1lfifx05Iat2R3XWE2L7ThLMIGQ/BTDMEKgnHHybAlHG0Pxe6fey9PUh5qdpVuLj3iUsXjEK33aUi31Q0nLMNxDdZGE8AmaC61xjN6sk0OmRAyaZEmHBAeCjTn2vkErlMGhJmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713806454; c=relaxed/simple;
-	bh=SlBuGJp6e/gb0sFXKn8EphsybjLeLJHUNFFHJmU3Qeo=;
+	s=arc-20240116; t=1713806475; c=relaxed/simple;
+	bh=FV2TUJKtwirxm+DazLdq+MAfYd7Y+YmL4J1Jaqx2Izc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aNvqObFsO/obyWge2xx1cRnYQxfchZ6+6/6MZLSuOx5cfH7qa8SnwE2sZR2Us7rofNIEFKovG7nqFnmQCNuQK+IIzAMrXr2Cq/xPheWhwnTgpkCGnWzqwXsWxSp6yoFkxSroarz2zbIuDiyI4hchqLb8yaJ0+kGLYQCY7kbT44c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5DCD339;
-	Mon, 22 Apr 2024 10:21:19 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.21.63])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9CDA3F7BD;
-	Mon, 22 Apr 2024 10:20:49 -0700 (PDT)
-Date: Mon, 22 Apr 2024 18:20:40 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Marc Zyngier <maz@kernel.org>, joey.gouly@arm.com,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: gcc-8: arm64/kvm/pauth.: Error: unknown architectural extension
- `pauth'
-Message-ID: <ZiacX2iNP_bI884s@FVFF77S0Q05N>
-References: <CA+G9fYsCL5j-9JzqNH5X03kikL=O+BaCQQ8Ao3ADQvxDuZvqcg@mail.gmail.com>
- <ZiYqV-5BWmPwgqbU@FVFF77S0Q05N>
- <cd172d05-15f6-427c-b6e3-d68fc746b940@app.fastmail.com>
- <ZiYwkKLRVgvrQrnK@FVFF77S0Q05N>
- <df782e40-95bf-4f8e-96c8-355ff0109e3a@app.fastmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=eWw+gytKMj27HKvsRqWOrKToClq+RUkzSMGINF5KY4zHmmR7FsLJW1B6wJYVEhTaeOYxGnS0ornaGwvFVOGk52yiMPk5LIEk8tUCYiGbvaFxnSfdN6ZyZfvaOwWMJp3UDlkIyUtLs9XvniEx7M+PmkubDXT+m5LdJgoMGu2oUXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DIJ9ieH5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DIJ9ieH5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E67C113CC;
+	Mon, 22 Apr 2024 17:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713806474;
+	bh=FV2TUJKtwirxm+DazLdq+MAfYd7Y+YmL4J1Jaqx2Izc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DIJ9ieH5lXiEuSkFe73f4Pcnx7rkadU0wqXw23nokeklWX8Zm7ECLOdagMtbrWUlB
+	 cR8EfZOOD7wdefTzUbaxPmt94ksDywAbhnzzyA49ow6zR21g/JOfyYOAcJ0RK6JM9V
+	 KZBwfbcGkM1bF66kcSVz9wOo9R2wZHiuVbJiM6aqNh5+0zg6Twt7hr+etKIKeCvQS7
+	 f3ZgazFmhqpDOK0vwitrJHp/CxKl7szWwcLkEq9ocvxPEpPxqXCd3kczr16iv96ovs
+	 JirZcx7x0cSYwH5pGl6LE7S/rdxna8jDIxIblMdh4Bkof5WL2gDVYcB8bufUwJ6jKY
+	 GB8cmY/GQo21A==
+Date: Mon, 22 Apr 2024 18:21:08 +0100
+From: Will Deacon <will@kernel.org>
+To: Dev Jain <dev.jain@arm.com>
+Cc: shuah@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Anshuman.Khandual@arm.com, suzuki.poulose@arm.com,
+	ryan.roberts@arm.com, rob.herring@arm.com, Catalin.Marinas@arm.com,
+	broonie@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Subject: Re: [PATCH v2 0/4] A new selftests/ directory for arm compatibility
+ testing
+Message-ID: <20240422172108.GD6223@willie-the-truck>
+References: <20240422070717.2194201-1-dev.jain@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,72 +46,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <df782e40-95bf-4f8e-96c8-355ff0109e3a@app.fastmail.com>
+In-Reply-To: <20240422070717.2194201-1-dev.jain@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Apr 22, 2024 at 02:11:05PM +0200, Arnd Bergmann wrote:
-> On Mon, Apr 22, 2024, at 11:40, Mark Rutland wrote:
-> > On Mon, Apr 22, 2024 at 11:25:25AM +0200, Arnd Bergmann wrote:
-> >> On Mon, Apr 22, 2024, at 11:13, Mark Rutland wrote:
-> >> > On Mon, Apr 22, 2024 at 02:04:43PM +0530, Naresh Kamboju wrote:
-> >> > Given the minimum supported toolchain comes with an assembler that doesn't
-> >> > necessarily support ARMv8.3, I reckon we'll either have to make NV pauth
-> >> > support depend upon AS_HAS_ARMV8_3, or manually assemble the PACGA instruction.
-> >> >
-> >> > I suspect the latter is the better option.
-> >> 
-> >> The .config linked from the report shows
-> >> 
-> >> CONFIG_AS_VERSION=23101
-> >> CONFIG_ARM64_PTR_AUTH_KERNEL=y
-> >> CONFIG_AS_HAS_ARMV8_3=y
-> >> 
-> >> So it gets detected as supporting ARMv8.3. Is this the wrong
-> >> conditional to check, or does it get misdetected for an unsupported
-> >> assembler?
-> >
-> > I suspect that means the 'pauth' arch extension was added after armv8.3
-> > support, and the assembler supports `-march=armv8.3-a` but does not support
-> > `.arch_extension pauth`. So for this code, it'd be wrong to check for
-> > AS_HAS_ARMV8_3, unless we used `.march armv8.3-a`, but even then that'd still
-> > mean configurations where we couldn't support this code.
-> >
-> > I reckon manually assembing the PACGA is the best thing to do; that sidesteps
-> > the need for either `.arch_extension pauth` or `.march armv8.3-a`, and aligns
-> > with what we do for CONFIG_ARM64_PTR_AUTH=y generally.
-> >
-> > Elsewhere in the kernel where we check for CONFIG_AS_HAS_ARMV8_3, we rely on
-> > ARM64_ASM_PREAMBLE containing `.arch armv8.3-a` or a later version that implies
-> > the presence of ARMv8.3-A instructions, and so pauth usage elsewhere is fine.
+On Mon, Apr 22, 2024 at 12:37:13PM +0530, Dev Jain wrote:
+> This series introduces the selftests/arm directory, which tests 32 and 64-bit
+> kernel compatibility with 32-bit ELFs running on the Aarch platform.
+> The need for this bucket of tests is that 32 bit applications built on legacy
+> ARM architecture must not break on the new Aarch64 platforms and the 64-bit
+> kernel. The kernel must emulate the data structures, system calls and the
+> registers according to Aarch32, when running a 32-bit process; this directory
+> fills that testing requirement.
 > 
-> I tested with the old binutils versions I have here and found
-> that anything that supports v8.3 also understands pacga, but
-> '.arch_extension pauth' only works in binutils-2.35 and higher,
-> presumably because it started out as a v8.3+ feature but was
-> later turned into an optional extension for all versions.
-> 
-> Since there is a Kconfig check for armv8.3-a support already, I think
-> it's safe to just drop the .arch_extension pauth.
+> One may find similarity between this directory and selftests/arm64; it is
+> advisable to refer to that since a lot has been copied from there itself.
 
-That'll be safe, but it does mean that we'd need to *not* support pointer auth
-for nested virt when we have a toolchain for which CONFIG_AS_HAS_ARMV8_3=n,
-unless our minimum supported AS supports ARMv8.3.
+Isn't this going to be difficult to maintain if we have two divergent copies
+of the same stuff? From a very quick skim, a bunch of the signals stuff is
+idential to what we have on arm64...
 
-If our minimum supported AS *doesn't* support ARMv8.3, then we'd either need a
-new Kconfig symbol for NV_PAUTH support, or make CONFIG_ARM64_PTR_AUTH depend
-upon CONFIG_AS_HAS_ARMV8_3.
-
-AFAICT our options are:
-
-(a) Manually assembly PACGA
-
-(b) Change CONFIG_ARM64_PTR_AUTH to depend upon CONFIG_AS_HAS_ARMV8_3=y
-
-(c) Add and use new Kconfig symbol for NV PAUTH, dependent upon
-    CONFIG_AS_HAS_ARMV8_3=y
-
-(d) Bump the minimum supported version of AS so that we can depend upon ARMv8.3
-    support, and just open-code the ".arch armv8.3-a" in the NV pauth code.
-
-... and maybe some variations on that.
-
-Mark.
+Will
