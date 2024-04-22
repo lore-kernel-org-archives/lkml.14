@@ -1,181 +1,191 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDE1433CF
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEC2502B1
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713774800; cv=none; b=ICwpwHT/eqGhcV+UmLsDcm9UYBBt3lkiQTAA/CisIBN/Rx7DFM2dUX65NslevSp9chiuQMUVx/AoFhAP2/u7AC3WziT5teABiG1ZFTOUQIu+o1fKy4+cIu+It6Wm1XPfof3f7FWNse7zwJzaAGbGYnW7t1Bzvo8+/hwXDapghVY=
+	t=1713774802; cv=none; b=iFEEvSj7MOni8ITlez73nyOUqV1drM2h4DEuO9owJEBNxduR9OTSAzbhyEWoD4GtEdra3iFWsjN6728lMNctmXZFZn/g649KmfzlV7cIcHDReSc0FSpqwm71gYf+s3NznCtHy11r6XAcCFXfhJvGj6JdBzUKbiwg1WBKQGkEjD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713774800; c=relaxed/simple;
-	bh=zQpxV0djrOiwPxhRvSgIUZn7ViHWbqTnSNjH4kOd7u8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mf9kcrdfz8XD4Bb3BS9aXmKtXIa0laYSPc3dKrY/fSfXBj0jizpCEZsRmc5IEnysmG0SXjmDfhuFAShqnJtsP/fw6mCb2FJD3ZEI4/MHfKWUuSNeRziOt03IngvptCKsqQK2gSSwZ+wC4TSfe5Dpd92Hr0P61ZHeDBWLwXse1G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lE5pImXM; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713774802; c=relaxed/simple;
+	bh=4h4630NBcffFLd43owEzq3/6Wwj2iMy/33KJfwU0EQ0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=oPRFtKQxSb4byboTOFO5m1YDq9WhzNhkdM9tghql+NMeqgkVyssIxkaQXQiUPVWjaI9h64S/1B8ffy0qAYxJz2fafnZPdTrVc4x1hzLopaSK+fsEiN49T++6R8n25/11Wj4GI4U4gt6YVmGNY1s2tRnVFQRcrmXEMzqS9Ik701A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=TVymIE84; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lE5pImXM"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4196c62bb4eso17917745e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 01:33:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713774797; x=1714379597; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cLRaymjKldV5Ae25ez2pVEwmOtAjv9LTg0zkuha6uuU=;
-        b=lE5pImXMGTo1z3vo5l15XtNZZI26+ITwo5KUIxqgme1uMfSi0F4IWWh0h5MCdaZQ+P
-         Pvleu4k9cZD8PIS8xz/Ed69HZz4GcpvkghBChSRJPisPQ1411sEmMnNWqxl3NjofgF6X
-         odSp481+xX+miUfz6sN8D7Mg3a5NR1urcEon0A1kRWTbqY2ZLVHlsDLvexKZGo1ifAuf
-         2xMwVX2B/Pt76KzJvKdU8JGFgaozjhbzumq4kfFgmZARAT3/UDp0IbxqOz584MXh+8ON
-         9BzI7ClWclHi8S5xZuR5iWSdlg9IppP7NYkUn5o4pKUEDTFKKJqNI1cfZpSd3QpjtrUa
-         O+4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713774797; x=1714379597;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cLRaymjKldV5Ae25ez2pVEwmOtAjv9LTg0zkuha6uuU=;
-        b=BPdMNEcFEhAkL4p64UYhVlx2DPL9CFm5LD01a+TBgiHX25mGh9EEUW2mcIT8GqK4kk
-         S5097EpklWXtxLI9qa8fhj7arRHi6Hd16ghBoE7iWKuqNXRh22nypLoeGzdhOEWHLG+Y
-         z5VMnNpVZ8+1oX35X5sKG/ohIR3ITM8ku23K+GP4D7bRCUGqrs+R4144fVwvR5jZBaMx
-         Yl82cFJIqwzD9FqJ6540+pdfm6IETcvSo2J0cHY/aMwQu/hO0XstwKEXaGcNFb7YTDCh
-         ZWzVWR2juw1h/DgYhtQzWorVvJwHYc7har+5R4eNjrXnSwN2xEQS0Hb8MUcTcP+Bt0Eg
-         NgSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3vJqDzOE4yxWpzN1TuBjwiAO31EnB1/9fpi52/QgTI8xE0BLVgdX+Cw2FcFWWiZXD8Jnlmz+Gz7upovsKWNBhw07abPGtLmDC5xkJ
-X-Gm-Message-State: AOJu0YzeblPyP5YTxP8b2fwkP2A3eYJ40Q7wNuJTFx1x85j5OctzX69L
-	xtZKGAtZX3k6wB5VuWtFaReGgZ3SUAxe7VIwjO4mJRHTaQA/PO8Y+SZLi4M5kX/TL2/po4/wIL5
-	7Zphnig==
-X-Google-Smtp-Source: AGHT+IFHAw4FMhpEGmtTQ4MMTPUbnYOSy9z5mJuHiv3zra6VJEyRQ6AFD+8qUVa54j5166hugk0F9w==
-X-Received: by 2002:a05:600c:c1a:b0:41a:68a5:b2c8 with SMTP id fm26-20020a05600c0c1a00b0041a68a5b2c8mr943929wmb.35.1713774797226;
-        Mon, 22 Apr 2024 01:33:17 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id j19-20020a05600c1c1300b004161bffa48csm15978786wms.40.2024.04.22.01.33.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 01:33:16 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Mon, 22 Apr 2024 10:33:13 +0200
-Subject: [PATCH v3 3/3] arm64: dts: qcom: sm8650: remove pcie-1-phy-aux-clk
- and add pcie1_phy pcie1_phy_aux_clk
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TVymIE84"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240422083312epoutp04c862bc9132b31de99e457150a5dbc1c7~IjRfsHzB_0043900439epoutp04a
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:33:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240422083312epoutp04c862bc9132b31de99e457150a5dbc1c7~IjRfsHzB_0043900439epoutp04a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1713774792;
+	bh=BOEbA516Jm64T4WqID42LxQKCDujqnFQ2P/+LMNsxW0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TVymIE848Y96fu29wd+CR0aHOzA05zFU01q+xZ5oIzx5UhAe2UAxIBHw4WoNtrgUy
+	 z1lYuYNpIS2YeyyC62iu/3ELlmXDTTKQ7viecSEjP4XzZONxtV1Qz9cRHLxp/yHxqh
+	 K4yBTzGF4tTtofH2cWnAiDJlyIvV/5MwV7L8GIas=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20240422083311epcas5p3dd871c8501c9c3bd1cc7aa2fc5f91da5~IjRfSYeJr1257312573epcas5p3g;
+	Mon, 22 Apr 2024 08:33:11 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.182]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4VNJRV4J6Cz4x9QJ; Mon, 22 Apr
+	2024 08:33:10 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	91.84.09665.7B026266; Mon, 22 Apr 2024 17:32:55 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240422081827epcas5p21ba3154cfcaa7520d7db412f5d3a15d2~IjEnpVCpk2667726677epcas5p2O;
+	Mon, 22 Apr 2024 08:18:27 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240422081827epsmtrp1cef82adf44c3f2c9fdfec058da8b330d~IjEnonSTg0981409814epsmtrp1C;
+	Mon, 22 Apr 2024 08:18:27 +0000 (GMT)
+X-AuditID: b6c32a4b-5cdff700000025c1-ae-662620b78d6e
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	CD.6D.08390.35D16266; Mon, 22 Apr 2024 17:18:27 +0900 (KST)
+Received: from testpc11818.samsungds.net (unknown [109.105.118.18]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240422081825epsmtip28adab640203b0fb84c1425d09984348c~IjEmI9bIQ1697016970epsmtip2p;
+	Mon, 22 Apr 2024 08:18:25 +0000 (GMT)
+From: hexue <xue01.he@samsung.com>
+To: asml.silence@gmail.com
+Cc: anuj20.g@samsung.com, axboe@kernel.dk, cliang01.li@samsung.com,
+	io-uring@vger.kernel.org, joshi.k@samsung.com, kundan.kumar@samsung.com,
+	linux-kernel@vger.kernel.org, peiwei.li@samsung.com, ruyi.zhang@samsung.com,
+	wenwen.chen@samsung.com, xiaobing.li@samsung.com, xue01.he@samsung.com
+Subject: Re: Re: io_uring: io_uring: releasing CPU resources when polling
+Date: Mon, 22 Apr 2024 16:18:16 +0800
+Message-Id: <20240422081816.2486247-1-xue01.he@samsung.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <26e38785-4f48-4801-a8c1-895bf8d78f7a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0xTZxTfd29pb8mqlwLbZzdcufERu4CtlO4yqDFITBeckrGZjCWrN/QC
+	DX2tD6pkWxpecwVHFVgm4zEFFKtSw4pUEGSoc9BgjHVxNalzjpmImysKsrQCa7l187/fd/J7
+	nHO+g6F8F1uAqXVm2qijNAQ7nnXu0iZR2qBwQ4n4Qvh1ssqxiJJtznOAPBVoZJPexd9Z5KPa
+	ayzyyvJfbDJUHwDkwNx8HOkbamOT90e45NylBQ455QjGkS1uD0IeqPEB0n59kr1tteJ8a4Cj
+	8E1ZFF+5nUDxpH9tAauoPKeMplS0UUjrivUqta5UTuQXKrcrM2ViSZoki3yLEOooLS0n8nYW
+	pO1QayJ9EsIKSmOJlAook4nYvDXHqLeYaWGZ3mSWE7RBpTFIDekmSmuy6ErTdbT5bYlYvCUz
+	QtxbXtbT60QM1Wv2Dc4+4NjAZKIdcDGIS2GLtw3YQTzGx4cB/HHxSw7zeAxg/69dcVEWH38K
+	oGd6rx1gK4quw6kMZwTAZVtnTPAPgNXtfjQqYOMEvOgOgqggCRfAcACLclD8OAKHT3WwopxE
+	/B04a1viRDELXw+HloIrWh6eDS87x+KY9t6AfvtFNOrDxeVwOpTLUBLgxJHpFRs0Qqke+BaN
+	+kP8CAadgTsIo82Dd91P2QxOhDNX3RwGC+CDxroY1sOmBRdg8Kew7/tHLAZnw6WbF1jRXBTf
+	BF1Dm5lyCmyZ7EOY3FXwYHg6FsWDno7nmIDdl3tjlhCGHcdioyhguLcntmkHgLcb5xEHELa+
+	ME/rC/O0/h/9HUCdYA1tMGlLaVOmIUNHW//742K9th+sXK4o3wPu3Q2mjwMEA+MAYiiRxAs9
+	W1fC56mo/ZW0Ua80WjS0aRxkRvZ9CBUkF+sjp68zKyXSLLFUJpNJszJkEuJV3sPadhUfL6XM
+	dDlNG2jjcx2CcQU2ZObzH4JtW5qd3SkjiN/z2cZUjnK6uOZ0Hj5f85F/Ys9C5ei+taKTtXO/
+	TX0wm8zVWqeenbnfJ/lwI/CO+vRJgxWHYdFgjiBU0Vz5kqwF53Np14nOoYaM966a6723S/5Y
+	1dgVUN8YiQ8cvYanKhMEPi51YPgVTd3ZW+9rC1dv3TnW3W4Q85b8RSdHZVxw7N3UATr553Vn
+	nhxdvyE3DUtpmrmREaIfxqnvJOQQiubFx2/eug7+3k1kN9ULd91cqtux2N/wyydfDO15LZ9r
+	7fi46sSyy4a159YctH6zS2eVV/UcOv3nTy97Ebm/SXH2/PL+7WNf94oa7vVNFAa3WXqudKZk
+	EyxTGSURoUYT9S/dg+XpQgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsWy7bCSvG6wrFqawZMDnBZNE/4yW8xZtY3R
+	YvXdfjaL038fs1i8az3HYnH0/1s2i1/ddxkttn75ympxedccNotnezktvhz+zm5xdsIHVoup
+	W3YwWXS0XGa06Lpwis2B32PnrLvsHpfPlnr0bVnF6PF5k1wASxSXTUpqTmZZapG+XQJXxtIV
+	q5gKmiUrtn98yd7AeEq4i5GDQ0LARGLxJMUuRi4OIYHdjBLzr0xk72LkBIpLSOx49IcVwhaW
+	WPnvOTtE0TdGieU/JjCDJNgElCT2b/nACDJIREBK4vddDpAaZoFtTBL7Hq5jAakRFvCU+Njw
+	D2woi4CqxK5/H8B6eQWsJY6sOgC1QF7iZtd+ZpA5nAK2Ek9+OYGEhQRsJC6sW8oIUS4ocXLm
+	E7CRzEDlzVtnM09gFJiFJDULSWoBI9MqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS95PzcTYzg
+	qNDS2sG4Z9UHvUOMTByMhxglOJiVRHh//VFJE+JNSaysSi3Kjy8qzUktPsQozcGiJM777XVv
+	ipBAemJJanZqakFqEUyWiYNTqoEppUFeOdvWztlQZAIj91s+FsmLE4t1zq/3Ll+UL62p3V88
+	b9LzV8VeNbPfr0gwPP7ixOkZh+/062rq3FsjkD0lIexkqlFu9KawspOT6u4EPvT1u277aAW/
+	qFn38w+1tVr9+s6zOdPuL99pZp+Yw2jrK7+ItbTlzFzTOgPWWaJfJ0mbr+QVfvXsUfKXR9vc
+	GFadNc5f3NwZuuX8lJ/eF9+cOmPltWd/J5u2VWL2WvWSIlvxLeuumc9l0f56uPV7x1QOJ2f5
+	WaI2fcsaZc7ytVmelrGwErFnmrWuuSvbsXejep5UH/fC7xxck19m9TdFz56XwKS15fTWbW2/
+	YkQOp4eZ7K7XTOh5e1Ltu+2et0osxRmJhlrMRcWJAJFl7er5AgAA
+X-CMS-MailID: 20240422081827epcas5p21ba3154cfcaa7520d7db412f5d3a15d2
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240422-topic-sm8x50-upstream-pcie-1-phy-aux-clk-v3-3-799475a27cce@linaro.org>
-References: <20240422-topic-sm8x50-upstream-pcie-1-phy-aux-clk-v3-0-799475a27cce@linaro.org>
-In-Reply-To: <20240422-topic-sm8x50-upstream-pcie-1-phy-aux-clk-v3-0-799475a27cce@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2488;
- i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=zQpxV0djrOiwPxhRvSgIUZn7ViHWbqTnSNjH4kOd7u8=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmJiDJ9xmje0GQO+nI5+7LeLoATi+T2Zb/zhTy4IU2
- sGW6a++JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZiYgyQAKCRB33NvayMhJ0X8BD/
- 9yQh5mmI6X23M/e5p+c8PjwJeVfqTbT/t6SwpivBvytndYSZ5J4914WV5BC+c3zegKWfNTmpICsrEX
- 9p6wC4liG1cUo3Y25/lH8rvUMiKMLSlK01g6dd5gkNds+e54dTsa1Ca8EahAm+pxQF5jOxbssl/VTB
- +JWwgUIA5jdN1RnO+5ZPbaMF+blg+uJVk8lXAb8axKd3TfLiVtZ+ReUQtsHmw641U/ZT/lG6fZXu6A
- 34YJmKKD/u+Z18DmTVOCcb0TAkYkylPizUGsY5s1KW7GNtPldbg3vbinHgEe6OgCInkvcxqPrNh2Xx
- G1F3t8JFKIeBjFZWE2VSIMlUXb5kcfmnmpxRvHVfXqn2Y4lta1lV5BvbIRZKvucx6ffqyVB+aKEjMA
- 7cQYR7PSFbDyUW7ULg0s5L4IuYoZTIYf7lAohQSRgAlqxBoe+5QmVG/fbHj2YwGpzBcz26241ziaQl
- YABQD/wF8l6xo8maf/Vl/jNhdO3rgukn9R5awTQG788ccmEAMayprgsJbxl0zWNOUOve++wByjlLT4
- wH4V2gdz4yR3nvnzqWTN2Pt+DxpcdEak2cnALMO0c8L4NhlS96AtrmvPcPKD8/LkuHZKWYchp1RgO0
- bGbXVL0LXslZ+uwP48mJaHFOVkQQVIlVNYhmSEpDUxB6TpT1I9sNvCQEShNw==
-X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
- fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240422081827epcas5p21ba3154cfcaa7520d7db412f5d3a15d2
+References: <26e38785-4f48-4801-a8c1-895bf8d78f7a@gmail.com>
+	<CGME20240422081827epcas5p21ba3154cfcaa7520d7db412f5d3a15d2@epcas5p2.samsung.com>
 
-Remove the dummy pcie-1-phy-aux-clk clock and replace with the pcie1_phy
-provided QMP_PCIE_PHY_AUX_CLK.
+On 4/19/24 13:27, Pavel Begunkov wrote:
+>On 4/18/24 10:31, hexue wrote:
+>> This patch is intended to release the CPU resources of io_uring in
+>> polling mode. When IO is issued, the program immediately polls for
+>> check completion, which is a waste of CPU resources when IO commands
+>> are executed on the disk.
+>> 
+>> I add the hybrid polling feature in io_uring, enables polling to
+>> release a portion of CPU resources without affecting block layer.
+>
+>So that's basically the block layer hybrid polling, which, to
+>remind, was removed not that long ago, but moved into io_uring.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm8650-mtp.dts |  4 ----
- arch/arm64/boot/dts/qcom/sm8650-qrd.dts |  4 ----
- arch/arm64/boot/dts/qcom/sm8650.dtsi    | 13 ++++---------
- 3 files changed, 4 insertions(+), 17 deletions(-)
+The idea is based on the previous blcok layer hybrid poll, but
+it's not just for single IO. I think hybrid poll is still an effective
+CPU-saving solution, and I've tested it with good results on both PCIe
+Gen4 and Gen5 nvme devices.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
-index d04ceaa73c2b..ea092f532e5a 100644
---- a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
-@@ -641,10 +641,6 @@ &mdss_dsi0_phy {
- 	status = "okay";
- };
- 
--&pcie_1_phy_aux_clk {
--	clock-frequency = <1000>;
--};
--
- &pcie0 {
- 	wake-gpios = <&tlmm 96 GPIO_ACTIVE_HIGH>;
- 	perst-gpios = <&tlmm 94 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-index 4e94f7fe4d2d..bd87aa3aa548 100644
---- a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-@@ -835,10 +835,6 @@ &mdss_dp0_out {
- 	remote-endpoint = <&usb_dp_qmpphy_dp_in>;
- };
- 
--&pcie_1_phy_aux_clk {
--	clock-frequency = <1000>;
--};
--
- &pcie0 {
- 	wake-gpios = <&tlmm 96 GPIO_ACTIVE_HIGH>;
- 	perst-gpios = <&tlmm 94 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-index 8e0c1841f748..658ad2b41c5a 100644
---- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-@@ -60,11 +60,6 @@ bi_tcxo_ao_div2: bi-tcxo-ao-div2-clk {
- 			clock-mult = <1>;
- 			clock-div = <2>;
- 		};
--
--		pcie_1_phy_aux_clk: pcie-1-phy-aux-clk {
--			compatible = "fixed-clock";
--			#clock-cells = <0>;
--		};
- 	};
- 
- 	cpus {
-@@ -758,8 +753,8 @@ gcc: clock-controller@100000 {
- 				 <&bi_tcxo_ao_div2>,
- 				 <&sleep_clk>,
- 				 <&pcie0_phy>,
--				 <&pcie1_phy>,
--				 <&pcie_1_phy_aux_clk>,
-+				 <&pcie1_phy QMP_PCIE_PIPE_CLK>,
-+				 <&pcie1_phy QMP_PCIE_PHY_AUX_CLK>,
- 				 <&ufs_mem_phy 0>,
- 				 <&ufs_mem_phy 1>,
- 				 <&ufs_mem_phy 2>,
-@@ -2467,8 +2462,8 @@ pcie1_phy: phy@1c0e000 {
- 
- 			power-domains = <&gcc PCIE_1_PHY_GDSC>;
- 
--			#clock-cells = <0>;
--			clock-output-names = "pcie1_pipe_clk";
-+			#clock-cells = <1>;
-+			clock-output-names = "pcie1_pipe_clk", "pcie1_phy_aux_clk";
- 
- 			#phy-cells = <0>;
- 
+>> - Record the running time and context switching time of each
+>>    IO, and use these time to determine whether a process continue
+>>    to schedule.
+>> 
+>> - Adaptive adjustment to different devices. Due to the real-time
+>>    nature of time recording, each device's IO processing speed is
+>>    different, so the CPU optimization effect will vary.
+>> 
+>> - Set a interface (ctx->flag) enables application to choose whether
+>>    or not to use this feature.
+>> 
+>> The CPU optimization in peak workload of patch is tested as follows:
+>>    all CPU utilization of original polling is 100% for per CPU, after
+>>    optimization, the CPU utilization drop a lot (per CPU);
+>
+>The first version was about cases that don't have iopoll queues.
+>How many IO poll queues did you have to get these numbers?
 
--- 
-2.34.1
+The test enviroment has 8 CPU 16G mem, and I set 8 poll queues this case.
+These data of the test from Gen4 disk.
 
+>>     read(128k, QD64, 1Job)     37%   write(128k, QD64, 1Job)     40%
+>>     randread(4k, QD64, 16Job)  52%   randwrite(4k, QD64, 16Job)  12%
+>> 
+>>    Compared to original polling, the optimised performance reduction
+>>    with peak workload within 1%.
+>> 
+>>     read  0.29%     write  0.51%    randread  0.09%    randwrite  0%
+>> 
+>> Reviewed-by: KANCHAN JOSHI <joshi.k@samsung.com>
+>
+>Kanchan, did you _really_ take a look at the patch?
+>
+
+sorry I misunderstood the meaning of "reviewed", I've had some discussions
+with Kanchan based on the test results, he just give some suggestions and
+possible approach for changes but haven't reviewed the implementation yet.
+This is my mistake, please ignore this "reviewed" message.
+
+>> Signed-off-by: hexue <xue01.he@samsung.com>
+>> ---
+>>   include/linux/io_uring_types.h | 10 +++++
+>>   include/uapi/linux/io_uring.h  |  1 +
+>>   io_uring/io_uring.c            | 28 +++++++++++++-
+>>   io_uring/io_uring.h            |  2 +
+>>   io_uring/rw.c                  | 69 ++++++++++++++++++++++++++++++++++
+>>   5 files changed, 109 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/include/linux/io_uring_types.h b/include/linux/io_uring_types.h
+>> index 854ad67a5f70..7607fd8de91c 100644
+>> --- a/include/linux/io_uring_types.h
+>> +++ b/include/linux/io_uring_types.h
+>> @@ -224,6 +224,11 @@ struct io_alloc_cache {
+>>   	size_t			elem_size;
+>>   };
+>
