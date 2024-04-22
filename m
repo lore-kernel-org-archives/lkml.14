@@ -1,72 +1,102 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2425A3399F;
-	Mon, 22 Apr 2024 13:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4A73399F;
+	Mon, 22 Apr 2024 13:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713791857; cv=none; b=kliRwQn8UtfMmAqTd36EKUVK2r/x0caC9Lok3mfF4/pkX92aanV5OJTB2SKprAZyPJc0wQ/a2e3nyuK5AXYGajG+Ik8l+H6D6q7Wd2O8JWLyuBCH9dd9LfXBcZt2vDAlZESG4Jya7FBu0kNLvvYLuDeybhCBzWt4UwNabx0jBik=
+	t=1713791911; cv=none; b=RAo7KntiwdSBDtrbf1g1eNFGZAXPjiSnjXuUSqlugxgFSud0SAbyKQpOJSOeDqWs4ceg6v7kmwfx3xPXyBOHnhmXsfAdnISchX8kAzYwniDZseThlJpoSeSXakG5sgJpeuVNwqvlr3kwPor7CH9niLgyhUQeGhjGUHtdsQg9cAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713791857; c=relaxed/simple;
-	bh=Ia3FvbaIgWfwRnYXgwdqVg+hKLXDcjWTsKN0buzFcc0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Aqnor9/Evc6x1NcbL0D3pSJLQw3RBSgt/TK/pUK/mNUI10NkPtRAAM7Ap034Bht1rjUs94R99HTGWoMD61JKhGUphMqgolQR85megL2HgP1hsSWE1VlOMVw6vBCWUePHYMAhkUowXuP7VKodpVV/g06BfA/7w3CxGN1rUFRoJXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=hu67uR/x; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1713791911; c=relaxed/simple;
+	bh=oH1R0IQ5okr+fcRE693xdM6cp7GPSY26awGZ2I/bPyA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PqDswts65feBKtKtosgVnTuQJPlNtlse1emLYMGXPwpzW0r+2fr6My6GK4BnScWMXB+b4CMgUaLjmlGD4jjZcTLqlSRkUnPfr4EgjUlUSHukC9bl7oQwrFiXDBuJRH2dqITnrOe7ISZL+0Z/nNsHqwuXtfOq3jypI3X5n6I+Ei8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hG9kbzbv; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hu67uR/x"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=YvpR2HwvEaWrxgeOfrdbZHCf4C+A8e9kchAEailHE7Q=; b=hu67uR/xPZUbBSccWD7TffeoDc
-	fJFjk64Cdytg0SREKKoRCikSigb6JRKJ3cUUzfwPfBfieD7qooK3wlluQMmTpr88fWm+Rg9wyyyVM
-	DLNSVimJztM7dqPEGgGyNz5AC/8DCsAYaG9c0eXqZhMGdAJLH2QswRnvbmatKr642Gyg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rytXz-00DcRf-UK; Mon, 22 Apr 2024 15:17:27 +0200
-Date: Mon, 22 Apr 2024 15:17:27 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Kyle Swenson <kyle.swenson@est.tech>,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH net-next 3/3] net: pse-pd: Kconfig: Add missing Regulator
- API dependency
-Message-ID: <6a88f4f0-940c-4e63-8520-5ab23e96c480@lunn.ch>
-References: <20240422-fix_poe-v1-0-811c8c0b9da7@bootlin.com>
- <20240422-fix_poe-v1-3-811c8c0b9da7@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hG9kbzbv"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-518a56cdbcfso6842564e87.2;
+        Mon, 22 Apr 2024 06:18:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713791908; x=1714396708; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oH1R0IQ5okr+fcRE693xdM6cp7GPSY26awGZ2I/bPyA=;
+        b=hG9kbzbv6mhe5DAmWl8v1yDByzrRRLCBG/t5SchjEGtprRwbxeC0Lv7PyWf49afEsb
+         PNmsfgTRsLZ5h/ms6E9zsVfvhNcFkozC0L7xMl2CdMTjX5KE3ZVVlDvdq4gHOv0hTY0Q
+         oBUXi0QvitzV75Tp+urqQj5qjBjE2ltE/JpvOo8yU2hWmpY48ZIL2YKD10hjPfhVge+B
+         v8/SS/ca5z5UpkpWms6iBUSBnBU/DPXCiOcqc1gxySFS057fZf7ekR/Pyq4iG9DMNlxj
+         KGxno4hklnYfNFtXI2vX4+ipcIz/KfWOfeJ/WLcUMJIOXqC6GiYalKREiKqCPB3btUvp
+         RMPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713791908; x=1714396708;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oH1R0IQ5okr+fcRE693xdM6cp7GPSY26awGZ2I/bPyA=;
+        b=marvfVVVJ8C1rEXeH9l7lyb1QOZwSAzRH8yQ7JT20UVhpGJgBWqKKs8f8CXyX3yE7x
+         /idy57nC0wQt6tGStymd92eEPrbNzNzK22Q/TQ9NU6g5jwvHLoOibmMI3xS+bs1TSi+P
+         yPnHE5L/KHc5QrQZ7l1J7NVim4PDGIwdVkY+GOTz2emGDfN64TGG1GWZeKDX864duskg
+         GfI1NzNipVoRRfXDccgvXvdfH5wGHhxqjxwDKTR9HGzokXKJCuWUZJUyvPOEfXuafLqr
+         8Njn2RKne7SQ5/Gmu7sSifv+ZgcOcq1cKWPMNrd9vmfqow8jn/PCG/6WG3qSndyDdOvg
+         DY1g==
+X-Forwarded-Encrypted: i=1; AJvYcCW8c2Axov2+VignWgtNIrLZWGZOd1fU8s0sbqALMnDBO0lqcuMTb0bJx3ziSFtNSqg4+YNecxSTWUvP1d9gA8X0BTKaoB0B5bfoqM2UdkexHGQ0HRq5LU8txeqd0pp8TvdVPVTT6pcX/IrA
+X-Gm-Message-State: AOJu0YwG1CZbXj3R3lewdj6Fpph80ST0EyhCaN39n6/y/Ticir7WJnCf
+	jzbjkLyonmzz/5ols84q464snAEhzYR/ndDekoSAhDYxlYNAhcCCiBAMRsVUomgUqqo7hM/VP9W
+	eUpn/ouZWqfb3PxnuEYfHvQesYMs=
+X-Google-Smtp-Source: AGHT+IHiF+CJbeJBpnqiMIUJlPP+HthhFpz+ac8LBycAWGHna+D5nbZF4aeIUQwuUL1OmY0B6OQGNutg+LajTART5Ug=
+X-Received: by 2002:ac2:41d6:0:b0:51a:c490:8d55 with SMTP id
+ d22-20020ac241d6000000b0051ac4908d55mr6695585lfi.13.1713791908094; Mon, 22
+ Apr 2024 06:18:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240422-fix_poe-v1-3-811c8c0b9da7@bootlin.com>
+References: <20240422123801.2695129-1-rilian.la.te@ya.ru> <20240422123801.2695129-2-rilian.la.te@ya.ru>
+ <ZiZcyhoKRgfteO5d@smile.fi.intel.com>
+In-Reply-To: <ZiZcyhoKRgfteO5d@smile.fi.intel.com>
+From: "Konstantin P." <ria.freelander@gmail.com>
+Date: Mon, 22 Apr 2024 16:20:40 +0300
+Message-ID: <CAF1WSuxPmzWYhCQU3tiA_GYMLowxMuvEJWRv83atithv8NCRxg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] serial: sc16is7xx: announce support of SER_RS485_RTS_ON_SEND
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Konstantin Pugin <rilian.la.te@ya.ru>, krzk@kernel.org, conor@kernel.org, lkp@intel.com, 
+	vz@mleia.com, robh@kernel.org, jcmvbkbc@gmail.com, 
+	nicolas.ferre@microchip.com, manikanta.guntupalli@amd.com, corbet@lwn.net, 
+	ychuang3@nuvoton.com, u.kleine-koenig@pengutronix.de, Maarten.Brock@sttls.nl, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>, Lech Perczak <lech.perczak@camlingroup.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 22, 2024 at 02:50:50PM +0200, Kory Maincent (Dent Project) wrote:
-> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
-> 
-> The PSE (Power Sourcing Equipment) API now relies on the Regulator API.
-> However, the Regulator dependency was missing from Kconfig. This patch
-> adds the necessary dependency, resolving the issue of the missing
-> dependency and ensuring proper functionality of the PSE API.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202404201020.mqX2IOu7-lkp@intel.com/
-> Closes: https://lore.kernel.org/oe-kbuild-all/202404200036.D8ap1Mf5-lkp@intel.com/
-> Fixes: d83e13761d5b ("net: pse-pd: Use regulator framework within PSE framework")
-> Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+On Mon, Apr 22, 2024 at 3:56=E2=80=AFPM Andy Shevchenko <andy@kernel.org> w=
+rote:
+>
+> On Mon, Apr 22, 2024 at 03:37:55PM +0300, Konstantin Pugin wrote:
+> > From: Konstantin Pugin <ria.freelander@gmail.com>
+> >
+> > The hardware supports both RTS_ON_SEND and RTS_AFTER_SEND modes, but
+> > after the commit 4afeced55baa ("serial: core: fix sanitizing check for
+> > RTS settings") we always end up with SER_RS485_RTS_AFTER_SEND set and
+> > always write to the register field SC16IS7XX_EFCR_RTS_INVERT_BIT, which
+> > breaks some hardware using these chips.
+>
+> LGTM, but I leave it to Hugo for testing and other comments, if any,
+> as I don't have a HW.
+>
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+Andy, I need to do v7 (because there is a missed fix), but Yandex do
+not allow me to send more mail( So, can it be sent next day?
