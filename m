@@ -1,108 +1,81 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539BD64A98;
-	Mon, 22 Apr 2024 09:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9633D502B3
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 09:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713778814; cv=none; b=POy5crvRabNoKCrkc1Voha1pYx2eJWvn/hjsu/eS8IQFSjoaIWvzMxeUBnliVGBgeGlAF0jBpWC+A0pgBztybxLv7NwA5+SxcUQyDNN+Sp71yvA788vdLMb9U79tusNgyQjM2bmYY11GXe8Gvf6bw5nXHsqhJiKrCs/YQID+J2s=
+	t=1713778839; cv=none; b=hhYIhmYY2+dXX9EkT1tVIiwWEtkyRSsX8usa+L6hkEtmbyjn9HqhDEufh+UKKKUrh8bE1WzR0lYzgc3QHOAnskE5na/P4l5gy70uHhDf7jjsR6to8Af+PTAegafte7oAjVA+BVKvODFIRBXzJNuNjPLgq6LFfYwoOUZezzzOaJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713778814; c=relaxed/simple;
-	bh=GlLSRRIiVc809HVRdBjHwu3wV54d3OJygCGFqUwLYpw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lhf4dilDdl2lEDfzjGz3f32hS5CI1skF5NB8zAcrA0VkrD8dGZ98S0DWNPIanYXIxjU2tCq7Kl2681f20HD6y2yt+2TXk7PGr6TGmgA9cZNDz4jqNy+YGMFB1t7u21IagwpkNFHrDtO2S+9UV8xMpSrsEbETU6vEdGTmb1zp8Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=S+pNIIbd; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="S+pNIIbd"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7ADA6240007;
-	Mon, 22 Apr 2024 09:40:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713778803;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RwTZz+QOuJFhVcfuZG7WHposSII0qZDyi7L1Xxt7bUA=;
-	b=S+pNIIbddjv1f/2u29qA50eSn2u78IHQoN/yeXQn9kXAkAxKzudzCKTzUBwh806OYKshiC
-	XGYhR4UsoJ0QlB3O0AUh1LU1fBv9Y3UF6JuutBlAfd/g6+gu+4UwRgFn2ib0YSsJgcmyCG
-	/lnMkpE8r8xkMCye4NTD0jiU49Wjlf3MFmEcL3mVdAcR5gD9sJcM5/uqBb+tdlL8wkj/Yx
-	ro+vEj/ipMhhHRpGzc+o8gn5YOKRaRb41slSwYMfQVbvK/vhNFZcNmVT9JwX0RLnisKXtu
-	0FAMl2TB1Pr0wTlhu5nFkiJpL2ffcyqpdkWVLP3IVvuD6KXXm8p33rFygEY6VQ==
-Message-ID: <cd5d0aa5-ca0c-47a5-8e40-4742bc939cfa@bootlin.com>
-Date: Mon, 22 Apr 2024 11:40:02 +0200
+	s=arc-20240116; t=1713778839; c=relaxed/simple;
+	bh=/WR48W7qWg4v2Qz+/XQ/bjd0aFfImG9Km5LpCV+Dy6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d8OzS3IDcREjOR1z4BsLvhd78KPMTdQjmRCT+nfNjC0qFZXHiLOIjwmlo6k06YhgDSOMqmRAhziuExKJJi5wCU9dGjZCPBi4ElRWYKKzGoN8GTtTgqm3sV0GYxgqeyshLNuf/XD3TvOL/tNl6usHwTBK7/i3vroLIN6kHRBTCmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B349339;
+	Mon, 22 Apr 2024 02:41:05 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.21.63])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 757843F64C;
+	Mon, 22 Apr 2024 02:40:35 -0700 (PDT)
+Date: Mon, 22 Apr 2024 10:40:32 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Marc Zyngier <maz@kernel.org>, joey.gouly@arm.com,
+	Oliver Upton <oliver.upton@linux.dev>
+Subject: Re: gcc-8: arm64/kvm/pauth.: Error: unknown architectural extension
+ `pauth'
+Message-ID: <ZiYwkKLRVgvrQrnK@FVFF77S0Q05N>
+References: <CA+G9fYsCL5j-9JzqNH5X03kikL=O+BaCQQ8Ao3ADQvxDuZvqcg@mail.gmail.com>
+ <ZiYqV-5BWmPwgqbU@FVFF77S0Q05N>
+ <cd172d05-15f6-427c-b6e3-d68fc746b940@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 02/11] i2c: omap: wakeup the controller during
- suspend() callback
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>,
- Peter Rosin <peda@axentia.se>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com,
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
- <20240102-j7200-pcie-s2r-v5-2-4b8c46711ded@bootlin.com>
- <eld637v3jvgqrjubwqlsxkafgqiqcfpukfwpcd5qoyvyrhubff@n6gzrwzr2klh>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <eld637v3jvgqrjubwqlsxkafgqiqcfpukfwpcd5qoyvyrhubff@n6gzrwzr2klh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd172d05-15f6-427c-b6e3-d68fc746b940@app.fastmail.com>
 
-On 4/19/24 10:47, Andi Shyti wrote:
-> Hi Thomas,
+On Mon, Apr 22, 2024 at 11:25:25AM +0200, Arnd Bergmann wrote:
+> On Mon, Apr 22, 2024, at 11:13, Mark Rutland wrote:
+> > On Mon, Apr 22, 2024 at 02:04:43PM +0530, Naresh Kamboju wrote:
+> > Given the minimum supported toolchain comes with an assembler that doesn't
+> > necessarily support ARMv8.3, I reckon we'll either have to make NV pauth
+> > support depend upon AS_HAS_ARMV8_3, or manually assemble the PACGA instruction.
+> >
+> > I suspect the latter is the better option.
 > 
->> +static int omap_i2c_suspend(struct device *dev)
->> +{
->> +	/*
->> +	 * If the controller is autosuspended, there is no way to wakeup it once
->> +	 * runtime pm is disabled (in suspend_late()).
->> +	 * But a device may need the controller up during suspend_noirq() or
->> +	 * resume_noirq().
->> +	 * Wakeup the controller while runtime pm is enabled, so it is available
->> +	 * until its suspend_noirq(), and from resume_noirq().
->> +	 */
->> +	return pm_runtime_resume_and_get(dev);
->> +}
->> +
->> +static int omap_i2c_resume(struct device *dev)
->> +{
->> +	pm_runtime_mark_last_busy(dev);
->> +	pm_runtime_put_autosuspend(dev);
->> +
->> +	return 0;
->> +}
->> +
->>  static const struct dev_pm_ops omap_i2c_pm_ops = {
->>  	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->>  				      pm_runtime_force_resume)
->> +	SET_SYSTEM_SLEEP_PM_OPS(omap_i2c_suspend, omap_i2c_resume)
+> The .config linked from the report shows
 > 
-> If you don't have CONFIG_PM_SLEEP, though, this doesn't compile.
+> CONFIG_AS_VERSION=23101
+> CONFIG_ARM64_PTR_AUTH_KERNEL=y
+> CONFIG_AS_HAS_ARMV8_3=y
+> 
+> So it gets detected as supporting ARMv8.3. Is this the wrong
+> conditional to check, or does it get misdetected for an unsupported
+> assembler?
 
-Hello Andi,
+I suspect that means the 'pauth' arch extension was added after armv8.3
+support, and the assembler supports `-march=armv8.3-a` but does not support
+`.arch_extension pauth`. So for this code, it'd be wrong to check for
+AS_HAS_ARMV8_3, unless we used `.march armv8.3-a`, but even then that'd still
+mean configurations where we couldn't support this code.
 
-Yes indeed, the __maybe_unused attribute is missing for
-omap_i2c_suspend() and omap_i2c_resume().
+I reckon manually assembing the PACGA is the best thing to do; that sidesteps
+the need for either `.arch_extension pauth` or `.march armv8.3-a`, and aligns
+with what we do for CONFIG_ARM64_PTR_AUTH=y generally.
 
--- 
-Thomas Richard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Elsewhere in the kernel where we check for CONFIG_AS_HAS_ARMV8_3, we rely on
+ARM64_ASM_PREAMBLE containing `.arch armv8.3-a` or a later version that implies
+the presence of ARMv8.3-A instructions, and so pauth usage elsewhere is fine.
 
+Mark.
