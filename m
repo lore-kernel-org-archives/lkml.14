@@ -1,85 +1,67 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E642BAEB;
-	Mon, 22 Apr 2024 06:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE88E3FBA0;
+	Mon, 22 Apr 2024 06:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713767286; cv=none; b=OvOMs0KMz/+k/1tPVNNCDgDLmXtdV8n46Pk7EPmLDu9yYQw9gr3lzIyyLfNRahGY5nhe444G1qmWyaewpbDF15PDH5S3N4ScBA/fyFSfo9SW0YRo6Zcm9OxYQWMqJIzp8z8JE0i2NnPKRZPNpOroRlQmsC1q/jC06MEtzUv6DxA=
+	t=1713767308; cv=none; b=QIcUTP3gcT/FgCRhSb+v+ohzJTbwu4bBCrnr7tld0D8sF2KTAr5Juo7Xt4IrloaDksZE7fJDwcP5dRPzjBa/ZF2+toIWOMpCdL2OwLHGQS7D9N8rrxGXLGjcEE6MVaa/kfgzrXKFMd9E35mdfq78nb9UcjkHJ1cnLnCDXcrN34M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713767286; c=relaxed/simple;
-	bh=3nJxs6KDCzEvXDgS/hhsIWpVpzHE7gksU4iMi6yQ1hk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t4dmNAmKlgGzuQZI79cM6ihlASdbOpVg16IJvQpNX3+colh8IU46OCkNU6pci+AbLvpOTv5GJ9saxNqJV5+NP0VKz1J2+iyRobJQpXH18a3TMcSZrObiAGRnGOwI+9fHidYKPtulmaa84i54/xDY1Ks9wZgm7BZDp/BcLGieWao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-51aff651083so1362089e87.0;
-        Sun, 21 Apr 2024 23:28:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713767282; x=1714372082;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3nJxs6KDCzEvXDgS/hhsIWpVpzHE7gksU4iMi6yQ1hk=;
-        b=MLVhyW+t5RuTPk8rdyC4iVp8KCnZRE3eIHbG0dCEkel4H/RiLh0IUggs17xUVnmwsg
-         UF0Szpwjc2JLCz9+vePot4p6UsAOnODQMPGp/RvNRj65XJcBevzr3Y4lPueGMOyT2516
-         k1PyJi2OAWU4Ztn5P30ifZe/kprSLpJJ5E1SgS6VyPh86Sxjc8lQVhKTKe/KHyL9qDqk
-         fwE7TgL9Qm6y8TaJAyrPNM69Mve3G/xYQpsEEOl4T+7Bv+9b2Av4RyV1aScEfoEQUyWq
-         6fo/OqKyFor6SxpjfkA6g6CxIBAdIXu5nBvZsEcSOubPMoZ3yrwPso0yz32SohQsdcXq
-         vTqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXqOkrdZ6RGJQimd8xlem3EJ5tcbW7/hC4JHwQoP4LYSW9AtlFy/hAQnmJVW56K4PmMb4ZnnTS21SHthalBe4ZCwBn9tP+TBr+4m45MLU9/ZFLAgCU+Eew12umcD+MD3Xzl7RBelW0=
-X-Gm-Message-State: AOJu0Yx49Zj8SCC94daFSY8KCQNGQ6/Y2IBYwD3S7UPMCsCkz4zg6Lxi
-	ST0dSb+KjY+acXGEKwu0l3+QrOhVfUayGy8zLyCxilPZA2EMp9IDZ/y+UVJcQ+Y=
-X-Google-Smtp-Source: AGHT+IEt5yS0ewKc7shXUG97ACf+yNKsqItvuEFDXLMLDhmn/DX4qA8eS3MNFUWRTsEWxMneBsXMhA==
-X-Received: by 2002:a2e:988c:0:b0:2dc:d7a6:1e53 with SMTP id b12-20020a2e988c000000b002dcd7a61e53mr5225067ljj.18.1713767281985;
-        Sun, 21 Apr 2024 23:28:01 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id w25-20020a2e9599000000b002d9fd8b0670sm1379958ljh.123.2024.04.21.23.28.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 21 Apr 2024 23:28:01 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d895e2c6efso60507361fa.0;
-        Sun, 21 Apr 2024 23:28:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUh1g9yP3eRttwc3gRzkeLno00F7C498HUgTq0yFaa81DEebeNDO4R/O+0husHxhYyGE40ADkbaamiF1+4WxaUxkfGTiBVovKa03KE4cA/ACa/V9gbuRAiXaJ4vcQExhb1UG10MyN0=
-X-Received: by 2002:a05:651c:608:b0:2dd:97e:3481 with SMTP id
- k8-20020a05651c060800b002dd097e3481mr3120608lje.51.1713767281436; Sun, 21 Apr
- 2024 23:28:01 -0700 (PDT)
+	s=arc-20240116; t=1713767308; c=relaxed/simple;
+	bh=1CXRUi8kECrLxrQwSZnzJQdfh9qu0GY60yrCy+rztNs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rEMmpYWD6pWdrkWdJN284IgpzqpAGaUu8CAKpAn2eYZYsMVjMol5KrxIBoAak5BwHBnPCNIMJ+MR6Jb2fP0inQiaUOAbIASQHy5v2t2x8Lax/7po+6j5+d6t+P6mLNhtKjIgDodj+hDv39nBP0Y1J0SO3HiaMGJ527zGwX/Uqak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hFpEfUjj; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hFpEfUjj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=aynr/ns6L8RuQzuBfA56RC77v8u4u9ryKPKNAb0jnmc=; b=hFpEfUjjC8Igh6zP7W3i+VGNJc
+	zumLU4Y1rKHn/m6pA+33tNtPvmgiv4/K4dB+jLsBpwUmJHKe3SaOsyeM92Qsm9RuYdgD/5YeIHA49
+	qccolprv3Ybo4yJIbEMUnEcYhexmRXljLAWwwoqWrXW1FF1otOqNb5jKKaA+mGdP7Gb33W5tVAW4e
+	7HycxgtlzVEIDXEadX5ZPrP34ET67rHalqUhPsqUiPL7DLNKrcfL55pykuBwhhns4qPyBSgEZWwQV
+	PBNHEhuMmjRLGRPs13fbMGrAnhJq0+XOG9nhZyChUaZjKUBD5rPI0WEhaYzCjoZY347DTmIyBhYhA
+	1ZHWxVGg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rynAA-0000000CFgP-29a6;
+	Mon, 22 Apr 2024 06:28:26 +0000
+Date: Sun, 21 Apr 2024 23:28:26 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Marius Fleischer <fleischermarius@gmail.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, syzkaller@googlegroups.com,
+	harrisonmichaelgreen@gmail.com
+Subject: Re: INFO: task hung in bdev_open
+Message-ID: <ZiYDiptCPKDNwE-J@infradead.org>
+References: <CAJg=8jyC1+s80etZgWteps0Q0yEsR2NE23+Bf+Daa7zgJ2qKBA@mail.gmail.com>
+ <ZiYDaN7fDzzEyVQr@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <285de20a187f3e4baeb28f639b5bf55e914a3821.1713756666.git.viresh.kumar@linaro.org>
-In-Reply-To: <285de20a187f3e4baeb28f639b5bf55e914a3821.1713756666.git.viresh.kumar@linaro.org>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Sun, 21 Apr 2024 23:27:50 -0700
-X-Gmail-Original-Message-ID: <CAGb2v66X94Y0zkHxNLb1KCoCR+q+z-mCm_21eUJ_C7D_srhDkw@mail.gmail.com>
-Message-ID: <CAGb2v66X94Y0zkHxNLb1KCoCR+q+z-mCm_21eUJ_C7D_srhDkw@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: sun50i: Fix build warning around snprint()
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Yangtao Li <tiny.windzz@gmail.com>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, linux-pm@vger.kernel.org, 
-	Vincent Guittot <vincent.guittot@linaro.org>, kernel test robot <lkp@intel.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZiYDaN7fDzzEyVQr@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Sun, Apr 21, 2024 at 8:31=E2=80=AFPM Viresh Kumar <viresh.kumar@linaro.o=
-rg> wrote:
->
-> The Sun50i driver generates a warning with W=3D1:
->
-> warning: '%d' directive output may be truncated writing between 1 and 10 =
-bytes into a region of size 2 [-Wformat-truncation=3D]
->
-> Fix it by allocating a big enough array to print an integer.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202404191715.LDwMm2gP-lkp@i=
-ntel.com/
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+On Sun, Apr 21, 2024 at 11:27:52PM -0700, Christoph Hellwig wrote:
+> On Sat, Apr 20, 2024 at 06:19:01PM -0700, Marius Fleischer wrote:
+> > Hi,
+> > 
+> > We would like to report the following bug which has been found by our
+> > modified version of syzkaller.
+> 
+> For your reports to be useful please make sure your szybot actually
+> provides the same features as the real one, that is link to the
+> reproducer, mention the exact git commit reproducing it, provide a way
+> to submit fixes.
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+.. or just feed your modifications to the original one so that
+everything just works..
+
