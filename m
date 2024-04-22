@@ -1,39 +1,39 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1737B14A61A;
-	Mon, 22 Apr 2024 12:50:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CDBE14F9DF;
+	Mon, 22 Apr 2024 12:50:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713790245; cv=none; b=FefZyqf0Dj/pXSXJF7g05O2mMuu88PXzpGHNSPb/MHbNrEJ+YIhJHxdbwuici3AXVfuoqDQYBAzlfiiCE3xJNWBIM59Ym9S3wa1yod+LxCxn4Ti1Wiekuu5jo0bjV0zDuP9+3y/A81yAI9FLrTjwvPZe8XxOj0Z6yE9w1zA6ogk=
+	t=1713790248; cv=none; b=S2o3AcLN2GNdq/Vs0GGdde7dYDVuO6K4srOvhuCEgiCErN3ZsC8V4BzMr0o3zNu7S215WdL7mcCzXzQVYCGWvNNZBO1j2lHLfrn2104dfmD/MEhHHR1ppKtq6w7FnQJ8AbEXGnAUTP5g8nx94Ttd2x+HHMhPO1sTRbzIj4aLWyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713790245; c=relaxed/simple;
-	bh=5bokXahkehLXZGGu263TxULeZ0Qn3n2E7yAb+9lbdp8=;
+	s=arc-20240116; t=1713790248; c=relaxed/simple;
+	bh=Qc9y9gWCMYXbIRGYxDOn9KPiL5+xiwpK3cNBzhn7RKo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NVGihZLfxv9FQbKJCS6c+lUccp/NOEaeilpA94tKPyF3ERkvkgqa7bDXkPIeoFkX8CC1wJ/cnsko1pYc5xfMTpjrFdx/GvuRIFhYlf2BEHoJttNCTGQXgrQu1knAiHB1MJwtbXiEkiyVCrwn/Ut8KmgC4tIEveQaT2aUMzwQY8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=On5SLI1T; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=ecd99dfcR/v7fR8ZtkRFv658QfDSucYIRqX8FXwVYyxI7PXXUs6RzofR9PW8xrljoEbKAdHLo+XATMX7rQ8MKyyaq6NmSgeCHfwYUekWgwRiOFSDNKeDlWGSh7V15HtAeYMuXWfH6zZl85rEoGKcI4kiXXFWSTuKXXEoG0ImA28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Nd8HLg5I; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="On5SLI1T"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 31633E0014;
-	Mon, 22 Apr 2024 12:50:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Nd8HLg5I"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 668FCE0008;
+	Mon, 22 Apr 2024 12:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713790241;
+	t=1713790238;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5ERvpAuGyrh0hYZOkpuljfnubioA2+F5EGqQCrpEDoY=;
-	b=On5SLI1TtJ9XDcddeDjxFLbRaIV40fbIYaIirsPnPLHbrIeDboo1aRWB56lkpneo5QQ26B
-	ltw1ogby/SxqcWKKHIg0vCafspoYCnhDmuxpmNZwSetqg8pIUMzHufPaCxvDHU4P5Oyri1
-	tJf7Crepq54SxMg+GhGG8R0EF5Wue8CjrNeb2CA/vAPm5X92smW/BVDKIa98TGwLXzqR25
-	HLyzRW4wWbMF00038KJADbXB2go4pAgRcWEZu+IhTXKYADh2rC3VKpkFy2LMoNo1qrRmTj
-	92wsWK+TJ+iz+mtdj//iyS9RuOX7zVBGshmd4Dc7FUrD+3xbqPNRggFqcAsm4A==
+	bh=G959hpynK4hhvxSMI29ATuJkbcQfTcQfzdFWCYXcEjs=;
+	b=Nd8HLg5IDBKzGlUDwGusovl/QN198QQW3ti2oSb9qM+7WizPA5rGo+gurJTW68+siEHo7D
+	ORjN3HBVjuk7UrsXTpFsNnPVPEIE0U1QoOMimUBW0+IBMiPF4sDgwk0SXvfGAY0g+yNKBA
+	zdpxBJGZ3Lte2fof4XmB2/CcwqgSF2VzUNGXEVj167ZKVjlnUray6/2eumnOJ1jur3w9bQ
+	10s1gAmu3/KLptR45uYVq/moSzhUFBWEdN1htfiw3BX2K6pYhPuwxH5UNYQXeoZDRSG6Db
+	yvTLD75kMwTyAKZmoCuTwMnwWCRi7Cq0UxGiU8xJHUOqgblGMBAwtMDR8x2yXw==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Mon, 22 Apr 2024 14:50:20 +0200
-Subject: [PATCH net-next v11 05/13] net: Change the API of PHY default
- timestamp to MAC
+Date: Mon, 22 Apr 2024 14:50:18 +0200
+Subject: [PATCH net-next v11 03/13] net: Make dev_get_hwtstamp_phylib
+ accessible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240422-feature_ptp_netnext-v11-5-f14441f2a1d8@bootlin.com>
+Message-Id: <20240422-feature_ptp_netnext-v11-3-f14441f2a1d8@bootlin.com>
 References: <20240422-feature_ptp_netnext-v11-0-f14441f2a1d8@bootlin.com>
 In-Reply-To: <20240422-feature_ptp_netnext-v11-0-f14441f2a1d8@bootlin.com>
 To: Florian Fainelli <florian.fainelli@broadcom.com>, 
@@ -68,242 +68,51 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: kory.maincent@bootlin.com
 
-Change the API to select MAC default time stamping instead of the PHY.
-Indeed the PHY is closer to the wire therefore theoretically it has less
-delay than the MAC timestamping but the reality is different. Due to lower
-time stamping clock frequency, latency in the MDIO bus and no PHC hardware
-synchronization between different PHY, the PHY PTP is often less precise
-than the MAC. The exception is for PHY designed specially for PTP case but
-these devices are not very widespread. For not breaking the compatibility
-default_timestamp flag has been introduced in phy_device that is set by
-the phy driver to know we are using the old API behavior.
+Make the dev_get_hwtstamp_phylib function accessible in prevision to use
+it from ethtool to read the hwtstamp current configuration.
 
-Reviewed-by: Rahul Rameshbabu <rrameshbabu@nvidia.com>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
 
-Changes in v5:
-- Extract the API change in this patch.
-- Rename whitelist to allowlist.
-- Set NETDEV_TIMESTAMPING in register_netdevice function.
-- Add software timestamping case description in ts_info.
-
-Change in v6:
-- Replace the allowlist phy with a default_timestamp flag to know which
-  phy is using old API behavior.
-- Fix dereferenced of a possible null pointer.
-- Follow timestamping layer naming update.
-- Update timestamp default set between MAC and software.
-- Update ts_info returned in case of software timestamping.
-
 Change in v8:
-- Reform the implementation to use a simple phy_is_default_hwtstamp helper
-  instead of saving the hwtstamp in the net_device struct.
+- New patch
 
-Change in v9:
-- Update few nit following the review.
+Change in v10:
+- Remove export symbol as ethtool can't be built as a module.
+- Move the declaration to net/core/dev.h instead of netdevice.h
 ---
- drivers/net/phy/bcm-phy-ptp.c     |  3 +++
- drivers/net/phy/dp83640.c         |  2 ++
- drivers/net/phy/micrel.c          |  6 ++++++
- drivers/net/phy/mscc/mscc_ptp.c   |  3 +++
- drivers/net/phy/nxp-c45-tja11xx.c |  3 +++
- include/linux/phy.h               | 17 +++++++++++++++++
- net/core/dev_ioctl.c              |  8 +++-----
- net/core/timestamping.c           |  5 +++--
- net/ethtool/common.c              |  2 +-
- 9 files changed, 41 insertions(+), 8 deletions(-)
+ net/core/dev.h       | 2 ++
+ net/core/dev_ioctl.c | 4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/bcm-phy-ptp.c b/drivers/net/phy/bcm-phy-ptp.c
-index 617d384d4551..d3e825c951ee 100644
---- a/drivers/net/phy/bcm-phy-ptp.c
-+++ b/drivers/net/phy/bcm-phy-ptp.c
-@@ -931,6 +931,9 @@ struct bcm_ptp_private *bcm_ptp_probe(struct phy_device *phydev)
- 		return ERR_CAST(clock);
- 	priv->ptp_clock = clock;
+diff --git a/net/core/dev.h b/net/core/dev.h
+index 39819fffece7..2236b14b798f 100644
+--- a/net/core/dev.h
++++ b/net/core/dev.h
+@@ -170,5 +170,7 @@ static inline void dev_xmit_recursion_dec(void)
+ int dev_set_hwtstamp_phylib(struct net_device *dev,
+ 			    struct kernel_hwtstamp_config *cfg,
+ 			    struct netlink_ext_ack *extack);
++int dev_get_hwtstamp_phylib(struct net_device *dev,
++			    struct kernel_hwtstamp_config *cfg);
  
-+	/* Timestamp selected by default to keep legacy API */
-+	phydev->default_timestamp = true;
-+
- 	priv->phydev = phydev;
- 	bcm_ptp_init(priv);
- 
-diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
-index 5c42c47dc564..d3e72d5c1472 100644
---- a/drivers/net/phy/dp83640.c
-+++ b/drivers/net/phy/dp83640.c
-@@ -1447,6 +1447,8 @@ static int dp83640_probe(struct phy_device *phydev)
- 	for (i = 0; i < MAX_RXTS; i++)
- 		list_add(&dp83640->rx_pool_data[i].list, &dp83640->rxpool);
- 
-+	/* Timestamp selected by default to keep legacy API */
-+	phydev->default_timestamp = true;
- 	phydev->mii_ts = &dp83640->mii_ts;
- 	phydev->priv = dp83640;
- 
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 0e310a5e2bff..b2cf9d752020 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -3511,6 +3511,9 @@ static void lan8814_ptp_init(struct phy_device *phydev)
- 	ptp_priv->mii_ts.ts_info  = lan8814_ts_info;
- 
- 	phydev->mii_ts = &ptp_priv->mii_ts;
-+
-+	/* Timestamp selected by default to keep legacy API */
-+	phydev->default_timestamp = true;
- }
- 
- static int lan8814_ptp_probe_once(struct phy_device *phydev)
-@@ -5001,6 +5004,9 @@ static int lan8841_probe(struct phy_device *phydev)
- 
- 	phydev->mii_ts = &ptp_priv->mii_ts;
- 
-+	/* Timestamp selected by default to keep legacy API */
-+	phydev->default_timestamp = true;
-+
- 	return 0;
- }
- 
-diff --git a/drivers/net/phy/mscc/mscc_ptp.c b/drivers/net/phy/mscc/mscc_ptp.c
-index eb0b032cb613..e66d20eff7c4 100644
---- a/drivers/net/phy/mscc/mscc_ptp.c
-+++ b/drivers/net/phy/mscc/mscc_ptp.c
-@@ -1570,6 +1570,9 @@ int vsc8584_ptp_probe(struct phy_device *phydev)
- 		return PTR_ERR(vsc8531->load_save);
- 	}
- 
-+	/* Timestamp selected by default to keep legacy API */
-+	phydev->default_timestamp = true;
-+
- 	vsc8531->ptp->phydev = phydev;
- 
- 	return 0;
-diff --git a/drivers/net/phy/nxp-c45-tja11xx.c b/drivers/net/phy/nxp-c45-tja11xx.c
-index 3cf614b4cd52..d18c133e6013 100644
---- a/drivers/net/phy/nxp-c45-tja11xx.c
-+++ b/drivers/net/phy/nxp-c45-tja11xx.c
-@@ -1660,6 +1660,9 @@ static int nxp_c45_probe(struct phy_device *phydev)
- 		priv->mii_ts.ts_info = nxp_c45_ts_info;
- 		phydev->mii_ts = &priv->mii_ts;
- 		ret = nxp_c45_init_ptp_clock(priv);
-+
-+		/* Timestamp selected by default to keep legacy API */
-+		phydev->default_timestamp = true;
- 	} else {
- 		phydev_dbg(phydev, "PTP support not enabled even if the phy supports it");
- 	}
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 3ddfe7fe781a..d09a340b95e2 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -615,6 +615,8 @@ struct macsec_ops;
-  *                 handling shall be postponed until PHY has resumed
-  * @irq_rerun: Flag indicating interrupts occurred while PHY was suspended,
-  *             requiring a rerun of the interrupt handler after resume
-+ * @default_timestamp: Flag indicating whether we are using the phy
-+ *		       timestamp as the default one
-  * @interface: enum phy_interface_t value
-  * @possible_interfaces: bitmap if interface modes that the attached PHY
-  *			 will switch between depending on media speed.
-@@ -681,6 +683,8 @@ struct phy_device {
- 	unsigned irq_suspended:1;
- 	unsigned irq_rerun:1;
- 
-+	unsigned default_timestamp:1;
-+
- 	int rate_matching;
- 
- 	enum phy_state state;
-@@ -1625,6 +1629,19 @@ static inline void phy_txtstamp(struct phy_device *phydev, struct sk_buff *skb,
- 	phydev->mii_ts->txtstamp(phydev->mii_ts, skb, type);
- }
- 
-+/**
-+ * phy_is_default_hwtstamp - return true if phy is the default hw timestamp
-+ * @phydev: Pointer to phy_device
-+ *
-+ * This is used to get default timestamping device taking into account
-+ * the new API choice, which is selecting the timestamping from MAC by
-+ * default if the phydev does not have default_timestamp flag enabled.
-+ */
-+static inline bool phy_is_default_hwtstamp(struct phy_device *phydev)
-+{
-+	return phy_has_hwtstamp(phydev) && phydev->default_timestamp;
-+}
-+
- /**
-  * phy_is_internal - Convenience function for testing if a PHY is internal
-  * @phydev: the phy_device struct
+ #endif
 diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
-index 6aaa8326bf8f..36cea843381f 100644
+index b9719ed3c3fd..b8cf8c55fa2d 100644
 --- a/net/core/dev_ioctl.c
 +++ b/net/core/dev_ioctl.c
-@@ -259,9 +259,7 @@ static int dev_eth_ioctl(struct net_device *dev,
-  * @dev: Network device
-  * @cfg: Timestamping configuration structure
-  *
-- * Helper for enforcing a common policy that phylib timestamping, if available,
-- * should take precedence in front of hardware timestamping provided by the
-- * netdev.
-+ * Helper for calling the default hardware provider timestamping.
-  *
-  * Note: phy_mii_ioctl() only handles SIOCSHWTSTAMP (not SIOCGHWTSTAMP), and
-  * there only exists a phydev->mii_ts->hwtstamp() method. So this will return
-@@ -271,7 +269,7 @@ static int dev_eth_ioctl(struct net_device *dev,
- int dev_get_hwtstamp_phylib(struct net_device *dev,
- 			    struct kernel_hwtstamp_config *cfg)
+@@ -268,8 +268,8 @@ static int dev_eth_ioctl(struct net_device *dev,
+  * -EOPNOTSUPP for phylib for now, which is still more accurate than letting
+  * the netdev handle the GET request.
+  */
+-static int dev_get_hwtstamp_phylib(struct net_device *dev,
+-				   struct kernel_hwtstamp_config *cfg)
++int dev_get_hwtstamp_phylib(struct net_device *dev,
++			    struct kernel_hwtstamp_config *cfg)
  {
--	if (phy_has_hwtstamp(dev->phydev))
-+	if (phy_is_default_hwtstamp(dev->phydev))
+ 	if (phy_has_hwtstamp(dev->phydev))
  		return phy_hwtstamp_get(dev->phydev, cfg);
- 
- 	return dev->netdev_ops->ndo_hwtstamp_get(dev, cfg);
-@@ -327,7 +325,7 @@ int dev_set_hwtstamp_phylib(struct net_device *dev,
- 			    struct netlink_ext_ack *extack)
- {
- 	const struct net_device_ops *ops = dev->netdev_ops;
--	bool phy_ts = phy_has_hwtstamp(dev->phydev);
-+	bool phy_ts = phy_is_default_hwtstamp(dev->phydev);
- 	struct kernel_hwtstamp_config old_cfg = {};
- 	bool changed = false;
- 	int err;
-diff --git a/net/core/timestamping.c b/net/core/timestamping.c
-index 04840697fe79..3717fb152ecc 100644
---- a/net/core/timestamping.c
-+++ b/net/core/timestamping.c
-@@ -25,7 +25,8 @@ void skb_clone_tx_timestamp(struct sk_buff *skb)
- 	struct sk_buff *clone;
- 	unsigned int type;
- 
--	if (!skb->sk)
-+	if (!skb->sk || !skb->dev ||
-+	    !phy_is_default_hwtstamp(skb->dev->phydev))
- 		return;
- 
- 	type = classify(skb);
-@@ -47,7 +48,7 @@ bool skb_defer_rx_timestamp(struct sk_buff *skb)
- 	struct mii_timestamper *mii_ts;
- 	unsigned int type;
- 
--	if (!skb->dev || !skb->dev->phydev || !skb->dev->phydev->mii_ts)
-+	if (!skb->dev || !phy_is_default_hwtstamp(skb->dev->phydev))
- 		return false;
- 
- 	if (skb_headroom(skb) < ETH_HLEN)
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index 6b2a360dcdf0..01b7550f12c6 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -637,7 +637,7 @@ int __ethtool_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info)
- 	memset(info, 0, sizeof(*info));
- 	info->cmd = ETHTOOL_GET_TS_INFO;
- 
--	if (phy_has_tsinfo(phydev))
-+	if (phy_is_default_hwtstamp(phydev) && phy_has_tsinfo(phydev))
- 		return phy_ts_info(phydev, info);
- 	if (ops->get_ts_info)
- 		return ops->get_ts_info(dev, info);
 
 -- 
 2.34.1
