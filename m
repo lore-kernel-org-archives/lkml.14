@@ -1,241 +1,146 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A06F145FE9
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 11:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCC614601F
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 11:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713784984; cv=none; b=uKKH8arGBC6cqdaS7dkaU+F3hMX0+dh0cBSZ4QJNrFBieqcS0G/4vz2SN+kjkb6eI0y5WZZFBZg1bTMVcRaanexKL8zvk7jtLAiSgaahSDFBqN/71vysuUZmvu6G+aMfgdaeYU6WA6JRyR/tAkjdR0gNYiolNTbihkj421C09MI=
+	t=1713785087; cv=none; b=YaQGIHrZSW/zrlfuvCQYBcoADhWfBa/oL9zx/+Q3dl75r3S+rdoMzCufdlGpEr0s+ui5p87pOlJNj2lgExz9GQhT3RRrtVu5/P0KAY8yHpZymCSWQylrfTJgmuo0mhXhB5LywMfDwzYN3prKfwaaK5syLVreRsIY8QBYank7sWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713784984; c=relaxed/simple;
-	bh=XGoajSu+/Do3RKNMn4jsKUYia62CDpDURgb1HAcIDEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IX27tUhKJ9viRVfChd+0Y25glyKTiXZZgGy0Hu1UKTj17QysCZqEE0gpT32CGvRlpzJevfXoPjTQKhJhYAMg4dRlmrbOzxM8Hbi6GZP1u1yH3kAPEwW5YBgwLHGg5RTS3qfBOqg3Qfhj47QlpIpo5MN6zRXpkMJudnG3EYgYfUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SMriD5vl; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713785087; c=relaxed/simple;
+	bh=lesur2DtlpG36U+RDatGEe3Kz31u61I145L9zgoURGg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hF3LvKzWuvnzkGPq5YDdz9QYDdBS2QTTudeCZdZXH7w4UYILA7X3FhtEPznbpz8xLQSvVArsAzYmcf+OY1IX2KfomYB74HoyojgqquzGYSziSMswjhhMkYVAPubiJfupKjRU4cLQf+VSBeE8RkP0TNvWcFr54xxu1faZ+fdAd9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KpBEHhBZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SMriD5vl"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a5200afe39eso467126366b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 04:23:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713784980; x=1714389780; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7KxlxiaM2PGBV+BkGeXxmbLGJIAVZ06jcBBCJ5bRZFs=;
-        b=SMriD5vlF+cYA17dkvNDqI3W4G1MSfctL9IlmKqsMIHxgUNoIlhZfKKxrDuayWZzPK
-         8qUjN0Ru9DUySUXWCv8nCdQQJInpErUOUnF5piRGaACMfMfBwNFbzFu3l31Gli2Ucjvd
-         lJ1sknoHDAEoPscFnxgP3FedYMlUy1EV4e2jBes9PhHkwpc8a1vaUS93fx28okXTZCXR
-         6/B1WVG85GhMIz4MJrX2phumvDFv1Eva20q3flhNwSJySakQkVfb4RVrvqLN9Fr3Y94x
-         ZNDKRT7+FI+lsGaZ1vzSGhCktGxhof6LqXhNvRCW6w+vH1teuRWrMy6YFjo6ubS7/qhX
-         pryg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KpBEHhBZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713785084;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ZoxPNt1dowIJ1Aw5Ufzxc0rTMxsMvYDFAtprWf/W5gA=;
+	b=KpBEHhBZoba9zDsArq/DUCjwygXZFo3rISY33KiAszR1opjExxFOKtkDzHADHc6XbPrhQv
+	3542kIvopNeWFhEaw5yPuIckoEWhR/33YIWU1dNWhSOB+tQQqLIpzjtgFtV8GUi19aA/Fn
+	9CH50KY1Q0TlLQx8cF9qJb311nkboNI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-47-yuL1Z-60OZiwdIqje4MB0Q-1; Mon, 22 Apr 2024 07:24:43 -0400
+X-MC-Unique: yuL1Z-60OZiwdIqje4MB0Q-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-419f572bdbdso5300535e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 04:24:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713784980; x=1714389780;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1713785082; x=1714389882;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7KxlxiaM2PGBV+BkGeXxmbLGJIAVZ06jcBBCJ5bRZFs=;
-        b=ftGXe1NiistbiP4uVXL/6pyOfQOYUJptDtr3ST92+GOcVthRJnbfdzrNQ7ci1tOG0z
-         qV8cVWZDu1vlqDQkNw0i8AYFJtFNpoo4ZomsGVqql6Yh8ZaPW37oP5lr6+0VK7Ur75PL
-         MmgvrXK/B5cMsVtJUiF9ouvHbiJKnOJpFf90cS4UrNLwTmEvRchloEz4iHubjHGr7RlP
-         i7fPL93Gknf3RxkVHCAW2wMgcTPuL+xUTP/dSbMm/qyy5XsP4b43Xcj8qy0pjLxTkS2D
-         m0fCGjrBBklBH0LWs5wsOcxPevYoZ5rxizpJGo0OHY28ejtTjfPeq8hB6rJajWRPikYI
-         kfjA==
-X-Forwarded-Encrypted: i=1; AJvYcCXig10tx9bc5tKcKxl0d22z87xozyxVjS92VZx6lj8cXVCYk6JaThMvw/vpE7HvroDCEvAdKpMEcsUvCU5JMj5MpMbCm2//7FZrPEiy
-X-Gm-Message-State: AOJu0YwqBCF/GuJvi3t6Tp6oQSwg2AIm1RD0Whk8s5nQd/INaCC2bKrG
-	RqEekhxOLZr+o2WWNuVejOzsGXminRtp0gg0EJFdcVgXxYKAuOqXjw/oI16Bb48=
-X-Google-Smtp-Source: AGHT+IF0sIK+G+eqh6ZNY5C0/zr8EDIQ7ynWfEBKk80BR2SveU6nr66XABxJ/pSEjMBgs40I7BL8qg==
-X-Received: by 2002:a17:906:c1cf:b0:a52:3316:bc29 with SMTP id bw15-20020a170906c1cf00b00a523316bc29mr8835339ejb.3.1713784980311;
-        Mon, 22 Apr 2024 04:23:00 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id k15-20020a170906128f00b00a473a1fe089sm5640374ejb.1.2024.04.22.04.22.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 04:22:59 -0700 (PDT)
-Date: Mon, 22 Apr 2024 14:22:54 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Ezequiel =?iso-8859-1?Q?Garc=EDa?= <elezegarcia@gmail.com>,
-	Ghanshyam Agrawal <ghanshyam1898@gmail.com>,
-	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] media: stk1160: fix bounds checking in
- stk1160_copy_video()
-Message-ID: <f2e9cdcd-46e7-41ab-9d5f-c1237a0a6222@moroto.mountain>
-References: <e43980df-1ca5-459d-b037-788dd7d9085d@moroto.mountain>
- <CANiDSCtjEPqEstuo92QeVK_rWkW9icsjKWakPyN19ETM+MJuuQ@mail.gmail.com>
+        bh=ZoxPNt1dowIJ1Aw5Ufzxc0rTMxsMvYDFAtprWf/W5gA=;
+        b=RDYJ6Prc05vyrfz9+uzyhaKFTpSFJAmnYSHcozyAtmOVRVAwxn9ZVw8y4aASRksUe6
+         byqT9KXFqZc47LW3WBPzleFzWMfXzmI4c6bSS6yl3ByDuZoBZA9d0YI6Ka+WMNylaW4z
+         E1W7QYh0gUWFFiSNeYdjjtSPLmOGVS4l2t2Ias3t1eN8Jr/Vs2ae8T4M7fl1GQaT8W43
+         CqwUfLJ2pPEiSR9IZMWhjG9nZ1fILRikBhUACBhqdTrFBkw+vAZhN/lTaXLzbU6wicgN
+         Kubaa6VljgIeGtN/npiy6EUbAxvOpBoxkVw9wSFLIr4hjU/j6tOSqIrZooJm8rfs9Q3T
+         /T3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUi3/Llrum+3+ghw8K3i0uVMBTk0txKimgp2UTggwqpvlT9jiHf3AIaMwYCb/eOd3Ienx2q2uKFyOXkoYeXYnO2e2a58p+NAafGeCwc
+X-Gm-Message-State: AOJu0Yyrqd9j2xbK1dqV2MSzhrSq5SaeSV30/jd9833YvHgCHKpDwhZ/
+	EjJwgzn+m578+gDMd8eni9fZgB59S0CIoiGPznP2zsWo7X441YzJYEW0JF9GsH1tEH1dVTFWbZR
+	qoEwtvGYT/+U4rdTjD+ZjJhayY1rUtXmiqfFQwHBuKr1s8gxR8mL1oHawwavE7w==
+X-Received: by 2002:a05:600c:4447:b0:41a:385:508d with SMTP id v7-20020a05600c444700b0041a0385508dmr5432669wmn.9.1713785081927;
+        Mon, 22 Apr 2024 04:24:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEh9EIiwBXQJpTfuuzTfXU4dKFUKefFnFnDT/8//OspOgbFrMryDb12cQN3J2V5j0SNci/kLg==
+X-Received: by 2002:a05:600c:4447:b0:41a:385:508d with SMTP id v7-20020a05600c444700b0041a0385508dmr5432655wmn.9.1713785081555;
+        Mon, 22 Apr 2024 04:24:41 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c739:600:d2fb:3a8a:9944:7910? (p200300cbc7390600d2fb3a8a99447910.dip0.t-ipconnect.de. [2003:cb:c739:600:d2fb:3a8a:9944:7910])
+        by smtp.gmail.com with ESMTPSA id d5-20020a5d6445000000b0034659d971a6sm11733502wrw.26.2024.04.22.04.24.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Apr 2024 04:24:41 -0700 (PDT)
+Message-ID: <b848c431-deca-42e4-925c-673b3fa1f251@redhat.com>
+Date: Mon, 22 Apr 2024 13:24:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANiDSCtjEPqEstuo92QeVK_rWkW9icsjKWakPyN19ETM+MJuuQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/rmap: remove unnecessary page_table_lock
+To: Yajun Deng <yajun.deng@linux.dev>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240422105212.1485788-1-yajun.deng@linux.dev>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240422105212.1485788-1-yajun.deng@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 22, 2024 at 05:52:36PM +0800, Ricardo Ribalda wrote:
-> Hi Dan
-> 
-> On Mon, 22 Apr 2024 at 17:32, Dan Carpenter <dan.carpenter@linaro.org> wrote:
-> >
-> > The subtract in this condition is reversed.  The ->length is the length
-> > of the buffer.  The ->bytesused is how many bytes we have copied thus
-> > far.  When the condition is reversed that means the result of the
-> > subtraction is always negative but since it's unsigned then the result
-> > is a very high positive value.  That means the overflow check is never
-> > true.
-> >
-> > Additionally, the ->bytesused doesn't actually work for this purpose
-> > because we're not writing to "buf->mem + buf->bytesused".  Instead, the
-> > math to calculate the destination where we are writing is a bit
-> > involved.  You calculate the number of full lines already written,
-> > multiply by two, skip a line if necessary so that we start on an odd
-> > numbered line, and add the offset into the line.
-> >
-> > To fix this buffer overflow, just take the actual destination where we
-> > are writing, if the offset is already out of bounds print an error and
-> > return.  Otherwise, write up to buf->length bytes.
-> >
-> > Fixes: 9cb2173e6ea8 ("[media] media: Add stk1160 new driver (easycap replacement)")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > ---
-> > v2: My first patch just reversed the if statement but that wasn't the
-> > correct fix.
-> >
-> > Ghanshyam Agrawal sent a patch last year to ratelimit the output from
-> > this function because it was spamming dmesg.  This patch should
-> > hopefully fix the issue.  Let me know if there are still problems.
-> >
-> >  drivers/media/usb/stk1160/stk1160-video.c | 20 +++++++++++++++-----
-> >  1 file changed, 15 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/media/usb/stk1160/stk1160-video.c b/drivers/media/usb/stk1160/stk1160-video.c
-> > index 366f0e4a5dc0..e79c45db60ab 100644
-> > --- a/drivers/media/usb/stk1160/stk1160-video.c
-> > +++ b/drivers/media/usb/stk1160/stk1160-video.c
-> > @@ -99,7 +99,7 @@ void stk1160_buffer_done(struct stk1160 *dev)
-> >  static inline
-> >  void stk1160_copy_video(struct stk1160 *dev, u8 *src, int len)
-> >  {
-> > -       int linesdone, lineoff, lencopy;
-> > +       int linesdone, lineoff, lencopy, offset;
-> >         int bytesperline = dev->width * 2;
-> >         struct stk1160_buffer *buf = dev->isoc_ctl.buf;
-> >         u8 *dst = buf->mem;
-> > @@ -139,8 +139,13 @@ void stk1160_copy_video(struct stk1160 *dev, u8 *src, int len)
-> >          * Check if we have enough space left in the buffer.
-> >          * In that case, we force loop exit after copy.
-> >          */
-> > -       if (lencopy > buf->bytesused - buf->length) {
-> > -               lencopy = buf->bytesused - buf->length;
-> > +       offset = dst - (u8 *)buf->mem;
-> > +       if (offset > buf->length) {
-> Maybe you want offset >= buf->length.
-> 
+On 22.04.24 12:52, Yajun Deng wrote:
+> page_table_lock is a lock that for page table, we won't change page
+> table in __anon_vma_prepare(). As we can see, it works well in
+> anon_vma_clone(). They do the same operation.
 
-The difference between > and >= is whether or not we print an error
-message.  In the original code, we didn't print an error message for
-this and I feel like that's the correct behavior.
+We are reusing mm->page_table_lock to serialize, not the *actual* 
+low-level page table locks that really protect PTEs.
 
-> And remember to add at the beginning of the function
-> 
-> if (!len)
->  return 0;
-> 
+With that locking gone, there would be nothing protection vma->anon_vma.
 
-That's checked in the caller so it's fine.
+Note that anon_vma_clone() is likely called with the mmap_lock held in 
+write mode, which is not the case for __anon_vma_prepare() ...
 
-   260                  /* Empty packet */
-   261                  if (len <= 4)
-   262                          continue;
+I think this change is wrong.
 
-Generally we don't add duplicate checks.
 
-> And I would have done:
-> len -= 4;
-> src += 4;
-> 
-> In the caller function
-> 
+-- 
+Cheers,
 
-I don't really think it makes sense to move that into the caller and
-anyway, doing cleanups like this is outside the scope of this patch.
-Really, there is a lot that could be cleaned up here.  People knew there
-was a bug here but they didn't figure out what was causing it.  We could
-delete that code.  Looking at it now, I think that code would actually
-be enough to prevent a buffer overflow, although the correct behavior is
-to write up to the end of the buffer instead of returning early.
-Probably?
+David / dhildenb
 
-To be honest, I'm still concerned there is a read overflow in
-stk1160_buffer_done().  I'd prefer to do:
-
-	len = buf->bytesused;
-	if (len > buf->length) {
-		dev_warn_ratelimited(dev->dev, "buf->bytesused invalid %u\n", len);
-		len = buf->length;
-	}
-	vb2_set_plane_payload(&buf->vb.vb2_buf, 0, len);
-
-regards,
-dan carpenter
-
-diff --git a/drivers/media/usb/stk1160/stk1160-video.c b/drivers/media/usb/stk1160/stk1160-video.c
-index ed261f0241da..f7977b07c066 100644
---- a/drivers/media/usb/stk1160/stk1160-video.c
-+++ b/drivers/media/usb/stk1160/stk1160-video.c
-@@ -112,16 +112,6 @@ void stk1160_copy_video(struct stk1160 *dev, u8 *src, int len)
- 	u8 *dst = buf->mem;
- 	int remain;
- 
--	/*
--	 * TODO: These stk1160_dbg are very spammy!
--	 * We should check why we are getting them.
--	 *
--	 * UPDATE: One of the reasons (the only one?) for getting these
--	 * is incorrect standard (mismatch between expected and configured).
--	 * So perhaps, we could add a counter for errors. When the counter
--	 * reaches some value, we simply stop streaming.
--	 */
--
- 	len -= 4;
- 	src += 4;
- 
-@@ -160,18 +150,6 @@ void stk1160_copy_video(struct stk1160 *dev, u8 *src, int len)
- 	if (lencopy == 0 || remain == 0)
- 		return;
- 
--	/* Let the bug hunt begin! sanity checks! */
--	if (lencopy < 0) {
--		printk_ratelimited(KERN_DEBUG "copy skipped: negative lencopy\n");
--		return;
--	}
--
--	if ((unsigned long)dst + lencopy >
--		(unsigned long)buf->mem + buf->length) {
--		printk_ratelimited(KERN_WARNING "stk1160: buffer overflow detected\n");
--		return;
--	}
--
- 	memcpy(dst, src, lencopy);
- 
- 	buf->bytesused += lencopy;
-@@ -208,17 +186,6 @@ void stk1160_copy_video(struct stk1160 *dev, u8 *src, int len)
- 		if (lencopy == 0 || remain == 0)
- 			return;
- 
--		if (lencopy < 0) {
--			printk_ratelimited(KERN_WARNING "stk1160: negative lencopy detected\n");
--			return;
--		}
--
--		if ((unsigned long)dst + lencopy >
--			(unsigned long)buf->mem + buf->length) {
--			printk_ratelimited(KERN_WARNING "stk1160: buffer overflow detected\n");
--			return;
--		}
--
- 		memcpy(dst, src, lencopy);
- 		remain -= lencopy;
- 
