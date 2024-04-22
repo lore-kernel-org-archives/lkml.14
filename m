@@ -1,92 +1,292 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C08614F10F;
-	Mon, 22 Apr 2024 15:46:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4911534F3;
+	Mon, 22 Apr 2024 15:48:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713800810; cv=none; b=sj5VndCIJlgVuh/RSJagHDlvurlFlU5hCXYIZsKvhRjCw1/Bp+YH98h5qH1iW/ofTCyuELle01+hnoaxoZ424v1hq60RkkG1cKjgU6OpxUmhy823CzjuhPqrvNd1hViwU2IW7DTdc+MLL0fB7QH2Zp9lr4C8JS+6dMfyWIDqG9Y=
+	t=1713800889; cv=none; b=EABxh2EwJk1S/Wgjb/kRypky4dcoLhnVaYyy5FJzsn4r68Qf0+RV8p8f0W5otd61STKoVJHb3Z2O8OHRZsqxvV5h8EUDkLOqqvJvYVVOTzICCzv3u2rpCKR0OJcl9oYMCrMvIRKiQKLJkZNvqfnEwo0ULFezmjD2351zboN41vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713800810; c=relaxed/simple;
-	bh=+qu0qv26kQloh1SQ/hJVXIzYgoo4nZLRiVKKumi1SoY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eethvUWfdySX40W7mG2LHSsk7U5G1R8VAXpMIBYcUPrIWalSpUq6J02u5IzOwhS23D0XMrwa5Sh3Qs6Rps2PgdI+tXDhXASCxf5NnGP8Ka52NBF+fLSuWbbWvlJz6eaz36XZvKYUYsOzvP7o2bOGRw9Jg0/QmFk2nkYNwlMYly4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g0UxBS1q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713800889; c=relaxed/simple;
+	bh=TGkCC1wb/ipHHm0xz1HjzQqToV5Sfv84Bet9nt2x64E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YZoq94HMSZPRiteVYokdohvTcljQnl+435eRB4dXTIQoxZLS8PjXNxB9PlOoL8LtFjE4MU6JgkBKEiXkXJAwMNOAgXPhp7je7jTkBeylGfmli4N3Bi56LVgsfjQ7Hxe+vQy/VZwE7OcwvwtvY+qJ93yZHxvVMjnpWNxMJTjV6lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eqzijObR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g0UxBS1q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4E3FC116B1;
-	Mon, 22 Apr 2024 15:46:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eqzijObR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14060C113CC;
+	Mon, 22 Apr 2024 15:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713800809;
-	bh=+qu0qv26kQloh1SQ/hJVXIzYgoo4nZLRiVKKumi1SoY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=g0UxBS1qaHwN8y7ngvHwrhPBOsCmTU6fioNlK+hw9jVfVQpt+rcx8nS0fjjHjE3Vh
-	 0rq/ccC+rBmacdExMk2wSgF+d1BY1ThbR0ggY3Cyb5PSrsIAkuzloZFKGkWp1qernA
-	 XJhxbPiUZSZ5blhs8zdGVlMl9gtyOJ1sC6k8TYtmlSSuUsol5hcThN4Y1FOq0jmAMj
-	 aTxehhrge949+rXFnFuSsOJOR0oIT+kI0f6gr+HPjlVGx9Fa14BJAqyfcFsCK2nSP2
-	 NJ6pqvL6IxG2eZZiLnrTCbTeQDtqiJo1JxqwXFLZKWVyyXiEkwQR3L7ZzQH8rWVggs
-	 oZOmcw9QQM/nw==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>
-Subject: [PATCH] kbuild: buildtar: remove warning for the default case
-Date: Tue, 23 Apr 2024 00:46:10 +0900
-Message-Id: <20240422154610.2864941-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	s=k20201202; t=1713800888;
+	bh=TGkCC1wb/ipHHm0xz1HjzQqToV5Sfv84Bet9nt2x64E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eqzijObRUsJ59JAHcqlBP0SQl5L5rx9qT/7vnci9gVpigjDM4nbbwfpOoOTHizdQt
+	 eNvZISlygM5uYM0hosK0Vmom9czSy3J7P3Pj72vY1r5dZDVzppKwqbB0t9rvG78wPo
+	 Ocoo829L6rUzqT/8+eIU//ta/cAI+1pPrlUlaAL6EWoweY32E7S8ewcipGnVSRinCv
+	 R6zXwDoAC1cYV36MYmO0IOQq2YdqHhvWhNpyprxnUWCeCcIyjvZ/ngRRGD2rFMfqeW
+	 AkvrVN+vANtrmgGHLXyChEiTTbxac62koeGlwjWSDiCP/K34jP6KFMzL/GsMF3z+Z6
+	 3uSrzXaBvZQrA==
+Date: Mon, 22 Apr 2024 21:15:02 +0530
+From: Naveen N Rao <naveen@kernel.org>
+To: Gautam Menghani <gautam@linux.ibm.com>
+Cc: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu, 
+	aneesh.kumar@kernel.org, Vaibhav Jain <vaibhav@linux.ibm.com>, 
+	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v5 RESEND] arch/powerpc/kvm: Add support for reading VPA
+ counters for pseries guests
+Message-ID: <aauzmvtbpgxbr4aa3s4k33cdi7fljs5q4ifn5x2swncz7dtvam@gclohylavkpl>
+References: <20240402070656.28441-1-gautam@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240402070656.28441-1-gautam@linux.ibm.com>
 
-Given KBUILD_IMAGE properly set in arch/*/Makefile, the default case
-should work in most scenarios. The only oddity is the naming of the
-copy destination, vmlinux-kbuild-${KERNELRELEASE}. Let's rename it
-to vmlinuz-${KERNELRELEASE} because the kernel is often compressed.
-Remove the warning to avoid unnecessary patch submissions when the
-default case suffices.
+On Tue, Apr 02, 2024 at 12:36:54PM +0530, Gautam Menghani wrote:
+> PAPR hypervisor has introduced three new counters in the VPA area of
+> LPAR CPUs for KVM L2 guest (see [1] for terminology) observability - 2
+> for context switches from host to guest and vice versa, and 1 counter
+> for getting the total time spent inside the KVM guest. Add a tracepoint
+> that enables reading the counters for use by ftrace/perf. Note that this
+> tracepoint is only available for nestedv2 API (i.e, KVM on PowerVM).
+> 
+> Also maintain an aggregation of the context switch times in vcpu->arch.
+> This will be useful in getting the aggregate times with a pmu driver
+> which will be upstreamed in the near future.
 
-Remove the x86 case, which is now identical to the default.
+It would be better to add code to maintain aggregate times as part of 
+that pmu driver.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+> 
+> [1] Terminology:
+> a. L1 refers to the VM (LPAR) booted on top of PAPR hypervisor
+> b. L2 refers to the KVM guest booted on top of L1.
+> 
+> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> ---
+> v5 RESEND: 
+> 1. Add the changelog
+> 
+> v4 -> v5:
+> 1. Define helper functions for getting/setting the accumulation counter
+> in L2's VPA
+> 
+> v3 -> v4:
+> 1. After vcpu_run, check the VPA flag instead of checking for tracepoint
+> being enabled for disabling the cs time accumulation.
+> 
+> v2 -> v3:
+> 1. Move the counter disabling and zeroing code to a different function.
+> 2. Move the get_lppaca() inside the tracepoint_enabled() branch.
+> 3. Add the aggregation logic to maintain total context switch time.
+> 
+> v1 -> v2:
+> 1. Fix the build error due to invalid struct member reference.
+> 
+>  arch/powerpc/include/asm/kvm_host.h |  5 ++++
+>  arch/powerpc/include/asm/lppaca.h   | 11 +++++---
+>  arch/powerpc/kvm/book3s_hv.c        | 40 +++++++++++++++++++++++++++++
+>  arch/powerpc/kvm/trace_hv.h         | 25 ++++++++++++++++++
+>  4 files changed, 78 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
+> index 8abac532146e..d953b32dd68a 100644
+> --- a/arch/powerpc/include/asm/kvm_host.h
+> +++ b/arch/powerpc/include/asm/kvm_host.h
+> @@ -847,6 +847,11 @@ struct kvm_vcpu_arch {
+>  	gpa_t nested_io_gpr;
+>  	/* For nested APIv2 guests*/
+>  	struct kvmhv_nestedv2_io nestedv2_io;
+> +
+> +	/* Aggregate context switch and guest run time info (in ns) */
+> +	u64 l1_to_l2_cs_agg;
+> +	u64 l2_to_l1_cs_agg;
+> +	u64 l2_runtime_agg;
 
- scripts/package/buildtar | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+Can be dropped from this patch.
 
-diff --git a/scripts/package/buildtar b/scripts/package/buildtar
-index ed8d9b496305..fe816f62a290 100755
---- a/scripts/package/buildtar
-+++ b/scripts/package/buildtar
-@@ -59,9 +59,6 @@ cp -v -- "${objtree}/vmlinux" "${tmpdir}/boot/vmlinux-${KERNELRELEASE}"
- #   build tree.
- #
- case "${ARCH}" in
--	x86|i386|x86_64)
--		cp -v -- "${objtree}/arch/x86/boot/bzImage" "${tmpdir}/boot/vmlinuz-${KERNELRELEASE}"
--		;;
- 	alpha)
- 		cp -v -- "${objtree}/arch/alpha/boot/vmlinux.gz" "${tmpdir}/boot/vmlinuz-${KERNELRELEASE}"
- 		;;
-@@ -110,13 +107,6 @@ case "${ARCH}" in
- 		done
- 		;;
- 	*)
--		cp -v -- "${KBUILD_IMAGE}" "${tmpdir}/boot/vmlinux-kbuild-${KERNELRELEASE}"
--		echo "" >&2
--		echo '** ** **  WARNING  ** ** **' >&2
--		echo "" >&2
--		echo "Your architecture did not define any architecture-dependent files" >&2
--		echo "to be placed into the tarball. Please add those to ${0} ..." >&2
--		echo "" >&2
--		sleep 5
-+		cp -v -- "${KBUILD_IMAGE}" "${tmpdir}/boot/vmlinuz-${KERNELRELEASE}"
- 		;;
- esac
--- 
-2.40.1
+>  #endif
+>  
+>  #ifdef CONFIG_KVM_BOOK3S_HV_EXIT_TIMING
+> diff --git a/arch/powerpc/include/asm/lppaca.h b/arch/powerpc/include/asm/lppaca.h
+> index 61ec2447dabf..bda6b86b9f13 100644
+> --- a/arch/powerpc/include/asm/lppaca.h
+> +++ b/arch/powerpc/include/asm/lppaca.h
+> @@ -62,7 +62,8 @@ struct lppaca {
+>  	u8	donate_dedicated_cpu;	/* Donate dedicated CPU cycles */
+>  	u8	fpregs_in_use;
+>  	u8	pmcregs_in_use;
+> -	u8	reserved8[28];
+> +	u8	l2_accumul_cntrs_enable;  /* Enable usage of counters for KVM guest */
 
+A simpler name - l2_counters_enable or such?
+
+> +	u8	reserved8[27];
+>  	__be64	wait_state_cycles;	/* Wait cycles for this proc */
+>  	u8	reserved9[28];
+>  	__be16	slb_count;		/* # of SLBs to maintain */
+> @@ -92,9 +93,13 @@ struct lppaca {
+>  	/* cacheline 4-5 */
+>  
+>  	__be32	page_ins;		/* CMO Hint - # page ins by OS */
+> -	u8	reserved12[148];
+> +	u8	reserved12[28];
+> +	volatile __be64 l1_to_l2_cs_tb;
+> +	volatile __be64 l2_to_l1_cs_tb;
+> +	volatile __be64 l2_runtime_tb;
+> +	u8 reserved13[96];
+>  	volatile __be64 dtl_idx;	/* Dispatch Trace Log head index */
+> -	u8	reserved13[96];
+> +	u8	reserved14[96];
+>  } ____cacheline_aligned;
+>  
+>  #define lppaca_of(cpu)	(*paca_ptrs[cpu]->lppaca_ptr)
+> diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+> index 8e86eb577eb8..fea1c1429975 100644
+> --- a/arch/powerpc/kvm/book3s_hv.c
+> +++ b/arch/powerpc/kvm/book3s_hv.c
+> @@ -4108,6 +4108,37 @@ static void vcpu_vpa_increment_dispatch(struct kvm_vcpu *vcpu)
+>  	}
+>  }
+>  
+> +static inline int kvmhv_get_l2_accumul(void)
+> +{
+> +	return get_lppaca()->l2_accumul_cntrs_enable;
+> +}
+> +
+> +static inline void kvmhv_set_l2_accumul(int val)
+					   ^^^
+					   bool?
+
+> +{
+> +	get_lppaca()->l2_accumul_cntrs_enable = val;
+> +}
+> +
+> +static void do_trace_nested_cs_time(struct kvm_vcpu *vcpu)
+> +{
+> +	struct lppaca *lp = get_lppaca();
+> +	u64 l1_to_l2_ns, l2_to_l1_ns, l2_runtime_ns;
+> +
+> +	l1_to_l2_ns = tb_to_ns(be64_to_cpu(lp->l1_to_l2_cs_tb));
+> +	l2_to_l1_ns = tb_to_ns(be64_to_cpu(lp->l2_to_l1_cs_tb));
+> +	l2_runtime_ns = tb_to_ns(be64_to_cpu(lp->l2_runtime_tb));
+> +	trace_kvmppc_vcpu_exit_cs_time(vcpu, l1_to_l2_ns, l2_to_l1_ns,
+> +					l2_runtime_ns);
+> +	lp->l1_to_l2_cs_tb = 0;
+> +	lp->l2_to_l1_cs_tb = 0;
+> +	lp->l2_runtime_tb = 0;
+> +	kvmhv_set_l2_accumul(0);
+> +
+> +	// Maintain an aggregate of context switch times
+> +	vcpu->arch.l1_to_l2_cs_agg += l1_to_l2_ns;
+> +	vcpu->arch.l2_to_l1_cs_agg += l2_to_l1_ns;
+> +	vcpu->arch.l2_runtime_agg += l2_runtime_ns;
+> +}
+> +
+>  static int kvmhv_vcpu_entry_nestedv2(struct kvm_vcpu *vcpu, u64 time_limit,
+>  				     unsigned long lpcr, u64 *tb)
+>  {
+> @@ -4130,6 +4161,11 @@ static int kvmhv_vcpu_entry_nestedv2(struct kvm_vcpu *vcpu, u64 time_limit,
+>  	kvmppc_gse_put_u64(io->vcpu_run_input, KVMPPC_GSID_LPCR, lpcr);
+>  
+>  	accumulate_time(vcpu, &vcpu->arch.in_guest);
+> +
+> +	/* Enable the guest host context switch time tracking */
+> +	if (unlikely(trace_kvmppc_vcpu_exit_cs_time_enabled()))
+> +		kvmhv_set_l2_accumul(1);
+> +
+>  	rc = plpar_guest_run_vcpu(0, vcpu->kvm->arch.lpid, vcpu->vcpu_id,
+>  				  &trap, &i);
+>  
+> @@ -4156,6 +4192,10 @@ static int kvmhv_vcpu_entry_nestedv2(struct kvm_vcpu *vcpu, u64 time_limit,
+>  
+>  	timer_rearm_host_dec(*tb);
+>  
+> +	/* Record context switch and guest_run_time data */
+> +	if (kvmhv_get_l2_accumul())
+> +		do_trace_nested_cs_time(vcpu);
+> +
+>  	return trap;
+>  }
+
+I'm assuming the counters in VPA are cumulative, since you are zero'ing 
+them out on exit. If so, I think a better way to implement this is to 
+use TRACE_EVENT_FN() and provide tracepoint registration and 
+unregistration functions. You can then enable the counters once during 
+registration and avoid repeated writes to the VPA area. With that, you 
+also won't need to do anything before vcpu entry. If you maintain 
+previous values, you can calculate the delta and emit the trace on vcpu 
+exit. The values in VPA area can then serve as the cumulative values.
+
+>  
+> diff --git a/arch/powerpc/kvm/trace_hv.h b/arch/powerpc/kvm/trace_hv.h
+> index 8d57c8428531..ab19977c91b4 100644
+> --- a/arch/powerpc/kvm/trace_hv.h
+> +++ b/arch/powerpc/kvm/trace_hv.h
+> @@ -491,6 +491,31 @@ TRACE_EVENT(kvmppc_run_vcpu_enter,
+>  	TP_printk("VCPU %d: tgid=%d", __entry->vcpu_id, __entry->tgid)
+>  );
+>  
+> +TRACE_EVENT(kvmppc_vcpu_exit_cs_time,
+
+Not sure what "exit" signifies in the tracepoint name. Can this be 
+simplified to kvmppc_vcpu_cs_time? Perhaps kvmppc_vcpu_stats, which will 
+allow more vcpu stats to be exposed in future as necessary?
+
+> +	TP_PROTO(struct kvm_vcpu *vcpu, u64 l1_to_l2_cs, u64 l2_to_l1_cs,
+> +		u64 l2_runtime),
+
+Can be on a single line, we no longer restrict lines to 80 columns. 100 
+or so is fine.
+
+> +
+> +	TP_ARGS(vcpu, l1_to_l2_cs, l2_to_l1_cs, l2_runtime),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(int,		vcpu_id)
+> +		__field(__u64,		l1_to_l2_cs_ns)
+> +		__field(__u64,		l2_to_l1_cs_ns)
+> +		__field(__u64,		l2_runtime_ns)
+
+Not sure there is a reason to use __u64 - just u64 should work.
+
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->vcpu_id  = vcpu->vcpu_id;
+> +		__entry->l1_to_l2_cs_ns = l1_to_l2_cs;
+> +		__entry->l2_to_l1_cs_ns = l2_to_l1_cs;
+> +		__entry->l2_runtime_ns = l2_runtime;
+> +	),
+> +
+> +	TP_printk("VCPU %d: l1_to_l2_cs_time=%llu-ns l2_to_l1_cs_time=%llu-ns l2_runtime=%llu-ns",
+						 ^^^
+You can drop the hyphen before "ns". Just put a space there.
+
+> +		__entry->vcpu_id,  __entry->l1_to_l2_cs_ns,
+> +		__entry->l2_to_l1_cs_ns, __entry->l2_runtime_ns)
+
+There is l1_to_l2_cs, l1_to_l2_cs_ns and l1_to_l2_cs_time - can you use 
+a single name for that?
+
+> +);
+> +
+
+As a minor nit, it will be good to put the new tracepoint after the 
+below vcpu exit tracepoint just so the entry/exit tracepoints are 
+together in the file.
+
+>  TRACE_EVENT(kvmppc_run_vcpu_exit,
+>  	TP_PROTO(struct kvm_vcpu *vcpu),
+>  
+> -- 
+> 2.43.2
+> 
+
+
+- Naveen
