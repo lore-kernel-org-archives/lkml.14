@@ -1,187 +1,242 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3393A537E3;
-	Mon, 22 Apr 2024 07:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BE94CE1F;
+	Mon, 22 Apr 2024 07:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713772404; cv=none; b=sUDfDUK2WeNi0y6gCoa/C6GUAwD1tu8HhNDzmLPrVXjRbWPBMpO6Xcf1JWD2WvfTlcf9l8isVfFFT1sXxHmEUP56h+0BAwo5r/tYB05FoGzc4QY8n2GgFc5Oltl8s9jRbeK/BQa8i4/Wq/W6xwfEwOlSXYOe76QXRrtLeRMXWUg=
+	t=1713772533; cv=none; b=drwYbwnGRYv0EwskYluVxqmmJiJiLK8KeZ66rF0BvTCe6JtRMzTHSCM3qJ0YEKVtZwYk8d3IxNwv4WfePAkSGYxY1OekVdyzKV9ArjqNVhyXyb1fzUiccA1EraCBgPtucU2IYKzU/QBzqpaivKyIVLC3lQnkh2liHAIbybXlz/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713772404; c=relaxed/simple;
-	bh=9ERXhCIJypAi+WymLqmCJZ5+j0H9jGVmRhExosMBV88=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=YKsitvbsFlHcRFtMLtKwTgQo07MBXxnS38O8MXXf/w2NbqIppA0BQGJ+a953t7MktU4PzikwhoIzYu6220+Csjgd0CI0QVVbuZDSp7lVLttbuNTmeZxnZB20Yizl6VoApWupys/LToqrCrri1BumpVsKfE/LqwS1Cp+SFLWTqo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VNHYM2blrz4f3lWH;
-	Mon, 22 Apr 2024 15:53:11 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 763921A0568;
-	Mon, 22 Apr 2024 15:53:20 +0800 (CST)
-Received: from [10.174.178.129] (unknown [10.174.178.129])
-	by APP2 (Coremail) with SMTP id Syh0CgA3kfRRFyZmPFqLKw--.43190S2;
-	Mon, 22 Apr 2024 15:53:20 +0800 (CST)
-Subject: Re: [ATCH v3 0/4] Improve visibility of writeback
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: akpm@linux-foundation.org, willy@infradead.org, jack@suse.cz,
- bfoster@redhat.com, tj@kernel.org
-Cc: dsterba@suse.com, mjguzik@gmail.com, dhowells@redhat.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org
-References: <20240422160539.3340-1-shikemeng@huaweicloud.com>
-Message-ID: <75341abe-8ab6-a712-2b42-66897d847e57@huaweicloud.com>
-Date: Mon, 22 Apr 2024 15:52:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+	s=arc-20240116; t=1713772533; c=relaxed/simple;
+	bh=EzRjNCSbKtQiwQ0eT1S66pyOa6ClYC4xUHa8zMfB0Xs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=trn4w3RGC8pl3guK2ha+Lw+5daTz0zaMV26mSmQAcseQrFDyHn7bffjhv4uL0eVSoj3cxXBMLeHjEZgV+hXqPr39U2KoLuQ4cnoQ6Ngro6qztd/lWrzfBSQahGgMok7attd1lI0k7uQ4bpJZqJWsLlKSJA2wV///7fHWEUGJeuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OCbjH1yy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OCbjH1yy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A25BC113CC;
+	Mon, 22 Apr 2024 07:55:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713772532;
+	bh=EzRjNCSbKtQiwQ0eT1S66pyOa6ClYC4xUHa8zMfB0Xs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OCbjH1yyvhAAC80zHQuNReQp/rrz/BGPMuAGGM/ammvFcPPjak7uc/6WVl6aN27Np
+	 pI7SHZa8uYH4bVlWlOGhJCaf9TF5Bm6hKs5f/gOUy2yHjwgSvE0QzCYO6oy8Bu4EpX
+	 QlRuOfIA2kVBhXGS1Win0JCN5tjkcYVbtWYhJoFTzb03F5qmeDjDaHovMcIfjlfwjE
+	 RW655maF2+Kfipl8t95EI8UwQXCnHY+xWc0gEgOD5MHZ4vW9KjescbzLZTSIUVzXUb
+	 ta0hpcY5GpaS7JDPeUR59YbKNwvi3Bmsv0hH6JfwvGcd4XFj0GLkBRg68vFhh0edDE
+	 VianSv1g9oOiw==
+Date: Mon, 22 Apr 2024 13:25:21 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+	linux-tegra@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH 05/11] PCI: epf-{mhi/test}: Move DMA initialization to
+ EPC init callback
+Message-ID: <20240422075521.GB9775@thinkpad>
+References: <20240314-pci-epf-rework-v1-0-6134e6c1d491@linaro.org>
+ <20240314-pci-epf-rework-v1-5-6134e6c1d491@linaro.org>
+ <Zf2tXgKo-gc3qy1D@ryzen>
+ <20240326082636.GG9565@thinkpad>
+ <ZgKsBoTvPWWhPO9e@ryzen>
+ <20240327055457.GA2742@thinkpad>
+ <ZgQFXsgqpeLbXMTb@ryzen>
+ <ZgW6KB73Wh1X6911@matsya>
+ <Zg5oeDzq5u3jmKIu@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240422160539.3340-1-shikemeng@huaweicloud.com>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgA3kfRRFyZmPFqLKw--.43190S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxWFyrGF4UXFW8uw17tr1rtFb_yoWrJr1UpF
-	Z3Aw13Kw1UZr9rArn3Ca42qr15t3y0qa47Xr9rZrW2vwn0grn8tF95W34UAr15Ar93Aryx
-	AFsxZry8Gr1q9F7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
-	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Gr0_Zr1lIxAIcVC2z280aVAF
-	wI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf
-	9x07UWE__UUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zg5oeDzq5u3jmKIu@ryzen>
 
-
-
-on 4/23/2024 12:05 AM, Kemeng Shi wrote:
-Forget to fix a build warning, please ignore this series. Sorry for the
-noise.
-> v2->v3:
-> -Drop patches to protect non-exist race and to define GDTC_INIT_NO_WB to
-> null.
-> -Add wb_tryget to wb from which we collect stats to bdi stats.
-> -Create wb_stats when CONFIG_CGROUP_WRITEBACK is no enabled.
-> -Add a blank line between two wb stats in wb_stats.
+On Thu, Apr 04, 2024 at 10:44:40AM +0200, Niklas Cassel wrote:
+> On Fri, Mar 29, 2024 at 12:12:48AM +0530, Vinod Koul wrote:
+> > On 27-03-24, 12:39, Niklas Cassel wrote:
+> > > 
+> > > So my question is:
+> > > Is the "dummy memcpy" DMA channel always available?
+> > 
+> > That depends on the system, you may or maynot have such a system where
+> > you have a generic memcpy dma controller which can provide you with
+> > these channels
 > 
-> v1->v2:
-> -Send cleanup to wq_monitor.py separately.
-> -Add patch to avoid use after free of bdi.
-> -Rename wb_calc_cg_thresh to cgwb_calc_thresh as Tejun suggested.
-> -Use rcu walk to avoid use after free.
-> -Add debug output to each related patches.
+> I misunderstood DMA_MEMCPY then, I assumed that it was a "software emulated"
+> DMA channel, which allowed the a driver to always use dmaengine + DMA API.
 > 
-> This series tries to improve visilibity of writeback. Patch 1 make
-> /sys/kernel/debug/bdi/xxx/stats show writeback info of whole bdi
-> instead of only writeback info in root cgroup. Patch 2 add a new
-> debug file /sys/kernel/debug/bdi/xxx/wb_stats to show per wb writeback
-> info. Patch 3 add wb_monitor.py to monitor basic writeback info
-> of running system, more info could be added on demand. Patch 4
-> is a random cleanup. More details can be found in respective
-> patches. Thanks!
-> 
-> Following domain hierarchy is tested:
->                 global domain (320G)
->                 /                 \
->         cgroup domain1(10G)     cgroup domain2(10G)
->                 |                 |
-> bdi            wb1               wb2
-> 
-> /* all writeback info of bdi is successfully collected */
-> cat stats
-> BdiWriteback:             4704 kB
-> BdiReclaimable:        1294496 kB
-> BdiDirtyThresh:      204208088 kB
-> DirtyThresh:         195259944 kB
-> BackgroundThresh:     32503588 kB
-> BdiDirtied:           48519296 kB
-> BdiWritten:           47225696 kB
-> BdiWriteBandwidth:     1173892 kBps
-> b_dirty:                     1
-> b_io:                        0
-> b_more_io:                   1
-> b_dirty_time:                0
-> bdi_list:                    1
-> state:                       1
-> 
-> /* per wb writeback info of bdi is collected */
-> cat /sys/kernel/debug/bdi/252:16/wb_stats
-> WbCgIno:                    1
-> WbWriteback:                0 kB
-> WbReclaimable:              0 kB
-> WbDirtyThresh:              0 kB
-> WbDirtied:                  0 kB
-> WbWritten:                  0 kB
-> WbWriteBandwidth:      102400 kBps
-> b_dirty:                    0
-> b_io:                       0
-> b_more_io:                  0
-> b_dirty_time:               0
-> state:                      1
-> 
-> WbCgIno:                 4208
-> WbWriteback:            59808 kB
-> WbReclaimable:         676480 kB
-> WbDirtyThresh:        6004624 kB
-> WbDirtied:           23348192 kB
-> WbWritten:           22614592 kB
-> WbWriteBandwidth:      593204 kBps
-> b_dirty:                    1
-> b_io:                       1
-> b_more_io:                  0
-> b_dirty_time:               0
-> state:                      7
-> 
-> WbCgIno:                 4249
-> WbWriteback:           144256 kB
-> WbReclaimable:         432096 kB
-> WbDirtyThresh:        6004344 kB
-> WbDirtied:           25727744 kB
-> WbWritten:           25154752 kB
-> WbWriteBandwidth:      577904 kBps
-> b_dirty:                    0
-> b_io:                       1
-> b_more_io:                  0
-> b_dirty_time:               0
-> state:                      7
-> 
-> The wb_monitor.py script output is as following:
-> ./wb_monitor.py 252:16 -c
->                   writeback  reclaimable   dirtied   written    avg_bw
-> 252:16_1                  0            0         0         0    102400
-> 252:16_4284             672       820064   9230368   8410304    685612
-> 252:16_4325             896       819840  10491264   9671648    652348
-> 252:16                 1568      1639904  19721632  18081952   1440360
-> 
->                   writeback  reclaimable   dirtied   written    avg_bw
-> 252:16_1                  0            0         0         0    102400
-> 252:16_4284             672       820064   9230368   8410304    685612
-> 252:16_4325             896       819840  10491264   9671648    652348
-> 252:16                 1568      1639904  19721632  18081952   1440360
-> ...
-> 
-> Kemeng Shi (4):
->   writeback: collect stats of all wb of bdi in bdi_debug_stats_show
->   writeback: support retrieving per group debug writeback stats of bdi
->   writeback: add wb_monitor.py script to monitor writeback info on bdi
->   writeback: rename nr_reclaimable to nr_dirty in balance_dirty_pages
-> 
->  include/linux/writeback.h     |   1 +
->  mm/backing-dev.c              | 174 +++++++++++++++++++++++++++++-----
->  mm/page-writeback.c           |  27 +++++-
->  tools/writeback/wb_monitor.py | 172 +++++++++++++++++++++++++++++++++
->  4 files changed, 345 insertions(+), 29 deletions(-)
->  create mode 100644 tools/writeback/wb_monitor.py
+> It actually uses a real DMA controller. I don't have any DMA controller in
+> the PCIe EP device tree node, but perhaps it can use any DMA controller that
+> has been registered with dmaengine?
 > 
 
+AFAIK, most of the dma controllers support both memcpy and separate tx/rx
+channels except a few like dw-edma where memcpy is not supported.
+
+But for just memcpy, clients can use any registered DMA controller in the
+system. For slave channels, it is best to pass them in DT since the client may
+not know how the channels are laid out in the DMA controller.
+
+> 
+> > Based on my reading you might have this mechanism:
+> > - eDMA provides dmaengine_prep_slave_single() which transfers data from
+> >   mem to pci ep device, so fasted
+> > - dmaengine_prep_dma_memcpy: This will copy the data but treat it as
+> >   memory. I dont pci internals to figure out how both can work... So
+> >   cant really make out why it is slowed
+> > - memcpy_xxx that is IO mem functions, so ofc they will be slowest
+> > 
+> > I think the code is decent from fallback pov... chooses fastest path if
+> > available on a system
+> 
+> Indeed, it makes more sense to me now, thank you Vinod.
+> 
+> 
+> > > I was wrong here, pci-epf-test always calls pci_epc_map_addr()
+> > > regardless if FLAG_USE_DMA is set or not.
+> > > 
+> > > (Even though this should be unnecessary when using the eDMA.)
+> > > 
+> > > However, if we look at pci-epf-mhi.c we can see that it does
+> > > NOT call pci_epc_map_addr() when using DMA API + dmaengine.
+> > > 
+> > > Is it really safe to avoid pci_epc_map_addr() in all EPC controllers?
+> > > I assume that it should be safe for all "real" DMA channels.
+> > > We can see that it is not safe when using DMA API + "dummy" memcpy
+> > > dma-channel. (That is why I was asking if we need a NEEDS_MAP, or
+> > > MAP_NOT_NEEDED flag.)
+> 
+> 
+> > > pci-epf-test.c:
+> > > -Always calls pci_epc_map_addr() when using DMA API.
+> > > 
+> > > pci-epf-mhi.c:
+> > > -Never calls pci_epc_map_addr() when using DMA API.
+> 
+> Mani, I still think that this part is inconsistent between PCI EPF drivers.
+> 
+> Looking more at commit:
+> 8353813c88ef ("PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities")
+> 
+> Adding Frank on CC, since he is the author of that commit.
+> 
+> When the commit added support for eDMA to pci-epf-test, it added an extra
+> parameter to pci_epf_test_data_transfer(), to pass the PCI/DMA address of
+> the remote buffer, in addition to the already provided local physical address
+> that pci_epc_map_addr() has mapped the PCI/DMA address to.
+> 
+> So in the case of eDMA transfer, the pci_epc_map_addr() operation is still
+> being performed, even though pci-epf-test never uses the result of the
+> the mapping operation... This is just confusing and a waste of CPU cycles.
+> 
+> What I would like is more consistency between the EPF drivers.
+> 
+> I guess an if-statement that skips the pci_epc_map_addr() in pci-epf-test
+> if using eDMA would make pci-epf-mhi and pci-epf-test most consistent.
+> 
+
+Agree.
+
+> 
+> However, when reading the DWC databook:
+> -The eDMA and HDMA always goes via the iATU table.
+> If you do not want this, then you need to set the the appropriate bypass bit.
+> 
+> 
+> For eDMA:
+> ""
+> When you do not want the iATU to translate outbound requests that are generated by the
+> internal DMA module, then you must implement one of the following approaches:
+> - Ensure that the combination of DMA channel programming and iATU control register
+> programming, causes no translation of DMA traffic to be done in the iATU.
+> or
+> - Activate the DMA bypass mode to allow request TLPs which are initiated by the DMA
+> controller to pass through the iATU untranslated. You can activate DMA bypass mode by
+> setting the DMA Bypass field of the iATU Control 2 Register (IATU_REGION_C-
+> TRL_OFF_2_OUTBOUND_0).
+> ""
+> 
+> For HDMA:
+> ""
+> When you do not want the iATU to translate outbound requests that are generated by the
+> internal HDMA module, then you must implement one of the following approaches:
+> - Ensure that the combination of HDMA channel programming and iATU control register
+> programming, causes no translation of DMA traffic to be done in the iATU.
+> or
+> - Activate the HDMA bypass mode to allow request TLPs which are initiated by the HDMA
+> controller to pass through the iATU untranslated. You can activate HDMA bypass mode by
+> setting the HDMA Bypass field of the iATU Control 2 Register (IATU_REGION_C-
+> TRL_OFF_2_OUTBOUND_0).
+> ""
+> 
+> We also know that, if there is no match in the iATU table:
+> ""
+> The default behavior of the ATU when there is no address match in the outbound direction or no
+> TLP attribute match in the inbound direction, is to pass the transaction through.
+> ""
+> 
+> So even if we do not call pci_epc_map_addr(), the eDMA and HDMA will go via
+> the iATU table, it will most likely not find a match, so it will go through
+> untranslated.
+> 
+> So I think we need to answer these questions:
+> 1) Do we want to rely on the fact that hopefully none of the iATUs in the DWC
+> controller has configured a mapping that might mess things up for us?
+> I don't see why the PCI/DMA address of the remote buffer, supplied to
+> pci-epf-test via test_reg BAR, might not fall within the physical iATU window
+> on the local EP system. (As long as the PCI EPF driver has mapped any address
+> using pci_epc_map_addr().)
+> 
+> This is a big argument that EPF drivers running on a DWC-based EPC should
+> definitely NOT call pci_epc_map_addr() needlessly when using eDMA, as it
+> can be catastrophic. (pci-epf-test needs to be patched.)
+> 
+
+Right. There is no need to do iATU translation for DMA. I avoid that in MHI
+driver.
+
+> 
+> 2) Can we really assume that both pci-epf-test and pci-epf-mhi does not need
+> to call pci_epc_map_addr() when using a DMA_SLAVE DMA controller?
+> This seems to be designed only with DWC in mind. Other PCIe endpoint
+> controllers might require this.
+> (Yes, for DWC-based controllers, this definitely should be skipped, but EPF
+> drivers are supposed to be independent from a specific EPC.)
+> 
+
+For TEST yes, but for MHI, no. In MHI, I kind of mix both iATU and DMA to ripe
+most of the performance (small vs big transactions). But for the TEST driver, it
+is fair to not call pci_epc_map_addr() when DMA_SLAVE is supported.
+
+I do feel that we need to maintain the similarity within the EPF drivers, but it
+is OK to let the drivers diverge a little for optimization.
+
+> I'm fine with just avoiding the pci_epc_map_addr() call when using DMA_SLAVE
+> DMA in pci-epf-test for now, as that is the only DMA controller that I'm
+> familiar with. This second question was more a question for how EPF drivers
+> are should be designed now and in the future.
+> 
+
+Regarding the DMA_MEMCPY code in TEST driver. We need to keep it for backwards
+compatibility since not all platforms are passing the slave channels in
+devicetree.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
