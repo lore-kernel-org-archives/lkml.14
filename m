@@ -1,121 +1,207 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A41153BFE
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 17:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF04C153BE1
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 17:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713806480; cv=none; b=nsTZmJDXCIt0qwWZuDAsYT7O3fyc/4FFHxekE3m7wht0m/si8CObNDKdoFPKqDyDlTjuk9XkNAPr9XZd/nY00yHGLNvrStv2NBdX2kiErgmEz9ZNTAVKBAXgpqwGdEUi6yCs+D/CKm94k6Ttx/oOV1hI3Uns/toXXnW/3z/W1UY=
+	t=1713806495; cv=none; b=MGU7gh5wb5L23S0tfDnxYwrdEGRxbGPMM/pEXF7WSDTxW/4DQrKwq3NUv3GcMu/mduElonKwPHBPhcqb7fhUWntdjpqUSNEIcI9DzVzHCsnlwcFnKYIC3EN9yu/sq6z3TPaYwlRsDyEAD9dzUEc1PMSmtshxOW+vfjIyRmdv9i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713806480; c=relaxed/simple;
-	bh=AavZtiE7Y5jNJbDH/UEH67bAAXiGlqHLEG6ZnZQvljs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LFxjGL/RLtCc1Ej/KTGX6U7Jz8O752Ci2kGGWvBUaw+D7DzTDVdGtfltF+Q4U7SI+mPv+lALe3Z8oiaMilEiEh8dm00GvBOktlUqhNUC8RlJHAlE14cGUJXErkfifaMv2q0cjQxABZq64v/eogxRIahibwp7VKQcBe071P2fIi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=MhODt1fX; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1713806495; c=relaxed/simple;
+	bh=vlqA1fBJDvLVrpPxkJhQEkoSULbpXOLTNNMAGaGnPsY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RdsGb4u7cuQr+o+b/KkChQvY7BkMefYg2w9ne6n/BL8oTOBv/C57KpTzd0LBDmrufu/RVoFPwBaUWRTtku+fkwLzqEM9vSo8QQFhEQdUFUtI4j2QiFs9oFtp5tipG0iQs/RQpWSZ3CrsfvO64b/bf9DIvztv4AKrHRJu+6yLGgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=gHQbum2t; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="MhODt1fX"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id EDEFB40E024C;
-	Mon, 22 Apr 2024 17:21:15 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id sj62pO-FdWHX; Mon, 22 Apr 2024 17:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1713806471; bh=X8dsCphHnI+xsPA20/Uvl8+GpfgKITkke/sIBay9D1s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MhODt1fXLmpag8dMVPz8uw/255+oWmZ08NlTWiUJAbFf06ZhqHSSohc8MUq8OeWFk
-	 1UOkv86OR2kEb5mYllvK6XVbMdDhEg35TD4qw9B8Hxr0U49f/m06qVrKllRVwBJmm2
-	 hkxCuSxaZ7FpyXSQ67Vx69z+3l456+zCRWa3WaYD6ULAH9rZZyE0ZFl2wUZpshaVAR
-	 JWAbiAvGX7AKqBOqtCh9WUfLPWckiDAKKTvycEQzIHt5pPfnwLdTXi96f6poqATLdx
-	 kxv5vRdHysZpU+zHO/O6q83Lrtkiw+1Bw3HkAchs6begHxTSlGwhJ6OoVDPCn/VA7f
-	 gLFpjpLQ1JD+Cfs4tY8+vFa30VOxUhd28+jy4wkcXyp63pbjDqwDIrHzYrC9xgH0dm
-	 X1+HADg5fb5QroKM3xYNcXMknIReNHimiBnCdeu08jzmTxBRNb/dKo/xK+6itOuCSU
-	 /6rE+DVFtrxfYJhZb0tld1nIVhqhFkfiDAF68IMDWA/iRrgoyApJy5YV7Gj3Og41QC
-	 Go6I1c+pD67gDIKmYfnoRj6yAMPckBoxH+xrx6oaIXFYe0+bvrDZwE0kgNoppDN45q
-	 d3geGaRluA2xXuHo6g86X3hrlodFowOuEc8SCUEoM1yr4Cl3I3GXaFX/ADzml1YPBA
-	 pu4rJrsO4v5D1QVvAQTMyA4Q=
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 18A1840E0240;
-	Mon, 22 Apr 2024 17:21:02 +0000 (UTC)
-Date: Mon, 22 Apr 2024 19:20:55 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Robert Richter <rrichter@amd.com>
-Cc: Dave Hansen <dave.hansen@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	linux-kernel@vger.kernel.org, jgross@suse.com, tglx@linutronix.de,
-	x86@kernel.org, Kim Phillips <kim.phillips@amd.com>,
-	Robert Richter <rric@kernel.org>
-Subject: Re: [PATCH 2/4] perf/x86/ibs: Use CPUID region helper
-Message-ID: <20240422172055.GAZiacdxkQU0XAbybW@fat_crate.local>
-References: <20240403153508.7328E749@davehans-spike.ostc.intel.com>
- <20240403153511.75CB9DA0@davehans-spike.ostc.intel.com>
- <20240416151242.GGZh6VaiO2gC4ej2BT@fat_crate.local>
- <f142e9c4-4829-4ace-8757-485246ad3572@intel.com>
- <20240416174850.GEZh66AmnDjrLxoXaw@fat_crate.local>
- <ZiEMnWaHkn99_oyW@rric.localdomain>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gHQbum2t"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6150670d372so42051907b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 10:21:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1713806493; x=1714411293; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=46PbGYVyS6vRtQF98S3XnuIdUSX2r0I5JNRdx7ADc2M=;
+        b=gHQbum2t8E+LIQX7xewNNXcar9rXfjTbe7strrjLvrvRTwIbwp9CixDXEJ0e5xrhBi
+         hSIVwoXWIU0s+2sk/jUvDwmx0hoBvD86nM2g9euq4ZuzaSH20i877/Q5NUtj0zwiOvZ7
+         RfxpcmoQOaVSObq9iOHx+y/c3tj0qz5eyGgAY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713806493; x=1714411293;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=46PbGYVyS6vRtQF98S3XnuIdUSX2r0I5JNRdx7ADc2M=;
+        b=U6bSsnrfoxNFwcAix0mY+6MY764a3RHQcJgA0EVNeHsnBlPTn2hjuZyMJUz5QrAo+Q
+         dcoh6loYImfWiKbC+HH5S+/0U+Pz1y8b6QNC6lNQ/RVpQVvvggD/iN4aU6ZTEdKEi6uG
+         56Aal75w5CdRsF6SBkIBcv36Etc+E7uUiQEWXaZrywn3ceCt1e1CKn1P9raZmrJmgBoy
+         PLCTOj54IGSLzFd61HbyOAIissX7+YYWSn/HstDy0GX1qjgt9Q9ltl+Qh4OqiaWh+vzS
+         VV9oaHN6IOUeKzJtLRvT/+Kuyf+bGckkV6NfQX0WRNZO58PICnS1KOIbRqs+XUVVY7Q+
+         ojxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUHKhApturBLYNLIpfhNYgW4/vZTycIxFXgW8jtfZQH+a5KFqt4CuT0dPVf7cZ0thJ5xDjUCHRclydujxf3KArAixBZCaNth05Jqzz9
+X-Gm-Message-State: AOJu0YwqYCIOhLNnkEoR7z5xyEEy9pvyd7jJQMrtWv3/3DOVGT32XTjw
+	yS7cFVHMBQ9gjIGlsT5xq/z5O4IRXmLR3n5+0MqdzvFwyb+QJfEYWMwLtXxXGfJlQbLPj2zFtAk
+	mW3mQvEaaALFeHYa3GrLY3Oy8s3ByK8mRiR6E
+X-Google-Smtp-Source: AGHT+IHdyiJxhnXVP7eDowRV/IGoJbK3MUOQvarP0xxCGMZdBSHN0yhyiHQ246x4kivH7MExvjzGzPjJLYdhCBe9xgY=
+X-Received: by 2002:a05:690c:6f85:b0:618:1ce6:b618 with SMTP id
+ je5-20020a05690c6f8500b006181ce6b618mr11509487ywb.12.1713806492739; Mon, 22
+ Apr 2024 10:21:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZiEMnWaHkn99_oyW@rric.localdomain>
+References: <20240422152626.175569-1-ast@fiberby.net>
+In-Reply-To: <20240422152626.175569-1-ast@fiberby.net>
+From: Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>
+Date: Mon, 22 Apr 2024 22:51:21 +0530
+Message-ID: <CAHHeUGWsz=fhTSqnNiTphB5TRcf4ZyNsEov+vqtUEBiT+XCEag@mail.gmail.com>
+Subject: Re: [PATCH net-next] bnxt_en: flower: validate control flags
+To: =?UTF-8?B?QXNiasO4cm4gU2xvdGggVMO4bm5lc2Vu?= <ast@fiberby.net>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Michael Chan <michael.chan@broadcom.com>, 
+	Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000003e6c760616b2abd1"
 
-On Thu, Apr 18, 2024 at 02:05:49PM +0200, Robert Richter wrote:
-> There is the X86_FEATURE_IBS bit (Fn8000_0001_ECX, bit 10) which is
-> available from the beginning of IBS (all Fam10h production releases,
-> revB onwards).
-> 
-> And right, IBS_CPUID_FEATURES (CPUID Fn8000_001B) was introduced with
-> revC. The capabilities of revB are set in IBS_CAPS_DEFAULT.
-> 
-> It doesn't look broken to me, simply the ibs caps field was introduced
-> later which can be determined checking the return code of
-> get_cpuid_region_leaf().
+--0000000000003e6c760616b2abd1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Right.
+On Mon, Apr 22, 2024 at 8:58=E2=80=AFPM Asbj=C3=B8rn Sloth T=C3=B8nnesen <a=
+st@fiberby.net> wrote:
+>
+> This driver currently doesn't support any control flags.
+>
+> Use flow_rule_match_has_control_flags() to check for control flags,
+> such as can be set through `tc flower ... ip_flags frag`.
+>
+> In case any control flags are masked, flow_rule_match_has_control_flags()
+> sets a NL extended error message, and we return -EOPNOTSUPP.
+>
+> Only compile-tested.
+>
+> Signed-off-by: Asbj=C3=B8rn Sloth T=C3=B8nnesen <ast@fiberby.net>
+> ---
+>  drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c b/drivers/net/e=
+thernet/broadcom/bnxt/bnxt_tc.c
+> index 273c9ba48f09..d2ca90407cce 100644
+> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
+> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
+> @@ -370,6 +370,7 @@ static int bnxt_tc_parse_flow(struct bnxt *bp,
+>                               struct bnxt_tc_flow *flow)
+>  {
+>         struct flow_rule *rule =3D flow_cls_offload_flow_rule(tc_flow_cmd=
+);
+> +       struct netlink_ext_ack *extack =3D tc_flow_cmd->common.extack;
+>         struct flow_dissector *dissector =3D rule->match.dissector;
+>
+>         /* KEY_CONTROL and KEY_BASIC are needed for forming a meaningful =
+key */
+> @@ -380,6 +381,9 @@ static int bnxt_tc_parse_flow(struct bnxt *bp,
+>                 return -EOPNOTSUPP;
+>         }
+>
+> +       if (flow_rule_match_has_control_flags(rule, extack))
+> +               return -EOPNOTSUPP;
+> +
+>         if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_BASIC)) {
+>                 struct flow_match_basic match;
+>
+> --
+> 2.43.0
+>
+>
 
-> My preference would be:
-> 
-> 	[...]
-> 	if (!get_cpuid_region_leaf(IBS_CPUID_FEATURES, CPUID_EAX, &caps))
+Thanks for this fix, it looks good. I need some time to test this; I
+will get back to you in a few days.
+-Harsha
 
-Right, checking get_cpuid_region_leaf() retval should happen.
+--0000000000003e6c760616b2abd1
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-> 		return IBS_CAPS_DEFAULT;
-> 
-> 	if (caps & IBS_CAPS_AVAIL)
-> 		return caps;
-> 
-> 	return 0;
-> 	[...]
-> 
-> Not too complex?
-
-I'm wondering should we even support those old things? All revBs should
-be probably dead by now. But ok, it's not like it is a lot of code or
-so...
-
-> This slightly modifies the functionality so that 0 is return if
-> !IBS_CAPS_AVAIL (instead of IBS_CAPS_DEFAULT).
-
-If !IBS_CAPS_AVAIL, then this is revB. But then you want to return
-IBS_CAPS_DEFAULT there.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBWcwggRPoAMCAQICDAGseBnUOryiK+cWfTANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAwODE3MzRaFw0yNTA5MTAwODE3MzRaMIGg
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xHjAcBgNVBAMTFVNyaWhhcnNoYSBCYXNhdmFwYXRuYTExMC8G
+CSqGSIb3DQEJARYic3JpaGFyc2hhLmJhc2F2YXBhdG5hQGJyb2FkY29tLmNvbTCCASIwDQYJKoZI
+hvcNAQEBBQADggEPADCCAQoCggEBANGVy7il6qkWFiW5c4+kohP7xrKuKgQsfDqhhdfOx4FvPMTF
+A9S2FwTdDOPuDNiSdR2+KK3JzqRLtBCSHV80dlEzwnOgLnlKkFQZvASsdXFtP9j56nc/ni7V4q9G
+Ob5RVSl61kWgHXVmZYj+SqUEKdNy1opV5mitkOJHa9zhftMojx+ylauLeBDp7lEjgg5xFPme6KGV
+GkD3dAbV6M4mQWaR6RpcUU4Jk+Og3FCDkG8PIxRKia+tBqfj2IGoR9LIlX8WZ/hhHTmkkwnsfr59
+kjjPMh9o02jAvOzf/CLmWENkxup5gyPmlM8xAVlqZmn0EtlzxEg2YqBHkRb1s1NNPi0CAwEAAaOC
+AeMwggHfMA4GA1UdDwEB/wQEAwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0
+dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2Ey
+MDIwLmNydDBBBggrBgEFBQcwAYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3Bl
+cnNvbmFsc2lnbjJjYTIwMjAwTQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEW
+Jmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0f
+BEIwQDA+oDygOoY4aHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMC5jcmwwLQYDVR0RBCYwJIEic3JpaGFyc2hhLmJhc2F2YXBhdG5hQGJyb2FkY29tLmNv
+bTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAd
+BgNVHQ4EFgQUXHovQBXsYr3/QkkF+EruxqF3ajswDQYJKoZIhvcNAQELBQADggEBAKHfsxL3xirL
+i7ilaAfW67MeZRrOqvgw4nXhuj+QzkDDZ4QCb6IEYs1B783CbRNC0Vohjtesr+GKJyeTTRqP/Ca2
+tPHjp5VJ3mZZ7Vu1Gnwj5kicRlSs3p7UVzpstr/cGn3oRz4Pby+VIbPftHCyUdrUOocITnz17hmR
+JryVxNcbPcjGdGhThv3mdEDg2RCrFR1X0jlSAsLbQn83Agls1OHzBPHuudbspjj3/jJGD8gsIcnx
+dgaqC7WHdB3zZutGigdpsmj/fxrvqbTUW8ZakCTtc8C57oDCeoBI4L+KAaFoHOJjVlWaQ3g9Fefa
+eiXd6ovtpOAc/1MAXvMftuX+mQIxggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQK
+ExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNp
+Z24gMiBDQSAyMDIwAgwBrHgZ1Dq8oivnFn0wDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkE
+MSIEICy6fcF/Y1QODUaHjshUScHKgHYtluKpo3xIPACMRwdaMBgGCSqGSIb3DQEJAzELBgkqhkiG
+9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDQyMjE3MjEzM1owaQYJKoZIhvcNAQkPMVwwWjALBglg
+hkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0B
+AQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAfhKfgeuF+1OVD
+1OVPVV4HSg0Qe8Kv0+BwLcKG+BX+1cw3icFit1JHcGkUg8p2hRuHMAd4wTynY5XYdYS42vX+ZzMc
+qh7N2yMq08Ljt2gon6bYUXy0l2JObkoDEmoY5xRcsoL8fv4xFUkykNp5P8Byu+Pc15U896UPuI2R
+b5dIFma3I3bG+XSG/DHhGN6inyWdjHrV7ALHfU/ulqZq9+cqSlmAtul5xB/00jEEWtPyDSDgIF8s
+syqq5px+aCPP9LYrvMywRM0HKC80962rEojz+URMI9wZOZcRGJIcOrEZ0262/WrSANxlw6GkwFYD
+fO7Pt+UU6HArGExxVVuwcMGg
+--0000000000003e6c760616b2abd1--
