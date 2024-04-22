@@ -1,84 +1,104 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C4510A20;
-	Mon, 22 Apr 2024 22:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D325C1C287
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 22:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713825119; cv=none; b=FG+tu3NbH68gaVTxDHcyypdW9gn1STSXEo7wteg4ubHDJm44smVFPiwuhY5nBOHfe+MgqVEYSTzbYXsO8x0OaY02lruDEzthbzHE9rce4Hi4Sc5t9VUXVjlaQx9RlQN9apoWAG5Fvrv7DinpwDJ3nCbt+b7yTJrptJpMWTQyRb8=
+	t=1713825433; cv=none; b=j3U1vlrbNAUWByQBwdkdPILe9ufdnwxR4uDOJzQ7OQU1TdsfFhWA3hRGHza3irNejm6KhktRS5hnN+A+orhLhoAdb7wrqiRgrkFSQ2Zsn+tZKPkqk/WznhYu7XnJFmhyQVz94hIYftqiMZnhuS3LTysiFQjoLnlhSsmFrWBu7oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713825119; c=relaxed/simple;
-	bh=kf+ZR8T7Z29rqXoays996MAkdV+Ne7CJSkwmJ2ck9tM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=eAUeBi1uddctGLt7rOLxWZOOWah8qODvtVKu7vSrXHXOe7s+DzoVrjhV1JjM6JlmPBCDU+Z4SzwkaOa08WpCdXaDDzSHqjri999wYSxMli/QSknjzTKEV4FcmPtvyxF+mKbqtGfcmLxnC+99ttfbhGkTfkv3hfQ1MGhiJzkCxY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=XOx2KqVV; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1713825433; c=relaxed/simple;
+	bh=JsxZ38XdkNgp9UD9W21uEmvYgPFSGAp83NClI4k5JWg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EkQtXDanhXY1lKs9S2kmASyQfDoprH/YRiLzA4B2lQkdXrpKz9fOaWVmp456LkO3S5RWxGjP5wzhtsuPJTCfXAejsrwa3cAJzr8TyrupZ2pirmJaDKTq7jedHZioohVoCqMMS+/htpNxF1DgeqbedM2PtZB+dsqvALSxn4tNTlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jC0Se1Au; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XOx2KqVV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1713825107;
-	bh=CBNPTh/j0dtAeIo8IQkOpYE80YzJz/hwlgHSjn0cD6k=;
-	h=Date:From:To:Cc:Subject:From;
-	b=XOx2KqVV0YEMhqPR/32casPYBn8zR1bHuB8Il8Q4yuYs2moel6E3ZSiyRaptG2TNm
-	 yqGcXF8dUqvyhp6ShYVrq0lRy/uHqHMKladyO+gckuHnjJuMJ2HVvO9AGBbabIV/vU
-	 r0I4qL68K8ZpGOigxoGYidW2jckk+xVqt2bZWmME898U1hiRsIsxx2vE2qLT9lKWTV
-	 TRN6kCWY+nYOPzenxcJ4Em4JQ0w6B0GfKu9B529lmxjAOfJGAyF5wXi7h9w0BqDKxz
-	 UBH/edtAJY/1DCnRXZ57k8NWE3rpawbE1nCnQPFoPfHDGTa/JArv26p3kBzvjuz+99
-	 fmfGpdUvhbQ+w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VNg375dsVz4wcp;
-	Tue, 23 Apr 2024 08:31:47 +1000 (AEST)
-Date: Tue, 23 Apr 2024 08:31:45 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the i2c-host-fixes
- tree
-Message-ID: <20240423083145.771dddf5@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jC0Se1Au"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51aff651083so2589551e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 15:37:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713825430; x=1714430230; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ohFmgglIcQlxE3MPNy1+YrogD02CaIJJKPILpDHEK2E=;
+        b=jC0Se1AuSIXi6m1zu9rYPo9813c1QcqMMGb1u2IEdG4WNHdlD3rF0J4y1eYFJfC3+z
+         rnGv8jhl3ksmyr8TC4W0Teh621nqMfJDBlxZyk5ObPmjALhwGGTNjZALZODb++D7kygW
+         dFFp+WSWUGBF6EKM3nMma3jaXgaISJHi58XZY/8iD3/uT117i3PAQSETOUjtiGwDTBMX
+         3POqQ39aiPHoOf4pRq4KTd4TsKLIp3UsW51lJn6nfCYHcCLLLT4BsEBiQtsuEXLMvWHr
+         QEawIjWvugtYxI/kWgIyDOgZQ338yS5Uj8KZQDIFcphnbnZCOElxuC3vHsRhNjblcITd
+         69zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713825430; x=1714430230;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ohFmgglIcQlxE3MPNy1+YrogD02CaIJJKPILpDHEK2E=;
+        b=OuuqOYv4Jw1WK0hWynjaWLVEHLS7TxrBqIlSksPgi1R3xC5NJdSX4QShP9Y16RCPec
+         k45eT2MxD9ukMYtn7SFiHXSwOX0xgh8I9SM680HlBXLg+QCdPT4Urx2CfsPYZl7aWrUo
+         3vit8ZwWs+Ak59Gwj5TM29F0y6B0Su8ovIv3qKryRVnsfIyqsDIkRCBQwv+safcVO8KM
+         ohNfP5ZC2W/Fa6XjYS4b7ElNOOx8YDjP+CzlNzFo7Lr4Khhx20h4T+wv2vziG0US5dTx
+         B/9lrB1gSVYtrcc9uWhexd/ugZniK2tFxQLVByWEiDaw1vJ2xjHqf6/qAB8XLPNVBbkW
+         dHiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvtNDywf4HlwDSqcNID5X5e2/YxQiS9L48VrND2HHyQMQmvoTWvqQKka3hozyYKrybEnuPELfwa3za1nG6/rN+SO94TyxXHCVEaiA2
+X-Gm-Message-State: AOJu0YwnMybk7VjrGIW8gqtpfABx+fpIDOXTgT04f3v6TWtHBs3a3J0k
+	Jq1jaj/5QP0+LmXjUQ3JLV39NMYId/PMlXwm17dXbaokyVwxRsL1FHMF01dCTzs=
+X-Google-Smtp-Source: AGHT+IE3m5uOC+ZmUmnZKf0riA6458/IhT/zPbv8SmhhSaid1ucuuBTYN37T3Pzrf8uaJHQYmrV0OA==
+X-Received: by 2002:a19:381a:0:b0:515:cfaf:737 with SMTP id f26-20020a19381a000000b00515cfaf0737mr6928150lfa.9.1713825429819;
+        Mon, 22 Apr 2024 15:37:09 -0700 (PDT)
+Received: from [127.0.1.1] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id r3-20020ac25f83000000b00513c4e41140sm1841271lfe.204.2024.04.22.15.37.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 15:37:09 -0700 (PDT)
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: [PATCH 0/2] Remove more useless wrappers
+Date: Tue, 23 Apr 2024 00:36:58 +0200
+Message-Id: <20240423-topic-msm_cleanup-v1-0-b30f39f43b90@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2Bl54QsjYVEctGKe5NQ8Tt0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIvmJmYC/x3MWwqAIBBA0a3EfCfkA4q2EhFpUw3kA60Iwr0nf
+ Z6Pe19IGAkT9NULEW9K5F0Brysw++w2ZLQUg2iEapSQ7PSBDLPJTubA2V2BaYmq1aZTnC9QuhB
+ xped/DmPOH+Q0mQBjAAAA
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.14-dev
 
---Sig_/2Bl54QsjYVEctGKe5NQ8Tt0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Shaving off some cruft
 
-Hi all,
+obj files seem to be identical pre and post cleanup which is always
+a good sign
 
-Commit
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+---
+Konrad Dybcio (2):
+      drm/msm/dsi: Remove dsi_phy_read/write()
+      drm/msm/dsi: Remove dsi_phy_write_[un]delay()
 
-  86eb98127332 ("gpio: pca953x: move suspend()/resume() to suspend_noirq()/=
-resume_noirq()")
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.h           |   5 -
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c      | 273 +++++++++-----------
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c      | 218 ++++++++--------
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_20nm.c      | 109 ++++----
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c      | 305 +++++++++++-----------
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm_8960.c | 205 +++++++--------
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c       | 320 ++++++++++++------------
+ 7 files changed, 699 insertions(+), 736 deletions(-)
+---
+base-commit: 33edc5592466996fe9610efc712da0a3539027ae
+change-id: 20240423-topic-msm_cleanup-b3e47bc8411d
 
-is missing a Signed-off-by from its committer.
+Best regards,
+-- 
+Konrad Dybcio <konrad.dybcio@linaro.org>
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/2Bl54QsjYVEctGKe5NQ8Tt0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYm5VEACgkQAVBC80lX
-0GwxsAgApU6Mw2X6vrLWY+0YRiHvXwkKVwXMxuqE2T2kyOcusLJ/kRohu4qhylmN
-ZgO8umix+zchTajVmutXQNq+w0mUhCwqwxlN9vR7WWKdAhjdOSXt1gJPxFfBSVgk
-5WgxGY8U2xKE9+q2CxlwIac9oTl7F+dzUXxK8kpoFr0WxmX4xo/Yf7Y2WswRQByR
-cfog29l3cn7hEiKCUtduZ4WXbFlrVxAHJW1NpBlqZoXTFreAc708iaOgZUGUQCxW
-KXBdAhVxtABwKH/QsKvJBmq+qMlj6b+hLfamCFkDM0gLKMtdzHq2FQ+2S7Zj7fX1
-miEg6UbKhgbnbX3dLEZXEFHl75jpdw==
-=54sA
------END PGP SIGNATURE-----
-
---Sig_/2Bl54QsjYVEctGKe5NQ8Tt0--
