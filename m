@@ -1,78 +1,107 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0325490E;
-	Mon, 22 Apr 2024 09:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A00131BAE;
+	Mon, 22 Apr 2024 09:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713777618; cv=none; b=QEOCYZrvGOYuoa3BlKNPh2WPx4ramBd3vUCGkSU3U/Ounsw6I/k9MXYB818sFeFPuMQz0WKR/cHHwfKeRrZ4GwWoLaCDKUr5M6kGUjsr+YA/QSfKTmvRuXL9XeCL25v09HGjNgppzVLfY47CZkPLLxV+AZhiCmbT4DpcAgOUXs0=
+	t=1713777626; cv=none; b=bC+cl7QpBFjrIDxDPMVdEmt+2/FEMRALdM1JNChYQ4KFTVoMFqApSCaBJBlrvil1q0eTvi0V4ktPjRL35rDw3HUwRD35zGLpwc+TEHGBQHI3bSXnWfQHNZagNFGcbOQGjyX/WT+n+oBFm4J9Kkw60TjVZmbcxJ2lADwzuO0sxCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713777618; c=relaxed/simple;
-	bh=mQQw5lMBFpwd1ib2VzuyorFSwtH397b/MvRxcKg2qkE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q1SmGkMnwjdaY3DVXKvxYSfTKHHtUhZ0XchSVW7arOJE2RQNJxBwl5aehAF3qNhoNcph8crVaVZB/JzZqW0ACRjWRnP7FswFEMDZNDOZk0W9PgZvmkhwJX5z6CzaoCO6NyUQjkYyEMi6OFyUD+db8OiAUmwUGKIqT7ZYcklTbX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VNKQ772jWz1RCjQ;
-	Mon, 22 Apr 2024 17:17:03 +0800 (CST)
-Received: from dggpemd500003.china.huawei.com (unknown [7.185.36.29])
-	by mail.maildlp.com (Postfix) with ESMTPS id B842C1403D2;
-	Mon, 22 Apr 2024 17:20:06 +0800 (CST)
-Received: from localhost.localdomain (10.175.101.6) by
- dggpemd500003.china.huawei.com (7.185.36.29) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 22 Apr 2024 17:20:06 +0800
-From: gaoxingwang <gaoxingwang1@huawei.com>
-To: <gaoxingwang1@huawei.com>
-CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
-	<kuba@kernel.org>, <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>, <yanan@huawei.com>
-Subject: [PATCH v2] net: ipv6: fix wrong start position when receive hop-by-hop fragment
-Date: Mon, 22 Apr 2024 17:19:17 +0800
-Message-ID: <20240422091917.3221601-1-gaoxingwang1@huawei.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20240422011052.2932165-1-gaoxingwang1@huawei.com>
-References: <20240422011052.2932165-1-gaoxingwang1@huawei.com>
+	s=arc-20240116; t=1713777626; c=relaxed/simple;
+	bh=T5tRASABoyAmF4/TwmiQdb4aSxJ5IjEe6kgVUHlghnY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T1J9NVUEboMegjPA5eL2FD5jIY+vGAjX97VuS6NdsiEX/P21C0H4YOLuuUn7JVByy2iFm2gYBvN14aUnT1+dRbxt9ega9DyQvSwZsVQbONTXO5m2QNYF/UUBbzZ6CIo4FzVjuLxEIiLOgQByikl4Ao9bYElQQESCaQcDG9rbysA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 2EF4A280108A8;
+	Mon, 22 Apr 2024 11:20:16 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 03FB34D34A; Mon, 22 Apr 2024 11:20:15 +0200 (CEST)
+Date: Mon, 22 Apr 2024 11:20:15 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: gregkh@linuxfoundation.org,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Marc Herbert <marc.herbert@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-coco@lists.linux.dev, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 1/3] sysfs: Fix crash on empty group attributes array
+Message-ID: <ZiYrzzk9Me1aksmE@wunner.de>
+References: <170863444851.1479840.10249410842428140526.stgit@dwillia2-xfh.jf.intel.com>
+ <170863445442.1479840.1818801787239831650.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemd500003.china.huawei.com (7.185.36.29)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170863445442.1479840.1818801787239831650.stgit@dwillia2-xfh.jf.intel.com>
 
-In IPv6, ipv6_rcv_core will parse the hop-by-hop type extension header and increase skb->transport_header by one extension header length.
-But if there are more other extension headers like fragment header at this time, the skb->transport_header points to the second extension header,
-not the transport layer header or the first extension header.
+On Thu, Feb 22, 2024 at 12:40:54PM -0800, Dan Williams wrote:
+> It turns out that arch/x86/events/intel/core.c makes use of "empty"
+> attributes.
+> 
+> 	static struct attribute *empty_attrs;
+> 
+> 	__init int intel_pmu_init(void)
+> 	{
+> 	        struct attribute **extra_skl_attr = &empty_attrs;
+> 	        struct attribute **extra_attr = &empty_attrs;
+> 	        struct attribute **td_attr    = &empty_attrs;
+> 	        struct attribute **mem_attr   = &empty_attrs;
+> 	        struct attribute **tsx_attr   = &empty_attrs;
+> 		...
+> 
+> That breaks the assumption __first_visible() that expects that if
+> grp->attrs is set then grp->attrs[0] must also be set and results in
+> backtraces like:
+> 
+>     BUG: kernel NULL pointer dereference, address: 00rnel mode
+>     #PF: error_code(0x0000) - not-present ] PREEMPT SMP NOPTI
+>     CPU: 1 PID: 1 Comm: swapper/IP: 0010:exra_is_visible+0x14/0x20
+>      ? exc_page_fault+0x68/0x190
+>      internal_create_groups+0x42/0xa0
+>      pmu_dev_alloc+0xc0/0xe0
+>      perf_event_sysfs_init+0x580000000000 ]---
+>     RIP: 0010:exra_is_visible+0x14/0
+> 
+> Check for non-empty attributes array before calling is_visible().
+[...]
+> --- a/fs/sysfs/group.c
+> +++ b/fs/sysfs/group.c
+> @@ -33,10 +33,10 @@ static void remove_files(struct kernfs_node *parent,
+>  
+>  static umode_t __first_visible(const struct attribute_group *grp, struct kobject *kobj)
+>  {
+> -	if (grp->attrs && grp->is_visible)
+> +	if (grp->attrs && grp->attrs[0] && grp->is_visible)
+>  		return grp->is_visible(kobj, grp->attrs[0], 0);
+>  
+> -	if (grp->bin_attrs && grp->is_bin_visible)
+> +	if (grp->bin_attrs && grp->bin_attrs[0] && grp->is_bin_visible)
+>  		return grp->is_bin_visible(kobj, grp->bin_attrs[0], 0);
+>  
+>  	return 0;
 
-This will result in the start and nexthdrp variable not pointing to the same position in ipv6frag_thdr_trunced,
-and ipv6_skip_exthdr returning incorrect offset and frag_off.Sometimes,the length of the last sharded packet is smaller than the calculated incorrect offset, resulting in packet loss.
-We can use network header to offset and calculate the correct position to solve this problem.
+I'm wondering why 0 is returned by default and not SYSFS_GROUP_INVISIBLE.
 
-Fixes: 9d9e937b1c8b (ipv6/netfilter: Discard first fragment not including all headers)
-Signed-off-by: Gao Xingwang <gaoxingwang1@huawei.com>
----
- net/ipv6/reassembly.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+An empty attribute list (containing just the NULL sentinel) will now
+result in the attribute group being visible as an empty directory.
 
-diff --git a/net/ipv6/reassembly.c b/net/ipv6/reassembly.c
-index 5ebc47da1000..2af98edef87e 100644
---- a/net/ipv6/reassembly.c
-+++ b/net/ipv6/reassembly.c
-@@ -369,7 +369,7 @@ static int ipv6_frag_rcv(struct sk_buff *skb)
- 	 * the source of the fragment, with the Pointer field set to zero.
- 	 */
- 	nexthdr = hdr->nexthdr;
--	if (ipv6frag_thdr_truncated(skb, skb_transport_offset(skb), &nexthdr)) {
-+	if (ipv6frag_thdr_truncated(skb, skb_network_offset(skb) + sizeof(struct ipv6hdr), &nexthdr)) {
- 		__IP6_INC_STATS(net, __in6_dev_get_safely(skb->dev),
- 				IPSTATS_MIB_INHDRERRORS);
- 		icmpv6_param_prob(skb, ICMPV6_HDR_INCOMP, 0);
--- 
-2.27.0
+I thought the whole point was to hide such empty directories.
 
+Was it a conscious decision to return 0?
+Did you expect breakage if SYSFS_GROUP_INVISIBLE is returned?
+
+Thanks,
+
+Lukas
