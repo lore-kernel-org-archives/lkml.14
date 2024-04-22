@@ -1,262 +1,239 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF1C4DA11
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [20.231.56.155])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E972A48CF2;
+	Mon, 22 Apr 2024 08:13:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.231.56.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713773465; cv=none; b=jpvRA7E5qZqp/HH+enPIi+tAGWcUChv/STZpBJ5ZGzTY13Tw/IbFn/fDcaJQ7c+TqQ6l0A3rcuDIMKY8G8GAoBaFqe+2M94Eae8uqCHFCXpqJJnsYhOgzvzKHbGQV8koEphZ4CQ1gUTFq0mBV1EXzZ1jzwnT/b0T0xXUthPXNQ8=
+	t=1713773601; cv=none; b=sYa37qukEJpuGIrXyt+PWFL1eK47PLEr2skw264CanO4BHRCPRIOGXMGD2mw5CRzsC5BDJhoB3lnYY0utXBDHXlm1JeqZDYMUFpC/3bw+rPUo81sQOK/iST5V9nsqm/0x5ohDAQWnArAFguY10HSZSkSpUMQsHSRdghDjFDWsMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713773465; c=relaxed/simple;
-	bh=e9GKbiHtBRjjqYKrxUrMGm5SH2rgrO2zZWgczq/P31k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G2CBXMTwVfeoE2PQqLqWj5wymBZxpTMD1K4hiFhn8jl/xY0L+BlKUiPLdalxLTYmFQmWDj2TH3EAJLR8HYSzzINbBXI1AKJiZa7DTh1VBYAbamHkZ/iuiBor0n5aaNKHkEM+xpDQNBZ64JhybJfBHl90QfRiXXHgE9fJ2OvnqgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eZU3Z+wU; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eZU3Z+wU"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a55e17f5d8dso27901366b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 01:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713773461; x=1714378261; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p9QX8CooDHp78Imo/EPyC0WcDTvF78Bq5sAeBhgkAFM=;
-        b=eZU3Z+wUST+x1NdU+N9jwhw5DEPr7jaBRmYNKmbnPqO77XLTo1tVwVXCu9IZdhhPiR
-         tV0nYJvyiDZIhUiwQyy0iiqHi7t546xJPPixTXJob4MnyEVoo03ksp9hyEX2fBD4wyPf
-         +Pra6zyvHPHTKTgPmLoqQ5EDYNqrzMA8/FTq0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713773461; x=1714378261;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p9QX8CooDHp78Imo/EPyC0WcDTvF78Bq5sAeBhgkAFM=;
-        b=hphhVCLYYAYD+nG5OXSYXBSkTH60y+6M8bHPQtbR6gpPZy/xsR5WwzvN0kOY070HeR
-         85NJiTKObrk97vl7qsOr1Y7I3VZnQHxnrhHv+/4zSlv4idvHfrov/7HCisib7PlLt7nc
-         BRlTw1Vkrcm0UTmTU3IsoVfIVhFUfsi91OHQNV0ISV4DJbHauoagUnV0jyiq4t+jAJTN
-         wfG73GpvN1b69zVbwnfVZwBC1mMPJDoJbkTwmbssI8Hw//ATesKWL1VSWnjJAkdQYoXK
-         1HF5GxVYiq9II4w3Z6LVDJFKSaf1NoneDh1PCZrxUDKoFWbxqH1fDmP/rW2OrR44OlJc
-         E+wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWIQ3/6Xh7A71YjpuGBM3g8Nf/tm8fUwcECxyjAlr7NzCMJyVdd2gEx2laEkpDAjyvo3Cv4lBZQ7q8oSA9mbRis4SXTesekfck/wyk0
-X-Gm-Message-State: AOJu0YzfHf6SmJU1ujKFteQ/17Ao+RDxeOOyJSbaZiSNPmPBPZIob4yr
-	0W/ZuTBfFbyOjduX+3mkVjiUlQR8RdK/hT53162JC5WyR6svJxinbt5/XcKbA743IHuv5MH1PEg
-	=
-X-Google-Smtp-Source: AGHT+IHPspeNQJIiwHM3NLMc55KG0SX5SILqVlxSYpJQylHW9qNRSv59K+OeJS5EqZpevYKax3LLew==
-X-Received: by 2002:a17:907:2d9f:b0:a56:cb24:fbb9 with SMTP id gt31-20020a1709072d9f00b00a56cb24fbb9mr374370ejc.20.1713773461025;
-        Mon, 22 Apr 2024 01:11:01 -0700 (PDT)
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
-        by smtp.gmail.com with ESMTPSA id t8-20020a170906a10800b00a4e253c8735sm5456829ejy.52.2024.04.22.01.11.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Apr 2024 01:11:00 -0700 (PDT)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a4702457ccbso454722866b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 01:11:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWIZDvUafywQQrEnKnkAv6KA9BfK+OO9Ox0M153V1anEpHVaAF/Imleh20k9Vjr1IK3/3gItu5Mq4WRLRnPu2k6+Vhvw7YXC/ZdBORs
-X-Received: by 2002:a17:907:9624:b0:a52:2a36:38bf with SMTP id
- gb36-20020a170907962400b00a522a3638bfmr6898017ejc.55.1713773460150; Mon, 22
- Apr 2024 01:11:00 -0700 (PDT)
+	s=arc-20240116; t=1713773601; c=relaxed/simple;
+	bh=D11aR4qjQ/yu8clsey/FaiMV5oRaZzQwh1LzxDxIr/k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=i3Zqi6PiNdgsnD+8oMzLUxPWQXLe4DOMmWKXV1ZHFIu0i+fZOMODw2SPENjQgFpgXXu5JCDxzSeuO0o5B5lvGTz3jM5pN9+5lMWjMxFwUwuir3hPjLJQSwN/h9M2rZy/NGWRR/RaBbzbOBYecJa7XCe1TTeRGhjn7A5yUF6peGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=20.231.56.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from localhost.localdomain (unknown [10.12.130.31])
+	by app1 (Coremail) with SMTP id TAJkCgBH6OSeGyZmSBIIAA--.61881S6;
+	Mon, 22 Apr 2024 16:11:14 +0800 (CST)
+From: Shenlin Liang <liangshenlin@eswincomputing.com>
+To: anup@brainfault.org,
+	atishp@atishpatra.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org
+Cc: Shenlin Liang <liangshenlin@eswincomputing.com>
+Subject: [PATCH v3 2/2] perf kvm/riscv: Port perf kvm stat to RISC-V
+Date: Mon, 22 Apr 2024 08:08:33 +0000
+Message-Id: <20240422080833.8745-3-liangshenlin@eswincomputing.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240422080833.8745-1-liangshenlin@eswincomputing.com>
+References: <20240422080833.8745-1-liangshenlin@eswincomputing.com>
+X-CM-TRANSID:TAJkCgBH6OSeGyZmSBIIAA--.61881S6
+X-Coremail-Antispam: 1UD129KBjvJXoW3AFW7tFWrZw48ur4kWrW3KFg_yoW7Cr1Dpa
+	n7CF90kw4rK39xu34fCFs2gF4fGws3WFy5K340grWjvF42y3y8J3WIgF90kF9rXr4kJrW8
+	A3W5WrWvk34rJaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPm14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY
+	6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aV
+	AFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZE
+	Xa7VUbdOz7UUUUU==
+X-CM-SenderInfo: xold0whvkh0z1lq6v25zlqu0xpsx3x1qjou0bp/
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240418-sbs-time-empty-now-error-v3-1-f286e29e3fca@collabora.com>
- <cf4d8131-4b63-4c7a-9f27-5a0847c656c4@notapiano>
-In-Reply-To: <cf4d8131-4b63-4c7a-9f27-5a0847c656c4@notapiano>
-From: Hsin-Te Yuan <yuanhsinte@chromium.org>
-Date: Mon, 22 Apr 2024 16:10:23 +0800
-X-Gmail-Original-Message-ID: <CAHc4DNJ0prAQOw89Hvw8n9KhY+8xB3D77pJvoPfU-X7ZFDYu7Q@mail.gmail.com>
-Message-ID: <CAHc4DNJ0prAQOw89Hvw8n9KhY+8xB3D77pJvoPfU-X7ZFDYu7Q@mail.gmail.com>
-Subject: Re: [PATCH v3] power: supply: sbs-battery: Handle unsupported PROP_TIME_TO_EMPTY_NOW
-To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>
-Cc: Sebastian Reichel <sre@kernel.org>, kernel@collabora.com, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Pin-yen Lin <treapking@chromium.org>, 
-	Hsin-Te Yuan <yuanhsinte@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 20, 2024 at 12:03=E2=80=AFAM N=C3=ADcolas F. R. A. Prado
-<nfraprado@collabora.com> wrote:
->
-> On Thu, Apr 18, 2024 at 01:34:23PM -0400, N=C3=ADcolas F. R. A. Prado wro=
-te:
-> > Despite the RunTimeToEmpty() (0x11) function being defined in the SBS
-> > specification as required, it seems that not all batteries implement it=
-.
-> > On platforms with such batteries, reading the property will cause an
-> > error to be printed:
-> >
-> > power_supply sbs-8-000b: driver failed to report `time_to_empty_now' pr=
-operty: -5
-> >
-> > This not only pollutes the log, distracting from real problems on the
-> > device, but also prevents the uevent file from being read since it
-> > contains all properties, including the faulty one.
-> >
-> > The following table summarizes the findings for a handful of platforms:
-> >
-> > Platform                                Status  Manufacturer    Model
-> > -----------------------------------------------------------------------=
--
-> > mt8186-corsola-steelix-sku131072        OK      BYD             L22B3PG=
-0
-> > mt8195-cherry-tomato-r2                 NOT OK  PANASON         AP16L5J
-> > mt8192-asurada-spherion-r0              NOT OK  PANASON         AP15O5L
-> > mt8183-kukui-jacuzzi-juniper-sku16      NOT OK  LGC KT0         AP16L8J
-> > mt8173-elm-hana                         OK      Sunwoda         L18D3PG=
-1
-> > sc7180-trogdor-lazor-limozeen-nots-r5   NOT OK  Murata          AP18C4K
-> > sc7180-trogdor-kingoftown               NOT OK  333-AC-0D-A     GG02047=
-XL
-> > rk3399-gru-kevin                        OK      SDI             4352D51
-> >
-> > Detect if this is one of the quirky batteries during presence update, s=
-o
-> > that hot-plugging works as expected, and if so report -ENODATA for
-> > POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW, which removes it from uevent and
-> > prevents throwing errors.
-> >
-> > Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
-> > ---
->
-> Hi,
->
-> I'm coming back with more information after some more testing has been do=
-ne.
->
-> Most importantly, in the meantime, a parallel investigation uncovered tha=
-t the
-> time_to_empty_now issue was actually in the EC firmware:
-> https://chromium-review.googlesource.com/c/chromiumos/platform/ec/+/54657=
-47
->
-> So the other faulty properties (which I'll mention below) could also be d=
-ue to
-> the EC firmware. These are the EC firmware version for the platforms with
-> additional issues:
-> * RW version:    juniper_v2.0.2509-9101a0730
-> * RW version:    lazor_v2.0.6519-9923041f79
->
-> Hsin-Te, do you have information on whether it's an EC issue in this case=
- as
-> well?
->
-> The following table shows all the faulty properties per platform:
->
-> Platform                               Manufacturer  Model      Faulty pr=
-operties
-> -------------------------------------------------------------------------=
---------
-> mt8186-corsola-steelix-sku131072       BYD           L22B3PG0   -
-> mt8195-cherry-tomato-r2                PANASON       AP16L5J    time_to_e=
-mpty_now
-> mt8192-asurada-spherion-r0             PANASON       AP15O5L    time_to_e=
-mpty_now
-> mt8183-kukui-jacuzzi-juniper-sku16     LGC KT0       AP16L8J    time_to_e=
-mpty_now
->                                                                 capacity_=
-error_margin
->                                                                 constant_=
-charge_current_max
->                                                                 constant_=
-charge_voltage_max
->                                                                 current_a=
-vg
->                                                                 technolog=
-y
->                                                                 manufactu=
-re_year
->                                                                 manufactu=
-re_month
->                                                                 manufactu=
-re_day
->                                                                 SPEC_INFO
-> mt8173-elm-hana                        Sunwoda       L18D3PG1   -
-> sc7180-trogdor-lazor-limozeen-nots-r5  Murata        AP18C4K    time_to_e=
-mpty_now
->                                                                 capacity_=
-error_margin
->                                                                 constant_=
-charge_current_max
->                                                                 constant_=
-charge_voltage_max
->                                                                 current_a=
-vg
-> sc7180-trogdor-kingoftown              333-AC-0D-A   GG02047XL  time_to_e=
-mpty_now
-> rk3399-gru-kevin                       SDI           4352D51    -
->
-> If it turns out to not be an EC issue for the properties other than the
-> time_to_empty_now, then quirks will need to be added for them. As for SPE=
-C_INFO
-> it's fine to keep it the way it is, as it already fails gracefully by fal=
-ling
-> back to disabled PEC. However it does mean sbs_update_quirks() would need=
- to be
-> moved up in sbs_update_presence(), or it will never run when SPEC_INFO fa=
-ils.
->
-> Also, the battery vendor for limozeen is actually "Murata ", with a trail=
-ing
-> space...
->
-> While at it, I also tested whether PEC was broken on all platforms (which=
- have
-> the SBS battery behind the EC I2C tunnel) to see if it could have any rel=
-ation
-> with the faulty properties:
->
->                                                                 PEC
-> Platform                               Manufacturer  Model      Status
-> ------------------------------------------------------------------------
-> mt8186-corsola-steelix-sku131072       BYD           L22B3PG0   NOT SUPPO=
-RTED
-> mt8195-cherry-tomato-r2                PANASON       AP16L5J    NOT SUPPO=
-RTED
-> mt8192-asurada-spherion-r0             PANASON       AP15O5L    NOT SUPPO=
-RTED
-> mt8183-kukui-jacuzzi-juniper-sku16     LGC KT0       AP16L8J    NOT SUPPO=
-RTED
-> mt8173-elm-hana                        Sunwoda       L18D3PG1   BROKEN
-> sc7180-trogdor-lazor-limozeen-nots-r5  Murata        AP18C4K    NOT SUPPO=
-RTED
-> sc7180-trogdor-kingoftown              333-AC-0D-A   GG02047XL  NOT SUPPO=
-RTED
-> rk3399-gru-kevin                       SDI           4352D51    BROKEN
->
-> Where on the platforms marked BROKEN all properties would fail like so:
-> power_supply sbs-9-000b: driver failed to report `status' property: -74
->
-> Those platforms indeed had PEC enabled:
-> <6>[   18.109211] sbs-battery 9-000b: PEC: enabled
->
-> and I verified the reported SBS version was SBS_VERSION_1_1_WITH_PEC.
->
-> Meanwhile, all the other platforms, marked NOT SUPPORTED, didn't actually=
- have
-> PEC enabled:
-> <6>[   14.563070] sbs-battery 8-000b: PEC: disabled
->
-> which I verified was due to version SBS_VERSION_1_0 being reported (excep=
-t for
-> jacuzzi, which fails to report a version).
->
-> So all platforms that had batteries that support PEC, have broken PEC, bu=
-t most
-> don't support it. In any case there doesn't seem to be a correlation with=
- the
-> properties that the batteries support, so it looks to be an orthogonal is=
-sue.
->
-> Thanks,
-> N=C3=ADcolas
+'perf kvm stat report/record' generates a statistical analysis of KVM
+events and can be used to analyze guest exit reasons.
 
-It looks like the firmware version of juniper is too old. Could you
-update the firmware and test it again?
-Also, Could you provide the error you get from lazor?
+"report" reports statistical analysis of guest exit events.
 
-Regards,
-Hsin-Te
+To record kvm events on the host:
+ # perf kvm stat record -a
+
+To report kvm VM EXIT events:
+ # perf kvm stat report --event=vmexit
+
+Signed-off-by: Shenlin Liang <liangshenlin@eswincomputing.com>
+---
+ tools/perf/arch/riscv/Makefile                |  1 +
+ tools/perf/arch/riscv/util/Build              |  1 +
+ tools/perf/arch/riscv/util/kvm-stat.c         | 79 +++++++++++++++++++
+ .../arch/riscv/util/riscv_exception_types.h   | 35 ++++++++
+ 4 files changed, 116 insertions(+)
+ create mode 100644 tools/perf/arch/riscv/util/kvm-stat.c
+ create mode 100644 tools/perf/arch/riscv/util/riscv_exception_types.h
+
+diff --git a/tools/perf/arch/riscv/Makefile b/tools/perf/arch/riscv/Makefile
+index a8d25d005207..e1e445615536 100644
+--- a/tools/perf/arch/riscv/Makefile
++++ b/tools/perf/arch/riscv/Makefile
+@@ -3,3 +3,4 @@ PERF_HAVE_DWARF_REGS := 1
+ endif
+ PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
+ PERF_HAVE_JITDUMP := 1
++HAVE_KVM_STAT_SUPPORT := 1
+\ No newline at end of file
+diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
+index 603dbb5ae4dc..d72b04f8d32b 100644
+--- a/tools/perf/arch/riscv/util/Build
++++ b/tools/perf/arch/riscv/util/Build
+@@ -1,5 +1,6 @@
+ perf-y += perf_regs.o
+ perf-y += header.o
+ 
++perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
+ perf-$(CONFIG_DWARF) += dwarf-regs.o
+ perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+diff --git a/tools/perf/arch/riscv/util/kvm-stat.c b/tools/perf/arch/riscv/util/kvm-stat.c
+new file mode 100644
+index 000000000000..58813049fc45
+--- /dev/null
++++ b/tools/perf/arch/riscv/util/kvm-stat.c
+@@ -0,0 +1,79 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Arch specific functions for perf kvm stat.
++ *
++ * Copyright 2024 Beijing ESWIN Computing Technology Co., Ltd.
++ *
++ */
++#include <errno.h>
++#include <memory.h>
++#include "../../../util/evsel.h"
++#include "../../../util/kvm-stat.h"
++#include "riscv_exception_types.h"
++#include "debug.h"
++
++define_exit_reasons_table(riscv_exit_reasons, kvm_riscv_exception_class);
++
++const char *vcpu_id_str = "id";
++const char *kvm_exit_reason = "scause";
++const char *kvm_entry_trace = "kvm:kvm_entry";
++const char *kvm_exit_trace = "kvm:kvm_exit";
++
++const char *kvm_events_tp[] = {
++	"kvm:kvm_entry",
++	"kvm:kvm_exit",
++	NULL,
++};
++
++static void event_get_key(struct evsel *evsel,
++			  struct perf_sample *sample,
++			  struct event_key *key)
++{
++	key->info = 0;
++	key->key = evsel__intval(evsel, sample, kvm_exit_reason);
++	key->key = (int)key->key;
++	key->exit_reasons = riscv_exit_reasons;
++}
++
++static bool event_begin(struct evsel *evsel,
++			struct perf_sample *sample __maybe_unused,
++			struct event_key *key __maybe_unused)
++{
++	return evsel__name_is(evsel, kvm_entry_trace);
++}
++
++static bool event_end(struct evsel *evsel,
++		      struct perf_sample *sample,
++		      struct event_key *key)
++{
++	if (evsel__name_is(evsel, kvm_exit_trace)) {
++		event_get_key(evsel, sample, key);
++		return true;
++	}
++	return false;
++}
++
++static struct kvm_events_ops exit_events = {
++	.is_begin_event = event_begin,
++	.is_end_event	= event_end,
++	.decode_key	= exit_event_decode_key,
++	.name		= "VM-EXIT"
++};
++
++struct kvm_reg_events_ops kvm_reg_events_ops[] = {
++	{
++		.name	= "vmexit",
++		.ops	= &exit_events,
++	},
++	{ NULL, NULL },
++};
++
++const char * const kvm_skip_events[] = {
++	NULL,
++};
++
++int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid __maybe_unused)
++{
++	kvm->exit_reasons_isa = "riscv64";
++	return 0;
++}
+diff --git a/tools/perf/arch/riscv/util/riscv_exception_types.h b/tools/perf/arch/riscv/util/riscv_exception_types.h
+new file mode 100644
+index 000000000000..c49b8fa5e847
+--- /dev/null
++++ b/tools/perf/arch/riscv/util/riscv_exception_types.h
+@@ -0,0 +1,35 @@
++// SPDX-License-Identifier: GPL-2.0
++#ifndef ARCH_PERF_RISCV_EXCEPTION_TYPES_H
++#define ARCH_PERF_RISCV_EXCEPTION_TYPES_H
++
++#define EXC_INST_MISALIGNED 0
++#define EXC_INST_ACCESS 1
++#define EXC_INST_ILLEGAL 2
++#define EXC_BREAKPOINT 3
++#define EXC_LOAD_MISALIGNED 4
++#define EXC_LOAD_ACCESS 5
++#define EXC_STORE_MISALIGNED 6
++#define EXC_STORE_ACCESS 7
++#define EXC_SYSCALL 8
++#define EXC_HYPERVISOR_SYSCALL 9
++#define EXC_SUPERVISOR_SYSCALL 10
++#define EXC_INST_PAGE_FAULT 12
++#define EXC_LOAD_PAGE_FAULT 13
++#define EXC_STORE_PAGE_FAULT 15
++#define EXC_INST_GUEST_PAGE_FAULT 20
++#define EXC_LOAD_GUEST_PAGE_FAULT 21
++#define EXC_VIRTUAL_INST_FAULT 22
++#define EXC_STORE_GUEST_PAGE_FAULT 23
++
++#define EXC(x) {EXC_##x, #x }
++
++#define kvm_riscv_exception_class                                         \
++	EXC(INST_MISALIGNED), EXC(INST_ACCESS), EXC(INST_ILLEGAL),         \
++	EXC(BREAKPOINT), EXC(LOAD_MISALIGNED), EXC(LOAD_ACCESS),           \
++	EXC(STORE_MISALIGNED), EXC(STORE_ACCESS), EXC(SYSCALL),            \
++	EXC(HYPERVISOR_SYSCALL), EXC(SUPERVISOR_SYSCALL),                  \
++	EXC(INST_PAGE_FAULT), EXC(LOAD_PAGE_FAULT), EXC(STORE_PAGE_FAULT), \
++	EXC(INST_GUEST_PAGE_FAULT), EXC(LOAD_GUEST_PAGE_FAULT),            \
++	EXC(VIRTUAL_INST_FAULT), EXC(STORE_GUEST_PAGE_FAULT)
++
++#endif /* ARCH_PERF_RISCV_EXCEPTION_TYPES_H */
+-- 
+2.37.2
+
