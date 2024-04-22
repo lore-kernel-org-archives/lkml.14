@@ -1,111 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2708414A61A;
-	Mon, 22 Apr 2024 12:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F80152521;
+	Mon, 22 Apr 2024 12:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713789606; cv=none; b=EmvCoigp3OdIr2r9yKhIRyaounqgYnsWiO8qMDjiw1qt8dyq3AWIb+ew+cv4J/gCdsrAnnbOXToVbQkIJswFCIDljNPbw13JTd4MNzVyKz/Tv8FwJnR25pnX7veeevaT/vpFkPjJa3lXGDlpgjwg5zzZI2eTD21RCYxjABqaf7I=
+	t=1713789609; cv=none; b=cLNlxmwrshfru3++cNQaKtMZk2+BjS/3wvPYMpDxa/SfZXKoOZakCvo92uQdMuY69LH2SF7TTakLK9CfeHDByQNqDeY/bATpetLak2aRWo8ps3RX3dHvOeKdytxaTaOQATUnyOjuexFg9Pbb2GIQq1eK7xoF1OEyHFzg7OtpJHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713789606; c=relaxed/simple;
-	bh=EDx6TY1wZzwdL7NzrbCkXEJtOWAtBySSVQbpTqRu25g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C/wKDkWPf36EQwsONaaQ7CPQID3WCPDiVIkVxYOhgLJTe+ho0MQekHNo3PdEoVluMFL+BgnE4vdv7nWioFOKKB/JqR35gVaWkDqDTN5TgT8jMPGDgekz4wSkfOXLjOwYzKNDxtgCZnvlndoGIBgajvPpHfO0tTQIN1IDwFJOxnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bZYbQ366; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bZYbQ366"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713789604; x=1745325604;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EDx6TY1wZzwdL7NzrbCkXEJtOWAtBySSVQbpTqRu25g=;
-  b=bZYbQ366sWX+FEXm1Im3hGsnq07s54Qv07NByGwXou1OogUuTjsDq/GD
-   bz6hba7G+lA7D6KV/c4WrYY7B5wb6blyXqDHwJhY+scR23M2l13jzqLpz
-   P8ux6KlYpmr3SDlbZgIMHOupXlOlORsyaDmyTlpKbjQjsWOpobijalYdJ
-   5p5j7lu49qTDf0zkddm4T6sBgNDDl4JV5ovz65YjIvx39+bdDYF/pla+J
-   1LRoWNLt+TTxaSbtqBk0S3Ca5Qcv9JOfzMLmN+5v1Izc3anaFjYcJ8ctB
-   JsubJ2hsLUXFgCIT5MrvnLxonP8pomcU6iTh4V+grBciQcNKw8X9iD41Q
-   g==;
-X-CSE-ConnectionGUID: 2X6rKkCnTb2/tYTsLFx1gw==
-X-CSE-MsgGUID: NR3cS+9aT7qhbapbzTZZ4Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11051"; a="9543867"
-X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
-   d="scan'208";a="9543867"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 05:40:03 -0700
-X-CSE-ConnectionGUID: kMyo4nblQsasHWi2/ePd4w==
-X-CSE-MsgGUID: C12mu43PR7Ow0/Wg2KPXMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
-   d="scan'208";a="28680298"
-Received: from kuha.fi.intel.com ([10.237.72.185])
-  by orviesa003.jf.intel.com with SMTP; 22 Apr 2024 05:39:58 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 22 Apr 2024 15:39:58 +0300
-Date: Mon, 22 Apr 2024 15:39:58 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Jameson Thies <jthies@google.com>
-Cc: linux-usb@vger.kernel.org, pmalani@chromium.org, bleung@google.com,
-	abhishekpandit@chromium.org, andersson@kernel.org,
-	dmitry.baryshkov@linaro.org, fabrice.gasnier@foss.st.com,
-	gregkh@linuxfoundation.org, hdegoede@redhat.com,
-	neil.armstrong@linaro.org, rajaram.regupathy@intel.com,
-	saranya.gopal@intel.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/4] usb: typec: ucsi: Delay alternate mode discovery
-Message-ID: <ZiZantUKg8K5Nqk+@kuha.fi.intel.com>
-References: <20240419211650.2657096-1-jthies@google.com>
- <20240419211650.2657096-4-jthies@google.com>
+	s=arc-20240116; t=1713789609; c=relaxed/simple;
+	bh=UfsEjeHUgOR27rtbE3M4PujzAfOxibpW7ixsPpbhaI0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=siBZgfaopCk39Si9e6VsEx0ZdaG0RnN57e6V7tmdLg1+1tN7MUHcDr0TPGwa02tL3ihxmH525tH95SBhhOSucpesSPTmA839Y24PwFgVlARQkzEu8Zf+0iH6Gacx0eJMTz+ggQRdYe1r+uWEmZQFWwbaO5nO4OUYe7LM6Zi81S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51967f75763so5100104e87.2;
+        Mon, 22 Apr 2024 05:40:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713789605; x=1714394405;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9uOh18J18K7IiJjOdRTp7+wBD9ghOrm4r66dFYnU+6Y=;
+        b=Gp6yXtRLTat/QSIiJ53YiFCdtsCdW/JIn0vfJEXH2j9jTrp5akKmktyPRZsLj61Cju
+         TAEfE4tlgEGN9UoaOZ5PkEaT7N+M590UVpMpDSG6kDyRfIM7fNj6URCI6PmVZIOoBPR4
+         2XjtfkJMPx0X1cWpFc2D3ryr8GvBBS9QkzpbeYtzj8x1wlD9iSxIraYW9WXmjxqDmNp3
+         a6cJreO5YLB/y+SdJhOsBVLcRQUR64NsRI6Kw6i6vez6ymX7y3O0a3r+f8VjGMuuJNGW
+         yMIgyA11Irys+ob8/WgMl7oDiCBeiYmrIS6fmejqdp4WFfXsOEU/dyCXmb03PaIeoqVJ
+         GiQg==
+X-Forwarded-Encrypted: i=1; AJvYcCXGgGRslzgzkvzxXmzv1WXUO1mbHxO2DmZcOa2yKQoJCxFiQnNApIMeN7rRuM5QptFct7S3mfH9eiuYKyuL3TNeODqbaIAOce7CkRQkBRfAJ25VPTUb1jVYAOomJkv6+zBiCVXiYdxks6AjKXiV+u4bwrJZ409m+/cx3hdWWSiKIco1POg/FMr/g/0thucqQLU3G5FXLm/IYx8=
+X-Gm-Message-State: AOJu0YxT6uhdtytARpZv0Mfc93VqOf6ojI8FZIU2/GvDFcuJNFP1ou6q
+	tQaWOdYvUXzoE0jT3czbKV46tEneiBpbITzgt0jzPLz/Mp+7B6DZ
+X-Google-Smtp-Source: AGHT+IFPaMXGPrfIOWC3xSs/FsiQyHtswf+lwwOxRqmyAAyNI/Q/4fT0q5REUlhk4xp7o5aQnfs+OQ==
+X-Received: by 2002:a19:7019:0:b0:518:96b5:f2c5 with SMTP id h25-20020a197019000000b0051896b5f2c5mr7368797lfc.46.1713789605113;
+        Mon, 22 Apr 2024 05:40:05 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-006.fbsv.net. [2a03:2880:30ff:6::face:b00c])
+        by smtp.gmail.com with ESMTPSA id gc24-20020a170906c8d800b00a55ac217235sm1944772ejb.90.2024.04.22.05.40.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 05:40:04 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: aleksander.lobakin@intel.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	elder@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	nbd@nbd.name,
+	sean.wang@mediatek.com,
+	Mark-MC.Lee@mediatek.com,
+	lorenzo@kernel.org,
+	taras.chornyi@plvision.eu,
+	ath11k@lists.infradead.org,
+	ath10k@lists.infradead.org,
+	linux-wireless@vger.kernel.org,
+	geomatsi@gmail.com,
+	kvalo@kernel.org,
+	Igor Mitsyanko <imitsyanko@quantenna.com>
+Cc: quic_jjohnson@quicinc.com,
+	leon@kernel.org,
+	dennis.dalessandro@cornelisnetworks.com,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	bpf@vger.kernel.org,
+	idosch@idosch.org,
+	leitao@debian.org,
+	angelogioacchino.delregno@collabora.com,
+	matthias.bgg@gmail.com
+Subject: [PATCH net-next v7 08/10] wifi: qtnfmac: Use netdev dummy allocator helper
+Date: Mon, 22 Apr 2024 05:39:01 -0700
+Message-ID: <20240422123921.854943-9-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240422123921.854943-1-leitao@debian.org>
+References: <20240422123921.854943-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240419211650.2657096-4-jthies@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 19, 2024 at 09:16:49PM +0000, Jameson Thies wrote:
-> Delay the ucsi_check_altmodes task to be inline with surrounding partner
-> tasks. This allows partner, cable and identity discovery to complete
-> before alternate mode registration. With that order, alternate mode
-> discovery can be used to indicate the ucsi driver has completed
-> discovery.
-> 
-> Signed-off-by: Jameson Thies <jthies@google.com>
+There is a new dummy netdev allocator, use it instead of
+alloc_netdev()/init_dummy_netdev combination.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Using alloc_netdev() with init_dummy_netdev might cause some memory
+corruption at the driver removal side.
 
-> ---
->  drivers/usb/typec/ucsi/ucsi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-> index b8d56a443531f..cd4c3b7a5d989 100644
-> --- a/drivers/usb/typec/ucsi/ucsi.c
-> +++ b/drivers/usb/typec/ucsi/ucsi.c
-> @@ -963,7 +963,7 @@ static void ucsi_pwr_opmode_change(struct ucsi_connector *con)
->  		con->rdo = con->status.request_data_obj;
->  		typec_set_pwr_opmode(con->port, TYPEC_PWR_MODE_PD);
->  		ucsi_partner_task(con, ucsi_get_src_pdos, 30, 0);
-> -		ucsi_partner_task(con, ucsi_check_altmodes, 30, 0);
-> +		ucsi_partner_task(con, ucsi_check_altmodes, 30, HZ);
->  		ucsi_partner_task(con, ucsi_register_partner_pdos, 1, HZ);
->  		break;
->  	case UCSI_CONSTAT_PWR_OPMODE_TYPEC1_5:
-> @@ -1247,7 +1247,7 @@ static void ucsi_handle_connector_change(struct work_struct *work)
->  	}
->  
->  	if (con->status.change & UCSI_CONSTAT_CAM_CHANGE)
-> -		ucsi_partner_task(con, ucsi_check_altmodes, 1, 0);
-> +		ucsi_partner_task(con, ucsi_check_altmodes, 1, HZ);
->  
->  out_unlock:
->  	mutex_unlock(&con->lock);
-> -- 
-> 2.44.0.769.g3c40516874-goog
+Fixes: 61cdb09ff760 ("wifi: qtnfmac: allocate dummy net_device dynamically")
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c b/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c
+index f8f55db2f454..f66eb43094d4 100644
+--- a/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c
++++ b/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c
+@@ -372,8 +372,7 @@ static int qtnf_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		goto error;
+ 	}
+ 
+-	bus->mux_dev = alloc_netdev(0, "dummy", NET_NAME_UNKNOWN,
+-				    init_dummy_netdev);
++	bus->mux_dev = alloc_netdev_dummy(0);
+ 	if (!bus->mux_dev) {
+ 		ret = -ENOMEM;
+ 		goto error;
 -- 
-heikki
+2.43.0
+
