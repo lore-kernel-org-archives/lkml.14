@@ -1,106 +1,132 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2951BF6FA
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 23:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4D51CF9B;
+	Mon, 22 Apr 2024 23:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713826853; cv=none; b=PaqotqmDdvg+PWZ7tm4SoHG1ALZ1kdn0vSCU0WVlneb6oq+v9kw/qac4G/m6ADS2sAhokqKKspJlrKcuX5effh1ZllZiWblWj2EcUA71kgNkz1VGJHCMN9AEN/jLQ2o58NIcZ5tYeQ4xUS97A5NasCqSmnCnpX2E43+PjD0r1vc=
+	t=1713826891; cv=none; b=DDatGKEw7uAXEIVtrybmQMckoTWGDzihixYS/v/yGc9TSvd7fnId5ylHNe0tES6PlLYvPYeJfAFkJDFQ9TK2tV4UWDZXhoLaCX9mx7A/qNQN+GXN0vNS7DcRxsurZK8N1ZIdC0if0RAgtG8J1rukKqT/Iz+VVpbkCWInIkNF/+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713826853; c=relaxed/simple;
-	bh=/jci29mGzzIavqEL2qT00cRZYvwPd29ad4CaRDp8/n4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gliTJMXRpXeXEtXo9UdAt8M3cyYUfvOWW7OGpEBHYDwTNE839UHIx67f9sU8A2eYMabRMIXUoeaxLhF0t0DhrVIcg5BuyI14UakuyDtCMHvq9jPvIWey1vENAALYTDstBoqAxhEzKRfHV3aJWw6oZyeeCrptJHivwxS8hu3/YiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QMaRmnZX; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QMaRmnZX"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51ab4ee9df8so4811885e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 16:00:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713826850; x=1714431650; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=kk8RZ3kIPMume4l3zZttutOgAKIxylCidZY2eGmr83I=;
-        b=QMaRmnZXt3PXtMtQbha0JxDPw5DCEdF7dazfdKvpRdh/098lw1OODIEPMIBqBkJgKI
-         ViV6dNEPJ8i43Y8WXXhDGJN3yjMbdyljRD1HKpjmr/v/DS7cPL8pyTTYeDTonLN3dq2J
-         iC0tmz8HApS4FJpvniTgH9UcfJ14wUc/9lnNRU4twe05eZeZdJEMCknmzmlTQzFiv1s2
-         T5JNkR3SfZWjCM5QHA3Ndk9XOJGETWxDbFfN3rstOViq8Akbjr1o8khQyQyGHZtcYQEF
-         ahNBoQ4eheCQt4qvTzkXov1vTil/ka0dDGquS09oOTzrdWcq4HNcrIEcmjEs5crjkNrU
-         VzIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713826850; x=1714431650;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kk8RZ3kIPMume4l3zZttutOgAKIxylCidZY2eGmr83I=;
-        b=jQE0Tfb0YUzNbCiv6pj6AU/Ggu8phAPF/z5fftvB6TvDyluDLx6CJ+G5nISStdgh1O
-         mEQiux/kiVwM0kAGujw1vFdDC6bhEW1ahjXYiWMwUaeGdJcz2WUkjE1DVs1tKkrzgOas
-         FQjKj9AULXa4DO/SIPsFJoT578pCF9hTDgcDdAPUgSELbKK8TQmt+h1MLboebncPQFs0
-         yr/A9hbh8CI1MWv1hqFZ0CMkxPS3aoECVSxHeTaDUklS47z9UMAYaG5wiVvkTrAUxvaG
-         HkoHCUxrFPqJwr1x6ieqv+C2sezlqdu7UhAqMDMo7gCrvur7V91/TO3mcDy0m6ybqdZW
-         Z6zw==
-X-Forwarded-Encrypted: i=1; AJvYcCUX2lnXnTcoW/i4/sl4ORCIR6ngi/1o0a9gn8GqY+TFo1USOIgcUiHWylAfpKRleaBHABz4USMa9jxPk/dNUD/OqVf74k31TxJi0sra
-X-Gm-Message-State: AOJu0Yzshbyvw3IlUJhv4FmiRO2zdlQQbJDtq/IZXZq7SVxtrTShLIpG
-	9+dIpsnG5ezB110MI5wbBWvD2PmVuAVl+wVMVKcI+bJpATpwFYU+dxqt3xiDjgI=
-X-Google-Smtp-Source: AGHT+IEQ2a2C6x5MBOQkua4NvRFyZgVGrHQKhZtpBWTuE/jycfIwqTASlvwYmTONiFAlMbc33a9Fsw==
-X-Received: by 2002:a05:6512:e83:b0:51b:64c3:8cfa with SMTP id bi3-20020a0565120e8300b0051b64c38cfamr2469243lfb.13.1713826849758;
-        Mon, 22 Apr 2024 16:00:49 -0700 (PDT)
-Received: from [172.30.204.103] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id w11-20020a05651234cb00b00518c057e78csm1830167lfr.159.2024.04.22.16.00.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Apr 2024 16:00:49 -0700 (PDT)
-Message-ID: <da8fc783-6b2b-495d-ab15-be297b0fa435@linaro.org>
-Date: Tue, 23 Apr 2024 01:00:48 +0200
+	s=arc-20240116; t=1713826891; c=relaxed/simple;
+	bh=Kn/X7LXt1iZwCxzFJZ37XYQ5DBemw1641eh3Gy1yxh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RNL/r37CzvumY7/JasIFynS8r5GOYkBQ7Hi4hDyrRIbWTbvBLv9zs+ZKE/5dPsEK02XsLtkg+o7qQ5UUIapAyalgCunax6svzN00iV1EX26dfro+U6CVxYB8lPe4/9adwq6rU1oPbnYAAjN902f0Hl9D+NPZ60MKX1k0jzd0BrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
+Received: from martin by akranes.kaiser.cx with local (Exim 4.96)
+	(envelope-from <martin@akranes.kaiser.cx>)
+	id 1rz2ER-000ZXO-02;
+	Tue, 23 Apr 2024 00:33:51 +0200
+Date: Tue, 23 Apr 2024 00:33:50 +0200
+From: Martin Kaiser <martin@kaiser.cx>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Anna Schumaker <Anna.Schumaker@netapp.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	David Howells <dhowells@redhat.com>, NeilBrown <neilb@suse.de>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] nfs: keep server info for remounts
+Message-ID: <ZiblzgAJ5M38dPh8@akranes.kaiser.cx>
+References: <20240414170109.137696-1-martin@kaiser.cx>
+ <d12c4998028014829713093ceccdbb521e34f05c.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 1/6] interconnect: icc-clk: Allow user to specify
- master/slave ids
-To: Varadarajan Narayanan <quic_varada@quicinc.com>, andersson@kernel.org,
- mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, djakov@kernel.org,
- dmitry.baryshkov@linaro.org, quic_anusha@quicinc.com,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-References: <20240418092305.2337429-1-quic_varada@quicinc.com>
- <20240418092305.2337429-2-quic_varada@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240418092305.2337429-2-quic_varada@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d12c4998028014829713093ceccdbb521e34f05c.camel@kernel.org>
+Sender: "Martin Kaiser,,," <martin@akranes.kaiser.cx>
 
+Thus wrote Jeff Layton (jlayton@kernel.org):
 
+> On Sun, 2024-04-14 at 19:01 +0200, Martin Kaiser wrote:
+> > With newer kernels that use fs_context for nfs mounts, remounts fail with
+> > -EINVAL.
 
-On 4/18/24 11:23, Varadarajan Narayanan wrote:
-> Presently, icc-clk driver autogenerates the master and slave ids.
-> However, devices with multiple nodes on the interconnect could
-> have other constraints and may not match with the auto generated
-> node ids. Hence, allow the driver to provide the preferred master
-> and slave ids.
-> 
-> Also, update clk-cbf-8996 accordingly.
-> 
-> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> ---
-> v9: squash cbf-msm8996 change into this
-> v8: Per review feedback, set master/slave ids explicitly. Dont autogenerate
->      https://lore.kernel.org/linux-arm-msm/f1b0d280-6986-4055-a611-2caceb15867d@linaro.org/
-> ---
->   drivers/clk/qcom/clk-cbf-8996.c  | 7 ++++++-
->   drivers/interconnect/icc-clk.c   | 6 +++---
->   include/linux/interconnect-clk.h | 2 ++
+> > $ mount -t nfs -o nolock 10.0.0.1:/tmp/test /mnt/test/
+> > $ mount -t nfs -o remount /mnt/test/
+> > mount: mounting 10.0.0.1:/tmp/test on /mnt/test failed: Invalid argument
 
-How is this going to be merged? :/
+> > For remounts, the nfs server address and port are populated by
+> > nfs_init_fs_context and later overwritten with 0x00 bytes by
+> > nfs23_parse_monolithic. The remount then fails as the server address is
+> > invalid.
 
-icc-next? clk-next?
+> > Fix this by not overwriting nfs server info in nfs23_parse_monolithic if
+> > we're doing a remount.
 
-Konrad
+> > Fixes: f2aedb713c28 ("NFS: Add fs_context support.")
+> > Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+> > ---
+> >  v3:
+> >  - rebased against linux-next from 12th April 2024
+
+> >  v2:
+> >  - rebased against linux-next from 26th February 2024
+
+> > Dear all,
+> > I'm resending this patch again. The problem that I'm trying to fix is still
+> > present in linux-next. Thanks in advance for any reviews and comments.
+
+> > I guess that we're taking this path for remounts
+
+> > do_remount
+> >     fs_context_for_reconfigure
+> >         alloc_fs_context
+> >             init_fs_context == nfs_init_fs_context
+> >                fc->root is set for remounts
+> >                ctx->nfs_server is populated
+> >     parse_monolithic_mount_data
+> >         nfs_fs_context_parse_monolithic
+> >             nfs23_parse_monolithic
+> >                ctx->nfs_server is overwritten with data from mount request
+
+> > An alternative to checking for !is_remount_fc(fc) would be to check
+> > if (ctx->nfs_server.addrlen == 0)
+
+> > fs/nfs/fs_context.c | 9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
+
+> > diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+> > index d0a0956f8a13..cac1157be2c2 100644
+> > --- a/fs/nfs/fs_context.c
+> > +++ b/fs/nfs/fs_context.c
+> > @@ -1112,9 +1112,12 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
+> >  		ctx->acdirmax	= data->acdirmax;
+> >  		ctx->need_mount	= false;
+
+> > -		memcpy(sap, &data->addr, sizeof(data->addr));
+> > -		ctx->nfs_server.addrlen = sizeof(data->addr);
+> > -		ctx->nfs_server.port = ntohs(data->addr.sin_port);
+> > +		if (!is_remount_fc(fc)) {
+> > +			memcpy(sap, &data->addr, sizeof(data->addr));
+> > +			ctx->nfs_server.addrlen = sizeof(data->addr);
+> > +			ctx->nfs_server.port = ntohs(data->addr.sin_port);
+> > +		}
+> > +
+> >  		if (sap->ss_family != AF_INET ||
+> >  		    !nfs_verify_server_address(sap))
+> >  			goto out_no_address;
+
+> Doesn't nfs4_parse_monolithic need the same fix? 
+
+Sorry for the delayed response. It took me a moment to set up a test with nfs4
+(busybox mount has no nfs4 support).
+
+The nfs4 remounts do not fail for me. The mount syscall goes into
+nfs4_parse_monolithic and 
+
+   if (data->version != 1)                                                                                             
+      return generic_parse_monolithic(fc, data);                                                                       
+
+branches off into generic_parse_monolithic before the server address is
+overwritten (this is what breaks nfs23).
+
+Best regards,
+
+   Martin
