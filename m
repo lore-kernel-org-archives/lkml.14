@@ -1,270 +1,166 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCBCF146A93;
-	Mon, 22 Apr 2024 10:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EA2482C1;
+	Mon, 22 Apr 2024 10:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713782988; cv=none; b=OFIBz1ya+8ptsO/zyVxOD9dUoFe9asye86GVzp4f9R/E2p7iciQngPkeZ7HV1hz/wLGNb6oOcnn4vfeeN6QCgBoGf1F2jKKa/9YtIASmyQR/iKppZBcQcFLtCMF35R/cePY3K3h0dlfFJE5kUKpKpH8PYlQDvz4znsvYVqwauTw=
+	t=1713783154; cv=none; b=DFwOcZAeExRWMw6YIA1f3IvQvHoUrTHgZHYgw7EFVHy1vnEoG4fkWtcM0rqH5o/WjiUOTS5I7GEhMUmTdMwobq3cgWzCeZRbwJZEnko4l4wXVv1AhnCaHp5MJf44ugjlxvGAh9aOZ9XGPvTCCVdVdW9vuEC4bAOAqvwRW6OW9Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713782988; c=relaxed/simple;
-	bh=On1b5DkttpFIhWrjyN3UO9TvEDQ5gy9BpjHBe0K+pQQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fFip90dsTT+ZKmXfpdMvMWUW6WlIZ6u1EcwRc/sZu9lfbMMKYpyZpX7QKSUVT0kj7j9s30F4mwY4MccKit4WM0fNeZE5CR8svaKvH8nlZpvdET3EulV1F8L7Ndsb4hZttpLdVQKErhabnwWMkpoMujBiB8gSaI3oCINWcwAt17M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99FDC339;
-	Mon, 22 Apr 2024 03:50:14 -0700 (PDT)
-Received: from e126817.cambridge.arm.com (e126817.cambridge.arm.com [10.2.3.5])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 49DFC3F7BD;
-	Mon, 22 Apr 2024 03:49:44 -0700 (PDT)
-From: Ben Gainey <ben.gainey@arm.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: ak@linux.intel.com,
-	will@kernel.org,
-	james.clark@arm.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Ben Gainey <ben.gainey@arm.com>
-Subject: [RFC PATCH v2 4/4] tools/perf: Modify event parser to support alt-period-jitter term
-Date: Mon, 22 Apr 2024 11:49:29 +0100
-Message-ID: <20240422104929.264241-5-ben.gainey@arm.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240422104929.264241-1-ben.gainey@arm.com>
-References: <20240422104929.264241-1-ben.gainey@arm.com>
+	s=arc-20240116; t=1713783154; c=relaxed/simple;
+	bh=0KlyZbYLtPzoaO0C9rWrtsHQkri9Vg0zakhGtHwYeko=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=AL+2fy6M+dLIVy3KwhHj9N9acwDcGaJAqX9xLmjLx5+cFLlXY8lKmpm8CJgrdoPumOM1A2snqBK8mfUZp9atQpM3EBYDDC5eSsmbnkNM2Us6UoqRz8QCWinVNCb2I7Vi1vmKq+7RbNRI1N1Vmj/+KE9zDaNhJXReK02hFKa4Nv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QcqiBEIr; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QcqiBEIr"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-518a56cdbcfso6575908e87.2;
+        Mon, 22 Apr 2024 03:52:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713783150; x=1714387950; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XB9rFLfMWN1g7ihRLHwOUgZ6Nm1LwOP8sZGJRcsldyE=;
+        b=QcqiBEIrDdfB2wRJu8SJ4XUlcj7/V+wF/e64LNSS/BwV7wqLh+3FgprSGbhFmYs/RX
+         Q2DD7GRioJ1VjI4zN2YFp5oRfKpNFs4VeEqvlQGi6wGeK69m9W/O6OY+MxVe9mKEOAjx
+         YQDZSDSpqJKuEBnGslw7uceOBDE/eVz5Jotm/r192Pt3WZEs8vKomEuF1jDcKr08CLIu
+         nxwsWrV6uc55lvUnZno6s09QQyQ0prTpcuMMUwZO/Y9uPukI90909IkLcoMGXg576jIS
+         If7+USLHSv2R0f7mnkNEw5Fm8RSLNtgF6/RjILYhBWr/jSn2zrye0jqdF+dKaLBCLG3B
+         LXdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713783150; x=1714387950;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XB9rFLfMWN1g7ihRLHwOUgZ6Nm1LwOP8sZGJRcsldyE=;
+        b=VMHpXjuaTtxcKNfmjzsWlxl967h/HeJ3Udn5H5wD2k+0IWAi1/nCqVV0E8AlJs0QfU
+         PmTyX/KDcq1zk0Ear5nVL+E58G2RdOX/PkuTwaOJFusFTNoTZh9gCJCTS0tNwHLbjolU
+         1OXhwu8Iap+O/4tTiNrXH4U5YaolIjdjyJUzx+ZgZXULYgl8DEl01Be4YWRzoVW1agf4
+         95KlQ2ISwuRNs1R6MZgZA0jcBlNEFrRcY3PSZtMJFH40ofL4XKZ0s9e/MUpjag0EQ71C
+         3HnBBUtES7/8dJRM+R38fzEEcMnaEaSthaB+fC53htctNqC7uCIYv3ogeBNgQnwYIEwf
+         iXsg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3WGgIHLHCGjcadOBKyfElzqB+tiaEutYRoy3eGMXXXwMwki0I++V8iIDuZXc/Uq3ZSkYlVKB07rXppU8Aehg3rSuGC1rrTewvpOQt3sPXGwf+ym9EcPWN4tlggLhxwfiqDy4R+pUrygztrhrB1Yptp1MUgZoxOGSFKizoLIKbI6j11ZrF2N2A
+X-Gm-Message-State: AOJu0Yy0h1hAcsQq/kla0/N2mX+G23LsAqUeaKC3fAatET063+Hm83NF
+	QB0RMwXJAhSi4NLbzebkrPfxY/FUnf0Hwjru8jW0mSDSShUnJTpSWIQOVg==
+X-Google-Smtp-Source: AGHT+IE2Fra+D9O2RmKL2tYXLgjMiLcbqzqK/4+uP5rJNuLIq6LRSJ0NyrdFpn1hET47c94bt7nfdQ==
+X-Received: by 2002:a05:6512:398b:b0:51b:214c:5231 with SMTP id j11-20020a056512398b00b0051b214c5231mr3320962lfu.15.1713783150279;
+        Mon, 22 Apr 2024 03:52:30 -0700 (PDT)
+Received: from [172.16.183.82] ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id w8-20020ac24428000000b0051b627770ecsm111901lfl.237.2024.04.22.03.52.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Apr 2024 03:52:29 -0700 (PDT)
+Message-ID: <b6ded975-1d16-46ea-84a2-8799b36e1270@gmail.com>
+Date: Mon, 22 Apr 2024 13:52:27 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/6] Support ROHM BD96801 scalable PMIC
+Content-Language: en-US, en-GB
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
+ <linux@roeck-us.net>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>
+References: <cover.1712058690.git.mazziesaccount@gmail.com>
+ <f7d454ac-6ecb-4431-a1de-c9b5d1240969@gmail.com>
+ <eb03ec33-0627-4986-be04-8e35da390d6b@sirena.org.uk>
+ <b6279be8-cf7d-4608-b556-3c01587f0d43@gmail.com>
+ <f1e3d31d-8c24-4cdc-ae26-747f383a937b@gmail.com>
+In-Reply-To: <f1e3d31d-8c24-4cdc-ae26-747f383a937b@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-parse-events is modified, adding the "alt-period-jitter" term which
-can be used to enable random jitter of the alternative sample
-period.
+Hi dee Ho peeps,
 
-Signed-off-by: Ben Gainey <ben.gainey@arm.com>
----
- tools/include/uapi/linux/perf_event.h             |  3 ++-
- tools/perf/tests/attr.c                           |  1 +
- tools/perf/tests/attr.py                          |  1 +
- tools/perf/tests/attr/base-record                 |  3 ++-
- tools/perf/tests/attr/base-record-spe             |  3 ++-
- tools/perf/tests/attr/base-stat                   |  1 +
- tools/perf/tests/attr/system-wide-dummy           |  1 +
- .../tests/attr/test-record-alt-period-jitter-term | 12 ++++++++++++
- tools/perf/tests/attr/test-record-dummy-C0        |  1 +
- tools/perf/util/parse-events.c                    | 15 +++++++++++++++
- tools/perf/util/parse-events.h                    |  3 ++-
- tools/perf/util/parse-events.l                    |  1 +
- 12 files changed, 41 insertions(+), 4 deletions(-)
- create mode 100644 tools/perf/tests/attr/test-record-alt-period-jitter-term
+On 4/5/24 12:19, Matti Vaittinen wrote:
+> On 4/4/24 16:15, Matti Vaittinen wrote:
+>> Hi Mark,
+>>
+>> On 4/4/24 15:09, Mark Brown wrote:
+>>> On Thu, Apr 04, 2024 at 10:26:34AM +0300, Matti Vaittinen wrote:
+>>>
+>>>> 1. Should we be able to have more than 1 IRQ domain / device?
+>>>> 2. Should regmap_irq support having more than 1 HWIRQ
+>>>
+>>> I would expect each parent interrupt to show up as a separate remap_irq.
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 5c1701d091cf..dd3697a4b300 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -461,7 +461,8 @@ struct perf_event_attr {
- 				inherit_thread :  1, /* children only inherit if cloned with CLONE_THREAD */
- 				remove_on_exec :  1, /* event is removed from task on exec */
- 				sigtrap        :  1, /* send synchronous SIGTRAP on event */
--				__reserved_1   : 26;
-+				jitter_alternate_period : 1, /* add a limited amount of jitter on each alternate period */
-+				__reserved_1   : 25;
- 
- 	union {
- 		__u32		wakeup_events;	  /* wakeup every n events */
-diff --git a/tools/perf/tests/attr.c b/tools/perf/tests/attr.c
-index 956b58c7ba8f..7fb5d1d0b0ab 100644
---- a/tools/perf/tests/attr.c
-+++ b/tools/perf/tests/attr.c
-@@ -140,6 +140,7 @@ static int store_event(struct perf_event_attr *attr, pid_t pid, struct perf_cpu
- 	WRITE_ASS(sample_regs_user,   "llu");
- 	WRITE_ASS(sample_stack_user,  PRIu32);
- 	WRITE_ASS(alternative_sample_period,  "llu");
-+	WRITE_ASS(jitter_alternate_period,  "d");
- 
- 	fclose(file);
- 	return 0;
-diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
-index 75c4527393f9..ecab8e69418f 100644
---- a/tools/perf/tests/attr.py
-+++ b/tools/perf/tests/attr.py
-@@ -92,6 +92,7 @@ class Event(dict):
-         'sample_regs_user',
-         'sample_stack_user',
-         'alternative_sample_period',
-+        'jitter_alternate_period',
-     ]
- 
-     def add(self, data):
-diff --git a/tools/perf/tests/attr/base-record b/tools/perf/tests/attr/base-record
-index 403de2e2c891..39a7228612c2 100644
---- a/tools/perf/tests/attr/base-record
-+++ b/tools/perf/tests/attr/base-record
-@@ -39,4 +39,5 @@ config2=0
- branch_sample_type=0
- sample_regs_user=0
- sample_stack_user=0
--alternative_sample_period=0
-\ No newline at end of file
-+alternative_sample_period=0
-+jitter_alternate_period=0
-diff --git a/tools/perf/tests/attr/base-record-spe b/tools/perf/tests/attr/base-record-spe
-index db528d7d8b73..b228cd98cfa1 100644
---- a/tools/perf/tests/attr/base-record-spe
-+++ b/tools/perf/tests/attr/base-record-spe
-@@ -38,4 +38,5 @@ config2=*
- branch_sample_type=*
- sample_regs_user=*
- sample_stack_user=*
--alternative_sample_period=0
-\ No newline at end of file
-+alternative_sample_period=0
-+jitter_alternate_period=0
-diff --git a/tools/perf/tests/attr/base-stat b/tools/perf/tests/attr/base-stat
-index 27ef0fa1386f..d9057d780262 100644
---- a/tools/perf/tests/attr/base-stat
-+++ b/tools/perf/tests/attr/base-stat
-@@ -40,3 +40,4 @@ branch_sample_type=0
- sample_regs_user=0
- sample_stack_user=0
- alternative_sample_period=0
-+jitter_alternate_period=0
-diff --git a/tools/perf/tests/attr/system-wide-dummy b/tools/perf/tests/attr/system-wide-dummy
-index 5c4d2a60931d..4d80542c3a68 100644
---- a/tools/perf/tests/attr/system-wide-dummy
-+++ b/tools/perf/tests/attr/system-wide-dummy
-@@ -51,3 +51,4 @@ branch_sample_type=0
- sample_regs_user=0
- sample_stack_user=0
- alternative_sample_period=0
-+jitter_alternate_period=0
-diff --git a/tools/perf/tests/attr/test-record-alt-period-jitter-term b/tools/perf/tests/attr/test-record-alt-period-jitter-term
-new file mode 100644
-index 000000000000..65f7c06c26e9
---- /dev/null
-+++ b/tools/perf/tests/attr/test-record-alt-period-jitter-term
-@@ -0,0 +1,12 @@
-+[config]
-+command = record
-+args    = --no-bpf-event -e cycles/period=3,alt-period=2,jitter_alternate_period/ -- kill >/dev/null 2>&1
-+ret     = 1
-+
-+[event-10:base-record]
-+sample_period=3
-+alternative_sample_period=2
-+jitter_alternate_period=1
-+
-+freq=0
-+sample_type=7
-\ No newline at end of file
-diff --git a/tools/perf/tests/attr/test-record-dummy-C0 b/tools/perf/tests/attr/test-record-dummy-C0
-index d4f0546e02b6..0f3360c35a5e 100644
---- a/tools/perf/tests/attr/test-record-dummy-C0
-+++ b/tools/perf/tests/attr/test-record-dummy-C0
-@@ -54,3 +54,4 @@ branch_sample_type=0
- sample_regs_user=0
- sample_stack_user=0
- alternative_sample_period=0
-+jitter_alternate_period=0
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index d516d84fa1ee..9821e3cd26a4 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -774,6 +774,7 @@ static const char *config_term_name(enum parse_events__term_type term_type)
- 		[PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE]          = "legacy-cache",
- 		[PARSE_EVENTS__TERM_TYPE_HARDWARE]              = "hardware",
- 		[PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD]	= "alt-period",
-+		[PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER]	= "alt-period-jitter",
- 	};
- 	if ((unsigned int)term_type >= __PARSE_EVENTS__TERM_TYPE_NR)
- 		return "unknown term";
-@@ -803,6 +804,7 @@ config_term_avail(enum parse_events__term_type term_type, struct parse_events_er
- 	case PARSE_EVENTS__TERM_TYPE_METRIC_ID:
- 	case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
- 	case PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD:
-+	case PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER:
- 	case PARSE_EVENTS__TERM_TYPE_PERCORE:
- 		return true;
- 	case PARSE_EVENTS__TERM_TYPE_USER:
-@@ -957,6 +959,16 @@ do {									   \
- 		}
- 		attr->alternative_sample_period = term->val.num;
- 		break;
-+	case PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER:
-+		CHECK_TYPE_VAL(NUM);
-+		if ((unsigned int)term->val.num > 1) {
-+			parse_events_error__handle(err, term->err_val,
-+						strdup("expected 0 or 1"),
-+						NULL);
-+			return -EINVAL;
-+		}
-+		attr->jitter_alternate_period = (term->val.num != 0);
-+		break;
- 	case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
- 	case PARSE_EVENTS__TERM_TYPE_USER:
- 	case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
-@@ -1084,6 +1096,7 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
- 	case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
- 	case PARSE_EVENTS__TERM_TYPE_HARDWARE:
- 	case PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD:
-+	case PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER:
- 	default:
- 		if (err) {
- 			parse_events_error__handle(err, term->err_term,
-@@ -1215,6 +1228,7 @@ do {								\
- 		case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
- 		case PARSE_EVENTS__TERM_TYPE_HARDWARE:
- 		case PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD:
-+		case PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER:
- 		default:
- 			break;
- 		}
-@@ -1269,6 +1283,7 @@ static int get_config_chgs(struct perf_pmu *pmu, struct parse_events_terms *head
- 		case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
- 		case PARSE_EVENTS__TERM_TYPE_HARDWARE:
- 		case PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD:
-+		case PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER:
- 		default:
- 			break;
- 		}
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 06e7ce8a29ef..2b02c5a6a5f3 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -80,7 +80,8 @@ enum parse_events__term_type {
- 	PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE,
- 	PARSE_EVENTS__TERM_TYPE_HARDWARE,
- 	PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD,
--#define	__PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD + 1)
-+	PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER,
-+#define	__PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER + 1)
- };
- 
- struct parse_events_term {
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index 312a4f1837b9..f5587dff596c 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -247,6 +247,7 @@ aux-output		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT); }
- aux-sample-size		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE); }
- metric-id		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_METRIC_ID); }
- alt-period		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD); }
-+alt-period-jitter	{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER); }
- cpu-cycles|cycles				{ return hw_term(yyscanner, PERF_COUNT_HW_CPU_CYCLES); }
- stalled-cycles-frontend|idle-cycles-frontend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
- stalled-cycles-backend|idle-cycles-backend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
+...
+>>> So if we arrange to supply a name when we register multiple domains
+>>> things should work fine?
+> 
+> After my latest findings, yes, I think so. How to do this correctly is 
+> beyond me though. The __irq_domain_create() seems to me that the name is 
+> meant to be the dt-node name when the controller is backed by a real 
+> dt-node. Naming of the irq_domain_alloc_named_fwnode() sounds to me like 
+> it is only intended to be used when there is no real fwnode. All 
+> suggestions appreciated. Using the:
+> irq_domain_update_bus_token(intb_domain, DOMAIN_BUS_WIRED);
+> feels like a dirty hack, and won't scale if there is more HWIRQs.
+
+I tried taking a look at this again.
+
+If we wanted to support multiple HWIRQs / regmap-IRQ controller, it 
+would require us to duplicate almost everything in the struct 
+regmap_irq_chip for every new parent IRQ. The status/mask register 
+information, IRQ type, etc. Naturally, it would require also duplicating 
+lot of the data contained in the struct regmap_irq_chip_data. I am not 
+sure if this could be done so the change is not reflected in the 
+existing IRQ data initialization macros etc. Furthermore, some API 
+changes would be required like changes to regmap_irq_get_domain().
+
+I am a bit afraid this change, if implemented in regmap-IRQ, would be 
+very intrusive and potentially impact large amount of callers. But more 
+importantly, looking the amount of data that should be duplicated per 
+new HWIRQ makes me think that an IRQ controller is really a product of a 
+parent IRQ, not product of the device. Hence, assuming there is only one 
+IRQ controller instance / device does not feel any more correct than 
+assuming there is an IRQ controller instance / parent IRQ. Same thinking 
+applies to IRQ domains.
+
+Thus, forcing the regmap-IRQ to support multiple parents instead of 
+having own regmap-IRQ instance / parent IRQ feels like fitting square 
+item to a round hole. I am sure fixing all the bugs I caused would give 
+donate a lot of EXP-points though :rolleyes:
+
+Question is, should I still try?
+
+Another option I see, is trying to think if irq-domain name could be 
+changed. (This is what the RFC v3 does, [ab]using the 
+irq_domain_update_bus_token()). I was a bit put off by the idea of 
+'instantiating' multiple domains (or regmap-IRQ controllers) from a 
+single node, but more I think of this, more I lean towards it. Besides, 
+this is not something completely odd, I think MFD devices do this 
+anyways. (Instantiate multiple [sub]devices from single DT-node). I 
+would love to get an opinion from someone who knows the 'fundamentals' 
+of the IRQ domains, and possibly some pointer for the right approach.
+
+Finally we might also consider adding own sub-node in DT for each parent 
+IRQ - but this feels very wrong to me.
+
+All in all, I am having very hard time trying to think how to proceed. 
+The last option for me is to skip support for the ERRB IRQ from the 
+BD96801 driver, which would leave this problem to the next person 
+working with a device providing multiple physical IRQs.
+
+Yours,
+	-- Matti
+
 -- 
-2.44.0
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
+
+~~ When things go utterly wrong vim users can always type :help! ~~
 
