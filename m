@@ -1,305 +1,178 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1EE14198A
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 09:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46089548EC
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 09:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713776653; cv=none; b=pjBA14ScnPBSanRHbTUnUfgJpKymsyTnb6GD5YDK9uR/USI4CKYpkI2wNSDUmmiExLtD4/gW7s9TvzLnQD2J4f/XuqEpFC0/R7FOQrAGAv9ApfUAknA85pfNp1QkzcFitAMRLYq3w0v9k+1qZYQuCvMADjOo3Gb532lmlUjH0Tc=
+	t=1713776719; cv=none; b=B3DB4FVChoTVm4QNaCSOEmd5SHJh+2O9FihG5KQp7rlw6WEMy7vyCMJ3TkPF80MH3dWOswqU7VJlUG5pRJglB9VByq88WS3kCgsWnhEJGP2s70FLSg5mlQ5qg4bMCB9rqRrVrZziVlWg69towBrFzVG58HP0uIyRq/Q92VSTKTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713776653; c=relaxed/simple;
-	bh=bv5VA3YFx3oPBTtJPxB4RuMi+m1aIeKYN6Arjuk14mE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sDtvWOgAdiVh8p6/r4AnW01bicfvVzjiuTuEh2Slk0XdkMxKu4kjxFQKI9gAih2HIha7LqApmG76dx4IuSvZHQ3+JYy1t5d+Cm0EtiqoXjyEGuJaMaldsFzfDSILaf0WI7U0nKcg927vQQQyIp4TEzH+tDy/14o6vZMBMNCoUoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=X7XjKlbu; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="X7XjKlbu"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2395e037342so1594147fac.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 02:03:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1713776636; x=1714381436; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z1iOsAYiCfutlrPJv8SC2TZcpNGu138N+1rppXMW9XM=;
-        b=X7XjKlbu2ovfDmADOdytVdybzy2ICX76oG/N5pY/uJqRwPYkVbOJsXzRxqmDuwtPZv
-         1jhiqqshYHaYLN4WlUORW2XMsi1cNj6eUaBDHtX6WRnmtQhml62DlPm69QiCCbF70la3
-         g22Fb9zJxGlL+GQ57ScbxbZY+QvQrExQJpjSjUBVygf4vyvRcqHcLm4vzGBQG1OeyJVr
-         SGCODVqKuSYt6azuMqHEsPLCHiX5trqZtaoO2d2aUc2TALaT/7g59wYWOJE/JLF18fu6
-         gjuspWq2uekBhG+SvLyGeARZqFB457kwkjYw63CtM39BTxQuTI8qzHxUWfQQc5LibyKS
-         d2ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713776636; x=1714381436;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z1iOsAYiCfutlrPJv8SC2TZcpNGu138N+1rppXMW9XM=;
-        b=dadMbUTSkoHAapCO7gDBOhgmG/9ATkyaymgvLcEMidG+jf8/B+W7QAkzbF/OtaX8zN
-         TRUCjayoUo+50iRb+sRmIsd1J8j4j5gpyfHkc3S9PwsMbhBQeERZmPahkMV7RjG6i4TD
-         6oHiL3pZMnC0/U8qUsooqXhz3lkVfxvorsighrHegLlGLGn5yofg1+x/vlvdqm3FrzhL
-         3T/2C3z6pbjyTOqBBjL50/XoNUL5TcVBEtvv0DtBFDgoMM2yojX33yp8/C9QZjuhnzvp
-         XJZ2n9J2I/tW6HG6ezOSFsVvlg41m9MLqx69NHya2N3k+VeoC42JifUfy3lOGtpqiUw2
-         iVQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2PZn7saUzTkbhFUbxearjgCAsVLjOSCsniFcrP0W8fCitwTbIAk5LbVTp/LgK63uQsyE3bjC93/6NZQV0DWSqWdSMbGJapORqU2pX
-X-Gm-Message-State: AOJu0YxHg0mqKFQEXFyAgIAHGttTlBFfTP/mlIDyip8X9lGYXYwAoAbY
-	6zgwlBs4zHUucPros4lHGe+PGyiDatKUDmqeWFlrTxASRFhBcwY5oFf2829XIQE=
-X-Google-Smtp-Source: AGHT+IEaiQYP/KCYuI9CEUWUt/o7raG5CR1YU5Wdx2qsjoQUQGLPQpfFGt9Hb4m/Tvf1FuiO3Zy/nw==
-X-Received: by 2002:a05:6871:742a:b0:22e:8576:bcd8 with SMTP id nw42-20020a056871742a00b0022e8576bcd8mr11458913oac.42.1713776636107;
-        Mon, 22 Apr 2024 02:03:56 -0700 (PDT)
-Received: from localhost.localdomain ([116.66.212.162])
-        by smtp.gmail.com with ESMTPSA id by42-20020a056a0205aa00b005fdd11c0874sm1919137pgb.64.2024.04.22.02.03.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 02:03:55 -0700 (PDT)
-From: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
-To: sam@ravnborg.org,
-	neil.armstrong@linaro.org,
-	daniel@ffwll.ch,
-	dianders@chromium.org,
-	linus.walleij@linaro.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	robh+dt@kernel.org,
-	conor+dt@kernel.org,
-	airlied@gmail.com
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	xuxinxiong@huaqin.corp-partner.google.com,
-	Cong Yang <yangcong5@huaqin.corp-partner.google.com>
-Subject: [PATCH v2 7/7] drm/panel: himax-hx83102: Support for IVO t109nw41 MIPI-DSI panel
-Date: Mon, 22 Apr 2024 17:03:10 +0800
-Message-Id: <20240422090310.3311429-8-yangcong5@huaqin.corp-partner.google.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240422090310.3311429-1-yangcong5@huaqin.corp-partner.google.com>
-References: <20240422090310.3311429-1-yangcong5@huaqin.corp-partner.google.com>
+	s=arc-20240116; t=1713776719; c=relaxed/simple;
+	bh=pNJQKBOLWs8rDZ/RhtvowRqOazYDQAhBrisc2ohw9Ck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uVp3z2yvlUsWp2HXgJ23qLsazGEcVxszQiP2Cg+g8Z8pL+MinrMSxrV4oSBPVe3hCx3XwgQWNkxwJrQqVdDZTj24s1HLb8szZTreRzgr6Azsd8+U7Pg5kl/BhrRGaas7kPV6EBJCfYztNif7arupwOQLAa9ExL5DX0+ZjBgjmR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1rypal-0000jv-Fo; Mon, 22 Apr 2024 11:04:03 +0200
+Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1rypaj-00Desi-1p; Mon, 22 Apr 2024 11:04:01 +0200
+Received: from pengutronix.de (unknown [172.20.34.65])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 7FC1A2BCE42;
+	Mon, 22 Apr 2024 09:04:00 +0000 (UTC)
+Date: Mon, 22 Apr 2024 11:04:00 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Clark Wang <xiaoning.wang@nxp.com>, Linux Team <linux-imx@nxp.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, imx@lists.linux.dev, devicetree@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/3] net: stmicro: imx: set TX_CLK direction in RMII mode
+Message-ID: <20240422-vigilant-chupacabra-of-lightning-f11220-mkl@pengutronix.de>
+References: <20240422-v6-9-topic-imx93-eqos-rmii-v1-0-30151fca43d2@pengutronix.de>
+ <20240422-v6-9-topic-imx93-eqos-rmii-v1-3-30151fca43d2@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="54trwo3z7e7ncsqb"
+Content-Disposition: inline
+In-Reply-To: <20240422-v6-9-topic-imx93-eqos-rmii-v1-3-30151fca43d2@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The IVO t109nw41 is a 11.0" WUXGA TFT LCD panel, use hx83102 controller
-which fits in nicely with the existing panel-himax-hx83102 driver. Hence,
-we add a new compatible with panel specific config.
 
-Signed-off-by: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
----
- drivers/gpu/drm/panel/panel-himax-hx83102.c | 178 ++++++++++++++++++++
- 1 file changed, 178 insertions(+)
+--54trwo3z7e7ncsqb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/gpu/drm/panel/panel-himax-hx83102.c b/drivers/gpu/drm/panel/panel-himax-hx83102.c
-index 963438a2b245..0aef1cc80dea 100644
---- a/drivers/gpu/drm/panel/panel-himax-hx83102.c
-+++ b/drivers/gpu/drm/panel/panel-himax-hx83102.c
-@@ -26,6 +26,7 @@
- #define HX83102_SETPOWER	0xb1
- #define HX83102_SETDISP		0xb2
- #define HX83102_SETCYC		0xb4
-+#define HX83102_UNKNOWN6	0xb6
- #define HX83102_SETEXTC		0xb9
- #define HX83102_SETMIPI		0xba
- #define HX83102_SETVDC		0xbc
-@@ -401,6 +402,152 @@ static int boe_nv110wum_init_cmd(struct hx83102 *ctx)
- 	return 0;
- };
- 
-+static int ivo_t109nw41_init_cmd(struct hx83102 *ctx)
-+{
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+
-+	msleep(60);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETEXTC, 0x83, 0x10, 0x21, 0x55, 0x00);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETPOWER, 0x2C, 0xED, 0xED, 0x27, 0xE7, 0x42, 0xF5, 0x39,
-+						  0x36, 0x36, 0x36, 0x36, 0x32, 0x8B, 0x11, 0x65, 0x00, 0x88, 0xFA, 0xFF,
-+						  0xFF, 0x8F, 0xFF, 0x08, 0xD6, 0x33);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETDISP, 0x00, 0x47, 0xB0, 0x80, 0x00, 0x12, 0x71, 0x3C,
-+						  0xA3, 0x22, 0x20, 0x00, 0x00, 0x88, 0x01);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETCYC, 0x35, 0x35, 0x43, 0x43, 0x35, 0x35, 0x30, 0x7A,
-+						  0x30, 0x7A, 0x01, 0x9D);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_UNKNOWN6, 0x34, 0x34, 0x03);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSPCCMD, 0xCD);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETMIPI, 0x84);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSPCCMD, 0x3F);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETVDC, 0x1B, 0x04);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_UNKNOWN1, 0x20);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETPTBA, 0xFC, 0xC4);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSTBA, 0x34, 0x34, 0x22, 0x11, 0x22, 0xA0, 0x31, 0x08,
-+						  0xF5, 0x03);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSPCCMD, 0xCC);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETTCON, 0x80);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSPCCMD, 0x3F);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSPCCMD, 0xC6);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETRAMDMY, 0x97);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSPCCMD, 0x3F);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETPWM, 0x00, 0x1E, 0x13, 0x88, 0x01);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETCLOCK, 0x08, 0x13, 0x07, 0x00, 0x0F, 0x34);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETPANEL, 0x02, 0x03, 0x44);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSPCCMD, 0xC4);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETCASCADE, 0x03);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSPCCMD, 0x3F);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETPCTRL, 0x07, 0x06, 0x00, 0x02, 0x04, 0x2C, 0xFF);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETGIP0, 0x06, 0x00, 0x00, 0x00, 0x00, 0x08, 0x08, 0x08,
-+						  0x08, 0x37, 0x07, 0x64, 0x7C, 0x11, 0x11, 0x03, 0x03, 0x32, 0x10, 0x0E,
-+						  0x00, 0x0E, 0x32, 0x17, 0x97, 0x07, 0x97, 0x32, 0x00, 0x02, 0x00, 0x02,
-+						  0x00, 0x00);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETGIP1, 0x25, 0x24, 0x25, 0x24, 0x18, 0x18, 0x18, 0x18,
-+						  0x07, 0x06, 0x07, 0x06, 0x05, 0x04, 0x05, 0x04, 0x03, 0x02, 0x03, 0x02,
-+						  0x01, 0x00, 0x01, 0x00, 0xA8, 0xA8, 0xA8, 0xA8, 0x29, 0x29, 0x29, 0x29,
-+						  0x21, 0x20, 0x21, 0x20, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETGIP3, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xA0, 0xAA, 0xAA,
-+						  0xAA, 0xAA, 0xAA, 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+						  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+						  0x00, 0x00, 0x00, 0x00);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETTP1, 0x07, 0x10, 0x10, 0x1A, 0x26, 0x9E, 0x00, 0x4F,
-+						  0xA0, 0x14, 0x14, 0x00, 0x00, 0x00, 0x00, 0x12, 0x0A, 0x02, 0x02, 0x00,
-+						  0x33, 0x02, 0x04, 0x18, 0x01);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETBANK, 0x01);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETPOWER, 0x01, 0x7F, 0x11, 0xFD);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETCLOCK, 0x86);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETGIP3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+						  0x00, 0x00, 0x00, 0x00, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xA0, 0xAA, 0xAA,
-+						  0xAA, 0xAA, 0xAA, 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+						  0x00, 0x00, 0x00, 0x00);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETTP1, 0x02, 0x00, 0x2B, 0x01, 0x7E, 0x0F, 0x7E, 0x10,
-+						  0xA0, 0x00, 0x00, 0x77, 0x00, 0x00, 0x00);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETBANK, 0x02);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETPTBA, 0xF2);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETCLOCK, 0x03, 0x07, 0x00, 0x10, 0x79);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETGIP3, 0xFF, 0xFF, 0xFF, 0xFF, 0xFA, 0xA0,
-+						  0xFF, 0xFF, 0xFF, 0xFF, 0xFA, 0xA0);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETTP1, 0xFE, 0x01, 0xFE, 0x01, 0xFE, 0x01, 0x00, 0x00,
-+						  0x00, 0x23, 0x00, 0x23, 0x81, 0x02, 0x40, 0x00, 0x20, 0x6E, 0x02, 0x01,
-+						  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETBANK, 0x03);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSPCCMD, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xA0, 0xAA, 0xAA,
-+						  0xAA, 0xAA, 0xAA, 0xA0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFA, 0xA0, 0xFF, 0xFF,
-+						  0xFF, 0xFF, 0xFA, 0xA0, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xA0, 0xAA, 0xAA,
-+						  0xAA, 0xAA, 0xAA, 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+						  0x00, 0x00, 0x00, 0x00);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSPCCMD, 0xC6);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETCYC, 0x03, 0xFF, 0xF8);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSPCCMD, 0x3F);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_UNKNOWN5, 0x00);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETBANK, 0x00);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSPCCMD, 0xC4);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETMIPI, 0x96);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSPCCMD, 0x3F);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETBANK, 0x01);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSPCCMD, 0xC5);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETMIPI, 0x4F);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETSPCCMD, 0x3F);
-+
-+	mipi_dsi_dcs_write_seq(dsi, HX83102_SETBANK, 0x00);
-+
-+	msleep(60);
-+
-+	return 0;
-+};
-+
- static const struct drm_display_mode starry_mode = {
- 	.clock = 162680,
- 	.hdisplay = 1200,
-@@ -457,6 +604,34 @@ static const struct hx83102_panel_desc boe_nv110wum_desc = {
- 	.lp11_before_reset = true
- };
- 
-+static const struct drm_display_mode ivo_t109nw41_default_mode = {
-+	.clock = 166400,
-+	.hdisplay = 1200,
-+	.hsync_start = 1200 + 75,
-+	.hsync_end = 1200 + 75 + 20,
-+	.htotal = 1200 + 75 + 20 + 55,
-+	.vdisplay = 1920,
-+	.vsync_start = 1920 + 115,
-+	.vsync_end = 1920 + 115 + 8,
-+	.vtotal = 1920 + 115 + 8 + 12,
-+	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-+};
-+
-+static const struct hx83102_panel_desc ivo_t109nw41_desc = {
-+	.modes = &ivo_t109nw41_default_mode,
-+	.bpc = 8,
-+	.size = {
-+		.width_mm = 147,
-+		.height_mm = 235,
-+	},
-+	.lanes = 4,
-+	.format = MIPI_DSI_FMT_RGB888,
-+	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-+		      MIPI_DSI_MODE_LPM,
-+	.init_cmds = ivo_t109nw41_init_cmd,
-+	.lp11_before_reset = true
-+};
-+
- static int hx83102_enable(struct drm_panel *panel)
- {
- 	struct hx83102 *ctx = panel_to_hx83102(panel);
-@@ -743,6 +918,9 @@ static const struct of_device_id hx83102_of_match[] = {
- 	{ .compatible = "boe,nv110wum-l60",
- 	  .data = &boe_nv110wum_desc
- 	},
-+	{ .compatible = "ivo,t109nw41",
-+	  .data = &ivo_t109nw41_desc
-+	},
- 	{ .compatible = "starry,himax83102-j02",
- 	  .data = &starry_desc
- 	},
--- 
-2.25.1
+On 22.04.2024 10:46:19, Steffen Trumtrar wrote:
+> In case of RMII connection, the TX_CLK must be set to output direction.
+> Parse the register and offset from the devicetree and set the direction
+> of the TX_CLK when the property was provided.
+>=20
+> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c | 27 +++++++++++++++++++=
+++++++
+>  1 file changed, 27 insertions(+)
+>=20
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/ne=
+t/ethernet/stmicro/stmmac/dwmac-imx.c
+> index 6b65420e11b5c..0fc81a626a664 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
+> @@ -37,6 +37,9 @@
+>  #define MX93_GPR_ENET_QOS_INTF_SEL_RGMII	(0x1 << 1)
+>  #define MX93_GPR_ENET_QOS_CLK_GEN_EN		(0x1 << 0)
+> =20
+> +#define MX93_GPR_ENET_QOS_TX_CLK_SEL_MASK	GENMASK(1, 1)
+> +#define MX93_GPR_ENET_QOS_TX_CLK_SEL		(0x1 << 1)
+> +
+>  #define DMA_BUS_MODE			0x00001000
+>  #define DMA_BUS_MODE_SFT_RESET		(0x1 << 0)
+>  #define RMII_RESET_SPEED		(0x3 << 14)
+> @@ -57,7 +60,9 @@ struct imx_priv_data {
+>  	struct clk *clk_tx;
+>  	struct clk *clk_mem;
+>  	struct regmap *intf_regmap;
+> +	struct regmap *enet_clk_regmap;
+>  	u32 intf_reg_off;
+> +	u32 enet_clk_reg_off;
+>  	bool rmii_refclk_ext;
+>  	void __iomem *base_addr;
+> =20
+> @@ -116,6 +121,18 @@ static int imx93_set_intf_mode(struct plat_stmmacene=
+t_data *plat_dat)
+>  		break;
+>  	case PHY_INTERFACE_MODE_RMII:
+>  		val =3D MX93_GPR_ENET_QOS_INTF_SEL_RMII;
+> +
+> +		/* According to NXP AN14149, the direction of the
+> +		 * TX_CLK must be set to output in RMII mode.
+> +		 */
+> +		if (dwmac->enet_clk_regmap)
+> +			regmap_update_bits(dwmac->enet_clk_regmap,
+> +					   dwmac->enet_clk_reg_off,
+> +					   MX93_GPR_ENET_QOS_TX_CLK_SEL_MASK,
+> +					   MX93_GPR_ENET_QOS_TX_CLK_SEL);
 
+Please add error handling.
+
+> +		else
+> +			dev_warn(dwmac->dev, "TX_CLK can't be set to output mode.\n");
+
+As far as I understand the AN14149, setting the TX_CLK_SEL is mandatory
+for PHY_INTERFACE_MODE_RMII. IMHO this should be error, shouldn't it?
+
+> +
+>  		break;
+>  	case PHY_INTERFACE_MODE_RGMII:
+>  	case PHY_INTERFACE_MODE_RGMII_ID:
+> @@ -310,6 +327,16 @@ imx_dwmac_parse_dt(struct imx_priv_data *dwmac, stru=
+ct device *dev)
+>  			dev_err(dev, "Can't get intf mode reg offset (%d)\n", err);
+>  			return err;
+>  		}
+> +
+> +		dwmac->enet_clk_regmap =3D syscon_regmap_lookup_by_phandle(np, "enet_c=
+lk_sel");
+> +		if (IS_ERR(dwmac->enet_clk_regmap))
+> +			return PTR_ERR(dwmac->enet_clk_regmap);
+> +
+> +		err =3D of_property_read_u32_index(np, "enet_clk_sel", 1, &dwmac->enet=
+_clk_reg_off);
+> +		if (err) {
+> +			dev_err(dev, "Can't get enet clk sel reg offset (%d)\n", err);
+> +			return err;
+> +		}
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--54trwo3z7e7ncsqb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmYmJ/0ACgkQKDiiPnot
+vG+rRAf/TCKV4SbXHqD5urbJNkZpU+ifAdUP8XnGCC49D+SYNZCjA4f8QR3fZ6Nc
+cfBefjXWzvGrGQPcDx0oEssnxQXSXLGYsm68ZDuHJXoZyEqwuPr2g4KNYmKidHT/
+bcUXJGJi8joRtN6RsQ8O/tkjC5OtfP2ydBNaZT8Vw3xxwHtv2PT9x7O66lGWVYLW
+0FRe2Jva6Gq3MYr/SpVi16FrUDIMjyQPGuOuqWergNCESFEwPwcqK6vjHNXj2h3c
+MUDoLwWv/Iuz/fohieOBSTSZIbIp7kbDZr23Pbc89XRI7ts6XtguerNGw6tEmefQ
+Uqe8uR3JnqblFK2pOEeelWhnp+tFKQ==
+=WXS4
+-----END PGP SIGNATURE-----
+
+--54trwo3z7e7ncsqb--
