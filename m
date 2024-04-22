@@ -1,30 +1,30 @@
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [195.130.132.52])
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7662F1448CB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2661448E1
 	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 10:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713781856; cv=none; b=cneuKS78fHQUYw4SzERHywqeyd2v8nwmYxgRgc2TXC98RXO+d0YhdQtkHv6npRbRzDQQoVxH7skeRqJWv7eChtF1MQLrepl9N9lzbvNmGuIOT7CiIPMCvLpTy6749/CkI7E5fOoSO+qv0nGD6ylv0NWhzq0e0B/4RA4YpTV82yQ=
+	t=1713781856; cv=none; b=YjiczUWjsGVkzQT9hxzYIBdDmdnRnrnHmHYys5Rbm3E9uWsNyaNPQzEdmjL/SX1auSjqfqpsHKgJ0UHF5MMR1YwH7n0L8zOo6HEgjiWXUOzsjWnQ5rbrS6xUrUdFUUcR7MehfleIx2n7uS2ypxhsW/JUayiGTxSUkML5i3lOqFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713781856; c=relaxed/simple;
-	bh=pWGbjHTEFE0GAG1KoztlvjnxdtC5QrGTZO5eXC4VGKs=;
+	bh=LW89FKmybpY3mO1SFm3qDF96FV56m4gojroshPJVa6M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=vDI3+dqiDQJfDcVQRyXkG1cnoo1ffMoahNBa+f1rwdJFTpzYvVbZa2Oc6UdY4MH3R5kqPlbfoOgw1eyNdlK89y1HR3461I/3d6NlEWMAZZAQQ1pxZs5oBsVoXzGHJhZTGQ+7K0rthDR/Dpj0mxEbUhESG3fQDgSl00nFcARs+1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.52
+	 MIME-Version; b=kTERLwCNKUM0hzxd33/9sER0mOol9QWDCjeCXXcsvnVENTw72WW5PnErFKFgA8WMpI05TBJF/e4Ct45bjb5hGguQYq+a3OIZ2sGfoMPcE6fEgZ8X2SUu8+s1CXJZAtAYfQgQmUUSktAClzsCcYBkmBIn1Oyb4cxNtGq2VZuLmhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
-	by xavier.telenet-ops.be with bizsmtp
-	id EAWj2C00T0SSLxL01AWjBQ; Mon, 22 Apr 2024 12:30:45 +0200
+	by laurent.telenet-ops.be with bizsmtp
+	id EAWj2C0080SSLxL01AWjqq; Mon, 22 Apr 2024 12:30:45 +0200
 Received: from rox.of.borg ([192.168.97.57])
 	by ramsan.of.borg with esmtp (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1ryqw1-001cwL-D6;
+	id 1ryqw1-001cwD-BD;
 	Mon, 22 Apr 2024 12:30:43 +0200
 Received: from geert by rox.of.borg with local (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1ryqwd-005i47-EC;
+	id 1ryqwd-005i3x-Bi;
 	Mon, 22 Apr 2024 12:30:43 +0200
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -38,9 +38,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org,
 	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 09/11] Revert "drm: Switch DRM_DISPLAY_HELPER to depends on"
-Date: Mon, 22 Apr 2024 12:30:37 +0200
-Message-Id: <1ba76cc4d96a8afefff5d1bc42fb1e1329c5da68.1713780345.git.geert+renesas@glider.be>
+Subject: [PATCH 07/11] Revert "drm: Switch DRM_DISPLAY_DP_HELPER to depends on"
+Date: Mon, 22 Apr 2024 12:30:35 +0200
+Message-Id: <89ac456805746b6d0c888f10c5120b11aacd3319.1713780345.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1713780345.git.geert+renesas@glider.be>
 References: <cover.1713780345.git.geert+renesas@glider.be>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This reverts commit e075e496f516bf92bc0cbaf94d64e8d4a6b58321, as helper
+This reverts commit 0323287de87d7e6e9c22c57d7440aa353a2298d0, as helper
 code should always be selected by the driver that needs it, for the
 convenience of the final user configuring a kernel.
 
@@ -63,103 +63,94 @@ first, which is very user-unfriendly.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/gpu/drm/Kconfig                 |  6 ++----
- drivers/gpu/drm/amd/amdgpu/Kconfig      |  6 ++----
+ drivers/gpu/drm/Kconfig                 |  2 +-
+ drivers/gpu/drm/amd/amdgpu/Kconfig      |  2 +-
  drivers/gpu/drm/bridge/Kconfig          | 10 +++++-----
  drivers/gpu/drm/bridge/analogix/Kconfig |  6 +++---
- drivers/gpu/drm/bridge/cadence/Kconfig  |  4 ++--
- drivers/gpu/drm/bridge/synopsys/Kconfig |  2 +-
+ drivers/gpu/drm/bridge/cadence/Kconfig  |  2 +-
  drivers/gpu/drm/display/Kconfig         |  1 -
  drivers/gpu/drm/exynos/Kconfig          |  2 +-
  drivers/gpu/drm/i915/Kconfig            |  2 +-
  drivers/gpu/drm/mediatek/Kconfig        |  2 +-
- drivers/gpu/drm/msm/Kconfig             |  4 ++--
- drivers/gpu/drm/nouveau/Kconfig         |  6 ++----
- drivers/gpu/drm/panel/Kconfig           | 20 ++++++++++----------
- drivers/gpu/drm/radeon/Kconfig          |  6 ++----
+ drivers/gpu/drm/msm/Kconfig             |  2 +-
+ drivers/gpu/drm/nouveau/Kconfig         |  2 +-
+ drivers/gpu/drm/panel/Kconfig           |  8 ++++----
+ drivers/gpu/drm/radeon/Kconfig          |  2 +-
  drivers/gpu/drm/rockchip/Kconfig        |  4 ++--
  drivers/gpu/drm/tegra/Kconfig           |  2 +-
- drivers/gpu/drm/vc4/Kconfig             |  8 ++++----
- drivers/gpu/drm/xe/Kconfig              |  7 ++-----
- drivers/gpu/drm/xlnx/Kconfig            |  6 ++----
- 19 files changed, 45 insertions(+), 59 deletions(-)
+ drivers/gpu/drm/xe/Kconfig              |  2 +-
+ drivers/gpu/drm/xlnx/Kconfig            |  2 +-
+ 17 files changed, 26 insertions(+), 27 deletions(-)
 
 diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index 33792ca3eeb7ae8d..bf4020915e299861 100644
+index 959b19a0410188d9..33792ca3eeb7ae8d 100644
 --- a/drivers/gpu/drm/Kconfig
 +++ b/drivers/gpu/drm/Kconfig
-@@ -74,12 +74,10 @@ config DRM_KUNIT_TEST_HELPERS
- 
+@@ -75,11 +75,11 @@ config DRM_KUNIT_TEST_HELPERS
  config DRM_KUNIT_TEST
  	tristate "KUnit tests for DRM" if !KUNIT_ALL_TESTS
--	depends on DRM
--	depends on DRM_DISPLAY_HELPER
--	depends on KUNIT
--	depends on MMU
-+	depends on DRM && KUNIT && MMU
+ 	depends on DRM
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
+ 	depends on KUNIT
+ 	depends on MMU
  	select DRM_BUDDY
- 	select DRM_DISPLAY_DP_HELPER
-+	select DRM_DISPLAY_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_EXEC
  	select DRM_EXPORT_FOR_TESTS if m
  	select DRM_GEM_SHMEM_HELPER
 diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig b/drivers/gpu/drm/amd/amdgpu/Kconfig
-index cf931b94a1889746..22d88f8ef5279a0f 100644
+index ba09121e7debb247..cf931b94a1889746 100644
 --- a/drivers/gpu/drm/amd/amdgpu/Kconfig
 +++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
-@@ -2,15 +2,13 @@
- 
+@@ -3,12 +3,12 @@
  config DRM_AMDGPU
  	tristate "AMD GPU"
--	depends on DRM
--	depends on DRM_DISPLAY_HELPER
--	depends on MMU
--	depends on PCI
-+	depends on DRM && PCI && MMU
+ 	depends on DRM
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
+ 	depends on MMU
+ 	depends on PCI
  	depends on !UML
  	select FW_LOADER
- 	select DRM_DISPLAY_DP_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_DISPLAY_HDMI_HELPER
  	select DRM_DISPLAY_HDCP_HELPER
-+	select DRM_DISPLAY_HELPER
  	select DRM_KMS_HELPER
- 	select DRM_SCHED
- 	select DRM_TTM
 diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index a51ad2b3a0fb01e2..f71d57216ae0602a 100644
+index ad38cd201b006251..6015e2e4c2f620cf 100644
 --- a/drivers/gpu/drm/bridge/Kconfig
 +++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -92,10 +92,10 @@ config DRM_FSL_LDB
- 
+@@ -93,9 +93,9 @@ config DRM_FSL_LDB
  config DRM_ITE_IT6505
  	tristate "ITE IT6505 DisplayPort bridge"
--	depends on DRM_DISPLAY_HELPER
+ 	depends on DRM_DISPLAY_DP_AUX_BUS
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	depends on OF
- 	select DRM_DISPLAY_DP_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_DISPLAY_HDCP_HELPER
-+	select DRM_DISPLAY_HELPER
- 	select DRM_DISPLAY_DP_AUX_BUS
  	select DRM_KMS_HELPER
  	select EXTCON
-@@ -225,9 +225,9 @@ config DRM_PARADE_PS8622
- 
+@@ -226,9 +226,9 @@ config DRM_PARADE_PS8622
  config DRM_PARADE_PS8640
  	tristate "Parade PS8640 MIPI DSI to eDP Converter"
--	depends on DRM_DISPLAY_HELPER
+ 	depends on DRM_DISPLAY_DP_AUX_BUS
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	depends on OF
- 	select DRM_DISPLAY_DP_HELPER
-+	select DRM_DISPLAY_HELPER
- 	select DRM_DISPLAY_DP_AUX_BUS
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_KMS_HELPER
  	select DRM_MIPI_DSI
+ 	select DRM_PANEL
 @@ -312,9 +312,9 @@ config DRM_TOSHIBA_TC358764
  
  config DRM_TOSHIBA_TC358767
  	tristate "Toshiba TC358767 eDP bridge"
--	depends on DRM_DISPLAY_HELPER
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	depends on OF
- 	select DRM_DISPLAY_DP_HELPER
-+	select DRM_DISPLAY_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_KMS_HELPER
  	select REGMAP_I2C
  	select DRM_MIPI_DSI
@@ -167,37 +158,37 @@ index a51ad2b3a0fb01e2..f71d57216ae0602a 100644
  
  config DRM_TOSHIBA_TC358775
  	tristate "Toshiba TC358775 DSI/LVDS bridge"
--	depends on DRM_DISPLAY_HELPER
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	depends on OF
- 	select DRM_DISPLAY_DP_HELPER
-+	select DRM_DISPLAY_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_KMS_HELPER
  	select REGMAP_I2C
  	select DRM_PANEL
-@@ -380,9 +380,9 @@ config DRM_TI_SN65DSI83
- 
+@@ -381,9 +381,9 @@ config DRM_TI_SN65DSI83
  config DRM_TI_SN65DSI86
  	tristate "TI SN65DSI86 DSI to eDP bridge"
--	depends on DRM_DISPLAY_HELPER
+ 	depends on DRM_DISPLAY_DP_AUX_BUS
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	depends on OF
- 	select DRM_DISPLAY_DP_HELPER
-+	select DRM_DISPLAY_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_KMS_HELPER
  	select REGMAP_I2C
  	select DRM_PANEL
 diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/bridge/analogix/Kconfig
-index 16d18dde483ae9c4..4846b2e9be7c2a5d 100644
+index 9659df6718de6db4..ec98c94535736c0a 100644
 --- a/drivers/gpu/drm/bridge/analogix/Kconfig
 +++ b/drivers/gpu/drm/bridge/analogix/Kconfig
 @@ -1,10 +1,10 @@
  # SPDX-License-Identifier: GPL-2.0-only
  config DRM_ANALOGIX_ANX6345
  	tristate "Analogix ANX6345 bridge"
--	depends on DRM_DISPLAY_HELPER
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	depends on OF
  	select DRM_ANALOGIX_DP
- 	select DRM_DISPLAY_DP_HELPER
-+	select DRM_DISPLAY_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_KMS_HELPER
  	select REGMAP_I2C
  	help
@@ -205,361 +196,286 @@ index 16d18dde483ae9c4..4846b2e9be7c2a5d 100644
  
  config DRM_ANALOGIX_ANX78XX
  	tristate "Analogix ANX78XX bridge"
--	depends on DRM_DISPLAY_HELPER
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	select DRM_ANALOGIX_DP
- 	select DRM_DISPLAY_DP_HELPER
-+	select DRM_DISPLAY_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_KMS_HELPER
  	select REGMAP_I2C
  	help
-@@ -33,10 +33,10 @@ config DRM_ANALOGIX_DP
- config DRM_ANALOGIX_ANX7625
+@@ -34,9 +34,9 @@ config DRM_ANALOGIX_ANX7625
  	tristate "Analogix Anx7625 MIPI to DP interface support"
  	depends on DRM
--	depends on DRM_DISPLAY_HELPER
+ 	depends on DRM_DISPLAY_DP_AUX_BUS
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	depends on OF
- 	select DRM_DISPLAY_DP_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_DISPLAY_HDCP_HELPER
-+	select DRM_DISPLAY_HELPER
- 	select DRM_DISPLAY_DP_AUX_BUS
  	select DRM_MIPI_DSI
  	help
 diff --git a/drivers/gpu/drm/bridge/cadence/Kconfig b/drivers/gpu/drm/bridge/cadence/Kconfig
-index 20143afded40e437..cced81633ddcda03 100644
+index 3480fd4d0a5f76e4..20143afded40e437 100644
 --- a/drivers/gpu/drm/bridge/cadence/Kconfig
 +++ b/drivers/gpu/drm/bridge/cadence/Kconfig
-@@ -23,12 +23,12 @@ endif
+@@ -23,9 +23,9 @@ endif
  
  config DRM_CDNS_MHDP8546
  	tristate "Cadence DPI/DP bridge"
--	depends on DRM_DISPLAY_HELPER
--	depends on OF
- 	select DRM_DISPLAY_DP_HELPER
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
+ 	depends on OF
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_DISPLAY_HDCP_HELPER
-+	select DRM_DISPLAY_HELPER
  	select DRM_KMS_HELPER
  	select DRM_PANEL_BRIDGE
-+	depends on OF
- 	help
- 	  Support Cadence DPI to DP bridge. This is an internal
- 	  bridge and is meant to be directly embedded in a SoC.
-diff --git a/drivers/gpu/drm/bridge/synopsys/Kconfig b/drivers/gpu/drm/bridge/synopsys/Kconfig
-index f366ece471462a70..15fc182d05ef02e6 100644
---- a/drivers/gpu/drm/bridge/synopsys/Kconfig
-+++ b/drivers/gpu/drm/bridge/synopsys/Kconfig
-@@ -1,8 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config DRM_DW_HDMI
- 	tristate
--	depends on DRM_DISPLAY_HELPER
- 	select DRM_DISPLAY_HDMI_HELPER
-+	select DRM_DISPLAY_HELPER
- 	select DRM_KMS_HELPER
- 	select REGMAP_MMIO
- 	select CEC_CORE if CEC_NOTIFIER
 diff --git a/drivers/gpu/drm/display/Kconfig b/drivers/gpu/drm/display/Kconfig
-index cffa2acdbc6c0988..c77e7f85bd674dc9 100644
+index 9801f47a3704530d..0cd4396914224226 100644
 --- a/drivers/gpu/drm/display/Kconfig
 +++ b/drivers/gpu/drm/display/Kconfig
-@@ -3,7 +3,6 @@
- config DRM_DISPLAY_HELPER
- 	tristate "DRM Display Helpers"
- 	depends on DRM
+@@ -39,7 +39,6 @@ config DRM_DISPLAY_DP_AUX_CHARDEV
+ config DRM_DISPLAY_DP_HELPER
+ 	bool "DRM DisplayPort Helpers"
+ 	depends on DRM_DISPLAY_HELPER
 -	default y
  	help
- 	  DRM helpers for display adapters.
+ 	  DRM display helpers for DisplayPort.
  
 diff --git a/drivers/gpu/drm/exynos/Kconfig b/drivers/gpu/drm/exynos/Kconfig
-index 4b0183bf221c8bb2..733b109a509525f7 100644
+index 6a26a0b8eff2c021..4b0183bf221c8bb2 100644
 --- a/drivers/gpu/drm/exynos/Kconfig
 +++ b/drivers/gpu/drm/exynos/Kconfig
-@@ -4,6 +4,7 @@ config DRM_EXYNOS
- 	depends on OF && DRM && COMMON_CLK
- 	depends on ARCH_S3C64XX || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
- 	depends on MMU
-+	select DRM_DISPLAY_HELPER if DRM_EXYNOS_DP
- 	select DRM_KMS_HELPER
- 	select VIDEOMODE_HELPERS
- 	select FB_DMAMEM_HELPERS if DRM_FBDEV_EMULATION
-@@ -67,7 +68,6 @@ config DRM_EXYNOS_DSI
+@@ -67,9 +67,9 @@ config DRM_EXYNOS_DSI
  config DRM_EXYNOS_DP
  	bool "Exynos specific extensions for Analogix DP driver"
  	depends on DRM_EXYNOS_FIMD || DRM_EXYNOS7_DECON
--	depends on DRM_DISPLAY_HELPER
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	select DRM_ANALOGIX_DP
- 	select DRM_DISPLAY_DP_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	default DRM_EXYNOS
+ 	select DRM_PANEL
+ 	help
 diff --git a/drivers/gpu/drm/i915/Kconfig b/drivers/gpu/drm/i915/Kconfig
-index 43183a68a09557b7..5932024f8f9547e5 100644
+index dbde4e29d93a79dc..43183a68a09557b7 100644
 --- a/drivers/gpu/drm/i915/Kconfig
 +++ b/drivers/gpu/drm/i915/Kconfig
 @@ -2,7 +2,6 @@
  config DRM_I915
  	tristate "Intel 8xx/9xx/G3x/G4x/HD Graphics"
  	depends on DRM
--	depends on DRM_DISPLAY_HELPER
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	depends on X86 && PCI
  	depends on !PREEMPT_RT
- 	select INTEL_GTT if X86
-@@ -14,6 +13,7 @@ config DRM_I915
- 	select DRM_DISPLAY_DP_HELPER
+@@ -12,6 +11,7 @@ config DRM_I915
+ 	# the shmem_readpage() which depends upon tmpfs
+ 	select SHMEM
+ 	select TMPFS
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_DISPLAY_HDCP_HELPER
  	select DRM_DISPLAY_HDMI_HELPER
-+	select DRM_DISPLAY_HELPER
  	select DRM_KMS_HELPER
- 	select DRM_PANEL
- 	select DRM_MIPI_DSI
 diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
-index 50bb28327f65fbf5..96cbe020f493ab19 100644
+index 6caab8d4d4e0f5f8..2add54486ac4ab11 100644
 --- a/drivers/gpu/drm/mediatek/Kconfig
 +++ b/drivers/gpu/drm/mediatek/Kconfig
-@@ -22,9 +22,9 @@ config DRM_MEDIATEK
- 
+@@ -23,10 +23,10 @@ config DRM_MEDIATEK
  config DRM_MEDIATEK_DP
  	tristate "DRM DPTX Support for MediaTek SoCs"
--	depends on DRM_DISPLAY_HELPER
+ 	depends on DRM_DISPLAY_DP_AUX_BUS
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	depends on DRM_MEDIATEK
  	select PHY_MTK_DP
-+	select DRM_DISPLAY_HELPER
- 	select DRM_DISPLAY_DP_HELPER
- 	select DRM_DISPLAY_DP_AUX_BUS
++	select DRM_DISPLAY_DP_HELPER
  	help
+ 	  DRM/KMS Display Port driver for MediaTek SoCs.
+ 
 diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
-index 2055266506e5adf0..27d72ed8b3896b64 100644
+index f7708590583e7377..28a898722ace789b 100644
 --- a/drivers/gpu/drm/msm/Kconfig
 +++ b/drivers/gpu/drm/msm/Kconfig
-@@ -2,10 +2,9 @@
- 
- config DRM_MSM
- 	tristate "MSM DRM"
-+	depends on DRM
- 	depends on ARCH_QCOM || SOC_IMX5 || COMPILE_TEST
+@@ -6,7 +6,6 @@ config DRM_MSM
  	depends on COMMON_CLK
--	depends on DRM
--	depends on DRM_DISPLAY_HELPER
+ 	depends on DRM
+ 	depends on DRM_DISPLAY_DP_AUX_BUS
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	depends on IOMMU_SUPPORT
  	depends on QCOM_AOSS_QMP || QCOM_AOSS_QMP=n
- 	depends on QCOM_OCMEM || QCOM_OCMEM=n
 @@ -17,6 +16,7 @@ config DRM_MSM
+ 	select IOMMU_IO_PGTABLE
+ 	select QCOM_MDT_LOADER if ARCH_QCOM
  	select REGULATOR
- 	select DRM_DISPLAY_DP_AUX_BUS
- 	select DRM_DISPLAY_DP_HELPER
-+	select DRM_DISPLAY_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_EXEC
  	select DRM_KMS_HELPER
  	select DRM_PANEL
 diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
-index 5ac852b816db262b..ceef470c9fbfcfb0 100644
+index 7cc305b2826d6abc..5ac852b816db262b 100644
 --- a/drivers/gpu/drm/nouveau/Kconfig
 +++ b/drivers/gpu/drm/nouveau/Kconfig
-@@ -1,14 +1,12 @@
- # SPDX-License-Identifier: GPL-2.0-only
+@@ -2,12 +2,12 @@
  config DRM_NOUVEAU
  	tristate "Nouveau (NVIDIA) cards"
--	depends on DRM
--	depends on DRM_DISPLAY_HELPER
--	depends on PCI
--	depends on MMU
-+	depends on DRM && PCI && MMU
+ 	depends on DRM
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
+ 	depends on PCI
+ 	depends on MMU
  	select IOMMU_API
  	select FW_LOADER
- 	select DRM_DISPLAY_DP_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_DISPLAY_HDMI_HELPER
-+	select DRM_DISPLAY_HELPER
  	select DRM_KMS_HELPER
  	select DRM_TTM
- 	select DRM_TTM_HELPER
 diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index 5073c45481d55821..1b70ebba9571d29f 100644
+index ab67789e59a2e7a6..ed7949bebad812c9 100644
 --- a/drivers/gpu/drm/panel/Kconfig
 +++ b/drivers/gpu/drm/panel/Kconfig
-@@ -544,11 +544,11 @@ config DRM_PANEL_RAYDIUM_RM68200
- 
+@@ -545,10 +545,10 @@ config DRM_PANEL_RAYDIUM_RM68200
  config DRM_PANEL_RAYDIUM_RM692E5
  	tristate "Raydium RM692E5-based DSI panel"
--	depends on BACKLIGHT_CLASS_DEVICE
--	depends on DRM_DISPLAY_HELPER
--	depends on DRM_MIPI_DSI
+ 	depends on BACKLIGHT_CLASS_DEVICE
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
+ 	depends on DRM_MIPI_DSI
  	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
- 	select DRM_DISPLAY_DP_HELPER
-+	select DRM_DISPLAY_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	help
  	  Say Y here if you want to enable support for Raydium RM692E5-based
  	  display panels, such as the one found in the Fairphone 5 smartphone.
-@@ -570,11 +570,11 @@ config DRM_PANEL_SAMSUNG_S6E88A0_AMS452EF01
- 
- config DRM_PANEL_SAMSUNG_ATNA33XC20
+@@ -572,10 +572,10 @@ config DRM_PANEL_SAMSUNG_ATNA33XC20
  	tristate "Samsung ATNA33XC20 eDP panel"
--	depends on BACKLIGHT_CLASS_DEVICE
--	depends on DRM_DISPLAY_HELPER
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on DRM_DISPLAY_DP_AUX_BUS
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	depends on OF
-+	depends on BACKLIGHT_CLASS_DEVICE
  	depends on PM
- 	select DRM_DISPLAY_DP_HELPER
-+	select DRM_DISPLAY_HELPER
- 	select DRM_DISPLAY_DP_AUX_BUS
++	select DRM_DISPLAY_DP_HELPER
  	help
  	  DRM panel driver for the Samsung ATNA33XC20 panel. This panel can't
-@@ -810,12 +810,12 @@ config DRM_PANEL_STARTEK_KD070FHFID015
- 
- config DRM_PANEL_EDP
+ 	  be handled by the DRM_PANEL_SIMPLE driver because its power
+@@ -812,11 +812,11 @@ config DRM_PANEL_EDP
  	tristate "support for simple Embedded DisplayPort panels"
--	depends on BACKLIGHT_CLASS_DEVICE
--	depends on DRM_DISPLAY_HELPER
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on DRM_DISPLAY_DP_AUX_BUS
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	depends on OF
-+	depends on BACKLIGHT_CLASS_DEVICE
  	depends on PM
  	select VIDEOMODE_HELPERS
- 	select DRM_DISPLAY_DP_HELPER
-+	select DRM_DISPLAY_HELPER
- 	select DRM_DISPLAY_DP_AUX_BUS
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_KMS_HELPER
  	help
-@@ -890,11 +890,11 @@ config DRM_PANEL_TRULY_NT35597_WQXGA
- 
+ 	  DRM panel driver for dumb eDP panels that need at most a regulator and
+@@ -891,10 +891,10 @@ config DRM_PANEL_TRULY_NT35597_WQXGA
  config DRM_PANEL_VISIONOX_R66451
  	tristate "Visionox R66451"
--	depends on BACKLIGHT_CLASS_DEVICE
--	depends on DRM_DISPLAY_HELPER
--	depends on DRM_MIPI_DSI
+ 	depends on BACKLIGHT_CLASS_DEVICE
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
+ 	depends on DRM_MIPI_DSI
  	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
- 	select DRM_DISPLAY_DP_HELPER
-+	select DRM_DISPLAY_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	help
  	  Say Y here if you want to enable support for Visionox
  	  R66451 1080x2340 AMOLED DSI panel.
 diff --git a/drivers/gpu/drm/radeon/Kconfig b/drivers/gpu/drm/radeon/Kconfig
-index 07d330450f05f899..f98356be0af288f5 100644
+index 18c867219a706a17..07d330450f05f899 100644
 --- a/drivers/gpu/drm/radeon/Kconfig
 +++ b/drivers/gpu/drm/radeon/Kconfig
-@@ -2,13 +2,11 @@
- 
- config DRM_RADEON
+@@ -4,11 +4,11 @@ config DRM_RADEON
  	tristate "ATI Radeon"
-+	depends on DRM && PCI && MMU
  	depends on AGP || !AGP
--	depends on DRM
--	depends on DRM_DISPLAY_HELPER
--	depends on PCI
--	depends on MMU
+ 	depends on DRM
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
+ 	depends on PCI
+ 	depends on MMU
  	select FW_LOADER
- 	select DRM_DISPLAY_DP_HELPER
-+	select DRM_DISPLAY_HELPER
++	select DRM_DISPLAY_DP_HELPER
          select DRM_KMS_HELPER
  	select DRM_SUBALLOC_HELPER
          select DRM_TTM
 diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
-index b72c0bbf346da5fa..0d5260e10f272d3b 100644
+index 4b49a14758fe0412..b72c0bbf346da5fa 100644
 --- a/drivers/gpu/drm/rockchip/Kconfig
 +++ b/drivers/gpu/drm/rockchip/Kconfig
-@@ -35,8 +35,8 @@ config ROCKCHIP_VOP2
+@@ -35,9 +35,9 @@ config ROCKCHIP_VOP2
  
  config ROCKCHIP_ANALOGIX_DP
  	bool "Rockchip specific extensions for Analogix DP driver"
--	depends on DRM_DISPLAY_HELPER
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	depends on ROCKCHIP_VOP
-+	select DRM_DISPLAY_HELPER
- 	select DRM_DISPLAY_DP_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	help
  	  This selects support for Rockchip SoC specific extensions
-@@ -45,8 +45,8 @@ config ROCKCHIP_ANALOGIX_DP
+ 	  for the Analogix Core DP driver. If you want to enable DP
+@@ -45,9 +45,9 @@ config ROCKCHIP_ANALOGIX_DP
  
  config ROCKCHIP_CDN_DP
  	bool "Rockchip cdn DP"
--	depends on DRM_DISPLAY_HELPER
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	depends on EXTCON=y || (EXTCON=m && DRM_ROCKCHIP=m)
-+	select DRM_DISPLAY_HELPER
- 	select DRM_DISPLAY_DP_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	help
  	  This selects support for Rockchip SoC specific extensions
+ 	  for the cdn DP driver. If you want to enable Dp on
 diff --git a/drivers/gpu/drm/tegra/Kconfig b/drivers/gpu/drm/tegra/Kconfig
-index 44381ee6ea9e36f7..782f51d3044af1fc 100644
+index bb6e35261f1144b1..e0385d175ec6d266 100644
 --- a/drivers/gpu/drm/tegra/Kconfig
 +++ b/drivers/gpu/drm/tegra/Kconfig
-@@ -4,10 +4,10 @@ config DRM_TEGRA
- 	depends on ARCH_TEGRA || COMPILE_TEST
+@@ -5,9 +5,9 @@ config DRM_TEGRA
  	depends on COMMON_CLK
  	depends on DRM
--	depends on DRM_DISPLAY_HELPER
+ 	depends on DRM_DISPLAY_DP_AUX_BUS
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
  	depends on OF
- 	select DRM_DISPLAY_DP_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_DISPLAY_HDMI_HELPER
-+	select DRM_DISPLAY_HELPER
- 	select DRM_DISPLAY_DP_AUX_BUS
  	select DRM_KMS_HELPER
  	select DRM_MIPI_DSI
-diff --git a/drivers/gpu/drm/vc4/Kconfig b/drivers/gpu/drm/vc4/Kconfig
-index 98772a6b5bf0df54..91dcf8d174d6c6e1 100644
---- a/drivers/gpu/drm/vc4/Kconfig
-+++ b/drivers/gpu/drm/vc4/Kconfig
-@@ -2,15 +2,15 @@
- config DRM_VC4
- 	tristate "Broadcom VC4 Graphics"
- 	depends on ARCH_BCM || ARCH_BCM2835 || COMPILE_TEST
--	depends on COMMON_CLK
--	depends on DRM
--	depends on DRM_DISPLAY_HELPER
--	depends on PM
- 	# Make sure not 'y' when RASPBERRYPI_FIRMWARE is 'm'. This can only
- 	# happen when COMPILE_TEST=y, hence the added !RASPBERRYPI_FIRMWARE.
- 	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST && !RASPBERRYPI_FIRMWARE)
-+	depends on DRM
- 	depends on SND && SND_SOC
-+	depends on COMMON_CLK
-+	depends on PM
- 	select DRM_DISPLAY_HDMI_HELPER
-+	select DRM_DISPLAY_HELPER
- 	select DRM_KMS_HELPER
- 	select DRM_GEM_DMA_HELPER
- 	select DRM_PANEL_BRIDGE
 diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
-index be29e5cd5215e842..1a556d087e63c30f 100644
+index 02da2faf5ae33bdb..be29e5cd5215e842 100644
 --- a/drivers/gpu/drm/xe/Kconfig
 +++ b/drivers/gpu/drm/xe/Kconfig
-@@ -1,11 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config DRM_XE
+@@ -3,7 +3,6 @@ config DRM_XE
  	tristate "Intel Xe Graphics"
--	depends on (m || (y && KUNIT=y))
--	depends on DRM
--	depends on DRM_DISPLAY_HELPER
--	depends on MMU
--	depends on PCI
-+	depends on DRM && PCI && MMU && (m || (y && KUNIT=y))
- 	select INTERVAL_TREE
- 	# we need shmfs for the swappable backing store, and in particular
- 	# the shmem_readpage() which depends upon tmpfs
-@@ -20,6 +16,7 @@ config DRM_XE
- 	select DRM_DISPLAY_DP_HELPER
+ 	depends on (m || (y && KUNIT=y))
+ 	depends on DRM
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
+ 	depends on MMU
+ 	depends on PCI
+@@ -18,6 +17,7 @@ config DRM_XE
+ 	select DRM_KUNIT_TEST_HELPERS if DRM_XE_KUNIT_TEST != n
+ 	select DRM_PANEL
+ 	select DRM_SUBALLOC_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_DISPLAY_HDCP_HELPER
  	select DRM_DISPLAY_HDMI_HELPER
-+	select DRM_DISPLAY_HELPER
  	select DRM_MIPI_DSI
- 	select RELAY
- 	select IRQ_WORK
 diff --git a/drivers/gpu/drm/xlnx/Kconfig b/drivers/gpu/drm/xlnx/Kconfig
-index 7a14a8c2e7be9e59..68ee897de9d75884 100644
+index 41d753b14ccd9574..7a14a8c2e7be9e59 100644
 --- a/drivers/gpu/drm/xlnx/Kconfig
 +++ b/drivers/gpu/drm/xlnx/Kconfig
-@@ -1,15 +1,13 @@
- config DRM_ZYNQMP_DPSUB
- 	tristate "ZynqMP DisplayPort Controller Driver"
- 	depends on ARCH_ZYNQMP || COMPILE_TEST
--	depends on COMMON_CLK
-+	depends on COMMON_CLK && DRM && OF
+@@ -4,12 +4,12 @@ config DRM_ZYNQMP_DPSUB
+ 	depends on COMMON_CLK
  	depends on DMADEVICES
--	depends on DRM
--	depends on DRM_DISPLAY_HELPER
--	depends on OF
+ 	depends on DRM
+-	depends on DRM_DISPLAY_DP_HELPER
+ 	depends on DRM_DISPLAY_HELPER
+ 	depends on OF
  	depends on PHY_XILINX_ZYNQMP
  	depends on XILINX_ZYNQMP_DPDMA
  	select DMA_ENGINE
- 	select DRM_DISPLAY_DP_HELPER
-+	select DRM_DISPLAY_HELPER
++	select DRM_DISPLAY_DP_HELPER
  	select DRM_GEM_DMA_HELPER
  	select DRM_KMS_HELPER
  	select GENERIC_PHY
