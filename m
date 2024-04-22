@@ -1,102 +1,101 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11568482ED
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF3448781
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:01:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713769273; cv=none; b=geQkh8f83PcLDsI27JParjp2lTzrTHqHksmmoQvA7YV1dV7Mrx56oi9RGyCqaOal7vCTU7UaPSv1ndU5enuZTMbyqVEgJp57FHq0ZQHkrhxd0Dc++5OU1V026eZl1fWliIuEUukf8WxYtb1eDiUjaS5i0vMy9TxEINrq9N0BCHs=
+	t=1713769302; cv=none; b=fYDou0NkGJrXeBaMt8EfRpQZJEfcIKtRCGePeHguvJP/I0YkJgNrPWAlFIBFWepqFzDleOVC7PwTbVZT8gqHy0Rr/k9RPw9uFJ5NiZxs10SSGJW4Dm37odBsT95Ko+85hC4PEbFuv9ez6Lw8qn4u9QCuxWAS3JbYvRDZcDbDXfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713769273; c=relaxed/simple;
-	bh=XNuK4qbKnADfMXviTzs6nnvQDFLAwer8iqIgdbyp8hU=;
-	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
-	 References:Message-ID; b=fm24h0W1uQhT86qf12qHk/uW+a5ByacHPQxcDcf3tTfqyK8Lnh9eiyvdmMfpF8alSGICOlY9dV+2tC3HH8OREftJIeGjxJ6OfmYcJSQECSN3+DNSrWgNx3oAcy1pAeswk0fuoWBykrBScL7eQzgfuNAgmlBd32zKF40KHAGMvzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=A6TNrzvi; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+	s=arc-20240116; t=1713769302; c=relaxed/simple;
+	bh=EocOFi6jpL3NawVx7Uyo1nJQzARyB+e3oj4NB4mpF80=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lvPZ085la1wHzYsvyRVoa/bBhIU7p9yPtC13JOILEyzNla9fqMe9aN5+c556ZJAhiEbK2WjcixZiZYiTPLgLzdjVSFuPaWA+8Ky1hgz3bhwHXR8kgebuGvTG6IPo3C/MrS/6JQaxYRALgWVXGeYiPQATQruMcQDquXzJQx7Ggno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EK8OrJFo; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="A6TNrzvi"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 4E3E6240104
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 09:01:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-	t=1713769264; bh=XNuK4qbKnADfMXviTzs6nnvQDFLAwer8iqIgdbyp8hU=;
-	h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:
-	 Cc:Subject:Message-ID:From;
-	b=A6TNrzviFhHFrYszwgREJ5iTO94EMYzAXNLzJdxNHfYsP2tXLcSvIjYoBs2lFWMxP
-	 /uROVMewqcHGK9ZMgZ2H+7qS0+K9LUpgMgI3267ZYFUfOQhcE6sApHpHajgkx5s5uA
-	 MXNUZj2Iqg8l5DATZRVRlpHMZnaCrV+OTbqZ8tUXtDZNKtX/BGKnH/g1PXeUF9HvCy
-	 +mB/3nBKzSH9S9OWXN4sDLZnd4ndMB+WN+GxbZjiOIOXwgWOOjNFC/r6oUf7Nni8k7
-	 3uwNQRv7f3LJplC4qBbIA8qfbG8W5IcmK/UY/hqkxrEdtbNi4Lzcjzqcr2zdg/jACb
-	 CUez8t9gnZNsg==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4VNGPB6MLPz6tsf;
-	Mon, 22 Apr 2024 09:01:02 +0200 (CEST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EK8OrJFo"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6edc61d0ff6so4041509b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 00:01:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713769297; x=1714374097; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KCSO3DBXAP020biPDVOFMShhruKddjro8yUAaqTBNH0=;
+        b=EK8OrJFoIVUTGOiRYnCBvP/WKNEi/K+S7wHom8zhgFPlzfUDnJSxk7ILjtiFDXueaG
+         Fw8Hj47FJ20373ysVhoXYTEYe3elk1cE9QsCakUayIsKshpwvYTKySsYqvXo/zEIkAhI
+         NITg0UaFYjDhmHQqiiJ0Wo0WhEQdZCGzLkJao=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713769297; x=1714374097;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KCSO3DBXAP020biPDVOFMShhruKddjro8yUAaqTBNH0=;
+        b=H5LJhkncAliAidQbN8R1jR2UQ0enJPR3Eu8c8nu5ey8G7K3hiX85/v6vv4qndu7+e1
+         WFU0/tFtxnUDhOFrHudatH6LeEsBkMfKT978WVK0bwjzGITcw7xZsSMEZ+Tr9HbkZ4h4
+         em7QMPOsL8rcEuJ/KuHVI5mTaRsG6FvBXftDrPsMKBWc2balzg0JVGBlEoUZSflJIqx5
+         heVYNFhhKxhqE4TjTaQuiVjWe3FusKKxowqKkxpGoFKZL0sUK2tB2V2TiFGc9P7ZEWE4
+         e8l7HNQq/wFmbJB8GBAPgyN3c5/qpLg8KuY/zZu1KUnzi/FQZrw2Txr/0oFsgWgjWlSw
+         BNyA==
+X-Forwarded-Encrypted: i=1; AJvYcCXw+u7QRKgyTys+70eFRETYtRUaTcExoqgj7QjqVlRO7vYrZI92dbdeAO4xl34a8XdIuMWt1RlvyldywLiWvrFJzRWHOhKY6KE/IvNO
+X-Gm-Message-State: AOJu0YxyknxCehmCXBqmJ1NTGHbB140yaTyRWWCCoZGQnWQaYcMzxRYN
+	EgJ1cZRAlH1IoU3FLTkOqw/vXyWs6T7U1JSkHh3MUFRWrDmuoezNzvCj92KLQg==
+X-Google-Smtp-Source: AGHT+IE9ipOcgG52IC1TkXYf/uOIFgKc4zPGU8336WExD6rgd2fXIg7a0e2ELUT5f+/LCjxl0E6R+Q==
+X-Received: by 2002:a05:6a00:2181:b0:6e8:f66f:6b33 with SMTP id h1-20020a056a00218100b006e8f66f6b33mr11716708pfi.4.1713769296972;
+        Mon, 22 Apr 2024 00:01:36 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:abfb:1876:7a20:8e16])
+        by smtp.gmail.com with UTF8SMTPSA id km18-20020a056a003c5200b006efbc365de9sm7145191pfb.121.2024.04.22.00.01.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Apr 2024 00:01:35 -0700 (PDT)
+From: David Stevens <stevensd@chromium.org>
+To: "Michael S . Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Cornelia Huck <cohuck@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>
+Cc: Eugenio Perez <eperezma@redhat.com>,
+	Zhu Lingshan <lingshan.zhu@intel.com>,
+	virtio-dev@lists.oasis-open.org,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux-foundation.org,
+	David Stevens <stevensd@chromium.org>
+Subject: [PATCH v2 0/1] virtio: Add suspend support
+Date: Mon, 22 Apr 2024 16:01:27 +0900
+Message-ID: <20240422070128.1980027-1-stevensd@chromium.org>
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Mon, 22 Apr 2024 07:01:02 +0000
-From: a-development@posteo.de
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
- David.Kaplan@amd.com, Andrew.Cooper3@citrix.com, jpoimboe@kernel.org,
- gregkh@linuxfoundation.org
-Subject: Re: [RFC][PATCH 00/17] Fix up the recent SRSO patches
-In-Reply-To: <20240417091200.GAZh-SYOGABCnsqpKj@fat_crate.local>
-References: <cbad6acb30e33e8dd387080e5936cc38@posteo.net>
- <20240127191942.GEZbVXTtDNzLB9hTpr@fat_crate.local>
- <181005cf4a78a4c3c5e1de77498f6c23@posteo.net>
- <20240127194139.GFZbVcc2RxhNtO3ZHD@fat_crate.local>
- <6170a3f60cd1ca68bca5829db4a8568a@posteo.net>
- <20240326222134.GNZgNKbgdBUsAU98RV@fat_crate.local>
- <d0dfa77ba8231652554c4e6088f985d1@posteo.net>
- <20240416084544.GAZh46uKW6ijAfftmI@fat_crate.local>
- <a49e7560f982f00ef1c5452483459b26@posteo.net>
- <0065fda592b2652d1a2730ddbc81cea6@posteo.net>
- <20240417091200.GAZh-SYOGABCnsqpKj@fat_crate.local>
-Message-ID: <98d6c53b244c579b7c7e28872d5cb665@posteo.net>
+Content-Transfer-Encoding: 8bit
 
-Hello. I have installed the kernel through 
-https://aur.archlinux.org/packages/linux-mainline and noticed that SRSO 
-is disabled. "Speculative Return Stack Overflow: IBPB-extending 
-microcode not applied!"
+This series implements support for the virtio device suspend feature
+that is under discussion. Unfortunately, the virtio mailing list is
+currently being migrated, so recent discussion of the proposal is not
+archived anywhere. There current version of the proposal is a
+combination of [1] and [2].
 
-cat /sys/devices/system/cpu/vulnerabilities/spec_rstack_overflow
-Vulnerable: Safe RET, no microcode
+[1] https://lore.kernel.org/all/20230906081637.32185-3-lingshan.zhu@intel.com/
+[2] https://lists.oasis-open.org/archives/virtio-comment/202402/msg00088.html
 
-So far, I have been succesfully suspending the one night I used it.
+v1 -> v2:
+ - Check for device removal while waiting for suspend bit.
+ - Don't try to suspend uninitialized deivces.
+ - Use msleep instead of mdelay.
 
-Assuming this is per-default, I've installed the kernel module for my 
-PCIe Capture card and testing it.
+David Stevens (1):
+  virtio: Add support for the virtio suspend feature
 
-Any new instructions?
+ drivers/virtio/virtio.c            | 60 ++++++++++++++++++++++++++++++
+ drivers/virtio/virtio_pci_common.c | 34 ++++++++---------
+ drivers/virtio/virtio_pci_modern.c | 19 ++++++++++
+ include/linux/virtio.h             |  8 ++++
+ include/uapi/linux/virtio_config.h | 10 ++++-
+ 5 files changed, 112 insertions(+), 19 deletions(-)
 
-Thanks
 
-On 17.04.2024 11:12, Borislav Petkov wrote:
-> On Wed, Apr 17, 2024 at 08:08:53AM +0000, a-development@posteo.de 
-> wrote:
->> Today I failed to suspend, and the spec_rstack thing was off.
->> 
->> https://up.tail.ws/txt/non-working-suspend-2.txt
-> 
-> Ok, but please do not top-post. Put your reply underneath the next
-> you're replying to and remove the rest of the quoted text like I just
-> did.
-> 
-> So this could be caused by the proprietary module or something else.
-> 
-> If you want this debugged, you'd have to try to reproduce it with the
-> latest upstream kernel from here:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> 
-> after having removed the propietary module.
-> 
-> HTH.
+base-commit: e8f897f4afef0031fe618a8e94127a0934896aba
+-- 
+2.44.0.769.g3c40516874-goog
+
