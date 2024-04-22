@@ -1,164 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B2D51016;
-	Mon, 22 Apr 2024 08:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4327A53380
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:48:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713775692; cv=none; b=pAzGDoeIjh56Ie4PnSNw8kpSehcDumfggDndv9PVyfrlLcsCYnKcaMPxTqMjlFI/z8fSNHO4ENTethgTc+FCAwkO+nmW84frZbh1hEOYfRvzJzaM2t7q85/gxYpjur9xFPCnetWz1rPbXoam7vF5thnlWTlK8dvQzjxi3Qm2gFo=
+	t=1713775700; cv=none; b=nIDGkCJ3EKm8Vdqw088kNlJUTgWhDiyeN2aXsZpGsdcmz73VMy7CEdfZe6nEEpcJbGlR2baxRH9lkez+DAgawHouG9BJcQKbKyuIjWafKtHCvoXSOv8XPpczAz5xXkT6kAEKsCBhRzLa12D92h/qIXyNHPs4mvZKSj9jsBau/IM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713775692; c=relaxed/simple;
-	bh=jgYZaFJ37N18LMQ1WJO1fYtb83p+Fzz2HBcTxrLBVpQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OXiZLpKrssmOO+w/Nd04pXvCrFdniSebVzzK6Mgsavu6Yr2/jj0r0go23+voDoQ/R5WUiIYYWpJbR3Hv8N/qyYSwBXNXeexTcn3UsSMAJ6bHcOciiVhFZWnOCA3ORVT9ki75sQv17JwNk+sZ5xHMJIMDbu4RVKpkgoYYzYCXq9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I8V3k3ae; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713775700; c=relaxed/simple;
+	bh=XWViwFClyPoSqKIp2sLKe4pbbvpkPWu9OeRT9H3W1oY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qUKqFVlwlVA5uTKAu8DWcwfTlzBL6T+42wc0tJtGHH11Via2WphgPu3KP8BNkPRyXAXcGX2wHhz3qSokmAecwmiJ2i6LUsgpauRHAW8advzaGV8893uQ4NH+DJhL/XnWHKNXqoqtM6n1TnNcjfzgGM6TzUp9TcPT7Cv4zAbETL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oNqB2tQl; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I8V3k3ae"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCC93C4AF07;
-	Mon, 22 Apr 2024 08:48:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713775691;
-	bh=jgYZaFJ37N18LMQ1WJO1fYtb83p+Fzz2HBcTxrLBVpQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I8V3k3ae+9naHvOaS6cJwZtIckHUimrtIXelVHd5reDyqWCurUcuLYiFrVR7O5rJe
-	 WLIw/fq4qdtK1pzNhArGAYpXocScZzwOAM3eSJkaQMvhdEAdFBJ3Onzum5GB1OKsAQ
-	 DLZDAQ9CNeHTM2loHlLef0zHOcCw2eMgd1Rc9O7qAS6dxqepCyJCkhdxnjhREXsEjd
-	 nMtbwuxADbrM+ZssO5VQfMWLwyIX8x1WboReEgX2937yBXh8DBE+eW9mvsv7XFo+I3
-	 RAgkM1Nskbw2jhMiHCS50BRyxm4qNoiEw38803qAZtCA2JGgNF0zbR7A2N1nCSWIvE
-	 18qq2Eo73azpQ==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mike Rapoport <rppt@kernel.org>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v5 04/15] sparc: simplify module_alloc()
-Date: Mon, 22 Apr 2024 11:47:12 +0300
-Message-ID: <20240422084717.3602332-4-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240422084717.3602332-1-rppt@kernel.org>
-References: <20240422084717.3602332-1-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oNqB2tQl"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-41a523e27e0so4975955e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 01:48:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713775696; x=1714380496; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7ebbPMvWBsKZ0ArkpmmdUg6nQqxEpO8djndB+too+HI=;
+        b=oNqB2tQlCWeUYVYbJeuFeo3fH1vnpI9dVzc6GOa52p49nsj6zBjDs1PUte5f+k1Cp0
+         MNfcCgffBtOueUXUx7KFB6jxL8aY5+ORd3uLs9vgtyT+pz7efNvolorE8w7KE8FXyhsB
+         hvFhq7o8GLRUGrvqiUhcsSj1a4cxI3jrbm/SMVahKZVNKbvPDJFdZLHWdwccdfeIvJCX
+         xireJMQgwYCIQcfm2IbQiv9OLs8NUmz7KLodnJitYgbRrabjwG3W0+/hSAhytEf8u2F1
+         2mawV2E76tJXtYymsjP9/vxwHYhI8NwKN0XnbjViui07pTjCUwIhsLFaJGXpliDWrnvC
+         +4iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713775697; x=1714380497;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7ebbPMvWBsKZ0ArkpmmdUg6nQqxEpO8djndB+too+HI=;
+        b=Rkf6R2Rd8RQAwlw7kNaT2qFF4ODyOFSr9RWHQEIkcF+Xvyu8vQGSd81A86XjBDyWmp
+         szdT6oJn7uXTFrN/2bzmQIYDk6OJNG/kun2zhRMEgGqyOIMYl2hHjC2HEjxahxc8+TmJ
+         XwPkO29GjbErNU5ahhLZOESBTkWRvpvZFqBwfj+/Ifodh6QemZ2kzF+ZlS1G+XOmlqmt
+         yzqNNiq9oMPL27k2Oa7/+IqfYaXGHfB9pIl1YevD384hPP3zzK+DhVUqBlBdS7SdJIiz
+         8HCoZ5+iULAexARx4PolQ9Ksb7fbXll6ARGtDpRpo1bVdbzE6KX4PNWc6lePoMosQMxB
+         VEQw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2JLm7fRwcbBiAGLIyyJXaS6pFjPbxKZ/+qSijuIPXaCpivzw5bRofDNPkbr3RYm/M6rFeznevIXyn5goq6RJOn+cWqnMfsOQpcvd0
+X-Gm-Message-State: AOJu0YzREwn4R+fdDFXwcx7X3Xp8xAiPWHBo9amleZzNC485bJOpEFo4
+	dW6lWl7zx1dod/UpexSsSuxBrOAhpX3N0HOQnL5hf7Dga1UmOaIcoQDeUkgucoE=
+X-Google-Smtp-Source: AGHT+IEDmMXEAsNMGafqsvYXvVxeCD4wbO2HE8DuQ9uEaYuSFLUK6kEssEISQVY+lV3u7ezKifjBQw==
+X-Received: by 2002:a05:600c:3ca3:b0:418:c021:33ae with SMTP id bg35-20020a05600c3ca300b00418c02133aemr6984192wmb.19.1713775696453;
+        Mon, 22 Apr 2024 01:48:16 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id s6-20020a05600c45c600b00418244d459esm15962650wmo.4.2024.04.22.01.48.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 01:48:16 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Mon, 22 Apr 2024 10:48:12 +0200
+Subject: [PATCH v4 1/3] dt-bindings: arm: qcom: Document the HDK8650 board
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240422-topic-sm8650-upstream-hdk-v4-1-b33993eaa2e8@linaro.org>
+References: <20240422-topic-sm8650-upstream-hdk-v4-0-b33993eaa2e8@linaro.org>
+In-Reply-To: <20240422-topic-sm8650-upstream-hdk-v4-0-b33993eaa2e8@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=952;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=XWViwFClyPoSqKIp2sLKe4pbbvpkPWu9OeRT9H3W1oY=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmJiRNMvLqQcadxyVBRIYuqIV5T1b4xUUcpYARAnuY
+ rpFC5LmJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZiYkTQAKCRB33NvayMhJ0ZRED/
+ 4mgSdAzjIwarwx/RN6ijPJgnNDVi3wvjwJJ5waiA7A3ufRBlVar1ndOroawO6Z13kzbEcfP7bPYheW
+ PBVpAi4L5BiC6IsYMmVEoRauE5xE3B31aZPukzcfHV71C2Jl65ua+JXg6JRPDw1ln143khGKCkmQES
+ H02TJVZx5zVYDvc7ZK70r0kMYj6Z2GwqcLgAPYqLQgGcZjetM437uyXx9SlWwyPzyVwrH/0KqJ+gzD
+ Fckt0v+Aux3gBDmglrs8MBTauJht2HiVsws7kRi6yFAKpVZ4rZmZTVd+AoKNyKR0RiWiH70Z5M63U8
+ S01ZdeqFNY0xRcnSFVPfOR8tkXu8bJQzSoQfhRVYAHEuwuy2sfKl7zMgVeBI7RjNf+WWtpSTGggK6y
+ r6Jlt/4KyrBQzrIDfPp6VJurDXyioZ+PV2REdu7bQG8IYoPY3ei92WGb2/5r4GJRH/UUsjSG8hHw7Y
+ T/Ez1v/JkhL9wjMELlMy149YknbbwA4OC+YWmcC/iFBWXo0C2M/sLhij58Us3FzHDkXsM+LIQ0thhM
+ N4OdD9jnrXxhDqNH1M0wyrTunxpg2d2rMRolD48W4auzA+s5CCgCwmdzvczC0k0e3bO3Jj7eL9cceo
+ J+iQecsNU9qChi/d0Wj4GTFFAmETpojSjvqLeLFG7ar8S5myEnd1e+3D6Bsg==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+Document the Qualcomm SM8650 based HDK (Hardware Development Kit)
+embedded development platform designed by Qualcomm and sold by Lantronix [1].
 
-Define MODULES_VADDR and MODULES_END as VMALLOC_START and VMALLOC_END
-for 32-bit and reduce module_alloc() to
+[1] https://www.lantronix.com/products/snapdragon-8-gen-3-mobile-hardware-development-kit/
 
-	__vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END, ...)
-
-as with the new defines the allocations becames identical for both 32
-and 64 bits.
-
-While on it, drop unsed include of <linux/jump_label.h>
-
-Suggested-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- arch/sparc/include/asm/pgtable_32.h |  2 ++
- arch/sparc/kernel/module.c          | 25 +------------------------
- 2 files changed, 3 insertions(+), 24 deletions(-)
+ Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/sparc/include/asm/pgtable_32.h b/arch/sparc/include/asm/pgtable_32.h
-index 9e85d57ac3f2..62bcafe38b1f 100644
---- a/arch/sparc/include/asm/pgtable_32.h
-+++ b/arch/sparc/include/asm/pgtable_32.h
-@@ -432,6 +432,8 @@ static inline int io_remap_pfn_range(struct vm_area_struct *vma,
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 98b4187f2aad..52be11d33935 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -1002,6 +1002,7 @@ properties:
  
- #define VMALLOC_START           _AC(0xfe600000,UL)
- #define VMALLOC_END             _AC(0xffc00000,UL)
-+#define MODULES_VADDR           VMALLOC_START
-+#define MODULES_END             VMALLOC_END
- 
- /* We provide our own get_unmapped_area to cope with VA holes for userland */
- #define HAVE_ARCH_UNMAPPED_AREA
-diff --git a/arch/sparc/kernel/module.c b/arch/sparc/kernel/module.c
-index 66c45a2764bc..d37adb2a0b54 100644
---- a/arch/sparc/kernel/module.c
-+++ b/arch/sparc/kernel/module.c
-@@ -21,35 +21,12 @@
- 
- #include "entry.h"
- 
--#ifdef CONFIG_SPARC64
--
--#include <linux/jump_label.h>
--
--static void *module_map(unsigned long size)
-+void *module_alloc(unsigned long size)
- {
--	if (PAGE_ALIGN(size) > MODULES_LEN)
--		return NULL;
- 	return __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END,
- 				GFP_KERNEL, PAGE_KERNEL, 0, NUMA_NO_NODE,
- 				__builtin_return_address(0));
- }
--#else
--static void *module_map(unsigned long size)
--{
--	return vmalloc(size);
--}
--#endif /* CONFIG_SPARC64 */
--
--void *module_alloc(unsigned long size)
--{
--	void *ret;
--
--	ret = module_map(size);
--	if (ret)
--		memset(ret, 0, size);
--
--	return ret;
--}
- 
- /* Make generic code ignore STT_REGISTER dummy undefined symbols.  */
- int module_frob_arch_sections(Elf_Ehdr *hdr,
+       - items:
+           - enum:
++              - qcom,sm8650-hdk
+               - qcom,sm8650-mtp
+               - qcom,sm8650-qrd
+           - const: qcom,sm8650
+
 -- 
-2.43.0
+2.34.1
 
