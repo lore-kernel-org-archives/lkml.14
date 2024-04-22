@@ -1,124 +1,120 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14324146D5F;
-	Mon, 22 Apr 2024 12:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E6B14EC5F
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 12:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713789586; cv=none; b=gg447vUfVXq64AkB2grjMxWKBPLXOkUNo9r4XCB63h35aLBXPJO2nMVKI4U4shQZm33IMwLWoVH5BqgyRmziSaFMgNXquykMYpvvv4o6a9/FNBV0Izb4o+lHeEkU7CVg/C9/XLH+aMh/uAzBscRXRjNL0ZmVESjXRPDHoD/SWVA=
+	t=1713789586; cv=none; b=tvqd+8F1RqpDoVZ/5hbIcpTDEeG0Iic0HX6Hd/WIF21sXfG7l3ZFkAm3mbW9w4UlRZOEfwQT783+WJ3mkfLHTsaEaOQNVZVAHIb1UHM4BJCwZPJ3i2pIejhOjiArDC5YKH+1cOGN6wCbZgpBi8HM78MTo9KujwQCHTwgdpKmDLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713789586; c=relaxed/simple;
-	bh=Fmr+7UDSIjLKMs43QuC2kTOPm/JegyQmo0KrwLPs74Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U6SC64aXmH15iDfjr9rG3w68Zmp9swxx07aZwH5AjL1gdVqV0dy3r7T6l+EBciQIrEOwZj7ihE8lYGgK2PBYjgazFJ4zA4GocI30v4c4xFf5sxbD9TOmGrql+4jVKfwEQpFaiLTm0TK/CTg9EHGic//Gin7auPaiRcu32glCqZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d8a2cbe1baso55315011fa.0;
-        Mon, 22 Apr 2024 05:39:44 -0700 (PDT)
+	bh=iyTsIMR6AeJPVBmq77RzZGnEgc860sS11RT6shdDDRw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dYGxJagttyEx7+c1AcVeZ4GEXUzS3TIgQj39FUGq49WYjy/Vzgb3otGEAcWxJgspdXB8GUq2a6EudKtYPhD35IKSEqPoRuwSvB8r0BaoO35nv3PaZqPI1o88oiDWwm7SuJrKBWwZ5TyiRG7hEcca5TEmpz1YiZmnOkds53uxuTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GJzqxMnA; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GJzqxMnA"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3c74b643aebso1733000b6e.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 05:39:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713789580; x=1714394380; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=S4ySNq3QesUCzbAIR2RY0fipn3yuib781ddLRiaF6bc=;
+        b=GJzqxMnAZlXFvpw/W7OFie1lW1lGs+B0rbRo4x7hIvcbGkrjUln9INDuLK9g+IphIX
+         aDaGsgDTGZz8E3msvjjzd9yYcp099GvrB/UGkBdmNOtH7gKA2ZPil83GTGt565zZZM2g
+         gOdHABj3iBLS2Zi1E4ke2ksQnniHGN7OpVehFs4ENiDNGsCQyhJG98hpaWt7zLe1cT/R
+         8E/TB78cAXPp5kS/2DjzOxhcJSfXIvwTLvDJ4wHaonghCQYUDNlQdR3pS2jANq2moE4z
+         0NM04olMYW4649SS9KYm7iKnSAyZCXe3IwIH9ma6AwZadKy30icRDpGmaarKoPIy5DIr
+         JilQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713789583; x=1714394383;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AtbQVvvytm2FvKdHddRJ6/OPEdy67XedVgC8G6QI7mE=;
-        b=qfV50iJgYAOOddpJp9ofQc7W8c9PVJfSYRJaACwXOPaJ1ECz6We45cGK5HAWikQ97V
-         zseazoCzn8ugO6W20N1avnnDuZ3lNdhQiutZ9dn/Fx7sgQBP9ch6NLSrj6XSclbvmhvQ
-         H5iGM63f59nLu4iPNT8TrkT6nMrxrP+XoowjSmIizoRlbB+78Gc9WDpscVOGRmcm8iO9
-         leUBg4/pfohYNIxMBc2/sgUH/CyWiCeauaxQYZt8BKGwpmU54bPh5iRWtEH77OP5l4nR
-         zQlAf0IpXwVFlH8JIxSouAR7W4AYxKCeOfo+ppj7B7wYSpyxaFtfhBBpXhsqpiITrClz
-         bt/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUHNZXtfXFYp6XVvOLNcpNBCBk4zoknw6EZ4Z01VPtPTcRnOgl+UlGSg7zWf7GToCUzez51Tk0svBu8GYUzrXvuoQ/y6exMHI7by6k5DXgsTmGXjgmY/94OUju4w+tj0EU9rA7dJVRITecepYmukzEuKH5TJ3GdjIWFydVdojcHPGijmdC3WAedc19A8jteW3nIGSeoeOUxkS4=
-X-Gm-Message-State: AOJu0YwJ47V7gT96aQziBMSe5EoreHuZAl/2gsvhNNP8ivwhFxp3cuzE
-	+eQPwDUUSaPmCGd3vOSxRaHZTR7rkHco5ZgI5+Zp/vDB/VcwPAEP
-X-Google-Smtp-Source: AGHT+IFjwu09Igjhit00FwgEXKxmKwFyLCPy0CniLE6C/q3K4O4DuOoAL8L+d3hMfAKTAbKTgdLqGw==
-X-Received: by 2002:ac2:4ed0:0:b0:515:cbf1:9fda with SMTP id p16-20020ac24ed0000000b00515cbf19fdamr7518637lfr.61.1713789582986;
-        Mon, 22 Apr 2024 05:39:42 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-006.fbsv.net. [2a03:2880:30ff:6::face:b00c])
-        by smtp.gmail.com with ESMTPSA id bu13-20020a170906a14d00b00a5816a7381bsm214578ejb.141.2024.04.22.05.39.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 05:39:42 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: aleksander.lobakin@intel.com,
-	kuba@kernel.org,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	elder@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	nbd@nbd.name,
-	sean.wang@mediatek.com,
-	Mark-MC.Lee@mediatek.com,
-	lorenzo@kernel.org,
-	taras.chornyi@plvision.eu,
-	ath11k@lists.infradead.org,
-	ath10k@lists.infradead.org,
-	linux-wireless@vger.kernel.org,
-	geomatsi@gmail.com,
-	kvalo@kernel.org
-Cc: quic_jjohnson@quicinc.com,
-	leon@kernel.org,
-	dennis.dalessandro@cornelisnetworks.com,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	idosch@idosch.org,
-	leitao@debian.org,
-	angelogioacchino.delregno@collabora.com,
-	matthias.bgg@gmail.com,
-	Ido Schimmel <idosch@nvidia.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Simon Horman <horms@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH net-next v7 01/10] net: core: Fix documentation
-Date: Mon, 22 Apr 2024 05:38:54 -0700
-Message-ID: <20240422123921.854943-2-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240422123921.854943-1-leitao@debian.org>
-References: <20240422123921.854943-1-leitao@debian.org>
+        d=1e100.net; s=20230601; t=1713789580; x=1714394380;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S4ySNq3QesUCzbAIR2RY0fipn3yuib781ddLRiaF6bc=;
+        b=dGtscdIvyCVWi7Au1H41DUjGuZwEM6nH5eQndzDgs8EQd27wTy4J6WdUzpkf+E4g9D
+         r8EzFvGEHaYejaDEo+SaILNzhmGgkLrIusKd9yZEAbBjy3LdRlQxtpPZ4m3r68qn2dkQ
+         C2b/X4d6QEAIi48Q/yh4ieXD5y/iFedjS1z0sRGIhHslQcA8DePPaPnjZk+qUjWbHJUN
+         YBb8aUYnBG1/og2p8UiCQK87zUES380PtmkFzkpIuf5IeEW2zm3TKJOdRKe3IivxeG7z
+         LeHpORM9WU24FwUY5SfQyogSJP5lLqLkJHLpz58Ia0zW4yazAh4GqhUfnl7Zq0Eq/xK6
+         zk0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXjtCOeXD4+P0MEd+N0Z9BZ2yVz1/wl6knrRXpA9Rlm+VPqzW/8fqmfiDsIOR2ZapYXyTwzbGXHduaPvGhBvXMle8mfmfvs3hV78XHJ
+X-Gm-Message-State: AOJu0YxGGQZFiZQuqebco4bmLTHCXNPDUNAsaBBGm2fv3UMBWikVLT2S
+	umMOnp4vNKnpjc+rdvJ0hdGr6VCO+UuKOTtEn7yNZejYK6eEUvznxJLM685oeSu/OPZCQMArPnV
+	BDyCSkF3DWjZqdKj9bIcX+2mUWhVYc5dTBbW6vw==
+X-Google-Smtp-Source: AGHT+IFRVyCeWFThbOBOiFgmqUhy26Z9HP2Lw9XMRIZylBypB7g6tOUorMkXN+WcL7sQuHVha6TScv+q+Y0CqpP+4uw=
+X-Received: by 2002:a05:6870:c1cf:b0:21f:d2a2:7ff4 with SMTP id
+ i15-20020a056870c1cf00b0021fd2a27ff4mr14344315oad.17.1713789580152; Mon, 22
+ Apr 2024 05:39:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240404122559.898930-1-peter.griffin@linaro.org>
+ <20240404122559.898930-11-peter.griffin@linaro.org> <75b1b063-e8d4-417d-99a8-4320d72297cf@moroto.mountain>
+In-Reply-To: <75b1b063-e8d4-417d-99a8-4320d72297cf@moroto.mountain>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Mon, 22 Apr 2024 13:39:28 +0100
+Message-ID: <CADrjBPputDQWpQZgPiuUDLTWZA83KJEMp-X8ZtXAwt6ivTOG9g@mail.gmail.com>
+Subject: Re: [PATCH 10/17] phy: samsung-ufs: ufs: Add SoC callbacks for
+ calibration and clk data recovery
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org, 
+	alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org, 
+	s.nawrocki@samsung.com, cw00.choi@samsung.com, jejb@linux.ibm.com, 
+	martin.petersen@oracle.com, chanho61.park@samsung.com, ebiggers@kernel.org, 
+	linux-scsi@vger.kernel.org, linux-phy@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, tudor.ambarus@linaro.org, 
+	andre.draszik@linaro.org, saravanak@google.com, willmcvicker@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-Fix bad grammar in description of init_dummy_netdev() function.  This
-topic showed up in the review of the "allocate dummy device dynamically"
-patch set.
+Hi Dan,
 
-Suggested-by: Ido Schimmel <idosch@nvidia.com>
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Reviewed-by: Ido Schimmel <idosch@nvidia.com>
----
- net/core/dev.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks for the review.
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 8bdc59074b29..44c2d698fd1b 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -10424,7 +10424,7 @@ EXPORT_SYMBOL(register_netdevice);
-  *	init_dummy_netdev	- init a dummy network device for NAPI
-  *	@dev: device to init
-  *
-- *	This takes a network device structure and initialize the minimum
-+ *	This takes a network device structure and initializes the minimum
-  *	amount of fields so it can be used to schedule NAPI polls without
-  *	registering a full blown interface. This is to be used by drivers
-  *	that need to tie several hardware interfaces to a single NAPI
-@@ -10433,7 +10433,7 @@ EXPORT_SYMBOL(register_netdevice);
- void init_dummy_netdev(struct net_device *dev)
- {
- 	/* Clear everything. Note we don't initialize spinlocks
--	 * are they aren't supposed to be taken by any of the
-+	 * as they aren't supposed to be taken by any of the
- 	 * NAPI code and this dummy netdev is supposed to be
- 	 * only ever used for NAPI polls
- 	 */
--- 
-2.43.0
+On Wed, 17 Apr 2024 at 10:52, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+>
+> On Thu, Apr 04, 2024 at 01:25:52PM +0100, Peter Griffin wrote:
+> > diff --git a/drivers/phy/samsung/phy-samsung-ufs.c b/drivers/phy/samsung/phy-samsung-ufs.c
+> > index c567efafc30f..f57a2f2a415d 100644
+> > --- a/drivers/phy/samsung/phy-samsung-ufs.c
+> > +++ b/drivers/phy/samsung/phy-samsung-ufs.c
+> > @@ -46,7 +46,7 @@ static void samsung_ufs_phy_config(struct samsung_ufs_phy *phy,
+> >       }
+> >  }
+> >
+> > -static int samsung_ufs_phy_wait_for_lock_acq(struct phy *phy)
+> > +int samsung_ufs_phy_wait_for_lock_acq(struct phy *phy, u8 lane)
+> >  {
+> >       struct samsung_ufs_phy *ufs_phy = get_samsung_ufs_phy(phy);
+> >       const unsigned int timeout_us = 100000;
+> > @@ -98,8 +98,15 @@ static int samsung_ufs_phy_calibrate(struct phy *phy)
+> >               }
+> >       }
+> >
+> > -     if (ufs_phy->ufs_phy_state == CFG_POST_PWR_HS)
+> > -             err = samsung_ufs_phy_wait_for_lock_acq(phy);
+> > +     for_each_phy_lane(ufs_phy, i) {
+> > +             if (ufs_phy->ufs_phy_state == CFG_PRE_INIT &&
+> > +                 ufs_phy->drvdata->wait_for_cal)
+> > +                     err = ufs_phy->drvdata->wait_for_cal(phy, i);
+> > +
+> > +             if (ufs_phy->ufs_phy_state == CFG_POST_PWR_HS &&
+> > +                 ufs_phy->drvdata->wait_for_cdr)
+> > +                     err = ufs_phy->drvdata->wait_for_cdr(phy, i);
+>
+> The "err" value is only preserved from the last iteration in this loop.
 
+I'll send a follow up patch for this as it's already applied.
+
+Thanks,
+
+Peter
