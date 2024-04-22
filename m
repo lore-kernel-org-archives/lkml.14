@@ -1,147 +1,190 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110AF537F1;
-	Mon, 22 Apr 2024 08:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA411CAA1
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 08:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713774804; cv=none; b=MRerWXlnnRvu8UCWZJdGvOmP1hb7G8WH9eg42mB5zbec3Q6VICHrqB8WzgUEb8zhbHNgwmETbKcTUJt3UYZbAjrg7t34lubTQPGG5wlg+rcim/yCGYtBKdY5LoSo659QKpSDAsXggbzFba3ymGaVmktEVGQaDsZy3AP0HmNv5gA=
+	t=1713774830; cv=none; b=C86F3p/UxOyWOB4onqVHfm2colUmDBICgZ1RC8B5Ux93hxKpT8TxVSNHKOwqmP6vnTOvoqetODBYDkaCU0T41FRMl0ktVmW2baqSNlUsXGs4uC1kMnEKihNMub6D0HomZxb0dS84WoabM6Hqkpgo/l38IgmSqvQfdRtaAfgx+VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713774804; c=relaxed/simple;
-	bh=V/gRTGxU4M1x81IlNr4qHiOOIHIMpJV/LpCHRVYKo6Y=;
+	s=arc-20240116; t=1713774830; c=relaxed/simple;
+	bh=foq5ht+lMPQXu4in46rwNYOqTfbeaW4P5OvmFAJopWw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FSpAfRsZooIovXB7Ew+PtH8hJTM+JyMW28IGXCkY38OHbI3u2cx5rAxV+8HvF3U0+bqkhFwvpa/hxGBEPL850tBGc68/xy5XV2823t46cfBmlIW7NpDrE7zOCHqVGnM5k0CJ1JQDQOtYve4mbY31hYe9HUsjoy9gwRiTlHr8kVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cVcbAvym; arc=none smtp.client-ip=209.85.167.51
+	 To:Cc:Content-Type; b=t/27PwSiu6sxyH3rpp4s8sCb1nLYwO1LZO/Oo5sw3KsgphXjW/BqevQcMfiSEiZJD12D/B3ux94/JhMNUpZ1OAATkbWuyRvVBtQWE9+uSjXMuH9BVvk72fhgKvFGghBYw/GbAOgKdCc1KeFoU9ql07TMuzjbtYnYbw5SRrIU1Wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CIk0DqMJ; arc=none smtp.client-ip=209.85.210.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cVcbAvym"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-51aa6a8e49aso4152665e87.3;
-        Mon, 22 Apr 2024 01:33:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CIk0DqMJ"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6ea1a55b0c0so2198873a34.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 01:33:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713774801; x=1714379601; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1713774828; x=1714379628; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UuzSRVYtf+Ra/WsXJdPH9Ei54fL4mpJd0z2NfLlMpkw=;
-        b=cVcbAvym7+hcPq6vkIwwNTcNYzRTIyiTkITFnQuMsexWDZBPx/cgkuUd9oQcdZB6sY
-         rUSDz9XbolEPeYe0yCFXsCldiwp8r3UZzRTzj4iu0LAqeCd6+UlEqwW95A36uekBRfpr
-         5puoq7knk1GJl3CRE9hzYbj4mlYepdtpSmu/OFxRqSe8C2mYni/bYJNY3umm+tj0gWBZ
-         CHv+dvTncDDkNQru75W96fMxf/3/b0o8ojiVFjXnNvriJfUDxtZWCJP0Dfq6opFT9Gh8
-         VUUcilfqt8lxUA7nzkuByMOQT4ihjWnaadWjOySPRBqYApMpAOZG37P41VRnEG+FeAkP
-         k5PA==
+        bh=ywcd19fDJAvHh2oKY2HtCRoc8tp9ImKib5PzcAaTuGE=;
+        b=CIk0DqMJ6jHLh16KBVwmcI1HCuz1bxE9PSxkaXM1eqkE+0/EZPTEILBmGcB1HKrNku
+         YQL8L5QghknVjpjxd27wsKg/4l02UarfZhv3zbp1Ugg6y6zsI/ekMVbGjmYk8/vzlcGQ
+         jmdqgVuhlV6oPJudrMYHZDnGJuVbdyUoAdiJ9kxVakXbOPNj1jO4UAKKsYutgBnWEOhp
+         1WivaJKSPauohcuraHOoRgmdlA60DZEGjYfAiQV46bhR3FpWyj5C2ELj+9BGOCETxOyX
+         96PcWJXYmzJCcp/dFtRuEFTxOMZett35JvIfdMhlNtXzhEO73o/jExie/H6Yabwo/7+E
+         0vIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713774801; x=1714379601;
+        d=1e100.net; s=20230601; t=1713774828; x=1714379628;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UuzSRVYtf+Ra/WsXJdPH9Ei54fL4mpJd0z2NfLlMpkw=;
-        b=cwsiX+HE9WSYO3qzo1+oFo6I0Vs3/InhcCMSP6jqVXW3r2J9ZCvA0qNr6y7bBEZu8+
-         wMRLzgaNtrKUcvpoOAR0riqTRyOTht16wuMaGCzAVTy59x5gDPPfWM08Mcob1jVmgj6x
-         CTYAUgIepMoIF1RdgIE39D1Z/oJ7IBjucwYIBnlghTS7ZdsHeX4MpMbUkXsgyt6gNPhN
-         maF1/brMTeg647IR6V3lgRy0CdneNHz1dD8ZjcjFUrT28uuvpHl/Q5nsRy4YhXodgxbk
-         Hc01sbQbmVddoZY5Sl8OIJHuW2B5zaFn9KYEKQIuPevKG2PuSnP0hE/RpJ35/pIQ49UP
-         oIAA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqzwa1FijiMUJYH1aTf/xhHF48ZLzR+QxUdd7QzMIwQFDtlogjEQPoFxra9j3CDMBTGR7Km1Ln6L7GdXC5G/ogQ9P1pd3H/H81ipeEa50AFhaRoLjf1ltQQaKDax6dDUorxJNOeIltobQo
-X-Gm-Message-State: AOJu0Yw4EzEM0O4MwlBNORvOpf62yNT9JWS8hwY9QiwzdCbph386SVP1
-	s542pfjyGK++0aSachmYRL/SZo5uY4lhw+EPNPPKJ1C1nwVGqtTxeCq6hB758j8/2QbM5a+2dkt
-	U2aPuVkPQvI1AYPhhDiAOrt4TmmE=
-X-Google-Smtp-Source: AGHT+IGKpKuGGjiohe1yFuIb8kDEPxL3NyoWbtgCGmC7bLt81jMHaKaCalA1tIA7Cmmx2ffBaaioB88fnfvBF4QAIRQ=
-X-Received: by 2002:a05:6512:3602:b0:518:d079:ffd9 with SMTP id
- f2-20020a056512360200b00518d079ffd9mr5121751lfs.13.1713774800851; Mon, 22 Apr
- 2024 01:33:20 -0700 (PDT)
+        bh=ywcd19fDJAvHh2oKY2HtCRoc8tp9ImKib5PzcAaTuGE=;
+        b=n8em2LoJSjZHqTymvreQMy/Ix/2JlQmj79p927IFSORRhiAooQXqNDj0HeXlHtZtA3
+         FTevaNda1dHWtd/TctYzRiuCTtjGLPXDAcU5G4V4nxQfKAuQoP1tAt0Vv7swTO8kWFpI
+         /XZEpgxwKdOGvH3V5SBOjMMFqkBy/TWhqwer/y30P1ypK4mG5sSpYDk/sSaClqgBWUIZ
+         BEJzrTugquQv5wBkYRU2xndcRLgilhHpQuahqn2BEWCdW2DLkCn/nBEHnmdKeZrlo0k8
+         5/HQCgP9kXbonutc9XUw9dJSJo3wC2tIyo5reqT6PgeF60c7Q6dLX2FitV2KN5GAhCjm
+         BLvA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPZEt0LYGfpnxCcQ9lJG5Hy8rvKZyyQcGlVJgU485lejrgDaF1jYy+QRDkgrjgvmAd0m/nlFzTv9ZlqnXG/Css1O7KHQ4BcH13Uvn1
+X-Gm-Message-State: AOJu0Yy+P/9bWaHFX2HvQeIThTHtbxUbG9/UfxHpUploafztUU5GJw8J
+	z2ANsPmfigBhIsuuugnrBTQKXqbpivTdMfRFCuBSDstT9cJEs+4L2wTNYdeATTTllbrgZdoThwq
+	qNgVGgSHL0Cd9oNT8gx5J2qhA4Aw=
+X-Google-Smtp-Source: AGHT+IEPJHMY8u7itxLBLQLayGMuxMOVFCMdrOZJ4tTSnqwhtm7xDeLbEZKYZ/SgcKO4gmrr6s7ixsqp9UeoKVIxDXM=
+X-Received: by 2002:a05:6870:71cf:b0:221:416:1df9 with SMTP id
+ p15-20020a05687071cf00b0022104161df9mr13159216oag.23.1713774828235; Mon, 22
+ Apr 2024 01:33:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240420182223.1153195-1-rilian.la.te@ya.ru> <20240420182223.1153195-4-rilian.la.te@ya.ru>
- <7cf31245-b2a1-419c-add6-a6a50a3f3cf1@kernel.org>
-In-Reply-To: <7cf31245-b2a1-419c-add6-a6a50a3f3cf1@kernel.org>
-From: "Konstantin P." <ria.freelander@gmail.com>
-Date: Mon, 22 Apr 2024 11:35:32 +0300
-Message-ID: <CAF1WSuw9WKCNbsnyDv6F0QNJbYT78wMn=s54n7XXfM94z51oJg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] serial: sc16is7xx: add support for EXAR XR20M1172 UART
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: Konstantin Pugin <rilian.la.te@ya.ru>, krzk@kernel.org, conor@kernel.org, lkp@intel.com, 
-	vz@mleia.com, robh@kernel.org, jcmvbkbc@gmail.com, 
-	nicolas.ferre@microchip.com, manikanta.guntupalli@amd.com, corbet@lwn.net, 
-	ychuang3@nuvoton.com, u.kleine-koenig@pengutronix.de, Maarten.Brock@sttls.nl, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Herve Codina <herve.codina@bootlin.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>, Lech Perczak <lech.perczak@camlingroup.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+References: <20240422082238.5784-1-xuewen.yan@unisoc.com>
+In-Reply-To: <20240422082238.5784-1-xuewen.yan@unisoc.com>
+From: Xuewen Yan <xuewen.yan94@gmail.com>
+Date: Mon, 22 Apr 2024 16:33:37 +0800
+Message-ID: <CAB8ipk-LhSuMsp0DdzjEJN-4XEBT1_ri6BPH_nvxSgFZONMT2Q@mail.gmail.com>
+Subject: Re: [PATCH v2] sched/eevdf: Prevent vlag from going out of bounds
+ when reweight_eevdf
+To: Xuewen Yan <xuewen.yan@unisoc.com>
+Cc: peterz@infradead.org, mingo@redhat.com, juri.lelli@redhat.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
+	yu.c.chen@intel.com, ke.wang@unisoc.com, di.shen@unisoc.com, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-I do not think this is a requirement for a new version. I need to
-wait. Some folks want to test my patches with their hardware)))
+Hi Peter,
 
-On Mon, Apr 22, 2024 at 9:30=E2=80=AFAM Jiri Slaby <jirislaby@kernel.org> w=
-rote:
+Because the issue may be urgent for many people, I sent the patch first.
+However, when I test on the Android system, I find there still are
+vlags which exceed the limit.
+On the Android system, the nice value of a task will change very
+frequently. The limit can also be exceeded.
+Maybe the !on_rq case is still necessary.
+So I'm planning to propose another patch for !on_rq case later after
+careful testing locally.
+
+BR
+
+On Mon, Apr 22, 2024 at 4:23=E2=80=AFPM Xuewen Yan <xuewen.yan@unisoc.com> =
+wrote:
 >
-> On 20. 04. 24, 20:22, Konstantin Pugin wrote:
-> > From: Konstantin Pugin <ria.freelander@gmail.com>
-> >
-> > XR20M1172 register set is mostly compatible with SC16IS762, but it has
-> > a support for additional division rates of UART with special DLD regist=
-er.
-> > So, add handling this register by appropriate devicetree bindings.
-> ...
-> > --- a/drivers/tty/serial/sc16is7xx.c
-> > +++ b/drivers/tty/serial/sc16is7xx.c
-> ...
-> > @@ -555,18 +578,43 @@ static bool sc16is7xx_regmap_noinc(struct device =
-*dev, unsigned int reg)
-> >       return reg =3D=3D SC16IS7XX_RHR_REG;
-> >   }
-> >
-> > +static bool sc16is7xx_has_dld(struct device *dev)
-> > +{
-> > +             struct sc16is7xx_port *s =3D dev_get_drvdata(dev);
-> > +
-> > +             if (s->devtype =3D=3D &xr20m1172_devtype)
-> > +                     return true;
-> > +             return false;
+> kernel encounters the following error when running workload:
 >
-> :) so this should simply be:
+> BUG: kernel NULL pointer dereference, address: 0000002c
+> EIP: set_next_entity (fair.c:?)
 >
-> return s->devtype =3D=3D &xr20m1172_devtype;
+> which was caused by NULL pointer returned by pick_eevdf().
 >
-> ...
-> > @@ -1002,6 +1052,7 @@ static void sc16is7xx_set_termios(struct uart_por=
-t *port,
-> >                                 const struct ktermios *old)
-> >   {
-> >       struct sc16is7xx_one *one =3D to_sc16is7xx_one(port, port);
-> > +     bool has_dld =3D sc16is7xx_has_dld(port->dev);
-> >       unsigned int lcr, flow =3D 0;
-> >       int baud;
-> >       unsigned long flags;
-> > @@ -1084,7 +1135,7 @@ static void sc16is7xx_set_termios(struct uart_por=
-t *port,
-> >       /* Get baud rate generator configuration */
-> >       baud =3D uart_get_baud_rate(port, termios, old,
-> >                                 port->uartclk / 16 / 4 / 0xffff,
-> > -                               port->uartclk / 16);
-> > +                               port->uartclk / (has_dld ? 4 : 16));
+> Further investigation has shown that, the entity_eligible() has an
+> false-negative issue when the entity's vruntime is far behind the
+> cfs_rq.min_vruntime that, the (vruntime - cfs_rq->min_vruntime) * load
+> caused a s64 overflow, thus every entity on the rb-tree is not
+> eligible, which results in a NULL candidate.
 >
-> Could you do this instead:
-> unsigned int divisor =3D sc16is7xx_has_dld(port->dev) ? 4 : 16;
+> The reason why entity's vruntime is far behind the cfs_rq.min_vruntime
+> is because during a on_rq task group's update_cfs_group()->reweight_eevdf=
+(),
+> there is no limit on the new entity's vlag. If the new weight is much
+> smaller than the old one,
 >
-> ...
+> vlag =3D div_s64(vlag * old_weight, weight)
 >
-> uart_get_baud_rate(..., port->uartclk / divisor);
+> generates a huge vlag, and results in very small(negative) vruntime.
 >
+> Thus limit the range of vlag accordingly.
 >
-> I am not sure the above warrants for a new version. Just in case you are
-> sending one.
+> Reported-by: Sergei Trofimovich <slyich@gmail.com>
+> Closes: https://lore.kernel.org/all/ZhuYyrh3mweP_Kd8@nz.home/
+> Reported-by: Igor Raits <igor@gooddata.com>
+> Closes: https://lore.kernel.org/all/CA+9S74ih+45M_2TPUY_mPPVDhNvyYfy1J1ft=
+Six+KjiTVxg8nw@mail.gmail.com/
+> Reported-by: Breno Leitao <leitao@debian.org>
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Closes: https://lore.kernel.org/lkml/202401301012.2ed95df0-oliver.sang@in=
+tel.com/
+> Reported-by: Yujie Liu <yujie.liu@intel.com>
+> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+> ---
+> changes of v2:
+> -add reported-by (suggested by <yu.c.chen@intel.com>)
+> -remork the changelog (<yu.c.chen@intel.com>)
+> -remove the judgement of fork (Peter)
+> -remove the !on_rq case. (Peter)
+> ---
+> Previous discussion link:
+> https://lore.kernel.org/lkml/20240226082349.302363-1-yu.c.chen@intel.com/
+> https://lore.kernel.org/all/20240130080643.1828-1-xuewen.yan@unisoc.com/
+> ---
+> ---
+>  kernel/sched/fair.c | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
 >
-> thanks,
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 03be0d1330a6..64826f406d6d 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -696,15 +696,21 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
+>   *
+>   * XXX could add max_slice to the augmented data to track this.
+>   */
+> -static void update_entity_lag(struct cfs_rq *cfs_rq, struct sched_entity=
+ *se)
+> +static s64 entity_lag(u64 avruntime, struct sched_entity *se)
+>  {
+> -       s64 lag, limit;
+> +       s64 vlag, limit;
+> +
+> +       vlag =3D avruntime - se->vruntime;
+> +       limit =3D calc_delta_fair(max_t(u64, 2*se->slice, TICK_NSEC), se)=
+;
+> +
+> +       return clamp(vlag, -limit, limit);
+> +}
+>
+> +static void update_entity_lag(struct cfs_rq *cfs_rq, struct sched_entity=
+ *se)
+> +{
+>         SCHED_WARN_ON(!se->on_rq);
+> -       lag =3D avg_vruntime(cfs_rq) - se->vruntime;
+>
+> -       limit =3D calc_delta_fair(max_t(u64, 2*se->slice, TICK_NSEC), se)=
+;
+> -       se->vlag =3D clamp(lag, -limit, limit);
+> +       se->vlag =3D entity_lag(avg_vruntime(cfs_rq), se);
+>  }
+>
+>  /*
+> @@ -3761,7 +3767,7 @@ static void reweight_eevdf(struct cfs_rq *cfs_rq, s=
+truct sched_entity *se,
+>          *         =3D V  - vl'
+>          */
+>         if (avruntime !=3D se->vruntime) {
+> -               vlag =3D (s64)(avruntime - se->vruntime);
+> +               vlag =3D entity_lag(avruntime, se);
+>                 vlag =3D div_s64(vlag * old_weight, weight);
+>                 se->vruntime =3D avruntime - vlag;
+>         }
 > --
-> js
-> suse labs
+> 2.25.1
+>
 >
