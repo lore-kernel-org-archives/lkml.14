@@ -1,79 +1,69 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2D21E49F;
-	Mon, 22 Apr 2024 14:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886491E49F;
+	Mon, 22 Apr 2024 14:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.245.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713797515; cv=none; b=TCXtD4e+uZJkxd8xxxr0fTOMqC8sY4JVWbmFOUp2atVaoVFD8kTOEkciEPqjwzkId9BYfhfzIdJ2yg9z3uxW7xOAuSyrN2bNjUMRoYXFRQ60fksq7hc9kKNRr5sqp5w1o7YWg+LVjRs0X82fXM+TJjNtatPpuiQKNukc3FMRIN0=
+	t=1713797585; cv=none; b=LDzRT8OnsCFS1IvohZqeZ0hAIsHQStezvagUUbCd05S7C5Za5yoUc18WZDO6dRj9QEQiPc1pDXb7SptOpqc/Dojm0HrdaBEZTnypEdOC58SeRfWa4EcIw1johEEaomXygeO7zU+5zskefbxIo92a75brZQ+TwVHuw7SIb0ssiXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713797515; c=relaxed/simple;
-	bh=2aqAiggZBYZSF6q+dv7makmdN5JW81N9+n16hV0dMwQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ev/BtXcWOiQ8lEED1idx6Mn0VMyVlaIJHNfxRePTZLM+ati8appzN/6jt64k9nMSfmZRjYNBs7xL3EpPn10jJrYCmT/4oghpzvWdM1jm3Ei9bXyQzx6ZdCA7O8l051pdlrhaNKFKdzg1NvBsMuHNskiJeO0pqzAbqz0XFUPY3ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=i54aG8va; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="i54aG8va"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 4123F47C32
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1713797512; bh=zSYiN+wlryW0C+GvuOLiBHEu0XIfQ0lel0K6D2siPGE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=i54aG8va6qXqTA9WtqWbkSFZ9s/7dUB9DoEpasI2CeyXLADo6mzlG/aaB3A4f+jwm
-	 mihPDrV05PEm/dWukuH0JS5ir1ymjW8is8V/reWnnye8RkR2ounY96DE9Tb4lYTaqa
-	 Xn6qrWVkeVPCkjFsu99vrjD1GJQixtZbLVA0Hhrswycs75bQj+BoWtA8oivz+5g2zf
-	 2GX+vQlEDezXZdsfa0wBq2EZCbycr0PjimKWa0v6Pk+4viCSsqX1gNZcZfP+rmOqtE
-	 8VxJI+iiYCbhccadqs0SCQE5EOEH05biNwefA5YDurx7wjHI2FTBQFXlXftssdYbf4
-	 +useFH9UV3byA==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 4123F47C32;
-	Mon, 22 Apr 2024 14:51:52 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Linus Torvalds <torvalds@linuxfoundation.org>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Documentation fixes for 6.9
-Date: Mon, 22 Apr 2024 08:51:51 -0600
-Message-ID: <87le5530xk.fsf@meer.lwn.net>
+	s=arc-20240116; t=1713797585; c=relaxed/simple;
+	bh=/ZmiNT3Ti61s/9U83aeDaAzv7pg7v8kBefpWb9Hqwkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MVn7m+iu8BBFCXwomTNEUzhZXATG87O2XmQVi1i0qWz009lS0gHAEb7e9eMFithGnBSuJGpozPYS7FjqGDirq2HFoUkQofSqOrlpbkVn0RRY6vmUgJq2KOyyeROB+nzHrt+gZFvZ/KNUPM/7ffaQvTA5qBopY5y7EfmR1lBHWXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de; spf=pass smtp.mailfrom=strlen.de; arc=none smtp.client-ip=91.216.245.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strlen.de
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1ryv2N-0000Rk-5J; Mon, 22 Apr 2024 16:52:55 +0200
+Date: Mon, 22 Apr 2024 16:52:55 +0200
+From: Florian Westphal <fw@strlen.de>
+To: Eric Dumazet <edumazet@google.com>
+Cc: syzbot <syzbot+0c4150bff9fff3bf023c@syzkaller.appspotmail.com>,
+	andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+	daniel@iogearbox.net, davem@davemloft.net, eddyz87@gmail.com,
+	fw@strlen.de, haoluo@google.com, horms@kernel.org,
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org,
+	kuba@kernel.org, linux-kernel@vger.kernel.org, martin.lau@linux.dev,
+	netdev@vger.kernel.org, pabeni@redhat.com, sdf@google.com,
+	song@kernel.org, syzkaller-bugs@googlegroups.com,
+	yonghong.song@linux.dev
+Subject: Re: [syzbot] [bpf?] [net?] WARNING in skb_ensure_writable
+Message-ID: <20240422145255.GA13918@breakpoint.cc>
+References: <000000000000eac28e0616b026d1@google.com>
+ <CANn89iKr4pY3wcMb=ONr8f5DU1X300XG8RoX7HU4_FEWSAJ9_w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANn89iKr4pY3wcMb=ONr8f5DU1X300XG8RoX7HU4_FEWSAJ9_w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-The following changes since commit e9c44c1beaba623b12201d2028bc20f535464d9b:
+Eric Dumazet <edumazet@google.com> wrote:
+> Hmm... Not sure how to deal with this one... this is a 'false positive'
+> 
+> diff --git a/net/core/filter.c b/net/core/filter.c
+> index 58e8e1a70aa752a2c045117e00d8797478da4738..a7cea6d717ef321215bc4cf9ab3b83535c4eec98
+> 100644
+> --- a/net/core/filter.c
+> +++ b/net/core/filter.c
+> @@ -1662,6 +1662,11 @@ static DEFINE_PER_CPU(struct bpf_scratchpad, bpf_sp);
+>  static inline int __bpf_try_make_writable(struct sk_buff *skb,
+>                                           unsigned int write_len)
+>  {
+> +#if defined(CONFIG_DEBUG_NET)
+> +       /* Avoid a splat in pskb_may_pull_reason() */
+> +       if (write_len > INT_MAX)
+> +               return -EINVAL;
+> +#endif
+>         return skb_ensure_writable(skb, write_len);
+>  }
+> 
 
-  docs: zswap: fix shell command format (2024-03-29 08:59:01 -0600)
-
-are available in the Git repository at:
-
-  git://git.lwn.net/linux.git tags/docs-6.9-fixes2
-
-for you to fetch changes up to 8d939ae349343b55984ea821164e2be526d48cd1:
-
-  docs: verify/bisect: stable regressions: first stable, then mainline (2024-04-15 09:41:56 -0600)
-
-----------------------------------------------------------------
-A set of updates from Thorsten to his (new) guide to verifying bugs and
-tracking down regressions.
-
-This is a fairly big set of changes for this late in the cycle, and they
-*can* wait if need be.  But they are limited to Thorsten's document,
-which is new with 6.9, and I don't see a reason to not have it in his
-desired form at release.
-
-----------------------------------------------------------------
-Thorsten Leemhuis (6):
-      docs: verify/bisect: use git switch, tag kernel, and various fixes
-      docs: verify/bisect: add and fetch stable branches ahead of time
-      docs: verify/bisect: proper headlines and more spacing
-      docs: verify/bisect: explain testing reverts, patches and newer code
-      docs: verify/bisect: describe how to use a build host
-      docs: verify/bisect: stable regressions: first stable, then mainline
-
- .../verify-bugs-and-bisect-regressions.rst         | 597 ++++++++++++++-------
- 1 file changed, 417 insertions(+), 180 deletions(-)
+LGTM, thanks Eric.  I think the current 'warn on > INT_MAX' makes sense
+for normal (non-bpf) callers.
