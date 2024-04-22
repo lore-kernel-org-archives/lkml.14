@@ -1,46 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8122F158D76;
-	Mon, 22 Apr 2024 23:54:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FD313E418;
+	Mon, 22 Apr 2024 23:54:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713830082; cv=none; b=q682eFPDbKvOP0cuIHHBc8LjhaGAmfO19J3dahu+OHUqmbCWyX6CEE5B9RV+sqSPUobVGFcp/Ht1MqGbsXR3CTrxsZBgAAKWwPOP+761aiEz8isZpd2G/I/4p2N4eMKQuxhq+p/YcMLCqyRJDYP8Ub60pOiqMA1+7qejNVh8f3Y=
+	t=1713830089; cv=none; b=XPqDmsziKSCiDXth35+J+kRSuUzJb4Kac+yuSlVua7BMl14va4J1FxCdCuetMVzz5fhnkKJ/HAQXaiW1mjFU4v5idXz+etQf7fDnmzjLlYrWtkFYu8YqJDZgojlUbI0FJjMSOlaLlzpVkhv0FadAVjHlHGeXG6A5PvIoRppkwsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713830082; c=relaxed/simple;
-	bh=GEpnhiSTG1TbEnLT97kCT5VbQj9dur5yP9sjIze/XLU=;
+	s=arc-20240116; t=1713830089; c=relaxed/simple;
+	bh=ltIROLwzh3NwESS782JFP356g9Ygs7Q1t/CRAXFVPoY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LxEyubvh9wpABIl/mCNk1/E9r2/rQWwsgsQvYROee87wh07aTGmXKqKJBSIZSdIDTlNqMucPjOyD/ztBefxFU3a8Fdwvu2QC2Qz8yW0fATCRByAbmK3SUsjoshoXiMrtm9WheOxJoDdoTOdqTs2L1jcW8qW2GZRx8Zvhg85ZLMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gIC0kYq8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qKncvk7aRRFD7JtmFbgTNIbjLeOZPKe1VKVAYjm/3XbJzQ/BmiLM5SNeLA7zFnb99u1/xiD6j2SaRvnOeMoJyL2+HB8b/DXIbA1HHU6WZSO2jOMnw5jc0im2stq/eumHouSRqPtKSSQ2H2g4ZmhPuPh01AnmRAsjUVv5n+mfTFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVlQFzw1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gIC0kYq8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7861C113CC;
-	Mon, 22 Apr 2024 23:54:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVlQFzw1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D55EC32782;
+	Mon, 22 Apr 2024 23:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713830082;
-	bh=GEpnhiSTG1TbEnLT97kCT5VbQj9dur5yP9sjIze/XLU=;
+	s=k20201202; t=1713830089;
+	bh=ltIROLwzh3NwESS782JFP356g9Ygs7Q1t/CRAXFVPoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gIC0kYq8VfIdk7oXV+VB+pvqt9XPP8u+rUOfM5A74gp5RWcKw+7kOSWhqF59W0sse
-	 I9K0dgntbrzXTPRBmaee6yBsf/j4e2G4KiXFbOeuW0d7HQjr+S7kUwOuhkwidKdcKy
-	 x5+46PqKFBKlnSAVxc6tnPznPEM2ZGHl+LPYtu/pjF96p8xMXhqXc/jaUdtfYeJEvn
-	 2kk7YSPz3I+geZ/aM/FyhFoDdv7fC2UYKuSpaG6S46nQ8WvolK+vKDBiAzPi7l+Lgp
-	 0V3MQGirdgkar/Oe7g7WAh3OKcx6su3lUel7y3JomlCSz+x9M00o2Va+JepIj9FtH/
-	 v2VCAfR8o2YoQ==
+	b=SVlQFzw1PXhleRKKRl1ZAPxbQtLQjnxAFf5oketqIfW4Wvioo5IAky/kLotchKv29
+	 RDL72C85n4nzeyFOTrYpmZAfC16MGCGJtr6FSZETq5BVXFT0OUyLCAbWWPBSIZxgv4
+	 q+VKEhJ7Cbt7bJmqrkGLFdqNydTeESfcIVVBaf4/mYcW/Wva4iLRCMGlrcS24kNY6w
+	 hx9tiFhvRPnPmGIkcqZV1lMwHQr6V0GesR7KXOPPhDvjtR1llLo/Uj/QRbYftQtbOy
+	 RSoIiv3MO2hgxugN10SALbF/n7Mu3T+8VxMbfcOIa7dKgHNa8EuLarMc2OAwgHhhpB
+	 w1K6Qk1e374fA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Thierry Reding <treding@nvidia.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
+Cc: Justin Ernst <justin.ernst@hpe.com>,
+	Thomas Renninger <trenn@suse.de>,
+	Len Brown <len.brown@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	thierry.reding@gmail.com,
-	mperttunen@nvidia.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	dri-devel@lists.freedesktop.org,
-	linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.8 21/43] gpu: host1x: Do not setup DMA for virtual devices
-Date: Mon, 22 Apr 2024 19:14:07 -0400
-Message-ID: <20240422231521.1592991-21-sashal@kernel.org>
+	lenb@kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.8 23/43] tools/power/turbostat: Fix uncore frequency file string
+Date: Mon, 22 Apr 2024 19:14:09 -0400
+Message-ID: <20240422231521.1592991-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240422231521.1592991-1-sashal@kernel.org>
 References: <20240422231521.1592991-1-sashal@kernel.org>
@@ -55,59 +52,51 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.8.7
 Content-Transfer-Encoding: 8bit
 
-From: Thierry Reding <treding@nvidia.com>
+From: Justin Ernst <justin.ernst@hpe.com>
 
-[ Upstream commit 8ab58f6841b19423231c5db3378691ec80c778f8 ]
+[ Upstream commit 60add818ab2543b7e4f2bfeaacf2504743c1eb50 ]
 
-The host1x devices are virtual compound devices and do not perform DMA
-accesses themselves, so they do not need to be set up for DMA.
+Running turbostat on a 16 socket HPE Scale-up Compute 3200 (SapphireRapids) fails with:
+turbostat: /sys/devices/system/cpu/intel_uncore_frequency/package_010_die_00/current_freq_khz: open failed: No such file or directory
 
-Ideally we would also not need to set up DMA masks for the virtual
-devices, but we currently still need those for legacy support on old
-hardware.
+We observe the sysfs uncore frequency directories named:
+...
+package_09_die_00/
+package_10_die_00/
+package_11_die_00/
+...
+package_15_die_00/
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240314154943.2487549-1-thierry.reding@gmail.com
+The culprit is an incorrect sprintf format string "package_0%d_die_0%d" used
+with each instance of reading uncore frequency files. uncore-frequency-common.c
+creates the sysfs directory with the format "package_%02d_die_%02d". Once the
+package value reaches double digits, the formats diverge.
+
+Change each instance of "package_0%d_die_0%d" to "package_%02d_die_%02d".
+
+[lenb: deleted the probe part of this patch, as it was already fixed]
+
+Signed-off-by: Justin Ernst <justin.ernst@hpe.com>
+Reviewed-by: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/host1x/bus.c | 8 --------
- 1 file changed, 8 deletions(-)
+ tools/power/x86/turbostat/turbostat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/host1x/bus.c b/drivers/gpu/host1x/bus.c
-index 84d042796d2e6..3937889fa912d 100644
---- a/drivers/gpu/host1x/bus.c
-+++ b/drivers/gpu/host1x/bus.c
-@@ -351,11 +351,6 @@ static int host1x_device_uevent(const struct device *dev,
- 	return 0;
- }
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 3438ad938d7e4..53b764422e804 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -2612,7 +2612,7 @@ unsigned long long get_uncore_mhz(int package, int die)
+ {
+ 	char path[128];
  
--static int host1x_dma_configure(struct device *dev)
--{
--	return of_dma_configure(dev, dev->of_node, true);
--}
--
- static const struct dev_pm_ops host1x_device_pm_ops = {
- 	.suspend = pm_generic_suspend,
- 	.resume = pm_generic_resume,
-@@ -369,7 +364,6 @@ struct bus_type host1x_bus_type = {
- 	.name = "host1x",
- 	.match = host1x_device_match,
- 	.uevent = host1x_device_uevent,
--	.dma_configure = host1x_dma_configure,
- 	.pm = &host1x_device_pm_ops,
- };
+-	sprintf(path, "/sys/devices/system/cpu/intel_uncore_frequency/package_0%d_die_0%d/current_freq_khz", package,
++	sprintf(path, "/sys/devices/system/cpu/intel_uncore_frequency/package_%02d_die_%02d/current_freq_khz", package,
+ 		die);
  
-@@ -458,8 +452,6 @@ static int host1x_device_add(struct host1x *host1x,
- 	device->dev.bus = &host1x_bus_type;
- 	device->dev.parent = host1x->dev;
- 
--	of_dma_configure(&device->dev, host1x->dev->of_node, true);
--
- 	device->dev.dma_parms = &device->dma_parms;
- 	dma_set_max_seg_size(&device->dev, UINT_MAX);
- 
+ 	return (snapshot_sysfs_counter(path) / 1000);
 -- 
 2.43.0
 
