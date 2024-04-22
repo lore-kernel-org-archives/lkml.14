@@ -1,167 +1,111 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC3614A4E5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2708414A61A;
 	Mon, 22 Apr 2024 12:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713789605; cv=none; b=ByZi+mvm4TOXr2BTBasAnkivTKONNohZaSrCLzYm8+a3iyac5xijBpS+WGMpKwJY2knjk6muK2UoDodbaMz55CtzAhxkmvch6s7mF3oIm13ufuq8FUBXbmWD52JsUjsnczeLny5ssFurVjBTuRXwIzi8Krnb5faKGZSEPVaMlio=
+	t=1713789606; cv=none; b=EmvCoigp3OdIr2r9yKhIRyaounqgYnsWiO8qMDjiw1qt8dyq3AWIb+ew+cv4J/gCdsrAnnbOXToVbQkIJswFCIDljNPbw13JTd4MNzVyKz/Tv8FwJnR25pnX7veeevaT/vpFkPjJa3lXGDlpgjwg5zzZI2eTD21RCYxjABqaf7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713789605; c=relaxed/simple;
-	bh=MB8+/MFHOEltGh7GM7e6UBLJe+yCPGpUyEgMI44tcDQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=adIQI1m5QLk0Sg/YfBepv4ay6CFUC+fZgUpL4QVic86fcj2Z4Sgdu9I/cOBxzdK870pFa0PlxrSOLUzISOIcY9lOJJiB1ai3odemO/KeT+gxE9EtcIUda7H8DxFtiPBJrQmlfRkyGH9QDEfIUJ6qkGnjb+d2XwruGoipYSo7+aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a5872b74c44so2300766b.3;
-        Mon, 22 Apr 2024 05:40:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713789602; x=1714394402;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CsBGQlMm+F00sLCL/qlkhF4TnT6nst/CdHn7pOQlov8=;
-        b=IDVqPuj7DXVh9QVygnynA0ewJ7z3XexQmaJFZghrhzhQCPkniQm4njU/xjvhZba1sP
-         dDM5qPGMpvEQnMQTL+YNyXrVTSI7H8dVr7i35aFNaaRQTYkOKHo7cFC54c2xm37SvpLb
-         qkgTg4ZhO8fVpyO2rwdosi7G4nYVDw5TRi0bwcD3qJBz24eHFcl3xCn5hddtrISnzFBK
-         zKwrg4Fs+WlQbaCnoVA9wJP4BwCd203YQn5ron02YcLDLch+UjdjS/rllyiCanNavGa0
-         T87MZbmChNLvAXgqspVWJU362MbV2zyhXvc7YujRhd+R3VkM1y+wAV/l1giujCi+F3da
-         eSPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUylcscOZzElLsNMNPapJJD6vBsV/dddbhQGpUf6KyhrG58cisdgg6wJAeXVeEvEBFbkzOcMrS1PVMtlEYZsFVtD3eTHv9MYOxbFzwu02C8yQaxIM48o44qQ9HIzEA8CfykDWcqU/oErYhnPcSfkja5oGI6nBzA9gncYVhVp8zjwUTGvOJIpFcwfsqk8A2Qdy0rYShKVnFLHno=
-X-Gm-Message-State: AOJu0Yx176bwctL95FR7kou77Sx52xSHFmM77MHe1JrANI6tYUD1iQ2B
-	SDan9I/gbXqTkO7YKT2EEnriK+dv6Zc1qG5jp0of8whPyuaGvnwN
-X-Google-Smtp-Source: AGHT+IHYhw0Rn+ozFJSEJTushyVa4eDMtV3KSJg5ZGsXSxqJSwj9e3Rtt1XVTXpakF4a8hoFl8I45g==
-X-Received: by 2002:a17:906:7949:b0:a47:20c3:7c51 with SMTP id l9-20020a170906794900b00a4720c37c51mr7458383ejo.71.1713789601643;
-        Mon, 22 Apr 2024 05:40:01 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-116.fbsv.net. [2a03:2880:30ff:74::face:b00c])
-        by smtp.gmail.com with ESMTPSA id fy7-20020a170906b7c700b00a55b1253fe5sm1659428ejb.194.2024.04.22.05.40.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 05:40:01 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: aleksander.lobakin@intel.com,
-	kuba@kernel.org,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	elder@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	nbd@nbd.name,
-	sean.wang@mediatek.com,
-	Mark-MC.Lee@mediatek.com,
-	lorenzo@kernel.org,
-	taras.chornyi@plvision.eu,
-	ath11k@lists.infradead.org,
-	ath10k@lists.infradead.org,
-	linux-wireless@vger.kernel.org,
-	geomatsi@gmail.com,
-	kvalo@kernel.org
-Cc: quic_jjohnson@quicinc.com,
-	leon@kernel.org,
-	dennis.dalessandro@cornelisnetworks.com,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	idosch@idosch.org,
-	leitao@debian.org,
-	angelogioacchino.delregno@collabora.com,
-	matthias.bgg@gmail.com,
-	Alex Elder <elder@linaro.org>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Rob Herring <robh@kernel.org>
-Subject: [PATCH net-next v7 07/10] net: ibm/emac: allocate dummy net_device dynamically
-Date: Mon, 22 Apr 2024 05:39:00 -0700
-Message-ID: <20240422123921.854943-8-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240422123921.854943-1-leitao@debian.org>
-References: <20240422123921.854943-1-leitao@debian.org>
+	s=arc-20240116; t=1713789606; c=relaxed/simple;
+	bh=EDx6TY1wZzwdL7NzrbCkXEJtOWAtBySSVQbpTqRu25g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C/wKDkWPf36EQwsONaaQ7CPQID3WCPDiVIkVxYOhgLJTe+ho0MQekHNo3PdEoVluMFL+BgnE4vdv7nWioFOKKB/JqR35gVaWkDqDTN5TgT8jMPGDgekz4wSkfOXLjOwYzKNDxtgCZnvlndoGIBgajvPpHfO0tTQIN1IDwFJOxnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bZYbQ366; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bZYbQ366"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713789604; x=1745325604;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EDx6TY1wZzwdL7NzrbCkXEJtOWAtBySSVQbpTqRu25g=;
+  b=bZYbQ366sWX+FEXm1Im3hGsnq07s54Qv07NByGwXou1OogUuTjsDq/GD
+   bz6hba7G+lA7D6KV/c4WrYY7B5wb6blyXqDHwJhY+scR23M2l13jzqLpz
+   P8ux6KlYpmr3SDlbZgIMHOupXlOlORsyaDmyTlpKbjQjsWOpobijalYdJ
+   5p5j7lu49qTDf0zkddm4T6sBgNDDl4JV5ovz65YjIvx39+bdDYF/pla+J
+   1LRoWNLt+TTxaSbtqBk0S3Ca5Qcv9JOfzMLmN+5v1Izc3anaFjYcJ8ctB
+   JsubJ2hsLUXFgCIT5MrvnLxonP8pomcU6iTh4V+grBciQcNKw8X9iD41Q
+   g==;
+X-CSE-ConnectionGUID: 2X6rKkCnTb2/tYTsLFx1gw==
+X-CSE-MsgGUID: NR3cS+9aT7qhbapbzTZZ4Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11051"; a="9543867"
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="9543867"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 05:40:03 -0700
+X-CSE-ConnectionGUID: kMyo4nblQsasHWi2/ePd4w==
+X-CSE-MsgGUID: C12mu43PR7Ow0/Wg2KPXMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="28680298"
+Received: from kuha.fi.intel.com ([10.237.72.185])
+  by orviesa003.jf.intel.com with SMTP; 22 Apr 2024 05:39:58 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 22 Apr 2024 15:39:58 +0300
+Date: Mon, 22 Apr 2024 15:39:58 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Jameson Thies <jthies@google.com>
+Cc: linux-usb@vger.kernel.org, pmalani@chromium.org, bleung@google.com,
+	abhishekpandit@chromium.org, andersson@kernel.org,
+	dmitry.baryshkov@linaro.org, fabrice.gasnier@foss.st.com,
+	gregkh@linuxfoundation.org, hdegoede@redhat.com,
+	neil.armstrong@linaro.org, rajaram.regupathy@intel.com,
+	saranya.gopal@intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/4] usb: typec: ucsi: Delay alternate mode discovery
+Message-ID: <ZiZantUKg8K5Nqk+@kuha.fi.intel.com>
+References: <20240419211650.2657096-1-jthies@google.com>
+ <20240419211650.2657096-4-jthies@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240419211650.2657096-4-jthies@google.com>
 
-Embedding net_device into structures prohibits the usage of flexible
-arrays in the net_device structure. For more details, see the discussion
-at [1].
+On Fri, Apr 19, 2024 at 09:16:49PM +0000, Jameson Thies wrote:
+> Delay the ucsi_check_altmodes task to be inline with surrounding partner
+> tasks. This allows partner, cable and identity discovery to complete
+> before alternate mode registration. With that order, alternate mode
+> discovery can be used to indicate the ucsi driver has completed
+> discovery.
+> 
+> Signed-off-by: Jameson Thies <jthies@google.com>
 
-Un-embed the net_device from the private struct by converting it
-into a pointer. Then use the leverage the new alloc_netdev_dummy()
-helper to allocate and initialize dummy devices.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-[1] https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/
+> ---
+>  drivers/usb/typec/ucsi/ucsi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
+> index b8d56a443531f..cd4c3b7a5d989 100644
+> --- a/drivers/usb/typec/ucsi/ucsi.c
+> +++ b/drivers/usb/typec/ucsi/ucsi.c
+> @@ -963,7 +963,7 @@ static void ucsi_pwr_opmode_change(struct ucsi_connector *con)
+>  		con->rdo = con->status.request_data_obj;
+>  		typec_set_pwr_opmode(con->port, TYPEC_PWR_MODE_PD);
+>  		ucsi_partner_task(con, ucsi_get_src_pdos, 30, 0);
+> -		ucsi_partner_task(con, ucsi_check_altmodes, 30, 0);
+> +		ucsi_partner_task(con, ucsi_check_altmodes, 30, HZ);
+>  		ucsi_partner_task(con, ucsi_register_partner_pdos, 1, HZ);
+>  		break;
+>  	case UCSI_CONSTAT_PWR_OPMODE_TYPEC1_5:
+> @@ -1247,7 +1247,7 @@ static void ucsi_handle_connector_change(struct work_struct *work)
+>  	}
+>  
+>  	if (con->status.change & UCSI_CONSTAT_CAM_CHANGE)
+> -		ucsi_partner_task(con, ucsi_check_altmodes, 1, 0);
+> +		ucsi_partner_task(con, ucsi_check_altmodes, 1, HZ);
+>  
+>  out_unlock:
+>  	mutex_unlock(&con->lock);
+> -- 
+> 2.44.0.769.g3c40516874-goog
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- drivers/net/ethernet/ibm/emac/mal.c | 14 +++++++++++---
- drivers/net/ethernet/ibm/emac/mal.h |  2 +-
- 2 files changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/ibm/emac/mal.c b/drivers/net/ethernet/ibm/emac/mal.c
-index 2439f7e96e05..d92dd9c83031 100644
---- a/drivers/net/ethernet/ibm/emac/mal.c
-+++ b/drivers/net/ethernet/ibm/emac/mal.c
-@@ -605,9 +605,13 @@ static int mal_probe(struct platform_device *ofdev)
- 	INIT_LIST_HEAD(&mal->list);
- 	spin_lock_init(&mal->lock);
- 
--	init_dummy_netdev(&mal->dummy_dev);
-+	mal->dummy_dev = alloc_netdev_dummy(0);
-+	if (!mal->dummy_dev) {
-+		err = -ENOMEM;
-+		goto fail_unmap;
-+	}
- 
--	netif_napi_add_weight(&mal->dummy_dev, &mal->napi, mal_poll,
-+	netif_napi_add_weight(mal->dummy_dev, &mal->napi, mal_poll,
- 			      CONFIG_IBM_EMAC_POLL_WEIGHT);
- 
- 	/* Load power-on reset defaults */
-@@ -637,7 +641,7 @@ static int mal_probe(struct platform_device *ofdev)
- 					  GFP_KERNEL);
- 	if (mal->bd_virt == NULL) {
- 		err = -ENOMEM;
--		goto fail_unmap;
-+		goto fail_dummy;
- 	}
- 
- 	for (i = 0; i < mal->num_tx_chans; ++i)
-@@ -703,6 +707,8 @@ static int mal_probe(struct platform_device *ofdev)
- 	free_irq(mal->serr_irq, mal);
-  fail2:
- 	dma_free_coherent(&ofdev->dev, bd_size, mal->bd_virt, mal->bd_dma);
-+ fail_dummy:
-+	free_netdev(mal->dummy_dev);
-  fail_unmap:
- 	dcr_unmap(mal->dcr_host, 0x100);
-  fail:
-@@ -734,6 +740,8 @@ static void mal_remove(struct platform_device *ofdev)
- 
- 	mal_reset(mal);
- 
-+	free_netdev(mal->dummy_dev);
-+
- 	dma_free_coherent(&ofdev->dev,
- 			  sizeof(struct mal_descriptor) *
- 			  (NUM_TX_BUFF * mal->num_tx_chans +
-diff --git a/drivers/net/ethernet/ibm/emac/mal.h b/drivers/net/ethernet/ibm/emac/mal.h
-index d212373a72e7..e0ddc41186a2 100644
---- a/drivers/net/ethernet/ibm/emac/mal.h
-+++ b/drivers/net/ethernet/ibm/emac/mal.h
-@@ -205,7 +205,7 @@ struct mal_instance {
- 	int			index;
- 	spinlock_t		lock;
- 
--	struct net_device	dummy_dev;
-+	struct net_device	*dummy_dev;
- 
- 	unsigned int features;
- };
 -- 
-2.43.0
-
+heikki
