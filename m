@@ -1,198 +1,144 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2531F922
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 22:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812D11401C
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 22:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713826106; cv=none; b=g19qtzcUu5C4aDmg9O/QnwJm9UW6f1tXmHpVSvdufoilaGM+5dVBJilunnVjK+IledOh5K878P9cJ9LhZKTYEl/fTKJ0Sb1qpTzKf+58wc7P8l7IdIuKGyvuMUb8EKWAVUo6ebUlvwimOnkbzBnS1dDjS7VstXITweHyfGKAYTg=
+	t=1713826174; cv=none; b=Hp8wa2CExmyY/os4/e/W61bTiLudZFx+Y1EV4w94jdU7fECEzxgNCU9cjQZA0CahHfiAF6lRDSCi3LmXHY/Fw+ZkqC/+lHBpK7KbpXLlBxEPCTjMeL/kiINQBxvMcY6wSOcu6X23CA0EGY4KDSQgDVo6DWxV2Put2lRSenhE0/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713826106; c=relaxed/simple;
-	bh=fWP8RCl/Y0bgltY1sVo9wNBmMVI4PNYA6XWtk6eH1fM=;
+	s=arc-20240116; t=1713826174; c=relaxed/simple;
+	bh=B3L3zEn6BiLKZYvpzycDpdmXcbV5Wr09ev43tjZpkdQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H9jQcklCS7xtlY/qYgYnpKBBL6Tl4QXvm05fMZNg/QVRyBzVUYR6ApZ49gOd5lOfn5v2+ZkdrDKoqZQ9VOFPGFVbaLJv+MZo5U169WXFesNkmckFj4ptHNdWT3d/Xgl/nnYqwOqtZV67E6Qby7SH3o6doFMOtC2F0ncw3TIbFo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c+mqOX1T; arc=none smtp.client-ip=209.85.210.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=ebRwL1hcqM0XFgi4muXmrA4b01ugoo+H1Agmb5Q3Hnsl21BW+Agvg/0ULY9VticAVkJGXk7LgFqYZi0kwIcPH7wj0xpnWWpGcM1EcZdYB0imfU7EG2u/rcWMTe3AI2k58nmJxmh24xQQzaaGOE1cTKU9TZql6dGXsg1U+ogozXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qX8w3x/q; arc=none smtp.client-ip=209.85.166.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c+mqOX1T"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6ecf05fd12fso4716479b3a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 15:48:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qX8w3x/q"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7da939572b5so104455339f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 15:49:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713826104; x=1714430904; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=SmlW0MljqguexkzhzTdZql1fdKXK699efxFdlsUjtxE=;
-        b=c+mqOX1TZL714X7jge6N1Y3Xb00YN9SW1GJlcx0pBcZtjZVcPyGnb0CSAP04QhoS7E
-         OV85Uyt6kxANN6DwuJmy83Opzrg8t87qvdeFl4pGiU8G31KJqXL6ceo0BOv8aObav0+9
-         mv6hbxerpPwOrvCyUL85Bxmvybf0POMJQUXV9C2sZ4TasjMgMmn4xeow8T+x68DaBACa
-         tmOiC/kfC4NicuzSZbvAR/MVEIfgtuA6geJ+g/FgsO5wvK5SXrM/h2vlHFP/tRYJPw7B
-         Ag9RFHb8vC4KpV+7bQBzgkNyQp9FXRjm+tGmJI6r7YRhsgDqjL+piq3ie2pXjITd2WC9
-         CjSQ==
+        d=google.com; s=20230601; t=1713826172; x=1714430972; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KCKJmu5bl2+zxy0B9al546VeTzaNGWidDB8dfZXwONo=;
+        b=qX8w3x/q723B/Z995aOzcvBMiKvLhQB8hsCOC4raQM19RRFSw34+goaSZL4TZfYppP
+         gYjp/ZqIc1M5o7F4HwSc4CJf6WaHkfRkUb7G9SAPHlmcbZQpQ0kZZ4OMEJ6iE6t9n8+D
+         ffHIT3p0qEjDCzLuhf2LAQS0z0oqg9d3LLDL9aLoa/UjTr/5tfyzUHUDZKuOSvk8WEk2
+         BoeqPxyPBxZy8qa0piHcKzWhnvkuj7sEkwMY1KnDIufYKF9xIuZg/kEXTDLFe5U6udpV
+         3/Ce48V0ZYniyBYkoUl8HMSyaqQUMqNYg+oYXdNL8zwkW46TUQmTuXmwqRG7Wz70WUtc
+         1RFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713826104; x=1714430904;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SmlW0MljqguexkzhzTdZql1fdKXK699efxFdlsUjtxE=;
-        b=PCrGbU3Ih5VI+ZTwgM+cjlA+6u66T8V2nGHa0ner67P+o08eWqqk6W9WNhIH8H1u1c
-         3xkMNxS3tq7WxSU8FwAbgk4RCSXb9Q43dfVvY4JZuBk/Q/KgPGaj7gehuah6zsZaJ5J6
-         KRnwFjXchMrPF81a+A0K8YnecE6/jCPPwcbfY0niOH3980xMdnptPiO2U4LInpDpB1L4
-         b3Xn+TBs3/ldFRiYtPLhK0AXNeX4qKyKi3BXrskeb1LWXzfBnUgfXbN6kuNkfEWt1XAr
-         pHNo0ANr2FaEa60Fca6EwNIkQ9XS8GCZuPUe1TRTBQZQeuIfk5zl95xxA2eOgP20cgGP
-         jOng==
-X-Forwarded-Encrypted: i=1; AJvYcCVi9gKEZesoH9uu8/VAqrsgOmqsAiKJspKvg6MuxRAeQ89RR5ZY3VlqfqTHZHkgHVkCConLiYCsABOXaaftpTNcMXhcN8A2ZfVTQDp4
-X-Gm-Message-State: AOJu0YxJ5P7zzGpLTUz120XHRPD9WWzv/YhaCbDQ8ZUuuHPSy2UfqPtG
-	uWbAAsby9wIap3HC6qVEtgl7CSxnbOLEdUOBaIAgcti4KbwPhUPS9I6jvJWhHw==
-X-Google-Smtp-Source: AGHT+IHIQgSfGDkaDSt/s2ARlG2UTnEAMh2m2ZxWg/IZbSlzMnEiP6/lbyyNXZR4okqFPH1mtgFODw==
-X-Received: by 2002:a05:6a00:2e0f:b0:6eb:1d5:6e43 with SMTP id fc15-20020a056a002e0f00b006eb01d56e43mr14497784pfb.11.1713826103741;
-        Mon, 22 Apr 2024 15:48:23 -0700 (PDT)
-Received: from google.com (57.92.83.34.bc.googleusercontent.com. [34.83.92.57])
-        by smtp.gmail.com with ESMTPSA id r13-20020aa79ecd000000b006ed045af796sm8342442pfq.88.2024.04.22.15.48.23
+        d=1e100.net; s=20230601; t=1713826172; x=1714430972;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KCKJmu5bl2+zxy0B9al546VeTzaNGWidDB8dfZXwONo=;
+        b=bHkQCkwv2N/ofcCtR+Y7Uq9cW8Ubwts90WXvgHMHi9OI5/Hmtzt1FZJDkZX/WE4cny
+         7GiLNl60IsxrWzApVgjrS67onHEYfcOd/zrR6LCYABV5NlYGDQyYgOee2Ornu3To2M3O
+         Ejr/hvqaFlkil71n+TiNCXhi2XiHZ81vTsAIaNQvGrfJKsgC0W1WHGqhDt22F3KbZrAV
+         6rgTRanCJ3Ji2l6yWLJc/ENGWQYQRBKkZE5qiQb2gpI9iCge5FiC/zb2+3sdUG/zVn3C
+         p2vbeLLLOdY7HYvtVICdh2kJqDQ5KcMbBrhQP2F+lQsca6bHmZke+++2JwtwRh6XyAuF
+         O/UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWurGiBD1VcT+avnyM3YZis1IQHfRQllHaMO6LyFotIYtN20lUFOqgH5MLFo7rGNTamUuItT2gPdo+RvsovtHqeBsD7orhQDzm1UxuZ
+X-Gm-Message-State: AOJu0Yy7+xrqNp4EwRAlaktudzO2yqXk9c07SQVaFkf6+QAtJ0rTtXNA
+	N0RFouG7dnZUP/h0+VnYEHqXHeqeGCTnaTLqrrxa/emOsQdaRF+RBBw8PLNdvw==
+X-Google-Smtp-Source: AGHT+IGD8E3UcrR5oTnyvVhpyX1RzPfTUHBhXeNY2iPixwVxtpyiWDPRP4/gkHWCWW3HKlkRlz40SA==
+X-Received: by 2002:a5e:d718:0:b0:7de:49c:9d3e with SMTP id v24-20020a5ed718000000b007de049c9d3emr793297iom.21.1713826172599;
+        Mon, 22 Apr 2024 15:49:32 -0700 (PDT)
+Received: from google.com (195.121.66.34.bc.googleusercontent.com. [34.66.121.195])
+        by smtp.gmail.com with ESMTPSA id u16-20020a056638305000b004830b70971asm3266609jak.122.2024.04.22.15.49.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 15:48:23 -0700 (PDT)
-Date: Mon, 22 Apr 2024 22:48:20 +0000
-From: Carlos Llamas <cmllamas@google.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: arve@android.com, brauner@kernel.org, gregkh@linuxfoundation.org,
-	joel@joelfernandes.org, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, maco@android.com, surenb@google.com,
-	tkjos@android.com
-Subject: Re: [PATCH 1/4] binder: introduce BINDER_SET_PROC_FLAGS ioctl
-Message-ID: <ZibpNNp2pH_UJISG@google.com>
-References: <20240417191418.1341988-2-cmllamas@google.com>
- <20240418083447.3877366-1-aliceryhl@google.com>
- <ZiRSPXSuSMyUO0Cw@google.com>
- <CAH5fLgjCmzOXWa7VFg6yCjnTDfu2pcJr9=FngeGg28zCvV49eQ@mail.gmail.com>
+        Mon, 22 Apr 2024 15:49:32 -0700 (PDT)
+Date: Mon, 22 Apr 2024 22:49:29 +0000
+From: Justin Stitt <justinstitt@google.com>
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Jason Wessel <jason.wessel@windriver.com>, 
+	Douglas Anderson <dianders@chromium.org>, kgdb-bugreport@lists.sourceforge.net, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] kdb: Refactor and fix bugs in kdb_read()
+Message-ID: <kvmf4hcnoeuogggx5jmcqjch32shyswjv5cqvg4hwdg4g27rup@t4ddszao3354>
+References: <20240422-kgdb_read_refactor-v2-0-ed51f7d145fe@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH5fLgjCmzOXWa7VFg6yCjnTDfu2pcJr9=FngeGg28zCvV49eQ@mail.gmail.com>
+In-Reply-To: <20240422-kgdb_read_refactor-v2-0-ed51f7d145fe@linaro.org>
 
-On Mon, Apr 22, 2024 at 10:56:31AM +0200, Alice Ryhl wrote:
-> On Sun, Apr 21, 2024 at 1:39 AM Carlos Llamas <cmllamas@google.com> wrote:
-> >
-> > On Thu, Apr 18, 2024 at 08:34:47AM +0000, Alice Ryhl wrote:
-> > > Carlos Llamas <cmllamas@google.com> writes:
-> > > > This new ioctl enables userspace to control the individual behavior of
-> > > > the 'struct binder_proc' instance via flags. The driver validates and
-> > > > returns the supported subset. Some existing ioctls are migrated to use
-> > > > these flags in subsequent commits.
-> > > >
-> > > > Suggested-by: Arve Hjønnevåg <arve@android.com>
-> > > > Signed-off-by: Carlos Llamas <cmllamas@google.com>
-> > > > ---
-> > > >  drivers/android/binder.c            | 25 +++++++++++++++++++++++++
-> > > >  drivers/android/binder_internal.h   |  4 +++-
-> > > >  include/uapi/linux/android/binder.h |  6 ++++++
-> > > >  3 files changed, 34 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> > > > index bad28cf42010..e0d193bfb237 100644
-> > > > --- a/drivers/android/binder.c
-> > > > +++ b/drivers/android/binder.c
-> > > > @@ -5334,6 +5334,26 @@ static int binder_ioctl_get_extended_error(struct binder_thread *thread,
-> > > >     return 0;
-> > > >  }
-> > > >
-> > > > +static int binder_ioctl_set_proc_flags(struct binder_proc *proc,
-> > > > +                                  u32 __user *user)
-> > > > +{
-> > > > +   u32 flags;
-> > > > +
-> > > > +   if (get_user(flags, user))
-> > > > +           return -EFAULT;
-> > > > +
-> > > > +   binder_inner_proc_lock(proc);
-> > > > +   flags &= PF_SUPPORTED_FLAGS_MASK;
-> > > > +   proc->flags = flags;
-> > > > +   binder_inner_proc_unlock(proc);
-> > > > +
-> > > > +   /* confirm supported flags with user */
-> > > > +   if (put_user(flags, user))
-> > > > +           return -EFAULT;
-> > > > +
-> > > > +   return 0;
-> > > > +}
-> > >
-> > > I'm just thinking out loud here, but is this the best API for this
-> > > ioctl? Using this API, if I want to toggle the oneway-spam-detection
-> > > flag, then I can't do so without knowing the value of all other flags,
-> > > and I also need to synchronize all calls to this ioctl.
-> > >
-> > > That's fine for the current use-case where these flags are only set
-> > > during startup, but are we confident that no future flag will be toggled
-> > > while a process is active?
-> >
-> > hmmm, this is a very good point. It would probably lead to userspace
-> > having to cache its flags for every binder instance. This is not a good
-> > solution at all.
-> >
-> > >
-> > > How about these alternatives?
-> > >
-> > > 1. Userspace passes two masks, one containing bits to set, and another
-> > >    containing bits to unset. Userspace returns new value of flags. (If
-> > >    the same bit is set in both masks, we can fail with EINVAL.)
+Hi,
+
+On Mon, Apr 22, 2024 at 05:35:53PM +0100, Daniel Thompson wrote:
+> Inspired by a patch from [Justin][1] I took a closer look at kdb_read().
 > 
-> To add to this one, one could also say that if a bit is set in both,
-> then the value is toggled.
+> Despite Justin's patch being a (correct) one-line manipulation it was a
+> tough patch to review because the surrounding code was hard to read and
+> it looked like there were unfixed problems.
 > 
-> > > 2. Compare and swap. Userspace passes the expected previous value and
-> > >    the desired new value. The kernel returns the actual previous value
-> > >    and updates it only if userspace gave the right previous value.
-> > >
-> > > 3. Set or unset only. Userspace passes a boolean and a mask. Boolean
-> > >    determines whether userspace wants to set or unset the bits set in
-> > >    the mask.
-> > >
-> > > I don't know what the usual kernel convention is for this kind of
-> > > ioctl, so I'm happy with whatever you all think is best.
-> >
-> > I've never come across these types of alternatives personally. What I've
-> > seen however, is the typical SET/GET ioctl pairs. This is a "simpler"
-> > interface I guess but it has the downside of an extra roundtrip. e.g.
-> >
-> >         ioctl(fd, BINDER_GET_PROC_FLAGS, &flags);
-> >         flags |= BF_LARGE_HANDLES;
-> >         ioctl(fd, BINDER_SET_PROC_FLAGS, &flags);
-> >
-> > What seems tempting about the SET/GET pair is that we could replace the
-> > BINDER_ENABLE_ONEWAY_SPAM_DETECTION with the SET. Instead of maintaining
-> > legacy code for the "deprecated" ioctl.
-> >
-> > wdyt?
-> >
-> > I'll have a second look at the alternatives you mentioned. Perhaps I can
-> > reference some other existing ioctl that does something similar.
+> This series isn't enough to make kdb_read() beautiful but it does make
+> it shorter, easier to reason about and fixes two buffer overflows and a
+> screen redraw problem!
 > 
-> Hmm. I don't think a get/set pair improves the situation much.
-> Userspace still needs a global mutex for making changes to the flag in
-> that case. Otherwise, two threads changing two different flags in
-> parallel could result in a race condition where one of the changes is
-> lost.
+> [1]: https://lore.kernel.org/all/20240403-strncpy-kernel-debug-kdb-kdb_io-c-v1-1-7f78a08e9ff4@google.com/
+> 
+> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-I'm not sure this would ever be a problem, libbinder currently has a
-mutex for this kind of things already and it seems unlikely that these
-process-wide flags would be toggled outside of initial config. However,
-it is worth discussing for sure as things can change.
+Seems to work nicely.
 
-I'm mainly concern about overloading what should be a very simple ioctl.
-With that said, I think one more option that is fairly simple/common is
-a SET/CLEAR ioctl pair. A little adaption from your 3rd option I think?
-I would be fine with that.
+There is some weird behavior which was present before your patch and is
+still present with it (let >< represent cursor position):
 
-Unfortunately, this would require new ioctl IDs so we would still need
-to maintain the ONEWAY_SPAM thing. I suppose that's ok.
+[0]kdb> test_ap>< (now press TAB)
 
-Sounds good?
+[0]kdb> test_aperfmperf>< (so far so good, we got our autocomplete)
 
---
-Carlos Llamas
+[0]kdb> test_ap><erfmperf (now, let's move the cursor back and press TAB again)
+
+[0]kdb> test_aperfmperf><erfmperf
+
+This is because the autocomplete engine is not considering the
+characters after the cursor position. To be clear, this isn't really a
+bug but rather a decision to be made about which functionality is
+desired.
+
+For example, my shell (zsh) will just simply move the cursor back to
+the end of the complete match instead of re-writing stuff.
+
+At any rate,
+Tested-by: Justin Stitt <justinstitt@google.com>
+
+> ---
+> Changes in v2:
+> - No code changes!
+> - I belatedly realized that one of the cleanups actually fixed a buffer
+>   overflow so there are changes to Cc: (to add stable@...) and to one
+>   of the patch descriptions.
+> - Link to v1: https://lore.kernel.org/r/20240416-kgdb_read_refactor-v1-0-b18c2d01076d@linaro.org
+> 
+> ---
+> Daniel Thompson (7):
+>       kdb: Fix buffer overflow during tab-complete
+>       kdb: Use format-strings rather than '\0' injection in kdb_read()
+>       kdb: Fix console handling when editing and tab-completing commands
+>       kdb: Merge identical case statements in kdb_read()
+>       kdb: Use format-specifiers rather than memset() for padding in kdb_read()
+>       kdb: Replace double memcpy() with memmove() in kdb_read()
+>       kdb: Simplify management of tmpbuffer in kdb_read()
+> 
+>  kernel/debug/kdb/kdb_io.c | 133 ++++++++++++++++++++--------------------------
+>  1 file changed, 58 insertions(+), 75 deletions(-)
+> ---
+> base-commit: dccce9b8780618986962ba37c373668bcf426866
+> change-id: 20240415-kgdb_read_refactor-2ea2dfc15dbb
+> 
+> Best regards,
+> -- 
+> Daniel Thompson <daniel.thompson@linaro.org>
+> 
+
+Thanks
+Justin
