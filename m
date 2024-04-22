@@ -1,113 +1,176 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B70E153581;
-	Mon, 22 Apr 2024 16:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87CF1474BA;
+	Mon, 22 Apr 2024 16:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713802354; cv=none; b=Zagn3KEkEDhemA6tKspsaxNC4Uz1Xrkkd0nCh+Gv0BQev1VIgquCsJ4gdfo9p3nKFrTD8htnngp+kPH8zDmOXeYPmOEhxEma8HD8nE2TF1lP24llp2ihcjkpqhxsjXG89Zch9QA9E3rrPXEY+K4htNS3veeGB8YL3qlkipDu16s=
+	t=1713802529; cv=none; b=VbXojXcs+e3efv6e/6ML9I0t3lwuaJ3fpPeUkzYrpYRMsmRZh7F7nzlO/2IgqH+4PBOxZxVlAU6wkn9pTPlnqOTix//E9mD6KhtooyyqVv0oF1UGyOSQxEBPHwFRyfsnt9YUBJ6iM0zqKEHiS9g/JIcNgY92qjOr7LxkthveBX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713802354; c=relaxed/simple;
-	bh=XwhpVp2uoJPgTaCeNcW7RZT9m15w1RdcLwxSuXD7Aeo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qRUDI9lHm7iXdo/t7DArZr+Wd+6hN5dyU/oGAzkfE2bKjLn8AzQdtQJYlymeUPbhBpCVdeT8+pGmuHmmS7CMIRrxcOJNlL70dlU+Wy/hf8Sv+FqR4HvDgz9aUTjRtE+xIHmgAJt1WtMSBEf0cK62n9uyjGHoTp2hu5IR7LKli6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EkdefmYe; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713802529; c=relaxed/simple;
+	bh=+T7qGoJM5CptwNtRlbFQYHPrnonOpqhbu/z+ZqbwDxk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=shWMQBWlPyWrjN0wdec/lr82W8xvCVM52kSQQ83K42oufuN6Wve0PoF91YZ0SQ5+SjxD0L6uvWymkfS/WI5GPhK7NbLIOiPX/3ZEo6cW6BKTS1XCEpj1++Cx0HEoEPhVTQNJktIDjy7zHXhMq6sdHMZw+vX0u6qfjsreSOJywn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SFfbKYoA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EkdefmYe"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43M8mKK3000381;
-	Mon, 22 Apr 2024 16:12:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=sCyLpknTZwvWXYoyKMfM/GI5z3ThcbGqTFkPKhPm5us=; b=Ek
-	defmYeeppshj66AFg3XqOQORVJDDHxCQrzCtg2X0eaU7JMlWRHgYf7Ro44HOMKuQ
-	miMmQ02Aw1eOsxVUIAg9cKmnV3fhDP+xksRN6oX1llCtKWIeayjmmFklawfWo+4M
-	SXh30pEfKOeenhNtaYY7r1IB7NrZ1ypq1G8IZsYnqugxNChCVTTo3cMAn+EGp9QG
-	wK+kC13cP3gfGtpBRiuuixu6P5C/tfJbIqsWzq7X7Gg0B3km7UKAUwFWmoQOiAIg
-	zNBMeIxPWwp0oJl/MXJNgUYN9Ok3thuAHdOi5D/2zM2rTdPb3o7mSkjLpHnIapdC
-	XijGzpCOZaJAyefPELoQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xm4qdd18v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 16:12:22 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43MGCL0V031372
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 16:12:21 GMT
-Received: from [10.110.104.191] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 22 Apr
- 2024 09:12:21 -0700
-Message-ID: <456bb6f6-03cc-aae1-b7d5-9d97300ba383@quicinc.com>
-Date: Mon, 22 Apr 2024 09:12:20 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SFfbKYoA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C0BEC32783;
+	Mon, 22 Apr 2024 16:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713802529;
+	bh=+T7qGoJM5CptwNtRlbFQYHPrnonOpqhbu/z+ZqbwDxk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=SFfbKYoALeaHJ0fDwzw0lg1SCTCKx3hn0tFWM3d/QyrFQLf7233i9lfrySHzfQjxj
+	 2U60qOufIXMn+70hs6Uw2GYvdz0C0wGp72OWXgSZclopmLgufHn+XJ/U8RZ3SD7d/m
+	 0TKMoG0OY2vtO48ZlPPCm1tMLwswG1Vag/7gxDXYhMObsB0OQQex9zorRVA9+dXeBV
+	 qg1WtVZYFO1kKnMDBxcp8OfJXxVZTcexDXFWQwblj2d8DBIRAmKCB0PrEWJsF9hBOT
+	 0PNFoRKrLj7YdLbipK7TJ4c9MId58O8IMMSkS7US/xlr7nLbC5JXazTRLsPmKZbm0Y
+	 YHrkVYfahXsHg==
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3c75145c6c4so39874b6e.0;
+        Mon, 22 Apr 2024 09:15:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVXRs2xKuChmGSyeczlOAtjbDo1VELDN8OHMeSFjkD3T69SzZO4ICyJdI9stJbaWsJZzHag9VbkS/NVdiDlM9WqwiQqbGPxYPeohHp+RfzaIbJM2q2xWLfLDuPyrqH7hVAsJQgBCcrJ0bhOJnNThcZNoDz2xLtV9BPZh51kjYPJe4gnacpSzBEjJ6vUfiIGGAqI9WbszI94UWFrAjb3cGawEoxiGHwAhWiYqw==
+X-Gm-Message-State: AOJu0Yy8TSTx6ypRU7TEBkEHXvg4C5rcefTMhik85C9582Qo+9WAG78O
+	P/VBPK6vd7r/uRDK4JzxRcogxDnBR7evC+bjfoBYrlWObynRxlUVOef/ohShZT3tKbZkx3Nw0v7
+	Y2aOqjf/F3+BcNllN/MWN84Cd1wg=
+X-Google-Smtp-Source: AGHT+IFuTJmoqmLpevz+uTmJX81reztBPyhbSeBbFcxUNXIQFfQPQ80CJ515TwTQNC2nE/LxIBgav9z4gMvpgI10aGQ=
+X-Received: by 2002:a05:6870:b28c:b0:22e:7cc0:ebd5 with SMTP id
+ c12-20020a056870b28c00b0022e7cc0ebd5mr12811422oao.5.1713802528328; Mon, 22
+ Apr 2024 09:15:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 1/3] drm/msm: don't clean up priv->kms prematurely
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Marijn
- Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20240420-mdp4-fixes-v1-0-96a70f64fa85@linaro.org>
- <20240420-mdp4-fixes-v1-1-96a70f64fa85@linaro.org>
- <67fbd629-3e80-b706-83a3-7baff3efd6c1@quicinc.com>
- <n7eet54g72usmuh4hdz6yce3i4ieweu4orgd7gewu7y53ejucc@dzmq2a2wdxkc>
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <n7eet54g72usmuh4hdz6yce3i4ieweu4orgd7gewu7y53ejucc@dzmq2a2wdxkc>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 2Y9GD3Dd-GNRSN9jpGiRQi3o-1st-3iv
-X-Proofpoint-ORIG-GUID: 2Y9GD3Dd-GNRSN9jpGiRQi3o-1st-3iv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-22_09,2024-04-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0
- mlxlogscore=601 bulkscore=0 suspectscore=0 malwarescore=0 clxscore=1015
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404220068
+References: <20240422060835.71708-1-W_Armin@gmx.de> <ZiYTJOmwDVaws3lh@surfacebook.localdomain>
+In-Reply-To: <ZiYTJOmwDVaws3lh@surfacebook.localdomain>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 22 Apr 2024 18:15:13 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0joULbyKQJ4suqKj7_UZwaA63M+N4AaWSm7vOdM4OZBEA@mail.gmail.com>
+Message-ID: <CAJZ5v0joULbyKQJ4suqKj7_UZwaA63M+N4AaWSm7vOdM4OZBEA@mail.gmail.com>
+Subject: Re: [PATCH RESEND v5] ACPI: fan: Add hwmon support
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Armin Wolf <w_armin@gmx.de>
+Cc: mlj@danelec.com, rafael.j.wysocki@intel.com, lenb@kernel.org, 
+	jdelvare@suse.com, linux@roeck-us.net, linux@weissschuh.net, 
+	ilpo.jarvinen@linux.intel.com, linux-acpi@vger.kernel.org, 
+	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Apr 22, 2024 at 9:36=E2=80=AFAM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> Mon, Apr 22, 2024 at 08:08:35AM +0200, Armin Wolf kirjoitti:
+> > Currently, the driver does only support a custom sysfs
+> > interface to allow userspace to read the fan speed.
+> > Add support for the standard hwmon interface so users
+> > can read the fan speed with standard tools like "sensors".
+> >
+> > Tested with a custom ACPI SSDT.
+>
+> ...
+>
+> > +/*
+> > + * fan_hwmon.c - hwmon interface for the ACPI Fan driver
+>
+> No file name in the file, it makes an unneeded burden if file is going to=
+ be
+> renamed.
+>
+> > + *
+> > + * Copyright (C) 2024 Armin Wolf <W_Armin@gmx.de>
+> > + */
+>
+> ...
+>
+> > +#include <linux/acpi.h>
+> > +#include <linux/hwmon.h>
+>
+> Please, follow IWYU pronciple, e.g., missing err.h here.
+>
+> > +#include <linux/limits.h>
+> > +#include <linux/units.h>
+>
+> ...
+>
+> > +/* Returned when the ACPI fan does not support speed reporting */
+> > +#define FAN_SPEED_UNAVAILABLE        0xffffffff
+> > +#define FAN_POWER_UNAVAILABLE        0xffffffff
+>
+> Shouldn't these be rather as ~0 of the respective types or _MAX (from lim=
+its.h)
+> or something like that?
+>
+> ...
+>
+> > +static struct acpi_fan_fps *acpi_fan_get_current_fps(struct acpi_fan *=
+fan, u64 control)
+> > +{
+> > +     int i;
+>
+> unsigned
+>
+> > +     for (i =3D 0; i < fan->fps_count; i++) {
+> > +             if (fan->fps[i].control =3D=3D control)
+> > +                     return &fan->fps[i];
+> > +     }
+> > +
+> > +     return NULL;
+> > +}
+>
+> ...
+>
+> > +static umode_t acpi_fan_is_visible(const void *drvdata, enum hwmon_sen=
+sor_types type, u32 attr,
+> > +                                int channel)
+> > +{
+> > +     const struct acpi_fan *fan =3D drvdata;
+> > +     int i;
+>
+> unsigned
+>
+> > +     switch (type) {
+> > +     case hwmon_fan:
+> > +             switch (attr) {
+> > +             case hwmon_fan_input:
+> > +                     return 0444;
+> > +             case hwmon_fan_target:
+> > +                     /* When in fine grain control mode, not every fan=
+ control value
+> > +                      * has an associated fan performance state.
+> > +                      */
+> > +                     if (fan->fif.fine_grain_ctrl)
+> > +                             return 0;
+> > +
+> > +                     return 0444;
+> > +             default:
+>
+> > +                     break;
+> > +             }
+> > +             break;
+>
+> Instead of two breaks, just return 0 from 'default' case.
 
+I agree here, but for a different reason.
 
-On 4/21/2024 3:35 PM, Dmitry Baryshkov wrote:
-> On Sat, Apr 20, 2024 at 04:02:00PM -0700, Abhinav Kumar wrote:
->>
->>
->> On 4/19/2024 7:33 PM, Dmitry Baryshkov wrote:
->>> MSM display drivers provide kms structure allocated during probe().
->>> Don't clean up priv->kms field in case of an error. Otherwise probe
->>> functions might fail after KMS probe deferral.
->>>
->>
->> So just to understand this more, this will happen when master component
->> probe (dpu) succeeded but other sub-component probe (dsi) deferred?
->>
->> Because if master component probe itself deferred it will allocate priv->kms
->> again isnt it and we will not even hit here.
-> 
-> Master probing succeeds (so priv->kms is set), then kms_init fails at
-> runtime, during binding of the master device. This results in probe
-> deferral from the last component's component_add() function and reprobe
-> attempt when possible (once the next device is added or probed). However
-> as priv->kms is NULL, probe crashes.
-> 
+If all of the other cases return from the function, the default one
+should return either unless there is a specific reason not to.  IIUC,
+there's no such reason in this case.
 
-Got it, a better commit text would have helped here. Either way,
+> > +     case hwmon_power:
+> > +             switch (attr) {
+> > +             case hwmon_power_input:
+> > +                     /* When in fine grain control mode, not every fan=
+ control value
+> > +                      * has an associated fan performance state.
+> > +                      */
+>
+> /*
+>  * Use correct style for multi-line
+>  * comment blocks. As in this example.
+>  */
 
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Yes, please.
+
+Thanks!
