@@ -1,206 +1,81 @@
-Received: from mail-m3293.qiye.163.com (mail-m3293.qiye.163.com [220.197.32.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D09252F9A;
-	Mon, 22 Apr 2024 07:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEE74C62A;
+	Mon, 22 Apr 2024 07:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713770206; cv=none; b=X09yOVSe4UroAE1C6lcybbD6V68ucmbUtrNSxHZy/wWAf7Y774VdUlUAGUQW+LfGs2BP4yhauGAw+OCEhMroLKz1bsOH+gI6RdOGiRN0LybQ2ytYbUFgQctcEx3oQzm5QZMLQlO7u0dPvpU1Atm+hZkP/Nmovr1wXD1UBKowtCw=
+	t=1713770300; cv=none; b=XJws4X3E6xnZhwdCIB4/CxSTpcrh7vTv09fxr0cWeXMfy+DUTw3gOYEgMdkXCiyM1YDIJq23UpcNudJ7r6uH9V2cbA0CO+ZSnreuhTY4eekgRZ5sX7zQeiNylVj8dupyO//YJxf3L0zdT2SzX2gAeV5NIZNXescaiCRvAntj4C0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713770206; c=relaxed/simple;
-	bh=TUHE9KihomjQT+4gHHlt9TTtEQswCTrpD973kNSu7jk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kmY89WGkZUTsF/pjh3AFCZjfmxPUafqp+s8dkWFI4uoIH5jibg2pqep2bl4E7rl7RrSBqhoRG6UgSL5sIrV1uzr123OgXQyQp4PE5jpVykgqWXEcqMqKATZcd4On2qEKYMB5MbyTEt6R7jDWBvHWAL22CS11PTEOYsROFEqoKXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=220.197.32.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
-Received: from ubuntu-22-04.. (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id C5801860221;
-	Mon, 22 Apr 2024 15:16:15 +0800 (CST)
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
-To: dan.j.williams@intel.com,
-	axboe@kernel.dk
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Dongsheng Yang <dongsheng.yang.linux@gmail.com>
-Subject: [PATCH 7/7] cbd: add related sysfs files in transport register
-Date: Mon, 22 Apr 2024 07:16:06 +0000
-Message-Id: <20240422071606.52637-8-dongsheng.yang@easystack.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
-References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
+	s=arc-20240116; t=1713770300; c=relaxed/simple;
+	bh=4j9/ixBcrRXzHNP/FULKIaHBtcfKqIhHzURyKg3qzdA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eh/dOXyhvmR3r1K6AAoxnU6FrlHxClxpLO5Gq9WJkxsUfmMkQF/tbHA3RdWGEzKaqlVrTMOne4DG5bjz6kIu0yqSkavPiJWnEMqvw0v8bLOrIzcnYdnrauVwZUJ9Z3WwOPQJRkBlCgKJ8cOiGPb9r8Ib+Z0lTKU9H4tUaXqK0Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mK0Z80cK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mK0Z80cK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E8AFC113CC;
+	Mon, 22 Apr 2024 07:18:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713770300;
+	bh=4j9/ixBcrRXzHNP/FULKIaHBtcfKqIhHzURyKg3qzdA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mK0Z80cKCAI+uDxSxdZHcaGs5+UT4XVQgZnS0F5bwO8/s8LgGk+/jsdRgfIB/Mgmx
+	 tS8XBioRztDxO4OLF0s2jjbrzM57aXUgIkAcYYfAfNkAeJWcMqMglFZpMz71SHWYgg
+	 mm0AXjUyQriCTOWMDeLd5h6v2gNV9qEkzvD3M2Z+vmTXEeQVQNmZCpmfLZrMRjBB4D
+	 70e3EfS7O5BOG4E1E9j0SFe9yr5cQo3iZbLBigNhr1XKg3Fj72hoI1c7a0vFE5u7bJ
+	 XnRjx3kwgRMcbn7ueNLFlHmea+een/YxKporS4WRUaPTCZTRVdydIOVULyJuzeK1CJ
+	 OFi1v4keCfTIQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rynwM-000000002f8-3LC2;
+	Mon, 22 Apr 2024 09:18:14 +0200
+Date: Mon, 22 Apr 2024 09:18:14 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Krishna Kurapati <quic_kriskura@quicinc.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_ppratap@quicinc.com,
+	quic_jackp@quicinc.com, Bjorn Andersson <quic_bjorande@quicinc.com>
+Subject: Re: [PATCH v21 6/9] usb: dwc3: qcom: Add helper function to request
+ wakeup interrupts
+Message-ID: <ZiYPNv8Q46rFj5CJ@hovoldconsulting.com>
+References: <20240420044901.884098-1-quic_kriskura@quicinc.com>
+ <20240420044901.884098-7-quic_kriskura@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlCSUseVk5LSUMdSEtCTUMYTlUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8f04a99e1c023ckunmc5801860221
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NiI6Mhw4Lzc0ShwQITYRCy0j
-	CDUKCjlVSlVKTEpITExLSkxNTk5DVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
-	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBTUlLQjcG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240420044901.884098-7-quic_kriskura@quicinc.com>
 
-From: Dongsheng Yang <dongsheng.yang.linux@gmail.com>
+On Sat, Apr 20, 2024 at 10:18:58AM +0530, Krishna Kurapati wrote:
+> The logic for requesting interrupts is duplicated for each interrupt. In
+> the upcoming patches that introduces support for multiport, it would be
+> better to clean up the duplication before reading mulitport related
+> interrupts.
+> 
+> Refactor interrupt setup call by adding a new helper function for
+> requesting the wakeup interrupts. To simplify implementation, make
+> the display name same as the interrupt name expected in Device tree.
+> 
+> Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
+> Reviewed-by: Bjorn Andersson <quic_bjorande@quicinc.com>
 
-When a transport is registered, a corresponding file is created for each
-area within the transport in the sysfs, including "cbd_hosts",
-"cbd_backends", "cbd_blkdevs", and "cbd_channels".
+As far I can see, you only replaced "DT" with "Device tree" in the
+commit message. For changes like that you could have kept my
+Reviewed-by tag (but I appreciate that you dropped it from some of the
+others):
 
-Through these sysfs files, we can examine the information of each entity
-and thereby understand the relationships between them. This allows us to
-further understand the current operational status of the transport.
-
-For example, by examining "cbd_hosts", we can find all the hosts
-currently using the transport. We can also determine which host each
-backend is running on by looking at the "host_id" in "cbd_backends".
-Similarly, by examining "cbd_blkdevs", we can determine which host each
-blkdev is running on, and through the "mapped_id", we can know the name
-of the cbd device to which the blkdev is mapped. Additionally, by
-looking at "cbd_channels", we can determine which blkdev and backend are
-connected through each channel by examining the "blkdev_id" and
-"backend_id".
-
-Signed-off-by: Dongsheng Yang <dongsheng.yang.linux@gmail.com>
----
- drivers/block/cbd/cbd_transport.c | 101 +++++++++++++++++++++++++++++-
- 1 file changed, 100 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/block/cbd/cbd_transport.c b/drivers/block/cbd/cbd_transport.c
-index 75b9d34218fc..0e917d72b209 100644
---- a/drivers/block/cbd/cbd_transport.c
-+++ b/drivers/block/cbd/cbd_transport.c
-@@ -1,8 +1,91 @@
- #include <linux/pfn_t.h>
--
- #include "cbd_internal.h"
- 
- #define CBDT_OBJ(OBJ, OBJ_SIZE)							\
-+extern struct device_type cbd_##OBJ##_type;					\
-+extern struct device_type cbd_##OBJ##s_type;					\
-+										\
-+static int cbd_##OBJ##s_init(struct cbd_transport *cbdt) 			\
-+{ 										\
-+	struct cbd_##OBJ##s_device *devs; 					\
-+	struct cbd_##OBJ##_device *cbd_dev;					\
-+	struct device *dev;							\
-+	int i; 									\
-+	int ret;								\
-+										\
-+	u32 memsize = struct_size(devs, OBJ##_devs,				\
-+			cbdt->transport_info->OBJ##_num);			\
-+	devs = kzalloc(memsize, GFP_KERNEL);					\
-+	if (!devs) {								\
-+	    return -ENOMEM;							\
-+	}									\
-+										\
-+	dev = &devs->OBJ##s_dev;						\
-+	device_initialize(dev);							\
-+	device_set_pm_not_required(dev);					\
-+	dev_set_name(dev, "cbd_" #OBJ "s");					\
-+	dev->parent = &cbdt->device;						\
-+	dev->type = &cbd_##OBJ##s_type;						\
-+	ret = device_add(dev);							\
-+	if (ret) {								\
-+		goto devs_free;							\
-+	}									\
-+										\
-+	for (i = 0; i < cbdt->transport_info->OBJ##_num; i++) {			\
-+		cbd_dev = &devs->OBJ##_devs[i];					\
-+		dev = &cbd_dev->dev;						\
-+										\
-+		cbd_dev->cbdt = cbdt;						\
-+		cbd_dev->OBJ##_info = cbdt_get_##OBJ##_info(cbdt, i);		\
-+		device_initialize(dev);						\
-+		device_set_pm_not_required(dev);				\
-+		dev_set_name(dev, #OBJ "%u", i);				\
-+		dev->parent = &devs->OBJ##s_dev;				\
-+		dev->type = &cbd_##OBJ##_type;					\
-+										\
-+		ret = device_add(dev);						\
-+		if (ret) {							\
-+			i--;							\
-+			goto del_device;					\
-+		}								\
-+	}									\
-+	cbdt->cbd_##OBJ##s_dev = devs;						\
-+										\
-+    	return 0;								\
-+del_device:									\
-+	for (; i >= 0; i--) {							\
-+		cbd_dev = &devs->OBJ##_devs[i];					\
-+		dev = &cbd_dev->dev;						\
-+		device_del(dev);						\
-+	}									\
-+devs_free:									\
-+	kfree(devs);								\
-+	return ret;								\
-+}										\
-+										\
-+static void cbd_##OBJ##s_exit(struct cbd_transport *cbdt)			\
-+{										\
-+	struct cbd_##OBJ##s_device *devs = cbdt->cbd_##OBJ##s_dev;		\
-+	struct device *dev;							\
-+	int i;									\
-+										\
-+	if (!devs)								\
-+		return;								\
-+										\
-+	for (i = 0; i < cbdt->transport_info->OBJ##_num; i++) {			\
-+		struct cbd_##OBJ##_device *cbd_dev = &devs->OBJ##_devs[i];	\
-+		dev = &cbd_dev->dev;						\
-+										\
-+		device_del(dev);						\
-+	}									\
-+										\
-+	device_del(&devs->OBJ##s_dev);						\
-+										\
-+	kfree(devs);								\
-+	cbdt->cbd_##OBJ##s_dev = NULL;						\
-+										\
-+	return;									\
-+}										\
- 										\
- static inline struct cbd_##OBJ##_info						\
- *__get_##OBJ##_info(struct cbd_transport *cbdt, u32 id)				\
-@@ -588,6 +671,11 @@ int cbdt_unregister(u32 tid)
- 	}
- 	mutex_unlock(&cbdt->lock);
- 
-+	cbd_blkdevs_exit(cbdt);
-+	cbd_channels_exit(cbdt);
-+	cbd_backends_exit(cbdt);
-+	cbd_hosts_exit(cbdt);
-+
- 	cbd_host_unregister(cbdt);
- 	device_unregister(&cbdt->device);
- 	cbdt_dax_release(cbdt);
-@@ -647,9 +735,20 @@ int cbdt_register(struct cbdt_register_options *opts)
- 		goto dev_unregister;
- 	}
- 
-+	if (cbd_hosts_init(cbdt) || cbd_backends_init(cbdt) ||
-+	    cbd_channels_init(cbdt) || cbd_blkdevs_init(cbdt)) {
-+		ret = -ENOMEM;
-+		goto devs_exit;
-+	}
-+
- 	return 0;
- 
- devs_exit:
-+	cbd_blkdevs_exit(cbdt);
-+	cbd_channels_exit(cbdt);
-+	cbd_backends_exit(cbdt);
-+	cbd_hosts_exit(cbdt);
-+
- 	cbd_host_unregister(cbdt);
- dev_unregister:
- 	device_unregister(&cbdt->device);
--- 
-2.34.1
-
+Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
