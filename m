@@ -1,229 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369B8152195;
-	Mon, 22 Apr 2024 14:49:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2D21E49F;
+	Mon, 22 Apr 2024 14:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713797388; cv=none; b=p3CsfTzFkfvqpiZuNkLBRrR1qqPKr7wjGy/KiwMvJaKDmwhzGhR8/vGiBQNqkCRGTS+2vUQ2CfuoQhKRVS1v0fjNYZ7fD8v10IbmcmyIW3p6DK42NAxKFTET/WydP6ZNFcKWIvOp53cLggn2gGV4ttKvhsN/+c7f2EO6GIvPI5A=
+	t=1713797515; cv=none; b=TCXtD4e+uZJkxd8xxxr0fTOMqC8sY4JVWbmFOUp2atVaoVFD8kTOEkciEPqjwzkId9BYfhfzIdJ2yg9z3uxW7xOAuSyrN2bNjUMRoYXFRQ60fksq7hc9kKNRr5sqp5w1o7YWg+LVjRs0X82fXM+TJjNtatPpuiQKNukc3FMRIN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713797388; c=relaxed/simple;
-	bh=hSW6/00CexkAj4yr/ss/j1zrPQ6JrexwJDPsR17Ywmc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hd6/mXnyNh4RH4Ql773mXSYWYFtonXKRX/eQTgHfQQDttAnS07gKny5N1HTeCasGmdM+QvX1cuV1Aj4AG1MfE42JbCfNSgtROaQBdhgh/HalXmmtrI2C4l3G3DBwyKaEnkBCsOG1Rc6ZYm9qPgaXXR4e9rwA4BuKZ2mk70SjqbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DCA5iY34; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713797515; c=relaxed/simple;
+	bh=2aqAiggZBYZSF6q+dv7makmdN5JW81N9+n16hV0dMwQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ev/BtXcWOiQ8lEED1idx6Mn0VMyVlaIJHNfxRePTZLM+ati8appzN/6jt64k9nMSfmZRjYNBs7xL3EpPn10jJrYCmT/4oghpzvWdM1jm3Ei9bXyQzx6ZdCA7O8l051pdlrhaNKFKdzg1NvBsMuHNskiJeO0pqzAbqz0XFUPY3ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=i54aG8va; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DCA5iY34"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713797387; x=1745333387;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hSW6/00CexkAj4yr/ss/j1zrPQ6JrexwJDPsR17Ywmc=;
-  b=DCA5iY34ZxfJGABPA1vitXsleRT4kdVTa00CtKvrI8+0VRCzKpXylCPd
-   IHh3BE0Hx7B8W0T5muQjNzTcwrS0fo0yzzge0kZWj4fFUjU068efeaLHh
-   49JAjxmLJjgOukWA50TCfuawRMw8n2Kwz8ptjEBE4jO7KRUelnHMvNZ5s
-   y2lzibYiSzqWLd1wNnHY8ZhmE6PjD9Y258I0G8zoWNZJvUn5orkeBB40p
-   5NoWbF/0xryL2br5NvADj4DagH7dY3dfBAuEUFeBxg3qfRt4vbJXhHvYD
-   Yz1CkKN/U6VDKpyOHEi2oyVFbnGGXQTconLjrLiwd29cF9MSEYbutNRKS
-   Q==;
-X-CSE-ConnectionGUID: NDamN9LWT3K4PM+mTX2VuA==
-X-CSE-MsgGUID: dYszhE4iS8GB9LgFbBuBDw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="20033641"
-X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
-   d="scan'208";a="20033641"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 07:49:45 -0700
-X-CSE-ConnectionGUID: Hz+KqllpRdmDG/nq7k5yuw==
-X-CSE-MsgGUID: F/ISxkcXQFCr4hBb59nOEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
-   d="scan'208";a="24067383"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa009.fm.intel.com with ESMTP; 22 Apr 2024 07:49:44 -0700
-Date: Mon, 22 Apr 2024 22:44:24 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, seanjc@google.com,
-	michael.roth@amd.com, isaku.yamahata@intel.com
-Subject: Re: [PATCH 09/11] KVM: guest_memfd: Add interface for populating
- gmem pages with user data
-Message-ID: <ZiZ3yDxEX+n6Za9b@yilunxu-OptiPlex-7050>
-References: <20240404185034.3184582-1-pbonzini@redhat.com>
- <20240404185034.3184582-10-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="i54aG8va"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 4123F47C32
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1713797512; bh=zSYiN+wlryW0C+GvuOLiBHEu0XIfQ0lel0K6D2siPGE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=i54aG8va6qXqTA9WtqWbkSFZ9s/7dUB9DoEpasI2CeyXLADo6mzlG/aaB3A4f+jwm
+	 mihPDrV05PEm/dWukuH0JS5ir1ymjW8is8V/reWnnye8RkR2ounY96DE9Tb4lYTaqa
+	 Xn6qrWVkeVPCkjFsu99vrjD1GJQixtZbLVA0Hhrswycs75bQj+BoWtA8oivz+5g2zf
+	 2GX+vQlEDezXZdsfa0wBq2EZCbycr0PjimKWa0v6Pk+4viCSsqX1gNZcZfP+rmOqtE
+	 8VxJI+iiYCbhccadqs0SCQE5EOEH05biNwefA5YDurx7wjHI2FTBQFXlXftssdYbf4
+	 +useFH9UV3byA==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 4123F47C32;
+	Mon, 22 Apr 2024 14:51:52 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Linus Torvalds <torvalds@linuxfoundation.org>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Documentation fixes for 6.9
+Date: Mon, 22 Apr 2024 08:51:51 -0600
+Message-ID: <87le5530xk.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240404185034.3184582-10-pbonzini@redhat.com>
+Content-Type: text/plain
 
-On Thu, Apr 04, 2024 at 02:50:31PM -0400, Paolo Bonzini wrote:
-> During guest run-time, kvm_arch_gmem_prepare() is issued as needed to
-> prepare newly-allocated gmem pages prior to mapping them into the guest.
-> In the case of SEV-SNP, this mainly involves setting the pages to
-> private in the RMP table.
-> 
-> However, for the GPA ranges comprising the initial guest payload, which
-> are encrypted/measured prior to starting the guest, the gmem pages need
-> to be accessed prior to setting them to private in the RMP table so they
-> can be initialized with the userspace-provided data. Additionally, an
-> SNP firmware call is needed afterward to encrypt them in-place and
-> measure the contents into the guest's launch digest.
-> 
-> While it is possible to bypass the kvm_arch_gmem_prepare() hooks so that
-> this handling can be done in an open-coded/vendor-specific manner, this
-> may expose more gmem-internal state/dependencies to external callers
-> than necessary. Try to avoid this by implementing an interface that
-> tries to handle as much of the common functionality inside gmem as
-> possible, while also making it generic enough to potentially be
-> usable/extensible for TDX as well.
-> 
-> Suggested-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Michael Roth <michael.roth@amd.com>
-> Co-developed-by: Michael Roth <michael.roth@amd.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  include/linux/kvm_host.h | 26 ++++++++++++++
->  virt/kvm/guest_memfd.c   | 78 ++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 104 insertions(+)
-> 
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 33ed3b884a6b..97d57ec59789 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -2450,4 +2450,30 @@ int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_ord
->  bool kvm_arch_gmem_prepare_needed(struct kvm *kvm);
->  #endif
->  
-> +/**
-> + * kvm_gmem_populate() - Populate/prepare a GPA range with guest data
-> + *
-> + * @kvm: KVM instance
-> + * @gfn: starting GFN to be populated
-> + * @src: userspace-provided buffer containing data to copy into GFN range
-> + *       (passed to @post_populate, and incremented on each iteration
-> + *       if not NULL)
-> + * @npages: number of pages to copy from userspace-buffer
-> + * @post_populate: callback to issue for each gmem page that backs the GPA
-> + *                 range
-> + * @opaque: opaque data to pass to @post_populate callback
-> + *
-> + * This is primarily intended for cases where a gmem-backed GPA range needs
-> + * to be initialized with userspace-provided data prior to being mapped into
-> + * the guest as a private page. This should be called with the slots->lock
-> + * held so that caller-enforced invariants regarding the expected memory
-> + * attributes of the GPA range do not race with KVM_SET_MEMORY_ATTRIBUTES.
-> + *
-> + * Returns the number of pages that were populated.
-> + */
-> +long kvm_gmem_populate(struct kvm *kvm, gfn_t gfn, void __user *src, long npages,
-> +		       int (*post_populate)(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
-> +					    void __user *src, int order, void *opaque),
-> +		       void *opaque);
-> +
->  #endif
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index 51c99667690a..e7de97382a67 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -602,3 +602,81 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
->  	return r;
->  }
->  EXPORT_SYMBOL_GPL(kvm_gmem_get_pfn);
-> +
-> +static int kvm_gmem_undo_get_pfn(struct file *file, struct kvm_memory_slot *slot,
-> +				 gfn_t gfn, int order)
-> +{
-> +	pgoff_t index = gfn - slot->base_gfn + slot->gmem.pgoff;
-> +	struct kvm_gmem *gmem = file->private_data;
-> +
-> +	/*
-> +	 * Races with kvm_gmem_unbind() must have been detected by
-> +	 * __kvm_gmem_get_gfn(), because the invalidate_lock is
-> +	 * taken between __kvm_gmem_get_gfn() and kvm_gmem_undo_get_pfn().
-> +	 */
-> +	if (WARN_ON_ONCE(xa_load(&gmem->bindings, index) != slot))
-> +		return -EIO;
-> +
-> +	return __kvm_gmem_punch_hole(file_inode(file), index << PAGE_SHIFT, PAGE_SIZE << order);
-> +}
-> +
-> +long kvm_gmem_populate(struct kvm *kvm, gfn_t gfn, void __user *src, long npages,
-> +		       int (*post_populate)(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
-> +					    void __user *src, int order, void *opaque),
-> +		       void *opaque)
-> +{
-> +	struct file *file;
-> +	struct kvm_memory_slot *slot;
-> +
-> +	int ret = 0, max_order;
-> +	long i;
-> +
-> +	lockdep_assert_held(&kvm->slots_lock);
-> +	if (npages < 0)
-> +		return -EINVAL;
-> +
-> +	slot = gfn_to_memslot(kvm, gfn);
-> +	if (!kvm_slot_can_be_private(slot))
-> +		return -EINVAL;
-> +
-> +	file = kvm_gmem_get_file(slot);
-> +	if (!file)
-> +		return -EFAULT;
-> +
-> +	filemap_invalidate_lock(file->f_mapping);
-> +
-> +	npages = min_t(ulong, slot->npages - (gfn - slot->base_gfn), npages);
-> +	for (i = 0; i < npages; i += (1 << max_order)) {
-> +		gfn_t this_gfn = gfn + i;
-> +		kvm_pfn_t pfn;
-> +
-> +		ret = __kvm_gmem_get_pfn(file, slot, this_gfn, &pfn, &max_order, false);
-> +		if (ret)
-> +			break;
-> +
-> +		if (!IS_ALIGNED(this_gfn, (1 << max_order)) ||
-> +		    (npages - i) < (1 << max_order))
-> +			max_order = 0;
-> +
-> +		if (post_populate) {
-> +			void __user *p = src ? src + i * PAGE_SIZE : NULL;
-> +			ret = post_populate(kvm, this_gfn, pfn, p, max_order, opaque);
+The following changes since commit e9c44c1beaba623b12201d2028bc20f535464d9b:
 
-I don't see the main difference between gmem_prepare() and post_populate()
-from gmem's point of view.  They are all vendor callbacks invoked after
-__filemap_get_folio(). Is it possible gmem choose to call gmem_prepare()
-or post_populate() outside __kvm_gmem_get_pfn()? Or even pass all
-parameters to a single gmem_prepare() and let vendor code decide what to
-do.
+  docs: zswap: fix shell command format (2024-03-29 08:59:01 -0600)
 
-> +		}
-> +
-> +		put_page(pfn_to_page(pfn));
-> +		if (ret) {
-> +			/*
-> +			 * Punch a hole so that FGP_CREAT_ONLY can succeed
-> +			 * again.
-> +			 */
-> +			kvm_gmem_undo_get_pfn(file, slot, this_gfn, max_order);
-> +			break;
-> +		}
-> +	}
-> +
-> +	filemap_invalidate_unlock(file->f_mapping);
-> +
-> +	fput(file);
-> +	return ret && !i ? ret : i;
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_gmem_populate);
-> -- 
-> 2.43.0
-> 
-> 
-> 
+are available in the Git repository at:
+
+  git://git.lwn.net/linux.git tags/docs-6.9-fixes2
+
+for you to fetch changes up to 8d939ae349343b55984ea821164e2be526d48cd1:
+
+  docs: verify/bisect: stable regressions: first stable, then mainline (2024-04-15 09:41:56 -0600)
+
+----------------------------------------------------------------
+A set of updates from Thorsten to his (new) guide to verifying bugs and
+tracking down regressions.
+
+This is a fairly big set of changes for this late in the cycle, and they
+*can* wait if need be.  But they are limited to Thorsten's document,
+which is new with 6.9, and I don't see a reason to not have it in his
+desired form at release.
+
+----------------------------------------------------------------
+Thorsten Leemhuis (6):
+      docs: verify/bisect: use git switch, tag kernel, and various fixes
+      docs: verify/bisect: add and fetch stable branches ahead of time
+      docs: verify/bisect: proper headlines and more spacing
+      docs: verify/bisect: explain testing reverts, patches and newer code
+      docs: verify/bisect: describe how to use a build host
+      docs: verify/bisect: stable regressions: first stable, then mainline
+
+ .../verify-bugs-and-bisect-regressions.rst         | 597 ++++++++++++++-------
+ 1 file changed, 417 insertions(+), 180 deletions(-)
