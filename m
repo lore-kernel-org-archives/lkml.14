@@ -1,101 +1,100 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C776EAC7;
-	Mon, 22 Apr 2024 21:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22341CAAE
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 21:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713821361; cv=none; b=aitgr0y0dWOvIoSP9eyExSBWy2pxahsY3IsaUmFaXbFb5hZinSFLalVtOMAugS0d0CeScIRdCoMxyM6SpJhY+lp5hMr3VJIutEvJO13700qxSYMkdMmCehJFlYPs6RqaWJ1uLEfAe2ha2KS1ogUFVRq7tOhghnCp2713udDyfks=
+	t=1713821414; cv=none; b=tszwcvPUoT1U+aRcabpejA97eI2RA3E3sBxY4eIbwkn3P5P63xl2YFhpbczI3i8lreX+k2PMP0rLQibHlzo7xfauSiaIlpt0MQrlmmMh84MGkekheWAa4UPr5Ejhcmmxkur/VdRJe9Y/jPvpXOVxJR3Mbim1xAXY/stM9WSj73s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713821361; c=relaxed/simple;
-	bh=X5yECVocRSVoXWNUjSJ5FQCElLwOjfvcL5E4tS0Ma9M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kTfzIo+i9TaKmgi8FMgHSrj0/zCMIrQlaifsebKnzf4kk+0jKWpuaOAmr53up6Mpmnzh3qAJpHu6WAzvBD6sTElPPlERE8IDOjIkwglbo2nNWOMn1UrhwGctSJkNjoNI6LMMTk/5EI6N2JMHW+pkJwifI9yjpDBxoJQ1328JIHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Kp1ExzYm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8yBclRjK; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1713821414; c=relaxed/simple;
+	bh=Ku1DGEy0db+OnEa5w7PseS2QxxW9d5ZfsbNmxLSkJk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HyjUXo6KZyIxMg+w7Y7xUI/tS5d6hbiZXfz3bMoJpJLi8iCR/DclZ/sgUa4nnJxQ15cZ8+XRHA2i9fdJUHpGz0y79T1rAwKwkMaR7FWSyKc/zXyMHFrR5GxZZPDqNBBAhINCz7lnxyPP+PbKDcB3Y4erjFxeW5zuuoj8RQiTgzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mWuX9Kg/; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Kp1ExzYm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8yBclRjK"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1713821357;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mWuX9Kg/"
+Message-ID: <173a7bb2-5473-4c1b-b3dd-ef776e63ac7a@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1713821410;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=eeyuEbrEx1MPoiOjVnW6ImI9gPSzPtQTfgem9Ff9pSI=;
-	b=Kp1ExzYmRQaKsiOSMmITaxogq9JhEcwIV44iCbU3V3uLKMCZdFmzlU/cp5WOiq9W/5Ke2q
-	f/oSqov0Oi7SrAFfSMB4PIcdRpNUuC8kcO/VtCwHXVFRP2ZrVpgUxoirToSyH3vNJynEDq
-	4kVknKPcFks1ZyH/UgLHuqzblH0UHkD/v1SNCt0SeJQIORup+f2ijCa05zMpRcH5RbOi4T
-	RzKxtqUuKbuGReooLq5SAmPQ3QilUGGOeNXG15K+e1AGEjEAVWXz2VtboxK4IZCjZgFNVz
-	JDJeNcIKuj7DtJ/IJmmL2vxbL3CoyU07mK2YhQM4dPBFw8XadUmEjKTQh+Wyyg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1713821357;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eeyuEbrEx1MPoiOjVnW6ImI9gPSzPtQTfgem9Ff9pSI=;
-	b=8yBclRjKCw8Nf5LARioW+Naqyx6TNa7SarnX433TQUWLxfqWJf4L9ckMKEY6o/Lhiozidf
-	M/WO8dzdvVdbAEAg==
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
- linux-kernel@vger.kernel.org
-Cc: opendmb@gmail.com, Florian Fainelli <florian.fainelli@broadcom.com>, Tim
- Ross <tim.ross@broadcom.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS
- ARCHITECTURE" <linux-mips@vger.kernel.org>, "moderated list:BROADCOM
- BCM7XXX ARM
- ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] irqchip/irq-brcmstb-l2: Avoid saving mask on shutdown
-In-Reply-To: <20240416194343.469318-1-florian.fainelli@broadcom.com>
-References: <20240416194343.469318-1-florian.fainelli@broadcom.com>
-Date: Mon, 22 Apr 2024 23:29:14 +0200
-Message-ID: <87le55ulw5.ffs@tglx>
+	bh=nH11/CXhaPQDxPvStD1h8S0lo64PkavloRKwmStdkfE=;
+	b=mWuX9Kg/JSi1GlYagbN/iSGyHb/7PXLCjJlVe2ffi1+IfdKuKtnzjNx4prIYV7NtPx33eP
+	8B5u1AI13YXJt+teLHVOvg75/U1S+3pRwtbXlsY/OMJnyiEvQkkBySvgFP0vw/MxqUcOGj
+	Qy2HIzwX+531fGEzPAj3ctd1ecHdlnk=
+Date: Mon, 22 Apr 2024 17:30:06 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Subject: Re: [PATCH 1/7] dt-bindings: pci: xilinx-nwl: Add phys
+To: Rob Herring <robh@kernel.org>
+Cc: Michal Simek <michal.simek@amd.com>,
+ Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+ linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ devicetree@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>
+References: <20240422195904.3591683-1-sean.anderson@linux.dev>
+ <20240422195904.3591683-2-sean.anderson@linux.dev>
+ <171382130333.1986303.15938018699322126426.robh@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <171382130333.1986303.15938018699322126426.robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 16 2024 at 12:43, Florian Fainelli wrote:
-> The interrupt controller shutdown path does not need to save the mask of
-> enabled interrupts because the next state the system is going to be in
-> is akin to a cold boot, or a kexec'd kernel.
+On 4/22/24 17:28, Rob Herring wrote:
+> 
+> On Mon, 22 Apr 2024 15:58:58 -0400, Sean Anderson wrote:
+>> Add phys properties so Linux can power-on/configure the GTR
+>> transcievers.
+>> 
+>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+>> ---
+>> 
+>>  Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>> 
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> yamllint warnings/errors:
+> 
+> dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml: properties:phy-names: {'maxItems': 4, 'items': [{'pattern': '^pcie-phy[0-3]$'}]} should not be valid under {'required': ['maxItems']}
+> 	hint: "maxItems" is not needed with an "items" list
+> 	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+> 
+> doc reference errors (make refcheckdocs):
+> 
+> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240422195904.3591683-2-sean.anderson@linux.dev
+> 
+> The base for the series is generally the latest rc1. A different dependency
+> should be noted in *this* patch.
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+> 
+> pip3 install dtschema --upgrade
+> 
+> Please check and re-submit after running the above command yourself. Note
+> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> your schema. However, it must be unset to test all examples with your schema.
+> 
 
-Sure, but
+This warning is invalid, since I am using pattern with items.
 
-> Reported-by: Tim Ross <tim.ross@broadcom.com>
-> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> ---
->  drivers/irqchip/irq-brcmstb-l2.c | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
-> index 2b0b3175cea0..c988886917f7 100644
-> --- a/drivers/irqchip/irq-brcmstb-l2.c
-> +++ b/drivers/irqchip/irq-brcmstb-l2.c
-> @@ -118,7 +118,7 @@ static void brcmstb_l2_intc_irq_handle(struct irq_desc *desc)
->  	chained_irq_exit(chip, desc);
->  }
->  
-> -static void brcmstb_l2_intc_suspend(struct irq_data *d)
-> +static void __brcmstb_l2_intc_suspend(struct irq_data *d, bool save)
->  {
->  	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
->  	struct irq_chip_type *ct = irq_data_get_chip_type(d);
-> @@ -127,7 +127,8 @@ static void brcmstb_l2_intc_suspend(struct irq_data *d)
->  
->  	irq_gc_lock_irqsave(gc, flags);
->  	/* Save the current mask */
-> -	b->saved_mask = irq_reg_readl(gc, ct->regs.mask);
-> +	if (save)
-> +		b->saved_mask = irq_reg_readl(gc, ct->regs.mask);
-
-what's the conditional actually buying you except more complex code?
-
-Thanks,
-
-        tglx
-
-        
+--Sean
