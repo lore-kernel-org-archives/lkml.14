@@ -1,94 +1,92 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E45DDAB
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 03:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92CDEDDC3
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 03:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713757123; cv=none; b=c4yudkBShCe+GIujznEV4AbhgAhOHq0/1PwL084nZ2sI139KV0pUyho1EEfU5P4KvQjEqHL7CVRBeVRzKRl8XMVtFArZ/5hAFQb3JoDkx4OgRiWyilcbU0mbz1f9Thf9FXw9qYHHLPIAkSpBqbSWZszx6PWmr1El7UUpVw45WQ0=
+	t=1713757276; cv=none; b=acGnSeqRF5mqcaYPZraXEGXMDn2w4MIDrJfubOFxz+vVNJFyHEEOqzvO6+gMpGZ6zFXRIfk2LfcIFu0yLGdaz2brVVaXK1xJcfYgmD5A413vINZV2zADiIZ8vSgbsKEaNkQweCxJl8TY8lqKNT0IgrtjzBUEy8e+RKdcLgPxPK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713757123; c=relaxed/simple;
-	bh=HmgUjEtE2D65gXb4uwnzJYArIQyX/6Kk/HUdfLvGQbI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iXaXR6uDB5AntekrgiQZTIgLchLw5m9vBorzuTCR9XA1SKl4eempaE366bh9ZemWIinfLQCNjoJw3FQAQjsBFdAUaSsaKcFnSYLAxW1NAc0jqjo2GJqJQN++LLlIWGqHwU2Pg7IKVfLkuIYnbpaluc1MUVOUL4gPWe0ivALr7bM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 4ba26e00005811ef9305a59a3cc225df-20240422
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:3cc5f76e-1216-462c-9101-c3fdefd9e948,IP:25,
-	URL:0,TC:0,Content:-5,EDM:-25,RT:0,SF:-1,FILE:0,BULK:0,RULE:Release_Ham,AC
-	TION:release,TS:-6
-X-CID-INFO: VERSION:1.1.37,REQID:3cc5f76e-1216-462c-9101-c3fdefd9e948,IP:25,UR
-	L:0,TC:0,Content:-5,EDM:-25,RT:0,SF:-1,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-6
-X-CID-META: VersionHash:6f543d0,CLOUDID:de48ecc80ffdb81986e69b4a94ad0c9a,BulkI
-	D:240422112750583FJ6BJ,BulkQuantity:0,Recheck:0,SF:25|72|19|44|66|38|102,T
-	C:nil,Content:0,EDM:1,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,
-	COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED, SA_EXISTED
-	SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
-	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
-	ABX_MISS_RDNS
-X-UUID: 4ba26e00005811ef9305a59a3cc225df-20240422
-X-User: gehao@kylinos.cn
-Received: from localhost.localdomain [(116.128.244.171)] by mailgw.kylinos.cn
-	(envelope-from <gehao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1761472885; Mon, 22 Apr 2024 11:27:49 +0800
-From: Hao Ge <gehao@kylinos.cn>
-To: akpm@linux-foundation.org,
-	willy@infradead.org
-Cc: david@redhat.com,
-	lrh2000@pku.edu.cn,
-	josef@toxicpanda.com,
-	vishal.moola@gmail.com,
-	gehao618@163.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Hao Ge <gehao@kylinos.cn>
-Subject: [PATCH] mm/page-flags: make PageUptodate return bool
-Date: Mon, 22 Apr 2024 11:27:25 +0800
-Message-Id: <20240422032725.41452-1-gehao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1713757276; c=relaxed/simple;
+	bh=QXCwamK07MsvJLUBrAceuoynnr5As4trjRDujWCt1Rs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fvIRe7kvRnoAT69T++HFgGNOR/Pn06ouHlgTHjSE8eoDVlWi1MDUTMF3LahmCrUVMfxRP1Nw3TyfZgn5LomDZ/XQ42inwheLVOhmNRBBYWjF/jY59Nesu8W1eJTsM96APtcD0xKQ+k1RI9HqlGw7nqHBUwvwgnjzjQznNsGmMKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IV/CTnq0; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IV/CTnq0"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5aa22ebd048so2799787eaf.1
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 20:41:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713757274; x=1714362074; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cl5iDmcU+vdD5ORuT+ZmSbv78xBtfXPu+m5CHFPkBDg=;
+        b=IV/CTnq02p8E+rxmZsk7j3TeJFn70+D8eqC94FwvQvZ8njDwlVJA9YJA8NYolygcin
+         oQIFidoML+OLg9zbmEtyGrv/PVkeDU2AMy/Pg2fuBioT8B+90d08UHLiN71ssuqTGOQi
+         iwFQ8I3Bl8bJ8qFCReZbnO2Sw7gwQpqJLrdQ3ZZk5nzGebiU4tlkZEvCyRyPrxeVPcCa
+         UH0bxoK89e1HD9+fXLwigcKk4TDEG+mucWRGTYLvhnaEUjKa/TKFyHZVR3NFYKNZ0jeA
+         pKmDInEXayjHPIYqiWfTdxvKLdAVqzXP6CuG97axr0iitWbLKoA9bTL2SvbkDZEspCrZ
+         ag6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713757274; x=1714362074;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cl5iDmcU+vdD5ORuT+ZmSbv78xBtfXPu+m5CHFPkBDg=;
+        b=OMZFnVq58U+x8lqEnj7JJyEUgX+NlyWuWVMB/5SL+4bXNRw0B8Nj23hkW/Qs8IJ4nI
+         4JXoocWUdhn6QuE4JkVWDuvLy5N1MxPNzRqZWIR6h8nnHEM1cBv+tBsDaKKCzolR5OvF
+         ryOIyC44IuK6F1gc9vrD+LRPU66M710BOOe9g0yCnupPRlZpp2Zj4Lpqr/2QcdzFhele
+         zcIMV1l7vtDAF0iDN3FAp8sx2j81Ud7ymox66CW8KEIcMP3Jb4qvSpqG+Rt3tCEJQDPF
+         Xv+LiOnMo7d27cD5vL5EvGnX+nXSXukhyn8vJ6LyhchY/sSGfOs1dNaF/NC0Yfc5ZTYj
+         JdCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVLUZHjsKy8g+Fx7piIzpi9E+DxRZy9wm5Jv14RCI+ENK7SQfzCsaQ3uJWxlte/U5kHVuE3BoTnnJg2Zmh1QXvAswScSF0WY9JR7FHo
+X-Gm-Message-State: AOJu0Yy4MgCOTxNWZfoUXSx2GqnusRn7hZEQtZz84N7U10pL6guzLquv
+	qyh90bqyyN9avxChSD+xR3ad3SOUWhiaS2rT3mD3MeOo3LG4RC6afOrgrOnQuko=
+X-Google-Smtp-Source: AGHT+IGk4VpEttqtX7wmUP0DjSs0Hnai1BKypHYXOPdM34VHuqvCdINyqmTAuf5HKKeFHylZBh137A==
+X-Received: by 2002:a05:6870:c352:b0:222:99cb:2215 with SMTP id e18-20020a056870c35200b0022299cb2215mr10754338oak.28.1713757274492;
+        Sun, 21 Apr 2024 20:41:14 -0700 (PDT)
+Received: from localhost ([122.172.87.52])
+        by smtp.gmail.com with ESMTPSA id m19-20020aa78a13000000b006e697bd5285sm6803551pfa.203.2024.04.21.20.41.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Apr 2024 20:41:13 -0700 (PDT)
+Date: Mon, 22 Apr 2024 09:11:12 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] cpufreq: mediatek: Add support for MT7988A
+Message-ID: <20240422034112.rugixkqrbeyq44zq@vireshk-i7>
+References: <acf4fb446aacfbf6ce7b6e94bf3aad303e0ad4d1.1713545923.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <acf4fb446aacfbf6ce7b6e94bf3aad303e0ad4d1.1713545923.git.daniel@makrotopia.org>
 
-make PageUptodate return bool to align the return
-values of folio_test_uptodate function
+On 19-04-24, 17:59, Daniel Golle wrote:
+> From: Sam Shih <sam.shih@mediatek.com>
+> 
+> This add cpufreq support for mediatek MT7988A SoC.
+> 
+> The platform data of MT7988A is different from previous MediaTek SoCs,
+> so we add a new compatible and platform data for it.
+> 
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> ---
+>  drivers/cpufreq/mediatek-cpufreq.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 
-Signed-off-by: Hao Ge <gehao@kylinos.cn>
----
- include/linux/page-flags.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied. Thanks.
 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 652d77805e99..497ec781a681 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -764,7 +764,7 @@ static inline bool folio_test_uptodate(const struct folio *folio)
- 	return ret;
- }
- 
--static inline int PageUptodate(const struct page *page)
-+static inline bool PageUptodate(const struct page *page)
- {
- 	return folio_test_uptodate(page_folio(page));
- }
 -- 
-2.25.1
-
+viresh
