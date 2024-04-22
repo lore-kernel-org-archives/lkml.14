@@ -1,174 +1,115 @@
-Received: from vern.gendns.com (vern.gendns.com [98.142.107.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A3A15442C;
-	Mon, 22 Apr 2024 18:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.142.107.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9579154C16;
+	Mon, 22 Apr 2024 18:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713811623; cv=none; b=pPy6w7FutFBWDn9v7bxoa2SSDfw1PbFQr81JiZEgar0osU7nZxJEhRbqtKIIUXnYTLez0gNzGKxit9R3CeKW+OWeKPuG7jhWVoynAVgVML3tSQa637bO8wcpFcKqmivs4gmj9xAsvA6FFUaY7QZAeC/QO46QqNKISrBODEdTylE=
+	t=1713811693; cv=none; b=PPBZWWz4lIhPyAuWb4oVI/ysOZx9zcCBafCB9t2aSXwYddFVUQUNWWhVuhMRb+ob9IyF1CLuryZ4xfB1BKQ7k5lWaXV8LhVf/2RYKZN3EVEO+Ik7x3CnmC+7WZvMgsJQBCM36yoEnInBVf/Ylz3E5q/N/w01jWYRPSm6gCxsBl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713811623; c=relaxed/simple;
-	bh=7DbwX/PviFN7M1PW7ebtzi0VSvjqv2voy9Qkj96KIUg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A0VNSoUb3ExL12S7Cguj2oFuZ1mHd/lN2pN03JbmF1qqj7CZqUSjH6hsTA0NLg/6972v3DaL7rLHqN59Ryqmn5gzidPmfMrAsG1H+S0rfw2pqRHYfrBOdZrU8iDmUfCofhAH3CbkBDZK2z17p2OkdP6HKvsnp3/3150NHmE4suA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com; spf=pass smtp.mailfrom=lechnology.com; dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b=HluOYFE7; arc=none smtp.client-ip=98.142.107.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lechnology.com
+	s=arc-20240116; t=1713811693; c=relaxed/simple;
+	bh=rpA6N07dzG+TJH3XYFQyU87OVzoWXjM0LCk9vtM3N3Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j6UsD61ggpjKgC0P6pKW9NGoWZc5LB18zyCxAZZHD+Add1Q2YOFCiQOAh5YdZ+66NxrZ+YrGzxjLlNT+/dmeoWHHsfFgn3b/H4HvnM0XpBi7M/P5ItxBWJmB8ngMAlMYdDjdskWVrA9w1onQ1ioPASns1NC9Zlg8DKzJ9FhSA4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pzVBCQSx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="HluOYFE7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=L5kzskFgMAlt+sf4dc6NATeKvo0TVUxNFW30+QZbNv4=; b=HluOYFE7np7DfRwZaGmV9rQnSb
-	53+GkT1ijwTAQwVzrlj0SBtz6vF7UxLVsW2OhDRbyZgh75G0be2zldU8XX6Nt5OOMuR98i4frRp1j
-	Tu1ad/8wEwBpeP18X3E/D7KZTpQGe3mflnAZcRTyqMP3xWSkTXxUanAIQKqQ1UJp9eJXhgkf9Dr+/
-	WkMpZahs/6TwZcYYY6i9tc3v1ILXia/6kVzCC3KikY+rYrBATOOKo+Cd//hIdAzUVmIXlB/bvmvzx
-	iey+1q6auWfMNMqWsvC7HgDjWdnnJNxBOSA+nt2OseD1RBeQdso8MXldYN2xmpZLh2pPD4kxEhAiQ
-	IJvhlPuQ==;
-Received: from ip98-183-112-25.ok.ok.cox.net ([98.183.112.25]:58238 helo=[192.168.0.142])
-	by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <david@lechnology.com>)
-	id 1ryyMo-000480-2k;
-	Mon, 22 Apr 2024 14:25:54 -0400
-Message-ID: <4cf5f463-dccd-4637-b7ce-e8d8eac044b7@lechnology.com>
-Date: Mon, 22 Apr 2024 13:25:52 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pzVBCQSx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8024C4AF0F;
+	Mon, 22 Apr 2024 18:48:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713811692;
+	bh=rpA6N07dzG+TJH3XYFQyU87OVzoWXjM0LCk9vtM3N3Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pzVBCQSxqnWh4x3MbkKicc4qA/nAbOE4JvvaoaeC+gJbzKr+ktYIyDQ3uXHJWvEr6
+	 pWdbfWZDMnNIlq+UmU4CyvxIml1OXPHnHfKca0OKLH8APjPJUWQBvPYts84peEjUWK
+	 qSUq+eRgJNMTFL3X7cF+ewXLP7ozXO2VNYVBPjVUHrLJpNOCvG3rDTwcNtmAtPCI7B
+	 roCCL51+T9+fAp/A4jkX8IlqYFr7uF34oE2O/EatP32GpuOF5yT1f6HbMSBJpb/LSH
+	 eJ5L0t3HaLJ7/Ik5iCLUxKMnFVkOvlSioYxvOHTkfdOAaY0iyvXv9n4RVNZYabHFCN
+	 rmHxZ9SI8GusQ==
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5acdbfa7a45so1536090eaf.2;
+        Mon, 22 Apr 2024 11:48:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUOY4qZ+EySN7WC/vyNeHGHJOiRCea/oy1t/SAmrd5d+VIOoD03cQTI8TF3QMgV6LfMwDGMRb6rbbd72XQpkcAQffQTG9eVb+TLWAmz2sYU6H++pbuV5a2wlmTK6Eblc6KEQ2HkbcB8l9G9vUHIAYYEM0jkDKlAx8joapTlxHk8XGv2z/DAe2SrtHi/cfixCeTxxK1q4UfoeJvfQaKu4g==
+X-Gm-Message-State: AOJu0YzksLusupozqrOO9H/CrOj3QyLwvpwt1OqnIAbWptNLZoqjJ1Dl
+	9DqZ34if4xEq8jn4sl2+BHKMVe4f1VM5eJJHJxKCPjtJpkgRiCJbjMLB682YQANsMlraegr+TfE
+	BTHP7co+Cv8YJl7a/UFnZ6CPQ61w=
+X-Google-Smtp-Source: AGHT+IHflqOEbu6JjhL9GA+4qsoaorYsVOPeB39pe/rPdTVl/TbW3rxr3EWdsbghxWdA3n1aLCbh5F2f8GOdraC2c/I=
+X-Received: by 2002:a05:6820:2c83:b0:5aa:6b2e:36f0 with SMTP id
+ dx3-20020a0568202c8300b005aa6b2e36f0mr10951143oob.0.1713811692094; Mon, 22
+ Apr 2024 11:48:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/7] dt-bindings: counter: Update TI eQEP binding
-To: Judith Mendez <jm@ti.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- William Breathitt Gray <william.gray@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-References: <20240418221417.1592787-1-jm@ti.com>
- <20240418221417.1592787-6-jm@ti.com>
-Content-Language: en-US
-From: David Lechner <david@lechnology.com>
-Autocrypt: addr=david@lechnology.com; keydata=
- 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
-In-Reply-To: <20240418221417.1592787-6-jm@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com> <20240418135412.14730-4-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20240418135412.14730-4-Jonathan.Cameron@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 22 Apr 2024 20:48:01 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g9g=W9o8=BNDP+3TEUEN4ByjQU9SJPJepE6eFrcRv2+A@mail.gmail.com>
+Message-ID: <CAJZ5v0g9g=W9o8=BNDP+3TEUEN4ByjQU9SJPJepE6eFrcRv2+A@mail.gmail.com>
+Subject: Re: [PATCH v7 03/16] ACPI: processor: Drop duplicated check on _STA
+ (enabled + present)
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, linux-pm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, 
+	Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Miguel Luis <miguel.luis@oracle.com>, James Morse <james.morse@arm.com>, 
+	Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, linuxarm@huawei.com, justin.he@arm.com, 
+	jianyong.wu@arm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/18/24 5:14 PM, Judith Mendez wrote:
-> Update eQEP binding for TI K3 devices.
+On Thu, Apr 18, 2024 at 3:55=E2=80=AFPM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> The ACPI bus scan will only result in acpi_processor_add() being called
+> if _STA has already been checked and the result is that the
+> processor is enabled and present.  Hence drop this additional check.
+>
+> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
+LGTM, so
 
-It would make more sense to have this patch first in the series
-before the dts changes.
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> 
-> Signed-off-by: Judith Mendez <jm@ti.com>
 > ---
->  Documentation/devicetree/bindings/counter/ti-eqep.yaml | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/counter/ti-eqep.yaml b/Documentation/devicetree/bindings/counter/ti-eqep.yaml
-> index 85f1ff83afe72..11755074c8a91 100644
-> --- a/Documentation/devicetree/bindings/counter/ti-eqep.yaml
-> +++ b/Documentation/devicetree/bindings/counter/ti-eqep.yaml
-> @@ -14,19 +14,23 @@ properties:
->      const: ti,am3352-eqep
->  
-
-As Krzysztof hinted, it sounds like we need to add new compatibles
-here and have some -if: statements to account for the differences
-in SoCs rather than making the bindings less strict.
-
->    reg:
-> -    maxItems: 1
-> +    minItems: 1
-> +    maxItems: 2
->  
->    interrupts:
->      description: The eQEP event interrupt
->      maxItems: 1
->  
->    clocks:
-> -    description: The clock that determines the SYSCLKOUT rate for the eQEP
-> +    description: The clock that determines the clock rate for the eQEP
->        peripheral.
->      maxItems: 1
->  
->    clock-names:
-> -    const: sysclkout
-> +    maxItems: 1
-
-In hindsight, this is not the best name. Since we only have one clock
-we don't really need the name anyway, so for the new compatibles, we
-could set clock-names: false.
-
-> +
-> +  power-domains:
-> +    maxItems: 1
->  
->  required:
->    - compatible
-
-
-I see that the CFG0 syscon register on AM62x has some control knobs for
-the EQEP so it would be good to add this to the bindings now too to try
-to make the bindings as complete as possible. (I didn't look at other
-chips so the same may apply to others as well.)
-
+> v7: No change
+> v6: New patch to drop this unnecessary code. Now I think we only
+>     need to explicitly read STA to print a warning in the ARM64
+>     arch_unregister_cpu() path where we want to know if the
+>     present bit has been unset as well.
+> ---
+>  drivers/acpi/acpi_processor.c | 6 ------
+>  1 file changed, 6 deletions(-)
+>
+> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.=
+c
+> index 7fc924aeeed0..ba0a6f0ac841 100644
+> --- a/drivers/acpi/acpi_processor.c
+> +++ b/drivers/acpi/acpi_processor.c
+> @@ -186,17 +186,11 @@ static void __init acpi_pcc_cpufreq_init(void) {}
+>  #ifdef CONFIG_ACPI_HOTPLUG_CPU
+>  static int acpi_processor_hotadd_init(struct acpi_processor *pr)
+>  {
+> -       unsigned long long sta;
+> -       acpi_status status;
+>         int ret;
+>
+>         if (invalid_phys_cpuid(pr->phys_id))
+>                 return -ENODEV;
+>
+> -       status =3D acpi_evaluate_integer(pr->handle, "_STA", NULL, &sta);
+> -       if (ACPI_FAILURE(status) || !(sta & ACPI_STA_DEVICE_PRESENT))
+> -               return -ENODEV;
+> -
+>         cpu_maps_update_begin();
+>         cpus_write_lock();
+>
+> --
