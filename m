@@ -1,62 +1,41 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [195.130.132.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3637A14F9DF;
-	Mon, 22 Apr 2024 12:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F2D14F9E6
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 12:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713789937; cv=none; b=OZy91iGdIKnd2voNLQSbazYVjmOpD48cOYVV0/TfcwETrM/oli9N2sc6zwOqRJYos/r+3YimxvU1JCnaXGH4Tlh5ypU3WUKozxAuj4sEo20Cxq7p2hJleYuUi2n9FXMLt3NpqB+1D4p6p/Z21Nqkvxx7N3wMGEfR+Pv2SScEBBw=
+	t=1713789939; cv=none; b=e3HM0/13XMFX5nvclGxyYKMXqit39eVcQ/DDMlkiAvWzeJewF1bx4lEjgonlLGTAL/qNCz2PjrtB6hN2CjE2lw9meGbdZgdwlY1wuOtcD48i976aNENe4ro76IXa94XDMfWsiRqUPrh1YFGQTylrBgegXMgW/BKfcZlOzyyAusw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713789937; c=relaxed/simple;
-	bh=tEH78XBPBsQYvQQOOnNYvIjBBy52gko0P2Kv0tpiHZk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pyGf2lDM4paijiNQIgO+soeBk5T/wppLt9AJr+r4jOdeca1oDZ8JxRWKn1czlynY6OXWZZmjXm97tRGr00vbxyi9Doiap8N9BsW4MKx/UsUyYK9bFdLm/gVEhpvtxvZNck4Ka1D7cZRxA6PopI4lW/2km/78N+umJlNSf1AjOTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HuLAXIjL; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HuLAXIjL"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43MCjIXN026642;
-	Mon, 22 Apr 2024 07:45:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1713789918;
-	bh=0QmxLrkimtptQPll3jysQXKo8ee+qL2NGBb1Scl3kBg=;
-	h=From:To:CC:Subject:Date;
-	b=HuLAXIjLaWauusSRGgJtwmeq0rhYmy/7LdRibVgEru4t42L8tm8PafTQdi0k8f6ER
-	 QGMUrh57ktrxKBJ2p+HenYmho9ZGvXsuh4YbK4f1sDWnfo5/89ZzN5+GLYX5dUcInl
-	 fFYGrhYTTjm2PU9+zBFQQG0SF9+7tXUQeh0WP7Ew=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43MCjIAK065786
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 22 Apr 2024 07:45:18 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 22
- Apr 2024 07:45:17 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 22 Apr 2024 07:45:17 -0500
-Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43MCjHhE009598;
-	Mon, 22 Apr 2024 07:45:17 -0500
-From: Chintan Vankar <c-vankar@ti.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Ronald Wahl <ronald.wahl@raritan.com>,
-        Dan Carpenter
-	<dan.carpenter@linaro.org>,
-        Roger Quadros <rogerq@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
-	<edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>, <s-vadapalli@ti.com>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        Chintan Vankar
-	<c-vankar@ti.com>
-Subject: [PATCH net-next v2] net: ethernet: ti: am65-cpsw-nuss: Enable SGMII mode for J784S4 CPSW9G
-Date: Mon, 22 Apr 2024 18:15:15 +0530
-Message-ID: <20240422124515.887511-1-c-vankar@ti.com>
+	s=arc-20240116; t=1713789939; c=relaxed/simple;
+	bh=yYH2vuZoVpYszLzr7WSPOJbEUql1N3RWmEXWyg6uOw8=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ktzYpKzPnY8XLRhNoIrjO9sWgSW1UCX5XveA44stkVD38Ed4np3V3VYVNQ5FHhUXtG+SDtzHNCCT+n5kYSvN5hkw7wtVA5qO1dUlW142mv/vP1GKGIRYj0Xi1QmwQ3ZbQvVfRi5KGLeNrUQfBCEfUX1PJnRVyrSHmN3afsLLYBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
+	by xavier.telenet-ops.be with bizsmtp
+	id ECla2C0040SSLxL01Cla1Y; Mon, 22 Apr 2024 14:45:34 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1ryt2V-001tuv-VA
+	for linux-kernel@vger.kernel.org;
+	Mon, 22 Apr 2024 14:45:34 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1ryt37-005ihq-Vk
+	for linux-kernel@vger.kernel.org;
+	Mon, 22 Apr 2024 14:45:34 +0200
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+To: linux-kernel@vger.kernel.org
+Subject: Build regressions/improvements in v6.9-rc5
+Date: Mon, 22 Apr 2024 14:45:33 +0200
+Message-Id: <20240422124533.1363483-1-geert@linux-m68k.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <CAHk-=wgfck-6-2YcD3Bzhjo0E0L0g2HGSZksB9pzRCah=Y4HBw@mail.gmail.com>
+References: <CAHk-=wgfck-6-2YcD3Bzhjo0E0L0g2HGSZksB9pzRCah=Y4HBw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,43 +43,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-TI's J784S4 SoC supports SGMII mode with CPSW9G instance of the CPSW
-Ethernet Switch. Thus, enable it by adding SGMII mode to the
-extra_modes member of the "j784s4_cpswxg_pdata" SoC data.
+Below is the list of build error/warning regressions/improvements in
+v6.9-rc5[1] compared to v6.8[2].
 
-Reviewed-by: Roger Quadros <rogerq@kernel.org>
-Signed-off-by: Chintan Vankar <c-vankar@ti.com>
----
+Summarized:
+  - build errors: +11/-8
+  - build warnings: +1/-40
 
-This patch is based on net-next tagged v6.9-rc4.
+JFYI, when comparing v6.9-rc5[1] to v6.9-rc4[3], the summaries are:
+  - build errors: +6/-5
+  - build warnings: +1/-1476
 
-Link to v1:
-https://lore.kernel.org/all/20231221111046.761843-1-c-vankar@ti.com/
+Happy fixing! ;-)
 
-Changes from v1 to v2:
-- Removed RFC from subject prefix as suggested by Roger.
-- Collected Reviewed-by tag from Roger Quadros.
+Thanks to the linux-next team for providing the build service.
 
- drivers/net/ethernet/ti/am65-cpsw-nuss.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+[1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/ed30a4a51bb196781c8058073ea720133a65596f/ (all 138 configs)
+[2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/e8f897f4afef0031fe618a8e94127a0934896aba/ (all 138 configs)
+[3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/0bbac3facb5d6cc0171c45c9873a2dc96bea9680/ (all 138 configs)
 
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index 2939a21ca74f..766abb571267 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -2904,7 +2904,8 @@ static const struct am65_cpsw_pdata j784s4_cpswxg_pdata = {
- 	.quirks = 0,
- 	.ale_dev_id = "am64-cpswxg",
- 	.fdqring_mode = K3_RINGACC_RING_MODE_MESSAGE,
--	.extra_modes = BIT(PHY_INTERFACE_MODE_QSGMII) | BIT(PHY_INTERFACE_MODE_USXGMII),
-+	.extra_modes = BIT(PHY_INTERFACE_MODE_QSGMII) | BIT(PHY_INTERFACE_MODE_SGMII) |
-+		       BIT(PHY_INTERFACE_MODE_USXGMII),
- };
- 
- static const struct of_device_id am65_cpsw_nuss_of_mtable[] = {
--- 
-2.34.1
 
+*** ERRORS ***
+
+11 error regressions:
+  + /kisskb/src/arch/sparc/kernel/setup_64.c: error: no previous prototype for 'alloc_irqstack_bootmem' [-Werror=missing-prototypes]:  => 602:13
+  + /kisskb/src/arch/sparc/vdso/vclock_gettime.c: error: no previous prototype for '__vdso_clock_gettime' [-Werror=missing-prototypes]:  => 254:1
+  + /kisskb/src/arch/sparc/vdso/vclock_gettime.c: error: no previous prototype for '__vdso_clock_gettime_stick' [-Werror=missing-prototypes]:  => 282:1
+  + /kisskb/src/arch/sparc/vdso/vclock_gettime.c: error: no previous prototype for '__vdso_gettimeofday' [-Werror=missing-prototypes]:  => 307:1
+  + /kisskb/src/arch/sparc/vdso/vclock_gettime.c: error: no previous prototype for '__vdso_gettimeofday_stick' [-Werror=missing-prototypes]:  => 343:1
+  + /kisskb/src/crypto/scompress.c: error: unused variable 'dst_page' [-Werror=unused-variable]:  => 174:38
+  + /kisskb/src/drivers/gpu/drm/msm/adreno/adreno_gen7_0_0_snapshot.h: error: 'gen7_0_0_external_core_regs' defined but not used [-Werror=unused-variable]:  => 924:19
+  + /kisskb/src/drivers/gpu/drm/msm/adreno/adreno_gen7_2_0_snapshot.h: error: 'gen7_2_0_external_core_regs' defined but not used [-Werror=unused-variable]:  => 748:19
+  + /kisskb/src/fs/bcachefs/btree_io.c: error: format '%lu' expects argument of type 'long unsigned int', but argument 12 has type 'unsigned int' [-Werror=format=]:  => 891:34, 891:6
+  + {standard input}: Error: invalid operands for opcode: 606 => 1099, 610
+  + {standard input}: Error: pcrel too far:  => 570, 579, 543, 563, 581, 588, 561, 572, 590, 545, 552, 554
+
+8 error improvements:
+  - /kisskb/src/arch/sparc/lib/cmpdi2.c: error: no previous prototype for '__cmpdi2' [-Werror=missing-prototypes]: 6:11 => 
+  - /kisskb/src/drivers/mtd/maps/sun_uflash.c: error: no previous prototype for 'uflash_devinit' [-Werror=missing-prototypes]: 50:5 => 
+  - /kisskb/src/include/linux/fortify-string.h: error: call to '__read_overflow2_field' declared with attribute warning: detected read beyond size of field (2nd parameter); maybe use struct_group()? [-Werror]: 537:4 => 
+  - /kisskb/src/include/linux/fortify-string.h: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror]: 528:4 => 
+  - /kisskb/src/kernel/dma.c: error: no previous prototype for 'free_dma' [-Werror=missing-prototypes]: 88:6 => 
+  - /kisskb/src/kernel/dma.c: error: no previous prototype for 'request_dma' [-Werror=missing-prototypes]: 70:5 => 
+  - {standard input}: Error: branch to a symbol in another ISA mode: 5016, 5011 => 
+  - {standard input}: Error: expected symbol name: 1095 => 
+
+
+*** WARNINGS ***
+
+1 warning regressions:
+  + /kisskb/src/fs/bcachefs/btree_io.c: warning: format '%lu' expects argument of type 'long unsigned int', but argument 12 has type 'unsigned int' [-Wformat=]:  => 891:34, 891:6
+
+40 warning improvements:
+  - /kisskb/src/arch/sparc/lib/cmpdi2.c: warning: no previous prototype for '__cmpdi2' [-Wmissing-prototypes]: 6:11 => 
+  - /kisskb/src/arch/sparc/lib/ucmpdi2.c: warning: no previous prototype for '__ucmpdi2' [-Wmissing-prototypes]: 5:11 => 
+  - /kisskb/src/drivers/net/ethernet/i825xx/sun3_82586.c: warning: array subscript 1 is above array bounds of 'volatile struct transmit_cmd_struct *[1]' [-Warray-bounds]: 990:108 => 
+  - /kisskb/src/drivers/tty/serial/mcf.c: warning: no previous prototype for 'early_mcf_setup' [-Wmissing-prototypes]: 473:12 => 
+  - /kisskb/src/kernel/dma.c: warning: no previous prototype for 'free_dma' [-Wmissing-prototypes]: 88:6 => 
+  - /kisskb/src/kernel/dma.c: warning: no previous prototype for 'request_dma' [-Wmissing-prototypes]: 70:5 => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/intel/ice/ice: section mismatch in reference: ice_adv_lnk_speed_maps+0x110 (section: .data) -> ice_adv_lnk_speed_200000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/intel/ice/ice: section mismatch in reference: ice_adv_lnk_speed_maps+0x14 (section: .data) -> ice_adv_lnk_speed_200000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/intel/ice/ice: section mismatch in reference: ice_adv_lnk_speed_maps+0x30 (section: .data) -> ice_adv_lnk_speed_200000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/intel/ice/ice: section mismatch in reference: ice_adv_lnk_speed_maps+0x4c (section: .data) -> ice_adv_lnk_speed_200000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/intel/ice/ice: section mismatch in reference: ice_adv_lnk_speed_maps+0x68 (section: .data) -> ice_adv_lnk_speed_200000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/intel/ice/ice: section mismatch in reference: ice_adv_lnk_speed_maps+0x84 (section: .data) -> ice_adv_lnk_speed_200000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/intel/ice/ice: section mismatch in reference: ice_adv_lnk_speed_maps+0xa0 (section: .data) -> ice_adv_lnk_speed_200000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/intel/ice/ice: section mismatch in reference: ice_adv_lnk_speed_maps+0xbc (section: .data) -> ice_adv_lnk_speed_200000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/intel/ice/ice: section mismatch in reference: ice_adv_lnk_speed_maps+0xd8 (section: .data) -> ice_adv_lnk_speed_200000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/intel/ice/ice: section mismatch in reference: ice_adv_lnk_speed_maps+0xf4 (section: .data) -> ice_adv_lnk_speed_200000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qed/qed: section mismatch in reference: qed_mfw_ext_maps+0x14 (section: .data) -> qed_mfw_legacy_bb_100g (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qed/qed: section mismatch in reference: qed_mfw_ext_maps+0x30 (section: .data) -> qed_mfw_legacy_bb_100g (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qed/qed: section mismatch in reference: qed_mfw_ext_maps+0x4c (section: .data) -> qed_mfw_legacy_bb_100g (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qed/qed: section mismatch in reference: qed_mfw_ext_maps+0x68 (section: .data) -> qed_mfw_legacy_bb_100g (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qed/qed: section mismatch in reference: qed_mfw_ext_maps+0x84 (section: .data) -> qed_mfw_legacy_bb_100g (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qed/qed: section mismatch in reference: qed_mfw_ext_maps+0xa0 (section: .data) -> qed_mfw_legacy_bb_100g (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qed/qed: section mismatch in reference: qed_mfw_ext_maps+0xbc (section: .data) -> qed_mfw_legacy_bb_100g (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qed/qed: section mismatch in reference: qed_mfw_ext_maps+0xd8 (section: .data) -> qed_mfw_legacy_bb_100g (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qed/qed: section mismatch in reference: qed_mfw_legacy_maps+0x14 (section: .data) -> qed_mfw_legacy_bb_100g (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qed/qed: section mismatch in reference: qed_mfw_legacy_maps+0x30 (section: .data) -> qed_mfw_legacy_bb_100g (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qed/qed: section mismatch in reference: qed_mfw_legacy_maps+0x4c (section: .data) -> qed_mfw_legacy_bb_100g (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qed/qed: section mismatch in reference: qed_mfw_legacy_maps+0x68 (section: .data) -> qed_mfw_legacy_bb_100g (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qed/qed: section mismatch in reference: qed_mfw_legacy_maps+0x84 (section: .data) -> qed_mfw_legacy_bb_100g (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qed/qed: section mismatch in reference: qed_mfw_legacy_maps+0xa0 (section: .data) -> qed_mfw_legacy_bb_100g (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qed/qed: section mismatch in reference: qed_mfw_legacy_maps+0xbc (section: .data) -> qed_mfw_legacy_bb_100g (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qede/qede: section mismatch in reference: qede_forced_speed_maps+0x14 (section: .data) -> qede_forced_speed_100000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qede/qede: section mismatch in reference: qede_forced_speed_maps+0x30 (section: .data) -> qede_forced_speed_100000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qede/qede: section mismatch in reference: qede_forced_speed_maps+0x4c (section: .data) -> qede_forced_speed_100000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qede/qede: section mismatch in reference: qede_forced_speed_maps+0x68 (section: .data) -> qede_forced_speed_100000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qede/qede: section mismatch in reference: qede_forced_speed_maps+0x84 (section: .data) -> qede_forced_speed_100000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qede/qede: section mismatch in reference: qede_forced_speed_maps+0xa0 (section: .data) -> qede_forced_speed_100000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: drivers/net/ethernet/qlogic/qede/qede: section mismatch in reference: qede_forced_speed_maps+0xbc (section: .data) -> qede_forced_speed_100000 (section: .init.rodata): N/A => 
+  - modpost: WARNING: modpost: vmlinux: section mismatch in reference: __trace_event_discard_commit+0x184 (section: .text.unlikely) -> initcall_level_names (section: .init.data): N/A => 
+  - {standard input}: Warning: end of file not at end of a line; newline inserted: 1094 => 
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
