@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E344E1D2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0D14F5FB;
 	Mon, 22 Apr 2024 07:15:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713770131; cv=none; b=lXrELw2qPYj8J8lNAAeIXeG9bT7c22BkCARR4Q//r7hA7iCqplr/Nu4J8z0kM5/I3btlL8Uy4zKtWVPko0npmpu28SUwCnHt9KWlnk2p5BK2tWn7go7s+Q1CZzdh8CZdipM41xaPZT6ZZ8aAqv429lGv1AGGJngBwH5bWMnnQy8=
+	t=1713770131; cv=none; b=KDNxU1g523X1b1f+eG5xbx0wCGsdTWI01x6KD9ZRH9BBtNcSVAr66RorhM0rUHXTGA4c29B/HumAzVY6DIdnORNffPxSnsxSwmDrbjTssazH9PHoV+W1oOZLEqy3rLz6ibpPOcbt5eVv/yBrwlGUupZnb0W3HSJnIM2j5srQoCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713770131; c=relaxed/simple;
-	bh=9aC2izf7pDmtSSitRHIY3XfQzKDzjBkTKbfmsq/v0JU=;
+	bh=PmeAMYPZ9FxzUW5GiKbK62DPOkBKTTIRFefQeWGqI48=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=W/I3XIJrSaGZcELUkWXL0aYLi6yXjUq8KLOoFYVpDERVTXJ6zZGX42muFEU3pfzWk70fBJ1hOjj2f9GwDhqY/xfL1LPi0a51kNW6s4u05sLLOq31vTcPm51RZbGQlxj29SLHxTXrewT3Gw0iTr4/9MM8k4W1nmMe4dd8HoHBsJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9WxVARk; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=d3gzh8WZ1gv4Izedgel2y3jvkIv7PXGqBdX79USt5uBrWuGREi1WCXzXcoLvwM0OS3Vgep7ZXV91K9d3wR2ZEBR6ShsoJgpsq4QRzZDb0n+IH9V2aaPOlsIw45H9HHkPdpgoMItZM3HhrVGZswveCkeYjA+wABMh/ndrmv+pq9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WSsmTj7/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9WxVARk"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DE97DC4AF0E;
-	Mon, 22 Apr 2024 07:15:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WSsmTj7/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5B6DCC4AF5F;
+	Mon, 22 Apr 2024 07:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713770130;
-	bh=9aC2izf7pDmtSSitRHIY3XfQzKDzjBkTKbfmsq/v0JU=;
+	s=k20201202; t=1713770131;
+	bh=PmeAMYPZ9FxzUW5GiKbK62DPOkBKTTIRFefQeWGqI48=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=H9WxVARkcobG5qCjw/w5KDIzb/Xd3HCkjFwNnc2HH0Du3MKbIB1r6DCmmKH8T1YF/
-	 vmeFkc50JMD/fE11V+fhgLK7kb7QeJaCLwYGFInasYjoFTTtC+xBsqX/Pwq8IIToxu
-	 komBQq8NSKfD2N4+QAxDAWirFznp3k7u+7/owW7A3mttXbsdYat3GO9lc2+VLgvyFu
-	 CwJimmKOT/8CS7vs0qPFKh4LIjbGEmij5b8JVfICmzTd7etdX5slhctakzccLCuyam
-	 D+ouXvuXayZf0gIMje9G/yKyAjiWmR4U6VkVewSCqwUrlQx1fAx8acPx35Y+sFDkky
-	 leAylbsyPriKw==
+	b=WSsmTj7/BFmSBKk+MIr5vBMqLM1UJs9iG9nfg5KdPgaAa2IqPWSAnux4rmop2SUQx
+	 mbI6gkOkb/OarXGqoMtYjvepAHj4k3N+a/thjJHgRK8FbJIlNf+9VBELFgZsrmmE0a
+	 SAB4bOi/zk4h1LwjeVxKbU9SJSOznmvLT2u4CsGB025g9zQjohrp8M3oEZSvbpiu91
+	 cPQ68d5B4ASkZvm7xIzxPQYBptkBX+7j3SZRP41KvJOIRSCIx6nhDDN65/mEm+iPuL
+	 8Gn6y8T/03O3QXuNxxej15krNFX7lE2WmIn7wHonmQhLkjSFKSk51lYJo98p0Jwkya
+	 TPbfDH1oERMCA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1815C10F15;
-	Mon, 22 Apr 2024 07:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 501AFC07E8F;
+	Mon, 22 Apr 2024 07:15:31 +0000 (UTC)
 From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL_via_B4_Relay?= <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Mon, 22 Apr 2024 10:15:14 +0300
-Subject: [PATCH net-next v2 07/15] net: dsa: mt7530: move MT753X_MTRAP
- operations for MT7530
+Date: Mon, 22 Apr 2024 10:15:21 +0300
+Subject: [PATCH net-next v2 14/15] net: dsa: mt7530: do not pass port
+ variable to mt7531_rgmii_setup()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240422-for-netnext-mt7530-improvements-4-v2-7-a75157ba76ad@arinc9.com>
+Message-Id: <20240422-for-netnext-mt7530-improvements-4-v2-14-a75157ba76ad@arinc9.com>
 References: <20240422-for-netnext-mt7530-improvements-4-v2-0-a75157ba76ad@arinc9.com>
 In-Reply-To: <20240422-for-netnext-mt7530-improvements-4-v2-0-a75157ba76ad@arinc9.com>
 To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
@@ -59,11 +59,11 @@ Cc: Bartel Eerdekens <bartel.eerdekens@constell8.be>,
  linux-mediatek@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713770127; l=3575;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713770127; l=1111;
  i=arinc.unal@arinc9.com; s=arinc9-Xeront; h=from:subject:message-id;
- bh=00K+c7w7ciHtR3cg/Vn4V9kvHhcXqDMvGRmHgFwDD6g=;
- b=iAFOJTEc2IUg4VptNYrkdDzK0KVfHzl0nrENTzHB8iCUFHLNebhthKeg5Z+6OC0LCdPu7JSCk
- rk2or1CHHFGBgISZslZ4GGPnV+O1AEghI6aKNwLMmme+il+Vl1C0c2L
+ bh=Q1j4jaCBiZXdXWGCY6tFpliJwSXL75dq4VnMljuW2Zw=;
+ b=4edWHZvzNJRTxMTUE0wiBeIEW7Iu4gYhfzaEG4rSVBrQN4GpNEFRAkN0qFdg0HmYp8vS7lSnt
+ a/JDc1cAa1ODoctBTyvB6iFiv1Ld2Sv5i5/ytpRPb3P/IaNP9ia9DRL
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=z49tLn29CyiL4uwBTrqH9HO1Wu3sZIuRp4DaLZvtP9M=
 X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-Xeront
@@ -73,116 +73,36 @@ Reply-To: arinc.unal@arinc9.com
 
 From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-On MT7530, the media-independent interfaces of port 5 and 6 are controlled
-by the MT7530_P5_DIS and MT7530_P6_DIS bits of the hardware trap. Deal with
-these bits only when the relevant port is being enabled or disabled. This
-ensures that these ports will be disabled when they are not in use.
-
-Do not set MT7530_CHG_TRAP on mt7530_setup_port5() as that's already being
-done on mt7530_setup().
-
-Instead of globally setting MT7530_P5_MAC_SEL, clear it, then set it only
-on the appropriate case.
-
-If PHY muxing is detected, clear MT7530_P5_DIS before calling
-mt7530_setup_port5().
+The mt7531_rgmii_setup() function does not use the port variable, do not
+pass the variable to it.
 
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 ---
- drivers/net/dsa/mt7530.c | 38 +++++++++++++++++++++++++++-----------
- 1 file changed, 27 insertions(+), 11 deletions(-)
+ drivers/net/dsa/mt7530.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 606516206fb9..83436723cb16 100644
+index 55954a165a15..1f6cd24de4b7 100644
 --- a/drivers/net/dsa/mt7530.c
 +++ b/drivers/net/dsa/mt7530.c
-@@ -880,8 +880,7 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
- 
- 	val = mt7530_read(priv, MT753X_MTRAP);
- 
--	val |= MT7530_CHG_TRAP | MT7530_P5_MAC_SEL | MT7530_P5_DIS;
--	val &= ~MT7530_P5_RGMII_MODE & ~MT7530_P5_PHY0_SEL;
-+	val &= ~MT7530_P5_PHY0_SEL & ~MT7530_P5_MAC_SEL & ~MT7530_P5_RGMII_MODE;
- 
- 	switch (priv->p5_mode) {
- 	/* MUX_PHY_P0: P0 -> P5 -> SoC MAC */
-@@ -891,15 +890,13 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
- 
- 	/* MUX_PHY_P4: P4 -> P5 -> SoC MAC */
- 	case MUX_PHY_P4:
--		val &= ~MT7530_P5_MAC_SEL & ~MT7530_P5_DIS;
--
- 		/* Setup the MAC by default for the cpu port */
- 		mt7530_write(priv, MT753X_PMCR_P(5), 0x56300);
- 		break;
- 
- 	/* GMAC5: P5 -> SoC MAC or external PHY */
- 	default:
--		val &= ~MT7530_P5_DIS;
-+		val |= MT7530_P5_MAC_SEL;
- 		break;
- 	}
- 
-@@ -1193,6 +1190,14 @@ mt7530_port_enable(struct dsa_switch *ds, int port,
- 
- 	mutex_unlock(&priv->reg_mutex);
- 
-+	if (priv->id != ID_MT7530 && priv->id != ID_MT7621)
-+		return 0;
-+
-+	if (port == 5)
-+		mt7530_clear(priv, MT753X_MTRAP, MT7530_P5_DIS);
-+	else if (port == 6)
-+		mt7530_clear(priv, MT753X_MTRAP, MT7530_P6_DIS);
-+
- 	return 0;
+@@ -2785,7 +2785,7 @@ mt7530_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+ 		mt7530_setup_port6(priv->ds, interface);
  }
  
-@@ -1211,6 +1216,14 @@ mt7530_port_disable(struct dsa_switch *ds, int port)
- 		   PCR_MATRIX_CLR);
- 
- 	mutex_unlock(&priv->reg_mutex);
-+
-+	if (priv->id != ID_MT7530 && priv->id != ID_MT7621)
-+		return;
-+
-+	if (port == 5)
-+		mt7530_set(priv, MT753X_MTRAP, MT7530_P5_DIS);
-+	else if (port == 6)
-+		mt7530_set(priv, MT753X_MTRAP, MT7530_P6_DIS);
+-static void mt7531_rgmii_setup(struct mt7530_priv *priv, u32 port,
++static void mt7531_rgmii_setup(struct mt7530_priv *priv,
+ 			       phy_interface_t interface,
+ 			       struct phy_device *phydev)
+ {
+@@ -2836,7 +2836,7 @@ mt7531_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+ 	if (phy_interface_mode_is_rgmii(interface)) {
+ 		dp = dsa_to_port(ds, port);
+ 		phydev = dp->user->phydev;
+-		mt7531_rgmii_setup(priv, port, interface, phydev);
++		mt7531_rgmii_setup(priv, interface, phydev);
+ 	}
  }
  
- static int
-@@ -2401,11 +2414,11 @@ mt7530_setup(struct dsa_switch *ds)
- 		mt7530_rmw(priv, MT7530_TRGMII_RD(i),
- 			   RD_TAP_MASK, RD_TAP(16));
- 
--	/* Enable port 6 */
--	val = mt7530_read(priv, MT753X_MTRAP);
--	val &= ~MT7530_P6_DIS & ~MT7530_PHY_INDIRECT_ACCESS;
--	val |= MT7530_CHG_TRAP;
--	mt7530_write(priv, MT753X_MTRAP, val);
-+	/* Allow modifying the trap and directly access PHY registers via the
-+	 * MDIO bus the switch is on.
-+	 */
-+	mt7530_rmw(priv, MT753X_MTRAP, MT7530_CHG_TRAP |
-+		   MT7530_PHY_INDIRECT_ACCESS, MT7530_CHG_TRAP);
- 
- 	if ((val & MT7530_XTAL_MASK) == MT7530_XTAL_40MHZ)
- 		mt7530_pll_setup(priv);
-@@ -2488,8 +2501,11 @@ mt7530_setup(struct dsa_switch *ds)
- 			break;
- 		}
- 
--		if (priv->p5_mode == MUX_PHY_P0 || priv->p5_mode == MUX_PHY_P4)
-+		if (priv->p5_mode == MUX_PHY_P0 ||
-+		    priv->p5_mode == MUX_PHY_P4) {
-+			mt7530_clear(priv, MT753X_MTRAP, MT7530_P5_DIS);
- 			mt7530_setup_port5(ds, interface);
-+		}
- 	}
- 
- #ifdef CONFIG_GPIOLIB
 
 -- 
 2.40.1
