@@ -1,47 +1,66 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032B714F9DC;
-	Mon, 22 Apr 2024 13:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B283F14F9EC
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 13:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713792673; cv=none; b=Vl1Bhh2iRxhxKu7TmX09wiYCneDL+ymkgWkEqUGkl9OtdZmhQeKNl8dLzknu3S9NklV5ZQxR28Q+Tl+HVfhfC6/IuxaTQdxp0bmOpY/PCOzVw1KuZaWIHPMcQJQ3TQ3mdKLzKtL5ue2XVW1ZjtMeUlRr8jkoHdCuhEcOK+3SBVo=
+	t=1713792685; cv=none; b=ukB+UDNcCXuwROPCpV/wrg0B7qRDEe58ZCnk4mBXrMmurt/K+wARTuE6tW4UmbSdU2e+6O3mpQwQp9wgRpPx9MqPP8om9hpVvaSHtSpPPzMI4u/bF5r7gl9yq8wqsavCDozUc0kGhLsn7xtb5XFxKikINs2J+iJr5cX4gCDOAqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713792673; c=relaxed/simple;
-	bh=BR+rjfuQ3fKF08ic/hIpkJH4RlB+LtgV/zV25IOt8TQ=;
+	s=arc-20240116; t=1713792685; c=relaxed/simple;
+	bh=8fA3TgGvoky2+yTrrPUrw7Y450/xNnRGDxxK59xj4xY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jZY6CEefiDdARCw07G/fBexrMllqFHE2YZzCgKHkRDW2sWUGnpiUS2x1KwM5WSG1/Ko2bRx7lKYd8p07h/Zqz0khLmplkrdqTbwZurlg+0XF2pnCV/en/x96BsvbP70hWZonPvayhDNweuuoyB2wYkjZs0tXCkdnwhogUIMNJD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=bxhLHCfK; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=AY5o16FTFzxV3auInvWDo5IzZ+/YrR1Mm9YK0T45t3NUnokjjTKbT4FFCVnkYRWes6YRhgWxHw41A6cJuZ9vnwV+W4H3Pw5xK4KYQi2Q3oKxte1mfTqtT4BVs6p04qO2v6fXs+RQ5QTTMjLQLwuoKSPfbK4gcD1K1KsbSEtcano=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=SQIWe0kd; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bxhLHCfK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=/slTi2dI7/QqEXj4ACAD+Owz9e1ZqfqrM5C8CzmcduE=; b=bxhLHCfKc4xATSEEzdpCppGraH
-	Yk7vXDFnCYaD2yDZng1bfdIW/UprJAACXiS9H+fuqLu2gduEPzlmLJc7Rh2SUqoGP6IT8cvCI/2tv
-	Bswo2fNhi4KvMxXQt7zm6C12rpQXCKFee/7VBW2nKVv034Bo90O1PpYw0id3jvl1IVjE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rytlA-00DcVS-DE; Mon, 22 Apr 2024 15:31:04 +0200
-Date: Mon, 22 Apr 2024 15:31:04 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Fabio Estevam <festevam@denx.de>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux@ew.tq-group.com
-Subject: Re: [PATCH net 2/2] net: dsa: mv88e6xxx: Avoid EEPROM timeout
- without EEPROM on 88E6250-family switches
-Message-ID: <47350aa7-b4d0-49f0-98f5-4fc52c4f2c42@lunn.ch>
-References: <2b924dcdf8adfe2c0b6b5998e47e836dd8f9e1b1.1713442039.git.matthias.schiffer@ew.tq-group.com>
- <67dc4da11986fd7fd192fbb183813bf5a721001f.1713442039.git.matthias.schiffer@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="SQIWe0kd"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-418c2bf2f55so29613415e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 06:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1713792681; x=1714397481; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=f/MngZQXdZZfwg1mKUe1CDRIHgGlqjOS5NNa7bAOpCE=;
+        b=SQIWe0kdUk14wy4DekdiiF7DV8pYG5N8Yv7doBu9YOSbFzV+k6TIPBolKTiwtIt+mp
+         GOjakivGLxULyw5snSV8ZMq5EEioXWM1PSEcSl7Nzvc/q2vkeHKCI0hBGfwE/6oQM+YV
+         JpLUQDFRmEhHSPN5OXNu4nIG61ELetEusA0EE/gjAHKCLiuxG9Fn7RwzAPKABnmD1eWR
+         KPvf5Dhy0btBYF2TN+Ku9c5SlhhiFBKUDDh9OV+Gg6VN9hx8iAQtRFnsmRz45ipVLZGN
+         ZZK5bdXNYSL6eQaHU/t/Hp0w3FlPbdt6pveEga23mDbenyRgrmVMWokuoooiSbDd1uZs
+         8YbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713792681; x=1714397481;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f/MngZQXdZZfwg1mKUe1CDRIHgGlqjOS5NNa7bAOpCE=;
+        b=BhVhdc+WFa+42oK6XzOBhan+vQnDf64GKFCOtHC/dT5HFSXm2QpxUijQF6mb4v8Lyg
+         AhQw0KlWrNjqhkebIB1JIyi5slIkFaHGjfVQDSTIiM2dKJLTlMSnag5vUfbb3l98dNvn
+         bkRMdQcOQCn4NRRY1iLWGT0k2eNNf2bPDxgzwWz3t/0c/+VFrwTDMNHXa6229r6cNio2
+         OTjQ0bAAySqQROI8NNrLh0hcMmWa3Tb/Cou6FMAX2HpZEm3fBSJFHtkj95EN9pLp+e/i
+         3sbsY2klbN01mi2ce5bjL5CF/+W5ahqEM9znQgrGo3CyTwF98Q3OxxaIt7o7QE0llhSH
+         Dv8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUkzLor4SQdea6uKLqcmIDRUI7vErVlsyPKBbZe3P4ppG2nepufD+HLFm7UTcquU6FaG5/VUn41GC1ZLKa1bGDQqDFYg/dSCXfDd2TK
+X-Gm-Message-State: AOJu0Yw57QUjBf8xPNnzQ82DBnt9qURnAwAVrjJ7OsetZKsfx0CWqSUw
+	n6eoQBLaGZ3SdlNk/IRnswlQqu/srlitYmWvTFyOIbS/kUy2cRL/Ut2ihJK8U+4=
+X-Google-Smtp-Source: AGHT+IFcxtQBTYafkchwt8ZWHFimE9yIbN5RHKFdoTAga4Ct03S83SdcD/iOdVDlpCeKJ4AuSBJxRA==
+X-Received: by 2002:a05:600c:4688:b0:418:a2ce:77ae with SMTP id p8-20020a05600c468800b00418a2ce77aemr7437610wmo.27.1713792680588;
+        Mon, 22 Apr 2024 06:31:20 -0700 (PDT)
+Received: from localhost (78-80-105-131.customers.tmcz.cz. [78.80.105.131])
+        by smtp.gmail.com with ESMTPSA id g18-20020a05600c4ed200b00418729383a4sm16574352wmq.46.2024.04.22.06.31.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 06:31:19 -0700 (PDT)
+Date: Mon, 22 Apr 2024 15:31:18 +0200
+From: Jiri Pirko <jiri@resnulli.us>
+To: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Cc: netdev@vger.kernel.org, vadim.fedorenko@linux.dev, davem@davemloft.net,
+	rrameshbabu@nvidia.com, linux-kernel@vger.kernel.org,
+	pabeni@redhat.com, kuba@kernel.org, mschmidt@redhat.com,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Subject: Re: [PATCH net] dpll: fix dpll_pin_registration missing refcount
+Message-ID: <ZiZmpg7GF99Ihxk0@nanopsycho>
+References: <20240419194711.1075349-1-arkadiusz.kubalewski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,33 +69,135 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67dc4da11986fd7fd192fbb183813bf5a721001f.1713442039.git.matthias.schiffer@ew.tq-group.com>
+In-Reply-To: <20240419194711.1075349-1-arkadiusz.kubalewski@intel.com>
 
-On Thu, Apr 18, 2024 at 02:16:08PM +0200, Matthias Schiffer wrote:
-> 88E6250-family switches have the quirk that the EEPROM Running flag can
-> get stuck at 1 when no EEPROM is connected, causing
-> mv88e6xxx_g2_eeprom_wait() to time out. We still want to wait for the
-> EEPROM however, to avoid interrupting a transfer and leaving the EEPROM
-> in an invalid state.
-> 
-> The condition to wait for recommended by the hardware spec is the EEInt
-> flag, however this flag is cleared on read, so before the hardware reset,
-> is may have been cleared already even though the EEPROM has been read
-> successfully.
-> 
-> For this reason, we revive the mv88e6xxx_g1_wait_eeprom_done() function
-> that was removed in commit 6ccf50d4d474
-> ("net: dsa: mv88e6xxx: Avoid EEPROM timeout when EEPROM is absent") in a
-> slightly refactored form, and introduce a new
-> mv88e6xxx_g1_wait_eeprom_done_prereset() that additionally handles this
-> case by triggering another EEPROM reload that can be waited on.
-> 
-> On other switch models without this quirk, mv88e6xxx_g2_eeprom_wait() is
-> kept, as it avoids the additional reload.
-> 
-> Fixes: 6ccf50d4d474 ("net: dsa: mv88e6xxx: Avoid EEPROM timeout when EEPROM is absent")
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Fri, Apr 19, 2024 at 09:47:11PM CEST, arkadiusz.kubalewski@intel.com wrote:
+>In scenario where pin is registered with multiple parent pins via
+>dpll_pin_on_pin_register(..), belonging to the same dpll device,
+>and each time with the same set of ops/priv data, a reference
+>between a pin and dpll is created once and then refcounted, at the same
+>time the dpll_pin_registration is only checked for existence and created
+>if does not exist. This is wrong, as for the same ops/priv data a
+>registration shall be also refcounted, a child pin is also registered
+>with dpll device, until each child is unregistered the registration data
+>shall exist.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+I read this 3 time, don't undestand clearly the matter of the problem.
+Could you perhaps make it somehow visual?
 
-    Andrew
+
+>
+>Add refcount and check if all registrations are dropped before releasing
+>dpll_pin_registration resources.
+>
+>Currently, the following crash/call trace is produced when ice driver is
+>removed on the system with installed NIC which includes dpll device:
+>
+>WARNING: CPU: 51 PID: 9155 at drivers/dpll/dpll_core.c:809 dpll_pin_ops+0x20/0x30
+>Call Trace:
+> dpll_msg_add_pin_freq+0x37/0x1d0
+> dpll_cmd_pin_get_one+0x1c0/0x400
+> ? __nlmsg_put+0x63/0x80
+> dpll_pin_event_send+0x93/0x140
+> dpll_pin_on_pin_unregister+0x3f/0x100
+> ice_dpll_deinit_pins+0xa1/0x230 [ice]
+> ice_remove+0xf1/0x210 [ice]
+>
+>Fixes: b446631f355e ("dpll: fix dpll_xa_ref_*_del() for multiple registrations")
+>Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+>Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+>---
+> drivers/dpll/dpll_core.c | 17 +++++++++++++----
+> 1 file changed, 13 insertions(+), 4 deletions(-)
+>
+>diff --git a/drivers/dpll/dpll_core.c b/drivers/dpll/dpll_core.c
+>index 64eaca80d736..7ababa327c0c 100644
+>--- a/drivers/dpll/dpll_core.c
+>+++ b/drivers/dpll/dpll_core.c
+>@@ -40,6 +40,7 @@ struct dpll_device_registration {
+> 
+> struct dpll_pin_registration {
+> 	struct list_head list;
+>+	refcount_t refcount;
+> 	const struct dpll_pin_ops *ops;
+> 	void *priv;
+> };
+>@@ -81,6 +82,7 @@ dpll_xa_ref_pin_add(struct xarray *xa_pins, struct dpll_pin *pin,
+> 		reg = dpll_pin_registration_find(ref, ops, priv);
+> 		if (reg) {
+> 			refcount_inc(&ref->refcount);
+>+			refcount_inc(&reg->refcount);
+
+I don't like this. Registration is supposed to be created for a single
+registration. Not you create one for many and refcount it.
+
+Instead of this, I suggest to extend __dpll_pin_register() for a
+"void *cookie" arg. That would be NULL for dpll_pin_register() caller.
+For dpll_pin_on_pin_register() caller, it would pass "parent" pointer.
+
+Than dpll_xa_ref_pin_add() can pass this cookie value to
+dpll_pin_registration_find(). The if case there would look like:
+if (reg->ops == ops && reg->priv == priv && reg->cookie == cookie)
+
+This way, we will create separate "sub-registration" for each parent.
+
+Makes sense?
+
+> 			return 0;
+> 		}
+> 		ref_exists = true;
+>@@ -113,6 +115,7 @@ dpll_xa_ref_pin_add(struct xarray *xa_pins, struct dpll_pin *pin,
+> 	reg->priv = priv;
+> 	if (ref_exists)
+> 		refcount_inc(&ref->refcount);
+>+	refcount_set(&reg->refcount, 1);
+> 	list_add_tail(&reg->list, &ref->registration_list);
+> 
+> 	return 0;
+>@@ -131,8 +134,10 @@ static int dpll_xa_ref_pin_del(struct xarray *xa_pins, struct dpll_pin *pin,
+> 		reg = dpll_pin_registration_find(ref, ops, priv);
+> 		if (WARN_ON(!reg))
+> 			return -EINVAL;
+>-		list_del(&reg->list);
+>-		kfree(reg);
+>+		if (refcount_dec_and_test(&reg->refcount)) {
+>+			list_del(&reg->list);
+>+			kfree(reg);
+>+		}
+> 		if (refcount_dec_and_test(&ref->refcount)) {
+> 			xa_erase(xa_pins, i);
+> 			WARN_ON(!list_empty(&ref->registration_list));
+>@@ -160,6 +165,7 @@ dpll_xa_ref_dpll_add(struct xarray *xa_dplls, struct dpll_device *dpll,
+> 		reg = dpll_pin_registration_find(ref, ops, priv);
+> 		if (reg) {
+> 			refcount_inc(&ref->refcount);
+>+			refcount_inc(&reg->refcount);
+> 			return 0;
+> 		}
+> 		ref_exists = true;
+>@@ -192,6 +198,7 @@ dpll_xa_ref_dpll_add(struct xarray *xa_dplls, struct dpll_device *dpll,
+> 	reg->priv = priv;
+> 	if (ref_exists)
+> 		refcount_inc(&ref->refcount);
+>+	refcount_set(&reg->refcount, 1);
+> 	list_add_tail(&reg->list, &ref->registration_list);
+> 
+> 	return 0;
+>@@ -211,8 +218,10 @@ dpll_xa_ref_dpll_del(struct xarray *xa_dplls, struct dpll_device *dpll,
+> 		reg = dpll_pin_registration_find(ref, ops, priv);
+> 		if (WARN_ON(!reg))
+> 			return;
+>-		list_del(&reg->list);
+>-		kfree(reg);
+>+		if (refcount_dec_and_test(&reg->refcount)) {
+>+			list_del(&reg->list);
+>+			kfree(reg);
+>+		}
+> 		if (refcount_dec_and_test(&ref->refcount)) {
+> 			xa_erase(xa_dplls, i);
+> 			WARN_ON(!list_empty(&ref->registration_list));
+>
+>base-commit: ac1a21db32eda8a09076bad025d7b848dd086d28
+>-- 
+>2.38.1
+>
