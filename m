@@ -1,22 +1,22 @@
-Received: from mail-m11877.qiye.163.com (mail-m11877.qiye.163.com [115.236.118.77])
+Received: from mail-m127104.qiye.163.com (mail-m127104.qiye.163.com [115.236.127.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2956AD27D;
-	Mon, 22 Apr 2024 08:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.236.118.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55D14F60D;
+	Mon, 22 Apr 2024 08:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.236.127.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713773892; cv=none; b=eVR//xp3xXjY3V+Mk6+aZNt3gnBL1XyoZ2FPG/nodJ/yYGTLehK27afKoFzRbU8GczV7R7MO17mgAYuWPa3JPmcD2jPe4cBAKdcYaiqZyxAyw0X1/dQdb8VvCKcqeUfRYI41v0OxLRSTYz+Crgm5yJM/ZQNDQOnKxv0eHIpsV/Q=
+	t=1713773895; cv=none; b=U9vbzU94AjeYKX1U2z/78huBo5DyFrayo099kY0Jnxj079t7Q2TQea7frT/RTGtql2iGr9r1/s/lesqe7HlbstYTYow52e9V7v0I5z9Qsm0AvN9JB469Fr7+pHciYDp9ZGGKbFsb3S1aLVPKNDSwuYvzPFTIa89cjVc8uadWQfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713773892; c=relaxed/simple;
+	s=arc-20240116; t=1713773895; c=relaxed/simple;
 	bh=+uhCAuMBch6NqAg0S0WaqlwhFKvYJe1RVreC07HCrK8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=D16+GPLr5O//ULilXIYBIPMLj9RwmdPnwDOWnvVXABkI97sMCx8kndzWfhlk6tWcOZk3cQ+XukbNrJ/rvnqnhLKxXHDwqr/OXZwPnsv7kwo5g2C8njQqr3Wwh80pkCIMyL8CInXmbd8DUivRzwyVrJKKkL6lBa9woXTrF8C/gtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=115.236.118.77
+	 MIME-Version; b=ltTtoBUU/jtIVbrGW5nDdEcXRABmimXoqFFdO97SDcdSZOmc6umaxDCTbG6n87f3vsO/YVceiQekhzB3fPPx662pAvOXydTrtcRwustKMnQ9I+PhH3wFhxMGTHf9udShMmEbU8Y0pDoLJtmXypoU1g8R4bat7/a2aXF6J43BkRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=115.236.127.104
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
 Received: from ubuntu-22-04.. (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id B1F8886025A;
-	Mon, 22 Apr 2024 15:01:34 +0800 (CST)
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 11E7B86014C;
+	Mon, 22 Apr 2024 15:01:32 +0800 (CST)
 From: Dongsheng Yang <dongsheng.yang@easystack.cn>
 To: dan.j.williams@intel.com,
 	axboe@kernel.dk
@@ -26,9 +26,9 @@ Cc: linux-block@vger.kernel.org,
 	Davidlohr Bueso <dave@stgolabs.net>,
 	Dave Jiang <dave.jiang@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH 3/3] cxl/memdev: Only show sanitize sysfs files when supported
-Date: Mon, 22 Apr 2024 07:01:25 +0000
-Message-Id: <20240422070125.52519-5-dongsheng.yang@easystack.cn>
+Subject: [PATCH] cxl/memdev: Only show sanitize sysfs files when supported
+Date: Mon, 22 Apr 2024 07:01:22 +0000
+Message-Id: <20240422070125.52519-2-dongsheng.yang@easystack.cn>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240422070125.52519-1-dongsheng.yang@easystack.cn>
 References: <20240422070125.52519-1-dongsheng.yang@easystack.cn>
@@ -40,13 +40,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSk9KVh0eTU5NS0xIGUIfQlUZERMWGhIXJBQOD1
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZHRlDVhhCH0hNHhkfHkgfGFUZERMWGhIXJBQOD1
 	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8f049c2c96023ckunmb1f8886025a
+X-HM-Tid: 0a8f049c224b023ckunm11e7b86014c
 X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Njo6PRw6CDcxARw0IhFKGQIa
-	Fi9PCkhVSlVKTEpITE1CSUJOT0JDVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
-	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBTEJJSTcG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OE06Ojo6EDc*FRwxSRw#GUJM
+	TDAwFDdVSlVKTEpITE1CSUJJQkNNVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
+	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBTEJKTzcG
 
 From: Davidlohr Bueso <dave@stgolabs.net>
 
