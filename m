@@ -1,210 +1,105 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D8D4AEC8
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9424AEFE;
+	Mon, 22 Apr 2024 07:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713771620; cv=none; b=t4vCMWlDVsuT218ESzfA0i4fVFh0Kkm9FAC0CrNI/9Gmz+hAcOnYzjZVTftP2HvSQj4zLqm7M3GX6x54FcqXNQA2ZxhzJovawlrl5TWTmUBQT9Y+IPhqKaWkzf5Ff8+5q0ooNMaOOHOdyjmNqdreDiVWg92JMecdReWuS/qH9+g=
+	t=1713771661; cv=none; b=b5NOrs7Hqae6Sbd3nghzBy/f6Dj5RiESMZaFLKs6hwNmwVvPrWj/Z1xB6lqCMiBRGAqKkCY/VQkGJ/GvFk/5U8uEE5H38RQQHVObH2m/hvk3TwMLaLg2ojRX27CKQ8hFUK8iJM0xCjVS3HpCFLJjorLTxpGEKCkNTo9DvykXhZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713771620; c=relaxed/simple;
-	bh=aCqjPF6MUCKiaG25u5tS1RHdEoH9/zJjbqQ9RdLI7kA=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=N/VjxDboLK+QsqwI2PrYXycRyj1BWkod0LoymS/zkg1tBWBNh9/tfYDVhu5m1u6t6Xe/c4lMn0GDwTOmmLmqwH5kfDlfBn1fq+b90mQtWvzLVcykbGveuU2bibp+UvjYdXyjYC0LpWV5sf9XHBgdimaWbAXH+KQpepYaL+7z1y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=GCwkSpOr; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1713771661; c=relaxed/simple;
+	bh=USR3bFEd40WckrOHmGi8VAlZeJ/vjjPTOFMN/FwP1iw=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=EftwOw/71Y1LoVh3tHlx9VM5luiTqG96RktmsfDERqjhQ2qTC0oUjg3yYM1KuLDxfunetcp3UnZQO+QEwJwywW8d+LDbNksBfq7QBGlFESRw7VKJpIoRmjP0FGEextKpyvaLSu6Pk+/cY95P3wVLl8jWBwYoxEuLqEmYv1DKuU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S0qklbmS; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="GCwkSpOr"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41a7c7abed9so1493475e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 00:40:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1713771616; x=1714376416; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=QE+BamrWTuLTpWa6qXzuznIbfPLHvLIlFCqgFnP4XM4=;
-        b=GCwkSpOr/+CP+LBJl9F0C4swYduWfnqYUAPbnNuAmV30khxAl+lBSgrwMxg69CPsiF
-         We0HJRFsxG99fx2olD4mqqb++cRcaqUDKPanQUKbxVREa6FSv9ODo2wQAWchsKrSnCBO
-         PhJqTpkeqEYRgB9WS///rGq07NGeLpgRwDTKPloqYLdwWEYdbzAuydvLuwTfQAVtNcvE
-         gip9gRryEgmu0QPJEEvHB5lsYCZmdsVnANI5Wah36lOeqL4EjZfHz+nVoJIEhca/AMpR
-         oTvFalucfCYHtTiPxTslpikQ3ru66WcoFmMP3Nm0MfFMwIsyIPQvWhzKILjss4/RZJOO
-         PxZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713771616; x=1714376416;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QE+BamrWTuLTpWa6qXzuznIbfPLHvLIlFCqgFnP4XM4=;
-        b=OOVComHzhP3hTsMnKK63XTcN6Mt0JfuzyKrlgWr/KmBSpzCdCcadmjF4mYOr90cGys
-         LimbWodAIp8yneGvsZTgfD3JLfDsFPrWtQAZ8Vpn+Ve3444R1k2zwY7PJEfK49Xr7nK0
-         x7PNy+aAEnww+Dy6BCFI7ExsDrSeXsL+cf2VMX6pJHXbnSqkCUap/n3RPx0A4SVTPyxD
-         DQJU4Cfh+uZV5YB9ye7bx5cGr1fELoMJuAtPn491TlF/mXmKbzc1DeAni92zfD3CsoZy
-         fy16+DMFgcBmqKgjL+WV3qPSCL3zH2OqXbFmAc6Jk+Vs5WYlJOHUNu79XQGUfvkHSnFk
-         FW+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVcs05qSWxnZNSPlO/greH8cEvYWvxiYGWWb3LdQx4jLiFVsMHmAKr8cGARpfsyM7hCqZyzL0IcNJ8M7GwRK1IgDPz94NycO02rkyaE
-X-Gm-Message-State: AOJu0YzTTb+sTV3LaADq5T7S5cSwktDYPlguW1LDc4iEHK7CLS5q44zv
-	UoPWljqw/M30hdubw4J6krkcocT9OIYlA/Zpq3xaDiqICN48ZajNPvDp4wetksw=
-X-Google-Smtp-Source: AGHT+IG1GxMcmf9NdFOYPr777X3p7JMNSnBLkFZFuq+TgYqkM9gLohUFhW5rZ49xsD+geaucH5c0gg==
-X-Received: by 2002:adf:fd0c:0:b0:343:f662:18f8 with SMTP id e12-20020adffd0c000000b00343f66218f8mr4577170wrr.63.1713771615818;
-        Mon, 22 Apr 2024 00:40:15 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:a619:ccb0:5f40:262c])
-        by smtp.gmail.com with ESMTPSA id j6-20020a5d5646000000b0034b19cb1531sm1609899wrw.59.2024.04.22.00.40.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 00:40:15 -0700 (PDT)
-References: <20240419125812.983409-1-jan.dakinevich@salutedevices.com>
- <20240419125812.983409-5-jan.dakinevich@salutedevices.com>
- <20240419210949.GA3979121-robh@kernel.org>
- <b86f1058-da53-4a9c-bc12-e7297351b482@salutedevices.com>
- <48e9f035-390b-40c9-a3ad-49880c0b972d@kernel.org>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Rob Herring
- <robh@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, Jerome
- Brunet <jbrunet@baylibre.com>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Kevin
- Hilman <khilman@baylibre.com>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>, Philipp Zabel
- <p.zabel@pengutronix.de>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
- linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH v3 4/6] dt-bindings: clock: meson: document A1 SoC
- audio clock controller driver
-Date: Mon, 22 Apr 2024 09:16:01 +0200
-In-reply-to: <48e9f035-390b-40c9-a3ad-49880c0b972d@kernel.org>
-Message-ID: <1jle55c0bl.fsf@starbuckisacylon.baylibre.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S0qklbmS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713771660; x=1745307660;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=USR3bFEd40WckrOHmGi8VAlZeJ/vjjPTOFMN/FwP1iw=;
+  b=S0qklbmSM8d0bIkXWJ5FAudZDbh55r1v7Q4NUooJh+XBKGrfPWHacSye
+   u1KZ4gDKgXUu5Vt9Slor/EAjyJLTKfw4jQMxCCenVHhM3x9qIJOBp5bRP
+   r5ysrWGFTEvQkrM9tOYZLdD2zH/b3eGjdCH6c3dl4FXoBmBWu3Q4pBldO
+   2JGsOrDfnlxExNmfZs82RgL1XldRpcwfbl5xUai2pA9R4aKGxWDG3lEKN
+   jrmu7b9lIWOtTFflfzDiuHhcUot9nFb90gDmJOI3t0+FqNupLlwqOrwET
+   1GL7eh/8oDN5VvcqLwCj50G2YNZAmP3t8XcYAqjQZxrf2LdYyeTcyZdX4
+   w==;
+X-CSE-ConnectionGUID: NYkUW69STGq2tfXR+ozkRg==
+X-CSE-MsgGUID: C/1kWFZYSqOBJhOMEI+UyQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11051"; a="20436786"
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="20436786"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 00:40:59 -0700
+X-CSE-ConnectionGUID: Bhjbqn5PRx+ExxI/+DpaQg==
+X-CSE-MsgGUID: I0j9NBpPT8OLzM2aqsevpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="24012803"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.225.176]) ([10.124.225.176])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 00:40:54 -0700
+Message-ID: <23ef7fbd-7498-4fb0-895b-81c618acedc1@linux.intel.com>
+Date: Mon, 22 Apr 2024 15:40:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Anup Patel <apatel@ventanamicro.com>, Sunil V L <sunilvl@ventanamicro.com>,
+ Nick Kossifidis <mick@ics.forth.gr>, Sebastien Boeuf <seb@rivosinc.com>,
+ Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+ iommu@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux@rivosinc.com
+Subject: Re: [PATCH v2 7/7] iommu/riscv: Paging domain support
+To: Jason Gunthorpe <jgg@ziepe.ca>, Tomasz Jeznach <tjeznach@rivosinc.com>
+References: <cover.1713456597.git.tjeznach@rivosinc.com>
+ <301244bc3ff5da484b46d3fecc931cdad7d2806f.1713456598.git.tjeznach@rivosinc.com>
+ <20240419125627.GD223006@ziepe.ca>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240419125627.GD223006@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 2024/4/19 20:56, Jason Gunthorpe wrote:
+>> +		riscv_iommu_cmd_inval_vma(&cmd);
+>> +		riscv_iommu_cmd_inval_set_pscid(&cmd, domain->pscid);
+>> +		if (len > 0 && len < RISCV_IOMMU_IOTLB_INVAL_LIMIT) {
+>> +			for (iova = start; iova < end; iova += PAGE_SIZE) {
+>> +				riscv_iommu_cmd_inval_set_addr(&cmd, iova);
+>> +				riscv_iommu_cmd_send(iommu, &cmd, 0);
+>> +			}
+>> +		} else {
+>> +			riscv_iommu_cmd_send(iommu, &cmd, 0);
+>> +		}
+>> +	}
+> This seems suboptimal, you probably want to copy the new design that
+> Intel is doing where you allocate "bonds" that are already
+> de-duplicated. Ie if I have 10 devices on the same iommu sharing the
+> domain the above will invalidate the PSCID 10 times. It should only be
+> done once.
+> 
+> ie add a "bond" for the (iommu,pscid) and refcount that based on how
+> many devices are used. Then another "bond" for the ATS stuff eventually.
 
-On Sun 21 Apr 2024 at 20:14, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+The latest version is under discussion here.
 
-> On 20/04/2024 18:15, Jan Dakinevich wrote:
->> 
->> 
->> On 4/20/24 00:09, Rob Herring wrote:
->>> On Fri, Apr 19, 2024 at 03:58:10PM +0300, Jan Dakinevich wrote:
->>>> Add device tree bindings for A1 SoC audio clock and reset controllers.
->>>>
->>>> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
->>>> ---
->>>>
->>>> This controller has 6 mandatory and up to 20 optional clocks. To describe
->>>> this, I use 'additionalItems'. It produces correct processed-schema.json:
->>>>
->>>>   "clock-names": {
->>>>       "maxItems": 26,
->>>>       "items": [
->>>>           {
->>>>               "const": "pclk"
->>>>           },
->>>>           {
->>>>               "const": "dds_in"
->>>>           },
->>>>           {
->>>>               "const": "fclk_div2"
->>>>           },
->>>>           {
->>>>               "const": "fclk_div3"
->>>>           },
->>>>           {
->>>>               "const": "hifi_pll"
->>>>           },
->>>>           {
->>>>               "const": "xtal"
->>>>           }
->>>>       ],
->>>>       "additionalItems": {
->>>>           "oneOf": [
->>>>               {
->>>>                   "pattern": "^slv_sclk[0-9]$"
->>>>               },
->>>>               {
->>>>                   "pattern": "^slv_lrclk[0-9]$"
->>>>               }
->>>>           ]
->>>>       },
->>>>       "type": "array",
->>>>       "minItems": 6
->>>>   },
->>>>
->>>> and it behaves as expected. However, the checking is followed by
->>>> complaints like this:
->>>>
->>>>   Documentation/devicetree/bindings/clock/amlogic,a1-audio-clkc.yaml: properties:clock-names:additionalItems: {'oneOf': [{'pattern': '^slv_sclk[0-9]$'}, {'pattern': '^slv_lrclk[0-9]$'}]} is not of type 'boolean'
->>>>
->>>> And indeed, 'additionalItems' has boolean type in meta-schema. So, how to
->>>> do it right?
->>>
->>> The meta-schemas are written both to prevent nonsense that json-schema 
->>> allows by default (e.g additionalitems (wrong case)) and constraints to 
->>> follow the patterns we expect. I'm happy to loosen the latter case if 
->>> there's really a need. 
->>>
->>> Generally, most bindings shouldn't be using 'additionalItems' at all as 
->>> all entries should be defined, but there's a few exceptions. Here, the 
->>> only reasoning I see is 26 entries is a lot to write out, but that 
->>> wouldn't really justify it. 
->> 
->> Writing a lot of entries don't scary me too much, but the reason is that
->> the existence of optional clock sources depends on schematics. Also, we
->
-> Aren't you documenting SoC component, not a board? So how exactly it
-> depends on schematics? SoC is done or not done...
->
->> unable to declare dt-nodes for 'clocks' array in any generic way,
->> because their declaration would depends on that what is actually
->> connected to the SoC (dt-node could be "fixed-clock" with specific rate
->> or something else).
->
-> So these are clock inputs to the SoC?
->
+https://lore.kernel.org/linux-iommu/20240416080656.60968-1-baolu.lu@linux.intel.com/
 
-Yes, possibly.
-Like an external crystal or a set clocks provided by an external codec
-where the codec is the clock master of the link.
+Supposedly, you can make such optimization after the base code is landed
+in the mainline tree if the change is big.
 
-This is same case as the AXG that was discussed here:
-https://lore.kernel.org/linux-devicetree/20230808194811.113087-1-alexander.stein@mailbox.org/
-
-IMO, like the AXG, only the pclk is a required clock.
-All the others - master and slave clocks - are optional.
-The controller is designed to operate with grounded inputs
-
->> 
->> By the way, I don't know any example (neither for A1 SoC nor for other
->> Amlogic's SoCs) where these optional clocks are used, but they are
->> allowed by hw.
-
-Those scenario exists and have been tested. There is just no dts using
-that upstream because they are all mostly copy of the AML ref design.
-
->> 
->> This is my understanding of this controller. I hope, Jerome Brunet will
->> clarify how it actually works.
->
-
-I think the simpliest way to deal with this to just list all the clocks
-with 'minItems = 1'. It is going be hard to read with a lot of '<0>,' in
-the DTS when do need those slave clocks but at least the binding doc
-will be simple.
-
-> Best regards,
-> Krzysztof
-
-If you are going ahead with this, please name the file
-amlogic,axg-audio-clkc.yaml because this is really the first controller
-of the type and is meant to be documented in the same file.
-
-You are free to handle the conversion of the AXG at the same time if
-you'd like. It would be much appreciated if you do.
-
--- 
-Jerome
+Best regards,
+baolu
