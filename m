@@ -1,58 +1,57 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FFE14A093
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 10:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B04114F10E
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 10:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713783252; cv=none; b=fgszdN5zvb7TGM0VSN7auu6uhABzrRlaqqBx0OfTlILOMHUV00f+89D8cmc1AxNvmB7/3h82FProSL186J/ta+tAdo/o/mJKC4xJUrB9P1nD8sCJR96lYiq3Ymy4DuTvW37i6AMvmZZstRnmmnboqc9Qdb/rshbi8PGtby+k7/4=
+	t=1713783256; cv=none; b=VrD+vDdKaJuNsODE/8Ibge0/+oHf5OOB3HYR59RifO7CWm5GR67MilFXXgj77vaCsl9pfXqObrtnja08CrguRafchW2WXTvMjbJ94kQjLaMSN31cYL29ZdsT/rEmIJRDkY4Yq6BWo3z55MYSqyiFpySzzpXFOF1hAFTgxZCbsvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713783252; c=relaxed/simple;
-	bh=kzfvIn5qFtOm6vevv9sfzeyre/RzrlRI0FWCZfrI0GU=;
+	s=arc-20240116; t=1713783256; c=relaxed/simple;
+	bh=sdehE+zn1RQvIdReWR+XY+nVCRWOxX0wiMQ32N7tCn4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q5+rDh+gAtAZDOqOfdMOal8TWxPY2ntclDwbdhW+UDO5s8ClKeO2ApVMeKMPLqR8h3RopXW70S2K1I0O1DIEvKoFopObapLOsaL/kmb9gybDkg/DOOyJefpSD5Gs+9Rr/wIfpP5jf+0JyC5K4SZY+omrmrIu8xLDIXYNN+f3O6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=SQ4hJWQy; arc=none smtp.client-ip=209.85.128.52
+	 MIME-Version; b=jU/qtmkq04fbZdp7alLYqM37Tu0ZiFeE+OZTJicEKlWvvUg6j2c3XUJqkWHM8pJbftHGY68I8lsmcC0bTzd2i/dM8MSgGgaBOieKWNlLRQrn2kC1ZkASxPkEP9vtx5/SJTYD9s88uMljym2Up+L55szfnjO7s7hmm+Kr+53oaAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=nLEbod0l; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="SQ4hJWQy"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-41a5b68eceeso4902485e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 03:54:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="nLEbod0l"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41a5b68ed85so4201535e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 03:54:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1713783249; x=1714388049; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1713783253; x=1714388053; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bAwRmO5huM+GW70T/FweuVU9CTXqYucZc7ooxGC0kuI=;
-        b=SQ4hJWQyAtvmdGSz4SPh+XAXccAatxOvppBULVv4ubGy27283MCeWt9IdbxeoiUbcN
-         yOtrlStrZDMNtn/TUIJ1m7KDpA5O//ZCijp64Wn8t5IhWfxp6RVPbNOzrmkMlt/TvZWR
-         J//2B9E+LehGJFt5oDERe/BxtnOm78LkCdoNWs+PAj7R5d4isr5SSyShfv0EHt4YC7kW
-         SuEZVThW2dwDSclnaLqoNMQesjbCiuMrSOGH6CQsjheITB3pCEMNJqRtaplFHdsjbINt
-         1Rs6+tgysxGGbmPUMSwK1O98nUtsTl631zuAzgcO2GZ05tR9dfKpqcy+/7a0XLdb4LRI
-         xbvw==
+        bh=k1N7C9y6FANsDWlj/dSgm/X0vOo9KMVHsfxdkeCTUls=;
+        b=nLEbod0lXZ92+d0VG1rK4TelU0qV1ZOkB3G487b5EbCdYNezO+NSUl6SdpkRac87Zp
+         pBg52h6CzlrTu0eAx0bcKx85AiUU6yqjsQJmAlUGmheEICyuvQTfwIZaGxOgOEZdwRWc
+         Vc97Wu54wkU3KNumaFEeBJqwMTjRsYqhgOlSg8lUHAk5P5y3H2MpLrhbTvtHgNQz8mgS
+         ZIznqhsKWPDaITcQqrYdk6k6zUdVCDpK61O/36r5pw9A/eoCgUqhWyLfYXFN9hbABJ+v
+         83fVqxobxgw3O3CFYAhdV/ELm64zzWec74+x1Ciet2jDQ7G2h/nd1umAMDj7Y7GtPHdL
+         uzwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713783249; x=1714388049;
+        d=1e100.net; s=20230601; t=1713783253; x=1714388053;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bAwRmO5huM+GW70T/FweuVU9CTXqYucZc7ooxGC0kuI=;
-        b=q4Oi5oNFoy+004NNUNPAYEdinbXwwqxKQ8Q5puK6V4RXu7znIuKZTQdRLIWrWZP5+K
-         /29UemFKPFhzlXlo3G+2TuMuWTvnWPRcHbSIBWErYglRILDk0El5WwvI+Yn/wrvfdbA/
-         MstLhbY6dziDsAXcv3uj78jD44nHT/9tASwyJsSciUbsxag7aJ9qJUSMzqFtyA8gTHjo
-         bjMMzQW/B4vJ8XR3Up0LzzWj6dZs7V6jmSSpKoa0p6YI0z8CjhuilD4oianaqC8e42+J
-         17I29UHt89M02EaZMMUI8ILD/drkL1AlbluTtqMNx1lg20uSxGQXr86I15l2Mzw9BmiC
-         GSGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVhZzjDzuSUDfbC0WkKPxzFw+AoPWWrBtjWVmpykA7PpK0fHXv/B++/VH69Bnr6R+IftXHE2k3DYnSA9BFEqdYqlq5D96ZJKhsot7mi
-X-Gm-Message-State: AOJu0YzJcJzvhXlfBptX5cYW5bQXBzvA0NZlkaRkXKDrMEMM3+gXKjv1
-	smJvKZR4OVIO0od5S3cfcVpmDzT0urzjO+/G9f5UBDLs8oZ1Q0LyTdjPZljz/FyeN2XUi+o206w
-	LdUI=
-X-Google-Smtp-Source: AGHT+IEgDwCgT5pzkeoswqG4nrQ8rtrCIWqKFBOLuvMt3yy55K/3kxVfAmsfO2HIlU7iiEbI5HsUnA==
-X-Received: by 2002:a05:600c:1c9e:b0:418:a5fc:5a5b with SMTP id k30-20020a05600c1c9e00b00418a5fc5a5bmr6945379wms.36.1713783248921;
-        Mon, 22 Apr 2024 03:54:08 -0700 (PDT)
+        bh=k1N7C9y6FANsDWlj/dSgm/X0vOo9KMVHsfxdkeCTUls=;
+        b=NcDngjtpHDpJdoc2hDUIpU+1xNQWVfNabQBsYPY0HRI/uyuK48UswBKxRtP/K9wAO2
+         9MxUofC69D17WjRZQ77PVUqMfzcLMZ20gqhT9OTMYy+PkYrov9PpSFNbljRxNR+oaIfT
+         aKfS81r92A0focMB/dVvAN2jX2Wrzle27AOKg/YE6clBGXhY81ds6exWuzpp+vzaAHPd
+         CH0oQeIWwJNoMBXiWbJ99s3PixUXbDDOVD3+EteNrGDSWWG2XGWfhcP1/t/H8MQWFdE6
+         1VOSwmxKPX/kmiSPq86I22BBudDLo/4GlCnRw6sjRlE6gX53MFg/5WQ0gwMg/Q1q9D3w
+         so5A==
+X-Forwarded-Encrypted: i=1; AJvYcCW5Ur5f6HpXx8m88vDBKFyPQUksKH0NFUuJsZKF7coUDrqoZROtT1DMMdOO7ivmyMG8QwN7UjFA8L8Xz1XK1H+J0mIagRys/26MWq1G
+X-Gm-Message-State: AOJu0Yw8D+9sYhY+UecrUApyDVY5oqkN2sv/aI1/uqhNkNwFC8Jk65R6
+	bs+dJNxPV7Ea8bKSZp2KpgbvuSooW6WQPL892OChEunNKo/ezYcyYGH6GTg9qvw=
+X-Google-Smtp-Source: AGHT+IF6X7R+CnfnuWa+fl+Pf5YiSAINpYi8IL6p/62UKQojmoQFTVGPGQijrRA+F6G+VcEY6bhYXw==
+X-Received: by 2002:a05:600c:358b:b0:418:2ab6:7123 with SMTP id p11-20020a05600c358b00b004182ab67123mr6892154wmq.10.1713783252902;
+        Mon, 22 Apr 2024 03:54:12 -0700 (PDT)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.53])
-        by smtp.gmail.com with ESMTPSA id v13-20020a05600c444d00b0041a3f700ccesm4321037wmn.40.2024.04.22.03.54.07
+        by smtp.gmail.com with ESMTPSA id v13-20020a05600c444d00b0041a3f700ccesm4321037wmn.40.2024.04.22.03.54.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 03:54:08 -0700 (PDT)
+        Mon, 22 Apr 2024 03:54:12 -0700 (PDT)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: geert+renesas@glider.be,
@@ -69,9 +68,9 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	linux-pm@vger.kernel.org,
 	claudiu.beznea@tuxon.dev,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v4 5/8] dt-bindings: clock: renesas,rzg2l-cpg: Update #power-domain-cells = <1> for RZ/G3S
-Date: Mon, 22 Apr 2024 13:53:52 +0300
-Message-Id: <20240422105355.1622177-6-claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v4 7/8] clk: renesas: r9a08g045: Add support for power domains
+Date: Mon, 22 Apr 2024 13:53:54 +0300
+Message-Id: <20240422105355.1622177-8-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240422105355.1622177-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20240422105355.1622177-1-claudiu.beznea.uj@bp.renesas.com>
@@ -85,76 +84,98 @@ Content-Transfer-Encoding: 8bit
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-The driver will be modified (in the next commits) to be able to specify
-individual power domain ID for each IP. The driver will still
-support #power-domain-cells = <0>, thus, previous users are not
-affected.
+Instantiate power domains for the currently enabled IPs of R9A08G045 SoC.
 
-The #power-domain-cells = <1> has been instantiated only for RZ/G3S at
-the moment as individual platform clock drivers need to be adapted for
-this to be supported on the rest of the SoCs.
-
-Also, the description for #power-domain-cells was updated with the links
-to per-SoC power domain IDs.
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
 
 Changes in v4:
-- none
+- dropped DEF_REG_CONF() specific to pwrdn functionality
+- dropped ddr, tzcddr, oftde_ddr domains as these were there due to
+  the pwrdn functionality
+- added wdt0 domain; this will not impact currently integrated
+  watchdog support
+- @Geert: I dropped your previous Rb tag due to the changes in v4
 
 Changes in v3:
 - collected tags
 
-Changes in v2:
-- updated patch title and description
-- kept both 0 and 1 for #power-domain-cells as not all the drivers,
-  device trees are adpated with this series
-- added a reference to dt-bindings/clock/r9a0*-cpg.h for power domain
-  specifiers
-- dropped the changes from examples section
+Change in v2:
+- used DEF_REG_CONF() to describe register offests and bits
+- updated MSTOP bitmask for ddr domain
+- updated MSTOP config for oftde_ddr
+- kept the same description for gic as the CPG_BUS_ACPU_MSTOP register
+  documentation in the latest HW manual version is wrong and it will be
+  fixed; proper description for GIC is located in "Registers for Module
+  Standby Mode" table
+- haven't added watchdog domain (was missing in v1, too, by mistake) as
+  the watchdog restart handler will fail w/o patch [1]; with this pm domain
+  support the watchdog will fail to probe; not sure what is the best
+  option until [1] will be integrated
 
- .../bindings/clock/renesas,rzg2l-cpg.yaml      | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+[1] https://patchwork.kernel.org/project/linux-renesas-soc/patch/20240228083253.2640997-10-claudiu.beznea.uj@bp.renesas.com
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,rzg2l-cpg.yaml b/Documentation/devicetree/bindings/clock/renesas,rzg2l-cpg.yaml
-index 80a8c7114c31..4e3b0c45124a 100644
---- a/Documentation/devicetree/bindings/clock/renesas,rzg2l-cpg.yaml
-+++ b/Documentation/devicetree/bindings/clock/renesas,rzg2l-cpg.yaml
-@@ -57,7 +57,8 @@ properties:
-       can be power-managed through Module Standby should refer to the CPG device
-       node in their "power-domains" property, as documented by the generic PM
-       Domain bindings in Documentation/devicetree/bindings/power/power-domain.yaml.
--    const: 0
-+      The power domain specifiers defined in <dt-bindings/clock/r9a0*-cpg.h> could
-+      be used to reference individual CPG power domains.
+ drivers/clk/renesas/r9a08g045-cpg.c | 41 +++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+
+diff --git a/drivers/clk/renesas/r9a08g045-cpg.c b/drivers/clk/renesas/r9a08g045-cpg.c
+index c3e6da2de197..b068733b145f 100644
+--- a/drivers/clk/renesas/r9a08g045-cpg.c
++++ b/drivers/clk/renesas/r9a08g045-cpg.c
+@@ -240,6 +240,43 @@ static const unsigned int r9a08g045_crit_mod_clks[] __initconst = {
+ 	MOD_CLK_BASE + R9A08G045_DMAC_ACLK,
+ };
  
-   '#reset-cells':
-     description:
-@@ -76,6 +77,21 @@ required:
- 
- additionalProperties: false
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: renesas,r9a08g045-cpg
-+    then:
-+      properties:
-+        '#power-domain-cells':
-+          const: 1
-+    else:
-+      properties:
-+        '#power-domain-cells':
-+          const: 0
++static const struct rzg2l_cpg_pm_domain_init_data r9a08g045_pm_domains[] = {
++	/* Keep always-on domain on the first position for proper domains registration. */
++	DEF_PD("always-on",	R9A08G045_PD_ALWAYS_ON,
++				DEF_REG_CONF(0, 0),
++				RZG2L_PD_F_ALWAYS_ON),
++	DEF_PD("gic",		R9A08G045_PD_GIC,
++				DEF_REG_CONF(CPG_BUS_ACPU_MSTOP, BIT(3)),
++				RZG2L_PD_F_ALWAYS_ON),
++	DEF_PD("ia55",		R9A08G045_PD_IA55,
++				DEF_REG_CONF(CPG_BUS_PERI_CPU_MSTOP, BIT(13)),
++				RZG2L_PD_F_ALWAYS_ON),
++	DEF_PD("dmac",		R9A08G045_PD_DMAC,
++				DEF_REG_CONF(CPG_BUS_REG1_MSTOP, GENMASK(3, 0)),
++				RZG2L_PD_F_ALWAYS_ON),
++	DEF_PD("wdt0",		R9A08G045_PD_WDT0,
++				DEF_REG_CONF(CPG_BUS_REG0_MSTOP, BIT(0)),
++				RZG2L_PD_F_NONE),
++	DEF_PD("sdhi0",		R9A08G045_PD_SDHI0,
++				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(0)),
++				RZG2L_PD_F_NONE),
++	DEF_PD("sdhi1",		R9A08G045_PD_SDHI1,
++				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(1)),
++				RZG2L_PD_F_NONE),
++	DEF_PD("sdhi2",		R9A08G045_PD_SDHI2,
++				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(11)),
++				RZG2L_PD_F_NONE),
++	DEF_PD("eth0",		R9A08G045_PD_ETHER0,
++				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(2)),
++				RZG2L_PD_F_NONE),
++	DEF_PD("eth1",		R9A08G045_PD_ETHER1,
++				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(3)),
++				RZG2L_PD_F_NONE),
++	DEF_PD("scif0",		R9A08G045_PD_SCIF0,
++				DEF_REG_CONF(CPG_BUS_MCPU2_MSTOP, BIT(1)),
++				RZG2L_PD_F_NONE),
++};
 +
- examples:
-   - |
-     cpg: clock-controller@11010000 {
+ const struct rzg2l_cpg_info r9a08g045_cpg_info = {
+ 	/* Core Clocks */
+ 	.core_clks = r9a08g045_core_clks,
+@@ -260,5 +297,9 @@ const struct rzg2l_cpg_info r9a08g045_cpg_info = {
+ 	.resets = r9a08g045_resets,
+ 	.num_resets = R9A08G045_VBAT_BRESETN + 1, /* Last reset ID + 1 */
+ 
++	/* Power domains */
++	.pm_domains = r9a08g045_pm_domains,
++	.num_pm_domains = ARRAY_SIZE(r9a08g045_pm_domains),
++
+ 	.has_clk_mon_regs = true,
+ };
 -- 
 2.39.2
 
