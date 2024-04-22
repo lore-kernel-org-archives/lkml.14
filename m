@@ -1,31 +1,51 @@
-Received: from localhost.localdomain (unknown [165.204.184.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B637A15099A;
-	Mon, 22 Apr 2024 13:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.204.184.1
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E0B1509B1
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 13:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713793520; cv=none; b=BdK+VNIJ5qKzRmLx4bZspQoNg5JaGvZw9y5CUskoLoJxwO33MHuV+abvAdH4rSzU6EUBxz2mWJnkL2fzM12PxNWh6KKs3ufpSKFb+PChJ93cnkSMex8TPWgH1Eju9SengKFMuMjPNGn+r/ab63YyC3EJmToA5XSvTsqwCzsNfhw=
+	t=1713793526; cv=none; b=e+A2a+pYH9Bx9HXZfXm7ondGmP9q2mRe1dNy0dp4AkNkdoLTABNttKVM0pM1o5PIlftLVe33LNhkVFs3xU+Z8gimuBFfWKPNya/RLWpD3wgsArMhWoG8D21ENX7LGPiVNS4NbMnUwBz/CDDMWqUZhTIzg5ZYmQEtYJtmxt0JCDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713793520; c=relaxed/simple;
-	bh=KJtLJ1PiXTSiUhXEI+u8c8gH/+X5sjYmBdrsu7oo7NE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M1BV4IuUGMrTJR+HTLPA7Q9Pe0kjcsIUpf/8y0o5Ll+GNU5j8zcFw0JRjVDAkpaeCUQFiHpZjEhyDio5490h3hlOte+94Ur+mNkCdlTUz5Pg/MCsMGI6y80/+SRxf1YKCKhcfr6hU7nKfCODO2weIHeb1EHqfml/7nffRR/symI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=none smtp.mailfrom=localhost.localdomain; arc=none smtp.client-ip=165.204.184.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=localhost.localdomain
-Received: by localhost.localdomain (Postfix, from userid 1000)
-	id 1A8EC137EF; Mon, 22 Apr 2024 08:37:31 -0500 (CDT)
-From: Carlos Bilbao <carlos.bilbao@amd.com>
-To: corbet@lwn.net,
-	elena.reshetova@intel.com
-Cc: cabilbao@amd.com,
-	bilbao@vt.edu,
-	avadhut.naik@amd.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Carlos Bilbao <carlos.bilbao@amd.com>
-Subject: [PATCH] docs/MAINTAINERS: Update my email address
-Date: Mon, 22 Apr 2024 08:37:23 -0500
-Message-ID: <20240422133726.129074-1-carlos.bilbao@amd.com>
-X-Mailer: git-send-email 2.41.0
+	s=arc-20240116; t=1713793526; c=relaxed/simple;
+	bh=GqweGD7FEih2DKxvPXX28sIxVSB/q+RnDMyr5ddRYYA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KSvEzYuoju2cCAKRhTHtasjtefeLvEVKztZh1C4IsqMVr2m5VxV+qo1/U+kd/IODp8lk4RFandEg5WMiBB+1RkJFNx9mvoYnvSqKoE/vQTq2y+N1deEBCd5OgKe87a/K/O5HIar2J6HFdkyu8vKWZdvj1gPPMoUJpKBELp+ghxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+X-QQ-mid: bizesmtpsz6t1713793491tn5a1gu
+X-QQ-Originating-IP: 4T9vFwtcN5bxuKVyJbWNoCazsGTJce4anorEd6nw19M=
+Received: from john-PC ( [123.114.60.34])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 22 Apr 2024 21:44:48 +0800 (CST)
+X-QQ-SSF: 01400000000000E0L000000A0000000
+X-QQ-FEAT: TxLxcJtIk++bAQsC+7kYDxGgt3lLYoKlJnOLtIMzDcO0Iriok2aBG9QN2pBfi
+	LgZDfkJs6Q13EeO5ul+C1abhuuv5Cnf26b7STHZ35jLbjInDsCKgvJPRocX5o8TI3UngAdr
+	NYKQ1wdA/VFOR4QlWz/ibm7GWPGXvH6y+uoPNJq9wWcXKOrbPMh9HLHmkMBqLxxuHiX5Dk8
+	qfnDosogiJqEPf43tQN7faSqfabqkL980q6gdeSefosXjn9lKCnromtz+RnKOM+/RFJ7eIx
+	T85e4sp+VVVdOsNYLd6mT7TWa2zUfP1AlngWgLeTE+Jm/Uj9SJ6YSrzIGw8V5lLNl2/3Bpj
+	VOQNr6E1GpfR45nCdCCJDzrmw2MwgiUX4kmWRMlkYZdBOah/HuA0hGkqpZnDTnAf86DzP64
+	9C7Hw976CtmHPt88OeQEz9cBrn37R36R
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 12248589611114575822
+Date: Mon, 22 Apr 2024 21:44:47 +0800
+From: Qiang Ma <maqianga@uniontech.com>
+To: Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>
+Cc: alexander.deucher@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
+ daniel@ffwll.ch, srinivasan.shanmugam@amd.com,
+ Arunpravin.PaneerSelvam@amd.com, le.ma@amd.com, Felix.Kuehling@amd.com,
+ mukul.joshi@amd.com, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/amdgpu: Fixup bad vram size on gmc v6 and v7
+Message-ID: <2778C515DE59A537+20240422214447.231a09de@john-PC>
+In-Reply-To: <bde48eef-4d8a-4cfa-b824-6de88c0f87fd@amd.com>
+References: <20240422052608.5297-1-maqianga@uniontech.com>
+	<68f02c5c-5591-4d6f-9926-b0fc6f9f6287@amd.com>
+	<D94775003178862D+20240422203329.49844e71@john-PC>
+	<bde48eef-4d8a-4cfa-b824-6de88c0f87fd@amd.com>
+Organization: UOS
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,235 +53,142 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpsz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz4a-0
 
-In the near future, I will not have access to the email address I used as
-maintainer of a number of things, mostly in the documentation. Update that
-address to my personal email address (see Link) so I can continue
-contributing.
+On Mon, 22 Apr 2024 14:59:36 +0200
+Christian K=C3=B6nig <christian.koenig@amd.com> wrote:
 
-Link: https://lore.kernel.org/all/BL1PR12MB58749FF2BFEDB817DE1FE6CBF82A2@BL1PR12MB5874.namprd12.prod.outlook.com/
-Signed-off-by: Carlos Bilbao <carlos.bilbao@amd.com>
----
- Documentation/security/snp-tdx-threat-model.rst           | 2 +-
- Documentation/translations/sp_SP/index.rst                | 2 +-
- Documentation/translations/sp_SP/memory-barriers.txt      | 4 ++--
- .../translations/sp_SP/process/code-of-conduct.rst        | 2 +-
- Documentation/translations/sp_SP/process/coding-style.rst | 2 +-
- .../translations/sp_SP/process/email-clients.rst          | 2 +-
- Documentation/translations/sp_SP/process/howto.rst        | 2 +-
- Documentation/translations/sp_SP/process/kernel-docs.rst  | 2 +-
- .../sp_SP/process/kernel-enforcement-statement.rst        | 2 +-
- Documentation/translations/sp_SP/process/magic-number.rst | 2 +-
- .../translations/sp_SP/process/programming-language.rst   | 2 +-
- .../translations/sp_SP/process/submitting-patches.rst     | 2 +-
- MAINTAINERS                                               | 8 ++++----
- 13 files changed, 17 insertions(+), 17 deletions(-)
+> Am 22.04.24 um 14:33 schrieb Qiang Ma:
+> > On Mon, 22 Apr 2024 11:40:26 +0200
+> > Christian K=C3=B6nig <christian.koenig@amd.com> wrote:
+> > =20
+> >> Am 22.04.24 um 07:26 schrieb Qiang Ma: =20
+> >>> Some boards(like Oland PRO: 0x1002:0x6613) seem to have
+> >>> garbage in the upper 16 bits of the vram size register,
+> >>> kern log as follows:
+> >>>
+> >>> [    6.000000] [drm] Detected VRAM RAM=3D2256537600M, BAR=3D256M
+> >>> [    6.007812] [drm] RAM width 64bits GDDR5
+> >>> [    6.031250] [drm] amdgpu: 2256537600M of VRAM memory ready
+> >>>
+> >>> This is obviously not true, check for this and clamp the size
+> >>> properly. Fixes boards reporting bogus amounts of vram,
+> >>> kern log as follows:
+> >>>
+> >>> [    2.789062] [drm] Probable bad vram size: 0x86800800
+> >>> [    2.789062] [drm] Detected VRAM RAM=3D2048M, BAR=3D256M
+> >>> [    2.789062] [drm] RAM width 64bits GDDR5
+> >>> [    2.789062] [drm] amdgpu: 2048M of VRAM memory ready =20
+> >> Well we had patches like this one here before and so far we always
+> >> rejected them.
+> >>
+> >> When the mmCONFIG_MEMSIZE register isn't properly initialized then
+> >> there is something wrong with your hardware.
+> >>
+> >> Working around that in the software driver is not going to fly.
+> >>
+> >> Regards,
+> >> Christian.
+> >> =20
+> > Hi Christian:
+> > I see that two patches for this issue have been merged, and the
+> > patches are as follows:
+> >
+> > 11544d77e397 drm/amdgpu: fixup bad vram size on gmc v8
+> > 0ca223b029a2 drm/radeon: fixup bad vram size on SI =20
+>=20
+> Mhm, I remember that we discussed reverting those but it looks like
+> that never happened. I need to ask around internally.
+>=20
+> Question is do you see any other problems with the board? E.g.
+> incorrect connector or harvesting configuration?
+>=20
+> Regards,
+> Christian.
+>=20
 
-diff --git a/Documentation/security/snp-tdx-threat-model.rst b/Documentation/security/snp-tdx-threat-model.rst
-index ec66f2ed80c9..3a2d41d2e645 100644
---- a/Documentation/security/snp-tdx-threat-model.rst
-+++ b/Documentation/security/snp-tdx-threat-model.rst
-@@ -4,7 +4,7 @@ Confidential Computing in Linux for x86 virtualization
- 
- .. contents:: :local:
- 
--By: Elena Reshetova <elena.reshetova@intel.com> and Carlos Bilbao <carlos.bilbao@amd.com>
-+By: Elena Reshetova <elena.reshetova@intel.com> and Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- 
- Motivation
- ==========
-diff --git a/Documentation/translations/sp_SP/index.rst b/Documentation/translations/sp_SP/index.rst
-index c543b495c042..274ef4ad96b9 100644
---- a/Documentation/translations/sp_SP/index.rst
-+++ b/Documentation/translations/sp_SP/index.rst
-@@ -7,7 +7,7 @@ Traducción al español
- 
- 	\kerneldocCJKoff
- 
--:maintainer: Carlos Bilbao <carlos.bilbao@amd.com>
-+:maintainer: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- 
- .. _sp_disclaimer:
- 
-diff --git a/Documentation/translations/sp_SP/memory-barriers.txt b/Documentation/translations/sp_SP/memory-barriers.txt
-index 27097a808c88..153e57130775 100644
---- a/Documentation/translations/sp_SP/memory-barriers.txt
-+++ b/Documentation/translations/sp_SP/memory-barriers.txt
-@@ -1,6 +1,6 @@
- NOTE:
- This is a version of Documentation/memory-barriers.txt translated into
--Spanish by Carlos Bilbao <carlos.bilbao@amd.com>. If you find any
-+Spanish by Carlos Bilbao <carlos.bilbao.osdev@gmail.com>. If you find any
- difference between this document and the original file or a problem with
- the translation, please contact the maintainer of this file. Please also
- note that the purpose of this file is to be easier to read for non English
-@@ -18,7 +18,7 @@ Documento original: David Howells <dhowells@redhat.com>
-     Will Deacon <will.deacon@arm.com>
-     Peter Zijlstra <peterz@infradead.org>
- 
--Traducido por: Carlos Bilbao <carlos.bilbao@amd.com>
-+Traducido por: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- Nota: Si tiene alguna duda sobre la exactitud del contenido de esta
- traducción, la única referencia válida es la documentación oficial en
- inglés.
-diff --git a/Documentation/translations/sp_SP/process/code-of-conduct.rst b/Documentation/translations/sp_SP/process/code-of-conduct.rst
-index adc6c770cc37..a6c08613aefc 100644
---- a/Documentation/translations/sp_SP/process/code-of-conduct.rst
-+++ b/Documentation/translations/sp_SP/process/code-of-conduct.rst
-@@ -1,7 +1,7 @@
- .. include:: ../disclaimer-sp.rst
- 
- :Original: :ref:`Documentation/process/code-of-conduct.rst <code_of_conduct>`
--:Translator: Contributor Covenant and Carlos Bilbao <carlos.bilbao@amd.com>
-+:Translator: Contributor Covenant and Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- 
- .. _sp_code_of_conduct:
- 
-diff --git a/Documentation/translations/sp_SP/process/coding-style.rst b/Documentation/translations/sp_SP/process/coding-style.rst
-index a37274764371..b5a84df44cea 100644
---- a/Documentation/translations/sp_SP/process/coding-style.rst
-+++ b/Documentation/translations/sp_SP/process/coding-style.rst
-@@ -1,7 +1,7 @@
- .. include:: ../disclaimer-sp.rst
- 
- :Original: :ref:`Documentation/process/coding-style.rst <submittingpatches>`
--:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
-+:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- 
- .. _sp_codingstyle:
- 
-diff --git a/Documentation/translations/sp_SP/process/email-clients.rst b/Documentation/translations/sp_SP/process/email-clients.rst
-index fdf1e51b84e4..55d5803daf41 100644
---- a/Documentation/translations/sp_SP/process/email-clients.rst
-+++ b/Documentation/translations/sp_SP/process/email-clients.rst
-@@ -1,7 +1,7 @@
- .. include:: ../disclaimer-sp.rst
- 
- :Original: :ref:`Documentation/process/email-clients.rst <email_clients>`
--:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
-+:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- 
- .. _sp_email_clients:
- 
-diff --git a/Documentation/translations/sp_SP/process/howto.rst b/Documentation/translations/sp_SP/process/howto.rst
-index dd793c0f8574..72ea855ac9dc 100644
---- a/Documentation/translations/sp_SP/process/howto.rst
-+++ b/Documentation/translations/sp_SP/process/howto.rst
-@@ -1,7 +1,7 @@
- .. include:: ../disclaimer-sp.rst
- 
- :Original: :ref:`Documentation/process/howto.rst <process_howto>`
--:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
-+:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- 
- .. _sp_process_howto:
- 
-diff --git a/Documentation/translations/sp_SP/process/kernel-docs.rst b/Documentation/translations/sp_SP/process/kernel-docs.rst
-index 2f9b3df8f8fa..a62c6854f59b 100644
---- a/Documentation/translations/sp_SP/process/kernel-docs.rst
-+++ b/Documentation/translations/sp_SP/process/kernel-docs.rst
-@@ -1,7 +1,7 @@
- .. include:: ../disclaimer-sp.rst
- 
- :Original: :ref:`Documentation/process/kernel-docs.rst <kernel_docs>`
--:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
-+:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- 
- .. _sp_kernel_docs:
- 
-diff --git a/Documentation/translations/sp_SP/process/kernel-enforcement-statement.rst b/Documentation/translations/sp_SP/process/kernel-enforcement-statement.rst
-index d66902694089..d47a1c154610 100644
---- a/Documentation/translations/sp_SP/process/kernel-enforcement-statement.rst
-+++ b/Documentation/translations/sp_SP/process/kernel-enforcement-statement.rst
-@@ -1,7 +1,7 @@
- .. include:: ../disclaimer-sp.rst
- 
- :Original: :ref:`Documentation/process/kernel-enforcement-statement.rst <process_statement_kernel>`
--:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
-+:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- 
- .. _sp_process_statement_kernel:
- 
-diff --git a/Documentation/translations/sp_SP/process/magic-number.rst b/Documentation/translations/sp_SP/process/magic-number.rst
-index 7c7dfb4ba80b..32a99aac2f6c 100644
---- a/Documentation/translations/sp_SP/process/magic-number.rst
-+++ b/Documentation/translations/sp_SP/process/magic-number.rst
-@@ -1,7 +1,7 @@
- .. include:: ../disclaimer-sp.rst
- 
- :Original: :ref:`Documentation/process/magic-number.rst <magicnumbers>`
--:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
-+:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- 
- .. _sp_magicnumbers:
- 
-diff --git a/Documentation/translations/sp_SP/process/programming-language.rst b/Documentation/translations/sp_SP/process/programming-language.rst
-index 301f525372d8..ba2164057f45 100644
---- a/Documentation/translations/sp_SP/process/programming-language.rst
-+++ b/Documentation/translations/sp_SP/process/programming-language.rst
-@@ -1,7 +1,7 @@
- .. include:: ../disclaimer-sp.rst
- 
- :Original: :ref:`Documentation/process/programming-language.rst <programming_language>`
--:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
-+:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- 
- .. _sp_programming_language:
- 
-diff --git a/Documentation/translations/sp_SP/process/submitting-patches.rst b/Documentation/translations/sp_SP/process/submitting-patches.rst
-index c2757d9ab216..18bb3413c3ca 100644
---- a/Documentation/translations/sp_SP/process/submitting-patches.rst
-+++ b/Documentation/translations/sp_SP/process/submitting-patches.rst
-@@ -1,7 +1,7 @@
- .. include:: ../disclaimer-sp.rst
- 
- :Original: :ref:`Documentation/process/submitting-patches.rst <submittingpatches>`
--:Translator: Carlos Bilbao <carlos.bilbao@amd.com>
-+:Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- 
- .. _sp_submittingpatches:
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d818866d6d73..8e9c2fd7a8a0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -987,7 +987,7 @@ F:	drivers/video/fbdev/geode/
- 
- AMD HSMP DRIVER
- M:	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
--R:	Carlos Bilbao <carlos.bilbao@amd.com>
-+R:	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	Documentation/arch/x86/amd_hsmp.rst
-@@ -5325,7 +5325,7 @@ F:	drivers/usb/atm/cxacru.c
- 
- CONFIDENTIAL COMPUTING THREAT MODEL FOR X86 VIRTUALIZATION (SNP/TDX)
- M:	Elena Reshetova <elena.reshetova@intel.com>
--M:	Carlos Bilbao <carlos.bilbao@amd.com>
-+M:	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- S:	Maintained
- F:	Documentation/security/snp-tdx-threat-model.rst
- 
-@@ -10549,7 +10549,7 @@ S:	Orphan
- F:	drivers/video/fbdev/imsttfb.c
- 
- INDEX OF FURTHER KERNEL DOCUMENTATION
--M:	Carlos Bilbao <carlos.bilbao@amd.com>
-+M:	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- S:	Maintained
- F:	Documentation/process/kernel-docs.rst
- 
-@@ -20549,7 +20549,7 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
- F:	drivers/media/dvb-frontends/sp2*
- 
- SPANISH DOCUMENTATION
--M:	Carlos Bilbao <carlos.bilbao@amd.com>
-+M:	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- R:	Avadhut Naik <avadhut.naik@amd.com>
- S:	Maintained
- F:	Documentation/translations/sp_SP/
--- 
-2.41.0
+At present, no other problems have been found.
+Configured as radeon driver, display is normal.=20
+But this problem is found when I switch to amdgpu driver, and the
+startup fails with black screen.
+After add the patch, the startup was successful, display is normal.
+
+Qiang Ma
+
+> >
+> > Qiang Ma
+> > =20
+> >>> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+> >>> ---
+> >>>    drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c | 11 +++++++++--
+> >>>    drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c | 13 ++++++++++---
+> >>>    2 files changed, 19 insertions(+), 5 deletions(-)
+> >>>
+> >>> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
+> >>> b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c index
+> >>> 23b478639921..3703695f7789 100644 ---
+> >>> a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c +++
+> >>> b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c @@ -309,8 +309,15 @@
+> >>> static int gmc_v6_0_mc_init(struct amdgpu_device *adev) }
+> >>>    	adev->gmc.vram_width =3D numchan * chansize;
+> >>>    	/* size in MB on si */
+> >>> -	adev->gmc.mc_vram_size =3D RREG32(mmCONFIG_MEMSIZE) *
+> >>> 1024ULL * 1024ULL;
+> >>> -	adev->gmc.real_vram_size =3D RREG32(mmCONFIG_MEMSIZE) *
+> >>> 1024ULL * 1024ULL;
+> >>> +	tmp =3D RREG32(mmCONFIG_MEMSIZE);
+> >>> +	/* some boards may have garbage in the upper 16 bits */
+> >>> +	if (tmp & 0xffff0000) {
+> >>> +		DRM_INFO("Probable bad vram size: 0x%08x\n",
+> >>> tmp);
+> >>> +		if (tmp & 0xffff)
+> >>> +			tmp &=3D 0xffff;
+> >>> +	}
+> >>> +	adev->gmc.mc_vram_size =3D tmp * 1024ULL * 1024ULL;
+> >>> +	adev->gmc.real_vram_size =3D adev->gmc.mc_vram_size;
+> >>>   =20
+> >>>    	if (!(adev->flags & AMD_IS_APU)) {
+> >>>    		r =3D amdgpu_device_resize_fb_bar(adev);
+> >>> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+> >>> b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c index
+> >>> 3da7b6a2b00d..1df1fc578ff6 100644 ---
+> >>> a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c +++
+> >>> b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c @@ -316,10 +316,10 @@
+> >>> static void gmc_v7_0_mc_program(struct amdgpu_device *adev) static
+> >>> int gmc_v7_0_mc_init(struct amdgpu_device *adev) {
+> >>>    	int r;
+> >>> +	u32 tmp;
+> >>>   =20
+> >>>    	adev->gmc.vram_width =3D
+> >>> amdgpu_atombios_get_vram_width(adev); if (!adev->gmc.vram_width) {
+> >>> -		u32 tmp;
+> >>>    		int chansize, numchan;
+> >>>   =20
+> >>>    		/* Get VRAM informations */
+> >>> @@ -363,8 +363,15 @@ static int gmc_v7_0_mc_init(struct
+> >>> amdgpu_device *adev) adev->gmc.vram_width =3D numchan * chansize;
+> >>>    	}
+> >>>    	/* size in MB on si */
+> >>> -	adev->gmc.mc_vram_size =3D RREG32(mmCONFIG_MEMSIZE) *
+> >>> 1024ULL * 1024ULL;
+> >>> -	adev->gmc.real_vram_size =3D RREG32(mmCONFIG_MEMSIZE) *
+> >>> 1024ULL * 1024ULL;
+> >>> +	tmp =3D RREG32(mmCONFIG_MEMSIZE);
+> >>> +	/* some boards may have garbage in the upper 16 bits */
+> >>> +	if (tmp & 0xffff0000) {
+> >>> +		DRM_INFO("Probable bad vram size: 0x%08x\n",
+> >>> tmp);
+> >>> +		if (tmp & 0xffff)
+> >>> +			tmp &=3D 0xffff;
+> >>> +	}
+> >>> +	adev->gmc.mc_vram_size =3D tmp * 1024ULL * 1024ULL;
+> >>> +	adev->gmc.real_vram_size =3D adev->gmc.mc_vram_size;
+> >>>   =20
+> >>>    	if (!(adev->flags & AMD_IS_APU)) {
+> >>>    		r =3D amdgpu_device_resize_fb_bar(adev); =20
+> >> =20
+>=20
+>=20
 
