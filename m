@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85161078B;
-	Mon, 22 Apr 2024 03:26:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AE12579;
+	Mon, 22 Apr 2024 03:28:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713756371; cv=none; b=OQNuGdnl0IY6Od2EvL8K7L0rXLTT8+dPVmY/Tu/ATw/dGWQhUtAz10pSSQOej2KdqpG9OBnuhzAB8YysjmZzz03662JdfYDwLU4wdL3drcgdh3sVDf90sql/v/1Ce+4ec2DVeNAtRTf50TPo4ugN+X3VzdvCmKflIr23NlbU4FE=
+	t=1713756530; cv=none; b=hCseeMW2O9lUXj+SU71r0aQe4Zq007W6NkMMbPsgRP6dK2EWwwSOkpYFTCT48/R+y/LC0WARqJtGtDW5nmXlmfdFPmxZjXQ6v+2dGMtR+PIcKV2OokoClqMpIJASVzjK8S1hUz5yBS4kNYcMCCb1wpvLmmwRCFRKkEPKd95nQzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713756371; c=relaxed/simple;
-	bh=n8OeoVzXBkCF7d/h9/+hrU0DlS4s1TrGHvMrJDN7uxk=;
+	s=arc-20240116; t=1713756530; c=relaxed/simple;
+	bh=+Ktb/IsPaoqwJhfwXUUrTC6XLdOCvL/6K6NVdF2venw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ac3v/3q/kmZwDNZq7kKR+cIEHVlEFUxqdeXCR6J++6Y0Bbia/mQasyoyE57wrgfR0sVs8Kp2BUTolxiTfO/nMFpnFp0FwJZnwLUFLkNOH/6+mfrtEHnpYANQU6DV2zzPQhX/xf2nU7T2DHNrGeGWtVH0Yt9mrE0W7ehGORWjMwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4abCtbD; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=KqFPsOTM12Qeh5fyzGMnkRAomTreU+5uPx8rySnhTbRlf6K2gR2+H7qaJNcqgLQIVLNiaDNkj5WnRO6U/JkV8JN4zL1CVO8CswR0zoKPzElUehAcgUOjFAW2ENfyiuuveydKBMZTlHS+MUViAhZlGtpTMDzJFZd9Uuff9FRNOPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXY9qgHI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4abCtbD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84757C3277B;
-	Mon, 22 Apr 2024 03:26:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXY9qgHI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9C14C113CE;
+	Mon, 22 Apr 2024 03:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713756371;
-	bh=n8OeoVzXBkCF7d/h9/+hrU0DlS4s1TrGHvMrJDN7uxk=;
+	s=k20201202; t=1713756529;
+	bh=+Ktb/IsPaoqwJhfwXUUrTC6XLdOCvL/6K6NVdF2venw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=q4abCtbDz68wMU7XVvgNs7tYVtJdvzJLNQBrqKlNyAgncuvftXKBj+EN5U4Nyakhh
-	 2ypUgtZUTJJQ3AaOP66h5QXQLrFYNtT1KbwJaCez/tCrh41kF0ruKkBOPz7igZmnzN
-	 G00/nOm1uW59OMYelc5B/ZvzTv+eMX7C4HqY6dMysRwH7/qMnlY1p3ULg+8G5ZWjJ5
-	 ogOpMSMYG8yQsl0mdMg/8a5wqVbc6v/OBIdyttEoL/5gGhuEGc0xEZ6nq/nchaLT2a
-	 xGIZTgjMdDtbXgUxdIDlqcSh5lRCwLF0YVjfdUWvo3521bPqorv40hIxeZADmHfZ54
-	 DzlSC3b/sYUmg==
-Message-ID: <ce03bc0c-b113-44c3-8243-0fa22b8a95bf@kernel.org>
-Date: Mon, 22 Apr 2024 05:26:02 +0200
+	b=YXY9qgHIVKCYMuEUBfRTb1sUxePxIBrehmLXnzeSA8cTU13V66krpliIqRXZSxMrW
+	 Jcc2vEmw/9VAOC3if5ovcipCrnL9S7eN8roBgQzeisyMSKF27rUxbjkD8Jg7Rraz+h
+	 X6Op6luDblMwZNVlAwgEDIPVCfGvVpRNQp6UZSGj+jz/KrNkLDqaZSD+/sCdfcawEQ
+	 M+M9BObz0Q1kCXrTwjmgb+kZO9czGi9x2gMh3cfFSJFuUVbVHFfRK4HntT8QdkjAST
+	 tpSIf9l6Uw+vNmiosehTVdgAX3Awo+sD2Xs9xqeAnkUW8afu39aiWA2c09R8BJsEQj
+	 GTfoCywv7P2og==
+Message-ID: <9b95f926-b96c-4266-b292-3c3cd362905e@kernel.org>
+Date: Mon, 22 Apr 2024 05:28:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,29 +35,16 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] media: dt-bindings: i2c: add Giantec GT97xx VCM
-To: Zhi Mao <zhi.mao@mediatek.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
- Heiko Stuebner <heiko@sntech.de>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
- Hans de Goede <hdegoede@redhat.com>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Alain Volmat <alain.volmat@foss.st.com>,
- Paul Elder <paul.elder@ideasonboard.com>,
- Mehdi Djait <mehdi.djait@bootlin.com>,
- Andy Shevchenko <andy.shevchenko@gmail.com>,
- Bingbu Cao <bingbu.cao@intel.com>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- shengnan.wang@mediatek.com, yaya.chang@mediatek.com, yunkec@chromium.org,
- 10572168@qq.com
-References: <20240420011840.23148-1-zhi.mao@mediatek.com>
- <20240420011840.23148-2-zhi.mao@mediatek.com>
+Subject: Re: [PATCH v2 0/2] Add adm1281 support
+To: Jose Ramon San Buenaventura <jose.sanbuenaventura@analog.com>,
+ linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-i2c@vger.kernel.org
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>
+References: <20240422025123.29770-1-jose.sanbuenaventura@analog.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -103,69 +90,21 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240420011840.23148-2-zhi.mao@mediatek.com>
+In-Reply-To: <20240422025123.29770-1-jose.sanbuenaventura@analog.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 20/04/2024 03:18, Zhi Mao wrote:
-> Add YAML device tree binding for GT9768 & GT8769 VCM,
-> and the relevant MAINTAINERS entries.
+On 22/04/2024 04:51, Jose Ramon San Buenaventura wrote:
+> This patch removes the extra case added in the adm1275_read_byte_data
+> for STATUS_CML reads. Upon checking, the reads for the STATUS_CML register
+> is already handled in the pmbus_core. 
 > 
-> Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
-> ---
+> It was also clarified and agreed upon that any other actionable steps
+> involving the STATUS_CML error flags should be added in the pmbus_core
+> and not on the specific chip driver.
+> 
 
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-If there is going to be any new version, then:
-
->  .../bindings/media/i2c/giantec,gt9769.yaml    | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
-
-> +title: Giantec Semiconductor, Crop. GT9768 & GT9769 Voice Coil Motor (VCM)
-> +
-> +maintainers:
-> +  - Zhi Mao <zhi.mao@mediatek.com>
-> +
-> +description: |-
-
-Drop |-
-
-> +  The Giantec GT9768 & GT9768 is a 10-bit DAC with current sink capability.
-> +  The DAC is controlled via I2C bus that operates at clock rates up to 1MHz.
-> +  This chip integrates Advanced Actuator Control (AAC) technology
-> +  and is intended for driving voice coil lens in camera modules.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - giantec,gt9768
-> +      - giantec,gt9769
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vin-supply: true
-> +
-> +  vdd-supply: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vin-supply
-> +  - vdd-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +
-
-Drop blank line
-
-> +    i2c {
-
-
+Where is the changelog? It's v2, so what happened here?
 
 Best regards,
 Krzysztof
