@@ -1,201 +1,279 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2073.outbound.protection.outlook.com [40.107.220.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2F031A60;
-	Mon, 22 Apr 2024 14:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713796596; cv=fail; b=EZtiCRsQcN48ScLJBoGbO5gBpIxaahMf0+dEMcVKDyofRfzWe1Ynb/jNtocSwBkcPs6dZtl1MlrHN61F53Bm8meLWVKCmqOXhYnP+0kEp+RbZylRFuoUQtCWE0qb3h28dyEVyb6eLc4STRM4tlX795hxqrp5DogWG8QvfZmZ/d4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713796596; c=relaxed/simple;
-	bh=bXuvOWjNTOrgOCmc+joNwXiITXc3ekl6WO8yAMeePUs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kANMyKQtOfNUEiQ48py1+ANw8TjUXbCXRIymA2UQ605OYfM+2Q2I3py5DItk0Hci8DoVXTNZrTAIt/4aKPNhfGu+pqNfEEd3i49ff3j5vpuDxWSLRQh77EljNY7pMolRv/vFBxntbOYuncm3Zo1h89I9Xkk6MhqHyMFQg3XFs6I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aTS3F3Wn; arc=fail smtp.client-ip=40.107.220.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7656C1474B9
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 14:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713796801; cv=none; b=SR7GwfPy+ncqoNTQBvABjfKygasSD2Xad3Wn/hUiF8+YpQoo33ypOcM//ZUoQ3oHiz19L2W72Xxc7XqYQIUudx+QqVLfBSIrS4U1kjTp7Wz/5mvY5JNqKgfSXNyp4hiZKP3QJrh91x4yIIdREI4xy7m7w2bRcxjNWblAmMo6usk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713796801; c=relaxed/simple;
+	bh=CmrfAGE8+PWDqHNf4q0R+xV3Sihym/OZTAep1aho/Tk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=af6zkIWuAzEufuxyNCGs937DOg26+qYBjiFquFeQGcskegq5wZcKvAQiEgOxqJL5i3yxSdsyvVMWHV+RHwfX9xBYGrpeDxodf1hv6RdrpivGntyuKkicDsLjxx4Z3TU1Er/FbiVGSMqTk71T+tFZhl+klZ8l/aDvbysF9nbMswY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hCQ73Vhb; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aTS3F3Wn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=in3XO+tBNsZCxBsFFLXjEeDKb7BZHHSwQ9HNZdYw1RxKVSPDb3hArtUoNfXlsNFPfu6KL0oVk9Xo+9Ms2jPcujfgk0zAktAbc0SLRKnZJCZO/RyNdaW0x2RMAILx8ylAVj8/5Fjmia/+R5vSzUUR9Hf435kJ8+9iNfHQNtRrPnP5aQw6ib1OomMsUz/6AomN/1GPzl6w2QQFAeiyi5S1KcZUPXdmdOyXi/G1MzH4LMcll3uyf2dx5+p4MyTLsViCoDCPjEHgTZMzKkXs8ZTZHw2C/YTylqZ/KxdyCbGT1ds1Kzkc2o1E2IuYOwR+e66vsp/LyDX2/9GQzPtMrbpC0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4pS/+wgs1eswq9a2+n5cPP6i0YG6wmmBCb0n9s4n/nc=;
- b=PnzPSXkCxsEoj8S/R3HOktxO+QFaxSgumJg/Bq0IINhjyIPwvSxrgtsuCUx4+cGdsl4YqRurnPIj2wI3jGZOS/u6f3w0EKqezyhysGRCD0WSSpVBxVy0AzGhisTeQXZ2krKCuPija1MiogIhCHbWTb8wa0zZU3M6fZakbb4BV1ihfgoxCoBArtxvluWrIdnDNnSMXj/rOMuWTs8ge8mNEQABsRdHsHyjlPhW7O5hoe67lvsfxMGexcYDoQ4wTaPPj1aZqQBOmC+LpwyDtxcAR3QkGm2m3w3bKsuZp2a44S9VN8F5pXBXfb5Co3Lw7YntLcEeSM5jxVS0VCEUPMBLkQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4pS/+wgs1eswq9a2+n5cPP6i0YG6wmmBCb0n9s4n/nc=;
- b=aTS3F3WnIXFsYkJoSSzHKHH9mdi4BAw4uo+KPojl2DztKvSRqev4EZGZI/yr8SOCdV0zKaRYmgZ/BoTN1xGWS5LILvbH35tHgt4r33O6eL2aGjWxfEX491XLkOkJdOykTdhPu0sKC9ItIuxU2tePM3Ygic4BCsELKty83Lh8bvcShXzUv5/dxBuFeE2yyLr8gg0ZPiFxHHqDzoYFHOeRs5GAFU17EffSfBFeBjw7d9iDp5UExXa/SAxDQjFnEY2v4y29UIETee2wNSsAPAAmdHKPlvCN0Q4ej5IJXyhLr1n+HL8Pl886hRs969WV1QMWcbNzl9dxu4Mfa73nGY5i3Q==
-Received: from SJ0P220CA0006.NAMP220.PROD.OUTLOOK.COM (2603:10b6:a03:41b::29)
- by SJ2PR12MB7992.namprd12.prod.outlook.com (2603:10b6:a03:4c3::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Mon, 22 Apr
- 2024 14:36:31 +0000
-Received: from CO1PEPF000044EE.namprd05.prod.outlook.com
- (2603:10b6:a03:41b:cafe::a) by SJ0P220CA0006.outlook.office365.com
- (2603:10b6:a03:41b::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.33 via Frontend
- Transport; Mon, 22 Apr 2024 14:36:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CO1PEPF000044EE.mail.protection.outlook.com (10.167.241.68) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7519.19 via Frontend Transport; Mon, 22 Apr 2024 14:36:31 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 22 Apr
- 2024 07:36:13 -0700
-Received: from [10.41.21.79] (10.126.231.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 22 Apr
- 2024 07:36:10 -0700
-Message-ID: <1aab0272-85ea-e3a1-7d68-27ab4f1e1993@nvidia.com>
-Date: Mon, 22 Apr 2024 20:06:07 +0530
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hCQ73Vhb"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-69b24162dd6so20729586d6.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:39:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713796798; x=1714401598; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lO7+CAKZ03CjsGbLxspLPlTA+srzrioL1UHFdc2MiwY=;
+        b=hCQ73Vhb3CjsyV11UZA39MybVrUw45TNdjAK7OM1e/c1neQA1/23A/+Sx7ITNK1GTx
+         H6jm1XwAVWbe1C4BGpGApfxTSNV3rsehteWHIgqYcxx9df8DPLQNHZjTcd9MPSxPqFqj
+         jqVjROez7AcRIRn6VkP2dqar0/FTL5O7rH1ZY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713796798; x=1714401598;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lO7+CAKZ03CjsGbLxspLPlTA+srzrioL1UHFdc2MiwY=;
+        b=MNWCYiMXtlopKu8aDxkKryUm1qqY04deZgz+61QeABawAYtYbCTrjnfFD92wfbVZ1m
+         2FBNtt/5hIjqfRq+ozx5bLo2cIx++DkK2INz64ipeNF7jyrgk0l2E+RRnUIZNMiUYSq4
+         5XUWNv9CgipItP1S4MiCYIAJ1iVZ1caIEejYslwuME6+nctOtoa+kFhpbRvXt+7nStH1
+         9egFIoEMXK6wa0mQ2/dA0EGYZuqI2APpUEkMOYvfR5mnKE28IsmP9X8BNbyZsNnstoHT
+         5IGp04ktr8zs4Z5+sU63EG5LYJzVkwT25QIfvCLxreovRTXUvZiVLKrH/NoQWdTsLO84
+         63qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6GA/c6kWiFAEOu4FqA8aqk9k4NGHkCPZMC5RpCbZgdH/M/SRDPRLkVEe+tZdN2ncyRonTXA7M8uhfY9SFvkQnVFvO0k160J8e/duU
+X-Gm-Message-State: AOJu0YyCJ2kpp67pzvEKulHotaQRKsiDeT2gA1GyVwdEX08yU/4mNWih
+	oMTErTLpytYzCVe5fgSL6wvZZqH8wQfCyr4reQJgjeh+dFdZ73SdMIqQbD8JQLdeBE1dDiP3ey4
+	hpg==
+X-Google-Smtp-Source: AGHT+IGuJZb5xX4ZBGG9oopaivzkkBJDPlj6l6nyd3664MWXqJt0XC5HrtEr3fOKnO8AHkVtJfLr9A==
+X-Received: by 2002:a05:6214:1398:b0:6a0:815b:1c82 with SMTP id pp24-20020a056214139800b006a0815b1c82mr2854003qvb.45.1713796797893;
+        Mon, 22 Apr 2024 07:39:57 -0700 (PDT)
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com. [209.85.219.54])
+        by smtp.gmail.com with ESMTPSA id t11-20020a05621405cb00b006a076660871sm1944400qvz.90.2024.04.22.07.39.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Apr 2024 07:39:57 -0700 (PDT)
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-69b24162dd6so20729396d6.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:39:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXWh04vq06ZH08aBCEM0srJWSF4eKavqJgCwerhaG6i8y9oSkgppS4i5Pj88/e2VC5oMoN7Y0/xfKW9szXMh3mCH/KgunvUzgLZoW4m
+X-Received: by 2002:a0c:e991:0:b0:6a0:405f:f29b with SMTP id
+ z17-20020a0ce991000000b006a0405ff29bmr10346738qvn.55.1713796795833; Mon, 22
+ Apr 2024 07:39:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [Patch v3 2/2] memory: tegra: make sid and broadcast regions
- optional
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, <robh@kernel.org>,
-	<conor+dt@kernel.org>, <maz@kernel.org>, <mark.rutland@arm.com>,
-	<treding@nvidia.com>, <jonathanh@nvidia.com>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-tegra@vger.kernel.org>, <amhetre@nvidia.com>, <bbasu@nvidia.com>,
-	Sumit Gupta <sumitg@nvidia.com>
-References: <20240412130540.28447-1-sumitg@nvidia.com>
- <20240412130540.28447-3-sumitg@nvidia.com>
- <06849796-f896-4cff-842c-118d86e94a6b@linaro.org>
-From: Sumit Gupta <sumitg@nvidia.com>
-In-Reply-To: <06849796-f896-4cff-842c-118d86e94a6b@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044EE:EE_|SJ2PR12MB7992:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0d97059a-800a-4a28-f906-08dc62d99a32
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Q0MweE9IYzhrUi9vMzkvRGdwUlZrbmxDeXJKNnZWK2NtZy9kMjFlSXhrR0wr?=
- =?utf-8?B?QXNJb3JKQ3dKL0orMlBkNVFCY0RsazRHcktUTzJMbzNEVTUwZDZSR2VsejZS?=
- =?utf-8?B?WDJvVDRTcGQxNlRzblpEVVQ0VVgxaVFySSsxdjdqUFdwTFVGZWx3cmlWNHEx?=
- =?utf-8?B?OHR4OVRwaC90YWYvenJ6Qm05cm1UbUMrK1VNVmRzL0lSSGdhYzdEU0xFNU1u?=
- =?utf-8?B?dzVGdWhmZnBmRFBpSFBndUxQdTA2T21HeWRZeXZoa3piRi9US0dJSSsrdU9l?=
- =?utf-8?B?bGQ5UWsvZ00zR2V3cVVPUmkwbDZWaHcvYzliYmtabkZXaWU0MDR1UlZoak5k?=
- =?utf-8?B?VHNoSDhCUnAzczFrdThDenZJS0JDRVplZk1xWjlWWmV5R2JjRDMvdUM2UjBK?=
- =?utf-8?B?WlpaSTNXUGt6MnNDTXJ2aFpYaktwcjJKWVllemliU0U0RjFRVTNhcUVQK3Fm?=
- =?utf-8?B?bHd3azZQMXkrRS9ObG1kZnNRUHdWeWdOMFd4WUtaWTJMVmVHbmNSTmNYZGJE?=
- =?utf-8?B?a3NUb1JJcXBxZjEySkRUMWROWGZPeFh1ZDdvdjJTMHNxMk5JU1VFYk5lNXBR?=
- =?utf-8?B?U2szRXQ4K3VWQVpqNmllWWRHeGgvbHR3Zis4Z1FxKzNBUnRPZHQwbjhza3d5?=
- =?utf-8?B?T01wdXlFdnV3TStzVDVxbDhyZEFhbzlhNmxHUkNTakxHenpqczc2Z29yWCsw?=
- =?utf-8?B?UHJRd1F6dWRQUkRSY3orL0s3b09qQll5Tm1XaGJUQ1c4aDNYUEJEZVVTWkY3?=
- =?utf-8?B?SlNuUnc1S3F3cXZOUy9UVHJiMU9LUXNtUElZalpqZmpTeW1lRWxnUmMra3JJ?=
- =?utf-8?B?U2lHYVJLM2JCUFhQdDdBaVVuVk9ObzVlZkxkYnpZVzJEMU9TL2hiZDRHeWxv?=
- =?utf-8?B?NTM5NHJNdkcrN0ZLRWRxa002WEZRQkl5dUNZb3o1eWJSR1o5NzRqQi9nN28v?=
- =?utf-8?B?dk9tSmRtL2x4TjYwMFFGbWNzV2RRcXFiM3F5NWhSNzBTbEpIZUQrUDd5ZytS?=
- =?utf-8?B?NHJabkUwMTlLd1RpWmJINmd6aE1IZUl2UVUwa2R2eVZ5UXNzZXovRnhGT3Y2?=
- =?utf-8?B?WnVEODBlWW9PZldFRmFNSWRGbGNwdzNtcmZNazBNRDFZaXFGVkNhNFl6QjNF?=
- =?utf-8?B?cWM4aW13dk1RNUlWK2EzSktUaHRYV2J3ZlhUeXVwYkJWYVlJMmpGSUkraDZv?=
- =?utf-8?B?aFB3dUtRdE96OGlUcXFXRUs0a2o3SEZGWGdyam9EM0l3QjdES2JiSjJyU3hR?=
- =?utf-8?B?eVRlSG80d2QrRjFjVHJWVG1RaVR2TjRrWTB1cE9MMWlDYWdTTTh0eVdWOCsz?=
- =?utf-8?B?VkZYNDlUQjB6UUNiOUxLZ1cyVnpsS3loR3gzK3hxbVduNzM0QjJaaTduT0hM?=
- =?utf-8?B?dzk2M290VTR3allIeUxGNHBhSElVMU1UUmY4c1BPTUc3RnJvYUMveXUxekkz?=
- =?utf-8?B?UjRzcVhLR3hwbTJIUzBsbDhuRzVsVXZYdDNjMG1GU0l3OWpNYmZjZ1VOWERF?=
- =?utf-8?B?RWZ1YlJhMDBTVStWWUVkbExTNVB4TGN5VVNiOUpCdDd6QUkrdjEraXA4bkRu?=
- =?utf-8?B?K1FOSHJjeFFsU2hITzZOZzdsV1lzYVM3dng3c0o4UEI1d0NxaVdjRGU2K25s?=
- =?utf-8?B?OWxLR3QreVcwdS9WVmtnbjB6NFhoN3hDdHAvOU9KdCttaDBXaWNhRkJscmsw?=
- =?utf-8?B?Y2t5Z0RPakNaSW5LdXhOb01DUi8zUTdUOWlDWGZYN2dTZXFEa2k0c0pyMzVG?=
- =?utf-8?B?amgvWVJ0SFYvWHNMUngzZlVQdlVCb2duVHhobjRtU1ExN3krQ1ptNEhFMm03?=
- =?utf-8?B?dnVpelZFRFV2WkYvUkJPM3VzZGErSnUrWCtvczFOV0c3ZGlaWXl6SkF1bktK?=
- =?utf-8?Q?R8ZEhvA2yPiBt?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(1800799015)(82310400014)(36860700004)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2024 14:36:31.3287
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d97059a-800a-4a28-f906-08dc62d99a32
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044EE.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7992
+References: <e43980df-1ca5-459d-b037-788dd7d9085d@moroto.mountain>
+ <CANiDSCtjEPqEstuo92QeVK_rWkW9icsjKWakPyN19ETM+MJuuQ@mail.gmail.com> <f2e9cdcd-46e7-41ab-9d5f-c1237a0a6222@moroto.mountain>
+In-Reply-To: <f2e9cdcd-46e7-41ab-9d5f-c1237a0a6222@moroto.mountain>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 22 Apr 2024 22:39:39 +0800
+X-Gmail-Original-Message-ID: <CANiDSCvVZtpkU6KnSYE4v7cTsgsjOb4E5XgK5eGMpRX7wCTQ3A@mail.gmail.com>
+Message-ID: <CANiDSCvVZtpkU6KnSYE4v7cTsgsjOb4E5XgK5eGMpRX7wCTQ3A@mail.gmail.com>
+Subject: Re: [PATCH v2] media: stk1160: fix bounds checking in stk1160_copy_video()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: =?UTF-8?Q?Ezequiel_Garc=C3=ADa?= <elezegarcia@gmail.com>, 
+	Ghanshyam Agrawal <ghanshyam1898@gmail.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+
+Hi Dan
+
+Thanks for the patch
+
+On Mon, 22 Apr 2024 at 19:23, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+>
+> On Mon, Apr 22, 2024 at 05:52:36PM +0800, Ricardo Ribalda wrote:
+> > Hi Dan
+> >
+> > On Mon, 22 Apr 2024 at 17:32, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> > >
+> > > The subtract in this condition is reversed.  The ->length is the length
+> > > of the buffer.  The ->bytesused is how many bytes we have copied thus
+> > > far.  When the condition is reversed that means the result of the
+> > > subtraction is always negative but since it's unsigned then the result
+> > > is a very high positive value.  That means the overflow check is never
+> > > true.
+> > >
+> > > Additionally, the ->bytesused doesn't actually work for this purpose
+> > > because we're not writing to "buf->mem + buf->bytesused".  Instead, the
+> > > math to calculate the destination where we are writing is a bit
+> > > involved.  You calculate the number of full lines already written,
+> > > multiply by two, skip a line if necessary so that we start on an odd
+> > > numbered line, and add the offset into the line.
+> > >
+> > > To fix this buffer overflow, just take the actual destination where we
+> > > are writing, if the offset is already out of bounds print an error and
+> > > return.  Otherwise, write up to buf->length bytes.
+> > >
+> > > Fixes: 9cb2173e6ea8 ("[media] media: Add stk1160 new driver (easycap replacement)")
+> > > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > > ---
+> > > v2: My first patch just reversed the if statement but that wasn't the
+> > > correct fix.
+> > >
+> > > Ghanshyam Agrawal sent a patch last year to ratelimit the output from
+> > > this function because it was spamming dmesg.  This patch should
+> > > hopefully fix the issue.  Let me know if there are still problems.
+> > >
+> > >  drivers/media/usb/stk1160/stk1160-video.c | 20 +++++++++++++++-----
+> > >  1 file changed, 15 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/drivers/media/usb/stk1160/stk1160-video.c b/drivers/media/usb/stk1160/stk1160-video.c
+> > > index 366f0e4a5dc0..e79c45db60ab 100644
+> > > --- a/drivers/media/usb/stk1160/stk1160-video.c
+> > > +++ b/drivers/media/usb/stk1160/stk1160-video.c
+> > > @@ -99,7 +99,7 @@ void stk1160_buffer_done(struct stk1160 *dev)
+> > >  static inline
+> > >  void stk1160_copy_video(struct stk1160 *dev, u8 *src, int len)
+> > >  {
+> > > -       int linesdone, lineoff, lencopy;
+> > > +       int linesdone, lineoff, lencopy, offset;
+> > >         int bytesperline = dev->width * 2;
+> > >         struct stk1160_buffer *buf = dev->isoc_ctl.buf;
+> > >         u8 *dst = buf->mem;
+> > > @@ -139,8 +139,13 @@ void stk1160_copy_video(struct stk1160 *dev, u8 *src, int len)
+> > >          * Check if we have enough space left in the buffer.
+> > >          * In that case, we force loop exit after copy.
+> > >          */
+> > > -       if (lencopy > buf->bytesused - buf->length) {
+> > > -               lencopy = buf->bytesused - buf->length;
+> > > +       offset = dst - (u8 *)buf->mem;
+> > > +       if (offset > buf->length) {
+> > Maybe you want offset >= buf->length.
+> >
+>
+> The difference between > and >= is whether or not we print an error
+> message.  In the original code, we didn't print an error message for
+> this and I feel like that's the correct behavior
+>
+> > And remember to add at the beginning of the function
+> >
+> > if (!len)
+> >  return 0;
+> >
+>
+> That's checked in the caller so it's fine.
+>
+>    260                  /* Empty packet */
+>    261                  if (len <= 4)
+>    262                          continue;
+
+It is also checked later on:
+
+/* Check if the copy is done */
+if (lencopy == 0 || remain == 0)
+return;
+
+I meant that we could move that check to the beginning of the funcion
+
+But I agree, the scope of this patch is to fix the error not to
+improve the code.
+
+The stubborn part of me still thinks that it is better  offset >=
+buf->length. :P
+But even without that you can add my
+
+Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
+
+I wish we could find someone to test it though.
+
+>
+> Generally we don't add duplicate checks.
+>
+> > And I would have done:
+> > len -= 4;
+> > src += 4;
+> >
+> > In the caller function
+> >
+>
+> I don't really think it makes sense to move that into the caller and
+> anyway, doing cleanups like this is outside the scope of this patch.
+> Really, there is a lot that could be cleaned up here.  People knew there
+> was a bug here but they didn't figure out what was causing it.  We could
+> delete that code.  Looking at it now, I think that code would actually
+> be enough to prevent a buffer overflow, although the correct behavior is
+> to write up to the end of the buffer instead of returning early.
+> Probably?
+>
+> To be honest, I'm still concerned there is a read overflow in
+> stk1160_buffer_done().  I'd prefer to do
+>
+>         len = buf->bytesused;
+>         if (len > buf->length) {
+>                 dev_warn_ratelimited(dev->dev, "buf->bytesused invalid %u\n", len);
+>                 len = buf->length;
+>         }
+
+After your patch I cannot see when this condition will be hitten...
+but it is a cheap check, better safe than sorry.
 
 
-> On 12/04/2024 15:05, Sumit Gupta wrote:
->> MC SID and Broadbast channel register access is restricted for Guest VM.
-> 
-> Same typo
-> 
-Thank you for catching. Will correct in v4.
+>         vb2_set_plane_payload(&buf->vb.vb2_buf, 0, len);
+>
+> regards,
+> dan carpenter
+>
+> diff --git a/drivers/media/usb/stk1160/stk1160-video.c b/drivers/media/usb/stk1160/stk1160-video.c
+> index ed261f0241da..f7977b07c066 100644
+> --- a/drivers/media/usb/stk1160/stk1160-video.c
+> +++ b/drivers/media/usb/stk1160/stk1160-video.c
+> @@ -112,16 +112,6 @@ void stk1160_copy_video(struct stk1160 *dev, u8 *src, int len)
+>         u8 *dst = buf->mem;
+>         int remain;
+>
+> -       /*
+> -        * TODO: These stk1160_dbg are very spammy!
+> -        * We should check why we are getting them.
+> -        *
+> -        * UPDATE: One of the reasons (the only one?) for getting these
+> -        * is incorrect standard (mismatch between expected and configured).
+> -        * So perhaps, we could add a counter for errors. When the counter
+> -        * reaches some value, we simply stop streaming.
+> -        */
+> -
+>         len -= 4;
+>         src += 4;
+>
+> @@ -160,18 +150,6 @@ void stk1160_copy_video(struct stk1160 *dev, u8 *src, int len)
+>         if (lencopy == 0 || remain == 0)
+>                 return;
+>
+> -       /* Let the bug hunt begin! sanity checks! */
+> -       if (lencopy < 0) {
+> -               printk_ratelimited(KERN_DEBUG "copy skipped: negative lencopy\n");
+> -               return;
+> -       }
+> -
+> -       if ((unsigned long)dst + lencopy >
+> -               (unsigned long)buf->mem + buf->length) {
+> -               printk_ratelimited(KERN_WARNING "stk1160: buffer overflow detected\n");
+> -               return;
+> -       }
+> -
+>         memcpy(dst, src, lencopy);
+>
+>         buf->bytesused += lencopy;
+> @@ -208,17 +186,6 @@ void stk1160_copy_video(struct stk1160 *dev, u8 *src, int len)
+>                 if (lencopy == 0 || remain == 0)
+>                         return;
+>
+> -               if (lencopy < 0) {
+> -                       printk_ratelimited(KERN_WARNING "stk1160: negative lencopy detected\n");
+> -                       return;
+> -               }
+> -
+> -               if ((unsigned long)dst + lencopy >
+> -                       (unsigned long)buf->mem + buf->length) {
+> -                       printk_ratelimited(KERN_WARNING "stk1160: buffer overflow detected\n");
+> -                       return;
+> -               }
+> -
+>                 memcpy(dst, src, lencopy);
+>                 remain -= lencopy;
+>
 
->> In Tegra MC driver, consider both the regions as optional and skip
->> access to restricted registers from Guest if a region is not present
->> in Guest DT.
->>
-> 
-> ...
-> 
->>
->>   static inline u32 mc_readl(const struct tegra_mc *mc, unsigned long offset)
->> diff --git a/drivers/memory/tegra/tegra186.c b/drivers/memory/tegra/tegra186.c
->> index 1b3183951bfe..716582255eeb 100644
->> --- a/drivers/memory/tegra/tegra186.c
->> +++ b/drivers/memory/tegra/tegra186.c
->> @@ -26,20 +26,16 @@
->>   static int tegra186_mc_probe(struct tegra_mc *mc)
->>   {
->>        struct platform_device *pdev = to_platform_device(mc->dev);
->> +     struct resource *res;
->>        unsigned int i;
->> -     char name[8];
->> +     char name[14];
-> 
-> How is it relevant? I don't see this being used in your diff.
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
 
-Did this change for below warning coming with 'W=1'.
-
-../drivers/memory/tegra/tegra186.c: In function tegra186_mc_probe:
-../drivers/memory/tegra/tegra186.c:51:49: warning: %u directive output 
-may be truncated writing between 1 and 10 bytes into a region of size 6 
-[8;;https://gc
-c.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat-truncation=-Wformat-truncation=8;;]
-    51 |                 snprintf(name, sizeof(name), "ch%u", i);
-       |                                                 ^~
-../drivers/memory/tegra/tegra186.c:51:46: note: directive argument in 
-the range [0, 4294967294]
-    51 |                 snprintf(name, sizeof(name), "ch%u", i);
-       |                                              ^~~~~~
-../drivers/memory/tegra/tegra186.c:51:17: note: snprintf output between 
-4 and 13 bytes into a destination of size 8
-    51 |                 snprintf(name, sizeof(name), "ch%u", i);
-       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Thank you,
-Sumit Gupta
+-- 
+Ricardo Ribalda
