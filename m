@@ -1,113 +1,111 @@
-Received: from mail.schimsalabim.eu (vps01.schimsalabim.eu [85.214.219.45])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDA3136988;
-	Mon, 22 Apr 2024 15:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F296152523;
+	Mon, 22 Apr 2024 15:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713798236; cv=none; b=S2o/oSvX7r81lt5MCD1l0sgKi7OwQLH2RVjvpHEYtu+EPmQXIHDXLNL6W+3C6WV0DkAifrHB6dBW/SBhiUv7t+YZ1TE22VxFmQoVpXzxgJVlKQMcZR4abysDfPJb1PJxWzVDLj+uTav52dGWU/dH31s0MxQJNGALCX+hTKn5YvQ=
+	t=1713798249; cv=none; b=gkqNUGPjBV+DKpwrn5H7rsnOdzU9cFuNDQT8J37iX84h7TTDWPGFJx8JwDtvCjdeLYcgr/om1PqmDNdK0/xFKkZQPIu2o/oLOgNaEX9cK31LWLLTQJkXFJxoVzQCCjBysIsH0SbAMA6xWcbn6jxd7CNZvQ78uDLlLgPfcUlOftY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713798236; c=relaxed/simple;
-	bh=F/+y69IMWZmu8UjWDvp6UxTy1wPIZeZF1pVBGeoqVHM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WtBmlfUX5gp5dAGuKreQqMoXbj8h528ugxemmR1KWefmGe0jeTeYKUvvMe64PFkC3YO+UFFVFyPXhH+2SwLH4kp6dLceQhFl/pd+DBwMp5zUydsruk3OCLQ4dRTFd9icPHiiFKSjgBR1EeJDj552gF+IkWGAB3wQcLAQEdwnhGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=schimsalabim.eu; spf=pass smtp.mailfrom=schimsalabim.eu; arc=none smtp.client-ip=85.214.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=schimsalabim.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=schimsalabim.eu
-Received: from localhost.localdomain (82-217-109-137.cable.dynamic.v4.ziggo.nl [82.217.109.137])
-	(authenticated bits=0)
-	by h2374449.stratoserver.net (8.14.7/8.14.7) with ESMTP id 43MF2Io9001087
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 22 Apr 2024 17:02:24 +0200
-From: Joao Schim <joao@schimsalabim.eu>
-To: Ban Tao <fengzheng923@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>
-Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: sunxi: DMIC: Add controls for adjusting the mic gains
-Date: Mon, 22 Apr 2024 17:02:13 +0200
-Message-Id: <20240422150213.4040734-1-joao@schimsalabim.eu>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1713798249; c=relaxed/simple;
+	bh=VZp1ze4DEOu4wpjMf4hEXpSipiJP0UAh6yOnK1vmw4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fiy8aJF29qygWG0N2ZB16dEPApEbqNhQcoSOOzB/mQfS4/zjnIUBZbOFC/z8ML1TPENa45uj7hJfR2SlbpzKasIG5UX/fcon/dbBbv/u5fFWQ0qjKFuYRxKxf3aMYRsoLsrfHE4PaWZDMzJR0UvtgcEl6LHdEAoNSB3y2DAxEfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=o7QGfXhh; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o7QGfXhh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=9wOxkCOVRUK81zz0hYioTjDzHLgukrv7N/ab7G/DRNA=; b=o7QGfXhheNbrl27ixrfNEePXFu
+	4EC2dL/ybNPCi8XDCdOuhFFL0X9/z3IYjbr+zsZK5siFquEowAhkX6PMaZCtL5DhkbNXpMtiJyC7B
+	scW9a4mVAaSDGxZXHh+U3DpyXXhFuUZ82vPnPl71Q2eIylZmpzJKjGm58lHVYt1LzesNH4H7qgROa
+	JQmZC6JyjbGTZ7FVcqdanxUsEyo/EFUtFe3PFlgw+L+n4kdHWoUdDU3UcoY/sKUGaet3ButT4lFOr
+	Hc1atYWmqG+TVDNf0nyOfSRo827jxVKj+8DDeKCps++KJa56x0zmR2wpBc8Wy9l0/ogfdbIh/xMHN
+	tCfZ7WSQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1ryvD2-0000000ERS1-3CAX;
+	Mon, 22 Apr 2024 15:03:56 +0000
+Date: Mon, 22 Apr 2024 16:03:56 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: axboe@kernel.dk, brauner@kernel.org, djwong@kernel.org,
+	viro@zeniv.linux.org.uk, jack@suse.cz, akpm@linux-foundation.org,
+	dchinner@redhat.com, tytso@mit.edu, hch@lst.de,
+	martin.petersen@oracle.com, nilay@linux.ibm.com,
+	ritesh.list@gmail.com, mcgrof@kernel.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, ojaswin@linux.ibm.com, p.raghav@samsung.com,
+	jbongio@google.com, okiselev@amazon.com
+Subject: Re: [PATCH RFC 5/7] fs: iomap: buffered atomic write support
+Message-ID: <ZiZ8XGZz46D3PRKr@casper.infradead.org>
+References: <20240422143923.3927601-1-john.g.garry@oracle.com>
+ <20240422143923.3927601-6-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240422143923.3927601-6-john.g.garry@oracle.com>
 
-The AllWinner H6 and later SoCs that sport a DMIC block contain a set of registers to control
-the gain (left + right) of each of the four supported channels.
+On Mon, Apr 22, 2024 at 02:39:21PM +0000, John Garry wrote:
+> Add special handling of PG_atomic flag to iomap buffered write path.
+> 
+> To flag an iomap iter for an atomic write, set IOMAP_ATOMIC.
+> 
+> For a folio associated with a write which has IOMAP_ATOMIC set, set
+> PG_atomic.
+> 
+> Otherwise, when IOMAP_ATOMIC is unset, clear PG_atomic.
+> 
+> This means that for an "atomic" folio which has not been written back, it
+> loses it "atomicity". So if userspace issues a write with RWF_ATOMIC set
+> and another write with RWF_ATOMIC unset and which fully or partially
+> overwrites that same region as the first write, that folio is not written
+> back atomically. For such a scenario to occur, it would be considered a
+> userspace usage error.
+> 
+> To ensure that a buffered atomic write is written back atomically when
+> the write syscall returns, RWF_SYNC or similar needs to be used (in
+> conjunction with RWF_ATOMIC).
+> 
+> As a safety check, when getting a folio for an atomic write in
+> iomap_get_folio(), ensure that the length matches the inode mapping folio
+> order-limit.
+> 
+> Only a single BIO should ever be submitted for an atomic write. So modify
+> iomap_add_to_ioend() to ensure that we don't try to write back an atomic
+> folio as part of a larger mixed-atomicity BIO.
+> 
+> In iomap_alloc_ioend(), handle an atomic write by setting REQ_ATOMIC for
+> the allocated BIO.
+> 
+> When a folio is written back, again clear PG_atomic, as it is no longer
+> required. I assume it will not be needlessly written back a second time...
 
-Add ASoC controls for changing each of the stereo channel gains using alsamixer and alike
----
- sound/soc/sunxi/sun50i-dmic.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+I'm not taking a position on the mechanism yet; need to think about it
+some more.  But there's a hole here I also don't have a solution to,
+so we can all start thinking about it.
 
-diff --git a/sound/soc/sunxi/sun50i-dmic.c b/sound/soc/sunxi/sun50i-dmic.c
-index c76628bc86c6..f8613d8c3462 100644
---- a/sound/soc/sunxi/sun50i-dmic.c
-+++ b/sound/soc/sunxi/sun50i-dmic.c
-@@ -14,6 +14,7 @@
- #include <sound/dmaengine_pcm.h>
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
-+#include <sound/tlv.h>
- 
- #define SUN50I_DMIC_EN_CTL			(0x00)
- 	#define SUN50I_DMIC_EN_CTL_GLOBE			BIT(8)
-@@ -43,6 +44,17 @@
- 	#define SUN50I_DMIC_CH_NUM_N_MASK			GENMASK(2, 0)
- #define SUN50I_DMIC_CNT				(0x2c)
- 	#define SUN50I_DMIC_CNT_N				(1 << 0)
-+#define SUN50I_DMIC_D0D1_VOL_CTR		(0x30)
-+	#define SUN50I_DMIC_D0D1_VOL_CTR_0R			(0)
-+	#define SUN50I_DMIC_D0D1_VOL_CTR_0L			(8)
-+	#define SUN50I_DMIC_D0D1_VOL_CTR_1R			(16)
-+	#define SUN50I_DMIC_D0D1_VOL_CTR_1L			(24)
-+#define SUN50I_DMIC_D2D3_VOL_CTR                (0x34)
-+        #define SUN50I_DMIC_D2D3_VOL_CTR_2R                     (0)
-+        #define SUN50I_DMIC_D2D3_VOL_CTR_2L                     (8)
-+        #define SUN50I_DMIC_D2D3_VOL_CTR_3R                     (16)
-+        #define SUN50I_DMIC_D2D3_VOL_CTR_3L                     (24)
-+
- #define SUN50I_DMIC_HPF_CTRL			(0x38)
- #define SUN50I_DMIC_VERSION			(0x50)
- 
-@@ -273,8 +285,30 @@ static const struct of_device_id sun50i_dmic_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, sun50i_dmic_of_match);
- 
-+static const DECLARE_TLV_DB_SCALE(sun50i_dmic_vol_scale, -12000, 75, 1);
-+
-+static const struct snd_kcontrol_new sun50i_dmic_controls[] = {
-+
-+        SOC_DOUBLE_TLV("DMIC Channel 0 Capture Volume", SUN50I_DMIC_D0D1_VOL_CTR,
-+                       SUN50I_DMIC_D0D1_VOL_CTR_0L, SUN50I_DMIC_D0D1_VOL_CTR_0R,
-+                       0xFF, 0, sun50i_dmic_vol_scale),
-+        SOC_DOUBLE_TLV("DMIC Channel 1 Capture Volume", SUN50I_DMIC_D0D1_VOL_CTR,
-+                       SUN50I_DMIC_D0D1_VOL_CTR_1L, SUN50I_DMIC_D0D1_VOL_CTR_1R,
-+                       0xFF, 0, sun50i_dmic_vol_scale),
-+        SOC_DOUBLE_TLV("DMIC Channel 2 Capture Volume", SUN50I_DMIC_D2D3_VOL_CTR,
-+                       SUN50I_DMIC_D2D3_VOL_CTR_2L, SUN50I_DMIC_D2D3_VOL_CTR_2R,
-+                       0xFF, 0, sun50i_dmic_vol_scale),
-+        SOC_DOUBLE_TLV("DMIC Channel 3 Capture Volume", SUN50I_DMIC_D2D3_VOL_CTR,
-+                       SUN50I_DMIC_D2D3_VOL_CTR_3L, SUN50I_DMIC_D2D3_VOL_CTR_3R,
-+                       0xFF, 0, sun50i_dmic_vol_scale),
-+
-+
-+};
-+
- static const struct snd_soc_component_driver sun50i_dmic_component = {
- 	.name           = "sun50i-dmic",
-+	.controls	= sun50i_dmic_controls,
-+	.num_controls	= ARRAY_SIZE(sun50i_dmic_controls),
- };
- 
- static int sun50i_dmic_runtime_suspend(struct device *dev)
--- 
-2.25.1
+In iomap_write_iter(), we call copy_folio_from_iter_atomic().  Through no
+fault of the application, if the range crosses a page boundary, we might
+partially copy the bytes from the first page, then take a page fault on
+the second page, hence doing a short write into the folio.  And there's
+nothing preventing writeback from writing back a partially copied folio.
 
+Now, if it's not dirty, then it can't be written back.  So if we're
+doing an atomic write, we could clear the dirty bit after calling
+iomap_write_begin() (given the usage scenarios we've discussed, it should
+always be clear ...)
+
+We need to prevent the "fall back to a short copy" logic in
+iomap_write_iter() as well.  But then we also need to make sure we don't
+get stuck in a loop, so maybe go three times around, and if it's still
+not readable as a chunk, -EFAULT?
