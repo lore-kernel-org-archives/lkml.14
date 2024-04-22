@@ -1,28 +1,27 @@
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBA9487A9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB76487A7;
 	Mon, 22 Apr 2024 07:10:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713769820; cv=none; b=A2VpetqFN7p3VGswdjLLsuaunE8B1upGBofwbIJFBjXtxrr2JhdlSF6TUC/rnLPIMMmbYvBCSdGBN6+Rw1JCZPFELhZILn+ZuR0vgjJBjr2BGkqM1yB5gCH+mslL0ztxxWt3GBFJPAFDy27zuYvozisCJzCGFtbkx9tWZjZbxfs=
+	t=1713769821; cv=none; b=W54IBnj/8yYTPJF8X2Foj19SI53vzvilOo1eu7n1+naBb5tdDHJDAcYof5TL2/qJnMm53kBf9zx0YNffoahqe7AK4E7Ch1vyJIQMo7NPNSjXV8yj5VXA1jhuTE45yjd3yzo3qszj+scDmQIqSeDv8zx5kNFKq+skxbvbGsjU85Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713769820; c=relaxed/simple;
-	bh=pfLch2OejLM4oDnUXJbhjI+xBddLixTBWgSUFwg26LU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AHZQ0Zo8Z2mWVogz6KynuRctL4Zwr7QXcY3NvY476Mvp0MFUKkb/HP3nCmOP5prHn4BYjfSXE6EX4WFwXFt5xpHbDXBEqpURfpUrKftArdRrKU9OYtVppTjGfFVKxud2l3EEsKS3Mvbyk3fKOJLJIWBGrRW2CgE80pXm29oJ2SE=
+	s=arc-20240116; t=1713769821; c=relaxed/simple;
+	bh=XowVtGgelGFc4QmiSD5yQB6xMeJZKd1nfm7oDiLP2Yw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tbVSztaCadJdE+9SYzrS8qqJUD9USMQcCe+CnXPDCe8RmxJvj9LwK4H/UDx/az9wZttfatG/S1fgOtrUjzHxHphTG2Yp+WuhleXmgUBeYaGtjXEVv8CnGNd97WNnKbx0cCwzKcZKWI+sOPRnopAQXFnQ0/KIWXWJDF9BhN3K4w0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VNGbg4ZhRz4f3kng;
-	Mon, 22 Apr 2024 15:10:07 +0800 (CST)
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VNGbf2SnYz4f3jYC;
+	Mon, 22 Apr 2024 15:10:06 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 15DC71A017D;
-	Mon, 22 Apr 2024 15:10:15 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id C0E8E1A016E;
+	Mon, 22 Apr 2024 15:10:13 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP2 (Coremail) with SMTP id Syh0CgAHdwpTDSZmt5eIKw--.7343S5;
-	Mon, 22 Apr 2024 15:10:14 +0800 (CST)
+	by APP2 (Coremail) with SMTP id Syh0CgAHdwpTDSZmt5eIKw--.7343S2;
+	Mon, 22 Apr 2024 15:10:13 +0800 (CST)
 From: Kemeng Shi <shikemeng@huaweicloud.com>
 To: akpm@linux-foundation.org,
 	willy@infradead.org,
@@ -35,12 +34,10 @@ Cc: dsterba@suse.com,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-fsdevel@vger.kernel.org
-Subject: [ATCH v3 3/4] writeback: add wb_monitor.py script to monitor writeback info on bdi
-Date: Tue, 23 Apr 2024 00:05:38 +0800
-Message-Id: <20240422160539.3340-4-shikemeng@huaweicloud.com>
+Subject: [ATCH v3 0/4] Improve visibility of writeback
+Date: Tue, 23 Apr 2024 00:05:35 +0800
+Message-Id: <20240422160539.3340-1-shikemeng@huaweicloud.com>
 X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240422160539.3340-1-shikemeng@huaweicloud.com>
-References: <20240422160539.3340-1-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,31 +45,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgAHdwpTDSZmt5eIKw--.7343S5
-X-Coremail-Antispam: 1UD129KBjvJXoW3Xr1UCrWrWFWxXw1DJFy7Jrb_yoWxJr1fpF
-	s8Aw13Ar1xZa4xJrnY9a40vry5Cws5Cr17XrW7ArWakan8Wa4FyryrCFyUAry3Cr9rJ39x
-	X3ya93y8KFWjgFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+X-CM-TRANSID:Syh0CgAHdwpTDSZmt5eIKw--.7343S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxWFy5ur1UAF43ZrWUAw47urg_yoW5uw4rpF
+	Z5Aw15tr1UZw1xAFn3Ca42gry5K3y8tFy7Xr9xZrW2q3Z0qr1Dtr95Wa4rAr15C3sayFy3
+	JFsxZry8Gr4v9F7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvvb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8IrcIa0xkI8VA2jI8067AKxVWUWwA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK
-	0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
-	x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l
-	84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxV
-	A2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
-	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
-	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
-	Iq2MUUUUU
+	8lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E
+	3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r
+	xl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv
+	0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z2
+	80aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v
+	6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI
+	8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
+	xVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI
+	8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E
+	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+	IFyTuYvjxUIf-PUUUUU
 X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-Add wb_monitor.py script to monitor writeback information on backing dev
-which makes it easier and more convenient to observe writeback behaviors
-of running system.
+v2->v3:
+-Drop patches to protect non-exist race and to define GDTC_INIT_NO_WB to
+null.
+-Add wb_tryget to wb from which we collect stats to bdi stats.
+-Create wb_stats when CONFIG_CGROUP_WRITEBACK is no enabled.
+-Add a blank line between two wb stats in wb_stats.
 
-The wb_monitor.py script is written based on wq_monitor.py.
+v1->v2:
+-Send cleanup to wq_monitor.py separately.
+-Add patch to avoid use after free of bdi.
+-Rename wb_calc_cg_thresh to cgwb_calc_thresh as Tejun suggested.
+-Use rcu walk to avoid use after free.
+-Add debug output to each related patches.
+
+This series tries to improve visilibity of writeback. Patch 1 make
+/sys/kernel/debug/bdi/xxx/stats show writeback info of whole bdi
+instead of only writeback info in root cgroup. Patch 2 add a new
+debug file /sys/kernel/debug/bdi/xxx/wb_stats to show per wb writeback
+info. Patch 3 add wb_monitor.py to monitor basic writeback info
+of running system, more info could be added on demand. Patch 4
+is a random cleanup. More details can be found in respective
+patches. Thanks!
 
 Following domain hierarchy is tested:
                 global domain (320G)
@@ -80,6 +93,64 @@ Following domain hierarchy is tested:
         cgroup domain1(10G)     cgroup domain2(10G)
                 |                 |
 bdi            wb1               wb2
+
+/* all writeback info of bdi is successfully collected */
+cat stats
+BdiWriteback:             4704 kB
+BdiReclaimable:        1294496 kB
+BdiDirtyThresh:      204208088 kB
+DirtyThresh:         195259944 kB
+BackgroundThresh:     32503588 kB
+BdiDirtied:           48519296 kB
+BdiWritten:           47225696 kB
+BdiWriteBandwidth:     1173892 kBps
+b_dirty:                     1
+b_io:                        0
+b_more_io:                   1
+b_dirty_time:                0
+bdi_list:                    1
+state:                       1
+
+/* per wb writeback info of bdi is collected */
+cat /sys/kernel/debug/bdi/252:16/wb_stats
+WbCgIno:                    1
+WbWriteback:                0 kB
+WbReclaimable:              0 kB
+WbDirtyThresh:              0 kB
+WbDirtied:                  0 kB
+WbWritten:                  0 kB
+WbWriteBandwidth:      102400 kBps
+b_dirty:                    0
+b_io:                       0
+b_more_io:                  0
+b_dirty_time:               0
+state:                      1
+
+WbCgIno:                 4208
+WbWriteback:            59808 kB
+WbReclaimable:         676480 kB
+WbDirtyThresh:        6004624 kB
+WbDirtied:           23348192 kB
+WbWritten:           22614592 kB
+WbWriteBandwidth:      593204 kBps
+b_dirty:                    1
+b_io:                       1
+b_more_io:                  0
+b_dirty_time:               0
+state:                      7
+
+WbCgIno:                 4249
+WbWriteback:           144256 kB
+WbReclaimable:         432096 kB
+WbDirtyThresh:        6004344 kB
+WbDirtied:           25727744 kB
+WbWritten:           25154752 kB
+WbWriteBandwidth:      577904 kBps
+b_dirty:                    0
+b_io:                       1
+b_more_io:                  0
+b_dirty_time:               0
+state:                      7
 
 The wb_monitor.py script output is as following:
 ./wb_monitor.py 252:16 -c
@@ -96,191 +167,19 @@ The wb_monitor.py script output is as following:
 252:16                 1568      1639904  19721632  18081952   1440360
 ...
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-Suggested-by: Tejun Heo <tj@kernel.org>
----
- tools/writeback/wb_monitor.py | 172 ++++++++++++++++++++++++++++++++++
- 1 file changed, 172 insertions(+)
+Kemeng Shi (4):
+  writeback: collect stats of all wb of bdi in bdi_debug_stats_show
+  writeback: support retrieving per group debug writeback stats of bdi
+  writeback: add wb_monitor.py script to monitor writeback info on bdi
+  writeback: rename nr_reclaimable to nr_dirty in balance_dirty_pages
+
+ include/linux/writeback.h     |   1 +
+ mm/backing-dev.c              | 174 +++++++++++++++++++++++++++++-----
+ mm/page-writeback.c           |  27 +++++-
+ tools/writeback/wb_monitor.py | 172 +++++++++++++++++++++++++++++++++
+ 4 files changed, 345 insertions(+), 29 deletions(-)
  create mode 100644 tools/writeback/wb_monitor.py
 
-diff --git a/tools/writeback/wb_monitor.py b/tools/writeback/wb_monitor.py
-new file mode 100644
-index 000000000000..5e3591f1f9a9
---- /dev/null
-+++ b/tools/writeback/wb_monitor.py
-@@ -0,0 +1,172 @@
-+#!/usr/bin/env drgn
-+#
-+# Copyright (C) 2024 Kemeng Shi <shikemeng@huaweicloud.com>
-+# Copyright (C) 2024 Huawei Inc
-+
-+desc = """
-+This is a drgn script based on wq_monitor.py to monitor writeback info on
-+backing dev. For more info on drgn, visit https://github.com/osandov/drgn.
-+
-+  writeback(kB)     Amount of dirty pages are currently being written back to
-+                    disk.
-+
-+  reclaimable(kB)   Amount of pages are currently reclaimable.
-+
-+  dirtied(kB)       Amount of pages have been dirtied.
-+
-+  wrttien(kB)       Amount of dirty pages have been written back to disk.
-+
-+  avg_wb(kBps)      Smoothly estimated write bandwidth of writing dirty pages
-+                    back to disk.
-+"""
-+
-+import signal
-+import re
-+import time
-+import json
-+
-+import drgn
-+from drgn.helpers.linux.list import list_for_each_entry
-+
-+import argparse
-+parser = argparse.ArgumentParser(description=desc,
-+                                 formatter_class=argparse.RawTextHelpFormatter)
-+parser.add_argument('bdi', metavar='REGEX', nargs='*',
-+                    help='Target backing device name patterns (all if empty)')
-+parser.add_argument('-i', '--interval', metavar='SECS', type=float, default=1,
-+                    help='Monitoring interval (0 to print once and exit)')
-+parser.add_argument('-j', '--json', action='store_true',
-+                    help='Output in json')
-+parser.add_argument('-c', '--cgroup', action='store_true',
-+                    help='show writeback of bdi in cgroup')
-+args = parser.parse_args()
-+
-+bdi_list                = prog['bdi_list']
-+
-+WB_RECLAIMABLE          = prog['WB_RECLAIMABLE']
-+WB_WRITEBACK            = prog['WB_WRITEBACK']
-+WB_DIRTIED              = prog['WB_DIRTIED']
-+WB_WRITTEN              = prog['WB_WRITTEN']
-+NR_WB_STAT_ITEMS        = prog['NR_WB_STAT_ITEMS']
-+
-+PAGE_SHIFT              = prog['PAGE_SHIFT']
-+
-+def K(x):
-+    return x << (PAGE_SHIFT - 10)
-+
-+class Stats:
-+    def dict(self, now):
-+        return { 'timestamp'            : now,
-+                 'name'                 : self.name,
-+                 'writeback'            : self.stats[WB_WRITEBACK],
-+                 'reclaimable'          : self.stats[WB_RECLAIMABLE],
-+                 'dirtied'              : self.stats[WB_DIRTIED],
-+                 'written'              : self.stats[WB_WRITTEN],
-+                 'avg_wb'               : self.avg_bw, }
-+
-+    def table_header_str():
-+        return f'{"":>16} {"writeback":>10} {"reclaimable":>12} ' \
-+                f'{"dirtied":>9} {"written":>9} {"avg_bw":>9}'
-+
-+    def table_row_str(self):
-+        out = f'{self.name[-16:]:16} ' \
-+              f'{self.stats[WB_WRITEBACK]:10} ' \
-+              f'{self.stats[WB_RECLAIMABLE]:12} ' \
-+              f'{self.stats[WB_DIRTIED]:9} ' \
-+              f'{self.stats[WB_WRITTEN]:9} ' \
-+              f'{self.avg_bw:9} '
-+        return out
-+
-+    def show_header():
-+        if Stats.table_fmt:
-+            print()
-+            print(Stats.table_header_str())
-+
-+    def show_stats(self):
-+        if Stats.table_fmt:
-+            print(self.table_row_str())
-+        else:
-+            print(self.dict(Stats.now))
-+
-+class WbStats(Stats):
-+    def __init__(self, wb):
-+        bdi_name = wb.bdi.dev_name.string_().decode()
-+        # avoid to use bdi.wb.memcg_css which is only defined when
-+        # CONFIG_CGROUP_WRITEBACK is enabled
-+        if wb == wb.bdi.wb.address_of_():
-+            ino = "1"
-+        else:
-+            ino = str(wb.memcg_css.cgroup.kn.id.value_())
-+        self.name = bdi_name + '_' + ino
-+
-+        self.stats = [0] * NR_WB_STAT_ITEMS
-+        for i in range(NR_WB_STAT_ITEMS):
-+            if wb.stat[i].count >= 0:
-+                self.stats[i] = int(K(wb.stat[i].count))
-+            else:
-+                self.stats[i] = 0
-+
-+        self.avg_bw = int(K(wb.avg_write_bandwidth))
-+
-+class BdiStats(Stats):
-+    def __init__(self, bdi):
-+        self.name = bdi.dev_name.string_().decode()
-+        self.stats = [0] * NR_WB_STAT_ITEMS
-+        self.avg_bw = 0
-+
-+    def collectStats(self, wb_stats):
-+        for i in range(NR_WB_STAT_ITEMS):
-+            self.stats[i] += wb_stats.stats[i]
-+
-+        self.avg_bw += wb_stats.avg_bw
-+
-+exit_req = False
-+
-+def sigint_handler(signr, frame):
-+    global exit_req
-+    exit_req = True
-+
-+def main():
-+    # handle args
-+    Stats.table_fmt = not args.json
-+    interval = args.interval
-+    cgroup = args.cgroup
-+
-+    re_str = None
-+    if args.bdi:
-+        for r in args.bdi:
-+            if re_str is None:
-+                re_str = r
-+            else:
-+                re_str += '|' + r
-+
-+    filter_re = re.compile(re_str) if re_str else None
-+
-+    # monitoring loop
-+    signal.signal(signal.SIGINT, sigint_handler)
-+
-+    while not exit_req:
-+        Stats.now = time.time()
-+
-+        Stats.show_header()
-+        for bdi in list_for_each_entry('struct backing_dev_info', bdi_list.address_of_(), 'bdi_list'):
-+            bdi_stats = BdiStats(bdi)
-+            if filter_re and not filter_re.search(bdi_stats.name):
-+                continue
-+
-+            for wb in list_for_each_entry('struct bdi_writeback', bdi.wb_list.address_of_(), 'bdi_node'):
-+                wb_stats = WbStats(wb)
-+                bdi_stats.collectStats(wb_stats)
-+                if cgroup:
-+                    wb_stats.show_stats()
-+
-+            bdi_stats.show_stats()
-+            if cgroup and Stats.table_fmt:
-+                print()
-+
-+        if interval == 0:
-+            break
-+        time.sleep(interval)
-+
-+if __name__ == "__main__":
-+    main()
 -- 
 2.30.0
 
