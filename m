@@ -1,157 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA6B5028B
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 13:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629AA5028B;
+	Mon, 22 Apr 2024 13:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713793340; cv=none; b=ncs290V//nuAT8v11PWJfjM+tlb1Afi2wD9z10AutwC459yl99qi7kySh2awjOVO7+YN1mraOrOHfF6dPqIfVOmoKtrOca1RWMHQk6eYeguQcW7kAayJ9hV8R5kxwWRdjrc+hm3dyWZL925xBEdUgc/KQRpCelrrust7BJ12JP4=
+	t=1713793416; cv=none; b=S608nk5fDhLTvMJqO1sSZTkuxPoJrbQErFofNLMBKtKKwJI1R+iPk5WhgZSlNvAn4StjdK5lB89+0rCeNSeVjj/vgkrf1YydTJ5XpBmaprX3aPD5Ib5irCERkSkouwKkF91XJeP9PFVK1ePXi6oWcHEuJmVkjh75AbtYoItCDfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713793340; c=relaxed/simple;
-	bh=2hQwBEpW01jp8qra2jvf/jNfR8J7cPQJApPJeAmp3hA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pZ0qfyDFhDiIt/RwO1EJLLt5LMJ18n+YyvXlGFts/G1sFpgrIZIixCHlCf/ioU65Qxq1hhu757uGxhh9I4P37y3B8nY3bgGrmVngDz/lIcW/FlxWpXiHFVUPI9BlSzucKM7Ik1vP5+skPELBSSBSxQHpQ7U/jTwNPUp4mUHq3z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iu6p7yAg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713793416; c=relaxed/simple;
+	bh=iyUYTV5ltJ3rODQwoPpNba45yscFs+Ul9nWQU6yjDfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mvCK0Dxyx1Me/id5te290Hx3zO3NyirCa+dNAlu2BccdH7Gw4LzkboNfUXHf1zbd/M+kf55nYht7lzqecoi9oIevExpYu23Uvd0ojqHw+LxPht0gyLyJ/CnkGVsGfXAt6VQ2U1ubct90z+rZzFvtGiIkP9uEjC0sL6X99CfTrV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fzV3Dz61; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iu6p7yAg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713793338;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DjWK16yEpG2qC4sEpfQe3ru9FwvfTS+uslLAL5h78t0=;
-	b=iu6p7yAgrFB/VWsW31UQD5c1uukqz2RiNfI/FZZnhy3iyVFRdzzjxM5PAwvcfNgqcxxWZQ
-	/v47qcFf9y6G54f5bsk++8Tifv28o9tvLuOEFDaCE4G1WS11A63OslUwCtLSkXQyFGXbD7
-	jkC0iTj5IthxtmwZacHVgNPyTTMJeXw=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-418-dCFO5pkAPeOsrMvUykCeQQ-1; Mon, 22 Apr 2024 09:42:15 -0400
-X-MC-Unique: dCFO5pkAPeOsrMvUykCeQQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a572ceb5340so30754266b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 06:42:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713793334; x=1714398134;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DjWK16yEpG2qC4sEpfQe3ru9FwvfTS+uslLAL5h78t0=;
-        b=Yx5UIgFWryf7of/sOS5ooKerGXV0YPDKOaGR72y+wJmPgYBHluBPIx8LeTs84XyeGi
-         bY/h37/jqMNr7wi3sR6cJeFpB/y9xx98d83hmylQXsM7ew8JDNP0L7U7l2S0SJpx0NB+
-         0ijG5oO/R4NKYHa9TxOD0V4yzvs0ZqwsGRWlvlWM24/qlURFaBtDhOLjzK+UEhH0qNTS
-         dp/Rn1GSJ+cAtsm0PDl65O578BRdpb2n/+2EVTZB8p+CX2N7kdfXyx1m2zYWsu1v5RZz
-         8hmXhlc8LYXv15eUc8b1557VadGCsUTxN6dXLhoWys0+5aJs+ahWYEKYzwMjP0KtZlxO
-         cWyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW787RfFiJ1u5qB30Z5rv6uxa9wcL4lHprtoCAGVjV/UbAR7uXSwdtewMT2aysYjAhyn6Q9x5LPdTU3nxg2pzt+ZAZn2KzaqoKIHug5
-X-Gm-Message-State: AOJu0YwUNVFWH4xbWpbFr8AqZkqvOlkqBV4V53x4W5rpMtjTldPV8twY
-	Hh4y0MxJIaes4E9HXpLEgkPyoX/tsGTXYF8XV7laGQJWd/VseKSX8EC8v7cEnf67L9uBOkrGsDn
-	spGGb2pwGcXE0rM3BiQj9D3ybZylPV51npHrevoD8xMVshnUourbGs+kQt0fUbw==
-X-Received: by 2002:a17:906:c79a:b0:a58:7192:8fbe with SMTP id cw26-20020a170906c79a00b00a5871928fbemr405956ejb.60.1713793334614;
-        Mon, 22 Apr 2024 06:42:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFA47jcvWTws5tkGi6B6q4Akc3azNwMQOwXlm+C/+DX0XcvHM7e0vNZiFufhWREV6jXq2+QzQ==
-X-Received: by 2002:a17:906:c79a:b0:a58:7192:8fbe with SMTP id cw26-20020a170906c79a00b00a5871928fbemr405945ejb.60.1713793334372;
-        Mon, 22 Apr 2024 06:42:14 -0700 (PDT)
-Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id 13-20020a170906058d00b00a522d34fee8sm5759717ejn.114.2024.04.22.06.42.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Apr 2024 06:42:13 -0700 (PDT)
-Message-ID: <3db76d62-114a-4703-ac88-8e1f26791a36@redhat.com>
-Date: Mon, 22 Apr 2024 15:42:12 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fzV3Dz61"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9046C113CC;
+	Mon, 22 Apr 2024 13:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713793415;
+	bh=iyUYTV5ltJ3rODQwoPpNba45yscFs+Ul9nWQU6yjDfo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fzV3Dz61yBDv+hpyv23l2av+nrBuoT/+wcwF6Okuiyt584leQaLRNvqUg/uOtTqGN
+	 j4q1xECwuU+4lK9iEpRlo3epfwTkarXtWvkGA4zK95xq7WOPcRZ0KgTkWw3KVnLw/b
+	 9MzfFWqyFyW8kUdwRZDBU0WNnQuzLNBzwbLOPiNHzok2oWwl5ynyNLKl3PLsAx0/bJ
+	 5EC7vN/8U2hoxVCSwjO42ACCKpu/xK6ZCRxhI/TcrovToUGRDU+SEqFxSjJKGydc5+
+	 iBe3TbIBYjxlE7UjH6budWKE9zVFhdz5/BqX0s/V8IoIZG/HPgK8AKBYIBA2IVKITI
+	 a19zyfMtirOKA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rytxD-000000005jw-1Bm1;
+	Mon, 22 Apr 2024 15:43:31 +0200
+Date: Mon, 22 Apr 2024 15:43:31 +0200
+From: Johan Hovold <johan@kernel.org>
+To: quic_zijuhu <quic_zijuhu@quicinc.com>
+Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Zhengping Jiang <jiangzp@google.com>,
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Bluetooth: qca: fix NULL-deref on non-serdev setup
+Message-ID: <ZiZpg4lyp-LcpV8l@hovoldconsulting.com>
+References: <20240319154611.2492-1-johan+linaro@kernel.org>
+ <ZiZdag8fw8H1haCb@hovoldconsulting.com>
+ <438844e9-47e8-486e-9611-ae524d6974b3@quicinc.com>
+ <ZiZkK4BAoqxNg7yG@hovoldconsulting.com>
+ <472b9f60-d68e-47ee-9ca9-f71a9ba86a1a@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: samsung-laptop: Use sysfs_emit() to
- replace the old interface sprintf()
-To: yunshui <jiangyunshui@kylinos.cn>, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: Ai Chao <aichao@kylinos.cn>
-References: <20240419064106.2396705-1-jiangyunshui@kylinos.cn>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240419064106.2396705-1-jiangyunshui@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <472b9f60-d68e-47ee-9ca9-f71a9ba86a1a@quicinc.com>
 
-Hi,
+On Mon, Apr 22, 2024 at 09:30:28PM +0800, quic_zijuhu wrote:
+> On 4/22/2024 9:20 PM, Johan Hovold wrote:
+> > On Mon, Apr 22, 2024 at 09:04:58PM +0800, quic_zijuhu wrote:
+> >> On 4/22/2024 8:51 PM, Johan Hovold wrote:
+> >>> On Tue, Mar 19, 2024 at 04:46:09PM +0100, Johan Hovold wrote:
+> > 
+> >>>> Johan Hovold (2):
+> >>>>   Bluetooth: qca: fix NULL-deref on non-serdev suspend
+> >>>>   Bluetooth: qca: fix NULL-deref on non-serdev setup
+> >>>
+> >>> Could you pick these up for 6.9 or 6.10?
+> >>>
+> >>> The patches are marked for stable backport and only privileged users can
+> >>> set the N_HCI line discipline these days (even if I'm not sure about
+> >>> pre-5.14 kernels...) so it may be fine to wait for 6.10 if you prefer.
+> > 
+> >> could you share the patch links for me to review. i can
+> >> 't find them now
+> > 
+> > Sure, but you should bookmark lore.kernel.org in your browser as you can
+> > search the archives there yourself:
+> > 
+> > 	https://lore.kernel.org/lkml/20240319154611.2492-1-johan+linaro@kernel.org/
 
-On 4/19/24 8:41 AM, yunshui wrote:
->     As Documentation/filesystems/sysfs.rst suggested,
->     show() should only use sysfs_emit() or sysfs_emit_at() when formatting
->     the value to be returned to user space.
-> 
-> Signed-off-by: yunshui <jiangyunshui@kylinos.cn>
-> Reviewed-by: Ai Chao <aichao@kylinos.cn>
+> NAK for your [PATCH 1/2] since the null checking is redundant with your
+> [PATCH 2/2].
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+I explained in the cover letter why it is split up like this. If you
+don't bother reading, then we will not bother listening to you.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+> NAK for your [PATCH 2/2], since it is same with my earlier fix
+> https://lore.kernel.org/all/1704960978-5437-1-git-send-email-quic_zijuhu@quicinc.com/
+> my new patchset for btattach tool still has this change.
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+The fix does not depend on your btattach series, which has also been
+rejected.
 
-Regards,
+You clearly have some learning to do on how to interact with the kernel
+community and to write proper commit messages and patches. If you start
+listening to feedback and try not to piss everyone off perhaps you can
+even get your patches merged one day. [1][2]
 
-Hans
+Johan
 
-
-
-> ---
->  drivers/platform/x86/samsung-laptop.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-> index b4aa8ba35d2d..3d2f8e758369 100644
-> --- a/drivers/platform/x86/samsung-laptop.c
-> +++ b/drivers/platform/x86/samsung-laptop.c
-> @@ -661,9 +661,9 @@ static ssize_t get_performance_level(struct device *dev,
->  	/* The logic is backwards, yeah, lots of fun... */
->  	for (i = 0; config->performance_levels[i].name; ++i) {
->  		if (sretval.data[0] == config->performance_levels[i].value)
-> -			return sprintf(buf, "%s\n", config->performance_levels[i].name);
-> +			return sysfs_emit(buf, "%s\n", config->performance_levels[i].name);
->  	}
-> -	return sprintf(buf, "%s\n", "unknown");
-> +	return sysfs_emit(buf, "%s\n", "unknown");
->  }
->  
->  static ssize_t set_performance_level(struct device *dev,
-> @@ -744,7 +744,7 @@ static ssize_t get_battery_life_extender(struct device *dev,
->  	if (ret < 0)
->  		return ret;
->  
-> -	return sprintf(buf, "%d\n", ret);
-> +	return sysfs_emit(buf, "%d\n", ret);
->  }
->  
->  static ssize_t set_battery_life_extender(struct device *dev,
-> @@ -813,7 +813,7 @@ static ssize_t get_usb_charge(struct device *dev,
->  	if (ret < 0)
->  		return ret;
->  
-> -	return sprintf(buf, "%d\n", ret);
-> +	return sysfs_emit(buf, "%d\n", ret);
->  }
->  
->  static ssize_t set_usb_charge(struct device *dev,
-> @@ -878,7 +878,7 @@ static ssize_t get_lid_handling(struct device *dev,
->  	if (ret < 0)
->  		return ret;
->  
-> -	return sprintf(buf, "%d\n", ret);
-> +	return sysfs_emit(buf, "%d\n", ret);
->  }
->  
->  static ssize_t set_lid_handling(struct device *dev,
-
+[1] https://lore.kernel.org/linux-bluetooth/fbe5722b-1e45-4ccb-a050-20a473a823c8@quicinc.com/T/#m8e495666a71eb0e7ae54c82554dfff1fc96983e7
+[2] https://lore.kernel.org/linux-bluetooth/1713563327-19694-1-git-send-email-quic_zijuhu@quicinc.com/T/#med0610646a8fd8b3c8586abca9895b124b2d2534
