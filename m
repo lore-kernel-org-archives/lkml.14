@@ -1,210 +1,116 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF2314E2FD;
-	Mon, 22 Apr 2024 12:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB121482F8
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 12:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713789613; cv=none; b=Fexl4rWVbqYCC7HKVH+u66z7C2UAG8jbrgE9+FvZ/kvjtsZSPVQL8fvacmfM6XczpKhO9tLGKCtlNDJYTMhtJd9xxL2sJbjO2UNlX7kCozoz7WQX6PeRCbWW7JzqT5y8N/9tox8drKGACa/F0q1eCgK0V06EF0MzSrVNY0vwSSo=
+	t=1713789651; cv=none; b=q+6Pf8sf+tSqiTCxA8RY30ftYNp6Akv36n/psRskXcPdGwkQfPTgogPgPK0ZYBKGeBQa2cDfRLcpckn5UdrP035ISCqFWTK+VGtxslAyVvL046SrCnCT7OY4pvCz7V+EJlPxyPl7BH0KPzlcjQb4GemBOOoF3IN4l/6+zYZl++Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713789613; c=relaxed/simple;
-	bh=C2/enydAC2YCsBNnm5NUTUC6WvB4CkjpCpQsFsdVyag=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lzPDE4ytmM/oy66RC3vpdagTRQGiE/icfqUwwKV7RFkWH5YqyfH2OGbDm0JUfqUQzfhKRXp54mr7ymIkVZywtpSHylo2gG9DrQ6xwmKjh7xzZtvPQxGPAr4EeQJR+odylTiPv57AsXca9pSVby6De+jnmYLQF2KuHDYHMfcwFzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5720d52eb10so809705a12.0;
-        Mon, 22 Apr 2024 05:40:11 -0700 (PDT)
+	s=arc-20240116; t=1713789651; c=relaxed/simple;
+	bh=rHwtqOJ7hfOxjOvIBhN3DOgNQntQgRNTBmHT3TVb85g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FsXNhREMIj9OxIIipVXlc6BG1kNKFCG03E4E+aSdBe8QFneYQfRIyezI+ttPRZBeeQUmz6t0IyD+xUl/kwGHtui3HVYPAiwRXofYqxT1tN2ocloihP7yyEiwBgwYagJxK741qydVDIuvxoJqN/ZOOtWtoA0eSiGZ3hQLWnJixw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MB2WIfh4; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MB2WIfh4"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3c7510d1bacso1115773b6e.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 05:40:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713789648; x=1714394448; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CG4hPexSWedosu3J2N32I42487kxLi51E4WCYQ7z86Q=;
+        b=MB2WIfh4rnpQvPmiUpr5uUnAIHibvLzy+iAN3xVwvrhEaW0XYXtPsUEb+iP/lShDmH
+         dtlFEsrvpKGphAw5yaIjDYshejPLgxIQiJYL+WWO4Pdmh2nIqbJoIl2xygXzgocgpx92
+         dMH8Oypugo07UY7vrx+JMOtxIHtet4Ecl6Zr1LkMCLo29tX3ypPgmmiTAdNbR/KYB1+s
+         KFVky1O5yt7228LjC2k+7AyRUv9N4AyJStrzgWziosLnrhA0Qs68qGgowC2rjSW8x+jX
+         ON6rah4tqFo1KZ+8IijvfUGbY8IdSpUl227PawVTzkwib7eyPaHenxFXln/JIl4P9R/n
+         O5rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713789610; x=1714394410;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1713789648; x=1714394448;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xrYnp1tDsZ0sxZFnn5u9gBZrt+Gb2bRXco5M67sATos=;
-        b=sJwTRuwAnhIuk2NaLokJx42mvtDH6cZC9YvLlaE3/k0tkW6vCPOuOfY/WqVmBkknSB
-         c9OBmqG8VfHA8/78MdocR1zSmX0kByQiXjTqWh34SD6uEi0sg/jo15D2F5vVycpDBppz
-         AeTsASpd0KZ3Gtks2dsESn9Xv6FnDUxtJ1UWhejguWz6YqFsElecVumCxHaukLHPWlnY
-         hPTCIba+hndY/ZH3lw+sh2U8GfQwqSxV4VphlttYdixBwhKUWlaUGJvj60w5Ldb45eCM
-         Uyx4rKCSKd/ryoYMcPWvNUCtcjHDwVJh+c9d1GPOYSXHdEUEGWqJgHnpP8CcgAd49nTQ
-         KcsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+2LlRiDpA/hN/BOQAfWB0lX7oWMHEMXFa0AH7K5JEuhp9qXzgQ5n2H1h27qklElRxHWw5fOZLk+fiUGclnAp4AhN2/sUDRzxwtMz47Xy7urPDoCvsS8qhxsu0T/MBZuDmjoXx5XbLV4AsqYRtI/xJiLUSGL4rCLWla4IDZhKXi+gw+ZurmS8UTKeRtSDWc0bS7keqTUyVAUY=
-X-Gm-Message-State: AOJu0YwQYIm8qKQNktNhgrBgBW9ufEGZOw6h0qARPeGi/ueQjefwW0FO
-	9qL3Ju/2XBNClLsfwhpTm1FwYAOCiZkzP3n7NFJqYMRHk/MkSCjD
-X-Google-Smtp-Source: AGHT+IGrZgag9UeQefghQLPV+ku8otAJz6U28ozWysOWpOYWi3aSs0tMI8tAitrA/dkQ2iNnyOPaxQ==
-X-Received: by 2002:a50:8e5b:0:b0:56b:cfef:b2de with SMTP id 27-20020a508e5b000000b0056bcfefb2demr6802703edx.26.1713789609790;
-        Mon, 22 Apr 2024 05:40:09 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-007.fbsv.net. [2a03:2880:30ff:7::face:b00c])
-        by smtp.gmail.com with ESMTPSA id q10-20020a056402248a00b0056fe7c5475bsm5505410eda.10.2024.04.22.05.40.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 05:40:09 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: aleksander.lobakin@intel.com,
-	kuba@kernel.org,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	elder@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	nbd@nbd.name,
-	sean.wang@mediatek.com,
-	Mark-MC.Lee@mediatek.com,
-	lorenzo@kernel.org,
-	taras.chornyi@plvision.eu,
-	ath11k@lists.infradead.org,
-	ath10k@lists.infradead.org,
-	linux-wireless@vger.kernel.org,
-	geomatsi@gmail.com,
-	kvalo@kernel.org,
-	Jeff Johnson <jjohnson@kernel.org>
-Cc: quic_jjohnson@quicinc.com,
-	leon@kernel.org,
-	dennis.dalessandro@cornelisnetworks.com,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	idosch@idosch.org,
-	leitao@debian.org,
-	angelogioacchino.delregno@collabora.com,
-	matthias.bgg@gmail.com
-Subject: [PATCH net-next v7 10/10] wifi: ath11k: allocate dummy net_device dynamically
-Date: Mon, 22 Apr 2024 05:39:03 -0700
-Message-ID: <20240422123921.854943-11-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240422123921.854943-1-leitao@debian.org>
-References: <20240422123921.854943-1-leitao@debian.org>
+        bh=CG4hPexSWedosu3J2N32I42487kxLi51E4WCYQ7z86Q=;
+        b=qrrywFkh41OL7sb3RacNXh+b2NYjsM9R6opYufoEApIwelHbNf4fQEuiyKC0IFjfqi
+         G8JwE+okY8NhgeE/p1+lT7/yIWdXlsJw0yk1DLVc6m1nFcx4/80IKm/CBFCqoonkir0r
+         AZFz9spNlckK2ma+2h+ygUcvp2cYaELcYyrv5DNCRgd3wpPO9j7mX8sqLXjT6wdJDPWe
+         forZ4pWyQ3p36XIDSzZhhnwHXjaQrWUajIvJ1AIWDZ16AcFByEf68EQoF4n9crTjjdsM
+         zOc69nFL8X12p6NEs8kLxWUug0C2Q2f5ADe/sRgGRDzl8VDwGdajK+ZIEs2Gj1N+/pvs
+         Xxvg==
+X-Forwarded-Encrypted: i=1; AJvYcCWF0GL36BL7t67nHijygkvW8AF+iyFaA4hb+PY1NQQKr0jbdb5ECuU8tvv3xYpKAbFq9LUr6dD46dxpHYR3ssKysQMMio+oMD7klQJw
+X-Gm-Message-State: AOJu0YwR7hlBHoeD+YyR4Y6wEnhwqbAwxaSTP4nq8/ujcMCbvshBqk5O
+	ICT3P1X9dhu9QfkMhQ0qWGuxo4s6V/RjPyDHaHCnm5JfbKYCJvs/DC5tzhv/IgYWJJ+m9i8qp4Z
+	yO1FyVpi6/jXs5yv+7ZaaIgkVymzFERRHlH342A==
+X-Google-Smtp-Source: AGHT+IEMfGJHMTEml1VRNaAfoa4qnzNHZkeLKuW9Vl9je272KzGmuVy0hJtkx+vfLt1IPHkVf/BJiDOJlfCqo09Adjo=
+X-Received: by 2002:a05:6870:b601:b0:233:5557:c6a2 with SMTP id
+ cm1-20020a056870b60100b002335557c6a2mr14543327oab.34.1713789647808; Mon, 22
+ Apr 2024 05:40:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240404122559.898930-1-peter.griffin@linaro.org>
+ <20240404122559.898930-10-peter.griffin@linaro.org> <95bcdc942cba564f78a6f2fe4cde892575838d5c.camel@linaro.org>
+In-Reply-To: <95bcdc942cba564f78a6f2fe4cde892575838d5c.camel@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Mon, 22 Apr 2024 13:40:36 +0100
+Message-ID: <CADrjBPrnWzT6raAtuswC0AE6EEwtQ7sTUkm8SjpBh=3nibcmSQ@mail.gmail.com>
+Subject: Re: [PATCH 09/17] phy: samsung-ufs: use exynos_get_pmu_regmap_by_phandle()
+ to obtain PMU regmap
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org, 
+	alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org, 
+	s.nawrocki@samsung.com, cw00.choi@samsung.com, jejb@linux.ibm.com, 
+	martin.petersen@oracle.com, chanho61.park@samsung.com, ebiggers@kernel.org, 
+	linux-scsi@vger.kernel.org, linux-phy@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, tudor.ambarus@linaro.org, 
+	saravanak@google.com, willmcvicker@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Embedding net_device into structures prohibits the usage of flexible
-arrays in the net_device structure. For more details, see the discussion
-at [1].
+Hi Andr=C3=A9,
 
-Un-embed the net_device from struct ath11k_ext_irq_grp by converting it
-into a pointer. Then use the leverage alloc_netdev() to allocate the
-net_device object at ath11k_ahb_config_ext_irq() for ahb, and
-ath11k_pcic_ext_irq_config() for pcic.
+Thanks for the review feedback.
 
-The free of the device occurs at ath11k_ahb_free_ext_irq() for the ahb
-case, and ath11k_pcic_free_ext_irq() for the pcic case.
+On Fri, 5 Apr 2024 at 08:04, Andr=C3=A9 Draszik <andre.draszik@linaro.org> =
+wrote:
+>
+> On Thu, 2024-04-04 at 13:25 +0100, Peter Griffin wrote:
+> > This allows us to obtain a PMU regmap that is created by the exynos-pmu
+> > driver. Platforms such as gs101 require exynos-pmu created regmap to
+> > issue SMC calls for PMU register accesses. Existing platforms still get
+> > a MMIO regmap as before.
+> >
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > ---
+> >  drivers/phy/samsung/phy-samsung-ufs.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/phy/samsung/phy-samsung-ufs.c b/drivers/phy/samsun=
+g/phy-samsung-ufs.c
+> > index 183c88e3d1ec..c567efafc30f 100644
+> > --- a/drivers/phy/samsung/phy-samsung-ufs.c
+> > +++ b/drivers/phy/samsung/phy-samsung-ufs.c
+> > @@ -18,6 +18,7 @@
+> >  #include <linux/phy/phy.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/regmap.h>
+> > +#include <linux/soc/samsung/exynos-pmu.h>
+>
+> You can now drop the include of linux/mfd/syscon.h
 
-[1] https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/
+I'll send a followup patch for this.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Tested-by: Kalle Valo <kvalo@kernel.org>
----
- drivers/net/wireless/ath/ath11k/ahb.c  |  9 +++++++--
- drivers/net/wireless/ath/ath11k/core.h |  2 +-
- drivers/net/wireless/ath/ath11k/pcic.c | 21 +++++++++++++++++----
- 3 files changed, 25 insertions(+), 7 deletions(-)
+Thanks,
 
-diff --git a/drivers/net/wireless/ath/ath11k/ahb.c b/drivers/net/wireless/ath/ath11k/ahb.c
-index 7c0a23517949..7f3f6479d553 100644
---- a/drivers/net/wireless/ath/ath11k/ahb.c
-+++ b/drivers/net/wireless/ath/ath11k/ahb.c
-@@ -442,6 +442,7 @@ static void ath11k_ahb_free_ext_irq(struct ath11k_base *ab)
- 			free_irq(ab->irq_num[irq_grp->irqs[j]], irq_grp);
- 
- 		netif_napi_del(&irq_grp->napi);
-+		free_netdev(irq_grp->napi_ndev);
- 	}
- }
- 
-@@ -533,8 +534,12 @@ static int ath11k_ahb_config_ext_irq(struct ath11k_base *ab)
- 
- 		irq_grp->ab = ab;
- 		irq_grp->grp_id = i;
--		init_dummy_netdev(&irq_grp->napi_ndev);
--		netif_napi_add(&irq_grp->napi_ndev, &irq_grp->napi,
-+
-+		irq_grp->napi_ndev = alloc_netdev_dummy(0);
-+		if (!irq_grp->napi_ndev)
-+			return -ENOMEM;
-+
-+		netif_napi_add(irq_grp->napi_ndev, &irq_grp->napi,
- 			       ath11k_ahb_ext_grp_napi_poll);
- 
- 		for (j = 0; j < ATH11K_EXT_IRQ_NUM_MAX; j++) {
-diff --git a/drivers/net/wireless/ath/ath11k/core.h b/drivers/net/wireless/ath/ath11k/core.h
-index b3fb74a226fb..590307ca7a11 100644
---- a/drivers/net/wireless/ath/ath11k/core.h
-+++ b/drivers/net/wireless/ath/ath11k/core.h
-@@ -174,7 +174,7 @@ struct ath11k_ext_irq_grp {
- 	u64 timestamp;
- 	bool napi_enabled;
- 	struct napi_struct napi;
--	struct net_device napi_ndev;
-+	struct net_device *napi_ndev;
- };
- 
- enum ath11k_smbios_cc_type {
-diff --git a/drivers/net/wireless/ath/ath11k/pcic.c b/drivers/net/wireless/ath/ath11k/pcic.c
-index add4db4c50bc..79eb3f9c902f 100644
---- a/drivers/net/wireless/ath/ath11k/pcic.c
-+++ b/drivers/net/wireless/ath/ath11k/pcic.c
-@@ -316,6 +316,7 @@ static void ath11k_pcic_free_ext_irq(struct ath11k_base *ab)
- 			free_irq(ab->irq_num[irq_grp->irqs[j]], irq_grp);
- 
- 		netif_napi_del(&irq_grp->napi);
-+		free_netdev(irq_grp->napi_ndev);
- 	}
- }
- 
-@@ -558,7 +559,7 @@ ath11k_pcic_get_msi_irq(struct ath11k_base *ab, unsigned int vector)
- 
- static int ath11k_pcic_ext_irq_config(struct ath11k_base *ab)
- {
--	int i, j, ret, num_vectors = 0;
-+	int i, j, n, ret, num_vectors = 0;
- 	u32 user_base_data = 0, base_vector = 0;
- 	unsigned long irq_flags;
- 
-@@ -578,8 +579,11 @@ static int ath11k_pcic_ext_irq_config(struct ath11k_base *ab)
- 
- 		irq_grp->ab = ab;
- 		irq_grp->grp_id = i;
--		init_dummy_netdev(&irq_grp->napi_ndev);
--		netif_napi_add(&irq_grp->napi_ndev, &irq_grp->napi,
-+		irq_grp->napi_ndev = alloc_netdev_dummy(0);
-+		if (!irq_grp->napi_ndev)
-+			return -ENOMEM;
-+
-+		netif_napi_add(irq_grp->napi_ndev, &irq_grp->napi,
- 			       ath11k_pcic_ext_grp_napi_poll);
- 
- 		if (ab->hw_params.ring_mask->tx[i] ||
-@@ -601,8 +605,13 @@ static int ath11k_pcic_ext_irq_config(struct ath11k_base *ab)
- 			int vector = (i % num_vectors) + base_vector;
- 			int irq = ath11k_pcic_get_msi_irq(ab, vector);
- 
--			if (irq < 0)
-+			if (irq < 0) {
-+				for (n = 0; n <= i; n++) {
-+					irq_grp = &ab->ext_irq_grp[n];
-+					free_netdev(irq_grp->napi_ndev);
-+				}
- 				return irq;
-+			}
- 
- 			ab->irq_num[irq_idx] = irq;
- 
-@@ -615,6 +624,10 @@ static int ath11k_pcic_ext_irq_config(struct ath11k_base *ab)
- 			if (ret) {
- 				ath11k_err(ab, "failed request irq %d: %d\n",
- 					   vector, ret);
-+				for (n = 0; n <= i; n++) {
-+					irq_grp = &ab->ext_irq_grp[n];
-+					free_netdev(irq_grp->napi_ndev);
-+				}
- 				return ret;
- 			}
- 		}
--- 
-2.43.0
-
+Peter
