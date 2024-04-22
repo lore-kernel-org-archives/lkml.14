@@ -1,105 +1,156 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79671465A7
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 12:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F189F1465A7
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 12:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713787222; cv=none; b=WG+n5uqpzUAKFen85Y631zCZKyQifKgX6fWSVGQNRUWDKpfGk80Wqu8BoFLJP0/BiM2Aqqh92zbAYnSd9rz/61zojWthITM3/7At38Iv5ToBLYvPkcqmzSoJgPKxLKxSry7IuUT67peY6DWJTWJyaXP1FKTV825ew8nzk9OJmNg=
+	t=1713787267; cv=none; b=GZdqoez8jcSc/f7tZlGw3qcY/3C/JN4ARDSu92txkXt3rtlAldG7r0u1eEknlahVgiAHlKzFCYtsabSI0Zcisdsy2K7wQizcpeJJBwUgS8WdHgGv5m5VdIxsMntLIyIswuE3Dr0NN8PW+KGtMkEPJI8ei19VjuScrf9udVBrKU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713787222; c=relaxed/simple;
-	bh=aUeq+9HkfsVjUgeuRNmXM/3pB1Vpk83CSga7MypB6ao=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uc3QW0R+YfGAY5CRH1PDvTI0yIFyF9i5qWiepdznjZIR2pIvJ+V3VTxffS94Pg3ErT6TguRyr+tI4Z9Rq0LIYOwwm90BkeXEs4iCHGCv5J8kpwpQHa/nT9nW2+yzvbrlhkmSJnsN7ctACxcLJr9AFV+AkyDc6K381bgLX0VpDIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hs/ADaL5; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1713787267; c=relaxed/simple;
+	bh=4UFUDrnZaiEppiwH3I4zA+17+x8DNbh2KbHYULiw1JE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=allMO5OgnBFZDX0ieVHZlgkDkm5z9PtUWHWwvdrHBQ6DSIyRo83L7mpk3DAJjpmEZz5oSGLtERMqHPAPGO0/CKCeSjEXyRgHaa74XohKr4I90nN3EkR2MHcE4tIQ10RC6Mu85EXzXdeofovUUmPXwwdmlcEHeLW4/F9/12rqgVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WH9ul2tG; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hs/ADaL5"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-34b3ef55a86so373462f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 05:00:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WH9ul2tG"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a55bdf477e5so62686066b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 05:01:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1713787219; x=1714392019; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=urxXw+V78rgcW1lZLXZyUF//DNEOBPjNxOQ6gmq3Soo=;
-        b=hs/ADaL5XQflub4PnfAXm6i4tO46XfgwfaROOopWEOB5nLsMmGD9OKSJDlCNN2y55X
-         6iRNJ3iij7neS5y30wVQ01jHjBhUOsAycORfm72NKkCqjCBg3NkuqmICdhwDBlRCOlg1
-         CG1P749vKjBYHVTK9De3mlgzZ7q+XRTTNT4xdjefCFRfor1KNAa7Fw8kuPVRouimG9C8
-         wNfcNCNtMDvYJ8rXYBnsu9MMRek02zv20Q7vGcbANhhjSgxoIWaXOlMJfH7jjSkA5ebZ
-         lNWoLykxt7jfZrHXNSZ7yVWsPdTDHDJUB505Kwm40Es+uQ9syRQ/QHwDXtR9Jo7AIPW1
-         0ciA==
+        d=gmail.com; s=20230601; t=1713787260; x=1714392060; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=h6fd5i+0JvXAyxfGeQJKy8pR12A2rl+HE+2Dsk7AGwM=;
+        b=WH9ul2tGdH7zLU11MIZOOO5frDLuOFh2b4iXnSaF8gqWLV8Bg1aNttZNNMxvxnqLKx
+         +6XbQr2ABxOjjNzsz9vImDXdwynQiFyqqWuWMJFqD1wJ0KSRIgIWop7eXsr/gaCCKkcj
+         3ssL5DK1QbOlA73s2yPpvyMncHXsuDx0VtjA/HxOXPvQlXhxNvDysbhg3jeus4PxE1Pt
+         rc3IgAb/RzdI6s27SuDi40ZzxmluMoeoy7l57auw/MC4DNqmFFxH585tdoWa4Wb4hGwk
+         NvQT+gnwTBjTWoAO+QAar7NVdvlx5PRYyPZzmmt5ovpXTomyS7pRtG3Eah+Ore6y14N4
+         Lwvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713787219; x=1714392019;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=urxXw+V78rgcW1lZLXZyUF//DNEOBPjNxOQ6gmq3Soo=;
-        b=jz2IZGilhJDc1ySoYOFhup9N8WzXU1yf4HKxOYtQigqXZv+tZHuvJYbituQ2oNT0ib
-         EjOGk7zBG3f8hV7xq/ZFhJjK4lEqCf6Zaqb65LO64JJw2EiL5CAv+rhzYWMXf+na1o5Z
-         suimIZxFPBjkLspdKg51Tr+XF0W4jDWHfFHbbn+SYnEiK5cAxoMWZG+LWuBmInXGho/1
-         x+N19uMfMKJcuKUmsICHcPLZvYwxh5/7hbhOPXfJBgKguMd2/ZgT5ZcQrcAbHoDcUELR
-         GHjh0MNSvtSZTVxiYieFLAyMjkgtLOOfxU2kWXmlCGzC645CJktlGoSmASEDeDYZNdy6
-         wbXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUT+Is0pMslqnWGzfqidUOEZdSEGOW/JxMlTUauxpKQCfdbARSr8q6P+wkD2vuyhSNq9rUHbDiVE7MqCig+TGcZf886gns80oEn3H3l
-X-Gm-Message-State: AOJu0Yyg1D1++38wYvcgdu/og3XE9I9yk57iYLsAI41lH7atX9octBXI
-	IMI9oudQPtuhO6getLulzFrGtaVzfz0PI7k2l7lOdoLlXdcUegyKszUhpE8ZDkK4GeuEyoFvYrZ
-	v
-X-Google-Smtp-Source: AGHT+IFPgf3HiKn+4jFSXKN3g9758WhcGHBHRQ0cOG5FAatrz+fIXj1Wgb8/4aM1NSTD8APlUfaM4A==
-X-Received: by 2002:adf:eed0:0:b0:33e:c410:a1cd with SMTP id a16-20020adfeed0000000b0033ec410a1cdmr5903847wrp.69.1713787218679;
-        Mon, 22 Apr 2024 05:00:18 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:6981:a121:4529:6e42])
-        by smtp.gmail.com with ESMTPSA id p3-20020a5d6383000000b00341b451a31asm11831720wru.36.2024.04.22.05.00.17
+        d=1e100.net; s=20230601; t=1713787260; x=1714392060;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h6fd5i+0JvXAyxfGeQJKy8pR12A2rl+HE+2Dsk7AGwM=;
+        b=dXb4v9M2V5HrY37lbQI+Jry0GJFU/gjVL/5kLQCVJIH8kX3iVGrGl7z8zuyz9lvZE/
+         KP2/o1h9/qzZ4RQnhRhkgccUw/xBMqK5c1eT1omy2ShoY1pTry+6VMvgv8lGVnH1qa+c
+         WQXudZUFlJ7gx17MGzHZ/QRJAXTb1LnyCIE0Z+7ck8QJovTwXJcy53JRSktwwxPlEqmZ
+         n+c/3PJ+O6xsqeAuZPdPm2ffyCUfRFaRNs8iViuPtdnc9v1WY8KmSh8ywS1H2oS62/Fp
+         bRGjdaAMWYXwB8KX3iBKqqkytjglMIoAqIeyWbOd0w+hHNV8MU+0KPghA0DeH3/vC7lh
+         bzBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUt1vScxoWLk/24xEi0GOlzFtBRt/BpPF7BLUiRILQXgklCX3v0BTcxgvK8gOTei2MrY8lklDWhNHibBuwK1vKalHzDcjb+3ZeRmUUC
+X-Gm-Message-State: AOJu0YzAQg1+QDM8CedAYjtsoqAPPpHbEUOy5facQWJpej271gHuwfqd
+	Z96ehFq7voEqmc3y9H0YHY5YkufsBZ/ksy8FAHjsufFACxHPSPMm
+X-Google-Smtp-Source: AGHT+IH0eLbh0z4T48v+/R6epjAWIqIwEIZBTeL/rAT/X+8MogZu6F69KsSLjqUYUd8Gw0Uf+GHtTA==
+X-Received: by 2002:a17:906:16cb:b0:a52:6159:5064 with SMTP id t11-20020a17090616cb00b00a5261595064mr9528762ejd.52.1713787259961;
+        Mon, 22 Apr 2024 05:00:59 -0700 (PDT)
+Received: from fedora.iskraemeco.si ([193.77.86.250])
+        by smtp.gmail.com with ESMTPSA id h6-20020a170906110600b00a5827d2f6f4sm172070eja.115.2024.04.22.05.00.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 05:00:18 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	jonathanh@nvidia.com,
-	treding@nvidia.com,
-	linux-gpio@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prathamesh Shete <pshete@nvidia.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	mochs@nvidia.com,
-	csoto@nvidia.com,
-	jamien@nvidia.com,
-	smangipudi@nvidia.com
-Subject: Re: [PATCH] gpio: tegra186: Fix tegra186_gpio_is_accessible() check
-Date: Mon, 22 Apr 2024 14:00:06 +0200
-Message-Id: <171378189683.23616.223081945525265669.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240416123501.12916-1-pshete@nvidia.com>
-References: <20240416123501.12916-1-pshete@nvidia.com>
+        Mon, 22 Apr 2024 05:00:59 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH] locking/qspinlock/x86: Micro-optimize virt_spin_lock()
+Date: Mon, 22 Apr 2024 14:00:38 +0200
+Message-ID: <20240422120054.199092-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Optimize virt_spin_lock() to use simpler and faster:
 
+  atomic_try_cmpxchg(*ptr, &val, new)
 
-On Tue, 16 Apr 2024 18:05:01 +0530, Prathamesh Shete wrote:
-> The controller has several register bits describing access control
-> information for a given GPIO pin. When SCR_SEC_[R|W]EN is unset, it
-> means we have full read/write access to all the registers for given GPIO
-> pin. When SCR_SEC[R|W]EN is set, it means we need to further check the
-> accompanying SCR_SEC_G1[R|W] bit to determine read/write access to all
-> the registers for given GPIO pin.
-> 
-> [...]
+instead of:
 
-Applied, thanks!
+  atomic_cmpxchg(*ptr, val, new) == val.
 
-[1/1] gpio: tegra186: Fix tegra186_gpio_is_accessible() check
-      commit: 62326f7cefc21b4a7e8a1b413bf1e8bc07df1115
+The x86 CMPXCHG instruction returns success in the ZF flag, so
+this change saves a compare after the CMPXCHG.
 
-Best regards,
+Also optimize retry loop a bit. atomic_try_cmpxchg() fails iff
+&lock->val != 0, so there is no need to load and compare the
+lock value again - cpu_relax() can be unconditinally called in
+this case. This allows us to generate optimized:
+
+  1f:	ba 01 00 00 00       	mov    $0x1,%edx
+  24:	8b 03                	mov    (%rbx),%eax
+  26:	85 c0                	test   %eax,%eax
+  28:	75 63                	jne    8d <...>
+  2a:	f0 0f b1 13          	lock cmpxchg %edx,(%rbx)
+  2e:	75 5d                	jne    8d <...>
+...
+  8d:	f3 90                	pause
+  8f:	eb 93                	jmp    24 <...>
+
+instead of:
+
+  1f:	ba 01 00 00 00       	mov    $0x1,%edx
+  24:	8b 03                	mov    (%rbx),%eax
+  26:	85 c0                	test   %eax,%eax
+  28:	75 13                	jne    3d <...>
+  2a:	f0 0f b1 13          	lock cmpxchg %edx,(%rbx)
+  2e:	85 c0                	test   %eax,%eax
+  30:	75 f2                	jne    24 <...>
+...
+  3d:	f3 90                	pause
+  3f:	eb e3                	jmp    24 <...>
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ arch/x86/include/asm/qspinlock.h | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
+index cde8357bb226..a053c1293975 100644
+--- a/arch/x86/include/asm/qspinlock.h
++++ b/arch/x86/include/asm/qspinlock.h
+@@ -85,6 +85,8 @@ DECLARE_STATIC_KEY_TRUE(virt_spin_lock_key);
+ #define virt_spin_lock virt_spin_lock
+ static inline bool virt_spin_lock(struct qspinlock *lock)
+ {
++	int val;
++
+ 	if (!static_branch_likely(&virt_spin_lock_key))
+ 		return false;
+ 
+@@ -94,10 +96,13 @@ static inline bool virt_spin_lock(struct qspinlock *lock)
+ 	 * horrible lock 'holder' preemption issues.
+ 	 */
+ 
+-	do {
+-		while (atomic_read(&lock->val) != 0)
+-			cpu_relax();
+-	} while (atomic_cmpxchg(&lock->val, 0, _Q_LOCKED_VAL) != 0);
++ __retry:
++	val = atomic_read(&lock->val);
++
++	if (val || !atomic_try_cmpxchg(&lock->val, &val, _Q_LOCKED_VAL)) {
++		cpu_relax();
++		goto __retry;
++	}
+ 
+ 	return true;
+ }
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.44.0
+
