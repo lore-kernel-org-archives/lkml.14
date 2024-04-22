@@ -1,102 +1,118 @@
-Received: from smtp-42ad.mail.infomaniak.ch (smtp-42ad.mail.infomaniak.ch [84.16.66.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69D914F128
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 13:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E49E714A4E5;
+	Mon, 22 Apr 2024 13:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713791744; cv=none; b=VNcPYYhYi32a/CNyGgqDwjCRac2QhTQe+/UQvhqdstfxxYkyycLzkF1TXb8glXKUaRPf0oW3cV43zN8U2wf3TRsD3ThfqU/WkeF/YmmZ5RMN9h+caWxnA1GXLOJVEl6MDM9h87eXqvcn/UjNY28UdtX9Er4EzrsNizz1UeXrDT4=
+	t=1713791826; cv=none; b=f1J0ZtfmIwfURHx6V0YCMDp7Lsi00qlyFDqT7kSIAMnU2q9g/OOAcHvxmCnkkrcIUfSoiS3XGV0RFYdxXwaeJGgmag9fTTQk7PKqts83ldLvnyOeKy+W/0qGhf+o3etKBMgM+4MCqgk3Zi9d3V22pY/1PgVteaPqnOzasr4cvXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713791744; c=relaxed/simple;
-	bh=GjhTJjoSiC3IDIVXzgKQ4P+qNveHUQ6lI+EgnHlfUqo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GDKgLq+FHw4CFJPld3NLjQmo+y6zhUMvGDJUQI0l9ZaPdeoYjRRlGxPxE1yrHrae+y6zKCTeLll5wOpwp8C1FMS0xN4Rs6XpfmcViPhiLld6yekCBwFazAFBwEsRaOMsEuTOQX6vLgfxO1SQM9XdnPEndkLjMQdqF6n6LWICy0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=XaC5f4gj; arc=none smtp.client-ip=84.16.66.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1713791826; c=relaxed/simple;
+	bh=bIu3jv7wbFitFgCSSAIH5zSJzALudmrLAp7H2HUq9VE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kh9DAJ9SDHYg03S2DO7rUHugJcF19HDSxnMjkT4KE4rZw7PSnutThAm5GZZL278a/9JY+iKvwXDDDWImrM93rrvZAdLBbbqoaeylJKGfs+hCS5j32il4+/UbWgK3mSCCUCOz6BoGscv3znDU++lB3PXU+yD51f+nNleKZ94acmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NN2NYGgW; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="XaC5f4gj"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VNQYc6JShz3q7;
-	Mon, 22 Apr 2024 15:08:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1713791332;
-	bh=GjhTJjoSiC3IDIVXzgKQ4P+qNveHUQ6lI+EgnHlfUqo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XaC5f4gjQmTg7HWgvo8OaBYgvZVVaUnv+Y6B/jdsg0Q4f2OLDr4AYla0dAr871yUg
-	 SXigC7/aA4mp4zabDYUfQYwz/kj2V8GznfSGfeIslpVajiSP9OYd5T8+9TTpiL7YOt
-	 axM86vO0S3TpXTEvr00XTnMRotQwMoJZqzDgMjqE=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4VNQYb16q2zrw3;
-	Mon, 22 Apr 2024 15:08:50 +0200 (CEST)
-Date: Mon, 22 Apr 2024 15:08:50 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Guenter Roeck <linux@roeck-us.net>, David Gow <davidgow@google.com>
-Cc: Brendan Higgins <brendanhiggins@google.com>, 
-	Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Ingo Molnar <mingo@redhat.com>, James Morris <jamorris@linux.microsoft.com>, 
-	Kees Cook <keescook@chromium.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marco Pagani <marpagan@redhat.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Thara Gopinath <tgopinath@microsoft.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Wanpeng Li <wanpengli@tencent.com>, Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-um@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v3 7/7] kunit: Add tests for fault
-Message-ID: <20240422.thesh7quoo0U@digikod.net>
-References: <20240319104857.70783-1-mic@digikod.net>
- <20240319104857.70783-8-mic@digikod.net>
- <928249cc-e027-4f7f-b43f-502f99a1ea63@roeck-us.net>
- <b70332b0-3e55-4375-935f-35ef3167a151@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NN2NYGgW"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2db17e8767cso58122391fa.3;
+        Mon, 22 Apr 2024 06:17:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713791822; x=1714396622; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rC5Q3TsmbK89CYxlmTZK9bHoQvR58XmOMQv8g8W4/aI=;
+        b=NN2NYGgWCHO6Xsi5Z65W6qo19ybkXMWKpRpbeM8X72xK+RD4lfuHoz5T0C6EKROoDK
+         Y5C3UbE5+c5y9tvkKR5+NlkgNlfzXVRI+Wd3oncLAgm4VHQ2+0Q0SUhQ0eorvDMIQLcn
+         SfBKNj9qO25bXP5TPVXliyE8HXB0QMZ4ytcH9jxnjFE0QWZ2aDTClmeheIV4LZ3SYOmW
+         bTZUNlsr93kxxG3kC4u1nKjmWdKlIjRsVl7PJ4fww1qGYGBhMLEOtT/M53voPXy+4ZXr
+         XOxMU2JDOvH7gRYH9xta0BYje2qC75duhIweJotfxIivjQXFGNCx54jM8OrJGSqLvhCt
+         mSkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713791822; x=1714396622;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rC5Q3TsmbK89CYxlmTZK9bHoQvR58XmOMQv8g8W4/aI=;
+        b=v9TvxqvkbU5u6xIJCHXI23n1Y9IAp/jSiHix42pYjinnLiuy4Fmu14wdhPOiFLrzkh
+         MKneazBaAErg95moq6jhI72SjOuW6/xdtKEZz/JsxKxQZCLnV1jMEpARyZURFHMGAPVL
+         H3tNJhDz8+p4w2N9U4U6m1gfT4vdotcdUn37niVLWGoeysNt6kvdBxm3VjdcZFnrJhFK
+         mL11V4YOtfIdzJ1fg1695Xv3KfFDkJphPMMt3hB/GNbjVISCQ1jnZirCInID4us/MBpu
+         uGwBqRAukGI81sBck+cLx7/x19NaVRV9zEOmHNbP/tCDt1Zl4Fv+CDizOxObJ2XAlH+D
+         Sj1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVpmwSoQN41iu8Zx3l0KgWLdc1rs1XV4WnpOb0s2RZ/9ftKks8eVNtNK7glhtsU2p6HIC5YumcVq3UFZmsX35r9wuYauBp3lcgKfj0ZmBTj+OGoIGYJ1MKOMGoL4XmqiShQPiSFxhQD0U+p2RFr
+X-Gm-Message-State: AOJu0YxXm1pgv1StFMhNJA5/0FwxgLpmVnG57k+dziuGQc2VAl0rOPK7
+	uLpgf1wIonnhzavmsJULdPFwmyDrg+sIsYx450NNpZZqu9Rieb8s
+X-Google-Smtp-Source: AGHT+IEZYgvUslSm4eH9mo9Iqq9wum0lqnNiW2nb2vsWtTcF6qcwIIy2TK+M2PClLWiKTUoJLwZIQw==
+X-Received: by 2002:a2e:9384:0:b0:2db:348f:5c33 with SMTP id g4-20020a2e9384000000b002db348f5c33mr5485742ljh.16.1713791821576;
+        Mon, 22 Apr 2024 06:17:01 -0700 (PDT)
+Received: from localhost ([185.204.1.218])
+        by smtp.gmail.com with ESMTPSA id w2-20020a05651c102200b002dcb67e5716sm1273768ljm.22.2024.04.22.06.17.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 06:17:01 -0700 (PDT)
+From: Amer Al Shanawany <amer.shanawany@gmail.com>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Miklos Szeredi <mszeredi@redhat.com>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Subject: [PATCH v2] selftests: filesystems: add missing stddef header
+Date: Mon, 22 Apr 2024 15:16:59 +0200
+Message-Id: <20240422131659.30222-1-amer.shanawany@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <df1df586-188e-4290-9986-7b7cd31710e3@collabora.com>
+References: <df1df586-188e-4290-9986-7b7cd31710e3@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b70332b0-3e55-4375-935f-35ef3167a151@roeck-us.net>
-X-Infomaniak-Routing: alpha
 
-On Fri, Apr 19, 2024 at 04:38:01PM -0700, Guenter Roeck wrote:
-> On Fri, Apr 19, 2024 at 03:33:49PM -0700, Guenter Roeck wrote:
-> > Hi,
-> > 
-> > On Tue, Mar 19, 2024 at 11:48:57AM +0100, Mickaël Salaün wrote:
-> > > Add a test case to check NULL pointer dereference and make sure it would
-> > > result as a failed test.
-> > > 
-> > > The full kunit_fault test suite is marked as skipped when run on UML
-> > > because it would result to a kernel panic.
-> > > 
-> > > Tested with:
-> > > ./tools/testing/kunit/kunit.py run --arch x86_64 kunit_fault
-> > > ./tools/testing/kunit/kunit.py run --arch arm64 \
-> > >   --cross_compile=aarch64-linux-gnu- kunit_fault
-> > > 
-> > 
-> > What is the rationale for adding those tests unconditionally whenever
-> > CONFIG_KUNIT_TEST is enabled ? This completely messes up my test system
-> > because it concludes that it is pointless to continue testing
-> > after the "Unable to handle kernel NULL pointer dereference" backtrace.
-> > At the same time, it is all or nothing, meaning I can not disable
-> > it but still run other kunit tests.
-> > 
+fix compiler warning and errors when compiling statmount test.
 
-CONFIG_KUNIT_TEST is to test KUnit itself.  Why does this messes up your
-test system, and what is your test system?  Is it related to the kernel
-warning and then the message you previously sent?
-https://lore.kernel.org/r/fd604ae0-5630-4745-acf2-1e51c69cf0c0@roeck-us.net
-It seems David has a solution to suppress such warning.
+gcc 12.3 (Ubuntu 12.3.0-1ubuntu1~22.04)
 
-> 
-> Oh, never mind. I just disabled CONFIG_KUNIT_TEST in my test bed
-> to "solve" the problem. I'll take that as one of those "unintended
-> consequences" items: Instead of more tests, there are fewer.
-> 
-> Guenter
-> 
+statmount_test.c:572:24: warning: implicit declaration of function
+‘offsetof’ [-Wimplicit-function-declaration]
+  572 | #define str_off(memb) (offsetof(struct statmount, memb) /
+sizeof(uint32_t))
+      |                        ^~~~~~~~
+statmount_test.c:598:51: note: in expansion of macro ‘str_off’
+  598 |         test_statmount_string(STATMOUNT_MNT_ROOT,
+str_off(mnt_root), "mount root");
+      |
+^~~~~~~
+statmount_test.c:18:1: note: ‘offsetof’ is defined in header
+‘<stddef.h>’; did you forget to ‘#include <stddef.h>’?
+   17 | #include "../../kselftest.h"
+  +++ |+#include <stddef.h>
+
+Signed-off-by: Amer Al Shanawany <amer.shanawany@gmail.com>
+---
+V1 -> V2 added compiler warning in the patch message
+
+ tools/testing/selftests/filesystems/statmount/statmount_test.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/testing/selftests/filesystems/statmount/statmount_test.c b/tools/testing/selftests/filesystems/statmount/statmount_test.c
+index 3eafd7da58e2..e6d7c4f1c85b 100644
+--- a/tools/testing/selftests/filesystems/statmount/statmount_test.c
++++ b/tools/testing/selftests/filesystems/statmount/statmount_test.c
+@@ -3,6 +3,7 @@
+ #define _GNU_SOURCE
+ 
+ #include <assert.h>
++#include <stddef.h>
+ #include <stdint.h>
+ #include <sched.h>
+ #include <fcntl.h>
+-- 
+2.34.1
+
