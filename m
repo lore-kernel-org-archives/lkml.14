@@ -1,96 +1,174 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA6535894
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 14:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D8F10A24;
+	Mon, 22 Apr 2024 14:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713796219; cv=none; b=p2lZvvRbJ40/f4qiDTvswmbm8P+BofCi3QBuPkbEgRKwLP3VV5umBa/5mEVZO5L+6+pMRuEsLudkGYvcpsVsoJQm4Th5zpZ2mxyYSCgnIUxgy4q+2Q5MYU/j9r5QkzODBiQ60XTkM/3z4zuf6PR6hvN3xUOHfgKpzzqppnq9qSM=
+	t=1713796295; cv=none; b=Nv7FQaPwo5t6uspKDp7AJ9tBoC4niKByB5yVf3UI31YSgfyxj/W9gVojasmWvpCqSXSTNal6RejM/A940d1sWP4jPneTo+nl06NDeJd4wqu7+YiCNQ8IxIZz4qY8gvZUkvoX4Y5EyJALPCS6gH37r1pS95MvJQs+6zk/wlhrrh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713796219; c=relaxed/simple;
-	bh=tXVlXPB/PSJki1/C2jbfu4JVsjrCQd7KwrdY5slbJl8=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Cq2rtaI51qI3PAnIgYK7F/j1uph6lepN6JJWBMLssmUxcaywwKVQln9IZwmgtPt93GNDxf4z+SvMdhY8d7MnVnKUdQpkORsW/Js4rislQpRnOJzXDhi7+FvDGfWlYjr4RWVZ10IofNU7pypulai0fL2klWs9pKNG2C4hM8X+pYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=j4j17g1H; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1713796295; c=relaxed/simple;
+	bh=K7wyjRLcNUykgxF/QAusCyjr8sCsvz/O1Abzbu8bRAk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Pj0TWZ1no0R4BKY2ZlnOWrOA2b5zA/RlWwpweF+P+zxG7vIcXiHOk2KIDBgD6djD1o29RUEt0HwUE/Nd38vCn8e4nSjicDWFraXLXgV3Gq6vOJkDqVW8zHcNecZkKBO7iCXEvok0b3RYds/kqUbO8gs8xYKFRn/OCPpO90aN+4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=kPlce+/D; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=WsAAiU4m; arc=none smtp.client-ip=96.44.175.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="j4j17g1H"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56e136cbcecso6345823a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1713796216; x=1714401016; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tXVlXPB/PSJki1/C2jbfu4JVsjrCQd7KwrdY5slbJl8=;
-        b=j4j17g1H7fCdz+OZydVy0cwDMEF9e6X2lKg/m5B2ysZorrXRghNWxpTt45Ja1fevJe
-         TVYn92cAFb3Pz+vSR+CxeD5w6NLRO2OBaBQGz0aBEDLyqB4kBazb+X3R8yW2SdIOlojo
-         3KKqW3FZuUwRqPKTjiHPVNluasYimKmgoQxAaTAQf0tI5R3GOWHC5jRDXGkkNq1IcJcy
-         WRRi2j6Ht6Z35b2Dt88+jGPv/fGipxWRZhKyV2A6JrkZiObi2teNEb/Vz9tI5GDsnyw5
-         2s2iM12bajfL9IaZmE/8LyTQvzjR+fFZ2Aa0ojZr7VXiBzgCIeE7eopPWedwbtKw+omD
-         V+Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713796216; x=1714401016;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tXVlXPB/PSJki1/C2jbfu4JVsjrCQd7KwrdY5slbJl8=;
-        b=ipDfs8wd77QV0Xp8Yh34oR5q3VU8j8ToMvBZPJqrRA1HppxwycYk2T+HHC6EkjV8N5
-         zIv/a2F6yKt6MtElRHMUF7RRaqo7YBZE9bjXun+pd1ADtAiQbWrNqNE28v+J0G/89WKl
-         9521kXCXmejIplkJGoRWFp7sNifL9kNuNE+8LAFy5J5+z6oMJH1sTnuJcVY83jvvk7hk
-         MFG0Bf0auOCO87mHGrkW8H+DuTya5kyfCLSRbpGF4XP5ZcD0IeQKV2rjyB6vJoKOp94O
-         8ECRCr7NFCmWo79u61AU2Ddxt7PHZc/WIKR99eiTviRwBHNnOoTWQCGU0nAzrXF1OA6v
-         vgCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUouKp1qOtVJCLqrAxMfMGUgDdkiArDWkka1sPzWCu1rrhH76WK3mMrYDDI/rUNrGVxpC9RTXSkEemY3dm+0Oa1wW0mzAEnHJWveEkh
-X-Gm-Message-State: AOJu0Yy83uEniWVCVv75LCR30TzoOZvUBt0oHtOulAk1/MFYOnMOyiyg
-	MefkmMUl3d/eFvXzUYgHBSszARdCBPjyWh5eTqJrs4HoDA0+k1YYQzkyVTYnl5E=
-X-Google-Smtp-Source: AGHT+IEbqojyvQXmqJAvwwpw4d9QKzh2sZsy8S2+Q0SK1s0wZBZgoKfYw8rOADqD/u+Jkier6TXDAQ==
-X-Received: by 2002:a17:907:9448:b0:a58:7298:fdfe with SMTP id dl8-20020a170907944800b00a587298fdfemr408810ejc.53.1713796216287;
-        Mon, 22 Apr 2024 07:30:16 -0700 (PDT)
-Received: from smtpclient.apple ([2001:a61:10c6:ce01:7d:af2:ac50:1252])
-        by smtp.gmail.com with ESMTPSA id h3-20020a170906260300b00a559965b896sm3197077ejc.202.2024.04.22.07.30.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2024 07:30:15 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="kPlce+/D";
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="WsAAiU4m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1713796293;
+	bh=K7wyjRLcNUykgxF/QAusCyjr8sCsvz/O1Abzbu8bRAk=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=kPlce+/DBdIm2PkNb3/TjC3aqq4tD528d1buooEpvGUHwCyeO57Muhae73VnPqmnh
+	 hY8AA1bXAuWaQKvES6D9L79ytyS+k88ewelMXVWQMRitzR8gWPTRUiFX/gwMGSM1Pv
+	 vbyjtbqvgpwAoOUOSwGM64DtDpPE9BYx3MyifrtM=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 18B201286027;
+	Mon, 22 Apr 2024 10:31:33 -0400 (EDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+ by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id 7Q_oRP6_fizp; Mon, 22 Apr 2024 10:31:33 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1713796292;
+	bh=K7wyjRLcNUykgxF/QAusCyjr8sCsvz/O1Abzbu8bRAk=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=WsAAiU4maGb9/Xm8Xlyct31Rtt1Hel4GwRt8kpz/kf4EPfbsWneJblnewAfu3PLDQ
+	 gbkXp6dPq1pBSyBSLluMbb2qkbIBZ399WzOmogk7z6HsVHIxKsSwag+yCFuhnXRkJ4
+	 Iv8lf4qv0xHqlHdxtMDpzuxCjkfYD0Mdo1kNCFD4=
+Received: from [172.20.13.230] (wsip-184-177-54-3.hr.hr.cox.net [184.177.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 23B481285FD7;
+	Mon, 22 Apr 2024 10:31:32 -0400 (EDT)
+Message-ID: <e1da76ca4c7fe9319aaac5f8ff6eb46db433ec60.camel@HansenPartnership.com>
+Subject: Re: [PATCH] efi: expose TPM event log to userspace via sysfs
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc: Mikko Rapeli <mikko.rapeli@linaro.org>, Ard Biesheuvel
+ <ardb@kernel.org>,  linux-efi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Lennart Poettering <lennart@poettering.net>,
+ linux-integrity@vger.kernel.org
+Date: Mon, 22 Apr 2024 10:31:30 -0400
+In-Reply-To: <CAC_iWj+zbs2tq_nMASDX6pgCAP23+PpctJFiu9=mgOVDz8Trzw@mail.gmail.com>
+References: <20240422112711.362779-1-mikko.rapeli@linaro.org>
+	 <6e751959b9056884c1b9d3ba23e303d1737d8763.camel@HansenPartnership.com>
+	 <ZiZhSfgeAdrbnaVL@nuoska>
+	 <CAC_iWjKA-xRH=3FK+=woXsB8AW4+_mVhJhUQnL8iFKxGzOwKiA@mail.gmail.com>
+	 <e3038141413e25350f0e53496f7a7af1bf8419cf.camel@HansenPartnership.com>
+	 <CAC_iWj+zbs2tq_nMASDX6pgCAP23+PpctJFiu9=mgOVDz8Trzw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
-Subject: Re: [PATCH] bitops: Change function return types from long to int
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <42e6a510-9000-44a4-b6bf-2bca9cf74d5e@linux.intel.com>
-Date: Mon, 22 Apr 2024 16:30:03 +0200
-Cc: Arnd Bergmann <arnd@arndb.de>,
- Xiao Wang <xiao.w.wang@intel.com>,
- Palmer Dabbelt <palmer@rivosinc.com>,
- Charlie Jenkins <charlie@rivosinc.com>,
- Namhyung Kim <namhyung@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>,
- Youling Tang <tangyouling@loongson.cn>,
- Tiezhu Yang <yangtiezhu@loongson.cn>,
- Jinyang He <hejinyang@loongson.cn>,
- linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C0856D2E-53FF-45EB-B0F9-D4F836C7222C@toblux.com>
-References: <20240420223836.241472-1-thorsten.blum@toblux.com>
- <42e6a510-9000-44a4-b6bf-2bca9cf74d5e@linux.intel.com>
-To: =?utf-8?Q?Amadeusz_S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>
-X-Mailer: Apple Mail (2.3774.500.171.1.1)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On 22. Apr 2024, at 09:44, Amadeusz S=C5=82awi=C5=84ski =
-<amadeuszx.slawinski@linux.intel.com> wrote:
->=20
-> I don't mind the idea, but in the past I've send some patches trying =
-to align some arch specific implementations with asm-generic ones. Now =
-you are changing only asm-generic implementation and leaving arch =
-specific ones untouched (that's probably why you see no size change on =
-some of them).
+On Mon, 2024-04-22 at 16:54 +0300, Ilias Apalodimas wrote:
+> Hi James
+> 
+> On Mon, 22 Apr 2024 at 16:38, James Bottomley
+> <James.Bottomley@hansenpartnership.com> wrote:
+> > 
+> > On Mon, 2024-04-22 at 16:32 +0300, Ilias Apalodimas wrote:
+> > > Hi all,
+> > > 
+> > > On Mon, 22 Apr 2024 at 16:08, Mikko Rapeli
+> > > <mikko.rapeli@linaro.org>
+> > > wrote:
+> > > > 
+> > > > Hi,
+> > > > 
+> > > > On Mon, Apr 22, 2024 at 08:42:41AM -0400, James Bottomley
+> > > > wrote:
+> > > > > On Mon, 2024-04-22 at 14:27 +0300, Mikko Rapeli wrote:
+> > > > > > Userspace needs to know if TPM kernel drivers need to be
+> > > > > > loaded and related services started early in the boot if
+> > > > > > TPM device is used and available.
+> > > > > 
+> > > > > This says what but not why.  We already have module
+> > > > > autoloading that works correctly for TPM devices, so why is
+> > > > > this needed?
+> > > > > 
+> > > > > We do have a chicken and egg problem with IMA in that the TPM
+> > > > > driver needs to be present *before* any filesystem, including
+> > > > > the one the TPM modules would be on, is mounted so executions
+> > > > > can be measured into IMA (meaning that if you use IMA the TPM
+> > > > > drivers must be built in) but this sounds to be something
+> > > > > different. However, because of the IMA problem, most
+> > > > > distributions don't end up compiling TPM drivers as modules
+> > > > > anyway.
+> > > > > 
+> > > > > Is what you want simply that tpm modules be loaded earlier?
+> > > > 
+> > > > Yes, ealier is the problem. In my specific testing case the
+> > > > machine is qemu arm64 with swtpm with EFI firmware for secure
+> > > > boot and TPM support.
+> > > > 
+> > > > Firmware uses TPM and does measurements and thus TPM event log
+> > > > is
+> > > > available on this machine and a bunch of other arm64 boards.
+> > > > Visible in early boot dmesg as TPMEventLog lines like:
+> > > > 
+> > > > [    0.000000] efi: ESRT=0xf0ea5040 TPMFinalLog=0xf0ea9040
+> > > > RTPROP=0xf0ea7040 SMBIOS=0xf0ea3000 TPMEventLog=0xeb3b3040
+> > > > INITRD=0xeb3b2040 RNG=0xe5c0f040 MEMRESERVE=0xe5c0e040
+> > > > 
+> > > > Different boards use different TPM HW and drivers so compiling
+> > > > all these in is possible but a bit ugly. systemd recently
+> > > > gained support for a specific tpm2.target which makes TPM
+> > > > support modular and also works with kernel modules for some TPM
+> > > > use cases but not rootfs encryption.
+> > > > 
+> > > > In my test case we have a kernel+initramfs uki binary which is
+> > > > loaded by EFI firmware as a secure boot binary. TPM support on
+> > > > various boards is visible in devicetree but not as ACPI table
+> > > > entries. systemd currently detect TPM2 support either via ACPI
+> > > > table /sys/firmware/acpi/tables/TPM2 or TPM entry or via
+> > > > firmware measurement via
+> > > > /sys/kernel/security/tpm0/binary_bios_measurements
+> > > > .
+> > > 
+> > > One corner case worth noting here is that scanning the device
+> > > tree won't always work for non-ACPI systems... The reason is that
+> > > a firmware TPM (running in OP-TEE) might or might not have a DT
+> > > entry, since OP-TEE can discover the device dynamically and
+> > > doesn't always rely on a DT entry.
+> > > 
+> > > I don't particularly love the idea that an EventLog existence
+> > > automatically means a TPM will be there, but it seems that
+> > > systemd already relies on that and it does solve the problem we
+> > > have.
+> > 
+> > Well, quite. That's why the question I was interested in, perhaps
+> > not asked as clearly as it could be is: since all the TPM devices
+> > rely on discovery mechanisms like ACPI or DT or the like which are
+> > ready quite early, should we simply be auto loading the TPM drivers
+> > earlier?
+> 
+> This would be an elegant way to solve this and on top of that, we
+> have a single discovery mechanism from userspace -- e.g ls /dev/tpmX.
+> But to answer that we need more feedback from systemd. What 'earlier'
+> means? Autload it from the kernel before we go into launching the
+> initrd?
 
-I would submit architecture-specific changes in another patch set to =
-keep it
-simple and to be able to review each arch separately.=
+Right, so this is another timing problem: we can't autoload modules
+*before* they appear in the filesystem and presumably they're on the
+initrd, so auto loading must be post initrd mount (and init execution)
+but otherwise quite early?
+
+This might be quite a bit of work.  Logically, just moving the matching
+and loading code earlier might work, but we used to have a
+load_default_modules() at the end of init/main.c and it got removed
+(because it only eventually loaded elevator modules) everything is now
+loaded in it's various init routines, so to get, say, TPM ACPI modules
+loaded earlier, we'd have to run the ACPI device matching code earlier
+and so on for every other subsystem ...
+
+James
+
