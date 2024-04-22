@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976DD145FE9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2C9146012;
 	Mon, 22 Apr 2024 11:12:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713784333; cv=none; b=hVIlXZyUbF958g6KWFLM9V6eJiRb/r/E2AowzBfVMeWgzPq6fxR637VDUHhKlM2O4X82aRmjJVC86PjQD2+VjZUYF4koP4Hsot7B5Qpxxf3vC1+JfnNce+vBt5mXobQDQ8eIWb9FZq4Am1xSSWp26nVDwS8BdXl6oj5u94/eBuw=
+	t=1713784333; cv=none; b=R1oPF3GLPgT4OPDx/GuBwwviUmkZuBEZlo6lc2peYsLmrg9z5NOvAC5imVYryv4auKa1amN8JV09eOgj/euBj6I2SVZNqsKsRtfqzZXJtuQTNVE0wf/c4/iKKhyebR/pJ35xtzZ0bVl9zI2TRCQpwMOcwCCBHZXSe0RwBCMHHMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713784333; c=relaxed/simple;
-	bh=60Nj6Eui0n3N0tnpm8vqfyc7ou3dQzK95LfY94ljJ2Q=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ubE55FjP/tcHo6XjbJc+5UNe6Cx4VSy61XLjOhq43L98ygBG3RAIIW9dzZyw7JARhyFHGIGUO5U0XktnS/JIoMfljMa1NLuHe45riltGUssWiOTdKxvdw96gxDtrTuKb3A9DHoE7e17AZH3daGQW9oNY8oVQRLdE9Z9daNkUpas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r0gpY5K9; arc=none smtp.client-ip=10.30.226.201
+	bh=jYWnCuITKVGeyc1t8hsHiTcjXug06ly8BmUw+OWZjmo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=As6ddu2sCAYBXf41a9Ky5a5sEzSjiFtYithf6VBQpdtshTusbkumdwO9hxhPLyWQwAg41osQDz8yUlhPVNtb04O7doAdhrfoj5y3HhWxjWeBQ94O7NBvCTcRJmdaScCPDhn+NU1JMFBV3F5WuA7tTQaG+dNSwgDIX7JO6YktXwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mDgilJIk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r0gpY5K9"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 378ACC113CC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mDgilJIk"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 51CA5C2BD11;
 	Mon, 22 Apr 2024 11:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713784333;
-	bh=60Nj6Eui0n3N0tnpm8vqfyc7ou3dQzK95LfY94ljJ2Q=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=r0gpY5K9/azlRnLLLeyXFSWAylhXDnQWwb5khECKFRQFAJ0aEFEx36KIv302Zt6lk
-	 925R7ZgDUiSvfFoThBPGCD134S0n8YbNtvJqr54XrqigpGTlYGn2hWLtbbpTKliG/+
-	 op1CljMdeNTSkQDrucsU91bbH8xCuT802DYH0oAJO86ivAB3PdqPwL3fLbKdt1i2eV
-	 J1rEmp+DW3SWUW1+TrI/isB4+NQ/d3IbcsfrJvhj3idgzoIskZNvE0FXLFBa9tJMna
-	 BcdD5WbYHgXYC37Drhjb7zyRsji4+2ZLYJdU5WkV0oAkBW2XK+3T189aHoxToqbmbW
-	 SPULFniiaQVOw==
+	bh=jYWnCuITKVGeyc1t8hsHiTcjXug06ly8BmUw+OWZjmo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=mDgilJIk0XYOo7/8ZK7h4v5of2zefwB24hE+6TydEv1oSuWBrufxIB2BekbKPsxoL
+	 xvtf8z8BnLCHa+4NurOfsPC+/vhh3z1tYJTQov28t2Ax2gSuWoGkuFZXEvbFmL1PBj
+	 wdhqCCXlIFUvF6iR20hwy3dkD+iAwpi+TfJOcDgzSQoxpdAWGC4C46CX11WXjxCuQs
+	 2Ex0VblbXqmjMzruDZwb7wEOKt3/VuQokpquIB71PqBW1gjHPTn4K+jPCUWk3zGW+D
+	 8b8J0GHK2rrZFxvTCPZLLaheCA6Pld9wDsn0CNKlt8DzdCgQ/FUEx6L+GOj1L2PdGz
+	 h7g8y09fWfUeA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E20C4345F;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB3AC10F1A;
 	Mon, 22 Apr 2024 11:12:13 +0000 (UTC)
 From: Kelvin Zhang via B4 Relay <devnull+kelvin.zhang.amlogic.com@kernel.org>
-Subject: [PATCH v2 0/3] Add support for Amlogic T7 reset controller
-Date: Mon, 22 Apr 2024 19:11:42 +0800
-Message-Id: <20240422-t7-reset-v2-0-cb82271d3296@amlogic.com>
+Date: Mon, 22 Apr 2024 19:11:44 +0800
+Subject: [PATCH v2 2/3] reset: reset-meson: Add support for Amlogic T7 SoC
+ reset controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAO5FJmYC/23MQQ7CIBCF4as0sxZDASl15T1MF0iHdhJbDDRE0
- 3B3sWuX/8vLt0PCSJjg2uwQMVOisNYQpwbcbNcJGY21QXChuBQ92zoWMeHGvOnQSKW9HR9Q76+
- Int4HdR9qz5S2ED+HnNvf+gfJLeNMOY0CtZGXHm92eYaJ3NmFBYZSyhdgXGSeogAAAA==
+Message-Id: <20240422-t7-reset-v2-2-cb82271d3296@amlogic.com>
+References: <20240422-t7-reset-v2-0-cb82271d3296@amlogic.com>
+In-Reply-To: <20240422-t7-reset-v2-0-cb82271d3296@amlogic.com>
 To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -54,11 +55,11 @@ Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  Zelong Dong <zelong.dong@amlogic.com>, 
  Kelvin Zhang <kelvin.zhang@amlogic.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713784331; l=1114;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713784331; l=1542;
  i=kelvin.zhang@amlogic.com; s=20240329; h=from:subject:message-id;
- bh=60Nj6Eui0n3N0tnpm8vqfyc7ou3dQzK95LfY94ljJ2Q=;
- b=/gYjYSk1vpwpkjfjMUbBti+TUQEAmVkAzsRF+ybxSZczfGfjPre9hMD1+0lbyMdq48VlAUv76
- e1nzmYjH+6PBDZqJxUF9CDf4k45OZe3hoGe/2cujuahY92nBy7spKPX
+ bh=V9Mku9OeTyU3lnGbQaD9sh0OS9qpGjOnwcE8yjtQxFM=;
+ b=VDZujYI/hY37dRyDX1UhtvU4NDwHA/K1jjD+Rm4uyzS+R08RTkxnMoRisdtTCSgF5kU2LT9tn
+ Lb/NQJbYztNCbz+HGSyUwV67i0NL1aV0Q/9tbcC/+wekdfMLHnPCALG
 X-Developer-Key: i=kelvin.zhang@amlogic.com; a=ed25519;
  pk=pgnle7HTNvnNTcOoGejvtTC7BJT30HUNXfMHRRXSylI=
 X-Endpoint-Received: by B4 Relay for kelvin.zhang@amlogic.com/20240329 with
@@ -66,34 +67,46 @@ X-Endpoint-Received: by B4 Relay for kelvin.zhang@amlogic.com/20240329 with
 X-Original-From: Kelvin Zhang <kelvin.zhang@amlogic.com>
 Reply-To: kelvin.zhang@amlogic.com
 
-Add a new compatible and device node for Amlogic T7 reset controller.
-And modify the driver accordingly.
+From: Zelong Dong <zelong.dong@amlogic.com>
+
+There are 7 sets of Reset Source in Amlogic T7 SoC reset controller,
+and the offset between base and level registers is 0x40.
+Add a new compatible string and struct meson_reset_param to support
+the reset controller on T7 SoC.
 
 Signed-off-by: Zelong Dong <zelong.dong@amlogic.com>
 Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
-Changes in v2:
-- Drop the compatible comment in dt-binding.
-- Move t7-reset.h to arch/arm64/boot/dts/amlogic.
-- Link to v1: https://lore.kernel.org/r/20240329-t7-reset-v1-0-4c6e2e68359e@amlogic.com
+ drivers/reset/reset-meson.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
----
-Zelong Dong (3):
-      dt-bindings: reset: Add Amlogic T7 reset controller
-      reset: reset-meson: Add support for Amlogic T7 SoC reset controller
-      arm64: dts: amlogic: Add Amlogic T7 reset controller
+diff --git a/drivers/reset/reset-meson.c b/drivers/reset/reset-meson.c
+index f78be97898bc..1e9fca3e30e8 100644
+--- a/drivers/reset/reset-meson.c
++++ b/drivers/reset/reset-meson.c
+@@ -102,6 +102,11 @@ static const struct meson_reset_param meson_s4_param = {
+ 	.level_offset	= 0x40,
+ };
+ 
++static const struct meson_reset_param t7_param = {
++	.reg_count      = 7,
++	.level_offset   = 0x40,
++};
++
+ static const struct of_device_id meson_reset_dt_ids[] = {
+ 	 { .compatible = "amlogic,meson8b-reset",    .data = &meson8b_param},
+ 	 { .compatible = "amlogic,meson-gxbb-reset", .data = &meson8b_param},
+@@ -109,6 +114,7 @@ static const struct of_device_id meson_reset_dt_ids[] = {
+ 	 { .compatible = "amlogic,meson-a1-reset",   .data = &meson_a1_param},
+ 	 { .compatible = "amlogic,meson-s4-reset",   .data = &meson_s4_param},
+ 	 { .compatible = "amlogic,c3-reset",   .data = &meson_s4_param},
++	 { .compatible = "amlogic,t7-reset",   .data = &t7_param},
+ 	 { /* sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, meson_reset_dt_ids);
 
- .../bindings/reset/amlogic,meson-reset.yaml        |   1 +
- arch/arm64/boot/dts/amlogic/amlogic-t7-reset.h     | 197 +++++++++++++++++++++
- arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi        |   7 +
- drivers/reset/reset-meson.c                        |   6 +
- 4 files changed, 211 insertions(+)
----
-base-commit: f529a6d274b3b8c75899e949649d231298f30a32
-change-id: 20240329-t7-reset-f87e8346fadb
-
-Best regards,
 -- 
-Kelvin Zhang <kelvin.zhang@amlogic.com>
+2.37.1
 
 
