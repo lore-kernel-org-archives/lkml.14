@@ -1,66 +1,124 @@
-Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6B3EDDAB;
-	Mon, 22 Apr 2024 03:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8923DF49
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 03:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713756568; cv=none; b=cKuzXz7bmQ7IKm+0NaN7LqhU2VM4oupvVev/ldXuECZFrU4T7gn68TfUtOKuXYpqasbmzYJ+RAJpz28KNNuLUoO5P0kqDRyPCuzT7jHRGqoBPKlR3iwMVdTTXoROXqnUfLDA+VDukmd5uTHKuSl/ZUKQ6vyhw/vlVaM95698o4A=
+	t=1713756683; cv=none; b=aMwTdOGUgy47NITI6DbNG70xjEUQW1g5c9nAq1MvSoQXrqL719kMti0nTcRPyD340HpB3WyyJ5KNAlL7c+5Bqz8ixPkfY1COhhEnNnqM6QSxzrW5aReJOZ8TikwaATHw1pfeZYfzdX1V6c+KOO27IrMqFCwYFa4B4Wv+viogJgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713756568; c=relaxed/simple;
-	bh=r8Qpr4ucM7+Hwg9wj59p5hxKfCnDkIHvT3XZ3KCX2iM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lCV84gIxN7EnW5sXIWwX842Bo+/WP3FIWtgSxMONkPAaUaQHgI/VD3tMZzUqGshVCRH/3Pa0XbWO5Cz2J7ThL+lD75a3tCPGATYtllCfuvlbYCJN/PAjHrjz8XJ6qVvBDuJqang/ZoXbYtJxGLvaHPSJ28f/+4My5sVnkKk/OP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=a+HYj5sp; arc=none smtp.client-ip=123.58.177.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1713756683; c=relaxed/simple;
+	bh=WgJQBh8J1Waa7dt3AUnqHF0bETc6Ofj/zz3UpXYRizY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kJuvqhUOWh/Pv2HOYUMNRIKbdtgVXqdoOw5TaixDS+CF+tf+njtNescvoQKP6Id+3OTf0+YjN6TrWrGNRgDA2SGJ54LEXIv4zEVPcIceX3fRm3G5sRGNooODFX3PFii6vJYMkns288bEnMMXFHqy1ejUkiZagbI76a9OBGzj0UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Er5qu7FT; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="a+HYj5sp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=Mg4GQsUB46WfDA6t6amPXP/MvXAaedMjLDYmCMx+L18=;
-	b=a+HYj5spNqtVeC7pMXyJgHFhcX5xpi183EfoCkgTUcCa8JDTnw6hP8CMprcz5N
-	RpzA809xqd9UdbpJpyPtkQtgNHtFZbgZVZ1SrfXnnGv6COkJIgIWP5TnSsfcpWT4
-	5dHVtuxPE8e0q4WTd72thqRBkRTAUAXgfZKMhhRq9kmsU=
-Received: from dragon (unknown [223.68.79.243])
-	by smtp1 (Coremail) with SMTP id ClUQrADXn0QR1yVmBSErAw--.21732S3;
-	Mon, 22 Apr 2024 11:18:43 +0800 (CST)
-Date: Mon, 22 Apr 2024 11:18:41 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Michael Walle <mwalle@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Er5qu7FT"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e3ca4fe4cfso27271495ad.2
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2024 20:31:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713756681; x=1714361481; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Li3+1Ghj2slvXiv+/E7e/F9kDJtZLuXuC3BIKi+jfUc=;
+        b=Er5qu7FTKrIPEWR48uAEX1DLYS3VrpieX1PAzPUN2S1jtCYeQcEqGhZymduJGj6U+t
+         avDkS3SfYje394nnAdXeQX9DD86J8sH2kAd0D1+HfnuqL41j/NULtAJF/IOyrCTFSox2
+         ftmMIQfgnDacyeH+vaHHqdWo2A1t+bRxe5UZhG/zO8bGNRKPjMuOYpUUiZVFCD74ZFua
+         cNfatV6U+bwdYUHaTqJ6d07qjLw9/Y6X1UvoajhziCHJiemYdgFquIkaKqhzdlMcz2Me
+         z84rjr7izdmwmlucBWp7PTsmCKwHRe/mByVCEso/21+FovunMHfQa0vnyomYhkZrVOdY
+         eVLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713756681; x=1714361481;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Li3+1Ghj2slvXiv+/E7e/F9kDJtZLuXuC3BIKi+jfUc=;
+        b=UVrZEJnlpmal+dNSvh9ZPpznEGjPBLZyQcOEBt2ZF3PL6Q5EDrRMseY9IRtCKL3VFi
+         kbN2oxeEpXxvhq63uwtmv0DYrQrzDABTCTecpU/KM39f2il74CRgje/hfxKacI3EnCYO
+         xmvvjOfzrCwFg7ZsQV/JyKuobll2JNxt5T3oiyxghWVJhJkfoqiqvyVnrYAI99jBMngC
+         MS+ThNlrnunx1X6U81AGMLbe9DI9KtfqFHM9bZn9R6AQqBxpLZzT7mcgZf0ymsRWSymJ
+         NuGstp1Dz9TDAVurTi0SKoqAdDtyiY6RW5K4DGkxWiBH0/V7OZKcTOEipcP216vubQFv
+         zKpA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/bgeXBAtS45wtDELaEnM1k3eVAkPS7yurk+HOK7b/rBpV1ggqUydugJuhpounEezv4z3qcoNwLnZ75MIBUEgvdM9ko6e+Vk2DCmpC
+X-Gm-Message-State: AOJu0YxNqAZRkd9CU1sOk5x53fUFbn24k2pWE277ke4Ft2JZZkKfRl9r
+	YppEARBpVo3wTUObE3tn3Iuf3eQlIeA5U/QBn9hJvh4ZphrIXdvZi6Ox8ipMUYw=
+X-Google-Smtp-Source: AGHT+IEGPELzo18c9HmsXyfk6vYoiNKnZbbOrQi5Dlekvq6DhkR5uumMN7p3RYSBJx4+oqieaxGcdQ==
+X-Received: by 2002:a17:903:244b:b0:1e5:5041:b18a with SMTP id l11-20020a170903244b00b001e55041b18amr11845236pls.40.1713756680930;
+        Sun, 21 Apr 2024 20:31:20 -0700 (PDT)
+Received: from localhost ([122.172.87.52])
+        by smtp.gmail.com with ESMTPSA id w5-20020a1709029a8500b001e435350a7bsm6981020plp.259.2024.04.21.20.31.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Apr 2024 20:31:20 -0700 (PDT)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Yangtao Li <tiny.windzz@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>
+Cc: linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	kernel test robot <lkp@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: ls1028a: sl28: split variant 3/ads2 carrier
-Message-ID: <ZiXXETdD7Q+9ldQr@dragon>
-References: <20240403083812.3898480-1-mwalle@kernel.org>
+Subject: [PATCH] cpufreq: sun50i: Fix build warning around snprint()
+Date: Mon, 22 Apr 2024 09:01:09 +0530
+Message-Id: <285de20a187f3e4baeb28f639b5bf55e914a3821.1713756666.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240403083812.3898480-1-mwalle@kernel.org>
-X-CM-TRANSID:ClUQrADXn0QR1yVmBSErAw--.21732S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrXw1UCw1xGr4kAF17KF48JFb_yoWxXrc_WF
-	n8ur1kCws3JF4vqw1akFn3ZFyUGa47X3srCw1fJF97ArykJayqgF95K34vyrZ7AFs2yasx
-	Zw13JrnrWrW5WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUb8hL5UUUUU==
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDhTIZVszYg7p3AAAsG
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 03, 2024 at 10:38:12AM +0200, Michael Walle wrote:
-> The devicetree files can be (re-)used in u-boot now, they are imported
-> on a regular basis (see OF_UPSTREAM option) there. Up until now, it
-> didn't matter for linux and there was just a combined devicetree
-> "-var3-ads2" (with ads2 being the carrier board). But if the devicetree
-> files are now reused in u-boot, we need to have an individual "-var3"
-> variant, because the bootloader is just using the bare "varN" devicetree
-> files. Split the "var3" off of the "-var3-ads2" devicetree.
-> 
-> Signed-off-by: Michael Walle <mwalle@kernel.org>
+The Sun50i driver generates a warning with W=1:
 
-Applied, thanks!
+warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 2 [-Wformat-truncation=]
+
+Fix it by allocating a big enough array to print an integer.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202404191715.LDwMm2gP-lkp@intel.com/
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/cpufreq/sun50i-cpufreq-nvmem.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+index 30e5c337611c..cd50cea16a87 100644
+--- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
++++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+@@ -19,8 +19,6 @@
+ #include <linux/pm_opp.h>
+ #include <linux/slab.h>
+ 
+-#define MAX_NAME_LEN	7
+-
+ #define NVMEM_MASK	0x7
+ #define NVMEM_SHIFT	5
+ 
+@@ -208,7 +206,7 @@ static int sun50i_cpufreq_get_efuse(void)
+ static int sun50i_cpufreq_nvmem_probe(struct platform_device *pdev)
+ {
+ 	int *opp_tokens;
+-	char name[MAX_NAME_LEN];
++	char name[] = "speedXXXXXXXXXXX"; /* Integers can take 11 chars max */
+ 	unsigned int cpu, supported_hw;
+ 	struct dev_pm_opp_config config = {};
+ 	int speed;
+@@ -235,7 +233,7 @@ static int sun50i_cpufreq_nvmem_probe(struct platform_device *pdev)
+ 		config.supported_hw_count = 1;
+ 	}
+ 
+-	snprintf(name, MAX_NAME_LEN, "speed%d", speed);
++	snprintf(name, sizeof(name), "speed%d", speed);
+ 	config.prop_name = name;
+ 
+ 	for_each_possible_cpu(cpu) {
+-- 
+2.31.1.272.g89b43f80a514
 
