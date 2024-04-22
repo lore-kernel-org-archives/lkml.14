@@ -1,100 +1,86 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22341CAAE
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 21:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961591CAB9;
+	Mon, 22 Apr 2024 21:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713821414; cv=none; b=tszwcvPUoT1U+aRcabpejA97eI2RA3E3sBxY4eIbwkn3P5P63xl2YFhpbczI3i8lreX+k2PMP0rLQibHlzo7xfauSiaIlpt0MQrlmmMh84MGkekheWAa4UPr5Ejhcmmxkur/VdRJe9Y/jPvpXOVxJR3Mbim1xAXY/stM9WSj73s=
+	t=1713821429; cv=none; b=Q7bRPxh8yEwYIVECJ13bnQDMFS4cs5PvEnpJF+lv/AZ0N1hAZcaLgElxx9/VEDqPa688HhytXq7PesZL2fnR4+HSMpI40eJ+2QxPdZMswfgqpKzezGU2c+MnFGvWqM1Du0XNREiBvSo8nezqP7mVwNK7C46x9o7b0U6oK5hd3a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713821414; c=relaxed/simple;
-	bh=Ku1DGEy0db+OnEa5w7PseS2QxxW9d5ZfsbNmxLSkJk4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HyjUXo6KZyIxMg+w7Y7xUI/tS5d6hbiZXfz3bMoJpJLi8iCR/DclZ/sgUa4nnJxQ15cZ8+XRHA2i9fdJUHpGz0y79T1rAwKwkMaR7FWSyKc/zXyMHFrR5GxZZPDqNBBAhINCz7lnxyPP+PbKDcB3Y4erjFxeW5zuuoj8RQiTgzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mWuX9Kg/; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1713821429; c=relaxed/simple;
+	bh=+MWDh4eam1mec7YkpjYmojj0wm6twFqAbTY7wxEKGxg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=EMxK2clQ7f3ZsfDDuDPZKD2oliKh3C77GrYr95VaV9+G5Codb1WwpJALFjm9tumyYcDSqOIdQL9imZ2sApoV234truk78Yijzl65siWisZSxhSetJFimTiC5zFKgL012TUB8R2dzgolLUnEoD3Cr84SDHNAT6yxAb6VRPl5hdI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tm1b9YqI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mWuX9Kg/"
-Message-ID: <173a7bb2-5473-4c1b-b3dd-ef776e63ac7a@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1713821410;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nH11/CXhaPQDxPvStD1h8S0lo64PkavloRKwmStdkfE=;
-	b=mWuX9Kg/JSi1GlYagbN/iSGyHb/7PXLCjJlVe2ffi1+IfdKuKtnzjNx4prIYV7NtPx33eP
-	8B5u1AI13YXJt+teLHVOvg75/U1S+3pRwtbXlsY/OMJnyiEvQkkBySvgFP0vw/MxqUcOGj
-	Qy2HIzwX+531fGEzPAj3ctd1ecHdlnk=
-Date: Mon, 22 Apr 2024 17:30:06 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tm1b9YqI"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 30031C2BD11;
+	Mon, 22 Apr 2024 21:30:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713821429;
+	bh=+MWDh4eam1mec7YkpjYmojj0wm6twFqAbTY7wxEKGxg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Tm1b9YqI/m5bnQY6lWhSzYJqnahgKyXaRTYJAdahs40lAMMcmZhgH775gKe+DIguq
+	 Go2jiXbEF0DkDQvOq2qRaMORMMN9XjNw628K02fygYwi3e8gXMyT0Bw6/WfWoAEjpJ
+	 UbyL50WZBtmqCr2Hoc3cYEEQn5AzaR+7qlcIosuPstYVvkl17sLxD5pDoUcUZ3+SeS
+	 ud5KhudroduD/fuzsDJxOgfxxUa0ECrfoCMA9MxR3J2a5gJkJK+MJbIXxpPunbbMWB
+	 oYoL1tgszcTV+se6YkvV/SaDch6DtaEdtNT4XCn3CYbnZGA0Tv++aKAyTsJ4Rf1Z9P
+	 bVIRODx5CrgvQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1319CC43443;
+	Mon, 22 Apr 2024 21:30:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/7] dt-bindings: pci: xilinx-nwl: Add phys
-To: Rob Herring <robh@kernel.org>
-Cc: Michal Simek <michal.simek@amd.com>,
- Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
- linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- devicetree@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>
-References: <20240422195904.3591683-1-sean.anderson@linux.dev>
- <20240422195904.3591683-2-sean.anderson@linux.dev>
- <171382130333.1986303.15938018699322126426.robh@kernel.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <171382130333.1986303.15938018699322126426.robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2 0/5] net: dsa: vsc73xx: convert to PHYLINK and do
+ some cleanup
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171382142907.1995.10883580544289239545.git-patchwork-notify@kernel.org>
+Date: Mon, 22 Apr 2024 21:30:29 +0000
+References: <20240417205048.3542839-1-paweldembicki@gmail.com>
+In-Reply-To: <20240417205048.3542839-1-paweldembicki@gmail.com>
+To: Pawel Dembicki <paweldembicki@gmail.com>
+Cc: netdev@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+ olteanv@gmail.com, davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org
 
-On 4/22/24 17:28, Rob Herring wrote:
-> 
-> On Mon, 22 Apr 2024 15:58:58 -0400, Sean Anderson wrote:
->> Add phys properties so Linux can power-on/configure the GTR
->> transcievers.
->> 
->> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
->> ---
->> 
->>  Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->> 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> yamllint warnings/errors:
-> 
-> dtschema/dtc warnings/errors:
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml: properties:phy-names: {'maxItems': 4, 'items': [{'pattern': '^pcie-phy[0-3]$'}]} should not be valid under {'required': ['maxItems']}
-> 	hint: "maxItems" is not needed with an "items" list
-> 	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
-> 
-> doc reference errors (make refcheckdocs):
-> 
-> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240422195904.3591683-2-sean.anderson@linux.dev
-> 
-> The base for the series is generally the latest rc1. A different dependency
-> should be noted in *this* patch.
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
-> 
-> pip3 install dtschema --upgrade
-> 
-> Please check and re-submit after running the above command yourself. Note
-> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> your schema. However, it must be unset to test all examples with your schema.
-> 
+Hello:
 
-This warning is invalid, since I am using pattern with items.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
---Sean
+On Wed, 17 Apr 2024 22:50:43 +0200 you wrote:
+> This patch series is a result of splitting a larger patch series [0],
+> where some parts needed to be refactored.
+> 
+> The first patch switches from a poll loop to read_poll_timeout.
+> 
+> The second patch is a simple conversion to phylink because adjust_link
+> won't work anymore.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,v2,1/5] net: dsa: vsc73xx: use read_poll_timeout instead delay loop
+    https://git.kernel.org/netdev/net-next/c/eb7e33d01db3
+  - [net-next,v2,2/5] net: dsa: vsc73xx: convert to PHYLINK
+    https://git.kernel.org/netdev/net-next/c/21fc3416ea11
+  - [net-next,v2,3/5] net: dsa: vsc73xx: use macros for rgmii recognition
+    https://git.kernel.org/netdev/net-next/c/12af94b2955f
+  - [net-next,v2,4/5] net: dsa: vsc73xx: Add define for max num of ports
+    https://git.kernel.org/netdev/net-next/c/6cc5280a0889
+  - [net-next,v2,5/5] net: dsa: vsc73xx: add structure descriptions
+    https://git.kernel.org/netdev/net-next/c/96944aafaaa6
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
