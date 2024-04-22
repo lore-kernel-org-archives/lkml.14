@@ -1,203 +1,133 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2070.outbound.protection.outlook.com [40.107.92.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6287A1514F0;
-	Mon, 22 Apr 2024 14:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713796503; cv=fail; b=gR6FncSzScDbkldR6nVQ1tzp+p4JUYRaczTEnqhHCTe8YdqXSXneMfSqat4cpawUWHjxaSIjq8FKaN+zJ8cB8X0lArxVbZAiltq/+ino0VzlsjobJtisL+ANC2OOgz0SQoixp42Y337q2gyAPbyK2yN1TC3jDH1GGwVLru5575o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713796503; c=relaxed/simple;
-	bh=yofH+Y73fmGXwyTRD8/dUy+fjoUFunfNPGRB5rcF+js=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZdX0pgq3LQsyRA3iJ5ihU7nuI6m470eRD26g093yyr0vMPJAhzMhxfS2sj0YwwSiz14eq5pjZAANVtRS59PXaC9dm2TfIl4G8T8LiJ/TJHWYTo1039di7BozxvfpguD18baGGJecxkj27AoMi3jHDbCUtlz7xQgDkaQt9ttT/rs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rz2vkW5v; arc=fail smtp.client-ip=40.107.92.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E393CF65
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 14:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713796558; cv=none; b=JwjlZVx3/pl0Yo/wKNSWUfpiTV7IALo6JIEQrzzEpeDL9eU9D97jgQYB1JUC/o6hKHar731VGO4sGxgyUMdTIA0VlAgmgJNzwEiA1yAx4pgPywPzieEK830AVsmsFcU6L+PEp9YRmiGa4ljWQeLmwx8NKxlsPnCLyjIoCfr1moU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713796558; c=relaxed/simple;
+	bh=EwGSVi8tsIBhQGwWzz1I/qZviamVBkcZz6+GbYrdYmk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nHH31P53jljc/kjmPEW0Hqv09gwJ/XeRiyprEPaW2AiND+tqwXmdZb0m9v7XfeTcmqlwIYWY3y3VuyFbgv5CfM/50hx4xiwMuUX4+INIDXCIuvz7PLvBKmzNYkJr+tGnioh1POY+8myxBWBbi1/Okiaw1rVcLE2G6GMcwjQVeAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=netflix.com; spf=pass smtp.mailfrom=netflix.com; dkim=pass (1024-bit key) header.d=netflix.com header.i=@netflix.com header.b=piGpTv3k; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=netflix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netflix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rz2vkW5v"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=caoFtHGyf5b61hTgK7MzjsdVUt5pprX13eRtPBuYQYu48Zg982/GVFJYj1DyKD3hybxSNUDXDU6QFHj0h8UOXQT+xgJRzmDj0mrOi9JN1bZeXPnD++AwiqFo+bbMuWlZO45EbC8UP7sgHsumzUbt8YM6RZGh3whiulJMMq7C7rGjRQW2wGYZyrYzVdvS2zNA8NtnSBls6HwmYZYw7YIcLPokVG23chYq5kJTHcPi+Y8oxvIL1vhaFAAsiCi8+Gt/tmp2NZVc3wwRAEcojDIzdIWmX4RAL8QDi/OYwi54mR5gZOtHXooKqhuOZEiuLadum+VfqaE73hgfpshwJxzLUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nkIZ2St2At/SGQvWXNajfcL0FCyooz9fnBUgP6XV8X4=;
- b=gMpvrbMZS/IZOJ/ZKO087oalbccSGfxhdl7GIoPE/bYKqwSud1/lvzcYRh0mMOrOCtzKcT6avIbtVayyNxfuKnBA/g7Hs68k2P74gDTqDz9puNNJ2692YCiUh7qo3hPEVq5ef7WRANKH7Y8Jphn20T8TzAssEfwrkqE4+hhMuVzGWCDWTT/Tlrae1ZgsT4parsqbYPW1h0Gt7QKztT6XVvyrkBdMCzEMTj87bG3o1kiTj0Jfa7OLhpDlnoBGxeJcZKfDLIXFOkAP7ZB1HNi6S4QvUQYEJ89m+8UFm0C412QIrWJ/0ujGfxxO7Op0ViajmoSsfSwEAfxn790c6V5zFg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nkIZ2St2At/SGQvWXNajfcL0FCyooz9fnBUgP6XV8X4=;
- b=rz2vkW5vFRbeq3RR3zYDqg6v/HE/caDq3jpqT0aasAfHxKB3pYb03ka6IHGuePk45uDj8BN9rIFeYP6YHv7edrVUgfRfpy3/4qCwyJ2AKlAy+iDyBFLt8Qk0CIAbn3W93RZ9rlTBfjgmgpQEQdw3YZ5v4gCRhhBBLv3HIYyvu2OeSn2474FHp0KDEDOL4JmGVO9K4xg7QgAQP0xOM1OhPGOu75e5XxAfpCDdFGNES6zYtipZ/ljDM24ZFnKub4yVluoS1Yp2f+Y0Apa49zu4EtFxSWypJ1TQ0xm/1hmAnxhFytqYUVTZAIACYNHs4wnSVClyFZQ8uBGH89zVFIfjKw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com (2603:10b6:8:73::18) by
- DM4PR12MB8557.namprd12.prod.outlook.com (2603:10b6:8:18b::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7472.44; Mon, 22 Apr 2024 14:34:57 +0000
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::dc5c:2cf1:d5f5:9753]) by DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::dc5c:2cf1:d5f5:9753%6]) with mapi id 15.20.7472.044; Mon, 22 Apr 2024
- 14:34:57 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>, kernel@collabora.com,
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] selftests: mm: fix unused and uninitialized variable
- warning
-Date: Mon, 22 Apr 2024 09:59:08 -0400
-X-Mailer: MailMate (1.14r6028)
-Message-ID: <CC621D9C-2D1B-4CB7-A5E0-ACE0850E6B0D@nvidia.com>
-In-Reply-To: <20240416162658.3353622-1-usama.anjum@collabora.com>
-References: <20240416162658.3353622-1-usama.anjum@collabora.com>
-Content-Type: multipart/signed;
- boundary="=_MailMate_48CB3BC0-7E89-479D-988D-8B56AF4CB946_=";
- micalg=pgp-sha512; protocol="application/pgp-signature"
-X-ClientProxiedBy: BL1PR13CA0270.namprd13.prod.outlook.com
- (2603:10b6:208:2ba::35) To DS7PR12MB5744.namprd12.prod.outlook.com
- (2603:10b6:8:73::18)
+	dkim=pass (1024-bit key) header.d=netflix.com header.i=@netflix.com header.b="piGpTv3k"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-7d6a772af5bso164423939f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 07:35:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netflix.com; s=google; t=1713796556; x=1714401356; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=a/JPFUxV2ArWkhwNnn1v7zuWOs9XoBJjsryMcg9Mcoo=;
+        b=piGpTv3k1ztDsoA3KzFniS8OUrino3+OEdveBYnZ/vO5cXdm7yaIbfybmkwEYB+Emh
+         +qObK+mu7bLCFtypkwHJabuPkZSF1ApPFlrbGmpAUwDrZzYy0d8rnOBAsqB5UH2BVbsx
+         9PkfSUNWjYKVu8EJxpFhLKiDq0U4lu7VmkhCA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713796556; x=1714401356;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=a/JPFUxV2ArWkhwNnn1v7zuWOs9XoBJjsryMcg9Mcoo=;
+        b=eq21rZcmCx2Bre3ytScNZwS86etDzdQq24wTjtqe+Eek9hx0+yP19GHibDFddLdpOG
+         lawUBtB84ooAZYSBxiseNgrT2VW12etEI5aEKAtTH8KAh7Ztq44C5HvpxK0ac0ewYp14
+         XfSnfX7rZe/TxCbY2Ky1yik2f7hNvKtGLK1Yl8hJno2Eruxjz0+wVEeSPtHmADDRV1RY
+         owiL/c79z9aR6Q89eobh2VeHyZICQ3c7uR6d/9y0kNOVITYTAY3O+ePw9ixvGF6Ggqhq
+         9rrRGKEbOJ2JciCe/ZFnpx3LJYNEuEhRPmdA2CwZJ47k9V0mJGu4TskDfTx9/7y8HogD
+         H2wA==
+X-Gm-Message-State: AOJu0YyjUuJ0Uwk7iA5Tk8oXur9ydKBYZBz0JsIN4q2+e4OeP+OrSY44
+	3074g9mlrDEFz5LaUo0PvscgvIbO/NWWGWsDbXO94pC5fH28/8JbJZ+oOWlQlMg=
+X-Google-Smtp-Source: AGHT+IGDHc8HUrs0iww/TdL2zMyyadTokjPSQhWtaZ8TbB4GbBiQ8FO8zM77jN0fCSdoCB79InX/Ew==
+X-Received: by 2002:a05:6602:1b92:b0:7cb:ffe6:b320 with SMTP id dq18-20020a0566021b9200b007cbffe6b320mr11608580iob.5.1713796555960;
+        Mon, 22 Apr 2024 07:35:55 -0700 (PDT)
+Received: from localhost ([2601:285:8700:8f20:e98c:6f5c:74a4:9a12])
+        by smtp.gmail.com with UTF8SMTPSA id dv10-20020a056638608a00b00482f7427748sm2849642jab.135.2024.04.22.07.35.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Apr 2024 07:35:55 -0700 (PDT)
+From: Jose Fernandez <josef@netflix.com>
+To: Harry Wentland <harry.wentland@amd.com>,
+	Leo Li <sunpeng.li@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	christian.koenig@amd.com,
+	Xinhui.Pan@amd.com,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Wenjing Liu <wenjing.liu@amd.com>,
+	Alan Liu <haoping.liu@amd.com>,
+	George Shen <george.shen@amd.com>,
+	Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
+	Ilya Bakoulin <ilya.bakoulin@amd.com>,
+	Hamza Mahfooz <hamza.mahfooz@amd.com>,
+	Fangzhi Zuo <jerry.zuo@amd.com>,
+	Leo Ma <hanghong.ma@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org,
+	Jose Fernandez <josef@netflix.com>
+Subject: [PATCH RESEND] drm/amd/display: Fix division by zero in setup_dsc_config
+Date: Mon, 22 Apr 2024 08:35:44 -0600
+Message-Id: <20240422143544.20481-1-josef@netflix.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB5744:EE_|DM4PR12MB8557:EE_
-X-MS-Office365-Filtering-Correlation-Id: cd8a434d-7101-46bc-b826-08dc62d961c7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?JWNkKTIP5ylNJ+yC+JCSsVdt7sw4xIoJshn67IXjQUmkUsAfSN9rKuxSoSAp?=
- =?us-ascii?Q?8st33WwaBGi78giY1rCBIGUVdeNPzPeQgFtEXnFOfcCob67aukagzXOQOA6o?=
- =?us-ascii?Q?d5+U5PQ+7Ptcs3TSN4H7xj5Me0OlUZWWS99yqajb7xj0M1lLjTEahZw5oXAN?=
- =?us-ascii?Q?jfNVLqSKUMdFfPxHFdjHAc2ZGuIc5c4VxoUkuxckksAWavA3j87+a+xrS6GW?=
- =?us-ascii?Q?kTT5JaJEiXdWCNHuuh3covDGT2K6yrgVl0LxWl3gZSniH/BPEPDFuHwdVB/Q?=
- =?us-ascii?Q?tptQIenlCCNZEWD65FkvNjlQ1iFPzzTJS3RhV07cUEExC/N7rMevgHH+xl6a?=
- =?us-ascii?Q?KYwkAT9qVmIM51i/hVuCTCCjBJF2AEpUZ1RN/3APItio+c/9z31livsQ7//p?=
- =?us-ascii?Q?DiLcnZfTjPOg30JiyR6VIobcfjcCjh5T1WORblOAMjLZD8W5ZcZa7zPCZppg?=
- =?us-ascii?Q?JOMAPiEHH0vKaDKqLGpGH0C93Dnv6LH9bf1cgUzdRF04cc+usMm+5h6eN4QI?=
- =?us-ascii?Q?4Qjnm6b+ijr0QOX8z6d7zSt8qq2Q+HnxPLiBM2yKetgxyQo4D4NdIUlGB0Yj?=
- =?us-ascii?Q?EybLItsAm6DLyw5NSsy1XaNeuW8MpoP1p7ZBcCoQS6YGHDLKjElQvUb3u+7x?=
- =?us-ascii?Q?hrtgOr1cKXo2u3szwUkpGXi11mXpLrbnvKChw0BVBCcps1ajosmx0IdAEY30?=
- =?us-ascii?Q?PedHXVA3MVm1MP1YhXRRVLwf7JT5fJHLaqt76iAsF0izyGvOIn9SFjtboX2L?=
- =?us-ascii?Q?8yt5AyEmY1bGUvDLP5WOHNVXNAzT7mXxC6lQcpjbTR9I5EINqIU145loYLbd?=
- =?us-ascii?Q?J8ulyrSf9TSAOGP8FtyRBxeWAihH8iGXgNoSjrjl3ynIQaUJ7+xA77DEfw5P?=
- =?us-ascii?Q?mwnb/1RY2f2vbjBBvmyam+5nQ/RCgn55nYi2aCW0HhfOACChBbT7Q7pR9qYN?=
- =?us-ascii?Q?GBq2KtlwQJYPJ9DzJZ1vahlzux6TRbmQKLMfozPc4gD+JYq7C4SOm61Jag+F?=
- =?us-ascii?Q?PXfNDITT9meogMMl67tjo8KG72lBt6R3ZommIWGa7NUqwQ0+2Ba59Z7MX+wu?=
- =?us-ascii?Q?iRguUQHVJUhvzwJ6JoWPjtLhtPNiyOmf2gdT8wT8TvTdJQsCNcFXtynyRiCM?=
- =?us-ascii?Q?1geWRev6WQntps4C/3cP5l7pGA1A5ZkvZKobLqAAkwIBMqFsGUAigRVCaSHF?=
- =?us-ascii?Q?GpCk0NpcTOwe6sZCo7UkO7GI0zEPAYHCLg1qwiIzJhRNan5pYZ78MqCebHq0?=
- =?us-ascii?Q?+h+b9Q1FfzQF+kXUJA60rthq5QqZ0ifFr+qVRZNocg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5744.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?5cMXCA2IJL/hW/Wc6rz7nIt8nlQnTj3FDLj6VQlguvkw9/gU4GVD8RUo/yEe?=
- =?us-ascii?Q?Gop+X/xMrXomCOfm8hSlwgjzQSruilZVlRjTnAYrFx1hK476h7Wac6Hkz6FK?=
- =?us-ascii?Q?qASLiHCwE/dfdfTUEV+nP/Af9MsLB3qGDI3A2xTkBZlLxnguGG9wygH6cwb3?=
- =?us-ascii?Q?f7dAuEWLingzxQ90DrBMHaBbinZtZEqjenaia7/RfdasudgGOUzgjjcSVaa6?=
- =?us-ascii?Q?9tESVwaKkt9sHF1jCPaJz2wFpbLSlH7aHFlAPxMK9jRAMbrFK73kNn4zKSJV?=
- =?us-ascii?Q?zdGUbDFiU9QXQWZc+kHXmAPuDl09PhhuRE7ySilUzf7d7bfwCN+vcPo8SmBQ?=
- =?us-ascii?Q?wZeZtU1+MF9a4tG4qJAb6heGIN1hdPsE+as8T9fw3criFNB5OKtxw4T5vjVp?=
- =?us-ascii?Q?UbXnAFvP+POpS6w6I4mzCUYZVneID3h6OMScqnpXP6eFOApla3SU7nZHNp8K?=
- =?us-ascii?Q?2gBSNw4xtl7krOAwzIIiWc56UShk1daISgtI+2/2PIm+uuMvJxpXXirzLf4C?=
- =?us-ascii?Q?Bqlnl6lVt06s63In31gr526RJKaF/TWoxCVW7RZLdflQR9KVLun13d3+EzX+?=
- =?us-ascii?Q?7zP1Qz6uc+vCtXsmRqCxmea525es/YSJJXSJS+iDX+tZChZ5xQ5+jF6DnV7O?=
- =?us-ascii?Q?Tlc3XQCM3eG0KDRhWMmZxmxRrLrUEbB8DcMswv+FzOUb1vO+FVHFoHUMfeFm?=
- =?us-ascii?Q?ttGTBjYIMXqhoIY70KFrpornPws6w7IBDUBi0lPPLqN4inIGDHTsypMqQu21?=
- =?us-ascii?Q?vNukcb9aEqY6jd27hS0wThsBJjKVaeHWZQuWvPLKy97LlW2dBO46Wi/RbG91?=
- =?us-ascii?Q?dsXntDCt3Ne1SWhpG4klAbo5Y1YDy7q/Ew/eqtoWsz5i8SQzLyHAVU4AofWT?=
- =?us-ascii?Q?JMb371bfA5QinkAQcvPDiJ+VrSHUqBQBjuWvtpUsig72dAfhaEj2xmnXBlHi?=
- =?us-ascii?Q?0bVfsaHdWNt04HpjCVBMD8SDcszwRbAAM2k2CUxwqRygRDEpk6Zojl1r6u7g?=
- =?us-ascii?Q?NF1zl9SKx2wRbLPHR2gdbB708D8tPmJcxXDPR07mWfP3pPaCy6bk3bxPtUQU?=
- =?us-ascii?Q?7isLAMInaDm1D8W6AUaKONf0wkt9wTzFZ91VVlHrlcXwRHphdqLO0djj/yix?=
- =?us-ascii?Q?orD3I9LulVq9L4dSNO45SP+2+MVoM0sv6gjNJlShI6DUbwfqyv6MGGnLGpR0?=
- =?us-ascii?Q?u1aM/CAa/Xxf+fhIXQoaA0dLsVyrhEkHVo/1jkdQz+KzVMAIBuzW8LoJBQwA?=
- =?us-ascii?Q?MuJk+JyrbnuJFdfHTntljUx3ZQC9UOZf0r9rzjxIAT9qBK+XsoJi6Nm/dCjn?=
- =?us-ascii?Q?akrpboF2a6DRddi4C6mjYbM8lOJhXn7Umedp5s0jLkRR15/sD8IzencA3FJi?=
- =?us-ascii?Q?8Vomgo0psw0p2B4ERDWay8kRbw7LI4FiThnaDF8RoywK/rDFK6dYU0SGXs/p?=
- =?us-ascii?Q?Wb20z4abSc8LcwyahaXwBC7ximBmPseNUnZOSRt58ygcBsyybDs/2MPUKnjD?=
- =?us-ascii?Q?UKQKO+KRDnOe9lKaRgjD2qRgTvuqgiopyqtKVSdg7LREP2+eB2cbN72RR0XH?=
- =?us-ascii?Q?2q3JFXutP/Hn7b9pgQQTyV7kZMNPFUfydQjA7juK?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd8a434d-7101-46bc-b826-08dc62d961c7
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5744.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2024 14:34:56.9002
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gcKYQsM3gM/aWId+q4zimMmvsx5Do2V5z/0lhy7s8ffatFXREN9H57f3cTZu33pt
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8557
+Content-Transfer-Encoding: 8bit
 
---=_MailMate_48CB3BC0-7E89-479D-988D-8B56AF4CB946_=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+When slice_height is 0, the division by slice_height in the calculation
+of the number of slices will cause a division by zero driver crash. This
+leaves the kernel in a state that requires a reboot. This patch adds a
+check to avoid the division by zero.
 
-On 16 Apr 2024, at 12:26, Muhammad Usama Anjum wrote:
+The stack trace below is for the 6.8.4 Kernel. I reproduced the issue on
+a Z16 Gen 2 Lenovo Thinkpad with a Apple Studio Display monitor
+connected via Thunderbolt. The amdgpu driver crashed with this exception
+when I rebooted the system with the monitor connected.
 
-> Fix the warnings by initializing and marking the variable as unused.
-> I've caught the warnings by using clang.
->
-> split_huge_page_test.c:303:6: warning: variable 'dummy' set but not use=
-d [-Wunused-but-set-variable]
->   303 |         int dummy;
->       |             ^
-> split_huge_page_test.c:343:3: warning: variable 'dummy' is uninitialize=
-d when used here [-Wuninitialized]
->   343 |                 dummy +=3D *(*addr + i);
->       |                 ^~~~~
-> split_huge_page_test.c:303:11: note: initialize the variable 'dummy' to=
- silence this warning
->   303 |         int dummy;
->       |                  ^
->       |                   =3D 0
-> 2 warnings generated.
->
-> Fixes: fc4d182316bd ("mm: huge_memory: enable debugfs to split huge pag=
-es to any order")
-> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> ---
->  tools/testing/selftests/mm/split_huge_page_test.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-LGTM. Thanks. Reviewed-by: Zi Yan <ziy@nvidia.com>
+kernel: ? die (arch/x86/kernel/dumpstack.c:421 arch/x86/kernel/dumpstack.c:434 arch/x86/kernel/dumpstack.c:447)
+kernel: ? do_trap (arch/x86/kernel/traps.c:113 arch/x86/kernel/traps.c:154)
+kernel: ? setup_dsc_config (drivers/gpu/drm/amd/amdgpu/../display/dc/dsc/dc_dsc.c:1053) amdgpu
+kernel: ? do_error_trap (./arch/x86/include/asm/traps.h:58 arch/x86/kernel/traps.c:175)
+kernel: ? setup_dsc_config (drivers/gpu/drm/amd/amdgpu/../display/dc/dsc/dc_dsc.c:1053) amdgpu
+kernel: ? exc_divide_error (arch/x86/kernel/traps.c:194 (discriminator 2))
+kernel: ? setup_dsc_config (drivers/gpu/drm/amd/amdgpu/../display/dc/dsc/dc_dsc.c:1053) amdgpu
+kernel: ? asm_exc_divide_error (./arch/x86/include/asm/idtentry.h:548)
+kernel: ? setup_dsc_config (drivers/gpu/drm/amd/amdgpu/../display/dc/dsc/dc_dsc.c:1053) amdgpu
+kernel: dc_dsc_compute_config (drivers/gpu/drm/amd/amdgpu/../display/dc/dsc/dc_dsc.c:1109) amdgpu
 
---
-Best Regards,
-Yan, Zi
+After applying this patch, the driver no longer crashes when the monitor
+is connected and the system is rebooted. I believe this is the same
+issue reported for 3113.
 
---=_MailMate_48CB3BC0-7E89-479D-988D-8B56AF4CB946_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename=signature.asc
-Content-Type: application/pgp-signature; name=signature.asc
+Signed-off-by: Jose Fernandez <josef@netflix.com>
+Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3113
+---
+ drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c b/drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c
+index ac41f9c0a283..597d5425d6cb 100644
+--- a/drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c
++++ b/drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c
+@@ -1055,7 +1055,12 @@ static bool setup_dsc_config(
+ 	if (!is_dsc_possible)
+ 		goto done;
+ 
+-	dsc_cfg->num_slices_v = pic_height/slice_height;
++	if (slice_height > 0)
++		dsc_cfg->num_slices_v = pic_height/slice_height;
++	else {
++		is_dsc_possible = false;
++		goto done;
++	}
+ 
+ 	if (target_bandwidth_kbps > 0) {
+ 		is_dsc_possible = decide_dsc_target_bpp_x16(
+-- 
+2.44.0
 
-iQJDBAEBCgAtFiEE6rR4j8RuQ2XmaZol4n+egRQHKFQFAmYmbSwPHHppeUBudmlk
-aWEuY29tAAoJEOJ/noEUByhUQ1MP/iC7xLfLjN9Qmlbjf8QP7EYroAKz7uTgH0aj
-RPGQnC1e4RBMGmct5k/8U2NrqRFDs9UrbXv+Lv0bvt3vvn3R97aDAXvHRjqyOwGj
-OTDsPDYsgIv26/uKQOd7N5/+3yKa+BRpiH5siGtvf/0Q3+Khhc5Krxyx9eZW2cle
-9CkAxmWoE3MN8bMEWZDGxyAXnKAmNNihlwtntAkBj2VF2zL+Qb8lezHFUojtvcIG
-WihNYJZbtBpcWEkaAxAYRniKflXe1dP7X9NeSctsp36XYDGeQ9JFkPSeq4qIFGo9
-yYtoGz5Fj7giiKbi1wwVjflKNrQmBommm807cZh6U0pT4ZGBx1hrcW1TnNultzk3
-6zewtyfZ8PAKuyMyK5U8am9x4Wx/jZN6eO3ZQ71hXR+vcZfae1ekzydb8gzLC3sI
-hHbXr+jmmp5RjeaaM+q+T19YNUoKwWMriEqsZUwvBAf/hzsjJr1E02DjydQ40Bdo
-gxom/vPBAc2poUCHwJB0/AA9P1wuyDzakUAiVXzszySZiUs8krxpouw2PncSQ+aN
-tcRqLrwXP87rLckbayiEYyGqEiUiyS9Clcz9WlGzNAxy+JHQJs13X2aa8gd4mVWa
-jRS74KM9otQ3+TKl38m6smny4xEfPBIuvWnGGQdMp5PZ8wdgB6QASEzt/XU6kR2w
-9onacvIS
-=yXTU
------END PGP SIGNATURE-----
-
---=_MailMate_48CB3BC0-7E89-479D-988D-8B56AF4CB946_=--
