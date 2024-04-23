@@ -1,103 +1,129 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB9413C66C;
-	Tue, 23 Apr 2024 16:11:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4018413BC29;
+	Tue, 23 Apr 2024 16:12:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713888676; cv=none; b=Tu/daoEUfN/Lt/GVUoher226ybqsF95/0TPa7Mn/3k0qqperuRLCX8lTUKm+ReOIZEV87C/cQb6NzeWe+aJYNAiolkOL/hRGAvKutD5XCTrCL2x+CFjg8jh3zyeaBN9tkstfx2SEkUblUBx1YeK/RTV6/9bYTH6Xmkwu2GaMx1o=
+	t=1713888781; cv=none; b=T0zYpUXm5CFNdzOoPCEhO4YGADNIg1sB2ZiiFfdB79rEt6F4ItkENkEc0yQdmBMYLnjToJPE/VCl7RuRJGJpb66qudVwXudkqXUCsIlVRLjrTEn/6l785dRSa0JfHYZJrouv36nVCo76TCql42aGdozx2Fsm2ddwtcB88xMMChs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713888676; c=relaxed/simple;
-	bh=uEH3no9t++z1xFSJQIOH7n+SYQJxYhyMCfAnzUjmRiM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q7XbxYaVNPtpNj5Dd4qvtVSku9N4H1Fogji7sZdtdrfwitR4a2+7iJ2rpMkdbhuyD3CCBvMjTjUQl6j+uxo8tmuJrBMfjgPiiefzsmP5zMn6o5g95+iltImNsJX2hpbdxiix1n5R4OvuB9Z6v37ltC/6pwQ5AwXcbTVITKKZJ08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GCTq3ph+; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1713888781; c=relaxed/simple;
+	bh=JMZZ3gcVPa767Qfvto7OizS7Ykmh/j3FMPZAU0c0ugo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rvqm9LMdtulr/9v2KZgcWxJBe9NPyMwUcUoJyIPqGHlXxAVxW/O9u+ennew0EvGrAZsBnRpr2nRjiYgnyApIzP60UwOEVLBC6udjHRZmz86xUWLmTJLCCYQmgV/vAIZVza3MJWTz40fI44DeuP6M86QeMI34O0mAwBs8ZzezN2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TJQYKDW7; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GCTq3ph+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TJQYKDW7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713888675; x=1745424675;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=uEH3no9t++z1xFSJQIOH7n+SYQJxYhyMCfAnzUjmRiM=;
-  b=GCTq3ph+VUsIrt+/eO3INSwN8tj+RmgUkhfDi/rVznuGoVjB7XaMdynD
-   GSmEjVhdPz3xaGEht2uk3/V2LoNbAX+zmmD/2+QDepx3vEXAeSl2H6JZ5
-   3xrYYVojxmLlsO1k6VtQTr+5GBcBDVPlViODRDWbx8y17EN612wfC3tuo
-   Me7ENZydVwUqyWeBwpXwGxtduFLhggjkMtBOSqUPibJCbwizNkLZbzXO8
-   I/0YDIwTkxxb1+1SpNpKtg3crPDSYkHBFMkaDSSN7zscb1jdOiIl2awiS
-   MvzuAeEWTamsFDhvnexW5cNFHuD2VrFQomC835aF73hQqhKFticW2X02C
-   A==;
-X-CSE-ConnectionGUID: QK/xEWAGR0KRmzjDIdKzgg==
-X-CSE-MsgGUID: DmRUgBC6QT+V8kewQ3Iftw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="26941098"
+  t=1713888781; x=1745424781;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JMZZ3gcVPa767Qfvto7OizS7Ykmh/j3FMPZAU0c0ugo=;
+  b=TJQYKDW7hRUH+grS771+QijZFsDN2haWlqQCVdWfbX3AKLX3qQbs/4zv
+   LHbcdqIZGz2nnqSiYRiq4VhtW5r4K9c1MfQfjzFWQtzD0MSm+duBRDBf2
+   dinVDKSfyKK/D/V4N0QX8WO8aSFAkIFSeKjs41Dl2jXOaHm9Jxy0viGWc
+   o22UXUy+Ghnbt/axfSzxtjJLIozAp6ptANIdVD9I4Iucc1HVogU4j3pGL
+   DUSxebi9n3tk5kRtsGVba8Gtv4XK53CGaFOkrb3XW8bm0jJmlrhHwdN6L
+   38ktzotJZoA6d5SZarr60PX4LLpskocMxAMJIaCdNxCAfYE0zbLdz1cSc
+   w==;
+X-CSE-ConnectionGUID: p8/idohpR/yurdHn4MRnMw==
+X-CSE-MsgGUID: x4cSMRywScGQQTGMuKhd2A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="26941405"
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="26941098"
+   d="scan'208";a="26941405"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 09:11:15 -0700
-X-CSE-ConnectionGUID: gNhNYmRkTwCrInkPMY4zdA==
-X-CSE-MsgGUID: k46LZnUxRvWPWItLF72aPw==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 09:13:00 -0700
+X-CSE-ConnectionGUID: xqtEIRwNTm+zTkhisprLFw==
+X-CSE-MsgGUID: o7ULhN2uT76//FgyuiluyQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24933923"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa007.jf.intel.com with ESMTP; 23 Apr 2024 09:11:12 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 09222192; Tue, 23 Apr 2024 19:11:10 +0300 (EEST)
+   d="scan'208";a="24934354"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 09:12:58 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rzIlL-00000000O7B-3IDM;
+	Tue, 23 Apr 2024 19:12:55 +0300
+Date: Tue, 23 Apr 2024 19:12:55 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v2 1/1] platform/x86: classmate-laptop: Add missing MODULE_DESCRIPTION()
-Date: Tue, 23 Apr 2024 19:09:51 +0300
-Message-ID: <20240423161108.2636958-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v1 2/2] Documentation: process: Recommend to put Cc: tags
+ after cutter '---' line
+Message-ID: <ZifeB_7DLa10BU__@smile.fi.intel.com>
+References: <20240423132024.2368662-1-andriy.shevchenko@linux.intel.com>
+ <20240423132024.2368662-3-andriy.shevchenko@linux.intel.com>
+ <2024042347-ellipse-overeater-9aff@gregkh>
+ <ZifTrD-jY1LZIyfs@smile.fi.intel.com>
+ <2024042317-wolf-condition-dd5f@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024042317-wolf-condition-dd5f@gregkh>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-The modpost script is not happy
+On Tue, Apr 23, 2024 at 09:07:09AM -0700, Greg KH wrote:
+> On Tue, Apr 23, 2024 at 06:28:44PM +0300, Andy Shevchenko wrote:
+> > On Tue, Apr 23, 2024 at 08:13:37AM -0700, Greg KH wrote:
+> > > On Tue, Apr 23, 2024 at 04:19:38PM +0300, Andy Shevchenko wrote:
+> > > > The recommendation is based on the following rationale:
+> > > > 
+> > > > - it makes the commit messages much cleaner and easy to read, especially
+> > > >   on the screens of the mobile devices;
+> > > 
+> > > Reading commits on a mobile device is not what kernel development is
+> > > optimized for, sorry.
+> > 
+> > The commit messages not always for the kernel development, some people may read
+> > them in order to understand code better or many other reasons. I.o.w. it's not
+> > the point.
+> > 
+> > > > - it reduces resources (memory, time, energy) to retrieve all these
+> > > >   headers, which are barely needed by a mere user, as for automation
+> > > >   they will be still available via mail archives, such as
+> > > >   https://lore.kernel.org, assuming the Link: or Message-ID tag is
+> > > >   provided.
+> > > > 
+> > > > Let's be environment friendly and save the planet!
+> > > > 
+> > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > ---
+> > > >  Documentation/process/5.Posting.rst          | 4 ++++
+> > > >  Documentation/process/submitting-patches.rst | 5 +++++
+> > > >  2 files changed, 9 insertions(+)
+> > > 
+> > > This breaks my existing workflow, sorry.  I can't track cc: below the
+> > > --- line because obviously, git cuts that off.  So I put them above
+> > > where git send-email can see them,
+> > 
+> > git send-email _sees_ them very well there.
+> 
+> Sorry, yes, but git itself can't track them in the commit when I
+> rebase/squash/redo/etc.  That's the point I was trying to make before my
+> coffee kicked in...
 
-  WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/classmate-laptop.o
+It can in your _local_ repo if you have it as
 
-because there is a missing module description.
+  Signed-off-by:
+  ---
+  Cc:
+  Cc:
 
-Add it to the module.
+in the commit message. It won't go to the final commit message if you sending
+it out and apply via `git am`, or reapply with the latter locally instead of
+cherry-picking.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2: alinged text with Kconfig entry (Thadeu Lima)
- drivers/platform/x86/classmate-laptop.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x86/classmate-laptop.c
-index 87462e7c6219..cb6fce655e35 100644
---- a/drivers/platform/x86/classmate-laptop.c
-+++ b/drivers/platform/x86/classmate-laptop.c
-@@ -13,8 +13,6 @@
- #include <linux/input.h>
- #include <linux/rfkill.h>
- 
--MODULE_LICENSE("GPL");
--
- struct cmpc_accel {
- 	int sensitivity;
- 	int g_select;
-@@ -1139,3 +1137,5 @@ static const struct acpi_device_id cmpc_device_ids[] __maybe_unused = {
- };
- 
- MODULE_DEVICE_TABLE(acpi, cmpc_device_ids);
-+MODULE_DESCRIPTION("Support for Intel Classmate PC ACPI devices");
-+MODULE_LICENSE("GPL");
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+With Best Regards,
+Andy Shevchenko
+
 
