@@ -1,91 +1,69 @@
-Received: from out187-16.us.a.mail.aliyun.com (out187-16.us.a.mail.aliyun.com [47.90.187.16])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76B183CCB
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166507E578
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713871844; cv=none; b=jqBhvNodY0AHsg8EnJQpzVOfN0LuFzLYXgkNY7n4lzjev99pFKBsNttsO8WJQrbP/qb9nU+xY0ZJlupZ1nnpQic3PJzOamJKarXUW+PuEpRL6W2/iKkLyIHf4StzeyLWvDHjUdFF5DK09nxv7HF3qcZeS2CaRLF134OWdf1V53Q=
+	t=1713871866; cv=none; b=hF4CZTT866pTM5P//PSSngrjTzAkkNLmH8SBQ44gKo8zcusnNuk/LM5bRmg5m0nVUnuyaLoU2sKS1SCEkJpmID0wVV0KiKFIiMU9VIHRcUUWtxJLktY90nU/97EIXtRXS6IsLJVrLUSxtX3Z6paCUgVDLBPw6yfWGuvoaUv7MFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713871844; c=relaxed/simple;
-	bh=7WJ6yWctR6knaJVR4QUqBonQC0vgU1vFUiJZIqMjLAA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C7bFBxUqkY8XjxfXBDuWG58Wg3yaHb4omVcAwcmYNo8OePFsVSxdWX5c5hJQl2n+xhJ2G8LueoKbrlOsDb9iN2wwmjnCg7ZiLP/IU5u64FEXhIsODW83IKYcrVvFlc1cnWJF+x4vCma1k8VW6wL+cf9rr5tyRwOmigyCFTMtzrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=xSJOntVV; arc=none smtp.client-ip=47.90.187.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	s=arc-20240116; t=1713871866; c=relaxed/simple;
+	bh=GXeqw+nCDkO9GKHRJugY3kPZKbwO9gNdMwJ7gPjSi1c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bFPThY4fJENHkmwcTIcnRUt7aezNiTjX8PtDKhVtIpE3qkfsgDDHLGovucZAQDeidg+/t3Cr4+oHpiLnfHeQNBNukDhr9B/uyN/HCe3sHyx8K1F68qZqP0xysVtbneHWoLJDeC5/84roZLiW6axtDm9nBI0rpTKzNdEhICf1brE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=Q9sCUdPE; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="xSJOntVV"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1713871829; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=4EXKiihVydLTnKmoFmv5QgTCQtRVg7rf+OIs/nHZkJ8=;
-	b=xSJOntVV/uDCGgorf32VvI25PI8pFOL7vkKtVjr0o0exYqiqgl+f/733ZzKN8gDZWjdvUwrsrh2nvF2sYR3h7mpPkcJU2D8ByBDg21uhfFpLiXKwiF0M6LNd7Xlyia8Xh7sgiFy9iCDNW1SGjpnXfoSJMtTlUHDkj2n7m8ZhKd8=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047188;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJTUYhr_1713871512;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJTUYhr_1713871512)
-          by smtp.aliyun-inc.com;
-          Tue, 23 Apr 2024 19:25:12 +0800
-From: "Tiwei Bie" <tiwei.btw@antgroup.com>
-To: richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net
-Cc:  <linux-um@lists.infradead.org>,
-   <linux-kernel@vger.kernel.org>,
-  "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH 3/7] um: Fix the -Wmissing-prototypes warning for get_thread_reg
-Date: Tue, 23 Apr 2024 19:24:53 +0800
-Message-Id: <20240423112457.2409319-4-tiwei.btw@antgroup.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240423112457.2409319-1-tiwei.btw@antgroup.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="Q9sCUdPE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=CGVLx9qgz3TjtRvUwHvGwoshAcQcOViHaUvMOEjBRm0=;
+	t=1713871862; x=1715081462; b=Q9sCUdPEvPdYU2lu75gKHHHQxI2qyTdV3qLOf0yvWEbLfjs
+	P1KZd5Fhb/yYfQfuxUEEjym2EQMzzOewqo9pFfaReiQC2qTDrYZpf4QxlmACdJXUaieSF6AeUEUeT
+	XAwexymDeL4caietoIyNyhl82Mvgfjxup/varCC6w7Zy29b0dhOhWJYqZ/HflWBog3sr58xcI+14K
+	3R0d2pvb+BHK2Us2+cSZLVnxSD3D1prXbCUxGpSBwKjMC0aOaR8OAiYrJodfblwEsiPTyd94MA5E5
+	MV9rAN9nSEHbduJJ2Vdw4sSZvgzBiB1fBGKKzgXI8T+J08hEYuH4UeK1DdH/dmTg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1rzEMU-0000000261M-2zNz;
+	Tue, 23 Apr 2024 13:30:58 +0200
+Message-ID: <e850e5016348805e7e2f427ed98cb1eb539fc434.camel@sipsolutions.net>
+Subject: Re: [PATCH 5/7] um: Add an internal header shared among the user
+ code
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Tiwei Bie <tiwei.btw@antgroup.com>, richard@nod.at, 
+	anton.ivanov@cambridgegreys.com
+Cc: linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
+Date: Tue, 23 Apr 2024 13:30:57 +0200
+In-Reply-To: <20240423112457.2409319-6-tiwei.btw@antgroup.com>
 References: <20240423112457.2409319-1-tiwei.btw@antgroup.com>
+	 <20240423112457.2409319-6-tiwei.btw@antgroup.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-malware-bazaar: not-scanned
 
-The get_thread_reg function is defined in the user code, and is
-called by the kernel code. It should be declared in a shared header.
+On Tue, 2024-04-23 at 19:24 +0800, Tiwei Bie wrote:
+>=20
+>  $(USER_OBJS:.o=3D.%): \
+> -	c_flags =3D -Wp,-MD,$(depfile) $(USER_CFLAGS) -include $(srctree)/inclu=
+de/linux/kern_levels.h -include user.h $(CFLAGS_$(basetarget).o)
+> +	c_flags =3D -Wp,-MD,$(depfile) $(USER_CFLAGS) -include $(srctree)/inclu=
+de/linux/kern_levels.h \
+> +		-include user.h -include $(srctree)/arch/um/os-Linux/internal.h $(CFLA=
+GS_$(basetarget).o)
+>=20
 
-Fixes: dbba7f704aa0 ("um: stop polluting the namespace with registers.h contents")
-Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
----
- arch/um/include/asm/processor-generic.h | 1 -
- arch/x86/um/shared/sysdep/archsetjmp.h  | 7 +++++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+Why not just include it explicitly? We do have the warnings?
 
-diff --git a/arch/um/include/asm/processor-generic.h b/arch/um/include/asm/processor-generic.h
-index 6c3779541845..5a7c05275aa7 100644
---- a/arch/um/include/asm/processor-generic.h
-+++ b/arch/um/include/asm/processor-generic.h
-@@ -94,7 +94,6 @@ extern struct cpuinfo_um boot_cpu_data;
- #define current_cpu_data boot_cpu_data
- #define cache_line_size()	(boot_cpu_data.cache_alignment)
- 
--extern unsigned long get_thread_reg(int reg, jmp_buf *buf);
- #define KSTK_REG(tsk, reg) get_thread_reg(reg, &tsk->thread.switch_buf)
- extern unsigned long __get_wchan(struct task_struct *p);
- 
-diff --git a/arch/x86/um/shared/sysdep/archsetjmp.h b/arch/x86/um/shared/sysdep/archsetjmp.h
-index 166cedbab926..15a75e01ce30 100644
---- a/arch/x86/um/shared/sysdep/archsetjmp.h
-+++ b/arch/x86/um/shared/sysdep/archsetjmp.h
-@@ -1,6 +1,13 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __X86_UM_SYSDEP_ARCHSETJMP_H
-+#define __X86_UM_SYSDEP_ARCHSETJMP_H
-+
- #ifdef __i386__
- #include "archsetjmp_32.h"
- #else
- #include "archsetjmp_64.h"
- #endif
-+
-+extern unsigned long get_thread_reg(int reg, jmp_buf *buf);
-+
-+#endif /* __X86_UM_SYSDEP_ARCHSETJMP_H */
--- 
-2.34.1
-
+johannes
