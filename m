@@ -1,79 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C7F135416;
-	Tue, 23 Apr 2024 13:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D4B134CC8
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 13:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713878431; cv=none; b=ald1zdZVuFdKvHEC3QCbe/AR7eg57pAT6+UTJgtTnGLsQby8QmrqdyMUG7+Il9Pg6XWJznCVSF9XYxm10MDD7ldcgUD8flieR5na1tbTBSijSpFX60fRDZxvThLiVNstEyyC4PpZev+0XAYA1wn73Mc01ZNo303wmFysrceyQm8=
+	t=1713878450; cv=none; b=iWSBk/U1gtK/ISCxkYvb3+z2F1fGzMn/zht0LKJm8MaXhNYVUp8QxQHLNNJsjtsZRD+G1KXlGgMumgv93B2T/JLRJLsgq8a4Tqn/Cts/lbFMwW84gRn/SGtCtw7TSiE53lD1ywhM66djfUfzSPmtRuwGGf9KO+iLKgf8agdi4Ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713878431; c=relaxed/simple;
-	bh=i5MXpWGoHGE2Xj6A1L0V/VFM6UTM7zUlHxVZGvJnQlE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ROjhqKV58/nF6Qf+ofadFEqF69wVNgEdTWtmrUAdYcdYlTxfNY7PXg6iVk9qdtrH4FGvO00zvhWXFI7fQqvH158B0pXGoQW1Mn/z/FJXkOKfgvzAXLSmmhAeeRKrS/77gy3NQWmUa7Q3TFAOFw4dhpr4gyd9YipEK3Hn5enrBwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nJS7xa4d; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713878450; c=relaxed/simple;
+	bh=PyHVWu/QKobiB7YcY+QCE35Yaf73xdFPKB4nRj1oqY0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L6FCYqurqaVTEItn4JuBHdrPxpmjc0+GXdtDadU9xDsjcwCErow2cyp+ePEz3bWrqhS1Fi2rAUTXL1CxVYZ7R6zSxOczf4/01ylc7xg/qROFs19WHMzNHvGxfZwpejF1Qq23RA4R0MxB/PMmhZNkQu7vrwF3MhWZ7BFLDL5V3aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gt5fwD7M; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nJS7xa4d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713878430; x=1745414430;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=i5MXpWGoHGE2Xj6A1L0V/VFM6UTM7zUlHxVZGvJnQlE=;
-  b=nJS7xa4dZm52Zu8QzTr+q/GMEur1FqYZS4kdBI+aimxGxCN17qP2PCos
-   VS9lhvcwy2DMzQgzfOkUMY7eA4RFIYNydttTC/K/prN/NIOoJJ62TU861
-   2q9Y18Hg7aI4u9jTa6G2Os+Ml3BRW375FPpbnVKd38P5jDypx8GItO4a+
-   CPVeuIkoMzCBVk/vP3VjEbZb9Z1U9blCwM4o8qzLSVWb/bVWV/F4H0MfH
-   z35D0kS1PIb6/eYhkbqMm9FlMVZee5xSwsym3Q7S6sM1xu/V/9djiA+4T
-   hiCeIYEx66sXUbLPObYm6YjGYBKPVLNj8UiH3PpTSpEC6UyXJO7PY4aDK
-   w==;
-X-CSE-ConnectionGUID: u6alkEM9Qc2aPNZ3NY4N8A==
-X-CSE-MsgGUID: iDP8wLF0QeuzwuBXmb0e1w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="9630381"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="9630381"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 06:20:28 -0700
-X-CSE-ConnectionGUID: KbAuRj8mQ1KYaVkF7aXzpw==
-X-CSE-MsgGUID: hkT2RY+UR5G+LvXP9b8ymw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24348996"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa009.jf.intel.com with ESMTP; 23 Apr 2024 06:20:27 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 3289044E; Tue, 23 Apr 2024 16:20:25 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v1 0/2] Documentation: process: Clarify use of Cc:
-Date: Tue, 23 Apr 2024 16:19:36 +0300
-Message-ID: <20240423132024.2368662-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gt5fwD7M"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-51bab51e963so757209e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 06:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713878446; x=1714483246; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DED8QC5Anhet7tIP2I7t7ZJzQkPh1lym+QGOcE4oVis=;
+        b=gt5fwD7Mlq1+zrSVgUkng27451HLB37gSj24JpXjE50zj80BhlZYM+Xk+SaZVFH2/u
+         nSRAfGjNFUYo+I0AlrbC3ie88Rk49JCPUC4qMoSa8WkPGVEnOIjR5R6A+fVNX4RLeQEh
+         g+rTAKxJac1cUCxfUXRMfTkHOyP7jq9DUjlsd+2sHNRogjjhVnfWfVVuYoVQW9hgyED4
+         oeBBU6io+ITYilF0kuzl7GW1AebTQHqAFYM/1SB3Qj4qXe/bhy8285pCvKwJBnjEi7l0
+         cCeo0j2FI4n4DgXf7ijZpDiWcLbHHjHKexX7GHgGalcQ70SFlLjn510JJqzPSUtFMKWt
+         G8Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713878446; x=1714483246;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DED8QC5Anhet7tIP2I7t7ZJzQkPh1lym+QGOcE4oVis=;
+        b=KXYYxtpHbIb5meV5UrI0J1y/UpuJdMX7/xU24N2rHb6GEAZLbp+w6La+6dk0nf/L2W
+         RI7Nuk6ecqGLAkbetdMatNETYt10f0FyvKBUPCGtt23xvukQrUK9TzNohVO7HbT6y1IP
+         40i1xWfjQuuLjvhMSLz4lyHg8Pdz5IXruuev7qNy/5vUh20lDzGpkdgy9IxSYkpy0/aQ
+         HBid8duvS6R+M5BfXjd0Zr7fQiAgLZhZiuYcnxQ/a4wYoMLFwOANf3mK/ozSn2pnIHfs
+         pAIeF7ymhc42InYopEgFnNelRsz8n8R95Rhl0iifEI6tEW5TosJ+PvoZI/6Fo+/Jnj0x
+         FTwg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6HzcMjE8QXoAsln0Jug/JABtgCm6qdKD5EBllIskIc8QLOaRVqD+uE9yrsRYrcwBGHdXYvOZAQkIkbr3+WjQZTi9B8hSlhV1d7sP+
+X-Gm-Message-State: AOJu0YwIXkXmP8oqtJY60uPUReY+8KaHldEgvNEThaCdO+liUX1ATvdZ
+	wFb/m66rdEpJR9TBxD6F9JbUz8+6wXXJGv3hpS0efCBsiozOgP21Yh3JVtNqNfk=
+X-Google-Smtp-Source: AGHT+IG6cO+5w21y5KWS+7cigDuEMe7L7tENMjk6qzTUeOwWkVVsMZ63pHbVyU4/AorYlwfX5JUOfg==
+X-Received: by 2002:a05:6512:48c9:b0:519:7585:9f66 with SMTP id er9-20020a05651248c900b0051975859f66mr8028391lfb.50.1713878446012;
+        Tue, 23 Apr 2024 06:20:46 -0700 (PDT)
+Received: from [172.30.205.0] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id u12-20020a05651206cc00b00516c5954d61sm2012461lff.246.2024.04.23.06.20.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 06:20:45 -0700 (PDT)
+Message-ID: <db13541d-839c-4af8-97ca-b471e37188b2@linaro.org>
+Date: Tue, 23 Apr 2024 15:20:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] arm64: dts: qcom: Add initial support for rb5gen2
+ board
+To: Wasim Nazir <quic_wasimn@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@quicinc.com
+References: <20240313071238.3290-1-quic_wasimn@quicinc.com>
+ <20240313071238.3290-4-quic_wasimn@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240313071238.3290-4-quic_wasimn@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add a couple of recommendations on how to utilise Cc header in
-environment friendly way.
 
-Andy Shevchenko (2):
-  Documentation: process: Avoid unneeded Cc: tags
-  Documentation: process: Recommend to put Cc: tags after cutter '---'
-    line
 
- Documentation/process/5.Posting.rst          |  8 +++++++-
- Documentation/process/submitting-patches.rst | 10 +++++++++-
- 2 files changed, 16 insertions(+), 2 deletions(-)
+On 3/13/24 08:12, Wasim Nazir wrote:
+> RB5gen2 is based on QCS8550-Rb5gen2 SOM for IOT solutions.
+> This initial version describes VPH_PWR, UART & USB3.1(HS).
+> 
+> On-board PMICs:
+> - PMR735D
+> - PM8010
+> 
+> Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
+> 
 
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+Where's the "---"? :thinking:
 
+[...]
+
+> +&apps_rsc {
+> +	regulators-0 {
+
+This does not scale. Use &label references instead
+
+> +		vdd-bob1-supply = <&vph_pwr>;
+> +		vdd-bob2-supply = <&vph_pwr>;
+> +	};
+> +
+> +	regulators-2 {
+> +		vdd-s4-supply = <&vph_pwr>;
+> +		vdd-s5-supply = <&vph_pwr>;
+> +	};
+> +
+> +	regulators-3 {
+> +		vdd-s1-supply = <&vph_pwr>;
+> +		vdd-s3-supply = <&vph_pwr>;
+> +		vdd-s4-supply = <&vph_pwr>;
+> +		vdd-s5-supply = <&vph_pwr>;
+> +		vdd-s6-supply = <&vph_pwr>;
+> +	};
+> +
+> +	regulators-4 {
+> +		vdd-s1-supply = <&vph_pwr>;
+> +		vdd-s3-supply = <&vph_pwr>;
+> +		vdd-s4-supply = <&vph_pwr>;
+> +		vdd-s5-supply = <&vph_pwr>;
+> +		vdd-s7-supply = <&vph_pwr>;
+> +	};
+> +
+> +	regulators-5 {
+> +		vdd-s1-supply = <&vph_pwr>;
+> +		vdd-s2-supply = <&vph_pwr>;
+> +		vdd-s3-supply = <&vph_pwr>;
+> +		vdd-s4-supply = <&vph_pwr>;
+> +		vdd-s5-supply = <&vph_pwr>;
+> +		vdd-s6-supply = <&vph_pwr>;
+> +	};
+> +};
+> +
+> +&pm8550b_eusb2_repeater {
+> +	vdd18-supply = <&vreg_l15b_1p8>;
+> +	vdd3-supply = <&vreg_l5b_3p1>;
+> +};
+
+Would that not be SoM-common too?
+
+Konrad
