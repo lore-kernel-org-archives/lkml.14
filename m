@@ -1,200 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D80413D503;
-	Tue, 23 Apr 2024 16:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5427513CF8E;
+	Tue, 23 Apr 2024 16:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713888882; cv=none; b=FGhqfbozAV0w3AFGiJhoK1aCZe+LugiqHmu+gRlKTtQybO50fCUQTA+hbRKqPfNMRwcEkC5jb+TubFBYBmHeWr/kw+2MgJO5+04/zPagvWcnA9Hx8EaFimPzhGH9jJKcxJuf1hgLuBakrNgNB8sFzo3iPA1jQBhjsVtbwycLafo=
+	t=1713888899; cv=none; b=QbGEXPtgFB0CE6XHO3nkSLrJ9mzBEO5LAcjSR4F4mTGBK/eWbKQtmY1I9d7oN+IX+XjptKO2ZNR3aQXYmYdYA3QP0Jop3tVqLQPOevA4KVcROD3By+fW8sb+0HX3pqhDNmMuRZ9h+8ZOyVFu5BzM6702IvHJmrYLMx/T4oz0v6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713888882; c=relaxed/simple;
-	bh=Vv3Pzh/tN2YWuj6VkDSluT/ePBD6u8OspryaSNQWcRw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Agbuo2DZ4ZXNacqRbhGYpv64cFA9j9YsTRXUmwI7Ge/n1NkxNyzJS6HgVaOHvZfxEJnu17qmu+NVopARp0S1VVDUcw2d0rDUx2M2T3A1hcEbYcp2xcvtQi1EjMXBi9Yw/uPGq3oSJANykODNhswNOFBVL+csCv0y2HZypzBYfe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FIE8LRDu; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713888899; c=relaxed/simple;
+	bh=t7XLkcm58+fVaHmvoGJBrl7ku5VBGktXbbg2zBpZuc4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QsgyxqeNpyFw9i1Lcxz9Ele4DvxDQXUq1tPf5LDMkv3ZofssLXBUebd9UPzRd7ODLEUeYcmYVk4tTsknjZjJr/H+ynJ58rz2ZO2+th5jk0VmpTKSPmuZFglq1g5MX0lmZdRNYppfWriwlcZYvLNVFZ1Lx6Sc/htea4GMO9FxOoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pg4DuW3R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FIE8LRDu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713888879; x=1745424879;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Vv3Pzh/tN2YWuj6VkDSluT/ePBD6u8OspryaSNQWcRw=;
-  b=FIE8LRDusZT/64f6dle62V0br9FMckHgrXIHb7Ryhq2nlLPikDrJPTGZ
-   /m/aG6Ln7zyHvMMt25AOov2u9wzKdbWU+JXc5j0XDZNOZkcqL1u5r4i7P
-   xY/G0sXZkCfDozFlSclOwVRMKEy1Ne8yZaEG6ZEvWwfSu/pdiOj7hkvWS
-   GJ+wau+biIbTPJzKqkeZc4v+gcJFATi1xmToWxdC3JnKmhtSE0QyFsKvK
-   b8XpLURI0O22boBOauoVte4YDXCkEhi4Oc/x8KGRU+ygtF7ZMk42KkWLK
-   kfdO3WKmaoH/XsSd/bdkSAbRQ/p8CwtUN44dRZDUZaCtYCcBDOzUqKBSR
-   w==;
-X-CSE-ConnectionGUID: vARbTaijTZm9nbIwetNcRg==
-X-CSE-MsgGUID: d0fs90R3QP+hcLDknxElUA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="31978014"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="31978014"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 09:14:39 -0700
-X-CSE-ConnectionGUID: OyVmfELgT4+8rSOzi26oTg==
-X-CSE-MsgGUID: fz3MNTTYSMOIFOVkv5qZ6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24414604"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 23 Apr 2024 09:14:35 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rzImv-0000JI-1k;
-	Tue, 23 Apr 2024 16:14:33 +0000
-Date: Wed, 24 Apr 2024 00:13:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Geetha sowjanya <gakula@marvell.com>, netdev@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pg4DuW3R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA4DC116B1;
+	Tue, 23 Apr 2024 16:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713888898;
+	bh=t7XLkcm58+fVaHmvoGJBrl7ku5VBGktXbbg2zBpZuc4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pg4DuW3RNJCx0k8isuY+Ww1E+jHZuB8iSnEvLhywPSku0gOCtXY+EiNIimYtjcHyb
+	 czaYkSR80eGrk3Gir/VJZw6eLCXDEGuDsfk3hUp/YJQCQoPCgCTixRfd+RCBtvKUy0
+	 NVlvAlwVCLOSwJyTxKriGkPfgSZ4xpFvVfIqqnt9cfwkq84eJuxaRdTaHWVxV4WSFM
+	 95bmMcyDqNaq0EPKZZgPS9fb+MLJXEGN76oVZeu0ilgwflUtvMhEaWBtVZw0/Z6RX/
+	 uWz7868bxHwjmKEmotlqb9vHKR9la8g6bsorfYZA49AkyX2g6DEa/dnzpEa8JBmiyp
+	 o0s+c5pz3u0TA==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Sinan Kaya <okaya@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org,
+	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, kuba@kernel.org, davem@davemloft.net,
-	pabeni@redhat.com, edumazet@google.com, sgoutham@marvell.com,
-	gakula@marvell.com, sbhatta@marvell.com, hkelam@marvell.com
-Subject: Re: [net-next PATCH v2 5/9] octeontx2-af: Add packet path between
- representor and VF
-Message-ID: <202404240058.p4HzPiSt-lkp@intel.com>
-References: <20240422095401.14245-6-gakula@marvell.com>
+Subject: [PATCH 2/2] dt-bindings: dma: Drop unused QCom hidma binding
+Date: Tue, 23 Apr 2024 11:14:12 -0500
+Message-ID: <20240423161413.481670-2-robh@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240423161413.481670-1-robh@kernel.org>
+References: <20240423161413.481670-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240422095401.14245-6-gakula@marvell.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Geetha,
+The QCom hidma binding was used on a defunct QCom server platform which
+mainly used ACPI. DT support in the Linux driver has been broken since
+2018, so it seems this binding is unused and can be dropped.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ .../bindings/dma/qcom_hidma_mgmt.txt          | 95 -------------------
+ 1 file changed, 95 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
 
-[auto build test WARNING on next-20240422]
-[also build test WARNING on v6.9-rc5]
-[cannot apply to net-next/main linus/master horms-ipvs/master v6.9-rc5 v6.9-rc4 v6.9-rc3]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Geetha-sowjanya/octeontx2-pf-Refactoring-RVU-driver/20240422-175819
-base:   next-20240422
-patch link:    https://lore.kernel.org/r/20240422095401.14245-6-gakula%40marvell.com
-patch subject: [net-next PATCH v2 5/9] octeontx2-af: Add packet path between representor and VF
-config: alpha-randconfig-r122-20240423 (https://download.01.org/0day-ci/archive/20240424/202404240058.p4HzPiSt-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20240424/202404240058.p4HzPiSt-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404240058.p4HzPiSt-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:39:38: sparse: sparse: cast to restricted __be16
->> drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:39:38: sparse: sparse: cast to restricted __be16
->> drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:39:38: sparse: sparse: cast to restricted __be16
->> drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:39:38: sparse: sparse: cast to restricted __be16
->> drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:95:31: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __be16 [assigned] [usertype] vlan_etype @@     got int @@
-   drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:95:31: sparse:     expected restricted __be16 [assigned] [usertype] vlan_etype
-   drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:95:31: sparse:     got int
-   drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:96:29: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __be16 [assigned] [usertype] vlan_etype @@     got int @@
-   drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:96:29: sparse:     expected restricted __be16 [assigned] [usertype] vlan_etype
-   drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:96:29: sparse:     got int
->> drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:97:29: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __be16 [assigned] [usertype] vlan_tci @@     got unsigned short [assigned] [usertype] vlan_tci @@
-   drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:97:29: sparse:     expected restricted __be16 [assigned] [usertype] vlan_tci
-   drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:97:29: sparse:     got unsigned short [assigned] [usertype] vlan_tci
->> drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:98:27: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __be16 [assigned] [usertype] vlan_tci @@     got int @@
-   drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:98:27: sparse:     expected restricted __be16 [assigned] [usertype] vlan_tci
-   drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c:98:27: sparse:     got int
-
-vim +39 drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c
-
-    25	
-    26	static int rvu_rep_tx_vlan_cfg(struct rvu *rvu,  u16 pcifunc,
-    27				       u16 vlan_tci, int *vidx)
-    28	{
-    29		struct nix_vtag_config_rsp rsp = {};
-    30		struct nix_vtag_config req = {};
-    31		u64 etype = ETH_P_8021Q;
-    32		int err;
-    33	
-    34		/* Insert vlan tag */
-    35		req.hdr.pcifunc = pcifunc;
-    36		req.vtag_size = VTAGSIZE_T4;
-    37		req.cfg_type = 0; /* tx vlan cfg */
-    38		req.tx.cfg_vtag0 = true;
-  > 39		req.tx.vtag0 = etype << 48 | ntohs(vlan_tci);
-    40	
-    41		err = rvu_mbox_handler_nix_vtag_cfg(rvu, &req, &rsp);
-    42		if (err) {
-    43			dev_err(rvu->dev, "Tx vlan config failed\n");
-    44			return err;
-    45		}
-    46		*vidx = rsp.vtag0_idx;
-    47		return 0;
-    48	}
-    49	
-    50	static int rvu_rep_rx_vlan_cfg(struct rvu *rvu, u16 pcifunc)
-    51	{
-    52		struct nix_vtag_config req = {};
-    53		struct nix_vtag_config_rsp rsp;
-    54	
-    55		/* config strip, capture and size */
-    56		req.hdr.pcifunc = pcifunc;
-    57		req.vtag_size = VTAGSIZE_T4;
-    58		req.cfg_type = 1; /* rx vlan cfg */
-    59		req.rx.vtag_type = NIX_AF_LFX_RX_VTAG_TYPE0;
-    60		req.rx.strip_vtag = true;
-    61		req.rx.capture_vtag = false;
-    62	
-    63		return rvu_mbox_handler_nix_vtag_cfg(rvu, &req, &rsp);
-    64	}
-    65	
-    66	static int rvu_rep_install_rx_rule(struct rvu *rvu, u16 pcifunc,
-    67					   u16 entry, bool rte)
-    68	{
-    69		struct npc_install_flow_req req = {};
-    70		struct npc_install_flow_rsp rsp = {};
-    71		struct rvu_pfvf *pfvf;
-    72		u16 vlan_tci, rep_id;
-    73	
-    74		pfvf = rvu_get_pfvf(rvu, pcifunc);
-    75	
-    76		/* To stree the traffic from Representee to Representor */
-    77		rep_id = (u16)rvu_rep_get_vlan_id(rvu, pcifunc);
-    78		if (rte) {
-    79			vlan_tci = rep_id | 0x1ull << 8;
-    80			req.vf = rvu->rep_pcifunc;
-    81			req.op = NIX_RX_ACTIONOP_UCAST;
-    82			req.index = rep_id;
-    83		} else {
-    84			vlan_tci = rep_id;
-    85			req.vf = pcifunc;
-    86			req.op = NIX_RX_ACTION_DEFAULT;
-    87		}
-    88	
-    89		rvu_rep_rx_vlan_cfg(rvu, req.vf);
-    90		req.entry = entry;
-    91		req.hdr.pcifunc = 0; /* AF is requester */
-    92		req.features = BIT_ULL(NPC_OUTER_VID) | BIT_ULL(NPC_VLAN_ETYPE_CTAG);
-    93		req.vtag0_valid = true;
-    94		req.vtag0_type = NIX_AF_LFX_RX_VTAG_TYPE0;
-  > 95		req.packet.vlan_etype = ETH_P_8021Q;
-    96		req.mask.vlan_etype = ETH_P_8021Q;
-  > 97		req.packet.vlan_tci = vlan_tci;
-  > 98		req.mask.vlan_tci = 0xffff;
-    99	
-   100		req.channel = RVU_SWITCH_LBK_CHAN;
-   101		req.chan_mask = 0xffff;
-   102		req.intf = pfvf->nix_rx_intf;
-   103	
-   104		return rvu_mbox_handler_npc_install_flow(rvu, &req, &rsp);
-   105	}
-   106	
-
+diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+deleted file mode 100644
+index 1ae4748730a8..000000000000
+--- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
++++ /dev/null
+@@ -1,95 +0,0 @@
+-Qualcomm Technologies HIDMA Management interface
+-
+-Qualcomm Technologies HIDMA is a high speed DMA device. It only supports
+-memcpy and memset capabilities. It has been designed for virtualized
+-environments.
+-
+-Each HIDMA HW instance consists of multiple DMA channels. These channels
+-share the same bandwidth. The bandwidth utilization can be partitioned
+-among channels based on the priority and weight assignments.
+-
+-There are only two priority levels and 15 weigh assignments possible.
+-
+-Other parameters here determine how much of the system bus this HIDMA
+-instance can use like maximum read/write request and number of bytes to
+-read/write in a single burst.
+-
+-Main node required properties:
+-- compatible: "qcom,hidma-mgmt-1.0";
+-- reg: Address range for DMA device
+-- dma-channels: Number of channels supported by this DMA controller.
+-- max-write-burst-bytes: Maximum write burst in bytes that HIDMA can
+-  occupy the bus for in a single transaction. A memcpy requested is
+-  fragmented to multiples of this amount. This parameter is used while
+-  writing into destination memory. Setting this value incorrectly can
+-  starve other peripherals in the system.
+-- max-read-burst-bytes: Maximum read burst in bytes that HIDMA can
+-  occupy the bus for in a single transaction. A memcpy request is
+-  fragmented to multiples of this amount. This parameter is used while
+-  reading the source memory. Setting this value incorrectly can starve
+-  other peripherals in the system.
+-- max-write-transactions: This value is how many times a write burst is
+-  applied back to back while writing to the destination before yielding
+-  the bus.
+-- max-read-transactions: This value is how many times a read burst is
+-  applied back to back while reading the source before yielding the bus.
+-- channel-reset-timeout-cycles: Channel reset timeout in cycles for this SOC.
+-  Once a reset is applied to the HW, HW starts a timer for reset operation
+-  to confirm. If reset is not completed within this time, HW reports reset
+-  failure.
+-
+-Sub-nodes:
+-
+-HIDMA has one or more DMA channels that are used to move data from one
+-memory location to another.
+-
+-When the OS is not in control of the management interface (i.e. it's a guest),
+-the channel nodes appear on their own, not under a management node.
+-
+-Required properties:
+-- compatible: must contain "qcom,hidma-1.0" for initial HW or
+-  "qcom,hidma-1.1"/"qcom,hidma-1.2" for MSI capable HW.
+-- reg: Addresses for the transfer and event channel
+-- interrupts: Should contain the event interrupt
+-- desc-count: Number of asynchronous requests this channel can handle
+-- iommus: required a iommu node
+-
+-Optional properties for MSI:
+-- msi-parent : See the generic MSI binding described in
+- devicetree/bindings/interrupt-controller/msi.txt for a description of the
+- msi-parent property.
+-
+-Example:
+-
+-Hypervisor OS configuration:
+-
+-	hidma-mgmt@f9984000 = {
+-		compatible = "qcom,hidma-mgmt-1.0";
+-		reg = <0xf9984000 0x15000>;
+-		dma-channels = <6>;
+-		max-write-burst-bytes = <1024>;
+-		max-read-burst-bytes = <1024>;
+-		max-write-transactions = <31>;
+-		max-read-transactions = <31>;
+-		channel-reset-timeout-cycles = <0x500>;
+-
+-		hidma_24: dma-controller@5c050000 {
+-			compatible = "qcom,hidma-1.0";
+-			reg = <0 0x5c050000 0x0 0x1000>,
+-			      <0 0x5c0b0000 0x0 0x1000>;
+-			interrupts = <0 389 0>;
+-			desc-count = <10>;
+-			iommus = <&system_mmu>;
+-		};
+-	};
+-
+-Guest OS configuration:
+-
+-	hidma_24: dma-controller@5c050000 {
+-		compatible = "qcom,hidma-1.0";
+-		reg = <0 0x5c050000 0x0 0x1000>,
+-		      <0 0x5c0b0000 0x0 0x1000>;
+-		interrupts = <0 389 0>;
+-		desc-count = <10>;
+-		iommus = <&system_mmu>;
+-	};
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
