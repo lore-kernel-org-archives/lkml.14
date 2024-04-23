@@ -1,136 +1,129 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD67569944;
-	Tue, 23 Apr 2024 11:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DFF45812B
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713870211; cv=none; b=ekzAxmeubfbNvAs5liulkrQKGpsUb1MD+ti3vYAFT0d3EUhrJTWAE14omPPOjRYjWaXAF2utOzCW2DZOLOW08Z+aQQ90s26M1zzlZW9aEXg15UcPV+w8xPRjYUo3UNthT4wTP1veOLtesQ94lidZZ0QVhNKGAztQ/pQnvoXHzX0=
+	t=1713870218; cv=none; b=McmGZiH4EAY2fbOTK7od/6l8h6YtPAVJtpHjgdOrJm7YXxqxDMV47HuHLwGtK05xR7KIIpLJO5Z+IHYDmJkbMHAkadJaG+pmmdumVO0ZjfKO/fbCk3dJZ/GHKaWAR5l2jVfhEFkQrxWCZXgnvAJpvUPUO969ekYdKvcvEUxnrLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713870211; c=relaxed/simple;
-	bh=2oE7qiEBTlPxS3EMJQmUOb6edRHb4fcMo/8D+mOUUF0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Zm5KAKSZ/iCOKmjIAYVnmGIRUs0ep5HSl53KnLuWQjZ4heTzSmZ9k4mA6PVO5pfElOwIwjzEKHK7W9Vl+VqgxBLTfCxbUTgaeeODqTDyLfkpyl3Lmv75Gbdkmx+sYjZcKnQGhXeBgbjPv40eJ4avqmPwYZQRpsia1QUqxhOGLBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i5e861d9e.versanet.de ([94.134.29.158] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rzDvd-0005B9-6h; Tue, 23 Apr 2024 13:03:13 +0200
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Michael Riesch <michael.riesch@wolfvision.net>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
- devicetree <devicetree@vger.kernel.org>
-Subject:
- Re: [PATCH] arm64: dts: rockchip: fix nodename warning on
- wolfvision-pf5-display
-Date: Tue, 23 Apr 2024 13:03:12 +0200
-Message-ID: <5189813.GXAFRqVoOG@diego>
-In-Reply-To: <3f93ecb0-a649-4492-8798-a00de26236c8@wolfvision.net>
-References:
- <20240423082941.2626102-1-heiko@sntech.de>
- <3f93ecb0-a649-4492-8798-a00de26236c8@wolfvision.net>
+	s=arc-20240116; t=1713870218; c=relaxed/simple;
+	bh=Q/2gtcyulav/9Q2+HHK8JUU7iDQ7d8y7qqKXMLxj2GY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BTwgsEei+BjFfjrPa55spKkeTLYotOkO8IctrgbEgAnX7D7Z2+C/W4IUPIJFXpvT0In1ZW7e2UiwIuNnuhlzje4n3OjuGGisFQJ2Z8jrAjv38svU+xYFyFVaplsB13FKSvFrIP2/fwpT7rvgSow4DCMo4rz50annTHjOqCpfWEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F8B6339;
+	Tue, 23 Apr 2024 04:04:00 -0700 (PDT)
+Received: from [10.57.74.127] (unknown [10.57.74.127])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1936F3F7BD;
+	Tue, 23 Apr 2024 04:03:29 -0700 (PDT)
+Message-ID: <6aa25e2a-a6b6-4ab7-8300-053ca3c0d748@arm.com>
+Date: Tue, 23 Apr 2024 12:03:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/5] mm: memory: extend finish_fault() to support
+ large folio
+Content-Language: en-GB
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: willy@infradead.org, david@redhat.com, wangkefeng.wang@huawei.com,
+ 21cnbao@gmail.com, ying.huang@intel.com, shy828301@gmail.com,
+ ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1713755580.git.baolin.wang@linux.alibaba.com>
+ <358aefb1858b63164894d7d8504f3dae0b495366.1713755580.git.baolin.wang@linux.alibaba.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <358aefb1858b63164894d7d8504f3dae0b495366.1713755580.git.baolin.wang@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Am Dienstag, 23. April 2024, 11:39:26 CEST schrieb Michael Riesch:
-> On 4/23/24 10:29, Heiko Stuebner wrote:
-> > The dtbs check throws a warning about node naming with the recently
-> > added pf5-display-overlay:
-> > rockchip/rk3568-wolfvision-pf5-display.dtsi:113.6-121.3: Warning (graph_port): /fragment@4/__overlay__: graph port node name should be 'port'
-> > 
-> > This comes from the overlay just referencing the vp2-port-node via
-> > its phandle and then adding an endpoint beneath it.
-> > 
-> > While this is possible something to handle inside the dtbs check,
-> > carrying around the warning is not pretty, so change the description
-> > to go around it.
+On 22/04/2024 08:02, Baolin Wang wrote:
+> Add large folio mapping establishment support for finish_fault() as a preparation,
+> to support multi-size THP allocation of anonymous shared pages in the following
+> patches.
 > 
-> What is the rationale behind that check? Describing a port in a SoC dtsi
-> or board dts and using the reference in an overlay is quite convenient
-> and above all concise.
-
-I guess this is mainly a problem of the overlay thing.
-Also it does not change with or without the "-@" option to dtc.
-
-So I guess the main thing seems to be that overlays and the whole
-checks don't seem to be well-trodden paths yet.
-
-
-> Cc: device tree list
-> > Starting from the vop_out phandle and then referencing the port
-> > via its generic port@2 nodename will satisfy the port<->endpoint
-> > naming dependency while keeping the same structure once the overlay
-> > is applied.
-> > 
-> > Reported-by: Arnd Bergmann <arnd@kernel.org>
-> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> > ---
-> >  .../rockchip/rk3568-wolfvision-pf5-display.dtsi    | 14 ++++++++------
-> >  1 file changed, 8 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-display.dtsi b/arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-display.dtsi
-> > index b22bb543ecbb..18c807c39e56 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-display.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-display.dtsi
-> > @@ -110,12 +110,14 @@ &pwm10 {
-> >  	status = "okay";
-> >  };
-> >  
-> > -&vp2 {
-> > -	#address-cells = <1>;
-> > -	#size-cells = <0>;
-> > +&vop_out {
-> > +	port@2 {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> >  
-> > -	vp2_out_rgb: endpoint@ROCKCHIP_VOP2_EP_RGB0 {
-> > -		reg = <ROCKCHIP_VOP2_EP_RGB0>;
-> > -		remote-endpoint = <&panel_in_vp2>;
-> > +		vp2_out_rgb: endpoint@ROCKCHIP_VOP2_EP_RGB0 {
-> > +			reg = <ROCKCHIP_VOP2_EP_RGB0>;
-> > +			remote-endpoint = <&panel_in_vp2>;
-> > +		};
-> >  	};
-> >  };
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> ---
+>  mm/memory.c | 25 ++++++++++++++++++-------
+>  1 file changed, 18 insertions(+), 7 deletions(-)
 > 
-> With this patch applied the DTC warning "Warning (graph_port):
-> /fragment@4/__overlay__: graph port node name should be 'port'"
-> vanishes, but a different DTC warning "Warning (unit_address_vs_reg):
-> /fragment@4/__overlay__/port@2: node has a unit name, but no reg or
-> ranges property" appears. Can you reproduce this?
-> 
-> I tried to fix that by adding the reg property, but then DTC complained
-> about "Warning (graph_port): /fragment@9/__overlay__/ports/port@0: graph
-> node '#size-cells' is -1, must be 0"
-> 
-> Then, I added the #size-cells property to avoid this. However, DTC
-> complained about this property not being necessary as there is only one
-> port. I stopped at this point.
-> 
-> I would say the real question is how this hardware should look like in
-> the device tree (overlay). Then, the compiler and/or build scripts can
-> be adjusted to tolerate this.
+> diff --git a/mm/memory.c b/mm/memory.c
+> index b6fa5146b260..094a76730776 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -4766,7 +4766,10 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+>  	struct page *page;
+> +	struct folio *folio;
+>  	vm_fault_t ret;
+> +	int nr_pages, i;
+> +	unsigned long addr;
+>  
+>  	/* Did we COW the page? */
+>  	if ((vmf->flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED))
+> @@ -4797,22 +4800,30 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+>  			return VM_FAULT_OOM;
+>  	}
+>  
+> +	folio = page_folio(page);
+> +	nr_pages = folio_nr_pages(folio);
+> +	addr = ALIGN_DOWN(vmf->address, nr_pages * PAGE_SIZE);
 
-When I checked, my "workaround" the check was silent, but I guess I
-need to update the schema python module again and would get that
-rabbit hole you went down.
+I'm not sure this is safe. IIUC, finish_fault() is called for any file-backed
+mapping. So you could have a situation where part of a (regular) file is mapped
+in the process, faults and hits in the pagecache. But the folio returned by the
+pagecache is bigger than the portion that the process has mapped. So you now end
+up mapping beyond the VMA limits? In the pagecache case, you also can't assume
+that the folio is naturally aligned in virtual address space.
 
-But yes definitly. Especially with those follow up problems you
-encountered, this makes it a problem to solve in the checker.
 
-So the original layout is the best one to represent the endpoint and
-I guess with the parent node being named "__overlay__" it should be
-somewhat ok for the checker going "nah, it'll be fine - we're an overlay"
+>  	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+> -				      vmf->address, &vmf->ptl);
+> +				       addr, &vmf->ptl);
+>  	if (!vmf->pte)
+>  		return VM_FAULT_NOPAGE;
+>  
+>  	/* Re-check under ptl */
+> -	if (likely(!vmf_pte_changed(vmf))) {
+> -		struct folio *folio = page_folio(page);
+> -
+> -		set_pte_range(vmf, folio, page, 1, vmf->address);
+> -		ret = 0;
+> -	} else {
+> +	if (nr_pages == 1 && vmf_pte_changed(vmf)) {
+>  		update_mmu_tlb(vma, vmf->address, vmf->pte);
+>  		ret = VM_FAULT_NOPAGE;
+> +		goto unlock;
+> +	} else if (nr_pages > 1 && !pte_range_none(vmf->pte, nr_pages)) {
 
+I think you have grabbed this from do_anonymous_page()? But I'm not sure it
+works in the same way here as it does there. For the anon case, if userfaultfd
+is armed, alloc_anon_folio() will only ever allocate order-0. So we end up in
+the vmf_pte_changed() path, which will allow overwriting a uffd entry. But here,
+there is nothing stopping nr_pages being greater than 1 when there could be a
+uffd entry present, and you will fail due to the pte_range_none() check. (see
+pte_marker_handle_uffd_wp()).
+
+Thanks,
+Ryan
+
+> +		for (i = 0; i < nr_pages; i++)
+> +			update_mmu_tlb(vma, addr + PAGE_SIZE * i, vmf->pte + i);
+> +		ret = VM_FAULT_NOPAGE;
+> +		goto unlock;
+>  	}
+>  
+> +	set_pte_range(vmf, folio, &folio->page, nr_pages, addr);
+> +	ret = 0;
+> +
+> +unlock:
+>  	pte_unmap_unlock(vmf->pte, vmf->ptl);
+>  	return ret;
+>  }
 
