@@ -1,114 +1,96 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A037A225CE;
-	Tue, 23 Apr 2024 06:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C00018AED;
+	Tue, 23 Apr 2024 06:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713852965; cv=none; b=UcEjgOnZUKnQ9DZRz/ZsCrD7YHiCoizrZRbRe81oX5Tch5fIyDZ0Q3mzLQR7GevfZpsU1nwM4GJdtLkJwWv2d0foSP7BqT1CtC2hFXgJczDFZEOWuHWRH48k3ktjwZ9Jk4hQNMB/FoZ31KNbStG3x4Fs/IXW6lgLkWj90frhTaw=
+	t=1713853091; cv=none; b=WwaQiRMCbqdjBBz1EBcgHdHqvGbEzVnyMe/Es2iZcXMLLOcSgVxtcr4j62th6qu+roR7L5LY5gCc/pg6mME1IXbU9FcVvECkxcvhzfmPvqshGOPbroDyB1HpL54ptfdmcT7nX0gcnnHJVfCOHI41ssbzT8ki8AhjG7e4J8wKmT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713852965; c=relaxed/simple;
-	bh=8HZOokaf2e/urC9+j/zg8HM4yzJXhpo+pSuikz395pg=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=CPqlyFZcFDdWOtxwWg2w34cNifvnv8m7twzL1hS4TdMo/ZuIsIRtG5axF/V2vQ1idU4TanssJcId3lmhAKuPBdMXaOlc7ypM5zT05rRL/n1NuZ/e2Mt+za8xb+ugF9uPy7SAyyZRgakGCzaWiHGr++JPmU/IaQ7zKFQvzgDl5jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ftJtTVSg; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ftJtTVSg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1713852948; x=1714457748; i=markus.elfring@web.de;
-	bh=8HZOokaf2e/urC9+j/zg8HM4yzJXhpo+pSuikz395pg=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ftJtTVSgNVSoDHfc+KAZQ7ywNskxloDYgJiUoHLnkVP3tPP2dDEI9tXC885mfawh
-	 o5Lt8/LTLMwyYp/99oA/SaCkHW90HqkM31+Nyt1uRcPz6DBHtPxD/tttdQJ3aU/9W
-	 cDgb1HpGDptwG2t298K9fN9qSsoq2Q4lkBud2WZT3nZSyTIMQ50H6WHPAsjvCrXcy
-	 2pVjkL4bPzJkx7yiljCwg306//ZE8hHACiiD7l2+kZLhtdRViot/gNzyigRzh9qPk
-	 fePF2N4qkCft0MFduYl1HMosF79SEifLQqoMVzqo8ZHibnLtQnUOj4saeZBfwJFWX
-	 m8yMm0djuIskLi5kCw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MYLmq-1sBkNl3eWg-00VgwC; Tue, 23
- Apr 2024 08:15:47 +0200
-Message-ID: <ac9cae80-cd9d-4ae0-9f27-b4b424304cbb@web.de>
-Date: Tue, 23 Apr 2024 08:15:33 +0200
+	s=arc-20240116; t=1713853091; c=relaxed/simple;
+	bh=a7a1rN9kNf6WGRL3kJeNoPiIhGtMJivIOtqJ86BB3Tc=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=kGEYlDNMfAO6fbNcQ5lwfknLdPweZu2BGVYK/ESsPf5vZuhWXOJALkFS0YKo8yVA/YzMijYnheoqWkkY9hcenByXHo/608uVzRG/CHG/WlGjLfbYVahXQ3StoLeG6xKpeWzjsU2qYbACLc/Nt51sv+FTN8+auxerCICycpK9LnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VNsKk0zmqzvQ5C;
+	Tue, 23 Apr 2024 14:15:06 +0800 (CST)
+Received: from dggpemm500002.china.huawei.com (unknown [7.185.36.229])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3ED3018006B;
+	Tue, 23 Apr 2024 14:18:06 +0800 (CST)
+Received: from [10.174.178.247] (10.174.178.247) by
+ dggpemm500002.china.huawei.com (7.185.36.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 23 Apr 2024 14:18:05 +0800
+Subject: Re: [PATCH v7 01/16] ACPI: processor: Simplify initial onlining to
+ use same path for cold and hotplug
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Thomas Gleixner
+	<tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
+	<linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>, <x86@kernel.org>, Russell King
+	<linux@armlinux.org.uk>, "Rafael J . Wysocki" <rafael@kernel.org>, Miguel
+ Luis <miguel.luis@oracle.com>, James Morse <james.morse@arm.com>, Salil Mehta
+	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+ <20240418135412.14730-2-Jonathan.Cameron@huawei.com>
+From: Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <0ec78ec2-636d-c7b1-4265-7cffa88765e1@huawei.com>
+Date: Tue, 23 Apr 2024 14:18:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Daniel Okazaki <dtokazaki@google.com>, kernel-team@android.com,
- linux-i2c@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Arnd Bergmann <arnd@arndb.de>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240422174337.2487142-1-dtokazaki@google.com>
-Subject: Re: [PATCH v3] eeprom: at24: fix memory corruption race condition
+In-Reply-To: <20240418135412.14730-2-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240422174337.2487142-1-dtokazaki@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:HueGTE6pDjjGq6fr0JtQFXMnH0PkSUwOeI6TKKF/rFse2NdxFMM
- js2RHiBMVQ4ZEw9p/zQQnMPF2/BR8XJ180yRoFmLISekyoprHvcYM+dBWTCSZcAIaGdh62E
- K1N18NIQrC+Zapvle9oC3ZshKQ6eHLqbSe4GN/VaIthN8ZLkKrwSPRFzHO8RD9Vy2v88Mpj
- W6OzuJxwp1MDtub7V8ZdQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:4UEACg2W1e0=;Xo4SzAXl0+sOQrC9KIxB9Mp5BBt
- /M8O5awMH88Oa8RtLXfshSJ6REZ79IZxchV4eATXnuq420jXN5S1zxOOAv3fZJOzkfP7zGN8l
- ENLvrRDOUmfh3x6soqg6sdaJuWj+24BYK80hOAmlHloP5cuy+9rAcZQvIgdKcWwj5MxhEhqRX
- soXe82Kj0zi1Dwlqsfj0PyDeo5z2JaJJ/iNGI1IfQwZ8/ZEZeh9rg8MbLyB3JqG5d75SfsLnO
- dh2ikNGQkDYN0U+oXCp+VwDY58JsezaZVQ2NZwCLfdnUTlfggpZnzg6axK0VKJ4wTXfe6HNcc
- JvgsbrzQJVK2x5EGeVeDqqML2HYh/s99DV+ff2iw8kmlQ879LJhHuDY2IEdNqkfixbxCZSZTc
- x+0lnwrZMEoHUe8ONPqIGuSnRaaRYuCePx0mXshY4sWa8qRckhfogkU4SI3WVqbPeQCtVCleA
- S0dRmDn3bNXzTajU8Y6bMvNJt58kTBdoKManKg/xH/DcGHVyVoShR9C+fKbTRe8qU1Tr9B8Y4
- SqOuezeF0IEUH6gCcvr+FaBBQfPOsWb5CpCHQBOre36+qNjAb93vI4+U+ubwvK936cLoy9UTn
- BCAAvvH2uNKCYhJzBJaE1dQceEUj6qiV1LMQLHIsE5ayrVyuM3nopGw1W2/Fv1xUdyIk5i8Ae
- 7PULxdGhPpHu/TdpIJJhRaxemeNm5tKk3YCkTkuc+NJvBnK6wp2k20gr2pPaDQdMrg6wJcPVm
- mKCaYc3RwKDVBg6QpqFnyCNYRoKli1g7cwqdZssuc/sgxLq3LpgGQoe91mhVQDlsotimQwVuu
- BmyZwKIMXSYpp+uFDEEK2Lvv24ylFxlUL7Dyy/LSIvE3E=
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500002.china.huawei.com (7.185.36.229)
 
-How do you think about to increase the version number for your attempt in =
-the patch subject?
-
-See also previous contribution:
-https://lore.kernel.org/lkml/20240419191200.219548-1-dtokazaki@google.com/
-https://lkml.org/lkml/2024/4/19/946
-
-
-> If the eeprom is not accessible, an nvmem device will be registered, the
-> read will fail, and the device will be torn down.
-=E2=80=A6
-
-Please present the introduction for failure conditions as an enumeration.
-
-
-> Move the failure point before registering the nvmem device.
-=E2=80=A6
-
-I would interpret the diff data more in the way that a devm_nvmem_register=
-() call
-should be performed a bit later in the implementation of the function =E2=
-=80=9Cat24_probe=E2=80=9D.
-How do you think about to mention the affected function also in the summar=
-y phrase?
-
-
-> Changed sha length to 12 in description
-
-A specification was adjusted for a tag.
-Please add a version identifier here.
-Will version descriptions be extended another bit?
-
-
+On 2024/4/18 21:53, Jonathan Cameron wrote:
+> Separate code paths, combined with a flag set in acpi_processor.c to
+> indicate a struct acpi_processor was for a hotplugged CPU ensured that
+> per CPU data was only set up the first time that a CPU was initialized.
+> This appears to be unnecessary as the paths can be combined by letting
+> the online logic also handle any CPUs online at the time of driver load.
+> 
+> Motivation for this change, beyond simplification, is that ARM64
+> virtual CPU HP uses the same code paths for hotplug and cold path in
+> acpi_processor.c so had no easy way to set the flag for hotplug only.
+> Removing this necessity will enable ARM64 vCPU HP to reuse the existing
+> code paths.
+> 
+> Leave noisy pr_info() in place but update it to not state the CPU
+> was hotplugged.
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
 > ---
+> v7: No change.
+> v6: New patch.
+> RFT: I have very limited test resources for x86 and other
+> architectures that may be affected by this change.
+> ---
+>   drivers/acpi/acpi_processor.c   |  1 -
+>   drivers/acpi/processor_driver.c | 44 ++++++++++-----------------------
+>   include/acpi/processor.h        |  2 +-
+>   3 files changed, 14 insertions(+), 33 deletions(-)
 
-I suggest to use blank line instead of a duplicate marker line.
+Nice simplification,
 
-Regards,
-Markus
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+
+Thanks
+Hanjun
