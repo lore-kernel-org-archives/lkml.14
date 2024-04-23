@@ -1,128 +1,69 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2958140368;
-	Tue, 23 Apr 2024 19:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE1028DC9;
+	Tue, 23 Apr 2024 19:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713900146; cv=none; b=PgJASjqC4NSbpFZ2fGI+s6iSGXn/2kQpKSGzl6Y1ogJVJIjq2nF/w1AI4OI64QcV3dyjGVYfA5jQhp2jUbERIS2IPtOkd74BrSOOn0bOc5zKcSipOG9xDEQMMZQr1SpKV9f8ThlNApSdjJ6bZv/UPaWquA6x58uuPqhAU0BgIn8=
+	t=1713900294; cv=none; b=Ig5Ai/aYeFXaGHSa2AOwu3iqhwucgkiLfm6dT5JkV67Jtbg6AIfQZrBVMA05hH/A6Pa9N1CVh1E+CM1yYkSNn3RZqWFdjBhbr5VBhe0QI/NNYr4h4esPGpvQjAcRrCRNc/WjAAVdJXI5yNtCWbeNj+o6jTYpu9wR3tSSTCZhmQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713900146; c=relaxed/simple;
-	bh=AifPCum3Y5cpyN0GlKVylAcfCgrw/OwmF5XdgLkmvEg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pm8siU2Qh/kpTDePXZKTEZlM0Uhf3UdHzN0/hXr16jiTruIb4O6/7t+b8MxOdO/gsKdJGO9UEF+WAGc8KfpoECLu6CgD9Q8PynXxq7YUzdGnKS+HsgLFVUJrtVLs4b4JrbhL29to8DKGCVuZMB6252pGJmZCmwSsHQcG8JlkcZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=p+WQ0DGV; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1713900294; c=relaxed/simple;
+	bh=gU5DjyFVcSjRr2SRhtji211Cs+TNH+YaJyyQsi8/VJM=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=caIR2uyvMFwEjGGDIWqErk0N5k1hhY6g4zLirovRk2MpEW7pnxsNVOUgnaqTh8dXZvTvCEP14JhhfpskpmH+ixZaQTLwY5SFPnyrlIvYOQAtBk+SPEo3QN2ijlG0mlV9TxRXlaiKg3JopHUzznDB1j73mRkZZS0nfVzBYSgVV0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A30vLFBP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p+WQ0DGV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=QH8+VVHeKCvyXF+XfpPQcB3hgAUVEIgYamedVnOHyoQ=; b=p+WQ0DGVtlrOAjESqjZUK58O8k
-	nisgxZqza7lnpwKkHu/cm5nXgHvuDPDUh+ETV2yigLg30aS1kNAP/2njfMQUTDyClS/xUJ4u0PfnI
-	AtDL6m9exbragWOT0L9tZ5cJd/CSP9tu9X9S85K9dDMYFwkAlfkZry2fx3pvV/xnqMjBgMSRECaGo
-	arQv8U4+baya92uW5jw1z9dDgR47wh3gSS3UWBpOgWsX3gtqQpqbvQfqKiC3V3NWlPdDvcDvYVqmi
-	V1C1vE6m5kmnyO5PKjON0tvVNztPaXjYUo6ZyOq3lBuo1iM9DQGHi3/spFwK2piLYT76AzMlnqzkI
-	8BjjovSw==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzLig-00000001GKt-3E51;
-	Tue, 23 Apr 2024 19:22:22 +0000
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: akpm@linux-foundation.org,
-	willy@infradead.org,
-	Liam.Howlett@oracle.com
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	djwong@kernel.org,
-	david@fromorbit.com,
-	gost.dev@samsung.com,
-	p.raghav@samsung.com,
-	da.gomez@samsung.com,
-	mcgrof@kernel.org
-Subject: [PATCH v2 2/2] lib/test_xarray.c: fix error assumptions on check_xa_multi_store_adv_add()
-Date: Tue, 23 Apr 2024 12:22:21 -0700
-Message-ID: <20240423192221.301095-3-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240423192221.301095-1-mcgrof@kernel.org>
-References: <20240423192221.301095-1-mcgrof@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A30vLFBP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CAFDC116B1;
+	Tue, 23 Apr 2024 19:24:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713900294;
+	bh=gU5DjyFVcSjRr2SRhtji211Cs+TNH+YaJyyQsi8/VJM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=A30vLFBPiR0pchWkzdGhcSUjqEPyqAQIcwaoYd0KLkqzW8fOwWlx7oD+jPSboDeD5
+	 OEZZAVh+KA6sW4i1XEnbr2Lkr6w8xcVZxsTi6Lbs/4S7MEpwQQcCkdjO5arNxsM8wu
+	 j1Mi4tNQfBO8SZ9VyKh2y7bh6VSciuqYPKXJNyECB/oup5lqfMPfj+5+fOHNtuwP+4
+	 bWzukIpPHyTER3SP1ivEylGQsnR8/h8OqTIUqzzaihcwKYhIGPU2q0XX/FLOOr6zV5
+	 xqJ5PFZ4NIN6S8Rs3WtBsVffY9olobd4HaPTAi1xiMaqGTJrzel8DBo0XsVPOxX812
+	 H8obg44KBdjWw==
+Message-ID: <cc21ff5ddd8fbe07e75fdffd596c0aa1.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240423110304.1659456-6-sashal@kernel.org>
+References: <20240423110304.1659456-1-sashal@kernel.org> <20240423110304.1659456-6-sashal@kernel.org>
+Subject: Re: [PATCH AUTOSEL 5.4 6/8] clk: Don't hold prepare_lock when calling kref_put()
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Douglas Anderson <dianders@chromium.org>, Sasha Levin <sashal@kernel.org>, mturquette@baylibre.com, linux-clk@vger.kernel.org
+To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Date: Tue, 23 Apr 2024 12:24:51 -0700
+User-Agent: alot/0.10
 
-While testing lib/test_xarray in userspace I've noticed we can fail with:
+Quoting Sasha Levin (2024-04-23 04:03:01)
+> From: Stephen Boyd <sboyd@kernel.org>
+>=20
+> [ Upstream commit 6f63af7511e7058f3fa4ad5b8102210741c9f947 ]
+>=20
+> We don't need to hold the prepare_lock when dropping a ref on a struct
+> clk_core. The release function is only freeing memory and any code with
+> a pointer reference has already unlinked anything pointing to the
+> clk_core. This reduces the holding area of the prepare_lock a bit.
+>=20
+> Note that we also don't call free_clk() with the prepare_lock held.
+> There isn't any reason to do that.
 
-make -C tools/testing/radix-tree
-./tools/testing/radix-tree/xarray
+You'll want the patch before this, 8358a76cfb47 ("clk: Remove
+prepare_lock hold assertion in __clk_release()"), to avoid lockdep
+warnings. And it looks like the problem was reported on v5.15.y so all
+5 patches from the series would need a backport.
 
-BUG at check_xa_multi_store_adv_add:749
-xarray: 0x55905fb21a00x head 0x55905fa1d8e0x flags 0 marks 0 0 0
-0: 0x55905fa1d8e0x
-xarray: ../../../lib/test_xarray.c:749: check_xa_multi_store_adv_add: Assertion `0' failed.
-Aborted
-
-We get a failure with a BUG_ON(), and that is because we actually can
-fail due to -ENOMEM, the check in xas_nomem() will fix this for us so
-it makes no sense to expect no failure inside the loop. So modify the
-check and since this is also useful for instructional purposes clarify
-the situation.
-
-The check for XA_BUG_ON(xa, xa_load(xa, index) != p) is already done
-at the end of the loop so just remove the bogus on inside the loop.
-
-With this we now pass the test in both kernel and userspace:
-
-In userspace:
-
-./tools/testing/radix-tree/xarray
-XArray: 149092856 of 149092856 tests passed
-
-In kernel space:
-
-XArray: 148257077 of 148257077 tests passed
-
-Fixes: a60cc288a1a2 ("test_xarray: add tests for advanced multi-index use")
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- lib/test_xarray.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/lib/test_xarray.c b/lib/test_xarray.c
-index ebe2af2e072d..5ab35190aae3 100644
---- a/lib/test_xarray.c
-+++ b/lib/test_xarray.c
-@@ -744,15 +744,20 @@ static noinline void check_xa_multi_store_adv_add(struct xarray *xa,
- 
- 	do {
- 		xas_lock_irq(&xas);
--
- 		xas_store(&xas, p);
--		XA_BUG_ON(xa, xas_error(&xas));
--		XA_BUG_ON(xa, xa_load(xa, index) != p);
--
- 		xas_unlock_irq(&xas);
-+		/*
-+		 * In our selftest case the only failure we can expect is for
-+		 * there not to be enough memory as we're not mimicking the
-+		 * entire page cache, so verify that's the only error we can run
-+		 * into here. The xas_nomem() which follows will ensure to fix
-+		 * that condition for us so to chug on on the loop.
-+		 */
-+		XA_BUG_ON(xa, xas_error(&xas) && xas_error(&xas) != -ENOMEM);
- 	} while (xas_nomem(&xas, GFP_KERNEL));
- 
- 	XA_BUG_ON(xa, xas_error(&xas));
-+	XA_BUG_ON(xa, xa_load(xa, index) != p);
- }
- 
- /* mimics page_cache_delete() */
--- 
-2.43.0
-
+ 8358a76cfb47 clk: Remove prepare_lock hold assertion in __clk_release()
+ 6f63af7511e7 clk: Don't hold prepare_lock when calling kref_put()
+ 9d05ae531c2c clk: Initialize struct clk_core kref earlier
+ e581cf5d2162 clk: Get runtime PM before walking tree during disable_unused
+ 9d1e795f754d clk: Get runtime PM before walking tree for clk_summary
