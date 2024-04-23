@@ -1,62 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CABE13D287;
-	Tue, 23 Apr 2024 17:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3C613DDD4;
+	Tue, 23 Apr 2024 17:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713893790; cv=none; b=HFOEOkkdIeiuBxA+/HOzUzr4fHOPZFWuJBVzBf7HCT8oKXtuhoU8amWrLmk7DdQoNmTB262vKeJ75dBYo49NssKUclfcZSe40ywFo5CqT8ParY+LflN3qLz777y+yaZEI0FWHU1wQ6EN9mfjnhC9dUEsn/AT1g/6Ee/1ol6YBE4=
+	t=1713893803; cv=none; b=oS+6z86IBYDZetqhhWx1TkhF86MwX0KqHK8GbVG9zFjZjiDVviBkKzT6miK0dnG4VpAC7EiwI5XIe0cV1OawwgutUw2UY7tR2yhbDtHht/CSVbAgaUL1taY6F1gEdVZhJMg3GP16ghWbBiQNA8WI71b+a5qsCM2Cgos6XhKRfKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713893790; c=relaxed/simple;
-	bh=96a/hF+nh+YvRKYaFLg+hwTfTv2zLQG6m8D8hdW3Yfg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y42CXCso8wXgjBp2IvPDBoBIbtsHhCJ53QKKIrHk7ehXnOPFBsoKc/S3AP0ZRJK+YH93CS9bV2A2166ADYhofGeZZ8hJjS301HkMH7HhZhwdgz5JzsshwB16hqP1SqRwU30dnG62tc67Rz02oed5vVmnJXVNP2da2TzmJ+uDV9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IJ/F6wjh; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1713893803; c=relaxed/simple;
+	bh=0GX8HhoSt+Bowm5iZvkwyHIzLD8tLG+XNrU90AlqK/Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CuWon4luK7JRiOgqo/uYhfgHRqZPnPAjMJahjvSSCGc3Px6+QWTb5EMlv/Ir69CKVnqYeTm3rJPQyuk+M4YK978XbGAU5K/gGK6bZmJscPYTXqZgcSR1Mui+xCw0pm2w9Cd5hCM5XY76BBCAx4R7hWsrNJI+UntU9S/If15h1EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CwVaoooG; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IJ/F6wjh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CwVaoooG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713893789; x=1745429789;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=96a/hF+nh+YvRKYaFLg+hwTfTv2zLQG6m8D8hdW3Yfg=;
-  b=IJ/F6wjhSvyR2WfVA9NpK1mpb+KqRNG7kXpuDJPK1bjAMgf5pTkZ37Ig
-   WQAET8xEhcwIqnc+XETAjMVICS+QWcc87lJRQw8kB+JpomDfK77qipDZ7
-   BjcrE8m7uMtBbCpCV2m4RKgwR0fdB3FGhsfORm7SnTJH8rl43EwIwZxDc
-   n8F1LB5r6kuVRpW6tv/jBfWOMgKtjPEWVvoa57FyB+9pJw8ZoC5NApH5X
-   F7+JB1NgaAdqCfc9ViIDIxXIss6HtQ9eQS5Zj4qY2cDzLZad67qkBw6JK
-   Zc6uLquGOuycRUiRL40LP+mxMqo+fRVQnFRD+QT5zYIA7RUqGLkOCl1K+
-   w==;
-X-CSE-ConnectionGUID: lzhs5B+zTL6K40jkYPWPMA==
-X-CSE-MsgGUID: t2V7o337QeKERsxV+S+ehQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9658607"
+  t=1713893803; x=1745429803;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=0GX8HhoSt+Bowm5iZvkwyHIzLD8tLG+XNrU90AlqK/Q=;
+  b=CwVaoooG56FuJnEgd2lSdWMHHkjj3UTX48xCzVZlI+bqqXLy25QBlHJ+
+   yDj3n9c3bQrqkGVovTFZGFZ0Nph7kk/f15cB3YGUNP7eYqlbdTjNdv5lb
+   /ogse5j+dV4vDsCCjCh/+s6NznEbGJNOMo8PCPmyOMn40jzu0NY3W45HR
+   agH6vblLeb2g8Dk5cQgpGoitUPbwgkwzOKehCBos6uFaFuSxljNbvvuA7
+   oe3AoJxh1fL4LSltz0Aq4JA5tx/pkZQD69qmyP4uOCJuSIdH7gBID/WkN
+   Se0VNl+6x6mxvUWgjxSYeTSL2txs5oQpt6pdGW4EpevYSCxMfKKlCLs++
+   Q==;
+X-CSE-ConnectionGUID: lJp+rtJURkWP1Ry4MqOeJw==
+X-CSE-MsgGUID: vE9bghDSQ+aGbFrI3lS/4A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9712310"
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="9658607"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 10:36:29 -0700
-X-CSE-ConnectionGUID: /8VeUUHTSHibYtTrwOiQ+g==
-X-CSE-MsgGUID: kF4oE0xRSe6ufvujCxDwqg==
+   d="scan'208";a="9712310"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 10:36:40 -0700
+X-CSE-ConnectionGUID: 1XBh1OYvTD60c3BFWsG2bA==
+X-CSE-MsgGUID: hdr0CBwaTRaCrNAxFNyDQA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="47713735"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa002.fm.intel.com with ESMTP; 23 Apr 2024 10:36:26 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 7EF5A192; Tue, 23 Apr 2024 20:36:25 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Michael Hennerich <michael.hennerich@analog.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Helge Deller <deller@gmx.de>
-Subject: [PATCH v1 1/1] fbtft: seps525: Don't use "proxy" headers
-Date: Tue, 23 Apr 2024 20:36:23 +0300
-Message-ID: <20240423173623.2748621-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+   d="scan'208";a="29097381"
+Received: from jacob-builder.jf.intel.com ([10.54.39.125])
+  by fmviesa004.fm.intel.com with ESMTP; 23 Apr 2024 10:36:39 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: LKML <linux-kernel@vger.kernel.org>,
+	X86 Kernel <x86@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	iommu@lists.linux.dev,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Lu Baolu" <baolu.lu@linux.intel.com>,
+	kvm@vger.kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Borislav Petkov" <bp@alien8.de>,
+	"Ingo Molnar" <mingo@redhat.com>
+Cc: Paul Luse <paul.e.luse@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Raj Ashok <ashok.raj@intel.com>,
+	"Tian, Kevin" <kevin.tian@intel.com>,
+	maz@kernel.org,
+	seanjc@google.com,
+	"Robin Murphy" <robin.murphy@arm.com>,
+	jim.harris@samsung.com,
+	a.manzanares@samsung.com,
+	"Bjorn Helgaas" <helgaas@kernel.org>,
+	guang.zeng@intel.com,
+	robert.hoo.linux@gmail.com,
+	oliver.sang@intel.com,
+	acme@kernel.org,
+	Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v3  02/12] x86/irq: Unionize PID.PIR for 64bit access w/o casting
+Date: Tue, 23 Apr 2024 10:41:04 -0700
+Message-Id: <20240423174114.526704-3-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240423174114.526704-1-jacob.jun.pan@linux.intel.com>
+References: <20240423174114.526704-1-jacob.jun.pan@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,33 +86,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Update header inclusions to follow IWYU (Include What You Use)
-principle.
+Make PIR field into u64 such that atomic xchg64 can be used without ugly
+casting.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
- drivers/staging/fbtft/fb_seps525.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/posted_intr.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/fbtft/fb_seps525.c b/drivers/staging/fbtft/fb_seps525.c
-index 05882e2cde7f..46c257308b49 100644
---- a/drivers/staging/fbtft/fb_seps525.c
-+++ b/drivers/staging/fbtft/fb_seps525.c
-@@ -16,11 +16,10 @@
-  * GNU General Public License for more details.
-  */
+diff --git a/arch/x86/include/asm/posted_intr.h b/arch/x86/include/asm/posted_intr.h
+index f0324c56f7af..acf237b2882e 100644
+--- a/arch/x86/include/asm/posted_intr.h
++++ b/arch/x86/include/asm/posted_intr.h
+@@ -9,7 +9,10 @@
  
--#include <linux/module.h>
--#include <linux/kernel.h>
--#include <linux/init.h>
--#include <linux/gpio.h>
-+#include <linux/bits.h>
- #include <linux/delay.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
- 
- #include "fbtft.h"
- 
+ /* Posted-Interrupt Descriptor */
+ struct pi_desc {
+-	u32 pir[8];     /* Posted interrupt requested */
++	union {
++		u32 pir[8];     /* Posted interrupt requested */
++		u64 pir64[4];
++	};
+ 	union {
+ 		struct {
+ 				/* bit 256 - Outstanding Notification */
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+2.25.1
 
