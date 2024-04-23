@@ -1,16 +1,16 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8548413BAFE;
-	Tue, 23 Apr 2024 15:15:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944AA13DBA2;
+	Tue, 23 Apr 2024 15:15:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713885348; cv=none; b=gxB0Dy88/WaTu0PSlKCSTHOQqQHee+G07zxZbGjhndCWOT8uIPrLyIO00FQjCM+3NjSOGNx9Qtn9TzXPIT7jkmGwhGCh/SRqwyXVuMDTRWVd1FnlY6J1BGJyqriy0IKM1V2kxN7mNUQm6ef3p55IuGj2HdGXI6XX2J+OYtamhOA=
+	t=1713885349; cv=none; b=CK0BILpkEgsFKAvnSHMYMPY1WXe8KVEYdD8N6zj7LvUTw80p5+DzxyoPzHw3QNY7T6O5+NDp8Ezcc9OtsKeGTMsBkd1iaPXUHs57VXcmXVrgA5IElzCH/YMTjNLVyyW7eF1b+hTOf+3zsRpJS0h/eWj4ht+JN01q73H0tXUdYtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713885348; c=relaxed/simple;
-	bh=XxcTd7LqaCigdDlq4y6hHS87KzLDSmMSLLvaSA1v7Ec=;
+	s=arc-20240116; t=1713885349; c=relaxed/simple;
+	bh=rNLMrMNl5u+YaPBSylRvR65dH9Jx9iRKCP/yMTCqWN4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tN0hMr8CIlHYBXFuQwpjXKj0K1O3oS9zoTbxg/H735xQewz2FIsxXFg3tuYWTxeq4JDdPJ/78VONiny2elg5SSRd4+7mORm1TUINzY+qzYi8UXaZwelbM+hGN1NPOq6hHNyTReJFhuFrhDfLic/5PozRmHFa9QSJ+jtp/Q7ciwQ=
+	 MIME-Version:Content-Type; b=ZHfd7Y2KEGjvahnUlsELlPukJmqEQUYXr5h0nOT3m1pVvop6yYl9+8yzJkq2/xSuwviri+p6hW4v+HttZyDGn15Wmh7zpXv/sy9wFh1zeq4+HF5qj7uXfxbQiVDyJptCzMrOngrTkWPKoudu+g2qJAgmht1WwEemtf8DVgNyAR8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
@@ -18,25 +18,23 @@ Received: from i5e861d9e.versanet.de ([94.134.29.158] helo=phil.lan)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1rzHrv-0007PZ-QB; Tue, 23 Apr 2024 17:15:39 +0200
+	id 1rzHrv-0007PZ-6j; Tue, 23 Apr 2024 17:15:39 +0200
 From: Heiko Stuebner <heiko@sntech.de>
-To: linux-rockchip@lists.infradead.org,
-	Dragan Simic <dsimic@manjaro.org>
+To: Chukun Pan <amadeus@jmu.edu.cn>
 Cc: Heiko Stuebner <heiko@sntech.de>,
-	krzk+dt@kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
-	Marek Kraus <gamiee@pine64.org>,
-	didi.debian@cknow.org,
-	robh+dt@kernel.org,
+	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	conor+dt@kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: arm: rockchip: Correct the descriptions for Pine64 boards
-Date: Tue, 23 Apr 2024 17:15:32 +0200
-Message-Id: <171388532521.2652222.18024517612743377604.b4-ty@sntech.de>
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 0/1] arm64: dts: rockchip: correct the model name for Radxa ROCK 3A
+Date: Tue, 23 Apr 2024 17:15:31 +0200
+Message-Id: <171388532518.2652222.5651556523830397668.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <ec124dab2b1a8776aa39177ecce34babca3a50e2.1713832790.git.dsimic@manjaro.org>
-References: <ec124dab2b1a8776aa39177ecce34babca3a50e2.1713832790.git.dsimic@manjaro.org>
+In-Reply-To: <20240419103019.992586-1-amadeus@jmu.edu.cn>
+References: <20240419103019.992586-1-amadeus@jmu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,19 +44,18 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Tue, 23 Apr 2024 02:43:43 +0200, Dragan Simic wrote:
-> Correct the descriptions of a few Pine64 boards and devices, according
-> to their official names used on the Pine64 wiki.  This ensures consistency
-> between the officially used names and the names in the source code.
-> 
+On Fri, 19 Apr 2024 18:30:17 +0800, Chukun Pan wrote:
+> Changes in v2:
+>   Collected Reviewed-by.
+>   Remove changes to compatible.
 > 
 
 Applied, thanks!
 
-[1/2] dt-bindings: arm: rockchip: Correct the descriptions for Pine64 boards
-      commit: 433dafc7b4f9f9a1011d72b32e138b598faa4807
-[2/2] arm64: dts: rockchip: Correct the model names for Pine64 boards
-      commit: adbc5e6b457e773f1afa11fdb9b667cd492a7f82
+[1/2] dt-bindings: arm: rockchip: correct the model name for Radxa ROCK 3A
+      commit: fac5b3381639a504cd0e8c015242622331cc7a52
+[2/2] arm64: dts: rockchip: correct the model name for Radxa ROCK 3A
+      commit: 626a479873b6a680b3227c4852bde4a1f2c17fdf
 
 Best regards,
 -- 
