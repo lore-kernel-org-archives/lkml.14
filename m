@@ -1,247 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6699112DDB4;
-	Tue, 23 Apr 2024 10:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74BEF12F585;
+	Tue, 23 Apr 2024 10:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713869177; cv=none; b=smFTZKGS7GTHr2C+8YlvqHG5yxG8W1dFr/28QqIRlMEVaLxSYEwQXgu3EUKg3RR9YbjGkpmP1WDabzdyoCMa9Vvt2KVyinypYSt/ZsAfO3Rv94n1y0yEf1Vvf6jRVZN2ZDyLm9hiMud0dpzbIyMohYDJpGyiCM9IF5PBbmPnD0M=
+	t=1713869183; cv=none; b=CjHciFAqJZfVC8Q5sA03GHAj0p46mxWVkiJGBkRKLH2shPqXdFfZ33yc/vBVOjqKyVVWUOvbJspcQv0mT+X2clD2dai33Fzn+IeEnKcKntGuyyYq/HU+cSRERjxcF5PJF/yBZcGRNfjfkZPGNzznLnRZ/0OQWjQOjrmovDhesHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713869177; c=relaxed/simple;
-	bh=0Jei25jBuuYJAKPLzz/1PwMOvUOkVr+WM5HlK6StDig=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uuVifzHu5Xd88AoDKlvf1jS8umtKjB9/kqIAifr1oxGS7zHtmkTNW7MBqy4CfSN+NRc3J1LzU/HLjgrhksROliSlsXQunC2XuV/DTvOX+qcZ0SwkyfIjJQI2cKttkRKPmzSpdNqibimABWbhGTnIFv26Lf1dn/ql1QRt5SHwFyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nSlQwg2H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713869183; c=relaxed/simple;
+	bh=mmjotz2m/s2wCzaIz5vGpF6Ju6kc+foSpiaBrorBsdg=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=EOJ88/iTVglr5lmE+8pvjfrKMim0wo2FVEaHquQ5h2o21IvRhMHpdQ3XZPP7lCgo6X1p7L1G6rUilndWcWdBeWnsJb5SJjxcUbt/ll+fqPBRhaDidQsSY3zuG+oytYtIqyLKFHIquZGOXzFQOPAZnCqEClkksd2nmPwGM6cRHcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=cmbeqjF9; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nSlQwg2H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E727FC4AF07;
-	Tue, 23 Apr 2024 10:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713869177;
-	bh=0Jei25jBuuYJAKPLzz/1PwMOvUOkVr+WM5HlK6StDig=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=nSlQwg2HWKftEeGjf6jIk4hrwJ5IXGBywnycwSfVR5PIBUda0VBpzouV3Nd7UFpkI
-	 F4A78YMJwttSRjCRVkY4blY2Rr1XrsYHc4UvzqzAvOojt2AknySVEkYM7HLnF/AqOd
-	 4IDG/y4UI9ofGR1VatIgRrQAEEyMaN/UKu6rWwN/GoTLS+V+IDpbB3rN/r/rSb3num
-	 U4REevZiaUDzhHu10IWpiK5dQdIAqrbo4zW6otIprOcN3fnZxJF3pEDRt29fRRiHnv
-	 AFbE9K04ZPRIlqFel1Am3rvLS9AuwcNW8kCr1SL8bivEmAqMSfqoNrHwTWqE0Q3l4o
-	 sL1mIQwQum1Og==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Tue, 23 Apr 2024 12:45:40 +0200
-Subject: [PATCH v12 11/28] drm/connector: hdmi: Calculate TMDS character
- rate
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="cmbeqjF9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1713869161; x=1714473961; i=markus.elfring@web.de;
+	bh=Z2QfoNYsNXaask8xcpoAL8dlyuCS+LFLGRl6vuwhzKs=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=cmbeqjF9MI/4Xc/cWfQvZU4+GjT1LN+3fohkWCFX1fVX7qGZFUI3WyZhRGRzzgz6
+	 SBcwU3rH2wvfa9QG1QMKAhP3JlELYBNEoDz6YTlm4eXjJ9MuFe667qbJSBj0sMKf/
+	 MZ5TSLbujJJcrnyw9E+NS2n+eM5qbaiCOnpqaLmc5kgd1kRZBN4z5BYFeBfecdidS
+	 +pxRD7OQyTs2eZk/ChX9Njo+BFAFud0LxFUW3QP/RoaHkq6CzIU6bWB+IEDM3nZaa
+	 8rPeFCH1ehIcGWqkd1HewCblSY6geGGmmRxhmicU5zAKM9HGeyq3IYj1Zw+/of5k7
+	 3FbGLrVVJ/bGcpNa1w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MALeR-1rrq3m0BfH-00BpJG; Tue, 23
+ Apr 2024 12:46:01 +0200
+Message-ID: <878bf83c-cd5b-48d0-8b4e-77223f1806dc@web.de>
+Date: Tue, 23 Apr 2024 12:45:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240423-kms-hdmi-connector-state-v12-11-3338e4c0b189@kernel.org>
-References: <20240423-kms-hdmi-connector-state-v12-0-3338e4c0b189@kernel.org>
-In-Reply-To: <20240423-kms-hdmi-connector-state-v12-0-3338e4c0b189@kernel.org>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
- Sandy Huang <hjc@rock-chips.com>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, Andy Yan <andy.yan@rock-chips.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
- Sebastian Wick <sebastian.wick@redhat.com>, 
- =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6362; i=mripard@kernel.org;
- h=from:subject:message-id; bh=0Jei25jBuuYJAKPLzz/1PwMOvUOkVr+WM5HlK6StDig=;
- b=owGbwMvMwCmsHn9OcpHtvjLG02pJDGnqE/1PS5i/uZC5m8vifaPZvot7rP9t1H1f7MzAtekWE
- 9+/+j0PO6ayMAhzMsiKKbI8kQk7vbx9cZWD/cofMHNYmUCGMHBxCsBEjFoYG9qe/eQJnmyokRKy
- NNN08ZTPdjFsJpsjvST9I5cvXLvb5T93qdeCxjkzp9+1z7tqtPv2LcaGFUZc59r3pXF1rE6xPm2
- 3vuzMGU2tBuUfu7+8Eq+6dqVPdVHvpZI7VzXsVjcdTm09+3oeAA==
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+User-Agent: Mozilla Thunderbird
+To: Kunwu Chan <chentao@kylinos.cn>, linux-kselftest@vger.kernel.org,
+ kvm@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Shuah Khan <shuah@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Kunwu Chan <kunwu.chan@hotmail.com>
+References: <20240423073952.2001989-1-chentao@kylinos.cn>
+Subject: Re: [PATCH] KVM: selftests: Add 'malloc' failure check in
+ test_vmx_nested_state
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240423073952.2001989-1-chentao@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:n0vG778YO3AlCLa1Kkm9T2tHkc4o+LBjG5klT6TJdU77Jh8Dora
+ QFIaJiH85W6Xc7fjQoiRabVVD44o4/UHu0iWfxFwNJowQmmXfs0A6Zn3Qys8CPRvwkLLNsu
+ whyjAWIuocz1zh22880mu8XUXCZp6MUK0I8Zj8OZLMETQNwHawKPxzyHeTfXq0gEPLqycpa
+ mH4Kkq7K0eOyfe9mfJ+ng==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:RYvcZeMOHFQ=;vIuz/LWBBbAEi+MLP3uR5HcF0S2
+ fKZlZqWia6HX2nKjYaSheqvvCWSVJV9WAWF8z6c1ycLowSt34X3TIYZIGzw/tsXNfX9C/Qm8W
+ 2O0oDDLWY1lkZ/WiwmhlEwXOMHFVBegFFdRNfI5dwg/p9Is4PS7W5wyb0W+Wodwzi9AG2AAcl
+ FzaxKtx7aeMfzoXu7TytaH5hkA4LQrqmKtGc71tM2IZtDz4f1xYy9p7IoMWZ/UI4cgk1xGRcI
+ Qpz5gKeK0ZHibwOxRsZ4kwiHzEWl+m+5uu5+gndOvc9QtMF1HCm0/wyT8M/wPdqhQpWfFrkZf
+ srcFX4IdTU9rrMRYlEAMOU8APeEk/ePBp8sqRDxJGK7Q3HwrAf1vfqiQvBnmy31jVjcn5tavj
+ 1chOk5dyfcpLXeG20VJo+OXde0ot7jumObxz4Ba5RtkakzOg7T+tyhfgfYnqdyMDcgiqvrpQw
+ ZVlqlggxlj+STKT1+/QAnY7LqOWkFNU+xPP6WLe7OB1T7zF8YlfnTaUnTP5erR0T68Sl40K0M
+ KkVDpeJQu8hH8fWw1x3YQG7FEbc5iXANOK5FmE8yHzCubDlz0uKKdhp0zQDPIJRhkFjUVbKJF
+ a0NbfPGE8ArC+miv6ZN6F/JuH277QhWYLZUtM5X8FVFPJSO/YWqfQDw6yBtAKmbZupBIfvoHd
+ Gx6uKztEiPZj0goQVz5KmDmhA82JwhiMugOl8xJMKjDu4vU4vpa6o6RDppRgvQZlIUOXYZf7Z
+ hq4MTWC2LtvIfYgXECGjFrb0fgkYWWRF8JQvlX8CLY97yJgavGFGxjnS96jI8PKl1N62SnUK6
+ 56j7kMp+kepa+px+bg02Nkzo2DG+BXdhxfc7N+CiS0w2Q=
 
-Most HDMI drivers have some code to calculate the TMDS character rate,
-usually to adjust an internal clock to match what the mode requires.
+=E2=80=A6
+> This patch will add the malloc failure checking
+=E2=80=A6
 
-Since the TMDS character rates mostly depends on the resolution, whether
-we need to repeat pixels or not, the bpc count and the format, we can
-now derive it from the HDMI connector state that stores all those infos
-and remove the duplication from drivers.
+* Please use a corresponding imperative wording for the change description=
+.
 
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
----
- drivers/gpu/drm/display/drm_hdmi_state_helper.c    | 67 ++++++++++++++++++++++
- drivers/gpu/drm/drm_atomic.c                       |  1 +
- drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c |  3 +
- include/drm/drm_connector.h                        |  5 ++
- 4 files changed, 76 insertions(+)
+* Would you like to add the tag =E2=80=9CFixes=E2=80=9D accordingly?
 
-diff --git a/drivers/gpu/drm/display/drm_hdmi_state_helper.c b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
-index f6cd0612ea2c..08630561d864 100644
---- a/drivers/gpu/drm/display/drm_hdmi_state_helper.c
-+++ b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
-@@ -1,10 +1,11 @@
- // SPDX-License-Identifier: MIT
- 
- #include <drm/drm_atomic.h>
- #include <drm/drm_connector.h>
- 
-+#include <drm/display/drm_hdmi_helper.h>
- #include <drm/display/drm_hdmi_state_helper.h>
- 
- /**
-  * __drm_atomic_helper_connector_hdmi_reset() - Initializes all HDMI @drm_connector_state resources
-  * @connector: DRM connector
-@@ -23,10 +24,67 @@ void __drm_atomic_helper_connector_hdmi_reset(struct drm_connector *connector,
- 	new_conn_state->max_bpc = max_bpc;
- 	new_conn_state->max_requested_bpc = max_bpc;
- }
- EXPORT_SYMBOL(__drm_atomic_helper_connector_hdmi_reset);
- 
-+static const struct drm_display_mode *
-+connector_state_get_mode(const struct drm_connector_state *conn_state)
-+{
-+	struct drm_atomic_state *state;
-+	struct drm_crtc_state *crtc_state;
-+	struct drm_crtc *crtc;
-+
-+	state = conn_state->state;
-+	if (!state)
-+		return NULL;
-+
-+	crtc = conn_state->crtc;
-+	if (!crtc)
-+		return NULL;
-+
-+	crtc_state = drm_atomic_get_new_crtc_state(state, crtc);
-+	if (!crtc_state)
-+		return NULL;
-+
-+	return &crtc_state->mode;
-+}
-+
-+static enum drm_mode_status
-+hdmi_clock_valid(const struct drm_connector *connector,
-+		 const struct drm_display_mode *mode,
-+		 unsigned long long clock)
-+{
-+	const struct drm_display_info *info = &connector->display_info;
-+
-+	if (info->max_tmds_clock && clock > info->max_tmds_clock * 1000)
-+		return MODE_CLOCK_HIGH;
-+
-+	return MODE_OK;
-+}
-+
-+static int
-+hdmi_compute_clock(const struct drm_connector *connector,
-+		   struct drm_connector_state *conn_state,
-+		   const struct drm_display_mode *mode,
-+		   unsigned int bpc, enum hdmi_colorspace fmt)
-+{
-+	enum drm_mode_status status;
-+	unsigned long long clock;
-+
-+	clock = drm_hdmi_compute_mode_clock(mode, bpc, fmt);
-+	if (!clock)
-+		return -EINVAL;
-+
-+	status = hdmi_clock_valid(connector, mode, clock);
-+	if (status != MODE_OK)
-+		return -EINVAL;
-+
-+	conn_state->hdmi.tmds_char_rate = clock;
-+
-+	return 0;
-+}
-+
- /**
-  * drm_atomic_helper_connector_hdmi_check() - Helper to check HDMI connector atomic state
-  * @connector: DRM Connector
-  * @state: the DRM State object
-  *
-@@ -42,10 +100,19 @@ int drm_atomic_helper_connector_hdmi_check(struct drm_connector *connector,
- {
- 	struct drm_connector_state *old_conn_state =
- 		drm_atomic_get_old_connector_state(state, connector);
- 	struct drm_connector_state *new_conn_state =
- 		drm_atomic_get_new_connector_state(state, connector);
-+	const struct drm_display_mode *mode =
-+		connector_state_get_mode(new_conn_state);
-+	int ret;
-+
-+	ret = hdmi_compute_clock(connector, new_conn_state, mode,
-+				 new_conn_state->hdmi.output_bpc,
-+				 new_conn_state->hdmi.output_format);
-+	if (ret)
-+		return ret;
- 
- 	if (old_conn_state->hdmi.output_bpc != new_conn_state->hdmi.output_bpc ||
- 	    old_conn_state->hdmi.output_format != new_conn_state->hdmi.output_format) {
- 		struct drm_crtc *crtc = new_conn_state->crtc;
- 		struct drm_crtc_state *crtc_state;
-diff --git a/drivers/gpu/drm/drm_atomic.c b/drivers/gpu/drm/drm_atomic.c
-index 8730137baa86..26f9e525c0a0 100644
---- a/drivers/gpu/drm/drm_atomic.c
-+++ b/drivers/gpu/drm/drm_atomic.c
-@@ -1146,10 +1146,11 @@ static void drm_atomic_connector_print_state(struct drm_printer *p,
- 	if (connector->connector_type == DRM_MODE_CONNECTOR_HDMIA ||
- 	    connector->connector_type == DRM_MODE_CONNECTOR_HDMIB) {
- 		drm_printf(p, "\toutput_bpc=%u\n", state->hdmi.output_bpc);
- 		drm_printf(p, "\toutput_format=%s\n",
- 			   drm_hdmi_connector_get_output_format_name(state->hdmi.output_format));
-+		drm_printf(p, "\ttmds_char_rate=%llu\n", state->hdmi.tmds_char_rate);
- 	}
- 
- 	if (connector->connector_type == DRM_MODE_CONNECTOR_WRITEBACK)
- 		if (state->writeback_job && state->writeback_job->fb)
- 			drm_printf(p, "\tfb=%d\n", state->writeback_job->fb->base.id);
-diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-index 8bc1f9b0b12b..4f46a70a5017 100644
---- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-+++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-@@ -70,10 +70,13 @@ static int light_up_connector(struct kunit *test,
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	conn_state = drm_atomic_get_connector_state(state, connector);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, conn_state);
- 
-+	conn_state->hdmi.output_bpc = connector->max_bpc;
-+	conn_state->hdmi.output_format = HDMI_COLORSPACE_RGB;
-+
- 	ret = drm_atomic_set_crtc_for_connector(conn_state, crtc);
- 	KUNIT_EXPECT_EQ(test, ret, 0);
- 
- 	crtc_state = drm_atomic_get_crtc_state(state, crtc);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, crtc_state);
-diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-index 29883e6f8e50..54899c030031 100644
---- a/include/drm/drm_connector.h
-+++ b/include/drm/drm_connector.h
-@@ -1047,10 +1047,15 @@ struct drm_connector_state {
- 
- 		/**
- 		 * @output_format: Pixel format to output in.
- 		 */
- 		enum hdmi_colorspace output_format;
-+
-+		/**
-+		 * @tmds_char_rate: TMDS Character Rate, in Hz.
-+		 */
-+		unsigned long long tmds_char_rate;
- 	} hdmi;
- };
- 
- /**
-  * struct drm_connector_funcs - control connectors on a given device
 
--- 
-2.44.0
+=E2=80=A6
+> +++ b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
+> @@ -91,6 +91,7 @@ void test_vmx_nested_state(struct kvm_vcpu *vcpu)
+>  	const int state_sz =3D sizeof(struct kvm_nested_state) + getpagesize()=
+;
+>  	struct kvm_nested_state *state =3D
+>  		(struct kvm_nested_state *)malloc(state_sz);
+> +	TEST_ASSERT(state, "-ENOMEM when allocating kvm state");
+=E2=80=A6
 
+Can =E2=80=9Cerrno=E2=80=9D be relevant for the error message construction=
+?
+
+Regards,
+Markus
