@@ -1,184 +1,101 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EBAC5EE8D;
-	Tue, 23 Apr 2024 10:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82405FBAA;
+	Tue, 23 Apr 2024 10:01:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713866502; cv=none; b=WWokdUNwf3A5q/Ma1FwtZA1pDcv6pOVJUujja06mF0NTqc5F+tKqAO9rdA+COIsbKS1rOrEeu5f6LVoo1oIT3yJLrTwK2aWVwHG+f1ebxvtqYTeWfpoXZFkhBVHyQxydoDTomerR22fetWjzYndVEA5VyJEB2aK7EVDOwjyviq4=
+	t=1713866514; cv=none; b=tpohSanHd7DNsZ15I1xbCI+K+gNeMtIswAzfJ37o3aeYkVpiuNjfRS4d5ULC06PiDl36JtkayBslAL6sDOKzfBz1Cxi5kZ1sGd1jvOONmr773oO3A6SbHCvzZDTeDpvjj0fkx3O/pEDWz4vEKPtxT0IlE/H/5Ss4piEOOx5c5CA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713866502; c=relaxed/simple;
-	bh=vyWYebRDWDhl43XoUdYklPfaE7SPJBl5AaD0stQkpPs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eYCyBcpPgfxfAoIKRcnfmyasMqIw+Ka7l/8hGXMJV4+5QEJZcsJF56UPYR1OKFyJce8r1R78+9VXnBlxczVoWdrwFuDBo2qHeCTv8qGHsBRiTBc/dppbEmq9AneMFbuuTButekiOP1VFJQOkdIqOrhzRHBLCCQldw9Zcs6RlJTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-61587aa956eso60890277b3.1;
-        Tue, 23 Apr 2024 03:01:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713866496; x=1714471296;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rgAcX24jtvExHPqFhKDe6sUvmzXmlqVKJ8fmRK4rLMM=;
-        b=QnZUGVP/6G7mcoWEsqegQFXvEwQ8JyQ+PGpxLnQBzhGyaQ2jX/3Ur5mIahojx7uCpC
-         X8msEsyUvwHvpJmN99f51pOmn7BA5Pxma1+kpbtsLao3RS+axKYW3xDayzYYLBBE4q/j
-         fgXZOkb29IjF3HMaZF69jLtfqeBH625USjY74xWFuHgQ3jnSqMM4HRoO8If7SbaLDlr8
-         TyGGhZZfPi9n5A59Y5P+alAwr5l4PIAX6Cr1b6F5dCWL+LcrzD96AkFJJ0g1mWtWFEEz
-         ZCxIJgoiigNS/FhqFdpwu9u2uvhB2xUPhiZfjPdBFv61mQT+cvqEtZ/VWc9qEjyWu3gn
-         B5nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUenAvUDDBf4huGfXhZlXanQnx6O2Z0Y+3bD/25y3ahqfMrhTF9tbkaA/v9oZ4vP2oYxJMKMP80AqNDIymF3HjZgQNma+R7lctOHbAVS0To9NGxWkVK4xRGzOnfB+DbFrkdQ3p+36ifl+Q1
-X-Gm-Message-State: AOJu0YzqpOXm53bzjpLXSX8F9Mo4MnoZJQTh5Ytk0csayEcJbQpCGaWC
-	k66oOKehrMvbs9O0aCcm3qfYngzl7wrZtJEnZXq1+IHglBm79CtRMphYro2I
-X-Google-Smtp-Source: AGHT+IGC+P2lDwgI+w4apZDW103kzDvUza6R3SH/Y1k0APvg3OvWJthvZQ4jmkoM7ojuFQlphP/wQQ==
-X-Received: by 2002:a05:690c:94:b0:61a:f1fc:eb14 with SMTP id be20-20020a05690c009400b0061af1fceb14mr14665327ywb.18.1713866495899;
-        Tue, 23 Apr 2024 03:01:35 -0700 (PDT)
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
-        by smtp.gmail.com with ESMTPSA id n127-20020a0dfd85000000b0060a16fb9209sm2426110ywf.115.2024.04.23.03.01.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 03:01:35 -0700 (PDT)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dde0b30ebe2so5025592276.0;
-        Tue, 23 Apr 2024 03:01:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVsR5PtRlGJ5HkmxJ1CScy+iWGm3A02yvtpcrdEEstBV1Q/5X4froCZummg8lc+LAg+Zk78ar0FBFvk40hmpnHWw9+W+sam1xZCVvZlDZbl4MlIIdOacPGcCBRRDiEjHdxPM+CrSg2Ii9eP
-X-Received: by 2002:a25:2685:0:b0:de5:53c0:b9e5 with SMTP id
- m127-20020a252685000000b00de553c0b9e5mr1358571ybm.40.1713866495562; Tue, 23
- Apr 2024 03:01:35 -0700 (PDT)
+	s=arc-20240116; t=1713866514; c=relaxed/simple;
+	bh=BNr7Q4jmb2WwnjfsAAi09SDjB7HAi4IIuSZgRKHvw5s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=phQitGvZ/MWKW81itIWgBe0GRA9GItgThDUsutvauFzSKJUu3p9o9j94uegUSw2ds96ThFUv4OpoK+PAVD6GYvD1pj34BbN+WTgafcr3zYA+Jt+awiJGXgP0Odeq0Ffdp+OJPIKVOt+vIbrzGJJCc1Z9oGSGZLNEU7y1R7iPeGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=p51pCjr/; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="p51pCjr/"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8189D1C001C;
+	Tue, 23 Apr 2024 10:01:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713866511;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9d1LWBS78fz/noWt+gqf119+B397lC3IF2943t1mJfE=;
+	b=p51pCjr/a5r4zzZu1njCWQXO3/yoPufH9zRqZh84JLpWmBtq3mWr26sDFzZ+PTatF/fC8g
+	NSUJmWPx/gMi53afkoTr4Z5ZlcmG/o5zBdmzcuDRPDDf9OXJ30v74dqB925vcGq2RBvw4o
+	tFt8hjnSzNcVdJk2vfKAmb7n8uQASlk7rmjvA/k+cdji2Qk3UvmBfhwlLe4TjAihVYdgll
+	u5thehFVolGgeg1Xg35wdrls78JW7HcgHvdAtQjVzWrISyTDSkuuu4JAd/qtDghltq2c69
+	nKRcGwdrLcTMp6Bg57uG40ChpxrXU3ptJpVFTzB3WQDw7Os4dW3UxIo9GnhPeg==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Date: Tue, 23 Apr 2024 12:01:43 +0200
+Subject: [PATCH v4 4/6] spi: cadence-qspi: add mobileye,eyeq5-ospi
+ compatible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240409154253.3043822-1-hugo@hugovil.com> <20240409154253.3043822-4-hugo@hugovil.com>
-In-Reply-To: <20240409154253.3043822-4-hugo@hugovil.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 23 Apr 2024 12:01:23 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVq=rf-6o485KiA+zcwJPHMe5STKUtSWtFPs2nmvshu-A@mail.gmail.com>
-Message-ID: <CAMuHMdVq=rf-6o485KiA+zcwJPHMe5STKUtSWtFPs2nmvshu-A@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] serial: sc16is7xx: split into core and I2C/SPI
- parts (core)
-To: Hugo Villeneuve <hugo@hugovil.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, peterz@infradead.org, 
-	mingo@kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	andy.shevchenko@gmail.com, Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240423-cdns-qspi-mbly-v4-4-3d2a7b535ad0@bootlin.com>
+References: <20240423-cdns-qspi-mbly-v4-0-3d2a7b535ad0@bootlin.com>
+In-Reply-To: <20240423-cdns-qspi-mbly-v4-0-3d2a7b535ad0@bootlin.com>
+To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Vaishnav Achath <vaishnav.a@ti.com>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Rob Herring <robh@kernel.org>
+Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-Hi Hugo,
+Declare a new mobileye,eyeq5-ospi compatible.
 
-On Tue, Apr 9, 2024 at 5:48=E2=80=AFPM Hugo Villeneuve <hugo@hugovil.com> w=
-rote:
-> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
->
-> Split the common code from sc16is7xx driver and move the I2C and SPI bus
-> parts into interface-specific source files.
->
-> sc16is7xx becomes the core functions which can support multiple bus
-> interfaces like I2C and SPI.
->
-> No functional changes intended.
->
-> Also simplify and improve Kconfig entries.
->   - Capitalize SPI keyword for consistency
->   - Display list of supported ICs each on a separate line (and aligned) t=
-o
->     facilitate locating a specific IC model
->   - Add Manufacturer name at start of description string
->   - Add UART keyword to description string
->
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+ drivers/spi/spi-cadence-quadspi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Thanks for your patch, which is now commit d49216438139bca0
-("serial: sc16is7xx: split into core and I2C/SPI parts (core)")
-in tty-next (next-20240415 and later).
+diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
+index 87c88ee708e4..05ebb03d319f 100644
+--- a/drivers/spi/spi-cadence-quadspi.c
++++ b/drivers/spi/spi-cadence-quadspi.c
+@@ -2055,6 +2055,12 @@ static const struct cqspi_driver_platdata pensando_cdns_qspi = {
+ 	.quirks = CQSPI_NEEDS_APB_AHB_HAZARD_WAR | CQSPI_DISABLE_DAC_MODE,
+ };
+ 
++static const struct cqspi_driver_platdata mobileye_eyeq5_ospi = {
++	.hwcaps_mask = CQSPI_SUPPORTS_OCTAL,
++	.quirks = CQSPI_DISABLE_DAC_MODE | CQSPI_NO_SUPPORT_WR_COMPLETION |
++			CQSPI_RD_NO_IRQ,
++};
++
+ static const struct of_device_id cqspi_dt_ids[] = {
+ 	{
+ 		.compatible = "cdns,qspi-nor",
+@@ -2088,6 +2094,10 @@ static const struct of_device_id cqspi_dt_ids[] = {
+ 		.compatible = "amd,pensando-elba-qspi",
+ 		.data = &pensando_cdns_qspi,
+ 	},
++	{
++		.compatible = "mobileye,eyeq5-ospi",
++		.data = &mobileye_eyeq5_ospi,
++	},
+ 	{ /* end of table */ }
+ };
+ 
 
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1021,41 +1021,30 @@ config SERIAL_SCCNXP_CONSOLE
->           Support for console on SCCNXP serial ports.
->
->  config SERIAL_SC16IS7XX_CORE
-> -       tristate
-> -
-> -config SERIAL_SC16IS7XX
-> -       tristate "SC16IS7xx serial support"
-> +       tristate "NXP SC16IS7xx UART support"
+-- 
+2.44.0
 
-Hence this replaces SERIAL_SC16IS7XX_CORE by SERIAL_SC16IS7XX,
-so arch/mips/configs/cu1??0-neo_defconfig needs to updated.
-
->         select SERIAL_CORE
-> -       depends on (SPI_MASTER && !I2C) || I2C
-> +       select SERIAL_SC16IS7XX_SPI if SPI_MASTER
-> +       select SERIAL_SC16IS7XX_I2C if I2C
-
-So if SPI_MASTER or I2C is enabled, the corresponding SERIAL_SC16IS7XX_*
-subdriver can no longer be disabled?  According to
-https://lore.kernel.org/all/20240403123501.8ef5c99f65a40ca2c10f635a@hugovil=
-.com/
-you did want to support that?
-
->         help
-> -         This selects support for SC16IS7xx serial ports.
-> -         Supported ICs are SC16IS740, SC16IS741, SC16IS750, SC16IS752,
-> -         SC16IS760 and SC16IS762. Select supported buses using options b=
-elow.
-> +         Core driver for NXP SC16IS7xx UARTs.
-> +         Supported ICs are:
-> +
-> +           SC16IS740
-> +           SC16IS741
-> +           SC16IS750
-> +           SC16IS752
-> +           SC16IS760
-> +           SC16IS762
-> +
-> +         The driver supports both I2C and SPI interfaces.
->
->  config SERIAL_SC16IS7XX_I2C
-> -       bool "SC16IS7xx for I2C interface"
-> -       depends on SERIAL_SC16IS7XX
-> -       depends on I2C
-> -       select SERIAL_SC16IS7XX_CORE if SERIAL_SC16IS7XX
-> -       select REGMAP_I2C if I2C
-> -       default y
-> -       help
-> -         Enable SC16IS7xx driver on I2C bus,
-> -         If required say y, and say n to i2c if not required,
-> -         Enabled by default to support oldconfig.
-> -         You must select at least one bus for the driver to be built.
-> +       tristate
-> +       select REGMAP_I2C
->
->  config SERIAL_SC16IS7XX_SPI
-> -       bool "SC16IS7xx for spi interface"
-> -       depends on SERIAL_SC16IS7XX
-> -       depends on SPI_MASTER
-> -       select SERIAL_SC16IS7XX_CORE if SERIAL_SC16IS7XX
-> -       select REGMAP_SPI if SPI_MASTER
-> -       help
-> -         Enable SC16IS7xx driver on SPI bus,
-> -         If required say y, and say n to spi if not required,
-> -         This is additional support to existing driver.
-> -         You must select at least one bus for the driver to be built.
-> +       tristate
-> +       select REGMAP_SPI
->
->  config SERIAL_TIMBERDALE
->         tristate "Support for timberdale UART"
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
