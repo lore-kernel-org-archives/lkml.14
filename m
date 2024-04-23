@@ -1,236 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55C6290F;
-	Tue, 23 Apr 2024 13:45:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F49135A78;
+	Tue, 23 Apr 2024 13:46:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713879904; cv=none; b=NcAKCQF9l10dQnqP7Cmv2gK4c9QeE4yDHyhGsJpphwkczjtAkYrfCZvCZWQlOCN8NK2gZHV9q/fzTWfr71MxzTCc8vRhlUh94CJIuTVn0IhCiEe6dA75/MaTAh6RTOmgmc3fZLIDnS/Ddx2C0l/WHlxnizOzFYHnFd/Q7y6K1qg=
+	t=1713880012; cv=none; b=NFBrKYyWCBPyg6Bl5tOFRItt+nAckE2eiguCsLFlEwqDhCI5WEsEOz/zznCAGdiBXrh6OidcdxnACj3xQ4murn8tJemiyEBbK/UFcFzool4X/wi11Zxqvoz5uVXqN2JLiH16moVTnEVaFC1c0xUTvPf5rPFEeEhAayClclZrkfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713879904; c=relaxed/simple;
-	bh=zWK2ReDFbkliJtaNVR7CmsOANV76XcgqSo5F0cqc4rs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oo8Zx2cPxXFrEyXYud75gY5vA7hJPZ/wiGcPTJfvCkFZcc6t4DlEK0LkR2HyOCy9WeB+iUfl4JLbgQOA2sylE2wbu4sVEZm3aWF6w46PR2a4OpUnzdWDmMMkFJ0gnZor9am3tuMfqUrAU5cPB5dCTQBtthEC3EwOhqdLwgbx2PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V4kl05cm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713880012; c=relaxed/simple;
+	bh=tCfBMb3DOalmVHX+fKphZQx4T+5g7FInpPlj/Ww+I/8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RtXGrK9QpbgRuAiH3NzfjDrrCc1bxN/aH8ejj7V+U/FIvVTrbp1h2DWeqnkTDHsKPy75793bAq81Bt45YnQp3jWNFb0x901AkhlQDCo7QapYgNtHwE4CKLwSntw3cQOdKxOehLovSZ8omZrV4XAPBdqHkvuqbByNdNuqjZnYxH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MNpvskNG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V4kl05cm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 220ECC32783;
-	Tue, 23 Apr 2024 13:45:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MNpvskNG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F217FC116B1;
+	Tue, 23 Apr 2024 13:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713879904;
-	bh=zWK2ReDFbkliJtaNVR7CmsOANV76XcgqSo5F0cqc4rs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=V4kl05cml6OpRcGFHeQw9n3dATJ/Ob+Tc/PDPgR76CXhiaG8ll72J+9JZ8il2UPUP
-	 y7QgwvZQOVjw2Bnm+UYZ4XJY6XvauiC83A7eYqWphs9M25ZTugbLtEO8o7sful4gWg
-	 fx82dtiy/pGO2gfDRbRF+aJAsmB3NtBxqTskQzoXcxCuNgoKMdTxYtIHy9vfkBn5iQ
-	 GxZe066I4Nk+/k5ZKq4tnY2pKhoEcJCmcLpH/bN8tSBxWyYTjr62NtRHkuEo5w/zyt
-	 Nqa3/GOhS8cKz2xj3fcy6FDdOlHsWfWiZ+i/a3J1ASsbKTsSOQ+7MXY+ukV5tpfHaA
-	 EMQC3bu6GPNVw==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-516d2600569so7150292e87.0;
-        Tue, 23 Apr 2024 06:45:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWb0kuXropkWuunCugs5zOPoe7oQ/cwZ/QVFju6sSepS4uAFn1N9ArHVP9B/PHy2HM69cXbcMtphi/TnSgsubfRXh4p7DJhbk+V8AhIPY370NGaBtin4UeyE2GxW92EXr1a0RYJRsUrSbuXuYvxjF0HwHDmlOnEvleb90+LKQ==
-X-Gm-Message-State: AOJu0YzVDO/Ssv1exOOz4quoR6Fpo6kZlxU0cyIya8O4M3on76BEZJ74
-	MytUh8wGuBhetvKQ93y/k2CQ+XtOuM0MkdfHvRfma65/hvkir4wvjPL5k5NwfY1dpcBbJqcV7If
-	rqT7AqGmSMxQSF0DW13Z2gYDnim8=
-X-Google-Smtp-Source: AGHT+IGYNwxeuuPgiHKtxd4oJygpTKk9VWJFI3uQjC7JbCruESydOS1HJ9g7YXGPSpKzTcYy2uUHXvX/yneINltO5BE=
-X-Received: by 2002:a2e:9a95:0:b0:2da:9f24:44a8 with SMTP id
- p21-20020a2e9a95000000b002da9f2444a8mr9158584lji.11.1713879902758; Tue, 23
- Apr 2024 06:45:02 -0700 (PDT)
+	s=k20201202; t=1713880012;
+	bh=tCfBMb3DOalmVHX+fKphZQx4T+5g7FInpPlj/Ww+I/8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=MNpvskNGtKjrw85/aCr/RXmboU6e8AvOWeXGUwV329/8YZkgIBU4eKVxMeh9Zboce
+	 YuVM4p5AXMykfl+7pzVHREMd6UIa2KkFHqxqy5Yojna4/pfNVlvCReRH0bwcmthPNi
+	 eMOnWsKUf+ZtukOShJwCv7qO4qhyljeKcP94opVmYCOQwQ84DD8uZvS/362NEUwY7/
+	 9jtNu51nqI0ABNE6HtYqhDN7A2Da1vi6Q0Ns3zBWsuVtsopB7uqT/TINBDdSmI2qu5
+	 EEc8GaBSINdd9lsfXj/v27uFA/1NIgjC5+/SJWXrLkVi0v4r+i+6v43019QRE+DDC+
+	 a80J+KdSGwT8w==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1rzGTy-000000008Kk-1836;
+	Tue, 23 Apr 2024 15:46:50 +0200
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH 3/6] dt-bindings: HID: i2c-hid: elan: add 'no-reset-on-power-off' property
+Date: Tue, 23 Apr 2024 15:46:08 +0200
+Message-ID: <20240423134611.31979-4-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240423134611.31979-1-johan+linaro@kernel.org>
+References: <20240423134611.31979-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240415162041.2491523-5-ardb+git@google.com> <20240415162041.2491523-6-ardb+git@google.com>
-In-Reply-To: <20240415162041.2491523-6-ardb+git@google.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 23 Apr 2024 22:44:26 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQi33YR35QZi3gX8Gfe-J3mfuEB5GWjmfT7W07mjmgKYw@mail.gmail.com>
-Message-ID: <CAK7LNAQi33YR35QZi3gX8Gfe-J3mfuEB5GWjmfT7W07mjmgKYw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] kallsyms: Avoid weak references for kallsyms symbols
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Martin KaFai Lau <martin.lau@linux.dev>, linux-arch@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, bpf@vger.kernel.org, 
-	Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <olsajiri@gmail.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 16, 2024 at 1:20=E2=80=AFAM Ard Biesheuvel <ardb+git@google.com=
-> wrote:
->
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> kallsyms is a directory of all the symbols in the vmlinux binary, and so
-> creating it is somewhat of a chicken-and-egg problem, as its non-zero
-> size affects the layout of the binary, and therefore the values of the
-> symbols.
->
-> For this reason, the kernel is linked more than once, and the first pass
-> does not include any kallsyms data at all. For the linker to accept
-> this, the symbol declarations describing the kallsyms metadata are
-> emitted as having weak linkage, so they can remain unsatisfied. During
-> the subsequent passes, the weak references are satisfied by the kallsyms
-> metadata that was constructed based on information gathered from the
-> preceding passes.
->
-> Weak references lead to somewhat worse codegen, because taking their
-> address may need to produce NULL (if the reference was unsatisfied), and
-> this is not usually supported by RIP or PC relative symbol references.
->
-> Given that these references are ultimately always satisfied in the final
-> link, let's drop the weak annotation, and instead, provide fallback
-> definitions in the linker script that are only emitted if an unsatisfied
-> reference exists.
->
-> While at it, drop the FRV specific annotation that these symbols reside
-> in .rodata - FRV is long gone.
->
-> Tested-by: Nick Desaulniers <ndesaulniers@google.com> # Boot
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Link: https://lkml.kernel.org/r/20230504174320.3930345-1-ardb%40kernel.or=
-g
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
+When the power supply is shared with other peripherals the reset line
+can be wired in such a way that it can remain deasserted regardless of
+whether the supply is on or not.
 
+This is important as it can be used to avoid holding the controller in
+reset for extended periods of time when it remains powered, something
+which can lead to increased power consumption. Leaving reset deasserted
+also avoids leaking current through the reset circuitry pull-up
+resistors.
 
-I dropped v5, and picked up this one.
+Add a new 'no-reset-on-power-off' devicetree property which can be used
+by the OS to determine when reset needs to be asserted on power down.
 
-Thanks.
+Note that this property can also be used when the supply cannot be
+turned off by the OS at all.
 
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ Documentation/devicetree/bindings/input/elan,ekth6915.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/input/elan,ekth6915.yaml b/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
+index c3a6f901ff45..3d20673f10b2 100644
+--- a/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
++++ b/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
+@@ -37,6 +37,12 @@ properties:
+   reset-gpios:
+     description: Reset GPIO; not all touchscreens using eKTH6915 hook this up.
+ 
++  no-reset-on-power-off:
++    type: boolean
++    description:
++      Reset line is wired so that it can be left deasserted when the power
++      supply is off.
++
+   vcc33-supply:
+     description: The 3.3V supply to the touchscreen.
+ 
+-- 
+2.43.2
 
->  include/asm-generic/vmlinux.lds.h | 19 +++++++++++++
->  kernel/kallsyms.c                 |  6 ----
->  kernel/kallsyms_internal.h        | 30 ++++++++------------
->  3 files changed, 31 insertions(+), 24 deletions(-)
->
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmli=
-nux.lds.h
-> index f7749d0f2562..e8449be62058 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -448,11 +448,30 @@
->  #endif
->  #endif
->
-> +/*
-> + * Some symbol definitions will not exist yet during the first pass of t=
-he
-> + * link, but are guaranteed to exist in the final link. Provide prelimin=
-ary
-> + * definitions that will be superseded in the final link to avoid having=
- to
-> + * rely on weak external linkage, which requires a GOT when used in posi=
-tion
-> + * independent code.
-> + */
-> +#define PRELIMINARY_SYMBOL_DEFINITIONS                                 \
-> +       PROVIDE(kallsyms_addresses =3D .);                               =
- \
-> +       PROVIDE(kallsyms_offsets =3D .);                                 =
- \
-> +       PROVIDE(kallsyms_names =3D .);                                   =
- \
-> +       PROVIDE(kallsyms_num_syms =3D .);                                =
- \
-> +       PROVIDE(kallsyms_relative_base =3D .);                           =
- \
-> +       PROVIDE(kallsyms_token_table =3D .);                             =
- \
-> +       PROVIDE(kallsyms_token_index =3D .);                             =
- \
-> +       PROVIDE(kallsyms_markers =3D .);                                 =
- \
-> +       PROVIDE(kallsyms_seqs_of_names =3D .);
-> +
->  /*
->   * Read only Data
->   */
->  #define RO_DATA(align)                                                 \
->         . =3D ALIGN((align));                                            =
- \
-> +       PRELIMINARY_SYMBOL_DEFINITIONS                                  \
->         .rodata           : AT(ADDR(.rodata) - LOAD_OFFSET) {           \
->                 __start_rodata =3D .;                                    =
- \
->                 *(.rodata) *(.rodata.*)                                 \
-> diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-> index 18edd57b5fe8..22ea19a36e6e 100644
-> --- a/kernel/kallsyms.c
-> +++ b/kernel/kallsyms.c
-> @@ -325,12 +325,6 @@ static unsigned long get_symbol_pos(unsigned long ad=
-dr,
->         unsigned long symbol_start =3D 0, symbol_end =3D 0;
->         unsigned long i, low, high, mid;
->
-> -       /* This kernel should never had been booted. */
-> -       if (!IS_ENABLED(CONFIG_KALLSYMS_BASE_RELATIVE))
-> -               BUG_ON(!kallsyms_addresses);
-> -       else
-> -               BUG_ON(!kallsyms_offsets);
-> -
->         /* Do a binary search on the sorted kallsyms_addresses array. */
->         low =3D 0;
->         high =3D kallsyms_num_syms;
-> diff --git a/kernel/kallsyms_internal.h b/kernel/kallsyms_internal.h
-> index 27fabdcc40f5..85480274fc8f 100644
-> --- a/kernel/kallsyms_internal.h
-> +++ b/kernel/kallsyms_internal.h
-> @@ -5,27 +5,21 @@
->  #include <linux/types.h>
->
->  /*
-> - * These will be re-linked against their real values
-> - * during the second link stage.
-> + * These will be re-linked against their real values during the second l=
-ink
-> + * stage. Preliminary values must be provided in the linker script using=
- the
-> + * PROVIDE() directive so that the first link stage can complete success=
-fully.
->   */
-> -extern const unsigned long kallsyms_addresses[] __weak;
-> -extern const int kallsyms_offsets[] __weak;
-> -extern const u8 kallsyms_names[] __weak;
-> +extern const unsigned long kallsyms_addresses[];
-> +extern const int kallsyms_offsets[];
-> +extern const u8 kallsyms_names[];
->
-> -/*
-> - * Tell the compiler that the count isn't in the small data section if t=
-he arch
-> - * has one (eg: FRV).
-> - */
-> -extern const unsigned int kallsyms_num_syms
-> -__section(".rodata") __attribute__((weak));
-> -
-> -extern const unsigned long kallsyms_relative_base
-> -__section(".rodata") __attribute__((weak));
-> +extern const unsigned int kallsyms_num_syms;
-> +extern const unsigned long kallsyms_relative_base;
->
-> -extern const char kallsyms_token_table[] __weak;
-> -extern const u16 kallsyms_token_index[] __weak;
-> +extern const char kallsyms_token_table[];
-> +extern const u16 kallsyms_token_index[];
->
-> -extern const unsigned int kallsyms_markers[] __weak;
-> -extern const u8 kallsyms_seqs_of_names[] __weak;
-> +extern const unsigned int kallsyms_markers[];
-> +extern const u8 kallsyms_seqs_of_names[];
->
->  #endif // LINUX_KALLSYMS_INTERNAL_H_
-> --
-> 2.44.0.683.g7961c838ac-goog
->
->
-
-
---=20
-Best Regards
-Masahiro Yamada
