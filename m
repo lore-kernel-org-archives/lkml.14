@@ -1,180 +1,93 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4C4136989;
-	Tue, 23 Apr 2024 18:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B3285653;
+	Tue, 23 Apr 2024 18:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713897735; cv=none; b=oj+T1CPURxGW+kygQ3oc7XwBLCzAUlzchOSNiGHM1gFd8IXl0GA2vB2PARVrQWx9GHkC6UyVx/uneX3k/ei0mBpS010gVPAj1WqVLEgi8QLWyOrdYtgtBl7VHffAaCKCFJmItK8ScgbS8K9imTOFTKyJPe2gNVVJcLrclEhaIwo=
+	t=1713897766; cv=none; b=IBtpvF5MP+XvsEUUOdR+k5+/yoFk7iTjIzLI+GIZP81FUIDoFgb10KEeXWn/NoZR7EtDsLTy0v4cObSr1Wum+RwvkYEE05EAef1WauqUs5nE6vH/7qWhqCgRac9Nk0T1NFC0XCUq0KV3+H+SW96K5ll3sWgRE93/2fEQ3VTbDzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713897735; c=relaxed/simple;
-	bh=sErawwCYvUHt0YL4Bze2yqUWXOhsq1yzz/3NhImhAnw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GO9/9LB755/PRobvVfBM6X+OK/b1iz69FSAPe9jkR/gEEoXVQ8/kJsyXTSKZ2gZlK0zJfht+uBggauZKGdPtjPhv6Hm3TY57F9Edi48UY/hBBFH9PXuUjSDjQDZv3X74oqtfMluVMZ1lo3yPhH0Z5UGv3yUuvnfj+8usIp2v/6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=ogwTU74z; arc=none smtp.client-ip=192.19.144.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1713897766; c=relaxed/simple;
+	bh=2U6q3AnIep0O9K7JjfLvpOuvvCYxZ9voAB/ZwE7uOUw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=uVuX3VVtomR12CvNoCq8zsht8DPbqkE+CvyG1Olh4RUAb+TBv3ZcBBrrGSGSA5T08z0hHOPmR/aKXNpOOttUwewVak3SPkRhAyWY67LOruP7WIm0ocyvwLK+0Nzc/I+YZGBzjvbfVrQ6b0Er2Bd+HBsHjLX7AD6YKIC4hgtQJEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bpGE6YPp; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ogwTU74z"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 1F244C0049BB;
-	Tue, 23 Apr 2024 11:33:41 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 1F244C0049BB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1713897221;
-	bh=sErawwCYvUHt0YL4Bze2yqUWXOhsq1yzz/3NhImhAnw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ogwTU74zlzGTjH/CcZyypXFgz5gJpWmuWxCY86v1S/fbzF3UPQnYi99Bnt/D8ZweQ
-	 8Rs6EUSuEz4z9G0FhMNwk0Ana4KD5968IBI7bgcEydcNwxnmxYVq+kiOngxzmllUhm
-	 q4YuOe9CZWuGO32oyobEq091+ysPqTp/GZDp8mqY=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 41C5518041CAC7;
-	Tue, 23 Apr 2024 11:33:39 -0700 (PDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: netdev@vger.kernel.org
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next 2/8] net: dsa: b53: Introduce b53_adjust_531x5_rgmii()
-Date: Tue, 23 Apr 2024 11:33:33 -0700
-Message-Id: <20240423183339.1368511-3-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240423183339.1368511-1-florian.fainelli@broadcom.com>
-References: <20240423183339.1368511-1-florian.fainelli@broadcom.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bpGE6YPp"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43N5qCGh013043;
+	Tue, 23 Apr 2024 18:42:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=tqHQDFqMUEDZk57HJ3NWrEhyU2BqbzhbR5rPVKR1UEM=; b=bp
+	GE6YPpdalyvKNMg8X8nS7wymRW/A62GrJ4Ah7GJQbVcr4s9CPlFvkQp5yinpHnrX
+	XNFi9Yr77JECaCgneF5IUZwMNR2UGqvl6tCISUhdjLApIDBS9p/G69jXV2VYFVq9
+	is9gTDSJaGC7glspL1WkSUBvQqarcOfyms8eE5vnfgKf0gVLEvlC+uQdcbmYkFTB
+	76KlicJvE0omenoxstR1vOA7a2sGVaBysgpFf8+erDiLf4T3Hk5x2WFfKa6lU4KQ
+	cGURS7mh9jTJn1muAGjF3/TYGa64xr0PugBV8hcdRDxw4l5eIyEdwY2bgG1ATLxr
+	HdOmBgNqALEYI3iUAGIQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xnvtnb6u2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Apr 2024 18:42:41 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43NIge11023290
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Apr 2024 18:42:40 GMT
+Received: from [10.226.59.182] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 23 Apr
+ 2024 11:42:39 -0700
+Message-ID: <4e766214-1bf4-9377-d9db-ed7b0b9e2832@quicinc.com>
+Date: Tue, 23 Apr 2024 12:42:38 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [PATCH v4 1/3] bus: mhi: host: Add sysfs entry to force device to
+ enter EDL
+Content-Language: en-US
+To: Qiang Yu <quic_qianyu@quicinc.com>, <mani@kernel.org>
+CC: <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_cang@quicinc.com>,
+        <quic_mrana@quicinc.com>
+References: <1713868417-37856-1-git-send-email-quic_qianyu@quicinc.com>
+ <1713868417-37856-2-git-send-email-quic_qianyu@quicinc.com>
+From: Jeffrey Hugo <quic_jhugo@quicinc.com>
+In-Reply-To: <1713868417-37856-2-git-send-email-quic_qianyu@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: xzaDnPiYSyLWFIa9-BJF5PvQh2FDQK8K
+X-Proofpoint-ORIG-GUID: xzaDnPiYSyLWFIa9-BJF5PvQh2FDQK8K
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-23_15,2024-04-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 mlxlogscore=732 phishscore=0 priorityscore=1501
+ mlxscore=0 adultscore=0 bulkscore=0 spamscore=0 malwarescore=0
+ impostorscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2404010003 definitions=main-2404230043
 
-Takes care of doing the 531x5 switch series specific RGMII programming
-and is called from b53_adjust_link() to allow the future removal of
-b53_adjust_link().
+On 4/23/2024 4:33 AM, Qiang Yu wrote:
+> Add sysfs entry to allow users of MHI bus force device to enter EDL.
+> Considering that the way to enter EDL mode varies from device to device and
+> some devices even do not support EDL. Hence, add a callback edl_trigger in
+> mhi controller as part of the sysfs entry to be invoked and MHI core will
+> only create EDL sysfs entry for mhi controller that provides edl_trigger
+> callback. All of the process a specific device required to enter EDL mode
+> can be placed in this callback.
+> 
+> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
 
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
- drivers/net/dsa/b53/b53_common.c | 84 +++++++++++++++++---------------
- 1 file changed, 46 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index bd069439549f..744567c465f7 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1266,14 +1266,57 @@ static void b53_adjust_63xx_rgmii(struct dsa_switch *ds, int port,
- 		phy_modes(interface));
- }
- 
-+static void b53_adjust_531x5_rgmii(struct dsa_switch *ds, int port,
-+				   phy_interface_t interface)
-+{
-+	struct b53_device *dev = ds->priv;
-+	u8 rgmii_ctrl = 0, off;
-+
-+	if (port == dev->imp_port)
-+		off = B53_RGMII_CTRL_IMP;
-+	else
-+		off = B53_RGMII_CTRL_P(port);
-+
-+	/* Configure the port RGMII clock delay by DLL disabled and
-+	 * tx_clk aligned timing (restoring to reset defaults)
-+	 */
-+	b53_read8(dev, B53_CTRL_PAGE, off, &rgmii_ctrl);
-+	rgmii_ctrl &= ~(RGMII_CTRL_DLL_RXC | RGMII_CTRL_DLL_TXC |
-+			RGMII_CTRL_TIMING_SEL);
-+
-+	/* PHY_INTERFACE_MODE_RGMII_TXID means TX internal delay, make
-+	 * sure that we enable the port TX clock internal delay to
-+	 * account for this internal delay that is inserted, otherwise
-+	 * the switch won't be able to receive correctly.
-+	 *
-+	 * PHY_INTERFACE_MODE_RGMII means that we are not introducing
-+	 * any delay neither on transmission nor reception, so the
-+	 * BCM53125 must also be configured accordingly to account for
-+	 * the lack of delay and introduce
-+	 *
-+	 * The BCM53125 switch has its RX clock and TX clock control
-+	 * swapped, hence the reason why we modify the TX clock path in
-+	 * the "RGMII" case
-+	 */
-+	if (interface == PHY_INTERFACE_MODE_RGMII_TXID)
-+		rgmii_ctrl |= RGMII_CTRL_DLL_TXC;
-+	if (interface == PHY_INTERFACE_MODE_RGMII)
-+		rgmii_ctrl |= RGMII_CTRL_DLL_TXC | RGMII_CTRL_DLL_RXC;
-+	rgmii_ctrl |= RGMII_CTRL_TIMING_SEL;
-+	b53_write8(dev, B53_CTRL_PAGE, off, rgmii_ctrl);
-+
-+	dev_info(ds->dev, "Configured port %d for %s\n", port,
-+		 phy_modes(interface));
-+}
-+
- static void b53_adjust_link(struct dsa_switch *ds, int port,
- 			    struct phy_device *phydev)
- {
- 	struct b53_device *dev = ds->priv;
- 	struct ethtool_keee *p = &dev->ports[port].eee;
--	u8 rgmii_ctrl = 0, reg = 0, off;
- 	bool tx_pause = false;
- 	bool rx_pause = false;
-+	u8 reg = 0;
- 
- 	if (!phy_is_pseudo_fixed_link(phydev))
- 		return;
-@@ -1295,43 +1338,8 @@ static void b53_adjust_link(struct dsa_switch *ds, int port,
- 	if (is63xx(dev) && port >= B53_63XX_RGMII0)
- 		b53_adjust_63xx_rgmii(ds, port, phydev->interface);
- 
--	if (is531x5(dev) && phy_interface_is_rgmii(phydev)) {
--		if (port == dev->imp_port)
--			off = B53_RGMII_CTRL_IMP;
--		else
--			off = B53_RGMII_CTRL_P(port);
--
--		/* Configure the port RGMII clock delay by DLL disabled and
--		 * tx_clk aligned timing (restoring to reset defaults)
--		 */
--		b53_read8(dev, B53_CTRL_PAGE, off, &rgmii_ctrl);
--		rgmii_ctrl &= ~(RGMII_CTRL_DLL_RXC | RGMII_CTRL_DLL_TXC |
--				RGMII_CTRL_TIMING_SEL);
--
--		/* PHY_INTERFACE_MODE_RGMII_TXID means TX internal delay, make
--		 * sure that we enable the port TX clock internal delay to
--		 * account for this internal delay that is inserted, otherwise
--		 * the switch won't be able to receive correctly.
--		 *
--		 * PHY_INTERFACE_MODE_RGMII means that we are not introducing
--		 * any delay neither on transmission nor reception, so the
--		 * BCM53125 must also be configured accordingly to account for
--		 * the lack of delay and introduce
--		 *
--		 * The BCM53125 switch has its RX clock and TX clock control
--		 * swapped, hence the reason why we modify the TX clock path in
--		 * the "RGMII" case
--		 */
--		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
--			rgmii_ctrl |= RGMII_CTRL_DLL_TXC;
--		if (phydev->interface == PHY_INTERFACE_MODE_RGMII)
--			rgmii_ctrl |= RGMII_CTRL_DLL_TXC | RGMII_CTRL_DLL_RXC;
--		rgmii_ctrl |= RGMII_CTRL_TIMING_SEL;
--		b53_write8(dev, B53_CTRL_PAGE, off, rgmii_ctrl);
--
--		dev_info(ds->dev, "Configured port %d for %s\n", port,
--			 phy_modes(phydev->interface));
--	}
-+	if (is531x5(dev) && phy_interface_is_rgmii(phydev))
-+		b53_adjust_531x5_rgmii(ds, port, phydev->interface);
- 
- 	/* configure MII port if necessary */
- 	if (is5325(dev)) {
--- 
-2.34.1
-
+Reviewed-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
