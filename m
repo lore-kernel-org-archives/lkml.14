@@ -1,151 +1,103 @@
-Received: from fhigh6-smtp.messagingengine.com (fhigh6-smtp.messagingengine.com [103.168.172.157])
+Received: from out0-210.mail.aliyun.com (out0-210.mail.aliyun.com [140.205.0.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD80F634EA;
-	Tue, 23 Apr 2024 11:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B54B7C6DF
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713871506; cv=none; b=NPZJHt1ktUBs4d4DjBFfGBy994YhNB0RP+q2yX0xaOc+aRE9lMUcXYB9W/xvfzzEX5N7Y33oel6V/HKDYC2yRqjr4+inoTXgwnwmiakg91VX6aVQaR9pW3sjLBf6OX+oT6vhTl6GRrDN7z9ZUMb+nYWXF3Tem3oGMkd7E+FrFuQ=
+	t=1713871520; cv=none; b=XV00/SdU2ehdG7DamdOYT352de4hHAU5rYJGwPLDzgq7UTI/41AsWeGVIe/FDAFUzZ/s793BusE9c5mPv2mPHduvb0k88edLJDDl1oNBhQx+Q8ClBXdJvAnsLShrhjQmHc1cmXK2C+VyljfzcLU0J+4+751SojfdTWqh4M4WdVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713871506; c=relaxed/simple;
-	bh=r+cc1d5mrSiT1NWZ4GMqLqmCRSJ7o/Mrj/vYFpuWVao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ifWfd8mJJcLR02vA0Co9JZVdwqsmp3crinZxNg+X+dvJOB3ra8Hn/gtnfA/0taRggOrkbtBpVB02CXu6UkaYkwXrZZZDC72YjOkb9Ov53akKgT4vsODGtAxlhh37zkrxE2p1Jc37+uvnFgxsqXJbhaWC3hay7nhUKhYn+vAlxsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=Zdv9eV9e; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jX4Pltxf; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	s=arc-20240116; t=1713871520; c=relaxed/simple;
+	bh=VUK1qW4vcuTcnbfvkh2ig+AROuk8bCOr9JBsTl9lZiI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KAYY0oYYjURRjz09tu0OJsEnTMsWEAusOZu/PDyCFgj9y8XNiZ9NhR9EDAusbdaW7LBuwILkm+/18t7K+QWbrl4alVpAd03Hs+zRXPgoOYAGrHWO6yXPDFDLrjis1TAldLYR8WzysBhQdjCwTpngJTVHDFtXVIm5c/Z0KNBd6UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=MpmH7SB5; arc=none smtp.client-ip=140.205.0.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="Zdv9eV9e";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jX4Pltxf"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id C39C51140163;
-	Tue, 23 Apr 2024 07:25:02 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 23 Apr 2024 07:25:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1713871502; x=1713957902; bh=yooErJBigy
-	jo0SOAFo2gUEaSYwKmOo0iaTHxSpAeDhE=; b=Zdv9eV9e8w6YRsR7Wnv+Xj8xCN
-	pThapi9PxUY9jL5o04WMw1PfLQpWxRiyf4po6fBvI4Wn6PvlwQ3rSnI8K5V172WK
-	/KjNNIAtOklnQSxzW2GM4TsrzflZslHwu6AVBYcLsD9/Al113QUysRt3TEzSty9J
-	qjIVRRE1mYrtjXW2K/7UpbqjaUechIRXuJKghSjapU5vLMq1I4Q15cugFjIdEWlf
-	mFLnJek09OI6iiVThT17fmZiSNvXQfYNdUh4Y96VnxvzPW7AC2jYRpjF/uOsd9V0
-	LGw1H/xlINZ75eexLbSgJxjStq0CvPOR+Um2HaD+OnBlkodR+S+Y+GqAK89g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1713871502; x=1713957902; bh=yooErJBigyjo0SOAFo2gUEaSYwKm
-	Oo0iaTHxSpAeDhE=; b=jX4PltxfG+270EN3VFiDrE+oar+iEcr260aatAKJ49yg
-	4VyX+uEwjL4O0dbjQ9/AIZ/9YMTPUuqjJeTk999nApl0nz9T/j/zqz+fEddvuuIs
-	jmJgqDnXsyIl7cHO0sDj49tlqjphXX+BsHcuss8r0E69bi1VWO4c472CkbCXYbam
-	hL1emYpTRVQTP93BufQCoES6Za9JBnhcC3Wr29MQxyPbIR2m0sZ9SGi4/EMKKbjV
-	SK5Y/ZIqF2E/EwoSpCWN7t8bMeUEyFu9DS686Y1vy0gxjsiwtdvgvQsywC31fU0B
-	g9y33FEY9qr+7QkX7pEmc4p6zh3UZtrR70eQqoynHg==
-X-ME-Sender: <xms:jZonZmAqqRQl8UjcvbdF7xSe0HfjrzoKm8cO9jSTjV_a6-2D08EcWg>
-    <xme:jZonZghnj2AdcKNmBn0u629J4hpGdzB1rootX8YPCkRpUvF4hJztUKgagK27yBAFn
-    MMW2LxqN1s-KQ>
-X-ME-Received: <xmr:jZonZplmYNZePKLELINQcy4VacTD1QCSbbHWt94hIDFt6op8x9pwfHUcOQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeluddgfeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepheegvd
-    evvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeufefhgfehkeetnecuvehluhhs
-    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorg
-    hhrdgtohhm
-X-ME-Proxy: <xmx:jZonZkyRKGv18AZ0mZpJyLdC9q4lzmgz4feV4magE_EUU7bL3jC8mw>
-    <xmx:jZonZrTpIymgRb_8lyh1c8-BbfM8M2_WFwmCYsZSXgMBJljc6V8-zA>
-    <xmx:jZonZvbVGNONIzBA6712O5q9VdL2T1GjLzsR3sGf8Gzgn-tRq5IFMg>
-    <xmx:jZonZkSvMze83y4coMQXfFNPFETD7qHz2XfvCh9HFgHzCkLine6W3A>
-    <xmx:jponZgJR6K-cvbyV1oLZH_g-1Sx2rRpP8tmnBZ-cYXXQofB7wUknv2gI>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 23 Apr 2024 07:25:01 -0400 (EDT)
-Date: Tue, 23 Apr 2024 13:24:50 +0200
-From: Greg KH <greg@kroah.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the tty tree with the tty.current
- tree
-Message-ID: <2024042326-numbness-arrogance-ce7c@gregkh>
-References: <20240419141947.4bc16fa4@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="MpmH7SB5"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1713871514; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
+	bh=lumfKnRDCzxzbmj8wJ/Hznk5zzPAE/pxByFtYHy06AQ=;
+	b=MpmH7SB5+6BXEFfaDQ9mgGy6Dp764bxncYmjedGK55dqCZbDF676g0a+vZN7yo0K/xwB+YBXfiq8N5D0nPZJV/pkoBoeJAMrar6zpze5W4oPNFWPurKkP9a/mnsTmgYm+ManzYymshzvs6/h7Opt5cAx9/HEWIHLCYgi2+TlY3s=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R221e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047203;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJTUYiJ_1713871513;
+Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJTUYiJ_1713871513)
+          by smtp.aliyun-inc.com;
+          Tue, 23 Apr 2024 19:25:14 +0800
+From: "Tiwei Bie" <tiwei.btw@antgroup.com>
+To: richard@nod.at,
+	anton.ivanov@cambridgegreys.com,
+	johannes@sipsolutions.net
+Cc:  <linux-um@lists.infradead.org>,
+   <linux-kernel@vger.kernel.org>,
+  "Tiwei Bie" <tiwei.btw@antgroup.com>
+Subject: [PATCH 7/7] um: Remove unused do_get_thread_area function
+Date: Tue, 23 Apr 2024 19:24:57 +0800
+Message-Id: <20240423112457.2409319-8-tiwei.btw@antgroup.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240423112457.2409319-1-tiwei.btw@antgroup.com>
+References: <20240423112457.2409319-1-tiwei.btw@antgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240419141947.4bc16fa4@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 19, 2024 at 02:19:47PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the tty tree got a conflict in:
-> 
->   drivers/tty/serial/serial_core.c
-> 
-> between commit:
-> 
->   9cf7ea2eeb74 ("serial: core: Clearing the circular buffer before NULLifying it")
-> 
-> from the tty.current tree and commits:
-> 
->   1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
->   abcd8632f26b ("serial: core: Extract uart_alloc_xmit_buf() and uart_free_xmit_buf()")
-> 
-> from the tty tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc drivers/tty/serial/serial_core.c
-> index c476d884356d,b9d631037ff6..000000000000
-> --- a/drivers/tty/serial/serial_core.c
-> +++ b/drivers/tty/serial/serial_core.c
-> @@@ -285,6 -273,53 +273,54 @@@ static int uart_alloc_xmit_buf(struct t
->   		free_page(page);
->   	}
->   
-> + 	return 0;
-> + }
-> + 
-> + static void uart_free_xmit_buf(struct tty_port *port)
-> + {
-> + 	struct uart_state *state = container_of(port, struct uart_state, port);
-> + 	struct uart_port *uport;
-> + 	unsigned long flags;
-> + 	char *xmit_buf;
-> + 
-> + 	/*
-> + 	 * Do not free() the transmit buffer page under the port lock since
-> + 	 * this can create various circular locking scenarios. For instance,
-> + 	 * console driver may need to allocate/free a debug object, which
-> + 	 * can end up in printk() recursion.
-> + 	 */
-> + 	uport = uart_port_lock(state, flags);
-> ++	kfifo_reset(&state->port.xmit_fifo);
-> + 	xmit_buf = port->xmit_buf;
-> + 	port->xmit_buf = NULL;
-> + 	INIT_KFIFO(port->xmit_fifo);
+It's not used since it was introduced by commit aa6758d4867c ("[PATCH]
+uml: implement {get,set}_thread_area for i386"). Now, it's causing a
+-Wmissing-prototypes warning:
 
-The INIT_KFIFO() call here does the same (same plus more) than the
-kfifo_reset() call does, so I'll just drop the kfifo_reset() here and
-all should be fine.  I'll do this in my tree now, thanks.
+arch/x86/um/tls_32.c:39:5: warning: no previous prototype for ‘do_get_thread_area’ [-Wmissing-prototypes]
+   39 | int do_get_thread_area(struct user_desc *info)
+      |     ^~~~~~~~~~~~~~~~~~
 
-greg k-h
+The original author also had doubts about whether it should be used.
+Considering that 18 years have passed, let's just remove it.
+
+Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
+---
+ arch/x86/um/tls_32.c | 17 -----------------
+ 1 file changed, 17 deletions(-)
+
+diff --git a/arch/x86/um/tls_32.c b/arch/x86/um/tls_32.c
+index ba40b1b8e179..d301deee041f 100644
+--- a/arch/x86/um/tls_32.c
++++ b/arch/x86/um/tls_32.c
+@@ -36,22 +36,6 @@ static int do_set_thread_area(struct user_desc *info)
+ 	return ret;
+ }
+ 
+-int do_get_thread_area(struct user_desc *info)
+-{
+-	int ret;
+-	u32 cpu;
+-
+-	cpu = get_cpu();
+-	ret = os_get_thread_area(info, userspace_pid[cpu]);
+-	put_cpu();
+-
+-	if (ret)
+-		printk(KERN_ERR "PTRACE_GET_THREAD_AREA failed, err = %d, "
+-		       "index = %d\n", ret, info->entry_number);
+-
+-	return ret;
+-}
+-
+ /*
+  * sys_get_thread_area: get a yet unused TLS descriptor index.
+  * XXX: Consider leaving one free slot for glibc usage at first place. This must
+@@ -231,7 +215,6 @@ int arch_set_tls(struct task_struct *new, unsigned long tls)
+ 	return ret;
+ }
+ 
+-/* XXX: use do_get_thread_area to read the host value? I'm not at all sure! */
+ static int get_tls_entry(struct task_struct *task, struct user_desc *info,
+ 			 int idx)
+ {
+-- 
+2.34.1
+
