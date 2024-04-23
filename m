@@ -1,37 +1,36 @@
 Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990181E53F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990592230F;
 	Tue, 23 Apr 2024 18:33:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713897228; cv=none; b=d92+5qR90x47ywVAfmaYlikOovi4ypHlY+lzPRgrXQuWdYWJSC/0Gn9/rNxkGa3RiACl7PSxmZLYLtidtELQEfRk50KuB7qIbKWGaXZlxljyn0kh+HM8ExxYIn5Ij8KFi/WVjCIo09czhOYft7t/ea/Y6H8O5eb878hSR2hB8Cw=
+	t=1713897228; cv=none; b=FferU4kJQ6lRcC/i4skpAwqqY2ow9wq/UFm9w6A7uGGA45QAIMSqEvN9rF1s/X1n34bf6qqjanlk7YF35nB4APmOHrO4bAgeulsJDnvQVHMuS1kM3XKWVmiE3iAtSEBpntBSdQEfXMe1rUxhtJwWWRDcCXztE9fLBCr+5shA44s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713897228; c=relaxed/simple;
-	bh=A406q/tAi4UZG/IcGrX9tzSqvoePKRA9IiSHVZtAsos=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ugdk1M+Iwk8KiMfwYAn9M1bBG3PYFKHhlAK7mXv1oloUen+78r24jJLCUZwUSoSGhkeGXA6n4x6kSWEah27a4S+9qtx5QMV03JLpxW0hVecVI+VeNgq1B7mkRwUFaaQTatSDKV/HoFGF71qCc0rtx+Gb1KU4TsTtg7jlP9h7yRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=llPNQYid; arc=none smtp.client-ip=192.19.144.207
+	bh=PoVxr6mN/QScs8qWuW3NkJNxsWMJn5z2pce3x1YhnZU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aGdl90VQc+WxfH0XjzjH0a0/+WOESfjJABLU/L3m1Zp4TAVVkTAFRUQMF+iw99vo1K1KO+o3kOSZNXeq33NRslCuQ59PiWk8kYPF7bYEJ7VHkfZ2udMuYYrlTncQB9c3qLKDCJhkWwCPYzTn0ugKJjUUUKBr+6iNeuWlNJtYU5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=DHJsIUgs; arc=none smtp.client-ip=192.19.144.207
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="llPNQYid"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DHJsIUgs"
 Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 6CAE8C00282D;
-	Tue, 23 Apr 2024 11:33:41 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 6CAE8C00282D
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id C90A7C002802;
+	Tue, 23 Apr 2024 11:33:40 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com C90A7C002802
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1713897221;
-	bh=A406q/tAi4UZG/IcGrX9tzSqvoePKRA9IiSHVZtAsos=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=llPNQYid5I7ncsvky7UeA6ELxr9WskCvmPzOsIBHVpgqWp2cD4Zj1lTXVE7lPBBSk
-	 k0eEj92LPiiSsjUgOHJPXthctXCqLU3xhNb5lyIIjgGiVO9+HN8Yfvc7u4muB0ohrL
-	 qBxB+PUUJsoZFr2r6Xvr9dD2vUSovlaRQj+eeSp8=
+	s=dkimrelay; t=1713897220;
+	bh=PoVxr6mN/QScs8qWuW3NkJNxsWMJn5z2pce3x1YhnZU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DHJsIUgsQT5z8fnCxxtcH5dbq7vKknMhZUqSVa2woUkEa7fjt0rvYrDIU5n/6eB3K
+	 jISb9expmCKeHN1ejJIAlyJpt8GJCAga6mQtOK4tzE0cY+J4ZsqxQxfmqvP6BvW7u/
+	 IMyt794lqEeGDosDnpZWdoP0IVLjTp2rH/94wbZE=
 Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 8C4E318041CAC4;
-	Tue, 23 Apr 2024 11:33:39 -0700 (PDT)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id E047F18041CAC4;
+	Tue, 23 Apr 2024 11:33:38 -0700 (PDT)
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 To: netdev@vger.kernel.org
 Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -43,12 +42,10 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
 	Paolo Abeni <pabeni@redhat.com>,
 	Russell King <linux@armlinux.org.uk>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next 4/8] net: dsa: b53: Force flow control for BCM5301X CPU port(s)
-Date: Tue, 23 Apr 2024 11:33:35 -0700
-Message-Id: <20240423183339.1368511-5-florian.fainelli@broadcom.com>
+Subject: [PATCH net-next 0/8] net: dsa: b53: Remove adjust_link
+Date: Tue, 23 Apr 2024 11:33:31 -0700
+Message-Id: <20240423183339.1368511-1-florian.fainelli@broadcom.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240423183339.1368511-1-florian.fainelli@broadcom.com>
-References: <20240423183339.1368511-1-florian.fainelli@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,31 +54,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Just like what b53_adjust_link() does, force flow control for the
-BCM5301X CPU port(s) by forcing rx_pause and tx_pause in
-b53_phylink_mac_link_up(). Preparatory step for getting rid of
-b53_adjust_link().
+b53 is now the only remaining driver that uses both PHYLIB's adjust_link
+and PHYLINK's mac_ops callbacks, convert entirely to PHYLINK.
 
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
- drivers/net/dsa/b53/b53_common.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Florian Fainelli (8):
+  net: dsa: b53: Stop exporting b53_phylink_* routines
+  net: dsa: b53: Introduce b53_adjust_531x5_rgmii()
+  net: dsa: b53: Introduce b53_adjust_5325_mii()
+  net: dsa: b53: Force flow control for BCM5301X CPU port(s)
+  net: dsa: b53: Configure RGMII for 531x5 and MII for 5325
+  net: dsa: b53: Call b53_eee_init() from b53_mac_link_up()
+  net: dsa: b53: Remove b53_adjust_link()
+  net: dsa: b53: provide own phylink MAC operations
 
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index a127a17be11c..6277ab7dcb7f 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1475,6 +1475,10 @@ static void b53_phylink_mac_link_up(struct dsa_switch *ds, int port,
- 		return;
- 
- 	if (mode == MLO_AN_FIXED) {
-+		/* Force flow control on BCM5301x's CPU port */
-+		if (is5301x(dev) && dsa_is_cpu_port(ds, port))
-+			tx_pause = rx_pause = true;
-+
- 		b53_force_port_config(dev, port, speed, duplex,
- 				      tx_pause, rx_pause);
- 		b53_force_link(dev, port, true);
+ drivers/net/dsa/b53/b53_common.c | 208 ++++++++++++++++---------------
+ drivers/net/dsa/b53/b53_priv.h   |  12 --
+ 2 files changed, 105 insertions(+), 115 deletions(-)
+
 -- 
 2.34.1
 
