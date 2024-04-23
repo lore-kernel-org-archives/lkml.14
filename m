@@ -1,28 +1,28 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185921C2A3;
-	Tue, 23 Apr 2024 03:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0871C2AF;
+	Tue, 23 Apr 2024 03:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713844012; cv=none; b=oa6RlXWgYO1t9XL95LZIY9n3sS7BVI94Q+V/8oedEBM56OVPspeGrIGLMQC93UUOdVK6PRxRHLseo/Den/V+XPW4VvDmK1qmyNPHyx3lbruwfJYvxGMEi6NMxPd3MK0wMEsfGMWzJWxZpKsnNyHJZ5KbXumZU7UET5wG51bS9ag=
+	t=1713844012; cv=none; b=T80fH21H9ffGa6v2TmtcLiRnEatVH3d4blmxbURASH88itPRhEO0l9WGKnNx+7a1Usuh8WQsMVg73sAlxdltulT5ZVvgfeEkymvSZEhWIRqAMA6PYkO/GHkSwo/1RdXwaMUenquUJcs8A6xNEztVItIpyiTUfkH6r9Q+K9voTmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713844012; c=relaxed/simple;
-	bh=RgpiLrR4UFkeGUI5TxaPpcmHT+hBOp69UYN5dz82Y1A=;
+	bh=pfLch2OejLM4oDnUXJbhjI+xBddLixTBWgSUFwg26LU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=X2fU0ilXlHwxE+xGEvpisfwIhz3VEvXL/yK/sDQHn1e2QWyjzQ6ZkqIwiEBoUawCn2aIbepA1YUjTrp8terbZ2PWNw4a6TrasrTcfcFuI/iUunztSimuXjxCVCwNn/dYIUndqAJc/7DlyZ/ePTs+sUIbqLcec7PLkw7NFtrQEmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=m5sNScQ5UZjaSOznrrnBZDjuU5Wdi3ipOa5TrES+JjneFWf1UzHevf3RNGWYPpOnQ9wkIfcmfC5iYKCDBEAYuBe/1btVFskaahJJvrJP4rREGL4yXRQWLr740IYzMd996eQQbQbzJOD5/BTjyIryPol4j34HrL7pFLbiszcPL8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VNp2P425Wz4f3nK2;
-	Tue, 23 Apr 2024 11:46:37 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VNp2S0kzJz4f3kpM;
+	Tue, 23 Apr 2024 11:46:40 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id AF8721A0568;
-	Tue, 23 Apr 2024 11:46:46 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 917F21A10FA;
+	Tue, 23 Apr 2024 11:46:47 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP2 (Coremail) with SMTP id Syh0CgA3Ww4kLydmKkDYKw--.11241S4;
-	Tue, 23 Apr 2024 11:46:46 +0800 (CST)
+	by APP2 (Coremail) with SMTP id Syh0CgA3Ww4kLydmKkDYKw--.11241S6;
+	Tue, 23 Apr 2024 11:46:47 +0800 (CST)
 From: Kemeng Shi <shikemeng@huaweicloud.com>
 To: akpm@linux-foundation.org,
 	willy@infradead.org,
@@ -35,9 +35,9 @@ Cc: dsterba@suse.com,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-fsdevel@vger.kernel.org
-Subject: [PATCH v5 2/5] writeback: support retrieving per group debug writeback stats of bdi
-Date: Tue, 23 Apr 2024 11:46:40 +0800
-Message-Id: <20240423034643.141219-3-shikemeng@huaweicloud.com>
+Subject: [PATCH v5 4/5] writeback: add wb_monitor.py script to monitor writeback info on bdi
+Date: Tue, 23 Apr 2024 11:46:42 +0800
+Message-Id: <20240423034643.141219-5-shikemeng@huaweicloud.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20240423034643.141219-1-shikemeng@huaweicloud.com>
 References: <20240423034643.141219-1-shikemeng@huaweicloud.com>
@@ -48,27 +48,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgA3Ww4kLydmKkDYKw--.11241S4
-X-Coremail-Antispam: 1UD129KBjvJXoW3Xw1rCry8Kw1kCr4ftF4fXwb_yoW7uF45pF
-	Z8Gw15tr4UZr17WFZxAFW2qry5tw48trW7X3s7u3yftFnFgry3tFy8ury8Ary5AF93AFy3
-	Jan8Cry8GrW8KrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXw
-	A2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
-	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
-	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFa9-UUUUU
+X-CM-TRANSID:Syh0CgA3Ww4kLydmKkDYKw--.11241S6
+X-Coremail-Antispam: 1UD129KBjvJXoW3Xr1UCrWrWFWxXw1DJFy7Jrb_yoWxJr1fpF
+	s8Aw13Ar1xZa4xJrnY9a40vry5Cws5Cr17XrW7ArWakan8Wa4FyryrCFyUAry3Cr9rJ39x
+	X3ya93y8KFWjgFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
+	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
+	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267
+	AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7
+	xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Y
+	z7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY
+	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU13l1DUUUUU==
 X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-Add /sys/kernel/debug/bdi/xxx/wb_stats to show per group writeback stats
-of bdi.
+Add wb_monitor.py script to monitor writeback information on backing dev
+which makes it easier and more convenient to observe writeback behaviors
+of running system.
+
+The wb_monitor.py script is written based on wq_monitor.py.
 
 Following domain hierarchy is tested:
                 global domain (320G)
@@ -77,204 +80,206 @@ Following domain hierarchy is tested:
                 |                 |
 bdi            wb1               wb2
 
-/* per wb writeback info of bdi is collected */
-cat wb_stats
-WbCgIno:                    1
-WbWriteback:                0 kB
-WbReclaimable:              0 kB
-WbDirtyThresh:              0 kB
-WbDirtied:                  0 kB
-WbWritten:                  0 kB
-WbWriteBandwidth:      102400 kBps
-b_dirty:                    0
-b_io:                       0
-b_more_io:                  0
-b_dirty_time:               0
-state:                      1
+The wb_monitor.py script output is as following:
+./wb_monitor.py 252:16 -c
+                  writeback  reclaimable   dirtied   written    avg_bw
+252:16_1                  0            0         0         0    102400
+252:16_4284             672       820064   9230368   8410304    685612
+252:16_4325             896       819840  10491264   9671648    652348
+252:16                 1568      1639904  19721632  18081952   1440360
 
-WbCgIno:                 4091
-WbWriteback:             1792 kB
-WbReclaimable:         820512 kB
-WbDirtyThresh:        6004692 kB
-WbDirtied:            1820448 kB
-WbWritten:             999488 kB
-WbWriteBandwidth:      169020 kBps
-b_dirty:                    0
-b_io:                       0
-b_more_io:                  1
-b_dirty_time:               0
-state:                      5
-
-WbCgIno:                 4131
-WbWriteback:             1120 kB
-WbReclaimable:         820064 kB
-WbDirtyThresh:        6004728 kB
-WbDirtied:            1822688 kB
-WbWritten:            1002400 kB
-WbWriteBandwidth:      153520 kBps
-b_dirty:                    0
-b_io:                       0
-b_more_io:                  1
-b_dirty_time:               0
-state:                      5
+                  writeback  reclaimable   dirtied   written    avg_bw
+252:16_1                  0            0         0         0    102400
+252:16_4284             672       820064   9230368   8410304    685612
+252:16_4325             896       819840  10491264   9671648    652348
+252:16                 1568      1639904  19721632  18081952   1440360
+...
 
 Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Suggested-by: Tejun Heo <tj@kernel.org>
 ---
- include/linux/writeback.h |  1 +
- mm/backing-dev.c          | 78 ++++++++++++++++++++++++++++++++++++++-
- mm/page-writeback.c       | 19 ++++++++++
- 3 files changed, 96 insertions(+), 2 deletions(-)
+ tools/writeback/wb_monitor.py | 172 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 172 insertions(+)
+ create mode 100644 tools/writeback/wb_monitor.py
 
-diff --git a/include/linux/writeback.h b/include/linux/writeback.h
-index 9845cb62e40b..112d806ddbe4 100644
---- a/include/linux/writeback.h
-+++ b/include/linux/writeback.h
-@@ -355,6 +355,7 @@ int dirtytime_interval_handler(struct ctl_table *table, int write,
- 
- void global_dirty_limits(unsigned long *pbackground, unsigned long *pdirty);
- unsigned long wb_calc_thresh(struct bdi_writeback *wb, unsigned long thresh);
-+unsigned long cgwb_calc_thresh(struct bdi_writeback *wb);
- 
- void wb_update_bandwidth(struct bdi_writeback *wb);
- 
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index 089146feb830..6ecd11bdce6e 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -155,19 +155,93 @@ static int bdi_debug_stats_show(struct seq_file *m, void *v)
- }
- DEFINE_SHOW_ATTRIBUTE(bdi_debug_stats);
- 
-+static void wb_stats_show(struct seq_file *m, struct bdi_writeback *wb,
-+			  struct wb_stats *stats)
-+{
+diff --git a/tools/writeback/wb_monitor.py b/tools/writeback/wb_monitor.py
+new file mode 100644
+index 000000000000..5e3591f1f9a9
+--- /dev/null
++++ b/tools/writeback/wb_monitor.py
+@@ -0,0 +1,172 @@
++#!/usr/bin/env drgn
++#
++# Copyright (C) 2024 Kemeng Shi <shikemeng@huaweicloud.com>
++# Copyright (C) 2024 Huawei Inc
 +
-+	seq_printf(m,
-+		   "WbCgIno:           %10lu\n"
-+		   "WbWriteback:       %10lu kB\n"
-+		   "WbReclaimable:     %10lu kB\n"
-+		   "WbDirtyThresh:     %10lu kB\n"
-+		   "WbDirtied:         %10lu kB\n"
-+		   "WbWritten:         %10lu kB\n"
-+		   "WbWriteBandwidth:  %10lu kBps\n"
-+		   "b_dirty:           %10lu\n"
-+		   "b_io:              %10lu\n"
-+		   "b_more_io:         %10lu\n"
-+		   "b_dirty_time:      %10lu\n"
-+		   "state:             %10lx\n\n",
-+		   cgroup_ino(wb->memcg_css->cgroup),
-+		   K(stats->nr_writeback),
-+		   K(stats->nr_reclaimable),
-+		   K(stats->wb_thresh),
-+		   K(stats->nr_dirtied),
-+		   K(stats->nr_written),
-+		   K(wb->avg_write_bandwidth),
-+		   stats->nr_dirty,
-+		   stats->nr_io,
-+		   stats->nr_more_io,
-+		   stats->nr_dirty_time,
-+		   wb->state);
-+}
++desc = """
++This is a drgn script based on wq_monitor.py to monitor writeback info on
++backing dev. For more info on drgn, visit https://github.com/osandov/drgn.
 +
-+static int cgwb_debug_stats_show(struct seq_file *m, void *v)
-+{
-+	struct backing_dev_info *bdi = m->private;
-+	unsigned long background_thresh;
-+	unsigned long dirty_thresh;
-+	struct bdi_writeback *wb;
-+	struct wb_stats stats;
++  writeback(kB)     Amount of dirty pages are currently being written back to
++                    disk.
 +
-+	global_dirty_limits(&background_thresh, &dirty_thresh);
++  reclaimable(kB)   Amount of pages are currently reclaimable.
 +
-+	rcu_read_lock();
-+	list_for_each_entry_rcu(wb, &bdi->wb_list, bdi_node) {
-+		struct wb_stats stats = { .dirty_thresh = dirty_thresh };
++  dirtied(kB)       Amount of pages have been dirtied.
 +
-+		if (!wb_tryget(wb))
-+			continue;
++  wrttien(kB)       Amount of dirty pages have been written back to disk.
 +
-+		collect_wb_stats(&stats, wb);
++  avg_wb(kBps)      Smoothly estimated write bandwidth of writing dirty pages
++                    back to disk.
++"""
 +
-+		/*
-+		 * Calculate thresh of wb in writeback cgroup which is min of
-+		 * thresh in global domain and thresh in cgroup domain. Drop
-+		 * rcu lock because cgwb_calc_thresh may sleep in
-+		 * cgroup_rstat_flush. We can do so here because we have a ref.
-+		 */
-+		if (mem_cgroup_wb_domain(wb)) {
-+			rcu_read_unlock();
-+			stats.wb_thresh = min(stats.wb_thresh, cgwb_calc_thresh(wb));
-+			rcu_read_lock();
-+		}
++import signal
++import re
++import time
++import json
 +
-+		wb_stats_show(m, wb, &stats);
++import drgn
++from drgn.helpers.linux.list import list_for_each_entry
 +
-+		wb_put(wb);
-+	}
-+	rcu_read_unlock();
++import argparse
++parser = argparse.ArgumentParser(description=desc,
++                                 formatter_class=argparse.RawTextHelpFormatter)
++parser.add_argument('bdi', metavar='REGEX', nargs='*',
++                    help='Target backing device name patterns (all if empty)')
++parser.add_argument('-i', '--interval', metavar='SECS', type=float, default=1,
++                    help='Monitoring interval (0 to print once and exit)')
++parser.add_argument('-j', '--json', action='store_true',
++                    help='Output in json')
++parser.add_argument('-c', '--cgroup', action='store_true',
++                    help='show writeback of bdi in cgroup')
++args = parser.parse_args()
 +
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(cgwb_debug_stats);
++bdi_list                = prog['bdi_list']
 +
- static void bdi_debug_register(struct backing_dev_info *bdi, const char *name)
- {
- 	bdi->debug_dir = debugfs_create_dir(name, bdi_debug_root);
- 
- 	debugfs_create_file("stats", 0444, bdi->debug_dir, bdi,
- 			    &bdi_debug_stats_fops);
-+	debugfs_create_file("wb_stats", 0444, bdi->debug_dir, bdi,
-+			    &cgwb_debug_stats_fops);
- }
- 
- static void bdi_debug_unregister(struct backing_dev_info *bdi)
- {
- 	debugfs_remove_recursive(bdi->debug_dir);
- }
--#else
-+#else /* CONFIG_DEBUG_FS */
- static inline void bdi_debug_init(void)
- {
- }
-@@ -178,7 +252,7 @@ static inline void bdi_debug_register(struct backing_dev_info *bdi,
- static inline void bdi_debug_unregister(struct backing_dev_info *bdi)
- {
- }
--#endif
-+#endif /* CONFIG_DEBUG_FS */
- 
- static ssize_t read_ahead_kb_store(struct device *dev,
- 				  struct device_attribute *attr,
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 3e19b87049db..3bb3bed102ef 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -892,6 +892,25 @@ unsigned long wb_calc_thresh(struct bdi_writeback *wb, unsigned long thresh)
- 	return __wb_calc_thresh(&gdtc);
- }
- 
-+unsigned long cgwb_calc_thresh(struct bdi_writeback *wb)
-+{
-+	struct dirty_throttle_control gdtc = { GDTC_INIT_NO_WB };
-+	struct dirty_throttle_control mdtc = { MDTC_INIT(wb, &gdtc) };
-+	unsigned long filepages = 0, headroom = 0, writeback = 0;
++WB_RECLAIMABLE          = prog['WB_RECLAIMABLE']
++WB_WRITEBACK            = prog['WB_WRITEBACK']
++WB_DIRTIED              = prog['WB_DIRTIED']
++WB_WRITTEN              = prog['WB_WRITTEN']
++NR_WB_STAT_ITEMS        = prog['NR_WB_STAT_ITEMS']
 +
-+	gdtc.avail = global_dirtyable_memory();
-+	gdtc.dirty = global_node_page_state(NR_FILE_DIRTY) +
-+		     global_node_page_state(NR_WRITEBACK);
++PAGE_SHIFT              = prog['PAGE_SHIFT']
 +
-+	mem_cgroup_wb_stats(wb, &filepages, &headroom,
-+			    &mdtc.dirty, &writeback);
-+	mdtc.dirty += writeback;
-+	mdtc_calc_avail(&mdtc, filepages, headroom);
-+	domain_dirty_limits(&mdtc);
++def K(x):
++    return x << (PAGE_SHIFT - 10)
 +
-+	return __wb_calc_thresh(&mdtc);
-+}
++class Stats:
++    def dict(self, now):
++        return { 'timestamp'            : now,
++                 'name'                 : self.name,
++                 'writeback'            : self.stats[WB_WRITEBACK],
++                 'reclaimable'          : self.stats[WB_RECLAIMABLE],
++                 'dirtied'              : self.stats[WB_DIRTIED],
++                 'written'              : self.stats[WB_WRITTEN],
++                 'avg_wb'               : self.avg_bw, }
 +
- /*
-  *                           setpoint - dirty 3
-  *        f(dirty) := 1.0 + (----------------)
++    def table_header_str():
++        return f'{"":>16} {"writeback":>10} {"reclaimable":>12} ' \
++                f'{"dirtied":>9} {"written":>9} {"avg_bw":>9}'
++
++    def table_row_str(self):
++        out = f'{self.name[-16:]:16} ' \
++              f'{self.stats[WB_WRITEBACK]:10} ' \
++              f'{self.stats[WB_RECLAIMABLE]:12} ' \
++              f'{self.stats[WB_DIRTIED]:9} ' \
++              f'{self.stats[WB_WRITTEN]:9} ' \
++              f'{self.avg_bw:9} '
++        return out
++
++    def show_header():
++        if Stats.table_fmt:
++            print()
++            print(Stats.table_header_str())
++
++    def show_stats(self):
++        if Stats.table_fmt:
++            print(self.table_row_str())
++        else:
++            print(self.dict(Stats.now))
++
++class WbStats(Stats):
++    def __init__(self, wb):
++        bdi_name = wb.bdi.dev_name.string_().decode()
++        # avoid to use bdi.wb.memcg_css which is only defined when
++        # CONFIG_CGROUP_WRITEBACK is enabled
++        if wb == wb.bdi.wb.address_of_():
++            ino = "1"
++        else:
++            ino = str(wb.memcg_css.cgroup.kn.id.value_())
++        self.name = bdi_name + '_' + ino
++
++        self.stats = [0] * NR_WB_STAT_ITEMS
++        for i in range(NR_WB_STAT_ITEMS):
++            if wb.stat[i].count >= 0:
++                self.stats[i] = int(K(wb.stat[i].count))
++            else:
++                self.stats[i] = 0
++
++        self.avg_bw = int(K(wb.avg_write_bandwidth))
++
++class BdiStats(Stats):
++    def __init__(self, bdi):
++        self.name = bdi.dev_name.string_().decode()
++        self.stats = [0] * NR_WB_STAT_ITEMS
++        self.avg_bw = 0
++
++    def collectStats(self, wb_stats):
++        for i in range(NR_WB_STAT_ITEMS):
++            self.stats[i] += wb_stats.stats[i]
++
++        self.avg_bw += wb_stats.avg_bw
++
++exit_req = False
++
++def sigint_handler(signr, frame):
++    global exit_req
++    exit_req = True
++
++def main():
++    # handle args
++    Stats.table_fmt = not args.json
++    interval = args.interval
++    cgroup = args.cgroup
++
++    re_str = None
++    if args.bdi:
++        for r in args.bdi:
++            if re_str is None:
++                re_str = r
++            else:
++                re_str += '|' + r
++
++    filter_re = re.compile(re_str) if re_str else None
++
++    # monitoring loop
++    signal.signal(signal.SIGINT, sigint_handler)
++
++    while not exit_req:
++        Stats.now = time.time()
++
++        Stats.show_header()
++        for bdi in list_for_each_entry('struct backing_dev_info', bdi_list.address_of_(), 'bdi_list'):
++            bdi_stats = BdiStats(bdi)
++            if filter_re and not filter_re.search(bdi_stats.name):
++                continue
++
++            for wb in list_for_each_entry('struct bdi_writeback', bdi.wb_list.address_of_(), 'bdi_node'):
++                wb_stats = WbStats(wb)
++                bdi_stats.collectStats(wb_stats)
++                if cgroup:
++                    wb_stats.show_stats()
++
++            bdi_stats.show_stats()
++            if cgroup and Stats.table_fmt:
++                print()
++
++        if interval == 0:
++            break
++        time.sleep(interval)
++
++if __name__ == "__main__":
++    main()
 -- 
 2.30.0
 
