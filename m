@@ -1,128 +1,119 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBB6143896;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB87143891;
 	Tue, 23 Apr 2024 17:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713895172; cv=none; b=I6ylAz92rc3pEIRx7zspGhwUPuAeC0Shk0jLrW5Bors76Fo43PBGm58yXA39baNXemhp5SdJ5PsDYVtBSnplNha8TM/6h5YO81pqITVWsTIr75vDqj8sTMAB4x1q34ddt0GC2P0Y/XfQECz95tdZdFkK6BdmDSGlKR3btzC5lOA=
+	t=1713895172; cv=none; b=VjUdEnxZN0hAiDLL411OEiyJ+T0uTkhr6OrSpF52o1iAU4i/07OBLxEq0ZmAX8OYkmapWOXwDFriYLhu526B4hO27ojEtKX0Rj483Cr99DW63h88hzo9AD0NkdetHDv76naiS4VPawLzGgNid7y3HbQ/9IzhkUBTGKzHj9mp9xI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713895172; c=relaxed/simple;
-	bh=nVmJXiH4yHIp2+Ic2OWQVS6oMl9V+PTyUf/HbTVGFkQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OdiL9q0MN5GpFNk9X64Nl0ZiiRHH8CHgIzSTWnIECevlngr+Sms618Td664UzIT8jhqdU5hstwG25iFOUyRWbLfO/T1VPMLksfwOGLE+uda3GT2/WfGCvFu36v3kYGlN70MiVTaY7sZyeeVimW3aFGe64/v9ItqU4iUv5zrE6RM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yevd2CPI; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=VBa5Uoa7nnDAfK4MeWFM8DIP6qDVEtvWS57pRdVdN+U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lETkiAob8eUdzExJL2qYu1yFAX+DhitwG3OL1H75TpNI+wDqNCswCAn2fW/i1JtCogRo0XvwgLt0rN+UjQ8WqpCCC48ZnUeqP6TBgC7/oL86S49Io1g0WfP+zir7szuhlBp/8NMNGmiGNU0Q6v8trbqOtqw7R08/bZW0vTE9e/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YIH3ZZDb; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yevd2CPI"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-417e327773cso562565e9.1;
-        Tue, 23 Apr 2024 10:59:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713895169; x=1714499969; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7C4Ech5rHYG7C4jDh6HOejAsVKSBZX+m5gTsiDcVD3Y=;
-        b=Yevd2CPItOPY5+nTJBvC4sxWssrf2LjSxu6pM6EaxQkf6HeknUogwxP8JuFv0Pctq/
-         ulfaEJOf2viVE0DXtxscKC4w+M+MBOtpt+/i80f5gQHpBysQR9K9un2bBBP2IQJEK1zM
-         s5WgxPM1ah+ob9wY68rOA/cNpGJmbA2PhzypQGaEuULFpPBgg5vjLX4AXDfFsxUT/cp0
-         FGnuk6qZIdZpPdzr6W3tN8WU+EQMTCR3eyG43XaIMUcVGzNFvxeMaRWUuVAtsTFuXppg
-         MIuS8VXr4uU8WrDiZ9FFNEGZJ95MupmLvo08hULQyVHZAF2GFtYBD8TWbvd1L/RTtP9Q
-         QK2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713895169; x=1714499969;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7C4Ech5rHYG7C4jDh6HOejAsVKSBZX+m5gTsiDcVD3Y=;
-        b=nobnmWG+FJALsohXfvOPVEP27CEUe0aKRieZyPsjnXnboEVKJh+YwG2SNINdtUPbJ/
-         r0fhaosNUMdpqKBAyuoslUjQ41Y1qoe4lLLVJ2NlnpcFY9g69wfEEhTobDqwjzOP0/8Y
-         Em4UqFpaVUuoKSqtNpuvUSHWJh3C7XxuMenAjPXQONMa2dKGlFtszrqwaLl/AnZ2tQFR
-         Njz16J5LZ3icM6PNQ0dQ4poyqwqE2G9aiBA3F7yUP00jUy3c2fWnFXmwob1ru3XlGDgt
-         FwGQRJnRgTdp5de0FMHEsMg++3xJvqo7nciF5gAx2e760Zuj7jzJm488OasdogzdZYU1
-         XvNw==
-X-Forwarded-Encrypted: i=1; AJvYcCWrm5BYvEM/PipTrsq1rQE/3Jgj/XZE2tct4mx+J7Ah4IpRMDtdKBk0nMkHPhNcrlNjwq/7dDvMFDgp9aBhfwYqNUV0GaIqmWVGNfVJEsCIKVqoPp0TNFgoahMSMLehZSBWqbyQFD6GepAKUJiTpKU3pg0Kv3OY4NdPbu1Ar+tCu0kRHKVmTWiV7GYB
-X-Gm-Message-State: AOJu0YzshoVxDaiP2SUIqXqh22xfzp830beX0uTMlYJd88sM9ji/e2/l
-	e6FfI3HJM2m+Md4tGpoH9HYlaav3/JMB+USl1UfC8Qp5aqVsL6uz
-X-Google-Smtp-Source: AGHT+IEGFdfJlVa7IglglfByhIZh80xohHWIw8NfwmUi/AJxPTZaMQZmN5w5KSLIzcahuZ+J1Q4EIw==
-X-Received: by 2002:a05:600c:35d3:b0:418:3ea8:46c0 with SMTP id r19-20020a05600c35d300b004183ea846c0mr2310079wmq.13.1713895169011;
-        Tue, 23 Apr 2024 10:59:29 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:cef0:9ed3:1428:f85f])
-        by smtp.gmail.com with ESMTPSA id fl5-20020a05600c0b8500b0041abeaaf7f0sm2808145wmb.28.2024.04.23.10.59.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 10:59:28 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-renesas-soc@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 12/13] pinctrl: renesas: pinctrl-rzg2l: Add support for custom parameters
-Date: Tue, 23 Apr 2024 18:58:59 +0100
-Message-Id: <20240423175900.702640-13-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YIH3ZZDb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713895171; x=1745431171;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VBa5Uoa7nnDAfK4MeWFM8DIP6qDVEtvWS57pRdVdN+U=;
+  b=YIH3ZZDbtUqDnTzkpGwzL2jScsL9pFgiXlTui11QQOnXS37gga7Z56D7
+   vQUO3KOZ30ovzgpJejhlJ7nCmR9wND2w5GvXjiLNUjimAQerceqKpxYkT
+   EMfv5vIQWEQBbnu1O+G81Rj+XwVCHJ4fTtM1y7mVjTGynMrRshwbFw44h
+   gSvr56D6vXPcgWNxHqgAnJAZp9WXxwniQzv8z9iO3ENLO/+uCkMsHowMD
+   ASrKfXjSvrNeQnHSTu+mD3JEJA1qk37CJbWc4LANAcAv0yuYHH2LkgeQy
+   npT6bs05PmW8MIbXVcgecTtA1nKQYNHZm7sG+2R9QmCk7PFuq9jptD2Ee
+   A==;
+X-CSE-ConnectionGUID: ztWXMs/FRLS5/mSiksbcqg==
+X-CSE-MsgGUID: /xIv8WtpRoWcM3LfuuKBeg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9370605"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="9370605"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 10:59:23 -0700
+X-CSE-ConnectionGUID: 88MXJqjRTQSFVr9BMJbdpg==
+X-CSE-MsgGUID: 771S65yCQu2CZpw3IpeGFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="24895532"
+Received: from soc-cp83kr3.jf.intel.com (HELO [10.24.10.60]) ([10.24.10.60])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 10:59:22 -0700
+Message-ID: <cdc6c880-c666-4ff2-99f3-56c6b4f7576d@intel.com>
+Date: Tue, 23 Apr 2024 10:59:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] KVM: selftests: Add KVM/PV clock selftest to prove
+ timer drift correction
+To: David Woodhouse <dwmw2@infradead.org>, Jack Allister
+ <jalliste@amazon.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>, Sean Christopherson <seanjc@google.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Shuah Khan <shuah@kernel.org>
+Cc: Paul Durrant <paul@xen.org>, kvm@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20240408220705.7637-1-jalliste@amazon.com>
+ <20240408220705.7637-3-jalliste@amazon.com>
+ <3664e8ec-1fa1-48c0-a80d-546b7f6cd671@intel.com>
+ <17F1A2E9-6BAD-40E7-ACDD-B110CFC124B3@infradead.org>
+ <65FF4D51-05A8-42E0-9D07-6E42913CC75E@infradead.org>
+ <6dca783b-6532-4fa7-9e04-1c0a382a00b0@intel.com>
+ <c863ffcfd4edda9a1a46e3351766a655c5523f7d.camel@infradead.org>
+ <71260288-3666-4419-8283-6565e91aaba4@intel.com>
+ <06864883c53cc4042e1939c04ecbd5ef0f8acf3b.camel@infradead.org>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <06864883c53cc4042e1939c04ecbd5ef0f8acf3b.camel@infradead.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-In preparation for passing custom params for RZ/V2H(P) SoC assign the
-custom params that is being passed via struct rzg2l_pinctrl_data.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-RFC->v2
-- No change
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+On 4/23/2024 12:49 AM, David Woodhouse wrote:
+>> If I restored the KVM_REQ_GLOBAL_CLOCK_UPDATE request from
+>> kvm_arch_vcpu_load(), the selftest works for me, and I ran the test for
+>> 1000+ iterations, w/ or w/o TSC scaling, the TEST_ASSERT(delta_corrected
+>>  <= ±1) never got hit. This is awesome!
+>>
+>> However, without KVM_REQ_GLOBAL_CLOCK_UPDATE, it still fails on creating
+>> a VM. Maybe the init sequence sill needs some rework.
+> 
+> That one confuses me. The crash is actually in debugfs, as it's
+> registering the per-vm or per-vcpu stats. I can't imagine *how* that's
+> occurring. Or see why the availability of TSC scaling would cause it to
+> show up for you and not me. Can I have your .config please?
+> 
+> First thought would be that there's some change in the KVM structures
+> and you have some stale object files using the old struct, but then I
+> realise I forgot to actually *remove* the now-unused
+> kvmclock_update_work from x86's struct kvm_arch anyway.
+> 
+> I'll try to reproduce, as I think I want to *know* what's going on
+> here, even if I am going to drop that patch as mentioned in 
+> https://lore.kernel.org/kvm/a6723ac9e0169839cb33e8022a47c2de213866ac.camel@infradead.org
+> 
+> Are you able to load that vmlinux in gdb and
+> (gdb) list *start_creating+0x80
+> (gdb) list *kvm_create_vm_debugfs+0x28b
+> 
+> Thanks again.
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index f3c5e8982623..7e3ed18e0745 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -262,6 +262,9 @@ struct rzg2l_pinctrl_data {
- 	const struct rzg2l_hwcfg *hwcfg;
- 	const struct rzg2l_variable_pin_cfg *variable_pin_cfg;
- 	unsigned int n_variable_pin_cfg;
-+	unsigned int num_custom_params;
-+	const struct pinconf_generic_params *custom_params;
-+	const struct pin_config_item *custom_conf_items;
- 	void (*pwpr_pfc_unlock)(struct rzg2l_pinctrl *pctrl);
- 	void (*pwpr_pfc_lock)(struct rzg2l_pinctrl *pctrl);
- 	void (*pmc_writeb)(struct rzg2l_pinctrl *pctrl, u8 val, void __iomem *addr);
-@@ -2374,6 +2377,13 @@ static int rzg2l_pinctrl_register(struct rzg2l_pinctrl *pctrl)
- 	pctrl->desc.pmxops = &rzg2l_pinctrl_pmxops;
- 	pctrl->desc.confops = &rzg2l_pinctrl_confops;
- 	pctrl->desc.owner = THIS_MODULE;
-+	if (pctrl->data->num_custom_params) {
-+		pctrl->desc.num_custom_params = pctrl->data->num_custom_params;
-+		pctrl->desc.custom_params = pctrl->data->custom_params;
-+#ifdef CONFIG_DEBUG_FS
-+		pctrl->desc.custom_conf_items = pctrl->data->custom_conf_items;
-+#endif
-+	}
- 
- 	pins = devm_kcalloc(pctrl->dev, pctrl->desc.npins, sizeof(*pins), GFP_KERNEL);
- 	if (!pins)
--- 
-2.34.1
+My apologies, it turns out the KVM_REQ_GLOBAL_CLOCK_UPDATE is not
+needed. Today I can't reproduce the issue after removing it.  Yesterday
+I thought it may miss something related to pfncache.
 
+To be clear, with the above mentioned change to
+kvm_scale_tsc(master_tsc_scaling_ratio), the selftest runs reliably
+regardless TSC scaling is enabled or not.
