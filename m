@@ -1,99 +1,141 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDFAE5820E;
-	Tue, 23 Apr 2024 15:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B5C5820E;
+	Tue, 23 Apr 2024 15:17:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713885418; cv=none; b=Niz4XSU0rbzHyYYD4rzfDT6g/ytAO+XlxjriMPpTuXcZp5X+z2QOzCKbY9ZmKDeozZLsuapERrRBNpU1u0mL0kxVUf3c6iOS+cCIXdwQfg9rYLcnqiSyF9oTErRtedfZ9I+gGDsIsaMBU6s01bmu+kxhB8eeWW5VYxUmW18x1jo=
+	t=1713885464; cv=none; b=nnUR2nvrk2zqMVuwCP35eTIMxdykrCZEwfv720doC2SgK6r7XbIlUO1OIBGgTukVNeji/gsi4Wel+nmW1fFFR4lTnso9eBFSucRshLK4lMhDkyimmJTT3KbSQ06Xb/xrUuOxy4Kb42MSWsn8zvDF4SXGZ0MBOtIenlGNcLeDH5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713885418; c=relaxed/simple;
-	bh=h4yQKZsodwASQ8BaWwplG73xDGyXx08Io8ws3yHb43k=;
-	h=Message-ID:Date:MIME-Version:Cc:To:From:Subject:Content-Type; b=IHk2xpZGR5VkFiGcU0bAKXH3pZM5x9tBy/0uB8yZ7/33Tz0b+3E68/MGguCBxB6WEAFhlgH6siUoyfVR9sJmq6EJPsAsMZXrcuy/60ABrh7DMGFs8fskSstitKlzt4sln6X05w2qaOukpms2i4+OOcxVcO3T1Nyys5pQ/yD/q+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ZyvvSgpz; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1713885464; c=relaxed/simple;
+	bh=11X1XUAxVaW4b16EfFWhWg9RCuLlRPTWcapG2V7xXTU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q4fIsXAJtxEi2qf02x6rpQyudaBo8DlPhlVmhBKDoBEy1bBg4EI2OvILPLpHp00rwsWimQ9B2XVLFIpg7947y0Ke7eAXVKxaYMPChhCML6rTsbJTMz7SSQhpS4dBZoJoJZFbKSlZTKURsNEclHYykZ1PVlicQ8TmCrsuxVKaKMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kcbifMMN; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ZyvvSgpz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713885413;
-	bh=h4yQKZsodwASQ8BaWwplG73xDGyXx08Io8ws3yHb43k=;
-	h=Date:Cc:To:From:Subject:From;
-	b=ZyvvSgpzomYyJOPD5OJaqVcG/9zmB0NKqRCIboLLNkHkNpvggR7JbbJMXNckipZci
-	 wJg66TIZOOBf+DFQ9fOkSala8QAu0vnDDKlI+IGG8+iwNTpan0OSMC76ZsHHfotZkF
-	 X9IyhcCfyfXjoadBS+Pzr3s/V1iE1A54TUaG+EfzhyJycL6uDyKcq69uC6l+VQL0e1
-	 faMnqXVkHCQrWhvlruBdwDeELAuM0FcBju/dnNu7iNYP9YGh74D9IFh+5CEeJIC9re
-	 aUU37CgTkP3pOw0Hv8QfPxl9S2ge/Yku/kbMw/MgGs0FNPaOHj06t8NKmAtLAzyHe7
-	 JNDeqd9nzAbUw==
-Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6B7CE37811D1;
-	Tue, 23 Apr 2024 15:16:49 +0000 (UTC)
-Message-ID: <02c3926c-84fe-4526-a746-6964f5290c14@collabora.com>
-Date: Tue, 23 Apr 2024 20:17:18 +0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kcbifMMN"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43NFHWKF060829;
+	Tue, 23 Apr 2024 10:17:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1713885452;
+	bh=h22C2hujtGXlxvbATtGe/0Gh3kVEv7O7ltevjWhcaB0=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=kcbifMMNCst26oyhQIIGZNdbOTeeL1ct7iNR4WU5Q/+0RijalhgWTY1Z6CsTx7CJA
+	 XUdsc+NbZrk5/8g1MEMlMAqF7/mHEnw1Gvi7o668PWzzbCrN+DE6Z3+vWk9KUVPFjz
+	 TZMO1jTLxZaKEmALhsxpa7uJVTsKoZvl5qPO+EUk=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43NFHWNA098205
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 23 Apr 2024 10:17:32 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 23
+ Apr 2024 10:17:32 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 23 Apr 2024 10:17:32 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43NFHWYH080176;
+	Tue, 23 Apr 2024 10:17:32 -0500
+From: Judith Mendez <jm@ti.com>
+To: Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>
+CC: Conor Dooley <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bhavya Kapoor <b-kapoor@ti.com>, Dasnavis
+ Sabiya <sabiya.d@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH v3 1/5] arm64: dts: ti: k3-am65-main: Fix sdhci node properties
+Date: Tue, 23 Apr 2024 10:17:28 -0500
+Message-ID: <20240423151732.3541894-2-jm@ti.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240423151732.3541894-1-jm@ti.com>
+References: <20240423151732.3541894-1-jm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- automated-testing@lists.yoctoproject.org,
- "kernel@collabora.com" <kernel@collabora.com>, kernelci@lists.linux.dev,
- open list <linux-kernel@vger.kernel.org>
-Content-Language: en-US
-To: Shuah Khan <shuah@kernel.org>, gustavo.padovan@collabora.com,
- "open list : KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
- Laura Nao <laura.nao@collabora.com>,
- Shreeya Patel <shreeya.patel@collabora.com>,
- =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
- Helen Mae Koike Fornazier <helen.koike@collabora.com>
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Subject: Improving the testing quality of the kernel
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi,
+Update otap-del-sel properties as per datasheet [0].
 
-I've been working with colleagues at Collabora to improve the testing
-quality overall for kselftests since several months. We had identified
-following key points to improve:
-* Make non-TAP conformant tests, TAP conformant to catch the bugs/failures
-in the CI and non-CI environment. Without clear success or failure message,
-it is difficult and at times impossible to notice the bugs and which part
-of the test or sub-test has failed.
-* Add config fragment if it is already isn't present.
-* Improve ancient tests to be robust. KernelCI helps a lot in finding
-flakiness or non-robust pieces of code by building it in range of
-configurations and running it on range of hardware.
+Add missing clkbuf-sel and itap-del-sel values also as per
+datasheet [0].
 
-As new KernelCI is in works, we are identifying which kselftest suites
-could be most suitable to be enabled in the start to keep the noise to a
-minimum. The criteria to enable a suite on KernelCI is:
-* The test suite is TAP compliant
-* The test suite passes in preliminary testing on x86_64 and ARM64 platforms
-* The test suite builds fine with Clang in-addition to gcc
+Move clkbuf-sel and ti,trm-icp above the otap-del-sel properties
+so the sdhci nodes could be more uniform across platforms.
 
-To facilitate transparency and track our progress, I am diligently
-maintaining a spreadsheet [1] with detailed information about each suite's
-status and requirements.
+[0] https://www.ti.com/lit/ds/symlink/am6548.pdf
 
-Furthermore, I have commenced exploration into KUnit testing, and initial
-results are promising. I plan to delve deeper into KUnit testing and will
-provide further updates in the coming days.
+Fixes: eac99d38f861 ("arm64: dts: ti: k3-am654-main: Update otap-del-sel values")
+Fixes: d7600d070fb0 ("arm64: dts: ti: k3-am65-main: Add support for sdhci1")
+Signed-off-by: Judith Mendez <jm@ti.com>
+---
+Changes since v2:
+- no change
+---
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-Your feedback, insights and collaboration on any aspect of these
-initiatives would be highly valuable. We greatly appreciate your
-collaboration and support as we continue to enhance the testing quality of
-kselftests.
-
-[1]
-https://docs.google.com/spreadsheets/d/1XRCgxlY1b74aIOIXQ7qDR-62KTJmuV1ow9st4fpeVhA/edit?usp=sharing
-
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 670557c89f756..0803a8b9bfe84 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -435,6 +435,8 @@ sdhci0: mmc@4f80000 {
+ 		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
+ 		mmc-ddr-1_8v;
+ 		mmc-hs200-1_8v;
++		ti,clkbuf-sel = <0x7>;
++		ti,trm-icp = <0x8>;
+ 		ti,otap-del-sel-legacy = <0x0>;
+ 		ti,otap-del-sel-mmc-hs = <0x0>;
+ 		ti,otap-del-sel-sd-hs = <0x0>;
+@@ -445,8 +447,7 @@ sdhci0: mmc@4f80000 {
+ 		ti,otap-del-sel-ddr50 = <0x5>;
+ 		ti,otap-del-sel-ddr52 = <0x5>;
+ 		ti,otap-del-sel-hs200 = <0x5>;
+-		ti,otap-del-sel-hs400 = <0x0>;
+-		ti,trm-icp = <0x8>;
++		ti,itap-del-sel-ddr52 = <0x0>;
+ 		dma-coherent;
+ 		status = "disabled";
+ 	};
+@@ -458,18 +459,22 @@ sdhci1: mmc@4fa0000 {
+ 		clocks = <&k3_clks 48 0>, <&k3_clks 48 1>;
+ 		clock-names = "clk_ahb", "clk_xin";
+ 		interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
++		ti,clkbuf-sel = <0x7>;
++		ti,trm-icp = <0x8>;
+ 		ti,otap-del-sel-legacy = <0x0>;
+ 		ti,otap-del-sel-mmc-hs = <0x0>;
+ 		ti,otap-del-sel-sd-hs = <0x0>;
+-		ti,otap-del-sel-sdr12 = <0x0>;
+-		ti,otap-del-sel-sdr25 = <0x0>;
++		ti,otap-del-sel-sdr12 = <0xf>;
++		ti,otap-del-sel-sdr25 = <0xf>;
+ 		ti,otap-del-sel-sdr50 = <0x8>;
+ 		ti,otap-del-sel-sdr104 = <0x7>;
+ 		ti,otap-del-sel-ddr50 = <0x4>;
+ 		ti,otap-del-sel-ddr52 = <0x4>;
+ 		ti,otap-del-sel-hs200 = <0x7>;
+-		ti,clkbuf-sel = <0x7>;
+-		ti,trm-icp = <0x8>;
++		ti,itap-del-sel-legacy = <0xa>;
++		ti,itap-del-sel-sd-hs = <0x1>;
++		ti,itap-del-sel-sdr12 = <0xa>;
++		ti,itap-del-sel-sdr25 = <0x1>;
+ 		dma-coherent;
+ 		status = "disabled";
+ 	};
 -- 
-BR,
-Muhammad Usama Anjum
+2.43.2
+
