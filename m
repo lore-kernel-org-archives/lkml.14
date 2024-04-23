@@ -1,196 +1,217 @@
-Received: from out0-211.mail.aliyun.com (out0-211.mail.aliyun.com [140.205.0.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451E25FB9A;
-	Tue, 23 Apr 2024 09:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D015FBA0;
+	Tue, 23 Apr 2024 09:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713865357; cv=none; b=jhkSfQ+9ILCiuTIJ8q+REPp4FIJ1QSCs8GmVqe/SmwROYs44nk2jeTBU2ZjHyJpQF1KTcL/v5mwtjvFI34yYBJjXZ+TCq1Ft/tvpVnyHcJZXB5KEI95KT7I1HE7I60GD8eS4ZmJrLWpo4oF8owa4F+6fGJneSyIs5A3Fph1ORWs=
+	t=1713865362; cv=none; b=sbSUN88sQ07extI6xqCm7kPUho1wCtv63lujQp31+HreTJmaklr7rT/ta2jISH+NKWHpBk15dYRjXBwXdhx3DfJOw+wEyo+06rAPEpGKn4AQzZeGk4kbvKAUxAx1zdjLWCPSpsPqlQ/EXahnJPow4LHbd3cPx3wCggN6+2O1Tuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713865357; c=relaxed/simple;
-	bh=HH2UmiPMMBGk7KoElLl+olNwdaMXD0BoL7x/bSioXAo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=edHIasTZ5A39+y8MtLQxJENkIPWeGtnDOt42A1b+GPjbKxZ2hie5IMTlYr21w62Pr5lVQ8Xf/FZ0NInwhznsBfpLqw1T2N+9xV5w5DeIv6FV/jPrE97J/D5F+9OMdscvG1aYbypZjulHV5Suxi9GUr2VH50nHVAgzkHOXs/2ZGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=GxO4pgeo; arc=none smtp.client-ip=140.205.0.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	s=arc-20240116; t=1713865362; c=relaxed/simple;
+	bh=Ls/UifY5Dz1wJAlodWBpmzK5RW2Ga9GWujeLPVUWApE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f5gekUayicBEMipOi1k8RV80kLKh5YCx4z9S2rY0/FopporVaYB0YnTSRAFf1Nx0x/i2ZXuBIvniZz1YldLSPJsUfH7Go/3ozH6O8M9M713I3Cf72pLsnwhrkcXz4JWd8W8NyJV4uTHIK5Kb1DobsiP3raIR4UW0YoxrVIWV+k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t3sUCms4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="GxO4pgeo"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1713865351; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=ZGZ0t2B2a4bviduXTVejdqN2/HaI1/q8fGUiKJDeZsI=;
-	b=GxO4pgeobQJ1X1kxV8T6UpuvvQnk2QtxyJ6HxyFYUPLoteeRzraKSfokP8KikCxvjkmPaFKshgByck6uduTlylpUycYBgl+OGVQe881lks3q48UZgwTPdTokak9spsIGRTDymx4JA/RbaljGnWMhraBDYIe1WaWbF/uAmyH9ZaI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R391e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047211;MF=zhubojun.zbj@antgroup.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---.XJPn81k_1713864399;
-Received: from localhost(mailfrom:zhubojun.zbj@antgroup.com fp:SMTPD_---.XJPn81k_1713864399)
-          by smtp.aliyun-inc.com;
-          Tue, 23 Apr 2024 17:26:54 +0800
-From: "=?UTF-8?B?5pyx5Lyv5ZCbKOadsOmTrSk=?=" <zhubojun.zbj@antgroup.com>
-To: linux-kernel@vger.kernel.org,
-	linux-sgx@vger.kernel.org,
-	jarkko@kernel.org,
-	dave.hansen@linux.intel.com
-Cc:  <reinette.chatre@intel.com>,
-  "=?UTF-8?B?5YiY5Y+MKOi9qeWxuSk=?=" <ls123674@antgroup.com>,
-  "=?UTF-8?B?5pyx5Lyv5ZCbKOadsOmTrSk=?=" <zhubojun.zbj@antgroup.com>
-Subject: [RFC PATCH 0/1] x86/sgx: Explicitly give up the CPU in EDMM's ioctl() to avoid softlockup
-Date: Tue, 23 Apr 2024 17:25:49 +0800
-Message-Id: <20240423092550.59297-1-zhubojun.zbj@antgroup.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t3sUCms4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235C1C116B1;
+	Tue, 23 Apr 2024 09:42:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713865361;
+	bh=Ls/UifY5Dz1wJAlodWBpmzK5RW2Ga9GWujeLPVUWApE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=t3sUCms4mYpMabtasGNhGocxGbl4sFKtiI5xMv3GUseqBt8syt6ltOpJw5h+mhkm9
+	 aFw/mfjIIPxTOgX3aSOEh8CQ9MDDltzwMmO7D/WChVF9JWgnNlfVL892FNWud09dKb
+	 FSA60+icHOuitAqK+1F/rbKWBFDweKEPHeGK3ckswBDSwzaQs+WEOy7vQNwL9Y8luP
+	 xYndgb4wDz00KwaLl7Uhr0PI6sa3C6nq5pot9Z3qY6+LMLbM+8e/iSegNeK7NbIhHP
+	 +qqwJies09VxEMlzq045chEuTCG3ApsAakzZW3oCkuQ9Zt7KVPauqvMQOtnyBHP4I0
+	 PSMBeRefA9q6g==
+Message-ID: <aef907ab-1087-4f49-bea4-d43ee6cebb73@kernel.org>
+Date: Tue, 23 Apr 2024 11:42:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/14] ASoC: Constify local snd_sof_dsp_ops
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+ Liam Girdwood <lgirdwood@gmail.com>,
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>,
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>, Mark Brown
+ <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <20240414-n-const-ops-var-v1-0-8f53ee5d981c@kernel.org>
+ <89f8f0be-2534-46c8-9058-cabea4f68568@linux.intel.com>
+ <9d1eda85-32a0-4e53-86ca-ce3137439bd7@kernel.org>
+ <d046d195-6fa3-4c52-bc5f-3e5e763bc692@linux.intel.com>
+ <138ac465-1576-4e86-a05d-63f8acc6fb70@kernel.org>
+ <3acfbe3c-8b83-4c40-83c2-437f963fd25a@linux.intel.com>
+ <7490bce3-3bd6-4beb-b8be-d47a6b0a30f0@kernel.org>
+ <eaa0c99a-3b41-4444-906c-d2f005d326b9@linux.intel.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <eaa0c99a-3b41-4444-906c-d2f005d326b9@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi folks,
+On 22/04/2024 23:24, Pierre-Louis Bossart wrote:
+> 
+> 
+>>>> There are multiple reasons and benefits for const, like compiler
+>>>> optimization, code readability (meaning) up to security improvements,
+>>>> e.g. by some GCC plugins or marking rodata as really non-writeable, so
+>>>> closing some ways of exploits. There are many opportunities here, even
+>>>> if they are not yet enabled.
+>>>
+>>> Possibly, but the SOF core does not know if the structure it uses is
+>>> rodata or not. Using the 'const' identifier would be misleading.
+>>
+>> How so? If core does not modify structure, it should take it via ops,
+>> just like 100 other widely known structures (see checkpatch). Why is
+>> this different?
+> 
+> I don't understand "it should take it via ops"
+> 
+> We are already fetching the structure with private_data.
 
-If we run an enclave equipped with large EPC(30G or greater on my platfrom)
-on the Linux with kernel preemptions disabled(by configuring
-"CONFIG_PREEMPT_NONE=3Dy"), we will get the following softlockup warning=20
-messages being reported in "dmesg" log:
+I meant, drivers using such core library functions or directly calling
+to the core, pass some private data structure with "struct foo_ops".
+Sometimes pass directly "struct foo_ops". This is happening everywhere
+and is common pattern.
 
-Is it an known issue? I can get the warning messages on Linux v6.9-rc5.
+And everywhere we try to make it const, where following conditions are met:
+1. the driver allocates "struct foo_ops" statically,
+2. the driver does not change it,
+3. the core (or library) does not change it.
 
-The EDMM's ioctl()s (sgx_ioc_enclave_{ modify_types | restrict_permissions =
-|  remove_pages})=20
-interface provided by kernel support batch changing attributes of enclave's=
- EPC.
-If userspace App requests kernel to handle too many EPC pages, kernel
-may stuck for a long time(with preemption disabled).
 
-The log is as follows:
+> 
+>>>>> that's a different interpretation to the 'software' view you're
+>>>>> describing. "this structure will not modified by this function" is not
+>>>>> the same thing as "this structure CANNOT be modified".
+>>>>
+>>>> Yes, but can we please discuss specific patchset then? Patches which
+>>>> change pointers to const have one "interpretation". Patches which modify
+>>>> static or global data have another.
+>>>
+>>> Just look at sound/soc/sof/intel/mtl.c... The core will sometimes use a
+>>
+>> That's a driver (or specific implementation), not core.
+> 
+> You are making an assumption on what the SOF core is. The core is used
+> by ACPI or PCI drivers as a library. The structures are all allocated in
+> ACPI/PCI drivers and passed to the core library.
 
-------------[ cut here ]------------
-[  901.101294] watchdog: BUG: soft lockup - CPU#92 stuck for 23s! [occlum-r=
-un:4289]
-[  901.109617] Modules linked in: veth xt_conntrack xt_MASQUERADE nf_conntr=
-ack_netlink nfnetlink xfrm_user xfrm_algo iptable_nat nf_nat nf_conntrack n=
-f_defrag_ipv6 nf_defrag_ipv4 libcrc32c xt_addrtype iptable_filter br_netfil=
-ter bridge stp llc overlay nls_iso8859_1 intel_rapl_msr intel_rapl_common i=
-ntel_uncore_frequency intel_uncore_frequency_common i10nm_edac nfit binfmt_=
-misc ipmi_ssif x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm=
- crct10dif_pclmul polyval_clmulni polyval_generic ghash_clmulni_intel sha51=
-2_ssse3 sha256_ssse3 pmt_telemetry sha1_ssse3 pmt_class joydev intel_sdsi i=
-nput_leds aesni_intel crypto_simd cryptd dax_hmem cxl_acpi cmdlinepart rapl=
- cxl_core ast spi_nor intel_cstate drm_shmem_helper einj mtd drm_kms_helper=
- mei_me idxd isst_if_mmio isst_if_mbox_pci isst_if_common intel_vsec idxd_b=
-us mei acpi_ipmi ipmi_si ipmi_devintf ipmi_msghandler acpi_pad acpi_power_m=
-eter mac_hid sch_fq_codel msr parport_pc ppdev lp parport ramoops reed_solo=
-mon pstore_blk pstore_zone efi_pstore drm ip_tables x_tables
-[  901.109670]  autofs4 mlx5_ib ib_uverbs ib_core hid_generic usbhid hid se=
-s enclosure scsi_transport_sas mlx5_core pci_hyperv_intf mlxfw igb ahci psa=
-mple i2c_algo_bit i2c_i801 spi_intel_pci xhci_pci tls megaraid_sas dca spi_=
-intel crc32_pclmul i2c_smbus i2c_ismt libahci xhci_pci_renesas wmi pinctrl_=
-emmitsburg
-[  901.109691] CPU: 92 PID: 4289 Comm: occlum-run Not tainted 6.9.0-rc5 #3
-[  901.109693] Hardware name: Inspur NF5468-M7-A0-R0-00/NF5468-M7-A0-R0-00,=
- BIOS 05.02.01 05/08/2023
-[  901.109695] RIP: 0010:sgx_enclave_restrict_permissions+0xba/0x1f0
-[  901.109701] Code: 48 c1 e6 05 48 89 d1 48 8d 5c 24 40 b8 0e 00 00 00 48 =
-2b 8e 70 8e 15 8b 48 c1 e9 05 48 c1 e1 0c 48 03 8e 68 8e 15 8b 0f 01 cf <a9=
-> 00 00 00 40 0f 85 b2 00 00 00 85 c0 0f 85 db 00 00 00 4c 89 ef
-[  901.109702] RSP: 0018:ffffad0ae5d0f8c0 EFLAGS: 00000202
-[  901.109704] RAX: 0000000000000000 RBX: ffffad0ae5d0f900 RCX: ffffad11dfc=
-0e000
-[  901.109705] RDX: ffffad2adcff81c0 RSI: 0000000000000000 RDI: ffff9a12f5f=
-4f000
-[  901.109706] RBP: ffffad0ae5d0f9b0 R08: 0000000000000002 R09: ffff9a1289f=
-57520
-[  901.109707] R10: 000000000000005d R11: 0000000000000002 R12: 00000006d8f=
-f2000
-[  901.109708] R13: ffff9a12f5f4f000 R14: ffffad0ae5d0fa18 R15: ffff9a12f5f=
-4f020
-[  901.109709] FS:  00007fb20ad1d740(0000) GS:ffff9a317fe00000(0000) knlGS:=
-0000000000000000
-[  901.109710] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  901.109711] CR2: 00007f8041811000 CR3: 0000000118530006 CR4: 00000000007=
-70ef0
-[  901.109712] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 00000000000=
-00000
-[  901.109713] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 00000000000=
-00400
-[  901.109714] PKRU: 55555554
-[  901.109714] Call Trace:
-[  901.109716]  <IRQ>
-[  901.109718]  ? show_regs+0x67/0x70
-[  901.109722]  ? watchdog_timer_fn+0x1f3/0x280
-[  901.109725]  ? __pfx_watchdog_timer_fn+0x10/0x10
-[  901.109727]  ? __hrtimer_run_queues+0xc8/0x220
-[  901.109731]  ? hrtimer_interrupt+0x10c/0x250
-[  901.109733]  ? __sysvec_apic_timer_interrupt+0x53/0x130
-[  901.109736]  ? sysvec_apic_timer_interrupt+0x7b/0x90
-[  901.109739]  </IRQ>
-[  901.109740]  <TASK>
-[  901.109740]  ? asm_sysvec_apic_timer_interrupt+0x1b/0x20
-[  901.109745]  ? sgx_enclave_restrict_permissions+0xba/0x1f0
-[  901.109747]  ? aa_file_perm+0x145/0x550
-[  901.109750]  sgx_ioctl+0x1ab/0x900
-[  901.109751]  ? xas_find+0x84/0x200
-[  901.109754]  ? sgx_enclave_etrack+0xbb/0x140
-[  901.109756]  ? sgx_encl_may_map+0x19a/0x240
-[  901.109758]  ? common_file_perm+0x8a/0x1b0
-[  901.109760]  ? obj_cgroup_charge_pages+0xa2/0x100
-[  901.109763]  ? tlb_flush_mmu+0x31/0x1c0
-[  901.109766]  ? tlb_finish_mmu+0x42/0x80
-[  901.109767]  ? do_mprotect_pkey+0x150/0x530
-[  901.109769]  ? __fget_light+0xc0/0x100
-[  901.109772]  __x64_sys_ioctl+0x95/0xd0
-[  901.109775]  x64_sys_call+0x1209/0x20c0
-[  901.109777]  do_syscall_64+0x6d/0x110
-[  901.109779]  ? syscall_exit_to_user_mode+0x86/0x1c0
-[  901.109782]  ? do_syscall_64+0x79/0x110
-[  901.109783]  ? syscall_exit_to_user_mode+0x86/0x1c0
-[  901.109784]  ? do_syscall_64+0x79/0x110
-[  901.109785]  ? free_unref_page+0x10e/0x180
-[  901.109788]  ? __do_fault+0x36/0x130
-[  901.109791]  ? do_pte_missing+0x2e8/0xcc0
-[  901.109792]  ? __pte_offset_map+0x1c/0x190
-[  901.109795]  ? __handle_mm_fault+0x7b9/0xe60
-[  901.109796]  ? __count_memcg_events+0x70/0x100
-[  901.109798]  ? handle_mm_fault+0x256/0x360
-[  901.109799]  ? do_user_addr_fault+0x3c1/0x860
-[  901.109801]  ? irqentry_exit_to_user_mode+0x67/0x190
-[  901.109803]  ? irqentry_exit+0x3b/0x50
-[  901.109804]  ? exc_page_fault+0x89/0x180
-[  901.109806]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[  901.109807] RIP: 0033:0x7fb20b4315cb
-[  901.109810] Code: 0f 1e fa 48 8b 05 c5 78 0d 00 64 c7 00 26 00 00 00 48 =
-c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48=
-> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 95 78 0d 00 f7 d8 64 89 01 48
-[  901.109811] RSP: 002b:00007ffc0e7af718 EFLAGS: 00000246 ORIG_RAX: 000000=
-0000000010
-[  901.109812] RAX: ffffffffffffffda RBX: 0000000780000000 RCX: 00007fb20b4=
-315cb
-[  901.109813] RDX: 00007ffc0e7af720 RSI: 00000000c028a405 RDI: 00000000000=
-00005
-[  901.109814] RBP: 0000000000000005 R08: 0000000000000000 R09: 00007ffc0e7=
-af794
-[  901.109815] R10: 00007ffc0e7af7c8 R11: 0000000000000246 R12: 00000000c02=
-8a405
-[  901.109815] R13: 00007ffc0e7af720 R14: 0000000780000000 R15: 00007fb20b2=
-ea980
-[  901.109817]  </TASK>
-------------[ end trace ]------------
+The same as everywhere else. The distinction, that this is "library" and
+in other cases often is "core framework" or "subsystem", does not
+matter. Behaves the same.
 
-We suggest to give up CPU in the ioctl() handler explicitly. I have attache=
-d a
-patch which can fix such issue. I'm looking forward to receiving suggestions
-from community regarding this patch.
+> 
+>>> constant structure and sometimes not, depending on the PCI ID reported
+>>> by hardware. This was intentional to override common defaults and make
+>>> the differences limited in scope between hardware generations.
+>>
+>>
+>>>
+>>> int sof_mtl_ops_init(struct snd_sof_dev *sdev)
+>>> {
+>>> 	struct sof_ipc4_fw_data *ipc4_data;
+>>>
+>>> 	/* common defaults */
+>>> 	memcpy(&sof_mtl_ops, &sof_hda_common_ops, sizeof(struct
+>>> snd_sof_dsp_ops)); <<<< THE BASELINE IS CONSTANT
+>>
+>> Yes, I saw it and such users are not changed. They won't receive any
+>> safety. But all others are getting safer.
+> 
+> 
+> Maybe there's a misunderstanding on what the 'SOF core' is. This is just
+> a helper library that are used by the PCI drivers. The core has zero
+> knowledge on anything really.
 
-Thanks for your time!
+The "core" or the "library" either modifies the structure or not. That
+is only that matters from the core point of view.
 
-Regards,
-Bojun Zhu
 
-Bojun Zhu (1):
-  x86/sgx: Explicitly give up the CPU in EDMM's ioctl() to avoid
-    softlockup
+> 
+>> I really do not understand what is the problem here. In entire Linux all
+>> of such changes are welcomed with open arms. So what is different here?
+> Adding 'const' at the SOF core level does not mean that we can treat
+> structures as rodata. It only means that the structure is not modified
+> by the core library. Not the same thing.
 
- arch/x86/kernel/cpu/sgx/ioctl.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Are we talking about basic C now? Of course it does not mean that and I
+already explained what is the goal of this - the static or global memory
+in the driver can be moved to rodata.
 
---=20
-2.25.1
+Just like everywhere else.
+
+I keep repeating the same arguments and keep repeating the same: please
+bring me any argument why this should be different than all other 100
+structs (or more, I count based on checkpatch). So far you did not bring
+any argument for this, so I don't know how to provide any other
+technical feedback.
+
+According to my knowledge and easily visible here, this is exactly the
+same as in all other cases. Drivers have some static or global struct
+which can be moved to rodata, because nothing modifies it.
+
+Best regards,
+Krzysztof
 
