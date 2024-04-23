@@ -1,165 +1,307 @@
-Received: from out187-4.us.a.mail.aliyun.com (out187-4.us.a.mail.aliyun.com [47.90.187.4])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654CD59148;
-	Tue, 23 Apr 2024 09:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34FE51016;
+	Tue, 23 Apr 2024 09:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713865374; cv=none; b=N7nRpR7edyudvCbaSlzZhqdttfMh7co644PAS/3Yvm2twY/8Tq0FZonH5YYV5KCnXRN1wmg9HXGHS4H8cd5f4qeTZRovZ9wMuJZXke1SByahZ8sRO1byoVIUZWFGcyg06sOMi4LfmSiJs1XiLri4wxapcbPq8xiwp0ZIv7Mnvd0=
+	t=1713865442; cv=none; b=d48BfsomMkzSLMYFcwVXAfYRHQKnPAvpOR/T6k1mWur7UoICp0iNJyUFkxeVBeTqpkyD3vuRMuredaQeG77Fvv1+u74SUMqHP4R2qlUAE5uh7j0Xlxy0iNLDMSJAB1pVnsBTO0VfOpXkJ1gArTQFXNAL/OEo07mr2Rk1b2jCwIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713865374; c=relaxed/simple;
-	bh=9e3zz2vdIgjObMpzkDW7FZcgOJIxeoqT6M30B1aspn4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bL6YN9+RRM7QvKTYWA3G5aRl4rXrm8iEFN7K8gvcrzuXNQv9IvF4+wUxpgmm7nTUbPRtnz3meCBZVHzx64tNixLyR3gHbD1rQtXB8ehMAH7oR5/f2WMM6HFHvcWW9BKF/5RP/ZvfEeLt7TKSj3sH3f6HfwlhyUHSDTcFtVJPgo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=zju6K1Vf; arc=none smtp.client-ip=47.90.187.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	s=arc-20240116; t=1713865442; c=relaxed/simple;
+	bh=DumJhvG8fsGnw0uHUg1uUVDb/GabqHRZR1307Gu8s9M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oGvErYiwAcgcK0TbPbgirhqYDUVvj60xLnqPePJ4EWncbFYFYnQQNJ7Ciorlo5ZxKD9Qxc8U29mb5G2GDZA2SY3eVvJKMuq2pjPGOmCOg5KYZfYTK9w+lOfGxYR4t6WhlNF0b/FO3OyOEMrPCY+SL15psF/aAdyLIddPL4g54uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h3cG41SD; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="zju6K1Vf"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1713865359; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=eRmZ9jEKUfe7r0xjaXFGSIKeohTP9cOqduT19L33uX0=;
-	b=zju6K1VfUsO56VJPbdPHuXBWD27e5sYhNer8g9cAM9PkwTuvvf88SG9JJSiMks6tocFF4Ym0KC6mg1ihqOG60HwBsILZ75BUoltfXMqiBpbFnChNCc+Vf02NOEgWjNES3s3xZkxNJSSo3UMD76Dvi2xgblLvRdRB6BRXFNLliJE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047190;MF=zhubojun.zbj@antgroup.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---.XJPn8AG_1713864416;
-Received: from localhost(mailfrom:zhubojun.zbj@antgroup.com fp:SMTPD_---.XJPn8AG_1713864416)
-          by smtp.aliyun-inc.com;
-          Tue, 23 Apr 2024 17:27:02 +0800
-From: "=?UTF-8?B?5pyx5Lyv5ZCbKOadsOmTrSk=?=" <zhubojun.zbj@antgroup.com>
-To: linux-kernel@vger.kernel.org,
-	linux-sgx@vger.kernel.org,
-	jarkko@kernel.org,
-	dave.hansen@linux.intel.com
-Cc:  <reinette.chatre@intel.com>,
-  "=?UTF-8?B?5YiY5Y+MKOi9qeWxuSk=?=" <ls123674@antgroup.com>,
-  "=?UTF-8?B?5pyx5Lyv5ZCbKOadsOmTrSk=?=" <zhubojun.zbj@antgroup.com>
-Subject: [RFC PATCH 1/1] x86/sgx: Explicitly give up the CPU in EDMM's ioctl() to avoid softlockup
-Date: Tue, 23 Apr 2024 17:25:50 +0800
-Message-Id: <20240423092550.59297-2-zhubojun.zbj@antgroup.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240423092550.59297-1-zhubojun.zbj@antgroup.com>
-References: <20240423092550.59297-1-zhubojun.zbj@antgroup.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h3cG41SD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713865441; x=1745401441;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DumJhvG8fsGnw0uHUg1uUVDb/GabqHRZR1307Gu8s9M=;
+  b=h3cG41SDm/nBFfs1oX56p2PgDp2U/YgU2APhV27s7Ihv8v6WEY0mRk4U
+   XzHvCucp0EmkfLkBZ2s10Q3BxiXwCiLN82owDX4ibhSkoBzLKUd3NpZM3
+   dyCLyQOEj2ifHFE/VCG0HODSkKYYeVtzxSWqkYn31ZmvlMVoFXYOQDtX0
+   NolJneYniCqMJZhfGnSXCIXfwGGi0ME5TVjPU28fdUG+TygiSXfJEBgit
+   AJoKP+ZpXcAPt7/nOquz4XzjjHpKiTz/lszSziZUyJe55qIKfIcVPbCY4
+   2YlgzGvEKSbbh/z5ifluP3tsR+toVyQjbPkCXIAerVbROPaVwvoxzGjCB
+   A==;
+X-CSE-ConnectionGUID: e/pfZVuTTGW0u/mhOfCTdQ==
+X-CSE-MsgGUID: 0lNFnT+7SuiWWZdU1tvWJw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="19990085"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="19990085"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 02:44:00 -0700
+X-CSE-ConnectionGUID: XVZWAwvQR66SJnsbejWocA==
+X-CSE-MsgGUID: LChqrwi+T5Oo5idjBqIjfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="47598385"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa002.fm.intel.com with ESMTP; 23 Apr 2024 02:43:57 -0700
+Date: Tue, 23 Apr 2024 17:38:37 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Peter Colberg <peter.colberg@intel.com>
+Cc: Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
+	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
+	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Russ Weight <russ.weight@linux.dev>,
+	Marco Pagani <marpagan@redhat.com>,
+	Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Subject: Re: [RFC PATCH v2 4/9] fpga: dfl: migrate FPGA Management Engine
+ driver to dfl_feature_dev_data
+Message-ID: <ZieBnQBDGgowf+y7@yilunxu-OptiPlex-7050>
+References: <20240409233942.828440-1-peter.colberg@intel.com>
+ <20240409233942.828440-5-peter.colberg@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240409233942.828440-5-peter.colberg@intel.com>
 
-EDMM's ioctl()s support batch operations, which may be
-time-consuming. Try to explicitly give up the CPU at
-the every end of "for loop" in
-sgx_enclave_{ modify_types | restrict_permissions | remove_pages}
-to give other tasks a chance to run, and avoid softlockup warning.
+On Tue, Apr 09, 2024 at 07:39:37PM -0400, Peter Colberg wrote:
+> This change separates out most of the symbol name changes required by this
+> patch series for the file: drivers/fpga/dfl-fme-main.c. This is done to
+> split a single monolithic change into multiple, smaller patches at the
+> request of the maintainer.
+> 
+> Signed-off-by: Peter Colberg <peter.colberg@intel.com>
+> ---
+> v2:
+> - Split monolithic patch into series at request of maintainer
+> - Change fme_hdr_ioctl_*() to receive dfl_feature_dev_data instead of
+>   dfl_feature_platform_data.
+> - Remove unused local variable pdata in fme_dev_{init,destroy}().
+> ---
+>  drivers/fpga/dfl-fme-main.c | 68 ++++++++++++++++++++-----------------
+>  1 file changed, 36 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+> index 864924f68f5e..7f119b09b54e 100644
+> --- a/drivers/fpga/dfl-fme-main.c
+> +++ b/drivers/fpga/dfl-fme-main.c
+> @@ -135,10 +135,10 @@ static const struct attribute_group fme_hdr_group = {
+>  	.attrs = fme_hdr_attrs,
+>  };
+>  
+> -static long fme_hdr_ioctl_release_port(struct dfl_feature_platform_data *pdata,
+> +static long fme_hdr_ioctl_release_port(struct dfl_feature_dev_data *fdata,
+>  				       unsigned long arg)
+>  {
+> -	struct dfl_fpga_cdev *cdev = pdata->dfl_cdev;
+> +	struct dfl_fpga_cdev *cdev = fdata->dfl_cdev;
+>  	int port_id;
+>  
+>  	if (get_user(port_id, (int __user *)arg))
+> @@ -147,10 +147,10 @@ static long fme_hdr_ioctl_release_port(struct dfl_feature_platform_data *pdata,
+>  	return dfl_fpga_cdev_release_port(cdev, port_id);
+>  }
+>  
+> -static long fme_hdr_ioctl_assign_port(struct dfl_feature_platform_data *pdata,
+> +static long fme_hdr_ioctl_assign_port(struct dfl_feature_dev_data *fdata,
+>  				      unsigned long arg)
+>  {
+> -	struct dfl_fpga_cdev *cdev = pdata->dfl_cdev;
+> +	struct dfl_fpga_cdev *cdev = fdata->dfl_cdev;
+>  	int port_id;
+>  
+>  	if (get_user(port_id, (int __user *)arg))
+> @@ -163,13 +163,13 @@ static long fme_hdr_ioctl(struct platform_device *pdev,
+>  			  struct dfl_feature *feature,
+>  			  unsigned int cmd, unsigned long arg)
+>  {
+> -	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
 
-The following has been observed on Linux v6.9-rc5 with kernel
-preemptions disabled(by configuring "PREEMPT_NONE=y"), when kernel
-is requested to restrict page permissions of a large number of EPC pages.
+Maybe firstly make a patch to:
 
-    ------------[ cut here ]------------
-    watchdog: BUG: soft lockup - CPU#45 stuck for 22s! [occlum-run:3905]
-    ...
-    CPU: 45 PID: 3905 Comm: occlum-run Not tainted 6.9.0-rc5 #7
-    ...
-    RIP: 0010:sgx_enclave_restrict_permissions+0xba/0x1f0
-    Code: 48 c1 e6 05 48 89 d1 48 8d 5c 24 40 b8 0e 00 00 00 48 2b 8e 70 8e f5 93 48 c1 e9 05 48 c1 e1 0c 48 03 8e 68 8e f5 93 0f 01 cf <a9> 00 00 00 40 0f 85 b2 00 00 00 85 c0 0f 85 db 00 00 00 4c 89 ef
-    RSP: 0018:ffffb55a6591fa80 EFLAGS: 00000202
-    RAX: 0000000000000000 RBX: ffffb55a6591fac0 RCX: ffffb581e7384000
-    RDX: ffffb59a9e4e8080 RSI: 0000000000000020 RDI: ffff91d69e8cc000
-    RBP: ffffb55a6591fb70 R08: 0000000000000002 R09: ffff91d646e12be0
-    R10: 000000000000006e R11: 0000000000000002 R12: 000000072052d000
-    R13: ffff91d69e8cc000 R14: ffffb55a6591fbd8 R15: ffff91d69e8cc020
-    FS:  00007fe10dbda740(0000) GS:ffff92163e480000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: 00007fc041811000 CR3: 00000040d95c8005 CR4: 0000000000770ef0
-    DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-    DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
-    PKRU: 55555554
-    Call Trace:
-     <IRQ>
-     ? show_regs+0x67/0x70
-     ? watchdog_timer_fn+0x1f3/0x280
-     ? __pfx_watchdog_timer_fn+0x10/0x10
-     ? __hrtimer_run_queues+0xc8/0x220
-     ? hrtimer_interrupt+0x10c/0x250
-     ? __sysvec_apic_timer_interrupt+0x53/0x130
-     ? sysvec_apic_timer_interrupt+0x7b/0x90
-     </IRQ>
-     <TASK>
-     ? asm_sysvec_apic_timer_interrupt+0x1b/0x20
-     ? sgx_enclave_restrict_permissions+0xba/0x1f0
-     ? __pte_offset_map_lock+0x94/0x110
-     ? sgx_encl_test_and_clear_young_cb+0x40/0x60
-     sgx_ioctl+0x1ab/0x900
-     ? do_syscall_64+0x79/0x110
-     ? apply_to_page_range+0x14/0x20
-     ? sgx_encl_test_and_clear_young+0x6c/0x80
-     ? sgx_vma_fault+0x132/0x4f0
-     __x64_sys_ioctl+0x95/0xd0
-     x64_sys_call+0x1209/0x20c0
-     do_syscall_64+0x6d/0x110
-     ? do_syscall_64+0x79/0x110
-     ? do_pte_missing+0x2e8/0xcc0
-     ? __pte_offset_map+0x1c/0x190
-     ? __handle_mm_fault+0x7b9/0xe60
-     ? __count_memcg_events+0x70/0x100
-     ? handle_mm_fault+0x256/0x360
-     ? do_user_addr_fault+0x3c1/0x860
-     ? irqentry_exit_to_user_mode+0x67/0x190
-     ? irqentry_exit+0x3b/0x50
-     ? exc_page_fault+0x89/0x180
-     entry_SYSCALL_64_after_hwframe+0x76/0x7e
-    RIP: 0033:0x7fe10e2ee5cb
-    Code: 0f 1e fa 48 8b 05 c5 78 0d 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 95 78 0d 00 f7 d8 64 89 01 48
-    RSP: 002b:00007fffb2c75518 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-    RAX: ffffffffffffffda RBX: 0000000780000000 RCX: 00007fe10e2ee5cb
-    RDX: 00007fffb2c75520 RSI: 00000000c028a405 RDI: 0000000000000005
-    RBP: 0000000000000005 R08: 0000000000000000 R09: 00007fffb2c75594
-    R10: 00007fffb2c755c8 R11: 0000000000000246 R12: 00000000c028a405
-    R13: 00007fffb2c75520 R14: 0000000780000000 R15: 00007fe10e1a7980
-     </TASK>
-     ------------[ end trace ]------------
+  #define to_dfl_feature_platform_data	dev_get_platdata
 
-Signed-off-by: Bojun Zhu <zhubojun.zbj@antgroup.com>
----
- arch/x86/kernel/cpu/sgx/ioctl.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+And s/to_dfl_feature_platform_data/dev_get_platdata
 
-diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/ioctl.c
-index b65ab214bdf5..2340a82fa796 100644
---- a/arch/x86/kernel/cpu/sgx/ioctl.c
-+++ b/arch/x86/kernel/cpu/sgx/ioctl.c
-@@ -806,6 +806,9 @@ sgx_enclave_restrict_permissions(struct sgx_encl *encl,
- 		}
- 
- 		mutex_unlock(&encl->lock);
-+
-+		if (need_resched())
-+			cond_resched();
- 	}
- 
- 	ret = 0;
-@@ -1010,6 +1013,9 @@ static long sgx_enclave_modify_types(struct sgx_encl *encl,
- 		entry->type = page_type;
- 
- 		mutex_unlock(&encl->lock);
-+
-+		if (need_resched())
-+			cond_resched();
- 	}
- 
- 	ret = 0;
-@@ -1156,6 +1162,9 @@ static long sgx_encl_remove_pages(struct sgx_encl *encl,
- 		kfree(entry);
- 
- 		mutex_unlock(&encl->lock);
-+
-+		if (need_resched())
-+			cond_resched();
- 	}
- 
- 	ret = 0;
--- 
-2.25.1
+Then we could do replacements in this patch more friendly.
 
+> +	struct dfl_feature_dev_data *fdata = to_dfl_feature_dev_data(&pdev->dev);
+>  
+>  	switch (cmd) {
+>  	case DFL_FPGA_FME_PORT_RELEASE:
+> -		return fme_hdr_ioctl_release_port(pdata, arg);
+> +		return fme_hdr_ioctl_release_port(fdata, arg);
+>  	case DFL_FPGA_FME_PORT_ASSIGN:
+> -		return fme_hdr_ioctl_assign_port(pdata, arg);
+> +		return fme_hdr_ioctl_assign_port(fdata, arg);
+>  	}
+>  
+>  	return -ENODEV;
+> @@ -411,14 +411,14 @@ static int power_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+>  static int power_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+>  			     u32 attr, int channel, long val)
+>  {
+> -	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev->parent);
+> +	struct dfl_feature_dev_data *fdata = to_dfl_feature_dev_data(dev);
+>  	struct dfl_feature *feature = dev_get_drvdata(dev);
+>  	int ret = 0;
+>  	u64 v;
+>  
+>  	val = clamp_val(val / MICRO, 0, PWR_THRESHOLD_MAX);
+>  
+> -	mutex_lock(&pdata->lock);
+> +	mutex_lock(&fdata->lock);
+>  
+>  	switch (attr) {
+>  	case hwmon_power_max:
+> @@ -438,7 +438,7 @@ static int power_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+>  		break;
+>  	}
+>  
+> -	mutex_unlock(&pdata->lock);
+> +	mutex_unlock(&fdata->lock);
+>  
+>  	return ret;
+>  }
+> @@ -589,7 +589,7 @@ static struct dfl_feature_driver fme_feature_drvs[] = {
+>  	},
+>  };
+>  
+> -static long fme_ioctl_check_extension(struct dfl_feature_platform_data *pdata,
+> +static long fme_ioctl_check_extension(struct dfl_feature_dev_data *fdata,
+>  				      unsigned long arg)
+>  {
+>  	/* No extension support for now */
+> @@ -600,19 +600,21 @@ static int fme_open(struct inode *inode, struct file *filp)
+>  {
+>  	struct platform_device *fdev = dfl_fpga_inode_to_feature_dev(inode);
+>  	struct dfl_feature_platform_data *pdata = dev_get_platdata(&fdev->dev);
+
+Why not do the same replacement here?
+
+> +	struct dfl_feature_dev_data *fdata;
+>  	int ret;
+>  
+>  	if (WARN_ON(!pdata))
+>  		return -ENODEV;
+>  
+> -	mutex_lock(&pdata->lock);
+> -	ret = dfl_feature_dev_use_begin(pdata, filp->f_flags & O_EXCL);
+> +	fdata = pdata;
+> +	mutex_lock(&fdata->lock);
+> +	ret = dfl_feature_dev_use_begin(fdata, filp->f_flags & O_EXCL);
+>  	if (!ret) {
+>  		dev_dbg(&fdev->dev, "Device File Opened %d Times\n",
+> -			dfl_feature_dev_use_count(pdata));
+> +			dfl_feature_dev_use_count(fdata));
+>  		filp->private_data = pdata;
+>  	}
+> -	mutex_unlock(&pdata->lock);
+> +	mutex_unlock(&fdata->lock);
+>  
+>  	return ret;
+>  }
+> @@ -620,19 +622,20 @@ static int fme_open(struct inode *inode, struct file *filp)
+>  static int fme_release(struct inode *inode, struct file *filp)
+>  {
+>  	struct dfl_feature_platform_data *pdata = filp->private_data;
+> -	struct platform_device *pdev = pdata->dev;
+> +	struct dfl_feature_dev_data *fdata = pdata;
+
+ditto.
+
+> +	struct platform_device *pdev = fdata->dev;
+>  	struct dfl_feature *feature;
+>  
+>  	dev_dbg(&pdev->dev, "Device File Release\n");
+>  
+> -	mutex_lock(&pdata->lock);
+> -	dfl_feature_dev_use_end(pdata);
+> +	mutex_lock(&fdata->lock);
+> +	dfl_feature_dev_use_end(fdata);
+>  
+> -	if (!dfl_feature_dev_use_count(pdata))
+> -		dfl_fpga_dev_for_each_feature(pdata, feature)
+> +	if (!dfl_feature_dev_use_count(fdata))
+> +		dfl_fpga_dev_for_each_feature(fdata, feature)
+>  			dfl_fpga_set_irq_triggers(feature, 0,
+>  						  feature->nr_irqs, NULL);
+> -	mutex_unlock(&pdata->lock);
+> +	mutex_unlock(&fdata->lock);
+>  
+>  	return 0;
+>  }
+> @@ -640,7 +643,8 @@ static int fme_release(struct inode *inode, struct file *filp)
+>  static long fme_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  {
+>  	struct dfl_feature_platform_data *pdata = filp->private_data;
+> -	struct platform_device *pdev = pdata->dev;
+> +	struct dfl_feature_dev_data *fdata = pdata;
+
+ditto
+
+> +	struct platform_device *pdev = fdata->dev;
+>  	struct dfl_feature *f;
+>  	long ret;
+>  
+> @@ -650,7 +654,7 @@ static long fme_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  	case DFL_FPGA_GET_API_VERSION:
+>  		return DFL_FPGA_API_VERSION;
+>  	case DFL_FPGA_CHECK_EXTENSION:
+> -		return fme_ioctl_check_extension(pdata, arg);
+> +		return fme_ioctl_check_extension(fdata, arg);
+>  	default:
+>  		/*
+>  		 * Let sub-feature's ioctl function to handle the cmd.
+> @@ -658,7 +662,7 @@ static long fme_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  		 * handled in this sub feature, and returns 0 or other
+>  		 * error code if cmd is handled.
+>  		 */
+> -		dfl_fpga_dev_for_each_feature(pdata, f) {
+> +		dfl_fpga_dev_for_each_feature(fdata, f) {
+>  			if (f->ops && f->ops->ioctl) {
+>  				ret = f->ops->ioctl(pdev, f, cmd, arg);
+>  				if (ret != -ENODEV)
+> @@ -672,27 +676,27 @@ static long fme_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  
+>  static int fme_dev_init(struct platform_device *pdev)
+>  {
+> -	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
+> +	struct dfl_feature_dev_data *fdata = to_dfl_feature_dev_data(&pdev->dev);
+>  	struct dfl_fme *fme;
+>  
+>  	fme = devm_kzalloc(&pdev->dev, sizeof(*fme), GFP_KERNEL);
+>  	if (!fme)
+>  		return -ENOMEM;
+>  
+> -	mutex_lock(&pdata->lock);
+> -	dfl_fpga_pdata_set_private(pdata, fme);
+> -	mutex_unlock(&pdata->lock);
+> +	mutex_lock(&fdata->lock);
+> +	dfl_fpga_fdata_set_private(fdata, fme);
+> +	mutex_unlock(&fdata->lock);
+>  
+>  	return 0;
+>  }
+>  
+>  static void fme_dev_destroy(struct platform_device *pdev)
+>  {
+> -	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
+> +	struct dfl_feature_dev_data *fdata = to_dfl_feature_dev_data(&pdev->dev);
+>  
+> -	mutex_lock(&pdata->lock);
+> -	dfl_fpga_pdata_set_private(pdata, NULL);
+> -	mutex_unlock(&pdata->lock);
+> +	mutex_lock(&fdata->lock);
+> +	dfl_fpga_fdata_set_private(fdata, NULL);
+> +	mutex_unlock(&fdata->lock);
+>  }
+>  
+>  static const struct file_operations fme_fops = {
+> -- 
+> 2.44.0
+> 
+> 
