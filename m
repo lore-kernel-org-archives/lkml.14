@@ -1,235 +1,118 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACD358231;
-	Tue, 23 Apr 2024 09:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCB151016;
+	Tue, 23 Apr 2024 09:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713864647; cv=none; b=FFlr2fxVcgtifjq1Wo/SPiv00newFbn3mSYox6nlscudNhymmmDTTC+i8/vjwgU8lI2RXW2iZJdy3fC+YaI0ju0d1XLDsqqRFvV2x+ycXkwMBf3UbCk/n+FBtWLd+eWBkeC5ym1UwlMmVBga2m+kPOdi87dJZdxy2CAct61ynH4=
+	t=1713864687; cv=none; b=uELwyPpvpQ+Z+nmgosR5Y2rdyG7z4LjnIvq7E2InAbh8FPeIjKCu8PqJIhOeK2voCrGChX86MOqk7T+Wsb1bKGVeFxKDgg8Uw73aZZ295ockl9KCL5eANMNjo/ukhUsrbi4BHu9mV/2HSSpqYtJ8jyt/tYggQBxlNvKrgGKZMj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713864647; c=relaxed/simple;
-	bh=ig3gdWUIA4c/gij5+4IFxL8mX9LSwR8d7bXH682mwvg=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=D3PN8ARmsqIN1Pb5VhWO2dHTLFW5hbeF1J0/6LEUtiHRjvJq7XnQKxeU7iyIoRr1dnJbIIyg7r/q2y4vnCEs0h8M2kiFkcW/8u6GVZqmswkapDEzlCnWN6IHOqMe+9uYsePwokz22T+yuA8Q6sV87LxO1338TRlP6Rx92tUoKN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxde.zte.com.cn (unknown [10.35.20.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4VNxWm6shTz9yVJ;
-	Tue, 23 Apr 2024 17:24:04 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.137])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mxde.zte.com.cn (FangMail) with ESMTPS id 4VNxWf09Lhz5TCGC;
-	Tue, 23 Apr 2024 17:23:58 +0800 (CST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4VNxWP1rqSz8XrS7;
-	Tue, 23 Apr 2024 17:23:45 +0800 (CST)
-Received: from xaxapp03.zte.com.cn ([10.88.97.17])
-	by mse-fl2.zte.com.cn with SMTP id 43N9NbrR064067;
-	Tue, 23 Apr 2024 17:23:37 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp03[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Tue, 23 Apr 2024 17:23:39 +0800 (CST)
-Date: Tue, 23 Apr 2024 17:23:39 +0800 (CST)
-X-Zmail-TransId: 2afb66277e1b0ee-a7f29
-X-Mailer: Zmail v1.0
-Message-ID: <20240423172339974p6mbS7jpKDyLRbzUZSpAn@zte.com.cn>
+	s=arc-20240116; t=1713864687; c=relaxed/simple;
+	bh=mCfFITSMnCflHebZWGZOERjPx9rq/bpE5SXgFwiJHz8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hNjfUV7Rb26yDi6gQDmnhc1lsxs0giivxl6sKYxuMngzHKfNkpNwiZ1+a8Iep7NJ/Go04mqKrexhSCe6PlHokaAnMcOsZ260DSeWk0Fu9pgjXHcJuo9dkRqc2KrtNYje0KTcrkoiZAxDhsbvgf3ou60sZ7Z0Biouoy4hteF4lPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LBqEG+4V; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LBqEG+4V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BE49C4AF0B;
+	Tue, 23 Apr 2024 09:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713864687;
+	bh=mCfFITSMnCflHebZWGZOERjPx9rq/bpE5SXgFwiJHz8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LBqEG+4VDH76Wzj3j/0ieKNlwWtnLoLwDo9wtFs4I19rtyemYkNNiQy4RqnBHyChx
+	 RR0fJjUL7C/bNvPLRLhBJKhs5MbowPS72vAoU1iHj6M2rYygNsh1nPK4Llt+Flsq4g
+	 RvgARe4pRKfaSCsmwB0nWtIv9W4+Uakle2S7TLmoo9DIzqy0QpOU7I3ha2wXygqe8q
+	 ssPoPWXf6+XL3YV7hnVlgVeLLJUpaUdBx2k8wDtuu+XHyBX9T69k+tEbG+Ct/q64FA
+	 +YWnSfjz7+6hYZ9bZfKMsIEYwXg2o15zuxJw9bnMXgcMTtPx5Niozg1vCNJmJj60B1
+	 fQV5eu3Hr/sew==
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5af12f48b72so213066eaf.3;
+        Tue, 23 Apr 2024 02:31:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVVBxHV2PYsi+wvnh6oua8yZR6JmcJjisXi51Ng5fLYKTsoFBITm8yzOsBxAzD7k0ATjl1aIPIO6S8zasGGr3rvAcAMX1OW9rpgc287tGjNAoymSkqX759rJPJr5CgH1JkJjYyg05Wdi2LQQejJB50X41sWlgF9YnqiHIOai+iRflTg2TGISt7Y6gGduX6cxzavmEhCLoWdbLU2gwrLJw==
+X-Gm-Message-State: AOJu0YwYdNgyxmrqvC9Shvd6kzB/N1GkrmjIgtkMG0zrGlQBpY2koHTU
+	i9yrg28qlg4PAhOlN1B6dNz/XSt0PsCTgVMD11CiI3AjTcvvEPp7jC68x/0NmzsnoBwqXAlcvXN
+	0SfwXbkqNUtaXbWtdE4v/Ht1g/fo=
+X-Google-Smtp-Source: AGHT+IHjVLpX2cYW6/cy3xUrXl+khsjki6+LuDCfZn16luHLntfkxzCHaR4p6xIi9+3OexMVeuKhREaD/0OB+bvFSRo=
+X-Received: by 2002:a05:6870:d68c:b0:22e:77b6:4f9d with SMTP id
+ z12-20020a056870d68c00b0022e77b64f9dmr15761595oap.3.1713864686690; Tue, 23
+ Apr 2024 02:31:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <horms@kernel.org>, <edumazet@google.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>
-Cc: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <dsahern@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <yang.yang29@zte.com.cn>,
-        <he.peilin@zte.com.cn>, <liu.chun2@zte.com.cn>,
-        <jiang.xuexin@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
-        <kerneljasonxing@gmail.com>, <fan.yu9@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>, <xu.xin16@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0IHY2XSBuZXQvaXB2NDogYWRkIHRyYWNlcG9pbnQgZm9yIGljbXBfc2VuZA==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 43N9NbrR064067
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 66277E33.000/4VNxWm6shTz9yVJ
+MIME-Version: 1.0
+References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+ <20240418135412.14730-4-Jonathan.Cameron@huawei.com> <c13f7424-3a7f-4c3e-3e8d-81e9fcf0caf7@huawei.com>
+In-Reply-To: <c13f7424-3a7f-4c3e-3e8d-81e9fcf0caf7@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 23 Apr 2024 11:31:14 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gDJzCTkUP3i8H3pivrCHdU4-qVf3SVCvTF9hQyKJHtBQ@mail.gmail.com>
+Message-ID: <CAJZ5v0gDJzCTkUP3i8H3pivrCHdU4-qVf3SVCvTF9hQyKJHtBQ@mail.gmail.com>
+Subject: Re: [PATCH v7 03/16] ACPI: processor: Drop duplicated check on _STA
+ (enabled + present)
+To: Hanjun Guo <guohanjun@huawei.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Peter Zijlstra <peterz@infradead.org>, linux-pm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, x86@kernel.org, Russell King <linux@armlinux.org.uk>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, 
+	James Morse <james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, 
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, linuxarm@huawei.com, justin.he@arm.com, 
+	jianyong.wu@arm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Peilin He <he.peilin@zte.com.cn>
+On Tue, Apr 23, 2024 at 8:49=E2=80=AFAM Hanjun Guo <guohanjun@huawei.com> w=
+rote:
+>
+> On 2024/4/18 21:53, Jonathan Cameron wrote:
+> > The ACPI bus scan will only result in acpi_processor_add() being called
+> > if _STA has already been checked and the result is that the
+> > processor is enabled and present.  Hence drop this additional check.
+> >
+> > Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >
+> > ---
+> > v7: No change
+> > v6: New patch to drop this unnecessary code. Now I think we only
+> >      need to explicitly read STA to print a warning in the ARM64
+> >      arch_unregister_cpu() path where we want to know if the
+> >      present bit has been unset as well.
+> > ---
+> >   drivers/acpi/acpi_processor.c | 6 ------
+> >   1 file changed, 6 deletions(-)
+> >
+> > diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processo=
+r.c
+> > index 7fc924aeeed0..ba0a6f0ac841 100644
+> > --- a/drivers/acpi/acpi_processor.c
+> > +++ b/drivers/acpi/acpi_processor.c
+> > @@ -186,17 +186,11 @@ static void __init acpi_pcc_cpufreq_init(void) {}
+> >   #ifdef CONFIG_ACPI_HOTPLUG_CPU
+> >   static int acpi_processor_hotadd_init(struct acpi_processor *pr)
+> >   {
+> > -     unsigned long long sta;
+> > -     acpi_status status;
+> >       int ret;
+> >
+> >       if (invalid_phys_cpuid(pr->phys_id))
+> >               return -ENODEV;
+> >
+> > -     status =3D acpi_evaluate_integer(pr->handle, "_STA", NULL, &sta);
+> > -     if (ACPI_FAILURE(status) || !(sta & ACPI_STA_DEVICE_PRESENT))
+> > -             return -ENODEV;
+> > -
+> >       cpu_maps_update_begin();
+> >       cpus_write_lock();
+>
+> Since the status bits were checked before acpi_processor_add() being
+> called, do we need to remove the if (!acpi_device_is_enabled(device))
+> check in acpi_processor_add() as well?
 
-Introduce a tracepoint for icmp_send, which can help users to get more
-detail information conveniently when icmp abnormal events happen.
-
-1. Giving an usecase example:
-=============================
-When an application experiences packet loss due to an unreachable UDP
-destination port, the kernel will send an exception message through the
-icmp_send function. By adding a trace point for icmp_send, developers or
-system administrators can obtain detailed information about the UDP
-packet loss, including the type, code, source address, destination address,
-source port, and destination port. This facilitates the trouble-shooting
-of UDP packet loss issues especially for those network-service
-applications.
-
-2. Operation Instructions:
-==========================
-Switch to the tracing directory.
-        cd /sys/kernel/tracing
-Filter for destination port unreachable.
-        echo "type==3 && code==3" > events/icmp/icmp_send/filter
-Enable trace event.
-        echo 1 > events/icmp/icmp_send/enable
-
-3. Result View:
-================
- udp_client_erro-11370   [002] ...s.12   124.728002:
- icmp_send: icmp_send: type=3, code=3.
- From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=23
- skbaddr=00000000589b167a
-
-Change log
-==========
-v5->v6:
-Some fixes according to
-https://lore.kernel.org/all/20240413161319.GA853376@kernel.org/
-1.Resubmit patches based on the latest net-next code.
-
-v4->v5:
-Some fixes according to
-https://lore.kernel.org/all/CAL+tcoDeXXh+zcRk4PHnUk8ELnx=CE2pcCqs7sFm0y9aK-Eehg@mail.gmail.com/
-1.Adjust the position of trace_icmp_send() to before icmp_push_reply().
-
-v3->v4:
-Some fixes according to
-https://lore.kernel.org/all/CANn89i+EFEr7VHXNdOi59Ba_R1nFKSBJzBzkJFVgCTdXBx=YBg@mail.gmail.com/
-1.Add legality check for UDP header in SKB.
-2.Target this patch for net-next.
-
-v2->v3:
-Some fixes according to
-https://lore.kernel.org/all/20240319102549.7f7f6f53@gandalf.local.home/
-1. Change the tracking directory to/sys/kernel/tracking.
-2. Adjust the layout of the TP-STRUCT_entry parameter structure.
-
-v1->v2:
-Some fixes according to
-https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHuFQTJvJsv-nz1xPDw@mail.gmail.com/
-1. adjust the trace_icmp_send() to more protocols than UDP.
-2. move the calling of trace_icmp_send after sanity checks
-in __icmp_send().
-
-Signed-off-by: Peilin He <he.peilin@zte.com.cn>
-Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
-Cc: Yang Yang <yang.yang29@zte.com.cn>
-Cc: Liu Chun <liu.chun2@zte.com.cn>
-Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
-Signed-off-by: xu xin <xu.xin16@zte.com.cn>
----
- include/trace/events/icmp.h | 65 +++++++++++++++++++++++++++++++++++++
- net/ipv4/icmp.c             |  4 +++
- 2 files changed, 69 insertions(+)
- create mode 100644 include/trace/events/icmp.h
-
-diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
-new file mode 100644
-index 000000000000..7d5190f48a28
---- /dev/null
-+++ b/include/trace/events/icmp.h
-@@ -0,0 +1,65 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM icmp
-+
-+#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_ICMP_H
-+
-+#include <linux/icmp.h>
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(icmp_send,
-+
-+		TP_PROTO(const struct sk_buff *skb, int type, int code),
-+
-+		TP_ARGS(skb, type, code),
-+
-+		TP_STRUCT__entry(
-+			__field(const void *, skbaddr)
-+			__field(int, type)
-+			__field(int, code)
-+			__array(__u8, saddr, 4)
-+			__array(__u8, daddr, 4)
-+			__field(__u16, sport)
-+			__field(__u16, dport)
-+			__field(unsigned short, ulen)
-+		),
-+
-+		TP_fast_assign(
-+			struct iphdr *iph = ip_hdr(skb);
-+			int proto_4 = iph->protocol;
-+			__be32 *p32;
-+
-+			__entry->skbaddr = skb;
-+			__entry->type = type;
-+			__entry->code = code;
-+
-+			struct udphdr *uh = udp_hdr(skb);
-+			if (proto_4 != IPPROTO_UDP || (u8 *)uh < skb->head ||
-+				(u8 *)uh + sizeof(struct udphdr) > skb_tail_pointer(skb)) {
-+				__entry->sport = 0;
-+				__entry->dport = 0;
-+				__entry->ulen = 0;
-+			} else {
-+				__entry->sport = ntohs(uh->source);
-+				__entry->dport = ntohs(uh->dest);
-+				__entry->ulen = ntohs(uh->len);
-+			}
-+
-+			p32 = (__be32 *) __entry->saddr;
-+			*p32 = iph->saddr;
-+
-+			p32 = (__be32 *) __entry->daddr;
-+			*p32 = iph->daddr;
-+		),
-+
-+		TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
-+			__entry->type, __entry->code,
-+			__entry->saddr, __entry->sport, __entry->daddr,
-+			__entry->dport, __entry->ulen, __entry->skbaddr)
-+);
-+
-+#endif /* _TRACE_ICMP_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-\ No newline at end of file
-diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
-index 8cebb476b3ab..30b302492613 100644
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -92,6 +92,8 @@
- #include <net/inet_common.h>
- #include <net/ip_fib.h>
- #include <net/l3mdev.h>
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/icmp.h>
-
- /*
-  *	Build xmit assembly blocks
-@@ -762,6 +764,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
- 	if (!fl4.saddr)
- 		fl4.saddr = htonl(INADDR_DUMMY);
-
-+	trace_icmp_send(skb_in, type, code);
-+
- 	icmp_push_reply(sk, &icmp_param, &fl4, &ipc, &rt);
- ende:
- 	ip_rt_put(rt);
--- 
-2.17.1
+No, because its caller only checks the present bit.  The function
+itself checks the enabled bit.
