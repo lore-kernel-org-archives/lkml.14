@@ -1,96 +1,137 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F75947F7A
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 07:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BD246447;
+	Tue, 23 Apr 2024 07:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713858852; cv=none; b=I/ICfRXGpHKseCu0n0amSfKteFIhloeS8dzWQaNls6+2Taec4e4vijLpVzILZStRguAuzK726bHIbM1AF1P7UAaYQPrWKZ2kvX8nrxjEqz66JggfUGmvJLbIKNYzhbEEHbZbHjwvlmIH5cif082203S2YmgD3dvUZ3L/85zjPdM=
+	t=1713858900; cv=none; b=my6PwZ4Ux1+6BkeR9Sr8yNtmpDEtypHlLWN2sPQKu9WZ48+q6lU4rWtcPDrJ47VXVX34JRUp9WaWGjZCCteJqra/sl/+ska7JvZ63dxWoZjOQGnn78r+xYDLPqLcKZXhyekuAS92RBh8rarBAQRKGDJB/YMhCvqzdsXs9d2h/4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713858852; c=relaxed/simple;
-	bh=Bv4VRmVg5nOXDs0B4iKA24dkhwSR5MrL4cXlSX5YltE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ls5aMRX8qlGp7AfyzahPz1o2hVA7Ukelf8zZxuBEllt/OqAXG/cldUeT5f0oRjDZGYWVNcaP5WPrLF/P/MLngJ9vVGrnskLQtfEocoht+2Wn7yyWMTkWmmMfIAUTLxYpC0lqmERuiNTiwvqGoQnAhPDKE5HDRultQTIBP3an8Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qFDotcdy; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713858900; c=relaxed/simple;
+	bh=5UuB6CXi5ElqkfwREN1HfZ7c8FMEVX4JWVxxnH4Df7g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gnkEJuId4hlHx5qkrOPhhXG0uSDefURiZYob8JSMvmbKmXToVTzakPN3Gp3pcltlNoJz6DHfGdGkWk+q3K9WWazDuWQ6duZ3Z3ZYsQnJrAu61mRlC8FpFPG6F+Ys3GIlWFAiuNQf2RzqmQ9fjbRvRmL3+ILQvoxEnKv5ccrXDug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TeOHpGH6; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qFDotcdy"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dc6cbe1ac75so3937800276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 00:54:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TeOHpGH6"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e5b6e8f662so41525555ad.0;
+        Tue, 23 Apr 2024 00:54:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713858849; x=1714463649; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3Ne7SQgNtLYRiRuHgxnjris3mVjBkOuVjWua3h1qnz4=;
-        b=qFDotcdyQQS+F9coeFoMSHaUjL/EqLwdwvnxqoMLEjvMEe/KzVB19mlptD4ab9XHwN
-         iYPcChlAUlWvmkwDcpFwhDFwSGzYVzGmUn7COOG1dNVP90b0E1m9N2MFJxnyRwiXgiWE
-         gMhCs3y4SRxQZEa4d9sM25QjDe+VUt1hwRUch6elEuRYGtdBZE54nUf2q1bNHgbbxjUv
-         FkK1V78JUiaaElOWzlVqMWGQjf97R5N6CyraakNNVG/pk+Fe4U1mIAwb9p4SCgLh0bUC
-         KpgwTDoqxHTc2QPN9W2TVLqD9lazlsh14dDZdxzUUClR+hLlxcOTFwxCMnPU0L81D9sx
-         YwYg==
+        d=gmail.com; s=20230601; t=1713858898; x=1714463698; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=agMoA5f411JyDJvtS+yhT8fkSFdQl8o5GANrhQCjrVc=;
+        b=TeOHpGH6CG+LmUj0MZNdDx87COPEQOzSGJ2ZGqDAU99ExuUEUtQsGPxigvvgm0ajOR
+         qaQJMoGlGbUDBKRGqePnT4JSjlVHJtUBjUWQ8OtkKqWhE+8o9nyv6ORnUJQcCevpKSQi
+         5A5eS3/sMtfj4hEJXT5RUicPFxB1TAkiEbH6dr6jQ+9K3+FkLecYSA9Ap88xOkcN/NSZ
+         mOfOInSN5E9m838Wsq3LRaVUQd/PKTJt3ngBHH7+PbxTnFve8wgCnvevtDSJkjxemCAq
+         JVXa9PO/+W0T0wYY1F17y1l37+53nmuJgZEQzEa5voJi5xdTZF5EaJvwfOXfUuAkTJxf
+         UrTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713858849; x=1714463649;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3Ne7SQgNtLYRiRuHgxnjris3mVjBkOuVjWua3h1qnz4=;
-        b=okeynG1O4qbkOeD3M/mwMI2UYZuYJYVMId4xu9gwF1rUo0Z/MJo1DDeUEDOu6QPiz9
-         5JKaKgEDKCMbUSlCDv3JzOQCiE0EZ171g6FAemVu4ksUDe2vpNpJ1+6EwTI3yAPwXpKf
-         Iv8iR95ltgPn8BgLmwEwHWXn4UV8UJXVPmtyF3W9Qw8F5NKS5bzBVLEjcWNP7ETnQ9/c
-         cX7duuITu2lPOE0dhyZFJmVf8dM4yENJ8DumOhPl2wTHM28eTdGJjhzsaSgb6vj1moKk
-         19z/YfT/t/GCwHkWjPIIVuwjFdsK/z2f6N8BH8bYe87HhPtWSDaqBAeYC33oQS5b1pr7
-         iw3A==
-X-Forwarded-Encrypted: i=1; AJvYcCUouUPr+aEle0+r9GmY84GIxeYWvYnxOav5nB3w7zvUKT+3D5i0ou6/AuAreljl01NkTAWtkdZ9UivK/FnCNqfzmGIUsGzRzAjVsr8a
-X-Gm-Message-State: AOJu0YwimQhb0xo4N3EvonfkpOstWXRt8imlpjV1+brE4jAlK2Jl/HXI
-	/A1MeJ8Mpez0biWnQW7t4nGHs6HWdu9XDG7C4lm7ifOFueEg80qrQk/SakZXw3iJGorWFovStSs
-	6cWJHnIuPaA4paFb0vgb+jzNw4E66qUbAGh/2tA==
-X-Google-Smtp-Source: AGHT+IEL7KRfa1JAVKFRuIecyIm/Y5cjYNThFgxAiGj9BjTgdvZZnAdOh/UlIv9zVyBc8AmnYbwxxJdG74ezwMWJYps=
-X-Received: by 2002:a25:9346:0:b0:dcc:2671:7819 with SMTP id
- g6-20020a259346000000b00dcc26717819mr1822061ybo.25.1713858849646; Tue, 23 Apr
- 2024 00:54:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713858898; x=1714463698;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=agMoA5f411JyDJvtS+yhT8fkSFdQl8o5GANrhQCjrVc=;
+        b=wRk6KigQi3+VO5dPmtLKlcoGamacYANlm1TWBy6LTqtkcmSm4vrwedZLHyfJEM5WN0
+         IyLxMdyuVND5z6TA0Wt+pMiSodwK1Eoc4FMRcRWL+PCwq3Da0nLMM70iBqRvW/Y1Q7Lw
+         BrefbRhSp52HEGatDy8VjG3zg0A7CY/evGDa4G9d23qxlIYoTJA6K7vY0FJk7ueDrhOX
+         N9c0wAwML0oXEBk74m/y6rwyS9m9ij0zkWDKUpH5pvLaW4n93ST0iPY3xOrdRpmhEV73
+         cRDn+s2EYThv3a9MhZfCF/OZeI3/vyPxBn4CJ1qHwLLGlh1tAmGpiCgGsMr3zkoET1C6
+         0W6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVjoLH1WnKxzEezzy+dNkm+FksvbuDoX4fzPP58qZAH8IgUkUTaOj0En8UrRviqgV9q0gbU7VCpJbwjuAKxuvzCp3EzQ+C7LJNB533yAETQ9btmPcOixGOyMciiyE8woqs2A2Sgh6zOyQ==
+X-Gm-Message-State: AOJu0YygI6RWch2kCyzJdEa7kvTannIUWiFUYyp3G/txWoIjs8cNLAqc
+	OseJSebqBdq1kvyzNLHNh/KPgyVsS/PIOB66vVErfAPnJZ90itQl
+X-Google-Smtp-Source: AGHT+IFTpcIANOjtuEbyvgWkE9+dlhgH0w30ThWifG3zdGe8uwJhivJKKtXveCWmEHopHe1aVhohUg==
+X-Received: by 2002:a17:902:d58c:b0:1e4:6938:6fe3 with SMTP id k12-20020a170902d58c00b001e469386fe3mr15510880plh.58.1713858897936;
+        Tue, 23 Apr 2024 00:54:57 -0700 (PDT)
+Received: from [10.66.66.2] (ec2-3-111-32-5.ap-south-1.compute.amazonaws.com. [3.111.32.5])
+        by smtp.gmail.com with ESMTPSA id w17-20020a1709029a9100b001e2a4663179sm9382486plp.258.2024.04.23.00.54.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 00:54:57 -0700 (PDT)
+Message-ID: <a97420fc-1fc3-4e85-9539-e1a74c711be0@gmail.com>
+Date: Tue, 23 Apr 2024 13:24:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240423093354.3d060378@canb.auug.org.au>
-In-Reply-To: <20240423093354.3d060378@canb.auug.org.au>
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Date: Tue, 23 Apr 2024 09:53:58 +0200
-Message-ID: <CACMJSeu+fUdYoxue-q=DxFdvtopgshQY+i2kpZMP-RGOTqMu_g@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the gpio-brgl-fixes tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Prathamesh Shete <pshete@nvidia.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Betterbird (Linux)
+Subject: Re: [PATCH v3] dt-bindings: usb: uhci: convert to dt schema
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240422122125.455781-1-sheharyaar48@gmail.com>
+ <7a43b05c-ca2e-4fa6-b1f9-cb1a12778da7@kernel.org>
+Content-Language: en-US
+From: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+In-Reply-To: <7a43b05c-ca2e-4fa6-b1f9-cb1a12778da7@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 23 Apr 2024 at 01:34, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the gpio-brgl-fixes tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->
-> drivers/gpio/gpio-tegra186.c: In function 'tegra186_gpio_is_accessible':
-> drivers/gpio/gpio-tegra186.c:189:14: error: 'or' of unmatched not-equal tests is always 1 [-Werror]
->   189 |              (value & TEGRA186_GPIO_WRITE_ACCESS)))
->       |              ^
-> drivers/gpio/gpio-tegra186.c:189:14: error: 'or' of unmatched not-equal tests is always 1 [-Werror]
-> cc1: all warnings being treated as errors
->
-> Caused by commit
->
->   62326f7cefc2 ("gpio: tegra186: Fix tegra186_gpio_is_accessible() check")
->
-> I have used the gpio-brgl-fixes tree from next-20240422 for today.
->
-> --
-> Cheers,
-> Stephen Rothwell
+On 4/23/24 12:24 PM, Krzysztof Kozlowski wrote:
+> On 22/04/2024 14:21, Mohammad Shehar Yaar Tausif wrote:
+>> Convert USB UHCI bindings to DT schema. Documenting aspeed compatibles
+>> and missing properties. Adding aspeed/generic-uhci example and fix previous
+>> incorrect example.
+>>
+>> Signed-off-by: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+> 
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +
+>> +allOf:
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            const: generic-uhci
+>> +    then:
+>> +      $ref: usb-hcd.yaml
+> 
+> Nothing improved here.
 
-I will back this out of my branch, please resend a fixed version.
+Sorry, I could not understand this, please guide me about the correction 
+required here.
+I added $ref inside the if-then block because it was raising errors when 
+tested against
+dts files that used "platform-uhci" as the compatible. Putting it above 
+the if block did
+not work.
 
-Bart
+When I ref the usb-hcd.yaml, it also includes usb.yaml which requires 
+the nodename to start with usb*,
+but the dtsi that use the deprecated compatible 
+(arch/arm/boot/dts/vt8500/wm8505.dtsi) have their nodename with
+uhci*, which causes the tests to fail.
+
+>> +      required:
+>> +        - clocks
+> 
+> And this was not tested.
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    uhci@d8007b00 {
+>> +        compatible = "platform-uhci";
+> 
+> What happened here? This is deprecated!
+
+The original example has the nodename as uhci* which causes the schema 
+to fail as mentioned earlier.
+Should I just remove the example or should I rename the node here and 
+add clock field to the original example ?
+
+Best Regards,
+Shehar
