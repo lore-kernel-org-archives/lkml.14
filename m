@@ -1,200 +1,252 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2046.outbound.protection.outlook.com [40.107.96.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDAF413D508
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 16:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713891522; cv=none; b=s50OcOP1hGoFoe/zn2S3yKfCI7CyUTeEUWbXMkdVyWKL2Bt6KxKxrFfY+yGTCLdGItUdVZVLZhTDrUqbgCFNOc0894Xb66xx29VEohpcOoQZoq6qlTb4McX3PiarLfSM1S92dOD7pHphPh2IAtZ48OLGqhbEndwhCedzic549Zs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713891522; c=relaxed/simple;
-	bh=2tNJSVUq0ySb+a8Cs/alRrm2UaBrWIph7OdIeq6GlGM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hyB9b0p7Uxrc4YhPnR5RiliR8mj8PsBSul4oszy+rSC+TxxI82fwfz59oC1yh23jj2UtY8mdBDIzysKN9ox0e1AyrsdLNkHnsGVzHLVDPRt66sydzHiQKISRXig51MAg5IQ86dAdGluiQAwWPQTfcq/iOoPENtKH8+YnQpw5QIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OgX0/Nc1; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C719D13BC33;
+	Tue, 23 Apr 2024 16:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713891584; cv=fail; b=P0MiM0DmJPNeJ+2ShOEm9wVSkM6pItqKEkNxOQGaTl06n70bm7W+EsqYCTFHebbcNtjHMrUpQR50NlzexHJRAqgRHWQUwvARxNgRlMjHImfz5cOfET6cZuqDvxPFBHPWvakipeccVyccDeJMg2i4EyjpZOXpQIvBcP8ZGwQ+cus=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713891584; c=relaxed/simple;
+	bh=3heiUpBJrGSdVUOM9m/duBlINpfoNmwvQ0O3Uq5srmk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=MJLDmiyZjaYKqQs7udABOayShHvQcj7oVp2YVoPTKU6KODvaSriVOSSv0A5sZpdIbW12ZHKYW1RLbNzvEScBHE/t2I3PiFEPMa4qLLnUWP/L7IaB3C9IzG5+CUkZ3uP+MAtTyxQi/H7v6Sx2M0YN4aZirDEhp2v8MYmKIh6Uay0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cpSQZQMR; arc=fail smtp.client-ip=40.107.96.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OgX0/Nc1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713891521; x=1745427521;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=2tNJSVUq0ySb+a8Cs/alRrm2UaBrWIph7OdIeq6GlGM=;
-  b=OgX0/Nc1PRB1Su30557n5NGJYtfQYXpK+4d22hJv0RnEIexJvTn6amLA
-   RJcIvIUjBJ0fmPH1lPeZaQVxrhnF7uGloDqs0iKlSPMxkg5a1XYvqCmsY
-   Z5WNcs6fARvYWqsSuE96EsDEXkFOMnUbZlFMn9j2iDopTlAoOjJDQyhog
-   RaDy5WgVQWR469FrcckR1zHBWaT9UwUVh8arLM5/0kE7DVEiOoJQYa1LO
-   zg+gKJKUYpmdGBEc8y8PxcJRj8qnRzOxlom+5L9u5s+RyWWC9vRWwHx25
-   WwEMd10h4pDU11gx/K7igAPiUlqHUnXgubt1AB0xqasQ89huHmmUsxAMa
-   Q==;
-X-CSE-ConnectionGUID: 8l9zO+EBQESUYkSt00XnMQ==
-X-CSE-MsgGUID: mGKV6cUPTcCctFnLBGxj5Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="27006437"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="27006437"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 09:58:40 -0700
-X-CSE-ConnectionGUID: cRC6DG87Qda2oVx84jXFfg==
-X-CSE-MsgGUID: i+awX6hsR3SciiRuh3OJOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24299562"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 23 Apr 2024 09:58:39 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rzJTX-0000Mq-2J;
-	Tue, 23 Apr 2024 16:58:35 +0000
-Date: Wed, 24 Apr 2024 00:57:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yang Wang <kevinyang.wang@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Hawking Zhang <Hawking.Zhang@amd.com>
-Subject: ERROR: modpost: "_restgpr1_16"
- [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
-Message-ID: <202404240012.Dsnund3n-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cpSQZQMR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kg/dRjEk8XL0zdtrXvLmGDGNlFgS4lzUOpBxN9pIswKMeISCMrefXyQ5MMp3HqyyeWw82W2kLLC+GKPWF5zDf9nSm57YLE9PpGdfR84J0OgT1KciQfdaN3YiUpb8FISk7wYS85e4FoRzKD3jGLz3KTwolVgIrgF3zOmaFeY8U+w0CT19JekIjUR2+S/PQrIAuo4oFHwKnGYVjlRTVKYFJwyegjSD9GMh76WVBxdO3YNK4KO2m6r6Lziyd126SviWqVBF2oTK8rROGiJ0oWtILjNUFuWO3RgMvYavVybepAfLB7HkyV9Njw2JihT3T3JIgxpdTHSzCC9ELXQ5MkpnCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+IpfIu7HRbtHwvn4/SJv0MBQMSw8rUNvS4Ta2UuRtD8=;
+ b=nelugMzGM/nKggN2BR7qAH8kJXZTPGTtTaZso5Uc5fcXYtqVbFif4WdBBsj/tJzYgCxai+XwDsZ/EeqVtdfNP9TI1uepEAs0aCxkmSj4GFdlESt5jL+daV+TQgmewaIT8nkX6mdH9RBI/gtfVzUHuRr0Dw9lwzxaMBt5LnF1auWUgHdJ4yjS0opKMSKD4R7EuOQPRc6+DchqWR8ofllRQWK9tw9+Mjzo4zT+YynY23ZyNxxXLxZxWaY1XbEvTl1K8SL0tJ3i3ZrWEtCPg/Hf6O1pj3Y18yPeCTvQ0i3OET2z3MjBTAWSC8jmY81t4WqE4vxX0ieeWumctGrLkTl3Ww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+IpfIu7HRbtHwvn4/SJv0MBQMSw8rUNvS4Ta2UuRtD8=;
+ b=cpSQZQMRKIIAEH0iAvbsRvO78fKaS6AKeYP+dOpbJNhL4n/Xsmb+IsQQEwLIFUXotYMxU4Zsd01uZN3L1Hhs913pYxVJQzJSoYl0A9w0+ruzEM962SfzBBwcUQbDXlG88DJ8AqQxpqFcoOt5TyX6EFxD528c5Fyz5eAixGDdrn8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SN7PR12MB8102.namprd12.prod.outlook.com (2603:10b6:806:359::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22; Tue, 23 Apr
+ 2024 16:59:39 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::d9b0:364f:335d:bb5b]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::d9b0:364f:335d:bb5b%4]) with mapi id 15.20.7472.044; Tue, 23 Apr 2024
+ 16:59:39 +0000
+Message-ID: <7197b2ce-f815-48a1-a78e-9e139de796b7@amd.com>
+Date: Tue, 23 Apr 2024 11:59:36 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Esther Shimanovich <eshimanovich@chromium.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
+References: <20240119102258.GE2543524@black.fi.intel.com>
+ <03926c6c-43dc-4ec4-b5a0-eae57c17f507@amd.com>
+ <20240123061820.GL2543524@black.fi.intel.com>
+ <CA+Y6NJFMDcB7NV49r2WxFzcfgarRiWsWO0rEPwz43PKDiXk61g@mail.gmail.com>
+ <CA+Y6NJGz6f8hE4kRDUTGgCj+jddUyHeD_8ocFBkARr7w90jmBw@mail.gmail.com>
+ <20240416050353.GI112498@black.fi.intel.com>
+ <CA+Y6NJF6+s5zUZeaWtagpMt8Qu0a1oE+3re3c6EsppH+ZsuMRQ@mail.gmail.com>
+ <20240419044945.GR112498@black.fi.intel.com>
+ <CA+Y6NJEpWpfPqHO6=Z1XFCXZDUq1+g6EFryB+Urq1=h0PhT+fg@mail.gmail.com>
+ <7d68a112-0f48-46bf-9f6d-d99b88828761@amd.com>
+ <20240423053312.GY112498@black.fi.intel.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20240423053312.GY112498@black.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1P222CA0160.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:3c3::6) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SN7PR12MB8102:EE_
+X-MS-Office365-Filtering-Correlation-Id: 670f0e12-8aea-428f-29c5-08dc63b6c396
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eWV2ZW5oa3ZUbm9WZHVHRTcxZEJ1KzFNczF3SnV2UGVkVFFEUXNnR3d4am5O?=
+ =?utf-8?B?dVR3WGlHSzFDeVgxOURzcEZnUHJCU1JwZk1sSDZibG9XWFpEeUljTnVNeFZV?=
+ =?utf-8?B?TVhTVHl6TFVUMnBIZkJQcjl1cm05V3ArU2tPdVAvdUN0OVNsWHNPRVVjVFVi?=
+ =?utf-8?B?M2JUMTZoMXhWUDdiTU96NDF2K0xwS25heFFEQi9PaDBtVEFRdVI1K0UzWXJY?=
+ =?utf-8?B?K0w4bnB5TEJjN1JLZEpLM3hwbFlmSXYyb3dFSDRpc1hiSCtCRnRseXFteUx3?=
+ =?utf-8?B?T3ZNem5mWWF4QkJLWXV2SEErdGtaVlIvamszT0JaczFPSkxGa1BXOUhobXF2?=
+ =?utf-8?B?RThsank3M1pOMlYzR251UndlWkNoT21IT1Z0V0s4VGJaSXZwSXNyN1RUc2g2?=
+ =?utf-8?B?UGNJSUJLbkJUS1o3TFdaeTdwM3I3aDlNWkVMK0s3QUZpNXZhR0tMMUhKbVVl?=
+ =?utf-8?B?M2d0TkZOeGk3Z251cGtjbzZCQjlDSThsSXBkdHRXMkVLZkdzSUN3d1p6R1dY?=
+ =?utf-8?B?V0dIbDlLdUVrWTBoQ2ZGUkhFYUZRMVhWcWxMZW5DbTUzQ3Fnc05keWZIKzFu?=
+ =?utf-8?B?SVJZTnRmbFh5Qnk4ZU5SYzVNWW5BYnRYK3VrVTlvNTBSL2Z6aDZFRFpZRTlm?=
+ =?utf-8?B?SDlzZDlyWWR3TzFzOE4zYjVXbnpucHVOQW43MVczU0hZTWxkcm53UTZtZktm?=
+ =?utf-8?B?N0RUSlhnVm42aFB1ZTd5MXZ5Um9NZUhpc3kvV2hROWhjZldFbzNKWlhGT25s?=
+ =?utf-8?B?aXBpejNsZW5HMURvdjNSb1lIMDBrUkRXSEpWS3NrK244MlhjMUtTRWpGOXlL?=
+ =?utf-8?B?MTE2WFcyaHBqTDBQS1BvUnpHRHkwK1NVN081bS9CaHNwdG1pZ2dPYW82R2dD?=
+ =?utf-8?B?RlJ3aGxpN2FSSTNacUhLRzlFZUE5NUxaRi9KeG9QL1Q1aEFGV3BlSXVpR09P?=
+ =?utf-8?B?ZUNUZjVOUlVNTGs0VURSbVFxRFhzZUpSVG82T3I5TnJvZDRnSlJubzVZU2FZ?=
+ =?utf-8?B?eG1DbUw1aUNUV0ltdjVOWlNoZktpSGV1ajZZTnc2VStRNGFNQjk0WHdyWmVs?=
+ =?utf-8?B?Zkhjd1hucDNYTCtMUEd0SmxOZ0tveVJ2ZFBHblZXd00vVXhIbEdGeU9udmcv?=
+ =?utf-8?B?WVFVbEJIZnhJWE5vMHVsZG95eTc2Y3Bmbm9RNUtRYTVjdk9zNjFhaGR3aHFu?=
+ =?utf-8?B?bnBISUZONHJZWXdiUVp1OWZuWndvSUFpN1FpUWZSL1NqSEZ4SXg1NDFkRUdy?=
+ =?utf-8?B?REdjbE9yZy9PalpWUFNUYXpjd01RZVMvUU40TEFjOWwvbGR3czhyN2N6MTcr?=
+ =?utf-8?B?cjloV1JkN0xISzRSNi95b3p4MDJhcEwxaGM5WUpFTE5uR2o1U01pSE5SVy9w?=
+ =?utf-8?B?TE5tR2hFVS9XalM4V2hHd0tIaDJPcEtIUUU4WkVtbGJJWll6ZE1CdE96NjVC?=
+ =?utf-8?B?Ri9NOWV1Wml2MHBlNXFmU0ExWnNobHkrSGN4dlg2WThJdGU4WVpjQnZDT0E2?=
+ =?utf-8?B?Rk93dW5PRkQ0MzF2V0RNaXIzbkpKZk0yVzFxbWV6ZnJHZWdiK1llN3pvQmpO?=
+ =?utf-8?B?MnNGRTllanpyQmVwbnd4NzMxRzRJRGwzRXNWTTBzaDBKVTRCTzRZTnpwNnJj?=
+ =?utf-8?B?NUM2NFhFeHBQZVVPZU9GSEp4dXZ2ZGdRL2xOYXhwTjdPZXBYN3loR2hNdzhS?=
+ =?utf-8?B?SzdXMmFlUUtsdkFuczNSdFVrb0NpSEE0YlhMMWtpcFE0b1VKN3pzRWpnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Wk5nc2kzT1h2Y0JTQlIwZ0tnR2FXQnBWOGlRY052dHdyWTYyenk5ZU5kbllN?=
+ =?utf-8?B?d2hYcmdtQS90WktDT0k0RU96aTA1NDJ0Y2pQMmRtYk8wK0JIVzZzb3A1VFBh?=
+ =?utf-8?B?dEo3VzkybGFLZFNTTmpycTBZU3doMktoT0VQdk9NMlNybUpaeUFhY2xYQTJN?=
+ =?utf-8?B?VUxFQUZEVEtsS3gvOUZxVXJlSUNIbzNTdnpubFZFWm1tRmtJYzdOelBFRVFw?=
+ =?utf-8?B?L2RKL3RBSmNCUm16OGJtY2lVa1RZMDZ2ejNwL2lxbTlwbG5JMUFlNE11OWRy?=
+ =?utf-8?B?cWIrWmlVZEtrMUdnYTJONjhKa2M4b3o4aDhBTW01MVZHUlZ0N0k4VGNmZ3c4?=
+ =?utf-8?B?Qm91NHVIT2ZYdGxXdXhvSTcyaGlLWFFyeGtTYmN2emFzWHhYTC81cklWSDJL?=
+ =?utf-8?B?S2Rhd3VUT3IwYzJHL2tCbjVmZno5TC8xZk1Ddi9jN1FiUDVFblhzdzRNa2k1?=
+ =?utf-8?B?YUFBcGtiazU5MjZVOHpPNmdBZjY2b0RoMDV2cE1zSWMzV3krRy9wVXJvUUtj?=
+ =?utf-8?B?L2E2U3NTRGdKdUVpazNHaTRxUENpUiszdU9mUmpsNDc0L3YwUm13ZTZVN0Y4?=
+ =?utf-8?B?WGIxaG0wQmRESTQwQWIvblNvaXVnaHQrQytBTFNEZSthNGxJUXNXajI3bjR2?=
+ =?utf-8?B?TDRtRUh1WGxZbHVBQjdHTnV1RVZFbnhGbVNiejk1Z2hDaXdPMkRUbUptS0sw?=
+ =?utf-8?B?Y3pEMXdrWnhEa2Y2ZW1kRkFGUlZoZkQybTNZVHQ0TXdvdHhPUWFOYkxqNkpp?=
+ =?utf-8?B?MFJBcnVmTmEyeFBCcVVJVVlmL00vdngyanQxNzFaZ3lIQVpGTHJ3bnplbDlR?=
+ =?utf-8?B?SEdQQUNWNkJSNlg2aUlmeGRMdU10dTRXZTludlRLVmx3bWlDcWM2cytHeHkv?=
+ =?utf-8?B?aWQ0U0tVNnQ5dkZ1S0RNUkpVMkpMMEEyVDBtWmFIcTFoOWxpWGl6YkxDT0U3?=
+ =?utf-8?B?SXNCMlJqNXM3QlFWMWI5QlExL2tFYU9EamYrdG14Q0ZnUXB4NFFraU0rb3Vh?=
+ =?utf-8?B?ZXdURE4rTXdPQW85ODhOZXVGVDU1MndjNkRTQkRMZ1UrbU1XZ1FVeHVVczZi?=
+ =?utf-8?B?MFhFYzgwRU15UC9MYmZrWHp2cDRnTXNXREZGZU5UMWs4czd5Vy9jcG1WVlFN?=
+ =?utf-8?B?MFNqRFVKbWk5UDJ0bFV2amRRYlUxQ2l6b2ZONlQ3VldHVDk5cTh6eDlqWDAx?=
+ =?utf-8?B?d3h1dFVud0J5T25zRW43YjI3bHhnNUVaOGpDTTNRMWFGOS9FYjVQay95S3NT?=
+ =?utf-8?B?TS9oU0c4MzlZeGhhVXYwU2drYnNqeHUrT01aTVJ6MFFiUzlzeXlMRHlZcDdp?=
+ =?utf-8?B?RG9iWDdIY1FKaWF4VTZicnQwTy9EenlEQ2FqRCtiUkdZNHpIWTFYQTJocGhV?=
+ =?utf-8?B?R3Zha3E1cUprTDFUTmpzdGl0V3hua0RIdGF2d0p5SXVMRlpOMDBqNTdXYzR6?=
+ =?utf-8?B?azZXL2pNbWg3R3E1Z0VTS0g1QVdoRTh6WTJIQjBwTzl5bjcyeEowQ1J0S2ow?=
+ =?utf-8?B?VzMyeFhiVlg1U2JpbmVkdFdBeW52SUh2amc3NnRhb1NXdC9nVjZjQkxSbCtk?=
+ =?utf-8?B?WmMwUEd0WEUxa2l2UTdQQ0dXTVhWbUhmaDc3cktYVmFxUzF2bnMvakNDVmtK?=
+ =?utf-8?B?MWk5RUdISlFnczViK1IvbjNMMlIxcjdDOFlYL1pwS1ZqYzlHMVBobUxxWjlr?=
+ =?utf-8?B?blJraXdXbkE4S2RwK01ZK2JXazRrcm4vYWpWRU9oUHlKdTZROVZOU042cXlq?=
+ =?utf-8?B?cWpNUVVlUHhZYTNWckxGMU5IUm5SY3BZWWpPUXozMzgyZ0NURkJqekhKbTJT?=
+ =?utf-8?B?Z0ZPVDNCZEZGTlRyMVZaSWE1M1dLbXRzVFNJUTI0V2hHVzBEMm1hdURYcHlW?=
+ =?utf-8?B?LzhiTnNnblFGUkM1QlFPR3ZaQ2RUUXZIYzBTSUE5R0Z6bTZhdEZYcmFEMlo5?=
+ =?utf-8?B?Ky9qYWZjZkJFbTgxaWthTHBZT2NuR25YQXV1eFoxOFp3eWw4MmFhaHNFVkVn?=
+ =?utf-8?B?RE81dVdlZFNiV0FHbTNnRmRHUExydEFzMFQrZmtiRlBxQmNLL05RSDU2cVZp?=
+ =?utf-8?B?VHoxWDNHUHRQMmdxWkl4NktsejlhSVlmWTFFNVJkNTRVRFBrTlgzbFpwZWxT?=
+ =?utf-8?Q?P/cNWUO38YCrsFIb6gkbg7038?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 670f0e12-8aea-428f-29c5-08dc63b6c396
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 16:59:39.7826
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Dsln2HEwKomur53jnc7TmxdhF7ZoAf/drc1NmCLz/E4KhUHE/P8rFInXoVewr/Uc1arpelo27IYAO+JTIfYksQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8102
 
-Hi Yang,
+On 4/23/2024 00:33, Mika Westerberg wrote:
+> On Mon, Apr 22, 2024 at 02:21:18PM -0500, Mario Limonciello wrote:
+>> On 4/22/2024 14:17, Esther Shimanovich wrote:
+>>> Thanks for the explanation! I still don't fully understand how that
+>>> would work for my use case.
+>>>
+>>> Perhaps it would be better for me to describe the case I am trying to
+>>> protect against.
+>>>
+>>> To rehash, this quirk was written for devices with discrete
+>>> Thunderbolt controllers.
+>>>
+>>> For example,
+>>> CometLake_CPU -> AlpineRidge_Chip -> USB-C Port
+>>> This device has the ExternalFacingPort property in ACPI.
+>>> My quirk relabels the Alpine Ridge chip as "fixed" and
+>>> external-facing, so that devices attached to the USB-C port could be
+>>> labeled as "removable"
+>>>
+>>> Let's say we have a TigerLake CPU, which has integrated
+>>> Thunderbolt/USB4 capabilities:
+>>>
+>>> TigerLake_ThunderboltCPU -> USB-C Port
+>>> This device also has the ExternalFacingPort property in ACPI and lacks
+>>> the usb4-host-interface property in the ACPI.
+>>>
+>>> My worry is that someone could take an Alpine Ridge Chip Thunderbolt
+>>> Dock and attach it to the TigerLake CPU
+>>>
+>>> TigerLake_ThunderboltCPU -> USB-C Port -> AlpineRidge_Dock
+>>>
+>>> If that were to happen, this quirk would incorrectly label the Alpine
+>>> Ridge Dock as "fixed" instead of "removable".
+>>>
+>>> My thinking was that we could prevent this scenario from occurring if
+>>> we filtered this quirk not to apply on CPU's like Tiger Lake, with
+>>> integrated Thunderbolt/USB4 capabilities.
+>>>
+>>> ExternalFacingPort is found both on the Comet Lake ACPI and also on
+>>> the Tiger Lake ACPI. So I can't use that to distinguish between CPUs
+>>> which don't have integrated Thunderbolt, like Comet Lake, and CPUs
+>>> with integrated Thunderbolt, like Tiger Lake.
+>>>
+>>> I am looking for something that can tell me if the device's Root Port
+>>> has the Thunderbolt controller upstream to it or not.
+>>> Is there anything like that?
+>>> Or perhaps should I add a check which compares the name of the
+>>> device's CPU with a list of CPUs that this quirk can be applied to?
+>>> Or is there some way I can identify the Thunderbolt controller, then
+>>> determine if it's upstream or downstream from the root port?
+>>> Or are Alpine Ridge docks not something to worry about at all?
+>>
+>> My thought was once you have a device as untrusted, everything else
+>> connected to it should "also" be untrusted.
+> 
+> I think what you are looking for is that anything behind a PCIe tunnel
+> should not have this applied. IIRC the AMD GPU or some code there were
+> going to add identification of "virtual" links to the bandwidth
+> calculation functionality.
+> 
+> @Mario, do you remember if this was done already and if that could maybe
+> be re-used here?
 
-First bad commit (maybe != root cause):
+Yeah there was a series that I worked on a few spins a while back 
+specifically in the context of eGPUs to identify virtual links and take 
+them out of bandwidth calculations.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   71b1543c83d65af8215d7558d70fc2ecbee77dcf
-commit: 04c4fcd2630d400959f791a598070dab9d2133cd drm/amdgpu: add amdgpu ras aca query interface
-date:   3 months ago
-config: powerpc64-randconfig-002-20230922 (https://download.01.org/0day-ci/archive/20240424/202404240012.Dsnund3n-lkp@intel.com/config)
-compiler: powerpc64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240424/202404240012.Dsnund3n-lkp@intel.com/reproduce)
+It didn't get merged, I recall it got stalled on various feedback and I 
+didn't dust it off because the series also did prompt discussions about 
+the reasoning that amdgpu was doing this in the first place.  It turned 
+out to be a bad assumption in the code and I instead made a change to 
+amdgpu to not look at the whole topology but just the link partner 
+(466a7d115326ece682c2b60d1c77d1d0b9010b4f if anyone is curious).
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404240012.Dsnund3n-lkp@intel.com/
+> 
+> The other way I think is something like this:
+> 
+>    - If it does not have "usb4-host-interface" property (or behind a port
+>      that has that). These are all tunneled (e.g virtual).
+> 
+>    - It is directly connected to a PCIe root port with
+>      "ExternalFacingPort" and it has sibling device that is "Thunderbolt
+>      NHI". This is because you can only have "NHI" on a host router
+>      according to the USB4 spec.
+> 
+> I may be forgetting something though.
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/kunit/kunit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/kunit/kunit-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/kunit/kunit-example-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/math/prime_numbers.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/irqchip/irq-meson-gpio.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/phy/broadcom/phy-bcm-ns-usb2.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pinctrl/pinctrl-mcp23s08_i2c.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pinctrl/pinctrl-mcp23s08.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pinctrl/meson/pinctrl-meson.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pwm/pwm-intel-lgm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pwm/pwm-visconti.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pci-host-generic.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-mediatek-gen3.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-apple.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/pci-stub.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/soc/ixp4xx/ixp4xx-npe.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/soc/qcom/spm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pmdomain/amlogic/meson-gx-pwrc-vpu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/tps6286x-regulator.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/serial/8250/8250_base.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/n_hdlc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/goldfish.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/agp/uninorth-agp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/ttyprintk.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/hw_random/omap-rng.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_kunit_helpers.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_buddy_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_cmdline_parser_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_connector_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_damage_helper_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_dp_mst_helper_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_exec_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_format_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_framebuffer_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_gem_shmem_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_managed_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_mm_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_modes_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_plane_helper_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_probe_helper_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_rect_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/lontium-lt9611.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/lontium-lt9611uxc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/sil-sii8620.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/sii9234.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tiny/cirrus.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/drm_panel_orientation_quirks.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-ac97.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-slimbus.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/misc/fastrpc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/misc/open-dice.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/arizona.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/timberdale.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/ssbi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/qcom-pm8008.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firewire/firewire-uapi-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/touchscreen/cyttsp_i2c_common.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/vivaldi-fmap.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/tests/input_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/rtc/lib_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-ccgx-ucsi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-ali1563.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-qup.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/dvb-frontends/mb86a16.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/common/videobuf2/videobuf2-dvb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/pci/ttpci/budget-core.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/pci/saa7134/saa7134-empress.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/pci/saa7134/saa7134-alsa.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/watchdog/twl4030_wdt.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/leds/blink/leds-bcm63138.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/fsl_imx8_ddr_perf.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/marvell_cn10k_ddr_pmu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/arm_cspmu/arm_cspmu_module.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/cxl_pmu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/nvmem/nvmem-apple-efuses.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/nvmem/nvmem_brcm_nvram.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/counter/ftm-quaddec.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/mr75203.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/greybus/greybus.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/core/snd-pcm-dmaengine.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/soc-topology-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/codecs/snd-soc-ab8500-codec.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/codecs/snd-soc-sigmadsp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/codecs/snd-soc-wm-adsp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/amd/snd-acp-config.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/fsl/imx-pcm-dma.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-intel-atom.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-intel-hda-common.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-pci-intel-tng.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-pci-intel-skl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-pci-intel-apl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-pci-intel-cnl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-pci-intel-icl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-pci-intel-tgl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-pci-intel-mtl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-pci-intel-lnl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/snd-sof-utils.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/snd-sof-pci.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/xilinx/snd-soc-xlnx-formatter-pcm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in sound/ac97_bus.o
->> ERROR: modpost: "_restgpr1_16" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
-ERROR: modpost: "_savegpr1_27" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
->> ERROR: modpost: "_restfpr_16" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
->> ERROR: modpost: "_savefpr_29" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
->> ERROR: modpost: "_savefpr_21" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
->> ERROR: modpost: "_savefpr_25" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
->> ERROR: modpost: "_restfpr_21" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
->> ERROR: modpost: "_savegpr1_15" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
->> ERROR: modpost: "_restfpr_29" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
->> ERROR: modpost: "_savefpr_16" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
-WARNING: modpost: suppressed 56 unresolved symbol warnings because there were too many)
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
