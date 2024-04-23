@@ -1,99 +1,261 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB3C136E1A
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 13:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544A413790B;
+	Tue, 23 Apr 2024 13:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713880733; cv=none; b=HP3xGLxp+jv/vASWhxv3q1viADLlgDB/47qZOBbb5mIWmnWHNYTVqIyDGeOBp8WJFO3W+OTniJ2dUeiFnqBwDnWjM1JvHC6q3LX+0d9bF564M3HfidSC7gbQYhq/vcE0GNY9V8YHsGN41sXoXuyAa3+AkvUJeQCPjkw/mFH8/cM=
+	t=1713880735; cv=none; b=tQszpSdyQ3DBmo8q+M5dDLsPoq2SOy61rFvqibttxOo4x8+kTsMdcRdv6m9nndZM4BEby4YA+/5m8W8QZnneVr76DyjMRIe3yzmasVeqJNMAk0xIbpYIixqMU2kRBHDBwcSUZH/5+fdf4lXJZHGkVVrH45uolO4nJXRvEx/p8N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713880733; c=relaxed/simple;
-	bh=dkyhFZxSFK/ufXtmRabwl0V5jznUX4WTx+N7+111Dbk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jnun65evSZRdSfw0zFZFMBmptOoLmsZdltnjhyNa46YY7yHXZ6k8w9TPl5aMTN+7hjdIpZ8kf8Fc8aFF7Qk7reyNh+nkWNoHeWcVbtd78JYYwruQZHkOhkWTRGox4CskghKKMxH1ISm1P9dk97qdopj//HIhYoxSZdmo8wM31Ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=PPABboEJ; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1713880735; c=relaxed/simple;
+	bh=NmhuzlmNypIrcR1nFCJLZ0OUcLV2LaL6YNQcG9vQrhg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Pcq55QAAkC30LKgW4CfI2GKYnDPvTDO0Pk48/6uWYVJjlBHOy3dVglwLGPliHSPNeQAzvpa3s/mxSXxwSTGVoZ8WuyivFdroY+JCFyzNHqDP4DUEkRWueD3BAwFCKUv6Pw3OlFE8WL1Vjw7HECQri+sLoVLn98IkcSgOaZ+pmf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ewITrsgr; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="PPABboEJ"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5ad28c0b85eso1779787eaf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 06:58:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1713880729; x=1714485529; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WqStfhzOnysXibrgT2E48MrpzZWIctM3Wmz+RM/fc7I=;
-        b=PPABboEJfEuSSbQCuKBcn38jtuIXVO898wnREhOT59fHsA6k7HI34Nk5amBZRh7Axe
-         IWVTuL7WBbGdLgGnLfxeiYbb9xIlECz9MziXxeH1IMUiV6iL0WymvvyTdvRRSbAqlwkM
-         ZBdzNoxZdTWsavn8u69mlvdf1jeK50OdZ7fgyEYM18SoxboEN7yeBnUsSJpEaFm4l2fW
-         B1LTe0xvI5WRA+xm66gZIuWB/jtVSv2GRiNn5FJUUVaSdUgNXgTIxcRfUtbDcMN05StK
-         WghJr47GIt40ZPfudIF+GTACUmmS32f3VbUuQjR0c4BPS7cJT7mWBfOB7x6QSvToiCCh
-         NWbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713880729; x=1714485529;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WqStfhzOnysXibrgT2E48MrpzZWIctM3Wmz+RM/fc7I=;
-        b=cESn3dWSD71ZmYZRVkuEsFmHiiOiRQ/O5iKT0ISmjJgT5t8S6Rsyp2fqIm623yEj8y
-         d0cW3/yPlIVeM7kAzERH5RfMYjLYSM4DmOFx88YIeJ0O+2CJubCZStCLo9GovP3SnDJw
-         d7Cqc+yA5oE0I2Ib3CpsC87alv9fRBDl/mIhOxTWF4uWWiGp5qyj10IyMJSFYFr8Knxd
-         cjFkXNNFd6bgzbhD4HMEv4785JcGBUwqbVMwbXATWAJeZ5Dy3pAFkwHpEFTIzrVbWa0b
-         x7ckdeij0MQrxOfZSuXRsgCnihDHL30kvzrqtKJkK7aQoneCLCsSlVGJ53+Xu1OSc2m9
-         /kgg==
-X-Forwarded-Encrypted: i=1; AJvYcCXyN0DPMOWjSKhPmOiOElUZXElczawJkuK1piNW79vr7V6wDo+uz4jor/xhLs5Fe1Q23uGmLu5tYY0/T/sAIWxK21p/3uWEvGc+uWY4
-X-Gm-Message-State: AOJu0Yw0zkQQ3fDg8fryIb1D2H4juP02S/iPh+3nuy5/fxQoaSBkQ7Fh
-	gkaEQgCBlWmYIhLZwaHZf9/K9R1zDjfub5iWLHwo6KiPnscT8BndhzKDbenqyBCnvAv/sh2ngs4
-	c
-X-Google-Smtp-Source: AGHT+IFwG9XJlDFqbvMmAOd4uyTY8SGLMaYeyX3/gPYvOni0T7+MH5srQSPCfT8gzXzv2lH9r8NbMA==
-X-Received: by 2002:a05:6358:4b02:b0:186:22a0:299d with SMTP id kr2-20020a0563584b0200b0018622a0299dmr17564312rwc.27.1713880729494;
-        Tue, 23 Apr 2024 06:58:49 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with ESMTPSA id kd11-20020a05622a268b00b00432bb012607sm5202815qtb.47.2024.04.23.06.58.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 06:58:48 -0700 (PDT)
-Date: Tue, 23 Apr 2024 09:58:44 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ewITrsgr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713880733; x=1745416733;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=NmhuzlmNypIrcR1nFCJLZ0OUcLV2LaL6YNQcG9vQrhg=;
+  b=ewITrsgrJIJn7o3fOqoffIfJt3HyHoupuU5hyO2o5OArd46DDQe2CM/A
+   pxTkWrLySC6nhN9G7mkWjTrVGatNp2jW4F6iIPUHsuKY7IFtQvDFfLGKY
+   VorFRC5EzxMDEI/yRWKnuAJW2AXFixRDo+dQ/YMhmOBqsOOGOCBE7ddCJ
+   p0ygzLVtdY7NT821SqHWkNy4egXPVdb7NvAp+JEJWlTNzvjPxCQviLGC0
+   iccfCXKvXurEGMSO0QtXJN7Ap45k5k9JIi+OQuG3BbobkBRpmmJfGax/3
+   SzMeZq9aXziryf8NUVv7lpL1s2x/J7ekMA49n10PHZFoY9cCwfIK20Js5
+   A==;
+X-CSE-ConnectionGUID: rHL7CEcaSruKTlLC7kemdQ==
+X-CSE-MsgGUID: 9JG7IvdrS1uYj9zztXUNqA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="26921441"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="26921441"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 06:58:53 -0700
+X-CSE-ConnectionGUID: ooD2TtQ0QciCoTh6svn2Mg==
+X-CSE-MsgGUID: 9sUECdpLQpCaA2IjaAe3vA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="24431803"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by fmviesa008.fm.intel.com with ESMTP; 23 Apr 2024 06:58:49 -0700
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Magnus Karlsson <magnus.karlsson@intel.com>,
+	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	iommu@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] mm: rearrange node_stat_item to put memcg stats at
- start
-Message-ID: <20240423135844.GA21141@cmpxchg.org>
-References: <20240423051826.791934-1-shakeel.butt@linux.dev>
- <20240423051826.791934-2-shakeel.butt@linux.dev>
+Subject: [PATCH net-next v4 1/7] dma: compile-out DMA sync op calls when not used
+Date: Tue, 23 Apr 2024 15:58:26 +0200
+Message-ID: <20240423135832.2271696-2-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240423135832.2271696-1-aleksander.lobakin@intel.com>
+References: <20240423135832.2271696-1-aleksander.lobakin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240423051826.791934-2-shakeel.butt@linux.dev>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 22, 2024 at 10:18:23PM -0700, Shakeel Butt wrote:
-> At the moment the memcg stats are sized based on the size of enum
-> node_stat_item but not all fields in node_stat_item corresponds to memcg
-> stats. So, rearrage the contents of node_stat_item such that all the
-> memcg specific stats are at the top and then the later patches will make
-> sure that the memcg code will not waste space for non-memcg stats.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+Some platforms do have DMA, but DMA there is always direct and coherent.
+Currently, even on such platforms DMA sync operations are compiled and
+called.
+Add a new hidden Kconfig symbol, DMA_NEED_SYNC, and set it only when
+either sync operations are needed or there is DMA ops or swiotlb
+or DMA debug is enabled. Compile global dma_sync_*() and dma_need_sync()
+only when it's set, otherwise provide empty inline stubs.
+The change allows for future optimizations of DMA sync calls depending
+on runtime conditions.
 
-This series is a great idea and the savings speak for themselves.
+Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+---
+ kernel/dma/Kconfig          |  5 +++
+ include/linux/dma-mapping.h | 62 ++++++++++++++++++++-----------------
+ kernel/dma/mapping.c        | 22 +++++++------
+ 3 files changed, 50 insertions(+), 39 deletions(-)
 
-But rearranging and splitting vmstats along the memcg-nomemcg line
-seems like an undue burden on the non-memcg codebase and interface.
+diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+index d62f5957f36b..c06e56be0ca1 100644
+--- a/kernel/dma/Kconfig
++++ b/kernel/dma/Kconfig
+@@ -107,6 +107,11 @@ config DMA_BOUNCE_UNALIGNED_KMALLOC
+ 	bool
+ 	depends on SWIOTLB
+ 
++config DMA_NEED_SYNC
++	def_bool ARCH_HAS_SYNC_DMA_FOR_DEVICE || ARCH_HAS_SYNC_DMA_FOR_CPU || \
++		 ARCH_HAS_SYNC_DMA_FOR_CPU_ALL || DMA_API_DEBUG || DMA_OPS || \
++		 SWIOTLB
++
+ config DMA_RESTRICTED_POOL
+ 	bool "DMA Restricted Pool"
+ 	depends on OF && OF_RESERVED_MEM && SWIOTLB
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 4a658de44ee9..a569b56b25e2 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -117,14 +117,6 @@ dma_addr_t dma_map_resource(struct device *dev, phys_addr_t phys_addr,
+ 		size_t size, enum dma_data_direction dir, unsigned long attrs);
+ void dma_unmap_resource(struct device *dev, dma_addr_t addr, size_t size,
+ 		enum dma_data_direction dir, unsigned long attrs);
+-void dma_sync_single_for_cpu(struct device *dev, dma_addr_t addr, size_t size,
+-		enum dma_data_direction dir);
+-void dma_sync_single_for_device(struct device *dev, dma_addr_t addr,
+-		size_t size, enum dma_data_direction dir);
+-void dma_sync_sg_for_cpu(struct device *dev, struct scatterlist *sg,
+-		    int nelems, enum dma_data_direction dir);
+-void dma_sync_sg_for_device(struct device *dev, struct scatterlist *sg,
+-		       int nelems, enum dma_data_direction dir);
+ void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
+ 		gfp_t flag, unsigned long attrs);
+ void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
+@@ -147,7 +139,6 @@ u64 dma_get_required_mask(struct device *dev);
+ bool dma_addressing_limited(struct device *dev);
+ size_t dma_max_mapping_size(struct device *dev);
+ size_t dma_opt_mapping_size(struct device *dev);
+-bool dma_need_sync(struct device *dev, dma_addr_t dma_addr);
+ unsigned long dma_get_merge_boundary(struct device *dev);
+ struct sg_table *dma_alloc_noncontiguous(struct device *dev, size_t size,
+ 		enum dma_data_direction dir, gfp_t gfp, unsigned long attrs);
+@@ -195,22 +186,6 @@ static inline void dma_unmap_resource(struct device *dev, dma_addr_t addr,
+ 		size_t size, enum dma_data_direction dir, unsigned long attrs)
+ {
+ }
+-static inline void dma_sync_single_for_cpu(struct device *dev, dma_addr_t addr,
+-		size_t size, enum dma_data_direction dir)
+-{
+-}
+-static inline void dma_sync_single_for_device(struct device *dev,
+-		dma_addr_t addr, size_t size, enum dma_data_direction dir)
+-{
+-}
+-static inline void dma_sync_sg_for_cpu(struct device *dev,
+-		struct scatterlist *sg, int nelems, enum dma_data_direction dir)
+-{
+-}
+-static inline void dma_sync_sg_for_device(struct device *dev,
+-		struct scatterlist *sg, int nelems, enum dma_data_direction dir)
+-{
+-}
+ static inline int dma_mapping_error(struct device *dev, dma_addr_t dma_addr)
+ {
+ 	return -ENOMEM;
+@@ -277,10 +252,6 @@ static inline size_t dma_opt_mapping_size(struct device *dev)
+ {
+ 	return 0;
+ }
+-static inline bool dma_need_sync(struct device *dev, dma_addr_t dma_addr)
+-{
+-	return false;
+-}
+ static inline unsigned long dma_get_merge_boundary(struct device *dev)
+ {
+ 	return 0;
+@@ -310,6 +281,39 @@ static inline int dma_mmap_noncontiguous(struct device *dev,
+ }
+ #endif /* CONFIG_HAS_DMA */
+ 
++#if defined(CONFIG_HAS_DMA) && defined(CONFIG_DMA_NEED_SYNC)
++void dma_sync_single_for_cpu(struct device *dev, dma_addr_t addr, size_t size,
++		enum dma_data_direction dir);
++void dma_sync_single_for_device(struct device *dev, dma_addr_t addr,
++		size_t size, enum dma_data_direction dir);
++void dma_sync_sg_for_cpu(struct device *dev, struct scatterlist *sg,
++		int nelems, enum dma_data_direction dir);
++void dma_sync_sg_for_device(struct device *dev, struct scatterlist *sg,
++		int nelems, enum dma_data_direction dir);
++bool dma_need_sync(struct device *dev, dma_addr_t dma_addr);
++#else /* !CONFIG_HAS_DMA || !CONFIG_DMA_NEED_SYNC */
++static inline void dma_sync_single_for_cpu(struct device *dev, dma_addr_t addr,
++		size_t size, enum dma_data_direction dir)
++{
++}
++static inline void dma_sync_single_for_device(struct device *dev,
++		dma_addr_t addr, size_t size, enum dma_data_direction dir)
++{
++}
++static inline void dma_sync_sg_for_cpu(struct device *dev,
++		struct scatterlist *sg, int nelems, enum dma_data_direction dir)
++{
++}
++static inline void dma_sync_sg_for_device(struct device *dev,
++		struct scatterlist *sg, int nelems, enum dma_data_direction dir)
++{
++}
++static inline bool dma_need_sync(struct device *dev, dma_addr_t dma_addr)
++{
++	return false;
++}
++#endif /* !CONFIG_HAS_DMA || !CONFIG_DMA_NEED_SYNC */
++
+ struct page *dma_alloc_pages(struct device *dev, size_t size,
+ 		dma_addr_t *dma_handle, enum dma_data_direction dir, gfp_t gfp);
+ void dma_free_pages(struct device *dev, size_t size, struct page *page,
+diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+index 58db8fd70471..c78b78e95a26 100644
+--- a/kernel/dma/mapping.c
++++ b/kernel/dma/mapping.c
+@@ -329,6 +329,7 @@ void dma_unmap_resource(struct device *dev, dma_addr_t addr, size_t size,
+ }
+ EXPORT_SYMBOL(dma_unmap_resource);
+ 
++#ifdef CONFIG_DMA_NEED_SYNC
+ void dma_sync_single_for_cpu(struct device *dev, dma_addr_t addr, size_t size,
+ 		enum dma_data_direction dir)
+ {
+@@ -385,6 +386,17 @@ void dma_sync_sg_for_device(struct device *dev, struct scatterlist *sg,
+ }
+ EXPORT_SYMBOL(dma_sync_sg_for_device);
+ 
++bool dma_need_sync(struct device *dev, dma_addr_t dma_addr)
++{
++	const struct dma_map_ops *ops = get_dma_ops(dev);
++
++	if (dma_map_direct(dev, ops))
++		return dma_direct_need_sync(dev, dma_addr);
++	return ops->sync_single_for_cpu || ops->sync_single_for_device;
++}
++EXPORT_SYMBOL_GPL(dma_need_sync);
++#endif /* CONFIG_DMA_NEED_SYNC */
++
+ /*
+  * The whole dma_get_sgtable() idea is fundamentally unsafe - it seems
+  * that the intention is to allow exporting memory allocated via the
+@@ -841,16 +853,6 @@ size_t dma_opt_mapping_size(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(dma_opt_mapping_size);
+ 
+-bool dma_need_sync(struct device *dev, dma_addr_t dma_addr)
+-{
+-	const struct dma_map_ops *ops = get_dma_ops(dev);
+-
+-	if (dma_map_direct(dev, ops))
+-		return dma_direct_need_sync(dev, dma_addr);
+-	return ops->sync_single_for_cpu || ops->sync_single_for_device;
+-}
+-EXPORT_SYMBOL_GPL(dma_need_sync);
+-
+ unsigned long dma_get_merge_boundary(struct device *dev)
+ {
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+-- 
+2.44.0
 
-- It messes with user-visible /proc/vmstat ordering, and sets things
-  up to do so on an ongoing basis as stats are added to memcg.
-
-- It also separates related stats (like the workingset ones) in
-  /proc/vmstat when memcg only accounts a subset.
-
-Would it make more sense to have a translation table inside memcg?
-Like we have with memcg1_events.
