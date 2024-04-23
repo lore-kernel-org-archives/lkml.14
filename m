@@ -1,30 +1,30 @@
-Received: from out187-16.us.a.mail.aliyun.com (out187-16.us.a.mail.aliyun.com [47.90.187.16])
+Received: from out187-1.us.a.mail.aliyun.com (out187-1.us.a.mail.aliyun.com [47.90.187.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84C31350F2
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C327A1350E3
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713877162; cv=none; b=uLp8g+3ICoOQausEXMY68lkhOTA1a787wqNdEYz2in0A8/EJjmb058q8UEk0f7piDjvaUD8kz0hfoMxF+ArP2zb1vz+wln8kipGPPWU32WJld3fYg7T9jeh11sl7Vlt6FXSV8gdYZ9dmxVSUuaw7GqmWITAhadAD5VdTzdZuEdk=
+	t=1713877162; cv=none; b=HwWMhKX13C8KMgV9F4hT/EFKbdVcUZtPDrsVO5fA0ovFpqgUOBJF7Iu3kFrNEHJ1Z9zRrnTiGSZXMem8IgSbRYClI/G+AzL3CL9ItRFYVD4VwCeUxt/8mGCRkXiZj4dplamAmUFosj4P9oyTUDLw6fPxI2kB3eKJVt36OIFbyiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713877162; c=relaxed/simple;
-	bh=VUK1qW4vcuTcnbfvkh2ig+AROuk8bCOr9JBsTl9lZiI=;
+	bh=whQ8McWaS9QADvZubdAMdl1LIVZsTQVAL0FukzyoZwg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sTiP71rPThadAKc/2EPiNNYAB/xO3IOko1IAckMtcZdpjHej2Gm+mp2h1VffN4fQNpI3G5hSo5IotNReacd4O7hZ1xm3SjGyBRzpV17/o7pHmF68TDWoGvfdeWmJze4TR5p85QD133m4uvpE99WI2gcnWiauSAIf7kGefvd/ckM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=n0HVDqsy; arc=none smtp.client-ip=47.90.187.16
+	 MIME-Version; b=UbFAqcKKRsRULF03vrO9qr/VeHuJ1m4bFAEIuaEvz4HqfbMbTaUqbSUOyP9NaodQxX0zMqbeu4k++9/RSnD72OOjJyOVC3VnpYHkq+RIcWpO+2MPMluJqEzXrKbL2RIu7CTZ4izoxeaKdpu2bYKudCk2713W9hC1f97xELaBaZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=M0Y2biDI; arc=none smtp.client-ip=47.90.187.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="n0HVDqsy"
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="M0Y2biDI"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=antgroup.com; s=default;
-	t=1713877149; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
-	bh=lumfKnRDCzxzbmj8wJ/Hznk5zzPAE/pxByFtYHy06AQ=;
-	b=n0HVDqsy9gqwPYdqOSn/UILDsSEH+3yxlEjWow3mT8gKzmrJX5uRX3i6D/jErMEZBzLCxOZXPe7RItbXgIQ7h75CG8iX73vowU6csFKXqbrug/drQ6jiebmIGQuAIZ79HGFYpVARI+ANq1X/pjvDSiCF8173iu9rHGOH5g1oQdE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047208;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJXNjT6_1713877148;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJXNjT6_1713877148)
+	t=1713877148; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=JMolFlkCz8q8s1KumAu1v9zZDtOAnzDuDDhti01QMmI=;
+	b=M0Y2biDILt4icf5DtECdUNt0S9ORTZUiW9oEV4tGi703v87SzGWDJii7lgngLHU7UBznU8qXb3Zf3ZPwikHF58GbYbN3xk8Tkb9Npw+Z7thgC6xyApxfotbW+fL+o5KokwSLw8BIimX+zKQFDjWMMhb7LnYqauKhvoonvMfGVws=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047187;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJXNjSO_1713877147;
+Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJXNjSO_1713877147)
           by smtp.aliyun-inc.com;
-          Tue, 23 Apr 2024 20:59:08 +0800
+          Tue, 23 Apr 2024 20:59:07 +0800
 From: "Tiwei Bie" <tiwei.btw@antgroup.com>
 To: richard@nod.at,
 	anton.ivanov@cambridgegreys.com,
@@ -32,9 +32,9 @@ To: richard@nod.at,
 Cc:  <linux-um@lists.infradead.org>,
    <linux-kernel@vger.kernel.org>,
   "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH v2 7/7] um: Remove unused do_get_thread_area function
-Date: Tue, 23 Apr 2024 20:58:58 +0800
-Message-Id: <20240423125858.137709-8-tiwei.btw@antgroup.com>
+Subject: [PATCH v2 2/7] um: Fix the -Wmissing-prototypes warning for __switch_mm
+Date: Tue, 23 Apr 2024 20:58:53 +0800
+Message-Id: <20240423125858.137709-3-tiwei.btw@antgroup.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240423125858.137709-1-tiwei.btw@antgroup.com>
 References: <20240423125858.137709-1-tiwei.btw@antgroup.com>
@@ -44,60 +44,42 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-It's not used since it was introduced by commit aa6758d4867c ("[PATCH]
-uml: implement {get,set}_thread_area for i386"). Now, it's causing a
--Wmissing-prototypes warning:
+The __switch_mm function is defined in the user code, and is called
+by the kernel code. It should be declared in a shared header.
 
-arch/x86/um/tls_32.c:39:5: warning: no previous prototype for ‘do_get_thread_area’ [-Wmissing-prototypes]
-   39 | int do_get_thread_area(struct user_desc *info)
-      |     ^~~~~~~~~~~~~~~~~~
-
-The original author also had doubts about whether it should be used.
-Considering that 18 years have passed, let's just remove it.
-
+Fixes: 4dc706c2f292 ("um: take um_mmu.h to asm/mmu.h, clean asm/mmu_context.h a bit")
 Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
 ---
- arch/x86/um/tls_32.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+ arch/um/include/asm/mmu.h           | 2 --
+ arch/um/include/shared/skas/mm_id.h | 2 ++
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/um/tls_32.c b/arch/x86/um/tls_32.c
-index ba40b1b8e179..d301deee041f 100644
---- a/arch/x86/um/tls_32.c
-+++ b/arch/x86/um/tls_32.c
-@@ -36,22 +36,6 @@ static int do_set_thread_area(struct user_desc *info)
- 	return ret;
- }
+diff --git a/arch/um/include/asm/mmu.h b/arch/um/include/asm/mmu.h
+index a7555e43ed14..f2923c767bb9 100644
+--- a/arch/um/include/asm/mmu.h
++++ b/arch/um/include/asm/mmu.h
+@@ -14,8 +14,6 @@ typedef struct mm_context {
+ 	struct uml_arch_mm_context arch;
+ } mm_context_t;
  
--int do_get_thread_area(struct user_desc *info)
--{
--	int ret;
--	u32 cpu;
+-extern void __switch_mm(struct mm_id * mm_idp);
 -
--	cpu = get_cpu();
--	ret = os_get_thread_area(info, userspace_pid[cpu]);
--	put_cpu();
--
--	if (ret)
--		printk(KERN_ERR "PTRACE_GET_THREAD_AREA failed, err = %d, "
--		       "index = %d\n", ret, info->entry_number);
--
--	return ret;
--}
--
- /*
-  * sys_get_thread_area: get a yet unused TLS descriptor index.
-  * XXX: Consider leaving one free slot for glibc usage at first place. This must
-@@ -231,7 +215,6 @@ int arch_set_tls(struct task_struct *new, unsigned long tls)
- 	return ret;
- }
+ /* Avoid tangled inclusion with asm/ldt.h */
+ extern long init_new_ldt(struct mm_context *to_mm, struct mm_context *from_mm);
+ extern void free_ldt(struct mm_context *mm);
+diff --git a/arch/um/include/shared/skas/mm_id.h b/arch/um/include/shared/skas/mm_id.h
+index e82e203f5f41..92dbf727e384 100644
+--- a/arch/um/include/shared/skas/mm_id.h
++++ b/arch/um/include/shared/skas/mm_id.h
+@@ -15,4 +15,6 @@ struct mm_id {
+ 	int kill;
+ };
  
--/* XXX: use do_get_thread_area to read the host value? I'm not at all sure! */
- static int get_tls_entry(struct task_struct *task, struct user_desc *info,
- 			 int idx)
- {
++void __switch_mm(struct mm_id *mm_idp);
++
+ #endif
 -- 
 2.34.1
 
