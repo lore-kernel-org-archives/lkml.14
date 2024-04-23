@@ -1,132 +1,140 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAB2290F
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D037E765;
+	Tue, 23 Apr 2024 12:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713875777; cv=none; b=ufXTBLU4BrKwaypjeUubjBd6OPHlKH6oMVKBvn/o3trcrhgpd8XpBG/Q172KmFx6+kEAVCyF5+S0HAK9CWzrTQdsC4lBTZqOdFBCiMWJR1Ck9pJZxxXB2ui3CkWaTCiVVGpAw2TDiLxYwkE+sTSu7WkMR7wuAIaUFl/E1NILtJM=
+	t=1713875793; cv=none; b=fnd5bJjrZLGFj+oKDHCPq7npofOS777RpSVup3PGFK6kHR3DS4/9BU96qtIRB7J5NcgYGWVQJwJ3bT4e1qtOAKdmL8+6ckC0AAUjLjju0/CNzEdRbA0DKfuB4ygYOvhgfsSW4yJMG7khQ7jMqtn2P0EDBG5ENK8Dvqc4rWQZLKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713875777; c=relaxed/simple;
-	bh=kBS+00rn0dPcSUgrOy0bzN/o9u8ih+e/QkeSnrZhINo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=onFKcC5v0zCmzwgXj+yTgdXucr5Zcljm6w1XCc1zD3jyTei1jLVi29bSqLHiv2WdPY9R7OZdhsmmom7Cp+lv9v3+mXEqopaw028yXSN5lrpuQFgfh/EsNkCDO+BZTaWmjrUyXkdoxggxj1Tyf6Enm8xlUARGA0k+eFhCPuEYM6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DvYJ3rNA; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713875793; c=relaxed/simple;
+	bh=fCoyNBrgDINfQGn1FNeW8IbFCBqvIvw+6q2AJGbqVsY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Wq6VY9ttBBOVlDBd81eMSAdij0sO3fvkw50dF3Z/pvr6vOwWn4hsxtsfFB17gIDtCnCEagjnepgDChC5PR6Cvs9QOTUumisgf1AmZXxfCA3SWw2sUZPfhWysNEO8yDVJBkawW8wNxiAu3KhLsUXHG2/8nwTkwTq8pNbc6nmLbHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=M4ASwh+U; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DvYJ3rNA"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-699320fcbc1so32832746d6.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 05:36:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713875774; x=1714480574; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Rp1vCZilhDTRpF22A7l/FKH26XsKR5Ax3W1/+Bf3MV0=;
-        b=DvYJ3rNAFXgzJdIMBjVPuAOKkKU0AdrT2EPb8TmAeJV5XP87bG8DJCy1sS32AUEcE0
-         ZGx/COUlY/Yv9iXF6YkqSlejFMLDe66VG+bd6KSrv2kj6m5i6UiN5Q3BT3Q3Cgc59/Vo
-         0QP808IAjAn1fauB+fJGVeyb+FA/UthFRUdNyDL+kOq5ejLylvzeH0n5R/HDyQeGcdZP
-         sQYaUBsrs5AIWXAgm/RULvSFBiBm+UgbpIR2su+AiZS0YXuTZhseNcUPOXPJKHj+3S/Q
-         b9hNqu3EUveJRp0l7p+RVCmYGfS9RfwCcNdMwmekUqdvfNRlXpHD9D+g1Fl4HBfeR1UP
-         MQig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713875774; x=1714480574;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rp1vCZilhDTRpF22A7l/FKH26XsKR5Ax3W1/+Bf3MV0=;
-        b=ObFx3KRIQ5zV0jg6B2yWXyeRVxKleXh9moyqJDTGXYngG2q/2wbthTmX2faJKuFypQ
-         6S7ieCTtUHiJkm2d0mB11HuYaE4LbETfmxEX9tFn8Komq3EHTyScKaCdJsLBf1O83ayx
-         lNLEqXAA8YyTznag6bL/sB8uRKTTLV3Q0aJKt83DLbnzgbVdyQhekPZQkCngtAvOm1Md
-         9RzS8N+RA1N7oKQXivWKF2PYG67DHSU8mX1JzSx+pyLipon2kYez0SbQ200xxs2N5Jbz
-         MtlLHqudm6iZG6HThsSVWi+AHh/oYx1noPqBgg7JEXbpemIRQDcKq+yN8JaV7TPDfTTs
-         HNCA==
-X-Forwarded-Encrypted: i=1; AJvYcCWliVEmMVYmTuTRbf9ufePYH+PyjsoteMJFoCspa+Mp+z51tgbsNfU51910HPXPmgkAwRfW0e4dhW5UPdoiKvRqB9HUI0Lfs6fzVUnZ
-X-Gm-Message-State: AOJu0Ywd3rsNioMbY0kPdqaoxzutH8tsmSCjrzaq0T+D6yD77HOS0HLn
-	yWwnKYmH8Ynx7fZlmT2O3d3HWNDgtJ/E3N8N/mVUNfbImWYXfvrErOYxYcyBc1Q=
-X-Google-Smtp-Source: AGHT+IHLs2D3cGmmnHWTUSwtoRkNbwIfAKQK3gorK2TJ0i2M3UwxSJcpe4+NF+eQ9QL2KzfKnAuleg==
-X-Received: by 2002:a0c:cc0b:0:b0:699:125:8540 with SMTP id r11-20020a0ccc0b000000b0069901258540mr12888684qvk.60.1713875774488;
-        Tue, 23 Apr 2024 05:36:14 -0700 (PDT)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id t11-20020a0ce2cb000000b0069b5bb757d0sm5103890qvl.93.2024.04.23.05.36.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 05:36:13 -0700 (PDT)
-Message-ID: <d6f8d978-350d-4867-be4e-beea0c7e467b@linaro.org>
-Date: Tue, 23 Apr 2024 07:36:12 -0500
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="M4ASwh+U"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43N8H3ql011919;
+	Tue, 23 Apr 2024 14:36:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=qJAQvcReYkKykfb7YDV3qlgrNFyxPWTmX6W3WAi2TpY=; b=M4
+	ASwh+U++lKh7IKpiPgXCubMEzEncw0phz8JPRWjC540afiqXaxn9iNsJ7Ghz6t0H
+	mvEBPDnig3rAqrxT5WxzHCVN+tRRZ/U23m9WqlE7/q3+ws/pTmONXYFZDO6aHm4A
+	5kV0+UO4rxkDH/JEG2XRHsu9rPI1XJSw4KadJys8gMCp1OyYLNR7vhHuwF6KFRI6
+	Y19OJDYlU3bwbWkC2ftw08bcQD17FQA4S4TTYJOjDjzfOTgC2fQS3NJz0JVRoV3X
+	pPK3Z9HSUsKa//LHPjM9yVTWvvueCNA0cx9L3t2X65659FKsdBFOPapNs25em+Qd
+	Pr2YsDAkH47CJRPhrL7w==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xm4kb3dfp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Apr 2024 14:36:20 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 3FA8A40047;
+	Tue, 23 Apr 2024 14:36:16 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6851921A237;
+	Tue, 23 Apr 2024 14:35:32 +0200 (CEST)
+Received: from localhost (10.48.86.143) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Apr
+ 2024 14:35:32 +0200
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>
+CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        Amelie Delaunay
+	<amelie.delaunay@foss.st.com>
+Subject: [PATCH 11/12] dmaengine: stm32-dma3: defer channel registration to specify channel name
+Date: Tue, 23 Apr 2024 14:33:01 +0200
+Message-ID: <20240423123302.1550592-12-amelie.delaunay@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240423123302.1550592-1-amelie.delaunay@foss.st.com>
+References: <20240423123302.1550592-1-amelie.delaunay@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 7/8] net: ipa: fix two minor ipa_cmd problems
-To: Paolo Abeni <pabeni@redhat.com>, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org
-Cc: mka@chromium.org, andersson@kernel.org, quic_cpratapa@quicinc.com,
- quic_avuyyuru@quicinc.com, quic_jponduru@quicinc.com,
- quic_subashab@quicinc.com, elder@kernel.org, netdev@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240419151800.2168903-1-elder@linaro.org>
- <20240419151800.2168903-8-elder@linaro.org>
- <3a09d8e47e4c59aa4a42baae5b8a0886925a94a0.camel@redhat.com>
-Content-Language: en-US
-From: Alex Elder <elder@linaro.org>
-In-Reply-To: <3a09d8e47e4c59aa4a42baae5b8a0886925a94a0.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-23_11,2024-04-23_01,2023-05-22_02
 
-On 4/23/24 6:21 AM, Paolo Abeni wrote:
-> On Fri, 2024-04-19 at 10:17 -0500, Alex Elder wrote:
->> In "ipa_cmd.h", ipa_cmd_data_valid() is declared, but that function
->> does not exist.  So delete that declaration.
->>
->> Also, for some reason ipa_cmd_init() never gets called.  It isn't
->> really critical--it just validates that some memory offsets and a
->> size can be represented in some register fields, and they won't fail
->> with current data.  Regardless, call the function in ipa_probe().
-> 
-> That name sounds confusing to me: I expect *init to allocate/set
-> something that will need some reverse operation at shutdown/removal.
-> What about a possible follow-up renaming the function to
-> ipa_cmd_validate() or the like?
+On STM32 DMA3, channels can be reserved, so they are non available for
+Linux. This non-availability creates a mismatch between dma_chan id and
+DMA3 channel id.
 
-In the IPA driver I have several phases of initialization that
-occur:
-- *_init() is done to initialize anything (like allocating memory
-   and looking up DT information) that does not require any access
-   to hardware.  Its inverse is *_exit().
-- *_config() is done once "primitive" (register-based) access to
-   the hardware is needed, where the hardware must be clocked.  Its
-   inverse is *_deconfig().
-- *_setup() is done after the above, at a point where a higher-level
-   command-based (submit/await completion) interface is available.
-   That is used for the last steps of setting up the hardware.  Its
-   inverse is *_teardown().
+Use dma_async_device_channel_register() to register the channels
+after controller registration and change the default channel name, so that
+it can match the name in the Reference Manual and ease requesting a channel
+thanks to its name.
 
-You're right, that in this case all this init function does is
-validate things.  But at an abstract level, this is the place
-in the "IPA command" module where *any* early-stage initialization
-takes place.  The caller doesn't "know" that at the moment this
-happens to only be validation.  (I don't recall, but this might
-previously have done some other things.)
+Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+---
+ drivers/dma/stm32/stm32-dma3.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-So that's the reasoning behind the name.  Changing it to
-ipa_cmd_validate() makes sense too, but wouldn't fit the
-pattern used elsewhere.  I'm open to it though; it's just a
-design choice.  But unless you're convinced such a change
-would really improve the code, I plan to leave it as-is.
-
-> Not blocking the series, I'm applying it.
-
-Thank you very much.
-
-					-Alex
-
-
-> Thanks,
-> 
-> Paolo
-> 
+diff --git a/drivers/dma/stm32/stm32-dma3.c b/drivers/dma/stm32/stm32-dma3.c
+index f15cc0129fc7..b6d8afd5ed34 100644
+--- a/drivers/dma/stm32/stm32-dma3.c
++++ b/drivers/dma/stm32/stm32-dma3.c
+@@ -1723,9 +1723,6 @@ static int stm32_dma3_probe(struct platform_device *pdev)
+ 		chan->fifo_size = get_chan_hwcfg(i, G_FIFO_SIZE(i), hwcfgr);
+ 		/* If chan->fifo_size > 0 then half of the fifo size, else no burst when no FIFO */
+ 		chan->max_burst = (chan->fifo_size) ? (1 << (chan->fifo_size + 1)) / 2 : 0;
+-		chan->vchan.desc_free = stm32_dma3_chan_vdesc_free;
+-
+-		vchan_init(&chan->vchan, dma_dev);
+ 	}
+ 
+ 	ret = dmaenginem_async_device_register(dma_dev);
+@@ -1733,14 +1730,26 @@ static int stm32_dma3_probe(struct platform_device *pdev)
+ 		goto err_clk_disable;
+ 
+ 	for (i = 0; i < ddata->dma_channels; i++) {
++		char name[12];
++
+ 		if (chan_reserved & BIT(i))
+ 			continue;
+ 
++		chan = &ddata->chans[i];
++		snprintf(name, sizeof(name), "dma%dchan%d", ddata->dma_dev.dev_id, chan->id);
++
++		chan->vchan.desc_free = stm32_dma3_chan_vdesc_free;
++		vchan_init(&chan->vchan, dma_dev);
++
++		ret = dma_async_device_channel_register(&ddata->dma_dev, &chan->vchan.chan, name);
++		if (ret) {
++			dev_err_probe(&pdev->dev, ret, "Failed to register channel %s\n", name);
++			goto err_clk_disable;
++		}
++
+ 		ret = platform_get_irq(pdev, i);
+ 		if (ret < 0)
+ 			goto err_clk_disable;
+-
+-		chan = &ddata->chans[i];
+ 		chan->irq = ret;
+ 
+ 		ret = devm_request_irq(&pdev->dev, chan->irq, stm32_dma3_chan_irq, 0,
+-- 
+2.25.1
 
