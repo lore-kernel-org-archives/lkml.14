@@ -1,226 +1,88 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE4756443;
-	Tue, 23 Apr 2024 09:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B925647F;
+	Tue, 23 Apr 2024 09:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713862850; cv=none; b=GcsixDQ8b9iwZniuoxLASoZ9y0yOC75x5OI6ss2oE8wd7+ySFOAlEDdrZd6740w+neLbdkKXV5vIWTTdwa+Yy3yPI1O6q0NreNn9bvuD9o9kgEJcm/W8Q6ZUQQ0M0uiQp0M5+cDGVJTAZl7bRvkV5CiN6rthU6FDmZiB6aLn3dk=
+	t=1713862854; cv=none; b=BbCgyHKZdadeOCTP1x9Ysiegc9nPFDPxsE0g95MZuwwl7/t9Tz1VtXkI9xHv4aHM4BmKaB55Zc38wuqI2pos1ZYaj5zAmbprbee+pXtxESSlL73XfNUa/uNKpSmsTPWhe2KWAyTQUXa4uxleta9phx/G5lKLEg+kBODbcWXjPtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713862850; c=relaxed/simple;
-	bh=AaPe4W5ATU0vKXRJA+JX8mxIfjHiFM2MGOqUcT2Zjlg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QU8pomdtvQkfAnF0BTsd1QqRpFgJaTnD+U5719sb+8qdvSnJ9M7inw+3WpwJrSNQDQw88X073JcX0mkmZ4dD3CkxgrYKeHg+e/VP2iALPEqCxCnJApV+RQc6S6Yg7I+xY1lvi6SVU4L/7/n5xKp9HLQOwJUOyYabTz0wDalEeYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=axwT2LI/; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1713862854; c=relaxed/simple;
+	bh=DVL/W006mq7B8XRru41g4X8LQ/QFyfpjIosJSHzQt7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nlPqQFmvOge6I09bCjyAoLNY7im3lfYO8Ic+5qUnF/KkYh14bXMCVrUtqII3RVzWM4CE/M3/aAxFX27Ydg66brfxzT9mNeC0+ke73HbHa6xPdE3s0GtbOJCT8XA5pt//t26Z3VPOTixTT8lQj6BwSa4rBpduJymTqzBl9pAneN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=pi8Lz4FM; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="axwT2LI/"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43N90W5O102048;
-	Tue, 23 Apr 2024 04:00:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1713862832;
-	bh=alTEvUtf7H2uqDMe4053Ta0mKCB1AIUyCEraP187CNQ=;
-	h=From:To:CC:Subject:Date;
-	b=axwT2LI/tuAzCylciujUpYigCqp9ppfXoGUUwYTEYGniDpt9P+PnjIRB/j38+8eQ4
-	 1AeJIUAroAEpjZM0VXGiW+cmIQiKeOI2BD2bvga21d755Wqx/BA06YzVtMwATzI+eJ
-	 /4pWtdNJlUh3qHYPnaYmy1UYk+MqVvA0OrQhYsJM=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43N90WeQ104439
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 23 Apr 2024 04:00:32 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 23
- Apr 2024 04:00:32 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 23 Apr 2024 04:00:32 -0500
-Received: from fllv0122.itg.ti.com (fllv0122.itg.ti.com [10.247.120.72])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43N90Wx5093755;
-	Tue, 23 Apr 2024 04:00:32 -0500
-Received: from localhost (danish-tpc.dhcp.ti.com [10.24.69.25])
-	by fllv0122.itg.ti.com (8.14.7/8.14.7) with ESMTP id 43N90VEh023186;
-	Tue, 23 Apr 2024 04:00:31 -0500
-From: MD Danish Anwar <danishanwar@ti.com>
-To: Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>
-CC: Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        Tero Kristo <kristo@kernel.org>, <srk@ti.com>, <r-gunasekaran@ti.com>,
-        Roger Quadros <rogerq@kernel.org>,
-        MD
- Danish Anwar <danishanwar@ti.com>
-Subject: [PATCH] arm64: dts: ti: k3-am642-evm-icssg1-dualemac: add overlay for mii mode
-Date: Tue, 23 Apr 2024 14:30:28 +0530
-Message-ID: <20240423090028.1311635-1-danishanwar@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="pi8Lz4FM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=rZoO7ltG3psc+RMtbCywngv1xFSki99rx9Qg2yUYeDY=;
+	t=1713862849; x=1714294849; b=pi8Lz4FMeS88/pL4t/BZI+mzwR1XURZ3pWX3VQziH/aUDMH
+	IJQOY96L4PJKa3PZgsi657gii2u7Gg4sPkxUTXIJ2ZCapLRwb3pejurux4JvugNiFZFjuJPxbt4L4
+	9SCVYvs67jHxwISBk4VUah6KCcjz968u8+VNB8MX5msrHg4YSDN7SDcCrlPcVsktiumwA0huLMowO
+	Wgl1O0zzBj/GkkEPJHABiIamBOqXYxiwlxNHMXz0EAZyYavYoqiglhdX9HI0JvRhmAwLmy5cKbMdw
+	RrEdTij+/x23UvpvNLEdpJYL+4IqdZF3VDPSdxjAJbmSBf/bIruuCdvIn0l6Notg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rzC15-0000B6-B2; Tue, 23 Apr 2024 11:00:43 +0200
+Message-ID: <bc420f3a-5809-4c4a-80ad-ccd8a46853b6@leemhuis.info>
+Date: Tue, 23 Apr 2024 11:00:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: 6.9.0-rc2+ kernel hangs on boot (bisected, maybe LED related)
+To: Johannes Berg <johannes@sipsolutions.net>,
+ Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
+ Ben Greear <greearb@candelatech.com>, Lee Jones <lee@kernel.org>
+References: <30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com>
+ <30819e01-43ce-638f-0cc6-067d6a8d03c7@candelatech.com>
+ <89a9eec3-337f-3c9f-6bbe-00a26a15287c@candelatech.com>
+ <20240411070718.GD6194@google.com>
+ <de43c7e1-7e8c-bdbe-f59e-7632c21da24a@candelatech.com>
+ <8736ebc8881e1e0cabfbbf033725a3123a5e8e90.camel@sipsolutions.net>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <8736ebc8881e1e0cabfbbf033725a3123a5e8e90.camel@sipsolutions.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713862849;391881e7;
+X-HE-SMSGID: 1rzC15-0000B6-B2
 
-Add device tree overlay to enable both ICSSG1 ports available on AM64x-EVM
-in MII mode.
+On 16.04.24 08:17, Johannes Berg wrote:
+> On Mon, 2024-04-15 at 13:37 -0700, Ben Greear wrote:
+>>
+>> Johannes, you had another suggestion: changing iwlwifi's request_module() to request_module_nowait() in
+>> iwl_req_fw_callback()
+>>
+>> Is that still best thing to try in your opinion?
+> 
+> I guess so, I don't have any better ideas so far anyway ...
 
-Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
----
-NOTE: This patch depends on [1]. Without [1] mii mode will not work for
-ICSSG. Patch [1] is currently posted to net subsystem.
+[adding the iwlwifi maintainer; thread starts here:
+https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
 
-This patch is based on next-20240423 linux-next tag.
+]
 
-[1] https://lore.kernel.org/all/20240423084828.1309294-1-danishanwar@ti.com/
+Johannes, Miri, what's the status wrt to this regression? From here
+things look somewhat stalled -- but maybe there was progress and I just
+missed it.
 
- arch/arm64/boot/dts/ti/Makefile               |   4 +
- .../ti/k3-am642-evm-icssg1-dualemac-mii.dtso  | 101 ++++++++++++++++++
- 2 files changed, 105 insertions(+)
- create mode 100644 arch/arm64/boot/dts/ti/k3-am642-evm-icssg1-dualemac-mii.dtso
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-index c76b41f86527..08c974b05616 100644
---- a/arch/arm64/boot/dts/ti/Makefile
-+++ b/arch/arm64/boot/dts/ti/Makefile
-@@ -44,6 +44,7 @@ k3-am642-hummingboard-t-usb3-dtbs := \
- 	k3-am642-hummingboard-t.dtb k3-am642-hummingboard-t-usb3.dtbo
- dtb-$(CONFIG_ARCH_K3) += k3-am642-evm.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am642-evm-icssg1-dualemac.dtbo
-+dtb-$(CONFIG_ARCH_K3) += k3-am642-evm-icssg1-dualemac-mii.dtbo
- dtb-$(CONFIG_ARCH_K3) += k3-am642-hummingboard-t.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am642-hummingboard-t-pcie.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am642-hummingboard-t-usb3.dtb
-@@ -132,6 +133,8 @@ k3-am62p5-sk-csi2-tevi-ov5640-dtbs := k3-am62p5-sk.dtb \
- 	k3-am62x-sk-csi2-tevi-ov5640.dtbo
- k3-am642-evm-icssg1-dualemac-dtbs := \
- 	k3-am642-evm.dtb k3-am642-evm-icssg1-dualemac.dtbo
-+k3-am642-evm-icssg1-dualemac-mii-dtbs := \
-+	k3-am642-evm.dtb k3-am642-evm-icssg1-dualemac-mii.dtbo
- k3-am642-tqma64xxl-mbax4xxl-sdcard-dtbs := \
- 	k3-am642-tqma64xxl-mbax4xxl.dtb k3-am64-tqma64xxl-mbax4xxl-sdcard.dtbo
- k3-am642-tqma64xxl-mbax4xxl-wlan-dtbs := \
-@@ -160,6 +163,7 @@ dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
- 	k3-am62p5-sk-csi2-ov5640.dtb \
- 	k3-am62p5-sk-csi2-tevi-ov5640.dtb \
- 	k3-am642-evm-icssg1-dualemac.dtb \
-+	k3-am642-evm-icssg1-dualemac-mii.dtb \
- 	k3-am642-tqma64xxl-mbax4xxl-sdcard.dtb \
- 	k3-am642-tqma64xxl-mbax4xxl-wlan.dtb \
- 	k3-am68-sk-base-board-csi2-dual-imx219-dtbs \
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm-icssg1-dualemac-mii.dtso b/arch/arm64/boot/dts/ti/k3-am642-evm-icssg1-dualemac-mii.dtso
-new file mode 100644
-index 000000000000..3081b5c64886
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am642-evm-icssg1-dualemac-mii.dtso
-@@ -0,0 +1,101 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/**
-+ * DT overlay for enabling both ICSSG1 port on AM642 EVM in MII mode
-+ *
-+ * Copyright (C) 2020-2024 Texas Instruments Incorporated - https://www.ti.com/
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+#include <dt-bindings/gpio/gpio.h>
-+#include "k3-pinctrl.h"
-+
-+&{/} {
-+	aliases {
-+		ethernet1 = "/icssg1-eth/ethernet-ports/port@1";
-+	};
-+
-+	mdio-mux-2 {
-+		compatible = "mdio-mux-multiplexer";
-+		mux-controls = <&mdio_mux>;
-+		mdio-parent-bus = <&icssg1_mdio>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		mdio@0 {
-+			reg = <0x0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			icssg1_phy2: ethernet-phy@3 {
-+				reg = <3>;
-+			};
-+		};
-+	};
-+};
-+
-+&main_pmx0 {
-+	icssg1_mii1_pins_default: icssg1-mii1-default-pins {
-+		pinctrl-single,pins = <
-+			AM64X_IOPAD(0x00f8, PIN_INPUT, 1) /* (V9) PRG1_PRU0_GPO16.PR1_MII_MT0_CLK */
-+			AM64X_IOPAD(0x00f4, PIN_OUTPUT, 0) /* (Y9) PRG1_PRU0_GPO15.PR1_MII0_TXEN */
-+			AM64X_IOPAD(0x00f0, PIN_OUTPUT, 0) /* (AA9) PRG1_PRU0_GPO14.PR1_MII0_TXD3 */
-+			AM64X_IOPAD(0x00ec, PIN_OUTPUT, 0) /* (W9) PRG1_PRU0_GPO13.PR1_MII0_TXD2 */
-+			AM64X_IOPAD(0x00e8, PIN_OUTPUT, 0) /* (U9) PRG1_PRU0_GPO12.PR1_MII0_TXD1 */
-+			AM64X_IOPAD(0x00e4, PIN_OUTPUT, 0) /* (AA8) PRG1_PRU0_GPO11.PR1_MII0_TXD0 */
-+			AM64X_IOPAD(0x00c8, PIN_INPUT, 1) /* (Y8) PRG1_PRU0_GPO4.PR1_MII0_RXDV */
-+			AM64X_IOPAD(0x00d0, PIN_INPUT, 1) /* (AA7) PRG1_PRU0_GPO6.PR1_MII_MR0_CLK */
-+			AM64X_IOPAD(0x00c4, PIN_INPUT, 1) /* (V8) PRG1_PRU0_GPO3.PR1_MII0_RXD3 */
-+			AM64X_IOPAD(0x00c0, PIN_INPUT, 1) /* (W8) PRG1_PRU0_GPO2.PR1_MII0_RXD2 */
-+			AM64X_IOPAD(0x00cc, PIN_INPUT, 1) /* (V13) PRG1_PRU0_GPO5.PR1_MII0_RXER */
-+			AM64X_IOPAD(0x00bc, PIN_INPUT, 1) /* (U8) PRG1_PRU0_GPO1.PR1_MII0_RXD1 */
-+			AM64X_IOPAD(0x00b8, PIN_INPUT, 1) /* (Y7) PRG1_PRU0_GPO0.PR1_MII0_RXD0 */
-+			AM64X_IOPAD(0x00d8, PIN_INPUT, 1) /* (W13) PRG1_PRU0_GPO8.PR1_MII0_RXLINK */
-+		>;
-+	};
-+
-+	icssg1_mii2_pins_default: icssg1-mii2-default-pins {
-+		pinctrl-single,pins = <
-+			AM64X_IOPAD(0x0148, PIN_INPUT, 1) /* (Y10) PRG1_PRU1_GPO16.PR1_MII_MT1_CLK */
-+			AM64X_IOPAD(0x0144, PIN_OUTPUT, 0) /* (Y11) PRG1_PRU1_GPO15.PR1_MII1_TXEN */
-+			AM64X_IOPAD(0x0140, PIN_OUTPUT, 0) /* (AA11) PRG1_PRU1_GPO14.PR1_MII1_TXD3 */
-+			AM64X_IOPAD(0x013c, PIN_OUTPUT, 0) /* (U10) PRG1_PRU1_GPO13.PR1_MII1_TXD2 */
-+			AM64X_IOPAD(0x0138, PIN_OUTPUT, 0) /* (V10) PRG1_PRU1_GPO12.PR1_MII1_TXD1 */
-+			AM64X_IOPAD(0x0134, PIN_OUTPUT, 0) /* (AA10) PRG1_PRU1_GPO11.PR1_MII1_TXD0 */
-+			AM64X_IOPAD(0x0118, PIN_INPUT, 1) /* (W12) PRG1_PRU1_GPO4.PR1_MII1_RXDV */
-+			AM64X_IOPAD(0x0120, PIN_INPUT, 1) /* (U11) PRG1_PRU1_GPO6.PR1_MII_MR1_CLK */
-+			AM64X_IOPAD(0x0114, PIN_INPUT, 1) /* (Y12) PRG1_PRU1_GPO3.PR1_MII1_RXD3 */
-+			AM64X_IOPAD(0x0110, PIN_INPUT, 1) /* (AA12) PRG1_PRU1_GPO2.PR1_MII1_RXD2 */
-+			AM64X_IOPAD(0x011c, PIN_INPUT, 1) /* (AA13) PRG1_PRU1_GPO5.PR1_MII1_RXER */
-+			AM64X_IOPAD(0x010c, PIN_INPUT, 1) /* (V11) PRG1_PRU1_GPO1.PR1_MII1_RXD1 */
-+			AM64X_IOPAD(0x0108, PIN_INPUT, 1) /* (W11) PRG1_PRU1_GPO0.PR1_MII1_RXD0 */
-+			AM64X_IOPAD(0x0128, PIN_INPUT, 1) /* (U12) PRG1_PRU1_GPO8.PR1_MII1_RXLINK */
-+		>;
-+	};
-+};
-+
-+&cpsw3g {
-+	pinctrl-0 = <&rgmii1_pins_default>;
-+};
-+
-+&cpsw_port2 {
-+	status = "disabled";
-+};
-+
-+&mdio_mux_1 {
-+	status = "disabled";
-+};
-+
-+&icssg1_eth {
-+	pinctrl-0 = <&icssg1_mii1_pins_default &icssg1_mii2_pins_default>;
-+};
-+
-+&icssg1_emac0 {
-+	phy-mode = "mii";
-+};
-+
-+&icssg1_emac1 {
-+	status = "okay";
-+	phy-handle = <&icssg1_phy2>;
-+	phy-mode = "mii";
-+};
--- 
-2.34.1
-
+#regzbot poke
