@@ -1,80 +1,85 @@
-Received: from mail-m1041.netease.com (mail-m1041.netease.com [154.81.10.41])
+Received: from out0-217.mail.aliyun.com (out0-217.mail.aliyun.com [140.205.0.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526D478285;
-	Tue, 23 Apr 2024 12:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.81.10.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83BF4594A
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713875267; cv=none; b=uKFpIrXQzrhD9+hDndjjCi0csH0S1N1O19NAO+3NXS9nxk8kb88Efdu6dhxLDsv5AxxvUgs14CgkF+L0OaNcY2T5td3KZpj/AB8GTKE3judowVzw2dc0AKkzPgEYpyH4nrEFtlZQ+nnD1Qu4+G8leOOx9gGo6NKeRjA9tUNmYQE=
+	t=1713875400; cv=none; b=Q2wDi+ncSnsrn+Wxfb1sEyVD/Oc2a+fM86AwQXHeGtB2fcTa5Hmts8dsGKQhrXCQXFoxCWabNubRskCktcaFeKJXhVMfiF+WbklcG4hjRtoLH7c+mTrdcrDD4QZs9wfUEPeE5TqK0FmsKbuRITSoJY7MQs8fkDUrMM6h7CEnSYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713875267; c=relaxed/simple;
-	bh=u6/C1yJRd8MJjmVCXRoTO9Hy08s48e5CyIph8InaR2Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U0/Eey4z97hvOOxZEiyWbRm/O+Nj48q6iGmeDpso9aZ9AGcXNzVKx+Gd6pRBRz/orgr8TyggxMl0szKZWIr7JP4cVgI9uabZVV5Gl1rb10PkY+NH40XzmZGIfngO9pntJw+/YG7I33g8S0Z6ztPe2nzJNng3I8naFwGrBL7eOiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=154.81.10.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
-Received: from localhost.localdomain (unknown [110.185.170.227])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id B1CFD560145;
-	Tue, 23 Apr 2024 15:37:54 +0800 (CST)
-From: Jun Gu <jun.gu@easystack.cn>
-To: pshelar@ovn.org
-Cc: netdev@vger.kernel.org,
-	dev@openvswitch.org,
-	linux-kernel@vger.kernel.org,
-	Jun Gu <jun.gu@easystack.cn>
-Subject: [PATCH net-next] net: openvswitch: Release reference to netdev
-Date: Tue, 23 Apr 2024 15:37:51 +0800
-Message-Id: <20240423073751.52706-1-jun.gu@easystack.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1713875400; c=relaxed/simple;
+	bh=Q99S/DEREDr4fChO9ym4b0hPsWbl1wtOVKah3zSOWJs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NS9tSnwhpeMc1SCJW4Lao02fqxZ5CzCfUkT0dWVJeZ8br1sUHrO+OipSZEPIGIecWsUFWGKlFQIsaoMx/TGaCAS7IhJV73fCapyvJsTBtwPIh4QIVf+3NZ/vxxsPbh7Q8MfQG4/ZaeDG+g5UX6yT2+oBp5akaceZsSTzABzKwKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=PqwNoUkq; arc=none smtp.client-ip=140.205.0.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="PqwNoUkq"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1713875394; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=wTjKYtAEHOduKI0XEVExYwKYYYwxDyq717ZSUBWZezY=;
+	b=PqwNoUkqeMTqXnYUWmFNBtI37i3jecOU1onLw5wEWSqEV//rRTt7FHWH3QD6EhWeqQN+PAmxxA9ah5hPj9O3+MfMa/gmz1itD+jYEhLdKwnoDexQD8ObQ+BsZwvDsAQ0WbP4ZpDXhIXXCEKqXRU9HzQPF+K3CRQIcVsAxcuc0eU=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R871e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047188;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---.XJWNeVg_1713875393;
+Received: from 30.230.91.3(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJWNeVg_1713875393)
+          by smtp.aliyun-inc.com;
+          Tue, 23 Apr 2024 20:29:53 +0800
+Message-ID: <3ce6a032-1bcd-47d2-86fb-0b33c541508d@antgroup.com>
+Date: Tue, 23 Apr 2024 20:29:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkaGkJOVh0eGUhMGENOGUhOS1UZERMWGhIXJBQOD1
-	lXWRgSC1lBWUpKS1VKQ05VSkxLVUlJTFlXWRYaDxIVHRRZQVlPS0hVSk1PSUxOVUpLS1VKQktLWQ
-	Y+
-X-HM-Tid: 0a8f09e3cb78023dkunmb1cfd560145
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PzI6MAw4OTcrMxJNFhQ5Pxgj
-	GTAaC1FVSlVKTEpIQ05MQ0xOSkxOVTMWGhIXVREOFVUcDjseGggCCA8aGBBVGBVFWVdZEgtZQVlK
-	SktVSkNOVUpMS1VJSUxZV1kIAVlBSkJISjcG
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/7] um: Add an internal header shared among the user code
+To: Johannes Berg <johannes@sipsolutions.net>, richard@nod.at,
+ anton.ivanov@cambridgegreys.com
+Cc: linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240423112457.2409319-1-tiwei.btw@antgroup.com>
+ <20240423112457.2409319-6-tiwei.btw@antgroup.com>
+ <e850e5016348805e7e2f427ed98cb1eb539fc434.camel@sipsolutions.net>
+ <ee636701-3f92-4424-8b04-dd2cecd8313a@antgroup.com>
+ <21cd05c895abc4f4e66190b26632543ff7990b32.camel@sipsolutions.net>
+Content-Language: en-US
+From: "Tiwei Bie" <tiwei.btw@antgroup.com>
+In-Reply-To: <21cd05c895abc4f4e66190b26632543ff7990b32.camel@sipsolutions.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-dev_get_by_name will provide a reference on the netdev. So ensure that
-the reference of netdev is released after completed.
+On 4/23/24 8:22 PM, Johannes Berg wrote:
+> On Tue, 2024-04-23 at 20:09 +0800, Tiwei Bie wrote:
+>> On 4/23/24 7:30 PM, Johannes Berg wrote:
+>>> On Tue, 2024-04-23 at 19:24 +0800, Tiwei Bie wrote:
+>>>>
+>>>>  $(USER_OBJS:.o=.%): \
+>>>> -	c_flags = -Wp,-MD,$(depfile) $(USER_CFLAGS) -include $(srctree)/include/linux/kern_levels.h -include user.h $(CFLAGS_$(basetarget).o)
+>>>> +	c_flags = -Wp,-MD,$(depfile) $(USER_CFLAGS) -include $(srctree)/include/linux/kern_levels.h \
+>>>> +		-include user.h -include $(srctree)/arch/um/os-Linux/internal.h $(CFLAGS_$(basetarget).o)
+>>>>
+>>>
+>>> Why not just include it explicitly?
+>>
+>> I think it might be more convenient if we include it implicitly,
+>> especially since there are two levels of directories under os-Linux/.
+>> But I don't have a strong opinion on this. I'm also willing to
+>> include it explicitly.
+> 
+> Yeah, ok, dunno.
+> 
+>>> We do have the warnings?
+>>
+>> Yeah. Without this patch, I can get below warnings with `make ARCH=um defconfig && make ARCH=um`:
+>>
+> 
+> Sure. I meant, we don't need to hide the include, if we need to add it
+> to some other file, we'll have the warnings as a reminder. :)
+> 
+> I don't think anyone today would write the code as it is now ...
 
-Fixes: 2540088b836f ("net: openvswitch: Check vport netdev name")
-Signed-off-by: Jun Gu <jun.gu@easystack.cn>
----
- net/openvswitch/vport-netdev.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Makes sense. Will include it explicitly. Thanks!
 
-diff --git a/net/openvswitch/vport-netdev.c b/net/openvswitch/vport-netdev.c
-index 618edc346c0f..91a11067e458 100644
---- a/net/openvswitch/vport-netdev.c
-+++ b/net/openvswitch/vport-netdev.c
-@@ -78,12 +78,16 @@ struct vport *ovs_netdev_link(struct vport *vport, const char *name)
- 	int err;
- 
- 	vport->dev = dev_get_by_name(ovs_dp_get_net(vport->dp), name);
-+	if (!vport->dev) {
-+		err = -ENODEV;
-+		goto error_free_vport;
-+	}
- 	/* Ensure that the device exists and that the provided
- 	 * name is not one of its aliases.
- 	 */
--	if (!vport->dev || strcmp(name, ovs_vport_name(vport))) {
-+	if (strcmp(name, ovs_vport_name(vport))) {
- 		err = -ENODEV;
--		goto error_free_vport;
-+		goto error_put;
- 	}
- 	netdev_tracker_alloc(vport->dev, &vport->dev_tracker, GFP_KERNEL);
- 	if (vport->dev->flags & IFF_LOOPBACK ||
--- 
-2.25.1
-
+Regards,
+Tiwei
