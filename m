@@ -1,184 +1,195 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D2F60279;
-	Tue, 23 Apr 2024 11:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BA14823D9
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713871612; cv=none; b=SwW95kWZyndz6ZRe1kyVZa9QPQCrFPBJtPEswc+n1WlMp1Lr91yE6pJraWxO+04c3xPBhb5MRCsx9uFWJ/SvwqBHzClzuq1H1SRosZmIXY2gw8WGddUFQ0SPQ18M2+dNWwEMCh8Cmd6eHXUoL+yWJwZvbPeuw/7rv7FVE2QUl6U=
+	t=1713871615; cv=none; b=JcMGIi1Ppx9/1CzT18QJ+hE+oiITdZR8qsMx2DOFgtIsKiFDeoyf0ry39Y8PRFC3uY+9/ost1LgZzlHDOt+Y52RHAWld/hJ1MuxFDTe1M3vU3hCnj3MquNa2g7snXF84VREdqz64yaSDsSu12jx7D4+fgu8e3zF+MAD8r/KR3Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713871612; c=relaxed/simple;
-	bh=yIru4Dpy+UCxrypB9Zbcrt6rwL+AC++o7HQ7EHMSuTY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kL337ZAR3vZmZPcQf0qDsZeKLnDA11lbfuGbalwQr5sr35sXTvyXGGaXs/x+ydyhSn0x+206zBaFdUpFPu77R3vEb48J+Q78VPYtYtcxx1nSiId9AU2hVAsZu1xu0FF7cfTQvIR0rwSdfpZhznu4LJFTFIbT8KqB/R+z/0eoq30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VP0F84QTsz4f3nKM;
-	Tue, 23 Apr 2024 19:26:36 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id C08ED1A0175;
-	Tue, 23 Apr 2024 19:26:45 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBHGBHymidmAnH7Kg--.30599S4;
-	Tue, 23 Apr 2024 19:26:45 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	djwong@kernel.org,
-	hch@infradead.org,
-	brauner@kernel.org,
-	david@fromorbit.com,
-	chandanbabu@kernel.org,
-	tytso@mit.edu,
-	jack@suse.cz,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com
-Subject: [PATCH v5 4/9] xfs: convert delayed extents to unwritten when zeroing post eof blocks
-Date: Tue, 23 Apr 2024 19:17:35 +0800
-Message-Id: <20240423111735.1298851-1-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240320110548.2200662-5-yi.zhang@huaweicloud.com>
-References: <20240320110548.2200662-5-yi.zhang@huaweicloud.com>
+	s=arc-20240116; t=1713871615; c=relaxed/simple;
+	bh=wJKPniY4/Ci5B83yC2QKM57byNuiwW1P7++ILqKKhzQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b4Yho/DxDs5I9T7QbJWcd0LmA6WB+7xgZZtQpUE75R2Pt60SQRHfRypTymm+Fo81KONMzVthnX7C72R6q6gqAGGFAprIXaw1p2Hz41PpuY3MXdF5sJLCDaO0t9FYp/QDq11nZFge4CPyEUXMK7ztog3n07oBGpnKKDoB4eUda4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0ABE339;
+	Tue, 23 Apr 2024 04:27:21 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 570B83F7BD;
+	Tue, 23 Apr 2024 04:26:51 -0700 (PDT)
+Message-ID: <3cf97e3c-c8d9-4282-a8ca-e4c1ea383dbd@arm.com>
+Date: Tue, 23 Apr 2024 12:26:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHGBHymidmAnH7Kg--.30599S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxWw47Kw4fCw4UJF4DuryDKFg_yoWrGrW8pF
-	Zagw15GrsrKw1fZw4fAF1agr1F93Z5Cr4UJryrXrs3Za4Yqr4IgryIy3Wjqry8Cws3A3Wj
-	vF4jgas2934qvaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VU1
-	a9aPUUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iommu: Fix def_domain_type interaction with untrusted
+ devices
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: joro@8bytes.org, will@kernel.org, ewagner12@gmail.com,
+ suravee.suthikulpanit@amd.com, vashegde@amd.com, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <fa14583e94cbf540b60a6be94b41bb24d0037e75.1713272443.git.robin.murphy@arm.com>
+ <20240416152943.GU223006@ziepe.ca>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20240416152943.GU223006@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Zhang Yi <yi.zhang@huawei.com>
+On 16/04/2024 4:29 pm, Jason Gunthorpe wrote:
+> On Tue, Apr 16, 2024 at 02:00:43PM +0100, Robin Murphy wrote:
+>> Previously, an untrusted device forcing IOMMU_DOMAIN_DMA always took
+>> precedence over whatever a driver's def_domain_type may have wanted to
+>> say. This was intentionally handled in core code since 3 years prior,
+>> to avoid drivers poking at the details of what is essentially a policy
+>> between the PCI core and the IOMMU core. Now, though, we go to the
+>> length of evaluating both constraints to check for any conflict, and if
+>> so throw our toys out of the pram and refuse to handle the device at
+>> all. Regardless of any intent, in practice this leaves the device, and
+>> potentially the rest of its group or even the whole IOMMU, in a largely
+>> undetermined state, which at worst may render the whole system
+>> unusable.
+> 
+> For systems supporting untrusted device security the translation must
+> be BLOCKED at this point.
 
-Current clone operation could be non-atomic if the destination of a file
-is beyond EOF, user could get a file with corrupted (zeroed) data on
-crash.
+So why is that not enforced then? Simply hoping that calling 
+ops->release_device() or returning an error from iommu_device_register() 
+might do the right thing is no guarantee. Furthermore I'm pretty sure 
+we're still letting an untrusted device be hotplugged into an existing 
+group without any checks at all.
 
-The problem is about preallocations. If you write some data into a file:
+Meanwhile if we go back to letting untrusted take priority and attach 
+the device to an empty DMA domain, oh hey look it's blocked, and what's 
+more we also retain control of the IOMMU to keep it that way. Problem 
+solved. You intentionally changed the code to be less effective at what 
+you say it should be doing, so once again I'm left a little puzzled as 
+to what point you're trying to argue here.
 
-	[A...B)
+>> Unfortunately it turns out that this is a realistic situation to run
+>> into by connecting a PASID-capable device (e.g. a GPU) to an AMD-based
+>> laptop via a Thunderbolt expansion box, since the AMD IOMMU driver needs
+>> an identity default domain for PASIDs to be usable, and thus sets a
+>> def_domain_type override based on PASID capability.
+> 
+> The majority of places implementing def_domain_type are using it as a
+> statement of HW capability that should not be ignored by the core code:
+> 
+>   - DART
+>     * system page size is too small, can't map IOPTEs, force identity
 
-and XFS decides to preallocate some post-eof blocks, then it can create
-a delayed allocation reservation:
+Not a hardware limitation at all, it supports paging just fine, and 
+iommu-dma *could* in principle work with larger pages with a bit of 
+effort (some proof-of-concept patches were posted some time ago). This 
+is entirely the driver hacking around the legacy of iommu-dma and core 
+code not expecting the situation and thus not detecting it or handling 
+it gracefully. In fact I should be able to sort that out relatively 
+soon, once my other stuff lands and I'm able to start pulling 
+iommu_dma_init_domain() apart.
 
-	[A.........D)
+>     * iommu does not support IDENTITY at all, force paging
+>   - tegra: Device quirks mean paging and DMA API doesn't work
 
-The writeback path tries to convert delayed extents to real ones by
-allocating blocks. If there aren't enough contiguous free space, we can
-end up with two extents, the first real and the second still delalloc:
+Hmm, I don't recall any specific device concerns. What I do know is that 
+historically this driver has always wanted to prevent the ARM DMA domain 
+or older versions of iommu-dma (prior to iommu_get_dma_domain()) from 
+getting in the way of what the host1x drivers expect, so if there is any 
+actual hardware policy here, it's very much implicitly hanging on the 
+coat-tails of software policy.
 
-	[A....C)[C.D)
+>   - amd: The driver can't support PAGING when in SNP mode
+>   - SMMU: The driver can't support paging when in legacy binding mode and
+>           paging domain allocation fails as well
 
-After that, both the in-memory and the on-disk file sizes are still B.
-If we clone into the range [E...F) from another file:
+Quite obviously nothing to do with hardware. That's there solely because 
+using the old binding prevents us from reasonably being able to order 
+binding the IOMMU driver against the client drivers, so we can't risk 
+having iommu-dma come up and change the DMA ops underneath an 
+already-active device.
 
-	[A....C)[C.D)      [E...F)
+>   - qcom: Looks like these devices have some iommu bypass bus in their
+>           HW and paging doesn't work
 
-then xfs_reflink_zero_posteof() calls iomap_zero_range() to zero out the
-range [B, E) beyond EOF and flush it. Since [C, D) is still a delalloc
-extent, its pagecache will be zeroed and both the in-memory and on-disk
-size will be updated to D after flushing but before cloning. This is
-wrong, because the user can see the size change and read the zeroes
-while the clone operation is ongoing.
+I believe that is true for some of the modem stuff, however again 
+there's also plenty of software policy in there too; some of it the same 
+thing about default domains getting in the way of how the GPU/display 
+drivers want to use dma-direct for cache maintenance underneath their 
+own unmanaged domains, one is completely abusing the domain type in a 
+devious hack which just happens to make some behaviour fall out of the 
+rest of the driver to satisfy an unrelated hardware/firmware constraint 
+(which is still *supposed* to be only a temporary fix pending a proper 
+solution, ha...)
 
-We need to keep the in-memory and on-disk size before the clone
-operation starts, so instead of writing zeroes through the page cache
-for delayed ranges beyond EOF, we convert these ranges to unwritten and
-invalidate any cached data over that range beyond EOF.
+>   - SMMUv3: The comment says HISI devices cannot support paging due to a HW quirk
+> 
+> For these force overriding the driver knowledge will either result in
+> domain allocate/attach failure or a broken DMA environment anyhow.
+> 
+> The AMD PASID thing is actually unique because the driver can still
+> fully support PAGING, despite it wrongly telling the core code that it
+> can't.
+> 
+> This is happening because it is all just a hack to work around the
+> incomplete SW implementation in the AMD driver.
 
-Suggested-by: Dave Chinner <david@fromorbit.com>
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
----
-Changes since v4:
+Not really, it's shown up because the core code took an illogical step 
+backwards. Without significant surgery to IOMMU and/or driver core code, 
+the best and most reasonable thing to do at the moment is still the one 
+which happens to work out OK for the current AMD behaviour. Yes, if we 
+*had* done all the work to make the core code super-robust then the 
+issue could have been the GPU driver gracefully failing rather than 
+wedging the whole system, and the remaining blame could then be fairly 
+laid on amd_iommu_def_domain_type(), but that is not the case and cannot 
+be claimed to be.
 
-Move the delalloc converting hunk before searching the COW fork. Because
-if the file has been reflinked and copied on write,
-xfs_bmap_extsize_align() aligned the range of COW delalloc extent, after
-the writeback, there might be some unwritten extents left over in the
-COW fork that overlaps the delalloc extent we found in data fork.
+Per our API expectations, a driver's def_domain_type can go one of three 
+ways; do nothing, request IOMMU_DOMAIN_DMA, or request 
+IOMMU_DOMAIN_IDENTITY. For the first two it's clear that untrusted 
+forcing IOMMU_DOMAIN_DMA without even asking is perfectly fine. In the 
+third case, we still definitely want untrusted to take precedence, since 
+our policy is that the device not having access to things it shouldn't 
+is more important that it having to access things it should. Sure, in 
+the almost-impossible case that we did have an external device which 
+genuinely couldn't handle translation, then the user may allow a driver 
+to bind, which ends up not working and causing IOMMU faults, however 
+that would be equally true of any kind of blocking notion we could 
+implement right now, so there's no appreciable loss of functionality. 
+However, the overwhelming fact is that the few devices genuinely 
+requiring IDENTITY overrides are on-chip integrated things, any of which 
+suddenly turning up on external ports would be highly suspect, so that's 
+actually a big argument in *favour* of not believing def_domain_type 
+either in such cases.
 
-  data fork  ...wwww|dddddddddd...
-  cow fork          |uuuuuuuuuu...
-                    ^
-                  i_size
+In fact the more I think about it, I could swear I've had this 
+discussion and worked through this reasoning before, possibly back when 
+we first introduced it?
 
-In my v4, we search the COW fork before checking the delalloc extent,
-goto found_cow tag and return unconverted delalloc srcmap in the above
-case, so the delayed extent in the data fork will have no chance to
-convert to unwritten, it will lead to delalloc extent residue and break
-generic/522 after merging patch 6.
+> When the AMD driver is
+> completed its def_domain_type should be removed entirely.
+> 
+> Since actual PASID AMD attach isn't implemented yet we could just
+> remove that check from def_domain_type as an RC fix. Vasant can sort
+> it out properly by disabling pasid support on untrusted devices until
+> the DTE logic is fully completed.
+> 
+>> In general, restoring the old behaviour of forcing translation will not
+>> make that device's operation any more broken than leaving it potentially
+>> blocked or subject to the rest of a group's translations would, nor will
+>> it be any less safe than leaving it potentially bypassed or subject to
+>> the rest of a group's translations would, so do that, and let eGPUs work
+>> again.
+> 
+> Well, this is true, since we can't handle the probe error it doesn't
+> matter what we do.
 
- fs/xfs/xfs_iomap.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+OK, so after all that you do in fact agree? In that case, why are we 
+still mucking about proposing hacks on top of hacks in the AMD driver 
+rather than just fixing the regression sensibly?
 
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index 236ee78aa75b..ab398cb3680a 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -1022,6 +1022,23 @@ xfs_buffered_write_iomap_begin(
- 		goto out_unlock;
- 	}
- 
-+	/*
-+	 * For zeroing, trim a delalloc extent that extends beyond the EOF
-+	 * block.  If it starts beyond the EOF block, convert it to an
-+	 * unwritten extent.
-+	 */
-+	if ((flags & IOMAP_ZERO) && imap.br_startoff <= offset_fsb &&
-+	    isnullstartblock(imap.br_startblock)) {
-+		xfs_fileoff_t eof_fsb = XFS_B_TO_FSB(mp, XFS_ISIZE(ip));
-+
-+		if (offset_fsb >= eof_fsb)
-+			goto convert_delay;
-+		if (end_fsb > eof_fsb) {
-+			end_fsb = eof_fsb;
-+			xfs_trim_extent(&imap, offset_fsb, end_fsb - offset_fsb);
-+		}
-+	}
-+
- 	/*
- 	 * Search the COW fork extent list even if we did not find a data fork
- 	 * extent.  This serves two purposes: first this implements the
-@@ -1167,6 +1184,17 @@ xfs_buffered_write_iomap_begin(
- 	xfs_iunlock(ip, lockmode);
- 	return xfs_bmbt_to_iomap(ip, iomap, &imap, flags, 0, seq);
- 
-+convert_delay:
-+	xfs_iunlock(ip, lockmode);
-+	truncate_pagecache(inode, offset);
-+	error = xfs_bmapi_convert_delalloc(ip, XFS_DATA_FORK, offset,
-+					   iomap, NULL);
-+	if (error)
-+		return error;
-+
-+	trace_xfs_iomap_alloc(ip, offset, count, XFS_DATA_FORK, &imap);
-+	return 0;
-+
- found_cow:
- 	seq = xfs_iomap_inode_sequence(ip, 0);
- 	if (imap.br_startoff <= offset_fsb) {
--- 
-2.39.2
-
+Thanks,
+Robin.
