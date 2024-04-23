@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F2858ABF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5605914C;
 	Tue, 23 Apr 2024 09:51:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713865860; cv=none; b=VRCRv0/FK9oDNuAwggxkyfny+0+Yl5RegoyB/QBhQX3ybHF3O3Tty/Lh1j6Hh1mSImiGdnq/lu4aalFaPSDwVOP4pE6vrhwfNB/Soo5yz01zOmt/Wapl3jwGXCAccbSPSnHvzHCr6cF/4dHbnK69Z5rfq2EmlcAaXbQgDhT1Om8=
+	t=1713865860; cv=none; b=iOIK0K7JhMRVRXzlswHXmFpL85Xn0l6JzCgtjxhNEPIwJEkArefXbakGTQ7GYExnKZnNbp4WOVPWXuezgW/QdOdTMcWDipkrY/wg2+zHoC12iXoVEfysjT9UDa3xnn52AkahqK3lbp4RzTip87kfH1CHvAOOWoGqkQ7pM/NMjls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713865860; c=relaxed/simple;
-	bh=FQLt1hmXPP3cDkvy4rTvlY0mMo/XhlZ354mwI3by6iM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hjT4Kf1LGSbo2a55xcttfHdyMZK7w6KuvQ+myKycJbLZp5iNGeTrJdfziIPLYgD6KUh3b1bv6EanJ8KgplABXpVquRJboW0oXiQX6Gqc8xKU5DBfHaq5g5BqNitOdrDCUS+gJqMxMt6oiBs7Rp4yyUGNj8ce/ICZefYog4MZnGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpY1pR0K; arc=none smtp.client-ip=10.30.226.201
+	bh=ZhqBEdEffOXsyEaHXhjd8E7KHJl7rrnb6Uh8uim8bp0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ivuUrSuUYKMbOXlTTgYXCTB9DLexNLntBjB0FIE3Y8G9H2FkMxUsgJGW252oXVAT8kx/fOzBDrfBupHbiIL/xwwr/WIVkct36raR+cwgLDXuRCM8wcLFFuBXfZzJeEFuY6yJwW7ag1e/Rp5Dgsh46PdQDwzKLZ1bLxvM5V3qfzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aCUsaGjV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpY1pR0K"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D96E2C116B1;
-	Tue, 23 Apr 2024 09:50:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aCUsaGjV"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 114B3C4AF0A;
+	Tue, 23 Apr 2024 09:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713865859;
-	bh=FQLt1hmXPP3cDkvy4rTvlY0mMo/XhlZ354mwI3by6iM=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=LpY1pR0KqRtOCUIUK07oiHmdmM3lbG4ve3myhPArvgGHZZNesmSNJ9IaxfpAKubYb
-	 pZrbkLj/4cJUTYBkd+XyhQy5GeSne+O+Fz0SnqCDHk0K/hrbjtwoeoZXkAUzypbc0Q
-	 znea+45G2wpg/yp6oOs7/4/WwccHMKaiWt/HtA0ajQ4V7AdLl0wWr133+7aulsFRXu
-	 QrQh7PDJqUuhgTMyXZlaME/C/wXl3QfTP4PCkLOruVDJwTInSSfBahrkgy8DZNIBiI
-	 M7EllTCAqk5K0GHVWbCt0mfgJwKlEYLgSZfiOV05a/OAU5ydBMYgfvky7M4DatNPvz
-	 Wc1WMfQNWHgiw==
+	s=k20201202; t=1713865860;
+	bh=ZhqBEdEffOXsyEaHXhjd8E7KHJl7rrnb6Uh8uim8bp0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=aCUsaGjVquArZxfBKi2nTnxshdOWrCnpd3Evqy6pfvHskkz327Dev7P0hQaMDAdlG
+	 MizmvrNhARxRC6hoTWDT0Zk4i0i45o8gw/Zicc2uAcyWZq40hngBX1Zk9x/6fH8Qi6
+	 /l0D5bBcEFg0dcTpVCCTA/3t3TiMoS7uPKpE1Pm3MWK/vRFtnUXsuCTHWEgJZPrfrV
+	 gLeHz8e6CBw+AQVxRfQXrwIlun9G3BoaGd9KfmMknKHeWORJi2MT03jHif1RJvYGMf
+	 aMz3UEUudJr19EtCLrQClbUJp7J4q6cLbz+xb3u/flNB0r2H8p4RAUeUQKgU8GVffX
+	 R6uwFcwQDtrVg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE177C4345F;
-	Tue, 23 Apr 2024 09:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E78C4345F;
+	Tue, 23 Apr 2024 09:51:00 +0000 (UTC)
 From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL_via_B4_Relay?= <devnull+arinc.unal.arinc9.com@kernel.org>
-Subject: [PATCH v3 0/5] Document ASUS RT-AC3200 and ASUS RT-AC5300 and add
- device trees
-Date: Tue, 23 Apr 2024 12:50:44 +0300
-Message-Id: <20240423-for-soc-asus-rt-ac3200-ac5300-v3-0-23d33cfafe7a@arinc9.com>
+Date: Tue, 23 Apr 2024 12:50:47 +0300
+Subject: [PATCH v3 3/5] ARM: dts: BCM5301X: Add DT for ASUS RT-AC3200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,10 +40,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAHSEJ2YC/4XNsQ7CIBDG8VcxzJ45KNTi5HsYB3oFy2AxUImm6
- btLGwedOn353/C7iSUbvU3stJtYtNknH4YS1X7HqDfDzYLvSjOBQqLEBlyIkAKBSc8EcQRDlUA
- so6oyqqutI0FSH1tWjEe0zr9W/3It3fs0hvhe32W+XL8ylxty5oDAeUMaW2Nrq84m+oH0gcKdL
- XQWv5ze4kThnFbOKSRhZPfHzfP8AXFbRjwaAQAA
+Message-Id: <20240423-for-soc-asus-rt-ac3200-ac5300-v3-3-23d33cfafe7a@arinc9.com>
+References: <20240423-for-soc-asus-rt-ac3200-ac5300-v3-0-23d33cfafe7a@arinc9.com>
+In-Reply-To: <20240423-for-soc-asus-rt-ac3200-ac5300-v3-0-23d33cfafe7a@arinc9.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, 
  Hauke Mehrtens <hauke@hauke-m.de>, Rafal Milecki <zajec5@gmail.com>, 
@@ -52,14 +50,13 @@ To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
 Cc: Tom Brautaset <tbrautaset@gmail.com>, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>
+ =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713865858; l=2295;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713865858; l=4241;
  i=arinc.unal@arinc9.com; s=arinc9-Xeront; h=from:subject:message-id;
- bh=FQLt1hmXPP3cDkvy4rTvlY0mMo/XhlZ354mwI3by6iM=;
- b=qMdw1MUc3Tww2iXeIs464rNvG05CzXQzzZhWOaRk5Z6RaRjyuPZMdIWfOSsX9zQnfrtgh6GSp
- Pc6+aAB53vfA14d6V+9kO2Fps6t46d9OGKpOk3YewVhmrbw3EybzSTX
+ bh=rzvkGU8XYLFoJJLUOwkBJjuiHr53mnc39d+oLj0VaB8=;
+ b=yVyNDxioUjfJOYcBXOy2mKFHErFQ4rTCTHIynhHmmls0VRE3UDq4IkfGsYsfcOB8qufib1dvd
+ Egf2mpgcjTVDvlFew5hjnf1vSXm4pu/9l+mPNGSBCt0vXiWc9PmwxKn
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=z49tLn29CyiL4uwBTrqH9HO1Wu3sZIuRp4DaLZvtP9M=
 X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-Xeront
@@ -67,58 +64,198 @@ X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-Xeront
 X-Original-From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 Reply-To: arinc.unal@arinc9.com
 
-Hello.
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-This patch series documents the compatible strings for ASUS RT-AC3200 and
-ASUS RT-AC5300, and adds the device trees for them. The last patch makes
-the device tree files for ASUS RT-AC3100 and ASUS RT-AC88U conform to the
-Devicetree Sources (DTS) Coding Style.
+Add the device tree for ASUS RT-AC3200 which is an AC3200 router featuring
+5 Ethernet ports over the integrated Broadcom switch.
 
+Hardware info:
+* Processor: Broadcom BCM4709A0 dual-core @ 1.0 GHz
+* Switch: BCM53012 in BCM4709A0
+* DDR3 RAM: 256 MB
+* Flash: 128 MB
+* 2.4GHz: BCM43602 3x3 single chip 802.11b/g/n SoC
+* 5GHz: BCM43602 3x3 two chips 802.11a/n/ac SoC
+* Ports: 4 LAN Ports, 1 WAN Port
+
+Co-developed-by: Tom Brautaset <tbrautaset@gmail.com>
+Signed-off-by: Tom Brautaset <tbrautaset@gmail.com>
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 ---
-Changes in v3:
-- Add a new patch to the end.
-- Patch 3
-  - Reorder the nodes and properties to conform to the Devicetree Sources
-    (DTS) Coding Style.
-- Patch 4
-  - Same as above.
-- Link to v2: https://lore.kernel.org/r/20240419-for-soc-asus-rt-ac3200-ac5300-v2-0-f95ff50c2a4d@arinc9.com
+ arch/arm/boot/dts/broadcom/Makefile                |   1 +
+ .../boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts   | 150 +++++++++++++++++++++
+ 2 files changed, 151 insertions(+)
 
-Changes in v2:
-- Patch 3
-  - Remove the chosen node as earlycon is not for mainline use, and the
-    stdout-path property which should be used instead of bootargs =
-    "console=" is already described in bcm4708.dtsi with the same value.
-  - Remove MAC address assignment to switch ports. To explain why shortly,
-    on the switch with CPU port architecture, the LLC Entity associated
-    with each port can be accessed without a distinct MAC address assigned
-    to each port. Therefore, it is unnecessary.
-- Patch 4
-  - Same as above.
-- Link to v1: https://lore.kernel.org/r/20240414-for-soc-asus-rt-ac3200-ac5300-v1-0-118c90bae6e5@arinc9.com
+diff --git a/arch/arm/boot/dts/broadcom/Makefile b/arch/arm/boot/dts/broadcom/Makefile
+index 7099d9560033..c61fca514775 100644
+--- a/arch/arm/boot/dts/broadcom/Makefile
++++ b/arch/arm/boot/dts/broadcom/Makefile
+@@ -64,6 +64,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+ 	bcm47081-luxul-xap-1410.dtb \
+ 	bcm47081-luxul-xwr-1200.dtb \
+ 	bcm47081-tplink-archer-c5-v2.dtb \
++	bcm4709-asus-rt-ac3200.dtb \
+ 	bcm4709-asus-rt-ac87u.dtb \
+ 	bcm4709-buffalo-wxr-1900dhp.dtb \
+ 	bcm4709-linksys-ea9200.dtb \
+diff --git a/arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts b/arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts
+new file mode 100644
+index 000000000000..53cb0c58f6d0
+--- /dev/null
++++ b/arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts
+@@ -0,0 +1,150 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++/*
++ * Author: Tom Brautaset <tbrautaset@gmail.com>
++ */
++
++/dts-v1/;
++
++#include "bcm4709.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
++
++#include <dt-bindings/leds/common.h>
++
++/ {
++	compatible = "asus,rt-ac3200", "brcm,bcm4709", "brcm,bcm4708";
++	model = "ASUS RT-AC3200";
++
++	memory@0 {
++		reg = <0x00000000 0x08000000>,
++		      <0x88000000 0x08000000>;
++		device_type = "memory";
++	};
++
++	nvram@1c080000 {
++		compatible = "brcm,nvram";
++		reg = <0x1c080000 0x00180000>;
++
++		et0macaddr: et0macaddr {
++			#nvmem-cell-cells = <1>;
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		button-reset {
++			label = "Reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&chipcommon 11 GPIO_ACTIVE_LOW>;
++		};
++
++		button-wifi {
++			label = "Wi-Fi";
++			linux,code = <KEY_RFKILL>;
++			gpios = <&chipcommon 4 GPIO_ACTIVE_LOW>;
++		};
++
++		button-wps {
++			label = "WPS";
++			linux,code = <KEY_WPS_BUTTON>;
++			gpios = <&chipcommon 7 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		led-power {
++			color = <LED_COLOR_ID_WHITE>;
++			function = LED_FUNCTION_POWER;
++			gpios = <&chipcommon 3 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "default-on";
++		};
++
++		led-wan-red {
++			color = <LED_COLOR_ID_RED>;
++			function = LED_FUNCTION_WAN;
++			gpios = <&chipcommon 5 GPIO_ACTIVE_HIGH>;
++		};
++
++		led-wps {
++			color = <LED_COLOR_ID_WHITE>;
++			function = LED_FUNCTION_WPS;
++			gpios = <&chipcommon 14 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&gmac0 {
++	nvmem-cells = <&et0macaddr 0>;
++	nvmem-cell-names = "mac-address";
++};
++
++&gmac1 {
++	nvmem-cells = <&et0macaddr 1>;
++	nvmem-cell-names = "mac-address";
++};
++
++&gmac2 {
++	nvmem-cells = <&et0macaddr 2>;
++	nvmem-cell-names = "mac-address";
++};
++
++&nandcs {
++	partitions {
++		compatible = "fixed-partitions";
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partition@0 {
++			reg = <0x00000000 0x00080000>;
++			label = "boot";
++			read-only;
++		};
++
++		partition@80000 {
++			reg = <0x00080000 0x00180000>;
++			label = "nvram";
++		};
++
++		partition@200000 {
++			compatible = "brcm,trx";
++			reg = <0x00200000 0x07e00000>;
++			label = "firmware";
++		};
++	};
++};
++
++&srab {
++	status = "okay";
++
++	ports {
++		port@0 {
++			label = "wan";
++		};
++
++		port@1 {
++			label = "lan1";
++		};
++
++		port@2 {
++			label = "lan2";
++		};
++
++		port@3 {
++			label = "lan3";
++		};
++
++		port@4 {
++			label = "lan4";
++		};
++	};
++};
++
++&usb2 {
++	vcc-gpio = <&chipcommon 9 GPIO_ACTIVE_HIGH>;
++};
++
++&usb3_phy {
++	status = "okay";
++};
 
----
-Arınç ÜNAL (5):
-      dt-bindings: arm: bcm: add bindings for ASUS RT-AC3200
-      dt-bindings: arm: bcm: add bindings for ASUS RT-AC5300
-      ARM: dts: BCM5301X: Add DT for ASUS RT-AC3200
-      ARM: dts: BCM5301X: Add DT for ASUS RT-AC5300
-      ARM: dts: BCM5301X: Conform to DTS Coding Style on ASUS RT-AC3100 & AC88U
-
- .../devicetree/bindings/arm/bcm/brcm,bcm4708.yaml  |   2 +
- arch/arm/boot/dts/broadcom/Makefile                |   2 +
- .../boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts   | 150 ++++++++++++++++++++
- .../boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi |  92 ++++++------
- .../boot/dts/broadcom/bcm47094-asus-rt-ac5300.dts  | 156 +++++++++++++++++++++
- .../boot/dts/broadcom/bcm47094-asus-rt-ac88u.dts   |  69 +++++----
- 6 files changed, 390 insertions(+), 81 deletions(-)
----
-base-commit: dd5c56cd065e6f7ac5f87b939e8a3c499a62d463
-change-id: 20240408-for-soc-asus-rt-ac3200-ac5300-5d6efc2c497b
-
-Best regards,
 -- 
-Arınç ÜNAL <arinc.unal@arinc9.com>
+2.40.1
 
 
