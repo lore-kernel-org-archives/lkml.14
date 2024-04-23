@@ -1,45 +1,45 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95CD13C67E;
-	Tue, 23 Apr 2024 15:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B858813D29E;
+	Tue, 23 Apr 2024 15:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713885472; cv=none; b=TZ8xcwiVdVaBsBYwjMLx3TaUaLmKpJHs3fuPmKhGyMV1syjEJWM4Yclwe++uNUf4qYydbwLIQE0YjMvPIjE5en6VG5TPRRWsTjt2G4LgA14GT0VfJo/HjNmzf3f9mzpatYH6b/bbzdcMGBG3UtFm09YE2EvyjIFgbPNw1vhNDHg=
+	t=1713885473; cv=none; b=j0tWlx4NxFHnQQn6Kv9SE3nhQjOixQK5yal17asX4NGXu4Bcog+GFSTknVKQMgVBKLf9OizmP544OhnyiaZ05NHn9hUp7EOQhIjyfajV60ncy6JX1+2wJ0wtezc1YGvabBaqXfSxz68AphovlmzBUcStTOlP/Inr5Hza+oSLEHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713885472; c=relaxed/simple;
-	bh=bvgv9aLUJ3EMk1jeY5CIgMbaDSjxNRI7pgf5rK8d4Wo=;
+	s=arc-20240116; t=1713885473; c=relaxed/simple;
+	bh=7D0Jqm4Hi3yv4xX/pXec3TN115HNJWKeLrGRpUFarvc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ckox7BwONBOLv8HXVyAMS37MGigWQ0aLNg/PuglRcqpn8jtldrtSm9jNIIUHDje1oPMBdHDs4sL4kl316qkGpsrLsjuhLX+jhz4RgHTnX4F6zI3B/+qx0tBH96qqMC/RncPACuQuAm6mjzDeYcCimqKrWAdAZfI3q1xdZJ3os5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ChPSXrCm; arc=none smtp.client-ip=198.47.23.249
+	 MIME-Version:Content-Type; b=K1wtzXd//mWBEh5gCBg2yp0XzNSKkEb6u8XcPpLVVP2pY1xnNPS56e0YXuA3Jba9jrm9cuV4YSEenNiUqL0TTnqebpf71wNS3L/Oha/Au81HVin0Kf+mcYyKfv8ool6Pp2rkr5l93yl+JlUjZS/qCXi7aIvTowhBaq05oHA8PKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=mnIXeA6+; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ChPSXrCm"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43NFHXIV078995;
-	Tue, 23 Apr 2024 10:17:33 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mnIXeA6+"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43NFHWdj071457;
+	Tue, 23 Apr 2024 10:17:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1713885453;
-	bh=lvfJKgIkkEKUauOE6w6qO3n0tQqMfPCnxJ2Toh2ImOo=;
+	s=ti-com-17Q1; t=1713885452;
+	bh=epMXkrMLZOUJTL2bqi9MWHEie1OnttqIhqXQ33qIXAg=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=ChPSXrCmw4Uan0ilpxHCww+JQG7wUpj/H1+Gy/oFr1y0/n3TtXwZyJkcgyIo0ldj2
-	 klj2eDeumoVT1e6ahMjGdyHWGY3GKgbpzGfQVylHXSWpcwHrp3EM3U1r0/iHUR6tSh
-	 ybKgeC5RcI8qzjiDtTEMgA4bvbGylszd6/+LUs40=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43NFHWZm130282
+	b=mnIXeA6+yfsw9t8Ikb1/HVqaMp6TuXUkh6rntI2iWwOL1Z1E75SXPb+A9uN6y+/ss
+	 JnZD6+ZOs/1KIL6nOmIyJx0yggUj8/zOpD7NFU/QLoToaL+2QgxyDJXhbLL8Fxrac1
+	 6XIw0cpEDPzoOqRLpk52m/rqXxDtAHGy9PCCWHDo=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43NFHW1k013055
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
 	Tue, 23 Apr 2024 10:17:32 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 23
  Apr 2024 10:17:32 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
  Frontend Transport; Tue, 23 Apr 2024 10:17:32 -0500
 Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43NFHWYL080176;
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43NFHWYI080176;
 	Tue, 23 Apr 2024 10:17:32 -0500
 From: Judith Mendez <jm@ti.com>
 To: Rob Herring <robh@kernel.org>,
@@ -50,9 +50,9 @@ CC: Conor Dooley <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
         Bhavya Kapoor <b-kapoor@ti.com>, Dasnavis
  Sabiya <sabiya.d@ti.com>,
         Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH v3 5/5] arm64: dts: ti: k3-j784s4-main: Enable support for UHS mode
-Date: Tue, 23 Apr 2024 10:17:32 -0500
-Message-ID: <20240423151732.3541894-6-jm@ti.com>
+Subject: [PATCH v3 2/5] arm64: dts: ti: k3-am65-main: Remove unused properties in sdhci nodes
+Date: Tue, 23 Apr 2024 10:17:29 -0500
+Message-ID: <20240423151732.3541894-3-jm@ti.com>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240423151732.3541894-1-jm@ti.com>
 References: <20240423151732.3541894-1-jm@ti.com>
@@ -66,38 +66,52 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Dasnavis Sabiya <sabiya.d@ti.com>
+On AM65x platform, sdhci0 is for eMMC and sdhci1 is for SD.
+Remove the properties that are not applicable for each device.
 
-Remove sdhci-caps-mask to enable support for SDR104 speed mode for
-SD card and remove no-1-8-v property so that SD card can work in
-any UHS-1 high speed mode it can support.
-
-Fixes: 4664ebd8346a ("arm64: dts: ti: Add initial support for J784S4 SoC")
-Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
-Signed-off-by: Dasnavis Sabiya <sabiya.d@ti.com>
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-[Judith: Add fixes tag]
+Fixes: eac99d38f861 ("arm64: dts: ti: k3-am654-main: Update otap-del-sel values")
+Fixes: d7600d070fb0 ("arm64: dts: ti: k3-am65-main: Add support for sdhci1")
 Signed-off-by: Judith Mendez <jm@ti.com>
 ---
 Changes since v2:
 - no change
 ---
- arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-index d42f25cacf23d..6a4554c6c9c13 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-@@ -904,8 +904,6 @@ main_sdhci1: mmc@4fb0000 {
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 0803a8b9bfe84..127f581a56bc6 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -439,12 +439,6 @@ sdhci0: mmc@4f80000 {
+ 		ti,trm-icp = <0x8>;
+ 		ti,otap-del-sel-legacy = <0x0>;
+ 		ti,otap-del-sel-mmc-hs = <0x0>;
+-		ti,otap-del-sel-sd-hs = <0x0>;
+-		ti,otap-del-sel-sdr12 = <0x0>;
+-		ti,otap-del-sel-sdr25 = <0x0>;
+-		ti,otap-del-sel-sdr50 = <0x8>;
+-		ti,otap-del-sel-sdr104 = <0x7>;
+-		ti,otap-del-sel-ddr50 = <0x5>;
+ 		ti,otap-del-sel-ddr52 = <0x5>;
+ 		ti,otap-del-sel-hs200 = <0x5>;
+ 		ti,itap-del-sel-ddr52 = <0x0>;
+@@ -462,15 +456,12 @@ sdhci1: mmc@4fa0000 {
  		ti,clkbuf-sel = <0x7>;
  		ti,trm-icp = <0x8>;
- 		dma-coherent;
--		sdhci-caps-mask = <0x00000003 0x00000000>;
--		no-1-8-v;
- 		status = "disabled";
- 	};
- 
+ 		ti,otap-del-sel-legacy = <0x0>;
+-		ti,otap-del-sel-mmc-hs = <0x0>;
+ 		ti,otap-del-sel-sd-hs = <0x0>;
+ 		ti,otap-del-sel-sdr12 = <0xf>;
+ 		ti,otap-del-sel-sdr25 = <0xf>;
+ 		ti,otap-del-sel-sdr50 = <0x8>;
+ 		ti,otap-del-sel-sdr104 = <0x7>;
+ 		ti,otap-del-sel-ddr50 = <0x4>;
+-		ti,otap-del-sel-ddr52 = <0x4>;
+-		ti,otap-del-sel-hs200 = <0x7>;
+ 		ti,itap-del-sel-legacy = <0xa>;
+ 		ti,itap-del-sel-sd-hs = <0x1>;
+ 		ti,itap-del-sel-sdr12 = <0xa>;
 -- 
 2.43.2
 
