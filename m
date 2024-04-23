@@ -1,25 +1,80 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BA14823D9
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E296E6E617;
+	Tue, 23 Apr 2024 11:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713871615; cv=none; b=JcMGIi1Ppx9/1CzT18QJ+hE+oiITdZR8qsMx2DOFgtIsKiFDeoyf0ry39Y8PRFC3uY+9/ost1LgZzlHDOt+Y52RHAWld/hJ1MuxFDTe1M3vU3hCnj3MquNa2g7snXF84VREdqz64yaSDsSu12jx7D4+fgu8e3zF+MAD8r/KR3Tc=
+	t=1713871633; cv=none; b=Xybbv7pwgA9F5GAYCI3X7lQUV/MViSUpO2m7vsQU7zzLzLWAMOpK4Kk9t10iUyBldfFrl4qF/03KlSbFkkFEUeBKaFOGY5yhcwCmSI9OFTRSKoLT2EIcGI2EbHUpVpxtP/TKj8dEUMfIzNnLl8WYWOZBikbsTpPep1ttBihHNhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713871615; c=relaxed/simple;
-	bh=wJKPniY4/Ci5B83yC2QKM57byNuiwW1P7++ILqKKhzQ=;
+	s=arc-20240116; t=1713871633; c=relaxed/simple;
+	bh=ueYji0xidRGXvo2rPszEPUmQZsK73RJ6pImfZ3Yo0cg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b4Yho/DxDs5I9T7QbJWcd0LmA6WB+7xgZZtQpUE75R2Pt60SQRHfRypTymm+Fo81KONMzVthnX7C72R6q6gqAGGFAprIXaw1p2Hz41PpuY3MXdF5sJLCDaO0t9FYp/QDq11nZFge4CPyEUXMK7ztog3n07oBGpnKKDoB4eUda4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0ABE339;
-	Tue, 23 Apr 2024 04:27:21 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 570B83F7BD;
-	Tue, 23 Apr 2024 04:26:51 -0700 (PDT)
-Message-ID: <3cf97e3c-c8d9-4282-a8ca-e4c1ea383dbd@arm.com>
-Date: Tue, 23 Apr 2024 12:26:41 +0100
+	 In-Reply-To:Content-Type; b=qhT9lMgS2nw7AMJK0WgzliZVluOqBdEf2ic8+CDC9TYD45jQeiWPHQraRNFc1YMnL88daho+4BCdewtw1rzgNTtJnX5hWLHLg866ic9ModjrDblI88qbWl3sdExSDjcsoEXQZ9RUXMBtepK89wDovHA/Ic75bdtXVUsatUobNvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SSeaQMW8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6+AlQIsL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pklb+EGt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5xYLAUg2; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SSeaQMW8";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6+AlQIsL";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pklb+EGt";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5xYLAUg2"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C8A0237E5E;
+	Tue, 23 Apr 2024 11:27:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713871630; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mzLNT4UJJ35qwBy06Z65wFSAnrbvdPTohIJO40vB644=;
+	b=SSeaQMW8OkbhmbqLKVc3CAKufCTgOK/Y0+QT4OEbQWPiKQL2cqTyXulNuBtVvDPiK8w7Fo
+	SqQrIvc0+/iLMiIsTPn0NkEf06f6/c3oZXDLg1QNhyz/P9inDR2nbVQP8oE02xm4nX+0Bc
+	HIdU75SVQAEHDVO4BKXtQ7hlCcVVE5I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713871630;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mzLNT4UJJ35qwBy06Z65wFSAnrbvdPTohIJO40vB644=;
+	b=6+AlQIsLUrniKK5AGxHJkoB/hG5FPYIpWGf9QRTOoqZG8XLVFC/sFHdTwE1OKH2YF5C2xa
+	9Rw1eeJZX9WRo5DA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713871629; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mzLNT4UJJ35qwBy06Z65wFSAnrbvdPTohIJO40vB644=;
+	b=pklb+EGt1joraBB6x8D9MNGHJQ0w8k1K/9Q1TRLbVnFVmBbZfTbOUzIOKtU4Gm3wQxW6bv
+	lCJGR8+KK+732ArQASXd1lm7Kl/5/F9jgobi5M6QT6VbWsp2nvLZfDY/KZVSuZNv0DDh/x
+	T61ZjdBETOfe0H8I+PNGnMJwRcMUoxk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713871629;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mzLNT4UJJ35qwBy06Z65wFSAnrbvdPTohIJO40vB644=;
+	b=5xYLAUg2xvsgoF6kB3Fmkh6KR+70IjZyvvldJPuNciuU2ifqw5RIwAjOlg5CvtsPW6FJpY
+	CWq1dSWHRb8z01AQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7ED991399F;
+	Tue, 23 Apr 2024 11:27:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id zT2gHQ2bJ2YdQQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 23 Apr 2024 11:27:09 +0000
+Message-ID: <64c1585d-70e0-47d4-9d78-405b483b433c@suse.de>
+Date: Tue, 23 Apr 2024 13:27:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,169 +82,140 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iommu: Fix def_domain_type interaction with untrusted
- devices
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: joro@8bytes.org, will@kernel.org, ewagner12@gmail.com,
- suravee.suthikulpanit@amd.com, vashegde@amd.com, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <fa14583e94cbf540b60a6be94b41bb24d0037e75.1713272443.git.robin.murphy@arm.com>
- <20240416152943.GU223006@ziepe.ca>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20240416152943.GU223006@ziepe.ca>
+Subject: Re: [PATCH] fbdev: fix incorrect address computation in deferred IO
+To: Nam Cao <namcao@linutronix.de>
+Cc: Jaya Kumar <jayalk@intworks.biz>, Daniel Vetter <daniel@ffwll.ch>,
+ Helge Deller <deller@gmx.de>, Javier Martinez Canillas <javierm@redhat.com>,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, tiwai@suse.de, bigeasy@linutronix.de,
+ patrik.r.jakobsson@gmail.com, Vegard Nossum <vegard.nossum@oracle.com>,
+ George Kennedy <george.kennedy@oracle.com>,
+ Darren Kenny <darren.kenny@oracle.com>, chuansheng.liu@intel.com,
+ Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+ stable@vger.kernel.org
+References: <20240419190032.40490-1-namcao@linutronix.de>
+ <666d986e-5227-4b6d-829c-95ff16115488@suse.de>
+ <20240423095538.m79ML6a0@linutronix.de>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20240423095538.m79ML6a0@linutronix.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.79 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	FREEMAIL_CC(0.00)[intworks.biz,ffwll.ch,gmx.de,redhat.com,vger.kernel.org,lists.freedesktop.org,suse.de,linutronix.de,gmail.com,oracle.com,intel.com];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TAGGED_RCPT(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linutronix.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Score: -2.79
+X-Spam-Flag: NO
 
-On 16/04/2024 4:29 pm, Jason Gunthorpe wrote:
-> On Tue, Apr 16, 2024 at 02:00:43PM +0100, Robin Murphy wrote:
->> Previously, an untrusted device forcing IOMMU_DOMAIN_DMA always took
->> precedence over whatever a driver's def_domain_type may have wanted to
->> say. This was intentionally handled in core code since 3 years prior,
->> to avoid drivers poking at the details of what is essentially a policy
->> between the PCI core and the IOMMU core. Now, though, we go to the
->> length of evaluating both constraints to check for any conflict, and if
->> so throw our toys out of the pram and refuse to handle the device at
->> all. Regardless of any intent, in practice this leaves the device, and
->> potentially the rest of its group or even the whole IOMMU, in a largely
->> undetermined state, which at worst may render the whole system
->> unusable.
-> 
-> For systems supporting untrusted device security the translation must
-> be BLOCKED at this point.
+Hi
 
-So why is that not enforced then? Simply hoping that calling 
-ops->release_device() or returning an error from iommu_device_register() 
-might do the right thing is no guarantee. Furthermore I'm pretty sure 
-we're still letting an untrusted device be hotplugged into an existing 
-group without any checks at all.
+Am 23.04.24 um 11:55 schrieb Nam Cao:
+[...]
+>>> Fix this by taking the mapping offset into account.
+>>>
+>>> Reported-and-tested-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+>>> Closes: https://lore.kernel.org/linux-fbdev/271372d6-e665-4e7f-b088-dee5f4ab341a@oracle.com
+>>> Fixes: 56c134f7f1b5 ("fbdev: Track deferred-I/O pages in pageref struct")
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Nam Cao <namcao@linutronix.de>
+>>> ---
+>>>    drivers/video/fbdev/core/fb_defio.c | 3 ++-
+>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/video/fbdev/core/fb_defio.c b/drivers/video/fbdev/core/fb_defio.c
+>>> index dae96c9f61cf..d5d6cd9e8b29 100644
+>>> --- a/drivers/video/fbdev/core/fb_defio.c
+>>> +++ b/drivers/video/fbdev/core/fb_defio.c
+>>> @@ -196,7 +196,8 @@ static vm_fault_t fb_deferred_io_track_page(struct fb_info *info, unsigned long
+>>>     */
+>>>    static vm_fault_t fb_deferred_io_page_mkwrite(struct fb_info *info, struct vm_fault *vmf)
+>>>    {
+>>> -	unsigned long offset = vmf->address - vmf->vma->vm_start;
+>>> +	unsigned long offset = vmf->address - vmf->vma->vm_start
+>>> +			+ (vmf->vma->vm_pgoff << PAGE_SHIFT);
+>> The page-fault handler at [1] use vm_fault.pgoff to retrieve the page
+>> structure. Can we do the same here and avoid that computation?
+> Yes, thanks for the suggestion.
+>
+> It will change things a bit: offset will not be the exact value anymore,
+> but will be rounded down to multiple of PAGE_SIZE. But that doesn't matter,
+> because it will only be used to calculate the page offset later on.
+>
+> We can clean this up and rename this "offset" to "pg_offset". But that's
+> for another day.
 
-Meanwhile if we go back to letting untrusted take priority and attach 
-the device to an empty DMA domain, oh hey look it's blocked, and what's 
-more we also retain control of the IOMMU to keep it that way. Problem 
-solved. You intentionally changed the code to be less effective at what 
-you say it should be doing, so once again I'm left a little puzzled as 
-to what point you're trying to argue here.
+But can't we use struct vm_fault.pgoff directly? The page-fault handler 
+has used it since forever. The look-up code for the pageref should 
+probably do the same, because there's a 1:1 connection between the page 
+and the pageref. The pageref structure only exists because we cannot 
+store its data in struct page directly.
 
->> Unfortunately it turns out that this is a realistic situation to run
->> into by connecting a PASID-capable device (e.g. a GPU) to an AMD-based
->> laptop via a Thunderbolt expansion box, since the AMD IOMMU driver needs
->> an identity default domain for PASIDs to be usable, and thus sets a
->> def_domain_type override based on PASID capability.
-> 
-> The majority of places implementing def_domain_type are using it as a
-> statement of HW capability that should not be ignored by the core code:
-> 
->   - DART
->     * system page size is too small, can't map IOPTEs, force identity
+AFAICT pgoff is exactly the value want to compute. See [1] and  the 
+calculation at [2].
 
-Not a hardware limitation at all, it supports paging just fine, and 
-iommu-dma *could* in principle work with larger pages with a bit of 
-effort (some proof-of-concept patches were posted some time ago). This 
-is entirely the driver hacking around the legacy of iommu-dma and core 
-code not expecting the situation and thus not detecting it or handling 
-it gracefully. In fact I should be able to sort that out relatively 
-soon, once my other stuff lands and I'm able to start pulling 
-iommu_dma_init_domain() apart.
+[1] https://elixir.bootlin.com/linux/v6.8/source/mm/memory.c#L5222
+[2] 
+https://elixir.bootlin.com/linux/v6.8/source/include/linux/pagemap.h#L957
 
->     * iommu does not support IDENTITY at all, force paging
->   - tegra: Device quirks mean paging and DMA API doesn't work
+Best regards
+Thomas
 
-Hmm, I don't recall any specific device concerns. What I do know is that 
-historically this driver has always wanted to prevent the ARM DMA domain 
-or older versions of iommu-dma (prior to iommu_get_dma_domain()) from 
-getting in the way of what the host1x drivers expect, so if there is any 
-actual hardware policy here, it's very much implicitly hanging on the 
-coat-tails of software policy.
+>
+> Best regards,
+> Nam
 
->   - amd: The driver can't support PAGING when in SNP mode
->   - SMMU: The driver can't support paging when in legacy binding mode and
->           paging domain allocation fails as well
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-Quite obviously nothing to do with hardware. That's there solely because 
-using the old binding prevents us from reasonably being able to order 
-binding the IOMMU driver against the client drivers, so we can't risk 
-having iommu-dma come up and change the DMA ops underneath an 
-already-active device.
-
->   - qcom: Looks like these devices have some iommu bypass bus in their
->           HW and paging doesn't work
-
-I believe that is true for some of the modem stuff, however again 
-there's also plenty of software policy in there too; some of it the same 
-thing about default domains getting in the way of how the GPU/display 
-drivers want to use dma-direct for cache maintenance underneath their 
-own unmanaged domains, one is completely abusing the domain type in a 
-devious hack which just happens to make some behaviour fall out of the 
-rest of the driver to satisfy an unrelated hardware/firmware constraint 
-(which is still *supposed* to be only a temporary fix pending a proper 
-solution, ha...)
-
->   - SMMUv3: The comment says HISI devices cannot support paging due to a HW quirk
-> 
-> For these force overriding the driver knowledge will either result in
-> domain allocate/attach failure or a broken DMA environment anyhow.
-> 
-> The AMD PASID thing is actually unique because the driver can still
-> fully support PAGING, despite it wrongly telling the core code that it
-> can't.
-> 
-> This is happening because it is all just a hack to work around the
-> incomplete SW implementation in the AMD driver.
-
-Not really, it's shown up because the core code took an illogical step 
-backwards. Without significant surgery to IOMMU and/or driver core code, 
-the best and most reasonable thing to do at the moment is still the one 
-which happens to work out OK for the current AMD behaviour. Yes, if we 
-*had* done all the work to make the core code super-robust then the 
-issue could have been the GPU driver gracefully failing rather than 
-wedging the whole system, and the remaining blame could then be fairly 
-laid on amd_iommu_def_domain_type(), but that is not the case and cannot 
-be claimed to be.
-
-Per our API expectations, a driver's def_domain_type can go one of three 
-ways; do nothing, request IOMMU_DOMAIN_DMA, or request 
-IOMMU_DOMAIN_IDENTITY. For the first two it's clear that untrusted 
-forcing IOMMU_DOMAIN_DMA without even asking is perfectly fine. In the 
-third case, we still definitely want untrusted to take precedence, since 
-our policy is that the device not having access to things it shouldn't 
-is more important that it having to access things it should. Sure, in 
-the almost-impossible case that we did have an external device which 
-genuinely couldn't handle translation, then the user may allow a driver 
-to bind, which ends up not working and causing IOMMU faults, however 
-that would be equally true of any kind of blocking notion we could 
-implement right now, so there's no appreciable loss of functionality. 
-However, the overwhelming fact is that the few devices genuinely 
-requiring IDENTITY overrides are on-chip integrated things, any of which 
-suddenly turning up on external ports would be highly suspect, so that's 
-actually a big argument in *favour* of not believing def_domain_type 
-either in such cases.
-
-In fact the more I think about it, I could swear I've had this 
-discussion and worked through this reasoning before, possibly back when 
-we first introduced it?
-
-> When the AMD driver is
-> completed its def_domain_type should be removed entirely.
-> 
-> Since actual PASID AMD attach isn't implemented yet we could just
-> remove that check from def_domain_type as an RC fix. Vasant can sort
-> it out properly by disabling pasid support on untrusted devices until
-> the DTE logic is fully completed.
-> 
->> In general, restoring the old behaviour of forcing translation will not
->> make that device's operation any more broken than leaving it potentially
->> blocked or subject to the rest of a group's translations would, nor will
->> it be any less safe than leaving it potentially bypassed or subject to
->> the rest of a group's translations would, so do that, and let eGPUs work
->> again.
-> 
-> Well, this is true, since we can't handle the probe error it doesn't
-> matter what we do.
-
-OK, so after all that you do in fact agree? In that case, why are we 
-still mucking about proposing hacks on top of hacks in the AMD driver 
-rather than just fixing the regression sensibly?
-
-Thanks,
-Robin.
