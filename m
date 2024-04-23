@@ -1,128 +1,169 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E594E13DDA4
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 17:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3B013D8BB;
+	Tue, 23 Apr 2024 17:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713892902; cv=none; b=s53nqM6UkjqQpzmsMt8x+rbGXdgVoMfP7LpxDXrvtd0Qq3tRg+6K4JpJnVG4fhVAjMzHS2n9SeRjGzy9qGt38JQbM6ppziRs5Htlj5yU3JLNxwl5vKPxVKMmFhNCOyaL1H03P6zeTLNN5cIC7OMht9pkEvCioIFvnINTPuKjCNQ=
+	t=1713892941; cv=none; b=P5Mzsa6kr6wwwz6D/Duz2kkhCsCQbeacaNCvIx1++RLr7TdP3gzTEdqiir+fZH2OqIsatobS1k9AxZPIyiRWshI5MRdF9HNPKPkZ6IfsUe4FJUSzbiervjDqnUIM1pMBVDciECd65WH2yZlQhKEFduellht9RgkHQNrg+P6QHCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713892902; c=relaxed/simple;
-	bh=RR/mhCut1yZzlo78rvqAn3QoOM7crWMEG6yeIIOea2k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rti4VoYFfqh4ylOBA6ANgQLvWmFMLUxs2ZrPByqri2gEYEyx7HfltCxpMtXI7kN5ktlswXJCv9mJ/CI5LnLcZsFEAih+YRlAwpezT3MlGHzLzxGcOkt2Qy4jPLYjWoNSTiCzfynysv7xyhdsi9xCYaoXPzd66BVrOH3VgkokyJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=etrO4Snl; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713892941; c=relaxed/simple;
+	bh=wsRKPwSX2fLnfRxf1Lj4oY534LLRz0PskOzRwhMxGZw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RNvbyRlNfwavUU4gVs5rRbUXhFATyfuB01MFuKrdKjTgAU7mYl67fL8MDPVvQUXclJB0xMm0du2/0l0P40yWD8vRaKcJPAa0xxgk0T3INmJ23aRa+2azbS6B6BkCGhqrMVlBSTj3YaHIro8Kd0dWMllEOciMboVgq/yd+7sTi4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XWCUOG4e; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="etrO4Snl"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6f2f6142d64so2002757b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 10:21:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713892900; x=1714497700; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TicRi0V1qAmMfgKOSSBluVXmEMBw9YUKFX3o6wTkOkA=;
-        b=etrO4Snl6wGdplraGaNrGy4NOWhi4O9d2sY14UfGMc27ZiYpkAAh/AuUmQ6wAqtfIO
-         ej2EYY9rp0RqBJpjQgvpFIZFXH7Z0AqmkBTdBAvbZ0y3ys1OmU2BvcZTTZ7RhUN9REdm
-         AV+1kvQJvYZ3Z20ov9EHaYvfRYCtdhPgNEJYo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713892900; x=1714497700;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TicRi0V1qAmMfgKOSSBluVXmEMBw9YUKFX3o6wTkOkA=;
-        b=OomHStY1w8zPCErOofXbc7ysCTbLuiaX3TFMszW0baw9sokGMnJpekbwBRRYnYdDHG
-         XNtBmQ8djMcRFw9vOW6YV60ToulFljmgpIBBWUEka+FIYJFPUp1yr6KgEqg3ztVGMg+U
-         Hbz6YHAMX3ZhdZ0mnYcoUZW9HvNZg1pbSLnxRrdvvtbsBFV4QgFLUm3GXhpTdYPDvOfK
-         AQZzNNbp6sCta5kWwr7fqDpOOeBYMdNl5ylONYUEQiXZGEdv0Og+712HFaJ4DcQIuId+
-         81O7iACHR8PIFEafNsVPr0cDghdYcKjbz5kKtxhzM3EXlc2sZscpnLOWct6bXPiUBsb8
-         Bw9A==
-X-Gm-Message-State: AOJu0YzJDnmo2jphDRId9qGBkdUg75xr+m1amC2byMpdULALfjyWGjzy
-	WYR+1a0R1lfcdg1NUUcpJb7jCoA1otftLVi4LFH6k7e/CYrGx3T9sxcs1JZ+FA==
-X-Google-Smtp-Source: AGHT+IE6XSvERDfNoRMkS2W/ja3DqBX71Hjak3gJeTYJ9CPh/P13Nw07P+l3XL5uNUwvjqxeZSPiQg==
-X-Received: by 2002:a05:6a20:2d06:b0:1aa:5984:d3 with SMTP id g6-20020a056a202d0600b001aa598400d3mr41751pzl.6.1713892900193;
-        Tue, 23 Apr 2024 10:21:40 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q23-20020a62ae17000000b006ed64f4767asm9894062pff.112.2024.04.23.10.21.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 10:21:39 -0700 (PDT)
-Date: Tue, 23 Apr 2024 10:21:39 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, paulmck@kernel.org
-Subject: Re: [PATCH] lkdtm/bugs: add test for hung smp_call_function_single()
-Message-ID: <202404231021.271D4D0B@keescook>
-References: <20240419103452.3530155-1-mark.rutland@arm.com>
- <202404191434.5B051B5DC6@keescook>
- <ZieDsZclwUpzcaeI@FVFF77S0Q05N>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XWCUOG4e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713892941; x=1745428941;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=wsRKPwSX2fLnfRxf1Lj4oY534LLRz0PskOzRwhMxGZw=;
+  b=XWCUOG4eE2FQRuxaU3hXmtyp5uQ9GbRQvPeOdK/ErKvO8n4mm3aBh91L
+   ChNFYb3K3VuJYn6iufy1pLtJowtjRc848XvKeImgi6bQHI96u7ziHXV+i
+   T/xpQ2rH4W286AsD5i1DU2WfTdhQKe4CLolUDof2sz5MS+3q0f1GgqKLk
+   24xGpx/isFyoTqLJGz/sACWCu4Yv2jvx8sUq4caBfKaaKcl60c5DcygqR
+   f3oI65cUwVqviXz8eynQJA33ToPZEgk/lOJrqJCbc+d6Ij5r7+/htTans
+   L4SqOvmYKuFVa/mr6ABN+nwttWb0tAu1Q+eVYaHMiHIRRAC5Ld0oi1aPN
+   A==;
+X-CSE-ConnectionGUID: 5CMOUzfyRWa9HR2r1mtENw==
+X-CSE-MsgGUID: UzEkvQ2TTNWaYi4NtgUlfA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="20911790"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="20911790"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 10:22:20 -0700
+X-CSE-ConnectionGUID: snlcJYYeTlakB82V6hD+xg==
+X-CSE-MsgGUID: dyiYYpBESA+AbbmcCyycpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="25051423"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa008.jf.intel.com with ESMTP; 23 Apr 2024 10:22:11 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 88F6A1C5; Tue, 23 Apr 2024 20:22:10 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Frank Li <Frank.Li@nxp.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-omap@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-amlogic@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Cc: Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Yue Wang <yue.wang@Amlogic.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Xiaowei Song <songxiaowei@hisilicon.com>,
+	Binghui Wang <wangbinghui@hisilicon.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+Subject: [PATCH v2 2/4] PCI: dwc: Remove unused of_gpio.h
+Date: Tue, 23 Apr 2024 20:19:05 +0300
+Message-ID: <20240423172208.2723892-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20240423172208.2723892-1-andriy.shevchenko@linux.intel.com>
+References: <20240423172208.2723892-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZieDsZclwUpzcaeI@FVFF77S0Q05N>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 23, 2024 at 10:47:29AM +0100, Mark Rutland wrote:
-> On Fri, Apr 19, 2024 at 02:53:59PM -0700, Kees Cook wrote:
-> > On Fri, Apr 19, 2024 at 11:34:52AM +0100, Mark Rutland wrote:
-> > > The CONFIG_CSD_LOCK_WAIT_DEBUG option enables debugging of hung
-> > > smp_call_function*() calls (e.g. when the target CPU gets stuck within
-> > > the callback function). Testing this option requires triggering such
-> > > hangs.
-> > > 
-> > > This patch adds an lkdtm test with a hung smp_call_function_single()
-> > > callbac, which can be used to test CONFIG_CSD_LOCK_WAIT_DEBUG and NMI
-> > > backtraces (as CONFIG_CSD_LOCK_WAIT_DEBUG will attempt an NMI backtrace
-> > > of the hung target CPU).
-> 
-> [...]
-> 
-> > > I wrote this because I needed to guide someone through debugging a hung
-> > > smp_call_function() call, and I needed examples with/without an NMI
-> > > backtrace. It seems like it'd be useful for testing the CSD lockup
-> > > detector and NMI backtrace code in future.
-> > 
-> > Like the other lockup detector, I suspect we should skip it by default
-> > in the selftests? Something like this:
-> > 
-> > diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
-> > index 368973f05250..32baddc2c85d 100644
-> > --- a/tools/testing/selftests/lkdtm/tests.txt
-> > +++ b/tools/testing/selftests/lkdtm/tests.txt
-> > @@ -31,6 +31,7 @@ SLAB_FREE_CROSS
-> >  SLAB_FREE_PAGE
-> >  #SOFTLOCKUP Hangs the system
-> >  #HARDLOCKUP Hangs the system
-> > +#CSDLOCKUP Hangs the system
-> >  #SPINLOCKUP Hangs the system
-> >  #HUNG_TASK Hangs the system
-> >  EXEC_DATA
-> 
-> Ah, I wasn't ware of that file, yes.
-> 
-> > > I'm not sure about the CSDLOCKUP name, but everything else I tried
-> > > didn't seem great either:
-> > > 
-> > > * IPILOCKUP sounds like it's testing IPIs generally
-> > > * SMPCALLLOCKUP and similar look weirdly long
-> > > * SMP_CALL_LOCKUP and similar look different to {HARD,SOFT,SPIN}LOCKUP
-> > > 
-> > > ... and I'm happy to defer to Kees for the naming. ;)
-> > 
-> > It looks like it's only useful with CSD lockup detector? If that's true,
-> > sure, this name is fine.
-> 
-> I think it's also useful for testing other things (e.g. RCU stall detection),
-> so how about we go with SMP_CALL_LOCKUP, as that says what the test does rather
-> than what specifically it can be used to test?
+of_gpio.h is deprecated and subject to remove.
+The driver doesn't use it, simply remove the unused header.
 
-Yeah, that works for me. Thanks!
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/pci/controller/dwc/pci-dra7xx.c    | 1 -
+ drivers/pci/controller/dwc/pci-meson.c     | 1 -
+ drivers/pci/controller/dwc/pcie-qcom.c     | 1 -
+ drivers/pci/controller/dwc/pcie-tegra194.c | 2 --
+ 4 files changed, 5 deletions(-)
 
--Kees
-
+diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+index d2d17d37d3e0..2015f51664bc 100644
+--- a/drivers/pci/controller/dwc/pci-dra7xx.c
++++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+@@ -17,7 +17,6 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+-#include <linux/of_gpio.h>
+ #include <linux/of_pci.h>
+ #include <linux/pci.h>
+ #include <linux/phy/phy.h>
+diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+index 6477c83262c2..db9482a113e9 100644
+--- a/drivers/pci/controller/dwc/pci-meson.c
++++ b/drivers/pci/controller/dwc/pci-meson.c
+@@ -9,7 +9,6 @@
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/gpio/consumer.h>
+-#include <linux/of_gpio.h>
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 14772edcf0d3..436076612c8f 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -20,7 +20,6 @@
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/of.h>
+-#include <linux/of_gpio.h>
+ #include <linux/pci.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/platform_device.h>
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 93f5433c5c55..e8cd8c1bd4f4 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -13,7 +13,6 @@
+ #include <linux/clk.h>
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
+-#include <linux/gpio.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/interconnect.h>
+ #include <linux/interrupt.h>
+@@ -21,7 +20,6 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+-#include <linux/of_gpio.h>
+ #include <linux/of_pci.h>
+ #include <linux/pci.h>
+ #include <linux/phy/phy.h>
 -- 
-Kees Cook
+2.43.0.rc1.1336.g36b5255a03ac
+
