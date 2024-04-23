@@ -1,54 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32831369BE;
-	Tue, 23 Apr 2024 13:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E451136E2D
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 13:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713880012; cv=none; b=HS/KxlOTRJM5dimZLLfUebBvEKas7XGw8TyGfqgyA4VchHJlbHcuJekAgm3r1NpUGXE0IHzq/7ZP50kd3YDRe4V0eVIIPWBFmyjRbca1qhuvyCaOmDMSCiiwa3Ch4LX/1N8I9qNlIM4NTSGbBEw9+0r8o4rmKkpU47BQ/4cS1gI=
+	t=1713880062; cv=none; b=MbBH2BaI9tJ3sdSiCQMRPWZJ5eyEXGagjY4tl5HzXQTVCckoQd7iT3ls21haUvQkeD0V6AuXK2E3gwUogoWr+wPGDQAhgirneQ7BE30hlPKUr4iSuFxNndhRXIeAnYTVGkdZywtf6y7j5dKhfvBtc6GPvjrZ28cIfdGJtM0VuBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713880012; c=relaxed/simple;
-	bh=Wm1xdrgosT91TDDq0rbWVizXhaR6E3LE+4BSaV+vb6A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QQTbnA4t5zPcw16ck6Pjcl2IYaLfx7HV2laUlKcMKbJaSea3+UjH75So/YGCdxHVrWYdDmA/2XRkoQdTBsewPNaJY3brrwUbInraFT2y2KBUsUz5an1IwUPnrEyID3y5R7ykpXFmlhvjky0ylA3w/LhbN/IaDpDWbS99IwkD9fY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1YofQiA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713880062; c=relaxed/simple;
+	bh=SLVehTKF+44M8nOQRcYo9sNLtTeGWb/0pP2ZXk9JzXU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gRopgMmIUw37r2sjVgkOjFXEbBh66wZJMA2F0f4ghanslyCJzo8T7AcrLc+qIlMQU0wF2zyNFN6RisZ2/HSo/sVr3xtVzlwwmMat4feDMCSaKIrrlzk0jNBRxN3i/XaYqroPmJVgbPik/LJEnnxHSujy9+ju+qCCzXF/XXz9oso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g6uODNW+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1YofQiA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DEE8C4AF07;
-	Tue, 23 Apr 2024 13:46:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713880012;
-	bh=Wm1xdrgosT91TDDq0rbWVizXhaR6E3LE+4BSaV+vb6A=;
-	h=From:To:Cc:Subject:Date:From;
-	b=n1YofQiAQSaaW+Ph9p5+IdGwbdhbsdJuuaWlpJp0P8IxtxOY0UdutduFzvWdMvCpp
-	 EMXcZJ9rSO2IuqjeRgM8qKfvW7c46pPvQt+NlDKhXK3ibVtf9kQ6fphCXOvmgEaxDi
-	 LMrPMXgXjxLqIUqKnTjbjudUl2DOmqlh1ILzJu3lwMb85XaHgjfrGmvZFo7jbA68OM
-	 qdFFrekPyvUDj/Wu3EJEYWU9Q0v8PzZ1Sqi00kus+a3mXpxv0pnn82qLai0jw5PSEW
-	 eafiFqCxKX9hJqcDTq1NsGe6C6vzaxm3oraGlstudxGm0c+REiQNn/4/1S7Lywxrq6
-	 X9vqv5Eya3hVQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1rzGTx-000000008Ke-405K;
-	Tue, 23 Apr 2024 15:46:50 +0200
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g6uODNW+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713880059;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hMZp7vYlgNuZhS/jUXjj83MHWi0SFemcDgb6WZEyykI=;
+	b=g6uODNW+QBBIzKc2afziISnG2yyzqp6PfDKHBrTjKgrKKUu1QPgAOFnTDCAKpy9ywL+CfH
+	PTdtAtbAp3nuJNukBy2lBMr7A6hkWa+Z5+ke1Oujz0m98OFj0RwrRpVBn9f353/4a+mvSU
+	SIk8zG5aA6KyERf3S8CZGPB0wD2f2po=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-473-Rxv05-80N6mL9QIoHLVtCw-1; Tue,
+ 23 Apr 2024 09:47:34 -0400
+X-MC-Unique: Rxv05-80N6mL9QIoHLVtCw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4BAC13C3D0C5;
+	Tue, 23 Apr 2024 13:47:33 +0000 (UTC)
+Received: from calimero.vinschen.de (unknown [10.39.194.197])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id DF92D200A5C5;
+	Tue, 23 Apr 2024 13:47:32 +0000 (UTC)
+Received: by calimero.vinschen.de (Postfix, from userid 500)
+	id 88233A80CED; Tue, 23 Apr 2024 15:47:31 +0200 (CEST)
+From: Corinna Vinschen <vinschen@redhat.com>
+To: netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH 0/6] HID/arm64: dts: qcom: sc8280xp-x13s: fix touchscreen power on
-Date: Tue, 23 Apr 2024 15:46:05 +0200
-Message-ID: <20240423134611.31979-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.43.2
+	intel-wired-lan@lists.osuosl.org
+Cc: Nikolay Aleksandrov <razor@blackwall.org>,
+	Jason Xing <kerneljasonxing@gmail.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>
+Subject: [PATCH net v2] igb: cope with large MAX_SKB_FRAGS
+Date: Tue, 23 Apr 2024 15:47:31 +0200
+Message-ID: <20240423134731.918157-1-vinschen@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,75 +62,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-The Elan eKTH5015M touch controller on the X13s requires a 300 ms delay
-before sending commands after having deasserted reset during power on.
+From: Paolo Abeni <pabeni@redhat.com>
 
-This series switches the X13s devicetree to use the Elan specific
-binding so that the OS can determine the required power-on sequence and
-make sure that the controller is always detected during boot. [1]
+Sabrina reports that the igb driver does not cope well with large
+MAX_SKB_FRAG values: setting MAX_SKB_FRAG to 45 causes payload
+corruption on TX.
 
-The Elan hid-i2c driver currently asserts reset unconditionally during
-suspend, which does not work on the X13s where the touch controller
-supply is shared with other peripherals that may remain powered. Holding
-the controller in reset can increase power consumption and also leaks
-current through the reset circuitry pull ups.
+An easy reproducer is to run ssh to connect to the machine.  With
+MAX_SKB_FRAGS=17 it works, with MAX_SKB_FRAGS=45 it fails.
 
-Note that the latter also affects X13s variants where the touchscreen is
-not populated as the driver also exits probe() with reset asserted.
+The root cause of the issue is that the driver does not take into
+account properly the (possibly large) shared info size when selecting
+the ring layout, and will try to fit two packets inside the same 4K
+page even when the 1st fraglist will trump over the 2nd head.
 
-Fix this by adding a new 'no-reset-on-power-off' devicetree property
-which can be used by the OS to determine when reset needs to be asserted
-on power down and when it safe and desirable to leave it deasserted.
+Address the issue forcing the driver to fit a single packet per page,
+leaving there enough room to store the (currently) largest possible
+skb_shared_info.
 
-I tried to look for drivers that had already addressed this but it was
-only after I finished implementing this that I noticed Doug's reference
-to commit 18eeef46d359 ("HID: i2c-hid: goodix: Tie the reset line to
-true state of the regulator"), which tried to solve a related problem.
+Fixes: 3948b05950fd ("net: introduce a config option to tweak MAX_SKB_FRAG")
+Reported-by: Jan Tluka <jtluka@redhat.com>
+Reported-by: Jirka Hladky <jhladky@redhat.com>
+Reported-by: Sabrina Dubroca <sd@queasysnail.net>
+Tested-by: Sabrina Dubroca <sd@queasysnail.net>
+Tested-by: Corinna Vinschen <vinschen@redhat.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+v2: fix subject, add a simple reproducer
 
-That commit has since been reverted but ultimately resulted in commit
-7607f12ba735 ("HID: i2c-hid: goodix: Add support for
-"goodix,no-reset-during-suspend" property") being merged to handle the
-related case where the touch controller supply is always on.
+ drivers/net/ethernet/intel/igb/igb_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The implementation is very similar, but I decided to use the slightly
-more generic 'no-reset-on-power-off' property name after considering a
-number of alternatives (including trying to describe the hardware
-configuration in the name). (And as this is not vendor specific, I left
-out the prefix.)
-
-Note that my X13s does not have a touchscreen, but I have done partial
-verification of the implementation using that machine and the sc8280xp
-CRD reference design. Bjorn has promised to help out with final
-verification on an X13s with a touchscreen.
-
-The devicetree changes are expected to go in through the Qualcomm tree
-once the binding and driver updates have been merged.
-
-Johan
-
-
-[1] The reset signal is currently deasserted using the pin configuration
-    and the controller would be detected if probe is deferred or if user
-    space triggers a reprobe through sysfs.
-
-
-Johan Hovold (6):
-  dt-bindings: HID: i2c-hid: add dedicated Ilitek ILI2901 schema
-  dt-bindings: HID: i2c-hid: elan: add Elan eKTH5015M
-  dt-bindings: HID: i2c-hid: elan: add 'no-reset-on-power-off' property
-  HID: i2c-hid: elan: fix reset suspend current leakage
-  arm64: dts: qcom: sc8280xp-x13s: fix touchscreen power on
-  arm64: dts: qcom: sc8280xp-crd: use external pull up for touch reset
-
- .../bindings/input/elan,ekth6915.yaml         | 20 ++++--
- .../bindings/input/ilitek,ili2901.yaml        | 66 +++++++++++++++++++
- arch/arm64/boot/dts/qcom/sc8280xp-crd.dts     |  3 +-
- .../qcom/sc8280xp-lenovo-thinkpad-x13s.dts    | 15 +++--
- drivers/hid/i2c-hid/i2c-hid-of-elan.c         | 37 ++++++++---
- 5 files changed, 118 insertions(+), 23 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/ilitek,ili2901.yaml
-
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index a3f100769e39..22fb2c322bca 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -4833,6 +4833,7 @@ static void igb_set_rx_buffer_len(struct igb_adapter *adapter,
+ 
+ #if (PAGE_SIZE < 8192)
+ 	if (adapter->max_frame_size > IGB_MAX_FRAME_BUILD_SKB ||
++	    SKB_HEAD_ALIGN(adapter->max_frame_size) > (PAGE_SIZE / 2) ||
+ 	    rd32(E1000_RCTL) & E1000_RCTL_SBP)
+ 		set_ring_uses_large_buffer(rx_ring);
+ #endif
 -- 
-2.43.2
+2.44.0
 
