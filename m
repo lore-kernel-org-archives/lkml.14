@@ -1,122 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBB114BF8B;
-	Tue, 23 Apr 2024 11:42:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1C484A57
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713872530; cv=none; b=F/0Jq1sU5P+TY+r833pkoqiawLUZg42GvmeoyMaBnJqpuj8AssA3ZOXnmsxU9YxuHx/Mwl9LuBaP4VClxYrzcyAhAObpryzJuEZ/8ccOh0nSbhhDSU4Nel7lHFUif1AQEccf/N8lRpcGcAiJ0UwQuvJIvnMXGNZJdDslxcK8yGM=
+	t=1713872645; cv=none; b=DDBpYmx0yKEpAHIVIybQnYxp9kvh6lsZZcNO6DU38NTwH4GZvONeC6+wT55/BGPgjw/kk25QBsDk7GsUUQbaqA5dDfEtUtAuGP93RAZiIS5izPPmBCGJhj7YcUMIwDorpkQ6u1ieJLYsSMa+3b/AGdihFQvp7n00CWHp7SCkl4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713872530; c=relaxed/simple;
-	bh=4xatCGuHGLqZax6DdkckXQorsV++62erOzujYkCsy4M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jSAqxLp2IRoFq8atHiv6RqNDh2LiYI6tbdHPR2OttxvFDw8EegQeaMs+uXAbb+GvgkjIjuNAWWY5lidg3m2GP/5TvsZEOnoWeaeYYJa0M1C9aRNHpxEE4JPGohjSiZabmp3eWnjSjmSuTJ5rABAZ5dE7SBrn1nrMU0schM5FBTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RRhYq85D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713872645; c=relaxed/simple;
+	bh=6/0LlvrN1gpGDZp5aJmUVeP9sPWMqO/MFef6cX7kpcs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mg8tliq6+N1yleCFFswUZotl6RtnKuelaOjHBAvros+zCA/mc80M2elL1qPtRvA3V65Hr0Ry7gY+45MIN2/flGRhqcZc0CrceIBNyGXDiBjBtXmewQ1YmUBP4qL0vm7wEJsVzo0p9hi1anWL+xAL1BW03eeBTZUGiBC/YAyVP4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=JSjVhsqY; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RRhYq85D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CB7CC116B1;
-	Tue, 23 Apr 2024 11:42:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713872530;
-	bh=4xatCGuHGLqZax6DdkckXQorsV++62erOzujYkCsy4M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RRhYq85DjhOpOxMG0VJwwynMq3anphrKISgK01I3nlHYG2sSbS2G3icIacogP4DGH
-	 jCVFHXrasftB/6dnBo/55EgsVSPg373IWGrtd5OKCmVwFrDW+Ib2k+goVYlsIs1vu8
-	 CvI/zrufJw//pLRgcfGbLBbDTXDAxdeUWY231ueKEjxA6G7e+9Eo2Rgedt3vspS7Cq
-	 vXFuyayxLzvMN6YUrbFtR3g4d8i+LHlf75MG+9OsVlC463rKSHyZSgCAQxk8BnOOJA
-	 iwBzGtWjgtxMWxswfl/g6TedhSiwjCDf0j6Ls5oigNUyg7+ti4d65Zg7R5wHDr/ov/
-	 3WSIWXTXyRDnQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Vanillan Wang <vanillanwang@163.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	bjorn@mork.no,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 7/7] net:usb:qmi_wwan: support Rolling modules
-Date: Tue, 23 Apr 2024 07:03:17 -0400
-Message-ID: <20240423110318.1659628-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240423110318.1659628-1-sashal@kernel.org>
-References: <20240423110318.1659628-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JSjVhsqY"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-617e6c873f3so60332267b3.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 04:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1713872642; x=1714477442; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=z1sKCCl7ebl0MIJR/f/QkAnKKTThmqv/7gFM9mRIM98=;
+        b=JSjVhsqYE+B3o+nKJl2VyqLDdobvhVT0cpe6eAD+nKPEurS1Rfk8FdYebTWlsGc6zA
+         0DKXF5wv5LwA0JaOo+60p7JRZv/0AcYfXLU4FbBGUxC9wgWiL/CuJMff4AfQiuLr0umm
+         wSC0/uhqQ3w2aML/PMzX8S+e/dWf9IH4RJWZugPlzI7DkmTmDcVxKZ2/QRAl3Ohj5GPh
+         9lhaNIjLHn5uul2LQBtYcPF5E2ExQFsZkg0Zl8Qfy4e7eE0rw6B1MjeRVlL3SfPvvD4p
+         iimEBcnQJYI0PR6wnA1Tl1DeiQOi7Oj+HesvxY3ukL70qzSeEBwXIy+WEx2qcY5eg4yk
+         8xlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713872642; x=1714477442;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z1sKCCl7ebl0MIJR/f/QkAnKKTThmqv/7gFM9mRIM98=;
+        b=LtaTxnt1DnB79wM54lss+o0eP8eJxyG8AaDSjoFbhZu5+SJfHnSVZ9wpl8o3sLs8ll
+         XqQ0+6pQMm9OE05yPFaxL3Ace0Kfe5p4CjWIe2/8xabh/i9rqPwPfbzOUljeLRdQHNVg
+         UlY1wZZCNmXckg8A6lKpH/ptsnZduOqlr9C8HvxMnbaGRadQzntMqvMfEjATtefoXgaI
+         TizMQvWQcjaj+oCCsuSfm4fLEDAqyhoqBvDO98UK0LLdkeltY4Xn57UJMqowIWdfPTnL
+         Ci//tt5/tOvaJg5ZYJmiMf8xNqqZQzYq3eEMlkZ8zUHqJEFfSGpErvXd+DF+Sh2XSFY3
+         RDKg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/ZYWx/d96HqWu6ZRkxNbwd7Wvb63JuhVO8KnkrDFT0N1H2ou9LCrAlBAtqkxrh76RcGUxj3r5zzI/H+I8VvC/twaIrRA8MqxLoUYX
+X-Gm-Message-State: AOJu0Yw2GsGhQSJhKoLXcGZUDhZgulh6yt2Y0XBluL2LQ0fqtylrtxL3
+	PE+0Z80nHADQHrzK9yXYBlLS7pIL6Sy0V/K1wjxoZXwxHJApngiHKd98YeDtiW7383SDKbUX8XY
+	9
+X-Google-Smtp-Source: AGHT+IHAGRMnMfKun6Sso1s6etTs8eqdIEQLJM8wBLdLQfSB2Mmcqbr2Dnq3AU99ObhConlm2aqaYw==
+X-Received: by 2002:a05:690c:3341:b0:614:8185:2946 with SMTP id fk1-20020a05690c334100b0061481852946mr13628124ywb.42.1713872642685;
+        Tue, 23 Apr 2024 04:44:02 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id c3-20020ac85183000000b00436e193f408sm5094927qtn.28.2024.04.23.04.44.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 04:44:02 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rzEZ7-0038Id-Jp;
+	Tue, 23 Apr 2024 08:44:01 -0300
+Date: Tue, 23 Apr 2024 08:44:01 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Konstantin Taranov <kotaranov@microsoft.com>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Konstantin Taranov <kotaranov@linux.microsoft.com>,
+	"sharmaajay@microsoft.com" <sharmaajay@microsoft.com>,
+	Long Li <longli@microsoft.com>, "leon@kernel.org" <leon@kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH rdma-next v3 4/6] RDMA/mana_ib: enable RoCE on port 1
+Message-ID: <20240423114401.GD231144@ziepe.ca>
+References: <1712738551-22075-1-git-send-email-kotaranov@linux.microsoft.com>
+ <1712738551-22075-5-git-send-email-kotaranov@linux.microsoft.com>
+ <20240422193728.GA44715@dev-arch.thelio-3990X>
+ <PAXPR83MB0557DE1F99908341801A11A6B4112@PAXPR83MB0557.EURPRD83.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.312
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PAXPR83MB0557DE1F99908341801A11A6B4112@PAXPR83MB0557.EURPRD83.prod.outlook.com>
 
-From: Vanillan Wang <vanillanwang@163.com>
+On Tue, Apr 23, 2024 at 07:15:41AM +0000, Konstantin Taranov wrote:
+> > I could not really find a consistent return code for when
+> > netdev_master_upper_dev_get_rcu() fails. -ENODEV?
+> 
+> Thanks for catching this! Yes, I think ret = -ENODEV; is appropriate fix.
+> Should I send a patch to rdma-next? Or what should I do now to fix
+> this?
 
-[ Upstream commit d362046021ea122309da8c8e0b6850c792ca97b5 ]
+Send a patch
 
-Update the qmi_wwan driver support for the Rolling
-LTE modules.
-
-- VID:PID 33f8:0104, RW101-GL for laptop debug M.2 cards(with RMNET
-interface for /Linux/Chrome OS)
-0x0104: RMNET, diag, at, pipe
-
-Here are the outputs of usb-devices:
-T:  Bus=04 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=5000 MxCh= 0
-D:  Ver= 3.20 Cls=00(>ifc ) Sub=00 Prot=00 MxPS= 9 #Cfgs=  1
-P:  Vendor=33f8 ProdID=0104 Rev=05.04
-S:  Manufacturer=Rolling Wireless S.a.r.l.
-S:  Product=Rolling Module
-S:  SerialNumber=ba2eb033
-C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=896mA
-I:  If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=30 Driver=option
-E:  Ad=01(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-E:  Ad=81(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-I:  If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=40 Driver=option
-E:  Ad=02(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-E:  Ad=82(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-I:  If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=40 Driver=option
-E:  Ad=03(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-E:  Ad=84(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-I:  If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=40 Driver=option
-E:  Ad=04(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-E:  Ad=86(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-I:  If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=50 Driver=qmi_wwan
-E:  Ad=0f(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-E:  Ad=88(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
-E:  Ad=8e(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-I:  If#= 5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=usbfs
-E:  Ad=05(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-E:  Ad=89(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
-
-Signed-off-by: Vanillan Wang <vanillanwang@163.com>
-Link: https://lore.kernel.org/r/20240416120713.24777-1-vanillanwang@163.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/usb/qmi_wwan.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index f787b9a4f9a9e..b4d436f985cfb 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1383,6 +1383,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x0489, 0xe0b5, 0)},	/* Foxconn T77W968 LTE with eSIM support*/
- 	{QMI_FIXED_INTF(0x2692, 0x9025, 4)},    /* Cellient MPL200 (rebranded Qualcomm 05c6:9025) */
- 	{QMI_QUIRK_SET_DTR(0x1546, 0x1342, 4)},	/* u-blox LARA-L6 */
-+	{QMI_QUIRK_SET_DTR(0x33f8, 0x0104, 4)}, /* Rolling RW101 RMNET */
- 
- 	/* 4. Gobi 1000 devices */
- 	{QMI_GOBI1K_DEVICE(0x05c6, 0x9212)},	/* Acer Gobi Modem Device */
--- 
-2.43.0
-
+Jason
