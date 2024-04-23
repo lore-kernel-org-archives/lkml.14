@@ -1,63 +1,71 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C6753373
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 23:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135212D7B8
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 23:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713915262; cv=none; b=Tr6308otXDc+Z1wv8Rt/cvreGV3/NzN6f5Wv8JXAdillcPzJU7UAoZw8vH6di+dTRjAdZ6kBdtO9Qs2Wr1eE0kiKXBZ/OVfL3uWeKPs4y3aBul7ERf7it9suHg+ShlbpkrfQ3wEVnTdGUKEHJictv/qyL/Q7h8jYmVp+q2vsR2g=
+	t=1713915305; cv=none; b=n2JwSqpFlb+IDdjChd6x5WNF30j89SzUpvsIHMeTW/v6NGkPaEBSwfnArVKGUM7qQQejIucyv8uIn/+9sFeLHHO7i8GSldv/UvTI1+9nOkMnQg+qgGx6qnD3Q7RubmJptS8vwoyZG4Fav0n6OJt5ezPks37WOQdpJLChacKMSUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713915262; c=relaxed/simple;
-	bh=i91iXa+v2Fvr881hXTJGQYY2QecwMN8qY6taP3UcQGc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=WRGvFnedSSYJWYwqOCae3K7WjJhWg6yRIlwhI81JwfiZcE3c4GkAoHwf34kdm8nlvXDqLnWfeiKhlbKoYbZljuB9wT1LeHyP9Xv2BhFO6pSs0Q22iezcGzJOicaNfi8PV4nvYCU9fkUWD6QgLCWyKAbnoDVATkR1tm9mVVwBdJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=WncLzLUg; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="WncLzLUg"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1713915256; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=9Gxowe4obBcWj3O95wnWmGmXXcjuigIjukpVqtM1i1k=;
-	b=WncLzLUgti+koitKU+Hn1nLxjLo6sdYPlccDNLqD2MQ8Ua2EWWy6G99gKD0eExVFwgwLvpL+ET+vVLb7Mssks7nApgsfsCWRVg0sDWHXFMjudG/ZCEZRkQR9wGXIXKjDLNyaeu72736UTI0K+VNCvkivFG85Trj/N2pK+jiKF3I=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0W5ACaKE_1713915254;
-Received: from 192.168.3.4(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W5ACaKE_1713915254)
-          by smtp.aliyun-inc.com;
-          Wed, 24 Apr 2024 07:34:15 +0800
-Message-ID: <4ac3f6e8-9801-473e-85e0-405a4283dc2a@linux.alibaba.com>
-Date: Wed, 24 Apr 2024 07:34:14 +0800
+	s=arc-20240116; t=1713915305; c=relaxed/simple;
+	bh=9ih97yL62HUGKVyj8n8Ste96IFo1+X1KxU08zI8Y3Qs=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=DaUJRd6N90oGA7GelFAM7AAKkLcwimq86tyKj8U8Tl7zmxb1gd2mIhT0CWUcFT8qo8spJ5TX4SI6GjvtBRj31YYIy7mxbGTiInpXNzg/09abBoC//nYVTxuPq/CmLuwYQ+vuUp7cYI9RoXSJr4W1OelH7sqqQuI6yXrkSRzPzoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7da52a99cbdso524505139f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 16:35:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713915303; x=1714520103;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=b95qhLXKHHgT3Jg8/31nDVZv9Zd0KrHEsXh95liPGbE=;
+        b=HWXSKbiUYbU7TVMxtc6d5cPY5/TJbSCFbMYKM3SCiJhRiP0JAA5ApONtdwNTZNuSQ3
+         O7dypOz7DhRIsK+2HP5wIzrK9rBoh2blQEJgW3mWic4MgcelVFVUs1qqyhXFTV/2fHGN
+         MLHBPCGxOnC/eX+Q5Ljk1HvZ3Lt+0UgcfoGWbO50O9UuRIrb3/RVLzvDwaIZ4A5N/Yhq
+         wVrnkebB3yu5fTobotT9fMmzinzk30lC8SApnmK6k6qg4CDxPESl+sjK7cvUcnpxKDxd
+         90tA4FDvp+Mst85aEYLur2DfhGCNnjdqGlIzCh/gfWEGf3PsussN50Xn6Rg6pJVFSygU
+         Hvqg==
+X-Forwarded-Encrypted: i=1; AJvYcCXO5hslVr0XncriV7OuMAzCzDTeplLD+t/wj8goNuh9+9HeZOSqXpPX8qyC8ZR4hT17zHkbd3S5f1Qzul1Gg1lpCXmU9ryd90hOXGhD
+X-Gm-Message-State: AOJu0YyiY/AxE4pAflQzTGgDqoO/jAUBNAD2Q8Me7s+iJKWHwPEvCCBk
+	WWpNTs3nKgGQYhIO5UTvLCq0bV1/QuyFabRDGVsYz3ddr3sh9EjORwo/OVzAtZuNAGvIFknepIw
+	rKYhvefqHkSgOdHtnRIiSqR2Lyq8iSMpp52pTTO/YHNgrAu1ZGy7eH18=
+X-Google-Smtp-Source: AGHT+IFQPZasv4KD6F5zLfb8+ePJDMKOzbwneN76rrPU9bcIZT68ZSO91Ax9ZurvOT645JhaNp2SkXfxjg/AC3GATZD0X9vfl7BC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [erofs?] BUG: using smp_processor_id() in preemptible
- code in z_erofs_get_gbuf
-To: syzbot <syzbot+27cc650ef45b379dfe5a@syzkaller.appspotmail.com>,
- linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- syzkaller-bugs@googlegroups.com
-References: <00000000000035775f0615b72d01@google.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <00000000000035775f0615b72d01@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1cac:b0:36b:1302:3272 with SMTP id
+ x12-20020a056e021cac00b0036b13023272mr98915ill.6.1713915303292; Tue, 23 Apr
+ 2024 16:35:03 -0700 (PDT)
+Date: Tue, 23 Apr 2024 16:35:03 -0700
+In-Reply-To: <20240423224608.3180-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d4049c0616cc00e4@google.com>
+Subject: Re: [syzbot] [fs?] WARNING in netdev_queue_update_kobjects (2)
+From: syzbot <syzbot+41cf3f847df2c5f600a3@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-On 2024/4/10 13:19, syzbot wrote:
-> Hello,
-> 
-> syzbot tried to test the proposed patch but the build/boot failed:
+Reported-and-tested-by: syzbot+41cf3f847df2c5f600a3@syzkaller.appspotmail.com
 
+Tested on:
 
-#syz invalid
+commit:         3cdb4559 Merge tag 's390-6.9-4' of git://git.kernel.or..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=14d33610980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c6e826cf3c9c6ffc
+dashboard link: https://syzkaller.appspot.com/bug?extid=41cf3f847df2c5f600a3
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1609eb73180000
 
-Since
-https://lore.kernel.org/r/20240408215231.3376659-1-dhavale@google.com
-has been folded into the original patch and this issue is only in -next.
-
-Thanks,
-Gao Xiang
+Note: testing is done by a robot and is best-effort only.
