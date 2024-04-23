@@ -1,233 +1,186 @@
-Received: from ironport.ite.com.tw (60-251-196-230.hinet-ip.hinet.net [60.251.196.230])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8785948788
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 08:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.251.196.230
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713860207; cv=none; b=J0sKSrxxaWxORjvzIJPKkLATeFPtZtq2env/+uolKwrGTkLne4H+3MB2Z0dIoR1auxhYQvsARWn4RCo88c6tzRDFWpN+3EyH2qz5aO11N6PYPNxMMxYZrE8TwaGippuY1F0lPuaVvMWFhuIs+rVrzgw5mfq4jBCOg6T88yjpcuA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713860207; c=relaxed/simple;
-	bh=qMRvRfCHt4RfsM1ayabBFvguO+HsdBVmxHCbs/4Emq0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lkJ77Zq2t9yoQ3X38QUMmBv5UdDv6cbSXJ+xpKFzUAq3pre2jfnU8Rz1wX3+jhBeMbsxph7SvjGXUN1bAXwRNVwK09g0UI9BxzpTjGNdegWRrlPzajYpATekSA3j7iWnUui6U0HSDM4lJqd5x9SgRW3dk04H9NsjdmcGsjD4ETw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw; spf=pass smtp.mailfrom=ite.com.tw; dkim=fail (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b=H+GOWL9s reason="key not found in DNS"; arc=none smtp.client-ip=60.251.196.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ite.com.tw
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2D32B9CA
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 08:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713860230; cv=fail; b=cyLVcEj1N22wbZh18Vajb04oW7peswyWpFpg1cjYgYywnRAZj76zbdozhYdjVBBy0UJtgV6Sw2SJa/2Mz60u5lG2L7RqWF66gx9XgmtJ3xfZ3+R4M9GcfFncNcJ6zKxHkskY9ZEEo3DiPy++tcHOFZ/BwcddnIFVW5POrOjIXQM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713860230; c=relaxed/simple;
+	bh=tZywtbTsMxpcgIk1Rpq3fRLVKEKozrcpB9m2dYDLJ9Y=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=if8l5x3Ubyu/4UfCC1DjuABjDsVi38mt5n5CT6SMl3Mvd90cvzcpVj5T3Ay9LqfGj/dl8Ta0bzILWtQQm+DjfY+5eVwPsD4uk7wWweLpIXEkZmdwuMCpDYfUxZmpEXXdG+mhnmLmST31xc0CypgBfnXlIBQ++FMKwfjfspZIH9k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JIz7uV2h; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b="H+GOWL9s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=ite.com.tw; s=dkim;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ZtLQhVDsiAYpK4O5MlGv6l3VXtS61DUL+pH4DJcyy/Q=;
-  b=H+GOWL9s+34ow1f+trqu4m+usnpck+ckQ8KEfPicE1lUx5ih0lPLidEN
-   O8m2VQ68tP73tpU1OlvahFDhwaY1mTcD2aIvvcYRrxJhLKdrSymDYY68M
-   wEXAd6URnU5sqvIbPDyeBVFXN+NqLpa2idIq45tc4hHeVJ4AWSzv31pio
-   YBe0V/BMrfh/8Xa+s4iIUGoRPBd29igm0uAG7Uq6IEvIMgO2AdUjH+aly
-   GKpgrwTMBTV8SY3mRom+ure+OXJKLNwOMUQJdIhJYNjM5nLCUQtWS2057
-   XzAI/yurP0AWbyjcY54KV+LePIoq1bw9hWez2grVpXMRHG18LYZG2J7Q5
-   g==;
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 23 Apr 2024 16:16:34 +0800
-Received: from CSBMAIL1.internal.ite.com.tw (CSBMAIL1.internal.ite.com.tw [192.168.65.58])
-	by mse.ite.com.tw with ESMTP id 43N8GRwc058283;
-	Tue, 23 Apr 2024 16:16:27 +0800 (GMT-8)
-	(envelope-from kuro.chung@ite.com.tw)
-Received: from ite-XPS-13-9360.internal.ite.com.tw (192.168.72.42) by
- CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JIz7uV2h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713860229; x=1745396229;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=tZywtbTsMxpcgIk1Rpq3fRLVKEKozrcpB9m2dYDLJ9Y=;
+  b=JIz7uV2hhKRB2UWNEk8FqjVnLZCwyaLE6pugQ30Kbh7cITud05oNNXSy
+   gjreN7g1GDw74DvzOBbJs6px8yFuf6K0gMG0U3/zr7kwBcxmEubkNOlnt
+   gMNebAkum8J/7SRXcEjDma3SOumhZhP7h61BCRW9su/9TMFBuhZzfvamQ
+   RJxWI0eHkwuX6x57AIeGorDQsJhz3p+IimCUonj9TJy5Kapo4vQObSd3U
+   WnT0JYuNhQ2fj/N0zK18727njs8nKtuJQhJozmjyHtwNQ1A3W2QK+6M9Y
+   xRpdelahpUBNDyC6iu2jbw1hJfVAlVpdFtIFuYk12B6x40FdDuf9tTz2n
+   w==;
+X-CSE-ConnectionGUID: 9Ishj4laRE2992JNy+cWyA==
+X-CSE-MsgGUID: DJnZa1yMSZisJUZfsZpYhA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="9297709"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="9297709"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 01:17:08 -0700
+X-CSE-ConnectionGUID: VOXuggwQQGq1fV3WyU9a+Q==
+X-CSE-MsgGUID: PEv4VH6iSdevgpuyp8ewnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="28796957"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 23 Apr 2024 01:17:08 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 23 Apr 2024 16:16:27 +0800
-From: kuro <kuro.chung@ite.com.tw>
-To:
-CC: Allen Chen <allen.chen@ite.com.tw>, Pin-yen Lin <treapking@chromium.org>,
-        Kuro Chung <kuro.chung@ite.com.tw>,
-        Kenneth Haung <kenneth.hung@ite.com.tw>,
-        Kuro Chung <kuro.chung@ite.corp-partner.google.com>,
-        Andrzej Hajda
-	<andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert
- Foss <rfoss@kernel.org>,
-        Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej
- Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS"
-	<dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 1/1] drm/bridge: it6505: fix hibernate to resume no display issue
-Date: Tue, 23 Apr 2024 16:27:22 +0800
-Message-ID: <20240423082722.843587-2-kuro.chung@ite.com.tw>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240423082722.843587-1-kuro.chung@ite.com.tw>
-References: <20240423082722.843587-1-kuro.chung@ite.com.tw>
+ 15.1.2507.35; Tue, 23 Apr 2024 01:17:07 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 23 Apr 2024 01:17:07 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 23 Apr 2024 01:17:07 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.101)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 23 Apr 2024 01:17:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EPpu50Nm1UipEpEJqXvVn/FE0WtZvUTarZr/YES5bUNZSCrAy7ZLTo2HF69M/YKmc6U3hOb1SVsdZ6W/RlZJYgFZr4iLzLZnmOeGMwjUVPD+20tla6FX7wBe1j9RoOBP7GQTU3cbvBk8QDMyraqar2YGMjoZVWLmg2qJyLtZ/NYZR3ZItJJH7jOSnrn7V38vjQPspUpm6uOLUBT18g4FPfwsHqc91W0+9FtAtuQ1530FLLWY8OcB3oIYJh/CLL87qf/1ndZZBKGPj+WF3eebKzL7+h+Wmjq8jaeggs1rcXSw30WhGrMXWR6KBLXLVcABmCOK+M3j0kFPojMR/7nIrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tZywtbTsMxpcgIk1Rpq3fRLVKEKozrcpB9m2dYDLJ9Y=;
+ b=AuogKpabUcrVxOVDCsM63YS9xksYcwbGvUwljkRncjFOWDeGPNWTqRpBbElOWlgoHC3xDd4PGQcN9sZUaJBrJ+QbR96+T7CDBEPk89bATcLUnsc5Pvk4I20ypupUYckxwm0v13QRUPmQ6FzRUondo5pv79SRyMIYWMnIrATiV7JCoClbLEEEbdM1WAghNwKvDxtkRPWCX8FKPWO5dZ2QKUgeMQesDuVnUTv05ZDuFwTUGdV8Qar16/VZgrIYtqZvdT0s5Isyh0rsrnfGLmwbm7wOpjgGAaGaR8okhzAWiSbjnp1f0is9F2vGcBrWDhBa6yGdVqF6FmCBomECm+4rAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by CO1PR11MB4868.namprd11.prod.outlook.com (2603:10b6:303:90::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.20; Tue, 23 Apr
+ 2024 08:17:06 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::6c9f:86e:4b8e:8234]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::6c9f:86e:4b8e:8234%6]) with mapi id 15.20.7519.021; Tue, 23 Apr 2024
+ 08:17:05 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, "Will
+ Deacon" <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, "Jason
+ Gunthorpe" <jgg@ziepe.ca>
+CC: "Zhang, Tina" <tina.zhang@intel.com>, "Liu, Yi L" <yi.l.liu@intel.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 01/12] iommu/vt-d: Add cache tag assignment interface
+Thread-Topic: [PATCH v3 01/12] iommu/vt-d: Add cache tag assignment interface
+Thread-Index: AQHaj9VBHEr21xvfHkeP18PDMfcoLLF1jXGQ
+Date: Tue, 23 Apr 2024 08:17:05 +0000
+Message-ID: <BN9PR11MB52764D1943C9A5CD91666E228C112@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20240416080656.60968-1-baolu.lu@linux.intel.com>
+ <20240416080656.60968-2-baolu.lu@linux.intel.com>
+In-Reply-To: <20240416080656.60968-2-baolu.lu@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|CO1PR11MB4868:EE_
+x-ms-office365-filtering-correlation-id: 2bb0a17c-c3ae-4b40-fc11-08dc636dc305
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|376005|366007|1800799015|38070700009;
+x-microsoft-antispam-message-info: =?us-ascii?Q?ylo/sADg81uscDkf5mX6A0jkFHZJwqgJqMOoImhMizVh4EvgRC+St7niTXpy?=
+ =?us-ascii?Q?u4LaILdVKHcad6BDx453u6T4q2LJFojlNkQbUSiPmCKjMhqKcMPRhg5qbDFt?=
+ =?us-ascii?Q?eC4dZUul9SLuGaZx8qjYzPPV7mdQXvIEsjbpJccCL8UaCnnBiZeAvASO6FXl?=
+ =?us-ascii?Q?lnzugPzkbmvc/YInplEvW2BsbvQ3acl3y1FdDlCerQrG083I7jqzuTaW06Ba?=
+ =?us-ascii?Q?IOLXE79+lEtESWW/kq0XZ/R/LcCn2SELWSJjh/qbjl5i3MMFfCLud6sK1bke?=
+ =?us-ascii?Q?dw7HOd4I4755p2V62sBQRi3saQZv1rkSuaZ3HGLH8oZuR9mCIZzhgUrD2QEl?=
+ =?us-ascii?Q?j1YRTjDZXmgibmxOKydASmvHOv9tWo1CrHQDjMFElk6jkKXyADY7gcLAycEs?=
+ =?us-ascii?Q?swnwK2Namks2Gdcp1aTjy33j5J4lJu4iLpQACJkuXrwTaXdEz16zAXMS662E?=
+ =?us-ascii?Q?Yj4mMmYT1weSEt+Y056T2Rq7zWTbEcrPaV+s2YwZWHiStj1g3Q4X4kOGHoml?=
+ =?us-ascii?Q?KtVBQ7HVAdrypE28VqLIHKw7wLSmw+DGqE8VHOEQhM19nRp8TEjN753fYCfh?=
+ =?us-ascii?Q?knKi5lktoRsrJv5WOtSLeWIu8xT+TrKM3dt3osajPkjXAhODnkF5NcZwsANI?=
+ =?us-ascii?Q?xVC+wOijESKHLQvshZXGS7UV8sxRf7PDimKs8eMDPcKpB1YyENiaMtNbxvW8?=
+ =?us-ascii?Q?Vr7JXIW9bndgpzhMzyjahUp8T0ccuxyMZPIuhs4t4xrlzckGOGJxvM9LZc65?=
+ =?us-ascii?Q?KovKzjOTgBkukPgnqGGfX2qniYi47ecaN0im8girdLYbadrbPxYp9+vNS2QY?=
+ =?us-ascii?Q?r3mbjEkKJiRC0yuG7MYSBc3YJjKJie0MwjxAqP2TD0x+4SyMWAJlp6ChR/Au?=
+ =?us-ascii?Q?yqEL/qN5Vn9W070iaa0WNY68zLvXaxpICdLs3zqnx5nqrvBQ97QBP0fsTgeR?=
+ =?us-ascii?Q?UCXQVKE8ev/zgIKc/d17YN8RZKeQRExDvprxh4q4AC/gz04f/y9uxS71ymTo?=
+ =?us-ascii?Q?nfuudapxLMHj0k+et4MXvybVThfWNyF5wJYFKcG1y/0S01o0iS5Y8LYT3f4r?=
+ =?us-ascii?Q?0i0bg5xPAxBI3Y2AMbJ+p8020t2sqOYTUWu9pkiAxF5x8tu7CLU3X7qoj85h?=
+ =?us-ascii?Q?Jz/+kKR7XcfZuJLAA0KhSwTLQdciKDJhVmU6ajdE0i0OceXqsaXDYak2UaUd?=
+ =?us-ascii?Q?Gflr4MxriVfQpqO9d9RsrMAI/aRTSLedPkvJiYcJSYK2kp3ZohqtsK+Hgw4F?=
+ =?us-ascii?Q?GruQpVdRGqaoGn3QlYezA6WKM80RcSa39WKgEHDOAJ77iWu+4DtFayiM6KWb?=
+ =?us-ascii?Q?XO3BKLbkscfC++7QL1xW9O5EfvSpDvy7NN5cqadT4Vb5UQ=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?x7q5vjIU9NAnx5hdMNNSE7RGS+Edb7eV4p08y3hjAw4llHTtBoiSGmof5yW0?=
+ =?us-ascii?Q?SyJOyduZ3GO6ENRYHxYJR+2GsmLOIQ6UO+jvB6FhDX6cRG7Y3YYigdf+QVSS?=
+ =?us-ascii?Q?+HnnmUfrIPT9QHWG/wuytGuxX9bY4I6LafgMmeZzwWKu3/n0jX26cbgrdw+o?=
+ =?us-ascii?Q?1Xpct+YNMArDxc46J2DJj6rVnJo58rNu8UGI+Z1NchDqYpSN8D6JCIR20nYQ?=
+ =?us-ascii?Q?/vJJ3ARfHDzwLC3gL3bPEjmbtAOQa13iATHjGeK2t5B/Bubg1ddk3Ja/IVkc?=
+ =?us-ascii?Q?dSsDtiYZq2uD2mH6z7eAFGM5CMfKNHhcBebvbHacnWhffX6RzotMRO9gmt8+?=
+ =?us-ascii?Q?KFix5D0pQ80ElcJWwvrFMTtuI93WviKpXfuitOZ8Kwp28cK5U5ursKEedo9y?=
+ =?us-ascii?Q?Qm1OpD31jeq21IuCAihIKAqp5iZDQjL8iNivnPlO8zPEWoQ4hiz2YR/eP8vR?=
+ =?us-ascii?Q?k12xSPG2wl+uRJexCdOGYAGAQFtaZtE5jpy+9jgrGeV2EkBZX1JzYKgntyHb?=
+ =?us-ascii?Q?TcwjLj4eYsAZXms/6Sb8borcXEOATuflETMqUJq+fqbG/mmLnyIvm1rvIYvZ?=
+ =?us-ascii?Q?jAQIQQCfe6XDvsOYiQKesOiEDn0h0Ick91EkEruZjnomZelAxKt+vFFNi9Al?=
+ =?us-ascii?Q?1cWx1eiiZpAWSO8YOzaYR4/uCEhGN3CS/Zz6CsXvo751jWj93RiiDfG8s8Rq?=
+ =?us-ascii?Q?ETmkigBkM1bX6F/PG65EBCRwPud6GlNscAlSnpdBTXdiJ7qykWp4B5hQqES0?=
+ =?us-ascii?Q?ZDrhRUY3dPraRh6/cJ3AWHHlkdycTHeW4emVAKkDhRWSXmJv5TbC+BRUAcnh?=
+ =?us-ascii?Q?Sw/g0ktQ+Cghj+iGUwix6eU8z8da76/IgWCoS8Td6s77PiJvxyEEtEt38ovb?=
+ =?us-ascii?Q?VCPk2C8SOHhDDu3H0BYloyyJddH4OnSUBZupjw7DdixwHjQcwBrwB23efNis?=
+ =?us-ascii?Q?fLfNqvvRqoKBK0pd9C69JiboHU+8p1BgbMewsABlefscWaKzGZ81f1MPnvlp?=
+ =?us-ascii?Q?qpWPuHeXl8T0TProR+zKp19npkjaW5RCK9Ft5RXgRDOfLx7H3QUi7ohh6pJT?=
+ =?us-ascii?Q?p9YrzGSqCHBlomqeQKbW9TUB57fBwN+CMdOiQSRylR5L0Im8jTql00vb5evK?=
+ =?us-ascii?Q?wwZC4dcVuwNY/XuNkrGihTBxZkdoUVFRm/uMYJ25XmKNcGPl/E6QyFDQ925p?=
+ =?us-ascii?Q?Psu70ucrmGgnfdbk+cNNGz1bm8KlJchuq+usGc8KaJ1725FYNgxzBe/v4wK4?=
+ =?us-ascii?Q?sG0l5I8iMDDlv79oPGyhOwCn/dy4PWT+j7Z06JGRT6qTvJ7cY+ZE1VB84F3h?=
+ =?us-ascii?Q?KiKn2WWJK0jvLAF9ouuOFiVNBOnFJzg1hvDgUQt3/kEZBWb4ngDVazaVvY0l?=
+ =?us-ascii?Q?VBjKCJygH30uw5hZJ6/bBwtmUl7eh0x8lVfN5H5FbJExrxNHV3u37ByrpbEn?=
+ =?us-ascii?Q?+oUnwMN3BZuSRwgouygH6qcjbfm4Ox80UiY2xJZLnSpM+z3D6+x56YqRmCok?=
+ =?us-ascii?Q?l9WeyTOTbuRAserEpdD0QxEpLXKYE0c9zMJunjhawnOrkw4Y6OnhkcZ1T+ab?=
+ =?us-ascii?Q?qPdv2ulXyQbaE0zl1Ok7JREHUp1WG+ODMhpg+ZyT?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
- CSBMAIL1.internal.ite.com.tw (192.168.65.58)
-X-TM-SNTS-SMTP:
-	3B09192209B203025BD741B7ACA8E0C697888362F73B39FE3A32B9968F8B69552002:8
-X-MAIL:mse.ite.com.tw 43N8GRwc058283
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2bb0a17c-c3ae-4b40-fc11-08dc636dc305
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2024 08:17:05.3680
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zPuOGkQHyr4c+k9h9PD1loE8fPzOEUUuQztHutLTOsQ1rmsYy0EKe/vx0KzsOO9zqDnyIKARU8x0YTiPNCmZWQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4868
+X-OriginatorOrg: intel.com
 
-From: Kuro <kuro.chung@ite.com.tw>
+> From: Lu Baolu <baolu.lu@linux.intel.com>
+> Sent: Tuesday, April 16, 2024 4:07 PM
+>=20
+> In addition to the basic IOTLB and devTLB caching tag types, PARENT_IOTLB
+> and PARENT_DEVTLB tag types are also introduced. These tags are used for
 
-ITE added a FIFO reset bit for input video. When system power resume,
-the TTL input of it6505 may get some noise before video signal stable
-and the hardware function reset is required.
-But the input FIFO reset will also trigger error interrupts of output module rising.
-Thus, it6505 have to wait a period can clear those expected error interrupts
-caused by manual hardware reset in one interrupt handler calling to avoid interrupt looping.
-
-Signed-off-by: Kuro Chung <kuro.chung@ite.corp-partner.google.com>
-
----
- drivers/gpu/drm/bridge/ite-it6505.c | 73 +++++++++++++++++++----------
- 1 file changed, 49 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
-index b53da9bb65a16..ae7f4c7ec6dd0 100644
---- a/drivers/gpu/drm/bridge/ite-it6505.c
-+++ b/drivers/gpu/drm/bridge/ite-it6505.c
-@@ -1317,9 +1317,15 @@ static void it6505_video_reset(struct it6505 *it6505)
- 	it6505_link_reset_step_train(it6505);
- 	it6505_set_bits(it6505, REG_DATA_MUTE_CTRL, EN_VID_MUTE, EN_VID_MUTE);
- 	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_VID_CTRL_PKT, 0x00);
--	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, VIDEO_RESET);
-+
-+	it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, 0x02);
-+	it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, 0x00);
-+
- 	it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, RST_501_FIFO);
- 	it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, 0x00);
-+
-+	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, VIDEO_RESET);
-+	usleep_range(1000, 2000);
- 	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, 0x00);
- }
- 
-@@ -2249,12 +2255,11 @@ static void it6505_link_training_work(struct work_struct *work)
- 	if (ret) {
- 		it6505->auto_train_retry = AUTO_TRAIN_RETRY;
- 		it6505_link_train_ok(it6505);
--		return;
- 	} else {
- 		it6505->auto_train_retry--;
-+		it6505_dump(it6505);
- 	}
- 
--	it6505_dump(it6505);
- }
- 
- static void it6505_plugged_status_to_codec(struct it6505 *it6505)
-@@ -2475,31 +2480,53 @@ static void it6505_irq_link_train_fail(struct it6505 *it6505)
- 	schedule_work(&it6505->link_works);
- }
- 
--static void it6505_irq_video_fifo_error(struct it6505 *it6505)
-+static bool it6505_test_bit(unsigned int bit, const unsigned int *addr)
- {
--	struct device *dev = &it6505->client->dev;
--
--	DRM_DEV_DEBUG_DRIVER(dev, "video fifo overflow interrupt");
--	it6505->auto_train_retry = AUTO_TRAIN_RETRY;
--	flush_work(&it6505->link_works);
--	it6505_stop_hdcp(it6505);
--	it6505_video_reset(it6505);
-+	return 1 & (addr[bit / BITS_PER_BYTE] >> (bit % BITS_PER_BYTE));
- }
- 
--static void it6505_irq_io_latch_fifo_overflow(struct it6505 *it6505)
-+static void it6505_irq_video_handler(struct it6505 *it6505, const int *int_status)
- {
- 	struct device *dev = &it6505->client->dev;
-+	int reg_0d, reg_int03;
- 
--	DRM_DEV_DEBUG_DRIVER(dev, "IO latch fifo overflow interrupt");
--	it6505->auto_train_retry = AUTO_TRAIN_RETRY;
--	flush_work(&it6505->link_works);
--	it6505_stop_hdcp(it6505);
--	it6505_video_reset(it6505);
--}
-+	/*
-+	 * When video SCDT change with video not stable,
-+	 * Or video FIFO error, need video reset
-+	 */
- 
--static bool it6505_test_bit(unsigned int bit, const unsigned int *addr)
--{
--	return 1 & (addr[bit / BITS_PER_BYTE] >> (bit % BITS_PER_BYTE));
-+	if ((!it6505_get_video_status(it6505) &&
-+		(it6505_test_bit(INT_SCDT_CHANGE, (unsigned int *) int_status))) ||
-+		(it6505_test_bit(BIT_INT_IO_FIFO_OVERFLOW, (unsigned int *) int_status)) ||
-+		(it6505_test_bit(BIT_INT_VID_FIFO_ERROR, (unsigned int *) int_status))) {
-+
-+		it6505->auto_train_retry = AUTO_TRAIN_RETRY;
-+		flush_work(&it6505->link_works);
-+		it6505_stop_hdcp(it6505);
-+		it6505_video_reset(it6505);
-+
-+		usleep_range(10000, 11000);
-+
-+		/*
-+		 * Clear FIFO error IRQ to prevent fifo error -> reset loop
-+		 * HW will trigger SCDT change IRQ again when video stable
-+		 */
-+
-+		reg_int03 = it6505_read(it6505, INT_STATUS_03);
-+		reg_0d = it6505_read(it6505, REG_SYSTEM_STS);
-+
-+		reg_int03 &= (BIT(INT_VID_FIFO_ERROR) | BIT(INT_IO_LATCH_FIFO_OVERFLOW));
-+		it6505_write(it6505, INT_STATUS_03, reg_int03);
-+
-+		DRM_DEV_DEBUG_DRIVER(dev, "reg08 = 0x%02x", reg_int03);
-+		DRM_DEV_DEBUG_DRIVER(dev, "reg0D = 0x%02x", reg_0d);
-+
-+		return;
-+	}
-+
-+
-+	if (it6505_test_bit(INT_SCDT_CHANGE, (unsigned int *) int_status))
-+		it6505_irq_scdt(it6505);
- }
- 
- static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
-@@ -2512,15 +2539,12 @@ static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
- 	} irq_vec[] = {
- 		{ BIT_INT_HPD, it6505_irq_hpd },
- 		{ BIT_INT_HPD_IRQ, it6505_irq_hpd_irq },
--		{ BIT_INT_SCDT, it6505_irq_scdt },
- 		{ BIT_INT_HDCP_FAIL, it6505_irq_hdcp_fail },
- 		{ BIT_INT_HDCP_DONE, it6505_irq_hdcp_done },
- 		{ BIT_INT_AUX_CMD_FAIL, it6505_irq_aux_cmd_fail },
- 		{ BIT_INT_HDCP_KSV_CHECK, it6505_irq_hdcp_ksv_check },
- 		{ BIT_INT_AUDIO_FIFO_ERROR, it6505_irq_audio_fifo_error },
- 		{ BIT_INT_LINK_TRAIN_FAIL, it6505_irq_link_train_fail },
--		{ BIT_INT_VID_FIFO_ERROR, it6505_irq_video_fifo_error },
--		{ BIT_INT_IO_FIFO_OVERFLOW, it6505_irq_io_latch_fifo_overflow },
- 	};
- 	int int_status[3], i;
- 
-@@ -2550,6 +2574,7 @@ static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
- 			if (it6505_test_bit(irq_vec[i].bit, (unsigned int *)int_status))
- 				irq_vec[i].handler(it6505);
- 		}
-+		it6505_irq_video_handler(it6505, (unsigned int *) int_status);
- 	}
- 
- 	pm_runtime_put_sync(dev);
--- 
-2.25.1
-
+it's NESTING_IOTLB/DEVTLB now.
