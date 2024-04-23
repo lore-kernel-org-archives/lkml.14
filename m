@@ -1,115 +1,99 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2D113CA98;
-	Tue, 23 Apr 2024 16:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472A013CA98;
+	Tue, 23 Apr 2024 16:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713888628; cv=none; b=sipYyqcsD+QhkTUbugjQ2E2iLoZhZFZf2x8h0uhQx3vuWQkFW0HlfQFhPDASu7KpdxqrnrtfV6xVbGRvHqO5Mv9bToMAvngn5FzQ2NYLJjjqTfWr/S90R38fL0ZP/PD63d3tyKti5biK/zIHUxpps7HAlT/Y8B91W+NKRyg6twY=
+	t=1713888641; cv=none; b=TP0648ulkyXEDw5e1PEtr2lk1TwhJpcjkyELPuX/vDQa8O/dhLYMszOkwfz16dYSznuWir096B041fNPkuGHOEf+mOI6J57xf0Y4CAtMWJsJx2EFXv8AubfaeSIfZe34jP+az9LK28e1tX+F6+XJEFWMuhpKbGGyfEkY+OUeONE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713888628; c=relaxed/simple;
-	bh=ay3KNslbYsYnV+1QHwm3VJsosHzA/esqmO1+ooE+lUE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pBUDCwvFRP8DrjN2UdnNIUMdrwV3Pd1rpRml2US/qnnoEzktaWa0c8L92QlhefWGig9AxfoFVskUSyUFJ5akKryauHyC7QURtnvJTyJyDzrvCtP4D38XkxPA+775ZuA1GJIh6OTIAhNMtRXk1jJxr5TOGC/MoTnNi5SCmVFw4YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=Crmx2ISf; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1713888641; c=relaxed/simple;
+	bh=o1a72SriqCofRJAiL12cU0C8WO49MwZYhQEM8zzR6b4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gPf40Dgie/NnPbv6Z9Du8PoDibHNUVO+aGZbym8t4j5HD4Sx44CqHSa76uzW9QIuRxBrvZMDMX0ZphFQDOdLNzer5cqzfgkPYFNlVQKXRlfngX14vBW3sbN63tRiH7uEf6JklY/lIuy5rbyKoBDay75WZyDp2wdJ8P9Anih9guM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PzG1UA5v; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="Crmx2ISf"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 471ED120010;
-	Tue, 23 Apr 2024 19:10:17 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 471ED120010
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1713888617;
-	bh=jcnKO+9qD/W9Hyy6XkIloPCRHxcviiB1D0CedgJxIBo=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=Crmx2ISfcIDvuS82LLJcAQ1DOJTbYDQfygFKZByh10GSZNZvnZolXEUNENn7sTSaR
-	 hO4mKFrLy+c3wkXvcytHucDVr2LHzt4D+NXV4RpNduBKc9fGseqiGP7C3Elgsa4Xyl
-	 6N8C0xCzFVKw4PNJwtDDDgEDtKFT3d1sTD3/LuKWXHiZxQNSmlEHGai9u9tX/W8eJT
-	 MQ0ddvdZNQSTW7C+2rxezu0qoTTMMUyfusEQz/TfV0iqBaPY6tJ2GAujGSy9KJ/ygA
-	 AluzzOl0uiUjVTIJ1dZFwgbSL4bqIFCohbgm0+3zAMaVNcrxvDKqjmdW4A2VxnbMzV
-	 QZdy2yBJh0N7w==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 23 Apr 2024 19:10:17 +0300 (MSK)
-Received: from work.sberdevices.ru (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 23 Apr 2024 19:10:16 +0300
-From: George Stark <gnstark@salutedevices.com>
-To: <u.kleine-koenig@pengutronix.de>, <neil.armstrong@linaro.org>,
-	<khilman@baylibre.com>, <jbrunet@baylibre.com>,
-	<martin.blumenstingl@googlemail.com>, <thierry.reding@gmail.com>,
-	<hkallweit1@gmail.com>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
-CC: <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>, George Stark
-	<gnstark@salutedevices.com>, Dmitry Rokosov <ddrokosov@salutedevices.com>
-Subject: [PATCH 1/2] dt-bindings: pwm: amlogic: Add new bindings for meson A1 pwm
-Date: Tue, 23 Apr 2024 19:10:05 +0300
-Message-ID: <20240423161006.2522351-2-gnstark@salutedevices.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240423161006.2522351-1-gnstark@salutedevices.com>
-References: <20240423161006.2522351-1-gnstark@salutedevices.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PzG1UA5v"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e5b6e8f662so45900965ad.0;
+        Tue, 23 Apr 2024 09:10:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713888639; x=1714493439; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=89XsLxTIyZU/1YlCByEe65lWUqJGzh8blemR9I/n6po=;
+        b=PzG1UA5vjNoXi+HnIiVW4fD5unW/+h6n86ijNNxMBS8PTjyN4RAN7gHkTSQLljAb69
+         /uEHdX0UgNvLHlfvU1xdt3eN1rlk0jTbTsWzkmgAZds0GCRIthVv4bx6MNCHbHY/ovPK
+         SxnDlvIREXkVjqMiZP7JfNXk1EBmoyQVBd1nodLVRNEgGNoS54s5fv9eCk8N8aXCRHfY
+         ca8kfUWQ6d+Yhs5RsUqKMzEaGXp9RDTm+tKuKRhavavIHkS6oZscpUKUFa2OMjUj6Chr
+         bqRIrD0W+rmSUxkGVJKVRZyMUPm1Qjy8Zd1Zotckac3vwqjcz83DEuTiMqr4gqJqnoqP
+         +SKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713888639; x=1714493439;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=89XsLxTIyZU/1YlCByEe65lWUqJGzh8blemR9I/n6po=;
+        b=QtmC+yY5y+wXqgNn50lVj2y9MpEaQspcU/PvLnFGkCQ19pehlrjtS2EMM6r16Cd0xS
+         WgluQGV5Ape9UF0+9J7E76PVSonfUUsLKBpTNCbHwn5hn3pKp0lauc2YLfg7oel3L3p7
+         t4pGWgMrIB7QL354fGqqDelqRh41DnzRSsMOUumaCBUIoqvyO6NpQhM5BSbACkYghIHf
+         KyLbivZs3CAKUwXOneBczUZtqWqzJmE8Z4wqtLwUxd6ZOvCUGVYN7tKtRqtbEvU1qQhu
+         XjdGVcw2+BvUhNObh6PjKO4KdxweHlfmIH1HB5HrR2G39yyfWvKx3zcOWKfZYrq5lxg9
+         7TFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW+jWft8cyrhxD6V6wu/MH3nXOdjYljpHYrZY8dfzivt68WJxoPizC7Tw4OE7PMXgt5zEh9N/53NY8V8eGsqc2hYhVp0AAk
+X-Gm-Message-State: AOJu0YzWILBToEBDWsks+VWr0HnIppp/hoXxKxEigAnwjfpLNHhqIPJ6
+	PaWRdPTOrbp2fHWr4dvMtzkkQ5lOY/JKXS8P9qafPb08WtuxBvomSqRJhpei
+X-Google-Smtp-Source: AGHT+IHCRskPKThiqLtki3QqWsynFY74sXkHpV/B/WwPyjov7Ur/kIqVS1cbHVle23QYScT8y2QGOQ==
+X-Received: by 2002:a17:902:ce87:b0:1e5:d0e3:b960 with SMTP id f7-20020a170902ce8700b001e5d0e3b960mr15985656plg.11.1713888639407;
+        Tue, 23 Apr 2024 09:10:39 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:6f51])
+        by smtp.gmail.com with ESMTPSA id r3-20020a170902be0300b001e27462b988sm10200288pls.61.2024.04.23.09.10.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 09:10:38 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Tue, 23 Apr 2024 06:10:37 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Sam Sun <samsun1006219@gmail.com>,
+	xingwei lee <xrivendell7@gmail.com>,
+	syzkaller-bugs@googlegroups.com,
+	Lai Jiangshan <jiangshan.ljs@antgroup.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] workqueue: Fix divide error in
+ wq_update_node_max_active()
+Message-ID: <ZifdfQ_vjqGqNdPk@slm.duckdns.org>
+References: <CAEkJfYPGS1_4JqvpSo0=FM0S1ytB8CEbyreLTtWpR900dUZymw@mail.gmail.com>
+ <20240423124548.1253842-1-jiangshanlai@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184882 [Apr 23 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;100.64.160.123:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/23 04:11:00 #24934400
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240423124548.1253842-1-jiangshanlai@gmail.com>
 
-The chip has 3 dual channel PWM modules AB, CD, EF.
+Hello, Lai.
 
-Signed-off-by: George Stark <gnstark@salutedevices.com>
-Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
----
- Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+On Tue, Apr 23, 2024 at 08:45:48PM +0800, Lai Jiangshan wrote:
+> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+> index 0066c8f6c154..b31cd7faeb9f 100644
+> --- a/kernel/workqueue.c
+> +++ b/kernel/workqueue.c
+> @@ -1591,7 +1591,7 @@ static void wq_update_node_max_active(struct workqueue_struct *wq, int off_cpu)
+>  		off_cpu = -1;
+>  
+>  	total_cpus = cpumask_weight_and(effective, cpu_online_mask);
+> -	if (off_cpu >= 0)
+> +	if (off_cpu >= 0 && total_cpus > 1)
+>  		total_cpus--;
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-index 1d71d4f8f328..ef6daf1760ff 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-+++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-@@ -37,6 +37,7 @@ properties:
-       - enum:
-           - amlogic,meson8-pwm-v2
-           - amlogic,meson-s4-pwm
-+          - amlogic,meson-a1-pwm
-       - items:
-           - enum:
-               - amlogic,meson8b-pwm-v2
-@@ -126,6 +127,7 @@ allOf:
-           contains:
-             enum:
-               - amlogic,meson-s4-pwm
-+              - amlogic,meson-a1-pwm
-     then:
-       properties:
-         clocks:
+Can we do this explicitly instead? ie. test total_cpus before using it as
+divisor and use max_active explicitly if it's zero.
+
+Thanks.
+
 -- 
-2.25.1
-
+tejun
