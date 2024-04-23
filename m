@@ -1,182 +1,114 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B58E59148;
-	Tue, 23 Apr 2024 09:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF587441E;
+	Tue, 23 Apr 2024 09:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713863320; cv=none; b=FX+MS/fyvWPPJJMQ7YpWgyYZAk5YCNQrZbIXEPq9EjapLM8ky395y9lYGvvmSfZgyBDNAhjGeTNnzWcyFwEKbFOCPvm8ZwKdlefEQR2O8Vzepw9nMQtK45rF0bUFXPkKJKscBR0V7322BxPVYv8ZVoENGqMMimMnIn7OTA2Qttg=
+	t=1713863321; cv=none; b=FcG5Cj7jlSDhH40SVE/EAoND9aplRctY1zV47S6OWvomHKYpNkpelU1SWWWX59obtrwjCOH3kFzCjVofnncbj/kh5RnQZ1iTm82V1v/krghU2pVSGpOFhHFuZ+qwh1Rz41zZYyXmh2/4PynKPrUeKy20/GdcZkje2pWQ4AhdrKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713863320; c=relaxed/simple;
-	bh=C8I6H8q1CsCEilGm6xZcUAtD7gbeIhxcNcTyYkuj3Vo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=NVZ2XTb2rNv8T7ri4OWjnz0gkstjBMF3d7kkhxUUWXcLaOQ6IEf5XzDS843bvNzdfO1eSQj7vpbpbzRdcL4cg7tYYQb3j5MSUY15qWmehvjf2v16QKU7ZUnXBNG6dOX7qkC0wOucxLVclB7EBrWmrTbO5UOpzo0k3X72v3ulcXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=g72p1BZe; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713863321; c=relaxed/simple;
+	bh=15a83D1JMHWclRfM/z678s+f7sq6QGUXYdBCaTmBd8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m0uvwokBtJJIobXxoK9BxA2ZO8ZcZAY85WMcD4uMvJt46IKMtTLSw0tNNcteJ9hNvjDTHqjcQyqM43/WOvR96WVukR2plCYqVA77Y6r+qeUcFuhn6emSLDL49CczpMWWBB36OCkHywXFu0Eh190bEWfidPy7mv3FOnoDfmSrQ8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iRlUWBb5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="g72p1BZe"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43N5pCd2010979;
-	Tue, 23 Apr 2024 09:08:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=xC+Wq2NeguQc2WvQitBOxzmrCHOw8Xh3tDYQPVO/dHc
-	=; b=g72p1BZe5P3tKN1Khml+OrFOb7W0ra5nNHU15+RDikfZP3kkWomALBB+BO+
-	burqUUKX0GjWLIalOte6Jl/EFQbQDm1oxiO8/xt3ua1xTJCSaRPkJigzGJYCEuhD
-	4ktFjtsRcef0WH+aI597oeq7XT+rofB6E/4Noc+a3aK025FPekvCviOwm3J6tLxN
-	nB4o8g6QVpPtUobFIozghX6jF707R3F0XnaNILKJiFh/fJZcYYkKP4qZeDghewWc
-	Dgajj+ZRHOq0mgI0LGM4MSdLWe74/GDNViEnbRLdniRJtpRDfyex9bdp8MIVo8HJ
-	IjHMYtdbegv1tDjUqZKTcRvBMgA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xnvtn9gx6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Apr 2024 09:08:27 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43N98Qkc001248
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Apr 2024 09:08:26 GMT
-Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 23 Apr 2024 02:08:19 -0700
-From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Date: Tue, 23 Apr 2024 14:36:59 +0530
-Subject: [PATCH v11 5/6] PCI: Bring the PCIe speed to MBps logic to new
- pcie_link_speed_to_mbps()
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iRlUWBb5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C034EC116B1;
+	Tue, 23 Apr 2024 09:08:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713863320;
+	bh=15a83D1JMHWclRfM/z678s+f7sq6QGUXYdBCaTmBd8w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iRlUWBb50EHmT13m11xXOZt/qv+NF9r1gZSuMiRTkn2aq0AHwO10LHACFR8qUt2Gb
+	 qR7BbU69LqMNVN/sycmEM+0/fIlf42BNqkHOmK5Sv7NAF32yDE0iN2I6HrvkYeAdFo
+	 svkMcS3cRLaRAd8Gk0UhlxHEj6kTmlednqdmvcyTPOVH79WExHraiwOw4+eFPBL1Pq
+	 lvVqIX2pc7QxhHBF96xVH5krgO3GR8BrWKYhgAE/YEKyhM7RxqWXSlLQosDm8eNmYx
+	 arbMgT9xseU4Sw2zu4pU1atN6SHAytlMKr2XEYXpzOCMCpLqTD0beQsWERnPx7Sg4a
+	 CWhSk32WtHqdQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rzC8j-000000003Lp-1TNJ;
+	Tue, 23 Apr 2024 11:08:38 +0200
+Date: Tue, 23 Apr 2024 11:08:37 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Doug Anderson <dianders@chromium.org>,
+	Janaki Ramaiah Thota <quic_janathot@quicinc.com>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Matthias Kaehlcke <mka@chromium.org>,
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH] Bluetooth: qca: fix invalid device address check
+Message-ID: <Zid6lfQMlDp3HQ67@hovoldconsulting.com>
+References: <20240416091509.19995-1-johan+linaro@kernel.org>
+ <CAD=FV=UBHvz2S5bd8eso030-E=rhbAypz_BnO-vmB1vNo+4Uvw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240423-opp_support-v11-5-15fdd40b0f95@quicinc.com>
-References: <20240423-opp_support-v11-0-15fdd40b0f95@quicinc.com>
-In-Reply-To: <20240423-opp_support-v11-0-15fdd40b0f95@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, <johan+linaro@kernel.org>,
-        <bmasney@redhat.com>, <djakov@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_parass@quicinc.com>, <quic_krichai@quicinc.com>,
-        <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713863266; l=2081;
- i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
- bh=C8I6H8q1CsCEilGm6xZcUAtD7gbeIhxcNcTyYkuj3Vo=;
- b=VEayDnO6GDqE0NBIYhGk0WP8lZMkWeLqGWuSEEjnosEKCLFRoaIJhI7WTMjTgnvCq4zWnzsV/
- LnjqnaNCLY5BIu5xDRxuQansWP8rOW55lYHhVfBOeYULHImj6jQ4aFI
-X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: yyGFdgl5qmoQG1pmHk1q_9UrlV1PWEJm
-X-Proofpoint-ORIG-GUID: yyGFdgl5qmoQG1pmHk1q_9UrlV1PWEJm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-23_07,2024-04-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
- mlxscore=0 adultscore=0 bulkscore=0 spamscore=0 malwarescore=0
- impostorscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2404010003 definitions=main-2404230025
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=UBHvz2S5bd8eso030-E=rhbAypz_BnO-vmB1vNo+4Uvw@mail.gmail.com>
 
-Bring the switch case in pcie_link_speed_mbps() to new function to
-the header file so that it can be used in other places like
-in controller driver.
+Hi Doug and Janaki,
 
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/pci.c | 19 +------------------
- drivers/pci/pci.h | 22 ++++++++++++++++++++++
- 2 files changed, 23 insertions(+), 18 deletions(-)
+On Mon, Apr 22, 2024 at 10:50:33AM -0700, Doug Anderson wrote:
+> On Tue, Apr 16, 2024 at 2:17 AM Johan Hovold <johan+linaro@kernel.org> wrote:
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e5f243dd4288..40487b86a75e 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5922,24 +5922,7 @@ int pcie_link_speed_mbps(struct pci_dev *pdev)
- 	if (err)
- 		return err;
- 
--	switch (to_pcie_link_speed(lnksta)) {
--	case PCIE_SPEED_2_5GT:
--		return 2500;
--	case PCIE_SPEED_5_0GT:
--		return 5000;
--	case PCIE_SPEED_8_0GT:
--		return 8000;
--	case PCIE_SPEED_16_0GT:
--		return 16000;
--	case PCIE_SPEED_32_0GT:
--		return 32000;
--	case PCIE_SPEED_64_0GT:
--		return 64000;
--	default:
--		break;
--	}
--
--	return -EINVAL;
-+	return pcie_link_speed_to_mbps(to_pcie_link_speed(lnksta));
- }
- EXPORT_SYMBOL(pcie_link_speed_mbps);
- 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 17fed1846847..4de10087523e 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -290,6 +290,28 @@ void pci_bus_put(struct pci_bus *bus);
- 	 (speed) == PCIE_SPEED_2_5GT  ?  2500*8/10 : \
- 	 0)
- 
-+static inline int pcie_link_speed_to_mbps(enum pci_bus_speed speed)
-+{
-+	switch (speed) {
-+	case PCIE_SPEED_2_5GT:
-+		return 2500;
-+	case PCIE_SPEED_5_0GT:
-+		return 5000;
-+	case PCIE_SPEED_8_0GT:
-+		return 8000;
-+	case PCIE_SPEED_16_0GT:
-+		return 16000;
-+	case PCIE_SPEED_32_0GT:
-+		return 32000;
-+	case PCIE_SPEED_64_0GT:
-+		return 64000;
-+	default:
-+		break;
-+	}
-+
-+	return -EINVAL;
-+}
-+
- const char *pci_speed_string(enum pci_bus_speed speed);
- enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev);
- enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
+> > As Chromium is the only known user of the 'local-bd-address' property,
+> > could you please confirm that your controllers use the 00:00:00:00:5a:ad
+> > address by default so that the quirk continues to be set as intended?
+> 
+> I was at EOSS last week so didn't get a chance to test this, but I
+> just tested it now and I can confirm that it breaks trogdor. It
+> appears that trogdor devices seem to have a variant of your "default"
+> address. Instead of:
+> 
+> 00:00:00:00:5a:ad
+> 
+> We seem to have a default of this:
+> 
+> 39:98:00:00:5a:ad
+> 
+> ...so almost the same, but not enough the same to make it work with
+> your code. I checked 3 different trogdor boards and they were all the
+> same, though I can't 100% commit to saying that every trogdor device
+> out there has that same default address...
+> 
+> Given that this breaks devices and also that it's already landed and
+> tagged for stable, what's the plan here? Do we revert? Do we add the
+> second address in and hope that there aren't trogdor devices out in
+> the wild that somehow have a different default?
 
--- 
-2.42.0
+This patch is currently queued for 6.10 so there should be time to get
+this sorted.
 
+My fallback plan was to add further (device-specific) default addresses
+in case this turned out to be needed (e.g. this is what the Broadcom
+driver does).
+
+I assume all Trogdor boards use the same controller, WCN3991 IIUC, but
+if you're worried about there being devices out there using a different
+address we could possibly also use the new
+"qcom,local-bd-address-broken" DT property as an indicator to set the
+bdaddr quirk.
+
+We have Qualcomm on CC here so perhaps Janaki, who should have access to
+the documentation, can tell us what the default address on these older
+controllers looks like?
+
+Janaki, are there further default addresses out there that we need to
+consider?
+
+Perhaps "39:98" can even be inferred from the hardware id somehow (cf.
+bcm4377_is_valid_bdaddr())?
+
+Doug, could you please also post the QCA version info for Trogdor that's
+printed on boot?
+
+Johan
