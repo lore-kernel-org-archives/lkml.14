@@ -1,257 +1,91 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6A4482FA;
-	Tue, 23 Apr 2024 08:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06F04AEE5;
+	Tue, 23 Apr 2024 08:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713859274; cv=none; b=fg4mIfjkzbi4kY1vlRRUEpXZTqtNyXf9FB/2A0tDQ9iTIb2mVs+8clVqP+M21iUhr8ydrAkRXHnro5QtrNCYbyxiDS6M0naxdELXVhtDmZ2jjTmUc53btvFF6dDa6m++c4ZoaQWSSuKQem8RgJIMmWYN8llNOXX1rsT6hTQ4Dv8=
+	t=1713859391; cv=none; b=F6e0NVcB6qJfzuP2CdugL0KSEycYzhJVS4HEs8NCFSH6Z7spEtmpY52tE79ueYdCA8qufVpAj3u/UH8aP7rIkJF8E8T+qwNlT9cT5K6vVIIqIvEMB0KCDnBbamiR2O/gUICi7p5jVo5rT5Od8etXanTqWv2GTgxZRY7X6ORwAyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713859274; c=relaxed/simple;
-	bh=ng7XtkcAIPwnIKea44bTa7GURBeQsl+FW+nGtuaX67E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VYQ1SArBBi2ipq7MbMJYs8+SFIrf2s0msm450dYuBJrpiaIbSZMADeNXYB8MstSu7f2Az6kXhJMvF13isoq7YWE/CIt8ltk6F94QLjS9xwSp5aCUsaPCa+ofz1n3UHJgZfW7GaSquwGII7mLFS2Ya7gIby9QXedKiR0Y1aMHpos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mgPtDm2E; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713859391; c=relaxed/simple;
+	bh=1pR6m5Wi5iIO9mWeE7uFEYPdE/xPU01dcPav6FtcGgk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Cca0u2AmH4ujtyEII/oDASdmm8aguXi6O+lOoom0ZXq206Wh2bYbqU78OMoNHTwZd1C+IiBIpQAD0jL6nzulEYWD9TCRu+B6ztkWTv9qHBKnulXEu6T+TQZhfl3cAtl4J0m6EG+g4YzslVu0Ta+ZW0i5vK+MpymWj3ywLF+Ao7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=qrpXb4E7; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mgPtDm2E"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2dae975d0dcso63863191fa.1;
-        Tue, 23 Apr 2024 01:01:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713859268; x=1714464068; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9+PI63vp8dcetV6uo5/jONMF2OhlOcMYFOX5cPVZ17Q=;
-        b=mgPtDm2Ehj4z8QcLNIEPqg5/Y8mrz7e9zhjdUfPsGXN5njuK2aC2J6E0sypEQ8MWFF
-         ns1UizAsy84TNndzHtV71QyFPygEw9Rldq9PRtrac+Ek2ZbbpEW5P0agN6fzKR+B/6rY
-         9mBBPfbuDko9NbDAyyFzfuRVzY6yQfY2Ha0AqceZdkKQtn2cocWsVxO43gXE2a66/yWP
-         /wm2sAssYkZt76foQlrfEaITevnX0u9KmiwRofidc1NduvKu+xlj5L/oMZRUT6xZjAiC
-         5yAJkCfP8fhLwrBbyN7kFufTs9bUXpWHnNQHhtTNDJmyDCpe/3EGYwnVn2p1K8f3Gr+t
-         0oQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713859268; x=1714464068;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9+PI63vp8dcetV6uo5/jONMF2OhlOcMYFOX5cPVZ17Q=;
-        b=b2Gln+XUY7df6sa77yInTItdMyGGd1rGYUTboGahHu74X+f5fjlP6kO2ZvfJ+iILlo
-         w91yFBLsG2fi1VETK8Ib1QauviCeHeDoObh0BnerGjhXHkroUTk1jVWmCD94NriIJKp9
-         Rcty+48fMRjKBTLZUOZw1Jwze6sMRJv0YYNMFXA013FcuNJoPPHIMnR0Fb68l8+irJTa
-         0OwdnA0Dph9Cm3idLEj3a8BQoPNkpIAOTEO6a8WAtlqf2W8L/Z1qQ3gSjEzyVO/9RCyw
-         f1Ar8L8zbUPFMJR2cu6QHnwHma2Szly5YVL5q+kVNBz62+lsXt/5o3jx6uBdkv7C58vp
-         WvWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIL/J544EQ2mAcMJ+6XpuzBxT/Gf3kh358HpPzXpLT5EG7pZ18SAJCrdjiKPkU4AwRlXCx5npoxvHqqja80buE6dnJrMMbaFOa779TjkYp9RsqFaHoX7He3U99C9VY/1yXH89oqvecmzoz9bM=
-X-Gm-Message-State: AOJu0Yzl6vh9TFISVUQ3xWhbLaAm5kYEbjgZPJWSQunVsR1PwVngX5OA
-	KfwCqjFdPTLW5RBuA5HitYTZQtM9iR4bG5dBxuuikNJAeS2pWKWEL0cvIV5i3WNETAL/sbzeX5k
-	bzFTPP8mF9Bmjyd4LDy2rdDNEf7w=
-X-Google-Smtp-Source: AGHT+IEcmF0yT1ETaoCyLgOqrkAYjlhww58t93fSkt375JfUnoJWJ3GcHmsSGYh7sJSBawrbvEwuvXJS97WHGKDcPH0=
-X-Received: by 2002:a2e:9683:0:b0:2da:7944:9521 with SMTP id
- q3-20020a2e9683000000b002da79449521mr500848lji.25.1713859267424; Tue, 23 Apr
- 2024 01:01:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="qrpXb4E7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1713858962;
+	bh=1pR6m5Wi5iIO9mWeE7uFEYPdE/xPU01dcPav6FtcGgk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=qrpXb4E7M7hSiZ8Cf2INubIQwovOxf8rtiST2nTdYG56P/i02vaGe83f+9bvQprvq
+	 VgpcOsvaoWCndC7LXwkbN21msJ81t9jqvLggR4K6+dWl6vt6tbFaQ5B1IFnTi+I3Mw
+	 H0IMGkDPx1RTLLHkm4qk51fTBM34bIyN02uPPn08=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 23 Apr 2024 09:54:37 +0200
+Subject: [PATCH v3 02/11] cgroup: bpf: constify ctl_table arguments and
+ fields
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240417-mac_addr_at_probe-v1-0-67d6c9b3bc2b@bootlin.com> <20240417-mac_addr_at_probe-v1-6-67d6c9b3bc2b@bootlin.com>
-In-Reply-To: <20240417-mac_addr_at_probe-v1-6-67d6c9b3bc2b@bootlin.com>
-From: Heiko Thiery <heiko.thiery@gmail.com>
-Date: Tue, 23 Apr 2024 10:00:55 +0200
-Message-ID: <CAEyMn7aZy+RAo3m=idPi0P152UO+WPm0sfQFdDrUpwmeuUgYBQ@mail.gmail.com>
-Subject: Re: [PATCH 6/6] wifi: wilc1000: read MAC address from fuse at probe
-To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Cc: Ajay Singh <ajay.kathat@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Kalle Valo <kvalo@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240423-sysctl-const-handler-v3-2-e0beccb836e2@weissschuh.net>
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+In-Reply-To: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+To: Luis Chamberlain <mcgrof@kernel.org>, 
+ Joel Granados <j.granados@samsung.com>, Kees Cook <keescook@chromium.org>
+Cc: Eric Dumazet <edumazet@google.com>, Dave Chinner <david@fromorbit.com>, 
+ linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
+ bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-xfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+ coreteam@netfilter.org, kexec@lists.infradead.org, 
+ linux-hardening@vger.kernel.org, bridge@lists.linux.dev, 
+ lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org, 
+ rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713858961; l=686;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=1pR6m5Wi5iIO9mWeE7uFEYPdE/xPU01dcPav6FtcGgk=;
+ b=pcm/jJjouDKJ7dKkXuplkCwgN4lakaTVY5yViah+TEyJb0kgB/5JxKSM28vhTdxT/a0KzPrgc
+ T5MafpuEka/DMwunsovOVuekoxGTF4FJjqwg/mb6qFtEZR2YOr2vquk
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Hi Alexis, All
+In a future commit the sysctl core will only use
+"const struct ctl_table". As a preparation for that adapt the cgroup-bpf
+code.
 
-Am Mi., 17. Apr. 2024 um 11:34 Uhr schrieb Alexis Lothor=C3=A9
-<alexis.lothore@bootlin.com>:
->
-> From: Ajay Singh <ajay.kathat@microchip.com>
->
-> The default netdev interface exposed by WILC1000 is registered at probe,
-> but the chip mac address is not known until ndo_open, which will load and
-> start chip firmware and then retrieve stored MAC address from it. As a
-> consequence, the interface has uninitialized value (00:00:00:00:00) until=
- a
-> user brings up the interface.
->
-> Fix MAC address at probe by setting the following steps:
-> - at probe, read MAC address directly from fuse
-> - whenever a new netdevice is created, apply saved mac address (which can
->   be a user-provided address, or the eFuse Mac address if no address has
->   been passed by user)
-> - whenever an interface is brought up for the first time (and so the
->   firmware is loaded and started), enforce netdevice mac address to the
->   chip (in case user has changed it)
->
-> Reported-by: Heiko Thiery <heiko.thiery@gmail.com>
-> Closes: https://lore.kernel.org/netdev/CAEyMn7aV-B4OEhHR4Ad0LM3sKCz1-nDqS=
-b9uZNmRWR-hMZ=3Dz+A@mail.gmail.com/T/
-> Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
-> Co-developed-by: Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com>
-> Signed-off-by: Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com>
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ include/linux/filter.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I applied the series on next and tested it on my env. It looks good.
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 7a27f19bf44d..4eada55a2df8 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -1404,7 +1404,7 @@ struct bpf_sock_ops_kern {
+ 
+ struct bpf_sysctl_kern {
+ 	struct ctl_table_header *head;
+-	struct ctl_table *table;
++	const struct ctl_table *table;
+ 	void *cur_val;
+ 	size_t cur_len;
+ 	void *new_val;
 
-Tested-by: Heiko Thiery <heiko.thiery@gmail.com>
+-- 
+2.44.0
 
-Thank you!
-Heiko
-
-> ---
->  drivers/net/wireless/microchip/wilc1000/netdev.c | 38 ++++++++++++++----=
-------
->  drivers/net/wireless/microchip/wilc1000/sdio.c   | 14 +++++++++
->  drivers/net/wireless/microchip/wilc1000/spi.c    |  6 ++++
->  3 files changed, 42 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/n=
-et/wireless/microchip/wilc1000/netdev.c
-> index 5ab448d0b643..f1fbc6e8a82a 100644
-> --- a/drivers/net/wireless/microchip/wilc1000/netdev.c
-> +++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
-> @@ -588,7 +588,6 @@ static int wilc_mac_open(struct net_device *ndev)
->         struct wilc *wl =3D vif->wilc;
->         int ret =3D 0;
->         struct mgmt_frame_regs mgmt_regs =3D {};
-> -       u8 addr[ETH_ALEN] __aligned(2);
->
->         if (!wl || !wl->dev) {
->                 netdev_err(ndev, "device not ready\n");
-> @@ -607,25 +606,19 @@ static int wilc_mac_open(struct net_device *ndev)
->                 return ret;
->         }
->
-> -       wilc_set_operation_mode(vif, wilc_get_vif_idx(vif), vif->iftype,
-> -                               vif->idx);
-> -
-> -       if (is_valid_ether_addr(ndev->dev_addr)) {
-> -               ether_addr_copy(addr, ndev->dev_addr);
-> -               wilc_set_mac_address(vif, addr);
-> -       } else {
-> -               wilc_get_mac_address(vif, addr);
-> -               eth_hw_addr_set(ndev, addr);
-> -       }
->         netdev_dbg(ndev, "Mac address: %pM\n", ndev->dev_addr);
-> -
-> -       if (!is_valid_ether_addr(ndev->dev_addr)) {
-> -               netdev_err(ndev, "Wrong MAC address\n");
-> +       ret =3D wilc_set_mac_address(vif, ndev->dev_addr);
-> +       if (ret) {
-> +               netdev_err(ndev, "Failed to enforce MAC address in chip")=
-;
->                 wilc_deinit_host_int(ndev);
-> -               wilc_wlan_deinitialize(ndev);
-> -               return -EINVAL;
-> +               if (!wl->open_ifcs)
-> +                       wilc_wlan_deinitialize(ndev);
-> +               return ret;
->         }
->
-> +       wilc_set_operation_mode(vif, wilc_get_vif_idx(vif), vif->iftype,
-> +                               vif->idx);
-> +
->         mgmt_regs.interface_stypes =3D vif->mgmt_reg_stypes;
->         /* so we detect a change */
->         vif->mgmt_reg_stypes =3D 0;
-> @@ -941,6 +934,7 @@ struct wilc_vif *wilc_netdev_ifc_init(struct wilc *wl=
-, const char *name,
->                                       int vif_type, enum nl80211_iftype t=
-ype,
->                                       bool rtnl_locked)
->  {
-> +       u8 mac_address[ETH_ALEN];
->         struct net_device *ndev;
->         struct wilc_vif *vif;
->         int ret;
-> @@ -969,6 +963,18 @@ struct wilc_vif *wilc_netdev_ifc_init(struct wilc *w=
-l, const char *name,
->         vif->iftype =3D vif_type;
->         vif->idx =3D wilc_get_available_idx(wl);
->         vif->mac_opened =3D 0;
-> +
-> +       memcpy(mac_address, wl->nv_mac_address, ETH_ALEN);
-> +       /* WILC firmware uses locally administered MAC address for the
-> +        * second virtual interface (bit 1 of first byte set), but
-> +        * since it is possibly not loaded/running yet, reproduce this be=
-havior
-> +        * in the driver during interface creation.
-> +        */
-> +       if (vif->idx)
-> +               mac_address[0] |=3D 0x2;
-> +
-> +       eth_hw_addr_set(vif->ndev, mac_address);
-> +
->         mutex_lock(&wl->vif_mutex);
->         list_add_tail_rcu(&vif->list, &wl->vif_list);
->         wl->vif_num +=3D 1;
-> diff --git a/drivers/net/wireless/microchip/wilc1000/sdio.c b/drivers/net=
-/wireless/microchip/wilc1000/sdio.c
-> index 04d6565df2cb..e6e20c86b791 100644
-> --- a/drivers/net/wireless/microchip/wilc1000/sdio.c
-> +++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
-> @@ -24,6 +24,9 @@ MODULE_DEVICE_TABLE(sdio, wilc_sdio_ids);
->
->  #define WILC_SDIO_BLOCK_SIZE 512
->
-> +static int wilc_sdio_init(struct wilc *wilc, bool resume);
-> +static int wilc_sdio_deinit(struct wilc *wilc);
-> +
->  struct wilc_sdio {
->         bool irq_gpio;
->         u32 block_size;
-> @@ -178,6 +181,16 @@ static int wilc_sdio_probe(struct sdio_func *func,
->         }
->         clk_prepare_enable(wilc->rtc_clk);
->
-> +       wilc_sdio_init(wilc, false);
-> +
-> +       ret =3D wilc_load_mac_from_nv(wilc);
-> +       if (ret) {
-> +               pr_err("Can not retrieve MAC address from chip\n");
-> +               goto clk_disable_unprepare;
-> +       }
-> +
-> +       wilc_sdio_deinit(wilc);
-> +
->         vif =3D wilc_netdev_ifc_init(wilc, "wlan%d", WILC_STATION_MODE,
->                                    NL80211_IFTYPE_STATION, false);
->         if (IS_ERR(vif)) {
-> @@ -187,6 +200,7 @@ static int wilc_sdio_probe(struct sdio_func *func,
->
->         dev_info(&func->dev, "Driver Initializing success\n");
->         return 0;
-> +
->  clk_disable_unprepare:
->         clk_disable_unprepare(wilc->rtc_clk);
->  dispose_irq:
-> diff --git a/drivers/net/wireless/microchip/wilc1000/spi.c b/drivers/net/=
-wireless/microchip/wilc1000/spi.c
-> index add0e70a09ea..5ff940c53ad9 100644
-> --- a/drivers/net/wireless/microchip/wilc1000/spi.c
-> +++ b/drivers/net/wireless/microchip/wilc1000/spi.c
-> @@ -250,6 +250,12 @@ static int wilc_bus_probe(struct spi_device *spi)
->         if (ret)
->                 goto power_down;
->
-> +       ret =3D wilc_load_mac_from_nv(wilc);
-> +       if (ret) {
-> +               pr_err("Can not retrieve MAC address from chip\n");
-> +               goto power_down;
-> +       }
-> +
->         wilc_wlan_power(wilc, false);
->         vif =3D wilc_netdev_ifc_init(wilc, "wlan%d", WILC_STATION_MODE,
->                                    NL80211_IFTYPE_STATION, false);
->
-> --
-> 2.44.0
->
