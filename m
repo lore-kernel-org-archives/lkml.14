@@ -1,145 +1,146 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0883C58105;
-	Tue, 23 Apr 2024 09:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D49558234
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 09:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713863295; cv=none; b=qSQ1L5wDoh+AkxQAVVvJCi0lYhcKQLyvJuYW0FiToLRtCuZAsfr+eGGw11LFdx+l5GqokwFCHFkwUIsglkM98lZlirHI9oa+Ge8SvXfmqlo5GgSqG2/yi08Q2lo/UmS9ah0Bp1Pmo7koUwLlsE7doEdTcWr/RgkzmmRZaGmZsUM=
+	t=1713863296; cv=none; b=VXY6qWoACfd3pWigJfFioKYdRPVHDBJchr2ADxP4BoNRflDXkaeHxOtxDEIZ8cTTVJj/ye5q+s8P6qlBVsfn/wuBXOXZvFI67pDEqCE+gnCn+zdONLgMQgtDsjCwXk45T+UOXhDhwmmbxYDXjOaDjoVtswYQpT9b23hnz8VB22g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713863295; c=relaxed/simple;
-	bh=V+31wpy+ViuFYyPXxxni0lbwtREaNbHVwxOi2HByI6I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=bnDWXSp8MIB7ZrxturJYmewokuGqbZTD9+inAuuFSvarR4tzWHf17FLsgnMPoLUiQmfwN4Xvl8Lb4m/O7JHBePwWbaRDWgA0fDoPSdboYrBo0fAsedlbreIezxUwYwDDqvdmMgy67qVhkabTvOIG3+B5YK7Z3UAI20jxx2fB6XY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=b6c/gSBj; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713863296; c=relaxed/simple;
+	bh=0rV1Ku+pcVQFW3sVe5g2nnNHm4ytFcT2WipJXX42ZRk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=gru282T6yUfonR7XKBGQbpbDy+K0/f8KRjLHX7pXyEaRfTjoQ7uFk7w952ENSaIwgkKRuew3qjHU2YqJMuKTsnXC8rh5geunvYp9ZbbW2Zumo4snQAKWQjfB3d5JSCk1k06Et6gY21Z7teka/INXlaHTNoZgGsdGzA/Ch4xIoZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M5S60Rmp; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="b6c/gSBj"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43N7uJnH007871;
-	Tue, 23 Apr 2024 09:08:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=Lge6OIRDCgkl4zCRo6LWVugfANWljw5EKDyEYyAefvo
-	=; b=b6c/gSBjgB5+wF9Bz45oKEm0pdAkkG+zORAurnPefyjkmgeRAcOpSqgXi78
-	ao3V0r09B5pVEEtB0N0FiIhQ6JR5PUUa2YadXpgrLF6MGRFU9aFAHyZ0U/YXQ7nP
-	8GPjAFQb1Ec0yvts7O8LK0YBiiNQwSL2oWQnRPDDul5JpqPp1TNkA/jfKMgjbJSs
-	/Jme08hanLOK8MoIljx/DqwuBeJOW4YY5mMKIdhob5g8Yt3Bp/Brm55GIxo9Zwih
-	p8zuG1fM4kLwOObzrFccpgmourgcnyCop4LMgEWvyk47oqTbmX5U+n52VoJylaLN
-	CPtLavKJP+J77VfeMkVMkvE7dBg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xp91fg5uh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Apr 2024 09:08:01 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43N980jE030802
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Apr 2024 09:08:00 GMT
-Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 23 Apr 2024 02:07:53 -0700
-From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Date: Tue, 23 Apr 2024 14:36:55 +0530
-Subject: [PATCH v11 1/6] arm64: dts: qcom: sm8450: Add interconnect path to
- PCIe node
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M5S60Rmp"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61acc68c1bdso69072077b3.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 02:08:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713863293; x=1714468093; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fVAaYYUYRjsITzR+rLStFX9oltnbfPIIpZ1fuxXV7XI=;
+        b=M5S60RmpzD8ZgBm3CSJU+/oXKdMchLrX1cFpQGpFulesF/MfM1Akkbt90ys3wkTRIu
+         1jaTJrt2AO+9rRc1i7JAkV1qTmE9MklvKS+CfjrsR1U7aCrEyc1rYyipY27QP8B6zTVr
+         Hzjseug4YncjOFim+3t1lqdy7YLUadWhmk3uyv7GqINASNR5OeOEiLbfnN8+quDR3XC2
+         UZQCULFZ5n6B//Xg02QifcAWoiSmHx5S8nduS/KWRAd27+IpnGn0M4BbsYm/zv9p+98e
+         nT7IX82+J6WfQOi7+hKFRQ66AhZGHwfL8MgLgGN5VjC2scMb/oPQO3EFvmQq+VwZ5lCT
+         86uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713863293; x=1714468093;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fVAaYYUYRjsITzR+rLStFX9oltnbfPIIpZ1fuxXV7XI=;
+        b=GQ87J6CR91SJcWR5pYcCzGSrydN+n6H3nQrGZTH+eFoV/95MCrZoITL5NiEOiSCfMI
+         9MrPfganMz+bA7NA6CrStBRirUmlfe47gQ2RwfkZ0UG4o8HkUGVO+JdREfULZIa1RtoJ
+         A9lPH1JSrdqI5ehCJCH8su0x3IWkvgen44qolqhRYPciHmB9lVh9hgPZRY4IjbGWBq3v
+         lNotn3yAViJ9AWDP363cQn7gNMMaUzu5RCJvUdbXLxS/Z6T4A31kWDO72oB+zZIgyg9e
+         YxDXq+EToGZAjOpk5LThurmcRl2AhwHhr3nwiL67qaqOsvnlbbb0Nx0Bc6B8t+psj11b
+         di0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUYQuUCKnOBt2KaBKFXsuBMSjwQpooX9rWwrO27AcdqwmaKA7Q2Eo8vcVqpH9ls2J8zdFXkliQYwi7NPTXyZYQvDSnYAwqb7TQ5JE3X
+X-Gm-Message-State: AOJu0YxLtuW3Hkv1xqNubaPhNrlaInG/04oREkTGio0YSMdq+Hlulw8o
+	+SfO12ZfACwlUvZ80xU6Ol80UZ4S9QERjZmp7pChhExA+LFtHVdaKCQl8eqLmsv+LF+Jy+cBVgr
+	GGSEe3BOaTQ==
+X-Google-Smtp-Source: AGHT+IFU0jlOyX9I+mwd40yApvsRfjBwt5t4OBU5P727dBTc45GWW4TdEtasewfwzzhy5LM65oNmgOpmVDst6g==
+X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:20a1])
+ (user=davidgow job=sendgmr) by 2002:a05:6902:1023:b0:dda:c4ec:7db5 with SMTP
+ id x3-20020a056902102300b00ddac4ec7db5mr691696ybt.4.1713863293622; Tue, 23
+ Apr 2024 02:08:13 -0700 (PDT)
+Date: Tue, 23 Apr 2024 17:08:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240423-opp_support-v11-1-15fdd40b0f95@quicinc.com>
-References: <20240423-opp_support-v11-0-15fdd40b0f95@quicinc.com>
-In-Reply-To: <20240423-opp_support-v11-0-15fdd40b0f95@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, <johan+linaro@kernel.org>,
-        <bmasney@redhat.com>, <djakov@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_parass@quicinc.com>, <quic_krichai@quicinc.com>,
-        <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713863265; l=1661;
- i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
- bh=V+31wpy+ViuFYyPXxxni0lbwtREaNbHVwxOi2HByI6I=;
- b=Rk6K56u92t2kiIqnqFJpkYkzwaq0CnI/ozh1AxLOcRO1bJBTvBHFVww6ljx+8/uR/0xGHDJGo
- bKbK+UJz69nA7hRs8oXN65WMAYHJ6fQIfPIvor+7m9WiYF3/Niwp1iU
-X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: r36NtGu1yXqzO4LesjMO_7xMlBM1z-3o
-X-Proofpoint-ORIG-GUID: r36NtGu1yXqzO4LesjMO_7xMlBM1z-3o
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-23_07,2024-04-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- impostorscore=0 phishscore=0 spamscore=0 mlxlogscore=999
- priorityscore=1501 clxscore=1015 malwarescore=0 mlxscore=0
- lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2404010003 definitions=main-2404230024
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
+Message-ID: <20240423090808.242389-1-davidgow@google.com>
+Subject: [PATCH] kunit: test: Move fault tests behind KUNIT_FAULT_TEST Kconfig option
+From: David Gow <davidgow@google.com>
+To: Rae Moar <rmoar@google.com>, 
+	"=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?=" <mic@digikod.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Guenter Roeck <linux@roeck-us.net>
+Cc: David Gow <davidgow@google.com>, kunit-dev@googlegroups.com, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add PCIe-MEM & CPU-PCIe interconnect path to the PCIe nodes.
+The NULL dereference tests in kunit_fault deliberately trigger a kernel
+BUG(), and therefore print the associated stack trace, even when the
+test passes. This is both annoying (as it bloats the test output), and
+can confuse some test harnesses, which assume any BUG() is a failure.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Allow these tests to be specifically disabled (without disabling all
+of KUnit's other tests), by placing them behind the
+CONFIG_KUNIT_FAULT_TEST Kconfig option. This is enabled by default, but
+can be set to 'n' to disable the test. An empty 'kunit_fault' suite is
+left behind, which will automatically be marked 'skipped'.
+
+As the fault tests already were disabled under UML (as they weren't
+compatible with its fault handling), we can simply adapt those
+conditions, and add a dependency on !UML for our new option.
+
+Suggested-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/all/928249cc-e027-4f7f-b43f-502f99a1ea63@roeck-us.net/
+Fixes: 82b0beff3497 ("kunit: Add tests for fault")
+Signed-off-by: David Gow <davidgow@google.com>
 ---
- arch/arm64/boot/dts/qcom/sm8450.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ lib/kunit/Kconfig      | 11 +++++++++++
+ lib/kunit/kunit-test.c |  8 ++++----
+ 2 files changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-index b86be34a912b..615296e13c43 100644
---- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-@@ -1807,6 +1807,12 @@ pcie0: pcie@1c00000 {
- 					<0 0 0 3 &intc 0 0 0 151 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
- 					<0 0 0 4 &intc 0 0 0 152 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+index 68a6daec0aef..34d7242d526d 100644
+--- a/lib/kunit/Kconfig
++++ b/lib/kunit/Kconfig
+@@ -24,6 +24,17 @@ config KUNIT_DEBUGFS
+ 	  test suite, which allow users to see results of the last test suite
+ 	  run that occurred.
  
-+			interconnects = <&pcie_noc MASTER_PCIE_0 QCOM_ICC_TAG_ALWAYS
-+					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
-+					<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
-+					 &config_noc SLAVE_PCIE_0 QCOM_ICC_TAG_ALWAYS>;
-+			interconnect-names = "pcie-mem", "cpu-pcie";
++config KUNIT_FAULT_TEST
++	bool "Enable KUnit tests which print BUG stacktraces"
++	depends on KUNIT_TEST
++	depends on !UML
++	default y
++	help
++	  Enables fault handling tests for the KUnit framework. These tests may
++	  trigger a kernel BUG(), and the associated stack trace, even when they
++	  pass. If this conflicts with your test infrastrcture (or is confusing
++	  or annoying), they can be disabled by setting this to N.
 +
- 			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
- 				 <&gcc GCC_PCIE_0_PIPE_CLK_SRC>,
- 				 <&pcie0_phy>,
-@@ -1930,6 +1936,12 @@ pcie1: pcie@1c08000 {
- 					<0 0 0 3 &intc 0 0 0 438 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
- 					<0 0 0 4 &intc 0 0 0 439 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+ config KUNIT_TEST
+ 	tristate "KUnit test for KUnit" if !KUNIT_ALL_TESTS
+ 	default KUNIT_ALL_TESTS
+diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
+index 0fdca5fffaec..e3412e0ca399 100644
+--- a/lib/kunit/kunit-test.c
++++ b/lib/kunit/kunit-test.c
+@@ -109,7 +109,7 @@ static struct kunit_suite kunit_try_catch_test_suite = {
+ 	.test_cases = kunit_try_catch_test_cases,
+ };
  
-+			interconnects = <&pcie_noc MASTER_PCIE_1 QCOM_ICC_TAG_ALWAYS
-+					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
-+					<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
-+					 &config_noc SLAVE_PCIE_1 QCOM_ICC_TAG_ALWAYS>;
-+			interconnect-names = "pcie-mem", "cpu-pcie";
-+
- 			clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
- 				 <&gcc GCC_PCIE_1_PIPE_CLK_SRC>,
- 				 <&pcie1_phy>,
-
+-#ifndef CONFIG_UML
++#if IS_ENABLED(CONFIG_KUNIT_FAULT_TEST)
+ 
+ static void kunit_test_null_dereference(void *data)
+ {
+@@ -136,12 +136,12 @@ static void kunit_test_fault_null_dereference(struct kunit *test)
+ 	KUNIT_EXPECT_TRUE(test, ctx->function_called);
+ }
+ 
+-#endif /* !CONFIG_UML */
++#endif /* CONFIG_KUNIT_FAULT_TEST */
+ 
+ static struct kunit_case kunit_fault_test_cases[] = {
+-#ifndef CONFIG_UML
++#if IS_ENABLED(CONFIG_KUNIT_FAULT_TEST)
+ 	KUNIT_CASE(kunit_test_fault_null_dereference),
+-#endif /* !CONFIG_UML */
++#endif /* CONFIG_KUNIT_FAULT_TEST */
+ 	{}
+ };
+ 
 -- 
-2.42.0
+2.44.0.769.g3c40516874-goog
 
