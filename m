@@ -1,115 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9FCFC18;
-	Tue, 23 Apr 2024 01:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BF412B93;
+	Tue, 23 Apr 2024 01:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713835331; cv=none; b=b9yVoy68noG6nXxiGnV3+9dW5UiyVh1QuCzpsKOY6ThcoO+acfs80iDfh0WBM5RZgP1cskK2TJcGcGKIiHdRq7iXwci+lmxIIWque1+60/p3xzW7a3gVgmFDJxVqTLdk7yngG+7mqnI4OJXvblWZTo6jtzm3C9Q7D5SC7oKqvEI=
+	t=1713835444; cv=none; b=doZoIv86kUrvWtGmbl4FTuXY57yyjtAndbSgjPWfsc5aRDWtVMEC5SDFsi3wPc2vQ4ahVo16AcIIRyhdXEnaukA0yaLGMvs8Fk1cM6fHgjs/eyZKj4jeS6aRuFXwTe/W5ucFX+C1wGra3CzWkSl+2l0ejIo5u/vBAoGb2fE3rpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713835331; c=relaxed/simple;
-	bh=Ih5x3U7p/xtVraTTykRD3OsOwljk9aCuZMTsbHhk8XQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mxHbNtd3xOPe/tZrkAQP1hzQ2ynbmbtk4jw/d2fViXUd+kcWxHhf1UPjL/WLzUfHtOmZU1OYIQjvjkBssOBRmg6kAGCtccecMvpspZrHQewt0itr9tdCr4eCsIu62hI5fTd0nyp61iVcNeHy123lODtEMmj6UpHQkI1nzX1Be2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=Bo7a/SmO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Bo7a/SmO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A225CC113CC;
-	Tue, 23 Apr 2024 01:22:10 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Bo7a/SmO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1713835327;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ABtPQ8N241McwH5nBg097+oC8v9+e969bZpbfxdAxJg=;
-	b=Bo7a/SmOoG+JYtN0U12s/KdN/K9YPwQO2U7Df3gj0Zy0tHf6yaZ6wf0tUpHaTLTCcWR56o
-	2OzydvBrH6TDAOiEJWmz5+SMktEDm21j0O4sXlWNKK9nOENQPpkg7FhCGaulIQ4kTQz6RX
-	ckK8y7h3bZBaw+sVwH8zHvzLGsbsTKg=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 885dffb8 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Tue, 23 Apr 2024 01:22:06 +0000 (UTC)
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dc6cbe1ac75so3836954276.1;
-        Mon, 22 Apr 2024 18:22:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVFE59M95gwpK0xW41tk1fcGijHiuASSGjXm664l5iDFOedUgrdC6OWHIiiAI4NBVThC+Fm0KqwPEe8WQ9SU5su/LlZC92c
-X-Gm-Message-State: AOJu0YxJlmU18DtPon06cPDT5NwpNd7Rtw0qsr5Sn1R/MR+hh0pzboG1
-	Uz2iJDsNkI/dwOQBZNHgh50GfKoaQz5vSWaFdO1T1ZmBRd8T9MgDSrS8+Z7rwBz6Cug90/O03gt
-	jmZeO0RudJo/FYtEzowonIkZgf4k=
-X-Google-Smtp-Source: AGHT+IHOl/OU0gcvKAzZv+BDUZWeDYaENpYzgHuuBDp9zvpkL5AsnDGHxy57Vi8y+7xvNvjifG8fxHcls0zCXYzjLQs=
-X-Received: by 2002:a25:ac90:0:b0:dc6:d258:c694 with SMTP id
- x16-20020a25ac90000000b00dc6d258c694mr1437897ybi.19.1713835324219; Mon, 22
- Apr 2024 18:22:04 -0700 (PDT)
+	s=arc-20240116; t=1713835444; c=relaxed/simple;
+	bh=EuaU35KfwN9Z7OMbZwNvGMdvR4+I5EILignv0Y/hgtY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SGMOXCNnItbTkZ4rJ5NK9HGnUs8ph/qUFzWfkD7HZmGWt2sMJ5BYQb1I5yFK8gi/oWeaA/IIoPeLhZjy1aejiyzljYraReECxNwviSvrBNao2MXzpnIUbxKLNi3qEn6IPzNNaEQ+kov3nls0Bitz/1zAZh/A7+tz+yNiJDIO2NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VNkpw0xP5zNt10;
+	Tue, 23 Apr 2024 09:21:28 +0800 (CST)
+Received: from kwepemi500025.china.huawei.com (unknown [7.221.188.170])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0223218007D;
+	Tue, 23 Apr 2024 09:23:58 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.2) by
+ kwepemi500025.china.huawei.com (7.221.188.170) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 23 Apr 2024 09:23:57 +0800
+From: Chenghai Huang <huangchenghai2@huawei.com>
+To: <herbert@gondor.apana.org.au>, <davem@davemloft.net>
+CC: <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+	<fanghao11@huawei.com>, <liulongfang@huawei.com>, <shenyang39@huawei.com>,
+	<songzhiqi1@huawei.com>, <qianweili@huawei.com>, <liushangbin@hisilicon.com>,
+	<linwenkai6@hisilicon.com>, <taoqi10@huawei.com>, <wangzhou1@hisilicon.com>,
+	<huangchenghai2@huawei.com>
+Subject: [PATCH 0/2] crypto: hisilicon - fix reg offset issue and cleanup dump information
+Date: Tue, 23 Apr 2024 09:19:20 +0800
+Message-ID: <20240423011922.770693-1-huangchenghai2@huawei.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240418114814.24601-1-Jason@zx2c4.com> <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
-In-Reply-To: <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date: Tue, 23 Apr 2024 03:21:52 +0200
-X-Gmail-Original-Message-ID: <CAHmME9qKFraYWmzD9zKCd4oaMg6FyQGP5pL9bzZP4QuqV1O_Qw@mail.gmail.com>
-Message-ID: <CAHmME9qKFraYWmzD9zKCd4oaMg6FyQGP5pL9bzZP4QuqV1O_Qw@mail.gmail.com>
-Subject: Re: [REGRESSION] Re: [PATCH] Revert "vmgenid: emit uevent when
- VMGENID updates"
-To: Alexander Graf <graf@amazon.com>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Lennart Poettering <mzxreary@0pointer.de>, Babis Chalios <bchalios@amazon.es>, "Theodore Ts'o" <tytso@mit.edu>, 
-	"Cali, Marco" <xmarcalx@amazon.co.uk>, Arnd Bergmann <arnd@arndb.de>, 
-	"rostedt@goodmis.org" <rostedt@goodmis.org>, Christian Brauner <brauner@kernel.org>, linux@leemhuis.info, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemi500025.china.huawei.com (7.221.188.170)
 
-Hi Alexander,
+Fix for register offset and cleanup dump information of debugfs.
 
-The process here seems weirdly aggressive and sneaky.
+Chenghai Huang (1):
+  crypto: hisilicon/debugfs - mask the unnecessary info from the dump
 
-On 2023-06-19, I wrote that I didn't want to take this route for
-userspace notifications.
+Wenkai Lin (1):
+  crypto: hisilicon/sec2 - fix for register offset
 
-Then on 2023-06-28, you wrote to Greg asking him to take it instead of
-me. Nine minutes later, Greg said "yea sure." Then he caught up on the
-thread and some hours later wrote:
+ drivers/crypto/hisilicon/debugfs.c        | 29 +++++++++++++++--------
+ drivers/crypto/hisilicon/hpre/hpre_main.c |  2 +-
+ drivers/crypto/hisilicon/sec2/sec_main.c  |  6 ++---
+ 3 files changed, 23 insertions(+), 14 deletions(-)
 
-> Wait, no, I'm not the maintainer of this, Jason is.  And he already
-> rejected it (and based on the changelog text, I would too), so why are
-> you asking me a month later to take this?
->
-> Work with the maintainer please, don't try to route around them, you
-> both know better than this.
+-- 
+2.30.0
 
-Then on 2023-11-14 you wrote to me again asking me to take it, despite
-my earlier reservations not changing in the interim. I didn't have a
-chance to reply.
-
-Then on 2023-11-30, Greg weirdly took it anyway, with zero discussion
-or evidence on the mailing list as to what had happened.
-
-When I noticed what had happened (while working on his driver in the
-process of cleaning up/reworking patches that your Amazon employees
-sent me that needed work), suspicious that you tried to "route around"
-the proper way of getting this done and trick Greg again into taking a
-patch that's not his purview, I asked him wtf happened on IRC:
-
-<gregkh> ugh, sorry, I don't remember that.  I think Alexander talked
-to me at plumbers and said, "hey, please take this virt patch"
-<gregkh> but you are right, you NAKed it in that thread, I forgot
-that, sorry.  Yes, revert it if that's needed.
-
-Greg then ACK'd the revert commit which came with a stable@ marking
-and a Fixes: tag (for 6.8, which isn't very old).
-
-So it looks to me like you twice tried to trick Greg into taking this,
-succeeded the second time, got caught, and now are trying to make a
-regression argument as a means of keeping your sneaky commit in there.
-All of this really _really_ rubs me the wrong way, I have to say.
-
-I don't know what holds more weight here -- the predictable regression
-argument, or the fact that you snuck nack'd changes into a very very
-recent kernel that can still be removed while probably only affecting
-you. But I'm obviously not happy about this.
-
-Jason
