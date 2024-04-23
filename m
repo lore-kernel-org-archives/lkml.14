@@ -1,89 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC02D85C48;
-	Tue, 23 Apr 2024 12:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69994129E95;
+	Tue, 23 Apr 2024 12:46:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713876299; cv=none; b=mTkTd0ajOYaMsKw8P/BJJGEIJacZ/YUt+wKUnvPX4VFXWBEowCMKhU8nkNeF5nLslbXNHHOsevuR81UiuYA1tsjrqqQjmBh0EqmC6YdfkFbIukfT2cR/mmWUfiZvsBZ/ZFP8Z0MNfQXe/DrJ9z5dwXvX6F4oIG+oKlUdnHyuJp8=
+	t=1713876375; cv=none; b=rzFXOVpBNGuSxvrodeKl6F9aW+2gGAvA1G1vJiMQZkYFuU2AqXxHN0BRljjk8nq81OVoA839Rr+samUmYaSnIfRiHJ4B0jmFNIP/i7CbhwwdWcRbwZ1ksMCgWsmLc3eUZ8sPtDdEdsvDzauSVXSLcb6Khw9vol2ooBMPeeoks+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713876299; c=relaxed/simple;
-	bh=cTXx+iD2wmjxxov1qX3iubOa9Y20RoJrqWIrv/7Wz0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lk16loD62knNnz5V3UlkUb6PBWeweXHcGotd5G2Tg70yu+2Kli9oP8m/oK3GaNxMBT5RFxps+29qcjirq7PsWHfWz79pYzGTTrai8m8a/Y6Z35a6pfspY+Zqt2FvIrk0+pLWngcG5vEu7fQcxQN+ysOvFUk+cJxniNQHgzo+rYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kKY/7MhB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713876375; c=relaxed/simple;
+	bh=uf4EuAH4BuWnJz364epyOFKLwWP5s6X7hUicAJuYTSI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jHgyPQXF3YSR87CKUCNtWelRfWbkrpHaPe/exX5lYoPJZZNw8DSOscVj5d1Y2cLfAeOnLxfNkAQBakIT5S36rNUX/VSWU8cAnLPgOBQ8H9enw0TCKP9rTViMQclYzOz5XaP52p6zAvES8HJIvUsAV14Ze/g0smJfao7Ki3CMFvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oK8PfJ/x; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kKY/7MhB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E753EC116B1;
-	Tue, 23 Apr 2024 12:44:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713876299;
-	bh=cTXx+iD2wmjxxov1qX3iubOa9Y20RoJrqWIrv/7Wz0U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kKY/7MhBGou+3DqZ/lN9QH+aKZ7FDa9tbgHIKuxifPyXktA/MznLQJ1uuwRhwD2lB
-	 OmyXEgOTk60IOS1FJJrXEK1huQIM5Njl3G/q+fg3GtKaWH1Kz6tGsCsiJ42M43z0Lo
-	 QtZc/bPi71errt/8feNSEc1qXa2sQd3EPwoPzJmlDQVbmsEZwOtaaczeUP4rZAqUNr
-	 dyi7rVBAQN0aHCWrbllEil1GKKrufWjy28e/dnnNBB9g1bj3kKqtrSrzliOjuuiYwu
-	 vuCT6Am90rSjErLhmETtvcXPFOwHGQyoxUFJiN0B87fYFip+YA9uRq2wHtYlgMMNJa
-	 TKXfcsBb5u59A==
-Date: Tue, 23 Apr 2024 07:44:56 -0500
-From: Rob Herring <robh@kernel.org>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/7] dt-bindings: pci: xilinx-nwl: Add phys
-Message-ID: <20240423124456.GB4105016-robh@kernel.org>
-References: <20240422195904.3591683-1-sean.anderson@linux.dev>
- <20240422195904.3591683-2-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oK8PfJ/x"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=YHvDh9MSlvAAsyJZm3hGqNEWp393dezjxKkBeAue+Lc=; b=oK8PfJ/xiT3y0h2vUm5st6RGQA
+	2+pKXK7YgbgtOd8PFcwPgi0ehfYBFRj2+7d7C/WqtXVihdi4T5IRdgXNRO8yEild+RkIxWb5zpW6V
+	OtX5zIDAJ80Ah8rlbcm8u3s9ZMM6AwErIWEs5thg9vVuY3gqkJd5p0jIe+ZC5TBtCrK5jJKk0BJv3
+	cZuVeNuaKrenyqjMm7k0DF/xIFVFwLlARq9r5ph/HYGzVgZudpBf2yYkNIy2oFNP4Gjl1CpmWJ7lg
+	2t1HkHBXBLOmdX+2OLfDJdPUh9uXXdDypeZh9eJtqVoA6OBlFYpxoIypa6VljGdYJ6sflC3hSONAJ
+	VtmQAK1g==;
+Received: from [2001:4bb8:188:6493:c70:4a89:bc61:2] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rzFXH-0000000HUJa-3wFj;
+	Tue, 23 Apr 2024 12:46:12 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Christian Brauner <christian@brauner.io>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>
+Cc: linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: xfs fixups for the fop_flags conversion
+Date: Tue, 23 Apr 2024 14:46:05 +0200
+Message-Id: <20240423124608.537794-1-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240422195904.3591683-2-sean.anderson@linux.dev>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, Apr 22, 2024 at 03:58:58PM -0400, Sean Anderson wrote:
-> Add phys properties so Linux can power-on/configure the GTR
-> transcievers.
-> 
-> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-> ---
-> 
->  Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml b/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
-> index 426f90a47f35..02315669b831 100644
-> --- a/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
-> @@ -61,6 +61,14 @@ properties:
->    interrupt-map:
->      maxItems: 4
->  
-> +  phys:
-> +    maxItems: 4
-> +
-> +  phy-names:
-> +    maxItems: 4
-> +    items:
-> +      - pattern: '^pcie-phy[0-3]$'
+Hi all,
 
-The names here are pointless and redundant. Names are local to the 
-device, so 'pcie' is redundant. They only refer to PHYs, so 'phy' is 
-redundant too. All you are left with is the index of the entry.
+this series against Christian's vfs.misc branch fixes up pointless
+harmless but pointless over-declaration of capabilities for XFS
+directories.
 
-Now if PCIe can work on only lanes 2 and 3 or similar, then maybe 
--names becomes useful.
+Christian: the first patch would make sense to just fold into the
+original fop_flags conversion if you're still rebasing the branch.
 
-Rob
+ xfs_file.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
