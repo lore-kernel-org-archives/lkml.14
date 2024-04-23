@@ -1,113 +1,111 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BC47E78E;
-	Tue, 23 Apr 2024 11:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A39712F585
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713871950; cv=none; b=Suvg5/UVbC8r0f1394D3mUcqKGub1v/z610vIeieew4P++SUWOSVYn7qQyJFROmdHa1y10kRjGWfCA5QDX/Yxx++q3vESD1uA+T+TwfdRL6Fkz3Qm3y0QMwznIpHFHMBSr6xLG7ouPQkMoLnFcw+6cIFXuYqfyijY56z+PUBlcI=
+	t=1713871955; cv=none; b=RFgdYPjprqdiOWCWeLkrIiHsPja2a+aUSUJbKDgmAIWvcZGXHogBO/EX6PuzMPQqlF9RjyB3Ff5GoUu4KU994KQnpsMPUTKrx5RmjVPP7Hm/YWFQXlkAiseC3hutoT72n/pWbjFUgeMgxeKVuiZP1s5aLzk5Cr94j8SCmG55VHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713871950; c=relaxed/simple;
-	bh=jwSYTrGlB4VVA6AzwNKL6XCoUro5wTrrJWrgjhjZkpc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BlS+ugRIJWF3SZL7UVhbmNRooiW8sVKE4Z/u5ad+Ox914czN1+Cjnm7Z65sLqqEObEumRUgwWdQtE3KKZqzs4QLFLiuiuJgWMUljQ7zwjti+gB4Zno6pgiVl/AzzPFBKODJtn0jmjT7QjVNyyCGF3kaqXSeUktql3Hod998bY+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=CxM0G6v0; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=rAugLcGH reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1713871955; c=relaxed/simple;
+	bh=LdqZ/QWiaje++MLzUHTivAf9HQkerMZ5MNR1lT49cmw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tIwZ3Zr2xygdehVQNVsLc1AuoYSCP86zYR2dxId90gTaDLeczUcTm9IQN+RykN2x2Kcw4GySlJP2ciR1NOlWLzLEXQ5RC+io1zr3Oa6Wk5RCq5xejWOugUhMREtJWaeWSWJ394n1xKxK7LRtKO2U7UDgO85IB1ZKp+XwD0licRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=C+acaH4q; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="CxM0G6v0";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="rAugLcGH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C+acaH4q"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2da0f8f7b24so62417371fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 04:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1713871949; x=1745407949;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=iu1dWYNKDp9es51AFvUQfiaCrk+4XgYnKK2u7hGngWI=;
-  b=CxM0G6v0LPUkSAyYByPq2oZgotPj4EVhaE9XL64iMVM/Hqk7ceHqqPAk
-   wYfFq4bgzYbJHms3AUGY5MlgqBcqycNE0YoAA51dXNyUy4H/hwYoKCUh4
-   EAvStUxARYzUNWmMBiNdtHB4PbjWlkNo4DOK7nowWsnDtduANebtyiMx7
-   0LRxIO6uX2HjffRvFdEhpqwWN3pYoYqWt+m36zXqm4s5bgvd+VVjzO19h
-   MjEahrzQjN+r3KQ5+fj/XJz03aQjY4OCjQC+04l1hW0j5NG/LZ+V8uENB
-   Ue4PQJDFeCikWUnPp/ETowmFXwrotsIAO/qQvzRlVd9IysDBcErwzAI7v
-   A==;
-X-IronPort-AV: E=Sophos;i="6.07,222,1708383600"; 
-   d="scan'208";a="36565285"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 23 Apr 2024 13:32:28 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 17F9A1702F4;
-	Tue, 23 Apr 2024 13:32:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1713871944; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=iu1dWYNKDp9es51AFvUQfiaCrk+4XgYnKK2u7hGngWI=;
-	b=rAugLcGHgiuz1Oyvl6KBwdn5BzeB5gtuK3wRKTe3q/S6eOlw8WCj2ZMN10oqBmqqv22yOO
-	/+FtnEkC7DreL7u50alA2g5FHbDfPG3lfQqEIZRLf/4+AT1n/zuPSFbkpY4sgrIRJbHviZ
-	QIWEgbhf289G9ydfkvTvQhqi0r1VptQBBrbaG7olMDe9v49yYGGKqbC4sGGA0WMKMlAxNX
-	CTPsLHaq/fUWZo+Y1MSYaSkRKM6c8YM8HLXKLfYIkfKpg1K6BMmxiB8fDo01RZ2jP7o5ps
-	y5eH6WFEgRBQXkOZBys3gaUmW8o2WAPqYHGpc4fLTB2/VQL7U04c3lBJKQJC5g==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux@ew.tq-group.com,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] arm64: dts: freescale: tqma8mq: Add partitions subnode to spi-nor
-Date: Tue, 23 Apr 2024 13:31:50 +0200
-Message-Id: <20240423113151.2145120-6-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240423113151.2145120-1-alexander.stein@ew.tq-group.com>
-References: <20240423113151.2145120-1-alexander.stein@ew.tq-group.com>
+        d=chromium.org; s=google; t=1713871952; x=1714476752; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LdqZ/QWiaje++MLzUHTivAf9HQkerMZ5MNR1lT49cmw=;
+        b=C+acaH4qOUg9jybSC5MkIbc7e61DfUWCN0Zw0vxjfWACydLYvx2MKkuzR9xtpJ4bHj
+         Ei5MZF4wb4tToYmDrOItQlvhltPeW5HxwhuzT53PFxGAW4q/rQdzDKFEaRjdKwM6SSGq
+         2lmHu+MDS8AyBW8TsMPmQbaUV/3XxXU5qmZFc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713871952; x=1714476752;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LdqZ/QWiaje++MLzUHTivAf9HQkerMZ5MNR1lT49cmw=;
+        b=kxXi2+J1dh8YFf1fRSp+jn7e0hX5uDWjmm+c7rpsQv2JmIcshSHu8eIWHzGLYFgBxR
+         IrdTgm+O24yU6ta6rxSBBHvaxWr3bY48PT28mkPy94SvYfBIBPmZGxM+bZqEne2gAzpp
+         qwlO44YAYqrmkA4v2z+8dP6wq5w9exxfD9Ku3jkik14AQS0mjaevasU0tATEoRV5pUeA
+         miHBRidqEi4YpxZ24g6+hJjTiVP4UVndRhhWy3Do2qY9Q1mgARzAokYxl7MgLc8ApZsn
+         N0KUxRKulgvAxjptTyJhab6pUn47RUQExy71UAoDPubvQqMsVkl+lxv6jhiKEPL+8rcP
+         lPDw==
+X-Forwarded-Encrypted: i=1; AJvYcCWXnDIm5CEZxADwvb+niGaoKHd5WAfttFaDf8B/sGSwf7fGK0dmVAhpQ2ufAHO9aSa+DuCYEwUlyHTLbbEegAqMuHGMtNDvkxb9Wyhw
+X-Gm-Message-State: AOJu0Yx5JTf3LGDm2rQ5o5XJ/GBvKs10D1XxKDTm5ZDdO17cZz6QeJyo
+	fWrmdHjAuZT7nYWpcOUDTbaKZ27qLrv4MdCuPpHILS2kF7IOVS9+cR+f786w2XpENSdwL3+sNhl
+	MMFyoS2XedgpgbiEaAAPrwSBWkDAW/EzLJ6oz
+X-Google-Smtp-Source: AGHT+IERajGx70v108Wf4eXuvycl6t3zVenYntzqbYq+/h/p6VvcDPumtQl29D9vFRK+LBHfWe/oUq0ddGwNxAxPMyU=
+X-Received: by 2002:a2e:9cd7:0:b0:2dc:f188:9945 with SMTP id
+ g23-20020a2e9cd7000000b002dcf1889945mr702989ljj.25.1713871952428; Tue, 23 Apr
+ 2024 04:32:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+References: <CAE5UKNqufWZfKLAXLcpBYKQpJEVt6jPD4Xtr=Nesh34VkNOETg@mail.gmail.com>
+ <81e1b870-37f9-4ef2-9a3d-87015f32546b@kl.wtf> <Zh0qKeI-YPDE-NVT@hovoldconsulting.com>
+ <535f3756-80d9-4599-bf73-a8785d18c399@kl.wtf>
+In-Reply-To: <535f3756-80d9-4599-bf73-a8785d18c399@kl.wtf>
+From: =?UTF-8?Q?=C5=81ukasz_Majczak?= <lma@chromium.org>
+Date: Tue, 23 Apr 2024 13:32:21 +0200
+Message-ID: <CAE5UKNqPA4SnnXyaB7Hwk0kcKMMQ_DUuxogDphnnvSGP8g1nAQ@mail.gmail.com>
+Subject: Re: [PATCH v2] HID: i2c-hid: wait for i2c touchpad deep-sleep to
+ power-up transition
+To: Kenny Levinsen <kl@kl.wtf>
+Cc: Johan Hovold <johan@kernel.org>, benjamin.tissoires@redhat.com, dianders@chromium.org, 
+	dtor@chromium.org, hdegoede@redhat.com, jikos@kernel.org, 
+	johan+linaro@kernel.org, kai.heng.feng@canonical.com, 
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, mripard@kernel.org, 
+	rad@chromium.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The bootloader adds MTD partitions in this subnode if present, or in the
-spi-nor node itself otherwise.
-Setting #size-cells in MTD nodes itself is deprecated by mtd.yaml.
-Fix all this by adding an empty partitions node which the bootloader will
-fill with configured MTD partitions. Remove the deprecated properties
-as well.
+On Mon, Apr 15, 2024 at 7:14=E2=80=AFPM Kenny Levinsen <kl@kl.wtf> wrote:
+>
+> On 4/15/24 3:22 PM, Johan Hovold wrote:
+> > We also use it for devices that may not be populated (e.g. an optional
+> > touchscreen) and in that case we should not print anything.
+>
+> I sent a patch series[0] that shows how the same can be achieved
+> (gracefully handling missing device + retry to wake device) without any
+> smbus probes, following the existing retry style in i2c_hid_set_power().
+>
+> Radoslaw and Lukasz, it somehow felt rude to tag and blame you for code
+> you hadn't seen yet. If my patch ends up favored we should make sure to
+> have the appropriate attribution tags added...
+>
+> [0]: https://lore.kernel.org/all/20240415170517.18780-1-kl@kl.wtf/
+>
+Hi Kenny,
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- arch/arm64/boot/dts/freescale/imx8mq-tqma8mq.dtsi | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Unfortunately, your fix doesn't help in our case as there is no sleep
+before the second call to
+i2c_hid_fetch_hid_descriptor().
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-tqma8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-tqma8mq.dtsi
-index 5ca6b22525469..01e5092e4c40a 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-tqma8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-tqma8mq.dtsi
-@@ -251,11 +251,15 @@ &qspi0 {
- 	flash0: flash@0 {
- 		compatible = "jedec,spi-nor";
- 		reg = <0>;
--		#address-cells = <1>;
--		#size-cells = <1>;
- 		spi-max-frequency = <84000000>;
- 		spi-tx-bus-width = <1>;
- 		spi-rx-bus-width = <4>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+		};
- 	};
- };
- 
--- 
-2.34.1
+Saying more, this STM exposes two i2c addresses (connected physically
+to the same bus)
+one is the HID interface and the other one gives an access to the base
+firmware and is
+served by cros_ec_i2c driver and actually thanks to this driver,
+touchpad is woken up because
+In the resume path cros_ec_i2c "starts talking" through the i2c bus
+thus generating a wakeup
+interrupt.
 
+So we need to send a dummy (or any other) transaction that may fail to
+wake up the controller after
+a whole chromebook rebook and on the resume path.
+
+Best regards,
+Lukasz
