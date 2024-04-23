@@ -1,217 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out187-4.us.a.mail.aliyun.com (out187-4.us.a.mail.aliyun.com [47.90.187.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D015FBA0;
-	Tue, 23 Apr 2024 09:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654CD59148;
+	Tue, 23 Apr 2024 09:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713865362; cv=none; b=sbSUN88sQ07extI6xqCm7kPUho1wCtv63lujQp31+HreTJmaklr7rT/ta2jISH+NKWHpBk15dYRjXBwXdhx3DfJOw+wEyo+06rAPEpGKn4AQzZeGk4kbvKAUxAx1zdjLWCPSpsPqlQ/EXahnJPow4LHbd3cPx3wCggN6+2O1Tuc=
+	t=1713865374; cv=none; b=N7nRpR7edyudvCbaSlzZhqdttfMh7co644PAS/3Yvm2twY/8Tq0FZonH5YYV5KCnXRN1wmg9HXGHS4H8cd5f4qeTZRovZ9wMuJZXke1SByahZ8sRO1byoVIUZWFGcyg06sOMi4LfmSiJs1XiLri4wxapcbPq8xiwp0ZIv7Mnvd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713865362; c=relaxed/simple;
-	bh=Ls/UifY5Dz1wJAlodWBpmzK5RW2Ga9GWujeLPVUWApE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f5gekUayicBEMipOi1k8RV80kLKh5YCx4z9S2rY0/FopporVaYB0YnTSRAFf1Nx0x/i2ZXuBIvniZz1YldLSPJsUfH7Go/3ozH6O8M9M713I3Cf72pLsnwhrkcXz4JWd8W8NyJV4uTHIK5Kb1DobsiP3raIR4UW0YoxrVIWV+k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t3sUCms4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713865374; c=relaxed/simple;
+	bh=9e3zz2vdIgjObMpzkDW7FZcgOJIxeoqT6M30B1aspn4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bL6YN9+RRM7QvKTYWA3G5aRl4rXrm8iEFN7K8gvcrzuXNQv9IvF4+wUxpgmm7nTUbPRtnz3meCBZVHzx64tNixLyR3gHbD1rQtXB8ehMAH7oR5/f2WMM6HFHvcWW9BKF/5RP/ZvfEeLt7TKSj3sH3f6HfwlhyUHSDTcFtVJPgo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=zju6K1Vf; arc=none smtp.client-ip=47.90.187.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t3sUCms4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235C1C116B1;
-	Tue, 23 Apr 2024 09:42:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713865361;
-	bh=Ls/UifY5Dz1wJAlodWBpmzK5RW2Ga9GWujeLPVUWApE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=t3sUCms4mYpMabtasGNhGocxGbl4sFKtiI5xMv3GUseqBt8syt6ltOpJw5h+mhkm9
-	 aFw/mfjIIPxTOgX3aSOEh8CQ9MDDltzwMmO7D/WChVF9JWgnNlfVL892FNWud09dKb
-	 FSA60+icHOuitAqK+1F/rbKWBFDweKEPHeGK3ckswBDSwzaQs+WEOy7vQNwL9Y8luP
-	 xYndgb4wDz00KwaLl7Uhr0PI6sa3C6nq5pot9Z3qY6+LMLbM+8e/iSegNeK7NbIhHP
-	 +qqwJies09VxEMlzq045chEuTCG3ApsAakzZW3oCkuQ9Zt7KVPauqvMQOtnyBHP4I0
-	 PSMBeRefA9q6g==
-Message-ID: <aef907ab-1087-4f49-bea4-d43ee6cebb73@kernel.org>
-Date: Tue, 23 Apr 2024 11:42:33 +0200
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="zju6K1Vf"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1713865359; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=eRmZ9jEKUfe7r0xjaXFGSIKeohTP9cOqduT19L33uX0=;
+	b=zju6K1VfUsO56VJPbdPHuXBWD27e5sYhNer8g9cAM9PkwTuvvf88SG9JJSiMks6tocFF4Ym0KC6mg1ihqOG60HwBsILZ75BUoltfXMqiBpbFnChNCc+Vf02NOEgWjNES3s3xZkxNJSSo3UMD76Dvi2xgblLvRdRB6BRXFNLliJE=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047190;MF=zhubojun.zbj@antgroup.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---.XJPn8AG_1713864416;
+Received: from localhost(mailfrom:zhubojun.zbj@antgroup.com fp:SMTPD_---.XJPn8AG_1713864416)
+          by smtp.aliyun-inc.com;
+          Tue, 23 Apr 2024 17:27:02 +0800
+From: "=?UTF-8?B?5pyx5Lyv5ZCbKOadsOmTrSk=?=" <zhubojun.zbj@antgroup.com>
+To: linux-kernel@vger.kernel.org,
+	linux-sgx@vger.kernel.org,
+	jarkko@kernel.org,
+	dave.hansen@linux.intel.com
+Cc:  <reinette.chatre@intel.com>,
+  "=?UTF-8?B?5YiY5Y+MKOi9qeWxuSk=?=" <ls123674@antgroup.com>,
+  "=?UTF-8?B?5pyx5Lyv5ZCbKOadsOmTrSk=?=" <zhubojun.zbj@antgroup.com>
+Subject: [RFC PATCH 1/1] x86/sgx: Explicitly give up the CPU in EDMM's ioctl() to avoid softlockup
+Date: Tue, 23 Apr 2024 17:25:50 +0800
+Message-Id: <20240423092550.59297-2-zhubojun.zbj@antgroup.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240423092550.59297-1-zhubojun.zbj@antgroup.com>
+References: <20240423092550.59297-1-zhubojun.zbj@antgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/14] ASoC: Constify local snd_sof_dsp_ops
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- Liam Girdwood <lgirdwood@gmail.com>,
- Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
- Bard Liao <yung-chuan.liao@linux.intel.com>,
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
- Daniel Baluta <daniel.baluta@nxp.com>,
- Kai Vehmanen <kai.vehmanen@linux.intel.com>, Mark Brown
- <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20240414-n-const-ops-var-v1-0-8f53ee5d981c@kernel.org>
- <89f8f0be-2534-46c8-9058-cabea4f68568@linux.intel.com>
- <9d1eda85-32a0-4e53-86ca-ce3137439bd7@kernel.org>
- <d046d195-6fa3-4c52-bc5f-3e5e763bc692@linux.intel.com>
- <138ac465-1576-4e86-a05d-63f8acc6fb70@kernel.org>
- <3acfbe3c-8b83-4c40-83c2-437f963fd25a@linux.intel.com>
- <7490bce3-3bd6-4beb-b8be-d47a6b0a30f0@kernel.org>
- <eaa0c99a-3b41-4444-906c-d2f005d326b9@linux.intel.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <eaa0c99a-3b41-4444-906c-d2f005d326b9@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 22/04/2024 23:24, Pierre-Louis Bossart wrote:
-> 
-> 
->>>> There are multiple reasons and benefits for const, like compiler
->>>> optimization, code readability (meaning) up to security improvements,
->>>> e.g. by some GCC plugins or marking rodata as really non-writeable, so
->>>> closing some ways of exploits. There are many opportunities here, even
->>>> if they are not yet enabled.
->>>
->>> Possibly, but the SOF core does not know if the structure it uses is
->>> rodata or not. Using the 'const' identifier would be misleading.
->>
->> How so? If core does not modify structure, it should take it via ops,
->> just like 100 other widely known structures (see checkpatch). Why is
->> this different?
-> 
-> I don't understand "it should take it via ops"
-> 
-> We are already fetching the structure with private_data.
+EDMM's ioctl()s support batch operations, which may be
+time-consuming. Try to explicitly give up the CPU at
+the every end of "for loop" in
+sgx_enclave_{ modify_types | restrict_permissions | remove_pages}
+to give other tasks a chance to run, and avoid softlockup warning.
 
-I meant, drivers using such core library functions or directly calling
-to the core, pass some private data structure with "struct foo_ops".
-Sometimes pass directly "struct foo_ops". This is happening everywhere
-and is common pattern.
+The following has been observed on Linux v6.9-rc5 with kernel
+preemptions disabled(by configuring "PREEMPT_NONE=y"), when kernel
+is requested to restrict page permissions of a large number of EPC pages.
 
-And everywhere we try to make it const, where following conditions are met:
-1. the driver allocates "struct foo_ops" statically,
-2. the driver does not change it,
-3. the core (or library) does not change it.
+    ------------[ cut here ]------------
+    watchdog: BUG: soft lockup - CPU#45 stuck for 22s! [occlum-run:3905]
+    ...
+    CPU: 45 PID: 3905 Comm: occlum-run Not tainted 6.9.0-rc5 #7
+    ...
+    RIP: 0010:sgx_enclave_restrict_permissions+0xba/0x1f0
+    Code: 48 c1 e6 05 48 89 d1 48 8d 5c 24 40 b8 0e 00 00 00 48 2b 8e 70 8e f5 93 48 c1 e9 05 48 c1 e1 0c 48 03 8e 68 8e f5 93 0f 01 cf <a9> 00 00 00 40 0f 85 b2 00 00 00 85 c0 0f 85 db 00 00 00 4c 89 ef
+    RSP: 0018:ffffb55a6591fa80 EFLAGS: 00000202
+    RAX: 0000000000000000 RBX: ffffb55a6591fac0 RCX: ffffb581e7384000
+    RDX: ffffb59a9e4e8080 RSI: 0000000000000020 RDI: ffff91d69e8cc000
+    RBP: ffffb55a6591fb70 R08: 0000000000000002 R09: ffff91d646e12be0
+    R10: 000000000000006e R11: 0000000000000002 R12: 000000072052d000
+    R13: ffff91d69e8cc000 R14: ffffb55a6591fbd8 R15: ffff91d69e8cc020
+    FS:  00007fe10dbda740(0000) GS:ffff92163e480000(0000) knlGS:0000000000000000
+    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    CR2: 00007fc041811000 CR3: 00000040d95c8005 CR4: 0000000000770ef0
+    DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+    DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
+    PKRU: 55555554
+    Call Trace:
+     <IRQ>
+     ? show_regs+0x67/0x70
+     ? watchdog_timer_fn+0x1f3/0x280
+     ? __pfx_watchdog_timer_fn+0x10/0x10
+     ? __hrtimer_run_queues+0xc8/0x220
+     ? hrtimer_interrupt+0x10c/0x250
+     ? __sysvec_apic_timer_interrupt+0x53/0x130
+     ? sysvec_apic_timer_interrupt+0x7b/0x90
+     </IRQ>
+     <TASK>
+     ? asm_sysvec_apic_timer_interrupt+0x1b/0x20
+     ? sgx_enclave_restrict_permissions+0xba/0x1f0
+     ? __pte_offset_map_lock+0x94/0x110
+     ? sgx_encl_test_and_clear_young_cb+0x40/0x60
+     sgx_ioctl+0x1ab/0x900
+     ? do_syscall_64+0x79/0x110
+     ? apply_to_page_range+0x14/0x20
+     ? sgx_encl_test_and_clear_young+0x6c/0x80
+     ? sgx_vma_fault+0x132/0x4f0
+     __x64_sys_ioctl+0x95/0xd0
+     x64_sys_call+0x1209/0x20c0
+     do_syscall_64+0x6d/0x110
+     ? do_syscall_64+0x79/0x110
+     ? do_pte_missing+0x2e8/0xcc0
+     ? __pte_offset_map+0x1c/0x190
+     ? __handle_mm_fault+0x7b9/0xe60
+     ? __count_memcg_events+0x70/0x100
+     ? handle_mm_fault+0x256/0x360
+     ? do_user_addr_fault+0x3c1/0x860
+     ? irqentry_exit_to_user_mode+0x67/0x190
+     ? irqentry_exit+0x3b/0x50
+     ? exc_page_fault+0x89/0x180
+     entry_SYSCALL_64_after_hwframe+0x76/0x7e
+    RIP: 0033:0x7fe10e2ee5cb
+    Code: 0f 1e fa 48 8b 05 c5 78 0d 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 95 78 0d 00 f7 d8 64 89 01 48
+    RSP: 002b:00007fffb2c75518 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+    RAX: ffffffffffffffda RBX: 0000000780000000 RCX: 00007fe10e2ee5cb
+    RDX: 00007fffb2c75520 RSI: 00000000c028a405 RDI: 0000000000000005
+    RBP: 0000000000000005 R08: 0000000000000000 R09: 00007fffb2c75594
+    R10: 00007fffb2c755c8 R11: 0000000000000246 R12: 00000000c028a405
+    R13: 00007fffb2c75520 R14: 0000000780000000 R15: 00007fe10e1a7980
+     </TASK>
+     ------------[ end trace ]------------
 
+Signed-off-by: Bojun Zhu <zhubojun.zbj@antgroup.com>
+---
+ arch/x86/kernel/cpu/sgx/ioctl.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> 
->>>>> that's a different interpretation to the 'software' view you're
->>>>> describing. "this structure will not modified by this function" is not
->>>>> the same thing as "this structure CANNOT be modified".
->>>>
->>>> Yes, but can we please discuss specific patchset then? Patches which
->>>> change pointers to const have one "interpretation". Patches which modify
->>>> static or global data have another.
->>>
->>> Just look at sound/soc/sof/intel/mtl.c... The core will sometimes use a
->>
->> That's a driver (or specific implementation), not core.
-> 
-> You are making an assumption on what the SOF core is. The core is used
-> by ACPI or PCI drivers as a library. The structures are all allocated in
-> ACPI/PCI drivers and passed to the core library.
-
-The same as everywhere else. The distinction, that this is "library" and
-in other cases often is "core framework" or "subsystem", does not
-matter. Behaves the same.
-
-> 
->>> constant structure and sometimes not, depending on the PCI ID reported
->>> by hardware. This was intentional to override common defaults and make
->>> the differences limited in scope between hardware generations.
->>
->>
->>>
->>> int sof_mtl_ops_init(struct snd_sof_dev *sdev)
->>> {
->>> 	struct sof_ipc4_fw_data *ipc4_data;
->>>
->>> 	/* common defaults */
->>> 	memcpy(&sof_mtl_ops, &sof_hda_common_ops, sizeof(struct
->>> snd_sof_dsp_ops)); <<<< THE BASELINE IS CONSTANT
->>
->> Yes, I saw it and such users are not changed. They won't receive any
->> safety. But all others are getting safer.
-> 
-> 
-> Maybe there's a misunderstanding on what the 'SOF core' is. This is just
-> a helper library that are used by the PCI drivers. The core has zero
-> knowledge on anything really.
-
-The "core" or the "library" either modifies the structure or not. That
-is only that matters from the core point of view.
-
-
-> 
->> I really do not understand what is the problem here. In entire Linux all
->> of such changes are welcomed with open arms. So what is different here?
-> Adding 'const' at the SOF core level does not mean that we can treat
-> structures as rodata. It only means that the structure is not modified
-> by the core library. Not the same thing.
-
-Are we talking about basic C now? Of course it does not mean that and I
-already explained what is the goal of this - the static or global memory
-in the driver can be moved to rodata.
-
-Just like everywhere else.
-
-I keep repeating the same arguments and keep repeating the same: please
-bring me any argument why this should be different than all other 100
-structs (or more, I count based on checkpatch). So far you did not bring
-any argument for this, so I don't know how to provide any other
-technical feedback.
-
-According to my knowledge and easily visible here, this is exactly the
-same as in all other cases. Drivers have some static or global struct
-which can be moved to rodata, because nothing modifies it.
-
-Best regards,
-Krzysztof
+diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/ioctl.c
+index b65ab214bdf5..2340a82fa796 100644
+--- a/arch/x86/kernel/cpu/sgx/ioctl.c
++++ b/arch/x86/kernel/cpu/sgx/ioctl.c
+@@ -806,6 +806,9 @@ sgx_enclave_restrict_permissions(struct sgx_encl *encl,
+ 		}
+ 
+ 		mutex_unlock(&encl->lock);
++
++		if (need_resched())
++			cond_resched();
+ 	}
+ 
+ 	ret = 0;
+@@ -1010,6 +1013,9 @@ static long sgx_enclave_modify_types(struct sgx_encl *encl,
+ 		entry->type = page_type;
+ 
+ 		mutex_unlock(&encl->lock);
++
++		if (need_resched())
++			cond_resched();
+ 	}
+ 
+ 	ret = 0;
+@@ -1156,6 +1162,9 @@ static long sgx_encl_remove_pages(struct sgx_encl *encl,
+ 		kfree(entry);
+ 
+ 		mutex_unlock(&encl->lock);
++
++		if (need_resched())
++			cond_resched();
+ 	}
+ 
+ 	ret = 0;
+-- 
+2.25.1
 
