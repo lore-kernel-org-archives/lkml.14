@@ -1,159 +1,147 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2064.outbound.protection.outlook.com [40.107.92.64])
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CFE113D53A;
-	Tue, 23 Apr 2024 16:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713889561; cv=fail; b=BxXk2sNT+cW+Jt3A/V0ysaWOQtljt2Eet86DIY2DrUzKi7JjP93sJuZCLcNKONPvGPI1+8s+mIQhaO1RSQLoUsadZC0qoGZ0nFpyjRWrUIITplUmNUgMAo9cMYVoNhnWS2v0BTgtdAGRwzObYf9EEtAXCoWOXCbSYqPBmRtcvXk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713889561; c=relaxed/simple;
-	bh=QYsywJEtTFQXgKSkNp0tCWxyJgaUcMEi8U/V68chOjc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iCNobDUwuUkKp4mAbVz9OnlKlSv3458QOLtDQfL1xdc+EY2yPRSbuHplFbSPm2qcLPwO47ampNGnBJ5xG5Co8YrHY2OuUu+qjXx/9v9g1Sxg6JqXA4QpEzfbZ+r3P3I3hsMrJw0jyEDlj0Ne/iK7gM4ORtOe/UHCG/XVatC0dFw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3UfvZggH; arc=fail smtp.client-ip=40.107.92.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765DE142916;
+	Tue, 23 Apr 2024 16:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713889567; cv=none; b=bKWiX5yQ7Ow+2cr9O2vBE2TwLTHopIWgxxpHuouKOoKJjzDrlcVjRytOYmGuBcDAe7P8em3moHAlmEZUJgf4UE4u1J0C4IyT38NkOrSqR+HQ548uaxyFr5xT5ar/5uQrFoOyko55TLd2DuyaMw1qBmv/SXoOJ1C3z5G1Yph589Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713889567; c=relaxed/simple;
+	bh=nx7ksgUQaGN0EY1GfAjq1Qx4E1C02KxqvhGIJ2PtKp0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N9MlS1R1QaoM4PV9vyF65esWCvUQPbET1FX/Zco1rtjyiXF3RegeCJGNFI4VltbUnsU2nrI2Y25J4bgGIPZy6pdlONRpg1Ckqb+oBaL7ojz2pxQoW+kh0KKzQwPxLVPfwjX/LPQ3IpXplUqFyugbr7Pljdtvivmwz1hXoR+qabA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=Wy1Y85zC; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3UfvZggH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Yfci2WfrZHHz5nlRGHSbC57A4hLpTeFjrkamiRRG6HrlXcp2AYLT1PCHDd3f7tur0KjQN8ybKoEzszeU4heiQzaxP2py1Uob7R8+NPO1ZnBHbY2IHw4PvPksmPlVHfe7tO/jk91dS80+JogCroX99Y+efNyj59cnHL7IvaWftEytGtnIgyZ5GWiuVo/VLvU/7qILfX1+QVp4g+Ke86yXAky7FKL5i7p6cmK3Qtbhfn5zhXIzNDE6TYvvnZkCgpthDAtomwCA1KZ3ZXVnAi4ZMM1fIgwO4acmr8WG5RhU8AC4YOeo7nbfu01PBcdFsTyf3wFWAIRgM/S67UXz/sk+Gw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CwkhCL+vr2XzfwAv20MKLDTPT0xknnynFHwZccJ5W20=;
- b=I/LX0CDB8z0wr7DlN2Gzws7N/ZfkcYFi/TfvUFSHU7qGx9SQAq5ehnWXZUoB5rQJaclgyIZgffa57H2ZZR4mA4pjsmlh/eZogVWuzVfzHMx0SxaVUyy9uS3zS4f9AwOASkPa1iko1rECP1O7Ke4hipKb7OvbzzqeaM18BV2jwmbicoxXW0XZXwQPImmHcL3J1RagVuF9YO18Zxvr3v5ICPPH9BazN8vodUQ895K+OflaqLnnBkkBWUCV6HKe8TpktPWJzDxceNvAQl9W8hT0hQBsV4+IaklUdV5uQ6odVSrb7AvvW3Iv+9SQTq1zUo8/mb/x4WH0Hd7eYdmU3I6IHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CwkhCL+vr2XzfwAv20MKLDTPT0xknnynFHwZccJ5W20=;
- b=3UfvZggHkPDy+NNrAzZVL1QaINhmd/4wg+UOPZ93iljHnHdYBShLLK3dogH/hBh+9YvJ1tyq2LM3HkiavpY3Lx/qDDq5We0+10mEUBUzDwrl04rPHwFJc8XFf0r3iM7r/72GPgHRcvFHyXoY6vW0HBEW3j1aWzCpOA1nEmN3eEQ=
-Received: from CH2PR03CA0026.namprd03.prod.outlook.com (2603:10b6:610:59::36)
- by MW3PR12MB4425.namprd12.prod.outlook.com (2603:10b6:303:5e::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Tue, 23 Apr
- 2024 16:25:56 +0000
-Received: from CH1PEPF0000AD7D.namprd04.prod.outlook.com
- (2603:10b6:610:59:cafe::51) by CH2PR03CA0026.outlook.office365.com
- (2603:10b6:610:59::36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.35 via Frontend
- Transport; Tue, 23 Apr 2024 16:25:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000AD7D.mail.protection.outlook.com (10.167.244.86) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Tue, 23 Apr 2024 16:25:56 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Apr
- 2024 11:25:55 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: <kvm@vger.kernel.org>
-CC: <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-crypto@vger.kernel.org>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>,
-	<ardb@kernel.org>, <pbonzini@redhat.com>, <seanjc@google.com>,
-	<vkuznets@redhat.com>, <jmattson@google.com>, <luto@kernel.org>,
-	<dave.hansen@linux.intel.com>, <slp@redhat.com>, <pgonda@google.com>,
-	<peterz@infradead.org>, <srinivas.pandruvada@linux.intel.com>,
-	<rientjes@google.com>, <dovmurik@linux.ibm.com>, <tobin@ibm.com>,
-	<bp@alien8.de>, <vbabka@suse.cz>, <kirill@shutemov.name>,
-	<ak@linux.intel.com>, <tony.luck@intel.com>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <alpergun@google.com>,
-	<jarkko@kernel.org>, <ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>,
-	<pankaj.gupta@amd.com>, <liam.merwick@oracle.com>
-Subject: [PATCH v14 29/22] [SQUASH] KVM: SEV: Support SEV-SNP AP Creation NAE event
-Date: Tue, 23 Apr 2024 11:21:44 -0500
-Message-ID: <20240423162144.1780159-7-michael.roth@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240423162144.1780159-1-michael.roth@amd.com>
-References: <20240421180122.1650812-1-michael.roth@amd.com>
- <20240423162144.1780159-1-michael.roth@amd.com>
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="Wy1Y85zC"
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 78369600A7;
+	Tue, 23 Apr 2024 16:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1713889560;
+	bh=nx7ksgUQaGN0EY1GfAjq1Qx4E1C02KxqvhGIJ2PtKp0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Wy1Y85zCl8qjZwviFxUVjPwGHAzszgP07LuhfP0ILoq2zTbtXwMY8pUCeak4rheIZ
+	 5SOWaA3EWeRE12awTASNBViXK2v201N83EGXFsjakP4SLpYdBJX0gdqedCpF91ycqt
+	 ZfpZ91W1zB5mTVCDd4aEGqtnrB1NL/eSbi3PoJG5IO+IfsiO1vAAGJ2KTS0it6X4ZV
+	 aBjeWoxzhl3vHnwFPhdjxRV7oVIzw7vs+bb8OBdoMkO6dg6Bc/0KDXFlxLt3lHuWMk
+	 Cux21icq9SurCdgOjNlii+NFq2W24fIKkNzJZspIYTlXXYb3JygX4Kt/3XDsZKew9j
+	 XABlU82rJUjQw==
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by x201s (Postfix) with ESMTP id 9C6CD202787;
+	Tue, 23 Apr 2024 16:25:53 +0000 (UTC)
+Message-ID: <8e112b31-0168-4e82-a378-87211ea99cfa@fiberby.net>
+Date: Tue, 23 Apr 2024 16:25:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 1/2] net: sparx5: flower: cleanup
+ sparx5_tc_flower_handler_control_usage()
+To: Daniel Machon <daniel.machon@microchip.com>
+Cc: netdev@vger.kernel.org, Steen Hegelund <Steen.Hegelund@microchip.com>,
+ Lars Povlsen <lars.povlsen@microchip.com>, UNGLinuxDriver@microchip.com,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ linux-kernel@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>
+References: <20240423102728.228765-1-ast@fiberby.net>
+ <20240423111515.wzvclnlxdwv77zy7@DEN-DL-M70577>
+Content-Language: en-US
+From: =?UTF-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>
+In-Reply-To: <20240423111515.wzvclnlxdwv77zy7@DEN-DL-M70577>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD7D:EE_|MW3PR12MB4425:EE_
-X-MS-Office365-Filtering-Correlation-Id: c96d2bce-f9f7-4b06-87ed-08dc63b20d74
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?yLZdUGzG5KhLqt5/mgdReNk1Bu4q0B2UNRQNa1pKLc2iR5qEUFQQWkmMGYxV?=
- =?us-ascii?Q?BcXFBsYRcf6MthaCA/2rD/FmDZkSqTs2GAXx+1RyVZj4GlFexXM0PbC1bOvH?=
- =?us-ascii?Q?BSIomrXMJTw0XqxdzutXGW9veD17b30uuE+Zbl8RX7paa7cbX1OZtacfv9wt?=
- =?us-ascii?Q?+s06XLhUkKZX6D2n1p8G+ApH4PPlew/mmnFVCje4AoVbYUzy9K7g+22wKRHr?=
- =?us-ascii?Q?1BtLnrBiQcNS2UwCfQ2OSEDcTKriJH2CnmmZEhobTrowHVkJt5yDSuzwaTHM?=
- =?us-ascii?Q?a1CXATtXMDlarhtnWCYSjst4U+/svPhwND+Z1Z4IKKpTjcfD3iIndbqOnDcE?=
- =?us-ascii?Q?8biRl2wAMnVTu6CIQkGASDK4GSN4IWuPHoYWrxXM01dDseQKGQCIWNdhTt1Z?=
- =?us-ascii?Q?crA/dQmJQvdcfunItZrTIyvgMLbO9UqzCcRyreO+bQYGfsVug4UucG2GAXM1?=
- =?us-ascii?Q?/IeFFdhmAVbkMJmVX7YebA+iRHLA7PdahRy5uu5JNN6NKml/xU+HvWy48W08?=
- =?us-ascii?Q?rt/trygewendQJn6W1LWnr6QJIGrcKVyygVo7EPoEfc1zeX/FXVkZZ9RCd/8?=
- =?us-ascii?Q?Gcuc9CtItgBwWDu27kXNE+ROgE1dAdNuePCqddZwPduDt8CKUa8k/exqki50?=
- =?us-ascii?Q?3GPRtWcz/CghPiCHGBoTxbAq/cN1Sa66+r/pC/FLwnfxr9dRvpkaxmhpyfmU?=
- =?us-ascii?Q?IsBElvVE+Hup4SKMl++zI1zuwc46Ni7eHndfBBkNOjKeHbYXb7ucyy7usLSh?=
- =?us-ascii?Q?HQxv/UJM7ugShcdjzyWT9Ru8xqjEI3Dn9x31XQPEeji3yS0FO2zoIFFi6Fm7?=
- =?us-ascii?Q?Eng4VkXcM+LXeB81YtbOLpiTkPd0XicKL3xgnNiNlFmNevbw7IKEKVD7CTAj?=
- =?us-ascii?Q?jG3ubVjZQHwUS9qMp5Yh0aPzGaJRBjxmx/FmKW2R2Z8BzMNxvrD0ni21CFlV?=
- =?us-ascii?Q?mjnTvde4Y/3UycoElzCFNMczvUc2OKIrE84lBzneyOWUs/M6HfeYfgVkdtFK?=
- =?us-ascii?Q?2We87V/P6iJVwztE02P5vCTPwmlwOtYlvh0t7vSnLffZcUeR/V8eotBMK3Bs?=
- =?us-ascii?Q?YEMgHKqO4lpNk62iEA6+/hdzuCSeVvv/9vRvAlIpaJ337OgLmHu1bP94PKI/?=
- =?us-ascii?Q?P2qlymMTtcNRdyzJQWdwMGpAYev+pBa2TQq3tFdaMy8iHibPeIStpF2xfiIz?=
- =?us-ascii?Q?RuoXh+iLmPqPErd9csdJ2IU7KWx2W8f+I131SD/S+bSI9w679GntYXAxbTxm?=
- =?us-ascii?Q?NOed1mQX07vTLSPtm/WQP/0thUVahY5kF4fjhZg/xv2H7rdKWMvtogX5hZiA?=
- =?us-ascii?Q?tG/2jFUoIIBkO9eG7Ky9RTYbo9s75i0Ui0rLRuHJ+rEY3B2MX1ibUdef2Ngk?=
- =?us-ascii?Q?XJVNjFQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(376005)(36860700004)(7416005)(82310400014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 16:25:56.0055
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c96d2bce-f9f7-4b06-87ed-08dc63b20d74
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD7D.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4425
 
-Return an error if non-SNP guest issues AP Creation request.
+Hi Daniel,
 
-Signed-off-by: Michael Roth <michael.roth@amd.com>
----
- arch/x86/kvm/svm/sev.c | 2 ++
- 1 file changed, 2 insertions(+)
+Thank you for the review.
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index ff64ed8df301..1137a7f4136b 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -3280,6 +3280,8 @@ static int sev_es_validate_vmgexit(struct vcpu_svm *svm)
- 			goto vmgexit_err;
- 		break;
- 	case SVM_VMGEXIT_AP_CREATION:
-+		if (!sev_snp_guest(vcpu->kvm))
-+			goto vmgexit_err;
- 		if (lower_32_bits(control->exit_info_1) != SVM_VMGEXIT_AP_DESTROY)
- 			if (!kvm_ghcb_rax_is_valid(svm))
- 				goto vmgexit_err;
+On 4/23/24 11:15 AM, Daniel Machon wrote:
+> Hi Asbjørn,
+> 
+> Thank you for your patch!
+> 
+>> Define extack locally, to reduce line lengths and future users.
+>>
+>> Only perform fragment handling, when at least one fragment flag is set.
+>>
+>> Remove goto, as it's only used once, and the error message is specific
+>> to that context.
+>>
+>> Only compile tested.
+>>
+>> Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+>> ---
+>>   .../ethernet/microchip/sparx5/sparx5_tc_flower.c    | 13 ++++++-------
+>>   1 file changed, 6 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c b/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
+>> index 663571fe7b2d..d846edd77a01 100644
+>> --- a/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
+>> +++ b/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
+>> @@ -159,13 +159,14 @@ sparx5_tc_flower_handler_basic_usage(struct vcap_tc_flower_parse_usage *st)
+>>   static int
+>>   sparx5_tc_flower_handler_control_usage(struct vcap_tc_flower_parse_usage *st)
+>>   {
+>> +       struct netlink_ext_ack *extack = st->fco->common.extack;
+> 
+> Could you please update the use of extack in all places inside this
+> function. You are missing one place.
+
+Good catch, sure. It must have got lost somewhere along the way. I deliberately kept it out
+of the net patch, since it could wait for net-next.
+
+
+>>          struct flow_match_control mt;
+>>          u32 value, mask;
+>>          int err = 0;
+>>
+>>          flow_rule_match_control(st->frule, &mt);
+>>
+>> -       if (mt.mask->flags) {
+>> +       if (mt.mask->flags & (FLOW_DIS_IS_FRAGMENT | FLOW_DIS_FIRST_FRAG)) {
+> 
+> Since these flags are used here and in the next patch, maybe assign them
+> to a variable:
+> 
+> u32 supp_flags = FLOW_DIS_IS_FRAGMENT | FLOW_DIS_FIRST_FRAG
+> 
+> And update the use throughout.
+
+In an earlier state this patch had a #define SPARX5_FLOWER_SUPPORTED_CTLFLAGS,
+in the same style as nfp in drivers/net/ethernet/netronome/nfp/flower/offload.c
+
+Right now, this driver supports all currently defined flags (which are used with mask),
+so the point of using flow_rule_is_supp_control_flags() to this dirver, is to
+make it possible to introduce new flags in the future, without having to update
+all drivers to explicitly not support a new flag.
+
+My problem with using supp_flags in both places is: What happens when support
+for a new flag is introduced?
+
+u32 supp_flags = FLOW_DIS_IS_FRAGMENT | FLOW_DIS_FIRST_FRAG | FLOW_DIS_NEW_FLAG;
+
+if (mt.mask->flags & (FLOW_DIS_IS_FRAGMENT | FLOW_DIS_FIRST_FRAG))
+         /* handle fragment flags through lookup table */
+
+if (mt.mask->flags & FLOW_DIS_NEW_FLAG)
+         /* do something */
+
+if (!flow_rule_is_supp_control_flags(supp_flags, mt.mask->flags, extack))
+         return -EOPNOTSUPP;
+
+The fragment lookup table code currently requires the above guarding,
+as [0][0] in the lookup table is FRAG_INVAL, and not FRAG_SHRUG.
+
+What do you think?
+
 -- 
-2.25.1
-
+Best regards
+Asbjørn Sloth Tønnesen
+Network Engineer
+Fiberby - AS42541
