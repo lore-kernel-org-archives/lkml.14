@@ -1,40 +1,45 @@
-Received: from out0-196.mail.aliyun.com (out0-196.mail.aliyun.com [140.205.0.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FEE713C9DA
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B7013D287;
+	Tue, 23 Apr 2024 11:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713872449; cv=none; b=BfiFrq7BadQiNZi1WrzHgbLaRfKmyte8IHrVtYAXXu+Y5XVrhWiIy9qrCAy7Hm0CcLthK3CVq/Pgjqq6MEYAEsuBjulrlH24L6Tjx/kJ+o5KxsEgwzp06TKshpxVLzHY6oCoMNe1jsz9O4lgEjJH7Sldb20x2oNgAChpuuByC5A=
+	t=1713872450; cv=none; b=okHtbml7pVzlW48GSM/4G4MOHgRAD04g+X3lUqF7zOfAc0eL1Amxzx4avq1j5XA4/aRJm0vuD76+aH5ht5PEGn9H4YQtkP1EgHzZIcdNF2ZMBw7FkHuoOaCyGDgGSWc/jcIRmcCT2JXP/NQPe6BL7ah29DDV1k0Ogya5zT7VXlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713872449; c=relaxed/simple;
-	bh=YfsrPvivDoRKNrC1YbqFj+eCbbGzeciwc/RF0sBkVJU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=G7o3lV+CBHDiqUwttvXmx3irAH3hPb7s3u7KtALZzS+h5f1pLHm6wyHKF/Rw6igY0nSR12gdzYp2551PSMLBt7npc5tfEs5FCVjzkIECyQJDqKY78/l2j2Cv53a8vkIjLfj85/rs8LZwH+mgT/BcjvV8FViIHuBdzIq8uTDSmrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=Dt7cB+Dl; arc=none smtp.client-ip=140.205.0.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	s=arc-20240116; t=1713872450; c=relaxed/simple;
+	bh=hKwut95N+tCwwDS51J+BHVxNHPqZYt4fc8mS6/l5WkI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PJLhchpwhGsAKJwQTAIZolpWw+g0khdK0AJwkra+qU3JUqK49+yX/IsWONTYptGNd326G+LC5kzTzKU93ir9pqSvZbIYH30B4ChIh5ceQKj6V8uUQCkf8eFMoTQ5BvKK54C34/q+Jz406oGRMrdR0LyVYDTui8JBUzUp4u1TJCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Im36tl6i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="Dt7cB+Dl"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1713872444; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
-	bh=Puom3o0JDkiZIFarbwt9DAJoDSO5gjgxzhiu11+oa54=;
-	b=Dt7cB+Dlv+gDGuvCSI0krKXzPBBUjh/wdHxVuCtXuZzSKlIwwPeYG4k0OLL4c6+P2BRRnBjLp5K4yMgMfNftbfCCGQI7juDq52KfcDmi9Jvef//gOHbFBNKM7zL/0cOafDcuyBtuIFOXg8Fc6H7vQAdSQ8h8Pg9jcU46PW9Q1T0=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047192;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJTUYfJ_1713871506;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJTUYfJ_1713871506)
-          by smtp.aliyun-inc.com;
-          Tue, 23 Apr 2024 19:25:12 +0800
-From: "Tiwei Bie" <tiwei.btw@antgroup.com>
-To: richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net
-Cc:  <linux-um@lists.infradead.org>,
-   <linux-kernel@vger.kernel.org>,
-  "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH 0/7] um: A follow-up series of -Wmissing-prototypes fixes
-Date: Tue, 23 Apr 2024 19:24:50 +0800
-Message-Id: <20240423112457.2409319-1-tiwei.btw@antgroup.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Im36tl6i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 549F1C3277B;
+	Tue, 23 Apr 2024 11:40:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713872450;
+	bh=hKwut95N+tCwwDS51J+BHVxNHPqZYt4fc8mS6/l5WkI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Im36tl6izfh2pPqKD7rNovWycGF+r5/iGXy/3XWCSbIDo28CBIf42bobnZHwxbhpM
+	 zcWxALeHJHdTYQ1V1S/ATzn66jOmyKXDPKZj3l6LdI4d7uhK4V6PVXY5uBqMAoabLf
+	 Hni96H1kEp1rdALQndLl23Mcmc4a2GxWmXhRgbI0Ofhdnl2eyub9/1l/gVzJE+rVo4
+	 xTFsaNHK9RvlhowyN/ep/p9Oo6otenMVD6a9MIEOXUpTRXo12T6VD47BEuBeoycLcH
+	 sFeltqLIlqODP9Wp3RtdaLc682KZ46RTZtG9kJ9vtZ2HUv7zESynXoF8IEHOwuAAOv
+	 oIcGyli17YeHQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	hdegoede@redhat.com,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 12/16] platform/x86: ISST: Add Granite Rapids-D to HPM CPU list
+Date: Tue, 23 Apr 2024 07:01:45 -0400
+Message-ID: <20240423110151.1658546-12-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240423110151.1658546-1-sashal@kernel.org>
+References: <20240423110151.1658546-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,38 +47,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.28
 Content-Transfer-Encoding: 8bit
 
-This is a follow-up series built on top of below series:
-https://lore.kernel.org/linux-um/20240306101925.1088870-1-tiwei.btw@antgroup.com/
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-Tiwei Bie (7):
-  um: Fix -Wmissing-prototypes warnings for (rt_)sigreturn
-  um: Fix the -Wmissing-prototypes warning for __switch_mm
-  um: Fix the -Wmissing-prototypes warning for get_thread_reg
-  um: Fix the declaration of kasan_map_memory
-  um: Add an internal header shared among the user code
-  um: Fix -Wmissing-prototypes warnings for __vdso_*
-  um: Remove unused do_get_thread_area function
+[ Upstream commit d8c2d38c4d1dee8fe8e015b9ebf65bdd8e4da99b ]
 
- arch/um/include/asm/kasan.h             |  1 -
- arch/um/include/asm/mmu.h               |  2 --
- arch/um/include/asm/processor-generic.h |  1 -
- arch/um/include/shared/kern_util.h      |  2 ++
- arch/um/include/shared/skas/mm_id.h     |  2 ++
- arch/um/os-Linux/internal.h             | 20 ++++++++++++++++++++
- arch/um/os-Linux/main.c                 |  2 --
- arch/um/os-Linux/mem.c                  |  1 +
- arch/um/os-Linux/skas/mem.c             |  2 --
- arch/um/os-Linux/start_up.c             |  2 --
- arch/um/scripts/Makefile.rules          |  3 ++-
- arch/x86/um/shared/sysdep/archsetjmp.h  |  7 +++++++
- arch/x86/um/signal.c                    |  5 +++--
- arch/x86/um/tls_32.c                    | 17 -----------------
- arch/x86/um/vdso/um_vdso.c              | 10 ++++++++--
- 15 files changed, 45 insertions(+), 32 deletions(-)
- create mode 100644 arch/um/os-Linux/internal.h
+Add Granite Rapids-D to hpm_cpu_ids, so that MSR 0x54 can be used.
 
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Link: https://lore.kernel.org/r/20240415212853.2820470-1-srinivas.pandruvada@linux.intel.com
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+index 08df9494603c5..30951f7131cd9 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+@@ -719,6 +719,7 @@ static struct miscdevice isst_if_char_driver = {
+ };
+ 
+ static const struct x86_cpu_id hpm_cpu_ids[] = {
++	X86_MATCH_INTEL_FAM6_MODEL(GRANITERAPIDS_D,	NULL),
+ 	X86_MATCH_INTEL_FAM6_MODEL(GRANITERAPIDS_X,	NULL),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_CRESTMONT_X,	NULL),
+ 	{}
 -- 
-2.34.1
+2.43.0
 
