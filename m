@@ -1,40 +1,69 @@
-Received: from mail78-36.sinamail.sina.com.cn (mail78-36.sinamail.sina.com.cn [219.142.78.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B8F13E02C
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 21:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=219.142.78.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C09D26288
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 21:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713907901; cv=none; b=OamqmoW7eSlZe7R77GC5HrTuglI+/Qms3fa4ThjdyRxdrLrzLcQf9QnuP9mPvhnASVh8BglnoyhCqfcfadsyBLaihAsLwktyg4zJcwCM1SMTmLOC59CEqhxMn/nneT+AC0lL5+SmxSCbbI2VGNOUiKpi2MLN4o3FLqPCypRTqcQ=
+	t=1713907955; cv=none; b=MsT4dDrDT7mgkZrJrGsQxzbd0JOPkGHHsEGfpJ7smXLqPXXOQQ6dxLKhatMK02rsQ+J4Hr/eFRlYXk8ews4LFfDo2DddnrbIJfWb32RXkdeeT7qqNor7+C+alFUBp9Zb74y4ovJcA16GWzzxxPWv3TOXttV8mPMA3Zc4H5A5wYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713907901; c=relaxed/simple;
-	bh=NcvEBJbMADFKETvubvmIIrt8KTc/o8vkNe/aSXZvSxw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hC5I9ZFXv7lSdtyn65FA9VT7s848f9Upys+ryyt7sfUNqkrTQz/XHpq3sZmfa+XXm1o1V91aDYXq1u2NH3XD2psjAnSCXfhAUqbQP7EYQZoT3JEJftsPM+5MajchgeNUQlM5uVLUd7u6L0zNwfeMncz4J6nn+AkYg98aF6fq9pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=219.142.78.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.88.49.188])
-	by sina.com (172.16.235.25) with ESMTP
-	id 662828B200004F1F; Tue, 24 Apr 2024 05:31:32 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 47432634210530
-X-SMAIL-UIID: B3B0442BC54F4D9990B8E3D0C28A4759-20240424-053132-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+6cf5652d3df49fae2e3f@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [pm?] KASAN: use-after-free Read in netdev_unregister_kobject
-Date: Wed, 24 Apr 2024 05:31:31 +0800
-Message-Id: <20240423213131.3040-1-hdanton@sina.com>
-In-Reply-To: <000000000000afab690616b12f99@google.com>
-References: 
+	s=arc-20240116; t=1713907955; c=relaxed/simple;
+	bh=qv8E1gsMpWM5F+eV243zDVTTn4MJOqXdD270Vb9ivYE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mFXHE7Wu6umuaPuK0BVn3LG8P9w7Cwm+svh0iTjrEZwz3TmMtjuBcr7QAUVh2QPTT7xg+Wx1wBzPaYnDt+P9gSFbTGbGiNgNgaKdUkww6QN5q8lv3X1DDIpgFcT7WWjwuM4ngY2TH/g6D+jgSNI5OGV4x2O1oubSxlXoMGZavQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gVXt9rf1; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gVXt9rf1"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6ed691fb83eso4906935b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 14:32:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713907953; x=1714512753; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pKWTSVVnluWR7STSuRRgwJ6Rd/eSnjR70lXgePt6SEU=;
+        b=gVXt9rf1NYWcm0F+H9LBAxfAUcBbeQIs0Dl4nsq1V/ezUVA7JE3Fkl8iCmKGxBWpaB
+         oSwIeHJRmHWRx4fWI2UBF3fru5uOIAfNXVcgsF23KSU5+OLdLI6sPMmvkSc2ALgAPZ9q
+         n5yqnLZ9DBZcktHX5oHLdmaewhN/sAba+CfdeuaxuLZHGFMvXgjM7fvErUH5LUs/p8Dh
+         c+XHSAF0GaM5Yz2GSJ3oEVDBZJpQyuwLLp9qvf5lFrsY6s4isL2SthDCB/SAfBVtKJC1
+         fdoK2xzxdHTuICxqEznG/z3dm0laMwsugq0g2NJbqvVfBfYZMZt/3k7Ou7F33CkaZOXX
+         vHFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713907953; x=1714512753;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pKWTSVVnluWR7STSuRRgwJ6Rd/eSnjR70lXgePt6SEU=;
+        b=mCj+R1O3zJ41kKW1U6uupqr3QXXZGbEKgmG89TxyvgGndAxYbG1X8TLABZaxYgVrLC
+         Clag1SyhvtdZuAhqhQocQxY8+p48MiwmRCmm5iTIoyMCfkEV41l48+2eunpo3JhLJXJc
+         wSwq62RmyQGeqa/z0G3LwNT7LRZM+LweOOYPrjAtoRADCdNVqwIswJAhVIJ8RHtssH8f
+         0f3wyWiri6F+QBQBXV6T9RUKK/CMpeZgBjP2MrGHxdC9tH6h+zaSF9wQFr5gLpyujlcz
+         qZMwmUJeo95mdmyn4mQtvFF7Gq07MTHhy0w4AVOUWL82Ib9IHKvhIZvkGNUaetCEjlBn
+         yyGw==
+X-Forwarded-Encrypted: i=1; AJvYcCWk42W5pLJDk4srXWoGnK7DgEyOZN2aQ5FN890zEacGcwu50kzCOpXJM/Z4yUbXICRt1zGJfeaMcpm9RF6WYiFdcjMhZD6+tBhB1+K9
+X-Gm-Message-State: AOJu0YzzNBeCe9/Qf1pcjyqV/a8UKq6OzFWRwQ5XSTotlsfotDCpq3Yd
+	yCgp3NLBvFiF57RlYE1HOj66K6ihE1TUBIT5QhfIUlhyyYMe5/+W
+X-Google-Smtp-Source: AGHT+IGrpbSit5J2n0PJb2L0MA0usVpInvB9ORrbXoqp3luIDwgWfImPPruwclc8bzba1CRst2wamQ==
+X-Received: by 2002:a05:6a00:2442:b0:6ea:d794:ccee with SMTP id d2-20020a056a00244200b006ead794cceemr1003937pfj.17.1713907953467;
+        Tue, 23 Apr 2024 14:32:33 -0700 (PDT)
+Received: from xiaxiShen-ThinkPad.gigstreem.net ([66.160.179.28])
+        by smtp.gmail.com with ESMTPSA id fh9-20020a056a00390900b006ecf1922df7sm10047199pfb.36.2024.04.23.14.32.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 14:32:32 -0700 (PDT)
+From: Xiaxi Shen <shenxiaxi26@gmail.com>
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de
+Cc: hpa@zytor.com,
+	shenxiaxi26@gmail.com,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	javier.carrasco.cruz@gmail.com,
+	julia.lawall@inria.fr
+Subject: [PATCH] Replace of_node_put() with new cleanup feature
+Date: Tue, 23 Apr 2024 14:40:06 -0700
+Message-Id: <20240423214006.29030-1-shenxiaxi26@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,40 +72,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Mon, 22 Apr 2024 08:35:25 -0700
-> syzbot found the following issue on:
-> 
-> HEAD commit:    3cdb45594619 Merge tag 's390-6.9-4' of git://git.kernel.or..
-> git tree:       upstream
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=144067cb180000
+Use the new cleanup magic to replace of_node_put() with
+__free(device_node) marking to auto release and to simplify the error
+paths
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  3cdb45594619
+Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+Signed-off-by: Xiaxi Shen <shenxiaxi26@gmail.com>
+---
+ arch/x86/platform/olpc/olpc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- x/net/bluetooth/bnep/core.c
-+++ y/net/bluetooth/bnep/core.c
-@@ -540,16 +540,6 @@ static int bnep_session(void *arg)
- 	return 0;
+diff --git a/arch/x86/platform/olpc/olpc.c b/arch/x86/platform/olpc/olpc.c
+index 1d4a00e767ec..66c4d1f888e7 100644
+--- a/arch/x86/platform/olpc/olpc.c
++++ b/arch/x86/platform/olpc/olpc.c
+@@ -202,7 +202,7 @@ static u32 __init get_board_revision(struct device_node *root)
+ 
+ static bool __init platform_detect(void)
+ {
+-	struct device_node *root = of_find_node_by_path("/");
++	struct device_node *root __free(device_node) = of_find_node_by_path("/");
+ 	bool success;
+ 
+ 	if (!root)
+@@ -218,7 +218,6 @@ static bool __init platform_detect(void)
+ 			olpc_platform_info.boardrev >> 4);
+ 	}
+ 
+-	of_node_put(root);
+ 	return success;
  }
  
--static struct device *bnep_get_device(struct bnep_session *session)
--{
--	struct l2cap_conn *conn = l2cap_pi(session->sock->sk)->chan->conn;
--
--	if (!conn || !conn->hcon)
--		return NULL;
--
--	return &conn->hcon->dev;
--}
--
- static const struct device_type bnep_type = {
- 	.name	= "bluetooth",
- };
-@@ -618,7 +608,6 @@ int bnep_add_connection(struct bnep_conn
- 	bnep_set_default_proto_filter(s);
- #endif
- 
--	SET_NETDEV_DEV(dev, bnep_get_device(s));
- 	SET_NETDEV_DEVTYPE(dev, &bnep_type);
- 
- 	err = register_netdev(dev);
---
+-- 
+2.34.1
+
