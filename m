@@ -1,192 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CD3136E16;
-	Tue, 23 Apr 2024 13:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB3C136E1A
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 13:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713880731; cv=none; b=T7kcZ2rrHcoy72jT+RMrFag/0PqnM32B8o6RToVSMuM/DqQ8M3HTIN1vSXI8ECULuVSlyWQda+WdDXU1h9dGp2bcaF5pf1TURrN9uN8E/aPiIUPzeFbG8gCJre4H3in6N6MMijA6Zc3pgCjTg4fOA6cipz/wa+KbpCzUkFFPlZs=
+	t=1713880733; cv=none; b=HP3xGLxp+jv/vASWhxv3q1viADLlgDB/47qZOBbb5mIWmnWHNYTVqIyDGeOBp8WJFO3W+OTniJ2dUeiFnqBwDnWjM1JvHC6q3LX+0d9bF564M3HfidSC7gbQYhq/vcE0GNY9V8YHsGN41sXoXuyAa3+AkvUJeQCPjkw/mFH8/cM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713880731; c=relaxed/simple;
-	bh=PM4hKVCgLViTlEhxGEmFa37oVZWQvC3vlHhtyjhGMvA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tNfQVUvjfHoAgWfsa0evPQ8cZp5uhp6te+75nKM8QYusyU8kNrGA8Dr1VyVmDi7j0wrCVvKZXxqOB6eFtushca3gUREnZqCqUkZVMEpx0yba89pzIDxHvTyjSOy4iT/qHBvLhoMphbGN/hrMepZ+58QpiK49Pee5L0sg95RpTe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dfi2uLq2; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713880733; c=relaxed/simple;
+	bh=dkyhFZxSFK/ufXtmRabwl0V5jznUX4WTx+N7+111Dbk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jnun65evSZRdSfw0zFZFMBmptOoLmsZdltnjhyNa46YY7yHXZ6k8w9TPl5aMTN+7hjdIpZ8kf8Fc8aFF7Qk7reyNh+nkWNoHeWcVbtd78JYYwruQZHkOhkWTRGox4CskghKKMxH1ISm1P9dk97qdopj//HIhYoxSZdmo8wM31Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=PPABboEJ; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dfi2uLq2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713880730; x=1745416730;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=PM4hKVCgLViTlEhxGEmFa37oVZWQvC3vlHhtyjhGMvA=;
-  b=dfi2uLq288Zmbcqgo/fAuud0TuOT1tc4CNcWBAR5MsldW0QYQl7fiQFH
-   hnah70cS4YJk1bfvl1vkcSi6j9a86k300A1geJKPdh+4yybJ6AvdoUg2c
-   e82dRfe/eP6IHp9iCVgnaNi9C2rgV2ARZAF1413DOldlCi6qzpqqnfp9j
-   gth8BTF+ffI65M5kN9+8Mvwsc0AnUN8dF4kP4hL7EebLtcCYcI79aa37F
-   sRg5Pm5fW8n6fUcQEUgpurREssyhiwsl2qu526zM1Cis5as0aiEYpxUVc
-   3bsLwWbrahfYRs4mHjQZQ5CS8mADQrq4ysHRWfvXubofv5dg+7sI3PTY0
-   w==;
-X-CSE-ConnectionGUID: 4iQ6PcLLSTyEciMdK/uoZw==
-X-CSE-MsgGUID: 6NVhk/ogTdK/Od/1CGbhGQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="26921426"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="26921426"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 06:58:49 -0700
-X-CSE-ConnectionGUID: If+xOyfqRgibg6Xjd3xxdg==
-X-CSE-MsgGUID: Rz+XMKpcS8KsUB23qWigbg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24431745"
-Received: from newjersey.igk.intel.com ([10.102.20.203])
-  by fmviesa008.fm.intel.com with ESMTP; 23 Apr 2024 06:58:45 -0700
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
-	bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	iommu@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="PPABboEJ"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5ad28c0b85eso1779787eaf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 06:58:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1713880729; x=1714485529; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WqStfhzOnysXibrgT2E48MrpzZWIctM3Wmz+RM/fc7I=;
+        b=PPABboEJfEuSSbQCuKBcn38jtuIXVO898wnREhOT59fHsA6k7HI34Nk5amBZRh7Axe
+         IWVTuL7WBbGdLgGnLfxeiYbb9xIlECz9MziXxeH1IMUiV6iL0WymvvyTdvRRSbAqlwkM
+         ZBdzNoxZdTWsavn8u69mlvdf1jeK50OdZ7fgyEYM18SoxboEN7yeBnUsSJpEaFm4l2fW
+         B1LTe0xvI5WRA+xm66gZIuWB/jtVSv2GRiNn5FJUUVaSdUgNXgTIxcRfUtbDcMN05StK
+         WghJr47GIt40ZPfudIF+GTACUmmS32f3VbUuQjR0c4BPS7cJT7mWBfOB7x6QSvToiCCh
+         NWbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713880729; x=1714485529;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WqStfhzOnysXibrgT2E48MrpzZWIctM3Wmz+RM/fc7I=;
+        b=cESn3dWSD71ZmYZRVkuEsFmHiiOiRQ/O5iKT0ISmjJgT5t8S6Rsyp2fqIm623yEj8y
+         d0cW3/yPlIVeM7kAzERH5RfMYjLYSM4DmOFx88YIeJ0O+2CJubCZStCLo9GovP3SnDJw
+         d7Cqc+yA5oE0I2Ib3CpsC87alv9fRBDl/mIhOxTWF4uWWiGp5qyj10IyMJSFYFr8Knxd
+         cjFkXNNFd6bgzbhD4HMEv4785JcGBUwqbVMwbXATWAJeZ5Dy3pAFkwHpEFTIzrVbWa0b
+         x7ckdeij0MQrxOfZSuXRsgCnihDHL30kvzrqtKJkK7aQoneCLCsSlVGJ53+Xu1OSc2m9
+         /kgg==
+X-Forwarded-Encrypted: i=1; AJvYcCXyN0DPMOWjSKhPmOiOElUZXElczawJkuK1piNW79vr7V6wDo+uz4jor/xhLs5Fe1Q23uGmLu5tYY0/T/sAIWxK21p/3uWEvGc+uWY4
+X-Gm-Message-State: AOJu0Yw0zkQQ3fDg8fryIb1D2H4juP02S/iPh+3nuy5/fxQoaSBkQ7Fh
+	gkaEQgCBlWmYIhLZwaHZf9/K9R1zDjfub5iWLHwo6KiPnscT8BndhzKDbenqyBCnvAv/sh2ngs4
+	c
+X-Google-Smtp-Source: AGHT+IFwG9XJlDFqbvMmAOd4uyTY8SGLMaYeyX3/gPYvOni0T7+MH5srQSPCfT8gzXzv2lH9r8NbMA==
+X-Received: by 2002:a05:6358:4b02:b0:186:22a0:299d with SMTP id kr2-20020a0563584b0200b0018622a0299dmr17564312rwc.27.1713880729494;
+        Tue, 23 Apr 2024 06:58:49 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with ESMTPSA id kd11-20020a05622a268b00b00432bb012607sm5202815qtb.47.2024.04.23.06.58.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 06:58:48 -0700 (PDT)
+Date: Tue, 23 Apr 2024 09:58:44 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v4 0/7] dma: skip calling no-op sync ops when possible
-Date: Tue, 23 Apr 2024 15:58:25 +0200
-Message-ID: <20240423135832.2271696-1-aleksander.lobakin@intel.com>
-X-Mailer: git-send-email 2.44.0
+Subject: Re: [PATCH 1/4] mm: rearrange node_stat_item to put memcg stats at
+ start
+Message-ID: <20240423135844.GA21141@cmpxchg.org>
+References: <20240423051826.791934-1-shakeel.butt@linux.dev>
+ <20240423051826.791934-2-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240423051826.791934-2-shakeel.butt@linux.dev>
 
-The series grew from Eric's idea and patch at [0]. The idea of using the
-shortcut for direct DMA as well belongs to Chris.
+On Mon, Apr 22, 2024 at 10:18:23PM -0700, Shakeel Butt wrote:
+> At the moment the memcg stats are sized based on the size of enum
+> node_stat_item but not all fields in node_stat_item corresponds to memcg
+> stats. So, rearrage the contents of node_stat_item such that all the
+> memcg specific stats are at the top and then the later patches will make
+> sure that the memcg code will not waste space for non-memcg stats.
+> 
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 
-When an architecture doesn't need DMA synchronization and the buffer is
-not an SWIOTLB buffer, most of times the kernel and the drivers end up
-calling DMA sync operations for nothing.
-Even when DMA is direct, this involves a good non-inline call ladder and
-eats a bunch of CPU time. With IOMMU, this results in calling indirect
-calls on hotpath just to check what is already known and return.
-XSk is been using a custom shortcut for that for quite some time.
-I recently wanted to introduce a similar one for Page Pool. Let's combine
-all this into one generic shortcut, which would cover all DMA sync ops
-and all types of DMA (direct, IOMMU, ...).
+This series is a great idea and the savings speak for themselves.
 
-* #1 adds stub inlines to be able to compile DMA sync ops out when not
-     needed.
-* #2 adds generic shortcut and enables it for direct DMA.
-* #3 adds ability to skip DMA syncs behind an IOMMU.
-* #4-5 are just cleanups for Page Pool to avoid merge conflicts in future.
-* #6 checks for the shortcut as early as possible in the Page Pool code to
-     make sure no cycles wasted.
-* #7 replaces XSk's shortcut with the generic one.
+But rearranging and splitting vmstats along the memcg-nomemcg line
+seems like an undue burden on the non-memcg codebase and interface.
 
-On 100G NIC, the result is +3-5% for direct DMA and +10-11% for IOMMU.
-As a bonus, XSk core now allows batched buffer allocations for IOMMU
-setups.
-If the shortcut is not available on some system, there should be no
-visible performance regressions.
+- It messes with user-visible /proc/vmstat ordering, and sets things
+  up to do so on an ongoing basis as stats are added to memcg.
 
-[0] https://lore.kernel.org/netdev/20221115182841.2640176-1-edumazet@google.com
+- It also separates related stats (like the workingset ones) in
+  /proc/vmstat when memcg only accounts a subset.
 
-Alexander Lobakin (7):
-  dma: compile-out DMA sync op calls when not used
-  dma: avoid redundant calls for sync operations
-  iommu/dma: avoid expensive indirect calls for sync operations
-  page_pool: make sure frag API fields don't span between cachelines
-  page_pool: don't use driver-set flags field directly
-  page_pool: check for DMA sync shortcut earlier
-  xsk: use generic DMA sync shortcut instead of a custom one
-
- kernel/dma/Kconfig                            |   5 +
- include/net/page_pool/types.h                 |  25 ++++-
- include/linux/device.h                        |   4 +
- include/linux/dma-map-ops.h                   |  12 ++
- include/linux/dma-mapping.h                   | 105 +++++++++++++-----
- include/net/xdp_sock_drv.h                    |   7 +-
- include/net/xsk_buff_pool.h                   |  14 +--
- drivers/iommu/dma-iommu.c                     |   3 +-
- drivers/net/ethernet/engleder/tsnep_main.c    |   2 +-
- .../net/ethernet/freescale/dpaa2/dpaa2-xsk.c  |   2 +-
- drivers/net/ethernet/intel/i40e/i40e_xsk.c    |   2 +-
- drivers/net/ethernet/intel/ice/ice_xsk.c      |   2 +-
- drivers/net/ethernet/intel/igc/igc_main.c     |   2 +-
- drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c  |   2 +-
- .../ethernet/mellanox/mlx5/core/en/xsk/rx.c   |   4 +-
- .../net/ethernet/mellanox/mlx5/core/en_rx.c   |   2 +-
- drivers/net/ethernet/netronome/nfp/nfd3/xsk.c |   2 +-
- .../net/ethernet/stmicro/stmmac/stmmac_main.c |   2 +-
- kernel/dma/mapping.c                          |  69 +++++++++---
- kernel/dma/swiotlb.c                          |   6 +
- net/core/page_pool.c                          |  76 ++++++++-----
- net/xdp/xsk_buff_pool.c                       |  28 +----
- 22 files changed, 243 insertions(+), 133 deletions(-)
-
----
-From v3[1]:
-* #1:
-  * don't prefix DMA sync ops with '__', just define them as empty inlines
-    when !DMA_NEED_SYNC (Chris, Robin);
-  * always select DMA_NEED_SYNC when DMA_API_DEBUG (^);
-* #2:
-  * don't use BIT(), keep the style consistent (^);
-  * check for dma_map_ops::sync_sg_*() in dma_setup_need_sync() (^);
-  * don't reset the flag in swiotlb_alloc() as it's not streaming API (^);
-  * instead of 'dma_skip_sync', name the flag 'dma_need_sync' and inverse
-    the logic (^);
-  * setup the shortcut in dma_set_mask() (assuming every driver using DMA
-    must call it on probe) (^);
-  * combine dma_direct() and (ops->flags & CAN_SKIP_SYNC) checks (Robin);
-* #3:
-  - pick Acked-by (Robin).
-
-From v2[2]:
-* #1:
-  * use two tabs for indenting multi-line function prototypes (Chris);
-* #2:
-  * make shortcut clearing function generic and move it out of the
-    SWIOTLB code (Chris);
-  * remove dma_set_skip_sync(): use direct assignment during the initial
-    setup, not used anywhere else (Chris);
-  * commitmsg: remove "NIC" and the workaround paragraph (Chris).
-
-From v1[3]:
-* #1:
-  * use static inlines instead of macros (Chris);
-  * move CONFIG_DMA_NEED_SYNC check into dma_skip_sync() (Robin);
-* #2:
-  * use a new dma_map_ops flag instead of new callback, assume the same
-    conditions as for direct DMA are enough (Petr, Robin);
-  * add more code comments to make sure the whole idea and path are
-    clear (Petr, Robin, Chris);
-* #2, #3: correct the Git tags and the authorship a bit.
-
-Not addressed in v2:
-* #1:
-  * dma_sync_*range_*() are still wrapped, as some subsystems may want
-    to call the underscored versions directly (e.g. Page Pool);
-* #2:
-  * the new dev->dma_skip_sync bit is still preferred over checking for
-    READ_ONCE(dev->dma_uses_io_tlb) + dev_is_dma_coherent() on hotpath
-    as a faster solution.
-
-[1] https://lore.kernel.org/netdev/20240214162201.4168778-1-aleksander.lobakin@intel.com
-[2] https://lore.kernel.org/netdev/20240205110426.764393-1-aleksander.lobakin@intel.com
-[3] https://lore.kernel.org/netdev/20240126135456.704351-1-aleksander.lobakin@intel.com
--- 
-2.44.0
-
+Would it make more sense to have a translation table inside memcg?
+Like we have with memcg1_events.
