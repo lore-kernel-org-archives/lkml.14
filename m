@@ -1,85 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31AB1143882;
-	Tue, 23 Apr 2024 21:23:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D182313CFA4;
+	Tue, 23 Apr 2024 21:27:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713907395; cv=none; b=GoRYLj2sYqBJMh6FOKHB86lkddEenQcGXJSSud077mkqH1lEiXh1ElUVSTBszpOOky4MK6qXxfvThRQb+pjb/CGAXBF57SDIm7DfN9n9NQsLqJPJIjC9Wli/ngJ2M+/m3riobUXS6lEq4hRqSYets6F3fYPXQjIcIcURuwE49HY=
+	t=1713907641; cv=none; b=p1uF2JS+4bjYuKGH3E3DqWZF6L0cquMW6jNTy9bdllCtDPUbViW2+C+JxnUzw+J8UioFaLxQIe1mgJFzAGgJILsgP9y2lfBISuoqj8vxZ/jggooTYtLVwV1k9+q3Lvxfk1j0VLxxjIkkfZhHPDzMVDE33WY5S0rUUA0ZQjR5o9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713907395; c=relaxed/simple;
-	bh=HK0ujPxp34qpwUxMtRk5RYEckAapSdQ4K+GXdVo0Cqk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eSXItm+1JCbjurSZSdXpvrEHNK1ZTAt09tSYNCat+mOVl9fH42v7LG9z93J++x0ucSxfBVq09/2PiDK6s2fmheFpJa6x27jgAmg4zdBFkuJS+Td/m0sTMONcgIMY8h8DWmFzDokdBZjWuJs0yrxChGRvhIkUmPmNJ1qR56CaMBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pUQzFste; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713907641; c=relaxed/simple;
+	bh=6tyOviKiBGRE0qFEG4rgVtjiOf1N2SmnrIhbrSSblFM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=e/wnaZP5iyWvx03bjFUImTACAoD5+84JCRzHmtk1L0SSjHwsoGhu9rQcBCH/KuGXnpm/zkcdnhbO847+kl53+14kjMg7V3FpXx0eENx3WsjqItbEAaos/3xOyk69f68aPz5bc3AEGau/RsR0YgaVILS6hZZA3Em+WhJeGsUnDlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WorFhiHq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pUQzFste"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7370C4AF09;
-	Tue, 23 Apr 2024 21:23:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WorFhiHq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF370C116B1;
+	Tue, 23 Apr 2024 21:27:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713907394;
-	bh=HK0ujPxp34qpwUxMtRk5RYEckAapSdQ4K+GXdVo0Cqk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pUQzFstejbk7piPmipfGwzTsvsQHb+BJz6gxaBOD9wBGu5ujIXaTvilrhWrPzFKUs
-	 funigVyrZSsZBNfVpQyPAbu6N9p+q/76Ero/rE/BA6k5jlJZFc/qq8uJUfdSh9iLbj
-	 ZX8L3YWHwvOvVnB++kQajXwIJVyXE0C529BLCEU2RQgULWDl3c51p76+8q6O/wkz0H
-	 iaRbdoTSoAamZHl1VPdKxgkB953B83K1TFMT/C6TzROLXyT7DPYGVAKsfKU2ZKw4WO
-	 bf55Q0KIHKHXhhkoK7RRC+4Lvb/9+pascEU22Qjybg9dAFYD3TLHWe9rIae4JCqpjt
-	 pvO4wjKZbvJPg==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-51bafbe7509so1541098e87.1;
-        Tue, 23 Apr 2024 14:23:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVQBY5RWCclZt3/Dn/uoYpWWYpEAKdDK/25n9+kLNihQ5P8BhZGOTXgzZ4X5pivK0krk87XYvq9YP636+xvHCDewqSMXeETYS2csalnyvQHsyt3m2XkTgfJO3we5c6r/pT74crhCxOSaw==
-X-Gm-Message-State: AOJu0YwTmpuF/8Is+fVRvb5QCRhiIw7XGv3IUZUZ4s0vjLP/T5LBhl++
-	DuJ8/DT8PjBATU0mMjxY4teNe4BzOOG2nvHpav5JGngPrHCqf9CzMX0a3j+REEweEm3qqmFCj6F
-	72jLAKzQYIEdHZBjoaemgOwsw0A==
-X-Google-Smtp-Source: AGHT+IFSEy7Ntcs8kO5E/YWUotyQAYiFUv1GQFB5gLdH1tA5hJgWZew7wv8o02kRNGivuEr/W3u5Ti11wEYzT1Mnyl4=
-X-Received: by 2002:a05:6512:601:b0:519:611f:df49 with SMTP id
- b1-20020a056512060100b00519611fdf49mr524205lfe.69.1713907393154; Tue, 23 Apr
- 2024 14:23:13 -0700 (PDT)
+	s=k20201202; t=1713907641;
+	bh=6tyOviKiBGRE0qFEG4rgVtjiOf1N2SmnrIhbrSSblFM=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=WorFhiHqcbeV3/CwVjWejS3bkBiOqKie8srE3Rr5L+dbRjfSHk4b5W1txDeLGyKGe
+	 icYTJc5wtl27xguinwLwZq/Ma8VerE313J/eFen1ZscxaU8OIt3RTiGiQCYIeWftTK
+	 abslo5e/o8QMDU9l3jPz09NSGV5S0RxaQqShk8XqVmhPCm9vwsv2BAd75QPO3YjGSK
+	 g6+Goq9f7MOto6mjYCN3hFXyI2SfCKzHB1TAyfdHuXLDXHgFYoLuk7p0BMpYPTGzm7
+	 NLAbqAynui7rRAQqF3nkGG1PrAXtosRnAJrCWHlHT1GmghPSWGZ9Nwqyp6xv5tYIhC
+	 rHn6PagUBB98A==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240317184130.157695-1-krzysztof.kozlowski@linaro.org> <20240317184130.157695-4-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240317184130.157695-4-krzysztof.kozlowski@linaro.org>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 23 Apr 2024 16:23:00 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJfT-jui5P56CO4Fr37kr5iNN8dpxt8ecKeFmdVGnRYbA@mail.gmail.com>
-Message-ID: <CAL_JsqJfT-jui5P56CO4Fr37kr5iNN8dpxt8ecKeFmdVGnRYbA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] arm: dts: allwinner: drop underscore in node names
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, Corentin Labbe <clabbe@baylibre.com>, 
-	Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 24 Apr 2024 00:27:18 +0300
+Message-Id: <D0RTJVEHLLZ8.3967ZI3I5UO28@kernel.org>
+Cc: "Liu, Shuang" <ls123674@antgroup.com>
+Subject: Re: [RFC PATCH 1/1] x86/sgx: Explicitly give up the CPU in EDMM's
+ ioctl() to avoid softlockup
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Reinette Chatre" <reinette.chatre@intel.com>, "Huang, Kai"
+ <kai.huang@intel.com>, "linux-sgx@vger.kernel.org"
+ <linux-sgx@vger.kernel.org>, "zhubojun.zbj@antgroup.com"
+ <zhubojun.zbj@antgroup.com>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "dave.hansen@linux.intel.com"
+ <dave.hansen@linux.intel.com>
+X-Mailer: aerc 0.17.0
+References: <20240423092550.59297-1-zhubojun.zbj@antgroup.com>
+ <20240423092550.59297-2-zhubojun.zbj@antgroup.com>
+ <02fe00c3b10e4476d500ad7a34024b7eae5e3c97.camel@intel.com>
+ <bfdb5787-65db-4c64-bce1-d39f37ad09fa@intel.com>
+In-Reply-To: <bfdb5787-65db-4c64-bce1-d39f37ad09fa@intel.com>
 
-On Sun, Mar 17, 2024 at 1:41=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+On Tue Apr 23, 2024 at 8:08 PM EEST, Reinette Chatre wrote:
+> Hi Kai,
 >
-> Underscores should not be used in node names (dtc with W=3D2 warns about
-> them), so replace them with hyphens.  Use also generic name for pwrseq
-> node, because generic naming is favored by Devicetree spec.  All the
-> clocks affected by this change use clock-output-names, so resulting
-> clock name should not change.  Functional impact checked with comparing
-> before/after DTBs with dtx_diff and fdtdump.
+> On 4/23/2024 4:50 AM, Huang, Kai wrote:
+> >> diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx=
+/ioctl.c
+> >> index b65ab214bdf5..2340a82fa796 100644
+> >> --- a/arch/x86/kernel/cpu/sgx/ioctl.c
+> >> +++ b/arch/x86/kernel/cpu/sgx/ioctl.c
+> >> @@ -806,6 +806,9 @@ sgx_enclave_restrict_permissions(struct sgx_encl *=
+encl,
+> >>  		}
+> >> =20
+> >>  		mutex_unlock(&encl->lock);
+> >> +
+> >> +		if (need_resched())
+> >> +			cond_resched();
+> >>  	}
+> >> =20
+> >>  	ret =3D 0;
+> >> @@ -1010,6 +1013,9 @@ static long sgx_enclave_modify_types(struct sgx_=
+encl *encl,
+> >>  		entry->type =3D page_type;
+> >> =20
+> >>  		mutex_unlock(&encl->lock);
+> >> +
+> >> +		if (need_resched())
+> >> +			cond_resched();
+> >>  	}
+> >> =20
+> >>  	ret =3D 0;
+> >> @@ -1156,6 +1162,9 @@ static long sgx_encl_remove_pages(struct sgx_enc=
+l *encl,
+> >>  		kfree(entry);
+> >> =20
+> >>  		mutex_unlock(&encl->lock);
+> >> +
+> >> +		if (need_resched())
+> >> +			cond_resched();
+> >>  	}
+> >>
+> >=20
+> > You can remove the need_reshced() in all 3 places above but just call
+> > cond_resched() directly.
+> >=20
 >
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> This change will call cond_resched() after dealing with each page in a
+> potentially large page range (cover mentions 30GB but we have also had to
+> make optimizations for enclaves larger than this). Adding a cond_resched(=
+)
+> here will surely placate the soft lockup detector, but we need to take ca=
+re
+> how changes like this impact the performance of the system and having act=
+ions
+> on these page ranges take much longer than necessary.
+> For reference, please see 7b72c823ddf8 ("x86/sgx: Reduce delay and interf=
+erence
+> of enclave release") that turned frequent cond_resched() into batches
+> to address performance issues.
+>
+> It looks to me like the need_resched() may be a quick check that can be u=
+sed
+> to improve performance? I am not familiar with all use cases that need to=
+ be
+> considered to determine if a batching solution may be needed.
 
-This adds warnings:
+Ya, well no matter it is the reasoning will need to be documented
+because this should have symmetry with sgx_ioc_enclave_add_pages()
+(see my response to Kai).
 
-13  prcm@1f01400: 'ahb0-clk', 'apb0-clk', 'apb0-gates-clk',
-'apb0-rst', 'ar100-clk', 'ir-clk' do not match any of the regexes:
-'^.*_(clk|rst)$', 'pinctrl-[0-9]+'
+I because this makes dealing with need_resched() a change in code
+even if it is left out as a side-effect, I'd support of not removing
+which means adding need_resched() as a side-effect.
 
-Since we documented it with underscores, I'd say just leave these at
-least until if/when we define some standard names. I'd prefer we spend
-time reducing warnings from the common schema. I'm looking at
-root-node.yaml. simple-bus.yaml generates a lot too.
+From this follows that *if* need_resched() needs to be removed then
+that is not really part of the bug fix, so in all cases the bug fix
+itself must include need_resched() :-)
 
-Rob
+phew, hope you got my logic here, i think it reasonable...
+
+BR, Jarkko
