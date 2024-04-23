@@ -1,101 +1,98 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56354320E;
-	Tue, 23 Apr 2024 08:42:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7D058213;
+	Tue, 23 Apr 2024 08:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713861749; cv=none; b=qr89vKFZqXK7kq4FHIywEZ5DKkTSvqOUpmM73VCsUwXXcWUcffZafCKrvjsIqsmjiv3vVVzcIQ4LyI+89/P5yNAnA1M0WA8CFEmI4NhnQ5R2Lro5MHVusFxm6EvYVZLHIaYLGpt6RsHtdVuUd8dwARD5ykml61UASSe6huuBTHI=
+	t=1713861762; cv=none; b=CTYTYHZr0/fgmmHDExkbfH1ZpFiPTD8dBoBgE0UYdwrVBmfSouJr3lq80zD7tBgm2dmsKrE696cPvUh0Eh/oxU9NYsqP9VT31VvPv315Od6daHWRvpVXDAevR5j8WiZ6sGGeaZefH25t7dEv4qwQSNyNkTyJ081zZvl9avdVDzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713861749; c=relaxed/simple;
-	bh=lCEgH6CjISLGxTFDuXB9DyweUCZb4U8cml+VeZJsxb8=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Ly9gL5wQAkkCsbJDg02PAk+RHgsjcu1lgcNniLlV+gz+Pwvm8guHZ6sKv4I3OByidPqIRRzTrLt2aC8ZJ+e/f7rc6Niccm9+lzrYQ+Mdj0PC/QVPF1mcgpFYuNg+HRj9BPPIQVP6x4wv3Y0yL7nGUAFoiULn3vMOBIgpCfI1MY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fzp7ISOZ; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1713861762; c=relaxed/simple;
+	bh=jVIS089dbZ3wXdCNQYTfk4ga5CpPJxYC+Ek+nANsWKs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=jrxuBSt/TVWc7GSJ+QFRhRxodWkpyFl8GkgeuJq09ClzA+wS0UAsOFKER7Ej90G0uWIe/M1GsPy3R7e/mRy99zUHMaYRoHmjjoMdbn0lol55bIKxCNmI6Vd0GY3j5LWhxL30DQ/AdoquTkot5994vjSX+F3MT1e7AX9q4IOffNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JZKGAWbo; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fzp7ISOZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713861746;
-	bh=lCEgH6CjISLGxTFDuXB9DyweUCZb4U8cml+VeZJsxb8=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=fzp7ISOZTZr9+iDobVs6ZrXUUgMj/2HKNiqi++bWH1yrgi0BBaw/5HPRADC5gSZPF
-	 AF0AD+MWcLZPUht2FcDsov+eDyXcX3TQxl95tqFmMh8BMsKgvSq8rUNsurpHwiptAV
-	 sbCQBP+edEMGYOcpk3HlkV/TxHxrE8WIfStYP8p5vUZvW+o0wag0btWoUKcntDl344
-	 VOZ3HpLkMs/YJT18LDa9O/hLofOJCxyNuDBAu145pZnFQULT+oEFE3Nx22Cs/NswBe
-	 7IxVByNuufNWddqj/X116zbdxG05ItoUFoYfOeufLwNkGfK2SoIAofLnOQNLw5s2v1
-	 yctat8YJbky+Q==
-Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 28D363780016;
-	Tue, 23 Apr 2024 08:42:22 +0000 (UTC)
-Message-ID: <e9c9a9e3-188e-4c6a-b7be-03802e833ef3@collabora.com>
-Date: Tue, 23 Apr 2024 13:42:51 +0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JZKGAWbo"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-34a3e0b31e6so3856515f8f.1;
+        Tue, 23 Apr 2024 01:42:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713861758; x=1714466558; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PbBwe79c842+R2b2YoCAfcl0fXxYuruoHQYuTfXaKdA=;
+        b=JZKGAWbo4e2OO/0IcsfQitbvfdbtd9WOmGwlKKY/Pz+RIdM8Potej8xMZMCj2/rzba
+         0bw7PAGt2ZtFV6JGv/fgVhEn4pXeZSSJcZKGYtJ03VAe6xF348vn5rxoFZZB9eojJPdZ
+         PbNoIbQA6vYO8A5f7OJyNmpaGirS9S0M00cqkN1tn7KnGhqpGZ4OihVLGhWtN1QLvPAw
+         FPQAKhwASllz4wtTnx3MH92lzsw9gDZVEXvIq+BDFeKci30tYrVYI+XoTK95tPicxvT/
+         R7u9GFOSjQw46z693vQY7EeQoVdmw3+hYyUyMXPs1VNOxlGekVtK7fV5E0tVdZwGik/w
+         7hMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713861758; x=1714466558;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PbBwe79c842+R2b2YoCAfcl0fXxYuruoHQYuTfXaKdA=;
+        b=mhtkIbJyEOjbt28NZVzcSR6s3ODd7zYsuW9pLfkshZ+YBl5q9Ji+Qx4rrZMoOo07XO
+         d2OX4RW7R/EhW8+nPh4NA9vr6PNG+1CV027cx4q1S5AGEYXAwAoPDwe9+la6Gt+le9s5
+         1zS2wuHua3MpcbO44Nvb0P8PoufLNz4iqcZQ9NhBHzmYg6J+IxvQldrYULTAQm6FaZhm
+         3TZfjzHvmWBMh1ZhYl77VV9/B0RI33iRodzESzVN1l5ZknHKMEPRVIKRIjCbKLkfD+IR
+         mym4V0rmwyAWUVG+VnL1MylxStBGdaFtbsxrdphoyqeidTq/1gH39JJ3ohTCge+1EqbH
+         Rpmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVgFqYjfYVhtosKyLUWf6q59vAawsRRdo2K9AY/B4XzZs9VbBYxZXa3/BJAdv97NzhAThhDVHhSxy8PZo41fg5w4fKQlYNil8zHUD9D3PGfLadqtEXAGD5iCeM+u5lVgKjNOyIc/tC7H0WHG7qmTvFDr42HSYKdTUSK27WIxe82Cg==
+X-Gm-Message-State: AOJu0Yx6aVCI1xqVeb5HjR6ul5s+PfTAs2PXAnEW4QPol8iW7fbsI0Bi
+	V4iaOKfJ1H8g5CF58JzOGzU/wcrNaSM0rQlcebUSrf16dkv9n7uQG6U1Z6G8
+X-Google-Smtp-Source: AGHT+IHQKR4h7agVByUQl9VxYHYGh69c7ndqTu7EZ0nPt8u1A61qGG6Ok/JtpvAeUVR1nFhZqHQVeA==
+X-Received: by 2002:adf:f283:0:b0:346:85a0:20af with SMTP id k3-20020adff283000000b0034685a020afmr7333249wro.35.1713861758099;
+        Tue, 23 Apr 2024 01:42:38 -0700 (PDT)
+Received: from rbolboac.. ([2a02:2f0e:320d:e800:cce2:61fe:1efc:ce48])
+        by smtp.gmail.com with ESMTPSA id a16-20020adffb90000000b0034af18ef68csm5989939wrr.5.2024.04.23.01.42.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 01:42:37 -0700 (PDT)
+From: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
+X-Google-Original-From: Ramona Gradinariu <ramona.gradinariu@analog.com>
+To: linux-kernel@vger.kernel.org,
+	jic23@kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	corbet@lwn.net,
+	conor+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	robh@kernel.org
+Cc: Ramona Gradinariu <ramona.gradinariu@analog.com>
+Subject: [PATCH 0/5] Add support for adis16545/47
+Date: Tue, 23 Apr 2024 11:42:05 +0300
+Message-Id: <20240423084210.191987-1-ramona.gradinariu@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kselftest: arm64: Add a null pointer check
-To: Kunwu Chan <chentao@kylinos.cn>, kunwu.chan@hotmail.com,
- catalin.marinas@arm.com, will@kernel.org, shuah@kernel.org
-References: <20240423082102.2018886-1-chentao@kylinos.cn>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20240423082102.2018886-1-chentao@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/23/24 1:21 PM, Kunwu Chan wrote:
-> There is a 'malloc' call, which can be unsuccessful.
-> This patch will add the malloc failure checking
-> to avoid possible null dereference and give more information
-> about test fail reasons.
-LGTM
+Add support for delta angle and delta velocity channels in adis16480 driver.
+Add support for ADIS16545/47 devices in already existing adis16480 driver.
+Add documentation for adis16480 driver.
 
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Ramona Gradinariu (5):
+  iio: adis16480: make the burst_max_speed configurable
+  iio: imu: adis16480.c: Add delta angle and delta velocity channels
+  dt-bindings: iio: imu: Add docs for ADIS16545/47
+  iio: adis16480: add support for adis16545/7 families
+  docs: iio: add documentation for adis16480 driver
 
-> 
-> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
-> ---
->  tools/testing/selftests/arm64/tags/tags_test.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/arm64/tags/tags_test.c b/tools/testing/selftests/arm64/tags/tags_test.c
-> index 5701163460ef..955f87c1170d 100644
-> --- a/tools/testing/selftests/arm64/tags/tags_test.c
-> +++ b/tools/testing/selftests/arm64/tags/tags_test.c
-> @@ -6,6 +6,7 @@
->  #include <stdint.h>
->  #include <sys/prctl.h>
->  #include <sys/utsname.h>
-> +#include "../../kselftest.h"
-The test isn't conformed to TAP. Maybe the next patch could be to conform
-the whole test into TAP, would be easy and straight forward.
+ .../bindings/iio/imu/adi,adis16480.yaml       |   6 +
+ Documentation/iio/adis16480.rst               | 461 ++++++++++++++++++
+ Documentation/iio/index.rst                   |   1 +
+ drivers/iio/imu/adis16480.c                   | 384 +++++++++++++--
+ 4 files changed, 803 insertions(+), 49 deletions(-)
+ create mode 100644 Documentation/iio/adis16480.rst
 
->  
->  #define SHIFT_TAG(tag)		((uint64_t)(tag) << 56)
->  #define SET_TAG(ptr, tag)	(((uint64_t)(ptr) & ~SHIFT_TAG(0xff)) | \
-> @@ -21,6 +22,9 @@ int main(void)
->  	if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) == 0)
->  		tbi_enabled = 1;
->  	ptr = (struct utsname *)malloc(sizeof(*ptr));
-> +	if (!ptr)
-> +		ksft_exit_fail_msg("Failed to allocate utsname buffer\n");
-> +
->  	if (tbi_enabled)
->  		tag = 0x42;
->  	ptr = (struct utsname *)SET_TAG(ptr, tag);
+--
+2.34.1
 
--- 
-BR,
-Muhammad Usama Anjum
