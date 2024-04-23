@@ -1,94 +1,171 @@
-Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1BF80025;
-	Tue, 23 Apr 2024 10:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B6A824A4;
+	Tue, 23 Apr 2024 10:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713869628; cv=none; b=at721InxfdpbXKm5HsQnOWZh7Zvb646sFFK0vaUgSWPvKb1yEoYbc8eCHWlYsBuHqeD4Cbe+Qlh5cH1cQtEqyth1LyNuyuQ9RVl8NTDeGj8zQrEi1chSrZWlpeQo519lH6aGI1pct4wF1awOoAmhhb6xXRuqA7Xhjflg5DISpQ4=
+	t=1713869629; cv=none; b=iTM2wGl4UDGy7Eqt2A0PKr7s4EByaD6VNCKkxMgxFXaqELsN/1tTjx9MkMWTPMQNdu2bKzsVYz134D9fw7mO/tbfNH2smhZk/YReYSElUDsZc9V6ATLTD4BI+IglIt2k3WueEtTQvWbcwEPDmUrbsPO3QOEDF2taKCN5ceypCPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713869628; c=relaxed/simple;
-	bh=LfagOb0pRvs+Yqv+NkD/D22iemaPJwNTcBbHuXvf4k8=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=agxwq9VRceV3coxRsY+LdzIDgxjkkD7ywJ0HKLdjppG2bI5PFiuXExkqKnLfLY8QeJvXbp9Z6gvNWfZfDqzGjiydgue+hphrHeK8O0F27Uub4UpqxYwe6UB+qJGYxR6knOwmAWaQvRyX4GbdGR1zyQTEZJo8r/x2VzuOKVsGyuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=y/2sqepl; arc=none smtp.client-ip=203.205.221.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1713869629; c=relaxed/simple;
+	bh=LrmdXQwT4U4g4BrzSOIGcl4UVDjaVzUdJEoh8Po20rc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cjc5OzdU7YeMYkC5hoGuhxKH7jx4LCAipEfPK4GQ/2/sisnaW50gTUCu6bCfJWIs7NUtlwoYOAas9awQJYmSh8szlDLnlET9gCmCp3ie5q0WXSrjCH7ColwFvmirDwFhvAngRnRiF/uj+a6/zY+QJK2esW4SOACiJV8nGr01YeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KwIJrc7A; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="y/2sqepl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1713869614; bh=/w5cKHDs6QXVwx078jjgBY94FORPbibvpuN7BzjxfHo=;
-	h=From:To:Cc:Subject:Date;
-	b=y/2sqeplB+bu7L3tw+TuETERVanXv9AcyROe1tzusrsfNcrwNoQMwuoVVWKRkj4Xm
-	 CZVFi8LiOFxcTueGUP/eON7oGnnA6Swo8cWKzZXH+kzGg3pVKap9NtEoFCVrE69ETG
-	 Sbp5tVDQ6rBvucXj4W6TMTM9xIAFu8UmIOKT5/bM=
-Received: from localhost.localdomain ([58.213.8.145])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id D5F99E4A; Tue, 23 Apr 2024 18:53:31 +0800
-X-QQ-mid: xmsmtpt1713869611tckeqekqp
-Message-ID: <tencent_616D84217798828E5D1021857C528B713406@qq.com>
-X-QQ-XMAILINFO: OZZSS56D9fAjxGKrQADUKsNLsZYDLsH2pHwDVVd/MVCsWEdnuuflZeC7gLw1qk
-	 bh1E8dear7oI7v3YY95BAz0ITzjU+ytVfSNrFpVo09c8KyR1wxu6L+00AK24qauoVnxdmC3SEphz
-	 ssYhtuW82bzVRyFy6Wkd/qkqeQJVXwx54roBdDIG1CxSVSMFnRmhdcxxeqYvOzBJD8WM65w5bEgx
-	 TfbkF72SjJsR/CQYhO8VHnGuch0c0WX3jyVFx5gVJR1Hlp1lBJJpsipJh+WFyFQNj6zilqU0LiAc
-	 Ya47AVX6l6B85is1Vu7A7Ga9WHoEh2D3XAJUGh3y7H6PdM1o1y9Ai1MdHwep9nV8+g5qKJzPWmUg
-	 KuGXepA2eXIydEHj5PuU0/Ify+yzGLfH/VKsWFmKL/FxgKHIS0nSTJVmjfXb1KNWHBSTdDB1UnCv
-	 8DtFwkGSdXG5WPnJCrjRho21RkeRyFuH7l9VddJDz+Ua41wjIXgKxmXHbkRK8h86bbWxTIz4sjlF
-	 1D+ig5Cs6lfNdMJmyWgqX/mI2gjtxr/XI0/7/dcnurW0ksOJuAocwdAO8avU7RQETk62EatJtsBX
-	 Y6uzQoaWa1fDWUaGvq4oZS8JMRMUsOy3gRkX1MtkNG5wK0zNibjznQkBRafeZW71UP1Hh9jZ6NBa
-	 CkVOLR5qgd0hqq038rSUof3IaItQHPmwN6pGqYkzUgPugER0+rx0LQPlLo2qt+6NCivU2F36ZtTO
-	 TyOjsud+Bpqqw9NT5mHcRubbU9sEP3yZD8x0psLXqJ1VI2JqGSIpM1GtNbLTcgPM9ZSCgQYViTa2
-	 vl1uKfccz13JKq1BxZX/cJ1gIRVTBq0/YgCTFglc9m6LY/EFfHZht7yH37VbpKmgcyO0p/fgLVGa
-	 PgSFmXNkcT3cQQ2JPMMgeWI5EgOwsDYnPbQuXBMV6KXAin2qjaDFsi/JCWCkNR49xP6KYKfaowzI
-	 kKo9rKmVkY6rBIber1gVOTpf48EmszZbeN2u6KXZSc0Q/6SeiVZgu0oYM/LO4lpLgA6SpNTPdrCt
-	 vc8GfBMg==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: linke li <lilinke99@qq.com>
-To: 
-Cc: xujianhao01@gmail.com,
-	linke li <lilinke99@qq.com>,
-	Roopa Prabhu <roopa@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	bridge@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] net: bridge: remove redundant check of f->dst
-Date: Tue, 23 Apr 2024 18:53:26 +0800
-X-OQ-MSGID: <20240423105327.77484-1-lilinke99@qq.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KwIJrc7A"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F3442E000A;
+	Tue, 23 Apr 2024 10:53:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713869624;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LO0/KBAgvShTcAJdKgnWdGKkN3QsevtB0Y7cE2P2ynU=;
+	b=KwIJrc7A3BRzlbEC4BAMGMC3UhWnjAUAKktH+AeN9xTRxinYxN4uHtqrXp3BAMpGSCtKuW
+	EHdUq5EIvACj1peiZv3/QYxbj+pk5rhhVMPokdO6cRPcJ05lF455YRvnu70XV+wQUHSNzN
+	MOLdzjs6cmPSEIYHt+hbeRMIWH51OYlGYNVFuQAa09/GVl+uaG6Uw2gTxKwFVASzLbFf+L
+	i2Sh+JmqFAz6E9pux/W/+n8AbPEfEPufhexCHt8Nih224Js90u0RciZ5cjH84Bbb4HScMD
+	9E7THt+SiW1Qo9zHY9y86QjvrCr3hUycq7V9K66jwGFcWIDxmM2k/aRt1NhqDw==
+Message-ID: <c5ed5bed-9c93-47eb-8277-d78e12e96b42@bootlin.com>
+Date: Tue, 23 Apr 2024 12:53:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 01/11] gpio: pca953x: move suspend()/resume() to
+ suspend_noirq()/resume_noirq()
+To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
+ <20240102-j7200-pcie-s2r-v5-1-4b8c46711ded@bootlin.com>
+ <CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com>
+ <CAHp75Vf+F3ArczHQ+nSmP4uFvRdMAQWufmR6xR0xtbHfVvFm-g@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <CAHp75Vf+F3ArczHQ+nSmP4uFvRdMAQWufmR6xR0xtbHfVvFm-g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-In br_fill_forward_path(), f->dst is checked not to be NULL, then
-immediately read using READ_ONCE and checked again. The first check is
-useless, so this patch aims to remove the redundant check of f->dst.
+On 4/23/24 12:34, Andy Shevchenko wrote:
+> On Tue, Apr 23, 2024 at 12:42 PM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+>> On Tue, Apr 16, 2024 at 3:31 PM Thomas Richard
+>> <thomas.richard@bootlin.com> wrote:
+> 
+> ...
+> 
+>>         +i2c-rcar e66d8000.i2c: error -16 : 10000005
+> 
+> It probably means that I²C host controller is already in power off
+> mode and can't serve anymore.
 
-Signed-off-by: linke li <lilinke99@qq.com>
----
- net/bridge/br_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hello,
 
-diff --git a/net/bridge/br_device.c b/net/bridge/br_device.c
-index 65cee0ad3c1b..ae33b30ff87c 100644
---- a/net/bridge/br_device.c
-+++ b/net/bridge/br_device.c
-@@ -405,7 +405,7 @@ static int br_fill_forward_path(struct net_device_path_ctx *ctx,
- 	br_vlan_fill_forward_path_pvid(br, ctx, path);
- 
- 	f = br_fdb_find_rcu(br, ctx->daddr, path->bridge.vlan_id);
--	if (!f || !f->dst)
-+	if (!f)
- 		return -1;
- 
- 	dst = READ_ONCE(f->dst);
+Yes the i2c controller is already off.
+In fact it's the same issue I had with the i2c-omap driver.
+In suspend-noirq, the runtime pm is disabled, so you can't wakeup a
+device. More details available in this thread [1].
+So the trick is to wakeup the device during suspend (like I did for the
+i2c-omap driver [2].
+
+[1]
+https://lore.kernel.org/all/f68c9a54-0fde-4709-9d2f-0d23a049341b@bootlin.com/
+[2]
+https://lore.kernel.org/all/20240102-j7200-pcie-s2r-v5-2-4b8c46711ded@bootlin.com/
+
+I think the patch below should fix the issue.
+
+--- a/drivers/i2c/busses/i2c-rcar.c
++++ b/drivers/i2c/busses/i2c-rcar.c
+@@ -1232,7 +1232,7 @@ static void rcar_i2c_remove(struct platform_device
+*pdev)
+        pm_runtime_disable(dev);
+ }
+
+-static int rcar_i2c_suspend(struct device *dev)
++static int rcar_i2c_suspend_noirq(struct device *dev)
+ {
+        struct rcar_i2c_priv *priv = dev_get_drvdata(dev);
+
+@@ -1240,7 +1240,7 @@ static int rcar_i2c_suspend(struct device *dev)
+        return 0;
+ }
+
+-static int rcar_i2c_resume(struct device *dev)
++static int rcar_i2c_resume_noirq(struct device *dev)
+ {
+        struct rcar_i2c_priv *priv = dev_get_drvdata(dev);
+
+@@ -1248,8 +1248,23 @@ static int rcar_i2c_resume(struct device *dev)
+        return 0;
+ }
+
++static int rcar_i2c_suspend(struct device *dev)
++{
++       pm_runtime_get_sync(dev);
++
++       return 0;
++}
++
++static int rcar_i2c_resume(struct device *dev)
++{
++       pm_runtime_put(dev);
++
++       return 0;
++}
++
+ static const struct dev_pm_ops rcar_i2c_pm_ops = {
+-       NOIRQ_SYSTEM_SLEEP_PM_OPS(rcar_i2c_suspend, rcar_i2c_resume)
++       NOIRQ_SYSTEM_SLEEP_PM_OPS(rcar_i2c_suspend_noirq,
+rcar_i2c_resume_noirq)
++       SYSTEM_SLEEP_PM_OPS(rcar_i2c_suspend, rcar_i2c_resume)
+ };
+
+ static struct platform_driver rcar_i2c_driver = {
+
+> 
+>>         +pca953x 4-0020: Failed to sync GPIO dir registers: -16
+>>         +pca953x 4-0020: Failed to restore register map: -16
+>>         +pca953x 4-0020: PM: dpm_run_callback(): pca953x_resume_noirq
+>> returns -16
+>>         +pca953x 4-0020: PM: failed to resume async noirq: error -16
+> 
+> Yeah, with this it's kinda forcing _every_ I²C host controller PM to
+> be moved also to noirq() or alike.
+
+Yes indeed.
+But this controller is already in noirq().
+So the issue was already there.
+We never saw it because we never did i2c accesses in noirq().
+
+Best Regards,
+
 -- 
-2.39.3 (Apple Git-146)
+Thomas Richard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
