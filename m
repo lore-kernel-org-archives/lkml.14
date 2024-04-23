@@ -1,108 +1,134 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9A884FD9
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1478814;
+	Tue, 23 Apr 2024 12:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713875170; cv=none; b=GpLCFw2Y6mCJeLbxPYna7vaHjOcPAtc+hhidPGn1EyE29gMwWyfsbjE4R/gODMdB6V2AKJnfqjxsR2rL5+W5NrkYUfSSuKNNyY8dvhHPcXcy4yo4QfWLqt/sh2GCxvT2zjXA1E7nFAhNuaVYKdCWV5nU1aJx7wyS5HmnG7dM9PM=
+	t=1713875196; cv=none; b=O/g7xFciTK/Im6UTf4eV+1BYcYGdjVkCwNT9l1XGgu4rznpPFQlTD+WEc8nCzCWHtoXLPW7rQhgq8tZNn8Qt4KH7sLuQXBaDsf3f2nHDnvb7YzRGpJogDTYpix+N8WliXIRDmwJvvzOmZv2ATLKO93A5nEglrQQa8mX170HZxMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713875170; c=relaxed/simple;
-	bh=dqEhvtsQA/KnqwaWloiCB5LQGWxBUcBJsyA+qcy7+RE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pxNOWZXOjh8+ALkXahCGmWJchW8ic0wQ5YXlVdtNcXCaKjMMlwNG8HCNZ2Z+ZYodHCSeZ0R63tR4JToNwlQQdQ3GlF6yOLPDh06DMU65UgNIAougaXKBZo8PwNPZrHepLoImk8ZiLfQz4mjf2KMu5lxQOjWm44P2ITYdTfKBozk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf; spf=pass smtp.mailfrom=kl.wtf; dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b=pB68De/h; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kl.wtf
+	s=arc-20240116; t=1713875196; c=relaxed/simple;
+	bh=GhFqWYnEMMVlmMXQ3Fz18iujy63dteb43440Fc9T//g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=noOOflfRSUnvz1UnTlL04Fse38aEvMBcf0LgLfUKkRvAd2OVq+nfiXhlep9+9Mm8GvDUn3D2Pa06Tiym8YA9E42FtPlk6WHAu7Uu24CL6u62oUk+pIxWhUNhCXZwl0H0+xbMc5TWOWpqV2+necaXMM+2sw8J2Jcj8h+QBH1Bf0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ixyfno0M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b="pB68De/h"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kl.wtf; s=key1;
-	t=1713875167;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WYMVR/H/8GVmViImqt+rKjHX+PeAvfbdfXWhlI89GyM=;
-	b=pB68De/hJ8iiLC1/E0Uq7rEtsYEuIKtvB9J2TzUbzCeorsSo7n5wmAG7HzHjfBT4xCk95C
-	2aJv32U/52tynBxdhVwddI5alPtJmh7J3leiDsRX0t7bRgV3R80JFmUyRIaWzkU7vGqNNi
-	b3w8KIn0yKyCl+1YCItZVGREIjWJer96lfulP4xHCsBd89r45LdXtzdGgxCJF+vD4NCpJr
-	iXhL+9F8uCpOzCMeIfF7Rr782gu4WTv1G3So6Cjc9VXpmHhHvnUzMCSI7qvjIvC5Rnm7tu
-	fF7bdKQhq64nU2aVVKiHlrVA7dJeICiFTCYOnkQu+PVF7oWpCIRgV5bGnxst4Q==
-From: Kenny Levinsen <kl@kl.wtf>
-To: Jiri Kosina <jikos@kernel.org>,
-	Dmitry Torokhov <dtor@chromium.org>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Radoslaw Biernacki <rad@chromium.org>,
-	Lukasz Majczak <lma@chromium.org>
-Cc: Kenny Levinsen <kl@kl.wtf>
-Subject: [PATCH v2 3/3] HID: i2c-hid: Align i2c_hid_set_power() retry with HID descriptor read
-Date: Tue, 23 Apr 2024 14:07:55 +0200
-Message-ID: <20240423122518.34811-4-kl@kl.wtf>
-In-Reply-To: <20240423122518.34811-1-kl@kl.wtf>
-References: <20240423122518.34811-1-kl@kl.wtf>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ixyfno0M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7016FC3277B;
+	Tue, 23 Apr 2024 12:26:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713875195;
+	bh=GhFqWYnEMMVlmMXQ3Fz18iujy63dteb43440Fc9T//g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ixyfno0Mumqxt2FxXvWIDrsNtDKx93yJVNdJNhB8n5MM2+SDtNwxEMRX5RyDRDFHN
+	 2Qu5PqID+p7dm2F590GnHTWuiAW70aNRmIT/Z9l8FSdI5YYxOBw5i8bY+BvdJIIH+S
+	 umR6clL5Tlu6w0K0wY1gOVDeftg/XZ6aPlMJlEoBgVvKmMyzC/T7U9CRJgUx4wxksv
+	 32frTGY3+AHtwkb1uhZsu+HoIq/EcYiA83eIjH4VSrAR344Exe67tXPW8+OcQGxTtv
+	 amQbNci+0Z28QM7vjj8jv1DQeDdBXNKrTKj3YXNjWM2+Myrvbm4omg2gvLWqKV80DU
+	 qon1HGcHrcNAg==
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5acf5723325so1309113eaf.0;
+        Tue, 23 Apr 2024 05:26:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWrpwo0arYK5Tf59akftLixY3Zs3cSjc/T7a08tM+Vw41Syx/jz1xwzjCiy6hnA/MbYQQRsGP8tYgJyXDw8jQEOpl5nsC281t2Pu/9ITZU4A9nwiOeGpob0iyU75eyXJolF+sfaRf8=
+X-Gm-Message-State: AOJu0Ywey0VjyYESG0c8nk3WXlremKGpsrfU7UFgxgUABHv6kcAlJsub
+	zRDgXbem2S5Y5M9mprQbjXxWiIb2dZEYn1OjoayTyBoBoWg+EGfJyj1Fpfgm2NqX4SnOYai2FmK
+	x1CpZySy7XWAh0atQ83EKQSV6RkA=
+X-Google-Smtp-Source: AGHT+IFVvA0HYfJ9IJSegQOjv5BhZ39vVydOBEH1PRw89xFYxRibhABRSF6oPzxBSeSuT69zRTXeirYp/IuSCMPsnjw=
+X-Received: by 2002:a05:6820:ecb:b0:5ac:6fc1:c2cb with SMTP id
+ en11-20020a0568200ecb00b005ac6fc1c2cbmr13195937oob.0.1713875194616; Tue, 23
+ Apr 2024 05:26:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <4918025.31r3eYUQgx@kreacher> <3a8f1978-c5df-40d6-91ca-276431bb01e1@arm.com>
+ <e8193798-4c02-423a-a9d8-63d29ebd7faa@linaro.org> <CAJZ5v0i2pvTLwj7jTzwhoQMap_cvjvNnK2Beuje2COo+F4hBzA@mail.gmail.com>
+ <2acea3c3-5c8f-4f3c-a275-743c3fbfd2e6@linaro.org>
+In-Reply-To: <2acea3c3-5c8f-4f3c-a275-743c3fbfd2e6@linaro.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 23 Apr 2024 14:26:23 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0j5Ja9-vuC9ve9Li=UxATcBtTmdMdhMS1g993XBe1DVqw@mail.gmail.com>
+Message-ID: <CAJZ5v0j5Ja9-vuC9ve9Li=UxATcBtTmdMdhMS1g993XBe1DVqw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] thermal/debugfs: Fix and clean up trip point
+ statistics updates
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>, 
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The retry for HID descriptor and for power commands deals with the same
-device quirk, so align the two.
+On Mon, Apr 22, 2024 at 6:12=E2=80=AFPM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> On 22/04/2024 17:48, Rafael J. Wysocki wrote:
+> > On Mon, Apr 22, 2024 at 5:34=E2=80=AFPM Daniel Lezcano
+>
+> [ ... ]
+>
+> >> or we should expect at least the residency to be showed even if the
+> >> mitigation state is not closed ?
+> >
+> > Well, in fact the device has already been in that state for some time
+> > and the mitigation can continue for a while.
+>
+> Yes, but when to update the residency time ?
+>
+> When we cross a trip point point ?
+>
+> or
+>
+> When we read the information ?
+>
+> The former is what we are currently doing AFAIR
 
-Signed-off-by: Kenny Levinsen <kl@kl.wtf>
+Not really.
+
+Records are added by thermal_debug_cdev_state_update() which only runs
+when __thermal_cdev_update() is called, ie. from governors.
+
+Moreover, it assumes the initial state to be 0 and checks if the new
+state is equal to the current one before doing anything else, so it
+will not make a record for the 0 state until the first transition.
+
+> and the latter must add the delta between the last update and the current=
+ time for the current
+> state, right ?
+
+Yes, and it is doing this already AFAICS.
+
+The problem is that it only creates a record for the old state, so if
+the new one is seen for the first time, there will be no record for it
+until it changes to some other state.
+
+The appended patch (modulo GMail-induced white space breakage) should
+help with this, but the initial state handling needs to be addressed
+separately.
+
 ---
- drivers/hid/i2c-hid/i2c-hid-core.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+ drivers/thermal/thermal_debugfs.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-index 252ccb3b71d1..749c0c036adb 100644
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -391,25 +391,21 @@ static int i2c_hid_set_power(struct i2c_hid *ihid, int power_state)
- 	i2c_hid_dbg(ihid, "%s\n", __func__);
- 
- 	/*
--	 * Some devices require to send a command to wakeup before power on.
--	 * The call will get a return value (EREMOTEIO) but device will be
--	 * triggered and activated. After that, it goes like a normal device.
-+	 * Some STM-based devices need 400µs after a rising clock edge to wake
-+	 * from deep sleep, which in turn means that our first command will
-+	 * fail EREMOTEIO. Certain Weida Tech devices also need this wake-up.
-+	 * Retry the command in this case.
- 	 */
--	if (power_state == I2C_HID_PWR_ON) {
-+	ret = i2c_hid_set_power_command(ihid, power_state);
-+	if (ret == -EREMOTEIO && power_state == I2C_HID_PWR_ON) {
-+		usleep_range(400, 500);
- 		ret = i2c_hid_set_power_command(ihid, I2C_HID_PWR_ON);
--
--		/* Device was already activated */
--		if (!ret)
--			goto set_pwr_exit;
- 	}
- 
--	ret = i2c_hid_set_power_command(ihid, power_state);
- 	if (ret)
- 		dev_err(&ihid->client->dev,
- 			"failed to change power setting.\n");
- 
--set_pwr_exit:
--
- 	/*
- 	 * The HID over I2C specification states that if a DEVICE needs time
- 	 * after the PWR_ON request, it should utilise CLOCK stretching.
--- 
-2.44.0
+Index: linux-pm/drivers/thermal/thermal_debugfs.c
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+--- linux-pm.orig/drivers/thermal/thermal_debugfs.c
++++ linux-pm/drivers/thermal/thermal_debugfs.c
+@@ -433,6 +433,14 @@ void thermal_debug_cdev_state_update(con
+     }
 
+     cdev_dbg->current_state =3D new_state;
++
++    /*
++     * Create a record for the new state if it is not there, so its
++     * duration will be printed by cdev_dt_seq_show() as expected if it
++     * runs before the next state transition.
++     */
++    thermal_debugfs_cdev_record_get(thermal_dbg, cdev_dbg->durations,
+new_state);
++
+     transition =3D (old_state << 16) | new_state;
+
+     /*
