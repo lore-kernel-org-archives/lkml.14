@@ -1,59 +1,61 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7357614389E
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 20:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FAB143C6E
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 20:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713905574; cv=none; b=YBYVf5spN5Ho7FDD1r3cDBt9GOG5TNU9u0+i9odEAvFmIz7KByAyLKCl0d47CJ9eTdOHZCPsF7kZ5Lc0daplP00ybPww3DD46zr2qIU6aCkXIcDcB5/3XV7hZVCJH/EBfyMhXTP7uFO7z36XZQFIrTWf418GnQljJafLvTW/CzM=
+	t=1713905574; cv=none; b=A98HvUydW/xM2rs2ssPxPjtFzXZ9fkrSotTIv8kv9Dimh9Sinn43t5yGxTGNqpAyvFOQJJZFZMthNKAPxfEg59ETVTbyO+sDVtypEG9QQJsZf26JbFF36lqwJP10NgQztFj3NXEZv/RbQGabVjZEM6WzuNtZhCtisvyjZ9cH/hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713905574; c=relaxed/simple;
-	bh=agoaO+yLgcCTgSTMLIJU2ZqfpAxYpRgRuzhSrnmExVE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=h2jBQzxhW27qtzm+OdwUorwrjg1VXeAo1/bw6I811savfQPwGKpwnm1NP+5/7DW5eVvbg20jJJEexZniBcyZHeLdeppXvscToZTRes9/S0PchqjIqq5xZm+VnMl2tIPyZcFcrL6HifSmrq0vw1jYeIGGKdLw0iNbzUS7TGmxbtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g9vQ8df2; arc=none smtp.client-ip=209.85.218.48
+	bh=ynd0BU/QdPiedpmwy4ixCC8VlFeGhbbYTb+LcXtnnXY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=lKToribB7Wep4geFUR1JHe4lqy0ASvHGC6fN9M44wnw4NigRhpUKZbpegSnEDrRkg9VBalKEYruc5lqbR7GR+ZPEL7CEloVGbGMXlVKY8Pmsa+9sgkcpzoBi12rdMZa5sc+Js3+I/fhK17e88grSyoxXSR9dx+bmvHkEH8/7QDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AzO2akyG; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g9vQ8df2"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a58872c07d8so53666266b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 13:52:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AzO2akyG"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-343f62d8124so4938563f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 13:52:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713905571; x=1714510371; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=enKb/FePM63duYlRqV9Qk3Sv4AxdpT2UptzUIV9J624=;
-        b=g9vQ8df24kKpLTwa2JI+wacBBhqNdnYNi+jciZTQKMm+zfrnhITsCqsZvgwR12z4z4
-         nPrd5aNd7zrkl9VK4ACYjHSwILC2SSzERf+6sSgrxOiMO1sUxoo+zYd+SK4kM06q8+27
-         H5TV7ROjtuRQOZxfnb7c1LwgOWbPqvyq+uQQ74XoHHdbQt7Kne0xURe4ydFiAkGovcdO
-         LvSx18QfXsj3rt9RoDX4FROwmyr8499NMgY5mYC7VO2i9pLMWmYc8dvx0+msfbZ7e3ko
-         RTMTJ9R1UUChp8YG3cVENf+4TWrkGw5Jwlyo3CBs5agfk5OacfQ7kmnfPeRoHJNZBncC
-         Nl9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713905571; x=1714510371;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1713905572; x=1714510372; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=enKb/FePM63duYlRqV9Qk3Sv4AxdpT2UptzUIV9J624=;
-        b=PdJS026T9HpKbtj9fLWECHsdOPK4FYfI3gOh2GFw6j4Qk6d4Z0Fum6/HfhljJq54io
-         FC4urJbkMGtTFhT7SskSm+xY4A+CC5rmIqT3iVmQupsh9XWgSHez+CGKIgbT322FSemK
-         wRYrtCk1Qn/Bo7DNhyTlE0m3TvSB1L/GJliO1QxpKmYZV5HqqLniIMBnY7knEHFMYW2Z
-         50RGpiMAQ2msPmw8zXmiDZWWH3Eb5EViqWC7IwhscTq+nsShHN69uTo41xs5AkYPNOEa
-         4cjM5gYzEvTFLAYJdoPsswroIxTWIJSh/pfVENKHoG+loz2jqbO69yencQ3zNpVgdzo2
-         OY7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWeIDLMEYLIRCaWxrrO/9W3PTbV/95MzgNGZWqRAciLv6LgvOt+LgUKPCJBmnWYh0S+h1K0OHW/G+QXJ1y9dZCuB7UCVrZlo4Mx8TZ0
-X-Gm-Message-State: AOJu0YzBbPwIz3cTkLSW5d7PHpHHlwTV7w4vJLejZyYJrJpnm8FcAFTG
-	hhySsluiR5prJ1lI68dpz9WmWlROToo8p5GTDnbH8IAiOYaOGFeAUnrp1QNVERE=
-X-Google-Smtp-Source: AGHT+IE5ZEFfPw9z6hVQ6KJ4VDfJlUP0PDE9gbusrIEU5+zuqqJGyyYKlrOwD4UvxqV9eS82lWjsuw==
-X-Received: by 2002:a17:906:30d0:b0:a55:aded:200d with SMTP id b16-20020a17090630d000b00a55aded200dmr533206ejb.12.1713905570797;
-        Tue, 23 Apr 2024 13:52:50 -0700 (PDT)
+        bh=qBOMQvlwyQAQ+Abc2xhhW1DcJnrKUYVw/PPBC3M05Co=;
+        b=AzO2akyGPqpe7pcru1YNxiMPxP8U9d1xLa158rAyCjgZkiL6zubvhbHG1oqAFKAfDY
+         PBlmj0HhcYcRh835S1YBYDuuDeaMOa0DZ2O5t0gxsIIyDZKrQN+6VHPSgqDg8tRdt3ak
+         s4ZTL61UyGOHEonESYgSRblWbLggAbzKh7LIIcic/DYiJQ8RQEKdqSIDe3w5HkkiJVqV
+         4XWhknDEOF04+iBh8yQh3pNNz9MUX6KeY2lLISsJmQOK4DFW0DRHJUTiabJJlMC39DNj
+         M65NqAUNeDhu7fDVQuZJpxzua/MUPFZ7hME+Igz6f8aOfSMVhKg/L9hmdQHj6QlCWRfE
+         LZvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713905572; x=1714510372;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qBOMQvlwyQAQ+Abc2xhhW1DcJnrKUYVw/PPBC3M05Co=;
+        b=QMp9jDrTzmHpoqxz+rKpnVexriau0leEaUaMHi2Jsh8TPDeIJM7ZI2lnYUfBN0/4Xo
+         pYwwm/1nUhZ3B/5k66EsKBS6RQwBd1XpE6bC7mE5Cps41rGWtNTvAjNUPrGa5dwuzXbD
+         XkANHYk2Dj8ZFZNefgFY/pKMg/PLpC2VuFPNJ2VZWYBwOak9OFRlthi2BCU298Gve0wY
+         rqV3tJsKB/4PkVHN/Nnsyosd4Zitqupcmv6RgenKB1QZzmhLQNmCnGZFdNXUpAuYAmRq
+         n9QLrCvMwBKWQ9N0FwX+/kbeGo2C6EIVayougEX4wDdhuMyTW7sgQHmRpuZ11rlkWizX
+         m3Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCXJqgq9ov2FbWXZk+EKyViQMhVOuBxeQZcEDpx18luAq5b6Lz6+jtXK0z7/NEEqBhp0V03mULnR+mvN+4W4zR7ASgd84pRQpGdyGtni
+X-Gm-Message-State: AOJu0YwJkpEdoyTntZWt2973aS4D+ElAeScP9Pq67Ddla6JuDkoiVm2N
+	zxjIOhd2coDIcTQgVcYPjxxE3JVu/MBHjcosTORFk1nb25qFNdsZRDvwz2xZTus=
+X-Google-Smtp-Source: AGHT+IG9DgCjmKcQA9J2q7MrzxwwWtFfg6SaXIWhfP3iX6GYqmoGdroKdUSDaXrKbhvSY/tA+wyliw==
+X-Received: by 2002:a5d:5610:0:b0:343:b252:2222 with SMTP id l16-20020a5d5610000000b00343b2522222mr272098wrv.6.1713905571616;
+        Tue, 23 Apr 2024 13:52:51 -0700 (PDT)
 Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id ww4-20020a170907084400b00a51d88e6164sm7443632ejb.203.2024.04.23.13.52.50
+        by smtp.gmail.com with ESMTPSA id ww4-20020a170907084400b00a51d88e6164sm7443632ejb.203.2024.04.23.13.52.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 13:52:50 -0700 (PDT)
+        Tue, 23 Apr 2024 13:52:51 -0700 (PDT)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Subject: [PATCH 0/2] enable USB on Pixel 6 (Oriole)
-Date: Tue, 23 Apr 2024 21:52:47 +0100
-Message-Id: <20240423-usb-dts-gs101-v1-0-3421b0371298@linaro.org>
+Date: Tue, 23 Apr 2024 21:52:49 +0100
+Subject: [PATCH 2/2] arm64: dts: exynos: gs101-oriole: enable USB on this
+ board
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,9 +64,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAJ8fKGYC/x3MQQ5AMBBA0avIrE0yrUbDVcSCGjUbpINIxN01l
- m/x/wPKSVihLR5IfInKtmaYsoCwDGtklCkbLFlHzlZ46ojToRjVkEFn64bJeB9ohtzsiWe5/1/
- Xv+8HWsKQDF8AAAA=
+Message-Id: <20240423-usb-dts-gs101-v1-2-3421b0371298@linaro.org>
+References: <20240423-usb-dts-gs101-v1-0-3421b0371298@linaro.org>
+In-Reply-To: <20240423-usb-dts-gs101-v1-0-3421b0371298@linaro.org>
 To: Peter Griffin <peter.griffin@linaro.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
@@ -76,74 +78,66 @@ Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.12.4
 
-These patches enable USB in peripheral mode on Pixel 6.
+Pixel 6 (Oriole) has a USB-C connector that can act as host or device.
 
-We can only support peripheral mode at this stage, as the MAX77759 TCPCI
-controller used on Pixel 6 to do the role selection doesn't have a(n
-upstream) Linux driver. Therefore the role is defaulted to peripheral
-without any endpoints / ports.
+The USB role is detected dynamically using a MAX77759 TCPCI controller,
+but since there is no driver for the MAX77759, the role is defaulted to
+peripheral, without any endpoints / ports.
 
-For the same reason, we can not detect the orientation of a SS USB-C cable
-and therefore it will only establish a link in SS mode in one of the
-possible orientations of the cable. In all other cases, the link will be HS.
+This allows Oriole to be configured as a gadget, e.g. using configfs.
 
-This series has a dependency on other patches, please see below.
-
-I have mainly tested this as CDC ECM Ethernet device using the following:
-
-    mount -t configfs configfs /sys/kernel/config/
-    modprobe libcomposite
-    modprobe usb_f_ecm
-    mkdir /sys/kernel/config/usb_gadget/g3
-    cd /sys/kernel/config/usb_gadget/g3
-
-    echo 0xadad > idVendor
-    echo 0xddaa > idProduct
-    mkdir strings/0x409
-    echo 01234567 > strings/0x409/serialnumber
-    echo ADADAD > strings/0x409/manufacturer
-    cat /proc/device-tree/model > strings/0x409/product
-    # create the function (name must match a usb_f_<name> module such as 'acm')
-    mkdir functions/ecm.usb0
-    # stable MAC addresses
-    echo "6e:27:3a:b9:40:87" > functions/ecm.usb0/dev_addr
-    echo "ca:49:84:b0:3b:bc" > functions/ecm.usb0/host_addr
-
-    mkdir configs/c.1
-    ln -s functions/ecm.usb0 configs/c.1/
-    echo $(ls -1 /sys/class/udc/) > UDC
-
-    ifconfig usb0 192.168.1.2 up
-
-at which point the other side should detect it and network communication
-becomes possible (once the other side also configures its network
-interface).
-
-Due to the clock IDs, this series depends on the bindings patch
-"dt-bindings: clock: google,gs101-clock: add HSI0 clock management unit" of
-the series in
-https://lore.kernel.org/r/20240423-hsi0-gs101-v1-0-2c3ddb50c720@linaro.org
-
-The bindings for USB and USB-phy have been proposed as part of:
-https://lore.kernel.org/r/20240423-usb-dwc3-gs101-v1-0-2f331f88203f@linaro.org
-and
-https://lore.kernel.org/r/20240423-usb-phy-gs101-v1-0-ebdcb3ac174d@linaro.org
-respectively.
+As PMIC regulators are not implemented yet, we rely on USB LDOs being
+enabled enabled by the bootloader. A placeholder regulator is used for
+now.
 
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
-André Draszik (2):
-      arm64: dts: exynos: gs101: add USB & USB-phy nodes
-      arm64: dts: exynos: gs101-oriole: enable USB on this board
+ arch/arm64/boot/dts/exynos/google/gs101-oriole.dts | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
- arch/arm64/boot/dts/exynos/google/gs101-oriole.dts | 24 +++++++++++++
- arch/arm64/boot/dts/exynos/google/gs101.dtsi       | 41 ++++++++++++++++++++++
- 2 files changed, 65 insertions(+)
----
-base-commit: a59668a9397e7245b26e9be85d23f242ff757ae8
-change-id: 20240423-usb-dts-gs101-4269e0177c0f
+diff --git a/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts b/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
+index 6be15e990b65..03b2a6fdfdc4 100644
+--- a/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
++++ b/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
+@@ -53,6 +53,12 @@ button-power {
+ 			wakeup-source;
+ 		};
+ 	};
++
++	/* TODO: Remove this once PMIC is implemented  */
++	reg_placeholder: regulator-0 {
++		compatible = "regulator-fixed";
++		regulator-name = "placeholder_reg";
++	};
+ };
+ 
+ &ext_24_5m {
+@@ -106,6 +112,24 @@ &serial_0 {
+ 	status = "okay";
+ };
+ 
++&usbdrd31 {
++	status = "okay";
++	vdd10-supply = <&reg_placeholder>;
++	vdd33-supply = <&reg_placeholder>;
++};
++
++&usbdrd31_dwc3 {
++	dr_mode = "otg";
++	usb-role-switch;
++	role-switch-default-mode = "peripheral";
++	maximum-speed = "super-speed-plus";
++	status = "okay";
++};
++
++&usbdrd31_phy {
++	status = "okay";
++};
++
+ &usi_uart {
+ 	samsung,clkreq-on; /* needed for UART mode */
+ 	status = "okay";
 
-Best regards,
 -- 
-André Draszik <andre.draszik@linaro.org>
+2.44.0.769.g3c40516874-goog
 
