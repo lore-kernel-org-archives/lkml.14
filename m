@@ -1,189 +1,106 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84EB0224F0;
-	Tue, 23 Apr 2024 06:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0453224EF
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 06:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713852711; cv=none; b=X4/hh3h8M7SPPuHL8gL8YDkT0HCUR9WeFrmNMunDPIV1GenXpKtziaCwSRrvfjkeel7FvyAvsyTO+wVtPMQNTR4AHOB3WgYmF/9WviVNoZPwfVr7Fz2MnxS4VsOfpintvqen5iVtzTgd6CuamSlO0ZIezD8BEUxiO8uMp+uhuck=
+	t=1713852779; cv=none; b=P4oe98cnW3Egqvtrg32dgdNwvWYNMfij5juUpFwwX3yAfma2jayS9fIb1ZelZcAtM2eQTcJvAUuAgttQs1reSuPs3XdYYt8baYaIHgr/IDcWGSiMj7Pk82iZbyrQzaWFNC3+3mFtJVf6QUl5TpzDDtelZx4tU6RExSS4DcO/KTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713852711; c=relaxed/simple;
-	bh=V7YpzEldJuTIV+Gf8sRePNx21jL0GM8qS7CvTMlG9Io=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Je2hIx/vdypa9adFYSqdQ9ZyobgEKE609S0PdhxGvUHx4ZU17kAZc/9ynr/U3SRgR4ivJMPs4TrNxfZ2TMBcmtWBwTW24w/zthnZBqUKNqxIVWS4NashmHLuYvyckS7U4ECupRfuItyuqRULYl4Jqkw9ohT9MIJIdVmLNKLBPG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TaTSjEEk; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713852779; c=relaxed/simple;
+	bh=M2JXIn03F7/QSf+dBvEbYBl2M3pS0JqlWeKIyakpfqo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jz5l+OToUZX8VsPoEBelPytl1Wzg1jLKnofIYYGiOM1X+BiiO8Oel5LSmiIarPzYfM6eHD23Em00tR1PPa4bgiIxtAC3USoYCRa39byanGCclCpEI8r8RhbxFfE7ggReW6Re4ZYOp1foK0EvKEh3SIe3Y4YjozKUaaVam2r7Mic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VRY0M8JK; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TaTSjEEk"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43N4ScPH016909;
-	Tue, 23 Apr 2024 06:11:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=tx5yxKtp0kmfVS31LxuwTSnEJXTe36IJzRgldANyxok=; b=Ta
-	TSjEEkFxtUhCgqElvUis+oxGqi3MmrkL88jeixE+57Jed+07gPIK+74wRwMcQB9N
-	VIIKjBW67ZFqp0D/0oHF04rEUSln9j4LBoPczZO4/TKnABqfEiAvh1TBfkH2VdVj
-	6DnE5hkR8qPv0Mg8zG8zi3+ziFjjvJt/yJzoXVezo1xcrrvuQolYAKmJk2s3rh7P
-	IK3OC1UTxuElG/gD1cmM7mwH46l3t/bkOrcBVhPB8x30OMPZ8USWzz19jlVvjuLR
-	Zp+BWEiWLvu5DiLpsx8HthCxltZRhlBI2lyDVRl5HpOOnuP1UlcffxND3Tow7Q6G
-	xZaTVtMBtwTBnOxrUpcw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xnr0mj24b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Apr 2024 06:11:29 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43N6BSmP001076
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Apr 2024 06:11:28 GMT
-Received: from [10.201.2.96] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 22 Apr
- 2024 23:11:22 -0700
-Message-ID: <b9081a61-c159-4659-a5e1-5586bb65dfce@quicinc.com>
-Date: Tue, 23 Apr 2024 11:41:19 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VRY0M8JK"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6ecec796323so5361828b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 23:12:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713852777; x=1714457577; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PegfXTHjFM9RFqoVlG6Hw8mcJ5lOawWkximGpqrPUKo=;
+        b=VRY0M8JK1Mpdd5dXKWSenCZ+5FbYaalCKgfuAInlbur7zB5tC3VAsw+3SP6PBwwT1V
+         uQU+op1k/eSIiweeGBuDukDxl3ipxrdyK+fim4yGK0azl/AwTvAuPPbHTXOlhG3Yvl5b
+         5y7Xks8jqYXEkCwdgkvLuZ/mzFRsLuvoZLKPlRuOlpdTgrH3HRkSEBv7eELZ5Wy6evv0
+         9sxAscHPmoGuA01x/Qhiql192qoDTYRVd1vWJrgnTLM9EV0xGS12q/X9dwBE3m5RXE14
+         S+uv7oJLOoULF0D0FvcYzuXGhcSK2bMJAdBGIj4NkuJxXUj2H2tdxn7R5FZcWMVfAE0M
+         0hhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713852777; x=1714457577;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PegfXTHjFM9RFqoVlG6Hw8mcJ5lOawWkximGpqrPUKo=;
+        b=HP/l032dJv3gMx7WTPnfnQ021LxMR/6d7+ovqXYohnYyXMzyYbK0w3JAg1ygElbm+G
+         I2yNrgQVfwUi4sajlcRNjF6pXgtfnKx8lkgwUZA69d2XbfB9nGm1UfLhsQXLeovTAsOl
+         WHuK6iODsHQxu2/06ZxBr40KMGSR7dPBPNfAKQaEcCn7ug2PRB0YMXSCPqxC88ed40VE
+         RfbUwVWVjOKxENhJd6gY2W7E7jvXBwtPp0K2ySMyPFSxt9LiR298R9LHXNjnR7UZ+n4X
+         sNfFUXB9z11dLOEKynmce7WVCuh95pGRhVz7X5ng02xlyAh0wkS4OlyHrY+vws+BdNXH
+         eFfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUD6EDzyTuYJ4UZ38lDJO7gZDHqfmYdsVFKWakSRYWs3qksaZnQz4ZXTTukGS7U86kZ1ll3y05zyXgcS4y5N5tJm+TSssjXYJSzaqu8
+X-Gm-Message-State: AOJu0Yy1Fk6UkFnDuSOxfoiZr1/kOSeFKTBWFp51l1CvljcHRN2lx3JO
+	DHeXPX5Xm+wf7HWXQjntxZmgyuMznam41/Kh6FtxOGzwLbxyYBn5e/qY4qZmRr0=
+X-Google-Smtp-Source: AGHT+IGUw/otBatPf+zILKW7L7JHzdCQoAVgJpbhjmlDG/lbtxa2H+ZKe1feDHWuNTXxbhpg0ZR54w==
+X-Received: by 2002:a05:6a20:da8c:b0:1a7:ad53:d3a3 with SMTP id iy12-20020a056a20da8c00b001a7ad53d3a3mr17586950pzb.35.1713852776820;
+        Mon, 22 Apr 2024 23:12:56 -0700 (PDT)
+Received: from localhost ([122.172.87.52])
+        by smtp.gmail.com with ESMTPSA id fn22-20020a056a002fd600b006edbcfe7005sm9139811pfb.144.2024.04.22.23.12.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 23:12:55 -0700 (PDT)
+Date: Tue, 23 Apr 2024 11:42:53 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Julian Calaby <julian.calaby@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Yangtao Li <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>, linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	kernel test robot <lkp@intel.com>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: sun50i: Fix build warning around snprint()
+Message-ID: <20240423061253.blyfuqasyiatm5sa@vireshk-i7>
+References: <285de20a187f3e4baeb28f639b5bf55e914a3821.1713756666.git.viresh.kumar@linaro.org>
+ <CAGRGNgWHkVkOP13jh-w1KQYeR_yeq1JgOt9a+R40F8DGYKMtkg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/7] ipq9574: Enable PCI-Express support
-To: <mr.nuke.me@gmail.com>, Bjorn Andersson <andersson@kernel.org>,
-        Konrad
- Dybcio <konrad.dybcio@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Vinod Koul
-	<vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Michael
- Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-clk@vger.kernel.org>
-References: <20240415182052.374494-1-mr.nuke.me@gmail.com>
- <4a83afeb-8e82-4f95-b44e-74d39d55f448@quicinc.com>
- <c498f5b9-df07-0802-800c-67c18dcf3e67@gmail.com>
-Content-Language: en-US
-From: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
-In-Reply-To: <c498f5b9-df07-0802-800c-67c18dcf3e67@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: QuHGmmjbEFMUabia_uEJdttfqNqw857e
-X-Proofpoint-ORIG-GUID: QuHGmmjbEFMUabia_uEJdttfqNqw857e
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-23_04,2024-04-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 bulkscore=0 mlxscore=0 spamscore=0 priorityscore=1501
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
- adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404230017
+In-Reply-To: <CAGRGNgWHkVkOP13jh-w1KQYeR_yeq1JgOt9a+R40F8DGYKMtkg@mail.gmail.com>
 
-
-
-On 4/20/2024 1:17 AM, mr.nuke.me@gmail.com wrote:
-> Hi Kathiravan,
+On 23-04-24, 11:38, Julian Calaby wrote:
+> On Mon, Apr 22, 2024 at 1:31 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> > index 30e5c337611c..cd50cea16a87 100644
+> > --- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> > +++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> > @@ -208,7 +206,7 @@ static int sun50i_cpufreq_get_efuse(void)
+> >  static int sun50i_cpufreq_nvmem_probe(struct platform_device *pdev)
+> >  {
+> >         int *opp_tokens;
+> > -       char name[MAX_NAME_LEN];
+> > +       char name[] = "speedXXXXXXXXXXX"; /* Integers can take 11 chars max */
 > 
-> On 4/19/24 09:28, Kathiravan Thirumoorthy wrote:
->>
->>
->> On 4/15/2024 11:50 PM, Alexandru Gagniuc wrote:
->>> There are four PCIe ports on IPQ9574, pcie0 thru pcie3. This series
->>> addresses pcie2, which is a gen3x2 port. The board I have only uses
->>> pcie2, and that's the only one enabled in this series.
->>>
->>> I believe this makes sense as a monolithic series, as the individual
->>> pieces are not that useful by themselves.
->>>
->>> In v2, I've had some issues regarding the dt schema checks. For
->>> transparency, I used the following test invocations to test v3:
->>>
->>>        make dt_binding_check 
->>> DT_SCHEMA_FILES=qcom,pcie.yaml:qcom,ipq8074-qmp-pcie-phy.yaml
->>>        make dtbs_check 
->>> DT_SCHEMA_FILES=qcom,pcie.yaml:qcom,ipq8074-qmp-pcie-phy.yaml
->>>
->>>
->>
->> Alexandru,
->>
->> Thanks for your contributions to the Qualcomm IPQ chipsets.
->>
->> I would like to inform you that we have also submitted the patches to 
->> enable the PCIe support on IPQ9574[1][2] and waiting for the ICC 
->> support[3] to land to enable the NOC clocks.
->>
->> [1] 
->> https://lore.kernel.org/linux-arm-msm/20230519090219.15925-1-quic_devipriy@quicinc.com/
->> [2] 
->> https://lore.kernel.org/linux-arm-msm/20230519085723.15601-1-quic_devipriy@quicinc.com/
->> [3] 
->> https://lore.kernel.org/linux-arm-msm/20240418092305.2337429-1-quic_varada@quicinc.com/
->>
->> Please take a look at these patches as well.
+> Would it make sense to just set a static length for the string here,
+> say 17-20 characters and add a comment explaining the number, say: /*
+> "speed" + 11 chars for the int */
 > 
-> I think I've seen [1] before -- I thought the series was abandoned. 
-> Since we have the dt-schema and applicability on mainline resolved here, 
-> do you want to use this series as the base for any new PCIe work?
+> The string constant, while it'll probably be optimised away, seems
+> weird and wasteful.
 
+The counting goes wrong (I have done it in the past) sometimes and so
+I like to explicitly reserve space like this, it also makes it look
+cleaner, i.e. how the eventual string will be named.
 
-Sure Alex. I believe some of the code review comments are already 
-addressed in the series which I pointed out. If you could have picked 
-those and re-posted the next version, it could have been better.
-
-
-> 
-> Alex
-> 
->> Thanks,
->> Kathiravan T.
->>
->>
->>> Changes since v2:
->>>   - reworked resets in qcom,pcie.yaml to resolve dt schema errors
->>>   - constrained "reg" in qcom,pcie.yaml
->>>   - reworked min/max intems in qcom,ipq8074-qmp-pcie-phy.yaml
->>>   - dropped msi-parent for pcie node, as it is handled by "msi" IRQ
->>>
->>> Changes since v1:
->>>   - updated new tables in phy-qcom-qmp-pcie.c to use lowercase hex 
->>> numbers
->>>   - reorganized qcom,ipq8074-qmp-pcie-phy.yaml to use a single list 
->>> of clocks
->>>   - reorganized qcom,pcie.yaml to include clocks+resets per compatible
->>>   - Renamed "pcie2_qmp_phy" label to "pcie2_phy"
->>>   - moved "ranges" property of pcie@20000000 higher up
->>>
->>> Alexandru Gagniuc (7):
->>>    dt-bindings: clock: Add PCIe pipe related clocks for IPQ9574
->>>    clk: qcom: gcc-ipq9574: Add PCIe pipe clocks
->>>    dt-bindings: PCI: qcom: Add IPQ9574 PCIe controller
->>>    PCI: qcom: Add support for IPQ9574
->>>    dt-bindings: phy: qcom,ipq8074-qmp-pcie: add ipq9574 gen3x2 PHY
->>>    phy: qcom-qmp-pcie: add support for ipq9574 gen3x2 PHY
->>>    arm64: dts: qcom: ipq9574: add PCIe2 nodes
->>>
->>>   .../devicetree/bindings/pci/qcom,pcie.yaml    |  35 +++++
->>>   .../phy/qcom,ipq8074-qmp-pcie-phy.yaml        |  36 ++++-
->>>   arch/arm64/boot/dts/qcom/ipq9574.dtsi         |  93 +++++++++++-
->>>   drivers/clk/qcom/gcc-ipq9574.c                |  76 ++++++++++
->>>   drivers/pci/controller/dwc/pcie-qcom.c        |  13 +-
->>>   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 136 +++++++++++++++++-
->>>   .../phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5.h   |  14 ++
->>>   include/dt-bindings/clock/qcom,ipq9574-gcc.h  |   4 +
->>>   8 files changed, 400 insertions(+), 7 deletions(-)
->>>
+-- 
+viresh
