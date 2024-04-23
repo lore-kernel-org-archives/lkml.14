@@ -1,408 +1,465 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BA513B795;
-	Tue, 23 Apr 2024 14:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5FBE13B2AC;
+	Tue, 23 Apr 2024 14:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713882255; cv=none; b=Q6P8TZo2KxZ3pBaiEyE8aPDLf+lx0qqcHshzVt3W0YAXjx3gCL2h+fiBEX8uZ7Mk3p52ho31xrEymhErKkYy/EZi5z6lUciRbPZbiFNAbiFQOG4qLA3AmJ7ylnRHmM9ZWNaNxlwrpro2bBtLEd5Gac54s55CX34N+eKZOnzCc+U=
+	t=1713882288; cv=none; b=WIdEz7H4g4YrV0mfihxQ+FrrWKyhHbK/qb45FanYi2JH5q1JU6QYvWgCHPCqI0Pddw+VJU1ZrI+lLLMaiibIZqCZY6IJ8SiH4TvjNqhFbSXC3pzWJeitp6iizn+3WCZadTQd4U9AZIEInBALDMDcYswuZq3Og1zoTRimI+kDzVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713882255; c=relaxed/simple;
-	bh=lsKqiX8Zjk3SA4TnopgENDvHBDl4W5onZMLdYgcKjKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NY9tUST73EVpW+LdSzthEj1ROKhr3MezM/zuuupAP/3ZHuG92F0roU5vHs9vJNBKq1d31A/GyfuevoxUhjRDlFCLSDA7/x2eSxXb750LBFWrSj5wqaGAmZi0Fwil66WMiHWq2/3b0NfefVggxrqKX1ZkVJXODafVCwU8/u3INRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwIMeQrL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwIMeQrL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5C72C116B1;
-	Tue, 23 Apr 2024 14:24:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713882255;
-	bh=lsKqiX8Zjk3SA4TnopgENDvHBDl4W5onZMLdYgcKjKg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mwIMeQrLGCpcC1dwjfuqkkqaaG6CWCweJpkoWeAxh9LAnnifhlfOwNmykhTQYeeQP
-	 XKxMpkAgcQrl+/wICk2WiIXzPThk8iC+HnjOE1qbhMzWAF6m+lyb6e8ahLC1mKPnYB
-	 ioUVaJF+Aq0KNpfPv8YLTjhyXLuB+YOV6AtpYVDnJM3Qa0p2yIZT8BYzTQvSfKydXT
-	 p0Y7027aD9i75V+JgsusBmZao/WFVZuaiEFvGcPBBi1rC7iQmpmQynQm4y7LAvpOLM
-	 Yz48TDtPJGIk6TWbU38wh6Qd+sRgD9cnL+25Ff/br6/ZoJNhsKYtd2s6mbN6RK1Puy
-	 3N+GsfFo3YGPQ==
-Date: Tue, 23 Apr 2024 09:24:12 -0500
-From: Rob Herring <robh@kernel.org>
-To: Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	shengjiu.wang@gmail.com, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Xiubo.Lee@gmail.com, festevam@gmail.com, nicoleotsuka@gmail.com,
-	perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2] ASoC: dt-bindings: fsl,ssi: Convert to YAML
-Message-ID: <20240423142412.GA138232-robh@kernel.org>
-References: <1713764894-11870-1-git-send-email-shengjiu.wang@nxp.com>
+	s=arc-20240116; t=1713882288; c=relaxed/simple;
+	bh=hhC4/ugD1478w+dMAUR5lqMKxQKAE3bhrFk6VU7sgOM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=nhzuJz9UV3HfRFlZdM7MwyrI0SnwDkUECPQSDbRrEHJRSYSnl8ARqQgyND8Nz1q5hP4PJb4eQ6FaF+jRC4+LrmHp6jjfEn0+GMhQTc9E+86KDWTE6z3ZV8xYEwV493jiXhFupT9QVVO0oS4VMb4WuRUHK0PidvqdaZ2DzfTbVMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
+Received: from hust.edu.cn (unknown [172.16.0.52])
+	by app1 (Coremail) with SMTP id HgEQrAB3eyqDxCdm4UFRBQ--.23867S2;
+	Tue, 23 Apr 2024 22:24:03 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.12.177.116])
+	by gateway (Coremail) with SMTP id _____wB350CBxCdmRLrJAQ--.6759S2;
+	Tue, 23 Apr 2024 22:24:03 +0800 (CST)
+From: Haoyang Liu <tttturtleruss@hust.edu.cn>
+To: Alex Shi <alexs@kernel.org>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Cc: hust-os-kernel-patches@googlegroups.com,
+	Haoyang Liu <tttturtleruss@hust.edu.cn>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] docs/zh_CN: Add dev-tools/kcov Chinese translation
+Date: Tue, 23 Apr 2024 22:23:56 +0800
+Message-Id: <20240423142357.3906-1-tttturtleruss@hust.edu.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1713764894-11870-1-git-send-email-shengjiu.wang@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:HgEQrAB3eyqDxCdm4UFRBQ--.23867S2
+Authentication-Results: app1; spf=neutral smtp.mail=tttturtleruss@hust
+	.edu.cn;
+X-Coremail-Antispam: 1UD129KBjvAXoW3Kr4xZry7KrWrtFy8uFWfKrg_yoW8XFWrto
+	Wfua90k34xAF4rZ3Z8Ka1UG3yxJF4kCrn3Ars7ArW3Zry8Ga4rWr4fCw4rt34rAr45K3ya
+	9r1xKrWfCa90k3W7n29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UjIYCTnIWjp_UUUO47k0a2IF6F4UM7kC6x804xWl1xkIjI8I6I8E6xAIw20EY4v2
+	0xvaj40_Wr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7
+	IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xv
+	wVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2kKe7AKxV
+	WUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02
+	F40EFcxC0VAKzVAqx4xG6I80ewAv7VACjcxG62k0Y48FwI0_Cr0_Gr1UMcIj6x8ErcxFaV
+	Av8VW8uFyUJr1UMcIj6xkF7I0En7xvr7AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4U
+	M4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxAIw2
+	8IcVCjz48v1sIEY20_GFW3Jr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
+	xVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
+	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
+	xhVjvjDU0xZFpf9x07UJrcfUUUUU=
+X-CM-SenderInfo: rxsqjiqrssiko6kx23oohg3hdfq/1tbiAQsPAmYmbD8JSwAIse
 
-On Mon, Apr 22, 2024 at 01:48:14PM +0800, Shengjiu Wang wrote:
-> Convert the fsl,ssi binding to YAML.
-> 
-> Add below compatible strings which were not listed
-> in document:
-> 
-> fsl,imx50-ssi
-> fsl,imx53-ssi
-> fsl,imx25-ssi
-> fsl,imx27-ssi
-> fsl,imx6q-ssi
-> fsl,imx6sl-ssi
-> fsl,imx6sx-ssi
-> 
-> Add below fsl,mode strings which were not listed.
-> 
-> i2s-slave
-> i2s-master
-> lj-slave
-> lj-master
-> rj-slave
-> rj-master
-> 
-> Add 'ac97-gpios' property which were not listed.
-> Then dtbs_check can pass.
-> 
-> And remove the 'codec' description which should be
-> in the 'codec' binding doc.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
-> changes in v2:
-> - change fallback string to const.
-> - add dai-common.yaml
-> - add ac97-gpios property
-> 
->  .../devicetree/bindings/sound/fsl,ssi.txt     |  87 --------
->  .../devicetree/bindings/sound/fsl,ssi.yaml    | 192 ++++++++++++++++++
->  2 files changed, 192 insertions(+), 87 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/fsl,ssi.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/fsl,ssi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/fsl,ssi.txt b/Documentation/devicetree/bindings/sound/fsl,ssi.txt
-> deleted file mode 100644
-> index 7e15a85cecd2..000000000000
-> --- a/Documentation/devicetree/bindings/sound/fsl,ssi.txt
-> +++ /dev/null
-> @@ -1,87 +0,0 @@
-> -Freescale Synchronous Serial Interface
-> -
-> -The SSI is a serial device that communicates with audio codecs.  It can
-> -be programmed in AC97, I2S, left-justified, or right-justified modes.
-> -
-> -Required properties:
-> -- compatible:       Compatible list, should contain one of the following
-> -                    compatibles:
-> -                      fsl,mpc8610-ssi
-> -                      fsl,imx51-ssi
-> -                      fsl,imx35-ssi
-> -                      fsl,imx21-ssi
-> -- cell-index:       The SSI, <0> = SSI1, <1> = SSI2, and so on.
-> -- reg:              Offset and length of the register set for the device.
-> -- interrupts:       <a b> where a is the interrupt number and b is a
-> -                    field that represents an encoding of the sense and
-> -                    level information for the interrupt.  This should be
-> -                    encoded based on the information in section 2)
-> -                    depending on the type of interrupt controller you
-> -                    have.
-> -- fsl,fifo-depth:   The number of elements in the transmit and receive FIFOs.
-> -                    This number is the maximum allowed value for SFCSR[TFWM0].
-> - - clocks:          "ipg" - Required clock for the SSI unit
-> -                    "baud" - Required clock for SSI master mode. Otherwise this
-> -		      clock is not used
-> -
-> -Required are also ac97 link bindings if ac97 is used. See
-> -Documentation/devicetree/bindings/sound/soc-ac97link.txt for the necessary
-> -bindings.
-> -
-> -Optional properties:
-> -- codec-handle:     Phandle to a 'codec' node that defines an audio
-> -                    codec connected to this SSI.  This node is typically
-> -                    a child of an I2C or other control node.
-> -- fsl,fiq-stream-filter: Bool property. Disabled DMA and use FIQ instead to
-> -		    filter the codec stream. This is necessary for some boards
-> -		    where an incompatible codec is connected to this SSI, e.g.
-> -		    on pca100 and pcm043.
-> -- dmas:		    Generic dma devicetree binding as described in
-> -		    Documentation/devicetree/bindings/dma/dma.txt.
-> -- dma-names:	    Two dmas have to be defined, "tx" and "rx", if fsl,imx-fiq
-> -		    is not defined.
-> -- fsl,mode:         The operating mode for the AC97 interface only.
-> -                    "ac97-slave" - AC97 mode, SSI is clock slave
-> -                    "ac97-master" - AC97 mode, SSI is clock master
-> -- fsl,ssi-asynchronous:
-> -                    If specified, the SSI is to be programmed in asynchronous
-> -                    mode.  In this mode, pins SRCK, STCK, SRFS, and STFS must
-> -                    all be connected to valid signals.  In synchronous mode,
-> -                    SRCK and SRFS are ignored.  Asynchronous mode allows
-> -                    playback and capture to use different sample sizes and
-> -                    sample rates.  Some drivers may require that SRCK and STCK
-> -                    be connected together, and SRFS and STFS be connected
-> -                    together.  This would still allow different sample sizes,
-> -                    but not different sample rates.
-> -- fsl,playback-dma: Phandle to a node for the DMA channel to use for
-> -                    playback of audio.  This is typically dictated by SOC
-> -                    design.  See the notes below.
-> -                    Only used on Power Architecture.
-> -- fsl,capture-dma:  Phandle to a node for the DMA channel to use for
-> -                    capture (recording) of audio.  This is typically dictated
-> -                    by SOC design.  See the notes below.
-> -                    Only used on Power Architecture.
-> -
-> -Child 'codec' node required properties:
-> -- compatible:       Compatible list, contains the name of the codec
-> -
-> -Child 'codec' node optional properties:
-> -- clock-frequency:  The frequency of the input clock, which typically comes
-> -                    from an on-board dedicated oscillator.
-> -
-> -Notes on fsl,playback-dma and fsl,capture-dma:
-> -
-> -On SOCs that have an SSI, specific DMA channels are hard-wired for playback
-> -and capture.  On the MPC8610, for example, SSI1 must use DMA channel 0 for
-> -playback and DMA channel 1 for capture.  SSI2 must use DMA channel 2 for
-> -playback and DMA channel 3 for capture.  The developer can choose which
-> -DMA controller to use, but the channels themselves are hard-wired.  The
-> -purpose of these two properties is to represent this hardware design.
-> -
-> -The device tree nodes for the DMA channels that are referenced by
-> -"fsl,playback-dma" and "fsl,capture-dma" must be marked as compatible with
-> -"fsl,ssi-dma-channel".  The SOC-specific compatible string (e.g.
-> -"fsl,mpc8610-dma-channel") can remain.  If these nodes are left as
-> -"fsl,elo-dma-channel" or "fsl,eloplus-dma-channel", then the generic Elo DMA
-> -drivers (fsldma) will attempt to use them, and it will conflict with the
-> -sound drivers.
-> diff --git a/Documentation/devicetree/bindings/sound/fsl,ssi.yaml b/Documentation/devicetree/bindings/sound/fsl,ssi.yaml
-> new file mode 100644
-> index 000000000000..d22911b0e9ef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/fsl,ssi.yaml
-> @@ -0,0 +1,192 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/fsl,ssi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale Synchronous Serial Interface
-> +
-> +maintainers:
-> +  - Shengjiu Wang <shengjiu.wang@nxp.com>
-> +
-> +description:
-> +  Notes on fsl,playback-dma and fsl,capture-dma
-> +  On SOCs that have an SSI, specific DMA channels are hard-wired for playback
-> +  and capture.  On the MPC8610, for example, SSI1 must use DMA channel 0 for
-> +  playback and DMA channel 1 for capture.  SSI2 must use DMA channel 2 for
-> +  playback and DMA channel 3 for capture.  The developer can choose which
-> +  DMA controller to use, but the channels themselves are hard-wired.  The
-> +  purpose of these two properties is to represent this hardware design.
-> +
-> +  The device tree nodes for the DMA channels that are referenced by
-> +  "fsl,playback-dma" and "fsl,capture-dma" must be marked as compatible with
-> +  "fsl,ssi-dma-channel".  The SOC-specific compatible string (e.g.
-> +  "fsl,mpc8610-dma-channel") can remain.  If these nodes are left as
-> +  "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel", then the generic Elo DMA
-> +  drivers (fsldma) will attempt to use them, and it will conflict with the
-> +  sound drivers.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - fsl,imx50-ssi
-> +              - fsl,imx53-ssi
-> +          - enum:
-> +              - fsl,imx51-ssi
+Translate dev-tools/kcov into Chinese and add it in
+dev-tools/zh_CN/index.rst.
 
-const
+Signed-off-by: Haoyang Liu <tttturtleruss@hust.edu.cn>
+Reviewed-by: Yanteng Si <siyanteng@loongson.cn>
+---
+ .../translations/zh_CN/dev-tools/index.rst    |   2 +-
+ .../translations/zh_CN/dev-tools/kcov.rst     | 359 ++++++++++++++++++
+ 2 files changed, 360 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/translations/zh_CN/dev-tools/kcov.rst
 
-> +          - const: fsl,imx21-ssi
-> +      - items:
-> +          - enum:
-> +              - fsl,imx25-ssi
-> +              - fsl,imx27-ssi
-> +              - fsl,imx35-ssi
-> +              - fsl,imx51-ssi
-> +              - fsl,imx6q-ssi
-> +              - fsl,imx6sl-ssi
-> +              - fsl,imx6sx-ssi
-> +          - enum:
-> +              - fsl,imx21-ssi
-> +              - fsl,imx51-ssi
+diff --git a/Documentation/translations/zh_CN/dev-tools/index.rst b/Documentation/translations/zh_CN/dev-tools/index.rst
+index 51e5b3e724c1..fa900f5beb68 100644
+--- a/Documentation/translations/zh_CN/dev-tools/index.rst
++++ b/Documentation/translations/zh_CN/dev-tools/index.rst
+@@ -22,6 +22,7 @@ Documentation/translations/zh_CN/dev-tools/testing-overview.rst
+    sparse
+    gcov
+    kasan
++   kcov
+    ubsan
+    kmemleak
+    gdb-kernel-debugging
+@@ -29,7 +30,6 @@ Documentation/translations/zh_CN/dev-tools/testing-overview.rst
+ Todolist:
+ 
+  - coccinelle
+- - kcov
+  - kcsan
+  - kfence
+  - kgdb
+diff --git a/Documentation/translations/zh_CN/dev-tools/kcov.rst b/Documentation/translations/zh_CN/dev-tools/kcov.rst
+new file mode 100644
+index 000000000000..629154df7121
+--- /dev/null
++++ b/Documentation/translations/zh_CN/dev-tools/kcov.rst
+@@ -0,0 +1,359 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++.. include:: ../disclaimer-zh_CN.rst
++
++:Original: Documentation/dev-tools/kcov.rst
++:Translator: 刘浩阳 Haoyang Liu <tttturtleruss@hust.edu.cn>
++
++KCOV: 用于模糊测试的代码覆盖率
++==============================
++
++KCOV 以一种适用于覆盖率引导的模糊测试的形式收集和暴露内核代码覆盖率信息。
++一个正在运行的内核的覆盖率数据可以通过 ``kcov`` 调试文件导出。覆盖率的收集是基
++于任务启用的，因此 KCOV 可以精确捕获单个系统调用的覆盖率。
++
++要注意的是 KCOV 不是为了收集尽可能多的覆盖率数据。而是为了收集相对稳定的覆盖率
++，这是系统调用输入的函数。为了完成这个目标，它不收集软硬中断的覆盖率（除非移除
++覆盖率收集被启用，见下文）以及内核中固有的不确定部分的覆盖率（如调度器，锁定）
++
++除了收集代码覆盖率，KCOV 还收集操作数比较的覆盖率。见 "操作数比较收集" 一节
++查看详细信息。
++
++除了从系统调用处理器收集覆盖率数据，KCOV 还从后台内核或软中断任务中执行的内核
++被标注的部分收集覆盖率。见 "远程覆盖率收集" 一节查看详细信息。
++
++先决条件
++--------
++
++KCOV 依赖编译器插桩，要求 GCC 6.1.0 及更高版本或者内核支持的任意版本的 Clang。
++
++收集操作数比较的覆盖率需要 GCC 8+ 或者 Clang。
++
++为了启用 KCOV，需要使用如下参数配置内核::
++
++        CONFIG_KCOV=y
++
++为了启用操作数比较覆盖率的收集，使用如下参数::
++
++    CONFIG_KCOV_ENABLE_COMPARISONS=y
++
++覆盖率数据只会在调试文件系统被挂载后才可以获取::
++
++        mount -t debugfs none /sys/kernel/debug
++
++覆盖率收集
++----------
++
++下面的程序演示了如何使用 KCOV 在一个测试程序中收集单个系统调用的覆盖率：
++
++.. code-block:: c
++
++    #include <stdio.h>
++    #include <stddef.h>
++    #include <stdint.h>
++    #include <stdlib.h>
++    #include <sys/types.h>
++    #include <sys/stat.h>
++    #include <sys/ioctl.h>
++    #include <sys/mman.h>
++    #include <unistd.h>
++    #include <fcntl.h>
++    #include <linux/types.h>
++
++    #define KCOV_INIT_TRACE			_IOR('c', 1, unsigned long)
++    #define KCOV_ENABLE			_IO('c', 100)
++    #define KCOV_DISABLE			_IO('c', 101)
++    #define COVER_SIZE			(64<<10)
++
++    #define KCOV_TRACE_PC  0
++    #define KCOV_TRACE_CMP 1
++
++    int main(int argc, char **argv)
++    {
++	int fd;
++	unsigned long *cover, n, i;
++
++	/* 单个文件描述符允许
++	 * 在单线程上收集覆盖率。
++	 */
++	fd = open("/sys/kernel/debug/kcov", O_RDWR);
++	if (fd == -1)
++		perror("open"), exit(1);
++	/* 设置跟踪模式和跟踪大小。 */
++	if (ioctl(fd, KCOV_INIT_TRACE, COVER_SIZE))
++		perror("ioctl"), exit(1);
++	/* 映射内核空间和用户空间共享的缓冲区。 */
++	cover = (unsigned long*)mmap(NULL, COVER_SIZE * sizeof(unsigned long),
++				     PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
++	if ((void*)cover == MAP_FAILED)
++		perror("mmap"), exit(1);
++	/* 在当前线程中启用覆盖率收集。 */
++	if (ioctl(fd, KCOV_ENABLE, KCOV_TRACE_PC))
++		perror("ioctl"), exit(1);
++	/* 在调用 ioctl() 之后重置覆盖率。 */
++	__atomic_store_n(&cover[0], 0, __ATOMIC_RELAXED);
++	/* 调用目标系统调用。 */
++	read(-1, NULL, 0);
++	/* 读取收集到的 PC 的数目。 */
++	n = __atomic_load_n(&cover[0], __ATOMIC_RELAXED);
++	for (i = 0; i < n; i++)
++		printf("0x%lx\n", cover[i + 1]);
++	/* 在当前线程上禁用覆盖率收集。在这之后
++	 * 可以在其他线程上收集覆盖率
++	 */
++	if (ioctl(fd, KCOV_DISABLE, 0))
++		perror("ioctl"), exit(1);
++	/* 释放资源 */
++	if (munmap(cover, COVER_SIZE * sizeof(unsigned long)))
++		perror("munmap"), exit(1);
++	if (close(fd))
++		perror("close"), exit(1);
++	return 0;
++    }
++
++在使用 ``addr2line`` 传输后，程序输出应该如下所示::
++
++    SyS_read
++    fs/read_write.c:562
++    __fdget_pos
++    fs/file.c:774
++    __fget_light
++    fs/file.c:746
++    __fget_light
++    fs/file.c:750
++    __fget_light
++    fs/file.c:760
++    __fdget_pos
++    fs/file.c:784
++    SyS_read
++    fs/read_write.c:562
++
++如果一个程序需要从多个线程收集覆盖率（独立地）。那么每个线程都需要单独打开
++``/sys/kernel/debug/kcov``。
++
++接口的细粒度允许高效的创建测试进程。即，一个父进程打开了
++``/sys/kernel/debug/kcov``，启用了追踪模式，映射了覆盖率缓冲区，然后在一个循
++环中创建了子进程。这个子进程只需要启用覆盖率收集即可（当一个线程退出时将自动禁
++用覆盖率收集）。
++
++操作数比较收集
++--------------
++
++操作数比较收集和覆盖率收集类似：
++
++.. code-block:: c
++
++    /* 包含和上文一样的头文件和宏定义。 */
++
++    /* 每次记录的 64 位字的数量。 */
++    #define KCOV_WORDS_PER_CMP 4
++
++    /*
++     * 收集的比较种类的格式。
++     *
++     * 0 比特表示是否是一个编译时常量。
++     * 1 & 2 比特包含参数大小的 log2 值，最大 8 字节。
++     */
++
++    #define KCOV_CMP_CONST          (1 << 0)
++    #define KCOV_CMP_SIZE(n)        ((n) << 1)
++    #define KCOV_CMP_MASK           KCOV_CMP_SIZE(3)
++
++    int main(int argc, char **argv)
++    {
++	int fd;
++	uint64_t *cover, type, arg1, arg2, is_const, size;
++	unsigned long n, i;
++
++	fd = open("/sys/kernel/debug/kcov", O_RDWR);
++	if (fd == -1)
++		perror("open"), exit(1);
++	if (ioctl(fd, KCOV_INIT_TRACE, COVER_SIZE))
++		perror("ioctl"), exit(1);
++	/*
++	* 注意缓冲区指针的类型是 uint64_t*，因为所有的
++	* 比较操作数都被提升为 uint64_t 类型。
++	*/
++	cover = (uint64_t *)mmap(NULL, COVER_SIZE * sizeof(unsigned long),
++				     PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
++	if ((void*)cover == MAP_FAILED)
++		perror("mmap"), exit(1);
++	/* 注意这里是 KCOV_TRACE_CMP 而不是 KCOV_TRACE_PC。 */
++	if (ioctl(fd, KCOV_ENABLE, KCOV_TRACE_CMP))
++		perror("ioctl"), exit(1);
++	__atomic_store_n(&cover[0], 0, __ATOMIC_RELAXED);
++	read(-1, NULL, 0);
++	/* 读取收集到的比较操作数的数量。 */
++	n = __atomic_load_n(&cover[0], __ATOMIC_RELAXED);
++	for (i = 0; i < n; i++) {
++		uint64_t ip;
++
++		type = cover[i * KCOV_WORDS_PER_CMP + 1];
++		/* arg1 和 arg2 - 比较的两个操作数。 */
++		arg1 = cover[i * KCOV_WORDS_PER_CMP + 2];
++		arg2 = cover[i * KCOV_WORDS_PER_CMP + 3];
++		/* ip - 调用者的地址。 */
++		ip = cover[i * KCOV_WORDS_PER_CMP + 4];
++		/* 操作数的大小。 */
++		size = 1 << ((type & KCOV_CMP_MASK) >> 1);
++		/* is_const - 当操作数是一个编译时常量时为真。*/
++		is_const = type & KCOV_CMP_CONST;
++		printf("ip: 0x%lx type: 0x%lx, arg1: 0x%lx, arg2: 0x%lx, "
++			"size: %lu, %s\n",
++			ip, type, arg1, arg2, size,
++		is_const ? "const" : "non-const");
++	}
++	if (ioctl(fd, KCOV_DISABLE, 0))
++		perror("ioctl"), exit(1);
++	/* 释放资源。 */
++	if (munmap(cover, COVER_SIZE * sizeof(unsigned long)))
++		perror("munmap"), exit(1);
++	if (close(fd))
++		perror("close"), exit(1);
++	return 0;
++    }
++
++注意 KCOV 的模式（代码覆盖率收集或操作数比较收集）是互斥的。
++
++远程覆盖率收集
++--------------
++
++除了从用户空间进程发布的系统调用句柄收集覆盖率数据以外，KCOV 也可以从部分在其
++他上下文中执行的内核中收集覆盖率 - 称为“远程”覆盖率。
++
++使用 KCOV 收集远程覆盖率要求：
++
++1. 修改内核源码并使用 ``kcov_remote_start`` 和 ``kcov_remote_stop`` 来标注要收集
++   覆盖率的代码片段。
++
++2. 在用户空间的收集覆盖率的进程应使用 ``KCOV_REMOTE_ENABLE`` 而不是 ``KCOV_ENABLE``。
++
++``kcov_remote_start`` 和 ``kcov_remote_stop`` 的标注以及 ``KCOV_REMOTE_ENABLE``
++ioctl 都接受可以识别特定覆盖率收集片段的句柄。句柄的使用方式取决于匹配代码片段执
++行的上下文。
++
++KCOV 支持在如下上下文中收集远程覆盖率：
++
++1. 全局内核后台任务。这些任务是内核启动时创建的数量有限的实例（如，每一个
++   USB HCD 产生一个 USB ``hub_event`` 工作器）。
++
++2. 局部内核后台任务。这些任务通常是由于用户空间进程与某些内核接口进行交互时产
++   生的，并且通常在进程退出时会被停止（如，vhost 工作器）。
++
++3. 软中断。
++
++对于 #1 和 #3，必须选择一个独特的全局句柄并将其传递给对应的
++``kcov_remote_start`` 调用。一个用户空间进程必须将该句柄存储在
++``kcov_remote_arg`` 结构体的 ``handle`` 数组字段中并将其传递给
++``KCOV_REMOTE_ENABLE``。这会将使用的 KCOV 设备附加到由此句柄引用的代码片段。多个全局
++句柄标识的不同代码片段可以一次性传递。
++
++对于 #2，用户空间进程必须通过 ``kcov_remote_arg`` 结构体的 ``common_handle`` 字段
++传递一个非零句柄。这个通用句柄将会被保存在当前 ``task_struct`` 结构体的
++``kcov_handle`` 字段中并且需要通过自定义内核代码的修改来传递给新创建的本地任务
++。这些任务需要在 ``kcov_remote_start`` 和 ``kcov_remote_stop`` 标注中依次使用传递过来的
++句柄。
++
++KCOV 对全局句柄和通用句柄均遵循一个预定义的格式。每一个句柄都是一个 ``u64`` 整形
++。当前，只有最高位和低四位字节被使用。第 4-7 字节是保留位并且值必须为 0。
++
++对于全局句柄，最高位的字节表示该句柄属于的子系统的标识。比如，KCOV 使用 ``1``
++表示 USB 子系统类型。全局句柄的低 4 字节表示子系统中任务实例的标识。比如，每一
++个 ``hub_event`` 工作器使用 USB 总线号作为任务实例的标识。
++
++对于通用句柄，使用一个保留值 ``0`` 作为子系统标识，因为这些句柄不属于一个特定
++的子系统。通用句柄的低 4 字节用于识别有用户进程生成的所有本地句柄的集合实例，
++该进程将通用句柄传递给 ``KCOV_REMOTE_ENABLE``。
++
++实际上，如果只从系统中的单个用户空间进程收集覆盖率，那么可以使用任意值作为通用
++句柄的实例标识。然而，如果通用句柄被多个用户空间进程使用，每个进程必须使用唯一
++的实例标识。一个选择是使用进程标识作为通用句柄实例的标识。
++
++下面的程序演示了如何使用 KCOV 从一个由进程产生的本地任务和处理 USB 总线的全局
++任务 #1 收集覆盖率：
++
++.. code-block:: c
++
++    /* 包含和上文一样的头文件和宏定义。 */
++
++    struct kcov_remote_arg {
++	__u32		trace_mode;
++	__u32		area_size;
++	__u32		num_handles;
++	__aligned_u64	common_handle;
++	__aligned_u64	handles[0];
++    };
++
++    #define KCOV_INIT_TRACE			_IOR('c', 1, unsigned long)
++    #define KCOV_DISABLE			_IO('c', 101)
++    #define KCOV_REMOTE_ENABLE		_IOW('c', 102, struct kcov_remote_arg)
++
++    #define COVER_SIZE	(64 << 10)
++
++    #define KCOV_TRACE_PC	0
++
++    #define KCOV_SUBSYSTEM_COMMON	(0x00ull << 56)
++    #define KCOV_SUBSYSTEM_USB	(0x01ull << 56)
++
++    #define KCOV_SUBSYSTEM_MASK	(0xffull << 56)
++    #define KCOV_INSTANCE_MASK	(0xffffffffull)
++
++    static inline __u64 kcov_remote_handle(__u64 subsys, __u64 inst)
++    {
++	if (subsys & ~KCOV_SUBSYSTEM_MASK || inst & ~KCOV_INSTANCE_MASK)
++		return 0;
++	return subsys | inst;
++    }
++
++    #define KCOV_COMMON_ID	0x42
++    #define KCOV_USB_BUS_NUM	1
++
++    int main(int argc, char **argv)
++    {
++	int fd;
++	unsigned long *cover, n, i;
++	struct kcov_remote_arg *arg;
++
++	fd = open("/sys/kernel/debug/kcov", O_RDWR);
++	if (fd == -1)
++		perror("open"), exit(1);
++	if (ioctl(fd, KCOV_INIT_TRACE, COVER_SIZE))
++		perror("ioctl"), exit(1);
++	cover = (unsigned long*)mmap(NULL, COVER_SIZE * sizeof(unsigned long),
++				     PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
++	if ((void*)cover == MAP_FAILED)
++		perror("mmap"), exit(1);
++
++	/* 通过通用句柄和 USB 总线 #1 启用代码覆盖率收集。 */
++	arg = calloc(1, sizeof(*arg) + sizeof(uint64_t));
++	if (!arg)
++		perror("calloc"), exit(1);
++	arg->trace_mode = KCOV_TRACE_PC;
++	arg->area_size = COVER_SIZE;
++	arg->num_handles = 1;
++	arg->common_handle = kcov_remote_handle(KCOV_SUBSYSTEM_COMMON,
++							KCOV_COMMON_ID);
++	arg->handles[0] = kcov_remote_handle(KCOV_SUBSYSTEM_USB,
++						KCOV_USB_BUS_NUM);
++	if (ioctl(fd, KCOV_REMOTE_ENABLE, arg))
++		perror("ioctl"), free(arg), exit(1);
++	free(arg);
++
++	/*
++	 * 在这里用户需要触发执行一个内核代码段
++	 * 该代码段要么使用通用句柄标识
++	 * 要么触发了一些 USB 总线 #1 上的一些活动。
++	 */
++	sleep(2);
++
++	n = __atomic_load_n(&cover[0], __ATOMIC_RELAXED);
++	for (i = 0; i < n; i++)
++		printf("0x%lx\n", cover[i + 1]);
++	if (ioctl(fd, KCOV_DISABLE, 0))
++		perror("ioctl"), exit(1);
++	if (munmap(cover, COVER_SIZE * sizeof(unsigned long)))
++		perror("munmap"), exit(1);
++	if (close(fd))
++		perror("close"), exit(1);
++	return 0;
++    }
+-- 
+2.25.1
 
-Fallbacks cannot be enum's. You need to split this into 2. Also, there's 
-no valid entry for "fsl,imx21-ssi".
-
-It also doesn't make sense that sometimes mx21 is a fallback of mx51, 
-but then sometimes the last fallback is mx51.
-
-> +      - items:
-> +          - const: fsl,mpc8610-ssi
-> +
-> +  cell-index:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum: [0, 1, 2]
-> +    description: The SSI index
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  fsl,fifo-depth:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      The number of elements in the transmit and receive FIFOs.
-> +      This number is the maximum allowed value for SFCSR[TFWM0].
-
-Ordering is standard properties first (like 'clocks') and then vendor 
-specific properties last.
-
-You need some constraints on the fsl,fifo-depth values.
-
-> +
-> +  clocks:
-> +    items:
-> +      - description: The ipg clock for register access
-> +      - description: clock for SSI master mode
-> +    minItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ipg
-> +      - const: baud
-> +    minItems: 1
-> +
-> +  dmas:
-> +    oneOf:
-> +      - items:
-> +          - description: DMA controller phandle and request line for RX
-> +          - description: DMA controller phandle and request line for TX
-> +      - items:
-> +          - description: DMA controller phandle and request line for RX0
-> +          - description: DMA controller phandle and request line for TX0
-> +          - description: DMA controller phandle and request line for RX1
-> +          - description: DMA controller phandle and request line for TX1
-> +
-> +  dma-names:
-> +    oneOf:
-> +      - items:
-> +          - const: rx
-> +          - const: tx
-> +      - items:
-> +          - const: rx0
-> +          - const: tx0
-> +          - const: rx1
-> +          - const: tx1
-> +
-> +  codec-handle:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      Phandle to a 'codec' node that defines an audio
-> +      codec connected to this SSI.  This node is typically
-> +      a child of an I2C or other control node.
-> +
-> +  fsl,fiq-stream-filter:
-> +    type: boolean
-> +    description:
-> +      Disabled DMA and use FIQ instead to filter the codec stream.
-> +      This is necessary for some boards where an incompatible codec
-> +      is connected to this SSI, e.g. on pca100 and pcm043.
-> +
-> +  fsl,mode:
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    enum: [ ac97-slave, ac97-master, i2s-slave, i2s-master,
-> +            lj-slave, lj-master, rj-slave, rj-master ]
-> +    description: |
-> +      "ac97-slave" - AC97 mode, SSI is clock slave
-> +      "ac97-master" - AC97 mode, SSI is clock master
-> +      "i2s-slave" - I2S mode, SSI is clock slave
-> +      "i2s-master" - I2S mode, SSI is clock master
-> +      "lj-slave" - Left justified mode, SSI is clock slave
-> +      "lj-master" - Left justified mode, SSI is clock master
-> +      "rj-slave" - Right justified mode, SSI is clock slave
-> +      "rj-master" - Right justified mode, SSI is clock master
-> +
-> +  fsl,ssi-asynchronous:
-> +    type: boolean
-> +    description: If specified, the SSI is to be programmed in asynchronous
-> +      mode.  In this mode, pins SRCK, STCK, SRFS, and STFS must
-> +      all be connected to valid signals.  In synchronous mode,
-> +      SRCK and SRFS are ignored.  Asynchronous mode allows
-> +      playback and capture to use different sample sizes and
-> +      sample rates.  Some drivers may require that SRCK and STCK
-> +      be connected together, and SRFS and STFS be connected
-> +      together.  This would still allow different sample sizes,
-> +      but not different sample rates.
-> +
-> +  fsl,playback-dma:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Phandle to a node for the DMA channel to use for
-> +      playback of audio.  This is typically dictated by SOC
-> +      design. Only used on Power Architecture.
-> +
-> +  fsl,capture-dma:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Phandle to a node for the DMA channel to use for
-> +      capture (recording) of audio.  This is typically dictated
-> +      by SOC design. Only used on Power Architecture.
-> +
-> +  ac97-gpios:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description: Please refer to soc-ac97link.txt
-> +
-> +  "#sound-dai-cells":
-> +    const: 0
-> +    description: optional, some dts node didn't add it.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - fsl,fifo-depth
-> +
-> +allOf:
-> +  - $ref: dai-common.yaml#
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/imx6qdl-clock.h>
-> +    ssi1: ssi@2028000 {
-
-Drop unused labels.
-> +        compatible = "fsl,imx6q-ssi",
-> +                     "fsl,imx51-ssi";
-
-This fits on 1 line.
-
-> +        reg = <0x02028000 0x4000>;
-> +        interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&clks IMX6QDL_CLK_SSI1_IPG>,
-> +                 <&clks IMX6QDL_CLK_SSI1>;
-> +        clock-names = "ipg", "baud";
-> +        dmas = <&sdma 37 1 0>, <&sdma 38 1 0>;
-> +        dma-names = "rx", "tx";
-> +        #sound-dai-cells = <0>;
-> +        fsl,fifo-depth = <15>;
-> +    };
-> -- 
-> 2.34.1
-> 
