@@ -1,62 +1,98 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4933B12E75
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 01:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8204833FD
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 02:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713837482; cv=none; b=TmpVNnwpiWaQtQJr3ItTrv/t2mvkUYBs4E6llCspIJlCqQtHGC6imyHNzEFkfH+gCw3naBryF7OD7taz72FnNTcCqa4M7ElH38PiVIenzxjU718fmFKeYrTbzSCSqh2sC7nmnr/WOyLPcIoOj3xybciSMy6eoPJZBGgyDkAR54w=
+	t=1713837996; cv=none; b=NEmK9/z+vLge3w03ztpzJu2LVfw5bxgJvhMzEIfHtcfhjx5tQ0Js+r6la6WlkRJphlXjxzVO/UB+e+0WZqMw+3eym//NTVddBj7IqYB6VuZx61K467E0wJ44cfyw9GZJJR9unU/Lu2x/lt1ABKgjA15773TfS2eVNbuw169gCQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713837482; c=relaxed/simple;
-	bh=CJ71Y+MJUKayvYKARogr2qdM1s0hARKWITmO/LkeVf0=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=Kxxv5/ZWMnXLeyxesGgD6gQM0pRgEtf1tC1/Z0T2j0GYAQ0a3odA4+UXk71dan/0qfQHGzpyUoyoj1evm0TjSd2/pF7nKedv5ldjufZxyr4wMwldfnQt3GF8OCSB/foVa4/PEW6anw+bU7imraVQwdGPwmnsS6x2etrYAw5J1JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=malaika-12.net; spf=pass smtp.mailfrom=malaika-12.net; dkim=pass (2048-bit key) header.d=malaika-12.net header.i=@malaika-12.net header.b=e5JPVt6A; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=malaika-12.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=malaika-12.net
+	s=arc-20240116; t=1713837996; c=relaxed/simple;
+	bh=c2xonoCbADKF8/xTJiffDV6oZLP+9gnvZFV5ez6gLjI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tKtjgqiMo8p1txFD60Kbo1uzcSI1Csr50aB6hNKm4SqfmFLcbqP/4WG3qdYM+I3jmk90rG7jBhLceiBAL7f4ttnLuqEjTIwBkDTCcV8JwYS1e2nAIvRXqbwadGIEUxxYuC7Y67rLH0lJunxnQpZCDVEZnR8e2u8RueDG2GYV2eY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EpGiPlHo; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=malaika-12.net header.i=@malaika-12.net header.b="e5JPVt6A"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=malaika-12.net; s=ds202404; h=Content-Transfer-Encoding:Content-Type:
-	Subject:From:To:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Bul97ErRvzV3DEAlBOTlUwNj8ZWcrdoMSwdc5QbKf4Y=; b=e5JPVt6AOEFOGeJebDZ6fC+8Km
-	LPdb5gTTwvqBC2pa2kjslEmbpK/IIXYSe7VMrxrKllUUn8nvffIL47c3y647iDkN/wj0hGS51wgsg
-	+1x9sOdxjZfq9Vo5lqh6a7mwCGtKEKqjL4cUtefaLek0SO+84+j2woMhr+bAslRHsh1Kh4ovQ11vX
-	+Izu6SSHA4dL0dRx7DY9aee/sLZ8zIIJm/D3tc3O1QQ5SCywvexxSQRX38ynG9BNkrQSiqdwYS5ul
-	6ylPIpfH/K2ktB8jd68iigbS43wdE2Ox3GrQKqlmK59U+lNA75I2nKSw90KpBcWlZlVts6Nn0BDm4
-	WvhuCDOQ==;
-Received: from [2a02:fe1:7001:f100:501f:16b8:2636:f4d7] (port=53794)
-	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <B7T@malaika-12.net>)
-	id 1rz5Pr-004rE8-Ht
-	for linux-kernel@vger.kernel.org;
-	Tue, 23 Apr 2024 03:57:51 +0200
-Message-ID: <802fa134-98c4-4a14-bdf4-26028e2e6366@malaika-12.net>
-Date: Tue, 23 Apr 2024 03:57:48 +0200
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EpGiPlHo"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51ab4ee9df8so4994036e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 19:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713837992; x=1714442792; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=waszPwSUwTOtETfRgHTu/kDUB/tVHu6WwyBPZl9yfsU=;
+        b=EpGiPlHoY/3UhTLaqetCS75r+hTOqoqgYZknbBXjy4+5x+DmnRCQjmJh03QuEcCRS2
+         Liy/FGWFGIBct/fNEn3QoMgFjfFYmK07a6nq5WUPIDCuafOu1Etna2uBCPd0x4pVikeQ
+         tjF9oMyZ0krhe1Fzi3bErbVm2mGt2gLfPGf/Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713837992; x=1714442792;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=waszPwSUwTOtETfRgHTu/kDUB/tVHu6WwyBPZl9yfsU=;
+        b=MFn+iLokMHhA/XS1bx6AGG6Hm8wKPRyy/8a1zh2vEPS1Bm9pCsRM8aZ2NKyPuvob+S
+         NAuKhkq4ZwLYYouJ3+cDhbFCbVizZpqMkmhuH5YWN3JYHRyl952KWIi8sX6SCkWl3O2K
+         XhQpzu9q9LbGBRLs9jZClHwx/z+K2mwQvRq9jEjts9rmN7MhdzFKVulhT6qzh2mNzQZf
+         6Mro0u0AUqPEFfVvA+tKI/waNXLPFqMlNmrSFFBxej6MYxyoieb/TYXw1gnv1YjbdbbW
+         pZDl467GMKC4A2B2KVOlUVC3OHS9rOefim2fAgvH50KKsSivNslV1fuN98UZuDDMcZQk
+         aybA==
+X-Gm-Message-State: AOJu0Ywl+JvccO3XHYjpBOqjoFIcTP66R+lSbbTFEGmee+CCm0MqozSJ
+	bjxK/yPuKEB0ECG8l9qSwqrpaRLBl0ypwPXPFl4Tt9SkbXLbx8Xj6j5q8YtHqxoLlpozUCM1a7B
+	JSyzgFKugPi+GEM8GPWMqRRPgxqSyccmHY7kV
+X-Google-Smtp-Source: AGHT+IHSxZN5/ZTAOWxTdVIyOYGbht8Awo9JzkHMw50CzuxT5XJD1v5RAa5yTyWC3fhgxbCk7gW08+f6/osGC9HnEV8=
+X-Received: by 2002:ac2:48b0:0:b0:51a:f3b9:f774 with SMTP id
+ u16-20020ac248b0000000b0051af3b9f774mr5993796lfg.21.1713837992555; Mon, 22
+ Apr 2024 19:06:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-kernel@vger.kernel.org
-From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <B7T@malaika-12.net>
-Subject: Hac translated: Tru
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240418074652.126355-1-stevensd@chromium.org> <87wmopuobi.ffs@tglx>
+In-Reply-To: <87wmopuobi.ffs@tglx>
+From: David Stevens <stevensd@chromium.org>
+Date: Tue, 23 Apr 2024 11:06:21 +0900
+Message-ID: <CAD=HUj7cmO5x4aunD_sJoQ6BQxejiwqa8tMbORnGjB3gADiLxg@mail.gmail.com>
+Subject: Re: [PATCH] genirq: Disable suspended irqs when restoring affinity
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A native form of (Al) Hac, that I talked about in previous mails, and 
-that is known through "hacker", is (De) Tru. (For italic script).
+On Tue, Apr 23, 2024 at 5:36=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> On Thu, Apr 18 2024 at 16:46, David Stevens wrote:
+> > In irq_restore_affinity_of_irq(), after initializing an affinity
+> > managed irq, disable the irq if it should be suspended. This ensures
+> > that irqs are not delivered to drivers during the noirq phase of
+> > resuming from S3, after non-boot CPUs are brought back online.
+> >
+> > Signed-off-by: David Stevens <stevensd@chromium.org>
+> > ---
+> >  kernel/irq/cpuhotplug.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
+> > index 1ed2b1739363..c00132013708 100644
+> > --- a/kernel/irq/cpuhotplug.c
+> > +++ b/kernel/irq/cpuhotplug.c
+> > @@ -197,6 +197,8 @@ static void irq_restore_affinity_of_irq(struct irq_=
+desc *desc, unsigned int cpu)
+> >
+> >       if (irqd_is_managed_and_shutdown(data)) {
+> >               irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
+> > +             if (desc->istate & IRQS_SUSPENDED)
+> > +                     __disable_irq(desc);
+>
+> Makes sense. But I rather avoid the whole startup/disable dance in this
+> case and let resume_device_irqs() deal with it.
 
-Everything in computers can really be designed according to Tru.
+Thanks for taking a look at my patch. Should I send a v2 with your
+suggestions, or will you create a patch for your tree yourself?
 
-See also my channel for more on this topic: 
-https://www.youtube.com/@Ywe_Caerlyn_Samilands_East
-
-Peace!
-
-
+-David
