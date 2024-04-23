@@ -1,157 +1,111 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A808FC18
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 01:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174C6FC18;
+	Tue, 23 Apr 2024 01:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713835061; cv=none; b=siHPXZvfMEPV7rAhvx5hoI/XZdtvtkAS3a4BB3V18uOcJu2OiLWTkWAvDGsYGA8HvBEc3o+jkeSPRvqhvvp+Duq4B21sKWekNbteRSzCFpGaCGMMLZV0ksrhUAtBmEuoohV8vVyE7laxvSVHYQ4g22AH3KcSj95s9JdT9igg40g=
+	t=1713835228; cv=none; b=RoRinJpLNfnv9Ar3N5W7D2WgTaG6In6FtxsSrkBvsJEd9C12rKEjHeH8afRfqkzDrjwrDV9Pl/mGRDIPnInDDGmQcN3JiadGp522519xvsLj2yvx7DH4SI5qpEDYpuVFPAT+FVSF645rwxHeqWYJYawr39EcNX9TnO6QD2wwOs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713835061; c=relaxed/simple;
-	bh=5dNHtu9PJ4dePjTdOxbwG2n1lua4BrF3Sz0/qY0oe14=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hSvFaXVlxngFc9g3LJqvzR8xYCJz/rvsjS1wVIuDUhUEzMgPQNBDzTj+0e8SqenuvqgquAb6vxGEIQxXmeCjHoSw6apkSAzoYZkkeTeW4ftTGzrOCs2C8JCDWCnmwWvJBOPbk5TM6Q5GehRzDXoteKm652J57jYMJ+RqnPVmxIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M8DwuEve; arc=none smtp.client-ip=209.85.221.170
+	s=arc-20240116; t=1713835228; c=relaxed/simple;
+	bh=8uMzQyWJm5Y6tVm722cv22TcEYfdMGHPWQCXt/bK0jM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qNsZiEpXB73vnhU5HgPvCAG2xPklTziISBdvZbPfgxFZCWT0ctnTMrwUODN63xh4lVTuXeT1SA2cJoCZef72iMOdt8i85ZbsFLxy0M3hIccioFbAyUQP4EjymRycj14F8ao5UrEf8vB/2yy+xWqffO0dMN+bw5YOSK84xrdXAx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HWKtVIWy; arc=none smtp.client-ip=209.85.222.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8DwuEve"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4dcf9659603so1555526e0c.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 18:17:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HWKtVIWy"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-78efd533a00so351519085a.0;
+        Mon, 22 Apr 2024 18:20:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713835059; x=1714439859; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YQfi/J7nvpoMKwZ6FO7G+J37oGiYtgYh3OlF6VNlT/g=;
-        b=M8DwuEve0Jt4yc/SZOnNyv9fOYYrn3BpC/qTgnVGee5dQmzqxJr6GwW+StB08IVrHe
-         gB4TCblbHkzIkBf10EGJEkxN42kd5sQiL286xQrUpDeT1/M18ZGYw9e9R1M6a4Xr2zn3
-         uBI+EeOGTrlbx+JZretq6bEqYY1cVeyzT6glOuwxRrQKrD27iU4x3IJDe2UJhDwbXdsJ
-         tb5vIW+CqhXtVL4OQq+9ZCU/8WDaqAPagoAe6fXhE1+jj/q/LnsSZTN5jQdntPR1opfp
-         CZfS+phJkLV3V0s73YHwrGfr7pKC2H1eM2hrhzn8Zg0Y3MHG6GYPUgbkqzmoUK3VT3+m
-         Rgyw==
+        d=gmail.com; s=20230601; t=1713835226; x=1714440026; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/X3oWVdwceQfK7JUbUass9+jsVy5WEkRvYuO9s5FjoI=;
+        b=HWKtVIWyLLY4UkJskjIIXOmK1wYYxOS0HGaV8AUm95Ic/wT2JgIYIz9I5gIXpZ5wo0
+         gSoJYiH6c/R1kunAuD0ng3OYHytGwqIo1Co2LEbKalterG+65yxezM5V42Zpqu8aWiK2
+         B018X7QqaJ/bUHNwj9IDNcKCvdz7p8U6z5jaNl/ibXtUYHj0q9X/PGPTj6+CTk0BGWOz
+         sBSEa06aoaI9KR8AI2KFCf/iknl9T2mDMBY5wC5n/5rRL6tYAnt+ztEneLxUhBvnxcnp
+         na+cqB0PjQDOcr+Yq5Xl7Z5QecpanXQYD45rWOXQFQhc6rVZIcNE++NVuy2fPC9sYV/x
+         NrVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713835059; x=1714439859;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YQfi/J7nvpoMKwZ6FO7G+J37oGiYtgYh3OlF6VNlT/g=;
-        b=ueqX+0s/yBtcda9AVGbw8hdGTMh+SNpNjkg9BA6aPikKoBLgl3UiG7y3ojnJnAlN9P
-         OkEYboCgiPmUtgw+HzesVgn6B+diKhwSbrHLXNUJAKtT3MrRm37BQbo9Im28FNL1FMBJ
-         v/lLS1r1wdhdwfwpOFY7VqwM02lPH2u2m1rSjDWzsfquiBos62/1bUqqNnkmJUkdRQ8f
-         Zkz1V0aaqECfFIW0f6PVZpGgxXZdVrM6f19smCY4WPel72e2KuC0m6oCs27t/sVGAQEt
-         7BRJUhNoHS25YTTKVR78i1DTsvPle2vmJPDkveue9C4mexaQCaZrk8Yqbr5lWLk/DKju
-         Qn2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVHiqzIArOsOWtYRvizYfm2IYNqX2szFgr3huLe+SevK+7rYXNXr8QgDE2c8vf2gNjrtfK8oypwbwoEJ4cUZoyz9D1hdNmY9w/1mPc/
-X-Gm-Message-State: AOJu0YyedyIYNaSfeynXpqOaS1f3kRPZf7XQVEP6CQ3ozWV0XpAtoRsP
-	shh09CbEGe+vA5KuSA+hUPRmC4L+rCeh4M34Rftp8H7wAkzZ1ymjBpJpAgx5v619M4oFFb43hvn
-	j9SL2fPEWIYAMK+NgQnufeLb0tC0=
-X-Google-Smtp-Source: AGHT+IE5kr7/FmDvHdESTeTV4pYrQRqKLntjammemlRhEqpP/AXB3ajSLiqSe4AE/qWEXqd9Lh4LDE0NGTk5T5AoRoU=
-X-Received: by 2002:a05:6122:134d:b0:4d8:37eb:9562 with SMTP id
- f13-20020a056122134d00b004d837eb9562mr13950768vkp.0.1713835058873; Mon, 22
- Apr 2024 18:17:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713835226; x=1714440026;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/X3oWVdwceQfK7JUbUass9+jsVy5WEkRvYuO9s5FjoI=;
+        b=WX7ny5kIO24Qzoyw2+ezipw0cXjIZDj5KoiECVz7HzT+5ElX/MWswjOJ74NiTMZHKP
+         n2C4p48gvdIJi4mTH/m4IeE94/h5/kQaJQyrye6kLSje+Utrerevm7iXJEmkBZ5Av4NS
+         Et+aDPZNaNmpOlRF0LxgIKDUw/jZWvdQr/49gP3E8Sru36fqzbtOmNwaQDgx5HSwnOVD
+         19PkImcs59Y3CL5gJKBftcGoToQB++Sl6LNuocuhOL+dkYbGFIYuH5vwUB+UZGCLddF5
+         qb+1wgY3ZfaY4VprWau5Q9UQkYDFDjo+nSWNP0beEEqsZbHB60x2fQNzCrXeh0hAS+dG
+         nYGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWi823t2uKTZnZen9/JfniGmoLQB5euL9wmlWNAuKTmHwkUr/Af0STiDd4kEiWXpiZXpBw7dTwTlB7poev8O5xwJbQHqxZt1yDp8aM9mwiuKHbXANrYDNSPN+GAJNjJZk2S1MZJGFYSApE=
+X-Gm-Message-State: AOJu0YypEaW2lNZWwgja33TTCLM9r6gDiPI7NPTQqWqolNjGjZZJDBfP
+	vl3RFlcYaL09taAK56c4wxeeHgHo5Rf4vFEzDMA7IwcEr2ri5BI3
+X-Google-Smtp-Source: AGHT+IHNrFNlRd8vHin4jO4b0/uHrTcFQKkQwjaNMI1A7Rs0w4RKZLqx3b3gXukSPNY57d4AO6waKw==
+X-Received: by 2002:ad4:57d3:0:b0:69b:63d2:6bc3 with SMTP id y19-20020ad457d3000000b0069b63d26bc3mr10704024qvx.5.1713835225910;
+        Mon, 22 Apr 2024 18:20:25 -0700 (PDT)
+Received: from sheunl-pc.ht.home ([2607:9880:4327:ffae:7c2b:7751:30a3:52c9])
+        by smtp.gmail.com with ESMTPSA id p11-20020a0cf54b000000b0069b58f8c33dsm4813265qvm.45.2024.04.22.18.20.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 18:20:25 -0700 (PDT)
+From: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
+To: deller@gmx.de,
+	sam@ravnborg.org,
+	tzimmermann@suse.de,
+	christophe.jaillet@wanadoo.fr,
+	u.kleine-koenig@pengutronix.de,
+	julia.lawall@inria.fr
+Cc: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	javier.carrasco.cruz@gmail.com
+Subject: [PATCH] video: fbdev: replacing of_node_put with __free(device_node)
+Date: Mon, 22 Apr 2024 21:20:21 -0400
+Message-Id: <20240423012021.56470-1-abdulrasaqolawani@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1713755580.git.baolin.wang@linux.alibaba.com> <05d0096e4ec3e572d1d52d33a31a661321ac1551.1713755580.git.baolin.wang@linux.alibaba.com>
-In-Reply-To: <05d0096e4ec3e572d1d52d33a31a661321ac1551.1713755580.git.baolin.wang@linux.alibaba.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Tue, 23 Apr 2024 09:17:27 +0800
-Message-ID: <CAGsJ_4xu4iL5pv7T1chyzGC2Vp9q1GwOp3wxb=bYMW-T-pj4dA@mail.gmail.com>
-Subject: Re: [RFC PATCH 5/5] mm: shmem: add anonymous share mTHP counters
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org, 
-	david@redhat.com, wangkefeng.wang@huawei.com, ryan.roberts@arm.com, 
-	ying.huang@intel.com, shy828301@gmail.com, ziy@nvidia.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 22, 2024 at 3:03=E2=80=AFPM Baolin Wang
-<baolin.wang@linux.alibaba.com> wrote:
->
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> ---
->  include/linux/huge_mm.h | 2 ++
->  mm/huge_memory.c        | 4 ++++
->  mm/shmem.c              | 5 ++++-
->  3 files changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> index 26b6fa98d8ac..67b9c1acad31 100644
-> --- a/include/linux/huge_mm.h
-> +++ b/include/linux/huge_mm.h
-> @@ -270,6 +270,8 @@ enum mthp_stat_item {
->         MTHP_STAT_ANON_SWPOUT,
->         MTHP_STAT_ANON_SWPOUT_FALLBACK,
->         MTHP_STAT_ANON_SWPIN_REFAULT,
-> +       MTHP_STAT_SHMEM_ANON_ALLOC,
-> +       MTHP_STAT_SHMEM_ANON_ALLOC_FALLBACK,
+Replaced instance of of_node_put with __free(device_node)
+to simplify code and protect against any memory leaks
+due to future changes in the control flow.
 
-not quite sure about this. for 2MB pmd-mapped THP shmem, we count them
-as FILE_THP.
-here we are counting as SHMEM_ANON. To me, SHMEM_ANON is more correct but
-it doesn't align with pmd-mapped THP. David, Ryan, what do you think?
+Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+Signed-off-by: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
+---
+ drivers/video/fbdev/offb.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/drivers/video/fbdev/offb.c b/drivers/video/fbdev/offb.c
+index b421b46d88ef..ea38a260774b 100644
+--- a/drivers/video/fbdev/offb.c
++++ b/drivers/video/fbdev/offb.c
+@@ -357,7 +357,7 @@ static void offb_init_palette_hacks(struct fb_info *info, struct device_node *dp
+ 			par->cmap_type = cmap_gxt2000;
+ 	} else if (of_node_name_prefix(dp, "vga,Display-")) {
+ 		/* Look for AVIVO initialized by SLOF */
+-		struct device_node *pciparent = of_get_parent(dp);
++		struct device_node *pciparent __free(device_node) = of_get_parent(dp);
+ 		const u32 *vid, *did;
+ 		vid = of_get_property(pciparent, "vendor-id", NULL);
+ 		did = of_get_property(pciparent, "device-id", NULL);
+@@ -369,7 +369,6 @@ static void offb_init_palette_hacks(struct fb_info *info, struct device_node *dp
+ 			if (par->cmap_adr)
+ 				par->cmap_type = cmap_avivo;
+ 		}
+-		of_node_put(pciparent);
+ 	} else if (dp && of_device_is_compatible(dp, "qemu,std-vga")) {
+ #ifdef __BIG_ENDIAN
+ 		const __be32 io_of_addr[3] = { 0x01000000, 0x0, 0x0 };
+-- 
+2.34.1
 
->         __MTHP_STAT_COUNT
->  };
->
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 9e52c0db7580..dc15240c1ab3 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -557,6 +557,8 @@ DEFINE_MTHP_STAT_ATTR(anon_alloc_fallback, MTHP_STAT_=
-ANON_ALLOC_FALLBACK);
->  DEFINE_MTHP_STAT_ATTR(anon_swpout, MTHP_STAT_ANON_SWPOUT);
->  DEFINE_MTHP_STAT_ATTR(anon_swpout_fallback, MTHP_STAT_ANON_SWPOUT_FALLBA=
-CK);
->  DEFINE_MTHP_STAT_ATTR(anon_swpin_refault, MTHP_STAT_ANON_SWPIN_REFAULT);
-> +DEFINE_MTHP_STAT_ATTR(shmem_anon_alloc, MTHP_STAT_SHMEM_ANON_ALLOC);
-> +DEFINE_MTHP_STAT_ATTR(shmem_anon_alloc_fallback, MTHP_STAT_SHMEM_ANON_AL=
-LOC_FALLBACK);
->
->  static struct attribute *stats_attrs[] =3D {
->         &anon_alloc_attr.attr,
-> @@ -564,6 +566,8 @@ static struct attribute *stats_attrs[] =3D {
->         &anon_swpout_attr.attr,
->         &anon_swpout_fallback_attr.attr,
->         &anon_swpin_refault_attr.attr,
-> +       &shmem_anon_alloc_attr.attr,
-> +       &shmem_anon_alloc_fallback_attr.attr,
->         NULL,
->  };
->
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 8b009e7040b2..4a0aa75ab29c 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -1706,11 +1706,14 @@ static struct folio *shmem_alloc_and_add_folio(st=
-ruct vm_fault *vmf,
->                         pages =3D 1 << order;
->                         index =3D round_down(index, pages);
->                         folio =3D shmem_alloc_hugefolio(gfp, info, index,=
- order);
-> -                       if (folio)
-> +                       if (folio) {
-> +                               count_mthp_stat(order, MTHP_STAT_SHMEM_AN=
-ON_ALLOC);
->                                 goto allocated;
-> +                       }
->
->                         if (pages =3D=3D HPAGE_PMD_NR)
->                                 count_vm_event(THP_FILE_FALLBACK);
-> +                       count_mthp_stat(order, MTHP_STAT_SHMEM_ANON_ALLOC=
-_FALLBACK);
->                         order =3D next_order(&orders, order);
->                 }
->         } else {
-> --
-> 2.39.3
->
-
-Thanks
-Barry
