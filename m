@@ -1,28 +1,28 @@
-Received: from out0-212.mail.aliyun.com (out0-212.mail.aliyun.com [140.205.0.212])
+Received: from out0-198.mail.aliyun.com (out0-198.mail.aliyun.com [140.205.0.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E760F86AE6
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.212
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A198B7E79F
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713877152; cv=none; b=qyz42/Zty+SMsQJ/w/2aSZAU72o8Wsok8SB1ymS2xhjTNI4lazfHuJJYZJNtlPGzx6j731q9kyDFBV8jIwQ4EqqWAlVuArI4FI0CfNAmsRMvWQH7gRPTO1N8HdnVeL4dosUUaiRUdrpGYMSrSl8k0oKYHbwcN+JgEERPS/smYNg=
+	t=1713877152; cv=none; b=RDMqvfIIQigfACLN9Iq/dHRUkmV6D056T9gnt9WCyAeJIX1gD0oCg4XIIpr9SLmnY1bnV9CdhQX8Bs5dgl97ykmzKL55/SCRM0i1xggH0kvYXqHQfsvb7YRpQ4+3hYedf8REp44D9Kc8VZKxFFJufH0K8121OOYcq5JoEsqojtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713877152; c=relaxed/simple;
-	bh=Ghj0/V/dH76APPyaKDAlG7P8Sbut9JOjTVMQKESCzlc=;
+	bh=RZQ4OaKt5l6WjLn4N/d2lAFpl8VZsWoGuYt7dpHlpMQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q90rEB9DafAFS2XDK7hHQ77lL8XYJ+wQppW/zTGtgnBDBiNWMq/BWk+vtE5x4E2Kr4o1dm6bu26Ek4xGiDqAvrH0v8XoOyce0Io40wb9klvifkWjMyFXRUg2qA8g6+1pBPy1E+bN+gSiwcl3J1FvyB0db3iU1Ltc0wVzSxW2yyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=BIeHsS2U; arc=none smtp.client-ip=140.205.0.212
+	 MIME-Version; b=Q6hNz6i3T1O9RKsLJwPliSUcqS/fzvsEwlaMuM7wtJbEb9sgfLDT/BtixP19VIj3ly8SsAYcrWjopLWlzByIkq5gJ++qRR18vXyW4r5qLxf6F7UErpHUILYoDdxiDluudjIqhilxYrsIlgpxsJUOeg1EZ5gKqEkm3zZDw7swX2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=WnMVVh/D; arc=none smtp.client-ip=140.205.0.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="BIeHsS2U"
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="WnMVVh/D"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=antgroup.com; s=default;
-	t=1713877147; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
-	bh=35K+byay5rbsmnKXw4pAmKxWNtRGPhfuJu7mpbXe+7w=;
-	b=BIeHsS2Uzj/6qCjaRZAhRQT3+R66E/p1pDrrEDbWGyfim4p7fklOptIT9Ghh4xgnahizd1S+rfM2ji2B+vcq3bef3/Uu29hnU+frNMvOxHE+Mac4Zh/ho1PQaaZg9iCOk3f9jBoCouEbSCJYgamfxVF11CZtGGRzGfOR1BHYcDI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047208;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJXNjSF_1713877146;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJXNjSF_1713877146)
+	t=1713877148; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=+BtmDxLOgobbye+TMx6cN7HTHoKqXF713ZEoIat3sOs=;
+	b=WnMVVh/DCvBEEJ4HNYmNDtyzn7OxvAVJnkQF+U7kl2EEMnNDX+ulJZN5OBmIuBzq0O4J5LyA/GdaUCDVg4GYdGBEyprKQTcHbBT9pVb3GTNl3LaYDkZ44U9gDtYE4Y4eVeL+B8QFA3TQrJL2JPmrYMWpy/ialH7RdNkcuItWYH0=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R761e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047206;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJXNjSc_1713877147;
+Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJXNjSc_1713877147)
           by smtp.aliyun-inc.com;
           Tue, 23 Apr 2024 20:59:07 +0800
 From: "Tiwei Bie" <tiwei.btw@antgroup.com>
@@ -32,9 +32,9 @@ To: richard@nod.at,
 Cc:  <linux-um@lists.infradead.org>,
    <linux-kernel@vger.kernel.org>,
   "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH v2 1/7] um: Fix -Wmissing-prototypes warnings for (rt_)sigreturn
-Date: Tue, 23 Apr 2024 20:58:52 +0800
-Message-Id: <20240423125858.137709-2-tiwei.btw@antgroup.com>
+Subject: [PATCH v2 4/7] um: Fix the declaration of kasan_map_memory
+Date: Tue, 23 Apr 2024 20:58:55 +0800
+Message-Id: <20240423125858.137709-5-tiwei.btw@antgroup.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240423125858.137709-1-tiwei.btw@antgroup.com>
 References: <20240423125858.137709-1-tiwei.btw@antgroup.com>
@@ -44,50 +44,55 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Use SYSCALL_DEFINE0 to define (rt_)sigreturn. This will address
-below -Wmissing-prototypes warnings:
+Make it match its definition (size_t vs unsigned long). And declare
+it in a shared header to fix the -Wmissing-prototypes warning, as it
+is defined in the user code and called in the kernel code.
 
-arch/x86/um/signal.c:453:6: warning: no previous prototype for ‘sys_sigreturn’ [-Wmissing-prototypes]
-arch/x86/um/signal.c:560:6: warning: no previous prototype for ‘sys_rt_sigreturn’ [-Wmissing-prototypes]
-
+Fixes: 5b301409e8bc ("UML: add support for KASAN under x86_64")
 Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
 ---
- arch/x86/um/signal.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/um/include/asm/kasan.h        | 1 -
+ arch/um/include/shared/kern_util.h | 2 ++
+ arch/um/os-Linux/mem.c             | 1 +
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/um/signal.c b/arch/x86/um/signal.c
-index 263e1d08f216..48e87b45adba 100644
---- a/arch/x86/um/signal.c
-+++ b/arch/x86/um/signal.c
-@@ -8,6 +8,7 @@
- #include <linux/personality.h>
- #include <linux/ptrace.h>
- #include <linux/kernel.h>
-+#include <linux/syscalls.h>
- #include <asm/unistd.h>
- #include <linux/uaccess.h>
- #include <asm/ucontext.h>
-@@ -450,7 +451,7 @@ int setup_signal_stack_si(unsigned long stack_top, struct ksignal *ksig,
- 	return 0;
- }
+diff --git a/arch/um/include/asm/kasan.h b/arch/um/include/asm/kasan.h
+index 0d6547f4ec85..f97bb1f7b851 100644
+--- a/arch/um/include/asm/kasan.h
++++ b/arch/um/include/asm/kasan.h
+@@ -24,7 +24,6 @@
  
--long sys_sigreturn(void)
-+SYSCALL_DEFINE0(sigreturn)
- {
- 	unsigned long sp = PT_REGS_SP(&current->thread.regs);
- 	struct sigframe __user *frame = (struct sigframe __user *)(sp - 8);
-@@ -557,7 +558,7 @@ int setup_signal_stack_si(unsigned long stack_top, struct ksignal *ksig,
- }
+ #ifdef CONFIG_KASAN
+ void kasan_init(void);
+-void kasan_map_memory(void *start, unsigned long len);
+ extern int kasan_um_is_ready;
+ 
+ #ifdef CONFIG_STATIC_LINK
+diff --git a/arch/um/include/shared/kern_util.h b/arch/um/include/shared/kern_util.h
+index 81bc38a2e3fc..95521b1f5b20 100644
+--- a/arch/um/include/shared/kern_util.h
++++ b/arch/um/include/shared/kern_util.h
+@@ -67,4 +67,6 @@ extern void fatal_sigsegv(void) __attribute__ ((noreturn));
+ 
+ void um_idle_sleep(void);
+ 
++void kasan_map_memory(void *start, size_t len);
++
  #endif
+diff --git a/arch/um/os-Linux/mem.c b/arch/um/os-Linux/mem.c
+index 8530b2e08604..c6c9495b1432 100644
+--- a/arch/um/os-Linux/mem.c
++++ b/arch/um/os-Linux/mem.c
+@@ -15,6 +15,7 @@
+ #include <sys/vfs.h>
+ #include <linux/magic.h>
+ #include <init.h>
++#include <kern_util.h>
+ #include <os.h>
  
--long sys_rt_sigreturn(void)
-+SYSCALL_DEFINE0(rt_sigreturn)
- {
- 	unsigned long sp = PT_REGS_SP(&current->thread.regs);
- 	struct rt_sigframe __user *frame =
+ /*
 -- 
 2.34.1
 
