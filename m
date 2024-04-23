@@ -1,42 +1,46 @@
 Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216A322EF0;
-	Tue, 23 Apr 2024 06:45:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5621523748;
+	Tue, 23 Apr 2024 06:45:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.157.23.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713854705; cv=none; b=SD8tG73QAEYJjVTdi5J7V/Vk6XMCpLoV8q9mR0LAOc764Jcr0TtG+uAx7ySLK70RIrkw0rx0azhIXc5Ub6xnSmjNov2jaWHeUKSzppExXw5ISnjnqJusu+enrQKS7ZrD3FOYYgTGFrfxNEDwM1EmEyKEEoQJAig3UWo1tFDoiJY=
+	t=1713854708; cv=none; b=aDqIRQZwYa6ZSifRnhYPYU3v2/yTwQJmevUa1NrvJYQOrRlIoS1YGSDgzS0p3MzquQRrxSj+gv3wasrv4LT4ayIt+qs7p3vC2n50miL/1up+KL4tt7bnVj5KdYpgezr8nQn6iwgey/Rn8ZNQE2xDbnopK0QpiyeWk5+VrOkUnNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713854705; c=relaxed/simple;
-	bh=yHYr9NZjTLV0KVkaIOczsUbndTX5BtsZ0/S7Jb6UjRc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YMrFoYuOWbVSr9fuxMYbRCUQSKUa48gRB4ISZj1+QcOT++dm7rLCcofqeUX2bO7/vNDDS7bmYsB4YPrFD0yjNSvTwet2shXhPsv5JjHq2vE3Xz6a8I11b+3kbeYX9Mdfhc11JXbQglV7V9W0+fxy0JTzkr1j716TLcBViC7GJ0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=duK+jLT4; arc=none smtp.client-ip=35.157.23.187
+	s=arc-20240116; t=1713854708; c=relaxed/simple;
+	bh=nTn0zaTNrShbk3paxud+AkmRRpbMA7FsQQJ0oaxqvyg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YywkaQkRmp6RsLNB54STQ9WjVPHpoWq6BL3bAgP2DspyLhLshEHNqfOdpC8bMY1rtVAD8T7MAp78F5L4YgFdC3DqUl0fJNGy6VVziIdbPVU4dAijv+P4q2TQ6NsvvfbizAUT+kCrEWBjUExOAjz2o8irlfmFE9qjOgPnxccV+os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=TvmV5wgd; arc=none smtp.client-ip=35.157.23.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="duK+jLT4"
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="TvmV5wgd"
 Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id 336401E80;
-	Tue, 23 Apr 2024 06:37:23 +0000 (UTC)
+	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id 92DE22001;
+	Tue, 23 Apr 2024 06:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=paragon-software.com; s=mail; t=1713854243;
-	bh=UmmlvBrk+NXAV/C0GvIsRMJbpjN8Ah/dZtXPiVlu6rQ=;
-	h=From:To:CC:Subject:Date;
-	b=duK+jLT4mqOFh4/ba2+8zXBJSlzAzybg0zVDV0WpOU4hrxjViTssHSMHd75r6bUZb
-	 Pc0Qb7rV5SHUR3b3b2xsozcRE5nca3OUdapgpFLGv5U2kEaLuUT66C1NkRhC3SlnQU
-	 Nu0HEMV1/4DWeYPMZXewqPFgZrx4io8+bIpMq09g=
+	d=paragon-software.com; s=mail; t=1713854253;
+	bh=3cVk0H+rl0oBurqKEXVfmBKXIrjKBQMQ/qE3urFKI1g=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=TvmV5wgd+8JqVtFIywK227+EAgZrJEpNe57VElPf38rTtzMdeZ+YzgnUc+33b27A/
+	 qJPsP6Cmj7XmTqNJJDN1uaugIwirtN2fwWdC30wcM4mi4EYBh+DoEekO6ogV2x9IHJ
+	 Smgj7jfCi4I0mRqKMw5ltDX4SSP0WR7ckRjF7LAk=
 Received: from ntfs3vm.paragon-software.com (192.168.211.160) by
  vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Tue, 23 Apr 2024 09:44:54 +0300
+ 15.1.2375.7; Tue, 23 Apr 2024 09:45:04 +0300
 From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
 To: <ntfs3@lists.linux.dev>
 CC: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Subject: [PATCH v2 0/9] Bugfix and refactoring
-Date: Tue, 23 Apr 2024 09:44:19 +0300
-Message-ID: <20240423064428.8289-1-almaz.alexandrovich@paragon-software.com>
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	<stable@vger.kernel.org>
+Subject: [PATCH 2/9] fs/ntfs3: Remove max link count info display during driver init
+Date: Tue, 23 Apr 2024 09:44:21 +0300
+Message-ID: <20240423064428.8289-3-almaz.alexandrovich@paragon-software.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240423064428.8289-1-almaz.alexandrovich@paragon-software.com>
+References: <20240423064428.8289-1-almaz.alexandrovich@paragon-software.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,40 +52,30 @@ Content-Type: text/plain
 X-ClientProxiedBy: vobn-exch-01.paragon-software.com (172.30.72.13) To
  vdlg-exch-02.paragon-software.com (172.30.1.105)
 
-v1->v2:
-Here is a reworked series of patches with corrected formatting and layout:
-- two patches have been removed for finalization;
-- proper commit messages were added;
-- important patches have been moved to the beginning of the series
-(refactoring at the end).
+Removes the output of this purely informational message from the
+kernel buffer:
 
-This series contains various fixes and refactoring for ntfs3.
-Fixed problem with incorrect link counting for files with DOS names.
+	"ntfs3: Max link count 4000"
 
-Konstantin Komarov (9):
-  fs/ntfs3: Taking DOS names into account during link counting
-  fs/ntfs3: Remove max link count info display during driver init
-  fs/ntfs3: Missed le32_to_cpu conversion
-  fs/ntfs3: Check 'folio' pointer for NULL
-  fs/ntfs3: Use 64 bit variable to avoid 32 bit overflow
-  fs/ntfs3: Use variable length array instead of fixed size
-  fs/ntfs3: Redesign ntfs_create_inode to return error code instead of
-    inode
-  fs/ntfs3: Always make file nonresident on fallocate call
-  fs/ntfs3: Mark volume as dirty if xattr is broken
+Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Cc: stable@vger.kernel.org
+---
+ fs/ntfs3/super.c | 2 --
+ 1 file changed, 2 deletions(-)
 
- fs/ntfs3/attrib.c  | 32 ++++++++++++++++++++++++++++++++
- fs/ntfs3/file.c    |  9 +++++++++
- fs/ntfs3/fslog.c   |  5 +++--
- fs/ntfs3/inode.c   | 46 ++++++++++++++++++++++++++--------------------
- fs/ntfs3/namei.c   | 31 ++++++++-----------------------
- fs/ntfs3/ntfs.h    |  2 +-
- fs/ntfs3/ntfs_fs.h | 10 +++++-----
- fs/ntfs3/record.c  | 11 ++---------
- fs/ntfs3/super.c   |  2 --
- fs/ntfs3/xattr.c   |  5 ++++-
- 10 files changed, 90 insertions(+), 63 deletions(-)
-
+diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
+index 9df7c20d066f..ac4722011140 100644
+--- a/fs/ntfs3/super.c
++++ b/fs/ntfs3/super.c
+@@ -1804,8 +1804,6 @@ static int __init init_ntfs_fs(void)
+ {
+ 	int err;
+ 
+-	pr_info("ntfs3: Max link count %u\n", NTFS_LINK_MAX);
+-
+ 	if (IS_ENABLED(CONFIG_NTFS3_FS_POSIX_ACL))
+ 		pr_info("ntfs3: Enabled Linux POSIX ACLs support\n");
+ 	if (IS_ENABLED(CONFIG_NTFS3_64BIT_CLUSTER))
 -- 
 2.34.1
 
