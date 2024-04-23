@@ -1,101 +1,145 @@
-Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12CDF18E28;
-	Tue, 23 Apr 2024 13:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF164135A61
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 13:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713879445; cv=none; b=Nk/+eIZj65NO31IqTiMbLb/pWQVZcmD0w/gEE6tFl9axJGnoyaKftHYs/Q3GliJojMD/LX2kMp+IAqxin8ubcmpCiHZJajDcYOsHVwVeYLHFFezcXm0MGSBav/7cJvTucyr6rdEj2lZ2NmU3UCWMjkQoahRvGso0dDxj5t94i0c=
+	t=1713879481; cv=none; b=fLrhqycjjGbLgjhCnHPdwQ3KOgBbTojQVzK4qAIq2Q0qPZe1uxxuOAE8uuncpmAWEPNzAVMdXfWx0xJzg2Z1NX0nQAcInJP4EAh+lB63BFGRb+UvTDC6gmB5ozh2gPnOI/2P5YSGaSq2xGYMXgfpzi4rJXNm9W2/e1fBl0unE5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713879445; c=relaxed/simple;
-	bh=dsVKS75rk/XJ1PdxuK8KFQuKjzQDb/YS3gKI282VATA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fIcPlJaTuecphgYN33QcYIgn8yLTZ7z22gKdg6IhqcAuH8q12FvZ5bpbB483uWUG8j3SyORb5AQvevpvSYB3YLIsDPdVbMc7coZ6wnegUk9DwAuOHD6e3xkJ2XOpJxaJJf0vgNBau2RsuHtWOmdvQJF5LbAX4LGuqMYAAGpCLJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=OB7MF+1r; arc=none smtp.client-ip=52.95.48.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="OB7MF+1r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1713879444; x=1745415444;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=QNgZ08cu6G7jRe5L0bfia3hVc4v0QPDb5H9DVfDn474=;
-  b=OB7MF+1rpTQrSRAlt1oqA8CN5W/fG10eNUQSGUKmC6zJSs8MMcaafpdu
-   iwvUMLE38w3SfmlXSBXTttfvQaGwmxj460GFnzoW5K5GIkkokQo2G66yj
-   IGu0h099DXeHcncMlF6M7lth5Q1Yl21vRF1iSqyctbp7VqfNFcuN/qRTx
-   Y=;
-X-IronPort-AV: E=Sophos;i="6.07,222,1708387200"; 
-   d="scan'208";a="391891265"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 13:37:21 +0000
-Received: from EX19MTAEUA002.ant.amazon.com [10.0.10.100:14814]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.1.110:2525] with esmtp (Farcaster)
- id 99e54c7e-3d8e-4df9-a177-c498b08e7836; Tue, 23 Apr 2024 13:37:20 +0000 (UTC)
-X-Farcaster-Flow-ID: 99e54c7e-3d8e-4df9-a177-c498b08e7836
-Received: from EX19D002EUC001.ant.amazon.com (10.252.51.219) by
- EX19MTAEUA002.ant.amazon.com (10.252.50.126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 23 Apr 2024 13:37:20 +0000
-Received: from EX19MTAUWA001.ant.amazon.com (10.250.64.204) by
- EX19D002EUC001.ant.amazon.com (10.252.51.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 23 Apr 2024 13:37:19 +0000
-Received: from dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com
- (10.253.65.58) by mail-relay.amazon.com (10.250.64.204) with Microsoft SMTP
- Server id 15.2.1258.28 via Frontend Transport; Tue, 23 Apr 2024 13:37:19
- +0000
-Received: by dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com (Postfix, from userid 23002382)
-	id BCAB820D4A; Tue, 23 Apr 2024 13:37:18 +0000 (UTC)
-From: Hagar Hemdan <hagarhem@amazon.com>
-To:
-CC: Maximilian Heyne <mheyne@amazon.de>, Pratyush Yadav <ptyadav@amazon.de>,
-	Norbert Manthey <nmanthey@amazon.de>, <stable@vger.kernel.org>, Hagar Hemdan
-	<hagarhem@amazon.com>, Ard Biesheuvel <ardb@kernel.org>,
-	<linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] efi: libstub: only free priv.runtime_map when allocated
-Date: Tue, 23 Apr 2024 13:36:33 +0000
-Message-ID: <20240423133635.19679-1-hagarhem@amazon.com>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1713879481; c=relaxed/simple;
+	bh=69jnoKvvCDmMn/lAjGuLECv91VIAAt67LYlGv0q5hNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BwfcsRdQcTt3EXMrSHo+p6m3VuRWyQtSsXrkCLNs/WDduNVGMrMa0v82WvpA3dguXXFMe4YlP+mCyRc9iP5g8iLl1YaOViPqGLQOZfndxskcIuyANmFB80yeep0iE5oqL6uU9Tc9Wf4V0gjzg8naWbpUaXsI9U8F8y9qMA4V72Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mgr@pengutronix.de>)
+	id 1rzGLJ-0000Fg-JC; Tue, 23 Apr 2024 15:37:53 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mgr@pengutronix.de>)
+	id 1rzGLI-00Du9u-IJ; Tue, 23 Apr 2024 15:37:52 +0200
+Received: from mgr by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mgr@pengutronix.de>)
+	id 1rzGLI-009tVB-1Z;
+	Tue, 23 Apr 2024 15:37:52 +0200
+Date: Tue, 23 Apr 2024 15:37:52 +0200
+From: Michael Grzeschik <mgr@pengutronix.de>
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] usb: dwc3: gadget: check drained isoc ep
+Message-ID: <Zie5sN473m2rgNTK@pengutronix.de>
+References: <20240307-dwc3-gadget-complete-irq-v2-1-8c5e9b35f7b9@pengutronix.de>
+ <20240402230555.xgt5uilc42diyr4m@synopsys.com>
+ <20240402231848.4hzzrxegjrcmdab2@synopsys.com>
+ <20240404002906.wk6xbz2wp2tf2xwn@synopsys.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="M6Szu+DUfPV4wPeQ"
+Content-Disposition: inline
+In-Reply-To: <20240404002906.wk6xbz2wp2tf2xwn@synopsys.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mgr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-priv.runtime_map is only allocated when efi_novamap is not set.
-Otherwise, it is an uninitialized value.
-In the error path, it is freed unconditionally.
-Avoid passing an uninitialized value to free_pool.
-Free priv.runtime_map only when it was allocated.
 
-This bug was discovered and resolved using Coverity Static Analysis
-Security Testing (SAST) by Synopsys, Inc.
+--M6Szu+DUfPV4wPeQ
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: f80d26043af9 ("efi: libstub: avoid efi_get_memory_map() for allocating the virt map")
-Signed-off-by: Hagar Hemdan <hagarhem@amazon.com>
----
- drivers/firmware/efi/libstub/fdt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hi Thinh,
 
-diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
-index 70e9789ff9de..6a337f1f8787 100644
---- a/drivers/firmware/efi/libstub/fdt.c
-+++ b/drivers/firmware/efi/libstub/fdt.c
-@@ -335,8 +335,8 @@ efi_status_t allocate_new_fdt_and_exit_boot(void *handle,
- 
- fail:
- 	efi_free(fdt_size, fdt_addr);
--
--	efi_bs_call(free_pool, priv.runtime_map);
-+	if (!efi_novamap)
-+		efi_bs_call(free_pool, priv.runtime_map);
- 
- 	return EFI_LOAD_ERROR;
- }
--- 
-2.40.1
+On Thu, Apr 04, 2024 at 12:29:14AM +0000, Thinh Nguyen wrote:
+>On Tue, Apr 02, 2024, Thinh Nguyen wrote:
+>> On Tue, Apr 02, 2024, Thinh Nguyen wrote:
+>> > My concern here is for the case where transfer_in_flight =3D=3D true a=
+nd
+>>
+>> I mean transfer_in_flight =3D=3D false
+>>
+>> > list_empty(started_list) =3D=3D false. That means that the requests in=
+ the
+>> > started_list are completed but are not given back to the gadget driver.
+>> >
+>> > Since they remained in the started_list, they will be resubmitted again
+>> > on the next usb_ep_queue. We may send duplicate transfers right?
+>
+>Actually, since the requests are completed, the HWO bits are cleared,
+>nothing is submitted and no duplicate. But since the requests are not
+>given back yet from the started_list, then the next Start_Transfer
+>command will begin with the TRB address of the completed request
+>(HWO=3D0), the controller may not process the next TRBs. Have you tested
+>this scenario?
+>
+>> >
+>> > You can try to cleanup requests in the started_list, but you need to be
+>> > careful to make sure you're not out of sync with the transfer completi=
+on
+>> > events and new requests from gadget driver.
+>> >
+>
+>Was the problem you encounter due to no_interrupt settings where the
+>it was set to the last request of the uvc data pump?
+>
+>if that's the case, can UVC function driver make sure to not set
+>no_interrupt to the last request of the data pump from the UVC?
 
+Actually no. What I want to do is to ensure that the dwc3 stream
+is stopped when the hardware was drained. Which is a valid point
+in my case. Since we are actually potentially enqueueing new request
+in the complete handler, be it zero length or real transfers.
+
+Calling kick_transfer on an drained hw will absolutely run into
+missed isocs if the irq thread was called late. We saw this on real hardwar=
+e,
+where another irq_thread was scheduled with the same priority as the
+dwc3 irq_thread but was running so long that the HW was running dry in
+between the hw irq and the actual dwc3_irq_thread run.
+
+Michael
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--M6Szu+DUfPV4wPeQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEElXvEUs6VPX6mDPT8C+njFXoeLGQFAmYnuawACgkQC+njFXoe
+LGT/DxAAwz6KulNc5KIUpueaEMu7WCq3l/4Bf+MoO37W9b1F8VVNE2jwZaLn/8iO
+rYUEIyJ6yqeiB4PrT3oBUwmqXQ39xMzzPqeFYwNA9WOa9e2vBVNE9ZesNpZVra/Q
+uNEoMVN56nWz2kIRLhl5egV5t96GGQMI4zi6UQx8OHXK6zKbhJcNh5zrDZT6gbRi
+X2MDOKF2TS9jrJK8TyU+gtbyjPdcrgmKfhv/XYmk3KaMBnVMx9EFoevQ+n2Vl6Nn
+51qkbjEooQ4uma+IitEI6tLjaytCOq57JPkMOUqArzXyhDyAhzmo8Lj0RDAhfFus
+TFk1TP6ee30tT4+Wvn6x8zD4FdOwqhYhaDfqRhmwdTGuAZ4bjGbsYhn/IT3PSNGF
+VyA1XiBqd+aqqBoxqTqMUChZ/uXjxqnJSjryCdwkNjHbxxkjoA9WWPE3QyBZXewn
+oEKaNC7G34SiyqubGuLinDBD9Q6gbtNSxCSxCdAEOWKUfI6NVjwr9Dve7dhpTlAu
+EqfJJu+Ittz3kB5qddDV43OVc7tpv2Tl6t04gyIuiNyoWxY0InHVJUhYW8hXFle7
+EaRn10m7ApNsKmF3Xmixw1uO6qp/Op4F2lvFIgNgkOowrm+zLWUULeR8RFx/HvWR
+b5cfRa47S0aUYmloKE93BoH7hN5S/JQ8fNzT+C3ljMr/eL3cEt0=
+=kvaR
+-----END PGP SIGNATURE-----
+
+--M6Szu+DUfPV4wPeQ--
