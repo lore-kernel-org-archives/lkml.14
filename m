@@ -1,28 +1,28 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503471C2AD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38EB1C2BD;
 	Tue, 23 Apr 2024 03:46:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713844012; cv=none; b=DtFbFroFsD+PdOFkGxt2PZPueHpjjTlH1LvNEiGERMEbXA2Ri+QDaYgP7dQ8OWKgKaCYoCzUaiO2Wf6nnbaanDjvztaJN+AiEEZyrOd0q7wfDowv6cbGp1AVROg556IRyB9iGiAsLoOKEey4WkE2YL6TXh15fR62kQDqQ8+QVjU=
+	t=1713844012; cv=none; b=LbN/3qezQm08J6r+YR/0avuvqgkHRDeEW/w/9bSDN5pUaqEcXfJVvEfDzt7GIs8/PK6uimcmbBMP6vvzI1oNG15vRQDvpvaHKxH/WDqosq15Cb5LJuYAj4CCvPe+/F3OLZRtlTZPtu9wUoEEOMv5yq5I/EAAzSnjH67YdehMpMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713844012; c=relaxed/simple;
-	bh=Oyn7Q/Z8KOp/GJK2P/SS60hLeCHJaTrxuzeGkcub8ds=;
+	bh=WQ05eBBY4p5S3lvd/kNS8zDpZ4FPaOvykDTMjRgeaeY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I2Uk+6O8fXzOIIQssxv239/pJeJP154RqolkD5vW+ZC4DHWaokmpygLIah1iOf94A7/Dc1AqUZiNqF3BenaJv/aZw0AfOCC3logrgWaf4BtTseEeRtwAP/Ny+Gima4oglZsWSqaQQTBpI43zb/gj/z3ql+xHPLOZ5PYzZBQZQAM=
+	 MIME-Version; b=T3gWwbGxCHkdnoApGTeHGyKm37Yl5yPhxCnRTDlFYf/HekGPj+pKcLjcKBnXWSHChT3LA3DrYBI0ZR6ESIkHuu4EMb/aTWplCnqPuv0hoyaMB2kQpmKrFaAOBLz0APiMq4O6FNR3r8+Gpip+Al6lcCJhhvBD6eEqdjY4lzdrTXk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VNp2V2Rbpz4f3kpB;
-	Tue, 23 Apr 2024 11:46:42 +0800 (CST)
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VNp2W1RqRz4f3kpS;
+	Tue, 23 Apr 2024 11:46:43 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 283661A016E;
-	Tue, 23 Apr 2024 11:46:47 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 06BF01A0179;
+	Tue, 23 Apr 2024 11:46:48 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP2 (Coremail) with SMTP id Syh0CgA3Ww4kLydmKkDYKw--.11241S5;
-	Tue, 23 Apr 2024 11:46:46 +0800 (CST)
+	by APP2 (Coremail) with SMTP id Syh0CgA3Ww4kLydmKkDYKw--.11241S7;
+	Tue, 23 Apr 2024 11:46:47 +0800 (CST)
 From: Kemeng Shi <shikemeng@huaweicloud.com>
 To: akpm@linux-foundation.org,
 	willy@infradead.org,
@@ -35,9 +35,9 @@ Cc: dsterba@suse.com,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-fsdevel@vger.kernel.org
-Subject: [PATCH v5 3/5] writeback: fix build problems of "writeback: support retrieving per group debug writeback stats of bdi"
-Date: Tue, 23 Apr 2024 11:46:41 +0800
-Message-Id: <20240423034643.141219-4-shikemeng@huaweicloud.com>
+Subject: [PATCH v5 5/5] writeback: rename nr_reclaimable to nr_dirty in balance_dirty_pages
+Date: Tue, 23 Apr 2024 11:46:43 +0800
+Message-Id: <20240423034643.141219-6-shikemeng@huaweicloud.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20240423034643.141219-1-shikemeng@huaweicloud.com>
 References: <20240423034643.141219-1-shikemeng@huaweicloud.com>
@@ -48,88 +48,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgA3Ww4kLydmKkDYKw--.11241S5
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cw13JrWUWryrCFy8Cw47twb_yoW8WF43p3
-	W3Gw40kw1UZF9FgFZxCayUWr98tw45ta47XFyDArW3t3WFqrnrGFyfGay8Zry7ZF93Jay3
-	ZanYvryxJrZFyr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUWw
-	A2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
-	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
-	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFYFCUUUUU
+X-CM-TRANSID:Syh0CgA3Ww4kLydmKkDYKw--.11241S7
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFyxZr1fGF17CrW8WFWkXrb_yoW8Cr15pF
+	ZrGw1jkr4xtayavrn3CFWq9rZxtw48tF43JryUCw4SvwsrWF1UKFyI9ry0vF1xAa4fJrWa
+	vws0qrykJw1vkrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
+	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
+	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267
+	AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7
+	xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Y
+	z7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY
+	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU13l1DUUUUU==
 X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-Fix two build problems:
-1. implicit declaration of function 'cgroup_ino'.
-2. unused variable 'stats'.
-
-After this fix, No build problem is found when CGROUPS is disabled.
-The wb_stats could be successfully retrieved when CGROUP_WRITEBACK is
-disabled:
-cat wb_stats
-WbCgIno:                    1
-WbWriteback:                0 kB
-WbReclaimable:         685440 kB
-WbDirtyThresh:      195530960 kB
-WbDirtied:             691488 kB
-WbWritten:               6048 kB
-WbWriteBandwidth:      102400 kBps
-b_dirty:                    2
-b_io:                       0
-b_more_io:                  0
-b_dirty_time:               0
-state:                      5
-
-cat wb_stats
-WbCgIno:                    1
-WbWriteback:                0 kB
-WbReclaimable:         818944 kB
-WbDirtyThresh:      195527484 kB
-WbDirtied:             824992 kB
-WbWritten:               6048 kB
-WbWriteBandwidth:      102400 kBps
-b_dirty:                    2
-b_io:                       0
-b_more_io:                  0
-b_dirty_time:               0
-state:                      5
+Commit 8d92890bd6b85 ("mm/writeback: discard NR_UNSTABLE_NFS, use
+NR_WRITEBACK instead") removed NR_UNSTABLE_NFS and nr_reclaimable
+only contains dirty page now.
+Rename nr_reclaimable to nr_dirty properly.
 
 Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
 ---
- mm/backing-dev.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ mm/page-writeback.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index 6ecd11bdce6e..e61bbb1bd622 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -172,7 +172,11 @@ static void wb_stats_show(struct seq_file *m, struct bdi_writeback *wb,
- 		   "b_more_io:         %10lu\n"
- 		   "b_dirty_time:      %10lu\n"
- 		   "state:             %10lx\n\n",
-+#ifdef CONFIG_CGROUP_WRITEBACK
- 		   cgroup_ino(wb->memcg_css->cgroup),
-+#else
-+		   1ul,
-+#endif
- 		   K(stats->nr_writeback),
- 		   K(stats->nr_reclaimable),
- 		   K(stats->wb_thresh),
-@@ -192,7 +196,6 @@ static int cgwb_debug_stats_show(struct seq_file *m, void *v)
- 	unsigned long background_thresh;
- 	unsigned long dirty_thresh;
- 	struct bdi_writeback *wb;
--	struct wb_stats stats;
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index 3bb3bed102ef..44df5c899a33 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -1694,7 +1694,7 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+ 	struct dirty_throttle_control * const mdtc = mdtc_valid(&mdtc_stor) ?
+ 						     &mdtc_stor : NULL;
+ 	struct dirty_throttle_control *sdtc;
+-	unsigned long nr_reclaimable;	/* = file_dirty */
++	unsigned long nr_dirty;
+ 	long period;
+ 	long pause;
+ 	long max_pause;
+@@ -1715,9 +1715,9 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+ 		unsigned long m_thresh = 0;
+ 		unsigned long m_bg_thresh = 0;
  
- 	global_dirty_limits(&background_thresh, &dirty_thresh);
+-		nr_reclaimable = global_node_page_state(NR_FILE_DIRTY);
++		nr_dirty = global_node_page_state(NR_FILE_DIRTY);
+ 		gdtc->avail = global_dirtyable_memory();
+-		gdtc->dirty = nr_reclaimable + global_node_page_state(NR_WRITEBACK);
++		gdtc->dirty = nr_dirty + global_node_page_state(NR_WRITEBACK);
+ 
+ 		domain_dirty_limits(gdtc);
+ 
+@@ -1768,7 +1768,7 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+ 		 * In normal mode, we start background writeout at the lower
+ 		 * background_thresh, to keep the amount of dirty memory low.
+ 		 */
+-		if (!laptop_mode && nr_reclaimable > gdtc->bg_thresh &&
++		if (!laptop_mode && nr_dirty > gdtc->bg_thresh &&
+ 		    !writeback_in_progress(wb))
+ 			wb_start_background_writeback(wb);
  
 -- 
 2.30.0
