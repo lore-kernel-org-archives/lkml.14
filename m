@@ -1,357 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65EE69944;
-	Tue, 23 Apr 2024 11:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713870270; cv=fail; b=cqB5teHkrl3mQ/GV2diWGWEoq5rPwP3J8RhCHjV+CNKQeRracuftWLVk/F1RLbCmYbonKjqQRkp4mQoM5p/jV/Fgo0SgGlJjTUgM/Bce0e43CSRmVD8k9tnuQUIAA2FN/oyWZLxsvU1zfygntQYFJZCbL5cW1EnCMIMW2/JGYb8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713870270; c=relaxed/simple;
-	bh=4ITnjLOnYzOcZ1r8dhLNDHSLuBzqekvsArwLX5T9kas=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Ob94pvSNU32i1w1Y9ykYKpaFU30/4A+ZGssA+ZrawMlt/M+yULY+SuAczGE2Xs1SJUY2/xiv/RoqZIHzZSDX4Fq17Ji//NKK0Hal8wPhMM6mktJZoMrNr/L1fdDcYZjGn/QkIgM3Rs4Mcbpm9L9v72iJ9MSaYV6c/GzJVNxRa5o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G1aVO1+L; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E7F4691
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713870314; cv=none; b=WqiZFG9mhD0cTmUPo5XJqS7WkJS14G9R1XcRWQcyFuI4SmYABi0aluwCvnMJnVUJkZvBBMCO0gIyiBIpy8CKx8tppOoqf/RWUAwNIk4AZYiD9EFohhr+W2ZbEMtsY3FmBwOCy3OUA0rlmNwHPXLZjiDsM6KJQGQ7eqMNPNwJ4Gs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713870314; c=relaxed/simple;
+	bh=w1uSIpY9FpVcmDza1G4oH4ZkDqM7XGjOMrKhtpxXzEc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JXvHEZwtjySwl/j75I9RD3WLKQqVhi0qG3IKe0zOTDLLbAfpBricvSs3agMGb58kR5nzz00alnd3hXaJZd2bYC7t0bPviTj+d/SWBuckAPJrR4vkOP0Q2ZzYQrzGBc0WpoL/SgD4tRDQylnZXezQ9jKGcgTDMzL4V5imGmOcAsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZhzegNxe; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G1aVO1+L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713870267; x=1745406267;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=4ITnjLOnYzOcZ1r8dhLNDHSLuBzqekvsArwLX5T9kas=;
-  b=G1aVO1+L+i/2w4PJFJeob8C0D8vmnCgbxbfa29Dns3GZppIBFovJvWid
-   bo7KkVeML/u69YEEy4Cu9ewpetD/ogu6Ix/esICXMDHQ16I32VGRLQ3TG
-   byTUlQtt/fHQtn1DXrMVCvVBNbaGc2Y00ztGkTwENRB1sBljVkf2awcf4
-   AYKHzNvh+iy6tlC1ec5mvWlJQAibl72c5KgEhOJWvFF95h61UpP7ytTgj
-   0zxlVMf8WnE6JSmoY8ZqaYaLOm38fUgVO4RPaAHHg8ZAGOm3OG3LvaHQ2
-   2VRTASoORym4vN6pHFWMnOAeKH5uoGGPavDkMSI75qrjMnFo5ax34EjaQ
-   A==;
-X-CSE-ConnectionGUID: GuEBeIqNSx+8JTau4JYThA==
-X-CSE-MsgGUID: 0WSm7JiMQc2MCOTWF+iuZA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="9617627"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="9617627"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 04:04:27 -0700
-X-CSE-ConnectionGUID: UwWsaRD3R9+Zsx2Y+6KYnw==
-X-CSE-MsgGUID: gQfpgJz3Q1u9EQQk6ALwpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="29003466"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 23 Apr 2024 04:04:27 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 23 Apr 2024 04:04:26 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 23 Apr 2024 04:04:26 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 23 Apr 2024 04:04:26 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 23 Apr 2024 04:04:26 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Yr9jsS1WCdyCJNGhFA//5e0ild98jRbhlYQDBBjSmNOmkKLOIZOZPnPqyDph9N5tUuEP3rQ1y2tOiEhdtYSfrmzsaGlU6qfxe55vW3i+/yVxTkiPu/O4PGE53H0m5Tw2GMbbrKMQXFkR6HHYdZo2pSI3MdovqlNfiwXjx0EBxzfLgzEC5003Kqhf6dI+fszeSIjm3km2emy3N6ow4ubl2S7vIOsGUAYFrx2X4ZZBhBwM335JXkFIfidn8CvcVhxZWML4OYf8m1UMYIsbfPTb7cS8R/+mwrQZrVzfwHOvyrUPv0ebxq1YIPpJOC+IX3BZ3O6T+b95BXS8dM5rg504YA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DQyqUD70jiP3vIFeE3UjmhQ7MvxlcdigmO8RNB3CML0=;
- b=URxxdraQl2iasAyOL8oHSA/eqfUDP9UrExAs4Q/+L+70ax454xUYmi+UKSazbv09kSv9216dvGB/Gg2kFauGE1tdU1LwkPo+1QTE9J1141TjS+8DXMNg513yYVFEO1rlIXph+89BECBTawn+ZkTsDi4Uh8dOYN1GDOIOo2JjmKgtiHRKaiOiqAHKeKkKOJLhRvkP2o+T+EGPHnb1dBPy/Jyv8Tbv01VTbxO737clIE6uh2eVpyeaMithMTf+TleuxPnB6tpqtVMQblELL/wlwm/txJ7QAs2wXSyN7zZIAhoqEZG2xMnfr3aEmUzdT+3iyAItXWy6j+trSB+/rfPNGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DM6PR11MB4657.namprd11.prod.outlook.com (2603:10b6:5:2a6::7) by
- CY8PR11MB7084.namprd11.prod.outlook.com (2603:10b6:930:50::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7519.22; Tue, 23 Apr 2024 11:04:22 +0000
-Received: from DM6PR11MB4657.namprd11.prod.outlook.com
- ([fe80::7d7c:9a51:767e:730a]) by DM6PR11MB4657.namprd11.prod.outlook.com
- ([fe80::7d7c:9a51:767e:730a%3]) with mapi id 15.20.7519.020; Tue, 23 Apr 2024
- 11:04:22 +0000
-From: "Kubalewski, Arkadiusz" <arkadiusz.kubalewski@intel.com>
-To: Jiri Pirko <jiri@resnulli.us>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"vadim.fedorenko@linux.dev" <vadim.fedorenko@linux.dev>,
-	"davem@davemloft.net" <davem@davemloft.net>, "rrameshbabu@nvidia.com"
-	<rrameshbabu@nvidia.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
-	"kuba@kernel.org" <kuba@kernel.org>, mschmidt <mschmidt@redhat.com>,
-	"Kitszel, Przemyslaw" <przemyslaw.kitszel@intel.com>
-Subject: RE: [PATCH net] dpll: fix dpll_pin_registration missing refcount
-Thread-Topic: [PATCH net] dpll: fix dpll_pin_registration missing refcount
-Thread-Index: AQHakpL1PxeMlLmpYEyEiHJJwvzNZLF0TZAAgAFoi2A=
-Date: Tue, 23 Apr 2024 11:04:22 +0000
-Message-ID: <DM6PR11MB465781953B5600F67C96AA809B112@DM6PR11MB4657.namprd11.prod.outlook.com>
-References: <20240419194711.1075349-1-arkadiusz.kubalewski@intel.com>
- <ZiZmpg7GF99Ihxk0@nanopsycho>
-In-Reply-To: <ZiZmpg7GF99Ihxk0@nanopsycho>
-Accept-Language: pl-PL, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM6PR11MB4657:EE_|CY8PR11MB7084:EE_
-x-ms-office365-filtering-correlation-id: 1b2da3bc-9d12-49dc-aa1a-08dc6385219e
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|1800799015|376005|366007|38070700009;
-x-microsoft-antispam-message-info: =?us-ascii?Q?bVmH10exIu2GSx1URlIQAC55Ym/Y2g4SsJK8733KvSYviHBIzJ59GyKZnyjJ?=
- =?us-ascii?Q?/Obsn6/pbf+Vj8Vj6KWTqb1Pj9OtQ0CuIKSaHyg+KWeMglxHyR5W9DD2Y5Vj?=
- =?us-ascii?Q?Vtipui9tFuz/N8RnAFSxguAfOXtSEo5dkkv5Pg8jtqeaDBrlcANFwqav9FsR?=
- =?us-ascii?Q?pV2w/9sHkSpscM8RpbQ5PB8lFUzAXO9Us61iAedSJevFjHPbwy44W+QRBNXn?=
- =?us-ascii?Q?7KwqCIpGqg0RN8RuN1L9gJH6DXQoo0x/3Y+O6Yhm3tlzQkIRfEOXFgMqQ0La?=
- =?us-ascii?Q?BH8u6zy5rk9fRgkGNqGbYzeIE0qoLZnjnEkCe5+VgDSn5eZ+8fze0+z/Ekch?=
- =?us-ascii?Q?aUdN1krr6WelLCfO63XuXvVb+RGMzj8ay1PIsUL7p1j6d8VuvHC+90Iy3xAm?=
- =?us-ascii?Q?oRydvMmjg0BFPj9c+Stwd4w+XWX4dUPKv+lL4U7sxq//OimSigN+thZuJPyv?=
- =?us-ascii?Q?RclwOIBn0x/ETBw8Okk/JgDHD6YnmRG2beuf6189a3CryZQcnYntx+83osB9?=
- =?us-ascii?Q?hh+mhYsCL961Z28Y5Hp4Dkc1qUIJS54mAYI/Px9zDYO9jt8QrxTPPU3e+ovG?=
- =?us-ascii?Q?j5jJ7hOm80n6hODn9dxMZa+xakYpQtvSjeJ1qxB96vgD6IH3WijbplMlNyNe?=
- =?us-ascii?Q?x+CgjrevFRLFtZTHvipFxpguU7tDkFKcLHYPT6ZyTyb9WSCKRwZSorpZDMDn?=
- =?us-ascii?Q?2fXgOnOhQ4X5uN/bFr5AgadTuD44oEvcMGYtxlSYEQxZ8OYS61e7mnrkUAue?=
- =?us-ascii?Q?3z727RfHC4vauFFyu/buM6LwWYrCptdDVlfGPxPG0PZgm1q0H381Yz7N/MM2?=
- =?us-ascii?Q?3TfQsDaHx3lXSE0rCQKQ4GFBq96IkdUPuu0V5x7LxrQcesJzv2JD81cFfrUs?=
- =?us-ascii?Q?pOE84UblcyfHkVAmYZzWcrJQtEVpCM79zw5YP6AB+n68W/JFMzPTf+0Hgh1x?=
- =?us-ascii?Q?WO3qIZxjDch8y2zOpIJ274McsbFAXpT1WNWTbyG2Y1J9/62MjqNqS4FglIWn?=
- =?us-ascii?Q?7rEqGJ5EZb62ZSU25OAA4Gra0IFFZqgV39hqWFJS2/BdSPNKo6+/MEVIuXkl?=
- =?us-ascii?Q?nMHuPdoeG+fuhGWUvZhIZb1jHjNexEap/063LAMTqayyOmxKTq188NiPkI8i?=
- =?us-ascii?Q?2JBWH1FUrbsvc0NTxT6+NbnrBVJx05dH+A9AaKe8kfNucM5aPSPQWUMclxK1?=
- =?us-ascii?Q?0NfHlaQd9mxKr2yJSk6aCvPSPppM7DN/clVMh+7wBdDasNrZmy+Q0YlkZY2R?=
- =?us-ascii?Q?Jw+xcqi3KxSWx1voJ2Gb7IafGJ75O5/ujd0N0jnyDMX7/2pEsamhCywZxQAJ?=
- =?us-ascii?Q?GAh552FLn3ehM80QqV1pm7NbfUcp6ORHSedRXxkOFvvfuA=3D=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4657.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?thlJUYVlrZbCAhIKCwTet1k3aUVf3XQvLKi2VF657r5v5M3mWwkhneooMQn2?=
- =?us-ascii?Q?j6GwT/btaUcEzJn/QMBrtcMxY31T6sdC+bHIhk7rEj+sjI16SPHKtbeblKBl?=
- =?us-ascii?Q?+7Y2L1v9/E4T8GhLziiXqMeLtjHUePg6FTvpT8tbkqby13eOvyY+kZxvWiao?=
- =?us-ascii?Q?45Okp2MwI2DcOWL7Mznbdo28qO7gz6d6AOEvfbD08F6hl0OUy3zdHv9mr+9J?=
- =?us-ascii?Q?kJuqymjlOc7E5hvcYDmluGYUi7IGfEiCs3AP754z0EPrn8gChy6Gw1ZfgSVR?=
- =?us-ascii?Q?/lT67jh+xe5Xa2ef/PKfn8EpBkV20gvdH9kPogjQ6QU5wgYwM08d0j6UR4gf?=
- =?us-ascii?Q?sn6FkXSTGacEfvl9kS7ndl3YU5gFMi6ZE6S9qiWdYp3UxPDgMAsZ1mN91AbP?=
- =?us-ascii?Q?yNllO9mpYByYHeCT8IqMMfDhy5RI8O3KDDv8FY/OMlX3x8eegnW7rl1X5dzX?=
- =?us-ascii?Q?/wd2y+FMSdc1cu9rTl9tukUT2CHh5mQdU6CXXgA9+X9hdZ3BqZHyhmcDIyXa?=
- =?us-ascii?Q?iWOAslRMYD/gO+weBBcK6IVp2IU0t1inpcy6qYP/UB/kWDOqnDFh1oKyTZP3?=
- =?us-ascii?Q?VnOgCwQNZN3ZG6pGRWhm7OwZA9iNXOZ+SWEKqNN0OjvHKBRHDQ6V3AD1RN1w?=
- =?us-ascii?Q?pUFeQZqZuRZm4V7u7EQKldx0Tt1sv7D5STDR2mIKVae4wQhY6GREcmD0PxxM?=
- =?us-ascii?Q?C0pltwhgP9qjicHD0PK55NwkK+TOsDmMSYNUCa/7cM8YKy4F0uXQOmqufuy9?=
- =?us-ascii?Q?A1kfQm6lcmelb7Ckk77UgBpTU062SbtPj7Dz54AJbZ6J2YJ7KCrS0hrgOb+t?=
- =?us-ascii?Q?iJ2sk6nzszdJGYMZAiITbYAkRfPsPOf7KD9csFZO9u3kJ4WBlZmwJ8T+kmy1?=
- =?us-ascii?Q?vc6jcA3MgIoAPMB7rUUZryUQ/zzOOK9GbHbzuMF2TnQVjOjEQiMnc77RzouN?=
- =?us-ascii?Q?icy48h5fr4QPhi/uJgZjmgMh3TYhyEvkmJMFWJgCT79Gg33b1uZOciK6YyIR?=
- =?us-ascii?Q?vKl0vYcPAAWtUGU6XGReAjVLo4on9tKaKltTDIle4gqibMkvdY3OWvt3G3VT?=
- =?us-ascii?Q?ntNy+L1Ka30+qjwAxQR8UTloybviVKZFZKwo1qG+uj+OfW2yXwvLxZkrcc++?=
- =?us-ascii?Q?t1Y8FFNiOXd5GrGCZoUX02ln5kciPUyZ2PYexBKudYWqpV8b1pa5pgio/aHf?=
- =?us-ascii?Q?0lURG2Q0mY1rk7N+BXp8vsprKPvvsq0cg+4oHcqOUYHJ6uq7+ETowEgOT1yO?=
- =?us-ascii?Q?W+yrQJOrlT7GJpBAkVRGm7xAAeDDg/Zj/t3qefqZW9w8pClLQTQ6Zlg6dFMA?=
- =?us-ascii?Q?HH8s5A4jeIDciMS5emDdO1iUIKR/jawVAU6przNgSbkKEt1AP05t0l8YZl6M?=
- =?us-ascii?Q?gO6P+nf4locM2jnRFzz8U4EZeumFsuOmKKdEZHofu2ylUCPFYPlJ1HN+4Apa?=
- =?us-ascii?Q?6AXeN772C3/3sqVgze/e6w5Ht1TsukrzwdRXoeNuFEu+6cwJtaHTotj5yNEC?=
- =?us-ascii?Q?iy6dOTilO1MHfP2VIM9Uh7WMSeeK4i8q+pB2wqHKc1cEYYxm3z0dOxNfybDS?=
- =?us-ascii?Q?FRFKA2CPieP0h7FAhj6MZAVKg/xvhH6JrFHgGmcrPQhJ2tVAZZG1PiX1MmsF?=
- =?us-ascii?Q?7w=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZhzegNxe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713870312;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=EjKJ4AU8u7PAwlJohTc2cAX1xjzwI5Yp1vDnN6OM75w=;
+	b=ZhzegNxe0pQeIrjw9JYJNR0sPjJq+TAedpHHWq82EBuuvDTGqJCAiZ9153o1bbV/U+Rsp3
+	hPBxH8flb/J2DhVbOwi49gH431kQsWPIOmA3yBrV5/ayI+O/cW4JC1l9/9XIsBaBoI7XPb
+	x9w+PogmJXp7Qdwxr6Kgu5VH/llPDjs=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-628-uNN3C2xkN9OIdh75Thaz0g-1; Tue, 23 Apr 2024 07:05:11 -0400
+X-MC-Unique: uNN3C2xkN9OIdh75Thaz0g-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-34b3fb802ddso788292f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 04:05:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713870310; x=1714475110;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EjKJ4AU8u7PAwlJohTc2cAX1xjzwI5Yp1vDnN6OM75w=;
+        b=lJs6vaovQNlpf49+p75lOAPDrJ3XKJTLrkYDH67DfPKtyWaEHhjmDRbWdn4lU4bJOU
+         IujqMgae9D1QdLJpBvLmcOmgccT3r6UiPeCwks/raMgx7KG96HCr3YxXThVOWMHlFuWF
+         Z9QqCb5qBeNprm7A2kk18dSByCmDeLl4mEWD1nvaiXC14SPdfWsu6g97Jdv/Ya0vJI9A
+         8R4onuMwuH8zgDG6ehojU7jeSTIEOARJUQwHqf9gDM+npYW9faK/f9BWOGq6VC5gqpt4
+         6lsegr2t2qzm0FUo/jzKG1ZF2dR3A9R88MBga1CupBeLhrFkY1PG720+j67CqZPBHymR
+         oDiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUw/0WXJ/BVsCDPkQw3yGmD6gWJv1HTVAndyUq0iJ7Rl6QQAhBTMJtbJm7TMUyOr020CPjeBrlXkt8EYXG5mKDk1wos5OntebAOZiC4
+X-Gm-Message-State: AOJu0YyjgjLQZSfI+/rnKU4gpvk0WF1hKSvoFJD9ISzPBwEERqec4KHB
+	t19UHjPkouWwQvWs6EtmvGn7pK2KCVm2TWOrswbz3StXSQSNR3qlJnyYKzxl+2pMPiKLJkkQqxU
+	N9qaw2mDSQUF4ZTs76lm6tQxCmWRaP6oqt0+MupbHQ0czBWwBLjkF9rtyK48Hsg==
+X-Received: by 2002:adf:fed0:0:b0:33e:76d7:a8ad with SMTP id q16-20020adffed0000000b0033e76d7a8admr8915432wrs.38.1713870309763;
+        Tue, 23 Apr 2024 04:05:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEwlddpYnAMq3cCjUD4VPpibURxlO35eJRB1XNrzQC4o/9df626d5GAoeOUmGMYwbMqsS8C8A==
+X-Received: by 2002:adf:fed0:0:b0:33e:76d7:a8ad with SMTP id q16-20020adffed0000000b0033e76d7a8admr8915407wrs.38.1713870309296;
+        Tue, 23 Apr 2024 04:05:09 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c706:fd00:fb07:92f8:8f0c:6a08? (p200300cbc706fd00fb0792f88f0c6a08.dip0.t-ipconnect.de. [2003:cb:c706:fd00:fb07:92f8:8f0c:6a08])
+        by smtp.gmail.com with ESMTPSA id r7-20020a05600c35c700b0041638a085d3sm23433800wmq.15.2024.04.23.04.05.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 04:05:08 -0700 (PDT)
+Message-ID: <8abcc8aa-473f-4a3c-a528-d32a0c8bfd75@redhat.com>
+Date: Tue, 23 Apr 2024 13:05:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4657.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b2da3bc-9d12-49dc-aa1a-08dc6385219e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2024 11:04:22.5537
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hTJSP7GTRMED4syRrPgJ5Zw5akncXMd9eR8it57lXyT4MtWhPxt/rANDzmJChtd6Eazff9enqGt4LiS7Wg2QMKB+pb9zGA2BQVGH2WyURiY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7084
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/5] add mTHP support for anonymous share pages
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: willy@infradead.org, wangkefeng.wang@huawei.com, 21cnbao@gmail.com,
+ ying.huang@intel.com, shy828301@gmail.com, ziy@nvidia.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1713755580.git.baolin.wang@linux.alibaba.com>
+ <4b998e7d-153f-48cc-a9bb-8c84bb675581@arm.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <4b998e7d-153f-48cc-a9bb-8c84bb675581@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
->From: Jiri Pirko <jiri@resnulli.us>
->Sent: Monday, April 22, 2024 3:31 PM
->
->Fri, Apr 19, 2024 at 09:47:11PM CEST, arkadiusz.kubalewski@intel.com wrote=
-:
->>In scenario where pin is registered with multiple parent pins via
->>dpll_pin_on_pin_register(..), belonging to the same dpll device,
->>and each time with the same set of ops/priv data, a reference
->>between a pin and dpll is created once and then refcounted, at the same
->>time the dpll_pin_registration is only checked for existence and created
->>if does not exist. This is wrong, as for the same ops/priv data a
->>registration shall be also refcounted, a child pin is also registered
->>with dpll device, until each child is unregistered the registration data
->>shall exist.
->
->I read this 3 time, don't undestand clearly the matter of the problem.
->Could you perhaps make it somehow visual?
->
-
-Many thanks for all your insights on this!
-
-Register child pin twice (via dpll_pin_on_pin_register(..)) with two differ=
-ent
-parents but the same ops/priv. Then, a single dpll_pin_on_pin_unregister(..=
-) will
-cause below stack trace.
-
-It was good to add a fix in b446631f355e, but the fix did not cover a multi=
--parent
-registration case, here I am fixing it.
-
->
+On 23.04.24 12:41, Ryan Roberts wrote:
+> On 22/04/2024 08:02, Baolin Wang wrote:
+>> Anonymous pages have already been supported for multi-size (mTHP) allocation
+>> through commit 19eaf44954df, that can allow THP to be configured through the
+>> sysfs interface located at '/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled'.
 >>
->>Add refcount and check if all registrations are dropped before releasing
->>dpll_pin_registration resources.
+>> However, the anonymous shared pages will ignore the anonymous mTHP rule
+>> configured through the sysfs interface, and can only use the PMD-mapped
+>> THP, that is not reasonable. Many implement anonymous page sharing through
+>> mmap(MAP_SHARED | MAP_ANONYMOUS), especially in database usage scenarios,
+>> therefore, users expect to apply an unified mTHP strategy for anonymous pages,
+>> also including the anonymous shared pages, in order to enjoy the benefits of
+>> mTHP. For example, lower latency than PMD-mapped THP, smaller memory bloat
+>> than PMD-mapped THP, contiguous PTEs on ARM architecture to reduce TLB miss etc.
+> 
+> This sounds like a very useful addition!
+> 
+> Out of interest, can you point me at any workloads (and off-the-shelf benchmarks
+> for those workloads) that predominantly use shared anon memory?
+> 
 >>
->>Currently, the following crash/call trace is produced when ice driver is
->>removed on the system with installed NIC which includes dpll device:
->>
->>WARNING: CPU: 51 PID: 9155 at drivers/dpll/dpll_core.c:809 dpll_pin_ops+0=
-x20/0x30
->>Call Trace:
->> dpll_msg_add_pin_freq+0x37/0x1d0
->> dpll_cmd_pin_get_one+0x1c0/0x400
->> ? __nlmsg_put+0x63/0x80
->> dpll_pin_event_send+0x93/0x140
->> dpll_pin_on_pin_unregister+0x3f/0x100
->> ice_dpll_deinit_pins+0xa1/0x230 [ice]
->> ice_remove+0xf1/0x210 [ice]
->>
->>Fixes: b446631f355e ("dpll: fix dpll_xa_ref_*_del() for multiple registra=
-tions")
->>Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
->>Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
->>---
->> drivers/dpll/dpll_core.c | 17 +++++++++++++----
->> 1 file changed, 13 insertions(+), 4 deletions(-)
->>
->>diff --git a/drivers/dpll/dpll_core.c b/drivers/dpll/dpll_core.c
->>index 64eaca80d736..7ababa327c0c 100644
->>--- a/drivers/dpll/dpll_core.c
->>+++ b/drivers/dpll/dpll_core.c
->>@@ -40,6 +40,7 @@ struct dpll_device_registration {
->>
->> struct dpll_pin_registration {
->> 	struct list_head list;
->>+	refcount_t refcount;
->> 	const struct dpll_pin_ops *ops;
->> 	void *priv;
->> };
->>@@ -81,6 +82,7 @@ dpll_xa_ref_pin_add(struct xarray *xa_pins, struct
->>dpll_pin *pin,
->> 		reg =3D dpll_pin_registration_find(ref, ops, priv);
->> 		if (reg) {
->> 			refcount_inc(&ref->refcount);
->>+			refcount_inc(&reg->refcount);
->
->I don't like this. Registration is supposed to be created for a single
->registration. Not you create one for many and refcount it.
->
+>> The primary strategy is that, the use of huge pages for anonymous shared pages
+>> still follows the global control determined by the mount option "huge=" parameter
+>> or the sysfs interface at '/sys/kernel/mm/transparent_hugepage/shmem_enabled'.
+>> The utilization of mTHP is allowed only when the global 'huge' switch is enabled.
+>> Subsequently, the mTHP sysfs interface (/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled)
+>> is checked to determine the mTHP size that can be used for large folio allocation
+>> for these anonymous shared pages.
+> 
+> I'm not sure about this proposed control mechanism; won't it break
+> compatibility? I could be wrong, but I don't think shmem's use of THP used to
+> depend upon the value of /sys/kernel/mm/transparent_hugepage/enabled? So it
+> doesn't make sense to me that we now depend upon the
+> /sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled values (which by
+> default disables all sizes except 2M, which is set to "inherit" from
+> /sys/kernel/mm/transparent_hugepage/enabled).
+> 
+> The other problem is that shmem_enabled has a different set of options
+> (always/never/within_size/advise/deny/force) to enabled (always/madvise/never)
+> 
+> Perhaps it would be cleaner to do the same trick we did for enabled; Introduce
+> /mm/transparent_hugepage/hugepage-XXkb/shmem_enabled, which can have all the
+> same values as the top-level /sys/kernel/mm/transparent_hugepage/shmem_enabled,
+> plus the additional "inherit" option. By default all sizes will be set to
+> "never" except 2M, which is set to "inherit".
 
-If register function is called with the same priv/ops, why to do all you
-suggested below instead of just refcounting?
+Matches what I had in mind.
 
->Instead of this, I suggest to extend __dpll_pin_register() for a
->"void *cookie" arg. That would be NULL for dpll_pin_register() caller.
->For dpll_pin_on_pin_register() caller, it would pass "parent" pointer.
->
->Than dpll_xa_ref_pin_add() can pass this cookie value to
->dpll_pin_registration_find(). The if case there would look like:
->if (reg->ops =3D=3D ops && reg->priv =3D=3D priv && reg->cookie =3D=3D coo=
-kie)
->
->This way, we will create separate "sub-registration" for each parent.
->
->Makes sense?
->
+-- 
+Cheers,
 
-It would do, but only if the code would anyhow use that new parent
-sub-registration explicitly for anything else later.
+David / dhildenb
 
-Creating a sub-registration with additional parent cookie just to create a
-second registration with only difference parent cookie and not using the
-cookie even once after, seems overshot for a fix.
-
-What you suggest is rather a refactor, but again needed only after we would
-make use of the parent cooking somewhere else.
-And such refactor shall target next-tree, right?
-
-Thank you!
-Arkadiusz
-
->> 			return 0;
->> 		}
->> 		ref_exists =3D true;
->>@@ -113,6 +115,7 @@ dpll_xa_ref_pin_add(struct xarray *xa_pins, struct
->>dpll_pin *pin,
->> 	reg->priv =3D priv;
->> 	if (ref_exists)
->> 		refcount_inc(&ref->refcount);
->>+	refcount_set(&reg->refcount, 1);
->> 	list_add_tail(&reg->list, &ref->registration_list);
->>
->> 	return 0;
->>@@ -131,8 +134,10 @@ static int dpll_xa_ref_pin_del(struct xarray
->>*xa_pins, struct dpll_pin *pin,
->> 		reg =3D dpll_pin_registration_find(ref, ops, priv);
->> 		if (WARN_ON(!reg))
->> 			return -EINVAL;
->>-		list_del(&reg->list);
->>-		kfree(reg);
->>+		if (refcount_dec_and_test(&reg->refcount)) {
->>+			list_del(&reg->list);
->>+			kfree(reg);
->>+		}
->> 		if (refcount_dec_and_test(&ref->refcount)) {
->> 			xa_erase(xa_pins, i);
->> 			WARN_ON(!list_empty(&ref->registration_list));
->>@@ -160,6 +165,7 @@ dpll_xa_ref_dpll_add(struct xarray *xa_dplls, struct
->>dpll_device *dpll,
->> 		reg =3D dpll_pin_registration_find(ref, ops, priv);
->> 		if (reg) {
->> 			refcount_inc(&ref->refcount);
->>+			refcount_inc(&reg->refcount);
->> 			return 0;
->> 		}
->> 		ref_exists =3D true;
->>@@ -192,6 +198,7 @@ dpll_xa_ref_dpll_add(struct xarray *xa_dplls, struct
->>dpll_device *dpll,
->> 	reg->priv =3D priv;
->> 	if (ref_exists)
->> 		refcount_inc(&ref->refcount);
->>+	refcount_set(&reg->refcount, 1);
->> 	list_add_tail(&reg->list, &ref->registration_list);
->>
->> 	return 0;
->>@@ -211,8 +218,10 @@ dpll_xa_ref_dpll_del(struct xarray *xa_dplls, struct
->>dpll_device *dpll,
->> 		reg =3D dpll_pin_registration_find(ref, ops, priv);
->> 		if (WARN_ON(!reg))
->> 			return;
->>-		list_del(&reg->list);
->>-		kfree(reg);
->>+		if (refcount_dec_and_test(&reg->refcount)) {
->>+			list_del(&reg->list);
->>+			kfree(reg);
->>+		}
->> 		if (refcount_dec_and_test(&ref->refcount)) {
->> 			xa_erase(xa_dplls, i);
->> 			WARN_ON(!list_empty(&ref->registration_list));
->>
->>base-commit: ac1a21db32eda8a09076bad025d7b848dd086d28
->>--
->>2.38.1
->>
