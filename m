@@ -1,32 +1,32 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62B813D8B0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2276813D8BB
 	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 17:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713892758; cv=none; b=OS4QBbo/lP0qiXcfuzqW8GIo4PhHe8fmS5yNt41EuJ5OURBVL5f2doBds0KeT+rUXKL4/JsWOPS2OJsIa2PuhkjiLPsLHj+vrIW2IVhNK4MPV9v3KgwCNUy1zfgxwtWyrLp+03ayrnNH4q2Floln5+0VUtBSQWUiV2Dfue8lAPY=
+	t=1713892759; cv=none; b=CaSBRivR+WDILTh3s/B3H+X9Lesl/2/EYCcPZChyyzolglCJ9BckC+NxkredNESdmiYSticsQhoIipFXp4t1/eyiHxLlbtYhHHOIGraU2nceWCbfqN/ozH+L+qQK6SP1n2p4VrgMSBIxtS6ax4uynr5ZCOea0Y36r8AvK0gSMcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713892758; c=relaxed/simple;
-	bh=VsVfaLDJwUbf4wZb9SlRbtcHLGnKH0YlD3YRgyJ6794=;
+	s=arc-20240116; t=1713892759; c=relaxed/simple;
+	bh=IHnII5Qkq8rGZ+soT10LxOWcu0pttyCxRaJkeJjdC3w=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=r//naDjDMj/wq/mc9IeycDF0kjhNFrSYkEMy2fcfqJMLpWU4oaAmikLOomY+xB7QFSfFo3oWuL4ZVw/19TUecxcSSwsVSDSXr6ReApl+Lcvuid6bI8yTYv15RUvUyOeAqkBjXWanxA5aLzOxduChwqFX95SRNJ4RBwKvHcJ/+Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KOdnL+Ac; arc=none smtp.client-ip=91.218.175.171
+	 MIME-Version; b=ogtGCC2T/0vk+eimXPzxs0Qy2nc/Xa1vo3oU1cBMmKUP343JktKAa2zIgJ9eRryUlIjKQhDnmR3uebSBF9A5t1xRxaj85LbayTm4WhbU/S2JEfo2uirmdnC0O+FEdPDhbhOtz5tgzyYjV96d14NPOoKNuP2VP/9acEs8UZzDqg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UvaMa5/d; arc=none smtp.client-ip=91.218.175.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KOdnL+Ac"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UvaMa5/d"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1713892750;
+	t=1713892755;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OOGt+jSm9xSy5lxg/d3TOjXUukiXICzPkjr8gC7XjPo=;
-	b=KOdnL+AcNlkTtmXsQ0E00qcw3EBV6jUTFnCleZG3VMQyVLZnU3XUHrC+JMa6OsJaIedvjA
-	slWI6bPqK+DaX3pIX8ujvDS+C0j4UaI/11EXf6KJ4Eg8c6PFajUHWBpPZsKfvsaPVuKU4M
-	KH/xQ+y3aKKnNJUqlQj/jD1TRv/3Hxg=
+	bh=PR1mE2byZvgd8XMIJjs6doiZygvimg31wz7VNCMIkH8=;
+	b=UvaMa5/dSSe/34q/bwwR7ASBx1OWo9/LShCgk9kAZXdoP1kxfeE0a0hpZUCID/7Lk85MeF
+	jOVs0FY+cNhw+4GQMruPGCmJ8uLQgt2rGJvStC4ky0zWthYfD+ns92cBoTAHBkXeOUHhj6
+	odsFrTKI5bm2WT+FHI/g5qZRXyrzk6I=
 From: Sean Anderson <sean.anderson@linux.dev>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -40,9 +40,9 @@ Cc: Daniel Vetter <daniel@ffwll.ch>,
 	David Airlie <airlied@gmail.com>,
 	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
 	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH v4 01/13] drm: xlnx: Store base pointers in zynqmp_disp directly
-Date: Tue, 23 Apr 2024 13:18:47 -0400
-Message-Id: <20240423171859.3953024-2-sean.anderson@linux.dev>
+Subject: [PATCH v4 03/13] drm: zynqmp_dp: Downgrade log level for aux retries message
+Date: Tue, 23 Apr 2024 13:18:49 -0400
+Message-Id: <20240423171859.3953024-4-sean.anderson@linux.dev>
 In-Reply-To: <20240423171859.3953024-1-sean.anderson@linux.dev>
 References: <20240423171859.3953024-1-sean.anderson@linux.dev>
 Precedence: bulk
@@ -54,120 +54,31 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-The blend, avbuf, and audio members of zynqmp_disp are anonymous structs
-with only one member each. This is rather pointless, so move the members
-up a level.
+Enable this message for verbose debugging only as it is otherwise
+printed after every AUX message, quickly filling the log buffer.
 
 Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 ---
 
-(no changes since v3)
+(no changes since v1)
 
-Changes in v3:
-- New
+ drivers/gpu/drm/xlnx/zynqmp_dp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/gpu/drm/xlnx/zynqmp_disp.c | 44 +++++++++++++-----------------
- 1 file changed, 19 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-index 8a39b3accce5..ca164a750ee9 100644
---- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
-+++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-@@ -128,24 +128,18 @@ struct zynqmp_disp_layer {
-  * struct zynqmp_disp - Display controller
-  * @dev: Device structure
-  * @dpsub: Display subsystem
-- * @blend.base: Register I/O base address for the blender
-- * @avbuf.base: Register I/O base address for the audio/video buffer manager
-- * @audio.base: Registers I/O base address for the audio mixer
-+ * @blend: Register I/O base address for the blender
-+ * @avbuf: Register I/O base address for the audio/video buffer manager
-+ * @audio: Registers I/O base address for the audio mixer
-  * @layers: Layers (planes)
-  */
- struct zynqmp_disp {
- 	struct device *dev;
- 	struct zynqmp_dpsub *dpsub;
- 
--	struct {
--		void __iomem *base;
--	} blend;
--	struct {
--		void __iomem *base;
--	} avbuf;
--	struct {
--		void __iomem *base;
--	} audio;
-+	void __iomem *blend;
-+	void __iomem *avbuf;
-+	void __iomem *audio;
- 
- 	struct zynqmp_disp_layer layers[ZYNQMP_DPSUB_NUM_LAYERS];
- };
-@@ -356,12 +350,12 @@ static const struct zynqmp_disp_format avbuf_gfx_fmts[] = {
- 
- static u32 zynqmp_disp_avbuf_read(struct zynqmp_disp *disp, int reg)
- {
--	return readl(disp->avbuf.base + reg);
-+	return readl(disp->avbuf + reg);
- }
- 
- static void zynqmp_disp_avbuf_write(struct zynqmp_disp *disp, int reg, u32 val)
- {
--	writel(val, disp->avbuf.base + reg);
-+	writel(val, disp->avbuf + reg);
- }
- 
- static bool zynqmp_disp_layer_is_video(const struct zynqmp_disp_layer *layer)
-@@ -587,7 +581,7 @@ static void zynqmp_disp_avbuf_disable(struct zynqmp_disp *disp)
- 
- static void zynqmp_disp_blend_write(struct zynqmp_disp *disp, int reg, u32 val)
- {
--	writel(val, disp->blend.base + reg);
-+	writel(val, disp->blend + reg);
- }
- 
- /*
-@@ -813,7 +807,7 @@ static void zynqmp_disp_blend_layer_disable(struct zynqmp_disp *disp,
- 
- static void zynqmp_disp_audio_write(struct zynqmp_disp *disp, int reg, u32 val)
- {
--	writel(val, disp->audio.base + reg);
-+	writel(val, disp->audio + reg);
- }
- 
- /**
-@@ -1237,21 +1231,21 @@ int zynqmp_disp_probe(struct zynqmp_dpsub *dpsub)
- 	disp->dev = &pdev->dev;
- 	disp->dpsub = dpsub;
- 
--	disp->blend.base = devm_platform_ioremap_resource_byname(pdev, "blend");
--	if (IS_ERR(disp->blend.base)) {
--		ret = PTR_ERR(disp->blend.base);
-+	disp->blend = devm_platform_ioremap_resource_byname(pdev, "blend");
-+	if (IS_ERR(disp->blend)) {
-+		ret = PTR_ERR(disp->blend);
- 		goto error;
- 	}
- 
--	disp->avbuf.base = devm_platform_ioremap_resource_byname(pdev, "av_buf");
--	if (IS_ERR(disp->avbuf.base)) {
--		ret = PTR_ERR(disp->avbuf.base);
-+	disp->avbuf = devm_platform_ioremap_resource_byname(pdev, "av_buf");
-+	if (IS_ERR(disp->avbuf)) {
-+		ret = PTR_ERR(disp->avbuf);
- 		goto error;
- 	}
- 
--	disp->audio.base = devm_platform_ioremap_resource_byname(pdev, "aud");
--	if (IS_ERR(disp->audio.base)) {
--		ret = PTR_ERR(disp->audio.base);
-+	disp->audio = devm_platform_ioremap_resource_byname(pdev, "aud");
-+	if (IS_ERR(disp->audio)) {
-+		ret = PTR_ERR(disp->audio);
- 		goto error;
- 	}
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+index 8a15d18a65a6..fdea1a9710de 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
++++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+@@ -1006,7 +1006,7 @@ zynqmp_dp_aux_transfer(struct drm_dp_aux *aux, struct drm_dp_aux_msg *msg)
+ 					       msg->buffer, msg->size,
+ 					       &msg->reply);
+ 		if (!ret) {
+-			dev_dbg(dp->dev, "aux %d retries\n", i);
++			dev_vdbg(dp->dev, "aux %d retries\n", i);
+ 			return msg->size;
+ 		}
  
 -- 
 2.35.1.1320.gc452695387.dirty
