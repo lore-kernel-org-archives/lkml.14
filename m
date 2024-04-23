@@ -1,71 +1,82 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22FCC4779D;
-	Tue, 23 Apr 2024 06:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9115E481B8;
+	Tue, 23 Apr 2024 06:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.157.23.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713854724; cv=none; b=Lja9G0JpMYyXgpDGjSMO/yq4kFMdD83CQMFjwE5EfyXar+Q8v7xOIXbIqNl0YY1iDuVvKBht64P4coC2fT0YMapG5qHmydBE0ur3Gz1ZIKcJZxLk6QVG0YAQZbJasFbkraxFR0rlu88nmOe2CYvdaw/5ROXLhWOeoO6SpEHQMEE=
+	t=1713854724; cv=none; b=X3XxUZFQhPEG9K3j2nTGzPfY3YD1cvNYgcM8k0f+LvAkK/FXh3VRoiZ/z4BDz0lhh/syL5y9wID94J+V8dQDrDrmb++TbSySssF7v/D7PAKn5Z5+LTXoNfzKF8MXr9wmAvtLGdpMa2hPkGd6qhTEEb4qHYsO+keeaKrVlUrpTA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713854724; c=relaxed/simple;
-	bh=/8UG4gXHPEjzqQauQjn7i+cz8eMeT4m/eMNC5CnSkI4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=IVERTG1cIR0LlWP8Xm4k2OHFXRiOMbu0MkI0Cp03tU4sQnfgCjhwUuf20CfOAhFNrwR4LVbqzb0z36mgk3TkohiWPN9JlyPExO3DiMVr8Flq1oup6MYlRu59WONTc+wOJHBp/REbrteJVpxayX3VxUrWSI9qKlA+YT+c2t1PMXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=rhPQ2CV+; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	bh=xDey/bPDIETOzyCtWip2cVT9cVPRQ8dkx4VUAGlDI9I=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BUpEudRwUF0WOp7V0g9THz0mziHRPdRYPWRJvAC/ocrtfeR1TF6Ooed16JHsmXRh8xxTusLZpVs036gPLg+MEOR22XouoR/8spg71UkljzvhxePTa3gneYOr9k6UOQo+j/9XH0w9nhd95QdOR9je3huUIdi7OIrRjofPyLTzVRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=HOBFpW/J; arc=none smtp.client-ip=35.157.23.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="rhPQ2CV+"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1713854712; h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type;
-	bh=2Bh4K1u+LZbAykGU6w9RgWH0PLEDjVXql/jyM2G15cE=;
-	b=rhPQ2CV+JZYFooyDt2EV76dDmv6+oLP86ViNlpwSeKlQ5xZq/4YeaC/2xN/WsZhpZkG1SeD65+5Jh2MgqCJJungfJ2be1hcqiLLVZdXgEztiIhncWh2jE0T/2SKulbzkSSigISJPJDx1ngQCHdw3vLS+zW4R8aFMgq1SaztvZNU=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R991e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0W580vZc_1713854701;
-Received: from 30.221.129.150(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W580vZc_1713854701)
-          by smtp.aliyun-inc.com;
-          Tue, 23 Apr 2024 14:45:11 +0800
-Message-ID: <6907c23c-a9b4-4366-99e5-b175319f9061@linux.alibaba.com>
-Date: Tue, 23 Apr 2024 14:45:00 +0800
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="HOBFpW/J"
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id C0E061E80;
+	Tue, 23 Apr 2024 06:37:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paragon-software.com; s=mail; t=1713854269;
+	bh=8abgFsR/Ui2xo5ZXw2cy57yMyvZkyHIC4gHtv2Ld0QM=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=HOBFpW/JtnMEXCelQPtYAct0c5gHYYXkLfw5GiGcTRJFo77gSQGlDQsubvBaxyXgi
+	 VPIw/DsCPNMUqmoOxBzKjFngrj5oUaQHI9c5D6KebJkabfYURDGX5k81CETUlpZZ8F
+	 OSPLQtsQV6ueiXWrlLVL+/0kpkF3E4+Y4NM2STlw=
+Received: from ntfs3vm.paragon-software.com (192.168.211.160) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Tue, 23 Apr 2024 09:45:21 +0300
+From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To: <ntfs3@lists.linux.dev>
+CC: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, kernel test
+ robot <lkp@intel.com>, Dan Carpenter <dan.carpenter@linaro.org>
+Subject: [PATCH 6/9] fs/ntfs3: Use variable length array instead of fixed size
+Date: Tue, 23 Apr 2024 09:44:25 +0300
+Message-ID: <20240423064428.8289-7-almaz.alexandrovich@paragon-software.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240423064428.8289-1-almaz.alexandrovich@paragon-software.com>
+References: <20240423064428.8289-1-almaz.alexandrovich@paragon-software.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Wen Gu <guwen@linux.alibaba.com>
-Subject: Re: [PATCH net-next v6 00/11] net/smc: SMC intra-OS shortcut with
- loopback-ism
-To: Wenjia Zhang <wenjia@linux.ibm.com>, wintera@linux.ibm.com,
- twinkler@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
- agordeev@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com,
- alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
- linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
- netdev@vger.kernel.org
-References: <20240414040304.54255-1-guwen@linux.alibaba.com>
- <3bc12c1e-c36c-4b34-8bc4-57ebb07038c2@linux.ibm.com>
-In-Reply-To: <3bc12c1e-c36c-4b34-8bc4-57ebb07038c2@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: vobn-exch-01.paragon-software.com (172.30.72.13) To
+ vdlg-exch-02.paragon-software.com (172.30.1.105)
 
+Should fix smatch warning:
+	ntfs_set_label() error: __builtin_memcpy() 'uni->name' too small (20 vs 256)
 
+Fixes: 4534a70b7056f ("fs/ntfs3: Add headers and misc files")
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/r/202401091421.3RJ24Mn3-lkp@intel.com/
+Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+---
+ fs/ntfs3/ntfs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 2024/4/17 23:36, Wenjia Zhang wrote:
-> 
-> 
-> On 14.04.24 06:02, Wen Gu wrote:
->> This patch set acts as the second part of the new version of [1] (The first
->> part can be referred from [2]), the updated things of this version are listed
->> at the end.
->>
->>
-> Still need some time to review the patches.
-> 
-> Thanks for your patience!
+diff --git a/fs/ntfs3/ntfs.h b/fs/ntfs3/ntfs.h
+index 9c7478150a03..3d6143c7abc0 100644
+--- a/fs/ntfs3/ntfs.h
++++ b/fs/ntfs3/ntfs.h
+@@ -59,7 +59,7 @@ struct GUID {
+ struct cpu_str {
+ 	u8 len;
+ 	u8 unused;
+-	u16 name[10];
++	u16 name[];
+ };
+ 
+ struct le_str {
+-- 
+2.34.1
 
-Hi Wenjia, is there any update on the review?
-
-Thanks!
