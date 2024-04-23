@@ -1,256 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2097.outbound.protection.outlook.com [40.107.94.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4421F367;
-	Tue, 23 Apr 2024 23:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713915778; cv=none; b=h6huRmLlyhCHdzD3zHaEouCDjmPLZ5WSwgdm5ySkY+84AFRI2aISyT2uQinD8D06HRgitiE9N4IG6v0cvLFRVBkJtT+yoktbiTxunF315IteBYKVxii7lD4DlggNd2Gs1+E52/CD2VhiC4DVsXR0Ldr7E3+3+QA0Hwuyx8LvpcY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713915778; c=relaxed/simple;
-	bh=m9tt459TrRCOHJGrn4P1GgZPBMmO2y3IZ40ZZj/ilNQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C5TzPGr/re1eZU40hfJFUFx9TL7TESg6CmaVtGQ2hmGI2X1srhJ1e9WPzKOlpoQh8oXyrcYLC10i5gJWnHfNiake+q6cH0w1vJtxHeUap8RiMqqofilxod2WXehvDKT+1cXrgcdGigNTBhzqgkjZRYINPCyUJacThPmei7ST8/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AOFDqcsl; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852DB367;
+	Tue, 23 Apr 2024 23:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.97
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713915938; cv=fail; b=U0UKBPV7u6LWXTghrE7KCr6IVQn/3B4z5q0YN7sIXgCBxkHx/QMWikUY37gkSQa84BOdWAo11c3YSvcHU+pRaaIJk4aPivqLEPyYWzWu48+7gk/jq03noy9XHX3krRqfqL0TZe+B6ToBdDEGYu6Zc0X8wZ4QYs90u7hKA5Urhw4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713915938; c=relaxed/simple;
+	bh=Fz2unADDAzAeggQ0AvZAShF8XZ7HD3CtKz7TzMBJ8Kk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=LMg4I65Cls/FGHpgTjMlISeBV/dfGfqwu8cd9v7+cCfq2O827fE5Z6sHjRrYhxp2k6R8KVuDgMHcZochO3zgJ4EWXsbhUFbjARU72HpTaKFWE5zvq/xXE7SDVInnt42txfUrnY+/pKMfJTT+E+ELsMeZMoZ55hOdaJZ78LAZ178=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=S1DrA+Re; arc=fail smtp.client-ip=40.107.94.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AOFDqcsl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713915776; x=1745451776;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=m9tt459TrRCOHJGrn4P1GgZPBMmO2y3IZ40ZZj/ilNQ=;
-  b=AOFDqcslefeg6/QRDaUbUul6nVwSaDcnD4navh4q8NlPWUv2q+4CiUq/
-   Fkpy62YiqN2SwXgysMRbXVIPOCfz+rYVoEMWkWhIsIDYFy3o24lflQ5ME
-   Ib2cVpbMCrenUDOvpkzp1enol79FL1JJF3xYSoMjK1kM1Q1A08sFh9YYw
-   urbb8iZ7aivW4u7j8KWoTyEif/vPtb38vovESbwbMbswvKMsapoUgJ3zU
-   r8RPjS8GCR2Qj04mDE8ah7FRI7jHkUep5rhgWVKB0ieCQs0/gxxAU9MO8
-   lDCHnUnIe7jnuObY5UnrdVp39NoQ9vF3Z/o7sGkO6Kkwec4EEloIwBt6P
-   w==;
-X-CSE-ConnectionGUID: Qg+xG3HFQX2pjBBen4zE9Q==
-X-CSE-MsgGUID: 37cstBi6SoClnrjJqkBYeg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="20930139"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="20930139"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 16:42:55 -0700
-X-CSE-ConnectionGUID: qeOxCRxLTsyH6lG5wft9+A==
-X-CSE-MsgGUID: 42c/oC0jQS2HyiXajej3Lg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24526372"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 23 Apr 2024 16:42:48 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rzPmf-0000da-2S;
-	Tue, 23 Apr 2024 23:42:45 +0000
-Date: Wed, 24 Apr 2024 07:42:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linux-amlogic@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Yue Wang <yue.wang@amlogic.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Xiaowei Song <songxiaowei@hisilicon.com>
-Subject: Re: [PATCH v2 2/4] PCI: dwc: Remove unused of_gpio.h
-Message-ID: <202404240725.Jlvuk7P3-lkp@intel.com>
-References: <20240423172208.2723892-3-andriy.shevchenko@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="S1DrA+Re"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ONcgdab6H/eOv87JrL/TeAJmDE3lPbIKCNTBWLUIK4hp8XU3X8UidmkwqYvcm5njW2yOVWhkiOwFbH747sXUCgy9NZu6fgCTq8f2tFDO5D9jDrX8Kmi+F58jmGw07qGl90NxCCpBTbAztQzvILkZsnYkz47Zy3otfsJfVjhveRnshDXW/S4aumiEyoVJbXsy5t9pCyI4sbLCvgPcIfNmXBryqkryKF2XwwRoiyTgU47aMbczUoBloB7Pb1EcpL7sAC6yKEZpVPqaUMOyaHAOO9PHqYkmtRWYfIwZa8hu/cj+odW5PwqWb4iRcUhBAh4xnNDZIvrRTonOVQ0DeLoeCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ow7aQDIl86nS899jTeRDwlKSIcKC5dIRtCWSu0EYon0=;
+ b=ZUJfB4tJ8kP9puHHlCp1g8FU08oTTmucuU8oQaDojVvInPZF8Jv7+g4jnWeC/NTf5Q4lA1FA80AGIcKeYoN7+jMMr98znTIAgHIamw8VW8zrJAC2D7foC/M1yqFUtIrDuo1VVpG7XcZp/oZ+X8ibrkdghZUUkf13AHgINn3lGpEfFPXVctdVZOPfrNfMjCJz8h9b9g+NY+rb+526RTraVFZHdmoHuycCi+KqW4xTQ+DglbL2X6tg6Mdor+hQ91XfqS7hX8AHFpof1+nsOfea7lyXKO2vjZxPiBkx4tfDLmnihFeiYb71ssC80pWjd9Sw9D6PmJ8W9rei5ZtvzvEAFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ow7aQDIl86nS899jTeRDwlKSIcKC5dIRtCWSu0EYon0=;
+ b=S1DrA+ReZ4UJRJwPPOJ26C7DpPhRXPF8QxWqTE5EwxrofxssMALR/qJLaYKKc1RfxS2AzXX6HDQsC6FebiQxWAqVzm731nmOLpemzCrZ7RfWCCWD0kOtdAK9o0721iC7U/RVqMIew2VAZzXuYUcMCKbAQd1SdPG6u/Qmtr2z4l4=
+Received: from SJ1PR21MB3457.namprd21.prod.outlook.com (2603:10b6:a03:453::5)
+ by BY3PR21MB3033.namprd21.prod.outlook.com (2603:10b6:a03:3b3::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.7; Tue, 23 Apr
+ 2024 23:45:18 +0000
+Received: from SJ1PR21MB3457.namprd21.prod.outlook.com
+ ([fe80::94ec:979:8364:85eb]) by SJ1PR21MB3457.namprd21.prod.outlook.com
+ ([fe80::94ec:979:8364:85eb%4]) with mapi id 15.20.7544.006; Tue, 23 Apr 2024
+ 23:45:18 +0000
+From: Long Li <longli@microsoft.com>
+To: Konstantin Taranov <kotaranov@linux.microsoft.com>, Konstantin Taranov
+	<kotaranov@microsoft.com>, "sharmaajay@microsoft.com"
+	<sharmaajay@microsoft.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, "leon@kernel.org"
+	<leon@kernel.org>
+CC: "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH rdma-next 5/6] RDMA/mana_ib: boundary check before
+ installing cq callbacks
+Thread-Topic: [PATCH rdma-next 5/6] RDMA/mana_ib: boundary check before
+ installing cq callbacks
+Thread-Index: AQHakbDErNzGLcyhkEy3fR/U9s4mD7F2jPSg
+Date: Tue, 23 Apr 2024 23:45:18 +0000
+Message-ID:
+ <SJ1PR21MB345784B523805F2D590ADA4FCE112@SJ1PR21MB3457.namprd21.prod.outlook.com>
+References: <1713459125-14914-1-git-send-email-kotaranov@linux.microsoft.com>
+ <1713459125-14914-6-git-send-email-kotaranov@linux.microsoft.com>
+In-Reply-To: <1713459125-14914-6-git-send-email-kotaranov@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=de8358dc-ddbf-416f-bc64-6472291d49fa;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-04-23T23:44:23Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR21MB3457:EE_|BY3PR21MB3033:EE_
+x-ms-office365-filtering-correlation-id: 635a0e27-f6c7-4f48-760a-08dc63ef6e85
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|376005|1800799015|366007|38070700009;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?zjox4Zkwhp4m0NHf47neaoZQUQTExrIuwW5GYrv96KMzE6cjQt713zaA2wPH?=
+ =?us-ascii?Q?EKe7JQw3Pb9XYxADxVKkL7YZ10R+2zzQWMrfJ1Nni8I7I4qsO7hqFBhlnU4v?=
+ =?us-ascii?Q?bMji2ygchArkj0GsEiPgaq3xMY8mpaGm0xFVcGcnix79/HGpPhlCTSIxj0UL?=
+ =?us-ascii?Q?aC8d8EMkP1p0c2dwMpjrvV8u4MCPW6HDnlvE8lb3YE5WHtA268vL9e8abEuY?=
+ =?us-ascii?Q?QaOAA9rm9IVjNsjYc6I8nZ49znZnKp0WVIn+glx8I13lVYbcPeSDB2PJjS2m?=
+ =?us-ascii?Q?MTT1kjXA+ZEuAwv2QZhlRK1++6iscqXukBmk+4I73/B/4F55vgxBjx1LDmz8?=
+ =?us-ascii?Q?uHKJ6Yr6tM6eKYpmj6elb2ED0GhxNKLbBTe8Qn03WUczWpa2hzoH8FUIO/jo?=
+ =?us-ascii?Q?bm2lfbGuEjN2YtcZIApzuWRMyeCpnaUCz8UUuu1EmU5J1HEEd+f3/sAyrle+?=
+ =?us-ascii?Q?+fCY+l3rqMy2Q4fQKuYdUWJNwRVbAqSD3RSYdoqfFzhczr8jruC7QdI2uSIO?=
+ =?us-ascii?Q?4G5emln0OUENp9kX5cf/qgybrzj1+/HkatJR76liNnLHXIphKUZpfsHmykly?=
+ =?us-ascii?Q?muyfU7jAn5aRd3KOcXGH3GxpNc/ooi5K9Aq++unEBzcnN1WwH/fkl38G/FIp?=
+ =?us-ascii?Q?qYw7zdRxPdBv8XMkNysThWkICQwAW2KwUjK+hfSRZ+f7Hp+D2HsP0QNNMihO?=
+ =?us-ascii?Q?atr6DQYdXyyMFo0r02RIv0TbO2vGhLrWFiGtLC3aTmLR8W5GkOOr8/DLrQKe?=
+ =?us-ascii?Q?18I4KhNaZ79ZKU1LOxxFWlQT77CO5JJH9iNTifCvAbeuu8U4u8Ld7AHXzjg/?=
+ =?us-ascii?Q?qbAhWUP1HPoOOzYrHuvZpIDkyzKnh1GH7KhfHIX399rJlRtGs3lS9IOJVogd?=
+ =?us-ascii?Q?W1Qw3lkpXAFcfpTdeLPAFGfZQeHCps53MSYzArTwAyyPWzTcKrnK0WJv33S2?=
+ =?us-ascii?Q?xj3xY5eKGc1Wn7EedSM27tEudiTn9kfag+m3Un1vHBZaj2d1T0nzAawukxFo?=
+ =?us-ascii?Q?MQ0urz6dlSqyx/tydE5szDw7g0mmGybePby8qZHnpveAxAmEN5axAoedJeVR?=
+ =?us-ascii?Q?hDuu8Ia9Ye+43qOMu0t6ZviXj79VhTzEtMMo7DdUbfjkfqEqYD7Y5hNxZzz2?=
+ =?us-ascii?Q?sNQJxfOieXEdojrcM/IMf/eeGaKO0s2pasatCW6ykqvM8yF49Eg+DMbY3vh2?=
+ =?us-ascii?Q?aDbays/isuEtLFYGWTBzg89SJjs5cg1ph+iWAWdCQfI1EXkj5D3TZohITLlZ?=
+ =?us-ascii?Q?B3seAd2q2Knq1tuOtBoKmkS1T9X7w2QGi0iQoceqdqqS1iRq1MH/w3MvI7Kg?=
+ =?us-ascii?Q?39nvEs/eXCLiP1qSKbn7i/ts0Nug9eupnpNbfvv8V2MfDw=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR21MB3457.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?9f6CNbpAaeK/J+g3Z2JnwajpHy+a0YCREgcacb/ocWPBrtrYMQdtBLMA/HCi?=
+ =?us-ascii?Q?aaXMv81AD3kicJ02LgKfj4tKy0wdoyrGoe4XjUKeDK7lYfWPZC20SdpW1IZe?=
+ =?us-ascii?Q?kmfLyOSOLa5vX/Pxj5bjGZl1XBSV0/cCRv4liDt2iDZb022ZZLq2lk4nZAmP?=
+ =?us-ascii?Q?kK/91FVVDOXhK+aEg76o2+olj6qIVvxRszxuVO/uLmacKDSRgHAWMmna6IfQ?=
+ =?us-ascii?Q?Aai1yqf/BZxulQ84vlA1P3o9ZbXeqK4UPuqxnYf2nv4SO0OlQBuq7pmsSuRI?=
+ =?us-ascii?Q?OY9YFG3uoxO+bZeVNlSRH3+5rjhtHuKG56SEQuBjlV0SIWy4vLa5JXlgws72?=
+ =?us-ascii?Q?BEsBDY0noyE8z+O9J93goLyVLmQcZjTZ4LAPXtGT+jFBDI0f4pI0hCih8N8F?=
+ =?us-ascii?Q?QtQJ95OqrJ8fStpYae15MHUdpt+n5FcVRZHpC8Xm0ZpgElMYpnF9b7fKijuu?=
+ =?us-ascii?Q?ZMuGmK0Yi8jwt3BZoT5gtJBGszE6eyjep47vxqgNzA+A2qqHHIFhkMUufo3q?=
+ =?us-ascii?Q?NLPkKgoo6c5BOAY30EYvAflrB3DqPKcaxkg5X/F8jTGWKG7sPPEScvhtxCJ0?=
+ =?us-ascii?Q?V6eUO2nv/EdDsypjVmsYvAQYUSg8iGa4A0VmWVR/z5dshfuG+N6VpmnUX08p?=
+ =?us-ascii?Q?55wZTRXOtNIM9nbbCtgKIqwC7MFyw44+mNhPP+PBjgHwhuSDwWjMcuFf5gF2?=
+ =?us-ascii?Q?qT//hGPu5Lb9Jk4ER8wDnEkTRjoo89vhOoXRxR3ZgiT0pEks3RrQaNkbtLp4?=
+ =?us-ascii?Q?0AcON2rQrAhw4H3CL0bi6Tyx0oDQZ20L0wbu4ehGGviafYVnGmnxZHxwTGZN?=
+ =?us-ascii?Q?/7b8nMi6AXf//hkgM2CyUGoQC4u6G20cdZVQOznbT7Kv3YQrodbiBsEh54CE?=
+ =?us-ascii?Q?oN88K3F/+4KXV2xk05z53b/DxVrxw3rBmZJF3WTcGyaiJ3+AYYsRK8nsMTpX?=
+ =?us-ascii?Q?d/FoqquYuvDbocNDN0/gGddYrPjz0DvpFuym7h47nCyOUyIQorj4krsLP/Eh?=
+ =?us-ascii?Q?vhDDo0hKMsSGt9k8YjPxdFQLFWZG61FrLZTqHDH+8jgZmWP62Xt385WEOZWJ?=
+ =?us-ascii?Q?FX9+VpqEEPLzW2LTCnFHsQQWfd7T5rpDkU7sy6HJIXB/ySG8tHCGkp/A9PWI?=
+ =?us-ascii?Q?83KWBzq79cFsfPoOZ/vr46LhogfiTswowvfI2ttUwa8l23a/yOeqltqTYR0j?=
+ =?us-ascii?Q?kdvcTDdnqirJcby4KuEI/w7rwmWS4r8Vfn6uE3Gulbr4DRZ7RflW8UOZeZHj?=
+ =?us-ascii?Q?oJ9s5BGRFMULKT9iwmTb8ga+cyJiVeD+T8RDU+2R92ofdn1CXk/6QaUEF4Bm?=
+ =?us-ascii?Q?O+C9/zlQTaKhYOopqvzRPKknXU1U3uCJqRo9Lto+IOC2KpLrtL22NDkDmLdu?=
+ =?us-ascii?Q?E9Xdc2EMeOXh7zIQZRpkQGn4dKUrpN4KoOPkeCpmHMy2loMWT5QAzMjT34/B?=
+ =?us-ascii?Q?GV+t1e7UeYf7u6vk0qDyOIw83Xh/GKbafZ+G+Qm7BDuGUgJeNdYUjeuIDo3o?=
+ =?us-ascii?Q?MFQBICIdOpKdS0RuWcQpkmBTWhVYBwiUqiU33ZDcCddJyyFB515waMTa2+/V?=
+ =?us-ascii?Q?04WWY0g2H9owhpDCgPg4DLeMi1NZdWhde1QzlQlYTugckqFDLDmH14+zsOb6?=
+ =?us-ascii?Q?/xQZUmP3ZhLuO9zS1jwM7AZLVn8aXA7BLgsrHsoit2eM?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240423172208.2723892-3-andriy.shevchenko@linux.intel.com>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR21MB3457.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 635a0e27-f6c7-4f48-760a-08dc63ef6e85
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2024 23:45:18.2043
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uKf3tisrrVhKtOr1noYejbw9175OSDCzrpgtlmDCAGxzNsSeIVMa/86bkPdCXLQU4U7ibbjCunbHcLP8xdw4Jw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY3PR21MB3033
 
-Hi Andy,
+> Subject: [PATCH rdma-next 5/6] RDMA/mana_ib: boundary check before
+> installing cq callbacks
+>=20
+> From: Konstantin Taranov <kotaranov@microsoft.com>
+>=20
+> Add a boundary check inside mana_ib_install_cq_cb to prevent index
+> overflow.
 
-kernel test robot noticed the following build errors:
+How is this condition possible that we are getting an out of bound queue id=
+ from SOC?
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus mani-mhi/mhi-next linus/master v6.9-rc5 next-20240423]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>=20
+> Fixes: 2a31c5a7e0d8 ("RDMA/mana_ib: Introduce mana_ib_install_cq_cb
+> helper function")
+> Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+> ---
+>  drivers/infiniband/hw/mana/cq.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/infiniband/hw/mana/cq.c
+> b/drivers/infiniband/hw/mana/cq.c index 6c3bb8c..8323085 100644
+> --- a/drivers/infiniband/hw/mana/cq.c
+> +++ b/drivers/infiniband/hw/mana/cq.c
+> @@ -70,6 +70,8 @@ int mana_ib_install_cq_cb(struct mana_ib_dev *mdev,
+> struct mana_ib_cq *cq)
+>  	struct gdma_context *gc =3D mdev_to_gc(mdev);
+>  	struct gdma_queue *gdma_cq;
+>=20
+> +	if (cq->queue.id >=3D gc->max_num_cqs)
+> +		return -EINVAL;
+>  	/* Create CQ table entry */
+>  	WARN_ON(gc->cq_table[cq->queue.id]);
+>  	gdma_cq =3D kzalloc(sizeof(*gdma_cq), GFP_KERNEL);
+> --
+> 2.43.0
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/PCI-aardvark-Remove-unused-of_gpio-h/20240424-012448
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20240423172208.2723892-3-andriy.shevchenko%40linux.intel.com
-patch subject: [PATCH v2 2/4] PCI: dwc: Remove unused of_gpio.h
-config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20240424/202404240725.Jlvuk7P3-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 5ef5eb66fb428aaf61fb51b709f065c069c11242)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240424/202404240725.Jlvuk7P3-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404240725.Jlvuk7P3-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/pci/controller/dwc/pci-dra7xx.c:12:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:173:
-   In file included from arch/s390/include/asm/mmu_context.h:11:
-   In file included from arch/s390/include/asm/pgalloc.h:18:
-   In file included from include/linux/mm.h:2208:
-   include/linux/vmstat.h:508:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     508 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     509 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:515:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     515 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     516 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:527:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     527 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     528 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:536:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     536 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     537 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   In file included from drivers/pci/controller/dwc/pci-dra7xx.c:15:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/s390/include/asm/io.h:78:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     547 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
-     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-         |                                                      ^
-   In file included from drivers/pci/controller/dwc/pci-dra7xx.c:15:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/s390/include/asm/io.h:78:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
-     115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
-         |                                                      ^
-   In file included from drivers/pci/controller/dwc/pci-dra7xx.c:15:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/s390/include/asm/io.h:78:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     584 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:692:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     692 |         readsb(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:700:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     700 |         readsw(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:708:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     708 |         readsl(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:717:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     717 |         writesb(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:726:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     726 |         writesw(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:735:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     735 |         writesl(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
->> drivers/pci/controller/dwc/pci-dra7xx.c:262:2: error: call to undeclared function 'chained_irq_enter'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     262 |         chained_irq_enter(chip, desc);
-         |         ^
->> drivers/pci/controller/dwc/pci-dra7xx.c:284:2: error: call to undeclared function 'chained_irq_exit'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     284 |         chained_irq_exit(chip, desc);
-         |         ^
-   17 warnings and 2 errors generated.
-
-
-vim +/chained_irq_enter +262 drivers/pci/controller/dwc/pci-dra7xx.c
-
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  252  
-9a5595ab21a9d1 drivers/pci/controller/dwc/pci-dra7xx.c Vignesh Raghavendra    2020-03-27  253  static void dra7xx_pcie_msi_irq_handler(struct irq_desc *desc)
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  254  {
-9a5595ab21a9d1 drivers/pci/controller/dwc/pci-dra7xx.c Vignesh Raghavendra    2020-03-27  255  	struct irq_chip *chip = irq_desc_get_chip(desc);
-9a5595ab21a9d1 drivers/pci/controller/dwc/pci-dra7xx.c Vignesh Raghavendra    2020-03-27  256  	struct dra7xx_pcie *dra7xx;
-60b3c27fb9b92b drivers/pci/controller/dwc/pci-dra7xx.c Serge Semin            2022-06-24  257  	struct dw_pcie_rp *pp;
-9a5595ab21a9d1 drivers/pci/controller/dwc/pci-dra7xx.c Vignesh Raghavendra    2020-03-27  258  	struct dw_pcie *pci;
-09b2d20349e37a drivers/pci/dwc/pci-dra7xx.c            Vignesh R              2017-12-29  259  	unsigned long reg;
-d21faba11693c1 drivers/pci/controller/dwc/pci-dra7xx.c Marc Zyngier           2021-08-02  260  	u32 bit;
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  261  
-9a5595ab21a9d1 drivers/pci/controller/dwc/pci-dra7xx.c Vignesh Raghavendra    2020-03-27 @262  	chained_irq_enter(chip, desc);
-9a5595ab21a9d1 drivers/pci/controller/dwc/pci-dra7xx.c Vignesh Raghavendra    2020-03-27  263  
-9a5595ab21a9d1 drivers/pci/controller/dwc/pci-dra7xx.c Vignesh Raghavendra    2020-03-27  264  	pp = irq_desc_get_handler_data(desc);
-9a5595ab21a9d1 drivers/pci/controller/dwc/pci-dra7xx.c Vignesh Raghavendra    2020-03-27  265  	pci = to_dw_pcie_from_pp(pp);
-9a5595ab21a9d1 drivers/pci/controller/dwc/pci-dra7xx.c Vignesh Raghavendra    2020-03-27  266  	dra7xx = to_dra7xx_pcie(pci);
-9a5595ab21a9d1 drivers/pci/controller/dwc/pci-dra7xx.c Vignesh Raghavendra    2020-03-27  267  
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  268  	reg = dra7xx_pcie_readl(dra7xx, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI);
-9a5595ab21a9d1 drivers/pci/controller/dwc/pci-dra7xx.c Vignesh Raghavendra    2020-03-27  269  	dra7xx_pcie_writel(dra7xx, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI, reg);
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  270  
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  271  	switch (reg) {
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  272  	case MSI:
-9a5595ab21a9d1 drivers/pci/controller/dwc/pci-dra7xx.c Vignesh Raghavendra    2020-03-27  273  		dra7xx_pcie_handle_msi_irq(pp);
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  274  		break;
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  275  	case INTA:
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  276  	case INTB:
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  277  	case INTC:
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  278  	case INTD:
-d21faba11693c1 drivers/pci/controller/dwc/pci-dra7xx.c Marc Zyngier           2021-08-02  279  		for_each_set_bit(bit, &reg, PCI_NUM_INTX)
-d21faba11693c1 drivers/pci/controller/dwc/pci-dra7xx.c Marc Zyngier           2021-08-02  280  			generic_handle_domain_irq(dra7xx->irq_domain, bit);
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  281  		break;
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  282  	}
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  283  
-9a5595ab21a9d1 drivers/pci/controller/dwc/pci-dra7xx.c Vignesh Raghavendra    2020-03-27 @284  	chained_irq_exit(chip, desc);
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  285  }
-47ff3de911a728 drivers/pci/host/pci-dra7xx.c           Kishon Vijay Abraham I 2014-07-22  286  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
