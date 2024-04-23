@@ -1,114 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6B519BBA
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 14:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF39719BBA;
+	Tue, 23 Apr 2024 14:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713884312; cv=none; b=jvbBQq8JaANDgTM8+eIe/81ByAHOXpexfDhTZDFzx1V/tghUhX2+XlT553Qez4wM6cUt88L5aP4+/66w2yiZrNjEC7P2+jhmgtgaBB5j7y2HvgEgr5YnK4YU6wsahu1BAY8Yevvc+pZLX0YSnISerdwTKl5abXl2JfORRHCMyow=
+	t=1713884348; cv=none; b=NVkPNsT2ce6bf+CvEoa5FeqaZ3zGwGZNXNZTu5d7NT7A3KN4+famOcKmxvgP8H9+z4BsrQuNP0uf6j/0IawAd5aob4PEuOS7r3OTganBkJZN+Ry4Na9s2/JAq+gdrroPe4Z21EdaycTb47rBcQyS1BzOJmZNZczHYmtqGcFzAtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713884312; c=relaxed/simple;
-	bh=1YHO87gpuA4GWmgj2Um/hut9wEBNIU7DZW6ecVbdQog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S5oXs2S8xBHzWnLv97AZr7OMeFH8q97Bl4WXik9uaQIrAVJxgcYm5s4pAK2gjLwLXHvd5ri96m3YB+I57cUKivfSS4j7Ze2cv0D2O9R/UKgwUZCWD05W+/NykzeHXVWhhUsi6lcUdEBLtnNTtzY5axwJdWr22IeKiRUpcuVoAIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lavk+HSl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713884348; c=relaxed/simple;
+	bh=Yce+qDBOZuO+SfiuLBCU/iYtbYmkEpQFI26Eyr98dJM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OEhu4ZlV+wJIj/KYT/ungxKFyzCiWU9m+YvO3hA93ze900fx38ihmkd55J0OqcI6x8Gvr5E34e7GEm+Yrrw99ckkv5w6Iytzl69XaNZUdKAvjgHfVmjHXSWpLrabSCE38RjffOWXSdTeXPLaQi/0m5CJoqJ1b7Ip0phWThRI5hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=Euk68xFI; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lavk+HSl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23513C116B1;
-	Tue, 23 Apr 2024 14:58:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713884311;
-	bh=1YHO87gpuA4GWmgj2Um/hut9wEBNIU7DZW6ecVbdQog=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Lavk+HSlkvCpvWHOmB/TRotL7IHCxCKW0b2IhHibrA+Y11LllPj7SumxIUl+BAtUl
-	 x0Wn4ntm5NdIfBQ3kQRItM+vrb1U4IqGNr0ZsJ/t1abxEjfEh4lhsIltm/s8Aouw7c
-	 RkT9s5MSw1Q8zp65Dcdf7bEVqVlGuAoyuVh7dROOGhV0PxW60PEPIl8jOFfn0SlVkD
-	 3TdYDtV21DgzEFowxzeviKHhQnZ9eIlLGLeyjZ1QfW1sUNY1TGnZTr4CEsKRkGGPHT
-	 NrqKPxTDm/H0cHAfUv8v1auQMVEhEoSc6CXD/jz0w43X58sRq9B6t/OP0NXCKroCq4
-	 fO0bVZD6FVGxg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rzHbJ-000000002ag-1MYj;
-	Tue, 23 Apr 2024 16:58:29 +0200
-Date: Tue, 23 Apr 2024 16:58:29 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: broonie@kernel.org, perex@perex.cz, tiwai@suse.com, lgirdwood@gmail.com,
-	alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-	Bjorn Andersson <quic_bjorande@quicinc.com>
-Subject: Re: [PATCH v2 0/4] ASoC: qcom: display port changes
-Message-ID: <ZifMlc_rLV6_LhUy@hovoldconsulting.com>
-References: <20240422134354.89291-1-srinivas.kandagatla@linaro.org>
- <ZieihZRKe7OtP-nV@hovoldconsulting.com>
- <92b02fd3-5eba-42a7-a166-21b14724b10c@linaro.org>
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="Euk68xFI"
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 5A3B8600A7;
+	Tue, 23 Apr 2024 14:59:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1713884341;
+	bh=Yce+qDBOZuO+SfiuLBCU/iYtbYmkEpQFI26Eyr98dJM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Euk68xFI4y8XXUx+z6g6V0jHbc97oDHz4Ykrc1dFaHrz2+APG9+rMjRwumONlJ3v9
+	 kvq/rBT59BH4Wm3plThuU/m7SE44w4Y9ma3r8epFTJyj0/+B+afoY8qY2uW6QEv9PF
+	 mX57F2UEhS9ddG0RjEF49Ic3bp/6geC7mEFHJ10dQWbehrG0Cf698nmnjT7fW5AHiu
+	 AM3cgn/9DHwGf4Ucj0oGjFjklNhgduZ6l8ANv8IizC+Fzr0nEo60yuI0a9LitqVbUd
+	 fmZIZ8000qT91Fk8KQhOUL48nRrLcvjQDeWgTnqjhCu1zIjrlLEZf4CWEQiRfkIw/Y
+	 u/nnH8EJYneLg==
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by x201s (Postfix) with ESMTP id DD630205A1A;
+	Tue, 23 Apr 2024 14:58:54 +0000 (UTC)
+Message-ID: <883a41cc-58b2-475b-a247-b45f69c7f24b@fiberby.net>
+Date: Tue, 23 Apr 2024 14:58:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <92b02fd3-5eba-42a7-a166-21b14724b10c@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 1/2] net: lan966x: cleanup
+ lan966x_tc_flower_handler_control_usage()
+To: Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, Horatiu Vultur <horatiu.vultur@microchip.com>,
+ UNGLinuxDriver@microchip.com, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org
+References: <20240423102720.228728-1-ast@fiberby.net>
+ <20240423140048.GU42092@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>
+In-Reply-To: <20240423140048.GU42092@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 23, 2024 at 01:38:18PM +0100, Srinivas Kandagatla wrote:
-> On 23/04/2024 12:59, Johan Hovold wrote:
+Hi Simon,
 
-> > It looks like your UCM changes are still muxing the speaker and *each*
-> > displayport output so that you can only use one device at a time (i.e.
-> > only Speaker or DP1 or DP2 can be used).
-
-> that is true.
+On 4/23/24 2:00 PM, Simon Horman wrote:
+> On Tue, Apr 23, 2024 at 10:27:17AM +0000, Asbjørn Sloth Tønnesen wrote:
+>> Define extack locally, to reduce line lengths and future users.
+>>
+>> Rename goto, as the error message is specific to the fragment flags.
+>>
+>> Only compile-tested.
+>>
+>> Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
 > 
-> What is the use-case to use more than one audio sink devices at the same 
-> time for a laptops?
-
-I can imagine streaming audio and video to a TV (or audio to a soundbar)
-over DP while playing systems sounds and doing video conferencing using
-the internal speakers (or the other DP port).
-
-> How do you test it? I never tested anything like that on a full desktop 
-> setup.
-
-You can select the sink per application in pavucontrol. Just verified
-that playing audio over the 3.5 mm jack while playing system sounds
-using the internal speakers works just fine.
-
-> > As we discussed off list last week, this seems unnecessarily limited and
-> > as far as I understood is mostly needed to work around some
-> > implementation details (not sure why DP1 and DP2 can't be used in
-> > parallel either).
+> Hi Asbjørn,
 > 
-> It is absolutely possible to run all the streams in parallel from the 
-> Audio hardware and DSP point of view.
-> 
-> One thing to note is, On Qualcomm DP IP, we can not read/write registers 
-> if the DP port is not connected, which means that we can not send data 
-> in such cases.
-> 
-> This makes it challenging to work with sound-servers like pipewire or 
-> pulseaudio as they tend to send silence data at very early stages in the 
-> full system boot up, ignoring state of the Jack events.
+> This patch-set did not apply to net-next at the time it was posted
+> (although it does now), so it will need to be reposted.
 
-This bit sounds like it can and should be worked around by the driver to
-avoid hard-coding policy which would prevent use cases such as the ones
-mentioned above.
+Weird, patchwork incorrectly matched up the two series. I had
+rebased shortly before posting (net-next was at 077633afe07f4).
 
-> > Can you please describe the problem here so that we can discuss this
-> > before merging an unnecessarily restricted solution which may later be
-> > harder to change (e.g. as kernel, topology and ucm may again need to be
-> > updated in lock step).
-> > 
-> >  From what I could tell after a quick look, this series does not
-> > necessarily depend on muxing things this way, but please confirm that
-> > too.
-> 
-> These patches have nothing to do with how we model the muxing in UCM or 
-> in tplg.
-> 
-> so these can go as it is irrespective of how we want to model the DP 
-> sinks in the UCM or tplg.
+The 4 emails and their Subject, Message-ID and In-Reply-To:
 
-Thanks for confirming.
+Subject: [PATCH net-next 1/2] net: sparx5: flower: cleanup sparx5_tc_flower_handler_control_usage()
+Message-ID: <20240423102728.228765-1-ast@fiberby.net>  (A)
 
-Johan
+Subject: [PATCH net-next 2/2] net: sparx5: flower: check for unsupported control flags
+Message-ID: <20240423102728.228765-2-ast@fiberby.net>  (B)
+In-Reply-To: <20240423102728.228765-1-ast@fiberby.net> (A)
+
+Subject: [PATCH net-next 1/2] net: lan966x: cleanup lan966x_tc_flower_handler_control_usage()
+Message-ID: <20240423102720.228728-1-ast@fiberby.net>  (C)
+
+Subject: [PATCH net-next 2/2] net: lan966x: flower: check for unsupported control flags
+Message-ID: <20240423102720.228728-2-ast@fiberby.net>  (D)
+In-Reply-To: <20240423102720.228728-1-ast@fiberby.net> (C)
+
+Patchwork have two series A+D and C+B, instead of A+B and C+D.
+
+> Also, please consider providing a cover-letter for patch-sets with
+> more than one (but not just one) patch.
+
+Sure, will do. Didn't know if it was appreciated for so small series,
+anyway v2 will have more patches, after splitting this patch up.
+
+-- 
+Best regards
+Asbjørn Sloth Tønnesen
+Network Engineer
+Fiberby - AS42541
