@@ -1,163 +1,97 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2067.outbound.protection.outlook.com [40.107.223.67])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC7A13CFBD;
-	Tue, 23 Apr 2024 16:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713889541; cv=fail; b=mw61jSGZmaoIE6guF4xviHLgSOqo9nbMhvF4An+BJ4R39C8YSN5RR3kyPkTD+CWVdu1y1P7KAOuEipuEArQMDIEsTPH0hYfThGubLHFeqTYeeT/L+5Pgft1pIYQZsiwbla+91yBW2kWf6dnbDWQqkBfJx2sOOqMrF95ey4GFwVA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713889541; c=relaxed/simple;
-	bh=9tvv/ITgL8togB8ryH3y89mHkgfUQrSPhi17ZQF43fU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b0LCjRenb26ALtJaszix/+qiUPv9/azMlE8lY1qbx40lzIgt+Elz/5b7//qROc1uzOSRazDl9NrqDnNDrLZ1iqmxlruEw2vSziVjgwoDlTTzP4A0JLDahgNkSt8BZT/r6nPlqYWOeUOBcmWV4sFpBul6+CIC6tbyLlZ9nLNfbKI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UrtawqBp; arc=fail smtp.client-ip=40.107.223.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905AE13EFE5;
+	Tue, 23 Apr 2024 16:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713889550; cv=none; b=VOF8L1J/1GAeHliIZgrAy0L8w59kHoOdLJm5sN3w/EqJtk7q6HqDSFpL33H9CpnieUgTRL3X1yX9X41nZoviO0HARO2F7zPc4wPWSHgszBaSYh0qkPJRF5FGjjI4BRvXIJGkJwkHit69s2iOr7Cgf3NnLhAH7UUp4BnrIk8Pt4o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713889550; c=relaxed/simple;
+	bh=selTvwPRVCABjm1HQhe7V2kfCqkDDvT5fefTH7nNXN0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=q/AwiP7EzUIyTnJTnqiJb8jflqSDPdmwxPp0loih7ccG/o3hFvW3sXezVmaY9buXhkXEfI+BlESlbOoG45b/7X6KS/S2ic0BdseLYgmJID5t9GCWYlmyUtO/G799LsVa3KhGYeOdESqeksf0xxM2BUnJ3deNSitZBARJGfGY+dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WxnCeEO6; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UrtawqBp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E4u3tBlykwixD/HcTjA0n8RlC0TwLAdZ/ub3dX3q1bje/39QQKRpm4k1FmsUXH24xzKkdF+FWInqK5B/cbj9e35n9NireC6gNYtq5bjsvmowhkDUyg6QhkjZWlPYyixM2AI5VVUA4x856+1f95ZZutairtbHb7NneV2OQG7pFG3gTHfg0Kdj3Q8VnH6jgVmgCIkYml1c8HkSs/FXEY5r0NEif8yvLW2535thcFFIA0xunwj+2gbKuVdEoJ+TgggVMa3QkdtSR842EtziA0Zr0qM0MzQetqDLvf7d+SPu5toz1iarANZAbCodU358zGXfjG0Tyyb/gFp5ejVZX8kldw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1uvqxf4AAT/4+K/snKnusN567i81xeodAMTISj8yubc=;
- b=ajSoNjZxlVAsCPSTooZyatngFHnBrz5bD7uzTTeDFFEa+DfofXA6gR9AgZVi/8X25E309rALOOppKLCjA7D8fNzPi18Um3fqqrfUtvDYLw8UbKDViTw9a65/oAftsEz785bs1wltncOZGhJeL5mg1B+9Q9DdjHnue+ycaeojIiNMdXO8hNqrc2BQkbhdTUCvMuoAUU45RBgsXQzjGpI5Dyg9MNXYXyXxmHe+fsShEcbUfvIOzjKxoUNjiv+e6h82XAMoEXZy1eqhaozAF8Sw3cNsgX9Zs+c7nAf4kWrk+X0Tcb1SyQF9KrTdNkxWc7t2+a8yqp6/hpe7IiYrK7x0dw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1uvqxf4AAT/4+K/snKnusN567i81xeodAMTISj8yubc=;
- b=UrtawqBpfwlFpR0JhIGiTeXDK3ACDmvJXSKMJs97LGGT3jgUVnZUVPXuf7sKImeZYtvrHJeC91V7liuAy1HxzA3lGrCKhuHFwCTUDlxEYdPXLVGv+LyqyIcRUliOnYKC4XZpCN8asBH2xvLES02KeXrkc/uVLIRYxzVs/ECerAY=
-Received: from CH0PR04CA0023.namprd04.prod.outlook.com (2603:10b6:610:76::28)
- by CY5PR12MB6060.namprd12.prod.outlook.com (2603:10b6:930:2f::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Tue, 23 Apr
- 2024 16:25:35 +0000
-Received: from CH1PEPF0000AD81.namprd04.prod.outlook.com
- (2603:10b6:610:76:cafe::57) by CH0PR04CA0023.outlook.office365.com
- (2603:10b6:610:76::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.35 via Frontend
- Transport; Tue, 23 Apr 2024 16:25:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000AD81.mail.protection.outlook.com (10.167.244.89) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Tue, 23 Apr 2024 16:25:34 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Apr
- 2024 11:25:34 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: <kvm@vger.kernel.org>
-CC: <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-crypto@vger.kernel.org>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>,
-	<ardb@kernel.org>, <pbonzini@redhat.com>, <seanjc@google.com>,
-	<vkuznets@redhat.com>, <jmattson@google.com>, <luto@kernel.org>,
-	<dave.hansen@linux.intel.com>, <slp@redhat.com>, <pgonda@google.com>,
-	<peterz@infradead.org>, <srinivas.pandruvada@linux.intel.com>,
-	<rientjes@google.com>, <dovmurik@linux.ibm.com>, <tobin@ibm.com>,
-	<bp@alien8.de>, <vbabka@suse.cz>, <kirill@shutemov.name>,
-	<ak@linux.intel.com>, <tony.luck@intel.com>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <alpergun@google.com>,
-	<jarkko@kernel.org>, <ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>,
-	<pankaj.gupta@amd.com>, <liam.merwick@oracle.com>
-Subject: [PATCH v14 28/22] [SQUASH] KVM: SEV: Provide support for SNP_EXTENDED_GUEST_REQUEST NAE event
-Date: Tue, 23 Apr 2024 11:21:43 -0500
-Message-ID: <20240423162144.1780159-6-michael.roth@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240423162144.1780159-1-michael.roth@amd.com>
-References: <20240421180122.1650812-1-michael.roth@amd.com>
- <20240423162144.1780159-1-michael.roth@amd.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WxnCeEO6"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43N8IcXC022096;
+	Tue, 23 Apr 2024 16:25:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=NDEho3uAV1nyYlvcJIIrLldXexiCVZwvoJHuX3+MTgw=; b=Wx
+	nCeEO6Peuxgp6KUlDwI8FyJ1K9Xv3SWlI1QJLDrRl3X4P7Uw76erOLg1TtDBaTOE
+	g+F0/mMXxJEOQe5Xn8UX5gce5D1NA+8ifuE4xJ8VrAHhbCtOOfdCNkXmuHuwOibL
+	bFQN40kLQHE2cRS9VZNSRKxhMrvkCblvs4OoEI5EKCpewcrVG35b+fXIfJMq4hnm
+	vwtUU9I5N0uCyFgAqTNsVruh+SGIK2hPIIQwJ/Ca7QG9YLLZRXww2DhARiopL2UU
+	1za65XIOY7BOm1xCWkmUG7wl1v7bz4S48odoLG9yZKk9HujHZCe+PDz0WiTzxv3q
+	TDJzfRU1dq4Y9P7lzGyw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xp9bu9ed3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Apr 2024 16:25:42 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43NGPfmO002838
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Apr 2024 16:25:41 GMT
+Received: from [10.226.59.182] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 23 Apr
+ 2024 09:25:40 -0700
+Message-ID: <96868bd1-aac1-ac1d-0f36-143c6aca761f@quicinc.com>
+Date: Tue, 23 Apr 2024 10:25:33 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD81:EE_|CY5PR12MB6060:EE_
-X-MS-Office365-Filtering-Correlation-Id: 094770ec-aaba-4a75-6ebb-08dc63b200c6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YzZ82casV1xpEF1kUPpSiTFHOFMGH+HTfEhuHKEHoDMM5op2AxTEexLWi7Ki?=
- =?us-ascii?Q?HSsRhN1DwvLgOVaFet+yEEtemSiNHK5SIbrJkqSRixnvUgMNlribdxovjlgE?=
- =?us-ascii?Q?lI+Gmu5mvHYwFywJi+9giglvBQ+VQ3Gvkp4iEl73fsMNmYWVPAQgfeoGdKZi?=
- =?us-ascii?Q?6el/0+q/is1MB3dSgvWKiivoKL8rVDcX7HJ1JqV6hSJLC6hjethPRXgovXy9?=
- =?us-ascii?Q?oCoCaziMNVWEB0/AOi7eTa0lC34kMSElO/qXLH6pRUnq3oY+YGD1+GBKzl+A?=
- =?us-ascii?Q?ubTRUXqhONxRmIXeZ+1tg6BR/1j6LBwcggXjY4gCQ2M73nMFl+JBAb5mB8ML?=
- =?us-ascii?Q?qhyApjsWCK9e/hF3Ugoje1862Ikr+MKkPKwc3vUNhEvOJla6vrQbeSN0GaVa?=
- =?us-ascii?Q?tk78YDq1Ic8PeBkaANtlDGEa8sw1wi+ZKYBX591SurYLOStnvUxFnp8FaCQa?=
- =?us-ascii?Q?unDd02rF2qf/L7i2Fbl5ZTyWGRhlZtwVhLzPQ6XQaH+7OMWdmoV1iKKscIo4?=
- =?us-ascii?Q?LOD5FIv+3fPZDz3xFr9v8QeRfqW/KAdn06RdJByMY1v30zbUGdNTj1W09oOb?=
- =?us-ascii?Q?P1+pWP6Rlj+/B+CVG0Xi/vVN88nV/Yvob4WrRexLNE4/BuvRpnqdmAkROEDB?=
- =?us-ascii?Q?yJMjECCnIcnrXznvq1vft8JY02mhYM4nwgGd75uLw3oBjQSCaFmj3s8jdeE7?=
- =?us-ascii?Q?H+b4jLZwI9VjJvnJdFAi/5RVysJ6CD5dwTV+9/kVpAVZ6Rv0q0a2lLRHufIZ?=
- =?us-ascii?Q?34ek/rIaqZtC9skFlNV1e64vsVkCmfo8ZhDZ8wnTRfrQZyvUbx36DhAGW5aU?=
- =?us-ascii?Q?aljxz1iHpf6WgpnbkSnOicip7l+2NuzclMndwOmAv34zf7DDJo/vLGXgzUS1?=
- =?us-ascii?Q?iMEJXkOGfRS6xdDUmCsZTH/LBt2E83tL6DXGr+yXgQWHs6bBh9vebVt34f4h?=
- =?us-ascii?Q?DEBwvGer262wRcTRrxT2sCVpXrjz8tY9qBJRonflE67liYwk3/JkDNzpxw9t?=
- =?us-ascii?Q?S0DDDIgna/2xY08hXvsQxviFePBaoIDvC2ufz2v86UCjYMea3KQi0d29hty4?=
- =?us-ascii?Q?3zWjQBYZUQxQ2aTixgr2B1RcuRg/JwVvZ55a7Xcjr2rS+6nlV2GP6sxYaUSr?=
- =?us-ascii?Q?yE76BpNTFATaD2oX9EUQlbpc//OANg7DJLqd40KrbivAUzjnyNeAbR2EyF6P?=
- =?us-ascii?Q?UR7pNn8Xg0iKob+9NdVxGXW9M60x10pOZLn85zYWtGn+LedbXKoEBWzswgMN?=
- =?us-ascii?Q?b4ZYARZM7CkT+WOcmq9HmxWFcvdSfO5XBV/0A8ACUe3CPPe8fFIBPfMdKrs+?=
- =?us-ascii?Q?IL28RM5M/PfLZ8DVF+Dse388PsJjTAMzJ2wDRA9+HoMtCkp4OQ7duutlYPR/?=
- =?us-ascii?Q?CJRfYzk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(376005)(7416005)(36860700004)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 16:25:34.7319
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 094770ec-aaba-4a75-6ebb-08dc63b200c6
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD81.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6060
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [PATCH 2/2] dt-bindings: dma: Drop unused QCom hidma binding
+Content-Language: en-US
+To: "Rob Herring (Arm)" <robh@kernel.org>, Sinan Kaya <okaya@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: Dan Carpenter <dan.carpenter@linaro.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20240423161413.481670-1-robh@kernel.org>
+ <20240423161413.481670-2-robh@kernel.org>
+From: Jeffrey Hugo <quic_jhugo@quicinc.com>
+In-Reply-To: <20240423161413.481670-2-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: irD2PcjKW0URdMpnVYKwIy5eGj8ljbJc
+X-Proofpoint-ORIG-GUID: irD2PcjKW0URdMpnVYKwIy5eGj8ljbJc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-23_14,2024-04-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=808 priorityscore=1501 clxscore=1011 spamscore=0 mlxscore=0
+ adultscore=0 suspectscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404230037
 
-Ensure an error is returned if a non-SNP guest attempts to issue an
-Extended Guest Request. Also add input validation for RAX/RBX.
+On 4/23/2024 10:14 AM, Rob Herring (Arm) wrote:
+> The QCom hidma binding was used on a defunct QCom server platform which
+> mainly used ACPI. DT support in the Linux driver has been broken since
+> 2018, so it seems this binding is unused and can be dropped.
+> 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-Signed-off-by: Michael Roth <michael.roth@amd.com>
----
- arch/x86/kvm/svm/sev.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 2b30b3b0eec8..ff64ed8df301 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -3297,6 +3297,11 @@ static int sev_es_validate_vmgexit(struct vcpu_svm *svm)
- 			goto vmgexit_err;
- 		break;
- 	case SVM_VMGEXIT_EXT_GUEST_REQUEST:
-+		if (!sev_snp_guest(vcpu->kvm))
-+			goto vmgexit_err;
-+		if (!kvm_ghcb_rax_is_valid(svm) ||
-+		    !kvm_ghcb_rbx_is_valid(svm))
-+			goto vmgexit_err;
- 		break;
- 	default:
- 		reason = GHCB_ERR_INVALID_EVENT;
--- 
-2.25.1
-
+Reviewed-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
