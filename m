@@ -1,96 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E8D13BAF6
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 15:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F8419BBA;
+	Tue, 23 Apr 2024 15:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713884789; cv=none; b=WBYqJRBuxFcWrSxU1KFr+VgT0xdzLN6aJyXtRKmCk3M9rbd9vMKCzuZIRKZMNVCcO5gO2Soz55im+ZbX0a3jtKnlxrGJrQgmS/A0h5qAMAemLn5Bqulg01WlhRTefziUa9GU0vJ1tqMUu3L+dlEt6l579IGbKC2qNx67RIEm+50=
+	t=1713884852; cv=none; b=aPHKOXAyU7YqbeSz8xD0f6Mqi7uGY1DRY9GGYWJ7TvpbsK/F/PitkrZ4eFNqRY4lEUKFPSTFP/BZ4wM/01bTuS90maQD1mc9kw39nIVqGzZhbv06b5v739VOJ5ZjG+jX4T99LnwmgAggs0bhWs6YOhlmu6rEWp/a+PAcfmTmsf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713884789; c=relaxed/simple;
-	bh=o6CKy0NYPP8jGkzivA4Wvp8QxKf+uzrSJVajbqU9mko=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ceq9XDsVBFVspAUHjoUXeAV0epp3mFC0aqr0zeajX2qXPrHCnmsA6EcwyA6r0cZ4ztY554wG3qXbapMxHIKer62QR0XTT0GBYbG3l2AZwf37I6Y+whi2VPTlHjpnaoUfOQQhrSjmZI7USrwt/+HEF9EhZoOuHGZSZver+1UtZbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xb6dZHCa; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713884852; c=relaxed/simple;
+	bh=AKBMobjYQ6x2TD8CDoee3DGcDXyOQQFoITtQ9pcukvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H3JPs/I4dVDuIk1SXkIWbB+D+bEd+sBDylWj+taQY1OBcB54jzv0ohAHY7CF5K6i1Xp+K3Lzxd79+cO+qxLf4/J9O9cAqeyrHl12ElTw0cpgskJHYgyUEA6uxGlf6+qQPqjsCFaT/nMWZIwhDoWAyLildsgVNPqyJCBrZafeNYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQBQOBcU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xb6dZHCa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713884787; x=1745420787;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=o6CKy0NYPP8jGkzivA4Wvp8QxKf+uzrSJVajbqU9mko=;
-  b=Xb6dZHCa37659PcbUF1KQagFpitqTNS9TJYLTq38fqqKKU6l2yZR/ZgK
-   pq3ycdxpAStuH4rmFEReT+bDFa6wJHzIcyCg9u4JtKe7nQ2oKRW0C3/QA
-   6wnMV2smIXaUP2mjrsP22kAtdpVTzgMju3E11FHVZjmEf0mUWOYI9IFDh
-   1vkSeV2S5raV5upkUUxO1Vt0FZ09i70wYggHoDJa2L5iue6DFxWs2Zqdp
-   PmCp1WUp5x95y9IoG70/lP5M6VeZRPnvpieHboK5z34G5tcMU64Pre6GZ
-   YXH0ckNUCp1EIa3E0CD3jrNL6lgsDTMk1I9pff1wSd3laGSyJ3rN5g8iv
-   A==;
-X-CSE-ConnectionGUID: hD6osGthT/+T+mnw+pmk4w==
-X-CSE-MsgGUID: k6sjZC/tTyaCRD5gYXJ5jA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="20085333"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="20085333"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 08:06:26 -0700
-X-CSE-ConnectionGUID: 0hrMKSD0RlGvTGF21MX/3Q==
-X-CSE-MsgGUID: Xo9vBO6dS1ylJ7ufOa3/Sg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="28895349"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa003.fm.intel.com with ESMTP; 23 Apr 2024 08:06:25 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 22341192; Tue, 23 Apr 2024 18:06:23 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] mm: page_alloc: Avoid defining unused function
-Date: Tue, 23 Apr 2024 18:06:22 +0300
-Message-ID: <20240423150622.2526825-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQBQOBcU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B495EC116B1;
+	Tue, 23 Apr 2024 15:07:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713884850;
+	bh=AKBMobjYQ6x2TD8CDoee3DGcDXyOQQFoITtQ9pcukvM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kQBQOBcUB6DxFRkYRr4oNjwNyRODpE0Md48n7Zb5oTuNNRbDZF1TEs9RIkhLA6W1l
+	 DSgBijpsweTdM2j/Dfr+WbeASNgDWuKI+e02uweWMyuuokfPMtmRWSNCJvydqf2WB7
+	 eOIS0r7XygtdDHoNheYn+zXRtQLN+k9acEerv0Zu8DoXhV+BZbMJS7RrOcCblXz+ED
+	 N5KIIWqVP65av1QQnC2YMgPNcHG5Un82QZ7hF1amdgrDpC7Djd95mFyTridA8TUi0X
+	 2sXEs3ag78ZSlhgUTRma6tbt7t/BuuBmUa3OBQiOisRU1iGBpa8Cvzux/5OwEmX2nR
+	 TFnYqAXwI1BfQ==
+Date: Tue, 23 Apr 2024 10:07:28 -0500
+From: Rob Herring <robh@kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org,
+	Rae Moar <rmoar@google.com>, patches@lists.linux.dev,
+	kunit-dev@googlegroups.com,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	linux-kernel@vger.kernel.org, David Gow <davidgow@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-clk@vger.kernel.org, Daniel Latypov <dlatypov@google.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-kselftest@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Ripard <maxime@cerno.tech>,
+	Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH v4 04/10] of: Add a KUnit test for overlays and test
+ managed APIs
+Message-ID: <171388483531.238610.10285255210612947227.robh@kernel.org>
+References: <20240422232404.213174-1-sboyd@kernel.org>
+ <20240422232404.213174-5-sboyd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240422232404.213174-5-sboyd@kernel.org>
 
-In some configurations I got
-mm/page_alloc.c:656:20: warning: unused function 'add_to_free_list' [-Wunused-function]
-Becuase the only user is guarged with a certain ifdeffery,
-do the same for add_to_free_list().
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- mm/page_alloc.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Mon, 22 Apr 2024 16:23:57 -0700, Stephen Boyd wrote:
+> Test the KUnit test managed overlay APIs. Confirm that platform devices
+> are created and destroyed properly. This provides us confidence that the
+> test managed APIs work correctly and can be relied upon to provide tests
+> with fake platform devices and device nodes via overlays compiled into
+> the kernel image.
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Daniel Latypov <dlatypov@google.com>
+> Cc: Brendan Higgins <brendan.higgins@linux.dev>
+> Cc: David Gow <davidgow@google.com>
+> Cc: Rae Moar <rmoar@google.com>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> ---
+>  drivers/of/.kunitconfig            |   1 +
+>  drivers/of/Kconfig                 |  10 +++
+>  drivers/of/Makefile                |   1 +
+>  drivers/of/kunit_overlay_test.dtso |   9 +++
+>  drivers/of/overlay_test.c          | 115 +++++++++++++++++++++++++++++
+>  5 files changed, 136 insertions(+)
+>  create mode 100644 drivers/of/kunit_overlay_test.dtso
+>  create mode 100644 drivers/of/overlay_test.c
+> 
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 33d4a1be927b..0fb796b700a4 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -653,6 +653,7 @@ static inline void __add_to_free_list(struct page *page, struct zone *zone,
- 	area->nr_free++;
- }
- 
-+#ifdef CONFIG_MEMORY_FAILURE
- static inline void add_to_free_list(struct page *page, struct zone *zone,
- 				    unsigned int order, int migratetype,
- 				    bool tail)
-@@ -660,6 +661,7 @@ static inline void add_to_free_list(struct page *page, struct zone *zone,
- 	__add_to_free_list(page, zone, order, migratetype, tail);
- 	account_freepages(zone, 1 << order, migratetype);
- }
-+#endif
- 
- /*
-  * Used for pages which are on another list. Move the pages to the tail
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
