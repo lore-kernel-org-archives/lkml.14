@@ -1,127 +1,138 @@
-Received: from nbd.name (nbd.name [46.4.11.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1B95CDF2;
-	Tue, 23 Apr 2024 10:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8226BB47;
+	Tue, 23 Apr 2024 10:25:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713867941; cv=none; b=SvZPreLDrTdZyc9AjON+dSJJbgIJoRwKyHFwl1fikir7lS/G7Ta/pYsYeWJbYE9yFXujkSWESOJQmwocdkhIPoh69ntueISkTanCEZyKkymPLzYmfcVDKFagxuorff7WhBaR/f8kpzTD5+Dm6QOv6VMcqe/XCcEOGnYdlmw2Aek=
+	t=1713867945; cv=none; b=Jppb95j/LuzVtthuaTMgs1P4QX+e/hl/49Wad6m34gtHKrNPTUf7GXbURA2OCK33Q5oL7E8M/YG93vSejkUPJnaWXx+ItCUQmoRXfVKuBtzO2j8Sz1mMQtr5fa2c27iIlpzvA+yIytf6BEEL1e4J/ywFzGR/dnwaifbvovGRZsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713867941; c=relaxed/simple;
-	bh=Y8f5+YKLqjKKXsFmgIr/oOVxZIeWK6XAH8GXTpW6zo4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HLlRBL7soTniS5uYvronqlR1zBwOl3IOmuK8q5v7tcOWT/2JXh9w++sWOyo6MCkNnAOhlGcHCJbOx73yxbivUy4bR1X4AmIc1j9MWBnQdmFmjicwnpk694iiDWqdt/2KSI3ZFp6CS8SWVCACZZtCw7AVB4oMK1UoQg9ugiws9ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=Sdkb0v8A; arc=none smtp.client-ip=46.4.11.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
+	s=arc-20240116; t=1713867945; c=relaxed/simple;
+	bh=n09yJzubRKA9cSYp8TkeTpJhWQ1QQIIQzpKSNmbwu1k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XTqVTjuPDrczANnns6GL1XH5Mn885s/UmBGfXQmXX/ldlGC6QUYy+s5wErzYDsyRGWGo8orT45TARIuGiHh5EGhUE+r/ryztRdOqEWwCJaWpyPceuAkZFJ9WEnN1H7J9kptJTOLkPs+YpHEbK81G3YrzORq55ROi34c09GMpuM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mHCxxhVA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="Sdkb0v8A"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-	s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=e6sfNgyyq3CP0DjLtTP2ZBLYSGUFE+AaTMTxRx7+2Mw=; b=Sdkb0v8ApZ8eALsQJahEXgrNj4
-	7EOx8+0/ILDg5MFyUY/fHFjMDPTuFRY1+r2zZJ+t7ZQDD4vFNuEQiImMbhMm489QKlTkkMl3UE10/
-	KQxnokWGZdgrO6TFW0SSATzzFXlYVFvcfgnt+DY5y0iggp65fnsH3HBnNiJ62OSzWITc=;
-Received: from p54ae9c93.dip0.t-ipconnect.de ([84.174.156.147] helo=nf.local)
-	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <nbd@nbd.name>)
-	id 1rzDLB-0061vs-11;
-	Tue, 23 Apr 2024 12:25:33 +0200
-Message-ID: <63abfa26-d990-46c3-8982-3eaf7b8f8ee5@nbd.name>
-Date: Tue, 23 Apr 2024 12:25:26 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mHCxxhVA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F57BC3277B;
+	Tue, 23 Apr 2024 10:25:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713867945;
+	bh=n09yJzubRKA9cSYp8TkeTpJhWQ1QQIIQzpKSNmbwu1k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mHCxxhVA6cyU/PoiepmDlSLS+H7E3lXEVZZ7SkQkbRwU8wsJn7yq/gsrdZ/KQ8EWQ
+	 qTdpyo+2/eOC0aeBtVgoHDfCIzopETuwzyuMteiQN0gOmyQFRX7HK+D8L6Qhs1nSf6
+	 QSW5QnB3PyHGaVi8/l72o8F+us2LH4bpe0oFOeOkxpMCBJBY9IfpsuMMMLnryGz3cD
+	 xE/GSa9LVnBLrOWUt19DDw6R4yEA4xjbFxKiOupkHRJaRa4+MRQgeR4IoqQPpzY+Y2
+	 /eI7tzFD1uKkwRbUpC0GOeZz2y8yY+HaAhUWdjcPSqVCGFWqu84OB0sN7tXOLyUw0i
+	 tbJVwJjELHQGQ==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH] drm: move DRM-related CONFIG options into DRM submenu
+Date: Tue, 23 Apr 2024 19:24:43 +0900
+Message-Id: <20240423102443.453261-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] net: add TCP fraglist GRO support
-To: Eric Dumazet <edumazet@google.com>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- David Ahern <dsahern@kernel.org>, linux-kernel@vger.kernel.org
-References: <20240423094117.93206-1-nbd@nbd.name>
- <CANn89i+6xRe4V6aDmD-9EM0uD7A87f6rzg3S7Xq6-NaB_Mb4nw@mail.gmail.com>
-Content-Language: en-US
-From: Felix Fietkau <nbd@nbd.name>
-Autocrypt: addr=nbd@nbd.name; keydata=
- xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCeMncXpbbWNT2AtoAYICrKyX5R3iMAoMhw
- cL98efvrjdstUfTCP2pfetyN
-In-Reply-To: <CANn89i+6xRe4V6aDmD-9EM0uD7A87f6rzg3S7Xq6-NaB_Mb4nw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 23.04.24 12:15, Eric Dumazet wrote:
-> On Tue, Apr 23, 2024 at 11:41 AM Felix Fietkau <nbd@nbd.name> wrote:
->>
->> When forwarding TCP after GRO, software segmentation is very expensive,
->> especially when the checksum needs to be recalculated.
->> One case where that's currently unavoidable is when routing packets over
->> PPPoE. Performance improves significantly when using fraglist GRO
->> implemented in the same way as for UDP.
->>
->> Here's a measurement of running 2 TCP streams through a MediaTek MT7622
->> device (2-core Cortex-A53), which runs NAT with flow offload enabled from
->> one ethernet port to PPPoE on another ethernet port + cake qdisc set to
->> 1Gbps.
->>
->> rx-gro-list off: 630 Mbit/s, CPU 35% idle
->> rx-gro-list on:  770 Mbit/s, CPU 40% idle
-> 
-> Hi Felix
-> 
-> changelog is a bit terse, and patch complex.
-> 
-> Could you elaborate why this issue
-> seems to be related to a specific driver ?
-> 
-> I think we should push hard to not use frag_list in drivers :/
-> 
-> And GRO itself could avoid building frag_list skbs
-> in hosts where forwarding is enabled.
-> 
-> (Note that we also can increase MAX_SKB_FRAGS to 45 these days)
+When you create a submenu using the 'menu' syntax, there is no
+ambiguity about the end of the submenu because the code between
+'menu' and 'endmenu' becomes the submenu.
 
-The issue is not related to a specific driver at all. Here's how traffic 
-flows: TCP packets are received on the SoC ethernet driver, the network 
-stack performs regular GRO. The packet gets forwarded by flow offloading 
-until it reaches the PPPoE device. PPPoE does not support GSO packets, 
-so the packets need to be segmented again.
-This is *very* expensive, since data needs to be copied and checksummed.
+In contrast, 'menuconfig' does not have the corresponding end marker.
+Instead, it infers the end of submenu from symbol dependency.
 
-So in my patch, I changed the code to build fraglist GRO instead of 
-regular GRO packets, whenever there is no local socket to receive the 
-packets. This makes segmenting very cheap, since the original skbs are 
-preserved on the trip through the stack. The only cost is an extra 
-socket lookup whenever NETIF_F_FRAGLIST_GRO is enabled.
+This is described in Documentation/kbuild/kconfig-language.rst,
+starting line 348. It demonstrates two ways to place the code under
+the submenu:
 
-PPPoE in this case is only an example. The same issue appears when 
-forwarding to any netdev which does not support TSO, which in my case 
-affects most wifi drivers as well.
+ (1) open an if-block right after the 'menuconfig', placing the submenu
+     content inside the if-block
 
-- Felix
+ (2) give 'depends on' to every symbol that should go into the submenu
+
+Many subsystems adopt (1) because it is the only reliable way to
+maintain the submenu structure. It ensures the code enclosed within the
+if-block is placed under the submenu.
+
+The DRM subsystem adopts (2). The submenu ends when the sequence of
+'depends on' breaks. DRM_DEBUG_MODESET_LOCK is the first option that
+does not depend on DRM. So, DRM_DEBUG_MODESET_LOCK and subsequent
+options reside outside the DRM submenu.
+
+You can confirm it by running a GUI frontend such as 'make menuconfig'
+and visiting the DRM menu:
+
+    < > Direct Rendering Manager (XFree86 4.1.0 and higher DRI support)  ----
+
+If you toggle '< >', you will notice most of the DRM-related options
+appear below it, not in the submenu.
+
+I highly recommend the approach (1). Obviously, (2) is not a reliable
+way because the submenu breaks whenever someone forgets to add
+'depends on DRM'.
+
+This commit surrounds the entire DRM configuration with 'if DRM' and
+'endif', except DRM_PANEL_ORIENTATION_QUIRKS.
+
+Note:
+ Now, 'depends on DRM' properties inside 'if DRM' ... 'endif' are
+ all redundant. I leave it as follow-up cleanups.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ drivers/gpu/drm/Kconfig | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index 5a0c476361c3..11f952d540aa 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -29,6 +29,8 @@ menuconfig DRM
+ 	  details.  You should also select and configure AGP
+ 	  (/dev/agpgart) support if it is available for your platform.
+ 
++if DRM
++
+ config DRM_MIPI_DBI
+ 	tristate
+ 	depends on DRM
+@@ -403,10 +405,6 @@ config DRM_HYPERV
+ config DRM_EXPORT_FOR_TESTS
+ 	bool
+ 
+-# Separate option because drm_panel_orientation_quirks.c is shared with fbdev
+-config DRM_PANEL_ORIENTATION_QUIRKS
+-	tristate
+-
+ config DRM_LIB_RANDOM
+ 	bool
+ 	default n
+@@ -414,3 +412,9 @@ config DRM_LIB_RANDOM
+ config DRM_PRIVACY_SCREEN
+ 	bool
+ 	default n
++
++endif
++
++# Separate option because drm_panel_orientation_quirks.c is shared with fbdev
++config DRM_PANEL_ORIENTATION_QUIRKS
++	tristate
+-- 
+2.40.1
+
