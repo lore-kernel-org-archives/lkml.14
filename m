@@ -1,141 +1,178 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from a.peacevolution.org (a.peacevolution.org [206.189.193.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793F1111AD
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 22:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD04518B04;
+	Tue, 23 Apr 2024 22:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.193.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713911940; cv=none; b=ekENIg+PRclC5F36aKT+oJhR1Hj1vu7yWEXM8AQVmv53mkrN2bjZ2PxhPUyIZU/N06tkUxmLPkNrZRFos7H+SIWyhKRgN85PzGLqAncly+D/UboOzvJ0DEEgyJMxMelU7lCqs0FagI4HtvCj54Ib5Kw0TAeLFMtbPlA3RklQ1TA=
+	t=1713912077; cv=none; b=UwZ1b+WNurT5gKanqZLQljUs3qEplGG0zZXCRaSPfNqLiqgdbVlbyyv0Y5JDDaBmVh7BC0LIw8EuZDF+zET9DSRZzSLFauu7AOUdj9LhV5DggaaURID8Jfkhbd82VnS4Q9nshbUGoYaZFxxcGba9Fneyd4Uv9Ph7GKU0PqVZH4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713911940; c=relaxed/simple;
-	bh=1pROOLzvYgFAvQOqlCQuvejs2/LA2hfbPAZih2dmTp4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RwC5R7ToJF7njUXTvxx3P/6gKGBaaEsrTCPpulyRmO1LU1TUccLoYfvBbWcHajXFPwf40SqR2yTqMxEawgUyBd9MCgsvZKFh/XRu8Ij3/Hri8ES5ExAig2EpJJZwduPmslpQLhOqNhApVQafKgGAUusafe1vMNa9KglKrSLn62w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=Z2EZZIQf; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1713912077; c=relaxed/simple;
+	bh=P1hW2nR8B6iOhbYwXhr0Keb/5gFXWkQwEOZrik5q2G8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Nf/zTjl1yptjtbXOGW0YOTFTeMCYwMnvwJ018tCFHZk3G/6OAJNo543ftM2OJIAOAMCA6yCTgWk+U0kwUeTE2zvtGkG+MRlgSJTzgU7RNEoyx5PXzq7NVq01776NbCo0vwugTNOCx3i7j6P33murF8kHyNg8zVHI8HBvESj2EIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=peacevolution.org; spf=pass smtp.mailfrom=peacevolution.org; dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b=a4Lk9guU; arc=none smtp.client-ip=206.189.193.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=peacevolution.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=peacevolution.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="Z2EZZIQf"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6f00f24f761so5288645b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 15:38:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1713911935; x=1714516735; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v116oTmF2G8tcjqnmi5BBeYNjLNRAfDLk4IJTFjyTNc=;
-        b=Z2EZZIQfKJl5veU9/FKQRNrsROGQAwHhfKOGdjl0uGmkEbVYHhn2Idk24Uyy92xKFF
-         5U9shcqNd5kU1zsC1oIJmCggdXDVSh5ADv1L+3IVt2M6rVjj5yC03qHvEDwmN5rI/rzt
-         gxo4pLdUpgBepTx87tEzZT53khZltihCDRRL8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713911935; x=1714516735;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v116oTmF2G8tcjqnmi5BBeYNjLNRAfDLk4IJTFjyTNc=;
-        b=EyU+mqGNjlMFvBIiiBBHwniETKhSBCNXC0y+8OtAJOK4Fz9kdtUhxa40abzKOTkpFB
-         GkcNceV74f1IwTPzeQpV6bY8XuoprA1Ugc3/Q2G9rOzKoz2Wgah1U+XP5trMgnmnyNR2
-         IW1pydbyVQYpRSSR0vBLPW9IUWQdCL9JXfvPp/x7MxystjCZrB+twIOmbERfncmCYP1s
-         K+38+8kqBaLaQEtkz0uG9y0a40Y6keGsT7FjJEnwL8nhQy+9osJKdWYcSK14Y662oNBh
-         vMvEgVTIYDnDJ06twqitZjlmB8mghgL6byGI5M8yVNniN4F6NEy8Oxw3iRdnV7VN+7Vx
-         CWww==
-X-Gm-Message-State: AOJu0YyqOaAPGCKTeIyGcffxZoQOUIT/GGcLzM1rzopS5v4nq9RjNF5h
-	icomDScPjFhBWVJfSJe4QucNUd9a616V11NISa+4QIcIYNvs7fXsjuZ9ooYfH/ZsbiJufYsEPkS
-	nT8r0VWlN8gykgfzlhPdRXoEs4Z5QWGHjwhYaM7ozEWraeC00RkR4Yf1FP+fc0MAeY6hRr3ciUV
-	DS8fm8hlpVGxQTHIZFmlgZ3lyHQPOwIV+Ho/rrD1Eh7AERSg==
-X-Google-Smtp-Source: AGHT+IGMn901wx8TYt9AQqDHfU3dkygWZi82tmpZMejTg3zDD+F0hjLw+9GT9DzvcwivByXEHkP6Iw==
-X-Received: by 2002:a05:6a00:1911:b0:6ec:fdfe:9bde with SMTP id y17-20020a056a00191100b006ecfdfe9bdemr1132482pfi.25.1713911935171;
-        Tue, 23 Apr 2024 15:38:55 -0700 (PDT)
-Received: from LQ3V64L9R2 ([74.87.211.242])
-        by smtp.gmail.com with ESMTPSA id kt19-20020a056a004bb300b006e6b989514bsm10175499pfb.60.2024.04.23.15.38.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 15:38:54 -0700 (PDT)
-Date: Tue, 23 Apr 2024 12:38:50 -1000
-From: Joe Damato <jdamato@fastly.com>
-To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, tariqt@nvidia.com,
-	saeedm@nvidia.com
-Cc: mkarsten@uwaterloo.ca, gal@nvidia.com, nalramli@fastly.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"open list:MELLANOX MLX4 core VPI driver" <linux-rdma@vger.kernel.org>
-Subject: Re: [PATCH net-next 1/3] net/mlx4: Track RX allocation failures in a
- stat
-Message-ID: <Zig4etCiQ6AGlR4H@LQ3V64L9R2>
-References: <20240423194931.97013-1-jdamato@fastly.com>
- <20240423194931.97013-2-jdamato@fastly.com>
+	dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b="a4Lk9guU"
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+	by a.peacevolution.org (Postfix) with ESMTPA id A939547A5F;
+	Tue, 23 Apr 2024 22:41:13 +0000 (UTC)
+From: Aren Moynihan <aren@peacevolution.org>
+To: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>
+Cc: Aren Moynihan <aren@peacevolution.org>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Ondrej Jirman <megi@xff.cz>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-iio@vger.kernel.org,
+	phone-devel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	Willow Barraco <contact@willowbarraco.fr>
+Subject: [PATCH v2 4/6] iio: light: stk3310: use dev_err_probe where possible
+Date: Tue, 23 Apr 2024 18:33:07 -0400
+Message-ID: <20240423223309.1468198-6-aren@peacevolution.org>
+In-Reply-To: <20240423223309.1468198-2-aren@peacevolution.org>
+References: <20240423223309.1468198-2-aren@peacevolution.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240423194931.97013-2-jdamato@fastly.com>
+Content-Transfer-Encoding: 8bit
+Authentication-Results: auth=pass smtp.auth=aren@peacevolution.org smtp.mailfrom=aren@peacevolution.org
+X-Spam-Level: ***
+X-Spamd-Bar: +++
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=peacevolution.org;
+	s=dkim; t=1713912074;
+	h=from:subject:date:message-id:to:cc:mime-version:content-transfer-encoding:in-reply-to:references;
+	bh=H5coa02/iaOjA9iqLxo1Oztbgi2cxOUrNasxJP7xbIE=;
+	b=a4Lk9guU0NEdyN6/998Mxl90hggHJaHblk9XS8qF2T7129mcpApydDwPe+0VXsjTlWJt96
+	Boedlc8cpdlMESLG7EeHzoycM2whNz/nKnNj9HlhQtaU7gomXRkM6GTCPvWVP8X6ZvXMXo
+	uuxj5Up77P48MW4o7v7RTlNWHasx9uc=
 
-On Tue, Apr 23, 2024 at 07:49:28PM +0000, Joe Damato wrote:
-> mlx4_en_alloc_frags currently returns -ENOMEM when mlx4_alloc_page
-> fails but does not increment a stat field when this occurs.
-> 
-> struct mlx4_en_rx_ring has a dropped field which is tabulated in
-> mlx4_en_DUMP_ETH_STATS, but never incremented by the driver.
-> 
-> This change modifies mlx4_en_alloc_frags to increment mlx4_en_rx_ring's
-> dropped field for the -ENOMEM case.
-> 
-> Signed-off-by: Joe Damato <jdamato@fastly.com>
-> Tested-by: Martin Karsten <mkarsten@uwaterloo.ca>
-> ---
->  drivers/net/ethernet/mellanox/mlx4/en_port.c | 4 +++-
->  drivers/net/ethernet/mellanox/mlx4/en_rx.c   | 4 +++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx4/en_port.c b/drivers/net/ethernet/mellanox/mlx4/en_port.c
-> index 532997eba698..c4b1062158e1 100644
-> --- a/drivers/net/ethernet/mellanox/mlx4/en_port.c
-> +++ b/drivers/net/ethernet/mellanox/mlx4/en_port.c
-> @@ -151,7 +151,7 @@ void mlx4_en_fold_software_stats(struct net_device *dev)
->  {
->  	struct mlx4_en_priv *priv = netdev_priv(dev);
->  	struct mlx4_en_dev *mdev = priv->mdev;
-> -	unsigned long packets, bytes;
-> +	unsigned long packets, bytes, dropped;
+Using dev_err_probe instead of dev_err and return makes the errors
+easier to understand by including the error name, and saves a little
+code.
 
-Err, sorry forgot to initialize this to 0 below with the rest of the init.
-Will fix this in v2 (and whatever other feedback there is). Apologies on
-the error here on my part.
+Signed-off-by: Aren Moynihan <aren@peacevolution.org>
+---
 
->  	int i;
->  
->  	if (!priv->port_up || mlx4_is_master(mdev->dev))
-> @@ -164,9 +164,11 @@ void mlx4_en_fold_software_stats(struct net_device *dev)
->  
->  		packets += READ_ONCE(ring->packets);
->  		bytes   += READ_ONCE(ring->bytes);
-> +		dropped += READ_ONCE(ring->dropped);
->  	}
->  	dev->stats.rx_packets = packets;
->  	dev->stats.rx_bytes = bytes;
-> +	dev->stats.rx_missed_errors = dropped;
->  
->  	packets = 0;
->  	bytes = 0;
-> diff --git a/drivers/net/ethernet/mellanox/mlx4/en_rx.c b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-> index 8328df8645d5..573ae10300c7 100644
-> --- a/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-> +++ b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-> @@ -82,8 +82,10 @@ static int mlx4_en_alloc_frags(struct mlx4_en_priv *priv,
->  
->  	for (i = 0; i < priv->num_frags; i++, frags++) {
->  		if (!frags->page) {
-> -			if (mlx4_alloc_page(priv, frags, gfp))
-> +			if (mlx4_alloc_page(priv, frags, gfp)) {
-> +				ring->dropped++;
->  				return -ENOMEM;
-> +			}
->  			ring->rx_alloc_pages++;
->  		}
->  		rx_desc->data[i].addr = cpu_to_be64(frags->dma +
-> -- 
-> 2.25.1
-> 
+Notes:
+    Added in v2
+
+ drivers/iio/light/stk3310.c | 44 +++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/iio/light/stk3310.c b/drivers/iio/light/stk3310.c
+index ee1ac95dbc0e..c56c6298d292 100644
+--- a/drivers/iio/light/stk3310.c
++++ b/drivers/iio/light/stk3310.c
+@@ -60,10 +60,10 @@
+ 		data->reg_##name =					    \
+ 			devm_regmap_field_alloc(&client->dev, regmap,	    \
+ 				stk3310_reg_field_##name);		    \
+-		if (IS_ERR(data->reg_##name)) {				    \
+-			dev_err(&client->dev, "reg field alloc failed.\n"); \
+-			return PTR_ERR(data->reg_##name);		    \
+-		}							    \
++		if (IS_ERR(data->reg_##name))				    \
++			return dev_err_probe(&client->dev,		    \
++				PTR_ERR(data->reg_##name),		    \
++				"reg field alloc failed.\n");		    \
+ 	} while (0)
+ 
+ static const struct reg_field stk3310_reg_field_state =
+@@ -480,22 +480,20 @@ static int stk3310_init(struct iio_dev *indio_dev)
+ 	if (chipid != STK3310_CHIP_ID_VAL &&
+ 	    chipid != STK3311_CHIP_ID_VAL &&
+ 	    chipid != STK3311X_CHIP_ID_VAL &&
+-	    chipid != STK3335_CHIP_ID_VAL) {
+-		dev_err(&client->dev, "invalid chip id: 0x%x\n", chipid);
+-		return -ENODEV;
+-	}
++	    chipid != STK3335_CHIP_ID_VAL)
++		return dev_err_probe(&client->dev, -ENODEV,
++				     "invalid chip id: 0x%x\n", chipid);
+ 
+ 	state = STK3310_STATE_EN_ALS | STK3310_STATE_EN_PS;
+ 	ret = stk3310_set_state(data, state);
+-	if (ret < 0) {
+-		dev_err(&client->dev, "failed to enable sensor");
+-		return ret;
+-	}
++	if (ret < 0)
++		return dev_err_probe(&client->dev, ret, "failed to enable sensor\n");
+ 
+ 	/* Enable PS interrupts */
+ 	ret = regmap_field_write(data->reg_int_ps, STK3310_PSINT_EN);
+ 	if (ret < 0)
+-		dev_err(&client->dev, "failed to enable interrupts!\n");
++		return dev_err_probe(&client->dev, ret,
++				     "failed to enable interrupts!\n");
+ 
+ 	return ret;
+ }
+@@ -530,10 +528,10 @@ static int stk3310_regmap_init(struct stk3310_data *data)
+ 
+ 	client = data->client;
+ 	regmap = devm_regmap_init_i2c(client, &stk3310_regmap_config);
+-	if (IS_ERR(regmap)) {
+-		dev_err(&client->dev, "regmap initialization failed.\n");
+-		return PTR_ERR(regmap);
+-	}
++	if (IS_ERR(regmap))
++		return dev_err_probe(&client->dev, PTR_ERR(regmap),
++				     "regmap initialization failed.\n");
++
+ 	data->regmap = regmap;
+ 
+ 	STK3310_REGFIELD(state);
+@@ -597,10 +595,8 @@ static int stk3310_probe(struct i2c_client *client)
+ 	struct stk3310_data *data;
+ 
+ 	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+-	if (!indio_dev) {
+-		dev_err(&client->dev, "iio allocation failed!\n");
+-		return -ENOMEM;
+-	}
++	if (!indio_dev)
++		return dev_err_probe(&client->dev, -ENOMEM, "iio allocation failed!\n");
+ 
+ 	data = iio_priv(indio_dev);
+ 	data->client = client;
+@@ -655,15 +651,15 @@ static int stk3310_probe(struct i2c_client *client)
+ 						IRQF_ONESHOT,
+ 						STK3310_EVENT, indio_dev);
+ 		if (ret < 0) {
+-			dev_err(&client->dev, "request irq %d failed\n",
+-				client->irq);
++			dev_err_probe(&client->dev, ret, "request irq %d failed\n",
++				      client->irq);
+ 			goto err_standby;
+ 		}
+ 	}
+ 
+ 	ret = iio_device_register(indio_dev);
+ 	if (ret < 0) {
+-		dev_err(&client->dev, "device_register failed\n");
++		dev_err_probe(&client->dev, ret, "device_register failed\n");
+ 		goto err_standby;
+ 	}
+ 
+-- 
+2.44.0
+
