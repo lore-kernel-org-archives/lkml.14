@@ -1,69 +1,88 @@
-Received: from mail-m24106.xmail.ntesmail.com (mail-m24106.xmail.ntesmail.com [45.195.24.106])
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7506F46436;
-	Tue, 23 Apr 2024 07:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.24.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FE746521
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 07:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713856966; cv=none; b=g4X7o+FyWB87oBzh1hcZH4a6hi5eDZPjh4zteOCbgQO3BA6S11nc6PpW0Hkc6ge8OPG3Zm7oAn/NBXIA0/Ou1g7U8EAb1GVNGaEi9hTu9ZG3+XI4Z4j3f0Qppdj+WQk1OzQ5PWY65fZPQtuysGuASkANhdGsJE2NUWujQLaOHU0=
+	t=1713856977; cv=none; b=JZxbTRihDCu8+9RPZEktPGIASpkoMp8ed+V2xN75xdAFs+ovPTQdEO0r3j/CPqgEGxvJKbPPm6gcpBAUaukKbHQJzbRxukQt8n995EiJi2vnXQ0of84PucIDJF6jfwCCKukcyre5/PapFeOLzhwcGLz8VE++VIPyX2+vwcGR3qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713856966; c=relaxed/simple;
-	bh=My0JKNecn5jLntC24uRik6kUKfG+CPD7tvnSI+kdIpw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yz5y5adTw8J7odsXrr2s+EWfbQ5bxCtA+c4ez9dGkQBF26FWsGkoeNuLbV7EQHLFO/vnEZ6gZv/LMJc3StHxCJR1OAcGyG6XzD5v362lDdlQ5kXbLEuMMfvo9G3z43PYXjqvUYdqYlwSZpsbCkHmkfB+Ph8AcbykbUO3Xxw21vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=45.195.24.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
-Received: from [192.168.181.208] (unknown [110.185.170.227])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 9B67E56019E;
-	Tue, 23 Apr 2024 10:34:34 +0800 (CST)
-Message-ID: <7e10353e-9e3e-4bf1-b825-7fe40f34748c@easystack.cn>
-Date: Tue, 23 Apr 2024 10:34:32 +0800
+	s=arc-20240116; t=1713856977; c=relaxed/simple;
+	bh=L4OcFr6Wq5nOJsUOvDaAmjOCMS9WVXFUfLPu4Nn2G+0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=USI7D5F46d9EC8qvN4CiYV2ZPBaMzW/nAlenaX/sbniEJxQSHMm1baLiLhbvYCOw37QXXHSge/EeBrlVph/XyjphbYQGmC+idtNTpIvKEDtLA+BWRgm4bWtEWCz2ZgaKK5ONPZFRLkauZdLH5Zukvf7/14yJ1EG71nb6iiv6/wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4VNtSh53Lhz9v7g7
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 15:06:12 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id AB0F01404A5
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 15:22:42 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwA3LBW6YSdmcLXMBg--.38603S2;
+	Tue, 23 Apr 2024 08:22:42 +0100 (CET)
+Message-ID: <15d5da65079d072856ef5e8d88040df2095bb6b7.camel@huaweicloud.com>
+Subject: Re: [PATCH] um: Add winch to winch_handlers before registering
+ winch IRQ
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: Johannes Berg <johannes@sipsolutions.net>, richard@nod.at, 
+	anton.ivanov@cambridgegreys.com
+Cc: linux-kernel@vger.kernel.org, linux-um@lists.infradead.org, Roberto
+ Sassu <roberto.sassu@huawei.com>
+Date: Tue, 23 Apr 2024 09:22:31 +0200
+In-Reply-To: <1743ad022502d64042fa7db4d847a988bb90cbdc.camel@sipsolutions.net>
+References: <20240307104926.3531358-1-roberto.sassu@huaweicloud.com>
+	 <1743ad022502d64042fa7db4d847a988bb90cbdc.camel@sipsolutions.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4] net: openvswitch: Check vport netdev name
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: dev@openvswitch.org, echaudro@redhat.com, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-References: <20240419061425.132723-1-jun.gu@easystack.cn>
- <20240422173850.2222305f@kernel.org>
-Content-Language: en-US
-From: Jun Gu <jun.gu@easystack.cn>
-In-Reply-To: <20240422173850.2222305f@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSE4fVhhPSEpMHkNJTRlKT1UZERMWGhIXJBQOD1
-	lXWRgSC1lBWUpKS1VKQ05VSkxLVUlJTFlXWRYaDxIVHRRZQVlPS0hVSk1PSUxOVUpLS1VKQktLWQ
-	Y+
-X-HM-Tid: 0a8f08ce1572023dkunm9b67e56019e
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ok06LBw*CDc9DRM1GEoUM0gC
-	PUMKCj9VSlVKTEpIQ0hCTUxOS0NIVTMWGhIXVREOFVUcDjseGggCCA8aGBBVGBVFWVdZEgtZQVlK
-	SktVSkNOVUpMS1VJSUxZV1kIAVlBSkJKQzcG
+X-CM-TRANSID:LxC2BwA3LBW6YSdmcLXMBg--.38603S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtF4UKF47ur4rCryrJF43ZFb_yoW3JFgEgr
+	4vk34fG3yDJrs2krs0k34qvr4vga18Kr13JwsIqrW3X34DurZ3JrWSyr9Yvw15G3W5JFZx
+	GrZIgF9agr17CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbOkYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r1j6r4UM28EF7xvwVC2z280aVCY1x0267
+	AKxVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
+	j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
+	kEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIx
+	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
+	Ja73UjIFyTuYvjxUrR6zUUUUU
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgACBF1jj5iypgABs4
 
-My mistake, I'm wondering that I need to submit a new patch or a v5 
-version based on this patch?
+On Thu, 2024-03-28 at 09:25 +0100, Johannes Berg wrote:
+> On Thu, 2024-03-07 at 11:49 +0100, Roberto Sassu wrote:
+> > From: Roberto Sassu <roberto.sassu@huawei.com>
+> >=20
+> > Registering a winch IRQ is racy, an interrupt may occur before the winc=
+h is
+> > added to the winch_handlers list.
+> >=20
+> > If that happens, register_winch_irq() adds to that list a winch that is
+> > scheduled to be (or has already been) freed, causing a panic later in
+> > winch_cleanup().
+> >=20
+> > Avoid the race by adding the winch to the winch_handlers list before
+> > registering the IRQ, and rolling back if um_request_irq() fails.
+> >=20
+>=20
+> Reviewed-by: Johannes Berg <johannes@sipsolutions.net>
 
-在 4/23/24 08:38, Jakub Kicinski 写道:
-> On Fri, 19 Apr 2024 14:14:25 +0800 Jun Gu wrote:
->>   	vport->dev = dev_get_by_name(ovs_dp_get_net(vport->dp), name);
->> -	if (!vport->dev) {
->> +	/* Ensure that the device exists and that the provided
->> +	 * name is not one of its aliases.
->> +	 */
->> +	if (!vport->dev || strcmp(name, ovs_vport_name(vport))) {
->>   		err = -ENODEV;
->>   		goto error_free_vport;
->>   	}
-> 
-> Sorry I applied this before I realised that it's buggy.
-> dev_get_by_name() will give you a reference on the device.
-> You must free it, so the error handling is different.
-> Please follow up ASAP to fix that.
-> 
+Thank you! Richard, are you going to pick this up?
+
+Thanks
+
+Roberto
+
