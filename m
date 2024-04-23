@@ -1,30 +1,30 @@
 Received: from out0-219.mail.aliyun.com (out0-219.mail.aliyun.com [140.205.0.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87A47E59F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D875C7E58E
 	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:25:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713871523; cv=none; b=kqBrhPJt0A3k6KlZPtzBwdWp5w5ml0d1So8SGCwCjMv4MEKYPYZeDS5d3L5iYMb/LZ2GNWOKC+FmfK62guvFpfqau+4irtRLqlAtGyK62KFy1JbngecJG93zzNuNvNOK10Kwa/9NVHR9rZKl+4hS9oAoPLwAbwdFbXlQvmtTYhU=
+	t=1713871524; cv=none; b=QtnNTievPHxZub/n0CRnR6+l9/psI3MfrHKnf9lRaMwdDpnv7mtRaAN16IctAW2DAEI42I9zVudy9dyCbo11yPkhxr1jyrNGX6DDcxOKfMFliQhu/LAM4m16p0AtTii8jz+FIx//tphn8QTl7OW0WYpxks6E755lHCtjLsoUGog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713871523; c=relaxed/simple;
-	bh=Ghj0/V/dH76APPyaKDAlG7P8Sbut9JOjTVMQKESCzlc=;
+	s=arc-20240116; t=1713871524; c=relaxed/simple;
+	bh=SBZ9bhy3FV5JlAyo/guuEZUQmwfsj3LdJnvdET7lW0Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tjHRDr9viNPBPKPv04gw7gvk+YZKRRolT3cPlCdWSFcAIEq+6dVeITPFumr1APERgNRQnvrv3Nzx0CahqvXR/kDyM75TirvXkfMX9vLZvZ4Nzhzl+Ve+Ut2F5Bin5wNHhw9QZyDHKvvCnOCCa8qH6L5b6yi+T79qqLWIpFh0S9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=zpOORgxm; arc=none smtp.client-ip=140.205.0.219
+	 MIME-Version; b=Agin9Wb9TYav/TyckYv3oACGBFVQXZ3L0P14WzIZk1/PSxkFv2tUGfYhXNMe5p2cEHr4xfrlX17JaGSFN8eOSCQHxVQRQX2YC2AgVeH+oHDxLb/yVfHr0qOJ+ogy+vuOWAHl/6k1KvQYcPoIxIwqQRAuLecsIgm7Mfc/WvqtQEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=qH5dWtNX; arc=none smtp.client-ip=140.205.0.219
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="zpOORgxm"
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="qH5dWtNX"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=antgroup.com; s=default;
-	t=1713871513; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
-	bh=35K+byay5rbsmnKXw4pAmKxWNtRGPhfuJu7mpbXe+7w=;
-	b=zpOORgxm7y4rkGhVbqR04m2MFyKaDYASe2TUzeKv1mXU2S4H/xiRBR/iDPWdwYJQLJPGZMHKOZ5+q/CVn7q8e1PUDhYVU2OAdxGDX3+rlqE8JO1yEgssL7h4kzqiPK2YsW0Me4MDZKNDD0bb3Qp/24diOQW1WKS/lZK8VEi+K0w=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047212;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJTUYhj_1713871512;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJTUYhj_1713871512)
+	t=1713871513; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=N+epOjrcnscwevX+BkIMhVfG4/FidOuIEx8jyTdVre0=;
+	b=qH5dWtNXtIiZ2tMCdMMsDisYaQ+nySGoXph66XctWWmL1f+tO9X/OFD7MWtR2M8sq1d1p5lyXlZC8q3bBkeNYorz5NCZ+/fk+Sz/RIm5fDqEtcCT8OuOAVpuVJdkgDh+UdYdKkBiqBGaMagPNmSbCQ4tA+A3oMtl0NdNu0/0zac=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R981e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047190;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJTUYhx_1713871513;
+Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJTUYhx_1713871513)
           by smtp.aliyun-inc.com;
-          Tue, 23 Apr 2024 19:25:12 +0800
+          Tue, 23 Apr 2024 19:25:13 +0800
 From: "Tiwei Bie" <tiwei.btw@antgroup.com>
 To: richard@nod.at,
 	anton.ivanov@cambridgegreys.com,
@@ -32,9 +32,9 @@ To: richard@nod.at,
 Cc:  <linux-um@lists.infradead.org>,
    <linux-kernel@vger.kernel.org>,
   "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH 1/7] um: Fix -Wmissing-prototypes warnings for (rt_)sigreturn
-Date: Tue, 23 Apr 2024 19:24:51 +0800
-Message-Id: <20240423112457.2409319-2-tiwei.btw@antgroup.com>
+Subject: [PATCH 4/7] um: Fix the declaration of kasan_map_memory
+Date: Tue, 23 Apr 2024 19:24:54 +0800
+Message-Id: <20240423112457.2409319-5-tiwei.btw@antgroup.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240423112457.2409319-1-tiwei.btw@antgroup.com>
 References: <20240423112457.2409319-1-tiwei.btw@antgroup.com>
@@ -44,50 +44,57 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Use SYSCALL_DEFINE0 to define (rt_)sigreturn. This will address
-below -Wmissing-prototypes warnings:
+Make it match its definition (size_t vs unsigned long). And declare
+it in a shared header to fix the -Wmissing-prototypes warning, as it
+is defined in the user code and called in the kernel code.
 
-arch/x86/um/signal.c:453:6: warning: no previous prototype for ‘sys_sigreturn’ [-Wmissing-prototypes]
-arch/x86/um/signal.c:560:6: warning: no previous prototype for ‘sys_rt_sigreturn’ [-Wmissing-prototypes]
-
+Fixes: 5b301409e8bc ("UML: add support for KASAN under x86_64")
 Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
 ---
- arch/x86/um/signal.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/um/include/asm/kasan.h        | 1 -
+ arch/um/include/shared/kern_util.h | 2 ++
+ arch/um/os-Linux/mem.c             | 1 +
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/um/signal.c b/arch/x86/um/signal.c
-index 263e1d08f216..48e87b45adba 100644
---- a/arch/x86/um/signal.c
-+++ b/arch/x86/um/signal.c
-@@ -8,6 +8,7 @@
- #include <linux/personality.h>
- #include <linux/ptrace.h>
- #include <linux/kernel.h>
-+#include <linux/syscalls.h>
- #include <asm/unistd.h>
- #include <linux/uaccess.h>
- #include <asm/ucontext.h>
-@@ -450,7 +451,7 @@ int setup_signal_stack_si(unsigned long stack_top, struct ksignal *ksig,
- 	return 0;
- }
+diff --git a/arch/um/include/asm/kasan.h b/arch/um/include/asm/kasan.h
+index 0d6547f4ec85..f97bb1f7b851 100644
+--- a/arch/um/include/asm/kasan.h
++++ b/arch/um/include/asm/kasan.h
+@@ -24,7 +24,6 @@
  
--long sys_sigreturn(void)
-+SYSCALL_DEFINE0(sigreturn)
- {
- 	unsigned long sp = PT_REGS_SP(&current->thread.regs);
- 	struct sigframe __user *frame = (struct sigframe __user *)(sp - 8);
-@@ -557,7 +558,7 @@ int setup_signal_stack_si(unsigned long stack_top, struct ksignal *ksig,
- }
- #endif
+ #ifdef CONFIG_KASAN
+ void kasan_init(void);
+-void kasan_map_memory(void *start, unsigned long len);
+ extern int kasan_um_is_ready;
  
--long sys_rt_sigreturn(void)
-+SYSCALL_DEFINE0(rt_sigreturn)
- {
- 	unsigned long sp = PT_REGS_SP(&current->thread.regs);
- 	struct rt_sigframe __user *frame =
+ #ifdef CONFIG_STATIC_LINK
+diff --git a/arch/um/include/shared/kern_util.h b/arch/um/include/shared/kern_util.h
+index 81bc38a2e3fc..1fa03499e1dc 100644
+--- a/arch/um/include/shared/kern_util.h
++++ b/arch/um/include/shared/kern_util.h
+@@ -37,6 +37,8 @@ extern void initial_thread_cb(void (*proc)(void *), void *arg);
+ 
+ extern void timer_handler(int sig, struct siginfo *unused_si, struct uml_pt_regs *regs);
+ 
++extern void kasan_map_memory(void *start, size_t len);
++
+ extern void uml_pm_wake(void);
+ 
+ extern int start_uml(void);
+diff --git a/arch/um/os-Linux/mem.c b/arch/um/os-Linux/mem.c
+index 8530b2e08604..c6c9495b1432 100644
+--- a/arch/um/os-Linux/mem.c
++++ b/arch/um/os-Linux/mem.c
+@@ -15,6 +15,7 @@
+ #include <sys/vfs.h>
+ #include <linux/magic.h>
+ #include <init.h>
++#include <kern_util.h>
+ #include <os.h>
+ 
+ /*
 -- 
 2.34.1
 
