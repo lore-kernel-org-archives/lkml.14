@@ -1,553 +1,423 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40B0143C4C;
-	Tue, 23 Apr 2024 20:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D10F1D52D
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 20:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713905189; cv=none; b=u44C9bUj5SHI+QP08AsmitWmMTJLPZkcPT+jSl6Q8XnuPuZtfLBpjY1Qe6vr2gEjMgWaaF/JqmlYXLpccbGC8obaovQ+P7WaJOtptfBkoaN0xBIDNhQqSUg7I++Smsy1wIcdCxGgV1D1pyxQFhtlziJUV9a3U5vWTCPfpxSryl4=
+	t=1713905385; cv=none; b=Du1j+1KzX6yLe7NIxRDMfsxhlaN76esfM43jvC05JoFTNyLPX9QKerZdsQm6IZgdpVEt46B1VPcV7U6PYFRXwfwVyhM3s+x38+wc1PusUYz4HRSVGhkCB0s5sHh8R4JFAyqx46HPs5m+mPgsZvjDRczXNKH1o6UdNhAt6kqzIyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713905189; c=relaxed/simple;
-	bh=x7LTlF5XkLbTPTT1wT/DnKTwiuY41wSfOL0aEEgXqxE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DK5beLnm4cBzlVxHVM/MOf4OJZ2suJRV4cHLy43f379ViLt/kZAx27+p8DN3jAQoPHzbA5p59aDX8MfQWfzfCIaveYW+0Lo6d2gXkJLg1EiTXc4QEVGRlmn5235bscuF11II4l+dye46PqIRrXsFn86hUfItzfrRe+q8lMGzxwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IvvqVXpw; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713905385; c=relaxed/simple;
+	bh=Licbxkqz8RIW1Ax6WTrb+k9Q0P7nu7C6uqwnePM6J7E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RMybuKOxqFiHBj8qs8V7+7jkDgstDQe/fH7HalwpwRumM7NIp7NcodxW9aeCulxGqLuC54NUUPdKNNgbrHtDn05IE6ZFXS5P+nj5aqMoRUDkgON9uvA1sOQ6y77XmszP+H3TzEuTl2hWacACaNBF+F05D5XdiwvfOIRR7CNr5YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=hLyi+lnu; arc=none smtp.client-ip=35.89.44.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IvvqVXpw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713905188; x=1745441188;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=x7LTlF5XkLbTPTT1wT/DnKTwiuY41wSfOL0aEEgXqxE=;
-  b=IvvqVXpwNo4QFTUHJmSEXGokRuTeB8b7vf4eC5xgZIoFF9+TDasYGe7g
-   flPaZhy5v1F6XIyecfucFUqrJOrDJjbtABtb/0wyg3lueJSF1rLbhgHa8
-   oORTddTbzqfQzWE8tErr558wCOMzSwOSYS4R6hln8oodlVv8M29MO88Q7
-   ron8L4hopludB9C7KqUXjGysjryGlsCAP6LUS4GlJGuHTqnzsHhcJGNIw
-   k5JrbVmtOr7k8BQ3fIaahYZhPJfUFJSbVtgqZbZLCBITqYtFVpi/Zq9ic
-   ciSStCTv7sHI22k9b2LjFsQJCeJ6iveyYMKH+OZUDmzbyFeW3bAcsemUo
-   Q==;
-X-CSE-ConnectionGUID: 10NWzpjLR6yABYBpXLY49A==
-X-CSE-MsgGUID: ucVDkt9bR7+/7cko9OL10A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="34912330"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="34912330"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 13:46:24 -0700
-X-CSE-ConnectionGUID: 6A3/4SgjQL+r/3VERidikg==
-X-CSE-MsgGUID: fCJlomLeSq+XcAmYs9BQKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24533090"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
-  by fmviesa010.fm.intel.com with ESMTP; 23 Apr 2024 13:46:24 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Zhang Rui <rui.zhang@intel.com>
-Subject: [PATCH 07/10] platform/x86: ISST: Support partitioned systems
-Date: Tue, 23 Apr 2024 13:46:16 -0700
-Message-Id: <20240423204619.3946901-8-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240423204619.3946901-1-srinivas.pandruvada@linux.intel.com>
-References: <20240423204619.3946901-1-srinivas.pandruvada@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="hLyi+lnu"
+Received: from eig-obgw-5002a.ext.cloudfilter.net ([10.0.29.215])
+	by cmsmtp with ESMTPS
+	id zKZxrnNCKtf2QzN3frXZow; Tue, 23 Apr 2024 20:48:07 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id zN3dr2WG3r1IfzN3erRWy6; Tue, 23 Apr 2024 20:48:06 +0000
+X-Authority-Analysis: v=2.4 cv=BawT0at2 c=1 sm=1 tr=0 ts=66281e86
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=m+g+Fs1a0yfSFFEminThaA==:17
+ a=IkcTkHD0fZMA:10 a=raytVjVEu-sA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=_Wotqz80AAAA:8 a=NEAV23lmAAAA:8 a=NTmM5WzjnA5bdhkKqE4A:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22 a=buJP51TR1BpY-zbLSsyS:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=sIXZ4t/HfQ/J01SNyHJA3mxHSf7XQU6u8d9yAoAnmEM=; b=hLyi+lnukOH//ih9+hTEWVR/aG
+	hcZciyOh4N2sBgHNFgfBumydGsquQcl2muRXtF0Kv076a/F4ZPZZcimDtWgYreRv9EwTs0E7QNQOc
+	SEMM7ljFWNxJHP3klF9DxBnDNz1W1soSc1EAUwb6D6mVUddb29piAuoJiwfP+NXg/7rZWiwiDrDy+
+	jhnaM2MSsxCe2OoCOJmuN0iuh/QKK/OyLxjz1BKnoaLSGS2ikGQsQtYkRupDbQWAjJ9XTG6fGmkDc
+	LFYyS5LeVCa4ViE5PzQAeu/vXuvAdrfN4/af12e8jfQx/8ushcTRx0SpeXFetR25/TZtjUqbF2igz
+	4h0z9/FA==;
+Received: from [201.162.232.90] (port=55692 helo=[192.168.5.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rzN3V-0027ed-39;
+	Tue, 23 Apr 2024 15:48:04 -0500
+Message-ID: <7789881d-a709-48f4-8c14-259acbce813a@embeddedor.com>
+Date: Wed, 24 Apr 2024 06:47:47 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] smb: smb2pdu.h: Avoid
+ -Wflex-array-member-not-at-end warnings
+To: Steve French <smfrench@gmail.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>,
+ Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+ Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+ Bharath SM <bharathsm@microsoft.com>, Namjae Jeon <linkinjeon@kernel.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>, linux-cifs@vger.kernel.org,
+ samba-technical@lists.samba.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <ZhgDTj1nwLEtSd9h@neat>
+ <1166494b-3e34-4919-9998-141540a948b3@embeddedor.com>
+ <CAH2r5msZaV1kHqQw8Sb_3wQfGBj4aU+tSCR5E0YJ8fCH6ODB4Q@mail.gmail.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <CAH2r5msZaV1kHqQw8Sb_3wQfGBj4aU+tSCR5E0YJ8fCH6ODB4Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.232.90
+X-Source-L: No
+X-Exim-ID: 1rzN3V-0027ed-39
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.5.44]) [201.162.232.90]:55692
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfKAicbDVXRs3oPKNN3BCJGwWYKwOrYeZ/b8J0mRsRkf5AWM/5pJ1IVuqDYqAvSa3LKkH0aXtodk9JU+raWZeMwZ3nhk1O3kWCZ3BZ/ZOpU6bcE+j8jZx
+ HsUJgFjVHEFGlGXgMzw6e8bkJ6P9YbJEfz4+SiX1Qr1KI9rXnXRKGxMRr145hJAIJBCkx1Lc8gLJdfBvvwdnCxypwPS3proxTZbdIMYlQqXQRbVZzm2NieYq
 
-A partitioned system has two different PCI VSEC devices per package.
-A non-partitioned device has only one PCI VSEC device per package.
-The current implementation only supports non partitioned systems.
 
-Each partition maps a set of power domains. Other than reading from
-different MMIO regions, there is no change in the SST functionality.
-The scope of SST control is still per power domain. Hence user space
-does not need to be aware of existence of partitions.
 
-With partitions, existing per package information defined using struct
-tpmi_sst_struct is enhanced to store information for both partitions. A
-mapping function map_partition_power_domain_id() is introduced, which
-maps to correct partition and index. This mapping function is called
-in get_instance() and isst_if_clos_assoc(), before indexing into
-tpmi_sst_struct->power_domain_info[].
+On 23/04/24 14:15, Steve French wrote:
+> This looks reasonably safe (running the usual regression tests on it now).
+> 
+> Reminds me though that we have to be careful (e.g. the recent fix for
+> regression caused by cleanup).
 
-The TPMI core platform info provides partition id and compute die ID
-mask for each partition. Use this information to order power domains,
-so that compute dies are presented before IO dies to match hardware
-defined compute die ID for each CPU.
+mmh... it seems that the offending commit was never CC'd to the linux-hardening
+list, hence it wasn't reviewed by us.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Reviewed-by: Zhang Rui <rui.zhang@intel.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- .../intel/speed_select_if/isst_tpmi_core.c    | 299 ++++++++++++++++--
- 1 file changed, 267 insertions(+), 32 deletions(-)
+After reviewing both, the offending commit and the fix, both seem to be wrong.
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-index 49d573fcbd72..b8da6847622b 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-@@ -23,6 +23,7 @@
- #include <linux/fs.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
-+#include <linux/minmax.h>
- #include <linux/module.h>
- #include <uapi/linux/isst_if.h>
- 
-@@ -263,20 +264,33 @@ struct tpmi_per_power_domain_info {
- 	bool write_blocked;
- };
- 
-+/* Supported maximum partitions */
-+#define SST_MAX_PARTITIONS	2
-+
- /**
-  * struct tpmi_sst_struct -	Store sst info for a package
-  * @package_id:			Package id for this aux device instance
-  * @number_of_power_domains:	Number of power_domains pointed by power_domain_info pointer
-  * @power_domain_info:		Pointer to power domains information
-+ * @cdie_mask:			Mask of compute dies present in a partition from hardware.
-+ *				This mask is not present in the version 1 information header.
-+ * @io_dies:			Number of IO dies in a partition. This will be 0 for TPMI
-+ *				version 1 information header.
-+ * @partition_mask:		Mask of all partitions.
-+ * @partition_mask_current:	Current partition mask as some may have been unbound.
-  *
-  * This structure is used store full SST information for a package.
-- * Each package has a unique OOB PCI device, which enumerates TPMI.
-- * Each Package will have multiple power_domains.
-+ * Each package has one or multiple OOB PCI devices. Each package can contain multiple
-+ * power domains.
-  */
- struct tpmi_sst_struct {
- 	int package_id;
--	int number_of_power_domains;
--	struct tpmi_per_power_domain_info *power_domain_info;
-+	struct tpmi_per_power_domain_info *power_domain_info[SST_MAX_PARTITIONS];
-+	u16 cdie_mask[SST_MAX_PARTITIONS];
-+	u8 number_of_power_domains[SST_MAX_PARTITIONS];
-+	u8 io_dies[SST_MAX_PARTITIONS];
-+	u8 partition_mask;
-+	u8 partition_mask_current;
- };
- 
- /**
-@@ -387,6 +401,126 @@ static int sst_main(struct auxiliary_device *auxdev, struct tpmi_per_power_domai
- 	return 0;
- }
- 
-+static u8 isst_instance_count(struct tpmi_sst_struct *sst_inst)
-+{
-+	u8 i, max_part, count = 0;
-+
-+	/* Partition mask starts from bit 0 and contains 1s only */
-+	max_part = hweight8(sst_inst->partition_mask);
-+	for (i = 0; i < max_part; i++)
-+		count += sst_inst->number_of_power_domains[i];
-+
-+	return count;
-+}
-+
-+/**
-+ * map_cdies() - Map user domain ID to compute domain ID
-+ * @sst_inst: TPMI Instance
-+ * @id: User domain ID
-+ * @partition: Resolved partition
-+ *
-+ * Helper function to map_partition_power_domain_id() to resolve compute
-+ * domain ID and partition. Use hardware provided cdie_mask for a partition
-+ * as is to resolve a compute domain ID.
-+ *
-+ * Return: %-EINVAL on error, otherwise mapped domain ID >= 0.
-+ */
-+static int map_cdies(struct tpmi_sst_struct *sst_inst, u8 id, u8 *partition)
-+{
-+	u8 i, max_part;
-+
-+	max_part = hweight8(sst_inst->partition_mask);
-+	for (i = 0; i < max_part; i++) {
-+		if (!(sst_inst->cdie_mask[i] & BIT(id)))
-+			continue;
-+
-+		*partition = i;
-+		return id - ffs(sst_inst->cdie_mask[i]) + 1;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+/**
-+ * map_partition_power_domain_id() - Map user domain ID to partition domain ID
-+ * @sst_inst: TPMI Instance
-+ * @id: User domain ID
-+ * @partition: Resolved partition
-+ *
-+ * In a partitioned system a CPU package has two separate MMIO ranges (Under
-+ * two PCI devices). But the CPU package compute die/power domain IDs are
-+ * unique in a package. User space can get compute die/power domain ID from
-+ * CPUID and MSR 0x54 for a CPU. So, those IDs need to be preserved even if
-+ * they are present in two different partitions with its own order.
-+ *
-+ * For example for command ISST_IF_COUNT_TPMI_INSTANCES, the valid_mask
-+ * is 111111b for a 4 compute and 2 IO dies system. This is presented as
-+ * provided by the hardware in a non-partitioned system with the following
-+ * order:
-+ *	I1-I0-C3-C2-C1-C0
-+ * Here: "C": for compute and "I" for IO die.
-+ * Compute dies are always present first in TPMI instances, as they have
-+ * to map to the real power domain/die ID of a system. In a non-partitioned
-+ * system there is no way to identify compute and IO die boundaries from
-+ * this driver without reading each CPU's mapping.
-+ *
-+ * The same order needs to be preserved, even if those compute dies are
-+ * distributed among multiple partitions. For example:
-+ * Partition 1 can contain: I1-C1-C0
-+ * Partition 2 can contain: I2-C3-C2
-+ *
-+ * This will require a conversion of user space IDs to the actual index into
-+ * array of stored power domains for each partition. For the above example
-+ * this function will return partition and index as follows:
-+ *
-+ * =============	=========	=====	========
-+ * User space ID	Partition	Index	Die type
-+ * =============	=========	=====	========
-+ * 0			0		0	Compute
-+ * 1			0		1	Compute
-+ * 2			1		0	Compute
-+ * 3			1		1	Compute
-+ * 4			0		2	IO
-+ * 5			1		2	IO
-+ * =============	=========	=====	========
-+ *
-+ * Return: %-EINVAL on error, otherwise mapped domain ID >= 0.
-+ */
-+static int map_partition_power_domain_id(struct tpmi_sst_struct *sst_inst, u8 id, u8 *partition)
-+{
-+	u8 i, io_start_id, max_part;
-+
-+	*partition = 0;
-+
-+	/* If any PCI device for partition is unbound, treat this as failure */
-+	if (sst_inst->partition_mask != sst_inst->partition_mask_current)
-+		return -EINVAL;
-+
-+	max_part = hweight8(sst_inst->partition_mask);
-+
-+	/* IO Index begin here */
-+	io_start_id = fls(sst_inst->cdie_mask[max_part - 1]);
-+
-+	if (id < io_start_id)
-+		return map_cdies(sst_inst, id, partition);
-+
-+	for (i = 0; i < max_part; i++) {
-+		u8 io_id;
-+
-+		io_id = id - io_start_id;
-+		if (io_id < sst_inst->io_dies[i]) {
-+			u8 cdie_range;
-+
-+			cdie_range = fls(sst_inst->cdie_mask[i]) - ffs(sst_inst->cdie_mask[i]) + 1;
-+			*partition = i;
-+			return cdie_range + io_id;
-+		}
-+		io_start_id += sst_inst->io_dies[i];
-+	}
-+
-+	return -EINVAL;
-+}
-+
- /*
-  * Map a package and power_domain id to SST information structure unique for a power_domain.
-  * The caller should call under isst_tpmi_dev_lock.
-@@ -395,6 +529,7 @@ static struct tpmi_per_power_domain_info *get_instance(int pkg_id, int power_dom
- {
- 	struct tpmi_per_power_domain_info *power_domain_info;
- 	struct tpmi_sst_struct *sst_inst;
-+	u8 part;
- 
- 	if (pkg_id < 0 || pkg_id > isst_common.max_index ||
- 	    pkg_id >= topology_max_packages())
-@@ -404,10 +539,11 @@ static struct tpmi_per_power_domain_info *get_instance(int pkg_id, int power_dom
- 	if (!sst_inst)
- 		return NULL;
- 
--	if (power_domain_id < 0 || power_domain_id >= sst_inst->number_of_power_domains)
-+	power_domain_id = map_partition_power_domain_id(sst_inst, power_domain_id, &part);
-+	if (power_domain_id < 0)
- 		return NULL;
- 
--	power_domain_info = &sst_inst->power_domain_info[power_domain_id];
-+	power_domain_info = &sst_inst->power_domain_info[part][power_domain_id];
- 
- 	if (power_domain_info && !power_domain_info->sst_base)
- 		return NULL;
-@@ -579,6 +715,7 @@ static long isst_if_clos_assoc(void __user *argp)
- 		struct tpmi_sst_struct *sst_inst;
- 		int offset, shift, cpu;
- 		u64 val, mask, clos;
-+		u8 part;
- 
- 		if (copy_from_user(&clos_assoc, ptr, sizeof(clos_assoc)))
- 			return -EFAULT;
-@@ -602,10 +739,11 @@ static long isst_if_clos_assoc(void __user *argp)
- 
- 		sst_inst = isst_common.sst_inst[pkg_id];
- 
--		if (clos_assoc.power_domain_id > sst_inst->number_of_power_domains)
-+		punit_id = map_partition_power_domain_id(sst_inst, punit_id, &part);
-+		if (punit_id < 0)
- 			return -EINVAL;
- 
--		power_domain_info = &sst_inst->power_domain_info[punit_id];
-+		power_domain_info = &sst_inst->power_domain_info[part][punit_id];
- 
- 		if (assoc_cmds.get_set && power_domain_info->write_blocked)
- 			return -EPERM;
-@@ -1134,18 +1272,28 @@ static int isst_if_get_tpmi_instance_count(void __user *argp)
- 	if (tpmi_inst.socket_id >= topology_max_packages())
- 		return -EINVAL;
- 
--	tpmi_inst.count = isst_common.sst_inst[tpmi_inst.socket_id]->number_of_power_domains;
--
- 	sst_inst = isst_common.sst_inst[tpmi_inst.socket_id];
-+
-+	tpmi_inst.count = isst_instance_count(sst_inst);
-+
- 	tpmi_inst.valid_mask = 0;
--	for (i = 0; i < sst_inst->number_of_power_domains; ++i) {
-+	for (i = 0; i < tpmi_inst.count; i++) {
- 		struct tpmi_per_power_domain_info *pd_info;
-+		u8 part;
-+		int pd;
-+
-+		pd = map_partition_power_domain_id(sst_inst, i, &part);
-+		if (pd < 0)
-+			continue;
- 
--		pd_info = &sst_inst->power_domain_info[i];
-+		pd_info = &sst_inst->power_domain_info[part][pd];
- 		if (pd_info->sst_base)
- 			tpmi_inst.valid_mask |= BIT(i);
- 	}
- 
-+	if (!tpmi_inst.valid_mask)
-+		tpmi_inst.count = 0;
-+
- 	if (copy_to_user(argp, &tpmi_inst, sizeof(tpmi_inst)))
- 		return -EFAULT;
- 
-@@ -1276,8 +1424,11 @@ int tpmi_sst_dev_add(struct auxiliary_device *auxdev)
- 	struct intel_tpmi_plat_info *plat_info;
- 	struct device *dev = &auxdev->dev;
- 	struct tpmi_sst_struct *tpmi_sst;
--	int i, ret, pkg = 0, inst = 0;
--	int num_resources;
-+	u8 i, num_resources, io_die_cnt;
-+	int ret, pkg = 0, inst = 0;
-+	bool first_enum = false;
-+	u16 cdie_mask;
-+	u8 partition;
- 
- 	ret = tpmi_get_feature_status(auxdev, TPMI_ID_SST, &read_blocked, &write_blocked);
- 	if (ret)
-@@ -1300,21 +1451,59 @@ int tpmi_sst_dev_add(struct auxiliary_device *auxdev)
- 		return -EINVAL;
- 	}
- 
--	if (isst_common.sst_inst[pkg])
--		return -EEXIST;
-+	partition = plat_info->partition;
-+	if (partition >= SST_MAX_PARTITIONS) {
-+		dev_err(&auxdev->dev, "Invalid partition :%x\n", partition);
-+		return -EINVAL;
-+	}
- 
- 	num_resources = tpmi_get_resource_count(auxdev);
- 
- 	if (!num_resources)
- 		return -EINVAL;
- 
--	tpmi_sst = devm_kzalloc(dev, sizeof(*tpmi_sst), GFP_KERNEL);
--	if (!tpmi_sst)
--		return -ENOMEM;
-+	mutex_lock(&isst_tpmi_dev_lock);
-+
-+	if (isst_common.sst_inst[pkg]) {
-+		tpmi_sst = isst_common.sst_inst[pkg];
-+	} else {
-+		/*
-+		 * tpmi_sst instance is for a package. So needs to be
-+		 * allocated only once for both partitions. We can't use
-+		 * devm_* allocation here as each partition is a
-+		 * different device, which can be unbound.
-+		 */
-+		tpmi_sst = kzalloc(sizeof(*tpmi_sst), GFP_KERNEL);
-+		if (!tpmi_sst) {
-+			ret = -ENOMEM;
-+			goto unlock_exit;
-+		}
-+		first_enum = true;
-+	}
-+
-+	ret = 0;
- 
- 	pd_info = devm_kcalloc(dev, num_resources, sizeof(*pd_info), GFP_KERNEL);
--	if (!pd_info)
--		return -ENOMEM;
-+	if (!pd_info) {
-+		ret = -ENOMEM;
-+		goto unlock_free;
-+	}
-+
-+	/* Get the IO die count, if cdie_mask is present */
-+	if (plat_info->cdie_mask) {
-+		u8 cdie_range;
-+
-+		cdie_mask = plat_info->cdie_mask;
-+		cdie_range = fls(cdie_mask) - ffs(cdie_mask) + 1;
-+		io_die_cnt = num_resources - cdie_range;
-+	} else {
-+		/*
-+		 * This is a synthetic mask, careful when assuming that
-+		 * they are compute dies only.
-+		 */
-+		cdie_mask = (1 << num_resources) - 1;
-+		io_die_cnt = 0;
-+	}
- 
- 	for (i = 0; i < num_resources; ++i) {
- 		struct resource *res;
-@@ -1330,11 +1519,20 @@ int tpmi_sst_dev_add(struct auxiliary_device *auxdev)
- 		pd_info[i].auxdev = auxdev;
- 		pd_info[i].write_blocked = write_blocked;
- 		pd_info[i].sst_base = devm_ioremap_resource(dev, res);
--		if (IS_ERR(pd_info[i].sst_base))
--			return PTR_ERR(pd_info[i].sst_base);
-+		if (IS_ERR(pd_info[i].sst_base)) {
-+			ret = PTR_ERR(pd_info[i].sst_base);
-+			goto unlock_free;
-+		}
- 
- 		ret = sst_main(auxdev, &pd_info[i]);
- 		if (ret) {
-+			/*
-+			 * This entry is not valid, hardware can partially
-+			 * populate dies. In this case MMIO will have 0xFFs.
-+			 * Also possible some pre-production hardware has
-+			 * invalid data. But don't fail and continue to use
-+			 * other dies with valid data.
-+			 */
- 			devm_iounmap(dev, pd_info[i].sst_base);
- 			pd_info[i].sst_base = NULL;
- 			continue;
-@@ -1343,30 +1541,53 @@ int tpmi_sst_dev_add(struct auxiliary_device *auxdev)
- 		++inst;
- 	}
- 
--	if (!inst)
--		return -ENODEV;
-+	if (!inst) {
-+		ret = -ENODEV;
-+		goto unlock_free;
-+	}
- 
- 	tpmi_sst->package_id = pkg;
--	tpmi_sst->power_domain_info = pd_info;
--	tpmi_sst->number_of_power_domains = num_resources;
-+
-+	tpmi_sst->power_domain_info[partition] = pd_info;
-+	tpmi_sst->number_of_power_domains[partition] = num_resources;
-+	tpmi_sst->cdie_mask[partition] = cdie_mask;
-+	tpmi_sst->io_dies[partition] = io_die_cnt;
-+	tpmi_sst->partition_mask |= BIT(partition);
-+	tpmi_sst->partition_mask_current |= BIT(partition);
-+
- 	auxiliary_set_drvdata(auxdev, tpmi_sst);
- 
--	mutex_lock(&isst_tpmi_dev_lock);
- 	if (isst_common.max_index < pkg)
- 		isst_common.max_index = pkg;
- 	isst_common.sst_inst[pkg] = tpmi_sst;
-+
-+unlock_free:
-+	if (ret && first_enum)
-+		kfree(tpmi_sst);
-+unlock_exit:
- 	mutex_unlock(&isst_tpmi_dev_lock);
- 
--	return 0;
-+	return ret;
- }
- EXPORT_SYMBOL_NS_GPL(tpmi_sst_dev_add, INTEL_TPMI_SST);
- 
- void tpmi_sst_dev_remove(struct auxiliary_device *auxdev)
- {
- 	struct tpmi_sst_struct *tpmi_sst = auxiliary_get_drvdata(auxdev);
-+	struct intel_tpmi_plat_info *plat_info;
-+
-+	plat_info = tpmi_get_platform_data(auxdev);
-+	if (!plat_info)
-+		return;
- 
- 	mutex_lock(&isst_tpmi_dev_lock);
--	isst_common.sst_inst[tpmi_sst->package_id] = NULL;
-+	tpmi_sst->power_domain_info[plat_info->partition] = NULL;
-+	tpmi_sst->partition_mask_current &= ~BIT(plat_info->partition);
-+	/* Free the package instance when the all partitions are removed */
-+	if (!tpmi_sst->partition_mask_current) {
-+		kfree(tpmi_sst);
-+		isst_common.sst_inst[tpmi_sst->package_id] = NULL;
-+	}
- 	mutex_unlock(&isst_tpmi_dev_lock);
- }
- EXPORT_SYMBOL_NS_GPL(tpmi_sst_dev_remove, INTEL_TPMI_SST);
-@@ -1374,9 +1595,16 @@ EXPORT_SYMBOL_NS_GPL(tpmi_sst_dev_remove, INTEL_TPMI_SST);
- void tpmi_sst_dev_suspend(struct auxiliary_device *auxdev)
- {
- 	struct tpmi_sst_struct *tpmi_sst = auxiliary_get_drvdata(auxdev);
--	struct tpmi_per_power_domain_info *power_domain_info = tpmi_sst->power_domain_info;
-+	struct tpmi_per_power_domain_info *power_domain_info;
-+	struct intel_tpmi_plat_info *plat_info;
- 	void __iomem *cp_base;
- 
-+	plat_info = tpmi_get_platform_data(auxdev);
-+	if (!plat_info)
-+		return;
-+
-+	power_domain_info = tpmi_sst->power_domain_info[plat_info->partition];
-+
- 	cp_base = power_domain_info->sst_base + power_domain_info->sst_header.cp_offset;
- 	power_domain_info->saved_sst_cp_control = readq(cp_base + SST_CP_CONTROL_OFFSET);
- 
-@@ -1395,9 +1623,16 @@ EXPORT_SYMBOL_NS_GPL(tpmi_sst_dev_suspend, INTEL_TPMI_SST);
- void tpmi_sst_dev_resume(struct auxiliary_device *auxdev)
- {
- 	struct tpmi_sst_struct *tpmi_sst = auxiliary_get_drvdata(auxdev);
--	struct tpmi_per_power_domain_info *power_domain_info = tpmi_sst->power_domain_info;
-+	struct tpmi_per_power_domain_info *power_domain_info;
-+	struct intel_tpmi_plat_info *plat_info;
- 	void __iomem *cp_base;
- 
-+	plat_info = tpmi_get_platform_data(auxdev);
-+	if (!plat_info)
-+		return;
-+
-+	power_domain_info = tpmi_sst->power_domain_info[plat_info->partition];
-+
- 	cp_base = power_domain_info->sst_base + power_domain_info->sst_header.cp_offset;
- 	writeq(power_domain_info->saved_sst_cp_control, cp_base + SST_CP_CONTROL_OFFSET);
- 
--- 
-2.40.1
+for __packed structs, you should use __struct_group():
 
+__struct_group(network_open_info, group_name, __packed, struct_members);
+
+The _packed in the commit 0268a7cc7fdc is not an attribute, it's the name
+for the group. So, it's not actually doing what the submitter thinks it does.
+
+> 
+> Thoughts about whether should be sent in rc6 or wait till 6.10?  51
+> warnings does sound
+> distracting though so might be worth going in sooner rather than later.
+
+There is actually no hurry. :)
+
+Thanks
+--
+Gustavo
+
+> 
+> commit 0268a7cc7fdc47d90b6c18859de7718d5059f6f1
+> Author: Namjae Jeon <linkinjeon@kernel.org>
+> Date:   Fri Apr 19 23:46:34 2024 +0900
+> 
+>      ksmbd: common: use struct_group_attr instead of struct_group for
+> network_open_info
+> 
+>      4byte padding cause the connection issue with the applications of MacOS.
+>      smb2_close response size increases by 4 bytes by padding, And the smb
+>      client of MacOS check it and stop the connection. This patch use
+>      struct_group_attr instead of struct_group for network_open_info to use
+>       __packed to avoid padding.
+> 
+> 
+> On Tue, Apr 23, 2024 at 1:58 PM Gustavo A. R. Silva
+> <gustavo@embeddedor.com> wrote:
+>>
+>> Hi all,
+>>
+>> Friendly ping: who can take this, please?
+>>
+>> Thanks
+>> --
+>> Gustavo
+>>
+>> On 11/04/24 09:35, Gustavo A. R. Silva wrote:
+>>> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+>>> ready to enable it globally.
+>>>
+>>> So, in order to avoid ending up with a flexible-array member in the
+>>> middle of multiple other structs, we use the `__struct_group()` helper
+>>> to separate the flexible array from the rest of the members in the
+>>> flexible structure, and use the tagged `struct create_context_hdr`
+>>> instead of `struct create_context`.
+>>>
+>>> So, with these changes, fix 51 of the following warnings[1]:
+>>>
+>>> fs/smb/client/../common/smb2pdu.h:1225:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>>
+>>> Link: https://gist.github.com/GustavoARSilva/772526a39be3dd4db39e71497f0a9893 [1]
+>>> Link: https://github.com/KSPP/linux/issues/202
+>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>> ---
+>>>    fs/smb/client/smb2pdu.h | 12 ++++++------
+>>>    fs/smb/common/smb2pdu.h | 33 ++++++++++++++++++---------------
+>>>    fs/smb/server/smb2pdu.h | 18 +++++++++---------
+>>>    3 files changed, 33 insertions(+), 30 deletions(-)
+>>>
+>>> diff --git a/fs/smb/client/smb2pdu.h b/fs/smb/client/smb2pdu.h
+>>> index c72a3b2886b7..1a02bd9e0c00 100644
+>>> --- a/fs/smb/client/smb2pdu.h
+>>> +++ b/fs/smb/client/smb2pdu.h
+>>> @@ -145,7 +145,7 @@ struct durable_context_v2 {
+>>>    } __packed;
+>>>
+>>>    struct create_durable_v2 {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        struct durable_context_v2 dcontext;
+>>>    } __packed;
+>>> @@ -167,7 +167,7 @@ struct durable_reconnect_context_v2_rsp {
+>>>    } __packed;
+>>>
+>>>    struct create_durable_handle_reconnect_v2 {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        struct durable_reconnect_context_v2 dcontext;
+>>>        __u8   Pad[4];
+>>> @@ -175,7 +175,7 @@ struct create_durable_handle_reconnect_v2 {
+>>>
+>>>    /* See MS-SMB2 2.2.13.2.5 */
+>>>    struct crt_twarp_ctxt {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8    Name[8];
+>>>        __le64  Timestamp;
+>>>
+>>> @@ -183,12 +183,12 @@ struct crt_twarp_ctxt {
+>>>
+>>>    /* See MS-SMB2 2.2.13.2.9 */
+>>>    struct crt_query_id_ctxt {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8    Name[8];
+>>>    } __packed;
+>>>
+>>>    struct crt_sd_ctxt {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8    Name[8];
+>>>        struct smb3_sd sd;
+>>>    } __packed;
+>>> @@ -415,7 +415,7 @@ struct smb2_posix_info_parsed {
+>>>    };
+>>>
+>>>    struct smb2_create_ea_ctx {
+>>> -     struct create_context ctx;
+>>> +     struct create_context_hdr ctx;
+>>>        __u8 name[8];
+>>>        struct smb2_file_full_ea_info ea;
+>>>    } __packed;
+>>> diff --git a/fs/smb/common/smb2pdu.h b/fs/smb/common/smb2pdu.h
+>>> index 1b594307c9d5..eab9d49c63ba 100644
+>>> --- a/fs/smb/common/smb2pdu.h
+>>> +++ b/fs/smb/common/smb2pdu.h
+>>> @@ -1171,12 +1171,15 @@ struct smb2_server_client_notification {
+>>>    #define SMB2_CREATE_FLAG_REPARSEPOINT 0x01
+>>>
+>>>    struct create_context {
+>>> -     __le32 Next;
+>>> -     __le16 NameOffset;
+>>> -     __le16 NameLength;
+>>> -     __le16 Reserved;
+>>> -     __le16 DataOffset;
+>>> -     __le32 DataLength;
+>>> +     /* New members must be added within the struct_group() macro below. */
+>>> +     __struct_group(create_context_hdr, hdr, __packed,
+>>> +             __le32 Next;
+>>> +             __le16 NameOffset;
+>>> +             __le16 NameLength;
+>>> +             __le16 Reserved;
+>>> +             __le16 DataOffset;
+>>> +             __le32 DataLength;
+>>> +     );
+>>>        __u8 Buffer[];
+>>>    } __packed;
+>>>
+>>> @@ -1222,7 +1225,7 @@ struct smb2_create_rsp {
+>>>    } __packed;
+>>>
+>>>    struct create_posix {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8    Name[16];
+>>>        __le32  Mode;
+>>>        __u32   Reserved;
+>>> @@ -1230,7 +1233,7 @@ struct create_posix {
+>>>
+>>>    /* See MS-SMB2 2.2.13.2.3 and MS-SMB2 2.2.13.2.4 */
+>>>    struct create_durable {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        union {
+>>>                __u8  Reserved[16];
+>>> @@ -1243,14 +1246,14 @@ struct create_durable {
+>>>
+>>>    /* See MS-SMB2 2.2.13.2.5 */
+>>>    struct create_mxac_req {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        __le64 Timestamp;
+>>>    } __packed;
+>>>
+>>>    /* See MS-SMB2 2.2.14.2.5 */
+>>>    struct create_mxac_rsp {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        __le32 QueryStatus;
+>>>        __le32 MaximalAccess;
+>>> @@ -1286,13 +1289,13 @@ struct lease_context_v2 {
+>>>    } __packed;
+>>>
+>>>    struct create_lease {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        struct lease_context lcontext;
+>>>    } __packed;
+>>>
+>>>    struct create_lease_v2 {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        struct lease_context_v2 lcontext;
+>>>        __u8   Pad[4];
+>>> @@ -1300,7 +1303,7 @@ struct create_lease_v2 {
+>>>
+>>>    /* See MS-SMB2 2.2.14.2.9 */
+>>>    struct create_disk_id_rsp {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        __le64 DiskFileId;
+>>>        __le64 VolumeId;
+>>> @@ -1309,7 +1312,7 @@ struct create_disk_id_rsp {
+>>>
+>>>    /* See MS-SMB2 2.2.13.2.13 */
+>>>    struct create_app_inst_id {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8 Name[16];
+>>>        __le32 StructureSize; /* Must be 20 */
+>>>        __u16 Reserved;
+>>> @@ -1318,7 +1321,7 @@ struct create_app_inst_id {
+>>>
+>>>    /* See MS-SMB2 2.2.13.2.15 */
+>>>    struct create_app_inst_id_vers {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8 Name[16];
+>>>        __le32 StructureSize; /* Must be 24 */
+>>>        __u16 Reserved;
+>>> diff --git a/fs/smb/server/smb2pdu.h b/fs/smb/server/smb2pdu.h
+>>> index bd1d2a0e9203..643f5e1cfe35 100644
+>>> --- a/fs/smb/server/smb2pdu.h
+>>> +++ b/fs/smb/server/smb2pdu.h
+>>> @@ -64,7 +64,7 @@ struct preauth_integrity_info {
+>>>    #define SMB2_SESSION_TIMEOUT                (10 * HZ)
+>>>
+>>>    struct create_durable_req_v2 {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        __le32 Timeout;
+>>>        __le32 Flags;
+>>> @@ -73,7 +73,7 @@ struct create_durable_req_v2 {
+>>>    } __packed;
+>>>
+>>>    struct create_durable_reconn_req {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        union {
+>>>                __u8  Reserved[16];
+>>> @@ -85,7 +85,7 @@ struct create_durable_reconn_req {
+>>>    } __packed;
+>>>
+>>>    struct create_durable_reconn_v2_req {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        struct {
+>>>                __u64 PersistentFileId;
+>>> @@ -96,13 +96,13 @@ struct create_durable_reconn_v2_req {
+>>>    } __packed;
+>>>
+>>>    struct create_alloc_size_req {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        __le64 AllocationSize;
+>>>    } __packed;
+>>>
+>>>    struct create_durable_rsp {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        union {
+>>>                __u8  Reserved[8];
+>>> @@ -114,7 +114,7 @@ struct create_durable_rsp {
+>>>    /* Flags */
+>>>    #define SMB2_DHANDLE_FLAG_PERSISTENT        0x00000002
+>>>    struct create_durable_v2_rsp {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        __le32 Timeout;
+>>>        __le32 Flags;
+>>> @@ -122,7 +122,7 @@ struct create_durable_v2_rsp {
+>>>
+>>>    /* equivalent of the contents of SMB3.1.1 POSIX open context response */
+>>>    struct create_posix_rsp {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8    Name[16];
+>>>        __le32 nlink;
+>>>        __le32 reparse_tag;
+>>> @@ -381,13 +381,13 @@ struct smb2_ea_info {
+>>>    } __packed; /* level 15 Query */
+>>>
+>>>    struct create_ea_buf_req {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        struct smb2_ea_info ea;
+>>>    } __packed;
+>>>
+>>>    struct create_sd_buf_req {
+>>> -     struct create_context ccontext;
+>>> +     struct create_context_hdr ccontext;
+>>>        __u8   Name[8];
+>>>        struct smb_ntsd ntsd;
+>>>    } __packed;
+>>
+> 
+> 
+> --
+> Thanks,
+> 
+> Steve
