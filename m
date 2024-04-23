@@ -1,41 +1,41 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0F8137900;
-	Tue, 23 Apr 2024 14:04:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C965135414;
+	Tue, 23 Apr 2024 14:04:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713881059; cv=none; b=V/l1E5GNNi6Fli8UTkTmNYco23vCNGHi/MvVh80IcNiKeHlX35w4iwVM/pYBIhnYKBPal04z7avBpClQJh429UJ+VlUXjMEzSmZ8wD50R9umoNMW8dWyYVLfQUn2C5oIBV9AS04UCKkXK5z5xE7H6zKNcxr1E0DOiwCq3a3ec8A=
+	t=1713881063; cv=none; b=CWDkGHfGtXcuNY0nX5ufI1oyKHO65ovAP9w0VKDoVdw43EmOI/fmhhvbZk5j0u1DiN8uwAnu06e2uVclAobZM8osdtF/RvQeLgM/YnzyhDB4cpbJ9XMh1sYu3jmZnpzRQOUrcUJa2RVAtD7h1A0bbHzlUql6FLZ/Jqz7cQ7KFUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713881059; c=relaxed/simple;
-	bh=neo6VBlrt3qDMQ41DWfk27jOXU9k4IUrHGw5mjmSN2I=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QnZg/+iKdIU5jBKc29SkkoyjqhuF4xCPSXEsqL518JR/ML0N01+RgZngKVEEpi17/Gqld5UMlID1shv49f0BZY1kTnBywhvzg0+pu/cvE6QoAK90kZTe6H00TminBDdsPHPZQ7QrmOze1fnY37uCauXF0C7/yfjTlvdDFq4fLcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qpT3A78d; arc=none smtp.client-ip=46.235.227.194
+	s=arc-20240116; t=1713881063; c=relaxed/simple;
+	bh=IswkZXwK+n2nisieR/XDGMs/iTPnx3zTGK0EaBj5w/0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=H+pTlnEBQ2nmxC6ZeB5Uja1VVWcnOJEt7F1Y1mogv2KOedVrTwMIqMAiRPdjPINFlrM9wLnyWoticbVrCYIEyxa5WW9mNEyIHZWp3hqsv7NNiAyrRmp8QNBNqbmWK8aCrHzP+vfPvVzMIUl8X7kDrP37wrkHVYIy7DBo2XMpmMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Y28hfahN; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qpT3A78d"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Y28hfahN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713881051;
-	bh=neo6VBlrt3qDMQ41DWfk27jOXU9k4IUrHGw5mjmSN2I=;
-	h=From:Subject:Date:To:Cc:From;
-	b=qpT3A78dofnqODQw2poC2hDIcGFP3T7ESuNcdikFHEdSGafE9QYN2hth0gc56/wrT
-	 Ghpv2hSSn4fyCAiLIwJ6bbTK4lzQSq/hsa7aaRNnjCW3y6A2TD+QEksq9Yp2X8mudb
-	 QBojiq+BjOVTfsPExYtD3jycZr0uiAfbZFNW3yG0xRqPxCLTPkYMLk5ytz1YOFKeN1
-	 z9CO/EBQFYtRj8K+puzwEkjRUhSrbnCi/nJnlJpcahuHll4lJLCET0nhQlEb11/8HB
-	 N6nM5+CxR/lxd2cHIKNhme2wRhMHnNDHxPWYrsX2R8jRtGe+lwEX82DRlIFprGVAlw
-	 B0VHZ7JchKZPA==
+	s=mail; t=1713881054;
+	bh=IswkZXwK+n2nisieR/XDGMs/iTPnx3zTGK0EaBj5w/0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Y28hfahNHk7gUuWmoLezv/VlMQPjejBP8mzZnZAgRXfCPeo1IwpvW98fgVkzdqzgb
+	 /wkIjkr0s7Zgw9FmxJJ7xvu3yCLoH3LwrG/tgerdlEZ6byrY04w6073nUaKP+5pL1g
+	 QoHBOMVEQYf4oKMOrsQie04YM4TLmHPaGy3/6BNIFwRFc+yk1nRTvmc1MRvzP5Wr4J
+	 Nva7WXCbmeu3petW/kFFlb64N14es8TNplebo4AGfoQLVDGi/1xbNj3g5JNOL+oFiE
+	 njifgz64pqUWj0K7AgTEng98lW+ASx+ghokzzChp6QgWscUwHQyk5L6yUd0UZN2hHt
+	 CSBQsxLMgM/8g==
 Received: from [192.168.1.205] (zone.collabora.co.uk [167.235.23.81])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0E86737820F9;
-	Tue, 23 Apr 2024 14:04:09 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 270B93782141;
+	Tue, 23 Apr 2024 14:04:13 +0000 (UTC)
 From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Subject: [PATCH 0/3] kselftest: Add test to report device log errors
-Date: Tue, 23 Apr 2024 10:03:39 -0400
-Message-Id: <20240423-dev-err-log-selftest-v1-0-690c1741d68b@collabora.com>
+Date: Tue, 23 Apr 2024 10:03:41 -0400
+Subject: [PATCH 2/3] kselftest: Move ksft helper module to common directory
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,9 +44,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIALu/J2YC/x3MQQqEMAxG4atI1gZqUUa8irhw2r9OQFQSEaF49
- ykuv8V7mQwqMBqqTIpLTPatoKkrCr95W8ASi8k737rWNxxxMVR53Rc2rOmEnez71H37FD4hOir
- poUhyv9txep4/oPpJVmYAAAA=
+Message-Id: <20240423-dev-err-log-selftest-v1-2-690c1741d68b@collabora.com>
+References: <20240423-dev-err-log-selftest-v1-0-690c1741d68b@collabora.com>
+In-Reply-To: <20240423-dev-err-log-selftest-v1-0-690c1741d68b@collabora.com>
 To: Shuah Khan <shuah@kernel.org>, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: kernel@collabora.com, linux-kselftest@vger.kernel.org, 
@@ -54,77 +54,68 @@ Cc: kernel@collabora.com, linux-kselftest@vger.kernel.org,
  =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
 X-Mailer: b4 0.13.0
 
-Log errors are the most widely used mechanism for reporting issues in
-the kernel. When an error is logged using the device helpers, eg
-dev_err(), it gets metadata attached that identifies the subsystem and
-device where the message is coming from. This series makes use of that
-metadata in a new test to report which devices logged errors.
-
-The first two patches move a test and a helper script to keep things
-organized before this new test is added in the third patch.
-
-It is expected that there might be many false-positive error messages
-throughout the drivers code which will be reported by this test. By
-having this test in the first place and working through the results we
-can address those occurrences by adjusting the loglevel of the messages
-that turn out to not be real errors that require the user's attention.
-It will also motivate additional error messages to be introduced in the
-code to detect real errors where they turn out to be missing, since
-it will be possible to detect said issues automatically.
-
-As an example, below you can see the test result for
-mt8192-asurada-spherion. The single standing issue has been investigated
-and will be addressed in an EC firmware update [1]:
-
-TAP version 13
-1..1
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `model_name' property: -6
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `energy_full_design' property: -6
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
- power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-not ok 1 +power_supply:sbs-8-000b
- Totals: pass:0 fail:1 xfail:0 xpass:0 skip:0 error:0
-
-[1] https://lore.kernel.org/all/cf4d8131-4b63-4c7a-9f27-5a0847c656c4@notapiano
+Move the ksft python module, which provides generic helpers for
+kselftests, to a common directory so it can be more easily shared
+between different tests.
 
 Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 ---
-Nícolas F. R. A. Prado (3):
-      kselftest: devices: Move discoverable devices test to subdirectory
-      kselftest: Move ksft helper module to common directory
-      kselftest: devices: Add test to detect device error logs
+ tools/testing/selftests/Makefile                                   | 1 +
+ tools/testing/selftests/devices/probe/Makefile                     | 2 +-
+ tools/testing/selftests/devices/probe/test_discoverable_devices.py | 7 ++++++-
+ tools/testing/selftests/{devices/probe => kselftest}/ksft.py       | 0
+ 4 files changed, 8 insertions(+), 2 deletions(-)
 
- tools/testing/selftests/Makefile                   |  4 +-
- tools/testing/selftests/devices/Makefile           |  4 -
- .../testing/selftests/devices/error_logs/Makefile  |  3 +
- .../devices/error_logs/test_device_error_logs.py   | 85 ++++++++++++++++++++++
- tools/testing/selftests/devices/probe/Makefile     |  4 +
- .../{ => probe}/boards/Dell Inc.,XPS 13 9300.yaml  |  0
- .../{ => probe}/boards/google,spherion.yaml        |  0
- .../{ => probe}/test_discoverable_devices.py       |  7 +-
- .../selftests/{devices => kselftest}/ksft.py       |  0
- 9 files changed, 101 insertions(+), 6 deletions(-)
----
-base-commit: 7b4f2bc91c15fdcf948bb2d9741a9d7d54303f8d
-change-id: 20240421-dev-err-log-selftest-28f5b8fc7cd0
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 55815470e94c..a07ef1f473b3 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -250,6 +250,7 @@ ifdef INSTALL_PATH
+ 	install -m 744 kselftest/runner.sh $(INSTALL_PATH)/kselftest/
+ 	install -m 744 kselftest/prefix.pl $(INSTALL_PATH)/kselftest/
+ 	install -m 744 kselftest/ktap_helpers.sh $(INSTALL_PATH)/kselftest/
++	install -m 744 kselftest/ksft.py $(INSTALL_PATH)/kselftest/
+ 	install -m 744 run_kselftest.sh $(INSTALL_PATH)/
+ 	rm -f $(TEST_LIST)
+ 	@ret=1;	\
+diff --git a/tools/testing/selftests/devices/probe/Makefile b/tools/testing/selftests/devices/probe/Makefile
+index 7a6eaa031cfe..f630108c3fdf 100644
+--- a/tools/testing/selftests/devices/probe/Makefile
++++ b/tools/testing/selftests/devices/probe/Makefile
+@@ -1,4 +1,4 @@
+ TEST_PROGS := test_discoverable_devices.py
+-TEST_FILES := boards ksft.py
++TEST_FILES := boards
+ 
+ include ../../lib.mk
+diff --git a/tools/testing/selftests/devices/probe/test_discoverable_devices.py b/tools/testing/selftests/devices/probe/test_discoverable_devices.py
+index fbae8deb593d..0a2f4902dbbf 100755
+--- a/tools/testing/selftests/devices/probe/test_discoverable_devices.py
++++ b/tools/testing/selftests/devices/probe/test_discoverable_devices.py
+@@ -15,12 +15,17 @@
+ #
+ 
+ import glob
+-import ksft
+ import os
+ import re
+ import sys
+ import yaml
+ 
++# Allow ksft module to be imported from different directory
++this_dir = os.path.dirname(os.path.realpath(__file__))
++sys.path.append(os.path.join(this_dir, "../../kselftest/"))
++
++import ksft
++
+ pci_controllers = []
+ usb_controllers = []
+ 
+diff --git a/tools/testing/selftests/devices/probe/ksft.py b/tools/testing/selftests/kselftest/ksft.py
+similarity index 100%
+rename from tools/testing/selftests/devices/probe/ksft.py
+rename to tools/testing/selftests/kselftest/ksft.py
 
-Best regards,
 -- 
-Nícolas F. R. A. Prado <nfraprado@collabora.com>
+2.44.0
 
