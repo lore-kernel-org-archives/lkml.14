@@ -1,93 +1,116 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA64D320E
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 08:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F5D320E
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 08:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713861241; cv=none; b=ZjI8p4UxaDdEGSJalZEoIxEvPNXreSee1qsW1s6/khbybrTcoz/mMBA/COhvpjcths5DQ0ltwhw25tJAT05nES1r2E5tySgLPUCkyBfVYs/O3Ne6yIUZM5UpJx2JCOQRvb/Yyrs6jBNc/GLT4EHIzr3GZf0wLNqcLHarVFMbMWY=
+	t=1713861310; cv=none; b=rajDJ9eRw/F5W+R/V5ItpU0t2DFgow4/m1T4lpqZfpolKZlGvz38FBdyCIqQu5t3uRqR3ZCqss/27r/45ctXiupZlXopTbf/6ag5ZtFtqvXmNNEKQc8l+oaLQ3lkZv11qGCu0PsO3Kzhfixo7pZeC0+9L7PzDlwauGz6AccNnF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713861241; c=relaxed/simple;
-	bh=GbEOcBiBoSjAahAIDalXGsP5xushNOL01/QV0u5nyAg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fi4RAZPir4qf1Gmv4TTlvTs8GS6zuHPb11c3ZRf8meZ2FUbmHKV42y5xcr9RmUNjf3rgqBezppQWDh/2NybvDoIEUINCdeNXPh2/QEYvOexsuOPD0pmP8wceY+f4CZk0ghIm1rQOp5fa0CSaixJqnhojsi09nCdxfIzFeN8h2NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ZiFYelrY; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1713861310; c=relaxed/simple;
+	bh=JvAVTujgcuiw/0tR/hMqo55xPe+4zmGUHWSlxH3z/Bg=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=dr2ThAn+ooLDihL2ytBKhyZRlfkfuXwT3ugkZXpC6pMfcA7kg5zQWtzmpMrZNNQ1mIt8Oxz25AJJyXLv6X75ltGfg4J4LWLXBcnsbvVcbWpI5a0/SoCKs7+l8Pq6ZjMSg0afoEYFs4x/qtbm2xrx0h7pg3J+/qzBzKykzqYfaRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DJ+CfAEc; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZiFYelrY"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0A62B40E0249;
-	Tue, 23 Apr 2024 08:33:51 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id d_koH9OyGXIh; Tue, 23 Apr 2024 08:33:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1713861226; bh=NFHsFX0uVgJUjkPOc/vFyW6tpvFhp24NlUDlmhptGtI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZiFYelrYnwih1ZDSbpND7ggtn2LzlXFUQxagba/xXahDpv751L2VEFFlY2QdtGA2K
-	 aVr7LpPjT09tTtYYQf7cqFwboyrlA97a2gYWr0CCO9dfPgGeRU7DK4KZ1XFkBI+ei9
-	 hXruUqOPua6+OVwrR/kMeXIMKTikWBmKB1+kdVVC3/w3pWJewZsmWZXMxGYjhLy9eL
-	 bGjoG8PIMZFINGtXu8RP5pR8+wUMDnvf/xllorclJc7YAoQ5q4+8RE9g6yGzCgWRul
-	 /dK8YhcutcqcGoeaXqN6eDHNmLBbvM/6CQy/8U8VTQ3gU3DDnozDo8YBh8Ni2yeZCC
-	 ofHA46PaXW3kBojoEZZ/lPyg67e/vrnStj7/5EJnhAK6KOQOOrmxR1UZlPyKBBJ3m1
-	 L59OrZp7BcL7dB02/Q0t6Nv5OZa0iWcbvFbVZ3PRZdRhBsTYzcZ8QKJ4Cr/+ZIFJxb
-	 Aa9F6r/ImgC1SnfeGDDTRRZlGODfqmvN0qY8RN+0UKOEit6wcZoiGjDhR0w/Y3Jz/v
-	 hyAdWzja/NURn6ZcJIant85XLLTWKY+72v8tm6um7hgLz+hea2Y84iIAvMQGSehr/V
-	 BtEQVR5Qc8WyI02ePZUSmV80ueakICjsA6jBgK+lkh9xsXYRv4Mm7QAQpt4UOzTLPc
-	 jq4/PGt0419YNI2JnAMZQpRo=
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A68E740E0177;
-	Tue, 23 Apr 2024 08:33:37 +0000 (UTC)
-Date: Tue, 23 Apr 2024 10:33:32 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Robert Richter <rrichter@amd.com>
-Cc: Dave Hansen <dave.hansen@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	linux-kernel@vger.kernel.org, jgross@suse.com, tglx@linutronix.de,
-	x86@kernel.org, Kim Phillips <kim.phillips@amd.com>,
-	Robert Richter <rric@kernel.org>
-Subject: Re: [PATCH 2/4] perf/x86/ibs: Use CPUID region helper
-Message-ID: <20240423083332.GAZidyXG5HFM0CrG3H@fat_crate.local>
-References: <20240416151242.GGZh6VaiO2gC4ej2BT@fat_crate.local>
- <f142e9c4-4829-4ace-8757-485246ad3572@intel.com>
- <20240416174850.GEZh66AmnDjrLxoXaw@fat_crate.local>
- <ZiEMnWaHkn99_oyW@rric.localdomain>
- <20240422172055.GAZiacdxkQU0XAbybW@fat_crate.local>
- <ZibEFZ6DoxDeBxxp@rric.localdomain>
- <20240422204146.GCZibLiqZhbY1J4qFJ@fat_crate.local>
- <ZibW8D9-CTd8G-_v@rric.localdomain>
- <20240422214503.GDZibaX4G2HWQgZuvH@fat_crate.local>
- <ZidnBlWbCaMg-UDi@rric.localdomain>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DJ+CfAEc"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZidnBlWbCaMg-UDi@rric.localdomain>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1713861306;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4cVFQdnmZhnHQm7CDK2o2kagEKgCqmKyp5VX7FCc9Es=;
+	b=DJ+CfAEcJNuA1bAj859OhU82Ws9DC+hNpzlw2XJHNSNAUzgK1FpRl6IfxcBKbotBqA+/ds
+	5iT0VkQyA6COHG7S1ExJ5axG41jighibwYoLxAhZN6Myz6AV/toYbtxYbZZIp3fK7DS3vo
+	B8rtbFNiB56JI7l9noA+O1riUaC3LxI=
+Date: Tue, 23 Apr 2024 08:35:03 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Yajun Deng" <yajun.deng@linux.dev>
+Message-ID: <b6ea1fb5bc6c06d2855e41b4034656b0a76b58f5@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH] mm/rmap: remove unnecessary page_table_lock
+To: "David Hildenbrand" <david@redhat.com>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+In-Reply-To: <fd7fde90-21ea-4617-be17-ba387b44feaf@redhat.com>
+References: <20240422105212.1485788-1-yajun.deng@linux.dev>
+ <b848c431-deca-42e4-925c-673b3fa1f251@redhat.com>
+ <3c452d5db5b3d5879160ab62a9e0ac4481a6298a@linux.dev>
+ <fd7fde90-21ea-4617-be17-ba387b44feaf@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 23, 2024 at 09:45:10AM +0200, Robert Richter wrote:
-> I prefer 1) as this applies IBS_CAPS_DEFAULT only if the leaf is
-> missing which was the original intention of IBS_CAPS_DEFAULT but can
-> live with 2) as it is implemented now.
+April 23, 2024 at 4:18 PM, "David Hildenbrand" <david@redhat.com> wrote:
 
-As implemented now and be done with it. We already wasted too much time
-with some hypothetical and there's bigger fish to fry so let's leave it
-like it is and move on.
 
-Thx.
 
--- 
-Regards/Gruss,
-    Boris.
+>=20
+>=20On 23.04.24 09:53, Yajun Deng wrote:
+>=20
+>=20>=20
+>=20> April 22, 2024 at 7:24 PM, "David Hildenbrand" <david@redhat.com> w=
+rote:
+> >=20
+>=20>  > >>
+> >=20
+>=20> >=20
+>=20> > On 22.04.24 12:52, Yajun Deng wrote:
+> > >=20
+>=20>=20
+>=20>  page_table_lock is a lock that for page table, we won't change pag=
+e
+> >=20
+>=20>  table in __anon_vma_prepare(). As we can see, it works well in
+> >=20
+>=20>  anon_vma_clone(). They do the same operation.
+> >=20
+>=20> >=20
+>=20> > We are reusing mm->page_table_lock to serialize, not the *actual*=
+ low-level page table locks that really protect PTEs.
+> > >=20
+>=20> >  With that locking gone, there would be nothing protection vma->a=
+non_vma.
+> > >=20
+>=20> >  Note that anon_vma_clone() is likely called with the mmap_lock h=
+eld in write mode, which is not the case for __anon_vma_prepare() ...
+> > >=20
+>=20>=20
+>=20>  Yes, anon_vma_clone() is called with the mmap_lock held. I added m=
+map_assert_write_locked(dst->vm_mm) to prove it.
+> >=20
+>=20>  I added mmap_assert_write_locked(vma->vm_mm) in __anon_vma_prepare=
+() at the same time, it shows __anon_vma_prepare()
+> >=20
+>=20>  is also called with the mmap_lock held too.
+> >=20
+>=20
+> Make sure you actually have lockdep built in and enabled.
+>=20
 
-https://people.kernel.org/tglx/notes-about-netiquette
+This=20is my config.
+CONFIG_LOCKDEP=3Dn
+CONFIG_DEBUG_VM=3Dy
+
+I did another test.
+I put mmap_assert_write_locked(mm) before 'set_bit(MMF_OOM_SKIP, &mm->fla=
+gs)' in mmap.c, it's outside the lock.
+It will crash when on boot. I think mmap_assert_write_locked() works.
+
+
+> __anon_vma_prepare() is for example called from do_anonymous_page() whe=
+re we might only hold the mmap_lock in read mode (or not at all IIRC with=
+ VMA in read mode).
+>=20
+>=20-- Cheers,
+>=20
+>=20David / dhildenb
+>
