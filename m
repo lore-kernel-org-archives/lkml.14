@@ -1,109 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out0-196.mail.aliyun.com (out0-196.mail.aliyun.com [140.205.0.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E04113CF9B;
-	Tue, 23 Apr 2024 11:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FEE713C9DA
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713872449; cv=none; b=oTadbeueaMZ5AgPaHIxkwOEMhyBEcKb4eRtHtBMuvywCAngWieI04KKTSztuoeWX1GzPQY2MW6LNTNwPYtQZ0lGK+rHr0hUls/mWU42Ql/7LQSeNPLzNJMa3rkmx6ojkBf6B10oJydBor2t0XmT2mpsA3HvruPnAbZOS8u0FgeM=
+	t=1713872449; cv=none; b=BfiFrq7BadQiNZi1WrzHgbLaRfKmyte8IHrVtYAXXu+Y5XVrhWiIy9qrCAy7Hm0CcLthK3CVq/Pgjqq6MEYAEsuBjulrlH24L6Tjx/kJ+o5KxsEgwzp06TKshpxVLzHY6oCoMNe1jsz9O4lgEjJH7Sldb20x2oNgAChpuuByC5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713872449; c=relaxed/simple;
-	bh=nq+kPSKYllN1RkHpJFSoPYEfPtGdlTgw8sdi/a8uZXE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NkTY2dt7Av5a6zCzw+4nO/3J6amZjJ2xi39POJd6KpUy45Q/FV24cbhaRRNfn1syqwwPsPtinrrtgCP73/qEJCZlhxQ27ycP32YURI8ZEwxx8nvV8KF4T5efTKaV+EWo88ZE3KJPEm6LuroWKj4gfS+1ELf2VCNNWEQl6qy181w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LYU5M9AK; arc=none smtp.client-ip=10.30.226.201
+	bh=YfsrPvivDoRKNrC1YbqFj+eCbbGzeciwc/RF0sBkVJU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=G7o3lV+CBHDiqUwttvXmx3irAH3hPb7s3u7KtALZzS+h5f1pLHm6wyHKF/Rw6igY0nSR12gdzYp2551PSMLBt7npc5tfEs5FCVjzkIECyQJDqKY78/l2j2Cv53a8vkIjLfj85/rs8LZwH+mgT/BcjvV8FViIHuBdzIq8uTDSmrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=Dt7cB+Dl; arc=none smtp.client-ip=140.205.0.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LYU5M9AK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7170C2BD11;
-	Tue, 23 Apr 2024 11:40:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713872448;
-	bh=nq+kPSKYllN1RkHpJFSoPYEfPtGdlTgw8sdi/a8uZXE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LYU5M9AKJhptCCF7P/sc1RtTxA0PeYibb34Sxxc6nv/ddbVhcIoAz9psKtoirz2Xr
-	 J9RojiTbacsGd/Z3eyn3NurZ0lNtEQzifTXEUuhY8ezxFVuRghPYZnvUswOB+Q6i25
-	 p4T/mlr02nUbzwQTdIIwTZroYUM8N0jUBcNBx8S8kMr1v2NszbHdk+F7QdWXyP28k/
-	 LzMtg9jnx3K3yHe9FVxgfXgTotmpjZKPeJdknls+X8aF0zed2iv38BnFvRgiXf0QeL
-	 ncMMgt6zRV7hPf4ZuiEW5kH0VSGyLlMtD7IoUTSObDsSr8DGD3M4ZJs4gSZxKdLave
-	 nXA2SrIh6AXSw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Lyude Paul <lyude@redhat.com>,
-	Dave Airlie <airlied@redhat.com>,
-	Sasha Levin <sashal@kernel.org>,
-	kherbst@redhat.com,
-	dakr@redhat.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.6 11/16] drm/nouveau/dp: Don't probe eDP ports twice harder
-Date: Tue, 23 Apr 2024 07:01:44 -0400
-Message-ID: <20240423110151.1658546-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240423110151.1658546-1-sashal@kernel.org>
-References: <20240423110151.1658546-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="Dt7cB+Dl"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1713872444; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
+	bh=Puom3o0JDkiZIFarbwt9DAJoDSO5gjgxzhiu11+oa54=;
+	b=Dt7cB+Dlv+gDGuvCSI0krKXzPBBUjh/wdHxVuCtXuZzSKlIwwPeYG4k0OLL4c6+P2BRRnBjLp5K4yMgMfNftbfCCGQI7juDq52KfcDmi9Jvef//gOHbFBNKM7zL/0cOafDcuyBtuIFOXg8Fc6H7vQAdSQ8h8Pg9jcU46PW9Q1T0=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047192;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJTUYfJ_1713871506;
+Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJTUYfJ_1713871506)
+          by smtp.aliyun-inc.com;
+          Tue, 23 Apr 2024 19:25:12 +0800
+From: "Tiwei Bie" <tiwei.btw@antgroup.com>
+To: richard@nod.at,
+	anton.ivanov@cambridgegreys.com,
+	johannes@sipsolutions.net
+Cc:  <linux-um@lists.infradead.org>,
+   <linux-kernel@vger.kernel.org>,
+  "Tiwei Bie" <tiwei.btw@antgroup.com>
+Subject: [PATCH 0/7] um: A follow-up series of -Wmissing-prototypes fixes
+Date: Tue, 23 Apr 2024 19:24:50 +0800
+Message-Id: <20240423112457.2409319-1-tiwei.btw@antgroup.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.28
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Lyude Paul <lyude@redhat.com>
+This is a follow-up series built on top of below series:
+https://lore.kernel.org/linux-um/20240306101925.1088870-1-tiwei.btw@antgroup.com/
 
-[ Upstream commit bf52d7f9b2067f02efe7e32697479097aba4a055 ]
+Tiwei Bie (7):
+  um: Fix -Wmissing-prototypes warnings for (rt_)sigreturn
+  um: Fix the -Wmissing-prototypes warning for __switch_mm
+  um: Fix the -Wmissing-prototypes warning for get_thread_reg
+  um: Fix the declaration of kasan_map_memory
+  um: Add an internal header shared among the user code
+  um: Fix -Wmissing-prototypes warnings for __vdso_*
+  um: Remove unused do_get_thread_area function
 
-I didn't pay close enough attention the last time I tried to fix this
-problem - while we currently do correctly take care to make sure we don't
-probe a connected eDP port more then once, we don't do the same thing for
-eDP ports we found to be disconnected.
+ arch/um/include/asm/kasan.h             |  1 -
+ arch/um/include/asm/mmu.h               |  2 --
+ arch/um/include/asm/processor-generic.h |  1 -
+ arch/um/include/shared/kern_util.h      |  2 ++
+ arch/um/include/shared/skas/mm_id.h     |  2 ++
+ arch/um/os-Linux/internal.h             | 20 ++++++++++++++++++++
+ arch/um/os-Linux/main.c                 |  2 --
+ arch/um/os-Linux/mem.c                  |  1 +
+ arch/um/os-Linux/skas/mem.c             |  2 --
+ arch/um/os-Linux/start_up.c             |  2 --
+ arch/um/scripts/Makefile.rules          |  3 ++-
+ arch/x86/um/shared/sysdep/archsetjmp.h  |  7 +++++++
+ arch/x86/um/signal.c                    |  5 +++--
+ arch/x86/um/tls_32.c                    | 17 -----------------
+ arch/x86/um/vdso/um_vdso.c              | 10 ++++++++--
+ 15 files changed, 45 insertions(+), 32 deletions(-)
+ create mode 100644 arch/um/os-Linux/internal.h
 
-So, fix this and make sure we only ever probe eDP ports once and then leave
-them at that connector state forever (since without HPD, it's not going to
-change on its own anyway). This should get rid of the last few GSP errors
-getting spit out during runtime suspend and resume on some machines, as we
-tried to reprobe eDP ports in response to ACPI hotplug probe events.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240404233736.7946-3-lyude@redhat.com
-(cherry picked from commit fe6660b661c3397af0867d5d098f5b26581f1290)
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/nouveau/nouveau_dp.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dp.c b/drivers/gpu/drm/nouveau/nouveau_dp.c
-index 6a4980b2d4d4e..bf2ae67b03d94 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dp.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dp.c
-@@ -108,12 +108,15 @@ nouveau_dp_detect(struct nouveau_connector *nv_connector,
- 	u8 *dpcd = nv_encoder->dp.dpcd;
- 	int ret = NOUVEAU_DP_NONE, hpd;
- 
--	/* If we've already read the DPCD on an eDP device, we don't need to
--	 * reread it as it won't change
-+	/* eDP ports don't support hotplugging - so there's no point in probing eDP ports unless we
-+	 * haven't probed them once before.
- 	 */
--	if (connector->connector_type == DRM_MODE_CONNECTOR_eDP &&
--	    dpcd[DP_DPCD_REV] != 0)
--		return NOUVEAU_DP_SST;
-+	if (connector->connector_type == DRM_MODE_CONNECTOR_eDP) {
-+		if (connector->status == connector_status_connected)
-+			return NOUVEAU_DP_SST;
-+		else if (connector->status == connector_status_disconnected)
-+			return NOUVEAU_DP_NONE;
-+	}
- 
- 	mutex_lock(&nv_encoder->dp.hpd_irq_lock);
- 	if (mstm) {
 -- 
-2.43.0
+2.34.1
 
