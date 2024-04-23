@@ -1,161 +1,159 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2060.outbound.protection.outlook.com [40.107.237.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8858513D62A;
-	Tue, 23 Apr 2024 16:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713889456; cv=fail; b=QS3XpXe9Xzsp9m2QGHy+vdKrMmhnJXE2yxpJIawuhl7x9MD4cQP41s6OakNC+vsNT1HPIinw2pDF8QeHFrHiBQnakj8YFHlYIG1JqXx3e4PZlBv4i8wHg9ZZDIs6FNEoLs7GjhEeXb3eAam67ftb6FHIGnilBZIEDqNGOvF3CiU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CA613CFBF
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 16:24:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713889456; cv=none; b=nzsxOj3oDDJU3dZFdfrESgOY/8602wr33qrXCNTWLNel9KvcnAC4AXPqFYdffNKCF9LU2k4gqfz9+Bw/OPUywUy6lJo/EhJXuB3avB7a1v4LiyEag7f79oRfO/YDghJJ7iZGJ0i/6L30Faap+Wtv5Y7PAV3i3AWzaoYBe9TBl9Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713889456; c=relaxed/simple;
-	bh=77aDoFXRWl6n9N0DxIlH0dZHZmlwmNueOPoWx1ztjEw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YSi698P1FbxYX3Hx1oMYCgVBs49qH2SoZ/mOStaVlgQ04SpgifUVLQduvVlyG/u/PMbqDciSp4M0+iZUh3Z4k2a2VxKlLgqC9FyB677SQ2w/PCrYx25tzX/JHcET6nvgv/OvyQBzEgJLKoacunV+neG/iEFYBkByG4Cqvi6ryOE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=41FS75/K; arc=fail smtp.client-ip=40.107.237.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	bh=+tdsTWcu5uZanT7zFCmikn7iEc1JLzdiEfizbaR/wz8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ly8IG03/ObAYq8caVWu2BXO9UZfj3Fg9TJNRLUiOAZXugJnKyC+kccmcOLWdGMjowSdYqQ3/CLV8NIyjoo6LQ3VofiBJxXhPZzHh1mrj5PmdI5LTN7EyIJsfgCSMlC2s5rNYwFq5ts7p4BeFJ7eFFIh49C/I9nt0zRMgp1i2ugg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WC0sD1+C; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="41FS75/K"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UaGiWUn6ozUhSQFnBvZUkQj60BR/s8Aui9Yks9nOIoSyex+lgIeccwbFhdgM1pnQAVyjY/BcdI3PLtEt1MA8YTdBWqBqgbLhTcOPmLT1BIalAtJ/4LCBRLFYcKTYTC+y5PyIuZ4HSP5hZKiLIJg/rk5hBcud4xAcPQ+5jih5OWRzVkYHDyJHHwpao4g/Zxzz3X6njiZ5hz3zI3JIh+3zjVoPkziEo/uj1ofvkHRZGCeTsNCFVr3y/qAdnGBJygLABawpy3ME20gRrDnRbsEdqAR5AcRTV04xgL94x7eBqS3UGKjuCVpMzNR2iyIGLHrqBYbETDvyy4HqhxO652EELw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=42poRSSSZjU7ZDIoATOoyv6W5iD879/831zPKtREN28=;
- b=OVM2Nm4qweTtoHO/vFQXmYfbq5E0U0uTaY/iB5KP4ckVzCT28v641VwgtSfkIKYLezhPKw5WqA/5QAGSSePywQns9mC1hGsqfzpJhwYYAjj2smAcVZCy5M6YinAx0Ya2Dy0mJWFmxjHjvuYM/Yu3GCAI74qEqkBD+z9GnO+aiByOI4k4DWlha2slcHYbOITFW/4xbaVDOth+jo+TNPf7Tr81v74nEERdZdn/sbyYJW5N9nft4v2VsqI5y1FT/mqlqs/CsjQYxZvS15WtLQTUkfVLGfXVLmRhta0rG1r0PWAL6JE46PasfHcC5FEiu/K+f22jhpB04K2RUSDqg603nw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=42poRSSSZjU7ZDIoATOoyv6W5iD879/831zPKtREN28=;
- b=41FS75/KPaWpArDiiBZLd+PkK5YTj51RaEea0Jh+aEQv4jvZUJYowTYe+zvf8XC0K6jPS4oxFESWXPeY9eAjgYDT3j3N3AKcvj8wCtXznXggM4uumWQfbRVtfnUFCF881LUPRDb9T1PqrFf6xoO6ro+T0Ybw/4J4yY1eQkcvMlY=
-Received: from CH2PR05CA0026.namprd05.prod.outlook.com (2603:10b6:610::39) by
- SA1PR12MB5637.namprd12.prod.outlook.com (2603:10b6:806:228::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Tue, 23 Apr
- 2024 16:24:11 +0000
-Received: from CH1PEPF0000AD83.namprd04.prod.outlook.com
- (2603:10b6:610:0:cafe::df) by CH2PR05CA0026.outlook.office365.com
- (2603:10b6:610::39) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22 via Frontend
- Transport; Tue, 23 Apr 2024 16:24:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000AD83.mail.protection.outlook.com (10.167.244.85) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Tue, 23 Apr 2024 16:24:10 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Apr
- 2024 11:24:10 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: <kvm@vger.kernel.org>
-CC: <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-crypto@vger.kernel.org>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>,
-	<ardb@kernel.org>, <pbonzini@redhat.com>, <seanjc@google.com>,
-	<vkuznets@redhat.com>, <jmattson@google.com>, <luto@kernel.org>,
-	<dave.hansen@linux.intel.com>, <slp@redhat.com>, <pgonda@google.com>,
-	<peterz@infradead.org>, <srinivas.pandruvada@linux.intel.com>,
-	<rientjes@google.com>, <dovmurik@linux.ibm.com>, <tobin@ibm.com>,
-	<bp@alien8.de>, <vbabka@suse.cz>, <kirill@shutemov.name>,
-	<ak@linux.intel.com>, <tony.luck@intel.com>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <alpergun@google.com>,
-	<jarkko@kernel.org>, <ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>,
-	<pankaj.gupta@amd.com>, <liam.merwick@oracle.com>
-Subject: [PATCH v14 24/22] [SQUASH] KVM: SEV: Add support to handle MSR based Page State Change VMGEXIT
-Date: Tue, 23 Apr 2024 11:21:39 -0500
-Message-ID: <20240423162144.1780159-2-michael.roth@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240423162144.1780159-1-michael.roth@amd.com>
-References: <20240421180122.1650812-1-michael.roth@amd.com>
- <20240423162144.1780159-1-michael.roth@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WC0sD1+C"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2dcbcfe11f8so45688871fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 09:24:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713889453; x=1714494253; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sXsBJiPCF6EJaK39O0Gdhcu0AFBTCRBlun7yBYbTEfc=;
+        b=WC0sD1+CZqLKeR4tx/5uAjJeFoNz5tYvU+xSZ9Zc6I2+fVkislD9qUC/0Fn61irriP
+         +yiM1wNpJUerNp6DI4Bw/XQsZEMEqwSU0WIa7RUw6LujL3NsPmoVFnoHqosOepkqiD5P
+         TAaZ7uo+eTSybxBiYdTZK2GLCuJ5Cp+yWSdoqPlHOprTL3fVywgZz3+dgDJzBl5x/ee0
+         kRB15pjB7KSb4A7OC06VFXWEDqydkpzD+xB34VAlP7L1uwbB7NEmSWQFQpdNEc8UjFhI
+         bYww7EHfFekQ3wElJbJc1BT8/HCpHCFXL8wMOdhzNvn188KmwucCGHnwrf7KwObHmV1k
+         48uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713889453; x=1714494253;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sXsBJiPCF6EJaK39O0Gdhcu0AFBTCRBlun7yBYbTEfc=;
+        b=LpuXm9rnGGIvf2pMsS8L+sOwyeanWN0/jImSAUhYxJf+XYLNoGDo8bm7GpipqxJkDp
+         zADyk12l8x0zXfxNZle9YftEGndhI9ZYM6Ej2adUBLmHD2tzRwI7sVSdDYoJqI8IiUTb
+         lgNn76mxfyy10WcFNww1qzMbQSv8R0l8Nifv1p7QdLzlmn9nfoJvbAmFvtOBabEHXCba
+         625NxRqsa38zwZCRdnAi76UGDAdOPG1h1LKIipq1bnB+Ag00h0okQnw0ARfpOXaZaVly
+         MT8RYUYT/d5hYFmdDUv5/oPQVId2xZrneSr8gfxCZpbqwTK08VWrqzQ1jLe3QMLqFYqn
+         FLqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW8f9nO0R7RbJpSBlxqra9gl50mCxqs4UUyzAIB9t8Z4gmyTDkQcN7WBvJRy3NZx5QzxMhH8Rr4jPAK65A1miXqeioiibcBRz8Nwed7
+X-Gm-Message-State: AOJu0Yy49YZgHkSgcIeFLr0H3DIJmc5CzBAktqPF07fhozzaDk9QkNhN
+	KbN1axaAiM10CbSr6kFQPjO7xcWdgzda0PMCvCLEHvp6yv7Uu2vWqWSML0308VQ=
+X-Google-Smtp-Source: AGHT+IGty4tVE0wt57SqmxXH6DbHe9+jZEXLxRpdlTX809Ie8ckAScVNfBVThnijn7lxg0pVJPm0bA==
+X-Received: by 2002:a2e:9a95:0:b0:2da:9f24:44a8 with SMTP id p21-20020a2e9a95000000b002da9f2444a8mr9481892lji.11.1713889452664;
+        Tue, 23 Apr 2024 09:24:12 -0700 (PDT)
+Received: from [172.30.205.0] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id u25-20020a2e2e19000000b002d4746112fesm1716288lju.38.2024.04.23.09.24.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 09:24:12 -0700 (PDT)
+Message-ID: <77482887-4be9-4c33-8b2c-e30e8ccfbf57@linaro.org>
+Date: Tue, 23 Apr 2024 18:24:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] kallsyms: Avoid weak references for kallsyms symbols
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+ Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+ Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>
+References: <20240420145303.238068-2-ardb+git@google.com>
+ <CAK7LNARGZZC=5Pcy8qBpp1E94hRHHHdUu7KxVudH1iT-yugs=g@mail.gmail.com>
+ <9fda72fa-e5e5-4d45-b268-dd98d28fb5a1@linaro.org>
+ <CAMj1kXERSHjh0k9uCmYuNf31Fg79sd_6EHuS=Y_-xEdNGWeiAw@mail.gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <CAMj1kXERSHjh0k9uCmYuNf31Fg79sd_6EHuS=Y_-xEdNGWeiAw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD83:EE_|SA1PR12MB5637:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3e43b350-c4c4-4d9b-040e-08dc63b1cebc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?CClBPY/hTgsf3/TZ1EyxMIJJ65mWV0yWnXodD/weCP8SiKzFUmyns/Zs9Pnd?=
- =?us-ascii?Q?8QlRqugiHlst36tFTTadDsAZNlsJVUi3kjSx/ppeD8ybkx6GOWn8BWxYC96T?=
- =?us-ascii?Q?Ed3pQ2h5EN7oDcaVCwrMKt4eJXH6DJHqvD0yiOPdosXzm00Gf2vV+Rxkwa+J?=
- =?us-ascii?Q?RT1prB8O9HbPKpruwyPHcNGywDH1A2a4MRRnZQYCl4A+mLJhyOnQgdRBkCkk?=
- =?us-ascii?Q?4YGkI0PuH+gQT5G2szr/yxMtNmLYGNwy2Eq4SlGrvTbuK3RlfNa5J+yKPBpD?=
- =?us-ascii?Q?AkHxkSS4U2c3vdlA/29S/e+SF35Q1pmzbgreRxszIsaOLPjXZUhPH9UArWZ2?=
- =?us-ascii?Q?qFvAHOQLjOySFe4uCpi/QOLD8INHDZ0+fbNtqxtLUoVra4o0xTiB3OEx75AL?=
- =?us-ascii?Q?2XiS4CWVqI71E+NcHeOj6d+5wac9caecwm0xjdSAd/4cjdQ7CSur3tQxZ1Ol?=
- =?us-ascii?Q?D9B7L/xsNoWi70Jlt2pyAhZR0mMgdto7a7w8t8+YsLzoAxeVpA+99waPRZyR?=
- =?us-ascii?Q?h5YxXHzNHEvzM0gzJ45lEWHuDDqyaTSNEK4J2/lDRtnQt6jN34m0Kgvrb5HU?=
- =?us-ascii?Q?Gn5HG6h1XLVDX4osB67RXJLkvfp3QfH/pWQbO2XKSUbDYhXyB5N9WFiPtZ/N?=
- =?us-ascii?Q?h3hCguMSLKiAqRDkoXngY2GHpt4u1E5YZigdBbYCLS/bgtzD+Hl/LJ486FIH?=
- =?us-ascii?Q?VcpsfTJTkt+9gIu2o33YKML4qUUqRJdNUw6D7i/tWdl2M4kzpDN6aAdBXsqK?=
- =?us-ascii?Q?GAXQ+XTAbAc6PLh3cJGkXBeY4YVbJ513zeM7a9rY+PcrBXSuG1OpZyYxLF6Q?=
- =?us-ascii?Q?uaKWbj1pMATPObqskFTVZFhJ8FJHJzOs/NollXpKwdSUQU11QPv3q7rKOoii?=
- =?us-ascii?Q?JF8L4s+T+JlRyLgHjn1ihsvCFqvZyuPICKVmA26dLh0dKIJ2B5f/7iiCjE5m?=
- =?us-ascii?Q?y5Qjl3pRefmKHzowEQym9Bkd9HownqeHcVY4dIRwa+WpoVjUqOtRrqwTMmR9?=
- =?us-ascii?Q?C9prA1Jrly27ys6WX4Vu3BwHvmUt3u3121lyXMCUZDY4u1JKT94AM/D3dnQF?=
- =?us-ascii?Q?xN9Hzgswa3z/ev2vpH+MnB6v81U9eRj8vNDqdqFo6pjmFjqmNV/vRv4Ze8+T?=
- =?us-ascii?Q?Ts3GVq70NmmfCAhTI6IXvbk6YTAoI/0JCTW3n+g3/m9vUrcsEJUibMEsdzGu?=
- =?us-ascii?Q?/Hv2CrWv6f15qbUMQExlih71Dwg0m4QDD86sy1jGP66V+4NXKqyt5KUgU7K2?=
- =?us-ascii?Q?lHqm4J6hhEWt9U2EvLj0t1Pg/TKrcaR+MxdK075afJtyJkcqunG3vNC2trJZ?=
- =?us-ascii?Q?SvjkR+f2Tmo5Qum6ufmuGeRe+Cuep7qTwBWJQJbkZAIns+rjMzlBHWt4oH3G?=
- =?us-ascii?Q?YJHicjs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(82310400014)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 16:24:10.7776
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e43b350-c4c4-4d9b-040e-08dc63b1cebc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD83.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB5637
 
-Terminate if an non-SNP guest attempts to issue a Page State Change
-GHCB request; this is only allowed for SNP.
 
-Signed-off-by: Michael Roth <michael.roth@amd.com>
----
- arch/x86/kvm/svm/sev.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 088eca85a6ac..0d8fbd5e25fe 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -3996,6 +3996,9 @@ static int sev_handle_vmgexit_msr_protocol(struct vcpu_svm *svm)
- 		break;
- 	}
- 	case GHCB_MSR_PSC_REQ:
-+		if (!sev_snp_guest(vcpu->kvm))
-+			goto out_terminate;
-+
- 		ret = snp_begin_psc_msr(vcpu, control->ghcb_gpa);
- 		break;
- 	case GHCB_MSR_TERM_REQ: {
--- 
-2.25.1
+On 4/23/24 18:22, Ard Biesheuvel wrote:
+> On Tue, 23 Apr 2024 at 18:01, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
+>>
+>>
+>>
+>> On 4/22/24 18:02, Masahiro Yamada wrote:
+>>> On Sat, Apr 20, 2024 at 11:53 PM Ard Biesheuvel <ardb+git@google.com> wrote:
+>>>>
+>>>> From: Ard Biesheuvel <ardb@kernel.org>
+>>>>
+>>>> kallsyms is a directory of all the symbols in the vmlinux binary, and so
+>>>> creating it poses somewhat of a chicken-and-egg problem, as its non-zero
+>>>> size affects the layout of the binary, and therefore the values of the
+>>>> symbols.
+>>>>
+>>>> For this reason, the kernel is linked more than once, and the first pass
+>>>> does not include any kallsyms data at all. For the linker to accept
+>>>> this, the symbol declarations describing the kallsyms metadata are
+>>>> emitted as having weak linkage, so they can remain unsatisfied. During
+>>>> the subsequent passes, the weak references are satisfied by the kallsyms
+>>>> metadata that was constructed based on information gathered from the
+>>>> preceding passes.
+>>>>
+>>>> Weak references lead to somewhat worse codegen, because taking their
+>>>> address may need to produce NULL (if the reference was unsatisfied), and
+>>>> this is not usually supported by RIP or PC relative symbol references.
+>>>>
+>>>> Given that these references are ultimately always satisfied in the final
+>>>> link, let's drop the weak annotation on the declarations, and instead,
+>>>> provide fallback definitions with weak linkage. This informs the
+>>>> compiler that ultimately, the reference will always be satisfied.
+>>>>
+>>>> While at it, drop the FRV specific annotation that these symbols reside
+>>>> in .rodata - FRV is long gone.
+>>>>
+>>>> Cc: Masahiro Yamada <masahiroy@kernel.org>
+>>>> Cc: linux-kbuild@vger.kernel.org
+>>>> Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+>>>> Acked-by: Kees Cook <keescook@chromium.org>
+>>>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>>>> Link: https://lore.kernel.org/all/20240415075837.2349766-5-ardb+git@google.com
+>>>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+>>>> ---
+>>>> v5: - avoid PROVIDE() in the linker script, use weak definitions instead
+>>>>       - drop tested-by, replace reviewed-by with acked-by
+>>>>
+>>>
+>>> Applied to linux-kbuild. Thanks.
+>>
+>> Hi, this commit seems to break call traces, resulting in output like:
+>>
+>> [    2.777006] Call trace:
+>> [    2.777007]  _text+0x89e7e8/0x39e0000
+>> [    2.777008]  _text+0x89e82c/0x39e0000
+>> [    2.777009]  _text+0x2b940cc/0x2bd2a90
+>> [    2.777011]  _text+0x2b941a4/0x2bd2a90
+>> [    2.777012]  _text+0x145dc/0x39e0000
+>> [    2.777014]  _text+0x2b51184/0x2bd2a90
+>> [    2.777016]  _text+0x18fc6a4/0x39e0000
+>> [    2.777018]  _text+0x15644/0x39e0000
+>> [    2.777019] ---[ end trace 0000000000000000 ]---
+>>
+> 
+> This patch triggers an issue in the compiler, which appears to perform
+> constant propagation on variables defined as weak, and this is
+> definitely a compiler bug. (A weak variable can be superseded by
+> another instance from a different object at link time, so the compiler
+> cannot make assumptions based on the version of the variable it
+> observes at compile time)
 
+Sounds like fun..
+
+> 
+> It has already been dropped from the kbuild tree.
+
+Thanks!
+
+Konrad
