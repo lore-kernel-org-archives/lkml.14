@@ -1,249 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E836D130AF7;
-	Tue, 23 Apr 2024 13:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1594B1332AC;
+	Tue, 23 Apr 2024 13:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713877709; cv=none; b=ZbvQ1kWAaujt6AidyX25iQxBuyn/GMBnAnBDk68EIBceEvTxmAwBxlQ4t5CixlQA2dqSxteH1SSVN+lyL+jfLM/LjfPf74f11KwKJDT8NcBBo3hDojquxwOfnGOW8vWDxzdBBcb2oQgwdP34GfmOmoXnJqacajeLcnwVIex0J80=
+	t=1713877726; cv=none; b=ljTQlCsb3myGXnahe5qgkg52kKnF0rqvDUVk+mE1fAZuALCu2Na/UzCbLWSKUd0ScFKVvf4ZpMYHlERb6c2xmDligf7HvkQ9G0okzRTIMBRPurcFvGgDuy+sad0oOCg0rVQrNA/W+RkS2QFZ/uBt+PJkAoUKBa06HmWYZrSkG5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713877709; c=relaxed/simple;
-	bh=uS2ZuTJaMnQpRhdP2S8VwBZAeRQ4ZnlDK/4HnTjcFoM=;
-	h=Content-Type:To:Cc:Subject:References:Date:MIME-Version:From:
-	 Message-ID:In-Reply-To; b=YNnTzXYpAZ0eIkqjb61EBYpLL4BiBlvWKiclCxmhjv0+9gBQR2yzvOR9eabiAinhsLrrFmwAPafEEWr2s8XkgEIvUJ7v0eWOtzW2wkIpCqr6SN/8wh2Jrnumqbz2gojAf/v68CdNTjao6VBUjCw9rMWcCXpwGNyRBVupQdVwY/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FC9ijhQq; arc=none smtp.client-ip=192.198.163.12
+	s=arc-20240116; t=1713877726; c=relaxed/simple;
+	bh=0javZ2j999g9iU8XTTAmvcG1Aa3PwZaNEsEiMn6UubY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=b6jgxEYvnhKto/4zNJ2/RmQCzoioRboBdr11vrkJ9vYicCkzyZA7C/1CIMkw3NT1RzdMqNiIbLwq3jLYQdDlD+WCxvWmcGB9dgCakBQhFxcVV0YukwSCxbeCHFTvXPbbahh60c1x3PGpUn8JCM7WY06WfJxeNZp6DvFwj09Gjd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jmh/McVv; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FC9ijhQq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jmh/McVv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713877708; x=1745413708;
-  h=to:cc:subject:references:date:mime-version:
-   content-transfer-encoding:from:message-id:in-reply-to;
-  bh=uS2ZuTJaMnQpRhdP2S8VwBZAeRQ4ZnlDK/4HnTjcFoM=;
-  b=FC9ijhQqt3tNfGWDZNAJ6sEdXJax4HKMGFGCSqBncE05D4sMxLNZn+8/
-   pfJcY5Hkd6YuempEPWnWKOGDk5jLWp4w3QzDoDMTDChU2FkCggKylTx13
-   iTiIhyWP05AH+8wNZFjZDeAiP/hZSzwGZe/j0LpNUxug1zDGNnAnk2MFR
-   i82tlBdSM9VSup8z7PTFigoIG0yH9P9pElUsgZPWlOR3QSsmrnWYQTBM5
-   +rRFJIm44UFaFA0JYLH1kcQH0hYBL2ou5/9AO57Aq3VYx9Wa3sHFmvSI7
-   DKpsB0TL4JGL62cUYVvPjUkHsS5cKT7Vz+B1H1TppC1jNgPbQtHZHscDp
+  t=1713877724; x=1745413724;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0javZ2j999g9iU8XTTAmvcG1Aa3PwZaNEsEiMn6UubY=;
+  b=jmh/McVvo/88r77xffkhKOXnwZhf2Sz0i+oYpBBiTQgpGBKqiEAibEFr
+   xzBeXlhE5ByuhaQVCb8yjkEDijwYZU8YGadvWgz8iQ8cfmM71Yk116RJm
+   cEg7+z7bLTNydHbb99ypEajw+xQb24eG8a5CSIW6mpYwPcX1HZJQ9Kt+9
+   5h3mlcA8seo20M1YYhznUdpkm5W6lNpKlSTqOsbS3cuMXje8BL67hTzGc
+   TDc1+puB5byb2dnLH26fsWtJHwiIQmE2jiLCt9SDiKH+76alkmTuBxlLc
+   +1/Anv3OChBpEg2ccnFOK2zbV0O+2Dod0Iy89hO7WTR3KMBna+qUDEmi2
    w==;
-X-CSE-ConnectionGUID: NcY3fZ0uSgWrwJVB3yBa8g==
-X-CSE-MsgGUID: jHxHavyRSiuzDibcrQIaqg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="13243683"
+X-CSE-ConnectionGUID: fWrYVPJUSG26/AJ3X7ErAw==
+X-CSE-MsgGUID: xlj6emHvQYmXWfFSFK3VrQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="20008195"
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="13243683"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 06:08:26 -0700
-X-CSE-ConnectionGUID: 6ZP7vbbgRvqYnVB23Y7dxA==
-X-CSE-MsgGUID: eaRP4m3rRJCMwWd1xZ5cfg==
+   d="scan'208";a="20008195"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 06:08:43 -0700
+X-CSE-ConnectionGUID: woc7n2+zTle0SV7BOSVICw==
+X-CSE-MsgGUID: W8H3GzlpR/2eskxSM+UJbA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="29168855"
-Received: from hhuan26-mobl.amr.corp.intel.com ([10.125.85.20])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 23 Apr 2024 06:08:23 -0700
-Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
-To: "tj@kernel.org" <tj@kernel.org>, "jarkko@kernel.org" <jarkko@kernel.org>,
- "x86@kernel.org" <x86@kernel.org>, "dave.hansen@linux.intel.com"
- <dave.hansen@linux.intel.com>, "cgroups@vger.kernel.org"
- <cgroups@vger.kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "mingo@redhat.com"
- <mingo@redhat.com>, "tim.c.chen@linux.intel.com" <tim.c.chen@linux.intel.com>,
- "mkoutny@suse.com" <mkoutny@suse.com>, "Mehta, Sohil" <sohil.mehta@intel.com>,
- "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>,
- "Huang, Kai" <kai.huang@intel.com>
-Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
- "seanjc@google.com" <seanjc@google.com>, "anakrish@microsoft.com"
- <anakrish@microsoft.com>, "Zhang, Bo" <zhanb@microsoft.com>,
- "kristen@linux.intel.com" <kristen@linux.intel.com>, "yangjie@microsoft.com"
- <yangjie@microsoft.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>,
- "chrisyan@microsoft.com" <chrisyan@microsoft.com>
-Subject: Re: [PATCH v12 09/14] x86/sgx: Implement async reclamation for cgroup
-References: <20240416032011.58578-1-haitao.huang@linux.intel.com>
- <20240416032011.58578-10-haitao.huang@linux.intel.com>
- <640866c5-9fe0-4f7b-a459-7a685dbe4092@intel.com>
- <op.2mhn6ti6wjvjmi@hhuan26-mobl.amr.corp.intel.com>
- <4be309656cb4e03793703098bbebab3dee93077e.camel@intel.com>
- <op.2mh5p7fawjvjmi@hhuan26-mobl.amr.corp.intel.com>
- <e8d076fb097774f1f0fe3365883e6cf5a823fc4f.camel@intel.com>
- <op.2mm0u7uswjvjmi@hhuan26-mobl.amr.corp.intel.com>
- <914371bd0673870c03e5f4c37db5a2a08fc50aa4.camel@intel.com>
-Date: Tue, 23 Apr 2024 08:08:22 -0500
+   d="scan'208";a="24399524"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.40])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 06:08:29 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	"Maciej W. Rozycki" <macro@orcam.me.uk>,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 1/2] PCI: Use the correct bit in Link Training not active check
+Date: Tue, 23 Apr 2024 16:08:19 +0300
+Message-Id: <20240423130820.43824-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-From: "Haitao Huang" <haitao.huang@linux.intel.com>
-Organization: Intel
-Message-ID: <op.2momr8oewjvjmi@hhuan26-mobl.amr.corp.intel.com>
-In-Reply-To: <914371bd0673870c03e5f4c37db5a2a08fc50aa4.camel@intel.com>
-User-Agent: Opera Mail/1.0 (Win32)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 22 Apr 2024 17:16:34 -0500, Huang, Kai <kai.huang@intel.com> wrote:
+Two changes were made into link retraining logic independent of each
+other.
 
-> On Mon, 2024-04-22 at 11:17 -0500, Haitao Huang wrote:
->> On Sun, 21 Apr 2024 19:22:27 -0500, Huang, Kai <kai.huang@intel.com>  
->> wrote:
->>
->> > On Fri, 2024-04-19 at 20:14 -0500, Haitao Huang wrote:
->> > > > > I think we can add support for "sgx_cgroup=disabled" in future  
->> if
->> > > indeed
->> > > > > needed. But just for init failure, no?
->> > > > >
->> > > >
->> > > > It's not about the commandline, which we can add in the future  
->> when
->> > > > needed.  It's about we need to have a way to handle SGX cgroup  
->> being
->> > > > disabled at boot time nicely, because we already have a case  
->> where we
->> > > > need
->> > > > to do so.
->> > > >
->> > > > Your approach looks half-way to me, and is not future  
->> extendible.  If
->> > > we
->> > > > choose to do it, do it right -- that is, we need a way to disable  
->> it
->> > > > completely in both kernel and userspace so that userspace won't be
->> > > able> to
->> > > > see it.
->> > >
->> > > That would need more changes in misc cgroup implementation to  
->> support
->> > > sgx-disable. Right now misc does not have separate files for  
->> different
->> > > resource types. So we can only block echo "sgx_epc..." to those
->> > > interfacefiles, can't really make files not visible.
->> >
->> > "won't be able to see" I mean "only for SGX EPC resource", but not the
->> > control files for the entire MISC cgroup.
->> >
->> > I replied at the beginning of the previous reply:
->> >
->> > "
->> > Given SGX EPC is just one type of MISC cgroup resources, we cannot  
->> just
->> > disable MISC cgroup as a whole.
->> > "
->> >
->> Sorry I missed this point. below.
->>
->> > You just need to set the SGX EPC "capacity" to 0 to disable SGX EPC.   
->> See
->> > the comment of @misc_res_capacity:
->> >
->> >  * Miscellaneous resources capacity for the entire machine. 0 capacity
->> >  * means resource is not initialized or not present in the host.
->> >
->>
->> IIUC I don't think the situation we have is either of those cases. For  
->> our
->> case, resource is inited and present on the host but we have allocation
->> error for sgx cgroup infra.
->
-> You have calculated the "capacity", but later you failed something and
-> then reset the "capacity" to 0, i.e., cleanup.  What's wrong with that?
->
->>
->> > And "blocking echo sgx_epc ... to those control files" is already
->> > sufficient for the purpose of not exposing SGX EPC to userspace,  
->> correct?
->> >
->> > E.g., if SGX cgroup is enabled, you can see below when you read "max":
->> >
->> >  # cat /sys/fs/cgroup/my_group/misc.max
->> >  # <resource1> <max1>
->> >    sgx_epc ...
->> >    ...
->> >
->> > Otherwise you won't be able to see "sgx_epc":
->> >
->> >  # cat /sys/fs/cgroup/my_group/misc.max
->> >  # <resource1> <max1>
->> >    ...
->> >
->> > And when you try to write the "max" for "sgx_epc", you will hit error:
->> >
->> >  # echo "sgx_epc 100" > /sys/fs/cgroup/my_group/misc.max
->> >  # ... echo: write error: Invalid argument
->> >
->> > The above applies to all the control files.  To me this is pretty much
->> > means "SGX EPC is disabled" or "not supported" for userspace.
->> >
->> You are right, capacity == 0 does block echoing max and users see an  
->> error
->> if they do that. But 1) doubt you literately wanted "SGX EPC is  
->> disabled"
->> and make it unsupported in this case,
->
-> I don't understand.  Something failed during SGX cgroup initialization,
-> you _literally_ cannot continue to support it.
->
->
+The commit e7e39756363a ("PCI/ASPM: Avoid link retraining race") added
+check to ensure no Link Training is currently active into
+pcie_retrain_link() to address the Implementation Note in PCIe r6.1 sec
+7.5.3.7. At that time pcie_wait_for_retrain() only checked for Link
+Training (LT) bit being cleared.
 
-Then we should just return -ENOMEM from sgx_init() when sgx cgroup  
-initialization fails?
-I thought we only disable SGX cgroup support. SGX can still run.
+The commit 680e9c47a229 ("PCI: Add support for polling DLLLA to
+pcie_retrain_link()") generalized pcie_wait_for_retrain() into
+pcie_wait_for_link_status() which can wait either for LT or Data Link
+Layer Link Active (DLLLA) bit with 'use_lt' argument and supporting
+waiting for either cleared or set using 'active' argument.
 
->> 2) even if we accept this is "sgx
->> cgroup disabled" I don't see how it is much better user experience than
->> current solution or really helps user better.
->
-> In your way, the userspace is still able to see "sgx_epc" in control  
-> files
-> and is able to update them.  So from userspace's perspective SGX cgroup  
-> is
-> enabled, but obviously updating to "max" doesn't have any impact.  This
-> will confuse userspace.
->
->>
+In the merge commit commit 1abb47390350 ("Merge branch
+'pci/enumeration'"), those two divergent branches converged. The merge
+changed LT bit checking added in the commit e7e39756363a ("PCI/ASPM:
+Avoid link retraining race") to now wait for completion of any ongoing
+Link Training using DLLLA bit being set if 'use_lt' is false.
 
-Setting capacity to zero also confuses user space. Some application may  
-rely on this file to know the capacity.
+When 'use_lt' is false, the pseudo-code steps of what occurs in
+pcie_retrain_link():
 
->> Also to implement this approach, as you mentioned, we need workaround  
->> the
->> fact that misc_try_charge() fails when capacity set to zero, and adding
->> code to return root always?
->
-> Why this is a problem?
->
+	1. Wait for DLLLA=1
+	2. Trigger link to retrain
+	3. Wait for DLLLA=1
 
-It changes/overrides the the original meaning of capacity==0: no one can  
-allocate if capacity is zero.
+Step 3 waits for the link to come up from the retraining triggered by
+Step 2. As Step 1 is supposed to wait for any ongoing retraining to
+end, using DLLLA also for it does not make sense because link training
+being active is still indicated using LT bit, not with DLLLA.
 
->> So it seems like more workaround code to just
->> make it work for a failing case no one really care much and end result  
->> is
->> not really much better IMHO.
->
-> It's not workaround, it's the right thing to do.
->
-> The result is userspace will see it being disabled when kernel disables
-> it.
->
->
-It's a workaround because you use the capacity==0 but it does not really  
-mean to disable the misc cgroup for specific resource IIUC.
+Correct the pcie_wait_for_link_status() parameters in Step 1 to only
+wait for LT=0 to ensure there is no ongoing Link Training.
 
-There is explicit way for user to disable misc without setting capacity to  
-zero. So in future if we want really disable sgx_epc cgroup specifically  
-we should not use capacity.  Therefore your approach is not  
-extensible/reusable.
+This only impacts the Target Speed quirk, which is the only case where
+waiting for DLLLA bit is used. It currently works in the problematic
+case by means of link training getting initiated by hardware repeatedly
+and respecting the new link parameters set by the caller, which then
+make training succeed and bring the link up, setting DLLLA and causing
+pcie_wait_for_link_status() to return success. We are not supposed to
+rely on luck and need to make sure that LT transitioned through the
+inactive state though before we initiate link training by hand via RL
+(Retrain Link) bit.
 
-Given this is a rare corner case caused by configuration, we can only do  
-as much as possible IMHO, not trying to implement a perfect solution at  
-the moment. Maybe BUG_ON() is more appropriate?
+Fixes: 1abb47390350 ("Merge branch 'pci/enumeration'")
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
 
-(If you want to disable sgx, we can return error from sgx_init() but I  
-still doubt that's what you meant.)
+v2:
+- Improve commit message
 
-Thanks
-Haitao
+NOTE: Maciej NAK'ed the v1 of this patch but has since retracted his
+NAK.
+
+Maciej, if possible, could you please test this with your HW?
+
+---
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e5f243dd4288..70b8c87055cb 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4629,7 +4629,7 @@ int pcie_retrain_link(struct pci_dev *pdev, bool use_lt)
+ 	 * avoid LTSSM race as recommended in Implementation Note at the
+ 	 * end of PCIe r6.0.1 sec 7.5.3.7.
+ 	 */
+-	rc = pcie_wait_for_link_status(pdev, use_lt, !use_lt);
++	rc = pcie_wait_for_link_status(pdev, true, false);
+ 	if (rc)
+ 		return rc;
+ 
+-- 
+2.39.2
+
