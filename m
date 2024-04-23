@@ -1,30 +1,30 @@
-Received: from out187-1.us.a.mail.aliyun.com (out187-1.us.a.mail.aliyun.com [47.90.187.1])
+Received: from out187-23.us.a.mail.aliyun.com (out187-23.us.a.mail.aliyun.com [47.90.187.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C327A1350E3
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16E17E79F
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713877162; cv=none; b=HwWMhKX13C8KMgV9F4hT/EFKbdVcUZtPDrsVO5fA0ovFpqgUOBJF7Iu3kFrNEHJ1Z9zRrnTiGSZXMem8IgSbRYClI/G+AzL3CL9ItRFYVD4VwCeUxt/8mGCRkXiZj4dplamAmUFosj4P9oyTUDLw6fPxI2kB3eKJVt36OIFbyiM=
+	t=1713877162; cv=none; b=XErA5lPnMxDrZy7WIItBykhVzusYJhfzuVFwoN6YVdEYGqAU4e8uy+9NkF7aj5wlJs05yHN4hm1W52D6vG/QBmmiGMMCVRXfUvS6IzONJA1EnmYvZjoan7tqyWD1I9mVMxBP9lHM6MKOuMYuyy+9YvhSn7eIA+ksT7bP3XxjJY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713877162; c=relaxed/simple;
-	bh=whQ8McWaS9QADvZubdAMdl1LIVZsTQVAL0FukzyoZwg=;
+	bh=UDetQ6kFYZh1xF4gwhKPP99yJfT7j4V08AzTDBUEsLI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UbFAqcKKRsRULF03vrO9qr/VeHuJ1m4bFAEIuaEvz4HqfbMbTaUqbSUOyP9NaodQxX0zMqbeu4k++9/RSnD72OOjJyOVC3VnpYHkq+RIcWpO+2MPMluJqEzXrKbL2RIu7CTZ4izoxeaKdpu2bYKudCk2713W9hC1f97xELaBaZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=M0Y2biDI; arc=none smtp.client-ip=47.90.187.1
+	 MIME-Version:Content-Type; b=SIDQehtUtIMw9vsofvFu+mjDdQT8waD4kxbye3nz/cSxIsbgc86dcyInznZI88nQaNXehwazcDI4bQbe1ETH1Z9KNMLvbcFLcQKC8U1eIQPeFfdjyO55f8Qql9+eSUwwu+ijWooeG7JZGq1g16t3/JhVeVYeyDb3uI3gHvmYq7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=dPELqWtu; arc=none smtp.client-ip=47.90.187.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="M0Y2biDI"
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="dPELqWtu"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=antgroup.com; s=default;
-	t=1713877148; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=JMolFlkCz8q8s1KumAu1v9zZDtOAnzDuDDhti01QMmI=;
-	b=M0Y2biDILt4icf5DtECdUNt0S9ORTZUiW9oEV4tGi703v87SzGWDJii7lgngLHU7UBznU8qXb3Zf3ZPwikHF58GbYbN3xk8Tkb9Npw+Z7thgC6xyApxfotbW+fL+o5KokwSLw8BIimX+zKQFDjWMMhb7LnYqauKhvoonvMfGVws=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047187;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJXNjSO_1713877147;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJXNjSO_1713877147)
+	t=1713877149; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
+	bh=64KorjYk0sx2nDSk7hiRZHzNhfBx4ybSJcgKjrQvbD8=;
+	b=dPELqWtu14oRDkOPT9X4rhEiML4w0rhbYprGiqnXzLk6RPtjpoPGbXLzSEOkqD16KpSOvy1pwKtaJLS9KgWTUm2Tm4Z+2H01T/rhaUgxJO8PABd81bzMoG43zg0LZYSC32pCHueWGu1Wkxj4Iq4Fh2ZlaREDVLwDV/uKWttt/Kg=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047209;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJXNjSx_1713877148;
+Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJXNjSx_1713877148)
           by smtp.aliyun-inc.com;
-          Tue, 23 Apr 2024 20:59:07 +0800
+          Tue, 23 Apr 2024 20:59:08 +0800
 From: "Tiwei Bie" <tiwei.btw@antgroup.com>
 To: richard@nod.at,
 	anton.ivanov@cambridgegreys.com,
@@ -32,9 +32,9 @@ To: richard@nod.at,
 Cc:  <linux-um@lists.infradead.org>,
    <linux-kernel@vger.kernel.org>,
   "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH v2 2/7] um: Fix the -Wmissing-prototypes warning for __switch_mm
-Date: Tue, 23 Apr 2024 20:58:53 +0800
-Message-Id: <20240423125858.137709-3-tiwei.btw@antgroup.com>
+Subject: [PATCH v2 6/7] um: Fix -Wmissing-prototypes warnings for __vdso_*
+Date: Tue, 23 Apr 2024 20:58:57 +0800
+Message-Id: <20240423125858.137709-7-tiwei.btw@antgroup.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240423125858.137709-1-tiwei.btw@antgroup.com>
 References: <20240423125858.137709-1-tiwei.btw@antgroup.com>
@@ -44,42 +44,61 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The __switch_mm function is defined in the user code, and is called
-by the kernel code. It should be declared in a shared header.
+The VDSO functions are defined as globals and intended to be called
+from userspace. Let's just workaround the -Wmissing-prototypes warnings
+by declaring them locally.
 
-Fixes: 4dc706c2f292 ("um: take um_mmu.h to asm/mmu.h, clean asm/mmu_context.h a bit")
+This will address below -Wmissing-prototypes warnings:
+
+arch/x86/um/vdso/um_vdso.c:16:5: warning: no previous prototype for ‘__vdso_clock_gettime’ [-Wmissing-prototypes]
+arch/x86/um/vdso/um_vdso.c:30:5: warning: no previous prototype for ‘__vdso_gettimeofday’ [-Wmissing-prototypes]
+arch/x86/um/vdso/um_vdso.c:44:21: warning: no previous prototype for ‘__vdso_time’ [-Wmissing-prototypes]
+arch/x86/um/vdso/um_vdso.c:57:1: warning: no previous prototype for ‘__vdso_getcpu’ [-Wmissing-prototypes]
+
+While at it, also fix the "WARNING: Prefer 'unsigned int *' to bare
+use of 'unsigned *'" checkpatch warning.
+
 Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
 ---
- arch/um/include/asm/mmu.h           | 2 --
- arch/um/include/shared/skas/mm_id.h | 2 ++
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/um/vdso/um_vdso.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/um/include/asm/mmu.h b/arch/um/include/asm/mmu.h
-index a7555e43ed14..f2923c767bb9 100644
---- a/arch/um/include/asm/mmu.h
-+++ b/arch/um/include/asm/mmu.h
-@@ -14,8 +14,6 @@ typedef struct mm_context {
- 	struct uml_arch_mm_context arch;
- } mm_context_t;
+diff --git a/arch/x86/um/vdso/um_vdso.c b/arch/x86/um/vdso/um_vdso.c
+index ff0f3b4b6c45..cbae2584124f 100644
+--- a/arch/x86/um/vdso/um_vdso.c
++++ b/arch/x86/um/vdso/um_vdso.c
+@@ -13,6 +13,12 @@
+ #include <linux/getcpu.h>
+ #include <asm/unistd.h>
  
--extern void __switch_mm(struct mm_id * mm_idp);
--
- /* Avoid tangled inclusion with asm/ldt.h */
- extern long init_new_ldt(struct mm_context *to_mm, struct mm_context *from_mm);
- extern void free_ldt(struct mm_context *mm);
-diff --git a/arch/um/include/shared/skas/mm_id.h b/arch/um/include/shared/skas/mm_id.h
-index e82e203f5f41..92dbf727e384 100644
---- a/arch/um/include/shared/skas/mm_id.h
-+++ b/arch/um/include/shared/skas/mm_id.h
-@@ -15,4 +15,6 @@ struct mm_id {
- 	int kill;
- };
- 
-+void __switch_mm(struct mm_id *mm_idp);
++/* workaround for -Wmissing-prototypes warnings */
++int __vdso_clock_gettime(clockid_t clock, struct __kernel_old_timespec *ts);
++int __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz);
++__kernel_old_time_t __vdso_time(__kernel_old_time_t *t);
++long __vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *unused);
 +
- #endif
+ int __vdso_clock_gettime(clockid_t clock, struct __kernel_old_timespec *ts)
+ {
+ 	long ret;
+@@ -54,7 +60,7 @@ __kernel_old_time_t __vdso_time(__kernel_old_time_t *t)
+ __kernel_old_time_t time(__kernel_old_time_t *t) __attribute__((weak, alias("__vdso_time")));
+ 
+ long
+-__vdso_getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *unused)
++__vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *unused)
+ {
+ 	/*
+ 	 * UML does not support SMP, we can cheat here. :)
+@@ -68,5 +74,5 @@ __vdso_getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *unused)
+ 	return 0;
+ }
+ 
+-long getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *tcache)
++long getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *tcache)
+ 	__attribute__((weak, alias("__vdso_getcpu")));
 -- 
 2.34.1
 
