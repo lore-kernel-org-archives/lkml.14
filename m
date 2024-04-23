@@ -1,206 +1,94 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCD913CA8C
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 16:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F9113C66C;
+	Tue, 23 Apr 2024 16:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713888564; cv=none; b=Nm6lF7VXjtUTce8IBHZNrQhk0yT0S7OUuliBmNK+r3gjdOZOj86IH/rBccwXBvmigedLUc7doL/LNqlXqxIWyKVeJQyNI5PjnIds403iAdN+lir6whFOcK/qyAmDGRNHg1+1BtmSVxD9t5KwgBJOoHOzR1uEPn+p1Jl3goEWEU0=
+	t=1713888628; cv=none; b=I4MhmZT4586qxyfYiRkScaLv0sgGJC/5n+nt6cb5V4wjQCuKiVaSAe2EdR+NHKRBJZ0/Of62yUnQnuj6oihQ/tEdBkKBfUJ1Jp3mN/FBd49DYvp5xKLQomWEtlX7Uj5OoCXb6M2Ujb2qbHH4OByxxse9M/bGAG7jEEXLTirSAQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713888564; c=relaxed/simple;
-	bh=LL6Bn5JcSzwliiLuDQ78JZdeqM3pl5MZa4j3ubP5F80=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Rh0s+AXbyTqNNSjXTdDrs+NlbPHKCcp3D+ORYjaxeDWhaOsCAdG2lfUKm1zlWsKfcO1oM7lP+AqYXbwOCtZwOZj8BTCJ65a105wVfkQ0YzlgAKxObnZ4mfY+kdrulE9DbwtMAFJPNWGtQY66fxi9E9aSQaajb7UGCJ8ztKRQfNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7dadd5636ccso186695039f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 09:09:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713888562; x=1714493362;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/8J3OxauynARCzPhSLU5/ak2dxpVPJ+Bfj7eFyVyks4=;
-        b=m5+Ksb+t+Pu0akT/m5CNIZlXEEmtw0SqiNpwydEu0Crp/QE3sfcVVhuDWE+lxjn0Kf
-         wCMikaGKDC4PfVLJolVX/p/jdPtUG/7a0SQI9+oPCTJwEU6AR+lEisduwa6KKQoIOLwe
-         iKBwbHs7JSEjgNYyEP2sWw1V3ft/yO70uGTibR+NHbZHdSHlt6xWL0SbDdIa71YRz9CE
-         suXrmUnEHQxGxmphbYEd1o0CcmnX1LPYuq4AGyznIq/daidDD+1QznObp3MjmxN4wve8
-         tLdbl7IvqLNpCpvcRhNeU5Brq88HJwRIDi5TpeB9dXOVH3EYbCT6/x8E3W1iqUlFZHAb
-         2G2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXYCtzy31VxXZUE1/AqRC+h/SH31fJodIqnV0TmoXZmPz62raPSOI0H/EykMhOn2OG/I15LJ+HozcDyhoNb/05oqhGc2Rc8arlOLUDx
-X-Gm-Message-State: AOJu0Yx9D4wBYYHFj5uBPFd8PgxLqwm0tGNjjzAzTSomMjmtbC3TARsa
-	xyfhmYOuzEqPzyvC+BqV+8IQm90m3HAJo0CBkiGv5ioy8jiGvsnQm/FZztMWWsO9kwalm4wACGe
-	sS08vouEsLXvdKAg3vzp2fpMgKIpmLxR8ckNpidTA36zVhGn7fFS6lIM=
-X-Google-Smtp-Source: AGHT+IHtCjhHDwurnWyMvfS1ZtFj8hEag/m7u5e1xnNDD5kvOqbF8jFgh+LwcUOGTMVmM3gPmK/9YVVNK3QO5xwqzCfBxD4snq2x
+	s=arc-20240116; t=1713888628; c=relaxed/simple;
+	bh=hNKc7ExTFhMLywfIJP+PycIbALVManyLftM917gb0R4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nPIArIZ02j8wuWvH/uWU/B4Av0CtwpN8SUcZYdA5ZtkU/vGAuZKocrFckSH0ooqCZvlgMNtKELldjtMDwNNiNh5I24EaLuXYjaADvF/GCIt74YzT/wLsyB+fuR0gU2aSM43hO2oHEiy0alfPvX2AJkLPQm8C1n9jYB/2rID97qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=GY608lPm; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="GY608lPm"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id E6D0010000F;
+	Tue, 23 Apr 2024 19:10:16 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru E6D0010000F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1713888616;
+	bh=DVY98jI0X94wEfGtVnGL5e71u5Av+34StswLSdjKMcs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=GY608lPm+OHvHFn6oSpWz8Y24ZDsU/bVdrbNUGJwLp2XrP0Egsps38mdY3vX3vTMG
+	 VflSktVIFX42pcUFHhsOpAYpbw3vHw1N07nTdEed5Ze24OTPYae2UE3IJPc0TeHZQw
+	 pmbQocZN9cbm/+Vu3w5F8WQa8gBl50uYLrNDXIohoJ+xfIZgxU2JlSvhJCVwFV/Q3J
+	 Jq2yBlayDc/sDu6oXasrfG5DMspxP+D9f8x0hBhMdJySpWz7Uh33uRssQK5hg72VI5
+	 GZ4xEqmXgDuFlUtvdZLHVw5E9EDdRFC5mLDVQl7j1hF3FltqlUkNiSpPmo27ibCkbm
+	 N7k3UeVkNg9PA==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Tue, 23 Apr 2024 19:10:16 +0300 (MSK)
+Received: from work.sberdevices.ru (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 23 Apr 2024 19:10:16 +0300
+From: George Stark <gnstark@salutedevices.com>
+To: <u.kleine-koenig@pengutronix.de>, <neil.armstrong@linaro.org>,
+	<khilman@baylibre.com>, <jbrunet@baylibre.com>,
+	<martin.blumenstingl@googlemail.com>, <thierry.reding@gmail.com>,
+	<hkallweit1@gmail.com>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-amlogic@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>, George Stark
+	<gnstark@salutedevices.com>
+Subject: [PATCH 0/2] pwm: meson: add pwm support for A1
+Date: Tue, 23 Apr 2024 19:10:04 +0300
+Message-ID: <20240423161006.2522351-1-gnstark@salutedevices.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:4126:b0:485:7333:8c29 with SMTP id
- ay38-20020a056638412600b0048573338c29mr186877jab.1.1713888562340; Tue, 23 Apr
- 2024 09:09:22 -0700 (PDT)
-Date: Tue, 23 Apr 2024 09:09:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f1761a0616c5c629@google.com>
-Subject: [syzbot] [net?] possible deadlock in __unix_gc
-From: syzbot <syzbot+fa379358c28cc87cc307@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184882 [Apr 23 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;100.64.160.123:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/23 04:11:00 #24934400
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-Hello,
+Add support for Amlogic meson A1 SoC family PWM.
 
-syzbot found the following issue on:
+George Stark (2):
+  dt-bindings: pwm: amlogic: Add new bindings for meson A1 pwm
+  pwm: meson: support meson A1 SoC family
 
-HEAD commit:    4d2008430ce8 Merge tag 'docs-6.9-fixes2' of git://git.lwn...
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=14a15280980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=98d5a8e00ed1044a
-dashboard link: https://syzkaller.appspot.com/bug?extid=fa379358c28cc87cc307
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a8fb4f180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ceeb73180000
+ .../devicetree/bindings/pwm/pwm-amlogic.yaml  |  2 ++
+ drivers/pwm/pwm-meson.c                       | 35 +++++++++++++++++++
+ 2 files changed, 37 insertions(+)
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/5670e5771b96/disk-4d200843.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/03314e6c8879/vmlinux-4d200843.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/41aca7a9505a/bzImage-4d200843.xz
+--
+2.25.1
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+fa379358c28cc87cc307@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.9.0-rc5-syzkaller-00007-g4d2008430ce8 #0 Not tainted
-------------------------------------------------------
-kworker/u8:1/11 is trying to acquire lock:
-ffff88807cea4e70 (&u->lock){+.+.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
-ffff88807cea4e70 (&u->lock){+.+.}-{2:2}, at: __unix_gc+0x40e/0xf70 net/unix/garbage.c:302
-
-but task is already holding lock:
-ffffffff8f6ab638 (unix_gc_lock){+.+.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
-ffffffff8f6ab638 (unix_gc_lock){+.+.}-{2:2}, at: __unix_gc+0x117/0xf70 net/unix/garbage.c:261
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (unix_gc_lock){+.+.}-{2:2}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
-       __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
-       _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
-       spin_lock include/linux/spinlock.h:351 [inline]
-       unix_notinflight+0x13d/0x390 net/unix/garbage.c:140
-       unix_detach_fds net/unix/af_unix.c:1819 [inline]
-       unix_destruct_scm+0x221/0x350 net/unix/af_unix.c:1876
-       skb_release_head_state+0x100/0x250 net/core/skbuff.c:1188
-       skb_release_all net/core/skbuff.c:1200 [inline]
-       __kfree_skb net/core/skbuff.c:1216 [inline]
-       kfree_skb_reason+0x16d/0x3b0 net/core/skbuff.c:1252
-       kfree_skb include/linux/skbuff.h:1262 [inline]
-       manage_oob net/unix/af_unix.c:2672 [inline]
-       unix_stream_read_generic+0x1125/0x2700 net/unix/af_unix.c:2749
-       unix_stream_splice_read+0x239/0x320 net/unix/af_unix.c:2981
-       do_splice_read fs/splice.c:985 [inline]
-       splice_file_to_pipe+0x299/0x500 fs/splice.c:1295
-       do_splice+0xf2d/0x1880 fs/splice.c:1379
-       __do_splice fs/splice.c:1436 [inline]
-       __do_sys_splice fs/splice.c:1652 [inline]
-       __se_sys_splice+0x331/0x4a0 fs/splice.c:1634
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&u->lock){+.+.}-{2:2}:
-       check_prev_add kernel/locking/lockdep.c:3134 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
-       validate_chain+0x18cb/0x58e0 kernel/locking/lockdep.c:3869
-       __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
-       __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
-       _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
-       spin_lock include/linux/spinlock.h:351 [inline]
-       __unix_gc+0x40e/0xf70 net/unix/garbage.c:302
-       process_one_work kernel/workqueue.c:3254 [inline]
-       process_scheduled_works+0xa10/0x17c0 kernel/workqueue.c:3335
-       worker_thread+0x86d/0xd70 kernel/workqueue.c:3416
-       kthread+0x2f0/0x390 kernel/kthread.c:388
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(unix_gc_lock);
-                               lock(&u->lock);
-                               lock(unix_gc_lock);
-  lock(&u->lock);
-
- *** DEADLOCK ***
-
-3 locks held by kworker/u8:1/11:
- #0: ffff888015089148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3229 [inline]
- #0: ffff888015089148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_scheduled_works+0x8e0/0x17c0 kernel/workqueue.c:3335
- #1: ffffc90000107d00 (unix_gc_work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3230 [inline]
- #1: ffffc90000107d00 (unix_gc_work){+.+.}-{0:0}, at: process_scheduled_works+0x91b/0x17c0 kernel/workqueue.c:3335
- #2: ffffffff8f6ab638 (unix_gc_lock){+.+.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
- #2: ffffffff8f6ab638 (unix_gc_lock){+.+.}-{2:2}, at: __unix_gc+0x117/0xf70 net/unix/garbage.c:261
-
-stack backtrace:
-CPU: 0 PID: 11 Comm: kworker/u8:1 Not tainted 6.9.0-rc5-syzkaller-00007-g4d2008430ce8 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Workqueue: events_unbound __unix_gc
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2187
- check_prev_add kernel/locking/lockdep.c:3134 [inline]
- check_prevs_add kernel/locking/lockdep.c:3253 [inline]
- validate_chain+0x18cb/0x58e0 kernel/locking/lockdep.c:3869
- __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
- __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
- _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
- spin_lock include/linux/spinlock.h:351 [inline]
- __unix_gc+0x40e/0xf70 net/unix/garbage.c:302
- process_one_work kernel/workqueue.c:3254 [inline]
- process_scheduled_works+0xa10/0x17c0 kernel/workqueue.c:3335
- worker_thread+0x86d/0xd70 kernel/workqueue.c:3416
- kthread+0x2f0/0x390 kernel/kthread.c:388
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
