@@ -1,69 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE1028DC9;
-	Tue, 23 Apr 2024 19:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD4413D884;
+	Tue, 23 Apr 2024 19:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713900294; cv=none; b=Ig5Ai/aYeFXaGHSa2AOwu3iqhwucgkiLfm6dT5JkV67Jtbg6AIfQZrBVMA05hH/A6Pa9N1CVh1E+CM1yYkSNn3RZqWFdjBhbr5VBhe0QI/NNYr4h4esPGpvQjAcRrCRNc/WjAAVdJXI5yNtCWbeNj+o6jTYpu9wR3tSSTCZhmQU=
+	t=1713900338; cv=none; b=ndz1iI5ApTp6ESAH48tE1x3SywoE8ktqebduPgQoOBHUvz7KRYfGE1/8NDCmT/bhWPOsGf8f2oKCHhGYOx10FZzIkzDjkln2mKjJYleZLG7+8cpXMLORdzmR0W5dNYLdqXJWPvdiH8XnrdDjSbVcPZXAvme1cPw8rt/Jta4CSo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713900294; c=relaxed/simple;
-	bh=gU5DjyFVcSjRr2SRhtji211Cs+TNH+YaJyyQsi8/VJM=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=caIR2uyvMFwEjGGDIWqErk0N5k1hhY6g4zLirovRk2MpEW7pnxsNVOUgnaqTh8dXZvTvCEP14JhhfpskpmH+ixZaQTLwY5SFPnyrlIvYOQAtBk+SPEo3QN2ijlG0mlV9TxRXlaiKg3JopHUzznDB1j73mRkZZS0nfVzBYSgVV0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A30vLFBP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713900338; c=relaxed/simple;
+	bh=GFgvUWu7beexxqgqYJWuWc2RAm6vGMhqSdFbjSi68w0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CNNi7Ta6Xs67MwvTqRbzC+n6zvKcHQBWlNq28vSCoyDE0JRBu0sT2mqCv46WWALt48M3Sb6sqp8cMV+87hY6+t/v7TeMcCV/Lw8U6E5jyscVBfNuh45YLhePUIUcxUpNMmJya6jGv9gKTIT9wH/DRu7rvpmOwVf47iE6tIZkOhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DHlBiw4v; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A30vLFBP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CAFDC116B1;
-	Tue, 23 Apr 2024 19:24:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713900294;
-	bh=gU5DjyFVcSjRr2SRhtji211Cs+TNH+YaJyyQsi8/VJM=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=A30vLFBPiR0pchWkzdGhcSUjqEPyqAQIcwaoYd0KLkqzW8fOwWlx7oD+jPSboDeD5
-	 OEZZAVh+KA6sW4i1XEnbr2Lkr6w8xcVZxsTi6Lbs/4S7MEpwQQcCkdjO5arNxsM8wu
-	 j1Mi4tNQfBO8SZ9VyKh2y7bh6VSciuqYPKXJNyECB/oup5lqfMPfj+5+fOHNtuwP+4
-	 bWzukIpPHyTER3SP1ivEylGQsnR8/h8OqTIUqzzaihcwKYhIGPU2q0XX/FLOOr6zV5
-	 xqJ5PFZ4NIN6S8Rs3WtBsVffY9olobd4HaPTAi1xiMaqGTJrzel8DBo0XsVPOxX812
-	 H8obg44KBdjWw==
-Message-ID: <cc21ff5ddd8fbe07e75fdffd596c0aa1.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DHlBiw4v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713900337; x=1745436337;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=GFgvUWu7beexxqgqYJWuWc2RAm6vGMhqSdFbjSi68w0=;
+  b=DHlBiw4vf02vsEvsF8I6FhcM/pEEct8JHd7/v9x+apFGQSW2saWXXKy+
+   dteeswAkUcjMGsQ9U5oaJWvnjxX/f0SrWO688+BCeNFgyy8Kn2nvGd+c/
+   sBiRS2nuSTL8RSL6idNzVeF7pp6tAd5MAa+NsrYxy+ICFMZjZSluxAAK+
+   BBHWplhngeC0MBA2VhZtCPrQTxZi5TJN1hHomcULobzCQ8z5WMH8gRgqQ
+   GdmobycfEx9bXupAQeCUR18sRHIcjg34kjq2ahrzJyC3cU+LgAty2yvUd
+   GGoFlsv+l7xpKfCmVUzSJ384hmAwtZB/lVhCaZSx0v7XZ3QKVB3woFATL
+   Q==;
+X-CSE-ConnectionGUID: mkWbkA5gSyO/eT0jNF5QBQ==
+X-CSE-MsgGUID: VT8eihNSSXaDIn6FazOguQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9669104"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="9669104"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 12:25:36 -0700
+X-CSE-ConnectionGUID: LIxgFSoYQRiMXQah94XU/Q==
+X-CSE-MsgGUID: uRkgrTKnQBm24ipxZkoGzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="61923095"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa001.jf.intel.com with ESMTP; 23 Apr 2024 12:25:32 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id BB7F9142; Tue, 23 Apr 2024 22:25:30 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rob Herring <robh@kernel.org>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-sunxi@lists.linux.dev
+Cc: Alain Volmat <alain.volmat@foss.st.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Sean Young <sean@mess.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Patrice Chotard <patrice.chotard@foss.st.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Stefani Seibold <stefani@seibold.net>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v2 1/3] media: rc: Add missing io.h
+Date: Tue, 23 Apr 2024 22:23:08 +0300
+Message-ID: <20240423192529.3249134-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20240423192529.3249134-1-andriy.shevchenko@linux.intel.com>
+References: <20240423192529.3249134-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240423110304.1659456-6-sashal@kernel.org>
-References: <20240423110304.1659456-1-sashal@kernel.org> <20240423110304.1659456-6-sashal@kernel.org>
-Subject: Re: [PATCH AUTOSEL 5.4 6/8] clk: Don't hold prepare_lock when calling kref_put()
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Douglas Anderson <dianders@chromium.org>, Sasha Levin <sashal@kernel.org>, mturquette@baylibre.com, linux-clk@vger.kernel.org
-To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Date: Tue, 23 Apr 2024 12:24:51 -0700
-User-Agent: alot/0.10
+Content-Transfer-Encoding: 8bit
 
-Quoting Sasha Levin (2024-04-23 04:03:01)
-> From: Stephen Boyd <sboyd@kernel.org>
->=20
-> [ Upstream commit 6f63af7511e7058f3fa4ad5b8102210741c9f947 ]
->=20
-> We don't need to hold the prepare_lock when dropping a ref on a struct
-> clk_core. The release function is only freeing memory and any code with
-> a pointer reference has already unlinked anything pointing to the
-> clk_core. This reduces the holding area of the prepare_lock a bit.
->=20
-> Note that we also don't call free_clk() with the prepare_lock held.
-> There isn't any reason to do that.
+In many remote control drivers the io.h is implied by others.
+This is not good as it prevents from cleanups done in other headers.
+Add missing include.
 
-You'll want the patch before this, 8358a76cfb47 ("clk: Remove
-prepare_lock hold assertion in __clk_release()"), to avoid lockdep
-warnings. And it looks like the problem was reported on v5.15.y so all
-5 patches from the series would need a backport.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/media/rc/mtk-cir.c   | 1 +
+ drivers/media/rc/serial_ir.c | 1 +
+ drivers/media/rc/st_rc.c     | 1 +
+ drivers/media/rc/sunxi-cir.c | 1 +
+ 4 files changed, 4 insertions(+)
 
- 8358a76cfb47 clk: Remove prepare_lock hold assertion in __clk_release()
- 6f63af7511e7 clk: Don't hold prepare_lock when calling kref_put()
- 9d05ae531c2c clk: Initialize struct clk_core kref earlier
- e581cf5d2162 clk: Get runtime PM before walking tree during disable_unused
- 9d1e795f754d clk: Get runtime PM before walking tree for clk_summary
+diff --git a/drivers/media/rc/mtk-cir.c b/drivers/media/rc/mtk-cir.c
+index 4e294e59d3cb..b2f82b2d1c8d 100644
+--- a/drivers/media/rc/mtk-cir.c
++++ b/drivers/media/rc/mtk-cir.c
+@@ -8,6 +8,7 @@
+ #include <linux/clk.h>
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
++#include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
+diff --git a/drivers/media/rc/serial_ir.c b/drivers/media/rc/serial_ir.c
+index 96ae0294ac10..fc5fd3927177 100644
+--- a/drivers/media/rc/serial_ir.c
++++ b/drivers/media/rc/serial_ir.c
+@@ -18,6 +18,7 @@
+ #include <linux/module.h>
+ #include <linux/errno.h>
+ #include <linux/interrupt.h>
++#include <linux/io.h>
+ #include <linux/kernel.h>
+ #include <linux/serial_reg.h>
+ #include <linux/types.h>
+diff --git a/drivers/media/rc/st_rc.c b/drivers/media/rc/st_rc.c
+index 28477aa95563..988b09191c4c 100644
+--- a/drivers/media/rc/st_rc.c
++++ b/drivers/media/rc/st_rc.c
+@@ -6,6 +6,7 @@
+ #include <linux/kernel.h>
+ #include <linux/clk.h>
+ #include <linux/interrupt.h>
++#include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
+index bf58c965ead8..b49df8355e6b 100644
+--- a/drivers/media/rc/sunxi-cir.c
++++ b/drivers/media/rc/sunxi-cir.c
+@@ -12,6 +12,7 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/interrupt.h>
++#include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
+
