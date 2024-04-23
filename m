@@ -1,181 +1,207 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CE917BDC
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 02:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E341095B;
+	Tue, 23 Apr 2024 02:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713840136; cv=none; b=g4jY2MTtQZ7L5l4O85YoEfQZRs5RLFu871qRthaAi/GvYPWl/tDjBlyRvzv2uHMZlM3cylKlBn3les3qOpkwRv44CKCSTwhYixLEQHvA78zi4Jl64ZvqLqvitht9hGbNaEBsq9SmVZ/pMYIb0Vm1zbtTCxKzG/fnO2hJ7CyyyyU=
+	t=1713840278; cv=none; b=Vzd/7KA+Vu50PsBIjPXZUmOFTz2wSCVvD8d1gvhnIUj4nDBbJ1ynQ9EyKhTDfUjaK9UGtsymXs+02Qj5m6MJ9959WNpIfhaz2gi7HwGxKaUeZ4IxplXieHzNrbqnsF9svJcOsQeAlZ3ENiLYPPw9rYjC3/PM3CSIueYn43M+C3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713840136; c=relaxed/simple;
-	bh=Uda6cTRjjmcJKph4My7u+kBHpqr+OUTWO5y/fZzmH5Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ezTo3zELHwSpwiAuC5o9CpMFzskGI3+cjKdakq6vj1/chCAl/07ticEO31tlmvTEN6bw/LAmwycCaiC2rABIG6cA0Touw2v3xFdTi34ii4goVRV1JLh4BxfwXOIEqbUQqdYJ9T+05QxHR0fFWNomc/IYizjdlFUGZT4XLhrnlX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VNmXT3Yywz1R5rG
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 10:39:05 +0800 (CST)
-Received: from kwepemi500008.china.huawei.com (unknown [7.221.188.139])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3F9AA18007F
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 10:42:05 +0800 (CST)
-Received: from huawei.com (10.67.174.55) by kwepemi500008.china.huawei.com
- (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 23 Apr
- 2024 10:42:04 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH -next v2] genirq: Reuse irq_is_nmi()
-Date: Tue, 23 Apr 2024 02:40:37 +0000
-Message-ID: <20240423024037.3331215-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1713840278; c=relaxed/simple;
+	bh=EU/jou4vLOFurVBMT8WPOG3WIJ7Ec5z4BM8L84cCgtc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i0bNFk2ec8aeNkVqIddhfX94pg9sF2NOa8ELT7nWgVWREqbqbVAYksnXHaNad+xeRYvAW9/nLKxeyUKkznzE6PeVcXd+hYwCldAb9QMYweZYfh/ap1qoWZoDAl35dZeJFG7dVHE35D5QxutDT5Og5i028F88oFtKbeCjmwm74Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GszlE20w; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GszlE20w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713840276; x=1745376276;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=EU/jou4vLOFurVBMT8WPOG3WIJ7Ec5z4BM8L84cCgtc=;
+  b=GszlE20waG3Ko0LsPkiOenQkXz6GPzM6yERjqQCnRNCiDvDQDgPcEYRR
+   I/Rgfa5ivjgWGqCpz2VPA7VpXLk6zShpSF3OFoarbSC0duxIkYhIGVzo1
+   HW3nZxZ8K9srjS0kRYxJIVAu+3G1dsl77/7SFljzsi7EINi8EYqqizt37
+   E53x7IgBv5/swwCYWPziYHWOLjwGzH3tQFJXH2AAwIXI+cQbN2dsD9JF8
+   Q8vWVekC5rLx0v1Oc1SPba40TL7yJBBc8a4575CaiY9EyVISzCyBeCA38
+   /wQUadiGARVznNInmSZL5ai6RTtxhd8ZNnArC8XIdl7BsY6yjh/dqZWmP
+   Q==;
+X-CSE-ConnectionGUID: nhapRqmITmawQaZPWPe2tg==
+X-CSE-MsgGUID: 53OogOaHQYSI1eYwS+nxoA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="26921140"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="26921140"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 19:44:35 -0700
+X-CSE-ConnectionGUID: wUWCz2GBQc2MI+YjJvlIJQ==
+X-CSE-MsgGUID: 9Q74fCf0Sk2Bn1mKiuu14w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="29011735"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.127]) ([10.124.245.127])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 19:44:30 -0700
+Message-ID: <d980dd10-e4c4-4774-b107-77b320cec9f9@linux.intel.com>
+Date: Tue, 23 Apr 2024 10:44:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+To: maobibo <maobibo@loongson.cn>, Sean Christopherson <seanjc@google.com>
+Cc: Mingwei Zhang <mizhang@google.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
+ peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
+ jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
+ irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
+ chao.gao@intel.com
+References: <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com>
+ <Zhn9TGOiXxcV5Epx@google.com>
+ <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com>
+ <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
+ <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com>
+ <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
+ <Zh1mKoHJcj22rKy8@google.com>
+ <CAL715WJf6RdM3DQt995y4skw8LzTMk36Q2hDE34n3tVkkdtMMw@mail.gmail.com>
+ <Zh2uFkfH8BA23lm0@google.com>
+ <4d60384a-11e0-2f2b-a568-517b40c91b25@loongson.cn>
+ <ZiaX3H3YfrVh50cs@google.com>
+ <d8f3497b-9f63-e30e-0c63-253908d40ac2@loongson.cn>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <d8f3497b-9f63-e30e-0c63-253908d40ac2@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemi500008.china.huawei.com (7.221.188.139)
 
-Move irq_is_nmi() definition from irqdesc.c to internals.h, and reuse it
-in manage.c and resend.c to simplify the code.
 
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
-v2:
-- static bool __maybe_unused -> static inline bool
----
- kernel/irq/internals.h |  5 +++++
- kernel/irq/irqdesc.c   |  5 -----
- kernel/irq/manage.c    | 16 ++++++++--------
- kernel/irq/resend.c    |  2 +-
- 4 files changed, 14 insertions(+), 14 deletions(-)
+On 4/23/2024 9:01 AM, maobibo wrote:
+>
+>
+> On 2024/4/23 上午1:01, Sean Christopherson wrote:
+>> On Mon, Apr 22, 2024, maobibo wrote:
+>>> On 2024/4/16 上午6:45, Sean Christopherson wrote:
+>>>> On Mon, Apr 15, 2024, Mingwei Zhang wrote:
+>>>>> On Mon, Apr 15, 2024 at 10:38 AM Sean Christopherson 
+>>>>> <seanjc@google.com> wrote:
+>>>>>> One my biggest complaints with the current vPMU code is that the 
+>>>>>> roles and
+>>>>>> responsibilities between KVM and perf are poorly defined, which 
+>>>>>> leads to suboptimal
+>>>>>> and hard to maintain code.
+>>>>>>
+>>>>>> Case in point, I'm pretty sure leaving guest values in PMCs 
+>>>>>> _would_ leak guest
+>>>>>> state to userspace processes that have RDPMC permissions, as the 
+>>>>>> PMCs might not
+>>>>>> be dirty from perf's perspective (see perf_clear_dirty_counters()).
+>>>>>>
+>>>>>> Blindly clearing PMCs in KVM "solves" that problem, but in doing 
+>>>>>> so makes the
+>>>>>> overall code brittle because it's not clear whether KVM _needs_ 
+>>>>>> to clear PMCs,
+>>>>>> or if KVM is just being paranoid.
+>>>>>
+>>>>> So once this rolls out, perf and vPMU are clients directly to PMU HW.
+>>>>
+>>>> I don't think this is a statement we want to make, as it opens a 
+>>>> discussion
+>>>> that we won't win.  Nor do I think it's one we *need* to make.  KVM 
+>>>> doesn't need
+>>>> to be on equal footing with perf in terms of owning/managing PMU 
+>>>> hardware, KVM
+>>>> just needs a few APIs to allow faithfully and accurately 
+>>>> virtualizing a guest PMU.
+>>>>
+>>>>> Faithful cleaning (blind cleaning) has to be the baseline
+>>>>> implementation, until both clients agree to a "deal" between them.
+>>>>> Currently, there is no such deal, but I believe we could have one via
+>>>>> future discussion.
+>>>>
+>>>> What I am saying is that there needs to be a "deal" in place before 
+>>>> this code
+>>>> is merged.  It doesn't need to be anything fancy, e.g. perf can 
+>>>> still pave over
+>>>> PMCs it doesn't immediately load, as opposed to using 
+>>>> cpu_hw_events.dirty to lazily
+>>>> do the clearing.  But perf and KVM need to work together from the 
+>>>> get go, ie. I
+>>>> don't want KVM doing something without regard to what perf does, 
+>>>> and vice versa.
+>>>>
+>>> There is similar issue on LoongArch vPMU where vm can directly pmu 
+>>> hardware
+>>> and pmu hw is shard with guest and host. Besides context switch 
+>>> there are
+>>> other places where perf core will access pmu hw, such as tick
+>>> timer/hrtimer/ipi function call, and KVM can only intercept context 
+>>> switch.
+>>
+>> Two questions:
+>>
+>>   1) Can KVM prevent the guest from accessing the PMU?
+>>
+>>   2) If so, KVM can grant partial access to the PMU, or is it all or 
+>> nothing?
+>>
+>> If the answer to both questions is "yes", then it sounds like 
+>> LoongArch *requires*
+>> mediated/passthrough support in order to virtualize its PMU.
+>
+> Hi Sean,
+>
+> Thank for your quick response.
+>
+> yes, kvm can prevent guest from accessing the PMU and grant partial or 
+> all to access to the PMU. Only that if one pmu event is granted to VM, 
+> host can not access this pmu event again. There must be pmu event 
+> switch if host want to.
 
-diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
-index 6c43ef3e7308..ed28059e9849 100644
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -280,6 +280,11 @@ static inline int irq_desc_is_chained(struct irq_desc *desc)
- 	return (desc->action && desc->action == &chained_action);
- }
- 
-+static inline bool irq_is_nmi(struct irq_desc *desc)
-+{
-+	return desc->istate & IRQS_NMI;
-+}
-+
- #ifdef CONFIG_PM_SLEEP
- bool irq_pm_check_wakeup(struct irq_desc *desc);
- void irq_pm_install_action(struct irq_desc *desc, struct irqaction *action);
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index 382093196210..5fd4499f649e 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -971,11 +971,6 @@ unsigned int kstat_irqs_cpu(unsigned int irq, int cpu)
- 	return desc && desc->kstat_irqs ? per_cpu(desc->kstat_irqs->cnt, cpu) : 0;
- }
- 
--static bool irq_is_nmi(struct irq_desc *desc)
--{
--	return desc->istate & IRQS_NMI;
--}
--
- unsigned int kstat_irqs_desc(struct irq_desc *desc, const struct cpumask *cpumask)
- {
- 	unsigned int sum = 0;
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index bf9ae8a8686f..f366e4e2af8c 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -564,7 +564,7 @@ irq_set_affinity_notifier(unsigned int irq, struct irq_affinity_notify *notify)
- 	/* The release function is promised process context */
- 	might_sleep();
- 
--	if (!desc || desc->istate & IRQS_NMI)
-+	if (!desc || irq_is_nmi(desc))
- 		return -EINVAL;
- 
- 	/* Complete initialisation of *notify */
-@@ -898,7 +898,7 @@ int irq_set_irq_wake(unsigned int irq, unsigned int on)
- 		return -EINVAL;
- 
- 	/* Don't use NMIs as wake up interrupts please */
--	if (desc->istate & IRQS_NMI) {
-+	if (irq_is_nmi(desc)) {
- 		ret = -EINVAL;
- 		goto out_unlock;
- 	}
-@@ -1624,7 +1624,7 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
- 		 */
- 		unsigned int oldtype;
- 
--		if (desc->istate & IRQS_NMI) {
-+		if (irq_is_nmi(desc)) {
- 			pr_err("Invalid attempt to share NMI for %s (irq %d) on irqchip %s.\n",
- 				new->name, irq, desc->irq_data.chip->name);
- 			ret = -EINVAL;
-@@ -2082,7 +2082,7 @@ const void *free_nmi(unsigned int irq, void *dev_id)
- 	unsigned long flags;
- 	const void *devname;
- 
--	if (!desc || WARN_ON(!(desc->istate & IRQS_NMI)))
-+	if (!desc || WARN_ON(!irq_is_nmi(desc)))
- 		return NULL;
- 
- 	if (WARN_ON(irq_settings_is_per_cpu_devid(desc)))
-@@ -2548,7 +2548,7 @@ void free_percpu_nmi(unsigned int irq, void __percpu *dev_id)
- 	if (!desc || !irq_settings_is_per_cpu_devid(desc))
- 		return;
- 
--	if (WARN_ON(!(desc->istate & IRQS_NMI)))
-+	if (WARN_ON(!irq_is_nmi(desc)))
- 		return;
- 
- 	kfree(__free_percpu_irq(irq, dev_id));
-@@ -2684,7 +2684,7 @@ int request_percpu_nmi(unsigned int irq, irq_handler_t handler,
- 		return -EINVAL;
- 
- 	/* The line cannot already be NMI */
--	if (desc->istate & IRQS_NMI)
-+	if (irq_is_nmi(desc))
- 		return -EINVAL;
- 
- 	action = kzalloc(sizeof(struct irqaction), GFP_KERNEL);
-@@ -2745,7 +2745,7 @@ int prepare_percpu_nmi(unsigned int irq)
- 	if (!desc)
- 		return -EINVAL;
- 
--	if (WARN(!(desc->istate & IRQS_NMI),
-+	if (WARN(!irq_is_nmi(desc),
- 		 KERN_ERR "prepare_percpu_nmi called for a non-NMI interrupt: irq %u\n",
- 		 irq)) {
- 		ret = -EINVAL;
-@@ -2787,7 +2787,7 @@ void teardown_percpu_nmi(unsigned int irq)
- 	if (!desc)
- 		return;
- 
--	if (WARN_ON(!(desc->istate & IRQS_NMI)))
-+	if (WARN_ON(!irq_is_nmi(desc)))
- 		goto out;
- 
- 	irq_nmi_teardown(desc);
-diff --git a/kernel/irq/resend.c b/kernel/irq/resend.c
-index 5f2c66860ac6..b07a2d732ffb 100644
---- a/kernel/irq/resend.c
-+++ b/kernel/irq/resend.c
-@@ -190,7 +190,7 @@ int irq_inject_interrupt(unsigned int irq)
- 	 *  - not NMI type
- 	 *  - activated
- 	 */
--	if ((desc->istate & IRQS_NMI) || !irqd_is_activated(&desc->irq_data))
-+	if (irq_is_nmi(desc) || !irqd_is_activated(&desc->irq_data))
- 		err = -EINVAL;
- 	else
- 		err = check_irq_resend(desc, true);
--- 
-2.34.1
+PMU event is a software entity which won't be shared. did you mean if a 
+PMU HW counter is granted to VM, then Host can't access the PMU HW 
+counter, right?
 
+
+>
+>>
+>>> Can we add callback handler in structure kvm_guest_cbs?  just like 
+>>> this:
+>>> @@ -6403,6 +6403,7 @@ static struct perf_guest_info_callbacks 
+>>> kvm_guest_cbs
+>>> = {
+>>>          .state                  = kvm_guest_state,
+>>>          .get_ip                 = kvm_guest_get_ip,
+>>>          .handle_intel_pt_intr   = NULL,
+>>> +       .lose_pmu               = kvm_guest_lose_pmu,
+>>>   };
+>>>
+>>> By the way, I do not know should the callback handler be triggered 
+>>> in perf
+>>> core or detailed pmu hw driver. From ARM pmu hw driver, it is 
+>>> triggered in
+>>> pmu hw driver such as function kvm_vcpu_pmu_resync_el0,
+>>> but I think it will be better if it is done in perf core.
+>>
+>> I don't think we want to take the approach of perf and KVM guests 
+>> "fighting" over
+>> the PMU.  That's effectively what we have today, and it's a mess for 
+>> KVM because
+>> it's impossible to provide consistent, deterministic behavior for the 
+>> guest.  And
+>> it's just as messy for perf, which ends up having wierd, cumbersome 
+>> flows that
+>> exists purely to try to play nice with KVM.
+> With existing pmu core code, in tick timer interrupt or IPI function 
+> call interrupt pmu hw may be accessed by host when VM is running and 
+> pmu is already granted to guest. KVM can not intercept host IPI/timer 
+> interrupt, there is no pmu context switch, there will be problem.
+>
+> Regards
+> Bibo Mao
+>
