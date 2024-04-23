@@ -1,28 +1,29 @@
 Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BF412B93;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BBA12B8B;
 	Tue, 23 Apr 2024 01:24:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713835444; cv=none; b=doZoIv86kUrvWtGmbl4FTuXY57yyjtAndbSgjPWfsc5aRDWtVMEC5SDFsi3wPc2vQ4ahVo16AcIIRyhdXEnaukA0yaLGMvs8Fk1cM6fHgjs/eyZKj4jeS6aRuFXwTe/W5ucFX+C1wGra3CzWkSl+2l0ejIo5u/vBAoGb2fE3rpY=
+	t=1713835445; cv=none; b=l3Q4Orc/U0HX0io+sOkeVoAizlnA9TqljDfS9qrCr24jbEsM2E5E6xUwMivQfvnXr4TtPnMzQjLNm1p12R5qUZlN3H90DdJ4elqTeAl74PfkaOj3z/XGrV97jJMWdmcY/shLsHZ7LrcW/7k16Xoub913CpBdBIrgblZ7QtkEq6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713835444; c=relaxed/simple;
-	bh=EuaU35KfwN9Z7OMbZwNvGMdvR4+I5EILignv0Y/hgtY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SGMOXCNnItbTkZ4rJ5NK9HGnUs8ph/qUFzWfkD7HZmGWt2sMJ5BYQb1I5yFK8gi/oWeaA/IIoPeLhZjy1aejiyzljYraReECxNwviSvrBNao2MXzpnIUbxKLNi3qEn6IPzNNaEQ+kov3nls0Bitz/1zAZh/A7+tz+yNiJDIO2NM=
+	s=arc-20240116; t=1713835445; c=relaxed/simple;
+	bh=SPalivOhnSghODFVv8OeqM4DNIShihOmZ+eu8XacD5U=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OsEFkh5AZRMnwPr2sCLhIAe4ThogWIEGq3KETBMHDwoyaMEsl1jW7DLvqZOaGIL7XXkrjzWFrKDNqPWOjRdR0O//T1qOKusWuG1StNkYrPglN6WDZx0+OkLNkut1lxLKQR0l6pf+a3jmIC/6UV8js7ZBC8y1eXIuHDJVnlYrQCo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VNkpw0xP5zNt10;
-	Tue, 23 Apr 2024 09:21:28 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VNkpx2JrMzNsDf;
+	Tue, 23 Apr 2024 09:21:29 +0800 (CST)
 Received: from kwepemi500025.china.huawei.com (unknown [7.221.188.170])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0223218007D;
-	Tue, 23 Apr 2024 09:23:58 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 3373F1800C4;
+	Tue, 23 Apr 2024 09:23:59 +0800 (CST)
 Received: from localhost.localdomain (10.67.165.2) by
  kwepemi500025.china.huawei.com (7.221.188.170) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 23 Apr 2024 09:23:57 +0800
+ 15.1.2507.35; Tue, 23 Apr 2024 09:23:58 +0800
 From: Chenghai Huang <huangchenghai2@huawei.com>
 To: <herbert@gondor.apana.org.au>, <davem@davemloft.net>
 CC: <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
@@ -30,10 +31,12 @@ CC: <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
 	<songzhiqi1@huawei.com>, <qianweili@huawei.com>, <liushangbin@hisilicon.com>,
 	<linwenkai6@hisilicon.com>, <taoqi10@huawei.com>, <wangzhou1@hisilicon.com>,
 	<huangchenghai2@huawei.com>
-Subject: [PATCH 0/2] crypto: hisilicon - fix reg offset issue and cleanup dump information
-Date: Tue, 23 Apr 2024 09:19:20 +0800
-Message-ID: <20240423011922.770693-1-huangchenghai2@huawei.com>
+Subject: [PATCH 2/2] crypto: hisilicon/sec2 - fix for register offset
+Date: Tue, 23 Apr 2024 09:19:22 +0800
+Message-ID: <20240423011922.770693-3-huangchenghai2@huawei.com>
 X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20240423011922.770693-1-huangchenghai2@huawei.com>
+References: <20240423011922.770693-1-huangchenghai2@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,19 +48,29 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemi500025.china.huawei.com (7.221.188.170)
 
-Fix for register offset and cleanup dump information of debugfs.
+From: Wenkai Lin <linwenkai6@hisilicon.com>
 
-Chenghai Huang (1):
-  crypto: hisilicon/debugfs - mask the unnecessary info from the dump
+The offset of SEC_CORE_ENABLE_BITMAP should be 0 instead of 32,
+it cause a kasan shift-out-bounds warning, fix it.
 
-Wenkai Lin (1):
-  crypto: hisilicon/sec2 - fix for register offset
+Signed-off-by: Wenkai Lin <linwenkai6@hisilicon.com>
+---
+ drivers/crypto/hisilicon/sec2/sec_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/crypto/hisilicon/debugfs.c        | 29 +++++++++++++++--------
- drivers/crypto/hisilicon/hpre/hpre_main.c |  2 +-
- drivers/crypto/hisilicon/sec2/sec_main.c  |  6 ++---
- 3 files changed, 23 insertions(+), 14 deletions(-)
-
+diff --git a/drivers/crypto/hisilicon/sec2/sec_main.c b/drivers/crypto/hisilicon/sec2/sec_main.c
+index 6eba1f22720f..75aad04ffe5e 100644
+--- a/drivers/crypto/hisilicon/sec2/sec_main.c
++++ b/drivers/crypto/hisilicon/sec2/sec_main.c
+@@ -152,7 +152,7 @@ static const struct hisi_qm_cap_info sec_basic_info[] = {
+ 	{SEC_CORE_TYPE_NUM_CAP, 0x313c, 16, GENMASK(3, 0), 0x1, 0x1, 0x1},
+ 	{SEC_CORE_NUM_CAP, 0x313c, 8, GENMASK(7, 0), 0x4, 0x4, 0x4},
+ 	{SEC_CORES_PER_CLUSTER_NUM_CAP, 0x313c, 0, GENMASK(7, 0), 0x4, 0x4, 0x4},
+-	{SEC_CORE_ENABLE_BITMAP, 0x3140, 32, GENMASK(31, 0), 0x17F, 0x17F, 0xF},
++	{SEC_CORE_ENABLE_BITMAP, 0x3140, 0, GENMASK(31, 0), 0x17F, 0x17F, 0xF},
+ 	{SEC_DRV_ALG_BITMAP_LOW, 0x3144, 0, GENMASK(31, 0), 0x18050CB, 0x18050CB, 0x18670CF},
+ 	{SEC_DRV_ALG_BITMAP_HIGH, 0x3148, 0, GENMASK(31, 0), 0x395C, 0x395C, 0x395C},
+ 	{SEC_DEV_ALG_BITMAP_LOW, 0x314c, 0, GENMASK(31, 0), 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF},
 -- 
 2.30.0
 
