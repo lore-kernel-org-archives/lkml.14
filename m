@@ -1,82 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6019213BADD;
-	Tue, 23 Apr 2024 15:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA375136E1A
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 15:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713885227; cv=none; b=mRbA9r88e2xQPqwW6yMoBXBQ8Pad8g1h66eavp5LTKVPBS771dWxugTos73seLYszbQ4R8Ca5zsS4iHhEEBGZNdQnx9Pk90hEm6sOCqzyyNZWFCA9kdqgJ3ETCvqBSMsjpZcdKTdy7iVM6QCOQun4ZJq4fF/8T6Ix7nBjDOzDQ0=
+	t=1713885298; cv=none; b=fZSQ0IWUuc6ejlq2nmZcshz7+g8yrg6BEcDIRccmGmR88MYqCHjgY03lrMgFfD9H0jaTEvIbQYv7sRyzkwgy7mQmc0GsdnvVYqG7bksSKg0gp93DlBiA8vL8/EgCDvVvYtyB+gJxU3r+9C7+2vx31+VkfSuEFlq+puAvfHqI0yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713885227; c=relaxed/simple;
-	bh=RJ4ooxxQshso5u8umOVzklJnomOaOetIWXrHfhND/pE=;
+	s=arc-20240116; t=1713885298; c=relaxed/simple;
+	bh=a5cD2LaaptC8wxD989v/1J0kMmeKcCSfjFsf7Y0J2sk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ihrRQkbNgxtkAsxAAPBQfwBdWJ+AWoPpSM8U9n/Vhfa9hTwIp5sIFFWvRw6T88P0PIM3yUptI1u7WjNKQDAPsHFX7yM3DRGmMgwjoVEiGe142X5oo7TPXfWbpVEmi/cmYv9RBnOcbl3otKDJxC9RINH0UwgqbsuCcEgFwZPRTMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZT+9JKG2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=k76CNpBpu6yO0nf3VQc96Ucp220Os0TKEFRpDVkR7/jcE+C0k08+qdiEUqWnTacQyu6ejxRBoqyfhiTSamH5T5xVWxSH8H67/BWWBFxzvh0797PYw8KIc16kwvWCUvNxkOShnRcScbu0rgc38Zy4cWYnVhLo4HkudqKU/5ZzXXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=J9u1MPcJ; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZT+9JKG2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFF20C116B1;
-	Tue, 23 Apr 2024 15:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1713885226;
-	bh=RJ4ooxxQshso5u8umOVzklJnomOaOetIWXrHfhND/pE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZT+9JKG2F+e3PRY/IMhM4veegw94Uo32VvswK4aOm9OH6/f+GFt32ky8EYBw7QpQE
-	 FqqS5gkq2QJJSxWdC45C0LkCkjg7pQ9yiGWug73McnZaZ2L+Er3R7W/PwMtuGEJgHV
-	 13fSNzHKBBpZ/kOfRdAivn44UedZ4mcgXLdigHvQ=
-Date: Tue, 23 Apr 2024 08:13:37 -0700
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v1 2/2] Documentation: process: Recommend to put Cc: tags
- after cutter '---' line
-Message-ID: <2024042347-ellipse-overeater-9aff@gregkh>
-References: <20240423132024.2368662-1-andriy.shevchenko@linux.intel.com>
- <20240423132024.2368662-3-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="J9u1MPcJ"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-518a3e0d2ecso8729298e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 08:14:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1713885294; x=1714490094; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4zF9sVBcXt3p+LHo6Ft4b30wlVpGZC//wb02folK/K8=;
+        b=J9u1MPcJPHT4dqSrXs9JbKZQOQPoeKh8fZhf6X/xPGM6EC4GoPa5mPsAVtR0dJ9V8Z
+         ndgB/rntHyKyzRtWG9WbHwmcqIisFZlBzJEx8wBNrjgECM8PsqWXxOixqqulZxix6C31
+         c5wWtxooo67YWl6eF5zsKPCDRk551DkmwsqfBrX7LL0iHIH0moGcXYt69vehaVbrY2aY
+         Sm9P4AvxFFBJFsLnubzucGRLHGwOEF7fwhX17DNqKYrlWdPkjqzQJ+br2cbITA1LWUbz
+         FGRdmvjbfTCpHJEI1zWheelIS5Lb+BWqCyjGkBdQ8ukCjacEYsEgZpENTBGTh+CSRiDP
+         RChg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713885294; x=1714490094;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4zF9sVBcXt3p+LHo6Ft4b30wlVpGZC//wb02folK/K8=;
+        b=QstFWtAkN+QZ2Q9TRZXDK+LKTJC7C6sqBDtzgqBWCHWh6h2UMJNfIC8CT0YufcDLot
+         l7eV56fqy8oDFVfichBFzQpP7Sq7dEL0WTaOTs17bDyHUUKLN+a1FM3KJInZHNZj6+X+
+         XIQzMzzdmy6wBusUMMxAkgc80EXX12Oim88M4tc/Q+5int8tP8uVilSOOzI5wXbLCsku
+         YeeyOJZpTf9/oGgPLL2FOvB9h7FZj0uDw1B6HhYVvgszuKQIDyhGAULX4+Nfwm+6U/ow
+         xWc0NyD/VR8XLbZaw1fCLwAVsN1b293TgXAkPc+nWhiPWV3uYJr4/EoqzvoTaxkhcnLO
+         UwVw==
+X-Forwarded-Encrypted: i=1; AJvYcCXuj2+FMgbQB+Hcw50AnXjSlQuD1hbSnhCeQ5x6Jzehac0RVI69Mz69Z/0KZkYkTxxHdpVOCJOF2mN1Vh1bsUIu3wt09/+0rluwUbb1
+X-Gm-Message-State: AOJu0Yy44u25Lk8OIkNdCVM5pKIGQifxUjKXgY++vWQm/O5zT82l3KGk
+	G+17DLnSB7B+02VE+E8f4eGE8MayNLPSWEqWb+HsGcgwZFsXihaa8DEKnKc5aH0=
+X-Google-Smtp-Source: AGHT+IF1/35Nlkwm9xUrkG3SYoD/oQBvgVGLdQGrEiz/Yiw++BMQpMgPiC/tA6FalJ2ScXPHHIEd6A==
+X-Received: by 2002:a05:6512:483:b0:518:e7ed:3c7c with SMTP id v3-20020a056512048300b00518e7ed3c7cmr10661458lfq.14.1713885293863;
+        Tue, 23 Apr 2024 08:14:53 -0700 (PDT)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id g10-20020a1709067c4a00b00a4e5866448bsm7115652ejp.155.2024.04.23.08.14.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 08:14:53 -0700 (PDT)
+Date: Tue, 23 Apr 2024 17:14:52 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Markus Elfring <Markus.Elfring@web.de>, 
+	Kunwu Chan <chentao@kylinos.cn>, linux-kselftest@vger.kernel.org, kvm@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org, Muhammad Usama Anjum <usama.anjum@collabora.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Kunwu Chan <kunwu.chan@hotmail.com>, 
+	Anup Patel <anup@brainfault.org>, Thomas Huth <thuth@redhat.com>, 
+	Oliver Upton <oliver.upton@linux.dev>
+Subject: Re: [PATCH] KVM: selftests: Add 'malloc' failure check in
+ test_vmx_nested_state
+Message-ID: <20240423-0db9024011213dcffe815c5c@orel>
+References: <20240423073952.2001989-1-chentao@kylinos.cn>
+ <878bf83c-cd5b-48d0-8b4e-77223f1806dc@web.de>
+ <ZifMAWn32tZBQHs0@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240423132024.2368662-3-andriy.shevchenko@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZifMAWn32tZBQHs0@google.com>
 
-On Tue, Apr 23, 2024 at 04:19:38PM +0300, Andy Shevchenko wrote:
-> The recommendation is based on the following rationale:
+On Tue, Apr 23, 2024 at 07:56:01AM -0700, Sean Christopherson wrote:
+> +others
 > 
-> - it makes the commit messages much cleaner and easy to read, especially
->   on the screens of the mobile devices;
-
-Reading commits on a mobile device is not what kernel development is
-optimized for, sorry.
-
-> - it reduces resources (memory, time, energy) to retrieve all these
->   headers, which are barely needed by a mere user, as for automation
->   they will be still available via mail archives, such as
->   https://lore.kernel.org, assuming the Link: or Message-ID tag is
->   provided.
+> On Tue, Apr 23, 2024, Markus Elfring wrote:
+> > …
+> > > This patch will add the malloc failure checking
+> > …
+> > 
+> > * Please use a corresponding imperative wording for the change description.
+> > 
+> > * Would you like to add the tag “Fixes” accordingly?
 > 
-> Let's be environment friendly and save the planet!
+> Nah, don't bother with Fixes.  OOM will cause the test to fail regardless, the
+> fact that it gets an assert instead a NULL pointer deref is nice to have, but by
+> no means does it fix a bug.
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  Documentation/process/5.Posting.rst          | 4 ++++
->  Documentation/process/submitting-patches.rst | 5 +++++
->  2 files changed, 9 insertions(+)
+> > > +++ b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
+> > > @@ -91,6 +91,7 @@ void test_vmx_nested_state(struct kvm_vcpu *vcpu)
+> > >  	const int state_sz = sizeof(struct kvm_nested_state) + getpagesize();
+> > >  	struct kvm_nested_state *state =
+> > >  		(struct kvm_nested_state *)malloc(state_sz);
+> > > +	TEST_ASSERT(state, "-ENOMEM when allocating kvm state");
+> > …
+> > 
+> > Can “errno” be relevant for the error message construction?
+> 
+> Probably not, but there's also no reason to assume ENOMEM.  TEST_ASSERT() spits
+> out the actual errno, and we can just say something like "malloc() failed for
+> blah blah blah".  
+> 
+> But rather than keeping playing whack-a-mole, what if we add macros to perform
+> allocations and assert on the result?  I have zero interest in chasing down all
+> of the "unsafe" allocations, and odds are very good that we'll collectively fail
+> to enforce checking on new code.
+> 
+> E.g. something like (obviously won't compile, just for demonstration purposes)
+> 
+> #define kvm_malloc(x)
+> ({
+> 	void *__ret;
+> 
+> 	__ret  = malloc(x);
+> 	TEST_ASSERT(__ret, "Failed malloc(" #x ")\n");
+> 	__ret;
+> })
+> 
+> #define kvm_calloc(x, y)
+> ({
+> 	void *__ret;
+> 
+> 	__ret  = calloc(x, y);
+> 	TEST_ASSERT(__ret, "Failed calloc(" #x ", " #y ")\n");
+> 	__ret;
+> })
 
-This breaks my existing workflow, sorry.  I can't track cc: below the
---- line because obviously, git cuts that off.  So I put them above
-where git send-email can see them, AND where git can handle them when I
-rebase/revise/etc.
+Sounds good to me, but I'd call them test_malloc, test_calloc, etc. and
+put them in include/test_util.h
 
-Also, as Jon points out, the "environmental" argument seems very odd,
-it's not like bits cost more to send around (they keep getting cheaper
-in power and money), and processing power is pretty constant for servers
-handling email, so I don't understand the power consumption argument.
-Without some sort of data to back that up, I'd be loath to repeat it.
-
-thanks,
-
-greg k-h
+Thanks,
+drew
