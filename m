@@ -1,210 +1,196 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out0-211.mail.aliyun.com (out0-211.mail.aliyun.com [140.205.0.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8761051016;
-	Tue, 23 Apr 2024 09:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451E25FB9A;
+	Tue, 23 Apr 2024 09:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713865349; cv=none; b=LJ/HoSt1E6m7CaSdBgu9NUQip+dLwlisyrzamlse/KXUbp79JhMd17fppnDLhhYZ6K8nrjwv9UJASlnUZM0qfEawv8RrjMyAsCt9qAzFDP1YYrp9eOv4vhlCifl6Vj6SkgERJ19srs+b3lj7gCrYLlVZzTg6yQ33C56y5/3Tl0I=
+	t=1713865357; cv=none; b=jhkSfQ+9ILCiuTIJ8q+REPp4FIJ1QSCs8GmVqe/SmwROYs44nk2jeTBU2ZjHyJpQF1KTcL/v5mwtjvFI34yYBJjXZ+TCq1Ft/tvpVnyHcJZXB5KEI95KT7I1HE7I60GD8eS4ZmJrLWpo4oF8owa4F+6fGJneSyIs5A3Fph1ORWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713865349; c=relaxed/simple;
-	bh=SeejIbtFL3q2Ah+TgrTpf656eWgMzRmReKNJR8SEw/M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fKPQNB3SE8ua+a0XYloNDAd5UlFsmGsc0Bo2wcTCfGGm8VI4aIxqM160gq5OAOWxr8fCdvEF1MrfrPfuDXNZY4RKDQSCKqbA2n4d4dxkjYOQ+rxNN50mrvOWbDjC5L9ONIGKZ+v5pJa730yKqJIf5NcIZcktUYk+NfU5Rdv28gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-61816fc256dso47363617b3.0;
-        Tue, 23 Apr 2024 02:42:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713865345; x=1714470145;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wqVVfPd+WN3revU4fg7rebmHFdp/AiB0hyvlw5Bb61g=;
-        b=uqlflhjQyo+9UkWaG+dQ4pRyc+Mv+OpWEMAW0vD60iz9rdtwHbj+g+de5B/R6Jf2ZA
-         Id0x20wVLLl7i0iZTky0o4upJb6sCBLlvXtsXCef7jrSDQCEvprL6cTKyJ51Vi4fAdbv
-         t5T5EebEQj09IgyU0yeAJ+oWhQbaOMWzKjYX8n7FpLI4iQ67ko/Rt8I0hRJiN9/NW6xp
-         twThh+nUIe4N78sJgLJVcGzp1ZtsIVn1l8tw7bAYdda1NpJAu3L9S65AyFnE6rwD6x3Y
-         UyR/C1cVtns40GbYcuz7Oc1uLMEib1wTX4KZ1Tm6mKrA0nA+GwUMDbXh/brJ6mYxH/3T
-         X7yA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/BtNrVgqwaiHe/N4MnHaMuXWSqtJNmmofUoT01/741JPnVPkp4gdFVBuP8g3lfO55cDv9TSZNFZvzjIaOC1prvNui4ctw70yIk/0Ert5vYxZsvj5zfJ+T8y3CgZlPsd4zhsM2jQM5QWGnCx4FJsIo0sitT1+8GObJ6mO7WXwRQeR4+KgAOGgWx4uzW39TXPhyMATdnEJ9LVX8e2WQHHCRCVqN1UGkyh5vN0uPbgAeiSuCDRyGLzeGnrz8lsE+Pw7FR6Nwiti53Lx8+aDdzn4QCBj9nYbDYldgWYzEFA==
-X-Gm-Message-State: AOJu0YxSF6CcvH9qT1ALkXUGgQRpZfkNTwURQ1ob9rpgEe6hQlXb+zgh
-	MBuMY5dv3mLrCbjWVbPspOGsXwwBAzRKKy/N6qgh3/usmyR5pIB2HrcwqlUB
-X-Google-Smtp-Source: AGHT+IHxjd25aXH4Pg198Wdzat7g29/g3mpyPaK2cuNtRCeV9WCFBJbFMsrV78FnEW7acppO2pJ2og==
-X-Received: by 2002:a05:690c:3501:b0:61a:fb4d:6fc3 with SMTP id fq1-20020a05690c350100b0061afb4d6fc3mr12942508ywb.35.1713865345073;
-        Tue, 23 Apr 2024 02:42:25 -0700 (PDT)
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
-        by smtp.gmail.com with ESMTPSA id p204-20020a0de6d5000000b0061575978d53sm2426862ywe.55.2024.04.23.02.42.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 02:42:24 -0700 (PDT)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so5240006276.1;
-        Tue, 23 Apr 2024 02:42:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXBe/ttW7jIQwk9mvXAqBujSj9nhpbCsQuTPJY0CECTUuPCrqHHiZhB2mFgyTMrI1nDQp6kb5glsHU4jLy3cr3NIKXyMQGCRXqPJ4AKP9BPNhBEIc4XzgvGCfD54yK/ckAKz/+72YFdRBJyhb9DMWhfpAzENfCIPQK1Uj3a6QPAAh7SANu6/VltdVwXTSt+TA88CQPrrDeY9YW4KnumNDzghIpiTFk8Jg8UhUGHGxfZlHw6pAl7h+gF4svd9Fz6G1BUGuohz8SsZKYRn1rwfc0sO78GOCH2II309HXqHg==
-X-Received: by 2002:a25:804f:0:b0:de4:6aa6:9ea2 with SMTP id
- a15-20020a25804f000000b00de46aa69ea2mr11819127ybn.32.1713865344325; Tue, 23
- Apr 2024 02:42:24 -0700 (PDT)
+	s=arc-20240116; t=1713865357; c=relaxed/simple;
+	bh=HH2UmiPMMBGk7KoElLl+olNwdaMXD0BoL7x/bSioXAo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=edHIasTZ5A39+y8MtLQxJENkIPWeGtnDOt42A1b+GPjbKxZ2hie5IMTlYr21w62Pr5lVQ8Xf/FZ0NInwhznsBfpLqw1T2N+9xV5w5DeIv6FV/jPrE97J/D5F+9OMdscvG1aYbypZjulHV5Suxi9GUr2VH50nHVAgzkHOXs/2ZGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=GxO4pgeo; arc=none smtp.client-ip=140.205.0.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="GxO4pgeo"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1713865351; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=ZGZ0t2B2a4bviduXTVejdqN2/HaI1/q8fGUiKJDeZsI=;
+	b=GxO4pgeobQJ1X1kxV8T6UpuvvQnk2QtxyJ6HxyFYUPLoteeRzraKSfokP8KikCxvjkmPaFKshgByck6uduTlylpUycYBgl+OGVQe881lks3q48UZgwTPdTokak9spsIGRTDymx4JA/RbaljGnWMhraBDYIe1WaWbF/uAmyH9ZaI=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R391e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047211;MF=zhubojun.zbj@antgroup.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---.XJPn81k_1713864399;
+Received: from localhost(mailfrom:zhubojun.zbj@antgroup.com fp:SMTPD_---.XJPn81k_1713864399)
+          by smtp.aliyun-inc.com;
+          Tue, 23 Apr 2024 17:26:54 +0800
+From: "=?UTF-8?B?5pyx5Lyv5ZCbKOadsOmTrSk=?=" <zhubojun.zbj@antgroup.com>
+To: linux-kernel@vger.kernel.org,
+	linux-sgx@vger.kernel.org,
+	jarkko@kernel.org,
+	dave.hansen@linux.intel.com
+Cc:  <reinette.chatre@intel.com>,
+  "=?UTF-8?B?5YiY5Y+MKOi9qeWxuSk=?=" <ls123674@antgroup.com>,
+  "=?UTF-8?B?5pyx5Lyv5ZCbKOadsOmTrSk=?=" <zhubojun.zbj@antgroup.com>
+Subject: [RFC PATCH 0/1] x86/sgx: Explicitly give up the CPU in EDMM's ioctl() to avoid softlockup
+Date: Tue, 23 Apr 2024 17:25:49 +0800
+Message-Id: <20240423092550.59297-1-zhubojun.zbj@antgroup.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com> <20240102-j7200-pcie-s2r-v5-1-4b8c46711ded@bootlin.com>
-In-Reply-To: <20240102-j7200-pcie-s2r-v5-1-4b8c46711ded@bootlin.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 23 Apr 2024 11:42:12 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com>
-Message-ID: <CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com>
-Subject: Re: [PATCH v5 01/11] gpio: pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Tony Lindgren <tony@atomide.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
-	Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com, 
-	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Thomas,
+Hi folks,
 
-On Tue, Apr 16, 2024 at 3:31=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
-> Some IOs can be needed during suspend_noirq()/resume_noirq().
-> So move suspend()/resume() to noirq.
->
-> Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
-> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+If we run an enclave equipped with large EPC(30G or greater on my platfrom)
+on the Linux with kernel preemptions disabled(by configuring
+"CONFIG_PREEMPT_NONE=3Dy"), we will get the following softlockup warning=20
+messages being reported in "dmesg" log:
 
-Thanks for your patch, which is now commit 86eb98127332748f ("gpio:
-pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()")
-in i2c-host/i2c/i2c-host.
+Is it an known issue? I can get the warning messages on Linux v6.9-rc5.
 
-This patch causes regressions on e.g. Salvator-XS.
+The EDMM's ioctl()s (sgx_ioc_enclave_{ modify_types | restrict_permissions =
+|  remove_pages})=20
+interface provided by kernel support batch changing attributes of enclave's=
+ EPC.
+If userspace App requests kernel to handle too many EPC pages, kernel
+may stuck for a long time(with preemption disabled).
 
-    s2idle:
+The log is as follows:
 
-         Freezing user space processes
-         Freezing user space processes completed (elapsed 0.006 seconds)
-         OOM killer disabled.
-         Freezing remaining freezable tasks
-         Freezing remaining freezable tasks completed (elapsed 0.003 second=
-s)
-         sd 0:0:0:0: [sda] Synchronizing SCSI cache
-         ata1.00: Entering standby power mode
-        +i2c-rcar e66d8000.i2c: error -16 : 10000005
-        +pca953x 4-0020: Failed to sync GPIO dir registers: -16
-        +pca953x 4-0020: Failed to restore register map: -16
-        +pca953x 4-0020: PM: dpm_run_callback(): pca953x_resume_noirq
-returns -16
-        +pca953x 4-0020: PM: failed to resume async noirq: error -16
+------------[ cut here ]------------
+[  901.101294] watchdog: BUG: soft lockup - CPU#92 stuck for 23s! [occlum-r=
+un:4289]
+[  901.109617] Modules linked in: veth xt_conntrack xt_MASQUERADE nf_conntr=
+ack_netlink nfnetlink xfrm_user xfrm_algo iptable_nat nf_nat nf_conntrack n=
+f_defrag_ipv6 nf_defrag_ipv4 libcrc32c xt_addrtype iptable_filter br_netfil=
+ter bridge stp llc overlay nls_iso8859_1 intel_rapl_msr intel_rapl_common i=
+ntel_uncore_frequency intel_uncore_frequency_common i10nm_edac nfit binfmt_=
+misc ipmi_ssif x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm=
+ crct10dif_pclmul polyval_clmulni polyval_generic ghash_clmulni_intel sha51=
+2_ssse3 sha256_ssse3 pmt_telemetry sha1_ssse3 pmt_class joydev intel_sdsi i=
+nput_leds aesni_intel crypto_simd cryptd dax_hmem cxl_acpi cmdlinepart rapl=
+ cxl_core ast spi_nor intel_cstate drm_shmem_helper einj mtd drm_kms_helper=
+ mei_me idxd isst_if_mmio isst_if_mbox_pci isst_if_common intel_vsec idxd_b=
+us mei acpi_ipmi ipmi_si ipmi_devintf ipmi_msghandler acpi_pad acpi_power_m=
+eter mac_hid sch_fq_codel msr parport_pc ppdev lp parport ramoops reed_solo=
+mon pstore_blk pstore_zone efi_pstore drm ip_tables x_tables
+[  901.109670]  autofs4 mlx5_ib ib_uverbs ib_core hid_generic usbhid hid se=
+s enclosure scsi_transport_sas mlx5_core pci_hyperv_intf mlxfw igb ahci psa=
+mple i2c_algo_bit i2c_i801 spi_intel_pci xhci_pci tls megaraid_sas dca spi_=
+intel crc32_pclmul i2c_smbus i2c_ismt libahci xhci_pci_renesas wmi pinctrl_=
+emmitsburg
+[  901.109691] CPU: 92 PID: 4289 Comm: occlum-run Not tainted 6.9.0-rc5 #3
+[  901.109693] Hardware name: Inspur NF5468-M7-A0-R0-00/NF5468-M7-A0-R0-00,=
+ BIOS 05.02.01 05/08/2023
+[  901.109695] RIP: 0010:sgx_enclave_restrict_permissions+0xba/0x1f0
+[  901.109701] Code: 48 c1 e6 05 48 89 d1 48 8d 5c 24 40 b8 0e 00 00 00 48 =
+2b 8e 70 8e 15 8b 48 c1 e9 05 48 c1 e1 0c 48 03 8e 68 8e 15 8b 0f 01 cf <a9=
+> 00 00 00 40 0f 85 b2 00 00 00 85 c0 0f 85 db 00 00 00 4c 89 ef
+[  901.109702] RSP: 0018:ffffad0ae5d0f8c0 EFLAGS: 00000202
+[  901.109704] RAX: 0000000000000000 RBX: ffffad0ae5d0f900 RCX: ffffad11dfc=
+0e000
+[  901.109705] RDX: ffffad2adcff81c0 RSI: 0000000000000000 RDI: ffff9a12f5f=
+4f000
+[  901.109706] RBP: ffffad0ae5d0f9b0 R08: 0000000000000002 R09: ffff9a1289f=
+57520
+[  901.109707] R10: 000000000000005d R11: 0000000000000002 R12: 00000006d8f=
+f2000
+[  901.109708] R13: ffff9a12f5f4f000 R14: ffffad0ae5d0fa18 R15: ffff9a12f5f=
+4f020
+[  901.109709] FS:  00007fb20ad1d740(0000) GS:ffff9a317fe00000(0000) knlGS:=
+0000000000000000
+[  901.109710] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  901.109711] CR2: 00007f8041811000 CR3: 0000000118530006 CR4: 00000000007=
+70ef0
+[  901.109712] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 00000000000=
+00000
+[  901.109713] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 00000000000=
+00400
+[  901.109714] PKRU: 55555554
+[  901.109714] Call Trace:
+[  901.109716]  <IRQ>
+[  901.109718]  ? show_regs+0x67/0x70
+[  901.109722]  ? watchdog_timer_fn+0x1f3/0x280
+[  901.109725]  ? __pfx_watchdog_timer_fn+0x10/0x10
+[  901.109727]  ? __hrtimer_run_queues+0xc8/0x220
+[  901.109731]  ? hrtimer_interrupt+0x10c/0x250
+[  901.109733]  ? __sysvec_apic_timer_interrupt+0x53/0x130
+[  901.109736]  ? sysvec_apic_timer_interrupt+0x7b/0x90
+[  901.109739]  </IRQ>
+[  901.109740]  <TASK>
+[  901.109740]  ? asm_sysvec_apic_timer_interrupt+0x1b/0x20
+[  901.109745]  ? sgx_enclave_restrict_permissions+0xba/0x1f0
+[  901.109747]  ? aa_file_perm+0x145/0x550
+[  901.109750]  sgx_ioctl+0x1ab/0x900
+[  901.109751]  ? xas_find+0x84/0x200
+[  901.109754]  ? sgx_enclave_etrack+0xbb/0x140
+[  901.109756]  ? sgx_encl_may_map+0x19a/0x240
+[  901.109758]  ? common_file_perm+0x8a/0x1b0
+[  901.109760]  ? obj_cgroup_charge_pages+0xa2/0x100
+[  901.109763]  ? tlb_flush_mmu+0x31/0x1c0
+[  901.109766]  ? tlb_finish_mmu+0x42/0x80
+[  901.109767]  ? do_mprotect_pkey+0x150/0x530
+[  901.109769]  ? __fget_light+0xc0/0x100
+[  901.109772]  __x64_sys_ioctl+0x95/0xd0
+[  901.109775]  x64_sys_call+0x1209/0x20c0
+[  901.109777]  do_syscall_64+0x6d/0x110
+[  901.109779]  ? syscall_exit_to_user_mode+0x86/0x1c0
+[  901.109782]  ? do_syscall_64+0x79/0x110
+[  901.109783]  ? syscall_exit_to_user_mode+0x86/0x1c0
+[  901.109784]  ? do_syscall_64+0x79/0x110
+[  901.109785]  ? free_unref_page+0x10e/0x180
+[  901.109788]  ? __do_fault+0x36/0x130
+[  901.109791]  ? do_pte_missing+0x2e8/0xcc0
+[  901.109792]  ? __pte_offset_map+0x1c/0x190
+[  901.109795]  ? __handle_mm_fault+0x7b9/0xe60
+[  901.109796]  ? __count_memcg_events+0x70/0x100
+[  901.109798]  ? handle_mm_fault+0x256/0x360
+[  901.109799]  ? do_user_addr_fault+0x3c1/0x860
+[  901.109801]  ? irqentry_exit_to_user_mode+0x67/0x190
+[  901.109803]  ? irqentry_exit+0x3b/0x50
+[  901.109804]  ? exc_page_fault+0x89/0x180
+[  901.109806]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  901.109807] RIP: 0033:0x7fb20b4315cb
+[  901.109810] Code: 0f 1e fa 48 8b 05 c5 78 0d 00 64 c7 00 26 00 00 00 48 =
+c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48=
+> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 95 78 0d 00 f7 d8 64 89 01 48
+[  901.109811] RSP: 002b:00007ffc0e7af718 EFLAGS: 00000246 ORIG_RAX: 000000=
+0000000010
+[  901.109812] RAX: ffffffffffffffda RBX: 0000000780000000 RCX: 00007fb20b4=
+315cb
+[  901.109813] RDX: 00007ffc0e7af720 RSI: 00000000c028a405 RDI: 00000000000=
+00005
+[  901.109814] RBP: 0000000000000005 R08: 0000000000000000 R09: 00007ffc0e7=
+af794
+[  901.109815] R10: 00007ffc0e7af7c8 R11: 0000000000000246 R12: 00000000c02=
+8a405
+[  901.109815] R13: 00007ffc0e7af720 R14: 0000000780000000 R15: 00007fb20b2=
+ea980
+[  901.109817]  </TASK>
+------------[ end trace ]------------
 
-    s2ram:
+We suggest to give up CPU in the ioctl() handler explicitly. I have attache=
+d a
+patch which can fix such issue. I'm looking forward to receiving suggestions
+from community regarding this patch.
 
-         Detected VIPT I-cache on CPU7
-         CPU7: Booted secondary processor 0x0000000103 [0x410fd034]
-         CPU7 is up
-        +i2c-rcar e66d8000.i2c: error -110 : 10000001
-        +pca953x 4-0020: Failed to sync GPIO dir registers: -110
-        +pca953x 4-0020: Failed to restore register map: -110
-        +pca953x 4-0020: PM: dpm_run_callback(): pca953x_resume_noirq
-returns -110
-        +pca953x 4-0020: PM: failed to resume async noirq: error -110
-         usb usb1: root hub lost power or was reset
-         ...
-         PM: suspend exit
-         ata1: link resume succeeded after 1 retries
-        -ata1: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
-        -sd 0:0:0:0: [sda] Starting disk
-        -ata1.00: configured for UDMA/133
-        -ata1.00: Entering active power mode
-        +ata1: SATA link down (SStatus 0 SControl 300)
-        +ata1: link resume succeeded after 1 retries
-        +ata1: SATA link down (SStatus 0 SControl 300)
-        +ata1: limiting SATA link speed to <unknown>
-        +ata1: link resume succeeded after 1 retries
-        +ata1: SATA link down (SStatus 0 SControl 3F0)
-        +ata1.00: disable device
-        +ata1.00: detaching (SCSI 0:0:0:0)
-        +sd 0:0:0:0: [sda] Synchronizing SCSI cache
-        +sd 0:0:0:0: [sda] Synchronize Cache(10) failed: Result:
-hostbyte=3D0x04 driverbyte=3DDRIVER_OK
+Thanks for your time!
 
-    When trying to read from /dev/sda afterwards:
+Regards,
+Bojun Zhu
 
-        ata1: link resume succeeded after 1 retries
-        ata1: SATA link down (SStatus 0 SControl 3F0)
-        ata1.00: disable device
-        ata1.00: detaching (SCSI 0:0:0:0)
-        device offline error, dev sda, sector 0 op 0x0:(READ) flags
-0x80700 phys_seg 4 prio class 0
-        device offline error, dev sda, sector 0 op 0x0:(READ) flags
-0x0 phys_seg 1 prio class 0
-        Buffer I/O error on dev sda, logical block 0, async page read
-        sd 0:0:0:0: [sda] Synchronizing SCSI cache
-        sd 0:0:0:0: [sda] Synchronize Cache(10) failed: Result:
-hostbyte=3D0x04 driverbyte=3DDRIVER_OK
+Bojun Zhu (1):
+  x86/sgx: Explicitly give up the CPU in EDMM's ioctl() to avoid
+    softlockup
 
-All issues above are fixed by reverting this commit.
-
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -1234,7 +1234,7 @@ static void pca953x_save_context(struct pca953x_chi=
-p *chip)
->         regcache_cache_only(chip->regmap, true);
->  }
->
-> -static int pca953x_suspend(struct device *dev)
-> +static int pca953x_suspend_noirq(struct device *dev)
->  {
->         struct pca953x_chip *chip =3D dev_get_drvdata(dev);
->
-> @@ -1248,7 +1248,7 @@ static int pca953x_suspend(struct device *dev)
->         return 0;
->  }
->
-> -static int pca953x_resume(struct device *dev)
-> +static int pca953x_resume_noirq(struct device *dev)
->  {
->         struct pca953x_chip *chip =3D dev_get_drvdata(dev);
->         int ret;
-> @@ -1268,7 +1268,8 @@ static int pca953x_resume(struct device *dev)
->         return ret;
->  }
->
-> -static DEFINE_SIMPLE_DEV_PM_OPS(pca953x_pm_ops, pca953x_suspend, pca953x=
-_resume);
-> +static DEFINE_NOIRQ_DEV_PM_OPS(pca953x_pm_ops,
-> +                              pca953x_suspend_noirq, pca953x_resume_noir=
-q);
->
->  /* convenience to stop overlong match-table lines */
->  #define OF_653X(__nrgpio, __int) ((void *)(__nrgpio | PCAL653X_TYPE | __=
-int))
->
-
-Gr{oetje,eeting}s,
-
-                        Geert
+ arch/x86/kernel/cpu/sgx/ioctl.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 --=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+2.25.1
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
