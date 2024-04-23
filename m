@@ -1,342 +1,236 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2093.outbound.protection.outlook.com [40.107.20.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD19224D7
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 09:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713865077; cv=none; b=tpkPIX+9r67q2u5cs9F9dhjs3oY6ZzTULdVeuJzebET4bvGmvCFiA8lTzsXtMaxDpf4Lpnwih0sFPtaC7brB+QV/i7vxb/mITl+cCQSyoiqi7ezHcO35rbi4OMhnF6PLrm3zLfZ2sszxYLpJSK7fyC6VKZogP5ASnfAL9fHMyGs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713865077; c=relaxed/simple;
-	bh=o0UF/opQcStCOkx3zfWgVYWw9S4Qct8KhuyRHKSbePs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IvhnGr+Wi42ExJZQ+B5WEr6OYH2DCYBnStecFMjHgup8t/P9L+HA5GYFkWh44YSwxZSIBZqYVgtDzwxOyqdjEwEK24RX01yUg5nYyeEAFhMobhAhZtxz8WbT1hbLPDnqolUh5hiHNfE6ELoiwgpVgBkC0Ig4nKcO4vL4zs4JKu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hyidxWIk; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8FB1E863;
+	Tue, 23 Apr 2024 09:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.93
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713865175; cv=fail; b=SRaK94/PtDR6OutQCZU7OIB1Q95+MpcYWrWo/zvSqElU0+42TNksK274U/hRTftiCiiDTMc6FCYWH1LHPh4ojW4DTMITW3yG5dUd9e/36H9YOpLCcdQJ/YQ+78Drh8SiaOaMDkx4WliPKptGFC+isHb/7gxAZy4tl/u+hja1j0g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713865175; c=relaxed/simple;
+	bh=nmytv9FKT83uoeZi2O8cvnL2MSWPB/md0I+WFzSvuAc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=mAbb/buyhh0Ygfdy0dJU7gRiWMjR4toJwT2fisICih7Oy7iGEB/S5u/cJbRhpvwQruKuE0hbUFoAKFBrvQ1TaffVsHmT1T9b3sKinNEQ5hUfXcWgEYwJgK4Ex3m3cgMvKbVez9WEMe2ind7emGewgaP+NLf00frHEl1eArK92IU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=D4tGC4qu; arc=fail smtp.client-ip=40.107.20.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolfvision.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hyidxWIk"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-6001399f22bso1443835a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 02:37:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713865074; x=1714469874; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d7qEzAeGQbSR+e0QLIBsBqx0r9aehVaKkSQghGhq9Bo=;
-        b=hyidxWIkhSHMgkqOTLHGKRsl45Ey98uPyVwrZZJyafctX80qaubFbD+wyy6Wnfakd6
-         P4iUauSErfTagj3vIRwOMeKBv3wWWEpya98NavejjBBwFeOmg3R63gQ4KMMZTljWeAoM
-         BeuDUGJ0I8NKK1byFH27G4e1ttwijqY3q8ogqyNOej1uEet3dHfLJ+Hfk9A6GrHXcykc
-         e3pJJuVDY51+HKlM54XcInGeo57dYWZHbs9NhpeASM4t9T6EKQM4V3Wau1Ag5mJZjyXH
-         Q+MohqPdhmMNH6uXvDsWxITwXC1ypFeEEWY7S2eRUXJWq19f5/RBck897GUK6KP6GpzV
-         cIMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713865074; x=1714469874;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d7qEzAeGQbSR+e0QLIBsBqx0r9aehVaKkSQghGhq9Bo=;
-        b=cEAz39fWHPcUnHajs8ep0f88IwkDTJPpX7Kb8sEyYJQB7hlTilLXBjYphhLKu2TsbF
-         IBLC1bgTG1IaYxDLDb9mj54XZAXeKMyHyDdLusA+3OK5keGJZ3ywjLtLOH0PAZpCcD/7
-         qdTGCh+giwi68PUQzjYRYqC/CAp2sf3ufWsYOfkGywJjY2gF+9ASbw/ruIFM2r8doapb
-         0Id1tCzxkbQtx0tfNBjYRjzDOIYstRnSiNe1HRpxr2a7Y+9iA8IOGONvRE0Fr95Qd4rB
-         41xhIQrXCDpuzGazt0fmuG4DfF37oZV1IpIm4h4M/M9M0nAUnVpGczsAb9uAfyAQqC5P
-         7hCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWxpU1Q3LQJGl1KWf3L0anDK4nNLolcLjr++2Q58CKCTavfOL4GJ8u+12rCv6LcONl31dPm6Dm+/KwI+qoBaqtHMORLZmnSIGXWxZxz
-X-Gm-Message-State: AOJu0YxiVz2lGBsdGcqrVtLOtkWBGW5aaR715ITuAFBDFRz0QK90BnE0
-	BKQTDhbmq8dsOb7e5TR7EID1k8LZJGlxHdJgd29EKHPisBfjJc4cD9pytvpOP2EKWXAjaqCLABE
-	q+ATotuNNpZJ7y2xy4/IKIDa8v8UUQupbNEGAKg==
-X-Google-Smtp-Source: AGHT+IFFLdxyFRIq+ARQuf3JajFuxDy//Aasarf/dudwTIXRsO2jCILHM+5eWcUSmNYXIIy0MyPqrmkQ2ju0iGdDttE=
-X-Received: by 2002:a17:90a:fe07:b0:2ac:3c42:5839 with SMTP id
- ck7-20020a17090afe0700b002ac3c425839mr9995209pjb.1.1713865074341; Tue, 23 Apr
- 2024 02:37:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="D4tGC4qu"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cwFcMyQD/pqUrt1nwyRR5vIFgMcDmfnKC5T1H2oGRftaOXzXyCCbZf8uOBtXETDDgJjTB138Dfk4Vik6F52c4y7MvMQRSJuMgU2u/16gCnCuxtWJu+HPpt6Sf/YQl4Y0QiJCXWd+v29+xWSM3JNSWqyb34bDYWlJ1rDdSjYlnwjNuGemrGrnAjrIwAH+ySKr3whYsMRvBMnNIe9SuXzRGt2qajsvv7uC919EbmnZfwZr6cEQ4WP1rQjn/PIpCHPaiXEtYXzSrDJZAnp8FAy6JSPtrWFx8JDzVweBblDf5SQNvb9SiSN6jvm354Y6XnQNj/DvhAVz3q9duD/pbTutOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iglarcSymAQ/s+SXFcIUFzuT/Iab7HVwkRoSu3j8u98=;
+ b=k0rxM5uHnkauAxO0cDdiCpS36Tm8AfMjpQSWvHvQyEeQsP71WSj28vVoQemdo/o3iuL3TosdS2EtlwmdDXWhtHYsKJOglpJ7qNTocdthm0R0ABfBqRUVClEvW5c0FRgExTYKLvFR2iYrR61K+uPi6Y9Fh5/6JVRHMR8NOoaRfd6sVRNk5wZ/6C8K2I+L8tscO63xKMjaMNdL0UKi7YtiRB1Z06f6ZunXCcw1B2HHBNlsHUsvojF/BKx/uBZoTP09dvoze+YV6E/h7K0hhWuNgkICPlL9Cn0nzXOHYu9rcQHm2ALLekkcGqPu723tBl6T/0HwCxcQc1MvdfsU6bRZVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wolfvision.net; dmarc=pass action=none
+ header.from=wolfvision.net; dkim=pass header.d=wolfvision.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolfvision.net;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iglarcSymAQ/s+SXFcIUFzuT/Iab7HVwkRoSu3j8u98=;
+ b=D4tGC4qukx7BD5ofs7NRNPn823VHqeL9AP+hnhiNEAH3tDuqVStBKwD+ycNjYDtVMCW6xEWIGFLuAy7Ba8J09uJrgdqjhXFXLaJXXoACVlLn23DC516Nxn29tQ5rP/kIstriXiO61Q4OjI2GvlugZoBNgKPF0TlvIT1Vy4U5q8M=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wolfvision.net;
+Received: from DU0PR08MB9155.eurprd08.prod.outlook.com (2603:10a6:10:416::5)
+ by DB9PR08MB6730.eurprd08.prod.outlook.com (2603:10a6:10:2a2::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22; Tue, 23 Apr
+ 2024 09:39:29 +0000
+Received: from DU0PR08MB9155.eurprd08.prod.outlook.com
+ ([fe80::224e:39b5:5107:43de]) by DU0PR08MB9155.eurprd08.prod.outlook.com
+ ([fe80::224e:39b5:5107:43de%3]) with mapi id 15.20.7472.044; Tue, 23 Apr 2024
+ 09:39:29 +0000
+Message-ID: <3f93ecb0-a649-4492-8798-a00de26236c8@wolfvision.net>
+Date: Tue, 23 Apr 2024 11:39:26 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: rockchip: fix nodename warning on
+ wolfvision-pf5-display
+Content-Language: en-US
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+ devicetree <devicetree@vger.kernel.org>
+References: <20240423082941.2626102-1-heiko@sntech.de>
+From: Michael Riesch <michael.riesch@wolfvision.net>
+Organization: WolfVision GmbH
+In-Reply-To: <20240423082941.2626102-1-heiko@sntech.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: VI1PR0102CA0034.eurprd01.prod.exchangelabs.com
+ (2603:10a6:802::47) To DU0PR08MB9155.eurprd08.prod.outlook.com
+ (2603:10a6:10:416::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240422090310.3311429-1-yangcong5@huaqin.corp-partner.google.com>
- <20240422090310.3311429-3-yangcong5@huaqin.corp-partner.google.com> <CAD=FV=V2O2aFDVn5CjbXfgcOLkmNp-G3ChVqQKouB2mDB+NZug@mail.gmail.com>
-In-Reply-To: <CAD=FV=V2O2aFDVn5CjbXfgcOLkmNp-G3ChVqQKouB2mDB+NZug@mail.gmail.com>
-From: cong yang <yangcong5@huaqin.corp-partner.google.com>
-Date: Tue, 23 Apr 2024 17:37:43 +0800
-Message-ID: <CAHwB_NJsDsTc=gjP8TJ+6ipo10uMYFLmuf+tKGVgxnznhuAcUQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] drm/panel: himax-hx83102: Break out as separate driver
-To: Doug Anderson <dianders@chromium.org>
-Cc: sam@ravnborg.org, neil.armstrong@linaro.org, daniel@ffwll.ch, 
-	linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org, 
-	robh+dt@kernel.org, conor+dt@kernel.org, airlied@gmail.com, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, xuxinxiong@huaqin.corp-partner.google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR08MB9155:EE_|DB9PR08MB6730:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6e68c026-1160-4b7e-5ce1-08dc63794598
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|366007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?L2JRajg3dFh1eHowNEpaQjVXZkVGbVdXYnRUSkZYYWpMcExTZ2hzSnFvUFBQ?=
+ =?utf-8?B?cWJVWTM3S09UdHZiUEJjNWNINHJYeVo3YjQyRlQrZ0VFMXVyeWtnRXY1T05s?=
+ =?utf-8?B?eHo2VkZId3JuL0VRaGZsVFJ3a0pWQVNKQzZRbzF6YjAwQVV1bFFCZ3Uvd1pU?=
+ =?utf-8?B?SVpzTTNXTms5UGlvZEtZeC9ITjI3N0ZLTHRDNVc1eEgyUGhka1BkOXR5Nkhh?=
+ =?utf-8?B?emlCUGZMSGhKOHpHRVR1MW5BRFpsUS80d1NKNDR6R3JmaXNNYUJpMDNEWkdO?=
+ =?utf-8?B?TUV6Q2htRTllaFQvNmRDdzdVbU9ITFdRRm8yeUhrR1U1TWxvYy9wNHlzbldw?=
+ =?utf-8?B?UHl1QzV3RnRLTEQzd2VzTEE0cGx4R0pYcWFJbUJ6bUhZZzJ0UE8zNjEwY29r?=
+ =?utf-8?B?Ly9pM3VuS1F4Yitvdkh3WGI2WCs1anZBRm1zT2djQjEzMEdOQ05oekpsMExY?=
+ =?utf-8?B?VzA5U0RqbjdySnVOTDBVcU1lV01JVWdtSEt6c0RVNHdyK2pOclFxelhqMkpa?=
+ =?utf-8?B?SkVqM0dWem0wWVI1amxvc3RFdW8wVHV0ZTNpVExSQ21wV2l0bFkzbVZ1dkV0?=
+ =?utf-8?B?dmxoOXZadDQ3NHUrWWhjSnIrcWdzL3JZa2VqWUZ3L2RaTXh6LzU1Q0NyTUdn?=
+ =?utf-8?B?aVVyUkVLeXNXSVcrc0llMm83Tm54SkFQcStJUG9uNG9JQndUUGpZMXR0Y2Ra?=
+ =?utf-8?B?SlZWQ1k1UllIOEVheG1mMFdBbVNTMUZOZ1hncENmaW9aMTRrbnRJcmZkSkpm?=
+ =?utf-8?B?b0tGR1d5bzBoMlgyK3gxeVJRZ1FUSmpGY2RCK1pmdEx6NkU3VGpPMFRDM3pz?=
+ =?utf-8?B?MExodDFJaFRHTklJT2x5QURjV3ZSNklHNUpib1J5U2IvZGFmWDNaOE5OMW8z?=
+ =?utf-8?B?K3lLZkxTNWp6aWZDZEhGbUJGU1NmdklZeE01UUVwWDBpNHE2YkNGTUgyNXdH?=
+ =?utf-8?B?Y0NjL1QrbmVWaVFUSXlpVEIxMTVhblFOVWYxdTQvakVmcWMwaHFKNWpDdmFs?=
+ =?utf-8?B?Mng1U3FzQUdHS2tFbSt4TStnRjdaQU5XZno2SnZ3U0c2WUdIajhxUFJ1eTE5?=
+ =?utf-8?B?eWZZU1BuY3Y2R3VuYlE4WVAzcUc1bHltL0dNYWNTcmZIY25tNnNNelBtMStG?=
+ =?utf-8?B?SFF5MGNSdThhYjhtMkZZQkprckxwdkJ3cGhBZkRYLzVON3RXeDNmRXp3ZHg0?=
+ =?utf-8?B?cU83cjByQ3hGK3F5UXhpQUd4VWZKZ3RiVHlpTExiT3d5RkcxWHNHMkwrNW9a?=
+ =?utf-8?B?ZzdnY09BVGVhaTR0bHBFTUpMMFBUZ0QwMUNtSkk0bmdoNFpiQzg2YjV2Ymhp?=
+ =?utf-8?B?U2c3aFpHcXgyY2JpRUZiQ0lEckozSExpNm04ckMrNVhzVzAzRkFGekd6RmRr?=
+ =?utf-8?B?ajBEWTBseHlUcVkxUitjbmxEanhZQ2dOcjhvR3Qwb2hEcHcvdXF2RTlsaStk?=
+ =?utf-8?B?MWF6NWpjakVyZEloa2ZLb2FPcnNOaDRZcnFaa1dBNmppR3M0R2p1OHhnYmxS?=
+ =?utf-8?B?UXBqRWovUFRWQlBBTVFVY1FNdVpoUmk0TFM3VXRaVU9Wc0JHTWpkSlpibWJV?=
+ =?utf-8?B?MmtuaUx2MDRqTXQ0UEdXeXdqcm9Majdrd0U2QVJPQWU5K1ZSeHNUWXdvN0l1?=
+ =?utf-8?B?QjVNN3JMTExRSkIvWXhtNGhWK0Z6SkhGcURSY3N5ZlF4N1FBNWF0N2lCMjBE?=
+ =?utf-8?B?cDV5Tml6SzJTR1Y0SGxjZGI1UFNVSExpNTN1bVhiV2JHQUpMQ3BQT2F3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR08MB9155.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VDU0R2UyVS85N2JiV0J0VFVTWVQvN3lMYXdSY3lZUm1sYkt3cXV2aWZVMjE2?=
+ =?utf-8?B?VEtTUXVJRVpZdzhYa2t3Y1loTWZaR0lXRlpDWTI5ejdoQnhxOTFMb3hFeG52?=
+ =?utf-8?B?NjlielFWKzg5RkVtOWlHZmdwZElFc1RzYkpUVHp5dG5hdUd0bSt5U25oNW93?=
+ =?utf-8?B?N05PMTRNd0VTTnNyLzVFV3NiNHBkbmFaNXhiOVUwaytNWmNOM2JkNEJTVk45?=
+ =?utf-8?B?THc1ZW1RS09xV1Bnb1lRRFNyN2U4MTlSVHZCWDJhUHBiREIzRnZDdmdYcjkz?=
+ =?utf-8?B?Z0VpNjErbFgxNCtSZE15SzZrZEJxU2FRRkxONkJ2STdKNHBiRXNXdW1Wcjgw?=
+ =?utf-8?B?SldkYmw5djFDaW9NNUlGZ0xHQysxcnRRc25Na3VRd0RLdFc3WldubkJDeGg2?=
+ =?utf-8?B?V1dXZ251bTJmT3JFQi9HSzYyTzZXbEhmUUhvbVhGVUxGbkljT0duYmo2SWJo?=
+ =?utf-8?B?ZG9FNFhiSkE2b08vZmhmUmdHUE5veVhUak1lREhlazE4RXVuaXBIQU1OcktT?=
+ =?utf-8?B?R0Qrb3UxZkQ2THcwTU84MWVFR2dZc2tieExHaFFvM3JRRHYzbVFrN09zODE3?=
+ =?utf-8?B?NkNrUDR3eDRqbXdwZXR2bzFFNEg0YzRralI1eVAxOVRlZjhaYU8zbVNOeXRl?=
+ =?utf-8?B?dURrNTYwd3RPQngzeGtYVk5OK3R6ODg4SXdSL1RkTEoweUVXUXllSVFzVCtY?=
+ =?utf-8?B?QmREY3RJOEJ5NkoyOWhLSzdzSURYZWZKZTN6WFNCT2x4VHZYYTEvUklaYnlM?=
+ =?utf-8?B?QWVTWW5mK1p3N2ZQdldZeG9WQkc4SVc0eFNKSERSZVVvVDJLZDd2bElod24r?=
+ =?utf-8?B?TzFXN0xQN0gyeDFaT1ZUaG9lY0NGczV1NU16enplR0p3bzlDeUNIMnFNY1pY?=
+ =?utf-8?B?STcyZGZONTlTdUR3SDh5YnBMam40cmt5OFVCOVJDN3N6VXdiNitMM0Z1VUVZ?=
+ =?utf-8?B?VzlqTkRNTlExYndtcTFsYVd3OS9qWDBEOGd4d29JTG5SamYxdlM0b3hkYzdQ?=
+ =?utf-8?B?bmdiVkpKY29RTFZIa1krUUZueDdGQklySGdDYXlRdjFWUzVSTFdtWDBNbnBT?=
+ =?utf-8?B?Z2MxMjdMNDRjUm5WekZqci84NkNpc1M5UGowTExPVTdkZjFCM3hpeVhyendi?=
+ =?utf-8?B?RmhFS0ozeEdtV3JUdzc2aWVuRDg5MThqMSswOHJzeExYY09hdTVBakVMSUdN?=
+ =?utf-8?B?S0tmdEREQUJYT2l6UktlODI5eDVXTVlrclFaZzlrQU5CNkJmb004VEpvNWVu?=
+ =?utf-8?B?aU80SmlneXJhRDRSdDJZR040aUNpVkFWdzhZY2lJd2pvWGxNT29OSEJnM2dk?=
+ =?utf-8?B?RlZ1RjBSM2d3b3orTXB2cXVCeUtid3ZNTDV6clJsZFArTEoreGp3cm82M1dE?=
+ =?utf-8?B?RmtwKzdFQlNUZysvaXYvMElIbUhTTFFrQWJDR1Z3QUlrbjl3L1JPL3prdzIx?=
+ =?utf-8?B?aGRjMDNxMWdVMFRXaS85MHpaZXlpd1JmK3E0R0xNNk91VkU3K251ZEpYZ0M1?=
+ =?utf-8?B?dGl1cUNEUGVSUzRmYXJ2Q2l0eUtpNmNZWG9iY1VEK0Jsb0Q3SThOZ0tPUmZR?=
+ =?utf-8?B?MEtSUUVTMS9zamJPNGhWU0lsTGhINW9kTU9vMGVMZ05vK21WbnVrWDhyOXVG?=
+ =?utf-8?B?M1JENnlnUVhtUzZTalczSC8yR21PODVkRk95L08vOThoOW0vUnFUd3VpcE9Q?=
+ =?utf-8?B?ME9LUzVvSzVlR091czZVZ0JNcDBkRE9ORU9XTzF2L3Ric0xvK002TVk5cHg2?=
+ =?utf-8?B?aTJhbDJNZmRGdExDbmRjNzNZclhWZkJQMUFCL1VoVjNBMjlXaGZxbjlrY0hv?=
+ =?utf-8?B?MVBnQzJaQ0ZQQjNsNTloRU9IdkxJWU9kbkMxRHE1OVQzTW8zc0p3SkJQeERS?=
+ =?utf-8?B?M0p4MEtUam5FSm1BVkYvdEZud2Z0NGRBMlRSelBXalRJYWgrT0c1T0RVdXda?=
+ =?utf-8?B?eVZkUFVIaFA0VmR1bWVCWWcyVFhrblU3K2Q3Z0FvdHluM3k1eE1KbHVCMjRo?=
+ =?utf-8?B?NzBIRFNNTU52VVVkRC9vRUtSK1lpY3Fab3AwQU5CLzlEY0xRUStweUQxRUpV?=
+ =?utf-8?B?Y0RtRzRrY0xHZnppYUNWeWh5M2R5N2gvMnBpQjBsekVGa282cUpDMnVhWXh1?=
+ =?utf-8?B?citZNGZNTWtRZVpDMDFrMnZOTmRSZzdaT1pZNXgxUjlVMDFseXdLRGlDN1Fm?=
+ =?utf-8?B?Q1E9PQ==?=
+X-OriginatorOrg: wolfvision.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e68c026-1160-4b7e-5ce1-08dc63794598
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR08MB9155.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 09:39:29.0615
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e94ec9da-9183-471e-83b3-51baa8eb804f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LfXCokUrISGTgHc5C4EueMsWf7mILqyc1RUmOaxjYDwKQRt3CcNDmGVQoA5lxSnzu2hOUjJqvg4kxBqDgaYBOb70+55SpYkDd6n+lOl0CIc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR08MB6730
 
-Hi,
-Thanks for review.
+Hi Heiko,
 
-Doug Anderson <dianders@chromium.org> =E4=BA=8E2024=E5=B9=B44=E6=9C=8823=E6=
-=97=A5=E5=91=A8=E4=BA=8C 05:24=E5=86=99=E9=81=93=EF=BC=9A
->
-> Hi,
->
-> On Mon, Apr 22, 2024 at 2:03=E2=80=AFAM Cong Yang
-> <yangcong5@huaqin.corp-partner.google.com> wrote:
-> >
-> > The Starry HX83102 based mipi panel should never have been part of the =
-boe
-> > tv101wum driver. Discussion with Doug and Linus in V1 [1], we need a
-> > separate driver to enable the hx83102 controller.
-> >
-> > In hx83102 driver, add DSI commands as macros. So it can add some panel=
-s
-> > with same control model in the future.
-> >
-> > [1]: https://lore.kernel.org/all/CACRpkdbzYZAS0=3DzBQJUC4CB2wj4s1h6n6aS=
-AZQvdMV95r3zRUw@mail.gmail.com
-> >
-> > Signed-off-by: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
-> > ---
-> >  drivers/gpu/drm/panel/Kconfig                 |   9 +
-> >  drivers/gpu/drm/panel/Makefile                |   1 +
-> >  .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    |  99 ---
-> >  drivers/gpu/drm/panel/panel-himax-hx83102.c   | 567 ++++++++++++++++++
-> >  4 files changed, 577 insertions(+), 99 deletions(-)
-> >  create mode 100644 drivers/gpu/drm/panel/panel-himax-hx83102.c
-> >
-> > diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kcon=
-fig
-> > index d037b3b8b999..eb378c897353 100644
-> > --- a/drivers/gpu/drm/panel/Kconfig
-> > +++ b/drivers/gpu/drm/panel/Kconfig
-> > @@ -145,6 +145,15 @@ config DRM_PANEL_LVDS
-> >           handling of power supplies or control signals. It implements =
-automatic
-> >           backlight handling if the panel is attached to a backlight co=
-ntroller.
-> >
-> > +config DRM_PANEL_HIMAX_HX83102
-> > +       tristate "himax HX83102-based panels"
->
-> Capital "h" for "Himax".
+First of all, thanks a lot for doing this!
 
-Got it, fix in V3. Thanks.
+On 4/23/24 10:29, Heiko Stuebner wrote:
+> The dtbs check throws a warning about node naming with the recently
+> added pf5-display-overlay:
+> rockchip/rk3568-wolfvision-pf5-display.dtsi:113.6-121.3: Warning (graph_port): /fragment@4/__overlay__: graph port node name should be 'port'
+> 
+> This comes from the overlay just referencing the vp2-port-node via
+> its phandle and then adding an endpoint beneath it.
+> 
+> While this is possible something to handle inside the dtbs check,
+> carrying around the warning is not pretty, so change the description
+> to go around it.
 
->
->
-> > +#define DRV_NAME "panel-himax-hx83102"
->
-> I don't think DRV_NAME buys you very much. Get rid of this #define and
-> just use it below.
+What is the rationale behind that check? Describing a port in a SoC dtsi
+or board dts and using the reference in an overlay is quite convenient
+and above all concise.
 
-Got it, fix in V3. Thanks.
+Cc: device tree list
+> Starting from the vop_out phandle and then referencing the port
+> via its generic port@2 nodename will satisfy the port<->endpoint
+> naming dependency while keeping the same structure once the overlay
+> is applied.
+> 
+> Reported-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+>  .../rockchip/rk3568-wolfvision-pf5-display.dtsi    | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-display.dtsi b/arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-display.dtsi
+> index b22bb543ecbb..18c807c39e56 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-display.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-display.dtsi
+> @@ -110,12 +110,14 @@ &pwm10 {
+>  	status = "okay";
+>  };
+>  
+> -&vp2 {
+> -	#address-cells = <1>;
+> -	#size-cells = <0>;
+> +&vop_out {
+> +	port@2 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+>  
+> -	vp2_out_rgb: endpoint@ROCKCHIP_VOP2_EP_RGB0 {
+> -		reg = <ROCKCHIP_VOP2_EP_RGB0>;
+> -		remote-endpoint = <&panel_in_vp2>;
+> +		vp2_out_rgb: endpoint@ROCKCHIP_VOP2_EP_RGB0 {
+> +			reg = <ROCKCHIP_VOP2_EP_RGB0>;
+> +			remote-endpoint = <&panel_in_vp2>;
+> +		};
+>  	};
+>  };
 
->
->
-> > +struct hx83102 {
-> > +       struct drm_panel base;
-> > +       struct mipi_dsi_device *dsi;
-> > +
-> > +       const struct hx83102_panel_desc *desc;
-> > +
-> > +       enum drm_panel_orientation orientation;
-> > +       struct regulator *pp1800;
-> > +       struct regulator *avee;
-> > +       struct regulator *avdd;
-> > +       struct gpio_desc *enable_gpio;
-> > +
-> > +       bool prepared;
->
-> We're trying to get rid of the tracking of "prepared" in panels. You
-> should be able to delete this and remove the code dealing with it. The
-> core DRM code should ensure that your prepare/unprepare functions are
-> called appropriately.
+With this patch applied the DTC warning "Warning (graph_port):
+/fragment@4/__overlay__: graph port node name should be 'port'"
+vanishes, but a different DTC warning "Warning (unit_address_vs_reg):
+/fragment@4/__overlay__/port@2: node has a unit name, but no reg or
+ranges property" appears. Can you reproduce this?
 
-Got it, fix in V3. Thanks.
+I tried to fix that by adding the reg property, but then DTC complained
+about "Warning (graph_port): /fragment@9/__overlay__/ports/port@0: graph
+node '#size-cells' is -1, must be 0"
 
->
->
->
-> > +struct hx83102_panel_desc {
-> > +       const struct drm_display_mode *modes;
-> > +       unsigned int bpc;
-> > +
-> > +       /**
-> > +        * @width_mm: width of the panel's active display area
-> > +        * @height_mm: height of the panel's active display area
-> > +        */
-> > +       struct {
-> > +               unsigned int width_mm;
-> > +               unsigned int height_mm;
-> > +       } size;
-> > +
-> > +       unsigned long mode_flags;
-> > +       enum mipi_dsi_pixel_format format;
-> > +       unsigned int lanes;
-> > +       bool lp11_before_reset;
->
-> Seems like you can remove "lp11_before_reset" since it's always true
-> for this controller. If later you find someone using this controller
-> that needs this false then we can always add it back in.
->
-> I think you could also remove "bpc", "format", and "mode_flags". If
-> these are all the same controller then that will be common between all
-> the panels, right? So you shouldn't need to define those on a
-> per-panel basis... You could maybe even remove "lanes" unless some
-> people using this panel are expected to hook up fewer lanes...
+Then, I added the #size-cells property to avoid this. However, DTC
+complained about this property not being necessary as there is only one
+port. I stopped at this point.
 
-Okay, remove =E2=80=9Clanes=E2=80=9D together.
+I would say the real question is how this hardware should look like in
+the device tree (overlay). Then, the compiler and/or build scripts can
+be adjusted to tolerate this.
 
->
->
-> > +static int starry_init_cmd(struct hx83102 *ctx)
-> > +{
-> > +       struct mipi_dsi_device *dsi =3D ctx->dsi;
-> > +
-> > +       mipi_dsi_dcs_write_seq(dsi, HX83102_SETEXTC, 0x83, 0x10, 0x21, =
-0x55, 0x00);
-> > +
-> > +       mipi_dsi_dcs_write_seq(dsi, HX83102_SETPOWER, 0x2C, 0xB5, 0xB5,=
- 0x31, 0xF1, 0x31, 0xD7, 0x2F,
-> > +                                                 0x36, 0x36, 0x36, 0x3=
-6, 0x1A, 0x8B, 0x11, 0x65, 0x00, 0x88, 0xFA, 0xFF,
-> > +                                                 0xFF, 0x8F, 0xFF, 0x0=
-8, 0x74, 0x33);
->
-> I know this is a sticking point between Linus W. and me, but I'm
-> really not a fan of all the hardcoded function calls since it bloats
-> the code so much. I think we need to stick with something more table
-> based at least for the majority of the commands. If I understand
-> correctly, Linus was OK w/ something table based as long as it was in
-> common code [1]. I think he also wanted the "delay" out of the table,
-> but since those always seem to be at the beginning or the end it seems
-> like we could still have the majority of the code as table based. Do
-> you want to make an attempt at that? If not I can try to find some
-> time to write up a patch in the next week or so.
-
-Do you mean not add "delay" in the table?  However, the delay
-required by each panel may be different. How should this be handled?
-It would be great if you could help provide a patch. Thank you so much.
-
->
-> [1] https://lore.kernel.org/r/CACRpkdYtM=3D5jdQddCqRFgBRXvcJEjk1ULJNKKFz7=
-jhhkGxV59Q@mail.gmail.com
->
-> ...also: nit that, in general, the Linux community prefers lowercase
-> hex, so 0xfa instead of 0xFA, for instance.
-
-Done. Fix in V3.
-
->
->
-> > +static int hx83102_get_modes(struct drm_panel *panel,
-> > +                           struct drm_connector *connector)
-> > +{
-> > +       struct hx83102 *ctx =3D panel_to_hx83102(panel);
-> > +       const struct drm_display_mode *m =3D ctx->desc->modes;
-> > +       struct drm_display_mode *mode;
-> > +
-> > +       mode =3D drm_mode_duplicate(connector->dev, m);
-> > +       if (!mode) {
-> > +               dev_err(panel->dev, "failed to add mode %ux%u@%u\n",
-> > +                       m->hdisplay, m->vdisplay, drm_mode_vrefresh(m))=
-;
-> > +               return -ENOMEM;
-> > +       }
->
-> nit: no need for an error message when drm_mode_duplicate() fails. It
-> is incredibly unlikely that the allocation will fail and the Linux
-> kernel will already do a stack crawl in the case that it does fail.
-
-Got it, fix in V3. Thanks.
-
->
->
-> > +       /*
-> > +        * TODO: Remove once all drm drivers call
-> > +        * drm_connector_set_orientation_from_panel()
-> > +        */
-> > +       drm_connector_set_panel_orientation(connector, ctx->orientation=
-);
->
-> Pretty sure you can drop the call to
-> drm_connector_set_panel_orientation() here. I believe that nearly
-> everyone is using panel_bridge which will handle this for you.
-
-Got it, fix in V3. Thanks.
-
->
->
-> > +static int hx83102_panel_add(struct hx83102 *ctx)
-> > +{
-> > +       struct device *dev =3D &ctx->dsi->dev;
-> > +       int err;
-> > +
-> > +       ctx->avdd =3D devm_regulator_get(dev, "avdd");
-> > +       if (IS_ERR(ctx->avdd))
-> > +               return PTR_ERR(ctx->avdd);
-> > +
-> > +       ctx->avee =3D devm_regulator_get(dev, "avee");
-> > +       if (IS_ERR(ctx->avee))
-> > +               return PTR_ERR(ctx->avee);
-> > +
-> > +       ctx->pp1800 =3D devm_regulator_get(dev, "pp1800");
-> > +       if (IS_ERR(ctx->pp1800))
-> > +               return PTR_ERR(ctx->pp1800);
-> > +
-> > +       ctx->enable_gpio =3D devm_gpiod_get(dev, "enable", GPIOD_OUT_LO=
-W);
-> > +       if (IS_ERR(ctx->enable_gpio)) {
-> > +               dev_err(dev, "cannot get reset-gpios %ld\n",
->
-> it's not "reset-gpios".
->
->
-> > +                       PTR_ERR(ctx->enable_gpio));
-> > +               return PTR_ERR(ctx->enable_gpio);
->
-> Rather than the above, use "dev_err_probe" and combine into one line. Unt=
-ested:
->
-> if (IS_ERR(ctx->enable_gpio))
->   return dev_err_probe(dev, PTR_ERR(ctx->enable_gpio), "Cannot get
-> enable GPIO\n");
-
-Got it, fix in V3. Thanks.
-
->
->
-> > +       }
-> > +
-> > +       gpiod_set_value(ctx->enable_gpio, 0);
->
-> You don't need the above line. When you got the GPIO you already
-> passed "GPIOD_OUT_LOW" which means that this is redundant.
-
-Got it, fix in V3. Thanks.
-
->
->
-> > +
-> > +       ctx->base.prepare_prev_first =3D true;
-> > +
-> > +       drm_panel_init(&ctx->base, dev, &hx83102_drm_funcs,
-> > +                      DRM_MODE_CONNECTOR_DSI);
-> > +       err =3D of_drm_get_panel_orientation(dev->of_node, &ctx->orient=
-ation);
-> > +       if (err < 0) {
-> > +               dev_err(dev, "%pOF: failed to get orientation %d\n", de=
-v->of_node, err);
-> > +               return err;
-> > +       }
->
-> Could also use "dev_err_probe" to make the above one line. Not sure
-> you really need the of_node name, too...
-
-Okay, fix in V3. Thanks.
-
->
-> if (err < 0)
->   return dev_err_probe(dev, err, "failed to get orientation\n");
->
-> -Doug
+Thanks and best regards,
+Michael
