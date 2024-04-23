@@ -1,149 +1,151 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877867E765
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624B9135A49;
+	Tue, 23 Apr 2024 12:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713876231; cv=none; b=nFwFawI2B3VGKHu/I+sITE1XxLvlkZJUMtzw328okgUGRS8jNNVW4FG97hY0ipC+Nb5/e8GId5cG5Jii8iYZeZEGctwoetY/Dvi7+BsbwOSM7kNm2BLbEdg3xVcyEM9BONr8+9T8nd1kmviIhB1dDhaU1bZE/CpF3J3Snpfx9C0=
+	t=1713876232; cv=none; b=Vao4XBKNJ9Yrby5FFFOxosyh1rod1rr0m8kPr1wgLLEz/gTm1tZ17ualihVrJvg8+eLEM7WRHTphqtccVOjerUa38CFwy0LwJ124wjyyP5XubWZ9C2kAktTKSuIXb5uQE09fkq1MS7iDDkamMbN1uoaglxxfFjZ5cKw+Qvb+3II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713876231; c=relaxed/simple;
-	bh=u6ulU0BPQmNSIcLbsuogo6WHzBJ6ZqZxhPCHBhuLYhk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hEK8NIzph2gj6AGjO6uutR5Vw/XHZi2uakalvawGTZEko3q7miK+2KpAcKRKjk8crH4yHDi3poXztKd5eOSNHvNeJRcrIoNbYgz24OyDky5woOayMYbw3xbSlsBCYYxoL/+eRePNQuyqBfnQdIX1+WiVlutelX8IeLM6tf+0iJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=1OYAdQWQ; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1713876232; c=relaxed/simple;
+	bh=UqX36Rw3qePOUwgzw6Vl6gVKugCmL8qWLR7mLwh1MB8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=aOo8YEe69435BIJ67EqVr0ZOevHLQVvkJj4zLFv8HVBQ6IbhYCmYCIoWitwhMjcH9alRIa0M3EK/Xz1lE+wEWAFOTjUlsWBPy9CawjkOXixoB4Dj1yOeah/9gRSHqSYmogmId222+iItNi6mPX7uqezY5FOGbbEnq3iLdzUEiRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XeHOkbYa; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="1OYAdQWQ"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-349a33a9667so872000f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 05:43:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XeHOkbYa"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6edc61d0ff6so5518944b3a.2;
+        Tue, 23 Apr 2024 05:43:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713876228; x=1714481028; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1713876229; x=1714481029; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HO1pUvU0QFRoXzPxVhmpQLKjzbVC9RycGYDtZgzkuNE=;
-        b=1OYAdQWQcFEPlzeEprCTVc/JiZruU3aK36LrPaOl8x2ehY0ZJS/0zxYc6pqwg2lD8o
-         s/n+EgYAH3OqhIz53Hp/FMGnzXUS0VCVO44Rs13rdSb1KUR0sJ2vJSkbdjwEQxUyCEgF
-         UA3R7lbB/vIMOa4ivyTaqRA52gdGt9ND4166Ta7WArbJEfnVNkb1hDUb1PdjJM0kmxvg
-         aitVdqNQYfDFf+fsRbw6hqaWIVOq4l2JGQN4UZd25MIXekXPYTeDMnszmQOJMwkhOrZH
-         ce9VXVz+poXsqJlJ9dlbtlto6KjKjJbcANZFwbhMz9/lXeQ3VAUuo9J4xP9DOS/GqkyA
-         LgnQ==
+        bh=TAmDMmdGnxQmR0z1NAQwsph4bonNjMMuYk2l5OWpTbg=;
+        b=XeHOkbYav5/jcOdm4rO+2uGVmf34w27wtOHneo7Gnxl8JQNuJmwZ0m/m9ih7aKzL7U
+         luEfNN35EnAvkjH5042nqJObk8Qj2wtCx5HYk4ZMJsnX/QUa0AsL+Z+/riOyoJPra9XO
+         yKlh/69JxrcZwzlBkNKDBQOejGsreo5aQRlkeG2RO1aeCtQXpPThfPxRPISOYgjukny3
+         Sw8uUL3wKlj4K0pikhiQ1eLuC+NKZkrkVJKRNlETfWWimNGx936uEjmEaoq39j8eCPRW
+         fx8YCh2ZT5xRzgzkzEzMoy5fRVZwC6vGtjfeIf4xVScMF+aouUmER0qNZrtM8DwWTEOI
+         qfdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713876228; x=1714481028;
+        d=1e100.net; s=20230601; t=1713876229; x=1714481029;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HO1pUvU0QFRoXzPxVhmpQLKjzbVC9RycGYDtZgzkuNE=;
-        b=BWe5ZVBG/HvraJ7Auner/87eELBIy2pvZ3bLmJveepSs6T9Cv2Hiz9GDIrgmzCYphG
-         LtOO4B3+DxXCYXqVJ3E5SoISNulBj1zEZDfKz2/vwvDLlM4yfLQ/iYZQwWrwmBLE8mHw
-         bzQDVNn46eCypdbtnz9cL0ndJ3JWxRC8SDLOOORSpVVTTolQRAMHrnJVFdOuINHzeOfu
-         h6mBtrZ0iomKYVoeEhb5bHc8WS1cZeIDzeLrhaslx2yd31m5UZfnQxMC2cMZNZrXqQHz
-         Eh5iGmhk34z62wY8eYiTqxIbSXuJMdsmahAUhd84G5Qyp96wJs8YElmA9fEHmbBp1baG
-         qzTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSYUmBAR1oNWW9DLSKhAPnNo98hDHVBBiQWWafEA68+v/5B/mTVKJ4KHH59ZR1erWyr8ek791a+dJrMboZnIxwd6OOypU88RAvjSes
-X-Gm-Message-State: AOJu0YxVIGHyfOBRPNtSh9bfeCNmcP5u5j2xvRf6Z5YtvO/OvTq/82It
-	7Q9avoLYPe4zF0BTAC59fT8V0m3V+4mU0Pl/Fkh3jq3U1pfEm1cKDBTumoUzMHQ=
-X-Google-Smtp-Source: AGHT+IFRgUnk0vEtF+hGJCYsgJqApSFxTJfbdXsIxf1B/11WOBNdkte1X7YViXtLgl4+JyLNVfZS7w==
-X-Received: by 2002:a05:600c:468f:b0:418:9941:ca28 with SMTP id p15-20020a05600c468f00b004189941ca28mr9046696wmo.2.1713876227919;
-        Tue, 23 Apr 2024 05:43:47 -0700 (PDT)
-Received: from carbon-x1.. ([2a01:e0a:999:a3a0:71cb:1f75:7053:849c])
-        by smtp.gmail.com with ESMTPSA id v10-20020a05600c470a00b00418a386c059sm19975709wmo.42.2024.04.23.05.43.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 05:43:47 -0700 (PDT)
-From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Anup Patel <anup@brainfault.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 06/11] KVM: riscv: selftests: Add some Zc* extensions to get-reg-list test
-Date: Tue, 23 Apr 2024 14:43:20 +0200
-Message-ID: <20240423124326.2532796-7-cleger@rivosinc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240423124326.2532796-1-cleger@rivosinc.com>
-References: <20240423124326.2532796-1-cleger@rivosinc.com>
+        bh=TAmDMmdGnxQmR0z1NAQwsph4bonNjMMuYk2l5OWpTbg=;
+        b=FuWPFdeDRgudpDC2lmaDhIG0SrsfrKFC08JiPwZoxNu4XN/lPBAOC6bIotZg+1cBSe
+         JBBm3859lj4C7LZDyVybv1mZ97+hMjW9Obheup4B8bmV5QDQmufOL50AQ/TFmSM/gRtn
+         D0kk5YVuYyZfq6UbcyFinSSJ3eDAN8Xb7VYe3PahCLyRuJA+6z6048ZC9vjb3ntHrLLU
+         w4WmPIhQ4O88kOm5bvRQFtK2UqOxmw5j6RAx3qFRzzP8eGCdjAcZkQ9O7TGX7rKtfczn
+         gfalNYUQVyuDyqNvuPyDuh0xODFDxnGXETDkq1eCTdzj+/iRAl+nLIPqX1luPVK0F8Q7
+         Y3cA==
+X-Forwarded-Encrypted: i=1; AJvYcCX05I6F/dBcEZ8hioUI7oRlLeM5LRK6MHdot/iYHF685uYHNLA5isnHrHU7mVBffKvryUmpkmv7wiZozbzweNNsbwGFhNcj
+X-Gm-Message-State: AOJu0YytjDCW2NOKYlm8Exg9LdOZ/frgVshinUer+OMJHOS0ZH1N+VOF
+	VHLQ1dMrLB6AZcuYGypbnaMv4fVz61uXIzx5uDl17SSN0/OxiLCaJqXhLg==
+X-Google-Smtp-Source: AGHT+IE90tOOtpdCjfOiuVbpeoLVuBgz8v7qGhSBEytsn3VfBx8E98GvWWexnSxUsBf4U6KHSmUCtA==
+X-Received: by 2002:a05:6a20:96c9:b0:1aa:9595:4261 with SMTP id hq9-20020a056a2096c900b001aa95954261mr13620672pzc.22.1713876229107;
+        Tue, 23 Apr 2024 05:43:49 -0700 (PDT)
+Received: from localhost ([198.11.176.14])
+        by smtp.gmail.com with ESMTPSA id a15-20020aa780cf000000b006f0830a298dsm9517060pfn.156.2024.04.23.05.43.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2024 05:43:48 -0700 (PDT)
+From: Lai Jiangshan <jiangshanlai@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Sam Sun <samsun1006219@gmail.com>,
+	xingwei lee <xrivendell7@gmail.com>,
+	syzkaller-bugs@googlegroups.com,
+	Lai Jiangshan <jiangshan.ljs@antgroup.com>,
+	stable@vger.kernel.org,
+	Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: [PATCH] workqueue: Fix divide error in wq_update_node_max_active()
+Date: Tue, 23 Apr 2024 20:45:48 +0800
+Message-Id: <20240423124548.1253842-1-jiangshanlai@gmail.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
+In-Reply-To: <CAEkJfYPGS1_4JqvpSo0=FM0S1ytB8CEbyreLTtWpR900dUZymw@mail.gmail.com>
+References: <CAEkJfYPGS1_4JqvpSo0=FM0S1ytB8CEbyreLTtWpR900dUZymw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The KVM RISC-V allows Zca, Zcf, Zcd and Zcb extensions for Guest/VM so
-add these extensions to get-reg-list test.
+From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
 
-Signed-off-by: Clément Léger <cleger@rivosinc.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Acked-by: Anup Patel <anup@brainfault.org>
+Yue Sun and xingwei lee reported a divide error bug in
+wq_update_node_max_active():
+
+divide error: 0000 [#1] PREEMPT SMP KASAN PTI
+CPU: 1 PID: 21 Comm: cpuhp/1 Not tainted 6.9.0-rc5 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+RIP: 0010:wq_update_node_max_active+0x369/0x6b0 kernel/workqueue.c:1605
+Code: 24 bf 00 00 00 80 44 89 fe e8 83 27 33 00 41 83 fc ff 75 0d 41
+81 ff 00 00 00 80 0f 84 68 01 00 00 e8 fb 22 33 00 44 89 f8 99 <41> f7
+fc 89 c5 89 c7 44 89 ee e8 a8 24 33 00 89 ef 8b 5c 24 04 89
+RSP: 0018:ffffc9000018fbb0 EFLAGS: 00010293
+RAX: 00000000000000ff RBX: 0000000000000001 RCX: ffff888100ada500
+RDX: 0000000000000000 RSI: 00000000000000ff RDI: 0000000080000000
+RBP: 0000000000000001 R08: ffffffff815b1fcd R09: 1ffff1100364ad72
+R10: dffffc0000000000 R11: ffffed100364ad73 R12: 0000000000000000
+R13: 0000000000000100 R14: 0000000000000000 R15: 00000000000000ff
+FS:  0000000000000000(0000) GS:ffff888135c00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb8c06ca6f8 CR3: 000000010d6c6000 CR4: 0000000000750ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ workqueue_offline_cpu+0x56f/0x600 kernel/workqueue.c:6525
+ cpuhp_invoke_callback+0x4e1/0x870 kernel/cpu.c:194
+ cpuhp_thread_fun+0x411/0x7d0 kernel/cpu.c:1092
+ smpboot_thread_fn+0x544/0xa10 kernel/smpboot.c:164
+ kthread+0x2ed/0x390 kernel/kthread.c:388
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:244
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+
+After analysis, it happens when all of the CPUs in a workqueue's affinity
+get offine.
+
+The problem can be easily reproduced by:
+
+ # echo 8 > /sys/devices/virtual/workqueue/<any-wq-name>/cpumask
+ # echo 0 > /sys/devices/system/cpu/cpu3/online
+
+Force the calculation of total_cpus which is used to be the divisor to
+be at least 1 to fix the problem.
+
+Link: https://lore.kernel.org/lkml/CAEkJfYPGS1_4JqvpSo0=FM0S1ytB8CEbyreLTtWpR900dUZymw@mail.gmail.com/
+Cc: stable@vger.kernel.org
+Fixes: 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
+Reported-by: Yue Sun <samsun1006219@gmail.com>
+Reported-by: xingwei lee <xrivendell7@gmail.com>
+Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
 ---
- tools/testing/selftests/kvm/riscv/get-reg-list.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ kernel/workqueue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kvm/riscv/get-reg-list.c b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-index 40107bb61975..61cad4514197 100644
---- a/tools/testing/selftests/kvm/riscv/get-reg-list.c
-+++ b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-@@ -55,6 +55,10 @@ bool filter_reg(__u64 reg)
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZBKC:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZBKX:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZBS:
-+	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCA:
-+	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCB:
-+	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCD:
-+	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCF:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFA:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFH:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFHMIN:
-@@ -421,6 +425,10 @@ static const char *isa_ext_single_id_to_str(__u64 reg_off)
- 		KVM_ISA_EXT_ARR(ZBKC),
- 		KVM_ISA_EXT_ARR(ZBKX),
- 		KVM_ISA_EXT_ARR(ZBS),
-+		KVM_ISA_EXT_ARR(ZCA),
-+		KVM_ISA_EXT_ARR(ZCB),
-+		KVM_ISA_EXT_ARR(ZCD),
-+		KVM_ISA_EXT_ARR(ZCF),
- 		KVM_ISA_EXT_ARR(ZFA),
- 		KVM_ISA_EXT_ARR(ZFH),
- 		KVM_ISA_EXT_ARR(ZFHMIN),
-@@ -945,6 +953,10 @@ KVM_ISA_EXT_SIMPLE_CONFIG(zbkb, ZBKB);
- KVM_ISA_EXT_SIMPLE_CONFIG(zbkc, ZBKC);
- KVM_ISA_EXT_SIMPLE_CONFIG(zbkx, ZBKX);
- KVM_ISA_EXT_SIMPLE_CONFIG(zbs, ZBS);
-+KVM_ISA_EXT_SIMPLE_CONFIG(zca, ZCA),
-+KVM_ISA_EXT_SIMPLE_CONFIG(zcb, ZCB),
-+KVM_ISA_EXT_SIMPLE_CONFIG(zcd, ZCD),
-+KVM_ISA_EXT_SIMPLE_CONFIG(zcf, ZCF),
- KVM_ISA_EXT_SIMPLE_CONFIG(zfa, ZFA);
- KVM_ISA_EXT_SIMPLE_CONFIG(zfh, ZFH);
- KVM_ISA_EXT_SIMPLE_CONFIG(zfhmin, ZFHMIN);
-@@ -1001,6 +1013,10 @@ struct vcpu_reg_list *vcpu_configs[] = {
- 	&config_zbkc,
- 	&config_zbkx,
- 	&config_zbs,
-+	&config_zca,
-+	&config_zcb,
-+	&config_zcd,
-+	&config_zcf,
- 	&config_zfa,
- 	&config_zfh,
- 	&config_zfhmin,
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 0066c8f6c154..b31cd7faeb9f 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1591,7 +1591,7 @@ static void wq_update_node_max_active(struct workqueue_struct *wq, int off_cpu)
+ 		off_cpu = -1;
+ 
+ 	total_cpus = cpumask_weight_and(effective, cpu_online_mask);
+-	if (off_cpu >= 0)
++	if (off_cpu >= 0 && total_cpus > 1)
+ 		total_cpus--;
+ 
+ 	for_each_node(node) {
 -- 
-2.43.0
+2.19.1.6.gb485710b
 
