@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD4413D884;
-	Tue, 23 Apr 2024 19:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8CF13F459;
+	Tue, 23 Apr 2024 19:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713900338; cv=none; b=ndz1iI5ApTp6ESAH48tE1x3SywoE8ktqebduPgQoOBHUvz7KRYfGE1/8NDCmT/bhWPOsGf8f2oKCHhGYOx10FZzIkzDjkln2mKjJYleZLG7+8cpXMLORdzmR0W5dNYLdqXJWPvdiH8XnrdDjSbVcPZXAvme1cPw8rt/Jta4CSo4=
+	t=1713900338; cv=none; b=CHAKnp/cQYjl60SS745sGYghDDgabH3jqF9Mtvw5hJDMyfkaW2RklGMe8YD/OwExwxZf50ivlCidUmzfMaB9m4KMjs578rqadW5WsPxXwiS8/67w8Bc+YT2XTXt3MgatdJM+2SHaCyPUOzB1H9mPuLLZf14zFE6TYZ29LVWXNao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713900338; c=relaxed/simple;
-	bh=GFgvUWu7beexxqgqYJWuWc2RAm6vGMhqSdFbjSi68w0=;
+	bh=iARSuX9KuhJ/Yd1VAlCEEM5wx1EpDHoBr77TViozzoM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CNNi7Ta6Xs67MwvTqRbzC+n6zvKcHQBWlNq28vSCoyDE0JRBu0sT2mqCv46WWALt48M3Sb6sqp8cMV+87hY6+t/v7TeMcCV/Lw8U6E5jyscVBfNuh45YLhePUIUcxUpNMmJya6jGv9gKTIT9wH/DRu7rvpmOwVf47iE6tIZkOhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DHlBiw4v; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version; b=k9c3F2KGCddltwipzMbAnxNEwStsERJT1IJYUA5npEjIoJRvPhF1C2/F//T/is85gLfwap+na3VcY9ctlq8RsM+G3ytJYaQtJ2R4EfefRjZPK47/ha++/NarHWcj4oGpZDgUkWHg22S0OipIibQ6hXjiRiEOGq+sUkQWl7gN+v8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bcpZqX+0; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DHlBiw4v"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bcpZqX+0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1713900337; x=1745436337;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=GFgvUWu7beexxqgqYJWuWc2RAm6vGMhqSdFbjSi68w0=;
-  b=DHlBiw4vf02vsEvsF8I6FhcM/pEEct8JHd7/v9x+apFGQSW2saWXXKy+
-   dteeswAkUcjMGsQ9U5oaJWvnjxX/f0SrWO688+BCeNFgyy8Kn2nvGd+c/
-   sBiRS2nuSTL8RSL6idNzVeF7pp6tAd5MAa+NsrYxy+ICFMZjZSluxAAK+
-   BBHWplhngeC0MBA2VhZtCPrQTxZi5TJN1hHomcULobzCQ8z5WMH8gRgqQ
-   GdmobycfEx9bXupAQeCUR18sRHIcjg34kjq2ahrzJyC3cU+LgAty2yvUd
-   GGoFlsv+l7xpKfCmVUzSJ384hmAwtZB/lVhCaZSx0v7XZ3QKVB3woFATL
-   Q==;
-X-CSE-ConnectionGUID: mkWbkA5gSyO/eT0jNF5QBQ==
-X-CSE-MsgGUID: VT8eihNSSXaDIn6FazOguQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9669104"
+  bh=iARSuX9KuhJ/Yd1VAlCEEM5wx1EpDHoBr77TViozzoM=;
+  b=bcpZqX+0DOAVG7xzEVPKU/SKFb8ok9xbKdHwKyOuJJgPssWEA1SYZdgZ
+   i+V/dPuyb7yJazszlCFz9P+m5OWtLj0XF1USQ5/isii+HToHlfjgn3elE
+   K5GcgVAzhiJZWlAtIFHFe2HdZkpNLEXekyMu2SIoW/Miweq7H23K593Lw
+   DwmR9g/DY8Tc9zIk6SLch/xhW5dU8fq1s2aSN+cY21LQmabzwvndOAcl8
+   q4qXP7J9HHXXOaXKWtFGbNQJP9EQqgLD4/UJnlbzc0rwpJykZCS/jQaj4
+   Ldf0pj2uxtqO+2dm8c/k6clgJ3S/C8C+k1tLhoHb24Z0Sp6bms4yI4K8S
+   g==;
+X-CSE-ConnectionGUID: PWu/iOuOQP6hBpOi3Nx2jg==
+X-CSE-MsgGUID: e1sMQ35cR+uml74cwaOesg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9613658"
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="9669104"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 12:25:36 -0700
-X-CSE-ConnectionGUID: LIxgFSoYQRiMXQah94XU/Q==
-X-CSE-MsgGUID: uRkgrTKnQBm24ipxZkoGzg==
+   d="scan'208";a="9613658"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 12:25:36 -0700
+X-CSE-ConnectionGUID: w/ztJlpcRnuDr+9rvjbvpw==
+X-CSE-MsgGUID: v5WeMhnJTXS6NM71pfP0ZQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="61923095"
+   d="scan'208";a="24440742"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 23 Apr 2024 12:25:32 -0700
+  by orviesa009.jf.intel.com with ESMTP; 23 Apr 2024 12:25:32 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id BB7F9142; Tue, 23 Apr 2024 22:25:30 +0300 (EEST)
+	id D372D489; Tue, 23 Apr 2024 22:25:30 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Rob Herring <robh@kernel.org>,
@@ -66,9 +66,9 @@ Cc: Alain Volmat <alain.volmat@foss.st.com>,
 	Samuel Holland <samuel@sholland.org>,
 	Stefani Seibold <stefani@seibold.net>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 1/3] media: rc: Add missing io.h
-Date: Tue, 23 Apr 2024 22:23:08 +0300
-Message-ID: <20240423192529.3249134-2-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 3/3] kfifo: Don't use "proxy" headers
+Date: Tue, 23 Apr 2024 22:23:10 +0300
+Message-ID: <20240423192529.3249134-4-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 In-Reply-To: <20240423192529.3249134-1-andriy.shevchenko@linux.intel.com>
 References: <20240423192529.3249134-1-andriy.shevchenko@linux.intel.com>
@@ -80,66 +80,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In many remote control drivers the io.h is implied by others.
-This is not good as it prevents from cleanups done in other headers.
-Add missing include.
+Update header inclusions to follow IWYU (Include What You Use)
+principle.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/media/rc/mtk-cir.c   | 1 +
- drivers/media/rc/serial_ir.c | 1 +
- drivers/media/rc/st_rc.c     | 1 +
- drivers/media/rc/sunxi-cir.c | 1 +
- 4 files changed, 4 insertions(+)
+ include/linux/kfifo.h       |  9 +++++++--
+ lib/kfifo.c                 | 10 +++++-----
+ samples/kfifo/dma-example.c |  3 ++-
+ 3 files changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/media/rc/mtk-cir.c b/drivers/media/rc/mtk-cir.c
-index 4e294e59d3cb..b2f82b2d1c8d 100644
---- a/drivers/media/rc/mtk-cir.c
-+++ b/drivers/media/rc/mtk-cir.c
-@@ -8,6 +8,7 @@
- #include <linux/clk.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
-+#include <linux/io.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/reset.h>
-diff --git a/drivers/media/rc/serial_ir.c b/drivers/media/rc/serial_ir.c
-index 96ae0294ac10..fc5fd3927177 100644
---- a/drivers/media/rc/serial_ir.c
-+++ b/drivers/media/rc/serial_ir.c
-@@ -18,6 +18,7 @@
- #include <linux/module.h>
- #include <linux/errno.h>
- #include <linux/interrupt.h>
-+#include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/serial_reg.h>
- #include <linux/types.h>
-diff --git a/drivers/media/rc/st_rc.c b/drivers/media/rc/st_rc.c
-index 28477aa95563..988b09191c4c 100644
---- a/drivers/media/rc/st_rc.c
-+++ b/drivers/media/rc/st_rc.c
-@@ -6,6 +6,7 @@
- #include <linux/kernel.h>
- #include <linux/clk.h>
- #include <linux/interrupt.h>
-+#include <linux/io.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
-index bf58c965ead8..b49df8355e6b 100644
---- a/drivers/media/rc/sunxi-cir.c
-+++ b/drivers/media/rc/sunxi-cir.c
-@@ -12,6 +12,7 @@
+diff --git a/include/linux/kfifo.h b/include/linux/kfifo.h
+index 0b35a41440ff..6b28d642f332 100644
+--- a/include/linux/kfifo.h
++++ b/include/linux/kfifo.h
+@@ -36,10 +36,15 @@
+  * to lock the reader.
+  */
  
- #include <linux/clk.h>
- #include <linux/interrupt.h>
-+#include <linux/io.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
+-#include <linux/kernel.h>
++#include <linux/array_size.h>
+ #include <linux/spinlock.h>
+ #include <linux/stddef.h>
+-#include <linux/scatterlist.h>
++#include <linux/types.h>
++
++#include <asm/barrier.h>
++#include <asm/errno.h>
++
++struct scatterlist;
+ 
+ struct __kfifo {
+ 	unsigned int	in;
+diff --git a/lib/kfifo.c b/lib/kfifo.c
+index 12f5a347aa13..15acdee4a8f3 100644
+--- a/lib/kfifo.c
++++ b/lib/kfifo.c
+@@ -5,13 +5,13 @@
+  * Copyright (C) 2009/2010 Stefani Seibold <stefani@seibold.net>
+  */
+ 
+-#include <linux/kernel.h>
+-#include <linux/export.h>
+-#include <linux/slab.h>
+ #include <linux/err.h>
+-#include <linux/log2.h>
+-#include <linux/uaccess.h>
++#include <linux/export.h>
+ #include <linux/kfifo.h>
++#include <linux/log2.h>
++#include <linux/scatterlist.h>
++#include <linux/slab.h>
++#include <linux/uaccess.h>
+ 
+ /*
+  * internal helper to calculate the unused elements in a fifo
+diff --git a/samples/kfifo/dma-example.c b/samples/kfifo/dma-example.c
+index 0cf27483cb36..74fe915b7ffe 100644
+--- a/samples/kfifo/dma-example.c
++++ b/samples/kfifo/dma-example.c
+@@ -6,8 +6,9 @@
+  */
+ 
+ #include <linux/init.h>
+-#include <linux/module.h>
+ #include <linux/kfifo.h>
++#include <linux/module.h>
++#include <linux/scatterlist.h>
+ 
+ /*
+  * This module shows how to handle fifo dma operations.
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
