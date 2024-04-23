@@ -1,104 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B96F262BD;
-	Tue, 23 Apr 2024 08:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA64D320E
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 08:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713861191; cv=none; b=WG++hm114rrwbjFaHJCmuL6BvtqCKiv3hFA2JHzRba9/Zka4Kodi/oRylzgfjBuhd2/RHWI1HAdYvaC5ksiTUeJSCYSHCL48xu80VLBjPYEX2QWXt/1bJY7boXB1HHrOyPLmYOPuBXO7+UdULqEZjopvAHs3pZtc2slbZqvEz80=
+	t=1713861241; cv=none; b=ZjI8p4UxaDdEGSJalZEoIxEvPNXreSee1qsW1s6/khbybrTcoz/mMBA/COhvpjcths5DQ0ltwhw25tJAT05nES1r2E5tySgLPUCkyBfVYs/O3Ne6yIUZM5UpJx2JCOQRvb/Yyrs6jBNc/GLT4EHIzr3GZf0wLNqcLHarVFMbMWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713861191; c=relaxed/simple;
-	bh=hVmRLvRndrBf+S9tZPXFqqcz9HpV8GnsniOu8zvWmlM=;
+	s=arc-20240116; t=1713861241; c=relaxed/simple;
+	bh=GbEOcBiBoSjAahAIDalXGsP5xushNOL01/QV0u5nyAg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OVcNUGvFwrv36b8bccPiMAO8gUm27Csf0a2RFR0bCMkGeIZWHFFKLIKT5tK54c+KfvvRhyGGgMSTmdcCLDq53ztzoZKC5kL4piN3gysJEqRQSkrq7dIlY9XRCoXBIhgLfY8bU4OZC52mzqHbXMwanPrVJoyim1CZbI6yw1a6s/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZSJcPr/E; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fi4RAZPir4qf1Gmv4TTlvTs8GS6zuHPb11c3ZRf8meZ2FUbmHKV42y5xcr9RmUNjf3rgqBezppQWDh/2NybvDoIEUINCdeNXPh2/QEYvOexsuOPD0pmP8wceY+f4CZk0ghIm1rQOp5fa0CSaixJqnhojsi09nCdxfIzFeN8h2NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ZiFYelrY; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZSJcPr/E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713861190; x=1745397190;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hVmRLvRndrBf+S9tZPXFqqcz9HpV8GnsniOu8zvWmlM=;
-  b=ZSJcPr/EfHPSFDaYg4nUbOpVZUlNyzoQvl9G4IMe2hDSE/UPp5sSMjmp
-   6l35WXRBKyzeaDSkaw1RzbNOT+TQwPdRqruOugO33E7QMh/RbAu2LGSOC
-   QZuRKjovFxrZqc6aZ9DPe501UtSuSCzXecZM0MWeHKnWCDc3+B3Uqh/Qr
-   X2JY6JP1codY3XAh/069WOlpzyh3uvp550bC9iVhEtWl67QAlxCs6Kbu6
-   WVcuHS1aST5eLyWI0BJLZMfOZHIOG9QrOxFDeUweRrcxXerVIRTzQ3qqn
-   hreY30Nw1WmyInOK4t3paa2d3TVCLTowxDC6z0YiMrk++4FD6iw+aapSe
-   g==;
-X-CSE-ConnectionGUID: LIfAZirbRXqTqAWmaPedIQ==
-X-CSE-MsgGUID: YMdsTpMdSbWALJtTAqCaGQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="9652512"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="9652512"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 01:33:09 -0700
-X-CSE-ConnectionGUID: LoAngRZ9QJG2JogeH+ETtA==
-X-CSE-MsgGUID: ZagmzqyKR2Six0phluB9zA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="55496468"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa001.fm.intel.com with ESMTP; 23 Apr 2024 01:33:07 -0700
-Date: Tue, 23 Apr 2024 16:27:46 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Peter Colberg <peter.colberg@intel.com>
-Cc: Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
-	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
-	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Russ Weight <russ.weight@linux.dev>,
-	Marco Pagani <marpagan@redhat.com>,
-	Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Subject: Re: [RFC PATCH v2 0/9] fpga: dfl: fix kernel warning on port
- release/assign for SRIOV
-Message-ID: <ZidxApdiC4cOKYOp@yilunxu-OptiPlex-7050>
-References: <20240409233942.828440-1-peter.colberg@intel.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZiFYelrY"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0A62B40E0249;
+	Tue, 23 Apr 2024 08:33:51 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id d_koH9OyGXIh; Tue, 23 Apr 2024 08:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1713861226; bh=NFHsFX0uVgJUjkPOc/vFyW6tpvFhp24NlUDlmhptGtI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZiFYelrYnwih1ZDSbpND7ggtn2LzlXFUQxagba/xXahDpv751L2VEFFlY2QdtGA2K
+	 aVr7LpPjT09tTtYYQf7cqFwboyrlA97a2gYWr0CCO9dfPgGeRU7DK4KZ1XFkBI+ei9
+	 hXruUqOPua6+OVwrR/kMeXIMKTikWBmKB1+kdVVC3/w3pWJewZsmWZXMxGYjhLy9eL
+	 bGjoG8PIMZFINGtXu8RP5pR8+wUMDnvf/xllorclJc7YAoQ5q4+8RE9g6yGzCgWRul
+	 /dK8YhcutcqcGoeaXqN6eDHNmLBbvM/6CQy/8U8VTQ3gU3DDnozDo8YBh8Ni2yeZCC
+	 ofHA46PaXW3kBojoEZZ/lPyg67e/vrnStj7/5EJnhAK6KOQOOrmxR1UZlPyKBBJ3m1
+	 L59OrZp7BcL7dB02/Q0t6Nv5OZa0iWcbvFbVZ3PRZdRhBsTYzcZ8QKJ4Cr/+ZIFJxb
+	 Aa9F6r/ImgC1SnfeGDDTRRZlGODfqmvN0qY8RN+0UKOEit6wcZoiGjDhR0w/Y3Jz/v
+	 hyAdWzja/NURn6ZcJIant85XLLTWKY+72v8tm6um7hgLz+hea2Y84iIAvMQGSehr/V
+	 BtEQVR5Qc8WyI02ePZUSmV80ueakICjsA6jBgK+lkh9xsXYRv4Mm7QAQpt4UOzTLPc
+	 jq4/PGt0419YNI2JnAMZQpRo=
+Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A68E740E0177;
+	Tue, 23 Apr 2024 08:33:37 +0000 (UTC)
+Date: Tue, 23 Apr 2024 10:33:32 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Robert Richter <rrichter@amd.com>
+Cc: Dave Hansen <dave.hansen@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	linux-kernel@vger.kernel.org, jgross@suse.com, tglx@linutronix.de,
+	x86@kernel.org, Kim Phillips <kim.phillips@amd.com>,
+	Robert Richter <rric@kernel.org>
+Subject: Re: [PATCH 2/4] perf/x86/ibs: Use CPUID region helper
+Message-ID: <20240423083332.GAZidyXG5HFM0CrG3H@fat_crate.local>
+References: <20240416151242.GGZh6VaiO2gC4ej2BT@fat_crate.local>
+ <f142e9c4-4829-4ace-8757-485246ad3572@intel.com>
+ <20240416174850.GEZh66AmnDjrLxoXaw@fat_crate.local>
+ <ZiEMnWaHkn99_oyW@rric.localdomain>
+ <20240422172055.GAZiacdxkQU0XAbybW@fat_crate.local>
+ <ZibEFZ6DoxDeBxxp@rric.localdomain>
+ <20240422204146.GCZibLiqZhbY1J4qFJ@fat_crate.local>
+ <ZibW8D9-CTd8G-_v@rric.localdomain>
+ <20240422214503.GDZibaX4G2HWQgZuvH@fat_crate.local>
+ <ZidnBlWbCaMg-UDi@rric.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240409233942.828440-1-peter.colberg@intel.com>
+In-Reply-To: <ZidnBlWbCaMg-UDi@rric.localdomain>
 
-On Tue, Apr 09, 2024 at 07:39:33PM -0400, Peter Colberg wrote:
-> DFL ports are registered as platform devices in PF mode. The port device
-> should be removed from the host when the user wants to configure the
-> port as a VF and pass through to a virtual machine. The FME device
-> ioctls DFL_FPGA_FME_PORT_RELEASE/ASSIGN are designed for this purpose.
-> 
-> In the previous implementation, the port platform device is not completely
-> destroyed on port release: it is removed from the system by
-> platform_device_del(), but the platform device instance is retained.
-> When the port assign ioctl is called, the platform device is added back by
-> platform_device_add(), which conflicts with this comment of device_add():
-> "Do not call this routine more than once for any device structure", and
-> will cause a kernel warning at runtime.
-> 
-> This patch tries to completely unregister the port platform device on
-> release and registers a new one on assign. But the main work is to remove
-> the dependency on struct dfl_feature_platform_data for many internal DFL
-> APIs. This structure holds many DFL enumeration infos for feature devices.
-> Many DFL APIs are expected to work with these info even when the port
-> platform device is unregistered. But with the change the platform_data will
-> be freed in this case. So this patch introduces a new structure
-> dfl_feature_dev_data for these APIs, which acts similarly to the previous
-> dfl_feature_platform_data. The dfl_feature_platform_data then only needs a
-> pointer to dfl_feature_dev_data to make the feature device driver work.
-> 
-> The single monolithic v1 patch is split into multiple, smaller patches
-> at the request of the maintainer. The first patch adds temporary macros
-> that alias dfl_feature_dev_data ("fdata") to dfl_feature_platform_data
-> ("pdata") and associated functions from the "fdata" to the corresponding
-> "pdata" variants. Subsequent patches separate out most of the symbol
-> name changes required by this patch series, one patch per file. The last
+On Tue, Apr 23, 2024 at 09:45:10AM +0200, Robert Richter wrote:
+> I prefer 1) as this applies IBS_CAPS_DEFAULT only if the leaf is
+> missing which was the original intention of IBS_CAPS_DEFAULT but can
+> live with 2) as it is implemented now.
 
-One patch per file is not a requirement, simple replacement across
-multiple files won't cause trouble for reviewers. The important thing is
-that don't bury the key changes in these symbol replacement so that
-people can't get the point.
+As implemented now and be done with it. We already wasted too much time
+with some hypothetical and there's bigger fish to fry so let's leave it
+like it is and move on.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
