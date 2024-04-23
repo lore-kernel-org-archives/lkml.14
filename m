@@ -1,61 +1,39 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3973313BAC3
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 14:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621F845C0C
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 14:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713883077; cv=none; b=JHKDpRc/9dhKwsVNBx4ZxHrrKjRm+UcILDXR/scoJ3RzJlIj/PVsRpL+PWR8Zpi82diOb8DWg7btzux1sGZ0RBjBdVu80Fgl30alLGMyVvlSqUSiOf+a2ajRMb6kh3DKCFxj5GP5If8zwAYxPO89TSvJZXzqvgbQbpjTZKhWezs=
+	t=1713883275; cv=none; b=r5Ts9tL4NaT2BcBDMLq4To4zxCkXDzjpvVrkbT7Sn3PyoWWwLz4gS1nSnHq4mWJ4AM3y1BI76WQzylbpX6nwCSkF8iruPfCQBXzFVSzW7o3LAp+jNieoP+kzDghpTgWbKpL/XFOhbPu/Zgg52BceDx7qLjV+DCbZYTsv48PvlCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713883077; c=relaxed/simple;
-	bh=djonfho/R/jyeCS8Y9idO2dg/3sauTPDxmqFop0x9d0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UMMEKniyO99z+0MteZLH0E72Z1uqRMU2/uWUih2Sr9UcQVHAPKgOq0t9j8pRs/wa9iPf8D7c+SCLQL4vROxKPbtKwYHjzKqaeYvHlw9hQiSo18vf5uwccNqzLB03mDaWKAepxGtJdHi2BxVXIUBqXCBBESY0ARDA2fet26MK3G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NsfKqWoP; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713883275; c=relaxed/simple;
+	bh=f3l1B1ROT5WgMnyYTGNqcQT1a+Nd3onAdjpdJ5GT0Ng=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U5vJeULURn7wxyjwxoNCOrX3kWW2djUlV/roxmxLrIFC9I6UePKwzCcoTBkVHRoy8OcQ7VqNUfkeFZitf1XrC38RvECDM7kE/Y3blP0YOh/jYirj6jX5cb5sJha1E0LNQIF2skYO0eumQWXMijRYkb4GDnXkNWnTaNg56i1qgSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LhJMRiDu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NsfKqWoP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713883076; x=1745419076;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=djonfho/R/jyeCS8Y9idO2dg/3sauTPDxmqFop0x9d0=;
-  b=NsfKqWoPLVxUUe7oa8/d5aXWTxwI/tA2iGNTqckc6R/z/DEM3uCwrZwM
-   Nl5S7C/fWnIw3hHSCdL+lVerNKdPafq53q9X7RDEBQQfMbOMZx3hd9gWZ
-   2WjURXUvJAPZpgB2+J6iuuCHyQJDVcD65Rnkvwfssjf1dWQttwgQXhErq
-   USW5pfk4A/VrUR0OA0YggA585fDD8ko2yZDUdXNnY3sgikJV/1CG7gJyh
-   MhtG0eY6/rAsCI3WmPaOamULFNEXf9W7vDsqodj8kRVh4LLkbmkdZluPD
-   syNutmU7gQWRPClTmET6aGvunO6n7euPT4RLD69ozjuMSZTuyDL1KH7RX
-   w==;
-X-CSE-ConnectionGUID: k1ocTXG9TUSL/73SuNRR1w==
-X-CSE-MsgGUID: xaKGnx4PSJiny3vJliScOw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9689343"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="9689343"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 07:37:56 -0700
-X-CSE-ConnectionGUID: Eel+Iw+tTjqCQrXcwsZB5A==
-X-CSE-MsgGUID: O2lJ0iAYTveU/wyW7as1xw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24425144"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP; 23 Apr 2024 07:37:54 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id EDA1244E; Tue, 23 Apr 2024 17:37:52 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	linux-kernel@vger.kernel.org
-Cc: Stefani Seibold <stefani@seibold.net>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] kfifo: Don't use "proxy" headers
-Date: Tue, 23 Apr 2024 17:37:50 +0300
-Message-ID: <20240423143750.2480181-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LhJMRiDu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 077FBC116B1;
+	Tue, 23 Apr 2024 14:41:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713883274;
+	bh=f3l1B1ROT5WgMnyYTGNqcQT1a+Nd3onAdjpdJ5GT0Ng=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LhJMRiDuh+sbo9IavZcA+cpSO3Fgra4A8UZX5RLvj/IlmhhvkfE2hwRYZ5Xqoaky7
+	 iGEF9qnjhELIK3tKyexC/v9O057zFuKyKzbC3cTmjGVnHpxlfcyAnElp0levQ3vegk
+	 pR1f8tbDmhRbWY2CbuqD5EUxHNiiZGSDXfaplVGM3VScSaVOxM3Om7ZLq6qf3FsM5a
+	 p+TU7FG2pZHt+eNHWj+CJtQVyMOjEgGYdhxGXcLmBcNFxQ1+pQucMPzFSYQSBO47yf
+	 QwU1WLm1MLZveDDOO8qBsvomzWzpPlCFzKuF7tLXnCQA7jPuSirGW6WYiahdK047/k
+	 37a4ZWDnja37g==
+From: Borislav Petkov <bp@kernel.org>
+To: X86 ML <x86@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Wenkuan Wang <Wenkuan.Wang@amd.com>,
+	Borislav Petkov <bp@alien8.de>
+Subject: [PATCH] x86/CPU/AMD: Add models 0x10-0x1f to the Zen5 range
+Date: Tue, 23 Apr 2024 16:41:11 +0200
+Message-ID: <20240423144111.1362-1-bp@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,37 +42,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Update header inclusions to follow IWYU (Include What You Use)
-principle.
+From: Wenkuan Wang <Wenkuan.Wang@amd.com>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Add some more Zen5 models.
+
+Fixes: 3e4147f33f8b ("x86/CPU/AMD: Add X86_FEATURE_ZEN5")
+Signed-off-by: Wenkuan Wang <Wenkuan.Wang@amd.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 ---
- include/linux/kfifo.h | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/amd.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/include/linux/kfifo.h b/include/linux/kfifo.h
-index d613748de7ff..564868bdce89 100644
---- a/include/linux/kfifo.h
-+++ b/include/linux/kfifo.h
-@@ -36,11 +36,16 @@
-  * to lock the reader.
-  */
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index cb9eece55904..307302af0aee 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -459,8 +459,7 @@ static void bsp_init_amd(struct cpuinfo_x86 *c)
  
-+#include <linux/array_size.h>
- #include <linux/dma-mapping.h>
--#include <linux/kernel.h>
- #include <linux/spinlock.h>
- #include <linux/stddef.h>
--#include <linux/scatterlist.h>
-+#include <linux/types.h>
-+
-+#include <asm/barrier.h>
-+#include <asm/errno.h>
-+
-+struct scatterlist;
- 
- struct __kfifo {
- 	unsigned int	in;
+ 	case 0x1a:
+ 		switch (c->x86_model) {
+-		case 0x00 ... 0x0f:
+-		case 0x20 ... 0x2f:
++		case 0x00 ... 0x2f:
+ 		case 0x40 ... 0x4f:
+ 		case 0x70 ... 0x7f:
+ 			setup_force_cpu_cap(X86_FEATURE_ZEN5);
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+2.43.0
 
