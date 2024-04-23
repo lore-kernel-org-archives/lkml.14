@@ -1,80 +1,69 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869D813C695
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 15:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3FC13BAFE;
+	Tue, 23 Apr 2024 15:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713886916; cv=none; b=NxWYGn+hif6I2DX3MBIJqD+GgB2t+hH9X6KocZ33U73MHZJ/4zMtXLIF01T6RUNVCvyI7U+FuA1/Qj9R03aI/yPxgidtlQzfiImD5NJcuhkaicc0vwTUqZEGnkgIBTOhBCEcA1aqCOFuQvCuHhzaUd4u7WqQFL+rt4GwcW0QXKA=
+	t=1713886981; cv=none; b=gjccHjSwIya5O8T3zOkiB1KxMGxZDkEFzdRx5iO5Jz8GN8vjUES0fLSL3dah2C8fN/NlJIZSzuYGZsNNmEPlC5qA3VmdqbPM0peq2SYeZF214CbBf0nmMKDv0X6pOsQJWk2AvJShSstdzxbG2VADmKzmG9Y5VKz0tfnI93wbzY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713886916; c=relaxed/simple;
-	bh=JPvzqGkogZqsVtyvLcr4Io7PU+CASfLbyvTvVNv+Enc=;
+	s=arc-20240116; t=1713886981; c=relaxed/simple;
+	bh=878iBN1wCLHEB2yRzqkpbitV3mFieot5Pqm94fhfGog=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TsZmhkyty5luOYl4NDkwu5o82BgMIZDeJdMssR3YM9dwShRf7MLNh6X35zj1n3dLwKjQBHv8pf5Qf6CS2swcoB1/Pr4PFxJj1mq470TpBcomnqvXv0rAsiwTFdsjw5HmRgmQP/dIFy7UNiAtP9IJA/BMhY2Aayz57pVrvdm2B9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NQSopt2y; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=fLjlMwQ2BEc9c6ythNnp1Ld+nja1U75KUYYP+zkzJqACQQuBOA97eatszuOz+n/PSuiwR0F0VVROoYTIWnzc7QFdn5oA6wls25LAwkh8IupZBgTDRFlwhaV5yMJ5XvV2aFZkXaEErTOqV4JhWWqH4tf3pyryB67Oa49fY1E9yFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JyHdhBkw; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NQSopt2y"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-41ae3dbedcfso1795245e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 08:41:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713886913; x=1714491713; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZikBdylglkN8bWBjnrEpahW+0kxCuVDLNcL4eHsNrZ8=;
-        b=NQSopt2y/5/RK1+rczM6p+t/uKDIG7gwhdO/Ts1jIsqIVZbwjIFTeeF7o4KNSjudq+
-         zHm9LnfYx4zboP0ESFXsEywMxmftfVcXdbwzoaJv5Ww2pQPl67ogJch6I8f99bSdqyuJ
-         LJsfJsOSgW5WsLypBzkU5k4MjKfItrjUNJUhf/Y8gRBUqOby+oUC1BRtpNBCmrW/MkWq
-         asFPMVswTIOQPxlElzzG5cGUpDsIUZiK24sR+LlMv4EJCuhFpsyCKtbU36yhrcrgmFl7
-         F/4YVG4KgmXqmQh0vyUSqJ927zFYOrG54Zx4HsgS0liUpsHnWnGn/Ik5NcoJRdTHhcnf
-         ud6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713886913; x=1714491713;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZikBdylglkN8bWBjnrEpahW+0kxCuVDLNcL4eHsNrZ8=;
-        b=pLet0zdXSBjMthIPhzaYQg3UH6WD1z/G2NYcqO/M0AqtuELP5DIhueWi3VSXgaVx/l
-         3H0sX+6MwQPyErvwU/2sRt9N6lvkTmilWROK2s0WmEWLgq/lBnlZtxmcQXdfuQtS8Dx4
-         7UswrdvSLoGyU5S6dUftTnHl4HCUc1gXEd1DYefXDM6C59YZiqCBhRAyj/OWvhHUoboF
-         p5IOi6mxU8K2RCx/lsu/ibnTDGnrmqrsk+xfFB2YFQ0QXUB5dmv8B6BHNDIYDusXtvQ6
-         8aVB1DSD5/G6mSjcCE/5CIaxbjLWcYV1hy8QE5MnaH46y2IZKE3UYBEEHpBrnWdyZ9Ix
-         Q+/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWa1l+kHx5YP77rrd5lg6XyrXpON9c2AXSvGSOg73Wlsi4iE6Clq/dG9Op43aQeFjX+r/o291bS1TFlFDxBtiX9dDrlRqQh8X76uq74
-X-Gm-Message-State: AOJu0Yy3RGSDEInt54MDAEPUZ9QTUmC9HaP+zIrfmjTaEz1ufWD4GXey
-	cmC0H5O0YGZapX0o7hE6FB4WMAzY82drZDhQw5ahW4nKZx8HIjAo4YqzXdQxgrk=
-X-Google-Smtp-Source: AGHT+IFxgKWYTQdFrX3VG4d1eGF6RGQaWSLjzXM57qu9fcpFkJ6JpJK2zYVCn7svqzO1SOa5kWdf9w==
-X-Received: by 2002:a05:600c:1d26:b0:418:5e80:b7af with SMTP id l38-20020a05600c1d2600b004185e80b7afmr10107916wms.36.1713886912731;
-        Tue, 23 Apr 2024 08:41:52 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id e6-20020a05600c4e4600b0041ac34cf06fsm2266461wmq.42.2024.04.23.08.41.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 08:41:52 -0700 (PDT)
-Date: Tue, 23 Apr 2024 18:41:48 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Nick Child <nnac123@linux.ibm.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, Markus Elfring <Markus.Elfring@web.de>,
-	linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Haren Myneni <haren@linux.ibm.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Rick Lindsley <ricklind@linux.ibm.com>,
-	Thomas Falcon <tlfalcon@linux.ibm.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ibmvnic: Use -EBUSY in __ibmvnic_reset()
-Message-ID: <ba5e5ccf-59fa-4c7f-b649-97c19b2008a0@moroto.mountain>
-References: <4cff158d-b5ac-4dca-9fbb-626237c1eafe@web.de>
- <f493e39063ee52a3d263de27bfd240149d910a88.camel@redhat.com>
- <da19d324-3c66-4bb1-8fa2-dc26dbea622b@moroto.mountain>
- <7e3f43a3-98e0-40ed-8820-2f1eef8742ba@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JyHdhBkw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713886981; x=1745422981;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=878iBN1wCLHEB2yRzqkpbitV3mFieot5Pqm94fhfGog=;
+  b=JyHdhBkwB9qjMTKdE9nbt4efQkzKxkJGpexu1QdsXxQHPT8s7TPO0ncg
+   g3gmlZ9tRCpAYcE9GeGF8gU5v0Lzr2Hk4D7Iizc9/W6Uk3OmWqYB5HQ+y
+   x1+fw34zgG+z8vbChls8CS/WYMjaAM+z0q5aLCwt/fitnSIxl0yrb86Wa
+   Gs3pEHJlmUvheGW0+PUFZ2TdUd52l+o6vnfghjLhtFTpxNRBPoAkVQ1Cl
+   njWAAC0VoJi4Grc4IgiPRD4Xn/wl0223ZNDQ1Ou9xeYzGJ5RIDunl03qS
+   5yDLOehGrzLbzBQ+2Gr5JVERdN3IgKHbPYIHQwfSu6fvDjQ+zfBBlUpb0
+   w==;
+X-CSE-ConnectionGUID: LnmQdojvSkmqrF2MQBCnig==
+X-CSE-MsgGUID: AEnjRQacTrWlPxL3y8Bx+Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9329281"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="9329281"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 08:43:00 -0700
+X-CSE-ConnectionGUID: SVLaXHivTkqKF0jkP1Q+dA==
+X-CSE-MsgGUID: R6Ph6u9PTiWUBmYBFUr1vA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="24274769"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 08:42:57 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rzIIH-00000000Naj-1sJH;
+	Tue, 23 Apr 2024 18:42:53 +0300
+Date: Tue, 23 Apr 2024 18:42:53 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: nuno.sa@analog.com
+Cc: Petr Mladek <pmladek@suse.com>, Chris Down <chris@chrisdown.name>,
+	John Ogness <john.ogness@linutronix.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Jyoti Bhayana <jbhayana@google.com>, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] iio: temperature: ltc2983: convert to
+ dev_err_probe()
+Message-ID: <ZifW_fUVcdIpfOWO@smile.fi.intel.com>
+References: <20240423-dev-add_dev_errp_probe-v2-0-12f43c5d8b0d@analog.com>
+ <20240423-dev-add_dev_errp_probe-v2-2-12f43c5d8b0d@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,42 +72,186 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7e3f43a3-98e0-40ed-8820-2f1eef8742ba@linux.ibm.com>
+In-Reply-To: <20240423-dev-add_dev_errp_probe-v2-2-12f43c5d8b0d@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 23, 2024 at 09:55:57AM -0500, Nick Child wrote:
-> > You're right that it doesn't affect the behavior of the driver except
-> > for the debug output when we do:
-> > 
-> > 	netdev_dbg(adapter->netdev, "Reset failed, rc=%d\n", rc);
-> > 
-> > But the - was left off uninitentionally so I think we should apply it.
-> > 
-> > I have been trying to look for similar bugs where the - is left off.
-> > It's a bit challenging because there places where we use positive
-> > error codes deliberately.  But in this case a static checker could
-> > easily detect the bug with a low false positive ratio by saying, "We're
-> > mixing normal negative error codes with positive EBUSY".
-> > 
-> > regards,
-> > dan carpenter
+On Tue, Apr 23, 2024 at 05:20:31PM +0200, Nuno Sa via B4 Relay wrote:
+> From: Nuno Sa <nuno.sa@analog.com>
 > 
-> Hello, small clarification, this patch will not effect the debug print
-> statement due to the break statement immediately following:
-> 	while () {	
-> 		if () {
-> 			rc = -EBUSY;
-> 			break;
-> 		}
-> 		netdev_dbg(adapter->netdev, "Reset failed, rc=%d\n", rc);
-> 	}
-> Though this return code can be passed to adapter->reset_done_rc, which is
-> only treated as a boolean.
-> 
-> So, the point of the patch not doing any behavioral differences is still
-> true.
+> Use dev_err_probe() in the probe() path. While at it, made some simple
+> improvements:
+>  * Declare a struct device *dev helper. This also makes the style more
+>    consistent (some places the helper was used and not in other places);
+>  * Explicitly included the err.h and errno.h headers;
+>  * Removed an useless else if();
+>  * Removed some unnecessary line breaks.
 
-Ah yes.  You're right.
+...
 
-regards,
-dan carpenter
+>  	/* Check space on the table. */
+>  	if (st->custom_table_size + new_custom->size >
+> -	    (LTC2983_CUST_SENS_TBL_END_REG -
+> -	     LTC2983_CUST_SENS_TBL_START_REG) + 1) {
+
+> +	    (LTC2983_CUST_SENS_TBL_END_REG - LTC2983_CUST_SENS_TBL_START_REG) + 1)
+
+Semi-unrelated change?
+
+...
+
+> +		return dev_err_ptr_probe(dev, -EINVAL,
+> +				      "Invalid chann:%d for differential thermocouple",
+
+While at it, add missing \n.
+
+> +				      sensor->chan);
+
+...
+
+> +		return dev_err_cast_probe(dev, ref,
+> +					  "Property adi,rsense-handle missing or invalid");
+
+Ditto.
+
+...
+
+> +			return dev_err_ptr_probe(dev, -EINVAL,
+> +					      "Invalid number of wires:%u\n",
+> +					      n_wires);
+
+Can be compressed in terms of LoCs?
+
+...
+
+> +				return dev_err_ptr_probe(dev, -EINVAL,
+> +						      "Rotation not allowed for 2/3 Wire RTDs");
+
+\n
+
+...
+
+> +			return dev_err_ptr_probe(dev, -EINVAL,
+> +					      "Invalid rsense chann:%d to use in kelvin rsense",
+> +					      rtd->r_sense_chan);
+
+Ditto.
+
+...
+
+> +			return dev_err_ptr_probe(dev, -EINVAL,
+> +					      "Invalid chann:%d for the rtd config",
+
+Ditto.
+
+> +					      sensor->chan);
+
+...
+
+> +			return dev_err_ptr_probe(dev, -EINVAL,
+> +					      "Invalid chann:%d for RTD",
+
+Ditto.
+
+> +					      sensor->chan);
+
+...
+
+> +			return dev_err_ptr_probe(dev, -EINVAL,
+> +					      "Invalid value for excitation current(%u)",
+
+Ditto.
+
+> +					      excitation_current);
+
+...
+
+> +	if (IS_ERR(ref))
+> +		return dev_err_cast_probe(dev, ref,
+> +					  "Property adi,rsense-handle missing or invalid");
+
+Ditto.
+
+...
+
+> +		return dev_err_ptr_probe(dev, -EINVAL,
+> +				      "Invalid chann:%d for differential thermistor",
+> +				      sensor->chan);
+
+
+Ditto.
+
+...
+
+> +			return dev_err_ptr_probe(dev, -EINVAL,
+> +					      "Invalid value for excitation current(%u)",
+> +					      excitation_current);
+
+Ditto.
+
+...
+
+> +		return dev_err_ptr_probe(dev, -EINVAL,
+> +				      "Invalid chann:%d for differential thermistor",
+> +				      sensor->chan);
+
+Ditto.
+
+...
+
+> +			return dev_err_ptr_probe(dev, -EINVAL,
+> +					      "Invalid value for excitation current(%u)",
+> +					      excitation_current);
+
+Ditto.
+
+...
+
+> +		return dev_err_ptr_probe(dev, -EINVAL,
+> +				      "Invalid chann:%d for r_sense",
+> +				      sensor->chan);
+
+Ditto.
+
+...
+
+> +	if (!st->num_channels)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "At least one channel must be given!");
+
+Ditto.
+
+...
+
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "EEPROM command failed: 0x%02X\n", val);
+
+One line?
+
+...
+
+> +	if (IS_ERR(st->regmap))
+> +		return dev_err_probe(dev, PTR_ERR(st->regmap),
+> +				     "Failed to initialize regmap\n");
+
+Wondering about Andi's proposal in conjunction with %pe to be in use
+
+		return dev_???(dev, st->regmap, "Failed to initialize regmap\n");
+
+where it returns an int and uses const void * as an error pointer for %pe.
+
+
+
+> -	st->iio_chan = devm_kzalloc(&spi->dev,
+> +	st->iio_chan = devm_kzalloc(dev,
+>  				    st->iio_channels * sizeof(*st->iio_chan),
+>  				    GFP_KERNEL);
+
+Separate change to devm_kzalloc() before this patch?
+In that patch you may also introduce a temporary struct device *dev.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
