@@ -1,95 +1,240 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC7B13FD78
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 17:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CFF13E890
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 17:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713891992; cv=none; b=u4Duz10qgc/ddzVnLi8xuR/7aTlkAs9bP8kn9I9vxv4U+iSiq0moO+Jn/c1iUeJeAOzcMVqURLnnOeOYm3YtnhPqp5qe/RaiUaQn/ZWVqrzAAfkHjj6IgVN9UHNAWUOLeDEix36PcPcw0KeWsxysqIAD/qmzNKgqEKZj//YkYM8=
+	t=1713891992; cv=none; b=Ok/suSyqFRmL5w69rBa46V0aR4ncWomLd0XIog7k1dJgRh8ED8FjKiXtQZa0ZaadzHtIHKdqNb3hKTfXz8AKaC63sPMEVuaYP1sBSN4Ge/GSRf1Al/v72f7fUZ8od0+aVbBY8fZLAVGee2ZwbxWypKh6EdaYhU8RA/mndeVys88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713891992; c=relaxed/simple;
-	bh=cadbqdxoCrgr/fQKYDJtFPwBcyrMsC1h7o4VyUXwexM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p+U+pAaFzecgsjauXBvjTExxo28OchWFGtmHmV4AibNDYzHaAIpdoymNlpfyvKZJHtYArHdyYUs8jH3mnGHgLpqNZ5rraLUZHtNbfO7VljghL6KDIShJ8/oRqZ5OAt8qGYKLfvZahmd4knieu16zawz9QjcXJQGbPG67IIJBypI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Iyd4pnPp; arc=none smtp.client-ip=209.85.208.178
+	bh=8+rczal/sT60nSRIxsRrhBYeetsV3rWc5ulhIp7cx2g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CWtqfc6ZbMN4tMvjQkrSgtNkLDhELuBzsryO5kVyqdcyY7kVEPUAjnIGkxp6Zs2vGIERJqItjGmKf/ZgfFzV/a4d52TYq6R9zGn+CjM0fbLPfWfzm//Vij74e2dukh8/UqduLheoql196/oetrkdNjqUup/GKw/KXqEXe8uYbCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YPIRTj25; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iyd4pnPp"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2dd6c160eaaso32232151fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 10:06:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YPIRTj25"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a58872905b5so57679866b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 10:06:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713891989; x=1714496789; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KXZVFoqKLEKB9pSmavX8lDsgDx8aHMUSa6gn/0P7/pI=;
-        b=Iyd4pnPpCcrGVnUpPTE+A0k+RCxP9a3G8g75xGZ7EiWVxHpvfrqzZPG+qhkxDnH32a
-         nXGr3LAddKT/ziLyST0QTwTg89eYBr9L7COb+8t02izwF69TlXzigVUvLaWKor598P+D
-         FVvI0/A9acG8+u9yxKaFGB290ufE4SwjNkO3pSaFvwILl2nIgkJwxU8t1y2vOMInXUq1
-         DIUBLo4OTIReE7BG1x8jn0poynF8on1hwJT9MVlge1+nOzinvTkinSY6KZWrYYOHwyxF
-         PiqtW+U4teHjzh4xhpZp+C/ngqy59ionBMK0qLRxph9sZeeI7A1F5tt8vd1ji4en0NYm
-         IbVA==
+        d=linaro.org; s=google; t=1713891988; x=1714496788; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Xi3l/qnNzfAd3sS4G7vPiu1NNsMSYHi+3xLBC/g45dE=;
+        b=YPIRTj254W66IO7MTtBNF+PThsYCACuq1714qpwXXIazbD0GYL9OJjwYCUXKLimSf8
+         tLedFj3AR8lOddi9OSoUxcQfZlUXxbsnS2jPDEC+0XlivT1twixgN2Rl8+8ggJtpPXCe
+         FVnyoudeSW08mj2emS9BtnjouFNAT2pfNTjQS0LsuL4wj5aHbpNXriwFS4mOIHwfdkDQ
+         kZeErhgY9B4Md0qd7+suIcphOvjlzMGqmNfALh3oi4fSy+a1zW7FxJXnfB/ICl5dvsKR
+         MsWtHSyXDgh2qXw9BfjsZBLCJc34GJNn6umhxOabmLO4t7wU+r0Gqe8A41kiZweuBQ4m
+         reVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713891989; x=1714496789;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KXZVFoqKLEKB9pSmavX8lDsgDx8aHMUSa6gn/0P7/pI=;
-        b=Mx0x2DzIeGpUzVVpSBPG3p/YNHjKnlQQhAo8zmyHquZ6xmjFtb5NdHnsI2odNranCc
-         4UmR9pRHPDbS7duxlaUL9HXnRZwTw9OMFz0jEuoRhFMLgIB65PSxEbOOuZ9GYDrUmsOB
-         BuHL8CzYEi7KU+pdGVKb9Gj2JFOpLShwf26P9wTOrNTn+0Uzy4rFZBIae6BG5g9TbE01
-         uIBg53chvgzx63p95Cg383yTrW8g0TPkdkEyx3dzYqmMRJdM9ZqtDYV6sPmIy611YMGj
-         IoXWl+Aeqcpcwnjc1Ab+2l4SKBfu6X8DSYOdDtrOoUEO+Dzq1eF7M+hHUOO1RxzO4JLc
-         CXhw==
-X-Gm-Message-State: AOJu0YyijiYka3QMuaBI72X56DG7Oh47QPb4TYZMLZ3PW9m/DiEvcPww
-	difACRII/J2Qa39y53kXgoDfriw9P6h/U+ZI8GTpmb79MIZRE1MQffhBJfoECyY=
-X-Google-Smtp-Source: AGHT+IFTLIFryToNiC7tozTvrbaJa5+9JPxbtu+C8ul5pe0yWHBv4YXKdKe+JFKAm0GKlNfIX8eAOA==
-X-Received: by 2002:a2e:9798:0:b0:2da:a73:4f29 with SMTP id y24-20020a2e9798000000b002da0a734f29mr11163313lji.30.1713891989157;
-        Tue, 23 Apr 2024 10:06:29 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id g9-20020a05600c310900b0041aa79f27a0sm3735054wmo.38.2024.04.23.10.06.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        d=1e100.net; s=20230601; t=1713891988; x=1714496788;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xi3l/qnNzfAd3sS4G7vPiu1NNsMSYHi+3xLBC/g45dE=;
+        b=HFudjv9ijXOac4DS6/ayzqvTZYW2mvPdzw3d5OxFv/ZIlLARydH1MM5fPjrq0nQC/d
+         X8UqkOpnYhTwxkN4AVDnwwV+C4W+gOCPtV3EkDlcKgTwsyVaUiJpsLKRkpElIgPQY8Il
+         n/zJdvWvRYm3Xl5MBfGXEHsZo9QIikL88KWUK1W8QvarUDs2QNbIj+airNukeQ9LoxuP
+         1p8wsOsKGQZ4yCelOU95cXJN2kzMn3mtA77jLOQVnbqMvGBuUFaT117HugwJCAs750PZ
+         e0hW9bD6Mwd5TvrHG/QiuprAJilJR7w47Zo7zx0/hvIv2sIFBRgTS2mWlIxp4ETFxLRP
+         nEkw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSkxq4oT4dsSxYhlsIcS4vpCuNDRdBhFfZGxYMbNWAq7Vk2fBjM2TEEPg9Wra8EFwAWZaR8bpWTn9qokohtMYDu7fZrObNqoQ62fmT
+X-Gm-Message-State: AOJu0YxC0mG9r1+5WA24uxvcIE5H+13wTFYN1NM4r00k5G8wht2Lc5/F
+	sBYrPlV3+0TigAOcuiM7lnlR3VCLx7zVMkTE0a0g7EIkpMNneOeDZfG5JJXukMI=
+X-Google-Smtp-Source: AGHT+IHhLeM9lHMwkusT37/REYAgRbABvWv57rJm56e9cAIvQ07N72wljQoRCkpcZiNKp7aTTXrFmg==
+X-Received: by 2002:a17:907:7215:b0:a55:8609:1c34 with SMTP id dr21-20020a170907721500b00a5586091c34mr10584896ejc.28.1713891988171;
         Tue, 23 Apr 2024 10:06:28 -0700 (PDT)
-Message-ID: <91fb56d5-3366-4fb3-ac44-71c29654318f@linaro.org>
-Date: Tue, 23 Apr 2024 19:06:25 +0200
+Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
+        by smtp.gmail.com with ESMTPSA id t22-20020a1709063e5600b00a5209dc79c1sm7351624eji.146.2024.04.23.10.06.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 10:06:27 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Date: Tue, 23 Apr 2024 18:06:08 +0100
+Subject: [PATCH 6/7] phy: exynos5-usbdrd: convert to clk_bulk for phy
+ (register) access
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 04/16] thermal: gov_bang_bang: Fold
- thermal_zone_trip_update() into its caller
-Content-Language: en-US
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-References: <13515747.uLZWGnKmhe@kreacher> <3827124.kQq0lBPeGt@kreacher>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <3827124.kQq0lBPeGt@kreacher>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20240423-usb-phy-gs101-v1-6-ebdcb3ac174d@linaro.org>
+References: <20240423-usb-phy-gs101-v1-0-ebdcb3ac174d@linaro.org>
+In-Reply-To: <20240423-usb-phy-gs101-v1-0-ebdcb3ac174d@linaro.org>
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Peter Griffin <peter.griffin@linaro.org>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, Roy Luo <royluo@google.com>, 
+ kernel-team@android.com, linux-phy@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.12.4
 
-On 10/04/2024 18:06, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Fold thermal_zone_trip_update() into bang_bang_control() which is the
-> only caller of it to reduce code size and make it easier to follow.
-> 
-> No functional impact.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
+In preparation for support for additional platforms, convert the phy
+register access clock to using the clk_bulk interfaces.
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Newer SoCs like Google Tensor gs101 require more clocks for register
+access, and converting to clk_bulk simplifies addition of those extra
+clocks.
+
+Given the list of phy register clocks is requested as optional, I
+haven't made it platform specific, as only those clocks that are
+actually declared (in the DT) will be retrieved and the code behaves as
+before this change. Nevertheless, this piece of the code is easy to
+change in the future if the need arises.
+
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
+---
+ drivers/phy/samsung/phy-exynos5-usbdrd.c | 45 +++++++++++++++++++++-----------
+ 1 file changed, 30 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+index 88b03bb67fff..63933029ffa7 100644
+--- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
++++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+@@ -194,7 +194,8 @@ struct exynos5_usbdrd_phy_drvdata {
+  * struct exynos5_usbdrd_phy - driver data for USB 3.0 PHY
+  * @dev: pointer to device instance of this platform device
+  * @reg_phy: usb phy controller register memory base
+- * @clk: phy clock for register access
++ * @phy_clks: phy clocks for register access
++ * @n_phy_clks: number of phy clocks for register access
+  * @pipeclk: clock for pipe3 phy
+  * @utmiclk: clock for utmi+ phy
+  * @itpclk: clock for ITP generation
+@@ -211,7 +212,8 @@ struct exynos5_usbdrd_phy_drvdata {
+ struct exynos5_usbdrd_phy {
+ 	struct device *dev;
+ 	void __iomem *reg_phy;
+-	struct clk *clk;
++	struct clk_bulk_data  *phy_clks;
++	size_t n_phy_clks;
+ 	struct clk *pipeclk;
+ 	struct clk *utmiclk;
+ 	struct clk *itpclk;
+@@ -407,7 +409,7 @@ static int exynos5_usbdrd_phy_init(struct phy *phy)
+ 	struct phy_usb_instance *inst = phy_get_drvdata(phy);
+ 	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
+ 
+-	ret = clk_prepare_enable(phy_drd->clk);
++	ret = clk_bulk_prepare_enable(phy_drd->n_phy_clks, phy_drd->phy_clks);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -457,7 +459,7 @@ static int exynos5_usbdrd_phy_init(struct phy *phy)
+ 	reg &= ~PHYCLKRST_PORTRESET;
+ 	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYCLKRST);
+ 
+-	clk_disable_unprepare(phy_drd->clk);
++	clk_bulk_disable_unprepare(phy_drd->n_phy_clks, phy_drd->phy_clks);
+ 
+ 	return 0;
+ }
+@@ -469,7 +471,7 @@ static int exynos5_usbdrd_phy_exit(struct phy *phy)
+ 	struct phy_usb_instance *inst = phy_get_drvdata(phy);
+ 	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
+ 
+-	ret = clk_prepare_enable(phy_drd->clk);
++	ret = clk_bulk_prepare_enable(phy_drd->n_phy_clks, phy_drd->phy_clks);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -491,7 +493,7 @@ static int exynos5_usbdrd_phy_exit(struct phy *phy)
+ 		PHYTEST_POWERDOWN_HSP;
+ 	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYTEST);
+ 
+-	clk_disable_unprepare(phy_drd->clk);
++	clk_bulk_disable_unprepare(phy_drd->n_phy_clks, phy_drd->phy_clks);
+ 
+ 	return 0;
+ }
+@@ -826,14 +828,14 @@ static int exynos850_usbdrd_phy_init(struct phy *phy)
+ 	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
+ 	int ret;
+ 
+-	ret = clk_prepare_enable(phy_drd->clk);
++	ret = clk_bulk_prepare_enable(phy_drd->n_phy_clks, phy_drd->phy_clks);
+ 	if (ret)
+ 		return ret;
+ 
+ 	/* UTMI or PIPE3 specific init */
+ 	inst->phy_cfg->phy_init(phy_drd);
+ 
+-	clk_disable_unprepare(phy_drd->clk);
++	clk_bulk_disable_unprepare(phy_drd->n_phy_clks, phy_drd->phy_clks);
+ 
+ 	return 0;
+ }
+@@ -846,7 +848,7 @@ static int exynos850_usbdrd_phy_exit(struct phy *phy)
+ 	u32 reg;
+ 	int ret;
+ 
+-	ret = clk_prepare_enable(phy_drd->clk);
++	ret = clk_bulk_prepare_enable(phy_drd->n_phy_clks, phy_drd->phy_clks);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -869,7 +871,7 @@ static int exynos850_usbdrd_phy_exit(struct phy *phy)
+ 	reg &= ~CLKRST_LINK_SW_RST;
+ 	writel(reg, regs_base + EXYNOS850_DRD_CLKRST);
+ 
+-	clk_disable_unprepare(phy_drd->clk);
++	clk_bulk_disable_unprepare(phy_drd->n_phy_clks, phy_drd->phy_clks);
+ 
+ 	return 0;
+ }
+@@ -882,16 +884,29 @@ static const struct phy_ops exynos850_usbdrd_phy_ops = {
+ 	.owner		= THIS_MODULE,
+ };
+ 
++static const char * const phy_clk_list[] = {
++	"phy",
++};
++
+ static int exynos5_usbdrd_phy_clk_handle(struct exynos5_usbdrd_phy *phy_drd)
+ {
+ 	unsigned long ref_rate;
+ 	int ret;
+ 
+-	phy_drd->clk = devm_clk_get(phy_drd->dev, "phy");
+-	if (IS_ERR(phy_drd->clk)) {
+-		dev_err(phy_drd->dev, "Failed to get phy clock\n");
+-		return PTR_ERR(phy_drd->clk);
+-	}
++	phy_drd->n_phy_clks = ARRAY_SIZE(phy_clk_list);
++	phy_drd->phy_clks = devm_kcalloc(phy_drd->dev, phy_drd->n_phy_clks,
++					 sizeof(*phy_drd->phy_clks),
++					 GFP_KERNEL);
++	if (!phy_drd->phy_clks)
++		return -ENOMEM;
++
++	for (int i = 0; i < phy_drd->n_phy_clks; ++i)
++		phy_drd->phy_clks[i].id = phy_clk_list[i];
++
++	ret = devm_clk_bulk_get_optional(phy_drd->dev, phy_drd->n_phy_clks,
++					 phy_drd->phy_clks);
++	if (ret < 0)
++		return ret;
+ 
+ 	phy_drd->ref_clk = devm_clk_get(phy_drd->dev, "ref");
+ 	if (IS_ERR(phy_drd->ref_clk)) {
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.44.0.769.g3c40516874-goog
 
