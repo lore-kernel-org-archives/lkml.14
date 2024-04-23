@@ -1,93 +1,102 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3545213CAAB
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 16:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298B013BACF;
+	Tue, 23 Apr 2024 16:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713889396; cv=none; b=O3oyiStv8QDY59/G1qfVlpwVErOnI4Q2VEOMgZwQDPxr9e4wFBfvGLGxtdkTNg+jYhHKQOKYgMF/jlkxXxX8NMRBo6n8PbrsHuPgYkH5efteBye2qC60l7ctoWjKEZ6MXXPWCyhFCPBQNoCHRI20Pj1sjNyTfykeL5caFj3g9I8=
+	t=1713889411; cv=none; b=KZOHdUfiA4sZ4kbQtaVAxWNiieZjQ/pCgegxRZGaEt1tXh34UJfX6mEqXanol787vZaoixGQGcFFx8VpOGMFZ+g7kOPcb6sZ479Udrx5UVueP1gqGlhQk4PV6FiwlZa/eVGUFxEUCdFpWOabba3w8I+k2R7Ed29FiS7pmn/ZGvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713889396; c=relaxed/simple;
-	bh=di3fBEWaf3r4JLUJjdiQ27NJdTUJM55Vizjr1hVxt4M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CbG+9YUPv9jkmI0z3X03dMwo5XE6h6BCu/mJq3YSHuzzzcuH4tks7XWQy9OWYL8ka5oTDEEOc5OmvbUj4ow0ZHGR9tktPGbRrd87p/BfAMJh1G8CU3b1BSUTxVZVGJRiaaEW5/D08L4LkkCwLQKCkPT97D60iqOi+RTXDWKfJKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J9X85Q1S; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713889411; c=relaxed/simple;
+	bh=Q5pBomNvNNt1A3Rnzxx0LXPI2/v2/y+Z2n+2/IhawV0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sZp1g6R0o/nNICXo5RE1DFx4WtKWUHvcCCAoULZq2xqDfTgx9JSU5j5YMiCBnvzp57Pnt9ok33ecWNd9v1rrSQwSB7bMmNzT8oAXtt+pQ5pOalfFmuvXKtCeGj0caj/vNwruEsxsZcI/B3Fn35ND0VC4HErskKaON1j2BkeUG2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=LnrtMU63; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J9X85Q1S"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2db17e8767cso76148831fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 09:23:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713889393; x=1714494193; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eV3JYQjvg7ps2tDw1BUY+qYafvfWNiGj6kHpWXZPB7M=;
-        b=J9X85Q1SCGqjEgx8+ytKq+l3Fo4gRU3extrqVg/EW4ZS21Rpr5MRa6dQwBqbzkxGHp
-         Pb4cePJpPECjcoq/mwbAP/O205/5qwcdpgbKPhejLW+3K2FfafmTh+hHGn1KhnDGlaQ4
-         gUorWi71SkrjvuXSsK/KzFFmHiTGb9obhZkCTmefBetw3afqTKy3cNApoEoqd31KzOhS
-         TOnKce16VYlxdc2qjx0tUn0e2jtYj3zYku50FU4+UgBQXl7LfvmHCuXTvTN8gTLaf7bb
-         AEYoj4rjxsVPkr23ezYdWxxPgNcW3a84/neDEpix4vlRIHOg7mzH/Tj9xRLPRimIWurh
-         qssg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713889393; x=1714494193;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eV3JYQjvg7ps2tDw1BUY+qYafvfWNiGj6kHpWXZPB7M=;
-        b=mLupkIQ823vaLEgZdfz9CZofE9KzbRc5kt4Y9Df52oMVdz8LXPSQs3DHdXgyL0aUDm
-         7Tjr8RVnyOZd83ihptghgLpVNehuIpcaizf3cCvNp3IFCnhlj67B3AJE91fNSPiHmWxg
-         DstbHZTm8ZZh8GJi2ifSZBNsSPlIcr2/hD6LX7x6Evsl2NxzoPWFCldcPajFCDmICY3u
-         fYahM7rEXm/koi/s/UoKNgYGdAqMW80TOdbYar+8S7VawQhgDzeB1ngq1ZoHvcP6dMjB
-         YThXWf5OqBrN4O8XVivq0eK2jrD6ESnR3UQK3Ra5PLpL3XAJEXIeE9BcTqFNI+Ckdjff
-         s77A==
-X-Forwarded-Encrypted: i=1; AJvYcCUHOpj5AMeVW7+YF95Ry2JjhzxkwebKXNATtcLIG2H54A31CsvH36O6AccACAFMa7RVuDld2OP+NWqQSumjcqKGOkJn5WKdPkFStarV
-X-Gm-Message-State: AOJu0YwP/3a/wuIeA65rBEp6SvKs/VEtXJS1M6psXTW835sOBqJbyw6F
-	hDoNZKDXpdc+6XfAm9hq8SP9QZ0zhirSPdQ5kKjjcfPL17z2loorJtWVaihbFss=
-X-Google-Smtp-Source: AGHT+IG6D6t4oovl9EKg9UPxHrmD6SGFGORMtpSatzoOpPt6wgyrSwG5hvAvInKw3kGGJ2qbs5jrQw==
-X-Received: by 2002:a2e:834b:0:b0:2d8:7363:ff36 with SMTP id l11-20020a2e834b000000b002d87363ff36mr7848169ljh.37.1713889393341;
-        Tue, 23 Apr 2024 09:23:13 -0700 (PDT)
-Received: from [172.30.205.0] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id u15-20020a2e854f000000b002db706ec5f7sm1735182ljj.98.2024.04.23.09.23.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 09:23:13 -0700 (PDT)
-Message-ID: <2efd6856-0e20-4b0f-93d3-60926ba2e4f3@linaro.org>
-Date: Tue, 23 Apr 2024 18:23:08 +0200
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="LnrtMU63"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43N5kTvC011470;
+	Tue, 23 Apr 2024 11:23:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	PODMain02222019; bh=otNxeYr92ucuR9gMxp7zxkbmIictW4XHCCuOxcBR5hk=; b=
+	LnrtMU63bmIKnphai52NBYUnpOBuKZyslWuwXBJczcIbuFGRKBX7sP4rzrKh5El7
+	VJP8/NDYBL04uOtUZEPrwFpjPlZ/XXyTDwo+hKnckI1XcLiIV9OEek9GX78vML38
+	aXkss7ZmGQKZgQ6PsZI4jI6k0NMtJBVcjQtES7yRfDNISd8wldkmrhj764xz575i
+	pCdPjhVAJNbrUS5BM3OBfIcEByC2GYnfjr7c5w20VW3Kdkc8kUm3yCOEboKZUSEp
+	PzXXa+kK7ugC3xCBlRYxH1App29QX8/nRcyIrgO2BnIFjnhG8rkh1II3zZQChBDP
+	RRy0U0wGcexgGHTyEIxubQ==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3xmqmh2b8c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Apr 2024 11:23:09 -0500 (CDT)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 23 Apr
+ 2024 17:23:07 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Tue, 23 Apr 2024 17:23:07 +0100
+Received: from sbinding-cirrus-dsktp2.ad.cirrus.com (unknown [198.61.64.201])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id DB00282024B;
+	Tue, 23 Apr 2024 16:23:06 +0000 (UTC)
+From: Stefan Binding <sbinding@opensource.cirrus.com>
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        "Stefan
+ Binding" <sbinding@opensource.cirrus.com>
+Subject: [PATCH v1 1/2] ALSA: hda: cs35l41: Support Lenovo 13X laptop without _DSD
+Date: Tue, 23 Apr 2024 17:23:02 +0100
+Message-ID: <20240423162303.638211-2-sbinding@opensource.cirrus.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240423162303.638211-1-sbinding@opensource.cirrus.com>
+References: <20240423162303.638211-1-sbinding@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dmaengine: qcom: Drop hidma DT support
-To: "Rob Herring (Arm)" <robh@kernel.org>, Sinan Kaya <okaya@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240423161413.481670-1-robh@kernel.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240423161413.481670-1-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: r4eWeIrplgezRGoBV1jN_RxwbYzy5l1S
+X-Proofpoint-GUID: r4eWeIrplgezRGoBV1jN_RxwbYzy5l1S
+X-Proofpoint-Spam-Reason: safe
 
+This laptop does not have the correct _DSD settings, so needs to
+obtain its configuration from the configuration table.
 
+Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
+---
+ sound/pci/hda/cs35l41_hda_property.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On 4/23/24 18:14, Rob Herring (Arm) wrote:
-> The DT support in hidma has been broken since commit 37fa4905d22a
-> ("dmaengine: qcom_hidma: simplify DT resource parsing") in 2018. The
-> issue is the of_address_to_resource() calls bail out on success rather
-> than failure. This driver is for a defunct QCom server platform where
-> DT use was limited to start with. As it seems no one has noticed the
-> breakage, just remove the DT support altogether.
-> 
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
+diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
+index 6f82b28e26dd..be97e973accb 100644
+--- a/sound/pci/hda/cs35l41_hda_property.c
++++ b/sound/pci/hda/cs35l41_hda_property.c
+@@ -111,6 +111,8 @@ static const struct cs35l41_config cs35l41_config_table[] = {
+ 	{ "10431F1F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, -1, 0, 0, 0, 0 },
+ 	{ "10431F62", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
+ 	{ "10433A60", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
++	{ "17AA3865", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, -1, -1, 0, 0, 0 },
++	{ "17AA3866", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, -1, -1, 0, 0, 0 },
+ 	{ "17AA386F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, -1, -1, 0, 0, 0 },
+ 	{ "17AA3877", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, -1, -1, 0, 0, 0 },
+ 	{ "17AA3878", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, -1, -1, 0, 0, 0 },
+@@ -504,6 +506,8 @@ static const struct cs35l41_prop_model cs35l41_prop_model_table[] = {
+ 	{ "CSC3551", "10431F1F", generic_dsd_config },
+ 	{ "CSC3551", "10431F62", generic_dsd_config },
+ 	{ "CSC3551", "10433A60", generic_dsd_config },
++	{ "CSC3551", "17AA3865", generic_dsd_config },
++	{ "CSC3551", "17AA3866", generic_dsd_config },
+ 	{ "CSC3551", "17AA386F", generic_dsd_config },
+ 	{ "CSC3551", "17AA3877", generic_dsd_config },
+ 	{ "CSC3551", "17AA3878", generic_dsd_config },
+-- 
+2.34.1
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-
-Konrad
