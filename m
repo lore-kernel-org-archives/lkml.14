@@ -1,307 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34FE51016;
-	Tue, 23 Apr 2024 09:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C480F56B9D;
+	Tue, 23 Apr 2024 09:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713865442; cv=none; b=d48BfsomMkzSLMYFcwVXAfYRHQKnPAvpOR/T6k1mWur7UoICp0iNJyUFkxeVBeTqpkyD3vuRMuredaQeG77Fvv1+u74SUMqHP4R2qlUAE5uh7j0Xlxy0iNLDMSJAB1pVnsBTO0VfOpXkJ1gArTQFXNAL/OEo07mr2Rk1b2jCwIY=
+	t=1713865544; cv=none; b=cPBlr+IkZ+23k8QXM8100ZhkJz67U3AscoaR08vwLXVa1Tv5Y7cSD2ixoFpMUtb5xCaSCIRSEk+ZA0w63RczfcKaygkSEi8ViLW36mkUG1+tOlwr9xjhOK+1SE5Tz1nVSun8rA3gRdXHX42rnw2KM603FDlZI4A9Pq2c/NLahQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713865442; c=relaxed/simple;
-	bh=DumJhvG8fsGnw0uHUg1uUVDb/GabqHRZR1307Gu8s9M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oGvErYiwAcgcK0TbPbgirhqYDUVvj60xLnqPePJ4EWncbFYFYnQQNJ7Ciorlo5ZxKD9Qxc8U29mb5G2GDZA2SY3eVvJKMuq2pjPGOmCOg5KYZfYTK9w+lOfGxYR4t6WhlNF0b/FO3OyOEMrPCY+SL15psF/aAdyLIddPL4g54uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h3cG41SD; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713865544; c=relaxed/simple;
+	bh=unf/IKr9VmLOe/XGqyE5/FCvp/8jpLFn08Ee3ayn9vE=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=FNtpK30RyIdq+cDU1VwbpG5a0C/1h5jEBDNloEsrb4wxb+/xkuNYqsNqPkncySX6rONuz95NldPlHCNJ7IUBE04A4f6DxJ+8M/GQbm8EUMom4mdGnUOx77XgkKfrYYak474tFlw1pld6dEV7F3QaTLbA8cdwwEGvlulW7OZ2NLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Tr6T8d3n; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h3cG41SD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713865441; x=1745401441;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DumJhvG8fsGnw0uHUg1uUVDb/GabqHRZR1307Gu8s9M=;
-  b=h3cG41SDm/nBFfs1oX56p2PgDp2U/YgU2APhV27s7Ihv8v6WEY0mRk4U
-   XzHvCucp0EmkfLkBZ2s10Q3BxiXwCiLN82owDX4ibhSkoBzLKUd3NpZM3
-   dyCLyQOEj2ifHFE/VCG0HODSkKYYeVtzxSWqkYn31ZmvlMVoFXYOQDtX0
-   NolJneYniCqMJZhfGnSXCIXfwGGi0ME5TVjPU28fdUG+TygiSXfJEBgit
-   AJoKP+ZpXcAPt7/nOquz4XzjjHpKiTz/lszSziZUyJe55qIKfIcVPbCY4
-   2YlgzGvEKSbbh/z5ifluP3tsR+toVyQjbPkCXIAerVbROPaVwvoxzGjCB
-   A==;
-X-CSE-ConnectionGUID: e/pfZVuTTGW0u/mhOfCTdQ==
-X-CSE-MsgGUID: 0lNFnT+7SuiWWZdU1tvWJw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="19990085"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="19990085"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 02:44:00 -0700
-X-CSE-ConnectionGUID: XVZWAwvQR66SJnsbejWocA==
-X-CSE-MsgGUID: LChqrwi+T5Oo5idjBqIjfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="47598385"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa002.fm.intel.com with ESMTP; 23 Apr 2024 02:43:57 -0700
-Date: Tue, 23 Apr 2024 17:38:37 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Peter Colberg <peter.colberg@intel.com>
-Cc: Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
-	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
-	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Russ Weight <russ.weight@linux.dev>,
-	Marco Pagani <marpagan@redhat.com>,
-	Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Subject: Re: [RFC PATCH v2 4/9] fpga: dfl: migrate FPGA Management Engine
- driver to dfl_feature_dev_data
-Message-ID: <ZieBnQBDGgowf+y7@yilunxu-OptiPlex-7050>
-References: <20240409233942.828440-1-peter.colberg@intel.com>
- <20240409233942.828440-5-peter.colberg@intel.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Tr6T8d3n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1713865502; x=1714470302; i=markus.elfring@web.de;
+	bh=unf/IKr9VmLOe/XGqyE5/FCvp/8jpLFn08Ee3ayn9vE=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=Tr6T8d3n2Z6QotE4Ah2/GuNN+n+H0MPh+Rib8eT9ZHFctn5z9bzoGFJa7fBLb89w
+	 PgQSmRGgsBjwGxyWM3dUQx9cV91Gyy03JNqIXHJD941+Q+JIy1cTMlKHnFTv8URBk
+	 aCkZG187W/mp6/Ao9Gq/vnfDdpZsL6tp0MgIH2U3ZLRkfziVmLk/K9rbSSeaGzfPZ
+	 0DpZdTl/aOTM7bLgeXM+oGSPj8MW/1aS1SugoA8Qts8gWt6BDO1LsJWjazsx6qdM3
+	 DyPkUTdCAzSjJNsCniEOBibmjgLqFuMU2JteTOxv8XLi6USby5YIHlu2R2xOFdgkp
+	 HQS/2Woaz2DrPKY/Qg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MjPQ6-1sR9k73YkM-00hArN; Tue, 23
+ Apr 2024 11:45:01 +0200
+Message-ID: <1f15f7e3-32ff-486f-8e6f-bbe9183b05e5@web.de>
+Date: Tue, 23 Apr 2024 11:44:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240409233942.828440-5-peter.colberg@intel.com>
+User-Agent: Mozilla Thunderbird
+To: Huacai Chen <chenhuacai@loongson.cn>,
+ Jiantao Shan <shanjiantao@loongson.cn>, loongarch@lists.linux.dev,
+ loongson-kernel@lists.loongnix.cn, linux-arch@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Guo Ren <guoren@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Xuefeng Li <lixuefeng@loongson.cn>, Xuerui Wang <kernel@xen0n.name>
+References: <20240423074257.2480274-1-chenhuacai@loongson.cn>
+Subject: Re: [PATCH] LoongArch: Fix access error when read fault on a
+ write-only VMA
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240423074257.2480274-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:5aAF/++CnrqQb4hr3ZNQgDjqdbWXV8FiY70vkX5EAL9c+pMnohp
+ sKY5V/AoYCKJqdNqip9JJNcWrXuJfNvdZwzjZaLSkSq/mUjGiu4hVt3P/fBig1peL/Gl+cb
+ P9HLBr4deryChgh/8nLct4XJM5XFQhZZlSkCVcum+5nO9kdvpMy22gS7NFaLB9t6SKz1hft
+ wvb8Rwojp2UmKg/xrsVeA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:uxmvR4l/YWM=;moCV0Xu1L3eQa1QE3ayecdIt6yI
+ TFwIiOzdVBTn1XS7iqW/d+WA80gDD8hWX8R458DMLrZWMWJkL887aXirdoajoDlX2j0/7aA6/
+ 5E2CEn2U2K9LWRORqLHkA/YhmUh0uBf3z7Eny3RmQMW46PgDKa6zUC0m0RP1gjMdDBn1ll1i9
+ 3Gqg763E+MrPz/V47ZIyEfaM8O7xzUkYjev1P0pqAXQ9I73mJtT9+gTe9tAGbPnQjvB0pPXD1
+ C6mkWZZuWdo9upJG0F48diq83XqbiJqFpQlkt3yAfBlNQ+XJhuqjMajL0kyVrRwwJALlj3tlE
+ 4Q8CkFfl5ADIzGL6SHlfwwr7mjyuWMsKpsTqDTtk3pe+B2bl4n0xiIoMAzcHrQ9WaPkTZkkdG
+ yP9U7Tn0DewYHscBzIpn09XDQhGsmNpYJTThlKudftUe2eCgX+5emdmWG1R0uTwMv/2yrRqcp
+ gZWrinbZ0kRNYdOwCDHH02bewpnMIAdAp4rYKlvHREaktT5yubOy7j0nVyvgJal5r6g8dnvYZ
+ ijYq/jrG2Sssc4Y3pBNOm9U8YkHY4hS2TpQRDdYoD817pOjto7TRBBxzwFThBkbNZ5abFT84F
+ l++U4l98nVtct94Q/Yf8TfRsYEghVt1Zae4crHi9dDqyX7c5fmroIOk0yB44XfTQzfTtbJ23x
+ TNlHEayPqfruBhlthohHs92c8hjE8wko5nY+O8WBklVGv2IvywPlmrdxNKJffBDGI/eeRGBlU
+ +CaJx/7Cxcw1/HwK0wgEs4nbGwqaF5lpSHGpzpd2lxs7J0MDrjuBoi4hboaEMirmIt7ZgZRkV
+ T7RbDHhJ1JomBCsixaL4mpI2UXiN7Mtbp9w5t1KWc/CTE=
 
-On Tue, Apr 09, 2024 at 07:39:37PM -0400, Peter Colberg wrote:
-> This change separates out most of the symbol name changes required by this
-> patch series for the file: drivers/fpga/dfl-fme-main.c. This is done to
-> split a single monolithic change into multiple, smaller patches at the
-> request of the maintainer.
-> 
-> Signed-off-by: Peter Colberg <peter.colberg@intel.com>
-> ---
-> v2:
-> - Split monolithic patch into series at request of maintainer
-> - Change fme_hdr_ioctl_*() to receive dfl_feature_dev_data instead of
->   dfl_feature_platform_data.
-> - Remove unused local variable pdata in fme_dev_{init,destroy}().
-> ---
->  drivers/fpga/dfl-fme-main.c | 68 ++++++++++++++++++++-----------------
->  1 file changed, 36 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> index 864924f68f5e..7f119b09b54e 100644
-> --- a/drivers/fpga/dfl-fme-main.c
-> +++ b/drivers/fpga/dfl-fme-main.c
-> @@ -135,10 +135,10 @@ static const struct attribute_group fme_hdr_group = {
->  	.attrs = fme_hdr_attrs,
->  };
->  
-> -static long fme_hdr_ioctl_release_port(struct dfl_feature_platform_data *pdata,
-> +static long fme_hdr_ioctl_release_port(struct dfl_feature_dev_data *fdata,
->  				       unsigned long arg)
->  {
-> -	struct dfl_fpga_cdev *cdev = pdata->dfl_cdev;
-> +	struct dfl_fpga_cdev *cdev = fdata->dfl_cdev;
->  	int port_id;
->  
->  	if (get_user(port_id, (int __user *)arg))
-> @@ -147,10 +147,10 @@ static long fme_hdr_ioctl_release_port(struct dfl_feature_platform_data *pdata,
->  	return dfl_fpga_cdev_release_port(cdev, port_id);
->  }
->  
-> -static long fme_hdr_ioctl_assign_port(struct dfl_feature_platform_data *pdata,
-> +static long fme_hdr_ioctl_assign_port(struct dfl_feature_dev_data *fdata,
->  				      unsigned long arg)
->  {
-> -	struct dfl_fpga_cdev *cdev = pdata->dfl_cdev;
-> +	struct dfl_fpga_cdev *cdev = fdata->dfl_cdev;
->  	int port_id;
->  
->  	if (get_user(port_id, (int __user *)arg))
-> @@ -163,13 +163,13 @@ static long fme_hdr_ioctl(struct platform_device *pdev,
->  			  struct dfl_feature *feature,
->  			  unsigned int cmd, unsigned long arg)
->  {
-> -	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
+> As with most architectures, allow handling of read faults in VMAs that
+> have VM_WRITE but without VM_READ (WRITE implies READ).
+=E2=80=A6
 
-Maybe firstly make a patch to:
+Will the tag =E2=80=9CFixes=E2=80=9D become relevant here?
 
-  #define to_dfl_feature_platform_data	dev_get_platdata
-
-And s/to_dfl_feature_platform_data/dev_get_platdata
-
-Then we could do replacements in this patch more friendly.
-
-> +	struct dfl_feature_dev_data *fdata = to_dfl_feature_dev_data(&pdev->dev);
->  
->  	switch (cmd) {
->  	case DFL_FPGA_FME_PORT_RELEASE:
-> -		return fme_hdr_ioctl_release_port(pdata, arg);
-> +		return fme_hdr_ioctl_release_port(fdata, arg);
->  	case DFL_FPGA_FME_PORT_ASSIGN:
-> -		return fme_hdr_ioctl_assign_port(pdata, arg);
-> +		return fme_hdr_ioctl_assign_port(fdata, arg);
->  	}
->  
->  	return -ENODEV;
-> @@ -411,14 +411,14 @@ static int power_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
->  static int power_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
->  			     u32 attr, int channel, long val)
->  {
-> -	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev->parent);
-> +	struct dfl_feature_dev_data *fdata = to_dfl_feature_dev_data(dev);
->  	struct dfl_feature *feature = dev_get_drvdata(dev);
->  	int ret = 0;
->  	u64 v;
->  
->  	val = clamp_val(val / MICRO, 0, PWR_THRESHOLD_MAX);
->  
-> -	mutex_lock(&pdata->lock);
-> +	mutex_lock(&fdata->lock);
->  
->  	switch (attr) {
->  	case hwmon_power_max:
-> @@ -438,7 +438,7 @@ static int power_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
->  		break;
->  	}
->  
-> -	mutex_unlock(&pdata->lock);
-> +	mutex_unlock(&fdata->lock);
->  
->  	return ret;
->  }
-> @@ -589,7 +589,7 @@ static struct dfl_feature_driver fme_feature_drvs[] = {
->  	},
->  };
->  
-> -static long fme_ioctl_check_extension(struct dfl_feature_platform_data *pdata,
-> +static long fme_ioctl_check_extension(struct dfl_feature_dev_data *fdata,
->  				      unsigned long arg)
->  {
->  	/* No extension support for now */
-> @@ -600,19 +600,21 @@ static int fme_open(struct inode *inode, struct file *filp)
->  {
->  	struct platform_device *fdev = dfl_fpga_inode_to_feature_dev(inode);
->  	struct dfl_feature_platform_data *pdata = dev_get_platdata(&fdev->dev);
-
-Why not do the same replacement here?
-
-> +	struct dfl_feature_dev_data *fdata;
->  	int ret;
->  
->  	if (WARN_ON(!pdata))
->  		return -ENODEV;
->  
-> -	mutex_lock(&pdata->lock);
-> -	ret = dfl_feature_dev_use_begin(pdata, filp->f_flags & O_EXCL);
-> +	fdata = pdata;
-> +	mutex_lock(&fdata->lock);
-> +	ret = dfl_feature_dev_use_begin(fdata, filp->f_flags & O_EXCL);
->  	if (!ret) {
->  		dev_dbg(&fdev->dev, "Device File Opened %d Times\n",
-> -			dfl_feature_dev_use_count(pdata));
-> +			dfl_feature_dev_use_count(fdata));
->  		filp->private_data = pdata;
->  	}
-> -	mutex_unlock(&pdata->lock);
-> +	mutex_unlock(&fdata->lock);
->  
->  	return ret;
->  }
-> @@ -620,19 +622,20 @@ static int fme_open(struct inode *inode, struct file *filp)
->  static int fme_release(struct inode *inode, struct file *filp)
->  {
->  	struct dfl_feature_platform_data *pdata = filp->private_data;
-> -	struct platform_device *pdev = pdata->dev;
-> +	struct dfl_feature_dev_data *fdata = pdata;
-
-ditto.
-
-> +	struct platform_device *pdev = fdata->dev;
->  	struct dfl_feature *feature;
->  
->  	dev_dbg(&pdev->dev, "Device File Release\n");
->  
-> -	mutex_lock(&pdata->lock);
-> -	dfl_feature_dev_use_end(pdata);
-> +	mutex_lock(&fdata->lock);
-> +	dfl_feature_dev_use_end(fdata);
->  
-> -	if (!dfl_feature_dev_use_count(pdata))
-> -		dfl_fpga_dev_for_each_feature(pdata, feature)
-> +	if (!dfl_feature_dev_use_count(fdata))
-> +		dfl_fpga_dev_for_each_feature(fdata, feature)
->  			dfl_fpga_set_irq_triggers(feature, 0,
->  						  feature->nr_irqs, NULL);
-> -	mutex_unlock(&pdata->lock);
-> +	mutex_unlock(&fdata->lock);
->  
->  	return 0;
->  }
-> @@ -640,7 +643,8 @@ static int fme_release(struct inode *inode, struct file *filp)
->  static long fme_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  {
->  	struct dfl_feature_platform_data *pdata = filp->private_data;
-> -	struct platform_device *pdev = pdata->dev;
-> +	struct dfl_feature_dev_data *fdata = pdata;
-
-ditto
-
-> +	struct platform_device *pdev = fdata->dev;
->  	struct dfl_feature *f;
->  	long ret;
->  
-> @@ -650,7 +654,7 @@ static long fme_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  	case DFL_FPGA_GET_API_VERSION:
->  		return DFL_FPGA_API_VERSION;
->  	case DFL_FPGA_CHECK_EXTENSION:
-> -		return fme_ioctl_check_extension(pdata, arg);
-> +		return fme_ioctl_check_extension(fdata, arg);
->  	default:
->  		/*
->  		 * Let sub-feature's ioctl function to handle the cmd.
-> @@ -658,7 +662,7 @@ static long fme_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  		 * handled in this sub feature, and returns 0 or other
->  		 * error code if cmd is handled.
->  		 */
-> -		dfl_fpga_dev_for_each_feature(pdata, f) {
-> +		dfl_fpga_dev_for_each_feature(fdata, f) {
->  			if (f->ops && f->ops->ioctl) {
->  				ret = f->ops->ioctl(pdev, f, cmd, arg);
->  				if (ret != -ENODEV)
-> @@ -672,27 +676,27 @@ static long fme_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  
->  static int fme_dev_init(struct platform_device *pdev)
->  {
-> -	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
-> +	struct dfl_feature_dev_data *fdata = to_dfl_feature_dev_data(&pdev->dev);
->  	struct dfl_fme *fme;
->  
->  	fme = devm_kzalloc(&pdev->dev, sizeof(*fme), GFP_KERNEL);
->  	if (!fme)
->  		return -ENOMEM;
->  
-> -	mutex_lock(&pdata->lock);
-> -	dfl_fpga_pdata_set_private(pdata, fme);
-> -	mutex_unlock(&pdata->lock);
-> +	mutex_lock(&fdata->lock);
-> +	dfl_fpga_fdata_set_private(fdata, fme);
-> +	mutex_unlock(&fdata->lock);
->  
->  	return 0;
->  }
->  
->  static void fme_dev_destroy(struct platform_device *pdev)
->  {
-> -	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
-> +	struct dfl_feature_dev_data *fdata = to_dfl_feature_dev_data(&pdev->dev);
->  
-> -	mutex_lock(&pdata->lock);
-> -	dfl_fpga_pdata_set_private(pdata, NULL);
-> -	mutex_unlock(&pdata->lock);
-> +	mutex_lock(&fdata->lock);
-> +	dfl_fpga_fdata_set_private(fdata, NULL);
-> +	mutex_unlock(&fdata->lock);
->  }
->  
->  static const struct file_operations fme_fops = {
-> -- 
-> 2.44.0
-> 
-> 
+Regards,
+Markus
