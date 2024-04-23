@@ -1,83 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A4320DD2;
-	Tue, 23 Apr 2024 05:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66D81CA82
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 05:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713848651; cv=none; b=rIJgRTVVVsX2xVqTlBguMNGwj/73fo0iz4IkafsJ/iWf466jOOXqFF75stL2Lg/9YcNUK1BvnD6oOtgnNG5IxLa41tHjmhXhdK+nivGauWJrNqjp2Z3eqHkudT7y2W8lOmYZU1rcOCGUWFkV+NU8t9wuPoVLsMKCXq7HwcU39yU=
+	t=1713849122; cv=none; b=n7m1gm+hIj7wOw6AX8sN+WuSzRhEKGFXz9V39VTcKBvUqaZYZ7iKGaeAhG4YLlkQXqyvHjPC28Oa+QTwuhbW/McWuX/tgqC2MQR84++bK/micbNIXFiXmo4X454TKxNXz6Sm5uyiUhFMhrFH3CFaGqnxaWSm1l37RRXzkrltdIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713848651; c=relaxed/simple;
-	bh=fyyNNc35kzUf08wTp1I94CCtJE66QRy40bl7jgbwPI0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=smi5jBhaOA7LFRxRBz09gFBnBxBgNowpk4dXKNVO8xcUnwLTs8SDqsWEsqCFsGmiA2/6QUiImRFoeM/KB9CeNrFcIF/MdKgWS4Hh0KqEx47uhlICezAU+9BNgQqmN/kG4Rb15hpwbRcvVQ2ggnYP2p8kzOhTgNxImw+dnkWY6PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k86VvsxN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713849122; c=relaxed/simple;
+	bh=deKjbTQrX2Kr2a+JaHlLXbv8YBnP4MnlhZJmmMO6fFo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=enA8Bejj77pOzNCZtPqtTm8IcTBmhhvjIa7mLXFBY+lpC3HhHmY85gDttiSX93hoHXH5FJr05VxxNF/1EKc1LBPLTIPO6jTEBZzXBNrh8PLUs45PzWF9pbdAwTVDd+Vzn3N5jlrAiyekwbUsZJyp6srAPAJx7DJJlFj1SmNK6yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SBr3y4v3; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k86VvsxN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7F7FC2BD10;
-	Tue, 23 Apr 2024 05:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713848650;
-	bh=fyyNNc35kzUf08wTp1I94CCtJE66QRy40bl7jgbwPI0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=k86VvsxNvKmKatUjSlNP1W6xBPp7fok45wJ/XmrsV3OHsiBtnaOW1m04D/O1zdZJ1
-	 wucJyo6Mh6HJzcuTnjXoeU8KB6fSTZC6lAfp6fogp5nw/o5gayUm+w1riRRtNlp2es
-	 Tuz1EAOFqQZply7pTOKVeWgj2akHu0j4sr5uoDjD/CyiDdxs6YS5b8EfEFPwusbhec
-	 tQ24xwvU2eeTmKboYKF5nNJxoC/UNydgCmWku02BSeQewfBgAeYyrE4VBFDOC/ZaHo
-	 zNkYCk+ji1cLhv9hx8VWrMVEps62F5+Hrq0+b7JFVflGPrb4hHRqoteehw4liuBmR9
-	 xT3ebRB66RITQ==
-From: Mark Brown <broonie@kernel.org>
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>
-In-Reply-To: <20240422151513.2052167-1-andriy.shevchenko@linux.intel.com>
-References: <20240422151513.2052167-1-andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 1/1] ASoC: soc.h: Don't use "proxy" headers
-Message-Id: <171384864836.1769239.2563630658108188735.b4-ty@kernel.org>
-Date: Tue, 23 Apr 2024 14:04:08 +0900
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SBr3y4v3"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2db7c6b5598so68162311fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 22:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713849119; x=1714453919; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YZ2pAl6U7OSdp/ImmnBqXaV8FpFqgZHPz2bwq5kVVXc=;
+        b=SBr3y4v3qyxn4PwlgSnZeu/nvx0ILaSdlqSh1HQVnaYRaGtsVGYkKfhpvXILTazQfF
+         eOzbJ4I5svT+6SWwO5HBLLVh0Kz+VEizZ+1MEFpl9+E8E/WwG4sdCvfQhmfHBrdIhdc/
+         9JAb2LwcyGMIssCS28Kjbv0oBkrWBp8YAvolF2v5D56AhqkfGolzx3aENMUu/z03QJtd
+         /sP92sDwLcJrNdof7aB9L2sOKUW2n/BBY8ik/DxQh7FXd+596E4QenQTTOn4Lpdo7pgY
+         2zSyLerZ1lGpdoWQXNWWcp04KZ9zkc2saLiRyT8yzKhkTA9l10pdLmW8JWPI+UMoXRB1
+         DPXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713849119; x=1714453919;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YZ2pAl6U7OSdp/ImmnBqXaV8FpFqgZHPz2bwq5kVVXc=;
+        b=rAbGb5QACY5SCtO607pX6oGHxYInsAjEPA7Ao/cgBohC51y0Ao8uht5fye8QoryQPK
+         TVKmNpQyY7LnkCxA8jMszcbOFIlpgz1huZRd78zKvJ7/63iun5wrNG36uqHIkcE58gqh
+         FrGDyRmV0tX4Sd5f44cQfKMoO7gMAGYJPnUzFY76cW7nIEDpHbFES9Czm+HyGg42fTpC
+         0BRyww4NzHL4/7KDb/oBRN0ExNlkBJvY84pLaQXbIn17MPFZUWTJU6nuSQgRs0jvmq0w
+         FeBd2NpKjpe9hREUqLNWXG/pSkn0zc1e1ks+ci0MzCPL0mc8klibSgxA3ksP4B3z7vXo
+         KvsA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2u947wBj5NV+WNmhKaU4/AOlQIJbZ8Y/Z4YL4H4nkGN6tlyZ4XmTshomGo36qk5esu7VUoZWYibgaPzHv3RIxZ+ndgY+LOTQ6PNsq
+X-Gm-Message-State: AOJu0Yz/Yoy/ssor594/5hGi+ICbGrbS8HoT0zPgbKpvnUs5LeQglM50
+	KBaSsyLbcXkO9Ky8ghkS6aKdvyW20P1RETk0hUrN/0D+Ep3bndy0
+X-Google-Smtp-Source: AGHT+IFJgFMRB9WwbskKeMis0h4clRoakWvs85bvcXXeKC93DPxeLg8zJS48963UCHJSSgRKPneUZw==
+X-Received: by 2002:a05:651c:218:b0:2dd:985d:9915 with SMTP id y24-20020a05651c021800b002dd985d9915mr2878323ljn.53.1713849118642;
+        Mon, 22 Apr 2024 22:11:58 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8cfe:d6e7:6701:9dfd? ([2a10:a5c0:800d:dd00:8cfe:d6e7:6701:9dfd])
+        by smtp.gmail.com with ESMTPSA id f16-20020a2e9190000000b002d89c1f0d9csm1543685ljg.69.2024.04.22.22.11.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Apr 2024 22:11:58 -0700 (PDT)
+Message-ID: <b8856e9a-1720-4e22-bf97-8cf074983c34@gmail.com>
+Date: Tue, 23 Apr 2024 08:11:57 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] regulator: change stubbed devm_regulator_get_enable to
+ return Ok
+Content-Language: en-US, en-GB
+To: Guenter Roeck <linux@roeck-us.net>,
+ Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ linux-kernel@vger.kernel.org, Aleksander Mazur <deweloper@wp.pl>
+References: <ZiYF6d1V1vSPcsJS@drtxq0yyyyyyyyyyyyyby-3.rev.dnainternet.fi>
+ <18d4811a-7c92-4bd7-b44f-aacf3c1f2f65@roeck-us.net>
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <18d4811a-7c92-4bd7-b44f-aacf3c1f2f65@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14-dev
 
-On Mon, 22 Apr 2024 18:15:13 +0300, Andy Shevchenko wrote:
-> Update header inclusions to follow IWYU (Include What You Use)
-> principle.
+On 4/22/24 16:23, Guenter Roeck wrote:
+> On 4/21/24 23:38, Matti Vaittinen wrote:
+>> The devm_regulator_get_enable() should be a 'call and forget' API,
+>> meaning, when it is used to enable the regulators, the API does not
+>> provide a handle to do any further control of the regulators. It gives
+>> no real benefit to return an error from the stub if CONFIG_REGULATOR is
+>> not set.
+>>
+>> On the contrary, returning and error is causing problems to drivers when
+>> hardware is such it works out just fine with no regulator control.
+>> Returning an error forces drivers to specifically handle the case where
+>> CONFIG_REGULATOR is not set, making the mere existence of the stub
+>> questionalble. Furthermore, the stub of the regulator_enable() seems to
+>> be returning Ok.
+>>
 > 
+> Yes, that was the reason why the lm90 driver worked pripr to its conversion
+> to use devm_regulator_get_enable() if CONFIG_REGULATOR=n.
 > 
+>> Change the stub implementation for the devm_regulator_get_enable() to
+>> return Ok so drivers do not separately handle the case where the
+>> CONFIG_REGULATOR is not set.
+>>
+>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>> Reported-by: Aleksander Mazur <deweloper@wp.pl>
+>> Suggested-by: Guenter Roeck <linux@roeck-us.net>
+>> Fixes: da279e6965b3 ("regulator: Add devm helpers for get and enable")
+>>
+>> ---
+>> Please find the report by Aleksander from:
+>> https://lore.kernel.org/all/20240420183427.0d3fda27@mocarz/
+>>
+>> This patch has not received testing. It'd be great to hear if this
+>> solves the issue.
+>>
+>> I see the regulator_get_exclusive() and devm_regulator_get_optional()
+>> returning errors. I thus leave the
+>> devm_regulator_get_enable_[optional/exclusive]() to do the same while
+>> wondering if this is the right thing to do, and why...
+>>
+> 
+> At least one of the callers of devm_regulator_get_enable (exc3000) 
+> checks for
+> -ENODEV and ignores it. I assume we'll see more of those unless this patch
+> is accepted. Many of the callers of devm_regulator_get_enable_optional()
+> explicitly check for -ENODEV and ignore it. Others fail if 
+> CONFIG_REGULATOR=n.
+> My plan for affected hwmon drivers is (was ?) to check for -ENODEV and 
+> ignore
+> it to match other drivers.
 
-Applied to
+I'd rather fixed the stub than the callers. I suspect same goes with 
+other subsystems.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> Returning ERR_PTR(-ENODEV) for [devm_]regulator_get() made sense because
+> the returned regulator pointer was often used to obtain a voltage or to
+> do other regulator operations. I don't really see the point of returning
+> -ENODEV for the _enable APIs if regulator support is disabled.
 
-Thanks!
+I agree. I'll send another one for the 
+devm_regulator_get_enable_[optional/exclusive]() if Mark accepts this one.
 
-[1/1] ASoC: soc.h: Don't use "proxy" headers
-      commit: 3249c68e3cdacc2da8fe811a54f8db43df124c0e
+Thanks for the heads up!
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Yours,
+	-- Matti
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+-- 
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+~~ When things go utterly wrong vim users can always type :help! ~~
 
