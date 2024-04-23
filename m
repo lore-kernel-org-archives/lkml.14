@@ -1,116 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F5F46441;
-	Tue, 23 Apr 2024 07:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99AF1C698;
+	Tue, 23 Apr 2024 07:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713857931; cv=none; b=auiBXftCscdy1v3JteyE6UXnPdDO023fsUB1RZrT0eJj5lV2XXQ6QbP+zXeaEOZ44AVWBEL0iCz7uz7rGedi0/ZODbdZJshyic8cKxewU4/L8JUzFqmk8ATaksWz1PQj5vNIH3QvGU7gWCamQaXqaBq0JwIx8wPT6V+MQ2AEBNc=
+	t=1713858006; cv=none; b=at++G8ZtfWYIqBY1JMys4xwmJleRpoHH3flAeRyW68LcWcGmiWokvZr7U3czgt6cd+IKofopS/vhcGqK3E5On+uKAC2imC9ed8DytHd9RyhS+5m2TLQ8yOOPRLpK1QMREjNDzPZbCKChhEKNa2xaGgzM6eSYARgJrbej5f4eIVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713857931; c=relaxed/simple;
-	bh=mjRkFfdBtZbVYBPrvsjPmWl58HkXWr16xgIBP3dQroM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=COuefhTOhK8DI4ss2fOuEjv8uAb0+mEcyP6subvAxUnwnFt4Xv/wA0S6q1dYcudFqWQs7E9pwGod0fmudnC0pU8PEWo9bLHx8OoSA/4XIUvV472TggvfkSVDmve/iE2brcMDUfSLkJuKQLMmq4XpcX09NUmVeRKEwaNGqwajEbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g2nCNumm; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g2nCNumm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713857929; x=1745393929;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mjRkFfdBtZbVYBPrvsjPmWl58HkXWr16xgIBP3dQroM=;
-  b=g2nCNummvlRj+JVkPdJL1qOV+3rWgeywty2ipzANBbnJsXrpqJJhNC7x
-   dGhRdKrMZSNTTUv7zqboihF8yRIa41pCGR5wGmoqMRkgLsiM8PALfGbR1
-   QdhdVn+mJmY7z6GSblg/InVuNT9Rjr5AtxSwnZ3T6ufoZTK95L2gBnmWx
-   axZ/DlclZSuohycmHPNp5Se6llS/di/BlqDwFb3xVT7eUAq0rvYY2Du5K
-   lXp5pwMepesZQcGKV6qnCKNpwAwNpF8ae4EQ3zNICZrq10y2XAS9Y9ttD
-   omYiHR2SC0iie8sQ17O7EN5NbilH9cgNWuen1tOzmGrUrFS0yOTUm+Cb1
-   A==;
-X-CSE-ConnectionGUID: GvO6N5AUR2yId7/OmN5Dmw==
-X-CSE-MsgGUID: SWnKJNYuTzqKvj7J1LwpQg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="31918033"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="31918033"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 00:38:48 -0700
-X-CSE-ConnectionGUID: s/KDoHdVTiSM0XnX3bJmkw==
-X-CSE-MsgGUID: mzxAigJiRoSRJZwbwrOibA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24332315"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa006.fm.intel.com with ESMTP; 23 Apr 2024 00:38:37 -0700
-Date: Tue, 23 Apr 2024 15:33:16 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Corey Minyard <minyard@acm.org>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	Peter Rosin <peda@axentia.se>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-	Keyur Chudgar <keyur@os.amperecomputing.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Yisen Zhuang <yisen.zhuang@huawei.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Tony Lindgren <tony@atomide.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Xiang Chen <chenxiang66@hisilicon.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>, Arnd Bergmann <arnd@arndb.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Tom Rix <trix@redhat.com>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	openipmi-developer@lists.sourceforge.net,
-	linux-integrity@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-fpga@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
-	linux-omap@vger.kernel.org, linux-rtc@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
-	linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 33/34] drivers: remove incorrect of_match_ptr/ACPI_PTR
- annotations
-Message-ID: <ZidkPHp27jz0t6t3@yilunxu-OptiPlex-7050>
-References: <20240403080702.3509288-1-arnd@kernel.org>
- <20240403080702.3509288-34-arnd@kernel.org>
+	s=arc-20240116; t=1713858006; c=relaxed/simple;
+	bh=rzVx5hdb3cC6FEK7gSAmvqgG85mYrv1Qkhiqvdrcdss=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uf+uxSFgwx8IEwfrMi/zr74dfghyIPB9CaxcS2E1t54J5JXx+9x3uKlF1dwGC9zEU/30MJ+JZ1QyD6KcfYE5Jr/HDl3Sy88+7N0SPOrOAbAinavFDFZktjwspoRAdYyX1xREhhGKtYpB1cgyR3wQZU0/wJdEJQeEJvRjp7xGvbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: ad145562014411ef9305a59a3cc225df-20240423
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:4bbdda0c-e953-4a54-846d-42af89c4638d,IP:20,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:1,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:21
+X-CID-INFO: VERSION:1.1.37,REQID:4bbdda0c-e953-4a54-846d-42af89c4638d,IP:20,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:1,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:21
+X-CID-META: VersionHash:6f543d0,CLOUDID:e2988424b0684b401761229020e6ac5d,BulkI
+	D:240423153956Q8FATKAV,BulkQuantity:0,Recheck:0,SF:66|38|24|72|19|43|74|10
+	2,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:
+	nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
+X-UUID: ad145562014411ef9305a59a3cc225df-20240423
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw.kylinos.cn
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 748802077; Tue, 23 Apr 2024 15:39:54 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 3B691E000EB9;
+	Tue, 23 Apr 2024 15:39:54 +0800 (CST)
+X-ns-mid: postfix-662765CA-41198460
+Received: from kernel.. (unknown [10.42.12.206])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 95C90E000EB9;
+	Tue, 23 Apr 2024 15:39:53 +0800 (CST)
+From: Kunwu Chan <chentao@kylinos.cn>
+To: seanjc@google.com,
+	kunwu.chan@hotmail.com,
+	pbonzini@redhat.com,
+	shuah@kernel.org
+Cc: kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: [PATCH] KVM: selftests: Add 'malloc' failure check in test_vmx_nested_state
+Date: Tue, 23 Apr 2024 15:39:52 +0800
+Message-Id: <20240423073952.2001989-1-chentao@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240403080702.3509288-34-arnd@kernel.org>
+Content-Transfer-Encoding: quoted-printable
 
-> diff --git a/drivers/fpga/versal-fpga.c b/drivers/fpga/versal-fpga.c
-> index 3710e8f01be2..e6189106c468 100644
-> --- a/drivers/fpga/versal-fpga.c
-> +++ b/drivers/fpga/versal-fpga.c
-> @@ -69,7 +69,7 @@ static struct platform_driver versal_fpga_driver = {
->  	.probe = versal_fpga_probe,
->  	.driver = {
->  		.name = "versal_fpga_manager",
-> -		.of_match_table = of_match_ptr(versal_fpga_of_match),
-> +		.of_match_table = versal_fpga_of_match,
+There is a 'malloc' call in test_vmx_nested_state function, which can
+be unsuccessful. This patch will add the malloc failure checking
+to avoid possible null dereference and give more information
+about test fail reasons.
 
-For this part
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+---
+ tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Acked-by: Xu Yilun <yilun.xu@intel.com>
+diff --git a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test=
+.c b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
+index 67a62a5a8895..18afc2000a74 100644
+--- a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
++++ b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
+@@ -91,6 +91,7 @@ void test_vmx_nested_state(struct kvm_vcpu *vcpu)
+ 	const int state_sz =3D sizeof(struct kvm_nested_state) + getpagesize();
+ 	struct kvm_nested_state *state =3D
+ 		(struct kvm_nested_state *)malloc(state_sz);
++	TEST_ASSERT(state, "-ENOMEM when allocating kvm state");
+=20
+ 	/* The format must be set to 0. 0 for VMX, 1 for SVM. */
+ 	set_default_vmx_state(state, state_sz);
+--=20
+2.40.1
+
