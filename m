@@ -1,199 +1,174 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C438913C66C
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 15:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A82513C695;
+	Tue, 23 Apr 2024 15:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713885324; cv=none; b=gEgouTCL/W2xkaKI0u9FHu8lXq+uqvszjVHdKQqEFFuC1XcrWBlwW5dnWCxYkyoaTZ/wygdEFln22DcbXxAvBxj+FKVHN/itRWGcQMI6Pg29CE8SQ4GzBMXTUAIBYatGM7jstpAvGZ+UE463rqs2tPSOu9TqNqvhj+6ksvDie0E=
+	t=1713885325; cv=none; b=AW2Hv+C+SRDBdfwhHSQDU49R2PHascrFM110j2PqPkP056yhcDFkAZXOmvrbrxcoGmz4Anhxm5GXMbZN5aqqtfO8KVAe41JEDR9uHHicrgAu1oodrn009YGCgOJ7Y/YzAHEHAQvFJVvytEll2mQ2L2IDqtWjri2dd9Fz7M91VEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713885324; c=relaxed/simple;
-	bh=29mJ2eC3FOIKEQMjH1aipAJXYNklA0kCDubcrgWpjxI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Rie1yLZR9eqgNCYCzYe/8QhKgA7+fET8IFCEs/7Iz66t7ZcRdMqe3MgisruGViY13T8c1musFFIkS7QCbUus/y8+5sHuJNAK61T1rVvdrBPC5re6kxOaUtLhgOuuANDe+YVWx4Jo7xsuplzboKaP+WqVzQWWvUeg3t2MbGrpBCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xtWGkKMm; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1713885325; c=relaxed/simple;
+	bh=lnYfLz/yKVLG22Y0s2TOCf6E1sFzxpYUAzI759jEv3k=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Sk0xyE3kHgjN33nTGjtm/zywIe/H7CGpWT1aMvmiHsW4Yjw/ckjkdQklmi+JnRplAJXickog/tcA+qkUm91yLQQj3JXKNoHzhinMxjG+MyhgxSQ4ZGXLwYM7omN5Yqce5Qx6/x+cAk3MLDYcZZ29xIPsbmNwxFOjVN3MsQ3O8ZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=iiNNHVRA; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xtWGkKMm"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5d8df7c5500so6199119a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 08:15:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713885322; x=1714490122; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uvz589OQSL7BtgJIC3S0S1kNpDPbm+tVW7ZqS1/fwaA=;
-        b=xtWGkKMmc8hX2yznug3v6v5NSwmc5r6yM/pV85JKA/xXTIKo/xSUcAIo6PvwXlvVg4
-         CXMVozkAWsvIfTGSnL4kLHDurxzg5KdHJR/zmHzqO42pRFr9/I4h5O+BspVoj8MzU8m4
-         1mDriOyEjTn2AyKQkL6TtsRdrWsGfRqgsarVHEYDNwmv3OVNoNYvE7xL7wm0sSPJnPqZ
-         pNVJZtFBA5lz22gzCBl9miN6Iz4j4H41P81tTp9kN5EeeEfYpiM8kDHpLLJEZa2iSzXj
-         NC2TA7uhCK3qRNYPQPLJXLuXQf7XIoY63jOEy38g2i+fpP+EVC7P8ot031ZRYVe4w+vg
-         e9lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713885322; x=1714490122;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=uvz589OQSL7BtgJIC3S0S1kNpDPbm+tVW7ZqS1/fwaA=;
-        b=uPQztP6h7CVaYyU2nw+wd81d3YC6dsTwy0H6mcAGtWI6eaukhU/pZ5V4DoN/EuypBE
-         IDypbVnSxKC465RF3izm1iJ5qkLNxilNpEFgYfnZXBNyVAlbF55+NTiS9qPYe1SdPiuP
-         bjLFHUazoLoGL7lNalvTwyY9OaMnkyIc7oUnfKAhW/htBpLe2Bl0KbMFKVnkgUiIf15x
-         X/0jUn0coQKUYBVgEbBrTGj6hqkgt+Cmig7dUzNxc86t8zlFK0/e9csvydsQTF9+dZw+
-         HZeargc0v19EoE3PKzOl/3Zd0+NYNe9qk91XrlSgVSduyzmLBCDSAdEhwUKshnEL+I4e
-         0T/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVHhdIG8I0J9nLT9OGkDGzB9VBA4bJ0s1GnYuRJC0Chw6s3fXvmedTWyfJJbghTGOEW8gSr4Tspo83JZFUhk3a50tG5w31mhj001biI
-X-Gm-Message-State: AOJu0Yz34NlQheG6EY5+YNEwDgaAcD0G+ejvm8SqZTjMuiYKnCQpStwY
-	QJ2IWoW1bL6Uq8crnAlO3G/cjlO66oWgkE3PT978fTypAbSusnO9CPvRNYuggNk0HTw2VB002tH
-	/dw==
-X-Google-Smtp-Source: AGHT+IFQMXpWlXAmt1Hjf05oblgz2qzg5pSqCLj2Uj5XW5rbT8TMU9yswMQX+Cl6PHEPZuJ5DFJk2P12+SU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:2b58:0:b0:5e8:57aa:3609 with SMTP id
- r85-20020a632b58000000b005e857aa3609mr42754pgr.9.1713885321995; Tue, 23 Apr
- 2024 08:15:21 -0700 (PDT)
-Date: Tue, 23 Apr 2024 08:15:20 -0700
-In-Reply-To: <d0563f077a7f86f90e72183cf3406337423f41fe.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="iiNNHVRA"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43NCH14A018378;
+	Tue, 23 Apr 2024 17:15:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type:content-transfer-encoding; s=
+	selector1; bh=sORmSAf9vacArCUQo8K1St5wRolQtpbAu5JoPjjIy14=; b=ii
+	NNHVRAEhwXhr+niTwSdwL4ktGCL2b1QSYUaSPeh4ZHBjPZLuf2J3Xx9wWzqtg5Bt
+	O6ufbjV5uAybP3SOX7vvMkiSM0vnNppdbDpMcXf7UKDRSg4JiOixxi24Q+jRyK/w
+	lOyKyTs3y/be+CeJEkV/FVUeXVv5Tum+FBunU9PBDcZTTuP2D7wdoFKIRPqdguac
+	e6ap/qrbyncVrdciLBFSY2Dxk56enOgBA8YCADsIHQE+Ms2LV5RKWf5PlbrqJ1Mb
+	nbGcXlwo5wlXWTddQw2Vl4krKG8ziaOiJfvdA4byPKOscaK40ml/7YAvvd7qTCB4
+	sjuwBbDnrLyP0f39ReuQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xm4cncfun-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Apr 2024 17:15:00 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2BFCD4002D;
+	Tue, 23 Apr 2024 17:14:52 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CE988223664;
+	Tue, 23 Apr 2024 17:14:16 +0200 (CEST)
+Received: from localhost (10.48.86.103) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Apr
+ 2024 17:14:16 +0200
+From: Maxime MERE <maxime.mere@foss.st.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller"
+	<davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>
+CC: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Rob
+ Herring <robh@kernel.org>, <linux-crypto@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 3/3] crypto: stm32/cryp - add CRYPTO_ALG_KERN_DRIVER_ONLY flag
+Date: Tue, 23 Apr 2024 17:14:09 +0200
+Message-ID: <20240423151409.902490-4-maxime.mere@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240423151409.902490-1-maxime.mere@foss.st.com>
+References: <20240423151409.902490-1-maxime.mere@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <5ffd4052-4735-449a-9bee-f42563add778@intel.com>
- <ZiEulnEr4TiYQxsB@google.com> <22b19d11-056c-402b-ac19-a389000d6339@intel.com>
- <ZiKoqMk-wZKdiar9@google.com> <deb9ccacc4da04703086d7412b669806133be047.camel@intel.com>
- <ZiaWMpNm30DD1A-0@google.com> <3771fee103b2d279c415e950be10757726a7bd3b.camel@intel.com>
- <Zib76LqLfWg3QkwB@google.com> <6e83e89f145aee496c6421fc5a7248aae2d6f933.camel@intel.com>
- <d0563f077a7f86f90e72183cf3406337423f41fe.camel@intel.com>
-Message-ID: <ZifQiCBPVeld-p8Y@google.com>
-Subject: Re: [PATCH v19 023/130] KVM: TDX: Initialize the TDX module when
- loading the KVM intel kernel module
-From: Sean Christopherson <seanjc@google.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: Tina Zhang <tina.zhang@intel.com>, Hang Yuan <hang.yuan@intel.com>, 
-	Bo2 Chen <chen.bo@intel.com>, "sagis@google.com" <sagis@google.com>, 
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Erdem Aktas <erdemaktas@google.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	Isaku Yamahata <isaku.yamahata@intel.com>, 
-	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-23_12,2024-04-23_02,2023-05-22_02
 
-On Tue, Apr 23, 2024, Kai Huang wrote:
-> On Tue, 2024-04-23 at 13:34 +1200, Kai Huang wrote:
-> > >=20
-> > > > > And the intent isn't to catch every possible problem.  As with ma=
-ny sanity checks,
-> > > > > the intent is to detect the most likely failure mode to make tria=
-ging and debugging
-> > > > > issues a bit easier.
-> > > >=20
-> > > > The SEAMCALL will literally return a unique error code to indicate =
-CPU
-> > > > isn't in post-VMXON, or tdx_cpu_enable() hasn't been done.  I think=
- the
-> > > > error code is already clear to pinpoint the problem (due to these p=
-re-
-> > > > SEAMCALL-condition not being met).
-> > >=20
-> > > No, SEAMCALL #UDs if the CPU isn't post-VMXON.  I.e. the CPU doesn't =
-make it to
-> > > the TDX Module to provide a unique error code, all KVM will see is a =
-#UD.
-> >=20
-> > #UD is handled by the SEAMCALL assembly code.  Please see TDX_MODULE_CA=
-LL
-> > assembly macro:
+From: Maxime Méré <maxime.mere@foss.st.com>
 
-Right, but that doesn't say why the #UD occurred.  The macro dresses it up =
-in
-TDX_SW_ERROR so that KVM only needs a single parser, but at the end of the =
-day
-KVM is still only going to see that SEAMCALL hit a #UD.
+This flag is needed to make the driver visible from openssl and cryptodev.
 
-> > > There is no reason to rely on the caller to take cpu_hotplug_lock, an=
-d definitely
-> > > no reason to rely on the caller to invoke tdx_cpu_enable() separately=
- from invoking
-> > > tdx_enable().  I suspect they got that way because of KVM's unnecessa=
-rily complex
-> > > code, e.g. if KVM is already doing on_each_cpu() to do VMXON, then it=
-'s easy enough
-> > > to also do TDH_SYS_LP_INIT, so why do two IPIs?
-> >=20
-> > The main reason is we relaxed the TDH.SYS.LP.INIT to be called _after_ =
-TDX
-> > module initialization. =C2=A0
-> >=20
-> > Previously, the TDH.SYS.LP.INIT must be done on *ALL* CPUs that the
-> > platform has (i.e., cpu_present_mask) right after TDH.SYS.INIT and befo=
-re
-> > any other SEAMCALLs.  This didn't quite work with (kernel software) CPU
-> > hotplug, and it had problem dealing with things like SMT disable
-> > mitigation:
-> >=20
-> > https://lore.kernel.org/lkml/529a22d05e21b9218dc3f29c17ac5a176334cac1.c=
-amel@intel.com/T/#mf42fa2d68d6b98edcc2aae11dba3c2487caf3b8f
-> >=20
-> > So the x86 maintainers requested to change this.  The original proposal
-> > was to eliminate the entire TDH.SYS.INIT and TDH.SYS.LP.INIT:
-> >=20
-> > https://lore.kernel.org/lkml/529a22d05e21b9218dc3f29c17ac5a176334cac1.c=
-amel@intel.com/T/#m78c0c48078f231e92ea1b87a69bac38564d46469
-> >=20
-> > But somehow it wasn't feasible, and the result was we relaxed to allow
-> > TDH.SYS.LP.INIT to be called after module initialization.
-> >=20
-> > So we need a separate tdx_cpu_enable() for that.
+Signed-off-by: Maxime Méré <maxime.mere@st.com>
+---
+ drivers/crypto/stm32/stm32-cryp.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-No, you don't, at least not given the TDX patches I'm looking at.  Allowing
-TDH.SYS.LP.INIT after module initialization makes sense because otherwise t=
-he
-kernel would need to online all possible CPUs before initializing TDX.  But=
- that
-doesn't mean that the kernel needs to, or should, punt TDH.SYS.LP.INIT to K=
-VM.
+diff --git a/drivers/crypto/stm32/stm32-cryp.c b/drivers/crypto/stm32/stm32-cryp.c
+index 36248975191c..e1a4b5d9d006 100644
+--- a/drivers/crypto/stm32/stm32-cryp.c
++++ b/drivers/crypto/stm32/stm32-cryp.c
+@@ -2294,7 +2294,7 @@ static struct skcipher_engine_alg crypto_algs[] = {
+ 		.base.cra_name		= "ecb(aes)",
+ 		.base.cra_driver_name	= "stm32-ecb-aes",
+ 		.base.cra_priority	= 300,
+-		.base.cra_flags		= CRYPTO_ALG_ASYNC,
++		.base.cra_flags		= CRYPTO_ALG_ASYNC | CRYPTO_ALG_KERN_DRIVER_ONLY,
+ 		.base.cra_blocksize	= AES_BLOCK_SIZE,
+ 		.base.cra_ctxsize	= sizeof(struct stm32_cryp_ctx),
+ 		.base.cra_alignmask	= 0,
+@@ -2316,7 +2316,7 @@ static struct skcipher_engine_alg crypto_algs[] = {
+ 		.base.cra_name		= "cbc(aes)",
+ 		.base.cra_driver_name	= "stm32-cbc-aes",
+ 		.base.cra_priority	= 300,
+-		.base.cra_flags		= CRYPTO_ALG_ASYNC,
++		.base.cra_flags		= CRYPTO_ALG_ASYNC | CRYPTO_ALG_KERN_DRIVER_ONLY,
+ 		.base.cra_blocksize	= AES_BLOCK_SIZE,
+ 		.base.cra_ctxsize	= sizeof(struct stm32_cryp_ctx),
+ 		.base.cra_alignmask	= 0,
+@@ -2339,7 +2339,7 @@ static struct skcipher_engine_alg crypto_algs[] = {
+ 		.base.cra_name		= "ctr(aes)",
+ 		.base.cra_driver_name	= "stm32-ctr-aes",
+ 		.base.cra_priority	= 300,
+-		.base.cra_flags		= CRYPTO_ALG_ASYNC,
++		.base.cra_flags		= CRYPTO_ALG_ASYNC | CRYPTO_ALG_KERN_DRIVER_ONLY,
+ 		.base.cra_blocksize	= 1,
+ 		.base.cra_ctxsize	= sizeof(struct stm32_cryp_ctx),
+ 		.base.cra_alignmask	= 0,
+@@ -2362,7 +2362,7 @@ static struct skcipher_engine_alg crypto_algs[] = {
+ 		.base.cra_name		= "ecb(des)",
+ 		.base.cra_driver_name	= "stm32-ecb-des",
+ 		.base.cra_priority	= 300,
+-		.base.cra_flags		= CRYPTO_ALG_ASYNC,
++		.base.cra_flags		= CRYPTO_ALG_ASYNC | CRYPTO_ALG_KERN_DRIVER_ONLY,
+ 		.base.cra_blocksize	= DES_BLOCK_SIZE,
+ 		.base.cra_ctxsize	= sizeof(struct stm32_cryp_ctx),
+ 		.base.cra_alignmask	= 0,
+@@ -2384,7 +2384,7 @@ static struct skcipher_engine_alg crypto_algs[] = {
+ 		.base.cra_name		= "cbc(des)",
+ 		.base.cra_driver_name	= "stm32-cbc-des",
+ 		.base.cra_priority	= 300,
+-		.base.cra_flags		= CRYPTO_ALG_ASYNC,
++		.base.cra_flags		= CRYPTO_ALG_ASYNC | CRYPTO_ALG_KERN_DRIVER_ONLY,
+ 		.base.cra_blocksize	= DES_BLOCK_SIZE,
+ 		.base.cra_ctxsize	= sizeof(struct stm32_cryp_ctx),
+ 		.base.cra_alignmask	= 0,
+@@ -2407,7 +2407,7 @@ static struct skcipher_engine_alg crypto_algs[] = {
+ 		.base.cra_name		= "ecb(des3_ede)",
+ 		.base.cra_driver_name	= "stm32-ecb-des3",
+ 		.base.cra_priority	= 300,
+-		.base.cra_flags		= CRYPTO_ALG_ASYNC,
++		.base.cra_flags		= CRYPTO_ALG_ASYNC | CRYPTO_ALG_KERN_DRIVER_ONLY,
+ 		.base.cra_blocksize	= DES_BLOCK_SIZE,
+ 		.base.cra_ctxsize	= sizeof(struct stm32_cryp_ctx),
+ 		.base.cra_alignmask	= 0,
+@@ -2429,7 +2429,7 @@ static struct skcipher_engine_alg crypto_algs[] = {
+ 		.base.cra_name		= "cbc(des3_ede)",
+ 		.base.cra_driver_name	= "stm32-cbc-des3",
+ 		.base.cra_priority	= 300,
+-		.base.cra_flags		= CRYPTO_ALG_ASYNC,
++		.base.cra_flags		= CRYPTO_ALG_ASYNC | CRYPTO_ALG_KERN_DRIVER_ONLY,
+ 		.base.cra_blocksize	= DES_BLOCK_SIZE,
+ 		.base.cra_ctxsize	= sizeof(struct stm32_cryp_ctx),
+ 		.base.cra_alignmask	= 0,
+@@ -2463,7 +2463,7 @@ static struct aead_engine_alg aead_algs[] = {
+ 		.cra_name		= "gcm(aes)",
+ 		.cra_driver_name	= "stm32-gcm-aes",
+ 		.cra_priority		= 300,
+-		.cra_flags		= CRYPTO_ALG_ASYNC,
++		.cra_flags		= CRYPTO_ALG_ASYNC | CRYPTO_ALG_KERN_DRIVER_ONLY,
+ 		.cra_blocksize		= 1,
+ 		.cra_ctxsize		= sizeof(struct stm32_cryp_ctx),
+ 		.cra_alignmask		= 0,
+@@ -2486,7 +2486,7 @@ static struct aead_engine_alg aead_algs[] = {
+ 		.cra_name		= "ccm(aes)",
+ 		.cra_driver_name	= "stm32-ccm-aes",
+ 		.cra_priority		= 300,
+-		.cra_flags		= CRYPTO_ALG_ASYNC,
++		.cra_flags		= CRYPTO_ALG_ASYNC | CRYPTO_ALG_KERN_DRIVER_ONLY,
+ 		.cra_blocksize		= 1,
+ 		.cra_ctxsize		= sizeof(struct stm32_cryp_ctx),
+ 		.cra_alignmask		= 0,
+-- 
+2.25.1
 
-AFAICT, KVM is NOT doing TDH.SYS.LP.INIT when a CPU is onlined, only when K=
-VM
-is loaded, which means that tdx_enable() can process all online CPUs just a=
-s
-easily as KVM.
-
-Presumably that approach relies on something blocking onlining CPUs when TD=
-X is
-active.  And if that's not the case, the proposed patches are buggy.
-
-> Btw, the ideal (or probably the final) plan is to handle tdx_cpu_enable()
-> in TDX's own CPU hotplug callback in the core-kernel and hide it from all
-> other in-kernel TDX users. =C2=A0
->=20
-> Specifically:
->=20
-> 1) that callback, e.g., tdx_online_cpu() will be placed _before_ any in-
-> kernel TDX users like KVM's callback.
-> 2) In tdx_online_cpu(), we do VMXON + tdx_cpu_enable() + VMXOFF, and
-> return error in case of any error to prevent that cpu from going online.
->=20
-> That makes sure that, if TDX is supported by the platform, we basically
-> guarantees all online CPUs are ready to issue SEAMCALL (of course, the in=
--
-> kernel TDX user still needs to do VMXON for it, but that's TDX user's
-> responsibility).
->=20
-> But that obviously needs to move VMXON to the core-kernel.
-
-It doesn't strictly have to be core kernel per se, just in code that sits b=
-elow
-KVM, e.g. in a seperate module called VAC[*] ;-)
-
-[*] https://lore.kernel.org/all/ZW6FRBnOwYV-UCkY@google.com
-
-> Currently, export tdx_cpu_enable() as a separate API and require KVM to
-> call it explicitly is a temporary solution.
->=20
-> That being said, we could do tdx_cpu_enable() inside tdx_enable(), but I
-> don't see it's a better idea.
-
-It simplifies the API surface for enabling TDX and eliminates an export.
