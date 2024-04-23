@@ -1,139 +1,103 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6D813B5AC
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732C586254
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:49:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713872942; cv=none; b=VY986x3Q1+G2kyXpqNddYWskaGVwG9nigapG+3etsgpM43hb4/6hmCFJ8svzvL+p2YX8U7i/KUuYs8Z7Uj/D7E66u103dLy6MZnGjRMQOQ7uW9Wpm7c0SvdtRH+p3lYY6cUdZ/FxMsJ92ricWWdYF9OeGS2ObixYY3T4qzqkzi8=
+	t=1713872976; cv=none; b=lqG7dIWMs5c6zp20rBXk+YZk8+RDDKLJcvg8EFtpBqahGGSrLNw3IIRF/v1a6JrC+Ew5SMBtjFUSwN5lNj03cCFk136wVkwxtycQ6CGrT5GNRrJx1eoCr6WutdddhzxLNh5SvXqOtgxI6zjY152ydD6zMYcRgO4KdSUpQ1OhWMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713872942; c=relaxed/simple;
-	bh=ZfuZnbxQcJiXsjKcyIyROVnZ6LTQ29+pjXlmqHq1MFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FgQgdwvaMrkyRlHKDvEzYjJ1i3VUN8aX0w07u8bX3k9OioBDEB3cXAl0kc1BcRwoPSlmtGmjW8SZyxq9oqs+aclwLzV6NQNLEHzxytygt/nyiYAWYWnmqyKonDE1ogZRBVcVjt8pRVMtKXlYoZNXrGns+oeXOZ3qFbIvRAk52/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aBsYfXKY; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1713872976; c=relaxed/simple;
+	bh=1+tVFk2qh9vDf6i/oCpUf/iYwQSby1SpP3kGFsH83w8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CcXAvnpNkJg2dzyXYNNg5V3ZQXC02nuZO+bP5hWsj3ZGdxAlee9w7xlrQLTNgaURm5hVVr6/3NCxlUVlB7I74M03+Had0RtbjxoxkIx0ERs/vpVHu+RbxjNkAq4Ap8pdXDOK7J8YvBalPUNoH24YdU6AJjHRidAnAnIr1TDx6uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PhwQ9K3w; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aBsYfXKY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=VHYacKOAYAXq7qcz87ZpPvgNr8LptHfkppDy+s6k0rA=; b=aBsYfXKYCmtr2rA2INiUCkvFzo
-	ycRy8s+dl5zZaUsn6fTVV6J/u4GpRBPCvbJ/df6M6G74A+YE89occI29mZWszcRF6dfP3kFC24xBU
-	RffVsDvP8p/1/sKex1zGdhUCadc28EQics2ruxW5ghFlYwNvICan1BbRudQXk9Q7RpFZEG1pJYc4e
-	DD3ZRaHB+LFCauuzidwsU+yxvA2lKpDRx9UENvxXRggInZ6PBZUqQLmycEMIRzfMQNxz2Vx+X+bpD
-	b9mYMscBZhA2ce4of1V6C8jX8RUI63fEXasJr/YPge8eItr5K/crzUN7i2G7WPNN2JHqjiwcpYNZG
-	3+tqkK/A==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzEdZ-0000000E14u-1Veg;
-	Tue, 23 Apr 2024 11:48:38 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 05ABA30057A; Tue, 23 Apr 2024 13:48:37 +0200 (CEST)
-Date: Tue, 23 Apr 2024 13:48:36 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Xuewen Yan <xuewen.yan94@gmail.com>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, mingo@redhat.com,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-	yu.c.chen@intel.com, ke.wang@unisoc.com, di.shen@unisoc.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] sched/eevdf: Prevent vlag from going out of bounds
- when reweight_eevdf
-Message-ID: <20240423114836.GA24704@noisy.programming.kicks-ass.net>
-References: <20240422082238.5784-1-xuewen.yan@unisoc.com>
- <CAB8ipk-LhSuMsp0DdzjEJN-4XEBT1_ri6BPH_nvxSgFZONMT2Q@mail.gmail.com>
- <20240422094157.GA34453@noisy.programming.kicks-ass.net>
- <CAB8ipk9M1wLXV7MWMBYGMhKbY71QqwkvchiENeWTg7JERe6kZw@mail.gmail.com>
- <20240422111744.GO30852@noisy.programming.kicks-ass.net>
- <CAB8ipk8ZBSnJfw9Ow9My-VXG1TU6DVY7mOL_i0Ejdd7GUZCLWA@mail.gmail.com>
- <20240422155937.GP30852@noisy.programming.kicks-ass.net>
- <CAB8ipk-WYVLsRi1_wnm2vF3M4RDnV1cSomb4MkJ83ef2GY0gzg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PhwQ9K3w"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-de54cb87998so785441276.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 04:49:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713872974; x=1714477774; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1+tVFk2qh9vDf6i/oCpUf/iYwQSby1SpP3kGFsH83w8=;
+        b=PhwQ9K3wTv/tOidR7xEmuzgYq++SQLqEFyu3P1moYEtakkdbIPpegV7720lNsMjdR5
+         R5V/FFfs+I7IWOwntA+tpI8tgRNP4KLpzTt0D2BeMnksyvhl/beiQSEgR0VzPkVf1PZ5
+         areFGS6O9iqucvJXSa09cdCdX5iOFDdNxHf51f+vAHvuyGr5gDBCK/OTY4q0evvyz/Cm
+         GFM7GujyAJUF5mGIJsXkEDICYBihgdyUgsfqoVps3qGWXNq9hpGzAVwC54Fuzn2QhI5C
+         Ihz8smdxyQZiKLkI1YU1JIcWAmnhg6yoOb7DtyNSKVTkuL6SndXPriP45b0SvI76Rw5G
+         2tkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713872974; x=1714477774;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1+tVFk2qh9vDf6i/oCpUf/iYwQSby1SpP3kGFsH83w8=;
+        b=QtSkudl9/xc0FqN84+KkkVPM2nlU6NhhvwaI4OrIxJL8/c0IrfDnm8/ZRXzk6JZNwD
+         kUU/o3/6K4ZjNdqQ8we7Pq8aTuKOyJmiDzPeqiJHcZrlx28Z95iKmpDvIQLuZay8PAeX
+         ZPMLBLhGWhlOMy4GLMaZFlwC8mcD85MiIO84+OB8eg8r50/bm3ZnEK3c5LvOWM3CqoSS
+         5tIcRtLepEXqhqReKjjZ8OqdXkwL/Gqtrtey54eDGGHRGdFtyzhYdxj95PsupkFhPzFU
+         WmCCNfmuWXQQzQvRv3ygeHmlVmuWfwf8v4BINt66EIHHuCit7Xs14ejvAl39SSW/+S+N
+         MVbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXdsPyhZqSierzy+/5uSCtsGjfq4x7WtPgCQjCFLxvf+3PbsNWY1t0Rg0xqASk5FnItb9btMEU/t51LT7uLFF9CLHnGOiKVomuYlVZk
+X-Gm-Message-State: AOJu0Yw5HikqX4Liy0oRLYi30E9iuRSeBXIEiE/KtThntFItNMgv5zth
+	gZTxZIUE2xSaQ+uy0aSDnnjQEuvzRmozZcSPEQpXAXSypTdlo+hSTfJp2tw/qXYi7tJg/PQHt+q
+	mEmC/lbRI9w2TXBAa1dP6WgNdFwR61NiiPxM6Hg==
+X-Google-Smtp-Source: AGHT+IGjDBUQYz9+X6SyEzZZeSMEDVf6Wbxzl8++aRZfjMU/+beIUpWnIVO740sZRKFFSeYQTIPRPMPFIKoScm0kEdQ=
+X-Received: by 2002:a5b:651:0:b0:de5:4a91:11c4 with SMTP id
+ o17-20020a5b0651000000b00de54a9111c4mr2558198ybq.44.1713872974438; Tue, 23
+ Apr 2024 04:49:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAB8ipk-WYVLsRi1_wnm2vF3M4RDnV1cSomb4MkJ83ef2GY0gzg@mail.gmail.com>
+References: <20240423-for-soc-asus-rt-ac3200-ac5300-v3-0-23d33cfafe7a@arinc9.com>
+ <20240423-for-soc-asus-rt-ac3200-ac5300-v3-4-23d33cfafe7a@arinc9.com>
+In-Reply-To: <20240423-for-soc-asus-rt-ac3200-ac5300-v3-4-23d33cfafe7a@arinc9.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 23 Apr 2024 13:49:23 +0200
+Message-ID: <CACRpkdZQbromhiebf6-Dn5zYxu13RLfPjgUf2b5FYH3_FrjsHg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] ARM: dts: BCM5301X: Add DT for ASUS RT-AC5300
+To: arinc.unal@arinc9.com
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, 
+	Hauke Mehrtens <hauke@hauke-m.de>, Rafal Milecki <zajec5@gmail.com>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Tom Brautaset <tbrautaset@gmail.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 23, 2024 at 11:05:20AM +0800, Xuewen Yan wrote:
-> On Mon, Apr 22, 2024 at 11:59 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Mon, Apr 22, 2024 at 09:12:12PM +0800, Xuewen Yan wrote:
-> >
-> > > By adding a log to observe weight changes in reweight_entity, I found
-> > > that calc_group_shares() often causes new_weight to become very small:
-> >
-> > Yes, cgroups do that. But over-all that should not matter no?
-> >
-> > Specifically, the whole re-weight thing turns into a series like:
-> >
-> >             w_0   w_1         w_n-1   w_0
-> >         S = --- * --- * ... * ----- = ---
-> >             w_1   w_2          w_n    w_n
-> >
-> > Where S is our ultimate scale factor.
-> >
-> > So even if w_m (0 < m < n) is 2, it completely disappears. But yes, it
-> > will create a big term, which is why the initial vlag should be limited.
-> 
-> Okay, I understand what you mean. Even if the weight during dequeue is
-> very small, the weight will be eliminated during enqueue.
-> In this case, the necessity of the !on_rq case does not seem to be
-> very important.
-> 
-> On the other hand, the following case:
-> place_entity()
-> {
-> ...
->  5244                 load = cfs_rq->avg_load;
->  5245                 if (curr && curr->on_rq)
->  5246                         load += scale_load_down(curr->load.weight);
->  5247
->  5248                 lag *= load + scale_load_down(se->load.weight);
->  5249                 if (WARN_ON_ONCE(!load))
->  5250                         load = 1;
->  5251                 lag = div_s64(lag, load);<<<<
-> ...
-> }
+On Tue, Apr 23, 2024 at 11:51=E2=80=AFAM Ar=C4=B1n=C3=A7 =C3=9CNAL via B4 R=
+elay
+<devnull+arinc.unal.arinc9.com@kernel.org> wrote:
 
-So this plays games with scale_load_down() because this is W, the sum of
-all w, which can indeed grow quite large and cause overflow.
+> From: Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc9.com>
+>
+> Add the device tree for ASUS RT-AC5300 which is an AC5300 router featurin=
+g
+> 5 Ethernet ports over the integrated Broadcom switch.
+>
+> Hardware info:
+> * Processor: Broadcom BCM4709C0 dual-core @ 1.4 GHz
+> * Switch: BCM53012 in BCM4709C0
+> * DDR3 RAM: 512 MB
+> * Flash: 128 MB
+> * 2.4GHz: BCM4366 4x4 single chip 802.11b/g/n SoC
+> * 5GHz: BCM4366 4x4 two chips 802.11a/n/ac SoC
+> * Ports: 4 LAN Ports, 1 WAN Port
+>
+> Co-developed-by: Tom Brautaset <tbrautaset@gmail.com>
+> Signed-off-by: Tom Brautaset <tbrautaset@gmail.com>
+> Signed-off-by: Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc9.com>
 
-> reweight_eevdf()
-> {
-> ...
->                  if (avruntime != se->vruntime) {
->  3770                 vlag = entity_lag(avruntime, se);
->  3771                 vlag = div_s64(vlag * old_weight, weight); <<<<
->  3772                 se->vruntime = avruntime - vlag;
->  3773         }
-> .....
-> }
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-While here we're talking about a single w, which is much more limited in
-scope. And per the above, what we're trying to do is:
-
-  vlag = lag/w
-  lag/w * w/w' = lag/w'
-
-That is, move vlag from one w to another.
-
-> There is no need to clamp the above two positions because these two
-> calculations will not theoretically cause s64 overflow?
-
-Well, supposedly, if I didn't get it wrong etc.. (I do tend to get
-things wrong from time to time :-).
-
-I would think limited vlag would stay below 1 second or about 30 bits
-this leaves another 30 bits for w which *should* be enough.
-
-Anyway, if you're unsure, sprinkle some check_mul_overflow() and see if
-you can tickle it.
+Yours,
+Linus Walleij
