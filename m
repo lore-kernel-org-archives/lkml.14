@@ -1,30 +1,30 @@
-Received: from out0-197.mail.aliyun.com (out0-197.mail.aliyun.com [140.205.0.197])
+Received: from out187-16.us.a.mail.aliyun.com (out187-16.us.a.mail.aliyun.com [47.90.187.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F3A126F10
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84C31350F2
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713877153; cv=none; b=ovis45ZmwptW1EE6QGrT6VTkYiWLnXZhFhVXsTZlNIGj0FDZ9bTUoafEg3jrvM0Eb8d7HQK+GuZdbLODg4aOsMcVacwmyV9OXCP9WZkebIf2I2SAYAKl4IRg3121xUzT2iBKCPjikK8lSIn1mSIieuly3VO/jbz/vCN30MFxgSU=
+	t=1713877162; cv=none; b=uLp8g+3ICoOQausEXMY68lkhOTA1a787wqNdEYz2in0A8/EJjmb058q8UEk0f7piDjvaUD8kz0hfoMxF+ArP2zb1vz+wln8kipGPPWU32WJld3fYg7T9jeh11sl7Vlt6FXSV8gdYZ9dmxVSUuaw7GqmWITAhadAD5VdTzdZuEdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713877153; c=relaxed/simple;
-	bh=cxe3FA+juKRwuhcRoo2BgZ+cSuJhZPREFLKbwZ0iAbc=;
+	s=arc-20240116; t=1713877162; c=relaxed/simple;
+	bh=VUK1qW4vcuTcnbfvkh2ig+AROuk8bCOr9JBsTl9lZiI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sA7r/tXytsoY5eQAihL30IpGcb2Cxmpwy4PCuKEUzW40iYmoZ3Op3laU1E802s9av/ZIjd+x1N3a86Ig6ZubVPMhzHnWjPL+SUkEW0IlLuXYZfMgob5KiDhtSgzmBaYnKEBQGi6vwziTFEXsxb172yoDgk8tfO+qTyTIQprMdng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=2LHNAiGx; arc=none smtp.client-ip=140.205.0.197
+	 MIME-Version:Content-Type; b=sTiP71rPThadAKc/2EPiNNYAB/xO3IOko1IAckMtcZdpjHej2Gm+mp2h1VffN4fQNpI3G5hSo5IotNReacd4O7hZ1xm3SjGyBRzpV17/o7pHmF68TDWoGvfdeWmJze4TR5p85QD133m4uvpE99WI2gcnWiauSAIf7kGefvd/ckM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=n0HVDqsy; arc=none smtp.client-ip=47.90.187.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="2LHNAiGx"
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="n0HVDqsy"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=antgroup.com; s=default;
-	t=1713877148; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=ztht0K4jTp/9L7ckF5yEd/2TUV3jSzUX1GNvcqyFTsA=;
-	b=2LHNAiGxxXWVyrfk1Z3pfDvNMuuasRGBT+aBh8LC0qgnODd99QFY+ZR3EYoH353MzQB84J/bE7vtlg5NgosZniY+r1UnoXv6PftQDG86OU8AMAYieiC8Ah7i4DHxJ8/ETXEMTNYI80bsTs8VJ6QS8RikOIb00o9+SVU/Tew9E4U=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047194;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJXNjST_1713877147;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJXNjST_1713877147)
+	t=1713877149; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
+	bh=lumfKnRDCzxzbmj8wJ/Hznk5zzPAE/pxByFtYHy06AQ=;
+	b=n0HVDqsy9gqwPYdqOSn/UILDsSEH+3yxlEjWow3mT8gKzmrJX5uRX3i6D/jErMEZBzLCxOZXPe7RItbXgIQ7h75CG8iX73vowU6csFKXqbrug/drQ6jiebmIGQuAIZ79HGFYpVARI+ANq1X/pjvDSiCF8173iu9rHGOH5g1oQdE=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047208;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJXNjT6_1713877148;
+Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJXNjT6_1713877148)
           by smtp.aliyun-inc.com;
-          Tue, 23 Apr 2024 20:59:07 +0800
+          Tue, 23 Apr 2024 20:59:08 +0800
 From: "Tiwei Bie" <tiwei.btw@antgroup.com>
 To: richard@nod.at,
 	anton.ivanov@cambridgegreys.com,
@@ -32,9 +32,9 @@ To: richard@nod.at,
 Cc:  <linux-um@lists.infradead.org>,
    <linux-kernel@vger.kernel.org>,
   "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH v2 3/7] um: Fix the -Wmissing-prototypes warning for get_thread_reg
-Date: Tue, 23 Apr 2024 20:58:54 +0800
-Message-Id: <20240423125858.137709-4-tiwei.btw@antgroup.com>
+Subject: [PATCH v2 7/7] um: Remove unused do_get_thread_area function
+Date: Tue, 23 Apr 2024 20:58:58 +0800
+Message-Id: <20240423125858.137709-8-tiwei.btw@antgroup.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240423125858.137709-1-tiwei.btw@antgroup.com>
 References: <20240423125858.137709-1-tiwei.btw@antgroup.com>
@@ -44,48 +44,60 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The get_thread_reg function is defined in the user code, and is
-called by the kernel code. It should be declared in a shared header.
+It's not used since it was introduced by commit aa6758d4867c ("[PATCH]
+uml: implement {get,set}_thread_area for i386"). Now, it's causing a
+-Wmissing-prototypes warning:
 
-Fixes: dbba7f704aa0 ("um: stop polluting the namespace with registers.h contents")
+arch/x86/um/tls_32.c:39:5: warning: no previous prototype for ‘do_get_thread_area’ [-Wmissing-prototypes]
+   39 | int do_get_thread_area(struct user_desc *info)
+      |     ^~~~~~~~~~~~~~~~~~
+
+The original author also had doubts about whether it should be used.
+Considering that 18 years have passed, let's just remove it.
+
 Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
 ---
- arch/um/include/asm/processor-generic.h | 1 -
- arch/x86/um/shared/sysdep/archsetjmp.h  | 7 +++++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ arch/x86/um/tls_32.c | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
-diff --git a/arch/um/include/asm/processor-generic.h b/arch/um/include/asm/processor-generic.h
-index 6c3779541845..5a7c05275aa7 100644
---- a/arch/um/include/asm/processor-generic.h
-+++ b/arch/um/include/asm/processor-generic.h
-@@ -94,7 +94,6 @@ extern struct cpuinfo_um boot_cpu_data;
- #define current_cpu_data boot_cpu_data
- #define cache_line_size()	(boot_cpu_data.cache_alignment)
+diff --git a/arch/x86/um/tls_32.c b/arch/x86/um/tls_32.c
+index ba40b1b8e179..d301deee041f 100644
+--- a/arch/x86/um/tls_32.c
++++ b/arch/x86/um/tls_32.c
+@@ -36,22 +36,6 @@ static int do_set_thread_area(struct user_desc *info)
+ 	return ret;
+ }
  
--extern unsigned long get_thread_reg(int reg, jmp_buf *buf);
- #define KSTK_REG(tsk, reg) get_thread_reg(reg, &tsk->thread.switch_buf)
- extern unsigned long __get_wchan(struct task_struct *p);
+-int do_get_thread_area(struct user_desc *info)
+-{
+-	int ret;
+-	u32 cpu;
+-
+-	cpu = get_cpu();
+-	ret = os_get_thread_area(info, userspace_pid[cpu]);
+-	put_cpu();
+-
+-	if (ret)
+-		printk(KERN_ERR "PTRACE_GET_THREAD_AREA failed, err = %d, "
+-		       "index = %d\n", ret, info->entry_number);
+-
+-	return ret;
+-}
+-
+ /*
+  * sys_get_thread_area: get a yet unused TLS descriptor index.
+  * XXX: Consider leaving one free slot for glibc usage at first place. This must
+@@ -231,7 +215,6 @@ int arch_set_tls(struct task_struct *new, unsigned long tls)
+ 	return ret;
+ }
  
-diff --git a/arch/x86/um/shared/sysdep/archsetjmp.h b/arch/x86/um/shared/sysdep/archsetjmp.h
-index 166cedbab926..8c81d1a604a9 100644
---- a/arch/x86/um/shared/sysdep/archsetjmp.h
-+++ b/arch/x86/um/shared/sysdep/archsetjmp.h
-@@ -1,6 +1,13 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __X86_UM_SYSDEP_ARCHSETJMP_H
-+#define __X86_UM_SYSDEP_ARCHSETJMP_H
-+
- #ifdef __i386__
- #include "archsetjmp_32.h"
- #else
- #include "archsetjmp_64.h"
- #endif
-+
-+unsigned long get_thread_reg(int reg, jmp_buf *buf);
-+
-+#endif /* __X86_UM_SYSDEP_ARCHSETJMP_H */
+-/* XXX: use do_get_thread_area to read the host value? I'm not at all sure! */
+ static int get_tls_entry(struct task_struct *task, struct user_desc *info,
+ 			 int idx)
+ {
 -- 
 2.34.1
 
