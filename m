@@ -1,91 +1,105 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE0163099;
-	Tue, 23 Apr 2024 10:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFEE57303;
+	Tue, 23 Apr 2024 10:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713868097; cv=none; b=uxGmiRkYVKqnXEcR7Y4fAs0qx6uH8QTiIHfcpJoVlhnmDFt/YK+OfFmgXMxBQmFvQzxn73+tgTIntwwh1ShmKw7PlzCQatyrT+blcCzEiiVszGwzz0d61PrfB785Z1ZJhBPNTfA2iHAIyp/jXtv9LWOedkyNGA5k8kLTHI+GlTU=
+	t=1713868135; cv=none; b=i6/NpzemV+3kGA8lqW/YjAv3dj+jm3ylgC6q/jQusXuYIkjXo1S8vf6rQTC/+bCtOn65op/3xmGYsGBkfxuLs3GLfLQYhKPtP0lSxRqkoUf9K5xzEBTT7YKgceR6RVhFnVedQzc7VLZuH7aazPwRzdKkHJaHzPvuofFU8QhRy3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713868097; c=relaxed/simple;
-	bh=6KXD0oeK4Ss5GHj0EJM6H4ROKzmr2ymo8levWGdF1ZQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RzruVgWlJxFp6FXjCTmJwDKG3SeaW+HA9IZ3xtNXoyMAMIrdybQokDtJyBFxHPo6qTQAZZc4vUXW0cyQGRuMAO0ya4vVAWNxjpfbXkUXzAlm5qxxXJ6RJeBMl3QUn8BIrmwguWxXHk2P/QdHa8Rrp2iADzNL5RZlYfkUBXYbaMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=uTiOqInZ; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+	s=arc-20240116; t=1713868135; c=relaxed/simple;
+	bh=uh3qowr3m7iMpEAznogEW2Z/W4vdpFPZBLkqnX3kXJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dQ/Fgl0byPTY0F4ZemaUcRx5dN+jdpKcW9+VTy83E6EP3dwZxhBtygcKGo8qeMbbi0/U71tQ7bwElKHY5UjrV2USI0+plGWlR2Hg/bYz2x5kaJdOKsJiuPsWa/+XEMhBuQba3YAofjP/7dN6IwbljWjFj34msFNG39vCH0gUI5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Z3FH4zLE; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="uTiOqInZ"
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 7EBF4600B1;
-	Tue, 23 Apr 2024 10:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1713868087;
-	bh=6KXD0oeK4Ss5GHj0EJM6H4ROKzmr2ymo8levWGdF1ZQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uTiOqInZY5CjiGeY9wc7nv9OVyi+q3o3i/3szMxy/g2GwwdSdha8NTWXY1oVviXYX
-	 Rc8/ol+2oS05mjKjZCGcrBVKz53S3TBydH17KWcVwLNvn8Ql8oUq+Jmm4Fb9qUAhqj
-	 GVOzRC/mh/O+VhMIv9XFdAlKBplc/NbO1wZgg8DfTqX4oQRTFQ9w6H926cVLwJuT27
-	 zAkkK3tw1fYr2dep0Sz24J5XhtLvYrka+zCsgofgqO4YpwbQ8sWLAUjdnSHDpHyNuZ
-	 Oy6mBaack3mxyd0O6CJK7uZMnkGSMMoTXDDBDHApy5lA5sxolxoVzbf7HwhffINzLV
-	 4D0je5lQlJZhw==
-Received: by x201s (Postfix, from userid 1000)
-	id 679AA216B8F; Tue, 23 Apr 2024 10:27:21 +0000 (UTC)
-From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
-To: netdev@vger.kernel.org
-Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 2/2] net: lan966x: flower: check for unsupported control flags
-Date: Tue, 23 Apr 2024 10:27:18 +0000
-Message-ID: <20240423102720.228728-2-ast@fiberby.net>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240423102720.228728-1-ast@fiberby.net>
-References: <20240423102720.228728-1-ast@fiberby.net>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Z3FH4zLE"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C8C2540E0192;
+	Tue, 23 Apr 2024 10:28:50 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id K4TEGVbBZaV8; Tue, 23 Apr 2024 10:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1713868126; bh=c06iWq/U5QU79LoYabk6NNZS2MWKKgb0Cpqli/6PTJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z3FH4zLEd5fO/jmwUKzXZVRNHTIcKRObRRp8a5M6PtmwkQjZ1og+lDQ0PUNGjvFZw
+	 5u34wtAYTjZTphebOJxFn9rcKnGTLn9Wr+a4EZbCe50NBnVxUQtX23qQabMWrrXkMx
+	 GZjVmxcn3LfHe4QWHKuGOkzGcCJ5feIXugB5CbtPuC02aAAEGTQJ8mzje4fAA7aesI
+	 m7NvwXgkE1IXo4MoB0JliP5XKJEgM041bjaapWGKi1ItjJrh+Nst1BYfmuIaVTdY8d
+	 XOGbfhKiaqHL90wTM/b5zdFD2TYm3wssUTcp0tCKpKT3O1nE74olmgY5csqVV4ZgwZ
+	 HhIm/jsSf1+LqoPQAI6bN9lyBQ8vtCFO70rPEFVuncQuYTk7K9i7RHsmZiPWYAwkuk
+	 A7XxLKJZSypuGSmpzEdMMWLi1mZbvn8mIOI/KK5mKhb6rxj9mOJEZhIrOhAdKyWcyG
+	 ssJ5sMKTUkZjhVy/vCtvLAEtSP/zG/ed17/wjodJY7zgGfr9FPIDH4WdwUA1X/hAks
+	 8eAKWWZrSbAMBU+Tl4ulBjxa8e4OeoSYxA5j1eW5l91WLGR1w87mZJMgXeCZWj5vYi
+	 DRsa5rfNkY9JuYyRzPHv0ECfD/f+LS1syX6eLLmwcW3iQofSQHZXTt5DMRjSx2UxrF
+	 pwlNX+kwDM0CujqWneLZSfUo=
+Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7939040E00B2;
+	Tue, 23 Apr 2024 10:28:35 +0000 (UTC)
+Date: Tue, 23 Apr 2024 12:28:29 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Nikunj A. Dadhania" <nikunj@amd.com>
+Cc: linux-kernel@vger.kernel.org, thomas.lendacky@amd.com, x86@kernel.org,
+	kvm@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
+	dave.hansen@linux.intel.com, pgonda@google.com, seanjc@google.com,
+	pbonzini@redhat.com
+Subject: Re: [PATCH v8 06/16] virt: sev-guest: Move SNP Guest command mutex
+Message-ID: <20240423102829.GCZieNTcHyuAYMcRf5@fat_crate.local>
+References: <20240215113128.275608-1-nikunj@amd.com>
+ <20240215113128.275608-7-nikunj@amd.com>
+ <20240422130012.GAZiZfXM5Z2yRvw7Cx@fat_crate.local>
+ <6a7a8892-bb8d-4f03-a802-d7eee48045b5@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <6a7a8892-bb8d-4f03-a802-d7eee48045b5@amd.com>
 
-Use flow_rule_is_supp_control_flags() to reject filters with
-unsupported control flags.
+On Tue, Apr 23, 2024 at 09:52:41AM +0530, Nikunj A. Dadhania wrote:
+> SNP guest messaging will be moving as part of sev.c, and Secure TSC code
+> will use this mutex.
 
-In case any unsupported control flags are masked,
-flow_rule_is_supp_control_flags() sets a NL extended
-error message, and we return -EOPNOTSUPP.
+No, this is all backwards.
 
-Only compile-tested.
+You have a *static* function in sev-guest - snp_guest_ioctl- which takes
+an exported lock - snp_guest_cmd_lock - in order to synchronize with
+other callers which are only in that same sev-guest driver.
 
-Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
----
- drivers/net/ethernet/microchip/lan966x/lan966x_tc_flower.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Why do you even need the guest messaging in sev.c?
 
-diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_tc_flower.c b/drivers/net/ethernet/microchip/lan966x/lan966x_tc_flower.c
-index 8baec0cd8d95..43913d6204e1 100644
---- a/drivers/net/ethernet/microchip/lan966x/lan966x_tc_flower.c
-+++ b/drivers/net/ethernet/microchip/lan966x/lan966x_tc_flower.c
-@@ -76,6 +76,11 @@ lan966x_tc_flower_handler_control_usage(struct vcap_tc_flower_parse_usage *st)
- 			goto bad_frag_out;
- 	}
- 
-+	if (!flow_rule_is_supp_control_flags(FLOW_DIS_IS_FRAGMENT |
-+					     FLOW_DIS_FIRST_FRAG,
-+					     match.mask->flags, extack))
-+		return -EOPNOTSUPP;
-+
- 	st->used_keys |= BIT_ULL(FLOW_DISSECTOR_KEY_CONTROL);
- 
- 	return err;
+I guess this: "Many of the required functions are implemented in the
+sev-guest driver and therefore not available at early boot."
+
+But then your API is misdesigned: the lock should be private to sev.c
+and none of the callers should pay attention to grabbing it - the
+callers simply call the functions and underneath the locking works
+automatically for them - they don't care. Just like any other shared
+resource, users see only the API they call and the actual
+synchronization is done behind the scenes.
+
+Sounds like you need to go back to the drawing board and think how this
+thing should look like.
+
+And when you have it, make sure to explain the commit messages *why* it
+is done this way.
+
+Thx.
+
 -- 
-2.43.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
