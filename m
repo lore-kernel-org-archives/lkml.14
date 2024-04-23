@@ -1,45 +1,43 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out0-200.mail.aliyun.com (out0-200.mail.aliyun.com [140.205.0.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B7013D287;
-	Tue, 23 Apr 2024 11:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FF813CAA9
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713872450; cv=none; b=okHtbml7pVzlW48GSM/4G4MOHgRAD04g+X3lUqF7zOfAc0eL1Amxzx4avq1j5XA4/aRJm0vuD76+aH5ht5PEGn9H4YQtkP1EgHzZIcdNF2ZMBw7FkHuoOaCyGDgGSWc/jcIRmcCT2JXP/NQPe6BL7ah29DDV1k0Ogya5zT7VXlk=
+	t=1713872451; cv=none; b=GQ5htI6h3fR2URUm1GIeBpwb61KywGIrTfUSTZx2+mWWJVE7oq9MUU8Gv9O7OXwJNjUdbVmcnfGeSLwfCPGfcAE2ZQE75CkDYB3xHFOYpR0wlu6wBs64H2upfdC342cDPJ75BP9AdiuxJzWqRlan2ig9BMuG3wcBW7zHxLB87jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713872450; c=relaxed/simple;
-	bh=hKwut95N+tCwwDS51J+BHVxNHPqZYt4fc8mS6/l5WkI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PJLhchpwhGsAKJwQTAIZolpWw+g0khdK0AJwkra+qU3JUqK49+yX/IsWONTYptGNd326G+LC5kzTzKU93ir9pqSvZbIYH30B4ChIh5ceQKj6V8uUQCkf8eFMoTQ5BvKK54C34/q+Jz406oGRMrdR0LyVYDTui8JBUzUp4u1TJCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Im36tl6i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713872451; c=relaxed/simple;
+	bh=9ZMqQqyu2e0uZqwNom9mTXgrUp5iks65fikGnwgJQtc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ll/N6iCpFgEBlbMS3IO5hJsg4c5jY4yHQvu6xARgzIW0Vv2qM1vBX/ksvZ6gip34rrt5R9SEL0CmW5MrbnJW1kC376QL6Y804QtfzquG+iiLo251ZtD6CYxPNio5fpaJyPaeJLdKeS4xh4oJmhOtiRWwCv5XnN6+BvnFSGHPNyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=MDga8oGh; arc=none smtp.client-ip=140.205.0.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Im36tl6i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 549F1C3277B;
-	Tue, 23 Apr 2024 11:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713872450;
-	bh=hKwut95N+tCwwDS51J+BHVxNHPqZYt4fc8mS6/l5WkI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Im36tl6izfh2pPqKD7rNovWycGF+r5/iGXy/3XWCSbIDo28CBIf42bobnZHwxbhpM
-	 zcWxALeHJHdTYQ1V1S/ATzn66jOmyKXDPKZj3l6LdI4d7uhK4V6PVXY5uBqMAoabLf
-	 Hni96H1kEp1rdALQndLl23Mcmc4a2GxWmXhRgbI0Ofhdnl2eyub9/1l/gVzJE+rVo4
-	 xTFsaNHK9RvlhowyN/ep/p9Oo6otenMVD6a9MIEOXUpTRXo12T6VD47BEuBeoycLcH
-	 sFeltqLIlqODP9Wp3RtdaLc682KZ46RTZtG9kJ9vtZ2HUv7zESynXoF8IEHOwuAAOv
-	 oIcGyli17YeHQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	hdegoede@redhat.com,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 12/16] platform/x86: ISST: Add Granite Rapids-D to HPM CPU list
-Date: Tue, 23 Apr 2024 07:01:45 -0400
-Message-ID: <20240423110151.1658546-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240423110151.1658546-1-sashal@kernel.org>
-References: <20240423110151.1658546-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="MDga8oGh"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1713872446; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
+	bh=gIvw0W9jwz4ek3Tvi63O6eytV7zW5ZlAtrTwF4fjS0o=;
+	b=MDga8oGhwyrw1tJ0Gmx6FZaQvGnsdOnm1O9k4ikjLcYQEOKAIQPC9bL9+yHq9mPFEPXpC9JJONGPkXNj+GRKw+IAyZFgVZ/vdklzzQrhNxpDqu6utx99BdV7VK6FJcsUwdtLn/8DbQaq0A7HZR9HSfQXVfUj1pJRd35F2VNajjc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047193;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJTUYiD_1713871513;
+Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJTUYiD_1713871513)
+          by smtp.aliyun-inc.com;
+          Tue, 23 Apr 2024 19:25:13 +0800
+From: "Tiwei Bie" <tiwei.btw@antgroup.com>
+To: richard@nod.at,
+	anton.ivanov@cambridgegreys.com,
+	johannes@sipsolutions.net
+Cc:  <linux-um@lists.infradead.org>,
+   <linux-kernel@vger.kernel.org>,
+  "Tiwei Bie" <tiwei.btw@antgroup.com>
+Subject: [PATCH 6/7] um: Fix -Wmissing-prototypes warnings for __vdso_*
+Date: Tue, 23 Apr 2024 19:24:56 +0800
+Message-Id: <20240423112457.2409319-7-tiwei.btw@antgroup.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240423112457.2409319-1-tiwei.btw@antgroup.com>
+References: <20240423112457.2409319-1-tiwei.btw@antgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,38 +45,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.28
 Content-Transfer-Encoding: 8bit
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+The VDSO functions are defined as globals and intended to be called
+from userspace. Let's just workaround the -Wmissing-prototypes warnings
+by declaring them locally.
 
-[ Upstream commit d8c2d38c4d1dee8fe8e015b9ebf65bdd8e4da99b ]
+This will address below -Wmissing-prototypes warnings:
 
-Add Granite Rapids-D to hpm_cpu_ids, so that MSR 0x54 can be used.
+arch/x86/um/vdso/um_vdso.c:16:5: warning: no previous prototype for ‘__vdso_clock_gettime’ [-Wmissing-prototypes]
+arch/x86/um/vdso/um_vdso.c:30:5: warning: no previous prototype for ‘__vdso_gettimeofday’ [-Wmissing-prototypes]
+arch/x86/um/vdso/um_vdso.c:44:21: warning: no previous prototype for ‘__vdso_time’ [-Wmissing-prototypes]
+arch/x86/um/vdso/um_vdso.c:57:1: warning: no previous prototype for ‘__vdso_getcpu’ [-Wmissing-prototypes]
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Link: https://lore.kernel.org/r/20240415212853.2820470-1-srinivas.pandruvada@linux.intel.com
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Meanwhile, also fix the "WARNING: Prefer 'unsigned int *' to bare use
+of 'unsigned *'" checkpatch warning.
+
+Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
 ---
- drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/um/vdso/um_vdso.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-index 08df9494603c5..30951f7131cd9 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-@@ -719,6 +719,7 @@ static struct miscdevice isst_if_char_driver = {
- };
+diff --git a/arch/x86/um/vdso/um_vdso.c b/arch/x86/um/vdso/um_vdso.c
+index ff0f3b4b6c45..cbae2584124f 100644
+--- a/arch/x86/um/vdso/um_vdso.c
++++ b/arch/x86/um/vdso/um_vdso.c
+@@ -13,6 +13,12 @@
+ #include <linux/getcpu.h>
+ #include <asm/unistd.h>
  
- static const struct x86_cpu_id hpm_cpu_ids[] = {
-+	X86_MATCH_INTEL_FAM6_MODEL(GRANITERAPIDS_D,	NULL),
- 	X86_MATCH_INTEL_FAM6_MODEL(GRANITERAPIDS_X,	NULL),
- 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_CRESTMONT_X,	NULL),
- 	{}
++/* workaround for -Wmissing-prototypes warnings */
++int __vdso_clock_gettime(clockid_t clock, struct __kernel_old_timespec *ts);
++int __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz);
++__kernel_old_time_t __vdso_time(__kernel_old_time_t *t);
++long __vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *unused);
++
+ int __vdso_clock_gettime(clockid_t clock, struct __kernel_old_timespec *ts)
+ {
+ 	long ret;
+@@ -54,7 +60,7 @@ __kernel_old_time_t __vdso_time(__kernel_old_time_t *t)
+ __kernel_old_time_t time(__kernel_old_time_t *t) __attribute__((weak, alias("__vdso_time")));
+ 
+ long
+-__vdso_getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *unused)
++__vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *unused)
+ {
+ 	/*
+ 	 * UML does not support SMP, we can cheat here. :)
+@@ -68,5 +74,5 @@ __vdso_getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *unused)
+ 	return 0;
+ }
+ 
+-long getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *tcache)
++long getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *tcache)
+ 	__attribute__((weak, alias("__vdso_getcpu")));
 -- 
-2.43.0
+2.34.1
 
