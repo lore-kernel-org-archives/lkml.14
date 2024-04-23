@@ -1,43 +1,46 @@
-Received: from out0-200.mail.aliyun.com (out0-200.mail.aliyun.com [140.205.0.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FF813CAA9
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3348564F;
+	Tue, 23 Apr 2024 11:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713872451; cv=none; b=GQ5htI6h3fR2URUm1GIeBpwb61KywGIrTfUSTZx2+mWWJVE7oq9MUU8Gv9O7OXwJNjUdbVmcnfGeSLwfCPGfcAE2ZQE75CkDYB3xHFOYpR0wlu6wBs64H2upfdC342cDPJ75BP9AdiuxJzWqRlan2ig9BMuG3wcBW7zHxLB87jI=
+	t=1713872451; cv=none; b=i0Zp8ZLFTzASxghoCrtiuB8KV2iSfTiYPREY6QyyqKFa36PunO/X4rP+EGYmoELNpdzJlv76S62gmnT7XNQhS6NaeazoMdJYA7n9fDQSXV0i7HfVtBfC/Cin4gjbuDmT2cG6kN0msfDG9DgSdJpGWWIIGTVYyW49nV5LH1N63sA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713872451; c=relaxed/simple;
-	bh=9ZMqQqyu2e0uZqwNom9mTXgrUp5iks65fikGnwgJQtc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ll/N6iCpFgEBlbMS3IO5hJsg4c5jY4yHQvu6xARgzIW0Vv2qM1vBX/ksvZ6gip34rrt5R9SEL0CmW5MrbnJW1kC376QL6Y804QtfzquG+iiLo251ZtD6CYxPNio5fpaJyPaeJLdKeS4xh4oJmhOtiRWwCv5XnN6+BvnFSGHPNyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=MDga8oGh; arc=none smtp.client-ip=140.205.0.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	bh=TkcNi1fQ9TF91KAuebmGAZ3Sag/oWc+wWRlrwOCiSVw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=R5RLZA5BMTKWwTC72eoRAoeb6SO1qWP2VzrR189Un9s4Uo6rZ/pH4n4SplZKjF81Z87SueTURBayt1+xTnbVLQoBaYLFfs+3PEWpmqIYuHb2x08wUN1Q8vUCxUlk+x2jKwiaCyVKUA0gf2WtghmbWIrWueh4lRnp5Mlmb3waz+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T9lay7NM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="MDga8oGh"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1713872446; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
-	bh=gIvw0W9jwz4ek3Tvi63O6eytV7zW5ZlAtrTwF4fjS0o=;
-	b=MDga8oGhwyrw1tJ0Gmx6FZaQvGnsdOnm1O9k4ikjLcYQEOKAIQPC9bL9+yHq9mPFEPXpC9JJONGPkXNj+GRKw+IAyZFgVZ/vdklzzQrhNxpDqu6utx99BdV7VK6FJcsUwdtLn/8DbQaq0A7HZR9HSfQXVfUj1pJRd35F2VNajjc=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047193;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJTUYiD_1713871513;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJTUYiD_1713871513)
-          by smtp.aliyun-inc.com;
-          Tue, 23 Apr 2024 19:25:13 +0800
-From: "Tiwei Bie" <tiwei.btw@antgroup.com>
-To: richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net
-Cc:  <linux-um@lists.infradead.org>,
-   <linux-kernel@vger.kernel.org>,
-  "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH 6/7] um: Fix -Wmissing-prototypes warnings for __vdso_*
-Date: Tue, 23 Apr 2024 19:24:56 +0800
-Message-Id: <20240423112457.2409319-7-tiwei.btw@antgroup.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240423112457.2409319-1-tiwei.btw@antgroup.com>
-References: <20240423112457.2409319-1-tiwei.btw@antgroup.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T9lay7NM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A246C2BD11;
+	Tue, 23 Apr 2024 11:40:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713872451;
+	bh=TkcNi1fQ9TF91KAuebmGAZ3Sag/oWc+wWRlrwOCiSVw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=T9lay7NMoNn2VbPU05cPG1jaLT4S2+HWlgyEpD8IoIlhxZetVvkEqel9a9Eo73hvp
+	 tzrFKn2l7pV/mPiLaEvnOpHaZZVWs5H/ciTAbKqRfarbG5/5IS444FvjTSS2XURq3O
+	 CFD+veACevhWyhcBeToY+Xbvk1LbiWgv2F2+ktlkOi/ZxzH7N8Wkulh33sEPbt3Jsf
+	 zd4jWl6Bo57wOr4Gm2XgHNLkI7q5w4YdNyGt0cPDpgTFSdZcTR88IuaFiaHA+PbGJK
+	 3nMRyu/J01N9RfJ3B3s1jzOD7SZeGTnl4M0T6D7BmlZxElZySKhp3R9fUShKmjxRpj
+	 9ofeaQ9nvrfaA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	Shyam-sundar.S-k@amd.com,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 13/16] platform/x86/amd/pmc: Extend Framework 13 quirk to more BIOSes
+Date: Tue, 23 Apr 2024 07:01:46 -0400
+Message-ID: <20240423110151.1658546-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240423110151.1658546-1-sashal@kernel.org>
+References: <20240423110151.1658546-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,60 +48,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.28
 Content-Transfer-Encoding: 8bit
 
-The VDSO functions are defined as globals and intended to be called
-from userspace. Let's just workaround the -Wmissing-prototypes warnings
-by declaring them locally.
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-This will address below -Wmissing-prototypes warnings:
+[ Upstream commit f609e7b1b49e4d15cf107d2069673ee63860c398 ]
 
-arch/x86/um/vdso/um_vdso.c:16:5: warning: no previous prototype for ‘__vdso_clock_gettime’ [-Wmissing-prototypes]
-arch/x86/um/vdso/um_vdso.c:30:5: warning: no previous prototype for ‘__vdso_gettimeofday’ [-Wmissing-prototypes]
-arch/x86/um/vdso/um_vdso.c:44:21: warning: no previous prototype for ‘__vdso_time’ [-Wmissing-prototypes]
-arch/x86/um/vdso/um_vdso.c:57:1: warning: no previous prototype for ‘__vdso_getcpu’ [-Wmissing-prototypes]
+BIOS 03.05 still hasn't fixed the spurious IRQ1 issue.  As it's still
+being worked on there is still a possibility that it won't need to
+apply to future BIOS releases.
 
-Meanwhile, also fix the "WARNING: Prefer 'unsigned int *' to bare use
-of 'unsigned *'" checkpatch warning.
+Add a quirk for BIOS 03.05 as well.
 
-Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20240410141046.433-1-mario.limonciello@amd.com
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/um/vdso/um_vdso.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/platform/x86/amd/pmc/pmc-quirks.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/x86/um/vdso/um_vdso.c b/arch/x86/um/vdso/um_vdso.c
-index ff0f3b4b6c45..cbae2584124f 100644
---- a/arch/x86/um/vdso/um_vdso.c
-+++ b/arch/x86/um/vdso/um_vdso.c
-@@ -13,6 +13,12 @@
- #include <linux/getcpu.h>
- #include <asm/unistd.h>
+diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+index b456370166b6b..b4f49720c87f6 100644
+--- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
++++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+@@ -208,6 +208,15 @@ static const struct dmi_system_id fwbug_list[] = {
+ 			DMI_MATCH(DMI_BIOS_VERSION, "03.03"),
+ 		}
+ 	},
++	{
++		.ident = "Framework Laptop 13 (Phoenix)",
++		.driver_data = &quirk_spurious_8042,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Framework"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Laptop 13 (AMD Ryzen 7040Series)"),
++			DMI_MATCH(DMI_BIOS_VERSION, "03.05"),
++		}
++	},
+ 	{}
+ };
  
-+/* workaround for -Wmissing-prototypes warnings */
-+int __vdso_clock_gettime(clockid_t clock, struct __kernel_old_timespec *ts);
-+int __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz);
-+__kernel_old_time_t __vdso_time(__kernel_old_time_t *t);
-+long __vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *unused);
-+
- int __vdso_clock_gettime(clockid_t clock, struct __kernel_old_timespec *ts)
- {
- 	long ret;
-@@ -54,7 +60,7 @@ __kernel_old_time_t __vdso_time(__kernel_old_time_t *t)
- __kernel_old_time_t time(__kernel_old_time_t *t) __attribute__((weak, alias("__vdso_time")));
- 
- long
--__vdso_getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *unused)
-+__vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *unused)
- {
- 	/*
- 	 * UML does not support SMP, we can cheat here. :)
-@@ -68,5 +74,5 @@ __vdso_getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *unused)
- 	return 0;
- }
- 
--long getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *tcache)
-+long getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *tcache)
- 	__attribute__((weak, alias("__vdso_getcpu")));
 -- 
-2.34.1
+2.43.0
 
