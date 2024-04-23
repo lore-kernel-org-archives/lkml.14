@@ -1,80 +1,59 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F161745E2;
-	Tue, 23 Apr 2024 13:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1001353FB
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 13:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713877686; cv=none; b=XK/k0Xl3CAZLwZEK/rlpXrfiJBJblGr28K90NF3wVG4Y3ThSY5zvMoN2EkeOcDXDdXnidQxOk7oXo7csggDesEbU45UMtgxc+TbmH8agfus79m2l3zYAtfKIaVXtFlKR1K/9FcSpi/lEAHsDIB3vj8QKXfjtSUNhw/JviMNHswU=
+	t=1713877692; cv=none; b=CMBW3KpRkjULBaUo08OiA4Q311M2eRuFJYMj5KnazXsusDCGPiR4tmbVbZkA8wLti8uWkI+z6v+zr7IxX6StUqWKxoVYhRquUYKOaHLSAqKRg4vv8Tj9OJnEYFww45PXGNKZgXM2vWWJY7fQtAeBey6HBXJZKtFKQDEJP7LLOiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713877686; c=relaxed/simple;
-	bh=iLUrBbUOU5gdH+eZbJLreYBsbpQPZFCk+4aYIpqdju4=;
+	s=arc-20240116; t=1713877692; c=relaxed/simple;
+	bh=BeIUqQAJFNDOpF7ht1GQmR6wVW1LPDbJ/XROhUKljBc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nuowu7ss6z5fe596EZzrdSHioUuL32Ph0n6zQoGTpZmrN/TER2qPHuuTQ7+4heQVJOp+ccejVpssCrguWUlv5ebxbctnds7f4cAXpepRkc0oPrS9hoFYQcRK+gslAcE642gKEf5nafrBeXFTZeSuuLOTKX9ULcK2w/ycTjdzwPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qmKMFT0m; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9nRhQWg3; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qmKMFT0m; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9nRhQWg3; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 In-Reply-To:Content-Type; b=s/kWKmU+Qr/FRKOz1eomJJ2KDsiSmyZ46iidk4n2Lxr+P021D5ve+GoEI5rFdIBDZ9rnizZ33JzK+NbUrFr3iUomgMupNRZz1XHChYvhMiJN2h4/rYpVVQIrYPWPBUcf0ZRg3IL5KxU4pL478UJjBdRkke+RMFDEdW/ldglNVbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ting4AdE; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qmKMFT0m";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9nRhQWg3";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qmKMFT0m";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9nRhQWg3"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6778F37F9F;
-	Tue, 23 Apr 2024 13:07:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713877676; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1Id41yHvdTscUsFAax+DNoLOYykqRWumjAUWJN9I2VY=;
-	b=qmKMFT0mlZ5lMemlzm3IMqpOJgMMdFt7iU2esq1/LeqFi9+L+zuwXWN8NLBj3YLBcJcqyp
-	NLxQi+wz7v5+y/etBqCdyehMvdlqGLm1/cljwq9XN9lDdXQnztGYvnJ8PTbjMLDZzn5NHb
-	tuWwNQHLLnl5BYFeZaUGklviJgswXyc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713877676;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1Id41yHvdTscUsFAax+DNoLOYykqRWumjAUWJN9I2VY=;
-	b=9nRhQWg3Lddeb3Ejm5yfTgZXrZNOJ8ErCcBzqxhu11oVqyX0ubIOBNgAVW1iCAc1maYNLz
-	CM5qwk08G/5TIPAg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713877676; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1Id41yHvdTscUsFAax+DNoLOYykqRWumjAUWJN9I2VY=;
-	b=qmKMFT0mlZ5lMemlzm3IMqpOJgMMdFt7iU2esq1/LeqFi9+L+zuwXWN8NLBj3YLBcJcqyp
-	NLxQi+wz7v5+y/etBqCdyehMvdlqGLm1/cljwq9XN9lDdXQnztGYvnJ8PTbjMLDZzn5NHb
-	tuWwNQHLLnl5BYFeZaUGklviJgswXyc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713877676;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1Id41yHvdTscUsFAax+DNoLOYykqRWumjAUWJN9I2VY=;
-	b=9nRhQWg3Lddeb3Ejm5yfTgZXrZNOJ8ErCcBzqxhu11oVqyX0ubIOBNgAVW1iCAc1maYNLz
-	CM5qwk08G/5TIPAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 162F013894;
-	Tue, 23 Apr 2024 13:07:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 7DhbBKyyJ2btXwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 23 Apr 2024 13:07:56 +0000
-Message-ID: <1722c1b6-59a5-429d-905c-bc1951a68a68@suse.de>
-Date: Tue, 23 Apr 2024 15:07:51 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ting4AdE"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d895e2c6efso85257591fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 06:08:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713877689; x=1714482489; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BeIUqQAJFNDOpF7ht1GQmR6wVW1LPDbJ/XROhUKljBc=;
+        b=ting4AdEyo60Uc45ePzamwPNjTyqc0LE1KIsTEOF4E8J8XTRjgyqRMupeNTLrsspru
+         duR4fu9Yt2rGDCsmuyjcY6bLaBzQvZ/rDwWnGSRT+zXw7yeLXBcGomgUcOjoFA3oqjNA
+         /RU3J+nfgZ1yf2UY4ah/ZjrwJ2CQpdiy4vi25NfFFXec0Yk/qCOTAJrOp26mps3g9B12
+         Cf8jvqxtBLz5II6o9xIImf1zYLVbFcqjP87cLbDzHflAt9p6N7PfUQ0o41vTK5Af74yO
+         5RA9OuivQ0SIC8mBBnyS4B7S7d6tIHgY3tuCUXEMLE6Djgqpi/ilJu4bxTB65lLecdB1
+         wARg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713877689; x=1714482489;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BeIUqQAJFNDOpF7ht1GQmR6wVW1LPDbJ/XROhUKljBc=;
+        b=E+Goh66giZpTtAoOSAPkgT0FKGYjdY3CONr6dIc2rq4sqpv/o6rxpjyRwa3Yqc7gZq
+         6eGyYu8oanvVxLyYolrzo6VUMl+PYRJ0ICaanM21D0jL7/KufIJW1rFYdg41KlCzUgUa
+         FpZ09G5SaADyUxwlidtlhbDSsKUETE/PzImVKXDkC0AdvZc/dXK3jQ6f+Te38dSCJN+n
+         XfbN4xG9d6QEdK4bW0g0gXxZBFdC75MI/Kdq9LDeqqTPOuHP0nJ9ciwAyDACo8uroG0Z
+         gRXUOlY1aUKG+RKebWlk5/DHNE4X6HPICRtcpZluJPhghNc8kkUqGw8kYjJLlF/RxXP6
+         U4kg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/+a3+TCYX9dvE+QA5IfIerosZFD3zhFqTQnd76jmNG/QLvaZuGthLgIGfLMwGmMXeZKl+N8cgl6p56E24lZ3w81RBZax6bFGDPpw8
+X-Gm-Message-State: AOJu0Yz/kDIjoxb34o+QZbBUBa/rI2s+sgAMvcaVbFJLhcheEknDvozR
+	6NAImQOMx97ydgt1srDHh+meyq1DoEjO5VVYAkESBbu5M/lMcv+jbVGqUwfR7UA=
+X-Google-Smtp-Source: AGHT+IE63dqBihv/nXAaphUKhm4QoRx8cccrUbZIncSaNE5pK7FBZ6/h8B/ymrmWiFGABv0uHgk0Og==
+X-Received: by 2002:a05:651c:1a06:b0:2d8:34ec:54e6 with SMTP id by6-20020a05651c1a0600b002d834ec54e6mr9435410ljb.33.1713877688746;
+        Tue, 23 Apr 2024 06:08:08 -0700 (PDT)
+Received: from [172.30.205.0] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id k11-20020a2e888b000000b002dd92e1ae00sm542013lji.26.2024.04.23.06.08.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 06:08:08 -0700 (PDT)
+Message-ID: <8cdcfa2f-7a8f-4f63-b919-df0afde7d9de@linaro.org>
+Date: Tue, 23 Apr 2024 15:08:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,142 +61,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] fbdev: fix incorrect address computation in deferred
- IO
-To: Nam Cao <namcao@linutronix.de>, Jaya Kumar <jayalk@intworks.biz>,
- Daniel Vetter <daniel@ffwll.ch>, Helge Deller <deller@gmx.de>,
- Javier Martinez Canillas <javierm@redhat.com>, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: tiwai@suse.de, bigeasy@linutronix.de, patrik.r.jakobsson@gmail.com,
- Vegard Nossum <vegard.nossum@oracle.com>,
- George Kennedy <george.kennedy@oracle.com>,
- Darren Kenny <darren.kenny@oracle.com>, chuansheng.liu@intel.com,
- Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
- stable@vger.kernel.org
-References: <20240423115053.4490-1-namcao@linutronix.de>
+Subject: Re: [PATCH v10 2/3] PCI: qcom-ep: Add support for SA8775P SOC
+To: Mrinmay Sarkar <quic_msarkar@quicinc.com>, andersson@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ manivannan.sadhasivam@linaro.org
+Cc: quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+ quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+ quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+ quic_schintav@quicinc.com, Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <1711725718-6362-1-git-send-email-quic_msarkar@quicinc.com>
+ <1711725718-6362-3-git-send-email-quic_msarkar@quicinc.com>
 Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20240423115053.4490-1-namcao@linutronix.de>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <1711725718-6362-3-git-send-email-quic_msarkar@quicinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.79 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	FREEMAIL_TO(0.00)[linutronix.de,intworks.biz,ffwll.ch,gmx.de,redhat.com,vger.kernel.org,lists.freedesktop.org];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,linutronix.de,gmail.com,oracle.com,intel.com,vger.kernel.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email]
-X-Spam-Score: -2.79
-X-Spam-Flag: NO
 
-Hi
 
-Am 23.04.24 um 13:50 schrieb Nam Cao:
-> With deferred IO enabled, a page fault happens when data is written to the
-> framebuffer device. Then driver determines which page is being updated by
-> calculating the offset of the written virtual address within the virtual
-> memory area, and uses this offset to get the updated page within the
-> internal buffer. This page is later copied to hardware (thus the name
-> "deferred IO").
->
-> This offset calculation is only correct if the virtual memory area is
-> mapped to the beginning of the internal buffer. Otherwise this is wrong.
-> For example, if users do:
->      mmap(ptr, 4096, PROT_WRITE, MAP_FIXED | MAP_SHARED, fd, 0xff000);
->
-> Then the virtual memory area will mapped at offset 0xff000 within the
-> internal buffer. This offset 0xff000 is not accounted for, and wrong page
-> is updated.
->
-> Correct the calculation by using vmf->pgoff instead. With this change, the
-> variable "offset" will no longer hold the exact offset value, but it is
-> rounded down to multiples of PAGE_SIZE. But this is still correct, because
-> this variable is only used to calculate the page offset.
->
-> Reported-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-> Closes: https://lore.kernel.org/linux-fbdev/271372d6-e665-4e7f-b088-dee5f4ab341a@oracle.com
-> Fixes: 56c134f7f1b5 ("fbdev: Track deferred-I/O pages in pageref struct")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
 
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+On 3/29/24 16:21, Mrinmay Sarkar wrote:
+> Add support for SA8775P SoC to the Qualcomm PCIe Endpoint Controller
+> driver. Adding new compatible string as it has different set of clocks
+> compared to other SoCs.
 
-Thank you so much. I'll take care of merging the patch later this week.
+So is it the only change after all? What did we conclude on the NO_SNOOP
+saga?
 
-Best regards
-Thomas
+If the difference is only in the consumed clocks (and they're only supposed
+to be "on" with no special handling), I don't think a separate compatible
+is necessary at all
 
-> ---
-> v2:
->    - simplify the patch by using vfg->pgoff
->    - remove tested-by tag, as the patch is now different
->
->   drivers/video/fbdev/core/fb_defio.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/video/fbdev/core/fb_defio.c b/drivers/video/fbdev/core/fb_defio.c
-> index 1ae1d35a5942..b9607d5a370d 100644
-> --- a/drivers/video/fbdev/core/fb_defio.c
-> +++ b/drivers/video/fbdev/core/fb_defio.c
-> @@ -196,7 +196,7 @@ static vm_fault_t fb_deferred_io_track_page(struct fb_info *info, unsigned long
->    */
->   static vm_fault_t fb_deferred_io_page_mkwrite(struct fb_info *info, struct vm_fault *vmf)
->   {
-> -	unsigned long offset = vmf->address - vmf->vma->vm_start;
-> +	unsigned long offset = vmf->pgoff << PAGE_SHIFT;
->   	struct page *page = vmf->page;
->   
->   	file_update_time(vmf->vma->vm_file);
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+Konrad
