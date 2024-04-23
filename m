@@ -1,104 +1,249 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50282135A6E;
-	Tue, 23 Apr 2024 13:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E836D130AF7;
+	Tue, 23 Apr 2024 13:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713877698; cv=none; b=g6kiTwmFkbyCc/QZr/KQnb+jw09YzqXhN/ktrFVB4xULRDeNtT6LdQbPCtbzB3eLI3VtSnnaJdDs+4E1CUm4SzOsdPxz2Kd3v9X7ourzFm8bGdbXyElzZ9PRPQ8wgbXIGTMBqPapwxjigE/4Dn3Sdx6XaO+DP3pq2gDNBPjIRGI=
+	t=1713877709; cv=none; b=ZbvQ1kWAaujt6AidyX25iQxBuyn/GMBnAnBDk68EIBceEvTxmAwBxlQ4t5CixlQA2dqSxteH1SSVN+lyL+jfLM/LjfPf74f11KwKJDT8NcBBo3hDojquxwOfnGOW8vWDxzdBBcb2oQgwdP34GfmOmoXnJqacajeLcnwVIex0J80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713877698; c=relaxed/simple;
-	bh=dlhH2ikJL+CjYyT5tXlg1eD1GvZPgftjtRMAdq5xhKc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=YWx2AxkgCQTkriIi3GXNJySIRH4i1CJKUUlJMrVJm6zr9G3eeQtxcR8KBu5g34g9h573Ys/Wz1Ic7VgfHprbf3rxYUzlg4dRhpwbcngksdXextZIUEwyVn0kn38K17NGPpIYHqU5Qz4PgxZzt5CwkbPkm4sFd76Vd9hxA06YYuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DbElU/od; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1713877709; c=relaxed/simple;
+	bh=uS2ZuTJaMnQpRhdP2S8VwBZAeRQ4ZnlDK/4HnTjcFoM=;
+	h=Content-Type:To:Cc:Subject:References:Date:MIME-Version:From:
+	 Message-ID:In-Reply-To; b=YNnTzXYpAZ0eIkqjb61EBYpLL4BiBlvWKiclCxmhjv0+9gBQR2yzvOR9eabiAinhsLrrFmwAPafEEWr2s8XkgEIvUJ7v0eWOtzW2wkIpCqr6SN/8wh2Jrnumqbz2gojAf/v68CdNTjao6VBUjCw9rMWcCXpwGNyRBVupQdVwY/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FC9ijhQq; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DbElU/od"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6BFD7240002;
-	Tue, 23 Apr 2024 13:08:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713877686;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fkEpdkG026UGxnP+K6Y14R8MUybzKxtIX1NVxXz3z98=;
-	b=DbElU/odY8l5M8g9YDeNsim7YMAfn5f6facsnHHOshFQExqhgFztKsG8IWz97QrGxydv0j
-	U13+KtzqtZOvO+YsuFabrlIfBWZUh7bKbJwU83vgryN2U+7tyGZZd/4CN1jA9r6+1Zsuou
-	oKzkIAxED8RTiRxCyu5vVWrHW69QraZfnT0TU79tLywPPkcQQVmiy9WZ0muAG2JuR/ShII
-	oUMHYHOH7+clvPjVKNEA1l8svyYL3dwGHE3jC0CabRhsbuaQWzxxi8E1hUO3fHSMkj4CJs
-	7sJ4YKhwuhzVkSEbKvQNedoo/GajcAxkMgtAIAfl81qQXV2cACcux2R/Cg3llw==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FC9ijhQq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713877708; x=1745413708;
+  h=to:cc:subject:references:date:mime-version:
+   content-transfer-encoding:from:message-id:in-reply-to;
+  bh=uS2ZuTJaMnQpRhdP2S8VwBZAeRQ4ZnlDK/4HnTjcFoM=;
+  b=FC9ijhQqt3tNfGWDZNAJ6sEdXJax4HKMGFGCSqBncE05D4sMxLNZn+8/
+   pfJcY5Hkd6YuempEPWnWKOGDk5jLWp4w3QzDoDMTDChU2FkCggKylTx13
+   iTiIhyWP05AH+8wNZFjZDeAiP/hZSzwGZe/j0LpNUxug1zDGNnAnk2MFR
+   i82tlBdSM9VSup8z7PTFigoIG0yH9P9pElUsgZPWlOR3QSsmrnWYQTBM5
+   +rRFJIm44UFaFA0JYLH1kcQH0hYBL2ou5/9AO57Aq3VYx9Wa3sHFmvSI7
+   DKpsB0TL4JGL62cUYVvPjUkHsS5cKT7Vz+B1H1TppC1jNgPbQtHZHscDp
+   w==;
+X-CSE-ConnectionGUID: NcY3fZ0uSgWrwJVB3yBa8g==
+X-CSE-MsgGUID: jHxHavyRSiuzDibcrQIaqg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="13243683"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="13243683"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 06:08:26 -0700
+X-CSE-ConnectionGUID: 6ZP7vbbgRvqYnVB23Y7dxA==
+X-CSE-MsgGUID: eaRP4m3rRJCMwWd1xZ5cfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="29168855"
+Received: from hhuan26-mobl.amr.corp.intel.com ([10.125.85.20])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 23 Apr 2024 06:08:23 -0700
+Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
+To: "tj@kernel.org" <tj@kernel.org>, "jarkko@kernel.org" <jarkko@kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>, "dave.hansen@linux.intel.com"
+ <dave.hansen@linux.intel.com>, "cgroups@vger.kernel.org"
+ <cgroups@vger.kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "mingo@redhat.com"
+ <mingo@redhat.com>, "tim.c.chen@linux.intel.com" <tim.c.chen@linux.intel.com>,
+ "mkoutny@suse.com" <mkoutny@suse.com>, "Mehta, Sohil" <sohil.mehta@intel.com>,
+ "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>,
+ "Huang, Kai" <kai.huang@intel.com>
+Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
+ "seanjc@google.com" <seanjc@google.com>, "anakrish@microsoft.com"
+ <anakrish@microsoft.com>, "Zhang, Bo" <zhanb@microsoft.com>,
+ "kristen@linux.intel.com" <kristen@linux.intel.com>, "yangjie@microsoft.com"
+ <yangjie@microsoft.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>,
+ "chrisyan@microsoft.com" <chrisyan@microsoft.com>
+Subject: Re: [PATCH v12 09/14] x86/sgx: Implement async reclamation for cgroup
+References: <20240416032011.58578-1-haitao.huang@linux.intel.com>
+ <20240416032011.58578-10-haitao.huang@linux.intel.com>
+ <640866c5-9fe0-4f7b-a459-7a685dbe4092@intel.com>
+ <op.2mhn6ti6wjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <4be309656cb4e03793703098bbebab3dee93077e.camel@intel.com>
+ <op.2mh5p7fawjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <e8d076fb097774f1f0fe3365883e6cf5a823fc4f.camel@intel.com>
+ <op.2mm0u7uswjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <914371bd0673870c03e5f4c37db5a2a08fc50aa4.camel@intel.com>
+Date: Tue, 23 Apr 2024 08:08:22 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 23 Apr 2024 15:08:05 +0200
-Message-Id: <D0RIXN4JG6ZA.4W4HN68M9U6I@bootlin.com>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: (subset) [PATCH v3 0/9] spi: cadence-qspi: add Mobileye EyeQ5
- support
-Cc: "Rob Herring" <robh+dt@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Vaishnav Achath" <vaishnav.a@ti.com>, "Thomas Bogendoerfer"
- <tsbogend@alpha.franken.de>, "Rob Herring" <robh@kernel.org>,
- <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-mips@vger.kernel.org>, "Vladimir
- Kondratiev" <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>
-To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Mark Brown"
- <broonie@kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240410-cdns-qspi-mbly-v3-0-7b7053449cf7@bootlin.com>
- <171283699002.32012.7629247540689477794.b4-ty@kernel.org>
- <D0QT350IJHFH.36EXE1UT9QM10@bootlin.com>
- <ZidAefc0Ejrklopf@finisterre.sirena.org.uk>
- <D0RF1AKWAEAE.44N64GHMV2ZY@bootlin.com>
- <3f891794-0083-4245-bad7-518b1c48bb7c@linaro.org>
-In-Reply-To: <3f891794-0083-4245-bad7-518b1c48bb7c@linaro.org>
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+From: "Haitao Huang" <haitao.huang@linux.intel.com>
+Organization: Intel
+Message-ID: <op.2momr8oewjvjmi@hhuan26-mobl.amr.corp.intel.com>
+In-Reply-To: <914371bd0673870c03e5f4c37db5a2a08fc50aa4.camel@intel.com>
+User-Agent: Opera Mail/1.0 (Win32)
 
-Hello,
+On Mon, 22 Apr 2024 17:16:34 -0500, Huang, Kai <kai.huang@intel.com> wrote:
 
-On Tue Apr 23, 2024 at 12:25 PM CEST, Krzysztof Kozlowski wrote:
-> On 23/04/2024 12:04, Th=C3=A9o Lebrun wrote:
-> > Hello,
-> >=20
-> > On Tue Apr 23, 2024 at 7:00 AM CEST, Mark Brown wrote:
-> >> On Mon, Apr 22, 2024 at 06:52:47PM +0200, Th=C3=A9o Lebrun wrote:
-> >>> All commits tagged "(no commit info)" do not show up in your for-next
-> >>> branch. Is that expected and is there anything I can do? There was on=
-e
-> >>> pending -Wunused-variable compiler warning to be addressed for
-> >>> example, see [0].
-> >>
-> >> Please submit any patches you'd like to see included.  If there were
-> >> outstanding issues that need fixing then fixing those prior to
-> >> submitting would be sensible.
-> >=20
-> > Seeing "Applied" followed by a list of commits, with some of those not
-> > being applied confused me.
+> On Mon, 2024-04-22 at 11:17 -0500, Haitao Huang wrote:
+>> On Sun, 21 Apr 2024 19:22:27 -0500, Huang, Kai <kai.huang@intel.com>  
+>> wrote:
+>>
+>> > On Fri, 2024-04-19 at 20:14 -0500, Haitao Huang wrote:
+>> > > > > I think we can add support for "sgx_cgroup=disabled" in future  
+>> if
+>> > > indeed
+>> > > > > needed. But just for init failure, no?
+>> > > > >
+>> > > >
+>> > > > It's not about the commandline, which we can add in the future  
+>> when
+>> > > > needed.  It's about we need to have a way to handle SGX cgroup  
+>> being
+>> > > > disabled at boot time nicely, because we already have a case  
+>> where we
+>> > > > need
+>> > > > to do so.
+>> > > >
+>> > > > Your approach looks half-way to me, and is not future  
+>> extendible.  If
+>> > > we
+>> > > > choose to do it, do it right -- that is, we need a way to disable  
+>> it
+>> > > > completely in both kernel and userspace so that userspace won't be
+>> > > able> to
+>> > > > see it.
+>> > >
+>> > > That would need more changes in misc cgroup implementation to  
+>> support
+>> > > sgx-disable. Right now misc does not have separate files for  
+>> different
+>> > > resource types. So we can only block echo "sgx_epc..." to those
+>> > > interfacefiles, can't really make files not visible.
+>> >
+>> > "won't be able to see" I mean "only for SGX EPC resource", but not the
+>> > control files for the entire MISC cgroup.
+>> >
+>> > I replied at the beginning of the previous reply:
+>> >
+>> > "
+>> > Given SGX EPC is just one type of MISC cgroup resources, we cannot  
+>> just
+>> > disable MISC cgroup as a whole.
+>> > "
+>> >
+>> Sorry I missed this point. below.
+>>
+>> > You just need to set the SGX EPC "capacity" to 0 to disable SGX EPC.   
+>> See
+>> > the comment of @misc_res_capacity:
+>> >
+>> >  * Miscellaneous resources capacity for the entire machine. 0 capacity
+>> >  * means resource is not initialized or not present in the host.
+>> >
+>>
+>> IIUC I don't think the situation we have is either of those cases. For  
+>> our
+>> case, resource is inited and present on the host but we have allocation
+>> error for sgx cgroup infra.
 >
-> That's a standard output of b4 and maybe also Patchwork, if some parts
-> are applied.
+> You have calculated the "capacity", but later you failed something and
+> then reset the "capacity" to 0, i.e., cleanup.  What's wrong with that?
+>
+>>
+>> > And "blocking echo sgx_epc ... to those control files" is already
+>> > sufficient for the purpose of not exposing SGX EPC to userspace,  
+>> correct?
+>> >
+>> > E.g., if SGX cgroup is enabled, you can see below when you read "max":
+>> >
+>> >  # cat /sys/fs/cgroup/my_group/misc.max
+>> >  # <resource1> <max1>
+>> >    sgx_epc ...
+>> >    ...
+>> >
+>> > Otherwise you won't be able to see "sgx_epc":
+>> >
+>> >  # cat /sys/fs/cgroup/my_group/misc.max
+>> >  # <resource1> <max1>
+>> >    ...
+>> >
+>> > And when you try to write the "max" for "sgx_epc", you will hit error:
+>> >
+>> >  # echo "sgx_epc 100" > /sys/fs/cgroup/my_group/misc.max
+>> >  # ... echo: write error: Invalid argument
+>> >
+>> > The above applies to all the control files.  To me this is pretty much
+>> > means "SGX EPC is disabled" or "not supported" for userspace.
+>> >
+>> You are right, capacity == 0 does block echoing max and users see an  
+>> error
+>> if they do that. But 1) doubt you literately wanted "SGX EPC is  
+>> disabled"
+>> and make it unsupported in this case,
+>
+> I don't understand.  Something failed during SGX cgroup initialization,
+> you _literally_ cannot continue to support it.
+>
+>
 
-Thanks for the pointer. I've created an issue over at b4 to see what
-people think about this matter. Current behavior is not intuitive as a
-young contributor.
+Then we should just return -ENOMEM from sgx_init() when sgx cgroup  
+initialization fails?
+I thought we only disable SGX cgroup support. SGX can still run.
 
-See: https://github.com/mricon/b4/issues/26
+>> 2) even if we accept this is "sgx
+>> cgroup disabled" I don't see how it is much better user experience than
+>> current solution or really helps user better.
+>
+> In your way, the userspace is still able to see "sgx_epc" in control  
+> files
+> and is able to update them.  So from userspace's perspective SGX cgroup  
+> is
+> enabled, but obviously updating to "max" doesn't have any impact.  This
+> will confuse userspace.
+>
+>>
 
-Regards,
+Setting capacity to zero also confuses user space. Some application may  
+rely on this file to know the capacity.
 
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+>> Also to implement this approach, as you mentioned, we need workaround  
+>> the
+>> fact that misc_try_charge() fails when capacity set to zero, and adding
+>> code to return root always?
+>
+> Why this is a problem?
+>
 
+It changes/overrides the the original meaning of capacity==0: no one can  
+allocate if capacity is zero.
+
+>> So it seems like more workaround code to just
+>> make it work for a failing case no one really care much and end result  
+>> is
+>> not really much better IMHO.
+>
+> It's not workaround, it's the right thing to do.
+>
+> The result is userspace will see it being disabled when kernel disables
+> it.
+>
+>
+It's a workaround because you use the capacity==0 but it does not really  
+mean to disable the misc cgroup for specific resource IIUC.
+
+There is explicit way for user to disable misc without setting capacity to  
+zero. So in future if we want really disable sgx_epc cgroup specifically  
+we should not use capacity.  Therefore your approach is not  
+extensible/reusable.
+
+Given this is a rare corner case caused by configuration, we can only do  
+as much as possible IMHO, not trying to implement a perfect solution at  
+the moment. Maybe BUG_ON() is more appropriate?
+
+(If you want to disable sgx, we can return error from sgx_init() but I  
+still doubt that's what you meant.)
+
+Thanks
+Haitao
