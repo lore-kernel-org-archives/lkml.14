@@ -1,246 +1,321 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BDEB135A7D;
-	Tue, 23 Apr 2024 13:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713878473; cv=fail; b=AqcsPTLY66ABopHjRmQLeB/nI7BVKu2n8TSC/BcLjMq/UjuF5WI73xb/gu5trkgCy/7m7FmoLOssjXIJN8r60D7nOepzL4Pekn5MkfOHWXE0bkTSncIH9uNeA+eSj3u86yn4vcBijUWt96qfzIyQU1NyHIa2DEj3f+aNW4sIlj0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713878473; c=relaxed/simple;
-	bh=E/Iiniyg40VUhX6Fe9u1SZwLWrpvlm7exKIbG5Yc3QU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=iEu5UnB7GXy8RUpDrdwrcbOZTV4SnHnCR+yUhD85F9utlFyPLUOaojZw2fbJk5RFYD/5ka5D0V+Fe34XfsQPhfxzaQmHNrxLe2BmmC9V+UUVs6ukK7Ncp3dxvmwpLdlTTk9cGGSlu9g1KZ5cUmsWMYM6vjmugcCff670nHC6sHo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=RQM32b7D; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=aFoqH4N5; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RQM32b7D";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="aFoqH4N5"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43N7Y4hk031855;
-	Tue, 23 Apr 2024 13:20:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=aOx/wzUVSXOQdNvmK8sPNpus5EI4JyxL15o6PnK3hdU=;
- b=RQM32b7DAu7YdhBkW1wkHRy+oiw+FNMXq3adPkjjiFWJ5kgDv+NRxKi+zJxNz566fTe9
- Lp+XF39s/W/oP58l0ws4KeAbhSNvnQ+yH5q1p4WwTFqs6YITj7Bu3kmckBBxAMdoDKQY
- v4GPMkiPrWWPa+1fBU33ljyyBwp+GZj9LEckdn7nawfCkZw1/VVNDARnyOVFm7v/hWhH
- uipau5EGplDcByiaUEgMUzzAHv1Jw+6s40gGxp8nFgq5aqa/PGAmNHq82TO/Z6uHLSFA
- Q4ymYqsv7tA6+kJD2RRJY9VlBwMYScOLrdrhzN/aG6SdI7NrX4pSnR/RmUOSeFf/jrQW QQ== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xm5rdw5wv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 23 Apr 2024 13:20:43 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43NCIjfs035601;
-	Tue, 23 Apr 2024 13:20:42 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xm4576ym7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 23 Apr 2024 13:20:42 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EiDi4dQ7biMp3Qh0uFVY09lW9t1LIdT7cXTX8e7ntYgwm6JwrWjmY+CqwM4NrvNXk6+w2nxUJ4/epRCaHsqlwWt+ZhuyOtjDfJxi/QHfweSJrsHTMeqfyntHqvkquxhXZE65/VFwmB6hAMzKfrdhYmt/ZLgMSnlo9rd7LWKQq59u8drR8rz+a0t1sufA8VjmIVT9buVZ2lQN9VJWUa7feW/c+anpcdPRfalw9gU+W+CmipdbPJDncI6Oxjm0iwBstgjw28QAmgNyZrwafMBX0l7Q6pBXH6mlnifBu0BvFrciH1W1oQHB3vkqKRG09xM4gYQNbm3R+NkuGq9FhHuNhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aOx/wzUVSXOQdNvmK8sPNpus5EI4JyxL15o6PnK3hdU=;
- b=N7VcY8QGhzDEq4QH5JGKAHsqEmpUNtUtFBRJkogeUprHyn4JnWLfG4H0j+WlnVmi+4Z4zu+C6GCHXVjSuIcSwt4rW8wl0Fyr/NoLyVBCBWFW+8mh5H8UbJXe4O1I1KsyTAe5uiuWzGc8wX4wsvYNqCsWInlJ2V2jhgvcxvoGVMe7g+DlXTCZSBuowaYExfRHkw1bEb8GgYZ6O95Vva1Y+YVHZOTDCusKUGtWujRhQBWZu6q5JqOnKVuLvABEhCmjVwHjlnhkjR45x8lJIyWmWK3VlrYILjhRRblWdRmUbdO1biXWfDUrEvQHn7O8qCqh8iOctCtrdY0skBaS5jji8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aOx/wzUVSXOQdNvmK8sPNpus5EI4JyxL15o6PnK3hdU=;
- b=aFoqH4N54WW1wjQL3XlFSx2jOpRw5drEGjhs7f6jPO9ABCzuib5cqO5HqUI1sLEC0r2Cr6vdaA/LzWizsswgWTSbEMEDtYmYLY1YPD7B6/yz7bIm9GS5BwmwboQDjiTEjeOuRgfZ0F9BWFDSV8uouwQe9Djd5XKNp/ZN+8ZHMcM=
-Received: from CO1PR10MB4705.namprd10.prod.outlook.com (2603:10b6:303:96::11)
- by DS7PR10MB5973.namprd10.prod.outlook.com (2603:10b6:8:9f::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Tue, 23 Apr
- 2024 13:20:38 +0000
-Received: from CO1PR10MB4705.namprd10.prod.outlook.com
- ([fe80::88ef:4ee:6255:5391]) by CO1PR10MB4705.namprd10.prod.outlook.com
- ([fe80::88ef:4ee:6255:5391%5]) with mapi id 15.20.7472.044; Tue, 23 Apr 2024
- 13:20:38 +0000
-Message-ID: <c8b72a0a-93af-9024-1fec-5cd56b57a933@oracle.com>
-Date: Tue, 23 Apr 2024 09:20:34 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] admin-guide/hw-vuln/core-scheduling: fix return type of
- PR_SCHED_CORE_GET
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Josh Don <joshdon@google.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <20240423-core-scheduling-cookie-v1-1-5753a35f8dfc@weissschuh.net>
-Content-Language: en-US
-From: Chris Hyser <chris.hyser@oracle.com>
-In-Reply-To: <20240423-core-scheduling-cookie-v1-1-5753a35f8dfc@weissschuh.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MN2PR15CA0007.namprd15.prod.outlook.com
- (2603:10b6:208:1b4::20) To CO1PR10MB4705.namprd10.prod.outlook.com
- (2603:10b6:303:96::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11B6136E16;
+	Tue, 23 Apr 2024 13:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713878481; cv=none; b=jqg+Xn1Iv9e6P+eRTMechAh9VL/e51RUR1Gpz9vwKBnzRTAHmXpyiYnDv90pzyQTp6YhAweWuGxXk4FTRbMEROnrHe6P1jSlQNEga+xXLpKnBG0VcfuLY5/KpJPVj6yHYmO3EGWV8vISNS0zYduTGQvbXENH29lj4pnyhyGAihw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713878481; c=relaxed/simple;
+	bh=UNQ179A3uNx1Z+YCWoQcxKHTSEKRUUeDsQHAMZSJzNU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HWoDzWqjrPzkwKikr2RyXoM6wcfYCobykoRHfPlyzBMimwdRT4nkQ/XMAeu07Pbwi0fXJKS3D5m9fUVwZRkfqSDB7amcFCZVmEYdMx1klIaikECTgMeke8QKO7v1jG+2B+AlPiGac9CSPjPktzA0dbJesGSLfePQGmaRDQTqlk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4VP2Jz43lyz9xtSH;
+	Tue, 23 Apr 2024 21:00:03 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 331DE140429;
+	Tue, 23 Apr 2024 21:21:01 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwBXShOwtSdmxNXQBg--.39207S2;
+	Tue, 23 Apr 2024 14:20:58 +0100 (CET)
+Message-ID: <a74b1c3c49b74aa6062c57bd99b48bdddc256ebf.camel@huaweicloud.com>
+Subject: Re: [RFC PATCH v2 0/2] ima: Fix detection of read/write violations
+ on stacked filesystems
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: Amir Goldstein <amir73il@gmail.com>, Stefan Berger
+ <stefanb@linux.ibm.com>
+Cc: linux-integrity@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, zohar@linux.ibm.com,
+ roberto.sassu@huawei.com,  miklos@szeredi.hu, brauner@kernel.org
+Date: Tue, 23 Apr 2024 15:20:44 +0200
+In-Reply-To: <CAOQ4uxgvHjU-n56ryOp5yWQF=yKz0Cfo0ZieypWJhqsBV4g-2w@mail.gmail.com>
+References: <20240422150651.2908169-1-stefanb@linux.ibm.com>
+	 <CAOQ4uxgvHjU-n56ryOp5yWQF=yKz0Cfo0ZieypWJhqsBV4g-2w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PR10MB4705:EE_|DS7PR10MB5973:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1af50238-c58c-4a0e-5dc4-08dc63982abe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?dUVBMlVuWVlPWmU0bXRHQUgwazVXUTA2YzYvSVNDTzZWbGRTVEVXeldMbEZv?=
- =?utf-8?B?Mmhuemh4ZDY4LzN3c0FGTUVPQUlJL3htNG5MRHJSWXg3dTZGZkNBZGdxbjNX?=
- =?utf-8?B?UXl2MzNlYVpoWk83WUtjQmNnOHVSVDNydlhUTTVXVEdKc1VwQXFjZ0lLR1VZ?=
- =?utf-8?B?WTRkajFyTmRpTWljZ1d6cXcycy9OQ1R2NEJ0MmY3a2M5aU1rdFZnT3Y3RUhE?=
- =?utf-8?B?ZUFkRE5JZEV6akpDWG93U2xOUnVJS2pSZjdZNVlGMEpEMUo0cmVNRFlhSHlo?=
- =?utf-8?B?SlVXTDN1WFNZVVNZemJNc3hMeFZVeVJWUEdlMHlFNHoxUEZaVFJWYjlQY0Fw?=
- =?utf-8?B?NVVaektZeDdVMkllUC9jRElFRWtIWXZEQk9uNE9CdVp1YjU1dXV0L1FKQTEz?=
- =?utf-8?B?SzhKRkk0TXNOcG1kWVRlb2hTVkcrWURhZDZ1bzdjOFJMNVlFOFYzS2dQd0Fi?=
- =?utf-8?B?YUZWbUtyd21lN3BlY2ZvTTkyejFZQ0J5ZnNEQXdmMWdvZm1QdkR5eTNKdGsv?=
- =?utf-8?B?dkFHcGdyZklqZDhSTHJPRmtIdkNqbG1CZHZZOWJBM1FKZmxQckFkdFZ6dXNZ?=
- =?utf-8?B?R0NQaFJHSG41bW9sQWJPU01NVzJzK3BVamxKejV4TUZCRXk0RU4rWjYxK3R3?=
- =?utf-8?B?NkVIbWYxU3hBYkhYc09DNll6MWVxSmV2dkxXNFFNMzFTd1lmQU84YU5oZUxV?=
- =?utf-8?B?Q3RCNWVlK0hNTHlKVGxMZ1hCK3Qzb0ZrT0lVMUZRcnh1QXcxU2JNREFEOS8w?=
- =?utf-8?B?Q1dMQzZ3eXRqd25qUEdEYUVSejFkUmxHSmt3OU5QemV4TVltOVB2dW1TUjI1?=
- =?utf-8?B?R2htS3gvSFQ2eldnUmlvRXVBMFMzU2tXV05SZktKVUZpSWhreC8yUzZaazcw?=
- =?utf-8?B?Q3pIYmpPSnNwUWdJSFJpZVFpTEZ1K3ljcUVNeVBDdEV0N3d2emFEbklXYXgv?=
- =?utf-8?B?b2pnY3lmL3FDa0NCNEs0bmdUUGtzcVIvSkhsenJDZkFzRXE4S00rRVFEZ1Zo?=
- =?utf-8?B?Vlp4SXcwT2FRL3cwcXpYYmx4azlVMEZIaTVMVGExQlN1clB2WXlBT0VZWjNp?=
- =?utf-8?B?T050dWtmK1BOOGxRK2lMUDc3aGlCSkY1WWZEYWtiRjhhSnhqVjlLYXVIeS9r?=
- =?utf-8?B?R0pISDFuTnJPZ004bHFHYjE4SS8xQjJlaURLd1MxTE9yL1loL0Q0cmZzRzVz?=
- =?utf-8?B?TUlWWVdvWGp1T29MenFZREhNNWxsaGlCY08xOTh5RTlpWHUvM2pPM2tKaDA3?=
- =?utf-8?B?RWV2QXVMTlp6eU82UERIaFRSREhWZHYwSit0aGJtRUpneVJiMDZoVXNmSk13?=
- =?utf-8?B?czBnVXVtalZQQUpldjA3Zy9vdmRDSjMvazg3OExHM0NyRXlLTEpxaXZPTEdQ?=
- =?utf-8?B?Zm8vNjdpSUJDbXRGSGZ0YXhwZUh3aUFoVmo3WGg3N3pHTi9RVTFuRFNONVl3?=
- =?utf-8?B?dmc2dTdBcDJjQ1NjeHZkd09JTnJrMEs5MlBoM3pZNTBlamV6ZTRyT29vSytu?=
- =?utf-8?B?VVJLL1hLS0VDUjVFVWRHTVhpbnlwa1hkYTd4dzhoY1ZMaisxWjkzYWNoSWNl?=
- =?utf-8?B?TnhNUDdIUURYVzd2a1BTcUM3aE96ejNvOHZNcXFwaEdXSmsvS092dTZucTVC?=
- =?utf-8?B?U0Mzb3h5TkEwc3I0SCt5dWZtdElaV2FheFZZbit1aTFjRGNsczdZVXdkMjY0?=
- =?utf-8?B?bEN4TU5yc2VpY2FQNXpLaUFTV0hzZDNDZHIwSHI2d28xeE5kMTFta1VBPT0=?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4705.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(7416005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?QlMyWFRiYXpGSnFmM0xDT0xjaEUrSnVuNXQyOVlGNG5sa0xQeVFhU1NlTHVk?=
- =?utf-8?B?R21ta0lVTmdaZm9HSUkwNnd2ZytrM3k0cUtCTm94bGhYWVNsTEo2NWlKTWpJ?=
- =?utf-8?B?QTNVd0pFRHpUVGY2YjJOdkNjdU1nK2xXcHBHZFYvblRlSDNjSTlsSndNR3Rx?=
- =?utf-8?B?MUNwMFNJM1ZXTXl1MVR6MkZuNzRLRFMzdWRhTFQ3RzkxSm44UlNzVk5XU1kz?=
- =?utf-8?B?L3ZVU0pRZWU1TC8wWExNQXdBNlkxbDRFSVZRMTFQbkdFalFrOTNEUXJ4YzVj?=
- =?utf-8?B?alFHV3RwWEdsM09xaittWlNVSFQ0T2NQR0dod2JmelN1dVRYNHgvSG02Nmo1?=
- =?utf-8?B?bGRGYmtlZjZISUJDayt5SnUzUm1wTFAxYmg1c2JSTjRXVmpuM2llVmY5YUlw?=
- =?utf-8?B?cmZsd1oxUTFBUFVseStYSmZpb0hiMEZNb0h2aVFJSHFER2VkTFlWbTYrai9T?=
- =?utf-8?B?MTNEQzd4VVl4cHhNTkF6ZFZHMUxyYVB4eFhzTDFhSGFHL2hYUHUwQ2llYXYx?=
- =?utf-8?B?bXpwQ2RCRkxkaFQrTWtETW5Lam9oc0VMTUJIZ3dsa0U5eENtcjFpeGxxUlNX?=
- =?utf-8?B?c29HTThxVTc3VGJ2d1JKVXpwTmZnNkRRdkU1ZXFwaGlSVE1kTDFhSHU4Zml2?=
- =?utf-8?B?c2xsclRGZ3dpZ0htMTVTcnY1YTFCR0JQQVdrdFdNelFNZnZ1MGJpMXY0dGtF?=
- =?utf-8?B?U2NJTTNxMkIrTHcwVE14eFdwK3NOZThHL09iSzFRc1JHSWxNYUlTVTFTcldp?=
- =?utf-8?B?UVlSV1pvb0xFbjRkaER3Ymhxem9NdzJMcm9hdWFqRWhjNGJZVlJsU0xXanF5?=
- =?utf-8?B?NXA1MmNyTjIvZTZyQ3NwR2JSTXNFRGdHTWNIR2J3cU9VS25jQmVtQkJ3OWhG?=
- =?utf-8?B?YkdpRXlmZ1gyVzhGWHRuU01uQmhvVC9hZW1ZcVUwWGsxdGlXTmgwcG82blBm?=
- =?utf-8?B?Rjc0bkk3b0g4OStvUGNEN1QzTU9qYUZUVmtVckkrUmdlK1hmcW5mdURZRC9l?=
- =?utf-8?B?bWtuNC9QQVpMS2tMdVl1S3dSTWs3VUoxU0w5Y3BWUmlqQjRMekNzVnhRUndD?=
- =?utf-8?B?QXljRkZSWEUySHdPUEtiRnRJZlVmdnV4Zm1Mb09HcmFEWURkcFdIeDRqUS9w?=
- =?utf-8?B?TWtiSk1nR0p5dU5xb0k4M0Uwei9UeFV1S2lqbGs3Rk9YK25LMUhpOTdjTUdq?=
- =?utf-8?B?ZUVJNC91NlBvMnpUK091TjFxQ3RVRkFTQkg1TVhRa1doWnAvL1NZclJNWXVk?=
- =?utf-8?B?OVZKZ3Z1M1ordjZ5UzVzMjRTOWg4SldrRENsWnN3eTBqQ1I3RjQ2Z1NrejVR?=
- =?utf-8?B?T1RjcEVYa21lMnJjMllSTlVKL3dWL2dzTmJSYm9PL0dQRy9qQWRaNndHKzBF?=
- =?utf-8?B?cmFjOS9BeERrYmwxK1c3K3YrYWFiaDVzbDk0Z3YxTmJXNXFRMTZwTUsxeG56?=
- =?utf-8?B?OG9NVjh1K0EzMC9aUjFzbjdYOEdqNnJNT2dFVklJVWFIK3YzdHM3d3NIK0lE?=
- =?utf-8?B?TmJWV25ER3dZYXgzRnQ0alI2OGlZb2ZIZTdnUCtBY1ZXNzVoM2JGbEF1OU9B?=
- =?utf-8?B?cXdSOTl3dndqeEt1b3o3Tm5PRFhaaStwNURCOE1CTEFSN3JxcGNHeHJWZHVp?=
- =?utf-8?B?aXMrS29MbkY3WGVnOTJyT09NUWZqVUpFamRNeU9aUlQwRU1aeTNtZzcvOXgx?=
- =?utf-8?B?UW5nTmtIZnN6QldwSHBCQlpPNDNURS9QLzc4WU9PMmpnSitPdWZzbFZ1NnR4?=
- =?utf-8?B?d3J4VlhXYTNTbTE2c2RnTVhOQkQ2Qjl3RElibE9hTVV4Q3Jrbk5ZaFVHTjNn?=
- =?utf-8?B?eWI2OWlFa2NTZzBoUHk2VFZ4V1VsZGV5WFl3MXFSa1ZwQ3ZGTW1tN2E2VjlJ?=
- =?utf-8?B?Yi9oK3N2RHBDQzRKeGJWUVVrNnFnd2h0ODlWYkhvVHhVd0RxTXNzeEsyWW5T?=
- =?utf-8?B?OXh4SFM4S24wdWFOTnVUK1EzRHI2cWpjZXQ1MTlOVWxiakZzTjRoL1JZWVNZ?=
- =?utf-8?B?cG9PcGYwRWJSMkZ6L0Fnb1ZIVlZlZE9YTzJHT3JhZEMzTkRiQmJ0NUJYUUN4?=
- =?utf-8?B?VXpxMm9CQjd4TGdvQjdHM0ozM1pWMy8vWjdOVmx6NVQ2bGptMkZaZGJmZ2ow?=
- =?utf-8?B?Qk9HOHRiVE5BVXV3TSt4eTNEcUxUUlV5L2JTbFc1WDVrSkR3M3hkRWFYVTVV?=
- =?utf-8?B?bnc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	h3hRAqZMO/9RtDCofg3J3hm5nz9N0kqojrNDTwNAdHDofzMhpTeuiDAu/uDB0Tn5akMhESKRTEtecMGiAcrgKgw2V5ysuQ/y9/3MHjY7MZ5CvlWToMA5m5x0P62XNCNEXcd4C802F4J9BmRnF5cWiPdmE0BoSVfM0fzEdNxUGwmmSVi/L8xSIv1HTcr18UDnSv6LMlXJ+KhDT4GS1iHywCw7HgSA7F6RjM0Jvr0PbOnKmMWYFzDfP7mdMd48//klrZ5Ta34APJxVoJr2HY7UUXvBQSjK5JBaWkuEWmecQRq5J9uG0HlYzaAZ008VnnKRtglYUuub0dPlUkboZqjsFpy9Wo/q/0G62vhCqoyNyxabRM5Gv9aKJKorfpAnZSzssb7l6ZRiM+0rRkETTcZtmTglNo5TmtnG7leRS512DJVMCpuS+p7bmCA0YQmHnrMmoXk7qcK2fIHGXvg44sqKoGrTcJE6/2KAC3FfATLXVB+doycnK35OJAUQMg3dATc4HqcZ0UlU9jffGdPzar+9NAlvt2+siG6FERugnAPgu/z6oTujg62CSbpZur/+lC0WsG+b2VQluhbmcrwChKfpST7e4LUpJRkhy2Ay7R/j3/s=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1af50238-c58c-4a0e-5dc4-08dc63982abe
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4705.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 13:20:38.4669
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 88k+y4rUFL+eNPFGm7SypmbBsCn3AL9XQoWQzU5DoQ6ofY+p8tZLheStvawl3Ey7FANydzTJMsCYQ6BE5Zi4vg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5973
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-23_11,2024-04-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
- bulkscore=0 mlxscore=0 suspectscore=0 adultscore=0 malwarescore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404230033
-X-Proofpoint-ORIG-GUID: aLzSRgbjSFTHyLFdJd5ZyV6y-F_BwCOa
-X-Proofpoint-GUID: aLzSRgbjSFTHyLFdJd5ZyV6y-F_BwCOa
+X-CM-TRANSID:LxC2BwBXShOwtSdmxNXQBg--.39207S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3CFy3ZrWDtFyDAr1kCFykXwb_yoWDurW3pr
+	n8tFWDKr48tF17Gr15Jr1UXF17Ar1DAFyUGF15ua4xXF98Grn5Zr4jyry3tw17Ars8ur1a
+	yanrXryaqr1UA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUglb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
+	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMI
+	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
+	xhVjvjDU0xZFpf9x07UWE__UUUUU=
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgACBF1jj5i3nwAAsF
 
-On 4/23/24 06:34, Thomas Weißschuh wrote:
+On Tue, 2024-04-23 at 09:02 +0300, Amir Goldstein wrote:
+> On Mon, Apr 22, 2024 at 6:07=E2=80=AFPM Stefan Berger <stefanb@linux.ibm.=
+com> wrote:
+> >=20
+> > This series fixes the detection of read/write violations on stacked
+> > filesystems. To be able to access the relevant dentries necessary to
+> > detect files opened for writing on a stacked filesystem a new d_real_ty=
+pe
+> > D_REAL_FILEDATA is introduced that allows callers to access all relevan=
+t
+> > files involved in a stacked filesystem while traversing the layers.
+> >=20
+>=20
+> Stefan,
+>=20
+> Both Miklos and myself objected to this solution:
+> https://lore.kernel.org/linux-unionfs/CAJfpeguctirEYECoigcAsJwpGPCX2NyfMZ=
+8H8GHGW-0UyKfjgg@mail.gmail.com/
+>=20
+> Not sure what you are hoping to achieve from re-posting the same solution=
+.
+>=20
+> I stopped counting how many times I already argued that *all* IMA/EVM
+> assertions,
+> including rw-ro violations should be enforced only on the real inode.
 
-> sched_core_share_pid() copies the cookie to userspace with
-> put_user(id, (u64 __user *)uaddr), expecting 64 bits of space.
-> The "unsigned long" datatype that is documented in core-scheduling.rst
-> however is only 32 bits large on 32 bit architectures.
->
-> Document "unsigned long long" as the correct data type that is always
-> 64bits large.
->
-> This matches what the selftest cs_prctl_test.c has been doing all along.
->
-> Fixes: 0159bb020ca9 ("Documentation: Add usecases, design and interface for core scheduling")
-> Cc: stable@vger.kernel.org
-> Link: https://lore.kernel.org/util-linux/df7a25a0-7923-4f8b-a527-5e6f0064074d@t-8ch.de/
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-> ---
->   Documentation/admin-guide/hw-vuln/core-scheduling.rst | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/admin-guide/hw-vuln/core-scheduling.rst b/Documentation/admin-guide/hw-vuln/core-scheduling.rst
-> index cf1eeefdfc32..a92e10ec402e 100644
-> --- a/Documentation/admin-guide/hw-vuln/core-scheduling.rst
-> +++ b/Documentation/admin-guide/hw-vuln/core-scheduling.rst
-> @@ -67,8 +67,8 @@ arg4:
->       will be performed for all tasks in the task group of ``pid``.
->   
->   arg5:
-> -    userspace pointer to an unsigned long for storing the cookie returned by
-> -    ``PR_SCHED_CORE_GET`` command. Should be 0 for all other commands.
-> +    userspace pointer to an unsigned long long for storing the cookie returned
-> +    by ``PR_SCHED_CORE_GET`` command. Should be 0 for all other commands.
->   
+I have hopefully a better idea. We should detect violations at each
+level of the stack independently. And IMA should be invoked each time
+overlayfs uses an underlying layer.
+
+That is currently not easy, from the IMA policy perspective, because
+there are filesystem-specific rules, such as fsname=3D or fsuuid=3D. At the
+moment, I'm not planning to solve this, but I'm thinking to use for
+example FMODE_BACKING to ignore the filesystem-specific keywords and
+match the rule anyway.
+
+For now, I'm only addressing the call to underlying layers. To make
+sure that IMA evaluates every layer, I added a rule that checks the
+inode UID:
+
+measure fowner=3D2000 mask=3DMAY_READ
 
 
-Yes you're right, that is what the test code actually does.
+I just investigated a bit, and I made some changes (for now, I'm just
+making it work, and you tell me what you think).
+
+diff --git a/fs/backing-file.c b/fs/backing-file.c
+index 740185198db3..8016f62cf770 100644
+--- a/fs/backing-file.c
++++ b/fs/backing-file.c
+@@ -12,6 +12,7 @@
+ #include <linux/backing-file.h>
+ #include <linux/splice.h>
+ #include <linux/mm.h>
++#include <linux/security.h>
+=20
+ #include "internal.h"
+=20
+@@ -40,12 +41,16 @@ struct file *backing_file_open(const struct path
+*user_path, int flags,
+        if (IS_ERR(f))
+                return f;
+=20
++       f->f_mode |=3D OPEN_FMODE(flags);
++
+        path_get(user_path);
+        *backing_file_user_path(f) =3D *user_path;
+        error =3D vfs_open(real_path, f);
+        if (error) {
+                fput(f);
+                f =3D ERR_PTR(error);
++       } else {
++               security_file_post_open(f, ACC_MODE(flags));
+        }
+=20
+        return f;
 
 
-Reviewed-by: Chris Hyser <chris.hyser@oracle.com>
+Setup:
+
+# mount -t overlay -olowerdir=3Da,upperdir=3Db,workdir=3Dc overlay d
+
+open is a tool with the following syntax:
+
+open <path> <perm>
+
+It performs the open, and waits for user input before closing the file.
 
 
->   In order for a process to push a cookie to, or pull a cookie from a process, it
->   is required to have the ptrace access mode: `PTRACE_MODE_READ_REALCREDS` to the
->
-> ---
-> base-commit: 71b1543c83d65af8215d7558d70fc2ecbee77dcf
-> change-id: 20240423-core-scheduling-cookie-b0551c40b086
->
-> Best regards,
+
+ToMToU (Time of Measurement - Time of Use):
+
+Same fs (overlayfs)
+
+# /root/open /root/test-dir/d/test-file r (terminal 1)
+# /root/open /root/test-dir/d/test-file w (terminal 2)
+
+This works:
+
+10 35435d0858d895b90097306171a2e5fcc7f5da9e ima-ng sha256:0e4acf326a82c6bde=
+d9d86f48d272d7a036b6490081bb6466ecc2a0e416b244a boot_aggregate
+10 cef529d5d1032ffb6d3e2154664c83ba18cf2576 ima-ng sha256:f2ca1bb6c7e907d06=
+dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 test-file
+10 694277487b9753db78446192231b59b7be7c03ad ima-ng sha256:f2ca1bb6c7e907d06=
+dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 /root/test-dir/d/test-file
+10 0000000000000000000000000000000000000000 ima-ng sha256:00000000000000000=
+00000000000000000000000000000000000000000000000 test-file
+10 0000000000000000000000000000000000000000 ima-ng sha256:00000000000000000=
+00000000000000000000000000000000000000000000000 /root/test-dir/d/test-file
+
+This is the result of calling IMA at both layers, and the violation of
+course happens twice.
+
+This is also confirmed in the logs:
+
+Apr 23 14:52:45 fedora audit[994]: INTEGRITY_PCR pid=3D994 uid=3D0 auid=3D0=
+ ses=3D3 subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=3D=
+invalid_pcr cause=3DToMToU comm=3D"open" name=3D"test-file" dev=3D"sda3" in=
+o=3D995512 res=3D1 errno=3D0
+Apr 23 14:52:45 fedora audit[994]: INTEGRITY_PCR pid=3D994 uid=3D0 auid=3D0=
+ ses=3D3 subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=3D=
+invalid_pcr cause=3DToMToU comm=3D"open" name=3D"/root/test-dir/d/test-file=
+" dev=3D"overlay" ino=3D995512 res=3D1 errno=3D0
+
+
+Different fs (overlayfs, btrfs)
+
+# /root/open /root/test-dir/d/test-file r (terminal 1)
+# /root/open /root/test-dir/b/test-file w (terminal 2)
+
+Again, this works despite the read is in overlayfs, and the write is in
+btrfs:
+
+10 35435d0858d895b90097306171a2e5fcc7f5da9e ima-ng sha256:0e4acf326a82c6bde=
+d9d86f48d272d7a036b6490081bb6466ecc2a0e416b244a boot_aggregate
+10 cef529d5d1032ffb6d3e2154664c83ba18cf2576 ima-ng sha256:f2ca1bb6c7e907d06=
+dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 test-file
+10 694277487b9753db78446192231b59b7be7c03ad ima-ng sha256:f2ca1bb6c7e907d06=
+dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 /root/test-dir/d/test-file
+10 0000000000000000000000000000000000000000 ima-ng sha256:00000000000000000=
+00000000000000000000000000000000000000000000000 /root/test-dir/b/test-file
+
+The difference from the previous example is that now there is only one
+violation, which is detected only in the upper layer. The logs have:
+
+Apr 23 15:01:15 fedora audit[985]: INTEGRITY_PCR pid=3D985 uid=3D0 auid=3D0=
+ ses=3D3 subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=3D=
+invalid_pcr cause=3DToMToU comm=3D"open" name=3D"/root/test-dir/b/test-file=
+" dev=3D"sda3" ino=3D995512 res=3D1 errno=3D0
+
+
+Different fs (btrfs, overlayfs)
+
+# /root/open /root/test-dir/b/test-file r (terminal 2)
+# /root/open /root/test-dir/d/test-file w (terminal 1)
+
+10 35435d0858d895b90097306171a2e5fcc7f5da9e ima-ng sha256:0e4acf326a82c6bde=
+d9d86f48d272d7a036b6490081bb6466ecc2a0e416b244a boot_aggregate
+10 d7a692e19158820d2755542a8d31b49ac7ac2729 ima-ng sha256:f2ca1bb6c7e907d06=
+dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 /root/test-dir/b/test-file
+10 0000000000000000000000000000000000000000 ima-ng sha256:00000000000000000=
+00000000000000000000000000000000000000000000000 test-file
+
+Works too. There is only one measurement, since that is done only for
+the upper layer.
+
+Apr 23 15:05:40 fedora audit[982]: INTEGRITY_PCR pid=3D982 uid=3D0 auid=3D0=
+ ses=3D1 subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=3D=
+invalid_pcr cause=3DToMToU comm=3D"open" name=3D"test-file" dev=3D"sda3" in=
+o=3D995512 res=3D1 errno=3D0
+
+
+
+Open writers
+
+Same fs (overlayfs)
+
+# /root/open /root/test-dir/d/test-file w (terminal 1)
+# /root/open /root/test-dir/d/test-file r (terminal 2)
+
+10 35435d0858d895b90097306171a2e5fcc7f5da9e ima-ng sha256:0e4acf326a82c6bde=
+d9d86f48d272d7a036b6490081bb6466ecc2a0e416b244a boot_aggregate
+10 0000000000000000000000000000000000000000 ima-ng sha256:00000000000000000=
+00000000000000000000000000000000000000000000000 test-file
+10 cef529d5d1032ffb6d3e2154664c83ba18cf2576 ima-ng sha256:f2ca1bb6c7e907d06=
+dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 test-file
+10 0000000000000000000000000000000000000000 ima-ng sha256:00000000000000000=
+00000000000000000000000000000000000000000000000 /root/test-dir/d/test-file
+10 694277487b9753db78446192231b59b7be7c03ad ima-ng sha256:f2ca1bb6c7e907d06=
+dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 /root/test-dir/d/test-file
+
+Apr 23 15:10:46 fedora audit[983]: INTEGRITY_PCR pid=3D983 uid=3D0 auid=3D0=
+ ses=3D3 subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=3D=
+invalid_pcr cause=3Dopen_writers comm=3D"open" name=3D"test-file" dev=3D"sd=
+a3" ino=3D995512 res=3D1 errno=3D0
+Apr 23 15:10:46 fedora audit[983]: INTEGRITY_PCR pid=3D983 uid=3D0 auid=3D0=
+ ses=3D3 subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=3D=
+invalid_pcr cause=3Dopen_writers comm=3D"open" name=3D"/root/test-dir/d/tes=
+t-file" dev=3D"overlay" ino=3D995512 res=3D1 errno=3D0
+
+
+Different fs (overlayfs, btrfs)
+
+# /root/open /root/test-dir/d/test-file w (terminal 1)
+# /root/open /root/test-dir/b/test-file r (terminal 2)
+
+10 35435d0858d895b90097306171a2e5fcc7f5da9e ima-ng sha256:0e4acf326a82c6bde=
+d9d86f48d272d7a036b6490081bb6466ecc2a0e416b244a boot_aggregate
+10 0000000000000000000000000000000000000000 ima-ng sha256:00000000000000000=
+00000000000000000000000000000000000000000000000 /root/test-dir/b/test-file
+10 d7a692e19158820d2755542a8d31b49ac7ac2729 ima-ng sha256:f2ca1bb6c7e907d06=
+dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 /root/test-dir/b/test-file
+
+Apr 23 15:12:58 fedora audit[984]: INTEGRITY_PCR pid=3D984 uid=3D0 auid=3D0=
+ ses=3D3 subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=3D=
+invalid_pcr cause=3Dopen_writers comm=3D"open" name=3D"/root/test-dir/b/tes=
+t-file" dev=3D"sda3" ino=3D995512 res=3D1 errno=3D0
+
+
+Different fs (btrfs, overlayfs)
+
+# /root/open /root/test-dir/b/test-file w (terminal 1)
+# /root/open /root/test-dir/d/test-file r (terminal 2)
+
+10 35435d0858d895b90097306171a2e5fcc7f5da9e ima-ng sha256:0e4acf326a82c6bde=
+d9d86f48d272d7a036b6490081bb6466ecc2a0e416b244a boot_aggregate
+10 0000000000000000000000000000000000000000 ima-ng sha256:00000000000000000=
+00000000000000000000000000000000000000000000000 test-file
+10 cef529d5d1032ffb6d3e2154664c83ba18cf2576 ima-ng sha256:f2ca1bb6c7e907d06=
+dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 test-file
+10 694277487b9753db78446192231b59b7be7c03ad ima-ng sha256:f2ca1bb6c7e907d06=
+dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 /root/test-dir/d/test-file
+
+Apr 23 15:16:37 fedora audit[983]: INTEGRITY_PCR pid=3D983 uid=3D0 auid=3D0=
+ ses=3D3 subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=3D=
+invalid_pcr cause=3Dopen_writers comm=3D"open" name=3D"test-file" dev=3D"sd=
+a3" ino=3D995512 res=3D1 errno=3D0
+
+Roberto
+
+> I know this does not work - so you should find out why it does not work a=
+nd fix
+> the problem.
+>=20
+> Enforcing IMA/EVM on the overlayfs inode layer is just the wrong way IMO.
+> Not once have I heard an argument from IMA/EVM developers why it is reall=
+y
+> needed to enforce IMA/EVM on the overlayfs inode layer and not on the
+> real inode.
+> I am sorry that we are failing to communicate on this matter, but I am no=
+t
+> sure how else I can help.
+>=20
+> Thanks,
+> Amir.
+
