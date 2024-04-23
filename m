@@ -1,88 +1,139 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2107.outbound.protection.partner.outlook.cn [139.219.17.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B925647F;
-	Tue, 23 Apr 2024 09:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713862854; cv=none; b=BbCgyHKZdadeOCTP1x9Ysiegc9nPFDPxsE0g95MZuwwl7/t9Tz1VtXkI9xHv4aHM4BmKaB55Zc38wuqI2pos1ZYaj5zAmbprbee+pXtxESSlL73XfNUa/uNKpSmsTPWhe2KWAyTQUXa4uxleta9phx/G5lKLEg+kBODbcWXjPtI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713862854; c=relaxed/simple;
-	bh=DVL/W006mq7B8XRru41g4X8LQ/QFyfpjIosJSHzQt7s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nlPqQFmvOge6I09bCjyAoLNY7im3lfYO8Ic+5qUnF/KkYh14bXMCVrUtqII3RVzWM4CE/M3/aAxFX27Ydg66brfxzT9mNeC0+ke73HbHa6xPdE3s0GtbOJCT8XA5pt//t26Z3VPOTixTT8lQj6BwSa4rBpduJymTqzBl9pAneN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=pi8Lz4FM; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="pi8Lz4FM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=rZoO7ltG3psc+RMtbCywngv1xFSki99rx9Qg2yUYeDY=;
-	t=1713862849; x=1714294849; b=pi8Lz4FMeS88/pL4t/BZI+mzwR1XURZ3pWX3VQziH/aUDMH
-	IJQOY96L4PJKa3PZgsi657gii2u7Gg4sPkxUTXIJ2ZCapLRwb3pejurux4JvugNiFZFjuJPxbt4L4
-	9SCVYvs67jHxwISBk4VUah6KCcjz968u8+VNB8MX5msrHg4YSDN7SDcCrlPcVsktiumwA0huLMowO
-	Wgl1O0zzBj/GkkEPJHABiIamBOqXYxiwlxNHMXz0EAZyYavYoqiglhdX9HI0JvRhmAwLmy5cKbMdw
-	RrEdTij+/x23UvpvNLEdpJYL+4IqdZF3VDPSdxjAJbmSBf/bIruuCdvIn0l6Notg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rzC15-0000B6-B2; Tue, 23 Apr 2024 11:00:43 +0200
-Message-ID: <bc420f3a-5809-4c4a-80ad-ccd8a46853b6@leemhuis.info>
-Date: Tue, 23 Apr 2024 11:00:42 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620BD535DB;
+	Tue, 23 Apr 2024 09:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.107
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713862885; cv=fail; b=Mx7v3oP3NBln99SLXGwvc0kVo/6oWoJ8aJx7KYYEo+Xam9cl1IL9BFgRfe0WFGbE2dZm/QseRVb/yzt231T0k7/emsgL242ipIbr3ALRZOmPVitnpOSKDhkXenpfdEwJ6pfBJTdZpNztAzIOMYEpQWgmSi8w79YQb2aaSQ4ajGI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713862885; c=relaxed/simple;
+	bh=fH+78OgKH3Y4C0RXiQYWPmQsEj2EHvqOo47cAkpqe8U=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=H0TCaKjMqHfuzEUsUD2/8FEzXhGspBDsxuwebgceKCziFjZbs7u368P3qKZmUG3T0LhJY9z4IfLRla5knhUrzm8QQKZn/+hfrUmlTtt7LIdMSohEWJzV0EHG3OcnO1I8jV2te7oqDENXjhDN9gNY7WhwsnWx/vxx/uzLknBuXCQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hTe0UPOa7nIeFFAAFFd/BacSBC7fLs47hkwuonKWbypWLf/fOdikdKS5K3bsEs/rR6H/7ii+yCj34koWiYspx5EnsD1uyKhaNREG1imlWm+IVU9Sk+4iQxa813H8s3qabrkuS60v5k73Y4DlAMe8wr1a+lOVkID3EJVaua9pnHf+VKVcoANuxw7VmM12UNZWA4eN7ldnJ2tQkaoRvUkJwGRh/3I5DWo5cOlOB7BOXToJtmQSk/9hmaNhWqPQV7t58SLiiQnqsbCoXl4sHNTuR0LnO7NfPydGDlfa6KPLZKgdOAjdTxo9pkU4J7uWb/1k5v3K+cHhHVaoc8mzsfZOeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=o1FdSEsWyXPNc6sqs8qRZz+h57DHwCYCy7uB67zeKJo=;
+ b=cFjsAG1hIlf2MVrcw+mMjT/QS9vv0zMcc0y3A3Nxzytjm4jhcfYerGRFQYNv/MtbejWxH9M07RMC55dbPRQOcOYPx+fJJgdv8Xm/gS00Gxpu5Pq9/fpEtcQBYEcHT7UAv1aU5nOlLmyxscxoAmRg+RkzAWLGS1X8YaAqFVwN7I8SVfc7Q7sx3Mqdj73Un0tlEB+AAhva+E1pGxg4/iY6xv87+ZNTvWNczGWku587UU6JZe9EAbS0AVpTqP1FaO0tsU6B5FrQgtNpOiXY7CimxPOYBltTsqcIVXLgbzICeNzxGOk2mJ7ZOk5qWRHLpJtKS2OJqXSyW5kYh/T2BayhJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:20::14) by SH0PR01MB0633.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:6::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Tue, 23 Apr
+ 2024 07:26:50 +0000
+Received: from SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
+ ([fe80::e0a:f88a:cad1:dc1c]) by SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
+ ([fe80::e0a:f88a:cad1:dc1c%7]) with mapi id 15.20.7472.044; Tue, 23 Apr 2024
+ 07:26:50 +0000
+From: Joshua Yeong <joshua.yeong@starfivetech.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	conor@kernel.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	joshua.yeong@starfivetech.com,
+	leyfoon.tan@starfivetech.com,
+	jeeheng.sia@starfivetech.com
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH v2 0/2] Add StarFive's JH8100 StarLink Cache Controller
+Date: Tue, 23 Apr 2024 15:26:37 +0800
+Message-Id: <20240423072639.143450-1-joshua.yeong@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: NT0PR01CA0031.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:c::14) To SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:20::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: 6.9.0-rc2+ kernel hangs on boot (bisected, maybe LED related)
-To: Johannes Berg <johannes@sipsolutions.net>,
- Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
- Ben Greear <greearb@candelatech.com>, Lee Jones <lee@kernel.org>
-References: <30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com>
- <30819e01-43ce-638f-0cc6-067d6a8d03c7@candelatech.com>
- <89a9eec3-337f-3c9f-6bbe-00a26a15287c@candelatech.com>
- <20240411070718.GD6194@google.com>
- <de43c7e1-7e8c-bdbe-f59e-7632c21da24a@candelatech.com>
- <8736ebc8881e1e0cabfbbf033725a3123a5e8e90.camel@sipsolutions.net>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <8736ebc8881e1e0cabfbbf033725a3123a5e8e90.camel@sipsolutions.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713862849;391881e7;
-X-HE-SMSGID: 1rzC15-0000B6-B2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SH0PR01MB0841:EE_|SH0PR01MB0633:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54edf0f4-b2b2-4d34-77ec-08dc6366bdfd
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	wTJYsxuSg5IbdO9VWxtpL0TmEiURSyXn2fOn9ctEP0ovCFurg8Nw2FEPPXHBoMpXiFqQdDCn3tDkFh7lJL4us/iPFA938N08oWlW2NpyzNGCmBBPAkJW7SCOZQbBgExVsOI2vSAO/QMQa7mAlqZt75uVIAQDlt2II4SZpVW21Zidacbo+skNAq0z8LdmOHPcsIlTC25D+IwqR4gRVkxP7JSIXfPX8bmT97l2iSj1j7JXZ22x/PyyCaB1+fAqgCJiaSiI9CcEWroh3rrsXJQKN47o6ui+Z7CYskMKWiIPUFcFUe+Dzk/H5ZOoT4GgpY9BLVR55LARy9iuby/DaiUvuOp0iGrDpSErQ6nF8rGApDWQhfFvEkqawmvU+XMAWuczwLTaBFNDLU00tEFovUhp8+JLZPbRv/PSSfb4fC0k6vaQlRz+4EjrxVsUW/NcOMhz2Eb3bik/vJINlUQIt/vavdc/aDFrEXcYGIcnVuv8AYWTnEjKIOyAP4P2wZ64Gak6zZ0rcjLAiLHMslJyxpJgvYcJNRqgfNz3tdPBGJFMLFB6GisO8j+gGXgXVUSuRUTg8Dk/8HCbD5/a+XJ5xx6h3u45zpbqUjclZ1wErpqBRgSFOj4ppvRKffE6XPtT4eIbCueikhvwRxkP6mRYB53UIw==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(41320700004)(52116005)(7416005)(366007)(921011)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ziK1Kic23elB1axqZ6t6zOT13cy9WRrh/4jjTkFbDgVA5bJdTSu1Alawz7Pm?=
+ =?us-ascii?Q?8i8tjNC5V3Amoivk9L9FlhlJob1G4pXwqhM9nUrYubQ6wE+4l6BGl8FDDAFL?=
+ =?us-ascii?Q?F2yshdVJH8khs6dOXi1ypEGSU1d3QunSBFh8rDT0WNUv/AI0f71jrT0b4Vxm?=
+ =?us-ascii?Q?NfES3NWlYx1sKGyuYhUT/ljfhVNVV+0zc1fsdoSYqTkRpdV+KjQIu7jhYggC?=
+ =?us-ascii?Q?YW5syNPEjEeGt9kb/rS8Db+gxtiH6/ZPIYLtxJbHDZ4DS+tdJ8+iq1gr0v2H?=
+ =?us-ascii?Q?oErxN0baYG6oM3WjaoLC/SAt82tI6ROHhV7EVV69MXrgJBqIjzduCET/sl63?=
+ =?us-ascii?Q?uUI3JJ8/jmsOyR7PsFP4bd3xw2f1tQNNZ/aH2Ej9poKjz1edpXpGSIkvuhCi?=
+ =?us-ascii?Q?/KAQPGIowuCuw/Su1KonU0V1XKwOsK46ZhpR84bWN/kKPLMYPL9Fsm0j9wbD?=
+ =?us-ascii?Q?+G4O1AjQo81NpWg2M+tMvxe5CUuLoZrYxSdtWYZET7t4G/zHIOBFm9MD+PTB?=
+ =?us-ascii?Q?5Lpn2Opn3MDcZkbfBn3o+m5UBGg4Dgzn8a/R7FNTXA3oWk8YTQVAqxGphzk3?=
+ =?us-ascii?Q?9Pk4PUdMYqIPUl+5qko1gzPXmOpTV7TaYpLbfwPW4tzj+O37gA8EVHLaQgTX?=
+ =?us-ascii?Q?/yb9XsuPLLhl8iKCXjZWFOfwOP6WkicKuFnVUTNI5C5qcPEczr8Tt+jqWC+l?=
+ =?us-ascii?Q?eeHZnBBXAuQD3h4gvz9wzuvz7H5vPYVIUEpPlKfFNP17faUg6jn2dxoibsd9?=
+ =?us-ascii?Q?1/h95LjkXOrE3srbBoJoQhfE1nItJqqYkGsCMwhJijjoQfMDolcv8QGQSDxe?=
+ =?us-ascii?Q?X7NMmCAr85pCb98FKRcJCVhTPKIbAStFpoxLZc/uaepVQZkL/Yk/K7ZLKSWN?=
+ =?us-ascii?Q?YKgLoB7yHERmCjqjO2bT28jQVmnQX6iKBe/6Zk153EUXzQNhmfo7RprObcdr?=
+ =?us-ascii?Q?14T4jSDrMUU5qwdrNdmn/WMDSsOgQRY6EhKIdc6MFJwgC36t+/A3j1CxoYlv?=
+ =?us-ascii?Q?3s8mzXOkGp8gO84piznZu+2gkGh+RFPir7iwmUxDEGlp16+J3/2adS9dScux?=
+ =?us-ascii?Q?sgP6KEfc7yHEbYNom7sdIfSvieVN7gh1M1143vCQstBfz9PupaGYv27fYTPQ?=
+ =?us-ascii?Q?tpUepwFPUopsPCwXss6L9uqrw/KzQyhNYjkU/jRkEoeVC3cjsgVUgApIS8RH?=
+ =?us-ascii?Q?Cjr1dswpkSHR+ee/RdPR3iUDaNeThkm/sR0TUlioRIsrVRMC2QYGnZGmtks5?=
+ =?us-ascii?Q?TePbK7ZasaS+BnJyn0P68KSb0qhxpGZ4azSXa9olHkZ9cQ8m+WjuhpRG7ngq?=
+ =?us-ascii?Q?yEC3Y7rTB7aUeBvlZ8MB6BtWHAR2gmonj3Q13UEGHZ/wv82zx89OffDKVIJ4?=
+ =?us-ascii?Q?04VuOQwEIMWhMhAnSikjOVIwuj/drNqzXg5yFdcxiTOlCoDdD2Zz9rw2NeXm?=
+ =?us-ascii?Q?/onuGv73mqs2UnqRjXe5hvZGUA5dZsMkXBwkMB2YVVANzklG8eMMngvVfYhH?=
+ =?us-ascii?Q?6Q294pCUveDVjU8Mm1ZnIRCR7nQrnCVnNzAPWLIL2w1OwLiB95UiKwWsKqUs?=
+ =?us-ascii?Q?X3e3Jvtaah2SJyBcX7bseZUDwMUn0z6E8uRiE6q0UafJRxXNvG7najdFNSdc?=
+ =?us-ascii?Q?/Vcm2abK4HMvNFM5XC54P8M=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54edf0f4-b2b2-4d34-77ec-08dc6366bdfd
+X-MS-Exchange-CrossTenant-AuthSource: SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 07:26:50.6072
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cVOrSXewqRVa98PVsHg36Rn/vHZxgwAlMK8Fj+DwRKU0dMrykwUXV42GZ325xOzDz/kiuFF3rpt0kjnLx3hkzmBN7j8mtkDvL0NLnAb+VSQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SH0PR01MB0633
 
-On 16.04.24 08:17, Johannes Berg wrote:
-> On Mon, 2024-04-15 at 13:37 -0700, Ben Greear wrote:
->>
->> Johannes, you had another suggestion: changing iwlwifi's request_module() to request_module_nowait() in
->> iwl_req_fw_callback()
->>
->> Is that still best thing to try in your opinion?
-> 
-> I guess so, I don't have any better ideas so far anyway ...
+StarFive's JH8100 StarLink Cache Controller flush/invalidates cache using non-
+conventional RISC-V Zicbom extension instructions. This driver provides the
+cache handling on StarFive RISC-V SoC.
 
-[adding the iwlwifi maintainer; thread starts here:
-https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
+Joshua Yeong (2):
+  cache: Add StarFive StarLink cache management for StarFive JH8100
+  dt-bindings: cache: Add docs for StarFive Starlink cache controller
 
-]
+ .../cache/starfive,jh8100-starlink-cache.yaml |  62 ++++++++
+ drivers/cache/Kconfig                         |   9 ++
+ drivers/cache/Makefile                        |   1 +
+ drivers/cache/starfive_starlink_cache.c       | 132 ++++++++++++++++++
+ 4 files changed, 204 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/cache/starfive,jh8100-starlink-cache.yaml
+ create mode 100644 drivers/cache/starfive_starlink_cache.c
 
-Johannes, Miri, what's the status wrt to this regression? From here
-things look somewhat stalled -- but maybe there was progress and I just
-missed it.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
+-- 
+Changes in v2:
+- Change patch title from 'Add StarFive's StarLink-500 Cache Controller'
+- Remove StarFive alternative from errata framework
+- Fixes warning from https://lore.kernel.org/oe-kbuild-all/202403151625.boKDjHGr-lkp@intel.com/
+- Flush completion through atomic timeout function
+- Link to v1: https://lore.kernel.org/lkml/20240314061205.26143-1-joshua.yeong@starfivetech.com/
