@@ -1,144 +1,88 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318167E573;
-	Tue, 23 Apr 2024 11:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634217D3E6
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713871649; cv=none; b=GVa6QjWFANBBuAZ0uhvRGtcYHiP5DAPT8spWIctkD7Mf992u8elYwijWuvfJON3tdjuNFzczGZf4051d0bMgSuE9tvKEX3M/Kg5eVBW9tFChumX2NHbBOm1iLtWRWytJ2dBLjk9vstTRICMkl/XqpZ32A+PwrYbY/1PdnoLDNGU=
+	t=1713871685; cv=none; b=CjQbQ448vDcNNK/fvk01r9jYi3HqorCCfDMaiRkZP+LrLFfMtzLhgcRPA6huQ1gRsXwjvt3SBj52xI6ICwbsya6Y1ts/2FdASJWn0j7HER3J9R7alnpHvgaDN4A/RAjbp4cTuPLovqR8ya7nVUrRJ7lyuZWn8HZpSqtt8MmC26c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713871649; c=relaxed/simple;
-	bh=RXjI0rE/2Bz7aU5n8VbUuaFd1Y6UY+NP4eppUyr6WG4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZVBuwtE05S5mjp9QQNiYCJO8OogG86be8+h7AmpszreD5CtPfrPReiehwPlSS75EkBMQ5kmW+N7JwFyxvmt2y6PAA9diTufMKG1nGcHysUvJfdeOgmzJIBf8A084uJp0PK76T4S18aZCFPMhLspOPMnRomGOSX3IWejbn6uBr0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IP1JvZTZ; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713871685; c=relaxed/simple;
+	bh=R3iqpIOIoK1o7CTPRk4sNfkHZGRMhCyVjxP5dycHP0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lCIX8hdrBfD0DmRn6AtUjxNHMPTneBOuuvVNbjjrh1Vs0Z+sAINT2gotycU4cEu6/CH/z057ntkwlgVr2nRxy3+/ty8C8KZ00BNbaCgD713YtiXKFGkMUxvssO7HUJr/8HCHrQjHRuUU4YsqGmmIdA98S3PF/gNKXx/ff58V95M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=JvzNUggf; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IP1JvZTZ"
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-4dcbf770c24so2865355e0c.1;
-        Tue, 23 Apr 2024 04:27:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="JvzNUggf"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41a4f291f80so16952555e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 04:28:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713871647; x=1714476447; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9fXVEYwcrN6pIHZeASeinQCONCWFuoO/BqgRK0XIVrE=;
-        b=IP1JvZTZ6OF58FNjIL6W8KGA4hXNX24CiPLUwHUBlKqf1LbqB6B6ygqeJfCO7J2cwK
-         JpdWstI3V6T0MoRgvWTjoLrvCISspAmaU2BSJ4VyXBG0d72uBjEpd11LCRWJrDp3v/LA
-         k8GQRpTU7nHvkBwjkVVMv0mvACLRcW7jzeilopE6LmVteCMUI3pmfH+LskLRbg0fZ52h
-         X35ncqUmGMs7z0eLMmHgB+TV+lMfT8J/+ID8wwaNlA4VCz6PtpGgXsio28YiGg5haycg
-         2eEyGGu6g3RWTTwri5ib5jpv9baGXn8DZtLM/4lEHVDIrutzrYqcBY+E+94vbeK3ia4X
-         iLcw==
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1713871682; x=1714476482; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R3iqpIOIoK1o7CTPRk4sNfkHZGRMhCyVjxP5dycHP0s=;
+        b=JvzNUggfIkiFCUl/ONvEAAeT+VihZJFvjTNSW4pyc7hu/IEpJb7N27oXVSNUP5niKe
+         KAzwU7xwn959rCz/LhbIkp5BJncRG8wzkGPlqc2yslmMahJ2xVcAU5uFL1bISncDTKET
+         +5dzOqNjpvs3YDUowjIWsD5Ok8pw3Ocyx+HamkLHa/974XdD4iNsxJ/klzbuSPzM1UIo
+         tD8wVOPvxYzFFErLwfrwDdmb3F8jb2VvREbgRcY5jJgo5h0PC0jRjxvAtoTLHyRFEXWg
+         Kek2zusHX9YL/pStsBtmh+yYcaIKiGrObxmFAaZYEfWkFGOhfnNsvH2s14lj+yhwqZhB
+         2BNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713871647; x=1714476447;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9fXVEYwcrN6pIHZeASeinQCONCWFuoO/BqgRK0XIVrE=;
-        b=v1l2eHXLVjNNNb/9xZq9ZyFwqyTKjHY4rGOgGoOnSlQPu0YSXIYrFvLDA7i6jJ6c5W
-         zzOtwZw+TApJ5wPiVXBcEv5Tk3ACwCnKSGJow7pVR+lTwiUxt1zaOoOk/jGGcY1rQNTg
-         pWRn39HmBBXlTQmS/WqKcUG/1sOmEkywrzCgqU66XB9H/puzEOqWGUSev+RV0FkeZlXO
-         cFJjXWmqVYM+pfibaxNBht2tTdv6dCIDGQqbTDziljcHnJ96jwFcJFabnrag9T3lKnfZ
-         t3IDhGKin3FThmK1gRSmjXG6lsV268JYU5Gp7EZCxH2FZCp9+dByH5fqR5Wg4w31T8/X
-         mDWg==
-X-Forwarded-Encrypted: i=1; AJvYcCUrbADHlgO+0DTaXwaKiVYM0eoTltav8uvJA1vRwCyi/7+lSoJFhL7NBzFiA+vTH9s9bga+MFFMV/60uqpDJacvsD1o7pJO29b64z+KmKvnvVfyf8wX5UAifl3zKC8jOn9kRgZzL3hWmuTdqmbusBB0J8LMGlk4TJPsBKYYDhs4RlXLG3F+M24J2eZ8oyR/M65SMR2mNDISLLIFyyODQTq/IzDYc8u/
-X-Gm-Message-State: AOJu0YxVg7MGN8pJu+W3iU5am3CR5GSIuWLHzk6bo+CFUJWQF7z4Tec4
-	3s70jzTOasvVX2/5/U7QQaacCb3HEO2HjYMwptFcHRXOuAOWlBL2RiQ7r+v93mcNvF+iRiDSJcQ
-	TXUxmyEmLODUQjzCFN77I2ZPuDMc=
-X-Google-Smtp-Source: AGHT+IEJ3YDW07lTxjloRNMEO4SRdGN1iz21J8b16q//J8FH3OjnhcGXWzQ5yHk0Wb/3+b0zKw3Ipv4gFZb+3y7JY90=
-X-Received: by 2002:a05:6122:410a:b0:4da:ae51:b755 with SMTP id
- ce10-20020a056122410a00b004daae51b755mr4960853vkb.3.1713871646754; Tue, 23
- Apr 2024 04:27:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713871682; x=1714476482;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R3iqpIOIoK1o7CTPRk4sNfkHZGRMhCyVjxP5dycHP0s=;
+        b=KowbdvO2gLPHUytVhuFvsRtWHBcdJbgVCXFHZOJgFrAQuBF4fXWFkQCz2GGe5l7H6C
+         J+XaC0xY/goZJcqNDsoP2FnAaxAUzJOXeQKIqWwcrRcdmYzOmhtf3eBG2J0NubvgtKnc
+         h03KtCWZi51klVV+Lcpmh17+5UmmPwrycg9YcB/Mqa0cEYoUtcaoydDZOhTD5LN2Zjn1
+         Y9k4RmIdLhrtV9/TiF6IQCNyd8Ue9DHWko4Hfu+98SglCBVmheIC80Vb6mTHIbN7VcDm
+         nnc0811dfjmngJnyYu95+1JVTYe7/Nhqgvz9suSsbNGi17rMhp0gBh7CiyLCpFLbStoH
+         F9Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNXFwaYMV1Ad3lz60TRYiglFDZFu95rKPOj16iy3N/wH5zoD8wCq3M2KVEk93Q35ntHwQRYIw0Iw0tqVAF3s/F06LASu6btz3UpEy3
+X-Gm-Message-State: AOJu0YyeXZWJsUxF3r3MwXQ0px7SA053ChgRfOK/3ue9Xuq9zwtY5e7i
+	O4GY7XpjOr1rxM1QLLgaOuCL/ReIu+0gR9pOsTMc3sWLdggbAWtfaIKHufTJOFY=
+X-Google-Smtp-Source: AGHT+IFxR+UxcEUSmm6y7PvB/0CvHSOafoe3TVmFX4MNJjWWeZEWNgqz70/4mF1IDjDPrmnI234YEA==
+X-Received: by 2002:a05:600c:1988:b0:415:4b4b:1e28 with SMTP id t8-20020a05600c198800b004154b4b1e28mr10779016wmq.20.1713871682525;
+        Tue, 23 Apr 2024 04:28:02 -0700 (PDT)
+Received: from localhost (78-80-105-131.customers.tmcz.cz. [78.80.105.131])
+        by smtp.gmail.com with ESMTPSA id y18-20020a5d4ad2000000b0034a0d3c0715sm14117203wrs.50.2024.04.23.04.28.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 04:28:01 -0700 (PDT)
+Date: Tue, 23 Apr 2024 13:28:00 +0200
+From: Jiri Pirko <jiri@resnulli.us>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Kyle Swenson <kyle.swenson@est.tech>,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH net-next v3 0/3] net: pse-pd: Fixes for few small issues
+Message-ID: <ZiebQLdu9dOh1v-T@nanopsycho>
+References: <20240423-fix_poe-v3-0-e50f32f5fa59@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240422213006.505576-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240422213006.505576-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <2b422e9f-bd80-4c57-a3e1-8b463b25c834@kernel.org> <CA+V-a8s1xDT7sGMpz_n45v9QzhpWUdJv9eXmUJoxPaJ69MiY7A@mail.gmail.com>
- <4c6d6957-3813-46d3-88de-ee64241bbe6f@kernel.org>
-In-Reply-To: <4c6d6957-3813-46d3-88de-ee64241bbe6f@kernel.org>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 23 Apr 2024 12:26:50 +0100
-Message-ID: <CA+V-a8s2pahd23jhkYdxJ_j8SxADaYf4QxOwO1_3jmCr9MzuFw@mail.gmail.com>
-Subject: Re: [PATCH 1/6] dt-bindings: mmc: renesas,sdhi: Drop 'items' keyword
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240423-fix_poe-v3-0-e50f32f5fa59@bootlin.com>
 
-On Tue, Apr 23, 2024 at 10:59=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.o=
-rg> wrote:
+Tue, Apr 23, 2024 at 11:21:09AM CEST, kory.maincent@bootlin.com wrote:
+>From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 >
-> On 23/04/2024 09:21, Lad, Prabhakar wrote:
-> > Hi Krzysztof,
-> >
-> > Thank you for the review.
-> >
-> > On Tue, Apr 23, 2024 at 7:29=E2=80=AFAM Krzysztof Kozlowski <krzk@kerne=
-l.org> wrote:
-> >>
-> >> On 22/04/2024 23:30, Prabhakar wrote:
-> >>> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >>>
-> >>> Drop 'items' keyword from compatible list which have single const val=
-ue.
-> >>>
-> >>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
+>This patch series fix few issues in PSE net subsystem like Regulator
+>dependency, PSE regulator type and kernel Documentation.
 >
-> >>> ---
-> >>>  .../devicetree/bindings/mmc/renesas,sdhi.yaml  | 18 ++++++----------=
---
-> >>>  1 file changed, 6 insertions(+), 12 deletions(-)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml =
-b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-> >>> index 29f2400247eb..90c8b1b727a8 100644
-> >>> --- a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-> >>> +++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-> >>> @@ -12,16 +12,11 @@ maintainers:
-> >>>  properties:
-> >>>    compatible:
-> >>>      oneOf:
-> >>> -      - items:
-> >>> -          - const: renesas,sdhi-sh73a0  # R-Mobile APE6
-> >>> -      - items:
-> >>> -          - const: renesas,sdhi-r7s72100 # RZ/A1H
-> >>> -      - items:
-> >>> -          - const: renesas,sdhi-r7s9210 # SH-Mobile AG5
-> >>> -      - items:
-> >>> -          - const: renesas,sdhi-r8a73a4 # R-Mobile APE6
-> >>> -      - items:
-> >>> -          - const: renesas,sdhi-r8a7740 # R-Mobile A1
-> >>> +      - const: renesas,sdhi-sh73a0  # R-Mobile APE6
-> >>> +      - const: renesas,sdhi-r7s72100 # RZ/A1H
-> >>> +      - const: renesas,sdhi-r7s9210 # SH-Mobile AG5
-> >>> +      - const: renesas,sdhi-r8a73a4 # R-Mobile APE6
-> >>> +      - const: renesas,sdhi-r8a7740 # R-Mobile A1
-> >>
-> >> That's just an enum.
-> >>
-> > Are you suggesting to group them into a single enum instead...?
->
-> Yes. That's preferred form, easier to read, because it clearly documents
-> that binding enumerates.
->
-Agreed.
+>Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 
-> But just in case you start changing all const to enums: don't. Comment
-> is for this patch, since you already want to touch these things.
->
-Indeed.
-
-Cheers,
-Prabhakar
+set-
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
