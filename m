@@ -1,114 +1,120 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156DB13CAB3;
-	Tue, 23 Apr 2024 16:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36BB13C9DF
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 16:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713888849; cv=none; b=s8TZT5XSGdA32qqBW77GtZpSF8pYzYR+npoE3i56q3LD2olJ7qi2GzMcIfAxJF18aOm/V4Q/Mju0noMzmYov3anbAUQGZ2V+9CvOfVSQnUgchNWo7OaZn9dlYgvWxE6gmMsHoaZk3ORdQx/GovbD/rFmO/X1Li48P3PLFCXBdQY=
+	t=1713888855; cv=none; b=QqaH9F81y3QQ3xHzD0VhKbUAN9lmAqAxCM+eQ16stL4az8iTGpV6PvbZ86ezLV2IYSZg5BxjQwEc50MAA/UMCLo6/ib+u8fraCw40Dz2CihMSTWo8fxMAPEz0c3XMR/88SZu3ZZasR34Jpx99anUucAy9ty6P0MgNfijDrlV7ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713888849; c=relaxed/simple;
-	bh=b967/hHJBnWnMCTBji//0dHXuXrl2DP/d/po0fsIoGk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IaoypCbaxBk4vQRu9zScgOMcS4JG8rDEsBZoBicwf39IbSBPo5gEqJO3AVFDYRHAQqkJZKQnqcyRKCl9FwNGQViNYxyjOjlchuIux3cCu36sUl3YMjOsOmQN2RxIO+JjOpcW3+4J15D3WE4Xh1bvcphNSsWshG9ZX3tRq+ZrvMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=b1yJeJJa; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1713888855; c=relaxed/simple;
+	bh=dWEAghxUZ6AljuU3Ocx2054Q77hrGSoiyNPUFJl8xkc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MaHLieQvyc07TDZdXp4ao+CuaK90voC0AL24QBZi+C+/yeTL8aMzMhUEEgvVZLbkRzmbBSrHfHQk7atixqyd1Da7qQSkFZifyNKYVR6lrR2rRor5qHAaRZwlAqcA2uISOD/OKBPZB7cGTDlju/tHOM5u1ztUeyBGdpa3ULgQcBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=RAbYyilf; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="b1yJeJJa"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 43D96120011;
-	Tue, 23 Apr 2024 19:14:05 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 43D96120011
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1713888845;
-	bh=5Gfs5AmZGozZkrrRTvm140Edujqw0V5kNp9waYflDF8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=b1yJeJJaDHqH69ss+sRunhyufYQj7rb6mouCKXrVFaysnuFWc1mTSgT1EdKNU6Pq3
-	 A79gQ+iFnbkN0Ik2WngcXBxeoU35rNHzUXQh3IOuRagb9hDzpBNxo+53kX7rrwtmFf
-	 yXSumzqbDzwQ4ffX1nb0oatFzMSYX461Wf41TP6vjjzW0ATntFn5grKADVJzfDfkmB
-	 VL3FO6D8MQTQXABxWmID518Txl7ELHqLvPC32mgKsIqlp6xu42EYxFxDIVbedXbA9b
-	 zlbsYkG4x9qmvprIbIh5ASsZ7oDjF+OW43b3OLIzQ6ac+CLmxuPZq+U3u2b8O0GYP1
-	 QGCVfVjuwnZ2w==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 23 Apr 2024 19:14:05 +0300 (MSK)
-Received: from work.sberdevices.ru (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 23 Apr 2024 19:14:04 +0300
-From: George Stark <gnstark@salutedevices.com>
-To: <u.kleine-koenig@pengutronix.de>, <neil.armstrong@linaro.org>,
-	<khilman@baylibre.com>, <jbrunet@baylibre.com>,
-	<martin.blumenstingl@googlemail.com>, <thierry.reding@gmail.com>,
-	<hkallweit1@gmail.com>
-CC: <linux-pwm@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kernel@salutedevices.com>, George Stark <gnstark@salutedevices.com>, Dmitry
- Rokosov <ddrokosov@salutedevices.com>
-Subject: [PATCH 2/2] pwm: meson: add check for error from clk_round_rate()
-Date: Tue, 23 Apr 2024 19:13:56 +0300
-Message-ID: <20240423161356.2522636-3-gnstark@salutedevices.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240423161356.2522636-1-gnstark@salutedevices.com>
-References: <20240423161356.2522636-1-gnstark@salutedevices.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RAbYyilf"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a55b78510bbso269832766b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 09:14:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1713888852; x=1714493652; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=N7OjeeVgqzJJaSGvTcJ0Yf3Ef5oITHumnbDzjX2kLmY=;
+        b=RAbYyilf4imfGQ4o7MsgH1s5/cNo6XEhxJOnkfNXbCYAiJOknFqIAxjbFg0qOS919D
+         Wmr3MCzc8Fk6Q5vgCNS1VyATcnmeQRqaLexTJx5D0XyZwzJ1t5LHjfjbskrI4sOq1waR
+         015d8zi8ksLGDQrBoHxJi36E+ONQaEZFXOt38=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713888852; x=1714493652;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N7OjeeVgqzJJaSGvTcJ0Yf3Ef5oITHumnbDzjX2kLmY=;
+        b=PsF1+wzDj0S5Wih//Da4/laX9Hrm0ylCz300gswuurTzkp1u0GfAQ+XV8EN7MBuufj
+         2zH4uN77sY6XoVoEPQLVCB0dhcCeO6PjcDV0omUYl9eqmUhcDhi7szHXm+0Sng4ErqzY
+         d8JaTHD7RW52ctCZHfxhIbIRPA6mchxmAmQbKJ3im/DUGq+KqXXOORMIH/Y+WMj3suw+
+         f7yPGwjRmeqbftJ38v8iaNhQrPdeEW5HH1faejOZ98SfyRDmE6OYN+3QN99XPV+l1eJl
+         NXqC9tJ0Uss2GaKbIjOI/cMVTpdQ79k1oJMf/HNScWPwuXDerGXnNI46UKdzZebmE2zh
+         zqiw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOn4+oavuAbgnebHdtTTHTtRf/d0PfUayMjb0SJj3KowweisyzXN+xP4GmYDQGa9c90GXCRYOaLTKzLb8gjkqjQZbI+UoYhPzCWsCn
+X-Gm-Message-State: AOJu0YxNDhAMgkA1KzzysiuxNeIxhSg32PDqqvguL5uruBDciyD0HXBO
+	DcJHKY7h+ImiOQNwNsa+pz95ZJXkjXM2RPddAyDiyuJPy+mtBqs6mDDyGhB3LvGN6id6t6Tg5jY
+	kddhXMg==
+X-Google-Smtp-Source: AGHT+IEIXOtW7qMHjfXDzJ9R+E1zyZhEVaumEycSy56JH896Kc2GlTtlvS0YPrxwTnXoug+HwnX+jg==
+X-Received: by 2002:a17:907:806:b0:a58:8743:12d5 with SMTP id wv6-20020a170907080600b00a58874312d5mr683734ejb.47.1713888851777;
+        Tue, 23 Apr 2024 09:14:11 -0700 (PDT)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
+        by smtp.gmail.com with ESMTPSA id gx20-20020a1709068a5400b00a5885a7cb8csm446009ejc.119.2024.04.23.09.14.11
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 09:14:11 -0700 (PDT)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-571bddd74c1so5641929a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 09:14:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU0zyAPINAMO5WXqRzG4ZLx9CUB7IHBepCkhPUSJJZuE6kgNb7VGNtmP6fbv1f6B1WOFgA9jY+s/aEGyhKWxiGisadqwq7Dd/vdC1oe
+X-Received: by 2002:a19:f611:0:b0:51a:f3b9:f76f with SMTP id
+ x17-20020a19f611000000b0051af3b9f76fmr13743lfe.13.1713888830965; Tue, 23 Apr
+ 2024 09:13:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184882 [Apr 23 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;100.64.160.123:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/23 04:11:00 #24934400
-X-KSMG-AntiVirus-Status: Clean, skipped
+References: <20240213055554.1802415-1-ankur.a.arora@oracle.com> <74ffd154-5d92-4303-9977-6ddc9accdf01@linux.ibm.com>
+In-Reply-To: <74ffd154-5d92-4303-9977-6ddc9accdf01@linux.ibm.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 23 Apr 2024 09:13:34 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whrTE30xzuq4mcXidT4M0z_HRYJW9i8M9gD9VG7d29Qpg@mail.gmail.com>
+Message-ID: <CAHk-=whrTE30xzuq4mcXidT4M0z_HRYJW9i8M9gD9VG7d29Qpg@mail.gmail.com>
+Subject: Re: [PATCH 00/30] PREEMPT_AUTO: support lazy rescheduling
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: Ankur Arora <ankur.a.arora@oracle.com>, Thomas Gleixner <tglx@linutronix.de>, peterz@infradead.org, 
+	paulmck@kernel.org, akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com, 
+	juri.lelli@redhat.com, vincent.guittot@linaro.org, willy@infradead.org, 
+	mgorman@suse.de, jpoimboe@kernel.org, mark.rutland@arm.com, jgross@suse.com, 
+	andrew.cooper3@citrix.com, bristot@kernel.org, mathieu.desnoyers@efficios.com, 
+	geert@linux-m68k.org, glaubitz@physik.fu-berlin.de, 
+	anton.ivanov@cambridgegreys.com, mattst88@gmail.com, 
+	krypton@ulrich-teichert.org, rostedt@goodmis.org, David.Laight@aculab.com, 
+	richard@nod.at, mjguzik@gmail.com, jon.grimm@amd.com, bharata@amd.com, 
+	raghavendra.kt@amd.com, boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, 
+	LKML <linux-kernel@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-clk_round_rate() can return not only zero if requested frequency can not
-be provided but also negative error code so add check for it too.
+On Tue, 23 Apr 2024 at 08:23, Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
+>
+> Tried this patch on PowerPC by defining LAZY similar to x86. The change is below.
+> Kept it at PREEMPT=none for PREEMPT_AUTO.
+>
+> Running into soft lockup on large systems (40Cores, SMT8) and seeing close to 100%
+> regression on small system ( 12 Cores, SMT8). More details are after the patch.
+>
+> Are these the only arch bits that need to be defined? am I missing something very
+> basic here? will try to debug this further. Any inputs?
 
-Fixes: 329db102a26d ("pwm: meson: make full use of common clock framework")
-Signed-off-by: George Stark <gnstark@salutedevices.com>
-Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
----
- drivers/pwm/pwm-meson.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+I don't think powerpc uses the generic *_exit_to_user_mode() helper
+functions, so you'll need to also add that logic to the low-level
+powerpc code.
 
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index ebe76298f6e2..52604635b31e 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -168,9 +168,10 @@ static int meson_pwm_calc(struct pwm_chip *chip, struct pwm_device *pwm,
- 		freq = ULONG_MAX;
- 
- 	fin_freq = clk_round_rate(channel->clk, freq);
--	if (fin_freq == 0) {
--		dev_err(pwmchip_parent(chip), "invalid source clock frequency\n");
--		return -EINVAL;
-+	if (fin_freq <= 0) {
-+		dev_err(pwmchip_parent(chip),
-+			"invalid source clock frequency %llu\n", freq);
-+		return fin_freq ? fin_freq : -EINVAL;
- 	}
- 
- 	dev_dbg(pwmchip_parent(chip), "fin_freq: %lu Hz\n", fin_freq);
--- 
-2.25.1
+IOW, on x86, with this patch series, patch 06/30 did this:
 
+-               if (ti_work & _TIF_NEED_RESCHED)
++               if (ti_work & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY))
+                        schedule();
+
+in kernel/entry/common.c exit_to_user_mode_loop().
+
+But that works on x86 because it uses the irqentry_exit_to_user_mode().
+
+On PowerPC, I think you need to at least fix up
+
+    interrupt_exit_user_prepare_main()
+
+similarly (and any other paths like that - I used to know the powerpc
+code, but that was long long LOOONG ago).
+
+                Linus
