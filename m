@@ -1,141 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A3913D2B6;
-	Tue, 23 Apr 2024 16:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB29313CF9F
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 16:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713889344; cv=none; b=FWJdl3H/iA1NkZFENWZE3y53zMUPmU0vyNt+hfMVlJlfyvNlTXlS8ZcOhc1NCKKrDfLQ02k7bSCXXNEspczRd7K7SEzq+ft7g3bX75D2zbg3FkNk/SngkVua6Ge2t1UKmnzkywwfvLDfe7aRSFdrrs9ZpZzcvQer5APEJ/aaSP4=
+	t=1713889369; cv=none; b=KRMksd6apoBSysJf2F3Q/RTeGBDSFuO+9bFe1vZRurzHuOpbeRmAzRGzCuc9jGct9lpnLu4E4SgYsRphHUOCs4+yK+corNHPf76HCkPKawwJuQIwoUKV/xFlX2VCSP4/Ioit1azLE3i02/a4tnbQbg1yhb9hb3ZVqjYDBCLwHLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713889344; c=relaxed/simple;
-	bh=oJzUEgPOfRz4FVU7f4MkDckgyDNtgFaj6AoyVUoITHg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dKFNSyzGsvwWErxRr9g1d0UOsX/Yf2xeT0iSHGVHNC38b2SkOuoyrPuVy5vHBGL2z2QSKqxzs3TkjGURmKMZCi0APYlyiUB2jsl/jxlFh3O2qL83vc8eurgLu/sbr6ij5eLmUYHw/PqWmduHidgzl/ireLvOcKdRvR0EitXekG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LUPSdfuW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713889369; c=relaxed/simple;
+	bh=RZ9HqBGp7TiesVGMtiKF6isf7pQuV7LId4hRp1mxlRA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oTY5itXAKv7/Xrib8onuSL8Yj4APs93JVCtF9zOkBLXsu8PPE8JSjFQwA+QT4/VM6yiE2nirEKAQtCljWee61luOoi81zPlD0W5Ek+9/WaDWyqEm+dTT6sbHfT0DSBKJ4rgWtNaRPu7Druh3Bp086sOjAI8J//ZOcIVMUBJFvIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GhuZ3qEm; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LUPSdfuW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDD67C32783;
-	Tue, 23 Apr 2024 16:22:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713889344;
-	bh=oJzUEgPOfRz4FVU7f4MkDckgyDNtgFaj6AoyVUoITHg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LUPSdfuWswat2YbontFlrpuaSPEp5kZTyppwr/svANpYziPuvV9/9qN/T2RaeE4vh
-	 oGanM8CiaH4JeMTrw2KAtTpzUYtZB298/wq6ScbcPihG8jTIxHKMO2bfpL/9VsshmX
-	 AJt43koJwYmBY1ippurWAn7CiuVrKeye7ZFUWkheGdmnSwCJcEwgb97TV8u541sx+o
-	 gp4k0/eLgS1pD3/crkwg7h2cH2RSnPcPhIlEEYgZNbEHPvzfDvyK4mU/jz/vKsP1sC
-	 e3fbV56QrIr/DMPDnkw0cdJVf0jo1FY55AB3nh/GA8KxkX6xLFjQjh4PYhhRYLx4KA
-	 U5obh+beqlvQg==
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2db6f5977e1so78363541fa.2;
-        Tue, 23 Apr 2024 09:22:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXbIecXI85x+s+m1F4UjopU5zcrto7wT2VaRrUVuJFrjQ3qeMdc10f93Y/mxy9M9odFf2X3zvNcpE4Sy5YhIRF8YDHO/t8rTrfeC4ViFIRHExSYm2UT9ll5R/jBDw5TXnoD2X6KTjU+dP0G
-X-Gm-Message-State: AOJu0Yx3iJeaEL/VVsr42P8AdHXjhde33Ct+vCGGsvAa71D55LiHWx3Y
-	XxsRr90y+660NpoNjCUtoefz9PWS84JwIrhma+q1xDxnJZ9/udfLrByakPXl70qs1YugLl31ePG
-	3ZBh+MakAKMxsCX3E1ESX9D8tAHs=
-X-Google-Smtp-Source: AGHT+IGBf8KlVvlJQHwaYJUUupKtFBr3QmhzNR2Ww/+nF8KFeeWkoc3mEINyodhNlJF7QLsZGPVopJ+/t/77bNtMUuk=
-X-Received: by 2002:a2e:84d5:0:b0:2d4:37ca:92d1 with SMTP id
- q21-20020a2e84d5000000b002d437ca92d1mr8064840ljh.42.1713889342313; Tue, 23
- Apr 2024 09:22:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GhuZ3qEm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713889366;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=H3SCZLnRvL1eBDiJGajTRcdGyi465jDJW6Y0DciZF9U=;
+	b=GhuZ3qEmJUNXsKpMfAbAYgLAsG3T3bpJ3U6Cxn/cZ2xhOmBDLVOWyACP2kMRKXVSq5sljt
+	RhMQ0BBufg84ljmgeB7IjUqv81fGrHjC4crIyuvg/PdyjhRcAbHGxx0TI8U0yUbnrYyrkH
+	XP9pIiWyPZXwLwQd9EX9JEq6OnA7v/g=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-284-ymqMAgOGNMGyMYsnK7uF4w-1; Tue, 23 Apr 2024 12:22:45 -0400
+X-MC-Unique: ymqMAgOGNMGyMYsnK7uF4w-1
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-79071211fbbso396984085a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 09:22:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713889365; x=1714494165;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H3SCZLnRvL1eBDiJGajTRcdGyi465jDJW6Y0DciZF9U=;
+        b=XOr9JEyXpUUPlqIQp3rUYn4llqk2QQmwbo7FBShBlRuraAocvJG9w+QNwWY14RwVJJ
+         ATogiy98nabZpJOpijtyk1Rcd3iK7Gj24+mfTK+vXZX7OdzfZgcjVTylqRzLr8dc25+f
+         qQ2Od0hqPFeYEIDDk/XiifuH1TV+sLAdPq3Q2jTSEX0oY8RQZ31F00DSHqBD+xBnDwpV
+         BiMMtucXhS0ReigEUcHFSYedGfxNVhUuiPFnefWfdemhlkDWeC6GtukfB+KIQLdFPKNh
+         nsOC20+iCzlihrcE6NkbiHZxHCqXYzcl7+0we2X0JG2lhZ8fAGDwKtD36ZhF62WK+Xme
+         QlzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmI+5nSNg46c4DYNJE2ZOqx/g38y/Rf4bnPO0R2PrroYotpBjRfml0eOPZiuWzeCTWppPfB0QHsjclgKlipIIQX/+4nHLZsEspR57x
+X-Gm-Message-State: AOJu0Yw9120kc3sKXTZdGXbBx+3myw7vKEKO9E135NSf2AzSafkFFdMn
+	xn68leNBQ1+0kn18LAdGqGkyckywzWb7A6ykLF5NYKrpFcCa36oY3/x0s0fyJVWsadHqI8V/qug
+	j5k/Y73HkkkU63itArqxvNgKmX1DHj+wNFzyJX+93Ost4R3PZnfcryZmO90RZ
+X-Received: by 2002:a05:620a:4c5:b0:790:652b:6ed6 with SMTP id 5-20020a05620a04c500b00790652b6ed6mr11916150qks.35.1713889365077;
+        Tue, 23 Apr 2024 09:22:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG6LfYBiqs0o5HuFdrqThiCJq0HcpbT83enbtYOCy34DyyB4s1voP9KXTHqq36y4sCHWLaHbg==
+X-Received: by 2002:a05:620a:4c5:b0:790:652b:6ed6 with SMTP id 5-20020a05620a04c500b00790652b6ed6mr11916132qks.35.1713889364776;
+        Tue, 23 Apr 2024 09:22:44 -0700 (PDT)
+Received: from klayman.redhat.com (net-2-34-26-208.cust.vodafonedsl.it. [2.34.26.208])
+        by smtp.gmail.com with ESMTPSA id a4-20020a05620a066400b0078d73685803sm5412757qkh.99.2024.04.23.09.22.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 09:22:44 -0700 (PDT)
+From: Marco Pagani <marpagan@redhat.com>
+To: Moritz Fischer <mdf@kernel.org>,
+	Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>
+Cc: Marco Pagani <marpagan@redhat.com>,
+	linux-fpga@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] fpga: re-enable KUnit test suites for the subsystem
+Date: Tue, 23 Apr 2024 18:22:29 +0200
+Message-ID: <20240423162229.52023-1-marpagan@redhat.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240420145303.238068-2-ardb+git@google.com> <CAK7LNARGZZC=5Pcy8qBpp1E94hRHHHdUu7KxVudH1iT-yugs=g@mail.gmail.com>
- <9fda72fa-e5e5-4d45-b268-dd98d28fb5a1@linaro.org>
-In-Reply-To: <9fda72fa-e5e5-4d45-b268-dd98d28fb5a1@linaro.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 23 Apr 2024 18:22:10 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXERSHjh0k9uCmYuNf31Fg79sd_6EHuS=Y_-xEdNGWeiAw@mail.gmail.com>
-Message-ID: <CAMj1kXERSHjh0k9uCmYuNf31Fg79sd_6EHuS=Y_-xEdNGWeiAw@mail.gmail.com>
-Subject: Re: [PATCH v5] kallsyms: Avoid weak references for kallsyms symbols
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Ard Biesheuvel <ardb+git@google.com>, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	Nick Desaulniers <ndesaulniers@google.com>, Kees Cook <keescook@chromium.org>, 
-	Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 23 Apr 2024 at 18:01, Konrad Dybcio <konrad.dybcio@linaro.org> wrot=
-e:
->
->
->
-> On 4/22/24 18:02, Masahiro Yamada wrote:
-> > On Sat, Apr 20, 2024 at 11:53=E2=80=AFPM Ard Biesheuvel <ardb+git@googl=
-e.com> wrote:
-> >>
-> >> From: Ard Biesheuvel <ardb@kernel.org>
-> >>
-> >> kallsyms is a directory of all the symbols in the vmlinux binary, and =
-so
-> >> creating it poses somewhat of a chicken-and-egg problem, as its non-ze=
-ro
-> >> size affects the layout of the binary, and therefore the values of the
-> >> symbols.
-> >>
-> >> For this reason, the kernel is linked more than once, and the first pa=
-ss
-> >> does not include any kallsyms data at all. For the linker to accept
-> >> this, the symbol declarations describing the kallsyms metadata are
-> >> emitted as having weak linkage, so they can remain unsatisfied. During
-> >> the subsequent passes, the weak references are satisfied by the kallsy=
-ms
-> >> metadata that was constructed based on information gathered from the
-> >> preceding passes.
-> >>
-> >> Weak references lead to somewhat worse codegen, because taking their
-> >> address may need to produce NULL (if the reference was unsatisfied), a=
-nd
-> >> this is not usually supported by RIP or PC relative symbol references.
-> >>
-> >> Given that these references are ultimately always satisfied in the fin=
-al
-> >> link, let's drop the weak annotation on the declarations, and instead,
-> >> provide fallback definitions with weak linkage. This informs the
-> >> compiler that ultimately, the reference will always be satisfied.
-> >>
-> >> While at it, drop the FRV specific annotation that these symbols resid=
-e
-> >> in .rodata - FRV is long gone.
-> >>
-> >> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> >> Cc: linux-kbuild@vger.kernel.org
-> >> Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-> >> Acked-by: Kees Cook <keescook@chromium.org>
-> >> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> >> Link: https://lore.kernel.org/all/20240415075837.2349766-5-ardb+git@go=
-ogle.com
-> >> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> >> ---
-> >> v5: - avoid PROVIDE() in the linker script, use weak definitions inste=
-ad
-> >>      - drop tested-by, replace reviewed-by with acked-by
-> >>
-> >
-> > Applied to linux-kbuild. Thanks.
->
-> Hi, this commit seems to break call traces, resulting in output like:
->
-> [    2.777006] Call trace:
-> [    2.777007]  _text+0x89e7e8/0x39e0000
-> [    2.777008]  _text+0x89e82c/0x39e0000
-> [    2.777009]  _text+0x2b940cc/0x2bd2a90
-> [    2.777011]  _text+0x2b941a4/0x2bd2a90
-> [    2.777012]  _text+0x145dc/0x39e0000
-> [    2.777014]  _text+0x2b51184/0x2bd2a90
-> [    2.777016]  _text+0x18fc6a4/0x39e0000
-> [    2.777018]  _text+0x15644/0x39e0000
-> [    2.777019] ---[ end trace 0000000000000000 ]---
->
+The core components no longer assume that low-level modules register a
+driver for the parent device and use its owner pointer to take the module's
+refcount. KUnit test suites can now be safely re-enabled even with loadable
+module support.
 
-This patch triggers an issue in the compiler, which appears to perform
-constant propagation on variables defined as weak, and this is
-definitely a compiler bug. (A weak variable can be superseded by
-another instance from a different object at link time, so the compiler
-cannot make assumptions based on the version of the variable it
-observes at compile time)
+This reverts commit a3fad2e92c76 ("fpga: disable KUnit test suites when
+module support is enabled")
 
-It has already been dropped from the kbuild tree.
+Signed-off-by: Marco Pagani <marpagan@redhat.com>
+---
+ drivers/fpga/tests/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/fpga/tests/Kconfig b/drivers/fpga/tests/Kconfig
+index d4e55204c092..e4a64815f16d 100644
+--- a/drivers/fpga/tests/Kconfig
++++ b/drivers/fpga/tests/Kconfig
+@@ -1,6 +1,6 @@
+ config FPGA_KUNIT_TESTS
+-	bool "KUnit test for the FPGA subsystem" if !KUNIT_ALL_TESTS
+-	depends on FPGA=y && FPGA_REGION=y && FPGA_BRIDGE=y && KUNIT=y && MODULES=n
++	tristate "KUnit test for the FPGA subsystem" if !KUNIT_ALL_TESTS
++	depends on FPGA && FPGA_REGION && FPGA_BRIDGE && KUNIT=y
+ 	default KUNIT_ALL_TESTS
+         help
+           This builds unit tests for the FPGA subsystem
+
+base-commit: b7c0e1ecee403a43abc89eb3e75672b01ff2ece9
+-- 
+2.44.0
+
