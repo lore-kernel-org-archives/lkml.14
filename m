@@ -1,185 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347C3135414
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 14:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F2513B5B0
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 14:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713883297; cv=none; b=Tgv2hPAEJhryxKy2qWzUm5niyOjn0sasL7+UdDlOxtXBJ07kZVORz6/DQ47s5+4qezQnShY+JgUi0yQMjxWGrhP71v0Ge5P07rR9sfnkM/y06XMK6JYV2aXLlrc+9W00S0oAVifDU5Iilmk7pykAiitSv8GOhps1XOHGwUAQxU8=
+	t=1713883301; cv=none; b=Ynoi9DAADO8pZjtaq9gla7ZwAAQ3NwbfZtRRkLX47I+H8f9dU/qb36bWnm85pNmvNTCDi6WOeZsUYXTrgsbQvUBzzLZWDaSjdISCOYRAwZf0037dowOvQ+O4kSrQGCsP8EuMF4+G9aa4q3V6X/y163pHfX7QUkMwfBogfPJ2+c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713883297; c=relaxed/simple;
-	bh=2MFEdQx8PJfmmWmol+/toruOTDUBS8sWIUsI92/p5zU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kyJ/W9Sw8gB+MxMaRnjMuf1GBXLk+4PNR+Y1+dmzxUWRjb4g1bfceLUrZCiBBZYEP3xERHWyAJcO/M0AfWLYScmFZmyx9pn4BlnMQRBiuak2a/8GoLY0iR4V1dkH73EOyi0sG579v7nUoTtGvUAXLSIY/O7jgoop90OkMG+8mwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XKqKEqFF; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713883301; c=relaxed/simple;
+	bh=SHePMIvAkVkmYBg3zgejga8b2mMgSpoachJmVkYbCaE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N/4NwZh7oxRRoZ6CsKoy8wB5A5o3Jk6M7ZqkL4ePcVrIBfVTayffxHuSvLkdwZLRQAlLHcJBGlTtiwhINW3gEP7oY5vcu05ZabgiP7CVUHowEFcUv5q4JbqSFeSD+smsmla8/dPtMJcW/2FVQwZ7sdA29Ku3tQ5fHNLlYiceN84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LkmcHzag; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XKqKEqFF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713883296; x=1745419296;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2MFEdQx8PJfmmWmol+/toruOTDUBS8sWIUsI92/p5zU=;
-  b=XKqKEqFFvd/fr0R4i9f07EosLJpMQ7rHVGT1J6ZhuQccN6xQhWryAcjG
-   YT20sNHLQzg3/NbqPdgunwBOS0vJmeCMOiEHjIDQkDVmCma4B7dkomrUZ
-   FeqyGrWcTRb7Dlr75R8wyE4dOChayp4t4nnAFIPglmxHXup3mxKGYz7HP
-   hRC3wjEjb5AFOU9TkRBH+ueq+wByxhLyFjNoYk1Cp0fiPIvi4ikT1Bd2a
-   //go2GM5ATDxkHpyTg2C+2E3jA7p2ILQLWIMD4Fa3ROPZLalz5hUbuK31
-   v0qOYCVlHmZZcDbV3nj4YV+qMYM1SwtMQeOx3VcqQFjvuM5bh7xq+IRcg
-   w==;
-X-CSE-ConnectionGUID: ZJ0ElKiZRJSYzQjuglBA6A==
-X-CSE-MsgGUID: TaNiRe72TpSpoAeNtViVLw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="20871603"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="20871603"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 07:41:36 -0700
-X-CSE-ConnectionGUID: VcsInWyQT7eIjCZmisbxQQ==
-X-CSE-MsgGUID: WUAU15WtSuGKJA5MQLX14A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24363957"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 23 Apr 2024 07:41:33 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rzHKs-0000Eu-1Q;
-	Tue, 23 Apr 2024 14:41:30 +0000
-Date: Tue, 23 Apr 2024 22:40:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shakeel Butt <shakeel.butt@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] memcg: reduce memory for the lruvec and memcg stats
-Message-ID: <202404232230.94gQwAI2-lkp@intel.com>
-References: <20240423051826.791934-3-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LkmcHzag"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3465921600dso5129141f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 07:41:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713883298; x=1714488098; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=QOiCU6JZaKjFE/L7EpX6jtWXoZ8wrLTdlB0QsdreRf4=;
+        b=LkmcHzagykgSvo/N5a4rzN55/InP6KW+uZOW0EAxJIRWIL/WWoZtSXqtlUqwXKuntR
+         W4wi8hnqi5/RxZNdW3cnQY9bsTF6XQkeFoKemdFUNZTWpKoEgjzEURDVMBH2I9UWBK5K
+         ZY6/g0pM0B2Fin89waQE1hRnMrCGwE8YqpGbH1gweUtc7AsUODEShq+LAMUbuLvSyvUs
+         rEEridBRCr7e55gs68/em6q78dk2Ws/MT2a4KeBaeTGZTv+9mr8lovjlwKP2W9CCNikw
+         udcW8jUu/m+eWizbk7a+EvYQXGX6kuYfXgXYkCjr0j9JKNOD5dW781j9fbjgf0JxnKR2
+         8+Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713883298; x=1714488098;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QOiCU6JZaKjFE/L7EpX6jtWXoZ8wrLTdlB0QsdreRf4=;
+        b=B/u3QfqFoc2hoN3P43GIHAUtde607eToJZNRqBS5s8jX7CXX+OPWUf3UXOFN2c6akB
+         4RAHZL2u8PHZsKJK0FN9+U4PkZpZ+teSxFb4e+b96RaU+2QX+kFhyB9oHnpCfhzmJd85
+         cPuGuwLqoTDpWuiA2IJMH2iabZXU1aacznFQkoLQt5Z7qqq0e8Lwa8IEXeVPJuXc9kTC
+         NiUtgM8BM/bAmLW7NQhPP9Yswu7UaDqQ4ujnuStUAv/krF0LAhR4vBdGS1lE7TALSZnp
+         SbUv7GbLjRKMPAIrzUJfvUvD38p8ECxNta6Ep6QmhCkq3CLFBl6DkxnEtNqKuegx2xt0
+         n4rA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKkIyLwvd4AS2WCn/+EBJPdnt3IAD4MORfPihOF1+FAHGXXdHU840m3t9X2Hqr5AMhKW+iWnFeqyIxrWtFOtSQJnrR2XHubiIkIUdB
+X-Gm-Message-State: AOJu0Yw2D1xhYagOVLUk4Tb099+YCdCLfFhZ6U1fiFrpWxq51BM8vsCV
+	2Unn5SV5vTQTlf3Qhm25pcNquucco0juIN/TTYaJTSxMKToF/qHZsNjduQuY/iY=
+X-Google-Smtp-Source: AGHT+IFyyJasS6WyWjsQRVZ9N7NPygkxprHq+fsDdTbs029FiT1JZu+BZQizTPwetmcei2Ds1GWMtA==
+X-Received: by 2002:a5d:5265:0:b0:345:66a1:d949 with SMTP id l5-20020a5d5265000000b0034566a1d949mr8369747wrc.0.1713883298232;
+        Tue, 23 Apr 2024 07:41:38 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id v2-20020adfe282000000b00346ceb9e060sm14681502wri.103.2024.04.23.07.41.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 07:41:37 -0700 (PDT)
+Message-ID: <6506b2e8-c7f2-460d-b17d-55b731fac1ac@linaro.org>
+Date: Tue, 23 Apr 2024 16:41:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240423051826.791934-3-shakeel.butt@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 2/2] memory: tegra: make sid and broadcast regions
+ optional
+To: Sumit Gupta <sumitg@nvidia.com>, robh@kernel.org, conor+dt@kernel.org,
+ maz@kernel.org, mark.rutland@arm.com, treding@nvidia.com,
+ jonathanh@nvidia.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-tegra@vger.kernel.org, amhetre@nvidia.com, bbasu@nvidia.com
+References: <20240412130540.28447-1-sumitg@nvidia.com>
+ <20240412130540.28447-3-sumitg@nvidia.com>
+ <06849796-f896-4cff-842c-118d86e94a6b@linaro.org>
+ <1aab0272-85ea-e3a1-7d68-27ab4f1e1993@nvidia.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <1aab0272-85ea-e3a1-7d68-27ab4f1e1993@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Shakeel,
+On 22/04/2024 16:36, Sumit Gupta wrote:
+> 
+>> On 12/04/2024 15:05, Sumit Gupta wrote:
+>>> MC SID and Broadbast channel register access is restricted for Guest VM.
+>>
+>> Same typo
+>>
+> Thank you for catching. Will correct in v4.
+> 
+>>> In Tegra MC driver, consider both the regions as optional and skip
+>>> access to restricted registers from Guest if a region is not present
+>>> in Guest DT.
+>>>
+>>
+>> ...
+>>
+>>>
+>>>   static inline u32 mc_readl(const struct tegra_mc *mc, unsigned long offset)
+>>> diff --git a/drivers/memory/tegra/tegra186.c b/drivers/memory/tegra/tegra186.c
+>>> index 1b3183951bfe..716582255eeb 100644
+>>> --- a/drivers/memory/tegra/tegra186.c
+>>> +++ b/drivers/memory/tegra/tegra186.c
+>>> @@ -26,20 +26,16 @@
+>>>   static int tegra186_mc_probe(struct tegra_mc *mc)
+>>>   {
+>>>        struct platform_device *pdev = to_platform_device(mc->dev);
+>>> +     struct resource *res;
+>>>        unsigned int i;
+>>> -     char name[8];
+>>> +     char name[14];
+>>
+>> How is it relevant? I don't see this being used in your diff.
+>>
+>>
+>> Best regards,
+>> Krzysztof
+>>
+> 
+> Did this change for below warning coming with 'W=1'.
+> 
+> ../drivers/memory/tegra/tegra186.c: In function tegra186_mc_probe:
+> ../drivers/memory/tegra/tegra186.c:51:49: warning: %u directive output 
+> may be truncated writing between 1 and 10 bytes into a region of size 6 
+> [8;;https://gc
+> c.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat-truncation=-Wformat-truncation=8;;]
+>     51 |                 snprintf(name, sizeof(name), "ch%u", i);
+>        |                                                 ^~
+> ../drivers/memory/tegra/tegra186.c:51:46: note: directive argument in 
+> the range [0, 4294967294]
+>     51 |                 snprintf(name, sizeof(name), "ch%u", i);
+>        |                                              ^~~~~~
+> ../drivers/memory/tegra/tegra186.c:51:17: note: snprintf output between 
+> 4 and 13 bytes into a destination of size 8
+>     51 |                 snprintf(name, sizeof(name), "ch%u", i);
+>        |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-kernel test robot noticed the following build errors:
+I asked how this is relevant to this change and you answer there is a
+warning. If the warning was there, your answer is really just deflecting
+the topic, so obviously this is new warning. Which part of code uses
+longer name?
 
-[auto build test ERROR on next-20240422]
-[cannot apply to akpm-mm/mm-everything linus/master v6.9-rc5 v6.9-rc4 v6.9-rc3 v6.9-rc5]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+BTW, really, such answers do not make review of your code smoother.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Shakeel-Butt/mm-rearrange-node_stat_item-to-put-memcg-stats-at-start/20240423-132451
-base:   next-20240422
-patch link:    https://lore.kernel.org/r/20240423051826.791934-3-shakeel.butt%40linux.dev
-patch subject: [PATCH 2/4] memcg: reduce memory for the lruvec and memcg stats
-config: x86_64-buildonly-randconfig-002-20240423 (https://download.01.org/0day-ci/archive/20240423/202404232230.94gQwAI2-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240423/202404232230.94gQwAI2-lkp@intel.com/reproduce)
+Best regards,
+Krzysztof
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404232230.94gQwAI2-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> mm/memcontrol.c:1651:2: error: call to '__compiletime_assert_963' declared with 'error' attribute: BUILD_BUG_ON failed: ARRAY_SIZE(memory_stats) != MEMCG_NR_STAT - 1
-    1651 |         BUILD_BUG_ON(ARRAY_SIZE(memory_stats) != MEMCG_NR_STAT - 1);
-         |         ^
-   include/linux/build_bug.h:50:2: note: expanded from macro 'BUILD_BUG_ON'
-      50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-         |         ^
-   include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_BUG_ON_MSG'
-      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^
-   include/linux/compiler_types.h:460:2: note: expanded from macro 'compiletime_assert'
-     460 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^
-   include/linux/compiler_types.h:448:2: note: expanded from macro '_compiletime_assert'
-     448 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ^
-   include/linux/compiler_types.h:441:4: note: expanded from macro '__compiletime_assert'
-     441 |                         prefix ## suffix();                             \
-         |                         ^
-   <scratch space>:40:1: note: expanded from here
-      40 | __compiletime_assert_963
-         | ^
-   1 error generated.
-
-
-vim +1651 mm/memcontrol.c
-
-  1645	
-  1646	static void memcg_stat_format(struct mem_cgroup *memcg, struct seq_buf *s)
-  1647	{
-  1648		int i;
-  1649	
-  1650		/* Reduce by 1 for MEMCG_SWAP as that is not exposed in v2. */
-> 1651		BUILD_BUG_ON(ARRAY_SIZE(memory_stats) != MEMCG_NR_STAT - 1);
-  1652	
-  1653		/*
-  1654		 * Provide statistics on the state of the memory subsystem as
-  1655		 * well as cumulative event counters that show past behavior.
-  1656		 *
-  1657		 * This list is ordered following a combination of these gradients:
-  1658		 * 1) generic big picture -> specifics and details
-  1659		 * 2) reflecting userspace activity -> reflecting kernel heuristics
-  1660		 *
-  1661		 * Current memory state:
-  1662		 */
-  1663		mem_cgroup_flush_stats(memcg);
-  1664	
-  1665		for (i = 0; i < ARRAY_SIZE(memory_stats); i++) {
-  1666			u64 size;
-  1667	
-  1668			size = memcg_page_state_output(memcg, memory_stats[i].idx);
-  1669			seq_buf_printf(s, "%s %llu\n", memory_stats[i].name, size);
-  1670	
-  1671			if (unlikely(memory_stats[i].idx == NR_SLAB_UNRECLAIMABLE_B)) {
-  1672				size += memcg_page_state_output(memcg,
-  1673								NR_SLAB_RECLAIMABLE_B);
-  1674				seq_buf_printf(s, "slab %llu\n", size);
-  1675			}
-  1676		}
-  1677	
-  1678		/* Accumulated memory events */
-  1679		seq_buf_printf(s, "pgscan %lu\n",
-  1680			       memcg_events(memcg, PGSCAN_KSWAPD) +
-  1681			       memcg_events(memcg, PGSCAN_DIRECT) +
-  1682			       memcg_events(memcg, PGSCAN_KHUGEPAGED));
-  1683		seq_buf_printf(s, "pgsteal %lu\n",
-  1684			       memcg_events(memcg, PGSTEAL_KSWAPD) +
-  1685			       memcg_events(memcg, PGSTEAL_DIRECT) +
-  1686			       memcg_events(memcg, PGSTEAL_KHUGEPAGED));
-  1687	
-  1688		for (i = 0; i < ARRAY_SIZE(memcg_vm_event_stat); i++) {
-  1689			if (memcg_vm_event_stat[i] == PGPGIN ||
-  1690			    memcg_vm_event_stat[i] == PGPGOUT)
-  1691				continue;
-  1692	
-  1693			seq_buf_printf(s, "%s %lu\n",
-  1694				       vm_event_name(memcg_vm_event_stat[i]),
-  1695				       memcg_events(memcg, memcg_vm_event_stat[i]));
-  1696		}
-  1697	
-  1698		/* The above should easily fit into one page */
-  1699		WARN_ON_ONCE(seq_buf_has_overflowed(s));
-  1700	}
-  1701	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
