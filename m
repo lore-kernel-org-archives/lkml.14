@@ -1,86 +1,99 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEFA1C2AD
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 05:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52EA208A0;
+	Tue, 23 Apr 2024 05:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713849831; cv=none; b=dKm8osVSCojrfnetg1j4zbZX8gSIifP0YX2LGsgPlKrSXkReHiXmUfr6Yg04NBEVXYq8BWxwSYJf5029KB/9Ivx75BcqJebVA2P7p5yxEzb3WuVFg0q7tp0RsPXwQMo2fMy0oa+x/25UKEeEXsykNAwwAYXKo2Trw2QKH1cH3bQ=
+	t=1713850363; cv=none; b=suar9OJ4/2HCxCbDfHPmlaj63/tyCizrNfieqojeJ2bNAWrv9qFHAOYkQPeSFtG91M6h22itvbIWrrG+BuddMLAJNlPCAnLujWIl09HowNYniqTyiUMSOc1zBgXv/vr5Fswatj646RZiKUOylJ9m8/ahQ2No0cc+zQJbZIShv1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713849831; c=relaxed/simple;
-	bh=99EfjvqpzFog+KcyejWyS1acNRGTXkB7Y1R/IpDMIK8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ecUBIyRPZawdOFD8l3jNdqX0kzi6e+KMNb4B4gfEHtkwRbPdrjemV7yjRY6JZTvIj27GCL/g4lmTH3alE0TGZKJAFcnc3k02zxyRsTFtldXjSb77h4PKrVQj135j7o2J2TetAjB8LIrrra+7uFeFdsy6k8qxxXvjGQCV+3nzCz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OvsiSo2V; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OvsiSo2V"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1713849827;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7wZMRsMyHQHXjFKrcDnWCD1NMGczgsTlPNC9ZrGXAJ8=;
-	b=OvsiSo2VciEz80V+ECLlsVWhu9VrKAZMMiT5JyhaIJpiJCaRlCFNPBSSnIM/oQ0A13NJ6j
-	Q0M6ktSc75eUe/FEsbEGO8Xw0LzcxsIBnDqZmgTIXd3X28/O0v+b8GHm92PPzMRnAkJ0U6
-	/BuPKk6hpDPgJz/MbeeRSvhhJ5MUOLI=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>
-Cc: linux-mm@kvack.org,
+	s=arc-20240116; t=1713850363; c=relaxed/simple;
+	bh=+azLDfk/XeFroGKgVqni53cR/vzETd6dF45ytF23To8=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=VC7l6wwB0lN9wi9+bOrkGxDXXtsQWfvwS8xZGqFwYJJ5n2CXNgmMcgiExFleBOxY6OqcbrOfc1chQ3KP4/OVOeT9+nTZXeORJMaoVJuE9Ex3bs6cFfidQAel1JDoesQkWzKis3Qks1BHktx274eUdMSWBKS/l8x6+8AvsnM8cSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D33FA20081E;
+	Tue, 23 Apr 2024 07:26:57 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7B9532005F3;
+	Tue, 23 Apr 2024 07:26:57 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 21EEC180222C;
+	Tue, 23 Apr 2024 13:26:55 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: abelvesa@kernel.org,
+	peng.fan@nxp.com,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	imx@lists.linux.dev,
+	shengjiu.wang@gmail.com
+Cc: linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] memcg: restrict __mod_memcg_lruvec_state to memcg stats
-Date: Mon, 22 Apr 2024 22:23:43 -0700
-Message-ID: <20240423052343.811563-1-shakeel.butt@linux.dev>
-In-Reply-To: <20240423051826.791934-1-shakeel.butt@linux.dev>
-References: <20240423051826.791934-1-shakeel.butt@linux.dev>
+Subject: [PATCH] clk: imx: imx8mp: Use modern pm_ops
+Date: Tue, 23 Apr 2024 13:08:37 +0800
+Message-Id: <1713848917-13380-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Currently __mod_memcg_lruvec_state takes enum node_stat_item as a
-parameter and enum node_stat_item contains both memcg and non-memcg
-stats but __mod_memcg_lruvec_state can only handle the memcg stats, so
-simply only call __mod_memcg_lruvec_state for memcg stats.
+Without CONFIG_PM, the driver warns about unused functions
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+../drivers/clk/imx/clk-imx8mp-audiomix.c:363:12: warning: 'clk_imx8mp_audiomix_runtime_resume' defined but not used [-Wunused-function]
+  363 | static int clk_imx8mp_audiomix_runtime_resume(struct device *dev)
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/clk/imx/clk-imx8mp-audiomix.c:356:12: warning: 'clk_imx8mp_audiomix_runtime_suspend' defined but not used [-Wunused-function]
+  356 | static int clk_imx8mp_audiomix_runtime_suspend(struct device *dev)
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Change the old SET_RUNTIME_PM_OPS()/SET_NOIRQ_SYSTEM_SLEEP_PM_OPS()
+helpers to their modern replacements that avoid the warning.
+
+Fixes: 1496dd413b2e ("clk: imx: imx8mp: Add pm_runtime support for power saving")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 ---
- mm/memcontrol.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/clk/imx/clk-imx8mp-audiomix.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 4e991e913393..531b6ff711c7 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -860,8 +860,6 @@ static void __mod_memcg_lruvec_state(struct lruvec *lruvec,
- 		case NR_ANON_MAPPED:
- 		case NR_FILE_MAPPED:
- 		case NR_ANON_THPS:
--		case NR_SHMEM_PMDMAPPED:
--		case NR_FILE_PMDMAPPED:
- 			if (WARN_ON_ONCE(!in_task()))
- 				pr_warn("stat item index: %d\n", idx);
- 			break;
-@@ -899,7 +897,7 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
- 	__mod_node_page_state(lruvec_pgdat(lruvec), idx, val);
- 
- 	/* Update memcg and lruvec */
--	if (!mem_cgroup_disabled())
-+	if (!mem_cgroup_disabled() && idx < NR_VM_NODE_MEMCG_STAT_ITEMS)
- 		__mod_memcg_lruvec_state(lruvec, idx, val);
+diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
+index 574a032309c1..e4231e9c8f05 100644
+--- a/drivers/clk/imx/clk-imx8mp-audiomix.c
++++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
+@@ -368,10 +368,10 @@ static int clk_imx8mp_audiomix_runtime_resume(struct device *dev)
  }
  
+ static const struct dev_pm_ops clk_imx8mp_audiomix_pm_ops = {
+-	SET_RUNTIME_PM_OPS(clk_imx8mp_audiomix_runtime_suspend,
+-			   clk_imx8mp_audiomix_runtime_resume, NULL)
+-	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+-				      pm_runtime_force_resume)
++	RUNTIME_PM_OPS(clk_imx8mp_audiomix_runtime_suspend,
++		       clk_imx8mp_audiomix_runtime_resume, NULL)
++	NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				  pm_runtime_force_resume)
+ };
+ 
+ static const struct of_device_id clk_imx8mp_audiomix_of_match[] = {
+@@ -386,7 +386,7 @@ static struct platform_driver clk_imx8mp_audiomix_driver = {
+ 	.driver = {
+ 		.name = "imx8mp-audio-blk-ctrl",
+ 		.of_match_table = clk_imx8mp_audiomix_of_match,
+-		.pm = &clk_imx8mp_audiomix_pm_ops,
++		.pm = pm_ptr(&clk_imx8mp_audiomix_pm_ops),
+ 	},
+ };
+ 
 -- 
-2.43.0
+2.34.1
 
