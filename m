@@ -1,16 +1,16 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944AA13DBA2;
-	Tue, 23 Apr 2024 15:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DD813DDC4;
+	Tue, 23 Apr 2024 15:15:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713885349; cv=none; b=CK0BILpkEgsFKAvnSHMYMPY1WXe8KVEYdD8N6zj7LvUTw80p5+DzxyoPzHw3QNY7T6O5+NDp8Ezcc9OtsKeGTMsBkd1iaPXUHs57VXcmXVrgA5IElzCH/YMTjNLVyyW7eF1b+hTOf+3zsRpJS0h/eWj4ht+JN01q73H0tXUdYtM=
+	t=1713885350; cv=none; b=ekiowB+F5r4sceIaOCmo5ZBKG3jPxsIbbEJd4NarL939fESU+J3JWqOPvXqSPtYdhuwy7TCKAjuaojQZcMM3T4bwWapxSpeV6bFJnTjz8r+XUT/Lsv75sz+vLamt7m1Ev3w5JtpTH0IoRtsOM4+vrqRfi3Ipk59wzH/0XclYWCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713885349; c=relaxed/simple;
-	bh=rNLMrMNl5u+YaPBSylRvR65dH9Jx9iRKCP/yMTCqWN4=;
+	s=arc-20240116; t=1713885350; c=relaxed/simple;
+	bh=sjp5JunMjDTPlz2EkpoFZUn15enj8itw3RntfFOyWqI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZHfd7Y2KEGjvahnUlsELlPukJmqEQUYXr5h0nOT3m1pVvop6yYl9+8yzJkq2/xSuwviri+p6hW4v+HttZyDGn15Wmh7zpXv/sy9wFh1zeq4+HF5qj7uXfxbQiVDyJptCzMrOngrTkWPKoudu+g2qJAgmht1WwEemtf8DVgNyAR8=
+	 MIME-Version:Content-Type; b=LI6ZvXHWrGVggxmOhN2t3KA2kubCjy1LUOLQuhXdrSyo3ilzeys3bAtyfIWgm6CUz0C7gFUuVVTZYk04q/wIzyCcVO7GfKjPBNBbPxOs6/IzzLMPnEF4wrkqE4SarfgirRUNQhFi7dPQ1+oqS9pkuAgsY51LhVAxnpnp2bZFfYo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
@@ -18,23 +18,25 @@ Received: from i5e861d9e.versanet.de ([94.134.29.158] helo=phil.lan)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1rzHrv-0007PZ-6j; Tue, 23 Apr 2024 17:15:39 +0200
+	id 1rzHrw-0007PZ-DP; Tue, 23 Apr 2024 17:15:40 +0200
 From: Heiko Stuebner <heiko@sntech.de>
-To: Chukun Pan <amadeus@jmu.edu.cn>
+To: linux-rockchip@lists.infradead.org,
+	Dragan Simic <dsimic@manjaro.org>
 Cc: Heiko Stuebner <heiko@sntech.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
+	krzk+dt@kernel.org,
+	amadeus@jmu.edu.cn,
 	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	robh+dt@kernel.org,
 	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 0/1] arm64: dts: rockchip: correct the model name for Radxa ROCK 3A
-Date: Tue, 23 Apr 2024 17:15:31 +0200
-Message-Id: <171388532518.2652222.5651556523830397668.b4-ty@sntech.de>
+	devicetree@vger.kernel.org,
+	conor+dt@kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: arm: rockchip: Correct the descriptions for Radxa boards
+Date: Tue, 23 Apr 2024 17:15:33 +0200
+Message-Id: <171388532520.2652222.16202058595399007422.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240419103019.992586-1-amadeus@jmu.edu.cn>
-References: <20240419103019.992586-1-amadeus@jmu.edu.cn>
+In-Reply-To: <1e148d6cd4486b31b5e7f3824cf6bccf536b74c0.1713457260.git.dsimic@manjaro.org>
+References: <1e148d6cd4486b31b5e7f3824cf6bccf536b74c0.1713457260.git.dsimic@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,18 +46,22 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Fri, 19 Apr 2024 18:30:17 +0800, Chukun Pan wrote:
-> Changes in v2:
->   Collected Reviewed-by.
->   Remove changes to compatible.
+On Thu, 18 Apr 2024 18:26:19 +0200, Dragan Simic wrote:
+> Correct the descriptions of a few Radxa boards, according to the up-to-date
+> documentation from Radxa and the detailed explanation from Naoki. [1]  To sum
+> it up, the short naming, as specified by Radxa, is preferred.
 > 
+> [1] https://lore.kernel.org/linux-rockchip/B26C732A4DCEA9B3+282b8775-601b-4d4a-a513-4924b7940076@radxa.com/
+> 
+> 
+> [...]
 
 Applied, thanks!
 
-[1/2] dt-bindings: arm: rockchip: correct the model name for Radxa ROCK 3A
-      commit: fac5b3381639a504cd0e8c015242622331cc7a52
-[2/2] arm64: dts: rockchip: correct the model name for Radxa ROCK 3A
-      commit: 626a479873b6a680b3227c4852bde4a1f2c17fdf
+[1/2] dt-bindings: arm: rockchip: Correct the descriptions for Radxa boards
+      commit: d78084cdb5a959a5759efed9b3bc3182d005073c
+[2/2] arm64: dts: rockchip: Correct the model names for Radxa ROCK 5 boards
+      commit: 45e831033f7a00a14f64afa1e34c476a9ff0f9f0
 
 Best regards,
 -- 
