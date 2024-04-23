@@ -1,33 +1,32 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from out0-213.mail.aliyun.com (out0-213.mail.aliyun.com [140.205.0.213])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50F4E576
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A531483CD3
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713874593; cv=none; b=EumgkI1XJvk/YsQ6RO6JAuI6buhfbzHpIXkBko/BjVcjm8eDpayBjujF/19jVxIG8MwAQBBDseMb8ZP1B7kcOksqbIU2Kuhq9s7RiMj1r0AeN+U9B24i3nMJoDRmfX3qjZstKkTvKfHLzyceWTsDyWZGIQ+iD8+bH+H0hy0Q9WY=
+	t=1713874600; cv=none; b=i7axljhjpCAEWB6cYvTbbcDXkwbJXK2qiP+/rGz6LGOi3bKTK2OcYo7VREvvFYL0aqdLbZNwpI5mhHR6Exq2/SnYnJeGpVkYGB2FtYwde0Ekg8HGLnpg/0ui0+iGs8/37RKgI6HdixAXrsfu8gEVu6dMJSXBCSmmCwhwhmGkNmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713874593; c=relaxed/simple;
-	bh=lOpQcn4MtBfmmDN35Auoa7Jf7iRLuuP28iIGHSawomQ=;
+	s=arc-20240116; t=1713874600; c=relaxed/simple;
+	bh=UFzQ3kWYWHBKaUYKOPY1WkcFren0Bv5aLakJ4HzCXeo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DDsb3pPx/9coTPPNl8jehKMKYasXH6icbNp3fvuH6N/Hd4o3XVPdyFQS0tD3jO8NZP1llRYnTTwvy64wkgyfCnOkTecHTfqcIwME4/m0RhwWuQ40jfEYWWt1Eao0MOP+uiSAjRnshZEgUCdu5rfQgs2liOI+ZljilKxmiGcF0+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=SU2htrQy; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 In-Reply-To:Content-Type; b=oqmsxrCn87AcSV+0lMrNgy89qTeCDEi26QFxJW/oD0tZYcLEQMqgXzNeax5VavRXV6eHpHd/OM6FDa2AvIi5d6GH9KS7gXsuAyu/5M5/LpdXpPdoE5P8zob23HM9FwpDeaPeLcPlAoQweuxajdX83TVFsxMS0f5lD0S8TqVVzr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=Kvs7XDBR; arc=none smtp.client-ip=140.205.0.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SU2htrQy"
-Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 12923E4;
-	Tue, 23 Apr 2024 14:15:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1713874538;
-	bh=lOpQcn4MtBfmmDN35Auoa7Jf7iRLuuP28iIGHSawomQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SU2htrQyuMLCN6ndjBJHOvhe20o+D+Yu5VOxVWWjPZRu/d+BhKFaSQTytUEe78BSF
-	 RUXo7qCZp8e/jr3kXRrGB2jytueDF4lj5oOLcqs9t/aBKNBaO4U3WEiXBsKcafrynM
-	 ZzlAm52hJQPTFlGdi5bxY1ogpmfCo6WfJkEztSis=
-Message-ID: <68d14afc-d641-4a4f-b3c8-37d280b5f571@ideasonboard.com>
-Date: Tue, 23 Apr 2024 15:16:25 +0300
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="Kvs7XDBR"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1713874593; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=zGpCGDLM61ejMNOyLJt8CjD5GKhvUW/9uVClM+cy3Nw=;
+	b=Kvs7XDBRcsVTErGY3Tl7r59h7TIyoMKdxvV3PjmPP3o1m0CZ/HHdlW4nOvqjIVui/CMB7O83v6XLV13LPWnqPN7Lcebq/PdYQnG7P2ZRF/px/tJ34qLMmA57V82j+fNK0hIAD9sFrwART/nDBX8ns5YLf6NmFBBzWOFZWt4KnkI=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047198;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---.XJXNWHL_1713874275;
+Received: from 30.230.91.3(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJXNWHL_1713874275)
+          by smtp.aliyun-inc.com;
+          Tue, 23 Apr 2024 20:11:16 +0800
+Message-ID: <c2d61760-ca89-49d0-b366-89b3cd76438f@antgroup.com>
+Date: Tue, 23 Apr 2024 20:11:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,185 +34,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/13] drm: xlnx: Store base pointers in zynqmp_disp
- directly
-To: Sean Anderson <sean.anderson@linux.dev>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- dri-devel@lists.freedesktop.org
-Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Michal Simek <michal.simek@amd.com>
-References: <20240422184553.3573009-1-sean.anderson@linux.dev>
- <20240422184553.3573009-2-sean.anderson@linux.dev>
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Subject: Re: [PATCH 2/7] um: Fix the -Wmissing-prototypes warning for
+ __switch_mm
+To: Johannes Berg <johannes@sipsolutions.net>, richard@nod.at,
+ anton.ivanov@cambridgegreys.com
+Cc: linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240423112457.2409319-1-tiwei.btw@antgroup.com>
+ <20240423112457.2409319-3-tiwei.btw@antgroup.com>
+ <8134c423c1a7f911cb5ae2f2e8e40e80f2e5270f.camel@sipsolutions.net>
 Content-Language: en-US
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20240422184553.3573009-2-sean.anderson@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: "Tiwei Bie" <tiwei.btw@antgroup.com>
+In-Reply-To: <8134c423c1a7f911cb5ae2f2e8e40e80f2e5270f.camel@sipsolutions.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/04/2024 21:45, Sean Anderson wrote:
-> The blend, avbuf, and audio members of zynqmp_disp are anonymous structs
-> with only one member each. This is rather pointless, so move the members
-> up a level.
+On 4/23/24 7:29 PM, Johannes Berg wrote:
+> On Tue, 2024-04-23 at 19:24 +0800, Tiwei Bie wrote:
+>>
+>> --- a/arch/um/include/shared/skas/mm_id.h
+>> +++ b/arch/um/include/shared/skas/mm_id.h
+>> @@ -15,4 +15,6 @@ struct mm_id {
+>>  	int kill;
+>>  };
+>>  
+>> +extern void __switch_mm(struct mm_id *mm_idp);
+>>
 > 
-> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-> ---
-> 
-> Changes in v3:
-> - New
+> Maybe drop the extern while at it?
 
-I would have renamed the fields to, e.g., "blend_base", but it doesn't 
-really matter as they are accessed only in a couple of places.
+Sure, will do. I also prefer to drop the extern.
+Thanks for the review! :)
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-
-  Tomi
-
->   drivers/gpu/drm/xlnx/zynqmp_disp.c | 44 +++++++++++++-----------------
->   1 file changed, 19 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> index 407bc07cec69..94a3ac046373 100644
-> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> @@ -128,24 +128,18 @@ struct zynqmp_disp_layer {
->    * struct zynqmp_disp - Display controller
->    * @dev: Device structure
->    * @dpsub: Display subsystem
-> - * @blend.base: Register I/O base address for the blender
-> - * @avbuf.base: Register I/O base address for the audio/video buffer manager
-> - * @audio.base: Registers I/O base address for the audio mixer
-> + * @blend: Register I/O base address for the blender
-> + * @avbuf: Register I/O base address for the audio/video buffer manager
-> + * @audio: Registers I/O base address for the audio mixer
->    * @layers: Layers (planes)
->    */
->   struct zynqmp_disp {
->   	struct device *dev;
->   	struct zynqmp_dpsub *dpsub;
->   
-> -	struct {
-> -		void __iomem *base;
-> -	} blend;
-> -	struct {
-> -		void __iomem *base;
-> -	} avbuf;
-> -	struct {
-> -		void __iomem *base;
-> -	} audio;
-> +	void __iomem *blend;
-> +	void __iomem *avbuf;
-> +	void __iomem *audio;
->   
->   	struct zynqmp_disp_layer layers[ZYNQMP_DPSUB_NUM_LAYERS];
->   };
-> @@ -356,12 +350,12 @@ static const struct zynqmp_disp_format avbuf_gfx_fmts[] = {
->   
->   static u32 zynqmp_disp_avbuf_read(struct zynqmp_disp *disp, int reg)
->   {
-> -	return readl(disp->avbuf.base + reg);
-> +	return readl(disp->avbuf + reg);
->   }
->   
->   static void zynqmp_disp_avbuf_write(struct zynqmp_disp *disp, int reg, u32 val)
->   {
-> -	writel(val, disp->avbuf.base + reg);
-> +	writel(val, disp->avbuf + reg);
->   }
->   
->   static bool zynqmp_disp_layer_is_video(const struct zynqmp_disp_layer *layer)
-> @@ -587,7 +581,7 @@ static void zynqmp_disp_avbuf_disable(struct zynqmp_disp *disp)
->   
->   static void zynqmp_disp_blend_write(struct zynqmp_disp *disp, int reg, u32 val)
->   {
-> -	writel(val, disp->blend.base + reg);
-> +	writel(val, disp->blend + reg);
->   }
->   
->   /*
-> @@ -813,7 +807,7 @@ static void zynqmp_disp_blend_layer_disable(struct zynqmp_disp *disp,
->   
->   static void zynqmp_disp_audio_write(struct zynqmp_disp *disp, int reg, u32 val)
->   {
-> -	writel(val, disp->audio.base + reg);
-> +	writel(val, disp->audio + reg);
->   }
->   
->   /**
-> @@ -1237,21 +1231,21 @@ int zynqmp_disp_probe(struct zynqmp_dpsub *dpsub)
->   	disp->dev = &pdev->dev;
->   	disp->dpsub = dpsub;
->   
-> -	disp->blend.base = devm_platform_ioremap_resource_byname(pdev, "blend");
-> -	if (IS_ERR(disp->blend.base)) {
-> -		ret = PTR_ERR(disp->blend.base);
-> +	disp->blend = devm_platform_ioremap_resource_byname(pdev, "blend");
-> +	if (IS_ERR(disp->blend)) {
-> +		ret = PTR_ERR(disp->blend);
->   		goto error;
->   	}
->   
-> -	disp->avbuf.base = devm_platform_ioremap_resource_byname(pdev, "av_buf");
-> -	if (IS_ERR(disp->avbuf.base)) {
-> -		ret = PTR_ERR(disp->avbuf.base);
-> +	disp->avbuf = devm_platform_ioremap_resource_byname(pdev, "av_buf");
-> +	if (IS_ERR(disp->avbuf)) {
-> +		ret = PTR_ERR(disp->avbuf);
->   		goto error;
->   	}
->   
-> -	disp->audio.base = devm_platform_ioremap_resource_byname(pdev, "aud");
-> -	if (IS_ERR(disp->audio.base)) {
-> -		ret = PTR_ERR(disp->audio.base);
-> +	disp->audio = devm_platform_ioremap_resource_byname(pdev, "aud");
-> +	if (IS_ERR(disp->audio)) {
-> +		ret = PTR_ERR(disp->audio);
->   		goto error;
->   	}
->   
-
+Regards,
+Tiwei
