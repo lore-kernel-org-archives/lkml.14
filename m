@@ -1,137 +1,91 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BD246447;
-	Tue, 23 Apr 2024 07:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2198C481D1;
+	Tue, 23 Apr 2024 07:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713858900; cv=none; b=my6PwZ4Ux1+6BkeR9Sr8yNtmpDEtypHlLWN2sPQKu9WZ48+q6lU4rWtcPDrJ47VXVX34JRUp9WaWGjZCCteJqra/sl/+ska7JvZ63dxWoZjOQGnn78r+xYDLPqLcKZXhyekuAS92RBh8rarBAQRKGDJB/YMhCvqzdsXs9d2h/4U=
+	t=1713858976; cv=none; b=LqRoNWjFfV0+v7jIzgT/YDOzGpzC38G+T/WiHkjcKFAOApaGDtLVucjzsJJ5aIAIGQ7gE/xogrNmgH06kjY0Jbto708RzEA1ELPjA3pVQbOJbEbOEAdPEY8FLrolIviSDXryHXZs8NebagKTh8x/ilaItw37Owl/xuaBZL5Sm5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713858900; c=relaxed/simple;
-	bh=5UuB6CXi5ElqkfwREN1HfZ7c8FMEVX4JWVxxnH4Df7g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gnkEJuId4hlHx5qkrOPhhXG0uSDefURiZYob8JSMvmbKmXToVTzakPN3Gp3pcltlNoJz6DHfGdGkWk+q3K9WWazDuWQ6duZ3Z3ZYsQnJrAu61mRlC8FpFPG6F+Ys3GIlWFAiuNQf2RzqmQ9fjbRvRmL3+ILQvoxEnKv5ccrXDug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TeOHpGH6; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713858976; c=relaxed/simple;
+	bh=C10U8w+9znaxkvj5EdGV6iNeFy+LKwoCMige5+WbmRk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=bD9ZBWbR3V/5EtyCQMG2+iC2V6SOZi/v8HBmspcWwGGYIKbjSu/uuR/8lrBBM2pESbdgQtfy17cvpI/H1R7BAUPKUzpGp/QsetVpR6TWsqI4tialNxHBMqTGMgJp0uVjbt5SxkUyCt2CENdr/dcOX0xWWnaoS/iTzREF+gM4axA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=dtp2KrFT; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TeOHpGH6"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e5b6e8f662so41525555ad.0;
-        Tue, 23 Apr 2024 00:54:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713858898; x=1714463698; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=agMoA5f411JyDJvtS+yhT8fkSFdQl8o5GANrhQCjrVc=;
-        b=TeOHpGH6CG+LmUj0MZNdDx87COPEQOzSGJ2ZGqDAU99ExuUEUtQsGPxigvvgm0ajOR
-         qaQJMoGlGbUDBKRGqePnT4JSjlVHJtUBjUWQ8OtkKqWhE+8o9nyv6ORnUJQcCevpKSQi
-         5A5eS3/sMtfj4hEJXT5RUicPFxB1TAkiEbH6dr6jQ+9K3+FkLecYSA9Ap88xOkcN/NSZ
-         mOfOInSN5E9m838Wsq3LRaVUQd/PKTJt3ngBHH7+PbxTnFve8wgCnvevtDSJkjxemCAq
-         JVXa9PO/+W0T0wYY1F17y1l37+53nmuJgZEQzEa5voJi5xdTZF5EaJvwfOXfUuAkTJxf
-         UrTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713858898; x=1714463698;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=agMoA5f411JyDJvtS+yhT8fkSFdQl8o5GANrhQCjrVc=;
-        b=wRk6KigQi3+VO5dPmtLKlcoGamacYANlm1TWBy6LTqtkcmSm4vrwedZLHyfJEM5WN0
-         IyLxMdyuVND5z6TA0Wt+pMiSodwK1Eoc4FMRcRWL+PCwq3Da0nLMM70iBqRvW/Y1Q7Lw
-         BrefbRhSp52HEGatDy8VjG3zg0A7CY/evGDa4G9d23qxlIYoTJA6K7vY0FJk7ueDrhOX
-         N9c0wAwML0oXEBk74m/y6rwyS9m9ij0zkWDKUpH5pvLaW4n93ST0iPY3xOrdRpmhEV73
-         cRDn+s2EYThv3a9MhZfCF/OZeI3/vyPxBn4CJ1qHwLLGlh1tAmGpiCgGsMr3zkoET1C6
-         0W6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVjoLH1WnKxzEezzy+dNkm+FksvbuDoX4fzPP58qZAH8IgUkUTaOj0En8UrRviqgV9q0gbU7VCpJbwjuAKxuvzCp3EzQ+C7LJNB533yAETQ9btmPcOixGOyMciiyE8woqs2A2Sgh6zOyQ==
-X-Gm-Message-State: AOJu0YygI6RWch2kCyzJdEa7kvTannIUWiFUYyp3G/txWoIjs8cNLAqc
-	OseJSebqBdq1kvyzNLHNh/KPgyVsS/PIOB66vVErfAPnJZ90itQl
-X-Google-Smtp-Source: AGHT+IFTpcIANOjtuEbyvgWkE9+dlhgH0w30ThWifG3zdGe8uwJhivJKKtXveCWmEHopHe1aVhohUg==
-X-Received: by 2002:a17:902:d58c:b0:1e4:6938:6fe3 with SMTP id k12-20020a170902d58c00b001e469386fe3mr15510880plh.58.1713858897936;
-        Tue, 23 Apr 2024 00:54:57 -0700 (PDT)
-Received: from [10.66.66.2] (ec2-3-111-32-5.ap-south-1.compute.amazonaws.com. [3.111.32.5])
-        by smtp.gmail.com with ESMTPSA id w17-20020a1709029a9100b001e2a4663179sm9382486plp.258.2024.04.23.00.54.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 00:54:57 -0700 (PDT)
-Message-ID: <a97420fc-1fc3-4e85-9539-e1a74c711be0@gmail.com>
-Date: Tue, 23 Apr 2024 13:24:52 +0530
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="dtp2KrFT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1713858962;
+	bh=C10U8w+9znaxkvj5EdGV6iNeFy+LKwoCMige5+WbmRk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=dtp2KrFTs1ZPOV423X3Lj+ohYH+w1R0E/8kBpk9DMXXZtdIcFmbTu30wN5OkBGmMP
+	 FLzPXuqgfXj6gzjMKHmGAW69Xpdffu14WLEeO5qDjUe0ZwtkRmnV3IoKoevaneipoy
+	 3sjOVDTg0D0OU3K0YuEo6+K2obOUKB6HIC+G61H4=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 23 Apr 2024 09:54:40 +0200
+Subject: [PATCH v3 05/11] neighbour: constify ctl_table arguments of
+ utility function
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH v3] dt-bindings: usb: uhci: convert to dt schema
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240422122125.455781-1-sheharyaar48@gmail.com>
- <7a43b05c-ca2e-4fa6-b1f9-cb1a12778da7@kernel.org>
-Content-Language: en-US
-From: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
-In-Reply-To: <7a43b05c-ca2e-4fa6-b1f9-cb1a12778da7@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240423-sysctl-const-handler-v3-5-e0beccb836e2@weissschuh.net>
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+In-Reply-To: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+To: Luis Chamberlain <mcgrof@kernel.org>, 
+ Joel Granados <j.granados@samsung.com>, Kees Cook <keescook@chromium.org>
+Cc: Eric Dumazet <edumazet@google.com>, Dave Chinner <david@fromorbit.com>, 
+ linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
+ bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-xfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+ coreteam@netfilter.org, kexec@lists.infradead.org, 
+ linux-hardening@vger.kernel.org, bridge@lists.linux.dev, 
+ lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org, 
+ rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713858961; l=808;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=C10U8w+9znaxkvj5EdGV6iNeFy+LKwoCMige5+WbmRk=;
+ b=EAoTey3kmtnh/z6T2K9kHOuOiGQPDvnlrHzdVg4MNSMG74MpVnrzaAzOlr8qG7tTA+0aGApZ5
+ EfQ5uq8SVYaAWFetEV8qu3UzVUp6J12UzjZsoq4ZupsTosh3ACnOL89
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-On 4/23/24 12:24 PM, Krzysztof Kozlowski wrote:
-> On 22/04/2024 14:21, Mohammad Shehar Yaar Tausif wrote:
->> Convert USB UHCI bindings to DT schema. Documenting aspeed compatibles
->> and missing properties. Adding aspeed/generic-uhci example and fix previous
->> incorrect example.
->>
->> Signed-off-by: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
-> 
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +
->> +allOf:
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            const: generic-uhci
->> +    then:
->> +      $ref: usb-hcd.yaml
-> 
-> Nothing improved here.
+In a future commit the proc_handlers themselves will change to
+"const struct ctl_table". As a preparation for that adapt the internal
+helper.
 
-Sorry, I could not understand this, please guide me about the correction 
-required here.
-I added $ref inside the if-then block because it was raising errors when 
-tested against
-dts files that used "platform-uhci" as the compatible. Putting it above 
-the if block did
-not work.
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ net/core/neighbour.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-When I ref the usb-hcd.yaml, it also includes usb.yaml which requires 
-the nodename to start with usb*,
-but the dtsi that use the deprecated compatible 
-(arch/arm/boot/dts/vt8500/wm8505.dtsi) have their nodename with
-uhci*, which causes the tests to fail.
+diff --git a/net/core/neighbour.c b/net/core/neighbour.c
+index 0805c00c63d4..92a01664a723 100644
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -3578,7 +3578,7 @@ static void neigh_copy_dflt_parms(struct net *net, struct neigh_parms *p,
+ 	rcu_read_unlock();
+ }
+ 
+-static void neigh_proc_update(struct ctl_table *ctl, int write)
++static void neigh_proc_update(const struct ctl_table *ctl, int write)
+ {
+ 	struct net_device *dev = ctl->extra1;
+ 	struct neigh_parms *p = ctl->extra2;
 
->> +      required:
->> +        - clocks
-> 
-> And this was not tested.
->> +
->> +unevaluatedProperties: false
->> +
->> +examples:
->> +  - |
->> +    uhci@d8007b00 {
->> +        compatible = "platform-uhci";
-> 
-> What happened here? This is deprecated!
+-- 
+2.44.0
 
-The original example has the nodename as uhci* which causes the schema 
-to fail as mentioned earlier.
-Should I just remove the example or should I rename the node here and 
-add clock field to the original example ?
-
-Best Regards,
-Shehar
