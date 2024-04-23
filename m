@@ -1,37 +1,38 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21004143C48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FC1143C47
 	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 21:33:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713908014; cv=none; b=Dr5LW2P4JNZwvP/GEVO85cdbC5q/kUL/1Tj38HgsGdWcWxcrO6FNVfU3wf2uRhyTVpy8jhDlrDosYrK//fiN9s5NAXX/O4hCVLGhfGPkTZ17bexnNeOzKM5tvL8gJev+6QuVFuXL/pMzHgJaK8GPpaxcufcl80Vu3WrG/2ovrpg=
+	t=1713908015; cv=none; b=ZAys3rxf6YsELMmYDZzhwjl6Rr4WwdeuVc09AmZGrPSDpJSaJZuRQ3TLivxC5hy7/3hrEdB/6CRz/wvbnryiEyS23UnnSPOo1Ta3bJVOebphJV0Zdn1PmY7ldb7sjX3XeFVtqr+4zO3kigIXmaTUcG5Kcg5KsgEcviZmy62xa2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713908014; c=relaxed/simple;
-	bh=ermidCzXptS9UpEY1BtR56mVa1oOYmwIe1YcgjJZ+ew=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=F3EBnZigTOmtJFDIIddOZu4erjrSTd5sOK7zgtpAjT3/Bq/81FFcoCog+LqkYIOxwRHDzRXajuDgMhl+bBfHItHwjybbT38/FaIkx2EI9Uv7hXAfPFu4fWykeq8x+Gj5bCDy9YofQlXKPN3gQcZl65zEKjLQYRr06cgfc7D69m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=rDyiKo2t; arc=none smtp.client-ip=46.235.227.194
+	s=arc-20240116; t=1713908015; c=relaxed/simple;
+	bh=WTSDOsANVORGkRoRiiItlqmB10yYEFCjydCZuf55SdI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sctLngzM7a8Tbjq7P8s9GDfTTkbNmbXIsDmFzr60altvO+ssIvMMdhZpynLJa/YYK1OavMMSD5fRiNJ9UsEgFYKpFjcfKu8VGxh/O646PWKodp4mHSsxKfsIBl/dAM+GTiX/IPpIzMO2PtAmdydrDi5xoM2p/UEtg/FR+U8dC98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KjjcZVg6; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="rDyiKo2t"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KjjcZVg6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713908008;
-	bh=ermidCzXptS9UpEY1BtR56mVa1oOYmwIe1YcgjJZ+ew=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rDyiKo2tV9d6QgusK0/h56uoM+CxgLeCuxOzEcKEkn1fVg3dc/vpv7F5SBhby8Y1A
-	 Gd/m/a/4n+AfOmLdEafPOX2Uf2oLzvK6lb/PX4rgEza31wB/3fAAA6IM8OE1dSPX/G
-	 l+24U4hihjxOvrc2UziSiag/buW92ZCNog3sHmqsGcAjVMHWdGh+5/1BwbKk7xv06C
-	 vD4fev0a/7HpyTzq96An4oN1c/2ywirsN6pmGrhUkXdR6szLG4aHlZ4CncmB67GoQY
-	 zerF1eHdPmFaA/grMuowHqjn/tJIxI70mMl3DcTjVpBC+FuX5ifdUjc0FRrdDw+hgX
-	 OkeKLITLc4R5g==
+	s=mail; t=1713908010;
+	bh=WTSDOsANVORGkRoRiiItlqmB10yYEFCjydCZuf55SdI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KjjcZVg6Qmz/d19GHkqM09gbMVElPzwbC7mayziwjkbkKOvnAkCX1w2ywQOpCJ7Ze
+	 yzC3IbITJaRC5lQoJqAmkY5D8jfdN/OqUiMY++qgCJDLFPyVQbtAgHPceptebE1eMs
+	 0lkts5DDQWGr5hU50dBuZzEdV3mGdVNYqNM71v9PbFNai0UV0Z8zFWWhRlbZR1dEEJ
+	 dqODXIwH9Z4iWz1qEgOaGRWeOCDmZNxbRaZfaNHKpu/yHO4hbfSEP9hu54e+Bztwif
+	 Ga/pQ7LZ56RPuAjAuq1aIBxAUJkUk55PCXIDE5ulWEPzv33fc6I3kCye8oRZ3XbZWl
+	 E71rRtk4uKVTQ==
 Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: alarumbe)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B3E7E37811D1;
-	Tue, 23 Apr 2024 21:33:27 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 18AB13782142;
+	Tue, 23 Apr 2024 21:33:30 +0000 (UTC)
 From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
 To: Boris Brezillon <boris.brezillon@collabora.com>,
 	Steven Price <steven.price@arm.com>,
@@ -45,10 +46,12 @@ Cc: kernel@collabora.com,
 	Adrian Larumbe <adrian.larumbe@collabora.com>,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] Support fdinfo runtime and memory stats on Panthor
-Date: Tue, 23 Apr 2024 22:32:33 +0100
-Message-ID: <20240423213240.91412-1-adrian.larumbe@collabora.com>
+Subject: [PATCH v2 3/3] drm/panthor: Enable fdinfo for memory stats
+Date: Tue, 23 Apr 2024 22:32:36 +0100
+Message-ID: <20240423213240.91412-4-adrian.larumbe@collabora.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240423213240.91412-1-adrian.larumbe@collabora.com>
+References: <20240423213240.91412-1-adrian.larumbe@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,34 +61,49 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This patch series enables userspace utilities like gputop and nvtop to
-query a render context's fdinfo file and figure out rates of engine
-and memory utilisation.
+When vm-binding an already-created BO, the entirety of its virtual size is
+then backed by system memory, so its RSS is always the same as its virtual
+size.
 
-Changelog:
-v2:
- - Split original first patch in two, one for FW CS cycle and timestamp
- calculations and job accounting memory management, and a second one
- that enables fdinfo.
- - Moved NUM_INSTRS_PER_SLOT to the file prelude
- - Removed nelem variable from the group's struct definition.
- - Precompute size of group's syncobj BO to avoid code duplication.
- - Some minor nits.
+Also, we consider a PRIME imported BO to be resident if its matching
+dma_buf has an open attachment, which means its backing storage had already
+been allocated.
 
-Adrián Larumbe (3):
-  drm/panthor: introduce job cycle and timestamp accounting
-  drm/panthor: Add DRM fdinfo support
-  drm/panthor: Enable fdinfo for memory stats
+Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+---
+ drivers/gpu/drm/panthor/panthor_gem.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
- drivers/gpu/drm/panthor/panthor_devfreq.c |  10 ++
- drivers/gpu/drm/panthor/panthor_device.h  |  11 ++
- drivers/gpu/drm/panthor/panthor_drv.c     |  31 ++++
- drivers/gpu/drm/panthor/panthor_gem.c     |  12 ++
- drivers/gpu/drm/panthor/panthor_sched.c   | 204 +++++++++++++++++++---
- 5 files changed, 244 insertions(+), 24 deletions(-)
-
-
-base-commit: a6325ad47bc808aeb4c69ae36e0236c2c6d400b5
+diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/panthor/panthor_gem.c
+index d6483266d0c2..386c0dfeeb5f 100644
+--- a/drivers/gpu/drm/panthor/panthor_gem.c
++++ b/drivers/gpu/drm/panthor/panthor_gem.c
+@@ -143,6 +143,17 @@ panthor_gem_prime_export(struct drm_gem_object *obj, int flags)
+ 	return drm_gem_prime_export(obj, flags);
+ }
+ 
++static enum drm_gem_object_status panthor_gem_status(struct drm_gem_object *obj)
++{
++	struct panthor_gem_object *bo = to_panthor_bo(obj);
++	enum drm_gem_object_status res = 0;
++
++	if (bo->base.base.import_attach || bo->base.pages)
++		res |= DRM_GEM_OBJECT_RESIDENT;
++
++	return res;
++}
++
+ static const struct drm_gem_object_funcs panthor_gem_funcs = {
+ 	.free = panthor_gem_free_object,
+ 	.print_info = drm_gem_shmem_object_print_info,
+@@ -152,6 +163,7 @@ static const struct drm_gem_object_funcs panthor_gem_funcs = {
+ 	.vmap = drm_gem_shmem_object_vmap,
+ 	.vunmap = drm_gem_shmem_object_vunmap,
+ 	.mmap = panthor_gem_mmap,
++	.status = panthor_gem_status,
+ 	.export = panthor_gem_prime_export,
+ 	.vm_ops = &drm_gem_shmem_vm_ops,
+ };
 -- 
 2.44.0
 
