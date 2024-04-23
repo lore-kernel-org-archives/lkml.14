@@ -1,33 +1,32 @@
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79BE813DDA5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC7E13D8BB;
 	Tue, 23 Apr 2024 18:05:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713895519; cv=none; b=VDOP0+SP0MIQNeBaTDcd8bppPJuBcQBLLD4NWTf7yZ5ioVVU8CAJy6p6kSVINI/2Q376z3iICEwSGXKWMv/pr3DHnivYRs9Z4CovhCoyjN+jgTbKqudw278ftkfWb3jOk7gymin19Ig5kQXHMfUq49xvBO4vvwXR303F0/5+pok=
+	t=1713895520; cv=none; b=CCaNF5cJeCLv3k0TwVC/g/94celIfI7mRKaOTg9VAKbzHwO8tvEAu2MEsV1n1Z7w2WNLeZ93nAMVUj6O+1DRCmzJT/Fk8HYYYRAhYCx80RVLM5RyRmglbLWq/rP6Xpr5L43QjHbqgllLp5bSxuvz98W8xG+v95wr2W95dh02ozk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713895519; c=relaxed/simple;
-	bh=xLEeNea2Swz811EqhOtx3ywS1B3A9qNV3biB+04Js0w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R4D2WcKTukcDKd3hQojSV3LK0rGUeQcDu3NgePDsJ7CkTu2ZVHgaH8sZAAL/ywSdlM+RLS1qttdNj9deiuiPv36j4kxBc9WMRUCmVYe9YO3NP9M3DBEuBWSEQ1ydxix1cBIIV9t2aigJ7I9RZe1S/5QevHUrz5XnxLFh1lz6R+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qOzyjcNR; arc=none smtp.client-ip=198.137.202.133
+	s=arc-20240116; t=1713895520; c=relaxed/simple;
+	bh=csbBsLOK9aN1YY14VJhgNaSPYMZmkMYSj4EsvEhArm8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TNFThpsNAPN4PMQ289g19+n7C2t5m9A4SzLMfRCX4DYRFY198dFr96O9wbBztak2wMM3CNwXggicqfapVlzEaWfZKcM4f0YAAFPv1SnBy92qQP2NrhM/1ZeMM+Y05sE3qRilyuBcnk2PxzY0YP0P7GigBsOo4K4KD9iIXN60n8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tYWlahpr; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qOzyjcNR"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tYWlahpr"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=ucWCcqpK+RgxRkCoiBrn6yK6YGAtyibZy8sxqOnryEM=; b=qOzyjcNRdSbxBDuZsbyVrfEg6C
-	hz4XiG/TqH/YQrqkTW+XVNZOm3RAdD2IHy+TkB73mS4ryfWsUEc3AMbKuap4Mhvk8pemd8Z2pdCYC
-	fPQjbCsUO2woGCj5zNZzEqelEXcBV644WZ5FVRslbTCHknlhPln2EB0s9+itnNSo8LAzWUv842VYn
-	mBy3Yx6OQWjiAasKbIH3rseys+VjISPqNkZs4M6wkMdWDX09ifLMI9DmgSYvdksNEjLw1749B8PhT
-	2bOrSpivC4PVkNUgYQWEtub8W+5itQGQdvT30QWfQU4AQ6TTluNSnhr1n4BbAbLvkaUQ2bnU4KNWB
-	7/8pkewg==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=x5XbG1JjCYNvoxcYQVRjX4l6Fw6ilVYPinQm4/OHRBI=; b=tYWlahprIb/r9CmNbSKQsIiUt1
+	DoB/kydDfe2VqIoT5GWk2EL7C7AhVj2QqUUNuzRj6C3HQ4XBcDDLAW10mST9zh3of+/Kpfct6kCcA
+	cPNJUM2oFvm6nbro+8Uk7Ai/EXEvUtGz8kwxX71lMD//1c23DrTsD16/UK2w+YG7Mx2CvaKRSWeQH
+	IPSdoAgoaN1dnVScwV0/q4EXqtbWHUt3oeAooG9irIVzJcx62vK3H+2fY10+6MNRtLyfY4bcbhVCL
+	wdSAE+dOlSSEjUAv+B0qSalL2nSryomZrN6GcYZpo4GIO/Dm+qQgLx3Ki9nWcqTB4/EnTZSG2PkLS
+	PU2UWhBw==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzKW5-000000014oc-2SlA;
+	id 1rzKW5-000000014oY-25p8;
 	Tue, 23 Apr 2024 18:05:17 +0000
 From: Luis Chamberlain <mcgrof@kernel.org>
 To: akpm@linux-foundation.org,
@@ -42,12 +41,10 @@ Cc: linux-fsdevel@vger.kernel.org,
 	p.raghav@samsung.com,
 	da.gomez@samsung.com,
 	mcgrof@kernel.org
-Subject: [PATCH 2/2] lib/test_xarray.c: fix error assumptions on check_xa_multi_store_adv_add()
-Date: Tue, 23 Apr 2024 11:05:16 -0700
-Message-ID: <20240423180517.256812-3-mcgrof@kernel.org>
+Subject: [PATCH 0/2] test_xarray: couple of fixes for v6-9-rc6
+Date: Tue, 23 Apr 2024 11:05:14 -0700
+Message-ID: <20240423180517.256812-1-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240423180517.256812-1-mcgrof@kernel.org>
-References: <20240423180517.256812-1-mcgrof@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,71 +54,24 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-While testing lib/test_xarray in userspace I've noticed we can fail with:
+Andrew,
 
-make -C tools/testing/radix-tree
-./tools/testing/radix-tree/xarray
+Provided there are no issues by folks with these two patches, here are a couple
+of fixes which should be merged into the queue for v6.9-rc6.  The first one was
+reported by Liam, after fixing that I noticed an issue which a test, and a fix
+for that is on the second patch.
 
-BUG at check_xa_multi_store_adv_add:749
-xarray: 0x55905fb21a00x head 0x55905fa1d8e0x flags 0 marks 0 0 0
-0: 0x55905fa1d8e0x
-xarray: ../../../lib/test_xarray.c:749: check_xa_multi_store_adv_add: Assertion `0' failed.
-Aborted
+I wasn't even aware that you can test xarray in userspace, cool beans.
 
-We get a failure with a BUG_ON(), and that is because we actually can
-fail due to -ENOMEM, the check in xas_nomem() will fix this for us so
-it makes no sense to expect no failure inside the loop. So modify the
-check and since this is also useful for instructional purposes clarify
-the situation.
+Luis Chamberlain (2):
+  tools: fix userspace compilation with new test_xarray changes
+  lib/test_xarray.c: fix error assumptions on
+    check_xa_multi_store_adv_add()
 
-The check for XA_BUG_ON(xa, xa_load(xa, index) != p) is already done
-at the end of the loop so just remove the bogus on inside the loop.
+ lib/test_xarray.c                       | 13 +++++++++----
+ tools/testing/radix-tree/linux/kernel.h |  2 ++
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-With this we now pass the test in both kernel and userspace:
-
-In userspace:
-
-./tools/testing/radix-tree/xarray
-XArray: 149092856 of 149092856 tests passed
-
-In kernel space:
-
-XArray: 148257077 of 148257077 tests passed
-
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- lib/test_xarray.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/lib/test_xarray.c b/lib/test_xarray.c
-index ebe2af2e072d..5ab35190aae3 100644
---- a/lib/test_xarray.c
-+++ b/lib/test_xarray.c
-@@ -744,15 +744,20 @@ static noinline void check_xa_multi_store_adv_add(struct xarray *xa,
- 
- 	do {
- 		xas_lock_irq(&xas);
--
- 		xas_store(&xas, p);
--		XA_BUG_ON(xa, xas_error(&xas));
--		XA_BUG_ON(xa, xa_load(xa, index) != p);
--
- 		xas_unlock_irq(&xas);
-+		/*
-+		 * In our selftest case the only failure we can expect is for
-+		 * there not to be enough memory as we're not mimicking the
-+		 * entire page cache, so verify that's the only error we can run
-+		 * into here. The xas_nomem() which follows will ensure to fix
-+		 * that condition for us so to chug on on the loop.
-+		 */
-+		XA_BUG_ON(xa, xas_error(&xas) && xas_error(&xas) != -ENOMEM);
- 	} while (xas_nomem(&xas, GFP_KERNEL));
- 
- 	XA_BUG_ON(xa, xas_error(&xas));
-+	XA_BUG_ON(xa, xa_load(xa, index) != p);
- }
- 
- /* mimics page_cache_delete() */
 -- 
 2.43.0
 
