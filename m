@@ -1,108 +1,75 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C09D26288
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 21:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B0526288;
+	Tue, 23 Apr 2024 21:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713907955; cv=none; b=MsT4dDrDT7mgkZrJrGsQxzbd0JOPkGHHsEGfpJ7smXLqPXXOQQ6dxLKhatMK02rsQ+J4Hr/eFRlYXk8ews4LFfDo2DddnrbIJfWb32RXkdeeT7qqNor7+C+alFUBp9Zb74y4ovJcA16GWzzxxPWv3TOXttV8mPMA3Zc4H5A5wYM=
+	t=1713908010; cv=none; b=Jx/Vkm7T8ALK2Jx7RQL5goQiHVG34Uq3+6GVN5WyI9mV6POwriHl/a2PpUwd4z1QrZQE+PXn+EJDJ1W/RSu/iDehGVDdp3xzP6ld/PGLYRrk/cU3pC+GkgvnmIVsvhBiSHP5TD1pJ802FDSc/5lfQtzeDBhPHuRaQwRG3kfRhpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713907955; c=relaxed/simple;
-	bh=qv8E1gsMpWM5F+eV243zDVTTn4MJOqXdD270Vb9ivYE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mFXHE7Wu6umuaPuK0BVn3LG8P9w7Cwm+svh0iTjrEZwz3TmMtjuBcr7QAUVh2QPTT7xg+Wx1wBzPaYnDt+P9gSFbTGbGiNgNgaKdUkww6QN5q8lv3X1DDIpgFcT7WWjwuM4ngY2TH/g6D+jgSNI5OGV4x2O1oubSxlXoMGZavQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gVXt9rf1; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713908010; c=relaxed/simple;
+	bh=ihT2Z5BjzFijWtjLQcXTrbIwcrnOFeEuAJr+ofHU/ec=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=VsuXrE4TwRuaQ6zrn2LKxwPAMd7/A8Fjj9AXCn/ZooTio0JuaJestKk7hnk2qMV/ZswBFEqyjgDnRI/Ry44GeRM1AZG9Qhsjj7+fryz/E/mvzmL6gF0B7sN0TC4lroVOLMXIhOKwC/kxBW5KJhi5AyZEE7Z2oYwFOFYQcrEHNQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bTSccHEC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gVXt9rf1"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6ed691fb83eso4906935b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 14:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713907953; x=1714512753; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pKWTSVVnluWR7STSuRRgwJ6Rd/eSnjR70lXgePt6SEU=;
-        b=gVXt9rf1NYWcm0F+H9LBAxfAUcBbeQIs0Dl4nsq1V/ezUVA7JE3Fkl8iCmKGxBWpaB
-         oSwIeHJRmHWRx4fWI2UBF3fru5uOIAfNXVcgsF23KSU5+OLdLI6sPMmvkSc2ALgAPZ9q
-         n5yqnLZ9DBZcktHX5oHLdmaewhN/sAba+CfdeuaxuLZHGFMvXgjM7fvErUH5LUs/p8Dh
-         c+XHSAF0GaM5Yz2GSJ3oEVDBZJpQyuwLLp9qvf5lFrsY6s4isL2SthDCB/SAfBVtKJC1
-         fdoK2xzxdHTuICxqEznG/z3dm0laMwsugq0g2NJbqvVfBfYZMZt/3k7Ou7F33CkaZOXX
-         vHFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713907953; x=1714512753;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pKWTSVVnluWR7STSuRRgwJ6Rd/eSnjR70lXgePt6SEU=;
-        b=mCj+R1O3zJ41kKW1U6uupqr3QXXZGbEKgmG89TxyvgGndAxYbG1X8TLABZaxYgVrLC
-         Clag1SyhvtdZuAhqhQocQxY8+p48MiwmRCmm5iTIoyMCfkEV41l48+2eunpo3JhLJXJc
-         wSwq62RmyQGeqa/z0G3LwNT7LRZM+LweOOYPrjAtoRADCdNVqwIswJAhVIJ8RHtssH8f
-         0f3wyWiri6F+QBQBXV6T9RUKK/CMpeZgBjP2MrGHxdC9tH6h+zaSF9wQFr5gLpyujlcz
-         qZMwmUJeo95mdmyn4mQtvFF7Gq07MTHhy0w4AVOUWL82Ib9IHKvhIZvkGNUaetCEjlBn
-         yyGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWk42W5pLJDk4srXWoGnK7DgEyOZN2aQ5FN890zEacGcwu50kzCOpXJM/Z4yUbXICRt1zGJfeaMcpm9RF6WYiFdcjMhZD6+tBhB1+K9
-X-Gm-Message-State: AOJu0YzzNBeCe9/Qf1pcjyqV/a8UKq6OzFWRwQ5XSTotlsfotDCpq3Yd
-	yCgp3NLBvFiF57RlYE1HOj66K6ihE1TUBIT5QhfIUlhyyYMe5/+W
-X-Google-Smtp-Source: AGHT+IGrpbSit5J2n0PJb2L0MA0usVpInvB9ORrbXoqp3luIDwgWfImPPruwclc8bzba1CRst2wamQ==
-X-Received: by 2002:a05:6a00:2442:b0:6ea:d794:ccee with SMTP id d2-20020a056a00244200b006ead794cceemr1003937pfj.17.1713907953467;
-        Tue, 23 Apr 2024 14:32:33 -0700 (PDT)
-Received: from xiaxiShen-ThinkPad.gigstreem.net ([66.160.179.28])
-        by smtp.gmail.com with ESMTPSA id fh9-20020a056a00390900b006ecf1922df7sm10047199pfb.36.2024.04.23.14.32.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 14:32:32 -0700 (PDT)
-From: Xiaxi Shen <shenxiaxi26@gmail.com>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de
-Cc: hpa@zytor.com,
-	shenxiaxi26@gmail.com,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	javier.carrasco.cruz@gmail.com,
-	julia.lawall@inria.fr
-Subject: [PATCH] Replace of_node_put() with new cleanup feature
-Date: Tue, 23 Apr 2024 14:40:06 -0700
-Message-Id: <20240423214006.29030-1-shenxiaxi26@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bTSccHEC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAAC8C116B1;
+	Tue, 23 Apr 2024 21:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713908010;
+	bh=ihT2Z5BjzFijWtjLQcXTrbIwcrnOFeEuAJr+ofHU/ec=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=bTSccHEC1A4UXr/YAFMFNlsu4aXrJfYmL7QRHev+gBu+yRgviFgVQbZK+aftcJ4X0
+	 VqIC6crlr2I4PmqPkFw2421v0XtEc0eJBWjAaF3LcszzrmrKqoGn/nXIrfENIvMfgo
+	 h0gYuFi+ve8/ny0m5VnZCEAxVmxNAJjXFG+Ioj0ex/RaR3DIgCpCMn9HEj0oRLTyPu
+	 7HaFov1cv2vCS3fM1jdDHmxItHEgf44c9EHZCr3/wymBv4O9XwkbM3dpZ/0HAnwGVn
+	 DIglWV+kHYLz/MaGkrrLOwHEcHJ0ScHlD3gsq1jd+IEe/T/WyiCifNPkzkrggv95a1
+	 loKItKB3KrWpA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 24 Apr 2024 00:33:27 +0300
+Message-Id: <D0RTOKUKOP3M.15LBA63K3KVWP@kernel.org>
+Cc: <linux-integrity@vger.kernel.org>, "Heiko Carstens" <hca@linux.ibm.com>,
+ <linux-kernel@vger.kernel.org>, "Arnd Bergmann" <arnd@kernel.org>
+Subject: Re: [PATCH] char: tpm: Keep TPM_INF_IO_PORT define for HAS_IOPORT=n
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Niklas Schnelle" <schnelle@linux.ibm.com>, "Peter Huewe"
+ <peterhuewe@gmx.de>
+X-Mailer: aerc 0.17.0
+References: <20240422123711.1739063-1-schnelle@linux.ibm.com>
+In-Reply-To: <20240422123711.1739063-1-schnelle@linux.ibm.com>
 
-Use the new cleanup magic to replace of_node_put() with
-__free(device_node) marking to auto release and to simplify the error
-paths
+On Mon Apr 22, 2024 at 3:37 PM EEST, Niklas Schnelle wrote:
+> The recent change to handle HAS_IOPORT removed the TPM_INF_IO_PORT
+> define for the HAS_IOPORT=3Dn case despite the define being used in
+> sections of code not covered by the same ifdef check. This was missed
+> because at the moment TCG_INFINEON indirectly depends on HAS_IOPORT via
+> PNP which depends on ACPI || ISA. As TCG_INFINEON does in principle
+> support MMIO only use add it for COMPILE_TEST to cover the HAS_IOPORT=3Dn
+> case.
+>
+> Link: https://lore.kernel.org/lkml/9d9fa267-067e-421b-9a39-aa178b913298@a=
+pp.fastmail.com/
+> Fixes: dab56f80e7f9 ("char: tpm: handle HAS_IOPORT dependencies")
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 
-Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-Signed-off-by: Xiaxi Shen <shenxiaxi26@gmail.com>
----
- arch/x86/platform/olpc/olpc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/x86/platform/olpc/olpc.c b/arch/x86/platform/olpc/olpc.c
-index 1d4a00e767ec..66c4d1f888e7 100644
---- a/arch/x86/platform/olpc/olpc.c
-+++ b/arch/x86/platform/olpc/olpc.c
-@@ -202,7 +202,7 @@ static u32 __init get_board_revision(struct device_node *root)
- 
- static bool __init platform_detect(void)
- {
--	struct device_node *root = of_find_node_by_path("/");
-+	struct device_node *root __free(device_node) = of_find_node_by_path("/");
- 	bool success;
- 
- 	if (!root)
-@@ -218,7 +218,6 @@ static bool __init platform_detect(void)
- 			olpc_platform_info.boardrev >> 4);
- 	}
- 
--	of_node_put(root);
- 	return success;
- }
- 
--- 
-2.34.1
+Thanks!
 
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+
+I applied it to my master but for some reason it is not yet reflected
+to web ui:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/log/
+
+But it is still applied and perhaps also visible when you seee this!
+
+BR, Jarkko
