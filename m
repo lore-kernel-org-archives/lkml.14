@@ -1,141 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A1347A5D;
-	Tue, 23 Apr 2024 07:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1091C698;
+	Tue, 23 Apr 2024 07:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713858218; cv=none; b=crupKciJ2tLehGcOcKUEhPkdbWVjvOTmwaikcPFUcH6GBYoj4NvPzQ5CE6/yqcfKcroj4j3USjXUUk5BOQZIemsoLZd0GW4W6A8wtD8SN8mn9giUcJnIFdmQk1h9KOH0DVLfoEdbwPiG9vu3Np6S73JvLrEc6rdvHXQJYT5VKAI=
+	t=1713858264; cv=none; b=XaRmYtH650PXhm0CLRgvAAbWdAbBCUn8IMsfLZKXb6SBPm724rGSTFP5ij5ZFrvRUEqDmyoyLXw0H3DJpyxA2Z/p3XQU2ANyflv3rpIcwM7f+O+yJwQeXkITOw7Q22RVP6SrXgZ3TaFjjiycblX4lp5rL1AFGOyUVMISMRQZZ9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713858218; c=relaxed/simple;
-	bh=zpqXzeN1h9+yujdqercMpcnT15Uwq0O3FUcKIyg2OOs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f0cwPgC/aZhjYjDSe+x2IeWRuwgnIDPcIY/XcBtDSF7HQJrmbe5jmOJ/bJaPYhW/gV+dwjkIsLYxaBolHXz3RmZBH8CZX3gdWluOfC25CdifWzSJjdZ1Y6xCMxTURT969jlCeWsZNEfEX7YMjhXKHXGA566QYpeRbcxlki+WwbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 896E0C116B1;
-	Tue, 23 Apr 2024 07:43:35 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH] LoongArch: Fix callchain parse error with kernel tracepoint events
-Date: Tue, 23 Apr 2024 15:43:22 +0800
-Message-ID: <20240423074322.2480319-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1713858264; c=relaxed/simple;
+	bh=JTZGZF6/n1PLTGlgTbj3EOnj4s2EN+2YlvWSFQvXm0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=apYGz93hnQ8Y3qTQOq/aUhtyK20xJbkvdzyNsl7aapXWTo2mcqYPqjxHJFQrPwHKbVbpqGZ37aw9/XV2qBmiaQQk8FgA9zQpppYw/DiazURrIFuJihHHu4tKlH++8fu8+6FKsLYo6xL55TQlAutg26jtHr6CrvjdCWxxr331Z0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TCmTUS8r; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TCmTUS8r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713858263; x=1745394263;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JTZGZF6/n1PLTGlgTbj3EOnj4s2EN+2YlvWSFQvXm0I=;
+  b=TCmTUS8rBC5uPOUuPq6J5Umz6LOPXIjqb/c6sNrJpipvEYVRku2usNkL
+   xXyLiPXqaKJMQU1mXBaVaIgH+VJUNRIZmKDU5BHP4uSaq9N6Th2XFoGMD
+   2Yn5a/x3FfgTqv9rzPHIGqRwMVRK9W322NCd2AAogyuoA84XejIuzmm08
+   HtaK1mZpT1Mq4bMikXAIBrOiOQ9rlDUfphi2S8BwjEHXKhpNRmKLJfUXg
+   wh+RFFyWUlgaWBDT5ytEVAvqF9vp6tv1FbEoUDyRRJ4yJaaQ9WGWoNcFK
+   vVLGHwP/NevS+KBzGuXn9Yd2V4M9+oNo+Y78PelT7FYEM9QUawCeRPqO6
+   g==;
+X-CSE-ConnectionGUID: 8BnXEuTLRX+9Pu7W1KA6Hg==
+X-CSE-MsgGUID: X8zM3DoQTsa5DMqa86bfMQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="9302929"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="9302929"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 00:44:22 -0700
+X-CSE-ConnectionGUID: v6rtPzSbT92u0dSUKcm7Eg==
+X-CSE-MsgGUID: MJbMIjI4Tn6JrDefDets/g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="47565057"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa002.fm.intel.com with ESMTP; 23 Apr 2024 00:44:18 -0700
+Date: Tue, 23 Apr 2024 15:38:58 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Marco Pagani <marpagan@redhat.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Alan Tull <atull@opensource.altera.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Russ Weight <russ.weight@linux.dev>, linux-fpga@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] fpga: region: add owner module and take its refcount
+Message-ID: <ZidlkofF4YSj9xeW@yilunxu-OptiPlex-7050>
+References: <20240419083601.77403-1-marpagan@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240419083601.77403-1-marpagan@redhat.com>
 
-In order to fix perf's callchain parse error for LoongArch, we implement
-perf_arch_fetch_caller_regs() which fills several necessary registers
-used for callchain unwinding, including sp, fp, and era. This is similar
-to the following commits.
+On Fri, Apr 19, 2024 at 10:35:59AM +0200, Marco Pagani wrote:
+> The current implementation of the fpga region assumes that the low-level
+> module registers a driver for the parent device and uses its owner pointer
+> to take the module's refcount. This approach is problematic since it can
+> lead to a null pointer dereference while attempting to get the region
+> during programming if the parent device does not have a driver.
+> 
+> To address this problem, add a module owner pointer to the fpga_region
+> struct and use it to take the module's refcount. Modify the functions for
+> registering a region to take an additional owner module parameter and
+> rename them to avoid conflicts. Use the old function names for helper
+> macros that automatically set the module that registers the region as the
+> owner. This ensures compatibility with existing low-level control modules
+> and reduces the chances of registering a region without setting the owner.
+> 
+> Also, update the documentation to keep it consistent with the new interface
+> for registering an fpga region.
+> 
+> Fixes: 0fa20cdfcc1f ("fpga: fpga-region: device tree control for FPGA")
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Suggested-by: Xu Yilun <yilun.xu@intel.com>
+> Reviewed-by: Russ Weight <russ.weight@linux.dev>
+> Signed-off-by: Marco Pagani <marpagan@redhat.com>
+> Acked-by: Xu Yilun <yilun.xu@intel.com>
 
-commit b3eac0265bf6:
-("arm: perf: Fix callchain parse error with kernel tracepoint events")
-
-commit 5b09a094f2fb:
-("arm64: perf: Fix callchain parse error with kernel tracepoint events")
-
-commit 9a7e8ec0d4cc:
-("riscv: perf: Fix callchain parse error with kernel tracepoint events")
-
-Test with commands:
-
- perf record -e sched:sched_switch -g --call-graph dwarf
- perf report
-
-Without this patch:
-
- Children      Self  Command        Shared Object      Symbol
- ........  ........  .............  .................  ....................
-
- 43.41%    43.41%  swapper          [unknown]          [k] 0000000000000000
-
- 10.94%    10.94%  loong-container  [unknown]          [k] 0000000000000000
-         |
-         |--5.98%--0x12006ba38
-         |
-         |--2.56%--0x12006bb84
-         |
-          --2.40%--0x12006b6b8
-
-With this patch, callchain can be parsed correctly:
-
- Children      Self  Command        Shared Object      Symbol
- ........  ........  .............  .................  ....................
-
- 47.57%    47.57%  swapper          [kernel.vmlinux]   [k] __schedule
-         |
-         ---__schedule
-
- 26.76%    26.76%  loong-container  [kernel.vmlinux]   [k] __schedule
-         |
-         |--13.78%--0x12006ba38
-         |          |
-         |          |--9.19%--__schedule
-         |          |
-         |           --4.59%--handle_syscall
-         |                     do_syscall
-         |                     sys_futex
-         |                     do_futex
-         |                     futex_wait
-         |                     futex_wait_queue_me
-         |                     hrtimer_start_range_ns
-         |                     __schedule
-         |
-         |--8.38%--0x12006bb84
-         |          handle_syscall
-         |          do_syscall
-         |          sys_epoll_pwait
-         |          do_epoll_wait
-         |          schedule_hrtimeout_range_clock
-         |          hrtimer_start_range_ns
-         |          __schedule
-         |
-          --4.59%--0x12006b6b8
-                    handle_syscall
-                    do_syscall
-                    sys_nanosleep
-                    hrtimer_nanosleep
-                    do_nanosleep
-                    hrtimer_start_range_ns
-                    __schedule
-
-Reported-by: Youling Tang <tangyouling@kylinos.cn>
-Suggested-by: Youling Tang <tangyouling@kylinos.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/perf_event.h | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/loongarch/include/asm/perf_event.h b/arch/loongarch/include/asm/perf_event.h
-index 2a35a0bc2aaa..157c4ace69d0 100644
---- a/arch/loongarch/include/asm/perf_event.h
-+++ b/arch/loongarch/include/asm/perf_event.h
-@@ -9,4 +9,10 @@
- 
- #define perf_arch_bpf_user_pt_regs(regs) (struct user_pt_regs *)regs
- 
-+#define perf_arch_fetch_caller_regs(regs, __ip) { \
-+	(regs)->csr_era = (__ip); \
-+	(regs)->regs[3] = current_stack_pointer; \
-+	(regs)->regs[22] = (unsigned long) __builtin_frame_address(0); \
-+}
-+
- #endif /* __LOONGARCH_PERF_EVENT_H__ */
--- 
-2.43.0
-
+Applied to for-next instead of v5
