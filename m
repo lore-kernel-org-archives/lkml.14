@@ -1,37 +1,37 @@
 Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9016A13280E;
-	Tue, 23 Apr 2024 12:49:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0734912DDBE;
+	Tue, 23 Apr 2024 12:49:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713876568; cv=none; b=lxbAQiLqlAgeHawm11xWAkZuslI3wZtREOA7Vxey+2IuNEXKos9NC2dwofQraU1eYn06E2xM6SIgT7xG1wa6nkyELK3G8D7lLFv2Ud5eDOnxQvhT4ZO++xwa5Yh2o027dRJVUGBLY3yNw8jvTdXyT5zosRoJ0iAFxFZjoPwyKgQ=
+	t=1713876569; cv=none; b=ZdsfJ3hyLZOzKP7Ft04Jdi/Wcx5OFIvZsFuPzXMn+2XEvRyBrJgLNkg8Wgtc8X+Ssk78+NP9QHvRMXfMwlV9AymoKQYINtLW1lmteQ3zBKKUZLyok5klzVk7gF6d8RQn9t0zPUHoPmSBVzns1PFAgxuAnQLkKxTgsGKQsAIQ1w4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713876568; c=relaxed/simple;
-	bh=ENEQWjd/orFKbPCnRA9/wp03isKnfgGXn50Q9kBx/4U=;
+	s=arc-20240116; t=1713876569; c=relaxed/simple;
+	bh=4KJAZTnFdP0YfNsuIvgBcb3TjXvRU3k02Foba2mASPY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PqP82DmtRbV2LfRmrhGQCht0WUgDm7oO8KMLIlmRQVjYijrM2jJevXYzfPC4Nan24J9cb33TQV3jQov47XQPbymlkI3SGS2fRHMHgGL6C9qvddQ/c+91s3w2iFD8k/GLP28UZKxwftjP3qrZNWpPzBHGHn/QX14Iz2QTKknZP/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=RosOYJi7; arc=none smtp.client-ip=85.214.62.61
+	 MIME-Version; b=EmxBgTJCxbc3WzVmujTW6cy0tFnrYUs8M9pTlSZZSUnvNdeCo3SzZgwIpEQ/AMzH4QGrrYkvNeyN75RByuKV1JRVNGSda5MZixwF2wUeKiQzB/wGAf6cjrCsEYPKaxqWfhtRHBtrSs5Onm6FqotwCmaYFB1AlL7iTGNTpmWPm6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=tVkokZzG; arc=none smtp.client-ip=85.214.62.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="RosOYJi7"
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="tVkokZzG"
 Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
 	(No client certificate requested)
 	(Authenticated sender: lukma@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 5F7BA88599;
-	Tue, 23 Apr 2024 14:49:24 +0200 (CEST)
+	by phobos.denx.de (Postfix) with ESMTPSA id BAEB48828C;
+	Tue, 23 Apr 2024 14:49:25 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1713876564;
-	bh=IiL05VoBy7iASraWS1ixTUxUFwRXhuZA90r6BgcT/kg=;
+	s=phobos-20191101; t=1713876566;
+	bh=kzTo4K8y7VuBk5h4xs8FQ5Pjrt3pC9EnvZtlpBFRwK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RosOYJi7Xh7QYxrSYxVRaMxlMl1g5I2pa1CGd3o7KvgVt4+dsWdCi4v0UgEEcA2Gm
-	 AzmPTexUihPUTnZRILSDCA6ihpeA5E7GoDpOWEDZ9inq2+bMT743FLHMGrtrLrof21
-	 aC+WwQlqjxC3Sy8uKkaLnlQYgJ2uuzDp8kpalOGCq04wktHT/uV5xZKMWYTqZFF9HR
-	 t+R63CyIThWH2d7TJ+pXqYvrSZRpnUJzLUld/A0i+SxRkLNgXt0X1ns4bPk59gQ2w4
-	 0SQcTkrRMSC1vpl0Whw1gr6TBqWf+SnLLCpJufgdxiiMZ7VckG6ihdwk5vkWGyobev
-	 jEJBEPOvXAOcw==
+	b=tVkokZzGMiaiUWimE/8N7Nc2vjrEGPsZaXZbcF9qic2l6L54sKxDS7QTicsfnTYzD
+	 Tj4JhfV1WdR/fO1kiMc8mpziyJBxrjMXsOoieUCZ/e3sg3uwG1upGywbXhhsALHqk7
+	 7zd9RnbiSz0NuNm8N4nSx1YipM97IO8hyZAPsAwaQEo8LgaRX87HjaPBfH1zL7P0Yf
+	 ocG4VF0RR0s028fQg2x/Lfhia1Rkf1G21AndbCenD6CLKbSBMPN/HEq/+Ec2LTYSr5
+	 Eco19MkWvt4yH+8IYlHN21IjfkGgXMd5+DtSqYfALNx3hm3lHkLYUYBN18Eb/7MpIs
+	 mauMxg6VIZUcQ==
 From: Lukasz Majewski <lukma@denx.de>
 To: netdev@vger.kernel.org,
 	Paolo Abeni <pabeni@redhat.com>,
@@ -55,9 +55,9 @@ Cc: Andrew Lunn <andrew@lunn.ch>,
 	"Ricardo B. Marliere" <ricardo@marliere.net>,
 	linux-kernel@vger.kernel.org,
 	Lukasz Majewski <lukma@denx.de>
-Subject: [net-next PATCH v6 2/5] test: hsr: Remove script code already implemented in lib.sh
-Date: Tue, 23 Apr 2024 14:49:05 +0200
-Message-Id: <20240423124908.2073400-3-lukma@denx.de>
+Subject: [net-next PATCH v6 4/5] test: hsr: Extract version agnostic information from ping command output
+Date: Tue, 23 Apr 2024 14:49:07 +0200
+Message-Id: <20240423124908.2073400-5-lukma@denx.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240423124908.2073400-1-lukma@denx.de>
 References: <20240423124908.2073400-1-lukma@denx.de>
@@ -71,74 +71,41 @@ Content-Transfer-Encoding: 8bit
 X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
 X-Virus-Status: Clean
 
-Some parts (like netns creation and cleanup) of hsr_ping.sh script are
-already implemented in ../lib.sh common script, so can be replaced by it.
+Current code checks if ping command output match hardcoded pattern:
+"10 packets transmitted, 10 received, 0% packet loss,".
+
+Such approach will work only from one ping program version (for which
+this test has been originally written).
+This patch address problem when ping with different summary output
+like "10 packets transmitted, 10 packets received, 0% packet" is
+used to run this test - for example one from busybox (as the test
+system runs in QEMU with rootfs created with buildroot).
+
+The fix is to modify output of ping command to be agnostic to ping
+version used on the platform.
 
 Signed-off-by: Lukasz Majewski <lukma@denx.de>
-
 ---
 Changes for v6:
 - New patch
 ---
- tools/testing/selftests/net/hsr/hsr_ping.sh | 28 +++------------------
- 1 file changed, 3 insertions(+), 25 deletions(-)
+ tools/testing/selftests/net/hsr/hsr_common.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/hsr/hsr_ping.sh b/tools/testing/selftests/net/hsr/hsr_ping.sh
-index 1c6457e54625..bd7c4b8f07b8 100755
---- a/tools/testing/selftests/net/hsr/hsr_ping.sh
-+++ b/tools/testing/selftests/net/hsr/hsr_ping.sh
-@@ -1,6 +1,7 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/testing/selftests/net/hsr/hsr_common.sh b/tools/testing/selftests/net/hsr/hsr_common.sh
+index be4ad07ff355..8e97b1f2e7e5 100644
+--- a/tools/testing/selftests/net/hsr/hsr_common.sh
++++ b/tools/testing/selftests/net/hsr/hsr_common.sh
+@@ -51,7 +51,8 @@ do_ping_long()
+ 	fi
  
-+source ../lib.sh
- ret=0
- ksft_skip=4
- ipv6=true
-@@ -27,19 +28,7 @@ while getopts "$optstring" option;do
- esac
- done
- 
--sec=$(date +%s)
--rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
--ns1="ns1-$rndh"
--ns2="ns2-$rndh"
--ns3="ns3-$rndh"
--
--cleanup()
--{
--	local netns
--	for netns in "$ns1" "$ns2" "$ns3" ;do
--		ip netns del $netns
--	done
--}
-+setup_ns ns1 ns2 ns3
- 
- # $1: IP address
- is_v6()
-@@ -254,21 +243,10 @@ if [ $? -ne 0 ];then
- 	exit $ksft_skip
- fi
- 
--trap cleanup EXIT
--
--for i in "$ns1" "$ns2" "$ns3" ;do
--	ip netns add $i || exit $ksft_skip
--	ip -net $i link set lo up
--done
-+trap cleanup_all_ns EXIT
- 
- setup_hsr_interfaces 0
- do_complete_ping_test
--cleanup
--
--for i in "$ns1" "$ns2" "$ns3" ;do
--	ip netns add $i || exit $ksft_skip
--	ip -net $i link set lo up
--done
- 
- setup_hsr_interfaces 1
- do_complete_ping_test
+ 	VAL="$(echo $OUT | cut -d' ' -f1-8)"
+-	if [ "$VAL" != "10 packets transmitted, 10 received, 0% packet loss," ]
++	SED_VAL="$(echo ${VAL} | sed -r -e 's/([0-9]{2}).*([0-9]{2}).*[[:space:]]([0-9]+%).*/\1 transmitted \2 received \3 loss/')"
++	if [ "${SED_VAL}" != "10 transmitted 10 received 0% loss" ]
+ 	then
+ 		echo "$netns -> $connect_addr ping TEST [ FAIL ]"
+ 		echo "Expect to send and receive 10 packets and no duplicates."
 -- 
 2.20.1
 
