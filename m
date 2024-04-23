@@ -1,180 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0EAF9D4;
-	Tue, 23 Apr 2024 01:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700E0171A4
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 01:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713835862; cv=none; b=DXq/8Jkl7ESNzUip2t4yac6AuO16iNguQ1F7Axos0aS2OCVVoG8QK1umcO0jhQc+cBjNYkmpdFNRTYwm2MTimuBj61gN8PppzrxVfRb43S5vrgJbr6zTSrKnP+I69wmlVqWxNjsa3HRp6qyZqjKClaatO2X6BqXp39wgTOIGcrc=
+	t=1713835865; cv=none; b=f8HnfMRuRiDYZP8WjGRBx26DxTLqOaYkSZz9E/S4j03naPYGHccnhrkck1SMMsD5jx/B/V2G6jabr89KcX9vdK06z6B6mCGIoYx6ueveWB+nsFirGGmb+keIPdgftUdeYYFvuaSrOKbO1quFUUNL/200obkUtkpGkpBqK219kV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713835862; c=relaxed/simple;
-	bh=TGwgxLWlj6TWD43M93E40JEa1uNcDOPHLH01f/Mh3eY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=uQngMst8Y3ZbnZhlNqiakwDRDbiTLuOqcUUawz/GXQhdFo5yyT9HspfwrxLdDn1I7QZ03sL9EyI+nMatxAsR1a8TZ0PVurU6chP/41+269rKmKR8pQLxQNdocVzEjLnNeYtLdnskl3inyQI56qPRqhnicprpj+ZkL7AvTxFfwH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T98ywX0z; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T98ywX0z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713835860; x=1745371860;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=TGwgxLWlj6TWD43M93E40JEa1uNcDOPHLH01f/Mh3eY=;
-  b=T98ywX0zAUXUt8mYCKlCetoS/oApql5GeKqVSiavCrfZqnsw52lfUTDc
-   yp6VnJMUMQWIt6tb7Wed6e6ORlPPGVhs/fu7WyWkgkfJdIkM5Xi74YkAv
-   LDNvppIveUcaXkDcwByUtI/wLwjcIlFCecAMwi1/zNNNY2Wt7VUSVXVhS
-   aTJHiTIog4laTe+ns+kQq+lRCeP3PuO/WWiccTRa2BOARPUYYP2jeHY/5
-   YlGUSDc9tVmhU/pCrdKl07hiKnNTvtT8YSm8BHODFtUclbR4A4Ns+mIHf
-   RUPW5iaLr2TAj/dPkWMPG0j91r7oSx3rg37JmHmisXQbnfbAchEIgZc9A
-   w==;
-X-CSE-ConnectionGUID: S0n2GrWwQLiO+00vAjzLyA==
-X-CSE-MsgGUID: Lf9O4wrjQaW0xlg2tA6IjA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="9319527"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="9319527"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 18:30:59 -0700
-X-CSE-ConnectionGUID: 7juPBe2xRCerbJCnut7GNw==
-X-CSE-MsgGUID: T4bvjcGaQv+nbkC1V8Txqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="55143078"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 18:30:56 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>,  linux-mm@kvack.org,  Andrew
- Morton <akpm@linux-foundation.org>,  Chris Li <chrisl@kernel.org>,  Barry
- Song <v-songbaohua@oppo.com>,  Ryan Roberts <ryan.roberts@arm.com>,  Neil
- Brown <neilb@suse.de>,  Minchan Kim <minchan@kernel.org>,  Hugh Dickins
- <hughd@google.com>,  David Hildenbrand <david@redhat.com>,  Yosry Ahmed
- <yosryahmed@google.com>,  linux-fsdevel@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] mm/swap: optimize swap cache search space
-In-Reply-To: <CAMgjq7B1YTrvZOrnbtVYfVMVAmtMkkwiqcqc1AGup4=gvgxKhQ@mail.gmail.com>
-	(Kairui Song's message of "Mon, 22 Apr 2024 23:20:19 +0800")
-References: <20240417160842.76665-1-ryncsn@gmail.com>
-	<87zftlx25p.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAMgjq7B1YTrvZOrnbtVYfVMVAmtMkkwiqcqc1AGup4=gvgxKhQ@mail.gmail.com>
-Date: Tue, 23 Apr 2024 09:29:03 +0800
-Message-ID: <87r0ewx3xc.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1713835865; c=relaxed/simple;
+	bh=22JucIr333S5hWoQojYq8sDzxWaVqwg8jNiaohfDBE8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=SJFW2xNbUViebnsUD5viB7GjOpPn6mT40U/I3jiThIqCaAyz+NImrAR+cf/uXqEe1ZFVL6ViTBIQNhu/PUxHV8G1Nzw5zCmGhN0BPprLEgPvHVz6AoThMbOpODedYXMsMkohBGvm3UhwvuFO4D6pd2qJkXnRbyQvjmssYzxZxy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7d6bf30c9e3so698890539f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 18:31:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713835863; x=1714440663;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cz3oNrlg/tZ0pVKzc2WrDO3+pRPfzflWiDsR/M727fk=;
+        b=LfuKDqsDKd0zzv0JbtPyYtG/EsF7k54+fdLxm+3xpqLVOdu4xJD0mQwvUVcFI/dgx6
+         ITclzkh6aDguGw3yj8o3PU7ZJnEEYgyrafilOhhH5pUQK5LexpZLTlSHs7JHZcXLnWMy
+         GGAGmP5dXqbutNkmEXJvwT4jMi6JMmYTMlloiNqLoiRllSRtwqg3dgooF1BbCxyAesj6
+         mkvkxaDKe803BaURTmN4LpWAS8AO3fvUheyq9u3VBimDB5MxQFXY0LgvD7LLPi2zspeA
+         PqGRHFixkLO9MeL8C4a4PIvwHPfYI58vxK70rhqCr44px/6POuTLetgRT9O9nnZ7vWRa
+         r9Zw==
+X-Forwarded-Encrypted: i=1; AJvYcCW4q/nRiGu61VdQcRdplqDFS3YmvZsOQ0l47qGI+RoCsGKtjqQjrvOQDW3wCnvDSvVUfGrmSZYIa0AOaxap+gIjE+tnaagDAkJB07Pg
+X-Gm-Message-State: AOJu0Yw20DPkxS/lXL6Z+FsmgNkKMavMuyX7y4eNQ8Pm7MkoEqZcEc6u
+	yqjT+YdXI1ruBULL+XSZwBdqu+XKhN5JrOPeAaAOYxc1Mv+alkxC9T1vVU5GMryo+W3X3u5sQot
+	+ShAdzXW9aksoZTslx1CQ9pN47mBO6uu0CsPUG3NMc7F7Vb9uh7uLii0=
+X-Google-Smtp-Source: AGHT+IHodPS3M1cJI0kzh6PKVQhHFuy5lI2gp/FKCQIK5MUvSHRJwKXkmGBl7t3+5hguQZybcRaW0A0Oqr+8oMCpedZQCN1uEESx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a05:6638:4126:b0:485:6cb9:9a79 with SMTP id
+ ay38-20020a056638412600b004856cb99a79mr103537jab.0.1713835863671; Mon, 22 Apr
+ 2024 18:31:03 -0700 (PDT)
+Date: Mon, 22 Apr 2024 18:31:03 -0700
+In-Reply-To: <20240422101622-mutt-send-email-mst@kernel.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000db97ee0616b981a2@google.com>
+Subject: Re: [syzbot] [virt?] [net?] KMSAN: uninit-value in
+ vsock_assign_transport (2)
+From: syzbot <syzbot+6c21aeb59d0e82eb2782@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, mst@redhat.com, netdev@vger.kernel.org, 
+	pabeni@redhat.com, sgarzare@redhat.com, syzkaller-bugs@googlegroups.com, 
+	virtualization@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Kairui Song <ryncsn@gmail.com> writes:
+Hello,
 
-> On Mon, Apr 22, 2024 at 3:56=E2=80=AFPM Huang, Ying <ying.huang@intel.com=
-> wrote:
->>
->> Hi, Kairui,
->>
->> Kairui Song <ryncsn@gmail.com> writes:
->>
->> > From: Kairui Song <kasong@tencent.com>
->> >
->> > Currently we use one swap_address_space for every 64M chunk to reduce =
-lock
->> > contention, this is like having a set of smaller swap files inside one
->> > big swap file. But when doing swap cache look up or insert, we are
->> > still using the offset of the whole large swap file. This is OK for
->> > correctness, as the offset (key) is unique.
->> >
->> > But Xarray is specially optimized for small indexes, it creates the
->> > redix tree levels lazily to be just enough to fit the largest key
->> > stored in one Xarray. So we are wasting tree nodes unnecessarily.
->> >
->> > For 64M chunk it should only take at most 3 level to contain everythin=
-g.
->> > But we are using the offset from the whole swap file, so the offset (k=
-ey)
->> > value will be way beyond 64M, and so will the tree level.
->> >
->> > Optimize this by reduce the swap cache search space into 64M scope.
->>
->
-> Hi,
->
-> Thanks for the comments!
->
->> In general, I think that it makes sense to reduce the depth of the
->> xarray.
->>
->> One concern is that IIUC we make swap cache behaves like file cache if
->> possible.  And your change makes swap cache and file cache diverge more.
->> Is it possible for us to keep them similar?
->
-> So far in this series, I think there is no problem for that, the two
-> main helpers for retrieving file & cache offset: folio_index and
-> folio_file_pos will work fine and be compatible with current users.
->
-> And if we convert to share filemap_* functions for swap cache / page
-> cache, they are mostly already accepting index as an argument so no
-> trouble at all.
->
->>
->> For example,
->>
->> Is it possible to return the offset inside 64M range in
->> __page_file_index() (maybe rename it)?
->
-> Not sure what you mean by this, __page_file_index will be gone as we
-> convert to folio.
-> And this series did delete / rename it (it might not be easy to see
-> this, the usage of these helpers is not very well organized before
-> this series so some clean up is involved).
-> It was previously only used through page_index (deleted) /
-> folio_index, and, now folio_index will be returning the offset inside
-> the 64M range.
->
-> I guess I just did what you wanted? :)
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Good!
+Reported-and-tested-by: syzbot+6c21aeb59d0e82eb2782@syzkaller.appspotmail.com
 
-> My cover letter and commit message might be not clear enough, I can updat=
-e it.
->
->>
->> Is it possible to add "start_offset" support in xarray, so "index"
->> will subtract "start_offset" before looking up / inserting?
->
-> xarray struct seems already very full, and this usage doesn't look
-> generic to me, might be better to fix this kind of issue case by case.
+Tested on:
 
-Just some open question.
+commit:         bcc17a06 vhost/vsock: always initialize seqpacket_allow
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=12b58abb180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=87a805e655619c64
+dashboard link: https://syzkaller.appspot.com/bug?extid=6c21aeb59d0e82eb2782
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
->>
->> Is it possible to use multiple range locks to protect one xarray to
->> improve the lock scalability?  This is why we have multiple "struct
->> address_space" for one swap device.  And, we may have same lock
->> contention issue for large files too.
->
-> Good question, this series can improve the tree depth issue for swap
-> cache, but contention in address space is still a thing.
-
-The lock contention for swap cache has been reduced via using multiple
-xarray in commit 4b3ef9daa4fc ("mm/swap: split swap cache into 64MB
-trunks").  But it fixes that for swap cache only, not for file cache in
-general.  We have observed similar lock contention issue for file cache
-too.  And the method isn't perfect too, like the issue you found here.
-In general, it's about what is "file" for swap device.
-
-> A more generic solution might involve changes of xarray API or use
-> some other data struct?
->
-> (BTW I think reducing the search space and resolving lock contention
-> is not necessarily related, reducing the search space by having a
-> large table of small trees should still perform better for swap
-> cache).
-
---
-Best Regards,
-Huang, Ying
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
