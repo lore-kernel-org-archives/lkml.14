@@ -1,69 +1,87 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8DA6A03F
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 13:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186FA745E2;
+	Tue, 23 Apr 2024 13:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713878574; cv=none; b=A6UePOy4isxdsa1TNzyqG3sqjkW1LyXPjxvaSFW2a5JDx8aPVFihQZPxmGMRUzGZxVta58n71nbabI3hqhDKIdDJakYVVfP87XsyqUYtDnULbLlt5+Yph+dvN3/qXxCh3mAIv7MIWZPlQWJmmtwgAdmvWtDDb24G1IabuniX5x8=
+	t=1713878590; cv=none; b=rRDtUZTxggv25GvDNQs/MGNCCt5llfDNvc9r4Nr9s6jJP3jvr1ej/P1liWN/QOkH8XSIcKrKquykmvxBwOHbQJ+SX3JovPZxFYQYGuXfjERKwV10dMY0g4mGM9DVj3yShNTatdcFH5QA05jHjPBywYn/5q3/Yfy1FJTaTCi4mhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713878574; c=relaxed/simple;
-	bh=KmATSqFrHq4RRAc6IwEhkR3mz+o6wTqAp3XvoRfn0oc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=j4mYFqduTKGtAr3SltGBQpSs8AqBFznJ/quOgP6wcLDGZEZ9uLLEveqgrOzArkJo7Wp0uV7Ye9V5+LoWYdUI822EgXrsQisXQrm/2xCOW6Ez4nsA7ISalXadmYFEYZoUVHMvCzFwOeCwNZyztxFyGhSLNuRZdJXwzcLtynnk8DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=X5nUE72S; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Oic7S4hd; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1713878590; c=relaxed/simple;
+	bh=Y3e+kyYzGZmeqX9U2y8Sf5GaMC6t/3cbauRRDhpXMhE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DxnE/6XIP8bu/Phj7qrqQmLKKbuwGBv3UQUW50Kh/tbJCOhB025Ly4X29E7JAkszPFd6zn4q8mmNcWdxwYF8ku7+vofBHOyS5YR1HvOwXL4UWlt2HdD1oXzb3CGbfjBwy7T1vRpmRWfbfbqGdJ2nrzdi0dyHu8h2RZDuIJHCkhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KED5v42A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="X5nUE72S";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Oic7S4hd"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1713878572;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KmATSqFrHq4RRAc6IwEhkR3mz+o6wTqAp3XvoRfn0oc=;
-	b=X5nUE72SKXF3BgB7eT7SUPtVgJdwKEsG8Lj7wGvL56esc9cMuXwPssWGFB05wbYb355OW7
-	+okrksre32uxY6qBXuBIE4XiKO6/ZSAtOJ+gveu3Ni+6em1i/3lGdHfQ7E7EHV4B2gmMz+
-	jUxYwGsnvnu/C3vckaZlvoql8RICulbuN9CVyJX1gTQ6G1yHo9DVpKsWhpWJfi2xcteXkE
-	sAz1InqOHrcbWSAuf7OUq98lfZycCpIcnESTCQ18QkX3sM6O3NGdyOVlAZSsSomZgAXEwH
-	lWuLRlY0y3/e7gsbGtcQ9OqOD7BQH3sMvMe9SbahJYQBmTHhtR+82+S8MjFlmQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1713878572;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KmATSqFrHq4RRAc6IwEhkR3mz+o6wTqAp3XvoRfn0oc=;
-	b=Oic7S4hdnZ6OUXIkaDxZIkzFpncPgPMu6slmIXkVD5Qd4rYBMR5dXNWd+4g+soeqrGSj+l
-	vRYh7/J3N+OZIpCg==
-To: David Stevens <stevensd@chromium.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] genirq: Disable suspended irqs when restoring affinity
-In-Reply-To: <CAD=HUj7cmO5x4aunD_sJoQ6BQxejiwqa8tMbORnGjB3gADiLxg@mail.gmail.com>
-References: <20240418074652.126355-1-stevensd@chromium.org>
- <87wmopuobi.ffs@tglx>
- <CAD=HUj7cmO5x4aunD_sJoQ6BQxejiwqa8tMbORnGjB3gADiLxg@mail.gmail.com>
-Date: Tue, 23 Apr 2024 15:22:48 +0200
-Message-ID: <8734rcusbb.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KED5v42A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D2E8C116B1;
+	Tue, 23 Apr 2024 13:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713878589;
+	bh=Y3e+kyYzGZmeqX9U2y8Sf5GaMC6t/3cbauRRDhpXMhE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KED5v42A/DIYWTinaT6HqZ0EzXjUr/GomwKAiORVTHqV3Qh9fIy66439eRBhYoqwv
+	 EOvMe9pDnPvmkhEXh6PL9LftXU9Mm0nYAvr45JyMrwFuqCjWZCFqQkjaFxXuNVHEAc
+	 BZ5Ns8FatnJO7xpQ33PIzjx8BbzxQCM7SJpXPCCMoR4kNj1V+KLUMIaMCvUfLHFCb2
+	 84cs3gH35Qbnp/Cm5Rz6VJkaAO8bx7IO752OdXImQvv+1jg2vOsoUWDte9/imL10cl
+	 SUYBichI0SnZxDT5+Ayzxur9FAw3WU7lNP6a8XDHtcld32dGJa98fiGJEh8DcP1pE+
+	 ncXSNdg3AEguA==
+Date: Tue, 23 Apr 2024 14:23:04 +0100
+From: Simon Horman <horms@kernel.org>
+To: Stefan Eichenberger <eichest@gmail.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	lxu@maxlinear.com, andrew@lunn.ch, hkallweit1@gmail.com,
+	linux@armlinux.org.uk, michael@walle.cc, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] net: phy: mxl-gpy: add new device tree property
+ to disable SGMII autoneg
+Message-ID: <20240423132304.GS42092@kernel.org>
+References: <20240416121032.52108-1-eichest@gmail.com>
+ <20240416121032.52108-3-eichest@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240416121032.52108-3-eichest@gmail.com>
 
-On Tue, Apr 23 2024 at 11:06, David Stevens wrote:
-> On Tue, Apr 23, 2024 at 5:36=E2=80=AFAM Thomas Gleixner <tglx@linutronix.=
-de> wrote:
->> Makes sense. But I rather avoid the whole startup/disable dance in this
->> case and let resume_device_irqs() deal with it.
->
-> Thanks for taking a look at my patch. Should I send a v2 with your
-> suggestions, or will you create a patch for your tree yourself?
+On Tue, Apr 16, 2024 at 02:10:32PM +0200, Stefan Eichenberger wrote:
+> Add a new device tree property to disable SGMII autonegotiation and
+> instead use the option to match the SGMII speed to what was negotiated
+> on the twisted pair interface (tpi). This allows us to disable SGMII
+> autonegotiation on Ethernet controllers that are not compatible with
+> this mode.
+> 
+> Signed-off-by: Stefan Eichenberger <eichest@gmail.com>
+> ---
+>  drivers/net/phy/mxl-gpy.c | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/phy/mxl-gpy.c b/drivers/net/phy/mxl-gpy.c
+> index b2d36a3a96f1..4147b4c29eaf 100644
+> --- a/drivers/net/phy/mxl-gpy.c
+> +++ b/drivers/net/phy/mxl-gpy.c
+> @@ -114,6 +114,7 @@ struct gpy_priv {
+>  	 * is enabled.
+>  	 */
+>  	u64 lb_dis_to;
+> +	bool sgmii_match_tpi_speed;
+>  };
+>  
+>  static const struct {
+> @@ -262,8 +263,17 @@ static int gpy_mbox_read(struct phy_device *phydev, u32 addr)
+>  
+>  static int gpy_config_init(struct phy_device *phydev)
+>  {
+> +	struct gpy_priv *priv = phydev->priv;
+>  	int ret;
+>  
+> +	/* Disalbe SGMII Autoneg if we want to match SGMII to TPI speed */
 
-Please send a V2.
+nit: Disable
+
