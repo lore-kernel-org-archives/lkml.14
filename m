@@ -1,156 +1,445 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC6818E1D
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 03:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B5618E1D
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 03:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713843832; cv=none; b=neAs0hZcaKOYF3i2FarE1P4/IroiGL29/8YN7vGoau1hvUkSGYnmNJwMlzbl8QS2JkuL2jUtToJH1zBFsPU2fUgD9kVbsgrelZBBdIznRrF2BCCa1q28gK9pxV0gtAlG+qafa39XmuoP0HR14YBQ2B/ZS8TodH1LdcPDP9irgGU=
+	t=1713843893; cv=none; b=jK8Mr8Puh1uBJL9NCa0C68JJj3n7H8xow8UAsN7s/haRnMtentfApn/CVBrm4Xb9eDUKb3vDK2Bxnw28vEl1zggmUbidhgxd+2qNlrgNb+M8N10N8C6YfBY3jzI+Ar8Inwhgy1H1KyDmLrgkA9XoH/yWPWs214RCnpnOl6MRtDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713843832; c=relaxed/simple;
-	bh=hNHEA6ccYnXv3lZ/1N2MV3Y3bDt/cuPB5SfWk4zbMMc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=O8tJ9xsxdI01MPR4nx+S0YvZRGfS90RCIDwrywxGwaFl0hLBQg9/B8URZZTIFb1u2wMS2EKZe8oaI9wMb+DI0kHlc5A8a7tFhRSKUtjelyjFiNRZvy517SolZgCE9GkjjH4dr7LzHzAoZBAI9x7ak4fKBkLX6L+1t7Y64NK1vYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=YUMnUKHu; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1713843893; c=relaxed/simple;
+	bh=Ilct6yVB8390vNnlX2J+xw65EcqkTRnZxwsdd6zmqhY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V1Gj8+j2aW21GyeGZLUttXOh1e7+QmbX/k/oRf2IuHOvoeK5jPlKvS+OavJ20DzfMk0pEJKpOM62kQAEfxF47vUhwK05zAop5r9n4vJc+MOgHPoGbE8+mcns0eFB5lQpoku0RfLPdt/mZkvd3HHC02LiCsCMHslnd9DjeJQe6IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OBZhF7Up; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YUMnUKHu"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240423034342epoutp02675f62126e2e67795115003ca9e07a9f~Iy_A2jHIw1621816218epoutp029
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 03:43:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240423034342epoutp02675f62126e2e67795115003ca9e07a9f~Iy_A2jHIw1621816218epoutp029
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1713843822;
-	bh=/3lH6JmubFkHYjtCbMv/Rjqjgq4yJpzd2+PUGN+/hE0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YUMnUKHuguqUF5uCvP2UU793sypxawpZlodjoWCsvNydLHr1fzyQHcdwqjhX/OiFM
-	 5ONP99SQEbTWSFzg42nizpJCdWURj52x6L8UZD+o+A+evAXoF596iMVWVkID9jFHn3
-	 rqCzQvOVcaN6rTL0u1A8oMcQUdv+A4rL7h64IHJ8=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20240423034341epcas5p16d4574060c424fb4367038103018e808~Iy_AMXyDy0740507405epcas5p1D;
-	Tue, 23 Apr 2024 03:43:41 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.180]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4VNnyy6pPdz4x9Q4; Tue, 23 Apr
-	2024 03:43:38 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	7B.61.09665.A6E27266; Tue, 23 Apr 2024 12:43:38 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240423032657epcas5p4d97f377b48bd40e792d187013c5e409c~IyvZkh1-q0716607166epcas5p42;
-	Tue, 23 Apr 2024 03:26:57 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240423032657epsmtrp19fa8ee7399a25e71d6556845f2c94b23~IyvZjwKNM1313413134epsmtrp1p;
-	Tue, 23 Apr 2024 03:26:57 +0000 (GMT)
-X-AuditID: b6c32a4b-829fa700000025c1-5d-66272e6a7463
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	44.1C.19234.18A27266; Tue, 23 Apr 2024 12:26:57 +0900 (KST)
-Received: from testpc11818.samsungds.net (unknown [109.105.118.18]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240423032655epsmtip1fdd4d1799bb8254f77809e6fca773541~IyvX3ceZp1684016840epsmtip12;
-	Tue, 23 Apr 2024 03:26:55 +0000 (GMT)
-From: hexue <xue01.he@samsung.com>
-To: axboe@kernel.dk
-Cc: anuj20.g@samsung.com, asml.silence@gmail.com, cliang01.li@samsung.com,
-	io-uring@vger.kernel.org, joshi.k@samsung.com, kundan.kumar@samsung.com,
-	linux-kernel@vger.kernel.org, peiwei.li@samsung.com, ruyi.zhang@samsung.com,
-	wenwen.chen@samsung.com, xiaobing.li@samsung.com, xue01.he@samsung.com
-Subject: Re: Re: [PATCH v2] io_uring: releasing CPU resources when polling
-Date: Tue, 23 Apr 2024 11:26:45 +0800
-Message-Id: <20240423032645.2546766-1-xue01.he@samsung.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <e8c28f87-ff8a-4f30-b252-46e2260357c9@kernel.dk>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OBZhF7Up"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-43989e6ca42so189671cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2024 20:44:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713843890; x=1714448690; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vt4JG8qCeL1iP0aOwkW0C+7/hL6q3fArHCZyUFLbwpQ=;
+        b=OBZhF7UpSWeJUr6t3G46xdI4cKdjhlKAh0ib4rHk38I986d66bNiAkwMiHtLmP/5je
+         jfSoFI2iH3+ltTyIm5Ev8GgPs/3rp3tp+0FKyj24uCAXeOyLa1RmKhRwO2o7I/53m35R
+         7v7BaaQqlMgypclx8jeUnDJFeG/c+h+DxiiIH9+Y3SCSB1E6pMJVQQiMQVfppRyfDadG
+         flg2TCkk0fGyYYazZJw+803+LVwIJmjpD0K6Dmz/JOryHxX2HE4c9CTWQ1dnrelj+MtR
+         i8DhgnYB8HWf3IH/bqYknCo167AKD1Re8qYUjYGq90bdkCguRMsZJfMX3XGSUk0iT9Ho
+         vqbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713843890; x=1714448690;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vt4JG8qCeL1iP0aOwkW0C+7/hL6q3fArHCZyUFLbwpQ=;
+        b=OIaZB86CBmZoGWjViODuzOCwft6Ez9GMoVJ8LlpyAx+CkdM5k3Kz04qMsH3cZ9PlcL
+         ggiANiFZsJikIGHqhS0HcBPjbg4KYfxaBcLkIt48/tWdZIrkaDt2IED0Zt2iHYxI13Eb
+         lpfFXHcAdV8KFF4lrMEmKxFXkOBRNv8faoNSKaa5PLc5lU2Lajoywm/uBF3pUOLQq2bO
+         Sb6bP/8TOsSYZw0BmlgbYLdB3WvGgkGsRV8Yj5GfWxdGr3voN4cEKZSsqn/WSAgZOh9M
+         G5tSwKEjqnJtKDCt//5LcPEmleP+O+ev5UqpQ7nhfVClpIsfjHXk3KrBixrpSYapVlPr
+         I4SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV78G+zd1WqD+I7UuFFtuQxPbK2u0cYwCS8kaTDhCuqSBTnuL8rzs2T3oBoWdge3C2b7q8MFWj8GfsMUTD91/2lQa6i/e1aE9DKrIf2
+X-Gm-Message-State: AOJu0YwnY5z9r3uQ3PU/o4vID0B8A8FAwFU+Y3qTRJb0GjAeMmbeRONA
+	enyfBpRVL2OrAG1+b7jw3E6i7FW5ZITuK0fgFmFUAw5jfJn6atAKnKXSU0MkcKiKN54BRzEO9hc
+	1fOJKsTdzHeyb0CWi1+mB1w+LPdEthTtgZ/E8
+X-Google-Smtp-Source: AGHT+IGSWRAJ9gjsG4eeTTY/nblTiq5QeqYiwnF+Rbt1tpJoAuOXcku4SJVgiWKD5APBHwtOSx7kjgf7WGjMj5DWhAU=
+X-Received: by 2002:ac8:7748:0:b0:437:b572:6a with SMTP id g8-20020ac87748000000b00437b572006amr100951qtu.23.1713843890003;
+ Mon, 22 Apr 2024 20:44:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPJsWRmVeSWpSXmKPExsWy7bCmpm6Wnnqawc82U4umCX+ZLeas2sZo
-	sfpuP5vF6b+PWSzetZ5jsTj6/y2bxa/uu4wWW798ZbW4vGsOm8WzvZwWXw5/Z7c4O+EDq8XU
-	LTuYLDpaLjNadF04xebA77Fz1l12j8tnSz36tqxi9Pi8SS6AJSrbJiM1MSW1SCE1Lzk/JTMv
-	3VbJOzjeOd7UzMBQ19DSwlxJIS8xN9VWycUnQNctMwfoTiWFssScUqBQQGJxsZK+nU1RfmlJ
-	qkJGfnGJrVJqQUpOgUmBXnFibnFpXrpeXmqJlaGBgZEpUGFCdkbT9yuMBWv5Ko6uVmpgnM7d
-	xcjJISFgIrFg7SsmEFtIYDejxN/mgC5GLiD7E6PEzeYN7HBO3+IX7DAdf05+ZIZI7GSU2Hp8
-	FQuE84NR4mrDDxaQKjYBJYn9Wz4wgtgiAsIS+ztawYqYBdYySWy8fRZoIQeHsICXxNteJ5Aa
-	FgFViQ0bZoLdwStgLbHpzX+obfISN7v2M4PYnAK2Emsv3WKHqBGUODnzCdguZqCa5q2zwS6S
-	EJjKIfF15TsmiGYXiW+PL7FC2MISr45vgRoqJfGyvw3KzpeY/H09I4RdI7Fu8zsWCNta4t+V
-	PSwgdzILaEqs36UPEZaVmHpqHRPEXj6J3t9PoFbxSuyYB2MrSSw5sgJqpITE7wmLoE7wkJg2
-	D+IEIYEJjBJNt3UnMCrMQvLOLCTvzELYvICReRWjZGpBcW56arFpgXFeajk8jpPzczcxglOu
-	lvcOxkcPPugdYmTiYDzEKMHBrCTC++uPSpoQb0piZVVqUX58UWlOavEhRlNgeE9klhJNzgcm
-	/bySeEMTSwMTMzMzE0tjM0Mlcd7XrXNThATSE0tSs1NTC1KLYPqYODilGpisCoR+Cm3OYI76
-	e8LQ5NnNSI450rK3r5x3PPPepmFK5Uxe40s5/G6bZnisF1u7XnHe3eiGop3rW48xZzU+fdaa
-	skbUyHZW9NUbvJtePVmyyqNDMEX5vCtv9yepNY0vc6IV186wfR59WI29TctpmXXxQ46gha/Z
-	FOcaFM+7ecfhfMDKb3EX7pd9dl++c2n/xfInm9YpbpN5EcXdvc7BOGLVPYajU/IvWXmHbUlR
-	rjH/Zy2jr3goOefmYetHtbeOXgzded7ypHVLgsSrwqeHp607HfW+5n3ynXWTZ9UmCE5eNr85
-	7k248bLd7efjfx+tXvk9sfLB959c4a42r555XjQ9vslEm1v9Ad/+fc3160qOK7EUZyQaajEX
-	FScCANIvX8pCBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsWy7bCSnG6jlnqawc3l2hZNE/4yW8xZtY3R
-	YvXdfjaL038fs1i8az3HYnH0/1s2i1/ddxkttn75ympxedccNotnezktvhz+zm5xdsIHVoup
-	W3YwWXS0XGa06Lpwis2B32PnrLvsHpfPlnr0bVnF6PF5k1wASxSXTUpqTmZZapG+XQJXRtP3
-	K4wFa/kqjq5WamCczt3FyMkhIWAi8efkR+YuRi4OIYHtjBKn3jxnh0hISOx49IcVwhaWWPkP
-	JA5S9I1RYuKTdkaQBJuAksT+LR/AbBGgov0drSwgRcwCe5kk7n+4ztTFyMEhLOAl8bbXCaSG
-	RUBVYsOGmUwgNq+AtcSmN/+hlslL3OzazwxicwrYSqy9dIsdpFVIwEaiY44FRLmgxMmZT1hA
-	bGag8uats5knMArMQpKahSS1gJFpFaNoakFxbnpucoGhXnFibnFpXrpecn7uJkZwNGgF7WBc
-	tv6v3iFGJg7GQ4wSHMxKIry//qikCfGmJFZWpRblxxeV5qQWH2KU5mBREudVzulMERJITyxJ
-	zU5NLUgtgskycXBKNTDpFd8784J9W1vi1av74gzU6n/9fTLxN0vOQZc/3mLy6Qu+Rr2u6Viy
-	acqac9wznJtXvA23LOe4YjZvQfO1aQwpP5V+GmT/0S5dY/30isCUJaJzn+rwx/Uaxz5XOvJI
-	ePGdRwzFrcavF+ewNfQe5vm7Z73uqhlnb/yZILL0rVx0+uV/X03sVX7U59Yxvvz5JvjvlFP3
-	lY5Njpwrrja9ZNvOviNz1XVYD30yuzP3zf9v1SFyQZKPLh08xlX8ovKEJq93gc9V78CFPdyC
-	JZ9cTPTlD/eetfX+vZ/nB9P5n4s2+5yMeeX5Mubk+9TLZjunsIocXlfMq9MpxhAyI2P7WsWQ
-	C4s2HXT5VeNnw+6o5nX6hRJLcUaioRZzUXEiAJ6eQ/31AgAA
-X-CMS-MailID: 20240423032657epcas5p4d97f377b48bd40e792d187013c5e409c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240423032657epcas5p4d97f377b48bd40e792d187013c5e409c
-References: <e8c28f87-ff8a-4f30-b252-46e2260357c9@kernel.dk>
-	<CGME20240423032657epcas5p4d97f377b48bd40e792d187013c5e409c@epcas5p4.samsung.com>
+References: <20240103165438.633054-1-samuel.holland@sifive.com>
+ <CAOnJCUJ4rC+Rrs6GV4t+=NWA=LtTZix5Nk1VzgP9CK-3+5-jAg@mail.gmail.com>
+ <06e71142-e113-40ac-b2c2-b20893aa714f@sifive.com> <a4c4c9f2-9fe1-4c22-a99c-1667481ddd6b@rivosinc.com>
+ <CAAhSdy1yoCMtR52X7tS6dB2x_ysgA8K4hSSXH044bbq2uFY7jQ@mail.gmail.com>
+In-Reply-To: <CAAhSdy1yoCMtR52X7tS6dB2x_ysgA8K4hSSXH044bbq2uFY7jQ@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 22 Apr 2024 20:44:35 -0700
+Message-ID: <CAP-5=fX5JRYxZ26buLujSVP7roQTaWofqdiX1y1rAKQ70Yu+QQ@mail.gmail.com>
+Subject: Re: [PATCH] perf: RISC-V: Check standard event availability
+To: Anup Patel <anup@brainfault.org>, Ian Rogers <irogers@google.com>
+Cc: Atish Patra <atishp@rivosinc.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	Atish Patra <atishp@atishpatra.org>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Will Deacon <will@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/22/24 18:11, Jens Axboe wrote:
->On 4/18/24 3:31 AM, hexue wrote:
->> This patch is intended to release the CPU resources of io_uring in
->> polling mode. When IO is issued, the program immediately polls for
->> check completion, which is a waste of CPU resources when IO commands
->> are executed on the disk.
->> 
->> I add the hybrid polling feature in io_uring, enables polling to
->> release a portion of CPU resources without affecting block layer.
->> 
->> - Record the running time and context switching time of each
->>   IO, and use these time to determine whether a process continue
->>   to schedule.
->> 
->> - Adaptive adjustment to different devices. Due to the real-time
->>   nature of time recording, each device's IO processing speed is
->>   different, so the CPU optimization effect will vary.
->> 
->> - Set a interface (ctx->flag) enables application to choose whether
->>   or not to use this feature.
->> 
->> The CPU optimization in peak workload of patch is tested as follows:
->>   all CPU utilization of original polling is 100% for per CPU, after
->>   optimization, the CPU utilization drop a lot (per CPU);
->> 
->>    read(128k, QD64, 1Job)     37%   write(128k, QD64, 1Job)     40%
->>    randread(4k, QD64, 16Job)  52%   randwrite(4k, QD64, 16Job)  12%
->> 
->>   Compared to original polling, the optimised performance reduction
->>   with peak workload within 1%.
->> 
->>    read  0.29%     write  0.51%    randread  0.09%    randwrite  0%
+On Mon, Apr 15, 2024 at 9:07=E2=80=AFPM Anup Patel <anup@brainfault.org> wr=
+ote:
 >
->As mentioned, this is like a reworked version of the old hybrid polling
->we had. The feature itself may make sense, but there's a slew of things
->in this patch that aren't really acceptable. More below.
+> On Tue, Apr 16, 2024 at 5:31=E2=80=AFAM Atish Patra <atishp@rivosinc.com>=
+ wrote:
+> >
+> > On 4/10/24 18:40, Samuel Holland wrote:
+> > > Hi Atish,
+> > >
+> > > On 2024-03-18 2:44 PM, Atish Patra wrote:
+> > >> On Wed, Jan 3, 2024 at 8:54=E2=80=AFAM Samuel Holland <samuel.hollan=
+d@sifive.com> wrote:
+> > >>>
+> > >>> The RISC-V SBI PMU specification defines several standard hardware =
+and
+> > >>> cache events. Currently, all of these events appear in the `perf li=
+st`
+> > >>> output, even if they are not actually implemented. Add logic to che=
+ck
+> > >>> which events are supported by the hardware (i.e. can be mapped to s=
+ome
+> > >>> counter), so only usable events are reported to userspace.
+> > >>>
+> > >>
+> > >> Thanks for the patch.
+> > >> This adds tons of SBI calls at every boot for a use case which is at
+> > >> best confusing for a subset of users who actually wants to run perf.
+> > >
+> > > I should have been clearer in the patch description. This is not just=
+ a cosmetic
+> > > change; because perf sees these as valid events, it tries to use them=
+ in
+> > > commands like `perf stat`. When the error from SBI_EXT_PMU_COUNTER_CF=
+G_MATCH
+> > > causes the ->add() callback to fail, this prevents any other events f=
+rom being
+> > > scheduled on that same CPU (search can_add_hw in kernel/events/core.c=
+). That is
+> > > why the dTLB/iTLB miss counts are missing in the "before" example bel=
+ow.
+> > >
+> >
+> > Thanks for explaining the problem. I can reproduce it in qemu as well i=
+f
+> > enough number of invalid events given on the command line and the
+> > workload is short enough.
+> >
+> > >> This probing can be done at runtime by invoking the
+> > >> pmu_sbi_check_event from pmu_sbi_event_map.
+> > >> We can update the event map after that so that it doesn't need to
+> > >> invoke pmu_sbi_check_event next time.
+> > >
+> > > I tried to implement this suggestion, but it did not work. The SBI in=
+terface
+> > > does not distinguish between "none of the counters can monitor the sp=
+ecified
+> > > event [because the event is unsupported]" and "none of the counters c=
+an monitor
+> > > the specified event [because the counters are busy]". It is not suffi=
+cient for
+> > > the kernel to verify that at least one counter is available before pe=
+rforming
+> > > the check, because certain events may only be usable on a subset of c=
+ounters
+> > > (per riscv,event-to-mhpmcounters), and the kernel does not know that =
+mapping.
+> > >
+> >
+> > Yeah. My suggestion was to fix the perf list issue which is different
+> > than the issue reported now.
+> >
+> > > As a result, checking for event support is only reliable when none of=
+ the
+> > > counters are in use. So the check can be asynchronous/deferred to lat=
+er in the
+> > > boot process, but I believe it still needs to be performed for all ev=
+ents before
+> > > userspace starts using the counters.
+> > >
+> >
+> > We should defer it a work queue for sure. We can also look at improving
+> > SBI PMU extension to support bulk matching behavior as well.
+> >
+> > However, I think a better solution would be to just rely on the json
+> > file mappings instead of making SBI calls. We are going to have the
+> > event encoding and mappings in the json in the future.
+>
+> The problem with JSON based event encoding is how to deal in-case
+> we are running inside Guest/VM because Host could be anything.
+>
+> IMO, the JSON based approach is not suitable for SBI PMU. For now,
+> we either defer the work using the work queue or keep the approach
+> of this patch as-is.
+>
+> The good part about SBI PMU extension is that we do have a standard
+> set of events and we only need a way to discover supported standard
+> events with a minimum number of SBI calls. It is better to add a new
+> SBI PMU call to assist supported event discovery which will also
+> help us virtualize it.
+>
+> Regards,
+> Anup
 
-Thank you very much for your patience in reviewing and correcting, I will
-improve those as soon as possible and submit the v3 patch later.
++Ian Rogers
+
+`perf list` will already filter some events depending on whether the
+PMU supports them, for example, legacy cache events. I think we can
+extend this to json events.
+
+Thanks,
+Ian
+
+> >
+> > I had added it only for platforms with counter delegation[1] but I thin=
+k
+> > this can be generalized for platforms with SBI PMU as well.
+> >
+> > I had some hacks to specify the legacy event encodings but Ian rogers
+> > improved with a generic support by preferring sysfs/json event encoding=
+s
+> > over fixed ones. I am yet to rebase and try Ian's series on top of the
+> > counter delegation though. Thoughts ?
+> >
+> > [1]
+> > https://lore.kernel.org/lkml/20240217005738.3744121-1-atishp@rivosinc.c=
+om/
+> > [2]
+> > https://lore.kernel.org/bpf/20240415063626.453987-2-irogers@google.com/=
+T/
+> >
+> >
+> > > Regards,
+> > > Samuel
+> > >
+> > >>> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> > >>> ---
+> > >>> Before this patch:
+> > >>> $ perf list hw
+> > >>>
+> > >>> List of pre-defined events (to be used in -e or -M):
+> > >>>
+> > >>>    branch-instructions OR branches                    [Hardware eve=
+nt]
+> > >>>    branch-misses                                      [Hardware eve=
+nt]
+> > >>>    bus-cycles                                         [Hardware eve=
+nt]
+> > >>>    cache-misses                                       [Hardware eve=
+nt]
+> > >>>    cache-references                                   [Hardware eve=
+nt]
+> > >>>    cpu-cycles OR cycles                               [Hardware eve=
+nt]
+> > >>>    instructions                                       [Hardware eve=
+nt]
+> > >>>    ref-cycles                                         [Hardware eve=
+nt]
+> > >>>    stalled-cycles-backend OR idle-cycles-backend      [Hardware eve=
+nt]
+> > >>>    stalled-cycles-frontend OR idle-cycles-frontend    [Hardware eve=
+nt]
+> > >>>
+> > >>> $ perf stat -ddd true
+> > >>>
+> > >>>   Performance counter stats for 'true':
+> > >>>
+> > >>>                4.36 msec task-clock                       #    0.74=
+4 CPUs utilized
+> > >>>                   1      context-switches                 #  229.32=
+5 /sec
+> > >>>                   0      cpu-migrations                   #    0.00=
+0 /sec
+> > >>>                  38      page-faults                      #    8.71=
+4 K/sec
+> > >>>           4,375,694      cycles                           #    1.00=
+3 GHz                         (60.64%)
+> > >>>             728,945      instructions                     #    0.17=
+  insn per cycle
+> > >>>              79,199      branches                         #   18.16=
+2 M/sec
+> > >>>              17,709      branch-misses                    #   22.36=
+% of all branches
+> > >>>             181,734      L1-dcache-loads                  #   41.67=
+6 M/sec
+> > >>>               5,547      L1-dcache-load-misses            #    3.05=
+% of all L1-dcache accesses
+> > >>>       <not counted>      LLC-loads                                 =
+                              (0.00%)
+> > >>>       <not counted>      LLC-load-misses                           =
+                              (0.00%)
+> > >>>       <not counted>      L1-icache-loads                           =
+                              (0.00%)
+> > >>>       <not counted>      L1-icache-load-misses                     =
+                              (0.00%)
+> > >>>       <not counted>      dTLB-loads                                =
+                              (0.00%)
+> > >>>       <not counted>      dTLB-load-misses                          =
+                              (0.00%)
+> > >>>       <not counted>      iTLB-loads                                =
+                              (0.00%)
+> > >>>       <not counted>      iTLB-load-misses                          =
+                              (0.00%)
+> > >>>       <not counted>      L1-dcache-prefetches                      =
+                              (0.00%)
+> > >>>       <not counted>      L1-dcache-prefetch-misses                 =
+                              (0.00%)
+> > >>>
+> > >>>         0.005860375 seconds time elapsed
+> > >>>
+> > >>>         0.000000000 seconds user
+> > >>>         0.010383000 seconds sys
+> > >>>
+> > >>> After this patch:
+> > >>> $ perf list hw
+> > >>>
+> > >>> List of pre-defined events (to be used in -e or -M):
+> > >>>
+> > >>>    branch-instructions OR branches                    [Hardware eve=
+nt]
+> > >>>    branch-misses                                      [Hardware eve=
+nt]
+> > >>>    cache-misses                                       [Hardware eve=
+nt]
+> > >>>    cache-references                                   [Hardware eve=
+nt]
+> > >>>    cpu-cycles OR cycles                               [Hardware eve=
+nt]
+> > >>>    instructions                                       [Hardware eve=
+nt]
+> > >>>
+> > >>> $ perf stat -ddd true
+> > >>>
+> > >>>   Performance counter stats for 'true':
+> > >>>
+> > >>>                5.16 msec task-clock                       #    0.84=
+8 CPUs utilized
+> > >>>                   1      context-switches                 #  193.81=
+7 /sec
+> > >>>                   0      cpu-migrations                   #    0.00=
+0 /sec
+> > >>>                  37      page-faults                      #    7.17=
+1 K/sec
+> > >>>           5,183,625      cycles                           #    1.00=
+5 GHz
+> > >>>             961,696      instructions                     #    0.19=
+  insn per cycle
+> > >>>              85,853      branches                         #   16.64=
+0 M/sec
+> > >>>              20,462      branch-misses                    #   23.83=
+% of all branches
+> > >>>             243,545      L1-dcache-loads                  #   47.20=
+3 M/sec
+> > >>>               5,974      L1-dcache-load-misses            #    2.45=
+% of all L1-dcache accesses
+> > >>>     <not supported>      LLC-loads
+> > >>>     <not supported>      LLC-load-misses
+> > >>>     <not supported>      L1-icache-loads
+> > >>>     <not supported>      L1-icache-load-misses
+> > >>>     <not supported>      dTLB-loads
+> > >>>              19,619      dTLB-load-misses
+> > >>>     <not supported>      iTLB-loads
+> > >>>               6,831      iTLB-load-misses
+> > >>>     <not supported>      L1-dcache-prefetches
+> > >>>     <not supported>      L1-dcache-prefetch-misses
+> > >>>
+> > >>>         0.006085625 seconds time elapsed
+> > >>>
+> > >>>         0.000000000 seconds user
+> > >>>         0.013022000 seconds sys
+> > >>>
+> > >>>
+> > >>>   drivers/perf/riscv_pmu_sbi.c | 37 +++++++++++++++++++++++++++++++=
++++--
+> > >>>   1 file changed, 35 insertions(+), 2 deletions(-)
+> > >>>
+> > >>> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_=
+sbi.c
+> > >>> index 16acd4dcdb96..b58a70ee8317 100644
+> > >>> --- a/drivers/perf/riscv_pmu_sbi.c
+> > >>> +++ b/drivers/perf/riscv_pmu_sbi.c
+> > >>> @@ -86,7 +86,7 @@ struct sbi_pmu_event_data {
+> > >>>          };
+> > >>>   };
+> > >>>
+> > >>> -static const struct sbi_pmu_event_data pmu_hw_event_map[] =3D {
+> > >>> +static struct sbi_pmu_event_data pmu_hw_event_map[] =3D {
+> > >>>          [PERF_COUNT_HW_CPU_CYCLES]              =3D {.hw_gen_event=
+ =3D {
+> > >>>                                                          SBI_PMU_HW=
+_CPU_CYCLES,
+> > >>>                                                          SBI_PMU_EV=
+ENT_TYPE_HW, 0}},
+> > >>> @@ -120,7 +120,7 @@ static const struct sbi_pmu_event_data pmu_hw_e=
+vent_map[] =3D {
+> > >>>   };
+> > >>>
+> > >>>   #define C(x) PERF_COUNT_HW_CACHE_##x
+> > >>> -static const struct sbi_pmu_event_data pmu_cache_event_map[PERF_CO=
+UNT_HW_CACHE_MAX]
+> > >>> +static struct sbi_pmu_event_data pmu_cache_event_map[PERF_COUNT_HW=
+_CACHE_MAX]
+> > >>>   [PERF_COUNT_HW_CACHE_OP_MAX]
+> > >>>   [PERF_COUNT_HW_CACHE_RESULT_MAX] =3D {
+> > >>>          [C(L1D)] =3D {
+> > >>> @@ -265,6 +265,36 @@ static const struct sbi_pmu_event_data pmu_cac=
+he_event_map[PERF_COUNT_HW_CACHE_M
+> > >>>          },
+> > >>>   };
+> > >>>
+> > >>> +static void pmu_sbi_check_event(struct sbi_pmu_event_data *edata)
+> > >>> +{
+> > >>> +       struct sbiret ret;
+> > >>> +
+> > >>> +       ret =3D sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATC=
+H,
+> > >>> +                       0, cmask, 0, edata->event_idx, 0, 0);
+> > >>> +       if (!ret.error) {
+> > >>> +               sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
+> > >>> +                         ret.value, 0x1, SBI_PMU_STOP_FLAG_RESET, =
+0, 0, 0);
+> > >>> +       } else if (ret.error =3D=3D SBI_ERR_NOT_SUPPORTED) {
+> > >>> +               /* This event cannot be monitored by any counter */
+> > >>> +               edata->event_idx =3D -EINVAL;
+> > >>> +       }
+> > >>> +}
+> > >>> +
+> > >>> +static void pmu_sbi_update_events(void)
+> > >>> +{
+> > >>> +       /* Ensure events are not already mapped to a counter */
+> > >>> +       sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
+> > >>> +                 0, cmask, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
+> > >>> +
+> > >>> +       for (int i =3D 0; i < ARRAY_SIZE(pmu_hw_event_map); i++)
+> > >>> +               pmu_sbi_check_event(&pmu_hw_event_map[i]);
+> > >>> +
+> > >>> +       for (int i =3D 0; i < ARRAY_SIZE(pmu_cache_event_map); i++)
+> > >>> +               for (int j =3D 0; j < ARRAY_SIZE(pmu_cache_event_ma=
+p[i]); j++)
+> > >>> +                       for (int k =3D 0; k < ARRAY_SIZE(pmu_cache_=
+event_map[i][j]); k++)
+> > >>> +                               pmu_sbi_check_event(&pmu_cache_even=
+t_map[i][j][k]);
+> > >>> +}
+> > >>> +
+> > >>>   static int pmu_sbi_ctr_get_width(int idx)
+> > >>>   {
+> > >>>          return pmu_ctr_list[idx].width;
+> > >>> @@ -1046,6 +1076,9 @@ static int pmu_sbi_device_probe(struct platfo=
+rm_device *pdev)
+> > >>>          if (pmu_sbi_get_ctrinfo(num_counters, &cmask))
+> > >>>                  goto out_free;
+> > >>>
+> > >>> +       /* Check which standard events are available */
+> > >>> +       pmu_sbi_update_events();
+> > >>> +
+> > >>>          ret =3D pmu_sbi_setup_irqs(pmu, pdev);
+> > >>>          if (ret < 0) {
+> > >>>                  pr_info("Perf sampling/filtering is not supported =
+as sscof extension is not available\n");
+> > >>> --
+> > >>> 2.42.0
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-riscv mailing list
+> > > linux-riscv@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-riscv
+> >
+>
