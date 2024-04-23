@@ -1,67 +1,58 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C282D53361
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 20:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 182691DFD0
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 20:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713904225; cv=none; b=GfTV97BfRIbxnFFioE32EbRPEzH1/zp3lCjjKSAEBrBNZX2Y8R5rMIYd4J9d2XXBaLus55SktvQ09op/RjbBt+5Zcy5CA5ZZPozaOTJsapTdAaWDkwzqi0zt1NhIsb3be72eAs20YNOsh7tQPtoDxFS5WQo7A8zCkGtSrUy8Yq4=
+	t=1713904467; cv=none; b=lkO3i0u/XzouvorMQxVVpxj6gY/WbkaBqJnNp1QeDxaowLi4SdtwXuwlmJT+FniogUyoWpiwweeMgAz7pE07zX8vBZryLVC2yqO/+/T3KzqpCVXn8wGuZUAE67ulT8fJagBfutx8ZgZC3IcYlqtCXbli+A5rYUxuhQWAaqynnPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713904225; c=relaxed/simple;
-	bh=CVIaYdYrEQr9OMr4jPSvITFD5x9uRmh+lgV2uZibvH0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LRyWmdFrxL5eg6o97OYHUg4zt6/LIQCR0E5BHwUKIiL3SdgR73odnyBmMUqY0LlrlTGClRGmBCTiBuOW7g98BekokkBmBtMpYqyfEGS8RpE16rTev+Fo29Z3j9hZxyfl66Mlz7Si6tRJgESY/T5Ty82wWMq2vLM7Ix7jrSKFx1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=JHynQWbu; arc=none smtp.client-ip=209.85.167.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1713904467; c=relaxed/simple;
+	bh=n+mPufYoYEFt9YUN0i64MuiWCBENtKpOpSJonH/OoLU=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OULxmgVy8KCYaU4NxVAXcBljjSol6eslhdjHoYmIAAYgejeosDsPghP3HPpMxzMnEiP5LdeixoT8L6S18wUqC0JVT7iT+bsnCdH3FymF+HEFCr0kj7tDMcbPLNdGJ2pHS2icp1LvtMiXs8dn+X3v4OBidZefg3yJMThRUVvnNU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SjbSo5px; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="JHynQWbu"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3c75139645aso2266946b6e.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 13:30:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1713904221; x=1714509021; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Torx1UPL12mK+9YLUjCQ2uCUXMbYdjic5Odfv8SpXtw=;
-        b=JHynQWbugy4Cre7zVazDOiiX6ngpiwUSYNeeRKv78CLrMwNA7ilqjPIE509zAAD21i
-         OxETTMGiO7PUxpbSEFx4I414Ex5Jz/29bNhOmCsFbclz4+g+U4ChGjsc/pwNYwiVByiY
-         OOwRB4n4iVuOqVqWzp0aO6aE8xuBbkogiR+0Vg02aw07RECbBIrjcS8qL871b9o2U5CI
-         8RDDWa410mhqhWTCnbD4umKWUCgONF2UVh3aCYDPbUzjucivRrLaZXfP9lZtERqPh0nO
-         ZoaZD68UTghvu5a7/sA0bgoqxzVP/v149nhGBTiROWpd5216QQdqQKK80emib3Q8KDJs
-         1e5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713904221; x=1714509021;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Torx1UPL12mK+9YLUjCQ2uCUXMbYdjic5Odfv8SpXtw=;
-        b=fq8XG3nvxiJri6NqLjcYAmNJMpc/VoCeK4NzzCeFhBjQoHxyy/B7qSC8pf6OW/biYo
-         aV4b4xcBY+ubj5afUgXtodqpV3MhlNbhSJ5a/TbIXPpkw0P5wUR7v9VORN/bffxKXOj9
-         0zIM/pfY0p8Y/5WTtqE35umDEJshkD03qP0QU3oQYfIRG82DyDlf315HzWHfBxVy9i+m
-         bBHAw6CE2PUR6YPWplQnb1B08Wf2jjdkNaUmZTgt4rgzvMFFqxrdh0tDwHLM4F3CC6hD
-         7HXYpqTF8ggw+l+/bnhiCoAfPWgT7cu6EFbFmUc9kMlqHiHI4vupPChTpUdeO+3nUY3P
-         KbvA==
-X-Forwarded-Encrypted: i=1; AJvYcCUr5jbED6scN2GY1t+nQBwcWHgnCCEzW/O7+c+joEjsy1cd9fBvT2KslV9y8NDWXRB/t/cJXayLu1H7D8whC6Pv4M7ALKOuSXLIDSZD
-X-Gm-Message-State: AOJu0YxzRSSJQmjSS8AZA3rc9CpTT/OZ6N0vbPWDUryV3aGHzydtR53j
-	RCDaauB9DpiQqrQY6GjqfkIga9WobGrMWYqnflS4Q1sBJPYof1kkhs4UAK43AkY=
-X-Google-Smtp-Source: AGHT+IHiUxJyLagPh/XINCMcJOpOhbZaSAa+jmo6C+ieX//m+gTeBM2QnjuG/QPlu/Y4VeO/9CBQHw==
-X-Received: by 2002:a05:6808:13d4:b0:3c7:5371:6a24 with SMTP id d20-20020a05680813d400b003c753716a24mr488139oiw.8.1713904221643;
-        Tue, 23 Apr 2024 13:30:21 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:400::5:9cfb])
-        by smtp.gmail.com with ESMTPSA id w9-20020a0ca809000000b00696b1050be8sm4365264qva.133.2024.04.23.13.30.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 13:30:21 -0700 (PDT)
-Date: Tue, 23 Apr 2024 16:30:20 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v2 1/1] mm: page_alloc: Avoid defining unused function
-Message-ID: <20240423203020.GB318022@cmpxchg.org>
-References: <20240423161506.2637177-1-andriy.shevchenko@linux.intel.com>
- <20240423111000.aaf74252a07d7e7fd56d7e12@linux-foundation.org>
- <Zif9e5ByqBKJ9rgQ@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SjbSo5px"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713904466; x=1745440466;
+  h=date:from:to:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=n+mPufYoYEFt9YUN0i64MuiWCBENtKpOpSJonH/OoLU=;
+  b=SjbSo5pxQOpJzThUNzD3ghiMYV3dTShkyOQA1SBdd+fjC0xzk/lIdzjq
+   B+QgSi33zzdvoztz9f+PphUMUaVfYRuu548Eb3+tS18gj9QYxj358VJD3
+   3573gD7CfgZlZZuXOy2bVcg8viIg/w8pNQ1aTKlGVRUsmY+BuP+yj3ieM
+   2MHwq8m7pnKqQ6CG0HDUazXcMfgcTtA1WEsGHamLiy3PgI+cQdqSOznJ9
+   PBJ5x53Ac/dpYOgO0DDJCzPzPDKQA35IMBVosTWtJ/2euNpew+8UykoNH
+   BNBCFSp8B3vQi6zK/nb0IACZw8bqCRFRISfmrSLsldHGnt8sAB8n4mGhh
+   w==;
+X-CSE-ConnectionGUID: 7KX+s5rJTiy57DUvwvbE0w==
+X-CSE-MsgGUID: UJy7ToLwSxe1SSqD3ikoLg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="13299060"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="13299060"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 13:34:26 -0700
+X-CSE-ConnectionGUID: GxTH2lVwQi2FNpROiMxuNQ==
+X-CSE-MsgGUID: il72+M1PQ92DcOnmKKdxMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="61936980"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 13:34:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rzMqM-00000000T50-2XEw;
+	Tue, 23 Apr 2024 23:34:22 +0300
+Date: Tue, 23 Apr 2024 23:34:22 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] mfd: kempld: Remove custom DMI matching code
+Message-ID: <ZigbTqKIruqIw_zG@smile.fi.intel.com>
+References: <20240418095319.3232118-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,24 +61,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zif9e5ByqBKJ9rgQ@smile.fi.intel.com>
+In-Reply-To: <20240418095319.3232118-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 23, 2024 at 09:27:07PM +0300, Andy Shevchenko wrote:
-> On Tue, Apr 23, 2024 at 11:10:00AM -0700, Andrew Morton wrote:
-> > On Tue, 23 Apr 2024 19:14:43 +0300 Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > > In some configurations I got
-> > > mm/page_alloc.c:656:20: warning: unused function 'add_to_free_list' [-Wunused-function]
-> > > Becuase the only user is guarged with a certain ifdeffery,
-> > > do the same for add_to_free_list().
-> 
-> ...
-> 
-> > Thanks, I'll queue this as a fix against "mm: page_alloc: consolidate
-> > free page accounting".
-> 
-> Thank you!
+On Thu, Apr 18, 2024 at 12:53:19PM +0300, Andy Shevchenko wrote:
+> The ->init() open codes the functionality of DMI matching code.
+> Moreover, all DMI quirks are using the same callback and driver_data.
+> With this in mind, refactor the DMI matching code.
 
-Thanks for the fix. We switched most callsites to __add_to_free_list()
-now, I didn't realize the memory failure code was the only one left.
+...
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> +	int ret -ENODEV;
+
+Wrong version had been sent, please ignore this.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
