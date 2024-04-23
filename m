@@ -1,114 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4735F12EBE7;
-	Tue, 23 Apr 2024 15:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A2013BC27;
+	Tue, 23 Apr 2024 15:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713884733; cv=none; b=b3AyBeOlp3+g58tgDa/UooU2NboKC6DW47Aukq2sl68LOwCc5vHYQ02Shapnt+IpX5ewMyVm8NrKZbQvAlcyz5QoTaToiwMZvbGNFuGtN4CxR/lcwh07eRRqOyy6Jt/Xf1hVwj8AW9kpVV+iSlWXVuDLt0qMuATPI5RIdTnwlRQ=
+	t=1713884737; cv=none; b=S8cwXrrcAUQRuRwMF9m+cpaD0WuwBpA4McclTXahlkc2HTMGevhLEqn6r9WoOoaTs2CJRRijd2aVk6+IAkfohyjbQIQkOyykWNzyxO1XCs6i7dACMOm0PaQ3JA6WVRlD6/qoEbM+o8WMyYvDJRRsg2vV/6GE5PzOCm3wg57+f7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713884733; c=relaxed/simple;
-	bh=rhecxeD2cGyz50/rzIf8qdv6WpuU26577Z2AHZCuTww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JVZmo0FfgCdKkzQNBCH+I82WAZJYWnZ3qCUVbF04P1c313ZgHZaxT+6Hj+1E6lw8RVVo23VCFwotT7VQ5UsQ+3yRKBVAFbzgongK2kkLSktSBITf/U1UFb4Ji1OMiFHQX6bSvWUQ9Epo2bPBQBAdW9sHXCf2WwISDQiE7hKWEnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iouqw4mQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713884737; c=relaxed/simple;
+	bh=1hxwFFG7sRViIQmtpQdXpYlxNm1EZkeQJ2bJvNxf/P4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aEXUZ3GJUnMkkpjfEeqxljM6Ers0Wj+f4nUEyW8bmr0e0ofzncRxq6kcnzl+EaLcoZkd9Cx5E+E0zBEY6VXCn8X6I2TRNSW95xLAmZJHMaSY4sWcYs2M8N5HWpi/H3IMd356UH+i7YoJhtd5JzPiLdPtdNtT0p0wRx0qtAg/SnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gWugi0Qj; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iouqw4mQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3D6AC2BD10;
-	Tue, 23 Apr 2024 15:05:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713884732;
-	bh=rhecxeD2cGyz50/rzIf8qdv6WpuU26577Z2AHZCuTww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Iouqw4mQZBJgFmb3LgZ98QJhyGYQvc+EInq511gxjyPNMtiaum2vNq2Bl+Mg4qHXk
-	 Ens6L+4d3LJ7hd+zWQCJaLT5DrWIFqiasL0rRDPLSEGmWCxVidMINn/MTcMgW5Q2Cu
-	 RGf/Kj7hBmo/dOIJI842Lz+RqBecO4Fa0SOseDLKHnYJY1Mn1/wiXg6lEOMPfVPv03
-	 WFA65VhAAb12rWp+V2bSkIzQQF6bLEP6T7d3S743Jo0auOzhv5OawT9x5btL8kC5Yw
-	 prpPY5s0WmWhGzwv2S5B6ZRNvPXnaWhn7II8vvJR1gvk6bWGd2Xzaj2sclfCpVFcZa
-	 rh5X9WIN6nOwQ==
-Date: Tue, 23 Apr 2024 10:05:30 -0500
-From: Rob Herring <robh@kernel.org>
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Maxime Ripard <maxime@cerno.tech>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Rae Moar <rmoar@google.com>, linux-kselftest@vger.kernel.org,
-	David Gow <davidgow@google.com>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	kunit-dev@googlegroups.com, patches@lists.linux.dev,
-	linux-clk@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Daniel Latypov <dlatypov@google.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 01/10] of: Add test managed wrappers for
- of_overlay_apply()/of_node_put()
-Message-ID: <171388470076.215446.15104256542666415343.robh@kernel.org>
-References: <20240422232404.213174-1-sboyd@kernel.org>
- <20240422232404.213174-2-sboyd@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gWugi0Qj"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-51b09c3a111so3951016e87.1;
+        Tue, 23 Apr 2024 08:05:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713884734; x=1714489534; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1hxwFFG7sRViIQmtpQdXpYlxNm1EZkeQJ2bJvNxf/P4=;
+        b=gWugi0Qj7+6RB2IlHo3P8hpJdMFoJ6/mJ3B3xGMy/LedV5Qk9pW9hlfqbpajZTnHWP
+         A47tDh6byDRRpSODU4o4a4m8Q2T0t+Ohe3xBKhG75L+KG7IKp5eugkkVrH33VKss2/uA
+         XFpqaQVOQuHLAYwyiLdygUGnA62dEp/eF2KVCaOfLpBL6gMwpjZp9nb1V1fLk3GESHuU
+         2DM0j1H6b5+M9KwWmqVkPfNTQOqXw2Gc0BsrNLvbUzj4zmY5nWimUyK/Qo3pIOPU6E1q
+         ztaFnPZderivx8clhUxJ3bl6X9V6oTpRMCWr8Mc+xoa1cMcjyTTJQMosLOCVaofsmlht
+         SK9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713884734; x=1714489534;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1hxwFFG7sRViIQmtpQdXpYlxNm1EZkeQJ2bJvNxf/P4=;
+        b=EY1YZukhH7LNiLzkaomBjQCTLuMrnzsp0cE6LDiZCaVj5IrWpkMXrjbLZL0ZqUsE8N
+         o+O5r366CsO0rmCY5nxKJ/4IvNUHQcR9HH78sMafWeP9hAyx+WRCkoPhlfQt3Ad6R80A
+         G2RpWQk9DW+Lepqhn3xv+VjYVdrz3Wpo8VGzqAFfCi3XjhENkeO+RI0fRND+Gv79FuIx
+         XfLIpJE7tGBlY5veS0XbUlQkClZxYS2jVudWBo/QgPQOrVY+e2kAXjXWhKtIE9b5sXBZ
+         yWcTTv+LMmmN4oitKwHArvkYdWWfD3tQ+GoHF4iHdOHDUhrYqPCf/Z74/pELycvMF+mk
+         XdVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVawKkeIql+6La5p9m8kUCUUtR8ZzYUMM/N2Zdvf7mkI92Gx1sG0M2QrWvztRLmK9KgegZIVbAV93HqdePi7GGJC2vFhSATp9UbGJrq8WBW1HZ3ttk+WYzIPTIPMXQ4xIs/lDEsVX9Z
+X-Gm-Message-State: AOJu0Yx0QSwA2cHmgU7LDMSXO2Vk43QSb68VzTZ29vqK//rOEPxSvtT5
+	bfci2k9dtb+/B6F1+Kij3pZVUQN2xHzLoOsnr3IXIh/GapymYG/cAAQEDajYYLtgZkNSd0Jnmzu
+	b4a3OMGY3sWbo3ZsnSDWplj5uSMwvQMYshWw=
+X-Google-Smtp-Source: AGHT+IEU3imTQlpcLZ5MH0x6sN91i6XuYjmBODMD6US12RgziIx79DvQUAGEuU8BBK2rOuvXt9euHVtFIGm0exQtmgc=
+X-Received: by 2002:ac2:4f8b:0:b0:518:c959:8be with SMTP id
+ z11-20020ac24f8b000000b00518c95908bemr7735255lfs.58.1713884733587; Tue, 23
+ Apr 2024 08:05:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240422232404.213174-2-sboyd@kernel.org>
+References: <CAJg=8jz0X=CKR1POvF41oEumrq1z=MVWPdF2ECbzV6-rhht8-g@mail.gmail.com>
+ <ZiGYbJezGZg6tGgq@dread.disaster.area> <CAJg=8jycPX=fQskUb=48g=AS7-uUNAVKZyZ+tyAC5uGYwfpabg@mail.gmail.com>
+ <ZiWl2MG5f0wAp7mM@dread.disaster.area>
+In-Reply-To: <ZiWl2MG5f0wAp7mM@dread.disaster.area>
+From: Marius Fleischer <fleischermarius@gmail.com>
+Date: Tue, 23 Apr 2024 08:05:22 -0700
+Message-ID: <CAJg=8jyZuxsUX+oNU6O_L4LNOVs21xVKTDi8ywPfDbj+cAxegA@mail.gmail.com>
+Subject: Re: KASAN: null-ptr-deref Write in xlog_cil_commit
+To: Dave Chinner <david@fromorbit.com>
+Cc: Leah Rumancik <leah.rumancik@gmail.com>, "Darrick J. Wong" <djwong@kernel.org>, 
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	harrisonmichaelgreen@gmail.com, syzkaller@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Dave,
 
-On Mon, 22 Apr 2024 16:23:54 -0700, Stephen Boyd wrote:
-> Add test managed wrappers for of_overlay_apply() that automatically
-> removes the overlay when the test is finished. This API is intended for
-> use by KUnit tests that test code which relies on 'struct device_node's
-> and of_*() APIs.
-> 
-> KUnit tests will call of_overlay_apply_kunit() to load an overlay that's
-> been built into the kernel image. When the test is complete, the overlay
-> will be removed.
-> 
-> This has a few benefits:
-> 
->  1) It keeps the tests hermetic because the overlay is removed when the
->     test is complete. Tests won't even be aware that an overlay was
->     loaded in another test.
-> 
->  2) The overlay code can live right next to the unit test that loads it.
->     The overlay and the unit test can be compiled into one kernel module
->     if desired.
-> 
->  3) We can test different device tree configurations by loading
->     different overlays. The overlays can be written for a specific test,
->     and there can be many of them loaded per-test without needing to jam
->     all possible combinations into one DTB.
-> 
->  4) It also allows KUnit to test device tree dependent code on any
->     architecture, not just UML. This allows KUnit tests to test
->     architecture specific device tree code.
-> 
-> There are some potential pitfalls though. Test authors need to be
-> careful to not overwrite properties in the live tree. The easiest way to
-> do this is to add and remove nodes with a 'kunit-' prefix, almost
-> guaranteeing that the same node won't be present in the tree loaded at
-> boot.
-> 
-> Suggested-by: Rob Herring <robh@kernel.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Saravana Kannan <saravanak@google.com>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-> ---
->  Documentation/dev-tools/kunit/api/index.rst | 11 +++
->  Documentation/dev-tools/kunit/api/of.rst    | 13 +++
->  drivers/of/Makefile                         |  1 +
->  drivers/of/of_kunit.c                       | 99 +++++++++++++++++++++
->  include/kunit/of.h                          | 94 +++++++++++++++++++
->  5 files changed, 218 insertions(+)
->  create mode 100644 Documentation/dev-tools/kunit/api/of.rst
->  create mode 100644 drivers/of/of_kunit.c
->  create mode 100644 include/kunit/of.h
-> 
+Thank you so much for your detailed explanations!
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> > Do you think it would make sense to backport that patch to 5.15.156 (the
+> > LTS kernel)?
+>
+> That's up to the 5.15 LTS maintainers to decide. They also need to
+> weigh up the fact that xlog_cil_kvmalloc() doesn't exist anymore in
+> the upstream code base. i.e. we found other places that had the same
+> kvmalloc() performance problems, and so lifted that code up further
+> and used it in other places in XFS....
+>
+
+Understood. Please allow me one last follow-up question. Did I add the correct
+maintainers/mailing lists to reach the 5.15 LTS maintainers? If not,
+how do I find
+the correct addresses? I used scripts/get_maintainer.pl as suggested here
+(https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html)
+to locate maintainers/mailing lists.
+
+Wishing you a lovely week!
+
+Best,
+Marius
