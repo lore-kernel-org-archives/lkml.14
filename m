@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788BC13D8BE;
-	Tue, 23 Apr 2024 17:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B3B13DBA5;
+	Tue, 23 Apr 2024 17:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713892943; cv=none; b=ePZ8e2M6KfNKrDLsIDb3quwRH4Lc7vkVhUK4SxnulbSwXkdmAZ/mDRo74o+CspoQFO0HrwatYGowmkpctSkIZxZf48Q8/u+7+1r+BV6fHjapR/rItKyUKv6q9nG2AqOdBqIRpQBev5qXI8ZahuoW8uDiW/cZHvlPVXXqP5KWqjw=
+	t=1713892944; cv=none; b=PcdjzMBbVBvS/1rN/7l7F0kuCFlo/4xerbexmlbUio+QzsBUB8Tf2OOZF13JrLHCQeMY58Bg348UHTR66Y4mvOQHbR4pnNruUsj41nC97y6V6OmtDSlMQIKOq2eduy2HukxVfCgPlTwgqLE/iWRN+LCYbyu4t+NWkyf/4KTytUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713892943; c=relaxed/simple;
-	bh=SGMALI4QdYtZABn10T5pVJnncfss1vQ8bKDWh3dyHOM=;
+	s=arc-20240116; t=1713892944; c=relaxed/simple;
+	bh=I9lQl747AQ4na6Zt0ksciPJQq6pP+rhmX/P2rnY3q9Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZimzvXnLpWSSmiMuLEGWGzu5XVTgMBMIvmTMe45vSB7XKjP4OuFamb+WzGh21wV4PLOwsGSJ1hHB0liE3tNVYTmD6nXTRH7h1SXMJ+E9DCtc1dqb0bXG4tKe7Krpl3nX4BkY6uA2xpxy+dr9igIr+7tHmwmSQN9lVPmCiPvnRQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b1Qzbplr; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version; b=u/O03Rbk/j07Beo6mnzDNqyxngtlFgzDdXdpP9hzZO70w3i0uyQi91gYfOr2ilWZt0PCQan+N6rVU/7qgA9GKNFV8FW9xEoQPMbmUbuPpu5hxU/tHHWjvLfLnWthbXCfaxhhWRBRqY1KTWb+/KcHEyQvMoTOmOKcfNm0Ga0XN0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cvd+PfiS; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b1Qzbplr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cvd+PfiS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713892942; x=1745428942;
+  t=1713892943; x=1745428943;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=SGMALI4QdYtZABn10T5pVJnncfss1vQ8bKDWh3dyHOM=;
-  b=b1QzbplrnKGM2wd8jCWcqM8DOLGCe//hFb9oxfrP/nREgg6Zsa6nS3ml
-   +1VTActs9ITVR1N6kVOqOHviQvNoyEg5StZKIdyqnQGUXX0BusgmJk/Hg
-   WBiCMjrrSJ9evgVP27ES9mXaf+rh/hH23nNK4hGSVcZi1nMhpL834PKAE
-   dO3KQWOrBypyNDeJtEqrFLIzhegGCE3C2AIcartKQUaJz9+6SFpor2bAr
-   wHqV3zm5wsjmvmN9L3k/wEo4bBphhmL9dg4hTeTEChW9/tzAuRy2XQKvD
-   JigvcE2eGLizaJsBZW+WYnQiXIAV61wbhxPmDSl3+KJC3TUSM9CGwanDd
-   g==;
-X-CSE-ConnectionGUID: oprZXTfPRlueHWV3Yyyxtg==
-X-CSE-MsgGUID: UceEPdHHSBGAQREApATYew==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="20898266"
+  bh=I9lQl747AQ4na6Zt0ksciPJQq6pP+rhmX/P2rnY3q9Y=;
+  b=Cvd+PfiS9vBfYCeEm1sfcvSvhAWacQUwjyKznfoEG6qJaV9etno5Gvvd
+   2xff3MjWL2ZQiVE0+1kpfbyVqw5sXn8ySmEM5TkLr2B1FQs0UaAarNF2u
+   RcpwSvq8xTM0vG8BPddVTmiRdJQIATtXrewjnpGtHNMB0jDDd/meO7JVC
+   KXx/rNsk3fWeCNSeT242+6OOgyS1DhXt+PB7PwybS1hD0VYZDCj7DFvX8
+   tG3kpsBXn9GRdcqhNaatBiLk/eF4ha/sgpCsWWsSgqTukzYjMhkCS/CSq
+   JcjNTcBgy8JpzScrQn215L88EyXsMbuZiCO1gIT/32vBSHHbeX/g9zLNv
+   A==;
+X-CSE-ConnectionGUID: le60FWdNRiOxn6C9uLySAg==
+X-CSE-MsgGUID: VibK1M7lRv+9IcgS0jvhEQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="20911832"
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="20898266"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 10:22:19 -0700
-X-CSE-ConnectionGUID: w7mCtatXRLWlZOakw9eLkg==
-X-CSE-MsgGUID: iMjDsOr7TGGBt8XsjZZ7wg==
+   d="scan'208";a="20911832"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 10:22:20 -0700
+X-CSE-ConnectionGUID: o2rJLffkS1CBqE8lbiB5bQ==
+X-CSE-MsgGUID: WgwC+y48QFe7URdjs4igrA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="55410232"
+   d="scan'208";a="25051427"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 23 Apr 2024 10:22:11 -0700
+  by orviesa008.jf.intel.com with ESMTP; 23 Apr 2024 10:22:11 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 9ACD5489; Tue, 23 Apr 2024 20:22:10 +0300 (EEST)
+	id 7FB74142; Tue, 23 Apr 2024 20:22:10 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Frank Li <Frank.Li@nxp.com>,
@@ -82,9 +82,9 @@ Cc: Vignesh Raghavendra <vigneshr@ti.com>,
 	Jonathan Hunter <jonathanh@nvidia.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-Subject: [PATCH v2 3/4] PCI: imx6: Convert to agnostic GPIO API
-Date: Tue, 23 Apr 2024 20:19:06 +0300
-Message-ID: <20240423172208.2723892-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 1/4] PCI: aardvark: Remove unused of_gpio.h
+Date: Tue, 23 Apr 2024 20:19:04 +0300
+Message-ID: <20240423172208.2723892-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 In-Reply-To: <20240423172208.2723892-1-andriy.shevchenko@linux.intel.com>
 References: <20240423172208.2723892-1-andriy.shevchenko@linux.intel.com>
@@ -96,99 +96,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The of_gpio.h is going to be removed. In preparation of that convert
-the driver to the agnostic API.
+of_gpio.h is deprecated and subject to remove.
+The driver doesn't use it, simply remove the unused header.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 37 ++++++++++-----------------
- 1 file changed, 14 insertions(+), 23 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 917c69edee1d..d620f1e1a43c 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -11,14 +11,13 @@
- #include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/kernel.h>
- #include <linux/mfd/syscon.h>
- #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
- #include <linux/mfd/syscon/imx7-iomuxc-gpr.h>
- #include <linux/module.h>
- #include <linux/of.h>
--#include <linux/of_gpio.h>
- #include <linux/of_address.h>
- #include <linux/pci.h>
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 71ecd7ddcc8a..8b3e1a079cf3 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -23,7 +23,6 @@
  #include <linux/platform_device.h>
-@@ -107,7 +106,7 @@ struct imx6_pcie_drvdata {
+ #include <linux/msi.h>
+ #include <linux/of_address.h>
+-#include <linux/of_gpio.h>
+ #include <linux/of_pci.h>
  
- struct imx6_pcie {
- 	struct dw_pcie		*pci;
--	int			reset_gpio;
-+	struct gpio_desc	*reset_gpiod;
- 	bool			gpio_active_high;
- 	bool			link_is_up;
- 	struct clk_bulk_data	clks[IMX6_PCIE_MAX_CLKS];
-@@ -721,9 +720,8 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
- 	}
- 
- 	/* Some boards don't have PCIe reset GPIO. */
--	if (gpio_is_valid(imx6_pcie->reset_gpio))
--		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
--					imx6_pcie->gpio_active_high);
-+	gpiod_set_raw_value_cansleep(imx6_pcie->reset_gpiod,
-+				     imx6_pcie->gpio_active_high);
- }
- 
- static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
-@@ -771,10 +769,10 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 	}
- 
- 	/* Some boards don't have PCIe reset GPIO. */
--	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
-+	if (imx6_pcie->reset_gpiod) {
- 		msleep(100);
--		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
--					!imx6_pcie->gpio_active_high);
-+		gpiod_set_raw_value_cansleep(imx6_pcie->reset_gpiod,
-+					     !imx6_pcie->gpio_active_high);
- 		/* Wait for 100ms after PERST# deassertion (PCIe r5.0, 6.6.1) */
- 		msleep(100);
- 	}
-@@ -1285,22 +1283,15 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 		return PTR_ERR(pci->dbi_base);
- 
- 	/* Fetch GPIOs */
--	imx6_pcie->reset_gpio = of_get_named_gpio(node, "reset-gpio", 0);
- 	imx6_pcie->gpio_active_high = of_property_read_bool(node,
- 						"reset-gpio-active-high");
--	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
--		ret = devm_gpio_request_one(dev, imx6_pcie->reset_gpio,
--				imx6_pcie->gpio_active_high ?
--					GPIOF_OUT_INIT_HIGH :
--					GPIOF_OUT_INIT_LOW,
--				"PCIe reset");
--		if (ret) {
--			dev_err(dev, "unable to get reset gpio\n");
--			return ret;
--		}
--	} else if (imx6_pcie->reset_gpio == -EPROBE_DEFER) {
--		return imx6_pcie->reset_gpio;
--	}
-+	imx6_pcie->reset_gpiod =
-+		devm_gpiod_get_optional(dev, "reset",
-+			imx6_pcie->gpio_active_high ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW);
-+	if (IS_ERR(imx6_pcie->reset_gpiod))
-+		return dev_err_probe(dev, PTR_ERR(imx6_pcie->reset_gpiod),
-+				     "unable to get reset gpio\n");
-+	gpiod_set_consumer_name(imx6_pcie->reset_gpiod, "PCIe reset");
- 
- 	if (imx6_pcie->drvdata->clks_cnt >= IMX6_PCIE_MAX_CLKS)
- 		return dev_err_probe(dev, -ENOMEM, "clks_cnt is too big\n");
+ #include "../pci.h"
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
