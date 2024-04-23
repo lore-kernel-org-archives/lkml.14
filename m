@@ -1,80 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08EA913B583;
-	Tue, 23 Apr 2024 14:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1684135414;
+	Tue, 23 Apr 2024 14:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713882134; cv=none; b=JxcvrfcZQ5Wu4CXS/O8YqGOLpLKP1QxdqCa2xB1jxArTG+4ruq6ES4d2SyarxQoIAJ4eaLRoN3cEuBUf1OXiYAs3WFUcvkeMeQNx7pJEtzLtCzWbNJqYddJINxohhdCsvLvgNxP1TyvTTmPhdPxzRnHipTfBFfGp+3AbfhROBUo=
+	t=1713882188; cv=none; b=cDNeaG4JHGMsUoCVhQYhZwWnB4Oj6VivhPR6SvAfHC2Pjtv6/y1NIoncueFgjoJrjusfVh0zQpTKe/mXpm9kpMiwT8hBzK4XnaC8xo5dZqgBmB63lxrFFjhzQlaZlFnkJRBPmIIkWbFhoj7Rye6fRmBibCCdw6NrAk2oEigHy14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713882134; c=relaxed/simple;
-	bh=l9wngut2dmKGkMnY+AgV+QGezfk1/t+xq5LIIizUEqU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d6WOWoI5D4auEWXW81s0fCupou+7Q4ET9IsR1Uu1Qbsd0KEraIq+h5767FhQlbTsbF1NFSPG8TJlte9ipuH/3QphI2mMxGbHs3zcyWL5ft8VhZNO172T4v2FZD269qpslkwqTqNyutl61LCtDnmUK8wf/JzulCm12F0mN1o+GYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hAXYsct8; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713882188; c=relaxed/simple;
+	bh=PunYx+hyhPJwAfUXA99FVFET50b/2wwq8JPFJnbFN2g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GDnDqceAdcYHBGs9fgBGYNBtOHfUzxq5SQTqZm4G6pS6Y9ps4l1UlBlkhc6RKEw73T4yxsivqyDURhj7gB5ymM1/HyatTTKJioyYPPS28TRXlN1soBGDSle7FaKLfoyNt7lBAXRp9mbc2EfQhiiMhTNOcdxhrR8Tt8ONJ7TxOPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wJwrCuZE; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hAXYsct8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713882133; x=1745418133;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=l9wngut2dmKGkMnY+AgV+QGezfk1/t+xq5LIIizUEqU=;
-  b=hAXYsct81VxQMy40YTrKWxIgiMMufi3qBra0Yp2XCxEWTf5nFqn/uLLJ
-   R4KsslAS6tdw0cEKwONqELuoh1h5K0B0mRv2AX5ETf1C4n7zN1ubhbvZ/
-   GZw6lGTK1cJqgFZhm1g+dtNSpb9pqNi6gT0OWqwDAltHKNBNQnDtsh7fu
-   YqgueY3yd1gPR2L+X2b0Z06eKHM0vcq1DmbxkWXNbUbKqH6Vvj9aQLrH3
-   WrpfRJ3PtT1WMrG0x604FznU+7iNFbd4TfKR4vH3RkFszdWjgVtCd+8em
-   xHG9FvvMYXVr1JUIxnSQC9ImPab+T5ShtvD+hdyBcJu4d7QWUpyuPVMf1
-   Q==;
-X-CSE-ConnectionGUID: OiBUwlEiTxOiDNsWdCaAsA==
-X-CSE-MsgGUID: 4WmmEHSDSGyrNbXdQfh+Xw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="20163856"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="20163856"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 07:22:11 -0700
-X-CSE-ConnectionGUID: CKeTtd6YR8CC2yqQntHkew==
-X-CSE-MsgGUID: +iw3yEGCTx+s+/7h1ZEt6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="29030065"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa003.jf.intel.com with ESMTP; 23 Apr 2024 07:22:09 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 9B9D944E; Tue, 23 Apr 2024 17:22:07 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v1 0/2] xarray: Clean up xarray.h
-Date: Tue, 23 Apr 2024 17:20:23 +0300
-Message-ID: <20240423142204.2408923-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wJwrCuZE"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43NEMjKH042410;
+	Tue, 23 Apr 2024 09:22:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1713882165;
+	bh=0s08x1heCD4VrAg93O2/+gMEE4S9jg0ddCdAwdHSMj0=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=wJwrCuZECLaXR6FXt4cB4jA9NEiOffGu6sP47W3NcEPAWjIEpKZIpPn0V1xESUjO0
+	 WCs67tkkHefFR39u6/LECED+yituQwW4lnLjQcUrjfiXQbcwCFUmy1bqsyQ5EAptA+
+	 ZDEnoWQnU3w7tRDcWOzBloLuH4i21JteBRqIg/5Y=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43NEMiTq008547
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 23 Apr 2024 09:22:45 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 23
+ Apr 2024 09:22:44 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 23 Apr 2024 09:22:44 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43NEMiXM097230;
+	Tue, 23 Apr 2024 09:22:44 -0500
+Message-ID: <59c777d8-3847-49a0-b521-87cc54d0a25f@ti.com>
+Date: Tue, 23 Apr 2024 09:22:44 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: ti: k3-j722s-evm: Enable UHS support for
+ MMCSD
+To: Bhavya Kapoor <b-kapoor@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <conor+dt@kernel.org>,
+        <krzk+dt@kernel.org>, <robh@kernel.org>, <kristo@kernel.org>,
+        <vigneshr@ti.com>, <nm@ti.com>
+References: <20240422131840.34642-1-b-kapoor@ti.com>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <20240422131840.34642-1-b-kapoor@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Main portion of this change is to get rid of kernel.h included into
-other globally available headers. This decreases a dependency hell
-degree. The first patch makes it possible to avoid math.h to be included
-as bitops.h is implied by bitmap.h.
+Hi Bhavya,
 
-Andy Shevchenko (2):
-  xarray: Use BITS_PER_LONGS()
-  xarray: Don't use "proxy" headers
+On 4/22/24 8:18 AM, Bhavya Kapoor wrote:
+> Enable the UHS modes for MMCSD in J722S by removing the
+> no-1-8-v property.
+> 
+> Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
 
- include/linux/xarray.h | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Reviewed-by: Judith Mendez <jm@ti.com>
 
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+~ Judith
+
+> ---
+>   arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+> index 78032caeb5fc..bf3c246d13d1 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+> @@ -381,7 +381,6 @@ &sdhci1 {
+>   	pinctrl-0 = <&main_mmc1_pins_default>;
+>   	ti,driver-strength-ohm = <50>;
+>   	disable-wp;
+> -	no-1-8-v;
+>   	status = "okay";
+>   	bootph-all;
+>   };
 
