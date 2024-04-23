@@ -1,253 +1,209 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D88332F5E;
-	Tue, 23 Apr 2024 03:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713842782; cv=none; b=Cpxl3V48KDRoUwLL3z1rWU18TwKd+RcztoMF2GmvPFYw9dWw0UEOPlfDNspjMTZiw1V1tDH3jAGGaaHuz4b0iNS6rI5IHiewU9O3m7+QK7xKPWOD7cASGXwevC2wTS9AudNPmeKfs24Sjod9Y1EEdetBCMn0M+S1DPauRB+rxXo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713842782; c=relaxed/simple;
-	bh=CAJpcXGdqvr9FJJtpqAZjbO1UWsz5IjjJ1sxEz09kzM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=iNbyx7vLjtfcF1p8txr8sVSriBK8eywDUo3pzX6o/wekpHUeVuLdlKQpDGGoInXcg1tYsdQvSbEoXuUeMs+NS1RdC9T80okywXGWlcfG2c7T7EH8VVfKjlAuBRsiKHJoBa8SPNLRkZ3ttquytaMXBruz4kqfjoSMOonjd9/frAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8CxJvBXKidmVyUBAA--.6777S3;
-	Tue, 23 Apr 2024 11:26:15 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxut1UKidmN_ABAA--.8069S3;
-	Tue, 23 Apr 2024 11:26:14 +0800 (CST)
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
- Sean Christopherson <seanjc@google.com>
-Cc: Mingwei Zhang <mizhang@google.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
- peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
- jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com
-References: <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com>
- <Zhn9TGOiXxcV5Epx@google.com>
- <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com>
- <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
- <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com>
- <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
- <Zh1mKoHJcj22rKy8@google.com>
- <CAL715WJf6RdM3DQt995y4skw8LzTMk36Q2hDE34n3tVkkdtMMw@mail.gmail.com>
- <Zh2uFkfH8BA23lm0@google.com>
- <4d60384a-11e0-2f2b-a568-517b40c91b25@loongson.cn>
- <ZiaX3H3YfrVh50cs@google.com>
- <d8f3497b-9f63-e30e-0c63-253908d40ac2@loongson.cn>
- <d980dd10-e4c4-4774-b107-77b320cec9f9@linux.intel.com>
- <b5e97aa1-7683-4eff-e1e3-58ac98a8d719@loongson.cn>
- <1ec7a21c-71d0-4f3e-9fa3-3de8ca0f7315@linux.intel.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <5f27b793-b19e-d429-190c-1c20a6d1c649@loongson.cn>
-Date: Tue, 23 Apr 2024 11:26:12 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2C51B952;
+	Tue, 23 Apr 2024 03:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.153.233
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713842861; cv=fail; b=QQpDYNopBr9D6RPkPUo4N/wsNSgrDy4mwjlGxwsDFuMnR7s+XuRRBD8M4SwlP9s7IqgWO5xty46YNEr3YhEx3sUTVXL1IBYfeRGg3crFy7z7YWsse5bD04UaIdmpTZlfT3tPpeR8YMeO1LQw/S+p+EnN1SDj9CUQYGsrOKeCPlI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713842861; c=relaxed/simple;
+	bh=1LMehHutUEYut8GKyRvkNjtV4y3oHdGuu2eE+TxxZkc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cpk9Q1A2eE/iMr5Yr5afpHn0f/0RNLyoZhl3ZkYVj1ZOiHIxbHnLSILlJOn4NZfinCWkhpHRFlo4JGVVnBZVng1/oMz+iVRst929KqjH1s4AyiiCRvC3ncvE6pjHwhBNw9pnPVBcdmkYIF6IpZZUbHoXi2u+psjmXgFGUyHGiyg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=CWWLJ1Ql; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=FRvnL9SR; arc=fail smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="CWWLJ1Ql";
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="FRvnL9SR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1713842859; x=1745378859;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=1LMehHutUEYut8GKyRvkNjtV4y3oHdGuu2eE+TxxZkc=;
+  b=CWWLJ1QlJEPnqAgmJotj2FPCJj4XFRb5pG9YvYmw2oqIkBtRjb2bGs6w
+   lmLCkaIumkOxjRLNbX3tnnufqSqLu2IbyiHIClUJa7G8HAGg4qqWpU5Jg
+   3hh5jZfoA2DDJ5VwaAzAfQjL9c83qEe2edspM+LKxP1f7EeaEMa/HQFBy
+   4P3ZvTGtQGDFILSOac3CqPg07cH7TXiSiegtU7OxAzs7cou5vh9mmDwp2
+   1gYaQ+GHhX0xIzzyjDptv+edlK8wrfsA4Rhh6+EqE8tj5hGK1uWG3FZ0Z
+   lhAtxKkzfaSbyOR9swF4MjX0BxjmGxDH9t4EgYTTcRiNmkJTyaEJFPYdU
+   w==;
+X-CSE-ConnectionGUID: yNbkMpp7RkewEl5I62fk9g==
+X-CSE-MsgGUID: UtZptR/lQmK5IyxHIx5xyQ==
+X-IronPort-AV: E=Sophos;i="6.07,222,1708412400"; 
+   d="scan'208";a="253023608"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 22 Apr 2024 20:27:37 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 22 Apr 2024 20:27:22 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.10.215.250)
+ by email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 22 Apr 2024 20:27:22 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DHzeRgrfK9BnsWAeKiTkZPVG3AKUImB2zthZ1rR+dfXusX0/IaaJnBUG9OAw/R/9oEH10ox/vjQ8d1/uKT0IQBWQ2j/PSu0vku5aoiBtHY1Wq4CKiWlmYMOjZVbtAtGYKTzfUjpleNQuWSiSTiT2Ioes4JGX0ge2MyxJmIkGHm2XnlUPohuhSZoEd/0VRvxT+k5RKz0oC1RURSF2CSkUKC/mUP9Jik2mHvhOrasqQNWIcxuWAEfYXQC+qEG9keZnwWY7zQe5MKW/dQurYrezDEaUs79C/I4loKZ4Vt4F/Msr8j8KoaI93If7Kl39zjHjDkUHSh3vTmuCClgDXzamiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1LMehHutUEYut8GKyRvkNjtV4y3oHdGuu2eE+TxxZkc=;
+ b=l9S8ATMFfVfrlSZfavykQT/vvNqdtYXkIXNAjRr89kx+kz7uPqN6MPxfW4I7limF3zmchQDw2j1cdubpqIw1RLw2+ruaJ4BVVlKT1DQ7SuApadzxqe3KivyFjDhCUlm+nvi/fu3IuIkG/jsVZcmB5MycHAp8obyE2c+5AsiLhGtcL/lMwVNBJB5mkeQHLVO1fZuCrCYwMooRstQUyhw19nN3UBOoNAgNHY2C6U3I6J+VZM4fiz/gOLatKk/X3oNSbYAXAnXaE5lFp4UYUlBJeTTI9ZuV+t0dljNYl+1AqSgsRt6/sdAx/IizaNND34r4s2RdUrOUGVBg4p3DuEn5Lw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1LMehHutUEYut8GKyRvkNjtV4y3oHdGuu2eE+TxxZkc=;
+ b=FRvnL9SRuk8rOpCb26Xm9RssB8NzAJ/O9UVzdfS8EqjFmdlU1yxwxqoxd7xmTrARTxNjfsu7ALBBtSG64wwIITO7rNGgXNSANk6hbXd//VZ+LA614NoCVfB9ezpZinWE57om0CBTpA4+QH/pVF2aOUA15jOfo3KEK87hxrsMpmzpfYWvehpIwi2kEPJPT9072BQB9Sv3z7HDw7xVosiGWLz3DTYbhUA22rXMyyYDqvKptB5x4nBGRon22ouEZ/tsrM7SrqXNCq49BNSFymHMGJj1QUPBFEUG3X+JN0cmt8q8toSTcO+YBIKzHDus0/KA2RgdKk7j5Dh9ntQUdso3Fg==
+Received: from SA1PR11MB8278.namprd11.prod.outlook.com (2603:10b6:806:25b::19)
+ by DS0PR11MB7651.namprd11.prod.outlook.com (2603:10b6:8:149::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.20; Tue, 23 Apr
+ 2024 03:27:19 +0000
+Received: from SA1PR11MB8278.namprd11.prod.outlook.com
+ ([fe80::84fa:e267:e389:fa9]) by SA1PR11MB8278.namprd11.prod.outlook.com
+ ([fe80::84fa:e267:e389:fa9%4]) with mapi id 15.20.7519.018; Tue, 23 Apr 2024
+ 03:27:19 +0000
+From: <Parthiban.Veerasooran@microchip.com>
+To: <conor@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <horms@kernel.org>, <saeedm@nvidia.com>,
+	<anthony.l.nguyen@intel.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <andrew@lunn.ch>, <corbet@lwn.net>,
+	<linux-doc@vger.kernel.org>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<devicetree@vger.kernel.org>, <Horatiu.Vultur@microchip.com>,
+	<ruanjinjie@huawei.com>, <Steen.Hegelund@microchip.com>,
+	<vladimir.oltean@nxp.com>, <UNGLinuxDriver@microchip.com>,
+	<Thorsten.Kummermehr@microchip.com>, <Pier.Beruto@onsemi.com>,
+	<Selvamani.Rajagopal@onsemi.com>, <Nicolas.Ferre@microchip.com>,
+	<benjamin.bigler@bernformulastudent.ch>
+Subject: Re: [PATCH net-next v4 12/12] dt-bindings: net: add Microchip's
+ LAN865X 10BASE-T1S MACPHY
+Thread-Topic: [PATCH net-next v4 12/12] dt-bindings: net: add Microchip's
+ LAN865X 10BASE-T1S MACPHY
+Thread-Index: AQHakZA01VegT/3r7Uq03tjnEIunvbFuKi4AgAWFvoCAAMadgIAAwrmA
+Date: Tue, 23 Apr 2024 03:27:19 +0000
+Message-ID: <677b2ac8-189f-41bc-802b-38310b801838@microchip.com>
+References: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
+ <20240418125648.372526-13-Parthiban.Veerasooran@microchip.com>
+ <20240418-hypnosis-oblong-028c107e6c3f@spud>
+ <a2c2d5ae-f709-42bf-9b60-c4428da4197d@microchip.com>
+ <20240422-duty-skedaddle-37e21a76f3f2@spud>
+In-Reply-To: <20240422-duty-skedaddle-37e21a76f3f2@spud>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR11MB8278:EE_|DS0PR11MB7651:EE_
+x-ms-office365-filtering-correlation-id: 5df5bfa3-3844-4d54-f714-08dc6345483a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|366007|7416005|1800799015|376005|38070700009;
+x-microsoft-antispam-message-info: =?utf-8?B?UXp3NW11OTMwdGVlS0c5OW5kWk5ibVM3MHpZWjVsYmJmRVlhRWV4c0k0QU5X?=
+ =?utf-8?B?YU90K2xBY0lrS2huNGhYeVVTOHlWei9scUZROTB3SkZtSUsrcHh6YjVhZFFk?=
+ =?utf-8?B?N0xlM0tJWE85MEpFKzh3dHlyRDUyZ3VPcnFrOVFlNmthR0ZuYnpJVnhMK245?=
+ =?utf-8?B?RkpiVU5iYWdPbWtIT1hLWUUvNUhsNXhxOFZSV2NZQ3ZFSGh3YU1TbnJjWnZu?=
+ =?utf-8?B?RWY0SFpCaklqczJjWWMzNmM2T0FVSHdkcnVUenV5V0hXYzV1TkNockZwekNi?=
+ =?utf-8?B?b1o4ZDltTjJMZjNsdEV6SS84bnBXU2FLTmp0UVZlcUFSbkZ2VVJ2YmZLVkN6?=
+ =?utf-8?B?Y3NManQzY1VEcWNMcmVRWkV0UkVUdFFzZkk0ZEtmTkVCN2RYSjVEcjR0b0hy?=
+ =?utf-8?B?YU8xdTVuR2xWSzJjVkU4N3Z3NHpkQ05OQkhlb05LcmM5ZnJRaGZnVDM1djVz?=
+ =?utf-8?B?UXVBZ2c1c1lYV1ZPYmNqWms4MzVVeEsvdHhKakdKZkRyY2t1SllqNGtaK0Rq?=
+ =?utf-8?B?T3ZrNFV4QngvTU8zRGpRNEg0VHRCaVNCdFVYU1FjQ1NoUzFHdk0yV3lrZDlR?=
+ =?utf-8?B?NzNaNmRuVXNTNkpmVG5VcTRvYzNyS3FZeEhYSHNzSlo1OW9HZFc2N3VEbzVr?=
+ =?utf-8?B?VDlHSCs4YTZvYm5mOGdTOWFNamVtL0F5K2JuWVV4TFh0QlRndXFmOHd1WTdR?=
+ =?utf-8?B?RVZOTWdKUjFiQnVNR2ZwZis2RnZ0cjNaWUxKaVd6ODk2MFVHYjZ0WHRmM29u?=
+ =?utf-8?B?Sk91TmRqZmF1ODlGRTFhM3Fmc3M1TC8wd1RWUU04TncrVlYwVjNrMG4ySWxW?=
+ =?utf-8?B?U3d6VFBBMkNReEQzTkpWZXpwWjdDWWxCQ3FSSlMvYU1NNGV6bHQ0aGhDZFl5?=
+ =?utf-8?B?b2hEOFptMU10VWdnWHk0aFN2a2dIOFRiZTFMNHd2UWpZMVF2N0xrLzdZaW1N?=
+ =?utf-8?B?SlQxZWl5T1NlTk9UNUVHTFlzNWZTcjdoSXFOQ21CYVdqYzRzUGxvek5lZk9I?=
+ =?utf-8?B?N3hnS04xNVlhbjlYbXVzdEw3VUFKVmh1NnhIb3VZalZ1OHMzTXdKQW9XaVQ5?=
+ =?utf-8?B?Y3BmNU5qU090RVUrNGhRSEhSMkFHQVlVeUtUMFNOampjVEZtbDdVSkdvSWYy?=
+ =?utf-8?B?RmM0ZkVENUxBelFYWXpFcW5acDdMWHR4alo3bEQraGxYR0NjSUtoVWpTTGxi?=
+ =?utf-8?B?SktINzJQZU5aNTBBTlZaRk1JaEdSSGRFMTYyRDAvaCtYRG8wcXo1dTlZMG5V?=
+ =?utf-8?B?ZjZlaW1nRlNxYmZCUG5PZmptMFF4Ty80Wk1ZUzF4UlZWQi9JT3NkcG5GZlN0?=
+ =?utf-8?B?cjh6UTZtNzVUSU1IdERaN0hmVVJkV3FnOXZ3MTd1blU0ayt3NkVwTm5XWlk0?=
+ =?utf-8?B?ZHpxWmZ1Sjdxejh4UERsTExMcFZLeHJsWnl3WENybHZ1TDdKL2llNkFrZ3l0?=
+ =?utf-8?B?Y0tLUmJJVTZFeTdqbEdWV2ExUU9LdzhLSnl3Qm50aDIrcHhUak9OMjdtNEN3?=
+ =?utf-8?B?UkNhS0xvVjB0M1BkdXlyazJoK0lsZ1A0dUpkcjFxekY2QzNXOTdYZDRDQ0gx?=
+ =?utf-8?B?Z3VZVG5JMnV4RFEvRnZQTll6UkpzL0hoOUFyMitkbndWMmlaTkJ1M1RXa1hk?=
+ =?utf-8?B?RzBsZ1BzSVlQN1EyY3I5M1ArQlgrbVVGVXVwYVcxK0pRTXpPam9KMzVpWUZ3?=
+ =?utf-8?B?WjdjS3VpVThWNGc3WUpOdDd6enY0TjEwdDJGQmIxTFpQcEFOejV1MElhTGFH?=
+ =?utf-8?B?VUlqakIzTWdiei9CYmg1WUMyUWcwdkFUVEFxdXBxZFRBQnJxSk5FeFZWVWJT?=
+ =?utf-8?B?MWlIS0hXUG9wUWxiNWdKdz09?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8278.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(1800799015)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Mm5PdXA5YWRmcWRkWHFNSVgwb202WlMzeU1oZmx4ZE02ZkxwZUJTUmZVN3Jk?=
+ =?utf-8?B?YjdzZTZ1MGo4ODA0Y3dyWkM3VVpnQ1Vqc2ZEOWMrOGw0dWI0ZG5mZXlta0Iy?=
+ =?utf-8?B?TWtDaDNOU2hqWkFrZC9nOHNnTEgwakkzNk8rS29NcjF6Y0ljdldHZmFqb3FR?=
+ =?utf-8?B?K1lCRlUydWFNNzAzN1p4N0l1QXRuWHFFL0swd2crakZDQjhQaGx2d3htaCtM?=
+ =?utf-8?B?a2QrcEdwUWtqOVBPNlpRNDdiWHRaMUtSTmlVa0xGandTTEN6M1R1VjlZU2lp?=
+ =?utf-8?B?U05zYmVFdkdrQUc0bjhraWw4MHFsd3BFd2sxVXJMWFFreUNoNjMwY1IrRWdy?=
+ =?utf-8?B?UHJLaVkyeWZkWjB6bktnZmRxcFRNQU0yM2NsUFQ2SVFOdUNqU1hkN1I5SW82?=
+ =?utf-8?B?dGZYSEVJT1FaK1FkWjZtNFFGV3ByRm90bzIxZ3FaRTZaeDJUSjhybGZzRVYz?=
+ =?utf-8?B?VkJrd0ZrUlc5aW55K0p0UmpwdXlmNFJvTERDaGhYbUUraFRFSjFPZloxSVlI?=
+ =?utf-8?B?MlgvT3ZQMDdxZm5GdjdLWkJGd3JEVEFkM3ZKMERSWnZWY1lpaWFuNWJXYTht?=
+ =?utf-8?B?RmFmVkx4SDZVUEtkdUhINDFkMitKL091TDM1TDdhR3I0eDM1c1hBZkhSUms4?=
+ =?utf-8?B?ZERCK2tOMjhMTUNjR1pnQ2VvbU9aQ3VyeVZoT2pVeUFvaytCNkVla2FWbmZQ?=
+ =?utf-8?B?SkNRZmt2cjhLcUhmQzdJZVd3TWk5YmhRTjkxUU5TZ2lKVXZNaU8vVlNKUFd5?=
+ =?utf-8?B?aUhraFEzWHZrdTVzZnBsOW5nU3FtV0FXajFwQThpMFZraHBYbVJoMWU0c2ti?=
+ =?utf-8?B?VkFWRGdKREJ3UnluazNKMlc0ZlppdDFuZkdiRWZNQ3o0YW9CTWVkS0xUOFZY?=
+ =?utf-8?B?bEFPMWZPeFRyRU5aZlA2OUl1ZTZ0QlF1NmlEQlpVcHIzT1RDMWhhWFRqZHgv?=
+ =?utf-8?B?ZVZjK2sycGxnMCt2Sm1OeVk1alhrdFQ5SEZ1aFo2ZllsSHRzUUFoWFhpOE5m?=
+ =?utf-8?B?Z3ZNN3dneTJaU2tnQXNMMklGcjRYM2hhM1N4VWh5SFQyZmtGU2p6Tkxrajkw?=
+ =?utf-8?B?UHcrMXBTenhKL3l6NFJhSVVjcmgxVDBoZC93ZUhMOHB0SkIrTlhEM21UQUFS?=
+ =?utf-8?B?S3MyQWJSeUNHTE1Falo2UDNiYloxbHE4Z28yMUV2dlRia0EzWUJud3IwcVQz?=
+ =?utf-8?B?QTA2U2haOFJTSytHOCtaRlpzYW9GMncxLzdKRDJyWEpLRHRHc2NGTXZFS25Q?=
+ =?utf-8?B?emVKWkFUNUZuN2ZQc2tvclhXL0RFYTlDVW9FbnpER3dxUk4vS3hzclEzMkNj?=
+ =?utf-8?B?U1E1MGsyOC9PTjdaU0VqaC9ZNGNTOVRxNWlnTmdwT2QzWDVGZTg0TEVNQUpi?=
+ =?utf-8?B?ZkdLK0hXVTd2a24rdUFrL09WK042Ryt2NG85bmdGUUxtTktLQlFMWUo4WGh0?=
+ =?utf-8?B?eHRQRTVDY3hQbWwvNzZGengrZ1NtTzloTXFaWWdNNnJaa2xEc21qK1p6TUJY?=
+ =?utf-8?B?enJLYmRRNHRpRUNNV3UxbzN0MUR2OXdoMUd2cC9hU2swWUxRTUQrNEUvQk81?=
+ =?utf-8?B?VWF2M2VVOFdaVkNITVo0bjROVTJvdE9rYm1iS3ZvV1czamZUM29jMjliRkU0?=
+ =?utf-8?B?eXdDSU5UUURZd01lUEZ4YUtIM3A5RnVXaHZHRmdSMTNUWUZKVzdqYmtlalRu?=
+ =?utf-8?B?bGJZK0VSZjJPay9XRndvRU9wRjRiQ1VZRi9ybkNiRHJpdGM3ZWhTbEtUTG9q?=
+ =?utf-8?B?aDZnOUtSOTZEU0tMc3Q2WTNGR09rcU9rZUoxRWpZUTlIb3FZRTUxZzIwbGR4?=
+ =?utf-8?B?amNlSW9kbTc1Sjg2VDR1SDZOMmNpQVdsdHNZSmFyR1ZnRVFrM2w0ZzZMbW5Y?=
+ =?utf-8?B?MmZyTU1PNmdINm9NOFIzUHl4UktYQU9JbVZWd0xrVWdnOGlvdkhXL215N2Z2?=
+ =?utf-8?B?cGkybWNpT0pGZi9FenhMdlpFWkk5c3NrYXFUWURyODliallEaStYQnE5dmNV?=
+ =?utf-8?B?TjNGYkk5ckFwSW80aVVnWUVZRGthSSs1Q1Zta1Z6MWQxYVRYanlYRjFqdU01?=
+ =?utf-8?B?UkFlcXJlKzRKRk9HYmFVdmsyMU1uOHZkZnMrejdqU3BUamhOby9MdFRMR1V4?=
+ =?utf-8?B?TUEvUXA0azZ4YmFUOTltRXJGdHRwUjJsY080VFFOMzc0VWROR2dSZFpOUHFZ?=
+ =?utf-8?B?ZWc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <44CB3D662B0AF743AE2A79DAC6C59C42@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1ec7a21c-71d0-4f3e-9fa3-3de8ca0f7315@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxut1UKidmN_ABAA--.8069S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Xr17XryfJFyUtFy3GryrXwc_yoWxZr17pF
-	WxAF4jkr4DJr10yw1Utw18JFyUtrWUJw1UXrn8tFyUA3909r1Fqr1UXryj9FyUWr48GF1j
-	qr4Ut347Zw1DAagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4qg4DU
-	UUU
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8278.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5df5bfa3-3844-4d54-f714-08dc6345483a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2024 03:27:19.5442
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VaZUmdFwy/5+VNJYkHpgSnb2g6qaeF1Kx4ofQgZ3Caf4Cf24YFw21J63zqSKil7iLTAwlr4p1XmPp4uHouNfUrrsdKx7K4lny3jQ3yRfHiXjTM5sHeXkKDblUTJyQQJw
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7651
 
-
-
-On 2024/4/23 上午11:13, Mi, Dapeng wrote:
-> 
-> On 4/23/2024 10:53 AM, maobibo wrote:
->>
->>
->> On 2024/4/23 上午10:44, Mi, Dapeng wrote:
->>>
->>> On 4/23/2024 9:01 AM, maobibo wrote:
->>>>
->>>>
->>>> On 2024/4/23 上午1:01, Sean Christopherson wrote:
->>>>> On Mon, Apr 22, 2024, maobibo wrote:
->>>>>> On 2024/4/16 上午6:45, Sean Christopherson wrote:
->>>>>>> On Mon, Apr 15, 2024, Mingwei Zhang wrote:
->>>>>>>> On Mon, Apr 15, 2024 at 10:38 AM Sean Christopherson 
->>>>>>>> <seanjc@google.com> wrote:
->>>>>>>>> One my biggest complaints with the current vPMU code is that 
->>>>>>>>> the roles and
->>>>>>>>> responsibilities between KVM and perf are poorly defined, which 
->>>>>>>>> leads to suboptimal
->>>>>>>>> and hard to maintain code.
->>>>>>>>>
->>>>>>>>> Case in point, I'm pretty sure leaving guest values in PMCs 
->>>>>>>>> _would_ leak guest
->>>>>>>>> state to userspace processes that have RDPMC permissions, as 
->>>>>>>>> the PMCs might not
->>>>>>>>> be dirty from perf's perspective (see 
->>>>>>>>> perf_clear_dirty_counters()).
->>>>>>>>>
->>>>>>>>> Blindly clearing PMCs in KVM "solves" that problem, but in 
->>>>>>>>> doing so makes the
->>>>>>>>> overall code brittle because it's not clear whether KVM _needs_ 
->>>>>>>>> to clear PMCs,
->>>>>>>>> or if KVM is just being paranoid.
->>>>>>>>
->>>>>>>> So once this rolls out, perf and vPMU are clients directly to 
->>>>>>>> PMU HW.
->>>>>>>
->>>>>>> I don't think this is a statement we want to make, as it opens a 
->>>>>>> discussion
->>>>>>> that we won't win.  Nor do I think it's one we *need* to make. 
->>>>>>> KVM doesn't need
->>>>>>> to be on equal footing with perf in terms of owning/managing PMU 
->>>>>>> hardware, KVM
->>>>>>> just needs a few APIs to allow faithfully and accurately 
->>>>>>> virtualizing a guest PMU.
->>>>>>>
->>>>>>>> Faithful cleaning (blind cleaning) has to be the baseline
->>>>>>>> implementation, until both clients agree to a "deal" between them.
->>>>>>>> Currently, there is no such deal, but I believe we could have 
->>>>>>>> one via
->>>>>>>> future discussion.
->>>>>>>
->>>>>>> What I am saying is that there needs to be a "deal" in place 
->>>>>>> before this code
->>>>>>> is merged.  It doesn't need to be anything fancy, e.g. perf can 
->>>>>>> still pave over
->>>>>>> PMCs it doesn't immediately load, as opposed to using 
->>>>>>> cpu_hw_events.dirty to lazily
->>>>>>> do the clearing.  But perf and KVM need to work together from the 
->>>>>>> get go, ie. I
->>>>>>> don't want KVM doing something without regard to what perf does, 
->>>>>>> and vice versa.
->>>>>>>
->>>>>> There is similar issue on LoongArch vPMU where vm can directly pmu 
->>>>>> hardware
->>>>>> and pmu hw is shard with guest and host. Besides context switch 
->>>>>> there are
->>>>>> other places where perf core will access pmu hw, such as tick
->>>>>> timer/hrtimer/ipi function call, and KVM can only intercept 
->>>>>> context switch.
->>>>>
->>>>> Two questions:
->>>>>
->>>>>   1) Can KVM prevent the guest from accessing the PMU?
->>>>>
->>>>>   2) If so, KVM can grant partial access to the PMU, or is it all 
->>>>> or nothing?
->>>>>
->>>>> If the answer to both questions is "yes", then it sounds like 
->>>>> LoongArch *requires*
->>>>> mediated/passthrough support in order to virtualize its PMU.
->>>>
->>>> Hi Sean,
->>>>
->>>> Thank for your quick response.
->>>>
->>>> yes, kvm can prevent guest from accessing the PMU and grant partial 
->>>> or all to access to the PMU. Only that if one pmu event is granted 
->>>> to VM, host can not access this pmu event again. There must be pmu 
->>>> event switch if host want to.
->>>
->>> PMU event is a software entity which won't be shared. did you mean if 
->>> a PMU HW counter is granted to VM, then Host can't access the PMU HW 
->>> counter, right?
->> yes, if PMU HW counter/control is granted to VM. The value comes from 
->> guest, and is not meaningful for host.  Host pmu core does not know 
->> that it is granted to VM, host still think that it owns pmu.
-> 
-> That's one issue this patchset tries to solve. Current new mediated x86 
-> vPMU framework doesn't allow Host or Guest own the PMU HW resource 
-> simultaneously. Only when there is no !exclude_guest event on host, 
-> guest is allowed to exclusively own the PMU HW resource.
-> 
-> 
->>
->> Just like FPU register, it is shared by VM and host during different 
->> time and it is lately switched. But if IPI or timer interrupt uses FPU 
->> register on host, there will be the same issue.
-> 
-> I didn't fully get your point. When IPI or timer interrupt reach, a 
-> VM-exit is triggered to make CPU traps into host first and then the host 
-> interrupt handler is called. Or are you complaining the executing 
-> sequence of switching guest PMU MSRs and these interrupt handler?
-It is not necessary to save/restore PMU HW at every vm exit, it had 
-better be lately saved/restored, such as only when vcpu thread is 
-sched-out/sched-in, else the cost will be a little expensive.
-
-I know little about perf core. However there is PMU HW access in 
-interrupt mode. That means PMU HW access should be irq disabled in 
-general mode, else there may be nested PMU HW access. Is that true?
-
-> 
-> 
->>
->> Regards
->> Bibo Mao
->>>
->>>
->>>>
->>>>>
->>>>>> Can we add callback handler in structure kvm_guest_cbs?  just like 
->>>>>> this:
->>>>>> @@ -6403,6 +6403,7 @@ static struct perf_guest_info_callbacks 
->>>>>> kvm_guest_cbs
->>>>>> = {
->>>>>>          .state                  = kvm_guest_state,
->>>>>>          .get_ip                 = kvm_guest_get_ip,
->>>>>>          .handle_intel_pt_intr   = NULL,
->>>>>> +       .lose_pmu               = kvm_guest_lose_pmu,
->>>>>>   };
->>>>>>
->>>>>> By the way, I do not know should the callback handler be triggered 
->>>>>> in perf
->>>>>> core or detailed pmu hw driver. From ARM pmu hw driver, it is 
->>>>>> triggered in
->>>>>> pmu hw driver such as function kvm_vcpu_pmu_resync_el0,
->>>>>> but I think it will be better if it is done in perf core.
->>>>>
->>>>> I don't think we want to take the approach of perf and KVM guests 
->>>>> "fighting" over
->>>>> the PMU.  That's effectively what we have today, and it's a mess 
->>>>> for KVM because
->>>>> it's impossible to provide consistent, deterministic behavior for 
->>>>> the guest.  And
->>>>> it's just as messy for perf, which ends up having wierd, cumbersome 
->>>>> flows that
->>>>> exists purely to try to play nice with KVM.
->>>> With existing pmu core code, in tick timer interrupt or IPI function 
->>>> call interrupt pmu hw may be accessed by host when VM is running and 
->>>> pmu is already granted to guest. KVM can not intercept host 
->>>> IPI/timer interrupt, there is no pmu context switch, there will be 
->>>> problem.
->>>>
->>>> Regards
->>>> Bibo Mao
->>>>
->>
-
+SGkgQ29ub3IsDQoNCk9uIDIyLzA0LzI0IDk6MjAgcG0sIENvbm9yIERvb2xleSB3cm90ZToNCj4g
+T24gTW9uLCBBcHIgMjIsIDIwMjQgYXQgMDM6NTk6MzFBTSArMDAwMCxQYXJ0aGliYW4uVmVlcmFz
+b29yYW5AbWljcm9jaGlwLmNvbSAgd3JvdGU6DQo+PiBPSy4gSWYgeW91IGFncmVlIHdpdGggdGhl
+IGFib3ZlIGNoYW5nZXMgdGhhdCB5b3UgZXhwZWN0ZWQgdGhlbiBJIHdpbGwNCj4+IGFkZCB0aGUg
+dGFnIGluIHRoZSBuZXh0IHZlcnNpb24gd2l0aCB0aGUgcHJvcG9zZWQgY2hhbmdlcy4NCj4geWUs
+IHRoZXkgc2VlbSBnb29kLCB5b3UgY2FuIHJldGFpbiBpdC4NCk9LLiBUaGFua3MgZm9yIHRoZSBj
+b25maXJtYXRpb24uDQoNCkJlc3QgcmVnYXJkcywNClBhcnRoaWJhbiBWDQo=
