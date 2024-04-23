@@ -1,89 +1,73 @@
-Received: from gardel.0pointer.net (gardel.0pointer.net [85.214.157.71])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9598529E;
-	Tue, 23 Apr 2024 12:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.157.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BE778285
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713875026; cv=none; b=kmh5VCAP7ZPe+ImlKVDt/hAPFiktUTGpi08XENI8s5nJ9GJ2QXlwz4CSKQB7K70Z64296NvujBXQw3QEudYKGnk71RBRWRKMSTbzDLosHRRVby29vG+0imgeV8pAzE4Ay5ZsrMyS+yEHYZr/57uoLfsOZZASp/Y/YEZcaJqRS+g=
+	t=1713875170; cv=none; b=WZdbmAlaJkjjUtIQmoWymwC10k6HjceHySfrZ+D2665zZFIb6YfEQwirtjwe11z0PCHvDPQ545rpczT6OTjWwro0h345P/KPJMBBywnfYnVHEw34KOC9T8aHVwj8wAVZtrxQy5GjexRxigUBKsdQJC5ykhYkKIhSQ44qjxHe84w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713875026; c=relaxed/simple;
-	bh=5DmUvjxy5vtrmeA+aWwOw6GwVTh9Pm0+Jafzv1sTFSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cwzDmaozonsKxGpZBSxPNg4LD9pC6r548aljuJQy0wI12dO2oWP1aMLKRoSZ4pYVLQXIZBMo/Wd9Cusg9/WpkObEQWq50+ftsbCPMxsN6rKodeGIOX61XIXIVTOqP7Dk6fXzCFS15uhjP+WLvkyK03U5/cbqhc4ybFsdUnU78UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de; spf=pass smtp.mailfrom=0pointer.de; arc=none smtp.client-ip=85.214.157.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0pointer.de
-Received: from gardel-login.0pointer.net (gardel-mail [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
-	by gardel.0pointer.net (Postfix) with ESMTP id 3A406E80104;
-	Tue, 23 Apr 2024 14:23:36 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-	id A91ED1602F7; Tue, 23 Apr 2024 14:23:35 +0200 (CEST)
-Date: Tue, 23 Apr 2024 14:23:35 +0200
-From: Lennart Poettering <mzxreary@0pointer.de>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Alexander Graf <graf@amazon.com>, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Babis Chalios <bchalios@amazon.es>, Theodore Ts'o <tytso@mit.edu>,
-	"Cali, Marco" <xmarcalx@amazon.co.uk>,
-	Arnd Bergmann <arnd@arndb.de>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	Christian Brauner <brauner@kernel.org>, linux@leemhuis.info,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Re: [PATCH] Revert "vmgenid: emit uevent when
- VMGENID updates"
-Message-ID: <ZieoRxn-On0gD-H2@gardel-login>
-References: <20240418114814.24601-1-Jason@zx2c4.com>
- <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
- <CAHmME9qKFraYWmzD9zKCd4oaMg6FyQGP5pL9bzZP4QuqV1O_Qw@mail.gmail.com>
+	s=arc-20240116; t=1713875170; c=relaxed/simple;
+	bh=e6ARaU2OvtoZ+qzRuhjbMDMgcKFgiApYcNksWkkvBME=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=sstF/uFw7cCKfZhgPKogZAySeDR0+DkH2J+P0H/7gfFVL6KVhBxtFEnVbD0Y8Wu1BvVmwaodjFVp4NsKLLjHkZNbP4VPi78mxQTrTbINwzRzcq87oy7P7bfjmuokmU4HH6ZKPKF2J1ogDqcDE0dfR/ehk3BgaWiMJHXZAhE0kYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf; spf=pass smtp.mailfrom=kl.wtf; dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b=as/Udpef; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kl.wtf
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b="as/Udpef"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kl.wtf; s=key1;
+	t=1713875165;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=e6ARaU2OvtoZ+qzRuhjbMDMgcKFgiApYcNksWkkvBME=;
+	b=as/Udpef9eDD+8GaJPHSDIIQANVuzGADEdLLCu2Ok9qKb9HbUhQsXLDuQUJZRQUSWP7dD1
+	6AQ/02qX/tHtpv5EpmBd25oELsLQhRh0QBbBI93PiMfSd9pJxuDWVtwY3Ah4TXGxFm73o5
+	Xb+C/1m4iSChBucJ0m1J49V6XUZtISl1FTeo2SqHVxTeuK1cAHgE23Jee/i78gFGe4gqBZ
+	aQxsMhC/JZtHPnsL4l6akpGOZTXa/KvYBCgdriCq5ZHC8Q3hTQbkL0kKB0KoGmuA8q63jF
+	v2dOjGogQdxc1zWCWvM2Y6FK6KShSJM9BeQUv/oZETdk7z//RvpF8CvW1i6fbA==
+From: Kenny Levinsen <kl@kl.wtf>
+To: Jiri Kosina <jikos@kernel.org>,
+	Dmitry Torokhov <dtor@chromium.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Radoslaw Biernacki <rad@chromium.org>,
+	Lukasz Majczak <lma@chromium.org>
+Subject: [PATCH v2 0/3] HID: i2c-hid: Probe and wake device with HID descriptor fetch
+Date: Tue, 23 Apr 2024 14:07:52 +0200
+Message-ID: <20240423122518.34811-1-kl@kl.wtf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHmME9qKFraYWmzD9zKCd4oaMg6FyQGP5pL9bzZP4QuqV1O_Qw@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Di, 23.04.24 03:21, Jason A. Donenfeld (Jason@zx2c4.com) wrote:
+This revises my previous patch[0] to add the sleep STM chips seem to
+require as per discussion on the original patch from Lukasz and
+Radoslaw[1]. I had initially tried without as it had not previously been
+needed in the similar logic in our resume path, but it would appear that
+this was simply luck as the affected device was woken up in that case by
+"noise" from other sources.
 
-Jason!
+To reiterate, the idea is to add the retry that Lukasz and Radoslaw
+discovered was necessary, but do away with the dummy smbus probe and
+instead just let HID descriptor fetch retry as needed, aligning more
+with the existing retry logic used after resume while saving some noise
+on the bus and speeding up initialization a tiny bit.
 
-Can you please explain to me what the precise problem is with the
-uevent? It doesn't leak any information about the actual vmgenid, it
-just lets userspace know that the machine was cloned,
-basically. What's the problem with that? I'd really like to
-understand?
+I added Co-developed-by tags, I hope that's appropriate. We should await
+an ACK from Lukasz on it fixing their hardware quirk.
 
-There are many usecases for this in the VM world, for example we'd
-like to hook things up so that various userspace managed concepts,
-such as DHCP leases, MAC addresses are automatically refreshed.
+[0]: https://lore.kernel.org/all/20240415170517.18780-1-kl@kl.wtf/
+[1]: https://lore.kernel.org/all/CAE5UKNqPA4SnnXyaB7Hwk0kcKMMQ_DUuxogDphnnvSGP8g1nAQ@mail.gmail.com/
 
-This has no relationship to RNGs or anything like this, it's just an
-event we can handle in userspace to trigger address refreshes like
-this.
-
-Hence, why is the revert necessary? This was already in a released
-kernel, and we have started work on making use of this in systemd, and
-afaics this does not compromise the kernel RNG in even the remotest of
-ways, hence why is a revert necessary? From my usersace perspective
-it's just very very sad, that this simple, trivial interface we wanted
-to use, that was in a stable kernel is now gone again.
-
-Can you explain what the problem with this single-line trivial
-interface is? I really would like to understand!
-
-Lennart
-
-(BTW: even if the uevent would leak the vmgenid somehow to userspace —
-which it does not —, at least on qemu — i.e. one of the most relevant
-VM platforms — the vmgenid can be read directly from userspace by
-cat'ing /sys/firmware/qemu_fw_cfg/by_name/etc/vmgenid_guid/raw,
-i.e. it's not that well protected anyway).
-
---
-Lennart Poettering, Berlin
