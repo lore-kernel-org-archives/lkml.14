@@ -1,37 +1,37 @@
 Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9BD129E95;
-	Tue, 23 Apr 2024 12:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36CB135417;
+	Tue, 23 Apr 2024 12:49:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713876569; cv=none; b=kE4p8sCecS1jpr260KUwcLx+PhnQkU79tkrtuh9uXVUf4jCmgQrLJ1psM1NQ35pGd0txC8YC/6gRf1Mk5RjFSkHvf5noS/IRFcmZyFYT46RQH4m7ajggffl9KDtGhZZpgHjz3h1KTWCPM/ozN7jl/Lq5Te3g1h2g3ta1m5OSEyg=
+	t=1713876571; cv=none; b=K4MhaspcUko80mbF9lwGwy7RiWuLrMSGKLIIRDAntbecrjYyrKeuopPLbagxrKchXlMI3WsltgImk04qO/Lzup86pvHfkixKO8WZPvURsCuodLrbpmZoD9uQUv2YUGwQrA5+oTpnuU3w6FQBqH9Nkq+xlD0FDyL+DUX6N+W0vKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713876569; c=relaxed/simple;
-	bh=l+EukYChqq3qBiwbnn/UAYYX26vJ61gYpOLFJtik6bY=;
+	s=arc-20240116; t=1713876571; c=relaxed/simple;
+	bh=uTLp+ELFhdGrJpCMfmww9OK9ESHzrjUhNlIi99hsMw0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jGY1Eg1pCgppVtYLEWNta39EgPLoTHq9zI+pI8e1faxFcVS1HYN+w9GTR4ykVFIRqRZV5sAI0XcEM6hTXqFAySZrbmpFOkO4ogLFv1uNShbJN/UDOFvY+53z96jvO+D1WObqxVO66A0k8ZT70M0Boj9OfY3UycbzEIohgLglIPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=qZUi1j3k; arc=none smtp.client-ip=85.214.62.61
+	 MIME-Version; b=kMRXSZouYkrQK3mcmZ1IV8etGtdlRCfAeUyc809KmTrhq4EfPMEX9FMoi6GhhH5BU40Rhbwiggi/Xl14uX7OFPuayEi43Fu/ts2Kn2/cOjZj4JRMQL9bJE4IJa9cl9I/bbomRCTvx+qzTswEr+7mbCspLld9OsV8iLvZdX6KyH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=vJqK1J1X; arc=none smtp.client-ip=85.214.62.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="qZUi1j3k"
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="vJqK1J1X"
 Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
 	(No client certificate requested)
 	(Authenticated sender: lukma@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 100C1885A2;
-	Tue, 23 Apr 2024 14:49:25 +0200 (CEST)
+	by phobos.denx.de (Postfix) with ESMTPSA id 714C48851D;
+	Tue, 23 Apr 2024 14:49:26 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1713876565;
-	bh=h6JvA4qYo+9oassIObUcS54wmHUdhNA+WMQkhrfxRto=;
+	s=phobos-20191101; t=1713876567;
+	bh=jhxcryAuFqbosk8HIXlOyLBsXBEZ6UHazg4UEaO9BxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qZUi1j3kLXUtYII9cb6AcHh+Ekltqz63a1ArnrIoXpzkqBw6U/RF3j3+N0aPCYClQ
-	 26yRoS8XRmNrdpXOH0/IdKws8anDa69g3kOVqStWIEzhjrwdyJHTY89iYV73+qUOZn
-	 oG4a7oNKkzmP17T6dUvvScoWb/Pqu0kjr6cJsXNHYU4qshhN/lU5VT6U6cE5YQaxMt
-	 Z2+1hHRfKqyCatRfQGskRUj3vLEGl7nBg9MYREtSUkRhw3vsJJepPXuw+cZH90wMiB
-	 Z5LT5jgnqExfEM6P6zNeKMVxwgFjo1uyCSTT8Yd3Ws4e9C/TKiMkTwxmqMJH6dCiwt
-	 KuBgkvrQeSS9g==
+	b=vJqK1J1Xh1VwdC06jg3okQcMTJofDvM5aDcHFFO7qpBv8vHQaYkrGp07H+nv4CbQa
+	 CPU/Cwm9XuQR3EkRKSV0TXa4S0lExV54bBbmaqPCuAiDyXGofbbyNBeO6jhEai3xR6
+	 yaNgotRrnhgwF+c00gr1hMkwGiEBe+Q9raz5ZIt9KLZCAbbW3ZjKWk8EDma/sWkG6E
+	 hsDS8T3mgNbgR3Jk6Sb8SIVPRRQCyIsupQjAV/vqQjaf2RoX72sQ9yh5PTVMDP9G9n
+	 e8yEYpbhpoKJe3Edw2vLf6xbWfDHTJnW3sqeWygzRIeYC8KeK8MNQKqPYVN5LlOXIB
+	 YghhXeicI04mQ==
 From: Lukasz Majewski <lukma@denx.de>
 To: netdev@vger.kernel.org,
 	Paolo Abeni <pabeni@redhat.com>,
@@ -55,9 +55,9 @@ Cc: Andrew Lunn <andrew@lunn.ch>,
 	"Ricardo B. Marliere" <ricardo@marliere.net>,
 	linux-kernel@vger.kernel.org,
 	Lukasz Majewski <lukma@denx.de>
-Subject: [net-next PATCH v6 3/5] test: hsr: Move common code to hsr_common.sh file
-Date: Tue, 23 Apr 2024 14:49:06 +0200
-Message-Id: <20240423124908.2073400-4-lukma@denx.de>
+Subject: [net-next PATCH v6 5/5] test: hsr: Add test for HSR RedBOX (HSR-SAN) mode of operation
+Date: Tue, 23 Apr 2024 14:49:08 +0200
+Message-Id: <20240423124908.2073400-6-lukma@denx.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240423124908.2073400-1-lukma@denx.de>
 References: <20240423124908.2073400-1-lukma@denx.de>
@@ -71,233 +71,130 @@ Content-Transfer-Encoding: 8bit
 X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
 X-Virus-Status: Clean
 
-Some of the code already present in the hsr_ping.sh test program can be
-moved to a separate script file, so it can be reused by other HSR
-functionality (like HSR-SAN) tests.
+This patch adds hsr_redbox.sh script to test if HSR-SAN mode of operation
+works correctly.
 
 Signed-off-by: Lukasz Majewski <lukma@denx.de>
-
 ---
 Changes for v6:
-- Use common code from ../lib.sh
-
-- Add hsr_common.sh to TEST_FILES variable
+- add to Makefile's TEST_PROGS hsr_redbox.sh script
 ---
- tools/testing/selftests/net/hsr/Makefile      |  1 +
- tools/testing/selftests/net/hsr/hsr_common.sh | 83 +++++++++++++++++++
- tools/testing/selftests/net/hsr/hsr_ping.sh   | 82 +-----------------
- 3 files changed, 88 insertions(+), 78 deletions(-)
- create mode 100644 tools/testing/selftests/net/hsr/hsr_common.sh
+ tools/testing/selftests/net/hsr/Makefile      |  2 +-
+ tools/testing/selftests/net/hsr/hsr_redbox.sh | 92 +++++++++++++++++++
+ 2 files changed, 93 insertions(+), 1 deletion(-)
+ create mode 100755 tools/testing/selftests/net/hsr/hsr_redbox.sh
 
 diff --git a/tools/testing/selftests/net/hsr/Makefile b/tools/testing/selftests/net/hsr/Makefile
-index 92c1d9d080cd..c782ad19e011 100644
+index c782ad19e011..884cd2cc0681 100644
 --- a/tools/testing/selftests/net/hsr/Makefile
 +++ b/tools/testing/selftests/net/hsr/Makefile
-@@ -3,5 +3,6 @@
+@@ -2,7 +2,7 @@
+ 
  top_srcdir = ../../../../..
  
- TEST_PROGS := hsr_ping.sh
-+TEST_FILES += hsr_common.sh
+-TEST_PROGS := hsr_ping.sh
++TEST_PROGS := hsr_ping.sh hsr_redbox.sh
+ TEST_FILES += hsr_common.sh
  
  include ../../lib.mk
-diff --git a/tools/testing/selftests/net/hsr/hsr_common.sh b/tools/testing/selftests/net/hsr/hsr_common.sh
-new file mode 100644
-index 000000000000..be4ad07ff355
+diff --git a/tools/testing/selftests/net/hsr/hsr_redbox.sh b/tools/testing/selftests/net/hsr/hsr_redbox.sh
+new file mode 100755
+index 000000000000..52e0412c32e6
 --- /dev/null
-+++ b/tools/testing/selftests/net/hsr/hsr_common.sh
-@@ -0,0 +1,83 @@
++++ b/tools/testing/selftests/net/hsr/hsr_redbox.sh
+@@ -0,0 +1,92 @@
++#!/bin/bash
 +# SPDX-License-Identifier: GPL-2.0
-+# Common code for HSR testing scripts
 +
-+source ../lib.sh
-+ret=0
-+ksft_skip=4
++ipv6=false
 +
-+# $1: IP address
-+is_v6()
-+{
-+	[ -z "${1##*:*}" ]
-+}
-+
-+do_ping()
-+{
-+	local netns="$1"
-+	local connect_addr="$2"
-+	local ping_args="-q -c 2"
-+
-+	if is_v6 "${connect_addr}"; then
-+		$ipv6 || return 0
-+		ping_args="${ping_args} -6"
-+	fi
-+
-+	ip netns exec ${netns} ping ${ping_args} $connect_addr >/dev/null
-+	if [ $? -ne 0 ] ; then
-+		echo "$netns -> $connect_addr connectivity [ FAIL ]" 1>&2
-+		ret=1
-+		return 1
-+	fi
-+
-+	return 0
-+}
-+
-+do_ping_long()
-+{
-+	local netns="$1"
-+	local connect_addr="$2"
-+	local ping_args="-q -c 10"
-+
-+	if is_v6 "${connect_addr}"; then
-+		$ipv6 || return 0
-+		ping_args="${ping_args} -6"
-+	fi
-+
-+	OUT="$(LANG=C ip netns exec ${netns} ping ${ping_args} $connect_addr | grep received)"
-+	if [ $? -ne 0 ] ; then
-+		echo "$netns -> $connect_addr ping [ FAIL ]" 1>&2
-+		ret=1
-+		return 1
-+	fi
-+
-+	VAL="$(echo $OUT | cut -d' ' -f1-8)"
-+	if [ "$VAL" != "10 packets transmitted, 10 received, 0% packet loss," ]
-+	then
-+		echo "$netns -> $connect_addr ping TEST [ FAIL ]"
-+		echo "Expect to send and receive 10 packets and no duplicates."
-+		echo "Full message: ${OUT}."
-+		ret=1
-+		return 1
-+	fi
-+
-+	return 0
-+}
-+
-+stop_if_error()
-+{
-+	local msg="$1"
-+
-+	if [ ${ret} -ne 0 ]; then
-+		echo "FAIL: ${msg}" 1>&2
-+		exit ${ret}
-+	fi
-+}
-+
-+check_prerequisites()
-+{
-+	ip -Version > /dev/null 2>&1
-+	if [ $? -ne 0 ];then
-+		echo "SKIP: Could not run test without ip tool"
-+		exit $ksft_skip
-+	fi
-+}
-diff --git a/tools/testing/selftests/net/hsr/hsr_ping.sh b/tools/testing/selftests/net/hsr/hsr_ping.sh
-index bd7c4b8f07b8..790294c8af83 100755
---- a/tools/testing/selftests/net/hsr/hsr_ping.sh
-+++ b/tools/testing/selftests/net/hsr/hsr_ping.sh
-@@ -1,11 +1,10 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
- 
--source ../lib.sh
--ret=0
--ksft_skip=4
- ipv6=true
- 
 +source ./hsr_common.sh
 +
- optstring="h4"
- usage() {
- 	echo "Usage: $0 [OPTION]"
-@@ -28,76 +27,6 @@ while getopts "$optstring" option;do
- esac
- done
- 
--setup_ns ns1 ns2 ns3
--
--# $1: IP address
--is_v6()
--{
--	[ -z "${1##*:*}" ]
--}
--
--do_ping()
--{
--	local netns="$1"
--	local connect_addr="$2"
--	local ping_args="-q -c 2"
--
--	if is_v6 "${connect_addr}"; then
--		$ipv6 || return 0
--		ping_args="${ping_args} -6"
--	fi
--
--	ip netns exec ${netns} ping ${ping_args} $connect_addr >/dev/null
--	if [ $? -ne 0 ] ; then
--		echo "$netns -> $connect_addr connectivity [ FAIL ]" 1>&2
--		ret=1
--		return 1
--	fi
--
--	return 0
--}
--
--do_ping_long()
--{
--	local netns="$1"
--	local connect_addr="$2"
--	local ping_args="-q -c 10"
--
--	if is_v6 "${connect_addr}"; then
--		$ipv6 || return 0
--		ping_args="${ping_args} -6"
--	fi
--
--	OUT="$(LANG=C ip netns exec ${netns} ping ${ping_args} $connect_addr | grep received)"
--	if [ $? -ne 0 ] ; then
--		echo "$netns -> $connect_addr ping [ FAIL ]" 1>&2
--		ret=1
--		return 1
--	fi
--
--	VAL="$(echo $OUT | cut -d' ' -f1-8)"
--	if [ "$VAL" != "10 packets transmitted, 10 received, 0% packet loss," ]
--	then
--		echo "$netns -> $connect_addr ping TEST [ FAIL ]"
--		echo "Expect to send and receive 10 packets and no duplicates."
--		echo "Full message: ${OUT}."
--		ret=1
--		return 1
--	fi
--
--	return 0
--}
--
--stop_if_error()
--{
--	local msg="$1"
--
--	if [ ${ret} -ne 0 ]; then
--		echo "FAIL: ${msg}" 1>&2
--		exit ${ret}
--	fi
--}
--
- do_complete_ping_test()
- {
- 	echo "INFO: Initial validation ping."
-@@ -237,11 +166,8 @@ setup_hsr_interfaces()
- 	ip -net "$ns3" link set hsr3 up
- }
- 
--ip -Version > /dev/null 2>&1
--if [ $? -ne 0 ];then
--	echo "SKIP: Could not run test without ip tool"
--	exit $ksft_skip
--fi
++do_complete_ping_test()
++{
++	echo "INFO: Initial validation ping (HSR-SAN/RedBox)."
++	# Each node has to be able each one.
++	do_ping "${ns1}" 100.64.0.2
++	do_ping "${ns2}" 100.64.0.1
++	# Ping from SAN to hsr1 (via hsr2)
++	do_ping "${ns3}" 100.64.0.1
++	do_ping "${ns1}" 100.64.0.3
++	stop_if_error "Initial validation failed."
++
++	# Wait for MGNT HSR frames being received and nodes being
++	# merged.
++	sleep 5
++
++	echo "INFO: Longer ping test (HSR-SAN/RedBox)."
++	# Ping from SAN to hsr1 (via hsr2)
++	do_ping_long "${ns3}" 100.64.0.1
++	# Ping from hsr1 (via hsr2) to SAN
++	do_ping_long "${ns1}" 100.64.0.3
++	stop_if_error "Longer ping test failed."
++
++	echo "INFO: All good."
++}
++
++setup_hsr_interfaces()
++{
++	local HSRv="$1"
++
++	echo "INFO: preparing interfaces for HSRv${HSRv} (HSR-SAN/RedBox)."
++
++#       |NS1                     |
++#       |                        |
++#       |    /-- hsr1 --\        |
++#       | ns1eth1     ns1eth2    |
++#       |------------------------|
++#            |            |
++#            |            |
++#            |            |
++#       |------------------------|        |-----------|
++#       | ns2eth1     ns2eth2    |        |           |
++#       |    \-- hsr2 --/        |        |           |
++#       |            \           |        |           |
++#       |             ns2eth3    |--------| ns3eth1   |
++#       |             (interlink)|        |           |
++#       |NS2 (RedBOX)            |        |NS3 (SAN)  |
++#
++	# Check if iproute2 supports adding interlink port to hsrX device
++	ip link help hsr | grep -q INTERLINK
++	[ $? -ne 0 ] && { echo "iproute2: HSR interlink interface not supported!"; exit 0; }
++
++	# Create interfaces for name spaces
++	ip link add ns1eth1 netns "${ns1}" type veth peer name ns2eth1 netns "${ns2}"
++	ip link add ns1eth2 netns "${ns1}" type veth peer name ns2eth2 netns "${ns2}"
++	ip link add ns3eth1 netns "${ns3}" type veth peer name ns2eth3 netns "${ns2}"
++
++	sleep 1
++
++	ip -n "${ns1}" link set ns1eth1 up
++	ip -n "${ns1}" link set ns1eth2 up
++
++	ip -n "${ns2}" link set ns2eth1 up
++	ip -n "${ns2}" link set ns2eth2 up
++	ip -n "${ns2}" link set ns2eth3 up
++
++	ip -n "${ns3}" link set ns3eth1 up
++
++	ip -net "${ns1}" link add name hsr1 type hsr slave1 ns1eth1 slave2 ns1eth2 supervision 45 version ${HSRv} proto 0
++	ip -net "${ns2}" link add name hsr2 type hsr slave1 ns2eth1 slave2 ns2eth2 interlink ns2eth3 supervision 45 version ${HSRv} proto 0
++
++	ip -n "${ns1}" addr add 100.64.0.1/24 dev hsr1
++	ip -n "${ns2}" addr add 100.64.0.2/24 dev hsr2
++	ip -n "${ns3}" addr add 100.64.0.3/24 dev ns3eth1
++
++	ip -n "${ns1}" link set hsr1 up
++	ip -n "${ns2}" link set hsr2 up
++}
++
 +check_prerequisites
 +setup_ns ns1 ns2 ns3
- 
- trap cleanup_all_ns EXIT
- 
++
++setup_hsr_interfaces 1
++do_complete_ping_test
++
++exit $ret
 -- 
 2.20.1
 
