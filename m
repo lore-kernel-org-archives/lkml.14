@@ -1,114 +1,100 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from nbd.name (nbd.name [46.4.11.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828E18593E
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3563D8405C;
+	Tue, 23 Apr 2024 12:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713875000; cv=none; b=Aw5BPz2wDcci1C7/lm1eO7EkcQx5Bw0HxfPhc6hw5d+i6Zmaefo3Ys5XlKugEyKH6OuM0fdUcbkTw4EaUF1l/n8nn5D8fvvSC6dUP8sPCvts/tXKuvTZZw0s8z9ZmjM2DZHnTqqjVq2QNgNvlXQizAHGb1I9fsuaAsnFpTFuFUc=
+	t=1713875021; cv=none; b=lKL9KssRkCGsCP0FZV2nyverT9AH4WXSrXnX1VlS9krLJJg6zzQtcl01g3z4yFxa8jH9URUl/R7VOKIAp2prv+Utuc12oZzDfm0lv7uhDtDdWM2GAc8+zYunDtGIMnsJ3Bm1sZohuOZPsiKf5ET6lWK396Xjvli7Pr2flfZkLS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713875000; c=relaxed/simple;
-	bh=zdEuS8XRlyMWs8i+nahfC/xh1vWX2u7uUNV94NmtyxI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QxU6pZvZEcHPnIEQ4X8c9xHRs5FajqTRU3wjnlo+feRT2zJRZQ4Nzkw/YDiH/zqjhKCXU5rdTx5VMIX4WetRhHqv935RjXj9ZHLCDiinA9vwOBkqCg6EFRn0OQqnsuHWzuqqeTKY7Zwq+SUFXYp+67UzbxNhnea/5xAsKD2VMQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qtQDLjrx; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713875021; c=relaxed/simple;
+	bh=9mJZ62l2+7SP3ReX1gQJjaQNcoPHMtLwRRBOZfEeAhU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YFkTvW8xTbPEPFyEonNE4H4NSSBVyI36VRYoQQMnU7Y28n8i5Qb2u8lgr13negTaKJiy3CY59RNUoT0SpkGPC7INNBvmqhv+q4WL4pZ8NdIDat3kbxanwwPerveiRrUJz7CzM3TqokuKjaCf4AEvVhUHpXU74CqsPp+m40RAsfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=OnCy526W; arc=none smtp.client-ip=46.4.11.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qtQDLjrx"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-de45385a1b4so5240884276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 05:23:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713874997; x=1714479797; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zdEuS8XRlyMWs8i+nahfC/xh1vWX2u7uUNV94NmtyxI=;
-        b=qtQDLjrxOz4wZvnJ9bfDXVOwl9pgcBQaULNGILtSLiwxeDyEfhAr8hY1GpjLS2dTRk
-         hQ1iEhbECkmemy1TAXFuMPOUOPGWJ4rJo2px55vkJ71AvfR6b49QPvbxKf8zrSmSbhDL
-         bQ6ESm52uGwAZteQRyEsWi+LVmP+rj6eeITbPGoDbG9wthTw8JwH56ionOcthpbCsPt2
-         4qkwk+V30rP778AX8Fo+6zV0EUS7gnYsMXei7jeXT20ob3nxPjhcJLsMDKuLfT5Ccqlj
-         q+xCVo5CRZqIuVae8f4MvSq4uyC3n5xov/0Pw4C7KkELMp4EY9osQ15Hc88NeVYZ1Tq7
-         vsMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713874997; x=1714479797;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zdEuS8XRlyMWs8i+nahfC/xh1vWX2u7uUNV94NmtyxI=;
-        b=U0+sD5W/GA/p7EDV5+2PU1tLKQDXPQAbrtfsgy3pEzOsS2f+Qg+FPn6cAHtqgScryx
-         HSmAtx96wB6o9x17mqGjqb4eJl7wl7B4REGkN9ZLxgl5fvfWFF4hAYFIaUnIoRMo2QAw
-         qfoCm36qmrM6oxxc1j2u7o8mkqkiRQeDTVbitO/Kn0MB9CqAQuTau8l7tcBAQ2G89hpy
-         srMDtom6OnHsk+Cu+Hgg10bgJwZKmrqJqHhx+MlmBgTopIA4X15O7fP7T1OQbCq3PCtR
-         f+8mmQVQKvOwLmysDIHUuXXanw7cnxCaIxdopDB8brbfok2NaLxW+vG0mt9AAHZM36Ah
-         HBnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQT3gQiKjIzsTFq6Ob5aLlnDhICWs1K1cHt2CTyUWueV/P3zZI4rNUKW4ocA3ooAMx/5D8XWmZwLxA76cx+Fhk/2g9eDGTra0K8U9r
-X-Gm-Message-State: AOJu0YyO8NHpJt0D2JC+dctzHH41mHx94GYSGuSk5guihJik7RC4TrO+
-	+1RSvGdysrwRJehbf3r9iS73r5RWMkymUnow9NPZvWa7FyMJK+69ZhYlInIRfTB6iLAxilXfdAI
-	cKN2Gn0OBTBIptWpl3KNZZKiZlEZ3OZo5IxXZqg==
-X-Google-Smtp-Source: AGHT+IFGEmHXL5CwAkBYa70XCoYWKwe8UnjgAcbc2h7iJmpsycDinZVPrwrOVKWCKX5O935DZ/QH6hClp73iSys2pzI=
-X-Received: by 2002:a25:8251:0:b0:dc7:4067:9f85 with SMTP id
- d17-20020a258251000000b00dc740679f85mr12766959ybn.58.1713874997608; Tue, 23
- Apr 2024 05:23:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="OnCy526W"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+	s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=/DSRa/6jf8NZlb//FM+oy5i4OZYimdjhlzNTdhVYxvI=; b=OnCy526WuugtHWZ18i2/UEYnqJ
+	ZyNODvLnguJeIzJ8hFaMqeRHZWDsWjlQ8FALHfehs8k5PCwqJjBy9CXJjSFxmGtUGmYVY1o5KomPf
+	Ddmf/yErTtDqyuS9NPAzHc5i2f+nIYT7Xduq3zRTJDklIoIbCOzCPJFdpm/0RDhgPRbc=;
+Received: from p54ae9c93.dip0.t-ipconnect.de ([84.174.156.147] helo=nf.local)
+	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <nbd@nbd.name>)
+	id 1rzFBN-0066eH-0X;
+	Tue, 23 Apr 2024 14:23:33 +0200
+Message-ID: <ebe85dca-e0e9-4c55-a15d-20d340f66848@nbd.name>
+Date: Tue, 23 Apr 2024 14:23:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240423040243.448091-1-vignesh.raman@collabora.com>
- <20240423040243.448091-4-vignesh.raman@collabora.com> <e3a0ea8f-d306-488c-a69c-aa18078e5e03@igalia.com>
-In-Reply-To: <e3a0ea8f-d306-488c-a69c-aa18078e5e03@igalia.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 23 Apr 2024 15:23:06 +0300
-Message-ID: <CAA8EJppaaitcXkXSFTB4-S2CbBcrAVHouB0wWiU5Nw2FvpagqA@mail.gmail.com>
-Subject: Re: [PATCH v1 3/4] drm/ci: uprev IGT and generate testlist from build
-To: =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>
-Cc: Vignesh Raman <vignesh.raman@collabora.com>, dri-devel@lists.freedesktop.org, 
-	daniels@collabora.com, helen.koike@collabora.com, airlied@gmail.com, 
-	daniel@ffwll.ch, robdclark@gmail.com, david.heidelberg@collabora.com, 
-	guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com, 
-	linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, amd-gfx@lists.freedesktop.org, 
-	linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
-	virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] net: add TCP fraglist GRO support
+To: Eric Dumazet <edumazet@google.com>
+Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ David Ahern <dsahern@kernel.org>, linux-kernel@vger.kernel.org
+References: <20240423094117.93206-1-nbd@nbd.name>
+ <CANn89i+6xRe4V6aDmD-9EM0uD7A87f6rzg3S7Xq6-NaB_Mb4nw@mail.gmail.com>
+ <63abfa26-d990-46c3-8982-3eaf7b8f8ee5@nbd.name>
+ <CANn89iJZvoKVB+AK1_44gki2pHyigyMLXFkyevSQpH3iDbnCvw@mail.gmail.com>
+ <7476374f-cf0c-45d0-8100-1b2cd2f290d5@nbd.name>
+ <CANn89iLddm704LHPDnnoF2RbCfvrivAz0e6HTeiBARmvzoUBjA@mail.gmail.com>
+Content-Language: en-US
+From: Felix Fietkau <nbd@nbd.name>
+Autocrypt: addr=nbd@nbd.name; keydata=
+ xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCeMncXpbbWNT2AtoAYICrKyX5R3iMAoMhw
+ cL98efvrjdstUfTCP2pfetyN
+In-Reply-To: <CANn89iLddm704LHPDnnoF2RbCfvrivAz0e6HTeiBARmvzoUBjA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 23 Apr 2024 at 13:24, Ma=C3=ADra Canal <mcanal@igalia.com> wrote:
->
-> On 4/23/24 01:02, Vignesh Raman wrote:
-> > Uprev IGT to the latest version and stop vendoring the
-> > testlist into the kernel. Instead, use the testlist from
-> > the IGT build to ensure we do not miss renamed or newly
-> > added tests.
->
-> Nitpick: wouldn't it be better to (1) stop vendoring the
-> testlist into the kernel in one patch and then (2) uprev
-> IGT to the latest version? I feel that this patch is changing
-> a lot of different stuff.
+On 23.04.24 14:11, Eric Dumazet wrote:
+> On Tue, Apr 23, 2024 at 1:55 PM Felix Fietkau <nbd@nbd.name> wrote:
+>>
+>> In the world of consumer-grade WiFi devices, there are a lot of chipsets
+>> with limited or nonexistent SG support, and very limited checksum
+>> offload capabilities on Ethernet. The WiFi side of these devices is
+>> often even worse. I think fraglist GRO is a decent fallback for the
+>> inevitable corner cases.
+> 
+> What about netfilter and NAT ? Are they okay with NETIF_F_FRAGLIST_GRO already ?
+> 
+> Many of these devices are probably using NAT.
 
-Definitely. Otherwise it's hard to understand whether a change to
-fails/flakes is caused by the uprev or by the testlist change. E.g. in
-several cases the list of failing subtests seems to be replaced with
-the test itself.
+In my tests, nftables NAT works just fine, both with and without 
+flowtable offloading. I didn't see anything in netfilter that would have 
+a problem with this.
 
->
-> Best Regards,
-> - Ma=C3=ADra
->
-> >
-> > Skip kms tests for panfrost driver since it is not a kms
-> > driver and skip driver-specific tests. Update xfails with
-> > the latest testlist.
-> >
-> > Increase the timoout of i915 jobs to 2h30m since some jobs
-> > takes more than 2 hours to complete.
-> >
-> > Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
-> > ---
-
-
---=20
-With best wishes
-Dmitry
+- Felix
