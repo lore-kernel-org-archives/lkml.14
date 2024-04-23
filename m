@@ -1,134 +1,108 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailrelay3-1.pub.mailoutpod3-cph3.one.com (mailrelay3-1.pub.mailoutpod3-cph3.one.com [46.30.211.242])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C6A13E03B
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 18:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6973D13E404
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 18:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.242
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713895237; cv=none; b=dBWZ+IMdgTwHevFCo6uIVsPfB+JcnVEvMTfb/dpAIEpr/sfMsPs2yQgbkywmMVmy38zcS/dcIURaniEm2WkXAEQe6ffJfk1P3dCA63uHMbvJqThjeJGqkvCdZKd9t/EISfvR0KVz7RwlFmoDg0AG3INfFIpWiEOR4py6BuvtF0U=
+	t=1713895356; cv=none; b=AoxBh/BOmXYLemu1y2rAhq4UVCGxu5D3ei2xvLXSDhJoyv17YHmJsNaLxpu4n8hpmpXlrPe8uo4PlkKsQin7uWGA2utsynkxUplwSK0qtBnxTFDAWzuD6++fybMHYINEnPr18WsldzfzvnGIL9n+X2IrnuYnw4cT2mzXkMkoL6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713895237; c=relaxed/simple;
-	bh=+Ycvpa9EG63dR81CHp5JkGsctcaf5dahBQ8q1erP7GU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JqYMAHXt42gGxU1FYzleIZUhenwSMGcWGAIoYJfJC5XFvzRY0P9SqHFOhggvu5g2GCU7jyR6EvY7YGDo8n7/FIrSaJzSdKeB+gsa96q3VE+Om3ufIZl0yPYplNwT4YDtAc5KFDJ3KqLnKrIVhTofnBHZ/bYwbkS+Av6/NwTu5bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q/FgQXI8; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713895356; c=relaxed/simple;
+	bh=mmtsBmibN1yGrAOOBOq7tt4DhIUx2MTlpkSj1eOKU5s=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oMypfB5gLAq/QHJYiy2r9qAqxY8JZqr6BzCFP0t/x/Fz1SyVJVnvq1/q1wtAbIcckrQYxCw8bSIIWKcZcF5M7lqpnKNJG/kQTb7ZXvDe3p48pl6e+0pv3svZzV2RV6W5+74hP4GEs2U66dUgNQ82hoOSiR5x77+E6QLPpwwtjh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=tiXjiwul; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=HfWeE/u/; arc=none smtp.client-ip=46.30.211.242
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q/FgQXI8"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-41ac4cd7a1cso6438295e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:00:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="tiXjiwul";
+	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="HfWeE/u/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713895234; x=1714500034; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZrPlhm46dVYsHXusJ+hWfPOX88ZyITI8Ng81vweSato=;
-        b=Q/FgQXI86olQ97k3hGIw14RYQByjGCJ5vLqQJYqJabPsEFqVsU5zPyV5/jMzDveqcC
-         8ukn06NqaSKFVJ4q8ykkSEDguWJl3gpUxtbLdCtx1qk+vyURJJj46r87Eo9UP+I5BJ5f
-         RMU3lQW6ufLPK326PsRE7iE84WndcXaCl1tDA1JT0e4rRrP2otv67PpzN9p8kglZK5o8
-         m02TchMPDf0UrM+DGWJQqfrSs0th2J0+vqNwd3Fs9yzKKXCIzrjvB8ksmngUOE6lIZuR
-         NKxBnlcrOuQQ9rlj5lj6JNnsD7dUpf1GeQVR3tJ507xa3BlZNGALjJDJopie0nIkN9E3
-         nTVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713895234; x=1714500034;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZrPlhm46dVYsHXusJ+hWfPOX88ZyITI8Ng81vweSato=;
-        b=VwU5bU2e0ayIoqa/jQjqMRrknHI0WA2w9c3w+NzD3iXkbuX42mx/8NNgpq2I429g1B
-         5n2jMsElVU8oWPOqWRwrGUVI/q2EoDJMW1+DZUTORF0ceBZun760jUsdjF7s+OHQePVi
-         CB2N+aL+43S9mS65TOFZd2NoKWc9u6nRnXvPk8kRvBdCFKbnfS+Jy2lFcxRZPN9jJ3QY
-         +DF7MUhgOUP61PQiRkv7GPEt8Jy6tJdhi/+qHCanGXiciqK2+p/JqeC3XPYPcp+/i3RD
-         Z5dtUmob7hYOymkVnHgcF2d2y26vGnWTDPs9NwoioSiZEcuJlWvm2qi296lgs/5harTj
-         zRLg==
-X-Forwarded-Encrypted: i=1; AJvYcCWafNyVdWvfPglrCXCY2MVoudWpSTGXhK90LjOKmYje4HVJo5HIlVpLKiXpVmTiF+pVFIgTwibqOLBv2lQP1F3jLOA4wAdhMjKQi8QS
-X-Gm-Message-State: AOJu0YxFsygURgxWZ8JyirsO5EXGbkXceVTsa7m/sVkOjLmUrp93EuNW
-	HGpU7dmK/LMQXWeVpGC5RjW00LW1mCQ4Ba2L7ma+JUiQrlhiG91bskPGWV8CRdg=
-X-Google-Smtp-Source: AGHT+IFPKxRpVw/tgIobHtXRwOUabSviwAvOx44Txi85lVaXClZmQ6awKbEmi2X3Yz//oeXnMfcuvg==
-X-Received: by 2002:a05:600c:3b07:b0:418:a2ce:77ae with SMTP id m7-20020a05600c3b0700b00418a2ce77aemr11122wms.27.1713895234395;
-        Tue, 23 Apr 2024 11:00:34 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id b5-20020a05600c4e0500b0041a7fe7a300sm6223533wmq.26.2024.04.23.11.00.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 11:00:33 -0700 (PDT)
-Message-ID: <33cafcb3-af9c-4058-b6b6-4e5aab6e21cb@linaro.org>
-Date: Tue, 23 Apr 2024 20:00:32 +0200
+	d=ravnborg.org; s=rsa1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:to:from:
+	 date:from;
+	bh=QCtZv2hKR4TC2H8Xchi6BYje0EdwUJ959Ulh1BBi7BU=;
+	b=tiXjiwulObS5EhcPzBhcVI2b7lyYjbhyrN+eScXsvRPf4CNWM0mzep8evt/KlX081DuECo1DQzvk1
+	 wh1MmubDWKPpi1oCcXnnTeTwWGiaHZvyWX54QHWQETldd7n02Dy7XeAZxJXbF62UeR4Y8ovwmTG2h/
+	 zR7q3kIBfD44p/kz90excP2SMKqNX3fsDfoQhA9jSaZsFcdlhVIn9hXhLQ0zTkmC0yJhb1xUrfO8nr
+	 97Y/6MTQX2EPS+R3oWPQM8B+4lRwr4FvsPIelDz4z87plAov9qBeXcBLWVtOs9U2guU+NGPpN8TE/F
+	 JPgrGgj1BwmyI3XjPqR/8abBf7BSYHg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=ed1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:to:from:
+	 date:from;
+	bh=QCtZv2hKR4TC2H8Xchi6BYje0EdwUJ959Ulh1BBi7BU=;
+	b=HfWeE/u/gBKw47N8oqIKQ7L5OJBjREBgJDf8mNUmiG3dJJPOazjw4Bgsd5yuaEF2d3z7H8kD48Zbl
+	 QMi8vYgAQ==
+X-HalOne-ID: 9dd17742-019b-11ef-8cb9-5166eb5bc2d3
+Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
+	by mailrelay3.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
+	id 9dd17742-019b-11ef-8cb9-5166eb5bc2d3;
+	Tue, 23 Apr 2024 18:02:26 +0000 (UTC)
+Date: Tue, 23 Apr 2024 20:02:16 +0200
+From: Sam Ravnborg <sam@ravnborg.org>
+To: "David S. Miller" <davem@davemloft.net>,
+	Arnd Bergmann <arnd@kernel.org>,
+	Andreas Larsson <andreas@gaisler.com>, Helge Deller <deller@gmx.de>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
+	Kjetil Oftedal <oftedal@gmail.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH v2 00/28] sparc32: sunset sun4m and sun4d
+Message-ID: <20240423180216.GA906720@ravnborg.org>
+References: <20240309-sunset-v2-0-f09912574d2c@ravnborg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 07/16] thermal: gov_power_allocator: Eliminate a
- redundant variable
-Content-Language: en-US
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Lukasz Luba <lukasz.luba@arm.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-References: <13515747.uLZWGnKmhe@kreacher> <1913649.CQOukoFCf9@kreacher>
- <8e26c3cb-1283-4561-95aa-30432f1d13ee@linaro.org>
- <CAJZ5v0h=15LYhukPWmHPK5hvD=2u75rTEiC8oJMVBFziMkB5gQ@mail.gmail.com>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <CAJZ5v0h=15LYhukPWmHPK5hvD=2u75rTEiC8oJMVBFziMkB5gQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240309-sunset-v2-0-f09912574d2c@ravnborg.org>
 
-On 23/04/2024 19:54, Rafael J. Wysocki wrote:
-> On Tue, Apr 23, 2024 at 7:35 PM Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
->>
->> On 10/04/2024 18:12, Rafael J. Wysocki wrote:
->>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>
->>> Notice that the passive field in struct thermal_zone_device is not
->>> used by the Power Allocator governor itself and so the ordering of
->>> its updates with respect to allow_maximum_power() or allocate_power()
->>> does not matter.
->>>
->>> Accordingly, make power_allocator_manage() update that field right
->>> before returning, which allows the current value of it to be passed
->>> directly to allow_maximum_power() without using the additional update
->>> variable that can be dropped.
->>>
->>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>> ---
->>
->> The step_wise and the power allocator are changing the tz->passive
->> values, so telling the core to start and stop the passive mitigation timer.
->>
->> It looks strange that a plugin controls the core internal and not the
->> opposite.
->>
->> I'm wondering if it would not make sense to have the following ops:
->>
->>          .start
->>          .stop
->>
->> .start is called when the first trip point is crossed the way up
->> .stop is called when the first trip point is crossed the way down
->>
->>    - The core is responsible to start and stop the passive mitigation timer.
->>
->>    - the governors do no longer us tz->passive
->>
->> The reset of the governor can happen at start or stop, as well as the
->> device cooling states.
+Hi Andreas,
+
+On Sat, Mar 09, 2024 at 07:15:21PM +0100, Sam Ravnborg via B4 Relay wrote:
+> This is the second attempt to sunset sun4m and sun4d.
+> See [1] for the inital attempt.
 > 
-> I have a patch that simply increments tz->passive when a passive trip
-> point is passed on the way up and decrements it when a passive trip
-> point is crossed on the way down.  It appears to work reasonably well.
+> The sun4m and sun4d parts of the kernel have seen no real interest
+> for several years now. Last time a few people surfaced, but it was
+> either due to a personal project or for nostalgic reasons.
+> It is time to let go and drop the parts of sparc32 that in reality
+> are not in use.
+> 
+> LEON from Frontgrade Gaisler is the only real user of sparc32,
+> and this patchset reduces sparc32 to what is required by LEON.
+> 
+> The defconfig is first adapted to the one used by Gaisler.
+> Then the patches removes sun4m and sun4d specific
+> implementations such as small drivers, SMP support, IRQ suppor etc.
+> 
+> Removing sun4m and sun4d support allowed removal of the run time
+> patching of the code as well as a lot of assembler code.
+> The result is a much cleaner assembler code that is easier to
+> understand and thus maintain and extend.
+> 
+> Changes in v2:
+>   - Rebased on top of Andreas' for-next branch
+>   - Collected ack's
+>   - Added patch to remove cpuid patching (Andreas)
+>   - Run-time testing using qemu (Andreas, Mark Cave-Ayland)
 
-Does it make the governors getting ride of it ? Or at least not changing 
-its value ?
+Please let me know if you expect me to rebase this on for-next.
+I have not yet tried if there are merge conflicts but can take a look in
+a some days if required.
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+That is assuming you agree with the sunset of the sun platforms...
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+	Sam
