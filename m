@@ -1,59 +1,57 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E04142E96;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07035143881;
 	Tue, 23 Apr 2024 20:46:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713905187; cv=none; b=SwovBvqfZeZmddRHFepV8XSi6rB6hRqxKrIxXNeatAiQrywJCVAZSHN+/W6GQnpMEV7oHMbEk0H/r+HFgpUDY8B13YvLUBA8q9FQyK1vUa+Zev0ZqE0RKrNBEQxouYYu3iOhwYMVeovJxnCJr+8UmUSiRXizonfUGKheqfhb5To=
+	t=1713905188; cv=none; b=oIMf09SP5V5KVlWp5VK1lZHrXgDvUiI2pBZyNHd6Oc5hjqUvqn/VYFOHeRl8bK/W3rZ6TgWVZEfNrIFJJ2H1zt1CVnP7W8NRD+eyp3zYzkUL8XwMOJ5vpzSTwiVUNgtyzhnL9iseIsbVWln8NhC6yEwphrePFedx+IdrfHdb208=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713905187; c=relaxed/simple;
-	bh=WKb7qELQbbK6hy0ANQKL1fGApsnx2UeaCuqul+3j10g=;
+	s=arc-20240116; t=1713905188; c=relaxed/simple;
+	bh=8Ynf/Pm+14Q4LJbIb6hfnZAW5/G6gUx7m7m0EFyWFBo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l52pCIsz8ogkIAwWXpfFJfmEtofutMQPzXPm+N7yeQJd2b06WDFdF0tmvSvWbVKCzjm+ct2AesahEek1hAVYLXwzy0wdPjaLNo2wsqIrTa3c5a51viKM1JNbhxJl361TLeLDYLQWaycq7/RBGtlbmT5loF8mNv4PNn2HehTa74Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nzjwIqsj; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version:Content-Type; b=ddbd0yquHFKnIpuw4rrP5hJdQKENSVHf8s7cpHKOXyLedHlpzDyWZ/NDC+ykOYCXBJJ80NbFJGjNGdaolm0xw7jEZSYBjU2IEVlhHII6S7QRgN05YPUtl9X6S7GhzhDucT1CTNVBcmmN3QDPsvptdb4SsjbgZaPzpJqQw+iR7gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lhgR6eEB; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nzjwIqsj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lhgR6eEB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713905186; x=1745441186;
+  t=1713905187; x=1745441187;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=WKb7qELQbbK6hy0ANQKL1fGApsnx2UeaCuqul+3j10g=;
-  b=nzjwIqsj4SimTgDtKEcOdUh30dfqebIDh2cQXvl8TjKmPfCqm6c9k80N
-   Vpb8Fhnns36QgC++mZJYp4VS91IFoJyx1g9Ow7RknBigcynbgNMfzoNN+
-   g/DCEh6t8zR5DtOssZW7SLdnW/mZfdI5sET5ZPdawijGZ2PXPCDt6KEXA
-   YrgPHDApY/tA8FqpCCpw4kmPPe1cBySo/QVFoVHynlCxpXqov5FGy+2lU
-   HE5Xbu76OZ/ltBF1Ub2GW3dEWs9gGTikMpIkHWMxagM7N9JtRmZDqM+Jk
-   ly8vn3xTShe9cc1gy6nQcKuaBGmQ+ExC1bvpfHHfp5GIKNeKzEyN8c4X5
-   Q==;
-X-CSE-ConnectionGUID: bdv9TkK0TPOFSGleAnN1nA==
-X-CSE-MsgGUID: kbSZLCEITDe7Uo7nXIr03Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="34912322"
+  bh=8Ynf/Pm+14Q4LJbIb6hfnZAW5/G6gUx7m7m0EFyWFBo=;
+  b=lhgR6eEBmvHnDWW5La/MfxJJYP6jRkOcYwPsoG9oeKR30EdJRWUaJAdC
+   SQNo+e3alpE6sm70AKlcfqh97lN+czK2508ZagWNnO05730LFc7vIi+nN
+   kw+OwW7iNgwkZTrW7RhF/rWOxACfygZAU+RO6Z6jGuUGtP5rNoITl/B90
+   Vufb1kp3O7MEDMNrllxM+J46tFQiNOGh+fjBrGKPfdg7gPA8J32Ca9tW5
+   xfeCOJL6NjzLAsMV/bt9PIe6HsvDC0vUdbWFDCQkNZ3kqtXwJBwh4jrid
+   fWhVZLLO/NkB1mNrCKIomQHZa6A3OYxPrjDwdVPrj4IM/cYoQz8MDiVNH
+   A==;
+X-CSE-ConnectionGUID: rYou+DyqTOmzs2psF60Xfw==
+X-CSE-MsgGUID: /JRBjFzfSFSX37rqersWbg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="34912328"
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="34912322"
+   d="scan'208";a="34912328"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
   by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 13:46:24 -0700
-X-CSE-ConnectionGUID: VeA3AUQVR+yRTkiqdO/XNQ==
-X-CSE-MsgGUID: b0zOSvnYRnmayDA3NSeyaQ==
+X-CSE-ConnectionGUID: G8CsckxyQ3eULXmtEoTyOg==
+X-CSE-MsgGUID: mnmGiIUwTZ+2UxerMoRWBQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24533085"
+   d="scan'208";a="24533087"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
-  by fmviesa010.fm.intel.com with ESMTP; 23 Apr 2024 13:46:23 -0700
+  by fmviesa010.fm.intel.com with ESMTP; 23 Apr 2024 13:46:24 -0700
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Zhang Rui <rui.zhang@intel.com>
-Subject: [PATCH 04/10] platform/x86/intel/tpmi: Add additional TPMI header fields
-Date: Tue, 23 Apr 2024 13:46:13 -0700
-Message-Id: <20240423204619.3946901-5-srinivas.pandruvada@linux.intel.com>
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 06/10] platform/x86: ISST: Shorten the assignments for power_domain_info
+Date: Tue, 23 Apr 2024 13:46:15 -0700
+Message-Id: <20240423204619.3946901-7-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240423204619.3946901-1-srinivas.pandruvada@linux.intel.com>
 References: <20240423204619.3946901-1-srinivas.pandruvada@linux.intel.com>
@@ -66,99 +64,88 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-TPMI information header added additional fields in version 2. Some of the
-reserved fields in version 1 are used to define new fields.
+Instead of long lines for assignment to tpmi_sst->power_domain_info, use
+a local variable pd_info and assign later. Also move the assignment
+of number of resources after the assignment of pd_info.
 
-Parse new fields and export as part of platform data. These fields include:
-- PCI segment ID
-- Partition ID of the package: If a package is represented by more than
-  one PCI device, then partition ID along with cdie_mask, describes the
-  scope. For example to update get/set properties for a compute die, one
-  of the PCI MMIO region is selected from the partition ID.
-- cdie_mask: Mask of all compute dies in this partition.
+No functional change is expected.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Zhang Rui <rui.zhang@intel.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/platform/x86/intel/tpmi.c | 15 ++++++++++++++-
- include/linux/intel_tpmi.h        |  6 ++++++
- 2 files changed, 20 insertions(+), 1 deletion(-)
+ .../intel/speed_select_if/isst_tpmi_core.c    | 33 +++++++++----------
+ 1 file changed, 16 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
-index a5bcb77bcb35..6c0cbccd80bb 100644
---- a/drivers/platform/x86/intel/tpmi.c
-+++ b/drivers/platform/x86/intel/tpmi.c
-@@ -128,6 +128,9 @@ struct intel_tpmi_info {
-  * @dev:	PCI device number
-  * @bus:	PCI bus number
-  * @pkg:	CPU Package id
-+ * @segment:	PCI segment id
-+ * @partition:	Package Partition id
-+ * @cdie_mask:	Bitmap of compute dies in the current partition
-  * @reserved:	Reserved for future use
-  * @lock:	When set to 1 the register is locked and becomes read-only
-  *		until next reset. Not for use by the OS driver.
-@@ -139,7 +142,10 @@ struct tpmi_info_header {
- 	u64 dev:5;
- 	u64 bus:8;
- 	u64 pkg:8;
--	u64 reserved:39;
-+	u64 segment:8;
-+	u64 partition:2;
-+	u64 cdie_mask:16;
-+	u64 reserved:13;
- 	u64 lock:1;
- } __packed;
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+index 4e09a5611aca..49d573fcbd72 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+@@ -1271,6 +1271,7 @@ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
  
-@@ -667,6 +673,7 @@ static int tpmi_create_devices(struct intel_tpmi_info *tpmi_info)
+ int tpmi_sst_dev_add(struct auxiliary_device *auxdev)
+ {
++	struct tpmi_per_power_domain_info *pd_info;
+ 	bool read_blocked = 0, write_blocked = 0;
+ 	struct intel_tpmi_plat_info *plat_info;
+ 	struct device *dev = &auxdev->dev;
+@@ -1311,35 +1312,31 @@ int tpmi_sst_dev_add(struct auxiliary_device *auxdev)
+ 	if (!tpmi_sst)
+ 		return -ENOMEM;
  
- #define TPMI_INFO_BUS_INFO_OFFSET	0x08
- #define TPMI_INFO_MAJOR_VERSION		0x00
-+#define TPMI_INFO_MINOR_VERSION		0x02
+-	tpmi_sst->power_domain_info = devm_kcalloc(dev, num_resources,
+-						   sizeof(*tpmi_sst->power_domain_info),
+-						   GFP_KERNEL);
+-	if (!tpmi_sst->power_domain_info)
++	pd_info = devm_kcalloc(dev, num_resources, sizeof(*pd_info), GFP_KERNEL);
++	if (!pd_info)
+ 		return -ENOMEM;
  
- static int tpmi_process_info(struct intel_tpmi_info *tpmi_info,
- 			     struct intel_tpmi_pm_feature *pfs)
-@@ -693,6 +700,12 @@ static int tpmi_process_info(struct intel_tpmi_info *tpmi_info,
- 	tpmi_info->plat_info.device_number = header.dev;
- 	tpmi_info->plat_info.function_number = header.fn;
+-	tpmi_sst->number_of_power_domains = num_resources;
+-
+ 	for (i = 0; i < num_resources; ++i) {
+ 		struct resource *res;
  
-+	if (TPMI_MINOR_VERSION(feature_header) >= TPMI_INFO_MINOR_VERSION) {
-+		tpmi_info->plat_info.cdie_mask = header.cdie_mask;
-+		tpmi_info->plat_info.partition = header.partition;
-+		tpmi_info->plat_info.segment = header.segment;
-+	}
-+
- error_info_header:
- 	iounmap(info_mem);
+ 		res = tpmi_get_resource_at_index(auxdev, i);
+ 		if (!res) {
+-			tpmi_sst->power_domain_info[i].sst_base = NULL;
++			pd_info[i].sst_base = NULL;
+ 			continue;
+ 		}
  
-diff --git a/include/linux/intel_tpmi.h b/include/linux/intel_tpmi.h
-index 685a41dddf82..1e880cb0f454 100644
---- a/include/linux/intel_tpmi.h
-+++ b/include/linux/intel_tpmi.h
-@@ -27,7 +27,10 @@ enum intel_tpmi_id {
+-		tpmi_sst->power_domain_info[i].package_id = pkg;
+-		tpmi_sst->power_domain_info[i].power_domain_id = i;
+-		tpmi_sst->power_domain_info[i].auxdev = auxdev;
+-		tpmi_sst->power_domain_info[i].write_blocked = write_blocked;
+-		tpmi_sst->power_domain_info[i].sst_base = devm_ioremap_resource(dev, res);
+-		if (IS_ERR(tpmi_sst->power_domain_info[i].sst_base))
+-			return PTR_ERR(tpmi_sst->power_domain_info[i].sst_base);
++		pd_info[i].package_id = pkg;
++		pd_info[i].power_domain_id = i;
++		pd_info[i].auxdev = auxdev;
++		pd_info[i].write_blocked = write_blocked;
++		pd_info[i].sst_base = devm_ioremap_resource(dev, res);
++		if (IS_ERR(pd_info[i].sst_base))
++			return PTR_ERR(pd_info[i].sst_base);
  
- /**
-  * struct intel_tpmi_plat_info - Platform information for a TPMI device instance
-+ * @cdie_mask:       Mask of all compute dies in the partition
-  * @package_id:      CPU Package id
-+ * @partition:       Package partition id when multiple VSEC PCI devices per package
-+ * @segment:         PCI segment ID
-  * @bus_number:      PCI bus number
-  * @device_number:   PCI device number
-  * @function_number: PCI function number
-@@ -36,7 +39,10 @@ enum intel_tpmi_id {
-  * struct is used to return data via tpmi_get_platform_data().
-  */
- struct intel_tpmi_plat_info {
-+	u16 cdie_mask;
- 	u8 package_id;
-+	u8 partition;
-+	u8 segment;
- 	u8 bus_number;
- 	u8 device_number;
- 	u8 function_number;
+-		ret = sst_main(auxdev, &tpmi_sst->power_domain_info[i]);
++		ret = sst_main(auxdev, &pd_info[i]);
+ 		if (ret) {
+-			devm_iounmap(dev, tpmi_sst->power_domain_info[i].sst_base);
+-			tpmi_sst->power_domain_info[i].sst_base =  NULL;
++			devm_iounmap(dev, pd_info[i].sst_base);
++			pd_info[i].sst_base = NULL;
+ 			continue;
+ 		}
+ 
+@@ -1350,6 +1347,8 @@ int tpmi_sst_dev_add(struct auxiliary_device *auxdev)
+ 		return -ENODEV;
+ 
+ 	tpmi_sst->package_id = pkg;
++	tpmi_sst->power_domain_info = pd_info;
++	tpmi_sst->number_of_power_domains = num_resources;
+ 	auxiliary_set_drvdata(auxdev, tpmi_sst);
+ 
+ 	mutex_lock(&isst_tpmi_dev_lock);
 -- 
 2.40.1
 
