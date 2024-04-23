@@ -1,110 +1,92 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE3E56B9D
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 09:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B97EB55E45
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 09:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713865582; cv=none; b=XcLjHMaFbFq5KIpd28U5PfoFU+hblq6QHyE/zSA8/YAp8PTHvLz6nCtnWHsHAZJuyuI68mhLmBcvRdJJWCZTI9qqXiacR8duzu70+KJFgp5gF1KzXejPqIITSTAlCnUzCa36OTb9YwXIt8+OBUvcagZ8qr6rkhguq17xlK0UYf8=
+	t=1713865658; cv=none; b=sM4ytEh5dWv87+TAzx3WFVQ5nXV9yjkvqUIhOTK4tGiong1joQ0LYlutOSIXNIyOYsJnQIaA74IJYr2ESQrZ/MlEMLwM5WUVFbRGtZIzsZYjQAOwCV0TCbo1GxSVqc4bjnpe/l2VDjSeste/4POAPxm9dlux3ychZVBJFmexmi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713865582; c=relaxed/simple;
-	bh=NAZlEUTkNeX9oBhGuQf7WyWsRXvJx03hWitvIPh65SY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Sdj/ZPBK7dlCxmEwbhucTQ9TvKuVBxNanEOoLvKVVbcZL7tMMzHEcHiaqW8FXdZCm3Mf3wez9YAgODp8b6UOtU5F5SGWhi/7H+g5T51/S+dHlDZJMwKMD0lA0l8wSKmNU9l/38nvdyFz4663IwwJ3JOiRAWbo1+0HrvM6MN3Sfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NF/L66M5; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NF/L66M5"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6edc61d0ff6so5375890b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 02:46:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713865579; x=1714470379; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yVtlhO4s49xZU1ItPoCI7JLpDg0ZBrWqzgWF+JfN10w=;
-        b=NF/L66M5ZfCO3oBmo21+zkET0x0hf/YzNw8sRxUxHxmylnaCrkB6mR1A+fu/6HT7yr
-         F6/Y8SGboNsP8rIMAKi0K/o2j1v1mJsZw/vDxniYWqH+KU9BBQJSCiHO5rwfBzP0C2oK
-         ZA6vzVKUDP661uAikFyivnvR7rfyRbAGBq8VmFxzxmhLExFfjAdvP5ZBd8T0YhkJyLl5
-         LsMDwPTNxoN/ekzbd2SsjybV8ycmTG33S/+1wETqHp59ofhNr8UhO1SCjXdIFFfLAb3d
-         mhTS/KYJImxtxHmREiEttH1NYKBD5Ah+9xGnI0wdXiKtVzQfe2psHxbw6S37kbEweOTO
-         HfAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713865579; x=1714470379;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yVtlhO4s49xZU1ItPoCI7JLpDg0ZBrWqzgWF+JfN10w=;
-        b=GWsWP9bBSps0n+/dUlURIeUtsA8j+kqlsX4ksjBPRATimH/kizuNIFD32ERFtzokjz
-         9n23wtbsTv2e6tlSXu44Sv/8QlzS3T2C1SOmvgFFvE6Wd7itMjnhOz7phxZvPoa84xoH
-         Dr4NZnTcIA+jW1GV3tsD7MQ5WlX98oejc0inL7fl2AHSqjs2ByCxWPe7xLcU0CRK30s4
-         K5HkD2MX10asB6IvThWhfgRnxRJEk4GEaXelbcUuex4oT0gigrp9vvotr3WKKIoktPYo
-         RfwNtFacNk2zAmfwsoASiepsxPGH3MLQDGl3svM6O0mSU6Wt37ln5SoZHjPddKHxUq+H
-         Syug==
-X-Forwarded-Encrypted: i=1; AJvYcCUed0x4gG5y3RmpdhnQku/MLcSMACKPcQSEhdmkM3ow3hV8/J7eSMCayYDaDgBbUUd+IUSnN/KqILGQ9NDKz2K/DXI/68eU3Zch98Ho
-X-Gm-Message-State: AOJu0YzRw8B3QCQhB0MHp4j2voGr9RL9dLDXlPNauXtoO9Ym4stUmlMJ
-	JiAL1gFJAT1elssn7bg1wzAqZ8YDMRSRhn1JCN2R4z4G86XMy6nP9kYGVRO4
-X-Google-Smtp-Source: AGHT+IEf8WRPrYdPf3as1sxPJI+z/s1TRXy5Vez+91vpeFVQd8HzW9/Uy4tUN6IGCeOvsjGo61E3Ig==
-X-Received: by 2002:a05:6a20:7484:b0:1a7:3b4a:3e8 with SMTP id p4-20020a056a20748400b001a73b4a03e8mr16826796pzd.7.1713865579527;
-        Tue, 23 Apr 2024 02:46:19 -0700 (PDT)
-Received: from LancedeMBP.lan ([112.10.240.252])
-        by smtp.gmail.com with ESMTPSA id fa19-20020a056a002d1300b006e57247f4e5sm9214399pfb.8.2024.04.23.02.46.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 02:46:19 -0700 (PDT)
-From: Lance Yang <ioworker0@gmail.com>
-To: baolin.wang@linux.alibaba.com
-Cc: 21cnbao@gmail.com,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	hughd@google.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	ryan.roberts@arm.com,
-	shy828301@gmail.com,
-	wangkefeng.wang@huawei.com,
-	willy@infradead.org,
-	ying.huang@intel.com,
-	ziy@nvidia.com
-Subject: Re: [RFC PATCH 5/5] mm: shmem: add anonymous share mTHP counters
-Date: Tue, 23 Apr 2024 17:45:02 +0800
-Message-Id: <20240423094502.4080-1-ioworker0@gmail.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <CAGsJ_4xu4iL5pv7T1chyzGC2Vp9q1GwOp3wxb=bYMW-T-pj4dA@mail.gmail.com>
-References: <CAGsJ_4xu4iL5pv7T1chyzGC2Vp9q1GwOp3wxb=bYMW-T-pj4dA@mail.gmail.com>
+	s=arc-20240116; t=1713865658; c=relaxed/simple;
+	bh=o8f+brFbNNar+gNRDa+EC2wglP1NAfSvVEiv2tzucYA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mf3PcBmmi2Ya8Vpgk8hzR7cIjfhLEiaP8toXQg7r5hERyuHTStjucJdJGkjqZTKJsZTFxTVyw5SqmLDWkHhMVpW9LwhfLTL48Xv+0TE2lneuYKyIYIP7tWn8WaaNjQKAHOy6zO8AaDYLwl2zDoD+P6YIQxiFSR/boccCg9kT1LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A1DE339;
+	Tue, 23 Apr 2024 02:48:03 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.21.210])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A99F3F64C;
+	Tue, 23 Apr 2024 02:47:33 -0700 (PDT)
+Date: Tue, 23 Apr 2024 10:47:29 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-kernel@vger.kernel.org, paulmck@kernel.org
+Subject: Re: [PATCH] lkdtm/bugs: add test for hung smp_call_function_single()
+Message-ID: <ZieDsZclwUpzcaeI@FVFF77S0Q05N>
+References: <20240419103452.3530155-1-mark.rutland@arm.com>
+ <202404191434.5B051B5DC6@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202404191434.5B051B5DC6@keescook>
 
-On 2024/4/23 09:17, Barry Song wrote:
+On Fri, Apr 19, 2024 at 02:53:59PM -0700, Kees Cook wrote:
+> On Fri, Apr 19, 2024 at 11:34:52AM +0100, Mark Rutland wrote:
+> > The CONFIG_CSD_LOCK_WAIT_DEBUG option enables debugging of hung
+> > smp_call_function*() calls (e.g. when the target CPU gets stuck within
+> > the callback function). Testing this option requires triggering such
+> > hangs.
+> > 
+> > This patch adds an lkdtm test with a hung smp_call_function_single()
+> > callbac, which can be used to test CONFIG_CSD_LOCK_WAIT_DEBUG and NMI
+> > backtraces (as CONFIG_CSD_LOCK_WAIT_DEBUG will attempt an NMI backtrace
+> > of the hung target CPU).
+
 [...]
->> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
->> index 26b6fa98d8ac..67b9c1acad31 100644
->> --- a/include/linux/huge_mm.h
->> +++ b/include/linux/huge_mm.h
->> @@ -270,6 +270,8 @@ enum mthp_stat_item {
->>          MTHP_STAT_ANON_SWPOUT,
->>          MTHP_STAT_ANON_SWPOUT_FALLBACK,
->>          MTHP_STAT_ANON_SWPIN_REFAULT,
->> +       MTHP_STAT_SHMEM_ANON_ALLOC,
->> +       MTHP_STAT_SHMEM_ANON_ALLOC_FALLBACK,
+
+> > I wrote this because I needed to guide someone through debugging a hung
+> > smp_call_function() call, and I needed examples with/without an NMI
+> > backtrace. It seems like it'd be useful for testing the CSD lockup
+> > detector and NMI backtrace code in future.
 > 
-> not quite sure about this. for 2MB pmd-mapped THP shmem, we count them
-> as FILE_THP.
-> here we are counting as SHMEM_ANON. To me, SHMEM_ANON is more correct but
-> it doesn't align with pmd-mapped THP. David, Ryan, what do you think?
+> Like the other lockup detector, I suspect we should skip it by default
+> in the selftests? Something like this:
+> 
+> diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
+> index 368973f05250..32baddc2c85d 100644
+> --- a/tools/testing/selftests/lkdtm/tests.txt
+> +++ b/tools/testing/selftests/lkdtm/tests.txt
+> @@ -31,6 +31,7 @@ SLAB_FREE_CROSS
+>  SLAB_FREE_PAGE
+>  #SOFTLOCKUP Hangs the system
+>  #HARDLOCKUP Hangs the system
+> +#CSDLOCKUP Hangs the system
+>  #SPINLOCKUP Hangs the system
+>  #HUNG_TASK Hangs the system
+>  EXEC_DATA
 
-+1
+Ah, I wasn't ware of that file, yes.
 
-IMO, shmem isn't actually file-backed, but it has file-backed-like
-characteristics :)
+> > I'm not sure about the CSDLOCKUP name, but everything else I tried
+> > didn't seem great either:
+> > 
+> > * IPILOCKUP sounds like it's testing IPIs generally
+> > * SMPCALLLOCKUP and similar look weirdly long
+> > * SMP_CALL_LOCKUP and similar look different to {HARD,SOFT,SPIN}LOCKUP
+> > 
+> > ... and I'm happy to defer to Kees for the naming. ;)
+> 
+> It looks like it's only useful with CSD lockup detector? If that's true,
+> sure, this name is fine.
 
-FWIW, perhaps MTHP_STAT_FILE_ALLOC and MTHP_STAT_FILE_ALLOC_FALLBACK
-would better align with PMD/PTE-mapped THP.
+I think it's also useful for testing other things (e.g. RCU stall detection),
+so how about we go with SMP_CALL_LOCKUP, as that says what the test does rather
+than what specifically it can be used to test?
 
-Thanks,
-Lance
+Mark.
