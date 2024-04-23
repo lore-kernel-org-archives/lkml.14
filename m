@@ -1,107 +1,129 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF39719BBA;
-	Tue, 23 Apr 2024 14:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7767D40D
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 14:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713884348; cv=none; b=NVkPNsT2ce6bf+CvEoa5FeqaZ3zGwGZNXNZTu5d7NT7A3KN4+famOcKmxvgP8H9+z4BsrQuNP0uf6j/0IawAd5aob4PEuOS7r3OTganBkJZN+Ry4Na9s2/JAq+gdrroPe4Z21EdaycTb47rBcQyS1BzOJmZNZczHYmtqGcFzAtM=
+	t=1713884371; cv=none; b=pVVKD7sSZK5CF12049b6qo3l6O1Rklx9tI9G+N38kmPJaBqMrgrl6r387flotvLi7aCj/7fptMnzsIMKgSZLjE5swujTyJyyhT5EK3hZRrpAOOq5nZVQHU3MbFQeQ9v1UoLw9CFyCySYXZCt0g6/1P+snmoVcLkja54Aq6zcPQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713884348; c=relaxed/simple;
-	bh=Yce+qDBOZuO+SfiuLBCU/iYtbYmkEpQFI26Eyr98dJM=;
+	s=arc-20240116; t=1713884371; c=relaxed/simple;
+	bh=4rFwTK4QCFK5vpEhfjbKw/LnAiGANKApDrFpRn437Qw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OEhu4ZlV+wJIj/KYT/ungxKFyzCiWU9m+YvO3hA93ze900fx38ihmkd55J0OqcI6x8Gvr5E34e7GEm+Yrrw99ckkv5w6Iytzl69XaNZUdKAvjgHfVmjHXSWpLrabSCE38RjffOWXSdTeXPLaQi/0m5CJoqJ1b7Ip0phWThRI5hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=Euk68xFI; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+	 In-Reply-To:Content-Type; b=eHGCnxvB4bO5UWEmZboYBGREUhGSbN8o2mxJWs8NxbF+LJswN5AxqLD50CHindHYQkIwRHZhP5ZvIqL1uT3eqsMDR7bQPOHzhsTTij3rE1u3fS3pQ6mI7q2za+rcTE1Yb/CZW04XhtP+HyDoo6wHPsMvYLO7DLhEgCP+irpnzec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X51gGEyg; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="Euk68xFI"
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 5A3B8600A7;
-	Tue, 23 Apr 2024 14:59:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1713884341;
-	bh=Yce+qDBOZuO+SfiuLBCU/iYtbYmkEpQFI26Eyr98dJM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Euk68xFI4y8XXUx+z6g6V0jHbc97oDHz4Ykrc1dFaHrz2+APG9+rMjRwumONlJ3v9
-	 kvq/rBT59BH4Wm3plThuU/m7SE44w4Y9ma3r8epFTJyj0/+B+afoY8qY2uW6QEv9PF
-	 mX57F2UEhS9ddG0RjEF49Ic3bp/6geC7mEFHJ10dQWbehrG0Cf698nmnjT7fW5AHiu
-	 AM3cgn/9DHwGf4Ucj0oGjFjklNhgduZ6l8ANv8IizC+Fzr0nEo60yuI0a9LitqVbUd
-	 fmZIZ8000qT91Fk8KQhOUL48nRrLcvjQDeWgTnqjhCu1zIjrlLEZf4CWEQiRfkIw/Y
-	 u/nnH8EJYneLg==
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by x201s (Postfix) with ESMTP id DD630205A1A;
-	Tue, 23 Apr 2024 14:58:54 +0000 (UTC)
-Message-ID: <883a41cc-58b2-475b-a247-b45f69c7f24b@fiberby.net>
-Date: Tue, 23 Apr 2024 14:58:54 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X51gGEyg"
+Message-ID: <472464bb-ae10-4452-aedf-a52b3eb8a25a@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1713884366;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ccfCA2yriug7qqwYanAzAzrf5XnmP6204NXO919D7VA=;
+	b=X51gGEygzLQf0O5Kzn5SPDhBrOWq0rKxZcATRaiTGC5LLiOmhIKKpQiL5HHziZF8Q9e6fZ
+	2UCkRCUJrMJ5MoEdR5ZWePLnpEMeqmSNytbsGZG85WLNN2ofAw8yXj6sYmI0PkeK3+Bgi8
+	bH2DldDQavPuAyFm+jPjjx2ArkqOk6E=
+Date: Tue, 23 Apr 2024 10:59:21 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 1/2] net: lan966x: cleanup
- lan966x_tc_flower_handler_control_usage()
-To: Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, Horatiu Vultur <horatiu.vultur@microchip.com>,
- UNGLinuxDriver@microchip.com, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org
-References: <20240423102720.228728-1-ast@fiberby.net>
- <20240423140048.GU42092@kernel.org>
+Subject: Re: [PATCH v3 00/13] drm: zynqmp_dp: IRQ cleanups and debugfs support
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Michal Simek <michal.simek@amd.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ dri-devel@lists.freedesktop.org
+References: <20240422184553.3573009-1-sean.anderson@linux.dev>
+ <5334a3cc-bcf9-4791-9ca9-1d0093899707@ideasonboard.com>
 Content-Language: en-US
-From: =?UTF-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>
-In-Reply-To: <20240423140048.GU42092@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <5334a3cc-bcf9-4791-9ca9-1d0093899707@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Simon,
-
-On 4/23/24 2:00 PM, Simon Horman wrote:
-> On Tue, Apr 23, 2024 at 10:27:17AM +0000, Asbjørn Sloth Tønnesen wrote:
->> Define extack locally, to reduce line lengths and future users.
->>
->> Rename goto, as the error message is specific to the fragment flags.
->>
->> Only compile-tested.
->>
->> Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+On 4/23/24 09:33, Tomi Valkeinen wrote:
+> Hi Sean,
 > 
-> Hi Asbjørn,
+> On 22/04/2024 21:45, Sean Anderson wrote:
+>> This series cleans up the zyqnmp_dp IRQ and locking situation. Once
+>> that's done, it adds debugfs support. The intent is to enable compliance
+>> testing or to help debug signal-integrity issues.
+>>
+>> Last time I discussed converting the HPD work(s) to a threaded IRQ. I
+>> did not end up doing that for this series since the steps would be
+>>
+>> - Add locking
+>> - Move link retraining to a work function
+>> - Harden the IRQ
+>> - Merge the works into a threaded IRQ (omitted)
+>>
+>> Which with the exception of the final step is the same as leaving those
+>> works as-is. Conversion to a threaded IRQ can be done as a follow-up.
 > 
-> This patch-set did not apply to net-next at the time it was posted
-> (although it does now), so it will need to be reposted.
+> What is the base for this series? I'm having trouble applying it.
+> 
+> I managed to mostly apply it, but I see the board hang when I unload the modules. I didn't debug it as it might as well be caused by my conflict resolution.
 
-Weird, patchwork incorrectly matched up the two series. I had
-rebased shortly before posting (net-next was at 077633afe07f4).
+The base is v6.8-rc1, but it should probably be v6.9. I can rebase and resend.
 
-The 4 emails and their Subject, Message-ID and In-Reply-To:
+--Sean
 
-Subject: [PATCH net-next 1/2] net: sparx5: flower: cleanup sparx5_tc_flower_handler_control_usage()
-Message-ID: <20240423102728.228765-1-ast@fiberby.net>  (A)
+>> Changes in v3:
+>> - Store base pointers in zynqmp_disp directly
+>> - Don't delay work
+>> - Convert to a hard IRQ
+>> - Use AUX IRQs instead of polling
+>> - Take dp->lock in zynqmp_dp_hpd_work_func
+>>
+>> Changes in v2:
+>> - Fix kerneldoc
+>> - Rearrange zynqmp_dp for better padding
+>> - Split off the HPD IRQ work into another commit
+>> - Expand the commit message
+>> - Document hpd_irq_work
+>> - Document debugfs files
+>> - Add ignore_aux_errors and ignore_hpd debugfs files to replace earlier
+>>    implicit functionality
+>> - Attempt to fix unreproducable, spurious build warning
+>> - Drop "Optionally ignore DPCD errors" in favor of a debugfs file
+>>    directly affecting zynqmp_dp_aux_transfer.
+>>
+>> Sean Anderson (13):
+>>    drm: xlnx: Store base pointers in zynqmp_disp directly
+>>    drm: xlnx: Fix kerneldoc
+>>    drm: zynqmp_dp: Downgrade log level for aux retries message
+>>    drm: zynqmp_dp: Adjust training values per-lane
+>>    drm: zynqmp_dp: Rearrange zynqmp_dp for better padding
+>>    drm: zynqmp_dp: Don't delay work
+>>    drm: zynqmp_dp: Add locking
+>>    drm: zynqmp_dp: Don't retrain the link in our IRQ
+>>    drm: zynqmp_dp: Convert to a hard IRQ
+>>    drm: zynqmp_dp: Use AUX IRQs instead of polling
+>>    drm: zynqmp_dp: Split off several helper functions
+>>    drm: zynqmp_dp: Take dp->lock in zynqmp_dp_hpd_work_func
+>>    drm: zynqmp_dp: Add debugfs interface for compliance testing
+>>
+>>   Documentation/gpu/drivers.rst       |   1 +
+>>   Documentation/gpu/zynqmp.rst        | 149 +++++
+>>   MAINTAINERS                         |   1 +
+>>   drivers/gpu/drm/xlnx/zynqmp_disp.c  |  44 +-
+>>   drivers/gpu/drm/xlnx/zynqmp_dp.c    | 909 +++++++++++++++++++++++++---
+>>   drivers/gpu/drm/xlnx/zynqmp_dpsub.h |   1 +
+>>   drivers/gpu/drm/xlnx/zynqmp_kms.h   |   4 +-
+>>   7 files changed, 1000 insertions(+), 109 deletions(-)
+>>   create mode 100644 Documentation/gpu/zynqmp.rst
+>>
+> 
 
-Subject: [PATCH net-next 2/2] net: sparx5: flower: check for unsupported control flags
-Message-ID: <20240423102728.228765-2-ast@fiberby.net>  (B)
-In-Reply-To: <20240423102728.228765-1-ast@fiberby.net> (A)
-
-Subject: [PATCH net-next 1/2] net: lan966x: cleanup lan966x_tc_flower_handler_control_usage()
-Message-ID: <20240423102720.228728-1-ast@fiberby.net>  (C)
-
-Subject: [PATCH net-next 2/2] net: lan966x: flower: check for unsupported control flags
-Message-ID: <20240423102720.228728-2-ast@fiberby.net>  (D)
-In-Reply-To: <20240423102720.228728-1-ast@fiberby.net> (C)
-
-Patchwork have two series A+D and C+B, instead of A+B and C+D.
-
-> Also, please consider providing a cover-letter for patch-sets with
-> more than one (but not just one) patch.
-
-Sure, will do. Didn't know if it was appreciated for so small series,
-anyway v2 will have more patches, after splitting this patch up.
-
--- 
-Best regards
-Asbjørn Sloth Tønnesen
-Network Engineer
-Fiberby - AS42541
