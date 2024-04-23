@@ -1,90 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E716138499;
-	Tue, 23 Apr 2024 14:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A66137903;
+	Tue, 23 Apr 2024 14:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713880912; cv=none; b=kXTMx9hk0dAuZludroeeFC/38U398BmkWPSas7DWZczwsbu4idG6jNMpX6LA8skB2Jilwtb+lL1B2eazB0KoqaW0L3n49Mz7eL6bn+ypW/xVQq6Bcvw6+8Tu5KStJPXuaqKUCFj1r/tXjNfcNX3+YkJ/22yr5jCHaZcHD3zo+hs=
+	t=1713881059; cv=none; b=BeN5ulydRY0h6MkJ+aMxX30I18Nq3vfPQYaY9vD674/Ayxb4yPnuRHsMc5Yk8hCgzxQRav6DZdVci0V40mEMe8lLrkMfvmXMKujsllVXPDC9rCzHb2CSvxYu6oa6eGaOAldpQtCOjPdXj5ADVKq0D62aUm5i1ltj3H9eQ0gdCWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713880912; c=relaxed/simple;
-	bh=jurAq+qLuaIebEVYfXbuv3sd0JBoXVXd0/D82SINrxM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H3m9ZqiCNznpaOHkpc4jOZ0J5q1JbSPZvwhNmKaDsiLSC/aMva7H+M2QvOzpU1GA6eqweHs42PGckg5TasBhrCBKXOfvzM08MXUB/TwnqF1YWEpImIYYF491v2O0w7HWoYyD/Gk2xyWJ45tDM2tgAOU9R8aQWk71SaHynP49ZuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cTVbsEpU; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713881059; c=relaxed/simple;
+	bh=saLWC8UDzTsxgZN81v2ZZ/H9uAMBrrcZVtJooX0ATGg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jN6hvLR01q/PVsMOcHpq4GP9fBEaknfG4c4upnMEA47ClY03LNz4KsSJ3dU88kaggOxd8OOex8+0L5aV26eXvizkd+cjKQ8iJnInsVPFOLk06Y2uiQQQyjIOzvondqJDgZPO3Sj+DZC6BwG9Vn9LiP4nWuGrz3IdD2z4Tbcu3Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MmvNR2v7; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cTVbsEpU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713880911; x=1745416911;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=jurAq+qLuaIebEVYfXbuv3sd0JBoXVXd0/D82SINrxM=;
-  b=cTVbsEpU/HjSSTvHVOk+b+Jig1lvORwzMD2CbtG4BKUjJIa9UmUUsfJt
-   id2rnqfU/1u8Ff8ihEu1OsVoGRiG9eURCmP3EgOvNrElLtVl0jeLZqGcy
-   eVVedvvbskdQ1vuXUJxHZw5Fa5KJ79m3JaePDuaEKY4Edb0JGf5TzywgH
-   KKLWlvDbE3DiPjXoq3r4ywihprCXKl74UP+Xb70ugyn9+0Xiu7Qp2aVqx
-   Talgkj1UOGo5S+zHmulkZnpJJjXrZ4/1+A7pH8bwRyR5qHm2dTvUI5i/N
-   N8ZuUZAKtd/8gLJh+uB34/Sx6T10PXUjCwdqqa69GjDgkzXAvUMq7ezhU
-   g==;
-X-CSE-ConnectionGUID: 1kAMYkkzTy+XPs+aQh0xxw==
-X-CSE-MsgGUID: YKqLhQD8TSueW5oGw6t1ow==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9629406"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="9629406"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 07:01:50 -0700
-X-CSE-ConnectionGUID: gCqOyLsVT6OWoOWf9k9piQ==
-X-CSE-MsgGUID: PRNoTFdfQQ27b3ts/Vcb6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="28835722"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 07:01:48 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rzGiP-00000000M24-3WsT;
-	Tue, 23 Apr 2024 17:01:45 +0300
-Date: Tue, 23 Apr 2024 17:01:45 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: Re: [PATCH 1/1] serial: 8250_pnp: Simplify "line" related code
-Message-ID: <Zie_SWPwpbsdU4mK@smile.fi.intel.com>
-References: <20240423134930.67033-1-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MmvNR2v7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1713881052;
+	bh=saLWC8UDzTsxgZN81v2ZZ/H9uAMBrrcZVtJooX0ATGg=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=MmvNR2v7ixBjEg8YyiM9SFQDuOrsUc2mc+YUwTc21A3Z/ISE/7/ja6XbwCzo07upR
+	 kxfU5YqyIK7c4LYq8+rqcHZTQhMF12zHeGhznqAh3kl1mA4D1+MRJkAeoMs27B6iWG
+	 AUAINiB1pGzYsMsqmqB2E0jmC87JVO12Gzfe5uYfk5XoD3oZTRaZ7KDV6FXhZISATA
+	 vsYPJgnu474dL7oRjYnES6Rz18sRD3bxEL27uWLzByBUAVRWyxu93+DG0PsfUfAW6k
+	 kd1/HqECrHnaF4M17xrvUj9Z8GletWLUk/XunWaXKms3vBTfon9xhK3Hk9apjhCvJG
+	 QTUlWDGcYnuig==
+Received: from [192.168.1.205] (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A92073782139;
+	Tue, 23 Apr 2024 14:04:11 +0000 (UTC)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Date: Tue, 23 Apr 2024 10:03:40 -0400
+Subject: [PATCH 1/3] kselftest: devices: Move discoverable devices test to
+ subdirectory
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240423134930.67033-1-ilpo.jarvinen@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Message-Id: <20240423-dev-err-log-selftest-v1-1-690c1741d68b@collabora.com>
+References: <20240423-dev-err-log-selftest-v1-0-690c1741d68b@collabora.com>
+In-Reply-To: <20240423-dev-err-log-selftest-v1-0-690c1741d68b@collabora.com>
+To: Shuah Khan <shuah@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: kernel@collabora.com, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.13.0
 
-On Tue, Apr 23, 2024 at 04:49:30PM +0300, Ilpo Järvinen wrote:
-> 8250_pnp sets drvdata to line + 1 if the probe is successful. The users
-> of drvdata are in remove, suspend and resume callbacks, none of which
-> will be called if probe failed. The line acquired from drvdata can
-> never be zero in those functions and the checks for that can be
-> removed.
-> 
-> Eliminate also +/-1 step because all users of line subtract 1 from the
-> value.
+Move the discoverable devices test to a subdirectory to allow other
+related tests to be added to the devices directory.
 
-Also noticed that, looks like a leftover from the legacy PM callbacks that
-might be called without probe being succeeded.
+Signed-off-by: NÃ­colas F. R. A. Prado <nfraprado@collabora.com>
+---
+ tools/testing/selftests/Makefile                                        | 2 +-
+ tools/testing/selftests/devices/{ => probe}/Makefile                    | 2 +-
+ .../selftests/devices/{ => probe}/boards/Dell Inc.,XPS 13 9300.yaml     | 0
+ tools/testing/selftests/devices/{ => probe}/boards/google,spherion.yaml | 0
+ tools/testing/selftests/devices/{ => probe}/ksft.py                     | 0
+ .../testing/selftests/devices/{ => probe}/test_discoverable_devices.py  | 0
+ 6 files changed, 2 insertions(+), 2 deletions(-)
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index c785b6256a45..55815470e94c 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -13,7 +13,7 @@ TARGETS += core
+ TARGETS += cpufreq
+ TARGETS += cpu-hotplug
+ TARGETS += damon
+-TARGETS += devices
++TARGETS += devices/probe
+ TARGETS += dmabuf-heaps
+ TARGETS += drivers/dma-buf
+ TARGETS += drivers/s390x/uvdevice
+diff --git a/tools/testing/selftests/devices/Makefile b/tools/testing/selftests/devices/probe/Makefile
+similarity index 77%
+rename from tools/testing/selftests/devices/Makefile
+rename to tools/testing/selftests/devices/probe/Makefile
+index ca29249b30c3..7a6eaa031cfe 100644
+--- a/tools/testing/selftests/devices/Makefile
++++ b/tools/testing/selftests/devices/probe/Makefile
+@@ -1,4 +1,4 @@
+ TEST_PROGS := test_discoverable_devices.py
+ TEST_FILES := boards ksft.py
+ 
+-include ../lib.mk
++include ../../lib.mk
+diff --git a/tools/testing/selftests/devices/boards/Dell Inc.,XPS 13 9300.yaml b/tools/testing/selftests/devices/probe/boards/Dell Inc.,XPS 13 9300.yaml
+similarity index 100%
+rename from tools/testing/selftests/devices/boards/Dell Inc.,XPS 13 9300.yaml
+rename to tools/testing/selftests/devices/probe/boards/Dell Inc.,XPS 13 9300.yaml
+diff --git a/tools/testing/selftests/devices/boards/google,spherion.yaml b/tools/testing/selftests/devices/probe/boards/google,spherion.yaml
+similarity index 100%
+rename from tools/testing/selftests/devices/boards/google,spherion.yaml
+rename to tools/testing/selftests/devices/probe/boards/google,spherion.yaml
+diff --git a/tools/testing/selftests/devices/ksft.py b/tools/testing/selftests/devices/probe/ksft.py
+similarity index 100%
+rename from tools/testing/selftests/devices/ksft.py
+rename to tools/testing/selftests/devices/probe/ksft.py
+diff --git a/tools/testing/selftests/devices/test_discoverable_devices.py b/tools/testing/selftests/devices/probe/test_discoverable_devices.py
+similarity index 100%
+rename from tools/testing/selftests/devices/test_discoverable_devices.py
+rename to tools/testing/selftests/devices/probe/test_discoverable_devices.py
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.44.0
 
