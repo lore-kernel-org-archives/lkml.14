@@ -1,155 +1,129 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C286D1A9
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 10:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD55260DCF
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 10:24:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713867832; cv=none; b=XwHzu3GvMiRVz2W6vHQwbBN/ON4N427nJAS/Nmn6JWPxrAzGBejXvU72TYEsLqabflonG/GzMP/ckNuhLPY/OQ1h6aSdRIO9RNOE2EcvEj3Vua54JO/dO2M9Np4D0hMXj+whhcRa4zYN9JOREZlxm/p6ULATaUbC3m43Nb3qdtE=
+	t=1713867868; cv=none; b=EcY+NP+RPo8qyOLLfBqnnEOSdbB6e50sSOXAxLVQyvuLHopa504TvtkUFuDMci6QlRqU68oyjJ24NUOczBhkE0Uzn0y+2Sl7ZWyyaZQp3I7F0YrQyyXQfGpST43ZVMcx9abUFiujYice/i4UmWGpuel0DQ8d2BKG1fYGUEAK0p0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713867832; c=relaxed/simple;
-	bh=rw+6R+nzVHr2DchNxm7cW1XESdq7NtcMktvw4P66jts=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZVVclPKD2PosXCfW134EgL2LwcKfgxc650DKuj8PgBZ17FA6Vc67/yWeV+6egtQIfezw1BHiFAii0jWg8WILUtdv/us9T7Ah7aBBnLVrR7GrGeYBL1ADuy/rVmejUQ/KHw0a+ink6uSMQ0YjQHO2DBb2E6W7x0+vpA9QFY5Zjc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=X8rQjt+D; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1713867868; c=relaxed/simple;
+	bh=qaSAT1+TaIc7tGENMqXgteVrWscZh7cUNCbhrTleCg4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=Z8EIKLGZoWDi065bKxim8uPhk6k8WKkN2FFo/8Eb37+pGNhmXyWgrhMOMqGm7GIHuwciUb7pfCotDuFZptl/OcWfFricrvTKfJMfTKINmUEDtTLOkfN6vrgA4Zs8JSg6TkYIDN/CikIBruSwLfEys8l0m6EWnoENELhu6gf/Sig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gmA02qVO; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="X8rQjt+D"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43N5qOAr019606;
-	Tue, 23 Apr 2024 05:23:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=PODMain02222019; bh=I
-	w6V43y3Cb122Py+ZPFtXAxE8lyjqCSdyyCRpwjHM+k=; b=X8rQjt+DQV28aHGbl
-	9zyOv0woxTzTBn2Cg8B+okaVqmPI3vo4mAk31m1oYBOti0OP/8p5CtunbXL31jkb
-	sHB1v/w5WVr9I1JhQycFCPwv7JL7t9w9Cfhl8zwetUpVliyOldK33qmAPdDKq4o+
-	ltQV+ZEZJXRIbCtnqIzVFAjQUSaSI9avcwwj1SbSPAQiJS9rrzPORV7S0iozu/oG
-	6OfUhUhDiZW05yjEYlgugM5S6FuO4LqR9H8oXoMZsZLa2zf1YukK7eINAkgXlAKq
-	My3OLwLLNCBSvAtvWea6iDfrHs7dDNvFyLPb+PB6xi7jiQICYi5KnQy9GXAtfb0O
-	gx4hw==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3xmqmh1xu2-1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gmA02qVO"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43N8gSB4023774;
+	Tue, 23 Apr 2024 10:24:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : references : cc : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=4AQ5OdGzRd9ced7hbJBtlQQmE/elMqN8PzOldBw2HRM=;
+ b=gmA02qVOy+Ybw0wV5NcfkG6q0SLV1rNSjbGFN8lcvanIU0PVddp+/c9J2cp7NEm8S0CE
+ qzvVskXpjNHfuktmzsUAvAJ1PpTTgVeuZdDe0Y0vUrnF9zKWXJuNMWP4H1bu/EGeeIlt
+ yQrJc7N55ZOM90IPESFO9LFitnJhLxlhw2Hdc0apxrsPHr97C0CM5c39rVm2y+B8VFQo
+ AHsQxsUwkAHrZjiA9KcQqPc0H7TfVkj6o2ksTuYIaS4vDu+4svr3804TNGAe0xA8KeBS
+ YeQqm6aL0Tsfne6ZYPpspss5CZG/cswa/Adzf4JSVksOU1wJugkYPgl4N2Cd/9yrPnwy Yg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xp9q406dy-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Apr 2024 05:23:41 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 23 Apr
- 2024 11:23:39 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
- via Frontend Transport; Tue, 23 Apr 2024 11:23:39 +0100
-Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 612B1820242;
-	Tue, 23 Apr 2024 10:23:39 +0000 (UTC)
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: <lee@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: [PATCH] mfd: cs42l43: Update patching revision check
-Date: Tue, 23 Apr 2024 11:23:39 +0100
-Message-ID: <20240423102339.2363400-1-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.2
+	Tue, 23 Apr 2024 10:24:17 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43NAKW4W008099;
+	Tue, 23 Apr 2024 10:24:16 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xp9q406ds-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Apr 2024 10:24:16 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43N7wnAi015277;
+	Tue, 23 Apr 2024 10:24:15 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xmshm4um9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Apr 2024 10:24:15 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43NAODMb28377812
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 23 Apr 2024 10:24:15 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E129D58060;
+	Tue, 23 Apr 2024 10:24:12 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F3FDF58051;
+	Tue, 23 Apr 2024 10:24:09 +0000 (GMT)
+Received: from [9.204.206.228] (unknown [9.204.206.228])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 23 Apr 2024 10:24:09 +0000 (GMT)
+Message-ID: <14898c69-6a2e-4a9d-a0d4-d674087cd1ae@linux.ibm.com>
+Date: Tue, 23 Apr 2024 15:54:08 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: _Oa1XF70cGf9wqyIqW4Yx0km86vFkBsG
-X-Proofpoint-GUID: _Oa1XF70cGf9wqyIqW4Yx0km86vFkBsG
-X-Proofpoint-Spam-Reason: safe
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] tracing/sched: sched_switch: place prev_comm and
+ next_comm in right order
+To: tiozhang@didiglobal.com
+References: <20240417102840.GA6614@didi-ThinkCentre-M930t-N000>
+Content-Language: en-US
+Cc: Steven Rostedt <rostedt@goodmis.org>, mhiramat@kernel.org,
+        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        zyhtheonly@gmail.com, zyhtheonly@yeah.net,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <20240417102840.GA6614@didi-ThinkCentre-M930t-N000>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: UtKRG6xtEF9d_N7qcflet19AJ5LfuYd3
+X-Proofpoint-ORIG-GUID: 57xv38v1tFx1ZLPPldUOfHBA0ZLrsuN6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-23_08,2024-04-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ suspectscore=0 spamscore=0 priorityscore=1501 phishscore=0 malwarescore=0
+ impostorscore=0 bulkscore=0 lowpriorityscore=0 mlxlogscore=999
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404230028
 
-The firmware can only be patched once. The current code checks if the
-firmware supports the features required by the driver and then patches
-if it does not. This could lead to the device being patched twice if
-the device was patched before the driver took control, but with a
-firmware that doesn't support the features the driver requires. This
-would fail but potentially in unpredictable ways.
+Hi Tio zhang,
 
-The check should actually check the device is at the ROM version, and
-patch the device if it is. Then a separate later check should error out
-if the devices firmware is still too old to be supported. This will at
-least fail in a clean way with a nice error message.
+On 17/04/24 15:59, Tio Zhang wrote:
+> Switch the order of prev_comm and next_comm in sched_switch's code to
+> align with its printing order.
+> 
+> Signed-off-by: Tio Zhang <tiozhang@didiglobal.com>
+> ---
+>  include/trace/events/sched.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> index dbb01b4b7451..a4bd4330db4c 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -239,11 +239,11 @@ TRACE_EVENT(sched_switch,
+>  	),
+>  
+>  	TP_fast_assign(
+> -		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
+> +		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
+>  		__entry->prev_pid	= prev->pid;
+>  		__entry->prev_prio	= prev->prio;
+>  		__entry->prev_state	= __trace_sched_switch_state(preempt, prev_state, prev);
+> -		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
+> +		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
+>  		__entry->next_pid	= next->pid;
+>  		__entry->next_prio	= next->prio;
+>  		/* XXX SCHED_DEADLINE */
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- drivers/mfd/cs42l43.c | 36 ++++++++++++++++++++++++++++++------
- 1 file changed, 30 insertions(+), 6 deletions(-)
+Yes, makes sense to have all previous and then the next for increased readability.
 
-diff --git a/drivers/mfd/cs42l43.c b/drivers/mfd/cs42l43.c
-index a0fb2dc6c3b2..ae8fd37afb75 100644
---- a/drivers/mfd/cs42l43.c
-+++ b/drivers/mfd/cs42l43.c
-@@ -43,6 +43,9 @@
- #define CS42L43_MCU_UPDATE_TIMEOUT_US		500000
- #define CS42L43_MCU_UPDATE_RETRIES		5
- 
-+#define CS42L43_MCU_ROM_REV			0x2001
-+#define CS42L43_MCU_ROM_BIOS_REV		0x0000
-+
- #define CS42L43_MCU_SUPPORTED_REV		0x2105
- #define CS42L43_MCU_SHADOW_REGS_REQUIRED_REV	0x2200
- #define CS42L43_MCU_SUPPORTED_BIOS_REV		0x0001
-@@ -709,6 +712,23 @@ static void cs42l43_mcu_load_firmware(const struct firmware *firmware, void *con
- 	complete(&cs42l43->firmware_download);
- }
- 
-+static int cs42l43_mcu_is_hw_compatible(struct cs42l43 *cs42l43,
-+					unsigned int mcu_rev,
-+					unsigned int bios_rev)
-+{
-+	/*
-+	 * The firmware has two revision numbers bringing either of them up to a
-+	 * supported version will provide the disable the driver requires.
-+	 */
-+	if (mcu_rev < CS42L43_MCU_SUPPORTED_REV &&
-+	    bios_rev < CS42L43_MCU_SUPPORTED_BIOS_REV) {
-+		dev_err(cs42l43->dev, "Firmware too old to support disable\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * The process of updating the firmware is split into a series of steps, at the
-  * end of each step a soft reset of the device might be required which will
-@@ -745,11 +765,10 @@ static int cs42l43_mcu_update_step(struct cs42l43 *cs42l43)
- 		  ((mcu_rev & CS42L43_FW_SUBMINOR_REV_MASK) >> 8);
- 
- 	/*
--	 * The firmware has two revision numbers bringing either of them up to a
--	 * supported version will provide the features the driver requires.
-+	 * The firmware has two revision numbers both of them being at the ROM
-+	 * revision indicates no patch has been applied.
- 	 */
--	patched = mcu_rev >= CS42L43_MCU_SUPPORTED_REV ||
--		  bios_rev >= CS42L43_MCU_SUPPORTED_BIOS_REV;
-+	patched = mcu_rev != CS42L43_MCU_ROM_REV || bios_rev != CS42L43_MCU_ROM_BIOS_REV;
- 	/*
- 	 * Later versions of the firmwware require the driver to access some
- 	 * features through a set of shadow registers.
-@@ -794,10 +813,15 @@ static int cs42l43_mcu_update_step(struct cs42l43 *cs42l43)
- 			return cs42l43_mcu_stage_2_3(cs42l43, shadow);
- 		}
- 	case CS42L43_MCU_BOOT_STAGE3:
--		if (patched)
-+		if (patched) {
-+			ret = cs42l43_mcu_is_hw_compatible(cs42l43, mcu_rev, bios_rev);
-+			if (ret)
-+				return ret;
-+
- 			return cs42l43_mcu_disable(cs42l43);
--		else
-+		} else {
- 			return cs42l43_mcu_stage_3_2(cs42l43);
-+		}
- 	case CS42L43_MCU_BOOT_STAGE4:
- 		return 0;
- 	default:
--- 
-2.39.2
-
+Reviewed-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
