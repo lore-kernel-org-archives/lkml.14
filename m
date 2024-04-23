@@ -1,76 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4955313DDDC
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 17:40:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674F413CA8A;
+	Tue, 23 Apr 2024 17:42:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713894029; cv=none; b=F/e4jSItnHxcs/4e4FOx0Y8seOaJNdosy0zk+lnPZca+xot2UACFjlC/LLYBUqfO0IfcYyTvNLY4/psdf35/wAZykqXB+m1izNem9QmvzSbE6GnIniebErOWbBnn7mv2+d8BrS/BZrmjxQPMWbIjBbdzFvodDQF6LaSQwsfMdWU=
+	t=1713894165; cv=none; b=Z7tRFDeNrHQ7GBCS3bikIpZAmZiTO4xIK/DYuzr53fYlAQpFffRJb+9+ngIgP/oKpuTz9S8xC0SmW1Rl1RyLYQyNS4JM44oyG/6N5G4IGmZi3hnm8UQiF7xGM6i3cKdNkVv2nMg4K5VPdJAdW4DVRVq2pOEo2/+O26SwRRlA2hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713894029; c=relaxed/simple;
-	bh=ZGVdiXH50qmWUKxvs/Sh72iae0mXIJYxi+k9XKbTZTE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=hvyi0g67i2BJ97WBDr/ax4gjK+CAwfb0SAy/KCSR0ITbtLeajST7EQoJs6uIDcCF+Gam3KJeujWXYbIxH+6atwKpntE2bm9cZvh7fs6eCmuDfOJD3+F6lyy79oafvjNiWDFPilL06i16Gsqr0HjWWygOF+2XpOJwUv0W+g4Na5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Km8eWQMm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713894165; c=relaxed/simple;
+	bh=jr0FL/sdQ5DqkDL9pdfWp5P13hNiyF7VcuK+S9HzQ4E=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=NzmsJi5YtjbHRp3QU6n9KoJHe+dE0Z0ntdjq3y5VgaZTT1PqXB0MDCsusEraHnfh5ZVWSZBNnhkZBHunXcrVlEFXjGmox2wCE89YJWxDLmlzHNv9iqU0DcklMII/Jh8xLwSo3Yj63fts3cPeCfKDy6UPhFMYB9gTTxFhgA1HcHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IEpNmJdz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Km8eWQMm"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EC7A7C2BD11;
-	Tue, 23 Apr 2024 17:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713894029;
-	bh=ZGVdiXH50qmWUKxvs/Sh72iae0mXIJYxi+k9XKbTZTE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Km8eWQMmdI+N9W5/tFoMg2J/NS4lZLmsFHRpRevL0nL//3/qMUcjuFVb9D2cxUB8e
-	 hgzY8hNFPGgORiBG68c19AGvA06Y6+8AAjYLWD14fUbigh4JQxFI9Z3ab945JlpLYm
-	 8FKX3YKavNqvLzdGzDTMmdttclR8NIynini5/KVHIZrHf+1DOTd8kLW9TuxhQy2b6k
-	 FQ/ETqiW4S2YrdolJeNmFSblx/bLyC2RBigojgIxFJtbC5LD74py7dVl7O6xAA6aMP
-	 I6oJMUr7NXV2VlbKzkaV9pjnRjw9lnRM7ioNSQbZyEafK//xFeDmxbDN3AKlyfJZ79
-	 MSG4QuxXfFSbw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CE48DDEC7E1;
-	Tue, 23 Apr 2024 17:40:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IEpNmJdz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8E3EC116B1;
+	Tue, 23 Apr 2024 17:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1713894165;
+	bh=jr0FL/sdQ5DqkDL9pdfWp5P13hNiyF7VcuK+S9HzQ4E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IEpNmJdzUHxHHBiS/0YhvZZ8Fk+7y/RJ/mmOhtuRZd+Vgf4KX8CuUJ4NqcqPN4fQ9
+	 WoxXv/IfSBxMbgBj0caJgRJYt1Hxl5DsRP/p074MWKoUHoEPBHxFUqeBOuNWW+cred
+	 T2KWkH/lxDshwWyRxrkilogbeFgbXbLXw8xaPBnE=
+Date: Tue, 23 Apr 2024 10:42:44 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: David Hildenbrand <david@redhat.com>, "Michael S. Tsirkin"
+ <mst@redhat.com>, Kent Overstreet <kent.overstreet@linux.dev>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Suren Baghdasaryan <surenb@google.com>
+Subject: Re: linux-next: manual merge of the vhost tree with the mm tree
+Message-Id: <20240423104244.d0108d71eee622b2f9371cfa@linux-foundation.org>
+In-Reply-To: <20240423220317.01d65416@canb.auug.org.au>
+References: <20240423145947.142171f6@canb.auug.org.au>
+	<e07add5b-e772-4a8c-b71f-79f1fe74580a@redhat.com>
+	<20240423220317.01d65416@canb.auug.org.au>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: fix comment in sanity_check_raw_super()
-From: patchwork-bot+f2fs@kernel.org
-Message-Id: 
- <171389402884.11756.5936531495937723538.git-patchwork-notify@kernel.org>
-Date: Tue, 23 Apr 2024 17:40:28 +0000
-References: <20240416072108.5819-1-chao@kernel.org>
-In-Reply-To: <20240416072108.5819-1-chao@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On Tue, 23 Apr 2024 22:03:17 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-This series was applied to jaegeuk/f2fs.git (dev)
-by Jaegeuk Kim <jaegeuk@kernel.org>:
-
-On Tue, 16 Apr 2024 15:21:07 +0800 you wrote:
-> Commit d7e9a9037de2 ("f2fs: Support Block Size == Page Size") missed to
-> adjust comment in sanity_check_raw_super(), fix it.
+> Hi all,
 > 
-> Signed-off-by: Chao Yu <chao@kernel.org>
-> ---
->  fs/f2fs/super.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Tue, 23 Apr 2024 10:21:55 +0200 David Hildenbrand <david@redhat.com> wrote:
+> >
+> > Easy header conflict. @MST, @Andrew, do we simply want to take that
+> > virtio-mem patch via the MM tree to get rid of the conflict
+> > completely?
+> 
+> And because it is so trivial a conflict, you should just mention it to
+> Linus when you send the merge requests.
 
-Here is the summary with links:
-  - [f2fs-dev,1/2] f2fs: fix comment in sanity_check_raw_super()
-    https://git.kernel.org/jaegeuk/f2fs/c/5bf624c01229
-  - [f2fs-dev,2/2] f2fs: remove unnecessary block size check in init_f2fs_fs()
-    https://git.kernel.org/jaegeuk/f2fs/c/06b206d9e2b4
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Yes, let's leave things as they are.  We have to give Linus *something*
+to do ;)
