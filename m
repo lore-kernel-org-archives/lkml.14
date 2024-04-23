@@ -1,71 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D45113776F;
-	Tue, 23 Apr 2024 14:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27357139D1B;
+	Tue, 23 Apr 2024 14:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713882037; cv=none; b=MML2xjhvSs6jTFBYdoEs5bLzUXfOtrA5DGZLjYQfjJ3ut93qU5phaUyoEye4tBl6YkiFFLsn9iBKvN0lJ1wiutvbBxmoTUi2GgmX/5/PlvhYmRsn32MFzF3WLZ9Irkm++Gm3hFxqlImIHso1CeCCKM7Xyzh2e2+ejeehrm3Vs/c=
+	t=1713882132; cv=none; b=Kw/WjGVRXjxOcWKXw66pKQHgqbOSQ5N9XVgNS7oowTn3nyIl5gVn9fcv8SFNyOfMumVhgMGX9QL9CRHTqUXvLpFCn07BQbqZE4uXYwqh0a4OUP8I0OPN5h+CboN7vP//5fhbFOCIfSs44c+Sq9he7RelfrPdnMyHtQ7oSNcPIbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713882037; c=relaxed/simple;
-	bh=zLC/Cfeda05MZAEngIc01iWcAOs4ICPgoAY1ea19gwM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SMOMc1cbpl3g9d8bnGd+i3lhC5QdCjLgDrxk19O/i+Y6wmkw5CGhXzSUNKKPSHBuqWqk24MXm73yVlFyzNG981BDHFl/gb0F4mQDuxwosyXeTam3uiVaomxpQcGas/RsYODUnAIIrUFRf7Q0Bjr0wlS/LOyt5sdGSUAXv6fbNDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KnW73mnG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713882132; c=relaxed/simple;
+	bh=h0MwcUHxXAEj+nVIJL59IQ1CJfo9yrZ784pC1Kz9e88=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rnq7T4aDJTYkF5cFA66crRW+MQzgn+fXAfutIUWmC88IJpE7Zwk5ISsj6zhYdSjDdFseVFTFFNmsV6bIj9QeQPJGbMrQNwp+Sz9vAXUUkwxqBLY32Cfj1uYzZMZo/t26xNdf9CORjSRjG3QGdx51+WmJ49oKbtHSsXTV0hpsIVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z2g2qmlH; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KnW73mnG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B46EFC116B1;
-	Tue, 23 Apr 2024 14:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713882037;
-	bh=zLC/Cfeda05MZAEngIc01iWcAOs4ICPgoAY1ea19gwM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KnW73mnGmamG9IFaewuH5XSilHmTIw0l6vRolCW1Kia0k5zrXRgEZr4/igfT1/YrR
-	 wRbPwfZPsoSmNeBZuEgOkk3BCF66U+ebX5NNBbzhxfnZg7LVmPhTGqmTvU3nqj0Teh
-	 6spRECGs34isnlUhTPMenIc+f0mrfkHDoXATGmR+UAfs6PyzIdyxiJztBLcW9oZxxp
-	 pQiZgZ93UAl5KQrvgQa1at5YmznpCr57P+5mHra0cwKsNUHEwfU9wmXLMnIZHRLhx7
-	 vQG4fuRbpKEDLUL4PfAGDo3SGbg7p4JKoPu7MOT11jSnaGrcRl7O+NonO/ZD6kvv2d
-	 o0X/1j8lLBAdQ==
-Date: Tue, 23 Apr 2024 16:20:33 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the
- i2c-host-fixes tree
-Message-ID: <qn4mvuemt3wblgntqx7rit4syvgkfipne26d63do4ef2jalpjd@vsvxdg36r3xf>
-References: <20240423083145.771dddf5@canb.auug.org.au>
- <20240423091728.06d9ad30@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z2g2qmlH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713882131; x=1745418131;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=h0MwcUHxXAEj+nVIJL59IQ1CJfo9yrZ784pC1Kz9e88=;
+  b=Z2g2qmlHc3+S+i3ZBqPdyBYk3RVrjegHrq75QLP02rtGgpIYR2VKmjZp
+   j8um0NVvaOxHWrWsgfoB4dSOsOWmhSS2XX2zA3DvnVNliGJDeEiia8nRr
+   YLkzbonJMVwlM+DvO9c0enBNnOlUjYAPDOzc185CScmHqzRCyVUz//3FF
+   S8Yn1uVTyzNeAZii7quvbv3EEQbHc5qm+y2A8N3DKZ+iVtZC1AAh2LIgl
+   8Qy3HeQ/hmVSxzOS75fN8UsmAY6cIdslN/IZRY/Di7YW2CsnDUuqAUZR3
+   d7ToO9bJ1RWBptrNvLi5VMiPsPJ6JnsiZ2PpxMeryr188Uz4kb27N9uTQ
+   Q==;
+X-CSE-ConnectionGUID: sbpI+DAKQ7OyRtXmQ0TunQ==
+X-CSE-MsgGUID: JwjogrdIQMSAv6Ebjx8NTw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9389745"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="9389745"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 07:22:10 -0700
+X-CSE-ConnectionGUID: lBqee1Y3Q4O8o8QU62LYPg==
+X-CSE-MsgGUID: wwcOT1aXQkKWOooRTgOoXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="24896044"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa007.jf.intel.com with ESMTP; 23 Apr 2024 07:22:09 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id AFA1E1C5; Tue, 23 Apr 2024 17:22:07 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Matthew Wilcox <willy@infradead.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v1 1/2] xarray: Use BITS_PER_LONGS()
+Date: Tue, 23 Apr 2024 17:20:24 +0300
+Message-ID: <20240423142204.2408923-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20240423142204.2408923-1-andriy.shevchenko@linux.intel.com>
+References: <20240423142204.2408923-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240423091728.06d9ad30@canb.auug.org.au>
+Content-Transfer-Encoding: 8bit
 
-Hi Stephen,
+Use BITS_PER_LONGS() instead of open coded variant.
 
-On Tue, Apr 23, 2024 at 09:17:28AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> On Tue, 23 Apr 2024 08:31:45 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Commit
-> > 
-> >   86eb98127332 ("gpio: pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()")
-> > 
-> > is missing a Signed-off-by from its committer.
-> 
-> That commit is also (still) in the i2c-host tree.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/xarray.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ops... this patch shouldn't be there at all.
+diff --git a/include/linux/xarray.h b/include/linux/xarray.h
+index d9d479334c9e..d54a1e98b0ca 100644
+--- a/include/linux/xarray.h
++++ b/include/linux/xarray.h
+@@ -1146,7 +1146,7 @@ static inline void xa_release(struct xarray *xa, unsigned long index)
+ #define XA_CHUNK_SIZE		(1UL << XA_CHUNK_SHIFT)
+ #define XA_CHUNK_MASK		(XA_CHUNK_SIZE - 1)
+ #define XA_MAX_MARKS		3
+-#define XA_MARK_LONGS		DIV_ROUND_UP(XA_CHUNK_SIZE, BITS_PER_LONG)
++#define XA_MARK_LONGS		BITS_TO_LONGS(XA_CHUNK_SIZE)
+ 
+ /*
+  * @count is the count of every non-NULL element in the ->slots array
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
-I think it ended up by mistake while I was testing the series.
-
-I will remove it.
-
-Thanks a lot!
-Andi
