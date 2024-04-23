@@ -1,118 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBAE745E2;
-	Tue, 23 Apr 2024 13:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F19B745E2;
+	Tue, 23 Apr 2024 13:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713878410; cv=none; b=j4vKS+PzhxPhx6JwKB898hXPRWu4pyCJDOx4pMhY3h7z5ouCQjwDL0xinN+Bg66fU3YErVOGbX16cEX9jAiNTV3B7yhY66T3uH0hcpvmMz0E5+yBXQvvYWIMiobLQEzKOZ4Yeu819joyqWt+rSv4/D5Bb9p1Sva4FISQArmWkIk=
+	t=1713878430; cv=none; b=f1/18xkUJtLfxbubS9I+835a30NutUNWVPn7M3qZ6+4Sku4oUDsreHs2qKQs0D7bM3OdH7QsoRDHB8OnQGLSMXx+o1WtwlbWLQc65Yd+8XTsYjp+H/Yfm3b2Jcs9/3107cERMXdQNchTyq3PE3qR9/LcGT2/sWgLoBXGKEKZntQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713878410; c=relaxed/simple;
-	bh=TFx9xfvwbclzPPajH46kI/lyaHseaDkHlbeFy9Vg4RM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hnux5cArT6/HORT/+txUlWlCPelZh3JWz0T2bBZiU5C3Ana+n1oZR6QNkiJFzCfkfTYowGiqpBJkYVjWPRBJF498j3+4JHhyFOOrpcJAmw2N2TfNfApoHuGXvy8HRCl2thrf6vQUT92KGIBXnTZtdiYEnL6JgWhjgqYE+wCd6kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kIl1Rd2w; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1713878430; c=relaxed/simple;
+	bh=dwxGe68AaFcC3uVyUNsjWLGssrP0iEGQWVADx4GC830=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NYWVaRoOXesFPcy3a0uq/O3fT9VpmQcaBRgp2oVQmyRYsMvcdlm0Sm9Pb2yMUdTaVglQNJ1AxG0Y0um0vLX2CEZa18YYWLxA6WkYylNDgKx468SLFkDPxY9jT+EAt973iL8z6Hyl57pdgHYOTLkyLcc9kJ/kNm4qFQyrn9mz9l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k85gPVQb; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kIl1Rd2w"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k85gPVQb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713878410; x=1745414410;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TFx9xfvwbclzPPajH46kI/lyaHseaDkHlbeFy9Vg4RM=;
-  b=kIl1Rd2wVyI1G0VgV1nQ9WxvT3S/VVROX2t7e0BIXwjplv+9yuXY5mm1
-   ZEBK3EkH7X+9EryRZyy4TS8TeCy5MJBBB9tPljknZgkI24Tg64BgrPbSq
-   9xEXgbP7FaQBs7ZFfIOVCb/TIxhQidIZagJ9ipWnWU9Z49YVVfo6dO1eu
-   KOfhxeXEx9w4wuXA0yTdX2EOaVU7ezSiaYfFyE4iYueexLCYnsuJUjOK3
-   JNqJErCojqDjDxAd5AkVFXAICeVlC+pEWgIcCF6Fq8x+vsW7YQNEvVI5b
-   QVdULJ/hbH2uqDWwEpKRbavRXwECiVb4AXT8oDgOnUMvgpxAvs1jXcQFz
+  t=1713878429; x=1745414429;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=dwxGe68AaFcC3uVyUNsjWLGssrP0iEGQWVADx4GC830=;
+  b=k85gPVQbcJBMm7huZxNk0/sMFCNBPes3gogv14xmZybCca7R6J6lQ1/b
+   BTn9pBKIaFz4kW0UhOujoPRn8ZCEdNTbRR2CxX3ev7w5IvoCsXLjfYjM3
+   UuGHF1zGiVcaxUoUFEqXT56taOU2AFZwJmCyxwQP12MjnN01I1mouxuyI
+   VJa3hr84RR5INlcXcYe3TyIrbBMlR6iHmR3G949IMhG9SMviTvk3ic7r/
+   wx8qW8cmIEDEqTDio/gTYUbsbeKHWXrbw9uKIXBT6PADNRHEAUoR9gFRi
+   QCq2cRMs9Bzh+ONGZP1YXPoHjzmr62oAFHdkftxBoe/PgNEPhObboWre5
    A==;
-X-CSE-ConnectionGUID: tt8teK9dTemw9GwhYJwodA==
-X-CSE-MsgGUID: 6fsiG6ArSsimauSw/wIvcA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="31953602"
+X-CSE-ConnectionGUID: LT0Lg5YIQJKVeFDkeNkm/w==
+X-CSE-MsgGUID: QrhTaxBGQ4S5FOnjAd/X6Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="9630379"
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="31953602"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 06:15:40 -0700
-X-CSE-ConnectionGUID: M86h0au6SiOVuxovR2hrAQ==
-X-CSE-MsgGUID: fwqwAFHYRrOEtC6/GVhW/A==
+   d="scan'208";a="9630379"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 06:20:28 -0700
+X-CSE-ConnectionGUID: CnAY08CmSHSn6vJfH89M/g==
+X-CSE-MsgGUID: Uabu8h9gT5ejj9xCCPeL7w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="28864245"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.124.225.183]) ([10.124.225.183])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 06:15:36 -0700
-Message-ID: <fe9cec78-36ee-4a20-81df-ec837a45f69f@linux.intel.com>
-Date: Tue, 23 Apr 2024 21:15:34 +0800
+   d="scan'208";a="24348995"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa009.jf.intel.com with ESMTP; 23 Apr 2024 06:20:27 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 4B26E489; Tue, 23 Apr 2024 16:20:25 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	workflows@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v1 2/2] Documentation: process: Recommend to put Cc: tags after cutter '---' line
+Date: Tue, 23 Apr 2024 16:19:38 +0300
+Message-ID: <20240423132024.2368662-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20240423132024.2368662-1-andriy.shevchenko@linux.intel.com>
+References: <20240423132024.2368662-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 085/130] KVM: TDX: Complete interrupts after tdexit
-To: Reinette Chatre <reinette.chatre@intel.com>, isaku.yamahata@intel.com
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
- erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
- Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
- chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <aa6a927214a5d29d5591a0079f4374b05a82a03f.1708933498.git.isaku.yamahata@intel.com>
- <7d19f693-d8e9-4a9d-8cfa-3ec9c388622f@intel.com>
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <7d19f693-d8e9-4a9d-8cfa-3ec9c388622f@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+The recommendation is based on the following rationale:
 
+- it makes the commit messages much cleaner and easy to read, especially
+  on the screens of the mobile devices;
 
-On 4/17/2024 2:23 AM, Reinette Chatre wrote:
-> Hi Isaku,
->
-> (In shortlog "tdexit" can be "TD exit" to be consistent with
-> documentation.)
->
-> On 2/26/2024 12:26 AM, isaku.yamahata@intel.com wrote:
->> From: Isaku Yamahata <isaku.yamahata@intel.com>
->>
->> This corresponds to VMX __vmx_complete_interrupts().  Because TDX
->> virtualize vAPIC, KVM only needs to care NMI injection.
-> This seems to be the first appearance of NMI and the changelog
-> is very brief. How about expending it with:
->
-> "This corresponds to VMX __vmx_complete_interrupts().  Because TDX
->   virtualize vAPIC, KVM only needs to care about NMI injection.
-   ^
-   virtualizes
+- it reduces resources (memory, time, energy) to retrieve all these
+  headers, which are barely needed by a mere user, as for automation
+  they will be still available via mail archives, such as
+  https://lore.kernel.org, assuming the Link: or Message-ID tag is
+  provided.
 
-Also, does it need to mention that non-NMI interrupts are handled by 
-posted-interrupt mechanism?
+Let's be environment friendly and save the planet!
 
-For example:
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ Documentation/process/5.Posting.rst          | 4 ++++
+ Documentation/process/submitting-patches.rst | 5 +++++
+ 2 files changed, 9 insertions(+)
 
-"This corresponds to VMX __vmx_complete_interrupts().  Because TDX
-  virtualizes vAPIC, and non-NMI interrupts are delivered using 
-posted-interrupt
-  mechanism, KVM only needs to care about NMI injection.
-...
-"
+diff --git a/Documentation/process/5.Posting.rst b/Documentation/process/5.Posting.rst
+index 90a7fe2a85f2..157b3fc0087a 100644
+--- a/Documentation/process/5.Posting.rst
++++ b/Documentation/process/5.Posting.rst
+@@ -276,6 +276,10 @@ for addition without the explicit permission of the person named; using
+ Reported-by: is fine most of the time as well, but ask for permission if
+ the bug was reported in private.
+ 
++It's recommended to locate the additional Cc: tags after the cutter '---' line
++in the patches as it makes sure the commit message won't be polluted with them.
++At the same time they will be available via email headers on the mail archives,
++such as https://lore.kernel.org.
+ 
+ Sending the patch
+ -----------------
+diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
+index 6775f0698136..0c898d9e00f5 100644
+--- a/Documentation/process/submitting-patches.rst
++++ b/Documentation/process/submitting-patches.rst
+@@ -491,6 +491,11 @@ automatically converted to the Cc: email header and you do not need to
+ have an explicit ``Cc:`` tag, if the person is already mentioned by another
+ tag.
+ 
++It's recommended to locate the additional ``Cc:`` tags after the cutter '---' line
++in the patches as it makes sure the commit message won't be polluted with them.
++At the same time they will be available via email headers on the mail archives,
++such as https://lore.kernel.org.
++
+ Co-developed-by: states that the patch was co-created by multiple developers;
+ it is used to give attribution to co-authors (in addition to the author
+ attributed by the From: tag) when several people work on a single patch.  Since
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
->
->   KVM can request TDX to inject an NMI into a guest TD vCPU when the
->   vCPU is not active. TDX will attempt to inject an NMI as soon as
->   possible on TD entry. NMI injection is managed by writing to (to
->   inject NMI) and reading from (to get status of NMI injection)
->   the PEND_NMI field within the TDX vCPU scope metadata (Trust
->   Domain Virtual Processor State (TDVPS)).
->
->   Update KVM's NMI status on TD exit by checking whether a requested
->   NMI has been injected into the TD. Reading the metadata via SEAMCALL
->   is expensive so only perform the check if an NMI was injected.
->
->   This is the first need to access vCPU scope metadata in the
->   "management" class. Ensure that needed accessor is available.
-> "
->
