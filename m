@@ -1,192 +1,100 @@
-Received: from out187-13.us.a.mail.aliyun.com (out187-13.us.a.mail.aliyun.com [47.90.187.13])
+Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC12126F3F
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 12:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3852B12C814;
+	Tue, 23 Apr 2024 13:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713877162; cv=none; b=FOfylsEN89PETk46k4COJJwTiJhPSL7jW4jannx/PUQ7abzfOz5mECCqUy1HqohmT2nTLhmlSYhTmus0Fm1vo8XrzmV3OzAXRweIqhC7f/W2B/klUrQ6kTVj3ACGGqCBNfJKrrfFdWfEGXs+7WQnUrwoG5mIAHVKl3625SDLSQU=
+	t=1713877208; cv=none; b=mQf4zgd9O3XIIuRQphK/mi7AqTxkaWQ91A7+/tLJ5e3B9KEZT7IVVTzkxmigH3E1pQ3nzn3kzvk1wtUMNiLTlZz6Tq2jYFGzba9K/0OkBD3YYgjAFoSXksBAVy0U5JSuT0cas7A1j4+lEdVaTbSB1S/1zTtnOcxPpLuWoheebhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713877162; c=relaxed/simple;
-	bh=LZFuJ/4FGskBf4AnZH1TT3ZTMxB4uZoW+o1jgSpMUno=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rmrlQFUV9IB2vbQup20kLTTGMsBySLexQ9TjG438gslCY3W65BmqLh6z0KbzUiopEXHZf6Oc5jdEwWbfwVdF1uf9rJiAw6jocGwoCZP6HOFXl3VdADYqOoShwnv1LlLpzFJ5szDy5MiZEbQrbm7m58pnFBFUed16+fLPGCSNWWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=YpVOKfdw; arc=none smtp.client-ip=47.90.187.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	s=arc-20240116; t=1713877208; c=relaxed/simple;
+	bh=96sOkJm4NWVH3kIPbR6s+LMnNin0blBdVvU3NTD2Rm0=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=jyzLg3GkRx6SbORUF9WgXkfUROnWy8TdXquQ/yxf4pSN3b0Z6g3msd34m1JQ4oy1/k144TSuPfsRSx5GEZW3iXDCQ8uUyAlcuhsBBaZ2AYU4gHgQJlX5vvwvEyFhz7jxacfGTSkd0xWdnz3aXFhKFDfCrrhPagLTykDGhRns16c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=fqFCyc1o; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kJV4mjJA; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="YpVOKfdw"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1713877148; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
-	bh=u2nOPuUACaHxjsvTBbK286kNs1kGaeWUIM12LDvgezc=;
-	b=YpVOKfdwHeePK5h+m/sgie0Xl2qQKelgw4ORTT/J8PxOw/yIJ3wlq/8hQgyrjunBTX/qo1WAl0+ylSFIiDMfKtQOY1Z6njv2aJa9lzOjwxJrvEdtXuOCpwWs6+8wSNlJuDHFaLDtVDr5KSfD3+6U61yIYudnIKs7mhNZOVcszXw=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047204;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.XJXNjSj_1713877148;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.XJXNjSj_1713877148)
-          by smtp.aliyun-inc.com;
-          Tue, 23 Apr 2024 20:59:08 +0800
-From: "Tiwei Bie" <tiwei.btw@antgroup.com>
-To: richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net
-Cc:  <linux-um@lists.infradead.org>,
-   <linux-kernel@vger.kernel.org>,
-  "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH v2 5/7] um: Add an internal header shared among the user code
-Date: Tue, 23 Apr 2024 20:58:56 +0800
-Message-Id: <20240423125858.137709-6-tiwei.btw@antgroup.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240423125858.137709-1-tiwei.btw@antgroup.com>
-References: <20240423125858.137709-1-tiwei.btw@antgroup.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="fqFCyc1o";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kJV4mjJA"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 53AD913817CB;
+	Tue, 23 Apr 2024 09:00:06 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 23 Apr 2024 09:00:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1713877206; x=1713963606; bh=96sOkJm4NW
+	VH3kIPbR6s+LMnNin0blBdVvU3NTD2Rm0=; b=fqFCyc1oHE+6auJzo+hRbFwgM/
+	oyV3kHrwOocGO6GwDHU83ixOOgB3AR3h8OGjiD1OOcN2Of/UGiHwcxWDGg7Q2kO9
+	hZ8Yv593YADSLWfBqFhrQrRbctx+eFJefPAmpoGMFM1NH0aSQs1ukdmTqY3Q72Ao
+	hij5dqno2g5LmhNHsTSo8/+Z/m57iCVwiK8b6pj6B/51ShQF4D8UCOJuexiE1h4Y
+	cjtRI2eE7n6CpRdKAFUvLC7cZdEhViDW70miNgwJkjWU52UUYaK6+OjnMMcWkEEf
+	G+nKBtedkghyG0Gjn0/agxzUfPOctWDzxLambqF/Eq10l0DJ/wGPA+M06vRA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1713877206; x=1713963606; bh=96sOkJm4NWVH3kIPbR6s+LMnNin0
+	blBdVvU3NTD2Rm0=; b=kJV4mjJA11QzkGuGatb62twjQKbnAAgYOuFW/mX8ZDEY
+	h56eNptRCeQ7jkB9yJYgr4EvvJYuaJeYzfkRi6U91T2g4coTl78qeu4Ah4CBYxXX
+	j+npQgWGnF168Y6Oyr6Qdrg/jv+ygqwj81Q+YHvwO2ikX9WkHo/eAnFFofBp3frf
+	SWyLLPc+svrQl22xkjGqWmuJVsG9BRpDs4HOi1cPLImKWfvNgDrRCdVZK8zt208G
+	vYn+kQRK/vuMH+eXuOQvIwdwc0ciXnsD5CAT4VljJANLVwNxTxyOuRggssvFACQY
+	PT2uwkybeRVDRADdP8n3rdbJGrQ0+KTT44cjeVKEsw==
+X-ME-Sender: <xms:1bAnZtnJ7by_3iVQOR4Bs_c8Igo2pPXcRMPL3Mf3A25lQwCD39H2tQ>
+    <xme:1bAnZo0Dmp5o603hjNlYPYYDSFM-_LLeUbGVEfmg_D_rbqv_EMPDlCwjGfc0zLbEa
+    Y4gYhrbwECNuaMi5RA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeluddgheelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:1bAnZjqJIGoZJGYvmN2m1Y0wmjgnhvfmGtckwD3x2SWNQ43vOWSsCA>
+    <xmx:1bAnZtn1f320OiptasVGe0HQkFGo57T_qDEFVtiX4ao6u9xTN5EDPA>
+    <xmx:1bAnZr1nrHRdqdTmtECoDnyXRaTdaBLMnTmSLt4S17qHVW2g_RJuaw>
+    <xmx:1bAnZsuVvpv_MnlXM3DuGQlhvZURwmrtFpTmLsUbi9D2JKalpYlUaQ>
+    <xmx:1rAnZtw-0sAb1sVjZXoQHf1StgQsEcl4I9ifaYfCnbO6Fmk6G3n7nY5k>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id CF625B6008F; Tue, 23 Apr 2024 09:00:05 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-386-g4cb8e397f9-fm-20240415.001-g4cb8e397
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-Id: <081ae10b-0a64-48fc-9be9-540e67900527@app.fastmail.com>
+In-Reply-To: <20240423102443.453261-1-masahiroy@kernel.org>
+References: <20240423102443.453261-1-masahiroy@kernel.org>
+Date: Tue, 23 Apr 2024 14:57:43 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Masahiro Yamada" <masahiroy@kernel.org>, dri-devel@lists.freedesktop.org
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+ "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "Dave Airlie" <airlied@gmail.com>,
+ "Daniel Vetter" <daniel@ffwll.ch>,
+ "Geert Uytterhoeven" <geert+renesas@glider.be>
+Subject: Re: [PATCH] drm: move DRM-related CONFIG options into DRM submenu
+Content-Type: text/plain
 
-Move relevant declarations to this header. This will address
-below -Wmissing-prototypes warnings:
+On Tue, Apr 23, 2024, at 12:24, Masahiro Yamada wrote:
+> When you create a submenu using the 'menu' syntax, there is no
+> ambiguity about the end of the submenu because the code between
+> 'menu' and 'endmenu' becomes the submenu.
+>
+...
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-arch/um/os-Linux/elf_aux.c:26:13: warning: no previous prototype for ‘scan_elf_aux’ [-Wmissing-prototypes]
-arch/um/os-Linux/mem.c:213:13: warning: no previous prototype for ‘check_tmpexec’ [-Wmissing-prototypes]
-arch/um/os-Linux/skas/process.c:107:6: warning: no previous prototype for ‘wait_stub_done’ [-Wmissing-prototypes]
+I think this is a useful cleanup.
 
-Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
----
- arch/um/os-Linux/elf_aux.c      |  1 +
- arch/um/os-Linux/internal.h     | 20 ++++++++++++++++++++
- arch/um/os-Linux/main.c         |  3 +--
- arch/um/os-Linux/mem.c          |  1 +
- arch/um/os-Linux/skas/mem.c     |  3 +--
- arch/um/os-Linux/skas/process.c |  1 +
- arch/um/os-Linux/start_up.c     |  3 +--
- 7 files changed, 26 insertions(+), 6 deletions(-)
- create mode 100644 arch/um/os-Linux/internal.h
-
-diff --git a/arch/um/os-Linux/elf_aux.c b/arch/um/os-Linux/elf_aux.c
-index 344ac403fb5d..0a0f91cf4d6d 100644
---- a/arch/um/os-Linux/elf_aux.c
-+++ b/arch/um/os-Linux/elf_aux.c
-@@ -13,6 +13,7 @@
- #include <init.h>
- #include <elf_user.h>
- #include <mem_user.h>
-+#include "internal.h"
- 
- typedef Elf32_auxv_t elf_auxv_t;
- 
-diff --git a/arch/um/os-Linux/internal.h b/arch/um/os-Linux/internal.h
-new file mode 100644
-index 000000000000..317fca190c2b
---- /dev/null
-+++ b/arch/um/os-Linux/internal.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __UM_OS_LINUX_INTERNAL_H
-+#define __UM_OS_LINUX_INTERNAL_H
-+
-+/*
-+ * elf_aux.c
-+ */
-+void scan_elf_aux(char **envp);
-+
-+/*
-+ * mem.c
-+ */
-+void check_tmpexec(void);
-+
-+/*
-+ * skas/process.c
-+ */
-+void wait_stub_done(int pid);
-+
-+#endif /* __UM_OS_LINUX_INTERNAL_H */
-diff --git a/arch/um/os-Linux/main.c b/arch/um/os-Linux/main.c
-index e82164f90288..f98ff79cdbf7 100644
---- a/arch/um/os-Linux/main.c
-+++ b/arch/um/os-Linux/main.c
-@@ -16,6 +16,7 @@
- #include <kern_util.h>
- #include <os.h>
- #include <um_malloc.h>
-+#include "internal.h"
- 
- #define PGD_BOUND (4 * 1024 * 1024)
- #define STACKSIZE (8 * 1024 * 1024)
-@@ -102,8 +103,6 @@ static void setup_env_path(void)
- 	}
- }
- 
--extern void scan_elf_aux( char **envp);
--
- int __init main(int argc, char **argv, char **envp)
- {
- 	char **new_argv;
-diff --git a/arch/um/os-Linux/mem.c b/arch/um/os-Linux/mem.c
-index c6c9495b1432..cf44d386f23c 100644
---- a/arch/um/os-Linux/mem.c
-+++ b/arch/um/os-Linux/mem.c
-@@ -17,6 +17,7 @@
- #include <init.h>
- #include <kern_util.h>
- #include <os.h>
-+#include "internal.h"
- 
- /*
-  * kasan_map_memory - maps memory from @start with a size of @len.
-diff --git a/arch/um/os-Linux/skas/mem.c b/arch/um/os-Linux/skas/mem.c
-index 953fb10f3f93..1f9c1bffc3a6 100644
---- a/arch/um/os-Linux/skas/mem.c
-+++ b/arch/um/os-Linux/skas/mem.c
-@@ -17,11 +17,10 @@
- #include <skas.h>
- #include <sysdep/ptrace.h>
- #include <sysdep/stub.h>
-+#include "../internal.h"
- 
- extern char batch_syscall_stub[], __syscall_stub_start[];
- 
--extern void wait_stub_done(int pid);
--
- static inline unsigned long *check_init_stack(struct mm_id * mm_idp,
- 					      unsigned long *stack)
- {
-diff --git a/arch/um/os-Linux/skas/process.c b/arch/um/os-Linux/skas/process.c
-index 1f5c3f2523d1..41a288dcfc34 100644
---- a/arch/um/os-Linux/skas/process.c
-+++ b/arch/um/os-Linux/skas/process.c
-@@ -23,6 +23,7 @@
- #include <skas.h>
- #include <sysdep/stub.h>
- #include <linux/threads.h>
-+#include "../internal.h"
- 
- int is_skas_winch(int pid, int fd, void *data)
- {
-diff --git a/arch/um/os-Linux/start_up.c b/arch/um/os-Linux/start_up.c
-index 6b21061c431c..89ad9f4f865c 100644
---- a/arch/um/os-Linux/start_up.c
-+++ b/arch/um/os-Linux/start_up.c
-@@ -25,6 +25,7 @@
- #include <ptrace_user.h>
- #include <registers.h>
- #include <skas.h>
-+#include "internal.h"
- 
- static void ptrace_child(void)
- {
-@@ -222,8 +223,6 @@ static void __init check_ptrace(void)
- 	check_sysemu();
- }
- 
--extern void check_tmpexec(void);
--
- static void __init check_coredump_limit(void)
- {
- 	struct rlimit lim;
--- 
-2.34.1
-
+Acked-by: Arnd Bergmann <arnd@arndb.de>
