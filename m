@@ -1,95 +1,150 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434C11292EC
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 11:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201A412C48D;
+	Tue, 23 Apr 2024 11:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713873181; cv=none; b=QWf+xCiXBwbn2vaRk2bpBTHPxFo4yIyyIlBFUEo0DrayijYm57FxDd7xTVbr1JtpXQ/O29d4KpBWY+dz+WJrUgYEGz1DG0bgFvSXtZrBJNjjo1ko2ay0KjEQQ8dLYYYbAab7xnTUd1GZWlfCVRwNzNNoO309KBl2tQaz9R7DBnQ=
+	t=1713873221; cv=none; b=kHrbANPDwPyCho1s4gdgM/57CDyf+g3xUluY+mIeah42PzYBtSvBrVoSjWtO071G7g6NVWG9P1kLiyXJ9M/544ppasUixUjRpjulfw7USmqkfxACJtIc0sQQ+pGihLUajlbZV74Eijwn9FAPa7BSOdNoFMPb6eToMdNgESiOq3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713873181; c=relaxed/simple;
-	bh=zYeAlMW1SsjV5lzQvuhmib9w9fZnmxBE5X2T4UP4XKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QACXpgW8VS85F5D4bTtqNnF5B+h6xobiabYD46gvEsOcoCw8MCn+UJgwbQofkTJSkv5uMlVRE7iB0/9eC1i6fFh2TWz/zg5qeoAQIwVeHytwqeEVNM3L1mr7nYtQxhTLO8mNEItuRuhXsWTBJ70cf6Ni4jF0NUctap7OKPhtJPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=J6wdU5rW; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="J6wdU5rW"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-34b3374ae22so1753014f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 04:52:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1713873177; x=1714477977; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zYeAlMW1SsjV5lzQvuhmib9w9fZnmxBE5X2T4UP4XKM=;
-        b=J6wdU5rWu1sYt7DIjHtoJzMw4dG3bEXwc/OYsQtCrZCkQOxlFhW5UeIELWi/Y3dBzf
-         DdXDvgYEQYIj/WgVVgx8zvrf0lpFhG9r1TAGLPaKzjEh/vE7PE79rXWIItWDszAnZc6p
-         +eT7/Z9vZr8BCXkQLev5eHdJuKp9ZoIO/EcWaSui7tzF520jZiNXcUaWdP0O0RxiD0oA
-         fobYl9b7URaCeoKUBkD9nRXBDI30AYMRvA3eSSqa3ffDaI4M2qahv3pltC8SGdpfAaRE
-         XnHzV/iEwQIsRSooB0NIAS0eyrRl4f8El1LJM/lfOPtIeoeABZ6gaWqcl4doIKVW6DRa
-         TGtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713873177; x=1714477977;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zYeAlMW1SsjV5lzQvuhmib9w9fZnmxBE5X2T4UP4XKM=;
-        b=bwps+WirZ8iHhsDTSVWdOyMa3GcbIuWHb4BjvNQ7hHYX02OQoTxcgQVdXzH+R3MDeu
-         MvIhqLajNymSWkxlojlVzaEupKtPSstB8/2sLFg1q1i8G9SIJtVPFr8UDq12h0v/LhC3
-         tzfcS9JIrcXd4U8m6wof5D7s70rVaxUaz9qFzHK+cJTNThC7A9UqXlu843tql0F6RODg
-         qo/EtQKvjAXkApF9xS2aogkijtNtu2BE2jP5Gq9EeiUvkb7bEG2tizHA0nP2ojT+6LFU
-         YaPkGIVpC6XPA2P9atqVIHunFFd5t6qHOwXKfutxwUWA9vRatDqzR8+MeeT6C0SeKIW4
-         fJjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUmulTnQ4iacCK9omOQoP29elsCmoPblvCTf7HNP/U/8afTgVikLos4CaYUyYH9BWaJDVw2eu/nQbbzxsdaiyjaGVWxc8fCsHuBwuy2
-X-Gm-Message-State: AOJu0Yy1BJ3GCDPqYEU/bjvfVfORh1Xng+aBJersk7HeCGY2nHgEeIXm
-	ftG0uDTB4owQb06inuyYTy6L6fnPxz5e2enAAV4w1Eos0Fovu0K787iRB6kBQ8U=
-X-Google-Smtp-Source: AGHT+IGYdlOXhKrV4Xx20GD8wz7O0dwwwQ+1vqgQ4tP2PJTOPwBLbBIdUDSR3guwA85weBtiPCyLSw==
-X-Received: by 2002:a05:6000:905:b0:33e:c528:c900 with SMTP id cw5-20020a056000090500b0033ec528c900mr9913946wrb.55.1713873177417;
-        Tue, 23 Apr 2024 04:52:57 -0700 (PDT)
-Received: from localhost (78-80-105-131.customers.tmcz.cz. [78.80.105.131])
-        by smtp.gmail.com with ESMTPSA id q4-20020adffec4000000b00347f6b5bb6dsm14382274wrs.30.2024.04.23.04.52.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 04:52:56 -0700 (PDT)
-Date: Tue, 23 Apr 2024 13:52:55 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: =?iso-8859-1?Q?Asbj=F8rn_Sloth_T=F8nnesen?= <ast@fiberby.net>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Yisen Zhuang <yisen.zhuang@huawei.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jijie Shao <shaojijie@huawei.com>
-Subject: Re: [PATCH net-next] net: hns3: flower: validate control flags
-Message-ID: <ZiehF8MaL7XYLk2X@nanopsycho>
-References: <20240422152717.175659-1-ast@fiberby.net>
+	s=arc-20240116; t=1713873221; c=relaxed/simple;
+	bh=sJUlIw2u3y7di8lLXLn9J2hl+nc7e+xRy/529rTVAcI=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=NWYsqE9zNZQs7y+zzxfmyrlV8xe01vmVNXYp7taAxJDnERsDXR+qmlJq9M2wliJG1+1nlhZaENqDDl5ufNczCIhIYsmWpAx+y0V046CLpvSwG1ZQFaxT7+rSb89m7AEMt/zWxu0mYp8AyIEKjUEskmWK6W3faElFYMPHoAHyhfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VP0mq6yPrzvPrw;
+	Tue, 23 Apr 2024 19:50:35 +0800 (CST)
+Received: from dggpemm500002.china.huawei.com (unknown [7.185.36.229])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6BA521403D4;
+	Tue, 23 Apr 2024 19:53:36 +0800 (CST)
+Received: from [10.174.178.247] (10.174.178.247) by
+ dggpemm500002.china.huawei.com (7.185.36.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 23 Apr 2024 19:53:35 +0800
+Subject: Re: [PATCH v7 04/16] ACPI: processor: Move checks and availability of
+ acpi_processor earlier
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Thomas Gleixner
+	<tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
+	<linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>, <x86@kernel.org>, Russell King
+	<linux@armlinux.org.uk>, "Rafael J . Wysocki" <rafael@kernel.org>, Miguel
+ Luis <miguel.luis@oracle.com>, James Morse <james.morse@arm.com>, Salil Mehta
+	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+ <20240418135412.14730-5-Jonathan.Cameron@huawei.com>
+From: Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <0cfc4e2d-65ab-0040-2c7d-fad83f32455b@huawei.com>
+Date: Tue, 23 Apr 2024 19:53:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240422152717.175659-1-ast@fiberby.net>
+In-Reply-To: <20240418135412.14730-5-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500002.china.huawei.com (7.185.36.229)
 
-Mon, Apr 22, 2024 at 05:27:16PM CEST, ast@fiberby.net wrote:
->This driver currently doesn't support any control flags.
->
->Use flow_rule_has_control_flags() to check for control flags,
->such as can be set through `tc flower ... ip_flags frag`.
->
->In case any control flags are masked, flow_rule_has_control_flags()
->sets a NL extended error message, and we return -EOPNOTSUPP.
->
->Also propagate extack to hclge_get_cls_key_ip(), and convert it to
->return error code.
->
->Only compile-tested.
->
->Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+> @@ -232,6 +263,7 @@ static int acpi_processor_get_info(struct acpi_device *device)
+>   	acpi_status status = AE_OK;
+>   	static int cpu0_initialized;
+>   	unsigned long long value;
+> +	int ret;
+>   
+>   	acpi_processor_errata();
+>   
+> @@ -316,10 +348,12 @@ static int acpi_processor_get_info(struct acpi_device *device)
+>   	 *  because cpuid <-> apicid mapping is persistent now.
+>   	 */
+>   	if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
+> -		int ret = acpi_processor_hotadd_init(pr);
+> +		ret = acpi_processor_hotadd_init(pr, device);
+>   
+>   		if (ret)
+> -			return ret;
+> +			goto err;
+> +	} else {
+> +		acpi_processor_set_per_cpu(pr, device);
+>   	}
+>   
+>   	/*
+> @@ -357,6 +391,10 @@ static int acpi_processor_get_info(struct acpi_device *device)
+>   		arch_fix_phys_package_id(pr->id, value);
+>   
+>   	return 0;
+> +
+> +err:
+> +	per_cpu(processors, pr->id) = NULL;
 
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+...
+
+> +	return ret;
+>   }
+>   
+>   /*
+> @@ -365,8 +403,6 @@ static int acpi_processor_get_info(struct acpi_device *device)
+>    * (cpu_data(cpu)) values, like CPU feature flags, family, model, etc.
+>    * Such things have to be put in and set up by the processor driver's .probe().
+>    */
+> -static DEFINE_PER_CPU(void *, processor_device_array);
+> -
+>   static int acpi_processor_add(struct acpi_device *device,
+>   					const struct acpi_device_id *id)
+>   {
+> @@ -395,28 +431,6 @@ static int acpi_processor_add(struct acpi_device *device,
+>   	if (result) /* Processor is not physically present or unavailable */
+>   		return 0;
+>   
+> -	BUG_ON(pr->id >= nr_cpu_ids);
+> -
+> -	/*
+> -	 * Buggy BIOS check.
+> -	 * ACPI id of processors can be reported wrongly by the BIOS.
+> -	 * Don't trust it blindly
+> -	 */
+> -	if (per_cpu(processor_device_array, pr->id) != NULL &&
+> -	    per_cpu(processor_device_array, pr->id) != device) {
+> -		dev_warn(&device->dev,
+> -			"BIOS reported wrong ACPI id %d for the processor\n",
+> -			pr->id);
+> -		/* Give up, but do not abort the namespace scan. */
+> -		goto err;
+> -	}
+> -	/*
+> -	 * processor_device_array is not cleared on errors to allow buggy BIOS
+> -	 * checks.
+> -	 */
+> -	per_cpu(processor_device_array, pr->id) = device;
+> -	per_cpu(processors, pr->id) = pr;
+
+Nit: seems we need to remove the duplicated
+per_cpu(processors, pr->id) = NULL; in acpi_processor_add():
+
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -446,7 +446,6 @@ static int acpi_processor_add(struct acpi_device 
+*device,
+   err:
+         free_cpumask_var(pr->throttling.shared_cpu_map);
+         device->driver_data = NULL;
+-       per_cpu(processors, pr->id) = NULL;
+   err_free_pr:
+         kfree(pr);
+         return result;
+
+Thanks
+Hanjun
