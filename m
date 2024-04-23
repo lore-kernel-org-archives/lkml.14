@@ -1,185 +1,83 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BD4126F10
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 13:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9585978C6E
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 13:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713877438; cv=none; b=r8k8ZI5BGu8WJsr4H1RcFAiGEXhiOc5/TvfJKiWu7hOdE7F1v6SUgKAlRHMQGx0eYuTGlXc8ER+B/7RqywwvcWjU8VsrIATTJglvEcqxu+o7XGIur+NBSNohvQHVExLczubMGuSRjhDPIK+VfyjqzmH7ZH9Ot7tCMsKK3+bgHag=
+	t=1713877484; cv=none; b=Ux4TNzqGgoMwu0q4drSrPJZqaZx6towiteh8dqfOejIEpRrwpPtG1aYf3tG2ZUwmzFQPBOxLhbDRniWjbeEmKCQN54KUrDMssSSejS1C18owWPzPXw0048oguL6SMXyFruguvXfGuq1UFkDIYYMQlHmZgA48qB+GHi2bNrH07Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713877438; c=relaxed/simple;
-	bh=S25T3qbVz7Y5k5OAGJMgnWEF0GJuX3pk/nUOLoJFNSk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k62ZQ/tcKyXS0F3sG5flCKfSfjd4ujdhdHfXP/kZCmLcdYrww46QASzShIU9R++EAU9qhpftYWWtJR7lNLC+ba5kJaQuv/pEO9m6mlyNTT68C1FyZnpnxgzwmW0Q6ENIMsnuX8bT6CLQFOFobjQV5U3OUOlDRoG33x+YKm7PrhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jsccEwdO; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713877484; c=relaxed/simple;
+	bh=4PayvcCQahx+h/YDh/dNOsNcPVTkJJLHrFkqYUc4Rwo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eNdk16rHjPrmOFGSi1kBs2BOYy6vtwMT1hgiA9+Zzo4GBgEPWwMLQDe+e6Erg1wJWaFMZDk3v3YSJ4DT1fLJMfv2MBVkRs2xmEXxBWZN4LpxXWh9tg5KhpaHZizAV4HLQFvINDOK3iYp/k8I0Rr+HyYJRqDnS2rLc7ovQR2q0kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=I3r8Gp3j; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jsccEwdO"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51b09c3a111so3681774e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 06:03:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="I3r8Gp3j"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a4715991c32so608901266b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 06:04:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713877435; x=1714482235; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Kvy8LO+cIMm+HbZIf+ZYGi2YekLnZkMXi2GFq6BTKfQ=;
-        b=jsccEwdO88o6Kik7i1fGGKIgPC4Xp9LTwmfVBexyxCeLW38LkdYWrbs9zzIJVTcEqq
-         /8WP5ub3GK0EkorIwOXrVXguDbBaDRlCs0jM5mI95QcpGbk+0cM819S+ZmKNHzEUR4oF
-         s1nl/7YwyzpCQJZgSTlCi4ryVVWf4iAc4+zTdFEWgAXqCQfR5J7n+kRAojM0pW72CtHV
-         6Zt136pVLEo+OMHDpE094jLOZZhL7EeUWNd/Zp7sdwlPlRmxp0hjVKnhsMpFcfgUmq7B
-         p5VhaWUWYTL2XvXIVG39xzjqHJTfGkhps0pLgWaNTaJpQcsxMbgTmQi6LM0SG/r6/oLt
-         k/1Q==
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1713877482; x=1714482282; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aKO5eiafgqhKAWmwCBGeybrOv3ldefy8ZOECZrE5TO0=;
+        b=I3r8Gp3j7fuVzAInrRyB2RGTkxIlt/5Z4F7zra6/50Y4O3n6qWLIsFXNwzaNNLFYVS
+         4VZjXqrZl0mhwlWvBTK61OXGlS2FF0GRTj7f2IwN/GHHspNJacJsgM1qWxOWf7YEABu7
+         mLdhzaou0Yo4OOGiyMC8LO9PxPyLeOGdzE/aH6AFqZM5rSQepllgMNXli1VN3tLkPluy
+         XuQhJ3R4hjiJ+0AqtNf+csagjvmLIpMMJV0VoBvh/LeYk3Th4xxMmEXd/NRAN+C4qg3s
+         c8ErtXBbI03yczaAnsx4KiyVsqVU0JmBTFQYCpC0o614F7nEg9WRugmkqduJSttYKZII
+         4x1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713877435; x=1714482235;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kvy8LO+cIMm+HbZIf+ZYGi2YekLnZkMXi2GFq6BTKfQ=;
-        b=f9XngA7vKnZ19rb6nDpkTFjcewKXdb74SV25QIuswzgCTqHUoK5PSq2Apv1kZRpXOm
-         Sgh93Q/aI7kU1hx/UEguW33ZZN4vllKcbB1a6uAsXXuuyK+kXY6Kauvk8qhEJvn0ARlc
-         QY90mCh9OgdGQ3J+2n3tKayoUm7wkJAavhn17i2tR4axV6ihfVbEHhuUlzAqVy3YLJ78
-         nTtivAB3SVP00seruBjVmBBmTTrVvBXbPFjS9NRuJ9Cv+uqF8GbgIccO0QFLC3K+RQyP
-         YpeJ71EiSpr5qUv2d9QSxjoRJoa6P8iY8/VNwXSR6i2ad2BsxAaZYVV75uPAYVqvYIWr
-         tm4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWdMANDZAVo2lSzX3vaQjFhMJlbG7nUwlysHc+lzbH0Z2pJJmAqJ2sqbaEUOrwTxVerVKs2cOqIt7ha7Dy4kk+88uoz74b5+ZqNKcS0
-X-Gm-Message-State: AOJu0YzH1yZwj5mWd56lv4M0NY32CQfLYs/pU3XlJWTpkS/RWB9bFfYp
-	nYrCw6OxDQwy271jH7zmqICllb9C8XFhynb3A1aqncJ5vHVUgGf6BORv/xaE9Ms=
-X-Google-Smtp-Source: AGHT+IGpySdaQcCROpQ5r5e9TsmfSInd7LVYx0iPlnKIMODKT5YasK7WcFwD6VkU7AE9jDrwMyk+5A==
-X-Received: by 2002:a05:6512:36d2:b0:519:6c2d:9bdb with SMTP id e18-20020a05651236d200b005196c2d9bdbmr7266957lfs.43.1713877435006;
-        Tue, 23 Apr 2024 06:03:55 -0700 (PDT)
-Received: from [172.30.205.0] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id z4-20020ac24f84000000b00513d244005asm2019862lfs.199.2024.04.23.06.03.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 06:03:53 -0700 (PDT)
-Message-ID: <f2d96f99-d8ac-4ff1-83fa-742e541565e4@linaro.org>
-Date: Tue, 23 Apr 2024 15:03:50 +0200
+        d=1e100.net; s=20230601; t=1713877482; x=1714482282;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aKO5eiafgqhKAWmwCBGeybrOv3ldefy8ZOECZrE5TO0=;
+        b=q3hTWzjQoZw5TzHa8DaNgSatj0dU95KK0AsP1sZMCxmh+dKcIYOlWpf6RtDWKNr64v
+         8O/Fiss83JgdWSZL7kw3d//Nu9Bu84oPDQ40uxtyKioyOwM7+NTyo+v4RgOZ/7/xCcOK
+         /ylsnX9c4nwioghJKlcoo32FPVLMCi5EgL/VGmZQ37UN5Z84F710JnQ5Xo44oEwAZI7p
+         x+466qjlelV+qlE7Kvs6L+U38Bp7GBCAcKhiOnN7HOGKdu0TbFW0SZRxOo7TLJzfD2Bp
+         /FSHcZOdeAezL2ZToh1ZFpCgwpkypp0LhdRFvjaqAwGvq0nRAHRFVl0wvmDqUv0gZVB1
+         IkNA==
+X-Forwarded-Encrypted: i=1; AJvYcCWOX0bxg3e8UBlueW2jGTq8+HafTU1t3kMnQO7SpG2w2lP4+NtRTamui2cqrL8AT8Z07tKAKg+47SWkqZtbtqtuX2GvXnGQAm4eZDaY
+X-Gm-Message-State: AOJu0YxscwJ/UofoYtt81P8gGAikMl+MeD9PKclk+g37lPnHY7PCpodV
+	c2Sta81LfGOsZq7kj4zjQSfa4DDD4aLvN5yhFnd9783TRM8cBBF00ijp1bfz4Rc=
+X-Google-Smtp-Source: AGHT+IF6LtpiKpdCpU719YcKxu9nj8OoIklDYjPATVZCNPyyvGmEyrYn1Z1ks9R9E0zgmHl1ekjL7w==
+X-Received: by 2002:a17:906:d20d:b0:a55:914a:8b4 with SMTP id w13-20020a170906d20d00b00a55914a08b4mr6639402ejz.37.1713877481719;
+        Tue, 23 Apr 2024 06:04:41 -0700 (PDT)
+Received: from localhost (78-80-105-131.customers.tmcz.cz. [78.80.105.131])
+        by smtp.gmail.com with ESMTPSA id i7-20020a1709061e4700b00a52244ab819sm7154788ejj.170.2024.04.23.06.04.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 06:04:40 -0700 (PDT)
+Date: Tue, 23 Apr 2024 15:04:38 +0200
+From: Jiri Pirko <jiri@resnulli.us>
+To: Geetha sowjanya <gakula@marvell.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kuba@kernel.org,
+	davem@davemloft.net, pabeni@redhat.com, edumazet@google.com,
+	sgoutham@marvell.com, sbhatta@marvell.com, hkelam@marvell.com
+Subject: Re: [net-next PATCH v2 9/9] octeontx2-pf: Add representors for sdp
+ MAC
+Message-ID: <Ziex5kCf3XwNQzjK@nanopsycho>
+References: <20240422095401.14245-1-gakula@marvell.com>
+ <20240422095401.14245-10-gakula@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFT 0/7] arm64: qcom: allow up to 4 lanes for the Type-C
- DisplayPort Altmode
-To: Luca Weiss <luca.weiss@fairphone.com>, neil.armstrong@linaro.org,
- Bjorn Andersson <andersson@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Abhinav Kumar
- <quic_abhinavk@quicinc.com>, linux-arm-msm@vger.kernel.org,
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240229-topic-sm8x50-upstream-phy-combo-typec-mux-v1-0-07e24a231840@linaro.org>
- <CZUHV429NTF7.1GW9TN9NXB4J1@fairphone.com>
- <7a7aa05f-9ae6-4ca0-a423-224fc78fbd0c@linaro.org>
- <liah4xvkfattlen7s2zi3vt2bl5pbbxqgig3k5ljqpveoao656@iacnommxkjkt>
- <236a104c-fc16-4b3d-9a00-e16517c00e3a@linaro.org>
- <D064242SMIVM.1GUC1I9GE9IGC@fairphone.com>
- <963b60e5-6ab7-4d9f-885a-ba744c2b7991@linaro.org>
- <D0C42YR1270X.23P9WCWWNB8XF@fairphone.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <D0C42YR1270X.23P9WCWWNB8XF@fairphone.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240422095401.14245-10-gakula@marvell.com>
+
+Mon, Apr 22, 2024 at 11:54:01AM CEST, gakula@marvell.com wrote:
+>Current silicons support 2 types of MACs, SDP and
+
+What's SDP? Care to elaborate a bit here?
 
 
-
-On 4/5/24 12:19, Luca Weiss wrote:
-> On Fri Apr 5, 2024 at 10:08 AM CEST, Neil Armstrong wrote:
->> Hi Luca,
->>
->> On 29/03/2024 10:02, Luca Weiss wrote:
->>> On Tue Mar 26, 2024 at 10:02 PM CET, Konrad Dybcio wrote:
->>>> On 16.03.2024 5:01 PM, Bjorn Andersson wrote:
->>>>> On Fri, Mar 15, 2024 at 06:35:15PM +0100, Neil Armstrong wrote:
->>>>>> On 15/03/2024 18:19, Luca Weiss wrote:
->>>>>>> On Thu Feb 29, 2024 at 2:07 PM CET, Neil Armstrong wrote:
->>>>>>>> Register a typec mux in order to change the PHY mode on the Type-C
->>>>>>>> mux events depending on the mode and the svid when in Altmode setup.
->>>>>>>>
->>>>>>>> The DisplayPort phy should be left enabled if is still powered on
->>>>>>>> by the DRM DisplayPort controller, so bail out until the DisplayPort
->>>>>>>> PHY is not powered off.
->>>>>>>>
->>>>>>>> The Type-C Mode/SVID only changes on plug/unplug, and USB SAFE states
->>>>>>>> will be set in between of USB-Only, Combo and DisplayPort Only so
->>>>>>>> this will leave enough time to the DRM DisplayPort controller to
->>>>>>>> turn of the DisplayPort PHY.
->>>>>>>>
->>>>>>>> The patchset also includes bindings changes and DT changes.
->>>>>>>>
->>>>>>>> This has been successfully tested on an SM8550 board, but the
->>>>>>>> Thinkpad X13s deserved testing between non-PD USB, non-PD DisplayPort,
->>>>>>>> PD USB Hubs and PD Altmode Dongles to make sure the switch works
->>>>>>>> as expected.
->>>>>>>>
->>>>>>>> The DisplayPort 4 lanes setup can be check with:
->>>>>>>> $ cat /sys/kernel/debug/dri/ae01000.display-controller/DP-1/dp_debug
->>>>>>>> 	name = msm_dp
->>>>>>>> 	drm_dp_link
->>>>>>>> 		rate = 540000
->>>>>>>> 		num_lanes = 4
->>>>>>>
->>>>>>> Hi Neil,
->>>>>>>
->>>>>>> I tried this on QCM6490/SC7280 which should also support 4-lane DP but I
->>>>>>> haven't had any success so far.
->>>>>>>
->>>>> [..]
->>>>>>> [ 1775.563969] [drm:dp_ctrl_link_train] *ERROR* max v_level reached
->>>>>>> [ 1775.564031] [drm:dp_ctrl_link_train] *ERROR* link training #1 failed. ret=-11
->>>>>>
->>>>>> Interesting #1 means the 4 lanes are not physically connected to the other side,
->>>>>> perhaps QCM6490/SC7280 requires a specific way to enable the 4 lanes in the PHY,
->>>>>> or some fixups in the init tables.
->>>>>>
->>>>>
->>>>> I tested the same on rb3gen2 (qcs6490) a couple of weeks ago, with the
->>>>> same outcome. Looking at the AUX reads, after switching to 4-lane the
->>>>> link training is failing on all 4 lanes, in contrast to succeeding only
->>>>> on the first 2 if you e.g. forget to mux the other two.
->>>>>
->>>>> As such, my expectation is that there's something wrong in the QMP PHY
->>>>> (or possibly redriver) for this platform.
->>>>
->>>> Do we have any downstream tag where 4lane dp works? I'm willing to believe
->>>> the PHY story..
->>>
->>> Just tested on Fairphone 5 downstream and 4 lane appears to work there.
->>> This is with an USB-C to HDMI adapter that only does HDMI.
->>>
->>> FP5:/ # cat /sys/kernel/debug/drm_dp/dp_debug
->>>           state=0x20a5
->>>           link_rate=270000
->>>           num_lanes=4
->>>           resolution=2560x1440@60Hz
->>>           pclock=241500KHz
->>>           bpp=24
->>>           test_req=DP_LINK_STATUS_UPDATED
->>>           lane_count=4
->>>           bw_code=10
->>>           v_level=0
->>>           p_level=0
->>>
->>> Sources are here:
->>> https://gerrit-public.fairphone.software/plugins/gitiles/kernel/msm-5.4/+/refs/heads/odm/rc/target/13/fp5
->>> And probably more importantly techpack/display:
->>> https://gerrit-public.fairphone.software/plugins/gitiles/platform/vendor/opensource/display-drivers/+/refs/heads/odm/rc/target/13/fp5
->>> Dts if useful:
->>> https://gerrit-public.fairphone.software/plugins/gitiles/kernel/msm-extra/devicetree/+/refs/heads/kernel/13/fp5
->>
->> Could you retry with this applied ?
->>
->> https://lore.kernel.org/all/20240405000111.1450598-1-swboyd@chromium.org/
-> 
-> Unfortunately I do not see any change with this on QCM6490 Fairphone 5
-> and 4-lane DP.
-
-Hm, could you like dump all the PHY regions up and downstream with the display
-connected (and nothing connected) and compare them?
-
-Konrad
+>RPM MAC.  This patch adds representors for SDP MAC
+>interfaces.
+>
