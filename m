@@ -1,154 +1,93 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E871156671
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 05:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D177156880
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 05:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713936913; cv=none; b=IQ1+loV4y5iNl9JrA+ZASu01yVdH/1FaswsLdaIOrXe4ZCUK8ZwrcONQpeabZyVJhJW0gMO1LnYyHtTHKM+3EywNx81S8Q/PtPL02WAQvrwCy3EC4eVLGJeWanRraC377T/ZgwhiP+Wsc1ihEaI3VTwyYrFdb1e6TaxSxNOxZmg=
+	t=1713936914; cv=none; b=D7SLkxki2kcINc5ZBBAP1dSCBd/IbAG0fw9Ljv0RauRdTy0brg1hCb78sSR3ehjeL/Zvowebibroy0ZyPVu5xO0KyTch2sQF2rWPmJkJH8vxcMIRDAFKMsYthOyKvc7s2sVTaW2Mly3UR4I5ohmii8knK/OrSWeMFWY892r2VIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713936913; c=relaxed/simple;
-	bh=EJ7HICHgLilFrtLK8BajK1eVr4wt6O4I9e6krZgg5WE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TuPz/c+Y/Ij2RJ0gEaBVptUPUBsdTWlxbv1ryQ7DAeOy9u4OhUW39DLPEEgXN0roBbs/whhrc3feNCKgPCb9MwK+XEp/Cu0WrPazI2eNymXhX+7EnIpVj7moLz48jbmwEHLOiiT/uFK6/fz2+OEnqUsuYRl0cisD1K7D3519f1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=kBDyZ0Ml; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1713936914; c=relaxed/simple;
+	bh=Jn60dYRd1TpXyCZr+gNbLZI2wVr5L4k3MosQ5rxQ7qI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a0MpnedCSB0fC6zblL8ytP5y0D7ZhPw95Yr2nuZhUTSlRrIUWkRF+hAske3la9vrLAot8yNkkLHlapMgRT8NxyghPjDo3yvxc4Pw+03PoOY1wJi3rNYla4+K3TgqwVkRJBBGOiHbhWxoHHgVBBli+QBlMUx7oYQwufsdiYtHcWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=me6Gb6RE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="kBDyZ0Ml"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1713936912; x=1745472912;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=EJ7HICHgLilFrtLK8BajK1eVr4wt6O4I9e6krZgg5WE=;
-  b=kBDyZ0Mlm28T8L9F5DwJqGWyuqkX5HwKSovV9ou8iyUjtz6BHFvgVNx7
-   xRO4bkzI49TDN2f9Z6l+ZOkZZwnXjc0A2AFqfokea1vWfEZgQMUl024fc
-   sU6jAeYbLo+0SJ0vgn3FmEG/idJrT+KMEeAJiXCoEo5twfX6knF9j1ufX
-   7728+88QIAOr0RTLaAq3z4sXIdzcosibHwe/EhqGbwoISGQHAbDYbSUa3
-   7B68dhbuoEVyLSA2Jpuv6AYvFiRgIbBPtpio3ttQS2PCD7dDiFK0tkTso
-   4rwiVzrgWvF9LKd7Vh3WkIE3uenA7EkyfBlMUzUnG2YnJ42/+EnVLwyI5
-   w==;
-X-CSE-ConnectionGUID: cS45O937TrSqQ6qvvirFaA==
-X-CSE-MsgGUID: pHqPswsEQ4y0P+i2vFp7IQ==
-X-IronPort-AV: E=Sophos;i="6.07,225,1708412400"; 
-   d="scan'208";a="22977482"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Apr 2024 22:35:11 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 23 Apr 2024 22:34:50 -0700
-Received: from che-lt-i67131.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Tue, 23 Apr 2024 22:34:40 -0700
-From: Manikandan Muralidharan <manikandan.m@microchip.com>
-To: <sam@ravnborg.org>, <bbrezillon@kernel.org>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <lee@kernel.org>,
-	<dri-devel@lists.freedesktop.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <Hari.PrasathGE@microchip.com>, <Balamanikandan.Gunasundar@microchip.com>,
-	<Durai.ManickamKR@microchip.com>, <Nayabbasha.Sayed@microchip.com>,
-	<Dharma.B@microchip.com>, <Varshini.Rajendran@microchip.com>,
-	<Balakrishnan.S@microchip.com>, <Charan.Pedumuru@microchip.com>, "Manikandan
- Muralidharan" <manikandan.m@microchip.com>
-Subject: [PATCH RESEND v9 3/8] drm: atmel_hlcdc: replace regmap_read with regmap_read_poll_timeout
-Date: Wed, 24 Apr 2024 11:03:46 +0530
-Message-ID: <20240424053351.589830-4-manikandan.m@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240424053351.589830-1-manikandan.m@microchip.com>
-References: <20240424053351.589830-1-manikandan.m@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="me6Gb6RE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD0DC2BD11;
+	Wed, 24 Apr 2024 05:35:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713936913;
+	bh=Jn60dYRd1TpXyCZr+gNbLZI2wVr5L4k3MosQ5rxQ7qI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=me6Gb6REqEGYDSgYaLVysK5rTC3FApIW8/DgWMIAHN4p1u3QswSoRh8VwHmCNdEdi
+	 0Qp4yfmWcMElMmp2jdFRidrf5pJblWD6ehNyj7NhuTtJL6NwWCa7EI/hZvfbxr3EN5
+	 jafbO1E2767NcasRIql5YRa+uRfshrdkUjYIKwWUEXleEE8k6igrPElxn6D9JClkJN
+	 7CdIvrfgctJqUr1rbwnX3vycp+ezdY+W/ShyfQ8bBJiHv8Ws4vsjn+lH876yefNL64
+	 1eC10b8vRgryE9PfJZzMDsC2x7n/wHqriZRAxFCBgnXR7FKmwnSgB5iT2/U0V12trg
+	 dzgsY7rSaJVoA==
+Date: Tue, 23 Apr 2024 22:35:11 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexandre Chartre <alexandre.chartre@oracle.com>,
+	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	KP Singh <kpsingh@kernel.org>, Waiman Long <longman@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 2/5] cpu/speculation: Fix CPU mitigation defaults for
+ !x86
+Message-ID: <20240424053511.grt6tgt34wwpvzog@treble>
+References: <cover.1713559768.git.jpoimboe@kernel.org>
+ <9d3c997264829d0e2b28718222724ae8f9e7d8b4.1713559768.git.jpoimboe@kernel.org>
+ <ZiMHu--agdvt4Rl1@google.com>
+ <ZifBT9N0QivOZ2L_@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZifBT9N0QivOZ2L_@google.com>
 
-Replace regmap_read with regmap_read_poll_timeout to neatly handle
-retries
+On Tue, Apr 23, 2024 at 07:10:23AM -0700, Sean Christopherson wrote:
+> On Fri, Apr 19, 2024, Sean Christopherson wrote:
+> > On Fri, Apr 19, 2024, Josh Poimboeuf wrote:
+> > > CPU speculative execution mitigations were inadvertently disabled on
+> > > non-x86 arches by the following commit:
+> > > 
+> > >  f337a6a21e2f ("x86/cpu: Actually turn off mitigations by default for SPECULATION_MITIGATIONS=n")
+> > > 
+> > > Fix it by replacing CONFIG_SPECULATION_MITIGATIONS with a new generic
+> > > CONFIG_CPU_MITIGATIONS option and moving the x86-specific mitigations to
+> > > a separate menu which depends on CONFIG_CPU_MITIGATIONS.
+> > 
+> > Ah drat, I didn't check my mailbox until after Cc'ing Linus my own version[*].
+> > 
+> > I don't have a strong preference between the two, though I do think it's worth
+> > nothing that this will (obvioulsy) allow disabling mitigations at compile time
+> > on all architectures, which may or may not be desirable.
+> > 
+> > [*] https://lore.kernel.org/all/20240420000556.2645001-2-seanjc@google.com
+> 
+> Josh, when you get a chance, can you weigh in on my menu-preserving approach?
+> 
+> I want to get this resolved asap so that we're not scrambing on Friday again :-)
 
-Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
----
- .../gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c    | 44 +++++++++++--------
- 1 file changed, 25 insertions(+), 19 deletions(-)
+Yeah, yours looks good.  Lemme go ack.
 
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-index cc5cf4c2faf7..b229692a27ca 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-@@ -203,19 +203,22 @@ static void atmel_hlcdc_crtc_atomic_disable(struct drm_crtc *c,
- 	pm_runtime_get_sync(dev->dev);
- 
- 	regmap_write(regmap, ATMEL_HLCDC_DIS, ATMEL_HLCDC_DISP);
--	while (!regmap_read(regmap, ATMEL_HLCDC_SR, &status) &&
--	       (status & ATMEL_HLCDC_DISP))
--		cpu_relax();
-+	if (regmap_read_poll_timeout(regmap, ATMEL_HLCDC_SR, status,
-+				     !(status & ATMEL_HLCDC_DISP),
-+				    10, 1000))
-+		dev_warn(dev->dev, "Atmel LCDC status register DISPSTS timeout\n");
- 
- 	regmap_write(regmap, ATMEL_HLCDC_DIS, ATMEL_HLCDC_SYNC);
--	while (!regmap_read(regmap, ATMEL_HLCDC_SR, &status) &&
--	       (status & ATMEL_HLCDC_SYNC))
--		cpu_relax();
-+	if (regmap_read_poll_timeout(regmap, ATMEL_HLCDC_SR, status,
-+				     !(status & ATMEL_HLCDC_SYNC),
-+				    10, 1000))
-+		dev_warn(dev->dev, "Atmel LCDC status register LCDSTS timeout\n");
- 
- 	regmap_write(regmap, ATMEL_HLCDC_DIS, ATMEL_HLCDC_PIXEL_CLK);
--	while (!regmap_read(regmap, ATMEL_HLCDC_SR, &status) &&
--	       (status & ATMEL_HLCDC_PIXEL_CLK))
--		cpu_relax();
-+	if (regmap_read_poll_timeout(regmap, ATMEL_HLCDC_SR, status,
-+				     !(status & ATMEL_HLCDC_PIXEL_CLK),
-+				    10, 1000))
-+		dev_warn(dev->dev, "Atmel LCDC status register CLKSTS timeout\n");
- 
- 	clk_disable_unprepare(crtc->dc->hlcdc->sys_clk);
- 	pinctrl_pm_select_sleep_state(dev->dev);
-@@ -241,20 +244,23 @@ static void atmel_hlcdc_crtc_atomic_enable(struct drm_crtc *c,
- 	clk_prepare_enable(crtc->dc->hlcdc->sys_clk);
- 
- 	regmap_write(regmap, ATMEL_HLCDC_EN, ATMEL_HLCDC_PIXEL_CLK);
--	while (!regmap_read(regmap, ATMEL_HLCDC_SR, &status) &&
--	       !(status & ATMEL_HLCDC_PIXEL_CLK))
--		cpu_relax();
--
-+	if (regmap_read_poll_timeout(regmap, ATMEL_HLCDC_SR, status,
-+				     status & ATMEL_HLCDC_PIXEL_CLK,
-+				     10, 1000))
-+		dev_warn(dev->dev, "Atmel LCDC status register CLKSTS timeout\n");
- 
- 	regmap_write(regmap, ATMEL_HLCDC_EN, ATMEL_HLCDC_SYNC);
--	while (!regmap_read(regmap, ATMEL_HLCDC_SR, &status) &&
--	       !(status & ATMEL_HLCDC_SYNC))
--		cpu_relax();
-+	if (regmap_read_poll_timeout(regmap, ATMEL_HLCDC_SR, status,
-+				     status & ATMEL_HLCDC_SYNC,
-+				     10, 1000))
-+		dev_warn(dev->dev, "Atmel LCDC status register LCDSTS timeout\n");
- 
- 	regmap_write(regmap, ATMEL_HLCDC_EN, ATMEL_HLCDC_DISP);
--	while (!regmap_read(regmap, ATMEL_HLCDC_SR, &status) &&
--	       !(status & ATMEL_HLCDC_DISP))
--		cpu_relax();
-+	if (regmap_read_poll_timeout(regmap, ATMEL_HLCDC_SR, status,
-+				     status & ATMEL_HLCDC_DISP,
-+				     10, 1000))
-+		dev_warn(dev->dev, "Atmel LCDC status register DISPSTS timeout\n");
-+
- 
- 	pm_runtime_put_sync(dev->dev);
- 
 -- 
-2.25.1
-
+Josh
