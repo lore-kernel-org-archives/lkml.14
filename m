@@ -1,63 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8A913D25E;
-	Wed, 24 Apr 2024 20:04:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F8BB143C5A;
+	Wed, 24 Apr 2024 20:04:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713989056; cv=none; b=mx5lpe9byrcxEf/Z9TlUtZOapMiOVw96tvcTEIFv/HLE2zlhJta9Oyq838wOdAc27Eqwa207fLHA+oX7yNxE4u5ukuoaSBrfmtCQGkGmERt8V8eQghPipK4jpk/xl7W3MEq+FaUvOeyazFqjcT5bW/r7q+ATmS4nL1R7jCWLBNg=
+	t=1713989056; cv=none; b=lcBH70cg6qseZcy01bMj3ji5WYb2ZSZ+Mkjv/nCETVF2xFlsEISUebSlq69h9oEvsEjiEN0erdj3+8Z6LKLBbMYfGpbh/avOTv6HtKI3pfcLYJIUL/iUNb7GuDQraNSfL0aucimpUwu0gWL97waMVX7HHL1KYkvADjN3DYvW2Lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713989056; c=relaxed/simple;
-	bh=hb6SpCxARZzBI/N7bpgQo/g8MGCD13PYeig3zaU+810=;
+	bh=tJaUYhyR6gQweoog88TjkZBTj5uT7xjIlUIQAj2YIcw=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=bascKo7cuJIYGAPB6J5G39VqD5aq7OaA4CoH277wdsPLcSsTCxDVSuaLGMIUYs8oktNTrOwXbs8L9ay32+g30I+524r5P+bTtaZNhC0oBNowaBjWLc2hvTlyLGSOxwx67Gy5fbcHQm2G0WbnlHmKmUq84D+WZjJD/8zJp2YoVXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UZDFQr/J; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D3Ajg9DV; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=AEgwLBcgyleQ2biuidt0omY8Jz/716thVHHATQHilK+ERTQrzjDdDNHx1Q3KYoDkZeB2Ll9EwIT1qqcXzJmaeseCXpNus7YZ9NOeoNh91MpNadc3ZT4Rr5rzbEEWj/B3fAn8aGZ90bASCC7m0dEUsGh3e+GM4aRC0FX9GolJmxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TTfv5PWu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k43vECvE; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UZDFQr/J";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D3Ajg9DV"
-Date: Wed, 24 Apr 2024 20:04:07 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TTfv5PWu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k43vECvE"
+Date: Wed, 24 Apr 2024 20:04:08 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1713989047;
+	s=2020; t=1713989048;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oVwWSLhbRoOnuuWBkaJtekqTzP7WA7b954lGwNcHPtg=;
-	b=UZDFQr/JaWLDvXKpHg6rRKWPrQ7W2DlLdAuqjULJKaDJPwihRzqCUis1yOM6DbZiSzY90e
-	l/io4jQ5Yah65fVbKCNbrXdnuanDNWucinDe26uxZzwCDoGtFc9VTFPk3AJGBDBaAwcaZD
-	28vj/TVXNhUm1ZVnj47Flg1OreEol+PKEhBo+lXf5tjbI2TkEX/j2wEbhcTFi6QCJJtUcd
-	/37r/jj4FjRxdlGv9uG+J4GpOFXOogBKHx2cDUU1F7TMpMmEwD++apr+DRivyQFdFvRJFP
-	l3HoKyx0X3KV/gCDq5/9iaW2jwTZDkt4dUW+AFEX0k2YcArZEPByDLAPKW5LvA==
+	bh=iItQc4w+NZqDaeNu10psZYVHMhWDkTFJZCM1bZhMdW0=;
+	b=TTfv5PWuJHvJPvZ74B7Rq0pC2T+q1LNlml5ANWMa0n9Hzx0arlB4YsEFmT0qHryekb5jZM
+	zoklznt0ZBEGfvDtmOGi/Jhtxx06e3iGsRbiojzs7H4cCF0yynkPXZqbFOJWIR/LiuaetH
+	L2o7o2Z+JswRWoEH0PDvey1iBAtG6nJ6SxymzHEywCxQqNlcsy/ijVLT42F02fWJilyLhA
+	eumGUv0tljclmz7yfU1VM3HKzXHWS6BollzXeFQ9ga5E1Sb1RNn43tHh9dDXjPmmEfEszb
+	q1LV+kuE5e7Xg4sgtrJT+LElYVQHte/FiBI2/CSdlIk/TkEGUBhdAUM8btqwTw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1713989047;
+	s=2020e; t=1713989048;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oVwWSLhbRoOnuuWBkaJtekqTzP7WA7b954lGwNcHPtg=;
-	b=D3Ajg9DVT7hh0eHq6YVLMseJKnekBDtQ7T0ssZt/X5Nvyug7i8ZIWGnHI2a1ruDqJLhFKn
-	BFzmwJkGCZXe89Bw==
-From: "tip-bot2 for Dawei Li" <tip-bot2@linutronix.de>
+	bh=iItQc4w+NZqDaeNu10psZYVHMhWDkTFJZCM1bZhMdW0=;
+	b=k43vECvEOhX5ar7wSOCfNqL+Q5kaISE7hZ+rfqyQdcIigJVDHiA7z0e9XPR5V09jNcQjt8
+	EOjSevXknTZ/MZBg==
+From: "tip-bot2 for David Stevens" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] cpumask: Introduce cpumask_first_and_and()
-Cc: Dawei Li <dawei.li@shingroup.cn>, Thomas Gleixner <tglx@linutronix.de>,
- Yury Norov <yury.norov@gmail.com>, x86@kernel.org,
+Subject: [tip: irq/core] genirq/cpuhotplug: Skip suspended interrupts when
+ restoring affinity
+Cc: David Stevens <stevensd@chromium.org>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20240416085454.3547175-2-dawei.li@shingroup.cn>
-References: <20240416085454.3547175-2-dawei.li@shingroup.cn>
+In-Reply-To: <20240424090341.72236-1-stevensd@chromium.org>
+References: <20240424090341.72236-1-stevensd@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171398904742.10875.2505859737865866065.tip-bot2@tip-bot2>
+Message-ID: <171398904821.10875.12381201257490919108.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,123 +68,76 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     cdc66553c4130735f0a2db943a5259e54ff1597a
-Gitweb:        https://git.kernel.org/tip/cdc66553c4130735f0a2db943a5259e54ff1597a
-Author:        Dawei Li <dawei.li@shingroup.cn>
-AuthorDate:    Tue, 16 Apr 2024 16:54:48 +08:00
+Commit-ID:     a60dd06af674d3bb76b40da5d722e4a0ecefe650
+Gitweb:        https://git.kernel.org/tip/a60dd06af674d3bb76b40da5d722e4a0ecefe650
+Author:        David Stevens <stevensd@chromium.org>
+AuthorDate:    Wed, 24 Apr 2024 18:03:41 +09:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 24 Apr 2024 21:23:49 +02:00
+CommitterDate: Wed, 24 Apr 2024 20:42:57 +02:00
 
-cpumask: Introduce cpumask_first_and_and()
+genirq/cpuhotplug: Skip suspended interrupts when restoring affinity
 
-Introduce cpumask_first_and_and() to get intersection between 3 cpumasks,
-free of any intermediate cpumask variable. Instead, cpumask_first_and_and()
-works in-place with all inputs and produces desired output directly.
+irq_restore_affinity_of_irq() restarts managed interrupts unconditionally
+when the first CPU in the affinity mask comes online. That's correct during
+normal hotplug operations, but not when resuming from S3 because the
+drivers are not resumed yet and interrupt delivery is not expected by them.
 
-Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
+Skip the startup of suspended interrupts and let resume_device_irqs() deal
+with restoring them. This ensures that irqs are not delivered to drivers
+during the noirq phase of resuming from S3, after non-boot CPUs are brought
+back online.
+
+Signed-off-by: David Stevens <stevensd@chromium.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Yury Norov <yury.norov@gmail.com>
-Link: https://lore.kernel.org/r/20240416085454.3547175-2-dawei.li@shingroup.cn
-
+Link: https://lore.kernel.org/r/20240424090341.72236-1-stevensd@chromium.org
 ---
- include/linux/cpumask.h | 17 +++++++++++++++++
- include/linux/find.h    | 27 +++++++++++++++++++++++++++
- lib/find_bit.c          | 12 ++++++++++++
- 3 files changed, 56 insertions(+)
+ kernel/irq/cpuhotplug.c | 11 ++++++++---
+ kernel/irq/manage.c     | 12 ++++++++----
+ 2 files changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-index 1c29947..c46f9e9 100644
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -188,6 +188,23 @@ unsigned int cpumask_first_and(const struct cpumask *srcp1, const struct cpumask
- }
+diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
+index 1ed2b17..43340e0 100644
+--- a/kernel/irq/cpuhotplug.c
++++ b/kernel/irq/cpuhotplug.c
+@@ -195,10 +195,15 @@ static void irq_restore_affinity_of_irq(struct irq_desc *desc, unsigned int cpu)
+ 	    !irq_data_get_irq_chip(data) || !cpumask_test_cpu(cpu, affinity))
+ 		return;
  
- /**
-+ * cpumask_first_and_and - return the first cpu from *srcp1 & *srcp2 & *srcp3
-+ * @srcp1: the first input
-+ * @srcp2: the second input
-+ * @srcp3: the third input
-+ *
-+ * Return: >= nr_cpu_ids if no cpus set in all.
-+ */
-+static inline
-+unsigned int cpumask_first_and_and(const struct cpumask *srcp1,
-+				   const struct cpumask *srcp2,
-+				   const struct cpumask *srcp3)
-+{
-+	return find_first_and_and_bit(cpumask_bits(srcp1), cpumask_bits(srcp2),
-+				      cpumask_bits(srcp3), small_cpumask_bits);
-+}
+-	if (irqd_is_managed_and_shutdown(data)) {
+-		irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
++	/*
++	 * Don't restore suspended interrupts here when a system comes back
++	 * from S3. They are reenabled via resume_device_irqs().
++	 */
++	if (desc->istate & IRQS_SUSPENDED)
+ 		return;
+-	}
 +
-+/**
-  * cpumask_last - get the last CPU in a cpumask
-  * @srcp:	- the cpumask pointer
-  *
-diff --git a/include/linux/find.h b/include/linux/find.h
-index c69598e..28ec5a0 100644
---- a/include/linux/find.h
-+++ b/include/linux/find.h
-@@ -29,6 +29,8 @@ unsigned long __find_nth_and_andnot_bit(const unsigned long *addr1, const unsign
- 					unsigned long n);
- extern unsigned long _find_first_and_bit(const unsigned long *addr1,
- 					 const unsigned long *addr2, unsigned long size);
-+unsigned long _find_first_and_and_bit(const unsigned long *addr1, const unsigned long *addr2,
-+				      const unsigned long *addr3, unsigned long size);
- extern unsigned long _find_first_zero_bit(const unsigned long *addr, unsigned long size);
- extern unsigned long _find_last_bit(const unsigned long *addr, unsigned long size);
++	if (irqd_is_managed_and_shutdown(data))
++		irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
  
-@@ -345,6 +347,31 @@ unsigned long find_first_and_bit(const unsigned long *addr1,
- }
- #endif
- 
-+/**
-+ * find_first_and_and_bit - find the first set bit in 3 memory regions
-+ * @addr1: The first address to base the search on
-+ * @addr2: The second address to base the search on
-+ * @addr3: The third address to base the search on
-+ * @size: The bitmap size in bits
-+ *
-+ * Returns the bit number for the first set bit
-+ * If no bits are set, returns @size.
-+ */
-+static inline
-+unsigned long find_first_and_and_bit(const unsigned long *addr1,
-+				     const unsigned long *addr2,
-+				     const unsigned long *addr3,
-+				     unsigned long size)
-+{
-+	if (small_const_nbits(size)) {
-+		unsigned long val = *addr1 & *addr2 & *addr3 & GENMASK(size - 1, 0);
-+
-+		return val ? __ffs(val) : size;
-+	}
-+
-+	return _find_first_and_and_bit(addr1, addr2, addr3, size);
-+}
-+
- #ifndef find_first_zero_bit
- /**
-  * find_first_zero_bit - find the first cleared bit in a memory region
-diff --git a/lib/find_bit.c b/lib/find_bit.c
-index 32f99e9..dacadd9 100644
---- a/lib/find_bit.c
-+++ b/lib/find_bit.c
-@@ -116,6 +116,18 @@ unsigned long _find_first_and_bit(const unsigned long *addr1,
- EXPORT_SYMBOL(_find_first_and_bit);
- #endif
- 
-+/*
-+ * Find the first set bit in three memory regions.
-+ */
-+unsigned long _find_first_and_and_bit(const unsigned long *addr1,
-+				      const unsigned long *addr2,
-+				      const unsigned long *addr3,
-+				      unsigned long size)
-+{
-+	return FIND_FIRST_BIT(addr1[idx] & addr2[idx] & addr3[idx], /* nop */, size);
-+}
-+EXPORT_SYMBOL(_find_first_and_and_bit);
-+
- #ifndef find_first_zero_bit
- /*
-  * Find the first cleared bit in a memory region.
+ 	/*
+ 	 * If the interrupt can only be directed to a single target
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index ad3eaf2..29c378d 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -800,10 +800,14 @@ void __enable_irq(struct irq_desc *desc)
+ 		irq_settings_set_noprobe(desc);
+ 		/*
+ 		 * Call irq_startup() not irq_enable() here because the
+-		 * interrupt might be marked NOAUTOEN. So irq_startup()
+-		 * needs to be invoked when it gets enabled the first
+-		 * time. If it was already started up, then irq_startup()
+-		 * will invoke irq_enable() under the hood.
++		 * interrupt might be marked NOAUTOEN so irq_startup()
++		 * needs to be invoked when it gets enabled the first time.
++		 * This is also required when __enable_irq() is invoked for
++		 * a managed and shutdown interrupt from the S3 resume
++		 * path.
++		 *
++		 * If it was already started up, then irq_startup() will
++		 * invoke irq_enable() under the hood.
+ 		 */
+ 		irq_startup(desc, IRQ_RESEND, IRQ_START_FORCE);
+ 		break;
