@@ -1,77 +1,100 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F07FB15CD51;
-	Wed, 24 Apr 2024 13:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3AB15A4B0
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713965267; cv=none; b=NMwjNj9UXuRUDAGkOYfOypAYd3oiu6FCKxX4l5iXvCdvQixS3TE44E78NKMyqcg8QkmO1j9VMQ6DnQqeyUnN6LVQ4/U3yP/Efqih0xwnJ8k3E48dPYHyQ+7y7aTNJAToYpTZbG0DqwWpFDKemKxTFtoGzKJkRsmT9XaqNgeg1yw=
+	t=1713965380; cv=none; b=XHY9nPbBb1ntQgq/8H9cytgwuoAhZOgiG9xd3cdkG/WsYqqh/ge3saqH/eVzvCI9jc9AC4UntZweeBm4TNyCX/jVBDflvT9CydWDcBn6L2WSvxVIq1322ypEU7opRSe/ck6Q3Ajt7b9kXweNKcv3ke7V0ra6kud/V2xiB34tH4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713965267; c=relaxed/simple;
-	bh=RHRNpt1GrdBK2G7+COQrLb3IEKD0I7+HfEEcq1CkGtk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j8x3mLOl7QuABUxWIwIzRbS5UkvAphZNdY5zJkz+DluuJ+7dZYhSQw4zxDj4Uf+NvqKdtHyUuGR2NY57QK5I0r6GOMAjdRaQNlK16QQVebsfFj55iE/xDhhXxEKAhn1/8dAVUI/Qbn3f4ZOyHZ5n52frEkAvAzV6DEM0pQWL0wE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 190582F;
-	Wed, 24 Apr 2024 06:28:13 -0700 (PDT)
-Received: from [10.57.86.198] (unknown [10.57.86.198])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DCF6A3F64C;
-	Wed, 24 Apr 2024 06:27:42 -0700 (PDT)
-Message-ID: <7c6504dd-ebef-4809-9e1d-7151db647e2a@arm.com>
-Date: Wed, 24 Apr 2024 14:27:41 +0100
+	s=arc-20240116; t=1713965380; c=relaxed/simple;
+	bh=YeGnNM3NBl2Yub3N76MBgc5Ql6v7CSjam7WnrDHtTxQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cJfZ36qGtmULqDSWufCYUutm2/LVkgVhvDC2vZbLO23LI68Xe6IaEXyC2aXEfNTh0rFln+e7lVJZvPiMY1NaxK0NkBLvWmBjFkDdJjTpsW1c4Bn1MKqJY4diWclaxZOTMbW9AjZqHB3+tZpxvXD4+ltKGSSp1qVKgF0wTXpaVjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VPfs552B5zvPvj;
+	Wed, 24 Apr 2024 21:26:33 +0800 (CST)
+Received: from kwepemf500005.china.huawei.com (unknown [7.202.181.243])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6E58918006B;
+	Wed, 24 Apr 2024 21:29:35 +0800 (CST)
+Received: from huawei.com (10.67.174.161) by kwepemf500005.china.huawei.com
+ (7.202.181.243) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 24 Apr
+ 2024 21:29:34 +0800
+From: Cheng Yu <serein.chengyu@huawei.com>
+To: <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>,
+	<vincent.guittot@linaro.org>, <dietmar.eggemann@arm.com>,
+	<rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
+	<bristot@redhat.com>, <vschneid@redhat.com>,
+	<changhuaixin@linux.alibaba.com>, <shanpeic@linux.alibaba.com>,
+	<dtcccc@linux.alibaba.com>, <tj@kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <zhangqiao22@huawei.com>, <judy.chenhui@huawei.com>,
+	<yusongping@huawei.com>, <serein.chengyu@huawei.com>
+Subject: [PATCH] sched/core: fix incorrect parameter burst in cpu_max_write()
+Date: Wed, 24 Apr 2024 21:24:38 +0800
+Message-ID: <20240424132438.514720-1-serein.chengyu@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 14/14] virt: arm-cca-guest: TSM_REPORT support for
- realms
-Content-Language: en-GB
-To: Thomas Fossati <thomas.fossati@linaro.org>,
- Steven Price <steven.price@arm.com>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
- Sami Mujawar <sami.mujawar@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-References: <20240412084056.1733704-1-steven.price@arm.com>
- <20240412084213.1733764-1-steven.price@arm.com>
- <20240412084213.1733764-15-steven.price@arm.com>
- <CA+1=6ydMVk4Vcouc2ag8G7tfqZy80VWFxWHSHEKF1JaABd=A7A@mail.gmail.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <CA+1=6ydMVk4Vcouc2ag8G7tfqZy80VWFxWHSHEKF1JaABd=A7A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemf500005.china.huawei.com (7.202.181.243)
 
-On 24/04/2024 14:06, Thomas Fossati wrote:
-> Hi Steven, Sami,
-> 
-> On Fri, 12 Apr 2024 at 10:47, Steven Price <steven.price@arm.com> wrote:
->> +/**
->> + * arm_cca_report_new - Generate a new attestation token.
->> + *
->> + * @report: pointer to the TSM report context information.
->> + * @data:  pointer to the context specific data for this module.
->> + *
->> + * Initialise the attestation token generation using the challenge data
->> + * passed in the TSM decriptor.
-> 
-> Here, it'd be good to document two interesting facts about challenge data:
-> 1. It must be at least 32 bytes, and
-> 2. If its size is less than 64 bytes, it will be zero-padded.
+In the cgroup v2 cpu subsystem, assuming we have a
+cgroup named test, we set cpu.max and cpu.max.burst:
+    # echo 1000000 > /sys/fs/cgroup/test/cpu.max
+    # echo 1000000 > /sys/fs/cgroup/test/cpu.max.burst
+then we check cpu.max and cpu.max.burst:
+    # cat /sys/fs/cgroup/test/cpu.max
+    1000000 100000
+    # cat /sys/fs/cgroup/test/cpu.max.burst
+    1000000
 
-Agreed !
+Next we set cpu.max again and check cpu.max and
+cpu.max.burst:
+    # echo 2000000 > /sys/fs/cgroup/test/cpu.max
+    # cat /sys/fs/cgroup/test/cpu.max
+    2000000 100000
+    # cat /sys/fs/cgroup/test/cpu.max.burst
+    1000
+we found that the cpu.max.burst value changed unexpectedly.
 
-Suzuki
+In cpu_max_write(), the unit of the burst value returned
+by tg_get_cfs_burst() is microseconds, while in cpu_max_write(),
+the burst unit used for calculation should be nanoseconds,
+which leads to the bug.
 
-> 
-> cheers!
+To fix it, we get the burst value directly from
+tg->cfs_bandwidth.burst.
+
+Reported-by: Qixin Liao <liaoqixin@huawei.com>
+Fixes: f4183717b370 ("sched/fair: Introduce the burstable CFS controller")
+Signed-off-by: Cheng Yu <serein.chengyu@huawei.com>
+Signed-off-by: Zhang Qiao <zhangqiao22@huawei.com>
+---
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 7019a40457a6..d211d40a2edc 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -11402,7 +11402,7 @@ static ssize_t cpu_max_write(struct kernfs_open_file *of,
+ {
+ 	struct task_group *tg = css_tg(of_css(of));
+ 	u64 period = tg_get_cfs_period(tg);
+-	u64 burst = tg_get_cfs_burst(tg);
++	u64 burst = tg->cfs_bandwidth.burst;
+ 	u64 quota;
+ 	int ret;
+ 
+-- 
+2.25.1
 
