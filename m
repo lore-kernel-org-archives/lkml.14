@@ -1,156 +1,181 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4B715B574
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 12:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26B015B975
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 12:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713961450; cv=none; b=tDavH/W95AtDx3pQclRIPehSbYu2VxXcwlaLQ9K7O9qdnTxlX1x/IhLWrO9slCobMIw077NEhVW4TW1S7MexQAEKbrt6ZCjAJDvEf+Th/g2941V35sZ4/CJj4Ae0D3LWE8XZmEbm9BEyFS0xxc0dZ8UCQ6FzmaJwHc/TkjGL2j4=
+	t=1713961453; cv=none; b=EbOZPvOfzYG0CJ8HrFsQhNygr9+KK5iJ5qXq3IfMWLfzZolQmgxkPsQCNwjHm728w85VhG2XzChbEMi5BTLvP9KSKAR78bkoR/19SoHhFy9mEl542PvhEkQoBylPY8fIVY8UQTHUPRMah8a4D5G1YE5rp/BHFYknBKxgF5wvz1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713961450; c=relaxed/simple;
-	bh=xkpmZvyTfHixCtX+t/n6zmsXjcy6VJHSizSG8yiH3B8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qY7TKBTfjcgcrubx8rbBFp4jyYmVAEFqJBNKO72/uiFUoA67XeqSNhlGAy/qNYbj+PPQxoulJnrEbcI6UtJZUfKlEZ+SMd9XXc9F33/Sa3S6+TLwDu2Db/SqgEiF/bi1XgJfBDeLRA1N06NdtYi6ro42uQpgOuY6dsrw3D5GI4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZBhL14Kh; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1713961453; c=relaxed/simple;
+	bh=HlazUzSr4amxm9DuYzU249o+uWW/IwDWB+kYCy7wJbE=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ExZZyWIhuFka/swVlFkGEweYGoNv6UP9NWTnt+7qJ0UkLK8ixS1oj0bIBHYAYaaJQZk2FgV6AFO0OhPNgSiOrhin34bJQjNdd5O41zPWjz/h2enQrkYqvoKifgvVdmqKHwww3Um/F3mVitDmaJd5/T/PS6dnXS7wFxMpLv+TcE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=eRkBEobK; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZBhL14Kh"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-51b09c3a111so5528315e87.1
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="eRkBEobK"
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D87FF3FE53
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 12:24:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1713961448;
+	bh=kP7Qj5CwpDA66Gz8AB4puXE6Tb6dE/jjDd5MukJFIok=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=eRkBEobK9qMo6CKt2t93IF8CICQCK3r85nlfHuLIw1WMPYuijWikAa+m/OAAHfnM4
+	 Ofg7dN68CHP0EJi7lmEgH3mCSIUhRXKqzTkMVzmY7pALBXvW6BlM4lVYoC66G9/lx1
+	 hE6B4IiV62v7BxKLLvEo3cGZbJS8bxgE/08ZybWoDp+4Q9dUKlALWRhdqa8MQRgyWl
+	 fwNgGNVfZDseNb17oxOQKlhocYa0AQd+84GATE41SWbl3mZwFdz4niXRFabSF07cdc
+	 rOEki7cqiNMDprQnwbigITKUnWwM2twgE844L/QB2cOxZuuH7pchL4/jMlNDSdeA3M
+	 TFK0JjeCYROeg==
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-434e823ba24so79343171cf.2
         for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 05:24:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1713961447; x=1714566247; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xkpmZvyTfHixCtX+t/n6zmsXjcy6VJHSizSG8yiH3B8=;
-        b=ZBhL14KhcDK1oNa2ImekiyYMxdjh+EOTvL5haCFTPGx12t50AorHPttMIVd0nv8enu
-         0jUBir99S0mi7Gs3vvYhzyGeMT0HVCaFv4McFh0mIoS67It12OPdNvlyan9L0UEstEqQ
-         aFqJLqWBCYw1aEhRdgcolHan9Oqu3K4A1zyYD3HeKKzobrg15pmMOXIGbeE4wC9jcMSS
-         G1L5rJgRLYZKmEEGUEmYqPbfiYhdqyXzt0LCuZ3bcCjm685xixfEDhIfXa+FRLlIGc+6
-         ofSApGZJ3kOjVAtc9VyA0PCsaPkbnHEl+pTdUiPPMUghJlShdJ9MshF9ue3X9bIrGFMT
-         oOGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1713961447; x=1714566247;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xkpmZvyTfHixCtX+t/n6zmsXjcy6VJHSizSG8yiH3B8=;
-        b=CepvXpcuuYUn1UDGLNSzWP5dnlQs7FtGNk2GJyd7gNHBanVlsWQuEY4GsywyAuc0q+
-         wxZKIzPzj4/MovHnsLm+YmhQUlU3VfMQFL8UfpUJN7vYcIFTPCknCrE6bcD3XWFiDalI
-         0Ba4wGUsSkuYVTWNpaRNQKlOJfGWDVcxVkJxgip1Bd/m/85KKHlFDPHwDpxWAYBybo4T
-         kFK/ROCGWonVrMD3bRh7HJja2MID6zTDodgdZi9X6vCwS/ViRxAu2Pns1v2GUWiE6VsB
-         rN7y21fQRWi8yXSyKYBItj2g/b0ixMA5sKEEc8CL1bv+CAadnCPKJp6W31Lp6r34BM17
-         rByA==
-X-Forwarded-Encrypted: i=1; AJvYcCWy1UDzh5POb5E6voaVvm/ArhOEbBOz7P73cChZE/x87mvqQusKUPVO0g1wfFhDgzL33GFCSKn7f4cXe3ysxyI1PRf0gN9xvXbbR0Jc
-X-Gm-Message-State: AOJu0YyzqxhtE4aKWXRsZpo490kfW6HvyZ+L8TZYJ5FhpKpRtWfiSVLu
-	56osbCY0w5LQhjkIf2sgLW5usTxiIkjCQmCkac/Xf/elRjRG7fQrVPhi9qNhq8F5bjOBOMduUgr
-	KblCJ7D3v6XJdYTAcaVRsfk0r90BTxd1kTIb1TQ==
-X-Google-Smtp-Source: AGHT+IFOeBZePCP+f0xM90P2Lnt+nsICvvd6CG+PexnWGNvAxYibGYTtsSwBuAMSnd5Ork/hdXeJjk5eFwi8uDscPD0=
-X-Received: by 2002:a05:6512:3e8:b0:51a:ca97:7e93 with SMTP id
- n8-20020a05651203e800b0051aca977e93mr1537595lfq.25.1713961446936; Wed, 24 Apr
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kP7Qj5CwpDA66Gz8AB4puXE6Tb6dE/jjDd5MukJFIok=;
+        b=ssbliztB09KPpocDXQg+KkfPmZb+9EmeqRoODzhthSSh8cnFoh2nhnQqfH4mnrQS8j
+         yJDhn0Xx0X0zLJD0bW7QydDaWZ0/Iqjkq0sVwJaWv/zLehSX0avArav5qk0OhiJe7abW
+         V2uy6p3q9dN1eB+qiFs//NaKa8j/NVvrtlTkS95zWeZzunKINZaRvOowtZkAc6zVpvG5
+         8IqBwkcesLRRzZefvxHsFAzVYqC2ZQ4hIsgYjo3c4J/cn0FnzF9ImY60Nsbah9OsEQEL
+         QdROy0iNxukwyLI3upDSCkzaMJdVV3QQg8X9PxbQIV9qdvGGbaoyh3Jp1xROHh4JbC+r
+         RzPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWic4bxZGbeWEviCnaLub+2XXaB2TVhVOfHRsFoB6fMFHz68kgMxZ5BxWjAz03+6WO9jd6haX24RfkXf+jACROR6SoBUQmn5WUwvKN/
+X-Gm-Message-State: AOJu0Yzz2QH87wdkhBLNoA9hAZfi667MBs2L9IRiOJh3e0MjbMA+dvFe
+	P84Az9Rd5ZvirP9jc3ZzeJyas+5EPbL9ZO7FktNFYPlqPqf/5Piy/HJ+4v17vef6yWwL3HWyOAa
+	gz+CeDsQCNn9Wv3Qr2dAp/2Zu2MPlwk/N8VC+Ph50CVPmk3IKdfC5y1doIZPUlB+ZXFPWyqEtCZ
+	v8uE3i4V8WlsPlD8LN8FmAYW9CjZagJfbvaH4fU8IiNtFwUFWrkXxo
+X-Received: by 2002:a05:622a:c3:b0:439:ff39:eda5 with SMTP id p3-20020a05622a00c300b00439ff39eda5mr2850161qtw.46.1713961446652;
+        Wed, 24 Apr 2024 05:24:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHE9LSddkv0aBFD9sD7nfjwgf9rCGcKJnWtVWsbq4dHYSmThicP0HSvR1y+4PaXDdyrxJ35vOBfb5XosrnnuVc=
+X-Received: by 2002:a05:622a:c3:b0:439:ff39:eda5 with SMTP id
+ p3-20020a05622a00c300b00439ff39eda5mr2850143qtw.46.1713961446367; Wed, 24 Apr
  2024 05:24:06 -0700 (PDT)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 24 Apr 2024 12:24:05 +0000
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <20240424-cost-monkhood-14ab2a933bb5@spud>
+References: <20240410142347.964-1-jszhang@kernel.org> <20240410142347.964-3-jszhang@kernel.org>
+ <20240424-cost-monkhood-14ab2a933bb5@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240422130036.31856-1-brgl@bgdev.pl> <99242a7c-53bf-4227-9623-7bc092f564b3@penguintechs.org>
- <CAMRc=MepDwUbAKrWgm0CXKObqy8=igtug0QDgo-CgwxjZCAC2Q@mail.gmail.com>
- <b982b73d-0540-409c-a6e2-0e03ecb11715@penguintechs.org> <0381f39c-38ba-4a2b-915c-f14c5f911eb9@penguintechs.org>
- <CAMRc=MfnEct7ThQhCA3AoY7hxq8j1mmFLNNkK17+RSvJxs67XQ@mail.gmail.com>
- <2371f538-ec53-4037-b171-c62bf4e06eb1@penguintechs.org> <CACMJSeunUaj0cxLaN4MpFmX5vTOx_vnWjBN4Y2FavdQoQxFRkg@mail.gmail.com>
-In-Reply-To: <CACMJSeunUaj0cxLaN4MpFmX5vTOx_vnWjBN4Y2FavdQoQxFRkg@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 24 Apr 2024 14:23:55 +0200
-Message-ID: <CAMRc=MeZh6YugXtDeF=nuwmpW5qvmHLt+g6S3Guoome7mz2xyA@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: qca: set power_ctrl_enabled on NULL returned
- by gpiod_get_optional()
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: Wren Turkal <wt@penguintechs.org>, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Mime-Version: 1.0
+Date: Wed, 24 Apr 2024 12:24:05 +0000
+Message-ID: <CAJM55Z9E7GnacYhQHcYmHKur6kD155d6C-xkORaEfxS9JxLFxg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] clocksource/drivers/timer-clint: Add T-Head C9xx clint
+To: Conor Dooley <conor@kernel.org>, Jisheng Zhang <jszhang@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Samuel Holland <samuel.holland@sifive.com>, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 24, 2024 at 2:20=E2=80=AFPM Bartosz Golaszewski
-<bartosz.golaszewski@linaro.org> wrote:
->
-> On Wed, 24 Apr 2024 at 14:17, Wren Turkal <wt@penguintechs.org> wrote:
+Conor Dooley wrote:
+> On Wed, Apr 10, 2024 at 10:23:47PM +0800, Jisheng Zhang wrote:
+> > To use the T-HEAD C9xx clint in RISCV-M NOMMU env, we need to take
+> > care two points:
 > >
-> > On 4/24/24 4:56 AM, Bartosz Golaszewski wrote:
-> > > On Wed, Apr 24, 2024 at 1:53=E2=80=AFPM Wren Turkal <wt@penguintechs.=
-org> wrote:
-> > >>
-> > >> On 4/24/24 4:16 AM, Wren Turkal wrote:
-> > >>> On 4/24/24 2:04 AM, Bartosz Golaszewski wrote:
-> > >>>> On Wed, 24 Apr 2024 07:07:05 +0200, Wren Turkal<wt@penguintechs.or=
-g>
-> > >>>> said:
-> > >>>>> On 4/22/24 6:00 AM, Bartosz Golaszewski wrote:
-> > >>>>>> From: Bartosz Golaszewski<bartosz.golaszewski@linaro.org>
-> > >>>>>>
-> > >>>>>> Any return value from gpiod_get_optional() other than a pointer =
-to a
-> > >>>>>> GPIO descriptor or a NULL-pointer is an error and the driver sho=
-uld
-> > >>>>>> abort probing. That being said: commit 56d074d26c58 ("Bluetooth:
-> > >>>>>> hci_qca:
-> > >>>>>> don't use IS_ERR_OR_NULL() with gpiod_get_optional()") no longer=
- sets
-> > >>>>>> power_ctrl_enabled on NULL-pointer returned by
-> > >>>>>> devm_gpiod_get_optional(). Restore this behavior but bail-out on
-> > >>>>>> errors.
-> > >>>>> Nack. This patch does fixes neither the disable/re-enable problem=
- nor
-> > >>>>> the warm boot problem.
-> > >>>>>
-> > >>>>> Zijun replied to this patch also with what I think is the proper
-> > >>>>> reasoning for why it doesn't fix my setup.
-> > >>>>>
-> > >>>> Indeed, I only addressed a single issue here and not the code unde=
-r the
-> > >>>> default: label of the switch case. Sorry.
-> > >>>>
-> > >>>> Could you give the following diff a try?
-> > >>>
-> > >>> I had a feeling that was what was going on. I'll give the patch a s=
-hot.
-> > >>>
-> > >>> wt
-> > >>
-> > >> Considering this patch is basically equivalent to patch 1/2 from Zij=
-un,
-> > >> I am not surprised that is works similarly. I.e. on a cold boot, I c=
-an
-> > >> disable/re-enable bluetooth as many time as I want.
-> > >>
-> > >
-> > > Zijun didn't bail out on errors which is the issue the original patch
-> > > tried to address and this one preserves.
-> > >
-> > >> However, since this patch doesn't include the quirk fix from Zijun's
-> > >> patchset (patch 2/2), bluetooth fails to work after a warm boot.
-> > >>
-> > >
-> > > That's OK, we have the first part right. Let's now see if we can reus=
-e
-> > > patch 2/2 from Zijun.
+> > 1.The mtimecmp in T-Head C9xx clint only supports 32bit read/write,
+> > implement such support.
 > >
-> > I'm compiling it right now. Be back soon.
+> > 2. As pointed out by commit ca7810aecdba ("lib: utils/timer: mtimer:
+> > add a quirk for lacking mtime register") of opensbi:
 > >
+> > "T-Head developers surely have a different understanding of time CSR and
+> > CLINT's mtime register with SiFive ones, that they did not implement
+> > the mtime register at all -- as shown in openC906 source code, their
+> > time CSR value is just exposed at the top of their processor IP block
+> > and expects an external continous counter, which makes it not
+> > overrideable, and thus mtime register is not implemented, even not for
+> > reading. However, if CLINTEE is not enabled in T-Head's MXSTATUS
+> > extended CSR, these systems still rely on the mtimecmp registers to
+> > generate timer interrupts. This makes it necessary to implement T-Head
+> > C9xx CLINT support in OpenSBI MTIMER driver, which skips implementing
+> > reading mtime register and falls back to default code that reads time
+> > CSR."
+> >
+> > So, we need to fall back to read time CSR instead of mtime register.
+> > Add riscv_csr_time_available static key for this purpose.
+> >
+> > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> > ---
+> >  arch/riscv/include/asm/clint.h    |  2 ++
+> >  arch/riscv/include/asm/timex.h    | 18 +++++++++---
+> >  drivers/clocksource/timer-clint.c | 48 +++++++++++++++++++++++++++----
+> >  3 files changed, 59 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/arch/riscv/include/asm/clint.h b/arch/riscv/include/asm/clint.h
+> > index 0789fd37b40a..c6057a182c5d 100644
+> > --- a/arch/riscv/include/asm/clint.h
+> > +++ b/arch/riscv/include/asm/clint.h
+> > @@ -10,6 +10,7 @@
+> >  #include <asm/mmio.h>
+> >
+> >  #ifdef CONFIG_RISCV_M_MODE
+> > +#include <linux/jump_label.h>
+> >  /*
+> >   * This lives in the CLINT driver, but is accessed directly by timex.h to avoid
+> >   * any overhead when accessing the MMIO timer.
+> > @@ -21,6 +22,7 @@
+> >   * like "riscv_mtime", to signify that these non-ISA assumptions must hold.
+> >   */
+> >  extern u64 __iomem *clint_time_val;
+> > +DECLARE_STATIC_KEY_FALSE(riscv_csr_time_available);
+> >  #endif
+> >
+> >  #endif
+> > diff --git a/arch/riscv/include/asm/timex.h b/arch/riscv/include/asm/timex.h
+> > index a06697846e69..007a15482d75 100644
+> > --- a/arch/riscv/include/asm/timex.h
+> > +++ b/arch/riscv/include/asm/timex.h
+> > @@ -17,18 +17,27 @@ typedef unsigned long cycles_t;
+> >  #ifdef CONFIG_64BIT
+> >  static inline cycles_t get_cycles(void)
+> >  {
+> > -	return readq_relaxed(clint_time_val);
+> > +	if (static_branch_likely(&riscv_csr_time_available))
+> > +		return csr_read(CSR_TIME);
+> > +	else
+> > +		return readq_relaxed(clint_time_val);
+> >  }
+> >  #else /* !CONFIG_64BIT */
+> >  static inline u32 get_cycles(void)
+> >  {
+> > -	return readl_relaxed(((u32 *)clint_time_val));
+> > +	if (static_branch_likely(&riscv_csr_time_available))
+> > +		return csr_read(CSR_TIME);
+> > +	else
+> > +		return readl_relaxed(((u32 *)clint_time_val));
+> >  }
+> >  #define get_cycles get_cycles
+> >
+> >  static inline u32 get_cycles_hi(void)
+> >  {
+> > -	return readl_relaxed(((u32 *)clint_time_val) + 1);
+> > +	if (static_branch_likely(&riscv_csr_time_available))
+> > +		return csr_read(CSR_TIMEH);
+> > +	else
+> > +		return readl_relaxed(((u32 *)clint_time_val) + 1);
+> >  }
 >
-> Well I doubt it's correct as it removed Krzysztof's fix which looks
-> right. If I were to guess I'd say we need some mix of both.
->
-> Bart
->
+> None of the else branches here need to actually be an else, since the
+> other branch returns. Otherwise, looks aight to me, thanks for the
+> update.
 
-Anyway, these are two separate issues. Let me send a v2 of this one to
-address at least one of them. I think Krzysztof will be better at
-fixing the other one as it's his patch that caused the second
-regression.
+Also the static key is initialized to false and the commit message says only
+the C9xx cores need to use the CSR_TIME, so shouldn't it be
 
-Bart
+  if (static_branch_unlikely(&riscv_csr_time_available))
+
+instead, or am I reading this wrong?
+
+/Emil
