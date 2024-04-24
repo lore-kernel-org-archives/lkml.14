@@ -1,938 +1,225 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E1F1591E6
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 09:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713950889; cv=none; b=pw4fwFpzkvu3P7R2EV5jqsTYqtiHGCEYGWtgYhpPB/ZC7XQIxo9XU7Duth6byBXaYWzh04knfyfMstQsJsZ4YE577KHbCbsCacUzfFsi8E4YM8LMGwYO0WC4AkAbJKXytGv43ToiLQMEzmQ0OWKzCezeUUyEUB274+i2Cxr5UYg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713950889; c=relaxed/simple;
-	bh=al+RxH461a6L3ObCzsEQeF44r62QxmRRkvnezVvy9UQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l+GyzorCKPQeGwic8sm1bjxIhatDv8VKxM49afU0yDn2zufZi4xhvObB6Ja2Fog3B2ucliIrgqU5NPeUFPdGCFfRTweQtsscJYM0EkBT0ukeYvX2aU47UBMhhZI0ZLb12XQT1TQ9Trh9upykIYqdlJ7gNnJeedVOEZLgSWGYgK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=smBTVAJl; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E0C1EF1A;
+	Wed, 24 Apr 2024 09:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713951040; cv=fail; b=XgvotGidTkchN0MGpKPQbiV7rm62zc9cJ7+ueDHSicWrWQmAWBjdB2sNUO60C0neReCkd7SSD+oILdNhKTUaG9KtGQ3KLb5F9wWl66aalbybGByCXimfnItwqIrSDkpS7g4v6u17s1rqxZkOnjwtU6D0OipDDwV6jqTIECdTMac=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713951040; c=relaxed/simple;
+	bh=F6qkd+g1m6gdqOlYBJ/yVyNyVSpGIJNKqbws+d8EAKA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=jodS4LgR/z9PCTg09wJO2GgMiDtgF3fYfpL24whHDwUXsYjz9I7oF4yctG8vQthX0d8lotSaVAsEJbiIyXUkgPvtr6eFSRF0dBraaE4Ad2a1Jw6r1l65BFlgjbEpMnRWlU4j6iaQZJlpZB8k7SRtH6AtJZeq0NYyNKAMK5sgGdQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=VFSRCOKw; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=LtAa1IcZ; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="smBTVAJl"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d895138d0eso51913601fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 02:28:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VFSRCOKw";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="LtAa1IcZ"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43O8eRB2014728;
+	Wed, 24 Apr 2024 09:30:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=7XeOVleqWkQ4tu3Ka74r2d5GDjNcrhGqy9Kdfn8dURY=;
+ b=VFSRCOKwledHNZCvCELkKfNxwYX0+a+diLz9hjftE1W2zIGy/LEPoIVusZuhVkEhUJn8
+ gUiwu8/FLf/yTinwsZafE1VcxbNNET6e++oH93U9bKJKnNKrKgvx9Bt2SLTKqcVPbPHD
+ iskGlwy7Bnvra4y7ruO/izytz+lrKiGthSVzWVLR9eREe200HZciJU3yciiOOoR//DyG
+ BVU9BGxgw2sXZB0GJU5DIpLL5fWV82FOF2Ajmrw7sGk0RAsLq8/chLshioK0SGqi5DnW
+ KJ3YggJEe/eHIW3Ewepa/WG4WM0Rnst+u62m8oSWNx+WVA4JRpCuic+MdU6Y9sHZX9DH gw== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xm4g4fmxb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 24 Apr 2024 09:30:07 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43O7jtGj035542;
+	Wed, 24 Apr 2024 09:30:06 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2100.outbound.protection.outlook.com [104.47.55.100])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xm458hwgx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 24 Apr 2024 09:30:06 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GoMAUKp9fwg8UHrRVRPNZ+LCPM10RODauLhmb5SFKsHG1+nLWh/jrAWVEmG5/25YUviSq9diuxioYxKICXQ8EUlQhcizP9+dqPF9rpzxFnjgOMPH/wGAp8USWuZqJX/Z5ftX8pshCOE6B79XkX9ktdxbjs3ifcUsQBPjgEdh64tTAlDjibI7/kSCe8kB5h/To5Xc2NgBvfUAyWLid/2/WnNsNuB+6w4n2p2vsaKNpNfTrAGZRbDPN5wHvfBMOFCQd9BUqytP+stzTSnXkOZDIduEc1Gye5VRymCy4IYkhLnU1GkNOdl9NUUeDmDoNiQGlDl2P3sDDnS6IByVInOq5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7XeOVleqWkQ4tu3Ka74r2d5GDjNcrhGqy9Kdfn8dURY=;
+ b=kHwis0swt59w5qpTsjHqUtZZ4Bq13/iOmypI2B7WWEgOgzjHGfbSFJq2XjUe55UeOGM7OyYaK78DTTcC4I1a1FpMSXlGAH0lTF2qbwPqtlTdtbcZbFfiWR740Vr/eYIAzq4kTQfNxqFZf/oSWBmVzBJQ3/5JRfz6sE6ALxfmBxaRp1TMOjtCxbbn7melpuxNkB8nDHM+DXcQVFExCq5/qnrMxWrT5vAQKJ0kJyNMEIsH3gN5FhvbGkvu3FLH/UPSO3Yf4wdS6G9ezPUH2TpWgOypyNNQ9SKxIwWHEYJ+90KcYle8datBK5bAJEQuHRoNQCuxqGbyRlfO4athhT6mhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713950883; x=1714555683; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l6dBAmvyuuA2FgCl9xoXApa72lrtEV3/N5httzgNFv0=;
-        b=smBTVAJlXVWikDYJNA9zcAjfClah9sZaefzS6jLKqTWSKDIevmo0/jw6x531O5CXUk
-         e0GHp/vJUvQ7GvL9wPubpfmljbt19qjHV/Uk4vc/wn/Je9ExmXNuWg+BTL/jcQQSC1lo
-         /MsfAeMFddsSsLUuCGSewgcgScFzMYm08rkY++jUlxNMNqefabdgrjQ9QxBbO3w7NXI2
-         cVd40YbytaPWTJmwQ/+a83o8NgiTNwCtAtC0EZhBWmQbG0dRbWBcVZTymKtoU+IUFdao
-         60sEYp5IkjqseHQMLKFtn8CdLggGGhGXFw4hbOKmhlsbXhzpd2FFDeC70yvK+UEwwANn
-         QxAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713950883; x=1714555683;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l6dBAmvyuuA2FgCl9xoXApa72lrtEV3/N5httzgNFv0=;
-        b=REIw+OiOnxwSXpDj88N45dBsJKfHfdu046HnwkbuK7oeik9BzDA73CFaySwvkN7W9F
-         LayhihYAZ46BxOHlYyXJ37BPuPyk7DvKG2/pWJ6r5QYHYkNrVtrvYUtx1Wxvm8mISRWa
-         MwmNulkvdPGL1t/QOgGooW4sIZTXheNsJT7uUDH+fipO6O12xqAXOnRkvBWXVSWwsFWn
-         mU0uDGaJDMvV5+m+fMKCLXMpxzHdRi8zSlP4kGwmArBFctflWqMHXrhvsOUpppLMgNio
-         yx73RYU0vGYy20NuunzOXUxvEwbIFfWiupbTGGDKxJa+aoKP7gY3L59u5mHjondsBd3n
-         k6sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWiAY6QaykCYguAKCX+/+9EE9/UiSSpVd1e0zCFfq0vg8bpgOXafl2GEcMA1LNyklnOwwWkxJAznZ59bI9aBdlGUPNSmXNBnDAXF/lK
-X-Gm-Message-State: AOJu0Yywpu15WTnxUgNcQsIpypEfeB3dWSCa66lxmpIobch7GsppdRUH
-	DIaN6UtfG9MkY94/JBJzcyVBmruaK5nza5HtF/ON7yri5jINTV+CABH1g8p32yL3xdQ/3vimtQO
-	a
-X-Google-Smtp-Source: AGHT+IEpYU1d8xtohhVrboRzgQJ/UeoTu/18A3I6ef/MJ76Hy2f/19khPFn7/tOqjUddmo49QChU1g==
-X-Received: by 2002:a2e:95ca:0:b0:2d8:d9f9:c615 with SMTP id y10-20020a2e95ca000000b002d8d9f9c615mr1101309ljh.14.1713950883145;
-        Wed, 24 Apr 2024 02:28:03 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id u2-20020a2e8442000000b002d8744903ebsm1916849ljh.68.2024.04.24.02.28.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 02:28:02 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Wed, 24 Apr 2024 12:28:01 +0300
-Subject: [PATCH v7 5/6] soc: qcom: add pd-mapper implementation
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7XeOVleqWkQ4tu3Ka74r2d5GDjNcrhGqy9Kdfn8dURY=;
+ b=LtAa1IcZav6YTFGIF/5L40Cx8RhHPQ5BT4KA0KlTxyfhmKKGdtR1FQMnWY4uhpt3KR3/+WpcxF5AFn2Bvk65sAWvbuoVoiXZl8lm00+WnNeCH9ktm5/ArE3dx2HdT6fjF3HWjCFs7Hc2hMLSPilv4q7oRaZ4GQKVZx+hc+jfagw=
+Received: from PH8PR10MB6290.namprd10.prod.outlook.com (2603:10b6:510:1c1::7)
+ by SA1PR10MB6518.namprd10.prod.outlook.com (2603:10b6:806:2b4::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.45; Wed, 24 Apr
+ 2024 09:30:03 +0000
+Received: from PH8PR10MB6290.namprd10.prod.outlook.com
+ ([fe80::309b:26bb:11d5:cc76]) by PH8PR10MB6290.namprd10.prod.outlook.com
+ ([fe80::309b:26bb:11d5:cc76%7]) with mapi id 15.20.7472.044; Wed, 24 Apr 2024
+ 09:30:03 +0000
+Message-ID: <726633e9-b5cd-4d04-bb98-79dea2e76cde@oracle.com>
+Date: Wed, 24 Apr 2024 14:59:53 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.6 000/158] 6.6.29-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+        rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com,
+        broonie@kernel.org, Darren Kenny <darren.kenny@oracle.com>,
+        Vegard Nossum <vegard.nossum@oracle.com>
+References: <20240423213855.696477232@linuxfoundation.org>
+Content-Language: en-US
+From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+In-Reply-To: <20240423213855.696477232@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TY2PR02CA0024.apcprd02.prod.outlook.com
+ (2603:1096:404:56::36) To PH8PR10MB6290.namprd10.prod.outlook.com
+ (2603:10b6:510:1c1::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240424-qcom-pd-mapper-v7-5-05f7fc646e0f@linaro.org>
-References: <20240424-qcom-pd-mapper-v7-0-05f7fc646e0f@linaro.org>
-In-Reply-To: <20240424-qcom-pd-mapper-v7-0-05f7fc646e0f@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Sibi Sankar <quic_sibis@quicinc.com>, 
- Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-remoteproc@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>, 
- Xilin Wu <wuxilin123@gmail.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=22605;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=al+RxH461a6L3ObCzsEQeF44r62QxmRRkvnezVvy9UQ=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmKNCeG2/z90ws4pE/uvP7X1ZBkBDeRJ5qqZx+l
- HnsW1OdXeaJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZijQngAKCRCLPIo+Aiko
- 1QFIB/9mbZ7FSLFuqcsMeOqmTzQdw5uSV3WZyf2ajNKHtexFgYKHWfawqML/80l2N6GleiXC37r
- cB17EG/I7WeK+j5g9ogQDGCNfaP4OXk0fBODEWDMg6LsBJfT/pYjD+vLYCBUz3QSwgHj7tiRXce
- xMyZO94n5dfTxqjKgNu5CAISWwrZQA0+BCFJ0DC/f3x7+ZRre016MeOu/2f808Lz+xm8rRBOf7H
- FuO44HM/EMJyjfvUih2K5dPv4BCGWhR7XKEvSsMJCYeWObINx08GC4GSgnNW2LLr0bAEh2qvuYn
- dWVZOYuh9hwPMj26uFwTafXm5wx+aP0pj3f5ySa6yY+7zDAf
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR10MB6290:EE_|SA1PR10MB6518:EE_
+X-MS-Office365-Filtering-Correlation-Id: 32470946-9754-4dff-3aab-08dc64411ef8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?bVpSOG9FWVk3ZDRkbG0zTW1kcVQ4WmpEenlWM2lwVlNnK2NseXZYa2diV3Zm?=
+ =?utf-8?B?RHNPVjNaM2d1eW1lZFM0ODY3ZU9rNnd4LzhXa2RpcmJLMW0yQnZITmhITnZS?=
+ =?utf-8?B?NTNSUHVhL1hSWWhGeUFHeU9JZHIrb01QYm5Pc0hwRlU3STMvQjZBZzZDbHNI?=
+ =?utf-8?B?N2pQd3dqZXRWYU11bTE2bUhSWlJ1c0w3elRseEJkU2ZsVy9QK0RSYU9qMWZI?=
+ =?utf-8?B?eUZMbzNOV2pqa0x2ZklBK2NwRlUwZmEreU1YajVOZzBpMXZxbVFSd2plK3dw?=
+ =?utf-8?B?VUt2bDBXYy9ldE5qT25DelRSRSsrT09nd0FkTXE3dEpZL1hPUWhzZ2NaTmxD?=
+ =?utf-8?B?b0xiWSt3QzJNT2VDODJwR0Rwb3BoUlloeWdQempTeDFXNXR0YmFXeEQ0V0NH?=
+ =?utf-8?B?U05aV2ppOXhWcjZkT0xhM3ZscFRwZEh6UDN6NStUc1IrV0FhSGMyNlZrN04y?=
+ =?utf-8?B?WGI4SktoUFVFNTBJMmpZWGhMR2laa1pETUdrY2dQaTFwUGRWcTZMSUcxOU5E?=
+ =?utf-8?B?UFRqY0tERFpBY2dOK2VnQXR2a3JEa0dtdEtkSlorSkU2VFhtQWVaRStLbk8x?=
+ =?utf-8?B?QWNqN0pWV2FkMW1EK29keExnY2o2d2xIbU5yVVNyamJydU55akVjYXM5YWFy?=
+ =?utf-8?B?UURvemR1dUpEZ2Nyc1NLRE9nQmpSTEFCemRSVkpQTTlYTEIwYzlTc0FHUDQ5?=
+ =?utf-8?B?SmlFOWVVd3g1QmsxNzI5VjdULzhDcjVCV2YyTHIzanNKMlpRdFc3VzBOTGZ6?=
+ =?utf-8?B?dUkzbG5RWmpmKyt5SzIxZ0ZwL1V0dEd5eVl1UXZoZFllTlEwK2RHU1NJalhN?=
+ =?utf-8?B?MUJoK3FlK005NkppeWNZSnd5K3FhZHg2TVpOSDRNSlpGTlc1RGZlK3Vicnh4?=
+ =?utf-8?B?UVF3QW1VcStuaU4xUUtrMDFrREpwN0ljOEptaVJRdmwxQm1DUkZXdWdqNnhO?=
+ =?utf-8?B?SEphUDVId0prNVc0blBud0Z3bzQ2Q01QcDNqaDRSUERRSng2amNhWkg0NFVj?=
+ =?utf-8?B?N05vRFd6bFQ2dzhIMUNDelcvdkhieHdQMC9WVENVaDMvVDRQK1U5Q1VlK1Ja?=
+ =?utf-8?B?RlhOR2o0VTVZbHNHY1JWZUxySndRbGpua0ljMXNTOXNlZVlnZE9VT1lWbTdz?=
+ =?utf-8?B?UzZWVi8rRUpwektnTkN4dWxoK0dBR01tcm02aExaQmhQK2ljVDR3Z1JxQWRU?=
+ =?utf-8?B?dXlIVi93ZFdpMTVXQW1oMDVodDU3UXI3UDhPUWM0N3dvdUVhRmwrUzhPTHlK?=
+ =?utf-8?B?bXl6SkJnZ0E1SGtCQyt3VnJWTlF6ZGlqNm44R1VkWUFDbE1yQStUckJ3TzFP?=
+ =?utf-8?B?b0JndVpOV1JOY0NKNVdmcW9lMGhLaU0wS24yRjlYSHdZYXRwRHJaVlRVajFR?=
+ =?utf-8?B?TnpINTk4N1NXazVuRHR6SGR5TVF5TTZKZUdNQmNRZ01yN1NjaUgxTWdjWW1N?=
+ =?utf-8?B?ajhDMUZsOU5UY29TZDFhdzY3VFdYWTg5eFJUNFlsMFA0VEN6V0xsa1pCOXRW?=
+ =?utf-8?B?WnlndUJUa0V2K3RlOXlCOTdPdjlVdzRVaUpJd1FEdHkwcU5BSzY4MlkrcTRI?=
+ =?utf-8?B?SmwyeDE2NjNubnFySjZkS2c1YkVGaGcwMjRiNkpxaU9vZFpPWEpYTDdEb0hY?=
+ =?utf-8?B?ZmdOdUNPYzRFcEt3Q2FNRkNyUTJVWERseEw2QXJEYjRuTnZWRlpWWFc4WTVy?=
+ =?utf-8?B?cjJQMll3c3FuNDRrYXVnL2ZDOElQVTM5NG5zY1JOZ2ZZeXB4ZDhsbjBBPT0=?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR10MB6290.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?R1NWQTF2TWZQZEZ3VkJ6QmwvSGo0bkdHd2lsYTRXYis4UXJiSzRrb1FWZnNN?=
+ =?utf-8?B?RkxWcll5L3BUc1J1MFRpc1ZXVjBtS1NLS0ZaZ1czcnFvaDNtOGVyZk03MHNH?=
+ =?utf-8?B?QUdGQzF1WXdwbjRjSG9VZzhHQU5jOEZwZlQ2bCtmQXVhMER0OUNTb3k2N3VQ?=
+ =?utf-8?B?SlJnV1g5ZjVCcGRIdXZuN1dxZFl0RzI1QStEd0kwMXdVMlEvaDhTNUdySlVT?=
+ =?utf-8?B?MzNoRm0rK2Nwb1dVM3hSZVVNR3pvRHRGRVdIL1NOc1k0UzJNWXdLSXpPcUlW?=
+ =?utf-8?B?R015cWM0ZFpxTHVVbndVRWF1azBWQkZMQ1NlUnJVTElYVW9JeFZ5ejZxYWZi?=
+ =?utf-8?B?U0pCaG16UHp4K2gvYVJETjJscktTQVRjT1Exb0JaeUFBcXJtck11OGRFbVV3?=
+ =?utf-8?B?dDVJMjI0MFpSZVVYSGJ2aHBXNjNuM2wxM2xDcDI5ekF6akJNMWtkWDJERmh6?=
+ =?utf-8?B?VHpxUitJdGNvT3lvdTFwTWZ1Q2pNR1VnSFhiM2tlY2F5RDA4dlhPaVZQTHU4?=
+ =?utf-8?B?aUw1SFBmR3JpRlA4T1p0VE9qNFlsL0dTcE9VZTZlRUY3TEdoeXd3L1ZvUkVa?=
+ =?utf-8?B?aVZNM0JZWkhrdEU0ejBmMU1WOVl1Ym5wUmRLRUtUUlJKblN5WUpCZE96WC94?=
+ =?utf-8?B?UXBMSi9CUlQ2U1hWdEdSdE1oRFJTa0J4b1ZJZHB2dEYzc2lTZ1FEUjRQNXZn?=
+ =?utf-8?B?dk9tN01UMVFyMnRFakhmdmtobEpVLzZ0RFkwTUFiTStmN3V6NGVnYlpEWEwr?=
+ =?utf-8?B?N2VpdzNla1p2cGduTTluVy8xbnFubW9VSExPQ1RjNHVTMURsK2x0MHA2ZjVQ?=
+ =?utf-8?B?R2EvdU5YeDFlQkd0WjBRL1hPV1pQRC9seG8waG9pY2MwVHczRDVCbTZmR0Zv?=
+ =?utf-8?B?dk1qeFhkUVhyeWVBMURlTXEwVDlyN1pjakhWSmVVejU1UVBKdG9yMlQxa2Ro?=
+ =?utf-8?B?OHZrSy9VT0Q3NHFFZ1BDY1N6MnlVTVN2TGg5ZlMyemtkaEw5TmlHazlxN1hs?=
+ =?utf-8?B?cmJMV0dhNHlwQ01OUjF3QWpkZjVMUWRIbXNCdkllcnhBRm5NSWRpOFdZL2hx?=
+ =?utf-8?B?VlFiYmpDVk1PL2tKbWUwTWlZYnk1eVhvWmFIczNFS0xxS3hSelFBbWxiYVl0?=
+ =?utf-8?B?bFZJaU5QN0wzT0J0aXR4elZuYndEOW5iVjVjdDBsU2JmZ3hIVVllTDEwcU43?=
+ =?utf-8?B?OXIwdCtxMnA4REpuMURVWFlPQ08xTHNDRHdmOG10WGlHWk9ZcmZiczZBTDdv?=
+ =?utf-8?B?bWgwazFtazluQ2h1YjNoSlVIZWJwZ1dHMEg5dzllZHpqdlVvVWVUMkxaTGMz?=
+ =?utf-8?B?RDRMc3dGQk9kL3pQNGx5SUxMRm1KM1FWb0R0TXFRdE5aWUYvN0xYMHdES2hN?=
+ =?utf-8?B?L29VMXNQT2dXNVVLaWU1cGRQdmlYeUxvWVZ1RWdNanRaekc3aFkvcmUyR1M4?=
+ =?utf-8?B?ZVAzSFJuaG52c1dXM0tPSnVFaGJnRTk2OE1pR2lzK0Uzd1gxR0FsdXpDYkg5?=
+ =?utf-8?B?QTlKTTMwRndtbWFxWkVYcmJpWUdLU0FrU3JRS3YzcW1TL1VtWHZqV1d2V2h4?=
+ =?utf-8?B?cjUvL1lXVVU3bkRjRkFSVWxEd2VxVFMvbGd3azExWHEreXNObE5SRU0rZ242?=
+ =?utf-8?B?WnI0WkN3cnRpT0prWVhuU0U4aGVEY3RrUUxXend0TnEvandTWjlvUEcwemVP?=
+ =?utf-8?B?cFROOVArRzQvdDVVemlyUkFKWURIR3VETG1RZ3lsaWZreDBqZUdta013d0ZD?=
+ =?utf-8?B?MGxmc1VwSzlZNmVvNTlFbWRGckI5VUtjcmZBTnl5TmIrTldzN3lkVTlUWFI2?=
+ =?utf-8?B?aHU4RWt4YTllVnpvQ2hzQi8wY1FBRDY4alpJRVNHNnRXZm5Xb0JxTkJ0d2dI?=
+ =?utf-8?B?aHhuT1hRemI2bWpZdzBnSzVIc2tVU1BSVTZ5K09vaUk3OG1naHF1cGhBc25E?=
+ =?utf-8?B?SUVGRzBTNHExeVdUZDcxS084RG14ektyS2xJcTlDU09DTDJ2eTdlV3F1eE9X?=
+ =?utf-8?B?RE5DRHpPS2c2QWVFRjNHVEd2M2oxTSt4Q3RsanJLTnFLWlRwaFdJYXVZQlFZ?=
+ =?utf-8?B?eno2bDR3TTlQZGdjYklFTW8vYmlsMG5QTmVNWGExNktmYTErTWZsV1gwVTNS?=
+ =?utf-8?B?eVllUWNta21BeU1qTkg2TUJHVmNZQU9HdHYyVEtZaGxheDVBanAvQVJ4SXA1?=
+ =?utf-8?Q?7VDNLmWej2eCqXuXA2ygYBg=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	Vs97DEhN+TbRqHLuWDuQOlCzhnKcy/xj4/dZiI8uxRjHqJx2z7U7yQxI2gOxGdU+IUfKT9xlEaJkPkTbPDtT3ieVhU0j4V2NyifSA9xL1gLEGt2ix4dPawXSFvtPs+XXodr77BRz5Nkrdo2/xwSra073C3HB6O7Do9gPUkZvjjZWuXQRYZKZcmNw+Wlgizjr8QOmMgyUeGUksdr3mCIZDx8ukrXqaSswCcqQ2SRz7JnCACKitJdzW4plZrD8C1d1Wn7Y2cAI6LZTZY4Gna9AGP2MXsRccbHxmE7hyROfMixhZYrBshZVHgVUDdQbAfQVHGgqDpqjl8cCXETGurPWYNPNTPDkRrAuJOZ+bqyfyaUwCw7NCf17mvX9WFz3sWDPKploGTwQFa0s59yyyRn1FPErDV2wevrP9Vp2XsUpdAMXRx4cSkQYJ0nfFfUWHUqSIbcG1fc92dq59BaOAl7FIqedk6rLtK1v7MMmd6NlRgrdKQOzTrOtGFV1yqtUh4sCa8kSiflsDX1ZfYcHtQoAKghCzyFmo5TxrZbxAlzbMeJf4GCOulzD4EOvZNbGhg4nOxuydXgpDL8WcOLFnMljpTTR6M5ppmQ+nf6nkw0I0hg=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32470946-9754-4dff-3aab-08dc64411ef8
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR10MB6290.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 09:30:03.7237
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vxvXNXfQJZxMrWkroGv/5Ges20j93Ha+SERHecZG+LluqVRTQqVzJGmnWUtvv9bruqOBGsL34eS+BGQW8GcXQGORE+FISHPMG2vvTrnTY7dfXxchftuIq96IT3ICuzCU
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6518
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-24_07,2024-04-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 mlxscore=0 suspectscore=0 adultscore=0 malwarescore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404240040
+X-Proofpoint-GUID: LfC3cxizE5u0MecbjSJld7ABKpM-Dp1Q
+X-Proofpoint-ORIG-GUID: LfC3cxizE5u0MecbjSJld7ABKpM-Dp1Q
 
-Existing userspace protection domain mapper implementation has several
-issue. It doesn't play well with CONFIG_EXTRA_FIRMWARE, it doesn't
-reread JSON files if firmware location is changed (or if firmware was
-not available at the time pd-mapper was started but the corresponding
-directory is mounted later), etc.
+Hi Greg,
 
-Provide in-kernel service implementing protection domain mapping
-required to work with several services, which are provided by the DSP
-firmware.
+On 24/04/24 03:07, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.29 release.
+> There are 158 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 25 Apr 2024 21:38:28 +0000.
+> Anything received after that time might be too late.
+> 
 
-This module is loaded automatically by the remoteproc drivers when
-necessary via the symbol dependency. It uses a root node to match a
-protection domains map for a particular board. It is not possible to
-implement it as a 'driver' as there is no corresponding device.
+No problems seen on x86_64 and aarch64 with our testing.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/soc/qcom/Kconfig           |  10 +
- drivers/soc/qcom/Makefile          |   1 +
- drivers/soc/qcom/pdr_internal.h    |  14 +
- drivers/soc/qcom/qcom_pd_mapper.c  | 656 +++++++++++++++++++++++++++++++++++++
- drivers/soc/qcom/qcom_pdr_msg.c    |  34 ++
- include/linux/soc/qcom/pd_mapper.h |  28 ++
- 6 files changed, 743 insertions(+)
+Tested-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
 
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 95973c6b828f..f666366841b8 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -72,6 +72,16 @@ config QCOM_OCMEM
- 	  requirements. This is typically used by the GPU, camera/video, and
- 	  audio components on some Snapdragon SoCs.
- 
-+config QCOM_PD_MAPPER
-+	tristate "Qualcomm Protection Domain Mapper"
-+	select QCOM_QMI_HELPERS
-+	depends on NET && QRTR
-+	help
-+	  The Protection Domain Mapper maps registered services to the domains
-+	  and instances handled by the remote DSPs. This is a kernel-space
-+	  implementation of the service. It is a simpler alternative to the
-+	  userspace daemon.
-+
- config QCOM_PDR_HELPERS
- 	tristate
- 	select QCOM_QMI_HELPERS
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index 3110ac3288bc..d3560f861085 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_QCOM_COMMAND_DB) += cmd-db.o
- obj-$(CONFIG_QCOM_GSBI)	+=	qcom_gsbi.o
- obj-$(CONFIG_QCOM_MDT_LOADER)	+= mdt_loader.o
- obj-$(CONFIG_QCOM_OCMEM)	+= ocmem.o
-+obj-$(CONFIG_QCOM_PD_MAPPER)	+= qcom_pd_mapper.o
- obj-$(CONFIG_QCOM_PDR_HELPERS)	+= pdr_interface.o
- obj-$(CONFIG_QCOM_PDR_MSG)	+= qcom_pdr_msg.o
- obj-$(CONFIG_QCOM_PMIC_GLINK)	+= pmic_glink.o
-diff --git a/drivers/soc/qcom/pdr_internal.h b/drivers/soc/qcom/pdr_internal.h
-index 7e5bb5a95275..8d17f7fb79e7 100644
---- a/drivers/soc/qcom/pdr_internal.h
-+++ b/drivers/soc/qcom/pdr_internal.h
-@@ -13,6 +13,8 @@
- #define SERVREG_SET_ACK_REQ				0x23
- #define SERVREG_RESTART_PD_REQ				0x24
- 
-+#define SERVREG_LOC_PFR_REQ				0x24
-+
- #define SERVREG_DOMAIN_LIST_LENGTH			32
- #define SERVREG_RESTART_PD_REQ_MAX_LEN			67
- #define SERVREG_REGISTER_LISTENER_REQ_LEN		71
-@@ -20,6 +22,7 @@
- #define SERVREG_GET_DOMAIN_LIST_REQ_MAX_LEN		74
- #define SERVREG_STATE_UPDATED_IND_MAX_LEN		79
- #define SERVREG_GET_DOMAIN_LIST_RESP_MAX_LEN		2389
-+#define SERVREG_LOC_PFR_RESP_MAX_LEN			10
- 
- struct servreg_location_entry {
- 	char name[SERVREG_NAME_LENGTH + 1];
-@@ -79,6 +82,15 @@ struct servreg_set_ack_resp {
- 	struct qmi_response_type_v01 resp;
- };
- 
-+struct servreg_loc_pfr_req {
-+	char service[SERVREG_NAME_LENGTH + 1];
-+	char reason[257];
-+};
-+
-+struct servreg_loc_pfr_resp {
-+	struct qmi_response_type_v01 rsp;
-+};
-+
- extern const struct qmi_elem_info servreg_location_entry_ei[];
- extern const struct qmi_elem_info servreg_get_domain_list_req_ei[];
- extern const struct qmi_elem_info servreg_get_domain_list_resp_ei[];
-@@ -89,5 +101,7 @@ extern const struct qmi_elem_info servreg_restart_pd_resp_ei[];
- extern const struct qmi_elem_info servreg_state_updated_ind_ei[];
- extern const struct qmi_elem_info servreg_set_ack_req_ei[];
- extern const struct qmi_elem_info servreg_set_ack_resp_ei[];
-+extern const struct qmi_elem_info servreg_loc_pfr_req_ei[];
-+extern const struct qmi_elem_info servreg_loc_pfr_resp_ei[];
- 
- #endif
-diff --git a/drivers/soc/qcom/qcom_pd_mapper.c b/drivers/soc/qcom/qcom_pd_mapper.c
-new file mode 100644
-index 000000000000..ba5440506c95
---- /dev/null
-+++ b/drivers/soc/qcom/qcom_pd_mapper.c
-@@ -0,0 +1,656 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Qualcomm Protection Domain mapper
-+ *
-+ * Copyright (c) 2023 Linaro Ltd.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/soc/qcom/pd_mapper.h>
-+#include <linux/soc/qcom/qmi.h>
-+
-+#include "pdr_internal.h"
-+
-+#define SERVREG_QMI_VERSION 0x101
-+#define SERVREG_QMI_INSTANCE 0
-+
-+#define TMS_SERVREG_SERVICE "tms/servreg"
-+
-+struct qcom_pdm_domain_data {
-+	const char *domain;
-+	u32 instance_id;
-+	/* NULL-terminated array */
-+	const char * services[];
-+};
-+
-+struct qcom_pdm_domain {
-+	struct list_head list;
-+	const char *name;
-+	u32 instance_id;
-+};
-+
-+struct qcom_pdm_service {
-+	struct list_head list;
-+	struct list_head domains;
-+	const char *name;
-+};
-+
-+static DEFINE_MUTEX(qcom_pdm_count_mutex); /* guards count */
-+/*
-+ * It is not possible to use refcount_t here. The service needs to go to 0 and
-+ * back without warnings.
-+ */
-+static unsigned int qcom_pdm_count;
-+
-+static DEFINE_MUTEX(qcom_pdm_mutex);
-+static struct qmi_handle qcom_pdm_handle;
-+static LIST_HEAD(qcom_pdm_services);
-+
-+static struct qcom_pdm_service *qcom_pdm_find(const char *name)
-+{
-+	struct qcom_pdm_service *service;
-+
-+	list_for_each_entry(service, &qcom_pdm_services, list) {
-+		if (!strcmp(service->name, name))
-+			return service;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int qcom_pdm_add_service_domain(const char *service_name,
-+				       const char *domain_name,
-+				       u32 instance_id)
-+{
-+	struct qcom_pdm_service *service;
-+	struct qcom_pdm_domain *domain;
-+
-+	service = qcom_pdm_find(service_name);
-+	if (service) {
-+		list_for_each_entry(domain, &service->domains, list) {
-+			if (!strcmp(domain->name, domain_name))
-+				return -EBUSY;
-+		}
-+	} else {
-+		service = kzalloc(sizeof(*service), GFP_KERNEL);
-+		if (!service)
-+			return -ENOMEM;
-+
-+		INIT_LIST_HEAD(&service->domains);
-+		service->name = service_name;
-+
-+		list_add_tail(&service->list, &qcom_pdm_services);
-+	}
-+
-+	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
-+	if (!domain) {
-+		if (list_empty(&service->domains)) {
-+			list_del(&service->list);
-+			kfree(service);
-+		}
-+
-+		return -ENOMEM;
-+	}
-+
-+	domain->name = domain_name;
-+	domain->instance_id = instance_id;
-+	list_add_tail(&domain->list, &service->domains);
-+
-+	return 0;
-+}
-+
-+static int qcom_pdm_add_domain(const struct qcom_pdm_domain_data *data)
-+{
-+	int ret;
-+	int i;
-+
-+	ret = qcom_pdm_add_service_domain(TMS_SERVREG_SERVICE,
-+					  data->domain,
-+					  data->instance_id);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; data->services[i]; i++) {
-+		ret = qcom_pdm_add_service_domain(data->services[i],
-+						  data->domain,
-+						  data->instance_id);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+
-+}
-+
-+static void qcom_pdm_free_domains(void)
-+{
-+	struct qcom_pdm_service *service, *tservice;
-+	struct qcom_pdm_domain *domain, *tdomain;
-+
-+	list_for_each_entry_safe(service, tservice, &qcom_pdm_services, list) {
-+		list_for_each_entry_safe(domain, tdomain, &service->domains, list) {
-+			list_del(&domain->list);
-+			kfree(domain);
-+		}
-+
-+		list_del(&service->list);
-+		kfree(service);
-+	}
-+}
-+
-+static void qcom_pdm_get_domain_list(struct qmi_handle *qmi,
-+				     struct sockaddr_qrtr *sq,
-+				     struct qmi_txn *txn,
-+				     const void *decoded)
-+{
-+	const struct servreg_get_domain_list_req *req = decoded;
-+	struct servreg_get_domain_list_resp *rsp = kzalloc(sizeof(*rsp), GFP_KERNEL);
-+	struct qcom_pdm_service *service;
-+	u32 offset;
-+	int ret;
-+
-+	offset = req->domain_offset_valid ? req->domain_offset : 0;
-+
-+	rsp->resp.result = QMI_RESULT_SUCCESS_V01;
-+	rsp->resp.error = QMI_ERR_NONE_V01;
-+
-+	rsp->db_rev_count_valid = true;
-+	rsp->db_rev_count = 1;
-+
-+	rsp->total_domains_valid = true;
-+	rsp->total_domains = 0;
-+
-+	mutex_lock(&qcom_pdm_mutex);
-+
-+	service = qcom_pdm_find(req->service_name);
-+	if (service) {
-+		struct qcom_pdm_domain *domain;
-+
-+		rsp->domain_list_valid = true;
-+		rsp->domain_list_len = 0;
-+
-+		list_for_each_entry(domain, &service->domains, list) {
-+			u32 i = rsp->total_domains++;
-+
-+			if (i >= offset && i < SERVREG_DOMAIN_LIST_LENGTH) {
-+				u32 j = rsp->domain_list_len++;
-+
-+				strscpy(rsp->domain_list[j].name, domain->name,
-+					sizeof(rsp->domain_list[i].name));
-+				rsp->domain_list[j].instance = domain->instance_id;
-+
-+				pr_debug("PDM: found %s / %d\n", domain->name,
-+					 domain->instance_id);
-+			}
-+		}
-+	}
-+
-+	pr_debug("PDM: service '%s' offset %d returning %d domains (of %d)\n", req->service_name,
-+		 req->domain_offset_valid ? req->domain_offset : -1, rsp->domain_list_len, rsp->total_domains);
-+
-+	ret = qmi_send_response(qmi, sq, txn, SERVREG_GET_DOMAIN_LIST_REQ,
-+				SERVREG_GET_DOMAIN_LIST_RESP_MAX_LEN,
-+				servreg_get_domain_list_resp_ei, rsp);
-+	if (ret)
-+		pr_err("Error sending servreg response: %d\n", ret);
-+
-+	mutex_unlock(&qcom_pdm_mutex);
-+
-+	kfree(rsp);
-+}
-+
-+static void qcom_pdm_pfr(struct qmi_handle *qmi,
-+			 struct sockaddr_qrtr *sq,
-+			 struct qmi_txn *txn,
-+			 const void *decoded)
-+{
-+	const struct servreg_loc_pfr_req *req = decoded;
-+	struct servreg_loc_pfr_resp rsp = {};
-+	int ret;
-+
-+	pr_warn_ratelimited("PDM: service '%s' crash: '%s'\n", req->service, req->reason);
-+
-+	rsp.rsp.result = QMI_RESULT_SUCCESS_V01;
-+	rsp.rsp.error = QMI_ERR_NONE_V01;
-+
-+	ret = qmi_send_response(qmi, sq, txn, SERVREG_LOC_PFR_REQ,
-+				SERVREG_LOC_PFR_RESP_MAX_LEN,
-+				servreg_loc_pfr_resp_ei, &rsp);
-+	if (ret)
-+		pr_err("Error sending servreg response: %d\n", ret);
-+}
-+
-+static const struct qmi_msg_handler qcom_pdm_msg_handlers[] = {
-+	{
-+		.type = QMI_REQUEST,
-+		.msg_id = SERVREG_GET_DOMAIN_LIST_REQ,
-+		.ei = servreg_get_domain_list_req_ei,
-+		.decoded_size = sizeof(struct servreg_get_domain_list_req),
-+		.fn = qcom_pdm_get_domain_list,
-+	},
-+	{
-+		.type = QMI_REQUEST,
-+		.msg_id = SERVREG_LOC_PFR_REQ,
-+		.ei = servreg_loc_pfr_req_ei,
-+		.decoded_size = sizeof(struct servreg_loc_pfr_req),
-+		.fn = qcom_pdm_pfr,
-+	},
-+	{ },
-+};
-+
-+static const struct qcom_pdm_domain_data adsp_audio_pd = {
-+	.domain = "msm/adsp/audio_pd",
-+	.instance_id = 74,
-+	.services = {
-+		"avs/audio",
-+		NULL,
-+	},
-+};
-+
-+static const struct qcom_pdm_domain_data adsp_charger_pd = {
-+	.domain = "msm/adsp/charger_pd",
-+	.instance_id = 74,
-+	.services = { NULL },
-+};
-+
-+static const struct qcom_pdm_domain_data adsp_root_pd = {
-+	.domain = "msm/adsp/root_pd",
-+	.instance_id = 74,
-+	.services = { NULL },
-+};
-+
-+static const struct qcom_pdm_domain_data adsp_root_pd_pdr = {
-+	.domain = "msm/adsp/root_pd",
-+	.instance_id = 74,
-+	.services = {
-+		"tms/pdr_enabled",
-+		NULL,
-+	},
-+};
-+
-+static const struct qcom_pdm_domain_data adsp_sensor_pd = {
-+	.domain = "msm/adsp/sensor_pd",
-+	.instance_id = 74,
-+	.services = { NULL },
-+};
-+
-+static const struct qcom_pdm_domain_data msm8996_adsp_audio_pd = {
-+	.domain = "msm/adsp/audio_pd",
-+	.instance_id = 4,
-+	.services = { NULL },
-+};
-+
-+static const struct qcom_pdm_domain_data msm8996_adsp_root_pd = {
-+	.domain = "msm/adsp/root_pd",
-+	.instance_id = 4,
-+	.services = { NULL },
-+};
-+
-+static const struct qcom_pdm_domain_data cdsp_root_pd = {
-+	.domain = "msm/cdsp/root_pd",
-+	.instance_id = 76,
-+	.services = { NULL },
-+};
-+
-+static const struct qcom_pdm_domain_data slpi_root_pd = {
-+	.domain = "msm/slpi/root_pd",
-+	.instance_id = 90,
-+	.services = { NULL },
-+};
-+
-+static const struct qcom_pdm_domain_data slpi_sensor_pd = {
-+	.domain = "msm/slpi/sensor_pd",
-+	.instance_id = 90,
-+	.services = { NULL },
-+};
-+
-+static const struct qcom_pdm_domain_data mpss_root_pd = {
-+	.domain = "msm/modem/root_pd",
-+	.instance_id = 180,
-+	.services = {
-+		NULL,
-+	},
-+};
-+
-+static const struct qcom_pdm_domain_data mpss_root_pd_gps = {
-+	.domain = "msm/modem/root_pd",
-+	.instance_id = 180,
-+	.services = {
-+		"gps/gps_service",
-+		NULL,
-+	},
-+};
-+
-+static const struct qcom_pdm_domain_data mpss_root_pd_gps_pdr = {
-+	.domain = "msm/modem/root_pd",
-+	.instance_id = 180,
-+	.services = {
-+		"gps/gps_service",
-+		"tms/pdr_enabled",
-+		NULL,
-+	},
-+};
-+
-+static const struct qcom_pdm_domain_data msm8996_mpss_root_pd = {
-+	.domain = "msm/modem/root_pd",
-+	.instance_id = 100,
-+	.services = { NULL },
-+};
-+
-+static const struct qcom_pdm_domain_data mpss_wlan_pd = {
-+	.domain = "msm/modem/wlan_pd",
-+	.instance_id = 180,
-+	.services = {
-+		"kernel/elf_loader",
-+		"wlan/fw",
-+		NULL,
-+	},
-+};
-+
-+static const struct qcom_pdm_domain_data *msm8996_domains[] = {
-+	&msm8996_adsp_audio_pd,
-+	&msm8996_adsp_root_pd,
-+	&msm8996_mpss_root_pd,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *msm8998_domains[] = {
-+	&mpss_root_pd,
-+	&mpss_wlan_pd,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *qcm2290_domains[] = {
-+	&adsp_audio_pd,
-+	&adsp_root_pd,
-+	&adsp_sensor_pd,
-+	&mpss_root_pd_gps,
-+	&mpss_wlan_pd,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *qcs404_domains[] = {
-+	&adsp_audio_pd,
-+	&adsp_root_pd,
-+	&adsp_sensor_pd,
-+	&cdsp_root_pd,
-+	&mpss_root_pd,
-+	&mpss_wlan_pd,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *sc7180_domains[] = {
-+	&adsp_audio_pd,
-+	&adsp_root_pd_pdr,
-+	&adsp_sensor_pd,
-+	&mpss_root_pd_gps_pdr,
-+	&mpss_wlan_pd,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *sc7280_domains[] = {
-+	&adsp_audio_pd,
-+	&adsp_root_pd_pdr,
-+	&adsp_charger_pd,
-+	&adsp_sensor_pd,
-+	&cdsp_root_pd,
-+	&mpss_root_pd_gps_pdr,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *sc8180x_domains[] = {
-+	&adsp_audio_pd,
-+	&adsp_root_pd,
-+	&adsp_charger_pd,
-+	&cdsp_root_pd,
-+	&mpss_root_pd_gps,
-+	&mpss_wlan_pd,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *sc8280xp_domains[] = {
-+	&adsp_audio_pd,
-+	&adsp_root_pd_pdr,
-+	&adsp_charger_pd,
-+	&cdsp_root_pd,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *sdm660_domains[] = {
-+	&adsp_audio_pd,
-+	&adsp_root_pd,
-+	&mpss_wlan_pd,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *sdm670_domains[] = {
-+	&adsp_audio_pd,
-+	&adsp_root_pd,
-+	&cdsp_root_pd,
-+	&mpss_root_pd,
-+	&mpss_wlan_pd,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *sdm845_domains[] = {
-+	&adsp_audio_pd,
-+	&adsp_root_pd,
-+	&cdsp_root_pd,
-+	&mpss_root_pd,
-+	&mpss_wlan_pd,
-+	&slpi_root_pd,
-+	&slpi_sensor_pd,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *sm6115_domains[] = {
-+	&adsp_audio_pd,
-+	&adsp_root_pd,
-+	&adsp_sensor_pd,
-+	&cdsp_root_pd,
-+	&mpss_root_pd_gps,
-+	&mpss_wlan_pd,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *sm6350_domains[] = {
-+	&adsp_audio_pd,
-+	&adsp_root_pd,
-+	&adsp_sensor_pd,
-+	&cdsp_root_pd,
-+	&mpss_wlan_pd,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *sm8150_domains[] = {
-+	&adsp_audio_pd,
-+	&adsp_root_pd,
-+	&cdsp_root_pd,
-+	&mpss_root_pd_gps,
-+	&mpss_wlan_pd,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *sm8250_domains[] = {
-+	&adsp_audio_pd,
-+	&adsp_root_pd,
-+	&cdsp_root_pd,
-+	&slpi_root_pd,
-+	&slpi_sensor_pd,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *sm8350_domains[] = {
-+	&adsp_audio_pd,
-+	&adsp_root_pd_pdr,
-+	&adsp_charger_pd,
-+	&cdsp_root_pd,
-+	&mpss_root_pd_gps,
-+	&slpi_root_pd,
-+	&slpi_sensor_pd,
-+	NULL,
-+};
-+
-+static const struct qcom_pdm_domain_data *sm8550_domains[] = {
-+	&adsp_audio_pd,
-+	&adsp_root_pd,
-+	&adsp_charger_pd,
-+	&adsp_sensor_pd,
-+	&cdsp_root_pd,
-+	&mpss_root_pd_gps,
-+	NULL,
-+};
-+
-+static const struct of_device_id qcom_pdm_domains[] = {
-+	{ .compatible = "qcom,apq8064", .data = NULL, },
-+	{ .compatible = "qcom,apq8074", .data = NULL, },
-+	{ .compatible = "qcom,apq8084", .data = NULL, },
-+	{ .compatible = "qcom,apq8096", .data = msm8996_domains, },
-+	{ .compatible = "qcom,msm8226", .data = NULL, },
-+	{ .compatible = "qcom,msm8974", .data = NULL, },
-+	{ .compatible = "qcom,msm8996", .data = msm8996_domains, },
-+	{ .compatible = "qcom,msm8998", .data = msm8998_domains, },
-+	{ .compatible = "qcom,qcm2290", .data = qcm2290_domains, },
-+	{ .compatible = "qcom,qcs404", .data = qcs404_domains, },
-+	{ .compatible = "qcom,sc7180", .data = sc7180_domains, },
-+	{ .compatible = "qcom,sc7280", .data = sc7280_domains, },
-+	{ .compatible = "qcom,sc8180x", .data = sc8180x_domains, },
-+	{ .compatible = "qcom,sc8280xp", .data = sc8280xp_domains, },
-+	{ .compatible = "qcom,sda660", .data = sdm660_domains, },
-+	{ .compatible = "qcom,sdm660", .data = sdm660_domains, },
-+	{ .compatible = "qcom,sdm670", .data = sdm670_domains, },
-+	{ .compatible = "qcom,sdm845", .data = sdm845_domains, },
-+	{ .compatible = "qcom,sm6115", .data = sm6115_domains, },
-+	{ .compatible = "qcom,sm6350", .data = sm6350_domains, },
-+	{ .compatible = "qcom,sm8150", .data = sm8150_domains, },
-+	{ .compatible = "qcom,sm8250", .data = sm8250_domains, },
-+	{ .compatible = "qcom,sm8350", .data = sm8350_domains, },
-+	{ .compatible = "qcom,sm8450", .data = sm8350_domains, },
-+	{ .compatible = "qcom,sm8550", .data = sm8550_domains, },
-+	{ .compatible = "qcom,sm8650", .data = sm8550_domains, },
-+	{},
-+};
-+
-+static int qcom_pdm_start(void)
-+{
-+	const struct of_device_id *match;
-+	const struct qcom_pdm_domain_data * const *domains;
-+	struct device_node *root;
-+	int ret, i;
-+
-+	root = of_find_node_by_path("/");
-+	if (!root)
-+		return -ENODEV;
-+
-+	match = of_match_node(qcom_pdm_domains, root);
-+	of_node_put(root);
-+	if (!match) {
-+		pr_notice("PDM: no support for the platform, userspace daemon might be required.\n");
-+		return -ENODEV;
-+	}
-+
-+	domains = match->data;
-+	if (!domains) {
-+		pr_debug("PDM: no domains\n");
-+		return -ENODEV;
-+	}
-+
-+	mutex_lock(&qcom_pdm_mutex);
-+	for (i = 0; domains[i]; i++) {
-+		ret = qcom_pdm_add_domain(domains[i]);
-+		if (ret)
-+			goto free_domains;
-+	}
-+
-+	ret = qmi_handle_init(&qcom_pdm_handle, 1024,
-+			      NULL, qcom_pdm_msg_handlers);
-+	if (ret)
-+		goto free_domains;
-+
-+	ret = qmi_add_server(&qcom_pdm_handle, SERVREG_LOCATOR_SERVICE,
-+			     SERVREG_QMI_VERSION, SERVREG_QMI_INSTANCE);
-+	if (ret) {
-+		pr_err("PDM: error adding server %d\n", ret);
-+		goto release_handle;
-+	}
-+	mutex_unlock(&qcom_pdm_mutex);
-+
-+	return 0;
-+
-+release_handle:
-+	qmi_handle_release(&qcom_pdm_handle);
-+
-+free_domains:
-+	qcom_pdm_free_domains();
-+	mutex_unlock(&qcom_pdm_mutex);
-+
-+	return ret;
-+}
-+
-+static void qcom_pdm_stop(void)
-+{
-+	qmi_del_server(&qcom_pdm_handle, SERVREG_LOCATOR_SERVICE,
-+		       SERVREG_QMI_VERSION, SERVREG_QMI_INSTANCE);
-+
-+	qmi_handle_release(&qcom_pdm_handle);
-+
-+	qcom_pdm_free_domains();
-+}
-+
-+/**
-+ * qcom_pdm_get() - ensure that PD mapper is up and running
-+ *
-+ * Start the in-kernel Qualcomm DSP protection domain mapper service if it was
-+ * not running.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int qcom_pdm_get(void)
-+{
-+	int ret = 0;
-+
-+	mutex_lock(&qcom_pdm_count_mutex);
-+
-+	if (!qcom_pdm_count)
-+		ret = qcom_pdm_start();
-+	if (!ret)
-+		++qcom_pdm_count;
-+
-+	mutex_unlock(&qcom_pdm_count_mutex);
-+
-+	/*
-+	 * If it is -ENODEV, the plaform is not supported by the in-kernel
-+	 * mapper. Still return 0 to rproc driver, userspace daemon will be
-+	 * used instead of the kernel server.
-+	 */
-+	if (ret == -ENODEV)
-+		return 0;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(qcom_pdm_get);
-+
-+/**
-+ * qcom_pdm_release() - possibly stop PD mapper service
-+ *
-+ * Decreases refcount, stopping the server when the last user was removed.
-+ */
-+void qcom_pdm_release(void)
-+{
-+	mutex_lock(&qcom_pdm_count_mutex);
-+
-+	if (qcom_pdm_count == 1)
-+		qcom_pdm_stop();
-+
-+	if (qcom_pdm_count >= 1)
-+		--qcom_pdm_count;
-+
-+	mutex_unlock(&qcom_pdm_count_mutex);
-+}
-+EXPORT_SYMBOL_GPL(qcom_pdm_release);
-+
-+MODULE_DESCRIPTION("Qualcomm Protection Domain Mapper");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/soc/qcom/qcom_pdr_msg.c b/drivers/soc/qcom/qcom_pdr_msg.c
-index 9b46f42aa146..bf3e4a47165e 100644
---- a/drivers/soc/qcom/qcom_pdr_msg.c
-+++ b/drivers/soc/qcom/qcom_pdr_msg.c
-@@ -315,5 +315,39 @@ const struct qmi_elem_info servreg_set_ack_resp_ei[] = {
- };
- EXPORT_SYMBOL_GPL(servreg_set_ack_resp_ei);
- 
-+const struct qmi_elem_info servreg_loc_pfr_req_ei[] = {
-+	{
-+		.data_type = QMI_STRING,
-+		.elem_len = SERVREG_NAME_LENGTH + 1,
-+		.elem_size = sizeof(char),
-+		.array_type = VAR_LEN_ARRAY,
-+		.tlv_type = 0x01,
-+		.offset = offsetof(struct servreg_loc_pfr_req, service)
-+	},
-+	{
-+		.data_type = QMI_STRING,
-+		.elem_len = SERVREG_NAME_LENGTH + 1,
-+		.elem_size = sizeof(char),
-+		.array_type = VAR_LEN_ARRAY,
-+		.tlv_type = 0x02,
-+		.offset = offsetof(struct servreg_loc_pfr_req, reason)
-+	},
-+	{}
-+};
-+EXPORT_SYMBOL_GPL(servreg_loc_pfr_req_ei);
-+
-+const struct qmi_elem_info servreg_loc_pfr_resp_ei[] = {
-+	{
-+		.data_type = QMI_STRUCT,
-+		.elem_len = 1,
-+		.elem_size = sizeof_field(struct servreg_loc_pfr_resp, rsp),
-+		.tlv_type = 0x02,
-+		.offset = offsetof(struct servreg_loc_pfr_resp, rsp),
-+		.ei_array = qmi_response_type_v01_ei,
-+	},
-+	{}
-+};
-+EXPORT_SYMBOL_GPL(servreg_loc_pfr_resp_ei);
-+
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("Qualcomm Protection Domain messages data");
-diff --git a/include/linux/soc/qcom/pd_mapper.h b/include/linux/soc/qcom/pd_mapper.h
-new file mode 100644
-index 000000000000..d0dd3dfc8fea
---- /dev/null
-+++ b/include/linux/soc/qcom/pd_mapper.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Qualcomm Protection Domain mapper
-+ *
-+ * Copyright (c) 2023 Linaro Ltd.
-+ */
-+#ifndef __QCOM_PD_MAPPER__
-+#define __QCOM_PD_MAPPER__
-+
-+#if IS_ENABLED(CONFIG_QCOM_PD_MAPPER)
-+
-+int qcom_pdm_get(void);
-+void qcom_pdm_release(void);
-+
-+#else
-+
-+static inline int qcom_pdm_get(void)
-+{
-+	return 0;
-+}
-+
-+static inline void qcom_pdm_release(void)
-+{
-+}
-+
-+#endif
-+
-+#endif
+Thanks,
+Harshit
 
--- 
-2.39.2
 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.29-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
