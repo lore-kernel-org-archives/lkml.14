@@ -1,265 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFCB1FDD;
-	Wed, 24 Apr 2024 18:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7B41798F;
+	Wed, 24 Apr 2024 18:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713984093; cv=none; b=VsMD/vSUc7OpX3EkQxXo3JeJQsrrnKLlsUy2h0kDxQIM3d12v/KeN6E/eNKtkwN8g9QUbX+NfsoeyoEJXSqFe85O27oA6b4NFpdJEdrTxXPu5pr7IZ2wNl8TvyukcbBanc7N8741tgMqWuluOWEsmQK/g1UxW6+c8zBEWvK1UU0=
+	t=1713984155; cv=none; b=iHfh2VxZVJdasBy+mUPP2bn8IVfjSxP4Ez/l+ZRsuVk6Qxgf7jOLnFqgiTCKIi+3Tf51kVTJjM2XkbT2fPe31LLO2ImCljFC7JN46S9tiy7XeSIRGZOhjhZ5EcfmTyMKB1DMmxHAUnjrQ9gBPU0Xu+sVW5koxKE7J9bAI9nJbME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713984093; c=relaxed/simple;
-	bh=kzZQaB5GtZ+QKzA70o+yGDoOKj7SVZ+KzMiOqdNiaoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lhuOkVNaZO2rJL1IwHwkoZMiFp14HgEO7AedhpKePcx9YiiTaQgmL+7VxYGPO9XBu4cy5Ycs1I/Fp2I9xQSyX3vYqvZEjjEdqfUST0p43xOyMN4E//L7+ck3lTfMw47gdp4nZaOFUXOgOEcAvxyEgLuFz8BkOO9h9gYd1aWtt5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ILxkC2G3; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713984155; c=relaxed/simple;
+	bh=Itcg+Jd23ZQ0QilHdje/jSd9t3UqWVBHp9CbQrEwRDY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EC0C54yC8Hu0x5615zofFcvyM7Nc3r5nqH6KhVziqZhAXVoym/FjUgjRbRmcFdWK8wUBZyrfth6FTq4kY4D2wC0b8NzlKpkFevuEk84AkPtiPzP4ZkqfGuQDIGpro3YuS6YeA2JLBis1+Cy4PllmLqd9kZYy2MKxyNoDSav7cRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OV8qAqYK; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ILxkC2G3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713984092; x=1745520092;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kzZQaB5GtZ+QKzA70o+yGDoOKj7SVZ+KzMiOqdNiaoY=;
-  b=ILxkC2G3jeAoOtuo2EYbPqj8LUpguPxQ7q7mS03pZnep+OunkKsY5HVI
-   oi1bkuG26SD7W3RzoYlhVne4kMkd1HMFMyDRU8boHa953WwpnVY6osxka
-   N/tZGZr0Si1aSk7OBrYRXEOUd9n9B3xEPqPFbpYIVIFW+7msXdVuHK4fG
-   l4Yj70LGOVj83IzN88K8jpfQbqTz0Vk88R0nwkwET5H/yFp306ncebnzX
-   nINhSEF4JpOvD2wsSeXW3LHca/qQcOj3Rb7BEmg2eTBmSEOGykV4ukmUW
-   PlAeoxnP1ohTv+kN+HcfGO+xz2SSh88LiaGjffGLuhXNKKPKKriTE41bu
-   Q==;
-X-CSE-ConnectionGUID: a39ikSP3TaqENMk+mWlBaA==
-X-CSE-MsgGUID: YeCa1Kq2Qo2+NICH5tB68g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="13422967"
-X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
-   d="scan'208";a="13422967"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 11:41:31 -0700
-X-CSE-ConnectionGUID: wqTHl7JJReqs5HYabPqhqA==
-X-CSE-MsgGUID: fxEjS7Z2SPqCu/yhMAcCUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
-   d="scan'208";a="29593424"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 24 Apr 2024 11:41:28 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rzhYa-0001YS-2Z;
-	Wed, 24 Apr 2024 18:41:24 +0000
-Date: Thu, 25 Apr 2024 02:40:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
-	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Michal Simek <monstr@monstr.eu>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Eng Lee Teh <englee.teh@starfivetech.com>
-Subject: Re: [PATCH v1 1/2] spi: spi-cadence: Add optional reset control
- support
-Message-ID: <202404250235.htdVhIMY-lkp@intel.com>
-References: <20240424051317.2084059-2-jisheng.teoh@starfivetech.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OV8qAqYK"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56e6acb39d4so144735a12.1;
+        Wed, 24 Apr 2024 11:42:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713984151; x=1714588951; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ol9krzBmTOyIuy1ft27l71rabBxmYrw1+e+89jby570=;
+        b=OV8qAqYKs6FYeM1aPS082RnpZOD6LRwZtnA9qVkBlThnXU4fEMJo9Zf2yis0sCWjlr
+         j+6/k2gdcIE6rNFmjx0Igv2Kt6Uxz11G0kt8al1YkSAPQtdUHbPii79Oco0dtOByUKzu
+         anJ4mKPOQH1/0zRiFapouef7wVddUiRLv3umrYZGVThK+hywrEC/zBzBRfdICbES8TlP
+         I0tDpWcaXO73m4PCHhcswjL3+QA0XDAX9oP/1zHEAtQL9HJmllPHr9ICRQz8XnAC2/cb
+         Ir13LLPltbIrO7NiorjZwHOUMOMWCZ0/6Ddfrcqb1NlAlwluMo+dj7zHTP+o9Nspi/jN
+         vumw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713984151; x=1714588951;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ol9krzBmTOyIuy1ft27l71rabBxmYrw1+e+89jby570=;
+        b=w1JOrdF+/3Z4oKN8GjmSQEgRhURZK9HothW/dB4F2sjjMFxzuJdS5gKg/qPwaydUTN
+         5O+Q8JhCNnoyWJO0qkNRqeGl3bNxTBlcm9XMdQrwGf2gLV2jmvkQnHRoyVkVHfRdHXB9
+         CoPyj/04v/0OOcu5Y9B4VfV1aZXh+QoFrYc0mjFhH8SSt42TKhcOf3xvEWDfrRL0VzaD
+         GeLT0uC4WZPEjs2AmUYGD0GuaScwxLSKk9zg+eil4VLsprc+qJBI7mA4p/HUZywlebpl
+         bIdNEhidlxpIVLawPu3NRVHQTh942F1q1UjxnpvRRetJADWTtEmjBu031Lp1UMu/aMJS
+         7rwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUiSrFsgVZ1pjtgQx4tOIFdc/QJI/UaX4F4LAPN4T7jY/+BP7e7OrG12Pm0Leko1ruMF09a9pOIEQO6603+pxqcuyWBsvJVj+zXNm8tYvyaRltmyCb7NVv10aZ7iYrkpqz4nA3X9AGWwZ0=
+X-Gm-Message-State: AOJu0YxlR5IZTdyaJzkN0HqZ0Z3av128uv88Y2bd6GZkYlLoK5dwrP/b
+	pnmLCrM36n1P41/juAC8UZ+xyeaewWuQ/CgYaCXuTU1wpbNMdngd
+X-Google-Smtp-Source: AGHT+IFJqfBO5mQOjDTG16NEhTc1tvbEXpcR5UL3y/xbDmPZLBWl1fVr9z9AG8k1xyje5QaUGr0gWw==
+X-Received: by 2002:a50:9e64:0:b0:566:2f24:b063 with SMTP id z91-20020a509e64000000b005662f24b063mr2220945ede.23.1713984150928;
+        Wed, 24 Apr 2024 11:42:30 -0700 (PDT)
+Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
+        by smtp.gmail.com with ESMTPSA id j2-20020aa7de82000000b005720e083878sm3644714edv.49.2024.04.24.11.42.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 11:42:30 -0700 (PDT)
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: Ban Tao <fengzheng923@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Chen-Yu Tsai <wens@csie.org>,
+ Samuel Holland <samuel@sholland.org>, Joao Schim <joao@schimsalabim.eu>
+Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH] ASoC: sunxi: DMIC: Add controls for adjusting the mic gains
+Date: Wed, 24 Apr 2024 20:42:29 +0200
+Message-ID: <5772237.DvuYhMxLoT@jernej-laptop>
+In-Reply-To: <20240422150213.4040734-1-joao@schimsalabim.eu>
+References: <20240422150213.4040734-1-joao@schimsalabim.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240424051317.2084059-2-jisheng.teoh@starfivetech.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-Hi Ji,
+Hi Joao,
 
-kernel test robot noticed the following build errors:
+Dne ponedeljek, 22. april 2024 ob 17:02:13 GMT +2 je Joao Schim napisal(a):
+> The AllWinner H6 and later SoCs that sport a DMIC block contain a set of registers to control
+> the gain (left + right) of each of the four supported channels.
+> 
+> Add ASoC controls for changing each of the stereo channel gains using alsamixer and alike
 
-[auto build test ERROR on broonie-spi/for-next]
-[also build test ERROR on robh/for-next krzk-dt/for-next linus/master v6.9-rc5 next-20240424]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Add SoB tag.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ji-Sheng-Teoh/spi-spi-cadence-Add-optional-reset-control-support/20240424-131551
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-patch link:    https://lore.kernel.org/r/20240424051317.2084059-2-jisheng.teoh%40starfivetech.com
-patch subject: [PATCH v1 1/2] spi: spi-cadence: Add optional reset control support
-config: arm-defconfig (https://download.01.org/0day-ci/archive/20240425/202404250235.htdVhIMY-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240425/202404250235.htdVhIMY-lkp@intel.com/reproduce)
+> ---
+>  sound/soc/sunxi/sun50i-dmic.c | 34 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+> 
+> diff --git a/sound/soc/sunxi/sun50i-dmic.c b/sound/soc/sunxi/sun50i-dmic.c
+> index c76628bc86c6..f8613d8c3462 100644
+> --- a/sound/soc/sunxi/sun50i-dmic.c
+> +++ b/sound/soc/sunxi/sun50i-dmic.c
+> @@ -14,6 +14,7 @@
+>  #include <sound/dmaengine_pcm.h>
+>  #include <sound/pcm_params.h>
+>  #include <sound/soc.h>
+> +#include <sound/tlv.h>
+>  
+>  #define SUN50I_DMIC_EN_CTL			(0x00)
+>  	#define SUN50I_DMIC_EN_CTL_GLOBE			BIT(8)
+> @@ -43,6 +44,17 @@
+>  	#define SUN50I_DMIC_CH_NUM_N_MASK			GENMASK(2, 0)
+>  #define SUN50I_DMIC_CNT				(0x2c)
+>  	#define SUN50I_DMIC_CNT_N				(1 << 0)
+> +#define SUN50I_DMIC_D0D1_VOL_CTR		(0x30)
+> +	#define SUN50I_DMIC_D0D1_VOL_CTR_0R			(0)
+> +	#define SUN50I_DMIC_D0D1_VOL_CTR_0L			(8)
+> +	#define SUN50I_DMIC_D0D1_VOL_CTR_1R			(16)
+> +	#define SUN50I_DMIC_D0D1_VOL_CTR_1L			(24)
+> +#define SUN50I_DMIC_D2D3_VOL_CTR                (0x34)
+> +        #define SUN50I_DMIC_D2D3_VOL_CTR_2R                     (0)
+> +        #define SUN50I_DMIC_D2D3_VOL_CTR_2L                     (8)
+> +        #define SUN50I_DMIC_D2D3_VOL_CTR_3R                     (16)
+> +        #define SUN50I_DMIC_D2D3_VOL_CTR_3L                     (24)
+> +
+>  #define SUN50I_DMIC_HPF_CTRL			(0x38)
+>  #define SUN50I_DMIC_VERSION			(0x50)
+>  
+> @@ -273,8 +285,30 @@ static const struct of_device_id sun50i_dmic_of_match[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, sun50i_dmic_of_match);
+>  
+> +static const DECLARE_TLV_DB_SCALE(sun50i_dmic_vol_scale, -12000, 75, 1);
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404250235.htdVhIMY-lkp@intel.com/
+DECLARE_TLV_DB_SCALE is old name, SNDRV_CTL_TLVD_DECLARE_DB_SCALE should be
+used instead.
 
-All error/warnings (new ones prefixed by >>):
+Other than that, it looks fine.
 
->> drivers/spi/spi-cadence.c:593:15: error: implicit declaration of function 'devm_reset_control_get_optional_exclusive' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           xspi->rstc = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
-                        ^
->> drivers/spi/spi-cadence.c:593:13: warning: incompatible integer to pointer conversion assigning to 'struct reset_control *' from 'int' [-Wint-conversion]
-           xspi->rstc = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
-                      ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/spi/spi-cadence.c:600:2: error: implicit declaration of function 'reset_control_assert' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           reset_control_assert(xspi->rstc);
-           ^
->> drivers/spi/spi-cadence.c:601:2: error: implicit declaration of function 'reset_control_deassert' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           reset_control_deassert(xspi->rstc);
-           ^
-   drivers/spi/spi-cadence.c:601:2: note: did you mean 'reset_control_assert'?
-   drivers/spi/spi-cadence.c:600:2: note: 'reset_control_assert' declared here
-           reset_control_assert(xspi->rstc);
-           ^
-   1 warning and 3 errors generated.
+Best regards,
+Jernej
+
+> +
+> +static const struct snd_kcontrol_new sun50i_dmic_controls[] = {
+> +
+> +        SOC_DOUBLE_TLV("DMIC Channel 0 Capture Volume", SUN50I_DMIC_D0D1_VOL_CTR,
+> +                       SUN50I_DMIC_D0D1_VOL_CTR_0L, SUN50I_DMIC_D0D1_VOL_CTR_0R,
+> +                       0xFF, 0, sun50i_dmic_vol_scale),
+> +        SOC_DOUBLE_TLV("DMIC Channel 1 Capture Volume", SUN50I_DMIC_D0D1_VOL_CTR,
+> +                       SUN50I_DMIC_D0D1_VOL_CTR_1L, SUN50I_DMIC_D0D1_VOL_CTR_1R,
+> +                       0xFF, 0, sun50i_dmic_vol_scale),
+> +        SOC_DOUBLE_TLV("DMIC Channel 2 Capture Volume", SUN50I_DMIC_D2D3_VOL_CTR,
+> +                       SUN50I_DMIC_D2D3_VOL_CTR_2L, SUN50I_DMIC_D2D3_VOL_CTR_2R,
+> +                       0xFF, 0, sun50i_dmic_vol_scale),
+> +        SOC_DOUBLE_TLV("DMIC Channel 3 Capture Volume", SUN50I_DMIC_D2D3_VOL_CTR,
+> +                       SUN50I_DMIC_D2D3_VOL_CTR_3L, SUN50I_DMIC_D2D3_VOL_CTR_3R,
+> +                       0xFF, 0, sun50i_dmic_vol_scale),
+> +
+> +
+> +};
+> +
+>  static const struct snd_soc_component_driver sun50i_dmic_component = {
+>  	.name           = "sun50i-dmic",
+> +	.controls	= sun50i_dmic_controls,
+> +	.num_controls	= ARRAY_SIZE(sun50i_dmic_controls),
+>  };
+>  
+>  static int sun50i_dmic_runtime_suspend(struct device *dev)
+> 
 
 
-vim +/devm_reset_control_get_optional_exclusive +593 drivers/spi/spi-cadence.c
 
-   550	
-   551	/**
-   552	 * cdns_spi_probe - Probe method for the SPI driver
-   553	 * @pdev:	Pointer to the platform_device structure
-   554	 *
-   555	 * This function initializes the driver data structures and the hardware.
-   556	 *
-   557	 * Return:	0 on success and error value on error
-   558	 */
-   559	static int cdns_spi_probe(struct platform_device *pdev)
-   560	{
-   561		int ret = 0, irq;
-   562		struct spi_controller *ctlr;
-   563		struct cdns_spi *xspi;
-   564		u32 num_cs;
-   565		bool target;
-   566	
-   567		target = of_property_read_bool(pdev->dev.of_node, "spi-slave");
-   568		if (target)
-   569			ctlr = spi_alloc_target(&pdev->dev, sizeof(*xspi));
-   570		else
-   571			ctlr = spi_alloc_host(&pdev->dev, sizeof(*xspi));
-   572	
-   573		if (!ctlr)
-   574			return -ENOMEM;
-   575	
-   576		xspi = spi_controller_get_devdata(ctlr);
-   577		ctlr->dev.of_node = pdev->dev.of_node;
-   578		platform_set_drvdata(pdev, ctlr);
-   579	
-   580		xspi->regs = devm_platform_ioremap_resource(pdev, 0);
-   581		if (IS_ERR(xspi->regs)) {
-   582			ret = PTR_ERR(xspi->regs);
-   583			goto remove_ctlr;
-   584		}
-   585	
-   586		xspi->pclk = devm_clk_get_enabled(&pdev->dev, "pclk");
-   587		if (IS_ERR(xspi->pclk)) {
-   588			dev_err(&pdev->dev, "pclk clock not found.\n");
-   589			ret = PTR_ERR(xspi->pclk);
-   590			goto remove_ctlr;
-   591		}
-   592	
- > 593		xspi->rstc = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
-   594		if (IS_ERR(xspi->rstc)) {
-   595			ret = PTR_ERR(xspi->rstc);
-   596			dev_err(&pdev->dev, "Cannot get SPI reset.\n");
-   597			goto remove_ctlr;
-   598		}
-   599	
- > 600		reset_control_assert(xspi->rstc);
- > 601		reset_control_deassert(xspi->rstc);
-   602	
-   603		if (!spi_controller_is_target(ctlr)) {
-   604			xspi->ref_clk = devm_clk_get_enabled(&pdev->dev, "ref_clk");
-   605			if (IS_ERR(xspi->ref_clk)) {
-   606				dev_err(&pdev->dev, "ref_clk clock not found.\n");
-   607				ret = PTR_ERR(xspi->ref_clk);
-   608				goto remove_ctlr;
-   609			}
-   610	
-   611			pm_runtime_use_autosuspend(&pdev->dev);
-   612			pm_runtime_set_autosuspend_delay(&pdev->dev, SPI_AUTOSUSPEND_TIMEOUT);
-   613			pm_runtime_get_noresume(&pdev->dev);
-   614			pm_runtime_set_active(&pdev->dev);
-   615			pm_runtime_enable(&pdev->dev);
-   616	
-   617			ret = of_property_read_u32(pdev->dev.of_node, "num-cs", &num_cs);
-   618			if (ret < 0)
-   619				ctlr->num_chipselect = CDNS_SPI_DEFAULT_NUM_CS;
-   620			else
-   621				ctlr->num_chipselect = num_cs;
-   622	
-   623			ret = of_property_read_u32(pdev->dev.of_node, "is-decoded-cs",
-   624						   &xspi->is_decoded_cs);
-   625			if (ret < 0)
-   626				xspi->is_decoded_cs = 0;
-   627		}
-   628	
-   629		cdns_spi_detect_fifo_depth(xspi);
-   630	
-   631		/* SPI controller initializations */
-   632		cdns_spi_init_hw(xspi, spi_controller_is_target(ctlr));
-   633	
-   634		irq = platform_get_irq(pdev, 0);
-   635		if (irq < 0) {
-   636			ret = irq;
-   637			goto clk_dis_all;
-   638		}
-   639	
-   640		ret = devm_request_irq(&pdev->dev, irq, cdns_spi_irq,
-   641				       0, pdev->name, ctlr);
-   642		if (ret != 0) {
-   643			ret = -ENXIO;
-   644			dev_err(&pdev->dev, "request_irq failed\n");
-   645			goto clk_dis_all;
-   646		}
-   647	
-   648		ctlr->use_gpio_descriptors = true;
-   649		ctlr->prepare_transfer_hardware = cdns_prepare_transfer_hardware;
-   650		ctlr->prepare_message = cdns_prepare_message;
-   651		ctlr->transfer_one = cdns_transfer_one;
-   652		ctlr->unprepare_transfer_hardware = cdns_unprepare_transfer_hardware;
-   653		ctlr->mode_bits = SPI_CPOL | SPI_CPHA;
-   654		ctlr->bits_per_word_mask = SPI_BPW_MASK(8);
-   655	
-   656		if (!spi_controller_is_target(ctlr)) {
-   657			ctlr->mode_bits |=  SPI_CS_HIGH;
-   658			ctlr->set_cs = cdns_spi_chipselect;
-   659			ctlr->auto_runtime_pm = true;
-   660			xspi->clk_rate = clk_get_rate(xspi->ref_clk);
-   661			/* Set to default valid value */
-   662			ctlr->max_speed_hz = xspi->clk_rate / 4;
-   663			xspi->speed_hz = ctlr->max_speed_hz;
-   664			pm_runtime_mark_last_busy(&pdev->dev);
-   665			pm_runtime_put_autosuspend(&pdev->dev);
-   666		} else {
-   667			ctlr->mode_bits |= SPI_NO_CS;
-   668			ctlr->target_abort = cdns_target_abort;
-   669		}
-   670		ret = spi_register_controller(ctlr);
-   671		if (ret) {
-   672			dev_err(&pdev->dev, "spi_register_controller failed\n");
-   673			goto clk_dis_all;
-   674		}
-   675	
-   676		return ret;
-   677	
-   678	clk_dis_all:
-   679		if (!spi_controller_is_target(ctlr)) {
-   680			pm_runtime_set_suspended(&pdev->dev);
-   681			pm_runtime_disable(&pdev->dev);
-   682		}
-   683	remove_ctlr:
-   684		spi_controller_put(ctlr);
-   685		return ret;
-   686	}
-   687	
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
