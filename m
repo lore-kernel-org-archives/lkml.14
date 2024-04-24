@@ -1,113 +1,120 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3CA15E1EA;
-	Wed, 24 Apr 2024 16:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B6F15FCED
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 16:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713974811; cv=none; b=NOI0qQ83BBhGNZpzjQx0ypvnXsoSLoUNeLp5xhxgK96l7wCAkWvL7Qf/u+P41JeGBZ67XSiAf2+OpPgAjaPRkOBrqDBKOEBIE+T1hp7VaMOsFIERPWr18uw2790wTc7aXvKBheE85JQ4UUaPsLFZtO5pt+iRgc8lobXK1z2G/VA=
+	t=1713974902; cv=none; b=Zh7bWEt14YByf57ZztYSmCmeoqEsJCyx9+UMEQfDdBfaN5mxWBfqP1t1jZuEmoutGzwATTxH+9nrM5eQnQHKfSZJwX/+w3zZ4M63gTze9CLjTeCjwEYA9gBSi1AUJAGH3LxeMwZWAU+Zzl1mxiNYhiS3RxZuF/Kk2Thp3lmfz4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713974811; c=relaxed/simple;
-	bh=pV+VrxGvpBc3cztS2k/grcbxt+d6cI6f1QkR7t0g/z8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qVPvVP8uAV1MgfmWujzQTQ/8O1TucS9Sjra3NCIhs95qJChoh0Hg4YDkc4hmlRm6s/3tb/CpmypVMJiFQtsPZwBFNCVObF9iabNVa10P0m8+sCcSR/4ZQvkjeKEu8z63pAFId8qod+YiKVo3rEgGJi7Ohlp+RI7DWI7H8tnkeiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=QWF3TD5D; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1713974902; c=relaxed/simple;
+	bh=UX+RSQsTZIoCgA4sTAjvIrhaan3lVSfzg+9u2yHW7fw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=c16wcqDkohpG4oQE37VgQ3o0SD/X8z2LZSMuQ0DF+kRy9Snzu4kVgV3HyF+fk49CyZuLkT06MmGsrXdoyYiOR/RI+J6d8eXGBlDOz6GW/PmjhNBwApiOECJHF+QlAuBgB06czDsg/HBXaNshUqZRjgAQzVWca1a+FgfVBDUXzJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fSQNh+xZ; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="QWF3TD5D"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3C07440E0177;
-	Wed, 24 Apr 2024 16:06:44 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id a1whXnU_urG2; Wed, 24 Apr 2024 16:06:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1713974800; bh=eT/sJrq6XNpXYldhLxOFeSR6n1DYq3NDJUftCdjBaNE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QWF3TD5DfjsDxjpmOqQmkDBvJqmy2ArfExGwOQxTl1ZUOlBsHM9dtYnlQhG69Fb/7
-	 iE8KAkqTm0OoHa0sqEnqNWcuhISoAq6YJGJLh2CTI2HJoTz0gwL3sxig0eL2t+XY2M
-	 7wcaIOfeHdUmZE9oVDfrIbgjpsMl6j0NStBevpmYsILuDiK2NinFpnprFt/Kj8uVA+
-	 CgGjjZ6BKlhY91FWBu4lXYHoICXTM/XrlbZghwGMPwi39FaWBenySPfMaq7snqnjLK
-	 DHGyOx9XcOjdHxhTvqrGTHO6iAOOp87i4FR5e4l8X/niXuR8947AHiBMYDsv+0p+ie
-	 t5by9FFOxn4v6FEVb6CCDgwFRUmOGmr9k5AGdoH/POcu1MD+4/6NYOsUNYV5EDjOg5
-	 PPfjXhZSgcHT6hAu1FyqGHmnFr86tOFQDX/vQ0hzX5nqQ/zkc40g+B1+8fLb8NhoeS
-	 sgaTO3Iq/7BGdS5CLYN1eCV/iCM3MzN8rlDKiRcnn3IIlulziuBtI2Sv48bI4kC/Xl
-	 AOXtU65xrJi/MHNBROsVykmeh3rLJlX0/ypKzomYRUxao3j+puNaybZVeElC4NGJWW
-	 ciPuepgMBQQkbIYhb89WOO2YsKOgl5TanEh8YSI9J8FxddQFkWw/8nsJP1lF9kclVP
-	 nGSR16o2/oCj2/GI5CzL2t9k=
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C440840E0192;
-	Wed, 24 Apr 2024 16:06:13 +0000 (UTC)
-Date: Wed, 24 Apr 2024 18:06:08 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Alexey Makhalov <alexey.makhalov@broadcom.com>
-Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	hpa@zytor.com, dave.hansen@linux.intel.com, mingo@redhat.com,
-	tglx@linutronix.de, x86@kernel.org, netdev@vger.kernel.org,
-	richardcochran@gmail.com, linux-input@vger.kernel.org,
-	dmitry.torokhov@gmail.com, zackr@vmware.com,
-	linux-graphics-maintainer@vmware.com, pv-drivers@vmware.com,
-	timothym@vmware.com, akaher@vmware.com,
-	dri-devel@lists.freedesktop.org, daniel@ffwll.ch, airlied@gmail.com,
-	tzimmermann@suse.de, mripard@kernel.org,
-	maarten.lankhorst@linux.intel.com, horms@kernel.org,
-	kirill.shutemov@linux.intel.com, Nadav Amit <nadav.amit@gmail.com>
-Subject: Re: [PATCH v8 1/7] x86/vmware: Move common macros to vmware.h
-Message-ID: <20240424160608.GFZikt8JLrTN4M5PG2@fat_crate.local>
-References: <20240422225656.10309-1-alexey.makhalov@broadcom.com>
- <20240422225656.10309-2-alexey.makhalov@broadcom.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fSQNh+xZ"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc647f65573so74558276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 09:08:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713974899; x=1714579699; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bk3EKgsQGWnjS0MB5E+L5+lH/YRrJ8wTPFpK6fCHC/0=;
+        b=fSQNh+xZyICEaLyAYJ9j8B5Dpz9iGvXe9AekGvZfUPSkhGUTKrJ2lWayZW7QAOpQOf
+         Q8M9BTKg6GMvNXkaD9RUJ1roLQLTBheXYP90tNemuaJnFJSGeXEHf5U6w/G8ikG57+hX
+         W/ZzL5/4l3gLhcXPfwq+bEcEFadq6++lmanCmdo/KIZDV3aU2zV7kIT6eEz9zfIpPkXU
+         LjwDPyGXrm6hdmyc3QkSm+PodXwkdjiQ8stX3PaKWkIe2b584IuIkiqHXxhX4rcfzUJe
+         HfikG0tr0eilK8dW+/r2DUtDQCvS/X8YSGThyZQo/jrugYDs0TXEhbrObWtF24v19B28
+         yj8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713974899; x=1714579699;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bk3EKgsQGWnjS0MB5E+L5+lH/YRrJ8wTPFpK6fCHC/0=;
+        b=hV9kfpz33Z7FoTcRCRkuHu7hUOd4tqU04huPHJgfN4WoKW6sKrUnabunrt1tRha2Qc
+         65lzvCfAOW1R5WbJf8dshQcoNPooYTI7AA5iY6LTY73U9vvRiSriS3R0QZqOeJNK3B5p
+         QGUBj4YIiwhNpdm2FftaXsQpg+cvJUzdGKM5h/lxKMW3eMkY7pO8w3LSrxxWp4iFmppo
+         JbDBjYBTJCzFs6JMFUdXEm+8vEJdPd0xIhLdho24cbKoaN95r9c8Cw9riX1gvTGlgTLZ
+         IiXZhxldzTaS2UK3mBuvTkUHv61I+ZiNcDq3QT2GwTiqTS2xWcyhCtL5n4LIWLwB9tqw
+         52ow==
+X-Forwarded-Encrypted: i=1; AJvYcCX86d3/6Rf6biu19kCjJE9DA5Wstak+1rSxGF0sQqhxN1ObRSgJpIc3hwvgdMLsnrntlC75HCnrkIJGGvGUqfN7haB+bliqf+LtZ9mz
+X-Gm-Message-State: AOJu0YzwSZtmXkUDBPKKa5vqq70eb0zUBrpwceSbaLec4zE1VYEHoEbe
+	7T3XDO88maJ4Fmgh2guKp2W5J8cITYgWt32qgHvP/j71PaBajqr47Imoe3zW60XrGM9YtsxVGNy
+	6PQ==
+X-Google-Smtp-Source: AGHT+IHUEHWaTgZwPWeVlQZLsmhgBLdJhdqkgpe+SOVJ7NnX/mE1lLDAZaofyhrlTH6Xy2nYNweVj/XvttU=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:706:b0:dcd:3172:7265 with SMTP id
+ k6-20020a056902070600b00dcd31727265mr1002573ybt.8.1713974899485; Wed, 24 Apr
+ 2024 09:08:19 -0700 (PDT)
+Date: Wed, 24 Apr 2024 09:08:18 -0700
+In-Reply-To: <20240329201854.f24ZDY24JtVE3gfa0i3m1MOFYfXVhCKdkXd0j5c-B6I@z>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240422225656.10309-2-alexey.makhalov@broadcom.com>
+Mime-Version: 1.0
+References: <20240207172646.3981-1-xin3.li@intel.com> <20240207172646.3981-26-xin3.li@intel.com>
+ <20240329201854.f24ZDY24JtVE3gfa0i3m1MOFYfXVhCKdkXd0j5c-B6I@z>
+Message-ID: <Zikucr6zpwBxOUiy@google.com>
+Subject: Re: [PATCH v2 25/25] KVM: selftests: Add fred exception tests
+From: Sean Christopherson <seanjc@google.com>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: Xin Li <xin3.li@intel.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	pbonzini@redhat.com, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	shuah@kernel.org, vkuznets@redhat.com, peterz@infradead.org, 
+	ravi.v.shankar@intel.com, xin@zytor.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Apr 22, 2024 at 03:56:50PM -0700, Alexey Makhalov wrote:
-> Move VMware hypercall macros to vmware.h. This is a prerequisite for
-> the introduction of vmware_hypercall API. No functional changes besides
-> exporting vmware_hypercall_mode symbol.
+On Sat, Mar 30, 2024, Muhammad Usama Anjum wrote:
+> On 2/7/24 10:26 PM, Xin Li wrote:
+> > Add tests for FRED event data and VMX nested-exception.
+> > 
+> > FRED is designed to save a complete event context in its stack frame,
+> > e.g., FRED saves the faulting linear address of a #PF into a 64-bit
+> > event data field defined in FRED stack frame.  As such, FRED VMX adds
+> > event data handling during VMX transitions.
+> > 
+> > Besides, FRED introduces event stack levels to dispatch an event handler
+> > onto a stack baesd on current stack level and stack levels defined in
+> > IA32_FRED_STKLVLS MSR for each exception vector.  VMX nested-exception
+> > support ensures a correct event stack level is chosen when a VM entry
+> > injects a nested exception, which is regarded as occurred in ring 0.
+> > 
+> > To fully test the underlying FRED VMX code, this test should be run one
+> > more round with EPT disabled to inject page faults as nested exceptions.
+> > 
+> > Originally-by: Shan Kang <shan.kang@intel.com>
+> > Signed-off-by: Xin Li <xin3.li@intel.com>
+> Thank you for the new test patch. We have been trying to ensure TAP
+> conformance for tests which cannot be achieved if new tests aren't using
+> TAP already.
 
-Well, I see more.
+Who is "we"?
 
-So code movement patches should be done this way:
+> Please make your test TAP compliant.
 
-* first patch: sole code movement, no changes whatsoever
+This isn't entirely reasonable feedback.  I'm all for getting KVM selftests
+TAP-friendly, but the current reality is that the KVM selftests infrastructure
+doesn't make it easy to be TAP compliant.  We're working on improving things,
+i.e. I do hope/want to get to a state where it's a hard requirement for KVM
+selftests to be TAP compliant, but we aren't there yet.
 
-* follow-on patches: add changes and explain them
+If you have specific feedback on _how_ to make a test TAP compliant, then by all
+means provide that feedback.  But a drive-by "make your test TAP compliant" isn't
+super helpful.
 
-Because... (follow me down)...
+> > ---
+> >  tools/testing/selftests/kvm/Makefile          |   1 +
+> >  .../selftests/kvm/include/x86_64/processor.h  |  32 ++
+> >  .../testing/selftests/kvm/x86_64/fred_test.c  | 297 ++++++++++++++++++
+> Add generated binary object to .gitignore.
 
-> @@ -476,8 +431,8 @@ static bool __init vmware_legacy_x2apic_available(void)
->  {
->  	uint32_t eax, ebx, ecx, edx;
->  	VMWARE_CMD(GETVCPU_INFO, eax, ebx, ecx, edx);
-> -	return !(eax & BIT(VMWARE_CMD_VCPU_RESERVED)) &&
-> -		(eax & BIT(VMWARE_CMD_LEGACY_X2APIC));
-> +	return !(eax & BIT(VCPU_RESERVED)) &&
-> +		(eax & BIT(VCPU_LEGACY_X2APIC));
-
-... what is that change for?
-
-Those bit definitions are clearly vmware-specific. So why are you
-changing them to something generic-ish?
-
-In any case, this patch needs to be split as outlined above.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+This should be unnecessary (though I haven't actually verified by building), as
+KVM selftests ignore most everything by default since commit 43e96957e8b8
+("KVM: selftests: Use pattern matching in .gitignore").
