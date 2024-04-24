@@ -1,111 +1,86 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D343C129A9C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857F285274;
 	Wed, 24 Apr 2024 02:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713927417; cv=none; b=AfPrwRGIrYZy++AHuzDAOKWQ1YqFxok9TAK2bACP9u5xW504G2k4fZMqSeLQL1KAZpbx+jZB0hvTUMztl11Dq94KS9q7MhiJ1q4dzXE/SQ46rdCU375/MZ1kROyHQvIy6TyoHf66GBRxfaZSgmjise0aJoJhL0RfkcfdLPSXLWg=
+	t=1713927418; cv=none; b=RxZqT6wmoVLavsPSXUVlltUeDQlN8ePkLzhbTYN7C1FrdLO4tW+c8hCVQf70S4EhJMUkHbDw6U73RhWi4UpicFVc3PL/qhlQS1R7wtTMKkUp/waWTYRpqPK/Sk8kzhWnIWk3dYplyWBb77ofhbPlkOd3pT5CGNbldwwEnITRQFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713927417; c=relaxed/simple;
-	bh=/5pmIFmXPkmAlPGyKfgD/8qmZjBx715ObeJgbZPB71Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M9tOooQJYekesB3ttOae2t3siqeGKyTi10Dd2FYh7S22qXOic7QAI892J/UKIdcF4T4yaP5+dBUqm4OqZd5OgEgukGkd+hb7R7Hng/mgwLYLkwd8E5NYUMl4S0crMIh0wRgsa3/w70FRXeGgM3QvkO3K+GR2y7MNCByWtGQ6bFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dAG4t1ep; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dAG4t1ep"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-34665dd7610so3240427f8f.3;
-        Tue, 23 Apr 2024 19:56:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713927414; x=1714532214; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=50U8awpANlESe7fsxcFoAzxWkGcwzVdwCPUvxCD4upA=;
-        b=dAG4t1epU/NsQLD5enMavNX8FFIkuTDZZSTFSytnDKy0mxhEMrQvCChCto1aN6X0Q7
-         8tV+PtO88XXP9kesOB9jONd/bVTVovusZt2E2pwCqz3cQBlVpHPHhn0u4STFANCXt0MW
-         eSyrpKFcxcGpXTCZF2XojnLxm4lsE/0B79wCt3Nm9uIE6q/yNr2JNwrU7whVNuBnKDxD
-         CJ+1GlbjdAAPOv2vVSrHcnxCNgObiXao8HgMF7cZ9bmKr6mjZj9XJRKPvbEe54FEeOCp
-         PU+/SgnPHyZJstH65juns9VH1GB63oTBcmfx90c98AQSm2ga1dMNBkLXVvtGhTY384aw
-         3zyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713927414; x=1714532214;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=50U8awpANlESe7fsxcFoAzxWkGcwzVdwCPUvxCD4upA=;
-        b=XMI91tyVDEAypPmUQVtyK8OTCdOD/f6wjX4bZWzAtzDF023KC9N78mwpxQXQKiUyJe
-         NKz5X5MB/hteqCKRNZ8CTZ2pDCiFDHEcVYr38AdnHs45+46HBTn5nZnIc+nQl4OefoOI
-         gw0Citwx0PhoSoRps4cA/ggU2Nrt8nYlwB3YU8RXbl2xgADDtihP4iBzu1L8iV1mpMpJ
-         AdTQ3iwdW2CMbpL+J8l6kAfb+7acWxcF/HuQioBHorhkexwMd4kv2Py4I7KOkSzYPJoQ
-         VnBeBxh9Tue24ZwWxKjley+JD0aBO9/5M1cgTuoV0jvCzrBia3FNztjJoWoq9b0+qXVj
-         54bw==
-X-Forwarded-Encrypted: i=1; AJvYcCWG9f4tXirrFA8iNaNdStuSpTUMc5urNI5YseUfU8V0wGs5Vxh+357TbYxDneUJO31Ymx1PRJ1P/6X68J40HNL+ocfXNAl1+MquEOKzblAzTn8E3k5g+GINVb9hjeZLv6zGnwl81o/VrFE9231Av36i2TRRTI/ncWzvcQkbIRBLk9TP
-X-Gm-Message-State: AOJu0Yw6+HHk6YnCyTdvQa8W0HOJGmU4+os9gHwkqbYQkOr4ISTbSGoO
-	ct6vmu4zKoWl4ZzNMQsEl0rMmXDTfEW9wZXGKLyW/B5lFJBm6tXvh03zJ/pDYqmYscsX+qnPLwF
-	Me1rFd9sw7xHHhYWRd2fg0+ZeWk4=
-X-Google-Smtp-Source: AGHT+IEuCqH3eh47wECnECQrOO35nmQN/2iOSzKyqoN+lsJfXd4CUGp3lkwGM+BrC+bUqjPGqN1l0B/9x5c2x8TNE3k=
-X-Received: by 2002:a5d:6182:0:b0:346:14d2:fef6 with SMTP id
- j2-20020a5d6182000000b0034614d2fef6mr565473wru.62.1713927414330; Tue, 23 Apr
- 2024 19:56:54 -0700 (PDT)
+	s=arc-20240116; t=1713927418; c=relaxed/simple;
+	bh=3q4wkwdzr6bsl7CdF20gWvsb13iPgTuP0auF/wmr1+U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BZPZfaRLxKfE/2cKRQKJe7FbARgOKNNaDMNpgbE2YA4vZyEvrQQH7Kh1tlrxhByLqPfgc3HJT+iQlx6IxrKBYwO0cnXZ/TUSDyJPrCPXBtSNeKPGxIGOYVv+GP1GgxI4+IfTd4U+8MDz3Cu5qY1bChN+klToeFwP+Cyot2NcKM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.204.34.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
+X-QQ-mid: bizesmtp84t1713927373txeesovm
+X-QQ-Originating-IP: RafR794jN92WUzpCABktLdB8zk7MggSEa+h1HLA4pRk=
+Received: from localhost ( [112.0.147.129])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 24 Apr 2024 10:56:12 +0800 (CST)
+X-QQ-SSF: 01400000000000903000000A0000000
+X-QQ-FEAT: 6MxOmYknsnlk+EvuqNPJydCUebOjjfGQngzxgv3iiMZC/5aK751EwP9r+F8i+
+	bH9DoKtFsUp/87eM/1WVZzyRE2NN4/1YfQsuiOJUXMdwDslas0+TN0BjT+VlUpBiIqTGE6m
+	/dq6tlAV8/cwazZ7Arvv2NsDoxeFDiADlngWQdLr5U5RgI/MpVehjBcakGq0sviZke76/uQ
+	VhpWfut99UyslE/Kp2uvK0JNZhC8VPtHnUYrmB4nQ0k0vDQjCF50z0BRII1fyp0zQVNTurk
+	PumEGM4FTgnOicwjqBqWFntmiZUVPAf5U7kq51MvgBwz91jX/Ge/3Pr27yOSbRlmLZQAvmO
+	XOnBPEhDEKWngvq+vVGMamH1OOO3sbUsz1W5/FCt0VccXivhBgtSDKNnjHSXv8vHTG+/pMU
+	xXYaKM56jpkqMm/eMwrf+iZeSOUCT06u
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 8021827342633474305
+From: Dawei Li <dawei.li@shingroup.cn>
+To: davem@davemloft.net,
+	andreas@gaisler.com
+Cc: sparclinux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	sam@ravnborg.org,
+	Dawei Li <dawei.li@shingroup.cn>
+Subject: [PATCH v4 3/5] sparc/of: Remove on-stack cpumask var
+Date: Wed, 24 Apr 2024 10:55:46 +0800
+Message-Id: <20240424025548.3765250-4-dawei.li@shingroup.cn>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20240424025548.3765250-1-dawei.li@shingroup.cn>
+References: <20240424025548.3765250-1-dawei.li@shingroup.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240420-bpf_wq-v2-0-6c986a5a741f@kernel.org> <20240420-bpf_wq-v2-10-6c986a5a741f@kernel.org>
-In-Reply-To: <20240420-bpf_wq-v2-10-6c986a5a741f@kernel.org>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 23 Apr 2024 19:56:42 -0700
-Message-ID: <CAADnVQLbn9UUZ+oH=uoB7OqCL02ZCYmSbtf3YWA56+XHvG0USg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 10/16] selftests/bpf: add bpf_wq tests
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
 
-On Sat, Apr 20, 2024 at 2:10=E2=80=AFAM Benjamin Tissoires <bentiss@kernel.=
-org> wrote:
->
-> +
-> +SEC("tc")
-> +/* test that workqueues can be used from an array
-> + */
-> +__retval(0)
-> +long test_call_array_sleepable(void *ctx)
-> +{
-> +       int key =3D 0;
-> +
-> +       return test_elem_callback(&array, &key);
-> +}
-> +
-> +SEC("syscall")
-> +/* Same test than above but from a sleepable context.
-> + */
+In general it's preferable to avoid placing cpumasks on the stack, as
+for large values of NR_CPUS these can consume significant amounts of
+stack space and make stack overflows more likely.
 
-I adjusted all these comments to be normal single line comments.
+@cpumask of irq_set_affinity() is read-only and free of change, drop
+unneeded cpumask var.
 
-The main thing to follow up is to figure out how to wait for wq
-to finish.
-Since we have this message:
-./test_progs -t wq
-...
-#521     wq:OK
-Summary: 2/9 PASSED, 0 SKIPPED, 0 FAILED
-Failed to unload bpf_testmod.ko from kernel: -11
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
+---
+ arch/sparc/kernel/of_device_64.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-and doing manual "rmmod bpf_testmod"
-after the test run is quite annoying.
+diff --git a/arch/sparc/kernel/of_device_64.c b/arch/sparc/kernel/of_device_64.c
+index c350c58c7f69..f98c2901f335 100644
+--- a/arch/sparc/kernel/of_device_64.c
++++ b/arch/sparc/kernel/of_device_64.c
+@@ -624,10 +624,7 @@ static unsigned int __init build_one_device_irq(struct platform_device *op,
+ out:
+ 	nid = of_node_to_nid(dp);
+ 	if (nid != -1) {
+-		cpumask_t numa_mask;
+-
+-		cpumask_copy(&numa_mask, cpumask_of_node(nid));
+-		irq_set_affinity(irq, &numa_mask);
++		irq_set_affinity(irq, cpumask_of_node(nid));
+ 	}
+ 
+ 	return irq;
+-- 
+2.27.0
 
-Overall great stuff. Thank you for pushing it through.
-Much appreciated!
