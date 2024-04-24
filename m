@@ -1,116 +1,124 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C74A157491;
-	Wed, 24 Apr 2024 06:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F96157489;
+	Wed, 24 Apr 2024 06:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713941927; cv=none; b=hSKcFOJj4ZYbtzsnfV/Y4qZKzC1ZvO8fOrr/YgX2fJ/jqhof9qm+KVVckWgtybQ9RgE8X/YO7uabcixO6lEj2VQOlIBBL3mRrI5TFNoRS+63gfBmAVc0J+FeBndnwSXyAmP9ChkZ2r7Q6AEZ+iXa37ec4ZKYyG8gmxdkOaX2PO4=
+	t=1713941961; cv=none; b=gZIXgX9hRD4icIzo8Chcab+SEaE6v0SKEK6tHwikKJBdwTpSKtMin9cWN44mgY5jaswod7LQaEZN0lap1hbYanr9mCWNstSthBSMMY1E2vWPu3kkwX2ji4AK7Mb2bYmrWviu0kv4nnUaLrrNul5Vj32swRLz9GqgcRDs7jon2BE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713941927; c=relaxed/simple;
-	bh=P1t0REWUuQLsDRjagkYz1+vlorbhLbaVGuGqkr3Yluo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UEi6xCNNVJcyiLMsoRnQHmKjtmA8t/ClyaeepnpdOLIzGKFbMZMtQJ0lMueOaSXKDpxUfPpWqwMEFl/GxstTUMRmEIVNBQM7WYLB60wnPEC24ARvwwoq+tKCjNLWdCLh1CbXT7HlSIryNq7sl3PfG32///CADABrGM0nAhtVCcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=M2gxhANI; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1713941961; c=relaxed/simple;
+	bh=jAHDmzsFsjVVBqJnc/5HKSRpUTtI3iSAfhWByWRHiks=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=s/d2VhGnH6giYYisXnQcrRebbYYBnW56CIpz/DaNhLAAbRXyHgpRQLbmPujie0VNMBkeR7GQKDbzaiZbDGfhvjj0/jsy6OHALyayeTs+uUNlMAn/LSkTA3bYvl35flwMbFhGKerDuUXvK77TzqoymhBnr2HB9daN/E77WrgqKqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iu4HIMX7; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M2gxhANI"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43O6waBC064296;
-	Wed, 24 Apr 2024 01:58:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1713941916;
-	bh=nK4OyElnhUKU5PaeG4vEL+OZvrtvfGDKXHMETnf8p4k=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=M2gxhANIi1ydmEQj31DX0dDNysx65SQKGb39A/p33VlHwIFT6EQCrOYYrfh+5Km1d
-	 WFibkIeKLWsiLQ0bT9Cnghchm77x19YmRL3gg4O4ofSgb7fQCZ0RkUjUB5fyJn2LLR
-	 cUOHa9TxEF1nUoGR/7GVOYISFccQVnjNWZStRiwE=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43O6waUC010974
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 24 Apr 2024 01:58:36 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 24
- Apr 2024 01:58:36 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 24 Apr 2024 01:58:36 -0500
-Received: from [10.250.149.192] ([10.250.149.192])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43O6wVpu107489;
-	Wed, 24 Apr 2024 01:58:32 -0500
-Message-ID: <0b572ad3-800b-4d62-8ddc-2207a82a2f41@ti.com>
-Date: Wed, 24 Apr 2024 12:28:30 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iu4HIMX7"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6eb86b69e65so3858405a34.3;
+        Tue, 23 Apr 2024 23:59:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713941959; x=1714546759; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YWZZ+dn7fNGUKxcBZFkHNk8wd/FNa/kDs6IcDRWi3xA=;
+        b=iu4HIMX7C2FCi73z2vU2EpXkGiM9wSzdit0MBJMqHfCyRmpTJqcs/icntgTG/SJUIh
+         Q8PSAOTbRWL5HGZTEmzU8t+1qOsvoVfP6DJi5JQWPMzagn1EtD/BQtrStackcHcFJUCd
+         W4HSSp74M4fWwR4XbGc3ZcYfpsdeeJg0YkHnvG8ZB3ImIPpUAh0242Y4U2v+8quEhCcI
+         L7l9vca89beStKD6VlCpGdSEG0nxM9ZHlSxM5RX8zkxh2rVFl8sNWUQhhnnPZU/hOo3v
+         Hg654QXfTNDZ1YkibUx6Xug/EZoOQjKyuJtbt5SaH/lUXYc3sovzS+HwI7rW+fEDiuHV
+         mMNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713941959; x=1714546759;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YWZZ+dn7fNGUKxcBZFkHNk8wd/FNa/kDs6IcDRWi3xA=;
+        b=iOcZZHx2o8zzMzdtxQKIUx6MRpT8nNdcWlvXPexSKVV6aJVGSxhk0bDm4H0bCYH5EH
+         o028KjQ0yW+Uk8EaznblDcRoD2rZMdm/xrc+b4XKq/XYMEdUFxYhrpkWuZh3g7RWNBsn
+         JRf1SIpViqt+pn3GxdTtKj0J3F9tvtFaYnbxow462hM9RRBFPxiOLB0HTLdQYlNRw0sr
+         NQOjI4GvVrnoEwHKh5FH2E2UP/UWI+G6oBAebcjhVZ/KZJW+NJU+cZKeRqrKO7OmUlZX
+         I9NQAJHuuGkQRHBFlkRQPEXKfglPYiDRtfTSCEzDKliYRhvO6vFwpo3GZaFPDu4zjfLc
+         I/QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWRM6IIzGZiEtNNeV16ekEa5yoGmFJ0EFeH7Kah5R4tS6RUdhraS6Danf4qxvMI6NVToGI3DjnfZyIBoR+M7EPpdjR2vKxeWNuxbP1PBGvYNXOynFm7z+shWy4WNEQZrcn3S37/wez2N0gVov40Hnx8zzaUdfQPizS9qMKayOlgDaP5
+X-Gm-Message-State: AOJu0YzhZIiR3sP3WTbCKm7QCNtqM978FCafQYGu2/LkJNkUHHPp8nS9
+	DF18gQO70aw06A1yHmMpA50RP2+Q0BMfj9bdvHRoC1RP1H7BQxfc
+X-Google-Smtp-Source: AGHT+IEOwg+BGEAz6/fsGPOw13LZuPP//HeGC7vsQd1OrWYlk42LFeKMCA0+u5KPiL1CSu6naAcP+A==
+X-Received: by 2002:a05:6870:a3d1:b0:21f:412a:87a8 with SMTP id h17-20020a056870a3d100b0021f412a87a8mr1940555oak.41.1713941959153;
+        Tue, 23 Apr 2024 23:59:19 -0700 (PDT)
+Received: from smtpclient.apple (120-51-0-113.east.xps.vectant.ne.jp. [120.51.0.113])
+        by smtp.gmail.com with ESMTPSA id x37-20020a056a000be500b006edcceffcb0sm10754234pfu.161.2024.04.23.23.59.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2024 23:59:18 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: ti: k3-am65-main: Add PRU system events for
- virtio
-To: MD Danish Anwar <danishanwar@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>, Nishanth Menon <nm@ti.com>
-CC: Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        Tero Kristo <kristo@kernel.org>, <srk@ti.com>,
-        Roger Quadros <rogerq@kernel.org>, <srk@ti.com>,
-        Ravi
- Gunasekaran <r-gunasekaran@ti.com>
-References: <20240423100838.1421845-1-danishanwar@ti.com>
-Content-Language: en-US
-From: Ravi Gunasekaran <r-gunasekaran@ti.com>
-In-Reply-To: <20240423100838.1421845-1-danishanwar@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH] sh: j2: drop incorrect SPI controller max frequency
+ property
+From: "D. Jeff Dionne" <djeffdionne@gmail.com>
+In-Reply-To: <171394121882.41568.17609347008268237958.b4-ty@linaro.org>
+Date: Wed, 24 Apr 2024 15:59:04 +0900
+Cc: Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>,
+ Rich Felker <dalias@libc.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ devicetree@vger.kernel.org,
+ linux-sh@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Kousik Sanagavarapu <five231003@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A9A1C6C4-2B40-4769-9C9D-3A4DB2C27C95@gmail.com>
+References: <20240322064221.25776-1-krzysztof.kozlowski@linaro.org>
+ <171394121882.41568.17609347008268237958.b4-ty@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
+Adrian,
 
+IMHO, this driver should go through the SH tree.  Thanks Rob, for =
+testing the patch.
 
-On 4/23/2024 3:38 PM, MD Danish Anwar wrote:
-> From: Suman Anna <s-anna@ti.com>
->
-> A PRU system event "vring" has been added to each PRU and RTU
-> node in each of the ICSSG0, ICSSG1 and ICSSG2 remote processor
-> subsystems to enable the virtio/rpmsg communication between MPU
-> and that PRU/RTU core. The additions are done in the base
-> k3-am65-main.dtsi, and so are inherited by all the K3 AM65x
-> boards.
->
-> The PRU system events is the preferred approach over using TI
-> mailboxes, as it eliminates an external peripheral access from
-> the PRU/RTU-side, and keeps the interrupt generation internal to
-> the ICSSG. The difference from MPU would be minimal in using one
-> versus the other.
->
-> Mailboxes can still be used if desired, but currently there is
-> no support on firmware-side for K3 SoCs to use mailboxes. Either
-> approach would require that an appropriate firmware image is
-> loaded/booted on the PRU.
->
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
-> ---
-> This patch is based on linux-next tag next-20240423
->
->  arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 36 ++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> index 0d68aa8e946f..72aa3b9aacce 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
->
+J.
 
-Acked-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
+> On Apr 24, 2024, at 3:48=E2=80=AFPM, Krzysztof Kozlowski =
+<krzysztof.kozlowski@linaro.org> wrote:
+>=20
+>=20
+> On Fri, 22 Mar 2024 07:42:21 +0100, Krzysztof Kozlowski wrote:
+>> The J2 SPI controller bindings never allowed spi-max-frequency =
+property
+>> in the controller node.  Neither old spi-bus.txt bindings, nor new DT
+>> schema allows it.  Linux driver does not parse that property from
+>> controller node, thus drop it from DTS as incorrect hardware
+>> description.  The SPI child device has already the same property with
+>> the same value, so functionality should not be affected.
+>>=20
+>> [...]
+>=20
+> Month passed, no replies from maintainers about picking it up. Dunno, =
+looks
+> abandoned, so let me grab this. If anyone else wants to pick it up, =
+let me
+> know.
+>=20
+> Applied, thanks!
+>=20
+> [1/1] sh: j2: drop incorrect SPI controller max frequency property
+>      =
+https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git/commit/?=
+h=3Dnext/dt&id=3Dcc92bf017f7c66c8a4050c61a7d11ddfd43f5cee
+>=20
+> Best regards,
+> --=20
+> Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>=20
 
-Regards,
-Ravi
