@@ -1,28 +1,28 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B46413E040;
-	Wed, 24 Apr 2024 03:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D19144313;
+	Wed, 24 Apr 2024 03:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713930517; cv=none; b=Asn0/7icMolwL6k1CUx3H+9a1qTb/hpLLIhImj2D+RgxaO1rx2SakiqMzN7BnbgWrT6YsDIh9Ra7/UIvDmYuqJn9rDItKsSeI5FRw2iCjhSCaYHx4P4Pds3YOsIs1KDQXC1cjsywKaA0MGIX08JdLoybhIo1s28TH7Ug28Clu2w=
+	t=1713930518; cv=none; b=Ypf3TcSJDhDeRc9ICINzkVUIfuQYPQvxpuMylIQVxkLYtKjBJDuZvI0sPgw7qNpdMmg7HeCU/T5Knty3l4UHglE6uKhHg40FZb4jNTTspKrePpbvxqLoLVKza7hxcOwnW6SuqEYbJcbKS5hO84FtIYitx59qct6Tctd1wC7XlIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713930517; c=relaxed/simple;
-	bh=85vbRXtj8Cc2mJmT5yxNEh8Moy5b/ZQpJ6HZMx09LyI=;
+	s=arc-20240116; t=1713930518; c=relaxed/simple;
+	bh=PwNqDD70BexKGmDdhHalU+iOW4RHuPA9PSloObR5YF4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eOptcovM1XOWIDFdB35Ldl/AcggPlLna/FI9SNX0+QBofgf/YCN9k5cXEo+2C2KCFyLo9N+aQkvO2fTPnR7v7CCqO1SV08qYXmYOHG3DynukmB/aAiS/cHTF4wV+TXxgyuRutGgQYUoIAu9OQ3WxRFumroQQ0IkHywJsy3sE41k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=fdHMEhQ+K+TE5bfqpADO7m61b7pLkHndgcUqU1TQgSBSspKy4J4DEv/HPT36eWeyl4HQr19XwT1VlUKzjbkYBgLd8KL2RhI1TcV1uxK1rm5/nYLfcuK86QvAxVwDJ3mZCycSfmuWswKrzclRU8V/KK+65GRgpuXuLVio2PJcSPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VPQ202tNpz4f3knn;
-	Wed, 24 Apr 2024 11:48:24 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VPQ25104bz4f3k6m;
+	Wed, 24 Apr 2024 11:48:29 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id E80CA1A0A96;
-	Wed, 24 Apr 2024 11:48:31 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id F0BF81A0568;
+	Wed, 24 Apr 2024 11:48:33 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBELgShmKXE4Kw--.6143S8;
-	Wed, 24 Apr 2024 11:48:31 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgCXaBELgShmKXE4Kw--.6143S12;
+	Wed, 24 Apr 2024 11:48:33 +0800 (CST)
 From: libaokun@huaweicloud.com
 To: netfs@lists.linux.dev
 Cc: dhowells@redhat.com,
@@ -34,9 +34,9 @@ Cc: dhowells@redhat.com,
 	linux-kernel@vger.kernel.org,
 	libaokun@huaweicloud.com,
 	Baokun Li <libaokun1@huawei.com>
-Subject: [PATCH 04/12] cachefiles: fix slab-use-after-free in cachefiles_ondemand_daemon_read()
-Date: Wed, 24 Apr 2024 11:39:08 +0800
-Message-Id: <20240424033916.2748488-5-libaokun@huaweicloud.com>
+Subject: [PATCH 08/12] cachefiles: never get a new anon fd if ondemand_id is valid
+Date: Wed, 24 Apr 2024 11:39:12 +0800
+Message-Id: <20240424033916.2748488-9-libaokun@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240424033916.2748488-1-libaokun@huaweicloud.com>
 References: <20240424033916.2748488-1-libaokun@huaweicloud.com>
@@ -47,10 +47,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgCXaBELgShmKXE4Kw--.6143S8
-X-Coremail-Antispam: 1UD129KBjvJXoWxZF1UWF15tF4UWrW3XrWDJwb_yoWruF4rpF
-	ZIyFyxtry8Way8Cr4kArn8Jr1rJ3yDuFnrX340qr1xAwn0vr1rZr17tF10yFy5Cry2yrsr
-	tw1UCF9xJryjyrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:cCh0CgCXaBELgShmKXE4Kw--.6143S12
+X-Coremail-Antispam: 1UD129KBjvJXoWxAr1DJryUKF48CFyDKrW8tFb_yoW5Cw48pF
+	WakF9xKryxuF4xWrZ7Aan5XryFy3ykZFnrWa4ag34rAFn0gr1rZr1Utr13ZF15A3sIgrsr
+	ta1UWF9xtw1qk3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUQI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWUWVWUuwAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -62,128 +62,107 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxZF1UWF15tF4UWrW3XrWDJwb_yoWruF4rpF
 	kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAKzI0EY4vE52x082I5MxAIw28IcxkI7VAKI48J
 	MxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
 	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8V
+	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8V
 	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
 	14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUUNBMtUUUUU==
 X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 
 From: Baokun Li <libaokun1@huawei.com>
 
-We got the following issue in a fuzz test of randomly issuing the restore
-command:
+Now every time the daemon reads an open request, it requests a new anon fd
+and ondemand_id. With the introduction of "restore", it is possible to read
+the same open request more than once, and therefore have multiple anon fd's
+for the same object.
 
-==================================================================
-BUG: KASAN: slab-use-after-free in cachefiles_ondemand_daemon_read+0xb41/0xb60
-Read of size 8 at addr ffff888122e84088 by task ondemand-04-dae/963
+To avoid this, allocate a new anon fd only if no anon fd has been allocated
+(ondemand_id == 0) or if the previously allocated anon fd has been closed
+(ondemand_id == -1). Returns an error if ondemand_id is valid, letting the
+daemon know that the current userland restore logic is abnormal and needs
+to be checked.
 
-CPU: 13 PID: 963 Comm: ondemand-04-dae Not tainted 6.8.0-dirty #564
-Call Trace:
- kasan_report+0x93/0xc0
- cachefiles_ondemand_daemon_read+0xb41/0xb60
- vfs_read+0x169/0xb50
- ksys_read+0xf5/0x1e0
-
-Allocated by task 116:
- kmem_cache_alloc+0x140/0x3a0
- cachefiles_lookup_cookie+0x140/0xcd0
- fscache_cookie_state_machine+0x43c/0x1230
- [...]
-
-Freed by task 792:
- kmem_cache_free+0xfe/0x390
- cachefiles_put_object+0x241/0x480
- fscache_cookie_state_machine+0x5c8/0x1230
- [...]
-==================================================================
-
-Following is the process that triggers the issue:
-
-     mount  |   daemon_thread1    |    daemon_thread2
-------------------------------------------------------------
-cachefiles_withdraw_cookie
- cachefiles_ondemand_clean_object(object)
-  cachefiles_ondemand_send_req
-   REQ_A = kzalloc(sizeof(*req) + data_len)
-   wait_for_completion(&REQ_A->done)
-
-            cachefiles_daemon_read
-             cachefiles_ondemand_daemon_read
-              REQ_A = cachefiles_ondemand_select_req
-              msg->object_id = req->object->ondemand->ondemand_id
-                                  ------ restore ------
-                                  cachefiles_ondemand_restore
-                                  xas_for_each(&xas, req, ULONG_MAX)
-                                   xas_set_mark(&xas, CACHEFILES_REQ_NEW)
-
-                                  cachefiles_daemon_read
-                                   cachefiles_ondemand_daemon_read
-                                    REQ_A = cachefiles_ondemand_select_req
-              copy_to_user(_buffer, msg, n)
-               xa_erase(&cache->reqs, id)
-               complete(&REQ_A->done)
-              ------ close(fd) ------
-              cachefiles_ondemand_fd_release
-               cachefiles_put_object
- cachefiles_put_object
-  kmem_cache_free(cachefiles_object_jar, object)
-                                    REQ_A->object->ondemand->ondemand_id
-                                     // object UAF !!!
-
-When we see the request within xa_lock, req->object must not have been
-freed yet, so grab the reference count of object before xa_unlock to
-avoid the above issue.
-
-Fixes: 0a7e54c1959c ("cachefiles: resend an open request if the read request's object is closed")
 Signed-off-by: Baokun Li <libaokun1@huawei.com>
 ---
- fs/cachefiles/ondemand.c          | 2 ++
- include/trace/events/cachefiles.h | 6 +++++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ fs/cachefiles/ondemand.c | 34 ++++++++++++++++++++++++++++------
+ 1 file changed, 28 insertions(+), 6 deletions(-)
 
 diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index 56d12fe4bf73..bb94ef6a6f61 100644
+index b5e6a851ef04..0cf63bfedc9e 100644
 --- a/fs/cachefiles/ondemand.c
 +++ b/fs/cachefiles/ondemand.c
-@@ -336,6 +336,7 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
- 	xas_clear_mark(&xas, CACHEFILES_REQ_NEW);
- 	cache->req_id_next = xas.xa_index + 1;
- 	refcount_inc(&req->ref);
-+	cachefiles_grab_object(req->object, cachefiles_obj_get_read_req);
- 	xa_unlock(&cache->reqs);
+@@ -14,11 +14,18 @@ static int cachefiles_ondemand_fd_release(struct inode *inode,
+ 					  struct file *file)
+ {
+ 	struct cachefiles_object *object = file->private_data;
+-	struct cachefiles_cache *cache = object->volume->cache;
+-	struct cachefiles_ondemand_info *info = object->ondemand;
++	struct cachefiles_cache *cache;
++	struct cachefiles_ondemand_info *info;
+ 	int object_id;
+ 	struct cachefiles_req *req;
+-	XA_STATE(xas, &cache->reqs, 0);
++	XA_STATE(xas, NULL, 0);
++
++	if (!object)
++		return 0;
++
++	info = object->ondemand;
++	cache = object->volume->cache;
++	xas.xa = &cache->reqs;
+ 
+ 	xa_lock(&cache->reqs);
+ 	spin_lock(&info->lock);
+@@ -269,22 +276,39 @@ static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
+ 		goto err_put_fd;
+ 	}
+ 
++	spin_lock(&object->ondemand->lock);
++	if (object->ondemand->ondemand_id > 0) {
++		spin_unlock(&object->ondemand->lock);
++		ret = -EEXIST;
++		/* Avoid performing cachefiles_ondemand_fd_release(). */
++		file->private_data = NULL;
++		goto err_put_file;
++	}
++
+ 	file->f_mode |= FMODE_PWRITE | FMODE_LSEEK;
+ 	fd_install(fd, file);
+ 
+ 	load = (void *)req->msg.data;
+ 	load->fd = fd;
+ 	object->ondemand->ondemand_id = object_id;
++	spin_unlock(&object->ondemand->lock);
+ 
+ 	cachefiles_get_unbind_pincount(cache);
+ 	trace_cachefiles_ondemand_open(object, &req->msg, load);
+ 	return 0;
+ 
++err_put_file:
++	fput(file);
+ err_put_fd:
+ 	put_unused_fd(fd);
+ err_free_id:
+ 	xa_erase(&cache->ondemand_ids, object_id);
+ err:
++	spin_lock(&object->ondemand->lock);
++	/* Avoid marking an opened object as closed. */
++	if (object->ondemand->ondemand_id <= 0)
++		cachefiles_ondemand_set_object_close(object);
++	spin_unlock(&object->ondemand->lock);
+ 	cachefiles_put_object(object, cachefiles_obj_put_ondemand_fd);
+ 	return ret;
+ }
+@@ -367,10 +391,8 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
  
  	if (msg->opcode == CACHEFILES_OP_OPEN) {
-@@ -355,6 +356,7 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
- 			close_fd(((struct cachefiles_open *)msg->data)->fd);
+ 		ret = cachefiles_ondemand_get_fd(req);
+-		if (ret) {
+-			cachefiles_ondemand_set_object_close(req->object);
++		if (ret)
+ 			goto out;
+-		}
  	}
- out:
-+	cachefiles_put_object(req->object, cachefiles_obj_put_read_req);
- 	/* Remove error request and CLOSE request has no reply */
- 	if (ret || msg->opcode == CACHEFILES_OP_CLOSE) {
- 		xas_reset(&xas);
-diff --git a/include/trace/events/cachefiles.h b/include/trace/events/cachefiles.h
-index cf4b98b9a9ed..119a823fb5a0 100644
---- a/include/trace/events/cachefiles.h
-+++ b/include/trace/events/cachefiles.h
-@@ -33,6 +33,8 @@ enum cachefiles_obj_ref_trace {
- 	cachefiles_obj_see_withdrawal,
- 	cachefiles_obj_get_ondemand_fd,
- 	cachefiles_obj_put_ondemand_fd,
-+	cachefiles_obj_get_read_req,
-+	cachefiles_obj_put_read_req,
- };
  
- enum fscache_why_object_killed {
-@@ -127,7 +129,9 @@ enum cachefiles_error_trace {
- 	EM(cachefiles_obj_see_lookup_cookie,	"SEE lookup_cookie")	\
- 	EM(cachefiles_obj_see_lookup_failed,	"SEE lookup_failed")	\
- 	EM(cachefiles_obj_see_withdraw_cookie,	"SEE withdraw_cookie")	\
--	E_(cachefiles_obj_see_withdrawal,	"SEE withdrawal")
-+	EM(cachefiles_obj_see_withdrawal,	"SEE withdrawal")	\
-+	EM(cachefiles_obj_get_read_req,		"GET read_req")		\
-+	E_(cachefiles_obj_put_read_req,		"PUT read_req")
- 
- #define cachefiles_coherency_traces					\
- 	EM(cachefiles_coherency_check_aux,	"BAD aux ")		\
+ 	msg->msg_id = xas.xa_index;
 -- 
 2.39.2
 
