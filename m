@@ -1,146 +1,86 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319DD15AD85;
-	Wed, 24 Apr 2024 10:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D800158211;
+	Wed, 24 Apr 2024 10:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713954144; cv=none; b=oBocAeV+aHXQOimhmLrz26pA3Ooxss1s/u4GepQPgvusQHqMQyplGXcoFP6vJdaWII2UKAAYctKwWCuJCKzKo0eYjXXcqV0HU0tOeHk0xF+Q4zWMUq5kBXZL1R9JayWPgIALfmcrnBvxt/Ip2jOgOaasrFSzalLzPiKa+jnFNmE=
+	t=1713954262; cv=none; b=hgSc0Te/E42RiSAy3KD1aUJp/VyZ4mM8n0QR3NW3X834juIdqVYpywISvYYeHCxZOenpBsDmzW1jhaOsUIHhZB1P4GDHOW9rQ/1C9GzwXgPsQqs85HklCwT6lrKbPR92GuB0EDgLb4uR86G9ZQXOnjpocnpSkDbUSccuM/Z8caI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713954144; c=relaxed/simple;
-	bh=RzmmoBga2Obe9acwUPhvYC4BPYcVPH14BtKNDCtLHKU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M+/HlMZB8Q5kzkH429VQN/ctkyP7lvqBHi2xwdrIlersxRP41SM7qlc/zqEy3ZJwgwHB5oI47Pa3aDQe0QisImcimE2XVAmi2oUD1I0FTj11weUXDN1Rt3WAY/iYV9BA3WaPblf/1RIkuFmIMZl0EjEo2O5ZYGaeRDGofk2DijE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f8PcaHkJ; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713954262; c=relaxed/simple;
+	bh=Dr5dwzcjqw7dSzyi89UvoPy4zSpLCzrvPxvOavEG0FI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=iEfz9+6fvJ5pSHbT/enfyPyJUHjRGaqsTVFrxrYrtpdrFrrSN8qfIUKhgxCvKhdCmRFd6fS8X2sHyBr+1bzPiVsLIVgTjDYTgXmgn/XH9i0BQL9z/uHgVsY8yKuqY70bxtrZ5bvqRjGB7zdrCCu3BFDj8ziEHzsiBwXhZULNij4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=Cs4Jp7Hd; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8PcaHkJ"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e4266673bbso60337655ad.2;
-        Wed, 24 Apr 2024 03:22:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713954142; x=1714558942; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RzmmoBga2Obe9acwUPhvYC4BPYcVPH14BtKNDCtLHKU=;
-        b=f8PcaHkJvylxU45mFSJw/sgm/eZfaBgSntsy2xR0nsbykasEugVumgN2hTfVgaT2Rn
-         63iRZlngv2LeaI3fincElrVWvYRkoOkKNUjvaIqOtRU1AbI1wyyB1jrcDWaMaBZtuSw6
-         tXXDEHZEZqccTwaDPkj7u308VTUUxtbFoVs94//C6rKddmI1azTqB65t+bLRq5/GRI5i
-         o6efSKFJIo2k5zGIsbPNR0pqYSrPgUTsu4m0YV/4GloYlteMuqXhejeVMLAoFBZ+rEvf
-         lNvtsHX2MbZSCmyKVAVA3eLMUcIoDkn+aj9M7+RZbFzS60ID6Oz3J3j2Iej1dWFGbOk+
-         KKVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713954142; x=1714558942;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RzmmoBga2Obe9acwUPhvYC4BPYcVPH14BtKNDCtLHKU=;
-        b=FyBqU4+O4k0q+elFY+2nYPyTllCWoWcH9a4Dtz/FG2jLm7iKJLAzhUlhV+0liybmSI
-         zVbxH/tTCLDzDGVbhb8DIuwEOrBpTpc/mtutyKSztilRpgztSRTyn38RrHFt1swqpgGK
-         qNLnm2BhdSGahKFj8muf8DmKFTcSdlfv3ZI96dIWmRto+oZh4+9M5aZUQvLfqQzI1v6/
-         s9/EItPaEqnXV4TDdhSIkiKKS3D+pXyumbOjjmgawKYdca1sN4ZtHKjkEdES9hLYwXrz
-         8Tf98W4SeIxPJctxUc45QtmzLJr3dJVrRMwfVIPfHHPJ66abt4/5LMXOH8eD0VVRNMnM
-         Qsug==
-X-Forwarded-Encrypted: i=1; AJvYcCWPVLKTZmweVe/0D9OWzWicQISSpfo/OIZXPKsRDt3iOB4N5pAjcjaDZha0vVBs3bEBwfQWsjUeQbDxOS4NRL1jSUWBR5xsyvP7URdyR5M7JRLke4Pc4qgawce5Ag3VhmHMx36LVir3SaRLc3F1RXhPx/oaPBT/R1O4ApcLj4455uHViGnCCXs/H2vNrXc=
-X-Gm-Message-State: AOJu0Ywca4KgZQ4fkNLP+oAVX8RAi053tcRPTi1Mm4Os8y9DK66xKL+Z
-	WK0E3bHo2L17fvN84OxVlz/TfrwyU9+JApdQRqkr3QQ06OmaipsG5odkUsmCLt1iHBoFFDFT9dQ
-	1geImbWrVhCdZJZhboYj49NBuG/M=
-X-Google-Smtp-Source: AGHT+IFt2St6wHWhK22oY3M0RR6agHbyWHYxda14P1ZzXBZfwWjGE3d2lbLSjANPq9S34w9kUxjrty7xUxLmEsWzXXk=
-X-Received: by 2002:a17:90a:4963:b0:2a6:d064:15d5 with SMTP id
- c90-20020a17090a496300b002a6d06415d5mr1794602pjh.18.1713954142403; Wed, 24
- Apr 2024 03:22:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="Cs4Jp7Hd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=d/MD22uaUm8+BoL9TbUyYnjmK+2qYuIFAbrMDBfUVbA=; t=1713954259; x=1714559059; 
+	b=Cs4Jp7HdCyicJnycDLC4R7+83WTpkwmSTYKtstZd73WXn35NDWHYm4s5pg0N6PzIpFIUBzNDz0T
+	API3bAm2+NZz8KI7yAADJqZS5d19EijRkMFzzN1hucKXuhX7o8SFu7n8BrEyUoWpczraZmt1Vqteu
+	gIRhrJIcic/KWwIlOs6KDxfeNJR5SIgeVfj3Ig02Iwmoust/nYDF18Zb6/OTVMoLTUMAgbcRJBz+O
+	JOFWlmBFqyQXwOoK0cz3ZukHW5hNMn1FgiN5AA2Ud3Z+WNRhP+XAyBvBk2SM89YnsFV+dFLZlGoqP
+	gSMx1C1SVWlT3zQQPjOltSW6aVAe/eb+1vSg==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.97)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1rzZnU-00000000GUH-0cmV; Wed, 24 Apr 2024 12:24:16 +0200
+Received: from [80.95.105.245] (helo=[172.16.2.143])
+          by inpost2.zedat.fu-berlin.de (Exim 4.97)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1rzZnT-00000001u5A-2sRA; Wed, 24 Apr 2024 12:24:16 +0200
+Message-ID: <7dd171cc41474871408f06326aea5cb87923e454.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH v2] sh: Call paging_init() earlier in the init sequence
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Markus Elfring <Markus.Elfring@web.de>, Oreoluwa Babatunde
+ <quic_obabatun@quicinc.com>, linux-sh@vger.kernel.org, 
+ kernel-janitors@vger.kernel.org, kernel@quicinc.com, Rich Felker
+ <dalias@libc.org>,  Rob Herring <robh@kernel.org>, Yoshinori Sato
+ <ysato@users.sourceforge.jp>
+Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Morton
+	 <akpm@linux-foundation.org>
+Date: Wed, 24 Apr 2024 12:24:14 +0200
+In-Reply-To: <f74fdb82-5d66-48f2-830e-3874570f022e@web.de>
+References: <20240423233150.74302-1-quic_obabatun@quicinc.com>
+	 <f74fdb82-5d66-48f2-830e-3874570f022e@web.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411230801.1504496-1-boqun.feng@gmail.com>
- <20240411230801.1504496-3-boqun.feng@gmail.com> <Zigj-lY5lnBSKuib@boqun-archlinux>
- <202404231630.20B2693D@keescook>
-In-Reply-To: <202404231630.20B2693D@keescook>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 24 Apr 2024 12:21:17 +0200
-Message-ID: <CANiq72kU+rXsw7SOtw=-fGmDyxWXjYY3zB2Kiixvn-o22BJKzA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] rust: time: Use wrapping_sub() for Ktime::sub()
-To: Kees Cook <keescook@chromium.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Miguel Ojeda <ojeda@kernel.org>, John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	bjorn3_gh@protonmail.com, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, justinstitt@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On Wed, Apr 24, 2024 at 1:37=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> While working on the signed (and unsigned) integer overflow sanitizer
-> support on the C side for the kernel, I've also run into timekeeping
-> being a questionable area[1]. I *think* from what I can tell, it's always
-> expected to have wrapping behavior.
+On Wed, 2024-04-24 at 10:45 +0200, Markus Elfring wrote:
+> =E2=80=A6
+> > Hence, move the call to paging_init() to be earlier in the init
+> > sequence so that the reserved memory regions are set aside before any
+> > allocations are done using memblock.
+> =E2=80=A6
+>=20
+> Will the tag =E2=80=9CFixes=E2=80=9D become relevant here?
 
-Thanks, that is useful. In that branch you link, since it is about
-unsigned, I imagine you could have hit issues with
-`ktime_add_unsafe()` -- after all, callers are expecting overflow
-there. But there is a single user (which is `ktime_add_safe()`), and I
-don't see that one annotated in your branch.
+I'm not aware of any bugs that have been reported in this context.
 
-In any case, if `ktime_add()` is supposed to always be wrapping like
-the other functions in the area as you mention, then I think
-`ktime_add_unsafe()` (i.e. wrapping one) should be renamed into
-`ktime_add()` and the existing one removed. And then we can discuss
-whether to do (or not) that in Rust too (see below).
+Adrian
 
-However, if the `ktime_add()` / `ktime_add_unsafe()` /
-`ktime_add_safe()` split is there for a good reason (see [1] -- sorry,
-you were not in Cc in that particular one), and callers are already
-expected to respect it, then I think we should document it in the C
-side better and we should just start with that approach in the Rust
-side too.
-
-> Can we define the type itself to be wrapping? (This has been my plan on
-> the C side, but we're still waiting on a finalized implementation of the
-> "wraps" attribute.[2])
-
-Yeah, we can make that the "default", so to speak (i.e. what the
-operators will do). But we can also have different methods with
-different expectations too if needed (i.e. the usual "access" vs.
-"type" discussion).
-
-And given the different variations that exist in C (see [1]), it
-seemed to me that `ktime_t` operations there may not be expected to
-actually wrap, and thus that would be an argument for trying to be
-explicit in Rust.
-
-So for the Rust side, what we need here is the expectation of how
-`ktime_t` is supposed to be used. Or, even better, how one would
-ideally design `ktime_t` today if there were no worry about callers,
-because we have the chance to improve here over the C side before we
-have those callers.
-
-If the answer is "everyone assumes those to be wrapping, and there are
-almost no use cases where the callers know it is not supposed to wrap,
-and we don't care about whether they wrap" etc., then yeah, we should
-go with wrapping default semantics and accept that we will not gain
-that information and thus not catch mistakes easily in the future.
-
-But if the answer is "we would have liked that `ktime_t` was more
-explicit, and that is why we have the `ktime_add{,_safe,_unsafe}()`
-variations, but nobody uses them because everybody assumes wrapping"
-or "we actually assume no wrapping in `ktime_t`, which is why
-`ktime_add_*()` exist", then I think we should definitely try to be
-explicit on the Rust side from the onset so that we can catch more
-bugs in the future.
-
-(I know you know all this, but I was trying to summarize and clarify
-the discussion :)
-
-[1] https://lore.kernel.org/rust-for-linux/CANiq72ka4UvJzb4dN12fpA1WirgDHXc=
-vPurvc7B9t+iPUfWnew@mail.gmail.com/
-
-Cheers,
-Miguel
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
