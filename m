@@ -1,131 +1,307 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163DE15ADAE;
-	Wed, 24 Apr 2024 12:26:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CADB15ADAE
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 12:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713961589; cv=none; b=Qegq5WcolITvwor9UkO0hxO5tdS+U2I8fJd/PLegc0uCqaW9gKtFgwAPdrNH7TUm2mCIRm7NEjYKBHrrjaAvce201EgmaMj/yHXU+DmYpsDgyodoIxTaWsD8Yzh/XPCKUPdgO9HdpFft2pgPf41Nj7/BdEgX6G7Z9X3qZ6utFqA=
+	t=1713961602; cv=none; b=nrFoUCdi4vPZi6Wl0RZ1H3z+Pp0YQEjO8uj1rEVSA4R7Emx23b3W86LkFjTe6z2jTmOwNEgx8FTShO1j+UdwhA7gJlNEgVEAAP/AeHCFpEvVfQQ6NRK4qsparRnxQ2FE3JdHR0cZ5w+nBWGMncVpztITg1TfS/XC2WYIsPZeKro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713961589; c=relaxed/simple;
-	bh=pENaq1F7irNnXDi2tqew8U6t/paLMwTAdvNSKq0Z4zM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KbiYL4QJ1iEQ5GN4pAtUEaDoh8+TBijE63FZTYLOj1Rv0eBPDnYuoUOsqdSa1Z3hyFe9dx5nsGJBnAO1B7VNNPrM5MsINju8ghm7iDHd1p8hbrxFbXcZ4o9sQxqcS7qIJpea0/Lnmzbw+KNgmpkNW/r3zX+rDHZUBX9OZBWoJeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OqV6jfm6; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713961602; c=relaxed/simple;
+	bh=MuZ+eCQWIxMfoH9uM3eWnGzNEQfRPjqnmhBrfa4frX0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J4hJHPpkjrO5pQSnXlQAdx9yyVp620kbPrRtTLqz+2dDolpE8naGsmdAcP22yR8yBOj8xjHJmXv0BwNTnUqMs0sWTu+NZ4cjlorAqfz9tvOKG/JsWdJ4SD/Y5w0CXlXpJXVxoskHFH2czkVlStVTM5vd9KLKMU9Bd2WoAGNLBYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UKsbiQbw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OqV6jfm6"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-572040691c9so1608885a12.1;
-        Wed, 24 Apr 2024 05:26:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713961586; x=1714566386; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+rdUuC6v/k+XVeWN6GsjQ32OKOeNoWrrRy+0NsEkvrY=;
-        b=OqV6jfm6FiqSb1JS2mULvh03zYC11KgLFeucABNpQolicHowgO+r/b0WY46hdFSjsf
-         TGMGzrtqOX7lnK0UuJqyxLcyVE1xZh33gNIocmW+3QeL3xl0jVLv3xbrigWb8IIpynxB
-         g1E/+xTwGvJC/abW5R6dLJ1bSSv8hrSgjS7XYupBoxod6aSR7MN9sWv7C/MB5Xu0CjiW
-         BF94EH1nDwUVcZRcs9mMz4LVIY5qawqBKAQnECHLlSlve8i413OQQlZakamGKzx09xi4
-         65lXtAnh9VXLy+OVa4JzpzMXKEtuyjQiYvoBxCqTeBX/DYUCTjyd2MI/IBIIk5VhFMkd
-         rLfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713961586; x=1714566386;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+rdUuC6v/k+XVeWN6GsjQ32OKOeNoWrrRy+0NsEkvrY=;
-        b=evtICmYPkWWrH1ss0bPX30HsY8EMM+P1kBmICyWZDlYNv2XV9GZE9MARjbRU3Q+XNA
-         3b1P9gdGSKXGwuVAOzqTRilx22hcmpwKK+1ImvoVkatACAEnDFmyHZWlcDnKOQEBIKW8
-         K5m4e5v5S/WhinheM4H1BP62WNfQZFUdDVlvk4hc9SjjcKuuTG0zUANYMC/J80mNxYoL
-         W2N2n+F4OXN0Jy5F2fvNoySUUZpmcevWM0q6rUXfspZUMM7KE/YuTvrG0Pjqk7ffbqkH
-         4P6OpUU4z3nFSJVyOeihfuM66xX77JY5gqClEmy3IIYBAAtlyyahhtGNMA5k5Y+TVOqw
-         e2UQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVo+oMjoiy9Z6lnhOs8ztNdPwe8Isv5bE0L5IqrQC2UdBzScy01NbSraAnhZl7eTmjjh+Izvi49Y9yikFUXFiLa3AB8oowcmIkZdHd6KOGRMaemeMN+v6cEsE8pBGU9kSKL5sigFpEZ0EOGwXfNaIT0aKs9bF27sfW1WHrvVTyJDkzV4yAf7eat
-X-Gm-Message-State: AOJu0YzRz/R2yH48HMhdJCWF60C8bdiNTzsIEzOV2aISieMd1cEOcvzq
-	qkrZ6D86r4Ds6pNEkhD00Df2agPEm61MRy5cfhhJCl9xFV8ztoOt
-X-Google-Smtp-Source: AGHT+IEhYR/0oIc/UbYhCWFPOMnJ7hBf7xrAGXFnwFIUU3o/7hThyqIDCatGp2KdXpmqCDltGTfWgA==
-X-Received: by 2002:a05:6402:22a5:b0:571:da40:22d9 with SMTP id cx5-20020a05640222a500b00571da4022d9mr5090846edb.10.1713961586077;
-        Wed, 24 Apr 2024 05:26:26 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id ef9-20020a05640228c900b00571bde3b0a4sm7497051edb.34.2024.04.24.05.26.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 05:26:25 -0700 (PDT)
-Message-ID: <87c6e65dadbb3ed0c9b4506e809eb3976b12f204.camel@gmail.com>
-Subject: Re: [PATCH] iio: dac: adi-axi: fix a mistake in
- axi_dac_ext_info_set()
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>, Nuno Sa <nuno.sa@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
-	 <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org
-Date: Wed, 24 Apr 2024 14:30:02 +0200
-In-Reply-To: <df7c6e1b-b619-40c3-9881-838587ed15d4@moroto.mountain>
-References: <df7c6e1b-b619-40c3-9881-838587ed15d4@moroto.mountain>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.0 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UKsbiQbw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713961599;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ga3+hfqpq7kefWMT7+hfg1368I6jLzziyLojN0hllE8=;
+	b=UKsbiQbwi3GPnHeXy3IsfoBd/+DG1veii1ST4f+W3/rzrQAxRVQ0lOB5G6KEnP5tFwzAV7
+	94o+Ondd2ZS72Q2kYMlPPNF11Myo03jg3QPkr6M7WjPvbuzWh14Wf4WgnPsHYbahMVHfbE
+	ue0hlAASYJfZeTq0/ULryuN80JOAgYw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-192-UF0W_gDvMVSSUKrV-5iNYQ-1; Wed, 24 Apr 2024 08:26:35 -0400
+X-MC-Unique: UF0W_gDvMVSSUKrV-5iNYQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0E0C88DCFC0;
+	Wed, 24 Apr 2024 12:26:35 +0000 (UTC)
+Received: from t14s.redhat.com (unknown [10.39.193.224])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id EEE052166B34;
+	Wed, 24 Apr 2024 12:26:31 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Yang Shi <yang.shi@linux.alibaba.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Ryan Roberts <ryan.roberts@arm.com>
+Subject: [PATCH v1] mm/khugepaged: replace page_mapcount() check by folio_likely_mapped_shared()
+Date: Wed, 24 Apr 2024 14:26:30 +0200
+Message-ID: <20240424122630.495788-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-Hi Dan,
+We want to limit the use of page_mapcount() to places where absolutely
+required, to prepare for kernel configs where we won't keep track of
+per-page mapcounts in large folios.
 
-On Wed, 2024-04-24 at 14:45 +0300, Dan Carpenter wrote:
-> The last parameter of these axi_dac_(frequency|scale|phase)_set()
-> functions is supposed to be true for TONE_2 and false for TONE_1. The
-> bug is the last call where it passes "private - TONE_2".=C2=A0 That
-> subtraction is going to be zero/false for TONE_2 and and -1/true for
-> TONE_1.=C2=A0 Fix the bug, and re-write it as "private =3D=3D TONE_2" so =
-it's
-> more obvious what is happening.
->=20
-> Fixes: 4e3949a192e4 ("iio: dac: add support for AXI DAC IP core")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
-> This is from code review.=C2=A0 Untested.
-> ---
+khugepaged is one of the remaining "more challenging" page_mapcount()
+users, but we might be able to move away from page_mapcount() without
+resulting in a significant behavior change that would warrant
+special-casing based on kernel configs.
 
-Auch, good catch! Agreed that private =3D=3D AXI_DAC_*_TONE_2 makes it more
-readable.
+In 2020, we first added support to khugepaged for collapsing COW-shared
+pages via commit 9445689f3b61 ("khugepaged: allow to collapse a page shared
+across fork"), followed by support for collapsing PTE-mapped THP in commit
+5503fbf2b0b8 ("khugepaged: allow to collapse PTE-mapped compound pages")
+and limiting the memory waste via the "page_count() > 1" check in commit
+71a2c112a0f6 ("khugepaged: introduce 'max_ptes_shared' tunable").
 
-I guess Jonathan may just squash this in the driver (was pushed this weeken=
-d).
-Anyways, FWIW:
+As a default, khugepaged will allow up to half of the PTEs to map shared
+pages: where page_mapcount() > 1. MADV_COLLAPSE ignores the khugepaged
+setting.
 
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+khugepaged does currently not care about swapcache page references, and
+does not check under folio lock: so in some corner cases the "shared vs.
+exclusive" detection might be a bit off, making us detect "exclusive" when
+it's actually "shared".
 
-> =C2=A0drivers/iio/dac/adi-axi-dac.c | 6 +++---
-> =C2=A01 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.=
-c
-> index 9047c5aec0ff..880d83a014a1 100644
-> --- a/drivers/iio/dac/adi-axi-dac.c
-> +++ b/drivers/iio/dac/adi-axi-dac.c
-> @@ -383,15 +383,15 @@ static int axi_dac_ext_info_set(struct iio_backend
-> *back, uintptr_t private,
-> =C2=A0	case AXI_DAC_FREQ_TONE_1:
-> =C2=A0	case AXI_DAC_FREQ_TONE_2:
-> =C2=A0		return axi_dac_frequency_set(st, chan, buf, len,
-> -					=C2=A0=C2=A0=C2=A0=C2=A0 private - AXI_DAC_FREQ_TONE_1);
-> +					=C2=A0=C2=A0=C2=A0=C2=A0 private =3D=3D AXI_DAC_FREQ_TONE_2);
-> =C2=A0	case AXI_DAC_SCALE_TONE_1:
-> =C2=A0	case AXI_DAC_SCALE_TONE_2:
-> =C2=A0		return axi_dac_scale_set(st, chan, buf, len,
-> -					 private - AXI_DAC_SCALE_TONE_1);
-> +					 private =3D=3D AXI_DAC_SCALE_TONE_2);
-> =C2=A0	case AXI_DAC_PHASE_TONE_1:
-> =C2=A0	case AXI_DAC_PHASE_TONE_2:
-> =C2=A0		return axi_dac_phase_set(st, chan, buf, len,
-> -					 private - AXI_DAC_PHASE_TONE_2);
-> +					 private =3D=3D AXI_DAC_PHASE_TONE_2);
-> =C2=A0	default:
-> =C2=A0		return -EOPNOTSUPP;
-> =C2=A0	}
+Most of our anonymous folios in the system are usually exclusive. We
+frequently see sharing of anonymous folios for a short period of time,
+after which our short-lived suprocesses either quit or exec().
+
+There are some famous examples, though, where child processes exist for a
+long time, and where memory is COW-shared with a lot of processes
+(webservers, webbrowsers, sshd, ...) and COW-sharing is crucial for
+reducing the memory footprint. We don't want to suddenly change the
+behavior to result in a significant increase in memory waste.
+
+Interestingly, khugepaged will only collapse an anonymous THP if at least
+one PTE is writable. After fork(), that means that something (usually a
+page fault) populated at least a single exclusive anonymous THP in that PMD
+range.
+
+So ... what happens when we switch to "is this folio mapped shared"
+instead of "is this page mapped shared" by using
+folio_likely_mapped_shared()?
+
+For "not-COW-shared" folios, small folios and for THPs (large
+folios) that are completely mapped into at least one process,
+switching to folio_likely_mapped_shared() will not result in a change.
+
+We'll only see a change for COW-shared PTE-mapped THPs that are
+partially mapped into all involved processes.
+
+There are two cases to consider:
+
+(A) folio_likely_mapped_shared() returns "false" for a PTE-mapped THP
+
+  If the folio is detected as exclusive, and it actually is exclusive,
+  there is no change: page_mapcount() == 1. This is the common case
+  without fork() or with short-lived child processes.
+
+  folio_likely_mapped_shared() might currently still detect a folio as
+  exclusive although it is shared (false negatives): if the first page is
+  not mapped multiple times and if the average per-page mapcount is smaller
+  than 1, implying that (1) the folio is partially mapped and (2) if we are
+  responsible for many mapcounts by mapping many pages others can't
+  ("mostly exclusive") (3) if we are not responsible for many mapcounts by
+  mapping little pages ("mostly shared") it won't make a big impact on the
+  end result.
+
+  So while we might now detect a page as "exclusive" although it isn't,
+  it's not expected to make a big difference in common cases.
+
+(B) folio_likely_mapped_shared() returns "true" for a PTE-mapped THP
+
+  folio_likely_mapped_shared() will never detect a large anonymous folio
+  as shared although it is exclusive: there are no false positives.
+
+  If we detect a THP as shared, at least one page of the THP is mapped by
+  another process. It could well be that some pages are actually exclusive.
+  For example, our child processes could have unmapped/COW'ed some pages
+  such that they would now be exclusive to out process, which we now
+  would treat as still-shared.
+
+  Examples:
+  (1) Parent maps all pages of a THP, child maps some pages. We detect
+      all pages in the parent as shared although some are actually
+      exclusive.
+  (2) Parent maps all but some page of a THP, child maps the remainder.
+      We detect all pages of the THP that the parent maps as shared
+      although they are all exclusive.
+
+  In (1) we wouldn't collapse a THP right now already: no PTE
+  is writable, because a write fault would have resulted in COW of a
+  single page and the parent would no longer map all pages of that THP.
+
+  For (2) we would have collapsed a THP in the parent so far, now we
+  wouldn't as long as the child process is still alive: unless the child
+  process unmaps the remaining THP pages or we decide to split that THP.
+
+  Possibly, the child COW'ed many pages, meaning that it's likely that
+  we can populate a THP for our child first, and then for our parent.
+
+  For (2), we are making really bad use of the THP in the first
+  place (not even mapped completely in at least one process). If the
+  THP would be completely partially mapped, it would be on the deferred
+  split queue where we would split it lazily later.
+
+  For short-running child processes, we don't particularly care. For
+  long-running processes, the expectation is that such scenarios are
+  rather rare: further, a THP might be best placed if most data in the
+  PMD range is actually written, implying that we'll have to COW more
+  pages first before khugepaged would collapse it.
+
+To summarize, in the common case, this change is not expected to matter
+much. The more common application of khugepaged operates on
+exclusive pages, either before fork() or after a child quit.
+
+Can we improve (A)? Yes, if we implement more precise tracking of "mapped
+shared" vs. "mapped exclusively", we could get rid of the false
+negatives completely.
+
+Can we improve (B)? We could count how many pages of a large folio we map
+inside the current page table and detect that we are responsible for most
+of the folio mapcount and conclude "as good as exclusive", which might help
+in some cases. ... but likely, some other mechanism should detect that
+the THP is not a good use in the scenario (not even mapped completely in
+a single process) and try splitting that folio lazily etc.
+
+We'll move the folio_test_anon() check before our "shared" check, so we
+might get more expressive results for SCAN_EXCEED_SHARED_PTE: this order
+of checks now matches the one in __collapse_huge_page_isolate(). Extend
+documentation.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Zi Yan <ziy@nvidia.com>
+Cc: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+
+How much time can one spend writing a patch description? Unbelievable. But
+it was likely time well spend to have a clear picture of the impact.
+
+This really needs the folio_likely_mapped_shared() optimization [1] that
+resides in mm-unstable, I think, to reduce "false negatives".
+
+The khugepage MM selftests keep working as expected, including:
+
+	Run test: collapse_max_ptes_shared (khugepaged:anon)
+	Allocate huge page... OK
+	Share huge page over fork()... OK
+	Trigger CoW on page 255 of 512... OK
+	Maybe collapse with max_ptes_shared exceeded.... OK
+	Trigger CoW on page 256 of 512... OK
+	Collapse with max_ptes_shared PTEs shared.... OK
+	Check if parent still has huge page... OK
+
+Where we check that collapsing in the parent behaves as expected after
+COWing a lot of pages in the parent: a sane scenario that is essentially
+unchanged and which does not depend on any action in the child process
+(compared to the cases discussed in (B) above).
+
+[1] https://lkml.kernel.org/r/20240409192301.907377-6-david@redhat.com
+
+---
+ Documentation/admin-guide/mm/transhuge.rst |  3 ++-
+ mm/khugepaged.c                            | 22 +++++++++++++++-------
+ 2 files changed, 17 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+index f82300b9193fe..076443cc10a6c 100644
+--- a/Documentation/admin-guide/mm/transhuge.rst
++++ b/Documentation/admin-guide/mm/transhuge.rst
+@@ -278,7 +278,8 @@ collapsed, resulting fewer pages being collapsed into
+ THPs, and lower memory access performance.
+ 
+ ``max_ptes_shared`` specifies how many pages can be shared across multiple
+-processes. Exceeding the number would block the collapse::
++processes. khugepaged might treat pages of THPs as shared if any page of
++that THP is shared. Exceeding the number would block the collapse::
+ 
+ 	/sys/kernel/mm/transparent_hugepage/khugepaged/max_ptes_shared
+ 
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 2f73d2aa9ae84..cf518fc440982 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -583,7 +583,8 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+ 		folio = page_folio(page);
+ 		VM_BUG_ON_FOLIO(!folio_test_anon(folio), folio);
+ 
+-		if (page_mapcount(page) > 1) {
++		/* See hpage_collapse_scan_pmd(). */
++		if (folio_likely_mapped_shared(folio)) {
+ 			++shared;
+ 			if (cc->is_khugepaged &&
+ 			    shared > khugepaged_max_ptes_shared) {
+@@ -1317,8 +1318,20 @@ static int hpage_collapse_scan_pmd(struct mm_struct *mm,
+ 			result = SCAN_PAGE_NULL;
+ 			goto out_unmap;
+ 		}
++		folio = page_folio(page);
+ 
+-		if (page_mapcount(page) > 1) {
++		if (!folio_test_anon(folio)) {
++			result = SCAN_PAGE_ANON;
++			goto out_unmap;
++		}
++
++		/*
++		 * We treat a single page as shared if any part of the THP
++		 * is shared. "False negatives" from
++		 * folio_likely_mapped_shared() are not expected to matter
++		 * much in practice.
++		 */
++		if (folio_likely_mapped_shared(folio)) {
+ 			++shared;
+ 			if (cc->is_khugepaged &&
+ 			    shared > khugepaged_max_ptes_shared) {
+@@ -1328,7 +1341,6 @@ static int hpage_collapse_scan_pmd(struct mm_struct *mm,
+ 			}
+ 		}
+ 
+-		folio = page_folio(page);
+ 		/*
+ 		 * Record which node the original page is from and save this
+ 		 * information to cc->node_load[].
+@@ -1349,10 +1361,6 @@ static int hpage_collapse_scan_pmd(struct mm_struct *mm,
+ 			result = SCAN_PAGE_LOCK;
+ 			goto out_unmap;
+ 		}
+-		if (!folio_test_anon(folio)) {
+-			result = SCAN_PAGE_ANON;
+-			goto out_unmap;
+-		}
+ 
+ 		/*
+ 		 * Check if the page has any GUP (or other external) pins.
+-- 
+2.44.0
 
