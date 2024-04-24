@@ -1,198 +1,154 @@
-Received: from mx08-0063e101.pphosted.com (mx08-0063e101.pphosted.com [185.183.31.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B84415B986;
-	Wed, 24 Apr 2024 13:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=185.183.31.155
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713966808; cv=fail; b=gqTe1dfqd0leHc+6wKljrowo1nZip10Vv5FJzKB7QSgnyHWpWc/XHH6gaUwOPLAGhXqF2z6M+E3ccZ0ZZEzcKuo8fCCu9vOweYahcbHXO9SclbfGupYanWA63Z17uzzS4n93rk+pxOAXmp3Vk3ZVTDA0JFSqyDYsC/R4yPxhIZY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713966808; c=relaxed/simple;
-	bh=B/zADlbqzAH+NIvoh/ZRP3Ehfkp5fuyWqXJlXTmRJqw=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=FNT1Vi70zDxVvCbyIK9COBe6IoocfGzBdI3y8oH3Yx+LTGAcUjr60A2ZcmRFzRPOeZ5vUrRQNypxHQyOeD9Url0sKXMj0En3es28ZdijiE5jcdcrKFPWAcMU/OSspS+KZRX057fsS8K0it75woPDXEFdsxdjQCm4Cc885OUNVKA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=blaize.com; spf=pass smtp.mailfrom=blaize.com; dkim=pass (1024-bit key) header.d=BLAIZE.COM header.i=@BLAIZE.COM header.b=G4vS641B; arc=fail smtp.client-ip=185.183.31.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=blaize.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=blaize.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AD115D5B1
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713966834; cv=none; b=LrRN3saKQap6lEQ1F3K68YkoCUXPB/liNckunY3d1df9aqu1jk1d35MlMkYtyPuGXAId2k5galQzvn+BeIv3c9gff2Kl9dRVdUeTkQgq2Ewv/nK3PQHKt83KcZ9pyXRpO8PxKVS9zM8ZefdgciMm7Z/44Ih327TNYkYGiy1VxhU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713966834; c=relaxed/simple;
+	bh=fhR4uE4yLyvD+B2f4w/tGJIZJC7P2TcQOXf71qR0Hdw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YU9OYPkRFMWCMPdUXu7vUJ5A2Hn6iTkvVX3ac5eCLyNNa2e2JTeBqJ68+UKmIyxjVPrSZGfT8l3OXXWJncRD0nihYrMb+1rwVvgEYsLLjE8Vi8b3hcKbzySA23LKpnl612mbvE/w899WHuWbuMaVfvGUAhiQ2UrzOAimJmbTnJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DIEvzPxm; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=BLAIZE.COM header.i=@BLAIZE.COM header.b="G4vS641B"
-Received: from pps.filterd (m0247494.ppops.net [127.0.0.1])
-	by mx08-0063e101.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43ODU27M015721;
-	Wed, 24 Apr 2024 14:31:33 +0100
-Received: from pnzpr01cu001.outbound.protection.outlook.com (mail-centralindiaazlp17011004.outbound.protection.outlook.com [40.93.132.4])
-	by mx08-0063e101.pphosted.com (PPS) with ESMTPS id 3xnxsfrqy2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 14:31:33 +0100 (BST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QCSNRJYA39r5uRwRKcpIC5xU+75mVMxoXXROpV4S2QV0qZ9wbWXLnBIU8ck7v2PURPYNr89leQCFXA5/Ww3mckGYWcyixf4hAFCNcpTCDw9i0/L6Nw12d1mEN4ok+M15SFXQeU1VMyQ5NfXtTU0g8tRAMOnTZ9/cx+MbwuHqcBMk2/LowB1L8Ja2NvqYSDewZ6hvnfxFl4M+lF4PW9bjJH7F7KlCbrbgOTGG4oEXh2nrT5otoy2yB0IxxZar+4WStgTkbMSaZD6G9PIl3PyR+izLoD9gbdOOqF+0WAxgNVmIkGODkienU8csqFpLzgwsPi8X/rZcf0F3A6OHwa8NOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0lvL1TUn5Yvj9GLuw4qtYmS97NZ51w3SpKX6nyCrdOg=;
- b=CJgfkxFNN4jGa7ZTCbngG6GMpQPA0Ozv23IbIlL19lCR29AOdv754okfIFyxmXUAUst13RklhH7+5RPobUTtgMhGWJaXfYEi4D1WBidrHKlTrvBP8vObWUFwX/wc6ytRmPX+pfhBtNYMDRN7eGJS+wS79PeoDS2YoM1QUCWP2m294+EQNOvEaqiKGm/BSxoM5plZ8kfE7d6WfZfyVEL8Pw+fRsGDjEyIHnO2Ks+qwTHF1a6eOr8bUXHvkdvHuC/prVHL/wje4gB7xWJ0ahp9EAsV0JUETZ5HM4MNsI204WnMSfwVFbWjWcHs3fSL+NsKfcQ9stpYewa5Ta+exTp5KA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=blaize.com; dmarc=pass action=none header.from=blaize.com;
- dkim=pass header.d=blaize.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=BLAIZE.COM;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0lvL1TUn5Yvj9GLuw4qtYmS97NZ51w3SpKX6nyCrdOg=;
- b=G4vS641BPoUA9zSGMN1Oc833CxuEPj3KA+38i7zXy9v3OYI5I21qZyaqplYLw4vpEWjftX9nXKRjuUouFC9kafdwIY3RguX0RdYER/bZo3CPE4lqJ7eWcOpAWxp7/lLyHbUxg6z1YW9wtPmFon2aRlziF7JtviHHkDn3bf23MlQ=
-Received: from MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:12a::5)
- by MA0PR01MB6106.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:7a::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22; Wed, 24 Apr
- 2024 13:31:29 +0000
-Received: from MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::309a:12cf:74a4:5655]) by MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::309a:12cf:74a4:5655%3]) with mapi id 15.20.7472.044; Wed, 24 Apr 2024
- 13:31:29 +0000
-From: Niko Pasaloukos <nikolaos.pasaloukos@blaize.com>
-To: "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: Niko Pasaloukos <nikolaos.pasaloukos@blaize.com>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Heiko Stuebner
-	<heiko.stuebner@cherry.de>,
-        Sebastian Reichel <sre@kernel.org>,
-        Chris Morgan
-	<macromorgan@hotmail.com>,
-        =?iso-8859-2?Q?Rafa=B3_Mi=B3ecki?=
-	<rafal@milecki.pl>,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        Andre
- Przywara <andre.przywara@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: [PATCH v2 1/7] dt-bindings: Add Blaize vendor prefix
-Thread-Topic: [PATCH v2 1/7] dt-bindings: Add Blaize vendor prefix
-Thread-Index: AQHalku2J3Py82Z/+Uy6xvmYmAxwkA==
-Date: Wed, 24 Apr 2024 13:31:28 +0000
-Message-ID: <20240424133124.19101-1-nikolaos.pasaloukos@blaize.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MA0PR01MB10184:EE_|MA0PR01MB6106:EE_
-x-ms-office365-filtering-correlation-id: c857f620-fa3e-4552-2da6-08dc6462d906
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230031|7416005|1800799015|376005|366007|38070700009;
-x-microsoft-antispam-message-info: 
- =?iso-8859-2?Q?QEscHlWykWngXtAnPOE3QZJJLY6CxVmSMrWZo1uqtk5iWSxrpQNPgX7nTp?=
- =?iso-8859-2?Q?DePQY9p9uMGFbE3f1OE9FoE/C7rdgP0i0JDUMrnuaPgklZc2lPPg1QNXu2?=
- =?iso-8859-2?Q?KGAfQBARN1wU3zbDw2ditUFRH4nSQkb8QXzfNHTyIRGycAVLX0bj4IWQmE?=
- =?iso-8859-2?Q?M7Mgb8tgcfj7T2OhsoZg9Gy6y2eUwN2edlwmNeuwc1tnS0Nn3ntl2t3nCp?=
- =?iso-8859-2?Q?6ZD1mxwagYbld7tPY7HORvXAdOp5pgDnAMeCX2rFq+s6qNTrm6X5dPiO0V?=
- =?iso-8859-2?Q?l7i93AAbutTb1MVe4VfCSW2UKbZOAZfg7KFAU+cTqfLvZ1xSNd24SqhIj/?=
- =?iso-8859-2?Q?qgES7ZZV0ieJ2su+ny1bJPCDV/e/si2f4cIQezhRteoUOxIHzPkL/+hBdC?=
- =?iso-8859-2?Q?DWh6oTROu4YrtTwpNxudgUfufPYgo+E2a8sNYMz7nf1lOzNF2lCem6i5tp?=
- =?iso-8859-2?Q?prQJiPuEI/zOhXeIGeucRO56zAjO386YtmQhuNz7dOSSic4DOoMO0/KBNe?=
- =?iso-8859-2?Q?6eucBoo90fUXjQcWqyQJvcZ4IVqJmIR30S6bXkRoAWQPpHsk+bVRrakXDo?=
- =?iso-8859-2?Q?ri/BGXhfnKWb2LJohmVe24BCPwtEiHhKx/XahKAF98WFOOelnzbpW3epRc?=
- =?iso-8859-2?Q?YhJoCyIqTUaMPM1IgXUbnFJuxvKxhfsmwPAOwcZrA6X327CDvSjWn8FfqK?=
- =?iso-8859-2?Q?GgboiuZVLdpcK4k+/nL0kylxaBG7zfJfCw4rMpsm8VplQ5RmJJXYInOURp?=
- =?iso-8859-2?Q?FHbOD3EY+YL56L32mEr79mjziQe9ykkyN8Z4BpwyJMhaAasWLwmKGRhUba?=
- =?iso-8859-2?Q?+fqjgjSBDjbgR9SZ6pmfgGU9HFaqsVZZ7MW+rHmuULWjWj+cijGQZhP5hr?=
- =?iso-8859-2?Q?C1bVHD5KkDliKnSqVcHMV+kcc3hua9nc+sKxZTDNyhIcq6r5hKWUYVzkLK?=
- =?iso-8859-2?Q?tu1jMRbIjiCJQghIgmAMG3TuHux62gsfST49n/QTXwrYKW/x0nWJYbe9pe?=
- =?iso-8859-2?Q?xJ4aUWZ0JiTNWPK8Bgx5qzf15hqO0ZDp8/hIzu0lYF4qdWw0TAvA63BoqD?=
- =?iso-8859-2?Q?vLISmpVOpTFfvGj/pDyRnyiPIfC0BWDNpNyKQsw0By3FFnShFcG6CiJMxK?=
- =?iso-8859-2?Q?d9NnhE1SrXhy5Q+TlkUX4cSIjs+GdQEw9AinD38P777RVkGs645t7YGYb+?=
- =?iso-8859-2?Q?BHaqnV64VhYEx2NqDMOKCkr5KaM/AOVxiZ3JKeoiay6WJLH/vB4yji87vY?=
- =?iso-8859-2?Q?vitYTEX9669C/FgX0aKGdgZ+GSU8kAb9qubma/Le5Udoi4IXmy+jDSQ0Fn?=
- =?iso-8859-2?Q?kSE3vnzUEP2knz7ZwH4aF26HEg=3D=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?iso-8859-2?Q?XUIGJs8y05FTv6BHSDc6IXCd1Btqur5kLiOBRiCh8skNduRCC1zmov8nwu?=
- =?iso-8859-2?Q?vkB79n53Mg6jtvQSV8Le9IGdvD20O1wpfecyPBrCfasjJXgivOdimcjyzY?=
- =?iso-8859-2?Q?tYiN5aKCsPvTTL+RTiy6/csqGL88C5vAAzUhleA4QJ3UIg2KjdaJ41DTSV?=
- =?iso-8859-2?Q?8tcyoOa+ArenRhPGy+mYY8zOV2Qh3bMgUjk5lknx+AsgrmPswMEgDLPqw4?=
- =?iso-8859-2?Q?D8AiEq9357AM4lIIUCYVzpAK7i0PnL+yddvLbG5a8OFBqxC6SffxO0HyTA?=
- =?iso-8859-2?Q?O5OWrfaDMoeVuvVgL//3pM/5aMLxxlrtmlHucTsWONTeApqs1X1/MwgTmK?=
- =?iso-8859-2?Q?E77+rYvuXR4/UByfbHLrtLW9F7QJlxRyMawiiVy5+nnQycK3XVCJ+BtECI?=
- =?iso-8859-2?Q?HGSNXGsjMJ128XYbPq0RONNG5aB2a0O3hsvpxDqqaNbLN4ofzIf+2s0f0S?=
- =?iso-8859-2?Q?37JsKlXdASy0qM5qSAQqltdn4shdK8bkldfV2VIhRiy6xcZIa+MWjR+zDF?=
- =?iso-8859-2?Q?5bVOz5Emz7qd1p8dHu2/xFesO3hXu7Hawxu8SHEzFch5/s95hKM0D20m2h?=
- =?iso-8859-2?Q?CmgxnkzL0hH7GlZpm8w55IZK0PCW+G4Xw3MmR9oOevT5W01u6EK2JsxaK6?=
- =?iso-8859-2?Q?I8A9N9krtoHg7AlktuRsYbk41RlGfh5x6Oj3UnjwWKbp/Eb97cLfYuSw1L?=
- =?iso-8859-2?Q?3gKY47OtpTX8Zdp++/Gy219cQ1eYMLesBz0QOshoG4YaCny+uBaJVULAx2?=
- =?iso-8859-2?Q?kf6Utkh+LFsaMrCMwZGw3/BUcM5x/Fa8hiCUR/SXaSJ768P+PZEH7lQWYK?=
- =?iso-8859-2?Q?YNEr1uc8gsE7ZnWxFDzzfGEKybTOGmkHc2H/dLPOse9ORfl7SVjlASW/Nu?=
- =?iso-8859-2?Q?MrNLqJKMUHAxQfPKySfbQLNh53vakD8ztqAk1MdcBLw89ujDRAWujDnYY1?=
- =?iso-8859-2?Q?d6UaxG4fN+f54Ehq/xh6FnoXpQizXcbpnd6PWPFyzGJ0qvJ/Ofblet4/lQ?=
- =?iso-8859-2?Q?XJ3eLxFMigoXxPq9OwNc21ThwCA4drshS5KCqx2tV9imWrFbNyDr+Kzw6d?=
- =?iso-8859-2?Q?EmOKZDKmDuOFj1/vWJOgeGK5ebvD9/lzjZwlQq8ihiayCFrYj2lbW9K1k0?=
- =?iso-8859-2?Q?6NIGRwoS5D9mGTicFSRSP0fX4Srzjl9qI7HnTuhrJ1swinu7hMMVgzim9z?=
- =?iso-8859-2?Q?ul3mII+Co0glmT32nLv3gWef9PULh+jy9u+LazkfrYUWI4YfhRqXc6ZwTe?=
- =?iso-8859-2?Q?7uazkINYgIqZS3cbNcmLkYyuLkZkl8ktmQPcDdTvtOWKB2X68fmTAQusvI?=
- =?iso-8859-2?Q?zsM4kr7+Mor9OdK91MrA26owRw6vcCU+hOb4bWcjo88y0pCgBW8mRpagqU?=
- =?iso-8859-2?Q?3N2Joe7pQQ2ZpxA4jY1jwjOQzqZvrsQN8i5F9BS6KH91sgT7RyQzKPHI8E?=
- =?iso-8859-2?Q?SmYJKlQdtkidsYfpHyHP/KDji1iKIGc1F1AuP08oUXL8VdMvC67Zu+LCUV?=
- =?iso-8859-2?Q?B3Oogowk8Piairpo8OKQlPPD6lFdBDf9kTn4mQDGyKdnjdnwXwNGLeb4Rs?=
- =?iso-8859-2?Q?eMtsExVOskYW10AoMybSz4nFM0k2rIx4/YTJkcoRpyB7Apq6Ius9fEw4An?=
- =?iso-8859-2?Q?ApqXnFhRgHUIrWvHpfaRKBtxc8lLgy1dDzULINjc4QmLlQGacI6Gp+2w?=
- =?iso-8859-2?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DIEvzPxm"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc236729a2bso6525393276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:53:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713966831; x=1714571631; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YTF0+jQz4A/5exiMNPE0r/1P9poMBy5VmCr9Kl+mvRg=;
+        b=DIEvzPxm4h7EvhTvt7CcorloTm0ogL6LBZsf8CKcZfI07oIEWSkJYc0OemQR4M7UXc
+         p1VoAALVPgPBCAmBOUQ7MuJFd4U1UqSpSdGZrye8UxwJFPO2hzjyssS3VYiKd/VWd4CY
+         nNAevEU3J9kqpa7pbGp93ebhfNcUNkcAHR8D63Sln8w8PhkAOcq/oURRMVBBuX7ftSBU
+         7gzZllSqdqQGmPQOH6/oxTXKPIHNs9j5ubErXmtAL2ob4KYITbEi38OlvYDNAYSTLqyp
+         aPvzPYUIts42fOdpGs4X0UkMRmD2XFK6iMgZJOObaD4UiTw5DihrWu6+gRA3DmJ44G6S
+         FvUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713966831; x=1714571631;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YTF0+jQz4A/5exiMNPE0r/1P9poMBy5VmCr9Kl+mvRg=;
+        b=enAVXXzFmE0Rwruqy27UjSb1E2HJoy0kbzeQewKkqzcPPVV1UXvEcKv+KczjpnbO2o
+         pFeVe8CAsib+46faRvJA/epFCCWCN8rDb1VL3D79pnZRiMnm4vIJ4e4lHR6feMfCIRJx
+         gWn61wV0jQt14+VJm8uQLt/vvKIrZMHmke+RMLuzZf89ZhClGu2stNV7NWoMdieBC5nC
+         AJdyKKiZ7//6DYKJHCZFCY+WBT7LCrZlI1K51qt5dMSubJ13WlT3xkK58SeefXc1FjnK
+         fdK5bwH2D+oo9nV5FhUmlZ7C2Io2ipZHOCw4RTxPie6Wai/fvUBTv18no/DdhOie17a3
+         Yz7A==
+X-Forwarded-Encrypted: i=1; AJvYcCUhOzal7jaXzYCyvLFPTHuv6fzkEkbk+LewihoSJblR99/UHZSfBcPv8Z8YDC5DPEw5g+855tXeG2VuUpugJ1PR1nsDwXl+lhSrRFiY
+X-Gm-Message-State: AOJu0Yyn/a0B9ra0+GD2w/+EyTPt5BIgmDDxgANSp9jKI/CoQJaxrdGL
+	y4hqJTBroXGnXuWS7mKa91GaBwGbObsYOe/d8MucpnZMeIEHPe+V9wkHtfoBGJLpe3CYX8NRkfO
+	0DfQFA2RNmKPyyPJQd0ctZZ5L60m/5ncMiZgAag==
+X-Google-Smtp-Source: AGHT+IHCYcGO1WA1gUez2YG161VlC4qW/5CFmZm5gjfXGv7q2yMFfXVWYmGPxxQwq8WnN8pWCyG2oZOjXqJZmZ0BSc4=
+X-Received: by 2002:a25:26c8:0:b0:dcb:b072:82d5 with SMTP id
+ m191-20020a2526c8000000b00dcbb07282d5mr2468708ybm.64.1713966831536; Wed, 24
+ Apr 2024 06:53:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: blaize.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: c857f620-fa3e-4552-2da6-08dc6462d906
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2024 13:31:29.0042
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 9d1c3c89-8615-4064-88a7-bb1a8537c779
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zzUZKlc4Qg368H2Vw7xWyJXUkjdwonSXrlBrM68P3H8d+ktiPp2Jajc8VMlPt2CjQoT9wCYCOWbsO3GjPpRYcCCyTTa9J6Uz0KBF5RHGcBU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0PR01MB6106
-X-Proofpoint-GUID: 3l7PGBpxh3eTQ0MIPytref6xmeynxe6A
-X-Proofpoint-ORIG-GUID: 3l7PGBpxh3eTQ0MIPytref6xmeynxe6A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-24_11,2024-04-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
- spamscore=0 bulkscore=0 mlxlogscore=847 malwarescore=0 clxscore=1011
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.21.0-2404010002 definitions=main-2404240046
+References: <20240422130036.31856-1-brgl@bgdev.pl> <99242a7c-53bf-4227-9623-7bc092f564b3@penguintechs.org>
+ <CAMRc=MepDwUbAKrWgm0CXKObqy8=igtug0QDgo-CgwxjZCAC2Q@mail.gmail.com>
+ <b982b73d-0540-409c-a6e2-0e03ecb11715@penguintechs.org> <0381f39c-38ba-4a2b-915c-f14c5f911eb9@penguintechs.org>
+ <CAMRc=MfnEct7ThQhCA3AoY7hxq8j1mmFLNNkK17+RSvJxs67XQ@mail.gmail.com>
+ <2371f538-ec53-4037-b171-c62bf4e06eb1@penguintechs.org> <CACMJSeunUaj0cxLaN4MpFmX5vTOx_vnWjBN4Y2FavdQoQxFRkg@mail.gmail.com>
+ <4c33304a-5dbc-450a-b874-e04ba9e93150@penguintechs.org> <CAMRc=MeDQFHX9r-sHNxqkfpi=LkHoRSL7i6dWokB-J+J03rBEg@mail.gmail.com>
+ <93e15ecf-252f-4789-a23b-a28280f6aa84@quicinc.com> <e64b89b3-a8f5-44e7-ae7f-fc4298841f1c@penguintechs.org>
+In-Reply-To: <e64b89b3-a8f5-44e7-ae7f-fc4298841f1c@penguintechs.org>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Wed, 24 Apr 2024 15:53:40 +0200
+Message-ID: <CACMJSet1wjEive0-Z=0_eiY7umBoSF_VX3QvVgiwqxhTSDZg6g@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: qca: set power_ctrl_enabled on NULL returned
+ by gpiod_get_optional()
+To: Wren Turkal <wt@penguintechs.org>
+Cc: quic_zijuhu <quic_zijuhu@quicinc.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Blaize, Inc. (www.blaize.com) is a SoC manufacturer with integrated
-programmable Graph-Streaming-Processors for AI and ML.
+On Wed, 24 Apr 2024 at 15:26, Wren Turkal <wt@penguintechs.org> wrote:
+>
+> On 4/24/24 6:12 AM, quic_zijuhu wrote:
+> > On 4/24/2024 8:27 PM, Bartosz Golaszewski wrote:
+> >> On Wed, Apr 24, 2024 at 2:24=E2=80=AFPM Wren Turkal <wt@penguintechs.o=
+rg> wrote:
+> >>>>>>
+> >>>>>> That's OK, we have the first part right. Let's now see if we can r=
+euse
+> >>>>>> patch 2/2 from Zijun.
+> >>>>>
+> >>>>> I'm compiling it right now. Be back soon.
+> >>>>>
+> >>>>
+> >>>> Well I doubt it's correct as it removed Krzysztof's fix which looks
+> >>>> right. If I were to guess I'd say we need some mix of both.
+> >>>
+> >>> Patch 2/2 remove K's fix? I thought only 1/2 did that.
+> >>>
+> >>> To be specific, I have applied your patch and Zijun's 2/2 only.
+> >>>
+> >>
+> >> No, patch 1/2 from Zijun reverted my changes. Patch 2/2 removes
+> >> Krzysztof's changes and replaces them with a different if else. This
+> >> patch is a better alternative to Zijun's patch 1/2. For 2/2, I'll let
+> >> Krzysztof handle it.
+> >>
+> > do you really realize what do you talk about?
+> > do you really listen what do @Wren says?
+> >
+> > he says that my patch 2/2 is right based on several verification result=
+s.
+>
+> she, not he
+>
+> > BTW, my 2/2 fix don't have anything about DTS usage.
+>
+> I think the problem with your 2/2 patch is that it removes the
+> conditional bailing if the device is shutdown or not open.
+>
+> Maybe this patch instead?
+>
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 2f7ae38d85eb..fcac44ae7898 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -2456,6 +2456,10 @@ static void qca_serdev_shutdown(struct device *dev=
+)
+>                      !test_bit(HCI_RUNNING, &hdev->flags))
+>                          return;
+>
+> +               if (test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP,
+> &hdev->quirks) ||
+> +                   hci_dev_test_flag(hdev, HCI_SETUP))
+> +                       return;
+> +
+>                  serdev_device_write_flush(serdev);
+>                  ret =3D serdev_device_write_buf(serdev, ibs_wake_cmd,
+>                                                sizeof(ibs_wake_cmd));
+>
+> > he maybe be a DTS expert but not BT from his present fix history for
+> > bluetooth system.
+>
+>
 
-Signed-off-by: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+Did you test it? Does it work? If so, please consider sending it
+upstream for review.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Docum=
-entation/devicetree/bindings/vendor-prefixes.yaml
-index b97d298b3eb6..746ff14028d1 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -214,6 +214,8 @@ patternProperties:
-     description: Shenzhen BigTree Tech Co., LTD
-   "^bitmain,.*":
-     description: Bitmain Technologies
-+  "^blaize,.*":
-+    description: Blaize, Inc.
-   "^blutek,.*":
-     description: BluTek Power
-   "^boe,.*":
---=20
-2.34.1
+You can keep Zijun's authorship but add your own SoB tag at the end
+and mention what you did. Something like this:
 
+[Wren: kept Krzysztof's fix]
+Signed-off-by: Wren...
+
+Bartosz
