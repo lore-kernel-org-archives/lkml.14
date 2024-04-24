@@ -1,154 +1,147 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AD115D5B1
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EF215B99C
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713966834; cv=none; b=LrRN3saKQap6lEQ1F3K68YkoCUXPB/liNckunY3d1df9aqu1jk1d35MlMkYtyPuGXAId2k5galQzvn+BeIv3c9gff2Kl9dRVdUeTkQgq2Ewv/nK3PQHKt83KcZ9pyXRpO8PxKVS9zM8ZefdgciMm7Z/44Ih327TNYkYGiy1VxhU=
+	t=1713966874; cv=none; b=fjK8c6un8s2JoBMYiMhpcK1Rkhfyt9EFcT5gYoyPeeeTF4ojSGY9W6kTnkPEZkTbjIUqb29t/7ic5DT/s1XkSdLgThG44Kf2aYS2r5oSD5g8j8IquwvM6v8e9Oo0HKKJKxk0NO0sOlsqACmBqTthGW+pw7q1UoTtQAioYr3R3HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713966834; c=relaxed/simple;
-	bh=fhR4uE4yLyvD+B2f4w/tGJIZJC7P2TcQOXf71qR0Hdw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YU9OYPkRFMWCMPdUXu7vUJ5A2Hn6iTkvVX3ac5eCLyNNa2e2JTeBqJ68+UKmIyxjVPrSZGfT8l3OXXWJncRD0nihYrMb+1rwVvgEYsLLjE8Vi8b3hcKbzySA23LKpnl612mbvE/w899WHuWbuMaVfvGUAhiQ2UrzOAimJmbTnJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DIEvzPxm; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713966874; c=relaxed/simple;
+	bh=KPARR30ZZmFE0n7R9yKr0iH+xt44HKxu1rqWPjRLPiI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nvoUN9jOaAu6G2Kb5wzi7hbXZkAZFuTa8LJwv78Rl1daXptNWri3UflkemYUtWykwK6icZMFvprTs4l3nZfUWz2R/vcPF7eKggF6XyzKhFx3U5mrJSvv7fT/VgChfm10cQHSg/wj7OTWGsnk0iBa68/BXq05QgRNUqLzcwWS4LM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YDjQMa+2; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DIEvzPxm"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc236729a2bso6525393276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:53:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713966831; x=1714571631; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YTF0+jQz4A/5exiMNPE0r/1P9poMBy5VmCr9Kl+mvRg=;
-        b=DIEvzPxm4h7EvhTvt7CcorloTm0ogL6LBZsf8CKcZfI07oIEWSkJYc0OemQR4M7UXc
-         p1VoAALVPgPBCAmBOUQ7MuJFd4U1UqSpSdGZrye8UxwJFPO2hzjyssS3VYiKd/VWd4CY
-         nNAevEU3J9kqpa7pbGp93ebhfNcUNkcAHR8D63Sln8w8PhkAOcq/oURRMVBBuX7ftSBU
-         7gzZllSqdqQGmPQOH6/oxTXKPIHNs9j5ubErXmtAL2ob4KYITbEi38OlvYDNAYSTLqyp
-         aPvzPYUIts42fOdpGs4X0UkMRmD2XFK6iMgZJOObaD4UiTw5DihrWu6+gRA3DmJ44G6S
-         FvUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713966831; x=1714571631;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YTF0+jQz4A/5exiMNPE0r/1P9poMBy5VmCr9Kl+mvRg=;
-        b=enAVXXzFmE0Rwruqy27UjSb1E2HJoy0kbzeQewKkqzcPPVV1UXvEcKv+KczjpnbO2o
-         pFeVe8CAsib+46faRvJA/epFCCWCN8rDb1VL3D79pnZRiMnm4vIJ4e4lHR6feMfCIRJx
-         gWn61wV0jQt14+VJm8uQLt/vvKIrZMHmke+RMLuzZf89ZhClGu2stNV7NWoMdieBC5nC
-         AJdyKKiZ7//6DYKJHCZFCY+WBT7LCrZlI1K51qt5dMSubJ13WlT3xkK58SeefXc1FjnK
-         fdK5bwH2D+oo9nV5FhUmlZ7C2Io2ipZHOCw4RTxPie6Wai/fvUBTv18no/DdhOie17a3
-         Yz7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUhOzal7jaXzYCyvLFPTHuv6fzkEkbk+LewihoSJblR99/UHZSfBcPv8Z8YDC5DPEw5g+855tXeG2VuUpugJ1PR1nsDwXl+lhSrRFiY
-X-Gm-Message-State: AOJu0Yyn/a0B9ra0+GD2w/+EyTPt5BIgmDDxgANSp9jKI/CoQJaxrdGL
-	y4hqJTBroXGnXuWS7mKa91GaBwGbObsYOe/d8MucpnZMeIEHPe+V9wkHtfoBGJLpe3CYX8NRkfO
-	0DfQFA2RNmKPyyPJQd0ctZZ5L60m/5ncMiZgAag==
-X-Google-Smtp-Source: AGHT+IHCYcGO1WA1gUez2YG161VlC4qW/5CFmZm5gjfXGv7q2yMFfXVWYmGPxxQwq8WnN8pWCyG2oZOjXqJZmZ0BSc4=
-X-Received: by 2002:a25:26c8:0:b0:dcb:b072:82d5 with SMTP id
- m191-20020a2526c8000000b00dcbb07282d5mr2468708ybm.64.1713966831536; Wed, 24
- Apr 2024 06:53:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YDjQMa+2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713966872;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MpzcW4eGUsXhIEVGjUGz71es2y4/452F4J6OFr59NG8=;
+	b=YDjQMa+2kPMC9V9Z5OfTqcfaeoG+vkE5UhrjAj0Yj2jCMZCFyxeRXJG8B5KTqv8WofHuHy
+	p5Qf1RNj4Qy7Ip65+APf94Ue/ujEKN74ZB/LIMYeHPxQusCCjydMlK9CWF0BcscEwmFwqK
+	wv5QqZU0dqcb1xT1I75XsnT9iWb4K4g=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-450-HuqN15zsOGehoISiB1vxHA-1; Wed, 24 Apr 2024 09:54:27 -0400
+X-MC-Unique: HuqN15zsOGehoISiB1vxHA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 664FA104D526;
+	Wed, 24 Apr 2024 13:54:27 +0000 (UTC)
+Received: from antares.redhat.com (unknown [10.39.193.98])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C09391C0666A;
+	Wed, 24 Apr 2024 13:54:25 +0000 (UTC)
+From: Adrian Moreno <amorenoz@redhat.com>
+To: netdev@vger.kernel.org
+Cc: aconole@redhat.com,
+	echaudro@redhat.com,
+	horms@kernel.org,
+	i.maximets@ovn.org,
+	Adrian Moreno <amorenoz@redhat.com>,
+	dev@openvswitch.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH net-next 0/8] net: openvswitch: Add sample multicasting.
+Date: Wed, 24 Apr 2024 15:50:47 +0200
+Message-ID: <20240424135109.3524355-1-amorenoz@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240422130036.31856-1-brgl@bgdev.pl> <99242a7c-53bf-4227-9623-7bc092f564b3@penguintechs.org>
- <CAMRc=MepDwUbAKrWgm0CXKObqy8=igtug0QDgo-CgwxjZCAC2Q@mail.gmail.com>
- <b982b73d-0540-409c-a6e2-0e03ecb11715@penguintechs.org> <0381f39c-38ba-4a2b-915c-f14c5f911eb9@penguintechs.org>
- <CAMRc=MfnEct7ThQhCA3AoY7hxq8j1mmFLNNkK17+RSvJxs67XQ@mail.gmail.com>
- <2371f538-ec53-4037-b171-c62bf4e06eb1@penguintechs.org> <CACMJSeunUaj0cxLaN4MpFmX5vTOx_vnWjBN4Y2FavdQoQxFRkg@mail.gmail.com>
- <4c33304a-5dbc-450a-b874-e04ba9e93150@penguintechs.org> <CAMRc=MeDQFHX9r-sHNxqkfpi=LkHoRSL7i6dWokB-J+J03rBEg@mail.gmail.com>
- <93e15ecf-252f-4789-a23b-a28280f6aa84@quicinc.com> <e64b89b3-a8f5-44e7-ae7f-fc4298841f1c@penguintechs.org>
-In-Reply-To: <e64b89b3-a8f5-44e7-ae7f-fc4298841f1c@penguintechs.org>
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Date: Wed, 24 Apr 2024 15:53:40 +0200
-Message-ID: <CACMJSet1wjEive0-Z=0_eiY7umBoSF_VX3QvVgiwqxhTSDZg6g@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: qca: set power_ctrl_enabled on NULL returned
- by gpiod_get_optional()
-To: Wren Turkal <wt@penguintechs.org>
-Cc: quic_zijuhu <quic_zijuhu@quicinc.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-On Wed, 24 Apr 2024 at 15:26, Wren Turkal <wt@penguintechs.org> wrote:
->
-> On 4/24/24 6:12 AM, quic_zijuhu wrote:
-> > On 4/24/2024 8:27 PM, Bartosz Golaszewski wrote:
-> >> On Wed, Apr 24, 2024 at 2:24=E2=80=AFPM Wren Turkal <wt@penguintechs.o=
-rg> wrote:
-> >>>>>>
-> >>>>>> That's OK, we have the first part right. Let's now see if we can r=
-euse
-> >>>>>> patch 2/2 from Zijun.
-> >>>>>
-> >>>>> I'm compiling it right now. Be back soon.
-> >>>>>
-> >>>>
-> >>>> Well I doubt it's correct as it removed Krzysztof's fix which looks
-> >>>> right. If I were to guess I'd say we need some mix of both.
-> >>>
-> >>> Patch 2/2 remove K's fix? I thought only 1/2 did that.
-> >>>
-> >>> To be specific, I have applied your patch and Zijun's 2/2 only.
-> >>>
-> >>
-> >> No, patch 1/2 from Zijun reverted my changes. Patch 2/2 removes
-> >> Krzysztof's changes and replaces them with a different if else. This
-> >> patch is a better alternative to Zijun's patch 1/2. For 2/2, I'll let
-> >> Krzysztof handle it.
-> >>
-> > do you really realize what do you talk about?
-> > do you really listen what do @Wren says?
-> >
-> > he says that my patch 2/2 is right based on several verification result=
-s.
->
-> she, not he
->
-> > BTW, my 2/2 fix don't have anything about DTS usage.
->
-> I think the problem with your 2/2 patch is that it removes the
-> conditional bailing if the device is shutdown or not open.
->
-> Maybe this patch instead?
->
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 2f7ae38d85eb..fcac44ae7898 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -2456,6 +2456,10 @@ static void qca_serdev_shutdown(struct device *dev=
-)
->                      !test_bit(HCI_RUNNING, &hdev->flags))
->                          return;
->
-> +               if (test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP,
-> &hdev->quirks) ||
-> +                   hci_dev_test_flag(hdev, HCI_SETUP))
-> +                       return;
-> +
->                  serdev_device_write_flush(serdev);
->                  ret =3D serdev_device_write_buf(serdev, ibs_wake_cmd,
->                                                sizeof(ibs_wake_cmd));
->
-> > he maybe be a DTS expert but not BT from his present fix history for
-> > bluetooth system.
->
->
+** Background **
+Currently, OVS supports several packet sampling mechanisms (sFlow,
+per-bridge IPFIX, per-flow IPFIX). These end up being translated into a
+userspace action that needs to be handled by ovs-vswitchd's handler
+threads only to be forwarded to some third party application that
+will somehow process the sample and provide observability on the
+datapath.
 
-Did you test it? Does it work? If so, please consider sending it
-upstream for review.
+A particularly interesting use-case is controller-driven
+per-flow IPFIX sampling where the OpenFlow controller can add metadata
+to samples (via two 32bit integers) and this metadata is then available
+to the sample-collecting system for correlation.
 
-You can keep Zijun's authorship but add your own SoB tag at the end
-and mention what you did. Something like this:
+** Problem **
+The fact that sampled traffic share netlink sockets and handler thread
+time with upcalls, apart from being a performance bottleneck in the
+sample extraction itself, can severely compromise the datapath,
+yielding this solution unfit for highly loaded production systems.
 
-[Wren: kept Krzysztof's fix]
-Signed-off-by: Wren...
+Users are left with little options other than guessing what sampling
+rate will be OK for their traffic pattern and system load and dealing
+with the lost accuracy.
 
-Bartosz
+Looking at available infrastructure, an obvious candidated would be
+to use psample. However, it's current state does not help with the
+use-case at stake because sampled packets do not contain user-defined
+metadata.
+
+** Proposal **
+This series is an attempt to fix this situation by extending the
+existing psample infrastructure to carry a variable length
+user-defined cookie.
+
+The main existing user of psample is tc's act_sample. It is also
+xtended to forward the action's cookie to psample.
+
+Finally, OVS sample action is extended with a couple of attributes
+(OVS_SAMPLE_ATTR_PSAMPLE_{GROUP,COOKIE}) that contain a 32 group_id
+and a variable length cookie. When provided, OVS sends the packet
+to psample for observability.
+
+In order to make it easier for users to receive samples coming from
+a specific source, group_id filtering is added to psample as well
+as a tracepoint for troubleshooting.
+
+--
+rfc_v2 -> v1:
+- Accomodate Ilya's comments.
+- Split OVS's attribute in two attributes and simplify internal
+handling of psample arguments.
+- Extend psample and tc with a user-defined cookie.
+- Add a tracepoint to psample to facilitate troubleshooting.
+
+rfc_v1 -> rfc_v2:
+- Use psample instead of a new OVS-only multicast group.
+- Extend psample and tc with a user-defined cookie.
+
+Adrian Moreno (8):
+  net: netlink: export genl private pointer getters
+  net: psample: add multicast filtering on group_id
+  net: psample: add user cookie
+  net: psample: add tracepoint
+  net: sched: act_sample: add action cookie to sample
+  net:openvswitch: add psample support
+  selftests: openvswitch: add sample action.
+  selftests: openvswitch: add psample test
+
+ Documentation/netlink/specs/ovs_flow.yaml     |   6 +
+ include/net/psample.h                         |   2 +
+ include/uapi/linux/openvswitch.h              |  49 ++++-
+ include/uapi/linux/psample.h                  |   2 +
+ net/netlink/genetlink.c                       |   2 +
+ net/openvswitch/actions.c                     |  51 ++++-
+ net/openvswitch/flow_netlink.c                |  80 +++++--
+ net/psample/psample.c                         | 131 ++++++++++-
+ net/psample/trace.h                           |  62 ++++++
+ net/sched/act_sample.c                        |  12 +
+ .../selftests/net/openvswitch/openvswitch.sh  |  97 +++++++-
+ .../selftests/net/openvswitch/ovs-dpctl.py    | 207 +++++++++++++++++-
+ 12 files changed, 655 insertions(+), 46 deletions(-)
+ create mode 100644 net/psample/trace.h
+
+-- 
+2.44.0
+
