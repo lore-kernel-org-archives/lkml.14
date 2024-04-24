@@ -1,56 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F9415FA68;
-	Wed, 24 Apr 2024 15:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D045415B97E;
+	Wed, 24 Apr 2024 15:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713972622; cv=none; b=n9Ze8F6FvuXymFKmlWHwj1JuoW54wLY/9F+gLwZ+jCKi+aNFEbLh6mcvl4bgoaKhmprX44TX/t4jLg8r0J0OjIQu6J1JrbSPnC0sS+UyyH3INeJVyLvpiirerVTU3ckj2Ec/7tgNnYAaqBQLzoNrSdcQKLczZylaoZyco9FTbQc=
+	t=1713972622; cv=none; b=quIOHPgWOyIUJGcV5sLge7ToPA8iHbJc6aTJ+ZIcrUP4XZX+0bEULJN42xVeFqmB6gC65VvYZA595zP+Cqnke4U39m63DYnBLiv0e0rCjcU9FZOzOK26FWTLajR6KDeuPj2oYvdsAqzdHEwfVIuVFZaOula65Dz/W+pQWPUaaAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713972622; c=relaxed/simple;
-	bh=wbLuhw/WYXCcv7kdW+LHH5poNfQY/brJKzckpRJupaE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g01LY+69ZAcDCTBQjpzraBmIpXue/oEiMPSCXONFqzRact8dqKf/beJP/YLtilUIMfYIS4HiT1gIUYVwbbeag2AhbaCgbhmY+cF/GoKy2u3fo0VqXJQn2jcdGzyldAuqzBhhxQ0vCWFjO+xklr0KF8zkeyUBBUSiZvSF4S7FNdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dLn+KLHa; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=Rb3e8woeRScQc0FyPXLGuhzPgU+tu+7LVsb9eCDyl8U=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=K84S5G40tKDB4Bt+9ZAQT3eGooqwJTZgMjlXz4cbB5kaN08q1kzo0PzDwHCAuumRGu+7v12+ZyKhwV4MQz8fmHc76XameGaf6L6DKNEO5UcxEEyZtEDXXNzrIgu7iALhrTiUIIBR4A15wPIxoeLFsDPAHLIz7Bu/8p5FtLrLgJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Dbba1WZc; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dLn+KLHa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713972620; x=1745508620;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wbLuhw/WYXCcv7kdW+LHH5poNfQY/brJKzckpRJupaE=;
-  b=dLn+KLHad0uNBXmg1wNDoq+v7czZDYkCvTA02uZAOiLMCAb6qkNBB6tc
-   v0/Yqswo5HGCsK2b4l6I93eh1UGVrhBYT+YPDm+FEftsAEDHohCK6XUUS
-   F9nhYVynzUIGhug6KCIZsygM//pwXi8X5M0zhMNO1EfJt1V+7a6HyArwa
-   b8lzwQrC51dQBaNP4nL7KbB63tyATBZH1KryAfFF+tHj0MDO4tEYDSUz9
-   HB+8x2m2OAQZ5FlANzrz65bjOD4KiHmUSVj5S+iJNOOm8p/37MOwfPF1u
-   PGYmaiqKH4vhJ67E0xydek5StOB3qLJkLCouAeyPMnpMVrSm8cGNyRMVf
-   w==;
-X-CSE-ConnectionGUID: RtD5yi/ARNO77Y3QqExL7Q==
-X-CSE-MsgGUID: 5DiS7h6ISly66z7Coi02MQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="9540547"
-X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
-   d="scan'208";a="9540547"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 08:30:18 -0700
-X-CSE-ConnectionGUID: 8VHd22DdTmO/lLu1mNIrQA==
-X-CSE-MsgGUID: D1ZemLcCQiKus60QrdcssQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
-   d="scan'208";a="24631769"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 08:30:18 -0700
-Received: from [10.212.107.188] (kliang2-mobl1.ccr.corp.intel.com [10.212.107.188])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 422D8206D89D;
-	Wed, 24 Apr 2024 08:30:16 -0700 (PDT)
-Message-ID: <7f1014fc-eb0a-4989-8efa-245d5b6937cd@linux.intel.com>
-Date: Wed, 24 Apr 2024 11:30:14 -0400
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Dbba1WZc"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43OAYs4D016277;
+	Wed, 24 Apr 2024 15:30:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:from:to:cc:references
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=pTtrhvgb2VDHteJAYAqYBmFdtC5q21PC2G9yrXQWYlM=; b=Db
+	ba1WZcrrkPCpDkAUS3RrdRbI9Z1DDsH4Y6yFvXTKvSKovTl4qK0mIDCVXm2FBRtc
+	8y4nbVoqhDNEn0c3oCHJx4w47Cj86i+4kwR98drogDNau3+fJcW5wY6dIqSA0uy/
+	juTNAXSL8zUzW/8z/Iz3TrxFAk34c2K00NVqs/U8U3LCw1kSM9XwrAkpS/gZ5W+3
+	cKbiOB4lQ/xlATQBuS0Q7ygiFB8oNCA4/FDPqIFPGBM1Pehlde/yzx2Hkxo4cwvE
+	P4lWMRf4qsqQEdVRs1EIvxH3LODz3HFt4EouDVJiiKgYiT2BenGDX8506u+PoJLV
+	WgDxbqEW6N85zcvOST1Q==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xpv9gs855-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Apr 2024 15:30:13 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43OFTjcw017165
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Apr 2024 15:29:45 GMT
+Received: from [10.253.14.221] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 24 Apr
+ 2024 08:29:43 -0700
+Message-ID: <f4bffd0e-0d9b-4fb9-926e-c75a20c92b50@quicinc.com>
+Date: Wed, 24 Apr 2024 23:29:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,79 +50,78 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 13/16] perf parse-events: Improvements to modifier
- parsing
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org,
- Beeman Strong <beeman@rivosinc.com>
-References: <20240416061533.921723-1-irogers@google.com>
- <20240416061533.921723-14-irogers@google.com>
- <e8147f53-1930-44d8-abb8-fee460ec355f@linux.intel.com>
- <CAP-5=fVXv_gsoq5L08gaEJvU1E8xoihc3-L4taA+bPHyOJfgqw@mail.gmail.com>
- <7df3ff63-a421-42cc-bcaa-b0254ff6a0e8@linux.intel.com>
- <CAP-5=fUi8DPNrbp=978K92Mopa71ag1sukttX3KcztD2ac0ADg@mail.gmail.com>
+Subject: Re: [PATCH v2] Bluetooth: qca: set power_ctrl_enabled on NULL
+ returned by gpiod_get_optional()
+From: quic_zijuhu <quic_zijuhu@quicinc.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+CC: Bartosz Golaszewski <brgl@bgdev.pl>,
+        Marcel Holtmann
+	<marcel@holtmann.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Wren
+ Turkal <wt@penguintechs.org>
+References: <20240424122932.79120-1-brgl@bgdev.pl>
+ <0f8ba1b5-490e-4961-80e2-7942f66730ec@linaro.org>
+ <CACMJSeuBCkNyaD60qGVpAq91DqD_OA=tCVEY0t+JNK2vcWBc+Q@mail.gmail.com>
+ <d82c2e39-d2b8-4de0-a11a-6ab2420f8f95@quicinc.com>
 Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fUi8DPNrbp=978K92Mopa71ag1sukttX3KcztD2ac0ADg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <d82c2e39-d2b8-4de0-a11a-6ab2420f8f95@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Hc2o8Fc8D-np2iq0E0RP717mFnr9UIN8
+X-Proofpoint-ORIG-GUID: Hc2o8Fc8D-np2iq0E0RP717mFnr9UIN8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-24_12,2024-04-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 mlxscore=0 adultscore=0 mlxlogscore=836
+ spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404240061
 
-
-
-On 2024-04-24 11:18 a.m., Ian Rogers wrote:
-> On Fri, Apr 19, 2024 at 6:20 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2024-04-19 2:22 a.m., Ian Rogers wrote:
->>>>> +             /* Simple modifiers copied to the evsel. */
->>>>> +             if (mod.precise) {
->>>>> +                     u8 precise = evsel->core.attr.precise_ip + mod.precise;
->>>>> +                     /*
->>>>> +                      * precise ip:
->>>>> +                      *
->>>>> +                      *  0 - SAMPLE_IP can have arbitrary skid
->>>>> +                      *  1 - SAMPLE_IP must have constant skid
->>>>> +                      *  2 - SAMPLE_IP requested to have 0 skid
->>>>> +                      *  3 - SAMPLE_IP must have 0 skid
->>>>> +                      *
->>>>> +                      *  See also PERF_RECORD_MISC_EXACT_IP
->>>>> +                      */
->>>>> +                     if (precise > 3) {
->>>> The pmu_max_precise() should return the max precise the current kernel
->>>> supports. It checks the /sys/devices/cpu/caps/max_precise.
+On 4/24/2024 11:24 PM, quic_zijuhu wrote:
+> On 4/24/2024 10:52 PM, Bartosz Golaszewski wrote:
+>> On Wed, 24 Apr 2024 at 16:46, Krzysztof Kozlowski
+>> <krzysztof.kozlowski@linaro.org> wrote:
+>>>
+>>> On 24/04/2024 14:29, Bartosz Golaszewski wrote:
+>>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >>>>
->>>> I think we should use that value rather than hard code it to 3.
->>> I'll add an extra patch to do that. I'm a bit concerned it may break
->>> event parsing on platforms not supporting max_precise of 3.
->>
->> The kernel already rejects the precise_ip > max_precise (using the same
->> x86_pmu_max_precise()). It should be fine to apply the same logic in the
->> tool.
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/events/core.c#n566
->>
->> Will the extra patch be sent separately?
+>>>
+>>>>               qcadev->susclk = devm_clk_get_optional(&serdev->dev, NULL);
+>>>>               if (IS_ERR(qcadev->susclk)) {
+>>>> @@ -2355,10 +2360,13 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+>>>>               qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
+>>>>                                              GPIOD_OUT_LOW);
+>>>>               if (IS_ERR(qcadev->bt_en)) {
+>>>> -                     dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
+>>>> -                     power_ctrl_enabled = false;
+>>>> +                     dev_err(&serdev->dev, "failed to acquire enable gpio\n");
+>>>> +                     return PTR_ERR(qcadev->bt_en);
+> please think about for QCA2066. if it is returned from here.  BT will
+> not working at all.  if you don't return here. i will be working fine
+> for every BT functionality.
+sorry, correct a type error, it is QCA6390 not QCA2066.
+> NAK again by me.
 > 
-> Let's do it separately. I'm concerned about the behavior on AMD (and
-> possibly similar architectures) where certain events support precision
-> like cycles, as they detour to the IBS PMU, but not all events support
-> it. The max_precise should reflect that AMD's Zen core PMU does
-> support precision as a consequence of detouring to IBS, but maybe
-> things in sysfs aren't set up correctly.
+>>>>               }
+>>>>
+>>>> +             if (!qcadev->bt_en)
+>>>> +                     power_ctrl_enabled = false;
+>>>
+>>> This looks duplicated - you already have such check earlier.
+>>>
+>>
+>> It's under a different switch case!
+>>
+>> Bartosz
 > 
-
-The x86_pmu_max_precise() is a generic function for X86. It should apply
-to AMD as well.
-
-A separate patch looks good to me.
-
-Thanks,
-Kan
+> 
 
