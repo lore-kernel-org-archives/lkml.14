@@ -1,167 +1,108 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D52D15821F;
-	Wed, 24 Apr 2024 13:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2325C15821F;
+	Wed, 24 Apr 2024 13:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713964883; cv=none; b=eWx/va08RijE0fPY1x0ILTO1MwyyblCirvl51fbm5DuyW6BcSHb/7NpUi5/MTOxYRcee7vJPMoTXUNarlMqg7H0YCX3mCHU7Wt4SOPTmEEcYzCjFWXIWspq3atFmwPka1geqTe3dfqzR/6lc56cSnfVDVEDEimbOsOyHjM9xiX0=
+	t=1713964899; cv=none; b=cIRYZ21OFjZaxDZyX1HAV6BqfXduP0uSUwXGErUjykEywE9nOIkRjjwWK2aDCxT9qatjqSmm8nIllxE3BCnZABl4kWzyKxhvbPk1e3ZZXzqsGhNvLjqgz7dRxE/TKH4fidJyi1PPXMMoY6hKsYSGE8vydIYwBnmf9xoNowfCLmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713964883; c=relaxed/simple;
-	bh=bABuUtxtwMiaDJEDth6yYKqkY4fMD7xJ78zqRkijgc0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=d+f4eerOeh8o2zWpWiktseCsT9DvruN4cxFpblOXYXB9DCsdEaaAdx/kWcBep+qEnEvYTfc2fbtVTooam0Jelh8mtpOIYlaWvck60V6+LsabgCQ4dcLASXLNsT3CzG0N0MqC5XXf7PDA1MyMyQGMaJAlfbyUygRyQg+qrJDvMw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=oPBxCIqj; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1713964899; c=relaxed/simple;
+	bh=PJb7aHAZTGNRgu0ckayfF/yub4XepCE5tuhF1zIWTiY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WaTfbFSb81IxzyC9ZwkY0fjJsHpFr9ti5iuMEpRta6uiOeMr2ov5h7Rz3wjkK/+u59n6bG1e9MBrv7wTSzUNA5ztjfkzc9Fxrbc+I4TJQwABUweb5ROc32ju8tv3LS3vm/dftV6ONLDDh1msx4iVl56NNblhnZalrU2RzHH20kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fW6lI8te; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="oPBxCIqj"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43OC4omW029734;
-	Wed, 24 Apr 2024 14:20:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=hkSUB26Hij3YoH4d4gONssMZiD9lhMIi9MYuoDahbc0=; b=oP
-	BxCIqjZqjU5yIPdolezp3gucfYE43BpO2moF0boJpv1s74317nNrf8tTbYX5usOd
-	rlKx/FhS1Qy6Jkjea82P6nnIhij2k6RtqQ72RGkfOKHZzW/rYU1jige7eN6glRBm
-	Gr/fYnvQ0nI1FFIhwyV+FpQcOob58VqnssUOpcpR/bfBeTjXY5MTu8NY0VN5oLNt
-	baPC6vo+Z6OwTORIZk9BIz6pJZyBiWpxinx+vs127hpTMIh3Q7+NTYQB11bqSkWu
-	wTRZ/tTR1dd1WWC/yQviBRPlU7NtgpxHp9kyOZz9PzdXYOFqZatkp9e4ugAKrRJ2
-	ZAcLVNQAQ/E+lH5KwgDw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xmrnj5npa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 14:20:39 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 16FD54002D;
-	Wed, 24 Apr 2024 14:20:30 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0C4C621A91F;
-	Wed, 24 Apr 2024 14:19:21 +0200 (CEST)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 24 Apr
- 2024 14:19:18 +0200
-Message-ID: <a0bd94ce-3ddb-4448-ada9-7070323cc98f@foss.st.com>
-Date: Wed, 24 Apr 2024 14:19:18 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fW6lI8te"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3c6f785223fso273179b6e.1;
+        Wed, 24 Apr 2024 06:21:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713964897; x=1714569697; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wiv6Ur85tzjJM8dSRsKgLVS3vAahPk5DSGQsWuI+AAc=;
+        b=fW6lI8tebGG7/w/zbI+fiOo/mU7sEuDu0HRVbx3K8x+sBcSSAKLwV1fbP2Ne7HDEjR
+         QW6skUgm5IvDbvGHLVRjXCXzHgjOLR+t8YMrI5YAhbHxF/AoKJXvjmHndjGJD6ikCwYz
+         H/+UDdHrQQz7Ua3SC/uioOJT3/AGYGPnTc6UBr90O59pJdW0RTexqF5RlNkqsQY9C/1v
+         HNCopS8m8P2kk/qukQyHKNzgVXEmmfT8df+qo8cur0K19TcZCZTgc6d53JIpyVesjl/v
+         tbXSV/aL6LX/UYOKP/vvCGLshrrrcH9yaavTUsLnJquGETd1W1+Op8Ld2wpsjF6mDf3D
+         Qq8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713964897; x=1714569697;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wiv6Ur85tzjJM8dSRsKgLVS3vAahPk5DSGQsWuI+AAc=;
+        b=SXdnukk0F9XbeJAYpb50A6YvyR2P16hNm+9UGoDmZQiH/P7HJMnSD+JBC9ZCn91ZUB
+         5fhbqFoEmYMPnMdl97OIoO+8/skgmrrrlJOjrHOTmOnmsS8Bs1h9rgx4fzaP6NjJFbXX
+         1vaIQrVsis7VUTjxuRWGIhs1ltK5cF5nwrrgOq07txBgAl8YfbdmMzDRcO8hWzXEKTRK
+         Vpnkf3mQTwf4cEVhRR+HvMDLllei1oZFIaPP/h9ENg2lok2o3V2Rc9PGV6WLxrB+0cdX
+         ljAGA4n5+kfj/MLsTu/jbX1T8r/g7MgOXo6P6AgM6ZgQbYFcA2hooo6xDj2+C0NeTJtl
+         elTA==
+X-Forwarded-Encrypted: i=1; AJvYcCXSs6r0+DaLK6ZouBRbvNXac0pCI8/D2ThpJEui8rBcRyx7dK9W5utt17Ej2OYAJ6PHfmiBKwA/8FZ2oN33uqFq/U2dzOAhmX2CPRw=
+X-Gm-Message-State: AOJu0YwgRv2Bypqp1gk3XcY581kcToganf0LPY/kI7QLUGohDowVuVfg
+	HQZ8y7yyCzjumEaLhOaBaO0M0AGeNzr53Ds8Y6cOz1PmoV6rTkApZVyn6uJoY3ZVZBofvPl690l
+	y2fpZNkjRX/YJ/6l2dm5bPjgO37QwCon5ohf8gAvR
+X-Google-Smtp-Source: AGHT+IEGm4DC6PtDuqmtZywGCS4SdK012A7q67NCec7GTwwIxO9u+x9A90G1cJIOZJ6W3zMWnz+oTPEryI8qZy7CSDc=
+X-Received: by 2002:a05:6808:201e:b0:3c5:f29a:5fda with SMTP id
+ q30-20020a056808201e00b003c5f29a5fdamr2757356oiw.3.1713964897050; Wed, 24 Apr
+ 2024 06:21:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 06/13] of: property: fw_devlink: Add support for
- "access-controller"
-To: Saravana Kannan <saravanak@google.com>,
-        Gatien Chevallier
-	<gatien.chevallier@foss.st.com>
-CC: <Oleksii_Moisieiev@epam.com>, <gregkh@linuxfoundation.org>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <vkoul@kernel.org>, <jic23@kernel.org>,
-        <olivier.moysan@foss.st.com>, <arnaud.pouliquen@foss.st.com>,
-        <mchehab@kernel.org>, <fabrice.gasnier@foss.st.com>,
-        <andi.shyti@kernel.org>, <ulf.hansson@linaro.org>,
-        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-        <hugues.fruchet@foss.st.com>, <lee@kernel.org>, <will@kernel.org>,
-        <catalin.marinas@arm.com>, <arnd@kernel.org>,
-        <richardcochran@gmail.com>, Frank Rowand <frowand.list@gmail.com>,
-        <peng.fan@oss.nxp.com>, <lars@metafoo.de>, <rcsekar@samsung.com>,
-        <wg@grandegger.com>, <mkl@pengutronix.de>,
-        <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-media@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-serial@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, Rob Herring <robh@kernel.org>
-References: <20240105130404.301172-1-gatien.chevallier@foss.st.com>
- <20240105130404.301172-7-gatien.chevallier@foss.st.com>
- <CAGETcx8HdnspNfDEJP+cqShJPsDryzGkOVq6B99cFQzkZi3dMg@mail.gmail.com>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <CAGETcx8HdnspNfDEJP+cqShJPsDryzGkOVq6B99cFQzkZi3dMg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-24_10,2024-04-23_02,2023-05-22_02
+References: <CABXGCsNmEtrN9DK-XmESaPm_1xpXm8A+juE+44Jf6AK5JE0+TQ@mail.gmail.com>
+ <874jcl7e83.wl-tiwai@suse.de> <CABXGCsMmRFW3EYJ3UvNd-LO7ZTOyoNqjc_3OAmaCDSL=LuxJqg@mail.gmail.com>
+ <87v851e2di.wl-tiwai@suse.de> <CABXGCsNMBRUaY-V8mhUQKdq+CQW5+eGUWL_YCJWXo0cgh9bGJQ@mail.gmail.com>
+ <87h6glt9zc.wl-tiwai@suse.de> <CABXGCsMcazRvmiN4XtiHQCE9=dB=M=VsRqB=v+RPmtuhBL29DA@mail.gmail.com>
+ <a6f4e20ea2a68f56a7d2c4d76280bca44d6bf421.camel@gmail.com> <CABXGCsPdqfXeZUw1ocx8O3NdOEb+h4yQ77+zdNpcwP_4JrYXuQ@mail.gmail.com>
+In-Reply-To: <CABXGCsPdqfXeZUw1ocx8O3NdOEb+h4yQ77+zdNpcwP_4JrYXuQ@mail.gmail.com>
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date: Wed, 24 Apr 2024 18:21:26 +0500
+Message-ID: <CABXGCsMTbmU4CP8CHUqRVXWkGiErFtEVG4COy6RSRWsAuK_-CQ@mail.gmail.com>
+Subject: Re: regression/bisected/6.9 commit 587d67fd929ad89801bcc429675bda90d53f6592
+ decrease 30% of gaming performance
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, linux-sound@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Saravana
+On Thu, Apr 18, 2024 at 11:22=E2=80=AFAM Mikhail Gavrilov
+<mikhail.v.gavrilov@gmail.com> wrote:
+>
+> On Tue, Apr 2, 2024 at 12:29=E2=80=AFAM <mikhail.v.gavrilov@gmail.com> wr=
+ote:
+> >
+> > On Mon, 2024-04-01 at 21:50 +0500, Mikhail Gavrilov wrote:
+> > > On Mon, Apr 1, 2024 at 7:48=E2=80=AFPM Takashi Iwai <tiwai@suse.de> w=
+rote:
+> > > >
+> > > >
+> > > > Then it shouldn't be dmix/dsnoop.  You'd better try profiling
+> > > > what's
+> > > > going on there.  e.g. try to get perf results with and without the
+> > > > commit.
+> > >
+> > >
+> > > Here is original perf files:
+> > > [1] perf-with-revert-587d67fd929a.data -
+> > > https://mega.nz/file/EpZmXbgL#vEnxuODoB__jM6TwV6XbwC_TWMMqvT7qaWkJU22=
+JY48
+> > > [2] perf-with-revert-587d67fd929a-beb45974dd49.data -
+> > > https://mega.nz/file/0lI31CDA#hKsv6vX7t5u-Sx1_p2E7-Y32-z5VFPlW2Y793oM=
+-JRU
+> > >
+>
+> Excuse me. Can you have time to look in my perf files?
+>
 
-On 4/24/24 07:57, Saravana Kannan wrote:
-> On Fri, Jan 5, 2024 at 5:03 AM Gatien Chevallier
-> <gatien.chevallier@foss.st.com> wrote:
->>
->> Allows tracking dependencies between devices and their access
->> controller.
->>
->> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
->> Acked-by: Rob Herring <robh@kernel.org>
-> 
-> Please cc me on fw_devlink patches. Also, this patch is breaking the
-> norm below. Please send a fix up patch.
-> 
->> ---
->> Changes in V9:
->>          - Added Rob's review tag
->>
->> Changes in V6:
->>          - Renamed access-controller to access-controllers
->>
->> Changes in V5:
->>          - Rename feature-domain* to access-control*
->>
->> Patch not present in V1
->>
->>   drivers/of/property.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/of/property.c b/drivers/of/property.c
->> index afdaefbd03f6..7f737eac91b2 100644
->> --- a/drivers/of/property.c
->> +++ b/drivers/of/property.c
->> @@ -1268,6 +1268,7 @@ DEFINE_SIMPLE_PROP(leds, "leds", NULL)
->>   DEFINE_SIMPLE_PROP(backlight, "backlight", NULL)
->>   DEFINE_SIMPLE_PROP(panel, "panel", NULL)
->>   DEFINE_SIMPLE_PROP(msi_parent, "msi-parent", "#msi-cells")
->> +DEFINE_SIMPLE_PROP(access_controllers, "access-controllers", "#access-controller-cells")
->>   DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
->>   DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
->>
->> @@ -1363,6 +1364,7 @@ static const struct supplier_bindings of_supplier_bindings[] = {
->>          { .parse_prop = parse_regulators, },
->>          { .parse_prop = parse_gpio, },
->>          { .parse_prop = parse_gpios, },
->> +       { .parse_prop = parse_access_controllers, },
-> 
-> All the simple properties are listed before the suffix ones as the
-> suffix checks are more expensive. So, you should have inserted this
-> right before the suffix properties. Also, there's a merge conflict in
-> linux-next. So make sure you take that into account when sending the
-> fix up and picking the order.
+This is a friendly reminder
 
-I'm fixing the stm32-next branch by inserting
-
-         { .parse_prop = parse_access_controllers, },
-just before
-
-	{ .parse_prop = parse_regulators, },
-
-
-> 
-> -Saravana
-> 
->>          {}
->>   };
-> 
->>
->> --
->> 2.35.3
->>
+--=20
+Best Regards,
+Mike Gavrilov.
