@@ -1,117 +1,111 @@
-Received: from mailrelay6-3.pub.mailoutpod2-cph3.one.com (mailrelay6-3.pub.mailoutpod2-cph3.one.com [46.30.212.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A361B15A491
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 11:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F51A15A488
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 11:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713958371; cv=none; b=MELkhBUfB/vgIF7CTpM/I0flztLAh/8rZs0TX5FXDPPsojBq7jXzsDSnl6WQMI/RMnaYJw3gy9qqaESm28PuH3LmgOn5WnTcrn13MBM/QNBtDEn4gpfSCyP+kJSuWbAI2rUnbOA/vNJMOi/T+WmjBmWy+PHSfonEvO1YdLK19dE=
+	t=1713958479; cv=none; b=YvSRCphP4hXhm01dk8Vo5BpyP7mDZGw2JnY0OivgYbcz8lXoctwAziYkWJH3uvNcPbL/dr7w8fJFXrVtzgiCOeAmy6tqok1Ab3Tou856CwsJHqv+Lkex0oS/Kph/y0OSQJuT/REC53q/kv+po3yQdK0vAHhy2qx7oDg5VMcty5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713958371; c=relaxed/simple;
-	bh=JCQMG7fP0cjNcmTnJ2sSDvS2UO71hAD4BPDVQWE7ZYk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c8QCMAPX96a9DUmKu63AWiFJcRd38PHjzbH79eNos99UeZ92MCTS3hz4ovSBdvqAsSY0zpWCi2g01S0/LF74x7Locp3CBT64NB0mP2NBvhTmSN11j6gZa5x/JzCm/MP5C6PW3o2/LbbXITZe+L3kSRw1AKzKH/9vSYAu5t0aoVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=carewolf.com; spf=none smtp.mailfrom=carewolf.com; dkim=pass (2048-bit key) header.d=carewolf.com header.i=@carewolf.com header.b=GVP2WCPU; dkim=permerror (0-bit key) header.d=carewolf.com header.i=@carewolf.com header.b=hVvvLzGb; arc=none smtp.client-ip=46.30.212.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=carewolf.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=carewolf.com
+	s=arc-20240116; t=1713958479; c=relaxed/simple;
+	bh=YcUfxhUcQApT1mNwyIlAfJBq0C+KxLwY6/CxV7Yz34E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l1XX+syIjRPrOqqgavUMg/21cc3E7//cQwvzT1zjnfXMl1sfmM5nDLADgViz346YP6juNpLmsOTMsUmXiTw/PiRIzXyv0wPRvIDWYJNXcC7p23DADPx5lPdiJhzvOWVWCJrsTd8k644hvVVI6NWH/NwWUV+91NOBK1Ba9U7aek4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dyjNgCLI; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=carewolf.com header.i=@carewolf.com header.b="GVP2WCPU";
-	dkim=permerror (0-bit key) header.d=carewolf.com header.i=@carewolf.com header.b="hVvvLzGb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dyjNgCLI"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-34be34b3296so88187f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 04:34:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=carewolf.com; s=rsa2;
-	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
-	 from;
-	bh=La1F9GWBKgOLv3pdQd/zEdcyB837+ewuRa+W1vOfcX0=;
-	b=GVP2WCPUXBc/8r+RqHisr+HQ9Hx5Qthrf1s754bea3Jd0pRDSeO1N2ev/HP5T+9K7lX3+puCd7NV0
-	 1Esg/fwDvuZViReuJDI09lvNy/1vyLuLuKaj0mQ5tk0JM6HofOx+b+/RQAshFDrXAfx14DwNcliYcD
-	 vbkUEdXX6qLcvKMbRnbdawBLUnCc7U8hgF9E6M6tpuULP87GfhvjwdvUZ0dYSiA/WCEJlNHS0ICoAM
-	 y99pq8quIsPDkwRvG9iKcPb28LL8rzJtG/F2UqEIl/xqlhFXsfJ3f+1eX49c5LP0Dm6ZSlUt880fqk
-	 +ayFa1im1WZwW3VwGSS2G3aH8Z8VURg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=carewolf.com; s=ed2;
-	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
-	 from;
-	bh=La1F9GWBKgOLv3pdQd/zEdcyB837+ewuRa+W1vOfcX0=;
-	b=hVvvLzGbrIiu1/uIWV5RFIPdTVhkyaeXPJiiF0BSVNIzYrzn4V+JmRmK9Bd/rWd2P4ccjX+BymW6m
-	 YV+newvCg==
-X-HalOne-ID: 360a4bc3-022e-11ef-8f41-f528319a6ef4
-Received: from carewolf.com (dynamic-2a02-3103-004c-5300-7231-17da-dcd1-9a4a.310.pool.telefonica.de [2a02:3103:4c:5300:7231:17da:dcd1:9a4a])
-	by mailrelay6.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
-	id 360a4bc3-022e-11ef-8f41-f528319a6ef4;
-	Wed, 24 Apr 2024 11:31:38 +0000 (UTC)
-From: kde@carewolf.com
-To: lains@riseup.net,
-	hadess@hadess.net,
-	jikos@kernel.org,
-	benjamin.tissoires@redhat.com,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Allan Sandfeld Jensen <allan.jensen@qt.io>,
-	Allan Sandfeld Jensen <kde@carewolf.com>
-Subject: [PATCH] Add Logitech HID++ devices
-Date: Wed, 24 Apr 2024 13:31:30 +0200
-Message-Id: <20240424113130.60386-1-kde@carewolf.com>
-X-Mailer: git-send-email 2.39.2
+        d=linaro.org; s=google; t=1713958476; x=1714563276; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=k25tPjMFnxZGYgnKJKp0dkB0J/d5Y8BkULxm1XocePE=;
+        b=dyjNgCLI+8hS8qaZyK26/0ZFyeQ+xfIIbktz7Em+kwHxKinVXEZaki3lbDs9vN09RC
+         bBjCXHvKVSIgLIRNdL+jSSA+N+98qhJcgC20Pn8a6Vxrm8wUaw/Lfl31dvkdvpQZJ41p
+         V/j1nvSuAsuIdBxgWjWAmK7MlpSzDFur6m6nv/ExOPOskb4N+pskqD7uzJxgMInQUioo
+         BdCe67LvXk8hngA+tfbJNb3IA73R6B2w4DazvbHU+f66eJyvYaiB2RYsxzxcjMciuTAR
+         FDZ0aDLhpxyM4YHkp921wVLMvrRqpWzyEUrN00knLwx6+gQibRdF9PsrqP2WSCadJRNf
+         dAQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713958476; x=1714563276;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k25tPjMFnxZGYgnKJKp0dkB0J/d5Y8BkULxm1XocePE=;
+        b=mfXu39QC/TLp5LoDLp0pL2IiJhDND+4s82+4ruCzrhQGmIzCvb0MpaUPhqH7aTMqmG
+         kXbHmeZd9BeZzcaRZ/Sxw82nlV37S0Tdh4SIA1TEWaW2ShNc8T10/Id3jPfQqTqROM56
+         kVRfUS7iLUsDX+q5uNvGgDOmdGGh+W/U8xBeZqtGT462mmjZmMmy6/Zg7AhvoA+DBtPK
+         2v1bYmaQlgldDFq+qIiUckXR5NdBRmPW1rLLvj2K9+Zg+504W3vlFwrhfKGRCvlVUmtS
+         ttudGU1ixeePD678pg3dT9WzRd3pf2OX7PFWj/3y9Fo2K4uO7qRaZCNGZHOJb5Yn4YTq
+         ipmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDS1JCEavYTGkydMqDeQfFWjhmmjj69ZnRieCOZU6uV1ghUPpV1MR0y+zY3Hp0otPMLNtFgq9OWSTCkjXVT/ll0XgBN8RmOuYlc0Zl
+X-Gm-Message-State: AOJu0Yw7bte7SGcZrnwciU+ngBBLTIg4JlNmuhPNoCXgKOOnvXFmdBwe
+	VR29gtlzZtRgpbWZBxx16H6R1VvfQ8+RTPnngVEUtT3E+ctqCxmmTSaIR6ZR7qBHJU0ubxRl8Lz
+	h
+X-Google-Smtp-Source: AGHT+IF7nndGnjcSyHSKcy0fsxfNLV5bYy8H6C5JEFkHVts2E5ZYVuz34KpOvWk+i4MbUAfOVCjbxw==
+X-Received: by 2002:a5d:6709:0:b0:341:d3b0:ae7d with SMTP id o9-20020a5d6709000000b00341d3b0ae7dmr1725373wru.45.1713958475772;
+        Wed, 24 Apr 2024 04:34:35 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id ea7-20020a0560000ec700b0033e91509224sm17003566wrb.22.2024.04.24.04.34.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Apr 2024 04:34:35 -0700 (PDT)
+Message-ID: <917f9bec-80f3-4d10-9781-7b27f361101d@linaro.org>
+Date: Wed, 24 Apr 2024 13:34:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 14/16] thermal: gov_user_space: Use .trip_crossed()
+ instead of .throttle()
+Content-Language: en-US
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Lukasz Luba <lukasz.luba@arm.com>
+References: <13515747.uLZWGnKmhe@kreacher> <15186663.tv2OnDr8pf@kreacher>
+ <ZijNj7DzL9e01Vnt@mai.linaro.org>
+ <e565a9c3-9244-4a0b-9ad8-4beebd03d681@linux.intel.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <e565a9c3-9244-4a0b-9ad8-4beebd03d681@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Allan Sandfeld Jensen <allan.jensen@qt.io>
+On 24/04/2024 13:32, Srinivas Pandruvada wrote:
+> 
+> On 4/24/24 02:14, Daniel Lezcano wrote:
+>> On Wed, Apr 10, 2024 at 07:03:10PM +0200, Rafael J. Wysocki wrote:
+>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>
+>>> Notifying user space about trip points that have not been crossed is
+>>> not particuarly useful, so modity the User Space governor to use the
+>>> .trip_crossed() callback, which is only invoked for trips that have been
+>>> crossed, instead of .throttle() that is invoked for all trips in a
+>>> thermal zone every time the zone is updated.
+>>>
+>>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>> ---
+>> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>
+>> I would also consider removing this governor which is pointless now 
+>> that we
+>> have the netlink notification mechanism
+> 
+> That is a good goal, But, not there yet to deprecate.
 
-Adds a few recognized Logitech HID++ capable mice over USB and Bluetooth
+What can be done to deprecate it ?
 
-Signed-off-by: Allan Sandfeld Jensen <kde@carewolf.com>
----
- drivers/hid/hid-logitech-hidpp.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 3c00e6ac8e76..6907b8c48c4e 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -4352,13 +4352,17 @@ static const struct hid_device_id hidpp_devices[] = {
- 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC081) },
- 	{ /* Logitech G903 Gaming Mouse over USB */
- 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC086) },
-+	{ /* Logitech G Pro Gaming Mouse over USB */
-+	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC088) },
-+	{ /* MX Vertical over USB */
-+	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC08A) },
-+	{ /* Logitech G703 Hero Gaming Mouse over USB */
-+	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC090) },
- 	{ /* Logitech G903 Hero Gaming Mouse over USB */
- 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC091) },
- 	{ /* Logitech G920 Wheel over USB */
- 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_G920_WHEEL),
- 		.driver_data = HIDPP_QUIRK_CLASS_G920 | HIDPP_QUIRK_FORCE_OUTPUT_REPORTS},
--	{ /* Logitech G Pro Gaming Mouse over USB */
--	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC088) },
- 
- 	{ /* MX5000 keyboard over Bluetooth */
- 	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb305),
-@@ -4373,13 +4377,19 @@ static const struct hid_device_id hidpp_devices[] = {
- 	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb008) },
- 	{ /* MX Master mouse over Bluetooth */
- 	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb012) },
-+	{ /* MX Master 2S mouse over Bluetooth */
-+	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb019) },
- 	{ /* MX Ergo trackball over Bluetooth */
- 	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01d) },
- 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01e) },
-+	{ /* MX Vertical mouse over Bluetooth */
-+	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb020) },
- 	{ /* MX Master 3 mouse over Bluetooth */
- 	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb023) },
- 	{ /* MX Master 3S mouse over Bluetooth */
- 	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb034) },
-+	{ /* MX Anywhere 3SB mouse over Bluetooth */
-+	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb038) },
- 	{}
- };
- 
 -- 
-2.39.2
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
