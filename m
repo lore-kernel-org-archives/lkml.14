@@ -1,121 +1,204 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mo-csw.securemx.jp (mo-csw1121.securemx.jp [210.130.202.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4213283CCA
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 02:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1974126F09;
+	Wed, 24 Apr 2024 02:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713926854; cv=none; b=tRFOf2/5gfgBNitLPbYKhcRg9RttQRZo5tccSf8GNvvH8uj3qtNLhNID3/rdAWvLsLi4Ic0tJtwa8TR33IEZysxrCQx01ajEPMd1trVh1YzT+o6XXELg5XFved5We0P+xDT7QCKGhVxJ0GLl/b1BVtAE3EKiOt0KfcZvXYX1SYg=
+	t=1713926896; cv=none; b=bf9zSVVu5bJAtdaiOlgiV/NsgbFgdTs8suF5DbtPR562O4WDYjPxrMuWo0GlMLX3O9UqKe8CK5ksoPSQqSUuRoLUO83fxFMmDF09WA14fU/a9got6JYw1iVZ08EjE7ZYuY9NlgqzDBwKwjohO+wOywyp3KLISYBLHc51c1Aj0QI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713926854; c=relaxed/simple;
-	bh=+9UFQ7F0kNPXWU5psDxCx9iQ57zcJZT5siNRwuiOyJQ=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=t3amoUYucVRBb+srLlhiqvowQwUf12+OKHXEJHisZuzEhUsDUCThFFzuAMfzhW/Oe4HgtGMDocEeYw2ZKOWv+/K6sBnD59u43fS0MlCNAfDeGp9mJtEKE6/egW1bQW8OTRFFfLLpQm7zbqAVZhSUC4WcCkILC5h8UHU6UWFDNoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f9OuM49H; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f9OuM49H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713926853; x=1745462853;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+9UFQ7F0kNPXWU5psDxCx9iQ57zcJZT5siNRwuiOyJQ=;
-  b=f9OuM49HoAqnWIGWu43VFooPpL3CspHZEC3y12RRv164oPdfddwaH5LM
-   /1KWMBDVC1vCbFeUP0JatiJUtuPXRji1YG8lZKMEFtEjq0aO9wXgr9vwD
-   en566Z2hoVHK5IkugtM+ld9CGrw0wkIfBpZShuvGFK5zXu4fT1HwUOyd/
-   xY0PgUVbymGS8ZdUc555Iz6b/UoThH5rUzxBOUDOwmKSDD29aaGlfHwVc
-   kKHCLNyTaLU5xVnX63KnGOEUGiolVrOWwNcENvtAvM8xI45Bg1+yvhSwc
-   vNHZNQnbgxb1KN2RdgAm9M1UsnKl131QUvXV5rUgzZL5sJM6nHgyQDRM1
-   Q==;
-X-CSE-ConnectionGUID: u2a+hYUWT/u9hhrD2M6ZXA==
-X-CSE-MsgGUID: 8ZGzj2s6QuONV/B2ZQQZIA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="12473148"
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="12473148"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 19:47:33 -0700
-X-CSE-ConnectionGUID: w/MpCQrWRG6QdETBGVh0CA==
-X-CSE-MsgGUID: Iz00bPD7QRu5uiyvlwgPXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="24449912"
-Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
-  by orviesa010.jf.intel.com with ESMTP; 23 Apr 2024 19:47:30 -0700
-Message-ID: <4c8fbcc3-64cf-4add-8d82-9a2ce8dbd39d@linux.intel.com>
-Date: Wed, 24 Apr 2024 10:46:06 +0800
+	s=arc-20240116; t=1713926896; c=relaxed/simple;
+	bh=t2YMIeN4VFNeAV/ewWANWx3FcOb4SiqGQg7nearulGc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dyoCnSJY8UGOLDa5Si1hHHKFksuYntNPDwh+k/ryTNrmxTi3PDseNLYVEJlkuW98Oay6iFSJU3QZuMyoDrKaFKtrysE9nnqfwzvnLAUqS6H3DoODsL0Ly9b+IpoEBCJzIdt8d5PF61Hx63eF0cQ80ubkd68wncHctxR/sVnjvpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp; spf=pass smtp.mailfrom=toshiba.co.jp; arc=none smtp.client-ip=210.130.202.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toshiba.co.jp
+Received: by mo-csw.securemx.jp (mx-mo-csw1121) id 43O2lYOR103201; Wed, 24 Apr 2024 11:47:35 +0900
+X-Iguazu-Qid: 2rWhNMNebuq33UEeEk
+X-Iguazu-QSIG: v=2; s=0; t=1713926854; q=2rWhNMNebuq33UEeEk; m=MtG2up2gxYnjxQKZ3UHEUoLgl4Hx9DIPOiOd24TsaiM=
+Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
+	by relay.securemx.jp (mx-mr1123) id 43O2lWEe186609
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 24 Apr 2024 11:47:33 +0900
+X-SA-MID: 21956130
+From: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
+To: Hans Verkuil <hverkuil@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v10 0/6] Add Toshiba Visconti Video Input Interface driver
+Date: Wed, 24 Apr 2024 11:42:09 +0900
+X-TSB-HOP2: ON
+Message-Id: <20240424024215.1624299-1-yuji2.ishikawa@toshiba.co.jp>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, "Zhang, Tina" <tina.zhang@intel.com>,
- "Liu, Yi L" <yi.l.liu@intel.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 00/12] Consolidate domain cache invalidation
-To: "Tian, Kevin" <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Jason Gunthorpe <jgg@ziepe.ca>
-References: <20240416080656.60968-1-baolu.lu@linux.intel.com>
- <BN9PR11MB52765F34E1168B538C7CEDFD8C112@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB52765F34E1168B538C7CEDFD8C112@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/23/24 5:06 PM, Tian, Kevin wrote:
->> From: Lu Baolu<baolu.lu@linux.intel.com>
->> Sent: Tuesday, April 16, 2024 4:07 PM
->>
->> The IOMMU hardware cache needs to be invalidated whenever the
->> mappings
->> in the domain are changed. Currently, domain cache invalidation is
->> scattered across different places, causing several issues:
->>
->> - IOMMU IOTLB Invalidation: This is done by iterating through the domain
->>    IDs of each domain using the following code:
->>
->>          xa_for_each(&dmar_domain->iommu_array, i, info)
->>                  iommu_flush_iotlb_psi(info->iommu, dmar_domain,
->>                                        start_pfn, nrpages,
->>                                        list_empty(&gather->freelist), 0);
->>
->>    This code could theoretically cause a use-after-free problem because
->>    there's no lock to protect the "info" pointer within the loop.
->>
->> - Inconsistent Invalidation Methods: Different domain types implement
->>    their own cache invalidation methods, making the code difficult to
->>    maintain. For example, the DMA domain, SVA domain, and nested domain
->>    have similar cache invalidation code scattered across different files.
->>
->> - SVA Domain Inconsistency: The SVA domain implementation uses a
->>    completely different data structure to track attached devices compared
->>    to other domains. This creates unnecessary differences and, even
->>    worse, leads to duplicate IOTLB invalidation when an SVA domain is
->>    attached to devices belonging to a same IOMMU.
->>
->> - Nested Domain Dependency: The special overlap between a nested domain
->>    and its parent domain requires a dedicated parent_domain_flush()
->>    helper function to be called everywhere the parent domain's mapping
->>    changes.
->>
->> - Limited Debugging Support: There are currently no debugging aids
->>    available for domain cache invalidation.
->>
->> By consolidating domain cache invalidation into a common location, we
->> can address the issues mentioned above and improve the code's
->> maintainability and debuggability.
->>
-> There are several small nits but overall this series looks good to me:
-> 
-> Reviewed-by: Kevin Tian<kevin.tian@intel.com>
+This series is the Video Input Interface driver
+for Toshiba's ARM SoC, Visconti.
+This provides DT binding documentation,
+device driver, documentation and MAINTAINER files.
 
-Thanks! I will queue this series to Joerg for wider verification.
+A visconti VIIF driver instance exposes
+1 media control device file, 3 video device files for capture
+and 2 video device files for controlling image signal processor.
+Detailed HW/SW are described in documentation directory.
+The VIIF hardware has CSI2 receiver,
+image signal processor and DMAC inside.
+The subdevice for image signal processor provides
+vendor specific V4L2 controls.
+
+The device driver depends on two other drivers under development;
+clock framework driver and IOMMU driver.
+Corresponding features will be added later.
 
 Best regards,
-baolu
+Yuji
+
+Changelog v2:
+- Resend v1 because a patch exceeds size limit.
+
+Changelog v3:
+- Add documentation to describe SW and HW
+- Adapted to media control framework
+- Introduced ISP subdevice, capture device
+- Remove private IOCTLs and add vendor specific V4L2 controls
+- Change function name avoiding camelcase and uppercase letters
+
+Changelog v4:
+- Split patches because a patch exceeds size limit
+- fix dt-bindings document
+- stop specifying ID numbers for driver instance explicitly at device tree
+- use pm_runtime to trigger initialization of HW
+  along with open/close of device files.
+- add a entry for a header file at MAINTAINERS file
+
+Changelog v5:
+- Fix coding style problem in viif.c (patch 2/6)
+
+Changelog v6:
+- add register definition of BUS-IF and MPU in dt-bindings
+- add CSI2RX subdevice (separeted from ISP subdevice)
+- change directory layout (moved to media/platform/toshiba/visconti)
+- change source file layout (removed hwd_xxxx.c)
+- pointer to userland memory is removed from uAPI parameters
+- change register access (from struct style to macro style)
+- remove unused macros
+
+Changelog v7:
+- remove redundant "bindings" from header and description text
+- fix multiline text of "description"
+- change "compatible" to "visconti5-viif"
+- explicitly define allowed properties for port::endpoint
+- remove unused variables
+- update kerneldoc comments
+- update references to headers
+
+Changelog v8:
+- rename bindings description file
+- remove/simplify items in bindings
+- update operations around v4l2_async_notifier
+- use v4l2_async_connection instead of v4l2_async_subdev
+- use dev_err_probe()
+- better error handling at probe
+- remove redundant mutex
+- add V4L2_CTRL_TYPE_VISCONTI_ISP constant
+
+Changelog v9:
+- dictionary ordering of dt-bindings properties
+- applied sparce checker
+- call div64_u64 for 64bit division
+- rebase to media_staging tree
+- fix warning for cast between ptr and dma_addr_t
+
+Changelog v10:
+- add an independent entry in MAINTAINERS
+- add paddings to uAPI structs
+- use parameter buffer to control ISP (instead of vendor specific controls)
+
+Yuji Ishikawa (6):
+  dt-bindings: media: platform: visconti: Add Toshiba Visconti Video
+    Input Interface
+  media: videodev2.h: add visconti viif meta buffer format
+  media: platform: visconti: Add Toshiba Visconti Video Input Interface
+    driver
+  media: platform: visconti: add streaming interface for ISP parameters
+    and status
+  documentation: media: add documentation for Toshiba Visconti Video
+    Input Interface driver
+  MAINTAINERS: Add entries for Toshiba Visconti Video Input Interface
+
+ .../admin-guide/media/v4l-drivers.rst         |    1 +
+ .../admin-guide/media/visconti-viif.dot       |   18 +
+ .../admin-guide/media/visconti-viif.rst       |  252 ++
+ .../media/toshiba,visconti5-viif.yaml         |  105 +
+ .../userspace-api/media/v4l/meta-formats.rst  |    1 +
+ .../media/v4l/metafmt-visconti-viif.rst       |   48 +
+ MAINTAINERS                                   |   11 +
+ drivers/media/platform/Kconfig                |    1 +
+ drivers/media/platform/Makefile               |    1 +
+ drivers/media/platform/toshiba/Kconfig        |    6 +
+ drivers/media/platform/toshiba/Makefile       |    2 +
+ .../media/platform/toshiba/visconti/Kconfig   |   19 +
+ .../media/platform/toshiba/visconti/Makefile  |    8 +
+ .../media/platform/toshiba/visconti/viif.c    |  664 ++++++
+ .../media/platform/toshiba/visconti/viif.h    |  398 ++++
+ .../platform/toshiba/visconti/viif_capture.c  | 1472 ++++++++++++
+ .../platform/toshiba/visconti/viif_capture.h  |   22 +
+ .../platform/toshiba/visconti/viif_common.c   |  239 ++
+ .../platform/toshiba/visconti/viif_common.h   |   40 +
+ .../platform/toshiba/visconti/viif_csi2rx.c   |  657 ++++++
+ .../platform/toshiba/visconti/viif_csi2rx.h   |   24 +
+ .../toshiba/visconti/viif_csi2rx_regs.h       |  102 +
+ .../platform/toshiba/visconti/viif_isp.c      | 1191 ++++++++++
+ .../platform/toshiba/visconti/viif_isp.h      |   24 +
+ .../platform/toshiba/visconti/viif_params.c   | 2026 +++++++++++++++++
+ .../platform/toshiba/visconti/viif_params.h   |   19 +
+ .../platform/toshiba/visconti/viif_regs.h     |  721 ++++++
+ .../platform/toshiba/visconti/viif_stats.c    |  334 +++
+ .../platform/toshiba/visconti/viif_stats.h    |   14 +
+ include/uapi/linux/videodev2.h                |    4 +
+ include/uapi/linux/visconti_viif.h            | 1921 ++++++++++++++++
+ 31 files changed, 10345 insertions(+)
+ create mode 100644 Documentation/admin-guide/media/visconti-viif.dot
+ create mode 100644 Documentation/admin-guide/media/visconti-viif.rst
+ create mode 100644 Documentation/devicetree/bindings/media/toshiba,visconti5-viif.yaml
+ create mode 100644 Documentation/userspace-api/media/v4l/metafmt-visconti-viif.rst
+ create mode 100644 drivers/media/platform/toshiba/Kconfig
+ create mode 100644 drivers/media/platform/toshiba/Makefile
+ create mode 100644 drivers/media/platform/toshiba/visconti/Kconfig
+ create mode 100644 drivers/media/platform/toshiba/visconti/Makefile
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif.c
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_capture.c
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_capture.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_common.c
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_common.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_csi2rx.c
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_csi2rx.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_csi2rx_regs.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_isp.c
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_isp.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_params.c
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_params.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_regs.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_stats.c
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_stats.h
+ create mode 100644 include/uapi/linux/visconti_viif.h
+
+-- 
+2.25.1
+
+
