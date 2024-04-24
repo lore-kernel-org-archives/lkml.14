@@ -1,93 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6CA213340B
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 03:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2AA85C59;
+	Wed, 24 Apr 2024 03:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713930153; cv=none; b=dTvEPh8t/CjSIOkcShqhl8h4znK1OQYRDjrhTfDhirx1ktyg14x5Tq2vwQfIyshgkulOJFFVRPJw/w47b9tz4xSb6YqdPaxdfgkJcJU5s45umspvnS485CDtNXOz7JkBL4cCPZ+vygpsAjWBEhviphoc2LlqbcwxewDkU9V6hrU=
+	t=1713930208; cv=none; b=Faeq87iUJy9tcKXYtGf0QITc7GVuRrmMzXyv4v7ekIH9YoYJbsfqCFIXWlFhpAois51keFFvIKZrHy6U3zq1rGlugHIhFmBimG7PjdinBAXTKrR/jxIN38L62OGcAP4rRv6wixiqU5t5vRNswT+C5TsDn/HAqGug4xPWwLjS02E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713930153; c=relaxed/simple;
-	bh=NaV8fJtdZNvQ2q6d/ly1hbkq/RvaEZpbmNlPteDHQWQ=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=UqdfSeXflbo3M7JmROn4HfmO7ibFbP8HbN8dsZPsaWajj6pwqOtWTXj9kN4AbCyCYSpnsacEW0b98ABm7p34zykBqv5ArnyW/hl6aCtL3faAU0Yls9M0OosQBV7N3L/CqJ0ItLdAXJXOWQFX+Yb08Fcw3krmB7LDMEKTmlK51zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nVJ+ZtYo; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nVJ+ZtYo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713930152; x=1745466152;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=NaV8fJtdZNvQ2q6d/ly1hbkq/RvaEZpbmNlPteDHQWQ=;
-  b=nVJ+ZtYoXofZzf9eIyLl25RUTL27rX6+8ACzAndV7TGZZq7+iofWXlAe
-   JCIrkppLR2E4q6TA4y6pMXqji9W+FLuUjY0vBOAuLrox60lo7EV6AjK0P
-   Wde1c7T5iZHeQtCisl0jY0jHqfrVuuJp1F5vZqp2C945Kf1nf1YDjNp7I
-   7ICBKmLC1IcZtHj4r0PTZURC66/lcHG2wyxsy83SYuvZsj1TVim9jd793
-   qUCNy7/q6GL2gkK02e9cfZQXVQFZypCCIqmKKV/0H0zfgB3YtCRoxQW4C
-   N6fNXG1vwaFEPxm78AE/Rk6ekvv6LOHcIaqc171kiCLKME+tfp2SY2A9G
-   g==;
-X-CSE-ConnectionGUID: mNQEn0X2R/CDFiKCgcdD0Q==
-X-CSE-MsgGUID: CQl1UERaSlGCwyJDtaO3mQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9409308"
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="9409308"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 20:42:31 -0700
-X-CSE-ConnectionGUID: 2eSLtHPzRS2Agdj31p61sQ==
-X-CSE-MsgGUID: TSfV7Yz6QTa49Qn7xr1NKA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="24609150"
-Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
-  by fmviesa006.fm.intel.com with ESMTP; 23 Apr 2024 20:42:28 -0700
-Message-ID: <daf746ef-f5db-46aa-876f-42a9deb65445@linux.intel.com>
-Date: Wed, 24 Apr 2024 11:41:05 +0800
+	s=arc-20240116; t=1713930208; c=relaxed/simple;
+	bh=NXQYY86D+GDRBXc8Sz0xux5RIySTPOpCMXcp/jSOXFs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=biTpjNQyVq7Z+zdS9nWqvxaopQ32bB43wz+G3pV7wgkJBsQN0H/QXc6SF1VRbOsR67OsAzoNTqoJRck1CLiDHghga53j6wQUFqC88JQiJQ/UrPyXdVrbgywBfv+yIGgTFSgVazPPeaqNliCA4QqmFdaLbtYmlwHIWwpMJjBxJ+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VPPw65qbcz4f3l8g;
+	Wed, 24 Apr 2024 11:43:18 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id A819E1A0EE6;
+	Wed, 24 Apr 2024 11:43:23 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgBHGBHafyhmuSA4Kw--.57541S4;
+	Wed, 24 Apr 2024 11:43:23 +0800 (CST)
+From: libaokun@huaweicloud.com
+To: netfs@lists.linux.dev
+Cc: dhowells@redhat.com,
+	jlayton@kernel.org,
+	zhujia.zj@bytedance.com,
+	jefflexu@linux.alibaba.com,
+	linux-cachefs@redhat.com,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	libaokun@huaweicloud.com,
+	Baokun Li <libaokun1@huawei.com>
+Subject: [PATCH 0/5] cachefiles: some bugfixes for clean object/send req/poll
+Date: Wed, 24 Apr 2024 11:34:04 +0800
+Message-Id: <20240424033409.2735257-1-libaokun@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Kevin Tian <kevin.tian@intel.com>,
- Yi Liu <yi.l.liu@intel.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] iommu/vt-d: Remove caching mode check before
- device TLB flush
-To: iommu@lists.linux.dev
-References: <20240415013835.9527-1-baolu.lu@linux.intel.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20240415013835.9527-1-baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBHGBHafyhmuSA4Kw--.57541S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7JF48GFW7Xr43Xr1DXrW5KFg_yoW8JF4rpF
+	Wav3W3JFy8Wr12kws3Zw1rJrWrC3s3ZF9rtF47XrykArn8XF1FvrW0yrn8ZFyUCrZ7Gw42
+	gw48WF929wn0v3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWUWVWUuwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0Ew4C26cxK6c8Ij28IcwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU0_-PUUUUU
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 
-On 4/15/24 9:38 AM, Lu Baolu wrote:
-> The Caching Mode (CM) of the Intel IOMMU indicates if the hardware
-> implementation caches not-present or erroneous translation-structure
-> entries except for the first-stage translation. The caching mode is
-> irrelevant to the device TLB, therefore there is no need to check it
-> before a device TLB invalidation operation.
-> 
-> Remove two caching mode checks before device TLB invalidation in the
-> driver. The removal of these checks doesn't change the driver's behavior
-> in critical map/unmap paths. Hence, there is no functionality or
-> performance impact, especially since commit <29b32839725f> ("iommu/vt-d:
-> Do not use flush-queue when caching-mode is on") has already disabled
-> flush-queue for caching mode. Therefore, caching mode will never call
-> intel_flush_iotlb_all().
-> 
-> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
-> Reviewed-by: Kevin Tian<kevin.tian@intel.com>
-> ---
->   drivers/iommu/intel/iommu.c | 9 ++-------
->   1 file changed, 2 insertions(+), 7 deletions(-)
+From: Baokun Li <libaokun1@huawei.com>
 
-Patch has been queued for iommu/vt-d.
+Hello everyone!
 
-Best regards,
-baolu
+Recently we found some bugs while doing tests on cachefiles ondemand mode,
+and this patchset is a fix for some of those issues. The following is a
+brief overview of the patches, see the patches for more details.
+
+Patch 1-3: After an object has been cleaned up, make sure it has no
+outstanding requests and that the corresponding ondemand_object_worker
+has exited, otherwise it may use-after-free.
+
+Patch 4: Cyclic allocation of msg_id to avoid msg_id reuse misleading
+the daemon to cause hung.
+
+Patch 5: Hold xas_lock during polling to avoid dereferencing reqs causing
+use-after-free.
+
+Comments and questions are, as always, welcome.
+
+Thanks,
+Baokun
+
+Baokun Li (3):
+  cachefiles: stop sending new request when dropping object
+  cachefiles: flush all requests for the object that is being dropped
+  cachefiles: cyclic allocation of msg_id to avoid reuse
+
+Hou Tao (1):
+  cachefiles: flush ondemand_object_worker during clean object
+
+Jingbo Xu (1):
+  cachefiles: add missing lock protection when polling
+
+ fs/cachefiles/daemon.c   |   4 +-
+ fs/cachefiles/internal.h |   3 +
+ fs/cachefiles/ondemand.c | 120 ++++++++++++++++++++++++++-------------
+ 3 files changed, 86 insertions(+), 41 deletions(-)
+
+-- 
+2.39.2
+
