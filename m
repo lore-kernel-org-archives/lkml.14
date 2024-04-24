@@ -1,172 +1,138 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18DFC1E4A9;
-	Wed, 24 Apr 2024 09:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15AB3158DD0;
+	Wed, 24 Apr 2024 09:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713952136; cv=none; b=E9w95c77itvCowqDQ8yoV5Lgw7iJl1ao17UfaFXhw1IJC44qaNt4Iicno/GpftYkJaVqWeEB94bisals1OZINscGag3ttyU4DEiSJIXtW7VNtKBybDtDM3YMY/DqxFuqbWWJAsbetZMqg7WyGz7+0lW6lI1o2nzBTmWMprgnEcw=
+	t=1713952154; cv=none; b=tLe+TohMLjHrxxLTPiDAZLr8V3ZMQvNL4Pr9c2pwqWm2hkFAIYyhDzRJWfoidt1wli2LdA7MJKjWczetIIFjHeMyVIQ46FiuWLLkEuClKPO7wB7SsWT9WFbWg2YLYxZbUJ26eHD6Nka1jSs8LbJmKOXfpT6NvVjlxlBQ7kEqqHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713952136; c=relaxed/simple;
-	bh=gjvTM5WoCXZfZuumlfuDjOkBqIB5Kok9g+SQrAlXbwE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=hfJhj/maLigu2fPsbNfIIZH0OHn+U7wGF03k7HH0ooEiyLuFYYCvoBSZ6jCdk2lqvA//I60hX3Wn7f69CCaJZ4941/UV7+w26eI8iSSZ9WMomyrLu+TLo6xg7+ZRqztPlnE/78Mm2mTVMjQdIKTJGw3IyF/3UKKJO5nA1bgcH9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lVSVn+oT; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lVSVn+oT"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43O8wGvH000580;
-	Wed, 24 Apr 2024 09:48:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=S0JRj5pKLCFlpW9XNhYLC6VhpFJ6oksErg2cwtnNIwA=;
- b=lVSVn+oT24geL8ikK+8OKBUOkD822sF0qrmdAm1Mhxuz2BwRqh5o5+oMCadT1z5MS/er
- FjYR/9TnFlzqX7VsHa9yXa9JZ5DGaMlC1HyOGIHRRXWAXx0UoehRLvNlFPdo7by4/okj
- 5go4aMacrv2g7XkLwI+hGBx4Ekicn8IynUbCz54fDvQfoKdHqT+qbiBkKp5LAce0us3o
- 1FIcpVW+8/E9f18ZKoV62EQfmI/9QRPb9in8OzO7JIOdQrzhEOQenSxuCpJdJiT1u8+6
- 0vkCEfx6Hr5IC0ySYzeNhW7DeeVCXceBaaWk1hi8TWb6fSM/+JAfDvl/fP94nmQebPYL ug== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xpy12g38t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 09:48:21 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43O9mKIZ013420;
-	Wed, 24 Apr 2024 09:48:20 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xpy12g38q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 09:48:20 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43O7mRPq023065;
-	Wed, 24 Apr 2024 09:21:21 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xms1p2tv5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 09:21:21 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43O9LJLx23200476
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 24 Apr 2024 09:21:21 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 10D8258052;
-	Wed, 24 Apr 2024 09:21:19 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5EF2258050;
-	Wed, 24 Apr 2024 09:21:15 +0000 (GMT)
-Received: from [9.152.212.241] (unknown [9.152.212.241])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 24 Apr 2024 09:21:15 +0000 (GMT)
-Message-ID: <3b6b4973-0973-40e4-a107-4c81840c9ed3@linux.ibm.com>
-Date: Wed, 24 Apr 2024 11:21:05 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.15 00/71] 5.15.157-rc1 review
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-        jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-        srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-        allen.lkml@gmail.com, broonie@kernel.org, linux-s390@vger.kernel.org,
-        Alexandra Winter <wintera@linux.ibm.com>
-References: <20240423213844.122920086@linuxfoundation.org>
- <CA+G9fYsm9OYUh+H9X2kpJWXsPdde36=WbSWc+mU0vO0i-QaWOw@mail.gmail.com>
-Content-Language: en-US
-From: Peter Oberparleiter <oberpar@linux.ibm.com>
-In-Reply-To: <CA+G9fYsm9OYUh+H9X2kpJWXsPdde36=WbSWc+mU0vO0i-QaWOw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: tz9a1ZkTDNaYgCbEfl71qQD-ElGlqFD3
-X-Proofpoint-GUID: cWVFI8ZpF-PAsklbHzHAdnBTc4Y9cm5k
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	s=arc-20240116; t=1713952154; c=relaxed/simple;
+	bh=u4lx/JULd5SMfiKzIJbC77K4KRfvpML7qMWfMAaioYI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F2gdxJAKM09qO6j/olhEgNinNv3v++7CBqA6+G6roNS0uWTV4edrrtgwyI0r/uoN9lyN4f8tlf0HfZ4ynFonhsIdu7O25MompuJ0mxwCmj2qgoJ9d56oQhZZnr4FBajRYH0a/vu6+k91MLH6Mk1CAv4oP5XqjONyghOVvirBYVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6164d7a02d2so77061907b3.3;
+        Wed, 24 Apr 2024 02:49:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713952151; x=1714556951;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6hEIVy3ACld9hvMVKRp+y3fj+DcJwYS/FFKJpxDdjEk=;
+        b=pHKZ4hWJuPcjwcvyjratQ3RaLJgo06y9lX8aYOI1923An0zQHhzOWxMjvyRMTme7np
+         44Gfd96Uq+NR++TGXIi5JYZ0an3vvI7faY52tVV6HuKBK6tCPjcYbbJtn25UaHlIpglx
+         TMJsUBY4ozFedyErJcxfj+T1OAf2w8UzQBxngxIssT9QpZR5UzSQEEnHKiSd/Fun8LM+
+         CA965R8gmVCVttCAqxYzSm8+MQBX3u53eMLMK1AcNhyTNfrY8frq3lSDRrhHOAei5dh9
+         2751PEog24WQXSWVCervNd57yX4cnxRJh0M/7mGw/9M/abEC6khK0cPHOCoQKWATFlmv
+         7WPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbmiQ3ZVRHP1m/ePvgygKx0517qQibNry2jDvkPEgSITPWNnt9AqUEQn1GFSxambur6L3D0kcMgMiHjLSYEXtcVYSG34oDxCVFq6dPDpGVefWrNZ76HGDJB47a5oHsUTR1fsHYQyUWUXj2
+X-Gm-Message-State: AOJu0YyMjZOkyEmfNnnUQARtFeBoRpEWnKe0vVXNl+LrI2b8nhWrz8Hu
+	Z+KElyO3l/LA2bmAMNHcr97Gw51G2lbBEJGTvv4eG4aswLFqGB+aUQC79E49
+X-Google-Smtp-Source: AGHT+IH1iqlvmzpGDqai+9wt7Uee4X8myKBxX98jbIgMafOaNXdduo1g5zc/B5bvH3eEPvukJrk6DA==
+X-Received: by 2002:a05:690c:690f:b0:615:1527:aa2 with SMTP id if15-20020a05690c690f00b0061515270aa2mr2011913ywb.10.1713952151348;
+        Wed, 24 Apr 2024 02:49:11 -0700 (PDT)
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
+        by smtp.gmail.com with ESMTPSA id a6-20020a81bc06000000b0061440b93ce5sm2887954ywi.37.2024.04.24.02.49.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Apr 2024 02:49:11 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dc23bf7e5aaso7001285276.0;
+        Wed, 24 Apr 2024 02:49:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWX51NhinKIz7FdYdVhRj/dv7r9KRpueSI+VXUuboIVfNqmFF9KcWhsIVEz/LoIus9kA4BmLsAXLvVxxFU7raraOtXm3J8aABYesv9gmPKSqz4zpnAqocSrgcS33ZwKkuGqwmBvWHXoUicN
+X-Received: by 2002:a25:e30d:0:b0:de5:5089:32b8 with SMTP id
+ z13-20020a25e30d000000b00de5508932b8mr1657304ybd.63.1713952150942; Wed, 24
+ Apr 2024 02:49:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-24_07,2024-04-23_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 suspectscore=0
- phishscore=0 adultscore=0 bulkscore=0 mlxlogscore=999 clxscore=1011
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404240041
+References: <20240416123545.7098-4-wsa+renesas@sang-engineering.com> <20240416123545.7098-6-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20240416123545.7098-6-wsa+renesas@sang-engineering.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 24 Apr 2024 11:48:59 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUEvft0B9WdfZ936ccomZW4Qea8MVNSj-Q-Dyn8EKSUdA@mail.gmail.com>
+Message-ID: <CAMuHMdUEvft0B9WdfZ936ccomZW4Qea8MVNSj-Q-Dyn8EKSUdA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] serial: sh-sci: always cancel hrtimer when DMA RX
+ is invalidated
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Aleksandar Mitev <amitev@visteon.com>, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 24.04.2024 09:57, Naresh Kamboju wrote:
-> On Wed, 24 Apr 2024 at 03:16, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
->>
->> This is the start of the stable review cycle for the 5.15.157 release.
->> There are 71 patches in this series, all will be posted as a response
->> to this one.  If anyone has any issues with these being applied, please
->> let me know.
->>
->> Responses should be made by Thu, 25 Apr 2024 21:38:28 +0000.
->> Anything received after that time might be too late.
->>
->> The whole patch series can be found in one patch at:
->>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.157-rc1.gz
->> or in the git tree and branch at:
->>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
->> and the diffstat can be found below.
->>
->> thanks,
->>
->> greg k-h
-> 
-> 
-> The s390 defconfig build failed with gcc-12 and clang-17 on the Linux
-> stable-rc linux.5.15.y branch.
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> Build log:
-> ---
-> drivers/s390/cio/qdio_main.c: In function 'qdio_int_handler':
-> drivers/s390/cio/qdio_main.c:761:52: error: incompatible type for
-> argument 2 of 'ccw_device_start'
->   761 |                 rc = ccw_device_start(cdev, irq_ptr->ccw,
-> intparm, 0, 0);
->       |                                             ~~~~~~~^~~~~
->       |                                                    |
->       |                                                    struct ccw1
-> In file included from arch/s390/include/asm/qdio.h:13,
->                  from drivers/s390/cio/qdio_main.c:18:
-> arch/s390/include/asm/ccwdev.h:172:50: note: expected 'struct ccw1 *'
-> but argument is of type 'struct ccw1'
->   172 | extern int ccw_device_start(struct ccw_device *, struct ccw1 *,
->       |                                                  ^~~~~~~~~~~~~
-> make[3]: *** [scripts/Makefile.build:289: drivers/s390/cio/qdio_main.o] Error 1
-> 
-> 
-> Suspected commit:
-> --------
-> s390/qdio: handle deferred cc1
->   [ Upstream commit 607638faf2ff1cede37458111496e7cc6c977f6f ]
+Hi Wolfram,
 
-This is due to a type change of field 'ccw' in 'struct qdio_irq' that
-was introduced in v5.17 via commit 718ce9e10171 ("s390/qdio: avoid
-allocating the qdio_irq with GFP_DMA").
+On Tue, Apr 16, 2024 at 2:35=E2=80=AFPM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> Clear the timer whenever 'chan_rx' is cleared to avoid an OOPS.
+> Currently, the driver only runs the timer when 'chan_rx' is set before.
+> However, it is good defensive programming to make sure the hrtimer is
+> always stopped before clearing the 'chan_rx' pointer.
+>
+> Reported-by: Dirk Behme <dirk.behme@de.bosch.com>
+> Closes: https://lore.kernel.org/r/ee6c9e16-9f29-450e-81da-4a8dceaa8fc7@de=
+.bosch.com
+> Fixes: 9ab765566086 ("serial: sh-sci: Remove timer on shutdown of port")
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-The following change to commit 607638faf2ff ("s390/qdio: handle deferred
-cc1") fixes the compile error on v5.15:
+Thanks for your patch!
 
---- a/drivers/s390/cio/qdio_main.c
-+++ b/drivers/s390/cio/qdio_main.c
-@@ -758,7 +758,7 @@ void qdio_int_handler(struct ccw_device *cdev, unsigned long intparm,
+> Locking needs to be double-checked here. This patch is mainly calling
+> for opinions.
 
- 	if (rc == -EAGAIN) {
- 		DBF_DEV_EVENT(DBF_INFO, irq_ptr, "qint retry");
--		rc = ccw_device_start(cdev, irq_ptr->ccw, intparm, 0, 0);
-+		rc = ccw_device_start(cdev, &irq_ptr->ccw, intparm, 0, 0);
- 		if (!rc)
- 			return;
- 		DBF_ERROR("%4x RETRY ERR", irq_ptr->schid.sch_no);
+I do think you need to cancel the timer: even when not restarting
+the timer in sci_dma_rx_complete() due to a DMA failure, the previous
+timer may still be running, and will cause a NULL pointer dereference
+on s->chan_rx on timer expiry.
 
+> --- a/drivers/tty/serial/sh-sci.c
+> +++ b/drivers/tty/serial/sh-sci.c
+> @@ -1262,6 +1262,7 @@ static void sci_dma_rx_chan_invalidate(struct sci_p=
+ort *s)
+>  {
+>         unsigned int i;
+>
+> +       hrtimer_cancel(&s->rx_timer);
+
+Is it safe to do this unconditionally on shutdown (cfr. the old check
+for s->chan_rx_saved)?
+
+>         s->chan_rx =3D NULL;
+>         for (i =3D 0; i < ARRAY_SIZE(s->cookie_rx); i++)
+>                 s->cookie_rx[i] =3D -EINVAL;
+> @@ -2242,14 +2243,6 @@ static void sci_shutdown(struct uart_port *port)
+>                        scr & (SCSCR_CKE1 | SCSCR_CKE0 | s->hscif_tot));
+>         uart_port_unlock_irqrestore(port, flags);
+>
+> -#ifdef CONFIG_SERIAL_SH_SCI_DMA
+> -       if (s->chan_rx_saved) {
+> -               dev_dbg(port->dev, "%s(%d) deleting rx_timer\n", __func__=
+,
+> -                       port->line);
+> -               hrtimer_cancel(&s->rx_timer);
+> -       }
+> -#endif
+> -
+>         if (s->rx_trigger > 1 && s->rx_fifo_timeout > 0)
+>                 del_timer_sync(&s->rx_fifo_timer);
+>         sci_free_irq(s);
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
