@@ -1,60 +1,80 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E38142902;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99385142910;
 	Wed, 24 Apr 2024 02:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713926808; cv=none; b=e29/cw/LeNE2s9M2fzx2E8AzeEw3NhStvsPLY1mA858st3BX67IYTC6RYTxFR+jYbzh8fOU59nspehzY6lC557Wi0AjAhfSt2cA/Sve09Nejc7ZmT/eWiqlafjRFy6vyU0eUizeBcqHmISDhL1ysX3g1rnu22nurQMhZp8eRoro=
+	t=1713926809; cv=none; b=Z7/CHf3NMYJWFlwThTMlh4FdFYwEUUkAZ+/aSZRY+/63BWapgt7R+BSFuk+gjfk48HLEvkE3FgYTNksdaItzx+PsML/AmVfkCU7JCi3AiDGY292Tk364eptTjsxIR94VBPZX3VXdihclv4PNqpxl7SVO/i0xC2F3GxpJVV+kXrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713926808; c=relaxed/simple;
-	bh=qlqjLL23VyMDj1WOAODqetm5Ivoy03njZ+jYFKFJjHw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IgJIWZA5LXqAJ6QXKfPmJ5ti8DvBT2Z+LlaS7+BBGaK2DN++jZaOJHi6Tkeucm6XH7SW+qxEGfcUrasK9zgBqKi8/aglfkfnfkBiPudfHbaFAWFIAyzzbm3uDITI/LCPJ/WLxhVV2U58YexpiBlNTd36eUyNjlu5OX9TQY2utEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=K53H4RTC; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713926809; c=relaxed/simple;
+	bh=IAWHe/WGFHNTDrFwvQXGWoYkFQwgloe0onaet/X378k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=n/hXnIJtMEIk73Co577m2BSUR+v3MPwVj0i8nXVJRsKPcpz/Fe4HgMVE/NYjKou+yd7EoPBopmlN6GDd2hd3TesR0phWKtpLi7RKjj6CwIPNspfRYhM05H8QgObeKsCZ97d2L1+j4WYz9pIbkRJInsEeASpWXAH4pjSk+w1qRpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=igf3hcsS; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="K53H4RTC"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43O2fGFM011088;
-	Wed, 24 Apr 2024 02:46:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=bczshZ/+ZN2E6C2aTZcD9h0Eu4d8eG9ITdt2YMJyB5o=; b=K5
-	3H4RTCysDnDCBbYvtt7MhpAHUSWqNt0Hg+Szoa3MeQFlh3p7RAqID7OC37nPYUHC
-	7h/5w7C00Rgs+lfefzKDLNVbuwReVR+nmLdRP2CuJ/BbaQF4XChZtBnncj3kQ9hS
-	Cg/2X3oL7X6JD3aWokc75ibBmax7GoYc8O1CIENslQ8afjW0H/3vUlMOzXdoRYBT
-	9z5JnIJ62ff2z94d1ojESlCUvz6Ow5IGK32LJ7xsSDPmzjcavC1I+ZEDLarp2khY
-	D5TqITMjywCOcoFsc32wPrKmURn3r2JCmwxxWzBDnn3BDTZQkVJWmcr/uBtt3oer
-	wv+Loby0h7Tnt1zHa6+w==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xppn5g9mv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 02:46:35 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43O2kYkt025023
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 02:46:34 GMT
-Received: from tengfan-gv.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 23 Apr 2024 19:46:28 -0700
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <dmitry.baryshkov@linaro.org>
-CC: <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <kernel@quicinc.com>, Tengfei Fan <quic_tengfan@quicinc.com>
-Subject: [PATCH v7 2/4] arm64: dts: qcom: qcs8550: introduce qcs8550 dtsi
-Date: Wed, 24 Apr 2024 10:45:06 +0800
-Message-ID: <20240424024508.3857602-3-quic_tengfan@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240424024508.3857602-1-quic_tengfan@quicinc.com>
-References: <20240424024508.3857602-1-quic_tengfan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="igf3hcsS"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e4bf0b3e06so60037825ad.1;
+        Tue, 23 Apr 2024 19:46:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713926807; x=1714531607; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WD6FLyFd+kaR4G9qqagHI1pHRoK87i1I+Wy5F/wZChs=;
+        b=igf3hcsSz73/jD+uSs5cGYmfVD3nyCNX3JagdGW7Rxm+sI+tBTcLR7Ug+METFAuOTO
+         HRSQ6wEfLZqkf1AqeBTZ/5XOISXR0yoJUpnVunAWPlmvzgOa5qwuB2lRneLuWrNK/cKp
+         x+aZwbV+ieZPDhDkaVtJ/4s6dYMW7T4JWjjRzHsoAxiBO81Wus1lW1wqLsqFLRQqJYoY
+         /ASjkRSjAaPt92Cveh6IkJNLLlQ0bJJEyyJMU+5t6gjuRTdLSolfbUv6ktkYtE6XuvrG
+         H5bO1XcO9qQRZb2J8tHQJFU8lT0BMp2ci9n2QiVnbZyYX1bhq6AK6WZS2XzBFjLC97eW
+         m0Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713926807; x=1714531607;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WD6FLyFd+kaR4G9qqagHI1pHRoK87i1I+Wy5F/wZChs=;
+        b=gckCj6IF+ZCMyAbPe8sosMmECmCIuydFIcI9IarVgiCt3nqLpC66Wwt0wx+MY9Hrtb
+         07srCwvpWJtA04xuxLneGg8w7i/FGGJ+rmn0eEmb2vPIB3dwx5+6lctqWyOTFwgpUxCu
+         UyZXDxOkFtD6DIp6K5zYZi3kVzUCSm70+Gg4rDGvHVsF0+uu5/ZyJi8me1i9dn2u/R7/
+         auknCiYbiqiBgZ/Mq+AnbH3QC4BdQv9DKOBqELreZhYtDJdcnrjII/PcvUh77LTGtnRg
+         UIHeNnklc83h61+kINfSXCDApZ5pOrcUgx27haPsTovH6jF1ntoCEnq8JIWMT6PznJcD
+         8ssQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWjynYEqvp9Ch9/JDf3WBsf7CREtNAUsp0E0CD0tTdwxCv6RTmicnshKWkJRx4biOg8u86Z/iLu6OPyGUoQlmEIBgBP8SX/Wc2yoqPK0tlW9GRFwGoLj8z+FTZ7eFGj5dLgIjjlyHNWf2lXoVkoG+5g14TwGeW+tyEeZFrvkEFoZYI6Q==
+X-Gm-Message-State: AOJu0YzTHWWJ2mtJ5k065N2dKEJe49grcrr9s/d40CE9YWxwuWm7NPl8
+	JAAkR3ow8Q4ZBgLpgCsKISJAJTP4nwFSGH3R4u/Ne/bEwO+rRcW7
+X-Google-Smtp-Source: AGHT+IGrT/CLvhvXaeyeMW8KmXQsEeyjRYnG1dAcTKRxQylkrtfhTczpntsU0x2jZAyYRNZ4iLBKqQ==
+X-Received: by 2002:a17:902:ec91:b0:1e0:983c:d686 with SMTP id x17-20020a170902ec9100b001e0983cd686mr1327968plg.20.1713926806655;
+        Tue, 23 Apr 2024 19:46:46 -0700 (PDT)
+Received: from localhost.localdomain ([120.229.49.143])
+        by smtp.gmail.com with ESMTPSA id t6-20020a170902e84600b001e604438791sm10739243plg.156.2024.04.23.19.46.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 19:46:46 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	zegao2021@gmail.com,
+	leo.yan@linux.dev,
+	ravi.bangoria@amd.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH v2 3/4] perf record off-cpu: extract off-cpu sample data from raw_data
+Date: Wed, 24 Apr 2024 10:48:04 +0800
+Message-ID: <20240424024805.144759-4-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240424024805.144759-1-howardchu95@gmail.com>
+References: <20240424024805.144759-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,248 +82,394 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 5GIIRK-XYHRUWGYVIVTxqaUvtP1iEXV0
-X-Proofpoint-ORIG-GUID: 5GIIRK-XYHRUWGYVIVTxqaUvtP1iEXV0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-23_20,2024-04-23_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=959 suspectscore=0 spamscore=0 lowpriorityscore=0
- malwarescore=0 phishscore=0 clxscore=1015 bulkscore=0 priorityscore=1501
- mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404240011
 
-QCS8550 is derived from SM8550. The differnece between SM8550 and
-QCS8550 is QCS8550 doesn't have modem RF system. QCS8550 is mainly used
-in IoT scenarios.
-QCS8550 firmware has different memory map with SM8550 firmware. The
-memory map will be runtime added through bootloader.
-There are 3 types of reserved memory regions here:
-1. Firmware related regions which aren't shared with kernel.
-    The device tree source in kernel doesn't need to have node to indicate
-the firmware related reserved information. OS bootloader conveys the
-information by update device tree in runtime.
-    This will be described as: UEFI saves the physical address of the
-UEFI System Table to dts file's chosen node. Kernel read this table and
-add reserved memory regions to efi config table. Current reserved memory
-region may have reserved region which was not yet used, release note of
-the firmware have such kind of information.
-2. Firmware related memory regions which are shared with Kernel
-    Each region has a specific node with specific label name for later
-phandle reference from other driver dt node.
-3. PIL regions.
-    PIL regions will be reserved and then assigned to subsystem firmware
-later.
-Here is a reserved memory map for this platform:
-0x100000000 +------------------+
-            |                  |
-            | Firmware Related |
-            |                  |
- 0xd4d00000 +------------------+
-            |                  |
-            | Kernel Available |
-            |                  |
- 0xa7000000 +------------------+
-            |                  |
-            |    PIL Region    |
-            |                  |
- 0x8a800000 +------------------+
-            |                  |
-            | Firmware Related |
-            |                  |
- 0x80000000 +------------------+
-Note that:
-0xa7000000..0xA8000000 is used by bootloader, when kernel boot up,
-it is available for kernel usage. This region is not suggested to be
-used by kernel features like ramoops, suspend resume etc.
+Because we need to extract real sample data from raw_data, an
+off_cpu_strip function is needed. In this function, we read events one by
+one, extract actual samples from raw data. After stripping is done, a
+new stripped buffer will be written to the file(or compressed).
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+The size is end - start without masking, because masking will be handled
+by perf_mmap__read_event(). Also, there's no need to call
+perf_mmap__consume() as it will be called by perf_mmap__push(). We read
+all the data at once, so start will be moved to end, when
+perf_mmap__push() is called in pushfn the second time, size will be zero,
+returns directly.
+
+Hook record_done instead of record_end to off_cpu_finish.
+
+Although moving record_end hook is also fine because currently, only
+off-cpu is using these hooks, technically record doesn't end when we need
+to turn off BPF output, so it may confuse if moved. The reason why there's
+an additional off_cpu_prepare_parse is that it cannot be put into
+off_cpu_finish because there are still samples to be read(which requires
+sample_type to stay PERF_SAMPLE_RAW), and it cannot be hooked to
+record_end because it has to be put before record__finish_output.
+
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/qcs8550.dtsi | 169 ++++++++++++++++++++++++++
- 1 file changed, 169 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/qcs8550.dtsi
+ tools/perf/util/bpf_off_cpu.c     | 242 +++++++++++++-----------------
+ tools/perf/util/off_cpu.h         |  14 +-
+ tools/perf/util/perf-hooks-list.h |   1 +
+ 3 files changed, 118 insertions(+), 139 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs8550.dtsi b/arch/arm64/boot/dts/qcom/qcs8550.dtsi
-new file mode 100644
-index 000000000000..a3ebf3d4e16d
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/qcs8550.dtsi
-@@ -0,0 +1,169 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2023-2024, Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
+diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
+index 6af36142dc5a..4b055b77d734 100644
+--- a/tools/perf/util/bpf_off_cpu.c
++++ b/tools/perf/util/bpf_off_cpu.c
+@@ -12,6 +12,9 @@
+ #include "util/thread_map.h"
+ #include "util/cgroup.h"
+ #include "util/strlist.h"
++#include "util/mmap.h"
++#include "util/sample.h"
++#include <perf/mmap.h>
+ #include <bpf/bpf.h>
+ 
+ #include "bpf_skel/off_cpu.skel.h"
+@@ -23,51 +26,6 @@
+ 
+ static struct off_cpu_bpf *skel;
+ 
+-struct off_cpu_key {
+-	u32 pid;
+-	u32 tgid;
+-	u32 stack_id;
+-	u32 state;
+-	u64 cgroup_id;
+-};
+-
+-union off_cpu_data {
+-	struct perf_event_header hdr;
+-	u64 array[1024 / sizeof(u64)];
+-};
+-
+-static int off_cpu_config(struct evlist *evlist)
+-{
+-	struct evsel *evsel;
+-	struct perf_event_attr attr = {
+-		.type	= PERF_TYPE_SOFTWARE,
+-		.config = PERF_COUNT_SW_BPF_OUTPUT,
+-		.size	= sizeof(attr), /* to capture ABI version */
+-	};
+-	char *evname = strdup(OFFCPU_EVENT);
+-
+-	if (evname == NULL)
+-		return -ENOMEM;
+-
+-	evsel = evsel__new(&attr);
+-	if (!evsel) {
+-		free(evname);
+-		return -ENOMEM;
+-	}
+-
+-	evsel->core.attr.freq = 1;
+-	evsel->core.attr.sample_period = 1;
+-	/* off-cpu analysis depends on stack trace */
+-	evsel->core.attr.sample_type = PERF_SAMPLE_CALLCHAIN;
+-
+-	evlist__add(evlist, evsel);
+-
+-	free(evsel->name);
+-	evsel->name = evname;
+-
+-	return 0;
+-}
+-
+ static void off_cpu_start(void *arg)
+ {
+ 	struct evlist *evlist = arg;
+@@ -125,18 +83,29 @@ static void check_sched_switch_args(void)
+ 	btf__free(btf);
+ }
+ 
++int off_cpu_prepare_parse(struct evlist *evlist)
++{
++	struct evsel *evsel;
 +
-+#include "sm8550.dtsi"
++	evsel = evlist__find_evsel_by_str(evlist, OFFCPU_EVENT);
++	if (evsel == NULL)
++		return -1;
 +
-+/delete-node/ &reserved_memory;
++	evsel->core.attr.sample_type = OFFCPU_SAMPLE_TYPES;
 +
-+/ {
-+	reserved_memory: reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
++	return 0;
++}
 +
+ int off_cpu_prepare(struct evlist *evlist, struct target *target,
+ 		    struct record_opts *opts)
+ {
+ 	int err, fd, i;
+ 	int ncpus = 1, ntasks = 1, ncgrps = 1;
++	u64 sid = 0;
+ 	struct strlist *pid_slist = NULL;
+ 	struct str_node *pos;
+-
+-	if (off_cpu_config(evlist) < 0) {
+-		pr_err("Failed to config off-cpu BPF event\n");
+-		return -1;
+-	}
++	struct evsel *evsel;
++	struct perf_cpu pcpu;
+ 
+ 	skel = off_cpu_bpf__open();
+ 	if (!skel) {
+@@ -250,7 +219,6 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
+ 	}
+ 
+ 	if (evlist__first(evlist)->cgrp) {
+-		struct evsel *evsel;
+ 		u8 val = 1;
+ 
+ 		skel->bss->has_cgroup = 1;
+@@ -272,6 +240,25 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
+ 		}
+ 	}
+ 
++	evsel = evlist__find_evsel_by_str(evlist, OFFCPU_EVENT);
++	if (evsel == NULL) {
++		pr_err("%s evsel not found\n", OFFCPU_EVENT);
++		goto out;
++	}
 +
-+		/* These are 3 types of reserved memory regions here:
-+		 * 1. Firmware related regions which aren't shared with kernel.
-+		 *     The device tree source in kernel doesn't need to have node to
-+		 * indicate the firmware related reserved information. OS bootloader
-+		 * conveys the information by update device tree in runtime.
-+		 *     This will be described as: UEFI saves the physical address of
-+		 * the UEFI System Table to dts file's chosen node. Kernel read this
-+		 * table and add reserved memory regions to efi config table. Current
-+		 * reserved memory region may have reserved region which was not yet
-+		 * used, release note of the firmware have such kind of information.
-+		 * 2. Firmware related memory regions which are shared with Kernel.
-+		 *     Each region has a specific node with specific label name for
-+		 * later phandle reference from other driver dt node.
-+		 * 3. PIL regions.
-+		 *     PIL regions will be reserved and then assigned to subsystem
-+		 * firmware later.
-+		 * Here is a reserved memory map for this platform:
-+		 * 0x100000000 +------------------+
-+		 *             |                  |
-+		 *             | Firmware Related |
-+		 *             |                  |
-+		 *  0xd4d00000 +------------------+
-+		 *             |                  |
-+		 *             | Kernel Available |
-+		 *             |                  |
-+		 *  0xa7000000 +------------------+
-+		 *             |                  |
-+		 *             |    PIL Region    |
-+		 *             |                  |
-+		 *  0x8a800000 +------------------+
-+		 *             |                  |
-+		 *             | Firmware Related |
-+		 *             |                  |
-+		 *  0x80000000 +------------------+
-+		 * Note that:
-+		 * 0xa7000000..0xA8000000 is used by bootloader, when kernel boot up,
-+		 * it is available for kernel usage. This region is not suggested to
-+		 * be used by kernel features like ramoops, suspend resume etc.
-+		 */
++	if (evsel->core.id)
++		sid = evsel->core.id[0];
 +
-+		/*
-+		 * Firmware related regions, bootlader will possible reserve parts of
-+		 * region from 0x80000000..0x8a800000.
-+		 */
-+		aop_image_mem: aop-image-region@81c00000 {
-+			reg = <0x0 0x81c00000 0x0 0x60000>;
-+			no-map;
-+		};
++	skel->bss->sample_id = sid;
++	skel->bss->sample_type = OFFCPU_SAMPLE_TYPES;
 +
-+		aop_cmd_db_mem: aop-cmd-db-region@81c60000 {
-+			compatible = "qcom,cmd-db";
-+			reg = <0x0 0x81c60000 0x0 0x20000>;
-+			no-map;
-+		};
++	perf_cpu_map__for_each_cpu(pcpu, i, evsel->core.cpus) {
++		bpf_map__update_elem(skel->maps.offcpu_output,
++				     &pcpu.cpu, sizeof(int),
++				     xyarray__entry(evsel->core.fd, pcpu.cpu, 0),
++				     sizeof(__u32), BPF_ANY);
++	}
 +
-+		aop_config_mem: aop-config-region@81c80000 {
-+			no-map;
-+			reg = <0x0 0x81c80000 0x0 0x20000>;
-+		};
+ 	err = off_cpu_bpf__attach(skel);
+ 	if (err) {
+ 		pr_err("Failed to attach off-cpu BPF skeleton\n");
+@@ -279,7 +266,7 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
+ 	}
+ 
+ 	if (perf_hooks__set_hook("record_start", off_cpu_start, evlist) ||
+-	    perf_hooks__set_hook("record_end", off_cpu_finish, evlist)) {
++	    perf_hooks__set_hook("record_done", off_cpu_finish, evlist)) {
+ 		pr_err("Failed to attach off-cpu skeleton\n");
+ 		goto out;
+ 	}
+@@ -291,105 +278,88 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
+ 	return -1;
+ }
+ 
+-int off_cpu_write(struct perf_session *session)
++ssize_t off_cpu_strip(struct evlist *evlist, struct mmap *mp, char *dst, size_t size)
+ {
+-	int bytes = 0, size;
+-	int fd, stack;
+-	u64 sample_type, val, sid = 0;
++	/*
++	 * In this function, we read events one by one,
++	 * stripping actual samples from raw data.
++	 */
 +
-+		smem_mem: smem-region@81d00000 {
-+			compatible = "qcom,smem";
-+			reg = <0x0 0x81d00000 0x0 0x200000>;
-+			hwlocks = <&tcsr_mutex 3>;
-+			no-map;
-+		};
++	union perf_event *event, tmp;
++	u64 sample_type = OFFCPU_SAMPLE_TYPES;
++	size_t written = 0, event_sz, write_sz, raw_sz_aligned, offset = 0;
++	void *src;
++	int err = 0, n = 0;
++	struct perf_sample sample;
+ 	struct evsel *evsel;
+-	struct perf_data_file *file = &session->data->file;
+-	struct off_cpu_key prev, key;
+-	union off_cpu_data data = {
+-		.hdr = {
+-			.type = PERF_RECORD_SAMPLE,
+-			.misc = PERF_RECORD_MISC_USER,
+-		},
+-	};
+-	u64 tstamp = OFF_CPU_TIMESTAMP;
+-
+-	skel->bss->enabled = 0;
+ 
+-	evsel = evlist__find_evsel_by_str(session->evlist, OFFCPU_EVENT);
++	evsel = evlist__find_evsel_by_str(evlist, OFFCPU_EVENT);
+ 	if (evsel == NULL) {
+ 		pr_err("%s evsel not found\n", OFFCPU_EVENT);
+-		return 0;
+-	}
+-
+-	sample_type = evsel->core.attr.sample_type;
+-
+-	if (sample_type & ~OFFCPU_SAMPLE_TYPES) {
+-		pr_err("not supported sample type: %llx\n",
+-		       (unsigned long long)sample_type);
+ 		return -1;
+ 	}
+ 
+-	if (sample_type & (PERF_SAMPLE_ID | PERF_SAMPLE_IDENTIFIER)) {
+-		if (evsel->core.id)
+-			sid = evsel->core.id[0];
+-	}
++	/* for writing sample time*/
++	if (sample_type & PERF_SAMPLE_IDENTIFIER)
++		++n;
++	if (sample_type & PERF_SAMPLE_IP)
++		++n;
++	if (sample_type & PERF_SAMPLE_TID)
++		++n;
 +
-+		adsp_mhi_mem: adsp-mhi-region@81f00000 {
-+			reg = <0x0 0x81f00000 0x0 0x20000>;
-+			no-map;
-+		};
++	/* no need for perf_mmap__consume(), it will be handled by perf_mmap__push() */
++	while ((event = perf_mmap__read_event(&mp->core)) != NULL) {
++		event_sz = event->header.size;
++		write_sz = event_sz;
++		src = event;
 +
-+		/* PIL region */
-+		mpss_mem: mpss-region@8a800000 {
-+			reg = <0x0 0x8a800000 0x0 0x10800000>;
-+			no-map;
-+		};
++		if (event->header.type == PERF_RECORD_SAMPLE) {
++			err = evlist__parse_sample(evlist, event, &sample);
++			if (err) {
++				pr_err("Failed to parse off-cpu sample\n");
++				return -1;
++			}
+ 
+-	fd = bpf_map__fd(skel->maps.off_cpu);
+-	stack = bpf_map__fd(skel->maps.stacks);
+-	memset(&prev, 0, sizeof(prev));
++			if (sample.raw_data && evsel->core.id) {
++				bool flag = false;
+ 
+-	while (!bpf_map_get_next_key(fd, &prev, &key)) {
+-		int n = 1;  /* start from perf_event_header */
+-		int ip_pos = -1;
++				for (u32 i = 0; i < evsel->core.ids; i++) {
++					if (sample.id == evsel->core.id[i]) {
++						flag = true;
++						break;
++					}
++				}
++				if (flag) {
++					memcpy(&tmp, event, event_sz);
+ 
+-		bpf_map_lookup_elem(fd, &key, &val);
++					/* raw data has extra bits for alignment, discard them */
++					raw_sz_aligned = sample.raw_size - sizeof(u32);
++					memcpy(tmp.sample.array, sample.raw_data, raw_sz_aligned);
+ 
+-		if (sample_type & PERF_SAMPLE_IDENTIFIER)
+-			data.array[n++] = sid;
+-		if (sample_type & PERF_SAMPLE_IP) {
+-			ip_pos = n;
+-			data.array[n++] = 0;  /* will be updated */
+-		}
+-		if (sample_type & PERF_SAMPLE_TID)
+-			data.array[n++] = (u64)key.pid << 32 | key.tgid;
+-		if (sample_type & PERF_SAMPLE_TIME)
+-			data.array[n++] = tstamp;
+-		if (sample_type & PERF_SAMPLE_ID)
+-			data.array[n++] = sid;
+-		if (sample_type & PERF_SAMPLE_CPU)
+-			data.array[n++] = 0;
+-		if (sample_type & PERF_SAMPLE_PERIOD)
+-			data.array[n++] = val;
+-		if (sample_type & PERF_SAMPLE_CALLCHAIN) {
+-			int len = 0;
+-
+-			/* data.array[n] is callchain->nr (updated later) */
+-			data.array[n + 1] = PERF_CONTEXT_USER;
+-			data.array[n + 2] = 0;
+-
+-			bpf_map_lookup_elem(stack, &key.stack_id, &data.array[n + 2]);
+-			while (data.array[n + 2 + len])
+-				len++;
+-
+-			/* update length of callchain */
+-			data.array[n] = len + 1;
+-
+-			/* update sample ip with the first callchain entry */
+-			if (ip_pos >= 0)
+-				data.array[ip_pos] = data.array[n + 2];
+-
+-			/* calculate sample callchain data array length */
+-			n += len + 2;
+-		}
+-		if (sample_type & PERF_SAMPLE_CGROUP)
+-			data.array[n++] = key.cgroup_id;
++					write_sz = sizeof(struct perf_event_header) +
++							  raw_sz_aligned;
 +
-+		q6_mpss_dtb_mem: q6-mpss-dtb-region@9b000000 {
-+			reg = <0x0 0x9b000000 0x0 0x80000>;
-+			no-map;
-+		};
++					/* without this we'll have out of order events */
++					if (sample_type & PERF_SAMPLE_TIME)
++						tmp.sample.array[n] = sample.time;
+ 
+-		size = n * sizeof(u64);
+-		data.hdr.size = size;
+-		bytes += size;
++					tmp.header.size = write_sz;
++					tmp.header.type = PERF_RECORD_SAMPLE;
++					tmp.header.misc = PERF_RECORD_MISC_USER;
+ 
+-		if (perf_data_file__write(file, &data, size) < 0) {
+-			pr_err("failed to write perf data, error: %m\n");
+-			return bytes;
++					src = &tmp;
++				}
++			}
+ 		}
++		if (offset + event_sz > size || written + write_sz > size)
++			break;
+ 
+-		prev = key;
+-		/* increase dummy timestamp to sort later samples */
+-		tstamp++;
++		memcpy(dst, src, write_sz);
 +
-+		ipa_fw_mem: ipa-fw-region@9b080000 {
-+			reg = <0x0 0x9b080000 0x0 0x10000>;
-+			no-map;
-+		};
++		dst += write_sz;
++		written += write_sz;
++		offset += event_sz;
+ 	}
+-	return bytes;
 +
-+		ipa_gsi_mem: ipa-gsi-region@9b090000 {
-+			reg = <0x0 0x9b090000 0x0 0xa000>;
-+			no-map;
-+		};
-+
-+		gpu_micro_code_mem: gpu-micro-code-region@9b09a000 {
-+			reg = <0x0 0x9b09a000 0x0 0x2000>;
-+			no-map;
-+		};
-+
-+		spss_region_mem: spss-region@9b100000 {
-+			reg = <0x0 0x9b100000 0x0 0x180000>;
-+			no-map;
-+		};
-+
-+		spu_secure_shared_memory_mem: spu-secure-shared-memory-region@9b280000 {
-+			reg = <0x0 0x9b280000 0x0 0x80000>;
-+			no-map;
-+		};
-+
-+		camera_mem: camera-region@9b300000 {
-+			reg = <0x0 0x9b300000 0x0 0x800000>;
-+			no-map;
-+		};
-+
-+		video_mem: video-region@9bb00000 {
-+			reg = <0x0 0x9bb00000 0x0 0x700000>;
-+			no-map;
-+		};
-+
-+		cvp_mem: cvp-region@9c200000 {
-+			reg = <0x0 0x9c200000 0x0 0x700000>;
-+			no-map;
-+		};
-+
-+		cdsp_mem: cdsp-region@9c900000 {
-+			reg = <0x0 0x9c900000 0x0 0x2000000>;
-+			no-map;
-+		};
-+
-+		q6_cdsp_dtb_mem: q6-cdsp-dtb-region@9e900000 {
-+			reg = <0x0 0x9e900000 0x0 0x80000>;
-+			no-map;
-+		};
-+
-+		q6_adsp_dtb_mem: q6-adsp-dtb-region@9e980000 {
-+			reg = <0x0 0x9e980000 0x0 0x80000>;
-+			no-map;
-+		};
-+
-+		adspslpi_mem: adspslpi-region@9ea00000 {
-+			reg = <0x0 0x9ea00000 0x0 0x4080000>;
-+			no-map;
-+		};
-+
-+		/*
-+		 * Firmware related regions, bootlader will possible reserve parts of
-+		 * region from 0xd8000000..0x100000000.
-+		 */
-+		mpss_dsm_mem: mpss_dsm_region@d4d00000 {
-+			reg = <0x0 0xd4d00000 0x0 0x3300000>;
-+			no-map;
-+		};
-+	};
-+};
++	return written;
+ }
+diff --git a/tools/perf/util/off_cpu.h b/tools/perf/util/off_cpu.h
+index 2dd67c60f211..1d195cd045ad 100644
+--- a/tools/perf/util/off_cpu.h
++++ b/tools/perf/util/off_cpu.h
+@@ -20,7 +20,9 @@ struct record_opts;
+ #ifdef HAVE_BPF_SKEL
+ int off_cpu_prepare(struct evlist *evlist, struct target *target,
+ 		    struct record_opts *opts);
+-int off_cpu_write(struct perf_session *session);
++ssize_t off_cpu_strip(struct evlist *evlist, struct mmap *mp,
++		      char *dst, size_t size);
++int off_cpu_prepare_parse(struct evlist *evlist);
+ #else
+ static inline int off_cpu_prepare(struct evlist *evlist __maybe_unused,
+ 				  struct target *target __maybe_unused,
+@@ -28,8 +30,14 @@ static inline int off_cpu_prepare(struct evlist *evlist __maybe_unused,
+ {
+ 	return -1;
+ }
+-
+-static inline int off_cpu_write(struct perf_session *session __maybe_unused)
++static inline ssize_t off_cpu_strip(struct evlist *evlist __maybe_unused,
++				    struct mmap *mp __maybe_unused,
++				    char *dst __maybe_unused,
++				    size_t size __maybe_unused)
++{
++	return -1;
++}
++static inline int off_cpu_prepare_parse(struct evlist *evlist __maybe_unused)
+ {
+ 	return -1;
+ }
+diff --git a/tools/perf/util/perf-hooks-list.h b/tools/perf/util/perf-hooks-list.h
+index 2867c07ee84e..1ce4d44ace35 100644
+--- a/tools/perf/util/perf-hooks-list.h
++++ b/tools/perf/util/perf-hooks-list.h
+@@ -1,3 +1,4 @@
+ PERF_HOOK(record_start)
+ PERF_HOOK(record_end)
++PERF_HOOK(record_done)
+ PERF_HOOK(test)
 -- 
-2.25.1
+2.44.0
 
