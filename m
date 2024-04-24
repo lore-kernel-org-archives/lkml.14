@@ -1,151 +1,94 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B2C15ECE4
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 17:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C560C158867;
+	Wed, 24 Apr 2024 17:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713978038; cv=none; b=OrxOsKcqvXnplkvh+2xvLA09caNuA1n5WMgEOVYBrIlTuypPuqHYwK85/W9ee6CAFz39CDKodap8ABBS9ZqyDFV9tvL2KqCrQAyCDlQ1rh/jXkywMZ3V94BQL3l3tOItQ/d/9pmsUNS2QqYInE9XcwsVgXdHcGJ3yzTg6mMZrcE=
+	t=1713978098; cv=none; b=A5cUUPGCMGxSEIqtdAH35OgbS+LL6HE5sV6oGMh5EIUKc+qbC4kATsAq4GQM+WeI4Mb2VQfnIjxhSJnkDbYTCfs4jZx3ll/70Ho35tevR6/RjVDfmIbiaJeWVoiZzUuDEl8MLAsFuXREB/kb5yth+MACJPWthYa+iuZcXkDEvDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713978038; c=relaxed/simple;
-	bh=casyLeEEBfK4ikHLS0W+RwKPDoHx/Ev9PSKWpfdKTKk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oHTd5czzsPcO+BCVa3EKPvqlqrxWhNhfm21IXYhQK8H8YRU8Ct6FnC45yCR7zuiLzYRuu1OmBKp0bNZYiwnwKJSa1FgBWYph10Gd9aE0oTHKlkwz9aeF9qsbXVZUG4ZHCvJIq2E7Z6kpTbkyHe+A8/p0gVAoouE/elgjiu/nAZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LKqlAErN; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713978098; c=relaxed/simple;
+	bh=w988jo+lIUr9L/JqmZ0jDECyv0nP7HP9YfsgJRNVM+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RIZ1ApcQ9YqUp7YEKkr9KpWD+++Lddr3Wk5p8zQHoCFw1aK3sEGqxWKkLEfK5d6GOrLHQPjv6T1piyTomf3ZkbZSADBTdqjnFKEUn+08l0Bh9qZhKZyZ/LjSBSAStdT0OiLNvPiEin6uolojCRLrAYw1heb98+4brBWK5cPdZ50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYZbtrXF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LKqlAErN"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6ea2f95ec67so43999a34.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 10:00:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713978033; x=1714582833; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jg/qAOTqmSx+R9zjCsmKNbYVeXAxK/pRxpkNV37yyXo=;
-        b=LKqlAErNVuRM1Lurs15Ln5KbTn5RhKZPjKpEf4SdEIBhSgynopx0tZJJeOxLahyaWg
-         YxTvKbD4XQOE/VMnfU2XjHvVaDxWh/qogXwzNFQHUID3ZINDwmz8k/NhCoYPyNOc/1Zf
-         5FJQmW2D1rU7WF6Qm2YdQEPQ0F/hbeu0e61nc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713978033; x=1714582833;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jg/qAOTqmSx+R9zjCsmKNbYVeXAxK/pRxpkNV37yyXo=;
-        b=C+uMpgtHDEWQY/GvTLD+A9aXGY6Edb4Q9Nm2uAQ+YnaSJ8OX7M/m55sGDyEHlZcF/a
-         PJkJyw1zBG2y0pQMKpj00cAS1VW51VyiL477ERNVshxdypooO5od5eDvK1xOQR56kqUn
-         MOY0Jfu6ZEdiCh1NLp3ml4eBb9fvhVPOSqJaRJ5f8kQIkJTdUMUgk+tHaw6zRzepl68Y
-         kgpCT74Swc3fA0KSB8q/ilQTxC/5NDjCS/+Ol78tUGebzddvYt4mCBFDtu0bEA1/20M+
-         ffkFYadS6VsWoBbpkSiMm22Xy/xQ370GNLtrFy80DTkUxU4s5e5viekR7AQalBcD1ufO
-         mhWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXSikk9/EMoHRkTO3aaoBJA9ga/UqVjykEatmFR+oIJXJrtdDqS/RzjPYVcwOp4dAyoxtc9KpqDzXnIUGChXJUa84XVk6NOm6wD9ZYa
-X-Gm-Message-State: AOJu0YxYFvoxZuVoKVEl8tLcfNvj0HHk4Ag7Kt7dYtj/+agHzrFMROJg
-	pVBqJyQY388u3sr8STeVF4+gkEC7TMxvMjxNWl89RZJWhcDMkltdRwy8vfEZ+q9OanNKOSFZUlM
-	=
-X-Google-Smtp-Source: AGHT+IHDMoAB5SY5++nhDGWIA1fCTw1r1cd2DQc97p466KGstzHeztOzW4DrRGWKsgG3yfNVLIv9cA==
-X-Received: by 2002:a9d:7f09:0:b0:6eb:89ce:9c6f with SMTP id j9-20020a9d7f09000000b006eb89ce9c6fmr4053662otq.33.1713978033277;
-        Wed, 24 Apr 2024 10:00:33 -0700 (PDT)
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com. [209.85.160.175])
-        by smtp.gmail.com with ESMTPSA id i19-20020ae9ee13000000b0078eca9de099sm6242771qkg.134.2024.04.24.10.00.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Apr 2024 10:00:33 -0700 (PDT)
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-434ffc2b520so5101cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 10:00:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWanHPr1mCwgvumrA/ZGJBqORX4e/6S9lAReh7Gpm4nllScm4w+TixvGuzB44fFMjPjxBAs9cqZ6VPOt3/lE+F5V7twktx+xJmdGa5W
-X-Received: by 2002:ac8:498a:0:b0:439:9c1b:ce93 with SMTP id
- f10-20020ac8498a000000b004399c1bce93mr403282qtq.12.1713978031476; Wed, 24 Apr
- 2024 10:00:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYZbtrXF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBEA6C113CD;
+	Wed, 24 Apr 2024 17:01:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713978098;
+	bh=w988jo+lIUr9L/JqmZ0jDECyv0nP7HP9YfsgJRNVM+8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iYZbtrXFw6s2q521SVjMf/a/7XcxfIULZpFDzfe3iAg6hdL7puQMEyCQxbUScImLR
+	 I552oFPpodbHQ9brM1Dvq/w5WKI6m2pmXFO51XpHq/E7l4r8pro/VDnClsbSH1JePU
+	 dAxYjVgvpwdlDlMHpqk2niS4YOvRvukk7KRgdzD9O2Ypu0WDhGXNAD0zA2mmhmpo+Z
+	 yHMNt967CpBPmsoAaSGO2wG8TfZ/0u+I4AgCRC63k+8ay/VbT2JOYoUB3JxzFxNaop
+	 siVcEN+TaWsmOR4nyqgcr6bRMFOweTxI5BcdXSycrepUrQ9egYvnANKNBSWQNzmCPs
+	 9aLABcyhAHEGw==
+Date: Wed, 24 Apr 2024 19:01:32 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc: amir73il@gmail.com, hu1.chen@intel.com, miklos@szeredi.hu, 
+	malini.bhandaru@intel.com, tim.c.chen@intel.com, mikko.ylinen@intel.com, 
+	lizhen.you@intel.com, linux-unionfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/3] overlayfs: Optimize override/revert creds
+Message-ID: <20240424-befund-unantastbar-9b0154bec6e7@brauner>
+References: <20240403021808.309900-1-vinicius.gomes@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240423122518.34811-1-kl@kl.wtf> <20240423122518.34811-2-kl@kl.wtf>
-In-Reply-To: <20240423122518.34811-2-kl@kl.wtf>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 24 Apr 2024 10:00:17 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Xr6NsW085Sc+NhVmGDOn-zCCQ65CMNce_DsHxtXUgm9w@mail.gmail.com>
-Message-ID: <CAD=FV=Xr6NsW085Sc+NhVmGDOn-zCCQ65CMNce_DsHxtXUgm9w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] HID: i2c-hid: Rely on HID descriptor fetch to probe
-To: Kenny Levinsen <kl@kl.wtf>
-Cc: Jiri Kosina <jikos@kernel.org>, Dmitry Torokhov <dtor@chromium.org>, 
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Maxime Ripard <mripard@kernel.org>, Kai-Heng Feng <kai.heng.feng@canonical.com>, 
-	Johan Hovold <johan+linaro@kernel.org>, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Radoslaw Biernacki <rad@chromium.org>, 
-	Lukasz Majczak <lma@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240403021808.309900-1-vinicius.gomes@intel.com>
 
-Hi,
+On Tue, Apr 02, 2024 at 07:18:05PM -0700, Vinicius Costa Gomes wrote:
+> Hi,
+> 
+> Changes from RFC v3:
+>  - Removed the warning "fixes" patches, as they could hide potencial
+>    bugs (Christian Brauner);
+>  - Added "cred-specific" macros (Christian Brauner), from my side,
+>    added a few '_' to the guards to signify that the newly introduced
+>    helper macros are preferred.
+>  - Changed a few guard() to scoped_guard() to fix the clang (17.0.6)
+>    compilation error about 'goto' bypassing variable initialization;
+> 
+> Link to RFC v3:
+> 
+> https://lore.kernel.org/r/20240216051640.197378-1-vinicius.gomes@intel.com/
+> 
+> Changes from RFC v2:
+>  - Added separate patches for the warnings for the discarded const
+>    when using the cleanup macros: one for DEFINE_GUARD() and one for
+>    DEFINE_LOCK_GUARD_1() (I am uncertain if it's better to squash them
+>    together);
+>  - Reordered the series so the backing file patch is the first user of
+>    the introduced helpers (Amir Goldstein);
+>  - Change the definition of the cleanup "class" from a GUARD to a
+>    LOCK_GUARD_1, which defines an implicit container, that allows us
+>    to remove some variable declarations to store the overriden
+>    credentials (Amir Goldstein);
+>  - Replaced most of the uses of scoped_guard() with guard(), to reduce
+>    the code churn, the remaining ones I wasn't sure if I was changing
+>    the behavior: either they were nested (overrides "inside"
+>    overrides) or something calls current_cred() (Amir Goldstein).
+> 
+> New questions:
+>  - The backing file callbacks are now called with the "light"
+>    overriden credentials, so they are kind of restricted in what they
+>    can do with their credentials, is this acceptable in general?
 
-On Tue, Apr 23, 2024 at 5:26=E2=80=AFAM Kenny Levinsen <kl@kl.wtf> wrote:
->
-> To avoid error messages when a device is not present, b3a81b6c4fc6 added
-> an initial bus probe using a dummy i2c_smbus_read_byte() call.
->
-> Without this probe, i2c_hid_fetch_hid_descriptor() will fail with
-> EREMOTEIO. Propagate the error up so the caller can handle EREMOTEIO
-> gracefully, and remove the probe as it is no longer necessary.
->
-> Signed-off-by: Kenny Levinsen <kl@kl.wtf>
-> ---
->  drivers/hid/i2c-hid/i2c-hid-core.c | 20 ++++++--------------
->  1 file changed, 6 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c=
--hid-core.c
-> index 2df1ab3c31cc..515a80dbf6c7 100644
-> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
-> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-> @@ -894,12 +894,8 @@ static int i2c_hid_fetch_hid_descriptor(struct i2c_h=
-id *ihid)
->                                               ihid->wHIDDescRegister,
->                                               &ihid->hdesc,
->                                               sizeof(ihid->hdesc));
-> -               if (error) {
-> -                       dev_err(&ihid->client->dev,
-> -                               "failed to fetch HID descriptor: %d\n",
-> -                               error);
-> -                       return -ENODEV;
-> -               }
-> +               if (error)
-> +                       return error;
->         }
->
->         /* Validate the length of HID descriptor, the 4 first bytes:
-> @@ -1014,17 +1010,13 @@ static int __i2c_hid_core_probe(struct i2c_hid *i=
-hid)
->         struct hid_device *hid =3D ihid->hid;
->         int ret;
->
-> -       /* Make sure there is something at this address */
-> -       ret =3D i2c_smbus_read_byte(client);
-> -       if (ret < 0) {
-> +       ret =3D i2c_hid_fetch_hid_descriptor(ihid);
-> +       if (ret =3D=3D -EREMOTEIO) {
+Until we grow additional users, I think yes. Just needs to be
+documented.
 
-I worry a little bit about keying just off of -EREMOTEIO. If I'm
-skimming the code properly it's up to the different i2c bus controller
-to decide which error code to return here. Looking at, for instance,
-"i2c-qcom-geni.c", I see:
+>  - in ovl_rename() I had to manually call the "light" the overrides,
+>    both using the guard() macro or using the non-light version causes
+>    the workload to crash the kernel. I still have to investigate why
+>    this is happening. Hints are appreciated.
 
-[NACK] =3D {-ENXIO, "NACK: slv unresponsive, check its power/reset-ln"},
-
-Maybe we should just use dev_dbg() in all cases here when we fail to
-fetch the descriptor? ...otherwise I think some boards will start
-getting a noisy error message.
-
-...and confirmed that my skim seemed to be accurate. i put your
-patches on my system and then changed the system to think my
-hid-over-i2c device was at 0x11 instead of the normal 0x10. Now, I
-get:
-
-[    5.973417] i2c_hid_of 4-0011: failed to fetch HID descriptor: -6
-[    5.979701] i2c_hid_of 4-0011: Power on failed: -6
-
-
--Doug
+Do you have a reproducer? Do you have a splat from dmesg?
