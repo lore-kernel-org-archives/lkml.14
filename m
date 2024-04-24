@@ -1,99 +1,148 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4A016F0D1
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 23:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A586016EBEF
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 23:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714001220; cv=none; b=nxjdTARmo0t3m4eB+MDLpBixWK43Eb+tJNuGMRjsDObr5fl3kVmBy/lmiBKdDi1ngwrtMiHqUdr7yIrJhVxHF3oX5zvG0RjuAL4B8wg7SFXR/S2B7oenZe9CDgT8a5egcffnoyEKrOlPecElYe+3IIkTaZUPrhpFRJG7x8YyGWc=
+	t=1714001455; cv=none; b=YSw5Xf4zewMMg9xFLDL0+nmsQhLRLS5FXANE6i7nxVKKp24LB2BCLs/T6OV5RSgQoDKtBWv/opQylTcFeWAixbqKaRRBdOcnyB7Ni0AT87eMi2mSwIINdsrtpfLXEMUa3g3ThR1m9fDXgY2ondn0Pke0W2matq+iiy8jgU9d3vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714001220; c=relaxed/simple;
-	bh=QtOdWdlOdeRyzFugEhg6e9ksqQi4BaU2ioPkhsidgEY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ePnADdJdPOs9yOJgHjXWpYmHfHYQtX92vQxD29XTA3OcfFCdFRkaMF7AfRDeHD2sQbRe0MwDtKfsi4nctIGH964LwaAsdwVHmmSLewIme5Dl0Nvp2ux6VFzYjNXhQoI0lk1p9MA5hTVyJKLAnnXvFAdFU0IWdX7rLkRmOgsZiwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b5+WrySM; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1714001455; c=relaxed/simple;
+	bh=oH09D5zkFXRFNfU7QJiNFf+gIh+lrRtBdFHPc4eg0Ho=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WCSWHTVJ7LlQ3wuZLsR+1EC9LNJpkSQzHtBX9NtCRE48Jue1DWCcE7D2cIRcee5OuVnH7mGvNmT79maeh8wJpwFurpm81j/DFCcNXM2gxf3SIedQO+oDwFId3IP0+YEJVr847Yp8VLMlsUtOAYx5bXT5bKZRXe/IzgSBYUrIzgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PuaOvteq; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b5+WrySM"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61ae546adf3so6119747b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 16:26:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PuaOvteq"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6ebc92079b5so280380a34.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 16:30:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714001218; x=1714606018; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9CmG+3iHB+1BxNgRQoZJ+SwJOKBGJtBG8Ri4d9VDnrA=;
-        b=b5+WrySMkvLaTYMw1QIOcbKG7DRhwAbXJtA6hCiOoAnYV6ZH2JS4PzcyrGLciWffY2
-         Zk6JEWojNcXAXaS8OzuRG8/5C8XMtXOnm2lS2PNJZ9NwLXFd2Q0pvq5cZ9oozsTUJwNH
-         eK9tBSDe9bd+3B09kGEZdTMk/E5ml3ViiYdVRNv4NRCwAp+UOGFrwZ3+QaydUeccBV7w
-         rXefzKAquju+l4+Q6qc1r8Ih2B4AjOH7LKvXKd6Q7l3Qp1XGFZSM5FlUq/7lFNQgGa1q
-         HZmlKt3DyV37+2b15yWfNUzxbaj6maNPY9lIiaBXVTJNbwBsM8VwfU+u5yenJoxdEOQT
-         EwLA==
+        d=chromium.org; s=google; t=1714001452; x=1714606252; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pwtnqARf0+6Z9GG1dv72c6Df9XT02q1HeJoWwzmw6v8=;
+        b=PuaOvteq0mMRgO3Jlb2dgmiCdAPFB3Btc8zIHX74LLL3fcOxKUNDdejxB4uqBY5JPG
+         gzeSqc5Q6og7ag+mA85KLwOLD2cgygAFMqFSk4UJczXMpWloJJYfcMV9Dq0DpY7UpbE3
+         IpKBWIDyFj1vZDAhupVMhZaYLMQxGDePYUc5Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714001218; x=1714606018;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9CmG+3iHB+1BxNgRQoZJ+SwJOKBGJtBG8Ri4d9VDnrA=;
-        b=m7n9slboMl64sn4G68DZyIjLFPB1zyp/3qR9hDovGbnFf1JGE2imgZduumcFW3UA7V
-         IC3Y8Va+m5RmIg7mVSFNMagitWEtxv5b+YOJxmsOc8mqQnkGABNPVK1VD9jtCVn2w0aF
-         Q33DjF+PRmn+DNBfsoiXd5S2vCTxCCuY3qUQ5RJbhfznotrm3Hx08wVSgYq0XWFN+3Gl
-         fJ/AQS5mXKYGhQcLGYdfqbBBatEQuVJMo7H2zsUmg18Z+sGVDhRXTk6z62rabH/XLR1m
-         vUKR9NsRXPMbg9GpgtbRNH16kqeiYaoUpkAd+tw5RrGfye10fGuvXI0VaYywwSA4ii4p
-         JOoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW3MRF3vz8F+t45ZVbDMKQZihDct90BnqYhhFqsUHrjW7oHKXQVMJ97snOXp9tdYSAp0VbOAYp0vSnr4AkK0/YaOdoagri3mP0HacS5
-X-Gm-Message-State: AOJu0Yw7Haq9NH/cmYdlr+Brts3D8QoWU49invll7EHSSKgjtass+agI
-	2oF3Z1sHWU1dFqtqnGQRZMjQwfqbj29SME/IxM7a+5/brA1Ob3L1Z+zT8DAiRZLOp08zSsSKlFy
-	d8w==
-X-Google-Smtp-Source: AGHT+IG9AFP7hY+ukqMVBTl39cuNC0vrXBttEQiu5m8xciLOlctXbTTnNj1cEOBjn+Fu9BaNN6kY8VHwld4=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a0d:e288:0:b0:61b:649:ac90 with SMTP id
- l130-20020a0de288000000b0061b0649ac90mr769275ywe.9.1714001218264; Wed, 24 Apr
- 2024 16:26:58 -0700 (PDT)
-Date: Wed, 24 Apr 2024 16:26:56 -0700
-In-Reply-To: <20240421180122.1650812-6-michael.roth@amd.com>
+        d=1e100.net; s=20230601; t=1714001452; x=1714606252;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pwtnqARf0+6Z9GG1dv72c6Df9XT02q1HeJoWwzmw6v8=;
+        b=HYUy/qM4wnBIm2lBx90ijijL3LB3bpZTn6pFXBLMHNhruCcT0XI3mE6YSndtmh53Xw
+         qXOvWpQCBsONFhhvjeQ9GDq1Wy37JGOIc7Ggu0q8DRNSH32QawddSgHiWcGIttxJWqAR
+         i0lnvC58Or6OC7b+sq1qSIBa99+C3KmK6bzwqU25Mtnokp3haWj5NWdaxfjnOCB9flHn
+         sFNS1knqQtlkESMsSQ9ffiA0StZR6FVJoWEa5lvkvQkjWPyq6czX/4XRJ07w3eQf4PMo
+         bheV/r5hhm5Yvj6Jap9lvcfO6dJs7pGP2M8kO0paXXH/Le14tPZ8WC1twKkDFckRZAa/
+         Grtw==
+X-Forwarded-Encrypted: i=1; AJvYcCXOjKp89Qbr+FJnRQ5xC2Ynxf2SsQwQn7yMagTlkaOYtJq36KUwbfAxCjCYnESnLmezc3di0NejuCmqw5qjaJSINA13Jb2bDJxhZR5T
+X-Gm-Message-State: AOJu0YwfFXonToGAgyp+1wPjE/kKphButQFcEtHriXfZNPc8qubVsqBT
+	braJKTG4FvV8jDTNIzoF9ZXoha4bdB1wwe79BiVGdgQdTKCB6E2OPT7WQNYrcQ==
+X-Google-Smtp-Source: AGHT+IG1ie+7N7gLAuYGp0jXBUvNN0VNl/qnLnqCCnwse0PJuc/S/QdeclEgnM1MgF3ysfsWuiww9g==
+X-Received: by 2002:a05:6871:7410:b0:233:56e5:ff99 with SMTP id nw16-20020a056871741000b0023356e5ff99mr4180313oac.23.1714001451762;
+        Wed, 24 Apr 2024 16:30:51 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id k73-20020a636f4c000000b005df41b00ee9sm600140pgc.68.2024.04.24.16.30.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 16:30:51 -0700 (PDT)
+Date: Wed, 24 Apr 2024 16:30:50 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Jakub Kicinski <kuba@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Uros Bizjak <ubizjak@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+	netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/4] locking/atomic/x86: Silence intentional wrapping
+ addition
+Message-ID: <202404241621.8286B8A@keescook>
+References: <20240424191225.work.780-kees@kernel.org>
+ <20240424191740.3088894-1-keescook@chromium.org>
+ <20240424224141.GX40213@noisy.programming.kicks-ass.net>
+ <202404241542.6AFC3042C1@keescook>
+ <20240424225436.GY40213@noisy.programming.kicks-ass.net>
+ <20240424230500.GG12673@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240421180122.1650812-1-michael.roth@amd.com> <20240421180122.1650812-6-michael.roth@amd.com>
-Message-ID: <ZimVQKWGZyju3RbT@google.com>
-Subject: Re: [PATCH v14 05/22] KVM: SEV: Add KVM_SEV_SNP_LAUNCH_START command
-From: Sean Christopherson <seanjc@google.com>
-To: Michael Roth <michael.roth@amd.com>
-Cc: kvm@vger.kernel.org, linux-coco@lists.linux.dev, linux-mm@kvack.org, 
-	linux-crypto@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, jroedel@suse.de, 
-	thomas.lendacky@amd.com, hpa@zytor.com, ardb@kernel.org, pbonzini@redhat.com, 
-	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org, 
-	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com, 
-	peterz@infradead.org, srinivas.pandruvada@linux.intel.com, 
-	rientjes@google.com, dovmurik@linux.ibm.com, tobin@ibm.com, bp@alien8.de, 
-	vbabka@suse.cz, kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com, 
-	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com, 
-	pankaj.gupta@amd.com, liam.merwick@oracle.com, 
-	Brijesh Singh <brijesh.singh@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240424230500.GG12673@noisy.programming.kicks-ass.net>
 
-On Sun, Apr 21, 2024, Michael Roth wrote:
-> From: Brijesh Singh <brijesh.singh@amd.com>
+On Thu, Apr 25, 2024 at 01:05:00AM +0200, Peter Zijlstra wrote:
+> On Thu, Apr 25, 2024 at 12:54:36AM +0200, Peter Zijlstra wrote:
+> > On Wed, Apr 24, 2024 at 03:45:07PM -0700, Kees Cook wrote:
+> > > On Thu, Apr 25, 2024 at 12:41:41AM +0200, Peter Zijlstra wrote:
+> > > > On Wed, Apr 24, 2024 at 12:17:34PM -0700, Kees Cook wrote:
+> > > > 
+> > > > > @@ -82,7 +83,7 @@ static __always_inline bool arch_atomic_add_negative(int i, atomic_t *v)
+> > > > >  
+> > > > >  static __always_inline int arch_atomic_add_return(int i, atomic_t *v)
+> > > > >  {
+> > > > > -	return i + xadd(&v->counter, i);
+> > > > > +	return wrapping_add(int, i, xadd(&v->counter, i));
+> > > > >  }
+> > > > >  #define arch_atomic_add_return arch_atomic_add_return
+> > > > 
+> > > > this is going to get old *real* quick :-/
+> > > > 
+> > > > This must be the ugliest possible way to annotate all this, and then
+> > > > litter the kernel with all this... urgh.
+> > > 
+> > > I'm expecting to have explicit wrapping type annotations soon[1], but for
+> > > the atomics, it's kind of a wash on how intrusive the annotations get. I
+> > > had originally wanted to mark the function (as I did in other cases)
+> > > rather than using the helper, but Mark preferred it this way. I'm happy
+> > > to do whatever! :)
+> > > 
+> > > -Kees
+> > > 
+> > > [1] https://github.com/llvm/llvm-project/pull/86618
+> > 
+> > This is arse-about-face. Signed stuff wraps per -fno-strict-overflow.
+> > We've been writing code for years under that assumption.
+> > 
+> > You want to mark the non-wrapping case.
 > 
-> KVM_SEV_SNP_LAUNCH_START begins the launch process for an SEV-SNP guest.
-> The command initializes a cryptographic digest context used to construct
-> the measurement of the guest. Other commands can then at that point be
-> used to load/encrypt data into the guest's initial launch image.
-> 
-> For more information see the SEV-SNP specification.
-> 
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> Co-developed-by: Michael Roth <michael.roth@amd.com>
-> Signed-off-by: Michael Roth <michael.roth@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
+> That is, anything that actively warns about signed overflow when build
+> with -fno-strict-overflow is a bug. If you want this warning you have to
+> explicitly mark things.
 
-I somehow ended up in the v13 series and gave feedback on that version, but AFAICT
-all of the feedback still applies to v14.
+This is confusing UB with "overflow detection". We're doing the latter.
 
-https://lore.kernel.org/all/Zil8MnPXkCbqw3Ka@google.com
+> Signed overflow is not UB, is not a bug.
+> 
+> Now, it might be unexpected in some places, but fundamentally we run on
+> 2s complement and expect 2s complement. If you want more, mark it so.
+
+Regular C never provided us with enough choice in types to be able to
+select the overflow resolution strategy. :( So we're stuck mixing
+expectations into our types. (One early defense you were involved in
+touched on this too: refcount_t uses a saturating overflow strategy, as
+that works best for how it gets used.)
+
+Regardless, yes, someone intent on wrapping gets their expected 2s
+complement results, but in the cases were a few values started collecting
+in some dark corner of protocol handling, having a calculation wrap around
+is at best a behavioral bug and at worst a total system compromise.
+Wrapping is the uncommon case here, so we mark those.
+
+-- 
+Kees Cook
