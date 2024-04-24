@@ -1,52 +1,104 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EFF511CA9;
-	Wed, 24 Apr 2024 11:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F6D15A480
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 11:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713957359; cv=none; b=JZD2wy7v/kmeNbX6016w73UoNeXgA1D34zzdgox2nGIc9zeM+W+K4MeRIuWj22dYz0VeUjh9VIP5N0Cxrrc8kR/4u8r5ipQuEz5Yh+ae8PrFirtsIvE2T0Kn94WTYKjNOBAytv4cWJUvavLlnY4wklI/mzdaWS1CNWcNwPK54/c=
+	t=1713957375; cv=none; b=nYcN7QjPEBluiEKpP5X0YNEH2KE7lDje57S/ieb3uWHx4J08Xmmgo7g+Pm/dQVlVsIKwD+HUoI48cqcW+eDmDCEHagdccfipJw3QWZ0Rcip8nCuuiNspvOIdHfrWRkV6Vtk2t0FD5wABnN8tHMOtAGmbi/VFtyzPsnIl0Z/0+rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713957359; c=relaxed/simple;
-	bh=XINDDeTOGOVVGSigsc0sBkS33iJM5Tcw6vkFg/tl1vU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=uOtRrhQNVMe5b8wGpiC0srSTfrvh2QL+llAAxvv4GWPvDSzh5b9QH3gyxQ1J2xFJNYZ0XxnZZZPcK7X6Ui9DcbjmFVm/PkE8Va2wKjbHKhQE2pSY89SdsSevGYkTJre9eKV4RJ/+rH0V2lzCddoD3TjXnhaCinryxZvPl/3wPqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id A195492009C; Wed, 24 Apr 2024 13:09:21 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 962BE92009B;
-	Wed, 24 Apr 2024 12:09:21 +0100 (BST)
-Date: Wed, 24 Apr 2024 12:09:21 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] PCI: Use the correct bit in Link Training not
- active check
-In-Reply-To: <20240423130820.43824-1-ilpo.jarvinen@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.2404241207450.9972@angie.orcam.me.uk>
-References: <20240423130820.43824-1-ilpo.jarvinen@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1713957375; c=relaxed/simple;
+	bh=9XHCMO60oCNxGiy+aJY/UaGzplEcfyIlLZJ/a6H4YN8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cwr4OnTLA2fjqTaS+pJODZt0tLEveNiOe6MuV69uBe09zGO7P8j47KHjSc+Kx0lUsBXaJLw19B0LIONlOteu1fJBs9lC/5EN9ij/uZb8oFBgB6C08JhbP4uuLabqZPX5gCyLwZDw46p4YzEyQQKZS93gy4R815jGrENH14pXDuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=penguintechs.org; spf=pass smtp.mailfrom=penguintechs.org; dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b=Xi44prbF; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=penguintechs.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=penguintechs.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b="Xi44prbF"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6ecee1f325bso5505200b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 04:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=penguintechs.org; s=google; t=1713957373; x=1714562173; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jZqKceRFYOcv5tkimj0+X+feVM7EViq3jSO9S9mspto=;
+        b=Xi44prbFHKy+GTEHgCVbfuGU3E/PbxuMcpB57V/PcoSR+oMTEY366Q84BG2HGM+J07
+         gIuZO02CGbQB6fqEJ7N0cNmf7FpYZDbk5O9peB/WIEstaX9n+fEa8wZNPu5q4b0xnAQF
+         A0L84rbUAWT74gpTqLHF9MMn/JwsrzSGwPj98=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713957373; x=1714562173;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jZqKceRFYOcv5tkimj0+X+feVM7EViq3jSO9S9mspto=;
+        b=PmuZq3Q9gL/b0gyB9Rm8vgiLXLGTpYghllUfBicG7mO3glYHdqtI7nf2KEW0yj2VlF
+         X3fsSRvBf9Vxtwhvuno1OZXht0mux+IJ370GC6G9+PctSWyW8BLLsmam1vwEr9WPAc7y
+         1JwR9ugTXO2bG23sAXhwat+8Pn96RbvqxmrCcIOaaTXQn1n6nfffseIWdStkCCjJcWXz
+         QlNAjloW8W4plweyeARlr/f/KSsSkglSx3q6fYWhkICB1I7cLYh1rlU4vRfeGTxmooeT
+         Ye8CjUr1J8f3ZXfDkkVG/XJYbeiWLVjRfepuXulfBuZPUjDoXMK1oindQR/QtL8dRmeh
+         S9WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXsn4kCGuykEk0w41aLay5QP9KjRkVM4RXqkKua+wjPLbQulNNekBR91wzs3DH1FmjvJqm3dM3mwG3oO8cVecFuM2+yFwGRcw3/hnLu
+X-Gm-Message-State: AOJu0YzUj/cJ567eQJ84BQhh4LMs1kSp2gYR1MQYbQ84YZ9rZzHngLVD
+	hR2T5iyypWwNkPIo51WakNOCC8bWh0P8QH2WYVLNtPQX993AX74nPh2QJzo+1g==
+X-Google-Smtp-Source: AGHT+IGrEd3S6crIeK6r7Gp9adxGZnS0C7zjoRAQn5SAuUYk5YRuc5UPhbyXdjw5UaDq1xnx7S60+A==
+X-Received: by 2002:a05:6a20:9756:b0:1a7:bc31:933b with SMTP id hs22-20020a056a20975600b001a7bc31933bmr2178455pzc.47.1713957372652;
+        Wed, 24 Apr 2024 04:16:12 -0700 (PDT)
+Received: from ?IPV6:2601:646:8700:dd30:5f3e:5ba7:e0ea:9a08? ([2601:646:8700:dd30:5f3e:5ba7:e0ea:9a08])
+        by smtp.gmail.com with ESMTPSA id j22-20020a056a00235600b006ea7d877191sm11216997pfj.2.2024.04.24.04.16.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Apr 2024 04:16:11 -0700 (PDT)
+Message-ID: <b982b73d-0540-409c-a6e2-0e03ecb11715@penguintechs.org>
+Date: Wed, 24 Apr 2024 04:16:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Bluetooth: qca: set power_ctrl_enabled on NULL returned
+ by gpiod_get_optional()
+Content-Language: en-US
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Zijun Hu <quic_zijuhu@quicinc.com>, Marcel Holtmann <marcel@holtmann.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20240422130036.31856-1-brgl@bgdev.pl>
+ <99242a7c-53bf-4227-9623-7bc092f564b3@penguintechs.org>
+ <CAMRc=MepDwUbAKrWgm0CXKObqy8=igtug0QDgo-CgwxjZCAC2Q@mail.gmail.com>
+From: Wren Turkal <wt@penguintechs.org>
+In-Reply-To: <CAMRc=MepDwUbAKrWgm0CXKObqy8=igtug0QDgo-CgwxjZCAC2Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 23 Apr 2024, Ilpo Järvinen wrote:
-
-> v2:
-> - Improve commit message
+On 4/24/24 2:04 AM, Bartosz Golaszewski wrote:
+> On Wed, 24 Apr 2024 07:07:05 +0200, Wren Turkal<wt@penguintechs.org>  said:
+>> On 4/22/24 6:00 AM, Bartosz Golaszewski wrote:
+>>> From: Bartosz Golaszewski<bartosz.golaszewski@linaro.org>
+>>>
+>>> Any return value from gpiod_get_optional() other than a pointer to a
+>>> GPIO descriptor or a NULL-pointer is an error and the driver should
+>>> abort probing. That being said: commit 56d074d26c58 ("Bluetooth: hci_qca:
+>>> don't use IS_ERR_OR_NULL() with gpiod_get_optional()") no longer sets
+>>> power_ctrl_enabled on NULL-pointer returned by
+>>> devm_gpiod_get_optional(). Restore this behavior but bail-out on errors.
+>> Nack. This patch does fixes neither the disable/re-enable problem nor
+>> the warm boot problem.
+>>
+>> Zijun replied to this patch also with what I think is the proper
+>> reasoning for why it doesn't fix my setup.
+>>
+> Indeed, I only addressed a single issue here and not the code under the
+> default: label of the switch case. Sorry.
 > 
-> NOTE: Maciej NAK'ed the v1 of this patch but has since retracted his
-> NAK.
-> 
-> Maciej, if possible, could you please test this with your HW?
+> Could you give the following diff a try?
 
- I'll try before the end of this week, thanks for your work in this area.
+I had a feeling that was what was going on. I'll give the patch a shot.
 
-  Maciej
+wt
+-- 
+You're more amazing than you think!
