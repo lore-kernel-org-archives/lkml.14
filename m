@@ -1,109 +1,137 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0587815886E;
-	Wed, 24 Apr 2024 09:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F28157468;
+	Wed, 24 Apr 2024 09:05:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713949514; cv=none; b=lMrNjip/bYVLTulSoqdLwNWYCwGNMSOi9UMUh2a94WDYi9RuFEx4wHrwIYh/jB47bCcY71htbhIuv8BRexjTL2LFS4ZHkWQ0/VEwpakSL9e8UpAPTTBx6VOsiS2FLeZCYUusO8T/uHr0rfc+mJaeyJVJASJ1KH0i74IEg9nkMAg=
+	t=1713949550; cv=none; b=uEqILq4txd/p5oEZkIz5LRmNKD2H+NwzvWkqFW8Z/FPL0QfLW1tcJ2Ztm5ZkD3qdsGgnlxKAK15Ru8zYgEMKO8avTSdLWfnfLaf82qrOnloIrdGWTfHS91+FZCXi83DgtE+XLtySdEucCutsxS8AHacxKsJ5z0l1D5Yfy+199Oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713949514; c=relaxed/simple;
-	bh=99uil39rbdssmjNXI7yaMpLDb6nTKTjeJ++aM7M4M5k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LyWRvhEWutvv8qIyw+dtMi9WbWy3+mEFpOLPz1hIbbm07T2yW+IxC7pTwBNN3jjoq9/GbGi5mf5tDL9hym5GuwnmNMqI/QIzR7XfiNwAf0xYtEAsjwnI7qH373QolDKnneFyOotApuXZkV5v0fo4aoYnwje5EYYg8iqZ9Xik4CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VPY0K5bMLzNtV7;
-	Wed, 24 Apr 2024 17:02:25 +0800 (CST)
-Received: from kwepemm600005.china.huawei.com (unknown [7.193.23.191])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1A4A018007B;
-	Wed, 24 Apr 2024 17:04:57 +0800 (CST)
-Received: from huawei.com (10.50.165.33) by kwepemm600005.china.huawei.com
- (7.193.23.191) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 24 Apr
- 2024 17:04:56 +0800
-From: Longfang Liu <liulongfang@huawei.com>
-To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
-CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@openeuler.org>, <liulongfang@huawei.com>
-Subject: [PATCH v5 5/5] Documentation: add debugfs description for hisi migration
-Date: Wed, 24 Apr 2024 16:57:21 +0800
-Message-ID: <20240424085721.12760-6-liulongfang@huawei.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20240424085721.12760-1-liulongfang@huawei.com>
-References: <20240424085721.12760-1-liulongfang@huawei.com>
+	s=arc-20240116; t=1713949550; c=relaxed/simple;
+	bh=bogBlq3GioMSWRlEADNLKDYWix5sTG1UKLb00fGvlk8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kGOv6bbvggYq7uXserEAk1hp+DcTdJ4YFiwyX8SAJ2+K2yzLFIv3ZX32sNydGaaht4KxP6AQszVJRp+nJfyFJGdJfq4Jsv7DKpwa45u6OCXsHf2QhCu4proqR4lXoOXvc9FU2ZJalJNTHqgcom7PerHVQOt/psmjA2LDbaICB2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UNPCHPP3; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UNPCHPP3"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6B16620011;
+	Wed, 24 Apr 2024 09:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713949544;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=zvGO6wU6nfYU3CkBpCdWWvYmaCRqlnSLXYCRyUMQSHk=;
+	b=UNPCHPP3Y0cB0c0DMvt6fosro3QkCwIgQAj1fSJrI8V9T/1B7gT2LfZ5Qu+SZdKiQ6Ky1q
+	GTYCqb9aCIeDI4YkLXEY//Rayxy9ROkV2BnZUz2dAD6koRfYdA7Lk2hMml4v8LNNg6410w
+	nm0tcKWKft5xD3DW2amnqxy43S10uLE3vEZgX5ck0Zc/eK9fkIrfS6QpDdS9cH5RduhVT/
+	B+WvICl8pCyTMSAU2EkAGkJXDUDldrMul1x7iW6UQsIeqk+7dzEQn16pBaknwe6vGYZGz2
+	pbQzVA+ja2DG9FekX1vWMl+J+EiVApMsJPUl4ScDR2OV4S+7jXZnDhyVMcOlqA==
+From: Romain Gantois <romain.gantois@bootlin.com>
+Subject: [PATCH net-next v4 0/5] net: stmmac: Add support for RZN1 GMAC
+ devices
+Date: Wed, 24 Apr 2024 11:06:18 +0200
+Message-Id: <20240424-rzn1-gmac1-v4-0-852a5f2ce0c0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600005.china.huawei.com (7.193.23.191)
+X-B4-Tracking: v=1; b=H4sIAIrLKGYC/23NQQ6DIBQE0KsY1qWBL1TpqvdoulD4KEmFBoyxN
+ d69xJWmXU4mb2YhCaPDRK7FQiJOLrngcxCngui+8R1SZ3ImwEAwwYDGj+e0GxrN6aWW2taVKg1
+ DksEronXzNnYnHkfqcR7JIze9S2OI7+1l4lv/b3DilFHZIrRQK2FqfWtDGJ/On3UYtqEJ9lgdM
+ GRcKd0IacHqSv3icoe5POAy46blYEELwbg54nVdv1gmcb0qAQAA
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Jose Abreu <joabreu@synopsys.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <clement.leger@bootlin.com>, 
+ Serge Semin <fancer.lancer@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, 
+ Romain Gantois <romain.gantois@bootlin.com>, 
+ "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: romain.gantois@bootlin.com
 
-Add a debugfs document description file to help users understand
-how to use the hisilicon accelerator live migration driver's
-debugfs.
+Hello everyone,
 
-Update the file paths that need to be maintained in MAINTAINERS
+This is version four of my series that adds support for a Gigabit Ethernet
+controller featured in the Renesas r9a06g032 SoC, of the RZ/N1 family. This
+GMAC device is based on a Synopsys IP and is compatible with the stmmac driver.
 
-Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+My former colleague Clément Léger originally sent a series for this driver,
+but an issue in bringing up the PCS clock had blocked the upstreaming
+process. This issue has since been resolved by the following series:
+
+https://lore.kernel.org/all/20240326-rxc_bugfix-v6-0-24a74e5c761f@bootlin.com/
+
+This series consists of a devicetree binding describing the RZN1 GMAC
+controller IP, a node for the GMAC1 device in the r9a06g032 SoC device
+tree, and the GMAC driver itself which is a glue layer in stmmac.
+
+There are also two patches by Russell that improve pcs initialization handling
+in stmmac.
+
+Best Regards,
+
+Romain Gantois
+
 ---
- .../ABI/testing/debugfs-hisi-migration        | 27 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 28 insertions(+)
- create mode 100644 Documentation/ABI/testing/debugfs-hisi-migration
+Changes in v4:
+- Removed the second parameters of the new pcs_init/exit() callbacks
+- Removed unnecessary interrupt-parent reference in gmac1 device node
+- Link to v3: https://lore.kernel.org/r/20240415-rzn1-gmac1-v3-0-ab12f2c4401d@bootlin.com
 
-diff --git a/Documentation/ABI/testing/debugfs-hisi-migration b/Documentation/ABI/testing/debugfs-hisi-migration
-new file mode 100644
-index 000000000000..f391f2366bfa
---- /dev/null
-+++ b/Documentation/ABI/testing/debugfs-hisi-migration
-@@ -0,0 +1,27 @@
-+What:		/sys/kernel/debug/vfio/<device>/migration/hisi_acc/dev_data
-+Date:		Apr 2024
-+KernelVersion:  6.9
-+Contact:	Longfang Liu <liulongfang@huawei.com>
-+Description:	Read the live migration data of the vfio device.
-+		These data include device status data, queue configuration
-+		data, some task configuration data and Device attribute data.
-+		The output format of the data is defined by the live
-+		migration driver.
-+
-+What:		/sys/kernel/debug/vfio/<device>/migration/hisi_acc/migf_data
-+Date:		Apr 2024
-+KernelVersion:  6.9
-+Contact:	Longfang Liu <liulongfang@huawei.com>
-+Description:	Read the data from the last completed live migration.
-+		These data include device status data, queue configuration
-+		data, some task configuration data and Device attribute data.
-+		The output format of the data is defined by the live
-+		migration driver.
-+
-+What:		/sys/kernel/debug/vfio/<device>/migration/hisi_acc/cmd_state
-+Date:		Apr 2024
-+KernelVersion:  6.9
-+Contact:	Longfang Liu <liulongfang@huawei.com>
-+Description:	Used to obtain the device command sending and receiving
-+		channel status. If successful, returns the command value.
-+		If failed, return error log.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7625911ec2f1..8c2d13b13273 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23072,6 +23072,7 @@ M:	Longfang Liu <liulongfang@huawei.com>
- M:	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
- L:	kvm@vger.kernel.org
- S:	Maintained
-+F:	Documentation/ABI/testing/debugfs-hisi-migration
- F:	drivers/vfio/pci/hisilicon/
- 
- VFIO MEDIATED DEVICE DRIVERS
+Changes in v3:
+- Fixed a typo in the socfpga patch
+- Link to v2: https://lore.kernel.org/r/20240409-rzn1-gmac1-v2-0-79ca45f2fc79@bootlin.com
+
+Changes in v2:
+- Add pcs_init/exit callbacks in stmmac to solve race condition
+- Use pcs_init/exit callbacks in dwmac_socfpga glue layer
+- Miscellaneous device tree binding corrections
+- Link to v1: https://lore.kernel.org/r/20240402-rzn1-gmac1-v1-0-5be2b2894d8c@bootlin.com
+
+---
+Clément Léger (3):
+      dt-bindings: net: renesas,rzn1-gmac: Document RZ/N1 GMAC support
+      net: stmmac: add support for RZ/N1 GMAC
+      ARM: dts: r9a06g032: describe GMAC1
+
+Russell King (Oracle) (2):
+      net: stmmac: introduce pcs_init/pcs_exit stmmac operations
+      net: stmmac: dwmac-socfpga: use pcs_init/pcs_exit
+
+ .../devicetree/bindings/net/renesas,rzn1-gmac.yaml |  66 +++++++++++++
+ MAINTAINERS                                        |   6 ++
+ arch/arm/boot/dts/renesas/r9a06g032.dtsi           |  18 ++++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |  12 +++
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c   |  86 +++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    | 107 ++++++++++-----------
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  14 +++
+ include/linux/stmmac.h                             |   2 +
+ 9 files changed, 258 insertions(+), 54 deletions(-)
+---
+base-commit: 1c04b46cbdddc7882eeb671521035ea884245b9f
+change-id: 20240402-rzn1-gmac1-685cf8793d0e
+
+Best regards,
 -- 
-2.24.0
+Romain Gantois <romain.gantois@bootlin.com>
 
