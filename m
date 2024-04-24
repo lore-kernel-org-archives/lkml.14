@@ -1,209 +1,234 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ADE1534E0;
-	Wed, 24 Apr 2024 07:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F95157E82;
+	Wed, 24 Apr 2024 07:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713944479; cv=none; b=rwtqNlGSS/M0+Q/GBE4K6DP5dZWqzllX1yRhhBKwwtwFPsCHdm9OkRtF2DX7JdTacKIAdMPPqFCqxfaikmu5YyUjt6LswKhecTj4UsuwY77+KZo13/7jEaDdONuOa8O2vvpd8d0SmJV1iQgoMsOYpcWnm/dv9POAEAggLM0enPE=
+	t=1713944529; cv=none; b=SGCVwwjgbJo/aFY9ADBW8e1kzNICNRoYXqcDzFmaQmt7bfZt/hmHR1z5PRXrrFensj+j9DkSZJQFDJ7fVTRudHFab6wMr2ZWI7gNzQ3Do3At6k6/oMBWiubOMF4kXcqWyM6Ki1/fmT7RlmkbWqE0NrZ4iq8Vz+4LfWJShSz/OZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713944479; c=relaxed/simple;
-	bh=euFLyW2mUNGGgNiXwy0oljlRB8crL8I7b65VqKg3OEE=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=EDO7O91hdmvfWenG4+uH9aHIGw6APOiLZOeL5dJUEE76MZofw+p90bougVtflkY8yAeO3RWe0d/7CHZabKvVevCVn6EQOftVtUMPzG/J9hXbwLfzk9mDQ7eL3/xpawla7FzJmBtfMkpSoYJHryKTFOKRWeB2900X27JlNN1JG68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=H9R2Uiqz; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1713944529; c=relaxed/simple;
+	bh=3jSAEAP6h7kLKxNdHKe1wEKkmll4W+mLBzqwPyPus3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lx4O5wMw5GrnbkhiGXwHHIlsbpyaTDtLLR/8melng5o5XHTLPw6Fvm4kuOhQfOzfwoJpMMGQSTxaEuvBeUYFHkhRzxrJp4JC6asiQlOO1de0CJt1GAaNwwELd/wZ02L0uYx6TWV82Uvx9k9SMs3Yo3Ga//19WASc5roWT7yXBf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y+ojOGtE; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="H9R2Uiqz"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240424074112euoutp028d29c7710f7c087eee559032f3e46581~JJ2rVDMWA1064410644euoutp02g;
-	Wed, 24 Apr 2024 07:41:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240424074112euoutp028d29c7710f7c087eee559032f3e46581~JJ2rVDMWA1064410644euoutp02g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1713944473;
-	bh=euFLyW2mUNGGgNiXwy0oljlRB8crL8I7b65VqKg3OEE=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=H9R2Uiqzrt7iYZRpYqEZMkbiPnTuybjRTzu+swHRR1ZJ4BrcX0oY35veJwuuxeUbe
-	 aQNHO5P1fZmCdsoUmq/bALd65Xw085eBa9TR0A393uOoRtf/89Do7uA+lBbj+qgbLT
-	 EkZRQaeydvBr0L76NbpRUCNNIdiNInkF6mPfy4ok=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240424074112eucas1p1863d3d7b98e0dbe97dd21ee66730e62b~JJ2rICFNZ0760407604eucas1p1p;
-	Wed, 24 Apr 2024 07:41:12 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id 1E.7D.09624.897B8266; Wed, 24
-	Apr 2024 08:41:12 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240424074112eucas1p259a4acc486ca5f8c6cbb4f736f2f984b~JJ2qnrul33139631396eucas1p2L;
-	Wed, 24 Apr 2024 07:41:12 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240424074112eusmtrp12bcebea7847b59366df6dd19bb3a048e~JJ2qmXIIM2835628356eusmtrp1k;
-	Wed, 24 Apr 2024 07:41:12 +0000 (GMT)
-X-AuditID: cbfec7f2-bfbff70000002598-08-6628b798d2b4
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id BC.B0.08810.797B8266; Wed, 24
-	Apr 2024 08:41:12 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240424074111eusmtip1681f98af2abf64a19d66d0e7ab3c9e0d~JJ2qThM-V2991229912eusmtip1-;
-	Wed, 24 Apr 2024 07:41:11 +0000 (GMT)
-Received: from localhost (106.110.32.44) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Wed, 24 Apr 2024 08:41:11 +0100
-Date: Wed, 24 Apr 2024 09:41:06 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-CC: Luis Chamberlain <mcgrof@kernel.org>, <josh@joshtriplett.org>, Kees Cook
-	<keescook@chromium.org>, Eric Biederman <ebiederm@xmission.com>, Iurii
-	Zaikin <yzaikin@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
-	Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas
-	Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>, Stephen
-	Boyd <sboyd@kernel.org>, Andy Lutomirski <luto@amacapital.net>, Will Drewry
-	<wad@chromium.org>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
-	<peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Daniel
-	Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider
-	<vschneid@redhat.com>, Petr Mladek <pmladek@suse.com>, John Ogness
-	<john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy
-	<anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
-	Balbir Singh <bsingharora@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
-	<john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
-	KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song
-	<yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Stanislav Fomichev
-	<sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-	<linux-fsdevel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <tools@kernel.org>
-Subject: Re: [PATCH v3 00/10] sysctl: Remove sentinel elements from kernel
- dir
-Message-ID: <20240424074106.c3dojqvobepifrut@joelS2.panther.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y+ojOGtE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713944527; x=1745480527;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3jSAEAP6h7kLKxNdHKe1wEKkmll4W+mLBzqwPyPus3s=;
+  b=Y+ojOGtEXHcSmgFeELayjUZZqxDpIdzNCrol4GXXh8gVQmXJV0iqDjgt
+   XaWaBtu4LWkUUO0ER1eg18EAnXRYUrq3OImyhCJnxMaaRS2IaPnguVsMA
+   l6FwZ09yBOC7bbBG+hs2ZVq5xVvtgANa72moXCNGJAuF/+heJ/Fl/5qOO
+   WooVVOjfM9UX9IXL82AfE1MH4lszu3w40IK1B5XTXNeKdDIoiedOE5vC2
+   qIL74HfHxm+6rd+aefK9fdDErZ9hrnsyhAlMixpqPRz8E6/ZcW48ele8x
+   ygZmoKDTfXfk4Lmzyq0SEDYzcdC+EdmZq+1BmElB1ATtRbd6R8BY/aSmh
+   A==;
+X-CSE-ConnectionGUID: K5hhc8rHQjSnkU7RAS+gcw==
+X-CSE-MsgGUID: XsW3pNtyTDKh9//ABbyEAg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9390847"
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="9390847"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 00:42:06 -0700
+X-CSE-ConnectionGUID: FALzAmajQ0uuFCSL2eFNuw==
+X-CSE-MsgGUID: ayiWfY4oQPi7bjsQn2obMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="24692454"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 24 Apr 2024 00:42:02 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rzXGR-000106-2j;
+	Wed, 24 Apr 2024 07:41:59 +0000
+Date: Wed, 24 Apr 2024 15:41:59 +0800
+From: kernel test robot <lkp@intel.com>
+To: Joe Damato <jdamato@fastly.com>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, tariqt@nvidia.com, saeedm@nvidia.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	mkarsten@uwaterloo.ca, gal@nvidia.com, nalramli@fastly.com,
+	Joe Damato <jdamato@fastly.com>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-rdma@vger.kernel.org
+Subject: Re: [PATCH net-next 2/3] net/mlx4: link NAPI instances to queues and
+ IRQs
+Message-ID: <202404241518.4TvjoN07-lkp@intel.com>
+References: <20240423194931.97013-3-jdamato@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="3ox4bgvwus4z6gtg"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <36a1ea2f-92c2-4183-a892-00c5b48c419b@linaro.org>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2VTe0xTVxzOuff23sJSdik4T3DBiKJMBWTO5CxOIhsxN3FjbmZLYFu2Ri7g
-	gEJaq25mCTJAqLKhUNHyKhKe5SEtgvJeBxR5lFEYVt4KruMhiDwE5THqxc1k/32/73HyfX8c
-	Pi5sphz4J8WnWIlYFOJEWhPlTUsG12sVLgH7Litc0LMXKTiq+ruPQHNLfRSabdCTyDjyJ4mS
-	x84TKHWsjUJZmQs4Su2IItCjhFs4WiuPopBOX0ehyNt5GCrvzgCoIUm5LqjC0HJzKYkGflUQ
-	qO1iKKpqncdQbGIFgcy18RiqrrlLoK7KVBI1lLQTSF0UwUPZ9zoxVBiXz0OmhEcAJU79BVBW
-	7k5krFdhSJ20QiF9fD2G1kbmeag2dhhDqz2lBDIuThCoqvQGifS5KyTSahQ4MpQ+wFFsw3rX
-	W43PKNQnX6PQsLqch3Lu+Bx2Z4YmVwimML0QMCkRnQRTln8fY+4oBygmqraXYlQaGaPN281k
-	VY9hjNxkxJneiUOMpiCOZPp7qklmymCgmMwIBc4k3KgHx97ys/7Anw05eZqVuHt+Zx20ptGQ
-	4UX02eYX02QESLSRAys+pN+D8pl0TA6s+UI6D8DkOiPJHXMATs0lE9wxC+Biiw68ijRl5+Oc
-	kAtgz83r1L+u+ZKoDUULoLImjmeJELQzrI7Ixi2YpPfCjsn+dczn26/jOIXU4sfpRgHsSOog
-	LB47+hhU9BgpCxbQh2F7SwbGYVt49/roSw9On4VdI1rK8g5Ob4G5q3wLbUV7wiVVN8E13Qbn
-	swY38E+wpaz35VBIL7wBpysXME7whpd+NmyY7OC4vozi8NuwNfESwQUSAaxbfUJxhxrAnPPz
-	G+mDMKp7dCPhBWMGpwlLI0jbQNNjW66oDbxSnoxztADGxgg5906oHpwkEsB25WvTlK9NU/43
-	jaP3QlXVU/J/9B6YkzmBc/gQLC6eJlSAKgCbWZk0NJCVeojZM25SUahUJg50OxEWqgHrH6x1
-	Vf/0Nkgbn3HTAYwPdGDHevjhTfUfwIEQh4lZJ3vB8+UdAUKBv+iHH1lJ2LcSWQgr1YEtfMJp
-	s8DZfysrpANFp9hglg1nJa9UjG/lEIHZ1Q/7ms7ZbM++ag6TFadmRuZsPd72xKcy3LvnmtlH
-	EUOvfEqdc3/zq6N+XgcuD+TrPrw6Mdq/z/hNipjnmuRY6Wagl02nJ/2HG1V+j6NN2xodH9iF
-	jzSbJ++bQ+0lQ0JvW9GopyTJmq9zRMtMbFrtpgnF8Tyv1hmbCvsEh4NKk94GP+JVEx9Y2zJz
-	r73YNZt34oLT+Ged8oCgdxxxSfSXwd06l5KLbZOJCqSl9tR+f/R5u7mrIDh8MYP9On1Xmr/s
-	SPTRsc/Z0f3vhgwp85tDK4u+uKD/KDLFy/eXKwVMn2/8x86/eYwtag7Yn5n1GHl/U/L4J2RT
-	1P6H6hVDl3bX7wNOhDRI5LEbl0hF/wACtOw12wQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe0xTVxzHdx+992LsdlcQb8AsG8qC4ApFYAcGjMyEXJw4lrlk02xa4fLY
-	oMU+BJdhCnQGSpyo4EZhUOh4WawWtIAwRAZWJiAgreW1gYisA0QnD5k81totM9l/n/P9fn/f
-	/HJyDoFwJjAXIkEgYUQCfqIbtgG9tWYYfev7eo9Yn6eLEFh6VoiApt+HUTC/PIyDJ+0GDPRP
-	GDHwnSUdBUWWLhyoSxcRUHRbjoLJ3CsIWNfLcdBmuIaDjIYqGOgHSiDQnqe0GiohWLmpw8Do
-	qXwUdOUkgaZbCzDIOluPgqmWkzBo/qkTBXeuFmGg/WI3CjQXZCxQfrcPBjXZ1Sxgzp2EwNmH
-	DyCgrnwT9LeqYKDJW8WB4WQrDNYnFligJWsMBmsmHQr6n06joElXhgFD5SoG6mrzEdCjG0dA
-	Vrt11ysdSzgYVqzjYEyjZ4GKxr1h3vRvM6soXVNcA9GFsj6Uvlw9CNONylGclrcM4bSqVkrX
-	VXnS6mYLTCvM/Qg9NB1C157PxugRUzNGP+zpwelSWT5C55a1QlHO+7nBIqFUwrweLxRLQtwO
-	8IAvlxcIuL5+gVzezrc/C/L1d/MODY5hEhOOMiLv0EPc+GXdB8kaMvX+nXOIDDr9sgJyICjS
-	j7pRXo0ooA0EhyyHqKLCLtxubKF080aWnR2pFZMCs4ceQ9TsvBq1H+ogSq/MfJ5CSXeqWVaO
-	2Bgjd1C3Z0asTBBOVs7OF9vyCNnBpsxTJZgt40jupUbOtKI2ZpNhVPcvJbC9dAyiBmtPsezG
-	q1Rnwf3nIYQ8SukX0lm2UoR0pSrXCJvsQIZSy6oB1L7pG9SC+td/OI16svoAyoUclS80KV9o
-	Uv7XZJc9KfOaBf6f7EVVlE4jdg6htNo5VAXh5yEnRipOiksS87hifpJYKojjRguTaiHrC9ff
-	WK5rgIr/eMxtg2ACaoO2WSfvXdL0Qi6oQChg3JzYf61si+WwY/jHvmJEwoMiaSIjboP8rbd4
-	GnHZFC20fheB5CAvwMef5xcQ6OMfGLDTbTM7IjmLzyHj+BLmS4ZJZkT/zsGEg4sMThEvFTj7
-	GfUNQ84drl5yzRx+Ziv9/sjx4YiV8Cl5sCLUHHmuryucXrpmzPn0Zspg/icbhxzKduX+aB42
-	TqaPawP93bsnX6l/1ze16zXRoz1+u6pUf7704aETKY/G1YQ2fJrp/Tgh0aNC/nXI2Im5sN5n
-	jdc528MlxjwTPx1eL/jWsLq7u3L2WDeRlhOdESnaav5hn/uAKT7ivR0VUn4kW1t6t1L7ec5H
-	QccPz+atR7GL245s8VYsemVuzxgw44uj+zsXNqceCN74hUU6c5m4lOD68zs997wsIr1HX0co
-	E4SUxHof3nT9m+C+tDBOpulIzFXdnn3OF8zi5DCDS91o1Ap50Q0Vx/N5nohIzP8b8evTHXYE
-	AAA=
-X-CMS-MailID: 20240424074112eucas1p259a4acc486ca5f8c6cbb4f736f2f984b
-X-Msg-Generator: CA
-X-RootMTR: 20240422142758eucas1p26e94cf6fbbbc99b27e941a172e8a4e41
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240422142758eucas1p26e94cf6fbbbc99b27e941a172e8a4e41
-References: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
-	<CGME20240422142758eucas1p26e94cf6fbbbc99b27e941a172e8a4e41@eucas1p2.samsung.com>
-	<36a1ea2f-92c2-4183-a892-00c5b48c419b@linaro.org>
+In-Reply-To: <20240423194931.97013-3-jdamato@fastly.com>
 
---3ox4bgvwus4z6gtg
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Joe,
 
-On Mon, Apr 22, 2024 at 04:27:47PM +0200, Konrad Dybcio wrote:
->=20
->=20
-> On 3/28/24 16:44, Joel Granados wrote:
-> > What?
-> > These commits remove the sentinel element (last empty element) from the
-> > sysctl arrays of all the files under the "kernel/" directory that use a
-> > sysctl array for registration. The merging of the preparation patches
-> > [1] to mainline allows us to remove sentinel elements without changing
-> > behavior. This is safe because the sysctl registration code
-> > (register_sysctl() and friends) use the array size in addition to
-> > checking for a sentinel [2].
->=20
-> Hi,
->=20
-> looks like *this* "patch" made it to the sysctl tree [1], breaking b4
-> for everyone else (as there's a "--- b4-submit-tracking ---" magic in
-> the tree history now) on next-20240422
->=20
-> Please drop it (again, I'm only talking about this empty cover letter).
-I see it. Will remove it from sysctl-next
+kernel test robot noticed the following build warnings:
 
-Thx for pointing it out.
+[auto build test WARNING on net-next/main]
 
-Best
+url:    https://github.com/intel-lab-lkp/linux/commits/Joe-Damato/net-mlx4-Track-RX-allocation-failures-in-a-stat/20240424-035224
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20240423194931.97013-3-jdamato%40fastly.com
+patch subject: [PATCH net-next 2/3] net/mlx4: link NAPI instances to queues and IRQs
+config: s390-defconfig (https://download.01.org/0day-ci/archive/20240424/202404241518.4TvjoN07-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 5ef5eb66fb428aaf61fb51b709f065c069c11242)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240424/202404241518.4TvjoN07-lkp@intel.com/reproduce)
 
->=20
-> Konrad
->=20
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/com=
-mit/?h=3Dsysctl-next&id=3Dec04a7fa09ddedc1d6c8b86ae281897256c7fdf0
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404241518.4TvjoN07-lkp@intel.com/
 
---=20
+All warnings (new ones prefixed by >>):
 
-Joel Granados
+   In file included from include/linux/elf.h:6:
+   In file included from arch/s390/include/asm/elf.h:173:
+   In file included from arch/s390/include/asm/mmu_context.h:11:
+   In file included from arch/s390/include/asm/pgalloc.h:18:
+   In file included from include/linux/mm.h:2208:
+   include/linux/vmstat.h:508:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     508 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     509 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:515:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     515 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     516 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   include/linux/vmstat.h:527:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     527 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     528 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:536:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     536 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     537 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   In file included from drivers/net/ethernet/mellanox/mlx4/en_cq.c:34:
+   In file included from include/linux/mlx4/cq.h:39:
+   In file included from include/linux/mlx4/device.h:37:
+   In file included from include/linux/if_ether.h:19:
+   In file included from include/linux/skbuff.h:28:
+   In file included from include/linux/dma-mapping.h:11:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/s390/include/asm/io.h:78:
+   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     547 |         val = __raw_readb(PCI_IOBASE + addr);
+         |                           ~~~~~~~~~~ ^
+   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
+      37 | #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
+         |                                                           ^
+   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
+     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
+         |                                                      ^
+   In file included from drivers/net/ethernet/mellanox/mlx4/en_cq.c:34:
+   In file included from include/linux/mlx4/cq.h:39:
+   In file included from include/linux/mlx4/device.h:37:
+   In file included from include/linux/if_ether.h:19:
+   In file included from include/linux/skbuff.h:28:
+   In file included from include/linux/dma-mapping.h:11:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/s390/include/asm/io.h:78:
+   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
+      35 | #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
+         |                                                           ^
+   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
+     115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
+         |                                                      ^
+   In file included from drivers/net/ethernet/mellanox/mlx4/en_cq.c:34:
+   In file included from include/linux/mlx4/cq.h:39:
+   In file included from include/linux/mlx4/device.h:37:
+   In file included from include/linux/if_ether.h:19:
+   In file included from include/linux/skbuff.h:28:
+   In file included from include/linux/dma-mapping.h:11:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/s390/include/asm/io.h:78:
+   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     584 |         __raw_writeb(value, PCI_IOBASE + addr);
+         |                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:692:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     692 |         readsb(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:700:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     700 |         readsw(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:708:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     708 |         readsl(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:717:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     717 |         writesb(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:726:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     726 |         writesw(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:735:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     735 |         writesl(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+>> drivers/net/ethernet/mellanox/mlx4/en_cq.c:202:12: warning: variable 'qtype' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+     202 |                 else if (cq->type == TX)
+         |                          ^~~~~~~~~~~~~~
+   drivers/net/ethernet/mellanox/mlx4/en_cq.c:205:45: note: uninitialized use occurs here
+     205 |                 netif_queue_set_napi(cq->dev, cq->cq_idx, qtype, NULL);
+         |                                                           ^~~~~
+   drivers/net/ethernet/mellanox/mlx4/en_cq.c:202:8: note: remove the 'if' if its condition is always true
+     202 |                 else if (cq->type == TX)
+         |                      ^~~~~~~~~~~~~~~~~~~
+     203 |                         qtype = NETDEV_QUEUE_TYPE_TX;
+   drivers/net/ethernet/mellanox/mlx4/en_cq.c:197:2: note: variable 'qtype' is declared here
+     197 |         enum netdev_queue_type qtype;
+         |         ^
+   18 warnings generated.
 
---3ox4bgvwus4z6gtg
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+vim +202 drivers/net/ethernet/mellanox/mlx4/en_cq.c
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmYot5IACgkQupfNUreW
-QU9JLgv/Xk/varStEW5HfSJDViPIf/SWclVUTpImKj1IK/P76DyvjPdXaekBKiYf
-iwRRN/qqbvDCYp9Hu3nOT5Pp6+kRDKIsMAhz0S+74V6N6kmYo+zuomJ6B5xYE5v/
-lBK2Pecvdic/IhnaYYJrr0kfNFfDpFNnZLEkI+Ao+u9Qho5sXoQqMzB0gdhGNBsA
-sg3tHBk72GQoBtnXD0vAgLe1a3nMIX58N5U8If5nMIY24dk5WDqk4uF+VeKuWoql
-bgEeNHnxrgX+7o65CXUKl3Y5P2r35p4lZ26nSKxUcy9rxCVluyqvcjOWKegC2RHc
-BsPdxqlq+sCS+Jl8GvV9RodvW+TseL8sYbm78PuhrBLmME46zyw8hMOIe9KTQGKz
-PL13bLzLyQ3kHjVyngfEnrobUBJWTO0wSEroqttx/GoKMeFBBubPV9DFnlYmt8qN
-+q1wOQc7/yuDYZHNo272pNOPnLogsjiXUihpXna2l3vN3L8QPb7v52yQHToJeDiK
-RZTL83Ww
-=o7gc
------END PGP SIGNATURE-----
+   194	
+   195	void mlx4_en_deactivate_cq(struct mlx4_en_priv *priv, struct mlx4_en_cq *cq)
+   196	{
+   197		enum netdev_queue_type qtype;
+   198	
+   199		if (cq->type != TX_XDP) {
+   200			if (cq->type == RX)
+   201				qtype = NETDEV_QUEUE_TYPE_RX;
+ > 202			else if (cq->type == TX)
+   203				qtype = NETDEV_QUEUE_TYPE_TX;
+   204	
+   205			netif_queue_set_napi(cq->dev, cq->cq_idx, qtype, NULL);
+   206			napi_disable(&cq->napi);
+   207			netif_napi_del(&cq->napi);
+   208		}
+   209	
+   210		mlx4_cq_free(priv->mdev->dev, &cq->mcq);
+   211	}
+   212	
 
---3ox4bgvwus4z6gtg--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
