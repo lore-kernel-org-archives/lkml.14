@@ -1,94 +1,80 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8062618C3D
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 02:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+Received: from mail.nfschina.com (unknown [42.101.60.195])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 6B4F8568A;
+	Wed, 24 Apr 2024 02:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713925702; cv=none; b=PgF41hkJTSXzbScBv3yQgeJcKhvff8INdtOXPBde8XOsA+vEX9j/CKQrWdBR8xPwYR4ICOTUyoH2o5nxd/yNb7JeoDc9C6/JbgxDD41njLNQxJQJfEATKst61AvTqz5mQVSO1yQn6NHgD931Pbtnos36hMsf5w4ZuzkyKiA4MH4=
+	t=1713925713; cv=none; b=TEWjPUyozSFDvvW/kgSKGLMnJ3iVSxJZNsU6XXDFZaKdvR+ycFRb3IQzyb/Ne1j4xVh0UdNNY7WMAaEljcTYa6vDFmVUzT3HdA8wz5IKMMCRjualxo7cmOCvm65SQwVGX2yDXFA/Pa8iBuISD/QjBwLsxOq725u/xUeycjMf+iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713925702; c=relaxed/simple;
-	bh=9z9OJbYgfrcfwWRX0GO88WwWFXb6L+Xo9Mu/0lbViUY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CQzuOThfcGLZ5seWI025DyrY6LjM4z9IJJ8F8pEqj6ZEsvum7EEdbIGpDAFyH/Q8r0ar/MUEKBpPIDrUVlvIGjP4/Z0yBM5kYP5pnfJAwqcvmjl/X/lOdSYZ/LTQG7SAm1cJ4nH0EA5jpCrY1a57xyZmrKsbyKkLkB/YlhQkAJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2r/9rwsd; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2r/9rwsd"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e3f17c6491so51294655ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 19:28:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713925701; x=1714530501; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ze4k+50kKLUhtdOJ+MVcWkC0g+gDNT54b6uo5ytHs5E=;
-        b=2r/9rwsdvb2hIXKLDWedx3j5xEpaY0tvYB0F5Hj6d8VdU7Tvsl50m3ZdDsuyDSJcUk
-         1yAUyzq13p2ofxdJIx57AOV/aP8tsu+IwoUFIgKmFOz4YoyRWeVS7YaOw40lK71c7KCT
-         b8VmxN87oz7ohSGAEYJmU1lAA6kBbbQsRHZGChHRIa4HxgT47ZMYDejcO89kd9BcyHGh
-         /hpSRfnprxn0uU+jXV+NYoGMqHy9jvY81AFjIpHRGErDaNuHIoJE2hYYIixbhIFpneBm
-         EDhCiZ49udFDD7NItvh5GkJuweNr7jFfw0n6g403s+dls7igWaGj5OoqlYIAcqx8Bnxz
-         5z5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713925701; x=1714530501;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ze4k+50kKLUhtdOJ+MVcWkC0g+gDNT54b6uo5ytHs5E=;
-        b=JePaVW7RnRa+p2uw/Ms3dq1klE2ByZm0E9rq6zHNEULpU0yfKscE5p3PF3OhVfaHpO
-         puYx/S0tsAR5A3C0xu7BNRRBcY+t4l1cH7L/1fDJdfQxXNr2VWPslmQJeWunYEeFnj3B
-         Al8f1dq6S220GQcKTeNGVpBVRl1+I3erwoB++7Q7zuW5vJdJBkzdNZw+r5EEuTzh0WFF
-         WgBaF/kAeW0o4y4vUZAC5ZCoJdZ/nDdWKI1AVVj/5JLdObp9FqzSM2T/fS9kyMmLnrda
-         RAdSderA1nI3A+2KToYNDT+MQUVFiKQq9+UA63jOab6zYZoezi1RtiqtoBokvk1gVfix
-         uZCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2aLpugWhjGU1hRJKTMSmCHX4GEX3TJKGlXLxhsYyGbranL0tNF8Pa3qM5BzScuYa5qel5jKXFCzIQW/qoZ2tu8prSsYUngbD4/H9m
-X-Gm-Message-State: AOJu0YwZ33EYfAhs4zUIOKJ1/22WvFnpXbx1DyUCG7qlK9aJNvYn25wE
-	ZRB8RFC5fzoyzpJSuHWXmcRH0zJOsX4cztcZvc6AxuL5C8gPfNO0jCJti3pX8xX/bGJTsuaSPFa
-	dToH8wsTSDpl/87DZp9umxZHON8zcZmKK4Z7VwA==
-X-Google-Smtp-Source: AGHT+IFBTLfPuGp9/IC945aJ33zSnp5IS3lA1sZQ97BsGnQxgo+apMlCKbEsg2kkINqPxswPBgsDmG5f6quE3YJGhno=
-X-Received: by 2002:a17:90b:3448:b0:2a4:ca45:ded1 with SMTP id
- lj8-20020a17090b344800b002a4ca45ded1mr979782pjb.28.1713925700834; Tue, 23 Apr
- 2024 19:28:20 -0700 (PDT)
+	s=arc-20240116; t=1713925713; c=relaxed/simple;
+	bh=53lcTeRvvpcYAQU46xMUesg77FmlT96Wq1XtqskvJ8Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=tKzYh8lyD7xrhFst3H5fHWwswFVG/TsXEpFysyVcw7maRrVHEDkf77jarZey9vZ3akJSf6W4oMhSXHVjoGjg3FzNoP7RdLM+ksviqbRqA2xcS3XWbBqxyyTurkRoT9Swzopp3itcdJRPVmsOV0LZSoTZrqhYE7ATQh/lFOa58QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from localhost.localdomain (unknown [180.167.10.98])
+	by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPSA id A58BD6019C09D;
+	Wed, 24 Apr 2024 10:28:12 +0800 (CST)
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+To: sgoutham@marvell.com,
+	lcherian@marvell.com,
+	gakula@marvell.com,
+	jerinj@marvell.com,
+	hkelam@marvell.com,
+	sbhatta@marvell.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	nathan@kernel.org,
+	ndesaulniers@google.com,
+	morbo@google.com,
+	justinstitt@google.com
+Cc: Su Hui <suhui@nfschina.com>,
+	sumang@marvell.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH net] octeontx2-af: fix the double free in rvu_npc_freemem()
+Date: Wed, 24 Apr 2024 10:27:25 +0800
+Message-Id: <20240424022724.144587-1-suhui@nfschina.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240422090310.3311429-1-yangcong5@huaqin.corp-partner.google.com>
- <20240422090310.3311429-5-yangcong5@huaqin.corp-partner.google.com> <20240422151607.GA1277508-robh@kernel.org>
-In-Reply-To: <20240422151607.GA1277508-robh@kernel.org>
-From: cong yang <yangcong5@huaqin.corp-partner.google.com>
-Date: Wed, 24 Apr 2024 10:28:09 +0800
-Message-ID: <CAHwB_N+M3Le2L=mECVMX1Ha2g+G=jog6zdfZCzJ-HSdkngHGvA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] dt-bindings: display: panel: Add compatible for
- BOE nv110wum-l60
-To: Rob Herring <robh@kernel.org>
-Cc: sam@ravnborg.org, neil.armstrong@linaro.org, daniel@ffwll.ch, 
-	dianders@chromium.org, linus.walleij@linaro.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, airlied@gmail.com, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, xuxinxiong@huaqin.corp-partner.google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
-  Thanks for review.
+Clang static checker(scan-build) warning：
+drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c:line 2184, column 2
+Attempt to free released memory.
 
-Rob Herring <robh@kernel.org> =E4=BA=8E2024=E5=B9=B44=E6=9C=8822=E6=97=A5=
-=E5=91=A8=E4=B8=80 23:16=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Mon, Apr 22, 2024 at 05:03:07PM +0800, Cong Yang wrote:
-> > The BOE nv110wum-l60 is a 11.0" WUXGA TFT LCD panel, which fits in nice=
-ly
-> > with the existing himax-hx83102 driver.
->
-> From a h/w perspective, the reason to share the binding is the same
-> underlying controller, himax hx83102, is used, not that it is the same
-> driver.
+npc_mcam_rsrcs_deinit() has released 'mcam->counters.bmap'. Deleted this
+redundant kfree() to fix this double free problem.
 
-Got it, will update commit message in V3. Thanks.
+Fixes: dd7842878633 ("octeontx2-af: Add new devlink param to configure maximum usable NIX block LFs")
+Signed-off-by: Su Hui <suhui@nfschina.com>
+---
+ drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
->
-> Rob
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
+index be709f83f331..e8b73b9d75e3 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
+@@ -2181,7 +2181,6 @@ void rvu_npc_freemem(struct rvu *rvu)
+ 
+ 	kfree(pkind->rsrc.bmap);
+ 	npc_mcam_rsrcs_deinit(rvu);
+-	kfree(mcam->counters.bmap);
+ 	if (rvu->kpu_prfl_addr)
+ 		iounmap(rvu->kpu_prfl_addr);
+ 	else
+-- 
+2.30.2
+
