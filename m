@@ -1,180 +1,237 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2081.outbound.protection.outlook.com [40.107.223.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEE815FCED;
-	Wed, 24 Apr 2024 15:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713974280; cv=none; b=HeMrYcTCeAcgJSYhGRcuacdt9AiI8HMQ1yfJp7lR53og9vmcbXAU1JQXbm8NJVeJjlPhVqgkSXU0M7e1pMZnNxLR8VmR6Fb/kER6ih6OD3nrVO4SAdqdgB4zP+gDBN7gtUTgQ5hqqTZ2tcPHNJl8rEapzBYaPw3qQy6BcniVdhY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713974280; c=relaxed/simple;
-	bh=ZzNkrV2fhi/P7CXl8CQL6Gv8PL1midi0/BgcWt9p6i0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=YkRWGioqhByDZCaOmqXncDzIsdQIslMnGR76590wXYthUiWfCmyGs32JgpmCQD10mf5McYyPaav8k797BO0jeWnjifPxarlnEegZJH89JMEH54jhTIf1AO5Sx9ogVxmeV7tDlIrfvaqZQaXC6GpcC/BTdp82SL2RI8/QiHeT8wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZllCMom+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B469015F406
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 15:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713974315; cv=fail; b=rjYJD3pa8CbiC5p5JffAa4OZfv5nj40gBdXhwIXceoV+fScgjTflYxGE0Kx4WbTs+jbEVO81vfqA/zZsZ0dEIhxAs9oWRkUa1SjEdiSezEBKb/ADLG1VfEmKh701X0RKWbr6TYOGz/DamdML0g2Q1dHW/Os207ZmVnVswDWz1B4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713974315; c=relaxed/simple;
+	bh=0skJtVuYgHwMivIdtqu2BTMhvuAH7Z4EE7+0vh1Iibs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I2c4KtGMySO5BI8qgFKlS408WwEqkUJEJJZBQhf/fTXuL/Vn1dTkbnJ3xanGKrfgJfbPgMU0EH+s0g3r+NRUWQd/jXtFDVq/jHDUcvzFR7uNpqmQmnsXjzjrfLf+/Sw8w4yiK/LcXY5GCPE0RKGhmJ9O9BGzfU3HQatnV1DpvM0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qk37VZM+; arc=fail smtp.client-ip=40.107.223.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZllCMom+"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43OAVcXP025423;
-	Wed, 24 Apr 2024 15:57:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:from:to:cc:references
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=HXqhNnCVnj4urhfrmzgAfywaXIs5n7kydyat0shKQ5U=; b=Zl
-	lCMom+Fq2fyL9u58kQQG1q/Bj2+BXOJVXiCsn/MklYa4xRj0RK/G253HjiM7xnfz
-	slwGcyZFpocJFEdRERR0sCxLxU03E+7wVulckHXn7BUZ+/B7W5179faj7PhAtzUr
-	ND3SnvyFgHuyGk6Sa8kePeNmG+0qg0H+r8X2ZccZqj5qRfZl7rvfe/xl1bOahfG/
-	BricPpDj4DcdQmFGuk0nwUiigYP0kq+6tVyhJr3Kj/gGBcnshRbpVI+j+2kSuLqt
-	oTIBgOXQwM1unnSWLNCIiarDzevBDIGJZ1v6O9UF8eDn4x++hnfTTGRoez8oi80i
-	upkZmpESOi7MAKrphWCw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xpv9g9amt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 15:57:50 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43OFvn8U020538
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 15:57:49 GMT
-Received: from [10.253.14.221] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 24 Apr
- 2024 08:57:47 -0700
-Message-ID: <f23212ed-c986-46ff-ba8a-e6fe6418bb8a@quicinc.com>
-Date: Wed, 24 Apr 2024 23:57:44 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qk37VZM+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e9MeKe4Lsh6yq4OS2j6Tgj7gPv3p+2gvntJQwqNUY9q3FbD6xTpJkgZ46AETAg7u+wBlEG6Nk546GAMIufJqsHZoEhselWaYtoDO7e9DO1M4q4KAhJrCbgnWyl7+3QNoDw/n6JyIX7ePA4YR0PoKk28EUJjIo31AWCV46OFkod0jXZfz7lDaH5PBqqwIiL18QGs1T2a/NFd0FoHxw+Uvd0+jaVB1cBLfCrTm+nHN7y6yCTlyAdWFtAS21V9p9hbnR6l25u3XmdSfKpJRpeMnQ8UZHT0fY43LDugrHEvlpyBk/CUD4G+1nf+QvBFervb5iQNCfZXf42h/lGvMYbt4/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=S3+IC27TH5ORa8Zf4SF9NM2mgUInEyfUneTApO+k518=;
+ b=PRBWk5rOtiOCnEh8Tr1w5LRKQFVviM8E5+weJHhoETx8T5KRhyYvfArFhxFhRbh/nHoC2nKzKGZz5TuYRjdNcZd2DSpLfUMYxCXftDdFY98cwCO48rQhyOjsQctv68TbPdx4sPgBETKJGZ+ZwzGouvz8EokGICplxrGRRElFMDynMXoOx82XUo4WZu29gjCAzaj8pN/nBf3HHyc7oJ0iGji9hIZhA8MZNCilGEUyaSljtgduCkBfAW1xnXnHvngvVcBR4Xbpw4bpmP8fYZkQdC6Hsa/YwoY5TcwxbePA9Vx+2zphwo5sBL9hwzsAj11TJrIPO/NPFa7FuL1ziQcysA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S3+IC27TH5ORa8Zf4SF9NM2mgUInEyfUneTApO+k518=;
+ b=qk37VZM+gPXSi94cGTeyiEnZctibyLRqPdSUDZFIurRys6JI2XVa9HhMpGKv1OHLEV1SnYQTrWRoXICdxMjYlHO0gfoqV2SkojSm4Mz5tu3MSu6vmiCVR5BwunfVMUs3mBGRypD1AjJjNP+YHsXUlJvyo5Vz+3Z1MNsWWOC9fSY=
+Received: from PH7PR17CA0006.namprd17.prod.outlook.com (2603:10b6:510:324::28)
+ by SA3PR12MB9091.namprd12.prod.outlook.com (2603:10b6:806:395::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Wed, 24 Apr
+ 2024 15:58:30 +0000
+Received: from CY4PEPF0000EE31.namprd05.prod.outlook.com
+ (2603:10b6:510:324:cafe::74) by PH7PR17CA0006.outlook.office365.com
+ (2603:10b6:510:324::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.23 via Frontend
+ Transport; Wed, 24 Apr 2024 15:58:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000EE31.mail.protection.outlook.com (10.167.242.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7519.19 via Frontend Transport; Wed, 24 Apr 2024 15:58:26 +0000
+Received: from tlendack-t1.amdoffice.net (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 24 Apr 2024 10:58:25 -0500
+From: Tom Lendacky <thomas.lendacky@amd.com>
+To: <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+	<linux-coco@lists.linux.dev>, <svsm-devel@coconut-svsm.dev>
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, "Peter
+ Zijlstra" <peterz@infradead.org>, Dan Williams <dan.j.williams@intel.com>,
+	Michael Roth <michael.roth@amd.com>, Ashish Kalra <ashish.kalra@amd.com>,
+	Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v4 00/15] Provide SEV-SNP support for running under an SVSM
+Date: Wed, 24 Apr 2024 10:57:56 -0500
+Message-ID: <cover.1713974291.git.thomas.lendacky@amd.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Bluetooth: qca: set power_ctrl_enabled on NULL
- returned by gpiod_get_optional()
-From: quic_zijuhu <quic_zijuhu@quicinc.com>
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-CC: Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Wren
- Turkal <wt@penguintechs.org>, <torvalds@linux-foundation.org>,
-        <--cc=regressions@lists.linux.dev>,
-        Greg KH <gregkh@linuxfoundation.org>
-References: <20240424122932.79120-1-brgl@bgdev.pl>
- <0f8ba1b5-490e-4961-80e2-7942f66730ec@linaro.org>
- <CACMJSeuBCkNyaD60qGVpAq91DqD_OA=tCVEY0t+JNK2vcWBc+Q@mail.gmail.com>
- <d82c2e39-d2b8-4de0-a11a-6ab2420f8f95@quicinc.com>
- <f4bffd0e-0d9b-4fb9-926e-c75a20c92b50@quicinc.com>
- <CAMRc=MfqKsRqKck5Wb052zuUURxqRykjbu+c3K9oFPMHaHuiJA@mail.gmail.com>
- <f1d41e3a-e864-43a3-bb59-f59a8667b595@quicinc.com>
- <CABBYNZ+5R8gJVWXjO_VMsZ9MN9e6YV-Cnp3oYEnnbRJz1D=W=g@mail.gmail.com>
- <e39038e2-4e61-4e28-93da-8137aa14ad51@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <e39038e2-4e61-4e28-93da-8137aa14ad51@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 7Oog-KOF8BfTFePTBIBaJvw7F3iH3Gjs
-X-Proofpoint-GUID: 7Oog-KOF8BfTFePTBIBaJvw7F3iH3Gjs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-24_13,2024-04-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- suspectscore=0 clxscore=1011 mlxlogscore=999 malwarescore=0 adultscore=0
- mlxscore=0 phishscore=0 lowpriorityscore=0 spamscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2404240064
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE31:EE_|SA3PR12MB9091:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5eda441f-2c62-4fed-5534-08dc647760aa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Tb1g+qhlz00S4ThQXHNv8nTYcz9BjzA34BzyYkc4h/NN2VUq3cOOi70qqj2M?=
+ =?us-ascii?Q?IDeuNUBruK5uBMYb1QKYpGem/nhbGeSvDpffLY5G1N1uVUDj3Pmrr/19tQlp?=
+ =?us-ascii?Q?Fe3JtvTv8UQY486Qg6m3pxBhUlfhq+JmXAXo630bPhV0wWgoOXDDKo+rFgUx?=
+ =?us-ascii?Q?j0dL+VzPdDGxzJh8gKSx7wzyeHmbKZvqJm+eldJJD7vv5Qf/IP8Otjd9S9dX?=
+ =?us-ascii?Q?fVTYXAP8S+ZOrv10cHCishTjb8q9p+uFa1aCUN1xuXmn8VdfQWsH3WH0pkTT?=
+ =?us-ascii?Q?LVxgm8jIf/bKJ8/R0qCj/pufQ0XdS9UjmwAImVRdm0rWPNXR8nNeHgHidCBL?=
+ =?us-ascii?Q?ZF/ikQuHtHJZsg9wH4XzkCN2xhVTa53CYoTpdCAyoEkoPCIqfSvYiyMBm8Np?=
+ =?us-ascii?Q?uBOQ+I3a8zqFXkEPIEDo4qgtc4A8aevbOE6prZETkF6/PvUfK4/0lIyPSUHs?=
+ =?us-ascii?Q?3ha1E/Xg+JTD7VcD6/kaUvcsq/3mS8r6H6HJWfQ/lKEc7B4ZLMlSqsFK6Kn9?=
+ =?us-ascii?Q?TOHDSM+9dZSck5CDRlEWmG/T4cx/iI9BqzWrCWiWYCC4E8ndW5rTaE/A5FhK?=
+ =?us-ascii?Q?1KX01oeQsu3NLZJnmRQNyd/e14by+q7zrnYE2bmZNhEKnkypzrIzf1IkWfq3?=
+ =?us-ascii?Q?sWRNSA4YGTZjt5jFZOMfKrTOa97nenTy17gOsyDQAEgT2akeneXzGN7nNzqJ?=
+ =?us-ascii?Q?8J+XRZaLtZQQFypdDrMgF+xg/yWsGiXYl2VDL9BaD54GKpFDgELlS01bVwvw?=
+ =?us-ascii?Q?gEU7AC8R3PkXLnQ7Zd9zR6bxj4HCzGvUoHgS/lI3qZC9wWgYvyEpdjU+77J8?=
+ =?us-ascii?Q?gy/4NvBg1zpmy9ZsWROPxksiY7a3GZyMBQyT6Akb3UcEj4TYuiyJclXJ1b5w?=
+ =?us-ascii?Q?yQKNaA31JRUD8CEg07CoQ0eIUN4mhelKTR8rVdEsd6OD6O5l+0ljDZawacOM?=
+ =?us-ascii?Q?hJeZFHrnkvXLG0xKPTh+rgkRq8nS+Z05AYoPlce0Mv8RMpNPhth0HpV7Z7jS?=
+ =?us-ascii?Q?xgR9g/kTeBpGIn8BX+bFYYQnvHX6zqdHeI2KqSLRmnR/G01NiT0AFzRYWEmI?=
+ =?us-ascii?Q?Qt66jPMMQ9lLOtSXnwLWWjnBQq+ooOQAoxlCvEnOH6CRqWsT7FfdleG5DUjZ?=
+ =?us-ascii?Q?PSrUX2cjRNsuN2XAVOq13MxSX3MhRrn/4mYPC41MLARKtVjP+FtJm0d/VRzD?=
+ =?us-ascii?Q?jPgbavsCssoep1RW5kniU3H1xZc9rDLfWQeHtVbtrk7OUiOyaMlceg7Y1bjO?=
+ =?us-ascii?Q?f4uMxeBBOa4c53ViuVHkwxLX89/8Q+2vXFxziO8/3LaWATcSEZBvtn/mxjQx?=
+ =?us-ascii?Q?BFvWtgULDC1VwVCffFEzY1dhFsD0UQJWTrVaykvx+qQjXbU6JuEpoA5EBWqH?=
+ =?us-ascii?Q?x/ydz37nnZvKtOStYsG7kkarLHOp?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(7416005)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 15:58:26.4344
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5eda441f-2c62-4fed-5534-08dc647760aa
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE31.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9091
 
-On 4/24/2024 11:47 PM, quic_zijuhu wrote:
-> On 4/24/2024 11:41 PM, Luiz Augusto von Dentz wrote:
->> Hi Quic_zijuhu,
->>
->> On Wed, Apr 24, 2024 at 11:35 AM quic_zijuhu <quic_zijuhu@quicinc.com> wrote:
->>>
->>> On 4/24/2024 11:31 PM, Bartosz Golaszewski wrote:
->>>> On Wed, Apr 24, 2024 at 5:30 PM quic_zijuhu <quic_zijuhu@quicinc.com> wrote:
->>>>>
->>>>> On 4/24/2024 11:24 PM, quic_zijuhu wrote:
->>>>>> On 4/24/2024 10:52 PM, Bartosz Golaszewski wrote:
->>>>>>> On Wed, 24 Apr 2024 at 16:46, Krzysztof Kozlowski
->>>>>>> <krzysztof.kozlowski@linaro.org> wrote:
->>>>>>>>
->>>>>>>> On 24/04/2024 14:29, Bartosz Golaszewski wrote:
->>>>>>>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>>>>>>>
->>>>>>>>
->>>>>>>>>               qcadev->susclk = devm_clk_get_optional(&serdev->dev, NULL);
->>>>>>>>>               if (IS_ERR(qcadev->susclk)) {
->>>>>>>>> @@ -2355,10 +2360,13 @@ static int qca_serdev_probe(struct serdev_device *serdev)
->>>>>>>>>               qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
->>>>>>>>>                                              GPIOD_OUT_LOW);
->>>>>>>>>               if (IS_ERR(qcadev->bt_en)) {
->>>>>>>>> -                     dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
->>>>>>>>> -                     power_ctrl_enabled = false;
->>>>>>>>> +                     dev_err(&serdev->dev, "failed to acquire enable gpio\n");
->>>>>>>>> +                     return PTR_ERR(qcadev->bt_en);
->>>>>> please think about for QCA2066. if it is returned from here.  BT will
->>>>>> not working at all.  if you don't return here. i will be working fine
->>>>>> for every BT functionality.
->>>>> sorry, correct a type error, it is QCA6390 not QCA2066.
->>>>
->>>> Doesn't matter. If enable-gpios is not there, gpiod_get_optional()
->>>> will return NULL and we will not return.
->>>>
->>> i think i need to explain more for my consider case.
->>> let me take QCA6390,  if the property enable-gpios is configured.
->>> but IS_ERR(qcadev->bt_en) case happens, your change will do error
->>> return, so BT will not work at all
->>>
->>> but if you don't do error return, BT will working fine.
->>>
->>> so your fix is not right regarding QCA6390.
->>
->> Actually I'd say he is probably right with respect to DT because that
->> seems to require GPIO, we probably need a clearer way to differentiate
->> if a device is being set up via DT or not (btattach), in any case DT
->> is probably preferable thus why I went ahead and applied this one.
->>
-> for QCA6390, i can confirm that enable-gpios is optional. it is bring-up
-> by my team. i can confirm reporter's machine don't config the GPIO pin.
-> DTS binding spec also don't mark it as required.
-> 
-> that is why i change my changing from initial reverting the whole change
-> to only focus on QCA6390 that is the machine reported the issue.
-> 
-> 
->>>> Bart
->>>>
->>>>>> NAK again by me.
->>>>>>
->>>>>>>>>               }
->>>>>>>>>
->>>>>>>>> +             if (!qcadev->bt_en)
->>>>>>>>> +                     power_ctrl_enabled = false;
->>>>>>>>
->>>>>>>> This looks duplicated - you already have such check earlier.
->>>>>>>>
->>>>>>>
->>>>>>> It's under a different switch case!
->>>>>>>
->>>>>>> Bartosz
->>>>>>
->>>>>>
->>>>>
->>>
->>
->>
-> 
-> 
-i find the change have been merged.
-i think it is not good manner to merge change in this way even if i give
-reasonable doubt
+This series adds SEV-SNP support for running Linux under an Secure VM
+Service Module (SVSM) at a less privileged VM Privilege Level (VMPL).
+By running at a less priviledged VMPL, the SVSM can be used to provide
+services, e.g. a virtual TPM, for Linux within the SEV-SNP confidential
+VM (CVM) rather than trust such services from the hypervisor.
+
+Currently, a Linux guest expects to run at the highest VMPL, VMPL0, and
+there are certain SNP related operations that require that VMPL level.
+Specifically, the PVALIDATE instruction and the RMPADJUST instruction
+when setting the VMSA attribute of a page (used when starting APs).
+
+If Linux is to run at a less privileged VMPL, e.g. VMPL2, then it must
+use an SVSM (which is running at VMPL0) to perform the operations that
+it is no longer able to perform.
+
+How Linux interacts with and uses the SVSM is documented in the SVSM
+specification [1] and the GHCB specification [2].
+
+This series introduces support to run Linux under an SVSM. It consists
+of:
+  - Detecting the presence of an SVSM
+  - When not running at VMPL0, invoking the SVSM for page validation and
+    VMSA page creation/deletion
+  - Adding a sysfs entry that specifies the Linux VMPL
+  - Modifying the sev-guest driver to use the VMPCK key associated with
+    the Linux VMPL
+  - Expanding the config-fs TSM support to request attestation reports
+    from the SVSM and allowing attributes to be hidden
+  - Detecting and allowing Linux to run in a VMPL other than 0 when an
+    SVSM is present
+
+The series is based off of and tested against the tip tree:
+  https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+
+  4e2b6e891aae ("Merge branch into tip/master: 'x86/shstk'")
+
+[1] https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/specifications/58019.pdf
+[2] https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/specifications/56421.pdf
+
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Christoph Hellwig <hch@lst.de>
+
+---
+
+Changes in v4:
+- Add a pre-patch to rename the struct snp_secrets_page_layout to just
+  snp_secrets_page.
+- Move the config-fs visibility support to be group based and referenced
+  by an index. Remove the macro changes that set the visibility function
+  for an entry.
+- Make the TSM visibility support vendor specific via an ops callback.
+- Use the rmpadjust() function directly and remove the enforce_vmpl0()
+  function.
+- Consolidate common variables into arch/x86/kernel/sev-shared.c.
+
+Changes in v3:
+- Rename decompresor snp_setup() to early_snp_setup() to better indicate
+  when it is called.
+- Rename the "svsm" config-fs attribute into the more generic
+  "service_provider" attribute that takes a name as input.
+- Change config-fs visibility function to be a simple bool return type
+  instead of returning the mode.
+- Switch to using new RIP_REL_REF() macro and __head notation where
+  appropriate.
+
+Changes in v2:
+- Define X86_FEATURE_SVSM_PRESENT and set the bit in the CPUID table,
+  removing the need to set the CPUID bit in the #VC handler.
+- Rename the TSM service_version attribute to service_manifest_version.
+- Add support to config-fs to hide attributes and hide the SVSM attributes
+  when an SVSM is not present.
+
+
+Tom Lendacky (15):
+  x86/sev: Shorten snp_secrets_page_layout to snp_secrets_page
+  x86/sev: Rename snp_init() in the boot/compressed/sev.c file
+  x86/sev: Make the VMPL0 checking more straight forward
+  x86/sev: Check for the presence of an SVSM in the SNP Secrets page
+  x86/sev: Use kernel provided SVSM Calling Areas
+  x86/sev: Perform PVALIDATE using the SVSM when not at VMPL0
+  x86/sev: Use the SVSM to create a vCPU when not in VMPL0
+  x86/sev: Provide SVSM discovery support
+  x86/sev: Provide guest VMPL level to userspace
+  virt: sev-guest: Choose the VMPCK key based on executing VMPL
+  configfs-tsm: Allow the privlevel_floor attribute to be updated
+  fs/configfs: Add a callback to determine attribute visibility
+  x86/sev: Take advantage of configfs visibility support in TSM
+  x86/sev: Extend the config-fs attestation support for an SVSM
+  x86/sev: Allow non-VMPL0 execution when an SVSM is present
+
+ Documentation/ABI/testing/configfs-tsm        |  63 +++
+ .../arch/x86/amd-memory-encryption.rst        |  22 +
+ arch/x86/boot/compressed/sev.c                | 258 ++++++-----
+ arch/x86/include/asm/cpufeatures.h            |   1 +
+ arch/x86/include/asm/msr-index.h              |   2 +
+ arch/x86/include/asm/sev-common.h             |  18 +
+ arch/x86/include/asm/sev.h                    | 116 ++++-
+ arch/x86/include/uapi/asm/svm.h               |   1 +
+ arch/x86/kernel/sev-shared.c                  | 354 ++++++++++++++-
+ arch/x86/kernel/sev.c                         | 421 +++++++++++++++---
+ arch/x86/mm/mem_encrypt_amd.c                 |   8 +-
+ drivers/virt/coco/sev-guest/sev-guest.c       | 210 ++++++++-
+ drivers/virt/coco/tdx-guest/tdx-guest.c       |  29 +-
+ drivers/virt/coco/tsm.c                       | 173 +++++--
+ fs/configfs/dir.c                             |  20 +
+ include/linux/configfs.h                      |   3 +
+ include/linux/tsm.h                           |  62 ++-
+ 17 files changed, 1533 insertions(+), 228 deletions(-)
+
+-- 
+2.43.2
 
