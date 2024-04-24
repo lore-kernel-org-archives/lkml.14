@@ -1,95 +1,80 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C652159903;
-	Wed, 24 Apr 2024 11:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2DC13DDD9;
+	Wed, 24 Apr 2024 11:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713956833; cv=none; b=awKwMAOMTj0uIJzQ72zDw13NF35zDAFID201WmHfv7figmoAWDEKzSPP9QawQZGJZ5OROpbz7atoA7RmiamJ1ajqEUmsn7IdW7tYckXj4bwsLRMe49esEx9Rfn8flcimHLWojAcRUoiGVVPHycALYUch8EegeqWWPKBAvjhuT34=
+	t=1713957027; cv=none; b=LCxHOaftmUEMIDrjwUJSDqp4hvYtX+6n7hHt75PtIlCKEwRHkv/EA3aLwO8apF9L1TbNEeKKvs98GXw3CBVeZs8THtMGWr1tN+7RiB/CDdy5DIMxHUWD4VQsslNZlJ6Ut/ISy04jKrBRa1ZytNLKCwhsNQxCzV6iyZCM3TJpsa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713956833; c=relaxed/simple;
-	bh=HIuZMhY7gmL38f+1HRFPKHO8EAylymTaSV39MZkYuXw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZTLyzHzbU2DiqReVKx6QD9f/zKkJIJAV7fjzUe/Ve5EeIoATQw1GEFKGLewFhG8Q3NQrAGRpra8FmuvNLmKitznMVkMjJJYvZIIMTqqnYry9ojSL7rnk4dQ4oLs6vXRfM2hr0F5YV5qjjp13piU+NsZjQUfrLa31AeFBfE8teBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ZTnGkGzy; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1713957027; c=relaxed/simple;
+	bh=Ckxhz825vmza6vvWz/TLutSmlDWafm3SUwU+g4hqtAQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=A71NK1CgqxgdJFEx51u1hEQwRZMh/B5fPAbC8i+AHoP1BCPj71c/rYvQBZam0gBOyrCdur5EKV9BUTL20NmROHDplRZSTdD3AdUnZp/RWYWWBP3VO9f3G3AcxxGaJ4EdMbRUf9mcuPWBatpFLb2hoFJZsrJ9LRlCbYcGfIcbNaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bVAGBNaM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ZTnGkGzy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1713956788; x=1714561588; i=markus.elfring@web.de;
-	bh=HIuZMhY7gmL38f+1HRFPKHO8EAylymTaSV39MZkYuXw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=ZTnGkGzyZ0PmSZaEiDOLvObJG2eYu2o07Dfxyro+gYNe4IYOg42S41aWvW1SgEOX
-	 d0v5CPMVvoidaHS/CbI6UwqujiWmn3lO/stFEr+GY3abiuiqfBVBCQsKZWGsChUEk
-	 l3yUrG+sfX9VgOOEUYxJV1Yy1RKY/2qtnyf75cUf8tKCnI2iBQhZmm8HBWHKirwkr
-	 aEtmK46przSiiCooJl68oC589FzPubfD8uTbJQjC3G5bpMBKTwOlVeBdFINdvjdrE
-	 G0LH+0Mu7B6frOOULFiu2+NAzvhz+4U/jqHNIc4Ny4rWVOj9p2ixjsSER2Zx7JqwN
-	 Jn+yvPqUNKvz7SZj1A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N79N8-1skfFo0Gui-016yeo; Wed, 24
- Apr 2024 13:06:28 +0200
-Message-ID: <a89a7147-57b3-4881-86e0-410eab56a91d@web.de>
-Date: Wed, 24 Apr 2024 13:06:26 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bVAGBNaM"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E210BC32781;
+	Wed, 24 Apr 2024 11:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713957026;
+	bh=Ckxhz825vmza6vvWz/TLutSmlDWafm3SUwU+g4hqtAQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=bVAGBNaM7DF00r6IsRzTLUj8CSJoy9XYR8ymyWFycWjZFrAU5SQq81tGhcuF2U/PC
+	 eUKTwL0QBd9POnCBbt8hJ9uLWdFYiP30TmXHtXKwCdUOYyidMwCqxJn/IRevcBVjOU
+	 55o+uv9QjLsMcdxJ/cKynz16F9GJPeYzm+bZKDqKWbKnMDOkg2MoiLb3Lh5yY73Tjc
+	 lQTG3EplQ3d9F44iTDCFeGVwg71NNMOA7/oSg33U0qPK9uxkOwu0YOVMwl1a2NnGj6
+	 SwbiUdScEGocf1tJ4IL3p7Tn947X9d5nZH7VEodftC4Br2fDlxnbbOPhn8qFxLFUKP
+	 ImdVKMeFRUnJA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CF635C43614;
+	Wed, 24 Apr 2024 11:10:26 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v2] sh: Call paging_init() earlier in the init sequence
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Oreoluwa Babatunde <quic_obabatun@quicinc.com>, linux-sh@vger.kernel.org,
- kernel-janitors@vger.kernel.org, kernel@quicinc.com,
- Rich Felker <dalias@libc.org>, Rob Herring <robh@kernel.org>,
- Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <20240423233150.74302-1-quic_obabatun@quicinc.com>
- <f74fdb82-5d66-48f2-830e-3874570f022e@web.de>
- <7dd171cc41474871408f06326aea5cb87923e454.camel@physik.fu-berlin.de>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <7dd171cc41474871408f06326aea5cb87923e454.camel@physik.fu-berlin.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:zRNMe9qrU5aJRpoCAfC5rz7EUjw5g56wfPskauKuNvH3ZMG5EEZ
- P8nP8/oqVw4ue8jYew8HIpRoghFb6hsUIi51KaduMss+ekyviVrdfraIlD2lN5ffL0bL8rC
- YbdAMzq6yiBptALvY8hMKpXQ2is5lA35FX76LL3M8qt4R7UA8FI+FEoRaf4BlDkXAplQ9dl
- mUCM7hqO/XHtIjBtEjY7w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:QllExh7Fwoc=;bjfyI7DOEdkwOJ0LEZi2g3NyULL
- hKf7pVdwBQpHfkUeAIq+sGCyuhCZFB9oxhB+lEfwqiSCUPK5IwTDZ/4yBj5+PdCkhLe3/O0k0
- ACbMfd4XSDcsQWLFm9faOre3A+4H3+AaluNhfviqTy2Bx1pPdc1Pkj/cE1W5VMO3td94e2Uo5
- GiDogpomprcEyRT9DfqQJkblyrHAyVgI5KozmnfAd84y0553AwSlWAz5JnqRNyMNllCmib33I
- ZfMjEk378K/iFdzV1KnAY7sLkuilc7TWB/kqft4pQRZ3ufe5AiYyCmoJ7kKZEdZkjFQqPrlYE
- pIt2HmEHzWtWwh13yPNsJ1ZS3Mfl/gI9sJATaPlBKQjzVnmle/s1svJZT4s6UHULmeyWKsBkm
- wCNsqZ62PYQB25h11NYbWBNys/yeUBtmBVXOHlaYnTC32WkLniN6KEeVlzofTJoqBJ/Wr9G0A
- /l2MfMCj2HEZRfHXCpb3KJfwhSbYnRd6Dt93E6YF9Goc2Kf3oOg9ExdH++8SJKnBivguKI4sY
- aPhryC5XfXrpTDKwYfjdwpSPqnrFtsrtm1TKTlmukyLSVa1hS8g6DI0Z25ks0h5ZtuKfPyr6Q
- cvLAP0+eSvPJg45YtV+LarDmRgpPO6X9bIPYHFr82r+Pdn6h1obq8AgfXBAi0IMmNqrHcL7fh
- 6eJKdR3/0+oLSZLW8fzKcQ7J6JRqTiEi5MUvjCJue2ItvBzaTUOXs9hcVNEduaBtUhCjPkR7I
- VeEW4y5co+kMd5pd7g3Y9kYChZFMS1309aEOwlML7hkZFzinm7s8f74Dmq+17EMbGswumnmKQ
- 8w3ljYhjMjgZFygpClytMyLS7ncClPU0ocTBieZaGmOTk=
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: phy: mediatek-ge-soc: follow netdev LED trigger
+ semantics
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171395702684.12181.223647631542261480.git-patchwork-notify@kernel.org>
+Date: Wed, 24 Apr 2024 11:10:26 +0000
+References: <4983a6b197ed999808c5690d01ec1ffb4f6407b7.1713656093.git.daniel@makrotopia.org>
+In-Reply-To: <4983a6b197ed999808c5690d01ec1ffb4f6407b7.1713656093.git.daniel@makrotopia.org>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: dqfext@gmail.com, SkyLake.Huang@mediatek.com, andrew@lunn.ch,
+ hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 
->> =E2=80=A6
->>> Hence, move the call to paging_init() to be earlier in the init
->>> sequence so that the reserved memory regions are set aside before any
->>> allocations are done using memblock.
->> =E2=80=A6
->>
->> Will the tag =E2=80=9CFixes=E2=80=9D become relevant here?
->
-> I'm not aware of any bugs that have been reported in this context.
+Hello:
 
-Can the mentioned questionable function call ordering be interpreted
-as a programming mistake?
+This patch was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-Regards,
-Markus
+On Sun, 21 Apr 2024 01:08:31 +0100 you wrote:
+> Only blink if the link is up on a LED which is programmed to also
+> indicate link-status.
+> 
+> Otherwise, if both LEDs are in use to indicate different speeds, the
+> resulting blinking being inverted on LEDs which aren't switched on at
+> a specific speed is quite counter-intuitive.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net] net: phy: mediatek-ge-soc: follow netdev LED trigger semantics
+    https://git.kernel.org/netdev/net/c/5b5f724b05c5
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
