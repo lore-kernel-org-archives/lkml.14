@@ -1,393 +1,156 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492A5158A2E;
-	Wed, 24 Apr 2024 09:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988CD158A06
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 09:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713950340; cv=none; b=uVp1q5Wcye/gTpQsdUx3YEFC1D+XvQqkYEH8MkmPdpOPVA63RLFTF9mgj2CNPHdlqDNFQkBW7NQKApqtOM2k7tLCBVL+sMQHuzgjgx8ueoONlAvdQhIWecDEo8PIb0yCg7dDx8TXnuoVpw0Pk5d9OwsgjkyjtfvhsST4+XwysWM=
+	t=1713950601; cv=none; b=i/cPzxR6RU3xxg4/XSfHQjKECyo6W5ygzehzjGeFm4E1vqyF3FdRKmnhon5aLbBwqbIndenw+YEJJXcpNgvelBNmJhWkBqSHzs+OBPnSLm/x6vM+B224kLE99pExkkmFE5+HhV5R1ukhLqWrpGiTNSzNBd4GWVLkWB2MVHNsYR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713950340; c=relaxed/simple;
-	bh=XzPjyDYDYh/LnN9lq803nlKb22vgozayDNt08Bh7Tmk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V650+BCycM48U7G3jEqtmnen4q6tCg6vB0Lxfnkfya3FHOEBcUPRX9HtdDysn3qLRNxzeWr5KfYoUIflYue/lgARl36QD5Hin+t20mHEOqanYsvWabQIqpr2YPMuWcw0GD6aHWw9OjhhKRCKWSHmqdFmg9eC06wYiGikNmpSDXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=OnPUXgpm; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1713950601; c=relaxed/simple;
+	bh=HgsUDihNrnZZ0lvjiU2TfgXdFPn79SJQ/G5Q9RLLW5k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ouKFvoblaD1JPk9ruvGcXkjtYJ/8EWmfYo7NL7EOEJSeY4yEzSDxRfHO2/sqc3DYHrEYJJVfdbVWV88Zf9mLN+3VRElwH1o0/+DrOSAa4wDL2LYkotTmagBqIgJx/1XetnXLS9Zw2Ln0HHhQndUmm5OoaGPMXsqRTsXLpKUozPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ON0abbo+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OnPUXgpm"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43O9IQEW107625;
-	Wed, 24 Apr 2024 04:18:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1713950306;
-	bh=fm92eiiohkNb05SXu2g3dO+IN7kIuwMop1jUIlFTwUI=;
-	h=From:To:CC:Subject:Date;
-	b=OnPUXgpmBwsCby3g41zutZAYq4pYrwSC0iCzZlIFeb4+yjFrNQyHFHP4zy5ta2ykw
-	 bXi2w1PPHitKxQSL7q3AuyvnDNOxgpkh20LGWfTPcXwNZj5PqMEQLoiylFu9LS48J9
-	 xny5LkgdR2J9lYNaprJEXZrTSKkQa8n+DLQk0wos=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43O9IQKf074035
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 24 Apr 2024 04:18:26 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 24
- Apr 2024 04:18:26 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 24 Apr 2024 04:18:26 -0500
-Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43O9IQvC055457;
-	Wed, 24 Apr 2024 04:18:26 -0500
-Received: from localhost (danish-tpc.dhcp.ti.com [10.24.69.25])
-	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 43O9IPai015060;
-	Wed, 24 Apr 2024 04:18:25 -0500
-From: MD Danish Anwar <danishanwar@ti.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>,
-        Heiner Kallweit
-	<hkallweit1@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Jan Kiszka
-	<jan.kiszka@siemens.com>,
-        Diogo Ivo <diogo.ivo@siemens.com>, Paolo Abeni
-	<pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
-	<edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>, <r-gunasekaran@ti.com>,
-        Roger Quadros <rogerq@kernel.org>,
-        MD Danish Anwar <danishanwar@ti.com>
-Subject: [PATCH net-next] net: ti: icssg_prueth: Add SW TX / RX Coalescing based on hrtimers
-Date: Wed, 24 Apr 2024 14:48:23 +0530
-Message-ID: <20240424091823.1814136-1-danishanwar@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ON0abbo+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713950598;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=AssHIO3VvfTUux2rCuscSCwR8gSBFHOzhHWhVW5L1Nc=;
+	b=ON0abbo+U1TLxn0e55LAEsJgHMvOsf2iZhe5o8y68NjZIS/tpuu8zxh7IE3PpNTwqNA8eC
+	5+XWIvXTt+xciDTzSr3Rh636t9IWjw0AOAN4o2v6cY0eKPE6TEHTL5hSoP99g3PjM5AOCU
+	ZMjb/L68Ycl9yx5TlYszXk8WStj4pLg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-329-zzrc9byxONG8ojK38UppPQ-1; Wed, 24 Apr 2024 05:23:14 -0400
+X-MC-Unique: zzrc9byxONG8ojK38UppPQ-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-34b5bece899so1431865f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 02:23:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713950594; x=1714555394;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AssHIO3VvfTUux2rCuscSCwR8gSBFHOzhHWhVW5L1Nc=;
+        b=JHM/y9qKAosCjdbG+x+a5gxdd8Lkvy1ECpwJ6/Qn7qiPWKyJLPlq6Xh+qsekbqf5mX
+         Dm7F0trJ0RyBjeVGgQIZe4H6pV4u3tkiLltqlmNkj8NgQ9y57rgJ2ADn3xCfV5oxUNxu
+         Qic7DNyMdmbyrNXKiO1KQfXhZJ2u2qLWRbV3GBSqzUXUNK/YEtYjnawldL1ly7mvF9PA
+         diQ90CF/C0ar6KT/wh6qZ9BWPj9T/KRWcoyNHC7X05xacKDG7K4S/UP0DLN77EYEWFk0
+         eiGRKfJDizmxihgc2YMJTRMmaghWZ6ZDfr3Ap0sq10sNDr6GLzrKJ6hfZO49mnXxS8ZM
+         mnXg==
+X-Forwarded-Encrypted: i=1; AJvYcCVVa+BLFxy+Wmn7hkBzqvikxHFPX+uobAT97osbDphUENT68TxlGNiLY4wk1MHFouY+5RQBroKX9fDMX3TIYoDZO8yhOk/AYZ/s8yvx
+X-Gm-Message-State: AOJu0YwD1OQrsGnAdpIQohcEqHJAQvKj/6Kx85P8KguEgtufyA8kUtNQ
+	ouj9l2fV401ISBl0GMq2c4mIV6tLRX5XcRwBxIw4a/iALzcJNj5seArUEVvNtkbKzSw5yVv4rcM
+	7E9MwckDArwtLahAn/Ti/nOFfiRil0mBfQfsQxB6eHAyj7ykbl/0tRUlAr1Hl0A==
+X-Received: by 2002:a5d:5581:0:b0:346:305c:b0eb with SMTP id i1-20020a5d5581000000b00346305cb0ebmr1232545wrv.22.1713950593767;
+        Wed, 24 Apr 2024 02:23:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFZI0XljlkmGfMm6bHycu8l8UnnsK6poVO81jpHTyzkE/qoi5wGjXy4wj72Gwrz6+jCvRQTVw==
+X-Received: by 2002:a5d:5581:0:b0:346:305c:b0eb with SMTP id i1-20020a5d5581000000b00346305cb0ebmr1232518wrv.22.1713950593363;
+        Wed, 24 Apr 2024 02:23:13 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c70d:1f00:7a4e:8f21:98db:baef? (p200300cbc70d1f007a4e8f2198dbbaef.dip0.t-ipconnect.de. [2003:cb:c70d:1f00:7a4e:8f21:98db:baef])
+        by smtp.gmail.com with ESMTPSA id x13-20020a5d54cd000000b0034335e47102sm16556281wrv.113.2024.04.24.02.23.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Apr 2024 02:23:12 -0700 (PDT)
+Message-ID: <49d85e19-feac-417b-9640-ff8059bc8b0b@redhat.com>
+Date: Wed, 24 Apr 2024 11:23:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm,swap: cleanup VMA based swap readahead window
+ calculation
+To: Huang Ying <ying.huang@intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Hugh Dickins <hughd@google.com>, Alistair Popple <apopple@nvidia.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Mel Gorman <mgorman@techsingularity.net>, Miaohe Lin <linmiaohe@huawei.com>,
+ Minchan Kim <minchan@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
+ Yang Shi <shy828301@gmail.com>, Yu Zhao <yuzhao@google.com>,
+ Kairui Song <kasong@tencent.com>, Barry Song <v-songbaohua@oppo.com>,
+ Chris Li <chrisl@kernel.org>, Yosry Ahmed <yosryahmed@google.com>
+References: <20240424063042.665018-1-ying.huang@intel.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240424063042.665018-1-ying.huang@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add SW IRQ coalescing based on hrtimers for RX and TX data path for ICSSG
-driver, which can be enabled by ethtool commands:
+On 24.04.24 08:30, Huang Ying wrote:
+> When VMA based swap readahead is introduced in commit
+> ec560175c0b6 ("mm, swap: VMA based swap readahead"), "struct
+> vma_swap_readahead" is defined to describe the readahead window.
+> Because we wanted to save the PTE entries in the struct at that time.
+> But after commit 4f8fcf4ced0b ("mm/swap: swap_vma_readahead() do the
+> pte_offset_map()"), we no longer save PTE entries in the struct.  The
+> size of the struct becomes so small, that it's better to use the
+> fields of the struct directly.  This can simplify the code to improve
+> the code readability.  The line number of source code reduces too.
+> 
+> No functionality change is expected in this patch.
 
-- RX coalescing
-  ethtool -C eth1 rx-usecs 50
+ From a quick scan, you perform quite some unrelated changes that make 
+the code harder to review than it should be. Consider separating any 
+cleanups from the core change of removing the struct.
 
-- TX coalescing can be enabled per TX queue
-
-  - by default enables coalesing for TX0
-  ethtool -C eth1 tx-usecs 50
-  - configure TX0
-  ethtool -Q eth0 queue_mask 1 --coalesce tx-usecs 100
-  - configure TX1
-  ethtool -Q eth0 queue_mask 2 --coalesce tx-usecs 100
-  - configure TX0 and TX1
-  ethtool -Q eth0 queue_mask 3 --coalesce tx-usecs 100 --coalesce
-tx-usecs 100
-
-Minimum value for both rx-usecs and tx-usecs is 20us.
-
-Comapared to gro_flush_timeout and napi_defer_hard_irqs this patch
-allows to enable IRQ coalescing for RX path separately.
-
-Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
----
- drivers/net/ethernet/ti/icssg/icssg_common.c  | 34 ++++++--
- drivers/net/ethernet/ti/icssg/icssg_ethtool.c | 87 +++++++++++++++++++
- drivers/net/ethernet/ti/icssg/icssg_prueth.c  | 17 +++-
- drivers/net/ethernet/ti/icssg/icssg_prueth.h  | 11 ++-
- 4 files changed, 142 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
-index 1d62c05b5f7c..1561503becc7 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_common.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
-@@ -122,7 +122,7 @@ void prueth_xmit_free(struct prueth_tx_chn *tx_chn,
- }
- 
- int emac_tx_complete_packets(struct prueth_emac *emac, int chn,
--			     int budget)
-+			     int budget, bool *tdown)
- {
- 	struct net_device *ndev = emac->ndev;
- 	struct cppi5_host_desc_t *desc_tx;
-@@ -145,6 +145,7 @@ int emac_tx_complete_packets(struct prueth_emac *emac, int chn,
- 		if (cppi5_desc_is_tdcm(desc_dma)) {
- 			if (atomic_dec_and_test(&emac->tdown_cnt))
- 				complete(&emac->tdown_complete);
-+			*tdown = true;
- 			break;
- 		}
- 
-@@ -190,19 +191,35 @@ int emac_tx_complete_packets(struct prueth_emac *emac, int chn,
- 	return num_tx;
- }
- 
-+static enum hrtimer_restart emac_tx_timer_callback(struct hrtimer *timer)
-+{
-+	struct prueth_tx_chn *tx_chns =
-+			container_of(timer, struct prueth_tx_chn, tx_hrtimer);
-+
-+	enable_irq(tx_chns->irq);
-+	return HRTIMER_NORESTART;
-+}
-+
- static int emac_napi_tx_poll(struct napi_struct *napi_tx, int budget)
- {
- 	struct prueth_tx_chn *tx_chn = prueth_napi_to_tx_chn(napi_tx);
- 	struct prueth_emac *emac = tx_chn->emac;
-+	bool tdown = false;
- 	int num_tx_packets;
- 
--	num_tx_packets = emac_tx_complete_packets(emac, tx_chn->id, budget);
-+	num_tx_packets = emac_tx_complete_packets(emac, tx_chn->id, budget, &tdown);
- 
- 	if (num_tx_packets >= budget)
- 		return budget;
- 
--	if (napi_complete_done(napi_tx, num_tx_packets))
--		enable_irq(tx_chn->irq);
-+	if (napi_complete_done(napi_tx, num_tx_packets)) {
-+		if (unlikely(tx_chn->tx_pace_timeout_ns && !tdown))
-+			hrtimer_start(&tx_chn->tx_hrtimer,
-+				      ns_to_ktime(tx_chn->tx_pace_timeout_ns),
-+				      HRTIMER_MODE_REL_PINNED);
-+		else
-+			enable_irq(tx_chn->irq);
-+	}
- 
- 	return num_tx_packets;
- }
-@@ -226,6 +243,8 @@ int prueth_ndev_add_tx_napi(struct prueth_emac *emac)
- 		struct prueth_tx_chn *tx_chn = &emac->tx_chns[i];
- 
- 		netif_napi_add_tx(emac->ndev, &tx_chn->napi_tx, emac_napi_tx_poll);
-+		hrtimer_init(&tx_chn->tx_hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_PINNED);
-+		tx_chn->tx_hrtimer.function = &emac_tx_timer_callback;
- 		ret = request_irq(tx_chn->irq, prueth_tx_irq,
- 				  IRQF_TRIGGER_HIGH, tx_chn->name,
- 				  tx_chn);
-@@ -870,7 +889,12 @@ int emac_napi_rx_poll(struct napi_struct *napi_rx, int budget)
- 	}
- 
- 	if (num_rx < budget && napi_complete_done(napi_rx, num_rx))
--		enable_irq(emac->rx_chns.irq[rx_flow]);
-+		if (unlikely(emac->rx_pace_timeout_ns))
-+			hrtimer_start(&emac->rx_hrtimer,
-+				      ns_to_ktime(emac->rx_pace_timeout_ns),
-+				      HRTIMER_MODE_REL_PINNED);
-+		else
-+			enable_irq(emac->rx_chns.irq[rx_flow]);
- 
- 	return num_rx;
- }
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_ethtool.c b/drivers/net/ethernet/ti/icssg/icssg_ethtool.c
-index ca20325d4d3e..d7409d82c428 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_ethtool.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_ethtool.c
-@@ -201,6 +201,88 @@ static void emac_get_rmon_stats(struct net_device *ndev,
- 	rmon_stats->hist_tx[4] = emac_get_stat_by_name(emac, "tx_bucket5_frames");
- }
- 
-+static int emac_get_coalesce(struct net_device *ndev, struct ethtool_coalesce *coal,
-+			     struct kernel_ethtool_coalesce *kernel_coal,
-+			     struct netlink_ext_ack *extack)
-+{
-+	struct prueth_emac *emac = netdev_priv(ndev);
-+	struct prueth_tx_chn *tx_chn;
-+
-+	tx_chn = &emac->tx_chns[0];
-+
-+	coal->rx_coalesce_usecs = emac->rx_pace_timeout_ns / 1000;
-+	coal->tx_coalesce_usecs = tx_chn->tx_pace_timeout_ns / 1000;
-+
-+	return 0;
-+}
-+
-+static int emac_get_per_queue_coalesce(struct net_device *ndev, u32 queue,
-+				       struct ethtool_coalesce *coal)
-+{
-+	struct prueth_emac *emac = netdev_priv(ndev);
-+	struct prueth_tx_chn *tx_chn;
-+
-+	if (queue >= PRUETH_MAX_TX_QUEUES)
-+		return -EINVAL;
-+
-+	tx_chn = &emac->tx_chns[queue];
-+
-+	coal->tx_coalesce_usecs = tx_chn->tx_pace_timeout_ns / 1000;
-+
-+	return 0;
-+}
-+
-+static int emac_set_coalesce(struct net_device *ndev, struct ethtool_coalesce *coal,
-+			     struct kernel_ethtool_coalesce *kernel_coal,
-+			     struct netlink_ext_ack *extack)
-+{
-+	struct prueth_emac *emac = netdev_priv(ndev);
-+	struct prueth *prueth = emac->prueth;
-+	struct prueth_tx_chn *tx_chn;
-+
-+	tx_chn = &emac->tx_chns[0];
-+
-+	if (coal->rx_coalesce_usecs && coal->rx_coalesce_usecs < ICSSG_MIN_COALESCE_USECS) {
-+		dev_info(prueth->dev, "defaulting to min value of %dus for rx-usecs\n",
-+			 ICSSG_MIN_COALESCE_USECS);
-+		coal->rx_coalesce_usecs = ICSSG_MIN_COALESCE_USECS;
-+	}
-+
-+	if (coal->tx_coalesce_usecs && coal->tx_coalesce_usecs < ICSSG_MIN_COALESCE_USECS) {
-+		dev_info(prueth->dev, "defaulting to min value of %dus for tx-usecs\n",
-+			 ICSSG_MIN_COALESCE_USECS);
-+		coal->tx_coalesce_usecs = ICSSG_MIN_COALESCE_USECS;
-+	}
-+
-+	emac->rx_pace_timeout_ns = coal->rx_coalesce_usecs * 1000;
-+	tx_chn->tx_pace_timeout_ns = coal->tx_coalesce_usecs * 1000;
-+
-+	return 0;
-+}
-+
-+static int emac_set_per_queue_coalesce(struct net_device *ndev, u32 queue,
-+				       struct ethtool_coalesce *coal)
-+{
-+	struct prueth_emac *emac = netdev_priv(ndev);
-+	struct prueth *prueth = emac->prueth;
-+	struct prueth_tx_chn *tx_chn;
-+
-+	if (queue >= PRUETH_MAX_TX_QUEUES)
-+		return -EINVAL;
-+
-+	tx_chn = &emac->tx_chns[queue];
-+
-+	if (coal->tx_coalesce_usecs && coal->tx_coalesce_usecs < ICSSG_MIN_COALESCE_USECS) {
-+		dev_info(prueth->dev, "defaulting to min value of %dus for tx-usecs for tx-%u\n",
-+			 ICSSG_MIN_COALESCE_USECS, queue);
-+		coal->tx_coalesce_usecs = ICSSG_MIN_COALESCE_USECS;
-+	}
-+
-+	tx_chn->tx_pace_timeout_ns = coal->tx_coalesce_usecs * 1000;
-+
-+	return 0;
-+}
-+
- const struct ethtool_ops icssg_ethtool_ops = {
- 	.get_drvinfo = emac_get_drvinfo,
- 	.get_msglevel = emac_get_msglevel,
-@@ -209,6 +291,11 @@ const struct ethtool_ops icssg_ethtool_ops = {
- 	.get_ethtool_stats = emac_get_ethtool_stats,
- 	.get_strings = emac_get_strings,
- 	.get_ts_info = emac_get_ts_info,
-+	.supported_coalesce_params = ETHTOOL_COALESCE_RX_USECS | ETHTOOL_COALESCE_TX_USECS,
-+	.get_coalesce = emac_get_coalesce,
-+	.set_coalesce = emac_set_coalesce,
-+	.get_per_queue_coalesce = emac_get_per_queue_coalesce,
-+	.set_per_queue_coalesce = emac_set_per_queue_coalesce,
- 	.get_channels = emac_get_channels,
- 	.set_channels = emac_set_channels,
- 	.get_link_ksettings = emac_get_link_ksettings,
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-index 186b0365c2e5..d620e88493c4 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-@@ -243,6 +243,16 @@ static void emac_adjust_link(struct net_device *ndev)
- 	}
- }
- 
-+static enum hrtimer_restart emac_rx_timer_callback(struct hrtimer *timer)
-+{
-+	struct prueth_emac *emac =
-+			container_of(timer, struct prueth_emac, rx_hrtimer);
-+	int rx_flow = PRUETH_RX_FLOW_DATA;
-+
-+	enable_irq(emac->rx_chns.irq[rx_flow]);
-+	return HRTIMER_NORESTART;
-+}
-+
- static int emac_phy_connect(struct prueth_emac *emac)
- {
- 	struct prueth *prueth = emac->prueth;
-@@ -582,8 +592,10 @@ static int emac_ndo_stop(struct net_device *ndev)
- 		netdev_err(ndev, "tx teardown timeout\n");
- 
- 	prueth_reset_tx_chan(emac, emac->tx_ch_num, true);
--	for (i = 0; i < emac->tx_ch_num; i++)
-+	for (i = 0; i < emac->tx_ch_num; i++) {
- 		napi_disable(&emac->tx_chns[i].napi_tx);
-+		hrtimer_cancel(&emac->tx_chns[i].tx_hrtimer);
-+	}
- 
- 	max_rx_flows = PRUETH_MAX_RX_FLOWS;
- 	k3_udma_glue_tdown_rx_chn(emac->rx_chns.rx_chn, true);
-@@ -591,6 +603,7 @@ static int emac_ndo_stop(struct net_device *ndev)
- 	prueth_reset_rx_chan(&emac->rx_chns, max_rx_flows, true);
- 
- 	napi_disable(&emac->napi_rx);
-+	hrtimer_cancel(&emac->rx_hrtimer);
- 
- 	cancel_work_sync(&emac->rx_mode_work);
- 
-@@ -801,6 +814,8 @@ static int prueth_netdev_init(struct prueth *prueth,
- 	ndev->features = ndev->hw_features;
- 
- 	netif_napi_add(ndev, &emac->napi_rx, emac_napi_rx_poll);
-+	hrtimer_init(&emac->rx_hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_PINNED);
-+	emac->rx_hrtimer.function = &emac_rx_timer_callback;
- 	prueth->emac[mac] = emac;
- 
- 	return 0;
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.h b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
-index 82e38ef5635b..a78c5eb75fb8 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_prueth.h
-+++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
-@@ -108,6 +108,8 @@ struct prueth_tx_chn {
- 	u32 descs_num;
- 	unsigned int irq;
- 	char name[32];
-+	struct hrtimer tx_hrtimer;
-+	unsigned long tx_pace_timeout_ns;
- };
- 
- struct prueth_rx_chn {
-@@ -127,6 +129,9 @@ struct prueth_rx_chn {
- 
- #define PRUETH_MAX_TX_TS_REQUESTS	50 /* Max simultaneous TX_TS requests */
- 
-+/* Minimum coalesce time in usecs for both Tx and Rx */
-+#define ICSSG_MIN_COALESCE_USECS 20
-+
- /* data for each emac port */
- struct prueth_emac {
- 	bool is_sr1;
-@@ -183,6 +188,10 @@ struct prueth_emac {
- 
- 	struct delayed_work stats_work;
- 	u64 stats[ICSSG_NUM_STATS];
-+
-+	/* RX IRQ Coalescing Related */
-+	struct hrtimer rx_hrtimer;
-+	unsigned long rx_pace_timeout_ns;
- };
- 
- /**
-@@ -320,7 +329,7 @@ void prueth_ndev_del_tx_napi(struct prueth_emac *emac, int num);
- void prueth_xmit_free(struct prueth_tx_chn *tx_chn,
- 		      struct cppi5_host_desc_t *desc);
- int emac_tx_complete_packets(struct prueth_emac *emac, int chn,
--			     int budget);
-+			     int budget, bool *tdown);
- int prueth_ndev_add_tx_napi(struct prueth_emac *emac);
- int prueth_init_tx_chns(struct prueth_emac *emac);
- int prueth_init_rx_chns(struct prueth_emac *emac,
-
-base-commit: 1c04b46cbdddc7882eeb671521035ea884245b9f
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
