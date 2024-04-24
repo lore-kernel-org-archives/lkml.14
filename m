@@ -1,37 +1,38 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68113158D9A;
-	Wed, 24 Apr 2024 09:54:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8544B1591FA;
+	Wed, 24 Apr 2024 09:54:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713952467; cv=none; b=bfAKkSZcdJGMtGXIT52vVB7iFCTBg9kUh/b8CkikG+7aHtg2UO61u21kkK02OcdvyCyw91X1VUOaTAuRaLVcjPseVIzwKkrfDW9xicxDdgMOR61cEOu037xEU57i68AihNWUPGBWyO33siv+4m5cscdfUuyEX6dx7fJzrXXXnUA=
+	t=1713952469; cv=none; b=Mt/kmUs8L1fpTZViXMfKgv97ppEgP+/tB7Fr7SsdkNyqqPNp30p4z8452ii4JCABq2nnl26/dTOcy+7q+Nevr8payYuxHz02cxT86DPrF/amHt8j7aRzrX+ABdWBsxVTwkNnPmNa8Haiy5RIWa19psqSG1bdV+z39PhtLXAxqVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713952467; c=relaxed/simple;
-	bh=GJQT/3O6iiaaVo32e8EBgerLbeFHb7WTjEivwkwCAog=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p7BOoo9q/JS8K1nA7oGwvyjn542CSQxdbVpay7D2byX/UzBQlx7ntGcBYGPbEa+xZcqKV2Ah12a9+p0UP2CE5tO61Q+1zJhtMmmPGa8fouAfmOs6vJNh81bNQlj3nMfr0meaWkvSkktpdxkBaAtLyW1g04U0EflUESlFOTTK7zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=l6OvnA1F; arc=none smtp.client-ip=46.235.227.194
+	s=arc-20240116; t=1713952469; c=relaxed/simple;
+	bh=yW7tXx1btA/816p82i+3Bq8rpWVBvhVu0O69i01g2wE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=E9Mp/Mum9eCtJK/9NStfYQROMuWRzVqrYaLyh/upTdQa2KeQ8jpv+4omyMqKjGb/2OIEk8U10gXnz9QTcfZIyDB79/MwO6DOe/PXm3ikP3bMDMOIqFXta3vhcGb/NYCUNF8NYqSDJOFLiUVcHjDeMlNkHuyGE2qDrRW7ssmgvAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=f3//9cj7; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="l6OvnA1F"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="f3//9cj7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713952463;
-	bh=GJQT/3O6iiaaVo32e8EBgerLbeFHb7WTjEivwkwCAog=;
-	h=From:To:Cc:Subject:Date:From;
-	b=l6OvnA1F94qHKJTKV5+pWP4gDH8lTrJgjVcp083dttDTu3r1tDQvprSEoExOwCKvH
-	 OqrfMyI9FRJe7ZzBZmvw2+dVjGYRf7buCaH5FpdH2yUT7lDC/W5vdi8PbB9PzYy40+
-	 4FMV8QbMH8lPxuBK+F6qk01Zvc9yJKcN3TZY5XCDKiQLX8x6uQzyy961BwGmDRw8/y
-	 aO4fnowW7xu6eE9bjwrAsdAOxG+od8TqX0DzUSvbsGClWt6Lqg5bcps+ccOScrIhVG
-	 stW1XmoKHaRT4Ebo8EeqzCJcFKzkZxQj1oDzHc+w3l1PhN60fqbQmnKNDVhS1AkWql
-	 QhqbY8Oh/b2nw==
+	s=mail; t=1713952465;
+	bh=yW7tXx1btA/816p82i+3Bq8rpWVBvhVu0O69i01g2wE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=f3//9cj7CvNt8JyuoJ4H1Yy4FawtO7JWHwC3SICRgXY7BPdBgbbFbFYCSWnn/UBFM
+	 9GFSFa6MFhFpKqyi0dpNwTkFIlJoX7NlDo01O4PhFPrJg6PGU6DVCSaswxo7ZTwodp
+	 fg3yOucSEslIa5klRu/0DO1jpRsVgoh/4bzNsT/6dXvmBjPB9M1r8LDi1fXSoXlf92
+	 n8w/v1Dn84YOsRgivhf9XMA0Law+O3hUspDR+cz+Lx7i6IX9kN0udyLYyvbTBn7amK
+	 x8HaXuIvs30ko7f42Y3asFk+uGWFAcgH/iNQfV9tM6VBLiMnuNRz7R95fRYGw+xVBU
+	 KX2qZ9FeKbfFw==
 Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 37FD0378107C;
-	Wed, 24 Apr 2024 09:54:22 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C29183782141;
+	Wed, 24 Apr 2024 09:54:24 +0000 (UTC)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: djakov@kernel.org
 Cc: robh@kernel.org,
@@ -52,10 +53,12 @@ Cc: robh@kernel.org,
 	kernel@collabora.com,
 	wenst@chromium.org,
 	amergnat@baylibre.com
-Subject: [PATCH v5 0/7] MediaTek DVFSRC Bus Bandwidth and Regulator knobs
-Date: Wed, 24 Apr 2024 11:54:09 +0200
-Message-ID: <20240424095416.1105639-1-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v5 2/7] dt-bindings: interconnect: Add MediaTek EMI Interconnect bindings
+Date: Wed, 24 Apr 2024 11:54:11 +0200
+Message-ID: <20240424095416.1105639-3-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240424095416.1105639-1-angelogioacchino.delregno@collabora.com>
+References: <20240424095416.1105639-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,133 +67,169 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changes in v5:
- - Fixed Kconfig dependencies in interconnect
- - Fixed module build for dvfsrc and interconnect
+Add bindings for the MediaTek External Memory Interface Interconnect,
+which providers support system bandwidth requirements through Dynamic
+Voltage Frequency Scaling Resource Collector (DVFSRC) hardware.
 
-Changes in v4:
- - Updated patch [3/7] to actually remove address/size cells
-   as the old version got unexpectedly pushed in v3.
+This adds bindings for MediaTek MT8183 and MT8195 SoCs.
 
-Changes in v3:
- - Removed examples from interconnect and regulator bindings
-   and kept example node with interconnect and regulator in
-   the main DVFSRC binding as suggested
- - Removed 'reg' from interconnect and regulator, removed both
-   address and size cells from the main DVFSRC binding as that
-   was not really needed
- - Added anyOf-required entries in the regulator binding as it
-   doesn't make sense to probe it without any regulator subnode
+Note that this is modeled as a subnode of DVFSRC for multiple reasons:
+ - Some SoCs have more than one interconnect on the DVFSRC (and two
+   different kinds of EMI interconnect, and also a SMI interconnect);
 
-Changes in v2:
- - Fixed issues with regulator binding about useless quotes and
-   wrong binding path (oops)
- - Removed useless 'items' from DVFSRC main binding
- - Allowed address/size cells to DVFSRC main binding to resolve
-   validation issues on the regulator and interconnect bindings
- - Changed dvfsrc node name to `system-controller`, as the DVFSRC
-   is actually able to control multiple system components.
- - Added a commit to remove mtk-dvfs-regulator.c before adding the
-   new, refactored regulator driver
+ - Some boards will want to not enable the interconnect driver because
+   some of those are not battery powered (so they just keep the knobs
+   at full thrust from the bootloader and never care scaling busses);
 
+ - Some DVFSRC interconnect features may depend on firmware.
 
-This series adds support for the MediaTek Dynamic Voltage and Frequency
-Scaling Resource Controller (DVFSRC), found on many MediaTek SoCs.
-
-This hardware collects requests from both software and the various remote
-processors embededd into the SoC, and decides about a minimum operating
-voltage and a minimum DRAM frequency to fulfill those requests, in an
-effort to provide the best achievable performance per watt.
-
-Such hardware IP is capable of transparently performing direct register
-R/W on all of the DVFSRC-controlled regulators and SoC bandwidth knobs.
-
-Summarizing how the DVFSRC works for Interconnect:
-
-             ICC provider         ICC Nodes
-                              ----          ----
-             _________       |CPU |   |--- |VPU |
-    _____   |         |-----  ----    |     ----
-   |     |->|  DRAM   |       ----    |     ----
-   |DRAM |->|scheduler|----- |GPU |   |--- |DISP|
-   |     |->|  (EMI)  |       ----    |     ----
-   |_____|->|_________|---.   -----   |     ----
-               /|\         `-|MMSYS|--|--- |VDEC|
-                |             -----   |     ----
-                |                     |     ----
-                | change DRAM freq    |--- |VENC|
-             --------                 |     ----
-    SMC --> | DVFSRC |                |     ----
-             --------                 |--- |IMG |
-                                      |     ----
-                                      |     ----
-                                      |--- |CAM |
-                                            ----
-
-...and for regulators, it's simply...
-   SMC -> DVFSRC -> Regulator voltage decider -> (vreg) Registers R/W
-
-Please note that this series is based on an old (abandoned) series from
-MediaTek [1], and reuses some parts of the code found in that.
-
-Besides, included in this series, there's also a refactoring of the
-mtk-dvfsrc-regulator driver, which never got compiled at all, and would
-not build anyway because of missing headers and typos: that commit did
-not get any Fixes tag because, well, backporting makes no sense at all
-as the DVFSRC support - which is critical for that driver to work - is
-introduced with *this series*! :-)
-
-P.S.: The DVFSRC regulator is a requirement for the MediaTek UFSHCI
-      controller's crypto boost feature, which is already upstream but
-      lacking the actual regulator to work....... :-)
-
-[1]: https://lore.kernel.org/all/20210812085846.2628-1-dawei.chien@mediatek.com/
-
-
-AngeloGioacchino Del Regno (7):
-  dt-bindings: regulator: Add bindings for MediaTek DVFSRC Regulators
-  dt-bindings: interconnect: Add MediaTek EMI Interconnect bindings
-  dt-bindings: soc: mediatek: Add DVFSRC bindings for MT8183 and MT8195
-  soc: mediatek: Add MediaTek DVFS Resource Collector (DVFSRC) driver
-  regulator: Remove mtk-dvfsrc-regulator.c
-  regulator: Add refactored mtk-dvfsrc-regulator driver
-  interconnect: mediatek: Add MediaTek MT8183/8195 EMI Interconnect
-    driver
-
- .../interconnect/mediatek,mt8183-emi.yaml     |  51 ++
- .../mediatek,mt6873-dvfsrc-regulator.yaml     |  43 ++
- .../soc/mediatek/mediatek,mt8183-dvfsrc.yaml  |  83 +++
- drivers/interconnect/Kconfig                  |   1 +
- drivers/interconnect/Makefile                 |   1 +
- drivers/interconnect/mediatek/Kconfig         |  29 +
- drivers/interconnect/mediatek/Makefile        |   5 +
- drivers/interconnect/mediatek/icc-emi.c       | 153 +++++
- drivers/interconnect/mediatek/icc-emi.h       |  40 ++
- drivers/interconnect/mediatek/mt8183.c        | 143 +++++
- drivers/interconnect/mediatek/mt8195.c        | 339 +++++++++++
- drivers/regulator/mtk-dvfsrc-regulator.c      | 242 ++++----
- drivers/soc/mediatek/Kconfig                  |  11 +
- drivers/soc/mediatek/Makefile                 |   1 +
- drivers/soc/mediatek/mtk-dvfsrc.c             | 551 ++++++++++++++++++
- .../interconnect/mediatek,mt8183.h            |  23 +
- .../interconnect/mediatek,mt8195.h            |  44 ++
- include/linux/soc/mediatek/dvfsrc.h           |  36 ++
- include/linux/soc/mediatek/mtk_sip_svc.h      |   3 +
- 19 files changed, 1669 insertions(+), 130 deletions(-)
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ .../interconnect/mediatek,mt8183-emi.yaml     | 51 +++++++++++++++++++
+ .../interconnect/mediatek,mt8183.h            | 23 +++++++++
+ .../interconnect/mediatek,mt8195.h            | 44 ++++++++++++++++
+ 3 files changed, 118 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/interconnect/mediatek,mt8183-emi.yaml
- create mode 100644 Documentation/devicetree/bindings/regulator/mediatek,mt6873-dvfsrc-regulator.yaml
- create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,mt8183-dvfsrc.yaml
- create mode 100644 drivers/interconnect/mediatek/Kconfig
- create mode 100644 drivers/interconnect/mediatek/Makefile
- create mode 100644 drivers/interconnect/mediatek/icc-emi.c
- create mode 100644 drivers/interconnect/mediatek/icc-emi.h
- create mode 100644 drivers/interconnect/mediatek/mt8183.c
- create mode 100644 drivers/interconnect/mediatek/mt8195.c
- create mode 100644 drivers/soc/mediatek/mtk-dvfsrc.c
  create mode 100644 include/dt-bindings/interconnect/mediatek,mt8183.h
  create mode 100644 include/dt-bindings/interconnect/mediatek,mt8195.h
- create mode 100644 include/linux/soc/mediatek/dvfsrc.h
 
+diff --git a/Documentation/devicetree/bindings/interconnect/mediatek,mt8183-emi.yaml b/Documentation/devicetree/bindings/interconnect/mediatek,mt8183-emi.yaml
+new file mode 100644
+index 000000000000..017c8478b2a7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interconnect/mediatek,mt8183-emi.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interconnect/mediatek,mt8183-emi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MediaTek External Memory Interface (EMI) Interconnect
++
++maintainers:
++  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
++
++description: |
++  EMI interconnect providers support system bandwidth requirements through
++  Dynamic Voltage Frequency Scaling Resource Collector (DVFSRC) hardware.
++  The provider is able to communicate with the DVFSRC through Secure Monitor
++  Call (SMC).
++
++             ICC provider         ICC Nodes
++                              ----          ----
++             _________       |CPU |   |--- |VPU |
++    _____   |         |-----  ----    |     ----
++   |     |->|  DRAM   |       ----    |     ----
++   |DRAM |->|scheduler|----- |GPU |   |--- |DISP|
++   |     |->|  (EMI)  |       ----    |     ----
++   |_____|->|_________|---.   -----   |     ----
++               /|\         `-|MMSYS|--|--- |VDEC|
++                |             -----   |     ----
++                |                     |     ----
++                | change DRAM freq    |--- |VENC|
++             --------                 |     ----
++    SMC --> | DVFSRC |                |     ----
++             --------                 |--- |IMG |
++                                      |     ----
++                                      |     ----
++                                      |--- |CAM |
++                                            ----
++
++properties:
++  compatible:
++    enum:
++      - mediatek,mt8183-emi
++      - mediatek,mt8195-emi
++
++  '#interconnect-cells':
++    const: 1
++
++required:
++  - compatible
++  - '#interconnect-cells'
++
++unevaluatedProperties: false
+diff --git a/include/dt-bindings/interconnect/mediatek,mt8183.h b/include/dt-bindings/interconnect/mediatek,mt8183.h
+new file mode 100644
+index 000000000000..1088c350258d
+--- /dev/null
++++ b/include/dt-bindings/interconnect/mediatek,mt8183.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright (c) 2021 MediaTek Inc.
++ * Copyright (c) 2024 Collabora Ltd.
++ *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
++ */
++
++#ifndef __DT_BINDINGS_INTERCONNECT_MEDIATEK_MT8183_H
++#define __DT_BINDINGS_INTERCONNECT_MEDIATEK_MT8183_H
++
++#define SLAVE_DDR_EMI		0
++#define MASTER_MCUSYS		1
++#define MASTER_MFG		2
++#define MASTER_MMSYS		3
++#define MASTER_MM_VPU		4
++#define MASTER_MM_DISP		5
++#define MASTER_MM_VDEC		6
++#define MASTER_MM_VENC		7
++#define MASTER_MM_CAM		8
++#define MASTER_MM_IMG		9
++#define MASTER_MM_MDP		10
++
++#endif
+diff --git a/include/dt-bindings/interconnect/mediatek,mt8195.h b/include/dt-bindings/interconnect/mediatek,mt8195.h
+new file mode 100644
+index 000000000000..33e0e6cde732
+--- /dev/null
++++ b/include/dt-bindings/interconnect/mediatek,mt8195.h
+@@ -0,0 +1,44 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright (c) 2020 MediaTek Inc.
++ * Copyright (c) 2024 Collabora Ltd.
++ *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
++ */
++
++#ifndef __DT_BINDINGS_INTERCONNECT_MEDIATEK_MT8195_H
++#define __DT_BINDINGS_INTERCONNECT_MEDIATEK_MT8195_H
++
++#define SLAVE_DDR_EMI		0
++#define MASTER_MCUSYS		1
++#define MASTER_GPUSYS		2
++#define MASTER_MMSYS		3
++#define MASTER_MM_VPU		4
++#define MASTER_MM_DISP		5
++#define MASTER_MM_VDEC		6
++#define MASTER_MM_VENC		7
++#define MASTER_MM_CAM		8
++#define MASTER_MM_IMG		9
++#define MASTER_MM_MDP		10
++#define MASTER_VPUSYS		11
++#define MASTER_VPU_0		12
++#define MASTER_VPU_1		13
++#define MASTER_MDLASYS		14
++#define MASTER_MDLA_0		15
++#define MASTER_UFS		16
++#define MASTER_PCIE_0		17
++#define MASTER_PCIE_1		18
++#define MASTER_USB		19
++#define MASTER_DBGIF		20
++#define SLAVE_HRT_DDR_EMI	21
++#define MASTER_HRT_MMSYS	22
++#define MASTER_HRT_MM_DISP	23
++#define MASTER_HRT_MM_VDEC	24
++#define MASTER_HRT_MM_VENC	25
++#define MASTER_HRT_MM_CAM	26
++#define MASTER_HRT_MM_IMG	27
++#define MASTER_HRT_MM_MDP	28
++#define MASTER_HRT_DBGIF	29
++#define MASTER_WIFI		30
++#define MASTER_BT		31
++#define MASTER_NETSYS		32
++#endif
 -- 
 2.44.0
 
