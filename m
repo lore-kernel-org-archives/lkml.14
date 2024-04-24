@@ -1,129 +1,100 @@
 Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C98157484
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 22:32:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CBD2942D
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 22:34:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713997975; cv=none; b=YVlPO1UbEwKp4axUmLAiIVtCLqyiMAFaKvafFpE0Ykd0+GMBkhTuWck0BFXRS4Ve6e9MDVUqT1vhDxPVLsI5PKujKlMuIDLXpF4etxF/FrtQT39QCCDbC9j3PuoYTbVug6iJz6WdOKfAvWrNctZjGOjem60BiMbFfLmZiHW+2bo=
+	t=1713998069; cv=none; b=OtoRmLNE0ULJHqJ//vQXl9JbOBBdEIToaaW2iVFzzXbN2Ynzr/Ytv8xkiu0YZz4R8b765djppCs9I4j+P+qkhIdKqkGZpT7+K0M7N1RHdcEAd00f7Bgj9e2jsv9UQwSaALKih1hvFxeN3iFdIvsP7XRFIMZiFRzDMVV3D76qWwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713997975; c=relaxed/simple;
-	bh=W8L5h+SzHiautt9SqcHIuNkveUNPF0/akp2X0XV3TX8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=drT6eYNvecg35oJfmrannhtos7mFgYgBW71oBBTwD3X957g0rDcBTSRRLI7S2YQ1aS7pj58EnMNFwxI8hJ01Vv885pCx1RcUGj2iWogBHSgc0HrJpHdzGGC95Eb+I6MuBKMi4iqb9LgV0etx78nqtnVeQ44r2f4lgEQfVsn+3lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--amitsd.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=guZZAZsj; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1713998069; c=relaxed/simple;
+	bh=asc2e9byBb6WbLiXPgQe7Wz0QSbFZ/SU6XAk6Ce1SYQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=SNsp/mvmPn+qVbJ4V3BUgzxE8q1UvIi+ByeGXbDPNbhUTf5VHCfZhLn7UU3X4nJ+P96VsrFgNhsg8HfYLmtJZ4JDNc7iNoHwVbRKKGxh8czk28qdfd54w+j3LkoJDAYLoj5ZFk0JDhgRCbI44KzeYX1WmYZjplTdiYafVvv4DNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2aPw+sag; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--amitsd.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="guZZAZsj"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-ddaf165a8d9so700587276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 15:32:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2aPw+sag"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc693399655so761232276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 15:34:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713997972; x=1714602772; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1NbcoiaRXrJH9+uu8XHipFnZdxDGtv91eD3q0pnQrtk=;
-        b=guZZAZsjFFEmc9Y70Bii2275K6ywVGJRSZVAa3ZQeOPI4SHensdfdc518JrW5rxiNU
-         0GmPgzYBuFyDg+mX7wOUSo25inhHowcA173zPpyntnLPJ676zNqk2XLuP2mK0dCk9pMH
-         /OSUkOms7h1fq8iY8lnIkw+O2ZyxeBKi3uwuW9gbu6rGydfqzMV4QoThhr9q0m8/gmKR
-         wBlyOhMfLL6vbDHmvfwmQWLi6plnuT4NeKwcCCGN8oROdYaGVjqFIVf5iPuU/O8jZi3C
-         Sdsp5MFdIqyIuUMHBVzME+BSZRtTmS2lzol3/qn2HJ2giHolLMoPRYHH43RjoGdVYqyX
-         RfMg==
+        d=google.com; s=20230601; t=1713998067; x=1714602867; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yhZptQyvv5xokxwHGECOmJsyHAUY1E5WI4kuUHDLdOc=;
+        b=2aPw+sagdPWEKp/sU1sHRHS9T7HuLpWdZZIq8kRxu0CmXPDZSUHA72fjfzvKhRyvco
+         OPzdoNKs8D5FcYv/nB0yQdGg3KbtVME/zkCAxwYVgcthkWW3WBN07KN1uHN8WXJT0+kO
+         zerUHdobFIE7uo+09+ynhiaik/inSILZmBqMop+1tzPgGM0pp4Yrhh1MI80pw5Es+nHQ
+         NPgAmAxcpnb9LFddgL0jFQMSkQJRWfXT/UiPfkmxOcH5iYJ8AchsvjtFBont5bm4n1VP
+         NkYfKV6Zk+lqARBhPiW3JJ5+VFG4a19yKbcyjgAKY4HTIMKsocSuOzup1zDvmQRAI/EE
+         vL/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713997972; x=1714602772;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1NbcoiaRXrJH9+uu8XHipFnZdxDGtv91eD3q0pnQrtk=;
-        b=Lq6sm9Z07I4DFeAvLyezJnMEthofjan4SjaQedggFlLrwmKzPi13Xl50U+X+ITxeOC
-         2mjSuDakNArj9FGiOc1rbFjYYXD6x8/8Osl0rxkQhuQdpMGyB05XISmc3IwXETzahOyP
-         7HEhvsoVSIRhS7otj9IC63MhYtndlVXEcsRXkTkbwwKjdT0C8T/jGAizSuA5hId0Aq0N
-         WswyE5DjMYjNn5VUWM3Xzdq1pI9O3ynJnFabX0MKm84JuHePETwUoJ7UbqV56lV+0aRj
-         bDbjYUdv4kdJQYOl1zxkJt0S4LarYcBhzjxHH+5qoBcclkKKpslJXQPuAoiWSliXBvXH
-         Y5vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWiNtlURPgAQIXzCl8nHgkn6wb6efGzGyxWuxU+Lwejtiynb1/6tLcjXnA1cDC9fLpco7UON6vBUEtcI9UCZg0KiZ3tRyiIO6YgWfKS
-X-Gm-Message-State: AOJu0YwxYpmexcHtNJT/fzcuzg7ZVB7XOJqJgFtUY0tt0JqxTfUO5RIJ
-	HCpU4EE5eumPX5tkDbyTaVfN8Ssl2j93th6TC6XMLT3EWNgm9XB08mYxN6qLYyUST7t88XmwC6U
-	Alg==
-X-Google-Smtp-Source: AGHT+IEgyiK0mF15tmGzPHN/qd3iIL6vfDLxMFx9Q1Dz4XF8BvW7SaW9Nw5e/kMd+OXWdBo6XB2GfwuDVMk=
-X-Received: from amitsd-gti.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:827])
- (user=amitsd job=sendgmr) by 2002:a25:d509:0:b0:de5:5693:4e8e with SMTP id
- r9-20020a25d509000000b00de556934e8emr371664ybe.11.1713997972127; Wed, 24 Apr
- 2024 15:32:52 -0700 (PDT)
-Date: Wed, 24 Apr 2024 15:32:16 -0700
+        d=1e100.net; s=20230601; t=1713998067; x=1714602867;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yhZptQyvv5xokxwHGECOmJsyHAUY1E5WI4kuUHDLdOc=;
+        b=OvKDYEA9gg4FmCsxjLOr8iiPq3wHXWrru31s/jHfEndaHpM/ctqGlriTt4xSyBe4MX
+         CR+hXYpLb6R2pknaM1IqzPPdX0UFdkg4p0V0HXC/lTfe9MKpRJ8gYOnjNsC4uXBwRSWd
+         3BriVwXroWsZ8bkzzlnoLsp88jVLlD6Jk04I1MV0JOU+ZPg/A0z/ufVFD/clNcdwIxzz
+         vecQQEV1SWsgTn1FUs2tCYGjqIOX0teFMfkNVDMYnf5XV4xkeQrsrmnJOsNIlz2/kqMK
+         rvWUjCoHgNgJxmGtI2cD37v+KQz0S5VbG83PabKRY9f59ORX1IxghldN5nuA6RgPldzU
+         943g==
+X-Gm-Message-State: AOJu0YyXbH/9V7/WLHrsK5FD7lEYvAb+qCfVKStee6aSGLmukHlsqxcd
+	TG63gQvQEh9GtNemzI18Acm6TJXkn5dp2lfxRLCqjmcfQutbkm1f+/Bx9zPKxwQlAZeHrRVxE1Z
+	wdQ==
+X-Google-Smtp-Source: AGHT+IGcMfHiAY6VH/m2Qvr49Qo7gg/Pdi4g71eeY/PE32J1XzS9ozT9Aczn/8PsKtNUQdNvIsu5y2fV7V8=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:150d:b0:dc7:7ce9:fb4d with SMTP id
+ q13-20020a056902150d00b00dc77ce9fb4dmr1279124ybu.12.1713998067469; Wed, 24
+ Apr 2024 15:34:27 -0700 (PDT)
+Date: Wed, 24 Apr 2024 15:34:26 -0700
+In-Reply-To: <20240404185034.3184582-8-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Message-ID: <20240424223227.1807844-1-amitsd@google.com>
-Subject: [PATCH v1] usb: typec: tcpm: unregister existing source caps before re-registration
-From: Amit Sunil Dhamne <amitsd@google.com>
-To: linux@roeck-us.net, heikki.krogerus@linux.intel.com, 
-	gregkh@linuxfoundation.org
-Cc: badhri@google.com, rdbabiera@google.com, 
-	Amit Sunil Dhamne <amitsd@google.com>, linux-usb@vger.kernel.org, stable@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20240404185034.3184582-1-pbonzini@redhat.com> <20240404185034.3184582-8-pbonzini@redhat.com>
+Message-ID: <ZimI8j9LIUsAArdD@google.com>
+Subject: Re: [PATCH 07/11] KVM: guest_memfd: extract __kvm_gmem_get_pfn()
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, michael.roth@amd.com, 
+	isaku.yamahata@intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-Check and unregister existing source caps in tcpm_register_source_caps
-function before registering new ones. This change fixes following
-warning when port partner resends source caps after negotiating PD contract
-for the purpose of re-negotiation.
+On Thu, Apr 04, 2024, Paolo Bonzini wrote:
+> In preparation for adding a function that walks a set of pages
+> provided by userspace and populates them in a guest_memfd,
+> add a version of kvm_gmem_get_pfn() that has a "bool prepare"
+> argument and passes it down to kvm_gmem_get_folio().
+> 
+> Populating guest memory has to call repeatedly __kvm_gmem_get_pfn()
+> on the same file, so make the new function take struct file*.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  virt/kvm/guest_memfd.c | 38 +++++++++++++++++++++++---------------
+>  1 file changed, 23 insertions(+), 15 deletions(-)
+> 
+> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+> index 486748e65f36..a537a7e63ab5 100644
+> --- a/virt/kvm/guest_memfd.c
+> +++ b/virt/kvm/guest_memfd.c
+> @@ -540,33 +540,29 @@ void kvm_gmem_unbind(struct kvm_memory_slot *slot)
+>  	fput(file);
+>  }
+>  
+> -int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+> -		     gfn_t gfn, kvm_pfn_t *pfn, int *max_order)
+> +static int __kvm_gmem_get_pfn(struct file *file, struct kvm_memory_slot *slot,
+> +		       gfn_t gfn, kvm_pfn_t *pfn, int *max_order, bool prepare)
 
-[  343.135030][  T151] sysfs: cannot create duplicate filename '/devices/virtual/usb_power_delivery/pd1/source-capabilities'
-[  343.135071][  T151] Call trace:
-[  343.135076][  T151]  dump_backtrace+0xe8/0x108
-[  343.135099][  T151]  show_stack+0x18/0x24
-[  343.135106][  T151]  dump_stack_lvl+0x50/0x6c
-[  343.135119][  T151]  dump_stack+0x18/0x24
-[  343.135126][  T151]  sysfs_create_dir_ns+0xe0/0x140
-[  343.135137][  T151]  kobject_add_internal+0x228/0x424
-[  343.135146][  T151]  kobject_add+0x94/0x10c
-[  343.135152][  T151]  device_add+0x1b0/0x4c0
-[  343.135187][  T151]  device_register+0x20/0x34
-[  343.135195][  T151]  usb_power_delivery_register_capabilities+0x90/0x20c
-[  343.135209][  T151]  tcpm_pd_rx_handler+0x9f0/0x15b8
-[  343.135216][  T151]  kthread_worker_fn+0x11c/0x260
-[  343.135227][  T151]  kthread+0x114/0x1bc
-[  343.135235][  T151]  ret_from_fork+0x10/0x20
-[  343.135265][  T151] kobject: kobject_add_internal failed for source-capabilities with -EEXIST, don't try to register things with the same name in the same directory.
+I genuinely don't know what it means to "prepare" a guest_memfd.  I see it becomes
 
-Fixes: 8203d26905ee ("usb: typec: tcpm: Register USB Power Delivery Capabilities")
-Cc: linux-usb@vger.kernel.org
-Cc: stable@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>
-Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
----
- drivers/usb/typec/tcpm/tcpm.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+	if (!prepare)
+		fgp_flags |= FGP_CREAT_ONLY;
 
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index ab6ed6111ed0..d8eb89f4f0c3 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -2996,7 +2996,7 @@ static int tcpm_register_source_caps(struct tcpm_port *port)
- {
- 	struct usb_power_delivery_desc desc = { port->negotiated_rev };
- 	struct usb_power_delivery_capabilities_desc caps = { };
--	struct usb_power_delivery_capabilities *cap;
-+	struct usb_power_delivery_capabilities *cap = port->partner_source_caps;
- 
- 	if (!port->partner_pd)
- 		port->partner_pd = usb_power_delivery_register(NULL, &desc);
-@@ -3006,6 +3006,9 @@ static int tcpm_register_source_caps(struct tcpm_port *port)
- 	memcpy(caps.pdo, port->source_caps, sizeof(u32) * port->nr_source_caps);
- 	caps.role = TYPEC_SOURCE;
- 
-+	if (cap)
-+		usb_power_delivery_unregister_capabilities(cap);
-+
- 	cap = usb_power_delivery_register_capabilities(port->partner_pd, &caps);
- 	if (IS_ERR(cap))
- 		return PTR_ERR(cap);
-
-base-commit: 0d31ea587709216d88183fe4ca0c8aba5e0205b8
--- 
-2.44.0.769.g3c40516874-goog
-
+but I find the name "prepare" to be extremely unhelpful.
