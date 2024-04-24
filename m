@@ -1,88 +1,100 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73E21598EA;
-	Wed, 24 Apr 2024 16:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCB01598EA;
+	Wed, 24 Apr 2024 16:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713976447; cv=none; b=Y0+M6RKPym5OCai2hQMi2tSgrna9ELOP9XmBux42Xdaj4XHmPQTCuNQIfc53tNgkAbO5NSbP5TqO4o2JiMHuC8kW27Cp2DXeddROcyBkqRre8bcmS/ica0A3ZCSCMRDdnq5aZz3h/gD7wOeVKpE6WwEfFbKGJVt3KsMQUOX63a8=
+	t=1713976464; cv=none; b=fDMRoPwQOwDlREYs5CfoF1GLx7eWfjt12AaaS3RY8x2hzfW6IXcPg18WrYg11JQZqiyXDMFgt7Wj0+y07MgJkB8Pvq7zNnTYiTHxdJUh8TD8fOsN4Tz7v/ltSZFafYcWC2UA7eq4NihAfr/iHiqZOGdo2B7q7sh6dqPf4njadQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713976447; c=relaxed/simple;
-	bh=sPxnpCDg/JQccPFyT4hEMhVpH5Dzk+4bYfHs/7rseoA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AiJplY5aarDzcRZ68HC6WZ0ou6keo5eKg7ppKfaWHhMHX9DSgmYDSufSgRokH3XVdz9rYlH8T8WQtEq+X/q02gxRTASdUSzZDd3DbSJoY0AM859vbxoCG5/8LfWz0iaTzLz/zC7LTuirQfHmULfFtopM9X8mKD2Bcebokz2Lxdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=toQELOnD; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1713976464; c=relaxed/simple;
+	bh=R1dglupSB88KtRABHMa3LWVRmrMi6PYIteYLYg2xY+0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Te4JUAU12sja+UevVDKK8x9JG2OmmGJ6+TV3Scmx7bgJ3q3ftCYSJH2liPjWM/gpL52Fow1dZV6RZqP5dAxGwNkSH+mhRjHaCxcHGt5GZ5FQdIkGTfAmLEjM54QaEdm+7yIDa2wQVJdIiVi5Ulo5Cb1vIzqSJbJXudAKZQAAnQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=KxZb4Ihh; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="toQELOnD"
-Received: from [192.168.1.106] (unknown [103.251.226.10])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0BB27674;
-	Wed, 24 Apr 2024 18:33:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1713976392;
-	bh=sPxnpCDg/JQccPFyT4hEMhVpH5Dzk+4bYfHs/7rseoA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=toQELOnDdFXTN2Wf0C8bfT7E7kcPmCt95AeHtn5/2+Yk1VqYc5eCp5BLjyaIQherx
-	 hF6f+Yv2XuF4F29Bgmo3adCO3Btofdn86Nn/75UYV4dh6F8tWXGOYJtMjS67BRMhwT
-	 hEifIngHKOyqQDNN2rOjiu3xAXn6riDVl98nfCJc=
-Message-ID: <b6f031c4-818e-44de-b491-1bfebdbf9c37@ideasonboard.com>
-Date: Wed, 24 Apr 2024 22:03:52 +0530
+	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="KxZb4Ihh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
+	t=1713975865; bh=R1dglupSB88KtRABHMa3LWVRmrMi6PYIteYLYg2xY+0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=KxZb4Ihh7f2RXuDcs3j0c/g04nu5+VbFZWkjxS9DNmfIpAh/r/i8aHoUYATXxMNe3
+	 s3obQQLRiK/F3LODLd4fLvtFZEiH5CziRCDHYwSKFPxktzsmvXt+P0B0SoAKu69/lr
+	 ehg53I055DqvOCzsoWMnkmY5ltlT4Mfp3eCSN2XI=
+From: Luca Weiss <luca@z3ntu.xyz>
+Date: Wed, 24 Apr 2024 18:23:57 +0200
+Subject: [PATCH 4/7] arm64: dts: qcom: msm8939: Use mboxes properties for
+ APCS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 11/11] media: subdev: Improve s_stream documentation
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240424-enable-streams-impro-v6-0-5fb14c20147d@ideasonboard.com>
- <20240424-enable-streams-impro-v6-11-5fb14c20147d@ideasonboard.com>
-Content-Language: en-US
-From: Umang Jain <umang.jain@ideasonboard.com>
-In-Reply-To: <20240424-enable-streams-impro-v6-11-5fb14c20147d@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240424-apcs-mboxes-v1-4-6556c47cb501@z3ntu.xyz>
+References: <20240424-apcs-mboxes-v1-0-6556c47cb501@z3ntu.xyz>
+In-Reply-To: <20240424-apcs-mboxes-v1-0-6556c47cb501@z3ntu.xyz>
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Luca Weiss <luca@z3ntu.xyz>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=980; i=luca@z3ntu.xyz;
+ h=from:subject:message-id; bh=R1dglupSB88KtRABHMa3LWVRmrMi6PYIteYLYg2xY+0=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmKTIzWeuJ0gzE/BH7sEN/gEOMejEaQZPoSYJI5
+ KKQOWZ6VouJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZikyMwAKCRBy2EO4nU3X
+ Vi0XD/9hVUYVPLwAml4TsfZ6UZA6upU5mk4Eh7M6UUeTup4mwq3PSxOI5vq0TSBnboTRf0mHLgS
+ XB6Lg2bmKJEafrmxHvO9NLfKO7+OTSUxUOGehvVKtwUswMhQWY+QzGmsQl2vkH6MgGs52E92IB7
+ tmXrzc432OBFJg9r9zZxGjNee5tKLkL862lmLNcokI4Nw21ShFaBQAoosCNZ6PPJGBs9rBIO8D9
+ rfBkmJy3/T6ZhObqppZihXUsUdClXsLiRxoolq0aV4CMg+zEoRsafNQg8va8u6SZfMrK7Jcsxy2
+ gwqtMPV1t1rZilfmVrNMrkCg2DjvJpdUX74IyelVMkvJbKNANdfL8xb3ZkiQgSKvEeCCqphp98d
+ pcTRJeyttUM5DILmqjpdOvvfCsa4b5+/+r+9LtRMZ+To62tJ9EgLKAju2qWjKaTIiBhgkokbNR9
+ ex1A4AaLtAlta3zhiamEjK8WDQx4J6P/DI5cfUAIzNseWogdxoTFPPAW2k6UMcIT+YOQr+h9rwb
+ NW6OMN8njgplCSIUfETNLdFUr5lQ6tvK/Rfl1R+SU1Aj6H86xL/4aRaxaHlLXtRwDoH/rB30Hub
+ GKTEP6qrJJi93iqLVlIK8DPysx3lgzZEB5QaAzRL2uo9PKHjk1bF4gbfkcnobOlOl2361g+aSyI
+ kWHYbOc6ktu7nTg==
+X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-Hi Tomi,
+Instead of passing the syscon to the various nodes, use the mbox
+interface using the mboxes property.
 
-On 24/04/24 9:09 pm, Tomi Valkeinen wrote:
-> Now that enable/disable_streams operations are available for
-> single-stream subdevices too, there's no reason to use the old s_stream
-> operation on new drivers. Extend the documentation reflecting this.
->
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+ arch/arm64/boot/dts/qcom/msm8939.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Reviewed-by: Umang Jain<umang.jain@ideasonboard.com>
+diff --git a/arch/arm64/boot/dts/qcom/msm8939.dtsi b/arch/arm64/boot/dts/qcom/msm8939.dtsi
+index dd45975682b2..95487de2ca6a 100644
+--- a/arch/arm64/boot/dts/qcom/msm8939.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8939.dtsi
+@@ -248,7 +248,7 @@ rpm: remoteproc {
+ 
+ 		smd-edge {
+ 			interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
+-			qcom,ipc = <&apcs1_mbox 8 0>;
++			mboxes = <&apcs1_mbox 0>;
+ 			qcom,smd-edge = <15>;
+ 
+ 			rpm_requests: rpm-requests {
+@@ -2067,7 +2067,7 @@ wcnss_iris: iris {
+ 
+ 			smd-edge {
+ 				interrupts = <GIC_SPI 142 IRQ_TYPE_EDGE_RISING>;
+-				qcom,ipc = <&apcs1_mbox 8 17>;
++				mboxes = <&apcs1_mbox 17>;
+ 				qcom,smd-edge = <6>;
+ 				qcom,remote-pid = <4>;
+ 
 
-> ---
->   include/media/v4l2-subdev.h | 9 +++++++++
->   1 file changed, 9 insertions(+)
->
-> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> index 14a3c91cce93..99564a2ef71c 100644
-> --- a/include/media/v4l2-subdev.h
-> +++ b/include/media/v4l2-subdev.h
-> @@ -450,6 +450,15 @@ enum v4l2_subdev_pre_streamon_flags {
->    *	already started or stopped subdev. Also see call_s_stream wrapper in
->    *	v4l2-subdev.c.
->    *
-> + *	New drivers should instead implement &v4l2_subdev_pad_ops.enable_streams
-> + *	and &v4l2_subdev_pad_ops.disable_streams operations, and use
-> + *	v4l2_subdev_s_stream_helper for the &v4l2_subdev_video_ops.s_stream
-> + *	operation to support legacy users.
-> + *
-> + *	Drivers should also not call the .s_stream() subdev operation directly,
-> + *	but use the v4l2_subdev_enable_streams() and
-> + *	v4l2_subdev_disable_streams() helpers.
-> + *
->    * @g_pixelaspect: callback to return the pixelaspect ratio.
->    *
->    * @s_rx_buffer: set a host allocated memory buffer for the subdev. The subdev
->
+-- 
+2.44.0
 
