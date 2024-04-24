@@ -1,211 +1,179 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2031DFF8;
-	Wed, 24 Apr 2024 12:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4751DFF8;
+	Wed, 24 Apr 2024 12:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713962060; cv=none; b=Dpt91R99hQSfUSvaBZa1XxNq0k8AC32HK/sZYZxPUqjtkY9blHWxSyWAhMjSp6y0amu33K2MQYAiwWLI3ccSjNx8d0YVyDE7gGdYpgVXoxG5scpSi8SqbdOB0dw6n6bGskhnpb4+UFALjL14Q73hISx+Wk2M11/ZNK6vjSKfqgo=
+	t=1713962088; cv=none; b=aMAqYzi/WSdcm7pOZYp4KbTRTWquW3nq33b8aRFc/yKPmeJoyup//O47WvuZwQv5O7VQPb5bcDlBfEOnZJRz3msgbWUhN8xmQ3L3J7cNy5hwzUkgB2LSvEAiB9n0/6KhttWMnBlU63gBszy4YC+pa21ScEcwm4Ocb0550LemBEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713962060; c=relaxed/simple;
-	bh=RdEzfGHr6mIGf1fmDgMivz/m+lwL7VuuP84qTo4VLCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n++XyMaNwyqcxWbYPG/NoNTGAHwZBsUtPktLJOmK9gXGfhV3nVm+ijbBsrHp2B7S25j1EXlT8WvdMm63WuKJXyiBtnMEO79R0CYjxGw7jQIBH46kCQ7oSo+W1tu2tqZOroy+xDjavTrtG86Vn62cjgiyPehIgnj+UK97IM4h9xM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=anduGsq3; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713962088; c=relaxed/simple;
+	bh=M/CykXs7tLVB+wjotgza7K2AlgcNOsKL5CfCon2EmNI=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=G1/4L8lmgN/29AL8KdrQtTJFlMdps5abKihc7+q0PULMvSywdcQHPbCtI2b5JQQvJYDTRpn5kHZEfobv8XGa5Fjrqu0Lv1iMhwxHjmFK6LuyNDV2Koh6BEMfdpqcN+PR6h2aY6uMsXhxaAWfxm1Rr/DFHjO71AJKb1rdPYc325c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ySRaNXIW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GdKLBIJT; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="anduGsq3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713962059; x=1745498059;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RdEzfGHr6mIGf1fmDgMivz/m+lwL7VuuP84qTo4VLCg=;
-  b=anduGsq337SRfbmlA2MCkUFDibNWfvsh74GpWW33bXD0uG+vZcDSBilm
-   HiquZ5CzdGe0C/NSxW9rmQ0EZDjTG47ghNHG5BWbYLqsCYQKz2SDD7K6u
-   mnX7Ktk00STFYRIt9iSqAbXm1JWI9ZQnujBZKvKlSHm97xRFNY3gct6Mu
-   2mbqD5uTU6ITio4OQ23zbajPxWOEK3YbrHy0M3Hu1Olc9DfKeTxyVc3Bi
-   0VTiMrzwthYKLUl7CNL+eNZ0EcYh6nwB1S/6B6n4RB9lchWh/28c32AZZ
-   KUSpL5y6FNDryjjF/PjaHRSIAPjnBuhOXdyTIhFlGBm+YN9IjSdRoXH8X
-   g==;
-X-CSE-ConnectionGUID: UYZd7slCSZaVzw1ZwzlpiA==
-X-CSE-MsgGUID: EM/5tJCfQhKnje6r3TQoJg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9811289"
-X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
-   d="scan'208";a="9811289"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 05:34:18 -0700
-X-CSE-ConnectionGUID: UXB9MMOrRbiJGz+VZuSSzg==
-X-CSE-MsgGUID: /K5OmW/RRKu88J3t3Vt0qw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
-   d="scan'208";a="24585850"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 24 Apr 2024 05:34:12 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rzbpB-0001Dq-2r;
-	Wed, 24 Apr 2024 12:34:09 +0000
-Date: Wed, 24 Apr 2024 20:34:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Aren Moynihan <aren@peacevolution.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Aren Moynihan <aren@peacevolution.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Ondrej Jirman <megi@xff.cz>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	linux-iio@vger.kernel.org, phone-devel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	Willow Barraco <contact@willowbarraco.fr>
-Subject: Re: [PATCH v2 2/6] iio: light: stk3310: Implement vdd supply and
- power it off during suspend
-Message-ID: <202404242057.PUDY5RB1-lkp@intel.com>
-References: <20240423223309.1468198-4-aren@peacevolution.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ySRaNXIW";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GdKLBIJT"
+Date: Wed, 24 Apr 2024 12:34:44 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1713962085;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9Avw2ZT5I1sz1g/0+oR3KsqSJGaVsQEsTbl2M9mSNnA=;
+	b=ySRaNXIWAmQkQ+j0LwdOEjzsoTNl977x08/NoCFVLMu/vwpxTlo4RIIetHNZwC/c/oOUj2
+	eIlZY1Mf3fl1Cn89cQIYT70VPO0LDnTYNzEP/yQLMB0POqlH3470g4HGERAqGidNWjNavY
+	vGseF7hd7yo27XDi5NhnEDzXTcar95AHwcs7qOmO75UK5rVILlCpGXWXZxDCNWBnVaeL0t
+	o0h4o6F7G2c6v81nSK5h4W0lBt16+YsTFtonvETSBNsDe7CZ1wTthcUZKFWnoaW/V3EOER
+	x1XGz+G7ZQG3EmqW/4NutFGG3QbLDvAZxBiJ/nSCce9c5pYabgyl1QBgc3JRRA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1713962085;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9Avw2ZT5I1sz1g/0+oR3KsqSJGaVsQEsTbl2M9mSNnA=;
+	b=GdKLBIJTQ7FXCjULHS6Sy81mxAgiRYsGCNfO9q7ygpAjNsIEarEhgCDLcHyGS6r7vPJ8tG
+	WOIfjY8YYRv0l0DQ==
+From: "tip-bot2 for Haifeng Xu" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/cache] x86/resctrl: Add tracepoint for llc_occupancy tracking
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+ James Morse <james.morse@arm.com>, Haifeng Xu <haifeng.xu@shopee.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240408092303.26413-3-haifeng.xu@shopee.com>
+References: <20240408092303.26413-3-haifeng.xu@shopee.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240423223309.1468198-4-aren@peacevolution.org>
+Message-ID: <171396208407.10875.3076169183667430328.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Aren,
+The following commit has been merged into the x86/cache branch of tip:
 
-kernel test robot noticed the following build warnings:
+Commit-ID:     931be446c6cbc15691dd499957e961f4e1d56afb
+Gitweb:        https://git.kernel.org/tip/931be446c6cbc15691dd499957e961f4e1d56afb
+Author:        Haifeng Xu <haifeng.xu@shopee.com>
+AuthorDate:    Mon, 08 Apr 2024 17:23:03 +08:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Wed, 24 Apr 2024 14:24:48 +02:00
 
-[auto build test WARNING on jic23-iio/togreg]
-[also build test WARNING on sunxi/sunxi/for-next robh/for-next linus/master v6.9-rc5 next-20240423]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+x86/resctrl: Add tracepoint for llc_occupancy tracking
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Aren-Moynihan/dt-bindings-iio-light-stk33xx-add-vdd-and-leda-regulators/20240424-064250
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-patch link:    https://lore.kernel.org/r/20240423223309.1468198-4-aren%40peacevolution.org
-patch subject: [PATCH v2 2/6] iio: light: stk3310: Implement vdd supply and power it off during suspend
-config: arm64-randconfig-001-20240424 (https://download.01.org/0day-ci/archive/20240424/202404242057.PUDY5RB1-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 5ef5eb66fb428aaf61fb51b709f065c069c11242)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240424/202404242057.PUDY5RB1-lkp@intel.com/reproduce)
+In our production environment, after removing monitor groups, those
+unused RMIDs get stuck in the limbo list forever because their
+llc_occupancy is always larger than the threshold. But the unused RMIDs
+can be successfully freed by turning up the threshold.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404242057.PUDY5RB1-lkp@intel.com/
+In order to know how much the threshold should be, perf can be used to
+acquire the llc_occupancy of RMIDs in each rdt domain.
 
-All warnings (new ones prefixed by >>):
+Instead of using perf tool to track llc_occupancy and filter the log
+manually, it is more convenient for users to use tracepoint to do this
+work. So add a new tracepoint that shows the llc_occupancy of busy RMIDs
+when scanning the limbo list.
 
-   In file included from drivers/iio/light/stk3310.c:10:
-   In file included from include/linux/i2c.h:19:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:21:
-   In file included from include/linux/mm.h:2208:
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> drivers/iio/light/stk3310.c:615:38: warning: variable 'ret' is uninitialized when used here [-Wuninitialized]
-     615 |                 return dev_err_probe(&client->dev, ret, "get regulator vdd failed\n");
-         |                                                    ^~~
-   drivers/iio/light/stk3310.c:594:9: note: initialize the variable 'ret' to silence this warning
-     594 |         int ret;
-         |                ^
-         |                 = 0
-   2 warnings generated.
+Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
+Suggested-by: James Morse <james.morse@arm.com>
+Signed-off-by: Haifeng Xu <haifeng.xu@shopee.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: James Morse <james.morse@arm.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Link: https://lore.kernel.org/r/20240408092303.26413-3-haifeng.xu@shopee.com
+---
+ Documentation/arch/x86/resctrl.rst    |  6 ++++++
+ arch/x86/kernel/cpu/resctrl/monitor.c | 11 +++++++++++
+ arch/x86/kernel/cpu/resctrl/trace.h   | 16 ++++++++++++++++
+ 3 files changed, 33 insertions(+)
 
-
-vim +/ret +615 drivers/iio/light/stk3310.c
-
-   591	
-   592	static int stk3310_probe(struct i2c_client *client)
-   593	{
-   594		int ret;
-   595		struct iio_dev *indio_dev;
-   596		struct stk3310_data *data;
-   597	
-   598		indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-   599		if (!indio_dev) {
-   600			dev_err(&client->dev, "iio allocation failed!\n");
-   601			return -ENOMEM;
-   602		}
-   603	
-   604		data = iio_priv(indio_dev);
-   605		data->client = client;
-   606		i2c_set_clientdata(client, indio_dev);
-   607	
-   608		device_property_read_u32(&client->dev, "proximity-near-level",
-   609					 &data->ps_near_level);
-   610	
-   611		mutex_init(&data->lock);
-   612	
-   613		data->vdd_reg = devm_regulator_get(&client->dev, "vdd");
-   614		if (IS_ERR(data->vdd_reg))
- > 615			return dev_err_probe(&client->dev, ret, "get regulator vdd failed\n");
-   616	
-   617		ret = stk3310_regmap_init(data);
-   618		if (ret < 0)
-   619			return ret;
-   620	
-   621		indio_dev->info = &stk3310_info;
-   622		indio_dev->name = STK3310_DRIVER_NAME;
-   623		indio_dev->modes = INDIO_DIRECT_MODE;
-   624		indio_dev->channels = stk3310_channels;
-   625		indio_dev->num_channels = ARRAY_SIZE(stk3310_channels);
-   626	
-   627		ret = regulator_enable(data->vdd_reg);
-   628		if (ret)
-   629			return dev_err_probe(&client->dev, ret,
-   630					     "regulator vdd enable failed\n");
-   631	
-   632		/* we need a short delay to allow the chip time to power on */
-   633		fsleep(1000);
-   634	
-   635		ret = stk3310_init(indio_dev);
-   636		if (ret < 0)
-   637			goto err_vdd_disable;
-   638	
-   639		if (client->irq > 0) {
-   640			ret = devm_request_threaded_irq(&client->dev, client->irq,
-   641							stk3310_irq_handler,
-   642							stk3310_irq_event_handler,
-   643							IRQF_TRIGGER_FALLING |
-   644							IRQF_ONESHOT,
-   645							STK3310_EVENT, indio_dev);
-   646			if (ret < 0) {
-   647				dev_err(&client->dev, "request irq %d failed\n",
-   648					client->irq);
-   649				goto err_standby;
-   650			}
-   651		}
-   652	
-   653		ret = iio_device_register(indio_dev);
-   654		if (ret < 0) {
-   655			dev_err(&client->dev, "device_register failed\n");
-   656			goto err_standby;
-   657		}
-   658	
-   659		return 0;
-   660	
-   661	err_standby:
-   662		stk3310_set_state(data, STK3310_STATE_STANDBY);
-   663	err_vdd_disable:
-   664		regulator_disable(data->vdd_reg);
-   665		return ret;
-   666	}
-   667	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/Documentation/arch/x86/resctrl.rst b/Documentation/arch/x86/resctrl.rst
+index 6c24558..627e238 100644
+--- a/Documentation/arch/x86/resctrl.rst
++++ b/Documentation/arch/x86/resctrl.rst
+@@ -446,6 +446,12 @@ during mkdir.
+ max_threshold_occupancy is a user configurable value to determine the
+ occupancy at which an RMID can be freed.
+ 
++The mon_llc_occupancy_limbo tracepoint gives the precise occupancy in bytes
++for a subset of RMID that are not immediately available for allocation.
++This can't be relied on to produce output every second, it may be necessary
++to attempt to create an empty monitor group to force an update. Output may
++only be produced if creation of a control or monitor group fails.
++
+ Schemata files - general concepts
+ ---------------------------------
+ Each line in the file describes one resource. The line starts with
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index c34a35e..2345e68 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -24,6 +24,7 @@
+ #include <asm/resctrl.h>
+ 
+ #include "internal.h"
++#include "trace.h"
+ 
+ /**
+  * struct rmid_entry - dirty tracking for all RMID.
+@@ -354,6 +355,16 @@ void __check_limbo(struct rdt_domain *d, bool force_free)
+ 			rmid_dirty = true;
+ 		} else {
+ 			rmid_dirty = (val >= resctrl_rmid_realloc_threshold);
++
++			/*
++			 * x86's CLOSID and RMID are independent numbers, so the entry's
++			 * CLOSID is an empty CLOSID (X86_RESCTRL_EMPTY_CLOSID). On Arm the
++			 * RMID (PMG) extends the CLOSID (PARTID) space with bits that aren't
++			 * used to select the configuration. It is thus necessary to track both
++			 * CLOSID and RMID because there may be dependencies between them
++			 * on some architectures.
++			 */
++			trace_mon_llc_occupancy_limbo(entry->closid, entry->rmid, d->id, val);
+ 		}
+ 
+ 		if (force_free || !rmid_dirty) {
+diff --git a/arch/x86/kernel/cpu/resctrl/trace.h b/arch/x86/kernel/cpu/resctrl/trace.h
+index 495fb90..2a50631 100644
+--- a/arch/x86/kernel/cpu/resctrl/trace.h
++++ b/arch/x86/kernel/cpu/resctrl/trace.h
+@@ -35,6 +35,22 @@ TRACE_EVENT(pseudo_lock_l3,
+ 	    TP_printk("hits=%llu miss=%llu",
+ 		      __entry->l3_hits, __entry->l3_miss));
+ 
++TRACE_EVENT(mon_llc_occupancy_limbo,
++	    TP_PROTO(u32 ctrl_hw_id, u32 mon_hw_id, int domain_id, u64 llc_occupancy_bytes),
++	    TP_ARGS(ctrl_hw_id, mon_hw_id, domain_id, llc_occupancy_bytes),
++	    TP_STRUCT__entry(__field(u32, ctrl_hw_id)
++			     __field(u32, mon_hw_id)
++			     __field(int, domain_id)
++			     __field(u64, llc_occupancy_bytes)),
++	    TP_fast_assign(__entry->ctrl_hw_id = ctrl_hw_id;
++			   __entry->mon_hw_id = mon_hw_id;
++			   __entry->domain_id = domain_id;
++			   __entry->llc_occupancy_bytes = llc_occupancy_bytes;),
++	    TP_printk("ctrl_hw_id=%u mon_hw_id=%u domain_id=%d llc_occupancy_bytes=%llu",
++		      __entry->ctrl_hw_id, __entry->mon_hw_id, __entry->domain_id,
++		      __entry->llc_occupancy_bytes)
++	   );
++
+ #endif /* _TRACE_RESCTRL_H */
+ 
+ #undef TRACE_INCLUDE_PATH
