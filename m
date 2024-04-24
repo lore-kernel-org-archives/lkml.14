@@ -1,164 +1,247 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C8E360
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 07:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4FC156C60
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 07:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713943040; cv=none; b=WGH4EEYOnBTF3uVFm96YFMW9TopXut0rVay+fcVY6OxD/RHNEY8R8d742Lb/mh/kKWJa7Z+D1a0JWTaKGQVFS5fs+s8fe8sYuaWydJwchAS8sY0Iz713101T8cXUji+A0DaZSBkeB+1yllKOkK1kSfvRgG23lVfW0PGyVEijy/Y=
+	t=1713943091; cv=none; b=FO0nTghcgxsEx2ZagB7+1Ka0W3bIjfWXQesUK/kWt5/i10WFRcO1I7RZaSo+YtvApH/0k0PWSm1ZiWJAw+kHFKcqsmuy7cDRSlVsnOBsYfM3DM+MCIB+KdaXzPc9NfqIwxQa/pLyAWyJETDN7Rlwx0KaQZC0lwEbyQ5JuhNvSkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713943040; c=relaxed/simple;
-	bh=AmULsBhF22qDpm7U3r8KmtqTPqh7ExmO7/k6ZU7Ywq8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I4KjjWd3rdm8tlWAeJEd6QzpcpwL+0ez5V+6GWhJEbdWY3ZljRDN12ct16xEXYV0wT3JypS0ne4bamZe0ylBla9w9OUFYEH1Wol45QgTDgBnUQ1UF16Bdw1ZMvXTptFNN0Bqhnn7hVHjoY0dI/uqcTgoiyUFFIZDO9Z4qKM/vos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=USIrOMjN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713943091; c=relaxed/simple;
+	bh=fh6/DxXJ6QlVYvQYFKUidpUtVMeGrajPzaBj/RdCU+g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mpLoLtfT14t/Nki25bYKySbvpg2cbAqrjnXjKkX03b1lzlMQPhutL5dduFyrn+jooWEK28L3eBQ8ZKPRjI+LLrCXyLrnKBXn7/UbngEiRykjaoc1i5bCc7mFl/mB1NcwGb0q0aFOy3T6O6smrQh9KNNcJdCPHGW/LO40uAiJDm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oKMi5ahd; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="USIrOMjN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713943037;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9iaYIAZiKliqY/TEMeW9+sVZsOPyKdm6944m3JCdN9c=;
-	b=USIrOMjN78HVtp/L8KceRL13bIVoayo1NxwslaK5oFaBfGomlnOZsvsy83Q/MPx/NGuPY0
-	N6/kPfpcdE0KkZ5ohqNx8WNNQro37nuhZI4f7JHep1ro4Q5Mz/KEpOocMPeCSJzNwZxOkZ
-	MtFlEFR0FWPBOczZWu9qeyRLZmgy0Zk=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-274-Seqk0RwrMkKsS4SZdAKKKw-1; Wed, 24 Apr 2024 03:17:16 -0400
-X-MC-Unique: Seqk0RwrMkKsS4SZdAKKKw-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-418f8271081so26412315e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 00:17:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713943035; x=1714547835;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9iaYIAZiKliqY/TEMeW9+sVZsOPyKdm6944m3JCdN9c=;
-        b=vP3vOG+hWMJ/V5gTv8pFYMo4vltM9kcZJJu5zKtfsZLZ9cDDl0YGZMmij8GijB+YtU
-         +3IoEwvecTy/IV5bnU/SrRK3AOTM5u1L4iKz4UGj5GzMbvPanDsn6qmHm+szi3WXSuRY
-         42z7NTZy9XvMkHasJCWw80wE6IaktTq218r/FZRpTD4qdOVBEXABy0/V7+Rbzvjz/BqZ
-         6iyitiyYZVvZ0Q6ljlWxQtwjW0LcSMiBteZBispTpiW/THtUojlslUQhycvSR6qNLHPX
-         oUD6rRmkituZhqsCy4lfWVN1nFey8mCNgJC2YfWIi/eV8HZEi9GTnwqIoWT9VM/dwzom
-         zqxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX/kEAr0H+3PKjxxeVlzqbVSiFW2Miw8TSppSQ+JXZQwIgGFw9HJEzegOMIb3bAMsvTg3YhBZ3nuZ1Uq+k2TQ02IQwVuk0Yaj5aaEWW
-X-Gm-Message-State: AOJu0YzYlMx8MmjaEapMoDq90M7OYm3fXSCKSXPnnlnO2mFE7ae2lT6p
-	frNVaQOYbUjD/fx1T0bGYkOOX6Wi0SP62Rl4ACKkADpFT+aKplgQr+y+zbHFMoG3SU7dgYIArAl
-	KaGHspQw6y2l4ZaYhes8PN+xVgRH4OxlkjaUBDwCuRq9QYOBoDTZaoDOe0E9dwQ==
-X-Received: by 2002:a05:600c:3b14:b0:418:a985:3ca with SMTP id m20-20020a05600c3b1400b00418a98503camr1747517wms.31.1713943034987;
-        Wed, 24 Apr 2024 00:17:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IENk37ZqeMVuNNj8JxEPChwKk/OCBk2hMQQvnZVyuzvgKBaOTQwhdp2HFHPmtBXRGKrNBMCoA==
-X-Received: by 2002:a05:600c:3b14:b0:418:a985:3ca with SMTP id m20-20020a05600c3b1400b00418a98503camr1747483wms.31.1713943034592;
-        Wed, 24 Apr 2024 00:17:14 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c70d:1f00:7a4e:8f21:98db:baef? (p200300cbc70d1f007a4e8f2198dbbaef.dip0.t-ipconnect.de. [2003:cb:c70d:1f00:7a4e:8f21:98db:baef])
-        by smtp.gmail.com with ESMTPSA id fm13-20020a05600c0c0d00b0041b0ade42b1sm731364wmb.7.2024.04.24.00.17.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Apr 2024 00:17:14 -0700 (PDT)
-Message-ID: <1a0ca018-8ad3-42b0-b98a-8e6b6862fc7a@redhat.com>
-Date: Wed, 24 Apr 2024 09:17:12 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oKMi5ahd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713943090; x=1745479090;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=fh6/DxXJ6QlVYvQYFKUidpUtVMeGrajPzaBj/RdCU+g=;
+  b=oKMi5ahdECFQ/bvLI5AwfNnr7JHGQLSArsMowS2+n8JGcek1qizXukZT
+   fdEQvi2CBAfJy19+IYObvdhgy3bLpfm6+TAB+Xt4o9zi5QSukDO8UfOyy
+   wPMWuLNoqbLab+X3y6zDrfOvtnxYtuPcwJT+S5JptA26Ai+Nd26mVzNKa
+   khPySd7awhlc66FkMoKFwUB2C5CBF4rabp4GEHKz8l12ek6WUsyWUyvMl
+   JzRd2NV/ik6daBXjx1c09q1aGU1EEL+1fhkkty0DQ08lU+7hXaSBbHAv6
+   mqNIoYirfAYYMgGrVcgyfU9pCIjtl73IdkmdL92AAvkEDTf8Z2UDqK2YB
+   A==;
+X-CSE-ConnectionGUID: l1d7sblvQNm3A3bL2AgXxA==
+X-CSE-MsgGUID: rbyENVBwTzmp6CwvIzocig==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="27073065"
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="27073065"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 00:18:10 -0700
+X-CSE-ConnectionGUID: c6Nn8hQVRCmH8gGApFwHJw==
+X-CSE-MsgGUID: UM3Mw8hJSR2Nw6Kg6pt8NA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="24664561"
+Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
+  by fmviesa010.fm.intel.com with ESMTP; 24 Apr 2024 00:18:07 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>,
+	Jingqi Liu <Jingqi.liu@intel.com>,
+	Dimitri Sivanich <sivanich@hpe.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 00/18] [PULL REQUEST] Intel IOMMU updates for v6.10
+Date: Wed, 24 Apr 2024 15:16:26 +0800
+Message-Id: <20240424071644.178250-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] mm/vmscan: avoid split PMD-mapped THP during
- shrink_folio_list()
-To: Matthew Wilcox <willy@infradead.org>, Lance Yang <ioworker0@gmail.com>
-Cc: akpm@linux-foundation.org, maskray@google.com, ziy@nvidia.com,
- ryan.roberts@arm.com, 21cnbao@gmail.com, mhocko@suse.com,
- fengwei.yin@intel.com, zokeefe@google.com, shy828301@gmail.com,
- xiehuan09@gmail.com, wangkefeng.wang@huawei.com, songmuchun@bytedance.com,
- peterx@redhat.com, minchan@kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20240422055213.60231-1-ioworker0@gmail.com>
- <ZiiHSwG_bnLJbwfb@casper.infradead.org>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <ZiiHSwG_bnLJbwfb@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 24.04.24 06:15, Matthew Wilcox wrote:
-> On Mon, Apr 22, 2024 at 01:52:13PM +0800, Lance Yang wrote:
->> When the user no longer requires the pages, they would use
->> madvise(MADV_FREE) to mark the pages as lazy free. IMO, they would not
->> typically rewrite to the given range.
->>
->> At present, PMD-mapped THPs that are marked as lazyfree during
->> shrink_folio_list() are unconditionally split, which may be unnecessary.
->> If the THP is clean, its PMD is also clean, and there are no unexpected
->> references, then we can attempt to remove the PMD mapping from it. This
->> change will improve the efficiency of memory reclamation in this case.
-> 
-> Does this happen outside of benchmarks?  I'm really struggling to see
-> how we end up in this situation.  We have a clean THP without swap
-> backing, so it's full of zeroes, but for some reason we haven't used the
-> shared huge zero page?  What is going on?
+Hi Joerg,
 
-It's not full of zeroes.
+The following changes have been queued for v6.10-rc1:
 
-User space called MADV_FREE on a PMD-mapped THP.
+ - Consolidate domain cache invalidation
+ - Remove private data from page fault message
+ - Allocate DMAR fault interrupts locally
+ - Cleanup and refactoring
 
-During MADV_FREE, we mark the PTEs as clean, the folio as clean and sd 
-"lazyfree" (no swap backend). If, during memory reclaim, we detect that 
-(a) the folio is still clean (b) the PTEs are still clean and (c) there 
-are no unexpected references (GUP), user space didn't re-write to that 
-memory again, so we can just discard the memory "lazily".
+Unfortunately, there is a merge conflict with the next branch, in
+drivers/iommu/intel/iommu.c. I resolved this conflict as below.
+
+All patches are based on v6.9-rc5. The whole code after merging into the
+next branch is available at:
+https://github.com/LuBaolu/intel-iommu/commits/vtd-update-for-v6.10
+
+diff --cc drivers/iommu/intel/iommu.c
+index 916cdb65d849,7abe76f92a3c..daf0e9b067e6
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@@ -860,9 -850,9 +845,9 @@@ static struct dma_pte *pfn_to_dma_pte(s
+  			break;
+  
+  		if (!dma_pte_present(pte)) {
+ -			uint64_t pteval;
+ +			uint64_t pteval, tmp;
+  
+- 			tmp_page = alloc_pgtable_page(domain->nid, gfp);
++ 			tmp_page = iommu_alloc_page_node(domain->nid, gfp);
+  
+  			if (!tmp_page)
+  				return NULL;
+@@@ -872,10 -862,9 +857,10 @@@
+  			if (domain->use_first_level)
+  				pteval |= DMA_FL_PTE_XD | DMA_FL_PTE_US | DMA_FL_PTE_ACCESS;
+  
+ -			if (cmpxchg64(&pte->val, 0ULL, pteval))
+ +			tmp = 0ULL;
+ +			if (!try_cmpxchg64(&pte->val, &tmp, pteval))
+  				/* Someone else set it while we were thinking; use theirs. */
+- 				free_pgtable_page(tmp_page);
++ 				iommu_free_page(tmp_page);
+  			else
+  				domain_flush_cache(domain, pte, sizeof(*pte));
+  		}
+@@@ -3226,7 -3402,16 +3211,7 @@@ static int intel_iommu_memory_notifier(
+  			LIST_HEAD(freelist);
+  
+  			domain_unmap(si_domain, start_vpfn, last_vpfn, &freelist);
+- 			put_pages_list(&freelist);
+ -
+ -			rcu_read_lock();
+ -			for_each_active_iommu(iommu, drhd)
+ -				iommu_flush_iotlb_psi(iommu, si_domain,
+ -					start_vpfn, mhp->nr_pages,
+ -					list_empty(&freelist), 0);
+ -			rcu_read_unlock();
++ 			iommu_put_pages_list(&freelist);
+  		}
+  		break;
+  	}
+@@@ -3921,9 -4107,26 +3906,9 @@@ static size_t intel_iommu_unmap_pages(s
+  static void intel_iommu_tlb_sync(struct iommu_domain *domain,
+  				 struct iommu_iotlb_gather *gather)
+  {
+ -	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
+ -	unsigned long iova_pfn = IOVA_PFN(gather->start);
+ -	size_t size = gather->end - gather->start;
+ -	struct iommu_domain_info *info;
+ -	unsigned long start_pfn;
+ -	unsigned long nrpages;
+ -	unsigned long i;
+ -
+ -	nrpages = aligned_nrpages(gather->start, size);
+ -	start_pfn = mm_to_dma_pfn_start(iova_pfn);
+ -
+ -	xa_for_each(&dmar_domain->iommu_array, i, info)
+ -		iommu_flush_iotlb_psi(info->iommu, dmar_domain,
+ -				      start_pfn, nrpages,
+ -				      list_empty(&gather->freelist), 0);
+ -
+ -	if (dmar_domain->nested_parent)
+ -		parent_domain_flush(dmar_domain, start_pfn, nrpages,
+ -				    list_empty(&gather->freelist));
+ +	cache_tag_flush_range(to_dmar_domain(domain), gather->start,
+ +			      gather->end, list_empty(&gather->freelist));
+- 	put_pages_list(&gather->freelist);
++ 	iommu_put_pages_list(&gather->freelist);
+  }
+  
+  static phys_addr_t intel_iommu_iova_to_phys(struct iommu_domain *domain,
+@@@ -4366,20 -4573,27 +4351,15 @@@ static int intel_iommu_iotlb_sync_map(s
+  	return 0;
+  }
+  
+- static void intel_iommu_remove_dev_pasid(struct device *dev, ioasid_t pasid)
++ static void intel_iommu_remove_dev_pasid(struct device *dev, ioasid_t pasid,
++ 					 struct iommu_domain *domain)
+  {
+  	struct device_domain_info *info = dev_iommu_priv_get(dev);
++ 	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
+  	struct dev_pasid_info *curr, *dev_pasid = NULL;
+  	struct intel_iommu *iommu = info->iommu;
+- 	struct dmar_domain *dmar_domain;
+- 	struct iommu_domain *domain;
+  	unsigned long flags;
+  
+- 	domain = iommu_get_domain_for_dev_pasid(dev, pasid, 0);
+- 	if (WARN_ON_ONCE(!domain))
+ -	/*
+ -	 * The SVA implementation needs to handle its own stuffs like the mm
+ -	 * notification. Before consolidating that code into iommu core, let
+ -	 * the intel sva code handle it.
+ -	 */
+ -	if (domain->type == IOMMU_DOMAIN_SVA) {
+ -		intel_svm_remove_dev_pasid(dev, pasid);
+--		goto out_tear_down;
+- 	dmar_domain = to_dmar_domain(domain);
+ -	}
+--
+  	spin_lock_irqsave(&dmar_domain->lock, flags);
+  	list_for_each_entry(curr, &dmar_domain->dev_pasids, link_domain) {
+  		if (curr->dev == dev && curr->pasid == pasid) {
+
+With above in mind, please consider them for v6.10.
+
+Best regards,
+baolu
+
+Colin Ian King (1):
+  iommu/vt-d: Remove redundant assignment to variable err
+
+Dimitri Sivanich (1):
+  iommu/vt-d: Allocate DMAR fault interrupts locally
+
+Jason Gunthorpe (1):
+  iommu: Add ops->domain_alloc_sva()
+
+Jingqi Liu (2):
+  iommu/vt-d: Remove debugfs use of private data field
+  iommu/vt-d: Remove private data use in fault message
+
+Lu Baolu (12):
+  iommu/vt-d: Remove caching mode check before device TLB flush
+  iommu/vt-d: Add cache tag assignment interface
+  iommu/vt-d: Add cache tag invalidation helpers
+  iommu/vt-d: Add trace events for cache tag interface
+  iommu/vt-d: Use cache_tag_flush_all() in flush_iotlb_all
+  iommu/vt-d: Use cache_tag_flush_range() in tlb_sync
+  iommu/vt-d: Use cache_tag_flush_range_np() in iotlb_sync_map
+  iommu/vt-d: Cleanup use of iommu_flush_iotlb_psi()
+  iommu/vt-d: Use cache_tag_flush_range() in cache_invalidate_user
+  iommu/vt-d: Use cache helpers in arch_invalidate_secondary_tlbs
+  iommu/vt-d: Remove intel_svm_dev
+  iommu/vt-d: Remove struct intel_svm
+
+Uros Bizjak (1):
+  iommu/vt-d: Use try_cmpxchg64{,_local}() in iommu.c
+
+ include/linux/dmar.h          |   2 +-
+ include/linux/iommu.h         |   6 +-
+ drivers/iommu/amd/amd_iommu.h |   2 +-
+ drivers/iommu/intel/iommu.h   |  86 +++++--
+ drivers/iommu/intel/perf.h    |   1 -
+ drivers/iommu/intel/trace.h   |  97 ++++++++
+ drivers/iommu/irq_remapping.h |   2 +-
+ drivers/iommu/amd/init.c      |   2 +-
+ drivers/iommu/intel/cache.c   | 419 ++++++++++++++++++++++++++++++++++
+ drivers/iommu/intel/debugfs.c |   7 -
+ drivers/iommu/intel/dmar.c    |  10 +-
+ drivers/iommu/intel/iommu.c   | 300 +++---------------------
+ drivers/iommu/intel/nested.c  |  69 ++----
+ drivers/iommu/intel/svm.c     | 372 +++++++-----------------------
+ drivers/iommu/iommu-sva.c     |  16 +-
+ drivers/iommu/irq_remapping.c |   5 +-
+ drivers/iommu/intel/Makefile  |   2 +-
+ 17 files changed, 743 insertions(+), 655 deletions(-)
+ create mode 100644 drivers/iommu/intel/cache.c
 
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
