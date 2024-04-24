@@ -1,308 +1,174 @@
-Received: from mail-m25499.xmail.ntesmail.com (mail-m25499.xmail.ntesmail.com [103.129.254.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F6D15666E;
-	Wed, 24 Apr 2024 08:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.129.254.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FDC156C6B
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 08:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713947833; cv=none; b=VLbWOt5lbtwOf8OwRqriHTOjH/jI2R7EO5fYOzAS15wgsRWcQM/ji47nm/bKllb8vMr0cCSZGQK8xKF2kcx7n8bDELnmLRna36w4QB/LsUrwK63UxnH4549K7fza450m8DAyQt2rq2pdcjSlMozvO94vdwIrf+SAuxu1LNHvNZE=
+	t=1713947870; cv=none; b=SOEAayscuU6SaEj1XVWfoe4T1Spvam9jk9+w53COoibboJNiPQoM1RIwxU/eWskXy25mGZKdMW+JInchcIoE25Fy8amshK8ePuDVLThYLEbU5OfNFIhIWKlEXPM2SysOXY2YGdo4QvyO9mBKl0ttEYKqev66XJj5sFfaiFxM8C0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713947833; c=relaxed/simple;
-	bh=XLHqJM6NlUvUMGQhytIuH3WUrI1lKV09/R3wMpcgh+A=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=enA8MDDt9A6uVEn+W+GmNviHJG0sAbcyYeG2oP81t913AhJQLuK8iaQs0bYVfhtHFxHOebdGcl1lqNGoAUX5lXWQ+xJBY3gsfcikptUKOdHECogdcJ+3ZlVfQNuWB2ffQfrYrbZKm1MOfPlyIsxwkmm1nX4PS44nQtYIhEfVvrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn; spf=none smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=103.129.254.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=easystack.cn
-Received: from [192.168.122.189] (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id B62EA86024B;
-	Wed, 24 Apr 2024 16:36:32 +0800 (CST)
-Subject: Re: [PATCH 5/7] cbd: introuce cbd_backend
-To: Chaitanya Kulkarni <chaitanyak@nvidia.com>,
- "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
- "axboe@kernel.dk" <axboe@kernel.dk>
-Cc: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- Dongsheng Yang <dongsheng.yang.linux@gmail.com>
-References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
- <20240422071606.52637-6-dongsheng.yang@easystack.cn>
- <5166cbf7-2680-4f84-9dee-aa214862f2a8@nvidia.com>
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Message-ID: <29b01fbc-080a-28da-72c1-5434635b2d3b@easystack.cn>
-Date: Wed, 24 Apr 2024 16:36:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+	s=arc-20240116; t=1713947870; c=relaxed/simple;
+	bh=eBNMslm0PdQThmrvJQdlDacnyzoprapoNvZMhUQUAT4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iDNzPk5lXGqPtDAjErLGXmk+AkPSeNse8j9SNEn0EnbDqbheq04+K4G0Uj0ZChphKYHCUK7at2NUl0Mvk0PZ4Cw5StkRGlHkicX8EdIGsPkGXd2NB0jh0EQ6b5MHfL93UET+TNqwgCTzrP/6VSfI/gKdHiUQq2rY+LhVKIIQz00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=w7b0crVW; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w7b0crVW"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-41a1d88723bso25402325e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 01:37:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713947866; x=1714552666; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uv9PR3rnKBjv55iigpDrI1Do3KF8pk1sW8s6bauxk8E=;
+        b=w7b0crVWPOYpL92/HciUjWiiz3oMjRpfe7CgyFBlvfLYHHIqxV+bqqgaDVZ5az08qj
+         dIigrtBRtXQjaFcLz/VlPFh9+3GfV4+/qoYsBUNA8uwtBrzD86bBcvWCrYOnOC8aAg2F
+         Gc9zb4oZex7Y5MNmZ7MnwUaEDegvEo9u/sPZ2T0K43x0yGtfgVRVSEAmcA6/rbFcbOYx
+         114lx1OjWxWko2lBpsbalTascGyGwiyEzN1VDg+FWVDSPqhAfQJstdvJxCAigxb7afVJ
+         N1b+39qcNAQrges1WDk2QqVFIbyyToRovLbj9V4lalbCM9q2bNFiGzX6vxlVcL8IHLan
+         4XUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713947866; x=1714552666;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Uv9PR3rnKBjv55iigpDrI1Do3KF8pk1sW8s6bauxk8E=;
+        b=ARbXM1JfHWTdIT4g0HVg1lK3XNGf1Su/tQfF4A3XNrQ+1jzUj6D10fFzVYaFJH0R/g
+         avDAqW2azDjQSEvZyThH/nFSkgTpsFehZkRCyq6P0UQl+ZodTuu40iRNN4VfD7fELZeb
+         fwzZsJQBef935bPujn4Ai4YQRKeIVRvbzie4/0UY99/L4g+522XGNcJgR8u+LNmGQMLC
+         zOsSVF4wH3krjUC3z2s7PhpcMuv6VbtYbocrkoRWsRNGwR3pR6IKA6BV22afcaLD6KLi
+         1YYpVB3D+nXqmalQLmPswnQxYYlcJsZ/2jqUJLXwldw+o2fViLTiYbHQt9lx125ujv3G
+         b+Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCUMj7/vY+YrNOxY315kmKLg6W99Vr/RJmtwYq88isz8EJsPZ9rop9G04vwUC2ic2Zj+I+pN+EbL1ILy7MWHdxDu5GvVmNRqGG0vwa0b
+X-Gm-Message-State: AOJu0Yx0QkDxtzeu0vytZcJChDRh5pC7o7cpE1TxxxIc5L4C71Xuyy7B
+	RfbOkx6G/VzJE071lIRC1RTWP4BuH8OE7wbB30OhnNUqzRvSiMzpaSR5Pi+cy0Y=
+X-Google-Smtp-Source: AGHT+IGm24kLmIp1QFLMZZeTHUDpUAwdt1K+Vjc6izHPajwBGJPSlXkA+pWXjOFNhQWFw4lS+5PCsg==
+X-Received: by 2002:a05:600c:19d4:b0:419:678e:64ce with SMTP id u20-20020a05600c19d400b00419678e64cemr1452460wmq.36.1713947865912;
+        Wed, 24 Apr 2024 01:37:45 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id n2-20020a05600c4f8200b0041884b79b81sm23005752wmq.1.2024.04.24.01.37.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Apr 2024 01:37:45 -0700 (PDT)
+Message-ID: <6ce7bc63-1c47-4e3d-a3af-8f229f1c36f7@linaro.org>
+Date: Wed, 24 Apr 2024 10:37:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <5166cbf7-2680-4f84-9dee-aa214862f2a8@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGExLVkwfQ04fGh4ZQk5MSlUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8f0f3fd6c0023ckunmb62ea86024b
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PBw6KTo*LTcrMxA4PlFWKFEQ
-	HjQKCQpVSlVKTEpIQk9MTEJITk9NVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
-	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBQkNOSjcG
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/9] arm64: dts: hisilicon: hip05: move non-MMIO node out
+ of soc
+To: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+References: <20240402193148.62323-1-krzk@kernel.org>
+ <171394159880.43787.12383182687947213751.b4-ty@linaro.org>
+ <6628B1E9.1050300@hisilicon.com>
+ <7adfe10b-cfb6-4242-9520-dd9819bf7f43@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <7adfe10b-cfb6-4242-9520-dd9819bf7f43@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 24/04/2024 09:23, Krzysztof Kozlowski wrote:
+> On 24/04/2024 09:16, Wei Xu wrote:
+>> Hi Krzysztof,
+>>
+>> On 2024/4/24 14:54, Krzysztof Kozlowski wrote:
+>>>
+>>> On Tue, 02 Apr 2024 21:31:40 +0200, Krzysztof Kozlowski wrote:
+>>>> Non-MMIO devices, which are BTW not really part of the SoC, should not
+>>>> be within simple-bus, as reported by dtc W=1 warning:
+>>>>
+>>>>   hip05.dtsi:301.30-305.5: Warning (simple_bus_reg): /soc/refclk200mhz: missing or empty reg/ranges property
+>>>>
+>>>>
+>>>
+>>> Almost a month passed, no replies from maintainers about picking it up. Dunno,
+>>> looks abandoned, so let me grab this. If anyone else wants to pick it up, let
+>>> me know.
+>>>
+>>
+>> Sorry for the late reply!
+>> I am applying these patches which are in the following git repo.
+>>   https://github.com/hisilicon/linux-hisi/tree/next/dt64
+>>
+>> And it is fine to me to go through your git tree.
+>> Thanks!
+> 
+> So you picked them up? Why you did not notify anyone? b4 does it almost
+> automatically. How anyone can know what is happening with the patches?
+> 
+> I will drop them from my tree.
 
+One more thing:
 
-在 2024/4/24 星期三 下午 1:03, Chaitanya Kulkarni 写道:
->> +
->> +struct cbd_backend_io {
->> +	struct cbd_se		*se;
->> +	u64			off;
->> +	u32			len;
->> +	struct bio		*bio;
->> +	struct cbd_handler	*handler;
->> +};
->> +
-> 
-> why not use inline bvecs and avoid bio page allocation for reasonable
-> size ? instead of performing the allocation for each request ...
+Even though you applied these patches few days ago, they are still not
+in linux-next (as of next-20240423), which suggests your tree is not in
+next.
 
-inline bvecs sounds good, Iwill use it in next version.
-> 
->> +static inline void complete_cmd(struct cbd_handler *handler, u64 priv_data, int ret)
->> +{
->> +	struct cbd_ce *ce = get_compr_head(handler);
->> +
->> +	memset(ce, 0, sizeof(*ce));
->> +	ce->priv_data = priv_data;
->> +	ce->result = ret;
->> +	CBDC_UPDATE_COMPR_HEAD(handler->channel_info->compr_head,
->> +			       sizeof(struct cbd_ce),
->> +			       handler->channel_info->compr_size);
->> +
->> +	cbdc_flush_ctrl(&handler->channel);
->> +
->> +	return;
->> +}
->> +
->> +static void backend_bio_end(struct bio *bio)
->> +{
->> +	struct cbd_backend_io *backend_io = bio->bi_private;
->> +	struct cbd_se *se = backend_io->se;
->> +	struct cbd_handler *handler = backend_io->handler;
->> +
->> +	if (bio->bi_status == 0 &&
->> +	    cbd_se_hdr_get_op(se->header.len_op) == CBD_OP_READ) {
->> +		cbdc_copy_from_bio(&handler->channel, se->data_off, se->data_len, bio);
->> +	}
->> +
->> +	complete_cmd(handler, se->priv_data, bio->bi_status);
->> +
->> +	bio_free_pages(bio);
->> +	bio_put(bio);
->> +	kfree(backend_io);
->> +}
->> +
->> +static int cbd_bio_alloc_pages(struct bio *bio, size_t size, gfp_t gfp_mask)
->> +{
->> +	int ret = 0;
->> +
->> +        while (size) {
->> +                struct page *page = alloc_pages(gfp_mask, 0);
->> +                unsigned len = min_t(size_t, PAGE_SIZE, size);
-> 
-> alloc_page() call should be close to below check ..
+Please read entire presentation "Beginner Linux kernel maintainer's
+toolbox" from LPC 2023 and improve your workflow by:
+1. Properly notifying patch status.
+2. Being part of the integration tree.
+3. ... and more, as explained in above talk.
 
-that's right, it should be alloc_page rather than alloc_pages with order 
-of 0.
-> 
->> +
->> +                if (!page) {
->> +			pr_err("failed to alloc page");
->> +			ret = -ENOMEM;
->> +			break;
->> +		}
->> +
->> +		ret = bio_add_page(bio, page, len, 0);
->> +                if (unlikely(ret != len)) {
->> +                        __free_page(page);
->> +			pr_err("failed to add page");
->> +                        break;
->> +                }
->> +
->> +                size -= len;
->> +        }
->> +
->> +	if (size)
->> +		bio_free_pages(bio);
->> +	else
->> +		ret = 0;
->> +
->> +        return ret;
->> +}
-> 
-> code formatting seems to be broken for above function plz check..
+There is a link to video and slides:
+https://lpc.events/event/17/contributions/1498/
 
-thanx for pointing it.
-> 
->> +
->> +static struct cbd_backend_io *backend_prepare_io(struct cbd_handler *handler, struct cbd_se *se, blk_opf_t opf)
->> +{
->> +	struct cbd_backend_io *backend_io;
->> +	struct cbd_backend *cbdb = handler->cbdb;
->> +
->> +	backend_io = kzalloc(sizeof(struct cbd_backend_io), GFP_KERNEL);
-> 
-> will above allocation always succeed ? or NULL check should be here ?
+Best regards,
+Krzysztof
 
-sure, it should be checked here. thanx
-> 
->> +	backend_io->se = se;
->> +
->> +	backend_io->handler = handler;
->> +	backend_io->bio = bio_alloc_bioset(cbdb->bdev, roundup(se->len, 4096) / 4096, opf, GFP_KERNEL, &handler->bioset);
->> +
->> +	backend_io->bio->bi_iter.bi_sector = se->offset >> SECTOR_SHIFT;
->> +	backend_io->bio->bi_iter.bi_size = 0;
->> +	backend_io->bio->bi_private = backend_io;
->> +	backend_io->bio->bi_end_io = backend_bio_end;
->> +
->> +	return backend_io;
->> +}
->> +
->> +static int handle_backend_cmd(struct cbd_handler *handler, struct cbd_se *se)
->> +{
->> +	struct cbd_backend *cbdb = handler->cbdb;
->> +	u32 len = se->len;
->> +	struct cbd_backend_io *backend_io = NULL;
->> +	int ret;
->> +
->> +	if (cbd_se_hdr_flags_test(se, CBD_SE_HDR_DONE)) {
->> +		return 0 ;
->> +	}
->> +
->> +	switch (cbd_se_hdr_get_op(se->header.len_op)) {
->> +	case CBD_OP_PAD:
->> +		cbd_se_hdr_flags_set(se, CBD_SE_HDR_DONE);
->> +		return 0;
->> +	case CBD_OP_READ:
->> +		backend_io = backend_prepare_io(handler, se, REQ_OP_READ);
->> +		break;
->> +	case CBD_OP_WRITE:
->> +		backend_io = backend_prepare_io(handler, se, REQ_OP_WRITE);
->> +		break;
->> +	case CBD_OP_DISCARD:
->> +		ret = blkdev_issue_discard(cbdb->bdev, se->offset >> SECTOR_SHIFT,
->> +				se->len, GFP_NOIO);
-> 
-> any specific reason to not use GFP_KERNEL ?
-
-Using GFP_NOIO is intended to avoid memory allocation loops in the I/O 
-path, but in this case, it's actually handling remote I/O requests, so 
-theoretically using GFP_KERNEL should also work.
-> 
->> +		goto complete_cmd;
->> +	case CBD_OP_WRITE_ZEROS:
->> +		ret = blkdev_issue_zeroout(cbdb->bdev, se->offset >> SECTOR_SHIFT,
->> +				se->len, GFP_NOIO, 0);
-> 
-> any specific reason to not use GFP_KERNEL ?
-
-ditto
-> 
->> +		goto complete_cmd;
->> +	case CBD_OP_FLUSH:
->> +		ret = blkdev_issue_flush(cbdb->bdev);
->> +		goto complete_cmd;
->> +	default:
->> +		pr_err("unrecognized op: %x", cbd_se_hdr_get_op(se->header.len_op));
->> +		ret = -EIO;
->> +		goto complete_cmd;
->> +	}
->> +
->> +	if (!backend_io)
->> +		return -ENOMEM;
-> 
-> there is no NULL check in the backend_prepare_io() not sure about
-> above condition in current code unless you return NULL ...
-
-backend_prepare_io should check NULL :)
-> 
->> +
->> +	ret = cbd_bio_alloc_pages(backend_io->bio, len, GFP_NOIO);
->> +	if (ret) {
->> +		kfree(backend_io);
->> +		return ret;
->> +	}
->> +
->> +	if (cbd_se_hdr_get_op(se->header.len_op) == CBD_OP_WRITE) {
->> +		cbdc_copy_to_bio(&handler->channel, se->data_off, se->data_len, backend_io->bio);
->> +	}
->> +
->> +	submit_bio(backend_io->bio);
->> +
-> 
-> unless I didn't understand the code, you are building a single bio from
-> incoming request, that might not have enough space to accommodate all
-> the data from incoming request, hence you are returning an error from
-> cbd_bio_alloc_pages() when bio_add_page() fail ...
-> 
-> bio_add_page() can fail for multiple reasons, instead of trying to
-> build only one bio that might be smaller for the size of the I/O and
-> returning error, why not use the chain of the small size bios ? that
-> way you will not run out of the space in single bio and still finish
-> the I/O by avoiding bio_add_page() failure that might happen due to
-> bio full ?
-
-"bio_add_page" should only return an error when "bio->bi_vcnt >= 
-bio->bi_max_vecs". However, in our case, "bi_max_vecs" is calculated 
-when "bio_alloc_bioset" is called, so "bi_vcnt" should not exceed 
-"bi_max_vecs". In other words, theoretically, "bio_add_page" should not 
-fail here.
-> 
->> +	return 0;
->> +
->> +complete_cmd:
->> +	complete_cmd(handler, se->priv_data, ret);
->> +	return 0;
->> +}
->> +
->> +static void handle_work_fn(struct work_struct *work)
->> +{
->> +	struct cbd_handler *handler = container_of(work, struct cbd_handler, handle_work.work);
->> +	struct cbd_se *se;
->> +	int ret;
->> +again:
->> +	/* channel ctrl would be updated by blkdev queue */
->> +	cbdc_flush_ctrl(&handler->channel);
->> +	se = get_se_to_handle(handler);
->> +	if (se == get_se_head(handler)) {
->> +		if (cbdwc_need_retry(&handler->handle_worker_cfg)) {
->> +			goto again;
->> +		}
->> +
->> +		cbdwc_miss(&handler->handle_worker_cfg);
->> +
->> +		queue_delayed_work(handler->handle_wq, &handler->handle_work, usecs_to_jiffies(0));
->> +		return;
->> +	}
->> +
->> +	cbdwc_hit(&handler->handle_worker_cfg);
->> +	cbdt_flush_range(handler->cbdb->cbdt, se, sizeof(*se));
->> +	ret = handle_backend_cmd(handler, se);
->> +	if (!ret) {
->> +		/* this se is handled */
->> +		handler->se_to_handle = (handler->se_to_handle + cbd_se_hdr_get_len(se->header.len_op)) % handler->channel_info->cmdr_size;
-> 
-> this is a really long line, if possible keep code under 80 char, I know
-> it's not a requirement anymore but it will match block drivers ..
-
-That's indeed long. I'll try to make it more concise in the next version.
-
-Kulkarni, thanx for your review, all each comment helps :)
-
-Thanx
-> 
-> -ck
-> 
-> 
