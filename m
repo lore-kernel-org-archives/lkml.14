@@ -1,300 +1,216 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF96155A50
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 22:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07FD16EC0B
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 22:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713999067; cv=none; b=uhRSx5mmcE5qemF7OLcM66r+qAUxiD/LZX/c5fpanyXi6XH+kInuLofljTA6svaO1sb4FxZntDB0mrQ2Ya0O0t9PbciAzzSWxEyVotBhlaD6Wmkk/x5tu9V+b+bIR0K1nn+s4XyBDsas1T7qfNjULjgwDS3KJ8qir3LQlwIrBIs=
+	t=1713999078; cv=none; b=RpNIAUOQnsX0ljNPSzH8Rz9C3ZJIMDKqL8FXh1E89/QsPGW7qD9a7Yu3cGXr2cRedqPygI2+JaSHBKsyGJxcxTLi3mozGwDKmYDT/uNmRIAQcIhgS+O073nI9v0zvNcyBad8i7uYWEMLZDVB3PXCz8wtjDVB4BKqiGZ3VDlRIUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713999067; c=relaxed/simple;
-	bh=qqd1zB8UQojIx8Ao/aNnMFZ4CF7YZC9OadhVYG1ei70=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TyN4lUNWD8Zh9CH+/7ZXWod+XhX0Y2TKQrzP3pczg+Su1jPGIrswosXccOiaAS0eseKR5YUsuajhmJkwqs6lxamf6dcX192kiapoR0PA4Bofzc9q2pOulY+e7Z1GjqSTC6tCHiqXjD72f5HqF3YsmLukPRaoP43kG136fM4hPYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lm1/qTA/; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713999078; c=relaxed/simple;
+	bh=Of9ns9FX8jAom1X+HK3aWmPE7C+OEG2Jf5g2gbZbZdE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W/vnkYxcAMiBXSVEvBUUe1GWj9amwJ9QfT+vMRlhyeP4usRkqeXyA7V6jmXdMeHqPm6ReqYTvNuz48SR+Z6xmlic0yeO4Mn6IcsLSUTAxHq4hSP5WN10SNVqrX9oLTwO1zuGeqPl63g/ksVOFIEotdeKKfeJIHLw3yXJ5UsVCcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Tv6yS03n; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lm1/qTA/"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-de462979e00so420385276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 15:51:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Tv6yS03n"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-78ebc7e1586so142555185a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 15:51:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713999064; x=1714603864; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GLM/Gzp3LttpkW6eOimYma73Nk3MMLdnbj7i6AMnYdM=;
-        b=lm1/qTA/DwZLtWXT3iIXpHzGEEiqymd1ZdxZKdbFC/f5gEFXwizWcHe7gna4XOQNbl
-         +stTU1oQWe9x1KH5ic6nk4cWETQQF2d03UO+hzyLazrCAgppk232Y+UqQ8VXsUK3bNP6
-         eV5niTICj68VDkSEZOUOFJVLf7J0zy/qum5ONEs4YEiOZiZ+S8UQzraR4DKce6JD6moS
-         m0IavXiWfPLKvTpoOVoo1c7c0dpxPsRgoXkyGXosBP0GtSJQCAVL+2Dzv7LmM0b2fR8i
-         VOKQDZrv/FaKJnzSN5aNIVT5EEyaQ5UnxbPHh4gvjJOvMKG89mAbE8dMCEX2997HB+na
-         dt3A==
+        d=broadcom.com; s=google; t=1713999076; x=1714603876; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w3JxfDTdmAIxXkAPXHb/OcHAUJKRODCvkACWiDYgOwA=;
+        b=Tv6yS03nEzhUExHkSdP1E/3KFnznl7NfAhQJQ4LCSKKDigHqiA9GOrZBhtinhrCGNl
+         cgKJQvhWqs9qb5XzPwVd5jCwh1PMu0a4Z/uePDGGAZ/rgcKTUHX2NL2gWh80OSrlBXaL
+         yN8ETw22zeozFDHmJ5KgkQwkN5aAMd0vFwEtU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713999064; x=1714603864;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GLM/Gzp3LttpkW6eOimYma73Nk3MMLdnbj7i6AMnYdM=;
-        b=HZveg2vUB2gItj+E5KBZMdtO6LntDJMBnpLVr0Nqpbdr46JyMfG2s12fuZL/k4tWv9
-         8ULssFxXVQP5ojW2WizD/JSF+mHSMLJ6O9u0z0jbAO6jLqfmFtP86wHxA1idKlmbs1aT
-         uEwwSqyw1ZNq/zJytOSeL0KWSBR69sEoo2D7o0TeEnEDjMoyx11cTpRfA+f1VKZg3Fp8
-         tmpQDOgLHEOzTT3S9ebzP8j3euO/Deyi2+BT+EyjT69Cbc7qlA66+uaIviBMa96WB78Y
-         mOlxZPoI9bSJpQ/bMtDl+d2LRRaG39OxF9lN8suGSw+S26xV2E5Hs9n9tTJauc/fI+EA
-         rNKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsSlVEm49XwdlTxOuKfWoWePUdHcPOGA8VP9sY8BLulbctyC4VpFzPD8rQtt/71vH4XtOyO7/uxeElcJUrPqCmWaOoTx7J1nKlU/fG
-X-Gm-Message-State: AOJu0Yx62TYDAkRUX/jy5Y1HlPjyTuoYqqjLfxlBjP0MbkERCr13mINW
-	GkQwB8VAJnSLe+hMfI7tPwd9ctrGAuqTb8P0a1isvW7cRFS2Jd4sGZGAb/LaGOCPVfabfw9+zab
-	xhtZ9NR9oLt+rHJQv+oABHu2ultexdLTJmYrYSlek2G1LJlwZ
-X-Google-Smtp-Source: AGHT+IGiX/LOl5CjzBrqEzFnH8RKtGfmEb83wb3BnKjqyTxL+6W4MeCexMwQDpNg/EZ4gLdw0prFXxeZA5XWL/LuoRw=
-X-Received: by 2002:a25:a509:0:b0:dca:59a7:896b with SMTP id
- h9-20020a25a509000000b00dca59a7896bmr4173378ybi.50.1713999063835; Wed, 24 Apr
- 2024 15:51:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713999076; x=1714603876;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=w3JxfDTdmAIxXkAPXHb/OcHAUJKRODCvkACWiDYgOwA=;
+        b=RhYs4XD1IJIy30AZqYE3x2pdWvjyqCSy4HTF+deqxDYE50+hbAQdrIsnYPMdLM/+aN
+         aIPqteSKMH3dJkB9Y38ZGQS83rzehib+MlNWPyA2/fs3Ut5k3WAAUNSjFEqhZNME+ehy
+         NZs7+POjOTBOC0GXRy+yrifGvlBFeQKLn8XQbz0ATzMsFN1ErZSf8IMcQG/gBa3MvArP
+         EsBk6EXDVyKVoRf6UMENfAxggLLJCTVsm23/ROXty9MpozEU9VNhZlt0ATR1oJj1BZEN
+         a6PTaPhZi0BJ/YT/ISYEaT52DEE8xsVtB3bGofn1cyCJkbnCeL4ipI07OAkKHB45qogy
+         9Lxg==
+X-Forwarded-Encrypted: i=1; AJvYcCVhFg6nPq6cZmS+au7aShC1q0U31yEyq1qK8CUdXNs+cUHcdiQmNInMVpaOUyUdkWQ2FLIOtqPvEwnFFLOrms64P5jW/9IDQN/mIywk
+X-Gm-Message-State: AOJu0YxDJ55cQQCRj9ga8pltVrIMBF1wsPkEx7GvnR2dOSfGA0vk8tHd
+	dwz2dKInM2u0Un4YwECbI+eHpMyQzm9SEPxabdp+iLuNZW4WtoPT3yM9AqvLKQ==
+X-Google-Smtp-Source: AGHT+IEGyRkJp56uqcLg16yNEr9JYUsnNLnHDnpZPvnONwKA/rpbFTa0rAhGNSybwNmF+EY5JzIPPQ==
+X-Received: by 2002:a05:620a:470a:b0:790:9976:9d5c with SMTP id bs10-20020a05620a470a00b0079099769d5cmr1000349qkb.21.1713999075730;
+        Wed, 24 Apr 2024 15:51:15 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id f10-20020a05620a15aa00b0079061110054sm4719829qkk.13.2024.04.24.15.51.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Apr 2024 15:51:14 -0700 (PDT)
+Message-ID: <62cf51b8-0597-4e42-bdc2-54f01ecb91e1@broadcom.com>
+Date: Wed, 24 Apr 2024 15:51:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240418081548.12160-1-lvzhaoxiong@huaqin.corp-partner.google.com>
- <20240418081548.12160-3-lvzhaoxiong@huaqin.corp-partner.google.com>
- <zanx5y3obqmewnbooovf52hx6vh7tpi4zsbse2dyzcqzddmzhw@kewxoa6n3mja>
- <CACb=7PURWtS8bwT5EcAFHhu7deHd2Y8cNOattfdwyEYpOUcbnQ@mail.gmail.com>
- <vbt2nxddw2dc7hkreq4iybv5zv5xyp32oajybeqsphgfrhzmn7@tskvckljmxpe>
- <CACb=7PVTvV9nsFu1ZAXu7YTjSOAGZka+c__EJq3J3qgSJGEShw@mail.gmail.com>
- <CAD=FV=VYAzqsGEBJai9b9n+HxHiG59L1vF73AEWcTwLS_ryjWw@mail.gmail.com>
- <an2k3vgynq4as2sd5dy6ccmdiqedmo7qjsab5qyfhesd333i2a@235sqph3bze5>
- <CAD=FV=VQ8rbwKk4WpHRER9p4cZp7UrrHRpgnErqbQxyxp4sg5w@mail.gmail.com>
- <CAA8EJprv3qBd1hfdWHrfhY=S0w2O70dZnYb6TVsS6AGRPxsYdw@mail.gmail.com> <CACb=7PVEpCFWf_aysRkeR0yWAXR5sTaXhNbi3TV3ffKj866+EQ@mail.gmail.com>
-In-Reply-To: <CACb=7PVEpCFWf_aysRkeR0yWAXR5sTaXhNbi3TV3ffKj866+EQ@mail.gmail.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 25 Apr 2024 01:50:52 +0300
-Message-ID: <CAA8EJprLvEt_pt4XzACQG7pU8KYagKbQ71xwtRF9KrLygTT3ow@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] drm/panel: kd101ne3: add new panel driver
-To: Hsin-Yi Wang <hsinyi@google.com>
-Cc: Doug Anderson <dianders@google.com>, 
-	lvzhaoxiong <lvzhaoxiong@huaqin.corp-partner.google.com>, mripard@kernel.org, 
-	airlied@gmail.com, daniel@ffwll.ch, robh@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	cong yang <yangcong5@huaqin.corp-partner.google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] serial: 8250_bcm7271: use default_mux_rate if possible
+To: Doug Berger <opendmb@gmail.com>, Al Cooper <alcooperx@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: bcm-kernel-feedback-list@broadcom.com, Jiri Slaby <jirislaby@kernel.org>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20240424222559.1844045-1-opendmb@gmail.com>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20240424222559.1844045-1-opendmb@gmail.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="00000000000013c3dd0616df8281"
 
-On Thu, 25 Apr 2024 at 01:15, Hsin-Yi Wang <hsinyi@google.com> wrote:
->
-> On Wed, Apr 24, 2024 at 2:49=E2=80=AFPM Dmitry Baryshkov
-> <dmitry.baryshkov@linaro.org> wrote:
-> >
-> > On Thu, 25 Apr 2024 at 00:04, Doug Anderson <dianders@google.com> wrote=
-:
-> > >
-> > > Hi,
-> > >
-> > > On Tue, Apr 23, 2024 at 2:20=E2=80=AFPM Dmitry Baryshkov
-> > > <dmitry.baryshkov@linaro.org> wrote:
-> > > >
-> > > > On Tue, Apr 23, 2024 at 01:41:59PM -0700, Doug Anderson wrote:
-> > > > > Hi,
-> > > > >
-> > > > > On Tue, Apr 23, 2024 at 11:10=E2=80=AFAM Hsin-Yi Wang <hsinyi@goo=
-gle.com> wrote:
-> > > > > >
-> > > > > > > > > > +#define _INIT_DCS_CMD(...) { \
-> > > > > > > > > > +     .type =3D INIT_DCS_CMD, \
-> > > > > > > > > > +     .len =3D sizeof((char[]){__VA_ARGS__}), \
-> > > > > > > > > > +     .data =3D (char[]){__VA_ARGS__} }
-> > > > > > > > > > +
-> > > > > > > > > > +#define _INIT_DELAY_CMD(...) { \
-> > > > > > > > > > +     .type =3D DELAY_CMD,\
-> > > > > > > > > > +     .len =3D sizeof((char[]){__VA_ARGS__}), \
-> > > > > > > > > > +     .data =3D (char[]){__VA_ARGS__} }
-> > > > > > > > >
-> > > > > > > > > This is the third panel driver using the same appoach. Ca=
-n you use
-> > > > > > > > > mipi_dsi_generic_write_seq() instead of the huge table? O=
-r if you prefer
-> > > > > > > > > the table, we should extract this framework to a common h=
-elper.
-> > > > > > > > > (my preference is shifted towards mipi_dsi_generic_write_=
-seq()).
-> > > > > > > > >
-> > > > > > > > The drawback of mipi_dsi_generic_write_seq() is that it can=
- cause the
-> > > > > > > > kernel size grows a lot since every sequence will be expand=
-ed.
-> > > > > > > >
-> > > > > > > > Similar discussion in here:
-> > > > > > > > https://lore.kernel.org/dri-devel/CAD=3DFV=3DWju3WS45=3DEpX=
-MUg7FjYDh3-=3Dmvm_jS7TF1tsaAzbb4Uw@mail.gmail.com/
-> > > > > > > >
-> > > > > > > > This patch would increase the module size from 157K to 572K=
-.
-> > > > > > > > scripts/bloat-o-meter shows chg +235.95%.
-> > > > > > > >
-> > > > > > > > So maybe the common helper is better regarding the kernel m=
-odule size?
-> > > > > > >
-> > > > > > > Yes, let's get a framework done in a useful way.
-> > > > > > > I'd say, drop the _INIT_DELAY_CMD. msleep() and usleep_range(=
-) should be
-> > > > > > > used instead (and it's up to the developer to select correct =
-delay
-> > > > > > > function).
-> > > > > > >
-> > > > > > > >
-> > > > > > > > > > +
-> > > > > > > > > > +static const struct panel_init_cmd kingdisplay_kd101ne=
-3_init_cmd[] =3D {
-> > > > > > > > > > +     _INIT_DELAY_CMD(50),
-> > > > > > > > > > +     _INIT_DCS_CMD(0xE0, 0x00),
-> > > > > > >
-> > > > > > > [skipped the body of the table]
-> > > > > > >
-> > > > > > > > > > +     _INIT_DCS_CMD(0x0E, 0x48),
-> > > > > > > > > > +
-> > > > > > > > > > +     _INIT_DCS_CMD(0xE0, 0x00),
-> > > > > > >
-> > > > > > > > > > +     _INIT_DCS_CMD(0X11),
-> > > > > > >
-> > > > > > > Also, at least this is mipi_dsi_dcs_exit_sleep_mode().
-> > > > > > >
-> > > > > > > > > > +     /* T6: 120ms */
-> > > > > > > > > > +     _INIT_DELAY_CMD(120),
-> > > > > > > > > > +     _INIT_DCS_CMD(0X29),
-> > > > > > >
-> > > > > > > And this is mipi_dsi_dcs_set_display_on().
-> > > > > > >
-> > > > > > > Having a single table enourages people to put known commands =
-into the
-> > > > > > > table, the practice that must be frowned upon and forbidden.
-> > > > > > >
-> > > > > > > We have functions for some of the standard DCS commands. So, =
-maybe
-> > > > > > > instead of adding a single-table based approach we can improv=
-e
-> > > > > > > mipi_dsi_generic_write_seq() to reduce the bloat. E.g. by mov=
-ing the
-> > > > > > > error handling to a common part of enable() / prepare() funct=
-ion.
-> > > > > > >
-> > > > > >
-> > > > > > For this panel, I think it can also refer to how
-> > > > > > panel-kingdisplay-kd097d04.c does. Create the table for init cm=
-d data,
-> > > > > > not what operation to use, and use mipi_dsi_generic_write_seq()=
- when
-> > > > > > looping through the table.
-> > > > >
-> > > > > Even more similar discussion:
-> > > > >
-> > > > > https://lore.kernel.org/r/CAD=3DFV=3DUGDbNvAMjzWSOvxybGikQcvW9JsR=
-tbxHVg8_97YPEQCA@mail.gmail.com
-> > > >
-> > > > It seems I skipped that thread.
-> > > >
-> > > > I'd still suggest a code-based solution compared to table-based one=
-, for
-> > > > the reasons I've outlined before. Having a tables puts a pressure o=
-n the
-> > > > developer to put commands there for which we already have a
-> > > > command-specific function.
-> > >
-> > > The problem is that with these panels that need big init sequences th=
-e
-> > > code based solution is _a lot_ bigger. If it were a few bytes or a
-> > > 1-2KB then fine, but when Hsin-Yi measured Linus W's attempt to move
-> > > from a table to code it was 100K difference in code [1]. I would also
-> > > say that having these long init sequences done as separate commands
-> > > encourages people to skip checking the return values of each of the
-> > > transfer functions and I don't love that idea.
-> > >
-> > > It would be ideal if these panels didn't need these long init
-> > > sequences, but I don't have any inside knowledge here saying that the=
-y
-> > > could be removed. So assume we can't get rid of the init sequences it
-> > > feels like we have to find some way to make the tables work for at
-> > > least the large chunks of init code and encourage people to make the
-> > > tables readable...
-> >
-> >
-> > I did a quick check on the boe-tv101wum-nl6 driver by converting the
-> > writes to use the following macro:
-> >
-> > #define mipi_dsi_dcs_write_cmd_seq(dsi, cmd, seq...)
-> >              \
-> >         do {                                                           =
-        \
-> >                 static const u8 d[] =3D { cmd, seq };                  =
-      \
-> >                 ret =3D mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d)=
-);    \
-> >                 if (ret < 0)                                           =
-        \
-> >                         goto err;                                      =
-        \
-> >         } while (0)
-> >
-> > And then at the end of the init funciton having
-> >
-> > err:
-> >         dev_err(panel->dev,
-> >                 "failed to write command %d\n", ret);
-> >         return ret;
-> > }
-> >
->
-> I'm not sure about the coding style rule here, would it be considered
-> unclear that caller of mipi_dsi_dcs_write_cmd_seq() needs to have err
-> block, but the block may not be directly used in that caller and is
-> only jumped from the macro?
+--00000000000013c3dd0616df8281
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-I'm also not sure here. It was a quick and dirty test.
-We might as well do something like
+On 4/24/24 15:25, Doug Berger wrote:
+> There is a scenario when resuming from some power saving states
+> with no_console_suspend where console output can be generated
+> before the 8250_bcm7271 driver gets the opportunity to restore
+> the baud_mux_clk frequency. Since the baud_mux_clk is at its
+> default frequency at this time the output can be garbled until
+> the driver gets the opportunity to resume.
+> 
+> Since this is only an issue with console use of the serial port
+> during that window and the console isn't likely to use baud
+> rates that require alternate baud_mux_clk frequencies, allow the
+> driver to select the default_mux_rate if it is accurate enough.
+> 
+> Fixes: 41a469482de2 ("serial: 8250: Add new 8250-core based Broadcom STB driver")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Doug Berger <opendmb@gmail.com>
 
-ret =3D mipi_dsi_dcs_write_cmd_seq(dsi, ...);
-if (ret)
-    goto err;
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 
-all over the place.
+Thanks!
+-- 
+Florian
 
 
->
->
-> > Size comparison:
-> >    text    data     bss     dec     hex filename
-> > before
-> >   34109   10410      18   44537    adf9
-> > ../build-64/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.o
-> > making init data const
-> >   44359     184       0   44543    adff
-> > ../build-64/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.o
-> > with new macros
-> >   44353     184       0   44537    adf9
-> > ../build-64/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.o
-> >
-> > As you can see, there is literally no size difference with this macro i=
-n place.
-> > The only drawback is that the init stops on the first write rather
-> > than going through the sequence.
-> >
-> > WDYT? I can turn this into a proper patch if you think this makes sense=
-.
-> >
-> > >
-> > >
-> > > [1] https://lore.kernel.org/r/CAD=3DFV=3DUFa_AoJQvUT3BTiRs19WCA2xLVeQ=
-OU=3D+nYu_HaE0_c6Q@mail.gmail.com
-> >
-> >
-> >
-> > --
-> > With best wishes
-> > Dmitry
+--00000000000013c3dd0616df8281
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-
-
---
-With best wishes
-Dmitry
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIN2VoUWPfAgt1ieY
+9k+mhiHkDMJNQ+RRhTVK4/ZFW3t9MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDQyNDIyNTExNlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQDZoGIerPOL5RM0aGeF33ZmmdHZmqHvwhNR
+5p7gFxhlpea8D9kvE1u7CYRqgDBLL7jjQxHYn4oUq0qmDip1v+xDy9hxo7cy5EGoxIJnh1v0ab+a
+7Yc5uXFHeu7fXVUxFIWusO7xI8Msn90Nr5U2/+pF0Q1HWAsowM9LlIKGarmAaXf8LvutCbCJAg8j
++KMVse4Hbs4PahG9b740tjFD/KwmHu12KFfKd5RqYigesThEqv+g3sFotVb2tSO26goZAbjcJgEp
+f8xDwGug33nDEw8fsq3v2E4XG/ORcFFF/ww8wg8b9G1DNz11BfYD8s6y30t3OvlIuhyEcNNwhtA0
+O6Jy
+--00000000000013c3dd0616df8281--
