@@ -1,163 +1,146 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17DD158A37
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 08:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F1A1E4A9;
+	Wed, 24 Apr 2024 08:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713947567; cv=none; b=JkqcJ9htRFaqK7Jm9d97Ps/dIi8px++BGh1Iiqpr+DnMqJd2B2b7bU4Q3vE/2rR+KiKxRN4korrCbn1vdqbMi19QUtbUp6wsNhlH2E2ZfJ1772+cVlIvRdO9aV2Xkfes2w5nZjCzvqTTW3QSbqdxUNoFIgkb5RL1B1mpZ/vqoUI=
+	t=1713947712; cv=none; b=CCDsCI8NLlB3SkZOBoHfJRyWF3mB8voONbFtXi+3DCtSyRH43BFKyElEXSRvpgmgIaacyg1Stk3pndKZ6J0+s9tGYPmWFFtLQkQ8hwumSYoXo3KMDmCchpF2QNyZSJfARycE8f9arSlHnBYLsS3t2CaNppm9DgnobGoWcOlTLoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713947567; c=relaxed/simple;
-	bh=xR9byxaAebG6l/9BPavcQ6ZRngFgOvtD9K7ifUUigYU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=roVtOBw43CaLpHyCsW0lnWJCA3XZCq7PySqTgbXEtmEQ9pcsXUiRvpNBYyL4j/eVrcCPfxjyTvxj8gTyOU9mTDCQArD/PTz5bJRWG++pqq+7ZuHo4WCIJCMJKUJbp9k0TGIAHaPCi8ZJZI0vgPGajghSmOoRPmDg5M2I1c0gPOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m//bbYq6; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713947712; c=relaxed/simple;
+	bh=D0PjB8GE2zj4HXjrQ9FCk4hXhyXnVv2CBDRAwwpXKFA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IwxXivNDJSBicN5GOZPgWiKIf3vPeWreKXUOi9hGnicV+LO5z32foxbIy3OQImprB1XVEDavEXFi4Z+4dL5Ty0lArzIBSsLVg1H+L2oZQnsCG00s4G6spYJ/UspzDDrt+qKt1z/iCTbsQQgmzZhEAD3SsQKrGW6dXlfK04mXTBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=cYK4eWIl; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m//bbYq6"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-41a0979b9aeso28001885e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 01:32:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713947563; x=1714552363; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pt2/IRWCetn93UD+4EyUBeJAaqUzcCQnHTha+UeKn04=;
-        b=m//bbYq6Diu0WN7OinqaLZybjkOW/prP6sqd8ewJxWKdfpMcKyLwOQttkBNoFeManZ
-         V/kTTd5bZVZXy2vUbzcheG10bviJ8BmZr0ugy7yX632hlIPjHmfzRI1/RJd6K7Df1y9O
-         LTc5ZPYDW9LDtxlOxrrQiKXsgxQC+BbsUbU5N0P2roRbyEHdqyKXASCwDZrvE4z+Yl7T
-         1gKQz725APe6lR6uR1NlhV8hdZP70i+F1aeqxz5qCBBlJX/+uUH0TTCfguefNybFTkzo
-         x7xegHM2RrtXP7ADCb4E2unBVQ83MfHn2ic6nd3nRc2SWgc6GOp3yUTSc3h26pIGz+k8
-         DUfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713947563; x=1714552363;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Pt2/IRWCetn93UD+4EyUBeJAaqUzcCQnHTha+UeKn04=;
-        b=Jy4B6twPgLL7irQHFCQp1TPIMD4b4TFutcWIjbVBLiVOIhqz/C7L3qHydLyb1qYRwC
-         TS/1SulrzR4Two2fsQXXtuE7WLXVqFf4sPXi6bnu2wo+K6QbaslhrHuq/J+LRonLOVu/
-         Efi8P9mFpHywtxAO8OHKi7f3MJb7vaQuXDLjmrcGxNLj3VPq3rJP7btzIribeePP6fkS
-         NOouXA2+zFTprG+Y+Gz3fS8KJzcniafGW5bW432t59nND47uyFKmaL+0tslaqTQ1bcfn
-         1OCr7X1G35MY7hAT/QZo2xj7HpPDHHhOB7DctrjH8a5IgeMUiNzdw0YVQZfmuLLfTNl3
-         8TJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUN4B3UXtuyYg14tGrDfNK3PD5Ryq83zXSP3zC0aioAh30UkjK7C6dgkdK3reUNe7BSc7WdunAptbyWKpXSBCzyBKpIZmU+RwWyF+Tz
-X-Gm-Message-State: AOJu0Yxu7ZwLgrurdSrhPyTSbw+rIHuCSuJ8ZYCB+hbi4THK5zy003i7
-	JUFVDf0V8CLZVF3v43TOUaUkzi6ejzoukZbnagiapv9fwb0WNLtVzNqdqKwd8Z4=
-X-Google-Smtp-Source: AGHT+IFOA4RdfLQcLQOhmj5hYE9KaYxir5zgDAMTptNSxrgYHje90MrprIAfoJoxvY1IFlXyhsi5WA==
-X-Received: by 2002:a05:600c:1d11:b0:41a:a81e:441 with SMTP id l17-20020a05600c1d1100b0041aa81e0441mr1652785wms.25.1713947563253;
-        Wed, 24 Apr 2024 01:32:43 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id w17-20020a05600c475100b004162d06768bsm26840103wmo.21.2024.04.24.01.32.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Apr 2024 01:32:42 -0700 (PDT)
-Message-ID: <ca7797c8-c341-479b-bcba-8a41f830c391@linaro.org>
-Date: Wed, 24 Apr 2024 10:32:40 +0200
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cYK4eWIl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1713947706;
+	bh=8StTTalxlnMb1zc1cqHQoff1rypJp3VvX0Tzv0JqIXw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=cYK4eWIlLLM9KQwaKQkBu45/9UIlJvqtfBuFfJg8qRgdVlCDm5r5O6OXisC7TsnKt
+	 ah3kBN0tOxdmnHtpbi37HRv+J2H7K9KxgpvOaKM1WtXH0PIuZ9j/lK4zCKPnvVyuHM
+	 VmPAVWnNhtncbGltM/MynwQ1/8mG3EvTJZhVJs17gRR0EaK7J1NI0CrBVIBi3NDZnv
+	 MaXT5/U9xgGqqxy6y4X4SaR30lTrxUUaQmpyVBsaLbqnN/chNDWtcZ42uvaBxHUDNW
+	 abyNht02KppioZKlWQJ/EJHpq2lPhLAiwl727bh0Ajd49t2J906ImmFW8pNxXmXCJJ
+	 kgfyyJ33oJVsg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VPXNp2hMwz4wcC;
+	Wed, 24 Apr 2024 18:35:06 +1000 (AEST)
+Date: Wed, 24 Apr 2024 18:35:03 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: "Mike Rapoport (IBM)" <rppt@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
+ PowerPC <linuxppc-dev@lists.ozlabs.org>
+Subject: linux-next: boot failure after merge of the modules tree
+Message-ID: <20240424183503.2a6ce847@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] dt-bindings: HID: i2c-hid: elan: add Elan eKTH5015M
-To: Johan Hovold <johan@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Douglas Anderson <dianders@chromium.org>, linux-input@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240423134611.31979-1-johan+linaro@kernel.org>
- <20240423134611.31979-3-johan+linaro@kernel.org>
- <1dc47644-56c9-4fdc-80cf-756cf4cea54c@linaro.org>
- <ZiiuxI3GfJQIjxAG@hovoldconsulting.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <ZiiuxI3GfJQIjxAG@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/.efID6=zWrPD=ivTQPrCikc";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 24/04/2024 09:03, Johan Hovold wrote:
-> On Tue, Apr 23, 2024 at 06:24:39PM +0200, Krzysztof Kozlowski wrote:
->> On 23/04/2024 15:46, Johan Hovold wrote:
->  
->>>  properties:
->>>    compatible:
->>> -    items:
->>> -      - const: elan,ekth6915
->>> +    oneOf:
->>> +      - items:
->>> +          - enum:
->>> +              - elan,ekth5015m
->>> +          - const: elan,ekth6915
->>> +      - items:
->>
->> Don't re-add the items for this entry. Just const.
-> 
-> Sure. But note that the example schema uses 'items' like this (e.g. for
-> 'compatible' and 'clock-names'):
-> 
-> 	https://docs.kernel.org/devicetree/bindings/writing-schema.html#annotated-example-schema
-> 
+--Sig_/.efID6=zWrPD=ivTQPrCikc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes, that's the inconsistency we keep. The point is that clocks usually
-have just one list, so one "items:". For compatible there can be many
-and it leads to less readable code, e.g.:
+Hi all,
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml?h=v6.9-rc5#n15
+After merging the modules tree, today's linux-next boot (powerpc
+pseries_le_defconfig) failed like this:
 
+BUG: Kernel NULL pointer dereference at 0x00000030
+Faulting instruction address: 0xc00000000057a4ec
+Oops: Kernel access of bad area, sig: 11 [#1]
+LE PAGE_SIZE=3D64K MMU=3DHash SMP NR_CPUS=3D2048 NUMA pSeries
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.9.0-rc5-08179-ga5ea707d10dc #1
+Hardware name: IBM pSeries (emulated by qemu) POWER8 (raw) 0x4d0200 0xf0000=
+04 of:SLOF,HEAD pSeries
+NIP:  c00000000057a4ec LR: c0000000002cd32c CTR: c0000000002cd304
+REGS: c000000004997700 TRAP: 0380   Not tainted  (6.9.0-rc5-08179-ga5ea707d=
+10dc)
+MSR:  8000000002009033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 84002484  XER: 20000=
+000
+CFAR: c0000000002cd328 IRQMASK: 0=20
+GPR00: c0000000002cd32c c0000000049979a0 c00000000163a500 0000000000010000=
+=20
+GPR04: 0000000000010000 0000000000004000 0000000000000000 0000000000002cc0=
+=20
+GPR08: 0000000000000030 0000000000000100 ffffffffffffffff 0000000000002000=
+=20
+GPR12: c0000000002cd304 c000000002b70000 c00000000001111c 0000000000000000=
+=20
+GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+=20
+GPR20: 0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+=20
+GPR24: 0000000000000000 0000000000000000 c000000002aa0940 c0000000026c0a40=
+=20
+GPR28: 0000000000010000 c0000000002cd32c 0000000000000030 c0000000027d0f78=
+=20
+NIP [c00000000057a4ec] execmem_alloc+0x5c/0x12c
+LR [c0000000002cd32c] alloc_insn_page+0x28/0x70
+Call Trace:
+[c000000004997a40] [c0000000002cd32c] alloc_insn_page+0x28/0x70
+[c000000004997a60] [c0000000002d07a4] __get_insn_slot+0x1cc/0x29c
+[c000000004997aa0] [c00000000005c434] arch_prepare_kprobe+0xbc/0x31c
+[c000000004997b20] [c0000000002d1b40] register_kprobe+0x54c/0x878
+[c000000004997b90] [c000000002018828] arch_init_kprobes+0x28/0x40
+[c000000004997bb0] [c00000000204b33c] init_kprobes+0x138/0x218
+[c000000004997c30] [c000000000010da8] do_one_initcall+0x80/0x2f8
+[c000000004997d00] [c000000002005aa8] kernel_init_freeable+0x1f8/0x520
+[c000000004997de0] [c000000000011148] kernel_init+0x34/0x26c
+[c000000004997e50] [c00000000000debc] ret_from_kernel_user_thread+0x14/0x1c
+--- interrupt: 0 at 0x0
+Code: fbe1fff8 3940ffff 38e02cc0 7c9c2378 7fa802a6 e8c91e48 f8010010 fb41ff=
+d0 39200100 fb61ffd8 f821ff61 7fc64214 <7ca6402a> eb5e0020 837e0028 e8de000=
+8=20
+---[ end trace 0000000000000000 ]---
 
-Best regards,
-Krzysztof
+note: swapper/0[1] exited with irqs disabled
+Kernel panic - not syncing: Attempted to kill init! exitcode=3D0x0000000b
 
+Bisected to commit
+
+  18da532eefc8 ("mm/execmem, arch: convert remaining overrides of module_al=
+loc to execmem")
+
+I have used the modules tree from next-20240423 for today.
+
+This is a qemu boot test using:
+
+qemu-system-ppc64 -M pseries -cpu POWER8 -m 2G -vga none -nographic -kernel=
+ ~/next/powerpc_pseries_le_defconfig/vmlinux -initrd ./ppc64le-rootfs.cpio.=
+gz
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/.efID6=zWrPD=ivTQPrCikc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYoxDcACgkQAVBC80lX
+0GzQcwf/U40DU/cscWGcfGCeC2vL0Xp+EnBRAoPvjcF86HoyYNI5yNGHDkOXWwTz
+0E76CpgC7w+XmHqLxZx+jz+eiZnB1u0AP8GtYJb2wOB4ZdkTdH7BZUDYfJ6AgtiJ
+rapL1zQmyNr+T8vU1M2pPlz9t645s72o11jJgD04dPh+em8sb7kbNLy49kGcUTMI
+sNI6+yOhjT9SX6Zg37+wt8QnV0NHY6ihGO2og2nofmxE/tW/W8s2qiT16/rIAQco
+/813SuBm1ekdSQT1/fD3+mqJwk7C58tRkaOzbEe36z9uJaPNJJs4xD4UAeEuROqn
+EQgitQ3uM2+A8MWfypdyKqIsm3sG/w==
+=UlUt
+-----END PGP SIGNATURE-----
+
+--Sig_/.efID6=zWrPD=ivTQPrCikc--
