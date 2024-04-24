@@ -1,129 +1,117 @@
-Received: from classfun.cn (unknown [129.204.178.38])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 601955CDF0;
-	Wed, 24 Apr 2024 19:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.204.178.38
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79519757F5
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 19:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713986429; cv=none; b=jEcZ/31SLVSvs2n+oLDmAkbA/qPj7SeXcq1x9r2VqmB9nU0MVXqMvs1k9NzGkDEmN3WqatXUQCOTtIjYntAXie3THPLYNaXTolAHzeHR3O8yVUEqRiu4ULRajZHjbtGg1NUJ1V0OFed6Q5L4BCc4jD6hNFSFNA/sFzyQYyaH3nY=
+	t=1713986499; cv=none; b=I8dNi+DmexoG3gyQbuxzQNm7E2rzVfAPROscXguKOXrLbtU5mDBTJ9241EuvIhVG1tKxHPn/croDsKhZ77183l5uf0n4yzMbnXMvsNmPX7ey47acz6AlGJBtu75CbVKh1dM0eO5sJgo+lqldVQm0Fsjg4qkYLx+9Dxm4I1qYSxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713986429; c=relaxed/simple;
-	bh=rZXk3f2UucFu56G21+BcQ5j5xPzD1bSO6jfq4L1h4MI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FUmyf4QgaPpRDkeoI/t2ukZGrO8FrwBpbEvRO4VDyZUQRi3X9vq9i0XeUqanfnHhW190BzHELb3xHoDe4HFJ94FqeQqFKJnAKS4xIeAIWgQ2XtTbWHTN5CDTk0JdOIUAmoiZqfc4pFsii2z8JGMCwt6DGeNsa4ADqPm5+7hWDzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=classfun.cn; spf=pass smtp.mailfrom=classfun.cn; dkim=pass (1024-bit key) header.d=classfun.cn header.i=@classfun.cn header.b=GfMxPo1X; arc=none smtp.client-ip=129.204.178.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=classfun.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=classfun.cn
+	s=arc-20240116; t=1713986499; c=relaxed/simple;
+	bh=tTJKTCZK+7MUJMSSp7o23DoKoVGNAUDPQk8v0lL9B64=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XDCXOZ3G3FWWQIL/vx44uVUQdqBEliFFibM1uXFsNgpi16JSIDZlEWXXEkUdafIw2qmjThM9d/VjfrST8ODScC/Jn2UEDX7pqrIiHFtHUl5dfPh2aOhPnpR7zTZf7jLLaRJC1DT6g4tx+y9icO3YjDpLmp2xDzKCtYd4RgSXXJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Roi+baR/; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=classfun.cn header.i=@classfun.cn header.b="GfMxPo1X"
-Received: from classfun.cn (unknown [129.204.178.38])
-	by node2.classfun.cn (Postfix) with ESMTP id C6130100C66;
-	Thu, 25 Apr 2024 03:09:39 +0800 (CST)
-Received: from [192.168.0.160] (unknown [220.162.71.180])
-	(Authenticated sender: bigfoot)
-	by classfun.cn (Postfix) with ESMTPSA id AF86178910;
-	Thu, 25 Apr 2024 03:09:35 +0800 (CST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 classfun.cn AF86178910
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=classfun.cn;
-	s=default; t=1713985778;
-	bh=d/BoO25/KtfZ3Yh1f6DO8rsPKA20e+M+yd8Hwd1i7sM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GfMxPo1XfOXfDQ7tKPi5Kk481vMw2IlAjpyvrroy769NxFg1EA0DsOn/WYuqw3zN5
-	 W61ibhG4x40Jst5zrp5Jfa+8rW639Rposs1+kkIMSYuylvWFzViZeOfvkMV/FHYpSr
-	 ns4KqQAOybwyR/zWU3rmcujhxBr76QFzLGk1VI78=
-Message-ID: <478366f4-cc4f-4343-99c4-87827159b10b@classfun.cn>
-Date: Thu, 25 Apr 2024 03:09:21 +0800
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Roi+baR/"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6eb658ca1ceso170840a34.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 12:21:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713986497; x=1714591297; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rNHLJopld4jqnJrZ1oiAAgxTAlpul98lFx9bY2o4kLg=;
+        b=Roi+baR/9NehB/DEa7wTeBDHVdkwYBUdQYGWKE5QRbrth+AMF2nWrsHrwAOPUtMjN6
+         dEV4o6+6Z08gitDVs6x8SErCBK0EEn7JB7nS296WtxFqv7bnukDlnUAbMCzG0P2YHNTt
+         tj92DpS9LgbMAGdRbsioaSu2w9rlMenjpHbjE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713986497; x=1714591297;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rNHLJopld4jqnJrZ1oiAAgxTAlpul98lFx9bY2o4kLg=;
+        b=os4M+KiAx/NPgDJEPKjl+h2J0dFUVipINugYHwawZUKfRreRS6eyTZBGVRHRGr9fDZ
+         ydW7lmZ1NDzie7uJBbqMwvJkWjeLnLJwVSD5M8r6hlmNTZCaYj4xbXU6TvTa59gAbAGR
+         g+mzrh6gbpBDjPAbm3b/pFUjIv1Q6hXeBZD4FG28K7NXtJBSAr9lDLXqZ9DEQxFsKecB
+         Sc2QroPG9Qyw01Ur+RIefLJcubtguG98ubGVtshlHoVhkQEWOCsNCtK9yJIxpExalr1F
+         dM13N9n+N1II7qFqYc8n48nPUURhW+fh7hqiGQ3MoFaJoTAe6DC9Fqj2IDYHx2E/eJO5
+         GyZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU952bcni2G8UxMgTExisa43uO/iiNvmbLZXddLoD0v6576ty1g3EGNvlnpP/6Qy3a12qY5yn72S6Dp5x+L5EvEEsLyCHFUqM7U54MA
+X-Gm-Message-State: AOJu0Yzxi906nQsnYK1uhU+P8UmndtnHWlNmxa7fIL2zY6E63SXw/RBq
+	Qi02oYHIv0J3LnVPi7KcIMWePu+ZQUIz6yuP+EJIS9/KeaLYiDR3aNUN2dT+bw==
+X-Google-Smtp-Source: AGHT+IFuqgGNw1ep4y54aPm4dQmLi99sxiEQ9YbOo91SW07Q3tBMI8FSl2WHIOI7cdyQhNEZyiSynw==
+X-Received: by 2002:a05:6830:1d6f:b0:6eb:7685:b00 with SMTP id l15-20020a0568301d6f00b006eb76850b00mr4093982oti.28.1713986497681;
+        Wed, 24 Apr 2024 12:21:37 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id l26-20020a65681a000000b00606506a95bbsm1425110pgt.13.2024.04.24.12.21.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 12:21:37 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Jiri Kosina <jikos@kernel.org>,
+	Kees Cook <keescook@chromium.org>
+Cc: y0un9n132@gmail.com,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Brian Gerst <brgerst@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Tony Battersby <tonyb@cybernetics.com>,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: (subset) [PATCH 2/2] binfmt_elf: Leave a gap between .bss and brk
+Date: Wed, 24 Apr 2024 12:20:58 -0700
+Message-Id: <171398645483.3089364.2691527690120638755.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240217062545.1631668-2-keescook@chromium.org>
+References: <20240217062035.work.493-kees@kernel.org> <20240217062545.1631668-2-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/10] pwm: Add SI-EN SN3112 PWM support
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, wuxilin123@gmail.com,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Tengfei Fan <quic_tengfan@quicinc.com>,
- Molly Sophia <mollysophia379@gmail.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-arm-msm@vger.kernel.org
-References: <20240424-ayn-odin2-initial-v1-0-e0aa05c991fd@gmail.com>
- <20240424-ayn-odin2-initial-v1-2-e0aa05c991fd@gmail.com>
- <17d36836-67cb-4d5a-a8b4-ecf1517a0020@linaro.org>
-Content-Language: en-US
-From: BigfootACA <bigfoot@classfun.cn>
-Autocrypt: addr=bigfoot@classfun.cn; keydata=
- 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
-In-Reply-To: <17d36836-67cb-4d5a-a8b4-ecf1517a0020@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On 24/4/2024 23:55, Bryan O'Donoghue wrote:
-> On 24/04/2024 16:29, Xilin Wu via B4 Relay wrote:
->> From: Junhao Xie <bigfoot@classfun.cn>
->>
->> Add a new driver for the SI-EN SN3112 12-channel 8-bit PWM LED controller.
->>
->> Signed-off-by: Junhao Xie <bigfoot@classfun.cn>
->> ---
->>   drivers/pwm/Kconfig      |  10 ++
->>   drivers/pwm/Makefile     |   1 +
->>   drivers/pwm/pwm-sn3112.c | 336 +++++++++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 347 insertions(+)
-[...]
+On Fri, 16 Feb 2024 22:25:44 -0800, Kees Cook wrote:
+> Currently the brk starts its randomization immediately after .bss,
+> which means there is a chance that when the random offset is 0, linear
+> overflows from .bss can reach into the brk area. Leave at least a single
+> page gap between .bss and brk (when it has not already been explicitly
+> relocated into the mmap range).
 > 
-> CHECK: Prefer kernel type 'u8' over 'uint8_t'
-> #145: FILE: drivers/pwm/pwm-sn3112.c:91:
-> +                  uint8_t val, bool write)
 > 
+> [...]
 
-I'll fix the commit and resend v2 later, thanks for your reply!
+Patch 1/2 was already applied via x86 tip, so I'll grab this one for the execve/binfmt tree.
+
+Applied to for-next/execve.
+
+[2/2] binfmt_elf: Leave a gap between .bss and brk
+      https://git.kernel.org/kees/c/2a5eb9995528
+
+Take care,
+
+-- 
+Kees Cook
+
