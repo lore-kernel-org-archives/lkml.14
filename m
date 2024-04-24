@@ -1,104 +1,105 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3883D16192C;
-	Wed, 24 Apr 2024 22:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981D316192C;
+	Wed, 24 Apr 2024 22:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713999294; cv=none; b=G3IBqpnaHqh/ccUq4qIOi/n5n5fJgMSJxvpgsz5PcibV3MwPwmqPbVruknQj6gQt1VY5SyfOE9wq4k34eJrN+rXTYPZb3893BdLrtWhjAeWpultKG/ZovsIv545FUMrm8aqbjekb0Qpn0ZQMoGdc0VB5PQ0gSqLgjDOmmO3+gyg=
+	t=1713999301; cv=none; b=Woh9lmbPQ78BZw6FEFfKiUKRNKnItZZ1PmyQfsS1OZ6g7SBLHzTsNtzJfTS5u8SPRp89ptiSq/mhpoVm2yhZv1ZzwuEkxksGbHQzKdWhWMcSrpOiCuDH/oJlWDdUsmZAdW27Wxg86ece9TzveMwuT9HkzZliDRQCKFhIHd0ISzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713999294; c=relaxed/simple;
-	bh=T1ca1SK2WRVFnYrwkN6XvRdji6bMVu9U9aghprD8oY4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BIRE+EVNI1ynciTf8Goa1/j0ACFXvsGCJWaogEy9iCMTOcehTxD8Zv9GessxGwzULS63Yr3NR/qUgUl7pU1dngVP5ZpI3Pqar2G2x3wIHAQp7TsewQtdpqM0OTx8xXLddwiQEEnPmf9U8Tk8BRB9FQ8vEC6SbgCaE8Ro3ZDT9Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GLOJ7n9M; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	s=arc-20240116; t=1713999301; c=relaxed/simple;
+	bh=z9pMGRLrLzKVrELAWdWdsuiieAGr6M7d01DM3NJ5UWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ClzlV5GM1w+vhVT2jQFHE6jsr/HPxEL8GO/28yCDBay//sZ45Td0LrIBj0Fpt5Khp9uSe1XwN3HPBRbEA7NJF2cyjtpxt/ndD8CuOoEc2NsAlexziQ9V8JlyxUAJBMRX+O1pPWlxj/Bi0SeTDb28uQGsN24a22VePiL5QK059JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=V23yVE2f; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GLOJ7n9M"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V23yVE2f"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=muDeZ0tlWt27kuip/KmoQCU5uSua2F4Lkz04HVCl3SI=; b=GLOJ7n9MsnX8cT7Ol0Jq3B7oke
-	XakDrBz62nFCW1+7tSom1DWnxTdrx9vfGaOdqMPsIZ3ASsJb27N+95zaDfI9JcOOHneo4BZzRhLfP
-	23kOwiSO5Fm9sTN/ITMOdHhWZ9K9WlMoCGYyaAimCi2UjGE7sbQS808i1stHQBDY66QLmwe/Nvuii
-	jQzyEow4oaq8dhWNg8SajN1NXgQTpBYs9ZhstehX7hnHSa9c3k73IhGttYUG9rOPirt9ejCJiCo4i
-	Ft/vzmSmsCm85YZBlmV+Yx0Z0CiUcXMJ08/mdpkYv5gyGp5+4fSPGZzZjSoj6QXDk8Teij6FTM8xc
-	Jz3b6GVg==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzlVq-00000006HlX-16Z2;
-	Wed, 24 Apr 2024 22:54:50 +0000
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: akpm@linux-foundation.org,
-	ziy@nvidia.com,
-	linux-mm@kvack.org
-Cc: fstests@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	willy@infradead.org,
-	hare@suse.de,
-	john.g.garry@oracle.com,
-	p.raghav@samsung.com,
-	da.gomez@samsung.com,
-	mcgrof@kernel.org
-Subject: [PATCH 2/2] mm/huge_memory: cap max length on debugfs file entry folio split
-Date: Wed, 24 Apr 2024 15:54:49 -0700
-Message-ID: <20240424225449.1498244-3-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240424225449.1498244-1-mcgrof@kernel.org>
-References: <20240424225449.1498244-1-mcgrof@kernel.org>
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=0/eQjSTv8D6eZQAQWbqT2LJmg+Blfc0mgxAHCYd1hAM=; b=V23yVE2fnmFqMNMneHrFe2nxSM
+	zIWX162MuXqByjLfKBbVwbcp0AzY6fOr+0zfvw3ceFos1ccHbkuaHaEJFbPDycFIj7r7MKcF3AoF9
+	Ud6OrWWxfWsmc/D/+WPeVi1hgsxDm+xxuEvPjvu6V9rqYd4gytTsn/nUr0lGOIgRmdOThR/yErVzY
+	Mp0SW0j3wOVIs5oVCS2IWT6ty3aWNKwgTx+o7gyzjjIXeUcvMSvHWtx/LYxCM2uEFyk5JbJnKhQqI
+	ksWgC3vKtJidBTEq1tb37xRzuRV/Cv8knq5a8vixM6EfUhAnYGC4lr+jvFKN79uqdv+0symsrN1UX
+	sZ19Qvcw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rzlVc-0000000EdKy-3Czb;
+	Wed, 24 Apr 2024 22:54:37 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 6ACAD30043E; Thu, 25 Apr 2024 00:54:36 +0200 (CEST)
+Date: Thu, 25 Apr 2024 00:54:36 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Jakub Kicinski <kuba@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Uros Bizjak <ubizjak@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+	netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/4] locking/atomic/x86: Silence intentional wrapping
+ addition
+Message-ID: <20240424225436.GY40213@noisy.programming.kicks-ass.net>
+References: <20240424191225.work.780-kees@kernel.org>
+ <20240424191740.3088894-1-keescook@chromium.org>
+ <20240424224141.GX40213@noisy.programming.kicks-ass.net>
+ <202404241542.6AFC3042C1@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202404241542.6AFC3042C1@keescook>
 
-Don't allow to query beyond a mapped file's length. Since this is just
-a debugfs interface allow userspace to be lazy and use a large value so
-we can just use the entire file.
+On Wed, Apr 24, 2024 at 03:45:07PM -0700, Kees Cook wrote:
+> On Thu, Apr 25, 2024 at 12:41:41AM +0200, Peter Zijlstra wrote:
+> > On Wed, Apr 24, 2024 at 12:17:34PM -0700, Kees Cook wrote:
+> > 
+> > > @@ -82,7 +83,7 @@ static __always_inline bool arch_atomic_add_negative(int i, atomic_t *v)
+> > >  
+> > >  static __always_inline int arch_atomic_add_return(int i, atomic_t *v)
+> > >  {
+> > > -	return i + xadd(&v->counter, i);
+> > > +	return wrapping_add(int, i, xadd(&v->counter, i));
+> > >  }
+> > >  #define arch_atomic_add_return arch_atomic_add_return
+> > 
+> > this is going to get old *real* quick :-/
+> > 
+> > This must be the ugliest possible way to annotate all this, and then
+> > litter the kernel with all this... urgh.
+> 
+> I'm expecting to have explicit wrapping type annotations soon[1], but for
+> the atomics, it's kind of a wash on how intrusive the annotations get. I
+> had originally wanted to mark the function (as I did in other cases)
+> rather than using the helper, but Mark preferred it this way. I'm happy
+> to do whatever! :)
+> 
+> -Kees
+> 
+> [1] https://github.com/llvm/llvm-project/pull/86618
 
-Without this we can end up wasting cycles looking for folios which
-just don't exist for no good reason.
+This is arse-about-face. Signed stuff wraps per -fno-strict-overflow.
+We've been writing code for years under that assumption.
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- mm/huge_memory.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+You want to mark the non-wrapping case.
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 8386d24a163e..86a8c7b3b8dc 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -3535,7 +3535,7 @@ static int split_huge_pages_in_file(const char *file_path, pgoff_t off_start,
- 	struct file *candidate;
- 	struct address_space *mapping;
- 	int ret = -EINVAL;
--	pgoff_t index;
-+	pgoff_t index, fsize;
- 	int nr_pages = 1;
- 	unsigned long total = 0, split = 0;
- 
-@@ -3547,11 +3547,14 @@ static int split_huge_pages_in_file(const char *file_path, pgoff_t off_start,
- 	if (IS_ERR(candidate))
- 		goto out;
- 
-+	mapping = candidate->f_mapping;
-+	fsize = i_size_read(mapping->host);
-+	if (off_end > fsize)
-+		off_end = fsize;
-+
- 	pr_debug("split file-backed THPs in file: %s, page offset: [0x%lx - 0x%lx]\n",
- 		 file_path, off_start, off_end);
- 
--	mapping = candidate->f_mapping;
--
- 	for (index = off_start; index < off_end; index += nr_pages) {
- 		struct folio *folio = filemap_get_folio(mapping, index);
- 
--- 
-2.43.0
+
 
