@@ -1,230 +1,200 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2046.outbound.protection.outlook.com [40.107.244.46])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C4943AB4;
-	Wed, 24 Apr 2024 05:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713936478; cv=fail; b=VZW53gB/gUrh/XM80PaBU8e008cUrSt3vJ1L20tKZYvg4YzI3q0YIVcnHEkRFr2MejW07rfp1HatXv4/I26tmGBk6wk2ce5eI1xatNr0w9LyQqusyNTkkeEXPzWYEUKPb9G2b5PvwQmg+T+SlvhAKck1lovb+nIbVBLVbp2lnns=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713936478; c=relaxed/simple;
-	bh=QChjuquDjGxkwS0HdmyHm6YyDPRlKq+LgaPKD/tVMng=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=B8GQXT/dbAwxa16X29aACDPb2PPxI3U2GiXvT59K+oPINe/jJHyVZvTLzOM7ZhWrtFDmLRUrZqG7zEVFPi6OBpGdM6pzBrHQiG8+4ByOcxNd+mjsZBKI5FVBTNWywRBoONPw8ognQdcspWHJ5MrdOyVV3LkcskXwt0CKV4w41PA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Z0SDcJJq; arc=fail smtp.client-ip=40.107.244.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46DC154BF3;
+	Wed, 24 Apr 2024 05:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713936567; cv=none; b=Lctv+A8QrZrl/gStt9Do045ABEjAO3uqsMpMguQFbFZGFWlt6pUvVgr24Qrj3eyIiXXad07vOegVEqSTZwNQQIuL/WlFWy4X+M0QDf4388u0RkZM02y+3CTgiTWGPI4o49hye8R3g+bFUfxDTtHYuPITovNx2RbeeMg/byDxMJk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713936567; c=relaxed/simple;
+	bh=1/iIct8UGpDmuG/5bl7oWPxGoo+moxuqtVa10nZ/dok=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c4eLw4pC+u7CZnmrsGfMKrP6UiJDd04k7oXqsnBs2448BgkWrd9IUEcjSvl3DECRR5ieUrZm5Ta8QvFHCEId+EyeTML8xwTMdupzXEu6HhPU10VCJ0PiEM7dQAcf9XSelaRPzklEGf4Rm5SvTh2LSNTVNfrkK8JDetoIlH3OLnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CANq3iYR; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Z0SDcJJq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BOfVqf/Xwz0XgMEW6wVfEG7D2CQeqRLf/S3Iv+lmr5l3+K7xnt1blsw/0ZLkPomtDbP4FgjjR6kWrMnrUuaA2b8bB9Rd1XnJeS4YO00lH44VUUZfhx221ZcZ9DlqQ4roIwSCY1KvhMDvPGHnehbh3p6/FJiYra4EX/20yIXEs4kDBs99Fl7yAHmq/M+Aelxo4ijnI4KPI370JQpdngCNdWyjGlt+rN6V0jmmHuIB3yA+2X7HuFreDr+lwd+tQZ+DBVKaPYvXxUlna7E6okFmvlx/jj9PHIkNdmOc/lMrsiztEh96T/bHlx7+hbAwT3Yv3T8+UwCor0G+FL7RSEiriQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VvHxSp6TCf+seJ2MtTBKJNmfG/BaDvWCgrud7t4O29I=;
- b=cBKyPnST5B5xkz1QmEGaUX61QFBJPdBOu4Rb15FEdyd4DZcENZBbvXt1Yg6/gmJKMBsxXy0R2ydvUzXFQbY12WpuHth33wJf62ZXa0eNHsH9BXv7ifLFMlHQPZHWvtgjqjYYKXx4gRtAt8PhyRSmZQJBEppNX+kNU3ELnTrpjIflVOjYBO6oxWaOGQTbDzsl5Xm/z3gUFUNM7aBzODAGQPfNfnXG8RwegZh9QvqapVeMAqDbvMhbIEE+iDAEIMFwHph/pm36gWT1W2ikqFDsYFYuzHuIcSWfzKtDG3TvlJg5vXC3mA8vT412VrT1gYvu1gtb7OFnsmg94XovteA1GA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VvHxSp6TCf+seJ2MtTBKJNmfG/BaDvWCgrud7t4O29I=;
- b=Z0SDcJJqVwp3w23RPp4RFCu5Yde1XFOJhhKjJncCZCSFaatgKgNYYuMrl4mt8rgkZ+ip/TEXW7+qFEuWgwLJ/IMcCZ22kuYeYcNhr6opQOjeWfFWfNW3qkTyZVwzLQCIiwqmMLTCTFow4YJ9+FaOJ3EbSYmoUacvHtKQQTnHeUIeBLaQq8f36U4+kdZueYzo4sh9Y2x6BkmYKehIoolgmkSV3q8DM+qXnXKj4tbiEAwP5AsMmHTDZkTzmwBBkQfzrJkxtR0E84FBtIx0f3xLE/kKGEn4Q4qbMOgN5TsFjUPYN/OwgLS3okdI80mSgHtzI8aniuJ/txFTjyRdc7KrNQ==
-Received: from BY3PR04CA0010.namprd04.prod.outlook.com (2603:10b6:a03:217::15)
- by BY5PR12MB4049.namprd12.prod.outlook.com (2603:10b6:a03:201::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22; Wed, 24 Apr
- 2024 05:27:53 +0000
-Received: from SJ5PEPF000001D0.namprd05.prod.outlook.com
- (2603:10b6:a03:217:cafe::7c) by BY3PR04CA0010.outlook.office365.com
- (2603:10b6:a03:217::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22 via Frontend
- Transport; Wed, 24 Apr 2024 05:27:53 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SJ5PEPF000001D0.mail.protection.outlook.com (10.167.242.52) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7519.19 via Frontend Transport; Wed, 24 Apr 2024 05:27:53 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 23 Apr
- 2024 22:27:42 -0700
-Received: from [10.41.21.79] (10.126.231.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 23 Apr
- 2024 22:27:38 -0700
-Message-ID: <95f8e4b5-23af-90cb-4dae-2922e8e71920@nvidia.com>
-Date: Wed, 24 Apr 2024 10:57:36 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CANq3iYR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713936565; x=1745472565;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1/iIct8UGpDmuG/5bl7oWPxGoo+moxuqtVa10nZ/dok=;
+  b=CANq3iYRgtTv+PuBlF267u695Z6FsiYQjbf7KyP+yWkbLFEgWNw3JUF9
+   d/EIxrJzUxsxw554sFDHSBSkGdBw4tY5STtDr2UTiTiGlTj9b403zhPvY
+   PkV4+xXIL8f2FVLWlYBF5rpD/vmYrg4B8VOZ0v9Ugc457lKmcUdhfcRmQ
+   y7DKAxbFmDTweI5kyePhVUj952WttElG/jAeik2rZpDKIxfbOiKPxttF2
+   FQltoVXFzI2HERc+c/xO3Zki/+BmZtDsG3B1kclIftXGp7vyrXxBBiAd1
+   oQeUXF1MydvEZ107YF9XTVLWvW8wZlTlXh2wnKxpYX+/m0fEUNbjvAdmc
+   Q==;
+X-CSE-ConnectionGUID: xedQgt2PQR+pLavKxP9YEw==
+X-CSE-MsgGUID: ffORWlt2QmWxopnkfei0gA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="27004146"
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="27004146"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 22:29:25 -0700
+X-CSE-ConnectionGUID: TZUdjSLNSc++1OEGH/Lb4Q==
+X-CSE-MsgGUID: 4RHRlqHiSi+Bn+7xBiL3uQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="62049672"
+Received: from unknown (HELO haibo-OptiPlex-7090.sh.intel.com) ([10.239.159.132])
+  by orviesa001.jf.intel.com with ESMTP; 23 Apr 2024 22:29:14 -0700
+From: Haibo Xu <haibo1.xu@intel.com>
+To: sunilvl@ventanamicro.com,
+	arnd@arndb.de
+Cc: xiaobo55x@gmail.com,
+	ajones@ventanamicro.com,
+	Haibo Xu <haibo1.xu@intel.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Robert Moore <robert.moore@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Guo Ren <guoren@kernel.org>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Baoquan He <bhe@redhat.com>,
+	Greentime Hu <greentime.hu@sifive.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Zong Li <zong.li@sifive.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Chen Jiahao <chenjiahao16@huawei.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Evan Green <evan@rivosinc.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev
+Subject: [PATCH v3 0/6] Add ACPI NUMA support for RISC-V
+Date: Wed, 24 Apr 2024 13:46:20 +0800
+Message-Id: <cover.1713778236.git.haibo1.xu@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [Patch v3 2/2] memory: tegra: make sid and broadcast regions
- optional
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, "robh@kernel.org"
-	<robh@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"maz@kernel.org" <maz@kernel.org>, "mark.rutland@arm.com"
-	<mark.rutland@arm.com>, Thierry Reding <treding@nvidia.com>, Jon Hunter
-	<jonathanh@nvidia.com>
-CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Ashish Mhetre
-	<amhetre@nvidia.com>, Bibek Basu <bbasu@nvidia.com>, Sumit Gupta
-	<sumitg@nvidia.com>
-References: <20240412130540.28447-1-sumitg@nvidia.com>
- <20240412130540.28447-3-sumitg@nvidia.com>
- <06849796-f896-4cff-842c-118d86e94a6b@linaro.org>
- <1aab0272-85ea-e3a1-7d68-27ab4f1e1993@nvidia.com>
- <6506b2e8-c7f2-460d-b17d-55b731fac1ac@linaro.org>
- <e1d4e915-08c9-c2e0-f882-6d7cd9500c96@nvidia.com>
- <d27d0784-7f88-4351-943e-5c464a7d95df@linaro.org>
-From: Sumit Gupta <sumitg@nvidia.com>
-In-Reply-To: <d27d0784-7f88-4351-943e-5c464a7d95df@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D0:EE_|BY5PR12MB4049:EE_
-X-MS-Office365-Filtering-Correlation-Id: 994752bb-66f6-44ec-2e11-08dc641f4a82
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|376005|82310400014|36860700004;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Y0wrRkJDanRieUgzTHpnN2RPQmh5cTFqSnlUSVk1bEozajdZeUFqOXdkYmF5?=
- =?utf-8?B?c0E3UFI1NnhwN2pKVkM3c2c0czlIWmc4YnRTWVNWSkplN0ZHZVFDdlh3QUtI?=
- =?utf-8?B?M0pZT2pxZ3B2bjRiQTBMTVREM1Z6aWVUSThWN29lb1pmN2piRWJoa3FiRnQ4?=
- =?utf-8?B?VURhbnJHZUQ2VjRRRzh3MnJFTklWQlpzUnk2NVcrZjdjL3RmK24wRGNQRWZP?=
- =?utf-8?B?T0pvMERidENZWnUwMEozRGp3bU9rQVBlQmM2YTZnRU1Gd0tBaDVwUnF5bkVu?=
- =?utf-8?B?eWNCYjhTVjNLaDVVcU93N09ZUHZiTUd0UTA3cjVDWVZOMHErcGxLeXJBNE52?=
- =?utf-8?B?aVNrZmxRMm9hcUVDTDQzUFN0elp3cTZMa3lNREp2bG9ub2RyZ1NtN3N1UGlB?=
- =?utf-8?B?aEpZaU1JZkJQRjR6RjJoNTJKUTJjaEtQK2huYWVJbDArZkVXNmlvK3BveDcv?=
- =?utf-8?B?eDNHV0ErVmFJRitWL1NPN0NJZUtWekJheGd1ck5FY2gzSDgzeUZNTHRtelB4?=
- =?utf-8?B?U1NYRUt2b1R4NzBpSVgva3A4RWE4SjZWcXVEZXlaQlh3QXJ6YVk0VnIwYTRB?=
- =?utf-8?B?VHgrRGNrcXlCMTVnZXcxWWE1QzdJM3BjYVVmcDdsYlhmQm1HS0grYTROVEVC?=
- =?utf-8?B?bUp0SzMzSGxMbU51VVR0STBIeUJKWFV5YnNOQ0wwakczdWxDSVAwSVhsUXAw?=
- =?utf-8?B?VkV0T2ZKcWtIR2VvTFRvRllreG9aQ1BwWngrblRnSW5HTGhwbFNVcmRhYVNv?=
- =?utf-8?B?WGJ4cFdUcVBLYmpsYkVxNWFxUmtnY1VWTGJVTkppUEVXOUtvTVJoT0hmTXlt?=
- =?utf-8?B?RFlRcnpZc1RCZkg4V0N2S3VlMjBkbXhuRzV6WDltQVA3c3Mza0xyTWNMZEdU?=
- =?utf-8?B?c2FFdUFYWXdlQklVbzIyMm9Qb0VhZXNYNzUzWGYxQW1jeTVWaDhnekVLSXNJ?=
- =?utf-8?B?R1lLZVNWMmZoaGxRK091K1puWlZKY3BWaHFDVk9rRlNBSnptYXVuSEZHb0I2?=
- =?utf-8?B?bmYxMERHRndaeWFldmZXOVlFVmQ4MGF6MFJiaXFlUExtdXdjTEs4Zm82R2RJ?=
- =?utf-8?B?VTBCTGdGdWFWL0ZWa2Y3bWtTK1EyZ3AvZVhUM0lnR1NVNmdoMG1wTGxYbjBl?=
- =?utf-8?B?NGIrRDBPY0dEV1dKMmlyNXFUK1d4MEIzQSswa0JlZEtQTzBoTWpwQkVPZUND?=
- =?utf-8?B?TXZSZWdzL0tYeDJ0MExvU0t1WUFUNzRhS2FEMmk5cFVnN1plMFhQSThxODlT?=
- =?utf-8?B?aXd1dlhBSncrWWNyT3lZSTJGMVcxNkUrd1ppVmFBUm5ZSW9uM24yaDgzZGVN?=
- =?utf-8?B?UGRuOW9rVEFMREZmaThGSi9HLzZWUVp4TEJaY1NQNnN6eVpxd0FCeitUVklm?=
- =?utf-8?B?dzAzeU1zclZHZ0RFMnZ0SS8zR0oxNmJadnpNeEcxM1pkcXhtdU1sYmVIMUVV?=
- =?utf-8?B?OFZqSklaUDNFTHhqOTVISWVHYzlTVnpPaGVYNXFnTjF4L2JoVVdUTlF0NFVt?=
- =?utf-8?B?QWN4SHlKVmJ1QVBZSGRkTEJoTkVmT2NjVm44SkloSm5tSWZ1cUlROFJGam1u?=
- =?utf-8?B?Vy9sbzM1WmdIenF2elZPUFpDZFBXMDZoRGd6aGROV2Z6dzZ4MWRpM3lNZGRu?=
- =?utf-8?B?eElzeWs5ak0wT3pldFhKZlNGakQwOGlzVkNlbUp1RUJ0MFZaVzVaNXhaL3A1?=
- =?utf-8?B?KzhYM3EycldqZEZ3cWtkSE5Nc0pscnRza2k0NmQrNGJqdDJLVWl0c05NczRk?=
- =?utf-8?B?Zm5CL0czbHUrdDMvRTBBak9nYTU2VzdRby9vVmRxeE1pT2N0b0FVNmpsMDc2?=
- =?utf-8?B?aVNFeXkzWEdQWWR6cVlTRm93LzZDZVFGVzFTWkpnTG5FMXYrVG85dnJrZjV0?=
- =?utf-8?Q?QaTClvCTrfdBv?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(1800799015)(376005)(82310400014)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 05:27:53.6264
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 994752bb-66f6-44ec-2e11-08dc641f4a82
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001D0.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4049
+Content-Transfer-Encoding: 8bit
 
+This patch series enable RISC-V ACPI NUMA support which was based on
+the recently approved ACPI ECR[1].
 
+Patch 1/6 is generated from the acpica PR[2] and should be merged through
+the acpica project. Due to this dependency, other 5 patches can only be
+merged after the corresponding ACPICA patch was pulled into linux.
 
->>
->>>>>>
->>>>>>     static inline u32 mc_readl(const struct tegra_mc *mc, unsigned long offset)
->>>>>> diff --git a/drivers/memory/tegra/tegra186.c b/drivers/memory/tegra/tegra186.c
->>>>>> index 1b3183951bfe..716582255eeb 100644
->>>>>> --- a/drivers/memory/tegra/tegra186.c
->>>>>> +++ b/drivers/memory/tegra/tegra186.c
->>>>>> @@ -26,20 +26,16 @@
->>>>>>     static int tegra186_mc_probe(struct tegra_mc *mc)
->>>>>>     {
->>>>>>          struct platform_device *pdev = to_platform_device(mc->dev);
->>>>>> +     struct resource *res;
->>>>>>          unsigned int i;
->>>>>> -     char name[8];
->>>>>> +     char name[14];
->>>>>
->>>>> How is it relevant? I don't see this being used in your diff.
->>>>>
->>>>>
->>>>> Best regards,
->>>>> Krzysztof
->>>>>
->>>>
->>>> Did this change for below warning coming with 'W=1'.
->>>>
->>>> ../drivers/memory/tegra/tegra186.c: In function tegra186_mc_probe:
->>>> ../drivers/memory/tegra/tegra186.c:51:49: warning: %u directive output
->>>> may be truncated writing between 1 and 10 bytes into a region of size 6
->>>> [8;;https://gc
->>>> c.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat-truncation=-Wformat-truncation=8;;]
->>>>       51 |                 snprintf(name, sizeof(name), "ch%u", i);
->>>>          |                                                 ^~
->>>> ../drivers/memory/tegra/tegra186.c:51:46: note: directive argument in
->>>> the range [0, 4294967294]
->>>>       51 |                 snprintf(name, sizeof(name), "ch%u", i);
->>>>          |                                              ^~~~~~
->>>> ../drivers/memory/tegra/tegra186.c:51:17: note: snprintf output between
->>>> 4 and 13 bytes into a destination of size 8
->>>>       51 |                 snprintf(name, sizeof(name), "ch%u", i);
->>>>          |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>>
->>> I asked how this is relevant to this change and you answer there is a
->>> warning. If the warning was there, your answer is really just deflecting
->>> the topic, so obviously this is new warning. Which part of code uses
->>> longer name?
->>>
->>> BTW, really, such answers do not make review of your code smoother.
->>>
->>> Best regards,
->>> Krzysztof
->>>
->>
->> Apologies for not explaining it earlier.
->>
->> I increased the buffer size to suppress a static check warning in the
->> existing code due to big range of 'unsigned int i', if copied to small
->> name buffer.
->>
->> Seems like the warning is harmless as the maximum value of num_channels
->> is 16. I will remove it and keep the buffer size as 8 in the next
->> version.
->>
-> 
-> That's not the point. For the third time: how is it relevant to this
-> change here? Was or was not the warning before?
-> 
+Patch 2/6 add RISC-V specific acpi_numa.c file to parse NUMA information
+from SRAT and SLIT ACPI tables.
+Patch 3/6 add the common SRAT RINTC affinity structure handler.
+Patch 4/6 remove the '#if defined(CONFIG_ARCH)' condition to make some NUMA
+related parse functions common for all current architectures that support
+ACPI_NUMA.
+Patch 5/6 change the ACPI_NUMA to a hidden option since it would be selected
+by default on all supported platform. 
+Patch 6/6 replace pr_info with pr_debug in arch_acpi_numa_init() to avoid
+potential boot noise on ACPI platforms that are not NUMA.  
 
-This is not relevant to the change here. The warning was before as well.
+Based-on: https://github.com/linux-riscv/linux-riscv/tree/for-next
 
-Thank you,
-Sumit Gupta
+[1] https://drive.google.com/file/d/1YTdDx2IPm5IeZjAW932EYU-tUtgS08tX/view?usp=sharing
+[2] https://github.com/acpica/acpica/pull/926
 
-> Best regards,
-> Krzysztof
-> 
+Testing:
+Since the ACPI AIA/PLIC support patch set is still under upstream review,
+hence it is tested using the poll based HVC SBI console and RAM disk.
+1) Build latest Qemu with the following patch backported
+   https://github.com/vlsunil/qemu/commit/42bd4eeefd5d4410a68f02d54fee406d8a1269b0
+
+2) Build latest EDK-II
+   https://github.com/tianocore/edk2/blob/master/OvmfPkg/RiscVVirt/README.md
+
+3) Build Linux with the following configs enabled
+   CONFIG_RISCV_SBI_V01=y
+   CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
+   CONFIG_NONPORTABLE=y
+   CONFIG_HVC_RISCV_SBI=y
+   CONFIG_NUMA=y
+   CONFIG_ACPI_NUMA=y
+
+4) Build buildroot rootfs.cpio
+
+5) Launch the Qemu machine
+   qemu-system-riscv64 -nographic \
+   -machine virt,pflash0=pflash0,pflash1=pflash1 -smp 4 -m 8G \
+   -blockdev node-name=pflash0,driver=file,read-only=on,filename=RISCV_VIRT_CODE.fd \
+   -blockdev node-name=pflash1,driver=file,filename=RISCV_VIRT_VARS.fd \
+   -object memory-backend-ram,size=4G,id=m0 \
+   -object memory-backend-ram,size=4G,id=m1 \
+   -numa node,memdev=m0,cpus=0-1,nodeid=0 \
+   -numa node,memdev=m1,cpus=2-3,nodeid=1 \
+   -numa dist,src=0,dst=1,val=30 \
+   -kernel linux/arch/riscv/boot/Image \
+   -initrd buildroot/output/images/rootfs.cpio \
+   -append "root=/dev/ram ro console=hvc0 earlycon=sbi"
+
+[    0.000000] ACPI: SRAT: Node 0 PXM 0 [mem 0x80000000-0x17fffffff]
+[    0.000000] ACPI: SRAT: Node 1 PXM 1 [mem 0x180000000-0x27fffffff]
+[    0.000000] NUMA: NODE_DATA [mem 0x17fe3bc40-0x17fe3cfff]
+[    0.000000] NUMA: NODE_DATA [mem 0x27fff4c40-0x27fff5fff]
+...
+[    0.000000] ACPI: NUMA: SRAT: PXM 0 -> HARTID 0x0 -> Node 0
+[    0.000000] ACPI: NUMA: SRAT: PXM 0 -> HARTID 0x1 -> Node 0
+[    0.000000] ACPI: NUMA: SRAT: PXM 1 -> HARTID 0x2 -> Node 1
+[    0.000000] ACPI: NUMA: SRAT: PXM 1 -> HARTID 0x3 -> Node 1
+
+---
+Changes since v2
+  - Rebase to Linux 6.9-rc1
+  - changed ACPI_NUMA to a hidden option in patch 5/6 per Arnd's suggestion
+  - Removed original 6/6 which was not needed with changes in patch 5/6
+  - Added a new patch 6/6 to replace pr_info to pr_debug in arch_acpi_numa_init
+
+Haibo Xu (6):
+  ACPICA: SRAT: Add RISC-V RINTC affinity structure
+  ACPI: RISCV: Add NUMA support based on SRAT and SLIT
+  ACPI: NUMA: Add handler for SRAT RINTC affinity structure
+  ACPI: NUMA: Make some NUMA related parse functions common
+  ACPI: NUMA: change the ACPI_NUMA to a hidden option
+  ACPI: NUMA: replace pr_info with pr_debug in arch_acpi_numa_init
+
+ arch/arm64/Kconfig            |   1 -
+ arch/loongarch/Kconfig        |   1 -
+ arch/riscv/include/asm/acpi.h |  15 +++-
+ arch/riscv/kernel/Makefile    |   1 +
+ arch/riscv/kernel/acpi.c      |   5 --
+ arch/riscv/kernel/acpi_numa.c | 131 ++++++++++++++++++++++++++++++++++
+ arch/riscv/kernel/setup.c     |   4 +-
+ arch/riscv/kernel/smpboot.c   |   2 -
+ drivers/acpi/numa/Kconfig     |   5 +-
+ drivers/acpi/numa/srat.c      |  40 ++++++++---
+ drivers/base/arch_numa.c      |   2 +-
+ include/acpi/actbl3.h         |  18 ++++-
+ include/linux/acpi.h          |   6 ++
+ 13 files changed, 204 insertions(+), 27 deletions(-)
+ create mode 100644 arch/riscv/kernel/acpi_numa.c
+
+-- 
+2.34.1
+
