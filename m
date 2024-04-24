@@ -1,262 +1,245 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D86161911;
-	Wed, 24 Apr 2024 16:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FCA16190B
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 16:26:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713975987; cv=none; b=Jz/j/W3lSnjxTGUG4bO1hIdefxlJhg1wCDdJG/so78W53m6VjVMfp79mZb/vgoKfi2Jrx6b1QkK5G2m62IQSFVDvAUTQP1o0JwFNVZjraZeFeFGNtNNBHd0TCLMxc932SvXmxQtl6VndrW3zz5vJsxfNDBCojp6HX3GgVK9vIco=
+	t=1713976004; cv=none; b=CEdUUSSvBCoxeQx72CiUXKj05HBBrve8wLlmPnShPiQXfWrZftyvh1IZV8vLInMzYQcyhDuqYXUsImFDgTYqs9pPl9Jsg7uMit1XV53cKvjwLFVMf4XiYlqzlgiClHI7/y9yKQAscmha9tvZ4eU0Jjk/0lc57LZfrM3Pxk+oSLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713975987; c=relaxed/simple;
-	bh=I6pFBHrPRU5Z2cCKG3RAl9CQCSHZHcaqr3fqNrtHn48=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oWVg8nFQnYHcHJZQ7uB+WQ5PVW3Kf6X0BbFvNfeGL3g8QOouwswFegggorT4yn86Haw4FQXj6LYggGrMV3b5n+Yv4whUipPyLpxHJ7q/zJgy3y9w7beEXD2FkHwNIHRuZcyghLDILLJ/GWzye79OC51hYZD4lqZWTyXMus9DJi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=le9GM7vT; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713976004; c=relaxed/simple;
+	bh=xozH9oOvOdexvEgedSYrQwo8HKXL1/ITXJMznJtXSzA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jOBbXL5V5VHftfGyF60J/m5ldMNKo0qsvACVmLZxT1FcFAFFpWA3mGl3256wq8N1Fy0hjSxlVadA9kMip9D3O2Wolzu71UKD++C0leWqbR5CBWGSG0IX3BZmTzusGVCA05jOo5jqTjOHugoVEyUgr+NPyS4SkQoxpgf4vvPCHEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=TMV7agaN; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="le9GM7vT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713975986; x=1745511986;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=I6pFBHrPRU5Z2cCKG3RAl9CQCSHZHcaqr3fqNrtHn48=;
-  b=le9GM7vTC5WSH/TOm6q+0FMdO3IqDmg+Ip6HSw0eiL4NDevV+nOkyN3Z
-   O+tp0oSucFe9bfOZHRT8SzG+PjF2JtKQ9j8kVCKaeSjw/Y6fmkD1gTOpi
-   1/LwA1kbbDFNfvlJqbOYjlMmGsowxKt0uUiwSwjU3XkLRcrXZnurlt3KD
-   LRBhtekkwkFC6HHZ2c35Jrp0/buJqrKdvs0hlIJ3KEK5TCefw0NsJ2VA9
-   XQZ9ULBPWqRXLLcklcDUZD+rs0YhvInQ7C0uIQd15juYJ6ZexyZn/zOXq
-   MlNy8XScJFucmwzHTQtazlmwZZddJSuyaTVM2dD/ipswAkWZVA8YtS100
-   w==;
-X-CSE-ConnectionGUID: F/mEqyh9T+yRtC22PPXnhA==
-X-CSE-MsgGUID: 9BGdpWXTQSiGh+6EP99ZXQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="13456323"
-X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
-   d="scan'208";a="13456323"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 09:26:25 -0700
-X-CSE-ConnectionGUID: dZrLZyZVSOqLAc318XUrbQ==
-X-CSE-MsgGUID: jnd5jTFxRmOBEn1dWLhsBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
-   d="scan'208";a="24779901"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 24 Apr 2024 09:26:21 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rzfRr-0001RZ-1g;
-	Wed, 24 Apr 2024 16:26:19 +0000
-Date: Thu, 25 Apr 2024 00:26:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
-	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Michal Simek <monstr@monstr.eu>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Eng Lee Teh <englee.teh@starfivetech.com>
-Subject: Re: [PATCH v1 1/2] spi: spi-cadence: Add optional reset control
- support
-Message-ID: <202404250029.8cjM4mtZ-lkp@intel.com>
-References: <20240424051317.2084059-2-jisheng.teoh@starfivetech.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="TMV7agaN"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-78edc3ad5fdso11180085a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 09:26:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1713976002; x=1714580802; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OBiTLx87B4seWy4XBkeDMtLFDwXG03SqLl9+/M+TF74=;
+        b=TMV7agaN08VWaM+/0VNxyMYieTifVBygk2/sZDI1OgwmAP3np89bwJGdafUM7iz/am
+         zL/iz+RMP+mdGwzRMcknyZ9YFlA6L96dIJ3p6gO7NVDczvuL4AOz2Thd7hKBdwQw0103
+         R5d+r98DQrHGoK55Xw/cxnUMKWvlGbl1Bok9s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713976002; x=1714580802;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=OBiTLx87B4seWy4XBkeDMtLFDwXG03SqLl9+/M+TF74=;
+        b=jkdD8Up1rau2G2QRlYT5tJ3AuV9x1ZtUNeGPXoHRRaECqT1vaUUo/AY4/sfw16fsli
+         f2azlLWwNlpGP8qm+jqCPSd6vuX9iCRCTGQz1o0zMDmR5O2r/6JpgQrTUEQR4Eu58YLV
+         SgVfzqSPUe4gG8JYccUCgdo79qZIzVtKPyUuuwjPEhp0b91sa27pANOo4KWtI664gEdE
+         qYzywFZLQh6nYZX3xlSDK2ztaaKSUpkBdr6BJwMISxtBgTl1m2mquVVtQhykN1Ib4xZu
+         RgXU13ooTI+nGPW4zAn9h4IROu59qIfFdHdzJ5bIGy+XC81gSCwo7xV5+RMKc1ei1Xyx
+         BTGg==
+X-Gm-Message-State: AOJu0YxVqO+jeD/O5+FCC2PCK6nYtSzXOcXw9AUwNaojhHITKdNIRblD
+	ce1wBLBsVUHCQj2EkENYg3axwqriyJCArLQhNbiffTiq7GPdyampbaePnnXwMg==
+X-Google-Smtp-Source: AGHT+IF905+8eoeSVhIusqNdOxOfR7pFr/pAGtp8mau3xMpkn8HaflI/+5yZzTS2DQYvrcFnx5UHQw==
+X-Received: by 2002:a05:620a:a58:b0:790:6b18:f5bd with SMTP id j24-20020a05620a0a5800b007906b18f5bdmr286895qka.3.1713976001730;
+        Wed, 24 Apr 2024 09:26:41 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id m6-20020ae9e006000000b0078efdcd9aa6sm6234018qkk.127.2024.04.24.09.26.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Apr 2024 09:26:40 -0700 (PDT)
+Message-ID: <dd469761-2a18-42f8-a98c-eb4ecbe9c85b@broadcom.com>
+Date: Wed, 24 Apr 2024 09:26:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240424051317.2084059-2-jisheng.teoh@starfivetech.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] Define i2c_designware in a header file
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+ Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
+ Lee Jones <lee@kernel.org>, Jiawen Wu <jiawenwu@trustnetic.com>,
+ Mengyuan Lou <mengyuanlou@net-swift.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+ Andrew Lunn <andrew@lunn.ch>, Duanqiang Wen <duanqiangwen@net-swift.com>,
+ "open list:SYNOPSYS DESIGNWARE I2C DRIVER" <linux-i2c@vger.kernel.org>,
+ "open list:WANGXUN ETHERNET DRIVER" <netdev@vger.kernel.org>
+References: <20240423233622.1494708-1-florian.fainelli@broadcom.com>
+ <ZihKtSble151A5mT@surfacebook.localdomain>
+ <e55c35c2-1bff-4b12-aa3b-713c6085d303@broadcom.com>
+ <ZikWps1DIVPNJeOp@smile.fi.intel.com>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <ZikWps1DIVPNJeOp@smile.fi.intel.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000c19bc40616da22b0"
 
-Hi Ji,
+--000000000000c19bc40616da22b0
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-kernel test robot noticed the following build errors:
+On 4/24/24 07:26, Andy Shevchenko wrote:
+> On Tue, Apr 23, 2024 at 06:21:21PM -0700, Florian Fainelli wrote:
+>> On 4/23/2024 4:56 PM, Andy Shevchenko wrote:
+>>> Tue, Apr 23, 2024 at 04:36:18PM -0700, Florian Fainelli kirjoitti:
+>>>> This patch series depends upon the following two patches being applied:
+>>>>
+>>>> https://lore.kernel.org/all/20240422084109.3201-1-duanqiangwen@net-swift.com/
+>>>> https://lore.kernel.org/all/20240422084109.3201-2-duanqiangwen@net-swift.com/
+>>>>
+>>>> There is no reason why each driver should have to repeat the
+>>>> "i2c_designware" string all over the place, because when that happens we
+>>>> see the reverts like the above being necessary.
+>>>
+>>> Isn't that a part of ABI between drivers, i.e. whenever ones want to
+>>> request_module() or so they need to know what they are doing, no?
+>>
+>> Yes, the drivers should know, but as evidenced by the two patches above,
+>> there was still room for error. If we have to abide by a certain contract,
+>> which is platform_driver::driver::name, then we might as well have a header
+>> defining it no?
+> 
+> Maybe, I simply don't like the manipulations with parts of the device instance
+> names / driver IDs / driver name, which all become mixed after this series.
+> 
 
-[auto build test ERROR on broonie-spi/for-next]
-[also build test ERROR on robh/for-next krzk-dt/for-next linus/master v6.9-rc5 next-20240424]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+That is fair enough, although there is definitively an expectation that 
+the clock name will match the dev_name() of the i2c bus, which is why it 
+changing or shortening the names as attempted by Duanqiang ended up not 
+working.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ji-Sheng-Teoh/spi-spi-cadence-Add-optional-reset-control-support/20240424-131551
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-patch link:    https://lore.kernel.org/r/20240424051317.2084059-2-jisheng.teoh%40starfivetech.com
-patch subject: [PATCH v1 1/2] spi: spi-cadence: Add optional reset control support
-config: nios2-randconfig-r081-20240424 (https://download.01.org/0day-ci/archive/20240425/202404250029.8cjM4mtZ-lkp@intel.com/config)
-compiler: nios2-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240425/202404250029.8cjM4mtZ-lkp@intel.com/reproduce)
+This call in i2c-designware-platdrv.c is:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404250029.8cjM4mtZ-lkp@intel.com/
+dev->clk = devm_clk_get_optional(&pdev->dev, NULL);
 
-All error/warnings (new ones prefixed by >>):
+and because the name is NULL, we end-up searching for a clock named 
+dev_name(), and if we have a mismatch, then we won't find it.
 
-   drivers/spi/spi-cadence.c: In function 'cdns_spi_probe':
->> drivers/spi/spi-cadence.c:593:22: error: implicit declaration of function 'devm_reset_control_get_optional_exclusive' [-Werror=implicit-function-declaration]
-     593 |         xspi->rstc = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
-         |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/spi/spi-cadence.c:593:20: warning: assignment to 'struct reset_control *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-     593 |         xspi->rstc = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
-         |                    ^
->> drivers/spi/spi-cadence.c:600:9: error: implicit declaration of function 'reset_control_assert' [-Werror=implicit-function-declaration]
-     600 |         reset_control_assert(xspi->rstc);
-         |         ^~~~~~~~~~~~~~~~~~~~
->> drivers/spi/spi-cadence.c:601:9: error: implicit declaration of function 'reset_control_deassert' [-Werror=implicit-function-declaration]
-     601 |         reset_control_deassert(xspi->rstc);
-         |         ^~~~~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +/devm_reset_control_get_optional_exclusive +593 drivers/spi/spi-cadence.c
-
-   550	
-   551	/**
-   552	 * cdns_spi_probe - Probe method for the SPI driver
-   553	 * @pdev:	Pointer to the platform_device structure
-   554	 *
-   555	 * This function initializes the driver data structures and the hardware.
-   556	 *
-   557	 * Return:	0 on success and error value on error
-   558	 */
-   559	static int cdns_spi_probe(struct platform_device *pdev)
-   560	{
-   561		int ret = 0, irq;
-   562		struct spi_controller *ctlr;
-   563		struct cdns_spi *xspi;
-   564		u32 num_cs;
-   565		bool target;
-   566	
-   567		target = of_property_read_bool(pdev->dev.of_node, "spi-slave");
-   568		if (target)
-   569			ctlr = spi_alloc_target(&pdev->dev, sizeof(*xspi));
-   570		else
-   571			ctlr = spi_alloc_host(&pdev->dev, sizeof(*xspi));
-   572	
-   573		if (!ctlr)
-   574			return -ENOMEM;
-   575	
-   576		xspi = spi_controller_get_devdata(ctlr);
-   577		ctlr->dev.of_node = pdev->dev.of_node;
-   578		platform_set_drvdata(pdev, ctlr);
-   579	
-   580		xspi->regs = devm_platform_ioremap_resource(pdev, 0);
-   581		if (IS_ERR(xspi->regs)) {
-   582			ret = PTR_ERR(xspi->regs);
-   583			goto remove_ctlr;
-   584		}
-   585	
-   586		xspi->pclk = devm_clk_get_enabled(&pdev->dev, "pclk");
-   587		if (IS_ERR(xspi->pclk)) {
-   588			dev_err(&pdev->dev, "pclk clock not found.\n");
-   589			ret = PTR_ERR(xspi->pclk);
-   590			goto remove_ctlr;
-   591		}
-   592	
- > 593		xspi->rstc = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
-   594		if (IS_ERR(xspi->rstc)) {
-   595			ret = PTR_ERR(xspi->rstc);
-   596			dev_err(&pdev->dev, "Cannot get SPI reset.\n");
-   597			goto remove_ctlr;
-   598		}
-   599	
- > 600		reset_control_assert(xspi->rstc);
- > 601		reset_control_deassert(xspi->rstc);
-   602	
-   603		if (!spi_controller_is_target(ctlr)) {
-   604			xspi->ref_clk = devm_clk_get_enabled(&pdev->dev, "ref_clk");
-   605			if (IS_ERR(xspi->ref_clk)) {
-   606				dev_err(&pdev->dev, "ref_clk clock not found.\n");
-   607				ret = PTR_ERR(xspi->ref_clk);
-   608				goto remove_ctlr;
-   609			}
-   610	
-   611			pm_runtime_use_autosuspend(&pdev->dev);
-   612			pm_runtime_set_autosuspend_delay(&pdev->dev, SPI_AUTOSUSPEND_TIMEOUT);
-   613			pm_runtime_get_noresume(&pdev->dev);
-   614			pm_runtime_set_active(&pdev->dev);
-   615			pm_runtime_enable(&pdev->dev);
-   616	
-   617			ret = of_property_read_u32(pdev->dev.of_node, "num-cs", &num_cs);
-   618			if (ret < 0)
-   619				ctlr->num_chipselect = CDNS_SPI_DEFAULT_NUM_CS;
-   620			else
-   621				ctlr->num_chipselect = num_cs;
-   622	
-   623			ret = of_property_read_u32(pdev->dev.of_node, "is-decoded-cs",
-   624						   &xspi->is_decoded_cs);
-   625			if (ret < 0)
-   626				xspi->is_decoded_cs = 0;
-   627		}
-   628	
-   629		cdns_spi_detect_fifo_depth(xspi);
-   630	
-   631		/* SPI controller initializations */
-   632		cdns_spi_init_hw(xspi, spi_controller_is_target(ctlr));
-   633	
-   634		irq = platform_get_irq(pdev, 0);
-   635		if (irq < 0) {
-   636			ret = irq;
-   637			goto clk_dis_all;
-   638		}
-   639	
-   640		ret = devm_request_irq(&pdev->dev, irq, cdns_spi_irq,
-   641				       0, pdev->name, ctlr);
-   642		if (ret != 0) {
-   643			ret = -ENXIO;
-   644			dev_err(&pdev->dev, "request_irq failed\n");
-   645			goto clk_dis_all;
-   646		}
-   647	
-   648		ctlr->use_gpio_descriptors = true;
-   649		ctlr->prepare_transfer_hardware = cdns_prepare_transfer_hardware;
-   650		ctlr->prepare_message = cdns_prepare_message;
-   651		ctlr->transfer_one = cdns_transfer_one;
-   652		ctlr->unprepare_transfer_hardware = cdns_unprepare_transfer_hardware;
-   653		ctlr->mode_bits = SPI_CPOL | SPI_CPHA;
-   654		ctlr->bits_per_word_mask = SPI_BPW_MASK(8);
-   655	
-   656		if (!spi_controller_is_target(ctlr)) {
-   657			ctlr->mode_bits |=  SPI_CS_HIGH;
-   658			ctlr->set_cs = cdns_spi_chipselect;
-   659			ctlr->auto_runtime_pm = true;
-   660			xspi->clk_rate = clk_get_rate(xspi->ref_clk);
-   661			/* Set to default valid value */
-   662			ctlr->max_speed_hz = xspi->clk_rate / 4;
-   663			xspi->speed_hz = ctlr->max_speed_hz;
-   664			pm_runtime_mark_last_busy(&pdev->dev);
-   665			pm_runtime_put_autosuspend(&pdev->dev);
-   666		} else {
-   667			ctlr->mode_bits |= SPI_NO_CS;
-   668			ctlr->target_abort = cdns_target_abort;
-   669		}
-   670		ret = spi_register_controller(ctlr);
-   671		if (ret) {
-   672			dev_err(&pdev->dev, "spi_register_controller failed\n");
-   673			goto clk_dis_all;
-   674		}
-   675	
-   676		return ret;
-   677	
-   678	clk_dis_all:
-   679		if (!spi_controller_is_target(ctlr)) {
-   680			pm_runtime_set_suspended(&pdev->dev);
-   681			pm_runtime_disable(&pdev->dev);
-   682		}
-   683	remove_ctlr:
-   684		spi_controller_put(ctlr);
-   685		return ret;
-   686	}
-   687	
-
+So the i2c_designware name is really something we must be sticking with, 
+or change *globally* for a) device(s) binding to the driver and b) a 
+successful clock search.
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Florian
+
+
+--000000000000c19bc40616da22b0
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIBUGupq8WueQNrj4
+kBMtABb0ERjusC1YZ0AqtHh6qam0MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDQyNDE2MjY0MlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCeOl/MwC6XzDpCk88VVFBbNwWo4oANEpej
+w2riAMtoUhBMb7jkESEUogxqKvm0rsfo4JHtkfawJM+qMxtVUaHPLoYxzRTQzd11tVLNgItqGOsM
+BBUNJ6KPIdb9/FFugIOcx9FmosKPGYzyqtiePy36YRT1g7Urv6+4Pr+6ZlLkFP9PH7hVpNwqsTKm
+pRBV1amPz1/8O4W+vp5BeKgwwAof3tzunhlwc1NDjYlZxk36iwoFRXA41BM5KCp4/PNENvw7XIuc
+SemJlZgrCqVXAQo8KCtqSdN+XpRGGwYkv+B07I0m8N8/r0oQKYotxPY3YqieZMdYhrxHoug2+OTO
+ozz+
+--000000000000c19bc40616da22b0--
