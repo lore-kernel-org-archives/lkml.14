@@ -1,165 +1,126 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B73415D5A9
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 14:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3603215B996;
+	Wed, 24 Apr 2024 14:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713967565; cv=none; b=CR1TheS1dybEih6aBwh62ufm86Ss8QQSCpr1KeszlcjADkoLUOXFqmHm+L8cBIpAHsbGMa7czCszSRH50R70vrUI3LQUYiv5XYOGaBwDTZOM1RM3gfysNLY21AQBumR8oSBVMfAjxrOg2dPvcAGVT3XXEmZXfsqgn+rbZXMEM+s=
+	t=1713967816; cv=none; b=gY55RXd1Dr8zYJhyCtK8okBcMiVITpkxeFkkWrW22+rjQOn+SbhxpPUscp9lOKyo0QmtS9J4KyqEiI4zfBzSYL3hDXT+oOT5jccRQ0DqNvUwvo+wJMpnIAZfBEUwfKjQYusTOOeZNtUnzE44Y9Szxq719NL99etzY2yDAMF8000=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713967565; c=relaxed/simple;
-	bh=m1nIw6K/wxbB+0xqkP9QU662J3mgsOoAQo76wtMC2n8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iA0/ZXdtt8zfXvesSHFfTcJDH4YEvmiA/c/z+wvqGIivMdgAbwbqCCtDMN9L0QPUbH1zqA0zQxeu4KBetJULDGFj+cwaSiNCYKzZkia7p1XgnO7z93VhSjZp2AvDuPZ44S1FcZQcomwT6dgrnoM4Wt1w39cb/OfMvAYf3ImJy08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qHuAsj4R; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qHuAsj4R"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-41aa45251eeso20106025e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 07:06:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713967558; x=1714572358; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W7xv5Gr4R7/WZHUDWU1nCwM+2Vbz0wc+mfKaI2SQTzI=;
-        b=qHuAsj4RAh4vAeSZuQ+fjWM3ommnqMZyWiJk6IOUG/WYMEL/FFCZbxIv/pZoWdVHAo
-         rnxgNWH9gyVAtBFP4anpTsmiO2PAptpyYJa27EPYSyrFVK1CMt95cUOD5/NE75HrM76D
-         u9s36zzKNaZYKdaAUGWvHdzhWpfPA4COkYt07tHfGXlXkrpt/DtSTaRW9Z1ogYrfoHwt
-         t3Rg1Df99RmYA4RyhvPGEMHMhN+dXlgyUNUOchhVVchzIY53EkptOXoUsibKsmdJVlGy
-         Zaa4wpymUhucJuDo/zpN1BIYOllaImaT9HeG6Glwm3LHeb2GGaVSSmv3YM+frV8e6iEv
-         pUGA==
+	s=arc-20240116; t=1713967816; c=relaxed/simple;
+	bh=Y1w31Rvu7zBBDZYiN3Jt/FzqaSd5eiNVxkPtDrQGkuw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j45/JTXkndJlMf7bZor4DrNTeD73P0heQ7GZ6IsmnXotgJ6Slh/pWczKIgfwhjb33A2RN4DpU6QayvLsMgz33HrGL98zMYLoJEZ1KSzlEFV96a2bFbUsytFaYqMYtDlJW9fsa6TzB9AdDTPDgp2m4A/WroIoKxxxbHoeqm+xFlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-618769020bcso74340767b3.3;
+        Wed, 24 Apr 2024 07:10:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713967558; x=1714572358;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1713967811; x=1714572611;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=W7xv5Gr4R7/WZHUDWU1nCwM+2Vbz0wc+mfKaI2SQTzI=;
-        b=cSbYWTbmMRmNuDoaWqE1BQtzIatq+Rg7qa672uvmICiVLows6QG2+TUG0VrsSyqyIx
-         QnxDcaubLDun7Et92gcxofdW6JrbLVcMF4aefgQDCppszGuloPWQDCj2U01WLUbrzx5e
-         lAnduCaOH/llBJ05smfuC01csmeuWzc+1F0Qks6gY4SlnG9/FVEWOzYaKOmU4MLlueOP
-         m/cd6ut4dXWdTMKYHCm1VDCTmnhKFgzi/nWofAWoGpe3K0HKaJN6qZCyxlyCWVO7v0Zq
-         h1tFeuKuB1zoogFtF5MXcnny0mS1rxU3U0hpmGgD4oWL/mLXpUF8PhxfHgheUGa8Beyi
-         Gq3g==
-X-Forwarded-Encrypted: i=1; AJvYcCX5/AH0ryvUAMEbVrIuENPHLRwLTQbWRQgZGhkyWdeiE3jAiH0E4q8jDBeSKNPBB7Juu9M+Z7C+uuCTQdv9R8C7uUIVnx45LZEUOx+M
-X-Gm-Message-State: AOJu0YyKXSaV/q6e+kGpiPZy3ii+lXbUBTXA62zttmA5SK+2d2wrsZSI
-	SDY7gShUHrQLB6/ssC7SKwjITOTD90IPh54BmxYe8VP3O9NyzSC13PCLNUglxQWQLhXZJLO0mO8
-	7ek0=
-X-Google-Smtp-Source: AGHT+IFq937L1Vi7JpHySQ2WjDRGjy5vgDcZRame4pNbvUA68UU9PQwXRC9KVlFkoL4mT3S8Fd8sgw==
-X-Received: by 2002:adf:e50b:0:b0:343:efb7:8748 with SMTP id j11-20020adfe50b000000b00343efb78748mr1632812wrm.66.1713967558452;
-        Wed, 24 Apr 2024 07:05:58 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id p8-20020a5d48c8000000b0034af40b2efdsm9105325wrs.108.2024.04.24.07.05.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 07:05:57 -0700 (PDT)
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Date: Wed, 24 Apr 2024 15:03:39 +0100
-Subject: [PATCH v3 6/7] kdb: Replace double memcpy() with memmove() in
- kdb_read()
+        bh=79YnAJzLJZsMvO3vMIQ39gqtdUV3uOsjN0bO7lVXx38=;
+        b=bk9zC0YTFdhSHsgBCO9mu9NJsGRiKW6ve6k+CaeP0XxDOkjMyjeWk53rtJxXRMjarj
+         YZ1HR8cGALt9E2DECAmlJsFIDfRhy2kVTck+9ha8fy6iUw4432KWb34XP5k1/nrKdcAY
+         bnDgY7hU0SosG1V2gWYQ9ayNKUNt/mglRIc1utt0zIS6A+qLfC7qmwA09u4yjgpabZND
+         dtISjLVPa4wtMIWDGPMfLdWxmbQdCqQccDnuaJPsMBRCFJOW2EamSftM3S3NmisvnL5w
+         o/gFWvhBdcdVCUPtQpyxctRhHNgDliqb+nE+9/RcoimxmCkWK5RfmXhTZxvF6jv+0Ajc
+         CCLg==
+X-Forwarded-Encrypted: i=1; AJvYcCWWV+vQ1lTPPVWZfhXj9aQRfn5n+tvePAU2qI8uJGYs21D2fxbt3tqhV5qi4epm+MSqx0kxnHBZsxuPG4U+afKqc+oiHUmH/i7nfJ5auWO+nL5tTiE6c/ikRa9HaORw2bHTO6YWjK1EI54MXt0hcuDa+1hsDBSsJnVWhMRZ/JwiAiEqOEkDPTgty2yEtDWg229ea3KKm+e+c5GNgRXSVsG2ZcBBM593vWzK0gVdugBzPQv9MiQNykh9g6871msJtxw=
+X-Gm-Message-State: AOJu0YwsKONd8tyiLADEwHnzzUMlUvuk4Lp+RKmrnVwa1bEZbYqCfp2r
+	4NAx0nsfupaX87SRJHMtjwsCmG3Ur2jIdAVCoLpDb2tbTuXpdp1tST5t3DB4HU8=
+X-Google-Smtp-Source: AGHT+IFWinzHs9h6qxtyF2O3jVZq90sj0NBcIEE35Tmtd8wkjFUiebXvanqDn8L0m2k4qg71zliT8A==
+X-Received: by 2002:a05:690c:6383:b0:618:8b98:f274 with SMTP id hp3-20020a05690c638300b006188b98f274mr2675124ywb.45.1713967811550;
+        Wed, 24 Apr 2024 07:10:11 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id i126-20020a0dc684000000b006158165c606sm3034546ywd.136.2024.04.24.07.10.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Apr 2024 07:10:11 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc6dcd9124bso6484214276.1;
+        Wed, 24 Apr 2024 07:10:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUqqws/wsi2+Fxc+gN2AoBIoIUTfQHxPONIyZognaqInZQefmcu89XA3eJ5RwzrKAaG9n55iVRcxHT4jdocvlvWPMWyXrJysda9EuY5oxepSp6Cnzxcq9jEG29lfJzhXTQXTSkSgPNP4cbKnPB/FwvckwDNm+ZHqtzcoaMok2taoJBJ4kAqN1KLRMSuNANOHBV+PgXl1t656QfjDzjaEbtqIBvJHNFM9+2Y2TGU4NtfHj5lFDmuv6jzR9hrlevHnJ0=
+X-Received: by 2002:a5b:c4c:0:b0:dcd:3a37:bdb1 with SMTP id
+ d12-20020a5b0c4c000000b00dcd3a37bdb1mr2648998ybr.44.1713967811000; Wed, 24
+ Apr 2024 07:10:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240424-kgdb_read_refactor-v3-6-f236dbe9828d@linaro.org>
-References: <20240424-kgdb_read_refactor-v3-0-f236dbe9828d@linaro.org>
-In-Reply-To: <20240424-kgdb_read_refactor-v3-0-f236dbe9828d@linaro.org>
-To: Jason Wessel <jason.wessel@windriver.com>, 
- Douglas Anderson <dianders@chromium.org>
-Cc: kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
- Daniel Thompson <daniel.thompson@linaro.org>, 
- Justin Stitt <justinstitt@google.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2464;
- i=daniel.thompson@linaro.org; h=from:subject:message-id;
- bh=m1nIw6K/wxbB+0xqkP9QU662J3mgsOoAQo76wtMC2n8=;
- b=owEBbQKS/ZANAwAKAXzjJV0594ihAcsmYgBmKRGhHh0sDmQu0SuR6ilg48GgyUTWyWMpc6f/b
- 7cMSMspygCJAjMEAAEKAB0WIQQvNUFTUPeVarpwrPB84yVdOfeIoQUCZikRoQAKCRB84yVdOfeI
- oWitD/92rzCg+qesbfCyE2mJoqhkiy0mr+6LY0ERzA4UQyQczanvfLm/oDA7/lgsVhNoqcc1mQr
- WJXP0XD7ZcigdkkOCQxM6XtTqotz6YvjxpLxcVVFgx1A4Of79ca6WkZGtC2F8QN5/kGzcpZqwjx
- hrBGYW8zG/5UGFz+91CQ+acTceX/bmbDpJq4FDVRSIdX0BAFzWFmliRA1ayfmOl95kWrd9COgSY
- TakLYAogsd5nOMUL3d2mFcQWK7ZqHl1+tv9NA67ZobfJ2QIjmOfOe+vTBNXE8UiGlTnR/XqhQQI
- B51sjhxd/MzAYlBPuM1odRN6eYmtH4WWLTmn0EKf/M+cpTXSOpTtqRt9JkpWkT/hd0KpPkJvchq
- ASsZMIo97PJY28gmN91fE0JDT/VtxwqHGp4tM84+DUZK9w3IlJOEDW28c1OuIx9s6BCMYrCSVPM
- ERusAc8+EtWW9vw95wYHRZOtjgeDklxQb+Zk+G8/Do8JYRr+82vnEl8x0VSkeqgX35azMroX3Gx
- YrCjphlt3LxHzcUZbKnEbHVNzmaQs8dcsYkGHthMCpSvql1pgbRW9zCWP0ONSMQ4L2ojQL/pzbR
- WKbdl+oPfBbYEyOBEMOX3bBEgcD/1il/y1JcUsZ5tqGR8dMhotfw4yBdsd/0qKvb+SbeCEPGcQW
- r3MFtMTucJ/0+oQ==
-X-Developer-Key: i=daniel.thompson@linaro.org; a=openpgp;
- fpr=E38BE19861669213F6E2661AA8A4E3BC5B7B28BE
+References: <20240422105355.1622177-1-claudiu.beznea.uj@bp.renesas.com> <20240422105355.1622177-7-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20240422105355.1622177-7-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 24 Apr 2024 16:09:58 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXvcRRmCSFB9tM81CjsgyhJ=48WShpqw0cxT7aA=EYNGw@mail.gmail.com>
+Message-ID: <CAMuHMdXvcRRmCSFB9tM81CjsgyhJ=48WShpqw0cxT7aA=EYNGw@mail.gmail.com>
+Subject: Re: [PATCH v4 6/8] clk: renesas: rzg2l: Extend power domain support
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: mturquette@baylibre.com, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, magnus.damm@gmail.com, ulf.hansson@linaro.org, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-At several points in kdb_read() there are variants of the following
-code pattern (with offsets slightly altered):
+On Mon, Apr 22, 2024 at 12:54=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev>=
+ wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> RZ/{G2L, V2L, G3S}-based CPG versions have support for saving extra
+> power when clocks are disabled by activating module standby. This is done
+> through MSTOP-specific registers that are part of CPG. Each individual
+> module has one or more bits associated with one MSTOP register (see table
+> "Registers for Module Standby Mode" from HW manuals). Hardware manual
+> associates modules' clocks with one or more MSTOP bits. There are 3
+> mappings available (identified by researching RZ/G2L, RZ/G3S, RZ/V2L HW
+> manuals):
+>
+> case 1: N clocks mapped to N MSTOP bits (with N=3D{0, ..., X})
+> case 2: N clocks mapped to 1 MSTOP bit  (with N=3D{0, ..., X})
+> case 3: N clocks mapped to M MSTOP bits (with N=3D{0, ..., X}, M=3D{0, ..=
+., Y})
+>
+> Case 3 has been currently identified on RZ/V2L for the VCPL4 module.
+>
+> To cover all three cases, the individual platform drivers will provide to
+> clock driver MSTOP register offset and associated bits in this register
+> as a bitmask and the clock driver will apply this bitmask to proper
+> MSTOP register.
+>
+> The MSTOP was implemented through power domains. Platform-specific clock
+> drivers will register an array of type
+> struct rzg2l_cpg_pm_domain_init_data, which will be used to instantiate
+> properly the power domains.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> ---
+>
+> Changes in v2:
 
-    memcpy(tmpbuffer, cp, lastchar - cp);
-    memcpy(cp-1, tmpbuffer, lastchar - cp);
-    *(--lastchar) = '\0';
+s/v2/v4/
 
-There is no need to use tmpbuffer here, since we can use memmove() instead
-so refactor in the obvious way. Additionally the strings that are being
-copied are already properly terminated so let's also change the code so
-that the library calls also move the terminator.
+> - dropped the pwrdn functionality until it is better understanded;
+>   at the same time kept the code ready for pwrd being added by keeping
+>   struct rzg2l_cpg_pm_domain_conf, DEF_REG_CONF(); please let me know
+>   if you prefer otherwise
+> - @Geert, @Ulf: I dropped your previous Rb tags due to dropping pwrdn
 
-Changing how the terminators are managed has no functional effect for now
-but might allow us to retire lastchar at a later point. lastchar, although
-stored as a pointer, is functionally equivalent to caching strlen(buffer).
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Tested-by: Justin Stitt <justinstitt@google.com>
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
----
- kernel/debug/kdb/kdb_io.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-index 2aeaf9765b248..40617f36a6db4 100644
---- a/kernel/debug/kdb/kdb_io.c
-+++ b/kernel/debug/kdb/kdb_io.c
-@@ -269,12 +269,9 @@ static char *kdb_read(char *buffer, size_t bufsize)
- 	switch (key) {
- 	case 8: /* backspace */
- 		if (cp > buffer) {
--			if (cp < lastchar) {
--				memcpy(tmpbuffer, cp, lastchar - cp);
--				memcpy(cp-1, tmpbuffer, lastchar - cp);
--			}
--			*(--lastchar) = '\0';
--			--cp;
-+			memmove(cp-1, cp, lastchar - cp + 1);
-+			lastchar--;
-+			cp--;
- 			kdb_printf("\b%s ", cp);
- 			kdb_position_cursor(kdb_prompt_str, buffer, cp);
- 		}
-@@ -291,9 +288,8 @@ static char *kdb_read(char *buffer, size_t bufsize)
- 		return buffer;
- 	case 4: /* Del */
- 		if (cp < lastchar) {
--			memcpy(tmpbuffer, cp+1, lastchar - cp - 1);
--			memcpy(cp, tmpbuffer, lastchar - cp - 1);
--			*(--lastchar) = '\0';
-+			memmove(cp, cp+1, lastchar - cp);
-+			lastchar--;
- 			kdb_printf("%s ", cp);
- 			kdb_position_cursor(kdb_prompt_str, buffer, cp);
- 		}
-@@ -398,9 +394,8 @@ static char *kdb_read(char *buffer, size_t bufsize)
- 	default:
- 		if (key >= 32 && lastchar < bufend) {
- 			if (cp < lastchar) {
--				memcpy(tmpbuffer, cp, lastchar - cp);
--				memcpy(cp+1, tmpbuffer, lastchar - cp);
--				*++lastchar = '\0';
-+				memmove(cp+1, cp, lastchar - cp + 1);
-+				lastchar++;
- 				*cp = key;
- 				kdb_printf("%s", cp);
- 				++cp;
+                        Geert
 
--- 
-2.43.0
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
