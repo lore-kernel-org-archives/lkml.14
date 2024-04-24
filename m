@@ -1,200 +1,277 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A361A15CD4A
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713966280; cv=none; b=qWLA8GDpQmQVEdfeMFZj/d9cIZ22qC9RMgBejWPJ1AKNIyujjt2sxlI80P8ASfdR4UiuuAcW5Rx+hF0n32yZcoOZvWgsiwdNUmvbE2ratpOJ+pXfkSTWKfJAD90KAV5mplIsFwuHm/jcwFiM7+b8GYxsM2mTMwc6R0MOQYZcDZ4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713966280; c=relaxed/simple;
-	bh=ihIvZQ1lhIayeVVoC4jmqBSdep063fytTukLDdx9yZY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tRkIUvXz4sF1kqopl+C8I8crLBY6Z3O7Mqzy1eqheEpgTI8epOi6qNewyNMNMOur3/MLu1HiMB7FyimoQVZt/9kplCoD3f06chW4giKPNtiYIPDGJH7PD0lGhy5ab+noRnL8fvZFFPwMLaCfcqVceXJerea8LkNdZcfHhHgpU0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Lf0Y/i09; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AD715AACF
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713966452; cv=fail; b=YjxGoNTikrg5gASFn9iUF5isLoEm9XwEuCvTvFdvpGxucd949/Qf0bvoExHsdnUs5/wywMXBjEc8ZbxglEc33tcDEOaeU+dK2ZGjIYhT/oUiNAS6NPGR5ucBq0i644gmSOkB6venazCWBkIg8qSW6QMkrLPr4H0gjXmcsBDEz6Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713966452; c=relaxed/simple;
+	bh=3E4lg3MXAyHNtXYjQX3+2NPGEa3PbrRNCfDtY5jjk8o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Jeo+0BWr09Tws8ytp9TbJ2yA7wzw6ezTv5Hosec/ZBWUx3QhZvSwUWqjIcyG6LKlw+Mz5lFv+ZDZieve9YckEeqzUO53OdXRf0XYdioEP7jpnylmMurxkXWFEWDCbJpcOiAUWelwas1spCGIf+Rgdmg2MzsaHBCjjqrQJuz9Ma0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=TVrOhSnx; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=jNilBhKV; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Lf0Y/i09"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2af71daeec1so46706a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:44:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TVrOhSnx";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="jNilBhKV"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43OA0gqA019531;
+	Wed, 24 Apr 2024 13:46:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type :
+ content-transfer-encoding : in-reply-to : mime-version; s=corp-2023-11-20;
+ bh=5Bnuq4pBXPDfH+NUzJxSBPbtkFO+4jE3nGmT+KtROE0=;
+ b=TVrOhSnxJGFjbcHgl0OXoIK3kq7AHBh09g6bch+tvulURvEjCqze78Ffwtg6wIKvYEhW
+ ZHOmS2Ls1SFW2A1eH4fDFcoY82VQffCVaADew4C3GHE/+dDxaQwR42oXHSqI0wB9ONjR
+ 5umJBkl5m356YtNQp6UD2wf/maf6N4URIJN/yeFkZJB/Ix51YbdqPX8z5SGbHEPZkFZW
+ HRD5gShP2uMimGUBp4JauSR6vWztl5Jl3gCZ9o+Jp0lujh1yy7IgPDuFJro2JF9kk78k
+ FkPi8Fvmty0RBz0JQc5dZMq8MckM+jFHur4mTL7BFBcbu9GaDRoQHIS5/fhRoZ94fBAb MQ== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xm44f00j7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 24 Apr 2024 13:46:51 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43ODRNBx035582;
+	Wed, 24 Apr 2024 13:46:50 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2169.outbound.protection.outlook.com [104.47.56.169])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xm458upnm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 24 Apr 2024 13:46:50 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bRE5CPMT7pLAmHS7H8lOIspKNmjgST1hB0nxNSQgEmPGL1MBZo1O/7/8J2MfB39/a+YqzVD1f7Df4hxp86o80Iiq5YkpMZ+l/YxepZZj47LZiX4etxecHaDUJyPW2HWJKf3iCPY7YAZ876Ar4artBefTOswxcoXBdW1SEuYtdFgJlXDes68d3KsbdDqk6sD6GzCBOfoxq4ZGch3NJOsg35EyDwFJ7MGUGpM96y2oY9YZ6KiYG42fxJeVEjm0HKDEcFfzo0YNQ1aWuHkO2LTwy8AscmN3083d3PFqdGzLUHX8cJ2h/A0Vugbli9XjN9n7UgHjcp/kwJRSAqMyRRaV4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5Bnuq4pBXPDfH+NUzJxSBPbtkFO+4jE3nGmT+KtROE0=;
+ b=dTfZXMIt0+SiiAJ9AhVL7yVJNCiuRBssdpTufL84bmKFWqMvMlF42WWIB5UxnVQs60VUtsrJGGedwSrmiRPobaeBepgNl4lGKQwD1C8kS8T71H5wWpl7gew5hELZkhW57rYpwyusz3Edp3V0FRWynReKqlulXCWyDhid5ytwSvUg70pYlajDzPyowMcbcGMNCPHaXpEe+eBV1Qj4P+WpfVhS0vVheXfwNFceuKVlk/Z6C1QiKQPYFmmVKiJYKUaZ6gQa/jtdZ0lN1JLgWZ581Kf0x/PrPQSrJMT7xPSVGxKTyptCS5lfGOQ08KsAWv5zlBXvySue7Qjc9LeOM1e5sw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1713966277; x=1714571077; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=q/KNDSFclfAattMPcaLu4xqVUcBUQTMHdrpQhgD6K8U=;
-        b=Lf0Y/i09ZT65h/ZO3rpunkp13TtlWGB+JTpr4WWdMiTz6EOhFh+Xs73erB8OGifTfc
-         POTwGkYXL0EoalEL1tdd1hvQqQPnlPQ3qOJa0JgTdrFcxlwkJW0Dtdxe0xDSfsBZItjY
-         jv2MPbj6KRyDgDp01sLi5IHjlSHtddxbCN13c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713966277; x=1714571077;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q/KNDSFclfAattMPcaLu4xqVUcBUQTMHdrpQhgD6K8U=;
-        b=kJf/Sq2d9n1OdG7mc7rqoB8F0SPzwBLMYCIb/RdeRPJ0mnL9bsI9zUryukqll9kApR
-         lXM44r5zk/vjj+t4HXCuJS+PbKAfu2SezjKvBEwfLK0agqnNG4xd8KLOMYte728Hail1
-         hJXtYSz4scSjvIwKafYteOsqr/LxPYbjKmRpZL7VqswrVh/0Tekf2FRoLwAsSsrJhj8u
-         cRB+4FTDpIl2h74vSOZ39nlv+C8u8EyYMD7W7abj7dynfeCB7GFpMxypE0NMe/SGEqWM
-         JJ5rJyWRienbtvvehqVEgtBIgXbyKWGO+NJ4lSUSGvoUh6FDmffIua04lANrUUhudVS0
-         03Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCUiGzDytgVcqwKnLGUnXdnEYAZOzZbhhh6PrcslcGSBN5gk5bmLgzCX2jnCPYz/KfRJv+RSbVrQ4XFrRqMBpqZ00KLNLCy+8GL48my/
-X-Gm-Message-State: AOJu0YybZRluvj3fw8WCzbsgr7i37q+vRjGKxWQ9Djs4y4VZ1MOB2V+a
-	S1JlCAfXjgyRwPHzvqWo3c5Hh3eXbvmtYqt4KZG04NvrcgjRmyeu6vi2HMrBMck=
-X-Google-Smtp-Source: AGHT+IFi0FEa8NfGQzs14kkWINqPGBb38znYBqxzSWwuAi5yLnixASU3bnMGLJqc7wL01uaa8+idkg==
-X-Received: by 2002:a17:902:ed45:b0:1e2:2ac1:aef0 with SMTP id y5-20020a170902ed4500b001e22ac1aef0mr2782540plb.2.1713966277003;
-        Wed, 24 Apr 2024 06:44:37 -0700 (PDT)
-Received: from [192.168.43.82] ([223.185.79.208])
-        by smtp.gmail.com with ESMTPSA id kk4-20020a170903070400b001e245d90d6fsm11944854plb.59.2024.04.24.06.44.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Apr 2024 06:44:36 -0700 (PDT)
-Message-ID: <bb5fd480-bd43-42c9-b326-2ee7addcda33@linuxfoundation.org>
-Date: Wed, 24 Apr 2024 07:44:31 -0600
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5Bnuq4pBXPDfH+NUzJxSBPbtkFO+4jE3nGmT+KtROE0=;
+ b=jNilBhKVj2EUQ0k/E2Xugd5O5XbYxtwDCTfssWQJ6RfRfxJnRVz7q2wFtde7TxMdAfGbsnz6F0qjmwu8htGc4W1Fa19FFet7XMVUJq8kRAarJNqjFjhpXsHodaw7pfC1uNKvOemgINb3Ud/DB3g5qrCG2aleqLVb3m5hjq7WcMc=
+Received: from DS0PR10MB7933.namprd10.prod.outlook.com (2603:10b6:8:1b8::15)
+ by IA1PR10MB6806.namprd10.prod.outlook.com (2603:10b6:208:42a::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Wed, 24 Apr
+ 2024 13:46:48 +0000
+Received: from DS0PR10MB7933.namprd10.prod.outlook.com
+ ([fe80::2561:85b0:ae8f:9490]) by DS0PR10MB7933.namprd10.prod.outlook.com
+ ([fe80::2561:85b0:ae8f:9490%6]) with mapi id 15.20.7472.044; Wed, 24 Apr 2024
+ 13:46:48 +0000
+Date: Wed, 24 Apr 2024 09:46:46 -0400
+From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org,
+        Willy Tarreau <w@1wt.eu>,
+        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        Andrew Morton <akpm@linux-foundation.org>, willy@infradead.org,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: limits.h in tools/
+Message-ID: <t2n5aj7orslsewknx6vmlf7t4wbnj3u6cabrjjfaptexb64fzn@rbjhcj3uwrkg>
+References: <ZigEvxn0-70og0H1@smile.fi.intel.com>
+ <ZigKWZKY6kq-w0Tp@x1>
+ <ZigMG8ZsBryO57zz@smile.fi.intel.com>
+ <ZigMa2GqF_HN39oz@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZigMa2GqF_HN39oz@smile.fi.intel.com>
+User-Agent: NeoMutt/20231103
+X-ClientProxiedBy: YT4PR01CA0440.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:10d::16) To DS0PR10MB7933.namprd10.prod.outlook.com
+ (2603:10b6:8:1b8::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests: Make ksft_exit functions return void instead
- of int
-To: Nathan Chancellor <nathan@kernel.org>, shuah@kernel.org
-Cc: tglx@linutronix.de, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20240417-ksft-exit-int-to-void-v1-1-eff48fdbab39@kernel.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240417-ksft-exit-int-to-void-v1-1-eff48fdbab39@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR10MB7933:EE_|IA1PR10MB6806:EE_
+X-MS-Office365-Filtering-Correlation-Id: cdafacfe-c3b3-4a4b-b985-08dc6464fcb1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?RzlvbHJyTVh1blpzaXNiSENzZEY2ZHVscm9CUm10OTZHWXUzTUc0dnIrRFpQ?=
+ =?utf-8?B?Qm9uQjYzMXpuWXRjSW5TMytVN3RSVEVleTVJd1cwbldvSUxORWdXVjVrQWRG?=
+ =?utf-8?B?MUdQRjRBYWpCWGhGbWlQSEN3ODVJNFY5YVQvZ0ppeWV3YjVuRGdXVGM5ZGRu?=
+ =?utf-8?B?QVl3T05VL3JkR3hrSzVoRDlaWFpGQ2pkdmVuMWM1VDBEQmd3dHIwMUwxMWFY?=
+ =?utf-8?B?amxqT29ySGFDcTY4anhRcU5YTituUENSc083ejVQT2xRYU1sTWxCRUVJa2RQ?=
+ =?utf-8?B?WEd1WktYb1pLL1ZHcUlpNkhEQzFkL1JVTzhDcGQ1SzB1Q1ZqTnUxYjYrMGRV?=
+ =?utf-8?B?Y0h4WkVqVXp4ZkY0RzZxeCtEdkRBOWFQeDdyYjN5WWVsbElhTE1md0UrZEtG?=
+ =?utf-8?B?bnRLcGV6MXFab05hMmpXVDJ0bUhocFBoRCs5a2o5M01tRTZUdm1YV045bFJ6?=
+ =?utf-8?B?L0lmRXYydGUxODJsbEVTVStxSVEzWFhVYTJCTmRtdkhoUWpWQXB5eFgzc0Ju?=
+ =?utf-8?B?MFNPd0pZbVdrYm9ManMzeXhIc2xrVzRtY2JwQUplVVN0YUdjVHVSMGJlNzJN?=
+ =?utf-8?B?dmRoQ1orWDJRanlzRzc4NGc1LzRvWloyTTRTT2k3S0RwVXJBdEhSYjJjbnZl?=
+ =?utf-8?B?MmVNSVl0TzdWUS8rMWhEQ2phQktYU3kyN0RWQ3FjSDVaRkI3aEVobHFxZGpw?=
+ =?utf-8?B?QkRPVnk0OXUwaEMrRndQaDNnMi95bm1HME1TRktPNUpGVVJLZFRGVWhNN3hl?=
+ =?utf-8?B?aEhwWWd1M0xQRGhTWG1DSDFzUnlpaWIvN0xiMHZVZUs0NHFJelRWY3hQOE5N?=
+ =?utf-8?B?K2lGclBYTU5WVFdvbitpU2NqbUZMZEhTV2FVRnEwUlkvYkpFanRpWUNrejM0?=
+ =?utf-8?B?UDZIYk5YV1pTYWYwY0g0ckNKMjY1SisrOWt2SFZ0Q1VhUUgrSVJ0SjNvRGdG?=
+ =?utf-8?B?Q0tPeGhwWmNrU3puRGdzOVBGSDl0SWxpQ3pZWnRONTYyUHF4ZXpHOEJzbENp?=
+ =?utf-8?B?SmJyN1lESWhERFZSZklldnNNa24rcjdRTUpQWXhnZjV2NW1hcklXaHJwR1JV?=
+ =?utf-8?B?L2c5cTFKZndRaktYdHRHekpOUVN4b1VJTGkwOW5ldXFCYTRGQUdKZFgrY1JK?=
+ =?utf-8?B?NElTeUF6YTBtcjlqMG13aU5QQ29PN2RmZUw3eWNSSjluTkVwN2VmRDV3azFk?=
+ =?utf-8?B?VGc2NWo0dTl0NFFLeWdkMFJuWXM2SUVlWHJwNXROamdEUTUyeXZHa0Vyd3Nw?=
+ =?utf-8?B?Z2ExTjFkZDRIblU0T0Q0Zy9iRjMyRW14eW0ySFkxelg4SWp4ejVwc0dvN1ds?=
+ =?utf-8?B?TjBXY1d1ZURGdytaRDhOUDQ3VWNnQU5kVUczYU5nQ1k4U0QyUGp3SzRBUGJW?=
+ =?utf-8?B?S3FYamMyVDI0WW1UMExDRHlqc3lyRDNBbXZhajVWeU9tTWN5SHYwY1Z6N0NX?=
+ =?utf-8?B?VE9JRG5LS2lvNTFjS0tDN1FXT3M4eUFvejV0VDJjelpKSmlyRG0wdHlVNjhM?=
+ =?utf-8?B?V1NzSFJ2ZXdsWThUcC9FbTRMNW1zS0JNTUtlc0JZZE1RemQ5Y3FmbitnSmgy?=
+ =?utf-8?B?QWtlbEZYTDZ0YzZ3L0ZOVjM3UWVaOVd1RDhwZ0RsYWk5U0U3VG81dWxLeTNZ?=
+ =?utf-8?B?RVdLK2xMcnFudHkxTTg0Wm02Y29POGdwL1VCN1VNRk1VUi9rbFBTRjVlc3RK?=
+ =?utf-8?B?VHF2N3FPbUxBaFgrWmxITS85Vmk4QUkyUXM5czhXTjFLSk4ybGs1STVnPT0=?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7933.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?aGhLcUJSRTBRRVpWc1lhZE1nV0FFSW5yWUliWjd1c0xtSFJqbVdOeGJSM0x3?=
+ =?utf-8?B?VjJjcU5QRmUrNzJpK2FZSmpnbHdaZkQyNlJMWlZmV1l0QkQrNnNhSEZ4cnlD?=
+ =?utf-8?B?YjJ6Ym5OUVc1ZDZsN3Z6WU1yQTMvdmNQTXlVRjRmNUdTdkx0UDZXSmsxTUNZ?=
+ =?utf-8?B?RUljLzNHN1lncHlYaWxtanNwUU9SOW41YW02aEJMWXpCNVJ4OVV3aVN0dDg5?=
+ =?utf-8?B?RGpFa2dEc3hFUW80MlowSU5Cc0EyZVVVU1VOTjJNQTRFeWs4cGRQbncvUmow?=
+ =?utf-8?B?YlFINVdLcnYyeEdvQTl1SHpMeThycDQwckpHaU9SL3ZrR244SUtoU0U2eVdv?=
+ =?utf-8?B?SndUUjd6NmdQRkM3S1JaMUg4OGdsTU5ESkh5c3FBMTJqQXJ6dUpqeGllVWl1?=
+ =?utf-8?B?c1AxK0ZQeVRmcHdwUEd1L2JpRm5PQ0Nqd00zbjVYcnZxU3lXRzlUYW1xR1k0?=
+ =?utf-8?B?TjUzaERCa2dWZmRxSjd6TjdSNlRTZmcrREN4YWRsQ21rRlhpank4S2ZGQkpB?=
+ =?utf-8?B?SFUvWkk1cHdVY0M4UW5YMUpiYm1DRzZCQ0I5dlNoZklNb2ZIOFJxNGVITVEz?=
+ =?utf-8?B?N0dLeUhHdVdRbVhBc1NPMmg1NFFDaTN0a0ZYQjJWemM1UXVSTk5pc0U5bWUz?=
+ =?utf-8?B?cGxDK296VnVJUmcyNDB4Zk9KVUpwaUJqNGdPNXBkQitVZHF5T1NXekhhbFVU?=
+ =?utf-8?B?TlVna1Y5clhLOG9jcmtyUGZOTGo1aWFJYjVtTkdPam5HWUhNaTlpQzlFU3Mx?=
+ =?utf-8?B?d1ZUVmVOZUFWaUNFWWdubDd4ZEpLSzJ4VEtDUDBGVnh1MXQydk1iSkFKZzhs?=
+ =?utf-8?B?UEYrM0xJYTJMd0NCNG01YTNreTlYWUJmSUtOWkNCd3V5Q01Vb2M3YVY1d2F6?=
+ =?utf-8?B?NHRxbzBMa1V2TjhVdG1xUklDRjI3SkYrSTY1cGRwV2loQkIrWWhrZFlFRkZQ?=
+ =?utf-8?B?Qzk1OHdTb0JBczg4cjh0MXo3TURNcU1WZGJHUXI2dkEwREhEVXRjU0lTZ0p6?=
+ =?utf-8?B?MTh4S1kyZW4rZnNYUVdRc2Z0WWpESWthL1BKc0oyd1h6YXdxWUR0QVZhMHdQ?=
+ =?utf-8?B?ZFBsVUMwbWN1Y3o3SWt1eDMvWUJHdFE3Y2RIS2dHMjMvN0RyWVhLMzFHTjhy?=
+ =?utf-8?B?RVlEeU1UeUoyV2ozVG9TQlczcTQvUnBLOGdqSExJOGVEZGRMSnVqaWZlRTh4?=
+ =?utf-8?B?TmM2YlRyTkVDOXZyTmRUZnpUVDVSVUJVdjAvZGNnQlg0Q1FvcDl5Sit5NHJu?=
+ =?utf-8?B?cVU2cjVmQjZEVW03T0dCU01vTzdsVVVBbThrb2RqOHdmanBCdG80NnByTERr?=
+ =?utf-8?B?NUEwNUdpVmVTZTZjNExGMFBJUjBuR1ZhdlhSeXZ2dkVoWGFLSWRBSlFEQlRt?=
+ =?utf-8?B?YnNPQTJvUWpucVBHaXJjNHVlbUttMjlaVDB3UkFrQi9VbUtRaDdDMFhUNm01?=
+ =?utf-8?B?eDA0ZDNtYjVaYTlXSlg2aktOYzNJb1hqeTBnTmhNdFZPOGcrc2FHM0JHaml5?=
+ =?utf-8?B?YWtNa2xhN0NLQ1pLaEREa2p6M1k1bU8rc3Bud2pzVFBoL3FkSUJWQVZKalQw?=
+ =?utf-8?B?cTJrU0dpRkF4UlBQRFhScFgxenN3OVNieUVMd0pWQkJDbU5YejhHMTRDb3V6?=
+ =?utf-8?B?Q2ZCWlVLUkRKQU1DZVNzVVY5d1laWEFJWW5mcWxhLytGOXphQXFTd3RBWTZN?=
+ =?utf-8?B?bHpROFU3aDNxMlBhWUF0SUZQQklWb1k4WUVJcWpta2dLTWdnOGF0T216V3k2?=
+ =?utf-8?B?aHlUdjM2SEI1UTBOeDd0d2pLT2FHNXEvalNqMThWRnpLSWluNEhPaytIcnYv?=
+ =?utf-8?B?eVN5MHJVT1p6NnRHMWhKL0ZZTmd3aTVyeW9DTFQwdS9PV1VCaG1jN0FQTzlh?=
+ =?utf-8?B?OG9PbmFNaTBUZzU5b0kvWEtWUmxZTElvOWZVUFBraU9yZk5HREFpYkludlhE?=
+ =?utf-8?B?YzN5aW5MeUZuM0xyM3J2NmlhQWwreE9MeE5TN1FBVFVUb2pubDZoblNWWnFK?=
+ =?utf-8?B?VVFtakk2UUs2d0FnWXR0ckhMaHpUdnZGUSsrekY4VkZ2UmVpWHo5YmM5dm9R?=
+ =?utf-8?B?YVBQL1lDdDFKR0NYY2FLWHVkWkdLbm43c1RyQitGWU83YktBN0I4RS95eXhz?=
+ =?utf-8?B?ZzFoYUUwS3ZIUmpwNTM3UW44MzgwaktLZHRQTkd6ZmM0Ull0REFWMjF4bkMy?=
+ =?utf-8?B?MEE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	2YRjXb+fwHdS/BrunpdMW/9VzKsY5oRawmMaexi4PgfVPx3kUUrtl/CQreU1byiwFXG7kVUamgHeGrdbKisz68BoqbdT4oem4SvGDVcwwP1jY60Aa2C1BCrHNSv1S1K/I9SeywraduFOoTLKEGm4lBeTmp8tFrRN7Vo7+c9vHn/SCSq/uJyVEwoOt2eK/SVvidf7IYQ0jeC4VtJpDtoxpCggm984p4rQwmljv63k9Lo/P+Jr4j713f5T6moF+eRyT6XL9c72TYGLdT5RpkxXoinQRk6GMUn4265nFoRt6X2TA8FF9TguAv4+uzuuUAdAaE8n7PILoBthskXW6zuTzXL8ZuMtBTpw8JhDU8/DXofuZaNQ4vRxfZ1FKXV//ZQ4sypLN3PWN61/fUv9Ys87r2VqGsZCQgFE1aX+v7W7ZuoFOsUxtXx6eu2ZZ1Dwo2xxLYi56C70sLX1bzDBrEbBcp8uV/jPxUHBzVB21CWQSG9+BSjkBs3537Hu5b3hN3Gh1vrrZvRJPItMi6Y1wfPREoDmYevPF2iLBFYxbO1Rj1DsgM2qaZq9jt6gYJAk3VTj9xuEtkD3ADp7/m2jzl7iq9uA+35D6tWIgE7gyiKZEJE=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cdafacfe-c3b3-4a4b-b985-08dc6464fcb1
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7933.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 13:46:48.0590
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fG1cD/XgBEEIASV8uevyifOfPf4TVKdzmAcf/zTzq8GerYcl+L/ZTbPyRS+JcerC0ptFrRMl99YCcqgTxa5HgQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB6806
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-24_11,2024-04-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 mlxscore=0 suspectscore=0 adultscore=0 malwarescore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404240047
+X-Proofpoint-ORIG-GUID: K0o2JpgtdsJJWtptjNT4h5taPyt670QQ
+X-Proofpoint-GUID: K0o2JpgtdsJJWtptjNT4h5taPyt670QQ
 
-On 4/17/24 09:37, Nathan Chancellor wrote:
-> Commit f7d5bcd35d42 ("selftests: kselftest: Mark functions that
-> unconditionally call exit() as __noreturn") marked functions that call
-> exit() as __noreturn but it did not change the return type of these
-> functions from 'void' to 'int' like it should have (since a noreturn
-> function by definition cannot return an integer because it does not
-> return...) because there are many tests that return the result of the
-> ksft_exit function, even though it has never been used due to calling
-> exit().
-> 
-> Prior to adding __noreturn, the compiler would not know that the functions
-> that call exit() will not return, so code like
-> 
->    void ksft_exit_fail(void)
->    {
->      exit(1);
->    }
-> 
->    void ksft_exit_pass(void)
->    {
->      exit(0);
->    }
-> 
->    int main(void)
->    {
->      int ret;
-> 
->      ret = foo();
->      if (ret)
->        ksft_exit_fail();
->      ksft_exit_pass();
->    }
-> 
-> would cause the compiler to complain that main() does not return an
-> integer, even though when ksft_exit_pass() is called, exit() will cause
-> the program to terminate. So ksft_exit_...() returns int to make the
-> compiler happy.
-> 
->    int ksft_exit_fail(void)
->    {
->      exit(1);
->    }
-> 
->    int ksft_exit_pass(void)
->    {
->      exit(0);
->    }
-> 
->    int main(void)
->    {
->      int ret;
-> 
->      ret = foo();
->      if (ret)
->        return ksft_exit_fail();
->      return ksft_exit_pass();
->    }
-> 
-> While this results in no warnings, it is weird semantically and it has
-> issues as noted in the aforementioned __noreturn change. Now that
-> __noreturn has been added to these functions, it is much cleaner to
-> change the functions to 'void' and eliminate the return statements, as
-> it has been made clear to the compiler that these functions terminate
-> the program. Drop the return before all instances of ksft_exit_...() in
-> a mechanical way. Only two manually changes were made to transform
-> 
->    return !ret ? ksft_exit_pass() : ksft_exit_fail();
-> 
-> into the more idiomatic
-> 
->    if (ret)
->      ksft_exit_fail();
->    ksft_exit_pass();
-> 
-> as well as a few style clean ups now that the code is shorter.
-> 
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> ---
->   tools/testing/selftests/clone3/clone3_clear_sighand.c        |  2 +-
->   tools/testing/selftests/clone3/clone3_set_tid.c              |  4 +++-
->   tools/testing/selftests/ipc/msgque.c                         | 11 +++++------
->   tools/testing/selftests/kselftest.h                          | 12 ++++++------
->   .../selftests/membarrier/membarrier_test_multi_thread.c      |  2 +-
->   .../selftests/membarrier/membarrier_test_single_thread.c     |  2 +-
->   tools/testing/selftests/mm/compaction_test.c                 |  6 +++---
->   tools/testing/selftests/mm/cow.c                             |  2 +-
->   tools/testing/selftests/mm/gup_longterm.c                    |  2 +-
->   tools/testing/selftests/mm/gup_test.c                        |  4 ++--
->   tools/testing/selftests/mm/ksm_functional_tests.c            |  2 +-
->   tools/testing/selftests/mm/madv_populate.c                   |  2 +-
->   tools/testing/selftests/mm/mkdirty.c                         |  2 +-
->   tools/testing/selftests/mm/pagemap_ioctl.c                   |  4 ++--
->   tools/testing/selftests/mm/soft-dirty.c                      |  2 +-
->   tools/testing/selftests/pidfd/pidfd_fdinfo_test.c            |  2 +-
->   tools/testing/selftests/pidfd/pidfd_open_test.c              |  4 +++-
->   tools/testing/selftests/pidfd/pidfd_poll_test.c              |  2 +-
->   tools/testing/selftests/pidfd/pidfd_test.c                   |  2 +-
->   tools/testing/selftests/resctrl/resctrl_tests.c              |  6 +++---
->   tools/testing/selftests/sync/sync_test.c                     |  3 +--
->   tools/testing/selftests/timers/adjtick.c                     |  4 ++--
->   tools/testing/selftests/timers/alarmtimer-suspend.c          |  4 ++--
->   tools/testing/selftests/timers/change_skew.c                 |  4 ++--
->   tools/testing/selftests/timers/freq-step.c                   |  4 ++--
->   tools/testing/selftests/timers/leap-a-day.c                  | 10 +++++-----
->   tools/testing/selftests/timers/leapcrash.c                   |  4 ++--
->   tools/testing/selftests/timers/mqueue-lat.c                  |  4 ++--
->   tools/testing/selftests/timers/posix_timers.c                | 12 ++++++------
->   tools/testing/selftests/timers/raw_skew.c                    |  6 +++---
->   tools/testing/selftests/timers/set-2038.c                    |  4 ++--
->   tools/testing/selftests/timers/set-tai.c                     |  4 ++--
->   tools/testing/selftests/timers/set-timer-lat.c               |  4 ++--
->   tools/testing/selftests/timers/set-tz.c                      |  4 ++--
->   tools/testing/selftests/timers/skew_consistency.c            |  4 ++--
->   tools/testing/selftests/timers/threadtest.c                  |  2 +-
->   tools/testing/selftests/timers/valid-adjtimex.c              |  6 +++---
->   tools/testing/selftests/x86/lam.c                            |  2 +-
->   38 files changed, 81 insertions(+), 79 deletions(-)
-> 
+* Andy Shevchenko <andriy.shevchenko@intel.com> [240423 15:31]:
+> +Cc: Liam, the maintainer of the tool in question.
 
-Please generate separate patches for each test so it is easy to apply
-them and also reduce merge conflicts.
+I maintain the maple.c file in that directory, not the xarray.c one.
+xarray is willy, and I depend on some of the functions from the xarray.
 
-You are missing maintainers for clone3, mm, pidfd tests. I can take these
-through kselftest tree, but I need the changes split.
+>=20
+> On Tue, Apr 23, 2024 at 10:29:31PM +0300, Andy Shevchenko wrote:
+> > On Tue, Apr 23, 2024 at 04:22:01PM -0300, Arnaldo Carvalho de Melo wrot=
+e:
+> > > On Tue, Apr 23, 2024 at 09:58:07PM +0300, Andy Shevchenko wrote:
+> > > > It seems tons of the code in tools include linux/limits.h. But I ha=
+ven't found
+> > > > where do we copy it. Any pointers?
+> > > >=20
+> > > > Based on the discussion 20220603183231.15159C385A9@smtp.kernel.org.
 
-thanks,
--- Shuah
+I was unable to locate this discussion.
 
+> > >=20
+> > > =E2=AC=A2[acme@toolbox perf-tools-next]$ diff -u /usr/include/linux/l=
+imits.h include/uapi/linux/limits.h=20
+> > > --- /usr/include/linux/limits.h	2024-01-31 21:00:00.000000000 -0300
+> > > +++ include/uapi/linux/limits.h	2024-02-03 16:18:02.652000641 -0300
+> > > @@ -1,6 +1,6 @@
+> > >  /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> > > -#ifndef _LINUX_LIMITS_H
+> > > -#define _LINUX_LIMITS_H
+> > > +#ifndef _UAPI_LINUX_LIMITS_H
+> > > +#define _UAPI_LINUX_LIMITS_H
+> > > =20
+> > >  #define NR_OPEN	        1024
+> > > =20
+> > > =E2=AC=A2[acme@toolbox perf-tools-next]$
+> > >=20
+> > > And in the places where I test build perf I saw no problem so far, th=
+e
+> > > build failures below are unrelated, but still outstanding, see below.
+> > >=20
+> > > But then is for building tools/, not the kernel, right? The discussio=
+n
+> > > you said this question was based on is about changing
+> > > include/linux/xarray.h, a kernel file, so should really be including
+> > > just kernel headers, files in the kernel source tree, outside tools/,=
+ I
+> > > don't see where what tools/ uses to build is relevant here? Can you
+> > > please elaborate?
+> >=20
+> > I believe the tool in question is tools/testing/radix-tree/xarray.c.
+
+I'm not sure what is being asked.  Are you suggesting that the linux
+kernel xarray.h header is including non-kernel headers?  I don't believe
+this to be true.
+
+However, the xarray.h tools/testing/radix-tree header certainly pulls in
+the kernel version of its header.  The point here is that we want to
+test the xarray, so we need to have access to the API, but including it
+after setting things up so it will work without the kernel.
+
+The directory you are point to is a testing directory which uses a
+combination of kernel headers and custom headers (to avoid pulling in
+the entire kernel) to build a test application.  Sometimes the real
+headers are used, but other times we are required to write a small
+function to do what is expected (eg: allocating kmem_cache objects).
+
+So our tools may include some kernel headers directly, for testing those
+functions.  It also includes testing headers where we just need the
+defined functionality provided for the testing framework.
+
+Specific to limits.h, if you look in the kernel header, you will see:
+
+#include <uapi/linux/limits.h>
+
+So, most likely, just including the uapi header satisfied the
+requirement without pulling in more headers with, potentially, other
+issues.  IIRC including the types.h header (also in the kernel limits.h)
+caused issues for me in the past.
+
+I hope this helps answer your questions.
+
+Thanks,
+Liam
