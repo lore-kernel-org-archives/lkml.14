@@ -1,93 +1,120 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5095015B133
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AE115B14B
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713963984; cv=none; b=LoXDpRVfiEMNjLpGylNccfvs9kj8e9V5ogceQofJxPZ5qPb82dr1X9BoarF4fL8K9CM0/hE6AbBxhLkRnFmqn8lf3z/d8BriebX+y8t6Hc+A7Ks86F7CLSZT7QBwjXUy6iOZ6x5CpbafQ7n83JohmyOE9K+HG95amJBRxSYmx1Y=
+	t=1713963994; cv=none; b=Vu6VR+KXzKrP03xQkDySlhco7kTrcx5qv9OPC10aErbWi9JdrVjEU7NsbOln4U/DW/q8DVtRW1ZbZSk/UzF/TR+soXY1mGyfZHsWc3bcp90hk/4Jv+LKJhm9JuSaDmBROhZ9jPN52k0M0wBTMHwTluaN2j0tB3KaSqElbi9WlIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713963984; c=relaxed/simple;
-	bh=1X/4OOsHJ1KCbUAws4NmpoimMT/p0DvtpIV8MG8B394=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HrRTDttvqmK6MWzJnEeroyolB3vmcJVlXY3D0vVPTX3rKXButY8pVeda5M02xgBNJzRB6qktvwoO8gYj1oJxVOD4D7ctjOYvWQpF7t2WSCwVz17btbdM/h0KFQI7ecoggdfp5SeGF/nikDKhrFrc1rXWtdPFVrj6fTAFMHcj9ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z7L2v9NA; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713963994; c=relaxed/simple;
+	bh=lvGq478npegdfe7X33ro4L3C4YXKBVJlBkfyJxEJbXo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YdMpmpI+cjKcNo0uBwVw4irMB1DPCZtRD2UmNRzZcDSPQ+jY1MnidGBt5FM168U1hnrRPv2hkKOirVbYnQxDhfVtcZzi7AUPfO5+foC3ECDkXAEgCePJ20HytUtXSv+Qbvu9utPSuCRuvIv0GAyPy0bY4sTt/RW7hYVNyS1arB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=McPBIgIf; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z7L2v9NA"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51b2f105829so4803364e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:06:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="McPBIgIf"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ed3cafd766so5634879b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:06:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713963981; x=1714568781; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=oXPDyQAT+HitFMuQv0udxwIiXElf7T1dd2oYrE6rTrM=;
-        b=z7L2v9NAChHGyNtJtkbm9xJ73l2sZ7/OorIH3YPPwjZozGA9BaZmiVLaHU8tUDd4QP
-         djgc6nXigSemjUK80wUoPavrbC6brJHERNVnxu90jPELVO4nFRCgou4Ueg4lWDAdBn0P
-         tf5ghtBpELQCh+v0zzmqa1AdDE7iKu7agSBcFQumegh8BqEPhq05/QfVwpibUQDxxAW0
-         93JXbc2FB13jvhO63FUOXl7EoURDxFnU1is/U4ArthkQXwld/1TLeZEk/YRl8d6qb3Mx
-         +TSN1Y5dUFH+Kq505SI49n80Sf8p5j/+ZgwSdWqK9K+TyyXnl3RQe+1JWqNwzReSeoaI
-         y9fg==
+        d=chromium.org; s=google; t=1713963990; x=1714568790; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZWmvHblwyLfpV+rEC2PSqDTFbQMnE4MDRNUxWTIYKmE=;
+        b=McPBIgIfkGSRkg6nVkKfnpiWJ72i3SZ6PIocpp0PgvijkzJ+L2JrlrVVGO8WWp9/Ko
+         7HIZz0gNBSsAWkm3GzQy5UtULLMz2J4uEXvZVt8J7x1Pr0BnRsxRf9CqlRrxvzVU+H8X
+         n43ZvyrPBXhvaigwVjMMFttxgWzH+bjK2wI+E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713963981; x=1714568781;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1713963990; x=1714568790;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oXPDyQAT+HitFMuQv0udxwIiXElf7T1dd2oYrE6rTrM=;
-        b=bupWARuHbLUV4v1QYADlTaNn6Y515wiZGDgarGIM8YZyQ1fgXQ+mXFWwPBWBo/HrvY
-         htRfgcLWnrggTsHZlWJwgC95ZgBvFI6VJ+NELfWQUG+54WmtK4qYTxBBaHgjIqoldMJ8
-         W1uHVmX6JaZ6LXRKtjXlFhBZVmuJLU5DQCeujCG50VGFTmlgjNngJJFNSvtZinlkz5JJ
-         MYdhklmGDNaDUnOaoRZkzLxV1egm32pb5wgmVV+Dt5cOjRWN2zRVvXrFpUgaIRqdI11C
-         sIN2pKfOGNT0K7lZP109XQF2p5gOa0J5M6Kz6+ulHWulKZgt73ervry3RpacM7QkUmtj
-         XzeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXO+Ph3UNVghv5CdT5f3PmQLGmm7N0vfhWKxEWQ5zK1ErrHyKvi5fR7l9bllM4uBFa7TkjoQjpr1E59xB9ZB7iuQDgeWgMlF+A18Y1m
-X-Gm-Message-State: AOJu0YxUVXH5JcWngA7OTMadlxeQ5c7AHHLq2FQCE3e2L/fH6a5iRSTe
-	l2o4i3t2vWOfYm6MgY7x3zTkyZLLwwAEok5eCT2AaKQVvQkuD2hqNzXH5UUNf8TpZ/2xTAe7/LR
-	nn2GeuctsVxRHMQjcLpPV2yDK31I+Ridl2x2o6A==
-X-Google-Smtp-Source: AGHT+IFefKvAYRBqhr8QCesj7hq8WHWt10BLztHIAMclGVcycqHpNCSNgO9jv0EcYEOBsbpQ6CS9FIGy90LZsASyIU0=
-X-Received: by 2002:a19:915b:0:b0:51a:f31f:fc6e with SMTP id
- y27-20020a19915b000000b0051af31ffc6emr2425780lfj.14.1713963981412; Wed, 24
- Apr 2024 06:06:21 -0700 (PDT)
+        bh=ZWmvHblwyLfpV+rEC2PSqDTFbQMnE4MDRNUxWTIYKmE=;
+        b=L0g3iS47CxTz2Rf7LdkBAf0m7fo8iqQcfcWAW9BG8NDTpfF+0k/K5CjVBemRGkoKGj
+         uK0uL1ocJGE8UpLobJBUNMhMNLo2f/KEfYgCs2sl0/BTUAeLyF0nmxBoqQ5PflAqQrqk
+         7sG5f3PzsGRBwCXnE8/ejOyiBhghKImgJb05b1mascYyXYZxPdy9ZeqEt0Gf492cJAJZ
+         Lak900Iu3Mcw6xrBLcb9Zt3Lgu8OKASGSbyxHwBHHtNFfkVK1PLUBvpqfaWi8GK4eic9
+         a5zFFB65ltcIJilDe6lufdk8mHjL9RgmNJllvM9gwBxjJoc954FHwvXkc82Y0QFhvg8O
+         LeHg==
+X-Gm-Message-State: AOJu0YyteSGrQmZs7M14F1pCAKGBxufVkybfIDXDxwqAGT52nD3fnJYZ
+	x+J4RXl7TbGRGurujLudbxQ0/2fpLl72kK3GUqSE5oqEvaOA9rxbYiHKY71HQA==
+X-Google-Smtp-Source: AGHT+IGxaNdfLyHIQirpTurMn+c1hdzjWlDQY5IRavD5VXu6cW703ROJBZd0shDax7VyQ2G08e/VqQ==
+X-Received: by 2002:a05:6a20:c6cd:b0:1ad:7fd1:ee2e with SMTP id gw13-20020a056a20c6cd00b001ad7fd1ee2emr2131046pzb.13.1713963989985;
+        Wed, 24 Apr 2024 06:06:29 -0700 (PDT)
+Received: from treapking.tpe.corp.google.com ([2401:fa00:1:10:836:835b:e0f2:a3a0])
+        by smtp.gmail.com with ESMTPSA id y5-20020a637d05000000b005f3d2a9a91bsm9981158pgc.89.2024.04.24.06.06.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 06:06:29 -0700 (PDT)
+From: Pin-yen Lin <treapking@chromium.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-kernel@vger.kernel.org,
+	Hilda Wu <hildawu@realtek.com>,
+	Pin-yen Lin <treapking@chromium.org>,
+	KidmanLee <kidman@realtek.com>,
+	linux-mediatek@lists.infradead.org,
+	Archie Pusaka <apusaka@chromium.org>,
+	Chen-Yu Tsai <wenst@chromium.org>,
+	linux-serial@vger.kernel.org,
+	Al Cooper <alcooperx@comcast.net>,
+	linux-arm-kernel@lists.infradead.org,
+	Hsin-Te Yuan <yuanhsinte@chromium.org>
+Subject: [PATCH v2] serial: 8520_mtk: Set RTS on shutdown for Rx in-band wakeup
+Date: Wed, 24 Apr 2024 20:58:08 +0800
+Message-ID: <20240424130619.2924456-1-treapking@chromium.org>
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240412084056.1733704-1-steven.price@arm.com>
- <20240412084213.1733764-1-steven.price@arm.com> <20240412084213.1733764-15-steven.price@arm.com>
-In-Reply-To: <20240412084213.1733764-15-steven.price@arm.com>
-From: Thomas Fossati <thomas.fossati@linaro.org>
-Date: Wed, 24 Apr 2024 15:06:04 +0200
-Message-ID: <CA+1=6ydMVk4Vcouc2ag8G7tfqZy80VWFxWHSHEKF1JaABd=A7A@mail.gmail.com>
-Subject: Re: [PATCH v2 14/14] virt: arm-cca-guest: TSM_REPORT support for realms
-To: Steven Price <steven.price@arm.com>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
-	Sami Mujawar <sami.mujawar@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>, 
-	Alexandru Elisei <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>, 
-	Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev, 
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Steven, Sami,
+When Rx in-band wakeup is enabled, set RTS to true in mtk8250_shutdown()
+so the connected device can still send message and trigger IRQ when the
+system is suspended.
 
-On Fri, 12 Apr 2024 at 10:47, Steven Price <steven.price@arm.com> wrote:
-> +/**
-> + * arm_cca_report_new - Generate a new attestation token.
-> + *
-> + * @report: pointer to the TSM report context information.
-> + * @data:  pointer to the context specific data for this module.
-> + *
-> + * Initialise the attestation token generation using the challenge data
-> + * passed in the TSM decriptor.
+Fixes: 18c9d4a3c249 ("serial: When UART is suspended, set RTS to false")
+Signed-off-by: Pin-yen Lin <treapking@chromium.org>
 
-Here, it'd be good to document two interesting facts about challenge data:
-1. It must be at least 32 bytes, and
-2. If its size is less than 64 bytes, it will be zero-padded.
+---
 
-cheers!
+Changes in v2:
+- Replase serial8250_set_mctrl() with serial8250_do_set_mctrl()
+
+ drivers/tty/serial/8250/8250_mtk.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
+index c365a349421a..b9cca210e171 100644
+--- a/drivers/tty/serial/8250/8250_mtk.c
++++ b/drivers/tty/serial/8250/8250_mtk.c
+@@ -209,15 +209,19 @@ static int mtk8250_startup(struct uart_port *port)
+ 
+ static void mtk8250_shutdown(struct uart_port *port)
+ {
+-#ifdef CONFIG_SERIAL_8250_DMA
+ 	struct uart_8250_port *up = up_to_u8250p(port);
+ 	struct mtk8250_data *data = port->private_data;
++	int irq = data->rx_wakeup_irq;
+ 
++#ifdef CONFIG_SERIAL_8250_DMA
+ 	if (up->dma)
+ 		data->rx_status = DMA_RX_SHUTDOWN;
+ #endif
+ 
+-	return serial8250_do_shutdown(port);
++	serial8250_do_shutdown(port);
++
++	if (irq >= 0)
++		serial8250_do_set_mctrl(&up->port, TIOCM_RTS);
+ }
+ 
+ static void mtk8250_disable_intrs(struct uart_8250_port *up, int mask)
+-- 
+2.44.0.769.g3c40516874-goog
+
