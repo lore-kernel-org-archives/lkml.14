@@ -1,114 +1,260 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DDA15E1FE
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2FC15E7EE
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713966879; cv=none; b=UVqQfJvJWq0BPfIqWg3bsh4X/McxL51Jja7JAtqJme1+7dPi7Vnr+VgETPp3BSWC8PpY5heT6czy5WF2xuw/0cGpOOode0puW2FOLL3puSvf/Bmv9rn+lgQNvGPY1h9he/JwEa1cuCNC4Js8dEQRfnAqeu3vfEl6xNoQQ2xNxwE=
+	t=1713966882; cv=none; b=L4E0AWzk6af/PmLDHPrZqf5QDXa2ob4iFwXqKVN4fQBXYYVQ+yer0/6YiM/HemBSnU7i+s0p3d+xsc5MdTlkjKW6lQomHam+f/5RwSKInHF0/Ay+zlPucqX+iiKSgY0QZpsWuEylprd0pRTuL9a2HKVcbybynPMCwltYW+zFlCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713966879; c=relaxed/simple;
-	bh=Mx2OfLd2q5mi0gURFw5TuMXcb1Huqn82HNjl8eR3ylE=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=uOWN2Rl3wonOIHUhn8j2ApV98PpddkS65yXptWpbXoERKwS34ycgJg4okBNkuCTNxM/BvOcQ4GENjTnSSAQ01X8vNI62tZxXV9xUHV1C9sO+593axoqlCpFr8gS7Ccb48ZNle23NbGP9r8pN/fP8M5k1d/ARocT3NDXfFuUmHN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=L0ACVveM; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1713966882; c=relaxed/simple;
+	bh=gxTGezLHWXY8b7sIhgnJbShbHkUHWXR6geF6I6OEDao=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Qpr3Cm07VbxBIViC/UXZTUGqROv7hr/0daoaP0upqUf1SBkZhLhAIxNxLuDxi2VwAvIjJGhu63RWtfAeIY6QoN/3EZ98JOZ+KZrwhpfvG6aAEvfrJD5b19WnwhPkdBBnmY36IySFjVFzcFB1EY5kX2+M7ruDpBd3iR1VplbvbtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UBEzUrLY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="L0ACVveM"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-34665dd7610so3656171f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1713966876; x=1714571676; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
-         :subject:cc:to:from:user-agent:references:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nqG6EAw4hfK6YDk87ISdjEyvEY4/LHJcMlZc2x8R9og=;
-        b=L0ACVveMqoyPVa55/eYySBH0vg1cRvHB0FzATMjJfL4L8G/itIj1gx84wFOhHK5fsy
-         1kIusoUJzOVAjlq8loXdVj+gnHpN/PQ3wePt9A3isf/yQshQgJebG/hqGIIWGf0smfDw
-         rDsjkKnhtqziSJp9TBqYeVKFn+Q8aMKxtT0bgjAw5dQhouNrA4MDO/z5Vw9a/DWMjIsw
-         0sIlEc/nielh4J7AjcqxmTLfJMzGanK+AwsqnBEOBMaKmHZ4AYg5TOt1ZMmXB/iypt9i
-         BuyGEVzetxj+xkpfzoMkw7oCaL5h5PlO8mZhlx34JrQLQ3KbueGAiC3uGzRf7o5SfKu8
-         yfSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713966876; x=1714571676;
-        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
-         :subject:cc:to:from:user-agent:references:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=nqG6EAw4hfK6YDk87ISdjEyvEY4/LHJcMlZc2x8R9og=;
-        b=rA5AJIw5qThtHn+VFzR/irzT/YQYYq2E3e2aa38pOIxMlMxLYNptQoqPhE0w8YJlBk
-         LOQSFaEEle8YITH9rdexuqSe1isu1BZ5ICuMBtmvEIW67SHyECnY6kwnfstGwQ8cOYBg
-         hBBz/aZ7ZKTo3JNSHzh9TARefitUKGF5xNiUdslFPUrO8HZ6G0gCn8bHggCOl7r5FE3c
-         gN4OPb0w2c1FdmSp9khiB3KRNAr0zo8EXH6eFHe9H3esdlT7ryrl+iqDbGIOW6D6qx6o
-         VARKF17x4Bnk/Ph8UhT7PkiTXCfU+Al8lRox+/DaQj98eKabMWYOAT2oM8M9evzLJr0J
-         Xe5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXCj8vAFnY+GO6wQzI/pG3IUef/fxDUx0/kOww66ra0nZJd5EEriwrlRggzjPNcPkysBVer4EaxqvOhPtVn7MUqP+rpW8BurFQ/joE5
-X-Gm-Message-State: AOJu0Yw/fkoO+1l8siLq6JCi9SDFO41b7iFlqfG/zQx5oHYqAdRUWu67
-	xP6c+z3dULKA+3fPHJqMs9+2hUbWWM0M0oy0v5yQDvtsERqZj78sHvtvWWJIL3M=
-X-Google-Smtp-Source: AGHT+IEOznvXT2DbTMtec6cIfPbt6cznBYSdTY7urC4yVUpfeeSzluMWHpxbXdtlOl9wyfNYXsAK/A==
-X-Received: by 2002:a5d:56c2:0:b0:346:251a:396d with SMTP id m2-20020a5d56c2000000b00346251a396dmr1588928wrw.51.1713966876400;
-        Wed, 24 Apr 2024 06:54:36 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:ab48:1b7:631c:952a])
-        by smtp.gmail.com with ESMTPSA id r14-20020a05600c458e00b00417e5b71188sm23952306wmo.34.2024.04.24.06.54.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 06:54:36 -0700 (PDT)
-References: <20240424-s4-pwm-v4-0-ee22effd40d0@amlogic.com>
- <20240424-s4-pwm-v4-1-ee22effd40d0@amlogic.com>
- <1jil07f3ps.fsf@starbuckisacylon.baylibre.com>
- <ikwqq5veuad7fehk6qrpebevvn2ezuxwm3h7agloqeomxc5cbg@kj3be67luyxm>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, kelvin.zhang@amlogic.com, George
- Stark <gnstark@salutedevices.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Martin
- Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Junyi Zhao
- <junyi.zhao@amlogic.com>
-Subject: Re: [PATCH v4 1/2] pwm: meson: Add support for Amlogic S4 PWM
-Date: Wed, 24 Apr 2024 15:53:44 +0200
-In-reply-to: <ikwqq5veuad7fehk6qrpebevvn2ezuxwm3h7agloqeomxc5cbg@kj3be67luyxm>
-Message-ID: <1jbk5yg92c.fsf@starbuckisacylon.baylibre.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UBEzUrLY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713966880;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mvfMKL+8UkJyc+6NdO80ILmMaNmzG0sr9rlaAL4MQIg=;
+	b=UBEzUrLYP1KsCFrnT3zjqKBcErNlcII2ybg9kYZuWE1D9WXCpPYP6nMDljzrqdhSvAkgZL
+	xPx76MNATkXz6G5gUG2WPzZbtZht3pWXUeqmIBATJVnc6MH7HZNHQAuQ3WQKecb2mD/SlV
+	HsS18hsDTFvssmfqdBxqDW1L43ugV2o=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-651-tSYvXOl7N2OL-BBPH0PrrQ-1; Wed,
+ 24 Apr 2024 09:54:35 -0400
+X-MC-Unique: tSYvXOl7N2OL-BBPH0PrrQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 148D73C0252B;
+	Wed, 24 Apr 2024 13:54:35 +0000 (UTC)
+Received: from antares.redhat.com (unknown [10.39.193.98])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3B8881C0F120;
+	Wed, 24 Apr 2024 13:54:33 +0000 (UTC)
+From: Adrian Moreno <amorenoz@redhat.com>
+To: netdev@vger.kernel.org
+Cc: aconole@redhat.com,
+	echaudro@redhat.com,
+	horms@kernel.org,
+	i.maximets@ovn.org,
+	Adrian Moreno <amorenoz@redhat.com>,
+	Yotam Gigi <yotam.gi@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 2/8] net: psample: add multicast filtering on group_id
+Date: Wed, 24 Apr 2024 15:50:49 +0200
+Message-ID: <20240424135109.3524355-3-amorenoz@redhat.com>
+In-Reply-To: <20240424135109.3524355-1-amorenoz@redhat.com>
+References: <20240424135109.3524355-1-amorenoz@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
+Packet samples can come from several places (e.g: different tc sample
+actions), typically using the sample group (PSAMPLE_ATTR_SAMPLE_GROUP)
+to differentiate them.
 
-On Wed 24 Apr 2024 at 15:51, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutr=
-onix.de> wrote:
+Likewise, sample consumers that listen on the multicast group may only
+be interested on a single group. However, they are currently forced to
+receive all samples and discard the ones that are not relevant, causing
+unnecessary overhead.
 
-> [[PGP Signed Part:Undecided]]
-> Hello,
->
-> On Wed, Apr 24, 2024 at 12:32:36PM +0200, Jerome Brunet wrote:
->> > +err:
->> > +	while (--i >=3D 0) {
->> > +		channel =3D &meson->channels[i];
->> > +		clk_put(channel->clk);
->>=20
->> Fine on error but leaks on module unload.
->>=20
->> Same as George,
->>=20
->> Add the devm variant of of_clk_get() if you must.
->
-> There shouldn't be a reason to still use of_clk_get(). I'd expect that
-> devm_clk_get() should do the job and if not that's a bug.
+Allow users to filter on the desired group_id by adding a new command
+PSAMPLE_SET_FILTER that can be used to pass the desired group id.
+Store this filter on the per-socket private pointer and use it for
+filtering multicasted samples.
 
-Getting a clock ressource by index instead of by name is a reason.
+Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
+---
+ include/uapi/linux/psample.h |   1 +
+ net/psample/psample.c        | 110 +++++++++++++++++++++++++++++++++--
+ 2 files changed, 105 insertions(+), 6 deletions(-)
 
->
-> Best regards
-> Uwe
+diff --git a/include/uapi/linux/psample.h b/include/uapi/linux/psample.h
+index e585db5bf2d2..9d62983af0a4 100644
+--- a/include/uapi/linux/psample.h
++++ b/include/uapi/linux/psample.h
+@@ -28,6 +28,7 @@ enum psample_command {
+ 	PSAMPLE_CMD_GET_GROUP,
+ 	PSAMPLE_CMD_NEW_GROUP,
+ 	PSAMPLE_CMD_DEL_GROUP,
++	PSAMPLE_CMD_SET_FILTER,
+ };
+ 
+ enum psample_tunnel_key_attr {
+diff --git a/net/psample/psample.c b/net/psample/psample.c
+index a5d9b8446f77..f5f77515b969 100644
+--- a/net/psample/psample.c
++++ b/net/psample/psample.c
+@@ -98,13 +98,77 @@ static int psample_nl_cmd_get_group_dumpit(struct sk_buff *msg,
+ 	return msg->len;
+ }
+ 
+-static const struct genl_small_ops psample_nl_ops[] = {
++struct psample_obj_desc {
++	struct rcu_head rcu;
++	u32 group_num;
++};
++
++struct psample_nl_sock_priv {
++	struct psample_obj_desc __rcu *filter;
++	spinlock_t filter_lock; /* Protects filter. */
++};
++
++static void psample_nl_sock_priv_init(void *priv)
++{
++	struct psample_nl_sock_priv *sk_priv = priv;
++
++	spin_lock_init(&sk_priv->filter_lock);
++}
++
++static void psample_nl_sock_priv_destroy(void *priv)
++{
++	struct psample_nl_sock_priv *sk_priv = priv;
++	struct psample_obj_desc *filter;
++
++	filter = rcu_dereference_protected(sk_priv->filter, true);
++	kfree_rcu(filter, rcu);
++}
++
++static int psample_nl_set_filter_doit(struct sk_buff *skb,
++				      struct genl_info *info)
++{
++	struct psample_obj_desc *filter = NULL;
++	struct psample_nl_sock_priv *sk_priv;
++	struct nlattr **attrs = info->attrs;
++
++	if (attrs[PSAMPLE_ATTR_SAMPLE_GROUP]) {
++		filter = kzalloc(sizeof(*filter), GFP_KERNEL);
++		filter->group_num =
++			nla_get_u32(attrs[PSAMPLE_ATTR_SAMPLE_GROUP]);
++	}
++
++	sk_priv = genl_sk_priv_get(&psample_nl_family, NETLINK_CB(skb).sk);
++	if (IS_ERR(sk_priv)) {
++		kfree(filter);
++		return PTR_ERR(sk_priv);
++	}
++
++	spin_lock(&sk_priv->filter_lock);
++	filter = rcu_replace_pointer(sk_priv->filter, filter,
++				     lockdep_is_held(&sk_priv->filter_lock));
++	spin_unlock(&sk_priv->filter_lock);
++	kfree_rcu(filter, rcu);
++	return 0;
++}
++
++static const struct nla_policy
++psample_set_filter_policy[PSAMPLE_ATTR_SAMPLE_GROUP + 1] = {
++	[PSAMPLE_ATTR_SAMPLE_GROUP] = { .type = NLA_U32, },
++};
++
++static const struct genl_ops psample_nl_ops[] = {
+ 	{
+ 		.cmd = PSAMPLE_CMD_GET_GROUP,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.dumpit = psample_nl_cmd_get_group_dumpit,
+ 		/* can be retrieved by unprivileged users */
+-	}
++	},
++	{
++		.cmd		= PSAMPLE_CMD_SET_FILTER,
++		.doit		= psample_nl_set_filter_doit,
++		.policy		= psample_set_filter_policy,
++		.flags		= 0,
++	},
+ };
+ 
+ static struct genl_family psample_nl_family __ro_after_init = {
+@@ -114,10 +178,13 @@ static struct genl_family psample_nl_family __ro_after_init = {
+ 	.netnsok	= true,
+ 	.module		= THIS_MODULE,
+ 	.mcgrps		= psample_nl_mcgrps,
+-	.small_ops	= psample_nl_ops,
+-	.n_small_ops	= ARRAY_SIZE(psample_nl_ops),
++	.ops		= psample_nl_ops,
++	.n_ops		= ARRAY_SIZE(psample_nl_ops),
+ 	.resv_start_op	= PSAMPLE_CMD_GET_GROUP + 1,
+ 	.n_mcgrps	= ARRAY_SIZE(psample_nl_mcgrps),
++	.sock_priv_size		= sizeof(struct psample_nl_sock_priv),
++	.sock_priv_init		= psample_nl_sock_priv_init,
++	.sock_priv_destroy	= psample_nl_sock_priv_destroy,
+ };
+ 
+ static void psample_group_notify(struct psample_group *group,
+@@ -360,6 +427,32 @@ static int psample_tunnel_meta_len(struct ip_tunnel_info *tun_info)
+ }
+ #endif
+ 
++static inline void psample_nl_obj_desc_init(struct psample_obj_desc *desc,
++					    u32 group_num)
++{
++	memset(desc, 0, sizeof(*desc));
++	desc->group_num = group_num;
++}
++
++static int psample_nl_sample_filter(struct sock *dsk, struct sk_buff *skb,
++				    void *data)
++{
++	struct psample_obj_desc *desc = data;
++	struct psample_nl_sock_priv *sk_priv;
++	struct psample_obj_desc *filter;
++	int ret = 0;
++
++	rcu_read_lock();
++	sk_priv = __genl_sk_priv_get(&psample_nl_family, dsk);
++	if (!IS_ERR_OR_NULL(sk_priv)) {
++		filter = rcu_dereference(sk_priv->filter);
++		if (filter && desc)
++			ret = (filter->group_num != desc->group_num);
++	}
++	rcu_read_unlock();
++	return ret;
++}
++
+ void psample_sample_packet(struct psample_group *group, struct sk_buff *skb,
+ 			   u32 sample_rate, const struct psample_metadata *md)
+ {
+@@ -370,6 +463,7 @@ void psample_sample_packet(struct psample_group *group, struct sk_buff *skb,
+ #ifdef CONFIG_INET
+ 	struct ip_tunnel_info *tun_info;
+ #endif
++	struct psample_obj_desc desc;
+ 	struct sk_buff *nl_skb;
+ 	int data_len;
+ 	int meta_len;
+@@ -487,8 +581,12 @@ void psample_sample_packet(struct psample_group *group, struct sk_buff *skb,
+ #endif
+ 
+ 	genlmsg_end(nl_skb, data);
+-	genlmsg_multicast_netns(&psample_nl_family, group->net, nl_skb, 0,
+-				PSAMPLE_NL_MCGRP_SAMPLE, GFP_ATOMIC);
++	psample_nl_obj_desc_init(&desc, group->group_num);
++	genlmsg_multicast_netns_filtered(&psample_nl_family,
++					 group->net, nl_skb, 0,
++					 PSAMPLE_NL_MCGRP_SAMPLE,
++					 GFP_ATOMIC, psample_nl_sample_filter,
++					 &desc);
+ 
+ 	return;
+ error:
+-- 
+2.44.0
 
-
---=20
-Jerome
