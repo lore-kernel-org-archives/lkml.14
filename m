@@ -1,98 +1,88 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8136053372;
-	Wed, 24 Apr 2024 16:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73E21598EA;
+	Wed, 24 Apr 2024 16:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713976386; cv=none; b=YciiiTGC5VbH3DQACoiHGkqunTkyU/1ZRs1AIU0Sm9wtwMuX0ChulWm8eVMwd7QkE6Is1kzvB/L5la7VDUUcMGQwo0/9uXbeXTOrmdMsBc+DzLbqdL8u4x5ah1CFTtmQCA2wT8NWxTlvy+hFGz7F+jIJleTdaGVtx9mdg5jL6Fc=
+	t=1713976447; cv=none; b=Y0+M6RKPym5OCai2hQMi2tSgrna9ELOP9XmBux42Xdaj4XHmPQTCuNQIfc53tNgkAbO5NSbP5TqO4o2JiMHuC8kW27Cp2DXeddROcyBkqRre8bcmS/ica0A3ZCSCMRDdnq5aZz3h/gD7wOeVKpE6WwEfFbKGJVt3KsMQUOX63a8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713976386; c=relaxed/simple;
-	bh=z3eF70FQlQ72XvDhpe9rqk8ScoUbO1zXys/ZqDSFff8=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=EsJFQDEcLhk0fHrYPYoe9EZiu11tL3ubDWunuN5Qa6QFR1xiKcBtHySOjFoGkuJut66dO+8vITb5V1GVICyLDDkV8LBVck39x+gNMHctX5N2kRXPQywMHJ0ItymxUDczOO14h+SbClZ4jzogUPc6iDMNhNGJUpjykDx4lfdOJWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iMVDtcco; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1713976447; c=relaxed/simple;
+	bh=sPxnpCDg/JQccPFyT4hEMhVpH5Dzk+4bYfHs/7rseoA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AiJplY5aarDzcRZ68HC6WZ0ou6keo5eKg7ppKfaWHhMHX9DSgmYDSufSgRokH3XVdz9rYlH8T8WQtEq+X/q02gxRTASdUSzZDd3DbSJoY0AM859vbxoCG5/8LfWz0iaTzLz/zC7LTuirQfHmULfFtopM9X8mKD2Bcebokz2Lxdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=toQELOnD; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iMVDtcco"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 21B53C000F;
-	Wed, 24 Apr 2024 16:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713976375;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nVfX6CunHv0QJSiX7CwyfL7fs8TD4zil05zPYCaSh6k=;
-	b=iMVDtccoEjyJoeXjQJLTyW/F8IkBaa/rp9MWSak72TbmK3OD5QfxAjn1in6WE98ZtBUyR5
-	3P30Xa4NYEDOJWfQc45QcD3YdXvSv1WDXSusY+dtDC2jdM6pibXjIRocRI5egVRjFP2OOy
-	ee13xRwe4nIhFtLSEg+D4hnIG/x9FNg9Y/zCSi8RjeyuNd8Oq5T4u1mYLqcrrN3fg2y5tg
-	Mt8UhDahzyzg/3U7hicTJd9RbTxtnMHLCFR+RR6ZXQS+6gwZsApMHLOAIPN2expFnKgqOX
-	Zi3tqaEjw8QcWzUf0o8XEAtexPfEvmQSk/JdjNpfLv+x9+AZ58jWDqhqAICBGQ==
-Date: Wed, 24 Apr 2024 18:33:30 +0200 (CEST)
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: Serge Semin <fancer.lancer@gmail.com>
-cc: Romain Gantois <romain.gantois@bootlin.com>, 
-    "David S. Miller" <davem@davemloft.net>, 
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-    Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-    Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-    Conor Dooley <conor+dt@kernel.org>, 
-    Geert Uytterhoeven <geert+renesas@glider.be>, 
-    Magnus Damm <magnus.damm@gmail.com>, 
-    Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-    Jose Abreu <joabreu@synopsys.com>, 
-    Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-    Russell King <linux@armlinux.org.uk>, 
-    =?ISO-8859-15?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>, 
-    Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
-    devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-renesas-soc@vger.kernel.org, 
-    linux-stm32@st-md-mailman.stormreply.com, 
-    linux-arm-kernel@lists.infradead.org, 
-    "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
-    Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next v4 2/5] net: stmmac: introduce pcs_init/pcs_exit
- stmmac operations
-In-Reply-To: <qf637dtkakxbumefbei3qrhbpyxgerjwn72ixp5xh6mc6yjbda@6z6tm6hk7fki>
-Message-ID: <27279f1a-e718-a8cf-ecfc-40f45bf6c500@bootlin.com>
-References: <20240424-rzn1-gmac1-v4-0-852a5f2ce0c0@bootlin.com> <20240424-rzn1-gmac1-v4-2-852a5f2ce0c0@bootlin.com> <qf637dtkakxbumefbei3qrhbpyxgerjwn72ixp5xh6mc6yjbda@6z6tm6hk7fki>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="toQELOnD"
+Received: from [192.168.1.106] (unknown [103.251.226.10])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0BB27674;
+	Wed, 24 Apr 2024 18:33:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1713976392;
+	bh=sPxnpCDg/JQccPFyT4hEMhVpH5Dzk+4bYfHs/7rseoA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=toQELOnDdFXTN2Wf0C8bfT7E7kcPmCt95AeHtn5/2+Yk1VqYc5eCp5BLjyaIQherx
+	 hF6f+Yv2XuF4F29Bgmo3adCO3Btofdn86Nn/75UYV4dh6F8tWXGOYJtMjS67BRMhwT
+	 hEifIngHKOyqQDNN2rOjiu3xAXn6riDVl98nfCJc=
+Message-ID: <b6f031c4-818e-44de-b491-1bfebdbf9c37@ideasonboard.com>
+Date: Wed, 24 Apr 2024 22:03:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-GND-Sasl: romain.gantois@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 11/11] media: subdev: Improve s_stream documentation
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240424-enable-streams-impro-v6-0-5fb14c20147d@ideasonboard.com>
+ <20240424-enable-streams-impro-v6-11-5fb14c20147d@ideasonboard.com>
+Content-Language: en-US
+From: Umang Jain <umang.jain@ideasonboard.com>
+In-Reply-To: <20240424-enable-streams-impro-v6-11-5fb14c20147d@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Serge,
+Hi Tomi,
 
-On Wed, 24 Apr 2024, Serge Semin wrote:
+On 24/04/24 9:09 pm, Tomi Valkeinen wrote:
+> Now that enable/disable_streams operations are available for
+> single-stream subdevices too, there's no reason to use the old s_stream
+> operation on new drivers. Extend the documentation reflecting this.
+>
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
-> Once again. There is a ready-to-use stmmac_xpcs_setup() method. Which
-> is currently intended for the XPCS setups. Let's collect all the
-> PCS-related stuff in a single place there. That will make code cleaner
-> and easier to read. This was discussed on v3:
-> 
-> https://lore.kernel.org/netdev/42chuecdt7dpgm6fcrtt2crifvv5hflmtnmdrw5fvk3r7pwjgu@hlcv56dbeosf/
-> 
-> You agreed to do that, but just ignored in result. I'll repeat what I
-> said in v3:
+Reviewed-by: Umang Jain<umang.jain@ideasonboard.com>
 
-Yeah sorry I took a quick look at your merged patches and thought that 
-stmmac_xpcs_setup() had been repurposed in the meantime, but it seems like I was 
-just confused about that.
+> ---
+>   include/media/v4l2-subdev.h | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+>
+> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+> index 14a3c91cce93..99564a2ef71c 100644
+> --- a/include/media/v4l2-subdev.h
+> +++ b/include/media/v4l2-subdev.h
+> @@ -450,6 +450,15 @@ enum v4l2_subdev_pre_streamon_flags {
+>    *	already started or stopped subdev. Also see call_s_stream wrapper in
+>    *	v4l2-subdev.c.
+>    *
+> + *	New drivers should instead implement &v4l2_subdev_pad_ops.enable_streams
+> + *	and &v4l2_subdev_pad_ops.disable_streams operations, and use
+> + *	v4l2_subdev_s_stream_helper for the &v4l2_subdev_video_ops.s_stream
+> + *	operation to support legacy users.
+> + *
+> + *	Drivers should also not call the .s_stream() subdev operation directly,
+> + *	but use the v4l2_subdev_enable_streams() and
+> + *	v4l2_subdev_disable_streams() helpers.
+> + *
+>    * @g_pixelaspect: callback to return the pixelaspect ratio.
+>    *
+>    * @s_rx_buffer: set a host allocated memory buffer for the subdev. The subdev
+>
 
-> It doesn't look as that much hard thing to do, but will cause having a
-> better readable code by providing a single coherent function for all
-> PCS'es.
-
-Sure, I'll get to it in v5.
-
-Thanks,
-
--- 
-Romain Gantois, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
