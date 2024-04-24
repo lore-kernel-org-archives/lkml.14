@@ -1,110 +1,90 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78826158871
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 08:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825ED157468
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 08:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713947116; cv=none; b=XonTcBxRaK8/xfKIz6fxOmFDfFpzRcYMqBjn21jPF66rPYLUNEUG+LH5kcFJs2CMUapx79k8YF/gxqR8QWRInRDtjTGmaudnLA38LbI+e7P5GOzeHEHPKpH54MGV0nyu1q4CiMK/xXYwdUhMD6Is2kvs1P/ZW5j4UsiB8x28czI=
+	t=1713947169; cv=none; b=qciPorHr/lheBqMXpS0Sol29o29fVep2XiOSOo6Ch03SnpuGrRqCQ87AJmk0Js6a+mqM24y3X4daCkVd7Wx0kgyQfJH65+LgLEXL1jLXkx7WX/HdATGm9HbqpaeEVLIv4+j8ucOUi0mTggFgVLbplXz6Sa9WR0RBY+1M56eg+pQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713947116; c=relaxed/simple;
-	bh=NeIENiopGqRCJKXoxGR47faLpfIOQmosSOdAybtLZ1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rqd+rVcPTxTxmOvBx1PlmJd6YBSAvzxr8ptRmf4PFtqsvLEffNupxJ2rL5B7A0z6J9D2UsTsAzCCi6TatG7T29YJPV+6sPUMbfOjw43MlRQA86F20QPo4flDcdbwex/f7v2v/kHbk1k66+ZcSfuWn6evnZ6/1zu0IyqTCgavHKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rzXw4-0004x8-5q; Wed, 24 Apr 2024 10:25:00 +0200
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rzXw3-00E2rV-Ic; Wed, 24 Apr 2024 10:24:59 +0200
-Received: from pengutronix.de (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 23B652BEC37;
-	Wed, 24 Apr 2024 08:24:59 +0000 (UTC)
-Date: Wed, 24 Apr 2024 10:24:58 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Gregor Herburger <gregor.herburger@ew.tq-group.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Thomas Kopp <thomas.kopp@microchip.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, linux-can@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux@ew.tq-group.com, alexander.stein@ew.tq-group.com
-Subject: Re: [PATCH 1/4] can: mcp251xfd: stop timestamp before sending chip
- to sleep
-Message-ID: <20240424-fast-sandy-jackrabbit-d289a0-mkl@pengutronix.de>
-References: <20240417-mcp251xfd-gpio-feature-v1-0-bc0c61fd0c80@ew.tq-group.com>
- <20240417-mcp251xfd-gpio-feature-v1-1-bc0c61fd0c80@ew.tq-group.com>
+	s=arc-20240116; t=1713947169; c=relaxed/simple;
+	bh=EmHMPvgKAoQJDRWQwlm9jmDo8kEKQqcKd0ef85rUkXc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=aCnpo4kmR1ksHsKgBIhT6oi++j5W879Dfj6WOJH0v4j/fMlinyhWP8N7/+FFmYL2fODglOH7T8CPaznLoM4EI+v0c+U5AcvfHVVCacvDcgX5XZ88pSMTtcUpmlJkvasEahWS9bbmr51xG2z0Sujk7nfVuWUB6EhLL+Mto/KDRb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nL/xHw2b; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nL/xHw2b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713947168; x=1745483168;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=EmHMPvgKAoQJDRWQwlm9jmDo8kEKQqcKd0ef85rUkXc=;
+  b=nL/xHw2bxo2psFNnF9wKIocSG9Ez+wjwRzXPW8/SV+ORhasKEPzdEP4n
+   EDAJXLiN9GIyz455Po6CIhaC8Y0laisn2saiRlzd2R59faCQj/ECHV4yG
+   mw1I7L9h7fUPpvEmeOQLduY7XPiVrxWtCk+bduIiqeu88wvHESzntVNLB
+   PN/OSgOZ2aLjK4jGHj4BOjin0n3vI1l9mkYw3rE2sDscbmR5u5a+UMWqv
+   5aafr9q5EXgWuAdC7GkpFf+mnrGSIEG37Ju5OXhOksWD3iYy5HGOvyC2H
+   00w0dv0i0So3HKu+o1UQEWYmyEObGiJRG6FcGSakmdHgkC0BSNCiouA92
+   w==;
+X-CSE-ConnectionGUID: g0wz8gCHQji8kXhD9LcUQA==
+X-CSE-MsgGUID: wUns77grTVWTd1EpOpMKeQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="27079755"
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="27079755"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 01:26:07 -0700
+X-CSE-ConnectionGUID: vZo7Fr8TTHyOmC05hFvI9g==
+X-CSE-MsgGUID: tEBgCSWzQbGOWqc+uJMFfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="29118475"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 24 Apr 2024 01:26:05 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rzXx5-00012Q-1J;
+	Wed, 24 Apr 2024 08:26:03 +0000
+Date: Wed, 24 Apr 2024 16:25:59 +0800
+From: kernel test robot <lkp@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@kernel.org>
+Subject: powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data319'
+ from `kernel/sched/core.o' being placed in section `.bss..Lubsan_data319'
+Message-ID: <202404241643.0athGlpO-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rqbw5j2wn4qgc634"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240417-mcp251xfd-gpio-feature-v1-1-bc0c61fd0c80@ew.tq-group.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   9d1ddab261f3e2af7c384dc02238784ce0cf9f98
+commit: 7a50f76674f8b6f4f30a1cec954179f10e20110c sched: Simplify yield_to()
+date:   7 months ago
+config: powerpc-randconfig-s032-20220402 (https://download.01.org/0day-ci/archive/20240424/202404241643.0athGlpO-lkp@intel.com/config)
+compiler: powerpc-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240424/202404241643.0athGlpO-lkp@intel.com/reproduce)
 
---rqbw5j2wn4qgc634
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404241643.0athGlpO-lkp@intel.com/
 
-On 17.04.2024 15:43:54, Gregor Herburger wrote:
-> MCP2518FD exits Low-Power Mode (LPM) when CS is asserted. When chip
-> is send to sleep and the timestamp workqueue is not stopped chip is
-> waked by SPI transfer of mcp251xfd_timestamp_read.
->=20
-> So before sending chip to sleep stop timestamp otherwise the
-> mcp251xfd_timestamp_read callback would wake chip up.
->=20
-> Also there are error paths in mcp251xfd_chip_start where workqueue has
-> not been initialized but mcp251xfd_chip_stop is called. So check for
-> initialized func before canceling delayed_work.
+All warnings (new ones prefixed by >>):
 
-Can you move the mcp251xfd_timestamp_init() (which starts the
-timestamping worker) into mcp251xfd_chip_start() to keep things
-symmetrical? I think then you don't need to check for "work->func" in
-mcp251xfd_timestamp_stop().
+>> powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data319' from `kernel/sched/core.o' being placed in section `.bss..Lubsan_data319'
+   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data228' from `fs/overlayfs/copy_up.o' being placed in section `.bss..Lubsan_data228'
+>> powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data319' from `kernel/sched/core.o' being placed in section `.bss..Lubsan_data319'
+   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data228' from `fs/overlayfs/copy_up.o' being placed in section `.bss..Lubsan_data228'
+>> powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data319' from `kernel/sched/core.o' being placed in section `.bss..Lubsan_data319'
+   powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data228' from `fs/overlayfs/copy_up.o' being placed in section `.bss..Lubsan_data228'
 
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---rqbw5j2wn4qgc634
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmYowdcACgkQKDiiPnot
-vG/p/Qf/TnaEbLVI0x6Nv/Y79Ua6wtUkcJzzxBEoGz9HPhHdw/dLMVrLdK9WGHwu
-wQFssYbY/vrV+ro2S120SzM69VfAKZY49Ouee0bq5C1zrxqjJRpO1Axj7lV8kCX8
-x2LUUxnbL1Ga1NWJLR+Z+y4nBY/LZotSIGohDemQhScfL5cAGkz/ZyoU58rt6zxM
-stvz8zMtJQmkprU6LH3MWr8MT25hj3T9OW9WAkjlqT30VCfuYvsRYqmJw+MsNIPd
-iqoMDYIYZyHKqTBfciDfEhZVPJzLQQtn0H5EBfG+yq8GH8QE4MvPuOWCd371+Sil
-XomSJ6I2QI5SFbGP/Wh3KfwoMXnEtQ==
-=GzL3
------END PGP SIGNATURE-----
-
---rqbw5j2wn4qgc634--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
