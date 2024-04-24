@@ -1,107 +1,168 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996F613B78F;
-	Wed, 24 Apr 2024 03:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EE8139CEB
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 03:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713930516; cv=none; b=smp98S6+4WSFLJRHPAN69WmZv20KElJAKbPZGYmFVIeinUfbDYLcI6wyaXUgc2Q2AhU2pTd6f2MUYM2NTFCTVg3XVfwYAx5Vlc4vwdoKNNdvL6wAPApTbWNuPBBCgj47sdB/FsucQHjZW0U5VxLrokkbcMUdbTEehpi4oPzLoEI=
+	t=1713930514; cv=none; b=SDg3Bshqg4Q86iqezbpdbXb+o2O9pNELvq3s0HzikiS527TzkaEb4CQyABDPwxtol/NAK2ptDT8pPe0pv0o5Jo6AEmU25FOJV7z16F2unTCcSXFZyroxPbXVyzWs88YopLk9Ji7/5+DKtP9P4wm/WyOP6mQz8qSRPbETQ01STBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713930516; c=relaxed/simple;
-	bh=CJAsjwsABHJzCJkMGGnMV8RgnGwDDt/vfJyinn94n7g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rhg6Emxw2GHSgFGBMry9+q5pbgg5/GVheLT2Lrwe4Q0mw+N1jO5ShL5qhGuFzeg2nv965jGYEHABfjwzRwDLRnEDFWlWJ4NhJHgBEuN6z4uv7ZZulrF4BaRv0vp3Y6/FEBzZ6SpQq/tWNKhAvCGxgwDT1cW4dEUhI1cJ1vTGqUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VPQ1z32jFz4f3jcy;
-	Wed, 24 Apr 2024 11:48:23 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id EBDBF1A0175;
-	Wed, 24 Apr 2024 11:48:30 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBELgShmKXE4Kw--.6143S6;
-	Wed, 24 Apr 2024 11:48:30 +0800 (CST)
-From: libaokun@huaweicloud.com
-To: netfs@lists.linux.dev
-Cc: dhowells@redhat.com,
-	jlayton@kernel.org,
-	zhujia.zj@bytedance.com,
-	jefflexu@linux.alibaba.com,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	libaokun@huaweicloud.com,
-	Baokun Li <libaokun1@huawei.com>
-Subject: [PATCH 02/12] cachefiles: remove err_put_fd tag in cachefiles_ondemand_daemon_read()
-Date: Wed, 24 Apr 2024 11:39:06 +0800
-Message-Id: <20240424033916.2748488-3-libaokun@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240424033916.2748488-1-libaokun@huaweicloud.com>
-References: <20240424033916.2748488-1-libaokun@huaweicloud.com>
+	s=arc-20240116; t=1713930514; c=relaxed/simple;
+	bh=PVtuPBs5eGsKOVbPHJb9cT/9z2T7nRtaF3A2ljCMW4M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JrHssoXRJo8lH8LWIIG0z/6z/4vWBX6wMlWlID0M9JTiHKKvWN1fFubPn2kKyrQsQvGcFboc2WcTaOms1JPccaxb91Pv+dVmpvLrUKNBqTY+p1ieW5SzMmBM+ojMW0yMRi3cymDDPqdy3SgRcycHIzAtKyrY2+nQvfQ41g+lMEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XZdKxFjH; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XZdKxFjH"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1713930508; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=i+3UguXcbzDLCETmEYwCVhpdB29rZwyImQLfXWWDzHk=;
+	b=XZdKxFjHn1SsTcDMj04oKltGqSP3EfVbmwcRsw/WndNlFTHaWJo9iDffSvWysjFG4bF/5FiHQYihPDRBo8ZTVIbtIUJq48NVhIhokfONyGTchyCAgq60As2atZtYe1rOi45hC90fsmmMXzOyWTWftKWHEXAv9Nk9+uRVsrqM0bU=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R321e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033022160150;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0W5AlpPR_1713930504;
+Received: from 30.97.56.58(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W5AlpPR_1713930504)
+          by smtp.aliyun-inc.com;
+          Wed, 24 Apr 2024 11:48:26 +0800
+Message-ID: <8e0a34df-3a02-40a6-a09d-3b4a25ec7fcf@linux.alibaba.com>
+Date: Wed, 24 Apr 2024 11:48:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 5/5] mm: shmem: add anonymous share mTHP counters
+To: Ryan Roberts <ryan.roberts@arm.com>, Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org,
+ david@redhat.com, wangkefeng.wang@huawei.com, ying.huang@intel.com,
+ shy828301@gmail.com, ziy@nvidia.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1713755580.git.baolin.wang@linux.alibaba.com>
+ <05d0096e4ec3e572d1d52d33a31a661321ac1551.1713755580.git.baolin.wang@linux.alibaba.com>
+ <CAGsJ_4xu4iL5pv7T1chyzGC2Vp9q1GwOp3wxb=bYMW-T-pj4dA@mail.gmail.com>
+ <3045341d-06c2-4fdb-88a1-3f0d473f99ee@linux.alibaba.com>
+ <5f147c9d-ba00-4757-b88e-38b45fffb8d3@arm.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <5f147c9d-ba00-4757-b88e-38b45fffb8d3@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgCXaBELgShmKXE4Kw--.6143S6
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4rury5GF17Zry5KFWDCFg_yoWDKFX_uF
-	92vr1kXr4fCF1fXw42vr9YqFWqg3y8A3WFgws8GFy2ya95JrW3Jr4Dtry3Ary3Way8GF1q
-	yrs5Z3WjqrnFgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbPkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6r1F6r1fM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
-	0Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
-	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
-	v7M4kE6xkIj40Ew7xC0wCY1x0264kExVAvwVAq07x20xyl42xK82IYc2Ij64vIr41l4I8I
-	3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
-	WUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
-	wI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2
-	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
-	Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfU1WlkUUUUU
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 
-From: Baokun Li <libaokun1@huawei.com>
 
-The err_put_fd tag is only used once, so remove it to make the code more
-readable.
 
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
----
- fs/cachefiles/ondemand.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+On 2024/4/23 19:39, Ryan Roberts wrote:
+> On 23/04/2024 02:46, Baolin Wang wrote:
+>>
+>>
+>> On 2024/4/23 09:17, Barry Song wrote:
+>>> On Mon, Apr 22, 2024 at 3:03 PM Baolin Wang
+>>> <baolin.wang@linux.alibaba.com> wrote:
+>>>>
+>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>>> ---
+>>>>    include/linux/huge_mm.h | 2 ++
+>>>>    mm/huge_memory.c        | 4 ++++
+>>>>    mm/shmem.c              | 5 ++++-
+>>>>    3 files changed, 10 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+>>>> index 26b6fa98d8ac..67b9c1acad31 100644
+>>>> --- a/include/linux/huge_mm.h
+>>>> +++ b/include/linux/huge_mm.h
+>>>> @@ -270,6 +270,8 @@ enum mthp_stat_item {
+>>>>           MTHP_STAT_ANON_SWPOUT,
+>>>>           MTHP_STAT_ANON_SWPOUT_FALLBACK,
+>>>>           MTHP_STAT_ANON_SWPIN_REFAULT,
+>>>> +       MTHP_STAT_SHMEM_ANON_ALLOC,
+>>>> +       MTHP_STAT_SHMEM_ANON_ALLOC_FALLBACK,
+>>>
+>>> not quite sure about this. for 2MB pmd-mapped THP shmem, we count them
+>>> as FILE_THP.
+>>> here we are counting as SHMEM_ANON. To me, SHMEM_ANON is more correct but
+>>> it doesn't align with pmd-mapped THP. David, Ryan, what do you think?
+>>
+>> Thanks for reviewing.
+>>
+>> IMO, I think both approaches are acceptable, which also reflects the dual nature
+>> of anonymous shared pages: on the one hand they are anonymous pages, and on the
+>> other hand, they are backed by a pseudo file. From the user's perspective, I
+>> prefer to use the term "anonymous shmem", which can be distinguished from the
+>> real file-backed THP.
+>>
+>> Anyway, let's see what others think.
+> 
+>  From a quick look at the code, it looks like the shmem alloc/fallback/charge
+> events are all lumped in with FILE_THP. But the instantaneous "how many are
+> allocated" and "how many are mapped" have their own NR_SHMEM_THPS and
+> NR_SHMEM_PMDMAPPED counters? So its a bit inconsistent today.
+> 
+> My preference would be to add these to be consistent with the anon stats:
+> 
+> MTHP_STAT_SHMEM_FAULT_ALLOC,
+> MTHP_STAT_SHMEM_FAULT_FALLBACK,
+> MTHP_STAT_SHMEM_FAULT_FALLBACK_CHARGE,
+> 
+> But it looks like these aren't always allocated due to faults? So perhaps:
+> 
+> MTHP_STAT_SHMEM_ALLOC,
+> MTHP_STAT_SHMEM_FALLBACK,
+> MTHP_STAT_SHMEM_FALLBACK_CHARGE,
 
-diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index 4ba42f1fa3b4..fd49728d8bae 100644
---- a/fs/cachefiles/ondemand.c
-+++ b/fs/cachefiles/ondemand.c
-@@ -347,7 +347,9 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
- 
- 	if (copy_to_user(_buffer, msg, n) != 0) {
- 		ret = -EFAULT;
--		goto err_put_fd;
-+		if (msg->opcode == CACHEFILES_OP_OPEN)
-+			close_fd(((struct cachefiles_open *)msg->data)->fd);
-+		goto error;
- 	}
- 
- 	/* CLOSE request has no reply */
-@@ -358,9 +360,6 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
- 
- 	return n;
- 
--err_put_fd:
--	if (msg->opcode == CACHEFILES_OP_OPEN)
--		close_fd(((struct cachefiles_open *)msg->data)->fd);
- error:
- 	xa_erase(&cache->reqs, id);
- 	req->error = ret;
--- 
-2.39.2
+This looks good to me.
 
+> If I've understood the code correctly (I know nothing about shmem), the
+> allocation can be for both mmap(SHARED|ANON) and for tmpfs? So "SHMEM_ANON"
+
+This is allowed, but the 'fd' for tmpfs will be ignored (see 
+ksys_mmap_pgoff()), which is same with anonymous shmem.
+
+> probably isn't quite right?
+> 
+> 
+>>
+>>>>           __MTHP_STAT_COUNT
+>>>>    };
+>>>>
+>>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>>>> index 9e52c0db7580..dc15240c1ab3 100644
+>>>> --- a/mm/huge_memory.c
+>>>> +++ b/mm/huge_memory.c
+>>>> @@ -557,6 +557,8 @@ DEFINE_MTHP_STAT_ATTR(anon_alloc_fallback,
+>>>> MTHP_STAT_ANON_ALLOC_FALLBACK);
+>>>>    DEFINE_MTHP_STAT_ATTR(anon_swpout, MTHP_STAT_ANON_SWPOUT);
+>>>>    DEFINE_MTHP_STAT_ATTR(anon_swpout_fallback, MTHP_STAT_ANON_SWPOUT_FALLBACK);
+>>>>    DEFINE_MTHP_STAT_ATTR(anon_swpin_refault, MTHP_STAT_ANON_SWPIN_REFAULT);
+>>>> +DEFINE_MTHP_STAT_ATTR(shmem_anon_alloc, MTHP_STAT_SHMEM_ANON_ALLOC);
+>>>> +DEFINE_MTHP_STAT_ATTR(shmem_anon_alloc_fallback,
+>>>> MTHP_STAT_SHMEM_ANON_ALLOC_FALLBACK);
+>>>>
+>>>>    static struct attribute *stats_attrs[] = {
+>>>>           &anon_alloc_attr.attr,
+>>>> @@ -564,6 +566,8 @@ static struct attribute *stats_attrs[] = {
+>>>>           &anon_swpout_attr.attr,
+>>>>           &anon_swpout_fallback_attr.attr,
+>>>>           &anon_swpin_refault_attr.attr,
+>>>> +       &shmem_anon_alloc_attr.attr,
+>>>> +       &shmem_anon_alloc_fallback_attr.attr,
+>>>>           NULL,
+>>>>    };
+>>>>
+>>>> diff --git a/mm/shmem.c b/mm/shmem.c
+>>>> index 8b009e7040b2..4a0aa75ab29c 100644
+>>>> --- a/mm/shmem.c
+>>>> +++ b/mm/shmem.c
+>>>> @@ -1706,11 +1706,14 @@ static struct folio *shmem_alloc_and_add_folio(struct
+>>>> vm_fault *vmf,
+>>>>                           pages = 1 << order;
+>>>>                           index = round_down(index, pages);
+>>>>                           folio = shmem_alloc_hugefolio(gfp, info, index, order);
+>>>> -                       if (folio)
+>>>> +                       if (folio) {
+>>>> +                               count_mthp_stat(order,
+>>>> MTHP_STAT_SHMEM_ANON_ALLOC);
+> 
+> is there any reason why this can't go next to the existing PMD-size stat?
+
+No, will move to the existing PMD-size stat.
