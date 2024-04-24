@@ -1,154 +1,131 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E806215ADBD
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 12:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163DE15ADAE;
+	Wed, 24 Apr 2024 12:26:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713961554; cv=none; b=AKK3M1iUU0q4cOJNP7f0e1M0ahyNQObhZryKglhivbnHCjdB5r3wUkvtM+Sv7hVwUVVotgFWLa0mDHVrsdZOzJwPnwYPIiSM+kEsUeRJStlWwpzP+pujUXfAUFKab2kkbJb2rRknCkiSIdPZUGOz7ADzAqnhG/Y/1gbCSCV0mrM=
+	t=1713961589; cv=none; b=Qegq5WcolITvwor9UkO0hxO5tdS+U2I8fJd/PLegc0uCqaW9gKtFgwAPdrNH7TUm2mCIRm7NEjYKBHrrjaAvce201EgmaMj/yHXU+DmYpsDgyodoIxTaWsD8Yzh/XPCKUPdgO9HdpFft2pgPf41Nj7/BdEgX6G7Z9X3qZ6utFqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713961554; c=relaxed/simple;
-	bh=rG4d/MnWfaOjQq0qDrwsQuXTojlbohycGBXya8OAIuc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=B/Y4wm3ua0ilAFppncMVABWG0N2YjFqfk9mTqAjZGImYp0MDCryWaGRagAyOQlKxCa7oyW5sUNd2O8DY9tFpFRIoGWHrLOT/Jakx2Vd+rQPvRrbXXXO/gOPPFqgjqydnp1HLeXiekr1h8GStFp3nhMvDnCWHCQDf5BK0Ag3oLZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=ExKG6atw; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	s=arc-20240116; t=1713961589; c=relaxed/simple;
+	bh=pENaq1F7irNnXDi2tqew8U6t/paLMwTAdvNSKq0Z4zM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KbiYL4QJ1iEQ5GN4pAtUEaDoh8+TBijE63FZTYLOj1Rv0eBPDnYuoUOsqdSa1Z3hyFe9dx5nsGJBnAO1B7VNNPrM5MsINju8ghm7iDHd1p8hbrxFbXcZ4o9sQxqcS7qIJpea0/Lnmzbw+KNgmpkNW/r3zX+rDHZUBX9OZBWoJeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OqV6jfm6; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ExKG6atw"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a55b2f49206so154833466b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 05:25:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OqV6jfm6"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-572040691c9so1608885a12.1;
+        Wed, 24 Apr 2024 05:26:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1713961551; x=1714566351; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6EK3Y3Nu/Z/IArF7/R+9U8KrZLCbZgIZZgP2Ef02z5M=;
-        b=ExKG6atwAgL7C6fnrea+BqyqoHZykKEJrQHLkHzYMLyY7CJqm/WrtYDEv8cV6kX/+o
-         jb6n6oB+BYouLXLBfA4MpxoHXKHhnOG/23xi8Btyhq7TRVJ6wBbp76weOVnV0TJj0FpK
-         42JHhGB396j2YTrxghW9U22LWtaywwUJdgDDs=
+        d=gmail.com; s=20230601; t=1713961586; x=1714566386; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+rdUuC6v/k+XVeWN6GsjQ32OKOeNoWrrRy+0NsEkvrY=;
+        b=OqV6jfm6FiqSb1JS2mULvh03zYC11KgLFeucABNpQolicHowgO+r/b0WY46hdFSjsf
+         TGMGzrtqOX7lnK0UuJqyxLcyVE1xZh33gNIocmW+3QeL3xl0jVLv3xbrigWb8IIpynxB
+         g1E/+xTwGvJC/abW5R6dLJ1bSSv8hrSgjS7XYupBoxod6aSR7MN9sWv7C/MB5Xu0CjiW
+         BF94EH1nDwUVcZRcs9mMz4LVIY5qawqBKAQnECHLlSlve8i413OQQlZakamGKzx09xi4
+         65lXtAnh9VXLy+OVa4JzpzMXKEtuyjQiYvoBxCqTeBX/DYUCTjyd2MI/IBIIk5VhFMkd
+         rLfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713961551; x=1714566351;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6EK3Y3Nu/Z/IArF7/R+9U8KrZLCbZgIZZgP2Ef02z5M=;
-        b=QDIGuPhGn+i1IuC7ZYa/QXzhaZo7GbfTNNSb+J1ie/L5Ly4ACm2xUk+JDt+Krhucc2
-         ldZqk/RqG+ouyD2q+qDeATkM/tR8NbwYohVL26Sicc6WhoEj2nj1pDlKrDakHzU5I2QN
-         gaWDoZnL0WfOu4qgP45gKYlzmbH4b2sI8XuB/dJz6paW+9bosU/+AcNurMEEHBUczf9i
-         q3ErofGUeNYDmUWtaQ6Xqi1qgz3s1ZgU66TEFcf9Lk7tT3SkX0VX/d5GJxOMZIbSt9be
-         4BTX+qerDWi3xajxvuyWnce1tAQWM0Uz2G4dqvyM4Z/5o3S4YfOLdrUFajcYMchI9ig0
-         4UPQ==
-X-Gm-Message-State: AOJu0YxetTYjBnIGjAGtmRXC0/VBU41OfhJnzpLPnhKQZAsvtXvqY1bj
-	PjinbdZXYaI8hSoCAyKNXTUOQ0haG7d+oQYhraCNB1XS2pkQc/ZrqrVXLRPrRzhqzl0uLs1y+H5
-	bGeI=
-X-Google-Smtp-Source: AGHT+IEACSnmOdwmOybMgM4QKn4HHUlMUtN23mOm1fXXJAGTvhFCmotMYTZCKh0njhVYjNRuha5ZqA==
-X-Received: by 2002:a17:906:3485:b0:a55:690b:b696 with SMTP id g5-20020a170906348500b00a55690bb696mr6278162ejb.9.1713961551046;
-        Wed, 24 Apr 2024 05:25:51 -0700 (PDT)
-Received: from andrea-amarula.amarulasolutions.com (212-57-59-66.xdsl.deanconnect.nl. [212.57.59.66])
-        by smtp.gmail.com with ESMTPSA id bi14-20020a170907368e00b00a5588ed8fa2sm6755202ejc.113.2024.04.24.05.25.50
+        d=1e100.net; s=20230601; t=1713961586; x=1714566386;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+rdUuC6v/k+XVeWN6GsjQ32OKOeNoWrrRy+0NsEkvrY=;
+        b=evtICmYPkWWrH1ss0bPX30HsY8EMM+P1kBmICyWZDlYNv2XV9GZE9MARjbRU3Q+XNA
+         3b1P9gdGSKXGwuVAOzqTRilx22hcmpwKK+1ImvoVkatACAEnDFmyHZWlcDnKOQEBIKW8
+         K5m4e5v5S/WhinheM4H1BP62WNfQZFUdDVlvk4hc9SjjcKuuTG0zUANYMC/J80mNxYoL
+         W2N2n+F4OXN0Jy5F2fvNoySUUZpmcevWM0q6rUXfspZUMM7KE/YuTvrG0Pjqk7ffbqkH
+         4P6OpUU4z3nFSJVyOeihfuM66xX77JY5gqClEmy3IIYBAAtlyyahhtGNMA5k5Y+TVOqw
+         e2UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVo+oMjoiy9Z6lnhOs8ztNdPwe8Isv5bE0L5IqrQC2UdBzScy01NbSraAnhZl7eTmjjh+Izvi49Y9yikFUXFiLa3AB8oowcmIkZdHd6KOGRMaemeMN+v6cEsE8pBGU9kSKL5sigFpEZ0EOGwXfNaIT0aKs9bF27sfW1WHrvVTyJDkzV4yAf7eat
+X-Gm-Message-State: AOJu0YzRz/R2yH48HMhdJCWF60C8bdiNTzsIEzOV2aISieMd1cEOcvzq
+	qkrZ6D86r4Ds6pNEkhD00Df2agPEm61MRy5cfhhJCl9xFV8ztoOt
+X-Google-Smtp-Source: AGHT+IEhYR/0oIc/UbYhCWFPOMnJ7hBf7xrAGXFnwFIUU3o/7hThyqIDCatGp2KdXpmqCDltGTfWgA==
+X-Received: by 2002:a05:6402:22a5:b0:571:da40:22d9 with SMTP id cx5-20020a05640222a500b00571da4022d9mr5090846edb.10.1713961586077;
+        Wed, 24 Apr 2024 05:26:26 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id ef9-20020a05640228c900b00571bde3b0a4sm7497051edb.34.2024.04.24.05.26.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 05:25:50 -0700 (PDT)
-From: Andrea Calabrese <andrea.calabrese@amarulasolutions.com>
-To: linux-kernel@vger.kernel.org
-Cc: trivial@kernel.org,
-	Andrea Calabrese <andrea.calabrese@amarulasolutions.com>
-Subject: [PATCH] map.c: refactoring magic constant
-Date: Wed, 24 Apr 2024 14:25:33 +0200
-Message-Id: <20240424122533.79720-1-andrea.calabrese@amarulasolutions.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 24 Apr 2024 05:26:25 -0700 (PDT)
+Message-ID: <87c6e65dadbb3ed0c9b4506e809eb3976b12f204.camel@gmail.com>
+Subject: Re: [PATCH] iio: dac: adi-axi: fix a mistake in
+ axi_dac_ext_info_set()
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>, Nuno Sa <nuno.sa@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+	 <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org
+Date: Wed, 24 Apr 2024 14:30:02 +0200
+In-Reply-To: <df7c6e1b-b619-40c3-9881-838587ed15d4@moroto.mountain>
+References: <df7c6e1b-b619-40c3-9881-838587ed15d4@moroto.mountain>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-In map.c there is a magic constant of value 255 for the maximum number
-of probes. It is in many places in the code, in this commit I modified
-it to make it more clear
+Hi Dan,
 
-Signed-off-by: Andrea Calabrese <andrea.calabrese@amarulasolutions.com>
----
- drivers/base/map.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+On Wed, 2024-04-24 at 14:45 +0300, Dan Carpenter wrote:
+> The last parameter of these axi_dac_(frequency|scale|phase)_set()
+> functions is supposed to be true for TONE_2 and false for TONE_1. The
+> bug is the last call where it passes "private - TONE_2".=C2=A0 That
+> subtraction is going to be zero/false for TONE_2 and and -1/true for
+> TONE_1.=C2=A0 Fix the bug, and re-write it as "private =3D=3D TONE_2" so =
+it's
+> more obvious what is happening.
+>=20
+> Fixes: 4e3949a192e4 ("iio: dac: add support for AXI DAC IP core")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+> This is from code review.=C2=A0 Untested.
+> ---
 
-diff --git a/drivers/base/map.c b/drivers/base/map.c
-index 83aeb09ca161..b27f0cf557f4 100644
---- a/drivers/base/map.c
-+++ b/drivers/base/map.c
-@@ -16,6 +16,8 @@
- #include <linux/kobject.h>
- #include <linux/kobj_map.h>
- 
-+#define MAX_PROBES = 255
-+
- struct kobj_map {
- 	struct probe {
- 		struct probe *next;
-@@ -25,7 +27,7 @@ struct kobj_map {
- 		kobj_probe_t *get;
- 		int (*lock)(dev_t, void *);
- 		void *data;
--	} *probes[255];
-+	} *probes[MAX_PROBES];
- 	struct mutex *lock;
- };
- 
-@@ -38,8 +40,8 @@ int kobj_map(struct kobj_map *domain, dev_t dev, unsigned long range,
- 	unsigned int i;
- 	struct probe *p;
- 
--	if (n > 255)
--		n = 255;
-+	if (n > MAX_PROBES)
-+		n = MAX_PROBES;
- 
- 	p = kmalloc_array(n, sizeof(struct probe), GFP_KERNEL);
- 	if (p == NULL)
-@@ -55,7 +57,7 @@ int kobj_map(struct kobj_map *domain, dev_t dev, unsigned long range,
- 	}
- 	mutex_lock(domain->lock);
- 	for (i = 0, p -= n; i < n; i++, p++, index++) {
--		struct probe **s = &domain->probes[index % 255];
-+		struct probe **s = &domain->probes[index % MAX_PROBES];
- 		while (*s && (*s)->range < range)
- 			s = &(*s)->next;
- 		p->next = *s;
-@@ -72,13 +74,13 @@ void kobj_unmap(struct kobj_map *domain, dev_t dev, unsigned long range)
- 	unsigned int i;
- 	struct probe *found = NULL;
- 
--	if (n > 255)
--		n = 255;
-+	if (n > MAX_PROBES)
-+		n = MAX_PROBES;
- 
- 	mutex_lock(domain->lock);
- 	for (i = 0; i < n; i++, index++) {
- 		struct probe **s;
--		for (s = &domain->probes[index % 255]; *s; s = &(*s)->next) {
-+		for (s = &domain->probes[index % MAX_PROBES]; *s; s = &(*s)->next) {
- 			struct probe *p = *s;
- 			if (p->dev == dev && p->range == range) {
- 				*s = p->next;
-@@ -100,7 +102,7 @@ struct kobject *kobj_lookup(struct kobj_map *domain, dev_t dev, int *index)
- 
- retry:
- 	mutex_lock(domain->lock);
--	for (p = domain->probes[MAJOR(dev) % 255]; p; p = p->next) {
-+	for (p = domain->probes[MAJOR(dev) % MAX_PROBES]; p; p = p->next) {
- 		struct kobject *(*probe)(dev_t, int *, void *);
- 		struct module *owner;
- 		void *data;
-@@ -147,7 +149,7 @@ struct kobj_map *kobj_map_init(kobj_probe_t *base_probe, struct mutex *lock)
- 	base->dev = 1;
- 	base->range = ~0;
- 	base->get = base_probe;
--	for (i = 0; i < 255; i++)
-+	for (i = 0; i < MAX_PROBES; i++)
- 		p->probes[i] = base;
- 	p->lock = lock;
- 	return p;
--- 
-2.34.1
+Auch, good catch! Agreed that private =3D=3D AXI_DAC_*_TONE_2 makes it more
+readable.
+
+I guess Jonathan may just squash this in the driver (was pushed this weeken=
+d).
+Anyways, FWIW:
+
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+
+> =C2=A0drivers/iio/dac/adi-axi-dac.c | 6 +++---
+> =C2=A01 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.=
+c
+> index 9047c5aec0ff..880d83a014a1 100644
+> --- a/drivers/iio/dac/adi-axi-dac.c
+> +++ b/drivers/iio/dac/adi-axi-dac.c
+> @@ -383,15 +383,15 @@ static int axi_dac_ext_info_set(struct iio_backend
+> *back, uintptr_t private,
+> =C2=A0	case AXI_DAC_FREQ_TONE_1:
+> =C2=A0	case AXI_DAC_FREQ_TONE_2:
+> =C2=A0		return axi_dac_frequency_set(st, chan, buf, len,
+> -					=C2=A0=C2=A0=C2=A0=C2=A0 private - AXI_DAC_FREQ_TONE_1);
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 private =3D=3D AXI_DAC_FREQ_TONE_2);
+> =C2=A0	case AXI_DAC_SCALE_TONE_1:
+> =C2=A0	case AXI_DAC_SCALE_TONE_2:
+> =C2=A0		return axi_dac_scale_set(st, chan, buf, len,
+> -					 private - AXI_DAC_SCALE_TONE_1);
+> +					 private =3D=3D AXI_DAC_SCALE_TONE_2);
+> =C2=A0	case AXI_DAC_PHASE_TONE_1:
+> =C2=A0	case AXI_DAC_PHASE_TONE_2:
+> =C2=A0		return axi_dac_phase_set(st, chan, buf, len,
+> -					 private - AXI_DAC_PHASE_TONE_2);
+> +					 private =3D=3D AXI_DAC_PHASE_TONE_2);
+> =C2=A0	default:
+> =C2=A0		return -EOPNOTSUPP;
+> =C2=A0	}
 
