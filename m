@@ -1,96 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1459A13CFAD;
-	Wed, 24 Apr 2024 05:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6709613CFAD;
+	Wed, 24 Apr 2024 05:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713937318; cv=none; b=JX6hrY6crUsZ0H++zaUV8eckb/9o+LcIJ00y6BxrI4d/IxXYTfghr8Of5cCBKCmfs+taGtR0RAUz/JR9G6zTRHrW65rVcxk0gibWEP5FrVMgsbottt5qateeAqvshcpJWHchY/glv7c1mujXIR/66VcjB9jlEvhcqbfJuVe6pdw=
+	t=1713937372; cv=none; b=qnb0P1C1VJgJzzqns8rtJIlprurlkKKGGIlShpWI6UHBQRrfnlxU6/XZetNa+cWhhLIEJrXOfzmsUxxW/uGXaUJ4tEgZItVOz2mno+0w3W/PN0TI48yYYvoZAy2N9O16e/s+9ic9wj3Cg+iGGAtt/up6rG/kE0fcqvbE8G5Z5Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713937318; c=relaxed/simple;
-	bh=xLugYiX9yb2t7DvTMC5IfpmLBUzF0Er2szAnJmqXgm0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nxbQKwa7Pk5b9mJ9kFQ9vbYW3NC+YtaV6+b8CTHgTkFnEZqNeCvTaMhS3t/7tpFHB/tTnV+Z/w7gwvzU7ePkomEVpfj5mby3PwS7FXlukO44UAzRTwsysBU+v/NhVfzQ1MVsmvHy+37uNlgCTGQiq04YQX1bfLl/BQwc9MHA6kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Eh/bXQnA; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713937372; c=relaxed/simple;
+	bh=cROuNLbeki5Gd9BgCdNRN+Wlj5pUWw5rtrCSyV3YY6E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q4H9Uy31RPd6sStIwCkx1KjFqcAkwP3v7fDNYoyHLUJFkwYREZGZcWJOnnri3B+Y9RdYin7uag60m8CnM1U6rIC2dn+Nz+wc0zxdlHc8kIVN68vPNMTIAmxiGgSjN/DogZT+Bq6GLNwJMNDrKbMEYxr0mECtSHAisYKs0yTXS1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=teMtBQW4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Eh/bXQnA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713937317; x=1745473317;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xLugYiX9yb2t7DvTMC5IfpmLBUzF0Er2szAnJmqXgm0=;
-  b=Eh/bXQnAw1okdBE5CrKYUuQzzGvDYzVGlLeDq4K+W8BEtD99ALqatsZy
-   bLCrprMRGQWNScJ/+vibSX3WNN2lCNbqy48YQyZlCRRPFZqTeMRGqK3mA
-   wPph2/DM1LzlDgTcbAbF0GPcdnR5eX6RTPZXi3gOlrV6RW/q506LmX4sq
-   8it+raUdnpoqiX98nBbqizqWeTSgrMlje8mhZjSiUpLdJ0nHS2Vo+dApq
-   ON77xpcWaRyi3SJG47jZiSPQ0GdbjHvlK9Fwyez8h5Ef5x9tLjNKysbV9
-   TFXSM3+Cg4mgD8vb3kdU9OE/aYVxHP0Zw+jmCQGfvRPCrVNSgzrekRBUc
-   w==;
-X-CSE-ConnectionGUID: vQupXMaNSryt2oSB2jfbVg==
-X-CSE-MsgGUID: 3elIl665S1SzP0PjTWCj0A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9670128"
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="9670128"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 22:41:57 -0700
-X-CSE-ConnectionGUID: Ieren6JkQg2WHb43rbnEgg==
-X-CSE-MsgGUID: h6M/6lwcRWSSy57fmloxmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="24662302"
-Received: from unknown (HELO dcai-bmc-sherry-1.sh.intel.com) ([10.239.138.57])
-  by fmviesa008.fm.intel.com with ESMTP; 23 Apr 2024 22:41:53 -0700
-From: Haiyue Wang <haiyue.wang@intel.com>
-To: bpf@vger.kernel.org
-Cc: Haiyue Wang <haiyue.wang@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH bpf-next v1] bpf: update the comment for BTF_FIELDS_MAX
-Date: Wed, 24 Apr 2024 13:45:07 +0800
-Message-ID: <20240424054526.8031-1-haiyue.wang@intel.com>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="teMtBQW4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1808BC2BD11;
+	Wed, 24 Apr 2024 05:42:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713937371;
+	bh=cROuNLbeki5Gd9BgCdNRN+Wlj5pUWw5rtrCSyV3YY6E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=teMtBQW4kd5WLbV5Fdi/aI72LaRFrp+461u8eT36iUd1pwmgNBX90KxrEcNjK9404
+	 jbZBB+8muf/801f1IW+CoXY4JjEvYA4hFlaVifokOrt370JJ6xD1Y/n8Hj7xuSxTxD
+	 Sts3RciR4DQ22bWya07lOgfXR7+y0SuO0WhJrXRnqbsu4cYXgY37ZxH4tPO+QADSPl
+	 Wy5dZCanMBBU+fD0ZRfP8HUta6AxytSIvvdCXO1o5gVCJEMmK5jBeVpCOkZbNhrYYF
+	 tmmx4DRIB/Xwcba8p28nUI4mPXOCzywK3/g+Zg4eXpTjRJpEJvaJbk1lQRTq3LhUy9
+	 dTkuXNb3ImWMg==
+Message-ID: <7a3d4b8a-e89e-499e-92b7-9f63fbc84011@kernel.org>
+Date: Wed, 24 Apr 2024 07:42:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] dt-bindings: mmc: renesas,sdhi: Group single const
+ value items into an enum list
+To: Prabhakar <prabhakar.csengg@gmail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-mmc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20240423182428.704159-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240423182428.704159-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240423182428.704159-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The commit d56b63cf0c0f ("bpf: add support for bpf_wq user type")
-changes the fields support number to 11, just sync the comment.
+On 23/04/2024 20:24, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> 
+> Group single const value items into an enum list.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v1->v2
+> - Updated commit message
+> - Grouped single const value items into an enum list. 
+> ---
+>  .../devicetree/bindings/mmc/renesas,sdhi.yaml  | 18 +++++++-----------
+>  1 file changed, 7 insertions(+), 11 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+> index 29f2400247eb..2bf90095742b 100644
+> --- a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+> @@ -13,15 +13,13 @@ properties:
+>    compatible:
+>      oneOf:
+>        - items:
+> -          - const: renesas,sdhi-sh73a0  # R-Mobile APE6
+> -      - items:
+> -          - const: renesas,sdhi-r7s72100 # RZ/A1H
+> -      - items:
+> -          - const: renesas,sdhi-r7s9210 # SH-Mobile AG5
+> -      - items:
+> -          - const: renesas,sdhi-r8a73a4 # R-Mobile APE6
+> -      - items:
+> -          - const: renesas,sdhi-r8a7740 # R-Mobile A1
+> +          - enum:
 
-Signed-off-by: Haiyue Wang <haiyue.wang@intel.com>
----
- include/linux/bpf.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+You wanted to drop the items, but I still see it here.
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 64bf0cf3ee95..978200f6d925 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -184,7 +184,7 @@ struct bpf_map_ops {
- };
- 
- enum {
--	/* Support at most 10 fields in a BTF type */
-+	/* Support at most 11 fields in a BTF type */
- 	BTF_FIELDS_MAX	   = 11,
- };
- 
--- 
-2.43.2
+> +              - renesas,sdhi-sh73a0  # R-Mobile APE6
+> +              - renesas,sdhi-r7s72100 # RZ/A1H
+> +              - renesas,sdhi-r7s9210 # SH-Mobile AG5
+> +              - renesas,sdhi-r8a73a4 # R-Mobile APE6
+> +              - renesas,sdhi-r8a7740 # R-Mobile A1
+> +              - renesas,sdhi-mmc-r8a77470 # RZ/G1C
+
+Keep list alphabetically ordered.
+
+
+
+Best regards,
+Krzysztof
 
