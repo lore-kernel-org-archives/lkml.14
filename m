@@ -1,156 +1,100 @@
-Received: from nbd.name (nbd.name [46.4.11.11])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805E815CD6F;
-	Wed, 24 Apr 2024 13:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B6B15B57E
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713966647; cv=none; b=n1mFU7JVubgb4FR7xpHPM74qMTee6JBiHsHx/xcuaByJxtkleaZ264Nl0mTySopac36LyJ2u8NGQZpd+NmqAiN0QqI99nAXU4G6cJ91xmxDL3hfraSYKnSS4qEjd9M5y3kJHv2BRgJjykI8K8Ms4W9kce7SE3ku8+AouWfYJuWc=
+	t=1713966682; cv=none; b=t6bzUji4jfz+wctD6TZqtByfw0aHcEdw4rkQ2Zzrfnuo1jmz69o0TcVbdc9VvXEnwbOY+IOrfIOh5mAFNtrPZB8AKPQqdUhAo7aG9nTR+bGnWxg38dF3NHbm2Dxx72vIuYLn0hi1zznSSsPF5xQaGrFB7GyeVvfwlMIE8IsEKpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713966647; c=relaxed/simple;
-	bh=4WwbKPa9Qflb+/iIZT+f/FFfbuAR+zna8wQMxq6DJ2Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BadI4eYhsCOgoTgggST5ROOCeVGpSBOIcHwA56BfdGPoJoVXBguwJnr9wp0ViwIJhCtihFRrB/4ouYFumEWyIG0VSknneX/+weTbZGpbrwJhN63wixepUGne6n6armk9sOipsrQPkdygvYsPNjNaoxx7b2gFKJrUYWhH+6uDKbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=EFKkX+Rm; arc=none smtp.client-ip=46.4.11.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
+	s=arc-20240116; t=1713966682; c=relaxed/simple;
+	bh=Ru5nWKfEHKjsDt1vpqsF7Uu+ro/kn7zKfZdgh5xVHAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DZ2fYUvK52McCWdpxZNg5B6ZG/+QUWbfrZ3QZZNKNC9/07ksT/RKERtT1xCZxQ2WnELi6uX/wUgQW09WjhbzVsBL+RHqOnaaWrJ6UpAd1811RJn74UZLRD8ATLR+hfikDqL7sk5XJMVKW2NN3c1EGFW6PQxx00uP0KeaaoFLAfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=cFuMhfON; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="EFKkX+Rm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-	s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=G3hli6eYNuucDxPQhgOYx6F2vYtfh3N/KW2prUSvcro=; b=EFKkX+RmvQ5yfh4QV1WkjR9B1Y
-	8p4xEfWxvqL8yegH295TDJSNPUVdtIbYb6OdJOXfBT67wfdZ8iRD8Er0eIkFjslQcf8DrVSE4kxNY
-	lqM5ckw6704T42upD0OS4Cj9visNoNuPwo7pXzQJlMTBzhowrfjEAtWdvVJn9sH/Pn7w=;
-Received: from p54ae9c93.dip0.t-ipconnect.de ([84.174.156.147] helo=nf.local)
-	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <nbd@nbd.name>)
-	id 1rzd16-006lN9-2a;
-	Wed, 24 Apr 2024 15:50:32 +0200
-Message-ID: <eb0e1eb6-306c-4cf7-922d-203db09d8d29@nbd.name>
-Date: Wed, 24 Apr 2024 15:50:32 +0200
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="cFuMhfON"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9EE2240E01C5;
+	Wed, 24 Apr 2024 13:51:18 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id JVrBxhuy33_y; Wed, 24 Apr 2024 13:51:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1713966674; bh=EBY9JeX28ZOF1EBVDHZpilQ+UJ4BEt8eGoNz2J+9fsQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cFuMhfONd+yCpmn5H3a445TD59aoAoX05f1TAeGQIrB4wGQTfECpx/JK1k7YIkbRK
+	 qy63iG7uHaFJumJCDLSbblC9RDeQBYmjg/uLL4CDGieFTYubdn1WmCtx0sZ0Gy0juZ
+	 i31C/8Bt7oxGVPOf7uUng1GtjGbVJQTjrapfNosI8FsSwpdlRz73R3d/f5rjkffx9z
+	 o5atlg87BSuqS4mvHRS21tEx8RRLFvk8COOVs5dhmmFa+4QGJtT2AerlH9G80DypJE
+	 vFOZMJsijUu9ck0Rb5ZipCLmh8jxVDOZwoihsDoenjqmgYViideoERJh/Zq/nyHO1b
+	 QPiarPweMFwrKIbo4qH+LXVodOS05jLZDYk0ZeKmONTze40fV3qo9U/KXBfY3tfc+z
+	 4K0wc2hDSL2aTa7SvA3VjOQ0FEK70wgcsJB/S/g8Agt5l99B6SNUW3flSKIpEIGIPl
+	 F3OfGv8pjypcu2gtuQJPJvTJtbkxneTGdqHFUKYvICFmegFcLdzbMn3jaANyKkTJEj
+	 fKGiRW1yd8NM1I2rlaZUy7fSFZtwqffI5aiIguzJCdT/vmV7MA5aK/IL1maDGeq4cO
+	 uCD2ncaKutVGK87r8E3J9d0fnfm9DrqqZJ7mlKr0MhRaA+h9Zd5L7ilqhrIraeqWMW
+	 8J1zOivBIOjWzmyABaT+4+rM=
+Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 841CE40E0177;
+	Wed, 24 Apr 2024 13:50:53 +0000 (UTC)
+Date: Wed, 24 Apr 2024 15:50:52 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Tao Liu <ltao@redhat.com>
+Subject: Re: [PATCHv10 04/18] cpu/hotplug, x86/acpi: Disable CPU offlining
+ for ACPI MADT wakeup
+Message-ID: <20240424135052.GDZikOPIOeGxtQRBBc@fat_crate.local>
+References: <20240409113010.465412-1-kirill.shutemov@linux.intel.com>
+ <20240409113010.465412-5-kirill.shutemov@linux.intel.com>
+ <20240423160258.GBZifbsuoTIbWDapej@fat_crate.local>
+ <k4t62qfiyapfh2hjp4bpnaa4bmtlajpm5q4an3qs4jimhldcwv@wtrp63ofrfk6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] net: add TCP fraglist GRO support
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, David Ahern <dsahern@kernel.org>,
- linux-kernel@vger.kernel.org
-References: <20240423094117.93206-1-nbd@nbd.name>
- <CANn89i+6xRe4V6aDmD-9EM0uD7A87f6rzg3S7Xq6-NaB_Mb4nw@mail.gmail.com>
- <63abfa26-d990-46c3-8982-3eaf7b8f8ee5@nbd.name>
- <CANn89iJZvoKVB+AK1_44gki2pHyigyMLXFkyevSQpH3iDbnCvw@mail.gmail.com>
- <7476374f-cf0c-45d0-8100-1b2cd2f290d5@nbd.name>
- <CANn89iLddm704LHPDnnoF2RbCfvrivAz0e6HTeiBARmvzoUBjA@mail.gmail.com>
- <ebe85dca-e0e9-4c55-a15d-20d340f66848@nbd.name>
- <97f10c8b5b615eac8f65d67ef10928d97b6b760d.camel@redhat.com>
- <328ab7b3-4890-4e0d-8b9a-fed7700f1a6a@nbd.name>
- <66285f637bdec_1924cc2941b@willemb.c.googlers.com.notmuch>
-From: Felix Fietkau <nbd@nbd.name>
-Content-Language: en-US
-Autocrypt: addr=nbd@nbd.name; keydata=
- xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCeMncXpbbWNT2AtoAYICrKyX5R3iMAoMhw
- cL98efvrjdstUfTCP2pfetyN
-In-Reply-To: <66285f637bdec_1924cc2941b@willemb.c.googlers.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <k4t62qfiyapfh2hjp4bpnaa4bmtlajpm5q4an3qs4jimhldcwv@wtrp63ofrfk6>
 
-On 24.04.24 03:24, Willem de Bruijn wrote:
-> Felix Fietkau wrote:
->> On 23.04.24 16:34, Paolo Abeni wrote:
->> > On Tue, 2024-04-23 at 14:23 +0200, Felix Fietkau wrote:
->> >> On 23.04.24 14:11, Eric Dumazet wrote:
->> >> > On Tue, Apr 23, 2024 at 1:55 PM Felix Fietkau <nbd@nbd.name> wrote:
->> >> > > 
->> >> > > In the world of consumer-grade WiFi devices, there are a lot of chipsets
->> >> > > with limited or nonexistent SG support, and very limited checksum
->> >> > > offload capabilities on Ethernet. The WiFi side of these devices is
->> >> > > often even worse. I think fraglist GRO is a decent fallback for the
->> >> > > inevitable corner cases.
->> >> > 
->> >> > What about netfilter and NAT ? Are they okay with NETIF_F_FRAGLIST_GRO already ?
->> >> > 
->> >> > Many of these devices are probably using NAT.
->> >> 
->> >> In my tests, nftables NAT works just fine, both with and without 
->> >> flowtable offloading. I didn't see anything in netfilter that would have 
->> >> a problem with this.
->> > 
->> > I see you handle explicitly NAT changes in __tcpv4_gso_segment_csum(),
->> > like the current UDP code.
->> > 
->> > The TCP header has many other fields that could be updated affecting
->> > the TCP csum.
->> > Handling every possible mutation looks cumbersome and will likely
->> > reduce the performance benefits.
->> > 
->> > What is your plan WRT other TCP header fields update?
->> 
->> I think that should be easy enough to handle. My patch already only 
->> combines packets where tcp_flag_word(th) is identical. So when 
->> segmenting, I could handle all flags changes with a single 
->> inet_proto_csum_replace4 call.
->> 
->> > Strictly WRT the patch, I guess it deserves to be split in series,
->> > moving UDP helpers in common code and possibly factoring out more
->> > helpers with separate patches.
->> Will do.
-> 
-> A significant chunk of the complexity is in the
-> tcp[46]_check_fraglist_gro sk match. Is this heuristic worth the
-> complexity?
-> 
-> It seems that the platforms that will enable NETIF_F_FRAGLIST will
-> be mainly forwarding planes.
+On Wed, Apr 24, 2024 at 11:38:42AM +0300, Kirill A. Shutemov wrote:
+> It was wrong from beginning. If ACPI MADT wake up method is used on the
+> platform, we cannot handle offline, regardless if it is TDX or not.
 
-There are people using their devices as file servers and routers at the 
-same time. The heuristic helps for those cases.
+Sounds to me like this fact should be a prominent part of the commit
+message and these 1-4 patches should be carved out as a separate set
+fixing that ACPI MADT thing and I should take them separately now...?
 
-> If keeping, this refinement can probably a separate follow-on patch in
-> the series too:
-> 
-> - refactor existing udp code
-> - add segmentation support to handle such packets on tx
-> - add coalescing support that starts building such packets on rx
-> - refine coalescing choice
-I don't really understand what you're suggesting. With my patch, the GRO 
-code handles coalescing of packets. Segmentation on output is also 
-supported. The next version of my patch will fix the cases that were too 
-similar to the UDP code, so I guess refactoring to share code doesn't 
-really make sense there.
-Am I missing something?
+Also, does this need to go to stable although it is kinda big for
+stable. If stable, do we need a smaller fix first which is backportable?
 
-Thanks,
+Thx.
 
-- Felix
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
