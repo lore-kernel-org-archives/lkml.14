@@ -1,48 +1,48 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22038156671
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 05:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2FB156876
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 05:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713936936; cv=none; b=knN6nXfFQERxtdQCVefHrwyLHLQyhVixTXOILMsTvZWRj+5ksQPCUIk8fWtZ0hcznlUzng4U2yb7WJggzscmTqJBLxoXNTkJbCflkvzt6IzGDeGn9iWn3WzA0z3fXMA76QnPnM5fniXyfoLUyZP7fGozlJKFiSmSq1ydH3l+ITI=
+	t=1713936957; cv=none; b=Ix0hZXj5HLHmMM0WEcCnuIfLP6WKekHgskSwim/G5CoV7H89YxrcBjsoulyDFO9l5vIrboNLXw3j2TJ/GGhzaG+2nRjf9+F7scDV/+XeFdf8O0+N/fsaYxBrFhTo7txWkGyfA7ri+IVIe12ID4f8tt8IjcClf+Lyqv3vbnN17wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713936936; c=relaxed/simple;
-	bh=MFjWpwk59bsDChbs9KtKrNdxez95WJ176JCMOJ6L8fo=;
+	s=arc-20240116; t=1713936957; c=relaxed/simple;
+	bh=ossuaQDe3AwZrzHLymVt2BTtRBDDMiPXTOLKWKHbS58=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YDE3KrZX9BoLb0ewP7wZbhy5AuPUTRuM5UIkkEirc+NxrY4UJ7Co43PAyg+T7bmX4DpVmNGadah1xu3QmRHoLDnNqJjgMoj7kMQnA7Ueo+35Y0mLjTTabrJBrRKGEK2vmJIdq856AZdwHkyZXFks2YaXSM9WIQpYo5Mmj4wDeB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=SHsj7XXs; arc=none smtp.client-ip=68.232.153.233
+	 MIME-Version:Content-Type; b=cmpQ6O+JZ7m/6flnP/CRgGLs++ZEif7th72meZdbVyiGySUX5iC+jGGXIGXsWSW8MKQAIVKXRaWvU8gBtE/mVX/uHwuY/XcpA1jxrIQgKXTmhGbmJEkqV+kvh2ZzKXiUw0mQ2nBFBu5ux+hQjRQn9wjQHmVPInzd9a6BK3p8r2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=cVF7xHPm; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="SHsj7XXs"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="cVF7xHPm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1713936935; x=1745472935;
+  t=1713936955; x=1745472955;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=MFjWpwk59bsDChbs9KtKrNdxez95WJ176JCMOJ6L8fo=;
-  b=SHsj7XXs1VhCuGH7Xphm8Y5tB+BCUKyXoeJNArUJ2ixIE5fhDItC3Qma
-   HV4QThktxYNFtuzNmuL3zZvRxNJGcUy85nlVfEOKJUKs4EdP62fZno3F+
-   KhB25mbMtXCQSNoNDtDGaaZtedO4YDY5B+MSrjGvV0k6TDeStVRyjGm0m
-   vkJwSMhS+Pw+6l+bfEpM3kHwt1h3aroL3lrvigfAMl2aR6ycSrPX71dor
-   v7j0I21hhuCC5XsNTFrEl7rUjw76ZqLd+Gb0YC7tkb6gH/XQmhivO1Big
-   vj/KEhOrX4aBg5RJm7/8Il/aFSCaCUzTZW6c1hSzuH98SpwHHKuYGN7IW
+  bh=ossuaQDe3AwZrzHLymVt2BTtRBDDMiPXTOLKWKHbS58=;
+  b=cVF7xHPm34JP6Uug4e4T8wAoBm+P/gjoawPd7dIE9FagvL89GJDLX19z
+   zaxvt+763XHHxcIu3hYP4oUdvkJwbMJBuK9EIqiunC5MYv0XooxNZCrLp
+   tRKGvBrDJ9MefQkV23bUDzOMOwo9ATLyc7ORdJrUYebnkGcG5s3WoGE0R
+   wDH4BP3mQWINOZAuLEhlUPny5hCKOVm+jT+YoxfivyxGQzqZIQ6K8hkOJ
+   7vz+3qh6oSydNqPnmuAq9h1wxHWSOkzT1eNpJGN1kmSDm35UEFcEQOyWA
+   nGYFEZGo7NDIZdqtgf9yKor3+rGAfM1MDmjpbP3efQYwU1bvJhWWzrh2L
    Q==;
-X-CSE-ConnectionGUID: 66HgaiTNS5a1XaeqM3EXdg==
-X-CSE-MsgGUID: YnnuRWviQlaohksSfUW97Q==
+X-CSE-ConnectionGUID: XEmm68rJSp2bFUw1qrzV5g==
+X-CSE-MsgGUID: xoW1CWxPS6iSDddadPIKlQ==
 X-IronPort-AV: E=Sophos;i="6.07,225,1708412400"; 
-   d="scan'208";a="22410971"
+   d="scan'208";a="189716704"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Apr 2024 22:35:33 -0700
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Apr 2024 22:35:54 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 23 Apr 2024 22:35:19 -0700
+ 15.1.2507.35; Tue, 23 Apr 2024 22:35:39 -0700
 Received: from che-lt-i67131.microchip.com (10.10.85.11) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Tue, 23 Apr 2024 22:35:11 -0700
+ 15.1.2507.35 via Frontend Transport; Tue, 23 Apr 2024 22:35:30 -0700
 From: Manikandan Muralidharan <manikandan.m@microchip.com>
 To: <sam@ravnborg.org>, <bbrezillon@kernel.org>,
 	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
@@ -56,9 +56,9 @@ CC: <Hari.PrasathGE@microchip.com>, <Balamanikandan.Gunasundar@microchip.com>,
 	<Dharma.B@microchip.com>, <Varshini.Rajendran@microchip.com>,
 	<Balakrishnan.S@microchip.com>, <Charan.Pedumuru@microchip.com>, "Manikandan
  Muralidharan" <manikandan.m@microchip.com>
-Subject: [PATCH RESEND v9 6/8] drm: atmel-hlcdc: add vertical and horizontal scaling support for XLCDC
-Date: Wed, 24 Apr 2024 11:03:49 +0530
-Message-ID: <20240424053351.589830-7-manikandan.m@microchip.com>
+Subject: [PATCH RESEND v9 8/8] drm: atmel-hlcdc: add LCD controller layer definition for sam9x75
+Date: Wed, 24 Apr 2024 11:03:51 +0530
+Message-ID: <20240424053351.589830-9-manikandan.m@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240424053351.589830-1-manikandan.m@microchip.com>
 References: <20240424053351.589830-1-manikandan.m@microchip.com>
@@ -71,70 +71,137 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-Update the vertical and horizontal scaler registers of XLCDC IP
-with Bilinear and Bicubic co-efficients taps for Chroma and
-Luma componenets of the Pixel.
+Add the LCD controller layer definition and descriptor structure for
+sam9x75 for the following layers:
+- Base Layer
+- Overlay1 Layer
+- Overlay2 Layer
+- High End Overlay
 
 Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
 Acked-by: Sam Ravnborg <sam@ravnborg.org>
 ---
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h  |  4 ++++
- .../gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c   | 20 +++++++++++++++++++
- 2 files changed, 24 insertions(+)
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c | 100 +++++++++++++++++++
+ 1 file changed, 100 insertions(+)
 
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
-index 1153d402f810..e1a0bb24b511 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
-@@ -198,6 +198,8 @@
-  * @disc_pos: discard area position register
-  * @disc_size: discard area size register
-  * @csc: color space conversion register
-+ * @vxs_config: vertical scalar filter taps control register
-+ * @hxs_config: horizontal scalar filter taps control register
-  */
- struct atmel_hlcdc_layer_cfg_layout {
- 	int xstride[ATMEL_HLCDC_LAYER_MAX_PLANES];
-@@ -217,6 +219,8 @@ struct atmel_hlcdc_layer_cfg_layout {
- 	int disc_pos;
- 	int disc_size;
- 	int csc;
-+	int vxs_config;
-+	int hxs_config;
+diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
+index b09df821cbc0..9ce429f889ca 100644
+--- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
++++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
+@@ -467,6 +467,102 @@ static const struct atmel_hlcdc_dc_desc atmel_hlcdc_dc_sam9x60 = {
+ 	.ops = &atmel_hlcdc_ops,
  };
  
- /**
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-index f60367dc6d9d..4a7ba0918eca 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-@@ -966,6 +966,26 @@ static void atmel_xlcdc_csc_init(struct atmel_hlcdc_plane *plane,
- 					    desc->layout.csc + i,
- 					    xlcdc_csc_coeffs[i]);
- 	}
++static const struct atmel_hlcdc_layer_desc atmel_xlcdc_sam9x75_layers[] = {
++	{
++		.name = "base",
++		.formats = &atmel_hlcdc_plane_rgb_formats,
++		.regs_offset = 0x60,
++		.id = 0,
++		.type = ATMEL_HLCDC_BASE_LAYER,
++		.cfgs_offset = 0x1c,
++		.layout = {
++			.xstride = { 2 },
++			.default_color = 3,
++			.general_config = 4,
++			.disc_pos = 5,
++			.disc_size = 6,
++		},
++		.clut_offset = 0x700,
++	},
++	{
++		.name = "overlay1",
++		.formats = &atmel_hlcdc_plane_rgb_formats,
++		.regs_offset = 0x160,
++		.id = 1,
++		.type = ATMEL_HLCDC_OVERLAY_LAYER,
++		.cfgs_offset = 0x1c,
++		.layout = {
++			.pos = 2,
++			.size = 3,
++			.xstride = { 4 },
++			.pstride = { 5 },
++			.default_color = 6,
++			.chroma_key = 7,
++			.chroma_key_mask = 8,
++			.general_config = 9,
++		},
++		.clut_offset = 0xb00,
++	},
++	{
++		.name = "overlay2",
++		.formats = &atmel_hlcdc_plane_rgb_formats,
++		.regs_offset = 0x260,
++		.id = 2,
++		.type = ATMEL_HLCDC_OVERLAY_LAYER,
++		.cfgs_offset = 0x1c,
++		.layout = {
++			.pos = 2,
++			.size = 3,
++			.xstride = { 4 },
++			.pstride = { 5 },
++			.default_color = 6,
++			.chroma_key = 7,
++			.chroma_key_mask = 8,
++			.general_config = 9,
++		},
++		.clut_offset = 0xf00,
++	},
++	{
++		.name = "high-end-overlay",
++		.formats = &atmel_hlcdc_plane_rgb_and_yuv_formats,
++		.regs_offset = 0x360,
++		.id = 3,
++		.type = ATMEL_HLCDC_OVERLAY_LAYER,
++		.cfgs_offset = 0x30,
++		.layout = {
++			.pos = 2,
++			.size = 3,
++			.memsize = 4,
++			.xstride = { 5, 7 },
++			.pstride = { 6, 8 },
++			.default_color = 9,
++			.chroma_key = 10,
++			.chroma_key_mask = 11,
++			.general_config = 12,
++			.csc = 16,
++			.scaler_config = 23,
++			.vxs_config = 30,
++			.hxs_config = 31,
++		},
++		.clut_offset = 0x1300,
++	},
++};
 +
-+	if (desc->layout.vxs_config && desc->layout.hxs_config) {
-+		/*
-+		 * Updating vxs.config and hxs.config fixes the
-+		 * Green Color Issue in SAM9X7 EGT Video Player App
-+		 */
-+		atmel_hlcdc_layer_write_cfg(&plane->layer,
-+					    desc->layout.vxs_config,
-+					    ATMEL_XLCDC_LAYER_VXSYCFG_ONE |
-+					    ATMEL_XLCDC_LAYER_VXSYTAP2_ENABLE |
-+					    ATMEL_XLCDC_LAYER_VXSCCFG_ONE |
-+					    ATMEL_XLCDC_LAYER_VXSCTAP2_ENABLE);
++static const struct atmel_hlcdc_dc_desc atmel_xlcdc_dc_sam9x75 = {
++	.min_width = 0,
++	.min_height = 0,
++	.max_width = 2048,
++	.max_height = 2048,
++	.max_spw = 0x3ff,
++	.max_vpw = 0x3ff,
++	.max_hpw = 0x3ff,
++	.fixed_clksrc = true,
++	.is_xlcdc = true,
++	.nlayers = ARRAY_SIZE(atmel_xlcdc_sam9x75_layers),
++	.layers = atmel_xlcdc_sam9x75_layers,
++	.ops = &atmel_xlcdc_ops,
++};
 +
-+		atmel_hlcdc_layer_write_cfg(&plane->layer,
-+					    desc->layout.hxs_config,
-+					    ATMEL_XLCDC_LAYER_HXSYCFG_ONE |
-+					    ATMEL_XLCDC_LAYER_HXSYTAP2_ENABLE |
-+					    ATMEL_XLCDC_LAYER_HXSCCFG_ONE |
-+					    ATMEL_XLCDC_LAYER_HXSCTAP2_ENABLE);
-+	}
- }
- 
- static int atmel_hlcdc_plane_init_properties(struct atmel_hlcdc_plane *plane)
+ static const struct of_device_id atmel_hlcdc_of_match[] = {
+ 	{
+ 		.compatible = "atmel,at91sam9n12-hlcdc",
+@@ -492,6 +588,10 @@ static const struct of_device_id atmel_hlcdc_of_match[] = {
+ 		.compatible = "microchip,sam9x60-hlcdc",
+ 		.data = &atmel_hlcdc_dc_sam9x60,
+ 	},
++	{
++		.compatible = "microchip,sam9x75-xlcdc",
++		.data = &atmel_xlcdc_dc_sam9x75,
++	},
+ 	{ /* sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, atmel_hlcdc_of_match);
 -- 
 2.25.1
 
