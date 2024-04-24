@@ -1,131 +1,124 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7601C15B0E2;
-	Wed, 24 Apr 2024 14:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808FB158DDD;
+	Wed, 24 Apr 2024 14:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713968027; cv=none; b=oxsHbw/3Czyrap1sWMIonLPyWZR/MJUF3HylDo9uwNRiqTiNmPgkIZPJhJ4RxdLj2ok4jHO5BcN+QKsyorc+9Azz9BOQ2spoA+E4tA1OyTAxdRZ30Awc7cS425AaQI7LtQT5kXHCXL5Cdx/ihaEWkfGLUCeNaKdunYf7Cnx98hg=
+	t=1713968095; cv=none; b=eXLMLQjkA9jI1yYPXI1drTwXpddLnwFl5e83GKToHwE6bWdIjTpFk28B+bydBt26R3nP1MVWZM64pIxO2hHdxvqjmMQfOYUOdANm3xE0egq6k+D9nbG8JGOCftEjctjopBL3zRcIzj3t2L+WFaqil+4wBo69OlEnGjEVBdbhJJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713968027; c=relaxed/simple;
-	bh=cRbX4fFdqq6ANBfeAy8HYW0knzfPEAqtYyQ9SIFo+K0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ElQd9iPqr5p+CjNvJ7T/lSlERn3XitNIqvTMB7tP2fEbH7a8chE81qVeJZJPfmkvtNEUPop5G8EJ/pHUQPn+hNwfSqohU2Uv1jdqElXXDxaPHvG7lL5N9kU1kTj4R64PtkeyIhSzkMbzgwyBopRW/8EzJkSZi+gspKiquGvOh60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.6] (ip5f5af5d1.dynamic.kabel-deutschland.de [95.90.245.209])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id AF4A061E5FE06;
-	Wed, 24 Apr 2024 16:13:09 +0200 (CEST)
-Message-ID: <0391b306-1368-47ea-9602-26ff6df48921@molgen.mpg.de>
-Date: Wed, 24 Apr 2024 16:13:09 +0200
+	s=arc-20240116; t=1713968095; c=relaxed/simple;
+	bh=ll03pwob+gLokLHhKJ9wKqSKaJJ7BhxC+kqwsk3GZ64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FrHxRdS8TdRfwbrxwi4ZS+Zpn0s3x9uCs+4l2exn7GNtF5hRG1Yo3WqqQUuponOSzx3etLW/r+g00rUU9xXtPjPNZhNm7QqLF3anGSHSO+IAleHKs4JurA2VAnVqlML6CK4fo378AefJhGWZAx2upGIxUcKLqLiFjV/9U59aUGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lhtt4Am7; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lhtt4Am7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713968095; x=1745504095;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ll03pwob+gLokLHhKJ9wKqSKaJJ7BhxC+kqwsk3GZ64=;
+  b=Lhtt4Am77xmVtd0WOFi+gkqwfaLXJsU+oY7n2tjLYsEWNaWmuHjyLNJt
+   Vkw/RC0x+k2EGUTd6tizyO0i6nd9SKFzearGRTbvDSqJEtwEkxEQQbmQR
+   MCoJhv3C8EBgBVSHz1F2wIKMKON5/TWchVfUDcQvdwHiToicfD/Md0qWL
+   abBoPLY29gALZBMwvB7Tqzo/WeGJeHGeOVMDxyw0eTG3gG8KS9SEdbCMx
+   GX8jmHmEcSE2UEswjE8vrqAfIdijhfzDtMzcJf7svrAU3dD9xgh6VGrFD
+   dvUczGwHgooRAgVPs+4H+EvwBWxwl7yDiNZs7Qi7YuKSsubeCUMPf4qht
+   g==;
+X-CSE-ConnectionGUID: pJyG7e2nSOickmoWv3fHsQ==
+X-CSE-MsgGUID: PcTFPJ6eSfSVY5BbO6EFsw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="27055532"
+X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
+   d="scan'208";a="27055532"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 07:14:54 -0700
+X-CSE-ConnectionGUID: jF/bLxj+TMOWgskL6OyzxQ==
+X-CSE-MsgGUID: /E2UezzlQCWzmgGctGONLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
+   d="scan'208";a="29364232"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 07:14:47 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rzdOV-00000000ff8-0bTg;
+	Wed, 24 Apr 2024 17:14:43 +0300
+Date: Wed, 24 Apr 2024 17:14:42 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: kernel test robot <lkp@intel.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Frank Li <Frank.Li@nxp.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-amlogic@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
+	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Yue Wang <yue.wang@amlogic.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Xiaowei Song <songxiaowei@hisilicon.com>
+Subject: Re: [PATCH v2 2/4] PCI: dwc: Remove unused of_gpio.h
+Message-ID: <ZikT0lWPOQD3uuH0@smile.fi.intel.com>
+References: <20240423172208.2723892-3-andriy.shevchenko@linux.intel.com>
+ <202404240649.QgY8lto8-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Bluetooth: hci_sync: Using hci_cmd_sync_submit when
- removing Adv Monitor
-To: Chun-Yi Lee <joeyli.kernel@gmail.com>
-Cc: Chun-Yi Lee <jlee@suse.com>,
- Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
- Manish Mandlik <mmandlik@google.com>, Archie Pusaka <apusaka@chromium.org>,
- Miao-chen Chou <mcchou@chromium.org>, linux-kernel@vger.kernel.org,
- linux-bluetooth@vger.kernel.org
-References: <20240424135903.24169-1-jlee@suse.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240424135903.24169-1-jlee@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202404240649.QgY8lto8-lkp@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Dear Chun-Yi,
-
-
-Thank you for your patch.
-
-Am 24.04.24 um 15:59 schrieb Lee, Chun-Yi:
-> From: Chun-Yi Lee <jlee@suse.com>
-
-Please use imperative mood in the commit message summary:
-
-Use hci_cmd_sync_submit() when removing Adv Monitor
-
-> Since the d883a4669a1de be introduced in v6.4, bluetooth daemon
-> got the following failed message of MGMT_OP_REMOVE_ADV_MONITOR
-> command when controller is power-off:
-
-Maybe:
-
-Since commit d883a4669a1de, present since Linux v6.4, the daemon 
-bluetoothd logs the failure below, if the command 
-MGMT_OP_REMOVE_ADV_MONITOR is sent when the controller is powered off.
-
-> bluetoothd[20976]:
-> src/adapter.c:reset_adv_monitors_complete() Failed to reset Adv
-> Monitors: Failed>
-
-Please make this one line and indent it with four spaces.
-
-> Normally this situation is happened when the bluetoothd deamon
-
-1.  happen*s*
-2.  d*ae*mon
-
-> be started manually after system booting. Which means that
-
-is started
-
-> bluetoothd received MGMT_EV_INDEX_ADDED event after kernel
-
-receive*s*
-
-> runs hci_power_off().
+On Wed, Apr 24, 2024 at 06:51:05AM +0800, kernel test robot wrote:
+> Hi Andy,
 > 
-> Base on doc/mgmt-api.txt, the MGMT_OP_REMOVE_ADV_MONITOR command
-
-Base*d*
-
-> can be used when the controller is not powered. This patch changes
-
-“This patch …” is redundant. Use: Change the code …
-
-> the code in remove_adv_monitor() to use hci_cmd_sync_submit()
-> instead of hci_cmd_sync_queue().
-
-Please document the test setup.
-
-> Fixes: d883a4669a1de ("Bluetooth: hci_sync: Only allow hci_cmd_sync_queue if running")
-> Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-> Cc: Manish Mandlik <mmandlik@google.com>
-> Cc: Archie Pusaka <apusaka@chromium.org>
-> Cc: Miao-chen Chou <mcchou@chromium.org>
-> Signed-off-by: Chun-Yi Lee <jlee@suse.com>
-> ---
->   net/bluetooth/mgmt.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> kernel test robot noticed the following build errors:
 > 
-> diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-> index 32ed6e9245a3..21962969411d 100644
-> --- a/net/bluetooth/mgmt.c
-> +++ b/net/bluetooth/mgmt.c
-> @@ -5475,7 +5475,7 @@ static int remove_adv_monitor(struct sock *sk, struct hci_dev *hdev,
->   		goto unlock;
->   	}
->   
-> -	err = hci_cmd_sync_queue(hdev, mgmt_remove_adv_monitor_sync, cmd,
-> +	err = hci_cmd_sync_submit(hdev, mgmt_remove_adv_monitor_sync, cmd,
->   				 mgmt_remove_adv_monitor_complete);
->   
->   	if (err) {
+> [auto build test ERROR on pci/next]
+> [also build test ERROR on pci/for-linus mani-mhi/mhi-next linus/master v6.9-rc5 next-20240423]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/PCI-aardvark-Remove-unused-of_gpio-h/20240424-012448
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+> patch link:    https://lore.kernel.org/r/20240423172208.2723892-3-andriy.shevchenko%40linux.intel.com
+> patch subject: [PATCH v2 2/4] PCI: dwc: Remove unused of_gpio.h
+> config: arm-defconfig (https://download.01.org/0day-ci/archive/20240424/202404240649.QgY8lto8-lkp@intel.com/config)
+> compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240424/202404240649.QgY8lto8-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202404240649.QgY8lto8-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+
+Right, I need to add a chained_irq.h which I have in a separate patch for now.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Kind regards,
-
-Paul
