@@ -1,71 +1,85 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mo-csw-fb.securemx.jp (mo-csw-fb1802.securemx.jp [210.130.202.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28DB142659
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 04:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5291613AA2B;
+	Wed, 24 Apr 2024 04:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713932124; cv=none; b=Z4NUQ9LECIGjukThCDKCz6LX4r0BztkwRgf4UT+b8FYHK3T3QsKfIrXCGbozadtQrplYf4HTdxiupdAq0WjDRx8inzSR5Py17tAXvyDV4iNTVXN1j8hzCC5wn5hDT+vAvpXjdfgWQdk0LqaYUFbyoZZ/YhL8FLc6bauCpSxSpSs=
+	t=1713932254; cv=none; b=FDZx3iujNEjhaR2lG1s2E9MLDyJWYmy11OaLPEL0kx7Gpm/I0CiSL4+Bk5H3zkx1JdTKI+Mb9rSppftoxadaTsL9qJSGPQju89wXamHJoB8jctADZVCQPIdJOHQRQNi29bfkTnUtWZzmAsGVEoaZu1gdQC2ZaZ/HM2Cfptq47ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713932124; c=relaxed/simple;
-	bh=k4lLCbg6edPJctKYJR5wVgV6a2Y5lzMPhruQhJ8dWgI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nmQbRhHN6VatyADMhfCaYPnKlsS5rfpth0jlCiPhm1I9kQV6QQqBDUHLZI8MG4UXcjsolO3ucLAR3cxyuCHUZyYxtIpUNiLEd38ujnpK18p5kpXUmzVLvsf20iZbmXEf3EQqhOKF8kl9+k3DHX93NtTQlBtnoPisvNni4VKWxVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Pa0jSMF/; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Pa0jSMF/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=viymBDCrvjKdxY/tQOLTnCZyFrlNtSCuDcsjtwmyXNA=; b=Pa0jSMF/krI6acUWmrQTlbuXP+
-	Ixe/53+Exzh2YbMszXNUt7Fb7XOHiiPbSGyUs0xa62vLR3eyO8VKJI8L8yjnTnhAiawwx96JZXv3f
-	cveQIL8B4NCcf3xkquIF30vei3mwsldKRMHaqmbC16L/RoDxa0NboQXn9kv1YMkUCKX7L8cTjNIfW
-	dPbVk6Wo+56zHrCTXpb1B3wYxtnZZ+rPA6eqbSP1TZFCAbRa0/DhLjWNSMsF6RCQyIJYXsHAN67kq
-	l2j6xGG7WT8hKe+Iqe9Mk9N/lgd3wER/3NdSDbnwQ8Crm38lvCQTLXhU4feH7spBwBzOzuo7+2oiY
-	dwAolfrA==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzU2F-0000000093z-10Cy;
-	Wed, 24 Apr 2024 04:15:07 +0000
-Date: Wed, 24 Apr 2024 05:15:07 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Lance Yang <ioworker0@gmail.com>
-Cc: akpm@linux-foundation.org, maskray@google.com, ziy@nvidia.com,
-	ryan.roberts@arm.com, david@redhat.com, 21cnbao@gmail.com,
-	mhocko@suse.com, fengwei.yin@intel.com, zokeefe@google.com,
-	shy828301@gmail.com, xiehuan09@gmail.com,
-	wangkefeng.wang@huawei.com, songmuchun@bytedance.com,
-	peterx@redhat.com, minchan@kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] mm/vmscan: avoid split PMD-mapped THP during
- shrink_folio_list()
-Message-ID: <ZiiHSwG_bnLJbwfb@casper.infradead.org>
-References: <20240422055213.60231-1-ioworker0@gmail.com>
+	s=arc-20240116; t=1713932254; c=relaxed/simple;
+	bh=tmZivAPoRtjSnEGiLMrWJXye+3/kG+MWQ2bcPivPywA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kXGE4ED0b/Pqv76Jv6vhsMbBm5AYoU2kek7THYtit7taRspXQcFnAG7dVqJl3CbBy9XXoTxBcnyi9jeZNH+rwuUBPyEnUVFFtmkObrV3QbNCrge0xK9eW/4AMXLphsdN5Wcea3eVu1YeOGYCdNuMFvB7umQ7yy/f3dmPIKGuynU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp; spf=pass smtp.mailfrom=toshiba.co.jp; arc=none smtp.client-ip=210.130.202.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toshiba.co.jp
+Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1802) id 43O2mFon1222808; Wed, 24 Apr 2024 11:48:15 +0900
+Received: by mo-csw.securemx.jp (mx-mo-csw1802) id 43O2lZUw3514010; Wed, 24 Apr 2024 11:47:35 +0900
+X-Iguazu-Qid: 2yAbdMiuYNn0EEa8l0
+X-Iguazu-QSIG: v=2; s=0; t=1713926855; q=2yAbdMiuYNn0EEa8l0; m=ryJhWAlzIXynJusIuDL36Fxw7+i1HfiH1CQUOwHDqDY=
+Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
+	by relay.securemx.jp (mx-mr1800) id 43O2lW2s2335784
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 24 Apr 2024 11:47:33 +0900
+X-SA-MID: 21956136
+From: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
+To: Hans Verkuil <hverkuil@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v10 2/6] media: videodev2.h: add visconti viif meta buffer format
+Date: Wed, 24 Apr 2024 11:42:11 +0900
+X-TSB-HOP2: ON
+Message-Id: <20240424024215.1624299-3-yuji2.ishikawa@toshiba.co.jp>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240424024215.1624299-1-yuji2.ishikawa@toshiba.co.jp>
+References: <20240424024215.1624299-1-yuji2.ishikawa@toshiba.co.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240422055213.60231-1-ioworker0@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 22, 2024 at 01:52:13PM +0800, Lance Yang wrote:
-> When the user no longer requires the pages, they would use
-> madvise(MADV_FREE) to mark the pages as lazy free. IMO, they would not
-> typically rewrite to the given range.
-> 
-> At present, PMD-mapped THPs that are marked as lazyfree during
-> shrink_folio_list() are unconditionally split, which may be unnecessary.
-> If the THP is clean, its PMD is also clean, and there are no unexpected
-> references, then we can attempt to remove the PMD mapping from it. This
-> change will improve the efficiency of memory reclamation in this case.
+Adds the Toshiba Visconti VIIF specific metadata format
 
-Does this happen outside of benchmarks?  I'm really struggling to see
-how we end up in this situation.  We have a clean THP without swap
-backing, so it's full of zeroes, but for some reason we haven't used the
-shared huge zero page?  What is going on?
+- V4L2_META_FMT_VISCONTI_VIIF_PARAMS for ISP parameters
+- V4L2_META_FMT_VISCONTI_VIIF_STATS for ISP statistics
+
+Signed-off-by: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
+---
+Changelog v10:
+- add entry for V4L2_META_FMT_VISCONTI_VIIF_PARAMS
+- add entry for V4L2_META_FMT_VISCONTI_VIIF_STATS
+
+ include/uapi/linux/videodev2.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index a8015e5e7f..686657e022 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -839,6 +839,10 @@ struct v4l2_pix_format {
+ #define V4L2_META_FMT_RK_ISP1_PARAMS	v4l2_fourcc('R', 'K', '1', 'P') /* Rockchip ISP1 3A Parameters */
+ #define V4L2_META_FMT_RK_ISP1_STAT_3A	v4l2_fourcc('R', 'K', '1', 'S') /* Rockchip ISP1 3A Statistics */
+ 
++/* Vendor specific - used for Visconti VIIF sub-system */
++#define V4L2_META_FMT_VISCONTI_VIIF_PARAMS	v4l2_fourcc('V', 'I', 'F', 'P') /* ISP Params */
++#define V4L2_META_FMT_VISCONTI_VIIF_STATS	v4l2_fourcc('V', 'I', 'F', 'S') /* ISP Stats */
++
+ /* priv field value to indicates that subsequent fields are valid. */
+ #define V4L2_PIX_FMT_PRIV_MAGIC		0xfeedcafe
+ 
+-- 
+2.25.1
+
 
