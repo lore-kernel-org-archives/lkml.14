@@ -1,235 +1,83 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F6A13C8F3;
-	Wed, 24 Apr 2024 03:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D749C13340B
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 03:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713930210; cv=none; b=MZgVdkF9u9+xdhfm+xO8Kj+V8CR6SZQ+PEmtz3S4nofbQm1fCNIxCNPizkEaEvc97zhBvWiNvln8/XMJgboTGx6NlIl0t77D2MrTHgDKSYg8r32Fhi6zwxxvrvZc/sGpiPMoIbDZbwTuKBNU5fpsbWWC4s3nRUMhpZnqa4B13JY=
+	t=1713930235; cv=none; b=dHh4xj/qLYqAwl+04mxSR7AwMCiEYGq8GrVIXz91584nAkAsGYAicgqDHh+J3eOMx9NFIk1nSGDIUI48A/VxeVAQ4eTCN8CFaL/Xw42arl7KGesSvPl72B7MDkeov6N+pBxzrawoR7qm2Sb82W5/9hnFqvcA12ORQI1zjUo2XD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713930210; c=relaxed/simple;
-	bh=D27V7j9H6zmJjtvGLBwi9QEzYwV3vIfj7n5EnJTujdY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ohHtqbwilfV3lEXTQBBvIBa6oAoaEhMv39z3TzoQ3yMjMfB8DHFkelVVofFqkZl87Z0vvg3Ft+mHKiNyzDiE2DkE1QRSsmxObqTNOeyrJSE0cg7ODXD5wWRD4Srmb/Q6IMimbU9NeFf4TND3oUGdwhlUYpsYy/gmUGLZo+nH1MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VPPw6267Gz4f3knl;
-	Wed, 24 Apr 2024 11:43:18 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id CC23B1A0179;
-	Wed, 24 Apr 2024 11:43:25 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBHGBHafyhmuSA4Kw--.57541S8;
-	Wed, 24 Apr 2024 11:43:25 +0800 (CST)
-From: libaokun@huaweicloud.com
-To: netfs@lists.linux.dev
-Cc: dhowells@redhat.com,
-	jlayton@kernel.org,
-	zhujia.zj@bytedance.com,
-	jefflexu@linux.alibaba.com,
-	linux-cachefs@redhat.com,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	libaokun@huaweicloud.com,
-	Baokun Li <libaokun1@huawei.com>
-Subject: [PATCH 4/5] cachefiles: cyclic allocation of msg_id to avoid reuse
-Date: Wed, 24 Apr 2024 11:34:08 +0800
-Message-Id: <20240424033409.2735257-5-libaokun@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240424033409.2735257-1-libaokun@huaweicloud.com>
-References: <20240424033409.2735257-1-libaokun@huaweicloud.com>
+	s=arc-20240116; t=1713930235; c=relaxed/simple;
+	bh=E5CvyKwPBQpRyM0AVWWIVzuLRubaZPD0MvbrMFrbwWQ=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=uHGOwVcjgQWZFBN9jIzhdzJ4ggFlDw7E3GplauWhxwWQDaB1qqnyCNS4+1fSBi4Wl5+8Eo1e6cIeOjk6+RBZLafU19sY3HyreFI65GdOP8r0YSJ/DeUrJ6x0dW6Hzby38vGSPQaxvEFOiDegspMtGNfysb/hPemVxh9pfgqgqPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=abQsFnej; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="abQsFnej"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713930234; x=1745466234;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=E5CvyKwPBQpRyM0AVWWIVzuLRubaZPD0MvbrMFrbwWQ=;
+  b=abQsFnej66ucMedrArgCclQFjLppDYrS5l7Fl/RPcndSJAnIJZ/xW6Ig
+   URSAltv99QUgrfDvTPD8yts9m7j9XmINm/IwKW7hzmP6M77piPKlDNbsO
+   mgEGh0OB20X2hQ6vtjZ2HLli7PCqPNgbfDeWKN4Cqu1Ry2NHB6RrenkW2
+   1tKKw/9+VI2s0mXHfxiohrAAqcmvoiY3SeRZmhpyMphQ6c0L9FWhkEGLM
+   iKQo9nClQyuoRiAB5Lu1d8HAWzsZXECNIssyHHLAnzUgz70/kJsbN5dQs
+   6NLFPwtMxRno71wUAxR4FZdcugnZAN+VvifGokB7Ti3TXjD6bFrKG9Ae1
+   w==;
+X-CSE-ConnectionGUID: wOzFkkYyR6aeFBw46VmO1g==
+X-CSE-MsgGUID: bNX+GxgtReGySkIKCv8CsQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9409349"
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="9409349"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 20:43:53 -0700
+X-CSE-ConnectionGUID: 2B+0aBnWTdOfSTHEwcnedw==
+X-CSE-MsgGUID: F6Iu94wbS/i3wRiJjl4p7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="24609443"
+Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
+  by fmviesa006.fm.intel.com with ESMTP; 23 Apr 2024 20:43:51 -0700
+Message-ID: <ab89fb17-508a-4041-b4a0-11341d356581@linux.intel.com>
+Date: Wed, 24 Apr 2024 11:42:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHGBHafyhmuSA4Kw--.57541S8
-X-Coremail-Antispam: 1UD129KBjvJXoW3Jr1fAF1xurWkur4xuryfWFg_yoW7Xr4rpF
-	WakFy2kry8WF1v9rykZFZ5Jr4fK34kZFsrWrySqry0ywn0vr45Zr1jyr1FqFyUArZ3WF47
-	tr48WF9rKa42v3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWUWVWUuwAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAKzI0EY4vE52x082I5MxAIw28IcxkI7VAKI48J
-	MxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUjs2-5UUUUU==
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] iommu/vt-d: Remove use of private data field
+To: Jingqi Liu <Jingqi.liu@intel.com>, iommu@lists.linux.dev,
+ Tian Kevin <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+References: <20240308103811.76744-1-Jingqi.liu@intel.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240308103811.76744-1-Jingqi.liu@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Baokun Li <libaokun1@huawei.com>
+On 3/8/24 6:38 PM, Jingqi Liu wrote:
+> "Private Data" field has been removed from Page Request/Response in
+> Intel VT-d specification revision 4.0.
+> 
+> Since the private data field has been removed, it's fine to remove the
+> entire private data handling from the driver as the specification
+> has been deprecated and Intel hasn't shipped any products which
+> support private data in the page request message.
+> 
+> Jingqi Liu (2):
+>    iommu/vt-d: Remove debugfs use of private data field
+>    iommu/vt-d: Remove private data use in fault message
 
-Reusing the msg_id after a maliciously completed reopen request may cause
-a read request to remain unprocessed and result in a hung, as shown below:
+Patches have been queued for iommu/vt-d.
 
-       t1       |      t2       |      t3
--------------------------------------------------
-cachefiles_ondemand_select_req
- cachefiles_ondemand_object_is_close(A)
- cachefiles_ondemand_set_object_reopening(A)
- queue_work(fscache_object_wq, &info->work)
-                ondemand_object_worker
-                 cachefiles_ondemand_init_object(A)
-                  cachefiles_ondemand_send_req(OPEN)
-                    // get msg_id 6
-                    wait_for_completion(&req_A->done)
-cachefiles_ondemand_daemon_read
- // read msg_id 6 req_A
- cachefiles_ondemand_get_fd
- copy_to_user
-                                // Malicious completion msg_id 6
-                                copen 6,-1
-                // reopen fails, want daemon to close fd,
-                // then set object to close, retrigger reopen
-                                cachefiles_ondemand_init_object(B)
-                                 cachefiles_ondemand_send_req(OPEN)
-                                 // new open req_B reuse msg_id 6
-// daemon successfully copen msg_id 6, so it won't close the fd.
-// object is always reopening, so read requests are not processed
-// resulting in a hung
-
-Therefore allocate the msg_id cyclically to avoid reusing the msg_id for
-a very short duration of time causing the above problem.
-
-Fixes: c8383054506c ("cachefiles: notify the user daemon when looking up cookie")
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
----
- fs/cachefiles/internal.h |  1 +
- fs/cachefiles/ondemand.c | 92 +++++++++++++++++++++++-----------------
- 2 files changed, 54 insertions(+), 39 deletions(-)
-
-diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
-index 8ecd296cc1c4..9200c00f3e98 100644
---- a/fs/cachefiles/internal.h
-+++ b/fs/cachefiles/internal.h
-@@ -128,6 +128,7 @@ struct cachefiles_cache {
- 	unsigned long			req_id_next;
- 	struct xarray			ondemand_ids;	/* xarray for ondemand_id allocation */
- 	u32				ondemand_id_next;
-+	u32				msg_id_next;
- };
- 
- static inline bool cachefiles_in_ondemand_mode(struct cachefiles_cache *cache)
-diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index f6440b3e7368..6171e1a8cfa1 100644
---- a/fs/cachefiles/ondemand.c
-+++ b/fs/cachefiles/ondemand.c
-@@ -404,51 +404,65 @@ static int cachefiles_ondemand_send_req(struct cachefiles_object *object,
- 	if (ret)
- 		goto out;
- 
--	do {
--		/*
--		 * Stop enqueuing the request when daemon is dying. The
--		 * following two operations need to be atomic as a whole.
--		 *   1) check cache state, and
--		 *   2) enqueue request if cache is alive.
--		 * Otherwise the request may be enqueued after xarray has been
--		 * flushed, leaving the orphan request never being completed.
--		 *
--		 * CPU 1			CPU 2
--		 * =====			=====
--		 *				test CACHEFILES_DEAD bit
--		 * set CACHEFILES_DEAD bit
--		 * flush requests in the xarray
--		 *				enqueue the request
--		 */
--		xas_lock(&xas);
--
--		if (test_bit(CACHEFILES_DEAD, &cache->flags) ||
--		    cachefiles_ondemand_object_is_dropping(object)) {
--			xas_unlock(&xas);
--			ret = -EIO;
--			goto out;
--		}
-+retry:
-+	/*
-+	 * Stop enqueuing the request when daemon is dying. The
-+	 * following two operations need to be atomic as a whole.
-+	 *   1) check cache state, and
-+	 *   2) enqueue request if cache is alive.
-+	 * Otherwise the request may be enqueued after xarray has been
-+	 * flushed, leaving the orphan request never being completed.
-+	 *
-+	 * CPU 1			CPU 2
-+	 * =====			=====
-+	 *				test CACHEFILES_DEAD bit
-+	 * set CACHEFILES_DEAD bit
-+	 * flush requests in the xarray
-+	 *				enqueue the request
-+	 */
-+	xas_lock(&xas);
- 
--		/* coupled with the barrier in cachefiles_flush_reqs() */
--		smp_mb();
-+	if (test_bit(CACHEFILES_DEAD, &cache->flags) ||
-+	    cachefiles_ondemand_object_is_dropping(object)) {
-+		xas_unlock(&xas);
-+		ret = -EIO;
-+		goto out;
-+	}
- 
--		if (opcode == CACHEFILES_OP_CLOSE &&
--			!cachefiles_ondemand_object_is_open(object)) {
--			WARN_ON_ONCE(object->ondemand->ondemand_id == 0);
--			xas_unlock(&xas);
--			ret = -EIO;
--			goto out;
--		}
-+	/* coupled with the barrier in cachefiles_flush_reqs() */
-+	smp_mb();
-+
-+	if (opcode == CACHEFILES_OP_CLOSE &&
-+		!cachefiles_ondemand_object_is_open(object)) {
-+		WARN_ON_ONCE(object->ondemand->ondemand_id == 0);
-+		xas_unlock(&xas);
-+		ret = -EIO;
-+		goto out;
-+	}
- 
-+	/*
-+	 * Cyclically find a free xas to avoid msg_id reuse that would
-+	 * cause the daemon to successfully copen a stale msg_id.
-+	 */
-+	xas.xa_index = cache->msg_id_next;
-+	xas_find_marked(&xas, UINT_MAX, XA_FREE_MARK);
-+	if (xas.xa_node == XAS_RESTART) {
- 		xas.xa_index = 0;
--		xas_find_marked(&xas, UINT_MAX, XA_FREE_MARK);
--		if (xas.xa_node == XAS_RESTART)
--			xas_set_err(&xas, -EBUSY);
--		xas_store(&xas, req);
-+		xas_find_marked(&xas, cache->msg_id_next - 1, XA_FREE_MARK);
-+	}
-+	if (xas.xa_node == XAS_RESTART)
-+		xas_set_err(&xas, -EBUSY);
-+
-+	xas_store(&xas, req);
-+	if (xas_valid(&xas)) {
-+		cache->msg_id_next = xas.xa_index + 1;
- 		xas_clear_mark(&xas, XA_FREE_MARK);
- 		xas_set_mark(&xas, CACHEFILES_REQ_NEW);
--		xas_unlock(&xas);
--	} while (xas_nomem(&xas, GFP_KERNEL));
-+	}
-+
-+	xas_unlock(&xas);
-+	if (xas_nomem(&xas, GFP_KERNEL))
-+		goto retry;
- 
- 	ret = xas_error(&xas);
- 	if (ret)
--- 
-2.39.2
-
+Best regards,
+baolu
