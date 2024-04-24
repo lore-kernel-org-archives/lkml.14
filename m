@@ -1,92 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D3713C82F
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 03:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C557385C59;
+	Wed, 24 Apr 2024 03:45:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713930298; cv=none; b=miIPz4Qgag+kBrrwioNP3gcFRN9xyxVhmPHPWeNrLWFHVUSqpbFFXMjzNCn259FWw2FE9Z5hdNlOSicakjuBdX+FY7ltQUYgnGfjfLD8oe+rdkfjCymWXW/2UGej7t44r6LJFxyLW7EdDtv+aH9LuvdyNsk7aGT//lhf4qhpN7c=
+	t=1713930355; cv=none; b=s8aASUzJvECE79nwxtBDwNZ/bVI7ka5DpE9Wy2u6gSvgfYMoEkK90eYYa5q4UGpbGoIOgLrhQU9l4TdbxvICAl9nw9gaAX7ChxkM5S37FUBY57ONdG1Cg2bH4xmHeAKOUbz/3JzSpv4xnRId/+TsgMfiDPU7iqbnQWW3APFCC7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713930298; c=relaxed/simple;
-	bh=k4ri3X4W0eb+g0rZLGMhcbWzg5Ntju/ygoN7+pfEGfs=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=V0VScXnO5l++/3Sdmhg5wcnvbd6K/j4zVfZD3na/bCQganxKXaXFEgFRS7rWY4NQa3DPJcPuVkySeQHJ0KZ2Pvi0abdiDlSB2HDq3NrlEin7eK2dw1rIZpVVC1QjMo57+3h/oKxxI+qHTq3P10byO5Yocs+Ut7aYK5lt3pCtRyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M4y0Hhn1; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713930355; c=relaxed/simple;
+	bh=5KHG4Klud08VnzfawmdvcmznP0NCKI9/pGgclfwlI9A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qmvzh7kFT6obA37E/zHxaV5mMLjdNbM5JE0Mt7x/XSBzVXG7lSXq0hRcjmUqa04tukTPlErCQZrvzE8qhUqECLFcacSCG2NPfzYNRGiOYVp9/GDoDyLTMYq0tEjIrwtRQZxeE75tWtEFJ5YzUiOPl1YhHl8n+x8h8B1CyBxLn70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=VBzYkDzE; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M4y0Hhn1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713930298; x=1745466298;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=k4ri3X4W0eb+g0rZLGMhcbWzg5Ntju/ygoN7+pfEGfs=;
-  b=M4y0Hhn196gqutn8OMt0vrgdgTBtmolBnCbqAZC8Y5pKzyY33gb9uEj0
-   2Tiu3thPPCKfXuadbetk93ByXcCNBX3//vPxAaTblFRxF1TCJCe8El+7m
-   0uzaxhUpY/MnAcsMppZFQKS/r+EOtfqtdKPPpDBm8exLyEef9ipIlYFiP
-   tb0pYyLklALUEsH3sHjezdYQ1Lsm2QVFuP2MD24L6YunwrVo0xtp9Owbf
-   CovAj1w/v5JtQ4zHT7HgSUV50Fd2tuKrLNaIHUcJuNOn90L2r/ZMbjCw0
-   lXvIaDKRGJo2r8Y17DWF8h25k7Jxc1S48v0OZvligjWRtWlyv0JjVYC7X
-   Q==;
-X-CSE-ConnectionGUID: CojGh8JjQfmxEYfS5I3JOA==
-X-CSE-MsgGUID: y5OAN/NwSbmxupCp4/LoBA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9660465"
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="9660465"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 20:44:57 -0700
-X-CSE-ConnectionGUID: 5SXu89jTSqSNgLuYHCHifA==
-X-CSE-MsgGUID: IaOA1sGfRMG+oMf7Fm/4xg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="29365322"
-Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
-  by orviesa005.jf.intel.com with ESMTP; 23 Apr 2024 20:44:54 -0700
-Message-ID: <a2d1c44d-6450-4641-843e-8981bdb4d533@linux.intel.com>
-Date: Wed, 24 Apr 2024 11:43:30 +0800
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VBzYkDzE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1713930352;
+	bh=kqTWpcHaimLGklEUrnsjykAcbnJGjdI278ZkeHnvtLE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=VBzYkDzEWwQ1xjE0WHmXjQAxegMiItStqJJpKXXsBdf+D1WmUr0eHA9lTaLOrFAM+
+	 XI7sUd7tqN5tjjrw6oW2tJaSPq7Sj9YcxJ4orhRx6lKvJhY9+wXpWo5L5gMNmwf+2v
+	 DaEOe4q1O5VdYhINLAJuke3Q3cmdk2olkjzdU8ssrIO55v18miNHOTtmL2kSTeHTNr
+	 /pdOQnm6SKvcQlJKddluIMmgIA6X0EwJEEqybJdITfLNOFGpOa+qmSv+zsJnXSzyYn
+	 qqlScacsYROYnCQHO4hUx1l/R7aRt25/f3DuhW2EJRWw1hCXo4QOF3eKiZK53M5oBJ
+	 g1lGbUnlnqVvA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VPPz40vvfz4wnv;
+	Wed, 24 Apr 2024 13:45:52 +1000 (AEST)
+Date: Wed, 24 Apr 2024 13:45:51 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: "Paul E. McKenney" <paulmck@kernel.org>, Luis Chamberlain
+ <mcgrof@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Subject: linux-next: manual merge of the rcu tree with the modules tree
+Message-ID: <20240424134551.44531979@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, linux-kernel@vger.kernel.org,
- Steve Wahl <steve.wahl@hpe.com>, Russ Anderson <russ.anderson@hpe.com>
-Subject: Re: [PATCH v2] iommu/vt-d: Allocate DMAR fault interrupts locally
-To: Dimitri Sivanich <sivanich@hpe.com>, Thomas Gleixner
- <tglx@linutronix.de>, Joerg Roedel <joro@8bytes.org>,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
- YueHaibing <yuehaibing@huawei.com>, iommu@lists.linux.dev
-References: <Zfydpp2Hm+as16TY@hpe.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <Zfydpp2Hm+as16TY@hpe.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/=s271tOq0qvWSVNq73D9bg0";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 3/22/24 4:50 AM, Dimitri Sivanich wrote:
-> The Intel IOMMU code currently tries to allocate all DMAR fault interrupt
-> vectors on the boot cpu.  On large systems with high DMAR counts this
-> results in vector exhaustion, and most of the vectors are not initially
-> allocated socket local.
-> 
-> Instead, have a cpu on each node do the vector allocation for the DMARs on
-> that node.  The boot cpu still does the allocation for its node during its
-> boot sequence.
-> 
-> Signed-off-by: Dimitri Sivanich<sivanich@hpe.com>
-> ---
-> 
-> v2: per Thomas Gleixner, implement this from a DYN CPU hotplug state, though
->      this implementation runs in CPUHP_AP_ONLINE_DYN space rather than
->      CPUHP_BP_PREPARE_DYN space.
+--Sig_/=s271tOq0qvWSVNq73D9bg0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Patch has been queued for iommu/vt-d.
+Hi all,
 
-Best regards,
-baolu
+Today's linux-next merge of the rcu tree got a conflict in:
+
+  arch/Kconfig
+
+between commit:
+
+  3f26835b6c72 ("kprobes: remove dependency on CONFIG_MODULES")
+
+from the modules tree and commit:
+
+  900da4d2a57c ("arch: Select new NEED_TASKS_RCU Kconfig option")
+
+from the rcu tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/Kconfig
+index 0ce4df5afd95,93d5010dfc92..000000000000
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@@ -52,10 -52,10 +52,10 @@@ config GENERIC_ENTR
+ =20
+  config KPROBES
+  	bool "Kprobes"
+ -	depends on MODULES
+  	depends on HAVE_KPROBES
+  	select KALLSYMS
+ +	select EXECMEM
+- 	select TASKS_RCU if PREEMPTION
++ 	select NEED_TASKS_RCU
+  	help
+  	  Kprobes allows you to trap at almost any kernel address and
+  	  execute a callback function.  register_kprobe() establishes
+
+--Sig_/=s271tOq0qvWSVNq73D9bg0
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYogG8ACgkQAVBC80lX
+0GyMQQgAofxbv9h7HzukOk6AEY7+11fAkec8OxbeFBBYWkMek2D0batnoe1fJl8v
+BGc6EswaKuPbnAAjPrW9fzgh6joylgDJzOv771p2Jk8KAHFAw9AKDLZEgw4CHLhU
+ig36LlzGlh61IqGav3+1mYrLNQa1489uNq1u6V45eGq98ZN71Ekj3EXpIo/cymG8
+IozEegtYkO0DyGoI5qsObyP7wIiyMUm0GvyQmYDN2yGyfOzEfyJWU95B5meKwC3J
+sg40l7F+K3L8ybi98bzhrbx+7ppoLNgLw8Uw1sco/LBpZcs+gN3oDNPa0+NjIfbk
+SUT4yAPD927gj9TEVcJzn+rhQ6eASA==
+=oaCN
+-----END PGP SIGNATURE-----
+
+--Sig_/=s271tOq0qvWSVNq73D9bg0--
