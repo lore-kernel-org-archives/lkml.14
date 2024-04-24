@@ -1,116 +1,294 @@
-Received: from seahorse.cherry.relay.mailchannels.net (seahorse.cherry.relay.mailchannels.net [23.83.223.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13D313A3E6;
-	Wed, 24 Apr 2024 23:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.161
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714001813; cv=pass; b=oV64p7uV21259rlzV3IaLb9Thfmdj/PSA4qk5p4B7OmuTL9r/+dk0v5nPk6HMODEcWYHlBEOhoWoyBOWH2HZIj2Y1bmU2j2zDXx4WWjbL2Yu/IPHRn7XsurxCin3eIDpEJcq1rqnE4jLeNmDF3nS+dtd0E2yqpELrAwHT2+m7V0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714001813; c=relaxed/simple;
-	bh=y4/FDZgTiB7uZt+GrJ9Q84C8HZBCN12BEcR92P/kNjA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rp9wnCjkKN0tjQ6/rpG20cWvh1R8QLW/itfWRuG/ja68owoBm5jd5iLA1uvpU57zu5QGopBlxZU07osYz2dGTYkgp4e+iHmvG3ATURsrKvdDzJLWe7sfMZisQt+iYhCWGsmxjXlceHsbZvW1csmThQ66tC20PC29tW0vE7hhwJ4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=FuLPnotF; arc=pass smtp.client-ip=23.83.223.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49609157473
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 23:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714001836; cv=none; b=XxAmRxFlBz8hlFFNzSDcGUFskRfNV71hHk9d65UcxViJo8PwzJYxsA/ZVwLqkZBA1Na6hQUJEXXcBY4LWpKAz/ffX54+GnB4MX/71y1KS2P4bWLrMLwQBV8AsuTPfTmr0SeRW4XE07gf8LTccirGxQ+yGHY7lJfattOWdHFftIE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714001836; c=relaxed/simple;
+	bh=F5+aF8cDr48TRubgu+AYedf/iRGKbug7UMfLWfuoev0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QCN9Q2t2jrgaW5x0cUiAvpbrtw5Lfyrc/l7FKrt0vnz0TphnuX2yYhLogO6367hg96SMEmjrUns4MZ9J1Sx7rZqghM+/25EtymigedaD1hcGgiFxo6EVNgubY9dPHEz3e2frc3pg0KiDv2ixSM9fz0rUPNA/7eSRmKW7FEAAHD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xKsr56PK; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="FuLPnotF"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 94AD340929;
-	Wed, 24 Apr 2024 23:11:46 +0000 (UTC)
-Received: from pdx1-sub0-mail-a235.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 0CF724054A;
-	Wed, 24 Apr 2024 23:11:46 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1714000306; a=rsa-sha256;
-	cv=none;
-	b=SiZT6pBBOImRsA7ydImmpPrikQ9KDKMZGK7IxCYd1dEVBMlFEaB4FpGlBy0+D6QZvsWZOT
-	wVgMs2jigkMtNbAWXoZx9MoYyMmon6Hczo3t2TTl9HWPD3w7LY0kFheSI7tTdwu/AMr2r9
-	SqV+3+XF7sH7K/hu5LRcKn0M540oy+nnmQO65J2oO2cRUnJCHi5vlv1O0PwZ6HSTauFZSL
-	kVjuQZbtNwcf4M34U1C06wNOkX1Wiiz84c97XIiS1p+robK/Nn55yxdBins1PGkR57MkZX
-	s5tWHzgtlfuYE7qMuOYbq2n4OWKrKjV6V8Ghb9e9vwEYAUef6du7FpbRR3uLIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1714000306;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=y4/FDZgTiB7uZt+GrJ9Q84C8HZBCN12BEcR92P/kNjA=;
-	b=3lAkrRL3I0TuHATFXkFiJQeqiI0p3NE5y//jBkBlwU6FNdtv3Y3I5MKHXdOwKy/4PQMLhk
-	MEAj2kp+UUZ7VjJQiq8su9a0WwUz6ktIMWShSQlJ2sCTY3vYSQvNto68VjNAmjHdzCNazA
-	Bww+rY/dLisDZS0XW6Mj3GP5pPcDFnlUbFxrxbsF7fbztU+ybJqyBkJsZkmK/CSlvXwCyU
-	1YJaC9EqpCFUXB6JNcFj89zMsCvlEoIKmfiFoNSnnt/neq7Iz+Lka9gG8rgSJvn0kVadEO
-	vjpKqdPNFrrPE5TQ1fcnBwaY4LWZBKtcLjo9HTq5HEF48H/dT9XXxgBLHL3sGQ==
-ARC-Authentication-Results: i=1;
-	rspamd-6f55c6f9dc-cds9h;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Stretch-Troubled: 4c82c1c54eb796ed_1714000306362_4070382946
-X-MC-Loop-Signature: 1714000306362:3215447623
-X-MC-Ingress-Time: 1714000306362
-Received: from pdx1-sub0-mail-a235.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.119.153.252 (trex/6.9.2);
-	Wed, 24 Apr 2024 23:11:46 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a235.dreamhost.com (Postfix) with ESMTPSA id 4VPvrK2ZK6z8x;
-	Wed, 24 Apr 2024 16:11:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1714000305;
-	bh=y4/FDZgTiB7uZt+GrJ9Q84C8HZBCN12BEcR92P/kNjA=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=FuLPnotFRpjsr7YkpzdNz3BQ4FwnYher2PgVr1DLtEKGIh7tHXkEeGiUGnIYA+wy/
-	 4fc5DtHLjld6qAJgNKHQFOqO7tlEYNQRis5c1s/MxJEOQ6o1PO1H8NKglRUjoNkjGJ
-	 o5E2AfGPZlexLPcijqJauOUud1PEWKK7PTZE+6oetOY2+mMjmecwAfF8QWpb1tar45
-	 x3lKipFeeTdPGgoQKaBcOdXRKH0GdOM79UdbYcjbiJ/4q2sPDE/fkY2Rk3XncWqeba
-	 2E99aAc7u/oSeXJYOcAB6Rnm2PbXWJI0ilyf4X/AoU/IGeGsNkMDqTsINZfYelRrRY
-	 D/7MBkxE0BW+w==
-Date: Wed, 24 Apr 2024 16:11:42 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] cxl: Fix use of phys_to_target_node() for x86
-Message-ID: <20240424231142.rytjmxfassu44vln@offworld>
-References: <20240424154756.2152614-1-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xKsr56PK"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-de55993cb6fso529075276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 16:37:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714001833; x=1714606633; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HJ0R3e0keMNx202pP2IN4/C+HPu73CPOtuGCfDRwGvU=;
+        b=xKsr56PK8gc7kC2XlKdyuCR7TKgc1e0ozMjtqEqH3HDSjwV+mY9utf3Q45yQ8bg9wo
+         ZU4LHYQt5/5xqmy/PJNr1HQCLU5I9CjCNZabC8rMEOuObUetRwkbL2UmrXDjvQiNxn58
+         038hhcL+uguub54DEtO+Fc53RLIb6r4KSTA4Ypuvg7jyZ3MxRULBVx7Dlkd0rZHcU5Zo
+         qRDm2co1MiGA2ov8clv8qNtk0QBsL61IWpllQd4zX6jyqZcyeWSo3JjEKdz+50WxqvkV
+         IE0/jhFfbPL9rRnoeRQdt89eyHpc8zMT/IVVLl5ARMaoB/I3/RTUowALi+8ULqBRKmfK
+         SZEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714001833; x=1714606633;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HJ0R3e0keMNx202pP2IN4/C+HPu73CPOtuGCfDRwGvU=;
+        b=MqdU+UhrRhj4+M6Hfrt++XoWnV1FOz67qwtDGZiKz+BcCKinL2JR6jHstKIDJLb2Wz
+         NuB8Lrm5bheWvgV/jCM85gZIk3i+vB+gaIGjvAn9fyXeLKzUMt9JaK7XTVBhSlFpIF91
+         4mJqvdaN50RxHByj4PgXFKsnA3Vx3bPpRzt0gXTiPyzWSgfn5/pr7QIrKo2VJYrWbkVK
+         Oy0BDTIdxY2oMYyX8A8fEfCNfMPlIxeyuHoyjVi1iAPW3eWyK3JEyCMWkSu4p6gzT0+M
+         Yk2wlNrCEYZrtPPIDeuaF3zS3+Qs+8GJOUmI0o/N0M8es+nixdMjfaMZHUMajmTyvabH
+         1wDw==
+X-Forwarded-Encrypted: i=1; AJvYcCWdRY7jPXJO0gfMpUUYiXNOA0uXqqCgd9b65TqWzwxlCm3uG69BpKUvnfAnaDcQk1gfYf6tmiZv1tzrfpSsZ0VtIvmLbP4Tn8Ez6DD0
+X-Gm-Message-State: AOJu0YxklMBOCPNRjh3KfCqKMsHjAnP/I6951qmNQpVsteLvP69vyY/V
+	0i3WXwSigzJ/1cd/IEjtZ+xVQIJ21Xm8wR5fSDgWgxHaIE9HKFQg3t4jXjW69Wsop4xqcS8WR+u
+	TXjtnpZ2PaGcbMotK52pXXXQqUMztV1VxFEdp87t9MJKdsmXnm/k=
+X-Google-Smtp-Source: AGHT+IFO6Jg9yz4O29TF/3ApJje86OjISlkRYmpbhXyKpYa10imH2qZlKxAqNXzx+sGHECnzJ3ejijQQwsfqD4JYJI4=
+X-Received: by 2002:a25:9f04:0:b0:dcf:bc57:cd61 with SMTP id
+ n4-20020a259f04000000b00dcfbc57cd61mr3974486ybq.50.1714001833305; Wed, 24 Apr
+ 2024 16:37:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20240424154756.2152614-1-rrichter@amd.com>
-User-Agent: NeoMutt/20220429
+References: <20240418081548.12160-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+ <20240418081548.12160-3-lvzhaoxiong@huaqin.corp-partner.google.com>
+ <zanx5y3obqmewnbooovf52hx6vh7tpi4zsbse2dyzcqzddmzhw@kewxoa6n3mja>
+ <CACb=7PURWtS8bwT5EcAFHhu7deHd2Y8cNOattfdwyEYpOUcbnQ@mail.gmail.com>
+ <vbt2nxddw2dc7hkreq4iybv5zv5xyp32oajybeqsphgfrhzmn7@tskvckljmxpe>
+ <CACb=7PVTvV9nsFu1ZAXu7YTjSOAGZka+c__EJq3J3qgSJGEShw@mail.gmail.com>
+ <CAD=FV=VYAzqsGEBJai9b9n+HxHiG59L1vF73AEWcTwLS_ryjWw@mail.gmail.com>
+ <an2k3vgynq4as2sd5dy6ccmdiqedmo7qjsab5qyfhesd333i2a@235sqph3bze5>
+ <CAD=FV=VQ8rbwKk4WpHRER9p4cZp7UrrHRpgnErqbQxyxp4sg5w@mail.gmail.com>
+ <CAA8EJprv3qBd1hfdWHrfhY=S0w2O70dZnYb6TVsS6AGRPxsYdw@mail.gmail.com>
+ <CACb=7PVEpCFWf_aysRkeR0yWAXR5sTaXhNbi3TV3ffKj866+EQ@mail.gmail.com>
+ <CAA8EJprLvEt_pt4XzACQG7pU8KYagKbQ71xwtRF9KrLygTT3ow@mail.gmail.com> <CAD=FV=V+jBvkKj1vvAsXuC5dSn0u_SQBQZHTrDZKoSG2V4fp3g@mail.gmail.com>
+In-Reply-To: <CAD=FV=V+jBvkKj1vvAsXuC5dSn0u_SQBQZHTrDZKoSG2V4fp3g@mail.gmail.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 25 Apr 2024 02:37:02 +0300
+Message-ID: <CAA8EJprU1KZHKAVUJiYaDRY6Wxihzw=ZDgdqQ9y7W3zdnRMfFg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] drm/panel: kd101ne3: add new panel driver
+To: Doug Anderson <dianders@google.com>
+Cc: Hsin-Yi Wang <hsinyi@google.com>, 
+	lvzhaoxiong <lvzhaoxiong@huaqin.corp-partner.google.com>, mripard@kernel.org, 
+	airlied@gmail.com, daniel@ffwll.ch, robh@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	cong yang <yangcong5@huaqin.corp-partner.google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 24 Apr 2024, Robert Richter wrote:
-
->The CXL driver uses both functions phys_to_target_node() and
->memory_add_physaddr_to_nid(). The x86 architecture relies on the
->NUMA_KEEP_MEMINFO kernel option enabled for both functions to work
->correct. Update Kconfig to make sure the option is always enabled for
->the driver.
+On Thu, 25 Apr 2024 at 02:25, Doug Anderson <dianders@google.com> wrote:
 >
->Suggested-by: Dan Williams <dan.j.williams@intel.com>
->Link: http://lore.kernel.org/r/65f8b191c0422_aa222941b@dwillia2-mobl3.amr.corp.intel.com.notmuch
->Reviewed-by: Ira Weiny <ira.weiny@intel.com>
->Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->Signed-off-by: Robert Richter <rrichter@amd.com>
+> Hi,
+>
+> On Wed, Apr 24, 2024 at 3:51=E2=80=AFPM Dmitry Baryshkov
+> <dmitry.baryshkov@linaro.org> wrote:
+> >
+> > On Thu, 25 Apr 2024 at 01:15, Hsin-Yi Wang <hsinyi@google.com> wrote:
+> > >
+> > > On Wed, Apr 24, 2024 at 2:49=E2=80=AFPM Dmitry Baryshkov
+> > > <dmitry.baryshkov@linaro.org> wrote:
+> > > >
+> > > > On Thu, 25 Apr 2024 at 00:04, Doug Anderson <dianders@google.com> w=
+rote:
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > On Tue, Apr 23, 2024 at 2:20=E2=80=AFPM Dmitry Baryshkov
+> > > > > <dmitry.baryshkov@linaro.org> wrote:
+> > > > > >
+> > > > > > On Tue, Apr 23, 2024 at 01:41:59PM -0700, Doug Anderson wrote:
+> > > > > > > Hi,
+> > > > > > >
+> > > > > > > On Tue, Apr 23, 2024 at 11:10=E2=80=AFAM Hsin-Yi Wang <hsinyi=
+@google.com> wrote:
+> > > > > > > >
+> > > > > > > > > > > > +#define _INIT_DCS_CMD(...) { \
+> > > > > > > > > > > > +     .type =3D INIT_DCS_CMD, \
+> > > > > > > > > > > > +     .len =3D sizeof((char[]){__VA_ARGS__}), \
+> > > > > > > > > > > > +     .data =3D (char[]){__VA_ARGS__} }
+> > > > > > > > > > > > +
+> > > > > > > > > > > > +#define _INIT_DELAY_CMD(...) { \
+> > > > > > > > > > > > +     .type =3D DELAY_CMD,\
+> > > > > > > > > > > > +     .len =3D sizeof((char[]){__VA_ARGS__}), \
+> > > > > > > > > > > > +     .data =3D (char[]){__VA_ARGS__} }
+> > > > > > > > > > >
+> > > > > > > > > > > This is the third panel driver using the same appoach=
+. Can you use
+> > > > > > > > > > > mipi_dsi_generic_write_seq() instead of the huge tabl=
+e? Or if you prefer
+> > > > > > > > > > > the table, we should extract this framework to a comm=
+on helper.
+> > > > > > > > > > > (my preference is shifted towards mipi_dsi_generic_wr=
+ite_seq()).
+> > > > > > > > > > >
+> > > > > > > > > > The drawback of mipi_dsi_generic_write_seq() is that it=
+ can cause the
+> > > > > > > > > > kernel size grows a lot since every sequence will be ex=
+panded.
+> > > > > > > > > >
+> > > > > > > > > > Similar discussion in here:
+> > > > > > > > > > https://lore.kernel.org/dri-devel/CAD=3DFV=3DWju3WS45=
+=3DEpXMUg7FjYDh3-=3Dmvm_jS7TF1tsaAzbb4Uw@mail.gmail.com/
+> > > > > > > > > >
+> > > > > > > > > > This patch would increase the module size from 157K to =
+572K.
+> > > > > > > > > > scripts/bloat-o-meter shows chg +235.95%.
+> > > > > > > > > >
+> > > > > > > > > > So maybe the common helper is better regarding the kern=
+el module size?
+> > > > > > > > >
+> > > > > > > > > Yes, let's get a framework done in a useful way.
+> > > > > > > > > I'd say, drop the _INIT_DELAY_CMD. msleep() and usleep_ra=
+nge() should be
+> > > > > > > > > used instead (and it's up to the developer to select corr=
+ect delay
+> > > > > > > > > function).
+> > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > > > +
+> > > > > > > > > > > > +static const struct panel_init_cmd kingdisplay_kd1=
+01ne3_init_cmd[] =3D {
+> > > > > > > > > > > > +     _INIT_DELAY_CMD(50),
+> > > > > > > > > > > > +     _INIT_DCS_CMD(0xE0, 0x00),
+> > > > > > > > >
+> > > > > > > > > [skipped the body of the table]
+> > > > > > > > >
+> > > > > > > > > > > > +     _INIT_DCS_CMD(0x0E, 0x48),
+> > > > > > > > > > > > +
+> > > > > > > > > > > > +     _INIT_DCS_CMD(0xE0, 0x00),
+> > > > > > > > >
+> > > > > > > > > > > > +     _INIT_DCS_CMD(0X11),
+> > > > > > > > >
+> > > > > > > > > Also, at least this is mipi_dsi_dcs_exit_sleep_mode().
+> > > > > > > > >
+> > > > > > > > > > > > +     /* T6: 120ms */
+> > > > > > > > > > > > +     _INIT_DELAY_CMD(120),
+> > > > > > > > > > > > +     _INIT_DCS_CMD(0X29),
+> > > > > > > > >
+> > > > > > > > > And this is mipi_dsi_dcs_set_display_on().
+> > > > > > > > >
+> > > > > > > > > Having a single table enourages people to put known comma=
+nds into the
+> > > > > > > > > table, the practice that must be frowned upon and forbidd=
+en.
+> > > > > > > > >
+> > > > > > > > > We have functions for some of the standard DCS commands. =
+So, maybe
+> > > > > > > > > instead of adding a single-table based approach we can im=
+prove
+> > > > > > > > > mipi_dsi_generic_write_seq() to reduce the bloat. E.g. by=
+ moving the
+> > > > > > > > > error handling to a common part of enable() / prepare() f=
+unction.
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > For this panel, I think it can also refer to how
+> > > > > > > > panel-kingdisplay-kd097d04.c does. Create the table for ini=
+t cmd data,
+> > > > > > > > not what operation to use, and use mipi_dsi_generic_write_s=
+eq() when
+> > > > > > > > looping through the table.
+> > > > > > >
+> > > > > > > Even more similar discussion:
+> > > > > > >
+> > > > > > > https://lore.kernel.org/r/CAD=3DFV=3DUGDbNvAMjzWSOvxybGikQcvW=
+9JsRtbxHVg8_97YPEQCA@mail.gmail.com
+> > > > > >
+> > > > > > It seems I skipped that thread.
+> > > > > >
+> > > > > > I'd still suggest a code-based solution compared to table-based=
+ one, for
+> > > > > > the reasons I've outlined before. Having a tables puts a pressu=
+re on the
+> > > > > > developer to put commands there for which we already have a
+> > > > > > command-specific function.
+> > > > >
+> > > > > The problem is that with these panels that need big init sequence=
+s the
+> > > > > code based solution is _a lot_ bigger. If it were a few bytes or =
+a
+> > > > > 1-2KB then fine, but when Hsin-Yi measured Linus W's attempt to m=
+ove
+> > > > > from a table to code it was 100K difference in code [1]. I would =
+also
+> > > > > say that having these long init sequences done as separate comman=
+ds
+> > > > > encourages people to skip checking the return values of each of t=
+he
+> > > > > transfer functions and I don't love that idea.
+> > > > >
+> > > > > It would be ideal if these panels didn't need these long init
+> > > > > sequences, but I don't have any inside knowledge here saying that=
+ they
+> > > > > could be removed. So assume we can't get rid of the init sequence=
+s it
+> > > > > feels like we have to find some way to make the tables work for a=
+t
+> > > > > least the large chunks of init code and encourage people to make =
+the
+> > > > > tables readable...
+> > > >
+> > > >
+> > > > I did a quick check on the boe-tv101wum-nl6 driver by converting th=
+e
+> > > > writes to use the following macro:
+> > > >
+> > > > #define mipi_dsi_dcs_write_cmd_seq(dsi, cmd, seq...)
+> > > >              \
+> > > >         do {                                                       =
+            \
+> > > >                 static const u8 d[] =3D { cmd, seq };              =
+          \
+> > > >                 ret =3D mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZ=
+E(d));    \
+> > > >                 if (ret < 0)                                       =
+            \
+> > > >                         goto err;                                  =
+            \
+> > > >         } while (0)
+> > > >
+> > > > And then at the end of the init funciton having
+> > > >
+> > > > err:
+> > > >         dev_err(panel->dev,
+> > > >                 "failed to write command %d\n", ret);
+> > > >         return ret;
+> > > > }
+> > > >
+> > >
+> > > I'm not sure about the coding style rule here, would it be considered
+> > > unclear that caller of mipi_dsi_dcs_write_cmd_seq() needs to have err
+> > > block, but the block may not be directly used in that caller and is
+> > > only jumped from the macro?
+> >
+> > I'm also not sure here. It was a quick and dirty test.
+> > We might as well do something like
+> >
+> > ret =3D mipi_dsi_dcs_write_cmd_seq(dsi, ...);
+> > if (ret)
+> >     goto err;
+> >
+> > all over the place.
+>
+> Oh. This is actually very simple to fix and requires no code changes
+> to clients. :-P We just need to hoist the printing out of the macro
+> and into "drm_mipi_dsi.c". Let me double-confirm and then I'll post a
+> patch.
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Sounds good. I have converted boe-tv101wum-nl6, ilitek-ili9882t and
+innolux-p079zca drivers. Once you post your patch I can post those
+too.
+
+
+
+--=20
+With best wishes
+Dmitry
