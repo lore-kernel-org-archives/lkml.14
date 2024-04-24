@@ -1,117 +1,100 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D59D360;
-	Wed, 24 Apr 2024 07:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A476F13D886;
+	Wed, 24 Apr 2024 07:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713943005; cv=none; b=mnHulsOCR6t/OiEnfwTXU/W8oklH1hbcmXQ4FN9sp1VBf+WaffTdYROPjTKcnbqzljjkPVMD3uFmEiVg9JlJ5wablx6Au+EA3f1AI902U5UFmJSU6RokuvAeLhIrkl2xdWmC/LQ2wVDjZ6TjOWkztQ+X+FMus10yvDFD1SP7ZRg=
+	t=1713943026; cv=none; b=iDSCSqPTbB0shWWSy1vK9OxRzrVCGVtL7vTe73V3XigQu9DS+i48YroedXtqobhVI9TbTlxUX75ZjRK6/EngYyV8XGyixIx65l/NT+Dl94rfx1BgnemBep5kaJiRmBi38/9oCxDga8RVd+lOz7zAqGmZTPdWWglqagDh/tcmzXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713943005; c=relaxed/simple;
-	bh=E1fwd1W0aXVPo9e17+huq/xHPYPSatpsHlCko4mo2wM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BKxBtdPO/M2louBcvKP8xgLpNqJVHSJ1hYcRLEO9oi74NWWeSBcngXA6tFkGd6l1e8QQ1a1Evl2cAlQ7vyHPzEyvtk4GNZquj+A0aYyJt6wUFpA9jnTSJrSp23VcFfaFggm+yLpiijkjS7v10ZFDFvjTIHXUiVaAVXLSmEfRvtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PY9Mw9ZZ; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PY9Mw9ZZ"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43O7GVdB061921;
-	Wed, 24 Apr 2024 02:16:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1713942991;
-	bh=0W2mD8fr9mkHJZVb38GrfhFcqGHaTgNh0tcswSRAXA8=;
-	h=From:To:CC:Subject:Date;
-	b=PY9Mw9ZZFu/IcIQv5tAVJOkJ83LP0jZFGuaqajzWdyaWanZ3TFMB23nu+sAhguFsz
-	 d8d04JJtQdiBPiCQfMq4Y6YOqG6glORbUsqJ0tSNWm85oVob7kYXQBZ7Yl/3eBN0CW
-	 gTLlh1NvrYcPlfPlcYuDIiVaUS/deoPLtWzhQJxY=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43O7GV03026334
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 24 Apr 2024 02:16:31 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 24
- Apr 2024 02:16:31 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 24 Apr 2024 02:16:30 -0500
-Received: from uda0500640.dal.design.ti.com (uda0500640.dhcp.ti.com [172.24.227.88])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43O7GQTH085742;
-	Wed, 24 Apr 2024 02:16:27 -0500
-From: Ravi Gunasekaran <r-gunasekaran@ti.com>
-To: <s-vadapalli@ti.com>, <rogerq@kernel.org>, <r-gunasekaran@ti.com>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <richardcochran@gmail.com>, <jreeder@ti.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <srk@ti.com>,
-        <ed.trexel@hp.com>
-Subject: [PATCH net v2] net: ethernet: ti: am65-cpts: Fix PTPv1 message type on TX packets
-Date: Wed, 24 Apr 2024 12:46:26 +0530
-Message-ID: <20240424071626.32558-1-r-gunasekaran@ti.com>
-X-Mailer: git-send-email 2.17.1
+	s=arc-20240116; t=1713943026; c=relaxed/simple;
+	bh=K6m+iz3u8NxFxDy/IZv/WjFWFnBXtXfL2AxNjjSg5wA=;
+	h=Message-ID:Date:From:MIME-Version:To:CC:Subject:References:
+	 In-Reply-To:Content-Type; b=q/3fdkW+vEVoSrrA8o9RZ4swFfVYtWLLXMgT6chMn93kwZYqKk6HWf9+TYqiU8G3FwyKFH180IaGb8+7YwrmRt3F7u4oFsoalnP1Iqg43QYTGAxeEyAIGbYpL7G6IMA2ZCsewdOGnj0K1e1IRQ8JJdlpRT8HgikwsUkURj2h9sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=hisilicon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VPVb6277zz1RDGb;
+	Wed, 24 Apr 2024 15:13:54 +0800 (CST)
+Received: from kwepemd500014.china.huawei.com (unknown [7.221.188.63])
+	by mail.maildlp.com (Postfix) with ESMTPS id B439218005F;
+	Wed, 24 Apr 2024 15:16:58 +0800 (CST)
+Received: from [10.67.121.2] (10.67.121.2) by kwepemd500014.china.huawei.com
+ (7.221.188.63) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Wed, 24 Apr
+ 2024 15:16:58 +0800
+Message-ID: <6628B1E9.1050300@hisilicon.com>
+Date: Wed, 24 Apr 2024 15:16:57 +0800
+From: Wei Xu <xuwei5@hisilicon.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:24.0) Gecko/20100101 Thunderbird/24.2.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Krzysztof Kozlowski <krzk@kernel.org>, <xuwei5@hisilicon.com>
+Subject: Re: [PATCH 1/9] arm64: dts: hisilicon: hip05: move non-MMIO node
+ out of soc
+References: <20240402193148.62323-1-krzk@kernel.org> <171394159880.43787.12383182687947213751.b4-ty@linaro.org>
+In-Reply-To: <171394159880.43787.12383182687947213751.b4-ty@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd500014.china.huawei.com (7.221.188.63)
 
-From: Jason Reeder <jreeder@ti.com>
+Hi Krzysztof,
 
-The CPTS, by design, captures the messageType (Sync, Delay_Req, etc.)
-field from the second nibble of the PTP header which is defined in the
-PTPv2 (1588-2008) specification. In the PTPv1 (1588-2002) specification
-the first two bytes of the PTP header are defined as the versionType
-which is always 0x0001. This means that any PTPv1 packets that are
-tagged for TX timestamping by the CPTS will have their messageType set
-to 0x0 which corresponds to a Sync message type. This causes issues
-when a PTPv1 stack is expecting a Delay_Req (messageType: 0x1)
-timestamp that never appears.
+On 2024/4/24 14:54, Krzysztof Kozlowski wrote:
+> 
+> On Tue, 02 Apr 2024 21:31:40 +0200, Krzysztof Kozlowski wrote:
+>> Non-MMIO devices, which are BTW not really part of the SoC, should not
+>> be within simple-bus, as reported by dtc W=1 warning:
+>>
+>>   hip05.dtsi:301.30-305.5: Warning (simple_bus_reg): /soc/refclk200mhz: missing or empty reg/ranges property
+>>
+>>
+> 
+> Almost a month passed, no replies from maintainers about picking it up. Dunno,
+> looks abandoned, so let me grab this. If anyone else wants to pick it up, let
+> me know.
+> 
 
-Fix this by checking if the ptp_class of the timestamped TX packet is
-PTP_CLASS_V1 and then matching the PTP sequence ID to the stored
-sequence ID in the skb->cb data structure. If the sequence IDs match
-and the packet is of type PTPv1 then there is a chance that the
-messageType has been incorrectly stored by the CPTS so overwrite the
-messageType stored by the CPTS with the messageType from the skb->cb
-data structure. This allows the PTPv1 stack to receive TX timestamps
-for Delay_Req packets which are necessary to lock onto a PTP Leader.
+Sorry for the late reply!
+I am applying these patches which are in the following git repo.
+  https://github.com/hisilicon/linux-hisi/tree/next/dt64
 
-Fixes: f6bd59526ca5 ("net: ethernet: ti: introduce am654 common platform time sync driver")
-Signed-off-by: Jason Reeder <jreeder@ti.com>
-Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
----
-Changes since v1:
------------------
-* Added Fixes tag as per Paolo's suggestion
-* Rebased to latest tip
+And it is fine to me to go through your git tree.
+Thanks!
 
-v1: https://lore.kernel.org/all/20240419080547.10682-1-r-gunasekaran@ti.com/
+Best Regards,
+Wei
 
- drivers/net/ethernet/ti/am65-cpts.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/net/ethernet/ti/am65-cpts.c b/drivers/net/ethernet/ti/am65-cpts.c
-index c66618d91c28..f89716b1cfb6 100644
---- a/drivers/net/ethernet/ti/am65-cpts.c
-+++ b/drivers/net/ethernet/ti/am65-cpts.c
-@@ -784,6 +784,11 @@ static bool am65_cpts_match_tx_ts(struct am65_cpts *cpts,
- 		struct am65_cpts_skb_cb_data *skb_cb =
- 					(struct am65_cpts_skb_cb_data *)skb->cb;
- 
-+		if ((ptp_classify_raw(skb) & PTP_CLASS_V1) &&
-+		    ((mtype_seqid & AM65_CPTS_EVENT_1_SEQUENCE_ID_MASK) ==
-+		     (skb_cb->skb_mtype_seqid & AM65_CPTS_EVENT_1_SEQUENCE_ID_MASK)))
-+			mtype_seqid = skb_cb->skb_mtype_seqid;
-+
- 		if (mtype_seqid == skb_cb->skb_mtype_seqid) {
- 			u64 ns = event->timestamp;
- 
-
-base-commit: a59668a9397e7245b26e9be85d23f242ff757ae8
--- 
-2.17.1
-
+> Applied, thanks!
+> 
+> [1/9] arm64: dts: hisilicon: hip05: move non-MMIO node out of soc
+>       https://git.kernel.org/krzk/linux-dt/c/8ff69c1d04c8f2381164c5f97781d9fe79f71761
+> [2/9] arm64: dts: hisilicon: hip05-d02: correct local-bus unit addresses
+>       https://git.kernel.org/krzk/linux-dt/c/4e0e9c0b311e599c78f63942256ccf03e5ebb0f5
+> [3/9] arm64: dts: hisilicon: hip06: move non-MMIO node out of soc
+>       https://git.kernel.org/krzk/linux-dt/c/2283b9afc1b43ec941c66665cdc86dd32f9c2295
+> [4/9] arm64: dts: hisilicon: hip06: correct unit addresses
+>       https://git.kernel.org/krzk/linux-dt/c/6c55978774fd66c720e20e1f88a2af7daaa382df
+> [5/9] arm64: dts: hisilicon: hip07: move non-MMIO node out of soc
+>       https://git.kernel.org/krzk/linux-dt/c/5e607ec42116e0ecb387e2db79a662333f789fa2
+> [6/9] arm64: dts: hisilicon: hip07: correct unit addresses
+>       https://git.kernel.org/krzk/linux-dt/c/76dce22bc7ec9483ef37899a617f2dfde2a382c0
+> [7/9] arm64: dts: hisilicon: hi6220-hikey: add missing port@0 reg
+>       https://git.kernel.org/krzk/linux-dt/c/d6fcc43f764630863e3888d0b5c3ff4a09a4f094
+> [8/9] arm64: dts: hisilicon: hi6220-hikey: drop unit addresses from fixed regulators
+>       https://git.kernel.org/krzk/linux-dt/c/e6a91e9f20058629dca4f0c264de092049bd8e74
+> [9/9] arm64: dts: hisilicon: hi6220: correct tsensor unit addresses
+>       https://git.kernel.org/krzk/linux-dt/c/83d4c5e2a529e3eebde5b4d75e3ec0fe2fc92440
+> 
+> Best regards,
+> 
