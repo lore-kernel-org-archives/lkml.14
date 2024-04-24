@@ -1,153 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54EA2159903
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 11:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8C11598FE
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 11:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713956497; cv=none; b=BXZ+zp6Mn6c8TseGcYLlT9KIogPE4LQyZ2e7Ktyeyof7YxkCQpxV7PYMl+X1gUN8FYrp3s/5WMHJPFf+i1xkApeWx57y2KiUuYSKO1IE8DVa18v3ct15kPdSk73Hv8wQUu69Lb9gwRRsRT8rjQLygXWQFMqrAtDy1Nq7GQErieU=
+	t=1713956528; cv=none; b=HG/eQvdKRwCPmh3P6ifUMR8xUPDQoEXpjVlYY9LTpLgkptoaFvOBsvpukORBXoeQ+EzjyKqeUkt36ynPlLJY1FjPRpALWB90THOf7lGQLk6zI+l7CGXf143XH9yv3cGkNeygKXpDrVioNIEL7nWCMonutw99H0Jhdc/xFGIoD7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713956497; c=relaxed/simple;
-	bh=Y8jauGU3H3pOStMZXtgLIEEBN0hMmdEL/BE2y9DDKbY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BlaRsAvEB0FLCSzI7FQC1HKbCvf6ErOgwrW30/20VR70vPeWXxCEVfrYQmyeEZV6uKyQrjSGb5ULzbgAt0ThYVlNwMWGJ0FGMGUw5G4OfnSjnClz6e3rLc0G9U18ATUmn1HSNTbZr1k5Yp/7qobkWyfrKuieXgnY+rQyr8lj0Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TghPvxAu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713956528; c=relaxed/simple;
+	bh=2jKIjdLV7lftx+xiDBEvy7i/MFRg4Wb2datzsreIZFw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZiPgctZjmMJxY/3DUGc0/CBSWLcGwSpdP74JNW669ZeKjk14PVeV/3zxXCekAXkBO3aFWLEzqnOK1/EtUUHzyGA5tfwid2MeM8FBtW3WvCW49XeZrC/jbhZSYUoN9qfotjZW+Gv6qbgu8ujB+bEQclSomXgxM2WhCp5KDFlao2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=Qjry9X9S; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TghPvxAu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BD79C113CE;
-	Wed, 24 Apr 2024 11:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713956496;
-	bh=Y8jauGU3H3pOStMZXtgLIEEBN0hMmdEL/BE2y9DDKbY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TghPvxAunIE5BH1bdxf67i9THqqTIfuap3goT7PqxxbcxZL+BeMotTFeFwBKZ8T7s
-	 GEmDRNOUuTJ42au0O8UezKWsMfx/SWmdZAPo03sgnjOAuFvdpnHAzw9pPVN+nEvuhg
-	 SzUp0p9j1oUQHvIw260ICdQZC0Jlp46SUortUgdNW4cteqXyPTrm6eVAsYenmt+wlq
-	 JtFvfTmFjdMXKZZWPdRTS4zteiRhcWKBrT6c1f1oOxkHTUmxbij90+2Aume5mmzu84
-	 x0DW5nk58N6siOEXRZ/UR5D1k4nN7mcsu+cJyLURc03zbQTq7zjzJf1zEUTWAoK41z
-	 xHKeu50hqtWXw==
-Date: Wed, 24 Apr 2024 12:01:33 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] clocksource/drivers/timer-clint: Add option to
- use CSR instead of mtime
-Message-ID: <20240424-ivory-undefined-0c96bd289c36@spud>
-References: <20240406112159.1634-1-jszhang@kernel.org>
- <20240406112159.1634-3-jszhang@kernel.org>
- <20240409-krypton-employed-b2e0e1b46ddf@spud>
- <ZhVVPB0qD4pBna51@xhacker>
- <ZhZqNbbUyPhVzekO@xhacker>
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="Qjry9X9S"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2a55a3d0b8eso595726a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 04:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessos.org; s=google; t=1713956526; x=1714561326; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UVuD14qd2v2GJpWMUKxJKGrbwwgi+TYXxSr/usBLCtM=;
+        b=Qjry9X9S+WvNwQfxxgJ5jAjOYuWuZCXuTBgz8HFxuZzfFyOfoOB8QKY9AruVXXCIbc
+         gdPonmkV7sO9AvDKKqza/JapMF6nrPnq2sf4y5zM4A9UDdHQXdpd9Jbl9tcE6wnhxV2Y
+         lWWQfaNjZYdh3YNQqTpL2p2xW3oNVgN7QfBiz5NZFOONqTS3wYD4KSqob3ZhyFg7XdtG
+         zBxtNbekjskRwFXRhPz0Rmh7/gwbPVJpnJNk1lrTnvIIg7gAucDeQUEbETViEi9EYnfK
+         +vGB3coC4QqfY5uvUtWImGQgo+3Km/aGFmWL6/wNAo73CmQvBvfmVTpYDKaWsID2jeVq
+         jVpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713956526; x=1714561326;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UVuD14qd2v2GJpWMUKxJKGrbwwgi+TYXxSr/usBLCtM=;
+        b=Y6hd6KaGqOAWt5e/XExqpnDs9Y6n2KM+n5n9ejgR931Zcj6mzpXHGOTOX+ukhWV+Se
+         LdZa8qU8Yd33/KRZGmvnoxRduUmtRD4iuJsUNND07rfqTnD8X7bjYGWDfQ34FkK/sDoK
+         Fdz8q9ADhOnpamOODB4S2sotXrrSsWWMcfC9QFirM80xS+wv//6AZ4SikkrlrhIMQZWU
+         IJ2DCe+lhuFFI708Qh8UBmx2zDqpmUyA6QMvlOrHsJ/T4E+fS/FkqPXAzXPsRz3dEHrG
+         LqLr+gTK0Zsuf7nJFecmdYd4W2MUoXwqfsrMVuyrg0m8scVBWlXHKX5aL3ppBenGiHba
+         Prxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmZIPV0Xlv1yehGeBXs/OLrZaXRp1uY0K2uYo3fn68+76RjVB1UlVXBFomw39yqbz7tdtSnfT9iEkNY/6BjVA0Qh+NWXab2Kd/0LoE
+X-Gm-Message-State: AOJu0YwFw/KJIzKs6fsCHfCRwoEtlV0qoMTpqk68ag5OUCdrBjJjwGXW
+	1tCNgwtL/6x0sKa7993qEseVwFJ5y46VKnUViPDZ39TVk1LGgzOrIh8Fq814hYU=
+X-Google-Smtp-Source: AGHT+IHGwVsOxC3KDLv+3r/1YnzNplxHumhenciI16CLN8PKLRoRBfKLbi53rsWsJbT33eWrnNUl+Q==
+X-Received: by 2002:a17:90a:5513:b0:2a5:be1a:6831 with SMTP id b19-20020a17090a551300b002a5be1a6831mr7456226pji.19.1713956526095;
+        Wed, 24 Apr 2024 04:02:06 -0700 (PDT)
+Received: from localhost.localdomain ([123.51.167.56])
+        by smtp.googlemail.com with ESMTPSA id x5-20020a17090a388500b002a53b33afa3sm13990338pjb.8.2024.04.24.04.02.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 04:02:05 -0700 (PDT)
+From: Jian-Hong Pan <jhp@endlessos.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>,
+	David Box <david.e.box@linux.intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jian-Hong Pan <jhp@endlessos.org>
+Subject: [PATCH v5 3/4] PCI/ASPM: Introduce aspm_get_l1ss_cap()
+Date: Wed, 24 Apr 2024 19:00:48 +0800
+Message-ID: <20240424110047.21766-2-jhp@endlessos.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="h1r6PhpT3M2gVcJm"
-Content-Disposition: inline
-In-Reply-To: <ZhZqNbbUyPhVzekO@xhacker>
+Content-Transfer-Encoding: 8bit
 
+Introduce aspm_get_l1ss_cap() which is extracted from aspm_l1ss_init() to
+get the PCIe's L1SS capability. This does not change any behavior, but
+aspm_get_l1ss_cap() can be reused later.
 
---h1r6PhpT3M2gVcJm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=218394
+Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+---
+ drivers/pci/pcie/aspm.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-On Wed, Apr 10, 2024 at 06:30:13PM +0800, Jisheng Zhang wrote:
-> On Tue, Apr 09, 2024 at 10:48:33PM +0800, Jisheng Zhang wrote:
-> > On Tue, Apr 09, 2024 at 03:26:18PM +0100, Conor Dooley wrote:
-> > > On Sat, Apr 06, 2024 at 07:21:58PM +0800, Jisheng Zhang wrote:
-> > > > As pointed out by commit ca7810aecdba ("lib: utils/timer: mtimer: a=
-dd a
-> > > > quirk for lacking mtime register") of opensbi:
-> > > >=20
-> > > > "T-Head developers surely have a different understanding of time CS=
-R and
-> > > > CLINT's mtime register with SiFive ones, that they did not implement
-> > > > the mtime register at all -- as shown in openC906 source code, their
-> > > > time CSR value is just exposed at the top of their processor IP blo=
-ck
-> > > > and expects an external continous counter, which makes it not
-> > > > overrideable, and thus mtime register is not implemented, even not =
-for
-> > > > reading. However, if CLINTEE is not enabled in T-Head's MXSTATUS
-> > > > extended CSR, these systems still rely on the mtimecmp registers to
-> > > > generate timer interrupts. This makes it necessary to implement T-H=
-ead
-> > > > C9xx CLINT support in OpenSBI MTIMER driver, which skips implementi=
-ng
-> > > > reading mtime register and falls back to default code that reads ti=
-me
-> > > > CSR."
-> > > >=20
-> > > > To use the clint in RISCV-M NOMMU env on Milkv Duo little core, we
-> > > > need to fall back to read time CSR instead of mtime register. Add t=
-he
-> > > > option for this purpose.
-> > > >=20
-> > > > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> > >=20
-> > > > diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kcon=
-fig
-> > > > index 34faa0320ece..7bbdbf2f96a8 100644
-> > > > --- a/drivers/clocksource/Kconfig
-> > > > +++ b/drivers/clocksource/Kconfig
-> > > > @@ -650,6 +650,15 @@ config CLINT_TIMER
-> > > >  	  This option enables the CLINT timer for RISC-V systems.  The CL=
-INT
-> > > >  	  driver is usually used for NoMMU RISC-V systems.
-> > > > =20
-> > > > +config CLINT_USE_CSR_INSTEADOF_MTIME
-> > > > +	bool "Use TIME CSR instead of the mtime register"
-> > > > +	depends on CLINT_TIMER
-> > > > +	help
-> > > > +	  Use TIME CSR instead of mtime register. Enable this option if
-> > > > +	  prefer TIME CSR over MTIME register, or if the implementation
-> > > > +	  doesn't implement the mtime register in CLINT, so fall back on
-> > > > +	  TIME CSR.
-> > >=20
-> > > This, as a Kconfig option, seems a bit strange to me. We know at runt=
-ime
-> > > if we are on a T-Head device without the mtime register and should be
-> > > able decide to use the CSR implementation dynamically in that case,
-> > > right?
-> >=20
-> > Dynamically decision can be done in clocksource/clockevnt:
-> > I can patch clint_clocksource.read to point to different clint_rdtime()
-> > implementation.
-> >=20
-> > But clint timer is also used in NOMMU RISCV-M's get_cycles(), this
-> > can't be dynamically chosen w/o an ugly "if (is_c900)"
-> > check, and I'm not sure whether this check in get_cycles() will
-> > introduce non-trival overhead or not. Or use code patching technology
-> > here?
->=20
-> Hi,
->=20
-> After some tests, I think will go with code patching path, I.E use
-> static_branch in get_cycles(). New version is under cooking.
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 91a8b35b1ae2..c55ac11faa73 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -612,6 +612,18 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ 	}
+ }
+ 
++static u32 aspm_get_l1ss_cap(struct pci_dev *pdev)
++{
++	u32 l1ss_cap;
++
++	pci_read_config_dword(pdev, pdev->l1ss + PCI_L1SS_CAP, &l1ss_cap);
++
++	if (!(l1ss_cap & PCI_L1SS_CAP_L1_PM_SS))
++		l1ss_cap = 0;
++
++	return l1ss_cap;
++}
++
+ /* Calculate L1.2 PM substate timing parameters */
+ static void aspm_calc_l12_info(struct pcie_link_state *link,
+ 				u32 parent_l1ss_cap, u32 child_l1ss_cap)
+@@ -722,15 +734,8 @@ static void aspm_l1ss_init(struct pcie_link_state *link)
+ 		return;
+ 
+ 	/* Setup L1 substate */
+-	pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CAP,
+-			      &parent_l1ss_cap);
+-	pci_read_config_dword(child, child->l1ss + PCI_L1SS_CAP,
+-			      &child_l1ss_cap);
+-
+-	if (!(parent_l1ss_cap & PCI_L1SS_CAP_L1_PM_SS))
+-		parent_l1ss_cap = 0;
+-	if (!(child_l1ss_cap & PCI_L1SS_CAP_L1_PM_SS))
+-		child_l1ss_cap = 0;
++	parent_l1ss_cap = aspm_get_l1ss_cap(parent);
++	child_l1ss_cap = aspm_get_l1ss_cap(child);
+ 
+ 	/*
+ 	 * If we don't have LTR for the entire path from the Root Complex
+-- 
+2.44.0
 
-Whoops, sorry for the delay getting back to you - been busier than I
-would like of late. Patching sounds good to me if your testing went
-well.
-
---h1r6PhpT3M2gVcJm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZijmjAAKCRB4tDGHoIJi
-0lW7AP9ELlOwlUcv5ji1DJE0FSqDfjyy0OOh7tUjreEqkrMykgEA298NQRO9jsRF
-Eqs54vfBUEEhkTfzEU9Wf+8F7mdOSwU=
-=99xV
------END PGP SIGNATURE-----
-
---h1r6PhpT3M2gVcJm--
