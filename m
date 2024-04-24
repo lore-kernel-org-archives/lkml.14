@@ -1,111 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8783C138
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 02:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA4983A1E;
+	Wed, 24 Apr 2024 02:46:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713926765; cv=none; b=oI+rvObvgfI/7Rbipjzw+OgMEQNnhnLZDjZ5lTzu76RhINzFi+n/0p52oK6L2eP8LAYYwnGN2+yWj635oqhf3jyBpOiijObUxr8wOxk6C7r/zZvNsp3TynrfcqnJHK5k7HP0tflf1Ff7x8d/GF609pVO3bca4fR9ICxBRfVo9Bo=
+	t=1713926788; cv=none; b=W2zLdHiXqYIOaXyzhhxsPtH6+tXyZMsgc05ATx+5WE19KtCxd2M2ShutPenPZbsbm0hKY7YYVVXbt6/f5wjMlcgbNy8jhWUx8wTbx5Uxs8o/wVtlUo+yeoxZCeh2iZahsO6ZdqXCJbfWvP9gCrg5UMFQ3BDseM02hTIV5Uk1qWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713926765; c=relaxed/simple;
-	bh=MiyHAf01++BUbs/aPGIknIWZ43yNcPC8sNtReIepA/s=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ngvQhml/beXmejM7LV8bXIyqlov8CyS9otpq+aRlMIiwHqcnG90us3zU1XlcXsWdRrSyCqn5pRFGwc4w5FGOtIfijkvVF8D3EoCCR+/UxkRPU2BttpJWjXcT7SNr49ga+iCcA6saXdzhPa5CgmMJ2RFI8lceHSRGXi9QjFFCqJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HJlY2TZ8; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713926788; c=relaxed/simple;
+	bh=xBUEcmhUENIVfjoh2Y2J3tXoPs5E2mh53NO4x3kUDXE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VwqL4b65uSDD4DSssaGgLhOCxzP8VcdDe6y97j/n5NHcx6Edius8c+cEARIzUfHbfku5hpeKRw111M0uw6nma9LdPMz1/q9sYAci/Njb9eOdXJgh+xqQwaYIx8MzWh5PjEd1tG0PAQDnQ4b1OIRz7L48fC1A8JVt//6tinL1mOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YCQUkFL5; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HJlY2TZ8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713926764; x=1745462764;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=MiyHAf01++BUbs/aPGIknIWZ43yNcPC8sNtReIepA/s=;
-  b=HJlY2TZ8rb6XIUnnbBf2wHxMCmBZYntaQBu4K8gTb6Q7EJCCCT118ugz
-   dQ2bfkfBt2BENqgHENEhCMB/+ekOCYpUbhTlGOzyXJUt5TRLmPZ2uIqJR
-   R0xnHQBakG8hh/IZ9G0cMBkmAiyEycj15Lcpa3pc+yChbSLohHVLZqCR8
-   IwCNwz31hG2f2RLjtul/kHHmL4tqZefPBpiIU3BR/3+i29B4YSfC/8r8h
-   oAyNzNZ/XeplT61/8gztd96KOrpsT/VE31mC2/JTIovhlcSeOqR9pRLlR
-   KTaCswpzTZlOGpFl7d2600eG3yVyJPCPsXD0JXEjTXY4SbjMF+rsEpxP4
-   Q==;
-X-CSE-ConnectionGUID: P7MDZ+c7SeWi2NrUjVeMsw==
-X-CSE-MsgGUID: QJEANZJFSZuvQu5q+mqEjg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="12473034"
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="12473034"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 19:46:03 -0700
-X-CSE-ConnectionGUID: YAkqvKlzSJKFctxgTNGymg==
-X-CSE-MsgGUID: xcsF7COYTyCRv1Cu3acPyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="24449651"
-Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
-  by orviesa010.jf.intel.com with ESMTP; 23 Apr 2024 19:46:00 -0700
-Message-ID: <05d0d9bf-2a33-487f-bbf2-5d7780cbabb9@linux.intel.com>
-Date: Wed, 24 Apr 2024 10:44:37 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCQUkFL5"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e4f341330fso53967385ad.0;
+        Tue, 23 Apr 2024 19:46:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713926787; x=1714531587; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lTvKMLpj2AZnqrPhNjBbKcnRSe3quDRxIzs6jtieELk=;
+        b=YCQUkFL57jYgfRvQaq0nBIAr4mRNTHJW4YHO8NYhk+jk1RuWGZGkpVJ21eZf/9x5PP
+         K9oku2CiZNewtNlF3CcuOhBXuDEfrBX51ZLwq2srGNzCbbeFKvpDXshFQ4iwMJoF65RU
+         +FBsm46nWMmvub2stNmtRlOegqHzvaUVWaIy4smeBTaBfiiU4iFPy1db0tZadtniTj/i
+         8Kz81bVJnfe6qw1nubPIo9nzdRHBViJBN3PmyvlVr7t1N7to6qdTNunCnYUnRfcRio9d
+         PurISUQ/t2vkY0A8MzeXRg8mwRid0gL/34+cT301/rzYJb5rWMq1bmTVdWnSC6Yb61OX
+         x/Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713926787; x=1714531587;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lTvKMLpj2AZnqrPhNjBbKcnRSe3quDRxIzs6jtieELk=;
+        b=Trgv8LeEWajuG6gxQz4G/RNNeLMQms8HOEqsTB0w24gNRaUDjV01Qlj9dN+n8ENkl5
+         x7o3pLc/ghkSGC601++SRgonpQYhyM/nOA/zMITboix6mfqVCvaHPOWeSxz2vQJREiWE
+         yoopVK8vmWqJYm6xvoJWXUfquB5vD0ryCl9Gcu5o8gaxhFg83Ys2XbW4hv556tCYb8Yv
+         H9R4XKD3hgBB0V5DYFbTR3H62azqudoGbc0qtUj3lQR1s6di2DtcnTU4uUbhkwr+wq0l
+         XlCoftSaRJy+dBdlBaT4zHvnFnVPrTSowv1EB2JKqFrO35UJR2myKpZ/NpJMFmpGUalI
+         MdDw==
+X-Forwarded-Encrypted: i=1; AJvYcCUhtZNxIoTH56uuVgQs/J7o2xh/vaMk/jIAJhOu5lUQYhQx8iw0AxrEkbFh3yTqzBwEgzamJIMrlj+3RPHfmn/O/ED6LpMUQEL9DjW2S6CVrXeMCo4IoAhYFuRqaMy4HxYSFthSTFRq4gujrngOFkeFp2EKNNRqLRv+KEQvsqNf1bcYJg==
+X-Gm-Message-State: AOJu0YxtIjd7kKrgYCRuKd/AI8N+lOUrEdfonuCAlc0EK7jSUClfyAVw
+	3u5/mj57vEVYHwu1M3lYNdzBlZ2zKm0p3DtCF96eGZVed0NfnoKQqOS0IqbTWjeM7Q==
+X-Google-Smtp-Source: AGHT+IF79yN1BuL7Po0ptWnZUO05HzHm4l9+fwgVmQSQ/bfLGqHL4piuBpi0EwGBsi/CKkzw8U3sxg==
+X-Received: by 2002:a17:902:d481:b0:1e3:e25c:fa5c with SMTP id c1-20020a170902d48100b001e3e25cfa5cmr1395689plg.67.1713926786686;
+        Tue, 23 Apr 2024 19:46:26 -0700 (PDT)
+Received: from localhost.localdomain ([120.229.49.143])
+        by smtp.gmail.com with ESMTPSA id t6-20020a170902e84600b001e604438791sm10739243plg.156.2024.04.23.19.46.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 19:46:26 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	zegao2021@gmail.com,
+	leo.yan@linux.dev,
+	ravi.bangoria@amd.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH v2 0/4] Dump off-cpu samples directly
+Date: Wed, 24 Apr 2024 10:48:01 +0800
+Message-ID: <20240424024805.144759-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, "Zhang, Tina" <tina.zhang@intel.com>,
- "Liu, Yi L" <yi.l.liu@intel.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 01/12] iommu/vt-d: Add cache tag assignment interface
-To: "Tian, Kevin" <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Jason Gunthorpe <jgg@ziepe.ca>
-References: <20240416080656.60968-1-baolu.lu@linux.intel.com>
- <20240416080656.60968-2-baolu.lu@linux.intel.com>
- <BN9PR11MB5276A1920E24BE91CF1FD2098C112@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB5276A1920E24BE91CF1FD2098C112@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/23/24 5:01 PM, Tian, Kevin wrote:
->> From: Lu Baolu <baolu.lu@linux.intel.com>
->> Sent: Tuesday, April 16, 2024 4:07 PM
->>
->> @@ -1757,6 +1759,9 @@ int domain_attach_iommu(struct dmar_domain
->> *domain, struct intel_iommu *iommu)
->>   	unsigned long ndomains;
->>   	int num, ret = -ENOSPC;
->>
->> +	if (domain->domain.type == IOMMU_DOMAIN_SVA)
->> +		return 0;
->> +
->>   	info = kzalloc(sizeof(*info), GFP_KERNEL);
->>   	if (!info)
->>   		return -ENOMEM;
->> @@ -1804,6 +1809,9 @@ void domain_detach_iommu(struct dmar_domain
->> *domain, struct intel_iommu *iommu)
->>   {
->>   	struct iommu_domain_info *info;
->>
->> +	if (domain->domain.type == IOMMU_DOMAIN_SVA)
->> +		return;
->> +
->>   	spin_lock(&iommu->lock);
->>   	info = xa_load(&domain->iommu_array, iommu->seq_id);
->>   	if (--info->refcnt == 0) {
-> 
-> above two are not called for SVA. Why do they start checking
-> SVA type now?
+As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=207323
 
-domain_detach_iommu() is called in remove_dev_pasid path which covers
-SVA domain as well.
+Currently, off-cpu samples are dumped when perf record is exiting. This
+results in off-cpu samples being after the regular samples. Also, samples
+are stored in large BPF maps which contain all the stack traces and
+accumulated off-cpu time, but they are eventually going to fill up after
+running for an extensive period. This patch fixes those problems by dumping
+samples directly into perf ring buffer, and dispatching those samples to the
+correct format.
 
-I am moving the check to the domain_attach/detach_iommu() helpers so
-that the call sites could be generic. I will later move the domain ID
-management to the cache tag code, this kind of check will be dropped
-then.
+Before, off-cpu samples are after regular samples
 
-Best regards,
-baolu
+```
+         swapper       0 [000] 963432.136150:    2812933    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+         swapper       0 [000] 963432.637911:    4932876    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+         swapper       0 [001] 963432.798072:    6273398    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+         swapper       0 [000] 963433.541152:    5279005    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+sh 1410180 [000] 18446744069.414584:    2528851 offcpu-time: 
+	    7837148e6e87 wait4+0x17 (/usr/lib/libc.so.6)
+
+
+sh 1410185 [000] 18446744069.414584:    2314223 offcpu-time: 
+	    7837148e6e87 wait4+0x17 (/usr/lib/libc.so.6)
+
+
+awk 1409644 [000] 18446744069.414584:     191785 offcpu-time: 
+	    702609d03681 read+0x11 (/usr/lib/libc.so.6)
+	          4a02a4 [unknown] ([unknown])
+```
+
+
+After, regular samples(cycles:P) and off-cpu(offcpu-time) samples are
+collected simultaneously:
+
+```
+upowerd     741 [000] 963757.428701:     297848 offcpu-time: 
+	    72b2da11e6bc read+0x4c (/usr/lib/libc.so.6)
+
+
+      irq/9-acpi      56 [000] 963757.429116:    8760875    cycles:P:  ffffffffb779849f acpi_os_read_port+0x2f ([kernel.kallsyms])
+upowerd     741 [000] 963757.429172:     459522 offcpu-time: 
+	    72b2da11e6bc read+0x4c (/usr/lib/libc.so.6)
+
+
+         swapper       0 [002] 963757.434529:    5759904    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+perf 1419260 [000] 963757.434550: 1001012116 offcpu-time: 
+	    7274e5d190bf __poll+0x4f (/usr/lib/libc.so.6)
+	    591acfc5daf0 perf_evlist__poll+0x24 (/root/hw/perf-tools-next/tools/perf/perf)
+	    591acfb1ca50 perf_evlist__poll_thread+0x160 (/root/hw/perf-tools-next/tools/perf/perf)
+	    7274e5ca955a [unknown] (/usr/lib/libc.so.6)
+```
+
+Here's a simple flowchart:
+
+[parse_event (sample type: PERF_SAMPLE_RAW)] --> [config (bind fds,
+sample_id, sample_type)] --> [off_cpu_strip (sample type: PERF_SAMPLE_RAW)] -->
+[record_done(hooks off_cpu_finish)] --> [prepare_parse(sample type: OFFCPU_SAMPLE_TYPES)]
+
+Changes in v2:
+ - Remove unnecessary comments.
+ - Rename function off_cpu_change_type to off_cpu_prepare_parse
+
+Howard Chu (4):
+  perf record off-cpu: Parse off-cpu event, change config location
+  perf record off-cpu: BPF perf_event_output on sched_switch
+  perf record off-cpu: extract off-cpu sample data from raw_data
+  perf record off-cpu: delete bound-to-fail test
+
+ tools/perf/builtin-record.c             |  98 +++++++++-
+ tools/perf/tests/shell/record_offcpu.sh |  29 ---
+ tools/perf/util/bpf_off_cpu.c           | 242 +++++++++++-------------
+ tools/perf/util/bpf_skel/off_cpu.bpf.c  | 163 +++++++++++++---
+ tools/perf/util/evsel.c                 |   8 -
+ tools/perf/util/off_cpu.h               |  14 +-
+ tools/perf/util/perf-hooks-list.h       |   1 +
+ 7 files changed, 344 insertions(+), 211 deletions(-)
+
+-- 
+2.44.0
+
