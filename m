@@ -1,38 +1,59 @@
-Received: from nbd.name (nbd.name [46.4.11.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6FA1635D5;
-	Wed, 24 Apr 2024 16:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D86161911;
+	Wed, 24 Apr 2024 16:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713976007; cv=none; b=qUlsh+noxDYGCinlXImK6/jDZnHiyBNVEY++9VHTwpVsRLtr/GXERCVFjZO5s6fGHx+ZiRoVxobdRH3vQT1F9cgPK7z2gGqWDU4601Z54Dy3ss5EXCPlAbujm97sFWh+l0kERfrzck8tOVzUCP615W82leNIh//MFnzCoqoP4FA=
+	t=1713976020; cv=none; b=tcVE/p7cWCrfZo9U92owu69PVBvOpzjqhMQOD6+hYqP6FPLzMO3KizVZsmlVRxQiRhV2XNLNjGJNuEvLA7BG5H2s7UTtdXVzCqF4jyWCuXsIbnubQeGEz0tpV4+VHvGMROOp9EzOyQ3avDplnG0Fu8NDiUJu3FWAmUZkH/5MS3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713976007; c=relaxed/simple;
-	bh=qp+U2GSE5g9lmqy8CgBgaWgxLhHEXYdXsgvZZwZNbq4=;
+	s=arc-20240116; t=1713976020; c=relaxed/simple;
+	bh=MrekQsd6OaTvzphSNX4kb5YxwQEH0aINbyb83pngJpI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k+14Uc/7FJzDQeECYLuCpAgnQ5oAvAwxDAez+lmevoql4K8oXm+MwbQRskVd5Db2VJk7h39xu8MuRQ9iM8ixbxuSb0KYyIvKm0d+nvE9N1/KRNvX+4F98i4IG7RwHeG8NjBmKolOrwefVwI9reZ1+0UT+vrrZ/7Hm1HHiW4/TDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=GkYXgMeI; arc=none smtp.client-ip=46.4.11.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
+	 In-Reply-To:Content-Type; b=KYWBqx6zyRapqTMvd+3sEO1nWHjirX+/RrrqZwXqEor0Uck5bMLJXMvmqfu67XL7V/6S22z2RS/3QINyeQZpT8/uQHbn+B/4wzwQxzjNjNUp/VsiXaM9E2mQQM86YvVw6gyDCUz1Mz8i1CbcXIzU990E86H5KS7M44bef80sV80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cXjElKKt; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="GkYXgMeI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-	s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=OIW5pBwd/QABDGbQnMOj9PDND5rkPJ3dm3XY/rq8KQI=; b=GkYXgMeIXn+STyyDJZP+qTQBdQ
-	dj3O+4v3VP2EeaVz1AHXCHlONy4eLINJbMwqMRAWxijUd8yYv1Uxx+r+soCDx9rDgAsGTPbkWsldT
-	ETemox4BwVpeIxHvkp1JSjms8WSGQpRU5xzz+1iam9u7TZ7XFVrTItVi8dkHDB/+YQsA=;
-Received: from p54ae9c93.dip0.t-ipconnect.de ([84.174.156.147] helo=nf.local)
-	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <nbd@nbd.name>)
-	id 1rzfS9-006pQZ-2D;
-	Wed, 24 Apr 2024 18:26:37 +0200
-Message-ID: <4e5704f4-f715-4e39-876b-ea5d8a83a0a3@nbd.name>
-Date: Wed, 24 Apr 2024 18:26:37 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cXjElKKt"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-790605809cbso393818185a.3;
+        Wed, 24 Apr 2024 09:26:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713976018; x=1714580818; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=re1VA/XQsH0motUnZZSRX7lW+nnZ1gYeiybIgvu9m1o=;
+        b=cXjElKKt61psJ/ALh931FrU0WSmdP0NeZpBJz4Koog2AUdo2c1wYZWt1d4aMtmtmkA
+         qmKUzJGSW3R4sBuZ6zo6q0CZcbzezHu7wj2wLzmbRATuvxWXE/6fwU2JeSIJyo4jJH92
+         kgXVhTJKqIBv9pBJCFfh1eAbfVU0S3wmksAjo/HPOZ/WFmq/GK/lp+kFBF+YPZpA083Z
+         Y8/BDmV5nbB4cv1nztZZmzAlJL0JXJy2GhJjDnzukeRTaZ0TWjT7vH/o/6E20OysGNeL
+         iG7wAMmSAsp2lfMq9Iz5RZhHpLPuDkdmF3nsw6zI9K3CkEb5SysP5qh5ixBzzK6PBG2Z
+         mm4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713976018; x=1714580818;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=re1VA/XQsH0motUnZZSRX7lW+nnZ1gYeiybIgvu9m1o=;
+        b=pHKbEpKnF2I0DfnS81XI4GDStMTMKCy23HZ5CFxwhovCyHIWi3t2l6zEXHqGr3WmRS
+         r3SG8VoGl56tGaElx3LZzv9NASeDwXTvrCg0MXzsRJp9BbyQuBsysvi0uxKPHVi+eoFT
+         pDcfWrsWgpFMLJ4zWdn336xXtWF7K8911EgR8IDBtguI3qkIwD3SabGMCeN1QDiJp+zk
+         ffSf90euepo/3bvFwTL3iU0DNC9nS1P5a1X1eYS6sxxILRV03ryXJ7WB0N2qoUF73vBZ
+         8WYAqpqdF5Sa+cmQ+HLh8MIIh2UvH5qkAm/ZxaZsKI8euiHTXfi9zSx/EPIGRyxrzbtT
+         Ih3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUCysQfum2N3lvP4T3X0jTn/fR3F1BvcPuWT060jbfx1pNrSmP69jxYP2sJOHwjFFGi7UlV1DmEMou6S+D1cx4nUhZ1Shnp9oGL2xkqTu6lcPQ7ddeReJJzGeocMd4bdx56CAZf
+X-Gm-Message-State: AOJu0YygWkMDdPPDsUKXb5us+/jseCDVFf1yUk9+8rpoZXJv6QbsXZvZ
+	69AtopV+aGf0uc74HJyYE2ZQsLc3fLf3Nz3k3QcGXclKVxFTDb3D
+X-Google-Smtp-Source: AGHT+IFM6NLmoPFoH6FJDBLabYzNV7CTdH+SzP4ipMiUJV0Fnx0XZAUUqt01+8Hm5ti+FGIm3K2t2A==
+X-Received: by 2002:ae9:f714:0:b0:790:9792:ccf9 with SMTP id s20-20020ae9f714000000b007909792ccf9mr97187qkg.26.1713976018075;
+        Wed, 24 Apr 2024 09:26:58 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id y16-20020a37e310000000b0078d5fdc929fsm6230425qki.104.2024.04.24.09.26.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Apr 2024 09:26:57 -0700 (PDT)
+Message-ID: <0886a749-c834-4f52-a25d-fc700dc26334@gmail.com>
+Date: Wed, 24 Apr 2024 09:26:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,77 +61,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] net: add TCP fraglist GRO support
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, David Ahern <dsahern@kernel.org>,
- linux-kernel@vger.kernel.org
-References: <20240423094117.93206-1-nbd@nbd.name>
- <CANn89i+6xRe4V6aDmD-9EM0uD7A87f6rzg3S7Xq6-NaB_Mb4nw@mail.gmail.com>
- <63abfa26-d990-46c3-8982-3eaf7b8f8ee5@nbd.name>
- <CANn89iJZvoKVB+AK1_44gki2pHyigyMLXFkyevSQpH3iDbnCvw@mail.gmail.com>
- <7476374f-cf0c-45d0-8100-1b2cd2f290d5@nbd.name>
- <CANn89iLddm704LHPDnnoF2RbCfvrivAz0e6HTeiBARmvzoUBjA@mail.gmail.com>
- <ebe85dca-e0e9-4c55-a15d-20d340f66848@nbd.name>
- <97f10c8b5b615eac8f65d67ef10928d97b6b760d.camel@redhat.com>
- <328ab7b3-4890-4e0d-8b9a-fed7700f1a6a@nbd.name>
- <66285f637bdec_1924cc2941b@willemb.c.googlers.com.notmuch>
- <eb0e1eb6-306c-4cf7-922d-203db09d8d29@nbd.name>
- <6629177f6b4c7_1a76072949b@willemb.c.googlers.com.notmuch>
+Subject: Re: [PATCH 6.1 000/141] 6.1.88-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
+References: <20240423213853.356988651@linuxfoundation.org>
 Content-Language: en-US
-From: Felix Fietkau <nbd@nbd.name>
-Autocrypt: addr=nbd@nbd.name; keydata=
- xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCeMncXpbbWNT2AtoAYICrKyX5R3iMAoMhw
- cL98efvrjdstUfTCP2pfetyN
-In-Reply-To: <6629177f6b4c7_1a76072949b@willemb.c.googlers.com.notmuch>
+From: Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20240423213853.356988651@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 24.04.24 16:30, Willem de Bruijn wrote:
->> > If keeping, this refinement can probably a separate follow-on patch in
->> > the series too:
->> > 
->> > - refactor existing udp code
->> > - add segmentation support to handle such packets on tx
->> > - add coalescing support that starts building such packets on rx
->> > - refine coalescing choice
->> I don't really understand what you're suggesting. With my patch, the GRO 
->> code handles coalescing of packets. Segmentation on output is also 
->> supported. The next version of my patch will fix the cases that were too 
->> similar to the UDP code, so I guess refactoring to share code doesn't 
->> really make sense there.
->> Am I missing something?
+On 4/23/24 14:37, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.88 release.
+> There are 141 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> I mean if breaking up into a series. First have the refactoring patch
-> which should be easy to review to be a noop. Then add the segmentation
-> code, which needs to exist before packets may arrive that depend on
-> it. Then add the code that produces such packets. To break up into
-> manageable chunks.
+> Responses should be made by Thu, 25 Apr 2024 21:38:28 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.88-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Right, that makes sense.
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-Thanks,
-
-- Felix
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
