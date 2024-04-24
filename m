@@ -1,200 +1,152 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C251158DD6;
-	Wed, 24 Apr 2024 09:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C5C3158DAE
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 09:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713952601; cv=none; b=tOqLAL+x0BziEXNUFjPSeqveEMsEq/634RB57nWQsOb1HKQwPOVONWG2low4c/dB2qUFyBFSUTRrGY9GPqVItdW6POTs6rmTnpie56U113iQpsakB+zRikIdx7TLVe3HWlKyGeZARRdeAeiFfXk9rXtQYggNfU3gzqz7n566KiU=
+	t=1713952632; cv=none; b=A5qEXDpTcxyWjTNWHr03qQNPgK55eGyrRcCJwlnejWe5WMei9ug/xtrN+PRQyXvs49LbOVrxUWd9gKhz8GFiTwAaOtpOP93J5sXdVVDlWuVeGhTl2Vb0kcfBZ7eSjr+M9NidJHSFbjGxf30XtpOV3U7WbDvjsOiHH9QdzC9yGz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713952601; c=relaxed/simple;
-	bh=YqY//5lBl+yYaGi8/E20oc5trrx5qjW8jCobmFuWfWU=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MsmV/c11MV8UCYHwKf4efCFeXmhyZcbqXs2F1kELeCf+mddFdkrTvcYI+4q3w3oTJnVUBZdyeLXnjV2CgEXloQqJDjNUCljaPoxoJnRQGhjJjwSE+tDkMED4Q/NUmeVtb08WCiGFsgll4NL5HxbBHvaDecBaJwZbKVGyKcuoAmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k2RJyw35; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k2RJyw35"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6f103b541aeso3652364b3a.3;
-        Wed, 24 Apr 2024 02:56:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713952599; x=1714557399; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1ioz599OIjAnA21zqxg3x3jvdxgxMKSXGk9djrFguws=;
-        b=k2RJyw35eogAhvG0WDh/1v9NFNh7uA94+5mrnsyvufAKBEVTU4ZYPtQlnbUjXHDFa7
-         /WxPfT3TMi+pQ56evQubmPVD4Imz9FMi+CcCsNaNHCn3xyoGUDX/jqrJ/B+K8Ajz3gOD
-         NhzG6WZzciuJVcCEEfzvGSyygSnRvJ1++/XDQkYR0/6f2PYHlYg+geTMOFepk7bm5w9B
-         TVpYsRge2yCws2HO7eP849FUozqD9W08CJeRtIVjeEloEzKmfHhXiQNaBaHxfDcgVeJY
-         fJVE4Qx+U0gP3oOMGdPgVq+NgqBcD6ga7ogqej7YupzhaQ7qkm91CMxrKgqy6AtLs4P3
-         A2mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713952599; x=1714557399;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1ioz599OIjAnA21zqxg3x3jvdxgxMKSXGk9djrFguws=;
-        b=v8V3c1mm4SGDskIKzbW8K2calOw6SZ4RswS08tzHSBQUVctQQJNPLJVIBTsj/jzbk5
-         BjUrhagwW2Hacv50UA3IlTiikJF6xiJEBopKLrEAYb6SiaN+S4d9BUsgXlVXHPHdyZ1G
-         aCIT7mBkd9R/7mMUJLv8AMRc5MQIHuD9kRSaBupDEDpHz3ltyrD7HuwdYILb/WFsQzWs
-         R/f7eVg0NsCjXNtZZpS3eHv3uX/MNPmRVUHv0sDcOFTZEGMC73XJ/ZAoOtdanciMtDZB
-         syAw1xINv4TOO6cmxalXSBMkypPQiKcFcRwb8vnN3NfaOcAjGxm5wRn5ZybOvGnAz4RW
-         30zw==
-X-Forwarded-Encrypted: i=1; AJvYcCVroRMS2gOigQf0NhoKNkx+BP90OILnIfazVlZWGYHBekM0PXHpm1j0rov5oimNiid964fXcQ6H/vUiuc/cUgMiXq07jX2VakSd0PCeF/k5nnEWaSLnmC75aL9zddhpowhAnyi5TkREeDb1Yf6clsgmlqShXjfdYnE7nuiiPzy/hgKWKXGZME/SrlaxY9NMxmu0lTzVPv4rOMM3aGvI1wEk18veapIgWoaCPtYpfpPOdhrPIR+Zlee+nci5
-X-Gm-Message-State: AOJu0YzGJ47zp1ZKqPI1ap2KwEUpkSSo9Sf/tpmlCX0nFv8LlGDsa+pA
-	rsaccHenAOdo6Aw+AmghkTGWY+X2R75evaDLYiZ6uP6DLI5r9Owj
-X-Google-Smtp-Source: AGHT+IFqcZdGhlM5bb2WUFyDPxvKU09dA2xfnEYMM8GJ9dIteNsekJtqKWSAUpk9WriPj/pXAX3ltQ==
-X-Received: by 2002:a05:6a20:4322:b0:1a9:e2e0:1806 with SMTP id h34-20020a056a20432200b001a9e2e01806mr2208462pzk.43.1713952599382;
-        Wed, 24 Apr 2024 02:56:39 -0700 (PDT)
-Received: from peter-bmc.dhcpserver.bu9bmc.local (2001-b400-e380-6057-c341-626e-0f0b-b82d.emome-ip6.hinet.net. [2001:b400:e380:6057:c341:626e:f0b:b82d])
-        by smtp.gmail.com with ESMTPSA id b19-20020a056a000a9300b006eae3aac040sm11042932pfl.31.2024.04.24.02.56.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 02:56:39 -0700 (PDT)
-From: Peter Yin <peteryin.openbmc@gmail.com>
-To: patrick@stwcx.xyz,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>,
-	Patrick Rudolph <patrick.rudolph@9elements.com>,
-	Cosmo Chou <chou.cosmo@gmail.com>,
-	Andre Werner <andre.werner@systec-electronic.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: [PATCH v1 3/3] Documentation: hwmon: Add infineon xdp710 driver
-Date: Wed, 24 Apr 2024 17:55:59 +0800
-Message-Id: <20240424095604.3425857-4-peteryin.openbmc@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240424095604.3425857-1-peteryin.openbmc@gmail.com>
-References: <20240424095604.3425857-1-peteryin.openbmc@gmail.com>
+	s=arc-20240116; t=1713952632; c=relaxed/simple;
+	bh=xElqm0mzanKgyLcHnkXCZf7n1tImjyjJ3L0Bvz1st3E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cfy3Syjt35mvDe9Jx+bcVAvnTJnuf1/HsceBY6FCGallYaKCqs0KFdlk0imRfcoweP/W/IxY8TCuePSfIU0Gvi10RghyDJSbi44X+jn77/VD7i42fo1FJRHoQnapGzobnP9fa2o/Q/E7ZE8gUhq2OzBAHQ9J8rRbXTXh3S4GYY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B02D339;
+	Wed, 24 Apr 2024 02:57:37 -0700 (PDT)
+Received: from [10.1.25.156] (unknown [10.1.25.156])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C4A93F73F;
+	Wed, 24 Apr 2024 02:57:08 -0700 (PDT)
+Message-ID: <7ae62c3f-918a-4778-badb-8f7ca74328d8@arm.com>
+Date: Wed, 24 Apr 2024 10:57:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/5] mm: memory: extend finish_fault() to support
+ large folio
+Content-Language: en-GB
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: willy@infradead.org, david@redhat.com, wangkefeng.wang@huawei.com,
+ 21cnbao@gmail.com, ying.huang@intel.com, shy828301@gmail.com,
+ ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1713755580.git.baolin.wang@linux.alibaba.com>
+ <358aefb1858b63164894d7d8504f3dae0b495366.1713755580.git.baolin.wang@linux.alibaba.com>
+ <6aa25e2a-a6b6-4ab7-8300-053ca3c0d748@arm.com>
+ <c48ae381-f073-4b20-84ae-bd5e9e56ce29@linux.alibaba.com>
+ <6c418d70-a75d-4019-a0f5-56a61002d37a@arm.com>
+ <5f949c1f-c56e-4227-af60-05a2a19f4c2e@linux.alibaba.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <5f949c1f-c56e-4227-af60-05a2a19f4c2e@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add document for xdp710 device
+On 24/04/2024 10:26, Baolin Wang wrote:
+> 
+> 
+> On 2024/4/24 16:07, Ryan Roberts wrote:
+>> On 24/04/2024 04:23, Baolin Wang wrote:
+>>>
+>>>
+>>> On 2024/4/23 19:03, Ryan Roberts wrote:
+>>>> On 22/04/2024 08:02, Baolin Wang wrote:
+>>>>> Add large folio mapping establishment support for finish_fault() as a
+>>>>> preparation,
+>>>>> to support multi-size THP allocation of anonymous shared pages in the
+>>>>> following
+>>>>> patches.
+>>>>>
+>>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>>>> ---
+>>>>>    mm/memory.c | 25 ++++++++++++++++++-------
+>>>>>    1 file changed, 18 insertions(+), 7 deletions(-)
+>>>>>
+>>>>> diff --git a/mm/memory.c b/mm/memory.c
+>>>>> index b6fa5146b260..094a76730776 100644
+>>>>> --- a/mm/memory.c
+>>>>> +++ b/mm/memory.c
+>>>>> @@ -4766,7 +4766,10 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+>>>>>    {
+>>>>>        struct vm_area_struct *vma = vmf->vma;
+>>>>>        struct page *page;
+>>>>> +    struct folio *folio;
+>>>>>        vm_fault_t ret;
+>>>>> +    int nr_pages, i;
+>>>>> +    unsigned long addr;
+>>>>>          /* Did we COW the page? */
+>>>>>        if ((vmf->flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED))
+>>>>> @@ -4797,22 +4800,30 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+>>>>>                return VM_FAULT_OOM;
+>>>>>        }
+>>>>>    +    folio = page_folio(page);
+>>>>> +    nr_pages = folio_nr_pages(folio);
+>>>>> +    addr = ALIGN_DOWN(vmf->address, nr_pages * PAGE_SIZE);
+>>>>
+>>>> I'm not sure this is safe. IIUC, finish_fault() is called for any file-backed
+>>>> mapping. So you could have a situation where part of a (regular) file is mapped
+>>>> in the process, faults and hits in the pagecache. But the folio returned by the
+>>>> pagecache is bigger than the portion that the process has mapped. So you now
+>>>> end
+>>>> up mapping beyond the VMA limits? In the pagecache case, you also can't assume
+>>>> that the folio is naturally aligned in virtual address space.
+>>>
+>>> Good point. Yes, I think you are right, I need consider the VMA limits, and I
+>>> should refer to the calculations of the start pte and end pte in
+>>> do_fault_around().
+>>
+>> You might also need to be careful not to increase reported RSS. I have a vague
+>> recollection that David once mentioned a problem with fault-around because it
+>> causes the reported RSS to increase for the process and this could lead to
+>> different decisions in other places. IIRC Redhat had an advisory somewhere with
+>> suggested workaround being to disable fault-around. For the anon-shared memory
+>> case, it shouldn't be a problem because the user has opted into allocating
+>> bigger blocks, but there may be a need to ensure we don't also start eagerly
+>> mapping regular files beyond what fault-around is configured for.
+> 
+> Thanks for reminding. And I also agree with you that this should not be a
+> problem since user has selected the larger folio, which is not the same as
+> fault-around.
+> 
+>>>>>        vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+>>>>> -                      vmf->address, &vmf->ptl);
+>>>>> +                       addr, &vmf->ptl);
+>>>>>        if (!vmf->pte)
+>>>>>            return VM_FAULT_NOPAGE;
+>>>>>          /* Re-check under ptl */
+>>>>> -    if (likely(!vmf_pte_changed(vmf))) {
+>>>>> -        struct folio *folio = page_folio(page);
+>>>>> -
+>>>>> -        set_pte_range(vmf, folio, page, 1, vmf->address);
+>>>>> -        ret = 0;
+>>>>> -    } else {
+>>>>> +    if (nr_pages == 1 && vmf_pte_changed(vmf)) {
+>>>>>            update_mmu_tlb(vma, vmf->address, vmf->pte);
+>>>>>            ret = VM_FAULT_NOPAGE;
+>>>>> +        goto unlock;
+>>>>> +    } else if (nr_pages > 1 && !pte_range_none(vmf->pte, nr_pages)) {
+>>>>
+>>>> I think you have grabbed this from do_anonymous_page()? But I'm not sure it
+>>>> works in the same way here as it does there. For the anon case, if userfaultfd
+>>>> is armed, alloc_anon_folio() will only ever allocate order-0. So we end up in
+>>>
+>>> IMO, the userfaultfd validation should do in the vma->vm_ops->fault() callback,
+>>> to make sure the nr_pages is always 1 if userfaultfd is armed.
+>>
+>> OK. Are you saying there is already logic to do that today? Great!
+> 
+> I mean I should add the userfaultfd validation in shmem_fault(), and may be need
+> add a warning in finish_fault() to catch this issue if other
+> vma->vm_ops->fault() will support large folio allocation?
+> 
+> WARN_ON(nr_pages > 1 && userfaultfd_armed(vma));
 
-Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
----
- Documentation/hwmon/index.rst  |  1 +
- Documentation/hwmon/xdp710.rst | 83 ++++++++++++++++++++++++++++++++++
- 2 files changed, 84 insertions(+)
- create mode 100644 Documentation/hwmon/xdp710.rst
-
-diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-index 1ca7a4fe1f8f..b2546925fb15 100644
---- a/Documentation/hwmon/index.rst
-+++ b/Documentation/hwmon/index.rst
-@@ -250,6 +250,7 @@ Hardware Monitoring Kernel Drivers
-    wm831x
-    wm8350
-    xgene-hwmon
-+   xdp710
-    xdpe12284
-    xdpe152c4
-    zl6100
-diff --git a/Documentation/hwmon/xdp710.rst b/Documentation/hwmon/xdp710.rst
-new file mode 100644
-index 000000000000..083891f27818
---- /dev/null
-+++ b/Documentation/hwmon/xdp710.rst
-@@ -0,0 +1,83 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Kernel driver xdp710
-+====================
-+
-+Supported chips:
-+
-+  * Infineon XDP710
-+
-+    Prefix: 'xdp710'
-+
-+  * Datasheet
-+
-+    Publicly available at the Infineon website : https://www.infineon.com/dgdl/Infineon-XDP710-001-DataSheet-v01_00-EN.pdf?fileId=8ac78c8c8412f8d301848a5316290b97
-+
-+Author:
-+
-+	Peter Yin <peteryin.openbmc@gmail.com>
-+
-+Description
-+-----------
-+
-+This driver implements support for Infineon XDP710 Hot-Swap Controller.
-+
-+Device compliant with:
-+
-+- PMBus rev 1.3 interface.
-+
-+Device supports direct and linear format for reading input voltage,
-+output voltage, output current, input power and temperature.
-+
-+The driver exports the following attributes via the 'sysfs' files
-+for input voltage:
-+
-+**in1_input**
-+
-+**in1_label**
-+
-+**in1_max**
-+
-+**in1_max_alarm**
-+
-+**in1_min**
-+
-+**in1_min_alarm**
-+
-+The driver provides the following attributes for output voltage:
-+
-+**in2_input**
-+
-+**in2_label**
-+
-+**in2_alarm**
-+
-+The driver provides the following attributes for output current:
-+
-+**curr1_input**
-+
-+**curr1_label**
-+
-+**curr1_alarm**
-+
-+**curr1_max**
-+
-+The driver provides the following attributes for input power:
-+
-+**power1_input**
-+
-+**power1_label**
-+
-+**power1_alarm**
-+
-+The driver provides the following attributes for temperature:
-+
-+**temp1_input**
-+
-+**temp1_max**
-+
-+**temp1_max_alarm**
-+
-+**temp1_crit**
-+
-+**temp1_crit_alarm**
--- 
-2.25.1
+That adds quite a subtle requirement to vm_ops::fault() though, which I guess is
+implemented in a lot of places. It would be better if it could be handled
+centrally - i.e. that all the ptes are either none or a uffd marker? I'm sure
+there would be corner cases to think about if taking that route.
 
