@@ -1,114 +1,133 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBB5171C4;
-	Wed, 24 Apr 2024 02:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132C68F47;
+	Wed, 24 Apr 2024 02:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713927092; cv=none; b=rdsQcsGyWICYc7l9hT711dxSA+44R6jxAaRYJlCWb8BStSArd3TlRgvGAz/ie8Ki4B7Ju9hXE/I7GG/+EckhKDI9zb3C+EVQkhU5xYg0QO8CRjrKcajtPoSic/hkydM5qr/P7CSL8qE9fPkYcZHGElOJlum1ade0G0kfIGyYxvU=
+	t=1713927224; cv=none; b=M6aQxjup4gaTJ4jRfcS0zk+F+z+0VJmYeWJW6rIHXFaTWJ22x5IwHrwJRGcAwIygRFlchTYkWmm2tbOoYRThjxAUnX1P+vpMjkROXshpUa21cMY3zt990ALcSvpG54lvfogbfk/NVUvwqkEAvBAqZnL625FkYZ3v8N3h7h0N4mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713927092; c=relaxed/simple;
-	bh=Yf4JmDI7ok7xHREqNVMiKRlcw6gQNe/K4vnS/jVO+To=;
+	s=arc-20240116; t=1713927224; c=relaxed/simple;
+	bh=yTCwB5MKwpTb9TeIS1+gfR/A4L8mMnu2aKsPl0GCDSA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Tnuq7IbaMce2cEq+VU00iNqyLnU/IR7fNny9Z4DV5E92fdGc/inIZnvQ8G6MScOgAGn9p7zxbvfhyRubZqgC+K+g8/3YNPPpw869oVDmcn2oS8xSu8y4sEqIQJkIplyPh7ufftM3z8FeSesFZePDePAG1VMT+rKu9PNk7AZmvyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MvVAMwGQ; arc=none smtp.client-ip=209.85.128.43
+	 To:Cc:Content-Type; b=I5PMTKafusSaU18az0f3ukwP9sPBxDztzq3nwTyMm8OuvQ86KVKiLz1e7YPFuSkJRhiDv8gH+4kXVxKOVGrGUDKiWRfSHligVJsYlxUfhE+ipRZmHBFABWnvecR7g64jQpDYNyjPgx+cLhoZxYIojTuX/ky0vItbHncTV89HKTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dUxePWuK; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MvVAMwGQ"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4155819f710so53328975e9.2;
-        Tue, 23 Apr 2024 19:51:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUxePWuK"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6f07de6ab93so5977539b3a.2;
+        Tue, 23 Apr 2024 19:53:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713927089; x=1714531889; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1713927222; x=1714532022; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LD4srwBtJX0KyfwDrMbgM0TFHzRmgGecb0JArSru4mk=;
-        b=MvVAMwGQOXpxhVTntMsi1kTsmOjzTDndz1KKjm+v3wDIr6uEOpVm9TJC7G/6cByIXM
-         3UU3G7fFwlkVSRszpjmiwIQgJiEW9wGJHFMGlc+U7dezbr/cb6yQNS+JuDOFQyqRsFJw
-         VjceMziGfQKuroN4uQ6UTvwLlE4c7AI8UEINGWeOBsLfLqFd87BTZvZHOLkrIiwNXF+5
-         8MKviauvF5TyNM+F87KXJSLX3djk9LiA9XTdjIsV5LXyAF88cm241Xpc3BLgJrrbQe+T
-         FMZC9m8CXZRrpPGYo/ipNThSKhB/Bp8OcCbXzXTMkynncfLtJttHLGvSTq1W6p5Ude/g
-         ppVQ==
+        bh=TmqU0PrGd+2IylBkSE4S0tLQ+pmhWNt4mrMys0RAJYA=;
+        b=dUxePWuKWvnSAjVODpa5LgFO+cWfxMypOZ8i5fypb4IgDLf7vIz5csaGjpLcrR82uN
+         keUhijRsK3581771Mbve6O+AsQbbccDYbhiEIqC8N25+61THMJ+ckbGE3REOoRitzW+v
+         1t8wMgYXVD4vBtCyShBT5eHx33MlAKkM/PkOcls3nEH0siF0kONfBGMfmQ55XCNGgwcV
+         jdzMY0GgygJyIYKv0jDDANmv1Kr4jRIZPqM+oNkwSLmeYqsGAxSbDVX4yNSC8g+ecMwt
+         XfcQlIUz7l7bJaVXCEUUtbgQzn4nSamRZrRKuqyvZqAqm24teh9M3dm5klRikDtbSWVH
+         pZ/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713927089; x=1714531889;
+        d=1e100.net; s=20230601; t=1713927222; x=1714532022;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LD4srwBtJX0KyfwDrMbgM0TFHzRmgGecb0JArSru4mk=;
-        b=jZ1o4ifz1vf4aUd+sPguyd2kI07sOzqlWRXI08gtMWiFVGCGcF6OnI2iu0OJbuEbzd
-         oV+z3lZ7R9ZSDteB1HRlAHI52we8sIIbYG9XDKea2i1pbrBK9XuhvEfE1CAttAmATKQW
-         Na9y+MCvvNFUWVjF/gJ0QDLa2ck4Y/NcF5DwMGXXNpzsBsEyeMhjhCB3TZFEkGZxsXgF
-         XBgE/nRNIYdGH0ruuHtj0I31AbVPEHb14C4UJm3E9d/wcTWIT7lbJLLxNg0o+tueHsC4
-         7UM5ck2D6K5ffXC6DZicABaHFjXa6kblr72XnGvU3ZwJcCM/dnMxR43QjgBR1vEh3C7g
-         enpg==
-X-Forwarded-Encrypted: i=1; AJvYcCWR+enkz50F52INtKKtFDo42w+HYiih1RCUOnuTkQoWuH6HeCNvjTK17kTH+Fc+GprDMB/06jCHB5fzIHHHAcIP4Ra4uqnmJEEHamfW7xm/N7un8n8qATEQMJP0r9vWJVHvg8GkeqSZ3kZQHdZddCRuY3VwWuZSevLxI3suvc7R/1NE
-X-Gm-Message-State: AOJu0YyZQrJTypBKFhz2GmT7IFMjsTHcFkAB5elQlYRg8ToJ8kXldOGT
-	LbfhshwM3yfneKx0ZqMEv1WeGAHAsvub91pTydBjYpRlwmMtzJgtgGtQ8O4jJJl1iMlkDB8Q7aP
-	Vg/ZYOKxsgadfrntjvAorIb1bRJM=
-X-Google-Smtp-Source: AGHT+IFtFFAxjnYdxlzp9CFTsz7mhCLHIvMwZAGqk1XtbcTEV/5Hsr54KKE5rGWRRDKYOrN6Kn63Ae8ERVYBScJVakA=
-X-Received: by 2002:adf:a18b:0:b0:34a:25f3:4daf with SMTP id
- u11-20020adfa18b000000b0034a25f34dafmr583918wru.7.1713927089023; Tue, 23 Apr
- 2024 19:51:29 -0700 (PDT)
+        bh=TmqU0PrGd+2IylBkSE4S0tLQ+pmhWNt4mrMys0RAJYA=;
+        b=Nuopk5gVFnTTJujBFDP6KNAC5No2ySB/0t/OOv+d1SmQCc1QUfX80V50d1fVLYW8+H
+         Rn/7o/gl2BlohwBDSC7zDcyOjMUOMDuWojuhHWiqC62AMy8iLJ7xy2UGo47mK/hVN2b9
+         oeacMhjbaRM1DpFsFjPyG2o+WpuuZmc8tMA2BcZdl6LD86d06BbfQCabzxCKmdlgbOfB
+         j6jLY4fIPP8mN5hjyCZ1EN5dNx/nmSmyhgGS6fi32sCFLM23bUnM8zyx6tJTXxFLc9+N
+         O0utjjYiqb2ilaHLGSvJOeJ5l5A4RcFKOQog5yYSOxN57z6cVNRxNYKclBiHbJwPpfDN
+         nfEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHncSzbcNWsJT1ZeRwA0HPXjfNbTb77s6Zw07/uyQNQ+XFgvTSQNK6WuE/yHyTIMc/D7puiobaTb7KjdtZU/B7Jl1n
+X-Gm-Message-State: AOJu0YxboyV4gcGLkfc2T5rTr+TryLmXxKjv0cp9SoAjqImBooNctPU3
+	BD8aChW9OvW+vqltSk+JCMpDqySxPhGXGt/MD1Ixpk2WXJGS9YtdEZxjKmsR8kLNzIQMGWAvgv8
+	4Y/hLnrzBY7smoNR0B70rR2c/BKY=
+X-Google-Smtp-Source: AGHT+IG+oc+vtI2bjeexO0jUWY9BDO/Wzwjc+RFH/CqhS6s0BkmVLznukrPZ3u6NgMcMqxbtUvmBpjx7vr4WHCb1uNU=
+X-Received: by 2002:a05:6a21:6802:b0:1aa:5fb4:87ff with SMTP id
+ wr2-20020a056a21680200b001aa5fb487ffmr1262636pzb.14.1713927222330; Tue, 23
+ Apr 2024 19:53:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240420-bpf_wq-v2-0-6c986a5a741f@kernel.org> <20240420-bpf_wq-v2-9-6c986a5a741f@kernel.org>
-In-Reply-To: <20240420-bpf_wq-v2-9-6c986a5a741f@kernel.org>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 23 Apr 2024 19:51:17 -0700
-Message-ID: <CAADnVQLO=QbXnDBKrDdofpkBg2jESC8rDwi_WiLNOahJQcEWSQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 09/16] bpf: allow struct bpf_wq to be embedded
- in arraymaps and hashmaps
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+References: <20240407090558.3395-1-jiangshanlai@gmail.com> <20240407090558.3395-11-jiangshanlai@gmail.com>
+ <CAEXW_YQUuGazgpLbERz7Y3nOq5nEkR+kx_Us9E30x1diiE2-eQ@mail.gmail.com>
+In-Reply-To: <CAEXW_YQUuGazgpLbERz7Y3nOq5nEkR+kx_Us9E30x1diiE2-eQ@mail.gmail.com>
+From: Lai Jiangshan <jiangshanlai@gmail.com>
+Date: Wed, 24 Apr 2024 10:53:30 +0800
+Message-ID: <CAJhGHyDyvUcXruA+kum_QPn-2pB1j+WjS-HyGCFJ8dYpW_vQFw@mail.gmail.com>
+Subject: Re: [PATCH V2 10/11] x86/rcu: Add rcu_preempt_count
+To: Joel Fernandes <joel@joelfernandes.org>
+Cc: linux-kernel@vger.kernel.org, rcu@vger.kernel.org, x86@kernel.org, 
+	Lai Jiangshan <jiangshan.ljs@antgroup.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Frederic Weisbecker <frederic@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Uros Bizjak <ubizjak@gmail.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Breno Leitao <leitao@debian.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Vegard Nossum <vegard.nossum@oracle.com>, 
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Nikolay Borisov <nik.borisov@suse.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 20, 2024 at 2:09=E2=80=AFAM Benjamin Tissoires <bentiss@kernel.=
+On Wed, Apr 24, 2024 at 2:09=E2=80=AFAM Joel Fernandes <joel@joelfernandes.=
 org> wrote:
 >
+> On Sun, Apr 7, 2024 at 5:06=E2=80=AFAM Lai Jiangshan <jiangshanlai@gmail.=
+com> wrote:
+> >
+> > From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+> >
+> > Implement PCPU_RCU_PREEMPT_COUNT for x86.
+> > Mainly copied from asm/preempt.h
+> >
+> > Make rcu_read_[un]lock() inlined for rcu-preempt.
 >
-> -static void htab_map_free_timers(struct bpf_map *map)
-> +static void htab_map_free_timers_and_wq(struct bpf_map *map)
->  {
->         struct bpf_htab *htab =3D container_of(map, struct bpf_htab, map)=
-;
->
-> -       /* We only free timer on uref dropping to zero */
-> -       if (!btf_record_has_field(htab->map.record, BPF_TIMER))
-> -               return;
-> -       if (!htab_is_prealloc(htab))
-> -               htab_free_malloced_timers(htab);
-> -       else
-> -               htab_free_prealloced_timers(htab);
-> +       /* We only free timer and workqueue on uref dropping to zero */
-> +       if (btf_record_has_field(htab->map.record, BPF_TIMER)) {
-> +               if (!htab_is_prealloc(htab))
-> +                       htab_free_malloced_timers_or_wq(htab, true);
-> +               else
-> +                       htab_free_prealloced_timers(htab);
-> +       }
-> +       if (btf_record_has_field(htab->map.record, BPF_WORKQUEUE)) {
-> +               if (!htab_is_prealloc(htab))
-> +                       htab_free_malloced_timers_or_wq(htab, false);
-> +               else
-> +                       htab_free_prealloced_wq(htab);
-> +       }
+> Changelog is wrong. You inlined rcu_read_[un]lock in previous patch,
+> not this one?
 
-I missed this earlier, but pls follow up to improve this part.
-Double walk of all elements once for timer and 2nd for wq
-is inefficient. Better to handle it in one go in prealloc and malloced case=
-s.
-Until we have delayed_wq it's quite possible that somebody will
-have both timers and wq in map elements.
+The previous patch just adds the non-arch framework code. The incline only
+happens when CONFIG_PCPU_RCU_PREEMPT_COUNT=3Dy.  This patch implements
+PCPU_RCU_PREEMPT_COUNT for x86, so rcu_read_[un]lock() was not made inlined
+for x86 for rcu-preempt until this patch.
+
+Thanks
+Lai
+
+>
+> - Joel
+>
+> > Make rcu_read_lock() only one instruction.
+> > Make rcu_read_unlock() only two instructions in the fast path.
+> >
+> > Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Frederic Weisbecker <frederic@kernel.org>
+> > Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+> > ---
+> >  arch/x86/Kconfig                   |   1 +
+> >  arch/x86/include/asm/current.h     |   3 +
+> >  arch/x86/include/asm/rcu_preempt.h | 107 +++++++++++++++++++++++++++++
+> >  arch/x86/kernel/cpu/common.c       |   4 ++
+> >  4 files changed, 115 insertions(+)
+> >  create mode 100644 arch/x86/include/asm/rcu_preempt.h
+> >
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index 4fff6ed46e90..e805cac3763d 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -256,6 +256,7 @@ config X86
+> >         select HAVE_OBJTOOL                     if X86_64
+> >         select HAVE_OPTPROBES
+> >         select HAVE_PAGE_SIZE_4KB
+> > +       select HAVE_PCPU_RCU_PREEMPT_COUNT
+> >         select HAVE_PCSPKR_PLATFORM
+> >         select HAVE_PERF_EVENTS
+> >         select HAVE_PERF_EVENTS_NMI
