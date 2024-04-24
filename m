@@ -1,126 +1,115 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CE815CD75;
-	Wed, 24 Apr 2024 13:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DCE15CD7F
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713965669; cv=none; b=SiWzgCLvhVPs+W5sb/7EwleoDiDY0E4vJP5ByLbZYRFtDgUyjINcq3wPoMAjZz2Nja2dfm243K6gegJR8P8eJLWq2tIo8TvOi97kB/fjEajaeD1yolwKM9NwKf/DDB6HHBj8q8EW7B31hEJfSCgwCp9epD5qEpfp2XokKc4auVo=
+	t=1713965693; cv=none; b=uNYqNFLq5ruonOsTzj1gOKVy7/BlV/dBpDzISTH2iAuLcUWb0EoeS9J5YIKYV+OkaxZA7r9NlCksxUDdaf2p4fcak34CKucXEiZZ9lomRVtWS1sBTPq1Yc4+uOMPVk9crVwwcigeybT9vFtw+qHINxZidEJ0d3CgcmRH0BHlfE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713965669; c=relaxed/simple;
-	bh=IwkocQoiEsPFLMe76gOZtJyZ7fUrfncVRvJvqh/N5Qo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dj2W10zHgQ1KAPTthtFw23zk+8rXtfWvBwcfPyfIFu8RK9GTmWIlwuCy0HMYYX87CbJmORcXBrU0fSl7oaQfnl/OJRGpG9RFnljIpldK1iyEpUh2V+uKaodZkuDtI3zBTVX/KLjC4kv7Lho45sxeZdCrBU7tnswyhgj12viq7FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=tS5crxao; arc=none smtp.client-ip=37.18.73.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1713965693; c=relaxed/simple;
+	bh=v5uts0F+G005dBPvbk0jOnlqwhvA4TASHvWq3ETeWdw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tCeilAZFufcHddGcnRdw9wTiJEiq3yYRxDAhA3ov76btNU3S2mOV5+2Wej6qoyn7LLDRjVTNRmqTFNDLA/Btwg5spXDYAi/kLhOWw017cUCzs8oNIbm1OFGbiv6veM9b8aJJ84GOSjjMQhndoom24cVaSlhptKPrQkhLBFyTjHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oY+3fx0g; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="tS5crxao"
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 0DF08100014;
-	Wed, 24 Apr 2024 16:24:17 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 0DF08100014
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1713965057;
-	bh=P3gJosMyO15rQMcOY6eGDpvCUcmma/l8WDr0SIlJGFY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=tS5crxaor0clxEgV4A7QWdlmSgbipRYHdLmKDwl0lhCBQQZbZQZYUmFs5JNYwmeQE
-	 e455Oo9oug+lDlsWMNAoM9PQYPqXlEqGLmomYAwlCtxHE6IXVe5zF8CjYdLU4MCGWA
-	 rtukjd8T8nb9XLFePMmJ2ISpEi+sNI/YVK0vyITHPyxlK22WAnohZ099PW6p8Mn6p7
-	 qhzQ7GFHlbylUPPlpUWpeNZ88sZ33PVBOFSBe5i/mcMEXXM/RUqrLc2aI/XZ2NoYJb
-	 hf6nYYImEIuVt5ud/9/p2IsedJCapJ9xZu6sby+L5OauTh8z00mCazLD2Foc8Li3qr
-	 tXjIq8JmW1K8w==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Wed, 24 Apr 2024 16:24:16 +0300 (MSK)
-Received: from work.sberdevices.ru (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 24 Apr 2024 16:24:16 +0300
-From: George Stark <gnstark@salutedevices.com>
-To: <u.kleine-koenig@pengutronix.de>, <neil.armstrong@linaro.org>,
-	<khilman@baylibre.com>, <jbrunet@baylibre.com>,
-	<martin.blumenstingl@googlemail.com>, <thierry.reding@gmail.com>,
-	<hkallweit1@gmail.com>
-CC: <linux-pwm@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kernel@salutedevices.com>, George Stark <gnstark@salutedevices.com>, Dmitry
- Rokosov <ddrokosov@salutedevices.com>
-Subject: [PATCH v2 2/2] pwm: meson: Add check for error from clk_round_rate()
-Date: Wed, 24 Apr 2024 16:24:08 +0300
-Message-ID: <20240424132408.2565916-3-gnstark@salutedevices.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240424132408.2565916-1-gnstark@salutedevices.com>
-References: <20240424132408.2565916-1-gnstark@salutedevices.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oY+3fx0g"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-de55708c616so1723456276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:34:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713965691; x=1714570491; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v5uts0F+G005dBPvbk0jOnlqwhvA4TASHvWq3ETeWdw=;
+        b=oY+3fx0gQCP4JdIzfu5YUlLxKHqmaBqlM9oZmXqM5rMYPv8WRwObnn/i/Acl2Lq9PY
+         qewv8MG2IXzRg/2YB59vw824iXr3W0KwztRRhxzubXLzsWu44yFyvIDTEiRqhjP3U/IH
+         yb3KWNb26saDPdkdn9YLVigbqTNO7ezBc2Gns+fc0iG8+UXcKW88vys5zWNVcshCaPAf
+         MhS/Yvn3wnNY+hSsA4kvwd683IV+P3PxDT+SEr9BqiAyMuA1579t5Ng5wsfBsHDETuem
+         +NhXucaYEu8wECoq47CFc8kPjVZOEcl5evjYRXJUFRTWgXZ7q+aE+lTiPU1vlzliy5LN
+         o8Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713965691; x=1714570491;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v5uts0F+G005dBPvbk0jOnlqwhvA4TASHvWq3ETeWdw=;
+        b=EC+EEpIxtAa7hbHd0IrZCYSUBl5H7X3GCFpRHq2U5QgESwFZ1eAmiXbannovIu0+Cl
+         8p5rMw3SCQ78/2An9uTfGiQo46iGYJWhQk3keeVSzkaqiZlepr1gmPdCs0w72BUb7Au3
+         FTLLKDBFfoogebORKqERj6WGCKEgsJvTGBo3GHx20/WBbOuTs3v+m+i+evntPL04fIIb
+         cHSljElWbCtJ/KEiO6B4s7/VKao/yDX9JJNExfiKulZVjE80r/qLGstWO/RrCikq8AJv
+         5nFmQPa32ZT+eK8q/s35/V+nJ3ncwjjlYDZFsTDzpAB+lBdDzoEpEtiSCnH5J6gNGvo1
+         xMWw==
+X-Forwarded-Encrypted: i=1; AJvYcCX/Z5/XcNxI8CtDMitxsWRvx7YlseVkypVuKCxSvckMRV+zsVljC6MlfblBZwMVp3DwCMfP55qg3uPHnWtnapph6bUXCPe3Ni2AAu+3
+X-Gm-Message-State: AOJu0Yxeo2OILlDmlK9viuIzd/N8uiLY6Wfcpupqezys8beBEG6NwUd4
+	V5fuuO3MP05uVYGPGmNcAW/Fw9zDEKrGP1ng0pz96a1Q79L5ezsKZQdnAXDrjwGQrQK3Y8St0uq
+	WQJ+Lncapt6FSKkSE4Xk4I0FUCps6t0AJmOvEVA==
+X-Google-Smtp-Source: AGHT+IHyyl3VXRzVgrpc497VuwR/tGfdtBR3F2BBQ+lp1bkMbMbay8ctwKEQp7xRENbiJ8Hez152lECflDB33HFqk9M=
+X-Received: by 2002:a25:a1a7:0:b0:de5:53a6:24ed with SMTP id
+ a36-20020a25a1a7000000b00de553a624edmr2514259ybi.50.1713965690752; Wed, 24
+ Apr 2024 06:34:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184897 [Apr 24 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/24 08:29:00 #24954596
-X-KSMG-AntiVirus-Status: Clean, skipped
+References: <20240422164658.217037-1-sui.jingfeng@linux.dev>
+ <Zie3ebHOEpWHj1qV@smile.fi.intel.com> <d5bc1e73-a553-451e-ab74-f5f0ca259c6b@linux.dev>
+ <hcltp2bbxxg2t7ibmzgiib7mgbwgmvzwnnq6mochdh7c4h76r3@bxj6yk5zq64e> <ZikE4qOVO7rgIs9a@smile.fi.intel.com>
+In-Reply-To: <ZikE4qOVO7rgIs9a@smile.fi.intel.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 24 Apr 2024 16:34:39 +0300
+Message-ID: <CAA8EJpr1FSjizAh6Dp5Bmux3NrGYh=BfHFL4D1fa87Og4ymY0w@mail.gmail.com>
+Subject: Re: [PATCH v2] software node: Implement device_get_match_data fwnode callback
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Sui Jingfeng <sui.jingfeng@linux.dev>, dri-devel@lists.freedesktop.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-clk_round_rate() can return not only zero if requested frequency can not
-be provided but also negative error code so add check for it too.
+On Wed, 24 Apr 2024 at 16:11, Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Wed, Apr 24, 2024 at 12:37:16AM +0300, Dmitry Baryshkov wrote:
+> > On Wed, Apr 24, 2024 at 12:49:18AM +0800, Sui Jingfeng wrote:
+> > > On 2024/4/23 21:28, Andy Shevchenko wrote:
+> > > > On Tue, Apr 23, 2024 at 12:46:58AM +0800, Sui Jingfeng wrote:
+>
+> ...
+>
+> > But let me throw an argument why this patch (or something similar) look=
+s
+> > to be necessary.
+> >
+> > Both on DT and non-DT systems the kernel allows using the non-OF based
+> > matching. For the platform devices there is platform_device_id-based
+> > matching.
+> >
+> > Currently handling the data coming from such device_ids requires using
+> > special bits of code, e.g. platform_get_device_id(pdev)->driver_data to
+> > get the data from the platform_device_id. Having such codepaths goes
+> > against the goal of unifying DT and non-DT paths via generic property /
+> > fwnode code.
+> >
+> > As such, I support Sui's idea of being able to use device_get_match_dat=
+a
+> > for non-DT, non-ACPI platform devices.
+>
+> I'm not sure I buy this. We have a special helpers based on the bus type =
+to
+> combine device_get_match_data() with the respective ID table crawling, se=
+e
+> the SPI and I=C2=B2C cases as the examples.
 
-Also change type of variable holding clk_round_rate() result from
-unsigned long to long. It's safe due to clk_round_rate() returns long.
+I was thinking that we might be able to deprecate these helpers and
+always use device_get_match_data().
 
-Fixes: 329db102a26d ("pwm: meson: make full use of common clock framework")
-Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
-Signed-off-by: George Stark <gnstark@salutedevices.com>
----
- drivers/pwm/pwm-meson.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index f4d70da621ec..d4228ac1e7ea 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -148,7 +148,7 @@ static int meson_pwm_calc(struct pwm_chip *chip, struct pwm_device *pwm,
- 	struct meson_pwm *meson = to_meson_pwm(chip);
- 	struct meson_pwm_channel *channel = &meson->channels[pwm->hwpwm];
- 	unsigned int cnt, duty_cnt;
--	unsigned long fin_freq;
-+	long fin_freq;
- 	u64 duty, period, freq;
- 
- 	duty = state->duty_cycle;
-@@ -168,9 +168,10 @@ static int meson_pwm_calc(struct pwm_chip *chip, struct pwm_device *pwm,
- 		freq = ULONG_MAX;
- 
- 	fin_freq = clk_round_rate(channel->clk, freq);
--	if (fin_freq == 0) {
--		dev_err(pwmchip_parent(chip), "invalid source clock frequency\n");
--		return -EINVAL;
-+	if (fin_freq <= 0) {
-+		dev_err(pwmchip_parent(chip),
-+			"invalid source clock frequency %llu\n", freq);
-+		return fin_freq ? fin_freq : -EINVAL;
- 	}
- 
- 	dev_dbg(pwmchip_parent(chip), "fin_freq: %lu Hz\n", fin_freq);
--- 
-2.25.1
-
+--=20
+With best wishes
+Dmitry
