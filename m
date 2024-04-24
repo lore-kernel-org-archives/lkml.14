@@ -1,86 +1,124 @@
-Received: from smtp.smtpout.orange.fr (smtp-16.smtpout.orange.fr [80.12.242.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C8915EFB0;
-	Wed, 24 Apr 2024 14:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B0415EFC7;
+	Wed, 24 Apr 2024 14:58:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713970679; cv=none; b=Q7DWvT+4RpRuDnLK7ENk5TM5tC87+rbJgalBriZmp+U8XisstLcclM3botiiLUJ6hEhY9xnVKBlrD9ovbmsrG3bNIKOneQbC6SqugHrzWR5UjgaVkwVuo66/ApwAqlNI93vaioYXYoDopVsMSP+7ZxjTi+8U8NKNNLCPh7WXtAw=
+	t=1713970704; cv=none; b=QzRVDq1D2BEiwDN1U2JNKpOhC+5JfAIna+fuQgQl6TTSpXXumnMw2rvuzGJW91+c8ZmmFg/3VjNF8m1mcfqYBo9CcIO7BHMXnxpDgkBqT/wtzEeOm7ojaV6iEkiOdPTwBZGYHcpHDWPGohF0nHArwPQ4dgSpVyRIbNqnFF/09xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713970679; c=relaxed/simple;
-	bh=Tkm/ZL2BucURiAvXPcBT2Jhd9yaHdg76lUCFgS1SDpg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yt0tyTWIxjvvHkuJ+6+ifGi9NZwe/xtlOoGNY5P66SSkGz/V/DkS3XQcRaCoYfJDtxSTaGp6wAnkGRCV2g2Z09skYTHrlQ5SkxqTCV/FIAjFZTOHZlgZTH9pUYp/Gd6oAJ1G2QzHokkWEtoVM+kTYFdb6mI85a4yQouW7PUzVNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=gqigxi7m; arc=none smtp.client-ip=80.12.242.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1713970704; c=relaxed/simple;
+	bh=x/ABSCkim9S0MeG/AzqNKvpbk54vNpeK5u4b7bC3YfY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H5sauUGNErg8WqTyVHMu1STqnVfTr3k37rwbCCo7qEmQ43RLHgDlt2//lzKON3QTj0rYXI4JOjcYKdon1++P8+byliCje0ty87ydOYr0oIN1QIgYBinx9mxMrifX6iqiPOt4BUXKh/syHAnM3wvy92h0lEZ9270Ol+dBGK8L7Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=huFgtjX/; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="gqigxi7m"
-Received: from fedora.home ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id zdvHrVBipBgCpzdvHrXTtd; Wed, 24 Apr 2024 16:48:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713970118;
-	bh=GysVhjc3jwVBUnjotsdi6hoQgzGItSC3vfYl+wJfA7Y=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=gqigxi7matvvstvzj9pbU7drkXFb1U8gb11FLCkw8HOVd0G1h45y+Dq2DXQJamyrF
-	 ieSSch/8E80FXzwJZ/yhnfIAMrvre/kyh4gU3ycrJ43YAprtaXsQ77hWeIfgTk97zb
-	 jbBp3JaWVEZaMxmya7lfKxokGCuVV7YsykFGM91vGiQYg/oPvegJSX/M01DrZFc3CG
-	 wHgJ+mWFVg8w9Hv1+2YtX/BLwgi8c5/wEKTjg6yqpgjS/oP5jeKo0c4JaDYYgmKa30
-	 Zh1p+m5pBoDpf7uayHkroOPxygV0p+pAgkF7LOsdhXrJlVkvcU7TgsHKFVmD3hxtJe
-	 3g0pvLpCWWG1g==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 24 Apr 2024 16:48:38 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: [PATCH] clk: rockchip: Remove some unused fields in struct rockchip_mmc_clock
-Date: Wed, 24 Apr 2024 16:48:29 +0200
-Message-ID: <410bc0f86c7b9f1c80f8a4e9a2a028a9a6ee1ec0.1713970085.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="huFgtjX/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=fzak5i6UEXrfZCHyTuoSWrRTPCwyT9tYF6PbbPFvEFg=; b=huFgtjX/EgWtocZIwmbY5+DXoU
+	MjVxuqn3Sx2ZoV8nfypF8Sge2jSlpPWvPyfgDoarUG1du5Usx2gfJetiyI9MUu6hv7bVQYZWvJ6NO
+	aaMwE5zawd5AaRVy30YOXW98BZaFHoqqeyqP3PRFi4R/s0LH+HruLIt7QVgeZTpn83MZpokIjf5bK
+	hWS4vVSZH9NwvyZMjbZHtNKj6Xrv6/NMm3MjK+k+ROwjHElpkRnv78N6lBtAIcra89usohYpQLJOV
+	GYZakpanBFv4g3ldCw9jhHsCWvjKC66T79c811qBX8gaZsx5b3UlB+VHwuLUEbc58lTSvo6vG3c7U
+	Dfg9ZwXg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54942)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rze4S-00068O-1H;
+	Wed, 24 Apr 2024 15:58:04 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rze4O-0004k6-MP; Wed, 24 Apr 2024 15:58:00 +0100
+Date: Wed, 24 Apr 2024 15:58:00 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Stefan Eichenberger <eichest@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	lxu@maxlinear.com, hkallweit1@gmail.com, michael@walle.cc,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] net: phy: mxl-gpy: add new device tree property
+ to disable SGMII autoneg
+Message-ID: <Zikd+GxuwMRC+5Ae@shell.armlinux.org.uk>
+References: <20240416121032.52108-1-eichest@gmail.com>
+ <20240416121032.52108-3-eichest@gmail.com>
+ <3f7f278f-e490-47f1-971c-ecf44a70cee4@lunn.ch>
+ <Zh6clAtI3NO+nMEi@eichest-laptop>
+ <5ed39628-4ac0-4c4e-9a16-fd4bf9a6db29@lunn.ch>
+ <Zh6mIv1Ee+1h21Xo@shell.armlinux.org.uk>
+ <Zh6z90iCpLqF4fla@eichest-laptop>
+ <Zh6/oVHUvnOVtHaC@shell.armlinux.org.uk>
+ <Zh94yqo2EHRq8eEq@eichest-laptop>
+ <ZiE156+BPpx/ciL6@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZiE156+BPpx/ciL6@shell.armlinux.org.uk>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-In "struct rockchip_mmc_clock", the 'id' field is unused.
-Remove it.
+On Thu, Apr 18, 2024 at 04:01:59PM +0100, Russell King (Oracle) wrote:
+> On Wed, Apr 17, 2024 at 09:22:50AM +0200, Stefan Eichenberger wrote:
+> > I also checked the datasheet and you are right about the 1000base-X mode
+> > and in-band AN. What worked for us so far was to use SGMII mode even for
+> > 2.5Gbps and disable in-band AN (which is possible for SGMII). I think
+> > this works because as you wrote, the genphy just multiplies the clock by
+> > 2.5 and doesn't care if it's 1000base-X or SGMII. With your patches we
+> > might even be able to use in-band autonegoation for 10,100 and 1000Mbps
+> > and then just disable it for 2.5Gbps. I need to test it, but I have hope
+> > that this should work.
+> 
+> There is another way we could address this. If the querying support
+> had a means to identify that the endpoint supports bypass mode, we
+> could then have phylink identify that, and arrange to program the
+> mvpp2 end to be in 1000base-X + x2.5 clock + AN bypass, which would
+> mean it wouldn't require the inband 16-bit word to be present.
+> 
+> I haven't fully thought it through yet - for example, I haven't
+> considered how we should indicate to the PCS that AN bypass mode
+> should be enabled or disabled via the pcs_config() method.
 
-Found with cppcheck, unusedStructMember.
+Okay, I've been trying to put more effort into this, but it's been slow
+progress (sorry).
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only.
+My thoughts from a design point of view were that we could just switch
+to PHYLINK_PCS_NEG_OUTBAND instead of PHYLINK_PCS_NEG_INBAND_* and
+everything at the PCS layer should be able to cope, but this is not the
+case, especially with mvneta/mvpp2.
 
-Apparently, it has never been used. It is not a left-over from a
-refactoring.
----
- drivers/clk/rockchip/clk-mmc-phase.c | 1 -
- 1 file changed, 1 deletion(-)
+The problem is that mvneta/mvpp2 (and probably more) expect that
 
-diff --git a/drivers/clk/rockchip/clk-mmc-phase.c b/drivers/clk/rockchip/clk-mmc-phase.c
-index 975454a3dd72..91012078681b 100644
---- a/drivers/clk/rockchip/clk-mmc-phase.c
-+++ b/drivers/clk/rockchip/clk-mmc-phase.c
-@@ -14,7 +14,6 @@
- struct rockchip_mmc_clock {
- 	struct clk_hw	hw;
- 	void __iomem	*reg;
--	int		id;
- 	int		shift;
- 	int		cached_phase;
- 	struct notifier_block clk_rate_change_nb;
+1) MLO_AN_INBAND means that the PCS will be using inband, and that
+   means the link up/down state won't be forced. This basically implies
+   that only PHYLINK_PCS_NEG_INBAND_* can be used can be used for the
+   PCS.
+
+2) !MLO_AN_INBAND means that an out-of-band mechanism will be used and
+   that means that the link needs to be forced (since there's no way
+   for the hardware to know whether the link should be up or down.)
+   It's therefore expected that only PHYLINK_PCS_NEG_OUTBAND will be
+   used for the PCS.
+
+So, attempting to put a resolution of the PHY and PCS abilities into
+phylink_pcs_neg_mode() and select the appropriate PHYLINK_PCS_NEG_*
+mode alone just doesn't work. Yet... we need to do that in there when
+considering whether inband can be enabled or not for non-PHY links.
+
+Basically, it needs a re-think how to solve this...
+
 -- 
-2.44.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
