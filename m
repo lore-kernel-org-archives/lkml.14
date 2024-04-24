@@ -1,110 +1,154 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749AB36D;
-	Wed, 24 Apr 2024 08:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E64536D;
+	Wed, 24 Apr 2024 08:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713946180; cv=none; b=angnFDT+vhtbWCbRGkGEZ8WjcOHs+XR4/rDNVv1DxxVnTAaOWCHxN3Pe+muzThSvDph7/ii30/Pv1oR1rgJOH74pzH8AX3wMQDcN1jMYJgkSz+ZygXWiDBhuYnSqy6B3xeRVM7iliclmGz4z6gtRXtd4staLTXNDfuI6YHU8rT0=
+	t=1713946230; cv=none; b=dH9uT67FeaJ8LD1iE1ZBT4ce3qMvGWvW0VRPxlrOn9C+vV++/QcfWeJPq79jEnogX5XhUL3N530YR9mlaKQkccIX/JkkICF2PTcJLjwYPhuJXVmc+uBBfBf8bBuf4S+9T5wvvnzPhTuhmTpehZRvCJtuYpSV+X+TGV0sKkWK1FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713946180; c=relaxed/simple;
-	bh=A9OVYBwzn9mh+suuk7UPlPFT2pggBVcyxifse9t5Nh4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=idQzWFlyEKhaK9Iec/9LKC8Us8PEpW4ykKkOGqiAJp2xno9dwnUX7bsrAb2ZmazhvEaDFof3wGsKVVd/JkN0Ae8qc/lXvw+TXOPqOnTPDAMz6QFPZdQ5VPx7eYYkP/I5yp031erPnmQwgibpIcEAP9vjibyK9nc8b0QeORi0lYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=pVAmmGFp; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="pVAmmGFp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=A9OVYBwzn9mh+suuk7UPlPFT2pggBVcyxifse9t5Nh4=;
-	t=1713946178; x=1714378178; b=pVAmmGFpGTWDOzC3+COv2MCZpsvGXNLElvxY5cJN+hdVrMc
-	/ujogRIuor/zod0mOkCh6u02jr4YdwV96/ppUg6sQ4+PmFTSP5pMs1QJ092oXJKFuscrrjb9rs5l8
-	//CqTvGMGpYdT6mjMvmS9WkMO7WGCDarnc8aVQfZgTwwPcqilQ/Cp9cV7SvWv1ymWdVou26gB2OUA
-	f8mx51QmhiPJswFIKfLYo2+vBhTNPvjHDxLlkXika4TNpe/W3xouhhtOlZgOzG04gCSr7fals1oOi
-	RtyoVymK4zviNmevXqfsp0kp3Omde2Pjm1X3sS6dwiaqEOY1CiSaGJch8Ptj11UQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rzXh9-0002qV-QH; Wed, 24 Apr 2024 10:09:35 +0200
-Message-ID: <5ef0ac71-21dd-46d7-a0c1-1b1b391e51a8@leemhuis.info>
-Date: Wed, 24 Apr 2024 10:09:35 +0200
+	s=arc-20240116; t=1713946230; c=relaxed/simple;
+	bh=b3HUjTobqzaKv1wG8AKQpzu+8E9bVgtosOQs6FdPTuQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OTa4shtzWfdBYFGVA49ErkPUJSC3pZ41YTqtCIPHwztkJ0xv+hmRKUCPf5NsFzT8YXPwBXTJ3DHzb2aG6Melgz8yQHIP/qN3rGo9lL+q25FrzRCEdgWsHG1gTYCGy7i31siwKaysOTGGYYa0aDIYlMRgCfMK4j4i4Xnbr3CmDvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VPWmp5D8Nz1R8QP;
+	Wed, 24 Apr 2024 16:07:22 +0800 (CST)
+Received: from dggpemd100001.china.huawei.com (unknown [7.185.36.94])
+	by mail.maildlp.com (Postfix) with ESMTPS id 223B114011F;
+	Wed, 24 Apr 2024 16:10:24 +0800 (CST)
+Received: from localhost.localdomain (10.50.165.33) by
+ dggpemd100001.china.huawei.com (7.185.36.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Wed, 24 Apr 2024 16:10:23 +0800
+From: Xingui Yang <yangxingui@huawei.com>
+To: <john.g.garry@oracle.com>, <yanaijie@huawei.com>, <jejb@linux.ibm.com>,
+	<martin.petersen@oracle.com>, <damien.lemoal@opensource.wdc.com>
+CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>,
+	<chenxiang66@hisilicon.com>, <kangfenglong@huawei.com>
+Subject: [PATCH v2] scsi: libsas: Fix exp-attached end device cannot be scanned in again after probe failed
+Date: Wed, 24 Apr 2024 08:08:07 +0000
+Message-ID: <20240424080807.8469-1-yangxingui@huawei.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: API break, sysfs "capability" file
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Lennart Poettering <mzxreary@0pointer.de>
-References: <ZhQJf8mzq_wipkBH@gardel-login>
- <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
- <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
- <ZhRSVSmNmb_IjCCH@gardel-login>
- <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
- <ZhT5_fZ9SrM0053p@gardel-login> <20240409141531.GB21514@lst.de>
- <d7a2b07c-26eb-4d55-8aa7-137168bd0b49@kernel.dk>
- <Zh6IpqnSfGHXMjVa@gardel-login>
- <b74f99e8-5a50-4e93-987f-0bcfc0c27959@kernel.dk>
- <Zh6KZ7ynHuOd0mgQ@gardel-login>
- <c3a6a639-bf15-4f8b-abbd-978d9836d93c@kernel.dk>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <c3a6a639-bf15-4f8b-abbd-978d9836d93c@kernel.dk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713946178;73e32188;
-X-HE-SMSGID: 1rzXh9-0002qV-QH
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemd100001.china.huawei.com (7.185.36.94)
 
-On 16.04.24 16:33, Jens Axboe wrote:
-> On 4/16/24 8:25 AM, Lennart Poettering wrote:
->> On Di, 16.04.24 08:22, Jens Axboe (axboe@kernel.dk) wrote:
->>> On 4/16/24 8:18 AM, Lennart Poettering wrote:
->>>> On Di, 09.04.24 09:17, Jens Axboe (axboe@kernel.dk) wrote:
->>>>
->>>>> On 4/9/24 8:15 AM, Christoph Hellwig wrote:
->>>>>> On Tue, Apr 09, 2024 at 10:19:09AM +0200, Lennart Poettering wrote:
->>>>>>> All I am looking for is a very simple test that returns me a boolean:
->>>>>>> is there kernel-level partition scanning enabled on this device or
->>>>>>> not.
->>>>>> And we can add a trivial sysfs attribute for that.
->>>>>
->>>>> And I think we should. I don't know what was being smoked adding a sysfs
->>>>> interface that exposed internal flag values - and honestly what was
->>>>> being smoked to rely on that, but I think it's fair to say that the
->>>>> majority of the fuckup here is on the kernel side.
-> [...]
-> Doesn't really change my conclusion from earlier. As mentioned, this is
-> clearly a kernel fuckup, and honestly since it's being presented as ABI,
-> we definitely need to rectify this and provide an alternative. Even
-> though I'm not a huge fan of it, might just be best to re-introduce
-> 'capability' and just have conversions of the flags so we retain the
-> user side of it the same. That can then also go into stable, so we'll
-> end up with something that at least looks cohesive on the user side.
+We found that it is judged as broadcast flutter when the exp-attached end
+device reconnects after probe failed, as follows:
 
-Jens, quick question: what's the plan forward here and who will realize
-what you outlined?
+[78779.654026] sas: broadcast received: 0
+[78779.654037] sas: REVALIDATING DOMAIN on port 0, pid:10
+[78779.654680] sas: ex 500e004aaaaaaa1f phy05 change count has changed
+[78779.662977] sas: ex 500e004aaaaaaa1f phy05 originated BROADCAST(CHANGE)
+[78779.662986] sas: ex 500e004aaaaaaa1f phy05 new device attached
+[78779.663079] sas: ex 500e004aaaaaaa1f phy05:U:8 attached: 500e004aaaaaaa05 (stp)
+[78779.693542] hisi_sas_v3_hw 0000:b4:02.0: dev[16:5] found
+[78779.701155] sas: done REVALIDATING DOMAIN on port 0, pid:10, res 0x0
+[78779.707864] sas: Enter sas_scsi_recover_host busy: 0 failed: 0
+...
+[78835.161307] sas: --- Exit sas_scsi_recover_host: busy: 0 failed: 0 tries: 1
+[78835.171344] sas: sas_probe_sata: for exp-attached device 500e004aaaaaaa05 returned -19
+[78835.180879] hisi_sas_v3_hw 0000:b4:02.0: dev[16:5] is gone
+[78835.187487] sas: broadcast received: 0
+[78835.187504] sas: REVALIDATING DOMAIN on port 0, pid:10
+[78835.188263] sas: ex 500e004aaaaaaa1f phy05 change count has changed
+[78835.195870] sas: ex 500e004aaaaaaa1f phy05 originated BROADCAST(CHANGE)
+[78835.195875] sas: ex 500e004aaaaaaa1f rediscovering phy05
+[78835.196022] sas: ex 500e004aaaaaaa1f phy05:U:A attached: 500e004aaaaaaa05 (stp)
+[78835.196026] sas: ex 500e004aaaaaaa1f phy05 broadcast flutter
+[78835.197615] sas: done REVALIDATING DOMAIN on port 0, pid:10, res 0x0
 
-I'm asking, as afaics nothing happened for a week (hope I didn't miss
-anything!). Sure, it's not a regression from the last cycle or so, so
-it's not that urgent. But hch's "It is not a regression at all" last
-week made me worry that this in the end might not be solved unless
-somebody has it on the todo list. Normally I would have CCed Linus at
-that point anyway to get his stance, but from your statements it sounds
-like this is unnecessary here.
+The cause of the problem is that the related ex_phy's attached_sas_addr was
+not cleared after the end device probe failed. In order to solve the above
+problem, a function sas_ex_unregister_end_dev() is defined to clear the
+ex_phy information and unregister the end device after the exp-attached end
+device probe failed.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+As the sata device is an asynchronous probe, the sata device may probe
+failed after done REVALIDATING DOMAIN. Then after its port is added to the
+sas_port_del_list, the port will not be deleted until the end of the next
+REVALIDATING DOMAIN and sas_destruct_ports() is called. A warning about
+creating a duplicate port will occur in the new REVALIDATING DOMAIN when
+the end device reconnects. Therefore, the previous destroy_list and
+sas_port_del_list should be handled before REVALIDATING DOMAIN.
+
+Signed-off-by: Xingui Yang <yangxingui@huawei.com>
+---
+Changes since v1:
+- Simplify the process of getting ex_phy id based on Jason's suggestion.
+- Update commit information.
+---
+ drivers/scsi/libsas/sas_discover.c | 2 ++
+ drivers/scsi/libsas/sas_expander.c | 8 ++++++++
+ drivers/scsi/libsas/sas_internal.h | 6 +++++-
+ 3 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/libsas/sas_discover.c b/drivers/scsi/libsas/sas_discover.c
+index 8fb7c41c0962..aae90153f4c6 100644
+--- a/drivers/scsi/libsas/sas_discover.c
++++ b/drivers/scsi/libsas/sas_discover.c
+@@ -517,6 +517,8 @@ static void sas_revalidate_domain(struct work_struct *work)
+ 	struct sas_ha_struct *ha = port->ha;
+ 	struct domain_device *ddev = port->port_dev;
+ 
++	sas_destruct_devices(port);
++	sas_destruct_ports(port);
+ 	/* prevent revalidation from finding sata links in recovery */
+ 	mutex_lock(&ha->disco_mutex);
+ 	if (test_bit(SAS_HA_ATA_EH_ACTIVE, &ha->state)) {
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index f6e6db8b8aba..45793c10009b 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -1856,6 +1856,14 @@ static void sas_unregister_devs_sas_addr(struct domain_device *parent,
+ 	}
+ }
+ 
++void sas_ex_unregister_end_dev(struct domain_device *dev)
++{
++	struct domain_device *parent = dev->parent;
++	struct sas_phy *phy = dev->phy;
++
++	sas_unregister_devs_sas_addr(parent, phy->number, true);
++}
++
+ static int sas_discover_bfs_by_root_level(struct domain_device *root,
+ 					  const int level)
+ {
+diff --git a/drivers/scsi/libsas/sas_internal.h b/drivers/scsi/libsas/sas_internal.h
+index 3804aef165ad..434f928c2ed8 100644
+--- a/drivers/scsi/libsas/sas_internal.h
++++ b/drivers/scsi/libsas/sas_internal.h
+@@ -50,6 +50,7 @@ void sas_discover_event(struct asd_sas_port *port, enum discover_event ev);
+ 
+ void sas_init_dev(struct domain_device *dev);
+ void sas_unregister_dev(struct asd_sas_port *port, struct domain_device *dev);
++void sas_ex_unregister_end_dev(struct domain_device *dev);
+ 
+ void sas_scsi_recover_host(struct Scsi_Host *shost);
+ 
+@@ -145,7 +146,10 @@ static inline void sas_fail_probe(struct domain_device *dev, const char *func, i
+ 		func, dev->parent ? "exp-attached" :
+ 		"direct-attached",
+ 		SAS_ADDR(dev->sas_addr), err);
+-	sas_unregister_dev(dev->port, dev);
++	if (dev->parent && !dev_is_expander(dev->dev_type))
++		sas_ex_unregister_end_dev(dev);
++	else
++		sas_unregister_dev(dev->port, dev);
+ }
+ 
+ static inline void sas_fill_in_rphy(struct domain_device *dev,
+-- 
+2.17.1
+
