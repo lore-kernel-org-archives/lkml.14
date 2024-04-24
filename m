@@ -1,35 +1,40 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2DC13DDD9;
-	Wed, 24 Apr 2024 11:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B67A215A482
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 11:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713957027; cv=none; b=LCxHOaftmUEMIDrjwUJSDqp4hvYtX+6n7hHt75PtIlCKEwRHkv/EA3aLwO8apF9L1TbNEeKKvs98GXw3CBVeZs8THtMGWr1tN+7RiB/CDdy5DIMxHUWD4VQsslNZlJ6Ut/ISy04jKrBRa1ZytNLKCwhsNQxCzV6iyZCM3TJpsa8=
+	t=1713957030; cv=none; b=vAVbIxuBXtBqDQ/1YTUM4iC8+lUe3BMXCX29xO9Pd4Efge2MWkTYkaWadRjTAGWEaZmcNLX1lkM9jr9wOHYARFgWT5mjK6xPvKu30uhJj7x+EUXoctasgLEFpF9FBzjuTu3C7uhshf5SwSZznoAV4jkqmap+Qj3DKKhAhSuPidI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713957027; c=relaxed/simple;
-	bh=Ckxhz825vmza6vvWz/TLutSmlDWafm3SUwU+g4hqtAQ=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=A71NK1CgqxgdJFEx51u1hEQwRZMh/B5fPAbC8i+AHoP1BCPj71c/rYvQBZam0gBOyrCdur5EKV9BUTL20NmROHDplRZSTdD3AdUnZp/RWYWWBP3VO9f3G3AcxxGaJ4EdMbRUf9mcuPWBatpFLb2hoFJZsrJ9LRlCbYcGfIcbNaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bVAGBNaM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bVAGBNaM"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E210BC32781;
-	Wed, 24 Apr 2024 11:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713957026;
-	bh=Ckxhz825vmza6vvWz/TLutSmlDWafm3SUwU+g4hqtAQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=bVAGBNaM7DF00r6IsRzTLUj8CSJoy9XYR8ymyWFycWjZFrAU5SQq81tGhcuF2U/PC
-	 eUKTwL0QBd9POnCBbt8hJ9uLWdFYiP30TmXHtXKwCdUOYyidMwCqxJn/IRevcBVjOU
-	 55o+uv9QjLsMcdxJ/cKynz16F9GJPeYzm+bZKDqKWbKnMDOkg2MoiLb3Lh5yY73Tjc
-	 lQTG3EplQ3d9F44iTDCFeGVwg71NNMOA7/oSg33U0qPK9uxkOwu0YOVMwl1a2NnGj6
-	 SwbiUdScEGocf1tJ4IL3p7Tn947X9d5nZH7VEodftC4Br2fDlxnbbOPhn8qFxLFUKP
-	 ImdVKMeFRUnJA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CF635C43614;
-	Wed, 24 Apr 2024 11:10:26 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1713957030; c=relaxed/simple;
+	bh=Hp6HU1H9XKj1goSR/zmVzhMG9A3n6qgITSLB6TFTkRM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=h7kqDwisMXyQM3N1QhSSVc2c4J1qlvnNVIyQJCnh8qGdePZRxnGgkx9PirVYuU5WqZEIDVRsgIzB4ri39DAkew/kRNDnhimM3CyYh/Pv3RqlyipAYF04y05aePOTeY0dhYFw58t15txFKwsUpRdD9sA7Tyaddrm6KDtxiBSsq+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5ADB2F;
+	Wed, 24 Apr 2024 04:10:54 -0700 (PDT)
+Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6ADC13F73F;
+	Wed, 24 Apr 2024 04:10:25 -0700 (PDT)
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	David Hildenbrand <david@redhat.com>,
+	Peter Xu <peterx@redhat.com>,
+	Mike Rapoport <rppt@linux.ibm.com>,
+	Shivansh Vij <shivanshvij@outlook.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/2] arm64/mm: Enable userfaultfd write-protect
+Date: Wed, 24 Apr 2024 12:10:15 +0100
+Message-Id: <20240424111017.3160195-1-ryan.roberts@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,44 +42,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] net: phy: mediatek-ge-soc: follow netdev LED trigger
- semantics
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171395702684.12181.223647631542261480.git-patchwork-notify@kernel.org>
-Date: Wed, 24 Apr 2024 11:10:26 +0000
-References: <4983a6b197ed999808c5690d01ec1ffb4f6407b7.1713656093.git.daniel@makrotopia.org>
-In-Reply-To: <4983a6b197ed999808c5690d01ec1ffb4f6407b7.1713656093.git.daniel@makrotopia.org>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: dqfext@gmail.com, SkyLake.Huang@mediatek.com, andrew@lunn.ch,
- hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 
-Hello:
+Hi All,
 
-This patch was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
+This series adds uffd write-protect support for arm64. The patches are
+extracted, without change, from a wider RFC I posted at [1].
 
-On Sun, 21 Apr 2024 01:08:31 +0100 you wrote:
-> Only blink if the link is up on a LED which is programmed to also
-> indicate link-status.
-> 
-> Otherwise, if both LEDs are in use to indicate different speeds, the
-> resulting blinking being inverted on LEDs which aren't switched on at
-> a specific speed is quite counter-intuitive.
-> 
-> [...]
+Previous attempts to add uffd-wp (and soft-dirty) have failed because of a
+perceived lack of available PTE SW bits. However it actually turns out that
+there are 2 available but they are hidden. PTE_PROT_NONE was previously
+occupying a SW bit, but it only applies when PTE_VALID is clear, so this is
+moved to overlay PTE_UXN in patch 1, freeing up the SW bit. Bit 63 is marked as
+"IGNORED" in the Arm ARM, but it does not currently indicate "reserved for SW
+use" like it does for the other SW bits. I've confirmed with the spec owner that
+this is an oversight; the bit is intended to be reserved for SW use and the spec
+will clarify this in a future update.
 
-Here is the summary with links:
-  - [net] net: phy: mediatek-ge-soc: follow netdev LED trigger semantics
-    https://git.kernel.org/netdev/net/c/5b5f724b05c5
+So now we have two spare bits; patch 2 enables uffd-wp on arm64, using the SW
+bit freed up by moving PTE_PROT_NONE. This leaves bit 63 spare for future use
+(e.g. soft-dirty - see RFC at [1] - or some other usage).
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+This applies on top of v6.9-rc3. The all mm selftests involving uffd-wp now run
+and pass and no other selftest regressions are observed.
 
+[1] https://lore.kernel.org/all/20240419074344.2643212-1-ryan.roberts@arm.com/
+
+Thanks,
+Ryan
+
+Ryan Roberts (2):
+  arm64/mm: Move PTE_PROT_NONE and PMD_PRESENT_INVALID
+  arm64/mm: Add uffd write-protect support
+
+ arch/arm64/Kconfig                    |  1 +
+ arch/arm64/include/asm/pgtable-prot.h | 12 ++++-
+ arch/arm64/include/asm/pgtable.h      | 71 ++++++++++++++++++++++++---
+ 3 files changed, 75 insertions(+), 9 deletions(-)
+
+--
+2.25.1
 
