@@ -1,63 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E77C181326;
-	Wed, 24 Apr 2024 18:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CB2181CF8
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 18:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713982524; cv=none; b=sJCsXqgCmwaqGjU0LqmFOkaoZ8/B8a8aiHamDceqgbIJwQ2b5D0EsfCn8k1xYxMWq6/SapKc8A8h7zpK28mAFA6cUcDQz6SNnk7JpYu6a6a3/IgWMlXJ9GdX4VwSIjfFFxvadGD1XRnr1n+JdtC/j7naHNQOyCPItrT6htfpMvk=
+	t=1713982525; cv=none; b=qmutXNqke0mcQzZza2RPF9kWTdsMAOu4NJOJy9RgkKO2JOqmoZKOti7S11aaiY9Oex9edIvJbIBPoX8nzEY6vcCG+mZyO9Rx+Ucmk4F6gZSReyysieKurjJrx1H0Dn83nmZJS3ILN6wjyZenL6S3dSleYaU5Jr0IaJuekQsQSIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713982524; c=relaxed/simple;
-	bh=obhXYEmt6d4ZPBEnG583vH7Ox14Ir+rTrmmNAEgF6jg=;
+	s=arc-20240116; t=1713982525; c=relaxed/simple;
+	bh=MetFmFlhAPE7vpRJ4pnmuEjVeVxyl19C3RDm5bFHSMs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=seFhzEHQ9gn8XJWiPF+QRuIz2N1OrP8gnh5RrUqdWUwS3JpFrV+ZNEoNYosrFDe6c/wZNbyQGQTDIMWNJkXYmJCSrjF9YXY9MaRqBcsYisxtvq8RMLFcc8IZbrcxqhPByD4G2Z7Usx48Xd7KJBL56Q+jG6cLEu+Q1mhDvQgmii4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B3cj5rbl; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version; b=ZC145a1rvDMVQ5N4APDCQx2RV62F/lho2q7gyGVB574wyVu2vJChY95B77WndIhvSLwN3uXAI6aAuBfpBfxBkiQ3AF1UxvXfAXgLd/04/2YzJbkvoY8VGrx/E0rIEgVh4kXUbna79Kd5+cOm3fmhN1tDVFD5bCfr1DeyJWRhnMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fl5OGbmq; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B3cj5rbl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fl5OGbmq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713982521; x=1745518521;
+  t=1713982523; x=1745518523;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=obhXYEmt6d4ZPBEnG583vH7Ox14Ir+rTrmmNAEgF6jg=;
-  b=B3cj5rblgcOnu7sbJn3nZ6XpbLriNwm3J5GbITYADQK568h/LFJSiUT8
-   UimrECfPEpMig6AckfbBLfsuktxc41MaXrrG14A5hR+a+AStygTFKu4FY
-   3ixfK4A+GOJElGXBZ0yGAnb0chM8TdAhDWg+udOQAG1qsGwjFU1vd6c9s
-   ZA7+4QM0TYcJYtk7zzQMoLqYxBdEg0TGu4J1fnY18l+iD7RkmSGjljDDo
-   9Mws2y9QAj7ajRGt8Dv/mCYy3lOqVed1nwWnUgMyzjLQ2fTCIBuyzcV/j
-   tpnvl13t4cKwf82g375OYGIyREESPJrMq6PEZ4rhqMZT5EbQ5AGpr/E6O
-   Q==;
-X-CSE-ConnectionGUID: gGjtlU4CTWi2nxX1DEfAjw==
-X-CSE-MsgGUID: CG7faPwISdCsUXGIJl3fdA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="9503539"
+  bh=MetFmFlhAPE7vpRJ4pnmuEjVeVxyl19C3RDm5bFHSMs=;
+  b=Fl5OGbmqlIydLqeI8Viidm4TijDTbD1J4QNhWSbgCftdFjgMVzWI/kzg
+   q42nk8OqAhV1cBrLJawantDGN0zbWuaNLV9ZLsPBwrXkm+7sS0mfBnr0a
+   dIt2AjaLNf3iAPsFrBPTZUMciLvuIWQOH0l/8PUu/ZmFJr0SHhwiVQkIC
+   /KTAvyVclzcW3hNeB8JSUY/iekRliGlyu9EqlY1fSOEv77wnT7T/8/UYQ
+   2mV/E2TsnWgO/YwMZj6PgKUN4R1pa9W6ruVfDBcsGRXrRlvG9183QjbKi
+   QbBjHpOKRcPGCVESwSa/GyPAjnoieBfDPUl2ydXGLx78Gw82Qq/KwptL0
+   g==;
+X-CSE-ConnectionGUID: q1OIDzYERnm4luQVcvM6EA==
+X-CSE-MsgGUID: voberBd2RSaILcIjLVavSg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="9482022"
 X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
-   d="scan'208";a="9503539"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 11:15:21 -0700
-X-CSE-ConnectionGUID: VcIiWi/bQZai5oz5I5U70w==
-X-CSE-MsgGUID: lbQj+TPeSR6BAaCag2O2PQ==
+   d="scan'208";a="9482022"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 11:15:14 -0700
+X-CSE-ConnectionGUID: AfJ2xFzOSQqry4fUNXU0nw==
+X-CSE-MsgGUID: BHJJCOJSQFefEC9GPZ5QeA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
-   d="scan'208";a="55750130"
+   d="scan'208";a="29262762"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 11:15:20 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 11:15:14 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
 	x86@kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-pci@vger.kernel.org,
+Cc: "H. Peter Anvin" <hpa@zytor.com>,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v4 42/71] x86/PCI: Switch to new Intel CPU model defines
-Date: Wed, 24 Apr 2024 11:15:20 -0700
-Message-ID: <20240424181520.41965-1-tony.luck@intel.com>
+Subject: [PATCH v4 35/71] x86/microcode/intel: Switch to new Intel CPU model defines
+Date: Wed, 24 Apr 2024 11:15:13 -0700
+Message-ID: <20240424181513.41829-1-tony.luck@intel.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240424181245.41141-1-tony.luck@intel.com>
 References: <20240424181245.41141-1-tony.luck@intel.com>
@@ -73,31 +71,32 @@ New CPU #defines encode vendor and family as well as model.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/x86/pci/intel_mid_pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/microcode/intel.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/pci/intel_mid_pci.c b/arch/x86/pci/intel_mid_pci.c
-index 8edd62206604..933ff795e53e 100644
---- a/arch/x86/pci/intel_mid_pci.c
-+++ b/arch/x86/pci/intel_mid_pci.c
-@@ -216,7 +216,7 @@ static int pci_write(struct pci_bus *bus, unsigned int devfn, int where,
- }
+diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/microcode/intel.c
+index 5f0414452b67..815fa67356a2 100644
+--- a/arch/x86/kernel/cpu/microcode/intel.c
++++ b/arch/x86/kernel/cpu/microcode/intel.c
+@@ -21,7 +21,7 @@
+ #include <linux/uio.h>
+ #include <linux/mm.h>
  
- static const struct x86_cpu_id intel_mid_cpu_ids[] = {
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_MID, NULL),
-+	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID, NULL),
- 	{}
- };
- 
-@@ -243,7 +243,7 @@ static int intel_mid_pci_irq_enable(struct pci_dev *dev)
- 		model = id->model;
- 
- 	switch (model) {
--	case INTEL_FAM6_ATOM_SILVERMONT_MID:
-+	case VFM_MODEL(INTEL_ATOM_SILVERMONT_MID):
- 		polarity_low = false;
- 
- 		/* Special treatment for IRQ0 */
+-#include <asm/intel-family.h>
++#include <asm/cpu_device_id.h>
+ #include <asm/processor.h>
+ #include <asm/tlbflush.h>
+ #include <asm/setup.h>
+@@ -577,8 +577,7 @@ static bool is_blacklisted(unsigned int cpu)
+ 	 * This behavior is documented in item BDF90, #334165 (Intel Xeon
+ 	 * Processor E7-8800/4800 v4 Product Family).
+ 	 */
+-	if (c->x86 == 6 &&
+-	    c->x86_model == INTEL_FAM6_BROADWELL_X &&
++	if (c->x86_vfm == INTEL_BROADWELL_X &&
+ 	    c->x86_stepping == 0x01 &&
+ 	    llc_size_per_core > 2621440 &&
+ 	    c->microcode < 0x0b000021) {
 -- 
 2.44.0
 
