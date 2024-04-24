@@ -1,32 +1,48 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D01D156C73
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B0A15687B;
+	Wed, 24 Apr 2024 06:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713939020; cv=none; b=Cf2fEoudKeMpF+Ww2ruj1YKRpZ6u5tPI8nfDjCNDI+Gyxy646wz/RWTJuOFnzCyHFmBWjFALp6P30eiPtRbcH3dG02KmlktllU3tyL+MylQspJv/riVqpQjpptiZGjMfVJX0+2PsHH3BlCFpvKxQj8chL25KVxlinIIBJZFhXt8=
+	t=1713939071; cv=none; b=uQHgbbx324oaXQqBU4zcL/MgTeVR7B/51N7KHUGEWUMP4CdKkQ0sZrg9xqHtbEaUJ18OCSWO8O5g/UN5trxA9YuvWvPh9lMtvp/44tDAv4X57fh1+90Hgw7qNDnblYEpQEUPp5ni3i5CiZXc73/V8RvkLStngJP6cbZRTM0jJc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713939020; c=relaxed/simple;
-	bh=iepwPMFV2Y8AxOlDOJoQU7DjU3/vVTr6VfAN666ZhBA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GAIfPg4YSE3qUFnWtFRY84KDOXKsV3TcZkdzlCQgOWvkqZzgSx/MOQZkdbMS/LwfRV+D/Gb/N9oN6uKftaVruVmubikrjEgLq17K11h2dIV/uS8La9zFRUnuGnEubhwYYy34I6I6Xe1z9p2rX94skdy9I3Nex7syhXwFVaJGKgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=tbA1ITQ7; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1713939071; c=relaxed/simple;
+	bh=gzkkQlE9RolOyVL22PsPDDxDNzwDNG3gpNefrqO6PLc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Ofi3PfD6p/+tVRY2HXBlEnnrN/J7OJwWw3rJh8FFgClB4TUqpefW2ecm666MJTdl+bdey4dIqZxYntsUoEn+wwcnYgKOmq68XH4+A/+uyvyL5BXyv4hoRpaHtJqKVrlotRva28hlVrqC+a4on9/e0o7mFESecncxub+E+1Oo/2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Npfz5vBv; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="tbA1ITQ7"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1713939012; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=UgkEafpjB4FkcGXYRGgNcZe1C+yfzAPApUHISBw8ick=;
-	b=tbA1ITQ7JOi4N3i5flMh6w+j1dMDnvZ1WLJNw01aR7lge1LVRC+2dv2ARfCyk1BJXPLT8EiGQSppRtsNCY6kL0CYfbshfojf+6hatBdC4/EcXIzRbed9sTZ+vr/duJN0LxeQotuiAaDLXvTsCkH11awgwAyKXbyjwZuMCfOzcZ0=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045046011;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0W5BPSdR_1713939009;
-Received: from 30.97.56.58(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W5BPSdR_1713939009)
-          by smtp.aliyun-inc.com;
-          Wed, 24 Apr 2024 14:10:10 +0800
-Message-ID: <fb2052ab-74d1-48f7-975b-15abc2a078e2@linux.alibaba.com>
-Date: Wed, 24 Apr 2024 14:10:09 +0800
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Npfz5vBv"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43O6AhG7045210;
+	Wed, 24 Apr 2024 01:10:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1713939043;
+	bh=fpGSrtQzUsza+SVKZ8gQXj1v2j7Bd88adZDyqcxXnZE=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=Npfz5vBvlWTUd+PYGdZCkx9q+SXRhiQKOWMVyY1YVLhaa2aV2gvzOs+LpxadRE1Zw
+	 wpbWXaICBfIXsjL7D/ONKAwiPHOGRHwytZd96rqa3Xp3tddAvuylpRNJ/4gv2BzaTi
+	 mzKD8BgkkmCDTEDk6msPG9TDhHRKd050awt7bzpc=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43O6Ah4t053683
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 24 Apr 2024 01:10:43 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 24
+ Apr 2024 01:10:43 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 24 Apr 2024 01:10:43 -0500
+Received: from [10.250.149.192] ([10.250.149.192])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43O6Abcx100128;
+	Wed, 24 Apr 2024 01:10:38 -0500
+Message-ID: <e91719e5-2de3-4c52-88e1-d85257484977@ti.com>
+Date: Wed, 24 Apr 2024 11:40:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,68 +50,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 5/5] mm: shmem: add anonymous share mTHP counters
-To: David Hildenbrand <david@redhat.com>, Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org,
- wangkefeng.wang@huawei.com, ryan.roberts@arm.com, ying.huang@intel.com,
- shy828301@gmail.com, ziy@nvidia.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <cover.1713755580.git.baolin.wang@linux.alibaba.com>
- <05d0096e4ec3e572d1d52d33a31a661321ac1551.1713755580.git.baolin.wang@linux.alibaba.com>
- <CAGsJ_4xu4iL5pv7T1chyzGC2Vp9q1GwOp3wxb=bYMW-T-pj4dA@mail.gmail.com>
- <ce6be451-7c5a-402f-8340-be40699829c2@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <ce6be451-7c5a-402f-8340-be40699829c2@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: phy: dp83869: Fix MII mode failure
+To: MD Danish Anwar <danishanwar@ti.com>,
+        Siddharth Vadapalli
+	<s-vadapalli@ti.com>,
+        Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiner Kallweit
+	<hkallweit1@gmail.com>, Andrew Lunn <andrew@lunn.ch>
+CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>, <srk@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Roger Quadros <rogerq@kernel.org>,
+        Ravi Gunasekaran <r-gunasekaran@ti.com>
+References: <20240423084828.1309294-1-danishanwar@ti.com>
+Content-Language: en-US
+From: Ravi Gunasekaran <r-gunasekaran@ti.com>
+In-Reply-To: <20240423084828.1309294-1-danishanwar@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
 
 
-On 2024/4/23 19:37, David Hildenbrand wrote:
-> On 23.04.24 03:17, Barry Song wrote:
->> On Mon, Apr 22, 2024 at 3:03 PM Baolin Wang
->> <baolin.wang@linux.alibaba.com> wrote:
->>>
->>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->>> ---
->>>   include/linux/huge_mm.h | 2 ++
->>>   mm/huge_memory.c        | 4 ++++
->>>   mm/shmem.c              | 5 ++++-
->>>   3 files changed, 10 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
->>> index 26b6fa98d8ac..67b9c1acad31 100644
->>> --- a/include/linux/huge_mm.h
->>> +++ b/include/linux/huge_mm.h
->>> @@ -270,6 +270,8 @@ enum mthp_stat_item {
->>>          MTHP_STAT_ANON_SWPOUT,
->>>          MTHP_STAT_ANON_SWPOUT_FALLBACK,
->>>          MTHP_STAT_ANON_SWPIN_REFAULT,
->>> +       MTHP_STAT_SHMEM_ANON_ALLOC,
->>> +       MTHP_STAT_SHMEM_ANON_ALLOC_FALLBACK,
->>
->> not quite sure about this. for 2MB pmd-mapped THP shmem, we count them
->> as FILE_THP.
->> here we are counting as SHMEM_ANON. To me, SHMEM_ANON is more correct but
->> it doesn't align with pmd-mapped THP. David, Ryan, what do you think?
-> 
-> The term "anonymous share" in the patch subject is weird to begin with 
-> ;) Easy to confuse with anonymous cow-shared memory. Let's just call it 
-> "anonymous shmem", which it is under the hood.
+On 4/23/2024 2:18 PM, MD Danish Anwar wrote:
+> The DP83869 driver sets the MII bit (needed for PHY to work in MII mode)
+> only if the op-mode is either DP83869_100M_MEDIA_CONVERT or
+> DP83869_RGMII_100_BASE.
+>
+> Some drivers i.e. ICSSG support MII mode with op-mode as
+> DP83869_RGMII_COPPER_ETHERNET for which the MII bit is not set in dp83869
+> driver. As a result MII mode on ICSSG doesn't work and below log is seen.
+>
+> TI DP83869 300b2400.mdio:0f: selected op-mode is not valid with MII mode
+> icssg-prueth icssg1-eth: couldn't connect to phy ethernet-phy@0
+> icssg-prueth icssg1-eth: can't phy connect port MII0
+>
+> Fix this by setting MII bit for DP83869_RGMII_COPPER_ETHERNET op-mode as
+> well.
+>
+> Fixes: 94e86ef1b801 ("net: phy: dp83869: support mii mode when rgmii strap cfg is used")
+> Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
+> ---
+> NOTE: This patch is needed for MII mode to work for ICSSG Ethernet driver.
+> I will post the device tree patch for MII mode and mark that as dependent
+> on this patch.
+>
+>  drivers/net/phy/dp83869.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+> index fa8c6fdcf301..d7aaefb5226b 100644
+> --- a/drivers/net/phy/dp83869.c
+> +++ b/drivers/net/phy/dp83869.c
+> @@ -695,7 +695,8 @@ static int dp83869_configure_mode(struct phy_device *phydev,
+>  	phy_ctrl_val = dp83869->mode;
+>  	if (phydev->interface == PHY_INTERFACE_MODE_MII) {
+>  		if (dp83869->mode == DP83869_100M_MEDIA_CONVERT ||
+> -		    dp83869->mode == DP83869_RGMII_100_BASE) {
+> +		    dp83869->mode == DP83869_RGMII_100_BASE ||
+> +		    dp83869->mode == DP83869_RGMII_COPPER_ETHERNET) {
+>  			phy_ctrl_val |= DP83869_OP_MODE_MII;
+>  		} else {
+>  			phydev_err(phydev, "selected op-mode is not valid with MII mode\n");
+>
+> base-commit: 6bea4f03c6a4e973ef369e15aac88f37981db49e
 
-Sure.
+Reviewed-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
 
-> ... regarding the question: if we add FILE_ALLOC and friends, at least 
-> initially, we wouldn't account other large pagecache folios.
-> 
-> ... likely we should add that then as well so the counter matches the 
-> actual name?
-> 
-> If we later realize that we need separate FILE vs. SHMEM vs. WHATEVER 
-> counters, we can always add more fine-grained counters later. Doing it 
-> consistently w.r.t. traditional THPs first sounds reasonable.
-
-Um, once we expose it to userspace through the sysfs interface, the 
-sysfs interface should be explicit as much as possible and avoid 
-confusing users, otherwise it will be difficult to change this kind of 
-interface in the future. Personally, I prefer to Ryan's suggestion.
+Regards,
+Ravi
