@@ -1,134 +1,139 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC1923CB
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 04:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4CE13C82F;
+	Wed, 24 Apr 2024 04:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713934283; cv=none; b=JoqnEiD0gX4mzT2bdu9dDFz13uoo4FVdqtByNW1oHsFDT0qV7I/KwlbVC48yUI6ghho2MSomFBs1SmtJzextqb8Z5JOnSo9pFXLXapdc+54wMtrB9ti2bS+P7mWkT0Nbwc7bvDDmWTJ0+qshsm0E1Gfhum4RoTSN2bn/xjz9Ruk=
+	t=1713934549; cv=none; b=pu10oJXrzMw+j8jRcsT5/0WmMLAKQSgT5O1gGFjV/9mdWeKqQtcFdXObTtHUfgmKPYIYPq32CqiMrnnjvd0nUxs4HfcA+dreefe0bFmGpowauw+maKC+oa/p7Ipr59cy//dSXzgXSn27M/p+g5uutfo2cnrZyy4bb+hgxcqx4is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713934283; c=relaxed/simple;
-	bh=RzlmXUZUpT2UJiLdlmyNWLbsXapDtDmbJXSzLVotPi0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FCUOmLCS9lbkYehXqVbNOhDSskWvymaplxUWi6gloeHOlM0Sx9m94cGuDtlgtHZ4Nc5Bs5QKx+K3UGJfFjb9sMpm0Mh5RLu7wkZKDFOv93F42wHouxa6jHL4RjmO44CKT4xaxZMl52AmjcopEukgSp+HrX2LVDSJ4wLKzHRBTbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6ee0642f718so407735b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 21:51:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713934280; x=1714539080;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yMKVJVRwPvOaVaYn4i+6e+fLoFdeQpNGOLfBdX27JlY=;
-        b=Laqq7YsOvPtxM8eUVkCPLPMh5erMsvBwchWkZ2XQ+4BaSJAM5FibkcHCv12mziIpv1
-         3UhIOR4P9LW7YIiHiNthutc8KJt9RasG61gh+PWv/hKCdRNkxu6qyk2YP/MTJj02tgSd
-         cyB1WlrwPCweSHn+hEKAN4VTk1TVIax6ZmzeAd+hjsnOcHDWiNC/9AFHL/V3Tbq1jr6n
-         PMroG2b5/sjF7qULNHcE3s5sddtrTL8INd9PXryQEmk9upcgCziDE0irMq6CIQpmF642
-         aHrZ0BD6Dz9EyA9Owz5o19+WNaKcrz1gSRtXbLZ4ZvI99bVlF4m4waCGt4UZEUd73UKy
-         Yz/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUwNjnULEVxhAyAIis6f6f5cnyqM0oJAXBO8pBVKwFEj6ndp4wT/Psw6CB79zM8tGnSt+yYVSpPrJdE5EFILYJBlMTI8dbGkxcU+C4Q
-X-Gm-Message-State: AOJu0Yyoy0X8CvbNKIYVFa2mObOrhLF5XdPZIlWfwsgVhp5r3s+45zBu
-	/zsEDD/r9gZ7D+2G8SuD6Mu7xLt48dKy6Ho34fhuwvK7TcFoPb73
-X-Google-Smtp-Source: AGHT+IFcNvTYVfMUXy2rrlzMfPImlK2xqErx5gMSEKPPWuzQxxL5Ruw/lUZzXC6vU1M2kYR/z2bPKA==
-X-Received: by 2002:a05:6a20:a127:b0:1ac:df6b:1501 with SMTP id q39-20020a056a20a12700b001acdf6b1501mr6828109pzk.27.1713934280393;
-        Tue, 23 Apr 2024 21:51:20 -0700 (PDT)
-Received: from snowbird ([136.25.84.117])
-        by smtp.gmail.com with ESMTPSA id j28-20020a63fc1c000000b005e83b3ce8d9sm10323645pgi.8.2024.04.23.21.51.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 21:51:19 -0700 (PDT)
-Date: Tue, 23 Apr 2024 21:51:17 -0700
-From: Dennis Zhou <dennis@kernel.org>
-To: "zhangpeng (AS)" <zhangpeng362@huawei.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org, shakeelb@google.com, jack@suse.cz,
-	surenb@google.com, kent.overstreet@linux.dev, mhocko@suse.cz,
-	vbabka@suse.cz, yuzhao@google.com, yu.ma@intel.com,
-	wangkefeng.wang@huawei.com, sunnanyong@huawei.com
-Subject: Re: [RFC PATCH v2 0/2] mm: convert mm's rss stats to use atomic mode
-Message-ID: <ZiiPxfN9jVPwXE6j@snowbird>
-References: <20240418142008.2775308-1-zhangpeng362@huawei.com>
- <0145f5db-1adf-46d1-1a2e-41230ab1e462@huawei.com>
+	s=arc-20240116; t=1713934549; c=relaxed/simple;
+	bh=3HNfuRsq5bP8CtlU4c34os9Pd3q+GbzNbJqEXXr5x1o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WTYWtJwNpCSt1j+qRMO5B+WnYWrw4pjIHy3Yf961GB4Zu11MvuN0YwMxUope9PVm49Lzq+8V5imwz04udRxsQ6JPapFfNjWL2vj2r7Ed7uEpeaJFWDpSabiH980qI8hQHIxGMjU+9/iKlf0CgZy3FjdfaTqJXviYD3Q/gTQgLmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=S6sjMxfK; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S6sjMxfK"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43O4YpaL009997;
+	Wed, 24 Apr 2024 04:55:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=d6RfTbleXipL1qn6KV8zRM3DFf84k4bMIcll6M1FFlg=; b=S6
+	sjMxfKoVyTRCUtb/opByWZ/jpzdNz7UTxVOUXXFz4LI9XjntL7pS/8CXHQ8FE0MG
+	to+l0tsrEiJronR2J2GPJPzBI2xLhz1jZThvCzbrHQYEhyqqzsK300ordUJiVa73
+	IJLpT+PUClGTGi4oZIKYwFSXKdPnVi1fqBYvJt9ltCRWqGXkgWCbCRFXPuHE5HOW
+	c248AjQj3pOEk59RJqctuOjWVrueD2uyN3NdgCWVJFwxsdvOS+A5nHfsjcBQajsw
+	pvUlsKmCS6EMe6v/J5XGYyhZ2D6T8tNVdlFnX1wSVQi8K9GJvoJNQhzckCMxGtsB
+	TtUWovkCfCB/+ac5Xchw==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xpu6a00yp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Apr 2024 04:55:42 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43O4tfAH008444
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Apr 2024 04:55:42 GMT
+Received: from [10.253.72.119] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 23 Apr
+ 2024 21:55:40 -0700
+Message-ID: <a5744a30-8464-441d-b306-546b08099400@quicinc.com>
+Date: Wed, 24 Apr 2024 12:55:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0145f5db-1adf-46d1-1a2e-41230ab1e462@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Bluetooth: qca: set power_ctrl_enabled on NULL returned
+ by gpiod_get_optional()
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+        Marcel Holtmann
+	<marcel@holtmann.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+CC: <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bartosz
+ Golaszewski <bartosz.golaszewski@linaro.org>,
+        Wren Turkal
+	<wt@penguintechs.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+References: <20240422130036.31856-1-brgl@bgdev.pl>
+Content-Language: en-US
+From: quic_zijuhu <quic_zijuhu@quicinc.com>
+In-Reply-To: <20240422130036.31856-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 24XnXVLNxtl46AyVO20Y4CMnI-rDQNGL
+X-Proofpoint-GUID: 24XnXVLNxtl46AyVO20Y4CMnI-rDQNGL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-24_02,2024-04-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ mlxscore=0 impostorscore=0 suspectscore=0 phishscore=0 clxscore=1011
+ spamscore=0 lowpriorityscore=0 malwarescore=0 mlxlogscore=999
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404240020
 
-Hi Peng,
-
-On Wed, Apr 24, 2024 at 12:29:25PM +0800, zhangpeng (AS) wrote:
-> On 2024/4/18 22:20, Peng Zhang wrote:
+On 4/22/2024 9:00 PM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Any suggestions or opinions are welcome. Could someone please review
-> this patch series?
-> Thanks!
+> Any return value from gpiod_get_optional() other than a pointer to a
+> GPIO descriptor or a NULL-pointer is an error and the driver should
+> abort probing. That being said: commit 56d074d26c58 ("Bluetooth: hci_qca:
+> don't use IS_ERR_OR_NULL() with gpiod_get_optional()") no longer sets
+> power_ctrl_enabled on NULL-pointer returned by
+> devm_gpiod_get_optional(). Restore this behavior but bail-out on errors.
 > 
-
-Sorry, I haven't been very active lately. This is what I remember
-discussing a while back. I'll take a close look tomorrow.
-
-Thanks,
-Dennis
-
-> > From: ZhangPeng <zhangpeng362@huawei.com>
-> > 
-> > Since commit f1a7941243c1 ("mm: convert mm's rss stats into
-> > percpu_counter"), the rss_stats have converted into percpu_counter,
-> > which convert the error margin from (nr_threads * 64) to approximately
-> > (nr_cpus ^ 2). However, the new percpu allocation in mm_init() causes a
-> > performance regression on fork/exec/shell. Even after commit 14ef95be6f55
-> > ("kernel/fork: group allocation/free of per-cpu counters for mm struct"),
-> > the performance of fork/exec/shell is still poor compared to previous
-> > kernel versions.
-> > 
-> > To mitigate performance regression, we delay the allocation of percpu
-> > memory for rss_stats. Therefore, we convert mm's rss stats to use
-> > percpu_counter atomic mode. For single-thread processes, rss_stat is in
-> > atomic mode, which reduces the memory consumption and performance
-> > regression caused by using percpu. For multiple-thread processes,
-> > rss_stat is switched to the percpu mode to reduce the error margin.
-> > We convert rss_stats from atomic mode to percpu mode only when the
-> > second thread is created.
-> > 
-> > After lmbench test, we can get 2% ~ 4% performance improvement
-> > for lmbench fork_proc/exec_proc/shell_proc and 6.7% performance
-> > improvement for lmbench page_fault (before batch mode[1]).
-> > 
-> > The test results are as follows:
-> >               base           base+revert        base+this patch
-> > 
-> > fork_proc    416.3ms        400.0ms  (3.9%)    398.6ms  (4.2%)
-> > exec_proc    2095.9ms       2061.1ms (1.7%)    2047.7ms (2.3%)
-> > shell_proc   3028.2ms       2954.7ms (2.4%)    2961.2ms (2.2%)
-> > page_fault   0.3603ms       0.3358ms (6.8%)    0.3361ms (6.7%)
-> > 
-> > [1] https://lore.kernel.org/all/20240412064751.119015-1-wangkefeng.wang@huawei.com/
-> > 
-> > ChangeLog:
-> > v2->v1:
-> > - Convert rss_stats from atomic mode to percpu mode only when
-> >    the second thread is created per Jan Kara.
-> > - Compared with v1, the performance data may be different due to
-> >    different test machines.
-> > 
-> > ZhangPeng (2):
-> >    percpu_counter: introduce atomic mode for percpu_counter
-> >    mm: convert mm's rss stats to use atomic mode
-> > 
-> >   include/linux/mm.h             | 50 +++++++++++++++++++++++++++++-----
-> >   include/linux/percpu_counter.h | 43 +++++++++++++++++++++++++++--
-> >   include/trace/events/kmem.h    |  4 +--
-> >   kernel/fork.c                  | 18 +++++++-----
-> >   lib/percpu_counter.c           | 31 +++++++++++++++++++--
-> >   5 files changed, 125 insertions(+), 21 deletions(-)
-> > 
-> -- 
-> Best Regards,
-> Peng
+> Reported-by: Wren Turkal <wt@penguintechs.org>
+> Reported-by: Zijun Hu <quic_zijuhu@quicinc.com>
+> Closes: https://lore.kernel.org/linux-bluetooth/1713449192-25926-2-git-send-email-quic_zijuhu@quicinc.com/
+> Fixes: 56d074d26c58 ("Bluetooth: hci_qca: don't use IS_ERR_OR_NULL() with gpiod_get_optional()")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/bluetooth/hci_qca.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 92fa20f5ac7d..739248c6d6b9 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -2327,9 +2327,12 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+>  		    (data->soc_type == QCA_WCN6750 ||
+>  		     data->soc_type == QCA_WCN6855)) {
+>  			dev_err(&serdev->dev, "failed to acquire BT_EN gpio\n");
+> -			power_ctrl_enabled = false;
+> +			return PTR_ERR(qcadev->bt_en);
+>  		}
+>  
+For QCA6390, control logic do not reach here, so it has no any help for
+QCA6390.
+> +		if (!qcadev->bt_en)
+> +			power_ctrl_enabled = false;
+> +
+property enable-gpios are obviously marked as required for WCN6750 and
+WCN6855 by dts binding spec as shown by below link:
+https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git/tree/Documentation/devicetree/bindings/net/bluetooth/qualcomm-bluetooth.yaml
+
+if user don't config the property then "qcadev->bt_en is NULL", can we
+still treat this case as good case?
+
+that is why i changed my fix from reverting the wrong commit to only
+focusing on QCA6390.
+
+i will give different fix for other impacted QCA controllers.
+
+>  		qcadev->sw_ctrl = devm_gpiod_get_optional(&serdev->dev, "swctrl",
+>  					       GPIOD_IN);
+>  		if (IS_ERR(qcadev->sw_ctrl) &&
+
+NAK as explained above.
