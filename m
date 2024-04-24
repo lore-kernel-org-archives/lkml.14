@@ -1,352 +1,239 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2042.outbound.protection.outlook.com [40.107.7.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5D8160885;
-	Wed, 24 Apr 2024 14:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713969443; cv=none; b=CLWVj/A5RLL0VwZAV/95wfhOcgJgFb202YjkIDDM0TlvMmPdwJN0BjUGUaN2Qtgz9yOsq4paIBHzITq6HwvvL/pynXg0r0i6cuhfxMQa8j1Z1TWJKOUrpuYM3vAka58g9NS+9RNfkbHec+uUzKnRYbCLtCG3xxBjTDHI/CnMSb8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713969443; c=relaxed/simple;
-	bh=PW/mKN9SsKQYfJubvo/JIUYxbAIyYneBGNWi3qCcTow=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EwDGnFp0+MzuTB5jdvqPJkW5BHi8LjcxGIBTapNWhfJH8HVP/0gDmCM4T0SC8pNGI4zfxFMcK0wEOj5z4VAFnbOOJYhuzI/B6gb3mvSJphNDgZ8TuqXFbgJSXP8smQmV2CYjEXJXzn998wLGrsEZRD6apkLuUgHJS2D37aD8TyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BPUDLJT3; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74DC15E5CB;
+	Wed, 24 Apr 2024 14:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713969577; cv=fail; b=iBAZ6CzH9g9BLfWTTE3hFwZ27uB5pK/Pf+IdTSaTpL+l1uYXvsLv4TYv/91wU5W9bGZHxjABunkiVnBp+a+n8VOEeuTWdKBr9saUTjHc/5YIpuBxTLi3mA/rdPRtfOKWKvtM0n99szXurg2VaSXxA50h2e82sXr2SYbHWZCYxN8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713969577; c=relaxed/simple;
+	bh=IXe0o7aHjDhP7b57jGh12HIHVJwtNk7Cd3/aLn/Hd/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=HEaf+D2amwPk5qDNCsEXFpFQriQWXoLcPJq4vgYQD1sYpkFEOBVYgHDQPMPmh5SRFjJl5awxh5fU8/wwnoIa6hDIfTV9GuTFok3a7dLpSNs4uT+EI3NqJiinAkNzvFkCVOm3vDlOywOcFyViC4FkoX/XXFspkp0okdCgugwiCYc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=K89jbApV; arc=fail smtp.client-ip=40.107.7.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BPUDLJT3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CBF6C2BBFC;
-	Wed, 24 Apr 2024 14:37:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713969443;
-	bh=PW/mKN9SsKQYfJubvo/JIUYxbAIyYneBGNWi3qCcTow=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BPUDLJT38CANyl6uS+s1jGahVWM31z9fmKVu4lCJCA+sF8M1qXGO9ur8w+zLEaIAa
-	 i4yIULeptP3FJfyp73jx7z9ysSWOSLdETgP90wMLtdZodb0jrcWwxFgH34qKu1hpy9
-	 idvKtJ9XUFM7CR1qaaukFi/U/P+23VsrrZqk2dWw+sKZxXnzLrXCqdJ2C5Sb14B/Fu
-	 ZUCA0ND/2hPdTkKb64ZzRBhnwrIeX2Bf0fkp0c8yw3ucvMd0YWm8Zw8NL+EMLRXqbk
-	 hlcfJOWgUmjQOoRwDmW9PVe2fqxAY8yhB9GD5GxHuw9dDfPs0S2a+zk8DbkAOTJ/FP
-	 R2sZda5Kiwv5w==
-From: Daniel Bristot de Oliveira <bristot@kernel.org>
-To: Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 8/8] rtla: Add --trace-buffer-size option
-Date: Wed, 24 Apr 2024 16:36:57 +0200
-Message-ID: <0281bfbd3b3fed11a0150a8645a1f9941a423c7a.1713968967.git.bristot@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1713968967.git.bristot@kernel.org>
-References: <cover.1713968967.git.bristot@kernel.org>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="K89jbApV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QE69dY0jFvutYIgCnzOAztqhaDK6gwNed5iehetrLISQT3nizCjbV/jMcOM9GJeom815+MY55VZoFd36hlg0h5Rdu0v/VwtwtFo+uDd3/Ic66pzICp+27OR3GBckzxtmEFXKe3vPPtyGd6x7ueSPoJ6RlvsSj4pcjR/G7HTc8J2BH9J3WuvELL7OpUB0U2s2Dx+gplfRsveB4mamMgg+3XlR79PbNtlLFhwbeWZM5haikB3iY4dpb9G+HRoFU817qwyXvlo0sMK6xOIPkaL9Y6wPLHUEoSiiBu+jKE6NmnOWKWxFZZS1di1B9RRdHMTj0WC31kvZ8+FnE0oGIy3iiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZXU511AQf5kMI1PsSDJkHhJ14JiSmVUY/R2f3smwCOo=;
+ b=Pzk7yE8/nyTTq31lG0xRU2CGFxe4JoGi95WEYY/l8dJZhzY4ge02MQBrxnzsxvTO+MLePNLDU7C666LDE6Nl1KhKEEUsIawmXKQHxZNIg/ctHqqEqkBLvPQN32n5ltv+f2Df1shp8JKbN7YpTIKqwO0oClNKdGQyr16K34pN+bdO9PkF5MpffTWoMVpzf7uXhRzylAIsygUadg2apKVANgWfLzwImK6Ag8xELROlu7r/zH0ricSZQ7EIDg1fgyQ2HiLiEPKi0pT2awxviQbUvkhI6Lgm2e10Pq4TyPxgUWXPVmMb9gjN6KRPo0jPY5CKcHUFGtgw33UC1eVbSZXiYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZXU511AQf5kMI1PsSDJkHhJ14JiSmVUY/R2f3smwCOo=;
+ b=K89jbApV4FccVWOUDQogYkdsdB/D4GqsDKrcyyvSeYyevI0vnSRPNFDYSMGR8yN8YmXi824mR375WJXe8jxNbCd1jEUVAp6I91ssgOpZM08NJHtP4tj+RGx7/gdvUCHiMvQ6e1tr0hucGosgQjiXzdTJzjTJqvTM/bcYJodz4tw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS1PR04MB9453.eurprd04.prod.outlook.com (2603:10a6:20b:4da::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.23; Wed, 24 Apr
+ 2024 14:39:31 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::1e67:dfc9:d0c1:fe58]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::1e67:dfc9:d0c1:fe58%7]) with mapi id 15.20.7472.044; Wed, 24 Apr 2024
+ 14:39:31 +0000
+Date: Wed, 24 Apr 2024 10:39:22 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>, vkoul@kernel.org, kishon@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+	imx@lists.linux.dev
+Subject: Re: [PATCH v3 2/3] dt-bindings: phy: Add i.MX8Q HSIO SerDes PHY
+ binding
+Message-ID: <ZikZmo3420wqx16E@lizhi-Precision-Tower-5810>
+References: <1713939683-15328-1-git-send-email-hongxing.zhu@nxp.com>
+ <1713939683-15328-3-git-send-email-hongxing.zhu@nxp.com>
+ <20240424-lustfully-region-826b9570bc38@spud>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240424-lustfully-region-826b9570bc38@spud>
+X-ClientProxiedBy: SJ0PR13CA0065.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c4::10) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS1PR04MB9453:EE_
+X-MS-Office365-Filtering-Correlation-Id: f0a6aad5-1b79-4030-ea6a-08dc646c5a26
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|7416005|1800799015|376005|366007|52116005|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?9MuXpyukn3MwyWPXMvNTUxA/a3G+LZFIv1kuUkUHgvDbgJ6l5o6KK/Yf0rbB?=
+ =?us-ascii?Q?cV2efsbSZTKWDK3EL4k9zqSpFCzRezGIT9CSvHtxNl19b4171xQkQS/tm0A4?=
+ =?us-ascii?Q?/LkhlUrEsBfF6255TQ/U7g9dXSuM2RPnLAuvigI8LQRFioYGfCZrEOvR+RgG?=
+ =?us-ascii?Q?p4JByX4X4DQ10BfllaCxh06mC0z86A3Rt34GZcebmqlhVm3UavtD5mCm6Tlx?=
+ =?us-ascii?Q?J60MCGB/55CMguEwgkOcrWYfdDGAmuwi2bhA9TZ5kvcwbni0EYd0w2a20fso?=
+ =?us-ascii?Q?VvdQ5ptEH5C5ZQb4+4WvoBLjphdokRwC6LUlSbovrTgAxcUyw1TSg9+14GQE?=
+ =?us-ascii?Q?x8y2CfziIVXo/bUKtruedklq3Ka4MIMZVqQx0Sjn7TxiUJ2pzM96Wxw5DY2E?=
+ =?us-ascii?Q?9WmVqbgRR4NgPj5BIzTqN9HIg69XcGU1Tmxa3utUQ++U3HD04HY1Igk1wqXL?=
+ =?us-ascii?Q?2Z5HD0ZKaruiBzbNo9CwgZC1InkYirCe0Rr+VPQX3fmXpkmXIEyU74beyXxh?=
+ =?us-ascii?Q?CMTrnmkJ9lM9uZJTbmTN+KhGLsVdZT/eKaSkoXCGzKe4TcxbOjk5rSAnx/b8?=
+ =?us-ascii?Q?PBdXvx97rx2rl6zhvdLgN8qftezuisiEdZ8p3sfRXutC9rGTe3hkd+DN5Kvs?=
+ =?us-ascii?Q?WGQ8aOvKKxmEyNVt6eg6oDAAeQPHAQGCmRnUZYUyTU0MxwH91ESCb34YMC8l?=
+ =?us-ascii?Q?En9oZnIDPTSYuubVAV29rG6V/YVCnTcaEFopgJsGfJqKOBDqb+XlNWxWYj96?=
+ =?us-ascii?Q?bcRSbioapXrVqFhmNl9OUZIqCeP1cFRHVpsdEnJkabLy1bhCSUDG2e8I8oyt?=
+ =?us-ascii?Q?BbaDP41DwCxq98abOgRNF67bH7GSCZdhxdkdYVDfDLgTyIQB7b1d87mumu5s?=
+ =?us-ascii?Q?Y0LG5NX7aSZkmKwYgycGMlCajinN8cf4LJBADlcyVDcwajqYbjm/0ZO4furl?=
+ =?us-ascii?Q?9bM0EQTucWdoaUKHSpPgoHi5oWxk+S7G/cF9tyP4h+1MDUVEe4DLA7hzw3+v?=
+ =?us-ascii?Q?6S3x0qFzQWxixktv3kqmpx8KT8aavsfMrAHlSBGYciJT/F0/u6OM81zXDaAF?=
+ =?us-ascii?Q?khusQHmrfb2qNn6rYiMR/brmWDtDpVCR0jwaWMO4l8j6/8yL5mfq1Hd4LHi9?=
+ =?us-ascii?Q?1CwDuHdvPF32e4o4YVLGxC0rI/qRkuGTFNNL0c8kbL/6R2BbAJDxiMV/hD3o?=
+ =?us-ascii?Q?XUqfVfcpt/iOR94QfMkyS3bCvx/w0wCsPF9TKE/R2ojAGeCV+9CXrTmXbBX0?=
+ =?us-ascii?Q?Wfjm5SN2AEKCymKMIVTi6jRasCgvS6SfqYoRFVzdfY7uCfIYBGtMUw/Mcv9a?=
+ =?us-ascii?Q?qak=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007)(52116005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Gze8w4ilMGlTssjKdJDuPpWjCMdszE5bK9sW8ts1OF12xn0jB4jFBozoaY6X?=
+ =?us-ascii?Q?0DK783NDUEfn3VRFFzwAI7xtwLhfgNOINakKkf8ypktXLA8XLqwnPfBPrxKO?=
+ =?us-ascii?Q?CRuaElKMFoLIXB0ThM+ae8o97fLqXVFEvOlTGte0I5q0AoX5Bv8G+LcJxUoA?=
+ =?us-ascii?Q?RjmhnvtshqTawyPTsgU2eItE6/jSVWNFkck4SyJ8sZy0K6sv0d7wT3df90Mg?=
+ =?us-ascii?Q?Y9XyyxmqBPV3/rmsYeN+OXW+Lx70km1XWeG/vXGi9mgr8iz2edSq53wREq7k?=
+ =?us-ascii?Q?yW7FmnwimMt4CDBZy58SSBADqFHwYHFxrdZ2riKfaZF03Xxl8JDD7XKTCEZF?=
+ =?us-ascii?Q?ZyZnFRXM3MPUEe9kglxFRMeDZV+4eS7/4RSxVeUUtnDZwNurZ3dfCpRBZDBH?=
+ =?us-ascii?Q?D7nVfe+YvpW0UFbZIZsGC9GyJ5GQJ/gwTSxWSi/pDuldY4mO4MwgN31aXjRp?=
+ =?us-ascii?Q?80DHAxII+xWZDxFPu5HPM1fCDyo4/1lpf04OjdBK0XD8S/k75f2W1d6ZJhX/?=
+ =?us-ascii?Q?pY9rwUekHr6xm+/Gymzz+vvAYnEUgzZNbLTrTL0+imm2n85Uty3EGLzACQA2?=
+ =?us-ascii?Q?uzvdNYm7tu+IRGAv+V2jkh8e5C3wnQpGzqB6XUzONvgnJBCHHHz4F0pXU4/n?=
+ =?us-ascii?Q?XPZUODjoJapRaTZ2J7HFdq25LlUFlUzkzxWlfPfbjpDHLDZMMAAfQOJCdUXl?=
+ =?us-ascii?Q?xgsC4qQwBIkDp3ZNQEQ+e4/7p6d/dPnphyGq2AzBlUiITssDhaAIlCFa93NO?=
+ =?us-ascii?Q?LeClULVB2aWmcafZs0q+OkkoQmsF192n+EWgJZTw+NkCau5Utu6NZXtRYipr?=
+ =?us-ascii?Q?044T/dHsNX5O4jJOQDwOu/ZRLGlJLQ4aSLZqWTqX9T4hRnHtrnX8lKUKG8OT?=
+ =?us-ascii?Q?6X8Cc5MejE8uEg1J9jda8b6M6vDkuUfhmeAAxCCxbugCZYeGqhIuG1gWSsdC?=
+ =?us-ascii?Q?IVyw/vTZBTAHrjVv1uzkSkozQz/BtxkOme54WVTSRjeWN2iX8msqDI8gXYyx?=
+ =?us-ascii?Q?vQi8UOV6nPHZ4LeFtxSLGMHoar8ozP6628qx1n4wXPJ1TdaMWtB2NdKrA9oK?=
+ =?us-ascii?Q?Mh9CuxtMjACfh4PIWMjUIGpSsUJhvtG8zT5WpHznnv4ah7FAle3y2O50DlPV?=
+ =?us-ascii?Q?/rYC35dkMOsSKtYNzN+6Yab8I2Iq+mKqkSm8M5I+c/tFv8TPDZRsoVv5famD?=
+ =?us-ascii?Q?D2pxuGooQHv+Pi3piOF3XOYaKKI5CRAkF2yZtGoQL8DgM6QlewB2KRJ8fhsA?=
+ =?us-ascii?Q?VjmP6+Km37zPfIvXUOJ1FeuxZ1Xw/qeLPvXs2GflfUrQ0c+zgrCxdtV3xCck?=
+ =?us-ascii?Q?Tn6bBNltzL7skuq84Kk1hlR35i3BlkxMGt1i8LynED0YR7ajkK3/7ZbdIp/3?=
+ =?us-ascii?Q?PPswItn0B4ixnJSlE+le8mP58zo4NKcDa8qUHMgp92Zax+D7CFRf7MUtix9f?=
+ =?us-ascii?Q?XfDkaahN0m+Ias67brLCPPIvTacvLpWD+c70JthQKml887+R/MpvhoEy0lSL?=
+ =?us-ascii?Q?yraoSwXOd5n91bJ4/1hFUubpRGqwTioYPPLpoitPSfzL4cTFjmfOHiABgUs/?=
+ =?us-ascii?Q?0M1VWpFO5UYNGjXRP44+JEvwvtjFNReonkCEleV3?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0a6aad5-1b79-4030-ea6a-08dc646c5a26
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 14:39:31.4091
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tEk5SIIpzYs+t6nEVH2swLVc/E+r4tRRk1zIJAJRssKY8vkS35pyviiPSDO/cOxj3ZtpYvLj+SAfVZz3ZN/i0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9453
 
-Add the option allow the users to set a different buffer size for the
-trace. For example, in large systems, the user might be interested on
-reducing the trace buffer to avoid large tracing files.
+On Wed, Apr 24, 2024 at 01:04:27PM +0100, Conor Dooley wrote:
+> On Wed, Apr 24, 2024 at 02:21:22PM +0800, Richard Zhu wrote:
+> > Add i.MX8QM and i.MX8QXP HSIO SerDes PHY binding.
+> > Introduce one HSIO configuration 'fsl,hsio-cfg', which need be set at
+> > initialization according to board design.
+> > 
+> > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > ---
+> >  .../bindings/phy/fsl,imx8qm-hsio.yaml         | 146 ++++++++++++++++++
+> >  1 file changed, 146 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/fsl,imx8qm-hsio.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/phy/fsl,imx8qm-hsio.yaml b/Documentation/devicetree/bindings/phy/fsl,imx8qm-hsio.yaml
+> > new file mode 100644
+> > index 000000000000..3e2824d1616c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/fsl,imx8qm-hsio.yaml
+> > @@ -0,0 +1,146 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/phy/fsl,imx8qm-hsio.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Freescale i.MX8QM SoC series HSIO SERDES PHY
+> > +
+> > +maintainers:
+> > +  - Richard Zhu <hongxing.zhu@nxp.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - fsl,imx8qm-hsio
+> > +      - fsl,imx8qxp-hsio
+> > +  reg:
+> > +    minItems: 4
+> > +    maxItems: 4
+> > +
+> > +  "#phy-cells":
+> > +    const: 3
+> > +    description:
+> > +      The first defines the type of the PHY refer to the include phy.h.
+> > +      The second defines controller index.
+> > +      The third defines the lane mask of the lane ID, indicated which
+> > +      lane is used by the PHY. They are defined as HSIO_LAN* in
+> > +      dt-bindings/phy/phy-imx8-pcie.h
+> > +
+> > +  reg-names:
+> > +    items:
+> > +      - const: reg
+> > +      - const: phy
+> > +      - const: ctrl
+> > +      - const: misc
+> > +
+> > +  clocks:
+> > +    minItems: 5
+> > +    maxItems: 14
+> > +
+> > +  clock-names:
+> > +    minItems: 5
+> > +    maxItems: 14
+> > +
+> > +  fsl,hsio-cfg:
+> > +    description: Refer macro HSIO_CFG* include/dt-bindings/phy/phy-imx8-pcie.h.
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +  fsl,refclk-pad-mode:
+> > +    description:
+> > +      Specifies the mode of the refclk pad used. It can be UNUSED(PHY
+> > +      refclock is derived from SoC internal source), INPUT(PHY refclock
+> > +      is provided externally via the refclk pad) or OUTPUT(PHY refclock
+> > +      is derived from SoC internal source and provided on the refclk pad).
+> > +      Refer include/dt-bindings/phy/phy-imx8-pcie.h for the constants
+> > +      to be used.
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    default: IMX8_PCIE_REFCLK_PAD_OUTPUT
+> 
+> My comments on this are still not addressed. Please go back and read my
+> comments about this property on v1.
 
-The buffer size is specified in kB, and it is only affecting
-the tracing instance.
+Richard: I think we missunderstand conor's means at v1.
 
-Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
----
- Documentation/tools/rtla/common_options.rst |  3 +++
- tools/tracing/rtla/src/osnoise_hist.c       | 13 ++++++++++++-
- tools/tracing/rtla/src/osnoise_top.c        | 14 +++++++++++++-
- tools/tracing/rtla/src/timerlat_hist.c      | 14 +++++++++++++-
- tools/tracing/rtla/src/timerlat_top.c       | 14 +++++++++++++-
- tools/tracing/rtla/src/trace.c              | 15 +++++++++++++++
- tools/tracing/rtla/src/trace.h              |  1 +
- 7 files changed, 70 insertions(+), 4 deletions(-)
+"Why do we need numbers and a header here at all? The enum should be an
+enum of strings input, output & unused. Oh and "unused" can just be
+dropped, and not having the property at all would mean "unused"."
 
-diff --git a/Documentation/tools/rtla/common_options.rst b/Documentation/tools/rtla/common_options.rst
-index a96ea0ed662e..7ac7b7581466 100644
---- a/Documentation/tools/rtla/common_options.rst
-+++ b/Documentation/tools/rtla/common_options.rst
-@@ -54,6 +54,9 @@
- 
-         After starting the workload, let it run for *s* seconds before starting collecting the data, allowing the system to warm-up. Statistical data generated during warm-up is discarded.
- 
-+**--trace-buffer-size** *kB*
-+        Set the per-cpu trace buffer size in kB for the tracing output.
-+
- **-h**, **--help**
- 
-         Print help menu.
-diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index c6100ff46a7f..198a17a3ea2e 100644
---- a/tools/tracing/rtla/src/osnoise_hist.c
-+++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -43,6 +43,7 @@ struct osnoise_hist_params {
- 	int			bucket_size;
- 	int			entries;
- 	int			warmup;
-+	int			buffer_size;
- };
- 
- struct osnoise_hist_cpu {
-@@ -469,6 +470,7 @@ static void osnoise_hist_usage(char *usage)
- 		"		d:runtime[us|ms|s]:period[us|ms|s] - use SCHED_DEADLINE with runtime and period",
- 		"						       in nanoseconds",
- 		"	     --warm-up: let the workload run for s seconds before collecting data",
-+		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
- 		NULL,
- 	};
- 
-@@ -533,13 +535,14 @@ static struct osnoise_hist_params
- 			{"trigger",		required_argument,	0, '4'},
- 			{"filter",		required_argument,	0, '5'},
- 			{"warm-up",		required_argument,	0, '6'},
-+			{"trace-buffer-size",	required_argument,	0, '7'},
- 			{0, 0, 0, 0}
- 		};
- 
- 		/* getopt_long stores the option index here. */
- 		int option_index = 0;
- 
--		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:p:P:r:s:S:t::T:01234:5:6:",
-+		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:p:P:r:s:S:t::T:01234:5:6:7:",
- 				 long_options, &option_index);
- 
- 		/* detect the end of the options. */
-@@ -685,6 +688,9 @@ static struct osnoise_hist_params
- 		case '6':
- 			params->warmup = get_llong_from_str(optarg);
- 			break;
-+		case '7':
-+			params->buffer_size = get_llong_from_str(optarg);
-+			break;
- 		default:
- 			osnoise_hist_usage("Invalid option");
- 		}
-@@ -891,6 +897,11 @@ int osnoise_hist_main(int argc, char *argv[])
- 				goto out_hist;
- 		}
- 
-+		if (params->buffer_size > 0) {
-+			retval = trace_set_buffer_size(&record->trace, params->buffer_size);
-+			if (retval)
-+				goto out_hist;
-+		}
- 	}
- 
- 	/*
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index 53a074c1222e..7e5aab22727d 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -41,6 +41,7 @@ struct osnoise_top_params {
- 	int			cgroup;
- 	int			hk_cpus;
- 	int			warmup;
-+	int			buffer_size;
- 	cpu_set_t		hk_cpu_set;
- 	struct sched_attr	sched_param;
- 	struct trace_events	*events;
-@@ -309,6 +310,7 @@ static void osnoise_top_usage(struct osnoise_top_params *params, char *usage)
- 		"		d:runtime[us|ms|s]:period[us|ms|s] - use SCHED_DEADLINE with runtime and period",
- 		"						       in nanoseconds",
- 		"	     --warm-up s: let the workload run for s seconds before collecting data",
-+		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
- 		NULL,
- 	};
- 
-@@ -384,13 +386,14 @@ struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
- 			{"trigger",		required_argument,	0, '0'},
- 			{"filter",		required_argument,	0, '1'},
- 			{"warm-up",		required_argument,	0, '2'},
-+			{"trace-buffer-size",	required_argument,	0, '3'},
- 			{0, 0, 0, 0}
- 		};
- 
- 		/* getopt_long stores the option index here. */
- 		int option_index = 0;
- 
--		c = getopt_long(argc, argv, "a:c:C::d:De:hH:p:P:qr:s:S:t::T:0:1:2:",
-+		c = getopt_long(argc, argv, "a:c:C::d:De:hH:p:P:qr:s:S:t::T:0:1:2:3:",
- 				 long_options, &option_index);
- 
- 		/* Detect the end of the options. */
-@@ -517,6 +520,9 @@ struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
- 		case '2':
- 			params->warmup = get_llong_from_str(optarg);
- 			break;
-+		case '3':
-+			params->buffer_size = get_llong_from_str(optarg);
-+			break;
- 		default:
- 			osnoise_top_usage(params, "Invalid option");
- 		}
-@@ -725,6 +731,12 @@ int osnoise_top_main(int argc, char **argv)
- 			if (retval)
- 				goto out_top;
- 		}
-+
-+		if (params->buffer_size > 0) {
-+			retval = trace_set_buffer_size(&record->trace, params->buffer_size);
-+			if (retval)
-+				goto out_top;
-+		}
- 	}
- 
- 	/*
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 6eb6e38d4a05..d4bab86ca1b9 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -54,6 +54,7 @@ struct timerlat_hist_params {
- 	int			bucket_size;
- 	int			entries;
- 	int			warmup;
-+	int			buffer_size;
- };
- 
- struct timerlat_hist_cpu {
-@@ -669,6 +670,7 @@ static void timerlat_hist_usage(char *usage)
- 		"	  -k/--kernel-threads: use timerlat kernel-space threads instead of rtla user-space threads",
- 		"	  -U/--user-load: enable timerlat for user-defined user-space workload",
- 		"	     --warm-up s: let the workload run for s seconds before collecting data",
-+		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
- 		NULL,
- 	};
- 
-@@ -745,13 +747,14 @@ static struct timerlat_hist_params
- 			{"no-aa",		no_argument,		0, '9'},
- 			{"dump-task",		no_argument,		0, '\1'},
- 			{"warm-up",		required_argument,	0, '\2'},
-+			{"trace-buffer-size",	required_argument,	0, '\3'},
- 			{0, 0, 0, 0}
- 		};
- 
- 		/* getopt_long stores the option index here. */
- 		int option_index = 0;
- 
--		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:i:knp:P:s:t::T:uU0123456:7:8:9\1\2:",
-+		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:i:knp:P:s:t::T:uU0123456:7:8:9\1\2:\3",
- 				 long_options, &option_index);
- 
- 		/* detect the end of the options. */
-@@ -926,6 +929,9 @@ static struct timerlat_hist_params
- 		case '\2':
- 			params->warmup = get_llong_from_str(optarg);
- 			break;
-+		case '\3':
-+			params->buffer_size = get_llong_from_str(optarg);
-+			break;
- 		default:
- 			timerlat_hist_usage("Invalid option");
- 		}
-@@ -1179,6 +1185,12 @@ int timerlat_hist_main(int argc, char *argv[])
- 			if (retval)
- 				goto out_hist;
- 		}
-+
-+		if (params->buffer_size > 0) {
-+			retval = trace_set_buffer_size(&record->trace, params->buffer_size);
-+			if (retval)
-+				goto out_hist;
-+		}
- 	}
- 
- 	if (!params->no_aa) {
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 0acfefe151f7..3a23e8d481c6 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -47,6 +47,7 @@ struct timerlat_top_params {
- 	int			kernel_workload;
- 	int			pretty_output;
- 	int			warmup;
-+	int			buffer_size;
- 	cpu_set_t		hk_cpu_set;
- 	struct sched_attr	sched_param;
- 	struct trace_events	*events;
-@@ -479,6 +480,7 @@ static void timerlat_top_usage(char *usage)
- 		"	  -k/--kernel-threads: use timerlat kernel-space threads instead of rtla user-space threads",
- 		"	  -U/--user-load: enable timerlat for user-defined user-space workload",
- 		"	     --warm-up s: let the workload run for s seconds before collecting data",
-+		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
- 		NULL,
- 	};
- 
-@@ -547,13 +549,14 @@ static struct timerlat_top_params
- 			{"dump-tasks",		no_argument,		0, '4'},
- 			{"aa-only",		required_argument,	0, '5'},
- 			{"warm-up",		required_argument,	0, '6'},
-+			{"trace-buffer-size",	required_argument,	0, '7'},
- 			{0, 0, 0, 0}
- 		};
- 
- 		/* getopt_long stores the option index here. */
- 		int option_index = 0;
- 
--		c = getopt_long(argc, argv, "a:c:C::d:De:hH:i:knp:P:qs:t::T:uU0:1:2:345:6:",
-+		c = getopt_long(argc, argv, "a:c:C::d:De:hH:i:knp:P:qs:t::T:uU0:1:2:345:6:7:",
- 				 long_options, &option_index);
- 
- 		/* detect the end of the options. */
-@@ -716,6 +719,9 @@ static struct timerlat_top_params
- 		case '6':
- 			params->warmup = get_llong_from_str(optarg);
- 			break;
-+		case '7':
-+			params->buffer_size = get_llong_from_str(optarg);
-+			break;
- 		default:
- 			timerlat_top_usage("Invalid option");
- 		}
-@@ -973,6 +979,12 @@ int timerlat_top_main(int argc, char *argv[])
- 			if (retval)
- 				goto out_top;
- 		}
-+
-+		if (params->buffer_size > 0) {
-+			retval = trace_set_buffer_size(&record->trace, params->buffer_size);
-+			if (retval)
-+				goto out_top;
-+		}
- 	}
- 
- 	if (!params->no_aa) {
-diff --git a/tools/tracing/rtla/src/trace.c b/tools/tracing/rtla/src/trace.c
-index e1ba6d9f4265..170a706248ab 100644
---- a/tools/tracing/rtla/src/trace.c
-+++ b/tools/tracing/rtla/src/trace.c
-@@ -540,3 +540,18 @@ int trace_is_off(struct trace_instance *tool, struct trace_instance *trace)
- 
- 	return 0;
- }
-+
-+/*
-+ * trace_set_buffer_size - set the per-cpu tracing buffer size.
-+ */
-+int trace_set_buffer_size(struct trace_instance *trace, int size)
-+{
-+	int retval;
-+
-+	debug_msg("Setting trace buffer size to %d Kb\n", size);
-+	retval = tracefs_instance_set_buffer_size(trace->inst, size, -1);
-+	if (retval)
-+		err_msg("Error setting trace buffer size\n");
-+
-+	return retval;
-+}
-diff --git a/tools/tracing/rtla/src/trace.h b/tools/tracing/rtla/src/trace.h
-index 2e9a89a25615..c7c92dc9a18a 100644
---- a/tools/tracing/rtla/src/trace.h
-+++ b/tools/tracing/rtla/src/trace.h
-@@ -48,3 +48,4 @@ int trace_events_enable(struct trace_instance *instance,
- int trace_event_add_filter(struct trace_events *event, char *filter);
- int trace_event_add_trigger(struct trace_events *event, char *trigger);
- int trace_is_off(struct trace_instance *tool, struct trace_instance *trace);
-+int trace_set_buffer_size(struct trace_instance *trace, int size);
--- 
-2.44.0
+fsl,refclk-pad-mode:
+  description:
+    ...
+  enum: ["input", "output"].
+
+If not exist "fsl,refclk-pad-mode" means "unused".
+
+Frank
 
