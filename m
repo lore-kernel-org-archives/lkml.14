@@ -1,71 +1,136 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB702901
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 23:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D98416EBEF
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 23:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714001886; cv=none; b=FS0osMVV/44F0PH7OdtUwR74oq1emiXCtMjz6z1nwpDzMtGanvgEsO50jfohPD3z5CbmUPXn0YSB5H9tYdTauHSEUi+Cj8yJn/LXVh7/LD27R4miFYxcgabEPDVWySjuHpfidi5suU+lp2o4UK28dtyNJHMAO7fAJw7aVg8X+vE=
+	t=1714001994; cv=none; b=YdxxHpM3AdfUICDwllluX0+13SA2WvFTJvmommxEaYtU79/bfXeXHwC4x1u/Vq6cvUpFHy1wPHTnirWcebjOAy3nDWfDwMp4xS56FUSjF+UfaI8SF5yMNog4k8UP3nk4dk+zRYC4Q8RIOvBTFSjFWDBFEafoOxUrY9eUQ9Py+Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714001886; c=relaxed/simple;
-	bh=khVCt5Dog1tiLOXWDJgREu2x1xVSvY8rGLoZBrpEms0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=AV0d0L3ZLQMNrYwLcc+F2VzsGvUD4FO6uOAwz9L7BWwdSRZohPUhNhT+OqNHqtfGE5R28eC6kXxkgEjKbL5BXoZJLuNM5orFkoG7Ro2VdDGP7LoTSJqIrUbRZ/SbNuI/4DRVCxsEiH30aatvVuXJD5vA+YDNMCJHqHSs5cjGdFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-36a168177f0so12108995ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 16:38:04 -0700 (PDT)
+	s=arc-20240116; t=1714001994; c=relaxed/simple;
+	bh=2O0o98ggkAQaDI7rP6itKxJY1fyhiAPS6wTogNwU5hg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=msOW+A/podwaPgKG1O8LWu7w5PNTUl+KW0GTAKsoqCIVWAvjl4U6uWWkVuOhI8jyRTWFpmyLB959Atis1olUgNQdDX75Uw7aLMaygw9rfCjb3w9wwu2zH+2SyUPN+WLd8hA4+erYRtPrcN88ysiscaHfNuvc3Tx6xEgMYG3jVkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=mTSeKG3O; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="mTSeKG3O"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-23333dddd8aso319179fac.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 16:39:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1714001992; x=1714606792; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pu6etYv5ocPJpDTio+T7Fs2/aD2ssrnDfuoC/AGwC3E=;
+        b=mTSeKG3OB6ztab6ECA7dehoBN5pZIBhzN4mW8PzumBU+iO+9fA5LcuTqcSNryCkEK9
+         JZhGzJXb2QOZ2f8IUMjSxOaNDT+XhUIdVUcORKhViXkw3/QSpvk8WTSjNdgosV4r0Nbt
+         MUJCYaTM/IbpI+NfqUVCvCpZ7TuXewAPvjG4RfcB768UPa9FOjuLAxnvopEGFZCJEvu0
+         Cxk4s/PxiZqBd0C/ZfoJD7p0jkgNr5gDtrsS/wmoEJX5hgnt7oFUCk6QT96k/CqBsdg2
+         e8p34X+AwDDLoUkQo0bkoIQAkL9+P3rZf7uiGtyG3En0zPV9apxUNl4nq2gMD/Y7rR3g
+         6acA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714001884; x=1714606684;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kcaB+Da5NKS4slkBhA8BS8DXtYe54xoXMCS2AeazuGs=;
-        b=Vif5GLj7r4ZS/P+k48zrCjLCfIMJZ/TJymveyrW0xbc6G463vhOkRi7L47/F6TmSTZ
-         qFIV2jpHFWy9GKOqUaS+8c5an8EczZq9JBoq0QvU0gkFpUdLFF6q6mG8z3gK+7lVZsTE
-         UOGQP2/oOeRvxfq7Fze1OylbfoyY0YzMwlWZc+QYaHtWy+LiasK/RJHAkfeVE30k6xbh
-         VZ1BLVdcIxjbcGzaZ2XzKW+eq1gLe/WOWs/hBh8ah8j4spD1lo9IN6XyPySbWC4fGtzN
-         9ekZ/Vuc6sDn+4JUy5/D1Q7hBKrSUEdgrWF2dUaGFs1OvdLLx+wQodE6elYjzKF7Uysz
-         bGQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlCqr3IS+g2CpWclDfJmCppKEhoAkb2J1R45Jj+89JLWcmJtb1oQt4hJ3/znAWO0NnT1Gj3MlUWlxfn1l598a400PnZVffnjE2V6Rc
-X-Gm-Message-State: AOJu0YzIQBb+ItAF57DgGWdD8gDV3640InoNhWZjfqOgUV0kYUC+zFEi
-	8z8pq6YWxaVGtrhywu4f27Po/rFeYTvTbGIAIP/djwyiqbUj33R4kxYgTFiiRXws0ukXVgtC7Ew
-	ujeFSnW1//XUMfcjsM/B42mVRqGYjQ2ay6uKpMsodu/Kaa41+z+rb38Q=
-X-Google-Smtp-Source: AGHT+IFRQDKzIQMldnn3lL3gptJNnkTuljlosUzewjv5tRaiA2dPnlAZeIJvN0manq6Lv6/EIceykVRcnZGJnDX9SYgx1Hoocrp7
+        d=1e100.net; s=20230601; t=1714001992; x=1714606792;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Pu6etYv5ocPJpDTio+T7Fs2/aD2ssrnDfuoC/AGwC3E=;
+        b=SugHLbVc36gyKmzL4vhmJmTbaTM2EaD9lIknx9mW5cUW7nJS9Byevtsoymz0JiOeF7
+         1le225Ohvg7Ax9zp0H5MDlnVLbb+FZIVeYevxZ6jdDJDBHKryzAgrE2C3dzH8WUbHVCr
+         ODN1u2Qvtvxpbjvw/JbRzjM1znrNkCbjnMPfib3g4RaIWwPg7JkzW4nsib9sKLrX2r1R
+         MSDGovqk31ttSS9t/OEhBm7qNz238bUcnzc24fhgyrzzwXbCm/Mq/m6wIBvh8h+J6XEb
+         frerGs+/smx9Y5zI2EuRdS6MDLSF+WfXELIcUxOFPprJy+/eMDmtYjduLa/RnaRVdaVA
+         /xsg==
+X-Forwarded-Encrypted: i=1; AJvYcCX/QFkCqAane2F/EPtq28xEGgXwCxMdlw1QTTypfuY55NtdC0FzI8Tuh+IWl+St/AEeYqJbn9AqGiPcsHYIXYeddEUVG2/nfgP7uzI1
+X-Gm-Message-State: AOJu0Ywu62+mdKtbDwiIV2odEi5G9yIZTI4eMWFNum7RYOIBCiwt/xXH
+	2lu7yb+FMDjt+w2vLkRHleM0GR7GFtSqjXMS12MNWuA+BxNegdXIRu2PYonds8Q=
+X-Google-Smtp-Source: AGHT+IFHSoQmOFvkIt4UdS9vVvm/+9LOICy267nTOZxeYgmuzEs2JusAIDrqy2AljxZbMWh+yyg/Lg==
+X-Received: by 2002:a05:6870:9602:b0:22e:bc50:3492 with SMTP id d2-20020a056870960200b0022ebc503492mr4335970oaq.47.1714001992183;
+        Wed, 24 Apr 2024 16:39:52 -0700 (PDT)
+Received: from ziepe.ca ([12.97.180.36])
+        by smtp.gmail.com with ESMTPSA id pv10-20020a0568709d8a00b0023b50a85913sm78072oab.38.2024.04.24.16.39.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 16:39:51 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rzmDO-00A1fN-HT;
+	Wed, 24 Apr 2024 20:39:50 -0300
+Date: Wed, 24 Apr 2024 20:39:50 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Tomasz Jeznach <tjeznach@rivosinc.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Sunil V L <sunilvl@ventanamicro.com>,
+	Nick Kossifidis <mick@ics.forth.gr>,
+	Sebastien Boeuf <seb@rivosinc.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	iommu@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux@rivosinc.com
+Subject: Re: [PATCH v2 7/7] iommu/riscv: Paging domain support
+Message-ID: <20240424233950.GJ231144@ziepe.ca>
+References: <cover.1713456597.git.tjeznach@rivosinc.com>
+ <301244bc3ff5da484b46d3fecc931cdad7d2806f.1713456598.git.tjeznach@rivosinc.com>
+ <20240419125627.GD223006@ziepe.ca>
+ <CAH2o1u5+XD9YN=gdMVtfkyhKoKha0UpwKgOVbCAwOQa+saPfRw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:50b:0:b0:36c:2357:7ad3 with SMTP id
- q11-20020a92050b000000b0036c23577ad3mr14063ile.3.1714001884380; Wed, 24 Apr
- 2024 16:38:04 -0700 (PDT)
-Date: Wed, 24 Apr 2024 16:38:04 -0700
-In-Reply-To: <20240424161201.147150-1-aha310510@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007691c20616e02945@google.com>
-Subject: Re: [syzbot] [hfs?] possible deadlock in hfsplus_file_extend
-From: syzbot <syzbot+325b61d3c9a17729454b@syzkaller.appspotmail.com>
-To: aha310510@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH2o1u5+XD9YN=gdMVtfkyhKoKha0UpwKgOVbCAwOQa+saPfRw@mail.gmail.com>
 
-Hello,
+On Wed, Apr 24, 2024 at 04:30:45PM -0700, Tomasz Jeznach wrote:
+> > > @@ -46,6 +46,10 @@ MODULE_LICENSE("GPL");
+> > >  #define dev_to_iommu(dev) \
+> > >       container_of((dev)->iommu->iommu_dev, struct riscv_iommu_device, iommu)
+> > >
+> > > +/* IOMMU PSCID allocation namespace. */
+> > > +static DEFINE_IDA(riscv_iommu_pscids);
+> > > +#define RISCV_IOMMU_MAX_PSCID                BIT(20)
+> > > +
+> >
+> > You may consider putting this IDA in the riscv_iommu_device() and move
+> > the pscid from the domain to the bond?
+> >
+> 
+> I've been considering containing IDA inside riscv_iommu_device at some
+> point,  but it made PCSID management more complicated.  In the follow
+> up patches it is desired for PSCID to be unique across all IOMMUs in
+> the system (within guest's GSCID), as the protection domains might
+> (and will) be shared between more than single IOMMU device.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+The PCSID isn't scoped under the GSCID? That doesn't sound very good,
+it means VM's can't direct issue invalidation with their local view of
+the PCSID space?
 
-Reported-and-tested-by: syzbot+325b61d3c9a17729454b@syzkaller.appspotmail.com
+> > This seems suboptimal, you probably want to copy the new design that
+> > Intel is doing where you allocate "bonds" that are already
+> > de-duplicated. Ie if I have 10 devices on the same iommu sharing the
+> > domain the above will invalidate the PSCID 10 times. It should only be
+> > done once.
+> >
+> > ie add a "bond" for the (iommu,pscid) and refcount that based on how
+> > many devices are used. Then another "bond" for the ATS stuff eventually.
+> >
+> 
+> Agree, not perfect to send duplicate invalidations.
+> This should improve with follow up patchsets introducing of SVA
+> (reusing the same, extended bond structure) and update to send IOTLB
+> range invalidations.
+> 
+> For this change I've decided to go with as simple as possible
+> implementation and over-invalidate for domains with multiple devices
+> attached. Hope this makes sense.
 
-Tested on:
+It is fine as long as you do fix it..
 
-commit:         e88c4cfc Merge tag 'for-6.9-rc5-tag' of git://git.kern..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/ master
-console output: https://syzkaller.appspot.com/x/log.txt?x=1533285f180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=98d5a8e00ed1044a
-dashboard link: https://syzkaller.appspot.com/bug?extid=325b61d3c9a17729454b
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=131f0927180000
-
-Note: testing is done by a robot and is best-effort only.
+Jason
