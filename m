@@ -1,39 +1,38 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8606157482;
-	Wed, 24 Apr 2024 09:05:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF99A158D82;
+	Wed, 24 Apr 2024 09:05:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713949553; cv=none; b=j1yI9nIVsYJWfWtkJS1OQMG00GPcK3c8Kh72oOtd1Dj+LJkCIkrSF1ieB/xfnbe9FtyV7wur9ivcx+8fNqnGK65grztetJ/RIQAFKidGPfpswjVDQ7cm0SyunmHO0zXu9cZLzm1xlolKXR+vi4kFVLZKjYS6Rpa4gP05YHi3AUw=
+	t=1713949554; cv=none; b=VJBDmpReSBSoB61h7LH5d7CB97lRic1Zwo7f6PRJniIbYG+dS7ZUiF/nNSuX5ga/CXYFbcetEzOqmXJI/uqjXz+ruZfM7a3An82EQfYSwfIgO/BiitNTJsIcEdt+3hCnhn3W+hlsOvDqq63jcGpklxY3ySWiHo9y3JHoPG54vmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713949553; c=relaxed/simple;
-	bh=RYi0++8u2X9c6dtV/xZRa3mc1bjAR7oL65UDBW4WRgo=;
+	s=arc-20240116; t=1713949554; c=relaxed/simple;
+	bh=A8V2uf3zUCuYbbxdHtjghMTBdJie4K2Lv5z3MIRNpVo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jxCH1r3MHsO9WImvFHQxieYEbD2xZH/VNzSu+7WynE+iI0IT2cKzOm1DKO22gllFARtRB4lwIMQ4eumjikcZNHOfhYLEDNOcxl50Xsgxl3Ps+t24rCAnd8YRES2uVNSv8nHUIdYFSZJwy0y87HqxrQ+iKYO2+f5nmeclUuDqdeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YB/euR5J; arc=none smtp.client-ip=217.70.183.200
+	 In-Reply-To:To:Cc; b=dS7RdDb2GWXdsLg/7rdwrwdoUtqvCWxXBabcWadkGazAjQub5/YY8uHzeGlradwObI9npKYcc2aBeBDCKUZn46H4SXCMl7iaAshLX3VSITq5sbgALmMcZk5pzSxf2BF/nQ8g4STfc+Hjy6Zo8eL4/Ut6ZLWT9INyODAmXUBGgkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QNO78uHX; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YB/euR5J"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DC8932000E;
-	Wed, 24 Apr 2024 09:05:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QNO78uHX"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C194620013;
+	Wed, 24 Apr 2024 09:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713949547;
+	t=1713949550;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bPM2kEMf15wkRNUvXrLz3uHBj6EMXfPCHtn3BLrRChk=;
-	b=YB/euR5J/Z8B/HqLgK4Od31HxrAfKd2VgUdvtO8x8fwZohgTkm/xrSelB4wLLAJ0wEpMU8
-	ILPjBahUDsGDu2UVv4EcwaTLg39lcsQPoEfWjb6Ru9C/a7OEY4o7XiKPMM2bqqAxIZIt33
-	snE07FB4uZRr5OWFOWZwtuF3nKIt6Jr7NhORJ5S9L+HpLQjA7fk0SRQPF6ESoC2I2oB4bK
-	djn5btNL31RKRxMLw1fmF7CozNbbdN/j8XMBsW2CfYsnesXbalkQ/pcqwnvZ9tTyLOkEDj
-	cUuna/7mqKhqGwgCvt6hl0PI+KMBjTCzk6/3K48gdJztVLN+vg2BpIQ6cAFjeg==
+	bh=FkwsPyixcCSwcd0s2uMQ5Dt/9zWSPn5aWyXJWJ6shg4=;
+	b=QNO78uHX3zk/6aB/m+RaqjpC8/Q+Ha+SRZ+o63Kp59pqhHoc+SVdfJ3aW8qv4vg2kxZ3Gw
+	UoAD7Hle+zHCjzwgP77iE3c12Fh/ha8wa2c24fbBxyEwVhHVAuTtNemciy57JSY88WUsbq
+	pabMuCbBJm3IsbDJwSxqk5rAmL/Y/jOJdAYc+QdqfbLo9YSbnFyf5RU3yqvDas1brgP4gI
+	F2bvfSXzgodCLMfo11dAjuc1G+Q6yEpi4Pwbk/1Tl3dXKyTnSa1yebeqCz+NQSCjvW1UD9
+	igMu479Ms6aKzvCcXWJKGEVeltEH6QlW6ptzXobCMlM6PoB9QUYQpv3BjPx/oA==
 From: Romain Gantois <romain.gantois@bootlin.com>
-Date: Wed, 24 Apr 2024 11:06:20 +0200
-Subject: [PATCH net-next v4 2/5] net: stmmac: introduce pcs_init/pcs_exit
- stmmac operations
+Date: Wed, 24 Apr 2024 11:06:22 +0200
+Subject: [PATCH net-next v4 4/5] net: stmmac: add support for RZ/N1 GMAC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,8 +40,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240424-rzn1-gmac1-v4-2-852a5f2ce0c0@bootlin.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240424-rzn1-gmac1-v4-4-852a5f2ce0c0@bootlin.com>
 References: <20240424-rzn1-gmac1-v4-0-852a5f2ce0c0@bootlin.com>
 In-Reply-To: <20240424-rzn1-gmac1-v4-0-852a5f2ce0c0@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -62,87 +61,170 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
  linux-arm-kernel@lists.infradead.org, 
- "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
- Maxime Chevallier <maxime.chevallier@bootlin.com>, 
  Romain Gantois <romain.gantois@bootlin.com>
 X-Mailer: b4 0.13.0
 X-GND-Sasl: romain.gantois@bootlin.com
 
-From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+From: Clément Léger <clement.leger@bootlin.com>
 
-Introduce a mechanism whereby platforms can create their PCS instances
-prior to the network device being published to userspace, but after
-some of the core stmmac initialisation has been completed. This means
-that the data structures that platforms need will be available.
+Add support for the Renesas RZ/N1 GMAC. This support can make use of a
+custom RZ/N1 PCS which is fetched by parsing the pcs-handle device tree
+property.
 
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-[rgantois: removed second parameters of new callbacks]
+Signed-off-by: "Clément Léger" <clement.leger@bootlin.com>
+Co-developed-by: Romain Gantois <romain.gantois@bootlin.com>
 Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 14 ++++++++++++++
- include/linux/stmmac.h                            |  2 ++
- 2 files changed, 16 insertions(+)
+ MAINTAINERS                                      |  6 ++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig      | 12 ++++
+ drivers/net/ethernet/stmicro/stmmac/Makefile     |  1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c | 86 ++++++++++++++++++++++++
+ 4 files changed, 105 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 59bf83904b62d..bee9c9ab31a88 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -7200,6 +7200,12 @@ static int stmmac_hw_init(struct stmmac_priv *priv)
- 	if (ret)
- 		return ret;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c0bfad3346235..c7ccbc9efeae3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18850,6 +18850,12 @@ F:	include/dt-bindings/net/pcs-rzn1-miic.h
+ F:	include/linux/pcs-rzn1-miic.h
+ F:	net/dsa/tag_rzn1_a5psw.c
  
-+	if (priv->plat->pcs_init) {
-+		ret = priv->plat->pcs_init(priv);
-+		if (ret)
-+			return ret;
++RENESAS RZ/N1 DWMAC GLUE LAYER
++M:	Romain Gantois <romain.gantois@bootlin.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/net/renesas,rzn1-gmac.yaml
++F:	drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c
++
+ RENESAS RZ/N1 RTC CONTROLLER DRIVER
+ M:	Miquel Raynal <miquel.raynal@bootlin.com>
+ L:	linux-rtc@vger.kernel.org
+diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+index 4ec61f1ee71a2..05cc07b8f48c0 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
++++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+@@ -142,6 +142,18 @@ config DWMAC_ROCKCHIP
+ 	  This selects the Rockchip RK3288 SoC glue layer support for
+ 	  the stmmac device driver.
+ 
++config DWMAC_RZN1
++	tristate "Renesas RZ/N1 dwmac support"
++	default ARCH_RZN1
++	depends on OF && (ARCH_RZN1 || COMPILE_TEST)
++	select PCS_RZN1_MIIC
++	help
++	  Support for Ethernet controller on Renesas RZ/N1 SoC family.
++
++	  This selects the Renesas RZ/N1 SoC glue layer support for
++	  the stmmac device driver. This support can make use of a custom MII
++	  converter PCS device.
++
+ config DWMAC_SOCFPGA
+ 	tristate "SOCFPGA dwmac support"
+ 	default ARCH_INTEL_SOCFPGA
+diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
+index 26cad4344701e..c2f0e91f6bf83 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/Makefile
++++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
+@@ -21,6 +21,7 @@ obj-$(CONFIG_DWMAC_MEDIATEK)	+= dwmac-mediatek.o
+ obj-$(CONFIG_DWMAC_MESON)	+= dwmac-meson.o dwmac-meson8b.o
+ obj-$(CONFIG_DWMAC_QCOM_ETHQOS)	+= dwmac-qcom-ethqos.o
+ obj-$(CONFIG_DWMAC_ROCKCHIP)	+= dwmac-rk.o
++obj-$(CONFIG_DWMAC_RZN1)	+= dwmac-rzn1.o
+ obj-$(CONFIG_DWMAC_SOCFPGA)	+= dwmac-altr-socfpga.o
+ obj-$(CONFIG_DWMAC_STARFIVE)	+= dwmac-starfive.o
+ obj-$(CONFIG_DWMAC_STI)		+= dwmac-sti.o
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c
+new file mode 100644
+index 0000000000000..848cf3c01f4ab
+--- /dev/null
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c
+@@ -0,0 +1,86 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2024 Schneider-Electric
++ *
++ * Clément Léger <clement.leger@bootlin.com>
++ */
++
++#include <linux/of.h>
++#include <linux/pcs-rzn1-miic.h>
++#include <linux/phylink.h>
++#include <linux/platform_device.h>
++
++#include "stmmac_platform.h"
++#include "stmmac.h"
++
++static int rzn1_dwmac_pcs_init(struct stmmac_priv *priv)
++{
++	struct device_node *np = priv->device->of_node;
++	struct device_node *pcs_node;
++	struct phylink_pcs *pcs;
++
++	pcs_node = of_parse_phandle(np, "pcs-handle", 0);
++
++	if (pcs_node) {
++		pcs = miic_create(priv->device, pcs_node);
++		of_node_put(pcs_node);
++		if (IS_ERR(pcs))
++			return PTR_ERR(pcs);
++
++		priv->hw->phylink_pcs = pcs;
 +	}
 +
- 	/* Get the HW capability (new GMAC newer than 3.50a) */
- 	priv->hw_cap_support = stmmac_get_hw_features(priv);
- 	if (priv->hw_cap_support) {
-@@ -7282,6 +7288,12 @@ static int stmmac_hw_init(struct stmmac_priv *priv)
- 	return 0;
- }
- 
-+static void stmmac_hw_exit(struct stmmac_priv *priv)
-+{
-+	if (priv->plat->pcs_exit)
-+		priv->plat->pcs_exit(priv);
++	return 0;
 +}
 +
- static void stmmac_napi_add(struct net_device *dev)
- {
- 	struct stmmac_priv *priv = netdev_priv(dev);
-@@ -7795,6 +7807,7 @@ int stmmac_dvr_probe(struct device *device,
- 	    priv->hw->pcs != STMMAC_PCS_RTBI)
- 		stmmac_mdio_unregister(ndev);
- error_mdio_register:
-+	stmmac_hw_exit(priv);
- 	stmmac_napi_del(ndev);
- error_hw_init:
- 	destroy_workqueue(priv->wq);
-@@ -7835,6 +7848,7 @@ void stmmac_dvr_remove(struct device *dev)
- 	if (priv->hw->pcs != STMMAC_PCS_TBI &&
- 	    priv->hw->pcs != STMMAC_PCS_RTBI)
- 		stmmac_mdio_unregister(ndev);
-+	stmmac_hw_exit(priv);
- 	destroy_workqueue(priv->wq);
- 	mutex_destroy(&priv->lock);
- 	bitmap_free(priv->af_xdp_zc_qps);
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index dfa1828cd756a..4a24a246c617d 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -285,6 +285,8 @@ struct plat_stmmacenet_data {
- 	int (*crosststamp)(ktime_t *device, struct system_counterval_t *system,
- 			   void *ctx);
- 	void (*dump_debug_regs)(void *priv);
-+	int (*pcs_init)(struct stmmac_priv *priv);
-+	void (*pcs_exit)(struct stmmac_priv *priv);
- 	void *bsp_priv;
- 	struct clk *stmmac_clk;
- 	struct clk *pclk;
++static void rzn1_dwmac_pcs_exit(struct stmmac_priv *priv)
++{
++	if (priv->hw->phylink_pcs)
++		miic_destroy(priv->hw->phylink_pcs);
++}
++
++static int rzn1_dwmac_probe(struct platform_device *pdev)
++{
++	struct plat_stmmacenet_data *plat_dat;
++	struct stmmac_resources stmmac_res;
++	struct device *dev = &pdev->dev;
++	int ret;
++
++	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
++	if (ret)
++		return ret;
++
++	plat_dat = devm_stmmac_probe_config_dt(pdev, stmmac_res.mac);
++	if (IS_ERR(plat_dat))
++		return PTR_ERR(plat_dat);
++
++	plat_dat->bsp_priv = plat_dat;
++	plat_dat->pcs_init = rzn1_dwmac_pcs_init;
++	plat_dat->pcs_exit = rzn1_dwmac_pcs_exit;
++
++	ret = stmmac_dvr_probe(dev, plat_dat, &stmmac_res);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static const struct of_device_id rzn1_dwmac_match[] = {
++	{ .compatible = "renesas,rzn1-gmac" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, rzn1_dwmac_match);
++
++static struct platform_driver rzn1_dwmac_driver = {
++	.probe  = rzn1_dwmac_probe,
++	.remove_new = stmmac_pltfr_remove,
++	.driver = {
++		.name           = "rzn1-dwmac",
++		.of_match_table = rzn1_dwmac_match,
++	},
++};
++module_platform_driver(rzn1_dwmac_driver);
++
++MODULE_AUTHOR("Clément Léger <clement.leger@bootlin.com>");
++MODULE_DESCRIPTION("Renesas RZN1 DWMAC specific glue layer");
++MODULE_LICENSE("GPL");
 
 -- 
 2.44.0
