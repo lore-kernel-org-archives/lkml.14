@@ -1,145 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF60156F21
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E15156F21
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713941597; cv=none; b=SuFbfdG3lfmTGqyZQ/1ziT+HMPUPj/oDkm3vxqAg/XvG7eBDS0jdo83mz+3jii23asnW2V5qNh7T3pOoVQ32fsMYywIbSjiPMiC46quD5o7ykgTr9kvn8RIRLf7PRse7uXuS5ZQuaw1UzVWHKqbSn1w7Xlnfh/B0mvf82cBZoJo=
+	t=1713941603; cv=none; b=ocSuWHmJDYmLrIxWtSKpli5MZjzYBAr4Q2exjgHO2arnJyTTgG6fce36smMj4jwnAlLb83Af4Pi3Zgskq4l5mxQyCHdh6tNeQuHGYcpONjweHgf5DNRYyog3335mq+bg3mBh8gsz4/ZCsDPtYS0FlB/dRyH3BvM6KwLOFjQxNxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713941597; c=relaxed/simple;
-	bh=kE6ujwyCxDJ3wnj3LmnUncuzn1h+gS9jTvaCIsXf/Xo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AQvDPyTcxBdkoppnT1kZBI7qLMDewpW4/nEK3TBnyRVsenpYOI2XJ0Z/zijLC3oCFUyUEBZwwiqc0DbHWEMyKhjbgT+ujxkWQkyoVLX0UMNl45yv1JmcxMzxQ44ASTrXq4YjZ4xxytXBXuMG0FlPQPJ7VBL2dzSCCICzaLg0CHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iSBZCu7n; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713941603; c=relaxed/simple;
+	bh=x2gSCLg7uLZG7K8PeJ5O8h6s1WxNRtk+9+18X30B+Ic=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=XcRg8HgQrWqMZAp9hDK5wIyuI69IVCUIAPtPQjGxXuZq6t+WUWqfhM14UcFCBwB3EMysSubJDgVD0LHFW+YWPOowJsNZlnnz50o2ae7TjEF5ybmoHsLWMtgb0Pqie4rM+DLq5CV2FV1NgIttuTYdB20NySu5sudWLYCeHxc29RA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H3IryjIc; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iSBZCu7n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713941594;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Hyxx3rdoKtkVIC3dpNxTEvu2bQJBAWkkgUSYJDIUqbc=;
-	b=iSBZCu7nbCXfzxft82Eio9eqA4d0b+fdkBHDcggo02bAntMCXl0UZ4U/ggatq3joLsw+fQ
-	WlRZfhMwxvnqusnJa0Ou3sINPIUQYXh/UMVWH8BjMnclV7pO2lt7hKK6VeKeebhSEYu6od
-	pM0y/lKqXS0xgRdF7+wuSBJ1NaagI4U=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-507-n9IxvPLSOne6_cJI1CrQQg-1; Wed, 24 Apr 2024 02:53:10 -0400
-X-MC-Unique: n9IxvPLSOne6_cJI1CrQQg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AA3F880021A;
-	Wed, 24 Apr 2024 06:53:09 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.39.193.73])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C86DCC01595;
-	Wed, 24 Apr 2024 06:53:03 +0000 (UTC)
-From: Kate Hsuan <hpa@redhat.com>
-To: Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>,
-	linux-leds@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Sebastian Reichel <sre@kernel.org>,
-	linux-pm@vger.kernel.org
-Cc: Kate Hsuan <hpa@redhat.com>
-Subject: [PATCH v7 0/6] KTD2026 indicator LED for X86 Xiaomi Pad2
-Date: Wed, 24 Apr 2024 14:52:06 +0800
-Message-ID: <20240424065212.263784-1-hpa@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H3IryjIc"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-347c197a464so4896165f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 23:53:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713941600; x=1714546400; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eqU6fPwBtkCZTZvnM/ZJ76eoBIYTFy3ASfBRYXLlBBw=;
+        b=H3IryjIcAzgFJuMwddFlHneKruBqrvenSdkAiB18j47TNNiePCnkN14Cgt31+Rf0DW
+         NcC3JKSIzvM9c5wS/vhFVu0N+97VmsyY4ZGEjakgKoJwUVkKP7FILS2gjUPfiVzjzUI3
+         rihEft/MS1tjRGSX+vpH8Zj2GEQUj9W7hMQp3hfq06VpnEwIkTGZK54CeXCvwm9WoXvQ
+         w5D//uzA6yi8n6I40ck5QkWAZbd30GFpSOmsr0JnrMs4O/85vMf6Iffw7+XXWwBImiDp
+         cqhuASo4aEBYr6uivNNNEgIZin7mOBPnSxJL4sXZ9LO+Bp5z3v3AJbJkcCmaIw622OL0
+         Nr0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713941600; x=1714546400;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eqU6fPwBtkCZTZvnM/ZJ76eoBIYTFy3ASfBRYXLlBBw=;
+        b=lRhGQVd42eLtb4ZBA/14l6aNBQXOPUUZ7by5u2cnbbEQQEQ4PT/uaZB2Zyv7buMBOI
+         LGDVeULcKAeVIWuMCPTyKdHLGl6zjEUZQ5Ajceb8J0LdjjtCjaMoF4Yo/O3zqeevw4YC
+         lR9s0C15GmsRQ0/FC9/BiIw7nXFayygRpnHab67yfUY/5sZ0yjZ48bzCmIas9nB9r46a
+         8lJz/UXglH1XETgru1b9Ei2qeamFw8dt/IQp8rxhjKcyAsqefrz7v8qCr4NkOrnOK6GE
+         AVL90JKVGv7jTVqaCwrjqpUXbuh2nyXpCCP1rLoEyX6P/94jk9YQwW4ndmqGYNIbXzVr
+         iZlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1Mik0dVwxjGgc6G1atGKRvWB1RZbUYNAKmpb0XAF1OPCZC1mFxmtHp3+7T2HmeGSrOf/MysBPIdydWZ/vOa9HIqhcSedXmJgViL28
+X-Gm-Message-State: AOJu0Yy2xBs/xjn4vaFFc1Gy18UwsA4zQ1VmDYJn/40ekTAE9s5jtNB9
+	8WMyz0/WXi0TJIvLQQu52QwyaWBqd8LT5GiGG+ITuVKQm0i+vpirct/dwOFcn8g=
+X-Google-Smtp-Source: AGHT+IFNRZPm2LDELThFDdehPYka/qFCJmWDSy/dxL0Ndkbn2JxTZB/V+nr7S/iP9/hxS6SH0iNWCQ==
+X-Received: by 2002:a05:6000:1970:b0:347:a81c:dadb with SMTP id da16-20020a056000197000b00347a81cdadbmr823946wrb.57.1713941599752;
+        Tue, 23 Apr 2024 23:53:19 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:ed3e:c90b:dd74:51a7? ([2a01:e0a:982:cbb0:ed3e:c90b:dd74:51a7])
+        by smtp.gmail.com with ESMTPSA id d5-20020a5d6445000000b0034659d971a6sm16258046wrw.26.2024.04.23.23.53.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 23:53:19 -0700 (PDT)
+Message-ID: <362383f6-6029-4fc5-8522-7b8fb131ea07@linaro.org>
+Date: Wed, 24 Apr 2024 08:53:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 5/6] drm/panel: novatek-nt36672a: stop calling
+ regulator_set_load manually
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Matthias Kaehlcke <mka@chromium.org>,
+ Harigovindan P <harigovi@codeaurora.org>,
+ Ritesh Kumar <quic_riteshk@quicinc.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240404-drop-panel-unregister-v1-0-9f56953c5fb9@linaro.org>
+ <20240404-drop-panel-unregister-v1-5-9f56953c5fb9@linaro.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240404-drop-panel-unregister-v1-5-9f56953c5fb9@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This patch added the support for Xiaomi Pad2 indicator LED. This work
-included:
-1. Added the KTD2026 swnode description to describe the LED controller.
-2. Migrated the original driver to fwnode to support x86 platform.
-3. Support for multi-color LED trigger event.
-4. The LED shows orange  when charging and the LED shows green when the
-   battery is full.
+On 04/04/2024 12:08, Dmitry Baryshkov wrote:
+> Use .init_load_uA part of the bulk regulator API instead of calling
+> register_set_load() manually.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>   drivers/gpu/drm/panel/panel-novatek-nt36672a.c | 11 +++--------
+>   1 file changed, 3 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-novatek-nt36672a.c b/drivers/gpu/drm/panel/panel-novatek-nt36672a.c
+> index 33fb3d715e54..3886372415c2 100644
+> --- a/drivers/gpu/drm/panel/panel-novatek-nt36672a.c
+> +++ b/drivers/gpu/drm/panel/panel-novatek-nt36672a.c
+> @@ -605,21 +605,16 @@ static int nt36672a_panel_add(struct nt36672a_panel *pinfo)
+>   	struct device *dev = &pinfo->link->dev;
+>   	int i, ret;
+>   
+> -	for (i = 0; i < ARRAY_SIZE(pinfo->supplies); i++)
+> +	for (i = 0; i < ARRAY_SIZE(pinfo->supplies); i++) {
+>   		pinfo->supplies[i].supply = nt36672a_regulator_names[i];
+> +		pinfo->supplies[i].init_load_uA = nt36672a_regulator_enable_loads[i];
+> +	}
+>   
+>   	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(pinfo->supplies),
+>   				      pinfo->supplies);
+>   	if (ret < 0)
+>   		return dev_err_probe(dev, ret, "failed to get regulators\n");
+>   
+> -	for (i = 0; i < ARRAY_SIZE(pinfo->supplies); i++) {
+> -		ret = regulator_set_load(pinfo->supplies[i].consumer,
+> -					 nt36672a_regulator_enable_loads[i]);
+> -		if (ret)
+> -			return dev_err_probe(dev, ret, "failed to set regulator enable loads\n");
+> -	}
+> -
+>   	pinfo->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+>   	if (IS_ERR(pinfo->reset_gpio))
+>   		return dev_err_probe(dev, PTR_ERR(pinfo->reset_gpio),
+> 
 
-Moreover, the LED trigger is set to the new trigger, called
-"bq27520-0-charging-orange-full-green" for Xiaomi Pad2 so the LED shows
-orange when charging and the LED shows green when the battery is full.
-
---
-Changes in v7:
-1. Platform: x86-android-tablets: other: Add swnode for Xiaomi pad2
-   indicator LED was included in Hans' branch.
-2. Included the tags from the previous version in the commit message.
-3. Fixed the comma issue for the structure initialiser.
-
-Changes in v6:
-1. The I2C ID table was moved to a separate patch.
-2. The LED shows orange when charging.
-3. The trigger name was renamed to charging-orange-full-green.
-4. The default trigger of Xiaomi Pad2 is
-   "bq27520-0-charging-orange-full-green".
-
-Changes in v5:
-1. Fix swnode LED color settings.
-2. Improve the driver based on the comments.
-3. Introduce a LED new API- led_mc_trigger_event() to make the LED
-   color can be changed according to the trigger.
-4. Introduced a new trigger "charging-red-full-green". The LED will be
-   red when charging and the the LED will be green when the battery is
-   full.
-5. Set the default trigger to "bq27520-0-charging-red-full-green" for
-   Xiaomi Pad2.
-
-Changes in v4:
-1. Fix double casting.
-2. Since force casting a pointer value to int will trigger a compiler
-   warning, the type of num_leds was changed to unsigned long.
-
-Changes in v3:
-1. Drop the patch "leds-ktd202x: Skip regulator settings for Xiaomi
-   pad2"
-
-Changes in v2:
-1. Typo and style fixes.
-2. The patch 0003 skips all the regulator setup for Xiaomi pad2 since
-   KTD2026 on Xiaomi pad2 is already powered by BP25890RTWR. So, the
-   sleep can be removed when removing the module.
-
-
-Hans de Goede (2):
-  leds: core: Add led_mc_set_brightness() function
-  leds: trigger: Add led_mc_trigger_event() function
-
-Kate Hsuan (4):
-  leds: rgb: leds-ktd202x: Get device properties through fwnode to
-    support ACPI
-  leds: rgb: leds-ktd202x: I2C ID tables for KTD2026 and 2027
-  power: supply: power-supply-leds: Add charging_orange_full_green
-    trigger for RGB LED
-  platform: x86-android-tablets: others: Set the LED trigger to
-    charging_orange_full_green for Xiaomi pad2
-
- drivers/leds/led-class-multicolor.c           |  1 +
- drivers/leds/led-core.c                       | 31 ++++++++
- drivers/leds/led-triggers.c                   | 20 ++++++
- drivers/leds/rgb/Kconfig                      |  1 -
- drivers/leds/rgb/leds-ktd202x.c               | 72 +++++++++++--------
- .../platform/x86/x86-android-tablets/other.c  |  2 +-
- drivers/power/supply/power_supply_leds.c      | 26 +++++++
- include/linux/leds.h                          | 26 +++++++
- include/linux/power_supply.h                  |  2 +
- 9 files changed, 149 insertions(+), 32 deletions(-)
-
--- 
-2.44.0
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
