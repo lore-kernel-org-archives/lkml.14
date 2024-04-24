@@ -1,152 +1,127 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C5C3158DAE
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 09:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7DA282EE
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 09:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713952632; cv=none; b=A5qEXDpTcxyWjTNWHr03qQNPgK55eGyrRcCJwlnejWe5WMei9ug/xtrN+PRQyXvs49LbOVrxUWd9gKhz8GFiTwAaOtpOP93J5sXdVVDlWuVeGhTl2Vb0kcfBZ7eSjr+M9NidJHSFbjGxf30XtpOV3U7WbDvjsOiHH9QdzC9yGz8=
+	t=1713952801; cv=none; b=LTFuYX/gbBe5naQKgPfPrRCq5ei/HOcLTlzMfzqg5OmYubrwrkwiyBsFwPahOOjTvjRcwSoo7ytW8kKs9SNawfWiHBaKVC0m/+nwcSGWVExOKV2Kg8mTYSpxvxUlFQN6kNvol2V6D2URRq5ivu5ns215p1dPLHFMvwcl3aS8UdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713952632; c=relaxed/simple;
-	bh=xElqm0mzanKgyLcHnkXCZf7n1tImjyjJ3L0Bvz1st3E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cfy3Syjt35mvDe9Jx+bcVAvnTJnuf1/HsceBY6FCGallYaKCqs0KFdlk0imRfcoweP/W/IxY8TCuePSfIU0Gvi10RghyDJSbi44X+jn77/VD7i42fo1FJRHoQnapGzobnP9fa2o/Q/E7ZE8gUhq2OzBAHQ9J8rRbXTXh3S4GYY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B02D339;
-	Wed, 24 Apr 2024 02:57:37 -0700 (PDT)
-Received: from [10.1.25.156] (unknown [10.1.25.156])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C4A93F73F;
-	Wed, 24 Apr 2024 02:57:08 -0700 (PDT)
-Message-ID: <7ae62c3f-918a-4778-badb-8f7ca74328d8@arm.com>
-Date: Wed, 24 Apr 2024 10:57:07 +0100
+	s=arc-20240116; t=1713952801; c=relaxed/simple;
+	bh=Ux7ls70uZC1fOJGQnu98hEvKQEH6QOpdA96fV34/2nY=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JAeWruIbrwiHSJHetW/eYPCjthP3U6d8+HrDprccmnzfV1m+pOLKnQW1+gtqvZlKKoJztAhmhAywIC4NMuzRhFAVobYoYbVzOcqBhTBO53FJ8nni/JtTKy1WOqGywdJJEqijzJ4U6dpvyDzFoK7ftCTaWGVIw0o3lcsk+wKpSdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=WEadfsC7; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="WEadfsC7"
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 341743FB77
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 09:59:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1713952796;
+	bh=S2dZSeR9LCzi8J1OpoztZzAdz+9TX12tp6NKUBGWijE=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=WEadfsC76zjEwReLrXF4EdNY6e2KqKdUpvYwl497JQ+VkN/NdEmR6Fu+PI61JStRB
+	 znZuObYg7RuRexz2sRUM/dK/P/fcR3pe5s/f4QibPzQaLPEXTYYMsvOjIWE66wVZGH
+	 L/8qClmTE09I2t84OVf85/Osmk1B+7+cosjTrvrpX0IzeJ1sikt/UfC+XAQZsYxcl1
+	 PpsdEsY7GcFudoimv+YNCpp96UbdWeP0V9z11hu1Xsa2EuZxMCMZGi+w2ILiF2DHR9
+	 /pOSnHnKsbvHod9nNWoxKeFrGU9A8RN5RCFzCZcpGLQ3XOl4sqlVtvDOfBUf+qjHIG
+	 rhKECOjnZsCiA==
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-43a2aab079cso2403111cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 02:59:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713952795; x=1714557595;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=S2dZSeR9LCzi8J1OpoztZzAdz+9TX12tp6NKUBGWijE=;
+        b=abiU9pqyjnuMgwL65KdsrZxJhoElZ/ZFvMEE6fTiRwDmB81SiAxrPcG8jbt01NLxi0
+         x1/JjCtqAh9vneuGlLWOufkO/yJ+V8LtfTUJwxWbcBh0CSC1n94I7KRncaCVFBhmQxiA
+         WvLONsMRfIS1wirRodMrH4SlG96UsKEMsJEtCs1UsuAnhnVKEYd3FQdbJyqAgC67BIuU
+         pkMYkqFzwZpceuxgxckL5GxX1xvlknqhkyMlNeXqsejumUgcieH4iuV3MBa0DbpMqsQb
+         YegkG7VuoIwz8t6eTjihCFMnEqCq5i9tXS2PnGlnAenTGOD1dLv8sD1MUBCa/cMhJ09/
+         4WTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVk1QsHXMyPNDOWyYyWk7/FVj3/OVJO6WKgJYTM2fImx4Sy6r4L5HBMRwxdq0LKbzNmNpS2ipcIqmNAu5qkxERE/uAbL7LSNfbt8KXy
+X-Gm-Message-State: AOJu0Yz78flUXyVFuuj1PVHNmhMwkSn+0sGGlXe9XFhZbPWK2jVt7wiV
+	CPLpQZNqrJLNA/lOAMJvKOE9ihhPDv4nB4UPcJXe4ntrO8Y+kPtviW86at/gxmQqwD6taQ2o+dG
+	xqRaOREayPuVQi6485fHTYEZadHVle5o66VflnjigwSGQPgRPJT1v7Z2JcwktjEo2KqrJnfHxZr
+	VU5phFwUSAHAPRBWCrMrSLRlTVg1VSIz1pFcJKcCGW6132freY+HAu
+X-Received: by 2002:ac8:5fcd:0:b0:439:2dd2:8c29 with SMTP id k13-20020ac85fcd000000b004392dd28c29mr2632662qta.53.1713952795217;
+        Wed, 24 Apr 2024 02:59:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE6L8U6dPY+IwDuihju7OczEcUyPW0NUseAoFBQBuD16x08m9IflcpytSNV7vfl8H2u2zH90ZPc/+Vym43bEtQ=
+X-Received: by 2002:ac8:5fcd:0:b0:439:2dd2:8c29 with SMTP id
+ k13-20020ac85fcd000000b004392dd28c29mr2632629qta.53.1713952794863; Wed, 24
+ Apr 2024 02:59:54 -0700 (PDT)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 24 Apr 2024 02:59:54 -0700
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <20240424075856.145850-1-joshua.yeong@starfivetech.com>
+References: <20240424075856.145850-1-joshua.yeong@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/5] mm: memory: extend finish_fault() to support
- large folio
-Content-Language: en-GB
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
- hughd@google.com
-Cc: willy@infradead.org, david@redhat.com, wangkefeng.wang@huawei.com,
- 21cnbao@gmail.com, ying.huang@intel.com, shy828301@gmail.com,
- ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1713755580.git.baolin.wang@linux.alibaba.com>
- <358aefb1858b63164894d7d8504f3dae0b495366.1713755580.git.baolin.wang@linux.alibaba.com>
- <6aa25e2a-a6b6-4ab7-8300-053ca3c0d748@arm.com>
- <c48ae381-f073-4b20-84ae-bd5e9e56ce29@linux.alibaba.com>
- <6c418d70-a75d-4019-a0f5-56a61002d37a@arm.com>
- <5f949c1f-c56e-4227-af60-05a2a19f4c2e@linux.alibaba.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <5f949c1f-c56e-4227-af60-05a2a19f4c2e@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Date: Wed, 24 Apr 2024 02:59:54 -0700
+Message-ID: <CAJM55Z9hObw7T=Z92w_5pYVcuR3UDW-Mas5YpCoGv4Y5s5M9xg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] Add StarFive's JH8100 StarLink Cache Controller
+To: Joshua Yeong <joshua.yeong@starfivetech.com>, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, conor@kernel.org, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, leyfoon.tan@starfivetech.com, 
+	jeeheng.sia@starfivetech.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 24/04/2024 10:26, Baolin Wang wrote:
-> 
-> 
-> On 2024/4/24 16:07, Ryan Roberts wrote:
->> On 24/04/2024 04:23, Baolin Wang wrote:
->>>
->>>
->>> On 2024/4/23 19:03, Ryan Roberts wrote:
->>>> On 22/04/2024 08:02, Baolin Wang wrote:
->>>>> Add large folio mapping establishment support for finish_fault() as a
->>>>> preparation,
->>>>> to support multi-size THP allocation of anonymous shared pages in the
->>>>> following
->>>>> patches.
->>>>>
->>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->>>>> ---
->>>>>    mm/memory.c | 25 ++++++++++++++++++-------
->>>>>    1 file changed, 18 insertions(+), 7 deletions(-)
->>>>>
->>>>> diff --git a/mm/memory.c b/mm/memory.c
->>>>> index b6fa5146b260..094a76730776 100644
->>>>> --- a/mm/memory.c
->>>>> +++ b/mm/memory.c
->>>>> @@ -4766,7 +4766,10 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
->>>>>    {
->>>>>        struct vm_area_struct *vma = vmf->vma;
->>>>>        struct page *page;
->>>>> +    struct folio *folio;
->>>>>        vm_fault_t ret;
->>>>> +    int nr_pages, i;
->>>>> +    unsigned long addr;
->>>>>          /* Did we COW the page? */
->>>>>        if ((vmf->flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED))
->>>>> @@ -4797,22 +4800,30 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
->>>>>                return VM_FAULT_OOM;
->>>>>        }
->>>>>    +    folio = page_folio(page);
->>>>> +    nr_pages = folio_nr_pages(folio);
->>>>> +    addr = ALIGN_DOWN(vmf->address, nr_pages * PAGE_SIZE);
->>>>
->>>> I'm not sure this is safe. IIUC, finish_fault() is called for any file-backed
->>>> mapping. So you could have a situation where part of a (regular) file is mapped
->>>> in the process, faults and hits in the pagecache. But the folio returned by the
->>>> pagecache is bigger than the portion that the process has mapped. So you now
->>>> end
->>>> up mapping beyond the VMA limits? In the pagecache case, you also can't assume
->>>> that the folio is naturally aligned in virtual address space.
->>>
->>> Good point. Yes, I think you are right, I need consider the VMA limits, and I
->>> should refer to the calculations of the start pte and end pte in
->>> do_fault_around().
->>
->> You might also need to be careful not to increase reported RSS. I have a vague
->> recollection that David once mentioned a problem with fault-around because it
->> causes the reported RSS to increase for the process and this could lead to
->> different decisions in other places. IIRC Redhat had an advisory somewhere with
->> suggested workaround being to disable fault-around. For the anon-shared memory
->> case, it shouldn't be a problem because the user has opted into allocating
->> bigger blocks, but there may be a need to ensure we don't also start eagerly
->> mapping regular files beyond what fault-around is configured for.
-> 
-> Thanks for reminding. And I also agree with you that this should not be a
-> problem since user has selected the larger folio, which is not the same as
-> fault-around.
-> 
->>>>>        vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
->>>>> -                      vmf->address, &vmf->ptl);
->>>>> +                       addr, &vmf->ptl);
->>>>>        if (!vmf->pte)
->>>>>            return VM_FAULT_NOPAGE;
->>>>>          /* Re-check under ptl */
->>>>> -    if (likely(!vmf_pte_changed(vmf))) {
->>>>> -        struct folio *folio = page_folio(page);
->>>>> -
->>>>> -        set_pte_range(vmf, folio, page, 1, vmf->address);
->>>>> -        ret = 0;
->>>>> -    } else {
->>>>> +    if (nr_pages == 1 && vmf_pte_changed(vmf)) {
->>>>>            update_mmu_tlb(vma, vmf->address, vmf->pte);
->>>>>            ret = VM_FAULT_NOPAGE;
->>>>> +        goto unlock;
->>>>> +    } else if (nr_pages > 1 && !pte_range_none(vmf->pte, nr_pages)) {
->>>>
->>>> I think you have grabbed this from do_anonymous_page()? But I'm not sure it
->>>> works in the same way here as it does there. For the anon case, if userfaultfd
->>>> is armed, alloc_anon_folio() will only ever allocate order-0. So we end up in
->>>
->>> IMO, the userfaultfd validation should do in the vma->vm_ops->fault() callback,
->>> to make sure the nr_pages is always 1 if userfaultfd is armed.
->>
->> OK. Are you saying there is already logic to do that today? Great!
-> 
-> I mean I should add the userfaultfd validation in shmem_fault(), and may be need
-> add a warning in finish_fault() to catch this issue if other
-> vma->vm_ops->fault() will support large folio allocation?
-> 
-> WARN_ON(nr_pages > 1 && userfaultfd_armed(vma));
+Joshua Yeong wrote:
+> StarFive's JH8100 StarLink Cache Controller flush/invalidates cache using non-
+> conventional RISC-V Zicbom extension instructions. This driver provides the
+> cache handling on StarFive RISC-V SoC.
 
-That adds quite a subtle requirement to vm_ops::fault() though, which I guess is
-implemented in a lot of places. It would be better if it could be handled
-centrally - i.e. that all the ptes are either none or a uffd marker? I'm sure
-there would be corner cases to think about if taking that route.
+Hi Joshua,
 
+As far as I know you didn't tape out the JH8100 yet, and you seem to have
+replaced the SiFive cache controller with your own implementation. Can you
+exlain a bit more about why you didn't implement the perfectly good Zicbom
+standard instead of adding yet another non-standard work-around like this?
+
+/Emil
+
+>
+> Changes in v3:
+> - Fix code syntax
+> - Link to v2: https://lore.kernel.org/all/20240423072639.143450-1-joshua.yeong@starfivetech.com/
+>
+> Changes in v2:
+> - Change patch title from 'Add StarFive's StarLink-500 Cache Controller'
+> - Remove StarFive alternative from errata framework
+> - Fixes warning from https://lore.kernel.org/oe-kbuild-all/202403151625.boKDjHGr-lkp@intel.com/
+> - Flush completion through atomic timeout function
+> - Link to v1: https://lore.kernel.org/lkml/20240314061205.26143-1-joshua.yeong@starfivetech.com/
+>
+> Joshua Yeong (2):
+>   cache: Add StarFive StarLink cache management for StarFive JH8100
+>   dt-bindings: cache: Add docs for StarFive Starlink cache controller
+>
+>  .../cache/starfive,jh8100-starlink-cache.yaml |  66 +++++++++
+>  drivers/cache/Kconfig                         |   9 ++
+>  drivers/cache/Makefile                        |   5 +-
+>  drivers/cache/starfive_starlink_cache.c       | 135 ++++++++++++++++++
+>  4 files changed, 213 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/cache/starfive,jh8100-starlink-cache.yaml
+>  create mode 100644 drivers/cache/starfive_starlink_cache.c
+>
+> --
+> 2.25.1
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
