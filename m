@@ -1,232 +1,122 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2056.outbound.protection.outlook.com [40.107.92.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9A516E88C
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 16:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713974423; cv=fail; b=bF6KXpgXBks/EZ4myFaJsRUYurlshStY9XeyX02Wk6f7Lvy3KdsDhvwFWvPQls1wVX9e7nyVKY7gTMHdXLGBqIGGDAD0BMmgNgt4OgPmd5J6JUSxtGjB1GU5lpSecdInk5RPWjVUm7tFx/SbXNVADRDeztfQ3z6iUCNM/rCWX1g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713974423; c=relaxed/simple;
-	bh=+38lmpMDTgZ2Niu7oLxh2G+nJKe19ji5QylGc4FUHaE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pW5GmD81GcQSdwjyEmwgmKgMy/35yQnIM5rxomKbuuKSJggwFSJCtWSlc/ks3tcRzo/zlH5V3CxwHT4/tHzmH7O4YgbrHHphovIdHBCaS2Es0Z/jTBvczjqQb8U+5m3Ep9AW75UbMzUiYBCffh7yzLvvXoYijs8yiRfQerS/LoE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=A2fLWdqM; arc=fail smtp.client-ip=40.107.92.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CAE515EFAC;
+	Wed, 24 Apr 2024 16:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713974754; cv=none; b=Qm6iWpCUqabxlEBYR20k0Xm9ObLXsRUA5jCgpuOi+MikAbBDMW61u5i00n7aWShgwd2xq9mC+RAMT1v7K6zCS7+oAlzaRbPX3j+/y1GTg4poQ8quB2zi1gyDKdcPP4M8rmlmDnCOl9ibAZEp8PXsyLkK/N6GsDu5lGs4N8c2x2A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713974754; c=relaxed/simple;
+	bh=Yem5qbHtxN0cJ/ytsfQ9VNOy5kHSWYu/mAE9kZGb0vI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=UtUBeEoA+P4WDAizkOvlMMrSxk+5dzKkmHlJokXeXD/GBxhfecg05U3meT5x1jKsi3HJ+zcWfHh+aA5fm3I3cdNvIm3wKKd8qy5ib7bN/KGQudM7KYODDyT/VPHU4eCqRldfPh+cNjDVcXmnZHhePxjil+FZgtsxjs7Ojbv6ZRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IInMrGfT; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="A2fLWdqM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HZiE4/BiG9Z3lkvb1ZReoap9OKj24kK4bUaZU8DNsv8l5NeelHkdkhzFLiraGwmtJ/laUawwME6yIagwpnkY5W5YaT3o5AaPBTtfZ5BtxKkGBL6QqtNIEqjQFXpgfzQPdaRiwSGDkTgSFXlZ8OtqK3rnJ1BFbluNgxlf0c+duYynccY3sBp+k9mHqY/bORJ+r+HZ7dUdxKDnu3J59CattJJjlGabaPERN4lX2N9Xyl1P6H5jGfykQoR5dW7afe1QkQcO1CM+FXVJH6M/ZZIVJR6qxIr3ilSQvreLOCiTTZyVXXvgQk4z43SDq//wqqeWywnRqkX6swKfuHmoR+UNlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CC6wYJAT7yq+DcXjqFCtejixHwkeemgza4tXTDKb0Hw=;
- b=VsE+ur5/TVQ0uSqHLpYP+HlEAhD9/xl+sFAVtE/OEpfNymZp2gUdCX6Uw4uPZKHT9k5RS/Sa4IZ15VAo1szeuQddsWTpkurL0JZNZksfDDi9gd6FGomINcyAdf2xgpII/aoI4H3EJEzlUnwRsdGrRweOyfJUrO9PvnuAEzW/9TI6rrWNQ0FMwFc16NGLMo+H5VnjbnPXWhsb7Whx70gDbsayHyRh8oFvRMEzE9JH0m/n5kOf3BvqfktQmbCy3f3x6ZryjX9T+ZeSbUH5FfLZti8SK2PE90cbdAgQi/8CGdnTFF2TliEGVcHv75OUbAebyUWD8iI80GwJeFeSBhfZog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CC6wYJAT7yq+DcXjqFCtejixHwkeemgza4tXTDKb0Hw=;
- b=A2fLWdqMVAD7JNJoL0XWK4fD3+lHBWbTi8ogXQzFLwJLTHUGL0ks5OQ4nw9eIQ6b4WFABH0fP+L9ZsCzGkNXJ5fHO5refMA0yuhdrc1HHsjLlQHrcmgCiM/ZeSQ5YoPnI+YCIcM6AaSEjOi4vi9yPwb1mIiCMEUVKOc37zmsmsI=
-Received: from MN2PR08CA0010.namprd08.prod.outlook.com (2603:10b6:208:239::15)
- by BL1PR12MB5898.namprd12.prod.outlook.com (2603:10b6:208:396::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Wed, 24 Apr
- 2024 16:00:13 +0000
-Received: from MN1PEPF0000F0E4.namprd04.prod.outlook.com
- (2603:10b6:208:239:cafe::6e) by MN2PR08CA0010.outlook.office365.com
- (2603:10b6:208:239::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22 via Frontend
- Transport; Wed, 24 Apr 2024 16:00:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MN1PEPF0000F0E4.mail.protection.outlook.com (10.167.242.42) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7519.19 via Frontend Transport; Wed, 24 Apr 2024 16:00:13 +0000
-Received: from tlendack-t1.amdoffice.net (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 24 Apr 2024 11:00:12 -0500
-From: Tom Lendacky <thomas.lendacky@amd.com>
-To: <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
-	<linux-coco@lists.linux.dev>, <svsm-devel@coconut-svsm.dev>
-CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, "Peter
- Zijlstra" <peterz@infradead.org>, Dan Williams <dan.j.williams@intel.com>,
-	Michael Roth <michael.roth@amd.com>, Ashish Kalra <ashish.kalra@amd.com>
-Subject: [PATCH v4 15/15] x86/sev: Allow non-VMPL0 execution when an SVSM is present
-Date: Wed, 24 Apr 2024 10:58:11 -0500
-Message-ID: <e377d148acac799f6905fc544fbb8bf2ed76e078.1713974291.git.thomas.lendacky@amd.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <cover.1713974291.git.thomas.lendacky@amd.com>
-References: <cover.1713974291.git.thomas.lendacky@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IInMrGfT"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2dd7e56009cso45476091fa.3;
+        Wed, 24 Apr 2024 09:05:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713974750; x=1714579550; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0x24o6hMGFGBnQfu7F8O4txKF88EkdHZ31y54DTNU68=;
+        b=IInMrGfTlvwiVmBEmrYMrGlW2Yp9z+B9e9wHWcdN5qtpkoARqlk54vymjNqZ3+uTQu
+         x7DiIGWuRX/LTqov1/gA7AIvlQ+zU1G84tE9YbWjYGkjCRLqZA2VP2VcN8EBZm1yhv6H
+         RPXEpnrl3NlqV/hTUJQMC/UQHruGktJbgqjGOgGwvdMuL0E6QY4Ji5suavgBxjPrMuu+
+         AjWx3alRpUakfsjRSATFkMsB8gAMp8NH8XMulhZamJSPiPUPfkIm8qOmlz0ee0rDlS4j
+         H29TaKkVjdS2e4p5QKLMZVW91xXZb/FG1s6SLj4T0UT4C0b5hU177/mnE4xq7sTrC2qU
+         AXaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713974750; x=1714579550;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0x24o6hMGFGBnQfu7F8O4txKF88EkdHZ31y54DTNU68=;
+        b=Mc0Y7283SV61mXsZvSK7YdQ2Odfh0m4ln8Z7tf4E4jyuLMhpKASoRWhoHFDlbX5DVY
+         52oy2csrI9+6FVY8foqegjDdWgBziiyisk0GFqchWj7XUkHIAklbm0BdN+eIifWkmF+w
+         hUmkrilmjscupBPjo+PMHPzhW7eKrLmOyXB+bEeYQ2EANZ2DkhiurgtcLgzY0S494vzw
+         /rNOF4FqgN0xgB8iDZDbXXEAG2izmFqchCcZpM+JY9qCbwk+9Z5TkaQOzaWg8xVIS+D/
+         rLayGKYwa/9GBTNqcWBU8Pg65Wamv9gEIwMXaN1DxfKBDkZtAD/s1MEhsI5sGhzdXKdT
+         AiGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXXH19yGr3dVugcbInvbzjLF8Jd8FXvZzs7ksfFfRZXe+VgrAX6KQci+gsc7a2qlkghwYz3LMhHMMCqQ46m31xWkw8F8HnNVQcPaOhPMkq1D1w0VafOwKrcFXYhUdYX5IH4DiJSf4qRZWI=
+X-Gm-Message-State: AOJu0YzNLFI+tKLg1eVA7GI1ATQJvTfgIfFlGiMAQZcWvgYmNj0y/MA5
+	MljDBeVqlzj5ZcxoWTeUiFH6lktmsXVy+2DEDPVj02LUHeXVq9hqpYSMCYINKSJYJXubcXNO9ny
+	yXfVJTxYabUwvDc5I+XCB3XlMButAlg1J
+X-Google-Smtp-Source: AGHT+IGiEOTkIS5Us1soeCARBGPKxlWm6WdKXlwdCsAqxyxtb8F/yXDmA6wQDCcy90KLueah/wb7zUHimGlk5FoxZ6g=
+X-Received: by 2002:a2e:9c07:0:b0:2de:d00f:e656 with SMTP id
+ s7-20020a2e9c07000000b002ded00fe656mr24507lji.37.1713974750346; Wed, 24 Apr
+ 2024 09:05:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E4:EE_|BL1PR12MB5898:EE_
-X-MS-Office365-Filtering-Correlation-Id: df11f22f-7735-410b-7a31-08dc6477a039
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?SvnuNda6EsdiMhvpFvgG/XKYbaVoZhFIPBw9HzVQ4L8RzOYXFoMDUP2YKmBB?=
- =?us-ascii?Q?p3Dsm+KNblMGLUXDHsvNdm0y4gMMV1p6LkDpeuFJcZ1v/7cvuplLCFwXt1Pd?=
- =?us-ascii?Q?/uwm3i9SLS8i3bUh5JTpECKTLzwuJnyyM0FH7LZF3tg3CLciAjO31LpIKRiz?=
- =?us-ascii?Q?mSm/5f0SHB/CvHrKsl7EiXVeDoQFkUdxDjuio23wH+VKKlmgRMNcLG2mF8xr?=
- =?us-ascii?Q?RPBXWtLnbokeMZbrP1CnnoEpsFeZAULOszMKXl4Ypg8gPG/E9Lr6VlTSTeKk?=
- =?us-ascii?Q?oKGvyEwPb0TfGuyb3zmmYtSA3n7m3zpZEWtvPzHJMY1jSbM4QrsrPO+VfKvo?=
- =?us-ascii?Q?qAca0A/4D+CJ9jTtBykTEriSKXZFyyrwjpWw3Gf7q/UE6nClSAvsfz1HHOjw?=
- =?us-ascii?Q?WgBfccUwdZ2bDRpgA6EvwhN5ICDZfne/WXYS8X5qkPO4XHQNCSYLDrWNItcH?=
- =?us-ascii?Q?ve9Q6BOgI1rmhb1xoG4UjJc+UxdIAAOkD64PY1dnNZrcCVTO1qgTIDx5TPPi?=
- =?us-ascii?Q?Mw6TLYgHZA4ZEfKCqZWAOEXHqnmvAngoDQD5uFJsG9zZs/swW6R3/F1KLy3H?=
- =?us-ascii?Q?7DlEm0wn84J62MZQ0g+hAT2uSPKa0duj3pbmeFvPuNS86fW2ICxr+kNC1A2X?=
- =?us-ascii?Q?JP4j0liaN6nxBnYYlqKL7DOjb5P4CFzJqLWdg8gX0+0DEbADalizospLvt26?=
- =?us-ascii?Q?xkHbymn5C72x/gDD3tgHoecd17lpm6GUZM1Lr7yPNyjmH7v8KB9afXVWEW2G?=
- =?us-ascii?Q?yGc/GDCA5Y4bbPau9Oc12ZrQn0GFR4GtMOQ13ZpbgClvbaehl8lL0YvAM9iD?=
- =?us-ascii?Q?jXT95jNcXhytNdnsXuDqm5KSiQCw5BVUGjIMXnTuvsEHOrIOYvQV8L1sIER3?=
- =?us-ascii?Q?KnGQXmj8aAOh/JsPVkjt2U3m+zR80KCxiBJuWuw4qsjrJY8hs4repXGv0O9p?=
- =?us-ascii?Q?QN6k2JSyNGwEEcFe1pvhQuSnfkEUjS6ruiSt3JHGmwpuC6Y1WEj2KYBhm99z?=
- =?us-ascii?Q?7tlhdXNWjHrvBOTAA0hJgGQiYH+12lkqaemHhoV607+IRET6jQBDNXLlNbS3?=
- =?us-ascii?Q?FIA9WaAnE1Piac39gi+kpNtWpVJVAp4Qkiy4ISb4Fn/QrJNZK8Ub04fj0lJG?=
- =?us-ascii?Q?KZY42dhRYGTW5lVW2DEFcSIBhxNYCvKoQVpTL1tN6ZGsHOJysD1N+yUPVI/G?=
- =?us-ascii?Q?P+iITkSop0PnnfyzAMmvvwQR8YeWFFdoJd3SXXSOyfO3O6E+SxZar1yYlbeC?=
- =?us-ascii?Q?SzdeOC9ZS9EasdbjiJMLKzNJxj8b8nPF9Sa+s5Wfl2oKMZuMhGp5F3fjc638?=
- =?us-ascii?Q?qpxLQGDReCPdWWQxVn9lh4roIPHjYHTJdotp5aHAABaiRUj2+HBs3snVxyHv?=
- =?us-ascii?Q?oeynzqwQHADowykIoppY23AkDgpr?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(7416005)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 16:00:13.1306
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: df11f22f-7735-410b-7a31-08dc6477a039
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000F0E4.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5898
+From: Aman Dhoot <amandhoot12@gmail.com>
+Date: Wed, 24 Apr 2024 21:36:42 +0530
+Message-ID: <CAMTp=B+3NG65Z684xMwHqdXDJhY+DJK-kuSw4adn6xwnG+b5JA@mail.gmail.com>
+Subject: Patch for mute led of HP Laptop 15 da3001TU
+To: tiwai@suse.com, linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="0000000000002628c50616d9d881"
 
-To allow execution at a level other than VMPL0, an SVSM must be present.
-Allow the SEV-SNP guest to continue booting if an SVSM is detected and
-the hypervisor supports the SVSM feature as indicated in the GHCB
-hypervisor features bitmap.
+--0000000000002628c50616d9d881
+Content-Type: multipart/alternative; boundary="0000000000002628c30616d9d87f"
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
----
- arch/x86/boot/compressed/sev.c    | 12 +++++++++---
- arch/x86/include/asm/sev-common.h |  1 +
- arch/x86/kernel/sev.c             | 20 +++++++++++++++++---
- 3 files changed, 27 insertions(+), 6 deletions(-)
+--0000000000002628c30616d9d87f
+Content-Type: text/plain; charset="UTF-8"
 
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index 32a1e98ffaa9..fb1e60165cd1 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -610,11 +610,13 @@ void sev_enable(struct boot_params *bp)
- 	 * features.
- 	 */
- 	if (sev_status & MSR_AMD64_SEV_SNP_ENABLED) {
--		if (!(get_hv_features() & GHCB_HV_FT_SNP))
-+		u64 hv_features = get_hv_features();
-+
-+		if (!(hv_features & GHCB_HV_FT_SNP))
- 			sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
- 
- 		/*
--		 * Enforce running at VMPL0.
-+		 * Enforce running at VMPL0 or with an SVSM.
- 		 *
- 		 * RMPADJUST modifies RMP permissions of a lesser-privileged (numerically
- 		 * higher) privilege level. Here, clear the VMPL1 permission mask of the
-@@ -624,8 +626,12 @@ void sev_enable(struct boot_params *bp)
- 		 * modifies permission bits, it is still ok to do so currently because Linux
- 		 * SNP guests running at VMPL0 only run at VMPL0, so VMPL1 or higher
- 		 * permission mask changes are a don't-care.
-+		 *
-+		 * Running at VMPL0 is not required if an SVSM is present and the hypervisor
-+		 * supports the required SVSM GHCB events.
- 		 */
--		if (rmpadjust((unsigned long)&boot_ghcb_page, RMP_PG_SIZE_4K, 1))
-+		if (rmpadjust((unsigned long)&boot_ghcb_page, RMP_PG_SIZE_4K, 1) &&
-+		    !(vmpl && (hv_features & GHCB_HV_FT_SNP_MULTI_VMPL)))
- 			sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_NOT_VMPL0);
- 	}
- 
-diff --git a/arch/x86/include/asm/sev-common.h b/arch/x86/include/asm/sev-common.h
-index 4cc716660d4b..7a9d09458989 100644
---- a/arch/x86/include/asm/sev-common.h
-+++ b/arch/x86/include/asm/sev-common.h
-@@ -118,6 +118,7 @@ enum psc_op {
- 
- #define GHCB_HV_FT_SNP			BIT_ULL(0)
- #define GHCB_HV_FT_SNP_AP_CREATION	BIT_ULL(1)
-+#define GHCB_HV_FT_SNP_MULTI_VMPL	BIT_ULL(5)
- 
- /*
-  * SNP Page State Change NAE event
-diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-index 5e71c94b952c..50754cc45161 100644
---- a/arch/x86/kernel/sev.c
-+++ b/arch/x86/kernel/sev.c
-@@ -2356,22 +2356,36 @@ static void dump_cpuid_table(void)
-  * sort of indicator, and there's not really any other good place to do it,
-  * so do it here.
-  */
--static int __init report_cpuid_table(void)
-+static void __init report_cpuid_table(void)
- {
- 	const struct snp_cpuid_table *cpuid_table = snp_cpuid_get_table();
- 
- 	if (!cpuid_table->count)
--		return 0;
-+		return;
- 
- 	pr_info("Using SNP CPUID table, %d entries present.\n",
- 		cpuid_table->count);
- 
- 	if (sev_cfg.debug)
- 		dump_cpuid_table();
-+}
-+
-+static void __init report_vmpl_level(void)
-+{
-+	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
-+		return;
-+
-+	pr_info("SNP running at VMPL%u.\n", vmpl);
-+}
-+
-+static int __init report_snp_info(void)
-+{
-+	report_vmpl_level();
-+	report_cpuid_table();
- 
- 	return 0;
- }
--arch_initcall(report_cpuid_table);
-+arch_initcall(report_snp_info);
- 
- static int __init init_sev_config(char *str)
- {
--- 
-2.43.2
+Hello there,
 
+This patch is for fixing the volume mute LED on HP Laptop 15 da3001TU,
+this patch adds SND_PCI_QUIRK for HP Laptop 15-da3001TU, please review this
+patch & add this patch to the mainline kernel.
+
+I have tested this patch on the latest kernel 6.8.7 & it is working without
+any problem.
+
+--0000000000002628c30616d9d87f
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hello there,<div><br></div><div>This=C2=A0patch is for fix=
+ing the volume mute LED on=C2=A0HP Laptop 15 da3001TU, this=C2=A0patch adds=
+ SND_PCI_QUIRK for HP Laptop 15-da3001TU, please review this patch &amp; ad=
+d this patch to the mainline kernel.</div><div><br></div><div>I have tested=
+ this patch on the latest kernel 6.8.7 &amp; it is working without any=C2=
+=A0problem.</div></div>
+
+--0000000000002628c30616d9d87f--
+--0000000000002628c50616d9d881
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-Fix-mute-led-of-HP-Laptop-15-da3001TU.patch"
+Content-Disposition: attachment; 
+	filename="0001-Fix-mute-led-of-HP-Laptop-15-da3001TU.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lve0a2at0>
+X-Attachment-Id: f_lve0a2at0
+
+RnJvbSAxMjEwOGNlNzk0NDY1OTI1YzlkYzE4NDI1MzM1NmQxZGFhYTlmNTA5IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBBbWFuIERob290IDxhbWFuZGhvb3QxMkBnbWFpbC5jb20+CkRh
+dGU6IE1vbiwgMjIgQXByIDIwMjQgMTg6MDg6MjMgKzA1MzAKU3ViamVjdDogW1BBVENIXSBGaXgg
+bXV0ZSBsZWQgb2YgSFAgTGFwdG9wIDE1LWRhMzAwMVRVLgoKVGhpcyBwYXRjaCBzaW1wbHkgYWRk
+IFNORF9QQ0lfUVVJUksgZm9yIEhQIExhcHRvcCAxNS1kYTMwMDFUVSB0byBmaXhlZCBtdXRlIGxl
+ZCBvZiBsYXB0b3AuCgpTaWduZWQtb2ZmLWJ5OiBBbWFuIERob290IDxhbWFuZGhvb3QxMkBnbWFp
+bC5jb20+Ci0tLQogc291bmQvcGNpL2hkYS9wYXRjaF9yZWFsdGVrLmMgfCAxICsKIDEgZmlsZSBj
+aGFuZ2VkLCAxIGluc2VydGlvbigrKQoKZGlmZiAtLWdpdCBhL3NvdW5kL3BjaS9oZGEvcGF0Y2hf
+cmVhbHRlay5jIGIvc291bmQvcGNpL2hkYS9wYXRjaF9yZWFsdGVrLmMKaW5kZXggZDFjMzVjZDVh
+Nzc2Li40MTg5ZWIzMDQ4NGEgMTAwNjQ0Ci0tLSBhL3NvdW5kL3BjaS9oZGEvcGF0Y2hfcmVhbHRl
+ay5jCisrKyBiL3NvdW5kL3BjaS9oZGEvcGF0Y2hfcmVhbHRlay5jCkBAIC05OTM3LDYgKzk5Mzcs
+NyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9wY2lfcXVpcmsgYWxjMjY5X2ZpeHVwX3RibFtd
+ID0gewogCVNORF9QQ0lfUVVJUksoMHgxMDNjLCAweDg2MGYsICJIUCBaQm9vayAxNSBHNiIsIEFM
+QzI4NV9GSVhVUF9IUF9HUElPX0FNUF9JTklUKSwKIAlTTkRfUENJX1FVSVJLKDB4MTAzYywgMHg4
+NjFmLCAiSFAgRWxpdGUgRHJhZ29uZmx5IEcxIiwgQUxDMjg1X0ZJWFVQX0hQX0dQSU9fQU1QX0lO
+SVQpLAogCVNORF9QQ0lfUVVJUksoMHgxMDNjLCAweDg2OWQsICJIUCIsIEFMQzIzNl9GSVhVUF9I
+UF9NVVRFX0xFRCksCisJU05EX1BDSV9RVUlSSygweDEwM2MsIDB4ODZjMSwgIkhQIExhcHRvcCAx
+NS1kYTMwMDFUVSIsIEFMQzIzNl9GSVhVUF9IUF9NVVRFX0xFRF9DT0VGQklUMiksCiAJU05EX1BD
+SV9RVUlSSygweDEwM2MsIDB4ODZjNywgIkhQIEVudnkgQWlPIDMyIiwgQUxDMjc0X0ZJWFVQX0hQ
+X0VOVllfR1BJTyksCiAJU05EX1BDSV9RVUlSSygweDEwM2MsIDB4ODZlNywgIkhQIFNwZWN0cmUg
+eDM2MCAxNS1lYjB4eHgiLCBBTEMyODVfRklYVVBfSFBfU1BFQ1RSRV9YMzYwX0VCMSksCiAJU05E
+X1BDSV9RVUlSSygweDEwM2MsIDB4ODZlOCwgIkhQIFNwZWN0cmUgeDM2MCAxNS1lYjB4eHgiLCBB
+TEMyODVfRklYVVBfSFBfU1BFQ1RSRV9YMzYwX0VCMSksCi0tIAoyLjM5LjIKCg==
+--0000000000002628c50616d9d881--
