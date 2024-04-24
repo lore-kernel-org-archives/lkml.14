@@ -1,86 +1,111 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D800158211;
-	Wed, 24 Apr 2024 10:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0C4F158211
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 10:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713954262; cv=none; b=hgSc0Te/E42RiSAy3KD1aUJp/VyZ4mM8n0QR3NW3X834juIdqVYpywISvYYeHCxZOenpBsDmzW1jhaOsUIHhZB1P4GDHOW9rQ/1C9GzwXgPsQqs85HklCwT6lrKbPR92GuB0EDgLb4uR86G9ZQXOnjpocnpSkDbUSccuM/Z8caI=
+	t=1713954334; cv=none; b=Gp8TTVi9RbzGkeqrhnDtrZvg3OZOsyF1FUih7QF0iluQRd1CjUTCofEArAfkpqhF6fS9DDD8Hi5pYlA3PK98eTCoePnQIFLd990aZdbNTXwP7K92z19igcJyCu/4oEXfIcJOK7srroP/pniCsIqOtxgV9/Z7UzL150b8wyFsGFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713954262; c=relaxed/simple;
-	bh=Dr5dwzcjqw7dSzyi89UvoPy4zSpLCzrvPxvOavEG0FI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iEfz9+6fvJ5pSHbT/enfyPyJUHjRGaqsTVFrxrYrtpdrFrrSN8qfIUKhgxCvKhdCmRFd6fS8X2sHyBr+1bzPiVsLIVgTjDYTgXmgn/XH9i0BQL9z/uHgVsY8yKuqY70bxtrZ5bvqRjGB7zdrCCu3BFDj8ziEHzsiBwXhZULNij4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=Cs4Jp7Hd; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="Cs4Jp7Hd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=d/MD22uaUm8+BoL9TbUyYnjmK+2qYuIFAbrMDBfUVbA=; t=1713954259; x=1714559059; 
-	b=Cs4Jp7HdCyicJnycDLC4R7+83WTpkwmSTYKtstZd73WXn35NDWHYm4s5pg0N6PzIpFIUBzNDz0T
-	API3bAm2+NZz8KI7yAADJqZS5d19EijRkMFzzN1hucKXuhX7o8SFu7n8BrEyUoWpczraZmt1Vqteu
-	gIRhrJIcic/KWwIlOs6KDxfeNJR5SIgeVfj3Ig02Iwmoust/nYDF18Zb6/OTVMoLTUMAgbcRJBz+O
-	JOFWlmBFqyQXwOoK0cz3ZukHW5hNMn1FgiN5AA2Ud3Z+WNRhP+XAyBvBk2SM89YnsFV+dFLZlGoqP
-	gSMx1C1SVWlT3zQQPjOltSW6aVAe/eb+1vSg==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.97)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1rzZnU-00000000GUH-0cmV; Wed, 24 Apr 2024 12:24:16 +0200
-Received: from [80.95.105.245] (helo=[172.16.2.143])
-          by inpost2.zedat.fu-berlin.de (Exim 4.97)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1rzZnT-00000001u5A-2sRA; Wed, 24 Apr 2024 12:24:16 +0200
-Message-ID: <7dd171cc41474871408f06326aea5cb87923e454.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH v2] sh: Call paging_init() earlier in the init sequence
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Markus Elfring <Markus.Elfring@web.de>, Oreoluwa Babatunde
- <quic_obabatun@quicinc.com>, linux-sh@vger.kernel.org, 
- kernel-janitors@vger.kernel.org, kernel@quicinc.com, Rich Felker
- <dalias@libc.org>,  Rob Herring <robh@kernel.org>, Yoshinori Sato
- <ysato@users.sourceforge.jp>
-Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Morton
-	 <akpm@linux-foundation.org>
-Date: Wed, 24 Apr 2024 12:24:14 +0200
-In-Reply-To: <f74fdb82-5d66-48f2-830e-3874570f022e@web.de>
-References: <20240423233150.74302-1-quic_obabatun@quicinc.com>
-	 <f74fdb82-5d66-48f2-830e-3874570f022e@web.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.0 
+	s=arc-20240116; t=1713954334; c=relaxed/simple;
+	bh=cqP1oedXnkvm4sQbRc6s+aClewY6gEkVWcgHiC1Dh5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r2Xd63w4M8n3QyfwBOQC9F0RJnJfnJnZ+ArfoOJgk2/4x3ZUFG2ZHIcYBVa4oFjKkxEUWNBMJwxFn29+jKBWdcMdxhMUnuP8mRNuwbV+LRCbjporbHqujY/tDphoOJ0pqRh/JlFiwzq5Enw+dJM8fRNsJ6Wz0LJ3qXYdW6rI0Cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6715339;
+	Wed, 24 Apr 2024 03:25:59 -0700 (PDT)
+Received: from bogus (unknown [10.57.84.59])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37D0E3F73F;
+	Wed, 24 Apr 2024 03:25:30 -0700 (PDT)
+Date: Wed, 24 Apr 2024 11:25:27 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Beata Michalska <beata.michalska@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Sudeep Holla <sudeep.holla@arm.com>, ionela.voinescu@arm.com,
+	vanshikonda@os.amperecomputing.com, will@kernel.org,
+	catalin.marinas@arm.com, vincent.guittot@linaro.org,
+	sumitg@nvidia.com, yang@os.amperecomputing.com,
+	lihuisong@huawei.com, viresh.kumar@linaro.org
+Subject: Re: [PATCH v5 2/5] arm64: amu: Rule out potential use after free
+Message-ID: <20240424102527.3s4ebjnaai2md5pa@bogus>
+References: <20240417093848.1555462-1-beata.michalska@arm.com>
+ <20240417093848.1555462-3-beata.michalska@arm.com>
+ <20240418105052.zvkomz5yeayie4ph@bogus>
+ <ZiFCfwEvdJxg6Hth@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZiFCfwEvdJxg6Hth@arm.com>
 
-On Wed, 2024-04-24 at 10:45 +0200, Markus Elfring wrote:
-> =E2=80=A6
-> > Hence, move the call to paging_init() to be earlier in the init
-> > sequence so that the reserved memory regions are set aside before any
-> > allocations are done using memblock.
-> =E2=80=A6
->=20
-> Will the tag =E2=80=9CFixes=E2=80=9D become relevant here?
+On Thu, Apr 18, 2024 at 05:55:43PM +0200, Beata Michalska wrote:
+> On Thu, Apr 18, 2024 at 11:50:52AM +0100, Sudeep Holla wrote:
+> > On Wed, Apr 17, 2024 at 10:38:45AM +0100, Beata Michalska wrote:
+> > > For the time being, the amu_fie_cpus cpumask is being exclusively used
+> > > by the AMU-related internals of FIE support and is guaranteed to be
+> > > valid on every access currently made. Still the mask is not being
+> > > invalidated on one of the error handling code paths, which leaves
+> > > a soft spot with potential risk of uaf for CPUMASK_OFFSTACK cases.
+> > > To make things sound, set the cpumaks pointer explicitly to NULL upon
+> > > failing to register the cpufreq notifier.
+> > > Note that, due to the quirks of CPUMASK_OFFSTACK, this change needs to
+> > > be wrapped with grim ifdefing (it would be better served by
+> > > incorporating this into free_cpumask_var ...)
+> > >
+> >
+> > Yes it doesn't look neat.
+> >
+> > > Signed-off-by: Beata Michalska <beata.michalska@arm.com>
+> > > ---
+> > >  arch/arm64/kernel/topology.c | 6 +++++-
+> > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+> > > index 1a2c72f3e7f8..3c814a278534 100644
+> > > --- a/arch/arm64/kernel/topology.c
+> > > +++ b/arch/arm64/kernel/topology.c
+> > > @@ -244,8 +244,12 @@ static int __init init_amu_fie(void)
+> > >
+> > >  	ret = cpufreq_register_notifier(&init_amu_fie_notifier,
+> > >  					CPUFREQ_POLICY_NOTIFIER);
+> > > -	if (ret)
+> > > +	if (ret) {
+> > >  		free_cpumask_var(amu_fie_cpus);
+> > > +#ifdef CONFIG_CPUMASK_OFFSTACK
+> > > +		amu_fie_cpus = NULL;
+> > > +#endif
+> > > +	}
+> >
+> > Instead of this #ifdeffery, I was wondering if we can actually do the
+> > allocation in init_amu_fie_callback() the first time it gets called
+> > checking if amu_fie_cpus is NULL. init_amu_fie_callback() must get called
+> > only if the cpufreq_register_notifier() succeeds right ?
+> >
 
-I'm not aware of any bugs that have been reported in this context.
+> Delayed allocation ... I guess this will do the trick.
 
-Adrian
+I prefer that if we can't find any other alternative. Do you see any issues
+with that ? That said I am fine if Will/Catalin is happy with this.
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+> > Also I don't see anyone calling amu_fie_setup(), so where do you think
+> > the possible use after free could occur for amu_fie_cpus. Just thinking
+> > out loud to check if I missed anything.
+> >
+> You haven't missed anything. Currently the uaf is purely theoretical as the code
+> that relies on that mask will only be executed if we have succeeded to register
+> the amu fie support: so far so good.
+
+Yes it is better to handle it even if it is theoretical.
+
+I assume you get some compiler error if you assign unconditionally and
+if(IS_ENABLED()) also doesn't work in this case as it would still give
+error ?
+
+--
+Regards,
+Sudeep
