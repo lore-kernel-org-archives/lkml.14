@@ -1,154 +1,132 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2076.outbound.protection.outlook.com [40.107.102.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3B9224E8;
-	Wed, 24 Apr 2024 16:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713976489; cv=fail; b=OcWUQX6iS5qbFhX5yvjenxlnNknN/YB1bKbsbDrk1TeGks8sm0jRpdeF6ewnwsGTA+0AFH6KyISclTRQJL1hgC5S8CENeoGRoVMcuw2qqBpsN8Xf/5KpGFDgBP4aLoxFGhMsIVDASoUV708SG7EiWpwVpxy9fdsDuT82e0Ylf5U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713976489; c=relaxed/simple;
-	bh=lQ8zjGEeBwZJi8RASLYfthfgxZ1OIcIs1U6uxjmBG+E=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KDQpSnDpOxxmuBEZ1StjrUH7/CgOhAJ5sgtuz/FAvmHZMsQ5dosSSS2je9I5t/HZ8dN75TpOJVtr+L6k6GIyDAidowk40vaD1/bXhQYXyBztNz3DQFQn5xpA1OhDgX+hbpCBGPzzJQb+8gLG6iYVrwid5oVROAUxARzgnEJ9WCo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lPPceh0p; arc=fail smtp.client-ip=40.107.102.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0493224E8
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 16:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713976500; cv=none; b=fFfVaoqAAK/KNoMA6fle/S6IVk0G16lC6LxmJGG4gQ4PeuA0vm+tfY57zQro2H7uIa8RSkFjzV+SBd1Eb/3TsskEPyw8Mrq6wlzlmIi79X5zs1WpC90beZFw8zABk/xSmnm5Xo5oYstXKcXV8SE4WPjR61ORJIThq9RghZHNie4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713976500; c=relaxed/simple;
+	bh=iB+4XqNIdHt7yvtxsimmIldmqZ+s79xvMNaIc7fbl+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YXu8YmOGcc6nr4VWaTRfsIrap8souxwx15skuYHR7LO+MyuadQwA2A5gunpTOdzhNRO21gObzJWBfBYbPLcDlxBAucIY+LewprnVCVO0GVgzu8bWbWYTJc4zmp1BziGFQCWsjtEdI5ePXJyifz9y56inYYo2+C3Q0ZPgUMALyCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dMo1QBHt; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lPPceh0p"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AgtuRiQMdmojxOuWTMGoTe0EFF7UApUTGoEiseFJNlEYD0RcNHP/d/P0B9DJ/tNo9Wxvmp0zkcr5HimwtE5A5Q5bmyOM1x6I+9bwGy13JXSg1K77ap31SsJmQ4yaQWnkaxqan8H41BkWpIrx/i3dskI/tsSpFeulNAqHcdOOnBXCLlDGETWCkSqXc0KmkjDFnTRMaSEmTpANAe3p7wGFxMePocinBTqn8f+Iq1VFiqFP4z/JrHa7MAiVH8thA+Hr1Rb51rgRHWUH+enU7ANeiyJ1/U6d5Ao8oWTCJnaXCz/5KOoGpJJv3EToPaY38xxBjTZ6PMre4iYumuGbq0Ttug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/ffz1ZsiwaLMPJbuaw4rUdcCvurrBpw2J+vcM8i71O8=;
- b=GsGuUUE5B0DY31GpUnM23DIT19Wnv9UZHNIB05cFXSicyQHnEnKQs6o3M1fcR+oM+Ee27QfJ/4q6+RcII9WpuCaRxoV/4IfWTrunZFySJSpO59IRAemhgBrK8biFKu1CQcHj9YpIRl7b+ooTJ2zriWgZqLNUyhosuk4Z25jPVW2QN1glqQU9o89iQ2h2vSG0CPPQpPo77zNrnDEUhBiNbk71/ZddnYmhNBKULvA0f4f7j9fdrnQjmJ6lnCW3ctLT9zNnri4l0xheZ9TZhjId0xvflHeiqN26eoFdsUdd7qGH3G6k7Pw83B39IBMEsPMZlKhLnExajT+wNnyATUWCew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/ffz1ZsiwaLMPJbuaw4rUdcCvurrBpw2J+vcM8i71O8=;
- b=lPPceh0pYFU/pmxVuwAruk0/EGpIMXsASkU+EC2Ub3U/pYP4keeZ525GHDWWtv1Vt00HHFrStHMOqpjvfcQtBkQfw/QMqh8MP+kzw2qrYTJKBq41Olyk/C1eXld8FmM1A0tFumWC52wI++fEo9ABTem+YsiVLo165EQMMm7K7f0=
-Received: from CH2PR15CA0003.namprd15.prod.outlook.com (2603:10b6:610:51::13)
- by CH3PR12MB8209.namprd12.prod.outlook.com (2603:10b6:610:123::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Wed, 24 Apr
- 2024 16:34:43 +0000
-Received: from CH2PEPF00000145.namprd02.prod.outlook.com
- (2603:10b6:610:51:cafe::d6) by CH2PR15CA0003.outlook.office365.com
- (2603:10b6:610:51::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22 via Frontend
- Transport; Wed, 24 Apr 2024 16:34:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH2PEPF00000145.mail.protection.outlook.com (10.167.244.102) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7519.19 via Frontend Transport; Wed, 24 Apr 2024 16:34:43 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 24 Apr
- 2024 11:34:42 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 24 Apr
- 2024 11:34:42 -0500
-Received: from xsjtanmays50.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Wed, 24 Apr 2024 11:34:41 -0500
-From: Tanmay Shah <tanmay.shah@amd.com>
-To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>,
-	<tanmay.shah@amd.com>
-CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drivers: remoteproc: xlnx: fix uninitialized tcm mode
-Date: Wed, 24 Apr 2024 09:33:45 -0700
-Message-ID: <20240424163344.1344304-1-tanmay.shah@amd.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dMo1QBHt"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-518931f8d23so7755490e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 09:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713976497; x=1714581297; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zmM7lELFzDnGc6ZurObVedqGSv5yidRsKIMWiDcLanw=;
+        b=dMo1QBHtMYfsf4ULtJhXA9C51awBvbVyYudqDfRrWx6k/Pbdq37k425ORLSJ9dposp
+         /yUMzUQu3rLFzbDn6nzxwZ3yxUsv+wBJFBlQ1KGbBcZOhTuGaWg5066ND2GDmZS2y/py
+         aNLdCf4i69yvym2pDNpmHtWJ93EbFixAXT0JBcTVZmbgq9n3ZzNQgepHAiqOLWYbXVT/
+         34CwVrXoe7MG6/gCmDLz8CMy76kaRnLHDAZRve6Ha18rIVh7vuxQETT6JjZT7SY6t8K2
+         LxwHQlaQWTFFbggDGv0kF3fGy8EjJ6vJbwznV0dMkEv9wTD9iDFJReYvQm26Wx1msaAJ
+         UQTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713976497; x=1714581297;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zmM7lELFzDnGc6ZurObVedqGSv5yidRsKIMWiDcLanw=;
+        b=mVhO50EDkTR3NMxAU71iXhjIxaeoKWfTxcwSteNP7udqF9pT5LuROtnGNOlC3bbjFF
+         2M3G1Gfxmn4FABqa2XIO9/+gTk7MkN6ZHQcXG733PR5hx6VwUHgIjjWD8VFEDYiHIFLp
+         oUZ7x/xbh4EkELjW71EPJ/4VUl6+AnJR+JaTxQI9ymK8f3uuQALlu7uubEOUxD5dBXzl
+         JRyIxd0q0HP0EZvbCaCgpPi8dCll5LBffvxZfkkSW4iDUhsfGUIX3ds0lgsjbtwE00n6
+         uP+fkISXaCXODvdv7KDpvqFC35xWeE3xct+ohU3pxd7M0UkQGAssfbsyOD4qUdhAocZw
+         VkjA==
+X-Forwarded-Encrypted: i=1; AJvYcCXyCJQjXL38MwXsZU7K7Xh9SnanJSmOBIA1J+rXK8OHvfRIcWaK6pd22xlTJQNA5NnZY3ZdwmfKBJCW05RBZOKZ+7haL9XxOK0QYpdi
+X-Gm-Message-State: AOJu0Yyn4zyrrEcBlRwl1efb60X26Ee2IWEyJhThgaQSej8u1KB6c0sd
+	2wSPYl8Ncu5U+/lgWWRy+n4X3yNRa6FiWp/qOdT1YzWNjvmHMM6Ju+zIdZAwUM8=
+X-Google-Smtp-Source: AGHT+IHEuFcRmsP4kFacjkpHRKtzhOGVaaVSjSmCp/pdIJ+sH4pCvIEVYuesx7A1/mQPkGI1d1iWBQ==
+X-Received: by 2002:ac2:47e7:0:b0:519:1503:9566 with SMTP id b7-20020ac247e7000000b0051915039566mr1987909lfp.56.1713976496664;
+        Wed, 24 Apr 2024 09:34:56 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::8a5])
+        by smtp.gmail.com with ESMTPSA id n9-20020a056512388900b00518fadeed0fsm2430866lft.115.2024.04.24.09.34.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 09:34:56 -0700 (PDT)
+Date: Wed, 24 Apr 2024 19:34:54 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Sui Jingfeng <sui.jingfeng@linux.dev>, dri-devel@lists.freedesktop.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v2] software node: Implement device_get_match_data fwnode
+ callback
+Message-ID: <kucey3jsydjye3ndflns3cqolcpizhnxgzz3fkmcatlnpbnwrk@22ulsqfh2vf6>
+References: <20240422164658.217037-1-sui.jingfeng@linux.dev>
+ <Zie3ebHOEpWHj1qV@smile.fi.intel.com>
+ <d5bc1e73-a553-451e-ab74-f5f0ca259c6b@linux.dev>
+ <hcltp2bbxxg2t7ibmzgiib7mgbwgmvzwnnq6mochdh7c4h76r3@bxj6yk5zq64e>
+ <ZikE4qOVO7rgIs9a@smile.fi.intel.com>
+ <CAA8EJpr1FSjizAh6Dp5Bmux3NrGYh=BfHFL4D1fa87Og4ymY0w@mail.gmail.com>
+ <Zikck2FJb4-PgXX0@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF00000145:EE_|CH3PR12MB8209:EE_
-X-MS-Office365-Filtering-Correlation-Id: 63d70ab4-4070-4174-8e76-08dc647c720a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?N6mrPhgJgg9co8oAWGCXt4nQG7TPLRc1ScGX/uEr00FNitjlDEgoAtEeA1B9?=
- =?us-ascii?Q?hLQGnmpoWX4EySpMg+P6+/PeLU6JWgNUKDn0tDQ63AhsxzXo2n6sIeqcjEfm?=
- =?us-ascii?Q?mz56Ouc1LTaE5+tlnl2Qd8POIGQKf+k5X/2coi7KxoveHNUwbXvm6CkvJLsb?=
- =?us-ascii?Q?ivrROsWswF34hHmkbZHRsoBTZNE/LGw7UZe2KB5Vjw1C/GbsH4RJusLzOcSL?=
- =?us-ascii?Q?P2zELueBNivwTXCJNQoIwabCcULI6f7/XxCSkVU9j1a697icOyrb0ZD0Q1Hy?=
- =?us-ascii?Q?yzk5+56doNCeO3GEgxu2qOofNTsAZT7QAD46DOlvAE9zhnCmhd/aFJ3WtVZJ?=
- =?us-ascii?Q?m+Wauo2dOfZX3tEs04xJ99DD5JZl460r5dj4zdOZkK9P0w8siLZkpq/ZO6a+?=
- =?us-ascii?Q?C+YnguoYaCpLJtP4hFwDNTW+uek+2s/EK5B3ffmxKNK72WEnmSMhVvZuV1Gv?=
- =?us-ascii?Q?smdcY4t+t8S/GjD5LUjbBrEYlLzjX6rwpylA73a1d6sa4CRVl64afVSQpwpB?=
- =?us-ascii?Q?hF58ukivq0qBklC2k68E9pM99sxFGnTEorg/EgHA60t4Hi5RYYVNc8B2Ptqi?=
- =?us-ascii?Q?Dgvy/ZHKPTY4MMLBkNqV4/c4GDEOmiiShF5vYTEwH3EGKRkK+YrUU+WAZhgJ?=
- =?us-ascii?Q?N2wO95QsEBtMgDarZFS6xXhdh68VHKnH50z9UwVkNoolgceEXYOHDvgv7/dV?=
- =?us-ascii?Q?eIOb5jlD86JXzwZFpOrmdNteh1x5lj5GKqj+N9JIvabUa+FSGnI4vhN6TIBn?=
- =?us-ascii?Q?GWJ/maxRNc1/pHsSpZa93GjfXHBzeTiCjwPpLoKJ9BxSfrlKbOPQFGpV2lbS?=
- =?us-ascii?Q?iUwD3eP1z+yfViAABiDjuAXgeUv4b6yjws6XgG6z9o5RUbYFslHVmP97cvFE?=
- =?us-ascii?Q?DMrqLc4JHHgmjmSUaiWjJW2M3cD8yHCKsMv58headXi6A3u1TdXNAJ53bSC8?=
- =?us-ascii?Q?72FgmhevtTc76GuTKW1XFPYI2y5bWsJ2hqlwhYPsVx1Tuj+wLDbrnOQE+ZQP?=
- =?us-ascii?Q?iEFAjzXj3LNqrM3sUD7f0YjdL7dnGjcn4SDHuiqWl2L2uoVIRe2HD38RKyyI?=
- =?us-ascii?Q?BS6mB0rJnvfWmN9kdoncv0anWoKUOux9ikv1cN85niGB3R+zP4OSf2Kn4cdf?=
- =?us-ascii?Q?l63NU+5/pKrs20mka28gqo2fJfafGIvG5/rq8fd6AWSV3qB5d9G7usEiSiui?=
- =?us-ascii?Q?Bv+mM+RRhzwB56dPuwm1P/yLY+OQX6nrb8FzuXb87YU9qaDhb/pYfqgfv+CX?=
- =?us-ascii?Q?L3m3s/BwRM7gPS6r+A1dvDTyU05W7Tu0rLNSJnf622otUDoNufdoF5ZiuHF2?=
- =?us-ascii?Q?wyNv/R3H31v9GMZNQNrY/0apLBz0dEo+GE18bNMIf/gAZdVRQUcq6pZh0UT2?=
- =?us-ascii?Q?R/6wovgloLLMDXkABqFAJLJuNKRZ?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(376005)(1800799015)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 16:34:43.1159
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 63d70ab4-4070-4174-8e76-08dc647c720a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF00000145.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8209
+In-Reply-To: <Zikck2FJb4-PgXX0@smile.fi.intel.com>
 
-Add "else" case for default tcm mode to silent following static check:
+On Wed, Apr 24, 2024 at 05:52:03PM +0300, Andy Shevchenko wrote:
+> On Wed, Apr 24, 2024 at 04:34:39PM +0300, Dmitry Baryshkov wrote:
+> > On Wed, 24 Apr 2024 at 16:11, Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > On Wed, Apr 24, 2024 at 12:37:16AM +0300, Dmitry Baryshkov wrote:
+> > > > On Wed, Apr 24, 2024 at 12:49:18AM +0800, Sui Jingfeng wrote:
+> > > > > On 2024/4/23 21:28, Andy Shevchenko wrote:
+> > > > > > On Tue, Apr 23, 2024 at 12:46:58AM +0800, Sui Jingfeng wrote:
+> 
+> ...
+> 
+> > > > But let me throw an argument why this patch (or something similar) looks
+> > > > to be necessary.
+> > > >
+> > > > Both on DT and non-DT systems the kernel allows using the non-OF based
+> > > > matching. For the platform devices there is platform_device_id-based
+> > > > matching.
+> > > >
+> > > > Currently handling the data coming from such device_ids requires using
+> > > > special bits of code, e.g. platform_get_device_id(pdev)->driver_data to
+> > > > get the data from the platform_device_id. Having such codepaths goes
+> > > > against the goal of unifying DT and non-DT paths via generic property /
+> > > > fwnode code.
+> > > >
+> > > > As such, I support Sui's idea of being able to use device_get_match_data
+> > > > for non-DT, non-ACPI platform devices.
+> > >
+> > > I'm not sure I buy this. We have a special helpers based on the bus type to
+> > > combine device_get_match_data() with the respective ID table crawling, see
+> > > the SPI and I²C cases as the examples.
+> > 
+> > I was thinking that we might be able to deprecate these helpers and
+> > always use device_get_match_data().
+> 
+> True, but that is orthogonal to swnode match_data support, right?
+> There even was (still is?) a patch series to do something like a new
+> member to struct device_driver (? don't remember) to achieve that.
 
-zynqmp_r5_cluster_init()
- error: uninitialized symbol 'tcm_mode'.
+Maybe the scenario was not properly described in the commit message, or
+maybe I missed something. The usecase that I understood from the commit
+message was to use instatiated i2c / spi devices, which means
+i2c_device_id / spi_device_id. The commit message should describe why
+the usecase requires using 'compatible' property and swnode. Ideally it
+should describe how these devices are instantiated at the first place.
 
-Fixes: a6b974b40f94 ("drivers: remoteproc: xlnx: Add Versal and Versal-NET support")
-Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
----
- drivers/remoteproc/xlnx_r5_remoteproc.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c b/drivers/remoteproc/xlnx_r5_remoteproc.c
-index d98940d7ef8f..84243d1dff9f 100644
---- a/drivers/remoteproc/xlnx_r5_remoteproc.c
-+++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
-@@ -1006,6 +1006,8 @@ static int zynqmp_r5_cluster_init(struct zynqmp_r5_cluster *cluster)
- 			tcm_mode = PM_RPU_TCM_COMB;
- 		else
- 			tcm_mode = PM_RPU_TCM_SPLIT;
-+	} else {
-+		tcm_mode = PM_RPU_TCM_COMB;
- 	}
- 
- 	/*
-
-base-commit: a49a6c600193e32123e8885515051b34a5d711ff
 -- 
-2.25.1
-
+With best wishes
+Dmitry
