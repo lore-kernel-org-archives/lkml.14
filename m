@@ -1,392 +1,205 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92032156878
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 23:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A37156F5D
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 23:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714000076; cv=none; b=HhFI8aZudFvmZIWxgVIfDemJgxtxMREl9hLIGbczSCSQE8hv0xaEnkTg3Jd4RIedSw0BHGpvkBLKAE7x9AqA3pd7mGtjbvfUCri3UXhp0nKpbLH/RBJcWR9rfewrSDitl5Or4HaMk028sKhusjKQjrpIM9A7WwkJmeGUA9XD/LU=
+	t=1714000319; cv=none; b=l6AB/53vVT71i++86IrSsCNCv+aJvFfIeZ2xVOpuMnobcGItyCQl21mSqK/uYm/vGB/4C9X3r1d5T/MHdmEAYETdhyJ2qHi0Qeny/UPfk0pFiz0s4KWZL8R+p8aJK0zu0QqwxrySXe/7k29DNpa631w6xPUkQk6V/Oc7WexdQHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714000076; c=relaxed/simple;
-	bh=q4oVfZdVhqFvTUBtnMf2SMwqHVktMXOGc4i9hjuJTRI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IQCBM+deedpMSlUIXi7SuAhYZhvO9+MGXatO9a/02tlhVt+MoE1fRqTa7jW5Lk+rrTs4hrCm3xUDbobHAcZk/0p8diPTYCgTBGjdzxg6Ek0Im+UvE0V99zUxPy6KQhitrIU++AM8/SFa5X6zV+H1kk1mgBFE0PeVMNCLZFCb1pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Ykc7+Q/j; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1714000319; c=relaxed/simple;
+	bh=JXM2m4lA2a0DtITzIuUl6mgpBjkpCZFLJMIWC+fJNn0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Elsy66bmRBhyU0V9ZHmSJ9rrIq23UPYMNOeuihVnMHyA61enIt6+8Hy0ml/6lF3IzHlUN1MzmYHAlBKqprBJRX6EXgh7TSYMMY0dUOH/D2VdMtroAcqtAyZGdrLjTFnlGjvlNXdmp+OPEngoDguDkc+HbXr4/jcfA+CGT1pWDkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=aDq6O9yA; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Ykc7+Q/j"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ac9b225a91so353545a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 16:07:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="aDq6O9yA"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-78f049ddd7dso25080985a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 16:11:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1714000074; x=1714604874; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MiSplVefZaDSsWDXGOfaGfEQv0wGWV0UxTQeH6AvQzc=;
-        b=Ykc7+Q/jrNLNPEa6TfmXFYxN2lskhcgohiqGgy4so7DWBwLC5Hj/vsiET4EZ36UiJJ
-         JQBK/b2D5566Zazw9bALHPeoePY5uoE2QiiXbEcVP7PBeiYIAaZ+3QO57fMUwlRWP3Sf
-         2uGYc3xutnXhVpsrpZfWj3+T74ASIObQzicOTWNCauBakKe9jAvTR6E1VPWRnIpBcUj3
-         EIGxRHZY/5E8ukNvpa5GK1O+z9nbehPoVVXkc6hN0ergEZmi8lYDdqFIhpCQYYUPqGdt
-         9CXwRQf+N/NGPnErsTvryJCYl6TGOcgdcedT3Lm2LdfghyXnnFuXI9KRqikEtlEWyOSX
-         Zuiw==
+        d=broadcom.com; s=google; t=1714000317; x=1714605117; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Tciotl3CiIub6rHOiENpwvEYsI9yPcaE7zdkbRybLrE=;
+        b=aDq6O9yAdj0GxWlPixdXicgC6jovAlb3+IyVm1E+LkXDiYGb/QIRSMpYZBHAFUOC/O
+         qUc8G+1X1B5YHxcSVASItEQ1aU3b7fiCPc+YN9stY6cX6vOICPHdPk/w+SUwxJXuvo7k
+         7G0YRHeguPyi2s/6vPr3EaQcyS2XWYTi/4/Do=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714000074; x=1714604874;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MiSplVefZaDSsWDXGOfaGfEQv0wGWV0UxTQeH6AvQzc=;
-        b=hz/sKKsBMBDmL2+hghfNCnQUUj/kED2W+S7AexnN7WpY2mWeJ/iuCYy8hNABf44zpo
-         s6htrFHYmtUHmFDtX5OXmldm1d4X5O1UzUo9V1k50PWXYA7Ct/AFffhJVlT+1QjLjhZo
-         hTGKY7/PNAIXsftoNKu9GqKBseNBvp6OIqHy0kJXyVETczbkilb48sT/S/nyEHCJS94G
-         E72mOTq9192+SmCnNeIb1zXg4evxgx8FQVdUS8ftF7su3o5+ayQ+oYyRfV7cDIvH4DOa
-         uPOiZSm6n62hGBdJZgRr0fgj+M6N3dwRjFuZCttOGHMOs/w2VxssTYNV5b5Er1qUeoSf
-         +Kow==
-X-Forwarded-Encrypted: i=1; AJvYcCVjJ9Je8A8Xyp19JQx3gvc0QQ5NzpdtGqwYoRT8ztfxVaiWZjkcdPjHg9V716PEas8zPwEmM7ZiwqCBWzPjDTjGuTLqX0h89+4iKo2T
-X-Gm-Message-State: AOJu0YzMtd2hxQ9oGqyS1ve1Z7gNp3uhrQdD5OV9mN2s0FbCWJShT+r+
-	EvKyf5b8Y95NMDzInIJzWtih1sldzAR/hVqS8RkfbY3GU+7ZPj8btbNFSF4WY1yXbWOFENAP5Xa
-	unSAF4qwUxn+WPpSN+nFSqbDT1vf6oqpZnV+KJA==
-X-Google-Smtp-Source: AGHT+IHmcq3CXPh+UmI8CFu4p4IS4i0vNZCrtp9ABzU8q/kLaweAMqjwhH86ZSsU2ySH+YCta9rMYOaZBwAC10Jwu0o=
-X-Received: by 2002:a17:90a:c789:b0:2af:1f3f:bd79 with SMTP id
- gn9-20020a17090ac78900b002af1f3fbd79mr3970825pjb.35.1714000073803; Wed, 24
- Apr 2024 16:07:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714000317; x=1714605117;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Tciotl3CiIub6rHOiENpwvEYsI9yPcaE7zdkbRybLrE=;
+        b=u9U0mFP5FZlLeFmRbp+ke8ympKonivoyW0YRaCgtubzhhc55677Km9ng0sbZDaVV4v
+         5m7Eu4lm4TVZWX+InBt3wb3r7aCJ2rFiy7jQ0SfRGr3Qp4MENfkrkOdLvEIBCNYeTEXW
+         AxpKNaaokAtTY5LKDTq+4tj/BndeemCOq75iOSKYEJrhFni5prAD0khx0crQBxvIscdF
+         iRkl/XX6FGtEYeHWulIQP2oB+XLZjEcDJBH4Sow5kGh0M0w5JH3GDbXrOer7XQk3G6Tj
+         mlDYRgb6btriLOwR6UULFp/6+JsQ9d2dltZ2yo3pkIH5rQIljKG1IaCaqoOEck2RTTYC
+         hF8g==
+X-Forwarded-Encrypted: i=1; AJvYcCX+VlG9Zsdt34Tl04Q372BmtNoCbvh6adqQcZzGaNBjVVT5FRliO7Pwz1LSUWV0RbZgGi9UoRHXuHaD502N+hecgnT/eLi1Fjdzp6N6
+X-Gm-Message-State: AOJu0YyYdzQ6FI2sFxXKxocJ+PQPUScrdktknH0oIqHujXcxUF1JODzU
+	bfkpPV4tdWKQFCt4OrnSzFmdpFFqJzMQ7M76ZMjtgRdKBsWSBN3e9nlqPvoJXA==
+X-Google-Smtp-Source: AGHT+IHA51IYzI8VCVRYnGjYtZXseREYyAdg0E9XG4/rfy3EpTqHMdGKwO8w/l4vYMDvvFMalzXhIg==
+X-Received: by 2002:a05:620a:b8f:b0:78e:ebcc:797d with SMTP id k15-20020a05620a0b8f00b0078eebcc797dmr4216658qkh.78.1714000317079;
+        Wed, 24 Apr 2024 16:11:57 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a4-20020a05620a066400b0078d73685803sm6561159qkh.99.2024.04.24.16.11.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Apr 2024 16:11:56 -0700 (PDT)
+Message-ID: <465e2b1f-601a-4754-87f8-1c71b0f166d1@broadcom.com>
+Date: Wed, 24 Apr 2024 16:11:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1713456597.git.tjeznach@rivosinc.com> <232b2824d5dfd9b8dcb3553bfd506444273c3305.1713456598.git.tjeznach@rivosinc.com>
- <964db2aa-6535-4243-9b3f-e72bff9b6297@linux.intel.com>
-In-Reply-To: <964db2aa-6535-4243-9b3f-e72bff9b6297@linux.intel.com>
-From: Tomasz Jeznach <tjeznach@rivosinc.com>
-Date: Wed, 24 Apr 2024 16:07:43 -0700
-Message-ID: <CAH2o1u5X42J_6ogLNx4Zd7VVdRM5D3adZpf2-riBKVv=s1K82A@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] iommu/riscv: Device directory management.
-To: Baolu Lu <baolu.lu@linux.intel.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Anup Patel <apatel@ventanamicro.com>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Nick Kossifidis <mick@ics.forth.gr>, Sebastien Boeuf <seb@rivosinc.com>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux@rivosinc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: gpio: brcmstb: add gpio-ranges
+To: Doug Berger <opendmb@gmail.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Phil Elwell <phil@raspberrypi.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240424185039.1707812-1-opendmb@gmail.com>
+ <20240424185039.1707812-2-opendmb@gmail.com>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20240424185039.1707812-2-opendmb@gmail.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000103d3c0616dfcc40"
 
-On Sun, Apr 21, 2024 at 10:13=E2=80=AFPM Baolu Lu <baolu.lu@linux.intel.com=
-> wrote:
->
-> On 4/19/24 12:32 AM, Tomasz Jeznach wrote:
-> > Introduce device context allocation and device directory tree
-> > management including capabilities discovery sequence, as described
-> > in Chapter 2.1 of the RISC-V IOMMU Architecture Specification.
-> >
-> > Device directory mode will be auto detected using DDTP WARL property,
-> > using highest mode supported by the driver and hardware. If none
-> > supported can be configured, driver will fall back to global pass-throu=
-gh.
-> >
-> > First level DDTP page can be located in I/O (detected using DDTP WARL)
-> > and system memory.
-> >
-> > Only identity protection domain is supported by this implementation.
-> >
-> > Co-developed-by: Nick Kossifidis <mick@ics.forth.gr>
-> > Signed-off-by: Nick Kossifidis <mick@ics.forth.gr>
-> > Signed-off-by: Tomasz Jeznach <tjeznach@rivosinc.com>
-> > ---
-> >   drivers/iommu/riscv/iommu.c | 369 +++++++++++++++++++++++++++++++++++=
--
-> >   drivers/iommu/riscv/iommu.h |   5 +
-> >   2 files changed, 365 insertions(+), 9 deletions(-)
->
-> [ ... ]
->
-> > +
-> > +/*
-> > + * Discover supported DDT modes starting from requested value,
-> > + * configure DDTP register with accepted mode and root DDT address.
-> > + * Accepted iommu->ddt_mode is updated on success.
-> > + */
-> > +static int riscv_iommu_set_ddtp_mode(struct riscv_iommu_device *iommu,
-> > +                                  unsigned int ddtp_mode)
-> > +{
-> > +     struct device *dev =3D iommu->dev;
-> > +     u64 ddtp, rq_ddtp;
-> > +     unsigned int mode, rq_mode =3D ddtp_mode;
-> > +     int rc;
-> > +
-> > +     rc =3D readq_relaxed_poll_timeout(iommu->reg + RISCV_IOMMU_REG_DD=
-TP,
-> > +                                     ddtp, !(ddtp & RISCV_IOMMU_DDTP_B=
-USY),
-> > +                                     10, RISCV_IOMMU_DDTP_TIMEOUT);
-> > +     if (rc < 0)
-> > +             return -EBUSY;
-> > +
-> > +     /* Disallow state transition from xLVL to xLVL. */
-> > +     switch (FIELD_GET(RISCV_IOMMU_DDTP_MODE, ddtp)) {
-> > +     case RISCV_IOMMU_DDTP_MODE_BARE:
-> > +     case RISCV_IOMMU_DDTP_MODE_OFF:
-> > +             break;
-> > +     default:
-> > +             if (rq_mode !=3D RISCV_IOMMU_DDTP_MODE_BARE &&
-> > +                 rq_mode !=3D RISCV_IOMMU_DDTP_MODE_OFF)
-> > +                     return -EINVAL;
->
-> Is this check duplicate? It appears that it's always true in the default
-> branch.
->
+--000000000000103d3c0616dfcc40
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-No. The condition in the switch represents current mode, while check
-in default branch checks desired mode device will be configured to.
-I've reworked the code in v3 to be more readable.
+On 4/24/24 11:50, Doug Berger wrote:
+> Add optional gpio-ranges device-tree property to the Broadcom
+> Set-Top-Box GPIO controller.
+> 
+> Signed-off-by: Doug Berger <opendmb@gmail.com>
 
-> > +             break;
-> > +     }
-> > +
-> > +     do {
-> > +             rq_ddtp =3D FIELD_PREP(RISCV_IOMMU_DDTP_MODE, rq_mode);
-> > +             if (rq_mode > RISCV_IOMMU_DDTP_MODE_BARE)
-> > +                     rq_ddtp |=3D phys_to_ppn(iommu->ddt_phys);
-> > +
-> > +             riscv_iommu_writeq(iommu, RISCV_IOMMU_REG_DDTP, rq_ddtp);
-> > +
-> > +             rc =3D readq_relaxed_poll_timeout(iommu->reg + RISCV_IOMM=
-U_REG_DDTP,
-> > +                                             ddtp, !(ddtp & RISCV_IOMM=
-U_DDTP_BUSY),
-> > +                                             10, RISCV_IOMMU_DDTP_TIME=
-OUT);
-> > +             if (rc < 0) {
-> > +                     dev_warn(dev, "timeout when setting ddtp (ddt mod=
-e: %u, read: %llx)\n",
-> > +                              rq_mode, ddtp);
-> > +                     return -EBUSY;
-> > +             }
-> > +
-> > +             /* Verify IOMMU hardware accepts new DDTP config. */
-> > +             mode =3D FIELD_GET(RISCV_IOMMU_DDTP_MODE, ddtp);
-> > +
-> > +             if (rq_mode =3D=3D mode)
-> > +                     break;
-> > +
-> > +             /* Hardware mandatory DDTP mode has not been accepted. */
-> > +             if (rq_mode < RISCV_IOMMU_DDTP_MODE_1LVL && rq_ddtp !=3D =
-ddtp) {
-> > +                     dev_warn(dev, "DDTP update failed hw: %llx vs %ll=
-x\n", ddtp, rq_ddtp);
-> > +                     return -EINVAL;
-> > +             }
-> > +
-> > +             /*
-> > +              * Mode field is WARL, an IOMMU may support a subset of
-> > +              * directory table levels in which case if we tried to se=
-t
-> > +              * an unsupported number of levels we'll readback either
-> > +              * a valid xLVL or off/bare. If we got off/bare, try agai=
-n
-> > +              * with a smaller xLVL.
-> > +              */
-> > +             if (mode < RISCV_IOMMU_DDTP_MODE_1LVL &&
-> > +                 rq_mode > RISCV_IOMMU_DDTP_MODE_1LVL) {
-> > +                     dev_dbg(dev, "DDTP hw mode %u vs %u\n", mode, rq_=
-mode);
-> > +                     rq_mode--;
-> > +                     continue;
-> > +             }
-> > +
-> > +             /*
-> > +              * We tried all supported modes and IOMMU hardware failed=
- to
-> > +              * accept new settings, something went very wrong since o=
-ff/bare
-> > +              * and at least one xLVL must be supported.
-> > +              */
-> > +             dev_warn(dev, "DDTP hw mode %u, failed to set %u\n", mode=
-, ddtp_mode);
-> > +             return -EINVAL;
-> > +     } while (1);
-> > +
-> > +     iommu->ddt_mode =3D mode;
-> > +     if (mode !=3D ddtp_mode)
-> > +             dev_warn(dev, "DDTP failover to %u mode, requested %u\n",
-> > +                      mode, ddtp_mode);
-> > +
-> > +     return 0;
-> > +}
-> > +
->
-> [ ... ]
->
-> > +
-> > +static int riscv_iommu_attach_domain(struct riscv_iommu_device *iommu,
-> > +                                  struct device *dev,
-> > +                                  struct iommu_domain *iommu_domain)
-> > +{
-> > +     struct iommu_fwspec *fwspec =3D dev_iommu_fwspec_get(dev);
-> > +     struct riscv_iommu_dc *dc;
-> > +     u64 fsc, ta, tc;
-> > +     int i;
-> > +
-> > +     if (!iommu_domain) {
-> > +             ta =3D 0;
-> > +             tc =3D 0;
-> > +             fsc =3D 0;
-> > +     } else if (iommu_domain->type =3D=3D IOMMU_DOMAIN_IDENTITY) {
-> > +             ta =3D 0;
-> > +             tc =3D RISCV_IOMMU_DC_TC_V;
-> > +             fsc =3D FIELD_PREP(RISCV_IOMMU_DC_FSC_MODE, RISCV_IOMMU_D=
-C_FSC_MODE_BARE);
-> > +     } else {
-> > +             /* This should never happen. */
-> > +             return -ENODEV;
-> > +     }
->
-> Move the domain->type check code to the domain-specific ops.
->
-> > +
-> > +     /* Update existing or allocate new entries in device directory */
-> > +     for (i =3D 0; i < fwspec->num_ids; i++) {
-> > +             dc =3D riscv_iommu_get_dc(iommu, fwspec->ids[i], !iommu_d=
-omain);
-> > +             if (!dc && !iommu_domain)
-> > +                     continue;
-> > +             if (!dc)
-> > +                     return -ENODEV;
-> > +
-> > +             /* Swap device context, update TC valid bit as the last o=
-peration */
-> > +             xchg64(&dc->fsc, fsc);
-> > +             xchg64(&dc->ta, ta);
-> > +             xchg64(&dc->tc, tc);
-> > +
-> > +             /* Device context invalidation will be required. Ignoring=
- for now. */
-> > +     }
-> > +
-> >       return 0;
-> >   }
-> >
-> > +static int riscv_iommu_attach_identity_domain(struct iommu_domain *iom=
-mu_domain,
-> > +                                           struct device *dev)
-> > +{
-> > +     struct riscv_iommu_device *iommu =3D dev_to_iommu(dev);
-> > +
-> > +     /* Global pass-through already enabled, do nothing. */
-> > +     if (iommu->ddt_mode =3D=3D RISCV_IOMMU_DDTP_MODE_BARE)
-> > +             return 0;
-> > +
-> > +     return riscv_iommu_attach_domain(iommu, dev, iommu_domain);
-> > +}
-> > +
-> >   static struct iommu_domain riscv_iommu_identity_domain =3D {
-> >       .type =3D IOMMU_DOMAIN_IDENTITY,
-> >       .ops =3D &(const struct iommu_domain_ops) {
-> > @@ -82,6 +420,13 @@ static void riscv_iommu_probe_finalize(struct devic=
-e *dev)
-> >       iommu_setup_dma_ops(dev, 0, U64_MAX);
-> >   }
-> >
-> > +static void riscv_iommu_release_device(struct device *dev)
-> > +{
-> > +     struct riscv_iommu_device *iommu =3D dev_to_iommu(dev);
-> > +
-> > +     riscv_iommu_attach_domain(iommu, dev, NULL);
->
-> Attaching a NULL domain to a device has already been removed. You can
-> use the iommu_ops->release_domain here.
->
-> > +}
-> > +
-> >   static const struct iommu_ops riscv_iommu_ops =3D {
-> >       .owner =3D THIS_MODULE,
-> >       .of_xlate =3D riscv_iommu_of_xlate,
-> > @@ -90,6 +435,7 @@ static const struct iommu_ops riscv_iommu_ops =3D {
-> >       .device_group =3D riscv_iommu_device_group,
-> >       .probe_device =3D riscv_iommu_probe_device,
-> >       .probe_finalize =3D riscv_iommu_probe_finalize,
->
-> The probe_finalize op will be removed soon.
->
-> https://lore.kernel.org/linux-iommu/bebea331c1d688b34d9862eefd5ede4750396=
-1b8.1713523152.git.robin.murphy@arm.com/
+Acked-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
-Thanks, I'm aware of the change, once this change is pulled for
-iommu/next I'll just remove probe_finalize.
 
->
-> > +     .release_device =3D riscv_iommu_release_device,
-> >   };
-> >
-> >   static int riscv_iommu_init_check(struct riscv_iommu_device *iommu)
-> > @@ -124,6 +470,7 @@ void riscv_iommu_remove(struct riscv_iommu_device *=
-iommu)
-> >   {
-> >       iommu_device_unregister(&iommu->iommu);
-> >       iommu_device_sysfs_remove(&iommu->iommu);
-> > +     riscv_iommu_set_ddtp_mode(iommu, RISCV_IOMMU_DDTP_MODE_OFF);
-> >   }
-> >
-> >   int riscv_iommu_init(struct riscv_iommu_device *iommu)
-> > @@ -133,12 +480,14 @@ int riscv_iommu_init(struct riscv_iommu_device *i=
-ommu)
-> >       rc =3D riscv_iommu_init_check(iommu);
-> >       if (rc)
-> >               return dev_err_probe(iommu->dev, rc, "unexpected device s=
-tate\n");
-> > -     /*
-> > -      * Placeholder for a complete IOMMU device initialization.
-> > -      * For now, only bare minimum: enable global identity mapping mod=
-e and register sysfs.
-> > -      */
-> > -     riscv_iommu_writeq(iommu, RISCV_IOMMU_REG_DDTP,
-> > -                        FIELD_PREP(RISCV_IOMMU_DDTP_MODE, RISCV_IOMMU_=
-DDTP_MODE_BARE));
-> > +
-> > +     rc =3D riscv_iommu_ddt_alloc(iommu);
-> > +     if (WARN(rc, "cannot allocate device directory\n"))
-> > +             goto err_init;
-> > +
-> > +     rc =3D riscv_iommu_set_ddtp_mode(iommu, RISCV_IOMMU_DDTP_MODE_MAX=
-);
-> > +     if (WARN(rc, "cannot enable iommu device\n"))
-> > +             goto err_init;
-> >
-> >       rc =3D iommu_device_sysfs_add(&iommu->iommu, NULL, NULL, "riscv-i=
-ommu@%s",
-> >                                   dev_name(iommu->dev));
-> > @@ -154,5 +503,7 @@ int riscv_iommu_init(struct riscv_iommu_device *iom=
-mu)
-> >   err_iommu:
-> >       iommu_device_sysfs_remove(&iommu->iommu);
-> >   err_sysfs:
-> > +     riscv_iommu_set_ddtp_mode(iommu, RISCV_IOMMU_DDTP_MODE_OFF);
-> > +err_init:
-> >       return rc;
-> >   }
-> > diff --git a/drivers/iommu/riscv/iommu.h b/drivers/iommu/riscv/iommu.h
-> > index 700e33dc2446..f1696926582c 100644
-> > --- a/drivers/iommu/riscv/iommu.h
-> > +++ b/drivers/iommu/riscv/iommu.h
-> > @@ -34,6 +34,11 @@ struct riscv_iommu_device {
-> >       /* available interrupt numbers, MSI or WSI */
-> >       unsigned int irqs[RISCV_IOMMU_INTR_COUNT];
-> >       unsigned int irqs_count;
-> > +
-> > +     /* device directory */
-> > +     unsigned int ddt_mode;
-> > +     dma_addr_t ddt_phys;
-> > +     u64 *ddt_root;
-> >   };
-> >
-> >   int riscv_iommu_init(struct riscv_iommu_device *iommu);
->
-> Best regards,
-> baolu
+--000000000000103d3c0616dfcc40
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-Thank you, Best.
-- Tomasz
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIGDGQXNJxRbkfw1U
+w2StWBH4sG4Tvd7ES8VIxuZv1QWBMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDQyNDIzMTE1N1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBZaieykwOlSVz+sdS2hxjopYhJRVCLvjQW
+X4GlSEDM7rFx+FtNfT4/tkdGIwzOCDJN+Bd8DHr/rDKCHWeIMF9ixl5RCl/xeTOgTYxH//zzNFzV
+jTaavzpGuE7A33hkTxV1vcRsWBlHEhuKhQbMpOG35o+SXA9sEfIV1TDiG8WAdXeDks7KWxy4316I
+/G3FW+TlU01bUh1jhDzPAujG2hVA2oJvwV46P4+aTAevGJBpkjsoRukwDyMz4N5Pq6j5oVd+5c7R
+JT/1ssb9j8FVpwOSzdRm2g4T1qcxt+OaFQGa97uYlbOopu2V2/3ip+Mqd/92gcYoSv7+VxwOtlsm
+BjfD
+--000000000000103d3c0616dfcc40--
