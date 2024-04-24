@@ -1,207 +1,116 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from seahorse.cherry.relay.mailchannels.net (seahorse.cherry.relay.mailchannels.net [23.83.223.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154E4442F;
-	Wed, 24 Apr 2024 23:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714001748; cv=none; b=LTmOiKUx83bugTvOEIuuStO98BKEWsXd1aAWcHIaWzmmnzJHObibvn39xoIFBRIPB4jxo0EO0AyMuL2JSMOT7y6MMpGn/oMWwvzYPEQ/GGDJkPzUr9iht5MfBDeKPs7tmiQIAv5miiVWwPtD9t15Yl6IIWFtrtcTeY30fz0Hso0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714001748; c=relaxed/simple;
-	bh=alWh828635B9LX6WrzpJ33NK+tWIsqWDA5n+dpzOkVg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LpcUAIPaETetvWrvX1fA1s9/LUdJbDVFV9qouS4bIHacEv+ZEk5ygFosIwy0Uk3PPyL/Lpsqq0pZXoWtS29le7TnvdCdK4xoiesFHi7T1ldvan2vgTwiY8yz3/JbTa0TDMU9HhPlpbpoU1uEDh1f7ru9+7Qbgl5CQ1f1HpmlkYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pQrrMB4b; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13D313A3E6;
+	Wed, 24 Apr 2024 23:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.161
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714001813; cv=pass; b=oV64p7uV21259rlzV3IaLb9Thfmdj/PSA4qk5p4B7OmuTL9r/+dk0v5nPk6HMODEcWYHlBEOhoWoyBOWH2HZIj2Y1bmU2j2zDXx4WWjbL2Yu/IPHRn7XsurxCin3eIDpEJcq1rqnE4jLeNmDF3nS+dtd0E2yqpELrAwHT2+m7V0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714001813; c=relaxed/simple;
+	bh=y4/FDZgTiB7uZt+GrJ9Q84C8HZBCN12BEcR92P/kNjA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rp9wnCjkKN0tjQ6/rpG20cWvh1R8QLW/itfWRuG/ja68owoBm5jd5iLA1uvpU57zu5QGopBlxZU07osYz2dGTYkgp4e+iHmvG3ATURsrKvdDzJLWe7sfMZisQt+iYhCWGsmxjXlceHsbZvW1csmThQ66tC20PC29tW0vE7hhwJ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=FuLPnotF; arc=pass smtp.client-ip=23.83.223.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pQrrMB4b"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43ONPDi7009559;
-	Wed, 24 Apr 2024 23:35:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=boDSHsbn06oFKEy2YJu1wtGdZZBUC0SEoorcU9qQ8r0=; b=pQ
-	rrMB4boYXfgbp2Pcs0WxyIa/gER36XaBwXp6+1kt/nZoccg7al7YZl7Wp6bxst+m
-	WjMiEUnl/tPOO1aAJutnIHj/V+2syeybkgd55Bx/LZDd62yDgA6ajf0UhWFWgm/W
-	zOwN7pDxBPhnuJb3GErG9w6xCcd8l6OnvjPho/1cQwsMftGA80My5Fa2PuMtdACr
-	iuTg9jmsjYfnGXf0NcH4fvFRC7bwVMOolXTNWqDrkcsQBCfxkyaEdq2KGDBscoVa
-	RPY74DrcqqJO3AMNY3ctIHlcY46T7CC4tueLp4wd4AI6v3HyT610FF7snq9S5YT9
-	/XPfZHKWjKIcIGrMNDYw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xpv9ktcna-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 23:35:41 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43ONZeKo005341
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 23:35:40 GMT
-Received: from [10.253.14.221] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 24 Apr
- 2024 16:35:38 -0700
-Message-ID: <1d0878e0-d138-4de2-86b8-326ab9ebde3f@quicinc.com>
-Date: Thu, 25 Apr 2024 07:35:36 +0800
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="FuLPnotF"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 94AD340929;
+	Wed, 24 Apr 2024 23:11:46 +0000 (UTC)
+Received: from pdx1-sub0-mail-a235.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 0CF724054A;
+	Wed, 24 Apr 2024 23:11:46 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1714000306; a=rsa-sha256;
+	cv=none;
+	b=SiZT6pBBOImRsA7ydImmpPrikQ9KDKMZGK7IxCYd1dEVBMlFEaB4FpGlBy0+D6QZvsWZOT
+	wVgMs2jigkMtNbAWXoZx9MoYyMmon6Hczo3t2TTl9HWPD3w7LY0kFheSI7tTdwu/AMr2r9
+	SqV+3+XF7sH7K/hu5LRcKn0M540oy+nnmQO65J2oO2cRUnJCHi5vlv1O0PwZ6HSTauFZSL
+	kVjuQZbtNwcf4M34U1C06wNOkX1Wiiz84c97XIiS1p+robK/Nn55yxdBins1PGkR57MkZX
+	s5tWHzgtlfuYE7qMuOYbq2n4OWKrKjV6V8Ghb9e9vwEYAUef6du7FpbRR3uLIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1714000306;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=y4/FDZgTiB7uZt+GrJ9Q84C8HZBCN12BEcR92P/kNjA=;
+	b=3lAkrRL3I0TuHATFXkFiJQeqiI0p3NE5y//jBkBlwU6FNdtv3Y3I5MKHXdOwKy/4PQMLhk
+	MEAj2kp+UUZ7VjJQiq8su9a0WwUz6ktIMWShSQlJ2sCTY3vYSQvNto68VjNAmjHdzCNazA
+	Bww+rY/dLisDZS0XW6Mj3GP5pPcDFnlUbFxrxbsF7fbztU+ybJqyBkJsZkmK/CSlvXwCyU
+	1YJaC9EqpCFUXB6JNcFj89zMsCvlEoIKmfiFoNSnnt/neq7Iz+Lka9gG8rgSJvn0kVadEO
+	vjpKqdPNFrrPE5TQ1fcnBwaY4LWZBKtcLjo9HTq5HEF48H/dT9XXxgBLHL3sGQ==
+ARC-Authentication-Results: i=1;
+	rspamd-6f55c6f9dc-cds9h;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Stretch-Troubled: 4c82c1c54eb796ed_1714000306362_4070382946
+X-MC-Loop-Signature: 1714000306362:3215447623
+X-MC-Ingress-Time: 1714000306362
+Received: from pdx1-sub0-mail-a235.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.119.153.252 (trex/6.9.2);
+	Wed, 24 Apr 2024 23:11:46 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a235.dreamhost.com (Postfix) with ESMTPSA id 4VPvrK2ZK6z8x;
+	Wed, 24 Apr 2024 16:11:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1714000305;
+	bh=y4/FDZgTiB7uZt+GrJ9Q84C8HZBCN12BEcR92P/kNjA=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=FuLPnotFRpjsr7YkpzdNz3BQ4FwnYher2PgVr1DLtEKGIh7tHXkEeGiUGnIYA+wy/
+	 4fc5DtHLjld6qAJgNKHQFOqO7tlEYNQRis5c1s/MxJEOQ6o1PO1H8NKglRUjoNkjGJ
+	 o5E2AfGPZlexLPcijqJauOUud1PEWKK7PTZE+6oetOY2+mMjmecwAfF8QWpb1tar45
+	 x3lKipFeeTdPGgoQKaBcOdXRKH0GdOM79UdbYcjbiJ/4q2sPDE/fkY2Rk3XncWqeba
+	 2E99aAc7u/oSeXJYOcAB6Rnm2PbXWJI0ilyf4X/AoU/IGeGsNkMDqTsINZfYelRrRY
+	 D/7MBkxE0BW+w==
+Date: Wed, 24 Apr 2024 16:11:42 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] cxl: Fix use of phys_to_target_node() for x86
+Message-ID: <20240424231142.rytjmxfassu44vln@offworld>
+References: <20240424154756.2152614-1-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Bluetooth: qca: set power_ctrl_enabled on NULL returned
- by gpiod_get_optional()
-To: Wren Turkal <wt@penguintechs.org>,
-        Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>
-CC: Bartosz Golaszewski <brgl@bgdev.pl>, <linux-bluetooth@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
-        Luiz
- Augusto von Dentz <luiz.dentz@gmail.com>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-References: <20240422130036.31856-1-brgl@bgdev.pl>
- <99242a7c-53bf-4227-9623-7bc092f564b3@penguintechs.org>
- <CAMRc=MepDwUbAKrWgm0CXKObqy8=igtug0QDgo-CgwxjZCAC2Q@mail.gmail.com>
- <b982b73d-0540-409c-a6e2-0e03ecb11715@penguintechs.org>
- <0381f39c-38ba-4a2b-915c-f14c5f911eb9@penguintechs.org>
- <CAMRc=MfnEct7ThQhCA3AoY7hxq8j1mmFLNNkK17+RSvJxs67XQ@mail.gmail.com>
- <2371f538-ec53-4037-b171-c62bf4e06eb1@penguintechs.org>
- <CACMJSeunUaj0cxLaN4MpFmX5vTOx_vnWjBN4Y2FavdQoQxFRkg@mail.gmail.com>
- <4c33304a-5dbc-450a-b874-e04ba9e93150@penguintechs.org>
- <CAMRc=MeDQFHX9r-sHNxqkfpi=LkHoRSL7i6dWokB-J+J03rBEg@mail.gmail.com>
- <93e15ecf-252f-4789-a23b-a28280f6aa84@quicinc.com>
- <e64b89b3-a8f5-44e7-ae7f-fc4298841f1c@penguintechs.org>
- <CACMJSet1wjEive0-Z=0_eiY7umBoSF_VX3QvVgiwqxhTSDZg6g@mail.gmail.com>
- <aea85118-060a-4451-a1f1-d8e634f1aab7@penguintechs.org>
-Content-Language: en-US
-From: quic_zijuhu <quic_zijuhu@quicinc.com>
-In-Reply-To: <aea85118-060a-4451-a1f1-d8e634f1aab7@penguintechs.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: KIJB2dMPWpvIeDKjfmq4B2snpsXlaTos
-X-Proofpoint-GUID: KIJB2dMPWpvIeDKjfmq4B2snpsXlaTos
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-24_19,2024-04-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- clxscore=1015 priorityscore=1501 adultscore=0 lowpriorityscore=0
- mlxlogscore=999 impostorscore=0 phishscore=0 spamscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404240124
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20240424154756.2152614-1-rrichter@amd.com>
+User-Agent: NeoMutt/20220429
 
-On 4/25/2024 6:17 AM, Wren Turkal wrote:
-> On 4/24/24 6:53 AM, Bartosz Golaszewski wrote:
->> On Wed, 24 Apr 2024 at 15:26, Wren Turkal <wt@penguintechs.org> wrote:
->>>
->>> On 4/24/24 6:12 AM, quic_zijuhu wrote:
->>>> On 4/24/2024 8:27 PM, Bartosz Golaszewski wrote:
->>>>> On Wed, Apr 24, 2024 at 2:24 PM Wren Turkal <wt@penguintechs.org>
->>>>> wrote:
->>>>>>>>>
->>>>>>>>> That's OK, we have the first part right. Let's now see if we
->>>>>>>>> can reuse
->>>>>>>>> patch 2/2 from Zijun.
->>>>>>>>
->>>>>>>> I'm compiling it right now. Be back soon.
->>>>>>>>
->>>>>>>
->>>>>>> Well I doubt it's correct as it removed Krzysztof's fix which looks
->>>>>>> right. If I were to guess I'd say we need some mix of both.
->>>>>>
->>>>>> Patch 2/2 remove K's fix? I thought only 1/2 did that.
->>>>>>
->>>>>> To be specific, I have applied your patch and Zijun's 2/2 only.
->>>>>>
->>>>>
->>>>> No, patch 1/2 from Zijun reverted my changes. Patch 2/2 removes
->>>>> Krzysztof's changes and replaces them with a different if else. This
->>>>> patch is a better alternative to Zijun's patch 1/2. For 2/2, I'll let
->>>>> Krzysztof handle it.
->>>>>
->>>> do you really realize what do you talk about?
->>>> do you really listen what do @Wren says?
->>>>
->>>> he says that my patch 2/2 is right based on several verification
->>>> results.
->>>
->>> she, not he
->>>
->>>> BTW, my 2/2 fix don't have anything about DTS usage.
->>>
->>> I think the problem with your 2/2 patch is that it removes the
->>> conditional bailing if the device is shutdown or not open.
->>>
->>> Maybe this patch instead?
->>>
->>> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->>> index 2f7ae38d85eb..fcac44ae7898 100644
->>> --- a/drivers/bluetooth/hci_qca.c
->>> +++ b/drivers/bluetooth/hci_qca.c
->>> @@ -2456,6 +2456,10 @@ static void qca_serdev_shutdown(struct device
->>> *dev)
->>>                       !test_bit(HCI_RUNNING, &hdev->flags))
->>>                           return;
->>>
->>> +               if (test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP,
->>> &hdev->quirks) ||
->>> +                   hci_dev_test_flag(hdev, HCI_SETUP))
->>> +                       return;
->>> +
->>>                   serdev_device_write_flush(serdev);
->>>                   ret = serdev_device_write_buf(serdev, ibs_wake_cmd,
->>>                                                 sizeof(ibs_wake_cmd));
->>>
->>>> he maybe be a DTS expert but not BT from his present fix history for
->>>> bluetooth system.
->>>
->>>
->>
->> Did you test it? Does it work? If so, please consider sending it
->> upstream for review.
->>
->> You can keep Zijun's authorship but add your own SoB tag at the end
->> and mention what you did. Something like this:
->>
+On Wed, 24 Apr 2024, Robert Richter wrote:
 
-[V7 2/2] as shown by below link is the formal fix.
-https://patchwork.kernel.org/project/bluetooth/patch/1713932807-19619-3-git-send-email-quic_zijuhu@quicinc.com/
+>The CXL driver uses both functions phys_to_target_node() and
+>memory_add_physaddr_to_nid(). The x86 architecture relies on the
+>NUMA_KEEP_MEMINFO kernel option enabled for both functions to work
+>correct. Update Kconfig to make sure the option is always enabled for
+>the driver.
+>
+>Suggested-by: Dan Williams <dan.j.williams@intel.com>
+>Link: http://lore.kernel.org/r/65f8b191c0422_aa222941b@dwillia2-mobl3.amr.corp.intel.com.notmuch
+>Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+>Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>Signed-off-by: Robert Richter <rrichter@amd.com>
 
-this fix logic was introduced from the very beginning when i saw your
-issue description as shown by below link
-https://lore.kernel.org/all/1713095825-4954-3-git-send-email-quic_zijuhu@quicinc.com/#t
-
->> [Wren: kept Krzysztof's fix]
->> Signed-off-by: Wren...
->>
->> Bartosz
-> 
-> @Bartosz, I have tested this, and it works functionally for my setup. I
-> cannot detect a difference between this and Zijun's logic when I compile
-> a kernel with this patch.
-> 
-> @Zijun, I think you have objections to this patch. I would like to make
-> sure I hear your concern. Can you please take through it like I'm a 5
-> year old who barely knows C? In retrospect, I guess that I would be a
-> pretty precocious 5 year old. LOL.
-> 
-> In all seriousness, @Zijun, I really appreciate the work you did on
-> this. I would like to understand why you assert that removing the logic
-> of Krzysztof is appropriate. Again, I am not a kernel developer, so this
-> stuff is really outside my wheelhouse. Having said that, by my reading,
-> which may very well be worng, it seems like you are just adding another
-> case that is orthogonal to K's conditions. I'd like to truly understand
-> you position to know if the patch I am suggesting is somehow harmful.
-> This is an earnest question. I really want to respect your expertise
-> here, and I really want you to know how much I appreciate your work.
-> you maybe see all replies of [2/2] patch for this issue within below
-link. i believe you will understand it. the bottom of the link includes
-all reply history.
-https://lore.kernel.org/all/fe1a0e3b-3408-4a33-90e9-d4ffcfc7a99b@quicinc.com/
-> wt
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
