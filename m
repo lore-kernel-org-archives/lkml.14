@@ -1,208 +1,102 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C13613D619
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 03:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FEB6339A1;
+	Wed, 24 Apr 2024 03:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713927899; cv=none; b=DuEk4aOk8UC88V1CGNan4kxiVhVJI5YplhCEDF9btzbmbg9MH7YOSo/k+bckxzqXxSRWtXAlEDbTx+L/8o3w8DekooRhIMt4fzEOtmfz5Mo2v7KjxZNeZbIchtn8gtKPZXcv9M/SiRAwS+Xk/DvfukvaGSjBrTqvyi7xsyOx81w=
+	t=1713928017; cv=none; b=sqFoxDToICWEETc1pk8/HpyDCrmN+IJvTdS6a2uwsrOzctv+Osbmkl9C/IwoTdRripE49B1NDitUZsRnY8rGoeFtH+2xUixBGusoNL5uBF0sEg038++NmPLOuaR1LpTVaQktrcKH3yK3OYpZBLH7de1r8+1dD0L2cSrI4HVkGn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713927899; c=relaxed/simple;
-	bh=R1jmTxIBV5+sVaAK4eRBOf1ydKoXFUJi+Y0I1HTFRhg=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=CCkk0CvMWwulHzgKuPnPr5XDGLnPoH/PssGRWIDb1pvU5+qFvQ4uW3v7LNMiWVQoMf/B/cN+NHM4+SDBy7dIYBXD0H3bVYfum/Pp6BeUO+lyGRc+8lZYrGzFnpBMF8rV/Q5R4iDG7+nJDRMzGh20ynySr3IWYyaDnNXh30rd8eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ld+syGfV; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1713928017; c=relaxed/simple;
+	bh=HAm8npkjU9W9knreApov7ysuQwghSu0sfaePTT/qFdM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MYm87SehUo5Jpxw3rGYAlhy+qBn4EDy/GSPaMcYefbaYUZJB05Hq5V4QbfkSdm8RVcgMHinfNkd3MnnB49apRwi9O+tmU+gBMh1N6P1muOiEvR2gz7Wl043VTPjYeCtFmv/qslGwtCmPjdoWAZJsU9ca7Aa7d8TOrYCi4cDfWW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LYfXxw3p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ld+syGfV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LYfXxw3p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AED8C116B1;
+	Wed, 24 Apr 2024 03:06:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713928016;
+	bh=HAm8npkjU9W9knreApov7ysuQwghSu0sfaePTT/qFdM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LYfXxw3p4wmKieHARFTBzsmHd7aZLi/XmBIFSyRdmgBtB9/1KsRNKMXYtkwmWDczJ
+	 WgXdVF7y7GPi8iK+q/qIdEP5v8Gsak1sml73TpWMoXjdbKrHU6RntqsOVbS9/Nzu80
+	 2VjASi+6BRpmo1iKP/fL4A7yiRhu4l2EepmtyORboMix6Udl+Yj2hEsCYqHgdlfCY8
+	 /TR/UCjZfjIp0zNyMflTpeQB1Igx7pOpdVfyPupT2aOZ/+wG/UvAXQ0ag4Asxihi9X
+	 XV7ctIpglPk+qIle93BDb59IvJi+gEJOIp8bihRNVLlTKUYUxddDWq8KwMq4A4gA4O
+	 sGlPFPkDBbXXA==
+Date: Tue, 23 Apr 2024 20:06:56 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc: chandan.babu@oracle.com, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
+Subject: Re: [PATCH] xfs: Remove unused function xrep_dir_self_parent
+Message-ID: <20240424030656.GC360919@frogsfrogsfrogs>
+References: <20240424020638.81487-1-jiapeng.chong@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1713927894;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5Q8EGvUA4lu8esD47DBLZ4CU9GgawJRaGEeylxgCNGE=;
-	b=ld+syGfVgjrpi0pZbQafZs11J2riKDoHegikuLS+sp6Foh/YO2ebEa+OCB0K9SmN6kVKRe
-	SAD5AEzXDi2tyRZW/7usHayuh76Ffo2zU/GItL6dmC+cznmpf0TbbIaPlk0AFAqZD7xNyP
-	kIJLd+IEOfE/2HD8/zJmX3u/FaKvEVQ=
-Date: Wed, 24 Apr 2024 03:04:51 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Yajun Deng" <yajun.deng@linux.dev>
-Message-ID: <e9c442bef63af1fab9f7630b41803aebf3c2b079@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH] mm/rmap: remove unnecessary page_table_lock
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: "David Hildenbrand" <david@redhat.com>, akpm@linux-foundation.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-In-Reply-To: <3v6xmyzmnw6go45riwlu7qv4c4phiexpqxldnlbgwsjhppe4oi@xdcqm4xupl4k>
-References: <20240422105212.1485788-1-yajun.deng@linux.dev>
- <b848c431-deca-42e4-925c-673b3fa1f251@redhat.com>
- <3c452d5db5b3d5879160ab62a9e0ac4481a6298a@linux.dev>
- <fd7fde90-21ea-4617-be17-ba387b44feaf@redhat.com>
- <b6ea1fb5bc6c06d2855e41b4034656b0a76b58f5@linux.dev>
- <3v6xmyzmnw6go45riwlu7qv4c4phiexpqxldnlbgwsjhppe4oi@xdcqm4xupl4k>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240424020638.81487-1-jiapeng.chong@linux.alibaba.com>
 
-April 24, 2024 at 1:11 AM, "Liam R. Howlett" <Liam.Howlett@oracle.com> wr=
-ote:
+On Wed, Apr 24, 2024 at 10:06:38AM +0800, Jiapeng Chong wrote:
+> The function are defined in the dir_repair.c file, but not called
+> elsewhere, so delete the unused function.
+> 
+> fs/xfs/scrub/dir_repair.c:186:1: warning: unused function 'xrep_dir_self_parent'.
+> 
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8867
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 
+Yep, not used anywhere in my patchsets.  Thank you for catching this and
+cleaning it up.
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
+--D
 
->=20
->=20* Yajun Deng <yajun.deng@linux.dev> [240423 04:35]:
->=20
->=20>=20
->=20> April 23, 2024 at 4:18 PM, "David Hildenbrand" <david@redhat.com> w=
-rote:
-> >=20
->=20>=20=20
->=20>=20
->=20>=20=20
->=20>=20
->=20>=20=20
->=20>=20
->=20>=20=20
->=20>=20
->=20>  On 23.04.24 09:53, Yajun Deng wrote:
-> >=20
->=20>=20=20
->=20>=20
->=20>  >=20
->=20>=20
->=20>  > April 22, 2024 at 7:24 PM, "David Hildenbrand" <david@redhat.com=
-> wrote:
-> >=20
->=20>  >=20
->=20>=20
->=20>  > > >>
-> >=20
->=20>  >=20
->=20>=20
->=20>  > >=20
->=20>=20
->=20>  > > On 22.04.24 12:52, Yajun Deng wrote:
-> >=20
->=20>  > >=20
->=20>=20
->=20>  >=20
->=20>=20
->=20>  > page_table_lock is a lock that for page table, we won't change p=
-age
-> >=20
->=20>  >=20
->=20>=20
->=20>  > table in __anon_vma_prepare(). As we can see, it works well in
-> >=20
->=20>  >=20
->=20>=20
->=20>  > anon_vma_clone(). They do the same operation.
-> >=20
->=20>  >=20
->=20>=20
->=20>  > >=20
->=20>=20
->=20>  > > We are reusing mm->page_table_lock to serialize, not the *actu=
-al* low-level page table locks that really protect PTEs.
-> >=20
->=20>  > >=20
->=20>=20
->=20>  > > With that locking gone, there would be nothing protection vma-=
->anon_vma.
-> >=20
->=20>  > >=20
->=20>=20
->=20>  > > Note that anon_vma_clone() is likely called with the mmap_lock=
- held in write mode, which is not the case for __anon_vma_prepare() ...
-> >=20
->=20>  > >=20
->=20>=20
->=20>  >=20
->=20>=20
->=20>  > Yes, anon_vma_clone() is called with the mmap_lock held. I added=
- mmap_assert_write_locked(dst->vm_mm) to prove it.
-> >=20
->=20>  >=20
->=20>=20
->=20>  > I added mmap_assert_write_locked(vma->vm_mm) in __anon_vma_prepa=
-re() at the same time, it shows __anon_vma_prepare()
-> >=20
->=20>  >=20
->=20>=20
->=20>  > is also called with the mmap_lock held too.
-> >=20
->=20>  >=20
->=20>=20
->=20>=20=20
->=20>=20
->=20>  Make sure you actually have lockdep built in and enabled.
-> >=20
->=20>=20=20
->=20>=20
->=20>=20=20
->=20>=20
->=20>  This is my config.
-> >=20
->=20>  CONFIG_LOCKDEP=3Dn
-> >=20
->=20>  CONFIG_DEBUG_VM=3Dy
-> >=20
->=20>=20=20
->=20>=20
->=20>  I did another test.
-> >=20
->=20>  I put mmap_assert_write_locked(mm) before 'set_bit(MMF_OOM_SKIP, &=
-mm->flags)' in mmap.c, it's outside the lock.
-> >=20
->=20>  It will crash when on boot. I think mmap_assert_write_locked() wor=
-ks.
-> >=20
->=20
-> If you are changing locks, then please test with lockdep on.
->=20
-
-It's=20my fault. It shows a warning with lockdep on.
-
-> >=20
->=20> __anon_vma_prepare() is for example called from do_anonymous_page()=
- where we might only hold the mmap_lock in read mode (or not at all IIRC =
-with VMA in read mode).
-> >=20
->=20
-> Consider two concurrent readers getting to this function with the same
->=20
->=20vma. There is no mergeable anon vma, so both create a new anon_vma.
->=20
->=20You take the anon_vma lock to parallelize the linking to the vma - bu=
-t
->=20
->=20they are different locks because they are both new anon_vma structs
->=20
->=20allocated by concurrent readers.
->=20
->=20You now need a lock that you know cannot allow this to happen. Lookin=
-g
->=20
->=20at the top of mm/rmap.c and see which one works. The next in line is
->=20
->=20the page table lock, so that one is used here.
->=20
->=20What if we reverse the locks? We can deadlock.
->=20
->=20What if we don't take the anon_vma lock? We can have two writers to t=
-he
->=20
->=20anon_vma.
->=20
->=20Thanks,
->=20
->=20Liam
->
+> ---
+>  fs/xfs/scrub/dir_repair.c | 21 ---------------------
+>  1 file changed, 21 deletions(-)
+> 
+> diff --git a/fs/xfs/scrub/dir_repair.c b/fs/xfs/scrub/dir_repair.c
+> index 38957da26b94..f8450c7f99f4 100644
+> --- a/fs/xfs/scrub/dir_repair.c
+> +++ b/fs/xfs/scrub/dir_repair.c
+> @@ -176,27 +176,6 @@ xrep_setup_directory(
+>  	return 0;
+>  }
+>  
+> -/*
+> - * If we're the root of a directory tree, we are our own parent.  If we're an
+> - * unlinked directory, the parent /won't/ have a link to us.  Set the parent
+> - * directory to the root for both cases.  Returns NULLFSINO if we don't know
+> - * what to do.
+> - */
+> -static inline xfs_ino_t
+> -xrep_dir_self_parent(
+> -	struct xrep_dir		*rd)
+> -{
+> -	struct xfs_scrub	*sc = rd->sc;
+> -
+> -	if (sc->ip->i_ino == sc->mp->m_sb.sb_rootino)
+> -		return sc->mp->m_sb.sb_rootino;
+> -
+> -	if (VFS_I(sc->ip)->i_nlink == 0)
+> -		return sc->mp->m_sb.sb_rootino;
+> -
+> -	return NULLFSINO;
+> -}
+> -
+>  /*
+>   * Look up the dotdot entry and confirm that it's really the parent.
+>   * Returns NULLFSINO if we don't know what to do.
+> -- 
+> 2.20.1.7.g153144c
+> 
+> 
