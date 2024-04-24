@@ -1,112 +1,88 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFD1219EA
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 12:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F302B156C68;
+	Wed, 24 Apr 2024 12:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713962907; cv=none; b=ZPEoV5K4diA0AxO5yCpm2fQ6DAMcYFPSOCuEIJVdXSi4EDDslsgJVOVpWsjHrqpCkhUnTgazMRaU9Usp8DylsLxMiS0ILo18189a5AakDADJR57gelJq3ZlflUVGHl2uHbiGzATAb72mp92RLQrxFMhK1R6wCcodYydhpnAlQv8=
+	t=1713962956; cv=none; b=LhYZQwHq0WvvMY25Vfy26+GS5HDfG6WEYGV/01akssRzY2lSrM7h/rIIA/thPkMD9LvEAM6a5nshzEAN0PKHH+IrZWJYi/8T5xeDHOfWolJfQTWJmTseYwYf/+pgX5fCO2mvgjEmitxWcztWDgI+fHw3ufiACVw7cmTEz/66bGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713962907; c=relaxed/simple;
-	bh=XLeh9ge2I9Js+5MqYRN9Wl/goxigSOvbR1wEfUTK7TQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=qiDlekwIBQLAZPnqyKZstIQLjEFGIBJUe0WBXn3izrRdtSrFYr+9uJF84bjiiGlx6TRxt1mZ4sEDsu1SYyx5O6Um3t3MhC4Hp/I1MIC/YdY9yoNTioGuMz7RlrmMEMg1AGDc8n+V8vS3JHraB7Rq5RWWvNCar7ocuPq/NwsOT/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org; spf=pass smtp.mailfrom=clip-os.org; dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b=Cku/hBbx; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=clip-os.org
+	s=arc-20240116; t=1713962956; c=relaxed/simple;
+	bh=Pe/8rKv+51DI3a+CqP2y5vGWwqMpYTxCESRC+dNeud0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IS/gYiQTehZvFiffLX1Ss/jPlXxqjC+8CyYDNkh5Dnehg0yS1PY/3kl345EdHFz/e/TGlHzrzEgY3NY+hu3EQINayCFZ4lqQmovlMG6YOdH5lIeRZP0VyYcsav9rZlIMod2QFtdLgyYcTkMw/B/wF3bA3r9Sc5T8QVQTv53L9eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVfQh2Kf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b="Cku/hBbx"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A793E2000B;
-	Wed, 24 Apr 2024 12:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=clip-os.org; s=gm1;
-	t=1713962897;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=9hAHncHB70jAgUx7BmR+WCk2XyvtNxvWkUnIfZWUNwo=;
-	b=Cku/hBbxGarI7ndhP7LA7wjMbwm2Ozo1qjccwHT2xh0bDfI/isbJn42/xgvrbPAAqnxIw7
-	8CrjV/ph6Z24DX4r5iidCt46E377vJ8nzge1IwVlSFk1PSRIyQcs0kmvSQpVUPryuKd4HC
-	3Qo178gvN+jXjGPK5KhwxjAVJwrPrZ6tr2/Iy/R2usy4JZ02b8WXcUV0RGixFwnAnGMOvK
-	dxophpoj5bURnDhkwLsuJDLZLAubUeOjY2XIwHpqWZ2l0wiomiYt31M7/XXfgNZa7GXBdP
-	Mq0L0c2/1dIG+Okzve6CdmJARE8bNbQzkRbvUR50P3wnZI71sguN6UAnUJ8l3g==
-Date: Wed, 24 Apr 2024 14:47:56 +0200
-From: Nicolas Bouchinet <nicolas.bouchinet@clip-os.org>
-To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc: cl@linux.com, penberg@kernel.org, rientjes@google.com,
-	iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, vbabka@suse.cz,
-	roman.gushchin@linux.dev, 42.hyeyoo@gmail.com
-Subject: [PATCH] slub: Fixes freepointer encoding for single free
-Message-ID: <Zij_fGjRS_rK-65r@archlinux>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVfQh2Kf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02837C113CE;
+	Wed, 24 Apr 2024 12:49:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713962955;
+	bh=Pe/8rKv+51DI3a+CqP2y5vGWwqMpYTxCESRC+dNeud0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QVfQh2KfvE8HUdB+INEHukSpOt9vFPJxwWKhk4KU2wYbdRi8whAsTxEWBvgr7hVuk
+	 q9uuP0FXGjlQgM/7S8UbYNy1aBO7YiDjzN5amjAT1+nFDCcjrmZ+/4FftCZbiTgDLR
+	 PPQj+sWirUje66HIN6F+YizQLjVjL+HK/roCyB2bPJW+N/gxw43rvUo3S2yupQUJVI
+	 u/qEXznTu22G1EOUcS5dbyxeZH/5CbEgrLJZd92/GcfO+wI5/Rl002kNeTNhai3Kb5
+	 jngpWh4Y+Ui0RgtJ4tSpEO2A4I3MyHPzvZqT/hJ901fHPH/9fGu8LvetHpPUhNoQLG
+	 6+dOxDrRD+3yA==
+From: Christian Brauner <brauner@kernel.org>
+To: Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Christoph Hellwig <hch@lst.de>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: xfs fixups for the fop_flags conversion
+Date: Wed, 24 Apr 2024 14:49:06 +0200
+Message-ID: <20240424-parameter-bekam-55dfd6f34ce6@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240423124608.537794-1-hch@lst.de>
+References: <20240423124608.537794-1-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-GND-Sasl: nicolas.bouchinet@clip-os.org
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1455; i=brauner@kernel.org; h=from:subject:message-id; bh=Pe/8rKv+51DI3a+CqP2y5vGWwqMpYTxCESRC+dNeud0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRp/D/MuSw0Is9A6fJ+NhGOV4tOGEtvt/32zdwgyeAAT 2U079zOjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIlU/GX4p/GpYLXaF14WueAJ gelNcrHFT99O/7401Lv2xNZZGZs3/GBkaD06JVHF4o9iR/PrM9xrz+0UDdXPKclsEO2WNLn95J4 4FwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+On Tue, 23 Apr 2024 14:46:05 +0200, Christoph Hellwig wrote:
+> this series against Christian's vfs.misc branch fixes up pointless
+> harmless but pointless over-declaration of capabilities for XFS
+> directories.
+> 
+> Christian: the first patch would make sense to just fold into the
+> original fop_flags conversion if you're still rebasing the branch.
+> 
+> [...]
 
-Commit 284f17ac13fe ("mm/slub: handle bulk and single object freeing
-separately") splits single and bulk object freeing in two functions
-slab_free() and slab_free_bulk() which leads slab_free() to call
-slab_free_hook() directly instead of slab_free_freelist_hook().
+Thanks for the fixes! I didn't fold because it would rebase a lot of
+other stuff which I'd like to avoid. :/
 
-If `init_on_free` is set, slab_free_hook() zeroes the object.
-Afterward, if `slub_debug=F` and `CONFIG_SLAB_FREELIST_HARDENED` are
-set, the do_slab_free() slowpath executes freelist consistency
-checks and try to decode a zeroed freepointer which leads to a
-"Freepointer corrupt" detection in check_object().
-
-Object's freepointer thus needs to be properly set using
-set_freepointer() after init_on_free.
-
-To reproduce, set `slub_debug=FU init_on_free=1 log_level=7` on the
-command line of a kernel build with `CONFIG_SLAB_FREELIST_HARDENED=y`.
-
-dmesg sample log:
-[   10.708715] =============================================================================
-[   10.710323] BUG kmalloc-rnd-05-32 (Tainted: G    B           T ): Freepointer corrupt
-[   10.712695] -----------------------------------------------------------------------------
-[   10.712695]
-[   10.712695] Slab 0xffffd8bdc400d580 objects=32 used=4 fp=0xffff9d9a80356f80 flags=0x200000000000a00(workingset|slab|node=0|zone=2)
-[   10.716698] Object 0xffff9d9a80356600 @offset=1536 fp=0x7ee4f480ce0ecd7c
-[   10.716698]
-[   10.716698] Bytes b4 ffff9d9a803565f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[   10.720703] Object   ffff9d9a80356600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[   10.720703] Object   ffff9d9a80356610: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[   10.724696] Padding  ffff9d9a8035666c: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[   10.724696] Padding  ffff9d9a8035667c: 00 00 00 00                                      ....
-[   10.724696] FIX kmalloc-rnd-05-32: Object at 0xffff9d9a80356600 not freed
-
-Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 ---
- mm/slub.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 3aa12b9b323d9..71dbff9ad8f17 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4342,10 +4342,16 @@ static __fastpath_inline
- void slab_free(struct kmem_cache *s, struct slab *slab, void *object,
- 	       unsigned long addr)
- {
-+	bool init = false;
-+
- 	memcg_slab_free_hook(s, slab, &object, 1);
-+	init = slab_want_init_on_free(s);
- 
--	if (likely(slab_free_hook(s, object, slab_want_init_on_free(s))))
-+	if (likely(slab_free_hook(s, object, init))) {
-+		if (init)
-+			set_freepointer(s, object, NULL);
- 		do_slab_free(s, slab, object, object, 1, addr);
-+	}
- }
- 
- static __fastpath_inline
--- 
-2.44.0
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[1/3] xfs: fix overly long line in the file_operations
+      https://git.kernel.org/vfs/vfs/c/19e048641bc6
+[2/3] xfs: drop fop_flags for directories
+      https://git.kernel.org/vfs/vfs/c/f50805713a6e
+[3/3] xfs: don't call xfs_file_open from xfs_dir_open
+      https://git.kernel.org/vfs/vfs/c/652efdeca5b1
