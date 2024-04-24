@@ -1,116 +1,351 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D93715E209
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 14:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B1215ECCF
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 14:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713970094; cv=none; b=P0iX1eV5MH7TIyZRJLAY2/Ta2UG/J/w6XV8WccacTzxJlxWiCxlw6CFvQ8yxnl74VWIcVXZG96ol+YOqOwq43hYTfCUXi4KaSGQct1VKiIhsguo75P8zZi6U5pOxTt4r17A3QhtS3+ozScAOfmknPzatyneJEG2PwP+CaLRW2KM=
+	t=1713970102; cv=none; b=lJHoJ7bjS82twCx8idd3W4Ab6W1Aiji5j32hUdlpSxTPuhu/tZnugT4JqTtJfvSnqrzVn3iqcgRgcv7yF01nFulXT67BTdFs2MVHJwigVTrvlgrgeOyeJ/U15Oqu/6hkDzPmy+L1QF5LVLd5gRNkS+u+8o0dPQ71/e3RCJyxJx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713970094; c=relaxed/simple;
-	bh=pZRMHeRrZ7PqTOAeDPMoXssbpZwAoT0QUjHK0yTI7G4=;
+	s=arc-20240116; t=1713970102; c=relaxed/simple;
+	bh=1TuzT+VtxtgIpOWyHKC+lNvLsB0FjJXvt3nOsiKFt6g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RcCNpSOZcUjJ2cn4ikL4+I2V2dE2jCKHrfa9a1o7wQR0VxRqB0a4mKXMbSItM6Wna08aIqfRV+l47LtkoGhvrn+8IGfgFpRm7Kh9MIxceTipfKE8k0IaVh8/3XcmbLcviWT4srnJlgoKbgSMTz/KFbhckQHsD8qVCsFp7m2MSyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=ogoM/PS1; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	 Content-Type:Content-Disposition:In-Reply-To; b=VDZcbOfbCL/csz0YcYJvb/tjuCvHknWa2rCpO6lBO6ldpmP/CAMEj4I8rSjAxyUoszFwWbVJUCTCJ17r0zjzecMATlfTqFVpyjrygRY06KeE7Q2yAHQKgCNeGSSO7hCgVAc0pqhVY8kmj9jd11EMpH8BfnaCJCKdfwH7vtJxhAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=j8gHIfPr; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="ogoM/PS1"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a5224dfa9adso192401466b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 07:48:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1713970091; x=1714574891; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NVbaUyrmVafdj/cQpZaiAaBbKWO3w1dBZ7Hp+YT/Oh8=;
-        b=ogoM/PS1Y2jX+13pwUTQ0rudu54Dmu2iJ7RNx2vmuACcmsFTVv6vIHNhtekmDb3nCu
-         8BusBlotgIy49+T7uufsI7jkabpyw6Qgn0OOe9xrsHCF8b+/WiXRavurqvkpYDqGlY2W
-         bMdYlIbaX1V5LzLf1HkChyUNv5S35MFFI6vLVy+LVUycgNK0M1ntygEzSiL9dJFSH+JS
-         PjzZbANMK+XkJ3wqPfrrvKAnXwJmWfb3YtDwhpo7cbZnwWpLLczj6prwBaquXsTaPY7J
-         Dd9HshcE9GBUZzUwqvwxbq8eaUvX6emjkeYk+v4j1fiYaEu7x2CzW/PgSiDlkVmH2O/W
-         J5ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713970091; x=1714574891;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NVbaUyrmVafdj/cQpZaiAaBbKWO3w1dBZ7Hp+YT/Oh8=;
-        b=Hd902aMS0VOpkGEUXjuJt+K44M69JW5pGTE6ZxKLu7RlPmkRmgD36a5/M2GZx9PcMF
-         rXbGOWJn3cyyVg/lBmyCrBy4pRpoJs45628l19uySpZAVdGYv3b4segM4z+sckQFnE6B
-         XAND37bajEahpwz2pxibh6K/cdEWi9UHG/Z/bg5yFttDO1y3AjeyfUAVgOC36xeIXPUE
-         rUVC9UhKFJc1keVrdlucYC2CAFTw3MRsUWksUkSSZInX6FBBBkWxbDu1T6yw75VO5X4g
-         aLtBudhMukmm4A4hMIel7J3C1Wy7yr6V1m1kWgIpi/DO/XeieCRGEhxFd3S1wwWuuj0o
-         rfog==
-X-Forwarded-Encrypted: i=1; AJvYcCUdgUDcHPql9D5Li+HZf8JjEcuzmO8nzzrgPqzkKhOptpz8+fket9545yLtblThMmub6Kcx6Iciz8+kw0rDu51hAfKKZY1+b15F6lsM
-X-Gm-Message-State: AOJu0YxOlnx417wOT4YzfGJgj3H+7vMkX/lOKZlVsSCZGm0z9DlhWbtA
-	eO6VQHc+/Hg7hMcM4CTEJUAQ0kpl2Irih3wp999p5A6jh7E1mFGBXTtlQ/35qaboFJwMWi7ew60
-	T
-X-Google-Smtp-Source: AGHT+IHyL7UR+GGslunB2Saa9OzbsgaAEz0dYE5qzWUKj2z2emKP9Bh5u/mfXv0ND1AFRSdoAqJmPw==
-X-Received: by 2002:a17:906:5650:b0:a52:6e87:77ef with SMTP id v16-20020a170906565000b00a526e8777efmr6378733ejr.6.1713970091244;
-        Wed, 24 Apr 2024 07:48:11 -0700 (PDT)
-Received: from localhost ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id q21-20020a170906771500b00a51d408d446sm8438326ejm.26.2024.04.24.07.48.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 07:48:10 -0700 (PDT)
-Date: Wed, 24 Apr 2024 16:48:06 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Breno Leitao <leitao@debian.org>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Yury Norov <yury.norov@gmail.com>, linux-hyperv@vger.kernel.org,
-	shradhagupta@microsoft.com
-Subject: Re: [PATCH net-next v2 0/2] Add sysfs attributes for MANA
-Message-ID: <ZikbpoXWmcQrBP3V@nanopsycho>
-References: <1713954774-29953-1-git-send-email-shradhagupta@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="j8gHIfPr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1713970098;
+	bh=1TuzT+VtxtgIpOWyHKC+lNvLsB0FjJXvt3nOsiKFt6g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j8gHIfPrHxxkK7hGQ7f9SpPstrN8iJlEOXdFwG5IbKk7i68ryI+s0BcP/DSeS4auA
+	 aVRIObIaOK4lJnD4KrnilXzyxr2XwrgS2zAbipaOiJ2FeCGmyyD3kTMS/htaHNOQuD
+	 FkzLA6HXKpvaQMwcNRUcpq3i1uUWE4YLrzB4Dp1I8eq6CVxlRRP7v61Khm8FzCpxMr
+	 v63Lz17GxCM+AOugIMcAl58pKHSjjjCDcjJoFF0kDynbBn//PcDOFrunYlR73c98a7
+	 euSj4NnA56adnQSWyJV2+WgxsA/FTN/43DxZcn8POEUb/9Pv1cMzNXyQDnaKfhkiaR
+	 90mmN58n6/Qrw==
+Received: from localhost (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: alarumbe)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 79C963782137;
+	Wed, 24 Apr 2024 14:48:18 +0000 (UTC)
+Date: Wed, 24 Apr 2024 15:48:17 +0100
+From: =?utf-8?Q?Adri=C3=A1n?= Larumbe <adrian.larumbe@collabora.com>
+To: Tvrtko Ursulin <tursulin@ursulin.net>
+Cc: Rob Clark <robdclark@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Hans de Goede <hdegoede@redhat.com>, kernel@collabora.com, 
+	Boris Brezillon <boris.brezillon@collabora.com>, Christopher Healy <healych@amazon.com>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/sysfs: Add drm class-wide attribute to get active
+ device clients
+Message-ID: <4btlparspmb47v3nq3mip6cjr2adwejepnglvh6q5nlbmdzwvt@74gg6tjpngbv>
+References: <20240403182951.724488-1-adrian.larumbe@collabora.com>
+ <CAF6AEGsWtJs2xcZx59P9_maxn1RqCO6-4GwEp2fL31bZtTyuoA@mail.gmail.com>
+ <e6500d5b-0151-4c31-9032-3a23157b3126@ursulin.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1713954774-29953-1-git-send-email-shradhagupta@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e6500d5b-0151-4c31-9032-3a23157b3126@ursulin.net>
 
-Wed, Apr 24, 2024 at 12:32:54PM CEST, shradhagupta@linux.microsoft.com wrote:
->These patches include adding sysfs attributes for improving
->debuggability on MANA devices.
->
->The first patch consists on max_mtu, min_mtu attributes that are
->implemented generically for all devices
->
->The second patch has mana specific attributes max_num_msix and num_ports
+Hi Tvrtko,
 
-1) you implement only max, min is never implemented, no point
-introducing it.
-2) having driver implement sysfs entry feels *very wrong*, don't do that
-3) why DEVLINK_PARAM_GENERIC_ID_MSIX_VEC_PER_PF_MAX
-   and DEVLINK_PARAM_GENERIC_ID_MSIX_VEC_PER_PF_MIN
-   Are not what you want?
+On 15.04.2024 13:50, Tvrtko Ursulin wrote:
+> 
+> On 05/04/2024 18:59, Rob Clark wrote:
+> > On Wed, Apr 3, 2024 at 11:37 AM Adrián Larumbe
+> > <adrian.larumbe@collabora.com> wrote:
+> > > 
+> > > Up to this day, all fdinfo-based GPU profilers must traverse the entire
+> > > /proc directory structure to find open DRM clients with fdinfo file
+> > > descriptors. This is inefficient and time-consuming.
+> > > 
+> > > This patch adds a new device class attribute that will install a sysfs file
+> > > per DRM device, which can be queried by profilers to get a list of PIDs for
+> > > their open clients. This file isn't human-readable, and it's meant to be
+> > > queried only by GPU profilers like gputop and nvtop.
+> > > 
+> > > Cc: Boris Brezillon <boris.brezillon@collabora.com>
+> > > Cc: Tvrtko Ursulin <tursulin@ursulin.net>
+> > > Cc: Christopher Healy <healych@amazon.com>
+> > > Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+> > 
+> > It does seem like a good idea.. idk if there is some precedent to
+> > prefer binary vs ascii in sysfs, but having a way to avoid walking
+> > _all_ processes is a good idea.
+> 
+> I naturally second that it is a needed feature, but I do not think binary
+> format is justified. AFAIR it should be used for things like hw/fw
+> standardised tables or firmware images, not when exporting a simple list of
+> PIDs. It also precludes easy shell/script access and the benefit of avoiding
+> parsing a short list is I suspect completely dwarfed by needing to parse all
+> the related fdinfo etc.
 
->
->Shradha Gupta (2):
->  net: Add sysfs atttributes for max_mtu min_mtu
->  net: mana: Add new device attributes for mana
->
-> Documentation/ABI/testing/sysfs-class-net     | 16 ++++++++++
-> .../net/ethernet/microsoft/mana/gdma_main.c   | 32 +++++++++++++++++++
-> net/core/net-sysfs.c                          |  4 +++
-> 3 files changed, 52 insertions(+)
->
->-- 
->2.34.1
->
->
+I'd rather keep it as a binary file for the sake of easily parsing the number
+list on the client side, in gputop or nvtop. For textual access, there's already
+a debugfs file that presents the same information, so I thought it was best not
+to duplicate that functionality and restrict sysfs to serving the very specific
+use case of UM profilers having to access the DRM client list.
+
+I should mention I did something controversial here, which is a semantically
+binary attribute through the regular attribute interface. I guess if I keep it
+as a binary attribute in the end, I should switch over to the binary attribute
+API.
+
+Another reason why I implemented it as a binary file is that we can only send
+back at most a whole page. If a PID takes 4 bytes, that's usually 1024 clients
+at most, which is probably enough for any UM profiler, but will decrease even
+more if we turn it into an ASCII readable file.
+
+I did some research into sysfs binary attributes, and while some sources mention that
+it's often used for dumping or loading of driver FW, none of them claim it cannot
+be used for other purposes.
+
+> > > ---
+> > >   drivers/gpu/drm/drm_internal.h       |  2 +-
+> > >   drivers/gpu/drm/drm_privacy_screen.c |  2 +-
+> > >   drivers/gpu/drm/drm_sysfs.c          | 89 ++++++++++++++++++++++------
+> > >   3 files changed, 74 insertions(+), 19 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/drm_internal.h b/drivers/gpu/drm/drm_internal.h
+> > > index 2215baef9a3e..9a399b03d11c 100644
+> > > --- a/drivers/gpu/drm/drm_internal.h
+> > > +++ b/drivers/gpu/drm/drm_internal.h
+> > > @@ -145,7 +145,7 @@ bool drm_master_internal_acquire(struct drm_device *dev);
+> > >   void drm_master_internal_release(struct drm_device *dev);
+> > > 
+> > >   /* drm_sysfs.c */
+> > > -extern struct class *drm_class;
+> > > +extern struct class drm_class;
+> > > 
+> > >   int drm_sysfs_init(void);
+> > >   void drm_sysfs_destroy(void);
+> > > diff --git a/drivers/gpu/drm/drm_privacy_screen.c b/drivers/gpu/drm/drm_privacy_screen.c
+> > > index 6cc39e30781f..2fbd24ba5818 100644
+> > > --- a/drivers/gpu/drm/drm_privacy_screen.c
+> > > +++ b/drivers/gpu/drm/drm_privacy_screen.c
+> > > @@ -401,7 +401,7 @@ struct drm_privacy_screen *drm_privacy_screen_register(
+> > >          mutex_init(&priv->lock);
+> > >          BLOCKING_INIT_NOTIFIER_HEAD(&priv->notifier_head);
+> > > 
+> > > -       priv->dev.class = drm_class;
+> > > +       priv->dev.class = &drm_class;
+> > >          priv->dev.type = &drm_privacy_screen_type;
+> > >          priv->dev.parent = parent;
+> > >          priv->dev.release = drm_privacy_screen_device_release;
+> > > diff --git a/drivers/gpu/drm/drm_sysfs.c b/drivers/gpu/drm/drm_sysfs.c
+> > > index a953f69a34b6..56ca9e22c720 100644
+> > > --- a/drivers/gpu/drm/drm_sysfs.c
+> > > +++ b/drivers/gpu/drm/drm_sysfs.c
+> > > @@ -58,8 +58,6 @@ static struct device_type drm_sysfs_device_connector = {
+> > >          .name = "drm_connector",
+> > >   };
+> > > 
+> > > -struct class *drm_class;
+> > > -
+> > >   #ifdef CONFIG_ACPI
+> > >   static bool drm_connector_acpi_bus_match(struct device *dev)
+> > >   {
+> > > @@ -128,6 +126,62 @@ static const struct component_ops typec_connector_ops = {
+> > > 
+> > >   static CLASS_ATTR_STRING(version, S_IRUGO, "drm 1.1.0 20060810");
+> > > 
+> > > +static ssize_t clients_show(struct device *cd, struct device_attribute *attr, char *buf)
+> > > +{
+> > > +       struct drm_minor *minor = cd->driver_data;
+> > > +       struct drm_device *ddev = minor->dev;
+> > > +       struct drm_file *priv;
+> > > +       ssize_t offset = 0;
+> > > +       void *pid_buf;
+> > > +
+> > > +       if (minor->type != DRM_MINOR_RENDER)
+> > > +               return 0;
+> 
+> Why this?
+
+I return nothing in case of a non-render node because we don't want display drivers
+to confuse UM GPU profilers.
+
+> > > +
+> > > +       pid_buf = kvmalloc(PAGE_SIZE, GFP_KERNEL);
+> 
+> I don't quite get the kvmalloc for just one page (or why even a temporay
+> buffer and not write into buf directly?).
+
+Should've used kmalloc, you're right. Or else I could just write everything straight into 'buf'.
+
+> > > +       if (!pid_buf)
+> > > +               return 0;
+> > > +
+> > > +       mutex_lock(&ddev->filelist_mutex);
+> > > +       list_for_each_entry_reverse(priv, &ddev->filelist, lhead) {
+> > > +               struct pid *pid;
+> > > +
+> > > +               if (drm_WARN_ON(ddev, (PAGE_SIZE - offset) < sizeof(pid_t)))
+> > > +                       break;
+> 
+> Feels bad.. I would suggest exploring implementing a read callback (instead of
+> show) and handling arbitrary size output.
+
+I think regular class attributes can only implement show() and set(). For a more complex
+interface, I would have to turn it into an actual binary attribute, and that would be the only
+choice if we want the list of clients to be of arbitrary size.
+
+> > > +
+> > > +               rcu_read_lock();
+> > > +               pid = rcu_dereference(priv->pid);
+> > > +               (*(pid_t *)(pid_buf + offset)) = pid_vnr(pid);
+> > > +               rcu_read_unlock();
+> > > +
+> > > +               offset += sizeof(pid_t);
+> > > +       }
+> > > +       mutex_unlock(&ddev->filelist_mutex);
+> > > +
+> > > +       if (offset < PAGE_SIZE)
+> > > +               (*(pid_t *)(pid_buf + offset)) = 0;
+> 
+> Either NULL terminated or PAGE_SIZE/sizeof(pid) entries and not NULL
+> terminated feels weird. If I got that right.
+> 
+> For me everything points towards going for text output.
+
+Yes, I know it might sound weird, but my reasoning was: either there are PAGE_SIZE/sizeof(pid) entries
+and the file isn't NULL terminated (which should be picked up by clients as being one page worth
+of data, the sysfs attribute maximum transfer unit), or else there aren't enough entries to fill
+a page and after the last one there's a NULL entry.
+
+
+> > > +
+> > > +       memcpy(buf, pid_buf, offset);
+> > > +
+> > > +       kvfree(pid_buf);
+> > > +
+> > > +       return offset;
+> > > +
+> > > +}
+> > > +static DEVICE_ATTR_RO(clients);
+> 
+> Shouldn't BIN_ATTR_RO be used for binary files in sysfs?
+
+Like I said above, I sort of faked a binary attribute through the regular sysfs attr API,
+which is most likely a bad idea.
+
+> Regards,
+> 
+> Tvrtko
+> 
+> P.S. Or maybe it is time for drmfs? Where each client gets a directory and
+> drivers can populate files. Such as per client logging streams and whatnot.
+
+Yes, but maybe this is something we can discuss in depth in an RFC at a later time?
+
+> > > +
+> > > +static struct attribute *drm_device_attrs[] = {
+> > > +       &dev_attr_clients.attr,
+> > > +       NULL,
+> > > +};
+> > > +ATTRIBUTE_GROUPS(drm_device);
+> > > +
+> > > +struct class drm_class = {
+> > > +       .name           = "drm",
+> > > +       .dev_groups     = drm_device_groups,
+> > > +};
+> > > +
+> > > +static bool drm_class_initialised;
+> > > +
+> > >   /**
+> > >    * drm_sysfs_init - initialize sysfs helpers
+> > >    *
+> > > @@ -142,18 +196,19 @@ int drm_sysfs_init(void)
+> > >   {
+> > >          int err;
+> > > 
+> > > -       drm_class = class_create("drm");
+> > > -       if (IS_ERR(drm_class))
+> > > -               return PTR_ERR(drm_class);
+> > > +       err = class_register(&drm_class);
+> > > +       if (err)
+> > > +               return err;
+> > > 
+> > > -       err = class_create_file(drm_class, &class_attr_version.attr);
+> > > +       err = class_create_file(&drm_class, &class_attr_version.attr);
+> > >          if (err) {
+> > > -               class_destroy(drm_class);
+> > > -               drm_class = NULL;
+> > > +               class_destroy(&drm_class);
+> > >                  return err;
+> > >          }
+> > > 
+> > > -       drm_class->devnode = drm_devnode;
+> > > +       drm_class.devnode = drm_devnode;
+> > > +
+> > > +       drm_class_initialised = true;
+> > > 
+> > >          drm_sysfs_acpi_register();
+> > >          return 0;
+> > > @@ -166,12 +221,12 @@ int drm_sysfs_init(void)
+> > >    */
+> > >   void drm_sysfs_destroy(void)
+> > >   {
+> > > -       if (IS_ERR_OR_NULL(drm_class))
+> > > +       if (!drm_class_initialised)
+> > >                  return;
+> > >          drm_sysfs_acpi_unregister();
+> > > -       class_remove_file(drm_class, &class_attr_version.attr);
+> > > -       class_destroy(drm_class);
+> > > -       drm_class = NULL;
+> > > +       class_remove_file(&drm_class, &class_attr_version.attr);
+> > > +       class_destroy(&drm_class);
+> > > +       drm_class_initialised = false;
+> > >   }
+> > > 
+> > >   static void drm_sysfs_release(struct device *dev)
+> > > @@ -372,7 +427,7 @@ int drm_sysfs_connector_add(struct drm_connector *connector)
+> > >                  return -ENOMEM;
+> > > 
+> > >          device_initialize(kdev);
+> > > -       kdev->class = drm_class;
+> > > +       kdev->class = &drm_class;
+> > >          kdev->type = &drm_sysfs_device_connector;
+> > >          kdev->parent = dev->primary->kdev;
+> > >          kdev->groups = connector_dev_groups;
+> > > @@ -550,7 +605,7 @@ struct device *drm_sysfs_minor_alloc(struct drm_minor *minor)
+> > >                          minor_str = "card%d";
+> > > 
+> > >                  kdev->devt = MKDEV(DRM_MAJOR, minor->index);
+> > > -               kdev->class = drm_class;
+> > > +               kdev->class = &drm_class;
+> > >                  kdev->type = &drm_sysfs_device_minor;
+> > >          }
+> > > 
+> > > @@ -579,10 +634,10 @@ struct device *drm_sysfs_minor_alloc(struct drm_minor *minor)
+> > >    */
+> > >   int drm_class_device_register(struct device *dev)
+> > >   {
+> > > -       if (!drm_class || IS_ERR(drm_class))
+> > > +       if (!drm_class_initialised)
+> > >                  return -ENOENT;
+> > > 
+> > > -       dev->class = drm_class;
+> > > +       dev->class = &drm_class;
+> > >          return device_register(dev);
+> > >   }
+> > >   EXPORT_SYMBOL_GPL(drm_class_device_register);
+> > > 
+> > > base-commit: 45c734fdd43db14444025910b4c59dd2b8be714a
+> > > --
+> > > 2.44.0
+> > > 
+
+Adrian Larumbe
