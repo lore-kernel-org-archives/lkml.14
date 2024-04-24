@@ -1,85 +1,146 @@
-Received: from mo-csw-fb.securemx.jp (mo-csw-fb1802.securemx.jp [210.130.202.161])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5291613AA2B;
-	Wed, 24 Apr 2024 04:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E18913D8AA
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 04:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713932254; cv=none; b=FDZx3iujNEjhaR2lG1s2E9MLDyJWYmy11OaLPEL0kx7Gpm/I0CiSL4+Bk5H3zkx1JdTKI+Mb9rSppftoxadaTsL9qJSGPQju89wXamHJoB8jctADZVCQPIdJOHQRQNi29bfkTnUtWZzmAsGVEoaZu1gdQC2ZaZ/HM2Cfptq47ls=
+	t=1713932901; cv=none; b=KWNvG7YAxBDED1oiE5zc6hcxN8gXaOjzJFEraiMmxkvk8k/zQfxEkL6WUZCy9NSqnuxct4pMbDjq//Pb4426Xg/TpOvEBnPiOFCs8FGutYTWemTPEdtfRarLynjY/I44FmM+6m3Xr8gytpt940eK/LDuVeE/QRidmRC6apXh8dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713932254; c=relaxed/simple;
-	bh=tmZivAPoRtjSnEGiLMrWJXye+3/kG+MWQ2bcPivPywA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kXGE4ED0b/Pqv76Jv6vhsMbBm5AYoU2kek7THYtit7taRspXQcFnAG7dVqJl3CbBy9XXoTxBcnyi9jeZNH+rwuUBPyEnUVFFtmkObrV3QbNCrge0xK9eW/4AMXLphsdN5Wcea3eVu1YeOGYCdNuMFvB7umQ7yy/f3dmPIKGuynU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp; spf=pass smtp.mailfrom=toshiba.co.jp; arc=none smtp.client-ip=210.130.202.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toshiba.co.jp
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1802) id 43O2mFon1222808; Wed, 24 Apr 2024 11:48:15 +0900
-Received: by mo-csw.securemx.jp (mx-mo-csw1802) id 43O2lZUw3514010; Wed, 24 Apr 2024 11:47:35 +0900
-X-Iguazu-Qid: 2yAbdMiuYNn0EEa8l0
-X-Iguazu-QSIG: v=2; s=0; t=1713926855; q=2yAbdMiuYNn0EEa8l0; m=ryJhWAlzIXynJusIuDL36Fxw7+i1HfiH1CQUOwHDqDY=
-Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
-	by relay.securemx.jp (mx-mr1800) id 43O2lW2s2335784
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 24 Apr 2024 11:47:33 +0900
-X-SA-MID: 21956136
-From: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
-To: Hans Verkuil <hverkuil@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v10 2/6] media: videodev2.h: add visconti viif meta buffer format
-Date: Wed, 24 Apr 2024 11:42:11 +0900
-X-TSB-HOP2: ON
-Message-Id: <20240424024215.1624299-3-yuji2.ishikawa@toshiba.co.jp>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240424024215.1624299-1-yuji2.ishikawa@toshiba.co.jp>
-References: <20240424024215.1624299-1-yuji2.ishikawa@toshiba.co.jp>
+	s=arc-20240116; t=1713932901; c=relaxed/simple;
+	bh=K2uPx8Z39cowyd3CKs/kv0/GPxaVvKugF3Okmkjpnuw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OxKcZiCv5yzFd9Y2NPy0VHY8DY1LrFmX57mwE6IjUlJTnVL0FISl7d3W/GVwojjyNjIbehhinJnHBeAsSAfLkHKQMwPxz7WzLmxAgwGC/5rZ6M9B2JYWpYdvSlYxg/DVnKX0NQo0+GGtnN2EiKu5tUHrE+K6ETTBcBCZwIs9oWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IPEU6vip; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IPEU6vip"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a5883518135so144212266b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 21:28:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713932898; x=1714537698; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=R8Fs3EjOdj6derBzQe4RlSevlHJghueWR0mNYiVQCo8=;
+        b=IPEU6vipT+Xa7En49p+JNgPICicS70PpWZhTcU9qkqOUcGn6dXEImtS3aQ/R+/URtY
+         soActiicKwfRym0BFPKxltMPobDnunEP0RTFrC8ljNkvXULxUS0PErXtRMTfybdF9rqF
+         pnGxPpk2yUm7IDcxI0s0lIBRc5zQG3hgDvZJRuunDNByqpJ1oOKdq+VrPmgfRLC1qGw5
+         OhdsQTlaqIbwRyhT0jQi8V+WbGYPBIoy9sShYpCpRmLsX5qk32rylRjCqJWdpJiXep3C
+         yjf1LBEUrGFs9Yb6RKryi02mtkg8vPv0CA8wZ2wTpYTGMOLivV6X0aXvd8etoBvb3JR1
+         kvOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713932898; x=1714537698;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R8Fs3EjOdj6derBzQe4RlSevlHJghueWR0mNYiVQCo8=;
+        b=Ke9oaq5e3lphG4Y7VFoOk9fSWJZUfkEd/ktyjDzwofL7pDCSV4r8x1/yW5Xt5omCZX
+         uzJkOA5D1Oza8xlliygnrql2yN17fH5cO6QHM5ch+QcIzrMHZLuMC8edfu1CvhrfhxBc
+         gsbGlvPTqf6ucp5r5hIhebNOOYhTEhQLNw22XNocbFucBTa2uUbx4vsd+XfgHaEbWea8
+         TcTe63ffT92e6SkoKUoiIqwW+xGmK0oe1uqUxc9ILwuw2JB1WUXiRnVG7RAVVohql4hB
+         Qwv4qxI9PBG6w2hZ+fbXK6Vtw6/ZR38Qnh5c9DqC9a5q660rVy+QjZx8QLUYmuQWUFee
+         vqhw==
+X-Forwarded-Encrypted: i=1; AJvYcCULhRjvSOi0/L2wY0K//2Lh31aSKLzq0w7Ef3Pgz3+n6fmGuqfEDkplV0WWqYBv2EbY0C8gkB5i5cotdFsfIGz0IYj/Omo98JcPyTNP
+X-Gm-Message-State: AOJu0YwAxoaMbJk9jem4A7qdCxwH+aAJr5i2lT3DgVSQp2fA9mEi1+RC
+	2SZncmrPqsaPSCQjyrKb5sA5m/jfNlT8zmBjgzvQPvwklg42L/5Y7LmLz2Cvn6Y=
+X-Google-Smtp-Source: AGHT+IHhibC5y0u82AOKA3V0ahASy6QI1S46tkSYPwpI/AUogp7DUC0A/o5LtZczFgCVrCna43jbXg==
+X-Received: by 2002:a17:906:d206:b0:a4d:fcc9:905c with SMTP id w6-20020a170906d20600b00a4dfcc9905cmr657577ejz.20.1713932898280;
+        Tue, 23 Apr 2024 21:28:18 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id bb6-20020a1709070a0600b00a55b020a821sm3841045ejc.13.2024.04.23.21.28.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 21:28:17 -0700 (PDT)
+Message-ID: <7d08f521-bdc9-4122-a636-a0a2c5bc328b@linaro.org>
+Date: Wed, 24 Apr 2024 06:28:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/6] dt-bindings: iio: light: stk33xx: add vdd and leda
+ regulators
+To: Aren Moynihan <aren@peacevolution.org>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Ondrej Jirman <megi@xff.cz>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ linux-iio@vger.kernel.org, phone-devel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ Willow Barraco <contact@willowbarraco.fr>
+References: <20240423223309.1468198-2-aren@peacevolution.org>
+ <20240423223309.1468198-3-aren@peacevolution.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240423223309.1468198-3-aren@peacevolution.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Adds the Toshiba Visconti VIIF specific metadata format
+On 24/04/2024 00:33, Aren Moynihan wrote:
+> stk3310 and stk3311 are typically connected to power supplies for the
+> chip (vdd) and the infrared LED (leda). Add properties so we can power
+> these up / down appropriately.
+> 
+> Signed-off-by: Aren Moynihan <aren@peacevolution.org>
+> ---
+> 
 
-- V4L2_META_FMT_VISCONTI_VIIF_PARAMS for ISP parameters
-- V4L2_META_FMT_VISCONTI_VIIF_STATS for ISP statistics
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
----
-Changelog v10:
-- add entry for V4L2_META_FMT_VISCONTI_VIIF_PARAMS
-- add entry for V4L2_META_FMT_VISCONTI_VIIF_STATS
-
- include/uapi/linux/videodev2.h | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index a8015e5e7f..686657e022 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -839,6 +839,10 @@ struct v4l2_pix_format {
- #define V4L2_META_FMT_RK_ISP1_PARAMS	v4l2_fourcc('R', 'K', '1', 'P') /* Rockchip ISP1 3A Parameters */
- #define V4L2_META_FMT_RK_ISP1_STAT_3A	v4l2_fourcc('R', 'K', '1', 'S') /* Rockchip ISP1 3A Statistics */
- 
-+/* Vendor specific - used for Visconti VIIF sub-system */
-+#define V4L2_META_FMT_VISCONTI_VIIF_PARAMS	v4l2_fourcc('V', 'I', 'F', 'P') /* ISP Params */
-+#define V4L2_META_FMT_VISCONTI_VIIF_STATS	v4l2_fourcc('V', 'I', 'F', 'S') /* ISP Stats */
-+
- /* priv field value to indicates that subsequent fields are valid. */
- #define V4L2_PIX_FMT_PRIV_MAGIC		0xfeedcafe
- 
--- 
-2.25.1
-
+Best regards,
+Krzysztof
 
