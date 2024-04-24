@@ -1,180 +1,128 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C521415ADB8;
-	Wed, 24 Apr 2024 12:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CA115B576;
+	Wed, 24 Apr 2024 12:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713963589; cv=none; b=tcz7eZYSfw3LbuEDGoub7LgCsC8X76erwq8QPSjbQI3jXDpS2l2we86bK+RQqOO/TLeGaHksne/YIif/wrXi3+tiFz3towEnRXYuDD6bM9p8qEHhwf2jfkenUbDlKN68dADMsOrsX6snWfyNdLRt8yeb9apAsTl0Sk4fYo5Lfio=
+	t=1713963599; cv=none; b=A5jDNZ44oONk38aZ5CMlWTCvRjVT2NRl+8N39KGMdVYVpBVCxwyIGSC9u7+cKF9wM6iIMhsN/9KPsCs18VhZCyn1jjBazEf5vYlde9z5fit18mIOzZfKWArsR/XdW6UJ13tFf9C5+cqnWS/LlxIytthZYRrun/gCohT1FH0NMLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713963589; c=relaxed/simple;
-	bh=nYaJwBHScwcf8mZ+65pvV+Cbut1NnlCU/Umn54RReB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HDOHuX0xNuAEDZi73/TCC7//Xm5O+UZidoDHryfFc8Pn377o2EOs5f2t6edW/s5Qa7MN3FLGuy5GQHTGAw4SskKG6aYu7IwtBPxBNl37Q8q4t8wF29XIUe8QBaX+C/b5QZcD2AuxpNuaDx56YZnq0VCZi6wtge3Qsbuo04ivD4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=avol3+KF; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713963599; c=relaxed/simple;
+	bh=kamfKpDUAuUVYKc3JD6fhJN/bs5aaqGFBEBTvufzKSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ciHFUfx0mWhSGKhwwTSETTe8YoV+1zgR/0krI7gdcBhm85O5LjbILd9JJnFtaKFqYTCR8YvMhQcerRlVSKVd8x7OdIMIg4u5OVDi5c7tZEZR/Jx5Xn4hSiNCopLsTE+tOe8b3vaHliEP7W1jeACDo91YPMc9Bh1YQVB8OxU9kb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=m2Opc8GE; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="avol3+KF"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43OBd8Id027237;
-	Wed, 24 Apr 2024 12:59:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=f20yqpl+kz5jwmAiKMXqy19f1liqCLMYGbmBPOR+394=; b=av
-	ol3+KFGx8hrnnaDm4e4fmWebokluWlX9A4YCqlYe+QQDWUwtpw+OXrv1z2HKZj7f
-	dDyR2r0pxY8j9bB4161zBZpEbiibo+27AiE06XIQfjKi9EyrY1baO5OiZhmdn77S
-	JosA8rHCSuXhGBWnBcb9UWQ+17oE2b+jSJZsy7TMpdStLZjViHe6WQivfgeXnMAp
-	0+jgDvs8noXZcHQafMnPyUlOJAn+qaRE/dmp3g8eIliW3dMEpmxqZwGFBUVjf1hu
-	+YfxZspKhpvaog+brNK1pgXN2N+EufQDWPqujFGW3afAhBoK6Enoa0E2nrcgcJsb
-	GIgIFcXpUed9Yju5weCA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xpv9g8uck-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 12:59:40 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43OCxdto002521
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 12:59:39 GMT
-Received: from [10.253.14.221] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 24 Apr
- 2024 05:59:37 -0700
-Message-ID: <2d3823bd-bc30-4e3f-a350-eb9a718261aa@quicinc.com>
-Date: Wed, 24 Apr 2024 20:59:35 +0800
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="m2Opc8GE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1713963589; bh=kamfKpDUAuUVYKc3JD6fhJN/bs5aaqGFBEBTvufzKSA=;
+	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
+	b=m2Opc8GEH5y1OCPgcUHTFE55CkaXhDFNC4qU5zJuox4opmWh69YhB6n2wMWjbLBew
+	 iA9GtdDPXTHD7fXEV5ewxEJen0QK5Byy+ZQrWJWDnxEvXD2onLoNfnFu1kqiijSerA
+	 m/BxquIGSzeUxD7Eitsp/l5Uuxbg6yxVAETYL/EE=
+Date: Wed, 24 Apr 2024 14:59:48 +0200
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Aren Moynihan <aren@peacevolution.org>, 
+	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-iio@vger.kernel.org, phone-devel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	Willow Barraco <contact@willowbarraco.fr>
+Subject: Re: [PATCH v2 2/6] iio: light: stk3310: Implement vdd supply and
+ power it off during suspend
+Message-ID: <5qqil7ltqhdeabml6toqpcy773uhjxgwaz3txpy4kv4sz55o2y@hmar674eey7s>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>, Aren Moynihan <aren@peacevolution.org>, 
+	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-iio@vger.kernel.org, phone-devel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	Willow Barraco <contact@willowbarraco.fr>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <20240423223309.1468198-2-aren@peacevolution.org>
+ <20240423223309.1468198-4-aren@peacevolution.org>
+ <CAHp75VeRDSPvpmSbUyZPp0RMoTOE193U2ma18qxv_qZQKLCq8g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Bluetooth: qca: set power_ctrl_enabled on NULL
- returned by gpiod_get_optional()
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-        Marcel Holtmann
-	<marcel@holtmann.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-CC: <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bartosz
- Golaszewski <bartosz.golaszewski@linaro.org>,
-        Wren Turkal
-	<wt@penguintechs.org>
-References: <20240424122932.79120-1-brgl@bgdev.pl>
-Content-Language: en-US
-From: quic_zijuhu <quic_zijuhu@quicinc.com>
-In-Reply-To: <20240424122932.79120-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: F4kwVAATKcRsWYNE87LArXDTUMGAAx9o
-X-Proofpoint-GUID: F4kwVAATKcRsWYNE87LArXDTUMGAAx9o
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-24_10,2024-04-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- suspectscore=0 clxscore=1015 mlxlogscore=999 malwarescore=0 adultscore=0
- mlxscore=0 phishscore=0 lowpriorityscore=0 spamscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2404240046
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VeRDSPvpmSbUyZPp0RMoTOE193U2ma18qxv_qZQKLCq8g@mail.gmail.com>
 
-On 4/24/2024 8:29 PM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Apr 24, 2024 at 02:16:06AM GMT, Andy Shevchenko wrote:
+> On Wed, Apr 24, 2024 at 1:41 AM Aren Moynihan <aren@peacevolution.org> wrote:
+> >
+> > From: Ondrej Jirman <megi@xff.cz>
+> >
+> > VDD power input can be used to completely power off the chip during
+> > system suspend. Do so if available.
 > 
-> Any return value from gpiod_get_optional() other than a pointer to a
-> GPIO descriptor or a NULL-pointer is an error and the driver should
-> abort probing. That being said: commit 56d074d26c58 ("Bluetooth: hci_qca:
-> don't use IS_ERR_OR_NULL() with gpiod_get_optional()") no longer sets
-> power_ctrl_enabled on NULL-pointer returned by
-> devm_gpiod_get_optional(). Restore this behavior but bail-out on errors.
-> While at it: also bail-out on error returned when trying to get the
-> "swctrl" GPIO.
+> ...
 > 
-> Reported-by: Wren Turkal <wt@penguintechs.org>
-> Reported-by: Zijun Hu <quic_zijuhu@quicinc.com>
-> Closes: https://lore.kernel.org/linux-bluetooth/1713449192-25926-2-git-send-email-quic_zijuhu@quicinc.com/
-> Fixes: 56d074d26c58 ("Bluetooth: hci_qca: don't use IS_ERR_OR_NULL() with gpiod_get_optional()")
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-is it really reviewed-by Krzysztof?
-suggest reviewer give explicit review-by tag by public way, then you add
-this tag.
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
-> v1 -> v2:
-> - also restore the previous behavior for QCA6390 and other models that
->   fall under the default: label in the affected switch case
-> - bail-out on errors when getting the swctrl GPIO too
+> >         ret = stk3310_init(indio_dev);
+> >         if (ret < 0)
+> > -               return ret;
+> > +               goto err_vdd_disable;
 > 
->  drivers/bluetooth/hci_qca.c | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
+> This is wrong. You will have the regulator being disabled _before_
+> IRQ. Note, that the original code likely has a bug which sets states
+> before disabling IRQ and removing a handler.
+
+How so? stk3310_init is called before enabling the interrupt.
+
+Original code has a bug that IRQ is enabled before registering the
+IIO device, so if IRQ is triggered before registration, iio_push_event
+from IRQ handler may be called on a not yet registered IIO device.
+
+Never saw it happen, though. :)
+
+kind regards,
+	o.
+
+> Side note, you may make the driver neater with help of
 > 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 92fa20f5ac7d..0e98ad2c0c9d 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -2327,16 +2327,21 @@ static int qca_serdev_probe(struct serdev_device *serdev)
->  		    (data->soc_type == QCA_WCN6750 ||
->  		     data->soc_type == QCA_WCN6855)) {
->  			dev_err(&serdev->dev, "failed to acquire BT_EN gpio\n");
-> -			power_ctrl_enabled = false;
-> +
-think about what will happen for present lunched products if this type
-error really happens.
-BT don't work at all with your change. BT can be used mostly without
-your change.
-			return PTR_ERR(qcadev->bt_en);
->  		}
->  
-> +		if (!qcadev->bt_en)
-> +			power_ctrl_enabled = false;
-> +
-you don't answer me how to treat a required enable is not configured by user
->  		qcadev->sw_ctrl = devm_gpiod_get_optional(&serdev->dev, "swctrl",
->  					       GPIOD_IN);
->  		if (IS_ERR(qcadev->sw_ctrl) &&
->  		    (data->soc_type == QCA_WCN6750 ||
->  		     data->soc_type == QCA_WCN6855 ||
-> -		     data->soc_type == QCA_WCN7850))
-> -			dev_warn(&serdev->dev, "failed to acquire SW_CTRL gpio\n");
-> +		     data->soc_type == QCA_WCN7850)) {
-> +			dev_err(&serdev->dev, "failed to acquire SW_CTRL gpio\n");
-> +			return PTR_ERR(qcadev->sw_ctrl);have the same question as above.
-> +		}
->  
->  		qcadev->susclk = devm_clk_get_optional(&serdev->dev, NULL);
->  		if (IS_ERR(qcadev->susclk)) {
-> @@ -2355,10 +2360,13 @@ static int qca_serdev_probe(struct serdev_device *serdev)
->  		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
->  					       GPIOD_OUT_LOW);
->  		if (IS_ERR(qcadev->bt_en)) {
-> -			dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
-> -			power_ctrl_enabled = false;
-> +			dev_err(&serdev->dev, "failed to acquire enable gpio\n");
-> +			return PTR_ERR(qcadev->bt_en);
->  		}
+>   struct device *dev = &client->dev;
 > 
-have the same question as above.
-is it right for such prompt ?
-> +		if (!qcadev->bt_en)
-> +			power_ctrl_enabled = false;
-> +
->  		qcadev->susclk = devm_clk_get_optional(&serdev->dev, NULL);
->  		if (IS_ERR(qcadev->susclk)) {
->  			dev_warn(&serdev->dev, "failed to acquire clk\n");
-have the same question as above.
-
-how do you known the root cause of the issue reported without my earlier
-debugging and fix?
-
-do my fix regarding the issue i concerned have any  fault?
-
-NAK by me.
-
-
-
-
+> defined in this patch.
+> 
+> ...
+> 
+> >  static int stk3310_suspend(struct device *dev)
+> >  {
+> >         struct stk3310_data *data;
+> 
+> >         data = iio_priv(i2c_get_clientdata(to_i2c_client(dev)));
+> 
+> Side note: This may be updated (in a separate change) to use
+> dev_get_drvdata() directly.
+> 
+> Jonathan, do we have something like iio_priv_from_drvdata(struct
+> device *dev)? Seems many drivers may utilise it.
+> 
+> >  }
+> 
+> ...
+> 
+> >  static int stk3310_resume(struct device *dev)
+> 
+> Ditto.
+> 
+> --
+> With Best Regards,
+> Andy Shevchenko
