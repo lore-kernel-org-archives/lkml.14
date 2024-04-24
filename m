@@ -1,123 +1,127 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A1E13CFAD;
-	Wed, 24 Apr 2024 05:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176F2156876
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 05:46:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713937576; cv=none; b=k9ee/JWn4aRpzEB2yimx0EukBFjFxkLwZ+sCRUA+n6z6oyWvgbMQcDhtc655d4Zd5LUjNbRjOu/mBKRZ8txoeeDx4WSkuIowunuJU8SJ1MjfPrg5D/OW9ah5vI5fdRKcYufvq6PNaWoulB9xdIAqPYz3lVceVMr5/6s816k67dI=
+	t=1713937618; cv=none; b=cl1mEUWsmguPErPtZ9ZT5OG8CMmAfZNBVopRO4tw3u00WoieXesl48zVbnKU6G8lVbrfRlphijO66E7E3fD/mXEuZfwk+6yrS2Yf9SBsSSEmxEPpnKrfudZfmGN5SJht5ZEsimcvXhQpX9xiDxvbFXOJU6qtvjChOGzWmdrP/gU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713937576; c=relaxed/simple;
-	bh=uwxUJBzuUS3WaFJagRhqzdd7FDplM881l5RFTKnaqg0=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=B9IUBGmk/lFaDeVgtjEHfQFeYudTiMVJCb/CKeJxuGcgK0bYXaTBPNXPqLKJMcR7ODmPyxNzOXxeTjnPl6+LLubtFmdEQArII6/jlKrBDr9idghM9JAQOf86Z48lbawepICQGtgvGagOZF8OyiIp4sIBNhekEebxV3/apEc6tRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lqXq62DI; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1713937618; c=relaxed/simple;
+	bh=CF+ts3A4hUIMuGaFQFIzKuPMzImW0nVYFO6/BZ05kUs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VPmrShXjo+9l1eUhaRa660uyDg4og1mu2lyWOPM6XX2rI4Cj146TubHOTTMrZOhlm/GzvFVppD3bscvHiz2V9FWi4DNJW8EMTdgoW/j0mkCT47dGNI3EhihYaHqeGFxqLgvcL0gJ/7d9uIsibLHrb+2Zc4OhmtYOeDyCdRKAdrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=HLrEp3zX; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lqXq62DI"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43O0jCrE006734;
-	Wed, 24 Apr 2024 05:46:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id; s=qcppdkim1; bh=b2Nj9uwekS1C
-	wRhb+sjbn8p7cNsJyk7FOMTsrfPdKQM=; b=lqXq62DIOSklUMrt8xjk12ZU5/Qt
-	ukSrXHCZiQxvqF3+M7w/pTcM7SzhvtE/WIJo8m8xQ1JIlzJPu5hOdsgtiybjA9av
-	80+3B2kIWw2Rf6jE3/LdBLsKXtaV2ywPBzT1nPKWq7ACHG0w5OoRd7EYNpD0F14L
-	uY4+IjWQjA1YgFrHQ+P8rCh+HcsVyU8qQjFC0LpwI93C1RAVW02g40S8IXmvOp5z
-	0WWdi2O1AUUY4ZqykO8hLrlir6RrKtWrhKKHBQllcIEt/aoZyWlZRlVejp3QdzVf
-	w09ECN8aATA+uR+/a+Zr6N1gQdJj8zWaV3NteAQh1Zp+8/KDcK8XpNnSKQ==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xpcxejhx4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 05:46:10 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 43O5k5Q9000560;
-	Wed, 24 Apr 2024 05:46:05 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3xm6skt5p9-1;
-	Wed, 24 Apr 2024 05:46:05 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43O5k5Nf000526;
-	Wed, 24 Apr 2024 05:46:05 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-vdadhani-hyd.qualcomm.com [10.213.106.28])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 43O5k5s1000518;
-	Wed, 24 Apr 2024 05:46:05 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 4047106)
-	id C66C55001C1; Wed, 24 Apr 2024 11:16:04 +0530 (+0530)
-From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-To: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org,
-        krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org, conor+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmitry.baryshkov@linaro.org
-Cc: quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com,
-        Viken Dadhaniya <quic_vdadhani@quicinc.com>
-Subject: [PATCH v2] arm64: dts: qcom: qcm6490-rb3: Enable gpi-dma and qup node
-Date: Wed, 24 Apr 2024 11:16:02 +0530
-Message-Id: <20240424054602.5731-1-quic_vdadhani@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: vQNICJ2goF1RpE3nOSfzfWeW_hxx8-Am
-X-Proofpoint-ORIG-GUID: vQNICJ2goF1RpE3nOSfzfWeW_hxx8-Am
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-24_03,2024-04-23_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- mlxlogscore=774 phishscore=0 impostorscore=0 priorityscore=1501
- clxscore=1011 spamscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404240024
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="HLrEp3zX"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3c74a75d9adso2859896b6e.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 22:46:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1713937615; x=1714542415; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oav/nBjbNQkJSHj491t5Rtmwwi8lc2zcpFduDWDdqHo=;
+        b=HLrEp3zXElsNeQq5ghg+IbasyFUOY45JCFvnv8QXVgdKv7Uw064/zhoP7EkxwZd3cB
+         3vStyImj8UcsrgCirsRHfA1KwMU02SRFfkei+kbZV4mXigck8n4yxUZIsXDV53baxfmH
+         +cxlMjHNEvDlGN/DJh2MqZU/qyucQazE5ULCU9SH9+VkH1iiuhMXbiFKJeZ8KwYnBL1Y
+         bNdWl1mNSphqNJKn7HVmCQO6AM7R4tOyoHya0iQdphoibzsej9U2w5Ej0VKLkWNVirrN
+         kJIZUCrvWi7Bb3z9Pbc8Kw7wkNoeFbgLkhdCHBWYsKpNpuC/fNQsVk7mSWdOxUDfemXx
+         tm9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713937615; x=1714542415;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=oav/nBjbNQkJSHj491t5Rtmwwi8lc2zcpFduDWDdqHo=;
+        b=sg+kFPMkEYmYlSGddjufyFNrbbDxisyK9T9po0Tv7NcroBiTd3LLsjl8Np7Y7v5pZM
+         Qfkjz5pugkWdTmsuYMKOOu4glpCoj6mL+ZZ5GyT/+E/inhtQAEiVkOEz7H7ilfQnNQGj
+         kinebJVfOuJUlk3R6Xfw6o3wIRni9aK4vveRymUZnWeMSF2lMLhrXnJS2ximHIjf/wzo
+         cUhP/fi9D8G3UrM1sHCteII+JWDZNVybbF+qNF0QJkcKHfNFyqhzSpA/aLUFRwuBJU9+
+         ks2s8lxNrt3EkIz1348FYg+Tgxul1QBQtvTTH/zdi/l5Pjdfs6u4sObglYNNDO2quuDf
+         fuzg==
+X-Forwarded-Encrypted: i=1; AJvYcCXLOiwxTc6myTiO4KYnCJ0O82A5oZsfD4s3CRBlWs7GEocvi/jLd2XAT9gI3irgGwLhfkxXELfq5Sx2cIfRRGzL3jr6XrS1SCw+v/qC
+X-Gm-Message-State: AOJu0YwxCJh2Q/AS8gk/e9FkztPp9f//57KXsKdxf+9tkKIRH3ReYO5r
+	GsCVee+eS6Wr6Psm7tJn9Tqyc/MKTKH+HpzlWMfoLwM/ue7wbsQgCxdZu3dleUg=
+X-Google-Smtp-Source: AGHT+IGXNptk+olxPRJcLAW0W9h984MMeb0Lybawe6fqDXiy7gt7eKH1E3YmxBnctdni7giQ3i6BUw==
+X-Received: by 2002:a05:6808:170e:b0:3c6:6e1:b166 with SMTP id bc14-20020a056808170e00b003c606e1b166mr1792336oib.28.1713937615179;
+        Tue, 23 Apr 2024 22:46:55 -0700 (PDT)
+Received: from [10.3.132.118] ([61.213.176.6])
+        by smtp.gmail.com with ESMTPSA id j9-20020a056a00130900b006eae2d9298esm10560634pfu.194.2024.04.23.22.46.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 22:46:54 -0700 (PDT)
+Message-ID: <a2593b0a-1ddc-4f87-8b6d-68900fdcf612@bytedance.com>
+Date: Wed, 24 Apr 2024 13:46:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] cachefiles: add missing lock protection when polling
+To: libaokun@huaweicloud.com, netfs@lists.linux.dev
+Cc: dhowells@redhat.com, jlayton@kernel.org, jefflexu@linux.alibaba.com,
+ linux-cachefs@redhat.com, linux-erofs@lists.ozlabs.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Gao Xiang <hsiangkao@linux.alibaba.com>, Baokun Li <libaokun1@huawei.com>
+References: <20240424033409.2735257-1-libaokun@huaweicloud.com>
+ <20240424033409.2735257-6-libaokun@huaweicloud.com>
+From: Jia Zhu <zhujia.zj@bytedance.com>
+In-Reply-To: <20240424033409.2735257-6-libaokun@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Enable gpi-dma0, gpi-dma1 and qupv3_id_1 nodes for
-buses usecase on RB3gen2.
 
-Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
----
 
-v1 -> v2:
-- Move gpi node to correct place.
-- Update commit log.
----
- arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+在 2024/4/24 11:34, libaokun@huaweicloud.com 写道:
+> From: Jingbo Xu <jefflexu@linux.alibaba.com>
+> 
+> Add missing lock protection in poll routine when iterating xarray,
+> otherwise:
+> 
+> Even with RCU read lock held, only the slot of the radix tree is
+> ensured to be pinned there, while the data structure (e.g. struct
+> cachefiles_req) stored in the slot has no such guarantee.  The poll
+> routine will iterate the radix tree and dereference cachefiles_req
+> accordingly.  Thus RCU read lock is not adequate in this case and
+> spinlock is needed here.
+> 
+> Fixes: b817e22b2e91 ("cachefiles: narrow the scope of triggering EPOLLIN events in ondemand mode")
+> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+> Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-index a085ff5b5fb2..577bf8560d1e 100644
---- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-@@ -530,6 +530,14 @@
- 			   <GCC_WPSS_RSCP_CLK>;
- };
- 
-+&gpi_dma0 {
-+	status = "okay";
-+};
-+
-+&gpi_dma1 {
-+	status = "okay";
-+};
-+
- &i2c1 {
- 	status = "okay";
- 
-@@ -606,6 +614,10 @@
- 	status = "okay";
- };
- 
-+&qupv3_id_1 {
-+	status = "okay";
-+};
-+
- &remoteproc_adsp {
- 	firmware-name = "qcom/qcs6490/adsp.mbn";
- 	status = "okay";
--- 
-2.17.1
+Thanks for catching this.
 
+Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
+
+> ---
+>   fs/cachefiles/daemon.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
+> index 6465e2574230..73ed2323282a 100644
+> --- a/fs/cachefiles/daemon.c
+> +++ b/fs/cachefiles/daemon.c
+> @@ -365,14 +365,14 @@ static __poll_t cachefiles_daemon_poll(struct file *file,
+>   
+>   	if (cachefiles_in_ondemand_mode(cache)) {
+>   		if (!xa_empty(&cache->reqs)) {
+> -			rcu_read_lock();
+> +			xas_lock(&xas);
+>   			xas_for_each_marked(&xas, req, ULONG_MAX, CACHEFILES_REQ_NEW) {
+>   				if (!cachefiles_ondemand_is_reopening_read(req)) {
+>   					mask |= EPOLLIN;
+>   					break;
+>   				}
+>   			}
+> -			rcu_read_unlock();
+> +			xas_unlock(&xas);
+>   		}
+>   	} else {
+>   		if (test_bit(CACHEFILES_STATE_CHANGED, &cache->flags))
