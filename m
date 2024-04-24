@@ -1,87 +1,87 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68410156C6D;
-	Wed, 24 Apr 2024 08:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E62156C78;
+	Wed, 24 Apr 2024 08:46:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713948360; cv=none; b=IhiNMbHqWcZycmSJs7H2rTzJzIwaPhgXRZ21n7fNA1JuL3THNPvH2II1pI10+qAQhr05HIKXa0WIo2zGT6lNr3qzzngoyvVTdnyTFbwH3CQXXb1mmErsfEI3eOxrkpi7SQ56ExIKSCrYFTGlz6ULWEXXRP9elMTrS7d46ekyVCc=
+	t=1713948376; cv=none; b=utzmTM9j8kTdXUzfqJWbluYc2Cl47ybMxTr6u4TEFmWOE/LxyOQndaTDSU2VXOo+y1/DbwKfvCm77pgqad8gEaG6EqOIvfYUdNSJaiKhKmO9frN7ik4r4VvXmmlj7Q/+TRtZdpuez7xUkEH0ne1Sag51VhWALGcOYTbR5ITQgGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713948360; c=relaxed/simple;
-	bh=uEdlRl8Jc4JFRBA1J8W5/TuzeZ48w8/YmJIGgstTKCY=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=Q6P+s+ZSbehO8GqsUPPWKq4GzJdo791kVP27ytLbRA9ZY9e0SoyXK/28X2gyIzUmnOiSyx43CxTbZ7j6TRzBRT/rzqb3cLsnofenvNmFv9b+lsmmreH2O6gIEpSquYMLmzrx3flmiyfwKdPsSGKMJilyYmwX2MEVcydDPfaswY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=MFiEXoG1; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="MFiEXoG1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1713948319; x=1714553119; i=markus.elfring@web.de;
-	bh=uEdlRl8Jc4JFRBA1J8W5/TuzeZ48w8/YmJIGgstTKCY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=MFiEXoG1hzCEcxtx7TtI8kVWf0uqPNtc9pn0AB4w/yv74v6F1V75DrqF59zGkAJL
-	 V2ABrdxV0EIfN6gj8aSwQmTSX9QXEmwUWIfETIAHwXXM4Z99iXItNllbq2Z6+/+a2
-	 vIXfrhUvUcSZOytcyxN6FVww+WWaQ0vyWXNoUmBdqERHCAR0QmlaQWlxWhIQzcKTF
-	 tMPwFYrjO4HJOSYBQCxtuk6gc9Hhf5tffa/thHsv0vAthVZZqFNFAIuEEH1pHKeQt
-	 Mus5w8+rkZKDlGGesKAldss6Z3RNiTtnoEuxGIqe2NRlceEEdSLDygbKcHydSMgqw
-	 chlsoy9g+yk+lSD+5w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M91Po-1s5bzN12XO-006MWT; Wed, 24
- Apr 2024 10:45:19 +0200
-Message-ID: <f74fdb82-5d66-48f2-830e-3874570f022e@web.de>
-Date: Wed, 24 Apr 2024 10:45:15 +0200
+	s=arc-20240116; t=1713948376; c=relaxed/simple;
+	bh=U9WEx/BCuYxzfID62sP6/0+vS8kW5OxyjS0bTYk41Zk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MDeBm+6dx0PNOxgdbct24BpKCQ9F/JB7HkgbjLUTAk3QvYQF6b+uAyfgizg4MHxn3Vo5Rpxcc21Z1g8cjceQ+/Jpo3pFzfBoIhtBLs9tcZHn9bISKjMZfadIqd70hKW8uoN80hkWeZoqoKYK0OHMkcpMrCNS8QPADGp0NpQSbcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 43O8jun572217172, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 43O8jun572217172
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 24 Apr 2024 16:45:56 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 24 Apr 2024 16:45:56 +0800
+Received: from fc38.realtek.com.tw (172.22.228.98) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 24 Apr
+ 2024 16:45:55 +0800
+From: Hayes Wang <hayeswang@realtek.com>
+To: <kuba@kernel.org>, <davem@davemloft.net>
+CC: <netdev@vger.kernel.org>, <nic_swsd@realtek.com>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        Hayes Wang
+	<hayeswang@realtek.com>
+Subject: [PATCH net-next] r8152: replace dev_info with dev_dbg for loading firmware
+Date: Wed, 24 Apr 2024 16:45:32 +0800
+Message-ID: <20240424084532.159649-1-hayeswang@realtek.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Oreoluwa Babatunde <quic_obabatun@quicinc.com>, linux-sh@vger.kernel.org,
- kernel-janitors@vger.kernel.org, kernel@quicinc.com,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Rich Felker <dalias@libc.org>, Rob Herring <robh@kernel.org>,
- Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <20240423233150.74302-1-quic_obabatun@quicinc.com>
-Subject: Re: [PATCH v2] sh: Call paging_init() earlier in the init sequence
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240423233150.74302-1-quic_obabatun@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:oDDtZE5QTI6HgZu8daXqlXif8l0UZyjgE5+bLaur5LHSocjnwgO
- gW8Txa5Nd4nJ75hAUuaxWnY9MzsjWpqOPbeZEX7XZ10oQ8b1E5N07MklbKEJN1YgeHPwU2V
- +Vhqvz7XtI9gcdrkagJw5i+8MzzhSXIpNNH4sH0mq0srUTygmIXNolv55XD1gzn1KZNwmeq
- g0yzkx/OYUSEDOevdAMlA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:SwlBNNsRryw=;QZ+WI6pzzujKucnH37AACiHDU6m
- 841de6/jPxCFDZdlmZRYUS+CbeWgZ/2NJk4zt09xZ+o30kbvVnUh+rK8NCa9SQ0pMYm9YCzAa
- KfP9oIGLqC2oN196WGO5yQpyMMXZvYow6G/Idozre+37/CQGTbdTJoTW5Y74uW5KR5H649DsA
- VTT6KGMar4aUN63NVNjSjRHvvFR8RncYTTK2xNO5EU5Q0FRVOF0K4OPrlsj5jHzd8OckydOKV
- HvsrELG9AVx31IX9SVq+JeRMcN5prh1nkH6DN2SENsdFSRy+Ai3MZmquSV9A4cRTnV0yntCVw
- 3mvZqjEOSOwqLmTZnsw66C+Wc68IjsBwJP86MT4aw7TJJAFiCiHFNwEYr2Gi063AYakwUa+ZK
- TAn6OdQG04K/4be03arZxAZVzaojQebjKxuqvn4FKO7hymOf+TPVfUh5nu8J9lm9pMyca51OZ
- bkZcrd7uUgp9cYYxdRI8nWDL3glhLjEZjFK6rH4/ALUdVigOTmhIOK16jxLyHUGGDuTeVPXp3
- 8ZiPjhkzTdpIiwEbm1WOvSGR6GXX9WEQblPX+TAwyA7CueV1YjtQgUdDhQ0x5S2pVVbCE4t3R
- nF1jEV1XNfwG7kOI6165FfNqPXFzIRe8wlejNNHblzXb9sFX5SFDHQu+z83V5ON6tUw3kgv5A
- lloQUn8ybcU0L79enEGqyJZAp8x2JK4QtvDeR3lirlkt8pmdm6tdQsZ8FdDCCogAHsCY2xOxR
- NIlkuwEXinyerk+1pezD0bInB/pOzK+Q+BDLZy3ov2IK1uUKI2649IrXV73SeGjKmciqs5ufU
- mzfOFgYh6n4+yzqFe0t8keGN1HJzNgzhWiuNqjdz8Xugk=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-=E2=80=A6
-> Hence, move the call to paging_init() to be earlier in the init
-> sequence so that the reserved memory regions are set aside before any
-> allocations are done using memblock.
-=E2=80=A6
+Someone complains the message appears continuously. This occurs
+because the device is woken from UPS mode, and the driver re-loads
+the firmware.
 
-Will the tag =E2=80=9CFixes=E2=80=9D become relevant here?
+When the device enters runtime suspend and cable is unplugged, the
+device would enter UPS mode. If the runtime resume occurs, and the
+device is woken from UPS mode, the driver has to re-load the firmware
+and causes the message. If someone wakes the device continuously, the
+message would be shown continuously, too. Use dev_dbg to avoid it.
 
-Regards,
-Markus
+Note that, the function could be called before register_netdev(), so I
+don't use netif_info() or netif_dbg().
+
+Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+---
+ drivers/net/usb/r8152.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 5d6aeb086fc7..51e9f5b2dccf 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -5274,7 +5274,7 @@ static void rtl8152_apply_firmware(struct r8152 *tp, bool power_cut)
+ 
+ 	rtl_reset_ocp_base(tp);
+ 	strscpy(rtl_fw->version, fw_hdr->version, RTL_VER_SIZE);
+-	dev_info(&tp->intf->dev, "load %s successfully\n", rtl_fw->version);
++	dev_dbg(&tp->intf->dev, "load %s successfully\n", rtl_fw->version);
+ }
+ 
+ static void rtl8152_release_firmware(struct r8152 *tp)
+-- 
+2.44.0
+
