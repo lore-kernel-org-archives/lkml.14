@@ -1,45 +1,46 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2081.outbound.protection.outlook.com [40.107.223.81])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2068.outbound.protection.outlook.com [40.107.96.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B469015F406
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 15:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BD316130D
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 15:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713974315; cv=fail; b=rjYJD3pa8CbiC5p5JffAa4OZfv5nj40gBdXhwIXceoV+fScgjTflYxGE0Kx4WbTs+jbEVO81vfqA/zZsZ0dEIhxAs9oWRkUa1SjEdiSezEBKb/ADLG1VfEmKh701X0RKWbr6TYOGz/DamdML0g2Q1dHW/Os207ZmVnVswDWz1B4=
+	t=1713974318; cv=fail; b=ghsvat8GLkpUtm/Jz34A47SZbOYnmq+5VHclwPliYT8EDLEmFrLa4607pxBV5XzkS8HY1WM1RAyQl5sUwKOar5n3BUDx7BVI+JQ+0A+fVEJTC/+ooPuzqwA2pOXvQD8gk3x0km0xK8SQL+J2rz/MZkvTtQNYFA3O845gEvxBUqg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713974315; c=relaxed/simple;
-	bh=0skJtVuYgHwMivIdtqu2BTMhvuAH7Z4EE7+0vh1Iibs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I2c4KtGMySO5BI8qgFKlS408WwEqkUJEJJZBQhf/fTXuL/Vn1dTkbnJ3xanGKrfgJfbPgMU0EH+s0g3r+NRUWQd/jXtFDVq/jHDUcvzFR7uNpqmQmnsXjzjrfLf+/Sw8w4yiK/LcXY5GCPE0RKGhmJ9O9BGzfU3HQatnV1DpvM0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qk37VZM+; arc=fail smtp.client-ip=40.107.223.81
+	s=arc-20240116; t=1713974318; c=relaxed/simple;
+	bh=IoPkAJCI+2qNOgE4ZNvBFMwjvGyVKF04WO2eSNkc3xM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=j6/eicrp2kWYPXnHCdZmAMnXFr9X5KrIh0y1Z3me7e6ctu+zXi7r97TBt1sQCumK5ka83UzABqBXHLuBW0Gv+NZ+RSWCSIj8B4RmuPLDRKeNGd3tb68dy2siYHYwELgNzevYGtzoCre/CMSNYo79X+GfLkU7WE++jr2XUv7v0/I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hY4JBgVW; arc=fail smtp.client-ip=40.107.96.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qk37VZM+"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hY4JBgVW"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e9MeKe4Lsh6yq4OS2j6Tgj7gPv3p+2gvntJQwqNUY9q3FbD6xTpJkgZ46AETAg7u+wBlEG6Nk546GAMIufJqsHZoEhselWaYtoDO7e9DO1M4q4KAhJrCbgnWyl7+3QNoDw/n6JyIX7ePA4YR0PoKk28EUJjIo31AWCV46OFkod0jXZfz7lDaH5PBqqwIiL18QGs1T2a/NFd0FoHxw+Uvd0+jaVB1cBLfCrTm+nHN7y6yCTlyAdWFtAS21V9p9hbnR6l25u3XmdSfKpJRpeMnQ8UZHT0fY43LDugrHEvlpyBk/CUD4G+1nf+QvBFervb5iQNCfZXf42h/lGvMYbt4/w==
+ b=ogv5Sm7TBIo1DZaOKiEnUDt+m7imYr18/4qYcHLI2E4vSi/39+8+MsrABjD0wtuX9Jpz5YwpR+vEQ4oqxrOK7uXdt5bX8HWnghZfEVprqm6Kw5HQEizTGJ34VfH/53RAL1qEGBMsXMql9m9jXzEiVVaBQtd2gYtNYaGa9QLFCsOX/9eJ8kY9uwRdirlrDQ884GETJeIAMCLLhc2tCWgIhjwIHmYtmM0JM13PhImUhPAAFfqezQVfAMN6VGPLQ0W7TtetYB4RgLNMTd8yarrutllu7s6SDfH6QI0m2mgriDdFlHHFZ+JHd2oBYD8tujy1WjO98KH++91y3+sTUUTPzQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S3+IC27TH5ORa8Zf4SF9NM2mgUInEyfUneTApO+k518=;
- b=PRBWk5rOtiOCnEh8Tr1w5LRKQFVviM8E5+weJHhoETx8T5KRhyYvfArFhxFhRbh/nHoC2nKzKGZz5TuYRjdNcZd2DSpLfUMYxCXftDdFY98cwCO48rQhyOjsQctv68TbPdx4sPgBETKJGZ+ZwzGouvz8EokGICplxrGRRElFMDynMXoOx82XUo4WZu29gjCAzaj8pN/nBf3HHyc7oJ0iGji9hIZhA8MZNCilGEUyaSljtgduCkBfAW1xnXnHvngvVcBR4Xbpw4bpmP8fYZkQdC6Hsa/YwoY5TcwxbePA9Vx+2zphwo5sBL9hwzsAj11TJrIPO/NPFa7FuL1ziQcysA==
+ bh=/fvoIpw98EGryWgKZZYrMRJWz18TwCVHQc7OK/87QBM=;
+ b=nP4MOd4va4kyQft+EyLoJMXS9qwQf15vBFs2Pp+wHkkxMNKqSBfA0DeQW7X6cq4t8oT2o9J56/R0rnXaaXmqHZ+EnuxPRPNE9Xz482/m8O4ZpDVglHRFfWrkqulR06O/iLGsC6wcFs5yZRKDndhjzb+EGYCzS5xhwM2ePP49KqBgBcR2KIu4BPXsUDUOQunAya7oKzCgW+Omdkd6+LISmblh3BukypNwANgrYq4hzT+VNMZq4ZFWe+tKjGpP+tRKEuu9mxRq0Ib9AdDTXn4qVnem9ZvE05ZpF6Oa2CWoMxnxwj39BTYoRPqaVlEcWL+OQBuwLAGNIH0zwlOavRQiew==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S3+IC27TH5ORa8Zf4SF9NM2mgUInEyfUneTApO+k518=;
- b=qk37VZM+gPXSi94cGTeyiEnZctibyLRqPdSUDZFIurRys6JI2XVa9HhMpGKv1OHLEV1SnYQTrWRoXICdxMjYlHO0gfoqV2SkojSm4Mz5tu3MSu6vmiCVR5BwunfVMUs3mBGRypD1AjJjNP+YHsXUlJvyo5Vz+3Z1MNsWWOC9fSY=
-Received: from PH7PR17CA0006.namprd17.prod.outlook.com (2603:10b6:510:324::28)
- by SA3PR12MB9091.namprd12.prod.outlook.com (2603:10b6:806:395::10) with
+ bh=/fvoIpw98EGryWgKZZYrMRJWz18TwCVHQc7OK/87QBM=;
+ b=hY4JBgVWQ16yKsutxpLix2aTc/R+6xn27ZOoGZLzdQjVEEsTdXQGI6vDKkEKEBJi1Gl6nbhD4YWLWpJDaLxTWwxk4OFEPh/b3E9RymlFxrN5pbV3L19fYYnSgRsuw7ZNoU+4GNbggFKp6IlU3iqPKqne4Jrxyk57sXIA1XU/ro4=
+Received: from PH7PR17CA0002.namprd17.prod.outlook.com (2603:10b6:510:324::22)
+ by MN0PR12MB6223.namprd12.prod.outlook.com (2603:10b6:208:3c1::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Wed, 24 Apr
- 2024 15:58:30 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.23; Wed, 24 Apr
+ 2024 15:58:33 +0000
 Received: from CY4PEPF0000EE31.namprd05.prod.outlook.com
- (2603:10b6:510:324:cafe::74) by PH7PR17CA0006.outlook.office365.com
- (2603:10b6:510:324::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.23 via Frontend
- Transport; Wed, 24 Apr 2024 15:58:26 +0000
+ (2603:10b6:510:324:cafe::f1) by PH7PR17CA0002.outlook.office365.com
+ (2603:10b6:510:324::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22 via Frontend
+ Transport; Wed, 24 Apr 2024 15:58:33 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -49,11 +50,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  CY4PEPF0000EE31.mail.protection.outlook.com (10.167.242.37) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7519.19 via Frontend Transport; Wed, 24 Apr 2024 15:58:26 +0000
+ 15.20.7519.19 via Frontend Transport; Wed, 24 Apr 2024 15:58:33 +0000
 Received: from tlendack-t1.amdoffice.net (10.180.168.240) by
  SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 24 Apr 2024 10:58:25 -0500
+ 15.1.2507.35; Wed, 24 Apr 2024 10:58:32 -0500
 From: Tom Lendacky <thomas.lendacky@amd.com>
 To: <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
 	<linux-coco@lists.linux.dev>, <svsm-devel@coconut-svsm.dev>
@@ -61,12 +62,13 @@ CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
 	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, "Peter
  Zijlstra" <peterz@infradead.org>, Dan Williams <dan.j.williams@intel.com>,
-	Michael Roth <michael.roth@amd.com>, Ashish Kalra <ashish.kalra@amd.com>,
-	Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v4 00/15] Provide SEV-SNP support for running under an SVSM
-Date: Wed, 24 Apr 2024 10:57:56 -0500
-Message-ID: <cover.1713974291.git.thomas.lendacky@amd.com>
+	Michael Roth <michael.roth@amd.com>, Ashish Kalra <ashish.kalra@amd.com>
+Subject: [PATCH v4 01/15] x86/sev: Shorten snp_secrets_page_layout to snp_secrets_page
+Date: Wed, 24 Apr 2024 10:57:57 -0500
+Message-ID: <bc8d58302c6ab66c3beeab50cce3ec2c6bd72d6c.1713974291.git.thomas.lendacky@amd.com>
 X-Mailer: git-send-email 2.43.2
+In-Reply-To: <cover.1713974291.git.thomas.lendacky@amd.com>
+References: <cover.1713974291.git.thomas.lendacky@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,159 +81,130 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE31:EE_|SA3PR12MB9091:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5eda441f-2c62-4fed-5534-08dc647760aa
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE31:EE_|MN0PR12MB6223:EE_
+X-MS-Office365-Filtering-Correlation-Id: a95481e7-91a6-47de-fc9e-08dc647764d6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|7416005|1800799015|376005|82310400014|36860700004;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Tb1g+qhlz00S4ThQXHNv8nTYcz9BjzA34BzyYkc4h/NN2VUq3cOOi70qqj2M?=
- =?us-ascii?Q?IDeuNUBruK5uBMYb1QKYpGem/nhbGeSvDpffLY5G1N1uVUDj3Pmrr/19tQlp?=
- =?us-ascii?Q?Fe3JtvTv8UQY486Qg6m3pxBhUlfhq+JmXAXo630bPhV0wWgoOXDDKo+rFgUx?=
- =?us-ascii?Q?j0dL+VzPdDGxzJh8gKSx7wzyeHmbKZvqJm+eldJJD7vv5Qf/IP8Otjd9S9dX?=
- =?us-ascii?Q?fVTYXAP8S+ZOrv10cHCishTjb8q9p+uFa1aCUN1xuXmn8VdfQWsH3WH0pkTT?=
- =?us-ascii?Q?LVxgm8jIf/bKJ8/R0qCj/pufQ0XdS9UjmwAImVRdm0rWPNXR8nNeHgHidCBL?=
- =?us-ascii?Q?ZF/ikQuHtHJZsg9wH4XzkCN2xhVTa53CYoTpdCAyoEkoPCIqfSvYiyMBm8Np?=
- =?us-ascii?Q?uBOQ+I3a8zqFXkEPIEDo4qgtc4A8aevbOE6prZETkF6/PvUfK4/0lIyPSUHs?=
- =?us-ascii?Q?3ha1E/Xg+JTD7VcD6/kaUvcsq/3mS8r6H6HJWfQ/lKEc7B4ZLMlSqsFK6Kn9?=
- =?us-ascii?Q?TOHDSM+9dZSck5CDRlEWmG/T4cx/iI9BqzWrCWiWYCC4E8ndW5rTaE/A5FhK?=
- =?us-ascii?Q?1KX01oeQsu3NLZJnmRQNyd/e14by+q7zrnYE2bmZNhEKnkypzrIzf1IkWfq3?=
- =?us-ascii?Q?sWRNSA4YGTZjt5jFZOMfKrTOa97nenTy17gOsyDQAEgT2akeneXzGN7nNzqJ?=
- =?us-ascii?Q?8J+XRZaLtZQQFypdDrMgF+xg/yWsGiXYl2VDL9BaD54GKpFDgELlS01bVwvw?=
- =?us-ascii?Q?gEU7AC8R3PkXLnQ7Zd9zR6bxj4HCzGvUoHgS/lI3qZC9wWgYvyEpdjU+77J8?=
- =?us-ascii?Q?gy/4NvBg1zpmy9ZsWROPxksiY7a3GZyMBQyT6Akb3UcEj4TYuiyJclXJ1b5w?=
- =?us-ascii?Q?yQKNaA31JRUD8CEg07CoQ0eIUN4mhelKTR8rVdEsd6OD6O5l+0ljDZawacOM?=
- =?us-ascii?Q?hJeZFHrnkvXLG0xKPTh+rgkRq8nS+Z05AYoPlce0Mv8RMpNPhth0HpV7Z7jS?=
- =?us-ascii?Q?xgR9g/kTeBpGIn8BX+bFYYQnvHX6zqdHeI2KqSLRmnR/G01NiT0AFzRYWEmI?=
- =?us-ascii?Q?Qt66jPMMQ9lLOtSXnwLWWjnBQq+ooOQAoxlCvEnOH6CRqWsT7FfdleG5DUjZ?=
- =?us-ascii?Q?PSrUX2cjRNsuN2XAVOq13MxSX3MhRrn/4mYPC41MLARKtVjP+FtJm0d/VRzD?=
- =?us-ascii?Q?jPgbavsCssoep1RW5kniU3H1xZc9rDLfWQeHtVbtrk7OUiOyaMlceg7Y1bjO?=
- =?us-ascii?Q?f4uMxeBBOa4c53ViuVHkwxLX89/8Q+2vXFxziO8/3LaWATcSEZBvtn/mxjQx?=
- =?us-ascii?Q?BFvWtgULDC1VwVCffFEzY1dhFsD0UQJWTrVaykvx+qQjXbU6JuEpoA5EBWqH?=
- =?us-ascii?Q?x/ydz37nnZvKtOStYsG7kkarLHOp?=
+	=?us-ascii?Q?Fcsi80JUm0GQamSUSBr/BS2m5dwj4/pJBKT4b7VkdBF63kOZD4o7QkTjryc5?=
+ =?us-ascii?Q?aNMECxOHMJrtcBUUV7q4zBQEtpDIq9Du6k5WXxt4N4Kj300vvFR507Ga+jwo?=
+ =?us-ascii?Q?CjqQQS+jUgQlfjgRS8jdLvWKIDwYWSbcDNNEGfW8Eql6ZkZMxXJO5OuwFRM0?=
+ =?us-ascii?Q?8hoFa/7+zu3ct1dZXBUZDW+qoJcfTRRXwyMwwQxZGzW+fbymJZysTvblKbRd?=
+ =?us-ascii?Q?mU6ZT+GOIoLB1F0XGWPXibXfcc1UjKrV/XniPNn5FKZKS9QngEQGN3y0jugo?=
+ =?us-ascii?Q?x5zqTNXjiKkFi8c6u/HyB/jQGLSKz1rnPZbl3MVZN1WmN1AchYXVdE4No3NH?=
+ =?us-ascii?Q?RWrX90U8NAt+g4qe5bFnBrSgAwixOJPVh/qDOjTawnGghZQXuXOHfzzgJN87?=
+ =?us-ascii?Q?FxoGfM1C9RPORe2elOUMQaRvHjkIOjVks5HWKLJfeD6FJHg4fVRDW7euZ6dq?=
+ =?us-ascii?Q?KzxuK5wZINBcWhVEC6TaDY/jBUvGIFSKMXUP2I16R3NVf8IX/ESNVN87l3Ox?=
+ =?us-ascii?Q?ltTJkqF3zw/miXi04ImEcO2wxG9jah39DjjULTMkMFiCK6IVWzaQRMGj73dA?=
+ =?us-ascii?Q?9jyYS8fQv/tW1JrmO8/AhsPL2KMSrOdgWFi/Wb+U5ElHW1OhsrqFcfuY9Ktz?=
+ =?us-ascii?Q?HN9fYe1zzSXFRgHqvSYro3LB8hIZEg5BXw5X9RwLPVUwzh57vTS0BOixL6t+?=
+ =?us-ascii?Q?d7sciFyhVkkOnzwh8sXtQBRZO/N2rk3aXs+0Z/h7G58kfqRVfoHpNd9MIHvb?=
+ =?us-ascii?Q?wFblGG1bwin8+jMK0z0rUkEURXGvlWEy7nCjB3u8M2NVMRA3uO137drI+uvR?=
+ =?us-ascii?Q?rIqGn4WWrWvMaOnSRc63umUC0K/Zi6LvfQhoMrnPb+GK+R1X2kR++5tCizn0?=
+ =?us-ascii?Q?REWwKG0I1usyD4aGOlsHdh72KfvTCnYEIWnwxmQE7ZLoPLf7lGSMhLryB09l?=
+ =?us-ascii?Q?WYGp+NaDecZ/gZxx7TB8AYgO1F3vppneEOkaA4TC83SM06M551wO8YuYqPw7?=
+ =?us-ascii?Q?vN23JCrgs9lQeF63TYqpkdTKBvcie60cWLDZBvB+itWA4kAE5/pv1q6RT7kN?=
+ =?us-ascii?Q?SnXZDulYOFxGdu/dM+7UoQMr9f9GNiiQULgr1Q3PnVVl6lv24SaldFLz9znN?=
+ =?us-ascii?Q?uDi8sRZk9Qi4bzX5qe0XOeDb0ilxnXcaebxdq87gR6Ukj/nPppuTr+YJ2muo?=
+ =?us-ascii?Q?fgGLhf4+a3tbUluMugF8uzFxmsNhVATGFs1IgD9zD8ZH4/IJeCHIDw1J/LtR?=
+ =?us-ascii?Q?pC30JdADc9m7XYcdFYanfF+rUsnBbIAIVXyYj3N5A4hWFWCuWGLMohUESjc3?=
+ =?us-ascii?Q?AA4zTdc7dFFRQtcBZG7h72R1GzJxBcdDEn9xRFzXTsnO3w/1oU7+nm3SJiD6?=
+ =?us-ascii?Q?pTGnZ2hCEqMJ3FFAd5FInzp/LLU7?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(7416005)(1800799015)(376005);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(82310400014)(36860700004);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 15:58:26.4344
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 15:58:33.3990
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5eda441f-2c62-4fed-5534-08dc647760aa
+X-MS-Exchange-CrossTenant-Network-Message-Id: a95481e7-91a6-47de-fc9e-08dc647764d6
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	CY4PEPF0000EE31.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9091
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6223
 
-This series adds SEV-SNP support for running Linux under an Secure VM
-Service Module (SVSM) at a less privileged VM Privilege Level (VMPL).
-By running at a less priviledged VMPL, the SVSM can be used to provide
-services, e.g. a virtual TPM, for Linux within the SEV-SNP confidential
-VM (CVM) rather than trust such services from the hypervisor.
+Ending a struct name with "layout" is a little redundant, so shorten the
+snp_secrets_page_layout name to just snp_secrets_page.
 
-Currently, a Linux guest expects to run at the highest VMPL, VMPL0, and
-there are certain SNP related operations that require that VMPL level.
-Specifically, the PVALIDATE instruction and the RMPADJUST instruction
-when setting the VMSA attribute of a page (used when starting APs).
+No functional change.
 
-If Linux is to run at a less privileged VMPL, e.g. VMPL2, then it must
-use an SVSM (which is running at VMPL0) to perform the operations that
-it is no longer able to perform.
-
-How Linux interacts with and uses the SVSM is documented in the SVSM
-specification [1] and the GHCB specification [2].
-
-This series introduces support to run Linux under an SVSM. It consists
-of:
-  - Detecting the presence of an SVSM
-  - When not running at VMPL0, invoking the SVSM for page validation and
-    VMSA page creation/deletion
-  - Adding a sysfs entry that specifies the Linux VMPL
-  - Modifying the sev-guest driver to use the VMPCK key associated with
-    the Linux VMPL
-  - Expanding the config-fs TSM support to request attestation reports
-    from the SVSM and allowing attributes to be hidden
-  - Detecting and allowing Linux to run in a VMPL other than 0 when an
-    SVSM is present
-
-The series is based off of and tested against the tip tree:
-  https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
-
-  4e2b6e891aae ("Merge branch into tip/master: 'x86/shstk'")
-
-[1] https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/specifications/58019.pdf
-[2] https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/specifications/56421.pdf
-
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Christoph Hellwig <hch@lst.de>
-
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
+ arch/x86/include/asm/sev.h              | 2 +-
+ arch/x86/kernel/sev.c                   | 4 ++--
+ drivers/virt/coco/sev-guest/sev-guest.c | 6 +++---
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-Changes in v4:
-- Add a pre-patch to rename the struct snp_secrets_page_layout to just
-  snp_secrets_page.
-- Move the config-fs visibility support to be group based and referenced
-  by an index. Remove the macro changes that set the visibility function
-  for an entry.
-- Make the TSM visibility support vendor specific via an ops callback.
-- Use the rmpadjust() function directly and remove the enforce_vmpl0()
-  function.
-- Consolidate common variables into arch/x86/kernel/sev-shared.c.
-
-Changes in v3:
-- Rename decompresor snp_setup() to early_snp_setup() to better indicate
-  when it is called.
-- Rename the "svsm" config-fs attribute into the more generic
-  "service_provider" attribute that takes a name as input.
-- Change config-fs visibility function to be a simple bool return type
-  instead of returning the mode.
-- Switch to using new RIP_REL_REF() macro and __head notation where
-  appropriate.
-
-Changes in v2:
-- Define X86_FEATURE_SVSM_PRESENT and set the bit in the CPUID table,
-  removing the need to set the CPUID bit in the #VC handler.
-- Rename the TSM service_version attribute to service_manifest_version.
-- Add support to config-fs to hide attributes and hide the SVSM attributes
-  when an SVSM is not present.
-
-
-Tom Lendacky (15):
-  x86/sev: Shorten snp_secrets_page_layout to snp_secrets_page
-  x86/sev: Rename snp_init() in the boot/compressed/sev.c file
-  x86/sev: Make the VMPL0 checking more straight forward
-  x86/sev: Check for the presence of an SVSM in the SNP Secrets page
-  x86/sev: Use kernel provided SVSM Calling Areas
-  x86/sev: Perform PVALIDATE using the SVSM when not at VMPL0
-  x86/sev: Use the SVSM to create a vCPU when not in VMPL0
-  x86/sev: Provide SVSM discovery support
-  x86/sev: Provide guest VMPL level to userspace
-  virt: sev-guest: Choose the VMPCK key based on executing VMPL
-  configfs-tsm: Allow the privlevel_floor attribute to be updated
-  fs/configfs: Add a callback to determine attribute visibility
-  x86/sev: Take advantage of configfs visibility support in TSM
-  x86/sev: Extend the config-fs attestation support for an SVSM
-  x86/sev: Allow non-VMPL0 execution when an SVSM is present
-
- Documentation/ABI/testing/configfs-tsm        |  63 +++
- .../arch/x86/amd-memory-encryption.rst        |  22 +
- arch/x86/boot/compressed/sev.c                | 258 ++++++-----
- arch/x86/include/asm/cpufeatures.h            |   1 +
- arch/x86/include/asm/msr-index.h              |   2 +
- arch/x86/include/asm/sev-common.h             |  18 +
- arch/x86/include/asm/sev.h                    | 116 ++++-
- arch/x86/include/uapi/asm/svm.h               |   1 +
- arch/x86/kernel/sev-shared.c                  | 354 ++++++++++++++-
- arch/x86/kernel/sev.c                         | 421 +++++++++++++++---
- arch/x86/mm/mem_encrypt_amd.c                 |   8 +-
- drivers/virt/coco/sev-guest/sev-guest.c       | 210 ++++++++-
- drivers/virt/coco/tdx-guest/tdx-guest.c       |  29 +-
- drivers/virt/coco/tsm.c                       | 173 +++++--
- fs/configfs/dir.c                             |  20 +
- include/linux/configfs.h                      |   3 +
- include/linux/tsm.h                           |  62 ++-
- 17 files changed, 1533 insertions(+), 228 deletions(-)
-
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index 7f57382afee4..48bc397db649 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -140,7 +140,7 @@ struct secrets_os_area {
+ #define VMPCK_KEY_LEN		32
+ 
+ /* See the SNP spec version 0.9 for secrets page format */
+-struct snp_secrets_page_layout {
++struct snp_secrets_page {
+ 	u32 version;
+ 	u32 imien	: 1,
+ 	    rsvd1	: 31;
+diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+index 995f94467101..6949fbccec40 100644
+--- a/arch/x86/kernel/sev.c
++++ b/arch/x86/kernel/sev.c
+@@ -648,7 +648,7 @@ static u64 __init get_secrets_page(void)
+ 
+ static u64 __init get_snp_jump_table_addr(void)
+ {
+-	struct snp_secrets_page_layout *layout;
++	struct snp_secrets_page *layout;
+ 	void __iomem *mem;
+ 	u64 pa, addr;
+ 
+@@ -662,7 +662,7 @@ static u64 __init get_snp_jump_table_addr(void)
+ 		return 0;
+ 	}
+ 
+-	layout = (__force struct snp_secrets_page_layout *)mem;
++	layout = (__force struct snp_secrets_page *)mem;
+ 
+ 	addr = layout->os_area.ap_jump_table_pa;
+ 	iounmap(mem);
+diff --git a/drivers/virt/coco/sev-guest/sev-guest.c b/drivers/virt/coco/sev-guest/sev-guest.c
+index 87f241825bc3..04a7bd1e4314 100644
+--- a/drivers/virt/coco/sev-guest/sev-guest.c
++++ b/drivers/virt/coco/sev-guest/sev-guest.c
+@@ -59,7 +59,7 @@ struct snp_guest_dev {
+ 	 */
+ 	struct snp_guest_msg secret_request, secret_response;
+ 
+-	struct snp_secrets_page_layout *layout;
++	struct snp_secrets_page *layout;
+ 	struct snp_req_data input;
+ 	union {
+ 		struct snp_report_req report;
+@@ -743,7 +743,7 @@ static const struct file_operations snp_guest_fops = {
+ 	.unlocked_ioctl = snp_guest_ioctl,
+ };
+ 
+-static u8 *get_vmpck(int id, struct snp_secrets_page_layout *layout, u32 **seqno)
++static u8 *get_vmpck(int id, struct snp_secrets_page *layout, u32 **seqno)
+ {
+ 	u8 *key = NULL;
+ 
+@@ -897,8 +897,8 @@ static void unregister_sev_tsm(void *data)
+ 
+ static int __init sev_guest_probe(struct platform_device *pdev)
+ {
+-	struct snp_secrets_page_layout *layout;
+ 	struct sev_guest_platform_data *data;
++	struct snp_secrets_page *layout;
+ 	struct device *dev = &pdev->dev;
+ 	struct snp_guest_dev *snp_dev;
+ 	struct miscdevice *misc;
 -- 
 2.43.2
 
