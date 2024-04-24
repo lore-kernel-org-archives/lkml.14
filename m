@@ -1,168 +1,90 @@
-Received: from mail-m12824.netease.com (mail-m12824.netease.com [103.209.128.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129C11422AF;
-	Wed, 24 Apr 2024 15:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.209.128.24
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FF6313DBB2;
+	Wed, 24 Apr 2024 15:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713973972; cv=none; b=aQoS/t/eF4oSymBar1BGn/3S/FB7iqiiIchXFj83Osme9Eeo+MHsLScYKVpQeDfacejtb3ybTgswEJeLUh/25Isf8+wTVt5/gythGeIxQornJ7Q3X62wY9dnQJy+MfqTlYG4BSolo3b5V4XY+ld/R0esNwA8jL2AIW7z6Srl8kY=
+	t=1713973993; cv=none; b=shpI6HKoTwnRdA6pb+NgWa5CMjFvGGAlswLqbYKTOXvdhPTxr+yA7r7cdqCDCvyU+DZpGPYb7p7nyjRAMfJhI07GmAgku2SwyQt1lQTENQ8MAUV6iHgp0fs/brEsMR++2JC4MsfWYhsV18BIp7cBMTfbg+UcW9lbJ5MVJpjksRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713973972; c=relaxed/simple;
-	bh=qOuZ/FKAj56jtkFL4SdM4vCiYPbiiMS+JV1peJ4ZbiY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=s6/e9+UX1HQUzlpJ7kL1v1dZEPMgmRMqWH5e/CpeJEIFUkLaHhDXrpsaw5NaVAsPXSCGaIUZ4mr+QJdbtpJbPnKktsMbCWAD7uuBy8HuDBFdBFOCefCamNyjuVjx7lA06KSAbmAKfGvpEuKZEByIrV1CEkQebeAhTB3lQXAIpyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=103.209.128.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
-Received: from [192.168.122.189] (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id C5A03860120;
-	Wed, 24 Apr 2024 16:43:48 +0800 (CST)
-Subject: Re: [PATCH 2/7] cbd: introduce cbd_transport
-To: Chaitanya Kulkarni <chaitanyak@nvidia.com>,
- "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
- "axboe@kernel.dk" <axboe@kernel.dk>
-Cc: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- Dongsheng Yang <dongsheng.yang.linux@gmail.com>
-References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
- <20240422071606.52637-3-dongsheng.yang@easystack.cn>
- <780f3ccd-5112-4948-81c3-3144c6779503@nvidia.com>
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Message-ID: <7ec61a75-79ec-94db-ebf9-58679c85edeb@easystack.cn>
-Date: Wed, 24 Apr 2024 16:43:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+	s=arc-20240116; t=1713973993; c=relaxed/simple;
+	bh=cqQlTJYlnxpdMp1tQKkUwfXxp9N7FIOvRmzCX75X7js=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LlpxOscILPTWY2s9vNkcCHF2ImJbJMwV48J7ju6t8kJESXBhfdhguXx3I6xh4lSxbKJz7BkE2ongSAM0PAjrB481lfuY7FuCw9PSXT2fdm8eiV+PrU4lFLA0INuV17u7MCBc4k4tln+kX5WogFfh5eGHRI9nEXrXIJRwPh2Y8Gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 709531063;
+	Wed, 24 Apr 2024 08:53:39 -0700 (PDT)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D0143F73F;
+	Wed, 24 Apr 2024 08:53:10 -0700 (PDT)
+Date: Wed, 24 Apr 2024 16:53:07 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Yangtao Li <tiny.windzz@gmail.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Chen-Yu Tsai
+ <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
+ <samuel@sholland.org>, linux-pm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: sun50i: fix error returns in
+ dt_has_supported_hw()
+Message-ID: <20240424165307.16f45b21@donnerap.manchester.arm.com>
+In-Reply-To: <9bfe5703-b39b-4d98-9995-f6a7d0ea558d@moroto.mountain>
+References: <9bfe5703-b39b-4d98-9995-f6a7d0ea558d@moroto.mountain>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <780f3ccd-5112-4948-81c3-3144c6779503@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZTE1LVkxISElJGE9MSkJDH1UZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8f0f467de2023ckunmc5a03860120
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MTI6Iww6Ojc1ThACPToJAgMC
-	LxpPFChVSlVKTEpIQk9DSUlCTk9JVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
-	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBT09NSjcG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Wed, 24 Apr 2024 14:40:11 +0300
+Dan Carpenter <dan.carpenter@linaro.org> wrote:
 
+Hi Dan,
 
-在 2024/4/24 星期三 下午 12:08, Chaitanya Kulkarni 写道:
->> +static ssize_t cbd_myhost_show(struct device *dev,
->> +			       struct device_attribute *attr,
->> +			       char *buf)
->> +{
->> +	struct cbd_transport *cbdt;
->> +	struct cbd_host *host;
->> +
->> +	cbdt = container_of(dev, struct cbd_transport, device);
->> +
->> +	host = cbdt->host;
->> +	if (!host)
->> +		return 0;
->> +
->> +	return sprintf(buf, "%d\n", host->host_id);
-> 
-> snprintf() ?
+thanks for having a look!
 
-IMO, it will only print a decimal unsigned int, so it shouldn't overflow 
-the buffer.
-> 
->> +}
->> +
->> +static DEVICE_ATTR(my_host_id, 0400, cbd_myhost_show, NULL);
->> +
->> +enum {
-> 
-> [...]
-> 
->> +
->> +static ssize_t cbd_adm_store(struct device *dev,
->> +				 struct device_attribute *attr,
->> +				 const char *ubuf,
->> +				 size_t size)
->> +{
->> +	int ret;
->> +	char *buf;
->> +	struct cbd_adm_options opts = { 0 };
->> +	struct cbd_transport *cbdt;
->> +
-> 
-> reverse tree order that matches rest of your code ?
+> The dt_has_supported_hw() function returns type bool.  That means these
+> negative error codes are cast to true but the function should return
+> false instead.
 
-Agreed,
-> 
->> +	if (!capable(CAP_SYS_ADMIN))
->> +		return -EPERM;
->> +
->> +	cbdt = container_of(dev, struct cbd_transport, device);
->> +
->> +	buf = kmemdup(ubuf, size + 1, GFP_KERNEL);
->> +	if (IS_ERR(buf)) {
->> +		pr_err("failed to dup buf for adm option: %d", (int)PTR_ERR(buf));
->> +		return PTR_ERR(buf);
->> +	}
->> +	buf[size] = '\0';
->> +	ret = parse_adm_options(cbdt, buf, &opts);
->> +	if (ret < 0) {
->> +		kfree(buf);
->> +		return ret;
->> +	}
->> +	kfree(buf);
->> +
-> 
-> standard format is using goto out and having only on kfree()
-> at the end of the function ...
+Ouch, of course! I refactored the function during development, but missed
+that part.
 
-Okey, having a unified error handling path is a good idea, and it's 
-suitable here as well, thanx.
-> 
->> +	switch (opts.op) {
->> +	case CBDT_ADM_OP_B_START:
->> +		break;
->> +	case CBDT_ADM_OP_B_STOP:
->> +		break;
->> +	case CBDT_ADM_OP_B_CLEAR:
->> +		break;
->> +	case CBDT_ADM_OP_DEV_START:
->> +		break;
->> +	case CBDT_ADM_OP_DEV_STOP:
->> +		break;
->> +	default:
->> +		pr_err("invalid op: %d\n", opts.op);
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	return size;
->> +}
->> +
-> 
-> [...]
-> 
->> +static struct cbd_transport *cbdt_alloc(void)
->> +{
->> +	struct cbd_transport *cbdt;
->> +	int ret;
->> +
->> +	cbdt = kzalloc(sizeof(struct cbd_transport), GFP_KERNEL);
->> +	if (!cbdt) {
->> +		return NULL;
->> +	}
-> 
-> no braces needed for single statements in if ... applies rest of
-> the code ...
+> Fixes: fa5aec9561cf ("cpufreq: sun50i: Add support for opp_supported_hw")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-thanx, Iwill remove unnecessary braces next version.
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+
+Thanks,
+Andre
+
+> ---
+>  drivers/cpufreq/sun50i-cpufreq-nvmem.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> -ck
-> 
-> 
+> diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> index cd50cea16a87..0b882765cd66 100644
+> --- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> +++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> @@ -136,11 +136,11 @@ static bool dt_has_supported_hw(void)
+>  
+>  	cpu_dev = get_cpu_device(0);
+>  	if (!cpu_dev)
+> -		return -ENODEV;
+> +		return false;
+>  
+>  	np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
+>  	if (!np)
+> -		return -ENOENT;
+> +		return false;
+>  
+>  	for_each_child_of_node(np, opp) {
+>  		if (of_find_property(opp, "opp-supported-hw", NULL)) {
+
