@@ -1,106 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8419415E1F3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DDA15E1FE
 	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713966878; cv=none; b=Ue8vPUspBCUH9ViE1XD62JJm7+v3dWMQ9aH3iR6iLo+WrbvSRSMfuGN288MGa/otjegtaRbE6C6vde5JthRNck1DZXtd6jWZoRKHsgVer+RZUjAWORsNWMCxVgrXdBKxRgZ++f2D6SDeh/exhbkZAELkfZYLkpra7lel3NYrukc=
+	t=1713966879; cv=none; b=UVqQfJvJWq0BPfIqWg3bsh4X/McxL51Jja7JAtqJme1+7dPi7Vnr+VgETPp3BSWC8PpY5heT6czy5WF2xuw/0cGpOOode0puW2FOLL3puSvf/Bmv9rn+lgQNvGPY1h9he/JwEa1cuCNC4Js8dEQRfnAqeu3vfEl6xNoQQ2xNxwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713966878; c=relaxed/simple;
-	bh=aaAS8vV4wb9QvjU6bclPinSt2ufTufAeAaQH7gzZLTM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O2vGnqXRKM1A60QnrunAZ4cyQ+DWHc0mYw/d56fRSbqKT5ES2bSGRLVeP75ZxYzbcPt5d8s7VoSChDV5k0e8rV7q65yqcSCBCX5VS9a8XvQ3M42lbCzOxo/hxioZ907j/RHembHur7VAQemxd1R9d9g0Ka3ebbySksYzyJZVcT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PtFH6AJ/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713966879; c=relaxed/simple;
+	bh=Mx2OfLd2q5mi0gURFw5TuMXcb1Huqn82HNjl8eR3ylE=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=uOWN2Rl3wonOIHUhn8j2ApV98PpddkS65yXptWpbXoERKwS34ycgJg4okBNkuCTNxM/BvOcQ4GENjTnSSAQ01X8vNI62tZxXV9xUHV1C9sO+593axoqlCpFr8gS7Ccb48ZNle23NbGP9r8pN/fP8M5k1d/ARocT3NDXfFuUmHN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=L0ACVveM; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PtFH6AJ/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713966876;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rmUaRXIMcsJ+dXovFl57XFZEcsYZXt5cyjvVIml/sc4=;
-	b=PtFH6AJ/f6c6RSnBZ0ZxWLh2y+ElHbYC9CeKwROKX5qo532060+gxEnpWOuyFl4sLb0zD3
-	0/DXPgYctlWzyeo/Jx77MrjZrZv/ZSQpcuBeupdxTbt33oh3jqka7QnZAStSgZenPSdQgX
-	x84sciqXq9ffgfYWGD/HygCwqnojBoU=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-208-HJzfv7WJMfWcK7JLXcIesg-1; Wed,
- 24 Apr 2024 09:54:33 -0400
-X-MC-Unique: HJzfv7WJMfWcK7JLXcIesg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A4DDD299E740;
-	Wed, 24 Apr 2024 13:54:32 +0000 (UTC)
-Received: from antares.redhat.com (unknown [10.39.193.98])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 218A91C0654B;
-	Wed, 24 Apr 2024 13:54:29 +0000 (UTC)
-From: Adrian Moreno <amorenoz@redhat.com>
-To: netdev@vger.kernel.org
-Cc: aconole@redhat.com,
-	echaudro@redhat.com,
-	horms@kernel.org,
-	i.maximets@ovn.org,
-	Adrian Moreno <amorenoz@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Ido Schimmel <idosch@nvidia.com>,
-	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 1/8] net: netlink: export genl private pointer getters
-Date: Wed, 24 Apr 2024 15:50:48 +0200
-Message-ID: <20240424135109.3524355-2-amorenoz@redhat.com>
-In-Reply-To: <20240424135109.3524355-1-amorenoz@redhat.com>
-References: <20240424135109.3524355-1-amorenoz@redhat.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="L0ACVveM"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-34665dd7610so3656171f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:54:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1713966876; x=1714571676; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nqG6EAw4hfK6YDk87ISdjEyvEY4/LHJcMlZc2x8R9og=;
+        b=L0ACVveMqoyPVa55/eYySBH0vg1cRvHB0FzATMjJfL4L8G/itIj1gx84wFOhHK5fsy
+         1kIusoUJzOVAjlq8loXdVj+gnHpN/PQ3wePt9A3isf/yQshQgJebG/hqGIIWGf0smfDw
+         rDsjkKnhtqziSJp9TBqYeVKFn+Q8aMKxtT0bgjAw5dQhouNrA4MDO/z5Vw9a/DWMjIsw
+         0sIlEc/nielh4J7AjcqxmTLfJMzGanK+AwsqnBEOBMaKmHZ4AYg5TOt1ZMmXB/iypt9i
+         BuyGEVzetxj+xkpfzoMkw7oCaL5h5PlO8mZhlx34JrQLQ3KbueGAiC3uGzRf7o5SfKu8
+         yfSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713966876; x=1714571676;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=nqG6EAw4hfK6YDk87ISdjEyvEY4/LHJcMlZc2x8R9og=;
+        b=rA5AJIw5qThtHn+VFzR/irzT/YQYYq2E3e2aa38pOIxMlMxLYNptQoqPhE0w8YJlBk
+         LOQSFaEEle8YITH9rdexuqSe1isu1BZ5ICuMBtmvEIW67SHyECnY6kwnfstGwQ8cOYBg
+         hBBz/aZ7ZKTo3JNSHzh9TARefitUKGF5xNiUdslFPUrO8HZ6G0gCn8bHggCOl7r5FE3c
+         gN4OPb0w2c1FdmSp9khiB3KRNAr0zo8EXH6eFHe9H3esdlT7ryrl+iqDbGIOW6D6qx6o
+         VARKF17x4Bnk/Ph8UhT7PkiTXCfU+Al8lRox+/DaQj98eKabMWYOAT2oM8M9evzLJr0J
+         Xe5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXCj8vAFnY+GO6wQzI/pG3IUef/fxDUx0/kOww66ra0nZJd5EEriwrlRggzjPNcPkysBVer4EaxqvOhPtVn7MUqP+rpW8BurFQ/joE5
+X-Gm-Message-State: AOJu0Yw/fkoO+1l8siLq6JCi9SDFO41b7iFlqfG/zQx5oHYqAdRUWu67
+	xP6c+z3dULKA+3fPHJqMs9+2hUbWWM0M0oy0v5yQDvtsERqZj78sHvtvWWJIL3M=
+X-Google-Smtp-Source: AGHT+IEOznvXT2DbTMtec6cIfPbt6cznBYSdTY7urC4yVUpfeeSzluMWHpxbXdtlOl9wyfNYXsAK/A==
+X-Received: by 2002:a5d:56c2:0:b0:346:251a:396d with SMTP id m2-20020a5d56c2000000b00346251a396dmr1588928wrw.51.1713966876400;
+        Wed, 24 Apr 2024 06:54:36 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:ab48:1b7:631c:952a])
+        by smtp.gmail.com with ESMTPSA id r14-20020a05600c458e00b00417e5b71188sm23952306wmo.34.2024.04.24.06.54.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 06:54:36 -0700 (PDT)
+References: <20240424-s4-pwm-v4-0-ee22effd40d0@amlogic.com>
+ <20240424-s4-pwm-v4-1-ee22effd40d0@amlogic.com>
+ <1jil07f3ps.fsf@starbuckisacylon.baylibre.com>
+ <ikwqq5veuad7fehk6qrpebevvn2ezuxwm3h7agloqeomxc5cbg@kj3be67luyxm>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, kelvin.zhang@amlogic.com, George
+ Stark <gnstark@salutedevices.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Junyi Zhao
+ <junyi.zhao@amlogic.com>
+Subject: Re: [PATCH v4 1/2] pwm: meson: Add support for Amlogic S4 PWM
+Date: Wed, 24 Apr 2024 15:53:44 +0200
+In-reply-to: <ikwqq5veuad7fehk6qrpebevvn2ezuxwm3h7agloqeomxc5cbg@kj3be67luyxm>
+Message-ID: <1jbk5yg92c.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Both "__genl_sk_priv_get" and "genl_sk_priv_get" are useful functions to
-handle private pointers attached to genetlink sockets.
-Export them so they can be used in modules.
 
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
----
- net/netlink/genetlink.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Wed 24 Apr 2024 at 15:51, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutr=
+onix.de> wrote:
 
-diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
-index feb54c63a116..beafa415a9f5 100644
---- a/net/netlink/genetlink.c
-+++ b/net/netlink/genetlink.c
-@@ -726,6 +726,7 @@ void *__genl_sk_priv_get(struct genl_family *family, struct sock *sk)
- 		return ERR_PTR(-EINVAL);
- 	return xa_load(family->sock_privs, (unsigned long) sk);
- }
-+EXPORT_SYMBOL(__genl_sk_priv_get);
- 
- /**
-  * genl_sk_priv_get - Get family private pointer for socket
-@@ -764,6 +765,7 @@ void *genl_sk_priv_get(struct genl_family *family, struct sock *sk)
- 	}
- 	return priv;
- }
-+EXPORT_SYMBOL(genl_sk_priv_get);
- 
- /**
-  * genl_register_family - register a generic netlink family
--- 
-2.44.0
+> [[PGP Signed Part:Undecided]]
+> Hello,
+>
+> On Wed, Apr 24, 2024 at 12:32:36PM +0200, Jerome Brunet wrote:
+>> > +err:
+>> > +	while (--i >=3D 0) {
+>> > +		channel =3D &meson->channels[i];
+>> > +		clk_put(channel->clk);
+>>=20
+>> Fine on error but leaks on module unload.
+>>=20
+>> Same as George,
+>>=20
+>> Add the devm variant of of_clk_get() if you must.
+>
+> There shouldn't be a reason to still use of_clk_get(). I'd expect that
+> devm_clk_get() should do the job and if not that's a bug.
 
+Getting a clock ressource by index instead of by name is a reason.
+
+>
+> Best regards
+> Uwe
+
+
+--=20
+Jerome
