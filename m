@@ -1,117 +1,132 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60A115E5C9
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 14:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19B215ECF3;
+	Wed, 24 Apr 2024 14:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713969426; cv=none; b=WgaTE8OY4prvMB+kO/11xuRx3tifoxIL+jNX1TUKhQjeexgNjGsSWfFZGSTLk/Gbs2mb0ehnZTQqEsVzxvfEdWZANgx0+Pejt7K3H9hz8dg0HCuU5C20R5EzY76jr9bvEMejnpEV14ZRS9AlT7WoCzSarZvxXAf9lokWZzKdcRg=
+	t=1713969427; cv=none; b=oBg/GNpqGpzv4Ec5kMZB65KFWIKTl5krfQJA2sX8zoAy2ly35S0w2hokKgdopU+QRdaH7fX4oj38fLVmscernjJINDrA9/8m5io1/T69omzUKscsvwL73i1W41Pajn7TAX3+E8m1uvbfo7SfDVdErTL/PWwFkErhT4hCvjdPhqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713969426; c=relaxed/simple;
-	bh=+BYrTVqDboKGgK4KKS0DRAvfuY7c0pLEiHeUk7SiITU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dvo02HcqpGquPIDTLAxyXXew0Goag8U7cglQDUqELpG5MDIS1eLo02DEwi46IR3u88WngJkSmm9Bj1yUJ2B82bDiFL4QQXuKmZX7EGlKkVROMk49qw0P8rFTqvJUkvqGKqhHIN73BxMxv/2LFCyEvrOEyXu1F7gmYefF7t30TbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=OFc5YRT3; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1713969427; c=relaxed/simple;
+	bh=k6zY+8OIqG3hvgbnxVfHVa3Ek+C1GSXe4a2L4RdgdEQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=I4p/RcWZ1zCAN8/6K8+1ZXT88uax8P6zRTd8D19oH7cVci5oo0B60WzLqC8ppr1Jd0SEqbiDldnn7IJNhaHs+UMXFAb2SJv5Bdsgd8Ssvb/7Dn8W3hT+e6AFutJbXkDKji97u1mg1ZRX2UnFcjsYxXiaBFNPxqq+JmiOi+21sn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h+F1XyJn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="OFc5YRT3"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-22e6b61d652so2320268fac.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 07:37:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1713969424; x=1714574224; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=T39L+QneLP5gnsdAiD9XezQQ4gD6H4BTQ8GV5y1wMWs=;
-        b=OFc5YRT3tyt9cNXK2yAzRIlmxm6FdzhvhEPm4fOjfYsKYWKF+0miuMkkFiI3yfPk5s
-         VN8xOXW9d/Q1yfbIKMMtDi7j9fZhn/gZ2dp+t3OJTUhnzlw+MP29lg/MTglCANHK34Hn
-         3M3jj/A3Q/ojjWZuQk3e9z5VpvFnZgY+poiAzY2PXL9FoDcfijeg+WBKXYDvw2rZLsHl
-         S4Vg9tieBurUNdAlwFfovZ/caO7VYx0VCbg+UjtcGhEGvlyOdNo/9GnOJCUHPaFMCRat
-         Csv8bICiOdAMYCn+YHnbKw8DeSAmJCNXwCgseFYb+03gYRAScCaKv9RzAiXD+0TKq4K5
-         1gyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713969424; x=1714574224;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T39L+QneLP5gnsdAiD9XezQQ4gD6H4BTQ8GV5y1wMWs=;
-        b=EUaumis+wAX0hhTCbIlgIQgURbve57yZFAvTi0ADh//FEfq64uVxieoj86zm2/cbIX
-         5vb3uwtyDIkDUp4C6sOewDOgqi8cvwSNrKPQX0s6cqSgR2uiTECrdKoEX+YCP9Ay9rke
-         w98/9dpo3K47aoZmjiiTAPt13ijBnvdk6/P7GntTxiOvYvqrSeGcEHzm4jI680vC9PDi
-         ATpHgeNK+z0IFqKwBZc5BQ3xrfgS48Bokg5dvgUFe3L/YzNK+8xKGZdKkQBEq/0emApR
-         JRTc+tdPusn+FAf+JempICzW/Tir4QKxunkymTk8bRGRI4Brty/BQYDDzPqiUfomkRzl
-         AL8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUGIYpM7j5jndCWR4Xg+6qY34yeGjt5ENXzkDyX43ss7gQah6zRW8fGVQ3r4sMyHHGoXeDlFxG74wxmZBedLhC25KwHc0qgd0ULyg8s
-X-Gm-Message-State: AOJu0YxUAzljIz+x1umK8Ur9CiJdmQtk63ZcGTuKr25gkskE7gmhTS3d
-	Qui3PWqCwb+PdPYvT5B3m7/PnXxhsQ+tSIDJ7uh29rWdrNoy1Z/fHpzmkG+MvBl3YeIK25Thw2+
-	P7aI=
-X-Google-Smtp-Source: AGHT+IE1/mCX5lKDlaYeWsUxTpNAKM0lRlTcLCGZmXloq2fK5/kkJb4Y3WWADBZMtpMMR37mGoMk7w==
-X-Received: by 2002:a05:6870:ef87:b0:23a:a6f:ed5a with SMTP id qr7-20020a056870ef8700b0023a0a6fed5amr2635643oab.19.1713969423775;
-        Wed, 24 Apr 2024 07:37:03 -0700 (PDT)
-Received: from ziepe.ca ([12.97.180.36])
-        by smtp.gmail.com with ESMTPSA id ms26-20020a0568706b9a00b0022ea967bb9dsm2858001oab.50.2024.04.24.07.37.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 07:37:03 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1rzdk6-008CY1-7I;
-	Wed, 24 Apr 2024 11:37:02 -0300
-Date: Wed, 24 Apr 2024 11:37:02 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Baolu Lu <baolu.lu@linux.intel.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, joro@8bytes.org, will@kernel.org,
-	ewagner12@gmail.com, suravee.suthikulpanit@amd.com,
-	vashegde@amd.com, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH] iommu: Fix def_domain_type interaction with untrusted
- devices
-Message-ID: <20240424143702.GH231144@ziepe.ca>
-References: <fa14583e94cbf540b60a6be94b41bb24d0037e75.1713272443.git.robin.murphy@arm.com>
- <20240416152943.GU223006@ziepe.ca>
- <3cf97e3c-c8d9-4282-a8ca-e4c1ea383dbd@arm.com>
- <20240424130457.GF231144@ziepe.ca>
- <77fd2bba-fc59-4997-a91a-2d9235ce5cd6@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h+F1XyJn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C08FC113CD;
+	Wed, 24 Apr 2024 14:37:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713969427;
+	bh=k6zY+8OIqG3hvgbnxVfHVa3Ek+C1GSXe4a2L4RdgdEQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=h+F1XyJnBAnkc7gMGRYlCJFwpBgbkGE0SW36ugHTAwN/bG8lgwRhTmdfnTGyVdupS
+	 THlpUvl3MZVQJ0vnc+mjzkKT30t9vfj7vc3mHA7GZV4cLlGSBA5Nlk0lCGuzPynoMA
+	 lc28IawaXFrOl9rm1vOA68HUUEW4d2+F3FHLIGKiK6uLigTWvPvWiHnaw5pP0yHAoP
+	 IWPua28+RGj6IvY1W8UZ4sqzpofBmorsbPcnvYEkp+6W0C9FD4OuSkXbxRS/Qls8Px
+	 yhePsHLxoB30PP2WZJ2P7yhKuGejQZtyClOMmSbU3Lz6apmPfQ7fas5wNw0ZIuOSXH
+	 tC7Tv0Ju+AQqQ==
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
+To: Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH 1/8] rtla/timerlat: Simplify "no value" printing on top
+Date: Wed, 24 Apr 2024 16:36:50 +0200
+Message-ID: <0a4d8085e7cd706733a5dc10a81ca38b82bd4992.1713968967.git.bristot@kernel.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1713968967.git.bristot@kernel.org>
+References: <cover.1713968967.git.bristot@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <77fd2bba-fc59-4997-a91a-2d9235ce5cd6@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 24, 2024 at 10:18:00PM +0800, Baolu Lu wrote:
+Instead of printing three times the same output, print it only once,
+reducing lines and being sure that all no values have the same length.
 
-> For example, the intel iommu driver allows users to opt-in graphic in
-> passthrough mode, in that case def_domain_type will return
-> IOMMU_DOMAIN_IDENTITY no matter the device is trusted or not.
-> 
->     if ((iommu_identity_mapping & IDENTMAP_GFX) && IS_GFX_DEVICE(pdev))
->          return IOMMU_DOMAIN_IDENTITY;
-> 
-> this potentially creates same conflict as the amd driver.
+It also fixes an extra '\n' when running the with kernel threads, like
+here:
 
-These performance policy choices should be done in the core code and
-they should interact correctly with other policy knobs like untrusted.
+     =============== %< ==============
+                                      Timer Latency
 
-If Intel Graphics has some performance reason to prefer IDENTITY then
-it should work the same no matter the IOMMU it is connected to. I
-think just because the GPU is co-packaged with the IOMMU isn't a good
-reason to organize the software like this.
+   0 00:00:01   |          IRQ Timer Latency (us)        |         Thread Timer Latency (us)
+ CPU COUNT      |      cur       min       avg       max |      cur       min       avg       max
+   2 #0         |        -         -         -         - |      161       161       161       161
+   3 #0         |        -         -         -         - |      161       161       161       161
+   8 #1         |       54        54        54        54 |        -         -         -         -'\n'
 
-If having a policy of a performance boost to some devices is
-legitimate then I guess we'd need more levels on the command line:
- fast           all IDENTITY
- fast-secure    all DMA expect IDENTIY for special devices
- mostly-secure  all DMA but unmapping is not strict
- secure         all DMA and strict unmapping
+ ---------------|----------------------------------------|---------------------------------------
+ ALL #1      e0 |                 54        54        54 |                161       161       161
+     =============== %< ==============
 
-How exactly you decide when the performance reason justfies IDENTITY,
-I don't know.. Would mlx5 800G NICs that can overwhelm most IOMMUs
-also go in that bucket too?
+This '\n' should have been removed with the user-space support that
+added another '\n' if not running with kernel threads.
 
-But yes, I'm quite adament that drivers should not be using
-def_domain_type as some kind of performance policy thing.
+Cc: stable@vger.kernel.org
+Fixes: cdca4f4e5e8e ("rtla/timerlat_top: Add timerlat user-space support")
+Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
+---
+ tools/tracing/rtla/src/timerlat_top.c | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
-Jason
+diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
+index 8a3fa64319c6..2665e0bb5f1e 100644
+--- a/tools/tracing/rtla/src/timerlat_top.c
++++ b/tools/tracing/rtla/src/timerlat_top.c
+@@ -212,6 +212,8 @@ static void timerlat_top_header(struct osnoise_tool *top)
+ 	trace_seq_printf(s, "\n");
+ }
+ 
++static const char *no_value = "        -";
++
+ /*
+  * timerlat_top_print - prints the output of a given CPU
+  */
+@@ -239,10 +241,7 @@ static void timerlat_top_print(struct osnoise_tool *top, int cpu)
+ 	trace_seq_printf(s, "%3d #%-9d |", cpu, cpu_data->irq_count);
+ 
+ 	if (!cpu_data->irq_count) {
+-		trace_seq_printf(s, "        - ");
+-		trace_seq_printf(s, "        - ");
+-		trace_seq_printf(s, "        - ");
+-		trace_seq_printf(s, "        - |");
++		trace_seq_printf(s, "%s %s %s %s |", no_value, no_value, no_value, no_value);
+ 	} else {
+ 		trace_seq_printf(s, "%9llu ", cpu_data->cur_irq / params->output_divisor);
+ 		trace_seq_printf(s, "%9llu ", cpu_data->min_irq / params->output_divisor);
+@@ -251,10 +250,7 @@ static void timerlat_top_print(struct osnoise_tool *top, int cpu)
+ 	}
+ 
+ 	if (!cpu_data->thread_count) {
+-		trace_seq_printf(s, "        - ");
+-		trace_seq_printf(s, "        - ");
+-		trace_seq_printf(s, "        - ");
+-		trace_seq_printf(s, "        -\n");
++		trace_seq_printf(s, "%s %s %s %s", no_value, no_value, no_value, no_value);
+ 	} else {
+ 		trace_seq_printf(s, "%9llu ", cpu_data->cur_thread / divisor);
+ 		trace_seq_printf(s, "%9llu ", cpu_data->min_thread / divisor);
+@@ -271,10 +267,7 @@ static void timerlat_top_print(struct osnoise_tool *top, int cpu)
+ 	trace_seq_printf(s, " |");
+ 
+ 	if (!cpu_data->user_count) {
+-		trace_seq_printf(s, "        - ");
+-		trace_seq_printf(s, "        - ");
+-		trace_seq_printf(s, "        - ");
+-		trace_seq_printf(s, "        -\n");
++		trace_seq_printf(s, "%s %s %s %s\n", no_value, no_value, no_value, no_value);
+ 	} else {
+ 		trace_seq_printf(s, "%9llu ", cpu_data->cur_user / divisor);
+ 		trace_seq_printf(s, "%9llu ", cpu_data->min_user / divisor);
+-- 
+2.44.0
+
