@@ -1,94 +1,91 @@
-Received: from mail-40140.protonmail.ch (mail-40140.protonmail.ch [185.70.40.140])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C091E493
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 14:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3784715886A;
+	Wed, 24 Apr 2024 14:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713970184; cv=none; b=e4Mp0uOpzEt+ZYTfjuRfD8ns/Tsrnq8CFIlCWWoX1fIINnrpKddAP8xHCNDSzt7gi+jBr948Y5hFPBNiDWOGYkscuQTqp3bz6Ni5K+cgY4eXMj6QxJSgp10nf4m/qr9fFqnnCMYDV6yMb2A6jFNCp8pEN/fH2TyQCJMiPa+Ht1o=
+	t=1713970195; cv=none; b=DdnqlJlk/7fP7wMqBlKg0Fu2oETi4wB+C3O78aqEaDzAUakkG8Lyj2mkXgLeOhkpog4YeDtAZUdgiCcfkqn5uXfJQTyuEd7eER8rY7U+FMB/rlJP4ynSga+q2Pqm9EtkmXfpaPIlveRgFPVHgdL0aefoLT1J5DxafyCaGjPDfEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713970184; c=relaxed/simple;
-	bh=UhytsUo9VBh/+t1V3Z4MvovH2cCjum7PfSADfjigeko=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=aTXN+fdya3Sq4wQHmX/ThqymjhvEd4WojE43XQCkYEk5yN6EyJlu0/LWtY8gbYzDVW6lgHzQxCdTkeCsU5UQ9yhclzuNpVqQTFu79RjOVJ3cg608+raQO36GwlqPtngto1v2WSnAlY/pM80ail5t//9Ka0IebSalsQrMU561cYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=DVHkQQS2; arc=none smtp.client-ip=185.70.40.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1713970195; c=relaxed/simple;
+	bh=QfIp9Cuncd8TPCMm0EDUz7IMudkuyG5DpO4qs2ODp2w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZjpYdtGIKJHVCtvqhniiN/i+b/4iECqaAohb7VE7xFDrCMChfAvzKX9IxKQ+UXfJ78KRxUmVSyGGd8gct4H9Yia6CabVgVMxBnvL0SmPulRa+SfIjT/VKkHD1ZwFxhsMOJiVlne5dZxYDL1/kCB6ai2eUKZNsev3LQxNf1/fVvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HvnJLGXk; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="DVHkQQS2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1713970180; x=1714229380;
-	bh=VEe3pOZHo9UZJqzOb18loUkmy2Jdqv45LZK57Rv1two=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=DVHkQQS2dADQ7U2fznF1wgeLqjuQnJ5yIN/6gfiEwV8ZU49B+w2TQ97qKmd63G4Cb
-	 ybWNo4OeLgIQsa7qd0iVdNY2gIeuPLl/b7PhfXExDpbgAyQ90pcTyGKXPbnZn6ocG3
-	 Lw5KRdGp+1Fu45udEdV3O0pgcIoCmwVOnCYvkDAvHaPQMY0pIvpKNf+PK/c1nTMylu
-	 Ga8tca55g5H/BA4/9Uqlrv3HffbQ8AVTefqLwkrwKgyrhcj865TyQJqmWR1DPo/hSi
-	 CsLkFCoOUtz4JtDBCxmE8k84GwVJN2z8PbFBU9lsD194t3O0E8JRHuVqKK7cfes4b0
-	 RZkqSO3YvsVYQ==
-Date: Wed, 24 Apr 2024 14:49:32 +0000
-To: linux-kernel@vger.kernel.org
-From: Raymond Hackley <raymondhackley@protonmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Jakob Hauser <jahau@rocketmail.com>, Stephan Gerhold <stephan@gerhold.net>, Nikita Travkin <nikita@trvn.ru>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: [PATCH] arm64: dts: qcom: msm8916-samsung-fortuna/rossa: Add connector for MUIC
-Message-ID: <20240424144922.28189-1-raymondhackley@protonmail.com>
-Feedback-ID: 49437091:user:proton
-X-Pm-Message-ID: 839d0a29a0592432c5acf1cdf144271682f08d52
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HvnJLGXk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713970194; x=1745506194;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QfIp9Cuncd8TPCMm0EDUz7IMudkuyG5DpO4qs2ODp2w=;
+  b=HvnJLGXkFRTpzOpAEcxe4sBc2dqGP638rNYMGriEg0FFWtnfvG7h+hns
+   zH+8epM1XIPq4fX9Go4F4AcvQMsXtJbOikGLM4j9vuoDMsCiEyVMItkvf
+   BiHmjdtmFAvO4ExoMnuXp0vEEDBzJyaRZ1VrrCIEZ37yk+rz86si77G6k
+   BJlbjENCVpQDTJoUi6o3wJqxNTm4PGqJlz3N77BoId3PjqsbFdmGHYMTd
+   xkg1y+un4GQ+Y6NEXF74I/WwmbZu53Z1QLTEp0uxKkKMuFQCKlJBryFFb
+   4sc1iIuFjMJPZbU37Xp7lCzCYME9bd7o6KJSWna4T3zNqTcMqrWSN0Sd/
+   A==;
+X-CSE-ConnectionGUID: UivBsOr8R4mX+nmmDZJVRA==
+X-CSE-MsgGUID: CIkDa5Y0SMel1pYTGqVu3w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="13392135"
+X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
+   d="scan'208";a="13392135"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 07:49:53 -0700
+X-CSE-ConnectionGUID: 4ydNRvDCQRSL0tBHTCMQCg==
+X-CSE-MsgGUID: kcLpl1bGTB6gEqnyj6Opyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
+   d="scan'208";a="24802439"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 07:49:51 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rzdwS-00000000gDk-3NW8;
+	Wed, 24 Apr 2024 17:49:48 +0300
+Date: Wed, 24 Apr 2024 17:49:48 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Subject: Re: [PATCH v2 1/1] ALSA: control: Use list_for_each_entry_safe()
+Message-ID: <ZikcDLDnv1PX17wb@smile.fi.intel.com>
+References: <20240423211102.3785556-1-andriy.shevchenko@linux.intel.com>
+ <87h6frdxz2.wl-tiwai@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h6frdxz2.wl-tiwai@suse.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Add subnode usb_con: extcon for SM5502 / SM5504 MUIC, which will be used
-for RT5033 charger.
+On Wed, Apr 24, 2024 at 09:24:49AM +0200, Takashi Iwai wrote:
+> On Tue, 23 Apr 2024 23:10:22 +0200,
+> Andy Shevchenko wrote:
+> > 
+> > Instead of reiterating the list, use list_for_each_entry_safe()
+> > that allows to continue without starting over.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+> > ---
+> > v2: added tag (Jaroslav)
+> 
+> We have a similar repeat in snd_ctl_led_reset().
+> Wouldn't it be better to catch both?
 
-Signed-off-by: Raymond Hackley <raymondhackley@protonmail.com>
----
- .../arm64/boot/dts/qcom/msm8916-samsung-fortuna-common.dtsi | 6 ++++++
- arch/arm64/boot/dts/qcom/msm8916-samsung-rossa-common.dtsi  | 6 ++++++
- 2 files changed, 12 insertions(+)
+Sure, v3 is on its way.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-fortuna-common.dtsi b=
-/arch/arm64/boot/dts/qcom/msm8916-samsung-fortuna-common.dtsi
-index 5e933fb8b363..62864cca0cbb 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-fortuna-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-fortuna-common.dtsi
-@@ -114,6 +114,12 @@ muic: extcon@25 {
- =09=09interrupts-extended =3D <&tlmm 12 IRQ_TYPE_EDGE_FALLING>;
- =09=09pinctrl-0 =3D <&muic_int_default>;
- =09=09pinctrl-names =3D "default";
-+
-+=09=09usb_con: connector {
-+=09=09=09compatible =3D "usb-b-connector";
-+=09=09=09label =3D "micro-USB";
-+=09=09=09type =3D "micro";
-+=09=09};
- =09};
- };
-=20
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-rossa-common.dtsi b/a=
-rch/arm64/boot/dts/qcom/msm8916-samsung-rossa-common.dtsi
-index b438fa81886c..08485dcc20de 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-rossa-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-rossa-common.dtsi
-@@ -15,6 +15,12 @@ muic: extcon@14 {
- =09=09interrupts-extended =3D <&tlmm 12 IRQ_TYPE_EDGE_FALLING>;
- =09=09pinctrl-0 =3D <&muic_int_default>;
- =09=09pinctrl-names =3D "default";
-+
-+=09=09usb_con: connector {
-+=09=09=09compatible =3D "usb-b-connector";
-+=09=09=09label =3D "micro-USB";
-+=09=09=09type =3D "micro";
-+=09=09};
- =09};
- };
-=20
---=20
-2.39.2
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
