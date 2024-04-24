@@ -1,76 +1,153 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57963157468;
-	Wed, 24 Apr 2024 12:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5AF15A4BA
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 12:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713961124; cv=none; b=efK59Egq3IkhpoFZMqckIjRJkQIWoa7sh6BjfvKTINaHHhAMeZX1QigwPPG1bp0K1nyzUXoIJD7AQjazxp1OF5B+367JNY3RxOr1s5ST2XTGpJcwQ1YjD3FDbHDlmr7f3AlPKAT00lib0pmjM7ND6uetfMN67v31hALIDS+duso=
+	t=1713961251; cv=none; b=ewGuIL67yI5Exlsra1PYpioRKgAqAB2K61NRmQefJHD4iyHdER9T8faDADrDXZKcFIZA70Fvfp+C7UyMhsF2ZwN+8+Iz9lhj/IFaXB4hC7rsD16jRrUZZk6b0T3FxG6fJPeSXz9neuYNDpy3ri/zabSf8bvi3jkm/91klTlt2CI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713961124; c=relaxed/simple;
-	bh=SULN04cta+fMxT+A7uGTXzI3Jjh1sMkfuGFHWvafAXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RV6W/hyAxg1pwBggmBMRijMdYaS5Dmp0QMDKDyPl9qRGHfJprTyi1mx/PTSCakMFmriBN1tbCUglT9DpCYKsREIUOvVUSRqi+nyOuHY0kWwTRcC05LwDx6tKHYKqtwcsLHntumhFlla6zosS+JiaCg+gVKiyUxZ+Ef2/IpFxGQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=1lbAuKeu; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1713961251; c=relaxed/simple;
+	bh=QXyTAYtBEHqfKfsBRuXbIP00XZG3dAzuEqxSavK2oRs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NG0QykFL85ltnAgi9lXEugFBURcQiT/EF8VWgz8/JjdUWlSxSBZVV/gSeeqIo7Rl2ogrDAfZ3sjUS9TkJIa6wY++yPo74MlIYGQfhDUiXA5db/W2fY8H31w4XJMsTMrCnld2KCtpf//obj8Z2NpYYMF1EKMb0+b8jOumCItl0oM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gs3LSytU; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1lbAuKeu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=5YU6RLfJEcQkDYGp0nVtAW9ea3dToWjX8XmP9WmB4qY=; b=1lbAuKeuHQtGR5Xoqex+Vz8IKD
-	R14cRiF09njBi1f0wxU9n9ZAZ+VTdwMBSHHPn1ashAK0Rlpsa0EjCaUXqXosheKd/okYE74UdJjnd
-	faVQ4WN9xtHb8y5C8zN+wTZYzg3bOfkdqgdSIRS0Wf5fNjz4DbprPh2Rw/6hGYimsuQc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rzbZx-00DoLZ-13; Wed, 24 Apr 2024 14:18:25 +0200
-Date: Wed, 24 Apr 2024 14:18:25 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
-	Lee Jones <lee@kernel.org>, Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Duanqiang Wen <duanqiangwen@net-swift.com>,
-	"open list:SYNOPSYS DESIGNWARE I2C DRIVER" <linux-i2c@vger.kernel.org>,
-	"open list:WANGXUN ETHERNET DRIVER" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 1/4] i2c: designware: Create shared header hosting driver
- name
-Message-ID: <b3cdfeb7-6eb0-4522-96ae-d3155d677002@lunn.ch>
-References: <20240423233622.1494708-1-florian.fainelli@broadcom.com>
- <20240423233622.1494708-2-florian.fainelli@broadcom.com>
- <ZihLSKe_BHxasBql@surfacebook.localdomain>
- <0aac2975-42d0-4abe-9405-bf8a38a94104@broadcom.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gs3LSytU"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-de462979e00so7715309276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 05:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713961248; x=1714566048; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QXyTAYtBEHqfKfsBRuXbIP00XZG3dAzuEqxSavK2oRs=;
+        b=gs3LSytU3jDhhIAmFOvLS8BZCOMsXNtyS9bgBy53UYKVGLN6zf5ssNiEdMdi0xTChr
+         ywCXPjONKVU5snKcK6O2uNUTa1SiX4G58vrrJ/kHUvS1alAKSq1LsXDvz/XViwd5sB1M
+         wKEjvvymoQHuag26UJdD7j/2NXHHFXiYLMjjweTUvv5h0RMCwWSAdFgFQJcfSxwyV0eS
+         6eoSMWzsXY4yuCBEJUNvMbxKEO7WVNqQUnPrxplOMZwTwsbtXKrqbYJH4dt4OE6HYUO8
+         Bmuww/JC2NcxyR1nhLCVaHJIN1OVDI/XsJGgDK/jDq6+g8rmSTbRkuT/9hhJHz6T6iYc
+         g3CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713961248; x=1714566048;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QXyTAYtBEHqfKfsBRuXbIP00XZG3dAzuEqxSavK2oRs=;
+        b=UZ9PCDyYSdXfiyRAx2XwAcujr6G+9eGggnPKc+VIWLnh0CJ02/jq2HHXg3X/jxDww3
+         txRSL+oOqvEEPOZC8huOxReEtWBytT9aGMy5xx306XL/6IAvNdOKUdg0JZ2rDU5IjOhw
+         Rlr0T5LV7ZwhtreYwywK9FVaIdlanu/0ezE5vKlJD4LvBQKOPM3B1ZACikZIokNhhRQE
+         1PiaAsBnpXxycL9hDJgqpH81oFuwAo/VODS0SrYEjZ3P3tT4Zq9oSm/HhT+Ix4YJ1Ibv
+         tMUxvcr0isR+EcHnD8jbY4U+cOZ6lkkTtjb4LmXiqZsfg6Z7rD0UC6+EH2kZ1fTTqoGj
+         aAwA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpUnLf/0qLSYRbPL2ahJhWQXJ9A3pkokT15uaX3Zc2WHzCGk/CIuW166mt4cU4wWnovZn/JI+ShPBuvh8Eibmq97RwNuKfe6fEOLOi
+X-Gm-Message-State: AOJu0Yw5blD6T97y0+lWkVSmSiGXzxBEEwEHwdbHraQ1Wiuh7v8lQPov
+	DJG4Dh2+5GS1/+fjxnA+iLhX6Kqg9aUQGfGM/lDTYuHv41B8XrajWZ1vCIEfukehWua1Jnix2eA
+	9w25jaFT9tBTk6ShIxjmsS+T8pcu/OX5Vit/V7w==
+X-Google-Smtp-Source: AGHT+IFlnUzjZT7CIke7TNCrSUx76xu1l/kSb/3YVpva/PnKnsHU1IGww6Ek7hw5Vt+mX8BVYvB8BjcE5mbTfmYmXDY=
+X-Received: by 2002:a05:6902:1024:b0:dca:e4fd:b6d6 with SMTP id
+ x4-20020a056902102400b00dcae4fdb6d6mr2642434ybt.61.1713961248050; Wed, 24 Apr
+ 2024 05:20:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0aac2975-42d0-4abe-9405-bf8a38a94104@broadcom.com>
+References: <20240422130036.31856-1-brgl@bgdev.pl> <99242a7c-53bf-4227-9623-7bc092f564b3@penguintechs.org>
+ <CAMRc=MepDwUbAKrWgm0CXKObqy8=igtug0QDgo-CgwxjZCAC2Q@mail.gmail.com>
+ <b982b73d-0540-409c-a6e2-0e03ecb11715@penguintechs.org> <0381f39c-38ba-4a2b-915c-f14c5f911eb9@penguintechs.org>
+ <CAMRc=MfnEct7ThQhCA3AoY7hxq8j1mmFLNNkK17+RSvJxs67XQ@mail.gmail.com> <2371f538-ec53-4037-b171-c62bf4e06eb1@penguintechs.org>
+In-Reply-To: <2371f538-ec53-4037-b171-c62bf4e06eb1@penguintechs.org>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Wed, 24 Apr 2024 14:20:37 +0200
+Message-ID: <CACMJSeunUaj0cxLaN4MpFmX5vTOx_vnWjBN4Y2FavdQoQxFRkg@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: qca: set power_ctrl_enabled on NULL returned
+ by gpiod_get_optional()
+To: Wren Turkal <wt@penguintechs.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > >   #include <linux/i2c.h>
-> > > +#include <linux/i2c-designware.h>
-> > 
-> > Can it be hidden in the subfolder?
-> 
-> That would require the MFD and ethernet drivers to include relative to where
-> they are in the source tree, do we really want that?
+On Wed, 24 Apr 2024 at 14:17, Wren Turkal <wt@penguintechs.org> wrote:
+>
+> On 4/24/24 4:56 AM, Bartosz Golaszewski wrote:
+> > On Wed, Apr 24, 2024 at 1:53=E2=80=AFPM Wren Turkal <wt@penguintechs.or=
+g> wrote:
+> >>
+> >> On 4/24/24 4:16 AM, Wren Turkal wrote:
+> >>> On 4/24/24 2:04 AM, Bartosz Golaszewski wrote:
+> >>>> On Wed, 24 Apr 2024 07:07:05 +0200, Wren Turkal<wt@penguintechs.org>
+> >>>> said:
+> >>>>> On 4/22/24 6:00 AM, Bartosz Golaszewski wrote:
+> >>>>>> From: Bartosz Golaszewski<bartosz.golaszewski@linaro.org>
+> >>>>>>
+> >>>>>> Any return value from gpiod_get_optional() other than a pointer to=
+ a
+> >>>>>> GPIO descriptor or a NULL-pointer is an error and the driver shoul=
+d
+> >>>>>> abort probing. That being said: commit 56d074d26c58 ("Bluetooth:
+> >>>>>> hci_qca:
+> >>>>>> don't use IS_ERR_OR_NULL() with gpiod_get_optional()") no longer s=
+ets
+> >>>>>> power_ctrl_enabled on NULL-pointer returned by
+> >>>>>> devm_gpiod_get_optional(). Restore this behavior but bail-out on
+> >>>>>> errors.
+> >>>>> Nack. This patch does fixes neither the disable/re-enable problem n=
+or
+> >>>>> the warm boot problem.
+> >>>>>
+> >>>>> Zijun replied to this patch also with what I think is the proper
+> >>>>> reasoning for why it doesn't fix my setup.
+> >>>>>
+> >>>> Indeed, I only addressed a single issue here and not the code under =
+the
+> >>>> default: label of the switch case. Sorry.
+> >>>>
+> >>>> Could you give the following diff a try?
+> >>>
+> >>> I had a feeling that was what was going on. I'll give the patch a sho=
+t.
+> >>>
+> >>> wt
+> >>
+> >> Considering this patch is basically equivalent to patch 1/2 from Zijun=
+,
+> >> I am not surprised that is works similarly. I.e. on a cold boot, I can
+> >> disable/re-enable bluetooth as many time as I want.
+> >>
+> >
+> > Zijun didn't bail out on errors which is the issue the original patch
+> > tried to address and this one preserves.
+> >
+> >> However, since this patch doesn't include the quirk fix from Zijun's
+> >> patchset (patch 2/2), bluetooth fails to work after a warm boot.
+> >>
+> >
+> > That's OK, we have the first part right. Let's now see if we can reuse
+> > patch 2/2 from Zijun.
+>
+> I'm compiling it right now. Be back soon.
+>
 
-Maybe linux/platform_data/i2c-designware.h ? There are a few NAME
-macros in there.
+Well I doubt it's correct as it removed Krzysztof's fix which looks
+right. If I were to guess I'd say we need some mix of both.
 
-       Andrew
+Bart
+
+> >> @Zijun, this patch looks more idiomatic when I look at the surrounding
+> >> code than your patch 1/2. Notice how it doesn't use the "else if"
+> >> construct. It does the NULL test separately after checking for errors.
+> >>
+> >> --
+> >> You're more amazing than you think!
+> >
+> > Bart
+>
+> --
+> You're more amazing than you think!
