@@ -1,157 +1,136 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D4FEC0
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D1436D
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713941089; cv=none; b=NjAjryUwisgZCg+IWH30Nf87CrbzYxn4Jc/BBPevMtCaQYa9aK/unooFcWxv4v8Gs5kKOamhM+gebibwOuNUIrfpQqv5XdGxD7XqdBxenDkeWMfSX8DIl1nXNiGsGAzAJyn/6PC7HV+xhO6lqOGU/ttxd+CCoGXrH8hjNb8Baiw=
+	t=1713941145; cv=none; b=QU/itgE4MKR+QGGPBijuQCmWD7MFLg2RIB1ZUD4ttJGdspDg9w7EzhPzCYFDQX3iknRdY8oRHp77oU+aicX47W8xSxw/fcNNuJxdmGbd3RMkkqQNbb08Adr+0Wo+fFNi5NBCU3CQweoDJUOk+6hWAHf+KMAbLUxetcVvQ5YQtms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713941089; c=relaxed/simple;
-	bh=qywyNAqtfmH3XPM3wc3C3h0jJnNuoDFJUlD0uSHfGJ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X9MvpOmNZS4zIOGiesre0kgiqINAMpbuGM8KshnTmqtCQekvPqtxL5kL00l2DOv807avDMPwuXpj3Qdin0hxmbK9TIQ7b1lZzbpRVmUGCQO6BV/NkOKp4S/mu9gMoPlNMnCf+vnxe/9aT+ZiaAlXCzxK3WEvIVI2TCNhl5IPg1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=jlAnsaql; arc=none smtp.client-ip=209.85.166.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1713941145; c=relaxed/simple;
+	bh=gVhV2LSQRbcRhrY7ozO+Nw5LSGX58zz9PAUZhFmP7XE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ArWMe3rQhjA/5jb2j9VE1Pea7BPdJf5TnRgIP/5AjiiX3T5EQbe3Tb2sqck0DL0YVYiINS1hUJIUo/FnouB1qq7vTLWvEPDUIvq3rxmQ8Y7bnULK7ZdVk4s6bUeDV213A64TqYQkcbbwikK47WeeKPpFUJWBxrDxYfkjBNBGPE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JBZq4RCv; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="jlAnsaql"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7dddba0f02fso84852039f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 23:44:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JBZq4RCv"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-572256b1636so1190172a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 23:45:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1713941087; x=1714545887; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Sf3+5YALiCVsfizYQ3BDSn74CJsGH44UmM4ytaiZ8LM=;
-        b=jlAnsaqlvlEt9FPwcwjDy9IaN+Fcxx1QE37nTGGAN00ggG/w4NZa6KYzTaIN+9yxhU
-         CWQXSzSmlJLk8fGRrfKvoXIMWcSiAw+AjakMZ5ranb9IVAdFnOqObRxebJSxPIKOB69B
-         hrg8bNVq62xrNQ++nsxQsiVC2nu5wkP0i8MDKS45cWk+UVRZvgwNgmP62tIAxWQ1g/n+
-         U6Kc2n1y4emKUWVHkOGbwEM11geG+UveZrLR/HrOzdoawpeK2vcGvu4prxQDV0Fj0PR+
-         J0Vw77Il66M0/6CSAThn8tj1hFwf4pnp+At5d8fgXhZor5TzMSavAlHysIVZNtCYMlkO
-         MvZg==
+        d=linaro.org; s=google; t=1713941142; x=1714545942; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3VmkCxB5MHuKKWmwb7OfnJ5mXhDXeidltR0c3CrCv1s=;
+        b=JBZq4RCvsX6XEILMXXvddOSRUfTgnDddfsfG+PpvVsduaCXXHlStB2DV46E0BD+xWu
+         7w7pgwIcAWZzX/weD3tnd+OSYkds8CGNThIzFtds5bk4ldvSCL/mABhpiZFHpFTmGZvi
+         RfrlZ/rTeThDp6J54t1AFkIWRjiVmffHZn/67r8x70txM9WqSqJRl4cZIaZvuHBTrn30
+         QjW5bg5du3YZwc8Q7dk8RlwNZr2WLg7wbstYuyLvoqD0TANp3EtwLcfDcMrwMOqieuZB
+         PxXxEdvRZPCBug2uvPgYpBQzDEKFlJ281goW7w3VxIggq2X+6I03ozhVyXKFhem98FVm
+         w3aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713941087; x=1714545887;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Sf3+5YALiCVsfizYQ3BDSn74CJsGH44UmM4ytaiZ8LM=;
-        b=gsFY0mEcL/a1kxhhKwmQQB0n4WaBZRYi9ssh70n8UWfrtwmHHti5ihN3edJ+yXz5Us
-         wkzKOSlJhxNMHp5GS1yiE02SKPvPjIkEhLXfy0xJGkbqkHDPEpODZwFFosXFON9Jp90r
-         2uU7RYVzs/xinno1QqyB5EUJUVvK/vfSLj2M+wse3zo4TqkVXzqukHgyM1P/GC4DGbUw
-         fTyBAMfl7GYCpzeCTGOPCgOyYi7qjIVUN62FsUn6JnBZyRt5O1P3Xg2P+zwC1i68gQ2w
-         MfwOCDVeyFNS5asPHlQZwF644Tzwsld+UMMbMHwy1isSBbhgS1y5ocem+wipTVIkU75g
-         5Nxg==
-X-Forwarded-Encrypted: i=1; AJvYcCW7DYLnaKI8e55kidlr9+NZhl4RuqA07WiE4vUooqR9Q7wftKFtapv4GvpAFmyjzsjvciFHb4u1tDyG009vDIHcSf6WGtn/QqoDKdsU
-X-Gm-Message-State: AOJu0Yxra0Xp31Rb1cu7tjQ9EK+mFf13+6MPOOJIXB1bKDZ4K5XyaCUl
-	0pQidmyO+CzXKSQspssOHDvwXrcS69AE6ru2y5NXRCY2NSH1vD6UsnI6oL4DXr7KavvVjdvMqtJ
-	PLKsVmgGIvRboQb38Y2l/MEk5RcVRoisYNNufpw==
-X-Google-Smtp-Source: AGHT+IErBzM2ZvKYjC/kgSDBdh9xGud9im9ZtDYytTVq3cZLIALDpKA6oVcIv+vfvAqc+qjjb0Q4f5CdYvyjEl60vMI=
-X-Received: by 2002:a6b:7e46:0:b0:7da:836:5d82 with SMTP id
- k6-20020a6b7e46000000b007da08365d82mr1731542ioq.7.1713941086645; Tue, 23 Apr
- 2024 23:44:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713941142; x=1714545942;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3VmkCxB5MHuKKWmwb7OfnJ5mXhDXeidltR0c3CrCv1s=;
+        b=VpkJ62SKPyMtFDdQqYtwT4aUXzVfNdoi+jiXGRlXbqEqHV7Av6ODg16JyUwj2n36tv
+         DZ+JwwL+IwamqQTcvvag1J/qOWr9WKCplATY+TtaRVL4iqOONGLIogBhBkDVPkiJX2Js
+         jzJ9rK+l2PSoCudAy6Qcp5zzf3gGgcrWkolkO+fP/R3mpBbH7FuXRvu8qkUmwUep/Awu
+         o1iHajFiRl/j0kJ1dO/IGFe8cwFzGXnYYc93YjHH4zGXMPuJ1rPyJoL3hM2t6SIxhhjc
+         Gefv68jtAYqGu6sGsMeyub6SULQgwqejDWKydRhyUXdIzmVwFXAFu/QerHmQKvqaYgs5
+         RnUw==
+X-Forwarded-Encrypted: i=1; AJvYcCVi1311WlTWqv9UoD0nmyhLhAuppT6UUuuc78Kr+m4uJs4Wzs8ChkZbcY7fL0KU6ptQU9A0NjbBEgR7AYAJ/nQi4Sju2DDLpO3u8f1J
+X-Gm-Message-State: AOJu0Yz7pGCuJ17F3MNn10KNa7XlzXUvB8+1ICLOTTfaXuhx/uD97sjz
+	O+L8hHEnzUfV3vqkxvVWZGeMYBmnMGm7znHxp+zDNMUPA8POVMMCWk/JeGoPpeU=
+X-Google-Smtp-Source: AGHT+IGO35/oYh7eyjPtOT160dsPyw8Yw5gW4dfb1SEXoqT8+oytQgFAfXBT+dmjc2z7e7DjXvy/2g==
+X-Received: by 2002:a50:d7dc:0:b0:571:cad0:a702 with SMTP id m28-20020a50d7dc000000b00571cad0a702mr938766edj.17.1713941142180;
+        Tue, 23 Apr 2024 23:45:42 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id h25-20020a0564020e9900b0056bc0c44f02sm7409525eda.96.2024.04.23.23.45.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 23:45:41 -0700 (PDT)
+Message-ID: <74fe0120-379c-4a18-a680-536304b8ac2e@linaro.org>
+Date: Wed, 24 Apr 2024 08:45:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416013138.28760-1-zong.li@sifive.com> <Zia29wYvScRVdXUP@ghost>
-In-Reply-To: <Zia29wYvScRVdXUP@ghost>
-From: Zong Li <zong.li@sifive.com>
-Date: Wed, 24 Apr 2024 14:44:35 +0800
-Message-ID: <CANXhq0qN-SsC=iO_5gAea=FqQqztmVUHaGxE5Z2me0h10jBU+Q@mail.gmail.com>
-Subject: Re: [PATCH] Revert "riscv: disable generation of unwind tables"
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	schwab@suse.de, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] drm/tiny: ili9225: drop driver owner assignment
+To: David Lechner <david@lechnology.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240327174842.519758-1-krzysztof.kozlowski@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240327174842.519758-1-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 23, 2024 at 3:14=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.c=
-om> wrote:
->
-> On Tue, Apr 16, 2024 at 09:31:38AM +0800, Zong Li wrote:
-> > This reverts commit 2f394c0e7d1129a35156e492bc8f445fb20f43ac.
-> >
-> > RISC-V has supported the complete relocation types in module loader by
-> > '8fd6c5142395 ("riscv: Add remaining module relocations")'.
-> > Now RISC-V port can enable unwind tables in case eh_frame parsing is
-> > needed.
-> >
-> > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > ---
-> >  arch/riscv/Makefile | 3 ---
-> >  1 file changed, 3 deletions(-)
-> >
-> > diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> > index 5b3115a19852..9216bf8a2691 100644
-> > --- a/arch/riscv/Makefile
-> > +++ b/arch/riscv/Makefile
-> > @@ -94,9 +94,6 @@ ifeq ($(CONFIG_CMODEL_MEDANY),y)
-> >       KBUILD_CFLAGS +=3D -mcmodel=3Dmedany
-> >  endif
-> >
-> > -# Avoid generating .eh_frame sections.
-> > -KBUILD_CFLAGS +=3D -fno-asynchronous-unwind-tables -fno-unwind-tables
-> > -
->
-> There are a lot of orphaned sections created by this, which throws a lot
-> of warnings. These warnings will only be present on GCC-13+ since
-> -fno-asynchronous-unwind-tables was a default before GCC-13.
->
-> The .eh_frame orphaned sections can be resolved by including
->
-> .eh_frame : {*(.eh_frame)}
->
-> in arch/riscv/kernel/vmlinux.lds.S. arm64 places it in the init section,
-> but outside init_data and init_text, so right after the .alternative
-> definition seems like a good place.
->
-> .init.eh_frame sections in drivers/firmware/efi/libstub also complain
-> about being orphaned, and other architectures have disabled unwind
-> tables for that compilation unit, so -fno-unwind-tables and
-> -fno-asynchronous-unwind-tables should be added to
-> drivers/firmware/efi/libstub/Makefile for riscv.
->
-> This also causes the resulting image (with defconfig) to increase from
-> 22M to 24M. There are currently no users of unwind tables in riscv so
-> this should be hidden behind a config. arm64 uses this config as:
->
-> # Avoid generating .eh_frame* sections.
-> ifneq ($(CONFIG_UNWIND_TABLES),y)
-> KBUILD_CFLAGS   +=3D -fno-asynchronous-unwind-tables -fno-unwind-tables
-> KBUILD_AFLAGS   +=3D -fno-asynchronous-unwind-tables -fno-unwind-tables
-> else
-> KBUILD_CFLAGS   +=3D -fasynchronous-unwind-tables
-> KBUILD_AFLAGS   +=3D -fasynchronous-unwind-tables
-> endif
->
-> Using this same config name for riscv would allow riscv to use the
-> standard .eh_frame code introduced in
-> https://lore.kernel.org/linux-arm-kernel/20221027155908.1940624-2-ardb@ke=
-rnel.org/.
->
-> This config is only enabled if some other config selects it in arm64,
-> but riscv does not contain any users so maybe this config can be left
-> unselected until there is a user of unwind tables in riscv.
->
+On 27/03/2024 18:48, Krzysztof Kozlowski wrote:
+> Core in spi_register_driver() already sets the .owner, so driver
+> does not need to.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  drivers/gpu/drm/tiny/ili9225.c | 1 -
+>  1 file changed, 1 deletion(-)
 
-Hi Charlie,
-Thanks a lot for the tips and information, I will use gcc-13+ to
-verify the next patch.
+It has been almost a month. Any comments on this patchset? Can this be
+picked up?
 
-> - Charlie
->
-> >  # The RISC-V attributes frequently cause compatibility issues and prov=
-ide no
-> >  # information, so just turn them off.
-> >  KBUILD_CFLAGS +=3D $(call cc-option,-mno-riscv-attribute)
-> > --
-> > 2.17.1
-> >
-> >
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+Best regards,
+Krzysztof
+
