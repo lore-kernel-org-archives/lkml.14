@@ -1,120 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760BE15EFB5;
-	Wed, 24 Apr 2024 14:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE0815EFDC;
+	Wed, 24 Apr 2024 14:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713970321; cv=none; b=RXMBI8p4Ezzz2oxEgXPTDbMDwPPSekb6j/maHc5ecnwgtclLd/TWYFvRXv89x4LXAywkRBzXsBF1oNo31xnY2t4zWEDuF7k30uTkxE83U9R5t7UEnqkowlOrMBB1dSwLttAfzxjqSgiNTz3XCeoS86FJo6sChRlEICQkfLPidLY=
+	t=1713970331; cv=none; b=E0SPPwSPIjqF+QxIuJZCbnQSgh1WMz5hkgLAkSdnyvIzU2ElRZyQJToQ4dIkLAYAVxeX3dn3Z/WnzKAWQCdFw1f+rnoWwZ14NIg08KqV2fGy6CsIdEYgwTsN0Wt5HmucSGlmWZd+b8Zkn7FW/Vh5Vf/NzMsE7PfeNmwRGW1Kpdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713970321; c=relaxed/simple;
-	bh=xPav91uI1ZNG9OJ6vetVcvDnMQMHSyXYAwBYPIfWJAY=;
+	s=arc-20240116; t=1713970331; c=relaxed/simple;
+	bh=pUk1fxgSgJzGkHuSvCgekaAeU9B72s05/k76ocuj9HI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ws3b4USsO36b7fAOEaymwozxMn7f9kfcjltrqCpuemefG7hXud47ecwLj256cgi72boCkUNwaiL298xeKZsYodwCATG9/Z+bWhS/IHA2BBTz2iFK5oIcEncM2/HKJDjnGr47CPzU332WfnSxptNoQ7YVZbhWNORSthABHUmbzQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=otlWOyP+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LC/XTLKtfpU1NWBh8J6/+tafAZzJIw8v5zkAP/DL9hhH8vt046fqzdCOzPLwmH5ULSq/97xLY/PNkKRCSmjMpetPgEVxhFVGxh0f0CJinWDDpJ/HDIXou5t2Q4p2gUnF25vsmpfeGr0jg1TvWqdk+hsxN5v8ENCd8/7NVYArvxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ta4Pk/kP; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="otlWOyP+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CCF5C2BD10;
-	Wed, 24 Apr 2024 14:51:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713970321;
-	bh=xPav91uI1ZNG9OJ6vetVcvDnMQMHSyXYAwBYPIfWJAY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=otlWOyP+tAKLOQY2jJz85UVBDjxfaJSShJb8fCwhde1QoWBVcXV9L8kOXZ7YiktDq
-	 CRFb4dulN7XW95JUfM340CSKNKybZ2dJ/b22SsZmQHhpqofEEHEXAqU2wibXzCVcS4
-	 HMfrS42NqBU81/dRPTkCtrvTtS8gTilQE5Db4nHV+I76fiYJBhDWN3DjU9kCwIeHh6
-	 4jJBSNhlOmgAMqensikb4v8l+gbU3+tw7ozUQMwFHWkUnxOIf1FA6OpSCkGWp9J4rL
-	 qB5hmqfwunYdSCmCdXGDOuwRopsL05J5I6EI7VnQPgdbplKA3I0ae1TvQI8BIOQKJG
-	 eF4loR+GluPmg==
-Date: Wed, 24 Apr 2024 15:51:54 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Charlie Jenkins <charlie@rivosinc.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Evan Green <evan@rivosinc.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 06/17] riscv: Fix extension subset checking
-Message-ID: <20240424-wildly-goofy-c81aac6f8cd7@spud>
-References: <20240420-dev-charlie-support_thead_vector_6_9-v3-0-67cff4271d1d@rivosinc.com>
- <20240420-dev-charlie-support_thead_vector_6_9-v3-6-67cff4271d1d@rivosinc.com>
- <6c624361-a968-498b-a9fb-ea2aaec70ce8@ghiti.fr>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ta4Pk/kP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713970330; x=1745506330;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=pUk1fxgSgJzGkHuSvCgekaAeU9B72s05/k76ocuj9HI=;
+  b=Ta4Pk/kPOW69fZfpT964jZOh2zziIs0chAGLiEfZlnM+yBDStOxkO6RU
+   2FrWtFoWx/B/98qedre6xpz82SETdv/61uLbE/x5L/aqG5ZtBcrPqlSEJ
+   MZsVcLdPq4oDy/prO/S3Tjo/L1OKlhKxNCPVCCiWsPsQu20o2n5HQXOgJ
+   IC9C0p5hRZ9PZWB+j1Qt8NEVesQTeTHVkZkogcGdDaemZdqRoo/3elOCH
+   cMSsaRbxTnYO9VR0Ds53tasoZelROFV/81EJZI7D8cybeUq1ma8I3LOiH
+   uyfj4MSG0FbdgnYQUQLtcScaBaxPma3WX/lRw7WUYPomH7Q7tg1mgUY6M
+   A==;
+X-CSE-ConnectionGUID: mY7Bod1GQbKdabNKq/bLGw==
+X-CSE-MsgGUID: edDlUk6ZTvaH9x4189JvZA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="10143556"
+X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
+   d="scan'208";a="10143556"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 07:52:09 -0700
+X-CSE-ConnectionGUID: /9NhRvYWQYWh1l8wZxDqEQ==
+X-CSE-MsgGUID: ldSIKB1vSKKI+/poZaSPIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
+   d="scan'208";a="29538283"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 07:52:07 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rzdyd-00000000gGH-2m3s;
+	Wed, 24 Apr 2024 17:52:03 +0300
+Date: Wed, 24 Apr 2024 17:52:03 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Sui Jingfeng <sui.jingfeng@linux.dev>, dri-devel@lists.freedesktop.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v2] software node: Implement device_get_match_data fwnode
+ callback
+Message-ID: <Zikck2FJb4-PgXX0@smile.fi.intel.com>
+References: <20240422164658.217037-1-sui.jingfeng@linux.dev>
+ <Zie3ebHOEpWHj1qV@smile.fi.intel.com>
+ <d5bc1e73-a553-451e-ab74-f5f0ca259c6b@linux.dev>
+ <hcltp2bbxxg2t7ibmzgiib7mgbwgmvzwnnq6mochdh7c4h76r3@bxj6yk5zq64e>
+ <ZikE4qOVO7rgIs9a@smile.fi.intel.com>
+ <CAA8EJpr1FSjizAh6Dp5Bmux3NrGYh=BfHFL4D1fa87Og4ymY0w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ISCd5ZrJR7K6TsSY"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <6c624361-a968-498b-a9fb-ea2aaec70ce8@ghiti.fr>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAA8EJpr1FSjizAh6Dp5Bmux3NrGYh=BfHFL4D1fa87Og4ymY0w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Wed, Apr 24, 2024 at 04:34:39PM +0300, Dmitry Baryshkov wrote:
+> On Wed, 24 Apr 2024 at 16:11, Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Wed, Apr 24, 2024 at 12:37:16AM +0300, Dmitry Baryshkov wrote:
+> > > On Wed, Apr 24, 2024 at 12:49:18AM +0800, Sui Jingfeng wrote:
+> > > > On 2024/4/23 21:28, Andy Shevchenko wrote:
+> > > > > On Tue, Apr 23, 2024 at 12:46:58AM +0800, Sui Jingfeng wrote:
+
+...
+
+> > > But let me throw an argument why this patch (or something similar) looks
+> > > to be necessary.
+> > >
+> > > Both on DT and non-DT systems the kernel allows using the non-OF based
+> > > matching. For the platform devices there is platform_device_id-based
+> > > matching.
+> > >
+> > > Currently handling the data coming from such device_ids requires using
+> > > special bits of code, e.g. platform_get_device_id(pdev)->driver_data to
+> > > get the data from the platform_device_id. Having such codepaths goes
+> > > against the goal of unifying DT and non-DT paths via generic property /
+> > > fwnode code.
+> > >
+> > > As such, I support Sui's idea of being able to use device_get_match_data
+> > > for non-DT, non-ACPI platform devices.
+> >
+> > I'm not sure I buy this. We have a special helpers based on the bus type to
+> > combine device_get_match_data() with the respective ID table crawling, see
+> > the SPI and I²C cases as the examples.
+> 
+> I was thinking that we might be able to deprecate these helpers and
+> always use device_get_match_data().
+
+True, but that is orthogonal to swnode match_data support, right?
+There even was (still is?) a patch series to do something like a new
+member to struct device_driver (? don't remember) to achieve that.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---ISCd5ZrJR7K6TsSY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Apr 24, 2024 at 04:22:02PM +0200, Alexandre Ghiti wrote:
-> Hi Charlie,
->=20
-> On 21/04/2024 03:04, Charlie Jenkins wrote:
-> > This loop is supposed to check if ext->subset_ext_ids[j] is valid, rath=
-er
-> > than if ext->subset_ext_ids[i] is valid, before setting the extension
-> > id ext->subset_ext_ids[j] in isainfo->isa.
-> >=20
-> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> > Fixes: 0d8295ed975b ("riscv: add ISA extension parsing for scalar crypt=
-o")
-> > ---
-> >   arch/riscv/kernel/cpufeature.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeat=
-ure.c
-> > index 48874aac4871..b537731cadef 100644
-> > --- a/arch/riscv/kernel/cpufeature.c
-> > +++ b/arch/riscv/kernel/cpufeature.c
-> > @@ -609,7 +609,7 @@ static int __init riscv_fill_hwcap_from_ext_list(un=
-signed long *isa2hwcap)
-> >   			if (ext->subset_ext_size) {
-> >   				for (int j =3D 0; j < ext->subset_ext_size; j++) {
-> > -					if (riscv_isa_extension_check(ext->subset_ext_ids[i]))
-> > +					if (riscv_isa_extension_check(ext->subset_ext_ids[j]))
-> >   						set_bit(ext->subset_ext_ids[j], isainfo->isa);
-> >   				}
-> >   			}
-> >=20
->=20
-> I think this should go into -fixes, let's check with Palmer if he wants to
-> take this patch only or if you should send the patch on its own.
-
-I think splitting out this and patch 1 into a new series targeting fixes
-would probably make things clearer?
-
---ISCd5ZrJR7K6TsSY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZikcigAKCRB4tDGHoIJi
-0lY6AP9fxMZ4oOWAWRpbaYHs+Q77SeZ+QaOXEZh098c2I789WAEAmdgrmjjeEcJ4
-b2LKa6uCXOLW9VEFR/QJlfNVN9MYwgU=
-=Z23p
------END PGP SIGNATURE-----
-
---ISCd5ZrJR7K6TsSY--
