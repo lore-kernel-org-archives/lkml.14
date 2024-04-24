@@ -1,61 +1,61 @@
 Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22066142E67
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:51:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8705182AE
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713941482; cv=none; b=ifeoi247F3JgHXjzVgpbsLp0Hw7j3+qrakJ6lfoprhUDbMjs2lvzWQWjlpkdAuUsLTjS3zVTslMTYwqaQ0DrpztWwqmMPvwta6V0KfLDCwReYzJ29gx/6FGWwS1Qke9YM/BGp32gX2hEROwhzx0jaFZPwSwEpw3iBZBfzjfPkNE=
+	t=1713941557; cv=none; b=CaK6E/hCgt8vRqI5d8XZ1/2LKEzfIjySMM/wkSH3vXHolEWHQKvd/BoC47R/dHZ2TF4CEfIA8OujAGBQ1uqupyfgHhsRaY31xcta8erG5QsI8hMsTnPPs3PkMJRa9ZQlDOlkcOBzyDwjxfxsYau1v1rOeFW9u65WzxFFZEL8UYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713941482; c=relaxed/simple;
-	bh=e0psFuTSMLyPViM4HdYZqYy5nRfKxWhGIfCp/5rtrcs=;
+	s=arc-20240116; t=1713941557; c=relaxed/simple;
+	bh=wPIQdMoTKZR6pu/TX/SJZKRKnEofue52kci185nLmYM=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rEui5PDa34pgUSWr93VNOgcpeSO91XAJi80UV/bIgLKH5c0a01WXOdRo2jUy+JpZTpugdNdGog/t7UTYzsRRgUVa/xIdXZV+TTomMemb7gOZXHCFpyVcjryaEXtFEXoc/+c3FluUcrInivaFFkTwvy9URTQOg5ukjKxX3722YIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eW05LZYc; arc=none smtp.client-ip=209.85.221.48
+	 In-Reply-To:Content-Type; b=cCQKpQ5lk7W6ZDOZN3gHxbTyY7O2APiU93DxYF65W2KPm3E5Glg1lPaQwiOy4Uo7H0J3ZqN5qfLkbWGFrznfYoVCjAU5X+jVfjJVVVVPA5C4sDRUyodsove+q5+4cpdjdO1+BggQaPMmPmSkdCAmybfTUVRt5AWNY5kOzOMur8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YvT62r++; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eW05LZYc"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-34665dd7744so4965823f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 23:51:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YvT62r++"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-343e46ec237so5497757f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 23:52:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713941479; x=1714546279; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1713941554; x=1714546354; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5fhRPEnVPqfUJjDOhDV7MC9ZHHIfbOjexEAXqhIdO3Y=;
-        b=eW05LZYcNtldcXAVRqLPSOCj/850J1s4xwxUt2idddY7m04LOtZ5yCm8/au09rICYU
-         1x0oleFgNAg3145JQuSbAruFtqtUSYzWfBvtCHRVP3DWYf8F+BzK6Ldcqgt08nwY7TWV
-         4L+D4QI0FTHve2z3YN1aTf4DbalzcW0NC1v8gZAcJneeaKvrPHDV9B60JERXdgSyM0Yr
-         kgs+GAbpwjmv7gGbqZ3vJlUMImY7kjIJnQ0EKeFpmh4R7PC5CfJR8mcYwcZWxib7dAl0
-         w8fanhMgYOOn7GYxyxBbOpJtTXWv0YMRhtZAeNlUWJA+g2E1rasVRK2+02FGl+67fGCR
-         5Qeg==
+        bh=z+kkCAVJxss4CPk4KOwYcVQMSZDA+8r/AwQ6dh68tMs=;
+        b=YvT62r++6PBAa7gqV+HkrhX/F7ANXaJLAc/Y6dpWqVnNNs+5fjWorl2Iigtbg6Oqgh
+         SMO9nLZ+62xVD36PcGDG94U2nwyCfV0xzcBVInQoq3Pki2ri8rMfjWprfJ/m+yBqpavd
+         PdNPVmtqoA0J1wmNf5H3v49ZD8PntfroJvE64uguMA/mqC7N4UcWFDak0xuaP+tPj0IT
+         A2ejn54kd/M93BfYw6vRlD2/qx7us0NsHn7vcyor6nh8smPRNd1MaybaG5QYg4tH+sPt
+         Wy/zgw9NMeX8QaaWogPQhH9yaWvuJ+cBWUyw5qZsghD6ynn+4gTa2pqXzKdajopCAcpz
+         4+BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713941479; x=1714546279;
+        d=1e100.net; s=20230601; t=1713941554; x=1714546354;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=5fhRPEnVPqfUJjDOhDV7MC9ZHHIfbOjexEAXqhIdO3Y=;
-        b=cLLY3vFLq8A0l6OTw1UFz8HOXceXnO1F473HKCvXHanXwRqDnu0uMpEG3DhlLvynwQ
-         ktNpgPh/mfx5Ilb4j9qj4MC8Duv9GimqNNJyyXbkMaJZ8sR1Hx+Ft7GCQ9yPtNme/mjo
-         fa8Fx4XTkFBqc0mAwrsbSIjyyrXg5bClnkiTI4f1I+LTW5uvkILZfmENwVRf9EgKooVl
-         r1aK21xM0bfTNC6TWGcCoSAksWjjSLdJ6QovPZMtHndN84d2IrZAFzKclWxwOvPKp1R7
-         8AQLhSY30eGj+IgrfSl/0VM1NI3sa7/+iyl5Qg6D5KEv4ldgp3IliM9a0CT4v0v1IyFu
-         fu6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUTSieTwYxYRksrxHdQf2/VfwuqBEO7V4a9tbeJcL5YuClmzJWjId2/HZjbMLv6IPnyeTf56jiF9s6APJL8JhFsHiZUlkRt2o/Vg5zX
-X-Gm-Message-State: AOJu0YyGIk8Z+KN44iKfvH+QJY3IyR8dj5mLL80oVZBd4MH8YvXphqa7
-	nYZZ8Ozu/xG0Mh/2M8s83vfjSVBhIuCAtw+ytKFRBc5baDls/BOrcNFMEOy5Bxg=
-X-Google-Smtp-Source: AGHT+IER+PTkXrM2sYTgRDnw/H8j7tp/CT8JUDUe2TAwv1AXC+oqV7npD/LeU5lehsx1WtbbguW2Ag==
-X-Received: by 2002:a5d:5243:0:b0:343:ba58:97c4 with SMTP id k3-20020a5d5243000000b00343ba5897c4mr800456wrc.10.1713941479305;
-        Tue, 23 Apr 2024 23:51:19 -0700 (PDT)
+        bh=z+kkCAVJxss4CPk4KOwYcVQMSZDA+8r/AwQ6dh68tMs=;
+        b=GAntZ9c6mfB4fw3GisFfzqu9ab9e+siuRozGJC2DdchcwH/aeCwFzEAMW/r9G2oxss
+         QRp04thYA0V44t6Wn/iEyaBpDlALVlTubRSXXy2FFvRHSdmpPoaLoiIWrbcltCogWgpT
+         AxuI4MSucVUWQkPFh6Vsk3TKitLMur2Pl+drxQgjwzRy6n7vJ5yEFxFs8E3cvwejT5vn
+         99zP4TUcq8sXTmNVzq1IzphSAGEPpieUyPlXevl08SmqzgeM9FuzvKJvg06KjR4oW2oG
+         RrA0Ir1Knz0trKNSLwoWPkNnRi2UWd48t/ayWC5nbACrdYJOlm8+7X+Q8mVXh8U/DS8a
+         Y4Gg==
+X-Forwarded-Encrypted: i=1; AJvYcCVt11bMUPZnTLOc3r2O22XF9dBpxmsk6+m/yigTdH92mlMHl/awWPQePmhpOR4ENiAYLKTjqyapLzSlRWp0qxPodzT4V7Qe+jcIQmI0
+X-Gm-Message-State: AOJu0YyZ3AW6Wu8f8+nur64DdP5FFhT+4rss1o4EE/dfPvjw1iS3zFOF
+	VTRM2mCfD1eZtNxi1AWF2f3ea0arNa+ziOmH3zaAfxJOM9OzgeB/D1cq3IPH8l4=
+X-Google-Smtp-Source: AGHT+IEVWgpM+FkCadzRn9I6amzbQMsnZKpbQYUhVluMjNrwR1wMJqnIGERLUVZnQUC66EUNm7zrKQ==
+X-Received: by 2002:adf:cd11:0:b0:349:8ae9:b030 with SMTP id w17-20020adfcd11000000b003498ae9b030mr952155wrm.10.1713941553966;
+        Tue, 23 Apr 2024 23:52:33 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:982:cbb0:ed3e:c90b:dd74:51a7? ([2a01:e0a:982:cbb0:ed3e:c90b:dd74:51a7])
-        by smtp.gmail.com with ESMTPSA id cs18-20020a056000089200b003437799a373sm16429555wrb.83.2024.04.23.23.51.18
+        by smtp.gmail.com with ESMTPSA id j13-20020a056000124d00b0034b7906c716sm3146747wrx.106.2024.04.23.23.52.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 23:51:18 -0700 (PDT)
-Message-ID: <ec748d7c-b1cb-4ab3-88e6-b624b1f086de@linaro.org>
-Date: Wed, 24 Apr 2024 08:51:17 +0200
+        Tue, 23 Apr 2024 23:52:33 -0700 (PDT)
+Message-ID: <c0f90e91-25dc-4912-906b-154c555fa25c@linaro.org>
+Date: Wed, 24 Apr 2024 08:52:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,15 +65,20 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] drm/panel: jdi-fhd-r63452: make use of prepare_prev_first
-To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <trabarni@gmail.com>,
+Subject: Re: [PATCH 3/6] drm/panel: novatek-nt36672e: stop setting register
+ load before disable
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
  Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
  Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- y.oudjana@protonmail.com
-References: <20240423-jdi-fix-v1-1-808970662b40@gmail.com>
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Matthias Kaehlcke <mka@chromium.org>,
+ Harigovindan P <harigovi@codeaurora.org>,
+ Ritesh Kumar <quic_riteshk@quicinc.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240404-drop-panel-unregister-v1-0-9f56953c5fb9@linaro.org>
+ <20240404-drop-panel-unregister-v1-3-9f56953c5fb9@linaro.org>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -100,36 +105,58 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20240423-jdi-fix-v1-1-808970662b40@gmail.com>
+In-Reply-To: <20240404-drop-panel-unregister-v1-3-9f56953c5fb9@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 23/04/2024 22:54, Barnabás Czémán wrote:
-> The DSI host must be enabled for the panel to be initialized in
-> prepare(). Set the prepare_prev_first flag to guarantee this.
+On 04/04/2024 12:08, Dmitry Baryshkov wrote:
+> It is pointless to set register load before disabling the register. This
+> vote is going to be dropped as soon as the register is disabled. Drop
+> these register_set_load calls.
 > 
-> Signed-off-by: Barnabás Czémán <trabarni@gmail.com>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > ---
->   drivers/gpu/drm/panel/panel-jdi-fhd-r63452.c | 1 +
->   1 file changed, 1 insertion(+)
+>   drivers/gpu/drm/panel/panel-novatek-nt36672e.c | 17 -----------------
+>   1 file changed, 17 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/panel/panel-jdi-fhd-r63452.c b/drivers/gpu/drm/panel/panel-jdi-fhd-r63452.c
-> index 3e0a8e0d58a0..483dc88d16d8 100644
-> --- a/drivers/gpu/drm/panel/panel-jdi-fhd-r63452.c
-> +++ b/drivers/gpu/drm/panel/panel-jdi-fhd-r63452.c
-> @@ -247,6 +247,7 @@ static int jdi_fhd_r63452_probe(struct mipi_dsi_device *dsi)
+> diff --git a/drivers/gpu/drm/panel/panel-novatek-nt36672e.c b/drivers/gpu/drm/panel/panel-novatek-nt36672e.c
+> index c39fe0fc5d69..9a870b9b6765 100644
+> --- a/drivers/gpu/drm/panel/panel-novatek-nt36672e.c
+> +++ b/drivers/gpu/drm/panel/panel-novatek-nt36672e.c
+> @@ -25,12 +25,6 @@ static const unsigned long regulator_enable_loads[] = {
+>   	100000,
+>   };
 >   
->   	drm_panel_init(&ctx->panel, dev, &jdi_fhd_r63452_panel_funcs,
->   		       DRM_MODE_CONNECTOR_DSI);
-> +	ctx->panel.prepare_prev_first = true;
+> -static const unsigned long regulator_disable_loads[] = {
+> -	80,
+> -	100,
+> -	100,
+> -};
+> -
+>   struct panel_desc {
+>   	const struct drm_display_mode *display_mode;
+>   	u32 width_mm;
+> @@ -385,20 +379,9 @@ static int nt36672e_power_off(struct nt36672e_panel *ctx)
+>   {
+>   	struct mipi_dsi_device *dsi = ctx->dsi;
+>   	int ret = 0;
+> -	int i;
 >   
->   	ret = drm_panel_of_backlight(&ctx->panel);
+>   	gpiod_set_value(ctx->reset_gpio, 0);
+>   
+> -	for (i = 0; i < ARRAY_SIZE(ctx->supplies); i++) {
+> -		ret = regulator_set_load(ctx->supplies[i].consumer,
+> -				regulator_disable_loads[i]);
+> -		if (ret) {
+> -			dev_err(&dsi->dev, "regulator set load failed for supply %s: %d\n",
+> -				ctx->supplies[i].supply, ret);
+> -			return ret;
+> -		}
+> -	}
+> -
+>   	ret = regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
 >   	if (ret)
+>   		dev_err(&dsi->dev, "regulator bulk disable failed: %d\n", ret);
 > 
-> ---
-> base-commit: a59668a9397e7245b26e9be85d23f242ff757ae8
-> change-id: 20240423-jdi-fix-986a796a3101
-> 
-> Best regards,
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
