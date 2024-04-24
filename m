@@ -1,166 +1,96 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A4E156666
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 05:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1459A13CFAD;
+	Wed, 24 Apr 2024 05:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713937306; cv=none; b=ffaQuQc3J+J/g9I9XLeb1rzuTxwv5i0uYasoWZIKqIo+gcvhKQFFCgpmHAOQCXFhgR3nIY7ZXnpyPhSkLuw5IfjGwE4xlJmDr0Bz1ovIq2g2YKBUOdGwjJbRGajYe2KD9Xoo+SWlmQ0bTN9QlZj/sP1LabkEO2uq2bDKSuhWv3g=
+	t=1713937318; cv=none; b=JX6hrY6crUsZ0H++zaUV8eckb/9o+LcIJ00y6BxrI4d/IxXYTfghr8Of5cCBKCmfs+taGtR0RAUz/JR9G6zTRHrW65rVcxk0gibWEP5FrVMgsbottt5qateeAqvshcpJWHchY/glv7c1mujXIR/66VcjB9jlEvhcqbfJuVe6pdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713937306; c=relaxed/simple;
-	bh=IyElVXqzTyQ3aKo0ohOGapMAuFHTguATuxVWkpi0DWg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZdWW2tMdpSTPzKWAMX4QibGAZ3KUaHqvPh202FmEOu9Ljj3+7xu9XSJJdfMA/enqJstEUnuKLOjNW11jLZhX6/+HUm9fdv5Hg7uH6ZKedvZLis3F6k30fgjw3W6pwbhRTTUNN8GJJGEHV71S4NtgxZBSMTqqlKU62LbUTFppL8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WFF4Abbs; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713937318; c=relaxed/simple;
+	bh=xLugYiX9yb2t7DvTMC5IfpmLBUzF0Er2szAnJmqXgm0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nxbQKwa7Pk5b9mJ9kFQ9vbYW3NC+YtaV6+b8CTHgTkFnEZqNeCvTaMhS3t/7tpFHB/tTnV+Z/w7gwvzU7ePkomEVpfj5mby3PwS7FXlukO44UAzRTwsysBU+v/NhVfzQ1MVsmvHy+37uNlgCTGQiq04YQX1bfLl/BQwc9MHA6kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Eh/bXQnA; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WFF4Abbs"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-346359c8785so5345465f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 22:41:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713937302; x=1714542102; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2UrQ3g5twb3BBJ4fBE47g+swAJMT+h6KnPSpx3YI5X0=;
-        b=WFF4Abbs7E16RYrXIM9ggmREHhJbrusKL6X9mFsx14GWvFMiCh6ldWscjhHj8fdzPE
-         ywrAb//GYZmmfOFxKjCcb4rlpcQtwaKb0KKI3ByNMMNBm4Vq/USsto3jD+u6F/pu+/sp
-         +ZDl7rQ52A/NdiSYOidzNNioSX3BEqtR0h8jWEMMwF0pupvnztvK6eWEM/kAEA1QC+fs
-         Jrh5iamokbwh5PEz+p4sxn8eJ3ZFXrGnMxwpw68pzUjWwQOpuRlTdVDvSpwCOlYuabds
-         mVRVTxk+bAoro99mgLOoVRAfKZiN+kr22ziT3B3Vp+qEe+MsLGL5XH9+Ndeq6g/8KjAG
-         0Wig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713937302; x=1714542102;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2UrQ3g5twb3BBJ4fBE47g+swAJMT+h6KnPSpx3YI5X0=;
-        b=l/Ar6B51fumvmDvyo8SDlwrcRVukbQjqXXdH1pTYu85VgGokVynabdNsOgRppFciqa
-         LYgYz/4Ed6xbGDLa2aBefi/BJVK0YzH03Fti2ezDLI4uaZpKMOciYSJF8tsbsrVh9Un6
-         ff8wO2TJPZpIbiS9NBtphUtQsjIhi685STu/JR991YMFCU77NBbPXwM0J+EllY8qo5MI
-         jCHR7DK5q2oMzwWRtrWSsjHWtV+hmGfp96YgsZxR8sTi2C/5ivtFbiTUUsfNuQlo+vFl
-         whQ7cYnsn/eUvK9wBOCkT1Nll3e0htLgQi5tslSQSbduncsXOcKbYqY/rHtiU8SNUzed
-         UJ0w==
-X-Forwarded-Encrypted: i=1; AJvYcCXez3u+0VaMJrgFtLkLWIAGA6gwoT/j0MAjv3g0ZtnqkJiodRVu7PSoSCD54twXh1LaV0unUlDBmSyWwdjupOV+Xui5RisBDWL+WX/F
-X-Gm-Message-State: AOJu0YynCTO6pHcieowtct+2oN/miiOXYnOF2at2me76H/WodV+QrEaC
-	4fLBjH/YagZIPwulMS5JxApa2Eo77hdyWsGlys6H096SywE4VbYqzR/tf4i2by0=
-X-Google-Smtp-Source: AGHT+IGm3SzufQ8qmVUjMugp1zOSYoDMSOXVbTv38V7zcneIa30Z0wti+n3pHXkYuoPQi5lqYjjsjg==
-X-Received: by 2002:a5d:4fc4:0:b0:348:1ee3:48fa with SMTP id h4-20020a5d4fc4000000b003481ee348famr846511wrw.47.1713937301787;
-        Tue, 23 Apr 2024 22:41:41 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id l6-20020adfa386000000b00349e2fab2a2sm16376427wrb.12.2024.04.23.22.41.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 22:41:41 -0700 (PDT)
-Date: Wed, 24 Apr 2024 08:41:36 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Andrew Jones <ajones@ventanamicro.com>,
-	Markus Elfring <Markus.Elfring@web.de>,
-	Kunwu Chan <chentao@kylinos.cn>, linux-kselftest@vger.kernel.org,
-	kvm@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Kunwu Chan <kunwu.chan@hotmail.com>,
-	Anup Patel <anup@brainfault.org>, Thomas Huth <thuth@redhat.com>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [PATCH] KVM: selftests: Add 'malloc' failure check in
- test_vmx_nested_state
-Message-ID: <9f67df9d-ab27-40b9-8849-3069649dc082@moroto.mountain>
-References: <20240423073952.2001989-1-chentao@kylinos.cn>
- <878bf83c-cd5b-48d0-8b4e-77223f1806dc@web.de>
- <ZifMAWn32tZBQHs0@google.com>
- <20240423-0db9024011213dcffe815c5c@orel>
- <ZigI48_cI7Twb9gD@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Eh/bXQnA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713937317; x=1745473317;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=xLugYiX9yb2t7DvTMC5IfpmLBUzF0Er2szAnJmqXgm0=;
+  b=Eh/bXQnAw1okdBE5CrKYUuQzzGvDYzVGlLeDq4K+W8BEtD99ALqatsZy
+   bLCrprMRGQWNScJ/+vibSX3WNN2lCNbqy48YQyZlCRRPFZqTeMRGqK3mA
+   wPph2/DM1LzlDgTcbAbF0GPcdnR5eX6RTPZXi3gOlrV6RW/q506LmX4sq
+   8it+raUdnpoqiX98nBbqizqWeTSgrMlje8mhZjSiUpLdJ0nHS2Vo+dApq
+   ON77xpcWaRyi3SJG47jZiSPQ0GdbjHvlK9Fwyez8h5Ef5x9tLjNKysbV9
+   TFXSM3+Cg4mgD8vb3kdU9OE/aYVxHP0Zw+jmCQGfvRPCrVNSgzrekRBUc
+   w==;
+X-CSE-ConnectionGUID: vQupXMaNSryt2oSB2jfbVg==
+X-CSE-MsgGUID: 3elIl665S1SzP0PjTWCj0A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9670128"
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="9670128"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 22:41:57 -0700
+X-CSE-ConnectionGUID: Ieren6JkQg2WHb43rbnEgg==
+X-CSE-MsgGUID: h6M/6lwcRWSSy57fmloxmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="24662302"
+Received: from unknown (HELO dcai-bmc-sherry-1.sh.intel.com) ([10.239.138.57])
+  by fmviesa008.fm.intel.com with ESMTP; 23 Apr 2024 22:41:53 -0700
+From: Haiyue Wang <haiyue.wang@intel.com>
+To: bpf@vger.kernel.org
+Cc: Haiyue Wang <haiyue.wang@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH bpf-next v1] bpf: update the comment for BTF_FIELDS_MAX
+Date: Wed, 24 Apr 2024 13:45:07 +0800
+Message-ID: <20240424054526.8031-1-haiyue.wang@intel.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZigI48_cI7Twb9gD@google.com>
 
-On Tue, Apr 23, 2024 at 12:15:47PM -0700, Sean Christopherson wrote:
-> On Tue, Apr 23, 2024, Andrew Jones wrote:
-> > On Tue, Apr 23, 2024 at 07:56:01AM -0700, Sean Christopherson wrote:
-> > > +others
-> > > 
-> > > On Tue, Apr 23, 2024, Markus Elfring wrote:
-> > > > …
-> > > > > This patch will add the malloc failure checking
-> > > > …
-> > > > 
-> > > > * Please use a corresponding imperative wording for the change description.
-> > > > 
-> > > > * Would you like to add the tag “Fixes” accordingly?
-> > > 
-> > > Nah, don't bother with Fixes.  OOM will cause the test to fail regardless, the
-> > > fact that it gets an assert instead a NULL pointer deref is nice to have, but by
-> > > no means does it fix a bug.
-> > > 
-> > > > > +++ b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-> > > > > @@ -91,6 +91,7 @@ void test_vmx_nested_state(struct kvm_vcpu *vcpu)
-> > > > >  	const int state_sz = sizeof(struct kvm_nested_state) + getpagesize();
-> > > > >  	struct kvm_nested_state *state =
-> > > > >  		(struct kvm_nested_state *)malloc(state_sz);
-> > > > > +	TEST_ASSERT(state, "-ENOMEM when allocating kvm state");
-> > > > …
-> > > > 
-> > > > Can “errno” be relevant for the error message construction?
-> > > 
-> > > Probably not, but there's also no reason to assume ENOMEM.  TEST_ASSERT() spits
-> > > out the actual errno, and we can just say something like "malloc() failed for
-> > > blah blah blah".  
-> > > 
-> > > But rather than keeping playing whack-a-mole, what if we add macros to perform
-> > > allocations and assert on the result?  I have zero interest in chasing down all
-> > > of the "unsafe" allocations, and odds are very good that we'll collectively fail
-> > > to enforce checking on new code.
-> > > 
-> > > E.g. something like (obviously won't compile, just for demonstration purposes)
-> > > 
-> > > #define kvm_malloc(x)
-> > > ({
-> > > 	void *__ret;
-> > > 
-> > > 	__ret  = malloc(x);
-> > > 	TEST_ASSERT(__ret, "Failed malloc(" #x ")\n");
-> > > 	__ret;
-> > > })
-> > > 
-> > > #define kvm_calloc(x, y)
-> > > ({
-> > > 	void *__ret;
-> > > 
-> > > 	__ret  = calloc(x, y);
-> > > 	TEST_ASSERT(__ret, "Failed calloc(" #x ", " #y ")\n");
-> > > 	__ret;
-> > > })
-> > 
-> > Sounds good to me, but I'd call them test_malloc, test_calloc, etc. and
-> > put them in include/test_util.h
-> 
-> Possibly terrible idea: what if we used kmalloc() and kcalloc()?  K is for KVM :-)
+The commit d56b63cf0c0f ("bpf: add support for bpf_wq user type")
+changes the fields support number to 11, just sync the comment.
 
-That's a legit terrible idea...  It probably would trigger more static
-checker warnings because the general policy is kmalloc() is kernel code
-and we *have* to test for errors.
+Signed-off-by: Haiyue Wang <haiyue.wang@intel.com>
+---
+ include/linux/bpf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-To be honest, I would have just rejected the first patch.  You
-obviously know this and have said this earlier in the thread but just
-for the other people, this is a userspace test that runs for a short
-time and then exits.  If it gets killed because we don't have enough
-memory that's fine.  It would be better to just fix the static checker
-to not print pointless warnings or educate people to ignore warnings
-like this.
-
-Creating the test_malloc() to silence the warning also seems like an
-okay idea as well.
-
-regards,
-dan carpenter
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 64bf0cf3ee95..978200f6d925 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -184,7 +184,7 @@ struct bpf_map_ops {
+ };
+ 
+ enum {
+-	/* Support at most 10 fields in a BTF type */
++	/* Support at most 11 fields in a BTF type */
+ 	BTF_FIELDS_MAX	   = 11,
+ };
+ 
+-- 
+2.43.2
 
