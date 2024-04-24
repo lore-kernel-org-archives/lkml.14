@@ -1,210 +1,183 @@
-Received: from mx07-0063e101.pphosted.com (mx07-0063e101.pphosted.com [205.220.184.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2690915AABA;
-	Wed, 24 Apr 2024 13:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.184.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713966099; cv=fail; b=gYkTDojNk1RIy44B0aQ6M5ivYThHTxqCB2u/ha8vDC3w2muF4xqCkWcACzs7RlZlGxdlhM4Mj7qHiLKt+BA6VlnUKB9es1UL7ux+zY+2oXg5u5eXBzDKrH4JchmZwGGSozeRZYE+isqCNNrlKPLcwExO+84rzE9n73IFrcqzACw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713966099; c=relaxed/simple;
-	bh=2vXApT6bXF5J4WcQzvCQFH06FMqljZYj8ut7yVGnWTY=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=AS+wTWu/N54vLLmE8y4Gi1POWGZLu3qBIkz0Q4Dp1okklRg1Mn0ZkDmKi/2qyCV2Gs6Scd7GvcD+ZW0Z9Um7OkIcf3AlmAKX05A2X7k3MtlwobYnVVL2WU5BDcjl+2UIdc62VrzjVqR3k846RsJu3B1xUURi53NTSWrHEWGmh3g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=blaize.com; spf=pass smtp.mailfrom=blaize.com; dkim=pass (1024-bit key) header.d=BLAIZE.COM header.i=@BLAIZE.COM header.b=cx9rkXbG; arc=fail smtp.client-ip=205.220.184.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=blaize.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=blaize.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CD5158DDD;
+	Wed, 24 Apr 2024 13:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713966148; cv=none; b=FHCzjS9GKjK+Cd/eVvOl1oyLOGF1gWCBJVSzg86CZ/QaLmN5dQIotMZT96urTN1UIn9h+faueHoSPmKEuY9p9TOHf3R2+xlSVzShceY//8qKbRKNp9RaydvccOPOvQA3dBSsZ9dezpnhyRE/zHCO/ddif+pJ6KlEI0eGluuprYE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713966148; c=relaxed/simple;
+	bh=bNx8k2bgyvRuen8Wg8IeG/ZTMn7ghMosAG2nurMOmkw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I1B8TZt+0vw4rIKU1PAmF72FPmVMXqqVfLshHHymE8fYU1TO8ku29g/LggIxut2NrIxXCUCyGTnwOYnI8H5X2D4HEYMAvP4/zdKzUVcwtYdzu0z53pfegmqqVwMgzuq1WyEZMp8nho2DSWFXEyBXi/0ngdExrfULPPoj6uyknRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PIYwUILg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xf4MurGk; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PIYwUILg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xf4MurGk; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=BLAIZE.COM header.i=@BLAIZE.COM header.b="cx9rkXbG"
-Received: from pps.filterd (m0247495.ppops.net [127.0.0.1])
-	by mx08-0063e101.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43ODU2k0025893;
-	Wed, 24 Apr 2024 14:31:22 +0100
-Received: from pnzpr01cu001.outbound.protection.outlook.com (mail-centralindiaazlp17011004.outbound.protection.outlook.com [40.93.132.4])
-	by mx08-0063e101.pphosted.com (PPS) with ESMTPS id 3xny4n8uxy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 14:31:22 +0100 (BST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jPD6oKfiUPhmR64Vt7pXZJ44nRiy1xFKvc+ZcxIlzeOTLn/ujJAruVeM+kcSph7zc5zkeLUX+S1+TuwO98PL33w5UNTRiK+CXo4l5TJS3y7pAGACxQfp9NqzMDzzs/CGJ3oW0uhceGQ0OMRgmmOg4Mo4bQpNiGmOBAsx/cV26qSwoM+l5ymnSAeyumcJRJNq102Xfxb8LmKiWk2aaajt9rTQtxaD69wLBg92EK2SpUtutjsKNjo+w/AHF0xY7kAH3VH1Q3h0O2GrFNokOy4i/EI8Mh69MsmuKD+IHEGDDhmma24InaAu7dD/Q3EsEqi6QffS1hVXpX/dy+jJ2b8xrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ucwKQ5VE5ntXGjpks6Z+kaDXGLo6SUjZUxLOfyguQ7U=;
- b=JvdyGHriOuEnEjm5ZOKGgBcZDexE00oDxTmDEEK5SlqmDAEBm8oHV9raJb0b38R0PUXxw0rMEFSl9PkqZZP2CwGLbvRC+sWWo9kepmZ61MBZHMjgb3pwpFA4V4E4+sd6E4I9a/q2y9Wl3/0H44+la07EPt6IBVKk5ax6+L+r2A9JVhBEVMpUDs4pKSzm01xfOCn8PHDoQCkHh+ri4dNUfV09Bka5h5UK/IqfWVmaX4l+gzb4/a1RelQ4dlKGpEGB92W+/uqmTE3RCODnUdR3W2llIRsn0qYvtZAxTOTGphDyLmM9bCOASJImAeQDnh0XMJ2JYSCKu9tAt8nmer6BlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=blaize.com; dmarc=pass action=none header.from=blaize.com;
- dkim=pass header.d=blaize.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=BLAIZE.COM;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ucwKQ5VE5ntXGjpks6Z+kaDXGLo6SUjZUxLOfyguQ7U=;
- b=cx9rkXbGuViP2+003dF2hbpTRAy552PRW8QtWJM3ZcSDBiGU1GsXgCMK4nnZXiPq91tYxP/vHzrj6bQ/8Lfrr0gAiuOU0v0VcLtWmWd3ENlWCT6t3hor1O/q13XzMEcATz6TOGrw0swSdadgKHhd3mI2zPNPpbuMJOVbGGvqkGA=
-Received: from MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:12a::5)
- by MA0PR01MB6106.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:7a::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22; Wed, 24 Apr
- 2024 13:31:16 +0000
-Received: from MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::309a:12cf:74a4:5655]) by MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::309a:12cf:74a4:5655%3]) with mapi id 15.20.7472.044; Wed, 24 Apr 2024
- 13:31:16 +0000
-From: Niko Pasaloukos <nikolaos.pasaloukos@blaize.com>
-To: "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "olof@lixom.net"
-	<olof@lixom.net>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "sboyd@kernel.org"
-	<sboyd@kernel.org>,
-        Niko Pasaloukos <nikolaos.pasaloukos@blaize.com>
-Subject: [PATCH v2 0/7] Add support for Blaize BLZP1600 SoC
-Thread-Topic: [PATCH v2 0/7] Add support for Blaize BLZP1600 SoC
-Thread-Index: AQHalkuv7F4NWtOj/EiPWHrSWEetvw==
-Date: Wed, 24 Apr 2024 13:31:16 +0000
-Message-ID: <20240424133032.19056-1-nikolaos.pasaloukos@blaize.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MA0PR01MB10184:EE_|MA0PR01MB6106:EE_
-x-ms-office365-filtering-correlation-id: 854b313a-937f-4885-1af0-08dc6462d190
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230031|7416005|1800799015|376005|366007|38070700009;
-x-microsoft-antispam-message-info: 
- =?iso-8859-1?Q?meF1L8uPEURnGA7nxaZxK7g0Ruw1/SOpMVbCbpOIoMQ0ssW4M6N2aOhA53?=
- =?iso-8859-1?Q?AA/elBPrgFJ6ohCwy9RjBX22K31dg3lsHTuYJXAmxJzHReONFWvZqg3FCs?=
- =?iso-8859-1?Q?YXq4ldnXkp0IqROiIibitrxtb0EPq1SENRCKnNpoqpKUBysmAs9jJ60S7T?=
- =?iso-8859-1?Q?3OFzgfMwIhpvOiep01WzRLUCCfLkwE5ZEi8AlqVm05R0lwAIyXxinhHONy?=
- =?iso-8859-1?Q?AXd0+7XoPUhQUsgd0SeTHF4aMGEb59fsPy16bLVKUAZGhKuW33V060h4cO?=
- =?iso-8859-1?Q?Zh0VaPZDoZYiUnel0Xstr6jlNFQk1SvNSRYtwEjXN2oym0a6wpZPPli2bC?=
- =?iso-8859-1?Q?1Gl8VUrEMUTvcWYlsJynR/xM4zsGFydHDpcli1p3tD0NRh7t4S0twLe3X/?=
- =?iso-8859-1?Q?60b38OfakHFPBRO9SvqhsfzM6UsSH+nadaFaRcaJlmc1FpcJY2QIfObpR1?=
- =?iso-8859-1?Q?11uIq9PUL9aet+bEKrFV1QQzy2nnzapI0TBGF1s/S/NcrgoaVqivQHHwT+?=
- =?iso-8859-1?Q?cDE0fj8upSBPJctriwr4jWwB6ay7znGYxmn+DE9242oyRlzA1wMPiul6pt?=
- =?iso-8859-1?Q?qxGtFAgMXX6lRaTHUZEk5ceRrQhb3gw7xiHF51nS4F+9hgIeY9rwqKODz+?=
- =?iso-8859-1?Q?pIdeiayWAqAI8vXGMhL+RqXiLTuRmiYYsmPWkR2V6Zj7J6KWydy+1JbIIs?=
- =?iso-8859-1?Q?sEbjQhx/I/kkqhmEi6tJz8Nq5E0yiGs3V9D/hUBmvJgVXbFuJUY7SekTlU?=
- =?iso-8859-1?Q?ATOmBuOAzjntoPcOUHHYFHbkZTTrLXoCA4pu5InoFbzXpLFRaNi9C3dDBY?=
- =?iso-8859-1?Q?jKq52pSeCRYRrxCwi+eWtXZ6wkQ1dJNAYxVF1u73NyMvH7/N0e6WPETDkl?=
- =?iso-8859-1?Q?xi7/eXVT8O/hLxs54xviKXS5mmr9C3SDACKh45NGptZ+b1IdR6KZEYaILA?=
- =?iso-8859-1?Q?xfYpZ1afgVkb11VxmK3LX5Pk202oCXYxpit6jBEs5NS3u975Kxe1vQn3QL?=
- =?iso-8859-1?Q?e+4K8LtVwLgrNbRQzvE448wdLnofQNjqRhX536jv7J/4MO2N3ehzL4KMnx?=
- =?iso-8859-1?Q?icZ9dP6cN5u8wIsirVmgo54puspLdmqHw0gBGUCkLDfXEQmKJB8hzIVg/o?=
- =?iso-8859-1?Q?E4dO1Ij/20c553TSqxcwkLUi/JswXQpEJiHB79oOqQgKsTMDtDbUWS59Jc?=
- =?iso-8859-1?Q?rVNhpNx+MT3/OftegZTSDGa6yufP71ebgRs0wz6L6NgN48yhYJIc/ctvuC?=
- =?iso-8859-1?Q?xWJDLvejSN4yYg4Z8N6mLfGAyfQbDAX2fV1IgLvc0uY57kOQ0gnLsuEDvo?=
- =?iso-8859-1?Q?+zwIu53g58CtRfddJlfh4PioLx8VCzMwzd3WbdfgxrNyyQzk0IUW32GXyG?=
- =?iso-8859-1?Q?u+qrgZuaoigrwux4ykjwuq+fZ3yeQVMA=3D=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?iso-8859-1?Q?lkwGL7NJi3VgOyi9/rvSFbY3b7URSXv+xAl6DWzELmM9wUYyuZLZKM3MxU?=
- =?iso-8859-1?Q?1Jo8SzhcCL6koNgPjRGrQ+FDy6ZYscb+dJHj6pi9vD7549rbe2JVgY5eQ3?=
- =?iso-8859-1?Q?oV6rBSzV6YL/kBu4pOxFlFffGXAxn8zA8Jzus2xuny27bbLqC3MwIjsmcJ?=
- =?iso-8859-1?Q?OmL+8GJMJhB2bFfSkTjEhpQwevxJJhYsmjg0ajOZJyzkB5TH/Wn/RHqf3r?=
- =?iso-8859-1?Q?R8VRIHRSSFPFYikl+NU1l6lw0+zQX6Q14rN0+FbQNjtxyKz0YxoDBF0Rkr?=
- =?iso-8859-1?Q?CrA9K2qhlg9nl1qDOClRjlhSBRyniFh0GqyxIXhx2g4jHSfTc1zssslg4z?=
- =?iso-8859-1?Q?BupEiMlCVft7FZ28lvLReXBTk3L8sFHO4SIoZVjYhXsPueLb2xLBT+TsHY?=
- =?iso-8859-1?Q?+Lc60d3mxntIBCSiAznhQkdjgwozh3TiaexszzqudSDtrlVEXlyBMWqbl2?=
- =?iso-8859-1?Q?dxFVqqUcFGmCup50A84YaPb4Hdfbhj/sfgT7m+7hjdfXN/h7hINnW/yoJI?=
- =?iso-8859-1?Q?omrtrRazdeiRXjk84gBkRd8gBnnfOjakV8vOqyuQMLkUuHwt6nomz/4NkK?=
- =?iso-8859-1?Q?Ohb1bTq6/zYxkSds4KjIONn9t9hcEt2FfAq+XaB0eGSY8FZbmIkM3CJ+SF?=
- =?iso-8859-1?Q?XveIVpWdVes4x9+IvS7VQhkgd4zLoIkVyS77PADm5u+Q999n+WDC0ZJCFZ?=
- =?iso-8859-1?Q?fsQD3RBJJ3onzGzXG6bn/7h/N2lUdmWP+E3pI5V5d2L48pGIZ/uXR4AQgD?=
- =?iso-8859-1?Q?3rcWSLNB6719yRRgdbtB2lmj/MReOEuTGSA67G86FzM8PyTZ6vFcEUVSQt?=
- =?iso-8859-1?Q?K0ZpXGLZAXedH4fazLLowaS/LLV5Ku1ExxoVQc5jXxyRa6mZsfyoGV9Erf?=
- =?iso-8859-1?Q?JYm1umuA0qWM6GjSRjOvmFZFjL1fTxHzU9vR8XdyYZ/Bq8B6toUjZbHJQ1?=
- =?iso-8859-1?Q?Ziuipm1byAsHoCH3/wDACKCHrXmub2yBPgLukUpynj+XqnCVF/d+RtOOTu?=
- =?iso-8859-1?Q?RF1TpCCE1ts0/hoUItFFuYn+dkNWWQHQrNgy80ylkGyCtf60sjx41el3JI?=
- =?iso-8859-1?Q?5jYKrMW04H71CyQrg+dKlMIcHbFAEMcqrvYgrBMPC6opnTxk8bdQM4uDnC?=
- =?iso-8859-1?Q?3jUxLCfK/qz5EHHGDTo201obZ70FDRojzVSqPYYp/C58Wk6DQHUAzD3WWK?=
- =?iso-8859-1?Q?sjXu2mUtDaFH2KmSY01mfENGSdT3vsagLOMSKX++1iFbrtydOPIO95Vnl5?=
- =?iso-8859-1?Q?zk95ADMGpO7+6d0cqW/4KZcqISY0lhyphM1gS+lmnBSqxlViNZH4tAYNX3?=
- =?iso-8859-1?Q?qOEW0TeuPjSeVSI0XIyiU2iJQ3eVNa8CEhthXhO/vMQqI++y3WCfgpcWOy?=
- =?iso-8859-1?Q?z0ykBVZvX82iyM2WnX85V4c8HFU2VwIY4c+ZnqC5UDk+lmhE5RdLzoY1VS?=
- =?iso-8859-1?Q?h6ByfV3qO5B4S8J/SsjMtC9kLsHXJcmXqWwZL+YolBDifpBhcnCNwdZMxk?=
- =?iso-8859-1?Q?Nb8IKkn1b5SgOLC2zIdR3/siJkZMVsZXAT4HdGSmNyHlT2sVTbjx45JdpM?=
- =?iso-8859-1?Q?+BkvrKzTw9LSY/QRa2g437dHcy0Xf9zWajaQBHXi2L8k0DP8Ar3KWGxNzf?=
- =?iso-8859-1?Q?cjf3+sTV92xE06G5KIbLodZk5l3hoyr1ct1Gw2UHeIaWut4rcFUefNJQ?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PIYwUILg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xf4MurGk";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PIYwUILg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xf4MurGk"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4E1FC66E58;
+	Wed, 24 Apr 2024 13:42:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713966144; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hg2qv+cKjg7lV92iv/LpJqsoqWYIPU+fAiMDC1vNkJ8=;
+	b=PIYwUILgn5mj7wcUSy00BMiX9xKR6H24XQQq4ebj+dW+Vl8ajUxzIPATCfc/09/PBKcVCF
+	fsWPHHocdGReX2JP8VQnAoML1grkNnCnXsRbDcLtZ5WwWZEp9Din5dB4fWpdHyvE4iBGYM
+	j0zL8YxdYIxkDGenRxU3LH7IWwJdzH8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713966144;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hg2qv+cKjg7lV92iv/LpJqsoqWYIPU+fAiMDC1vNkJ8=;
+	b=xf4MurGk5Ir4zd5WHE56JnEVwf7EDfCuhghqAkp+ILXhLX91wj+fASNqGMEjEfsSseSOTc
+	ZPPRzJf1pglOouDQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=PIYwUILg;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=xf4MurGk
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713966144; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hg2qv+cKjg7lV92iv/LpJqsoqWYIPU+fAiMDC1vNkJ8=;
+	b=PIYwUILgn5mj7wcUSy00BMiX9xKR6H24XQQq4ebj+dW+Vl8ajUxzIPATCfc/09/PBKcVCF
+	fsWPHHocdGReX2JP8VQnAoML1grkNnCnXsRbDcLtZ5WwWZEp9Din5dB4fWpdHyvE4iBGYM
+	j0zL8YxdYIxkDGenRxU3LH7IWwJdzH8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713966144;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hg2qv+cKjg7lV92iv/LpJqsoqWYIPU+fAiMDC1vNkJ8=;
+	b=xf4MurGk5Ir4zd5WHE56JnEVwf7EDfCuhghqAkp+ILXhLX91wj+fASNqGMEjEfsSseSOTc
+	ZPPRzJf1pglOouDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3803313690;
+	Wed, 24 Apr 2024 13:42:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id mMiDDEAMKWb7BgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 24 Apr 2024 13:42:24 +0000
+Date: Wed, 24 Apr 2024 15:42:34 +0200
+Message-ID: <87jzkmdghh.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+	linux-sound@vger.kernel.org
+Subject: Re: regression/bisected/6.9 commit 587d67fd929ad89801bcc429675bda90d53f6592 decrease 30% of gaming performance
+In-Reply-To: <87pluedgx5.wl-tiwai@suse.de>
+References: <CABXGCsNmEtrN9DK-XmESaPm_1xpXm8A+juE+44Jf6AK5JE0+TQ@mail.gmail.com>
+	<874jcl7e83.wl-tiwai@suse.de>
+	<CABXGCsMmRFW3EYJ3UvNd-LO7ZTOyoNqjc_3OAmaCDSL=LuxJqg@mail.gmail.com>
+	<87v851e2di.wl-tiwai@suse.de>
+	<CABXGCsNMBRUaY-V8mhUQKdq+CQW5+eGUWL_YCJWXo0cgh9bGJQ@mail.gmail.com>
+	<87h6glt9zc.wl-tiwai@suse.de>
+	<CABXGCsMcazRvmiN4XtiHQCE9=dB=M=VsRqB=v+RPmtuhBL29DA@mail.gmail.com>
+	<a6f4e20ea2a68f56a7d2c4d76280bca44d6bf421.camel@gmail.com>
+	<CABXGCsPdqfXeZUw1ocx8O3NdOEb+h4yQ77+zdNpcwP_4JrYXuQ@mail.gmail.com>
+	<CABXGCsMTbmU4CP8CHUqRVXWkGiErFtEVG4COy6RSRWsAuK_-CQ@mail.gmail.com>
+	<87pluedgx5.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: blaize.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 854b313a-937f-4885-1af0-08dc6462d190
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2024 13:31:16.5169
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 9d1c3c89-8615-4064-88a7-bb1a8537c779
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4RYkQjsVmIxzyljxTwVuvau1hBZQdyWrpu5q+4wxKzirv3bG43IGasWSXzW72wqNDX0R2iq+7oLC4N3XO8sQy0iWTbuU5cix/lRvj6Pz3As=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0PR01MB6106
-X-Proofpoint-GUID: GGOfK2NLbf-7D9boibhH1zoeNbTpdYX-
-X-Proofpoint-ORIG-GUID: GGOfK2NLbf-7D9boibhH1zoeNbTpdYX-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-24_11,2024-04-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- lowpriorityscore=0 clxscore=1011 bulkscore=0 mlxscore=0 impostorscore=0
- priorityscore=1501 mlxlogscore=583 phishscore=0 adultscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.21.0-2404010002
- definitions=main-2404240046
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,mega.nz:url,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,perf-with-revert-587d67fd929a-beb45974dd49.data:url,perf-with-revert-587d67fd929a.data:url]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 4E1FC66E58
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -3.51
 
-Adds basic support for the Blaize BLZP1600 SoC.
-This SoC contains two cores of Cortex-A53 CPUs, one Blaize
-Graph Streaming Processor (GSP) and several other IPs.
+On Wed, 24 Apr 2024 15:33:10 +0200,
+Takashi Iwai wrote:
+> 
+> On Wed, 24 Apr 2024 15:21:26 +0200,
+> Mikhail Gavrilov wrote:
+> > 
+> > On Thu, Apr 18, 2024 at 11:22 AM Mikhail Gavrilov
+> > <mikhail.v.gavrilov@gmail.com> wrote:
+> > >
+> > > On Tue, Apr 2, 2024 at 12:29 AM <mikhail.v.gavrilov@gmail.com> wrote:
+> > > >
+> > > > On Mon, 2024-04-01 at 21:50 +0500, Mikhail Gavrilov wrote:
+> > > > > On Mon, Apr 1, 2024 at 7:48 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > > > > >
+> > > > > >
+> > > > > > Then it shouldn't be dmix/dsnoop.  You'd better try profiling
+> > > > > > what's
+> > > > > > going on there.  e.g. try to get perf results with and without the
+> > > > > > commit.
+> > > > >
+> > > > >
+> > > > > Here is original perf files:
+> > > > > [1] perf-with-revert-587d67fd929a.data -
+> > > > > https://mega.nz/file/EpZmXbgL#vEnxuODoB__jM6TwV6XbwC_TWMMqvT7qaWkJU22JY48
+> > > > > [2] perf-with-revert-587d67fd929a-beb45974dd49.data -
+> > > > > https://mega.nz/file/0lI31CDA#hKsv6vX7t5u-Sx1_p2E7-Y32-z5VFPlW2Y793oM-JRU
+> > > > >
+> > >
+> > > Excuse me. Can you have time to look in my perf files?
+> > >
+> > 
+> > This is a friendly reminder
+> 
+> Honestly speaking, it's your role to analyze what's going on.
+> Such a performance issue is pretty much dependent on the installed
+> system, so giving a perf data to me won't help much, unfortunately.
 
-V2 changes:
- * Update SoBs.
- * `make dtbs_check` has no warnings.
- * Fix dts names and removed dead code.
- * DTS is separated from anything else.
+That said, maybe the first thing you can try would be to check who is
+actually calling the corresponding function
+(snd_timer_close_locked()).  Put a debug print or a tracing hook to
+watch out for figuring out.  If the commit was really relevant, it
+must be called very frequently and concurrently, and I don't know
+really who does it except for dmix/dsnoop.
 
-Nikolaos Pasaloukos (7):
-  dt-bindings: Add Blaize vendor prefix
-  dt-bindings: arm: blaize: Add Blaize BLZP1600 SoC
-  dt-bindings: reset: Add binding constants for BLZP1600
-  dt-bindings: clock: Add binding constants for BLZP1600
-  arm64: Add Blaize BLZP1600 SoC family
-  arm64: Add initial support for Blaize BLZP1600 CB2
-  arm64: defconfig: Enable ARCH_BLAIZE_BLZP1600
 
- .../devicetree/bindings/arm/blaize.yaml       |  40 ++++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- arch/arm64/Kconfig.platforms                  |   5 +
- arch/arm64/boot/dts/Makefile                  |   1 +
- arch/arm64/boot/dts/blaize/Makefile           |   2 +
- .../boot/dts/blaize/blaize-blzp1600-cb2.dts   |  84 +++++++
- .../boot/dts/blaize/blaize-blzp1600-som.dtsi  |  23 ++
- .../boot/dts/blaize/blaize-blzp1600.dtsi      | 211 ++++++++++++++++++
- arch/arm64/configs/defconfig                  |   1 +
- .../dt-bindings/clock/blaize,blzp1600-clk.h   |  77 +++++++
- .../dt-bindings/reset/blaize,blzp1600-reset.h |  84 +++++++
- 11 files changed, 530 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/blaize.yaml
- create mode 100644 arch/arm64/boot/dts/blaize/Makefile
- create mode 100644 arch/arm64/boot/dts/blaize/blaize-blzp1600-cb2.dts
- create mode 100644 arch/arm64/boot/dts/blaize/blaize-blzp1600-som.dtsi
- create mode 100644 arch/arm64/boot/dts/blaize/blaize-blzp1600.dtsi
- create mode 100644 include/dt-bindings/clock/blaize,blzp1600-clk.h
- create mode 100644 include/dt-bindings/reset/blaize,blzp1600-reset.h
-
---=20
-2.34.1
-
+Takashi
