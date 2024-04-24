@@ -1,144 +1,347 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-40140.protonmail.ch (mail-40140.protonmail.ch [185.70.40.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F1915EFA3
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 14:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1B82E646;
+	Wed, 24 Apr 2024 14:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713969038; cv=none; b=ituqHCIx6cVrOwfiWrYLdlMKcXbDYDUSP2w8Uq71+4jXcxduIDssnSLbKN3q6bGhbiK/DjdP/KW2EY3WuBdW0wnlD5kD8e284xrYr1ZwlE/nhLR7Vd9gaZxrMkSe3eFLhscbLye+Ui2I+ZNwOEAo3x/mpL5JjOjBESI+V4vA1BU=
+	t=1713969038; cv=none; b=dxn71s81NR7sMOTyLi9WwqPkHfdU9ej2nWxVuKJdzHNFD9FIS0F6uQ3BiHWg3Wa7LBhSNGBr/v1AvEynwjekaPPOKBOfvCmfy3tANVNIsbAPwxr/Qy/IbhNVpmwj45rg3OxTH1fNPl+fGMZlH61UNSchSqv4UN4KG3cWQ+Y2e3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713969038; c=relaxed/simple;
-	bh=RRYczo61DKfwox/IZZwkcuhLSiGOKb5E9N3mdAb4v9A=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hfBQpnXc0/ITgsj9eHHVHU56Ql8tPS95rtwM1lBZnWqQioAH6uJBOUy5/nJ3JgOLIjWT/vmpFyA7T7qapIcvmXGlBFWmhkREIkvZyx3pjzdwrvjknRDJRhAj1GFOYiuZ+ICx3p513L1tIDHYKYDa/NrYx7NMPiy3Uusg38K1mSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7d6bf30c9e3so870094839f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 07:30:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713969036; x=1714573836;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5Bxh+v1QEHdGeL/W1U++CTQKILrpMJ/B7+jPozfFTLM=;
-        b=tDGKUQhaAsHbeptX7MB0Rl8JPfCLqjFy1fLITPhc2bI8Fme4N7Jpp0Co+9azyPODjd
-         VDskuFCwgArM0DGWYDAmaCZzDUTHR6mHOw/LxD9nFfJl4wXbYX+J0fcVHBsaNh2QxPKh
-         zrFMrkQRkkwujIWURHk5aIjp6sY/RcxIj10mHgT0ILGFhqL56lyoErrFHfnFngAI7vl4
-         fBOhPvaV0HZLi/HAkDczQfTvrVynR4OkeA2bG7yGi6ObqtckmdBN1L0yZi6H7aTB1fx3
-         5seWVaQGdZJeqL0Ja8lzA1U2f4KjjPLp/0uWpx7rtxcFwW/13948J9jBXezYTI+rneTp
-         2Uow==
-X-Forwarded-Encrypted: i=1; AJvYcCV9AibqyfZqPVfFUg0CYfN/6KX3P6IG9nT6Xp3MG2xmFJnc2iGk5ZvibrgsYKzGHJJTsnFw5riYUMctawhpMIR3NF7r52J2yT1fX4F7
-X-Gm-Message-State: AOJu0YwQm8xpZ3rMyk/GT1PnCEe7dg6pCUM7WvyqdCDPmE94Wo8co7lf
-	1t/zZ6hYyAUynM3aWH3GOGB/Ucr3qZ1PNCJ6yz33F0rRS36F+Qa68djMHNI/c0BXQ/LoIvlFUu/
-	LqP3Qy6ZlKedqCDT1rPdaLFpGFWJOYzJUDjmTFZ3uzjswOxsbXQplg6I=
-X-Google-Smtp-Source: AGHT+IFp7bpSB5L0XnxC/4nNsZjF8MLb7zlHsxmaNw0MNvLvm6oeRmUw9P5rjpoemtfOE41sJ+OhcpR0KV2xar6m82Ij8TvjjCV9
+	bh=lUbwmbACpUyNk3NJHtKvbkqtg1ZQrOGUu4jdy0ur7tI=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TKWr/F5jVjkY3KUszEKhC9+BYkRfmZGNwhP6s97C7misUo2Cp/RyDsO+yXF3wLiRTJNhHv0foO3+5PnhMAMXXAV0K/xu7h641K0zuzHAHxRXuHKT9rOqtzBqPvEeyUJVTKEJfa0CUAS+h0lY+V3XKZmpw5GUGc7MgOzo26YGIL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=lQZNhrUi; arc=none smtp.client-ip=185.70.40.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="lQZNhrUi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1713969028; x=1714228228;
+	bh=YOUqMWyu64b4W+swnGia9RjBKKQpjLyK1AV6gnT28JA=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=lQZNhrUiFnBUvmAh/SJCXL5xokpKSWNtpuWVR55CPGSdk+uhdPs+wwIFKiR7CCWF5
+	 le7y3YY7RZUuZH4rPigiKUtXxmIDXezsdACIzyZusXe35ijEX2C9TTrEY8r04EH4uX
+	 WQGINbjveYcfn+MBc1vDNjkvVPolAsF/NvPoaUhSoX2ZL8HsrlNktg5SLVknn/ZbZ0
+	 541I7aK19lhePsn2PWrbe/cjcIw1o44u17PXaGxvWVPEe0nvR6r771CNujWcbZ6C5s
+	 UuKa7hgH1tZ1nkPYv01snu9WXqa7eJVoHojJdF8BWzHcfnCgXGQJuzIxXNQPtEI3fE
+	 U5e6Y93sxfEOQ==
+Date: Wed, 24 Apr 2024 14:30:19 +0000
+To: linux-kernel@vger.kernel.org
+From: Raymond Hackley <raymondhackley@protonmail.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Jakob Hauser <jahau@rocketmail.com>, Stephan Gerhold <stephan@gerhold.net>, Nikita Travkin <nikita@trvn.ru>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: [PATCH v3] arm64: dts: qcom: msm8916/39-samsung-a2015: Add PMIC and charger
+Message-ID: <20240424142952.24134-2-raymondhackley@protonmail.com>
+In-Reply-To: <20240424142952.24134-1-raymondhackley@protonmail.com>
+References: <20240424142952.24134-1-raymondhackley@protonmail.com>
+Feedback-ID: 49437091:user:proton
+X-Pm-Message-ID: 1c6cd5f4be663087311b13706acb0d1d0d07e0d2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:24d4:b0:485:67be:97d0 with SMTP id
- y20-20020a05663824d400b0048567be97d0mr349993jat.1.1713969036190; Wed, 24 Apr
- 2024 07:30:36 -0700 (PDT)
-Date: Wed, 24 Apr 2024 07:30:36 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008ef08f0616d88373@google.com>
-Subject: [syzbot] [ext4?] WARNING in ext4_journal_check_start
-From: syzbot <syzbot+3325329a0e08fe68bace@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+The phones listed below have Richtek RT5033 PMIC and charger.
+Add them to the device trees.
 
-syzbot found the following issue on:
+- Samsung Galaxy A3/A5/A7 2015
+- Samsung Galaxy E5/E7
+- Samsung Galaxy Grand Max
 
-HEAD commit:    7b4f2bc91c15 Add linux-next specific files for 20240418
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1469d1fd180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ae644165a243bf62
-dashboard link: https://syzkaller.appspot.com/bug?extid=3325329a0e08fe68bace
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=123c72bf180000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/524a18e6c5be/disk-7b4f2bc9.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/029f1b84d653/vmlinux-7b4f2bc9.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/c02d1542e886/bzImage-7b4f2bc9.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/8423191c8b73/mount_9.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3325329a0e08fe68bace@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 10063 at fs/ext4/ext4_jbd2.c:73 ext4_journal_check_start+0x1ed/0x250 fs/ext4/ext4_jbd2.c:73
-Modules linked in:
-CPU: 1 PID: 10063 Comm: syz-executor.3 Not tainted 6.9.0-rc4-next-20240418-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-RIP: 0010:ext4_journal_check_start+0x1ed/0x250 fs/ext4/ext4_jbd2.c:73
-Code: 41 bf e2 ff ff ff 44 89 f8 5b 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc e8 b1 e4 43 ff 41 bf fb ff ff ff eb e2 e8 a4 e4 43 ff 90 <0f> 0b 90 eb d1 e8 99 e4 43 ff 90 0f 0b 90 43 80 7c 25 00 00 0f 85
-RSP: 0018:ffffc90003e976a0 EFLAGS: 00010293
-RAX: ffffffff825278ec RBX: 0000000000000001 RCX: ffff888027b01e00
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: 0000000000000001 R08: ffffffff825277c0 R09: 1ffff1100f837070
-R10: dffffc0000000000 R11: ffffed100f837071 R12: dffffc0000000000
-R13: 1ffff1100c880cc7 R14: ffff888064406000 R15: ffff888064406638
-FS:  00007f52763386c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ff27a379198 CR3: 00000000796d6000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __ext4_journal_start_sb+0x181/0x600 fs/ext4/ext4_jbd2.c:105
- ext4_sample_last_mounted fs/ext4/file.c:837 [inline]
- ext4_file_open+0x53e/0x760 fs/ext4/file.c:866
- do_dentry_open+0x95a/0x1720 fs/open.c:955
- do_open fs/namei.c:3650 [inline]
- path_openat+0x289f/0x3280 fs/namei.c:3807
- do_filp_open+0x235/0x490 fs/namei.c:3834
- do_sys_openat2+0x13e/0x1d0 fs/open.c:1405
- do_sys_open fs/open.c:1420 [inline]
- __do_sys_openat fs/open.c:1436 [inline]
- __se_sys_openat fs/open.c:1431 [inline]
- __x64_sys_openat+0x247/0x2a0 fs/open.c:1431
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f527567dea9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f52763380c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 00007f52757ac050 RCX: 00007f527567dea9
-RDX: 0000000000000000 RSI: 0000000020000100 RDI: ffffffffffffff9c
-RBP: 00007f52756ca4a4 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000006e R14: 00007f52757ac050 R15: 00007ffda916c8d8
- </TASK>
-
-
+Signed-off-by: Raymond Hackley <raymondhackley@protonmail.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+v2: Split the connector into another patch
+v3: Skip applied conntector patch
+---
+ .../qcom/msm8916-samsung-a2015-common.dtsi    | 53 +++++++++++++++++-
+ .../boot/dts/qcom/msm8916-samsung-a3u-eur.dts |  6 ++
+ .../boot/dts/qcom/msm8916-samsung-a5u-eur.dts |  6 ++
+ .../boot/dts/qcom/msm8916-samsung-e5.dts      |  6 ++
+ .../boot/dts/qcom/msm8916-samsung-e7.dts      |  7 +++
+ .../dts/qcom/msm8916-samsung-grandmax.dts     |  6 ++
+ .../boot/dts/qcom/msm8939-samsung-a7.dts      | 56 ++++++++++++++++++-
+ 7 files changed, 138 insertions(+), 2 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/a=
+rch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+index 4bbbee80b5e4..e6355e5e2177 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+@@ -28,6 +28,12 @@ tz-apps@85500000 {
+ =09=09};
+ =09};
+=20
++=09battery: battery {
++=09=09compatible =3D "simple-battery";
++=09=09precharge-current-microamp =3D <450000>;
++=09=09precharge-upper-limit-microvolt =3D <3500000>;
++=09};
++
+ =09clk_pwm: pwm {
+ =09=09compatible =3D "clk-pwm";
+ =09=09#pwm-cells =3D <2>;
+@@ -245,7 +251,7 @@ magnetometer@12 {
+ &blsp_i2c4 {
+ =09status =3D "okay";
+=20
+-=09battery@35 {
++=09fuel-gauge@35 {
+ =09=09compatible =3D "richtek,rt5033-battery";
+ =09=09reg =3D <0x35>;
+ =09=09interrupt-parent =3D <&tlmm>;
+@@ -253,6 +259,44 @@ battery@35 {
+=20
+ =09=09pinctrl-names =3D "default";
+ =09=09pinctrl-0 =3D <&fg_alert_default>;
++
++=09=09power-supplies =3D <&charger>;
++=09};
++};
++
++&blsp_i2c6 {
++=09status =3D "okay";
++
++=09pmic@34 {
++=09=09compatible =3D "richtek,rt5033";
++=09=09reg =3D <0x34>;
++
++=09=09interrupts-extended =3D <&tlmm 62 IRQ_TYPE_EDGE_FALLING>;
++
++=09=09pinctrl-0 =3D <&pmic_int_default>;
++=09=09pinctrl-names =3D "default";
++
++=09=09regulators {
++=09=09=09rt5033_reg_safe_ldo: SAFE_LDO {
++=09=09=09=09regulator-min-microvolt =3D <4900000>;
++=09=09=09=09regulator-max-microvolt =3D <4900000>;
++=09=09=09=09regulator-always-on;
++=09=09=09};
++
++=09=09=09/*
++=09=09=09 * Needed for camera, but not used yet.
++=09=09=09 * Define empty nodes to allow disabling the unused
++=09=09=09 * regulators.
++=09=09=09 */
++=09=09=09LDO {};
++=09=09=09BUCK {};
++=09=09};
++
++=09=09charger: charger {
++=09=09=09compatible =3D "richtek,rt5033-charger";
++=09=09=09monitored-battery =3D <&battery>;
++=09=09=09richtek,usb-connector =3D <&usb_con>;
++=09=09};
+ =09};
+ };
+=20
+@@ -476,6 +520,13 @@ nfc_i2c_default: nfc-i2c-default-state {
+ =09=09bias-disable;
+ =09};
+=20
++=09pmic_int_default: pmic-int-default-state {
++=09=09pins =3D "gpio62";
++=09=09function =3D "gpio";
++=09=09drive-strength =3D <2>;
++=09=09bias-disable;
++=09};
++
+ =09sdc2_cd_default: sdc2-cd-default-state {
+ =09=09pins =3D "gpio38";
+ =09=09function =3D "gpio";
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts b/arch/ar=
+m64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
+index 3b934f5eba47..906d31f1ea21 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
+@@ -55,6 +55,12 @@ &accelerometer {
+ =09=09       "0", "0", "1";
+ };
+=20
++&battery {
++=09charge-term-current-microamp =3D <150000>;
++=09constant-charge-current-max-microamp =3D <1000000>;
++=09constant-charge-voltage-max-microvolt =3D <4350000>;
++};
++
+ &blsp_i2c5 {
+ =09status =3D "okay";
+=20
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts b/arch/ar=
+m64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts
+index 391befa22bb4..fe39be7a742b 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts
+@@ -29,6 +29,12 @@ &accelerometer {
+ =09=09=09"0", "0", "1";
+ };
+=20
++&battery {
++=09charge-term-current-microamp =3D <200000>;
++=09constant-charge-current-max-microamp =3D <1500000>;
++=09constant-charge-voltage-max-microvolt =3D <4350000>;
++};
++
+ &blsp_i2c5 {
+ =09status =3D "okay";
+=20
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-e5.dts b/arch/arm64/b=
+oot/dts/qcom/msm8916-samsung-e5.dts
+index fad2535255f7..800cb1038da0 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-samsung-e5.dts
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-e5.dts
+@@ -23,6 +23,12 @@ / {
+ =09chassis-type =3D "handset";
+ };
+=20
++&battery {
++=09charge-term-current-microamp =3D <200000>;
++=09constant-charge-current-max-microamp =3D <1500000>;
++=09constant-charge-voltage-max-microvolt =3D <4350000>;
++};
++
+ &blsp_i2c5 {
+ =09status =3D "okay";
+=20
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-e7.dts b/arch/arm64/b=
+oot/dts/qcom/msm8916-samsung-e7.dts
+index b412b61ca258..ec1debd2e245 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-samsung-e7.dts
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-e7.dts
+@@ -23,6 +23,13 @@ / {
+ =09chassis-type =3D "handset";
+ };
+=20
++&battery {
++=09charge-term-current-microamp =3D <200000>;
++=09constant-charge-current-max-microamp =3D <1500000>;
++=09constant-charge-voltage-max-microvolt =3D <4350000>;
++};
++
++
+ &pm8916_l17 {
+ =09regulator-min-microvolt =3D <3000000>;
+ =09regulator-max-microvolt =3D <3000000>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-grandmax.dts b/arch/a=
+rm64/boot/dts/qcom/msm8916-samsung-grandmax.dts
+index 5882b3a593b8..135df1739dbd 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-samsung-grandmax.dts
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-grandmax.dts
+@@ -41,6 +41,12 @@ led-keyled {
+ =09};
+ };
+=20
++&battery {
++=09charge-term-current-microamp =3D <150000>;
++=09constant-charge-current-max-microamp =3D <1000000>;
++=09constant-charge-voltage-max-microvolt =3D <4400000>;
++};
++
+ &reg_motor_vdd {
+ =09gpio =3D <&tlmm 72 GPIO_ACTIVE_HIGH>;
+ };
+diff --git a/arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dts b/arch/arm64/b=
+oot/dts/qcom/msm8939-samsung-a7.dts
+index 0c599e71a464..91acdb160227 100644
+--- a/arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dts
++++ b/arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dts
+@@ -33,6 +33,15 @@ tz-apps@85500000 {
+ =09=09};
+ =09};
+=20
++=09battery: battery {
++=09=09compatible =3D "simple-battery";
++=09=09charge-term-current-microamp =3D <150000>;
++=09=09constant-charge-current-max-microamp =3D <1500000>;
++=09=09constant-charge-voltage-max-microvolt =3D <4300000>;
++=09=09precharge-current-microamp =3D <450000>;
++=09=09precharge-upper-limit-microvolt =3D <3500000>;
++=09};
++
+ =09gpio-hall-sensor {
+ =09=09compatible =3D "gpio-keys";
+=20
+@@ -82,7 +91,7 @@ i2c-fg {
+ =09=09#address-cells =3D <1>;
+ =09=09#size-cells =3D <0>;
+=20
+-=09=09battery@35 {
++=09=09fuel-gauge@35 {
+ =09=09=09compatible =3D "richtek,rt5033-battery";
+ =09=09=09reg =3D <0x35>;
+=20
+@@ -91,6 +100,8 @@ battery@35 {
+=20
+ =09=09=09pinctrl-0 =3D <&fg_alert_default>;
+ =09=09=09pinctrl-names =3D "default";
++
++=09=09=09power-supplies =3D <&charger>;
+ =09=09};
+ =09};
+=20
+@@ -325,6 +336,42 @@ touchscreen@24 {
+ =09};
+ };
+=20
++&blsp_i2c6 {
++=09status =3D "okay";
++
++=09pmic@34 {
++=09=09compatible =3D "richtek,rt5033";
++=09=09reg =3D <0x34>;
++
++=09=09interrupts-extended =3D <&tlmm 62 IRQ_TYPE_EDGE_FALLING>;
++
++=09=09pinctrl-0 =3D <&pmic_int_default>;
++=09=09pinctrl-names =3D "default";
++
++=09=09regulators {
++=09=09=09rt5033_reg_safe_ldo: SAFE_LDO {
++=09=09=09=09regulator-min-microvolt =3D <4900000>;
++=09=09=09=09regulator-max-microvolt =3D <4900000>;
++=09=09=09=09regulator-always-on;
++=09=09=09};
++
++=09=09=09/*
++=09=09=09 * Needed for camera, but not used yet.
++=09=09=09 * Define empty nodes to allow disabling the unused
++=09=09=09 * regulators.
++=09=09=09 */
++=09=09=09LDO {};
++=09=09=09BUCK {};
++=09=09};
++
++=09=09charger: charger {
++=09=09=09compatible =3D "richtek,rt5033-charger";
++=09=09=09monitored-battery =3D <&battery>;
++=09=09=09richtek,usb-connector =3D <&usb_con>;
++=09=09};
++=09};
++};
++
+ &blsp_uart2 {
+ =09status =3D "okay";
+ };
+@@ -510,6 +557,13 @@ nfc_i2c_default: nfc-i2c-default-state {
+ =09=09bias-disable;
+ =09};
+=20
++=09pmic_int_default: pmic-int-default-state {
++=09=09pins =3D "gpio62";
++=09=09function =3D "gpio";
++=09=09drive-strength =3D <2>;
++=09=09bias-disable;
++=09};
++
+ =09reg_tsp_en_default: reg-tsp-en-default-state {
+ =09=09pins =3D "gpio73";
+ =09=09function =3D "gpio";
+--=20
+2.39.2
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
