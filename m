@@ -1,148 +1,114 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480A413DBB2;
-	Wed, 24 Apr 2024 10:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB58F142E62
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 10:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713954873; cv=none; b=rijDjOMpuZXEzoLQft0F1bVAlz3FXXqwaRU7FHaD2xZIsq2+H9dpxX9AlDdtnI2YQl149X3SPACuG1dvg/7tu7xc4yM0NDW3l0H+HeBSggEePf5UuDoEhqJDhqrKyuoZx+4Gfx6jLZ2/MzXiO03ltzJoHM3716nmpkvQD/xO7rQ=
+	t=1713954886; cv=none; b=qGmrxuozg16uAQd2TBE76xMYvAvftVROta/KvVUc46/IDW6VKlYfk5nBsXdmmyva1GwHunxIVEu50DfeWdmFZgk22mAHnGfdCQLK905vI09dAc63PJSNZAlWb9YV/UTJLPN70f6BfLhiObwtMHqTiQj3Fo9mvVRjH3dGcErqV24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713954873; c=relaxed/simple;
-	bh=kcJ56fsa/PMFsPSqACtQFZlurMUAdbmI1ttj5bfikVM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=fEOfXEYeU6s6zT1L9kWdUwwsYZpq23o/5P0J0QDctVd8CE50KWSnkWLfcNrBsKFjC+n6T2korISLL91FpTTIM14AkiZwVbpLWyAI7PMePYFwyTXUrobiBKKs+LmnJcB0Nq6/jlO4N6kTyWbOI3V0neaXKQOIAFBnoV8OISnaEy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Z7L7Vv2W; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7ntG99+Z; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Z7L7Vv2W; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7ntG99+Z; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1713954886; c=relaxed/simple;
+	bh=YTGioqHw4bG0d3wWLA0C6k3sKtV4jev6rrEIMgbLhO4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P8FcEyv1n38OmyGHOeU6rk1WMxI7psDaAb5m59bUZYTxVOHcbXQz3X7Q+ebJzBjV992WcV7Td4tXVhb1/y4rbAYuPC8++FoMAXbSjNoYXM+VErCwdahKhqDEuMfwqbSZOU238WPvi39ed0/sJDqomtn9QbHiqePA+/EVmXojiNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=d5QjoJCT; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Z7L7Vv2W";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7ntG99+Z";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Z7L7Vv2W";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7ntG99+Z"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 767C3613F2;
-	Wed, 24 Apr 2024 10:34:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713954870; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=lClhB2Lx5EF0SugdSw87bUnROejaSI8p6PH1P+TqX3s=;
-	b=Z7L7Vv2W7CLL9VMxKrr1on+J8hyAT76nbbvz35Dw5Jorq6mpHanLXSh1c9aBsRI16Hvbrw
-	nTsAR22V3fSWsadfnRYFwLHJc6NmSHMYywNCXiA7YuaXWISHxU+UV8qU0uiCRqYRTnjfOF
-	kcN+JXj5uCcbpMFL/19nl+OO8Ao5u8Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713954870;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=lClhB2Lx5EF0SugdSw87bUnROejaSI8p6PH1P+TqX3s=;
-	b=7ntG99+Zuc6fCcwdsPn+3q3HFP/MOJMDX5B93jon/FP3EBHZm89pXT5UDw/T5hPewoQEtw
-	nH6f/Q75Dd3SAFCw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Z7L7Vv2W;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=7ntG99+Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713954870; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=lClhB2Lx5EF0SugdSw87bUnROejaSI8p6PH1P+TqX3s=;
-	b=Z7L7Vv2W7CLL9VMxKrr1on+J8hyAT76nbbvz35Dw5Jorq6mpHanLXSh1c9aBsRI16Hvbrw
-	nTsAR22V3fSWsadfnRYFwLHJc6NmSHMYywNCXiA7YuaXWISHxU+UV8qU0uiCRqYRTnjfOF
-	kcN+JXj5uCcbpMFL/19nl+OO8Ao5u8Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713954870;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=lClhB2Lx5EF0SugdSw87bUnROejaSI8p6PH1P+TqX3s=;
-	b=7ntG99+Zuc6fCcwdsPn+3q3HFP/MOJMDX5B93jon/FP3EBHZm89pXT5UDw/T5hPewoQEtw
-	nH6f/Q75Dd3SAFCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EB61D1393C;
-	Wed, 24 Apr 2024 10:34:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id +ZsKNjXgKGauTAAAD6G6ig
-	(envelope-from <clopez@suse.de>); Wed, 24 Apr 2024 10:34:29 +0000
-From: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH] KVM: fix documentation for KVM_CREATE_GUEST_MEMFD
-Date: Wed, 24 Apr 2024 12:33:16 +0200
-Message-Id: <20240424103317.28522-1-clopez@suse.de>
-X-Mailer: git-send-email 2.35.3
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d5QjoJCT"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2de2f5ca076so18064371fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 03:34:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713954882; x=1714559682; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YTGioqHw4bG0d3wWLA0C6k3sKtV4jev6rrEIMgbLhO4=;
+        b=d5QjoJCT4tGPOUizncdMovUNpMyoBw50xu8aeFD05oztfFAcqdy3Bdul0lreOWRwCo
+         /IZUPO6onAUVtXA5+RVzgIc5ZrLbM4AmKZ42OLHrE3wX9eLtEUX89LX59CaisXGvLJc/
+         Mq+zwfEP3QqhcR2gtyvJ8GE3qKWIDXvLWmcZo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713954882; x=1714559682;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YTGioqHw4bG0d3wWLA0C6k3sKtV4jev6rrEIMgbLhO4=;
+        b=Ticl9ZOmaYh14P6Kt6Qa8YgOWrRZcR6qlBXttmzWUfnSSMn3UsH9kZesAoRvnZak6J
+         jgSfSJwzFTIMg7nftJzyrwz0CL6eYJobPPLthAP4hF2aOnfvB2GSjmwj+cr1jfIlL2YI
+         RTXztAI4sZkXG/lWBWL6AR4MYeWall242wzCz7WmKVwpkLza3qddLzj+kE3xs1aSHz4/
+         Ni57BuXrg9q5Dn55cvC7a+gUc/j5Imh8429aT6dQan8NhIOVGOzcAzmsieXScFzaZR5u
+         d4AnoLmxGgxzu2SdPkes5ndhAXn6z6gHoiTWG76atDYtj6fVTr8fIPCGgfbfVsoT9XN3
+         bA0A==
+X-Forwarded-Encrypted: i=1; AJvYcCV3dAFyDAzetHzT1ltm3/BdicI5dPFps/jXhQ6clm10avw+Knc9W6oNk77Kr4GC9LlttZZAhdHBij2d8fvBLRT1WoKYnlFxkV3hbvOf
+X-Gm-Message-State: AOJu0YzszRbUmLqZGX1YGJ5OmYtvNrQ5QSTAMj9nfaFgiGz6kJiW76fI
+	pDAJbDO/iIk3KwDGAl4w2yVdY8w1ymbb8tGxxf3SVnrRemm6XrZ7TN4NFrEK5Y342LdGOPhCCvr
+	ubchZdqQu/988PSVCzxQkpfEHuLFVapoYmrRH
+X-Google-Smtp-Source: AGHT+IH1SKEuMcbXbVaOT7b6LPKCdH0Hxd/9lwuaSIGld/FRJW7iu8EV/TAGnf3V8FIPftxocbi/e/dy8Ket9y/FUsU=
+X-Received: by 2002:a2e:3c0b:0:b0:2d8:5e21:8ec5 with SMTP id
+ j11-20020a2e3c0b000000b002d85e218ec5mr1359535lja.48.1713954882016; Wed, 24
+ Apr 2024 03:34:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -1.95
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 767C3613F2
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-1.95 / 50.00];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MIXED_CHARSET(0.56)[subject];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
+References: <20240423122518.34811-1-kl@kl.wtf>
+In-Reply-To: <20240423122518.34811-1-kl@kl.wtf>
+From: =?UTF-8?Q?=C5=81ukasz_Majczak?= <lma@chromium.org>
+Date: Wed, 24 Apr 2024 12:34:30 +0200
+Message-ID: <CAE5UKNpSNtPbdMKDb7pDTpSiCNndkYP7KC+m6xSd6aMMQvQ2tQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] HID: i2c-hid: Probe and wake device with HID
+ descriptor fetch
+To: Kenny Levinsen <kl@kl.wtf>
+Cc: Jiri Kosina <jikos@kernel.org>, Dmitry Torokhov <dtor@chromium.org>, 
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>, Douglas Anderson <dianders@chromium.org>, 
+	Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <mripard@kernel.org>, 
+	Kai-Heng Feng <kai.heng.feng@canonical.com>, Johan Hovold <johan+linaro@kernel.org>, 
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Radoslaw Biernacki <rad@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The KVM_CREATE_GUEST_MEMFD ioctl returns a file descriptor, and is
-documented as such in the description. However, the "Returns" field
-in the documentation states that the ioctl returns 0 on success.
-Update this to match the description.
+On Tue, Apr 23, 2024 at 2:26=E2=80=AFPM Kenny Levinsen <kl@kl.wtf> wrote:
+>
+> This revises my previous patch[0] to add the sleep STM chips seem to
+> require as per discussion on the original patch from Lukasz and
+> Radoslaw[1]. I had initially tried without as it had not previously been
+> needed in the similar logic in our resume path, but it would appear that
+> this was simply luck as the affected device was woken up in that case by
+> "noise" from other sources.
+>
+> To reiterate, the idea is to add the retry that Lukasz and Radoslaw
+> discovered was necessary, but do away with the dummy smbus probe and
+> instead just let HID descriptor fetch retry as needed, aligning more
+> with the existing retry logic used after resume while saving some noise
+> on the bus and speeding up initialization a tiny bit.
+>
+> I added Co-developed-by tags, I hope that's appropriate. We should await
+> an ACK from Lukasz on it fixing their hardware quirk.
+>
+> [0]: https://lore.kernel.org/all/20240415170517.18780-1-kl@kl.wtf/
+> [1]: https://lore.kernel.org/all/CAE5UKNqPA4SnnXyaB7Hwk0kcKMMQ_DUuxogDphn=
+nvSGP8g1nAQ@mail.gmail.com/
+>
+Hi Kenny,
 
-Signed-off-by: Carlos López <clopez@suse.de>
----
- Documentation/virt/kvm/api.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Your solution works as it should - I have tested it on my Eve with
+enabled debugs and
+the retries works as expected with power-on, reboot and suspend/resume path=
+s.
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 0b5a33ee71ee..57bd2b2b1532 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -6316,7 +6316,7 @@ The "flags" field is reserved for future extensions and must be '0'.
- :Architectures: none
- :Type: vm ioctl
- :Parameters: struct kvm_create_guest_memfd(in)
--:Returns: 0 on success, <0 on error
-+:Returns: A file descriptor on success, <0 on error
- 
- KVM_CREATE_GUEST_MEMFD creates an anonymous file and returns a file descriptor
- that refers to it.  guest_memfd files are roughly analogous to files created
--- 
-2.35.3
+I have also disabled cros_ec_i2c driver to be 100% sure it doesn't do
+any i2c transactions on the bus
+and again the touchpad initialized successfully (with a retry) on all paths=
+.
 
+So you can add:
+Tested-by: Lukasz Majczak <lma@chromium.org>
+Reviewed-by: Lukasz Majczak <lma@chromium.org>
+
+Thank you Kenny for your work :)
+
+Best regards,
+Lukasz
