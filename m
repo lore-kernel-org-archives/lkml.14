@@ -1,102 +1,133 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668D215A4A3
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 11:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD7A158DDD
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 11:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713959713; cv=none; b=Mvg2qXzmeKWw8/SwrctTbuzP25mIVa0atJH8ATfjArRUo77qQR0aZHXMq34UDbW3jSPLpLeMKJNTm3C71favy84QZrjat4ni/QAMR/SpdsyjlVwhw1ClUHInx+jo9s9WwudUNdBpPaz29RlU/MEqsVg+esoR3fJhSUtshWvZ9yY=
+	t=1713959781; cv=none; b=E/mLPF3pE1bXshPZ1+eph2iRBl/P47LoCKmRF2A0OThGKRtxiddSuapTqSev0RBxHC4UfEFCR9cRM4vi2333QWwjZtTbC2mFDUiw4cyYo9HIzNGfq3qoSrWWZN5nf90rpwmi9vGagHl/6DZkdI6O/DqIxQTx+ZUMicdBoms8OZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713959713; c=relaxed/simple;
-	bh=laKzd3mIW3DWI5qUup3vRqxbLwrPRojH8Z7HJlY1Apc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kOrFXDw5dIrQcmfGIxe2BzzgxLpfb9fj0MC1NXqIduqlrNwPD710qy6VAZ6tQjLQal/g0iCh1Q8Um67CG0rZ9BYQtsHffi6IPK/6jG7DN1y/4sN9nM0adckLakClQ1kkFMH4eATz/yOkRhMEvlhIhSVwy9BYTDRxrS6CkyKBiJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rzbDD-00033t-Ou; Wed, 24 Apr 2024 13:54:55 +0200
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rzbDD-00E4Rk-8O; Wed, 24 Apr 2024 13:54:55 +0200
-Received: from pengutronix.de (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id C8B292BEDFC;
-	Wed, 24 Apr 2024 11:54:54 +0000 (UTC)
-Date: Wed, 24 Apr 2024 13:54:54 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Gregor Herburger <gregor.herburger@ew.tq-group.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Thomas Kopp <thomas.kopp@microchip.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, linux-can@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux@ew.tq-group.com, alexander.stein@ew.tq-group.com
-Subject: Re: [PATCH 1/4] can: mcp251xfd: stop timestamp before sending chip
- to sleep
-Message-ID: <20240424-adaptable-zircon-badger-1fefd9-mkl@pengutronix.de>
-References: <20240417-mcp251xfd-gpio-feature-v1-0-bc0c61fd0c80@ew.tq-group.com>
- <20240417-mcp251xfd-gpio-feature-v1-1-bc0c61fd0c80@ew.tq-group.com>
+	s=arc-20240116; t=1713959781; c=relaxed/simple;
+	bh=E1j8D+z+VDjM0jA1xb7bQtZFFSEdkHgBaKagxKEiWBI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CLHA7ogyMJHfN8/PSzWyu/1rMQZ2RSvJbYAGEzmRaXrLvi4pUMsXb+mAUKVAcXEYTeww71xHWivo5JOjHXOg6F9j6YU81W3/isGVgdvtp/72JCkQgoN4vy9ohErpsUoo3cv5tv8qsOgy7f4aQwX/9C9i2ob44xrUX5SdC1kW48k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=WLCmnJl4; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="WLCmnJl4"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-516d6c1e238so8541838e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 04:56:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1713959778; x=1714564578; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E1j8D+z+VDjM0jA1xb7bQtZFFSEdkHgBaKagxKEiWBI=;
+        b=WLCmnJl4amCHJ8C5fwnsPKfQeSmOAFhmZWG1eoiCCO22RugspXJXHM0hgXFezREFDz
+         VX6yGcpLooi0I9GG3h2DDEvlqWQI3vdzGEYUIrABH1HBvkQdvG3HHIPtzR8X5Kw8WmDp
+         WU/8oko4ffmJsdp1KrO7rB8TIVIjtu5FOssr4/OBcMxjoe5fqbgmyovPuABAj6puOtEJ
+         kGK/suNK9ug0mxZ5wJRxHLcjhnGBJeOCyYRKvhg9X/hQtu1Nh3PyxonUqGGTUCben/16
+         5x1GYhPqJLqqhWENOjVe+HTSk22auqapkopXki7l/vxeMPwji7rN1a8/C7MX8E53bznK
+         ULUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713959778; x=1714564578;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E1j8D+z+VDjM0jA1xb7bQtZFFSEdkHgBaKagxKEiWBI=;
+        b=QOT8s+IW7ORusHhvWtowpO4YFOqRyY1bcFK5fN5Wrnifvv+h3sMHflQbet7Lv9PC35
+         gjmzonXfcx80SynYB5v9u5zElQZQcqVkQIpSAmKtA1CtieGmlQIymClPBqJ99Rdu3mz7
+         nLSQTOhzaw+l9EkiH4J/GCX85y+okRR+24aEaAptlmkkJi4cKIkCh2ByX7gEdDIqu4Ba
+         xd5WwXMKVDSkRXYR93RFmoGAJ1eTI/OlmlVmfyEQmdXu+R3RxrAiyIXSMU7/xL1wNXkl
+         LQB7Y3nJVyiXwq4rl/IX8IfomFfCK2d/xOM9Pm1z+h32ZQk6WizdvuS3YkGJdcFMvQsa
+         7mfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUthpZPUCsAGZbpWrjvliabhoM9XFopNbtd1VGBMZCozl35Vn/wzntp+TyrkZ70yma3AFTO71cHYqr2B5EQcvbEv0+IEK+Wg3fq7hI0
+X-Gm-Message-State: AOJu0YwAqIe6NNGNY4I4ICYTSfsamFyhLWokiew/r+bFfW0KHQ4dQCIp
+	UODPvcZ4WYCsPyeeP063FQdXULfb2CQ0MR/2fv+W04mMhcTFlcfVhJL5ySSteIGbiEjKEZC3Mfi
+	/P56dAbGgkuX2tS4LezJgJmdVnjJcv4XY+JU1ng==
+X-Google-Smtp-Source: AGHT+IGn2nOjGynSGGs86KzRli27o88A8Q0fLdg3mlD0Wzx4QSFJ+wXo2KW1LOEP2Tcgo/VJYD78wFE891jDnM6jmBU=
+X-Received: by 2002:ac2:4daa:0:b0:516:d448:b42a with SMTP id
+ h10-20020ac24daa000000b00516d448b42amr1567023lfe.26.1713959777778; Wed, 24
+ Apr 2024 04:56:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="42zcn6qmd3zur5l3"
-Content-Disposition: inline
-In-Reply-To: <20240417-mcp251xfd-gpio-feature-v1-1-bc0c61fd0c80@ew.tq-group.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
-
-
---42zcn6qmd3zur5l3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20240422130036.31856-1-brgl@bgdev.pl> <99242a7c-53bf-4227-9623-7bc092f564b3@penguintechs.org>
+ <CAMRc=MepDwUbAKrWgm0CXKObqy8=igtug0QDgo-CgwxjZCAC2Q@mail.gmail.com>
+ <b982b73d-0540-409c-a6e2-0e03ecb11715@penguintechs.org> <0381f39c-38ba-4a2b-915c-f14c5f911eb9@penguintechs.org>
+In-Reply-To: <0381f39c-38ba-4a2b-915c-f14c5f911eb9@penguintechs.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 24 Apr 2024 13:56:07 +0200
+Message-ID: <CAMRc=MfnEct7ThQhCA3AoY7hxq8j1mmFLNNkK17+RSvJxs67XQ@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: qca: set power_ctrl_enabled on NULL returned
+ by gpiod_get_optional()
+To: Wren Turkal <wt@penguintechs.org>
+Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Zijun Hu <quic_zijuhu@quicinc.com>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On 17.04.2024 15:43:54, Gregor Herburger wrote:
-> MCP2518FD exits Low-Power Mode (LPM) when CS is asserted. When chip
-> is send to sleep and the timestamp workqueue is not stopped chip is
-> waked by SPI transfer of mcp251xfd_timestamp_read.
+On Wed, Apr 24, 2024 at 1:53=E2=80=AFPM Wren Turkal <wt@penguintechs.org> w=
+rote:
+>
+> On 4/24/24 4:16 AM, Wren Turkal wrote:
+> > On 4/24/24 2:04 AM, Bartosz Golaszewski wrote:
+> >> On Wed, 24 Apr 2024 07:07:05 +0200, Wren Turkal<wt@penguintechs.org>
+> >> said:
+> >>> On 4/22/24 6:00 AM, Bartosz Golaszewski wrote:
+> >>>> From: Bartosz Golaszewski<bartosz.golaszewski@linaro.org>
+> >>>>
+> >>>> Any return value from gpiod_get_optional() other than a pointer to a
+> >>>> GPIO descriptor or a NULL-pointer is an error and the driver should
+> >>>> abort probing. That being said: commit 56d074d26c58 ("Bluetooth:
+> >>>> hci_qca:
+> >>>> don't use IS_ERR_OR_NULL() with gpiod_get_optional()") no longer set=
+s
+> >>>> power_ctrl_enabled on NULL-pointer returned by
+> >>>> devm_gpiod_get_optional(). Restore this behavior but bail-out on
+> >>>> errors.
+> >>> Nack. This patch does fixes neither the disable/re-enable problem nor
+> >>> the warm boot problem.
+> >>>
+> >>> Zijun replied to this patch also with what I think is the proper
+> >>> reasoning for why it doesn't fix my setup.
+> >>>
+> >> Indeed, I only addressed a single issue here and not the code under th=
+e
+> >> default: label of the switch case. Sorry.
+> >>
+> >> Could you give the following diff a try?
+> >
+> > I had a feeling that was what was going on. I'll give the patch a shot.
+> >
+> > wt
+>
+> Considering this patch is basically equivalent to patch 1/2 from Zijun,
+> I am not surprised that is works similarly. I.e. on a cold boot, I can
+> disable/re-enable bluetooth as many time as I want.
+>
 
-How does the Low-Power Mode affect the GPIO lines? Is there a difference
-if the device is only in sleep mode?
+Zijun didn't bail out on errors which is the issue the original patch
+tried to address and this one preserves.
 
-regards,
-Marc
+> However, since this patch doesn't include the quirk fix from Zijun's
+> patchset (patch 2/2), bluetooth fails to work after a warm boot.
+>
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+That's OK, we have the first part right. Let's now see if we can reuse
+patch 2/2 from Zijun.
 
---42zcn6qmd3zur5l3
-Content-Type: application/pgp-signature; name="signature.asc"
+> @Zijun, this patch looks more idiomatic when I look at the surrounding
+> code than your patch 1/2. Notice how it doesn't use the "else if"
+> construct. It does the NULL test separately after checking for errors.
+>
+> --
+> You're more amazing than you think!
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmYo8wsACgkQKDiiPnot
-vG94AAf/fWp9nrOulZnq9/AdJQ9ZdkwwGBc1Y2so9ZSM9MUN1SAmlR5E67MpNdT5
-IUuME7nsewsFsKPeirJiFFP8Vi0c4+ID0GimQkD6XKlNPjtBzJPDW3LfwPzkYg9w
-Z2jizgKuBwrJvqRHxREhRuAzU0SSBSmb7kh9a0mE2JjC7ju6E5wqYQvbI+P7tnFK
-VaWIq75tHVWGIp6IhnQtudGoRi+YUVaqTeoHpfyEgnCosZ8b4vhN8EasSnA1S5si
-1vDZBgCHfVqQ4Losf9Z0zUQx5KSSGjpQJP6YirqqUXqUTbrd0g7ht59550jAT5JE
-aZXrBcZxYBPxliNx/Kg1HmJUxCP2uQ==
-=MLif
------END PGP SIGNATURE-----
-
---42zcn6qmd3zur5l3--
+Bart
