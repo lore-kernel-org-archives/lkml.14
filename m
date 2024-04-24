@@ -1,143 +1,133 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5340815FD15
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 15:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73866537E9;
+	Wed, 24 Apr 2024 15:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713972985; cv=none; b=DkJ541RrW/AMY+eCFuObdKZ/dJclsFdXrIkdoVP+317nJdnSBDM1qo7CN7aAx7rm3WeNC7C4DRj6NZldxiufwOXORbPsf8cDE6mz35iAQlLeLqbcxDZjaOMxfAWTaUBVJS2nBXOtbJrByBvCN3LpplNq6nU6KpkfnJSShdL0Qpw=
+	t=1713973183; cv=none; b=MudKDx3Nd2J9pBmyKy4H2k6PsGTPGZju09MH0eLtVbftP0UgXIW/n5iIayXUH9t1QAXGPafeQccxvRZmHm4PgHilipRXvhUTsUs77Gygd8tTeGvldhBuk6n/sie4pUDLKBZ1a7lfWhP+81GFuRgfWtGnR1O7D7h6oua3okco36s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713972985; c=relaxed/simple;
-	bh=H/kqbfAVoGFvlhHgdIzd+BSw/1qG8jsiW3DecnDx3PQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZYBAcqvH7kiYq1i+Fzj8uoYk8hIV/t0l4+iyKi1C8uGP4WLfEQzKAtbftM/klHbJh7ww0MBIS6oTz7W1UfvXZmy1iCxLG/Isy+RzJ2nMJCYOU2O7KO22bSAJ0VlPirSdHsmuOt4TRpE11VjnWs7ZL/OZYe4A0zxjrsh9M82+69M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=hCAi05SN; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1713973183; c=relaxed/simple;
+	bh=23+0yDyOWieu/OvqCnq30wt6Gy8zITnht47Y9cnyRBI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Yc72L//dxY4UcpCcN3alIQstB4J0XGQdxRUHgCFgQPzbY3lnd/8eQe5wi+6w0jIsZh7PV8hdGWb+U7eue8YlT4G+WC6N2TrsqSB6+beiP2Hn6EO4QiuFgdJbAHIps8f6cUr5taOi0M+ODkh71lDe7Hb9jZqtSjWIOGe/hkKtlRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=l6kT5UEI; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="hCAi05SN"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-61b3be24dd9so517057b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 08:36:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713972982; x=1714577782; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UOeTFyyci3z7BUZ6gEboB6kicq7JHa28+x4pg4U/L9Q=;
-        b=hCAi05SNb+8TkDrnDyAe/wXX0NWLx6OklKVidskMgdFjS4xLcXFYnXphJtg2EvVGX4
-         u9X0Kh4oFwrnxJhh//qu/zUpiheZkopOxh7stL5laNJmOHuymr459On2lPTDIoZzT2nN
-         Q9vLczF4LkWJ9XrdPRMj4FfAgdaPkFzZK7plip3aXt/V+OL9VP26y4L9JKIrnOOKzqt3
-         hCuSXfr3hj1EejeYKkpFwspy0AX45CFJE0sUAu9lsbHplvU8O2wC8peZQjUH/m6LYrjG
-         retYszOgjeBcsq/GA+0tDxiExUppmYs57AZRJzGlhGYkuYIjoDaHWJjcZSFiJwpZMxDw
-         2UfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713972982; x=1714577782;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UOeTFyyci3z7BUZ6gEboB6kicq7JHa28+x4pg4U/L9Q=;
-        b=Il0dGRYk2cmxJJUfuddrGbtZOc2WQyJLQbOufl7C4sw224VcktRyWZI3819ZasXRIf
-         m67YWLRObVKM5ZLBzaKr9Qd8VEKSpONCgote9qXJ6Yah8ao9HdL3Ca8KFI81W1whHFJt
-         xRzyxj2czhE3W/4RezOjqDrQKYMM+5bBOXRiL38T0rWDAooyiVgCvQ3haNvf2os7qKbS
-         m3M8LbqG8hnrE2czakr3X/c4KTvJ0QOaGkFvrff4+NNGqWUU7yA5e8vTPGvYLKXcD2Pj
-         JhDBdMwWN8UlroO9W8ex3Le2ZWAiaoq8zZoJT+zUJWcCa9KwaXrB5oWWzhvWWyJGNLVg
-         tetQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXwF6uOQFTJBiKbVsK6pPP3q1BaS1NUmnY/UXbzRjL/kSufI9TZIBahJWzPm5u9vEnr8TQSQ05jej8+PGb0bZvMifzjD4vszzAIMyJV
-X-Gm-Message-State: AOJu0YwlMlqIcYSw7dfRndkQUpu1HwAaEYXgYWDeWZ6N2y17lZgV1c2U
-	pmzSaCP3FHpd3Bc9mwRg0Qzv/1XcPv1o0+mnwLu7s260mXqLh8BVFhiMqw1p5wY=
-X-Google-Smtp-Source: AGHT+IGUqY1hEYLyvR7VYD34HR40H5BCTS3NDhpEtJYnVydiqbsmxy3Dkl9KuCGBuZqe3HcyqLC03w==
-X-Received: by 2002:a0d:cc12:0:b0:618:88d1:f15f with SMTP id o18-20020a0dcc12000000b0061888d1f15fmr73152ywd.0.1713972982354;
-        Wed, 24 Apr 2024 08:36:22 -0700 (PDT)
-Received: from ghost ([50.146.0.2])
-        by smtp.gmail.com with ESMTPSA id j82-20020a819255000000b0061ad72dd577sm2417745ywg.112.2024.04.24.08.36.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 08:36:21 -0700 (PDT)
-Date: Wed, 24 Apr 2024 11:36:19 -0400
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Alexandre Ghiti <alex@ghiti.fr>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Evan Green <evan@rivosinc.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 06/17] riscv: Fix extension subset checking
-Message-ID: <Zikm80mmHFYoaAOF@ghost>
-References: <20240420-dev-charlie-support_thead_vector_6_9-v3-0-67cff4271d1d@rivosinc.com>
- <20240420-dev-charlie-support_thead_vector_6_9-v3-6-67cff4271d1d@rivosinc.com>
- <6c624361-a968-498b-a9fb-ea2aaec70ce8@ghiti.fr>
- <20240424-wildly-goofy-c81aac6f8cd7@spud>
- <ZikhpEgEoMX/rObu@ghost>
- <20240424-gondola-cosmic-b7a02b2a8619@spud>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="l6kT5UEI"
+Received: from [127.0.1.1] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B208582A;
+	Wed, 24 Apr 2024 17:38:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1713973129;
+	bh=23+0yDyOWieu/OvqCnq30wt6Gy8zITnht47Y9cnyRBI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=l6kT5UEIr5z4wboZG2u4xduokf3VY9YNP2jHz5c1f7MWnfSpK3jveJabtOwAES7Ew
+	 GxP2MbLSbCXwTZPkscoiYZIkKoUTDcgnANAZJdm+sjfg2fRlEFhzKFEeubwCTgbsss
+	 ECHaVuoy7XMx7mdjZmE5R8buVcHwjwQz3bC/voB4=
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Date: Wed, 24 Apr 2024 18:39:04 +0300
+Subject: [PATCH v6 01/11] media: subdev: Add privacy led helpers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240424-gondola-cosmic-b7a02b2a8619@spud>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240424-enable-streams-impro-v6-1-5fb14c20147d@ideasonboard.com>
+References: <20240424-enable-streams-impro-v6-0-5fb14c20147d@ideasonboard.com>
+In-Reply-To: <20240424-enable-streams-impro-v6-0-5fb14c20147d@ideasonboard.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Hans Verkuil <hverkuil@xs4all.nl>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Umang Jain <umang.jain@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2038;
+ i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
+ bh=23+0yDyOWieu/OvqCnq30wt6Gy8zITnht47Y9cnyRBI=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBmKSe3dx/jb6pAhJovrc5ZPCvTIdE9XH5hWVQg6
+ tiVaXMQ59GJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZikntwAKCRD6PaqMvJYe
+ 9S6XD/9JTdPIoBtpzJFndCfeS/N1WwDLvHTF+hdnm3CkW1IYpjvQfAoThvFmJXgCvB3rfOzf4KA
+ TxSV9AGnM7hcCIWx/BOtCrZEcYRVIymHzIToJLMNwmySWq3S0UXwZUsxEDDSXyKG9i7ZfLQ6Q/R
+ OH1hQ+W4DhISCrcVyaQU4mxA/fflIU3yy1s4zr3RK8AtL/gm0EhX/kCFjW9kNAbX3+Iou1bt+Dq
+ sjX9YjpbQHNMBG5RnZM+CmdkAc2HFH/glUgaD9BHgte/v3CfZUPD7PYbltIWOVzqtDeZdHwzXbQ
+ oI26BHw2IyTGQnuxA0mVJQ9VqbqgPiTyQglPAb/h8LftS6n5boBb2WJmkGzQe7d/sZk/QqfVRNz
+ NQR+cXC277TGLAEAlvjWywwBE+KS6z5yabKWN2+5ImgoIMu+XnNHdRnHPBtQzUw/xvHOEDMpgiG
+ HNc8nWnt/NNaGDCh9aeOx19EoI8Txrc2Clwe1a+EZXVZ88fBQQX37E1B2jBi5amgaKsv4DAVYWQ
+ ARsBiMLfZmR2kuTvh5WITkA+iI0lwaQc7dWnLZhNXpkPmG2QoN0n/Jt9bK8AGLde9PRmVAR2R5a
+ dyDs0bl1gp0cByKwuuSpWKgC5q9TVkDkqqW/hRkywMsKUNRya024tj3dvs0IP1y+URK88cT2c3P
+ bp75HPqBvvXuxgA==
+X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-On Wed, Apr 24, 2024 at 04:21:05PM +0100, Conor Dooley wrote:
-> On Wed, Apr 24, 2024 at 11:13:40AM -0400, Charlie Jenkins wrote:
-> > On Wed, Apr 24, 2024 at 03:51:54PM +0100, Conor Dooley wrote:
-> > > On Wed, Apr 24, 2024 at 04:22:02PM +0200, Alexandre Ghiti wrote:
-> > > > Hi Charlie,
-> > > > 
-> > > > On 21/04/2024 03:04, Charlie Jenkins wrote:
-> > > > > This loop is supposed to check if ext->subset_ext_ids[j] is valid, rather
-> > > > > than if ext->subset_ext_ids[i] is valid, before setting the extension
-> > > > > id ext->subset_ext_ids[j] in isainfo->isa.
-> > > > > 
-> > > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > > > > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> > > > > Fixes: 0d8295ed975b ("riscv: add ISA extension parsing for scalar crypto")
-> > > > > ---
-> > > > >   arch/riscv/kernel/cpufeature.c | 2 +-
-> > > > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-> > > > > index 48874aac4871..b537731cadef 100644
-> > > > > --- a/arch/riscv/kernel/cpufeature.c
-> > > > > +++ b/arch/riscv/kernel/cpufeature.c
-> > > > > @@ -609,7 +609,7 @@ static int __init riscv_fill_hwcap_from_ext_list(unsigned long *isa2hwcap)
-> > > > >   			if (ext->subset_ext_size) {
-> > > > >   				for (int j = 0; j < ext->subset_ext_size; j++) {
-> > > > > -					if (riscv_isa_extension_check(ext->subset_ext_ids[i]))
-> > > > > +					if (riscv_isa_extension_check(ext->subset_ext_ids[j]))
-> > > > >   						set_bit(ext->subset_ext_ids[j], isainfo->isa);
-> > > > >   				}
-> > > > >   			}
-> > > > > 
-> > > > 
-> > > > I think this should go into -fixes, let's check with Palmer if he wants to
-> > > > take this patch only or if you should send the patch on its own.
-> > > 
-> > > I think splitting out this and patch 1 into a new series targeting fixes
-> > > would probably make things clearer?
-> > 
-> > Okay I can do that. I will give it a bit more time before I send this
-> > series split into two to allow time for the rest of the patches to
-> > gather comments so I avoid sending too many duplicate patches.
-> 
-> Ye, I do hope to get back to this series later in the week when I have
-> time to actually read through all of the patches in detail.
-> 
-> However, you wouldn't have to resend both parts of the series - you can
-> just split out the fixes portion and send that, leaving the rest of the
-> series sitting on the list to gather comments.
+Add helper functions to enable and disable the privacy led. This moves
+the #if from the call site to the privacy led functions, and makes
+adding privacy led support to v4l2_subdev_enable/disable_streams()
+cleaner.
 
-Oh cool, I will send those two patches out in their own series then.
+Reviewed-by: Umang Jain <umang.jain@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Tested-by: Umang Jain <umang.jain@ideasonboard.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+---
+ drivers/media/v4l2-core/v4l2-subdev.c | 30 +++++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
-- Charlie
+diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+index 2d67ec54569a..b4f0b89412eb 100644
+--- a/drivers/media/v4l2-core/v4l2-subdev.c
++++ b/drivers/media/v4l2-core/v4l2-subdev.c
+@@ -148,6 +148,23 @@ static int subdev_close(struct file *file)
+ }
+ #endif /* CONFIG_VIDEO_V4L2_SUBDEV_API */
+ 
++static void v4l2_subdev_enable_privacy_led(struct v4l2_subdev *sd)
++{
++#if IS_REACHABLE(CONFIG_LEDS_CLASS)
++	if (!IS_ERR_OR_NULL(sd->privacy_led))
++		led_set_brightness(sd->privacy_led,
++				   sd->privacy_led->max_brightness);
++#endif
++}
++
++static void v4l2_subdev_disable_privacy_led(struct v4l2_subdev *sd)
++{
++#if IS_REACHABLE(CONFIG_LEDS_CLASS)
++	if (!IS_ERR_OR_NULL(sd->privacy_led))
++		led_set_brightness(sd->privacy_led, 0);
++#endif
++}
++
+ static inline int check_which(u32 which)
+ {
+ 	if (which != V4L2_SUBDEV_FORMAT_TRY &&
+@@ -452,15 +469,10 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
+ 	if (!ret) {
+ 		sd->enabled_streams = enable ? BIT(0) : 0;
+ 
+-#if IS_REACHABLE(CONFIG_LEDS_CLASS)
+-		if (!IS_ERR_OR_NULL(sd->privacy_led)) {
+-			if (enable)
+-				led_set_brightness(sd->privacy_led,
+-						   sd->privacy_led->max_brightness);
+-			else
+-				led_set_brightness(sd->privacy_led, 0);
+-		}
+-#endif
++		if (enable)
++			v4l2_subdev_enable_privacy_led(sd);
++		else
++			v4l2_subdev_disable_privacy_led(sd);
+ 	}
+ 
+ 	return ret;
+
+-- 
+2.34.1
 
