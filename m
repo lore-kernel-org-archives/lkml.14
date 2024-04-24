@@ -1,123 +1,278 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593B51E86F
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 23:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424DD156964
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 23:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714001035; cv=none; b=hLlBLwWvuatsq14yjpD6tcUrTxFgXaKR3N4SKEIU3bhi4PR7y10URN6ipeK0qU1E76XuUbVDhzDMcce1SHQRhgRrzQhi33aVJitzaTXlFGtPZqGQZ1CyyT3JM4Uv0rCkoCL/i6YZVaA1pEl5VpbqhX+a2vdt9E0mBxndso4GGss=
+	t=1714001126; cv=none; b=LHMTq31jDHoPNTf/9OLgylomyJ+iMGEFyDDRtePgxkHDQvCi4jMsGIheA/VgG/GPXTg/qKn3nf/oX42ogD44nPvIJ3Ah1cooVlHgqeisNBFps2MIDiLu3ldo0Px+LZkDQl+EfgFLfkLFvDG62hsFkY4NG8qXmwg5AFSp3SM3fqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714001035; c=relaxed/simple;
-	bh=kWYPE52TsD9tInankw4Nl3ZO8d6bCgXJgGeWHlBI7E8=;
+	s=arc-20240116; t=1714001126; c=relaxed/simple;
+	bh=w82ER0IflDrSeOEkY+ItZ9K207uzmYQ+tSNVV9wr/sI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N4PzVRcNR7KRptnJb52Pv3cwTDa5elQ7nTfKAcpi14RIByzI6eMnfmN3Uv1VVjAyX84dMlMtLOGyFoR4EAQrVTYJQKOhl5Gbm9UyAy5c0duboMVBJD/11yniWo7mdhaXUvI1ZU61uYQJH3dWSVTvzS2HqJMJyDHXZZOEDcT6KLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZDBmXtqK; arc=none smtp.client-ip=209.85.208.178
+	 To:Cc:Content-Type; b=tB3u06sSxfuMHEE8+8lXkfrMBujTzhn5brpgsHPbYkX+vI6fadVciQiIa0O/i4Via9IZgTAkrX29YhAT1uCfjEhY+JhcOgplQziUPtNG5+CsmTrNpZxYiWankWVhzpT9yyNcZogfRRPjBBtEii9gxl0DImEJg1BTQGSFjNvHFpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DLCey4c/; arc=none smtp.client-ip=209.85.160.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZDBmXtqK"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2dd041acff1so4208491fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 16:23:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DLCey4c/"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-439b1c72676so105951cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 16:25:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714001031; x=1714605831; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714001124; x=1714605924; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=R4Xhz5NWCXtt8nKXxeIFmhH8Oed5NRQI3JQnJYBJb4s=;
-        b=ZDBmXtqKUgzM5W6Y9v/FaSWCHcLxNWr12HbqWLBMO6yf6A8OTiahKd3JK1posYwxSG
-         vuMm8PFjLRvrMt5lwZUyiweQsVDVF/F62rnhi0zCE97/mNJZDsIrMMajRsNQZSWmr4og
-         91mlctLys46RrYkEjgAGu3mrzHmHtO6IJiTk66weMjRoMXvW0gpylRits2TiFvcY1cMt
-         BY5wd9sliMz2uIigVPYvjLwCd1a6JIZf3M2FhGr/gSilxQWrA4VkRFCwDVXgAf+hN4jo
-         BJ3M7EGjRQdm3yamJoku/qFFDjGF1fVDfDEZ7VgXBFd+amcVrRPryrjanJWvvXizAaAS
-         nCGg==
+        bh=1qmcwM8RwSJ8RvR8mUmf7ZCMdq1Mj/o54DavtjLG99s=;
+        b=DLCey4c/ELKypx0LIOrQEJWfxb8iu6/gZ59KA1wKK0Q2KA32sxjjz8WXvAVa5PgShw
+         ZHXadfG897dga0007ttbPgVVX/KKVCjQoYjHRheT3aeraTt/nssDx+Fb/U9DnBaXtQ6j
+         urdBV3IHeCpy0l/Urp1B6vGPWWQW8YfZE9bUeW+rsV2vwV/UWERRJgjftOu9i4ZSNniX
+         1V3AGthCSBeC6vWYnU6PYhEsClBbaxBfjivOm+0D/ya7s9t70weSy1zf8wG1Qqfdmr4j
+         plEcUF2xDkeHP9f1XoWI0uCvsRbdmEO+L+aCVkm21TJS30rq8Lk9pULkhKhyusAtZ/0u
+         hSgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714001031; x=1714605831;
+        d=1e100.net; s=20230601; t=1714001124; x=1714605924;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=R4Xhz5NWCXtt8nKXxeIFmhH8Oed5NRQI3JQnJYBJb4s=;
-        b=ox5hxNHuRaZScxbF6/DCTJt5P0Hd05CrvBVnoF7Lv4rUf9+MMBWIfhpAXUsm0xjVU2
-         C9uUbHljQCmrNZIFUF3DD4Abtgvt+oefSXefibqEk+TaXDgguqxNp7XXbiIZQ0s+2a9F
-         DCU9Q/wzKNGb+SQCXS5OGuuBdFwPp65NkSaUlBZ/JVvPbJrKxGGb6exOxDMMuxGegyRv
-         ftn2sB/YOi4hzp0KoSJqp/qXlWA/I1apATz8Cj65qMoj6MIaJb2spB7oCiAs7G74rc9M
-         mwe46WCIR5nLDQDAdhdikRKLqd5mBfWCU82JRQxq7zvDxCV1XDgH7uPfGMfuoIKw16Sp
-         bIxA==
-X-Forwarded-Encrypted: i=1; AJvYcCUS0yW5GsBB+oG8D6ZjDetxc0UWZlgzm224dPwWvvEgC5MKntEPpLVaALz9geuSfZRYwkXT/jPOxR5wcI8/9Yqf28pFK9bajgLBR2k2
-X-Gm-Message-State: AOJu0YzfkGETwkrYyBygXxyHg/8ttK4J6ZT49n9rwNJjyZ7bMVvJdcYn
-	+JGeNdLJBUsl1LTj7v4xi3IY0GUm4xk03JOEgDf3+X1h3M6EMeEy1T7uyl43vQ4YrWAYZHWR/Iq
-	dEiDbvHZsifkTTV63nxnZEQkGciPZ77QQMsAQ
-X-Google-Smtp-Source: AGHT+IHPC10+jHzeG+tgpIIgUMIPE4SuCr0QvH7By3qs7yKyt3sGcnqfFcju9V2mis/w27r/UIkSloxyYeZtRuWl320=
-X-Received: by 2002:ac2:4254:0:b0:519:63c1:6f45 with SMTP id
- m20-20020ac24254000000b0051963c16f45mr2385942lfl.61.1714001031354; Wed, 24
- Apr 2024 16:23:51 -0700 (PDT)
+        bh=1qmcwM8RwSJ8RvR8mUmf7ZCMdq1Mj/o54DavtjLG99s=;
+        b=tZ5W+qQp7vY0tBenWPVoKROzqa9ckw1kzq0FW6MyBjnncf6JIbPRrHjvTtMpZW/tER
+         okiumPSGFz37WAKa4oSQDtblgTubv2SR81BnQC3wsmsOeKOa2DZxJulrWffcwMBvzK6J
+         lEVGDtigsbSjT9kVexqbk4+60k03ppoub5QAF2HVwHTSSS0D+JVosMaD4ibd1un5JKwK
+         KBHs2FpRL0oWf39u8QLgqpzgzmGADDdYJj4fD9fn2nNqIOKDxbDXldjGibptT7Q9d3YP
+         dYgryYHAU1teBZAOJmy2rqWHmj8tej+yU1DxHtrYUjdzj3bBohqZlVWBbbuP9uue2pw7
+         ZqKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/Ih1/tl8dER2rc4GCi/WlIeu85O4z1qijuoiaJn0e2/5H+WHT86NOZ0fcBzGyCDh0mWeum6qd0Y7LpwA/A4G9VElPt6gh994FOK0G
+X-Gm-Message-State: AOJu0YzdmyQUPpz5pMXCD0w1dmYBobju3U+kEMaYxMQCt9+w3hWYMYCx
+	vUKHIOKq17s37mPGK4102+iJi2RGqjCV5QXtfwq5i8O4scqTBp4w8iPLrY/6TwWX8mNnsNS7Ttl
+	wCcuaZrAdaQ4b4TpiG3Pkdir5Sz2AKV6/PQST
+X-Google-Smtp-Source: AGHT+IGngb+doAaU+bl0yImCLvQlYT3JWd2Y1NtDuZR6IHeqS9NEm1m+Z/ararXJJXOEKKR3n7VPR7GvvCDu+nBXR4w=
+X-Received: by 2002:ac8:6604:0:b0:437:816e:48e5 with SMTP id
+ c4-20020ac86604000000b00437816e48e5mr47052qtp.29.1714001123922; Wed, 24 Apr
+ 2024 16:25:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424125940.2410718-1-leitao@debian.org>
-In-Reply-To: <20240424125940.2410718-1-leitao@debian.org>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Wed, 24 Apr 2024 16:23:12 -0700
-Message-ID: <CAJD7tkaWw14fLvCKE5-3U-FLm_0bsMJHcxHEFJwgGdfsR4SzMw@mail.gmail.com>
-Subject: Re: [PATCH] memcg: Fix data-race KCSAN bug in rstats
-To: Breno Leitao <leitao@debian.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, leit@meta.com, 
-	"open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" <cgroups@vger.kernel.org>, 
-	"open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" <linux-mm@kvack.org>, open list <linux-kernel@vger.kernel.org>
+References: <20240418081548.12160-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+ <20240418081548.12160-3-lvzhaoxiong@huaqin.corp-partner.google.com>
+ <zanx5y3obqmewnbooovf52hx6vh7tpi4zsbse2dyzcqzddmzhw@kewxoa6n3mja>
+ <CACb=7PURWtS8bwT5EcAFHhu7deHd2Y8cNOattfdwyEYpOUcbnQ@mail.gmail.com>
+ <vbt2nxddw2dc7hkreq4iybv5zv5xyp32oajybeqsphgfrhzmn7@tskvckljmxpe>
+ <CACb=7PVTvV9nsFu1ZAXu7YTjSOAGZka+c__EJq3J3qgSJGEShw@mail.gmail.com>
+ <CAD=FV=VYAzqsGEBJai9b9n+HxHiG59L1vF73AEWcTwLS_ryjWw@mail.gmail.com>
+ <an2k3vgynq4as2sd5dy6ccmdiqedmo7qjsab5qyfhesd333i2a@235sqph3bze5>
+ <CAD=FV=VQ8rbwKk4WpHRER9p4cZp7UrrHRpgnErqbQxyxp4sg5w@mail.gmail.com>
+ <CAA8EJprv3qBd1hfdWHrfhY=S0w2O70dZnYb6TVsS6AGRPxsYdw@mail.gmail.com>
+ <CACb=7PVEpCFWf_aysRkeR0yWAXR5sTaXhNbi3TV3ffKj866+EQ@mail.gmail.com> <CAA8EJprLvEt_pt4XzACQG7pU8KYagKbQ71xwtRF9KrLygTT3ow@mail.gmail.com>
+In-Reply-To: <CAA8EJprLvEt_pt4XzACQG7pU8KYagKbQ71xwtRF9KrLygTT3ow@mail.gmail.com>
+From: Doug Anderson <dianders@google.com>
+Date: Wed, 24 Apr 2024 16:25:07 -0700
+Message-ID: <CAD=FV=V+jBvkKj1vvAsXuC5dSn0u_SQBQZHTrDZKoSG2V4fp3g@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] drm/panel: kd101ne3: add new panel driver
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Hsin-Yi Wang <hsinyi@google.com>, 
+	lvzhaoxiong <lvzhaoxiong@huaqin.corp-partner.google.com>, mripard@kernel.org, 
+	airlied@gmail.com, daniel@ffwll.ch, robh@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	cong yang <yangcong5@huaqin.corp-partner.google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 24, 2024 at 6:00=E2=80=AFAM Breno Leitao <leitao@debian.org> wr=
-ote:
->
-> A data-race issue in memcg rstat occurs when two distinct code paths
-> access the same 4-byte region concurrently. KCSAN detection triggers the
-> following BUG as a result.
->
->         BUG: KCSAN: data-race in __count_memcg_events / mem_cgroup_css_rs=
-tat_flush
->
->         write to 0xffffe8ffff98e300 of 4 bytes by task 5274 on cpu 17:
->         mem_cgroup_css_rstat_flush (mm/memcontrol.c:5850)
->         cgroup_rstat_flush_locked (kernel/cgroup/rstat.c:243 (discriminat=
-or 7))
->         cgroup_rstat_flush (./include/linux/spinlock.h:401 kernel/cgroup/=
-rstat.c:278)
->         mem_cgroup_flush_stats.part.0 (mm/memcontrol.c:767)
->         memory_numa_stat_show (mm/memcontrol.c:6911)
-> <snip>
->
->         read to 0xffffe8ffff98e300 of 4 bytes by task 410848 on cpu 27:
->         __count_memcg_events (mm/memcontrol.c:725 mm/memcontrol.c:962)
->         count_memcg_event_mm.part.0 (./include/linux/memcontrol.h:1097 ./=
-include/linux/memcontrol.h:1120)
->         handle_mm_fault (mm/memory.c:5483 mm/memory.c:5622)
-> <snip>
->
->         value changed: 0x00000029 -> 0x00000000
->
-> The race occurs because two code paths access the same "stats_updates"
-> location. Although "stats_updates" is a per-CPU variable, it is remotely
-> accessed by another CPU at
-> cgroup_rstat_flush_locked()->mem_cgroup_css_rstat_flush(), leading to
-> the data race mentioned.
->
-> Considering that memcg_rstat_updated() is in the hot code path, adding
-> a lock to protect it may not be desirable, especially since this
-> variable pertains solely to statistics.
->
-> Therefore, annotating accesses to stats_updates with READ/WRITE_ONCE()
-> can prevent KCSAN splats and potential partial reads/writes.
->
-> Suggested-by: Shakeel Butt <shakeel.butt@linux.dev>
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+Hi,
 
-Reviewed-by: Yosry Ahmed <yosryahmed@google.com>
+On Wed, Apr 24, 2024 at 3:51=E2=80=AFPM Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
+>
+> On Thu, 25 Apr 2024 at 01:15, Hsin-Yi Wang <hsinyi@google.com> wrote:
+> >
+> > On Wed, Apr 24, 2024 at 2:49=E2=80=AFPM Dmitry Baryshkov
+> > <dmitry.baryshkov@linaro.org> wrote:
+> > >
+> > > On Thu, 25 Apr 2024 at 00:04, Doug Anderson <dianders@google.com> wro=
+te:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Tue, Apr 23, 2024 at 2:20=E2=80=AFPM Dmitry Baryshkov
+> > > > <dmitry.baryshkov@linaro.org> wrote:
+> > > > >
+> > > > > On Tue, Apr 23, 2024 at 01:41:59PM -0700, Doug Anderson wrote:
+> > > > > > Hi,
+> > > > > >
+> > > > > > On Tue, Apr 23, 2024 at 11:10=E2=80=AFAM Hsin-Yi Wang <hsinyi@g=
+oogle.com> wrote:
+> > > > > > >
+> > > > > > > > > > > +#define _INIT_DCS_CMD(...) { \
+> > > > > > > > > > > +     .type =3D INIT_DCS_CMD, \
+> > > > > > > > > > > +     .len =3D sizeof((char[]){__VA_ARGS__}), \
+> > > > > > > > > > > +     .data =3D (char[]){__VA_ARGS__} }
+> > > > > > > > > > > +
+> > > > > > > > > > > +#define _INIT_DELAY_CMD(...) { \
+> > > > > > > > > > > +     .type =3D DELAY_CMD,\
+> > > > > > > > > > > +     .len =3D sizeof((char[]){__VA_ARGS__}), \
+> > > > > > > > > > > +     .data =3D (char[]){__VA_ARGS__} }
+> > > > > > > > > >
+> > > > > > > > > > This is the third panel driver using the same appoach. =
+Can you use
+> > > > > > > > > > mipi_dsi_generic_write_seq() instead of the huge table?=
+ Or if you prefer
+> > > > > > > > > > the table, we should extract this framework to a common=
+ helper.
+> > > > > > > > > > (my preference is shifted towards mipi_dsi_generic_writ=
+e_seq()).
+> > > > > > > > > >
+> > > > > > > > > The drawback of mipi_dsi_generic_write_seq() is that it c=
+an cause the
+> > > > > > > > > kernel size grows a lot since every sequence will be expa=
+nded.
+> > > > > > > > >
+> > > > > > > > > Similar discussion in here:
+> > > > > > > > > https://lore.kernel.org/dri-devel/CAD=3DFV=3DWju3WS45=3DE=
+pXMUg7FjYDh3-=3Dmvm_jS7TF1tsaAzbb4Uw@mail.gmail.com/
+> > > > > > > > >
+> > > > > > > > > This patch would increase the module size from 157K to 57=
+2K.
+> > > > > > > > > scripts/bloat-o-meter shows chg +235.95%.
+> > > > > > > > >
+> > > > > > > > > So maybe the common helper is better regarding the kernel=
+ module size?
+> > > > > > > >
+> > > > > > > > Yes, let's get a framework done in a useful way.
+> > > > > > > > I'd say, drop the _INIT_DELAY_CMD. msleep() and usleep_rang=
+e() should be
+> > > > > > > > used instead (and it's up to the developer to select correc=
+t delay
+> > > > > > > > function).
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > > > +
+> > > > > > > > > > > +static const struct panel_init_cmd kingdisplay_kd101=
+ne3_init_cmd[] =3D {
+> > > > > > > > > > > +     _INIT_DELAY_CMD(50),
+> > > > > > > > > > > +     _INIT_DCS_CMD(0xE0, 0x00),
+> > > > > > > >
+> > > > > > > > [skipped the body of the table]
+> > > > > > > >
+> > > > > > > > > > > +     _INIT_DCS_CMD(0x0E, 0x48),
+> > > > > > > > > > > +
+> > > > > > > > > > > +     _INIT_DCS_CMD(0xE0, 0x00),
+> > > > > > > >
+> > > > > > > > > > > +     _INIT_DCS_CMD(0X11),
+> > > > > > > >
+> > > > > > > > Also, at least this is mipi_dsi_dcs_exit_sleep_mode().
+> > > > > > > >
+> > > > > > > > > > > +     /* T6: 120ms */
+> > > > > > > > > > > +     _INIT_DELAY_CMD(120),
+> > > > > > > > > > > +     _INIT_DCS_CMD(0X29),
+> > > > > > > >
+> > > > > > > > And this is mipi_dsi_dcs_set_display_on().
+> > > > > > > >
+> > > > > > > > Having a single table enourages people to put known command=
+s into the
+> > > > > > > > table, the practice that must be frowned upon and forbidden=
+.
+> > > > > > > >
+> > > > > > > > We have functions for some of the standard DCS commands. So=
+, maybe
+> > > > > > > > instead of adding a single-table based approach we can impr=
+ove
+> > > > > > > > mipi_dsi_generic_write_seq() to reduce the bloat. E.g. by m=
+oving the
+> > > > > > > > error handling to a common part of enable() / prepare() fun=
+ction.
+> > > > > > > >
+> > > > > > >
+> > > > > > > For this panel, I think it can also refer to how
+> > > > > > > panel-kingdisplay-kd097d04.c does. Create the table for init =
+cmd data,
+> > > > > > > not what operation to use, and use mipi_dsi_generic_write_seq=
+() when
+> > > > > > > looping through the table.
+> > > > > >
+> > > > > > Even more similar discussion:
+> > > > > >
+> > > > > > https://lore.kernel.org/r/CAD=3DFV=3DUGDbNvAMjzWSOvxybGikQcvW9J=
+sRtbxHVg8_97YPEQCA@mail.gmail.com
+> > > > >
+> > > > > It seems I skipped that thread.
+> > > > >
+> > > > > I'd still suggest a code-based solution compared to table-based o=
+ne, for
+> > > > > the reasons I've outlined before. Having a tables puts a pressure=
+ on the
+> > > > > developer to put commands there for which we already have a
+> > > > > command-specific function.
+> > > >
+> > > > The problem is that with these panels that need big init sequences =
+the
+> > > > code based solution is _a lot_ bigger. If it were a few bytes or a
+> > > > 1-2KB then fine, but when Hsin-Yi measured Linus W's attempt to mov=
+e
+> > > > from a table to code it was 100K difference in code [1]. I would al=
+so
+> > > > say that having these long init sequences done as separate commands
+> > > > encourages people to skip checking the return values of each of the
+> > > > transfer functions and I don't love that idea.
+> > > >
+> > > > It would be ideal if these panels didn't need these long init
+> > > > sequences, but I don't have any inside knowledge here saying that t=
+hey
+> > > > could be removed. So assume we can't get rid of the init sequences =
+it
+> > > > feels like we have to find some way to make the tables work for at
+> > > > least the large chunks of init code and encourage people to make th=
+e
+> > > > tables readable...
+> > >
+> > >
+> > > I did a quick check on the boe-tv101wum-nl6 driver by converting the
+> > > writes to use the following macro:
+> > >
+> > > #define mipi_dsi_dcs_write_cmd_seq(dsi, cmd, seq...)
+> > >              \
+> > >         do {                                                         =
+          \
+> > >                 static const u8 d[] =3D { cmd, seq };                =
+        \
+> > >                 ret =3D mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(=
+d));    \
+> > >                 if (ret < 0)                                         =
+          \
+> > >                         goto err;                                    =
+          \
+> > >         } while (0)
+> > >
+> > > And then at the end of the init funciton having
+> > >
+> > > err:
+> > >         dev_err(panel->dev,
+> > >                 "failed to write command %d\n", ret);
+> > >         return ret;
+> > > }
+> > >
+> >
+> > I'm not sure about the coding style rule here, would it be considered
+> > unclear that caller of mipi_dsi_dcs_write_cmd_seq() needs to have err
+> > block, but the block may not be directly used in that caller and is
+> > only jumped from the macro?
+>
+> I'm also not sure here. It was a quick and dirty test.
+> We might as well do something like
+>
+> ret =3D mipi_dsi_dcs_write_cmd_seq(dsi, ...);
+> if (ret)
+>     goto err;
+>
+> all over the place.
 
-, and or posterity:
-Fixes: 9cee7e8ef3e3 ("mm: memcg: optimize parent iteration in
-memcg_rstat_updated()")
+Oh. This is actually very simple to fix and requires no code changes
+to clients. :-P We just need to hoist the printing out of the macro
+and into "drm_mipi_dsi.c". Let me double-confirm and then I'll post a
+patch.
+
+-Doug
