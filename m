@@ -1,110 +1,136 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2812E159219;
-	Wed, 24 Apr 2024 09:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FC7158D9A
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 09:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713952591; cv=none; b=JbofiibQGez4JQKYXS9QTiMzZF3mctlsQqObqkc89/2lZ4b5w37yNNo3XT9iarm8KWLrVDjKBzSAjAGBgVC3NbNjaArA7R/Mntm5RUblw9puLfVVbH4aIp8CJSq/T0fAzU6Q55ker9IeUeNPcG/D+Oc6xhLtFZnp8Hq/VgRJF80=
+	t=1713952599; cv=none; b=kaDRvJRpo7tddPEyteg0g9qToJ2D/BLWjEdIyGed8OE+Sw69vIxCpwU0phn5+iR6satPbBSmoWzpTLKY3phXnyWsmaVt+5G0bwHVOnrf1rtAjzXGBxk3BZX6aVhpb2rYIlhls14kMChtAz5U1VlBnNp/D6593M+m88lYyuX3huw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713952591; c=relaxed/simple;
-	bh=GR8A7c005nMUANFMAbqCEmqGtDL0serin5bnFniQPOo=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SEBy+e2RxPCaENfaf9u0l4QKFj8vRxOzkN/DEaJDw+Ui1UomacqBRDjdMW2Yci4GSm0s3f80vJsHfqp1HQ2RzZ5uDJ/n2mKcNA4SUwvKMK9H1BJyzyDt1PLy9jIJ88RXont3D83+HMZBamJ4XJqJDhvwrO64UNthjEvhFJFO2Qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HGdQPbdi; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713952599; c=relaxed/simple;
+	bh=3E8MjztnSkrTWEyHLP5cvRfLVl2S7Kr5oEE/JpJrfWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aqHLuw7mkznBKAGshURFmyRBoZSmV4ZvqC/Tq3TR5Dr3ADMVmw6aHCAG8BfrKRuOtnlh9htjyd4zii1R5tlAwof+NRFk2mweE9H9ZW+LwIDfySMwBUXr4wC7hapSyCI45nKy+qUkDEzvpMgYVE0DdIvduE7rcROXhgdCRmCLS3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oRkmQN9d; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HGdQPbdi"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6f043f9e6d7so6982622b3a.3;
-        Wed, 24 Apr 2024 02:56:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713952589; x=1714557389; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yN9ZYDD/GHZL9HeYNNtcwFkCjAa5nvHWIU9QFcJoOPI=;
-        b=HGdQPbdiKcMr6ZEuEQwynP3LW4utID2QkeIBuD9KsVdMNSotjCgMVxG7KA1mtS63Kh
-         YHD9szMTMRHDqBSI36L3SupxWA+ZoNe09uFimmNXauPjO2wvQ6OUsMrGP2RhLsmSQxiL
-         7P8MEb1ppKiKVZrWM5Cpj+xIhiwcKkc5mexpda6MuuBjSv1BgsV4JdMeJUoNv023Ny44
-         Wg00SKMxYt9ibhYlByfFjxiOlUsQcal2V0O3usCQ9395SyVWqWM1sWrBwPdvUxUWlonL
-         MriuGg1gdfa1T/TeABUb7nMuQ2hZxKTaEMENQprPOTQSfiF/oy8Fth9i6Oo0ZcutZ07U
-         CNRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713952589; x=1714557389;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yN9ZYDD/GHZL9HeYNNtcwFkCjAa5nvHWIU9QFcJoOPI=;
-        b=MExn7Pt00mj74G5VXke1nZygCKa1nvCYd2Yu2fyDgrwP7+faMq4PPyVqen+m6V/AaX
-         VAV44kA1Sd/XDHf87KBdpSu8syKsLgnt5cV55lsr1DyIgkbq0/iOn4/eGkgQzz3bFG/C
-         zEoKDkfIM1pMeLi2rAOk/XmFtthGBH6VK8md6d1H+Ze6/DnQOlpV1/gO4L74ifJsRoR7
-         MpAKpS7q44Ws9S+TnXpeLVbZIsWx7bJXWTYUf3SYakHRT8VNg3b8UHbTKjrp0QxuU0zv
-         ptbGCqbuZB+jYn/8cGMyhsYt7OWz36twaCe15l80F0DoxC9ZnWSLriYMQuxBQOOczn6O
-         rsMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXadpdcy/icz1MSflWMHHKKlPicF6aMiOkRe86uhyLZlgzjPrl49cS6YaJlWh9ztd7c8gfgpwuTEH91UgbLozw0OmtfnPIRzDw4j8fTLiYiyaGZ+8DMLPQAR/eCX3xomkz2iDe0JzAs2gGHzxfmmAcMVK9TkD5r+gvfgLjkutvUwsC/cFtWMPmN1kWkAMQJxmGQ1FA7e01kQg80VSpqdaz0WOWS4RtnN1TSO3dv8wmkDmnxtHJIY+oTUiXm
-X-Gm-Message-State: AOJu0YyI3dHKeAzmLcHy/qXJfKmBfLsXE0Hoxh9AtwL5fyc5GL/fCyf/
-	wyUGaGiODGtGrl4KYuyfVx+z0L7Kv4VJjBOT1fqfxwSZ0tHSBdTP
-X-Google-Smtp-Source: AGHT+IHqENdYJgDrTUiyFBAYDEfP2zIyky+sERTOkTbpoL6wOvHxSc59L8kaSHDYhBV3FJbCcF44SA==
-X-Received: by 2002:a05:6a20:96d0:b0:1ac:f796:963c with SMTP id hq16-20020a056a2096d000b001acf796963cmr1552398pzc.56.1713952589509;
-        Wed, 24 Apr 2024 02:56:29 -0700 (PDT)
-Received: from peter-bmc.dhcpserver.bu9bmc.local (2001-b400-e380-6057-c341-626e-0f0b-b82d.emome-ip6.hinet.net. [2001:b400:e380:6057:c341:626e:f0b:b82d])
-        by smtp.gmail.com with ESMTPSA id b19-20020a056a000a9300b006eae3aac040sm11042932pfl.31.2024.04.24.02.56.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 02:56:29 -0700 (PDT)
-From: Peter Yin <peteryin.openbmc@gmail.com>
-To: patrick@stwcx.xyz,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>,
-	Patrick Rudolph <patrick.rudolph@9elements.com>,
-	Cosmo Chou <chou.cosmo@gmail.com>,
-	Andre Werner <andre.werner@systec-electronic.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: [PATCH v1 2/3] dt-bindings: hwmon: Add infineon xdp710 driver bindings
-Date: Wed, 24 Apr 2024 17:55:58 +0800
-Message-Id: <20240424095604.3425857-3-peteryin.openbmc@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240424095604.3425857-1-peteryin.openbmc@gmail.com>
-References: <20240424095604.3425857-1-peteryin.openbmc@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oRkmQN9d"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=VEqNIbL4SoeW4hVSCJPd6eJQtQ8Wlq3SXU81gNluTDk=; b=oRkmQN9dMm0Ykf+pLKBRlSbEl4
+	tLJc5ZRt3ygdtUqfGHCLxvUqNbQxxDg0K8B7KXDKhPq9tXbH9CRoabYryM8nDRW6yPdjVw6DOc9ub
+	Vag0eUYbdsXK2UAel06YsMOAreOEWVWvxLzk3PVZcMGguy3VtTBZVVfBHX2HtiVDx9jtldyFDDY0x
+	RHAv10dzN37ESZvMAVuM0+7THhpjczK/XY0z65zUFLvi9DNXEdkVLLxKZk6VcM1rrlr3ePUNGpUHn
+	X35CRl7g/o+J5EDzMKfrM4IplnsAewWRvxjiYhZcNNVMWZ525jXCnAZ7TaZTrd4WrcMueWmTFtI/M
+	51QC1FxA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rzZMh-0000000ELv2-2ld1;
+	Wed, 24 Apr 2024 09:56:36 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 5272330043E; Wed, 24 Apr 2024 11:56:35 +0200 (CEST)
+Date: Wed, 24 Apr 2024 11:56:35 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH 2/4] sched/core: change rq->nr_iowait type to
+ atomic_long_t on 64-bit
+Message-ID: <20240424095635.GU40213@noisy.programming.kicks-ass.net>
+References: <20240416121526.67022-1-axboe@kernel.dk>
+ <20240416121526.67022-3-axboe@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240416121526.67022-3-axboe@kernel.dk>
 
-Add a device tree bindings for xdp710 device
+On Tue, Apr 16, 2024 at 06:11:19AM -0600, Jens Axboe wrote:
+> In preparation for storing two separate iowait states in there, bump the
+> size from a 32-bit to a 64-bit size, for 64-bit kernels.
+> 
+> Note that on 32-bit, the number of tasks are limited to 0x8000, which
+> fits just fine in even half of the existiing 32-bit atomic_t. For 64-bit,
+> no such limit exists, hence play it safe and make it a 64-bit atomic.
 
-Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
----
- Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+We still have the tid limit, no? Anyway...
 
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index e07be7bf8395..f982de168c4c 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -134,6 +134,8 @@ properties:
-           - infineon,irps5401
-             # Infineon TLV493D-A1B6 I2C 3D Magnetic Sensor
-           - infineon,tlv493d-a1b6
-+            # Infineon Hot-swap controller xdp710
-+          - infineon,xdp710
-             # Infineon Multi-phase Digital VR Controller xdpe11280
-           - infineon,xdpe11280
-             # Infineon Multi-phase Digital VR Controller xdpe12254
--- 
-2.25.1
+> 
+> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> ---
+>  kernel/sched/core.c  | 14 +++++++++++++-
+>  kernel/sched/sched.h |  4 ++++
+>  2 files changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 977bb08a33d2..6a6c985220b1 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3723,17 +3723,29 @@ static inline cpumask_t *alloc_user_cpus_ptr(int node)
+>  
+>  static void task_iowait_inc(struct task_struct *p)
+>  {
+> +#ifdef CONFIG_64BIT
+> +	atomic_long_inc(&task_rq(p)->nr_iowait);
+> +#else
+>  	atomic_inc(&task_rq(p)->nr_iowait);
+> +#endif
+>  }
+>  
+>  static void task_iowait_dec(struct task_struct *p)
+>  {
+> +#ifdef CONFIG_64BIT
+> +	atomic_long_dec(&task_rq(p)->nr_iowait);
+> +#else
+>  	atomic_dec(&task_rq(p)->nr_iowait);
+> +#endif
+>  }
+>  
+>  int rq_iowait(struct rq *rq)
+>  {
+> +#ifdef CONFIG_64BIT
+> +	return atomic_long_read(&rq->nr_iowait);
+> +#else
+>  	return atomic_read(&rq->nr_iowait);
+> +#endif
+>  }
+>  
+>  static void
+> @@ -10065,7 +10077,7 @@ void __init sched_init(void)
+>  #endif
+>  #endif /* CONFIG_SMP */
+>  		hrtick_rq_init(rq);
+> -		atomic_set(&rq->nr_iowait, 0);
+> +		atomic_long_set(&rq->nr_iowait, 0);
+>  
 
+This one site lacks the ifdeffery, which seems superfluous anyway, since
+long is already 32bit / 64bit like you want. Hmm?
+
+>  #ifdef CONFIG_SCHED_CORE
+>  		rq->core = rq;
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 387f67ddf18a..c2802d066615 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1049,7 +1049,11 @@ struct rq {
+>  	u64			clock_idle_copy;
+>  #endif
+>  
+> +#ifdef CONFIG_64BIT
+> +	atomic_long_t		nr_iowait;
+> +#else
+>  	atomic_t		nr_iowait;
+> +#endif
+>  
+>  #ifdef CONFIG_SCHED_DEBUG
+>  	u64 last_seen_need_resched_ns;
+> -- 
+> 2.43.0
+> 
