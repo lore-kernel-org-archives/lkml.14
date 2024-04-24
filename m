@@ -1,138 +1,168 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m12824.netease.com (mail-m12824.netease.com [103.209.128.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F8B1422AF
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 15:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129C11422AF;
+	Wed, 24 Apr 2024 15:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.209.128.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713973954; cv=none; b=a6kbeUkZywrRmVJkpXi6mx9LCi0Lt1hHmPqsVwE6tvGnEQwvTl2TCNGg4o31rs/kZlZZ+FEe+BFcpfmxe75Rjd2mE0+gy+ebR5QRFPjMrMKCjPm2ViZP0yT0BIEzoRvthpnsUGYVgEkAu6lKtN8JQfUXdixFITni5bXL/WjIZ2Y=
+	t=1713973972; cv=none; b=aQoS/t/eF4oSymBar1BGn/3S/FB7iqiiIchXFj83Osme9Eeo+MHsLScYKVpQeDfacejtb3ybTgswEJeLUh/25Isf8+wTVt5/gythGeIxQornJ7Q3X62wY9dnQJy+MfqTlYG4BSolo3b5V4XY+ld/R0esNwA8jL2AIW7z6Srl8kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713973954; c=relaxed/simple;
-	bh=oo33Ekn8sNMAj8kE0HDHgjQpsSxVRvX5+mLw4VDaKTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EWVCbcjDuNkQUV/T1OZvTVn4PbHWJpudOKed051DCG9d0ACPl9ewsQ8Ogvr9LJ+kfVTH9w4F7oPE2WmdcKx7oCodOy6khwHjyVkJ36XFXPG1YhVNqMj6RL2uo5DcZtI6jUd2lrXmt7Z8q5fklg3XUL/S1bHQzUiNROWe1/yL6Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ta301A7l; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ta301A7l"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5d81b08d6f2so3936a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 08:52:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713973952; x=1714578752; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rrg8wwpA92kjivH0TKg4TZtfTIvVrn3ddePAYWoa0qw=;
-        b=Ta301A7lDHfvZhNn8Yvri60QGrwM8ArewiyTL97NuO2+HFRd/C8sqIa8hjjVCfcbLL
-         Qy2x+qrOnhXkI6qRV4zRcXkewFzl/YnNRqdryHXU3UHFwk91OaVmmZtr5PKwosMQfc0r
-         rxxj07ddwo6TsJLJlZOwgdK+624PZOWgjxhWSEZ/FXlcsBdg1N8MraZsact/UTT/bJ6r
-         slf3RhcKS7tT4U3DZfUN7OJow46+Vd/4v5YUvL47uKv0N3u3xKTAJYoUTwvcZGky9RoQ
-         eueOoaWIwNaSO+C14JsLPbPPzG9fl5iWPabYkasUmHj1AFSbaq83bhNl7xa1wzKdy3eD
-         vcdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713973952; x=1714578752;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rrg8wwpA92kjivH0TKg4TZtfTIvVrn3ddePAYWoa0qw=;
-        b=DzC9IQTyRF8KQ29xKj9SZRWo0/eRQZ/l0gZzR+Gsk6uRYWlhvo/XRQoUr2jmATvAxv
-         25PbFKbM8T2FyVuQeKSn3vyRsUQ7lgV3YPjQFgW+M9vJZ6b50Zq6Qr5zKZ9bBSypwFr0
-         w9cl3lNvAVZUBHRYFnGzEYg+vvD5LAPlYYc77eQP57GT8V8Xthf0yROOArPo9/Jxsxhv
-         FbKg2Qpe7+tcgHQ9J49R20rsz4gUFHbJ147SNnDvcsZGP1ExPIyGKTpSo02t6JjRr4rZ
-         p4tMUQYq1ZlVJWMtfS/v1K4yfqe1ev8HGwJApQSkU8ckhbP/XMx/zLXK8WBkqJwuweZ6
-         a4nA==
-X-Forwarded-Encrypted: i=1; AJvYcCVE+OILettJ0HE89NQzsMK3/x+Q9MpVHSa8pxet72cBOsZ/azyd3OOB31lCwHQMkYFKYhWBji0u123hVT0yfWkbmfgMhsl3tCeS4C3i
-X-Gm-Message-State: AOJu0Yy8WOlLC45DJTWtqOK8rZ3Zxsh1H09Ema1rjGut/Ra+LoF4cujL
-	TIQIJix0o2nm9RFM4JenLq4pDUGdhK8oL2gwSVLWEe6t4wx1Gd2HqUaKPU2CCxc=
-X-Google-Smtp-Source: AGHT+IFJz2davFxl/umAykqWCqyRrrGNTJwfxgAOiKqEZ16/Hd7Gt5Q+2HCcbgUlPTtL3ULXGxROYQ==
-X-Received: by 2002:a05:6a21:33a0:b0:1aa:6167:b6d6 with SMTP id yy32-20020a056a2133a000b001aa6167b6d6mr3249147pzb.42.1713973951946;
-        Wed, 24 Apr 2024 08:52:31 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:e523:8f5:a4a3:fdaf])
-        by smtp.gmail.com with ESMTPSA id v22-20020aa78516000000b006f03a06314esm11614021pfn.195.2024.04.24.08.52.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 08:52:31 -0700 (PDT)
-Date: Wed, 24 Apr 2024 09:52:28 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Olivia Wen <olivia.wen@mediatek.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Tinghan Shen <tinghan.shen@mediatek.com>,
-	linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Project_Global_Chrome_Upstream_Group@mediatek.com,
-	jason-ch.chen@mediatek.com, yaya.chang@mediatek.com,
-	teddy.chen@mediatek.com
-Subject: Re: [PATCH v3 4/4] media: mediatek: imgsys: Support image processing
-Message-ID: <ZikqvOwh5aHi6iug@p14s>
-References: <20240424030351.5294-1-olivia.wen@mediatek.com>
- <20240424030351.5294-5-olivia.wen@mediatek.com>
- <ba25cb7b-ff93-4fcb-b943-154e960d45a0@collabora.com>
- <fd24398f-a915-4e9a-9c19-4eb644178987@collabora.com>
+	s=arc-20240116; t=1713973972; c=relaxed/simple;
+	bh=qOuZ/FKAj56jtkFL4SdM4vCiYPbiiMS+JV1peJ4ZbiY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=s6/e9+UX1HQUzlpJ7kL1v1dZEPMgmRMqWH5e/CpeJEIFUkLaHhDXrpsaw5NaVAsPXSCGaIUZ4mr+QJdbtpJbPnKktsMbCWAD7uuBy8HuDBFdBFOCefCamNyjuVjx7lA06KSAbmAKfGvpEuKZEByIrV1CEkQebeAhTB3lQXAIpyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=103.209.128.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
+Received: from [192.168.122.189] (unknown [218.94.118.90])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id C5A03860120;
+	Wed, 24 Apr 2024 16:43:48 +0800 (CST)
+Subject: Re: [PATCH 2/7] cbd: introduce cbd_transport
+To: Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+ "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+ "axboe@kernel.dk" <axboe@kernel.dk>
+Cc: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ Dongsheng Yang <dongsheng.yang.linux@gmail.com>
+References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
+ <20240422071606.52637-3-dongsheng.yang@easystack.cn>
+ <780f3ccd-5112-4948-81c3-3144c6779503@nvidia.com>
+From: Dongsheng Yang <dongsheng.yang@easystack.cn>
+Message-ID: <7ec61a75-79ec-94db-ebf9-58679c85edeb@easystack.cn>
+Date: Wed, 24 Apr 2024 16:43:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <780f3ccd-5112-4948-81c3-3144c6779503@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <fd24398f-a915-4e9a-9c19-4eb644178987@collabora.com>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZTE1LVkxISElJGE9MSkJDH1UZERMWGhIXJBQOD1
+	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
+X-HM-Tid: 0a8f0f467de2023ckunmc5a03860120
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MTI6Iww6Ojc1ThACPToJAgMC
+	LxpPFChVSlVKTEpIQk9DSUlCTk9JVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
+	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBT09NSjcG
 
-On Wed, Apr 24, 2024 at 12:04:54PM +0200, AngeloGioacchino Del Regno wrote:
-> Il 24/04/24 12:02, AngeloGioacchino Del Regno ha scritto:
-> > Il 24/04/24 05:03, Olivia Wen ha scritto:
-> > > Integrate the imgsys core architecture driver for image processing on
-> > > the MT8188 platform.
-> > > 
-> > > Signed-off-by: Olivia Wen <olivia.wen@mediatek.com>
-> > 
-> > This should be reordered before introducing the 8188 scp core 1 support commit,
-> > but let's check with Mathieu before sending a v4.
-> > 
 
-I don't have a strong preference.
 
-> > With that reordered,
-> > 
-> > Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+åœ¨ 2024/4/24 æ˜ŸæœŸä¸‰ ä¸‹åˆ 12:08, Chaitanya Kulkarni å†™é“:
+>> +static ssize_t cbd_myhost_show(struct device *dev,
+>> +			       struct device_attribute *attr,
+>> +			       char *buf)
+>> +{
+>> +	struct cbd_transport *cbdt;
+>> +	struct cbd_host *host;
+>> +
+>> +	cbdt = container_of(dev, struct cbd_transport, device);
+>> +
+>> +	host = cbdt->host;
+>> +	if (!host)
+>> +		return 0;
+>> +
+>> +	return sprintf(buf, "%d\n", host->host_id);
 > 
-> Wait, no. Sorry. I just noticed that the commit message is totally wrong.
-> 
-> This is not a media commit, but remoteproc, and you're not adding support for
-> image processing with this commit - not in media at least.
-> Also, you're not adding any imgsys core architecture driver.
-> 
-> Please fix both commit description and title.
-> 
+> snprintf() ?
 
-I agree.
-
-> Regards,
-> Angelo
+IMO, it will only print a decimal unsigned int, so it shouldn't overflow 
+the buffer.
 > 
-> > 
-> > > ---
-> > >   include/linux/remoteproc/mtk_scp.h | 1 +
-> > >   1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/include/linux/remoteproc/mtk_scp.h b/include/linux/remoteproc/mtk_scp.h
-> > > index 7c2b7cc9..344ff41 100644
-> > > --- a/include/linux/remoteproc/mtk_scp.h
-> > > +++ b/include/linux/remoteproc/mtk_scp.h
-> > > @@ -43,6 +43,7 @@ enum scp_ipi_id {
-> > >       SCP_IPI_CROS_HOST_CMD,
-> > >       SCP_IPI_VDEC_LAT,
-> > >       SCP_IPI_VDEC_CORE,
-> > > +    SCP_IPI_IMGSYS_CMD,
-> > >       SCP_IPI_NS_SERVICE = 0xFF,
-> > >       SCP_IPI_MAX = 0x100,
-> > >   };
-> > 
+>> +}
+>> +
+>> +static DEVICE_ATTR(my_host_id, 0400, cbd_myhost_show, NULL);
+>> +
+>> +enum {
+> 
+> [...]
+> 
+>> +
+>> +static ssize_t cbd_adm_store(struct device *dev,
+>> +				 struct device_attribute *attr,
+>> +				 const char *ubuf,
+>> +				 size_t size)
+>> +{
+>> +	int ret;
+>> +	char *buf;
+>> +	struct cbd_adm_options opts = { 0 };
+>> +	struct cbd_transport *cbdt;
+>> +
+> 
+> reverse tree order that matches rest of your code ?
+
+Agreed,
+> 
+>> +	if (!capable(CAP_SYS_ADMIN))
+>> +		return -EPERM;
+>> +
+>> +	cbdt = container_of(dev, struct cbd_transport, device);
+>> +
+>> +	buf = kmemdup(ubuf, size + 1, GFP_KERNEL);
+>> +	if (IS_ERR(buf)) {
+>> +		pr_err("failed to dup buf for adm option: %d", (int)PTR_ERR(buf));
+>> +		return PTR_ERR(buf);
+>> +	}
+>> +	buf[size] = '\0';
+>> +	ret = parse_adm_options(cbdt, buf, &opts);
+>> +	if (ret < 0) {
+>> +		kfree(buf);
+>> +		return ret;
+>> +	}
+>> +	kfree(buf);
+>> +
+> 
+> standard format is using goto out and having only on kfree()
+> at the end of the function ...
+
+Okey, having a unified error handling path is a good idea, and it's 
+suitable here as well, thanx.
+> 
+>> +	switch (opts.op) {
+>> +	case CBDT_ADM_OP_B_START:
+>> +		break;
+>> +	case CBDT_ADM_OP_B_STOP:
+>> +		break;
+>> +	case CBDT_ADM_OP_B_CLEAR:
+>> +		break;
+>> +	case CBDT_ADM_OP_DEV_START:
+>> +		break;
+>> +	case CBDT_ADM_OP_DEV_STOP:
+>> +		break;
+>> +	default:
+>> +		pr_err("invalid op: %d\n", opts.op);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	return size;
+>> +}
+>> +
+> 
+> [...]
+> 
+>> +static struct cbd_transport *cbdt_alloc(void)
+>> +{
+>> +	struct cbd_transport *cbdt;
+>> +	int ret;
+>> +
+>> +	cbdt = kzalloc(sizeof(struct cbd_transport), GFP_KERNEL);
+>> +	if (!cbdt) {
+>> +		return NULL;
+>> +	}
+> 
+> no braces needed for single statements in if ... applies rest of
+> the code ...
+
+thanx, Iwill remove unnecessary braces next version.
+> 
+> -ck
+> 
 > 
