@@ -1,121 +1,167 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDFB52AEFB
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D52D15821F;
+	Wed, 24 Apr 2024 13:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713964835; cv=none; b=iM2Sb5OkriDb3XidcbAO9ll0fmfnXCHJQ7u0EuIs6SWdIDHRmFRJ7sNx5Jl4L5EIlnTQ59an10GJSp6oPMb4MgHZ1QWF2wTw50qMheYRHe/T3CMGi4/82P2CNuWy7tNdOAhFPu/EsaTXd8X6D5AtRbdeubm0b/F3J1qeSFK6rNk=
+	t=1713964883; cv=none; b=eWx/va08RijE0fPY1x0ILTO1MwyyblCirvl51fbm5DuyW6BcSHb/7NpUi5/MTOxYRcee7vJPMoTXUNarlMqg7H0YCX3mCHU7Wt4SOPTmEEcYzCjFWXIWspq3atFmwPka1geqTe3dfqzR/6lc56cSnfVDVEDEimbOsOyHjM9xiX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713964835; c=relaxed/simple;
-	bh=5EpFadq0ZInp1s+VEvsfR5N+7n7nws126mwu9XDnLXE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XmqjWNmI6Wg9w+wTlazJL8MDzZXUG9N/9TJx4qKez0pf5e6dK/LPLKHhHoQlNVkgWiykhe0l13obJZR/hbPw27VojPH8P/qwZg2PQy585eGG7XEYYw9nBFlPjrFLi3mfxVXIkgeFhyknfRZx/WzAXXZ3ZRBik/OMMaGVzH2PJUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eTBfayaM; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713964883; c=relaxed/simple;
+	bh=bABuUtxtwMiaDJEDth6yYKqkY4fMD7xJ78zqRkijgc0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=d+f4eerOeh8o2zWpWiktseCsT9DvruN4cxFpblOXYXB9DCsdEaaAdx/kWcBep+qEnEvYTfc2fbtVTooam0Jelh8mtpOIYlaWvck60V6+LsabgCQ4dcLASXLNsT3CzG0N0MqC5XXf7PDA1MyMyQGMaJAlfbyUygRyQg+qrJDvMw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=oPBxCIqj; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eTBfayaM"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41a7ae25d53so23812085e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:20:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713964832; x=1714569632; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2TyuW/9e9KLJDEWEaZausa76J+1CE2fdIpzJjL72yaU=;
-        b=eTBfayaMluyOz2ft47IvZiC/RxNWuj+OgCJnPI9A7xstu+naHkHmPCZ70enTZnL/U/
-         R40LFLkhs/1ITUR2JH5E2lfziNeGQEH0pJ1R73f8GyLu4p3h5krhCKkornWYNXk2i22j
-         tE/I1jCwnUacBraRfY5gE9A12gvtX0X/7NWGVSMdI408PTnVgD3SxSqX+/cpG+quLxeP
-         cxuxx1xMaJqgcyUMH37/sAiYHzPwVoK47cXzJIqlFhtxWQP50jNoRgFn/EaKZiY+xdfY
-         yws39nncTZfz6rB6XW6ABYvA5gELfwLJ9pJRSURDOj4QfbqmPxEmCSJbZPXDeAefs7A9
-         52+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713964832; x=1714569632;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2TyuW/9e9KLJDEWEaZausa76J+1CE2fdIpzJjL72yaU=;
-        b=LdHgknwMXQZ422D8ejdYYhQ+Qi0rbu3q/atdevuCVlzB2zsLyFVCT9trHXph6z6X7e
-         JuRPEIRnHGCuB3urHHxfcVGhg2t+J7HydfeYm6uZyA3KnGB21powG6bH7nGdD42jTWLY
-         seFunUxCq60luvwOopJVTQXnyR1UizO3PzLsUriLohTY/uEPYszQ4cdPspJLBV7zFzb5
-         4b3nKPqsfazejN58BC8jn87VBx8+ZJdlFmLS/87eufsggzj5QZJmzzLTbO5mI0WW6Jqp
-         DUff98BePG/ZWNqIxmPRtjCSkSD4w0x80DA668M/bF2p7FvdIi9wfi2KxKsUqfH8nTwc
-         Knvg==
-X-Forwarded-Encrypted: i=1; AJvYcCVJwUtQM++RKsc9rCIl3fLqRwdXZG3xyVbfVim+Iqutil7YB+DDIMJCn43yGD5hWDGc9amTSC8SaHv9HLRVcXh0MVrw1TdiBvsq4RrG
-X-Gm-Message-State: AOJu0Yy8ncmOZq/WGPH1KsORyML+CT+bCHAjdEsj5XU97RIFvRd7zsP9
-	MSHpsbZKeaPDT1m+MPJISQKsEj1RyLwDdLXz869Swdy02xqf4S+Wkn04w0lk7+0=
-X-Google-Smtp-Source: AGHT+IEqx+6Q5HPT/226uSYOEj4gagY8/ay6pqBgEdYUwvp1rFV97+gPRI8UX0jMy33YgTglYnf6VA==
-X-Received: by 2002:adf:ec49:0:b0:34b:e79:2677 with SMTP id w9-20020adfec49000000b0034b0e792677mr1820503wrn.63.1713964832050;
-        Wed, 24 Apr 2024 06:20:32 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id e37-20020a5d5965000000b0034a44c615ddsm15180075wri.88.2024.04.24.06.20.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 06:20:31 -0700 (PDT)
-Date: Wed, 24 Apr 2024 16:20:27 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: Harry Wentland <harry.wentland@amd.com>,
-	Charlene Liu <charlene.liu@amd.com>, Leo Li <sunpeng.li@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Alvin Lee <alvin.lee2@amd.com>, Wenjing Liu <wenjing.liu@amd.com>,
-	Jun Lei <jun.lei@amd.com>, Tom Chung <chiahsuan.chung@amd.com>,
-	Dillon Varone <dillon.varone@amd.com>,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] drm/amd/display: re-indent dc_power_down_on_boot()
-Message-ID: <4a996c51-e101-47a0-8a89-78c6f9f01e0f@moroto.mountain>
-References: <e5f538ab-ebc8-400b-8104-4642b8089b4f@moroto.mountain>
- <bbc315ed-3482-4abb-b3f6-88c335dcf9d2@amd.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="oPBxCIqj"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43OC4omW029734;
+	Wed, 24 Apr 2024 14:20:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=hkSUB26Hij3YoH4d4gONssMZiD9lhMIi9MYuoDahbc0=; b=oP
+	BxCIqjZqjU5yIPdolezp3gucfYE43BpO2moF0boJpv1s74317nNrf8tTbYX5usOd
+	rlKx/FhS1Qy6Jkjea82P6nnIhij2k6RtqQ72RGkfOKHZzW/rYU1jige7eN6glRBm
+	Gr/fYnvQ0nI1FFIhwyV+FpQcOob58VqnssUOpcpR/bfBeTjXY5MTu8NY0VN5oLNt
+	baPC6vo+Z6OwTORIZk9BIz6pJZyBiWpxinx+vs127hpTMIh3Q7+NTYQB11bqSkWu
+	wTRZ/tTR1dd1WWC/yQviBRPlU7NtgpxHp9kyOZz9PzdXYOFqZatkp9e4ugAKrRJ2
+	ZAcLVNQAQ/E+lH5KwgDw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xmrnj5npa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Apr 2024 14:20:39 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 16FD54002D;
+	Wed, 24 Apr 2024 14:20:30 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0C4C621A91F;
+	Wed, 24 Apr 2024 14:19:21 +0200 (CEST)
+Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 24 Apr
+ 2024 14:19:18 +0200
+Message-ID: <a0bd94ce-3ddb-4448-ada9-7070323cc98f@foss.st.com>
+Date: Wed, 24 Apr 2024 14:19:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 06/13] of: property: fw_devlink: Add support for
+ "access-controller"
+To: Saravana Kannan <saravanak@google.com>,
+        Gatien Chevallier
+	<gatien.chevallier@foss.st.com>
+CC: <Oleksii_Moisieiev@epam.com>, <gregkh@linuxfoundation.org>,
+        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <vkoul@kernel.org>, <jic23@kernel.org>,
+        <olivier.moysan@foss.st.com>, <arnaud.pouliquen@foss.st.com>,
+        <mchehab@kernel.org>, <fabrice.gasnier@foss.st.com>,
+        <andi.shyti@kernel.org>, <ulf.hansson@linaro.org>,
+        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+        <hugues.fruchet@foss.st.com>, <lee@kernel.org>, <will@kernel.org>,
+        <catalin.marinas@arm.com>, <arnd@kernel.org>,
+        <richardcochran@gmail.com>, Frank Rowand <frowand.list@gmail.com>,
+        <peng.fan@oss.nxp.com>, <lars@metafoo.de>, <rcsekar@samsung.com>,
+        <wg@grandegger.com>, <mkl@pengutronix.de>,
+        <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-media@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-serial@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, Rob Herring <robh@kernel.org>
+References: <20240105130404.301172-1-gatien.chevallier@foss.st.com>
+ <20240105130404.301172-7-gatien.chevallier@foss.st.com>
+ <CAGETcx8HdnspNfDEJP+cqShJPsDryzGkOVq6B99cFQzkZi3dMg@mail.gmail.com>
+Content-Language: en-US
+From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <CAGETcx8HdnspNfDEJP+cqShJPsDryzGkOVq6B99cFQzkZi3dMg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <bbc315ed-3482-4abb-b3f6-88c335dcf9d2@amd.com>
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-24_10,2024-04-23_02,2023-05-22_02
 
-On Wed, Apr 24, 2024 at 03:11:08PM +0200, Christian König wrote:
-> Am 24.04.24 um 13:41 schrieb Dan Carpenter:
-> > These lines are indented too far.  Clean the whitespace.
-> > 
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > ---
-> >   drivers/gpu/drm/amd/display/dc/core/dc.c | 7 +++----
-> >   1 file changed, 3 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-> > index 8eefba757da4..f64d7229eb6c 100644
-> > --- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-> > +++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-> > @@ -5043,11 +5043,10 @@ void dc_interrupt_ack(struct dc *dc, enum dc_irq_source src)
-> >   void dc_power_down_on_boot(struct dc *dc)
-> >   {
-> >   	if (dc->ctx->dce_environment != DCE_ENV_VIRTUAL_HW &&
-> > -			dc->hwss.power_down_on_boot) {
-> > -
-> > -			if (dc->caps.ips_support)
-> > -				dc_exit_ips_for_hw_access(dc);
-> > +	    dc->hwss.power_down_on_boot) {
-> > +		if (dc->caps.ips_support)
-> > +			dc_exit_ips_for_hw_access(dc);
+Hi Saravana
+
+On 4/24/24 07:57, Saravana Kannan wrote:
+> On Fri, Jan 5, 2024 at 5:03â€¯AM Gatien Chevallier
+> <gatien.chevallier@foss.st.com> wrote:
+>>
+>> Allows tracking dependencies between devices and their access
+>> controller.
+>>
+>> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
 > 
-> Well while at it can't the two ifs be merged here?
+> Please cc me on fw_devlink patches. Also, this patch is breaking the
+> norm below. Please send a fix up patch.
 > 
-> (I don't know this code to well, but it looks like it).
+>> ---
+>> Changes in V9:
+>>          - Added Rob's review tag
+>>
+>> Changes in V6:
+>>          - Renamed access-controller to access-controllers
+>>
+>> Changes in V5:
+>>          - Rename feature-domain* to access-control*
+>>
+>> Patch not present in V1
+>>
+>>   drivers/of/property.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/of/property.c b/drivers/of/property.c
+>> index afdaefbd03f6..7f737eac91b2 100644
+>> --- a/drivers/of/property.c
+>> +++ b/drivers/of/property.c
+>> @@ -1268,6 +1268,7 @@ DEFINE_SIMPLE_PROP(leds, "leds", NULL)
+>>   DEFINE_SIMPLE_PROP(backlight, "backlight", NULL)
+>>   DEFINE_SIMPLE_PROP(panel, "panel", NULL)
+>>   DEFINE_SIMPLE_PROP(msi_parent, "msi-parent", "#msi-cells")
+>> +DEFINE_SIMPLE_PROP(access_controllers, "access-controllers", "#access-controller-cells")
+>>   DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
+>>   DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
+>>
+>> @@ -1363,6 +1364,7 @@ static const struct supplier_bindings of_supplier_bindings[] = {
+>>          { .parse_prop = parse_regulators, },
+>>          { .parse_prop = parse_gpio, },
+>>          { .parse_prop = parse_gpios, },
+>> +       { .parse_prop = parse_access_controllers, },
 > 
+> All the simple properties are listed before the suffix ones as the
+> suffix checks are more expensive. So, you should have inserted this
+> right before the suffix properties. Also, there's a merge conflict in
+> linux-next. So make sure you take that into account when sending the
+> fix up and picking the order.
 
-I'm sorry, I don't see what you're saying.
+I'm fixing the stm32-next branch by inserting
 
-I probably should have deleted the other blank line as well, though.
-It introduces a checkpatch.pl --strict warning.
+         { .parse_prop = parse_access_controllers, },
+just before
 
-regards,
-dan carpenter
+	{ .parse_prop = parse_regulators, },
 
+
+> 
+> -Saravana
+> 
+>>          {}
+>>   };
+> 
+>>
+>> --
+>> 2.35.3
+>>
