@@ -1,152 +1,282 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E15156F21
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C16B156C53
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713941603; cv=none; b=ocSuWHmJDYmLrIxWtSKpli5MZjzYBAr4Q2exjgHO2arnJyTTgG6fce36smMj4jwnAlLb83Af4Pi3Zgskq4l5mxQyCHdh6tNeQuHGYcpONjweHgf5DNRYyog3335mq+bg3mBh8gsz4/ZCsDPtYS0FlB/dRyH3BvM6KwLOFjQxNxc=
+	t=1713941607; cv=none; b=m3BpQ4pOsN6ql1jtYYR++hTQizMhzeiUSOuDWphUz579jiTt075xaskJQn7tJnhhJRXHKRyjGuLTTpkGNjhNCymL4MtYGYlCOZ8DBFq5Y0nBVBxHJUlyxN2u32aHg+uCCOqJ4zARGoSK5FQqEplI4yT3VgDnv+Ohq5RdfIcFwSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713941603; c=relaxed/simple;
-	bh=x2gSCLg7uLZG7K8PeJ5O8h6s1WxNRtk+9+18X30B+Ic=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=XcRg8HgQrWqMZAp9hDK5wIyuI69IVCUIAPtPQjGxXuZq6t+WUWqfhM14UcFCBwB3EMysSubJDgVD0LHFW+YWPOowJsNZlnnz50o2ae7TjEF5ybmoHsLWMtgb0Pqie4rM+DLq5CV2FV1NgIttuTYdB20NySu5sudWLYCeHxc29RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H3IryjIc; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713941607; c=relaxed/simple;
+	bh=ci92G/ou2uH85ciA1lCqnKer9QpBSxLGMQcuzQL2UYg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LHLjp44/DyVFOlfYKJBwcAbXgcPBvSl02KeYanxJ6CzQAi09yhPcDhJJpCuzo7xMI7H7lMlJnSPn3YMqKU5VSt1uTHij32Nspydpvdy8yd6sWh2rAgQ63ywpYQ84SxJRyzb+ZUbFgVzrr+2D79PoUeGon2Qy9MsaZ1SS8LtKZxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bF8+tozz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H3IryjIc"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-347c197a464so4896165f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 23:53:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713941600; x=1714546400; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eqU6fPwBtkCZTZvnM/ZJ76eoBIYTFy3ASfBRYXLlBBw=;
-        b=H3IryjIcAzgFJuMwddFlHneKruBqrvenSdkAiB18j47TNNiePCnkN14Cgt31+Rf0DW
-         NcC3JKSIzvM9c5wS/vhFVu0N+97VmsyY4ZGEjakgKoJwUVkKP7FILS2gjUPfiVzjzUI3
-         rihEft/MS1tjRGSX+vpH8Zj2GEQUj9W7hMQp3hfq06VpnEwIkTGZK54CeXCvwm9WoXvQ
-         w5D//uzA6yi8n6I40ck5QkWAZbd30GFpSOmsr0JnrMs4O/85vMf6Iffw7+XXWwBImiDp
-         cqhuASo4aEBYr6uivNNNEgIZin7mOBPnSxJL4sXZ9LO+Bp5z3v3AJbJkcCmaIw622OL0
-         Nr0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713941600; x=1714546400;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=eqU6fPwBtkCZTZvnM/ZJ76eoBIYTFy3ASfBRYXLlBBw=;
-        b=lRhGQVd42eLtb4ZBA/14l6aNBQXOPUUZ7by5u2cnbbEQQEQ4PT/uaZB2Zyv7buMBOI
-         LGDVeULcKAeVIWuMCPTyKdHLGl6zjEUZQ5Ajceb8J0LdjjtCjaMoF4Yo/O3zqeevw4YC
-         lR9s0C15GmsRQ0/FC9/BiIw7nXFayygRpnHab67yfUY/5sZ0yjZ48bzCmIas9nB9r46a
-         8lJz/UXglH1XETgru1b9Ei2qeamFw8dt/IQp8rxhjKcyAsqefrz7v8qCr4NkOrnOK6GE
-         AVL90JKVGv7jTVqaCwrjqpUXbuh2nyXpCCP1rLoEyX6P/94jk9YQwW4ndmqGYNIbXzVr
-         iZlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1Mik0dVwxjGgc6G1atGKRvWB1RZbUYNAKmpb0XAF1OPCZC1mFxmtHp3+7T2HmeGSrOf/MysBPIdydWZ/vOa9HIqhcSedXmJgViL28
-X-Gm-Message-State: AOJu0Yy2xBs/xjn4vaFFc1Gy18UwsA4zQ1VmDYJn/40ekTAE9s5jtNB9
-	8WMyz0/WXi0TJIvLQQu52QwyaWBqd8LT5GiGG+ITuVKQm0i+vpirct/dwOFcn8g=
-X-Google-Smtp-Source: AGHT+IFNRZPm2LDELThFDdehPYka/qFCJmWDSy/dxL0Ndkbn2JxTZB/V+nr7S/iP9/hxS6SH0iNWCQ==
-X-Received: by 2002:a05:6000:1970:b0:347:a81c:dadb with SMTP id da16-20020a056000197000b00347a81cdadbmr823946wrb.57.1713941599752;
-        Tue, 23 Apr 2024 23:53:19 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:ed3e:c90b:dd74:51a7? ([2a01:e0a:982:cbb0:ed3e:c90b:dd74:51a7])
-        by smtp.gmail.com with ESMTPSA id d5-20020a5d6445000000b0034659d971a6sm16258046wrw.26.2024.04.23.23.53.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 23:53:19 -0700 (PDT)
-Message-ID: <362383f6-6029-4fc5-8522-7b8fb131ea07@linaro.org>
-Date: Wed, 24 Apr 2024 08:53:17 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bF8+tozz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713941605;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wlyAgauEYi0BjAtdrpMyEHFGdd2VOJ0uxMs2Qc1nZ18=;
+	b=bF8+tozzh3Po6JyY6Jzl/3WRWbRZvg92ucZr+gs3GIvhHTEpqRYt/x32yXwKBaPyD6HGcX
+	uV4gQaZGEIOOCLAAUWCOy5uikLGubnfbCuZ9CaZ3fEF9hM9jWi92oHM1O9RFa4lUeb8XCp
+	okt7hSAINT3PG+3kKzl6MkFRA+EMHt4=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-359-_w9v8rVIOBWydJPxEHNWpw-1; Wed,
+ 24 Apr 2024 02:53:20 -0400
+X-MC-Unique: _w9v8rVIOBWydJPxEHNWpw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 69B2A1C0C650;
+	Wed, 24 Apr 2024 06:53:19 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.39.193.73])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 96A61C13FA3;
+	Wed, 24 Apr 2024 06:53:13 +0000 (UTC)
+From: Kate Hsuan <hpa@redhat.com>
+To: Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	linux-leds@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>,
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>,
+	linux-pm@vger.kernel.org
+Cc: Kate Hsuan <hpa@redhat.com>
+Subject: [PATCH v7 1/6] leds: rgb: leds-ktd202x: Get device properties through fwnode to support ACPI
+Date: Wed, 24 Apr 2024 14:52:07 +0800
+Message-ID: <20240424065212.263784-2-hpa@redhat.com>
+In-Reply-To: <20240424065212.263784-1-hpa@redhat.com>
+References: <20240424065212.263784-1-hpa@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 5/6] drm/panel: novatek-nt36672a: stop calling
- regulator_set_load manually
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Matthias Kaehlcke <mka@chromium.org>,
- Harigovindan P <harigovi@codeaurora.org>,
- Ritesh Kumar <quic_riteshk@quicinc.com>,
- Sumit Semwal <sumit.semwal@linaro.org>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20240404-drop-panel-unregister-v1-0-9f56953c5fb9@linaro.org>
- <20240404-drop-panel-unregister-v1-5-9f56953c5fb9@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20240404-drop-panel-unregister-v1-5-9f56953c5fb9@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-On 04/04/2024 12:08, Dmitry Baryshkov wrote:
-> Use .init_load_uA part of the bulk regulator API instead of calling
-> register_set_load() manually.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->   drivers/gpu/drm/panel/panel-novatek-nt36672a.c | 11 +++--------
->   1 file changed, 3 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-novatek-nt36672a.c b/drivers/gpu/drm/panel/panel-novatek-nt36672a.c
-> index 33fb3d715e54..3886372415c2 100644
-> --- a/drivers/gpu/drm/panel/panel-novatek-nt36672a.c
-> +++ b/drivers/gpu/drm/panel/panel-novatek-nt36672a.c
-> @@ -605,21 +605,16 @@ static int nt36672a_panel_add(struct nt36672a_panel *pinfo)
->   	struct device *dev = &pinfo->link->dev;
->   	int i, ret;
->   
-> -	for (i = 0; i < ARRAY_SIZE(pinfo->supplies); i++)
-> +	for (i = 0; i < ARRAY_SIZE(pinfo->supplies); i++) {
->   		pinfo->supplies[i].supply = nt36672a_regulator_names[i];
-> +		pinfo->supplies[i].init_load_uA = nt36672a_regulator_enable_loads[i];
-> +	}
->   
->   	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(pinfo->supplies),
->   				      pinfo->supplies);
->   	if (ret < 0)
->   		return dev_err_probe(dev, ret, "failed to get regulators\n");
->   
-> -	for (i = 0; i < ARRAY_SIZE(pinfo->supplies); i++) {
-> -		ret = regulator_set_load(pinfo->supplies[i].consumer,
-> -					 nt36672a_regulator_enable_loads[i]);
-> -		if (ret)
-> -			return dev_err_probe(dev, ret, "failed to set regulator enable loads\n");
-> -	}
-> -
->   	pinfo->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
->   	if (IS_ERR(pinfo->reset_gpio))
->   		return dev_err_probe(dev, PTR_ERR(pinfo->reset_gpio),
-> 
+This LED controller is installed on a Xiaomi pad2 and it is an x86
+platform. The original driver is based on the device tree and can't be
+used for this ACPI based system. This patch migrated the driver to use
+fwnode to access the properties. Moreover, the fwnode API supports the
+device tree so this work won't affect the original implementations.
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Signed-off-by: Kate Hsuan <hpa@redhat.com>
+Tested-by: André Apitzsch <git@apitzsch.eu> # on BQ Aquaris M5
+---
+ drivers/leds/rgb/Kconfig        |  1 -
+ drivers/leds/rgb/leds-ktd202x.c | 64 +++++++++++++++++----------------
+ 2 files changed, 34 insertions(+), 31 deletions(-)
+
+diff --git a/drivers/leds/rgb/Kconfig b/drivers/leds/rgb/Kconfig
+index e66bd21b9852..14d6b294a786 100644
+--- a/drivers/leds/rgb/Kconfig
++++ b/drivers/leds/rgb/Kconfig
+@@ -17,7 +17,6 @@ config LEDS_GROUP_MULTICOLOR
+ config LEDS_KTD202X
+ 	tristate "LED support for KTD202x Chips"
+ 	depends on I2C
+-	depends on OF
+ 	select REGMAP_I2C
+ 	help
+ 	  This option enables support for the Kinetic KTD2026/KTD2027
+diff --git a/drivers/leds/rgb/leds-ktd202x.c b/drivers/leds/rgb/leds-ktd202x.c
+index 514965795a10..f1c810c415a4 100644
+--- a/drivers/leds/rgb/leds-ktd202x.c
++++ b/drivers/leds/rgb/leds-ktd202x.c
+@@ -99,7 +99,7 @@ struct ktd202x {
+ 	struct device *dev;
+ 	struct regmap *regmap;
+ 	bool enabled;
+-	int num_leds;
++	unsigned long num_leds;
+ 	struct ktd202x_led leds[] __counted_by(num_leds);
+ };
+ 
+@@ -381,16 +381,19 @@ static int ktd202x_blink_mc_set(struct led_classdev *cdev,
+ 				 mc->num_colors);
+ }
+ 
+-static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct device_node *np,
++static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct fwnode_handle *fwnode,
+ 				 struct ktd202x_led *led, struct led_init_data *init_data)
+ {
++	struct fwnode_handle *child;
+ 	struct led_classdev *cdev;
+-	struct device_node *child;
+ 	struct mc_subled *info;
+ 	int num_channels;
+ 	int i = 0;
+ 
+-	num_channels = of_get_available_child_count(np);
++	num_channels = 0;
++	fwnode_for_each_available_child_node(fwnode, child)
++		num_channels++;
++
+ 	if (!num_channels || num_channels > chip->num_leds)
+ 		return -EINVAL;
+ 
+@@ -398,22 +401,22 @@ static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct device_node *np,
+ 	if (!info)
+ 		return -ENOMEM;
+ 
+-	for_each_available_child_of_node(np, child) {
++	fwnode_for_each_available_child_node(fwnode, child) {
+ 		u32 mono_color;
+ 		u32 reg;
+ 		int ret;
+ 
+-		ret = of_property_read_u32(child, "reg", &reg);
++		ret = fwnode_property_read_u32(child, "reg", &reg);
+ 		if (ret != 0 || reg >= chip->num_leds) {
+-			dev_err(chip->dev, "invalid 'reg' of %pOFn\n", child);
+-			of_node_put(child);
+-			return -EINVAL;
++			dev_err(chip->dev, "invalid 'reg' of %pfw\n", child);
++			fwnode_handle_put(child);
++			return ret;
+ 		}
+ 
+-		ret = of_property_read_u32(child, "color", &mono_color);
++		ret = fwnode_property_read_u32(child, "color", &mono_color);
+ 		if (ret < 0 && ret != -EINVAL) {
+-			dev_err(chip->dev, "failed to parse 'color' of %pOF\n", child);
+-			of_node_put(child);
++			dev_err(chip->dev, "failed to parse 'color' of %pfw\n", child);
++			fwnode_handle_put(child);
+ 			return ret;
+ 		}
+ 
+@@ -433,16 +436,16 @@ static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct device_node *np,
+ 	return devm_led_classdev_multicolor_register_ext(chip->dev, &led->mcdev, init_data);
+ }
+ 
+-static int ktd202x_setup_led_single(struct ktd202x *chip, struct device_node *np,
++static int ktd202x_setup_led_single(struct ktd202x *chip, struct fwnode_handle *fwnode,
+ 				    struct ktd202x_led *led, struct led_init_data *init_data)
+ {
+ 	struct led_classdev *cdev;
+ 	u32 reg;
+ 	int ret;
+ 
+-	ret = of_property_read_u32(np, "reg", &reg);
++	ret = fwnode_property_read_u32(fwnode, "reg", &reg);
+ 	if (ret != 0 || reg >= chip->num_leds) {
+-		dev_err(chip->dev, "invalid 'reg' of %pOFn\n", np);
++		dev_err(chip->dev, "invalid 'reg' of %pfw\n", fwnode);
+ 		return -EINVAL;
+ 	}
+ 	led->index = reg;
+@@ -454,7 +457,7 @@ static int ktd202x_setup_led_single(struct ktd202x *chip, struct device_node *np
+ 	return devm_led_classdev_register_ext(chip->dev, &led->cdev, init_data);
+ }
+ 
+-static int ktd202x_add_led(struct ktd202x *chip, struct device_node *np, unsigned int index)
++static int ktd202x_add_led(struct ktd202x *chip, struct fwnode_handle *fwnode, unsigned int index)
+ {
+ 	struct ktd202x_led *led = &chip->leds[index];
+ 	struct led_init_data init_data = {};
+@@ -463,21 +466,21 @@ static int ktd202x_add_led(struct ktd202x *chip, struct device_node *np, unsigne
+ 	int ret;
+ 
+ 	/* Color property is optional in single color case */
+-	ret = of_property_read_u32(np, "color", &color);
++	ret = fwnode_property_read_u32(fwnode, "color", &color);
+ 	if (ret < 0 && ret != -EINVAL) {
+-		dev_err(chip->dev, "failed to parse 'color' of %pOF\n", np);
++		dev_err(chip->dev, "failed to parse 'color' of %pfw\n", fwnode);
+ 		return ret;
+ 	}
+ 
+ 	led->chip = chip;
+-	init_data.fwnode = of_fwnode_handle(np);
++	init_data.fwnode = fwnode;
+ 
+ 	if (color == LED_COLOR_ID_RGB) {
+ 		cdev = &led->mcdev.led_cdev;
+-		ret = ktd202x_setup_led_rgb(chip, np, led, &init_data);
++		ret = ktd202x_setup_led_rgb(chip, fwnode, led, &init_data);
+ 	} else {
+ 		cdev = &led->cdev;
+-		ret = ktd202x_setup_led_single(chip, np, led, &init_data);
++		ret = ktd202x_setup_led_single(chip, fwnode, led, &init_data);
+ 	}
+ 
+ 	if (ret) {
+@@ -490,15 +493,14 @@ static int ktd202x_add_led(struct ktd202x *chip, struct device_node *np, unsigne
+ 	return 0;
+ }
+ 
+-static int ktd202x_probe_dt(struct ktd202x *chip)
++static int ktd202x_probe_fw(struct ktd202x *chip)
+ {
+-	struct device_node *np = dev_of_node(chip->dev), *child;
++	struct fwnode_handle *child;
++	struct device *dev = chip->dev;
+ 	int count;
+ 	int i = 0;
+ 
+-	chip->num_leds = (int)(unsigned long)of_device_get_match_data(chip->dev);
+-
+-	count = of_get_available_child_count(np);
++	count = device_get_child_node_count(dev);
+ 	if (!count || count > chip->num_leds)
+ 		return -EINVAL;
+ 
+@@ -507,11 +509,11 @@ static int ktd202x_probe_dt(struct ktd202x *chip)
+ 	/* Allow the device to execute the complete reset */
+ 	usleep_range(200, 300);
+ 
+-	for_each_available_child_of_node(np, child) {
++	device_for_each_child_node(dev, child) {
+ 		int ret = ktd202x_add_led(chip, child, i);
+ 
+ 		if (ret) {
+-			of_node_put(child);
++			fwnode_handle_put(child);
+ 			return ret;
+ 		}
+ 		i++;
+@@ -554,6 +556,8 @@ static int ktd202x_probe(struct i2c_client *client)
+ 		return ret;
+ 	}
+ 
++	chip->num_leds = (unsigned long)i2c_get_match_data(client);
++
+ 	chip->regulators[0].supply = "vin";
+ 	chip->regulators[1].supply = "vio";
+ 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(chip->regulators), chip->regulators);
+@@ -568,7 +572,7 @@ static int ktd202x_probe(struct i2c_client *client)
+ 		return ret;
+ 	}
+ 
+-	ret = ktd202x_probe_dt(chip);
++	ret = ktd202x_probe_fw(chip);
+ 	if (ret < 0) {
+ 		regulator_bulk_disable(ARRAY_SIZE(chip->regulators), chip->regulators);
+ 		return ret;
+@@ -605,7 +609,7 @@ static void ktd202x_shutdown(struct i2c_client *client)
+ static const struct of_device_id ktd202x_match_table[] = {
+ 	{ .compatible = "kinetic,ktd2026", .data = (void *)KTD2026_NUM_LEDS },
+ 	{ .compatible = "kinetic,ktd2027", .data = (void *)KTD2027_NUM_LEDS },
+-	{},
++	{}
+ };
+ MODULE_DEVICE_TABLE(of, ktd202x_match_table);
+ 
+-- 
+2.44.0
+
