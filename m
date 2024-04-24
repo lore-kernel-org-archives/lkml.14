@@ -1,111 +1,262 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB2D15EFDF
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 14:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 30A8715EFAE
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 14:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713970313; cv=none; b=eUiZEs7pyv3m8DBbtkznnlTPC06OV2d4H3Sul5t6YoIPVNz7YW/ssTVzVkPJ6vOHjZPqFYttE/rwVwedrGMmwqkwYbpZ60/mRvnj+6NMDxoXFi/8jknPlaIt7Q0SzR6E9pPFHWhXaDsxNswgnaWvgLOqojuwn28DxBpn7v1WvDY=
+	t=1713970320; cv=none; b=qadnwQVDEGynivzyos2mRDhT6NI/6R4HtkgxYy6bCMXxC9SRy3kSfav3+7SXb0WSNLuo5Yr/NxMkT9RT5Yi5uAIKQluBgJt1CsdCjmS/CqDCmMtOv/SjU/GYEW05c2YtPCveYIgPaDPxBhlEEcmwri/Wqy5dztU/pmewiomgM1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713970313; c=relaxed/simple;
-	bh=LhsJcsPYkmC1C8NWMoV9t3a0TrX/fu9kJZuNQtERuRk=;
+	s=arc-20240116; t=1713970320; c=relaxed/simple;
+	bh=3Z6uVOtYIw3MLXx0Sb5rRJUYpjtvpVEB1ZfVvMdz0v8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MaDlr82iRRv5iattVBAlNQbgd03+o+1p5td7cdKkpEG8eJVs6s0hjSVJOXGxqn9T24Y3Vfv8ddaB4OwKwXL9SN0+k/RtMzvc+PyHi8op7+g4IW2K3oXIJiQLhev2WBID0TQFE+n30ypsDxTK/rPfvBHhV2qtCPKQyAfFr0UOrA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=PsLWA4oe; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="PsLWA4oe"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1EA2E40E0177;
-	Wed, 24 Apr 2024 14:51:49 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id FLV5n242awhg; Wed, 24 Apr 2024 14:51:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1713970305; bh=hAzgTdW20PH8p2TSvQDh/sf526Oq7pqMUYP84FyR6+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PsLWA4oeHhE1aKts/WuRjHM5YGSItzza5+A7EtRPfUalEAza7A4eT/wCqKrkjtVAJ
-	 Bu+paApzhfU8mIQx+T15513wLpMsBfcVD+xGPv3HCtrVVEaASwj7ujZtjLKjatglhF
-	 TYtEo76RZCbRHZHlpaTacn/gbT/CzLrzimhUpRZ91nYkXIiCdJ1zKvbec3b8cYUVwu
-	 uAkXyQO6JI3LpCIn831pSy8UZocD4hLsM9zBASEoh5cHPPzjbHmJcdYFsKo8FYwL+b
-	 IpLLslb9O/yhwD+HOPEdOvrzPykVBVbMV3Anb3vKoa8nam13um74MPbOdJgYAmFlbH
-	 mgI+MMopUxh1af0NFhU7FkKIeZDHDVCZnDwtq48QwD06iYxVb0Ndfh+PvH4j4D3t06
-	 93+vso7mtQ27ZjEO9FZ246qrt/YdLRhkqGz8lrMUT28Sb/TG5WpvCLYJ5LxxgQA45D
-	 7o8W1mDGYtfg6pqRaFokPSNMJrkVg6BmbcT78sL0U6O8n04wAuodP8gmaPg0izFtGE
-	 mscySG9g3QOxGHk+c+0Kr8QiiHFCk2jiNxuAV0vCtPFNe+JUnLQ/KJ/O87zsxrRfJh
-	 TfylnRkDMqu/zghw53T1O3Piq07mo6c3qKwDpidI1yfdyiS7+1nhR5czcTu1mnGwyQ
-	 ahGVBjRQJnbFzikoFk0c4eJI=
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4031C40E00C7;
-	Wed, 24 Apr 2024 14:51:23 +0000 (UTC)
-Date: Wed, 24 Apr 2024 16:51:22 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Tao Liu <ltao@redhat.com>
-Subject: Re: [PATCHv10 04/18] cpu/hotplug, x86/acpi: Disable CPU offlining
- for ACPI MADT wakeup
-Message-ID: <20240424145122.GEZikcaiqFT_eG1KDo@fat_crate.local>
-References: <20240409113010.465412-1-kirill.shutemov@linux.intel.com>
- <20240409113010.465412-5-kirill.shutemov@linux.intel.com>
- <20240423160258.GBZifbsuoTIbWDapej@fat_crate.local>
- <k4t62qfiyapfh2hjp4bpnaa4bmtlajpm5q4an3qs4jimhldcwv@wtrp63ofrfk6>
- <20240424135052.GDZikOPIOeGxtQRBBc@fat_crate.local>
- <svpuqhoglv7s2wtu754i4oicowueen47vq6eobjbznsromb4m3@4h7vy346n4ak>
- <e1a71955-5228-47fe-9241-dd0197d4a552@intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=f51ZGoPPp5PHFekILtXmnyhcFMX1fU3kumQ7XnJm8BqlZqKJTBYQEjmBI5mdQT26FdNWdLppuZlN0QlqXOg/DDUrITzSbsgIFIH6kuArLX30dJKfsrcm2oMNE10dnMs5sIHsiquE25QOUSNieGdxVP7H/QfH6JYkG9B8hXbVG6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 453342 invoked by uid 1000); 24 Apr 2024 10:51:57 -0400
+Date: Wed, 24 Apr 2024 10:51:57 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Norihiko Hama <Norihiko.Hama@alpsalpine.com>
+Cc: gregkh@linuxfoundation.org, corbet@lwn.net, linux-doc@vger.kernel.org,
+  linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+  usb-storage@lists.one-eyed-alien.net
+Subject: Re: [PATCH v4] usb-storage: Optimize scan delay more precisely
+Message-ID: <c06aaaa1-a2af-47c6-a615-602f2c70de86@rowland.harvard.edu>
+References: <20240424013134.17307-1-Norihiko.Hama@alpsalpine.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e1a71955-5228-47fe-9241-dd0197d4a552@intel.com>
+In-Reply-To: <20240424013134.17307-1-Norihiko.Hama@alpsalpine.com>
 
-On Wed, Apr 24, 2024 at 07:40:26AM -0700, Dave Hansen wrote:
-> On 4/24/24 07:35, Kirill A. Shutemov wrote:
-> >> Also, does this need to go to stable although it is kinda big for
-> >> stable. If stable, do we need a smaller fix first which is backportable?
-> > Correct me, if I am wrong, but I believe TDX guest is the only user of
-> > ACPI MADT wake up method. At least it was added into kernel for TDX guest.
-> > So it wouldn't fix anything user-visible. It might affect a future
-> > platform that uses this wake up method, but it is a guessing game.
+On Wed, Apr 24, 2024 at 10:31:34AM +0900, Norihiko Hama wrote:
+> Current storage scan delay is reduced by the following old commit.
 > 
-> Yeah, the MADT wakeup is pretty funky, highly TDX specific, and not in
-> use or planned to be _put_ into use anywhere else.
+> a4a47bc03fe5 ("Lower USB storage settling delay to something more reasonable")
+> 
+> It means that delay is at least 'one second', or zero with delay_use=0.
+> 'one second' is still long delay especially for embedded system but
+> when delay_use is set to 0 (no delay), still error observed on some USB drives.
+> 
+> So delay_use should not be set to 0 but 'one second' is quite long.
+> Especially for embedded system, it's important for end user
+> how quickly access to USB drive when it's connected.
+> That's why we have a chance to minimize such a constant long delay.
+> 
+> This patch optimizes scan delay more precisely
+> to minimize delay time but not to have any problems on USB drives
+> by extending module parameter 'delay_use' in milliseconds internally.
+> The parameter 'delay_use' is changed to be parsed as 3 decimal point value
+> if it has digit values with '.'.
+> It makes the range of value to 1 / 1000 in internal 32-bit value
+> but it's still enough to set the delay time.
+> By default, delay time is 'one second' for backward compatibility.
+> 
+> For example, it seems to be good by changing delay_use=0.1,
+> that is 100 millisecond delay without issues for most USB pen drives.
+> 
+> Signed-off-by: Norihiko Hama <Norihiko.Hama@alpsalpine.com>
+> ---
+> V3 -> V4: Separate parser functions from module parameter set/get
+> V2 -> V3: Change to use kstrtouint only for parsing decimal point
+> V1 -> V2: Extend existing module parameter 'delay_use' to support decimal points
 
-Then please make sure all that info is in the commit messages in the
-next revision. Because as they are now, they're not even beginning to
-explain what exactly is this fixing. /me thinking that this is some
-generic fix needed in stable is case-in-point.
+This is pretty good.  I've got a couple of minor suggestions.
 
-Thx.
+>  .../admin-guide/kernel-parameters.txt         |   5 +
+>  drivers/usb/storage/usb.c                     | 120 +++++++++++++++++-
+>  2 files changed, 121 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 561d0dd776c7..8248426524d5 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -6190,6 +6190,11 @@
+>  	usb-storage.delay_use=
+>  			[UMS] The delay in seconds before a new device is
+>  			scanned for Logical Units (default 1).
+> +			The delay can have up to 3 decimal places, giving a
+> +			resolution of one millisecond.
+> +			Example:
+> +				delay_use=2.567
 
--- 
-Regards/Gruss,
-    Boris.
+This could go on the previous line.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+			Example:  delay_use = 2.567
+
+> +					2.567 second delay
+
+This is obvious; I don't think you need to say it.
+
+>  
+>  	usb-storage.quirks=
+>  			[UMS] A list of quirks entries to supplement or
+> diff --git a/drivers/usb/storage/usb.c b/drivers/usb/storage/usb.c
+> index 90aa9c12ffac..c908cf2a8027 100644
+> --- a/drivers/usb/storage/usb.c
+> +++ b/drivers/usb/storage/usb.c
+> @@ -67,9 +67,121 @@ MODULE_AUTHOR("Matthew Dharm <mdharm-usb@one-eyed-alien.net>");
+>  MODULE_DESCRIPTION("USB Mass Storage driver for Linux");
+>  MODULE_LICENSE("GPL");
+>  
+> -static unsigned int delay_use = 1;
+> -module_param(delay_use, uint, S_IRUGO | S_IWUSR);
+> -MODULE_PARM_DESC(delay_use, "seconds to delay before using a new device");
+> +static unsigned int delay_use = 1 * MSEC_PER_SEC;
+> +
+> +/**
+> + * str_to_fixed_point_uint - parse an unsigned fixed-point decimal integer
+> + * @str: String to parse.
+> + * @ndecimals: Number of decimal places in the fixed-point value.
+> + * @val: Where to store the parsed value.
+> + *
+> + * Parse an unsigned fixed-point decimal value in @str, containing at
+> + * most ndecimal digits to the right of the decimal point.
+> + * Stores the parsed value in @val, scaled by 10^(@ndecimal).
+> + *
+> + * As with kstrtouint(), the string must be NUL-terminated and may
+> + * include a single newline before the terminating NUL.  The first
+> + * character may be a plus sign but not a minus sign.  The decimal
+> + * point and fractional digits are optional.
+> + *
+> + * Returns 0 on success, a negative error code otherwise.
+> + */
+> +static int str_to_fixed_point_uint(const char *str, int ndecimals,
+> +				   unsigned int *val)
+> +{
+> +	int n, n1, n2;
+> +	const char *p;
+> +	char *q;
+> +	char buf[16];
+> +
+> +	n = strlen(str);
+> +	if (n > 0 && str[n - 1] == '\n')
+> +		--n;
+> +
+> +	p = strnchr(str, n, '.');
+> +	if (p) {
+> +		n1 = p++ - str;
+> +		n2 = n - (n1 + 1);
+> +		if (n2 == 0 || n2 > ndecimals)
+> +			return -EINVAL;
+> +	} else {
+> +		n1 = n;
+> +		n2 = 0;
+> +	}
+> +	if (n1 == 0 || n1 + ndecimals > sizeof(buf) - 1)
+> +		return -EINVAL;
+
+There's no reason to rule out strings like ".5" or "2.".  Allow either n1 
+or n2 to be 0, as long as they aren't both 0.  (And even then, the code 
+would accept "+" or "+.", which is bizarre but not terrible.)
+
+> +
+> +	memcpy(buf, str, n1);
+> +	if (p)
+> +		memcpy(buf + n1, p, n2);
+> +	for (q = buf + n1 + n2; n2 < ndecimals; ++n2)
+> +		*q++ = '0';
+> +	*q = 0;
+> +
+> +	return kstrtouint(buf, 10, val);
+> +}
+> +
+> +/**
+> + * fixed_point_uint_to_str - parse into fixed-point decimal integer string
+> + * @val: Integer value to parse.
+> + * @ndecimals: Number of decimal places in the fixed-point value.
+> + * @str: Where to store the parsed string.
+> + * @size: The size of buffer for @str.
+> + *
+> + * Stores the parsed @val scaled by 10^(@ndecimal) into @str.
+> + * The string trailing fractional part '0' is trimmed.
+
+"Parse" is the wrong word here.  You parse a string to understand what it 
+means (so the previous function parses @str).  But here you're converting 
+an integer to a string; that's called "formatting".
+
+So the function's description should be: format a fixed-point decimal value 
+into a string.  @val is the integer value to format, scaled by 
+10^(@ndecimals), and @str is where to store the formatted string.
+
+> + *
+> + * Returns the number of characters written into @str.
+> + */
+> +static int fixed_point_uint_to_str(unsigned int val, int ndecimals,
+> +				   char *str, int size)
+> +{
+> +	unsigned int delay_ms = val;
+> +	unsigned int rem = do_div(delay_ms, int_pow(10, ndecimals));
+> +	int len;
+> +	char buf[16];
+> +
+> +	len = scnprintf(buf, sizeof(buf), "%d", delay_ms);
+> +	if (rem) {
+> +		char format[8];
+> +
+> +		snprintf(format, sizeof(format) - 1, ".%%0%dd", ndecimals);
+> +		len += scnprintf(buf + len, sizeof(buf) - len, format, rem);
+> +		while (buf[len - 1] == '0') {
+> +			buf[len - 1] = '\0';
+> +			if (--len <= 1)
+> +				break;
+> +		}
+
+Small simplification:  You know that len can never reach 0 because rem is 
+nonzero, and in any case buf contains a '.' somewhere.  So this loop 
+can be written as:
+
+		while (buf[--len] == '0')
+			buf[len] = 0;
+
+Alan Stern
+
+> +	}
+> +	return scnprintf(str, size, "%s\n", buf);
+> +}
+> +
+> +static int delay_use_set(const char *s, const struct kernel_param *kp)
+> +{
+> +	unsigned int delay_ms;
+> +	int ret;
+> +
+> +	ret = str_to_fixed_point_uint(skip_spaces(s), 3, &delay_ms);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*((unsigned int *)kp->arg) = delay_ms;
+> +	return 0;
+> +}
+> +
+> +static int delay_use_get(char *s, const struct kernel_param *kp)
+> +{
+> +	unsigned int delay_ms = *((unsigned int *)kp->arg);
+> +
+> +	return fixed_point_uint_to_str(delay_ms, 3, s, PAGE_SIZE);
+> +}
+> +
+> +static const struct kernel_param_ops delay_use_ops = {
+> +	.set = delay_use_set,
+> +	.get = delay_use_get,
+> +};
+> +module_param_cb(delay_use, &delay_use_ops, &delay_use, 0644);
+> +MODULE_PARM_DESC(delay_use, "time to delay before using a new device");
+>  
+>  static char quirks[128];
+>  module_param_string(quirks, quirks, sizeof(quirks), S_IRUGO | S_IWUSR);
+> @@ -1066,7 +1178,7 @@ int usb_stor_probe2(struct us_data *us)
+>  	if (delay_use > 0)
+>  		dev_dbg(dev, "waiting for device to settle before scanning\n");
+>  	queue_delayed_work(system_freezable_wq, &us->scan_dwork,
+> -			delay_use * HZ);
+> +			msecs_to_jiffies(delay_use));
+>  	return 0;
+>  
+>  	/* We come here if there are any problems */
+> -- 
+> 2.17.1
+> 
+> 
