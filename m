@@ -1,181 +1,207 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABCC16F0DD;
-	Wed, 24 Apr 2024 23:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154E4442F;
+	Wed, 24 Apr 2024 23:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714001619; cv=none; b=MCzVjkQens6/dWvDKqY7YlfC2xcT07ALX2qtGXIq6y+/E/w0Q8+yG+gS64Pid9p2VSlbZtzXYgps0Oig8+Y7uZilYua183cN1RAmvOgzMDFuOnvn6H7X+xamWh0aKdTp8p97txa64wYaID2fugVlqGoCGUxElgTkmqECJd9PB10=
+	t=1714001748; cv=none; b=LTmOiKUx83bugTvOEIuuStO98BKEWsXd1aAWcHIaWzmmnzJHObibvn39xoIFBRIPB4jxo0EO0AyMuL2JSMOT7y6MMpGn/oMWwvzYPEQ/GGDJkPzUr9iht5MfBDeKPs7tmiQIAv5miiVWwPtD9t15Yl6IIWFtrtcTeY30fz0Hso0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714001619; c=relaxed/simple;
-	bh=RIgE5n3pL6jeQnQkBJoRkDShHjgY8jnKMIghJf4yJ2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=euFkU1pikNmEWFnxtW7s5MTbhLBBbTcyS7spOcbsM2olbOdo+3oD5w/6Zd9Gr/TeBZRYuqQXSYLtLKvquq2V6Kt2PLBfkiFlKSTseJlBTv4YfkYBEvx1phvJsSf59WZ8n7xqJ00rhE5QWwyfm30uVKH6m30GS/jmAXB7/NEzG4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nUkFi/JU; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714001748; c=relaxed/simple;
+	bh=alWh828635B9LX6WrzpJ33NK+tWIsqWDA5n+dpzOkVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LpcUAIPaETetvWrvX1fA1s9/LUdJbDVFV9qouS4bIHacEv+ZEk5ygFosIwy0Uk3PPyL/Lpsqq0pZXoWtS29le7TnvdCdK4xoiesFHi7T1ldvan2vgTwiY8yz3/JbTa0TDMU9HhPlpbpoU1uEDh1f7ru9+7Qbgl5CQ1f1HpmlkYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pQrrMB4b; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nUkFi/JU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714001618; x=1745537618;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RIgE5n3pL6jeQnQkBJoRkDShHjgY8jnKMIghJf4yJ2s=;
-  b=nUkFi/JUqd5/lhtVtjLzNNRvAoG+uVUwZG/SNhQ2JpYy9E0qG3L8Dy+D
-   7CJSTxz/75+AlMe5aFlPhciXij8cSRjRgwmzUf2wfKwOBLG00E+yo9Ehm
-   aJX0mUDIihqPkZfSzukYVg/Pfgv6nDilOQGh0U4T2nEELWOzJpjQSyfPl
-   7iVQOcAwsxT9rz81x3zO5Ve4lD7W2vBWyMB77F+0yz+1Bob6UpuUoRTi3
-   W7DsPAKHHkLJISgMoe5VOxoLgaYNUU/tFwJjQQ+dOAxSAkUZxyEQRMj9S
-   Wi6gUryWCBYQYWHudxhKulF2yzG89e9tuYpv/X4+j/qtvHjg6TCt/C0bG
-   Q==;
-X-CSE-ConnectionGUID: O1b7S63XRrKvmSQBY4+7NQ==
-X-CSE-MsgGUID: zAY3AF7yThqdWRjByzBiRA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="9589678"
-X-IronPort-AV: E=Sophos;i="6.07,227,1708416000"; 
-   d="scan'208";a="9589678"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 16:33:37 -0700
-X-CSE-ConnectionGUID: 4g0UrdBoQrilGb7Ep/RgRw==
-X-CSE-MsgGUID: K1w0tqhpQZ+bEtHASv2FDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,227,1708416000"; 
-   d="scan'208";a="24916325"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 24 Apr 2024 16:33:35 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rzm7I-0001m2-0t;
-	Wed, 24 Apr 2024 23:33:32 +0000
-Date: Thu, 25 Apr 2024 07:32:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Longfang Liu <liulongfang@huawei.com>, alex.williamson@redhat.com,
-	jgg@nvidia.com, shameerali.kolothum.thodi@huawei.com,
-	jonathan.cameron@huawei.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxarm@openeuler.org, liulongfang@huawei.com
-Subject: Re: [PATCH v5 4/5] hisi_acc_vfio_pci: register debugfs for hisilicon
- migration driver
-Message-ID: <202404250711.4mzD3Fe0-lkp@intel.com>
-References: <20240424085721.12760-5-liulongfang@huawei.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pQrrMB4b"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43ONPDi7009559;
+	Wed, 24 Apr 2024 23:35:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=boDSHsbn06oFKEy2YJu1wtGdZZBUC0SEoorcU9qQ8r0=; b=pQ
+	rrMB4boYXfgbp2Pcs0WxyIa/gER36XaBwXp6+1kt/nZoccg7al7YZl7Wp6bxst+m
+	WjMiEUnl/tPOO1aAJutnIHj/V+2syeybkgd55Bx/LZDd62yDgA6ajf0UhWFWgm/W
+	zOwN7pDxBPhnuJb3GErG9w6xCcd8l6OnvjPho/1cQwsMftGA80My5Fa2PuMtdACr
+	iuTg9jmsjYfnGXf0NcH4fvFRC7bwVMOolXTNWqDrkcsQBCfxkyaEdq2KGDBscoVa
+	RPY74DrcqqJO3AMNY3ctIHlcY46T7CC4tueLp4wd4AI6v3HyT610FF7snq9S5YT9
+	/XPfZHKWjKIcIGrMNDYw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xpv9ktcna-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Apr 2024 23:35:41 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43ONZeKo005341
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Apr 2024 23:35:40 GMT
+Received: from [10.253.14.221] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 24 Apr
+ 2024 16:35:38 -0700
+Message-ID: <1d0878e0-d138-4de2-86b8-326ab9ebde3f@quicinc.com>
+Date: Thu, 25 Apr 2024 07:35:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240424085721.12760-5-liulongfang@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Bluetooth: qca: set power_ctrl_enabled on NULL returned
+ by gpiod_get_optional()
+To: Wren Turkal <wt@penguintechs.org>,
+        Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>
+CC: Bartosz Golaszewski <brgl@bgdev.pl>, <linux-bluetooth@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
+        Luiz
+ Augusto von Dentz <luiz.dentz@gmail.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+References: <20240422130036.31856-1-brgl@bgdev.pl>
+ <99242a7c-53bf-4227-9623-7bc092f564b3@penguintechs.org>
+ <CAMRc=MepDwUbAKrWgm0CXKObqy8=igtug0QDgo-CgwxjZCAC2Q@mail.gmail.com>
+ <b982b73d-0540-409c-a6e2-0e03ecb11715@penguintechs.org>
+ <0381f39c-38ba-4a2b-915c-f14c5f911eb9@penguintechs.org>
+ <CAMRc=MfnEct7ThQhCA3AoY7hxq8j1mmFLNNkK17+RSvJxs67XQ@mail.gmail.com>
+ <2371f538-ec53-4037-b171-c62bf4e06eb1@penguintechs.org>
+ <CACMJSeunUaj0cxLaN4MpFmX5vTOx_vnWjBN4Y2FavdQoQxFRkg@mail.gmail.com>
+ <4c33304a-5dbc-450a-b874-e04ba9e93150@penguintechs.org>
+ <CAMRc=MeDQFHX9r-sHNxqkfpi=LkHoRSL7i6dWokB-J+J03rBEg@mail.gmail.com>
+ <93e15ecf-252f-4789-a23b-a28280f6aa84@quicinc.com>
+ <e64b89b3-a8f5-44e7-ae7f-fc4298841f1c@penguintechs.org>
+ <CACMJSet1wjEive0-Z=0_eiY7umBoSF_VX3QvVgiwqxhTSDZg6g@mail.gmail.com>
+ <aea85118-060a-4451-a1f1-d8e634f1aab7@penguintechs.org>
+Content-Language: en-US
+From: quic_zijuhu <quic_zijuhu@quicinc.com>
+In-Reply-To: <aea85118-060a-4451-a1f1-d8e634f1aab7@penguintechs.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: KIJB2dMPWpvIeDKjfmq4B2snpsXlaTos
+X-Proofpoint-GUID: KIJB2dMPWpvIeDKjfmq4B2snpsXlaTos
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-24_19,2024-04-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ clxscore=1015 priorityscore=1501 adultscore=0 lowpriorityscore=0
+ mlxlogscore=999 impostorscore=0 phishscore=0 spamscore=0 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404240124
 
-Hi Longfang,
+On 4/25/2024 6:17 AM, Wren Turkal wrote:
+> On 4/24/24 6:53 AM, Bartosz Golaszewski wrote:
+>> On Wed, 24 Apr 2024 at 15:26, Wren Turkal <wt@penguintechs.org> wrote:
+>>>
+>>> On 4/24/24 6:12 AM, quic_zijuhu wrote:
+>>>> On 4/24/2024 8:27 PM, Bartosz Golaszewski wrote:
+>>>>> On Wed, Apr 24, 2024 at 2:24 PM Wren Turkal <wt@penguintechs.org>
+>>>>> wrote:
+>>>>>>>>>
+>>>>>>>>> That's OK, we have the first part right. Let's now see if we
+>>>>>>>>> can reuse
+>>>>>>>>> patch 2/2 from Zijun.
+>>>>>>>>
+>>>>>>>> I'm compiling it right now. Be back soon.
+>>>>>>>>
+>>>>>>>
+>>>>>>> Well I doubt it's correct as it removed Krzysztof's fix which looks
+>>>>>>> right. If I were to guess I'd say we need some mix of both.
+>>>>>>
+>>>>>> Patch 2/2 remove K's fix? I thought only 1/2 did that.
+>>>>>>
+>>>>>> To be specific, I have applied your patch and Zijun's 2/2 only.
+>>>>>>
+>>>>>
+>>>>> No, patch 1/2 from Zijun reverted my changes. Patch 2/2 removes
+>>>>> Krzysztof's changes and replaces them with a different if else. This
+>>>>> patch is a better alternative to Zijun's patch 1/2. For 2/2, I'll let
+>>>>> Krzysztof handle it.
+>>>>>
+>>>> do you really realize what do you talk about?
+>>>> do you really listen what do @Wren says?
+>>>>
+>>>> he says that my patch 2/2 is right based on several verification
+>>>> results.
+>>>
+>>> she, not he
+>>>
+>>>> BTW, my 2/2 fix don't have anything about DTS usage.
+>>>
+>>> I think the problem with your 2/2 patch is that it removes the
+>>> conditional bailing if the device is shutdown or not open.
+>>>
+>>> Maybe this patch instead?
+>>>
+>>> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+>>> index 2f7ae38d85eb..fcac44ae7898 100644
+>>> --- a/drivers/bluetooth/hci_qca.c
+>>> +++ b/drivers/bluetooth/hci_qca.c
+>>> @@ -2456,6 +2456,10 @@ static void qca_serdev_shutdown(struct device
+>>> *dev)
+>>>                       !test_bit(HCI_RUNNING, &hdev->flags))
+>>>                           return;
+>>>
+>>> +               if (test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP,
+>>> &hdev->quirks) ||
+>>> +                   hci_dev_test_flag(hdev, HCI_SETUP))
+>>> +                       return;
+>>> +
+>>>                   serdev_device_write_flush(serdev);
+>>>                   ret = serdev_device_write_buf(serdev, ibs_wake_cmd,
+>>>                                                 sizeof(ibs_wake_cmd));
+>>>
+>>>> he maybe be a DTS expert but not BT from his present fix history for
+>>>> bluetooth system.
+>>>
+>>>
+>>
+>> Did you test it? Does it work? If so, please consider sending it
+>> upstream for review.
+>>
+>> You can keep Zijun's authorship but add your own SoB tag at the end
+>> and mention what you did. Something like this:
+>>
 
-kernel test robot noticed the following build errors:
+[V7 2/2] as shown by below link is the formal fix.
+https://patchwork.kernel.org/project/bluetooth/patch/1713932807-19619-3-git-send-email-quic_zijuhu@quicinc.com/
 
-[auto build test ERROR on awilliam-vfio/next]
-[also build test ERROR on linus/master v6.9-rc5 next-20240424]
-[cannot apply to awilliam-vfio/for-linus]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+this fix logic was introduced from the very beginning when i saw your
+issue description as shown by below link
+https://lore.kernel.org/all/1713095825-4954-3-git-send-email-quic_zijuhu@quicinc.com/#t
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Longfang-Liu/hisi_acc_vfio_pci-extract-public-functions-for-container_of/20240424-170806
-base:   https://github.com/awilliam/linux-vfio.git next
-patch link:    https://lore.kernel.org/r/20240424085721.12760-5-liulongfang%40huawei.com
-patch subject: [PATCH v5 4/5] hisi_acc_vfio_pci: register debugfs for hisilicon migration driver
-config: riscv-allmodconfig (https://download.01.org/0day-ci/archive/20240425/202404250711.4mzD3Fe0-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 5ef5eb66fb428aaf61fb51b709f065c069c11242)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240425/202404250711.4mzD3Fe0-lkp@intel.com/reproduce)
+>> [Wren: kept Krzysztof's fix]
+>> Signed-off-by: Wren...
+>>
+>> Bartosz
+> 
+> @Bartosz, I have tested this, and it works functionally for my setup. I
+> cannot detect a difference between this and Zijun's logic when I compile
+> a kernel with this patch.
+> 
+> @Zijun, I think you have objections to this patch. I would like to make
+> sure I hear your concern. Can you please take through it like I'm a 5
+> year old who barely knows C? In retrospect, I guess that I would be a
+> pretty precocious 5 year old. LOL.
+> 
+> In all seriousness, @Zijun, I really appreciate the work you did on
+> this. I would like to understand why you assert that removing the logic
+> of Krzysztof is appropriate. Again, I am not a kernel developer, so this
+> stuff is really outside my wheelhouse. Having said that, by my reading,
+> which may very well be worng, it seems like you are just adding another
+> case that is orthogonal to K's conditions. I'd like to truly understand
+> you position to know if the patch I am suggesting is somehow harmful.
+> This is an earnest question. I really want to respect your expertise
+> here, and I really want you to know how much I appreciate your work.
+> you maybe see all replies of [2/2] patch for this issue within below
+link. i believe you will understand it. the bottom of the link includes
+all reply history.
+https://lore.kernel.org/all/fe1a0e3b-3408-4a33-90e9-d4ffcfc7a99b@quicinc.com/
+> wt
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404250711.4mzD3Fe0-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   In file included from drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c:9:
-   In file included from include/linux/hisi_acc_qm.h:10:
-   In file included from include/linux/pci.h:38:
-   In file included from include/linux/interrupt.h:21:
-   In file included from arch/riscv/include/asm/sections.h:9:
-   In file included from include/linux/mm.h:2208:
-   include/linux/vmstat.h:508:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     508 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     509 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:515:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     515 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     516 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:527:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     527 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     528 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:536:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     536 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     537 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
->> drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c:1370:46: error: too few arguments provided to function-like macro invocation
-    1370 |         dev_err("mailbox cmd channel state is OK!\n");
-         |                                                     ^
-   include/linux/dev_printk.h:143:9: note: macro 'dev_err' defined here
-     143 | #define dev_err(dev, fmt, ...) \
-         |         ^
->> drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c:1370:2: error: use of undeclared identifier 'dev_err'; did you mean '_dev_err'?
-    1370 |         dev_err("mailbox cmd channel state is OK!\n");
-         |         ^~~~~~~
-         |         _dev_err
-   include/linux/dev_printk.h:50:6: note: '_dev_err' declared here
-      50 | void _dev_err(const struct device *dev, const char *fmt, ...);
-         |      ^
->> drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c:1370:2: warning: expression result unused [-Wunused-value]
-    1370 |         dev_err("mailbox cmd channel state is OK!\n");
-         |         ^~~~~~~
-   6 warnings and 2 errors generated.
-
-
-vim +1370 drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-
-  1345	
-  1346	static int hisi_acc_vf_debug_cmd(struct seq_file *seq, void *data)
-  1347	{
-  1348		struct device *vf_dev = seq->private;
-  1349		struct vfio_pci_core_device *core_device = dev_get_drvdata(vf_dev);
-  1350		struct vfio_device *vdev = &core_device->vdev;
-  1351		struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(vdev);
-  1352		struct hisi_qm *vf_qm = &hisi_acc_vdev->vf_qm;
-  1353		u64 value;
-  1354		int ret;
-  1355	
-  1356		mutex_lock(&hisi_acc_vdev->enable_mutex);
-  1357		ret = hisi_acc_vf_debug_check(seq, vdev);
-  1358		if (ret) {
-  1359			mutex_unlock(&hisi_acc_vdev->enable_mutex);
-  1360			return ret;
-  1361		}
-  1362	
-  1363		value = readl(vf_qm->io_base + QM_MB_CMD_SEND_BASE);
-  1364		if (value == QM_MB_CMD_NOT_READY) {
-  1365			mutex_unlock(&hisi_acc_vdev->enable_mutex);
-  1366			dev_err(vf_dev, "mailbox cmd channel not ready!\n");
-  1367			return -EINVAL;
-  1368		}
-  1369		mutex_unlock(&hisi_acc_vdev->enable_mutex);
-> 1370		dev_err("mailbox cmd channel state is OK!\n");
-  1371	
-  1372		return 0;
-  1373	}
-  1374	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
