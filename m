@@ -1,72 +1,124 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1B336D;
-	Wed, 24 Apr 2024 06:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A0214533E;
+	Wed, 24 Apr 2024 06:47:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713941208; cv=none; b=e2qQBoFBw2lEFy1DAUoOKPuA0CWPkL+QG3N3qu9kr0TDWPKDnjlL+Vk0kIx2dKzYUcPpU4RJlXzvQ80psTaO3kCZ5UZw9fuhRkqP99oAhrJ+oem55lgdQlAvm2yFAIOErfvHN8l7ZxvQBhcbLFF+zTvOCCz2pH4tTyibXi8ru9E=
+	t=1713941246; cv=none; b=ascOs0N445PnJEnzKZy1v/y5TrWJ7gu5Tg2udAs/7v4AM/BMKzQo0tPNMkki2ebh5wyiFOEtWnJlat0/dM+c9sM+FqavcojDISndx7bO+5bylXqOHf2QIvZTTqiISmULajZrVKQ4LUIV/tVGCMrMbGZE89h/LsOUBlo+nCTOPxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713941208; c=relaxed/simple;
-	bh=JzRlsZzTpW98MwFDr2zX5jBbDNQdobqqGsy935JoHRQ=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=d9YAdIViXkhYCOrVWvzrp+50ELFgF1B2wFJ+t2xHlB8al+VUNnB1xeyjyLBL5/e7WcHpcNAA3B9AaWLnHILgd9m+BcU8xdmb6p0VCaeCZL7PTt7DIR+K6pUxONYuN8KxEzE3Ivn+b8KO6Q7kKKIxL2GGGoh4NmZ3JRYarIouMo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=mazz3bcL; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1713941246; c=relaxed/simple;
+	bh=W/nAbB+b80AFZH0E0v4Vhn8d8EpV58x6zd+vDNi02LQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NSxzWfwerXhovmxmwtd567GHxhb6S0YflLVw78Hs14nraxpzTtPIU0KHLOvfOP1fNsCnM2Tk+dvMZbR7TGqaCp6tzsBmmJnEsGescIBlkMSjT6lDuxV3GKnUzu1RmO+0ujuMYrhjE7eQrDOzrLE6e3EkojsRCVslvekVx9L2tBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EDr+9SRN; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="mazz3bcL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EDr+9SRN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713941245; x=1745477245;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=W/nAbB+b80AFZH0E0v4Vhn8d8EpV58x6zd+vDNi02LQ=;
+  b=EDr+9SRNGwkrSuzn1lRezU09L2dbwNIRvYwotaVpdmR4i0Fcb/UFKNpZ
+   l625NnRpmOeOVeMeHUHUJS5jnZ1XCw9yLH8ey8d2NxFafdoX3ESXmscYh
+   kteYSeQDt3o65Y0jo4M2zU9IpXfFBnSg8k9XVVMJTq3cqc5/eCpX3yFx/
+   DzxVT132N/I9F4sHMZe2tkZtE3JR0lohjbhr+BYfOl6ggs/nJct/Nwets
+   jOaiW3n/pkZfIsd5vBRE0CN58EdEhqgcVfAUDrFaPMnqViEeL+AucePV7
+   RgIirruNyaaO+s9F6xM7aLbvRpyo8npTptd5E2i/dGi0Ynx54DUSV2yNH
+   g==;
+X-CSE-ConnectionGUID: JT/SYKXRRTakwvgndv5KHA==
+X-CSE-MsgGUID: r5U4JQimQtqhzbqqpggXlg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9665853"
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="9665853"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 23:47:24 -0700
+X-CSE-ConnectionGUID: 4DTLW/iZQMa9jgBXQptp4g==
+X-CSE-MsgGUID: Mv/Nni+lSxKpOTiJCM7hgw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="24581555"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 23:47:19 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Kairui Song <ryncsn@gmail.com>,  linux-mm@kvack.org,  Kairui Song
+ <kasong@tencent.com>,  Andrew Morton <akpm@linux-foundation.org>,  Chris
+ Li <chrisl@kernel.org>,  Barry Song <v-songbaohua@oppo.com>,  Ryan Roberts
+ <ryan.roberts@arm.com>,  Neil Brown <neilb@suse.de>,  Minchan Kim
+ <minchan@kernel.org>,  Hugh Dickins <hughd@google.com>,  David Hildenbrand
+ <david@redhat.com>,  Yosry Ahmed <yosryahmed@google.com>,
+  linux-fsdevel@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-nfs@vger.kernel.org,  Trond Myklebust
+ <trond.myklebust@hammerspace.com>,  Anna Schumaker <anna@kernel.org>,
+  linux-afs@lists.infradead.org,  David Howells <dhowells@redhat.com>,
+  Marc Dionne <marc.dionne@auristor.com>
+Subject: Re: [PATCH v2 7/8] mm: drop page_index/page_file_offset and convert
+ swap helpers to use folio
+In-Reply-To: <ZiiFHTwgu8FGio1k@casper.infradead.org> (Matthew Wilcox's message
+	of "Wed, 24 Apr 2024 05:05:49 +0100")
+References: <20240423170339.54131-1-ryncsn@gmail.com>
+	<20240423170339.54131-8-ryncsn@gmail.com>
+	<87sezbsdwf.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZiiFHTwgu8FGio1k@casper.infradead.org>
+Date: Wed, 24 Apr 2024 14:45:26 +0800
+Message-ID: <87jzkns1h5.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1713941205;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7bi0F1JRl8mqsIdjFylCLGdQWmTMb9OhvsZ+CofSBtE=;
-	b=mazz3bcL61oC9OueattYVTBjaoj2ibTA3yRvybk01cFYL91V1MMIm5NPYomF2PejCuMZ1a
-	hQ7KhBMOP3iYaOm6/EaduiRyr6iZEH3xt1DLHMdc8fIECFfu3dNm+jZpH3XZ9vinkPRrgN
-	nQwR03JYhfQGDXD/mTSS24h9iUwn6tltYLoWBt8HrDL39mS2314+pf4PIerMW6pG6DBQTd
-	FigPGzgOpsYAvtT+6NMPsO2Vc1n3NNIjKi5n+bJ765oCnhP0iMXjj0adA9DqJR8giTg7Am
-	dQKJvGZdqmrQygCCKLqUj5DoHoxBD5K9N4C/7iXpCh6xWTqjPBRS00WYRd3eBA==
-Date: Wed, 24 Apr 2024 08:46:45 +0200
-From: Dragan Simic <dsimic@manjaro.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, krzk+dt@kernel.org,
- linux-arm-kernel@lists.infradead.org, Marek Kraus <gamiee@pine64.org>,
- didi.debian@cknow.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, conor+dt@kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: arm: rockchip: Correct the descriptions
- for Pine64 boards
-In-Reply-To: <171388532521.2652222.18024517612743377604.b4-ty@sntech.de>
-References: <ec124dab2b1a8776aa39177ecce34babca3a50e2.1713832790.git.dsimic@manjaro.org>
- <171388532521.2652222.18024517612743377604.b4-ty@sntech.de>
-Message-ID: <28507b03e51842fc0392171aed902ec7@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+Content-Type: text/plain; charset=ascii
 
-On 2024-04-23 17:15, Heiko Stuebner wrote:
-> On Tue, 23 Apr 2024 02:43:43 +0200, Dragan Simic wrote:
->> Correct the descriptions of a few Pine64 boards and devices, according
->> to their official names used on the Pine64 wiki.  This ensures 
->> consistency
->> between the officially used names and the names in the source code.
-> 
-> Applied, thanks!
-> 
-> [1/2] dt-bindings: arm: rockchip: Correct the descriptions for Pine64 
-> boards
->       commit: 433dafc7b4f9f9a1011d72b32e138b598faa4807
-> [2/2] arm64: dts: rockchip: Correct the model names for Pine64 boards
->       commit: adbc5e6b457e773f1afa11fdb9b667cd492a7f82
+Hi, Matthew,
 
-Thanks!
+Matthew Wilcox <willy@infradead.org> writes:
+
+> On Wed, Apr 24, 2024 at 10:17:04AM +0800, Huang, Ying wrote:
+>> Kairui Song <ryncsn@gmail.com> writes:
+>> >  static inline loff_t folio_file_pos(struct folio *folio)
+>> >  {
+>> > -	return page_file_offset(&folio->page);
+>> > +	if (unlikely(folio_test_swapcache(folio)))
+>> > +		return __folio_swap_dev_pos(folio);
+>> > +	return ((loff_t)folio->index << PAGE_SHIFT);
+>> 
+>> This still looks confusing for me.  The function returns the byte
+>> position of the folio in its file.  But we returns the swap device
+>> position of the folio.
+>> 
+>> Tried to search folio_file_pos() usage.  The 2 usage in page_io.c is
+>> swap specific, we can use swap_dev_pos() directly.
+>> 
+>> There are also other file system users (NFS and AFS) of
+>> folio_file_pos(), I don't know why they need to work with swap
+>> cache. Cced file system maintainers for help.
+>
+> Time for a history lesson!
+>
+> In d56b4ddf7781 (2012) we introduced page_file_index() and
+> page_file_mapping() to support swap-over-NFS.  Writes to the swapfile went
+> through ->direct_IO but reads went through ->readpage.  So NFS was changed
+> to remove direct references to page->mapping and page->index because
+> those aren't right for anon pages (or shmem pages being swapped out).
+>
+> In e1209d3a7a67 (2022), we stopped using ->readpage in favour of using
+> ->swap_rw.  Now we don't need to use page_file_*(); we get the swap_file
+> and ki_pos directly in the swap_iocb.  But there are still relics in NFS
+> that nobody has dared rip out.  And there are all the copy-and-pasted
+> filesystems that use page_file_* because they don't know any better.
+>
+> We should delete page_file_*() and folio_file_*().  They shouldn't be
+> needed any more.
+
+Thanks a lot for your detailed explanation!  Yes, this will simplify the
+semantics and improve the readability of the corresponding code.
+
+--
+Best Regards,
+Huang, Ying
