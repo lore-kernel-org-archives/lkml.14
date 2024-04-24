@@ -1,36 +1,35 @@
 Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D521DFCE;
-	Wed, 24 Apr 2024 12:16:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7901515ADA7;
+	Wed, 24 Apr 2024 12:16:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713961014; cv=none; b=JezGgvgQjG6Uq2gUmMAeBXsVubMjn92Qx03pQApvsiA3cxfPVBi8j/uTZhIFeLNpdW0+wboA1a+G9yx8Ybx/UB2M0660JPHqja6YjMld79MDDSaCyalU0P/Jbo9STTLD4P+VeGWdE4UrkoFea3hmPVg7lBIo4XrS2/j2r48hhGI=
+	t=1713961014; cv=none; b=JRnwKCyZoOL8QIrUwR2Blto4GNJ7/57Gj4iqa7hjwyhXq9EEzw1hiEiuEW9iTtP7Kti1nnUsInZ34bEHjvDgyW1HPv1yyvzCMI7QsoPtdQZPTxaEEcrxOLayReCDSfapYlmQZ1NKfnTF0/WJ5LBkDS0NCTxTcXtMqqX82PN3P2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713961014; c=relaxed/simple;
-	bh=WlV+NTBBGpvEW9L0XHBhxoYKJ2JFhI+MtCnUapFUQWU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h2zts6bIuZ4fP0A+dmVTmMWOpOKCV/ql7q4JuWlNqNNs8b9R2R5xWJQk4PaSGIBGpc2ENAdGMwkwgQu+kdPEnB/bNqX3t02Ek0YmxURm6NKsoby1z2Fzzd1iA6/dLYipZa4AAZlXhNQLYUTd5h5RHQWvWAQbaigs2AVVGSY6jxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=v1QXhCID; arc=none smtp.client-ip=193.104.135.124
+	bh=PJ0CzHqB5rokxbMzRyma4HaJ9uYEAg9hicxRy4R6kL0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LmGY8/+MuGsMDDnczV21v44vPM3PETnemHu4K7yR4H8+hbniaVqleIIBrkVq/764YQAp+UWvH0oofIAwnGIc09++si9apzTMPrv7JucPat6zbUaZZu3ADd/B6LgPBDe40/TjTlvPmAO0OBcvi28Jd171Cy6bMA+BNcWJK0ay0UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=iVCChsq/; arc=none smtp.client-ip=193.104.135.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="v1QXhCID"
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="iVCChsq/"
 Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id EADC6600A9;
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 08B87600B1;
 	Wed, 24 Apr 2024 12:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
 	s=202008; t=1713961004;
-	bh=WlV+NTBBGpvEW9L0XHBhxoYKJ2JFhI+MtCnUapFUQWU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=v1QXhCIDY2KnFl/dei+LcGMEwoFvimRsuaWY7k3kE764ngjCGqQC6ZrMzAQlyasaI
-	 YE1ZQtVFrqv073RftLcwTS18e4eKOp9jkd4DqwZVA1BCbSmgtgPXFW6Uxk3ra7ni5R
-	 YB6j/KvmUi16jsjcmrJ8kyLvUjGMWaBC7jirh415UghbITDAqFsZDobw0DT1KJ02Vp
-	 4fvWd7649uxLRQzCzffWJkGH8YZ5DBVOVArfwuPd4vJG9y4WnFVYQmGLYwDZ5A+Sru
-	 46jaREVy7eaaG3rvy0A35/7zQBIfe2jdufsL20F39UfPQq2YsqjtuMA5y+5FSHIJld
-	 VPj9quz9PvDvw==
+	bh=PJ0CzHqB5rokxbMzRyma4HaJ9uYEAg9hicxRy4R6kL0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=iVCChsq/jXVH+cUrfMJr5PWDGOkRubmamTZ/AZKRLIsRLW5T/4zOyXIv3gEUSDouB
+	 ve42GV5naBSDS9+nSHvq5Vbc8SxYF5ci1lDigOffovf5vhEw9AD9QAs2q5N82TG1fy
+	 qnJ+1MxdKbBbmPl+1xL7KEGJ9l/WXu7ATP8i4+tyrW3U3eABZMbMNQ2dTB3j8IhM+s
+	 kWggGd0nzN6Bl1YQXfnMyqgRJMUdSAUFGQiVwmja1VGABbe9yLrbKKZD6oqjuA4gsC
+	 aTshduVJs57zHNJMFgzQBdywB0uTmYUMZ+QYv65pXFUMRllXLa2jAPtpPqejKY0sLY
+	 LNEbG59p+zLNg==
 Received: by x201s (Postfix, from userid 1000)
-	id 3536621BB47; Wed, 24 Apr 2024 12:16:37 +0000 (UTC)
+	id 55AD7204B37; Wed, 24 Apr 2024 12:16:35 +0000 (UTC)
 From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
 To: netdev@vger.kernel.org
 Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
@@ -45,12 +44,10 @@ Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	linux-kernel@vger.kernel.org,
 	Jiri Pirko <jiri@resnulli.us>,
 	Simon Horman <horms@kernel.org>
-Subject: [PATCH net-next v2 3/4] net: sparx5: flower: remove goto in sparx5_tc_flower_handler_control_usage()
-Date: Wed, 24 Apr 2024 12:16:24 +0000
-Message-ID: <20240424121632.459022-4-ast@fiberby.net>
+Subject: [PATCH net-next v2 0/4] net: sparx5: flower: validate control flags
+Date: Wed, 24 Apr 2024 12:16:21 +0000
+Message-ID: <20240424121632.459022-1-ast@fiberby.net>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240424121632.459022-1-ast@fiberby.net>
-References: <20240424121632.459022-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,42 +57,33 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Remove goto, as it's only used once, and the error message is
-specific to that context.
+This series adds flower control flags validation to the
+sparx5 driver, and changes it from assuming that it handles
+all control flags, to instead reject rules if they have
+masked any unknown/unsupported control flags.
 
-Only compile tested.
-
-Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
 ---
- .../net/ethernet/microchip/sparx5/sparx5_tc_flower.c   | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c b/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
-index d0dca65f8e76..22f6c778afb0 100644
---- a/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
-+++ b/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
-@@ -191,17 +191,15 @@ sparx5_tc_flower_handler_control_usage(struct vcap_tc_flower_parse_usage *st)
- 		err = vcap_rule_add_key_u32(st->vrule,
- 					    VCAP_KF_L3_FRAGMENT_TYPE,
- 					    value, mask);
--		if (err)
--			goto out;
-+		if (err) {
-+			NL_SET_ERR_MSG_MOD(extack, "ip_frag parse error");
-+			return err;
-+		}
- 	}
- 
- 	st->used_keys |= BIT_ULL(FLOW_DISSECTOR_KEY_CONTROL);
- 
- 	return err;
--
--out:
--	NL_SET_ERR_MSG_MOD(extack, "ip_frag parse error");
--	return err;
- }
- 
- static int
+Changelog:
+
+v2:
+* Split first patch into 3 (requested by Jiri)
+* Convert a missed extack usage (noticed by Daniel)
+* Added cover letter (requested by Simon and Daniel)
+
+v1: https://lore.kernel.org/netdev/20240423102728.228765-1-ast@fiberby.net/
+
+Asbjørn Sloth Tønnesen (4):
+  net: sparx5: flower: only do lookup if fragment flags are set
+  net: sparx5: flower: add extack to
+    sparx5_tc_flower_handler_control_usage()
+  net: sparx5: flower: remove goto in
+    sparx5_tc_flower_handler_control_usage()
+  net: sparx5: flower: check for unsupported control flags
+
+ .../microchip/sparx5/sparx5_tc_flower.c       | 20 +++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
+
 -- 
 2.43.0
 
