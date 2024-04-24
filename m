@@ -1,138 +1,121 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41FBD15B562
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDFB52AEFB
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713964788; cv=none; b=E/8pso4AjGhP3vFN3i8tWn5DNnuZVLnNAJ0Vw1COhGw0SLLWkkQ7sNzGaYDWsuPzE98cvVWuCHffZzdh8JKctYppgtqDn0V3OAXtYEs6W8pdA+I/ubF6UkkgwvtPQzaqJUGSHKVl7xzCCZP/179zOh0GGK3iKia5ZMDSGd9ylEI=
+	t=1713964835; cv=none; b=iM2Sb5OkriDb3XidcbAO9ll0fmfnXCHJQ7u0EuIs6SWdIDHRmFRJ7sNx5Jl4L5EIlnTQ59an10GJSp6oPMb4MgHZ1QWF2wTw50qMheYRHe/T3CMGi4/82P2CNuWy7tNdOAhFPu/EsaTXd8X6D5AtRbdeubm0b/F3J1qeSFK6rNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713964788; c=relaxed/simple;
-	bh=/GQoX1gc0yl6e/Pz8zk6L9EPOwroU4wExy1cX78SnUI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QyRKp3eRzczhXuUbfvbc8ZUfBP/c0zzD29oycPBqBvZe/RbpQ1HcZPj//15sM4nlR7a9ksLmyCr3uCQc6C3657yjUiDo/2bL9HrIYUYL/ZxwtnDePTbcnUXgk36jb9FLBYRToAZXaYEkn9HckliH3iuRYqZ8ipOdvWrlcPb06ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lHgApBrG; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713964835; c=relaxed/simple;
+	bh=5EpFadq0ZInp1s+VEvsfR5N+7n7nws126mwu9XDnLXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XmqjWNmI6Wg9w+wTlazJL8MDzZXUG9N/9TJx4qKez0pf5e6dK/LPLKHhHoQlNVkgWiykhe0l13obJZR/hbPw27VojPH8P/qwZg2PQy585eGG7XEYYw9nBFlPjrFLi3mfxVXIkgeFhyknfRZx/WzAXXZ3ZRBik/OMMaGVzH2PJUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eTBfayaM; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lHgApBrG"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-6082fd3e96eso120716a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:19:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eTBfayaM"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41a7ae25d53so23812085e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:20:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713964786; x=1714569586; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8VvHJ58Y+Q3UWAzWsSTTjuIwD8U8vgOkrH/9YIF6f+M=;
-        b=lHgApBrG4E6j0tbQuXywkr1MB58N2Bx9nktuAzORtFE377i1FUVwrKNdg871OpwQvK
-         tmBuLsubIW6D+NgNoy9IcN4PgzuKaN/7pYR36T1Bwmxfh7+2yPQn7npHwO+e/kPs2K63
-         WmHL37zDXk4UHA6ztqWrVCiy4aFkqIrmHZVUI=
+        d=linaro.org; s=google; t=1713964832; x=1714569632; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2TyuW/9e9KLJDEWEaZausa76J+1CE2fdIpzJjL72yaU=;
+        b=eTBfayaMluyOz2ft47IvZiC/RxNWuj+OgCJnPI9A7xstu+naHkHmPCZ70enTZnL/U/
+         R40LFLkhs/1ITUR2JH5E2lfziNeGQEH0pJ1R73f8GyLu4p3h5krhCKkornWYNXk2i22j
+         tE/I1jCwnUacBraRfY5gE9A12gvtX0X/7NWGVSMdI408PTnVgD3SxSqX+/cpG+quLxeP
+         cxuxx1xMaJqgcyUMH37/sAiYHzPwVoK47cXzJIqlFhtxWQP50jNoRgFn/EaKZiY+xdfY
+         yws39nncTZfz6rB6XW6ABYvA5gELfwLJ9pJRSURDOj4QfbqmPxEmCSJbZPXDeAefs7A9
+         52+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713964786; x=1714569586;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8VvHJ58Y+Q3UWAzWsSTTjuIwD8U8vgOkrH/9YIF6f+M=;
-        b=qmDNkCdB3B84gDZ5bRA9DiIFPq3IxiCahJq7YTGyaeUYjOxhUr/ss2eMSw9TyYqR8E
-         j0IglX9FuCdHgHxVlDwylLNl/aKiblO19OsEXcEenxL8TUlaTUOq467eoSlpw4duqKO4
-         mnuoQtz31eJsIVrYeJZrx4Eaq5a4lAiVYt9Kt5TJfvS7/m+ViTYhLBhtVqwjlki2aCKX
-         +Jc9MBReTZMTNueZWiQb/Y57qCkqA4h1v+ehqQbwhTxc2KprH1mWjPZczjo2H1noNILv
-         q6XXfQQPHzOz5XJ2NSAYlHrrp4OLLa2H+7DNIjnmEOxGvU+38+DLmURqarEbFaCrnwU9
-         hd2g==
-X-Forwarded-Encrypted: i=1; AJvYcCWeA4+uPdZ74YYpjK+iKWDEoY62/WRRG4fwCtgHtkgKFrmGJ8Yt7taeGu/gdUVSl6ior61oP0cYyBQxLla9ofJwMooZUFme42B5ZMPL
-X-Gm-Message-State: AOJu0YxfLLlSqjoJl9wcjtvZTz9kPSShzCCeIpfEfh0eGE39cE7/2wYY
-	GX5yAfiiComq8rdg3EMxAWT9o7D+hzorLh4JyUGmGJm1W4eyE7zbAG/HYrBR82B9GIJWx+oBjs8
-	CuXpz+jY0iRCcC3emVGbY3V81ROzHLVdXQnaF
-X-Google-Smtp-Source: AGHT+IEUzUPrMZm5/9Nr7/HujqEqTFgw9lpTp1RH6c+ZBPmhrdCrzL9/trH59BuNk2ibQ8CFKYuYBk72hhVixMAIZqA=
-X-Received: by 2002:a17:90b:4f41:b0:2a5:275c:ed with SMTP id
- pj1-20020a17090b4f4100b002a5275c00edmr2474867pjb.23.1713964786600; Wed, 24
- Apr 2024 06:19:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713964832; x=1714569632;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2TyuW/9e9KLJDEWEaZausa76J+1CE2fdIpzJjL72yaU=;
+        b=LdHgknwMXQZ422D8ejdYYhQ+Qi0rbu3q/atdevuCVlzB2zsLyFVCT9trHXph6z6X7e
+         JuRPEIRnHGCuB3urHHxfcVGhg2t+J7HydfeYm6uZyA3KnGB21powG6bH7nGdD42jTWLY
+         seFunUxCq60luvwOopJVTQXnyR1UizO3PzLsUriLohTY/uEPYszQ4cdPspJLBV7zFzb5
+         4b3nKPqsfazejN58BC8jn87VBx8+ZJdlFmLS/87eufsggzj5QZJmzzLTbO5mI0WW6Jqp
+         DUff98BePG/ZWNqIxmPRtjCSkSD4w0x80DA668M/bF2p7FvdIi9wfi2KxKsUqfH8nTwc
+         Knvg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJwUtQM++RKsc9rCIl3fLqRwdXZG3xyVbfVim+Iqutil7YB+DDIMJCn43yGD5hWDGc9amTSC8SaHv9HLRVcXh0MVrw1TdiBvsq4RrG
+X-Gm-Message-State: AOJu0Yy8ncmOZq/WGPH1KsORyML+CT+bCHAjdEsj5XU97RIFvRd7zsP9
+	MSHpsbZKeaPDT1m+MPJISQKsEj1RyLwDdLXz869Swdy02xqf4S+Wkn04w0lk7+0=
+X-Google-Smtp-Source: AGHT+IEqx+6Q5HPT/226uSYOEj4gagY8/ay6pqBgEdYUwvp1rFV97+gPRI8UX0jMy33YgTglYnf6VA==
+X-Received: by 2002:adf:ec49:0:b0:34b:e79:2677 with SMTP id w9-20020adfec49000000b0034b0e792677mr1820503wrn.63.1713964832050;
+        Wed, 24 Apr 2024 06:20:32 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id e37-20020a5d5965000000b0034a44c615ddsm15180075wri.88.2024.04.24.06.20.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 06:20:31 -0700 (PDT)
+Date: Wed, 24 Apr 2024 16:20:27 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc: Harry Wentland <harry.wentland@amd.com>,
+	Charlene Liu <charlene.liu@amd.com>, Leo Li <sunpeng.li@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Alvin Lee <alvin.lee2@amd.com>, Wenjing Liu <wenjing.liu@amd.com>,
+	Jun Lei <jun.lei@amd.com>, Tom Chung <chiahsuan.chung@amd.com>,
+	Dillon Varone <dillon.varone@amd.com>,
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] drm/amd/display: re-indent dc_power_down_on_boot()
+Message-ID: <4a996c51-e101-47a0-8a89-78c6f9f01e0f@moroto.mountain>
+References: <e5f538ab-ebc8-400b-8104-4642b8089b4f@moroto.mountain>
+ <bbc315ed-3482-4abb-b3f6-88c335dcf9d2@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <171318533841.254850.15841395205784342850.stgit@devnote2>
- <171318535003.254850.2125783941049872788.stgit@devnote2> <CABRcYmK_Btem8cBbz=j==RWxw11PQ8cNAUshNA540VD3O=2WEQ@mail.gmail.com>
-In-Reply-To: <CABRcYmK_Btem8cBbz=j==RWxw11PQ8cNAUshNA540VD3O=2WEQ@mail.gmail.com>
-From: Florent Revest <revest@chromium.org>
-Date: Wed, 24 Apr 2024 15:19:24 +0200
-Message-ID: <CABRcYmK+JMLDf41csuZB4aJSb9956wTy=5rpB1YDsSv0-MoZHg@mail.gmail.com>
-Subject: Re: [PATCH v9 01/36] tracing: Add a comment about ftrace_regs definition
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, 
-	Sven Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Alan Maguire <alan.maguire@oracle.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bbc315ed-3482-4abb-b3f6-88c335dcf9d2@amd.com>
 
-On Wed, Apr 24, 2024 at 2:23=E2=80=AFPM Florent Revest <revest@chromium.org=
-> wrote:
->
-> On Mon, Apr 15, 2024 at 2:49=E2=80=AFPM Masami Hiramatsu (Google)
-> <mhiramat@kernel.org> wrote:
-> >
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
-> > To clarify what will be expected on ftrace_regs, add a comment to the
-> > architecture independent definition of the ftrace_regs.
-> >
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > Acked-by: Mark Rutland <mark.rutland@arm.com>
+On Wed, Apr 24, 2024 at 03:11:08PM +0200, Christian König wrote:
+> Am 24.04.24 um 13:41 schrieb Dan Carpenter:
+> > These lines are indented too far.  Clean the whitespace.
+> > 
+> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > > ---
-> >  Changes in v8:
-> >   - Update that the saved registers depends on the context.
-> >  Changes in v3:
-> >   - Add instruction pointer
-> >  Changes in v2:
-> >   - newly added.
-> > ---
-> >  include/linux/ftrace.h |   26 ++++++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >
-> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> > index 54d53f345d14..b81f1afa82a1 100644
-> > --- a/include/linux/ftrace.h
-> > +++ b/include/linux/ftrace.h
-> > @@ -118,6 +118,32 @@ extern int ftrace_enabled;
-> >
-> >  #ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
-> >
-> > +/**
-> > + * ftrace_regs - ftrace partial/optimal register set
-> > + *
-> > + * ftrace_regs represents a group of registers which is used at the
-> > + * function entry and exit. There are three types of registers.
-> > + *
-> > + * - Registers for passing the parameters to callee, including the sta=
-ck
-> > + *   pointer. (e.g. rcx, rdx, rdi, rsi, r8, r9 and rsp on x86_64)
-> > + * - Registers for passing the return values to caller.
-> > + *   (e.g. rax and rdx on x86_64)
->
-> Ooc, have we ever considered skipping argument registers that are not
-> return value registers in the exit code paths ? For example, why would
-> we want to save rdi in a return handler ?
->
-> But if we want to avoid the situation of having "sparse ftrace_regs"
-> all over again, we'd have to split ftrace_regs into a ftrace_args_regs
-> and a ftrace_ret_regs which would make this refactoring even more
-> painful, just to skip a few instructions. :|
->
-> I don't necessarily think it's worth it, I just wanted to make sure
-> this was considered.
+> >   drivers/gpu/drm/amd/display/dc/core/dc.c | 7 +++----
+> >   1 file changed, 3 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+> > index 8eefba757da4..f64d7229eb6c 100644
+> > --- a/drivers/gpu/drm/amd/display/dc/core/dc.c
+> > +++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+> > @@ -5043,11 +5043,10 @@ void dc_interrupt_ack(struct dc *dc, enum dc_irq_source src)
+> >   void dc_power_down_on_boot(struct dc *dc)
+> >   {
+> >   	if (dc->ctx->dce_environment != DCE_ENV_VIRTUAL_HW &&
+> > -			dc->hwss.power_down_on_boot) {
+> > -
+> > -			if (dc->caps.ips_support)
+> > -				dc_exit_ips_for_hw_access(dc);
+> > +	    dc->hwss.power_down_on_boot) {
+> > +		if (dc->caps.ips_support)
+> > +			dc_exit_ips_for_hw_access(dc);
+> 
+> Well while at it can't the two ifs be merged here?
+> 
+> (I don't know this code to well, but it looks like it).
+> 
 
-Ah, well, I just reached patch 22 and noticed that there you add add:
+I'm sorry, I don't see what you're saying.
 
-+ * Basically, ftrace_regs stores the registers related to the context.
-+ * On function entry, registers for function parameters and hooking the
-+ * function call are stored, and on function exit, registers for function
-+ * return value and frame pointers are stored.
+I probably should have deleted the other blank line as well, though.
+It introduces a checkpatch.pl --strict warning.
 
-So ftrace_regs can be a a sparse structure then. That's fair enough with me=
-! ;)
+regards,
+dan carpenter
+
