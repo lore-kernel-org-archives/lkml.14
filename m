@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B6315696F;
-	Wed, 24 Apr 2024 20:36:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C3C156F51;
+	Wed, 24 Apr 2024 20:36:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713990986; cv=none; b=dlwhxFP6sHnlmv9Q4XmDWNUdJwXYVRyW0tlc5QfWKLNNtjnFFJxJz2lOIiVxFuc2QY4rvHbINVKNDUykRkyknaYkEiFI9mFjPJ5JU1QNJ9IC39x95G41nAjssvZSgxw2whzJWjMlBIvZ1iFrpCcIX3e4cAa3GpNL8QWAep+c8Lc=
+	t=1713990988; cv=none; b=W7SVRmOeeNCdwWQ7ZWfsQY6rQ1VNj+PSEKh8/9gEd+qY9bMP1TGEQeKZdHo0E6CglsuqOdUNmmpcFvLusUB0xKOKeUKA1ANjRWp22Gczf5Id0NBf6IUl52vUPHMqTMqHJ5ijhNCkCQ3hE5z2qfxpzlpvJvf2Nldrl/hZYZRjIf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713990986; c=relaxed/simple;
-	bh=gtCP0mVFMjrC86no3PsIxRY71Q/YdP+vM8xThXGDktg=;
+	s=arc-20240116; t=1713990988; c=relaxed/simple;
+	bh=Xocwmyw5mCAtqSKXzcrUURMt3ZX8+ODunlgOREKFZgc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lpb80a+ZvhvEPvvWbtRchDJ80DmS+YEyDPMNd3h8SfrCxeiePp2A7eHmnKwog1OALF1WsbqhNDbL67dx+y6xUVTI4Bn7/yhd5GyU0o/aGA5LWOXFr63ckZmEbb7txuj97EESYIJz/BzXtY6usromU5GOoZ1VOyfJE3+MMn/57y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OK3/4Jyc; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=UvVI7MuYcNFvvdnNU5UCMOCNi5VHq70dJB8z3h3E4W5LMlhW5KoLNASfitXxn77yo86p6mpeajIplCXTtop+f0rxQhBtH4XtXJDkmN0Gp09uhF1M1HPXPkAw+kcYaygZwHrT/GsXArya06CohLjp6GYnQyDbnOPkFVe+bH2ciow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YQfhFgpv; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OK3/4Jyc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YQfhFgpv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713990983; x=1745526983;
+  t=1713990986; x=1745526986;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=gtCP0mVFMjrC86no3PsIxRY71Q/YdP+vM8xThXGDktg=;
-  b=OK3/4JycDN2iBPwRgfDZG8R0pPrU4o1Ea2EW31F1200U0Na0C3oGTQFZ
-   wvRwsT4onNiazC5MipzHlpxrBFaRq1Rk4NF4nHHyUo1v0fwDzcjXVseaj
-   S17SKK0+/pXloD1pSDRlWvJw06A+lP1qGqCeM9vzQ0CTGUR533AdTKedy
-   98utNWkisHI/OyRjmLSc4ksmj8UKkc7NLh8VZUNAVR+kjOss7xyVTMelI
-   KCJCTSLLTsdYp57DcbyL0T+Nrtp4j0eCmzYy3U4A7qhW0ZFKyvOI86w19
-   +zuNyQyxSdk539Rbp+qkSaDIXJ8NJSpdht/iOXakzYCXzHNiT5S0gKT3i
-   Q==;
-X-CSE-ConnectionGUID: t3/7YzF4Say004ieKEIMMA==
-X-CSE-MsgGUID: D1UpzyHUT92/cc6XhmCYCA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="9511915"
+  bh=Xocwmyw5mCAtqSKXzcrUURMt3ZX8+ODunlgOREKFZgc=;
+  b=YQfhFgpvVvzCA7NT+aNm/ZTLmq4LfV8/ISjLlAkglLnFIt/OtwgUOz1V
+   39BifMqzqWlgbMaM5IcS2H656L78WbOiMniZWzEr1CaJnETAplW6pAOTf
+   mb2x+SLjVVvozx6TVsbXyHQccHWYjv+RfwDc4cFH+ZjEZRr3jBF/+v6tY
+   YEJ/UiNxxGE97Xuuh1g/1zBZV1KART5LR6m4auaYLN46N9cykzv56NAP7
+   qeilD7otWQdBHBur21/e6nkXh6jS8eilZGhMi4+eV3NHG7G1vuLOlb58D
+   EefTODX9FJLfRdXS1wu3YxpMB8UyBqteBE3t2K9ajh72z83t14DUaJySf
+   g==;
+X-CSE-ConnectionGUID: A+u/u+cNQPi2QYa7SW6e9w==
+X-CSE-MsgGUID: PHl/KurbTDapMqMc02yFHQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="9511970"
 X-IronPort-AV: E=Sophos;i="6.07,227,1708416000"; 
-   d="scan'208";a="9511915"
+   d="scan'208";a="9511970"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 13:36:19 -0700
-X-CSE-ConnectionGUID: V5iuG7bdSx2IXaf6yKMVZQ==
-X-CSE-MsgGUID: PFlBcleoQUOQutE6nk1CfA==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 13:36:21 -0700
+X-CSE-ConnectionGUID: rRERwvdtSZiiTdf+UQla6Q==
+X-CSE-MsgGUID: 0kXbz0B4TLusPmFXmFS6lg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,227,1708416000"; 
-   d="scan'208";a="29314983"
+   d="scan'208";a="29314995"
 Received: from anguy11-upstream.jf.intel.com ([10.166.9.133])
-  by fmviesa003.fm.intel.com with ESMTP; 24 Apr 2024 13:36:18 -0700
+  by fmviesa003.fm.intel.com with ESMTP; 24 Apr 2024 13:36:20 -0700
 From: Tony Nguyen <anthony.l.nguyen@intel.com>
 To: davem@davemloft.net,
 	kuba@kernel.org,
@@ -62,9 +62,9 @@ Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
 	cl@linux.com,
 	akpm@linux-foundation.org,
 	vbabka@suse.cz
-Subject: [PATCH net-next v11 03/10] iavf: drop page splitting and recycling
-Date: Wed, 24 Apr 2024 13:35:50 -0700
-Message-ID: <20240424203559.3420468-4-anthony.l.nguyen@intel.com>
+Subject: [PATCH net-next v11 07/10] libeth: add Rx buffer management
+Date: Wed, 24 Apr 2024 13:35:54 -0700
+Message-ID: <20240424203559.3420468-8-anthony.l.nguyen@intel.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20240424203559.3420468-1-anthony.l.nguyen@intel.com>
 References: <20240424203559.3420468-1-anthony.l.nguyen@intel.com>
@@ -78,509 +78,286 @@ Content-Transfer-Encoding: 8bit
 
 From: Alexander Lobakin <aleksander.lobakin@intel.com>
 
-As an intermediate step, remove all page splitting/recycling code. Just
-always allocate a new page and don't touch its refcount, so that it gets
-freed by the core stack later.
-Same for the "in-place" recycling, i.e. when an unused buffer gets
-assigned to a first needs-refilling descriptor. In some cases, this
-was leading to moving up to 63 &iavf_rx_buf structures around the ring
-on a per-field basis -- not something wanted on hotpath.
-The change allows to greatly simplify certain parts of the code:
-
-Function: add/remove: 0/2 grow/shrink: 0/7 up/down: 0/-744 (-744)
-
-Although the array of &iavf_rx_buf is barely used now and could be
-replaced with just page pointer array, don't touch it now to not
-complicate replacing it with libie Rx buffer struct later on.
-No surprise perf loses up to 30% here, but that regression will
-go away once PP lands.
-Note that iavf_rx_pg_*() definitions are left to reduce diffstat.
-They will be removed with the conversion to Page Pool.
+Add a couple intuitive helpers to hide Rx buffer implementation details
+in the library and not multiplicate it between drivers. The settings are
+sorta optimized for 100G+ NICs, but nothing really HW-specific here.
+Use the new page_pool_dev_alloc() to dynamically switch between
+split-page and full-page modes depending on MTU, page size, required
+headroom etc. For example, on x86_64 with the default driver settings
+each page is shared between 2 buffers. Turning on XDP (not in this
+series) -> increasing headroom requirement pushes truesize out of 2048
+boundary, leading to that each buffer starts getting a full page.
+The "ceiling" limit is %PAGE_SIZE, as only order-0 pages are used to
+avoid compound overhead. For the above architecture, this means maximum
+linear frame size of 3712 w/o XDP.
+Not that &libeth_buf_queue is not a complete queue/ring structure for
+now, rather a shim, but eventually the libeth-enabled drivers will move
+to it, with iavf being the first one.
 
 Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
 Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
 ---
- drivers/net/ethernet/intel/iavf/iavf_main.c   |  24 +--
- drivers/net/ethernet/intel/iavf/iavf_txrx.c   | 152 +-----------------
- drivers/net/ethernet/intel/iavf/iavf_txrx.h   |  65 --------
- drivers/net/ethernet/intel/iavf/iavf_type.h   |   2 -
- .../net/ethernet/intel/iavf/iavf_virtchnl.c   |   8 +-
- 5 files changed, 10 insertions(+), 241 deletions(-)
+kernel-doc for libeth_fq::fp generates an "Excess struct member" warning
+currently, here's patch which fixes the script: [0]
 
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
-index 5eb7379956e4..ffb71a62b105 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_main.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
-@@ -715,32 +715,10 @@ static void iavf_configure_tx(struct iavf_adapter *adapter)
-  **/
- static void iavf_configure_rx(struct iavf_adapter *adapter)
- {
--	unsigned int rx_buf_len = IAVF_RXBUFFER_2048;
- 	struct iavf_hw *hw = &adapter->hw;
--	int i;
--
--	if (PAGE_SIZE < 8192) {
--		struct net_device *netdev = adapter->netdev;
+[0] https://lore.kernel.org/linux-doc/20240411093208.2483580-1-aleksander.lobakin@intel.com
+
+ drivers/net/ethernet/intel/libeth/Kconfig |   1 +
+ drivers/net/ethernet/intel/libeth/rx.c    |  98 ++++++++++++++++++
+ include/net/libeth/rx.h                   | 117 ++++++++++++++++++++++
+ 3 files changed, 216 insertions(+)
+
+diff --git a/drivers/net/ethernet/intel/libeth/Kconfig b/drivers/net/ethernet/intel/libeth/Kconfig
+index af970a63c227..480293b71dbc 100644
+--- a/drivers/net/ethernet/intel/libeth/Kconfig
++++ b/drivers/net/ethernet/intel/libeth/Kconfig
+@@ -3,6 +3,7 @@
  
--		/* For jumbo frames on systems with 4K pages we have to use
--		 * an order 1 page, so we might as well increase the size
--		 * of our Rx buffer to make better use of the available space
--		 */
--		rx_buf_len = IAVF_RXBUFFER_3072;
--
--		/* We use a 1536 buffer size for configurations with
--		 * standard Ethernet mtu.  On x86 this gives us enough room
--		 * for shared info and 192 bytes of padding.
--		 */
--		if (!IAVF_2K_TOO_SMALL_WITH_PADDING &&
--		    (netdev->mtu <= ETH_DATA_LEN))
--			rx_buf_len = IAVF_RXBUFFER_1536 - NET_IP_ALIGN;
--	}
--
--	for (i = 0; i < adapter->num_active_queues; i++) {
-+	for (u32 i = 0; i < adapter->num_active_queues; i++)
- 		adapter->rx_rings[i].tail = hw->hw_addr + IAVF_QRX_TAIL1(i);
--		adapter->rx_rings[i].rx_buf_len = rx_buf_len;
--	}
- }
+ config LIBETH
+ 	tristate
++	select PAGE_POOL
+ 	help
+ 	  libeth is a common library containing routines shared between several
+ 	  drivers, but not yet promoted to the generic kernel API.
+diff --git a/drivers/net/ethernet/intel/libeth/rx.c b/drivers/net/ethernet/intel/libeth/rx.c
+index 879c4dfd6a4e..6221b88c34ac 100644
+--- a/drivers/net/ethernet/intel/libeth/rx.c
++++ b/drivers/net/ethernet/intel/libeth/rx.c
+@@ -3,6 +3,104 @@
  
- /**
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_txrx.c b/drivers/net/ethernet/intel/iavf/iavf_txrx.c
-index a908b394409d..c7602c173420 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_txrx.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_txrx.c
-@@ -715,7 +715,7 @@ static void iavf_clean_rx_ring(struct iavf_ring *rx_ring)
- 		dma_sync_single_range_for_cpu(rx_ring->dev,
- 					      rx_bi->dma,
- 					      rx_bi->page_offset,
--					      rx_ring->rx_buf_len,
-+					      IAVF_RXBUFFER_3072,
- 					      DMA_FROM_DEVICE);
+ #include <net/libeth/rx.h>
  
- 		/* free resources associated with mapping */
-@@ -724,7 +724,7 @@ static void iavf_clean_rx_ring(struct iavf_ring *rx_ring)
- 				     DMA_FROM_DEVICE,
- 				     IAVF_RX_DMA_ATTR);
- 
--		__page_frag_cache_drain(rx_bi->page, rx_bi->pagecnt_bias);
-+		__free_page(rx_bi->page);
- 
- 		rx_bi->page = NULL;
- 		rx_bi->page_offset = 0;
-@@ -736,7 +736,6 @@ static void iavf_clean_rx_ring(struct iavf_ring *rx_ring)
- 	/* Zero out the descriptor ring */
- 	memset(rx_ring->desc, 0, rx_ring->size);
- 
--	rx_ring->next_to_alloc = 0;
- 	rx_ring->next_to_clean = 0;
- 	rx_ring->next_to_use = 0;
- }
-@@ -792,7 +791,6 @@ int iavf_setup_rx_descriptors(struct iavf_ring *rx_ring)
- 		goto err;
- 	}
- 
--	rx_ring->next_to_alloc = 0;
- 	rx_ring->next_to_clean = 0;
- 	rx_ring->next_to_use = 0;
- 
-@@ -812,9 +810,6 @@ static void iavf_release_rx_desc(struct iavf_ring *rx_ring, u32 val)
- {
- 	rx_ring->next_to_use = val;
- 
--	/* update next to alloc since we have filled the ring */
--	rx_ring->next_to_alloc = val;
--
- 	/* Force memory writes to complete before letting h/w
- 	 * know there are new descriptors to fetch.  (Only
- 	 * applicable for weak-ordered memory model archs,
-@@ -838,12 +833,6 @@ static bool iavf_alloc_mapped_page(struct iavf_ring *rx_ring,
- 	struct page *page = bi->page;
- 	dma_addr_t dma;
- 
--	/* since we are recycling buffers we should seldom need to alloc */
--	if (likely(page)) {
--		rx_ring->rx_stats.page_reuse_count++;
--		return true;
--	}
--
- 	/* alloc new page for storage */
- 	page = dev_alloc_pages(iavf_rx_pg_order(rx_ring));
- 	if (unlikely(!page)) {
-@@ -870,9 +859,6 @@ static bool iavf_alloc_mapped_page(struct iavf_ring *rx_ring,
- 	bi->page = page;
- 	bi->page_offset = IAVF_SKB_PAD;
- 
--	/* initialize pagecnt_bias to 1 representing we fully own page */
--	bi->pagecnt_bias = 1;
--
- 	return true;
- }
- 
-@@ -924,7 +910,7 @@ bool iavf_alloc_rx_buffers(struct iavf_ring *rx_ring, u16 cleaned_count)
- 		/* sync the buffer for use by the device */
- 		dma_sync_single_range_for_device(rx_ring->dev, bi->dma,
- 						 bi->page_offset,
--						 rx_ring->rx_buf_len,
-+						 IAVF_RXBUFFER_3072,
- 						 DMA_FROM_DEVICE);
- 
- 		/* Refresh the desc even if buffer_addrs didn't change
-@@ -1102,91 +1088,6 @@ static bool iavf_cleanup_headers(struct iavf_ring *rx_ring, struct sk_buff *skb)
- 	return false;
- }
- 
--/**
-- * iavf_reuse_rx_page - page flip buffer and store it back on the ring
-- * @rx_ring: rx descriptor ring to store buffers on
-- * @old_buff: donor buffer to have page reused
-- *
-- * Synchronizes page for reuse by the adapter
-- **/
--static void iavf_reuse_rx_page(struct iavf_ring *rx_ring,
--			       struct iavf_rx_buffer *old_buff)
--{
--	struct iavf_rx_buffer *new_buff;
--	u16 nta = rx_ring->next_to_alloc;
--
--	new_buff = &rx_ring->rx_bi[nta];
--
--	/* update, and store next to alloc */
--	nta++;
--	rx_ring->next_to_alloc = (nta < rx_ring->count) ? nta : 0;
--
--	/* transfer page from old buffer to new buffer */
--	new_buff->dma		= old_buff->dma;
--	new_buff->page		= old_buff->page;
--	new_buff->page_offset	= old_buff->page_offset;
--	new_buff->pagecnt_bias	= old_buff->pagecnt_bias;
--}
--
--/**
-- * iavf_can_reuse_rx_page - Determine if this page can be reused by
-- * the adapter for another receive
-- *
-- * @rx_buffer: buffer containing the page
-- *
-- * If page is reusable, rx_buffer->page_offset is adjusted to point to
-- * an unused region in the page.
-- *
-- * For small pages, @truesize will be a constant value, half the size
-- * of the memory at page.  We'll attempt to alternate between high and
-- * low halves of the page, with one half ready for use by the hardware
-- * and the other half being consumed by the stack.  We use the page
-- * ref count to determine whether the stack has finished consuming the
-- * portion of this page that was passed up with a previous packet.  If
-- * the page ref count is >1, we'll assume the "other" half page is
-- * still busy, and this page cannot be reused.
-- *
-- * For larger pages, @truesize will be the actual space used by the
-- * received packet (adjusted upward to an even multiple of the cache
-- * line size).  This will advance through the page by the amount
-- * actually consumed by the received packets while there is still
-- * space for a buffer.  Each region of larger pages will be used at
-- * most once, after which the page will not be reused.
-- *
-- * In either case, if the page is reusable its refcount is increased.
-- **/
--static bool iavf_can_reuse_rx_page(struct iavf_rx_buffer *rx_buffer)
--{
--	unsigned int pagecnt_bias = rx_buffer->pagecnt_bias;
--	struct page *page = rx_buffer->page;
--
--	/* Is any reuse possible? */
--	if (!dev_page_is_reusable(page))
--		return false;
--
--#if (PAGE_SIZE < 8192)
--	/* if we are only owner of page we can reuse it */
--	if (unlikely((page_count(page) - pagecnt_bias) > 1))
--		return false;
--#else
--#define IAVF_LAST_OFFSET \
--	(SKB_WITH_OVERHEAD(PAGE_SIZE) - IAVF_RXBUFFER_2048)
--	if (rx_buffer->page_offset > IAVF_LAST_OFFSET)
--		return false;
--#endif
--
--	/* If we have drained the page fragment pool we need to update
--	 * the pagecnt_bias and page count so that we fully restock the
--	 * number of references the driver holds.
--	 */
--	if (unlikely(!pagecnt_bias)) {
--		page_ref_add(page, USHRT_MAX);
--		rx_buffer->pagecnt_bias = USHRT_MAX;
--	}
--
--	return true;
--}
--
- /**
-  * iavf_add_rx_frag - Add contents of Rx buffer to sk_buff
-  * @rx_ring: rx descriptor ring to transact packets on
-@@ -1204,24 +1105,13 @@ static void iavf_add_rx_frag(struct iavf_ring *rx_ring,
- 			     struct sk_buff *skb,
- 			     unsigned int size)
- {
--#if (PAGE_SIZE < 8192)
--	unsigned int truesize = iavf_rx_pg_size(rx_ring) / 2;
--#else
- 	unsigned int truesize = SKB_DATA_ALIGN(size + IAVF_SKB_PAD);
--#endif
- 
- 	if (!size)
- 		return;
- 
- 	skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags, rx_buffer->page,
- 			rx_buffer->page_offset, size, truesize);
--
--	/* page is being used so we must update the page offset */
--#if (PAGE_SIZE < 8192)
--	rx_buffer->page_offset ^= truesize;
--#else
--	rx_buffer->page_offset += truesize;
--#endif
- }
- 
- /**
-@@ -1249,9 +1139,6 @@ static struct iavf_rx_buffer *iavf_get_rx_buffer(struct iavf_ring *rx_ring,
- 				      size,
- 				      DMA_FROM_DEVICE);
- 
--	/* We have pulled a buffer for use, so decrement pagecnt_bias */
--	rx_buffer->pagecnt_bias--;
--
- 	return rx_buffer;
- }
- 
-@@ -1269,12 +1156,8 @@ static struct sk_buff *iavf_build_skb(struct iavf_ring *rx_ring,
- 				      unsigned int size)
- {
- 	void *va;
--#if (PAGE_SIZE < 8192)
--	unsigned int truesize = iavf_rx_pg_size(rx_ring) / 2;
--#else
- 	unsigned int truesize = SKB_DATA_ALIGN(sizeof(struct skb_shared_info)) +
- 				SKB_DATA_ALIGN(IAVF_SKB_PAD + size);
--#endif
- 	struct sk_buff *skb;
- 
- 	if (!rx_buffer || !size)
-@@ -1292,23 +1175,15 @@ static struct sk_buff *iavf_build_skb(struct iavf_ring *rx_ring,
- 	skb_reserve(skb, IAVF_SKB_PAD);
- 	__skb_put(skb, size);
- 
--	/* buffer is used by skb, update page_offset */
--#if (PAGE_SIZE < 8192)
--	rx_buffer->page_offset ^= truesize;
--#else
--	rx_buffer->page_offset += truesize;
--#endif
--
- 	return skb;
- }
- 
- /**
-- * iavf_put_rx_buffer - Clean up used buffer and either recycle or free
-+ * iavf_put_rx_buffer - Unmap used buffer
-  * @rx_ring: rx descriptor ring to transact packets on
-  * @rx_buffer: rx buffer to pull data from
-  *
-- * This function will clean up the contents of the rx_buffer.  It will
-- * either recycle the buffer or unmap it and free the associated resources.
-+ * This function will unmap the buffer after it's written by HW.
++/* Rx buffer management */
++
++/**
++ * libeth_rx_hw_len - get the actual buffer size to be passed to HW
++ * @pp: &page_pool_params of the netdev to calculate the size for
++ * @max_len: maximum buffer size for a single descriptor
++ *
++ * Return: HW-writeable length per one buffer to pass it to the HW accounting:
++ * MTU the @dev has, HW required alignment, minimum and maximum allowed values,
++ * and system's page size.
++ */
++static u32 libeth_rx_hw_len(const struct page_pool_params *pp, u32 max_len)
++{
++	u32 len;
++
++	len = READ_ONCE(pp->netdev->mtu) + LIBETH_RX_LL_LEN;
++	len = ALIGN(len, LIBETH_RX_BUF_STRIDE);
++	len = min3(len, ALIGN_DOWN(max_len ? : U32_MAX, LIBETH_RX_BUF_STRIDE),
++		   pp->max_len);
++
++	return len;
++}
++
++/**
++ * libeth_rx_fq_create - create a PP with the default libeth settings
++ * @fq: buffer queue struct to fill
++ * @napi: &napi_struct covering this PP (no usage outside its poll loops)
++ *
++ * Return: %0 on success, -%errno on failure.
++ */
++int libeth_rx_fq_create(struct libeth_fq *fq, struct napi_struct *napi)
++{
++	struct page_pool_params pp = {
++		.flags		= PP_FLAG_DMA_MAP | PP_FLAG_DMA_SYNC_DEV,
++		.order		= LIBETH_RX_PAGE_ORDER,
++		.pool_size	= fq->count,
++		.nid		= fq->nid,
++		.dev		= napi->dev->dev.parent,
++		.netdev		= napi->dev,
++		.napi		= napi,
++		.dma_dir	= DMA_FROM_DEVICE,
++		.offset		= LIBETH_SKB_HEADROOM,
++	};
++	struct libeth_fqe *fqes;
++	struct page_pool *pool;
++
++	/* HW-writeable / syncable length per one page */
++	pp.max_len = LIBETH_RX_PAGE_LEN(pp.offset);
++
++	/* HW-writeable length per buffer */
++	fq->buf_len = libeth_rx_hw_len(&pp, fq->buf_len);
++	/* Buffer size to allocate */
++	fq->truesize = roundup_pow_of_two(SKB_HEAD_ALIGN(pp.offset +
++							 fq->buf_len));
++
++	pool = page_pool_create(&pp);
++	if (IS_ERR(pool))
++		return PTR_ERR(pool);
++
++	fqes = kvcalloc_node(fq->count, sizeof(*fqes), GFP_KERNEL, fq->nid);
++	if (!fqes)
++		goto err_buf;
++
++	fq->fqes = fqes;
++	fq->pp = pool;
++
++	return 0;
++
++err_buf:
++	page_pool_destroy(pool);
++
++	return -ENOMEM;
++}
++EXPORT_SYMBOL_NS_GPL(libeth_rx_fq_create, LIBETH);
++
++/**
++ * libeth_rx_fq_destroy - destroy a &page_pool created by libeth
++ * @fq: buffer queue to process
++ */
++void libeth_rx_fq_destroy(struct libeth_fq *fq)
++{
++	kvfree(fq->fqes);
++	page_pool_destroy(fq->pp);
++}
++EXPORT_SYMBOL_NS_GPL(libeth_rx_fq_destroy, LIBETH);
++
++/**
++ * libeth_rx_recycle_slow - recycle a libeth page from the NAPI context
++ * @page: page to recycle
++ *
++ * To be used on exceptions or rare cases not requiring fast inline recycling.
++ */
++void libeth_rx_recycle_slow(struct page *page)
++{
++	page_pool_recycle_direct(page->pp, page);
++}
++EXPORT_SYMBOL_NS_GPL(libeth_rx_recycle_slow, LIBETH);
++
+ /* Converting abstract packet type numbers into a software structure with
+  * the packet parameters to do O(1) lookup on Rx.
   */
- static void iavf_put_rx_buffer(struct iavf_ring *rx_ring,
- 			       struct iavf_rx_buffer *rx_buffer)
-@@ -1316,18 +1191,9 @@ static void iavf_put_rx_buffer(struct iavf_ring *rx_ring,
- 	if (!rx_buffer)
- 		return;
+diff --git a/include/net/libeth/rx.h b/include/net/libeth/rx.h
+index 0807e19f44b3..f29ea3e34c6c 100644
+--- a/include/net/libeth/rx.h
++++ b/include/net/libeth/rx.h
+@@ -4,8 +4,125 @@
+ #ifndef __LIBETH_RX_H
+ #define __LIBETH_RX_H
  
--	if (iavf_can_reuse_rx_page(rx_buffer)) {
--		/* hand second half of page back to the ring */
--		iavf_reuse_rx_page(rx_ring, rx_buffer);
--		rx_ring->rx_stats.page_reuse_count++;
--	} else {
--		/* we are not reusing the buffer so unmap it */
--		dma_unmap_page_attrs(rx_ring->dev, rx_buffer->dma,
--				     iavf_rx_pg_size(rx_ring),
--				     DMA_FROM_DEVICE, IAVF_RX_DMA_ATTR);
--		__page_frag_cache_drain(rx_buffer->page,
--					rx_buffer->pagecnt_bias);
--	}
-+	/* we are not reusing the buffer so unmap it */
-+	dma_unmap_page_attrs(rx_ring->dev, rx_buffer->dma, PAGE_SIZE,
-+			     DMA_FROM_DEVICE, IAVF_RX_DMA_ATTR);
++#include <linux/if_vlan.h>
++
++#include <net/page_pool/helpers.h>
+ #include <net/xdp.h>
  
- 	/* clear contents of buffer_info */
- 	rx_buffer->page = NULL;
-@@ -1432,8 +1298,6 @@ static int iavf_clean_rx_irq(struct iavf_ring *rx_ring, int budget)
- 		/* exit if we failed to retrieve a buffer */
- 		if (!skb) {
- 			rx_ring->rx_stats.alloc_buff_failed++;
--			if (rx_buffer && size)
--				rx_buffer->pagecnt_bias++;
- 			break;
- 		}
- 
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_txrx.h b/drivers/net/ethernet/intel/iavf/iavf_txrx.h
-index 68543efdd29b..e01777531635 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_txrx.h
-+++ b/drivers/net/ethernet/intel/iavf/iavf_txrx.h
-@@ -81,8 +81,6 @@ enum iavf_dyn_idx_t {
- 	BIT_ULL(IAVF_FILTER_PCTYPE_NONF_MULTICAST_IPV6_UDP))
- 
- /* Supported Rx Buffer Sizes (a multiple of 128) */
--#define IAVF_RXBUFFER_1536  1536  /* 128B aligned standard Ethernet frame */
--#define IAVF_RXBUFFER_2048  2048
- #define IAVF_RXBUFFER_3072  3072  /* Used for large frames w/ padding */
- #define IAVF_MAX_RXBUFFER   9728  /* largest size for single descriptor */
- 
-@@ -92,57 +90,7 @@ enum iavf_dyn_idx_t {
- #define IAVF_RX_DMA_ATTR \
- 	(DMA_ATTR_SKIP_CPU_SYNC | DMA_ATTR_WEAK_ORDERING)
- 
--/* Attempt to maximize the headroom available for incoming frames.  We
-- * use a 2K buffer for receives and need 1536/1534 to store the data for
-- * the frame.  This leaves us with 512 bytes of room.  From that we need
-- * to deduct the space needed for the shared info and the padding needed
-- * to IP align the frame.
-- *
-- * Note: For cache line sizes 256 or larger this value is going to end
-- *	 up negative.  In these cases we should fall back to the legacy
-- *	 receive path.
-- */
--#if (PAGE_SIZE < 8192)
--#define IAVF_2K_TOO_SMALL_WITH_PADDING \
--((NET_SKB_PAD + IAVF_RXBUFFER_1536) > SKB_WITH_OVERHEAD(IAVF_RXBUFFER_2048))
--
--static inline int iavf_compute_pad(int rx_buf_len)
--{
--	int page_size, pad_size;
--
--	page_size = ALIGN(rx_buf_len, PAGE_SIZE / 2);
--	pad_size = SKB_WITH_OVERHEAD(page_size) - rx_buf_len;
--
--	return pad_size;
--}
--
--static inline int iavf_skb_pad(void)
--{
--	int rx_buf_len;
--
--	/* If a 2K buffer cannot handle a standard Ethernet frame then
--	 * optimize padding for a 3K buffer instead of a 1.5K buffer.
--	 *
--	 * For a 3K buffer we need to add enough padding to allow for
--	 * tailroom due to NET_IP_ALIGN possibly shifting us out of
--	 * cache-line alignment.
--	 */
--	if (IAVF_2K_TOO_SMALL_WITH_PADDING)
--		rx_buf_len = IAVF_RXBUFFER_3072 + SKB_DATA_ALIGN(NET_IP_ALIGN);
--	else
--		rx_buf_len = IAVF_RXBUFFER_1536;
--
--	/* if needed make room for NET_IP_ALIGN */
--	rx_buf_len -= NET_IP_ALIGN;
--
--	return iavf_compute_pad(rx_buf_len);
--}
--
--#define IAVF_SKB_PAD iavf_skb_pad()
--#else
--#define IAVF_2K_TOO_SMALL_WITH_PADDING false
- #define IAVF_SKB_PAD (NET_SKB_PAD + NET_IP_ALIGN)
--#endif
- 
- /**
-  * iavf_test_staterr - tests bits in Rx descriptor status and error fields
-@@ -265,12 +213,7 @@ struct iavf_tx_buffer {
- struct iavf_rx_buffer {
- 	dma_addr_t dma;
- 	struct page *page;
--#if (BITS_PER_LONG > 32) || (PAGE_SIZE >= 65536)
- 	__u32 page_offset;
--#else
--	__u16 page_offset;
--#endif
--	__u16 pagecnt_bias;
- };
- 
- struct iavf_queue_stats {
-@@ -292,8 +235,6 @@ struct iavf_rx_queue_stats {
- 	u64 non_eop_descs;
- 	u64 alloc_page_failed;
- 	u64 alloc_buff_failed;
--	u64 page_reuse_count;
--	u64 realloc_count;
- };
- 
- enum iavf_ring_state_t {
-@@ -337,7 +278,6 @@ struct iavf_ring {
- 
- 	u16 count;			/* Number of descriptors */
- 	u16 reg_idx;			/* HW register index of the ring */
--	u16 rx_buf_len;
- 
- 	/* used in interrupt processing */
- 	u16 next_to_use;
-@@ -373,7 +313,6 @@ struct iavf_ring {
- 	struct iavf_q_vector *q_vector;	/* Backreference to associated vector */
- 
- 	struct rcu_head rcu;		/* to avoid race on free */
--	u16 next_to_alloc;
- 	struct sk_buff *skb;		/* When iavf_clean_rx_ring_irq() must
- 					 * return before it sees the EOP for
- 					 * the current packet, we save that skb
-@@ -407,10 +346,6 @@ struct iavf_ring_container {
- 
- static inline unsigned int iavf_rx_pg_order(struct iavf_ring *ring)
- {
--#if (PAGE_SIZE < 8192)
--	if (ring->rx_buf_len > (PAGE_SIZE / 2))
--		return 1;
--#endif
- 	return 0;
- }
- 
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_type.h b/drivers/net/ethernet/intel/iavf/iavf_type.h
-index 23ded4fcd94f..f6b09e57abce 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_type.h
-+++ b/drivers/net/ethernet/intel/iavf/iavf_type.h
-@@ -10,8 +10,6 @@
- #include "iavf_adminq.h"
- #include "iavf_devids.h"
- 
--#define IAVF_RXQ_CTX_DBUFF_SHIFT 7
--
- /* IAVF_MASK is a macro used on 32 bit registers */
- #define IAVF_MASK(mask, shift) ((u32)(mask) << (shift))
- 
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c b/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-index a31df5af0473..f8e9f859a4f1 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-@@ -288,10 +288,6 @@ void iavf_configure_queues(struct iavf_adapter *adapter)
- 	if (!vqci)
- 		return;
- 
--	/* Limit maximum frame size when jumbo frames is not enabled */
--	if (adapter->netdev->mtu <= ETH_DATA_LEN)
--		max_frame = IAVF_RXBUFFER_1536 - NET_IP_ALIGN;
--
- 	vqci->vsi_id = adapter->vsi_res->vsi_id;
- 	vqci->num_queue_pairs = pairs;
- 	vqpi = vqci->qpair;
-@@ -308,9 +304,7 @@ void iavf_configure_queues(struct iavf_adapter *adapter)
- 		vqpi->rxq.ring_len = adapter->rx_rings[i].count;
- 		vqpi->rxq.dma_ring_addr = adapter->rx_rings[i].dma;
- 		vqpi->rxq.max_pkt_size = max_frame;
--		vqpi->rxq.databuffer_size =
--			ALIGN(adapter->rx_rings[i].rx_buf_len,
--			      BIT_ULL(IAVF_RXQ_CTX_DBUFF_SHIFT));
-+		vqpi->rxq.databuffer_size = IAVF_RXBUFFER_3072;
- 		if (CRC_OFFLOAD_ALLOWED(adapter))
- 			vqpi->rxq.crc_disable = !!(adapter->netdev->features &
- 						   NETIF_F_RXFCS);
++/* Rx buffer management */
++
++/* Space reserved in front of each frame */
++#define LIBETH_SKB_HEADROOM	(NET_SKB_PAD + NET_IP_ALIGN)
++/* Maximum headroom for worst-case calculations */
++#define LIBETH_MAX_HEADROOM	LIBETH_SKB_HEADROOM
++/* Link layer / L2 overhead: Ethernet, 2 VLAN tags (C + S), FCS */
++#define LIBETH_RX_LL_LEN	(ETH_HLEN + 2 * VLAN_HLEN + ETH_FCS_LEN)
++
++/* Always use order-0 pages */
++#define LIBETH_RX_PAGE_ORDER	0
++/* Pick a sane buffer stride and align to a cacheline boundary */
++#define LIBETH_RX_BUF_STRIDE	SKB_DATA_ALIGN(128)
++/* HW-writeable space in one buffer: truesize - headroom/tailroom, aligned */
++#define LIBETH_RX_PAGE_LEN(hr)						  \
++	ALIGN_DOWN(SKB_MAX_ORDER(hr, LIBETH_RX_PAGE_ORDER),		  \
++		   LIBETH_RX_BUF_STRIDE)
++
++/**
++ * struct libeth_fqe - structure representing an Rx buffer (fill queue element)
++ * @page: page holding the buffer
++ * @offset: offset from the page start (to the headroom)
++ * @truesize: total space occupied by the buffer (w/ headroom and tailroom)
++ *
++ * Depending on the MTU, API switches between one-page-per-frame and shared
++ * page model (to conserve memory on bigger-page platforms). In case of the
++ * former, @offset is always 0 and @truesize is always ```PAGE_SIZE```.
++ */
++struct libeth_fqe {
++	struct page		*page;
++	u32			offset;
++	u32			truesize;
++} __aligned_largest;
++
++/**
++ * struct libeth_fq - structure representing a buffer (fill) queue
++ * @fp: hotpath part of the structure
++ * @pp: &page_pool for buffer management
++ * @fqes: array of Rx buffers
++ * @truesize: size to allocate per buffer, w/overhead
++ * @count: number of descriptors/buffers the queue has
++ * @buf_len: HW-writeable length per each buffer
++ * @nid: ID of the closest NUMA node with memory
++ */
++struct libeth_fq {
++	struct_group_tagged(libeth_fq_fp, fp,
++		struct page_pool	*pp;
++		struct libeth_fqe	*fqes;
++
++		u32			truesize;
++		u32			count;
++	);
++
++	/* Cold fields */
++	u32			buf_len;
++	int			nid;
++};
++
++int libeth_rx_fq_create(struct libeth_fq *fq, struct napi_struct *napi);
++void libeth_rx_fq_destroy(struct libeth_fq *fq);
++
++/**
++ * libeth_rx_alloc - allocate a new Rx buffer
++ * @fq: fill queue to allocate for
++ * @i: index of the buffer within the queue
++ *
++ * Return: DMA address to be passed to HW for Rx on successful allocation,
++ * ```DMA_MAPPING_ERROR``` otherwise.
++ */
++static inline dma_addr_t libeth_rx_alloc(const struct libeth_fq_fp *fq, u32 i)
++{
++	struct libeth_fqe *buf = &fq->fqes[i];
++
++	buf->truesize = fq->truesize;
++	buf->page = page_pool_dev_alloc(fq->pp, &buf->offset, &buf->truesize);
++	if (unlikely(!buf->page))
++		return DMA_MAPPING_ERROR;
++
++	return page_pool_get_dma_addr(buf->page) + buf->offset +
++	       fq->pp->p.offset;
++}
++
++void libeth_rx_recycle_slow(struct page *page);
++
++/**
++ * libeth_rx_sync_for_cpu - synchronize or recycle buffer post DMA
++ * @fqe: buffer to process
++ * @len: frame length from the descriptor
++ *
++ * Process the buffer after it's written by HW. The regular path is to
++ * synchronize DMA for CPU, but in case of no data it will be immediately
++ * recycled back to its PP.
++ *
++ * Return: true when there's data to process, false otherwise.
++ */
++static inline bool libeth_rx_sync_for_cpu(const struct libeth_fqe *fqe,
++					  u32 len)
++{
++	struct page *page = fqe->page;
++
++	/* Very rare, but possible case. The most common reason:
++	 * the last fragment contained FCS only, which was then
++	 * stripped by the HW.
++	 */
++	if (unlikely(!len)) {
++		libeth_rx_recycle_slow(page);
++		return false;
++	}
++
++	page_pool_dma_sync_for_cpu(page->pp, page, fqe->offset, len);
++
++	return true;
++}
++
+ /* Converting abstract packet type numbers into a software structure with
+  * the packet parameters to do O(1) lookup on Rx.
+  */
 -- 
 2.41.0
 
