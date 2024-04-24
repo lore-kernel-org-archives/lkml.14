@@ -1,120 +1,97 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71319158204;
-	Wed, 24 Apr 2024 07:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08322157468;
+	Wed, 24 Apr 2024 07:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713945463; cv=none; b=rR0dIenwWzkxIMbZ2jrhI9+lMfVECvsSTc4puz+j2SmH37WfemgSc41dUv+CuJ/VDluTUnxnV6qLOUfnysAhptvqkJiJs0l23pHGK4+mbBR9370mxbjBzBpoS6hs+BhP4S5lj3IT1I/hYaaCb28AmS5KhlcFJynjRM2y8AUBY1k=
+	t=1713945562; cv=none; b=ZKdXscUahLIjUmBaBMoQ4sUNlhEFe28kJozCVsgigB4fz8CEPPpR7u1UUglHu+Wl8r//ZrlO5xiYvfod/BHimEE3fwqhXOhJThiQNInx/EozU/sCccfN7PE38HahW0NdzGPYy+eYkVsFgaaucuNN/HzMwP/b+Jzh+6G445XMUNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713945463; c=relaxed/simple;
-	bh=4rtVE0X0W+VYOde9xnxiY6Ua/MCnujHrvFC8pnUPkTo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=fSlVO0f3lXGuJyHUgmzGWkWjPZJniUOGeU55lwSUaZuWa5GWtGxWsKFWKflarJHsf1y9lmk6nNJRJPDPCbL5k7GqBcuAHQlmzPIu7Thms3NoOHYOKnRtL9+zAc7zzjC/rkZO8VEe4MNn+j7EisXHj/6/Q3Q4d4TI93dchlF5GoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=knpp7o+r; arc=none smtp.client-ip=37.18.73.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1713945562; c=relaxed/simple;
+	bh=HsIJdWWpSQKAlczShDDiGD7bOAvC75m1tGVYAIxvngE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RnA0igitIzjsGx5CVHv2rPo2ev6zlomwdKU8fsXV+elSwZ7Fxrg+8iz/JwJ8IeFDWd68GVhiZthYbimKKtacEA9RdoxWE8frcsmLuDoq/BrmquBvD9QBsYOMf7bqWgd+ci54JjRmEx/VxgnzcW2U1Lx6DGcetKBBhmcdaudO72Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=l+QuAGlE; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="knpp7o+r"
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 73A87100014;
-	Wed, 24 Apr 2024 10:57:35 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 73A87100014
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1713945455;
-	bh=MMX6QiCqy4Wkoh4oQ7dRjKfmKsrE2YLbEXXPVkHkon4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=knpp7o+rlSmXPXWuf4/yNNp4X85+CfGDCqeqeTc/IUKAVW90Kc80z8RRcRYbcRpWu
-	 GbB3ujXyBOWT3ORfzPNjenLJe4gJ6FXgHZnTo/BN64T0LUlHOD6mAad9nuRtIZWK8J
-	 XNIXSOAHiUu+3/jhnR4K74raRpTobcrxVFHTjyRNAgjbkDHwoiFh75X6RTRCv1Cl5N
-	 +VaAJU6wgM91mECx5nc9PcqY4Edlh8Pd4Z0NqIHbKifxDsCQfy3p5ehI1X2HgbrDo1
-	 GbiGwlGweiNmkH46e2JYvLqixEjoD66BANg10YJa1cbPJRCXRMxlzaqvsKGkRAfqCJ
-	 1JjZPFbyUHivA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Wed, 24 Apr 2024 10:57:35 +0300 (MSK)
-Received: from [172.28.226.27] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 24 Apr 2024 10:57:34 +0300
-Message-ID: <6d34b236-4067-42bf-a6f7-d2f3b3270e3b@salutedevices.com>
-Date: Wed, 24 Apr 2024 10:57:34 +0300
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="l+QuAGlE"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 527072000D;
+	Wed, 24 Apr 2024 07:59:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713945556;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HsIJdWWpSQKAlczShDDiGD7bOAvC75m1tGVYAIxvngE=;
+	b=l+QuAGlE5COpRrBRPKXK3Hy+kNWMl0m84IPbLpuuVIV+S0xVjYIztXGdGRt1yHMeuQhPGv
+	wLnaPkUeaScO0bN/A7tzWq7UfOSuOwYcfUGX+9TUrOH5J/y4n/qB8V0YNiK0Di2UHbWSdc
+	8auzm5abl5EexOrzkBi3zEXO9r9fZLLCwpsu5xL+RAKD5SmCVwZ8+EmJVK8cv5Mx/yCfDo
+	h7kQnKdJ1W250bV5vUAW9WocbFGb8tcWq1KeeKt3/RGVpssfHaKoB2PYkIRhL5Fbl826Er
+	qTwJ4cW/8PvpE0xzkk1QX3VkZB1JraJ7OROQWB3NzjWVJIGOgm/ThW71ij3Hkw==
+Date: Wed, 24 Apr 2024 09:59:12 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Saravana Kannan <saravanak@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Luis Chamberlain
+ <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+ Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Heiner
+ Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>,
+ kernel@pengutronix.de, Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net-next v8 02/17] of: property: Add fw_devlink support
+ for pse parent
+Message-ID: <20240424095912.15f5ec44@kmaincent-XPS-13-7390>
+In-Reply-To: <CAGETcx-fZ4uuYsgpWcPFsuNKAkBarwC19_Ld=WX5EhYJ3Lovig@mail.gmail.com>
+References: <20240414-feature_poe-v8-0-e4bf1e860da5@bootlin.com>
+	<20240414-feature_poe-v8-2-e4bf1e860da5@bootlin.com>
+	<CAGETcx-fZ4uuYsgpWcPFsuNKAkBarwC19_Ld=WX5EhYJ3Lovig@mail.gmail.com>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] pwm: meson: drop unneeded check in get_state callback
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-CC: <neil.armstrong@linaro.org>, <khilman@baylibre.com>,
-	<jbrunet@baylibre.com>, <martin.blumenstingl@googlemail.com>,
-	<thierry.reding@gmail.com>, <hkallweit1@gmail.com>,
-	<linux-pwm@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kernel@salutedevices.com>, Dmitry Rokosov <ddrokosov@salutedevices.com>
-References: <20240423161356.2522636-1-gnstark@salutedevices.com>
- <20240423161356.2522636-2-gnstark@salutedevices.com>
- <wkn6ybnnlco7vrqbpclfxaajt5cvywpr633au7qcr6vpjihabq@kb7q6y4khh2k>
-Content-Language: en-US
-From: George Stark <gnstark@salutedevices.com>
-In-Reply-To: <wkn6ybnnlco7vrqbpclfxaajt5cvywpr633au7qcr6vpjihabq@kb7q6y4khh2k>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184892 [Apr 24 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;127.0.0.199:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/24 05:07:00 #24952670
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Hello Uwe
+On Tue, 23 Apr 2024 22:48:12 -0700
+Saravana Kannan <saravanak@google.com> wrote:
 
-Thanks for the review
+> On Sun, Apr 14, 2024 at 7:21=E2=80=AFAM Kory Maincent <kory.maincent@boot=
+lin.com>
+> wrote:
+> >
+> > From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+> >
+> > This allows fw_devlink to create device links between consumers of
+> > a PSE and the supplier of the PSE.
+> >
+> > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com> =20
+>=20
+> As the fw_devlink, I'd have preferred to be CC'ed on this patch before
+> it got pulled in. Especially since Andrew thought this might get
+> fw_devlink in a knot.
 
-On 4/24/24 10:19, Uwe Kleine-König wrote:
-> Hello George,
-> 
-> On Tue, Apr 23, 2024 at 07:13:55PM +0300, George Stark wrote:
->> Drop checking state argument for null pointer in meson_pwm_get_state()
->> due to it is called only from pwm core with always valid arguments.
->>
->> Fixes: 211ed630753d ("pwm: Add support for Meson PWM Controller")
->> Signed-off-by: George Stark <gnstark@salutedevices.com>
->> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
-> 
-> I'd apply this one with the following changes if you agree:
-> 
->   - capitalize "drop" in the Subject line
->   - s/get_state/.get_state()/
->   - make "null" all caps (i.e. "NULL")
->   - swap the order of Signed-off-by lines to have yours last.
-> 
-> Alternatively send it in a v2 together with addressing the comment in
-> the second patch.
+Oh indeed you are not on the CC list!
+I might have forgotten to run the b4 command to update the CC list after ha=
+ving
+added this patch. Sorry for that.
 
-I agree with the proposed changes and
-I'll clean it up after myself in v2
-
-> Best regards
-> Uwe
-> 
-
--- 
-Best regards
-George
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
