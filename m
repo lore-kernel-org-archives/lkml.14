@@ -1,55 +1,138 @@
-Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75A715E7F8
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 14:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.77.79.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B391E535;
+	Wed, 24 Apr 2024 14:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713969043; cv=none; b=CN0vwiz1AOVFJjkA4SdOA/IW6ku4XMtPF0PVh/e0QYnY0FtM8hAqtYhIzU3EFEO7l5nRrEcLDrKZ2kL7JibkWtVyO2LVTYJ5ltleFRnhcVVRd2spEZQ8LNZf6BSJpGrJDIJuW7LPgnshQPUZxDBxm3wu0RqLQdYQ6HGjgZeEWu4=
+	t=1713969123; cv=none; b=jWj/rLB0CP37uqzPt1GekBAixXiEa13WSgmRqLY2R2WO8uutgNyD9YydEjvFIPEjr4HuGyi/lD1fGsXdhb1keyT+HrSth7eqL5hDSaMZud6c+J8E5XykI4zbuCQWn2unVhOTeimC0B0Ggp5OEYzQj/VPtYNaThUOKLQ9nagp2Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713969043; c=relaxed/simple;
-	bh=YuHq8eA6SLCImHbONPdueoD/jJr5PUsm1Eh9BqfAMj0=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=K9zkVFwERSaR0PC9YgwdzDMLYJWEslqym3wg5V5xAlzE01XU0MzXPnQRKPjP/V2tzlEG+Aba1ulAQsLTNlMgAIneHio9IrlhHG5ymPumuTN2TZZsojlLGMRUG8qhoo8TDtcpTdLGpEy1unOKdUJ9bhKB8aL8eeBSVdfZdpT1Ypw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=Dnto/3XR; arc=none smtp.client-ip=51.77.79.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1713969123; c=relaxed/simple;
+	bh=wAod5RSgdsjuTw+r1YaB6JyjK+go0sx8F9HiXNQiL+c=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=phYfFZqmjfDKQusCUYGn1l3CceFJLVx7dyUTTDKQ//k05dNJcbBon8QMfCF30lbTl/nr1yY59d/a0Qkma8TSP+8Y1GK3p+6113u5gNZm6wkAhoCuBvvPOQ3gKNZGhoEAka+BXzEVpERwwBkoi+9vijLIQuB3/5ObUfijUw1sOeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YF5mQVER; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="Dnto/3XR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1713969025; x=1714228225;
-	bh=YuHq8eA6SLCImHbONPdueoD/jJr5PUsm1Eh9BqfAMj0=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=Dnto/3XRvMRkn7pB/ihDgb7fwrQ84Fw9+HWL7sV5CXy30r93r2IorgCl3zSw8ubhW
-	 MjYlWcjmBuvsIt5XHkbUwJ+PIUFhXGqpa5E5DoN3AlybmfBVToou4grSiz0tHjtSUJ
-	 89mfV0CY+pjNpWCdI7V5idIlg2XCbT9Ang1c63AqJsPnRTiDNDqJwTo7XSABLcPHRP
-	 u0Fd8qdWpqmuXAHhSnm705D+4aIhGWlUuf4Ydxf8FrMuzKo8IIT+jIAWCE/g/gGzvX
-	 v6Rc37Zp7vOx6YSQWC7XwDa5ULYjv4qzqhYhepONOrDkYu6B4NTrYXx0x2sOnWKslb
-	 AabyLwU7kvsjA==
-Date: Wed, 24 Apr 2024 14:30:09 +0000
-To: linux-kernel@vger.kernel.org
-From: Raymond Hackley <raymondhackley@protonmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Jakob Hauser <jahau@rocketmail.com>, Stephan Gerhold <stephan@gerhold.net>, Nikita Travkin <nikita@trvn.ru>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: [PATCH v2 0/2] arm64: dts: qcom: msm8916/39-samsung-a2015: Add PMIC and charger
-Message-ID: <20240424142952.24134-1-raymondhackley@protonmail.com>
-Feedback-ID: 49437091:user:proton
-X-Pm-Message-ID: 0890518e4e5b3ebfb83d1e0e134db4545b8ea97b
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YF5mQVER"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B754BC113CD;
+	Wed, 24 Apr 2024 14:31:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713969122;
+	bh=wAod5RSgdsjuTw+r1YaB6JyjK+go0sx8F9HiXNQiL+c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=YF5mQVERP1lV0bpGS15IMBcfuFXzXrJHuxpR36+ZbHsx7429bMXL550RKR76jvgi3
+	 NvnfhA1/owyvN77viCAM/xEJmmnLXO9Bv8ICnRsZQx3lO20Cn6UiWoXZ08CY696eDB
+	 IugIt2fcj8iLcs+c/Ld8p2FEEx0YEbzk3BnqgH8naoHcnXyA5ePl+jmPOSr235eccc
+	 WnTiFFrellPtqecVJEOnSLTzXABA6rtikRiFEVgzDkXiPzQPO/3+3VikHSjc78ByRY
+	 Qq+WHny79SINk1mw+FMA69BKGAGNhRN7yIfnW4/PKQ7qvXhbYcLg9q6/4dnFdkKUNX
+	 XUDbghxo88H4g==
+Date: Wed, 24 Apr 2024 23:31:56 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Florent Revest <revest@chromium.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
+ <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
+ Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v9 01/36] tracing: Add a comment about ftrace_regs
+ definition
+Message-Id: <20240424233156.67b39d2a3485069fed156308@kernel.org>
+In-Reply-To: <CABRcYmK+JMLDf41csuZB4aJSb9956wTy=5rpB1YDsSv0-MoZHg@mail.gmail.com>
+References: <171318533841.254850.15841395205784342850.stgit@devnote2>
+	<171318535003.254850.2125783941049872788.stgit@devnote2>
+	<CABRcYmK_Btem8cBbz=j==RWxw11PQ8cNAUshNA540VD3O=2WEQ@mail.gmail.com>
+	<CABRcYmK+JMLDf41csuZB4aJSb9956wTy=5rpB1YDsSv0-MoZHg@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The phones listed below have Richtek RT5033 PMIC and charger.
-Add them to the device trees.
+On Wed, 24 Apr 2024 15:19:24 +0200
+Florent Revest <revest@chromium.org> wrote:
 
-- Samsung Galaxy A3/A5/A7 2015
-- Samsung Galaxy E5/E7
-- Samsung Galaxy Grand Max
+> On Wed, Apr 24, 2024 at 2:23 PM Florent Revest <revest@chromium.org> wrote:
+> >
+> > On Mon, Apr 15, 2024 at 2:49 PM Masami Hiramatsu (Google)
+> > <mhiramat@kernel.org> wrote:
+> > >
+> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > >
+> > > To clarify what will be expected on ftrace_regs, add a comment to the
+> > > architecture independent definition of the ftrace_regs.
+> > >
+> > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > Acked-by: Mark Rutland <mark.rutland@arm.com>
+> > > ---
+> > >  Changes in v8:
+> > >   - Update that the saved registers depends on the context.
+> > >  Changes in v3:
+> > >   - Add instruction pointer
+> > >  Changes in v2:
+> > >   - newly added.
+> > > ---
+> > >  include/linux/ftrace.h |   26 ++++++++++++++++++++++++++
+> > >  1 file changed, 26 insertions(+)
+> > >
+> > > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> > > index 54d53f345d14..b81f1afa82a1 100644
+> > > --- a/include/linux/ftrace.h
+> > > +++ b/include/linux/ftrace.h
+> > > @@ -118,6 +118,32 @@ extern int ftrace_enabled;
+> > >
+> > >  #ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+> > >
+> > > +/**
+> > > + * ftrace_regs - ftrace partial/optimal register set
+> > > + *
+> > > + * ftrace_regs represents a group of registers which is used at the
+> > > + * function entry and exit. There are three types of registers.
+> > > + *
+> > > + * - Registers for passing the parameters to callee, including the stack
+> > > + *   pointer. (e.g. rcx, rdx, rdi, rsi, r8, r9 and rsp on x86_64)
+> > > + * - Registers for passing the return values to caller.
+> > > + *   (e.g. rax and rdx on x86_64)
+> >
+> > Ooc, have we ever considered skipping argument registers that are not
+> > return value registers in the exit code paths ? For example, why would
+> > we want to save rdi in a return handler ?
+> >
+> > But if we want to avoid the situation of having "sparse ftrace_regs"
+> > all over again, we'd have to split ftrace_regs into a ftrace_args_regs
+> > and a ftrace_ret_regs which would make this refactoring even more
+> > painful, just to skip a few instructions. :|
+> >
+> > I don't necessarily think it's worth it, I just wanted to make sure
+> > this was considered.
+> 
+> Ah, well, I just reached patch 22 and noticed that there you add add:
+> 
+> + * Basically, ftrace_regs stores the registers related to the context.
+> + * On function entry, registers for function parameters and hooking the
+> + * function call are stored, and on function exit, registers for function
+> + * return value and frame pointers are stored.
+> 
+> So ftrace_regs can be a a sparse structure then. That's fair enough with me! ;)
 
----
-v2: Split the connector into another patch
+Yes, and in this patch, I explained that too :)
 
+> + * On the function entry, those registers will be restored except for
+> + * the stack pointer, so that user can change the function parameters
+> + * and instruction pointer (e.g. live patching.)
+> + * On the function exit, only registers which is used for return values
+> > + * are restored.
+
+So the function exit, ftrace_regs will be sparse.
+
+Thank you,
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
