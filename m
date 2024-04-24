@@ -1,154 +1,89 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E64536D;
-	Wed, 24 Apr 2024 08:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+Received: from mail.holtmann.org (coyote.holtmann.net [212.227.132.17])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E569A158202;
+	Wed, 24 Apr 2024 08:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.132.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713946230; cv=none; b=dH9uT67FeaJ8LD1iE1ZBT4ce3qMvGWvW0VRPxlrOn9C+vV++/QcfWeJPq79jEnogX5XhUL3N530YR9mlaKQkccIX/JkkICF2PTcJLjwYPhuJXVmc+uBBfBf8bBuf4S+9T5wvvnzPhTuhmTpehZRvCJtuYpSV+X+TGV0sKkWK1FM=
+	t=1713946290; cv=none; b=YNsTecWaG9ODwxfnhhYn/ZKIdvOa3YW7zotNWxygjZwZBtldQTJqtM3t11DHvFffga8ry/jImls3nDeJLZuViJaZRuqeAJj1InOAW7KVjWrT6JNudRwoggOsskiw9YK3PQ9j14TVDCDtisHnNRFmT773P/FZ0ezpPdpQTXfUMW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713946230; c=relaxed/simple;
-	bh=b3HUjTobqzaKv1wG8AKQpzu+8E9bVgtosOQs6FdPTuQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OTa4shtzWfdBYFGVA49ErkPUJSC3pZ41YTqtCIPHwztkJ0xv+hmRKUCPf5NsFzT8YXPwBXTJ3DHzb2aG6Melgz8yQHIP/qN3rGo9lL+q25FrzRCEdgWsHG1gTYCGy7i31siwKaysOTGGYYa0aDIYlMRgCfMK4j4i4Xnbr3CmDvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VPWmp5D8Nz1R8QP;
-	Wed, 24 Apr 2024 16:07:22 +0800 (CST)
-Received: from dggpemd100001.china.huawei.com (unknown [7.185.36.94])
-	by mail.maildlp.com (Postfix) with ESMTPS id 223B114011F;
-	Wed, 24 Apr 2024 16:10:24 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- dggpemd100001.china.huawei.com (7.185.36.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Wed, 24 Apr 2024 16:10:23 +0800
-From: Xingui Yang <yangxingui@huawei.com>
-To: <john.g.garry@oracle.com>, <yanaijie@huawei.com>, <jejb@linux.ibm.com>,
-	<martin.petersen@oracle.com>, <damien.lemoal@opensource.wdc.com>
-CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>,
-	<chenxiang66@hisilicon.com>, <kangfenglong@huawei.com>
-Subject: [PATCH v2] scsi: libsas: Fix exp-attached end device cannot be scanned in again after probe failed
-Date: Wed, 24 Apr 2024 08:08:07 +0000
-Message-ID: <20240424080807.8469-1-yangxingui@huawei.com>
-X-Mailer: git-send-email 2.17.1
+	s=arc-20240116; t=1713946290; c=relaxed/simple;
+	bh=7HDc/MqVQCPWa5gWooNoBrslr6ONAaNmJF3PdVsJytY=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=GLUkwtRApVLeUjBqXMUSE7NwQ8PutXnIFSO5V+4kw592Gg4uqbzBxDV6VxJTw5v5xXx6P2AyPdxygU/GJOXzj8oAIG27x4dA1lhgWifeJGOggQh0iUnqg1JxO7UT5tlXV9PKzMgvJndefuv2RLozM9itD0U9YEANXzv9v3PF5g8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=holtmann.org; spf=pass smtp.mailfrom=holtmann.org; arc=none smtp.client-ip=212.227.132.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=holtmann.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=holtmann.org
+Received: from smtpclient.apple (p4fefc49c.dip0.t-ipconnect.de [79.239.196.156])
+	by mail.holtmann.org (Postfix) with ESMTPSA id 979D1CECBE;
+	Wed, 24 Apr 2024 10:11:20 +0200 (CEST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemd100001.china.huawei.com (7.185.36.94)
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [EXT] [PATCH v10 0/2] wifi: mwifiex: add code to support host
+ mlme
+From: Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <PA4PR04MB96389E67F826216C44FE19FFD1112@PA4PR04MB9638.eurprd04.prod.outlook.com>
+Date: Wed, 24 Apr 2024 10:11:10 +0200
+Cc: Brian Norris <briannorris@chromium.org>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Kalle Valo <kvalo@kernel.org>,
+ "francesco@dolcini.it" <francesco@dolcini.it>,
+ Pete Hsieh <tsung-hsien.hsieh@nxp.com>,
+ "rafael.beims" <rafael.beims@toradex.com>,
+ Francesco Dolcini <francesco.dolcini@toradex.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C8F76484-1359-437B-85BF-C646A21F7BCE@holtmann.org>
+References: <20240418060626.431202-1-yu-hao.lin@nxp.com>
+ <0ED16BAB-6E7D-487C-BBCA-E63FEF37C60D@holtmann.org>
+ <PA4PR04MB963815B9FDA6119683A28CADD10E2@PA4PR04MB9638.eurprd04.prod.outlook.com>
+ <6CB59E09-F34E-4986-AA88-8EC4EE5E71DF@holtmann.org>
+ <PA4PR04MB9638B62BC25F773C6922A4BCD10D2@PA4PR04MB9638.eurprd04.prod.outlook.com>
+ <ZiLlPOvKlfCySZwF@google.com>
+ <PA4PR04MB96383D46C1187C237DFC7988D1122@PA4PR04MB9638.eurprd04.prod.outlook.com>
+ <PA4PR04MB96389E67F826216C44FE19FFD1112@PA4PR04MB9638.eurprd04.prod.outlook.com>
+To: David Lin <yu-hao.lin@nxp.com>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-We found that it is judged as broadcast flutter when the exp-attached end
-device reconnects after probe failed, as follows:
+Hi David,
 
-[78779.654026] sas: broadcast received: 0
-[78779.654037] sas: REVALIDATING DOMAIN on port 0, pid:10
-[78779.654680] sas: ex 500e004aaaaaaa1f phy05 change count has changed
-[78779.662977] sas: ex 500e004aaaaaaa1f phy05 originated BROADCAST(CHANGE)
-[78779.662986] sas: ex 500e004aaaaaaa1f phy05 new device attached
-[78779.663079] sas: ex 500e004aaaaaaa1f phy05:U:8 attached: 500e004aaaaaaa05 (stp)
-[78779.693542] hisi_sas_v3_hw 0000:b4:02.0: dev[16:5] found
-[78779.701155] sas: done REVALIDATING DOMAIN on port 0, pid:10, res 0x0
-[78779.707864] sas: Enter sas_scsi_recover_host busy: 0 failed: 0
-...
-[78835.161307] sas: --- Exit sas_scsi_recover_host: busy: 0 failed: 0 tries: 1
-[78835.171344] sas: sas_probe_sata: for exp-attached device 500e004aaaaaaa05 returned -19
-[78835.180879] hisi_sas_v3_hw 0000:b4:02.0: dev[16:5] is gone
-[78835.187487] sas: broadcast received: 0
-[78835.187504] sas: REVALIDATING DOMAIN on port 0, pid:10
-[78835.188263] sas: ex 500e004aaaaaaa1f phy05 change count has changed
-[78835.195870] sas: ex 500e004aaaaaaa1f phy05 originated BROADCAST(CHANGE)
-[78835.195875] sas: ex 500e004aaaaaaa1f rediscovering phy05
-[78835.196022] sas: ex 500e004aaaaaaa1f phy05:U:A attached: 500e004aaaaaaa05 (stp)
-[78835.196026] sas: ex 500e004aaaaaaa1f phy05 broadcast flutter
-[78835.197615] sas: done REVALIDATING DOMAIN on port 0, pid:10, res 0x0
+> Johannes agreed that cfg80211 is the correct way for the development =
+of mwifiex
+> (mac80211 can't offload association process to driver/FW).
 
-The cause of the problem is that the related ex_phy's attached_sas_addr was
-not cleared after the end device probe failed. In order to solve the above
-problem, a function sas_ex_unregister_end_dev() is defined to clear the
-ex_phy information and unregister the end device after the exp-attached end
-device probe failed.
+that was never my question here.
 
-As the sata device is an asynchronous probe, the sata device may probe
-failed after done REVALIDATING DOMAIN. Then after its port is added to the
-sas_port_del_list, the port will not be deleted until the end of the next
-REVALIDATING DOMAIN and sas_destruct_ports() is called. A warning about
-creating a duplicate port will occur in the new REVALIDATING DOMAIN when
-the end device reconnects. Therefore, the previous destroy_list and
-sas_port_del_list should be handled before REVALIDATING DOMAIN.
+> This patch is used to fully leverage SME of wpa_supplicant and hostapd =
+which can complete the missing WPA3 feature of mwifiex.
+> The patch series had been reviewed and discussed. It looks like there =
+is no more comments for patch v10.
+> I wonder can patch v10 be accepted by you?
 
-Signed-off-by: Xingui Yang <yangxingui@huawei.com>
----
-Changes since v1:
-- Simplify the process of getting ex_phy id based on Jason's suggestion.
-- Update commit information.
----
- drivers/scsi/libsas/sas_discover.c | 2 ++
- drivers/scsi/libsas/sas_expander.c | 8 ++++++++
- drivers/scsi/libsas/sas_internal.h | 6 +++++-
- 3 files changed, 15 insertions(+), 1 deletion(-)
+If your hardware is a FullMac hardware then what is the point in now =
+separating
+auth/assoc out. Is this done just for WPA3 or also for WPA2/WPA1. Are =
+you no
+longer a FullMac hardware?
 
-diff --git a/drivers/scsi/libsas/sas_discover.c b/drivers/scsi/libsas/sas_discover.c
-index 8fb7c41c0962..aae90153f4c6 100644
---- a/drivers/scsi/libsas/sas_discover.c
-+++ b/drivers/scsi/libsas/sas_discover.c
-@@ -517,6 +517,8 @@ static void sas_revalidate_domain(struct work_struct *work)
- 	struct sas_ha_struct *ha = port->ha;
- 	struct domain_device *ddev = port->port_dev;
- 
-+	sas_destruct_devices(port);
-+	sas_destruct_ports(port);
- 	/* prevent revalidation from finding sata links in recovery */
- 	mutex_lock(&ha->disco_mutex);
- 	if (test_bit(SAS_HA_ATA_EH_ACTIVE, &ha->state)) {
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index f6e6db8b8aba..45793c10009b 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -1856,6 +1856,14 @@ static void sas_unregister_devs_sas_addr(struct domain_device *parent,
- 	}
- }
- 
-+void sas_ex_unregister_end_dev(struct domain_device *dev)
-+{
-+	struct domain_device *parent = dev->parent;
-+	struct sas_phy *phy = dev->phy;
-+
-+	sas_unregister_devs_sas_addr(parent, phy->number, true);
-+}
-+
- static int sas_discover_bfs_by_root_level(struct domain_device *root,
- 					  const int level)
- {
-diff --git a/drivers/scsi/libsas/sas_internal.h b/drivers/scsi/libsas/sas_internal.h
-index 3804aef165ad..434f928c2ed8 100644
---- a/drivers/scsi/libsas/sas_internal.h
-+++ b/drivers/scsi/libsas/sas_internal.h
-@@ -50,6 +50,7 @@ void sas_discover_event(struct asd_sas_port *port, enum discover_event ev);
- 
- void sas_init_dev(struct domain_device *dev);
- void sas_unregister_dev(struct asd_sas_port *port, struct domain_device *dev);
-+void sas_ex_unregister_end_dev(struct domain_device *dev);
- 
- void sas_scsi_recover_host(struct Scsi_Host *shost);
- 
-@@ -145,7 +146,10 @@ static inline void sas_fail_probe(struct domain_device *dev, const char *func, i
- 		func, dev->parent ? "exp-attached" :
- 		"direct-attached",
- 		SAS_ADDR(dev->sas_addr), err);
--	sas_unregister_dev(dev->port, dev);
-+	if (dev->parent && !dev_is_expander(dev->dev_type))
-+		sas_ex_unregister_end_dev(dev);
-+	else
-+		sas_unregister_dev(dev->port, dev);
- }
- 
- static inline void sas_fill_in_rphy(struct domain_device *dev,
--- 
-2.17.1
+You keep saying that you just want to support WPA3 and if previously the =
+HW
+worked as FullMac hardware, then external_auth should be the way to go =
+for
+having SAE handled by wpa_supplicant (or iwd for that matter).
+
+Now if you are fully embracing to auth/assoc and we can remove the =
+support
+for the connect ops, then lets do it. However I don=E2=80=99t see =
+anything properly
+described in the commit message. You keep saying WPA3 support and =
+nothing
+else explain what the new Key V2 API of the firmware would do.
+
+Regards
+
+Marcel
 
