@@ -1,290 +1,129 @@
-Received: from forward501a.mail.yandex.net (forward501a.mail.yandex.net [178.154.239.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07296839E2;
-	Wed, 24 Apr 2024 19:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.81
+Received: from classfun.cn (unknown [129.204.178.38])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 601955CDF0;
+	Wed, 24 Apr 2024 19:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.204.178.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713986382; cv=none; b=sgz+HsC5+HnL5Jirg+QznrXtreuC7+cVxxbSsKsrN+DBTA9CXn/qrw6xThGI20JC9+LxfqIaJQznhpmn4l1Zr9Z2kAwTYpzmtzNBsQA3lfe/ZlG6vptT3rZejfziwO4nqF+FbbifWTXCDCu6ZE8XCQAUUqiE7QqLIjvS8L0hXZ0=
+	t=1713986429; cv=none; b=jEcZ/31SLVSvs2n+oLDmAkbA/qPj7SeXcq1x9r2VqmB9nU0MVXqMvs1k9NzGkDEmN3WqatXUQCOTtIjYntAXie3THPLYNaXTolAHzeHR3O8yVUEqRiu4ULRajZHjbtGg1NUJ1V0OFed6Q5L4BCc4jD6hNFSFNA/sFzyQYyaH3nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713986382; c=relaxed/simple;
-	bh=gmKhwrKJ7KkWdLFrjoM7B8JA1ns8GbRqJN0IY0d4Jt4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KXZoHLJ8A0vKz18ydAjWtjo6sOOc1QXpGL5Trx414of8UQD/N0u6ZxVHa/q7tTEKbw3OkKjBpruzUJz/VlhQQcbdX0A6aT90CjozvsEbOPoTZw9mDYqJ4QYU4iQycjC0fmRYrP7j9Me9kBoG7XDjnCWybH6A6NuSam6DQY41xsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru; spf=pass smtp.mailfrom=ya.ru; dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b=YOUHiuwJ; arc=none smtp.client-ip=178.154.239.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ya.ru
+	s=arc-20240116; t=1713986429; c=relaxed/simple;
+	bh=rZXk3f2UucFu56G21+BcQ5j5xPzD1bSO6jfq4L1h4MI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FUmyf4QgaPpRDkeoI/t2ukZGrO8FrwBpbEvRO4VDyZUQRi3X9vq9i0XeUqanfnHhW190BzHELb3xHoDe4HFJ94FqeQqFKJnAKS4xIeAIWgQ2XtTbWHTN5CDTk0JdOIUAmoiZqfc4pFsii2z8JGMCwt6DGeNsa4ADqPm5+7hWDzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=classfun.cn; spf=pass smtp.mailfrom=classfun.cn; dkim=pass (1024-bit key) header.d=classfun.cn header.i=@classfun.cn header.b=GfMxPo1X; arc=none smtp.client-ip=129.204.178.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=classfun.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=classfun.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b="YOUHiuwJ"
-Received: from mail-nwsmtp-smtp-production-main-54.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-54.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:332e:0:640:784d:0])
-	by forward501a.mail.yandex.net (Yandex) with ESMTPS id DA35061C30;
-	Wed, 24 Apr 2024 22:19:36 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-54.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id IJRtcgXMoCg0-wOIrQrK4;
-	Wed, 24 Apr 2024 22:19:35 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ya.ru; s=mail;
-	t=1713986375; bh=2+rCwqdAWPAFb5cCgnBE9YdZvQ4hDgvaFdanWPm/XQQ=;
-	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=YOUHiuwJ1lZPfnwkhfXIiBt3AOTeMzu4JLbG6wDiFw1giTFNigMJXmROkta0jVJkm
-	 Sk5Cn9hRB8f17bYg0lOiG3wuDE3le5HJr6JOZftKJrsXy78XJf2NYmMBeMIHr8kxBj
-	 KdlCZXN/bdOoYVTxF21CJOVRV8g/7jzCgwTgy570=
-Authentication-Results: mail-nwsmtp-smtp-production-main-54.iva.yp-c.yandex.net; dkim=pass header.i=@ya.ru
-From: Konstantin Pugin <rilian.la.te@ya.ru>
-To: 
-Cc: krzk@kernel.org,
-	conor@kernel.org,
-	lkp@intel.com,
-	vz@mleia.com,
-	robh@kernel.org,
-	jcmvbkbc@gmail.com,
-	nicolas.ferre@microchip.com,
-	manikanta.guntupalli@amd.com,
-	corbet@lwn.net,
-	ychuang3@nuvoton.com,
-	u.kleine-koenig@pengutronix.de,
-	Maarten.Brock@sttls.nl,
-	Konstantin Pugin <ria.freelander@gmail.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Lech Perczak <lech.perczak@camlingroup.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [PATCH v8 3/3] serial: sc16is7xx: add support for EXAR XR20M1172 UART
-Date: Wed, 24 Apr 2024 22:18:54 +0300
-Message-ID: <20240424191908.32565-4-rilian.la.te@ya.ru>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240424191908.32565-1-rilian.la.te@ya.ru>
-References: <20240424191908.32565-1-rilian.la.te@ya.ru>
+	dkim=pass (1024-bit key) header.d=classfun.cn header.i=@classfun.cn header.b="GfMxPo1X"
+Received: from classfun.cn (unknown [129.204.178.38])
+	by node2.classfun.cn (Postfix) with ESMTP id C6130100C66;
+	Thu, 25 Apr 2024 03:09:39 +0800 (CST)
+Received: from [192.168.0.160] (unknown [220.162.71.180])
+	(Authenticated sender: bigfoot)
+	by classfun.cn (Postfix) with ESMTPSA id AF86178910;
+	Thu, 25 Apr 2024 03:09:35 +0800 (CST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 classfun.cn AF86178910
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=classfun.cn;
+	s=default; t=1713985778;
+	bh=d/BoO25/KtfZ3Yh1f6DO8rsPKA20e+M+yd8Hwd1i7sM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GfMxPo1XfOXfDQ7tKPi5Kk481vMw2IlAjpyvrroy769NxFg1EA0DsOn/WYuqw3zN5
+	 W61ibhG4x40Jst5zrp5Jfa+8rW639Rposs1+kkIMSYuylvWFzViZeOfvkMV/FHYpSr
+	 ns4KqQAOybwyR/zWU3rmcujhxBr76QFzLGk1VI78=
+Message-ID: <478366f4-cc4f-4343-99c4-87827159b10b@classfun.cn>
+Date: Thu, 25 Apr 2024 03:09:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/10] pwm: Add SI-EN SN3112 PWM support
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, wuxilin123@gmail.com,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Tengfei Fan <quic_tengfan@quicinc.com>,
+ Molly Sophia <mollysophia379@gmail.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-arm-msm@vger.kernel.org
+References: <20240424-ayn-odin2-initial-v1-0-e0aa05c991fd@gmail.com>
+ <20240424-ayn-odin2-initial-v1-2-e0aa05c991fd@gmail.com>
+ <17d36836-67cb-4d5a-a8b4-ecf1517a0020@linaro.org>
+Content-Language: en-US
+From: BigfootACA <bigfoot@classfun.cn>
+Autocrypt: addr=bigfoot@classfun.cn; keydata=
+ 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
+In-Reply-To: <17d36836-67cb-4d5a-a8b4-ecf1517a0020@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Konstantin Pugin <ria.freelander@gmail.com>
+On 24/4/2024 23:55, Bryan O'Donoghue wrote:
+> On 24/04/2024 16:29, Xilin Wu via B4 Relay wrote:
+>> From: Junhao Xie <bigfoot@classfun.cn>
+>>
+>> Add a new driver for the SI-EN SN3112 12-channel 8-bit PWM LED controller.
+>>
+>> Signed-off-by: Junhao Xie <bigfoot@classfun.cn>
+>> ---
+>>   drivers/pwm/Kconfig      |  10 ++
+>>   drivers/pwm/Makefile     |   1 +
+>>   drivers/pwm/pwm-sn3112.c | 336 +++++++++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 347 insertions(+)
+[...]
+> 
+> CHECK: Prefer kernel type 'u8' over 'uint8_t'
+> #145: FILE: drivers/pwm/pwm-sn3112.c:91:
+> +                  uint8_t val, bool write)
+> 
 
-XR20M1172 register set is mostly compatible with SC16IS762, but it has
-a support for additional division rates of UART with special DLD register.
-So, add handling this register by appropriate devicetree bindings.
-
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-Signed-off-by: Konstantin Pugin <ria.freelander@gmail.com>
----
- drivers/tty/serial/Kconfig         |  3 +-
- drivers/tty/serial/sc16is7xx.c     | 61 ++++++++++++++++++++++++++++--
- drivers/tty/serial/sc16is7xx.h     |  1 +
- drivers/tty/serial/sc16is7xx_i2c.c |  1 +
- drivers/tty/serial/sc16is7xx_spi.c |  1 +
- 5 files changed, 62 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 4fdd7857ef4d..9d0438cfe147 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1029,7 +1029,7 @@ config SERIAL_SC16IS7XX_CORE
- 	select SERIAL_SC16IS7XX_SPI if SPI_MASTER
- 	select SERIAL_SC16IS7XX_I2C if I2C
- 	help
--	  Core driver for NXP SC16IS7xx UARTs.
-+	  Core driver for NXP SC16IS7xx and compatible UARTs.
- 	  Supported ICs are:
- 
- 	    SC16IS740
-@@ -1038,6 +1038,7 @@ config SERIAL_SC16IS7XX_CORE
- 	    SC16IS752
- 	    SC16IS760
- 	    SC16IS762
-+	    XR20M1172 (Exar)
- 
- 	  The driver supports both I2C and SPI interfaces.
- 
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index dfcc804f558f..09c9e52d7ec2 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -10,6 +10,7 @@
- #undef DEFAULT_SYMBOL_NAMESPACE
- #define DEFAULT_SYMBOL_NAMESPACE SERIAL_NXP_SC16IS7XX
- 
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-@@ -68,6 +69,7 @@
- /* Special Register set: Only if ((LCR[7] == 1) && (LCR != 0xBF)) */
- #define SC16IS7XX_DLL_REG		(0x00) /* Divisor Latch Low */
- #define SC16IS7XX_DLH_REG		(0x01) /* Divisor Latch High */
-+#define XR20M117X_DLD_REG		(0x02) /* Divisor Fractional Register */
- 
- /* Enhanced Register set: Only if (LCR == 0xBF) */
- #define SC16IS7XX_EFR_REG		(0x02) /* Enhanced Features */
-@@ -221,6 +223,20 @@
- #define SC16IS7XX_TCR_RX_HALT(words)	((((words) / 4) & 0x0f) << 0)
- #define SC16IS7XX_TCR_RX_RESUME(words)	((((words) / 4) & 0x0f) << 4)
- 
-+/*
-+ * Divisor Fractional Register bits (EXAR extension).
-+ * EXAR hardware is mostly compatible with SC16IS7XX, but supports additional feature:
-+ * 4x and 8x divisor, instead of default 16x. It has a special register to program it.
-+ * Bits 0 to 3 is fractional divisor, it used to set value of last 16 bits of
-+ * uartclk * (16 / divisor) / baud, in case of default it will be uartclk / baud.
-+ * Bits 4 and 5 used as switches, and should not be set to 1 simultaneously.
-+ */
-+
-+#define XR20M117X_DLD_16X			0
-+#define XR20M117X_DLD_DIV_MASK			GENMASK(3, 0)
-+#define XR20M117X_DLD_8X			BIT(4)
-+#define XR20M117X_DLD_4X			BIT(5)
-+
- /*
-  * TLR register bits
-  * If TLR[3:0] or TLR[7:4] are logical 0, the selectable trigger levels via the
-@@ -523,6 +539,13 @@ const struct sc16is7xx_devtype sc16is762_devtype = {
- };
- EXPORT_SYMBOL_GPL(sc16is762_devtype);
- 
-+const struct sc16is7xx_devtype xr20m1172_devtype = {
-+	.name		= "XR20M1172",
-+	.nr_gpio	= 8,
-+	.nr_uart	= 2,
-+};
-+EXPORT_SYMBOL_GPL(xr20m1172_devtype);
-+
- static bool sc16is7xx_regmap_volatile(struct device *dev, unsigned int reg)
- {
- 	switch (reg) {
-@@ -555,18 +578,43 @@ static bool sc16is7xx_regmap_noinc(struct device *dev, unsigned int reg)
- 	return reg == SC16IS7XX_RHR_REG;
- }
- 
-+static bool sc16is7xx_has_dld(struct device *dev)
-+{
-+	struct sc16is7xx_port *s = dev_get_drvdata(dev);
-+
-+	if (s->devtype == &xr20m1172_devtype)
-+		return true;
-+	return false;
-+}
-+
- static int sc16is7xx_set_baud(struct uart_port *port, int baud)
- {
- 	struct sc16is7xx_one *one = to_sc16is7xx_one(port, port);
--	u8 lcr;
-+	unsigned long clk = port->uartclk, div, div16;
-+	bool has_dld = sc16is7xx_has_dld(port->dev);
-+	u8 dld_mode = XR20M117X_DLD_16X;
- 	u8 prescaler = 0;
--	unsigned long clk = port->uartclk, div = clk / 16 / baud;
-+	u8 divisor = 16;
-+	u8 lcr;
-+
-+	if (has_dld && DIV_ROUND_CLOSEST(clk, baud) < 16)
-+		divisor = rounddown_pow_of_two(DIV_ROUND_CLOSEST(clk, baud));
-+
-+	div16 = (clk * 16) / divisor / baud;
-+	div = div16 / 16;
- 
- 	if (div >= BIT(16)) {
- 		prescaler = SC16IS7XX_MCR_CLKSEL_BIT;
- 		div /= 4;
- 	}
- 
-+	/* Count additional divisor for EXAR devices */
-+	if (divisor == 8)
-+		dld_mode = XR20M117X_DLD_8X;
-+	if (divisor == 4)
-+		dld_mode = XR20M117X_DLD_4X;
-+	dld_mode |= FIELD_PREP(XR20M117X_DLD_DIV_MASK, div16);
-+
- 	/* Enable enhanced features */
- 	sc16is7xx_efr_lock(port);
- 	sc16is7xx_port_update(port, SC16IS7XX_EFR_REG,
-@@ -587,12 +635,14 @@ static int sc16is7xx_set_baud(struct uart_port *port, int baud)
- 	regcache_cache_bypass(one->regmap, true);
- 	sc16is7xx_port_write(port, SC16IS7XX_DLH_REG, div / 256);
- 	sc16is7xx_port_write(port, SC16IS7XX_DLL_REG, div % 256);
-+	if (has_dld)
-+		sc16is7xx_port_write(port, XR20M117X_DLD_REG, dld_mode);
- 	regcache_cache_bypass(one->regmap, false);
- 
- 	/* Restore LCR and access to general register set */
- 	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, lcr);
- 
--	return DIV_ROUND_CLOSEST(clk / 16, div);
-+	return DIV_ROUND_CLOSEST(clk / divisor, div);
- }
- 
- static void sc16is7xx_handle_rx(struct uart_port *port, unsigned int rxlen,
-@@ -1002,6 +1052,8 @@ static void sc16is7xx_set_termios(struct uart_port *port,
- 				  const struct ktermios *old)
- {
- 	struct sc16is7xx_one *one = to_sc16is7xx_one(port, port);
-+	bool has_dld = sc16is7xx_has_dld(port->dev);
-+	u8 divisor = has_dld ? 4 : 16
- 	unsigned int lcr, flow = 0;
- 	int baud;
- 	unsigned long flags;
-@@ -1084,7 +1136,7 @@ static void sc16is7xx_set_termios(struct uart_port *port,
- 	/* Get baud rate generator configuration */
- 	baud = uart_get_baud_rate(port, termios, old,
- 				  port->uartclk / 16 / 4 / 0xffff,
--				  port->uartclk / 16);
-+				  port->uartclk / divisor);
- 
- 	/* Setup baudrate generator */
- 	baud = sc16is7xx_set_baud(port, baud);
-@@ -1684,6 +1736,7 @@ void sc16is7xx_remove(struct device *dev)
- EXPORT_SYMBOL_GPL(sc16is7xx_remove);
- 
- const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] = {
-+	{ .compatible = "exar,xr20m1172",	.data = &xr20m1172_devtype, },
- 	{ .compatible = "nxp,sc16is740",	.data = &sc16is74x_devtype, },
- 	{ .compatible = "nxp,sc16is741",	.data = &sc16is74x_devtype, },
- 	{ .compatible = "nxp,sc16is750",	.data = &sc16is750_devtype, },
-diff --git a/drivers/tty/serial/sc16is7xx.h b/drivers/tty/serial/sc16is7xx.h
-index afb784eaee45..eb2e3bc86f15 100644
---- a/drivers/tty/serial/sc16is7xx.h
-+++ b/drivers/tty/serial/sc16is7xx.h
-@@ -28,6 +28,7 @@ extern const struct sc16is7xx_devtype sc16is750_devtype;
- extern const struct sc16is7xx_devtype sc16is752_devtype;
- extern const struct sc16is7xx_devtype sc16is760_devtype;
- extern const struct sc16is7xx_devtype sc16is762_devtype;
-+extern const struct sc16is7xx_devtype xr20m1172_devtype;
- 
- const char *sc16is7xx_regmap_name(u8 port_id);
- 
-diff --git a/drivers/tty/serial/sc16is7xx_i2c.c b/drivers/tty/serial/sc16is7xx_i2c.c
-index 3ed47c306d85..839de902821b 100644
---- a/drivers/tty/serial/sc16is7xx_i2c.c
-+++ b/drivers/tty/serial/sc16is7xx_i2c.c
-@@ -46,6 +46,7 @@ static const struct i2c_device_id sc16is7xx_i2c_id_table[] = {
- 	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
- 	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
- 	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
-+	{ "xr20m1172",	(kernel_ulong_t)&xr20m1172_devtype, },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, sc16is7xx_i2c_id_table);
-diff --git a/drivers/tty/serial/sc16is7xx_spi.c b/drivers/tty/serial/sc16is7xx_spi.c
-index 73df36f8a7fd..2b278282dbd0 100644
---- a/drivers/tty/serial/sc16is7xx_spi.c
-+++ b/drivers/tty/serial/sc16is7xx_spi.c
-@@ -69,6 +69,7 @@ static const struct spi_device_id sc16is7xx_spi_id_table[] = {
- 	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
- 	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
- 	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
-+	{ "xr20m1172",	(kernel_ulong_t)&xr20m1172_devtype, },
- 	{ }
- };
- MODULE_DEVICE_TABLE(spi, sc16is7xx_spi_id_table);
--- 
-2.44.0
-
+I'll fix the commit and resend v2 later, thanks for your reply!
