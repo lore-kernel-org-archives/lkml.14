@@ -1,446 +1,227 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98511292E9;
-	Wed, 24 Apr 2024 03:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713927869; cv=none; b=B65rz/q6bU/vMw4qJNU5AZdLLV82qYvpDT/bBgEsjWQP4FYQ8GrSTJNePWB3B3yzjrR5mSoNSIde89EBpXP9f3e6XOs4PQrCqxf7kQuOZufeQdvoGqb2IIksu21m70XJXePvlFbQB2gIrXZtdX7nip4CM1buKhTs/Nl7b4xheu0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713927869; c=relaxed/simple;
-	bh=Xdhhi4p5VYig6NI0eTSEzsyfCACwOxwCl4HtL70RxRE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F0fa5B05E/GnljraV3S+ooCn4yincKPPAmBazIRXSuh7ugZGJfdyGwON5Qin41tLtagG1ZeubSFwhGKrn9Nxki3HLKII6X+bmXCOkMmGpao9sl0jjnZMKed9kIeEVItJZ2D0tc/6XNEibhUUX8kvD1zd6DWIWjSdxfKmbqG+YEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=IXKq4G/+; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF6B1442EF;
+	Wed, 24 Apr 2024 03:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713927883; cv=fail; b=W7uTk9mhbhzlN38b620WRk3dDGrcw95i1/qd0VFrecuMjxlwo10EK/4XxaRpnCN5OYsAkMYZ2Bnyv34nDTcH5amvQZXbOYsXE/qw9agDzZbpYN0MUqW3CMUHeGL6hSXfhN07UT24ybtM9qOOEgNOi0/VM9qM8vjCjOFsEMQR7HA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713927883; c=relaxed/simple;
+	bh=zFXUmCb6hbcsrBXWslEsZv99jvMd17D/IvkPb84vvHE=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=LLR9HFcSrN15RtGnfqmR7t2y59/yMtq7kJEduaO20WOb4ST0PFYxFRm9KOUsJAkVN4+RePWi63m+78Dj1VIE7typPh6uxHglYrnL5ZWadTViCmJYR/XBIHdGo+JQJFsn1x90zMVrs9P9Z0aJNRvvPVfxBuV77ZxRCv4gbqdgrdI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l1FrN1ua; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IXKq4G/+"
-X-UUID: 578e331c01e711ef935d6952f98a51a9-20240424
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=PW393jJSw9yT5Yn2NPhE3fJJQ1DQ2voscMClcC4/i3M=;
-	b=IXKq4G/+jwNjA3+upMUmMiK+UF7U/ZZKcqc/XX9kBVYwGLULOuXVqnIHr0p7O554v/lh3RWWZGdxOgYWr+oXDIX76Iref4BtmDEDxfeYYDYb9W5mrRsSTavBtxhj2kaE+Sa4IS54yNypE1UboF/+C82sJxPlP+5TgCS1K7Awkec=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:cb068ac1-34da-40df-8749-8ff8b15857eb,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:82c5f88,CLOUDID:ddf40983-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 578e331c01e711ef935d6952f98a51a9-20240424
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw02.mediatek.com
-	(envelope-from <olivia.wen@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1985050861; Wed, 24 Apr 2024 11:04:18 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l1FrN1ua"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713927881; x=1745463881;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   mime-version;
+  bh=zFXUmCb6hbcsrBXWslEsZv99jvMd17D/IvkPb84vvHE=;
+  b=l1FrN1uadwy18b1tHcx3LlphAaS++VE6s2sHoD+2clWXTGXao57pLIj0
+   LP8OISbr/O8vZ2JoBqjna9ZqucDi1/mOs750cQqCclH6XGOA8EogEPUvp
+   LebXLO83HQrnpKqGeaXcnUyGF7yCVPlXb7GLCjW/0dLQOIhSmmNtZ1EJy
+   uaeOxinsIahhoYqN3hXqqdoM4PqalVt+9zXtSqBsqAtFZ4vk12vM8UvNi
+   2KZ6obciOwn8uT+nT2gLFAbw/FQ7bEK0YGNwpiNevirm4LF5DRmmVjpzg
+   mK2LtGQ3/FbURaN56UtVW2R48R3SwbwQDhNB3aC4uu6fXVArNlIAjokYU
+   Q==;
+X-CSE-ConnectionGUID: DJHzzPN3T4yFOFV35/kHdg==
+X-CSE-MsgGUID: nybMoN0bTIKu05LKmV7rOQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="32028740"
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="32028740"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 20:04:40 -0700
+X-CSE-ConnectionGUID: MZD3GZrBR+Kx+TjkZ4DVmA==
+X-CSE-MsgGUID: HYxYvmBGTDy6YS5R+EKF3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="29358765"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 23 Apr 2024 20:04:40 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 23 Apr 2024 20:04:39 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 23 Apr 2024 20:04:39 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 23 Apr 2024 20:04:39 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Wed, 24 Apr 2024 11:04:15 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Wed, 24 Apr 2024 11:04:15 +0800
-From: Olivia Wen <olivia.wen@mediatek.com>
-To: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier
-	<mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>
-CC: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	"Tinghan Shen" <tinghan.shen@mediatek.com>,
-	<linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	<jason-ch.chen@mediatek.com>, <yaya.chang@mediatek.com>,
-	<teddy.chen@mediatek.com>, <olivia.wen@mediatek.com>
-Subject: [PATCH v3 3/4] remoteproc: mediatek: Support setting DRAM and IPI shared buffer sizes
-Date: Wed, 24 Apr 2024 11:03:50 +0800
-Message-ID: <20240424030351.5294-4-olivia.wen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20240424030351.5294-1-olivia.wen@mediatek.com>
-References: <20240424030351.5294-1-olivia.wen@mediatek.com>
+ 15.1.2507.35; Tue, 23 Apr 2024 20:04:38 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oZ7qQIjSfvkec0wTX0nIbshXowQwYZvpJg8/sMh/sA+I47kpvqgI9wxpjl6zKyut5ix5YBXtsj3T7P0M9/U2cWARCblW0EYbKO1dwDYkVYt99T/Mq1tN++C+iwGlKzWA7uEE4HVK4hQpOLgZQxz07oiGV9XSkytTfYQw0lMVYMWGYhSofOrvlpvPleNTd2M6Xi9QhU71lIExxXCxAPSuKN/jaQct555AdKqMowruboMKNBlmY8s/+t+6SsYN6F+CbRkWzNSlJL875BsHCN+V3hYEdWtOdpJMudeKovPhZWLrowFBvhTQV2vfIZNCpCJUuBNYHkr4H9U1yuiQVO0wIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=T34BATf8V5Xb8ZmHcW2lDs3g/Xm4yF1ft4SYd9Oqd6Q=;
+ b=jsTJlSZLP6qmnC9mXfizWsaarBXi9zqdC6mHXR2Ifa4qA4FfVy7E0odybjfqff1IjiNznwuYsxpSwkF9FmD9thUf97rN0YWKsUSXWPlU+nbf2WXDzwCQjbq4cSNWnkF69/NeG/n1XsIj3hEPuZ3OexHH2Cq2XzNYorAonJm92DQ1cEP1CD/uHA/oe7FgYCvpH9/MBsteBM6ShX7aVjCsxN9g1aktGOijDbdy6o5xMwI6AdqPkFG7Y0H+AABjl/+sIdyCkAm0UnM4DofCWp1BDI4DLLex2qoYZfMY30IacLISZ06CzfUiZlo9kvFAL+9Cs+6r/KdsllDjgL8HAL3xsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB8393.namprd11.prod.outlook.com (2603:10b6:806:373::21)
+ by DS0PR11MB7460.namprd11.prod.outlook.com (2603:10b6:8:142::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22; Wed, 24 Apr
+ 2024 03:04:32 +0000
+Received: from SA1PR11MB8393.namprd11.prod.outlook.com
+ ([fe80::c0cf:689c:129c:4bcd]) by SA1PR11MB8393.namprd11.prod.outlook.com
+ ([fe80::c0cf:689c:129c:4bcd%6]) with mapi id 15.20.7519.021; Wed, 24 Apr 2024
+ 03:04:32 +0000
+Date: Wed, 24 Apr 2024 10:57:57 +0800
+From: kernel test robot <yujie.liu@intel.com>
+To: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>, Jonathan Corbet <corbet@lwn.net>,
+	Bjorn Helgaas <helgaas@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>, James Clark <james.clark@arm.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>
+CC: <oe-kbuild-all@lists.linux.dev>
+Subject: Re: [PATCH v2 4/6] perf test pmu: Add an eagerly loaded event test
+Message-ID: <202404241018.bgi3yFxj-lkp@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240423031719.1941141-5-irogers@google.com>
+X-ClientProxiedBy: TYCP286CA0256.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:455::14) To SA1PR11MB8393.namprd11.prod.outlook.com
+ (2603:10b6:806:373::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--10.879500-8.000000
-X-TMASE-MatchedRID: IW9ef45PAny0PK/eA06etx+WEMjoO9WWI9yVcHNDU7a5ZjHyzYrpGpW3
-	ZGXw3kr5/2rnqB0vAn9Uhaw9JJTz5KK176S49UNHlyI0nNqpRfV2+spiatOx+MOtrkhuZC9WsD3
-	kIq1/2diTFmqgSxbocPzW2RHkdJ7R6Rtr/Su6qrjk7k9yXJiqqgrefVId6fzVUUVrdcYJZJ0JSK
-	yYs8AD/Xq293tYU7oR1W4+xl3445om4SY1UdFN+Utzk37SzX4NNpy6NoTePCGbKItl61J/yZ+in
-	TK0bC9eKrauXd3MZDWUxh29qbXq99W1dy5/UE7TqD9cIqNKRTDoWnHPUOsouj9RVzG7Y29R
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--10.879500-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	11432BC0EFFE2A97E56B35C0983C879584DDAB4D71967AF94F88919975A4E5792000:8
-X-MTK: N
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB8393:EE_|DS0PR11MB7460:EE_
+X-MS-Office365-Filtering-Correlation-Id: 80f6b4ba-091e-492c-4313-08dc640b4379
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|7416005|1800799015|366007|921011;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?uFekn2Uta+e9fpwbfjwt03MQNuwLdp5IQJwFOxKvfnhdT91BFiVTtlpQS+s+?=
+ =?us-ascii?Q?QVoqfn8cSs/ipGU6Lg+NVLjELed84rnN4z31APMTRQR4ecH0M0wAZUT700ww?=
+ =?us-ascii?Q?La7D+8ejruHW0Td+sPdag6xYNudzGKiZEnPgQ3FxJgmDiepiHi37yY29b6E/?=
+ =?us-ascii?Q?k7LePHaQC++0qt78Kqevp0jMRwK1mXubAuAuYv4QVxt9/mbGP0ZPE6oT6Of0?=
+ =?us-ascii?Q?/PFnLJw9vb7kOkHEaQKWZvjqgo6Aw7jTfNUJdYdsXHlbuoftKhz3O26xXcUY?=
+ =?us-ascii?Q?zYbx1H4F3IMGYIWueKOmN0D7jj1lYHirjJfer/gZN0Rae6f+ViRiCxloizy0?=
+ =?us-ascii?Q?T68u5V3nDcRG+4VTxogYFnKOAEXjXiDmd2Jb95WUOxCqgTBz8T96vrVJ/TTk?=
+ =?us-ascii?Q?HL7MY5gMv0eq9ZsyDXr7SwkoN7jyAho04l8AfIatyw0fCs4vdC4w3pvy0KNN?=
+ =?us-ascii?Q?HtdbUjjhGi0ZkIBlml9oBtmjTYQocUcqBINGNo6C1j26BASrlPxfmHrCcaDx?=
+ =?us-ascii?Q?Mt8iwmfqoTXWYokRDnBOugfnASytv6qz3VsoM6GNasV368Z12EkC6ek8EqL6?=
+ =?us-ascii?Q?bMbqDiu0vFc5EDCy5rcslM6WoaPWW4YHRzVdlOuF6Dt01h/XtkDjrYLJj40d?=
+ =?us-ascii?Q?Zr/YPM8MwtEoc7K6MZswU9gRz8KkPYyyp058SALgAGvC0j+xdLDPudZJ0xxT?=
+ =?us-ascii?Q?drYMdMQYBfJVT2V0Oxg/Cl0KaM7ZTSk53kNqQquGAFWF2pwtOgaDyBni4xPk?=
+ =?us-ascii?Q?/U4HCsZy7gRMFi/cLNuBF68NjX/cZCrerXWA81DM2jvToXADPzHRcAmVQsc8?=
+ =?us-ascii?Q?kcn9kugAawYuaiZA0piAWTGIqhDWtOeoK93cT+Ys0jCsZ7fH1wk2x41n3lfi?=
+ =?us-ascii?Q?1++hgph50aHGl3hjWqq23At7JGLbuxDW3UwpbCKVIU5RuAGlolnsyuH8GI3O?=
+ =?us-ascii?Q?GCaOy6qNUL7DRnQYX9LuZ4hQkbV3kxc+944RWKbJVeCLfktbQh+eXFp/q6uF?=
+ =?us-ascii?Q?x2J02AomNfF4Jki21Gm/pRogscowKsnMfBiLr2ZIrQHE6vlGqr97UlCZiAmS?=
+ =?us-ascii?Q?2lhyU80fYWkFLBAp2nO02gL7VyZuzBZoA687yXVMFmWdtEtg4nUkabmVHK91?=
+ =?us-ascii?Q?bKYjhiwhljr0hUQETJwtkJ8/dQ/ZaMIzvvg6ZHckmDFGXSGBWJYF4n8k6E3i?=
+ =?us-ascii?Q?0WmzoQyQQr6iWGG/CRG9IlNimMG1xuXpj16Z5kiuiQ1x7lmua/Rtk7LvmKDB?=
+ =?us-ascii?Q?BVKM8Hz+38QTm19I8Rdk22JVQ63AjWEDM03K5hsU2g=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8393.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?vvE3LQLyW7ZR9vBmnXW6qT8gvZ/PNBfuoitG4mGFsKj1S8ek7sq7hZlFGQFV?=
+ =?us-ascii?Q?quV6tecvZRIUJX6QL6BH6XLZCNSXIb9wriPko255JcQno7ZIkNXMUW/oTM1s?=
+ =?us-ascii?Q?zNomzJvVpB4gFKSyJ7AUvk9X1mqUQadrmT9xO7b+1gSFmaBm3OiK4yK7z5ni?=
+ =?us-ascii?Q?7aAyP3H6k2r8oAdmEIuIvQ78SDTFzEaoghyp9+KOl3F32pAAo+wkoE62PJ7k?=
+ =?us-ascii?Q?GmxUdPDfmSy64bF5GBVLatJRRJAbs20va6FUhmw5HcCedctFUwBVAivZQd2p?=
+ =?us-ascii?Q?ajMcXMjL4oBvZiQBih+Ld/zjGN39cUQyRlEqF8irJVzn51ogAhIWUvT3B3eF?=
+ =?us-ascii?Q?3gCRuqVhwq2PEeXhXTMA7d46QLDV8MUC1hDi7u/px+hC10eIhhW4aJjKbI3Q?=
+ =?us-ascii?Q?BjMvv3vCvak3qVeUv+wzcJFvInBQPl7qvrZIPiBtdmBMjUerRahxOm+Cy7X4?=
+ =?us-ascii?Q?UfJqWWy4ObTo66v1LsnRRe4jU2C3a0taonx0uMiDaj6nvKzfR8yvb1X0f5m9?=
+ =?us-ascii?Q?POnWR2+PVWx8swSOMTP36NASAo/ceaCtA6G2zY5y5QZSDOoQfQ163IKRWnRO?=
+ =?us-ascii?Q?Fe7uLcz/jvWAEYIbc8UemOiq6KvITWPFWpMXBS9c0HD+ol9T3cNlFSlG0nnE?=
+ =?us-ascii?Q?H8oLzBFbd1Jz6OzsKKsBOXriB31VaTo6OD7fP+oaU1rkQIbCCZ9BZsJsunZA?=
+ =?us-ascii?Q?65GZGSXF6fj7GM+vlZ109y1CTkMKEEn/bTf87dlRTvsUjMr1AUrpTaR2K8yg?=
+ =?us-ascii?Q?Q3ID7MpcZu6mfbIzrJuS7kZYYHyLzxXggb/4lqHMcZfZGjR5AVIoQgI1HtHC?=
+ =?us-ascii?Q?k8LejOnoLemFsNPe8G4i6NNwHWaza8mf5KE2nuHuolt4Ic3B0SMrpwQC+MOG?=
+ =?us-ascii?Q?/50+mhDwpEKi+OS0RmTAdDxBJo/rv3BYAoicp0rzQ6rEiA7+aFWimYCHIwdI?=
+ =?us-ascii?Q?I8bRYMaP8+NoCjQKeMBu5BUN2aVSYSQJNbNkbekIXU0U9zMkW8I+iuA7mtOs?=
+ =?us-ascii?Q?7bvGfHBkX4jXFgb4nhIyeNNojAoWnLMRJKVEGXfxmeWEjEozt01mMZVcP28z?=
+ =?us-ascii?Q?xOiL8a4TYf2kSUnt5AWu0En2eHtQirCNGiQrADTWoTHJ9dAAvWEwZnGp8Ooc?=
+ =?us-ascii?Q?sR3nMVSSqWqk4GyaoMn4o0iLgDic5OZ9FB1tzFNxX1FN2Lj7S/eTfeokppcW?=
+ =?us-ascii?Q?q0vciWFyijqRlgsllB6LpaiUTTHmM6QSBw3k5No/SxApep7x8WqLHejU2hDQ?=
+ =?us-ascii?Q?MpFz8H8AXzeDrm9fgbzP8AuAp1wLuS0iOpTHpYYrOHcx/qtS85EmHBtyooWK?=
+ =?us-ascii?Q?tSrjaJm4f+sSk6k2njcTyt0YPONGqodBlnhUBa1QEKkCP9Ub/1cwlJ/CBJlq?=
+ =?us-ascii?Q?G1BmsOy48jV6bL8lYQS/e/YNejhWtXXc6VUZHNHgAxPgUcCDv59IudL19hgv?=
+ =?us-ascii?Q?Z/9u6rTeAd1Ft9/Jjr2cLqBce3oclRPtyi3ngBymywat6r199jegViOf5sVY?=
+ =?us-ascii?Q?npWgzLumWFQAp/n1uXZc/Oh7ymwG5BjcsfCdJUQJsn3sQuQsTRjZr8HooNGo?=
+ =?us-ascii?Q?27SeG5dq0Wa6BrSRd5HDjRWK94IRHjw/f9/jXgs6?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80f6b4ba-091e-492c-4313-08dc640b4379
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8393.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 03:04:32.0232
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wGxfTcxYKnlIowBFZanSpTMsa8un7aKpzwHkgBGAX69SEe6eI5icV5NyzYGwXjGqEkdjcMWrvV9ihQ2DaUwCCA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7460
+X-OriginatorOrg: intel.com
 
-The SCP on different chips will require different DRAM sizes and IPI
-shared buffer sizes based on varying requirements.
+Hi Ian,
 
-Signed-off-by: Olivia Wen <olivia.wen@mediatek.com>
----
- drivers/remoteproc/mtk_common.h  | 11 ++++--
- drivers/remoteproc/mtk_scp.c     | 84 +++++++++++++++++++++++++++++++---------
- drivers/remoteproc/mtk_scp_ipi.c |  7 +++-
- 3 files changed, 79 insertions(+), 23 deletions(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/remoteproc/mtk_common.h b/drivers/remoteproc/mtk_common.h
-index 6d7736a..fd5c539 100644
---- a/drivers/remoteproc/mtk_common.h
-+++ b/drivers/remoteproc/mtk_common.h
-@@ -78,7 +78,6 @@
- #define MT8195_L2TCM_OFFSET			0x850d0
- 
- #define SCP_FW_VER_LEN			32
--#define SCP_SHARE_BUFFER_SIZE		288
- 
- struct scp_run {
- 	u32 signaled;
-@@ -97,6 +96,11 @@ struct scp_ipi_desc {
- 
- struct mtk_scp;
- 
-+struct mtk_scp_sizes_data {
-+	size_t max_dram_size;
-+	size_t ipi_share_buffer_size;
-+};
-+
- struct mtk_scp_of_data {
- 	int (*scp_clk_get)(struct mtk_scp *scp);
- 	int (*scp_before_load)(struct mtk_scp *scp);
-@@ -110,6 +114,7 @@ struct mtk_scp_of_data {
- 	u32 host_to_scp_int_bit;
- 
- 	size_t ipi_buf_offset;
-+	const struct mtk_scp_sizes_data *scp_sizes;
- };
- 
- struct mtk_scp_of_cluster {
-@@ -141,10 +146,10 @@ struct mtk_scp {
- 	struct scp_ipi_desc ipi_desc[SCP_IPI_MAX];
- 	bool ipi_id_ack[SCP_IPI_MAX];
- 	wait_queue_head_t ack_wq;
-+	u8 *share_buf;
- 
- 	void *cpu_addr;
- 	dma_addr_t dma_addr;
--	size_t dram_size;
- 
- 	struct rproc_subdev *rpmsg_subdev;
- 
-@@ -162,7 +167,7 @@ struct mtk_scp {
- struct mtk_share_obj {
- 	u32 id;
- 	u32 len;
--	u8 share_buf[SCP_SHARE_BUFFER_SIZE];
-+	u8 *share_buf;
- };
- 
- void scp_memcpy_aligned(void __iomem *dst, const void *src, unsigned int len);
-diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
-index 6295148..e281d28 100644
---- a/drivers/remoteproc/mtk_scp.c
-+++ b/drivers/remoteproc/mtk_scp.c
-@@ -20,7 +20,6 @@
- #include "mtk_common.h"
- #include "remoteproc_internal.h"
- 
--#define MAX_CODE_SIZE 0x500000
- #define SECTION_NAME_IPI_BUFFER ".ipi_buffer"
- 
- /**
-@@ -94,14 +93,15 @@ static void scp_ipi_handler(struct mtk_scp *scp)
- {
- 	struct mtk_share_obj __iomem *rcv_obj = scp->recv_buf;
- 	struct scp_ipi_desc *ipi_desc = scp->ipi_desc;
--	u8 tmp_data[SCP_SHARE_BUFFER_SIZE];
- 	scp_ipi_handler_t handler;
- 	u32 id = readl(&rcv_obj->id);
- 	u32 len = readl(&rcv_obj->len);
-+	const struct mtk_scp_sizes_data *scp_sizes;
- 
--	if (len > SCP_SHARE_BUFFER_SIZE) {
--		dev_err(scp->dev, "ipi message too long (len %d, max %d)", len,
--			SCP_SHARE_BUFFER_SIZE);
-+	scp_sizes = scp->data->scp_sizes;
-+	if (len > scp_sizes->ipi_share_buffer_size) {
-+		dev_err(scp->dev, "ipi message too long (len %d, max %zd)", len,
-+			scp_sizes->ipi_share_buffer_size);
- 		return;
- 	}
- 	if (id >= SCP_IPI_MAX) {
-@@ -117,8 +117,9 @@ static void scp_ipi_handler(struct mtk_scp *scp)
- 		return;
- 	}
- 
--	memcpy_fromio(tmp_data, &rcv_obj->share_buf, len);
--	handler(tmp_data, len, ipi_desc[id].priv);
-+	memset(scp->share_buf, 0, scp_sizes->ipi_share_buffer_size);
-+	memcpy_fromio(scp->share_buf, &rcv_obj->share_buf, len);
-+	handler(scp->share_buf, len, ipi_desc[id].priv);
- 	scp_ipi_unlock(scp, id);
- 
- 	scp->ipi_id_ack[id] = true;
-@@ -133,6 +134,8 @@ static int scp_ipi_init(struct mtk_scp *scp, const struct firmware *fw)
- {
- 	int ret;
- 	size_t buf_sz, offset;
-+	size_t share_buf_offset;
-+	const struct mtk_scp_sizes_data *scp_sizes;
- 
- 	/* read the ipi buf addr from FW itself first */
- 	ret = scp_elf_read_ipi_buf_addr(scp, fw, &offset);
-@@ -152,12 +155,15 @@ static int scp_ipi_init(struct mtk_scp *scp, const struct firmware *fw)
- 		return -EOVERFLOW;
- 	}
- 
-+	scp_sizes = scp->data->scp_sizes;
- 	scp->recv_buf = (struct mtk_share_obj __iomem *)
- 			(scp->sram_base + offset);
-+	share_buf_offset = sizeof(scp->recv_buf->id)
-+		+ sizeof(scp->recv_buf->len) + scp_sizes->ipi_share_buffer_size;
- 	scp->send_buf = (struct mtk_share_obj __iomem *)
--			(scp->sram_base + offset + sizeof(*scp->recv_buf));
--	memset_io(scp->recv_buf, 0, sizeof(*scp->recv_buf));
--	memset_io(scp->send_buf, 0, sizeof(*scp->send_buf));
-+			(scp->sram_base + offset + share_buf_offset);
-+	memset_io(scp->recv_buf, 0, share_buf_offset);
-+	memset_io(scp->send_buf, 0, share_buf_offset);
- 
- 	return 0;
- }
-@@ -741,14 +747,16 @@ static int scp_start(struct rproc *rproc)
- static void *mt8183_scp_da_to_va(struct mtk_scp *scp, u64 da, size_t len)
- {
- 	int offset;
-+	const struct mtk_scp_sizes_data *scp_sizes;
- 
-+	scp_sizes = scp->data->scp_sizes;
- 	if (da < scp->sram_size) {
- 		offset = da;
- 		if (offset >= 0 && (offset + len) <= scp->sram_size)
- 			return (void __force *)scp->sram_base + offset;
--	} else if (scp->dram_size) {
-+	} else if (scp_sizes->max_dram_size) {
- 		offset = da - scp->dma_addr;
--		if (offset >= 0 && (offset + len) <= scp->dram_size)
-+		if (offset >= 0 && (offset + len) <= scp_sizes->max_dram_size)
- 			return scp->cpu_addr + offset;
- 	}
- 
-@@ -758,7 +766,9 @@ static void *mt8183_scp_da_to_va(struct mtk_scp *scp, u64 da, size_t len)
- static void *mt8192_scp_da_to_va(struct mtk_scp *scp, u64 da, size_t len)
- {
- 	int offset;
-+	const struct mtk_scp_sizes_data *scp_sizes;
- 
-+	scp_sizes = scp->data->scp_sizes;
- 	if (da >= scp->sram_phys &&
- 	    (da + len) <= scp->sram_phys + scp->sram_size) {
- 		offset = da - scp->sram_phys;
-@@ -774,9 +784,9 @@ static void *mt8192_scp_da_to_va(struct mtk_scp *scp, u64 da, size_t len)
- 	}
- 
- 	/* optional memory region */
--	if (scp->dram_size &&
-+	if (scp_sizes->max_dram_size &&
- 	    da >= scp->dma_addr &&
--	    (da + len) <= scp->dma_addr + scp->dram_size) {
-+	    (da + len) <= scp->dma_addr + scp_sizes->max_dram_size) {
- 		offset = da - scp->dma_addr;
- 		return scp->cpu_addr + offset;
- 	}
-@@ -997,6 +1007,7 @@ EXPORT_SYMBOL_GPL(scp_mapping_dm_addr);
- static int scp_map_memory_region(struct mtk_scp *scp)
- {
- 	int ret;
-+	const struct mtk_scp_sizes_data *scp_sizes;
- 
- 	ret = of_reserved_mem_device_init(scp->dev);
- 
-@@ -1012,8 +1023,8 @@ static int scp_map_memory_region(struct mtk_scp *scp)
- 	}
- 
- 	/* Reserved SCP code size */
--	scp->dram_size = MAX_CODE_SIZE;
--	scp->cpu_addr = dma_alloc_coherent(scp->dev, scp->dram_size,
-+	scp_sizes = scp->data->scp_sizes;
-+	scp->cpu_addr = dma_alloc_coherent(scp->dev, scp_sizes->max_dram_size,
- 					   &scp->dma_addr, GFP_KERNEL);
- 	if (!scp->cpu_addr)
- 		return -ENOMEM;
-@@ -1023,10 +1034,13 @@ static int scp_map_memory_region(struct mtk_scp *scp)
- 
- static void scp_unmap_memory_region(struct mtk_scp *scp)
- {
--	if (scp->dram_size == 0)
-+	const struct mtk_scp_sizes_data *scp_sizes;
-+
-+	scp_sizes = scp->data->scp_sizes;
-+	if (scp_sizes->max_dram_size == 0)
- 		return;
- 
--	dma_free_coherent(scp->dev, scp->dram_size, scp->cpu_addr,
-+	dma_free_coherent(scp->dev, scp_sizes->max_dram_size, scp->cpu_addr,
- 			  scp->dma_addr);
- 	of_reserved_mem_device_release(scp->dev);
- }
-@@ -1090,6 +1104,7 @@ static struct mtk_scp *scp_rproc_init(struct platform_device *pdev,
- 	struct resource *res;
- 	const char *fw_name = "scp.img";
- 	int ret, i;
-+	const struct mtk_scp_sizes_data *scp_sizes;
- 
- 	ret = rproc_of_parse_firmware(dev, 0, &fw_name);
- 	if (ret < 0 && ret != -EINVAL)
-@@ -1137,6 +1152,13 @@ static struct mtk_scp *scp_rproc_init(struct platform_device *pdev,
- 		goto release_dev_mem;
- 	}
- 
-+	scp_sizes = scp->data->scp_sizes;
-+	scp->share_buf = kzalloc(scp_sizes->ipi_share_buffer_size, GFP_KERNEL);
-+	if (!scp->share_buf) {
-+		dev_err(dev, "Failed to allocate IPI share buffer\n");
-+		goto release_dev_mem;
-+	}
-+
- 	init_waitqueue_head(&scp->run.wq);
- 	init_waitqueue_head(&scp->ack_wq);
- 
-@@ -1156,6 +1178,8 @@ static struct mtk_scp *scp_rproc_init(struct platform_device *pdev,
- remove_subdev:
- 	scp_remove_rpmsg_subdev(scp);
- 	scp_ipi_unregister(scp, SCP_IPI_INIT);
-+	kfree(scp->share_buf);
-+	scp->share_buf = NULL;
- release_dev_mem:
- 	scp_unmap_memory_region(scp);
- 	for (i = 0; i < SCP_IPI_MAX; i++)
-@@ -1171,6 +1195,8 @@ static void scp_free(struct mtk_scp *scp)
- 
- 	scp_remove_rpmsg_subdev(scp);
- 	scp_ipi_unregister(scp, SCP_IPI_INIT);
-+	kfree(scp->share_buf);
-+	scp->share_buf = NULL;
- 	scp_unmap_memory_region(scp);
- 	for (i = 0; i < SCP_IPI_MAX; i++)
- 		mutex_destroy(&scp->ipi_desc[i].lock);
-@@ -1357,6 +1383,21 @@ static void scp_remove(struct platform_device *pdev)
- 	mutex_destroy(&scp_cluster->cluster_lock);
- }
- 
-+static const struct mtk_scp_sizes_data default_scp_sizes = {
-+	.max_dram_size = 0x500000,
-+	.ipi_share_buffer_size = 288,
-+};
-+
-+static const struct mtk_scp_sizes_data mt8188_scp_sizes = {
-+	.max_dram_size = 0x500000,
-+	.ipi_share_buffer_size = 600,
-+};
-+
-+static const struct mtk_scp_sizes_data mt8188_scp_c1_sizes = {
-+	.max_dram_size = 0xA00000,
-+	.ipi_share_buffer_size = 600,
-+};
-+
- static const struct mtk_scp_of_data mt8183_of_data = {
- 	.scp_clk_get = mt8183_scp_clk_get,
- 	.scp_before_load = mt8183_scp_before_load,
-@@ -1368,6 +1409,7 @@ static const struct mtk_scp_of_data mt8183_of_data = {
- 	.host_to_scp_reg = MT8183_HOST_TO_SCP,
- 	.host_to_scp_int_bit = MT8183_HOST_IPC_INT_BIT,
- 	.ipi_buf_offset = 0x7bdb0,
-+	.scp_sizes = &default_scp_sizes,
- };
- 
- static const struct mtk_scp_of_data mt8186_of_data = {
-@@ -1381,6 +1423,7 @@ static const struct mtk_scp_of_data mt8186_of_data = {
- 	.host_to_scp_reg = MT8183_HOST_TO_SCP,
- 	.host_to_scp_int_bit = MT8183_HOST_IPC_INT_BIT,
- 	.ipi_buf_offset = 0x3bdb0,
-+	.scp_sizes = &default_scp_sizes,
- };
- 
- static const struct mtk_scp_of_data mt8188_of_data = {
-@@ -1393,6 +1436,7 @@ static const struct mtk_scp_of_data mt8188_of_data = {
- 	.scp_da_to_va = mt8192_scp_da_to_va,
- 	.host_to_scp_reg = MT8192_GIPC_IN_SET,
- 	.host_to_scp_int_bit = MT8192_HOST_IPC_INT_BIT,
-+	.scp_sizes = &mt8188_scp_sizes,
- };
- 
- static const struct mtk_scp_of_data mt8188_of_data_c1 = {
-@@ -1405,6 +1449,7 @@ static const struct mtk_scp_of_data mt8188_of_data_c1 = {
- 	.scp_da_to_va = mt8192_scp_da_to_va,
- 	.host_to_scp_reg = MT8192_GIPC_IN_SET,
- 	.host_to_scp_int_bit = MT8195_CORE1_HOST_IPC_INT_BIT,
-+	.scp_sizes = &mt8188_scp_c1_sizes,
- };
- 
- static const struct mtk_scp_of_data mt8192_of_data = {
-@@ -1417,6 +1462,7 @@ static const struct mtk_scp_of_data mt8192_of_data = {
- 	.scp_da_to_va = mt8192_scp_da_to_va,
- 	.host_to_scp_reg = MT8192_GIPC_IN_SET,
- 	.host_to_scp_int_bit = MT8192_HOST_IPC_INT_BIT,
-+	.scp_sizes = &default_scp_sizes,
- };
- 
- static const struct mtk_scp_of_data mt8195_of_data = {
-@@ -1429,6 +1475,7 @@ static const struct mtk_scp_of_data mt8195_of_data = {
- 	.scp_da_to_va = mt8192_scp_da_to_va,
- 	.host_to_scp_reg = MT8192_GIPC_IN_SET,
- 	.host_to_scp_int_bit = MT8192_HOST_IPC_INT_BIT,
-+	.scp_sizes = &default_scp_sizes,
- };
- 
- static const struct mtk_scp_of_data mt8195_of_data_c1 = {
-@@ -1441,6 +1488,7 @@ static const struct mtk_scp_of_data mt8195_of_data_c1 = {
- 	.scp_da_to_va = mt8192_scp_da_to_va,
- 	.host_to_scp_reg = MT8192_GIPC_IN_SET,
- 	.host_to_scp_int_bit = MT8195_CORE1_HOST_IPC_INT_BIT,
-+	.scp_sizes = &default_scp_sizes,
- };
- 
- static const struct mtk_scp_of_data *mt8188_of_data_cores[] = {
-diff --git a/drivers/remoteproc/mtk_scp_ipi.c b/drivers/remoteproc/mtk_scp_ipi.c
-index cd0b601..c068227 100644
---- a/drivers/remoteproc/mtk_scp_ipi.c
-+++ b/drivers/remoteproc/mtk_scp_ipi.c
-@@ -162,10 +162,13 @@ int scp_ipi_send(struct mtk_scp *scp, u32 id, void *buf, unsigned int len,
- 	struct mtk_share_obj __iomem *send_obj = scp->send_buf;
- 	u32 val;
- 	int ret;
-+	const struct mtk_scp_sizes_data *scp_sizes;
-+
-+	scp_sizes = scp->data->scp_sizes;
- 
- 	if (WARN_ON(id <= SCP_IPI_INIT) || WARN_ON(id >= SCP_IPI_MAX) ||
- 	    WARN_ON(id == SCP_IPI_NS_SERVICE) ||
--	    WARN_ON(len > sizeof(send_obj->share_buf)) || WARN_ON(!buf))
-+	    WARN_ON(len > scp_sizes->ipi_share_buffer_size) || WARN_ON(!buf))
- 		return -EINVAL;
- 
- 	ret = clk_prepare_enable(scp->clk);
-@@ -184,7 +187,7 @@ int scp_ipi_send(struct mtk_scp *scp, u32 id, void *buf, unsigned int len,
- 		goto unlock_mutex;
- 	}
- 
--	scp_memcpy_aligned(send_obj->share_buf, buf, len);
-+	scp_memcpy_aligned(&send_obj->share_buf, buf, len);
- 
- 	writel(len, &send_obj->len);
- 	writel(id, &send_obj->id);
+[auto build test ERROR on perf-tools-next/perf-tools-next]
+[also build test ERROR on tip/perf/core perf-tools/perf-tools linus/master v6.9-rc5 next-20240423]
+[cannot apply to acme/perf/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/perf-test-pmu-events-Make-it-clearer-that-pmu-events-tests-json-events/20240423-112057
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
+patch link:    https://lore.kernel.org/r/20240423031719.1941141-5-irogers%40google.com
+patch subject: [PATCH v2 4/6] perf test pmu: Add an eagerly loaded event test
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <yujie.liu@intel.com>
+| Closes: https://lore.kernel.org/r/202404241018.bgi3yFxj-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> tests/pmu.c:128:9: error: ignoring return value of 'write' declared with attribute 'warn_unused_result' [-Werror=unused-result]
+     128 |         write(file, test_event, strlen(test_event));
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   tests/pmu.c: In function 'test__pmu_events':
+>> tests/pmu.c:241:16: error: 'ret' may be used uninitialized [-Werror=maybe-uninitialized]
+     241 |         return ret;
+         |                ^~~
+   tests/pmu.c:198:13: note: 'ret' was declared here
+     198 |         int ret;
+         |             ^~~
+   cc1: all warnings being treated as errors
+   make[7]: *** [tools/build/Makefile.build:106: tools/perf/tests/pmu.o] Error 1
+   make[7]: *** Waiting for unfinished jobs....
+   make[6]: *** [tools/build/Makefile.build:158: tests] Error 2
+   make[6]: *** Waiting for unfinished jobs....
+   make[5]: *** [Makefile.perf:727: tools/perf/perf-in.o] Error 2
+   make[5]: *** Waiting for unfinished jobs....
+   make[4]: *** [Makefile.perf:264: sub-make] Error 2
+   make[3]: *** [Makefile:70: all] Error 2
+
 -- 
-2.6.4
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
