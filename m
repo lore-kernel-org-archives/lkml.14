@@ -1,80 +1,80 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6957157A61;
-	Wed, 24 Apr 2024 06:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C161591E2;
+	Wed, 24 Apr 2024 06:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713940785; cv=none; b=ZFml+7bngS5K742NFaJ1T+Qqpipbvv55kOoJx3EZWQz93CmVt3ghXRu0FD9fdw4cr6ukq5QC2XbVoeHcHVAfgdI1Z1TI1g5GgNfnfO8cOD0PMIdFgLTmx/ZM1mEyEia3X7v/jgohpxmK0DIFbz1yX7Zsq6W5lKLuukg33h92NSg=
+	t=1713940792; cv=none; b=Lnu9kDLeAO9YN+BoTny3Kt1LjznnUqxZ/N0ZJ3BngAaaRpdyR/H85hX6m5fhjIFCisUxKfQYwA6tVbgWRtUxmbydTIczmpFVTjBdKdli5ajQbDUpbGOCWdNr2I3o/OC0HnWLQHNtp+Gl3yF5GBmbhzfsFxqb5a5GsqfV/bhkvK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713940785; c=relaxed/simple;
-	bh=AAN04JZawu8pWEFDdz3fVQNCM7NmprVKAS13ylm9e7s=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=n/L2I4KsrcJxHrE0LmBxN6kQ1WNrZgt58PWd6Uh/XZWsA1rCi1mPpb22iF+gTVLpMI6awYHNkfuKLem4fPn1WO9PQDlx/3Obldw97+AI9EAh0U12zKLWENm+33AoNSWtPq68DNx4PXfpupV/kczcXeJuIOCMs+ok2e5AUK6E3kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=CsKs7IrQ; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="CsKs7IrQ"
+	s=arc-20240116; t=1713940792; c=relaxed/simple;
+	bh=rZBy/i+sD+VWCZ0HAIWMZJeuAKvsI/pfhC5oycrcFDc=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=HO+seNae9B6dhMGkO4JJDaRz2Ny0ruVybnap5xd4RyalHIcZYAZKAJ5olB/1S9sKU1B98pyzQ1NLHPCM7QQOakuBM7D3t8M5O2Ux2TpKbnwI7mtHZfIL1reQ+LUTuNscvDRyf47zX60BPb1MOKkbw6h0TQOqmV9K125/ZaFjyic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 801211A22BD;
+	Wed, 24 Apr 2024 08:39:43 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E16821A22EE;
+	Wed, 24 Apr 2024 08:39:41 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 70D73181D0FB;
+	Wed, 24 Apr 2024 14:39:39 +0800 (+08)
+From: Richard Zhu <hongxing.zhu@nxp.com>
+To: conor@kernel.org,
+	vkoul@kernel.org,
+	kishon@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	frank.li@nxp.com,
+	conor+dt@kernel.org
+Cc: hongxing.zhu@nxp.com,
+	linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de,
+	imx@lists.linux.dev
+Subject: [PATCH v3 0/3] Add i.MX8QM HSIO PHY driver
+Date: Wed, 24 Apr 2024 14:21:20 +0800
+Message-Id: <1713939683-15328-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1713940782;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sU6Lg3T730x67q5TNnFx9GR4FQZTeQCJKcEZaJjZkgE=;
-	b=CsKs7IrQD0Y/5BV+OjWhOGmKH6JgniVl71Rphd1nvbXLX57PYJye0aTD2UXGjP5GYE7dCw
-	32QWo0/fFmw0fo9ZSXq/fzWzLtC9BN/E3wewWFWtwRwmoschgwReHSGR/qF4fsoyYNZEny
-	RRfvTw3b6WtOBrFGTXEn6L7df6xfVttRR1qAgtr4rVXs7iEvObwGCRmV9tT9EIy1wiNbLJ
-	racgozgOqfVBpGdqtTqXKGC+0B/IVUTi5M0k8WvA/zC8g4AHSZquwk2G9HLAqSyQi5fWzP
-	jk1uifOb2M84QK8KrfcA26zFPMJ7ro7qU70/s6Yg06FPD13gif/8N/XtqWmp+g==
-Date: Wed, 24 Apr 2024 08:39:40 +0200
-From: Dragan Simic <dsimic@manjaro.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, krzk+dt@kernel.org,
- amadeus@jmu.edu.cn, linux-arm-kernel@lists.infradead.org, FUKAUMI Naoki
- <naoki@radxa.com>, robh+dt@kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, conor+dt@kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: arm: rockchip: Correct the descriptions
- for Radxa boards
-In-Reply-To: <171388532520.2652222.16202058595399007422.b4-ty@sntech.de>
-References: <1e148d6cd4486b31b5e7f3824cf6bccf536b74c0.1713457260.git.dsimic@manjaro.org>
- <171388532520.2652222.16202058595399007422.b4-ty@sntech.de>
-Message-ID: <c5617f5eff7c057f8ad7d591d148f20e@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On 2024-04-23 17:15, Heiko Stuebner wrote:
-> On Thu, 18 Apr 2024 18:26:19 +0200, Dragan Simic wrote:
->> Correct the descriptions of a few Radxa boards, according to the 
->> up-to-date
->> documentation from Radxa and the detailed explanation from Naoki. [1]  
->> To sum
->> it up, the short naming, as specified by Radxa, is preferred.
->> 
->> [1] 
->> https://lore.kernel.org/linux-rockchip/B26C732A4DCEA9B3+282b8775-601b-4d4a-a513-4924b7940076@radxa.com/
->> 
->> 
->> [...]
-> 
-> Applied, thanks!
-> 
-> [1/2] dt-bindings: arm: rockchip: Correct the descriptions for Radxa 
-> boards
->       commit: d78084cdb5a959a5759efed9b3bc3182d005073c
-> [2/2] arm64: dts: rockchip: Correct the model names for Radxa ROCK 5 
-> boards
->       commit: 45e831033f7a00a14f64afa1e34c476a9ff0f9f0
+v3 changes:
+Refer to Conor's comments.
+- Let filename match a compatible
+- Refine description of the fsl,refclk-pad-mode.
+- Remove power-domains description.
+- Keep clock ording for two devices.
+- Drop the unused label and status.
+Refer to Rob's comments.
+- Use standard phy mode defines.
+- Correct the spell mistakes in the binding document.
 
-Thanks!
+v2:https://patchwork.kernel.org/project/linux-phy/cover/1712036704-21064-1-git-send-email-hongxing.zhu@nxp.com/ 
+
+v2 changes:
+- Place the dt-bindings header file changes as the first one
+in the patch-set, make the annotation more clear, and add
+Frank's Reviewed-by tag.
+
+v1:https://patchwork.kernel.org/project/linux-phy/cover/1711699790-16494-1-git-send-email-hongxing.zhu@nxp.com/
+
+[PATCH v3 1/3] dt-bindings: phy: phy-imx8-pcie: Add header file for
+[PATCH v3 2/3] dt-bindings: phy: Add i.MX8Q HSIO SerDes PHY binding
+[PATCH v3 3/3] phy: freescale: imx8qm-hsio: Add i.MX8QM HSIO PHY
+
+Documentation/devicetree/bindings/phy/fsl,imx8qm-hsio.yaml | 146 ++++++++++++++++++++
+drivers/phy/freescale/Kconfig                              |   8 ++
+drivers/phy/freescale/Makefile                             |   1 +
+drivers/phy/freescale/phy-fsl-imx8qm-hsio.c                | 607 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+include/dt-bindings/phy/phy-imx8-pcie.h                    |  62 +++++++++
+5 files changed, 824 insertions(+)
