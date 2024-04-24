@@ -1,32 +1,33 @@
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2237FF
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 00:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE207EF
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 00:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713917469; cv=none; b=g/A1WLrmuhVAPTqxaLyCMMuUhPwTK92sh21ZvT2oX+LlJew5V1FGGWVfMgPqxe++YSsviM2dRsn6YHIzx69jBKqZQlL5qH0luatD5+eyQGps5BkDDThFzHMqAudTfhPE2NenxI/lHhIBKA/Aog//Ld2S8Hao5ciyomsXjutgvDg=
+	t=1713917490; cv=none; b=J40CjfKNcJnBTV25HfdK9MQNH1t9EhVX2jhpAJmxUu5llUExa4HJUGavHIDs1l5UryohG7gtGD6FaI2NL8jCpWu2PZWxK1Linf2gy9z0UYR+zrzFfNFlMFLtXdtmTA9go9rj2zkDp292bf8Wl0yPCnQ9Ky0X8wDHvogz0UPRpXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713917469; c=relaxed/simple;
-	bh=v97JnFigdJQ9lbLuqbnZwJGG1k8S71/PRqmW3bvb2LY=;
+	s=arc-20240116; t=1713917490; c=relaxed/simple;
+	bh=3pSLZFuGiJnJlY2piHPfE03X/NoaHX/iWuiekKpGI3g=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AYWhfn3rD7GESAXeLLdbRjlYuUid3f+wvUOvbVVD8nOLSifGy/O05th1zXqz+Ve9ZjkrrQyCpBLaZJVEXhGIuV9KutyFAM3xZXtpLsN1JyH2394eN8u/8GQj/7PTIaAtmrzde/tF6awtlfQgzM2+58FyJvGvktmuQrJ73bFxjlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
+	 Content-Type:Content-Disposition:In-Reply-To; b=jSG0DB94iw3BRi65oetg5xTAossp0N7tOXs/2PKYoGdW2Yd6HLGaD8Fye2F17YAYKaOvYT9VhOYEUG30Is4ZPT6nDhYLkC+JE+wHiyAitW2XYhFITZtvd/bF5/Du/sYiijnhdWYpc2vOPF42GjicR53bHFyObYtjisaFxMEeJcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.83
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
 Received: from localhost (88-113-25-208.elisa-laajakaista.fi [88.113.25.208])
-	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-	id 247e3573-01cf-11ef-abf4-005056bdd08f;
-	Wed, 24 Apr 2024 03:11:05 +0300 (EEST)
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+	id 31306275-01cf-11ef-b3cf-005056bd6ce9;
+	Wed, 24 Apr 2024 03:11:27 +0300 (EEST)
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 24 Apr 2024 03:11:05 +0300
+Date: Wed, 24 Apr 2024 03:11:26 +0300
 To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-i2c@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+Cc: linux-i2c@vger.kernel.org, Seth Heasley <seth.heasley@intel.com>,
+	Neil Horman <nhorman@tuxdriver.com>,
 	Andi Shyti <andi.shyti@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/18] i2c: i801: remove printout on handled timeouts
-Message-ID: <ZihOGZ3ldzWRb7y7@surfacebook.localdomain>
+Subject: Re: [PATCH 08/18] i2c: ismt: remove printout on handled timeouts
+Message-ID: <ZihOLtvtdOm90tJF@surfacebook.localdomain>
 References: <20240410112418.6400-20-wsa+renesas@sang-engineering.com>
- <20240410112418.6400-26-wsa+renesas@sang-engineering.com>
+ <20240410112418.6400-28-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,18 +36,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240410112418.6400-26-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20240410112418.6400-28-wsa+renesas@sang-engineering.com>
 
-Wed, Apr 10, 2024 at 01:24:20PM +0200, Wolfram Sang kirjoitti:
+Wed, Apr 10, 2024 at 01:24:22PM +0200, Wolfram Sang kirjoitti:
 > I2C and SMBus timeouts are not something the user needs to be informed
 > about on controller level. The client driver may know if that really is
 > a problem and give more detailed information to the user. The controller
-> should just pass this information upwards. Turn all timeout related
-> printouts to debug level.
+> should just pass this information upwards. Remove the printout.
 
-As I mentioned in reply to cover letter this change does not seem to me right.
-If you provide an equivalent dev_err() in the core, I'll be totally fine with
-it.
+Neither this.
 
 -- 
 With Best Regards,
