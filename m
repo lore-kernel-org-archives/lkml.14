@@ -1,60 +1,60 @@
 Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013EF15E1FE
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 14:12:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBE615B996
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 14:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713967938; cv=none; b=ELyfASatZSyV0O+JAo3xd6gHXIunU+NJ0rN39Nyh35BuZxHUzP029IgHMKYGKtSwdm2Fe/Hn2Zk7rf4tC39Dci4+IYElsNp2gKFgfR69cJ33JG8KrlTWKKHnWdWTcjK7wKSUSB5VOuyeMMQh6ujWYUWqApMRTkjJTzwLxxBBQzc=
+	t=1713968012; cv=none; b=RfxOmKr5WrGaTiAHkjj39Olc6SE8Gyzo/AMjNb40xcNl/Muoy8rNi2tXjShAvq1kHbvuwV0d5FGRrnz4AINN9X2S5za5b9DYZBobFLafaQT5kEREbCbrNhMJti7G3u60H7w/enEEhHBp/UE3Rrs72Ik9sKdUIma2s2CQrlg6IT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713967938; c=relaxed/simple;
-	bh=JHWDAlXDMHen4ye8Cgf64D+XKALvK+nD/KnFaJSygmU=;
+	s=arc-20240116; t=1713968012; c=relaxed/simple;
+	bh=MHXJFG9R5z4UIBlsq3Q0t7pBbsb1GrwHCN4cLP+nv7g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EIfaPGJRz4sBxXTrroh8zqQSlP8mb3xP2Pq57+2K6ONpEoaJC/M4SFNwt4gJMNapSzNkYIYpjYASbvaeWDj2QnLt7KZQTKPUQpDXRjW0S/H+uF9i+Iv8zzkV1pTEoXikMXGsPDKMKXBnhHbtCXDmcYl7K7lh5penbh4FEjXmuy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VKpwsVJE; arc=none smtp.client-ip=209.85.221.41
+	 In-Reply-To:Content-Type; b=YXpgc+rcVTcGF66sib8v5DVByzAu6kZSy1rqDU1pjYGOVq7vQk/jcPorSTtul/RuXHkQ01u6+u5hCIUYh7zkv3jAKyznquJW2vrs+SHsM6nj/8Zt206tDrIotW3jO3UQV6tPAEkF7Ri7jVVPmKJVrJjC8gfWhpoo7HnwyumbLm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OGHyWzxC; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VKpwsVJE"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-34be34b3296so244713f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 07:12:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OGHyWzxC"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3476dcd9c46so5295775f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 07:13:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713967935; x=1714572735; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1713968009; x=1714572809; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=3zh00KAZtdWL9fqL/Gs2PzvIUPj0Oj4tDIo1Vf5qeC8=;
-        b=VKpwsVJEHx/Q+Iy5tQ+gtNa6LIPT0ekOQEJmocM9IiZuwdQeJZKNylq8cBhGZRAVIL
-         kYVvAG/I2OAY+dPeWxN2WDfGefls8mQhH0+gmUr7WJRBXLx2IhVGuFLDs55KfNRAvKbS
-         iKSEdYDqv9efQd0lpyPbYrcsVJvP2vS+nAbI1xOmFMsTr2oMXGnrmtDNaV2ZB0c34hxx
-         XQ3BclPEyBo+iC4oYZGovAOo+JuBPYn6SKWNR+D/q3HnpKC+FFP9X4bhWSfvSB2g08Em
-         KYTgHXnLWcebWr42xnlH632k4xGTaiEgZMZFpX03scE9eNlBrpDNsn2QGMM/T31dXh0x
-         DNLA==
+        bh=upFSzmkQo8CgsapbEeLrrhLTa3hAx19iRLmed+yVuy0=;
+        b=OGHyWzxCS4378pHSnpTDBvy5vHEqOnx8Dgip3otVfJx7fF8itfYVC6q3IeiayRCkVq
+         ANnGgQwC5LSOJCAF3McyFQDNwin299FLfHvlFedkRBiIzmSQ7zUoMKcwqaoOyFIRgYh8
+         g54nFmW7IXVxaRkyuW6C29naARonyibAychfeD+QjnUu7CI46D/2t8VSid+wgvS6egZj
+         cJcNcX83wKi49KZda+xXmYROigOPyoqTeNQYu2+EVp4sH4ZhGaRpMBWf3XHBZsefJIUQ
+         TJClg/IDVeO6PHlQBUNfaUEIhBKfTPAGMR2eO6Z+TGXl7r6SQpSQxPoAB9ybAdrdhi3B
+         3bBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713967935; x=1714572735;
+        d=1e100.net; s=20230601; t=1713968009; x=1714572809;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3zh00KAZtdWL9fqL/Gs2PzvIUPj0Oj4tDIo1Vf5qeC8=;
-        b=A3cvrh3/52JRoCrxm/qU04JMEdYSKbLErQtZXTrC4dQS8mEesmSk23+Wd8Q0simoZ5
-         BBkZp4QQAJnSavESfOcThVuwKdbNcUjumpKIG02emctULLHpHCtDqV7cnSjaN0aBsVmc
-         Ezrm9ZV0mF7naOMbA7En2FjlseMAIv2J56QA4iCP5AjDqreuqPW+xRzLRH8ehY+KonGh
-         /BCg/M+kmLMX/W3XYezpZsLK8EO22Gc+cPM8+KfXCqh1oaGfwGqOzdwZWrYEjqc9vxC2
-         kQMhbIWrTLlOQ5CRMLEHH4hXmSk8N92mnrRf+oWhY9ZkoAdivfgPe/t8E5FRVKuuxK4J
-         JBrA==
-X-Forwarded-Encrypted: i=1; AJvYcCXKnkvJyOaRmLpFFvMolkMFJjoNJyDQnQ9L7Rq19FNCnQYwdkgfMtD/fgzMCDeHoQfm7YPdDccbg/yU9haKy0nnsiKaxHLq/OU+2WXT
-X-Gm-Message-State: AOJu0YyAQK9epuDm0fHVyRIfBsIsxaoYd7yiB0287+wnE8qG5OkHCR3k
-	vX57vG8OIiBcSGhfND96js9hVdpjp9Tre+8KB3vsZ/wN9Z8x9/DXXgJW3e5j/fI=
-X-Google-Smtp-Source: AGHT+IG8yQJyvrtnTwlNbmHTTR7gHwykrYPCeKBeei6+S5iwv3E/DPqubFaiH8iH3FPtja9CKq4pWQ==
-X-Received: by 2002:a5d:5702:0:b0:343:44b9:af97 with SMTP id a2-20020a5d5702000000b0034344b9af97mr2205042wrv.64.1713967935251;
-        Wed, 24 Apr 2024 07:12:15 -0700 (PDT)
+        bh=upFSzmkQo8CgsapbEeLrrhLTa3hAx19iRLmed+yVuy0=;
+        b=WOhcPLtr85AIICU+vz2yMkq5LXyDTz7YSeXl5FzldRjbLOTpxpjIzWvomND04AgJjQ
+         W7FP1RxP/n+pDfulQ+kPrYC98/RBcLkWj0bIlFyLFMvPhqfhtgXgZQs1t5lxFQbYvqa8
+         9jd0D8JCoBpJiguyYqi63T5UKIIyv8VuM7kaLOzSqfg29g3D+p5RnMco1sgZITXJv48z
+         ziXL9NZXefa4G5LErZ827k1lJvE/zMS+aRFSnAYi/VY4d8YRF+PvXQuAdl/3b1C/20Lg
+         zjildjejiZlgBnZy2FbcdZrU8YNkLrK+fPxDIVRAyple58ztmYUXZAUJqfgdx6HoGrGZ
+         IuAw==
+X-Forwarded-Encrypted: i=1; AJvYcCX7dLcpoUeHvoZzBT4IgmZypJGWHrTeL5/yDVZ4/Ujn6k01yVJcCJj0+tqTCIMzgL/XdIARAbhl0eVoJPefYgyHxmaawfmnZQmUqLfC
+X-Gm-Message-State: AOJu0YxEhnE3tcG1T7GTGma5NA7Xdgm/Hmx5Z/QzPas1pRzw6aJUm3Jd
+	oOkAXLl85UECovKgKN266//vYrWwqVWXWBJ8dW+zEF0KUjb7ccnTR/eQGDWF74s=
+X-Google-Smtp-Source: AGHT+IHEiUahRPYhpIwJapnRuhEnrBG7idILvKUBZXtAjNt+HU6ad3qEBAoDyUdtHUs6Ct0FJspW1Q==
+X-Received: by 2002:adf:e28f:0:b0:34a:ce8b:7b79 with SMTP id v15-20020adfe28f000000b0034ace8b7b79mr1857054wri.1.1713968008891;
+        Wed, 24 Apr 2024 07:13:28 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id w20-20020adfe054000000b0034a366f26b0sm15620894wrh.87.2024.04.24.07.12.14
+        by smtp.gmail.com with ESMTPSA id k29-20020a05600c1c9d00b00418948a5eb0sm27885519wms.32.2024.04.24.07.13.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Apr 2024 07:12:14 -0700 (PDT)
-Message-ID: <a2af498e-5db7-4362-b3b8-486c2c38b8b2@linaro.org>
-Date: Wed, 24 Apr 2024 16:12:13 +0200
+        Wed, 24 Apr 2024 07:13:28 -0700 (PDT)
+Message-ID: <fd4072dc-7cd3-4d13-a15b-d63c675a5994@linaro.org>
+Date: Wed, 24 Apr 2024 16:13:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,20 +62,22 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/7] Add support for Blaize BLZP1600 SoC
+Subject: Re: [PATCH v2 4/7] dt-bindings: clock: Add binding constants for
+ BLZP1600
 To: Niko Pasaloukos <nikolaos.pasaloukos@blaize.com>,
  "linux-arm-kernel@lists.infradead.org"
  <linux-arm-kernel@lists.infradead.org>,
  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "olof@lixom.net" <olof@lixom.net>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "robh+dt@kernel.org" <robh+dt@kernel.org>,
- "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
- "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
- "sboyd@kernel.org" <sboyd@kernel.org>
-References: <20240424133032.19056-1-nikolaos.pasaloukos@blaize.com>
+Cc: James Cowgill <james.cowgill@blaize.com>,
+ Matt Redfearn <matthew.redfearn@blaize.com>,
+ Neil Jones <neil.jones@blaize.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <20240424133241.19210-1-nikolaos.pasaloukos@blaize.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -122,25 +124,51 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240424133032.19056-1-nikolaos.pasaloukos@blaize.com>
+In-Reply-To: <20240424133241.19210-1-nikolaos.pasaloukos@blaize.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 24/04/2024 15:31, Niko Pasaloukos wrote:
-> Adds basic support for the Blaize BLZP1600 SoC.
-> This SoC contains two cores of Cortex-A53 CPUs, one Blaize
-> Graph Streaming Processor (GSP) and several other IPs.
+On 24/04/2024 15:32, Niko Pasaloukos wrote:
+> Add SCMI clock numbers according to the Blaize BLZP1600
+> SoC hardware specifications.
 > 
-> V2 changes:
->  * Update SoBs.
->  * `make dtbs_check` has no warnings.
->  * Fix dts names and removed dead code.
->  * DTS is separated from anything else.
+> Reviewed-by: James Cowgill <james.cowgill@blaize.com>
+> Reviewed-by: Matt Redfearn <matt.redfearn@blaize.com>
+> Reviewed-by: Neil Jones <neil.jones@blaize.com>
+> Signed-off-by: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
 
-Your threading is totally broken.
+This goes to the patch introducing binding doc.
 
-I recommend using b4, if sending patches is tricky. b4 nicely solves
-such (and many more) issues.
+> ---
+>  .../dt-bindings/clock/blaize,blzp1600-clk.h   | 77 +++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/blaize,blzp1600-clk.h
+> 
+> diff --git a/include/dt-bindings/clock/blaize,blzp1600-clk.h b/include/dt-bindings/clock/blaize,blzp1600-clk.h
+> new file mode 100644
+> index 000000000000..f1d59849a6e5
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/blaize,blzp1600-clk.h
+> @@ -0,0 +1,77 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+> +/*
+> + * Copyright (C) 2023, Blaize, Inc.
+> + */
+> +
+> +#ifndef DT_BINDING_CLK_BLZP1600_H
+> +#define DT_BINDING_CLK_BLZP1600_H
+> +
+> +/* ARM SCMI clocks */
+> +
+> +/* BLZP1600 clock-gate numbers as defined in the hardware architecture */
+> +
+> +#define BLZP1600_CPU_CLK 0
+> +/* clock-gates 1-6 invalid */
+
+No, they cannot be invalid. IDs start from 0 and are incremented by one.
+If you have holes, it is not a binding.
+
+Drop the header or use it properly, so as virtual IDs.
 
 Best regards,
 Krzysztof
