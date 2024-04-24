@@ -1,228 +1,409 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2045.outbound.protection.outlook.com [40.107.244.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BBA159590
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 10:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713953794; cv=fail; b=GtryFNqB20W1w9S0MrZXQVODxFZNHHUxItTIdnx6O8RSIjyR4NNWldCBuU2xaF2Jf2sKEcx68/sIaM8nhM9j+jlapnP75Uf4AtjqBTOiCOa1l+3rVp4B9ZfrLQRtyb0nY2YZXm3r+XIUcaxEoj0+ZczyMt3GSGukyDIPFk5+BOw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713953794; c=relaxed/simple;
-	bh=TY5uItwCKVdfNbVO2d6ua82n/TbDaSgO5nJz0Yawd8g=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=YWDcrpW3XyGxKRotzHIFo0N2G5EfwdNIfF5P5ijlHnLZeIbNOJbcQZg4pxGs4OFene5IDypgy3+e3a/UA7YlkMiR0B6ljMgWcyKZDO8BMIBqWVx62UqLZp7+lhgGINLzSKLiwEKBwQBZPgzXpxqHc4Npw15//5oeMcZqYammnKo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1WYPpYzt; arc=fail smtp.client-ip=40.107.244.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48FA1591F0
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 10:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713953930; cv=none; b=aZ5eOISVSzuuRZdih+kByb23Dbq7tvOEtUdbrMFLmg7zZKsSgj0hhN4apbfMC98ZOOY74EDMfbbWkDJ3pJ2TV08CTkwheHba1RSRYgZQCphUxuqiEoOdGK5wWpajmzbN2f4GeNGwB372BNMlLd5vJx+5K3hhrlncDKo9F0CIPrA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713953930; c=relaxed/simple;
+	bh=lK83DFMMrheEcjmLGnhK7+OwBHnpFcHV4An4Tq+hklQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gI9tTajGN0gIZbsfRhR0Z+qyin5mbq4b6i4bIerfGk54YoQYPbisPE5zi9aeDt/TuK1GFM7zhSRwjcMfaN34a4Y4MNqJzPKs2nymil/8vT4/eoM0vZjw1x5rHLzAUYA4KOcL90Ade+dCl53pbCHX5mu1/afvtDyvVFAUqAERFak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OncTH6Fu; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1WYPpYzt"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RjVqPyIeHtyLvV/E+SHntmj7sBhyGI/lyzrl31wOb4oQZ6cotvHJ8F17b6IPZ11ZmCxZuBCHjZ9GhZOHDn7L55JSNrrhHCdEgTzfcRehib7S7TS6WJaB+zln93NdmlNt4jYgKfFpdeUlIjM2rxttLWap94ek4rBVPTqOKwkkV/2FSrbkNPxI2ifttE741WEo/phXQ/4KlB7gx/DYyfK4JmHucCit/ixpfnGKMfWlvUnW+uWz6rioIfnlcryb84WqxS7gjJX1g4dxfb3W5PHQqvgoG6NgpWNrrxBo5TQYe8VbgCWRf8kKbfrQ4h7rPs7eglZUeT9L0WIHfyoTmeBXaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=L9obZrlka3fyKTZMFwolnLlX22unENpCmIHtzodi1Rw=;
- b=WrV+5zjSpGnG4RssjquBgt+boARcCUBQHR+N8zePBpWXU7Ozr1z91+DPu71JJnDNZFMGbYNDk87fqRHCoj/4uFQz5j9IOlzXXJgMRlL5aUJ2zRgKYAbmaGmOJicx2QvPqEYSQxWKK6nQtiVRzS4bFlh09mOQqHoHpAp/LnJ/gRuCtgYbcAoqdIdpY8Q+7yOlhytTLqXUrq+4uOLKuF/bDe1kbQrc4d5FrCPS4EDld4Et++zh7g+lzgjPI9ktkpkRUFqoivXYTIEPRuViMcc/yoxar67aWHAE6kKGu9PMFbQ9s6Mtv6g+BvABV4tJhpO4qIFvlsgCKhCEifDndnBxng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L9obZrlka3fyKTZMFwolnLlX22unENpCmIHtzodi1Rw=;
- b=1WYPpYztYpl/m1gfey+lA3dlPtVfVEmGf4uefmV4brdUnUwukDrG4eoBOBeS/xxoc+p+PMyG90URVqVrfzwI58HG0d6vDR/h1TH2tlZ8H2oN9SHr3ILmq+30C5ul8Yi2ve0opbFSQzl7ObeET3e/gn/S6E6dr3xaavkxLwFM16A=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SJ2PR12MB8109.namprd12.prod.outlook.com (2603:10b6:a03:4f5::8)
- by MW4PR12MB6804.namprd12.prod.outlook.com (2603:10b6:303:20d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Wed, 24 Apr
- 2024 10:16:30 +0000
-Received: from SJ2PR12MB8109.namprd12.prod.outlook.com
- ([fe80::c3fc:3be9:dde7:745f]) by SJ2PR12MB8109.namprd12.prod.outlook.com
- ([fe80::c3fc:3be9:dde7:745f%7]) with mapi id 15.20.7472.044; Wed, 24 Apr 2024
- 10:16:29 +0000
-Message-ID: <f19dfb12-0f11-463f-a64c-2e81324e6e61@amd.com>
-Date: Wed, 24 Apr 2024 12:16:18 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] microblaze: Remove early printk call from
- cpuinfo-static.c
-To: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com,
- git@xilinx.com
-Cc: Rob Herring <robh@kernel.org>
-References: <2f10db506be8188fa07b6ec331caca01af1b10f8.1712824039.git.michal.simek@amd.com>
-Content-Language: en-US
-From: Michal Simek <michal.simek@amd.com>
-Autocrypt: addr=michal.simek@amd.com; keydata=
- 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
- 3i3l5DA=
-In-Reply-To: <2f10db506be8188fa07b6ec331caca01af1b10f8.1712824039.git.michal.simek@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VI1PR0902CA0054.eurprd09.prod.outlook.com
- (2603:10a6:802:1::43) To SJ2PR12MB8109.namprd12.prod.outlook.com
- (2603:10b6:a03:4f5::8)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OncTH6Fu"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-516d6c1e238so8424735e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 03:18:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713953927; x=1714558727; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mFdw4V9U4NST4C8w1cj4IEkGhdH2VTb3cZ2ewOJFDY8=;
+        b=OncTH6FujuC0CGt8CzSQHMJlJ0+X1C5+TGThi2US1Pl/TuRMBpb+3ib/Y22DraCOlZ
+         apmACURksvrHaxMZ84TzO0xCKz/pF34SXFn0UM/w6UKZacdGm7Iv/S4FFUZkncgBdp1i
+         /GygrQw+RizFWxNzGskbGp14jlpx75AjMa8qODcGzWWkAt4fbI/HCXXNHsiY5JjVfUZy
+         UMCvDdBn+kCrbgvjF3j/DTyn98CrWk3ZlBtA6HE+xz1O3y9EnF0Vd5Gljf+agCn6LiGc
+         csVOeyN+UL5stmX/C/+XxQHTmRe36OV80lV7/OB1XqHBTWPQhgKHZw8Q/9/WgHJz68dG
+         Gs+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713953927; x=1714558727;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mFdw4V9U4NST4C8w1cj4IEkGhdH2VTb3cZ2ewOJFDY8=;
+        b=wLw2B32emn4WwA5Aa+KM6JmqrCbslbiWG8C40KZ4BSY5nitjakmSRCTBVRPhMKeume
+         d9v5tEF/0yR6XrkCT5ZvOdMr9yAmmbW1lPz494eWUC/j0ZzP6VFkD6QnPF4N2ByJYE5a
+         4HUJIdc2t648rSnFAkn3brm1NBu46e5Vae0i3oYwpaEj055ZtnUzKQJyYt6R2fG7GhRc
+         wokoSTk3Mbwk8oEBKXKN5BxvIukgdXmCMBFYU+QhK9p634WFFkRn7k+1rryXMO36Cg1E
+         RNYgokx4Oa2GyUQActCX6XhG2c3BKx7N7A1OEyY+/nuqQ+JY8qoqi0gz33hE3KDx1aNn
+         6bWg==
+X-Forwarded-Encrypted: i=1; AJvYcCXvknXTEZhGJv7bpj3QTnRBupt5wcKGheziYUHS+B2A3eWQ8OzMYpEqt7b2GxZoLaK4VJA5ekKcF5BGQwtNP4iSH2etpibtrnMeDBH5
+X-Gm-Message-State: AOJu0Yz+qKrIfSviJ4WLgpAe8l0j98OLVmWA487fjWZx46+mUkXj/kpg
+	1pfe4g7H91Fyte3nc51UZBCENvgVwlbLWvkUXTIDvKu1EC46qOwXQWkUTonS9gAV37GFhSt2KrE
+	0K4ZY+LeFxohh3JuR9T2eWCzVWnEJ6oWT62JZ
+X-Google-Smtp-Source: AGHT+IG8wWkRon3EGwbXNZDXFJeXYV2g79QRt563aKJF+Zlpi8UbIP8U7SqapviVgrO6cjhFlvXRk8rG8EBwrRTYgAE=
+X-Received: by 2002:a19:690a:0:b0:51a:bdd6:e718 with SMTP id
+ e10-20020a19690a000000b0051abdd6e718mr1226965lfc.31.1713953926472; Wed, 24
+ Apr 2024 03:18:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR12MB8109:EE_|MW4PR12MB6804:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3448be26-7db4-45f1-64c0-08dc64479b8e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YmhBSktTbHNxTkhPeFNBdEdsbkJqcnA0RXRKV2lNcEFDa0hZWm8rUi9qVmE1?=
- =?utf-8?B?NlRhYktQZndMa1d1bHFRd0pWdi8wZFBqQkd3eTBQYm54VU5pbjRncWtOZTdP?=
- =?utf-8?B?SEhEenFYcGNwdnJGK2hFN1dkalZYSTlZZVdzbmFQVnIveHFMazlhMUVBbDNo?=
- =?utf-8?B?aG40ejNQeHAvY1p0WjljRmRIOEJKVVZET052Q0FpTFRTNG9ZMnF4Ung0V1VV?=
- =?utf-8?B?NUMxM1lyZXU5UlpJU3dXWlNDR3JSWFQyUmZ4cXZBYUM4WWxycnFWNmppY3lr?=
- =?utf-8?B?NWJ4Q2V6S2FzcVJVVTUvbU53Y0dBb2NzM3FyZko3aldvb3c1RWlxeER6M1Rj?=
- =?utf-8?B?cWpFb1NnMm9VbVJjTDNTYmpTejloYmMwNDlEeUlhcFp6aWVvanBhM2M4d2F4?=
- =?utf-8?B?K24zS2Z0NHRtQkJieU41ZmpzTkVCR2NHWnFxYnE2b2M1VHVSUk4vQmNNWW1h?=
- =?utf-8?B?Z0tJa2plamRtTzRYUHgzVmZxdnZ0NFlaODZRc3R6anRxeWZ3SVRhWmhUK0FK?=
- =?utf-8?B?SzBOQ2ZibzRGTGxtYzg0RkJFYmQyeGVxZGYzdFV5aFRNdEpUOXBVWXdrWVRv?=
- =?utf-8?B?bFFpNnlwY0tRMmtFeFUycXJFWGwvcGpjVHh5cVBWVHpxQWNsWDhCT0d0YXZH?=
- =?utf-8?B?YTFCTlk4dXdHN1FPMXJDYXljY1F3T0ZrcHVxeTJrYnhlS0h1Vk16L1FSMXBT?=
- =?utf-8?B?bnNaUVRmbFRwdUcvelhqNXZrS0NQN0lRZ1pMZ05VNytrVXVVcnVQZXI3UDZM?=
- =?utf-8?B?N0YvZzVlQ1FYakp1NEgrYUk5MjRYZjV3QXFCdnJBN244STJIbzBHMGpPaUtE?=
- =?utf-8?B?V1AwTzJiKzAxWEg0eXl0UDZZYXpSV3NQSGRyZSs2OFpGMkdFblpwalpzV0tK?=
- =?utf-8?B?Y0JXZmFQOUdmNEdzVlJZUnkrU0Rjd2NsN0NjQmsrc0xRcEJTZTdLOG9aMjJm?=
- =?utf-8?B?Z0pRYVN2TTRvSkVFRUJQR04zbXprbmJ3c1ExYVNMM0ltWmhrYnBxdnoxd1pj?=
- =?utf-8?B?YzdzNS9FcDAzMTFBZ2NoM0E4QWJ3bUtkRENUNlFwQlQvNkdwVTE3T2pOclRK?=
- =?utf-8?B?MkxCdGpNN0N1cDA0enlQR1dzenM4MW5tNWNFK2tUdEF1N3g1Rk00OXhsc2JP?=
- =?utf-8?B?UUxKRlFyZmRmQWVZWEpoeVVxN21tOVZjRCtiVVRhS1l1NHVMaERZWkhWU2tY?=
- =?utf-8?B?amczUk0rbWVaL3d0a2VxdnZlTUdxc2JNVis1SFNaTTFkWm9aSkJaMlhtNEJD?=
- =?utf-8?B?OTJXYmVHOVNFREJ5ZUpsb3c1bi9uVU9tQ1JhUVpVc053MzhSbEZtK1NmZGtK?=
- =?utf-8?B?ZnpzY1FnN0tIZ3hxNHZ1aVptVGIxODVIRjk5Z2ZTa2xXZy8yZDVqYVlZS3FV?=
- =?utf-8?B?b25kUkJNTHFRbnhYM25ldDZpckRBZkVTamVEUVVyZmJJSTl5VlppWklNYXpu?=
- =?utf-8?B?RTY4SlgzWVlpZFBZSlpLQjZ0MzRZREEyUk1RakRpS0NXaGZod2hqM0IvUHMw?=
- =?utf-8?B?YVpHOVFBNUFHcmJndHRNblYrK1hLaWd1ZmJBQ3pzV0I0azBBZ3JjZHpzTlI2?=
- =?utf-8?B?dXZIZGl4ejBydmorT2pJaWVOWEdWcGZNMHBzQWhLYTZzaUh1VGwzWmw1YXZz?=
- =?utf-8?B?b2YwYnVpOXdUNWN6aUxna2pKZXM1SDc5NkNjd0h0S1ptUTBTclJlU3IyUHp2?=
- =?utf-8?B?ZDZ4dmFhZ0NEUW8zV1Q4Z3ZIa1Bha2JFS3hXRE5LU2xhN2RIaHdlemxnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8109.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b1JoMEhBVkdJTHdOa3BjT0xpc0NtQ05tR0Q1c3BwZENjeHo0Z3BoSnArbWZN?=
- =?utf-8?B?RzUyRDJYWVJ1OFN5cmtVemZPK0F0akV6cUVWRUErL1B5UkZLSXBlU3NpaUp1?=
- =?utf-8?B?bTRZQ0JuRE53QjZYamtJVEk4dVlaWXNvSmhWMjR2a29vRTVhbHR2MUdQRmhG?=
- =?utf-8?B?K1V4L3c2L0NhMkZUbXpXZlo1eUxEejdvdWRpRGUrcWNlS2I1L1B3b2s5b0JH?=
- =?utf-8?B?aWR0VUM5bEs4Uk9RTDBOMjdFSUhuNHVuSjFhRTZ6YnNTRUl4UXUrNVFreTVX?=
- =?utf-8?B?SkVrY2IwUWhQNDBLa2tpZ0UwamRzQ0JTemw1citBekhIQ1hIZWxQNTdVUkVn?=
- =?utf-8?B?aHNueWxTOERHRElLSlVMYmxGdlk0SDRCT0RmU0J5dlE2dzV1WFlPb1lnUXRu?=
- =?utf-8?B?VnRrbldaUE4vY0xYWTdHM2xEMnk4TTNZYU1PL29CWjE0N0xnaFd1cUNYLzRW?=
- =?utf-8?B?SCtpY1RCS3JBVklGQWxoUDhNcjl1dGlYR3dRTzNTQTZSNCt4WGVieklNTjlL?=
- =?utf-8?B?OVQxVGdyRWhvbUw5YWtmUjBFSG1Cb0tuMXVHK0hDRFRyNVBlckhsRmJYempR?=
- =?utf-8?B?eXVPZnYxOSszR2xFYjZuSm5qTmdXNXFSWi9uQndORHlrOXE1dm9LWEVSOE5F?=
- =?utf-8?B?Mi9PQmNBSnN0ZzZIUk05UUNSYm5GazdOY3NNZDVmaVh1S2R1TTdUUHhHNVR6?=
- =?utf-8?B?UUVVUlFwODFQR0YzclpXOGdKaDhBcFpiY2ZKcEFZMUdtcy9vbUZKRHV2VVJX?=
- =?utf-8?B?R3dQMFdyK1FLVE9YbUdybmdSSzQwWnU2TjJGWlc2cHMvakpPZ0xHajh4cTkw?=
- =?utf-8?B?OForQ3dCd2dZNk0wU1ZFcjhHQUZNb1UxQXhNay9OU0JNR2FBbUtKRU5HcWNW?=
- =?utf-8?B?WkQzanRnMDVRb1piS1cxVGkyZml0TWNTSFNYZVlpdURGL3owZ2I4SUl2cEky?=
- =?utf-8?B?NHlzODZ1SDBJS0JyM1VNSk9BYXZGcmVEZXJIN3dwaGJIMVNpdklLRXR6bnJl?=
- =?utf-8?B?VkIyQmxYRTBEb2psUGgxa3EwOE1HSi9ITk5YeGRjb0NKWVJQeVJ2UEpFWmFw?=
- =?utf-8?B?LytZUkxadnhiUWx6anNhMG42MzhrSnc1Sk9wVW82eXBRMVdkeXBGZzFQUzRa?=
- =?utf-8?B?K1pCOEhWbHNwbm1zK0lQVXJLbVIvWEZ2VDlrQ3h1TUc2bWlDSEZDeWtYTkxT?=
- =?utf-8?B?Y0orazRqT1VPTDRIU0JWVk44N1RWNStlQVBUaEQxb0FIeFMwdWIwRmRZZ1pG?=
- =?utf-8?B?UnhjaUtrQkRiVExQSlNSNXVITWJoVWtyM0RabEdIOFk3WGNtMzBPOXJYMHVw?=
- =?utf-8?B?NTk0RmtHZGVPTzBMWjdNakRZZi9QdTU3bTVLNk40ME9JODc2NFd6OEk4M3Zl?=
- =?utf-8?B?SUs2SVpyYzMxbU02Q08wbERSTVRyMlREbXFyaGpFYjRrNm1zWEU3WnlqQTNx?=
- =?utf-8?B?ZmpaY2FBTGxMa1ZwL0tUbWI5dkNid2Q0dEJTL1dUWGRYa2UwQXZ6RG5CNHJX?=
- =?utf-8?B?YjQ2aG9hdlhMZDBENCtleGpUdFh0OGVxT1B0amxyWGc5V05XdjZVNmpvWjNU?=
- =?utf-8?B?eTA4SlI0UGJWbHpOaERFOElSMnJncXpwY25UUjRoQlowS01YV1BGSHhZRDQw?=
- =?utf-8?B?ME1OdjQyMHpoVUl2a0NBdUVkc3V6Vm1sRnNiamVndG10V3ZEdmFidUFOUWJR?=
- =?utf-8?B?Y2d3SUlCWFdjK2kyYUtYVEpra0c0L0U5MWxEejBqdXlvT2RVbnpyZzkrczBv?=
- =?utf-8?B?SkhZSGpYZGQzaVh3RG1FcFgzZVBJaWMxZWdIbytYOTlGUSsya21Xd0JzUVZW?=
- =?utf-8?B?UWZpVXBPT0dRSDhxOXl2UHFYRm9pYlh0S25BRHBCMk0zY3JOL1FNUXI1a2tn?=
- =?utf-8?B?MWhLVUJIcTRDeXl5U01EeHVYOUpDWUVzLzRsTk9WeGFDclI4VDdVY2ZnaG1K?=
- =?utf-8?B?dUFYSzE5ZEhpQkxNQlNKQjcyU2xVK0pndkhEbXR2M2Q2V1hhbFRBM3VXOUJ2?=
- =?utf-8?B?VGFjTWppOGMyQ2N1a0VNUzNpakY5eHBHY21EeXF5NWNDelNUekllTkpOTlZy?=
- =?utf-8?B?THNra3d0UmdJSGNRNzNvSkxKQ1UzV0ljUDM5NzdlRkZZZmR4L0x1RUdDWU5N?=
- =?utf-8?Q?MZHBtN+hrGtJDnMqyHbRltDFu?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3448be26-7db4-45f1-64c0-08dc64479b8e
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8109.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 10:16:29.7729
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: A7DrpOqZ7P1QBAgXTY8TJak7LLdmw0/iV+rCM9rIEJky6r7zfUudXuuGjslUzG5f
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6804
+References: <20240424074242.519895-1-joychakr@google.com> <20240424074242.519895-2-joychakr@google.com>
+ <20240424104048.1b02b07e@donnerap.manchester.arm.com>
+In-Reply-To: <20240424104048.1b02b07e@donnerap.manchester.arm.com>
+From: Joy Chakraborty <joychakr@google.com>
+Date: Wed, 24 Apr 2024 15:48:32 +0530
+Message-ID: <CAOSNQF1cVFTgZN4uzmxLEUG9cEq6bCNMQ9Mar9Y8AHaYKh6OEg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] nvmem: Change return type of reg read/write to ssize_t
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	NXP Linux Team <linux-imx@nxp.com>, Vladimir Zapolskiy <vz@mleia.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Vincent Shih <vincent.sunplus@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Rafal Milecki <rafal@milecki.pl>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Michal Simek <michal.simek@amd.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, asahi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-sunxi@lists.linux.dev, 
+	manugautam@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Apr 24, 2024 at 3:11=E2=80=AFPM Andre Przywara <andre.przywara@arm.=
+com> wrote:
+>
+> On Wed, 24 Apr 2024 07:42:42 +0000
+> Joy Chakraborty <joychakr@google.com> wrote:
+>
+> > Change return type of reg_read() and reg_write() callback to ssize_t fo=
+r
+> > nvmem suppliers to return number of bytes read/written to the nvmem cor=
+e.
+> >
+> > Currently nvmem core assumes the amount of data read/written is equal
+> > to what it has requested from the supplier, this return code facilitate=
+s
+> > better error handling in the nvmem core.
+> >
+> > Signed-off-by: Joy Chakraborty <joychakr@google.com>
+>
+> There are two problems in the sunxi driver:
+>
+> > ---
+> >  drivers/nvmem/apple-efuses.c        |  7 +--
+> >  drivers/nvmem/bcm-ocotp.c           | 12 ++---
+> >  drivers/nvmem/brcm_nvram.c          | 10 ++--
+> >  drivers/nvmem/core.c                | 83 +++++++++++++----------------
+> >  drivers/nvmem/imx-iim.c             |  6 +--
+> >  drivers/nvmem/imx-ocotp-ele.c       |  4 +-
+> >  drivers/nvmem/imx-ocotp-scu.c       | 12 ++---
+> >  drivers/nvmem/imx-ocotp.c           | 10 ++--
+> >  drivers/nvmem/jz4780-efuse.c        |  7 +--
+> >  drivers/nvmem/lan9662-otpc.c        | 12 ++---
+> >  drivers/nvmem/layerscape-sfp.c      | 11 ++--
+> >  drivers/nvmem/lpc18xx_eeprom.c      | 14 ++---
+> >  drivers/nvmem/lpc18xx_otp.c         |  6 +--
+> >  drivers/nvmem/meson-efuse.c         | 22 +++++---
+> >  drivers/nvmem/meson-mx-efuse.c      |  6 +--
+> >  drivers/nvmem/microchip-otpc.c      |  6 +--
+> >  drivers/nvmem/mtk-efuse.c           |  6 +--
+> >  drivers/nvmem/mxs-ocotp.c           |  7 +--
+> >  drivers/nvmem/nintendo-otp.c        |  6 +--
+> >  drivers/nvmem/qcom-spmi-sdam.c      | 12 ++---
+> >  drivers/nvmem/qfprom.c              | 14 ++---
+> >  drivers/nvmem/qoriq-efuse.c         |  6 +--
+> >  drivers/nvmem/rave-sp-eeprom.c      | 18 +++----
+> >  drivers/nvmem/rmem.c                |  4 +-
+> >  drivers/nvmem/rockchip-efuse.c      | 19 +++----
+> >  drivers/nvmem/rockchip-otp.c        | 19 +++----
+> >  drivers/nvmem/sc27xx-efuse.c        |  3 +-
+> >  drivers/nvmem/sec-qfprom.c          |  4 +-
+> >  drivers/nvmem/snvs_lpgpr.c          | 17 +++---
+> >  drivers/nvmem/sprd-efuse.c          |  8 +--
+> >  drivers/nvmem/stm32-bsec-optee-ta.c | 12 ++---
+> >  drivers/nvmem/stm32-bsec-optee-ta.h | 20 +++----
+> >  drivers/nvmem/stm32-romem.c         | 26 ++++-----
+> >  drivers/nvmem/sunplus-ocotp.c       |  4 +-
+> >  drivers/nvmem/sunxi_sid.c           | 15 +++---
+> >  drivers/nvmem/u-boot-env.c          |  6 +--
+> >  drivers/nvmem/uniphier-efuse.c      |  6 +--
+> >  drivers/nvmem/vf610-ocotp.c         |  7 +--
+> >  drivers/nvmem/zynqmp_nvmem.c        | 13 ++---
+> >  include/linux/nvmem-provider.h      |  4 +-
+> >  40 files changed, 253 insertions(+), 231 deletions(-)
+>
+> [ ... ]
+>
+> >
+> > diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
+> > index ba14a76208ab..0133263d2adb 100644
+> > --- a/drivers/nvmem/sunxi_sid.c
+> > +++ b/drivers/nvmem/sunxi_sid.c
+> > @@ -36,8 +36,8 @@ struct sunxi_sid {
+> >       u32                     value_offset;
+> >  };
+> >
+> > -static int sunxi_sid_read(void *context, unsigned int offset,
+> > -                       void *val, size_t bytes)
+> > +static ssize_t sunxi_sid_read(void *context, unsigned int offset,
+> > +                           void *val, size_t bytes)
+> >  {
+> >       struct sunxi_sid *sid =3D context;
+> >       u32 word;
+> > @@ -56,7 +56,7 @@ static int sunxi_sid_read(void *context, unsigned int=
+ offset,
+>
+>         (adding more context here)
+>
+> >
+> >       val +=3D round_down(bytes, 4);
+> >       offset +=3D round_down(bytes, 4);
+> >       bytes =3D bytes % 4;
+> >
+> >       if (!bytes)
+> >               return 0;
+> >
+> >       /* Handle any trailing bytes */
+> >       word =3D readl_relaxed(sid->base + sid->value_offset + offset);
+> >       memcpy(val, &word, bytes);
+> >
+> > -     return 0;
+> > +     return bytes;
+>
+> So this is only the code path in case the read request was not 4 byte
+> aligned, so the "return 0;" above must also be changed. But please note
+> that the bytes parameter is changed, so we either need to save that, or
+> derive the amount read from something else.
+>
+> Cheers,
+> Andre
 
+Ack, Missed the return logic above.
+Will fix this next version by saving bytes read in another variable.
+Thanks for reviewing.
 
-On 4/11/24 10:27, Michal Simek wrote:
-> Early printk has been removed already that's why also remove calling it.
-> Similar change has been done in cpuinfo-pvr-full.c by commit cfbd8d1979af
-> ("microblaze: Remove early printk setup").
-> 
-> Fixes: 96f0e6fcc9ad ("microblaze: remove redundant early_printk support")
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
-> ---
-> 
->   arch/microblaze/kernel/cpu/cpuinfo-static.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/microblaze/kernel/cpu/cpuinfo-static.c b/arch/microblaze/kernel/cpu/cpuinfo-static.c
-> index 85dbda4a08a8..03da36dc6d9c 100644
-> --- a/arch/microblaze/kernel/cpu/cpuinfo-static.c
-> +++ b/arch/microblaze/kernel/cpu/cpuinfo-static.c
-> @@ -18,7 +18,7 @@ static const char family_string[] = CONFIG_XILINX_MICROBLAZE0_FAMILY;
->   static const char cpu_ver_string[] = CONFIG_XILINX_MICROBLAZE0_HW_VER;
->   
->   #define err_printk(x) \
-> -	early_printk("ERROR: Microblaze " x "-different for kernel and DTS\n");
-> +	pr_err("ERROR: Microblaze " x "-different for kernel and DTS\n");
->   
->   void __init set_cpuinfo_static(struct cpuinfo *ci, struct device_node *cpu)
->   {
+Thanks
+Joy
 
-Applied.
-M
+>
+> >  }
+> >
+> >  static int sun8i_sid_register_readout(const struct sunxi_sid *sid,
+> > @@ -90,10 +90,11 @@ static int sun8i_sid_register_readout(const struct =
+sunxi_sid *sid,
+> >   * to be not reliable at all.
+> >   * Read by the registers instead.
+> >   */
+> > -static int sun8i_sid_read_by_reg(void *context, unsigned int offset,
+> > -                              void *val, size_t bytes)
+> > +static ssize_t sun8i_sid_read_by_reg(void *context, unsigned int offse=
+t,
+> > +                                  void *val, size_t bytes)
+> >  {
+> >       struct sunxi_sid *sid =3D context;
+> > +     size_t bytes_read =3D bytes;
+> >       u32 word;
+> >       int ret;
+> >
+> > @@ -109,7 +110,7 @@ static int sun8i_sid_read_by_reg(void *context, uns=
+igned int offset,
+> >       }
+> >
+> >       if (!bytes)
+> > -             return 0;
+> > +             return bytes_read;
+> >
+> >       /* Handle any trailing bytes */
+> >       ret =3D sun8i_sid_register_readout(sid, offset, &word);
+> > @@ -118,7 +119,7 @@ static int sun8i_sid_read_by_reg(void *context, uns=
+igned int offset,
+> >
+> >       memcpy(val, &word, bytes);
+> >
+> > -     return 0;
+> > +     return bytes_read;
+> >  }
+> >
+> >  static int sunxi_sid_probe(struct platform_device *pdev)
+> > diff --git a/drivers/nvmem/u-boot-env.c b/drivers/nvmem/u-boot-env.c
+> > index befbab156cda..2288a2891bb2 100644
+> > --- a/drivers/nvmem/u-boot-env.c
+> > +++ b/drivers/nvmem/u-boot-env.c
+> > @@ -47,8 +47,8 @@ struct u_boot_env_image_broadcom {
+> >       DECLARE_FLEX_ARRAY(uint8_t, data);
+> >  } __packed;
+> >
+> > -static int u_boot_env_read(void *context, unsigned int offset, void *v=
+al,
+> > -                        size_t bytes)
+> > +static ssize_t u_boot_env_read(void *context, unsigned int offset, voi=
+d *val,
+> > +                            size_t bytes)
+> >  {
+> >       struct u_boot_env *priv =3D context;
+> >       struct device *dev =3D priv->dev;
+> > @@ -66,7 +66,7 @@ static int u_boot_env_read(void *context, unsigned in=
+t offset, void *val,
+> >               return -EIO;
+> >       }
+> >
+> > -     return 0;
+> > +     return bytes_read;
+> >  }
+> >
+> >  static int u_boot_env_read_post_process_ethaddr(void *context, const c=
+har *id, int index,
+> > diff --git a/drivers/nvmem/uniphier-efuse.c b/drivers/nvmem/uniphier-ef=
+use.c
+> > index 6ad3295d3195..a6c28e03adc2 100644
+> > --- a/drivers/nvmem/uniphier-efuse.c
+> > +++ b/drivers/nvmem/uniphier-efuse.c
+> > @@ -16,8 +16,8 @@ struct uniphier_efuse_priv {
+> >       void __iomem *base;
+> >  };
+> >
+> > -static int uniphier_reg_read(void *context,
+> > -                          unsigned int reg, void *_val, size_t bytes)
+> > +static ssize_t uniphier_reg_read(void *context,
+> > +                              unsigned int reg, void *_val, size_t byt=
+es)
+> >  {
+> >       struct uniphier_efuse_priv *priv =3D context;
+> >       u8 *val =3D _val;
+> > @@ -26,7 +26,7 @@ static int uniphier_reg_read(void *context,
+> >       for (offs =3D 0; offs < bytes; offs +=3D sizeof(u8))
+> >               *val++ =3D readb(priv->base + reg + offs);
+> >
+> > -     return 0;
+> > +     return bytes;
+> >  }
+> >
+> >  static int uniphier_efuse_probe(struct platform_device *pdev)
+> > diff --git a/drivers/nvmem/vf610-ocotp.c b/drivers/nvmem/vf610-ocotp.c
+> > index ee9c61ae727d..4e2bdb38305d 100644
+> > --- a/drivers/nvmem/vf610-ocotp.c
+> > +++ b/drivers/nvmem/vf610-ocotp.c
+> > @@ -143,11 +143,12 @@ static int vf610_get_fuse_address(int base_addr_o=
+ffset)
+> >       return -EINVAL;
+> >  }
+> >
+> > -static int vf610_ocotp_read(void *context, unsigned int offset,
+> > -                     void *val, size_t bytes)
+> > +static ssize_t vf610_ocotp_read(void *context, unsigned int offset,
+> > +                             void *val, size_t bytes)
+> >  {
+> >       struct vf610_ocotp *ocotp =3D context;
+> >       void __iomem *base =3D ocotp->base;
+> > +     size_t bytes_read =3D bytes;
+> >       u32 reg, *buf =3D val;
+> >       int fuse_addr;
+> >       int ret;
+> > @@ -193,7 +194,7 @@ static int vf610_ocotp_read(void *context, unsigned=
+ int offset,
+> >               offset +=3D 4;
+> >       }
+> >
+> > -     return 0;
+> > +     return bytes_read;
+> >  }
+> >
+> >  static struct nvmem_config ocotp_config =3D {
+> > diff --git a/drivers/nvmem/zynqmp_nvmem.c b/drivers/nvmem/zynqmp_nvmem.=
+c
+> > index 8682adaacd69..1502d4998159 100644
+> > --- a/drivers/nvmem/zynqmp_nvmem.c
+> > +++ b/drivers/nvmem/zynqmp_nvmem.c
+> > @@ -56,8 +56,8 @@ struct xilinx_efuse {
+> >       u32 pufuserfuse;
+> >  };
+> >
+> > -static int zynqmp_efuse_access(void *context, unsigned int offset,
+> > -                            void *val, size_t bytes, enum efuse_access=
+ flag,
+> > +static ssize_t zynqmp_efuse_access(void *context, unsigned int offset,
+> > +                                void *val, size_t bytes, enum efuse_ac=
+cess flag,
+> >                              unsigned int pufflag)
+> >  {
+> >       struct device *dev =3D context;
+> > @@ -140,10 +140,10 @@ static int zynqmp_efuse_access(void *context, uns=
+igned int offset,
+> >       dma_free_coherent(dev, sizeof(struct xilinx_efuse),
+> >                         efuse, dma_addr);
+> >
+> > -     return ret;
+> > +     return ret < 0 ? ret : bytes;
+> >  }
+> >
+> > -static int zynqmp_nvmem_read(void *context, unsigned int offset, void =
+*val, size_t bytes)
+> > +static ssize_t zynqmp_nvmem_read(void *context, unsigned int offset, v=
+oid *val, size_t bytes)
+> >  {
+> >       struct device *dev =3D context;
+> >       int ret;
+> > @@ -166,6 +166,7 @@ static int zynqmp_nvmem_read(void *context, unsigne=
+d int offset, void *val, size
+> >
+> >               dev_dbg(dev, "Read chipid val %x %x\n", idcode, version);
+> >               *(int *)val =3D version & SILICON_REVISION_MASK;
+> > +             ret =3D SOC_VER_SIZE;
+> >               break;
+> >       /* Efuse offset starts from 0xc */
+> >       case EFUSE_START_OFFSET ... EFUSE_END_OFFSET:
+> > @@ -182,8 +183,8 @@ static int zynqmp_nvmem_read(void *context, unsigne=
+d int offset, void *val, size
+> >       return ret;
+> >  }
+> >
+> > -static int zynqmp_nvmem_write(void *context,
+> > -                           unsigned int offset, void *val, size_t byte=
+s)
+> > +static ssize_t zynqmp_nvmem_write(void *context,
+> > +                               unsigned int offset, void *val, size_t =
+bytes)
+> >  {
+> >       int pufflag =3D 0;
+> >
+> > diff --git a/include/linux/nvmem-provider.h b/include/linux/nvmem-provi=
+der.h
+> > index 3ebeaa0ded00..f7e83a59aa2f 100644
+> > --- a/include/linux/nvmem-provider.h
+> > +++ b/include/linux/nvmem-provider.h
+> > @@ -16,9 +16,9 @@
+> >  #include <linux/gpio/consumer.h>
+> >
+> >  struct nvmem_device;
+> > -typedef int (*nvmem_reg_read_t)(void *priv, unsigned int offset,
+> > +typedef ssize_t (*nvmem_reg_read_t)(void *priv, unsigned int offset,
+> >                               void *val, size_t bytes);
+> > -typedef int (*nvmem_reg_write_t)(void *priv, unsigned int offset,
+> > +typedef ssize_t (*nvmem_reg_write_t)(void *priv, unsigned int offset,
+> >                                void *val, size_t bytes);
+> >  /* used for vendor specific post processing of cell data */
+> >  typedef int (*nvmem_cell_post_process_t)(void *priv, const char *id, i=
+nt index,
+>
