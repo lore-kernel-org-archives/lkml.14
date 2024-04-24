@@ -1,109 +1,121 @@
-Received: from smtp.smtpout.orange.fr (smtp-24.smtpout.orange.fr [80.12.242.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB24815AD9D;
-	Wed, 24 Apr 2024 12:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B7715ADBD;
+	Wed, 24 Apr 2024 12:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713961727; cv=none; b=PvdNWgbQGZeo9lxjgAxR93GFENO21+pIdxKLU5YT6UlkOqfKxCN/uJl1bi9pwyYSfxI287gzYLEHozHaBnogzapoagHXX5pKvEWgTfQKEFhj1meK2+l4vEBESPT4eftDPTwLy6sPo3fgtDXZzH5xIp1i59rUldPvWdSF8GCJst0=
+	t=1713961779; cv=none; b=kfxheOP16JghlJc94o9ND1kqBZUFLK5ZzVBvkWEj36HBP1LFQNSpoIcLs57CGu5Ehiu44FOlOHNf3+dTjfbSG6HNkt7wf8sX6am4Tr1oO5/JoHe3e72/DXm18sRQ/bF7Eo86VbKWVze8izJ2F4+7ReWVs5FvurOtSq+0SkfbgNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713961727; c=relaxed/simple;
-	bh=BE7LvHhy1jcP9dVf2+G9dk0Puo2poqCn/ow8d+Ul8Rs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i2QiUpvxK/hGRc+r4SAOqAf+ZYSwAZKTkwACRl09ml4xtQ1oAzq8R8JQj7xqBdCcjLbZrq5RgKWFHdBYkvMZz9oUNeinaRVFXpEz66gcn/hzJoUvyHv6nQKC15FSpyGiKUme5TAXYiCY/7BWWJPEDuiYKceWHVQroEN+NGU1n+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=kjCKQRgS; arc=none smtp.client-ip=80.12.242.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1713961779; c=relaxed/simple;
+	bh=2r0Zx60Kk3Gcfn/lsAiAKkp21jd937boMLMyrUqiaVE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fCy5jKY5k3G8y/yBaGBR1GFO9Rf+d+p3HFwl23A6HHimG10ckXfb8wJrNrNKOh/Vm89sOAAbmsP+/Kxu9GcCaUUxVFplnA/a8KMqKlqiokg6L2hafTYwkoAE0IXriwpJvQ59Qgh8mQDfXFUk1Yh53Xyhk3sjq2mlXIB7ICYsP4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=hSZsyrnd; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="kjCKQRgS"
-Received: from fedora.home ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id zbijrKEx3tES9zbijrejgW; Wed, 24 Apr 2024 14:27:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713961652;
-	bh=0euCcEnVXaCbghlJdcYSkVKJP6L0D104GpN/D1rVMRM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=kjCKQRgS5F+ta/B+KkLL4Abevv9pFTJrXd1PrbjwS9rhV7Eura+IHlVS+CjZ2U0ru
-	 b3QTqFYgY8EHvdzXrgKHx6LwR1h9OLKklY4cdbRZ8ZISpgk7iA2w8TTZtB0dd+0eaz
-	 SWzOVpPkuiUNvOePgKOGo4o3bWsBT3B6Quccjg9WjJf9T7fu7EpgGSnaKpfYT7gUz/
-	 Ws296KA4IigfMYQVrKGjGye3BQbP4SIrij3dLoDn2toV4VVbC69E9fx9hnjDAloULi
-	 rblZ7RUqyJWpg5eZlskUP+BhybPXkJ/ukSb7k2A8cwigtRpv63MZqTIedkjpzvtupr
-	 ctOtp4GVEOXtw==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 24 Apr 2024 14:27:32 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jorgen Hansen <jhansen@vmware.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] VMCI: Fix an error handling path in vmci_guest_probe_device()
-Date: Wed, 24 Apr 2024 14:27:23 +0200
-Message-ID: <a35bbc3876ae1da70e49dafde4435750e1477be3.1713961553.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="hSZsyrnd"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43O7hW5Z021471;
+	Wed, 24 Apr 2024 14:29:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=0v8FucOCV2cy2eAkTUXe4t7/ZIX5yYmmCfK23IcasIw=; b=hS
+	ZsyrndC4U2fgo4zzlDapMaxl7bK7/cG5yCTy/vJO2LIoguD1oLcuE/Tzt1BNaw2R
+	k9CRLhbMWInadGCcw8Fh6OReDMcfzbZ7CsbwperoAFdWqSGw4Q0b1T3CBXj57LDO
+	UOOZqEg0H+esLKV9BgRCOq8gmWTWX8k40jed1yQb26BI4sgmKqrF5dSQ1WSK3sCa
+	Kj4YEorLTiVjVx3Sm/nzYd+JT7IujXOZ4DnRHLpmKJCldZ7tcKruk91PEUtd5ZaU
+	PB0pAdrwu4L9ujun8D0u72CGlqBMG6GKtEOPjkBc1GlfWQJsSao2UBvtXfwULRS9
+	6x206l5br2uOfxQkSgVg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xm51w8c6g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Apr 2024 14:29:15 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9D3F940044;
+	Wed, 24 Apr 2024 14:29:09 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4BE4A21B51B;
+	Wed, 24 Apr 2024 14:28:23 +0200 (CEST)
+Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 24 Apr
+ 2024 14:28:22 +0200
+Message-ID: <9baaed82-c118-4a60-beff-2be9dbe2a6c3@foss.st.com>
+Date: Wed, 24 Apr 2024 14:28:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: manual merge of the devicetree tree with the
+ net-next, stm32 trees
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Rob Herring <robh@kernel.org>,
+        David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+        "Paolo
+ Abeni" <pabeni@redhat.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "Arnd
+ Bergmann" <arnd@arndb.de>
+CC: Networking <netdev@vger.kernel.org>,
+        Gatien Chevallier
+	<gatien.chevallier@foss.st.com>,
+        "Kory Maincent (Dent Project)"
+	<kory.maincent@bootlin.com>,
+        Linux Kernel Mailing List
+	<linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List
+	<linux-next@vger.kernel.org>,
+        Saravana Kannan <saravanak@google.com>
+References: <20240424134038.28532f2f@canb.auug.org.au>
+Content-Language: en-US
+From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <20240424134038.28532f2f@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-24_10,2024-04-23_02,2023-05-22_02
 
-After a successful pci_iomap_range() call, pci_iounmap() should be called
-in the error handling path, as already done in the remove function.
+Hi Stephen
 
-Add the missing call.
+On 4/24/24 05:40, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the devicetree tree got a conflict in:
+> 
+>    drivers/of/property.c
+> 
+> between commits:
+> 
+>    6a15368c1c6d ("of: property: fw_devlink: Add support for "access-controller"")
+>    93c0d8c0ac30 ("of: property: Add fw_devlink support for pse parent")
+> 
+> from the net-next, stm32 trees and commit:
+> 
+>    669430b183fc ("of: property: fw_devlink: Add support for "power-supplies" binding")
+> 
+> from the devicetree tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
 
-The corresponding call was added in the remove function in commit
-5ee109828e73 ("VMCI: dma dg: allocate send and receive buffers for DMA
-datagrams")
+After remark from Saravana I just updated the stm32-next branch which 
+impact part of code mentioned above. I think you should get a merge 
+conflict on the next stm32-next merge into linux-next.
 
-Fixes: e283a0e8b7ea ("VMCI: dma dg: add MMIO access to registers")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/misc/vmw_vmci/vmci_guest.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+I will warn Arnd B. about those conflicts in my next PR.
 
-diff --git a/drivers/misc/vmw_vmci/vmci_guest.c b/drivers/misc/vmw_vmci/vmci_guest.c
-index c61e8953511d..476af89e751b 100644
---- a/drivers/misc/vmw_vmci/vmci_guest.c
-+++ b/drivers/misc/vmw_vmci/vmci_guest.c
-@@ -625,7 +625,8 @@ static int vmci_guest_probe_device(struct pci_dev *pdev,
- 	if (!vmci_dev) {
- 		dev_err(&pdev->dev,
- 			"Can't allocate memory for VMCI device\n");
--		return -ENOMEM;
-+		error = -ENOMEM;
-+		goto err_unmap_mmio_base;
- 	}
- 
- 	vmci_dev->dev = &pdev->dev;
-@@ -642,7 +643,8 @@ static int vmci_guest_probe_device(struct pci_dev *pdev,
- 		if (!vmci_dev->tx_buffer) {
- 			dev_err(&pdev->dev,
- 				"Can't allocate memory for datagram tx buffer\n");
--			return -ENOMEM;
-+			error = -ENOMEM;
-+			goto err_unmap_mmio_base;
- 		}
- 
- 		vmci_dev->data_buffer = dma_alloc_coherent(&pdev->dev, VMCI_DMA_DG_BUFFER_SIZE,
-@@ -892,6 +894,10 @@ static int vmci_guest_probe_device(struct pci_dev *pdev,
- err_free_data_buffers:
- 	vmci_free_dg_buffers(vmci_dev);
- 
-+err_unmap_mmio_base:
-+	if (mmio_base != NULL)
-+		pci_iounmap(pdev, mmio_base);
-+
- 	/* The rest are managed resources and will be freed by PCI core */
- 	return error;
- }
--- 
-2.44.0
-
+regards
+Alex
