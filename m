@@ -1,121 +1,443 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D3F158D88;
-	Wed, 24 Apr 2024 09:34:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E1641E898
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 09:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713951250; cv=none; b=tl37qKUoURuVCfPit8WBVbnK0SRBiXOtjxnfIvwgrwAEVCR4YG9CUhFv9yRKuQUAhCIZSHz2SzJ48yrq4ZtkTApLv7zYcE5akIcR1cor4Nt3ttyphLoqDE4pJkWNkJFJ1NYeLsdZonEQxKKnX1B6vjw7BCrK/deCQI3/uj/eoeg=
+	t=1713951310; cv=none; b=SIwgBYJM7uRjkhNFpExYcfkclqGllKOkrzf5i++NYmfA1B9RQLFpylETLiOT51cEVs6Jd3kFKAQ+mDrZ2nbiS4A//8X9/Oj1RR0k1fm3GV5c0N09FZiFclidjvaO6KM0X+H3tke7accMNW5eLUt3jgX/ZoSZSrD971ZfD3Rn87E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713951250; c=relaxed/simple;
-	bh=yGiPoJvpXlRgOQSVONxPZ89qtxcRwU5XBdx9AG7B7lE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LgnkiDig5va61ZVxrI6F+YbAr/QRJVlrW/FfNBsPUiYu0QSrz87gj+ruJjkYE4vCrDsD9TMujfLYYAEOPLmgBzqfxGlCQHW6M5cavvZBgssXeJJcnchYQ4jisCuBQE/gUMsSv+acs1QQYYM8T/gnK4gYDoptUnWbsoIINWQeNVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B11CC113CE;
-	Wed, 24 Apr 2024 09:34:08 +0000 (UTC)
-Message-ID: <47a8ba71-9d51-40e5-85fb-7b64a40921db@xs4all.nl>
-Date: Wed, 24 Apr 2024 11:34:07 +0200
+	s=arc-20240116; t=1713951310; c=relaxed/simple;
+	bh=0sVXnFQ8TQVaHAYAngVYSibJXuqAt2MUBDi0xqpqPbs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TdwInaYNjWEi/IIZ+IsZeIdXpbx5Iuk4VEeOKa9fjbrLpPhImBb9exSTlXbi0y+o/0XcSsS9vuFgMsHaOwYLKn1YggizwOyIJ5ITpPx4nSFZzR4k71cGcVmZPnbfk5yeianHd1bCiska/36qqRM0pdQpzQ41HjYHM4lB0XIbqP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8CxZ_BF0ihmRuEBAA--.10366S3;
+	Wed, 24 Apr 2024 17:35:01 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxrldD0ihmC0YDAA--.8598S2;
+	Wed, 24 Apr 2024 17:35:00 +0800 (CST)
+From: Song Gao <gaosong@loongson.cn>
+To: maobibo@loongson.cn
+Cc: pbonzini@redhat.com,
+	zhaotianrui@loongson.cn,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] LoongArch: KVM: Add PMU support
+Date: Wed, 24 Apr 2024 17:18:13 +0800
+Message-Id: <20240424091813.1471440-1-gaosong@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/9] staging: media: av7110: These patches address various
- code style and formatting issues in the av7110 driver
-Content-Language: en-US, nl
-To: Jonathan Bergh <bergh.jonathan@gmail.com>, mchehab@kernel.org
-Cc: mcgrof@kernel.org, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240303192040.8116-1-bergh.jonathan@gmail.com>
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <20240303192040.8116-1-bergh.jonathan@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxrldD0ihmC0YDAA--.8598S2
+X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Hi Jonathan,
+On LoongArch, the host and guest have their own PMU CSRs registers
+and they share PMU hardware resources. A set of PMU CSRs consists of
+a CTRL register and a CNTR register. We can set which PMU CSRs are used
+by the guest by writing to the GCFG register [24: 26] bits.
 
-On 03/03/2024 20:20, Jonathan Bergh wrote:
-> The following patches fix a number of code style issues identified by
-> checkpatch in the av7110 driver.
-> 
-> Jonathan Bergh (9):
->   staging: media: av7110: Fix formatting problem where trailing statements
->     should be on a new line
->   staging: media: av7110: Remove braces for single line statement blocks
->   staging: media: av7110: Remove spaces between function name and
->     opening parenthesis
->   staging: media: av7110: Fix formatting of pointers to meet coding
->     style guidelines
->   staging: media: av7110: Fix block comments to meet code style
->     guidelines
->   staging: media: av7110: Remove extra whitespace before opening '['s
->   staging: media: av7110: Remove extra whitespace before ','
->   staging: media: av7110: Ensure whitespace ahead of opening brace '{'
->   staging: media: av7110: Ensure newline after variable declarations
-> 
->  drivers/staging/media/av7110/sp8870.c | 136 +++++++++++++-------------
->  1 file changed, 70 insertions(+), 66 deletions(-)
-> 
+On KVM side. we save the host PMU CSRs into structure kvm_context.
+If the host supports the PMU feature. When entering guest mode.
+we save the host PMU CSRs and restore the guest PMU CSRs. When exiting
+guest mode, we save the guest PMU CSRs and restore the host PMU CSRs.
 
-I'm sorry, but I will reject this series. This is an old driver that is
-not under active development.
+Signed-off-by: Song Gao <gaosong@loongson.cn>
 
-It is not worth the review effort I have to put into reviewing these
-cleanup patches.
+v2->V3:
+  1. When saving the PMU context, clear the CTRL register
+     before reading the CNTR register.
+  2, Put kvm_lose_pmu() in kvm_handler_exit().
+v1->v2:
+  1. Add new vcpu->request flag KVM_REQ_PMU. If we use PMU,
+We need to set this flag;
+  2. Add kvm_check_pmu() to kvm_pre_enter_guest();
+  3. On _kvm_setcsr(), after modifying the PMU CSR register value,
+     if we use PMU, we need to set KVM_REQ_PMU.
+---
+ arch/loongarch/include/asm/kvm_csr.h   |   5 +
+ arch/loongarch/include/asm/kvm_host.h  |  20 +++
+ arch/loongarch/include/asm/loongarch.h |   1 +
+ arch/loongarch/kvm/exit.c              |   8 ++
+ arch/loongarch/kvm/vcpu.c              | 192 ++++++++++++++++++++++++-
+ 5 files changed, 224 insertions(+), 2 deletions(-)
 
-As the TODO file says:
+diff --git a/arch/loongarch/include/asm/kvm_csr.h b/arch/loongarch/include/asm/kvm_csr.h
+index 724ca8b7b401..289c3671ee25 100644
+--- a/arch/loongarch/include/asm/kvm_csr.h
++++ b/arch/loongarch/include/asm/kvm_csr.h
+@@ -208,4 +208,9 @@ static __always_inline void kvm_change_sw_gcsr(struct loongarch_csrs *csr,
+ 	csr->csrs[gid] |= val & _mask;
+ }
+ 
++#define KVM_PMU_EVENT_ENABLED	(CSR_PERFCTRL_PLV0 |		\
++					CSR_PERFCTRL_PLV1 |	\
++					CSR_PERFCTRL_PLV2 |	\
++					CSR_PERFCTRL_PLV3)
++
+ #endif	/* __ASM_LOONGARCH_KVM_CSR_H__ */
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index 2d62f7b0d377..e1d64e26e7cb 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -51,9 +51,14 @@ struct kvm_arch_memory_slot {
+ 	unsigned long flags;
+ };
+ 
++#define KVM_REQ_PMU			KVM_ARCH_REQ(0)
++#define HOST_MAX_PMNUM			16
+ struct kvm_context {
+ 	unsigned long vpid_cache;
+ 	struct kvm_vcpu *last_vcpu;
++	/* Save host pmu csr */
++	u64 perf_ctrl[HOST_MAX_PMNUM];
++	u64 perf_cntr[HOST_MAX_PMNUM];
+ };
+ 
+ struct kvm_world_switch {
+@@ -99,6 +104,8 @@ enum emulation_result {
+ #define KVM_LARCH_LASX		(0x1 << 2)
+ #define KVM_LARCH_SWCSR_LATEST	(0x1 << 3)
+ #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
++#define KVM_GUEST_PMU_ENABLE	(0x1 << 5)
++#define KVM_GUEST_PMU_ACTIVE	(0x1 << 6)
+ 
+ struct kvm_vcpu_arch {
+ 	/*
+@@ -136,6 +143,9 @@ struct kvm_vcpu_arch {
+ 	/* CSR state */
+ 	struct loongarch_csrs *csr;
+ 
++	/* Guest max PMU CSR id */
++	int max_pmu_csrid;
++
+ 	/* GPR used as IO source/target */
+ 	u32 io_gpr;
+ 
+@@ -195,6 +205,16 @@ static inline bool kvm_guest_has_lasx(struct kvm_vcpu_arch *arch)
+ 	return arch->cpucfg[2] & CPUCFG2_LASX;
+ }
+ 
++static inline bool kvm_guest_has_pmu(struct kvm_vcpu_arch *arch)
++{
++	return arch->cpucfg[LOONGARCH_CPUCFG6] & CPUCFG6_PMP;
++}
++
++static inline int kvm_get_pmu_num(struct kvm_vcpu_arch *arch)
++{
++	return (arch->cpucfg[LOONGARCH_CPUCFG6] & CPUCFG6_PMNUM) >> CPUCFG6_PMNUM_SHIFT;
++}
++
+ /* Debug: dump vcpu state */
+ int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu);
+ 
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index 46366e783c84..644380b6ebec 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -119,6 +119,7 @@
+ #define  CPUCFG6_PMP			BIT(0)
+ #define  CPUCFG6_PAMVER			GENMASK(3, 1)
+ #define  CPUCFG6_PMNUM			GENMASK(7, 4)
++#define  CPUCFG6_PMNUM_SHIFT		4
+ #define  CPUCFG6_PMBITS			GENMASK(13, 8)
+ #define  CPUCFG6_UPM			BIT(14)
+ 
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index ed1d89d53e2e..636cd1500135 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -83,6 +83,14 @@ static int kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
+ 	rj = inst.reg2csr_format.rj;
+ 	csrid = inst.reg2csr_format.csr;
+ 
++	if (csrid >= LOONGARCH_CSR_PERFCTRL0 && csrid <= vcpu->arch.max_pmu_csrid) {
++		if (kvm_guest_has_pmu(&vcpu->arch)) {
++			vcpu->arch.pc -= 4;
++			kvm_make_request(KVM_REQ_PMU, vcpu);
++			return EMULATE_DONE;
++		}
++	}
++
+ 	/* Process CSR ops */
+ 	switch (rj) {
+ 	case 0: /* process csrrd */
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 3a8779065f73..2a694a52978e 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -30,6 +30,150 @@ const struct kvm_stats_header kvm_vcpu_stats_header = {
+ 		       sizeof(kvm_vcpu_stats_desc),
+ };
+ 
++static inline void kvm_save_host_pmu(struct kvm_vcpu *vcpu)
++{
++	struct kvm_context *context;
++
++	context = this_cpu_ptr(vcpu->kvm->arch.vmcs);
++	context->perf_ctrl[0] = read_csr_perfctrl0();
++	write_csr_perfctrl0(0);
++	context->perf_ctrl[1] = read_csr_perfctrl1();
++	write_csr_perfctrl1(0);
++	context->perf_ctrl[2] = read_csr_perfctrl2();
++	write_csr_perfctrl2(0);
++	context->perf_ctrl[3] = read_csr_perfctrl3();
++	write_csr_perfctrl3(0);
++
++	context->perf_cntr[0] = read_csr_perfcntr0();
++	context->perf_cntr[1] = read_csr_perfcntr1();
++	context->perf_cntr[2] = read_csr_perfcntr2();
++	context->perf_cntr[3] = read_csr_perfcntr3();
++}
++
++static inline void kvm_restore_host_pmu(struct kvm_vcpu *vcpu)
++{
++	struct kvm_context *context;
++
++	context = this_cpu_ptr(vcpu->kvm->arch.vmcs);
++	write_csr_perfctrl0(context->perf_ctrl[0]);
++	write_csr_perfcntr0(context->perf_cntr[0]);
++	write_csr_perfctrl1(context->perf_ctrl[1]);
++	write_csr_perfcntr1(context->perf_cntr[1]);
++	write_csr_perfctrl2(context->perf_ctrl[2]);
++	write_csr_perfcntr2(context->perf_cntr[2]);
++	write_csr_perfctrl3(context->perf_ctrl[3]);
++	write_csr_perfcntr3(context->perf_cntr[3]);
++}
++
++
++static inline void kvm_save_guest_pmu(struct kvm_vcpu *vcpu)
++{
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++
++	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL0);
++	kvm_write_hw_gcsr(LOONGARCH_CSR_PERFCTRL0, 0);
++	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL1);
++	kvm_write_hw_gcsr(LOONGARCH_CSR_PERFCTRL1, 0);
++	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL2);
++	kvm_write_hw_gcsr(LOONGARCH_CSR_PERFCTRL2, 0);
++	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL3);
++	kvm_write_hw_gcsr(LOONGARCH_CSR_PERFCTRL3, 0);
++
++	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR0);
++	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR1);
++	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR2);
++	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR3);
++}
++
++static inline void kvm_restore_guest_pmu(struct kvm_vcpu *vcpu)
++{
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL0);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR0);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL1);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR1);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL2);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR2);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCTRL3);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PERFCNTR3);
++}
++
++static void kvm_lose_pmu(struct kvm_vcpu *vcpu)
++{
++	unsigned long val;
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++
++	if (!(vcpu->arch.aux_inuse & KVM_GUEST_PMU_ENABLE))
++		return;
++	if (!(vcpu->arch.aux_inuse & KVM_GUEST_PMU_ACTIVE))
++		return;
++
++	kvm_save_guest_pmu(vcpu);
++	/* Disable pmu access from guest */
++	write_csr_gcfg(read_csr_gcfg() & ~CSR_GCFG_GPERF);
++
++	/*
++	 * Clear KVM_GUEST_PMU_ENABLE if the guest is not using PMU CSRs
++	 * when exiting the guest, so that the next time trap into the guest.
++	 * we don't need to deal with PMU CSRs contexts.
++	 */
++	val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_PERFCTRL0);
++	val |= kvm_read_sw_gcsr(csr, LOONGARCH_CSR_PERFCTRL1);
++	val |= kvm_read_sw_gcsr(csr, LOONGARCH_CSR_PERFCTRL2);
++	val |= kvm_read_sw_gcsr(csr, LOONGARCH_CSR_PERFCTRL3);
++	if (!(val & KVM_PMU_EVENT_ENABLED))
++		vcpu->arch.aux_inuse &= ~KVM_GUEST_PMU_ENABLE;
++	kvm_restore_host_pmu(vcpu);
++
++	/* KVM_GUEST_PMU_ACTIVE needs to be cleared when exiting the guest */
++	vcpu->arch.aux_inuse &= ~KVM_GUEST_PMU_ACTIVE;
++}
++
++static void kvm_own_pmu(struct kvm_vcpu *vcpu)
++{
++	unsigned long val;
++
++	kvm_save_host_pmu(vcpu);
++	/* Set PM0-PM(num) to guest */
++	val = read_csr_gcfg() & ~CSR_GCFG_GPERF;
++	val |= (kvm_get_pmu_num(&vcpu->arch) + 1) << CSR_GCFG_GPERF_SHIFT;
++	write_csr_gcfg(val);
++	kvm_restore_guest_pmu(vcpu);
++}
++
++static void kvm_restore_pmu(struct kvm_vcpu *vcpu)
++{
++	if (!(vcpu->arch.aux_inuse & KVM_GUEST_PMU_ENABLE))
++		return;
++
++	kvm_make_request(KVM_REQ_PMU, vcpu);
++}
++
++static void kvm_check_pmu(struct kvm_vcpu *vcpu)
++{
++	if (!kvm_check_request(KVM_REQ_PMU, vcpu))
++		return;
++
++	kvm_own_pmu(vcpu);
++
++	/*
++	 * Set KVM_GUEST PMU_ENABLE and GUEST_PMU_ACTIVE
++	 * when guest has KVM_REQ_PMU request.
++	 */
++	vcpu->arch.aux_inuse |= KVM_GUEST_PMU_ENABLE;
++	vcpu->arch.aux_inuse |= KVM_GUEST_PMU_ACTIVE;
++
++	/*
++	 * Save the PMU CSRs context when there is a host PMU interrupt.
++	 * and set KVM_REQ_PMU.
++	 */
++	if (read_csr_estat() & CPU_PMU) {
++		kvm_lose_pmu(vcpu);
++		kvm_make_request(KVM_REQ_PMU, vcpu);
++	}
++}
++
+ /*
+  * kvm_check_requests - check and handle pending vCPU requests
+  *
+@@ -100,6 +244,7 @@ static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
+ 		/* Make sure the vcpu mode has been written */
+ 		smp_store_mb(vcpu->mode, IN_GUEST_MODE);
+ 		kvm_check_vpid(vcpu);
++		kvm_check_pmu(vcpu);
+ 		vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
+ 		/* Clear KVM_LARCH_SWCSR_LATEST as CSR will change when enter guest */
+ 		vcpu->arch.aux_inuse &= ~KVM_LARCH_SWCSR_LATEST;
+@@ -130,6 +275,8 @@ static int kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
+ 	/* Set a default exit reason */
+ 	run->exit_reason = KVM_EXIT_UNKNOWN;
+ 
++	kvm_lose_pmu(vcpu);
++
+ 	guest_timing_exit_irqoff();
+ 	guest_state_exit_irqoff();
+ 	local_irq_enable();
+@@ -295,6 +442,21 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
+ 
+ 	kvm_write_sw_gcsr(csr, id, val);
+ 
++	/*
++	 * After modifying the PMU CSR register value of the vcpu.
++	 * If the PMU CSRs are used, we need to set KVM_REQ_PMU.
++	 */
++	if (id >= LOONGARCH_CSR_PERFCTRL0 && id <= LOONGARCH_CSR_PERFCNTR3) {
++		unsigned long val;
++
++		val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_PERFCTRL0);
++		val |= kvm_read_sw_gcsr(csr, LOONGARCH_CSR_PERFCTRL1);
++		val |= kvm_read_sw_gcsr(csr, LOONGARCH_CSR_PERFCTRL2);
++		val |= kvm_read_sw_gcsr(csr, LOONGARCH_CSR_PERFCTRL3);
++		if (val & KVM_PMU_EVENT_ENABLED)
++			kvm_make_request(KVM_REQ_PMU, vcpu);
++	}
++
+ 	return ret;
+ }
+ 
+@@ -333,6 +495,12 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+ 	case LOONGARCH_CPUCFG5:
+ 		*v = GENMASK(31, 0);
+ 		return 0;
++	case LOONGARCH_CPUCFG6:
++		if (cpu_has_pmp)
++			*v = GENMASK(14, 0);
++		else
++			*v = 0;
++		return 0;
+ 	case LOONGARCH_CPUCFG16:
+ 		*v = GENMASK(16, 0);
+ 		return 0;
+@@ -351,7 +519,7 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+ 
+ static int kvm_check_cpucfg(int id, u64 val)
+ {
+-	int ret;
++	int ret, host;
+ 	u64 mask = 0;
+ 
+ 	ret = _kvm_get_cpucfg_mask(id, &mask);
+@@ -377,6 +545,18 @@ static int kvm_check_cpucfg(int id, u64 val)
+ 			/* LASX architecturally implies LSX and FP but val does not satisfy that */
+ 			return -EINVAL;
+ 		return 0;
++	case LOONGARCH_CPUCFG6:
++		if (val & CPUCFG6_PMP) {
++			host = read_cpucfg(LOONGARCH_CPUCFG6);
++			if ((val & CPUCFG6_PMBITS) != (host & CPUCFG6_PMBITS))
++				/* Guest pmbits must be the same with host */
++				return -EINVAL;
++			if ((val & CPUCFG6_PMNUM) > (host & CPUCFG6_PMNUM))
++				return -EINVAL;
++			if ((val & CPUCFG6_UPM) && !(host & CPUCFG6_UPM))
++				return -EINVAL;
++		}
++		return 0;
+ 	default:
+ 		/*
+ 		 * Values for the other CPUCFG IDs are not being further validated
+@@ -459,6 +639,10 @@ static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
+ 		if (ret)
+ 			break;
+ 		vcpu->arch.cpucfg[id] = (u32)v;
++		if (id == LOONGARCH_CPUCFG6) {
++			vcpu->arch.max_pmu_csrid = LOONGARCH_CSR_PERFCTRL0 +
++							2 * kvm_get_pmu_num(&vcpu->arch) + 1;
++		}
+ 		break;
+ 	case KVM_REG_LOONGARCH_KVM:
+ 		switch (reg->id) {
+@@ -552,7 +736,8 @@ static int kvm_loongarch_cpucfg_has_attr(struct kvm_vcpu *vcpu,
+ 					 struct kvm_device_attr *attr)
+ {
+ 	switch (attr->attr) {
+-	case 2:
++	case LOONGARCH_CPUCFG2:
++	case LOONGARCH_CPUCFG6:
+ 		return 0;
+ 	default:
+ 		return -ENXIO;
+@@ -982,6 +1167,9 @@ static int _kvm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 	/* Control guest page CCA attribute */
+ 	change_csr_gcfg(CSR_GCFG_MATC_MASK, CSR_GCFG_MATC_ROOT);
+ 
++	/* Restore hardware PMU CSRs */
++	kvm_restore_pmu(vcpu);
++
+ 	/* Don't bother restoring registers multiple times unless necessary */
+ 	if (vcpu->arch.aux_inuse & KVM_LARCH_HWCSR_USABLE)
+ 		return 0;
+-- 
+2.39.3
 
-- Cleanup patches for the drivers here won't be accepted.
-
-I mentioned that before, so I'm not sure why you post another version
-of cleanup patches.
-
-Regards,
-
-	Hans
