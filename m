@@ -1,375 +1,403 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-sh.amlogic.com (unknown [58.32.228.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513BA1E868
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 05:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271D11E868;
+	Wed, 24 Apr 2024 05:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.32.228.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713935356; cv=none; b=muWXC+l8H+beW3pRH2hLwNA/EAdk0bxVq9ODbr4IVL9jp7tRy8Njg1dJIy2eER+ff9cEORXu4hkpMrZEnHJeTH9NCuuokQhF4DpQZjDsCJY509i933aSx8gEySzDhtA45B86GZTJ7AEnJlaziE1lx+guhumhc0f1kZrvLfRp7Ks=
+	t=1713935487; cv=none; b=Rsv9k1vARDjogAJ5uE9+9BdQ3NZuPKjXPj/hYMhZKZeitAS4SxUi+GWWR5SD/vyaOD5jsy48KgfiQw5oSFWHEYqRkHTYeDUqC0wl2JMJZg2NkvVQZm1AORKsWoFVXpvL6Cx0VXs6kQYhjeFdNNVMFe3qRauMDuAY7XHBFY+jydM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713935356; c=relaxed/simple;
-	bh=hsPjuTbiN/dIW997zkTnai903v/BUpXXdiPKRMY47wk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ph+LOHGZCUkb/vpnQbqElZKS0Tqa/2zzOlA3Q3sH/JLhKs6GDIbTd4JYYDODxCotelIGir72x5p5z5S4R2x+iUj2byWN8ytLXNWvWCxg6JLFRstG+iRW2uxRrxxuUY5/jb7YJqZFB+NVzhlWQFnfCRw0zbuFI744kgOG/UTxQLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=f9ycVAQP; arc=none smtp.client-ip=91.218.175.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="f9ycVAQP"
-Message-ID: <22979e28-ed48-467f-a5cf-82be57bcc2f7@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1713935351;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kn9GVgtEXwasErGqw/29COA8cUkcHNCt3wrEGRAtFN4=;
-	b=f9ycVAQPnotRUb3NSIfT4hkf5CwCbI7ej7CXuagnK8SRHaUqdNw1ZPAtFO9I7KmYF5PyMN
-	tUHJ2u/7m/jLqkNxC6IWf21Tza35Q7GH6LakrldMRVkHqml0fab6vK9IoBvnM5TmlvIgtJ
-	41S5HClq9Qqs5utQFiDNm+ah0biH7OE=
-Date: Wed, 24 Apr 2024 13:09:00 +0800
+	s=arc-20240116; t=1713935487; c=relaxed/simple;
+	bh=SSFAJUpb02iFZ0+qSaHkBCk1sa9KpZ3Dc9Sr2srIl9o=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=G/U6F16ERXw9az/ILF7D6nNDkUjO0658hlMHyqhVnAOtnTP8i9Py/u6GrV02haxeHFmyk/rrzJ5q9DoN7/JJonDScnH69Zx56eepvo3d0z7ctvj/+q/o8J+VrLl+DhCQS3FQu+rYzsScnCjOyiWpSN6zixtM4+oiCMnC5l6u4LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; arc=none smtp.client-ip=58.32.228.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+Received: from droid01-cd.amlogic.com (10.98.11.200) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.2507.6; Wed, 24 Apr 2024
+ 13:10:20 +0800
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+To: <linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>
+CC: Neil Armstrong <neil.armstrong@linaro.org>, Jerome Brunet
+	<jbrunet@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, "Stephen
+ Boyd" <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	Kevin Hilman <khilman@baylibre.com>, Xianwei Zhao <xianwei.zhao@amlogic.com>,
+	Chuan Liu <chuan.liu@amlogic.com>
+Subject: [PATCH v7 3/5] dt-bindings: clock: add Amlogic C3 peripherals clock controller
+Date: Wed, 24 Apr 2024 13:09:26 +0800
+Message-ID: <20240424050928.1997820-4-xianwei.zhao@amlogic.com>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20240424050928.1997820-1-xianwei.zhao@amlogic.com>
+References: <20240424050928.1997820-1-xianwei.zhao@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] software node: Implement device_get_match_data fwnode
- callback
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- dri-devel@lists.freedesktop.org, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20240422164658.217037-1-sui.jingfeng@linux.dev>
- <Zie3ebHOEpWHj1qV@smile.fi.intel.com>
- <d5bc1e73-a553-451e-ab74-f5f0ca259c6b@linux.dev>
- <hcltp2bbxxg2t7ibmzgiib7mgbwgmvzwnnq6mochdh7c4h76r3@bxj6yk5zq64e>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-In-Reply-To: <hcltp2bbxxg2t7ibmzgiib7mgbwgmvzwnnq6mochdh7c4h76r3@bxj6yk5zq64e>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-
-Hi,
-
-
-On 2024/4/24 05:37, Dmitry Baryshkov wrote:
-> On Wed, Apr 24, 2024 at 12:49:18AM +0800, Sui Jingfeng wrote:
->> Hi,
->>
->> Thanks a for you reviewing my patch.
->>
->>
->> On 2024/4/23 21:28, Andy Shevchenko wrote:
->>> On Tue, Apr 23, 2024 at 12:46:58AM +0800, Sui Jingfeng wrote:
->>>> Because the software node backend of the fwnode API framework lacks an
->>>> implementation for the .device_get_match_data function callback. This
->>>> makes it difficult to use(and/or test) a few drivers that originates
->>> Missing space before opening parenthesis.
->> OK, will be fixed at the next version.
->>
->>
->>>> from DT world on the non-DT platform.
->>>>
->>>> Implement the .device_get_match_data fwnode callback, device drivers or
->>>> platform setup codes are expected to provide a string property, named as
->>>> "compatible", the value of this software node string property is used to
->>>> match against the compatible entries in the of_device_id table.
->>> Yep and again, how is this related? If you want to test a driver originating
->>> from DT, you would probably want to have a DT (overlay) to be provided.
->> There are a few reasons, please fixed me if I'm wrong.
->>
->> DT (overlay) can be possible solution, but DT (overlay) still depend on DT.
->> For example, one of my x86 computer with Ubuntu 22.04 Linux/x86 6.5.0-28-generic
->> kernel configuration do not has the DT enabled. This means that the default kernel
->> configuration is decided by the downstream OS distribution. It is not decided by
->> usual programmers. This means that out-of-tree device drivers can never utilize
->> DT or DT overlay, right?
-> No, this is not fully correct. The drivers anyway have to adopted for
-> the platforms they are used with. It is perfectly fine to have a driver
-> that supports both DT and ACPI at the same time.
->
->> I means that Linux kernel is intended to be used by both in-tree drivers and out-of-tree drivers.
->> Out-of-tree device drivers don't have a chance to alter kernel config, they can only managed to
->> get their source code compiled against the Linux kernel the host in-using.
->>
->> Some out-of-tree device drivers using DKMS to get their source code compiled,
->> with the kernel configuration already *fixed*. So they don't have a opportunity
->> to use DT overlay.
->>
->> Relying on DT overlay is *still* *DT* *dependent*, and I not seeing matured solution
->> get merged into upstream kernel yet. However, software node has *already* been merged
->> into Linux kernel. It can be used on both DT systems and non-DT systems. Software node
->> has the least requirement, it is *handy* for interact with drivers who only need a small
->> set properties.
->>
->> In short, I still think my patch maybe useful for some peoples. DT overlay support on
->> X86 is not matured yet, need some extra work. For out-of-tree kernel module on
->> downstream kernel. Select DT and DT overlay on X86 is out-of-control. And I don't want
->> to restrict the freedom of developers.
-> I don't think upstream developers care about the downstream kernels.
-
-
-Theupstream kernels are facing the same problem,by default drm-misc-x86_defconfigdon't has the CONFIG_OF and CONFIG_OF_OVERLAY  selected.
-See [1] for an example.
-  
-[1] https://cgit.freedesktop.org/drm/drm-tip/tree/drm-misc-x86_defconfig?h=rerere-cache
-
-
-> But let me throw an argument why this patch (or something similar) looks
-> to be necessary.
-
-Agreed till to here.
-
-
-> Both on DT and non-DT systems the kernel allows using the non-OF based
-> matching. For the platform devices there is platform_device_id-based
-> matching.
-
-
-Yeah, still sounds good.
-
-
-> Currently handling the data coming from such device_ids requires using
-> special bits of code,
-
-
-It get started to deviate from here, as you are going to rash onto a narrow way.
-Because you made the wrong assumption, it can be platform devices, it can *also*
-be of platform device created by the of_platform_device_create(). The patch itself
-won't put strong restrictions about its users.
-
-
-> e.g. platform_get_device_id(pdev)->driver_data to
-> get the data from the platform_device_id.
-
-Right, but you run into a narrow area and stuck yourself.
-The so called non-DT, non-ACPI platform devices are all you basis of you argument, right?
-
-There have plenty i2c device and SPI device associated with software note properties.
-After applied this patch, it means that device_get_match_data() can also works for
-those device.
-
-And the approach you provide already generate a lot of *boilerplate*...
-
-> Having such codepaths goes
-> against the goal of unifying DT and non-DT paths via generic property /
-> fwnode code.
-
-
-Who's goal? your goal or community's goal? is it documented somewhere?
-
-Andy's goal is just to make those two drivers truely DT independent,
-and I agree with Andy. I'm going to cooperate with Andy to achieve this
-small goal.
-
-However, apparently, our goal is *different* with your goal, your goal
-is a big goal. If you have such a ambitious goal, you can definitely do
-something on behalf of yourself.
-
-For example, improving DT overlay support for the FPGA device, Or making
-the of_device_id stuff truly platform neutral before telling people that
-"XXXX doesn't depend on DT". I guess task of removing the of_node member
-from the struct device already in you job list, as you want to unify
-the DT and non-DT code paths...
-
-All I want is just be able to contribute, do something useful and do the
-right thing. So please don't throw your personal goal or taste onto the
-body of other people. Thanks.
-
-
-> As such, I support Sui's idea
-
-
-OK so far. But,
-
-
-> of being able to use device_get_match_data
-> for non-DT, non-ACPI platform devices.
-
-Please *stop* the making biased assumptions!
-Please stop the making *biased* assumptions!
-Please stop the making biased *assumptions*!
-
-
-Currently, the various display drivers don't have the acpi_device_id associated.
-This means that those drivers won't probed even in ACPI enabled systems either.
-Adding acpi_device_id to those drivers is another topic. If you have that ambitious,
-you can take the job. But this again is another problem.
-
-Back to the concern itself, I didn't mention what device or what drivers will
-be benefits in my commit message. In fact, after applied this patch,
-device_get_match_data() will works for the i2c device and SPI device associated
-with software note. Hence, "non-DT, non-ACPI platform devices" are just an imaginary
-of yourself. So please stop bring you own confusion to us.
-
-> Sui, if that fits your purpose,
-
-
-That doesn't fits my purpose, please stop the recommendation, thanks.
-
-
-> please make sure that with your patch
-> (or the next iteration of it) you can get driver_data from the matched
-> platform_device_id.
-
-
-No, that's a another problem.
-
-The 'platform_get_device_id(pdev)->driver_data' you mentioned is completely
-off the domain of fwnode API framework. You are completely deviate what we
-are currently talking about.
-
-What we are talking about is something within the fwnode API framework.
-
-You can hack the device_get_match_data() function to call platform_get_device_id()
-as a fallback code path when the fwnode subsystem couldn't return a match data to
-you. But this is another problem.
-
-
->>
->>>> This also helps to keep the three backends of the fwnode API aligned as
->>>> much as possible, which is a fundamential step to make device driver
->>>> OF-independent truely possible.
->>>>
->>>> Fixes: ffb42e64561e ("drm/tiny/repaper: Make driver OF-independent")
->>>> Fixes: 5703d6ae9573 ("drm/tiny/st7735r: Make driver OF-independent")
->>> How is it a fix?
->>
->> Because the drm/tiny/repaper driver and drm/tiny/st7735r driver requires extra
->> device properties. We can not make them OF-independent simply by switching to
->> device_get_match_data(). As the device_get_match_data() is a *no-op* on non-DT
->> environment.
-> This doesn't constitute a fix.
-
-
-No, it does.
-
-> It's not that there is a bug that you are
-> fixing. You are adding new feature ('support for non-DT platforms').
-
-
-Yes, it's a bit of farfetched.
-
-But as our goal is to make driver OF-independent, as mentioned in the commit title.
-when the needed feature is missing, the goal can not be achieved. Fix the missing.
-
-
->> Hence, before my patch is applied, the two "Make driver OF-independent" patch
->> have no effect. Using device_get_match_data() itself is exactly *same* with
->> using of_device_get_match_data() as long as the .device_get_match_data hook is
->> not implemented.
->>
->>
->> See my analysis below:
->>
->> When the .device_get_match_data hook is not implemented:
->>
->> 1) On DT systems, device_get_match_data() just redirect to of_fwnode_device_get_match_data(),
->>     which is just a wrapper of of_device_get_match_data().
->>
->> 2) On Non-DT system, device_get_match_data() has *ZERO* effect, it just return NULL.
->>
->>
->> Therefore, device_get_match_data() adds *ZERO* benefits to the mentioned drivers if
->> the .device_get_match_data is not implemented.
->>
->> Only when the .device_get_match_data hook get implemented, device_get_match_data()
->> can redirect tosoftware_node_get_match_data() function in this patch.
->> Therefore, the two driver has a way to get a proper driver match data on
->> non-DT environment. Beside, the users of those two driver can provide
->> additional software node property at platform setup code. as long as at
->> somewhere before the driver is probed.
->>
->> So the two driver really became OF-independent after applied my patch.
->>
->>
->>>> Closes: https://lore.kernel.org/lkml/20230223203713.hcse3mkbq3m6sogb@skbuf/
->>> Yes, and then Reported-by, which is missing here.
->>>
->>>> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->>>> Cc: Daniel Scally <djrscally@gmail.com>
->>>> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->>>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
->>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->>> Please, move these after the cutter '---' line (note you may have that line in
->>> your local repo).
->>>
->>> ...
->>>
->> OK, thanks a lot for teaching me.
->>
->>
->>>> +static const void *
->>>> +software_node_get_match_data(const struct fwnode_handle *fwnode,
->>>> +			     const struct device *dev)
->>>> +{
->>>> +	struct swnode *swnode = to_swnode(fwnode);
->>>> +	const struct of_device_id *matches = dev->driver->of_match_table;
->>>> +	const char *val = NULL;
->>>> +	int ret;
->>>> +	ret = property_entry_read_string_array(swnode->node->properties,
->>>> +					       "compatible", &val, 1);
->>> And if there are more than one compatible provided?
->> Nope, I think this is kind of limitation of the software node,
->> platform setup code generally could provide a compatible property.
->> No duplicate name is allowed. But we the best explanation would be
->> platform setup code should provide the "best" or "default" compatible
->> property.
-> The implementation is still incorrect.
-
-
-No, it is correct.
-
-
-> The swnode code shouldn't look
-> into the OF data. Please use non-DT match IDs.
-
-Please stop the misleading,  the software_node_get_match_data() is a mimic to (subset of)
-acpi_fwnode_device_get_match_data(), Software node is kind of complement to ACPI, it's
-definitely need to follow the code style of ACPI counterpart. The initial implementation
-choose to take a look at the dev->driver->of_match_table, which is to avoid ugly duplication.
-This introducing no *boilerplate*, and partly reflect what you goal: "Unifying".
-   
-So, please don't go against with yourself and Please read the implement
-of acpi_fwnode_device_get_match_data() before objects, thanks.
-
-
->>
->>>> +	if (ret < 0 || !val)
->>>> +		return NULL;
->>>> +	while (matches && matches->compatible[0]) {
->>> First part of the conditional is invariant to the loop. Can be simply
->>
->> Right, thanks.
->>
->>
->>> 	matches = dev->driver->of_match_table;
->>> 	if (!matches)
->>> 		return NULL;
->>>
->>> 	while (...)
->>>
->>>> +		if (!strcmp(matches->compatible, val))
->>>> +			return matches->data;
->>>> +
->>>> +		matches++;
->>>> +	}
->>>> +
->>>> +	return NULL;
->>>> +}
->> -- 
->> Best regards,
->> Sui
->>
+Content-Type: text/plain
+
+Add the peripherals clock controller dt-bindings for Amlogic C3 SoC family
+
+Co-developed-by: Chuan Liu <chuan.liu@amlogic.com>
+Signed-off-by: Chuan Liu <chuan.liu@amlogic.com>
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+---
+ .../clock/amlogic,c3-peripherals-clkc.yaml    | 120 ++++++++++
+ .../clock/amlogic,c3-peripherals-clkc.h       | 212 ++++++++++++++++++
+ 2 files changed, 332 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/amlogic,c3-peripherals-clkc.yaml
+ create mode 100644 include/dt-bindings/clock/amlogic,c3-peripherals-clkc.h
+
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,c3-peripherals-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,c3-peripherals-clkc.yaml
+new file mode 100644
+index 000000000000..98e30b8c0529
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/amlogic,c3-peripherals-clkc.yaml
+@@ -0,0 +1,120 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2022-2023 Amlogic, Inc. All rights reserved
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/amlogic,c3-peripherals-clkc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Amlogic C3 series Peripheral Clock Controller
++
++maintainers:
++  - Neil Armstrong <neil.armstrong@linaro.org>
++  - Jerome Brunet <jbrunet@baylibre.com>
++  - Xianwei Zhao <xianwei.zhao@amlogic.com>
++  - Chuan Liu <chuan.liu@amlogic.com>
++
++properties:
++  compatible:
++    const: amlogic,c3-peripherals-clkc
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 16
++    items:
++      - description: input oscillator (usually at 24MHz)
++      - description: input oscillators multiplexer
++      - description: input fix pll
++      - description: input fclk div 2
++      - description: input fclk div 2p5
++      - description: input fclk div 3
++      - description: input fclk div 4
++      - description: input fclk div 5
++      - description: input fclk div 7
++      - description: input gp0 pll
++      - description: input gp1 pll
++      - description: input hifi pll
++      - description: input sys clk
++      - description: input axi clk
++      - description: input sys pll div 16
++      - description: input cpu clk div 16
++      - description: input pad clock for rtc clk (optional)
++
++  clock-names:
++    minItems: 16
++    items:
++      - const: xtal_24m
++      - const: oscin
++      - const: fix
++      - const: fdiv2
++      - const: fdiv2p5
++      - const: fdiv3
++      - const: fdiv4
++      - const: fdiv5
++      - const: fdiv7
++      - const: gp0
++      - const: gp1
++      - const: hifi
++      - const: sysclk
++      - const: axiclk
++      - const: sysplldiv16
++      - const: cpudiv16
++      - const: pad_osc
++
++  "#clock-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - "#clock-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    apb {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        clock-controller@0 {
++            compatible = "amlogic,c3-peripherals-clkc";
++            reg = <0x0 0x0 0x0 0x49c>;
++            #clock-cells = <1>;
++            clocks = <&xtal_24m>,
++                     <&scmi_clk 8>,
++                     <&scmi_clk 12>,
++                     <&clkc_pll 3>,
++                     <&clkc_pll 5>,
++                     <&clkc_pll 7>,
++                     <&clkc_pll 9>,
++                     <&clkc_pll 11>,
++                     <&clkc_pll 13>,
++                     <&clkc_pll 15>,
++                     <&scmi_clk 13>,
++                     <&clkc_pll 17>,
++                     <&scmi_clk 9>,
++                     <&scmi_clk 10>,
++                     <&scmi_clk 14>,
++                     <&scmi_clk 15>;
++            clock-names = "xtal_24m",
++                          "oscin",
++                          "fix",
++                          "fdiv2",
++                          "fdiv2p5",
++                          "fdiv3",
++                          "fdiv4",
++                          "fdiv5",
++                          "fdiv7",
++                          "gp0",
++                          "gp1",
++                          "hifi",
++                          "sysclk",
++                          "axiclk",
++                          "sysplldiv16",
++                          "cpudiv16";
++        };
++    };
+diff --git a/include/dt-bindings/clock/amlogic,c3-peripherals-clkc.h b/include/dt-bindings/clock/amlogic,c3-peripherals-clkc.h
+new file mode 100644
+index 000000000000..d115c741c255
+--- /dev/null
++++ b/include/dt-bindings/clock/amlogic,c3-peripherals-clkc.h
+@@ -0,0 +1,212 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
++/*
++ * Copyright (c) 2023 Amlogic, Inc. All rights reserved.
++ * Author: Chuan Liu <chuan.liu@amlogic.com>
++ */
++
++#ifndef _DT_BINDINGS_CLOCK_AMLOGIC_C3_PERIPHERALS_CLKC_H
++#define _DT_BINDINGS_CLOCK_AMLOGIC_C3_PERIPHERALS_CLKC_H
++
++#define CLKID_RTC_XTAL_CLKIN			0
++#define CLKID_RTC_32K_DIV			1
++#define CLKID_RTC_32K_MUX			2
++#define CLKID_RTC_32K				3
++#define CLKID_RTC_CLK				4
++#define CLKID_SYS_RESET_CTRL			5
++#define CLKID_SYS_PWR_CTRL			6
++#define CLKID_SYS_PAD_CTRL			7
++#define CLKID_SYS_CTRL				8
++#define CLKID_SYS_TS_PLL			9
++#define CLKID_SYS_DEV_ARB			10
++#define CLKID_SYS_MMC_PCLK			11
++#define CLKID_SYS_CPU_CTRL			12
++#define CLKID_SYS_JTAG_CTRL			13
++#define CLKID_SYS_IR_CTRL			14
++#define CLKID_SYS_IRQ_CTRL			15
++#define CLKID_SYS_MSR_CLK			16
++#define CLKID_SYS_ROM				17
++#define CLKID_SYS_UART_F			18
++#define CLKID_SYS_CPU_ARB			19
++#define CLKID_SYS_RSA				20
++#define CLKID_SYS_SAR_ADC			21
++#define CLKID_SYS_STARTUP			22
++#define CLKID_SYS_SECURE			23
++#define CLKID_SYS_SPIFC				24
++#define CLKID_SYS_NNA				25
++#define CLKID_SYS_ETH_MAC			26
++#define CLKID_SYS_GIC				27
++#define CLKID_SYS_RAMA				28
++#define CLKID_SYS_BIG_NIC			29
++#define CLKID_SYS_RAMB				30
++#define CLKID_SYS_AUDIO_PCLK			31
++#define CLKID_SYS_PWM_KL			32
++#define CLKID_SYS_PWM_IJ			33
++#define CLKID_SYS_USB				34
++#define CLKID_SYS_SD_EMMC_A			35
++#define CLKID_SYS_SD_EMMC_C			36
++#define CLKID_SYS_PWM_AB			37
++#define CLKID_SYS_PWM_CD			38
++#define CLKID_SYS_PWM_EF			39
++#define CLKID_SYS_PWM_GH			40
++#define CLKID_SYS_SPICC_1			41
++#define CLKID_SYS_SPICC_0			42
++#define CLKID_SYS_UART_A			43
++#define CLKID_SYS_UART_B			44
++#define CLKID_SYS_UART_C			45
++#define CLKID_SYS_UART_D			46
++#define CLKID_SYS_UART_E			47
++#define CLKID_SYS_I2C_M_A			48
++#define CLKID_SYS_I2C_M_B			49
++#define CLKID_SYS_I2C_M_C			50
++#define CLKID_SYS_I2C_M_D			51
++#define CLKID_SYS_I2S_S_A			52
++#define CLKID_SYS_RTC				53
++#define CLKID_SYS_GE2D				54
++#define CLKID_SYS_ISP				55
++#define CLKID_SYS_GPV_ISP_NIC			56
++#define CLKID_SYS_GPV_CVE_NIC			57
++#define CLKID_SYS_MIPI_DSI_HOST			58
++#define CLKID_SYS_MIPI_DSI_PHY			59
++#define CLKID_SYS_ETH_PHY			60
++#define CLKID_SYS_ACODEC			61
++#define CLKID_SYS_DWAP				62
++#define CLKID_SYS_DOS				63
++#define CLKID_SYS_CVE				64
++#define CLKID_SYS_VOUT				65
++#define CLKID_SYS_VC9000E			66
++#define CLKID_SYS_PWM_MN			67
++#define CLKID_SYS_SD_EMMC_B			68
++#define CLKID_AXI_SYS_NIC			69
++#define CLKID_AXI_ISP_NIC			70
++#define CLKID_AXI_CVE_NIC			71
++#define CLKID_AXI_RAMB				72
++#define CLKID_AXI_RAMA				73
++#define CLKID_AXI_CPU_DMC			74
++#define CLKID_AXI_NIC				75
++#define CLKID_AXI_DMA				76
++#define CLKID_AXI_MUX_NIC			77
++#define CLKID_AXI_CVE				78
++#define CLKID_AXI_DEV1_DMC			79
++#define CLKID_AXI_DEV0_DMC			80
++#define CLKID_AXI_DSP_DMC			81
++#define CLKID_12_24M_IN				82
++#define CLKID_12M_24M				83
++#define CLKID_FCLK_25M_DIV			84
++#define CLKID_FCLK_25M				85
++#define CLKID_GEN_SEL				86
++#define CLKID_GEN_DIV				87
++#define CLKID_GEN				88
++#define CLKID_SARADC_SEL			89
++#define CLKID_SARADC_DIV			90
++#define CLKID_SARADC				91
++#define CLKID_PWM_A_SEL				92
++#define CLKID_PWM_A_DIV				93
++#define CLKID_PWM_A				94
++#define CLKID_PWM_B_SEL				95
++#define CLKID_PWM_B_DIV				96
++#define CLKID_PWM_B				97
++#define CLKID_PWM_C_SEL				98
++#define CLKID_PWM_C_DIV				99
++#define CLKID_PWM_C				100
++#define CLKID_PWM_D_SEL				101
++#define CLKID_PWM_D_DIV				102
++#define CLKID_PWM_D				103
++#define CLKID_PWM_E_SEL				104
++#define CLKID_PWM_E_DIV				105
++#define CLKID_PWM_E				106
++#define CLKID_PWM_F_SEL				107
++#define CLKID_PWM_F_DIV				108
++#define CLKID_PWM_F				109
++#define CLKID_PWM_G_SEL				110
++#define CLKID_PWM_G_DIV				111
++#define CLKID_PWM_G				112
++#define CLKID_PWM_H_SEL				113
++#define CLKID_PWM_H_DIV				114
++#define CLKID_PWM_H				115
++#define CLKID_PWM_I_SEL				116
++#define CLKID_PWM_I_DIV				117
++#define CLKID_PWM_I				118
++#define CLKID_PWM_J_SEL				119
++#define CLKID_PWM_J_DIV				120
++#define CLKID_PWM_J				121
++#define CLKID_PWM_K_SEL				122
++#define CLKID_PWM_K_DIV				123
++#define CLKID_PWM_K				124
++#define CLKID_PWM_L_SEL				125
++#define CLKID_PWM_L_DIV				126
++#define CLKID_PWM_L				127
++#define CLKID_PWM_M_SEL				128
++#define CLKID_PWM_M_DIV				129
++#define CLKID_PWM_M				130
++#define CLKID_PWM_N_SEL				131
++#define CLKID_PWM_N_DIV				132
++#define CLKID_PWM_N				133
++#define CLKID_SPICC_A_SEL			134
++#define CLKID_SPICC_A_DIV			135
++#define CLKID_SPICC_A				136
++#define CLKID_SPICC_B_SEL			137
++#define CLKID_SPICC_B_DIV			138
++#define CLKID_SPICC_B				139
++#define CLKID_SPIFC_SEL				140
++#define CLKID_SPIFC_DIV				141
++#define CLKID_SPIFC				142
++#define CLKID_SD_EMMC_A_SEL			143
++#define CLKID_SD_EMMC_A_DIV			144
++#define CLKID_SD_EMMC_A				145
++#define CLKID_SD_EMMC_B_SEL			146
++#define CLKID_SD_EMMC_B_DIV			147
++#define CLKID_SD_EMMC_B				148
++#define CLKID_SD_EMMC_C_SEL			149
++#define CLKID_SD_EMMC_C_DIV			150
++#define CLKID_SD_EMMC_C				151
++#define CLKID_TS_DIV				152
++#define CLKID_TS				153
++#define CLKID_ETH_125M_DIV			154
++#define CLKID_ETH_125M				155
++#define CLKID_ETH_RMII_DIV			156
++#define CLKID_ETH_RMII				157
++#define CLKID_MIPI_DSI_MEAS_SEL			158
++#define CLKID_MIPI_DSI_MEAS_DIV			159
++#define CLKID_MIPI_DSI_MEAS			160
++#define CLKID_DSI_PHY_SEL			161
++#define CLKID_DSI_PHY_DIV			162
++#define CLKID_DSI_PHY				163
++#define CLKID_VOUT_MCLK_SEL			164
++#define CLKID_VOUT_MCLK_DIV			165
++#define CLKID_VOUT_MCLK				166
++#define CLKID_VOUT_ENC_SEL			167
++#define CLKID_VOUT_ENC_DIV			168
++#define CLKID_VOUT_ENC				169
++#define CLKID_HCODEC_0_SEL			170
++#define CLKID_HCODEC_0_DIV			171
++#define CLKID_HCODEC_0				172
++#define CLKID_HCODEC_1_SEL			173
++#define CLKID_HCODEC_1_DIV			174
++#define CLKID_HCODEC_1				175
++#define CLKID_HCODEC				176
++#define CLKID_VC9000E_ACLK_SEL			177
++#define CLKID_VC9000E_ACLK_DIV			178
++#define CLKID_VC9000E_ACLK			179
++#define CLKID_VC9000E_CORE_SEL			180
++#define CLKID_VC9000E_CORE_DIV			181
++#define CLKID_VC9000E_CORE			182
++#define CLKID_CSI_PHY0_SEL			183
++#define CLKID_CSI_PHY0_DIV			184
++#define CLKID_CSI_PHY0				185
++#define CLKID_DEWARPA_SEL			186
++#define CLKID_DEWARPA_DIV			187
++#define CLKID_DEWARPA				188
++#define CLKID_ISP0_SEL				189
++#define CLKID_ISP0_DIV				190
++#define CLKID_ISP0				191
++#define CLKID_NNA_CORE_SEL			192
++#define CLKID_NNA_CORE_DIV			193
++#define CLKID_NNA_CORE				194
++#define CLKID_GE2D_SEL				195
++#define CLKID_GE2D_DIV				196
++#define CLKID_GE2D				197
++#define CLKID_VAPB_SEL				198
++#define CLKID_VAPB_DIV				199
++#define CLKID_VAPB				200
++
++#endif  /* _DT_BINDINGS_CLOCK_AMLOGIC_C3_PERIPHERALS_CLKC_H */
 -- 
-Best regards,
-Sui
+2.39.2
 
