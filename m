@@ -1,122 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C38157498;
-	Wed, 24 Apr 2024 10:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D102158DDC;
+	Wed, 24 Apr 2024 10:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713953030; cv=none; b=IonG3TSPk7tUnda3Xysq8P6+siOkNsHxb8YC7sEB11vpA5aIh3uSZfNgEL0CEoJtAg1tm/9MTxDCQh8uQ1m3a7eG6lDab/8iPxyUHtgwO0GMPeZVcQs24pVlaI/NS3l3oIxnEOpfrYH6cY2SeReJRNI0KHTFfKR13RCB7nhRwgU=
+	t=1713953079; cv=none; b=eG1MJup4qaDDO2AyxmtxTmDx5RpaL0xCfHbSdHY5kcsh7viFbphObM/2dzCnBV8Qy+RxkQ5widEwOfumqWhGT0fawvRf6Xz5PJAefOuh11Mvge+ZFywr64Lv35wUwz70IdwGE2rGtMgYHMCiKfOeIEtVfcRFogNVwck3L79sWiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713953030; c=relaxed/simple;
-	bh=of8KehQGF7cDuMBIGs5ksgB82Umnq66JY9p3LR+p260=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cTPoLRBc5EsRfJWj8AOooj46iYjyyqQ6iK04aZY9d+DCWxFwpV7qfoxqg6siWaOzXONEHxq+YZg4odQYky14EjkRD6+pT+0CiXAhhPa6apaVcHrJbd+Y6FhfwYhsWGf+xyFv5oWDMnXXhgDsdnGxW5iFw631n613Yiyx0KFGPX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26846C113CE;
-	Wed, 24 Apr 2024 10:03:45 +0000 (UTC)
-Message-ID: <25a33db9-3bc1-4d90-83d4-0bdbea9bc5d8@xs4all.nl>
-Date: Wed, 24 Apr 2024 12:03:44 +0200
+	s=arc-20240116; t=1713953079; c=relaxed/simple;
+	bh=gvCRJc7Vl5sSkNeFuRS44MOSMhBghTLZALAiwpcMrHk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=OWEAy+dbINVAVYrG9G5l5vD1jYQTmrjgTLsA+lGT4UBSCYkEoIs7ibKc2HhOOJ63CJEoIeJoY/txaLU+EJivoyB5T0x4+woOcliW34XjYUynPgFG9SYoxnfjs+PIc1BJ4Tl0pV2d3HYgLgR53WLjK2x2jrIsr4MjkV60k+iIglc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HDJm9Ro6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qXrSmrYu; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HDJm9Ro6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qXrSmrYu"
+Date: Wed, 24 Apr 2024 10:04:26 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1713953067;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2OelZoFz8WpDRzkyvDR4X73zTTNcDag/PPb+K94UZAA=;
+	b=HDJm9Ro68cu0i9qU7ubtej/AbrfXS67EJoNKs5/VuN7T37CYcKw+++RaGxKuJr//qdcJ7M
+	guh9IH2ykY8HFgHFTKPSOSYWQRK9qpJlGNUVT4Xb3rwRxfwOgiRfGCnwjkRiu+IESJlARL
+	Hh6T5ZWwazk07SCvNx0UCw4dmm847GxiQpr070CD7Q+zBDKtyKkaZWpgdf6Y7PQxvxvBhP
+	TpK2cjJmbyMLZTl7Cs52qBLMr6h9XPest/ZdtcBDZJGjVU4y25qJjDpw0EMkb04uZZMauO
+	uk31g5+r94wBNyNE9baLnQEnz/qcB10epeeFGkXU0LkVhLmL7PWHamrXWm+oEg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1713953067;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2OelZoFz8WpDRzkyvDR4X73zTTNcDag/PPb+K94UZAA=;
+	b=qXrSmrYus1SNcDdPd+ex9FNsFuAGRy1WoOeoRiQPvJG+7GJcRylMwIg205kJA2uAGRU8c1
+	whLU+RNYroX0q6AQ==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: locking/core] locking/qspinlock/x86: Micro-optimize virt_spin_lock()
+Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Waiman Long <longman@redhat.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240422120054.199092-1-ubizjak@gmail.com>
+References: <20240422120054.199092-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] media: v4l2-ctrls: Add average qp control
-Content-Language: en-US, nl
-To: Ming Qian <ming.qian@nxp.com>, mchehab@kernel.org
-Cc: shawnguo@kernel.org, robh+dt@kernel.org, s.hauer@pengutronix.de,
- kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
- xiahong.bao@nxp.com, eagle.zhou@nxp.com, tao.jiang_2@nxp.com,
- ming.qian@oss.nxp.com, imx@lists.linux.dev, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20240329092352.2648837-1-ming.qian@nxp.com>
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-In-Reply-To: <20240329092352.2648837-1-ming.qian@nxp.com>
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <171395306631.10875.1846466008666455267.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On 29/03/2024 10:23, Ming Qian wrote:
-> Add a control V4L2_CID_MPEG_VIDEO_AVERAGE_QP to report the average qp
-> value of current encoded frame.
-> 
-> Signed-off-by: Ming Qian <ming.qian@nxp.com>
-> ---
->  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 4 ++++
->  drivers/media/v4l2-core/v4l2-ctrls-defs.c                 | 5 +++++
->  include/uapi/linux/v4l2-controls.h                        | 2 ++
->  3 files changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> index 2a165ae063fb..cef20b3f54ca 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> @@ -1653,6 +1653,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
->      Quantization parameter for a P frame for FWHT. Valid range: from 1
->      to 31.
->  
-> +``V4L2_CID_MPEG_VIDEO_AVERAGE_QP (integer)``
-> +    This read-only control returns the average qp value of the currently
-> +    encoded frame. Applicable to the H264 and HEVC encoders.
+The following commit has been merged into the locking/core branch of tip:
 
-qp -> QP
+Commit-ID:     94af3a04e3f386d4f060d903826e85aa006ce252
+Gitweb:        https://git.kernel.org/tip/94af3a04e3f386d4f060d903826e85aa006ce252
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Mon, 22 Apr 2024 14:00:38 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 24 Apr 2024 11:46:28 +02:00
 
-Why is this applicable to H264/HEVC only? I think it is fine for any codec.
+locking/qspinlock/x86: Micro-optimize virt_spin_lock()
 
-This needs to document that the value applies to the last dequeued buffer
-(VIDIOC_DQBUF).
+Optimize virt_spin_lock() to use simpler and faster:
 
-> +
->  .. raw:: latex
->  
->      \normalsize
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls-defs.c b/drivers/media/v4l2-core/v4l2-ctrls-defs.c
-> index 8696eb1cdd61..88e86e4e539d 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls-defs.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls-defs.c
-> @@ -972,6 +972,7 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_MPEG_VIDEO_USE_LTR_FRAMES:		return "Use LTR Frames";
->  	case V4L2_CID_FWHT_I_FRAME_QP:				return "FWHT I-Frame QP Value";
->  	case V4L2_CID_FWHT_P_FRAME_QP:				return "FWHT P-Frame QP Value";
-> +	case V4L2_CID_MPEG_VIDEO_AVERAGE_QP:			return "Average QP value";
+  atomic_try_cmpxchg(*ptr, &val, new)
 
-value -> Value
+instead of:
 
-Also move it up two lines so that it follows V4L2_CID_MPEG_VIDEO_USE_LTR_FRAMES
-rather than FWHT controls.
+  atomic_cmpxchg(*ptr, val, new) == val
 
->  
->  	/* VPX controls */
->  	case V4L2_CID_MPEG_VIDEO_VPX_NUM_PARTITIONS:		return "VPX Number of Partitions";
-> @@ -1507,6 +1508,10 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
->  		*max = 0xffffffffffffLL;
->  		*step = 1;
->  		break;
-> +	case V4L2_CID_MPEG_VIDEO_AVERAGE_QP:
-> +		*type = V4L2_CTRL_TYPE_INTEGER;
-> +		*flags |= V4L2_CTRL_FLAG_VOLATILE | V4L2_CTRL_FLAG_READ_ONLY;
+The x86 CMPXCHG instruction returns success in the ZF flag, so
+this change saves a compare after the CMPXCHG.
 
-Drop the volatile flag, this isn't a volatile value.
+Also optimize retry loop a bit. atomic_try_cmpxchg() fails iff
+&lock->val != 0, so there is no need to load and compare the
+lock value again - cpu_relax() can be unconditinally called in
+this case. This allows us to generate optimized:
 
-> +		break;
->  	case V4L2_CID_PIXEL_RATE:
->  		*type = V4L2_CTRL_TYPE_INTEGER64;
->  		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> index 99c3f5e99da7..974fd254e573 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -898,6 +898,8 @@ enum v4l2_mpeg_video_av1_level {
->  	V4L2_MPEG_VIDEO_AV1_LEVEL_7_3 = 23
->  };
->  
-> +#define V4L2_CID_MPEG_VIDEO_AVERAGE_QP  (V4L2_CID_CODEC_BASE + 657)
-> +
->  /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
->  #define V4L2_CID_CODEC_CX2341X_BASE				(V4L2_CTRL_CLASS_CODEC | 0x1000)
->  #define V4L2_CID_MPEG_CX2341X_VIDEO_SPATIAL_FILTER_MODE		(V4L2_CID_CODEC_CX2341X_BASE+0)
+  1f:	ba 01 00 00 00       	mov    $0x1,%edx
+  24:	8b 03                	mov    (%rbx),%eax
+  26:	85 c0                	test   %eax,%eax
+  28:	75 63                	jne    8d <...>
+  2a:	f0 0f b1 13          	lock cmpxchg %edx,(%rbx)
+  2e:	75 5d                	jne    8d <...>
+...
+  8d:	f3 90                	pause
+  8f:	eb 93                	jmp    24 <...>
 
-Regards,
+instead of:
 
-	Hans
+  1f:	ba 01 00 00 00       	mov    $0x1,%edx
+  24:	8b 03                	mov    (%rbx),%eax
+  26:	85 c0                	test   %eax,%eax
+  28:	75 13                	jne    3d <...>
+  2a:	f0 0f b1 13          	lock cmpxchg %edx,(%rbx)
+  2e:	85 c0                	test   %eax,%eax
+  30:	75 f2                	jne    24 <...>
+...
+  3d:	f3 90                	pause
+  3f:	eb e3                	jmp    24 <...>
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20240422120054.199092-1-ubizjak@gmail.com
+---
+ arch/x86/include/asm/qspinlock.h | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
+index cde8357..a053c12 100644
+--- a/arch/x86/include/asm/qspinlock.h
++++ b/arch/x86/include/asm/qspinlock.h
+@@ -85,6 +85,8 @@ DECLARE_STATIC_KEY_TRUE(virt_spin_lock_key);
+ #define virt_spin_lock virt_spin_lock
+ static inline bool virt_spin_lock(struct qspinlock *lock)
+ {
++	int val;
++
+ 	if (!static_branch_likely(&virt_spin_lock_key))
+ 		return false;
+ 
+@@ -94,10 +96,13 @@ static inline bool virt_spin_lock(struct qspinlock *lock)
+ 	 * horrible lock 'holder' preemption issues.
+ 	 */
+ 
+-	do {
+-		while (atomic_read(&lock->val) != 0)
+-			cpu_relax();
+-	} while (atomic_cmpxchg(&lock->val, 0, _Q_LOCKED_VAL) != 0);
++ __retry:
++	val = atomic_read(&lock->val);
++
++	if (val || !atomic_try_cmpxchg(&lock->val, &val, _Q_LOCKED_VAL)) {
++		cpu_relax();
++		goto __retry;
++	}
+ 
+ 	return true;
+ }
