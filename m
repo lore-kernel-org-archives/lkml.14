@@ -1,144 +1,215 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2044.outbound.protection.outlook.com [40.107.244.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A747161913
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 15:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713974377; cv=none; b=EprhHx32CnJPkmiMpZ3wYLepix2hfhQiMAWv2nZ+Ixu6cV8mw0EGK9jgPRL/tUnbcdluaLDtUYY+EH5rskoSQ7D/jHdeAVU25JEZUYMcPHN3BPcGyZlH2+Z8Ph7H8lvtlsv4yHSRGy54nYK3YVqLWGWm66iFQvM+xlwNXrL6lc4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713974377; c=relaxed/simple;
-	bh=0GiSfYTnN6d165IOBQzb694rnUh8tyUWWbTI6T31ybQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bo1oOBuQnTF9LgGHr5dKUgI14Vu5CuiAdZexwqsHbK0q6Qkp4bfG4sLcZAcp0FWakE4f1cF9SLeCBQRA0gm5JSGnbroCxfsVy7yaykLM6OwddS23VAJGfASlgAKw58TBQLztkLpWtxs0DvyqsBf/K787aTzulqyz4ZwEozcQQIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JbZOhrpT; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E51316192C
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 15:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713974381; cv=fail; b=TQB6eQUdZsfWWnckv7duRc6WlgMGUZCogUSbSsX/cfwF8umc0iXuYFsl9vwxtjOwu7AWPIMmqO6HI6kZY5imh4eioQViYPuGlQbGzHfY2p1v/TTaUxfG0ZN8NxNnhLpC8wFTn05KJ8hKeOOB1PeiWFWj8PHlYq7hk4hWDFpDkpw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713974381; c=relaxed/simple;
+	bh=k5dqfCB1Ny7K9oxiexb9YQ/Q3eD7iadwyVpqzh3QELo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cbGfJsxKYWz57/GaZj6n7iV9HP6wm5nxonUZkvSBmb7Jzusir+dp/s6DLoHjLNPfvmSTGBxc9fT3Z88WEXfqo/D8ihJiQRFVYebLX5oxO5qQs9BpkbUNZwOqYlcJg41AD6o3/4z8OfC0ptzJ/Gc+HFheSIFy3WYzBrP3MAt+bCw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Y9oLYYoW; arc=fail smtp.client-ip=40.107.244.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JbZOhrpT"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e9320c2ef6so31542735ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 08:59:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713974375; x=1714579175; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3WnnPsbn6LQ0620dM71ztuHhda8zUa4oNBqxG0zPojc=;
-        b=JbZOhrpTlsJnQLzZ365dtjwupe70dJDCEXDimOBMkR3Bg7+zZd3iVL9+c/fblvuOJR
-         x0/p7JzcKbF5JES4niDrqp9telHI2uMJwCUzDwhUzTuXKR6QJJzAvzo4uhChsQDsbZmc
-         tiA0z6vwEp4T0MncXqV7aYzXI91gWY/TuKhuY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713974375; x=1714579175;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3WnnPsbn6LQ0620dM71ztuHhda8zUa4oNBqxG0zPojc=;
-        b=dSpg+I5+qBd/DP1c6sdo5V1JZyqY8hIDN50GiXNRV/us0wrRK3ErVO/FW+rUghpMRV
-         xkLGTyaSymAoJcb2jPZW1IVctfPg0towo+w89aCH3KYMRmTVJB1WsOAdewA9PFwNpG1Q
-         xtwm2oXFDR6pn19QfNoxZ18fRmfz8etqd1mhs2fnVL4jZiwlT6OdQ9D/257F0sx93RUL
-         aqPEX23rXcAI5WJf8tD6n97cqtqj9HAKRqLjwXGsSkV1nqBDHWrWP9axvxgJ3uliQ3U4
-         9mJVS975+bzwgdxBWd7r53FA9CiStQGROQ3j33WzQgQPYSD2XV8BMQEipl1qTxo5P5j3
-         9ZHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXiUSFFhdjKecAZTv9oK6JAztY6wEBGYa1CjHxO1P1Ym5dGjk371DxWUYZ/QwdPCHvwjM+Eut+VNjyqOyDNkbD2466bJkeTVnZgKL45
-X-Gm-Message-State: AOJu0YwOHoLy8/r6zY1B2Am9c1njhiNwlbRSkj0qHJJPw3oL9HKCRCJJ
-	XlzcqcC+A6xAIuiMcQcLF7cy+drrCZkzfN7MCkCnI8AOjShF4eF2/XnNFkewBg==
-X-Google-Smtp-Source: AGHT+IFH25XoxrsKcb6phfTBuhyybN5yfvn80JCnlXdGkC8eys5A64GweFI7pjlxIx0ItdNyWbfEnQ==
-X-Received: by 2002:a17:903:11c3:b0:1e9:9c6e:9732 with SMTP id q3-20020a17090311c300b001e99c6e9732mr3467740plh.19.1713974374923;
-        Wed, 24 Apr 2024 08:59:34 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p9-20020a170902bd0900b001e4565a2596sm12100439pls.92.2024.04.24.08.59.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 08:59:34 -0700 (PDT)
-Date: Wed, 24 Apr 2024 08:59:33 -0700
-From: Kees Cook <keescook@chromium.org>
-To: "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: Justin Stitt <justinstitt@google.com>,
-	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
-	Charles Bertsch <cbertsch@cox.net>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Sathya Prakash <sathya.prakash@broadcom.com>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	Kashyap Desai <kashyap.desai@broadcom.com>,
-	Sumit Saxena <sumit.saxena@broadcom.com>,
-	Nilesh Javali <njavali@marvell.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Himanshu Madhani <himanshu.madhani@oracle.com>,
-	linux-kernel@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-	linux-scsi@vger.kernel.org, mpi3mr-linuxdrv.pdl@broadcom.com,
-	GR-QLogic-Storage-Upstream@marvell.com
-Subject: Re: [PATCH 1/5] string.h: Introduce memtostr() and memtostr_pad()
-Message-ID: <202404240858.0FDD390@keescook>
-References: <20240410021833.work.750-kees@kernel.org>
- <20240410023155.2100422-1-keescook@chromium.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Y9oLYYoW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nWkTPhs4s2pHLskt6c2sCGaB2hF1YMKJRKs3qzWP3jojKEIrm5rLmaZHcldNyHzVeHuFeWhiB4b88sf4bV0S1VIUM9yhPdHeG4hr4SfWdfq9/4HB4tk/K6nxD0/yO00uDUMF3nogZoIdydC2tuxWrlZ/PHCeIgg3O00ynu0MPdGuwugaZ7BnFL0TwsYGG+qH8pe1WAb7vVZFVuqlBPI2yVVfbo+uytpczDn6sIllgpOoWnGN615sgxr8WFvqVNhnAlbzSqPQy/0oTDkhzqGE/EQ7ZH9tOKcLZ2qEpm5TH5CjxUwghCZLSa0VVuJqK66XfNd0uv8K+qQ9Jc9jkp48ew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tJrOw01MQaT9tkIKTDOXvm9NDgY/m/tu/OEjNakftDE=;
+ b=GGb7g+/Ed45h01St1GGXnPueGWTG4t9MPlGwgyph8wUbWJN2GsRpXVlFYuVUsrYPaXEHy8zkmfgoVPgQLS40cD5PcZ6BoBOJK39FOQD7UOkQ3bWHYnoMVu/2hBfOgGZah/cSOai19kQGQB5xUVOpovim2Y3fUWSOHQ7Sni9HdxE3L+vL7MUNV3W+6w58M+hJoX9Lexl1/pQjWzkv1ZburG6EzIH4BDOannsm6Re43GwE5PEcksIILvX5iXYLQfU34k/N9ohZB7DoMES7bmPIfUB0OPc/kIFYAZTo63EygotfdY+F+Av0/JVtsPIGD5Gcp6VqQQRdb7xEJZH5PhM8ag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tJrOw01MQaT9tkIKTDOXvm9NDgY/m/tu/OEjNakftDE=;
+ b=Y9oLYYoW18uz4sP7ls7kLGwGOg4WyAyXGCWw8tugMM3pba0z74EmMxOSx0xi7vfvizvqgPG5rrbywMWkhSg3odCv+5i8ed71NDku7y9NonsEQlTfugYO5ehdMTbYymw9Lb67ZnsKwg+sbLr+sy1N+cL3b5/Dm37mwqVGBVv7mwY=
+Received: from BL0PR1501CA0036.namprd15.prod.outlook.com
+ (2603:10b6:207:17::49) by SA1PR12MB8141.namprd12.prod.outlook.com
+ (2603:10b6:806:339::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Wed, 24 Apr
+ 2024 15:59:37 +0000
+Received: from MN1PEPF0000F0E3.namprd04.prod.outlook.com
+ (2603:10b6:207:17:cafe::8b) by BL0PR1501CA0036.outlook.office365.com
+ (2603:10b6:207:17::49) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.34 via Frontend
+ Transport; Wed, 24 Apr 2024 15:59:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MN1PEPF0000F0E3.mail.protection.outlook.com (10.167.242.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7519.19 via Frontend Transport; Wed, 24 Apr 2024 15:59:37 +0000
+Received: from tlendack-t1.amdoffice.net (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 24 Apr 2024 10:59:36 -0500
+From: Tom Lendacky <thomas.lendacky@amd.com>
+To: <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+	<linux-coco@lists.linux.dev>, <svsm-devel@coconut-svsm.dev>
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, "Peter
+ Zijlstra" <peterz@infradead.org>, Dan Williams <dan.j.williams@intel.com>,
+	Michael Roth <michael.roth@amd.com>, Ashish Kalra <ashish.kalra@amd.com>
+Subject: [PATCH v4 10/15] virt: sev-guest: Choose the VMPCK key based on executing VMPL
+Date: Wed, 24 Apr 2024 10:58:06 -0500
+Message-ID: <b8508f57712e3194484aa8695494eea26abe1b73.1713974291.git.thomas.lendacky@amd.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <cover.1713974291.git.thomas.lendacky@amd.com>
+References: <cover.1713974291.git.thomas.lendacky@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240410023155.2100422-1-keescook@chromium.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E3:EE_|SA1PR12MB8141:EE_
+X-MS-Office365-Filtering-Correlation-Id: aae7bcbd-84cb-472c-972f-08dc64778acd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?h48vaUyOU3JrT6udw8KY/t4wBUhZ1SNvSHxkSUXPMTnZjKN0erB1Ukb9mUN7?=
+ =?us-ascii?Q?83xgejRe6QBmfqa5Lgyzu+DOCNakFlkuX7uHd3PudDZStlrGJgPPnOxRENgj?=
+ =?us-ascii?Q?BubiWqTspbGgLSnd3OXi4KehKh0q1nRlkSc5FrtrlemSn5DWWg/s/YuvwlU0?=
+ =?us-ascii?Q?lNLieujRdVhFYCFGojPBxbByWl/Ltso0kgVDRkJiiXe+7XG8AUdzFaq2tnTR?=
+ =?us-ascii?Q?bwm6lRhmk+dvmarp2yKktUzInEqgSqhCqSpYGvJmCe9A+scfQeSd+YWP1afh?=
+ =?us-ascii?Q?7A41nlYJfOnadyl99ZiKNKWZxIZvYkAu+FnNeK/OYs15IRI0NFLRYW/w1TsM?=
+ =?us-ascii?Q?jRo8fuTzvwscvFT56ZA0GrxIbVYodSVxM/0uHSaVBIyaktk6+WN97KaNb5JV?=
+ =?us-ascii?Q?xP10k8vLZPrKBAwdfDHbPnPLc+naqlMu6K2OXzyly+v6dB/GR+bV6ScdC2Sf?=
+ =?us-ascii?Q?5uZkwqagHz9zTd5CTy19Yv83wYraaw7CEiNXocAakY9QFomL2QGYPrKTOogI?=
+ =?us-ascii?Q?NygBPyZvkRGVY+/jHxHYlPr4bYfpT3f+2jVS+xwAQApjf/O+gmOxlXzacQbL?=
+ =?us-ascii?Q?qO+4ObcALzTn2ZIMh/0M+YIBF0/L+a4tP26Wp5Qoek8nlMwrIoWUS7FOSNtN?=
+ =?us-ascii?Q?n7CxFawlNsQAG2Aq3NC6IV8w3JhCBtj7RqSy48oH6dsBpCabx0/KqPZxEujW?=
+ =?us-ascii?Q?KfrRMDJk3ubs3YR2rEfsyjODuhPtRzph7mwuFes0rXlHkR/9uZRbJYlLsNnB?=
+ =?us-ascii?Q?4aekBemxn1s7Sc+15qsy0Y7FBCVrOHBnyq0raB2o0bFjSvuTvf1pnDze1JST?=
+ =?us-ascii?Q?kkJEbk13+Yzec9cFXFGtT2G5V00AaLmj/ZlJNCQL1X1fh3MlKRBxz/uCXlQq?=
+ =?us-ascii?Q?gJlmG1oY9FivnI2poI20wE5PzLKiIEIkS0D0p2L8IYnivNuGj/ixiU7loxcr?=
+ =?us-ascii?Q?umIyxgVE9PslqWrEZg0RMxz6ndmCdu/U/++hwgJ86K70gsZXBf3DGheV6/j0?=
+ =?us-ascii?Q?iBEXQch4RhVe+dm13ztbE+Iro2X5uy2S9qPgTo0zLj49Mliuzdlk70nFvBbM?=
+ =?us-ascii?Q?XhEKMTclr0RIG2/VVyOE7cGD5iesxqRjYM4Kc/JyDNfGbnMhrgNE5Y4Uo3q2?=
+ =?us-ascii?Q?9ivq0fGWdpScGPp/A5gAWfgrbc+7tD3LeyPx7FL8lNFkslEXlESfyt997hv/?=
+ =?us-ascii?Q?W3sOai0UGBaPIQk0WZx+x8G2c0pO7vjs0ETcZHff1BrffKWs8adUG1aiWZNM?=
+ =?us-ascii?Q?tCC3HRc84pxvuUUjXI3zQ60xgunGmwyyWkn7Z+7XPWj3dMTjngRFjmttQqvh?=
+ =?us-ascii?Q?KBsZdDimeLqZ6C3Wgg1YfuF5Zn3AKE5SFimoIk+ZwPCgHsN5XCdqSfRIl5Op?=
+ =?us-ascii?Q?P7aFjAg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(36860700004)(82310400014)(7416005)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 15:59:37.1914
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: aae7bcbd-84cb-472c-972f-08dc64778acd
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MN1PEPF0000F0E3.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8141
 
-On Tue, Apr 09, 2024 at 07:31:50PM -0700, Kees Cook wrote:
-> Another ambiguous use of strncpy() is to copy from strings that may not
-> be NUL-terminated. These cases depend on having the destination buffer
-> be explicitly larger than the source buffer's maximum size, having
-> the size of the copy exactly match the source buffer's maximum size,
-> and for the destination buffer to get explicitly NUL terminated.
-> 
-> This usually happens when parsing protocols or hardware character arrays
-> that are not guaranteed to be NUL-terminated. The code pattern is
-> effectively this:
-> 
-> 	char dest[sizeof(src) + 1];
-> 
-> 	strncpy(dest, src, sizeof(src));
-> 	dest[sizeof(dest) - 1] = '\0';
-> 
-> In practice it usually looks like:
-> 
-> struct from_hardware {
-> 	...
-> 	char name[HW_NAME_SIZE] __nonstring;
-> 	...
-> };
-> 
-> 	struct from_hardware *p = ...;
-> 	char name[HW_NAME_SIZE + 1];
-> 
-> 	strncpy(name, p->name, HW_NAME_SIZE);
-> 	name[NW_NAME_SIZE] = '\0';
-> 
-> This cannot be replaced with:
-> 
-> 	strscpy(name, p->name, sizeof(name));
-> 
-> because p->name is smaller and not NUL-terminated, so FORTIFY will
-> trigger when strnlen(p->name, sizeof(name)) is used. And it cannot be
-> replaced with:
-> 
-> 	strscpy(name, p->name, sizeof(p->name));
-> 
-> because then "name" may contain a 1 character early truncation of
-> p->name.
-> 
-> Provide an unambiguous interface for converting a maybe not-NUL-terminated
-> string to a NUL-terminated string, with compile-time buffer size checking
-> so that it can never fail at runtime: memtostr() and memtostr_pad(). Also
-> add KUnit tests for both.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Currently, the sev-guest driver uses the vmpck-0 key by default. When an
+SVSM is present the kernel is running at a VMPL other than 0 and the
+vmpck-0 key is no longer available. If a specific vmpck key has not be
+requested by the user via the vmpck_id module parameter, choose the vmpck
+key based on the active VMPL level.
 
-FYI,
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+---
+ arch/x86/include/asm/sev.h              |  2 ++
+ arch/x86/kernel/sev.c                   |  6 ++++++
+ drivers/virt/coco/sev-guest/sev-guest.c | 10 +++++++---
+ 3 files changed, 15 insertions(+), 3 deletions(-)
 
-As the string KUnit tests have seen some refactoring, I'm taking this
-patch and refactoring it onto my tree. Once the SCSI fixes are reviewed, if
-we want to land them in -next, it's probably easiest for them to go via
-my tree.
-
--Kees
-
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index a7312b936d16..64fcadd6d602 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -307,6 +307,7 @@ u64 snp_get_unsupported_features(u64 status);
+ u64 sev_get_status(void);
+ void sev_show_status(void);
+ void snp_remap_svsm_ca(void);
++int snp_get_vmpl(void);
+ #else
+ static inline void sev_es_ist_enter(struct pt_regs *regs) { }
+ static inline void sev_es_ist_exit(void) { }
+@@ -337,6 +338,7 @@ static inline u64 snp_get_unsupported_features(u64 status) { return 0; }
+ static inline u64 sev_get_status(void) { return 0; }
+ static inline void sev_show_status(void) { }
+ static inline void snp_remap_svsm_ca(void) { }
++static inline int snp_get_vmpl(void) { return 0; }
+ #endif
+ 
+ #ifdef CONFIG_KVM_AMD_SEV
+diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+index 8edf7362136b..75f11da867a3 100644
+--- a/arch/x86/kernel/sev.c
++++ b/arch/x86/kernel/sev.c
+@@ -2454,6 +2454,12 @@ int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input, struct sn
+ }
+ EXPORT_SYMBOL_GPL(snp_issue_guest_request);
+ 
++int snp_get_vmpl(void)
++{
++	return vmpl;
++}
++EXPORT_SYMBOL_GPL(snp_get_vmpl);
++
+ static struct platform_device sev_guest_device = {
+ 	.name		= "sev-guest",
+ 	.id		= -1,
+diff --git a/drivers/virt/coco/sev-guest/sev-guest.c b/drivers/virt/coco/sev-guest/sev-guest.c
+index 04a7bd1e4314..e7dd7df86427 100644
+--- a/drivers/virt/coco/sev-guest/sev-guest.c
++++ b/drivers/virt/coco/sev-guest/sev-guest.c
+@@ -2,7 +2,7 @@
+ /*
+  * AMD Secure Encrypted Virtualization (SEV) guest driver interface
+  *
+- * Copyright (C) 2021 Advanced Micro Devices, Inc.
++ * Copyright (C) 2021-2024 Advanced Micro Devices, Inc.
+  *
+  * Author: Brijesh Singh <brijesh.singh@amd.com>
+  */
+@@ -70,8 +70,8 @@ struct snp_guest_dev {
+ 	u8 *vmpck;
+ };
+ 
+-static u32 vmpck_id;
+-module_param(vmpck_id, uint, 0444);
++static int vmpck_id = -1;
++module_param(vmpck_id, int, 0444);
+ MODULE_PARM_DESC(vmpck_id, "The VMPCK ID to use when communicating with the PSP.");
+ 
+ /* Mutex to serialize the shared buffer access and command handling. */
+@@ -923,6 +923,10 @@ static int __init sev_guest_probe(struct platform_device *pdev)
+ 	if (!snp_dev)
+ 		goto e_unmap;
+ 
++	/* Adjust the default VMPCK key based on the executing VMPL level */
++	if (vmpck_id == -1)
++		vmpck_id = snp_get_vmpl();
++
+ 	ret = -EINVAL;
+ 	snp_dev->vmpck = get_vmpck(vmpck_id, layout, &snp_dev->os_area_msg_seqno);
+ 	if (!snp_dev->vmpck) {
 -- 
-Kees Cook
+2.43.2
+
