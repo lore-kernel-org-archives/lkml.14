@@ -1,115 +1,114 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D82885C46
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 04:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119F08F47
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 04:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713932915; cv=none; b=lQGR1V2eboZ3fb9FDu7q6pWDSG/9MxtPMX0PXHmQQQwLBxj643nYkCIuCAPWjg6BEF14gluLRRTg+zO0pvHf0KL0q7O5WH4bTtYsIcJ/dnn50ypu1NixvdSd1xdF2fWkpTbH7O00BhnMlpeErpCVwPljNho3//3gmQzKQNr3Ots=
+	t=1713932985; cv=none; b=LtkquVRY8ZMWK4OORbZ9NNStUXflL1s2VwLciQSTQ7yLPDAzw/OE2OI8f1vRhE7O6LRL/It29bBXndgX0XJKLTPfNGJNUpS2iLqoT29MVOYb2rqwTqAr+MSIc6GIghtwkaiSGNqV7LDxhw81J/hygWOHmYrRskJWOwAVVGeUEXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713932915; c=relaxed/simple;
-	bh=SVlBsh+OtGzs8Wz8fbFQpOEK85w5Obn5WGl0/vqVgpE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IqGgATx6/Jh+HdCKhwe2bcumMhVrWPM1M+CCQVbGSXwBrflI1jmDTTh+wg+xNGi4I71opNugW6xwker1K63PkjL/6r8/KcAFOwoGjQOxik1uiU60mqNAkxM4ITrhPiRg+HAJnD2wblP0ekBG7b3b5019rYkMP2fSkRy06uv1WWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=t7FgfskB; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="t7FgfskB"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc6cbe1ac75so400221276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 21:28:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessos.org; s=google; t=1713932913; x=1714537713; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MvX5ZYnBGyHu2whyk5II8GGcdhq7ix0Hf+Bdyx6MY/I=;
-        b=t7FgfskBYzOs7VRYTqgQgkWKMmCAJ04cv0dCJNem+2vSGrb0UQnJLu1yypQmkJ5rob
-         bMNU+UrCzIhzmBb9b5REd1BEVgGnW0u8dwmtHdREZ/uudX7EpT61VS1n96xIwrna7Xg0
-         1dEe9vw+pKtf6in0+lNXZ6mx/ga0ZuDYfm6Ae8xpK3COEz4pogeLuHVudumSHKliV8Xv
-         n82dDR5SUraRm+1DmnXjK261P3FDCWAl+aarjbMlEUWmz0S79aeokbxX8lHe7oXbuVNy
-         1CL5XV1cfBxq+tU8W82v6CyuE1l/jhYXEZXOx39SS7OFZb60ZK2+eJ1JzW50XYcItYTt
-         jT8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713932913; x=1714537713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MvX5ZYnBGyHu2whyk5II8GGcdhq7ix0Hf+Bdyx6MY/I=;
-        b=oxuyL9u9hTn6koPFlzZAbMLotJ8c63FJLVXn2s2/diDLVZHqOtjReuOEcTw6nxLXTF
-         d5GyZlWVx8jFTjM05IdnXs/sNLnVxmEj9AgQB6jQJJ4ZxA+IMOsL5A4aK+I7VdDXa2CE
-         T2gv82lA3ubKbuyeWLTE5OGMgwhFzSvJN5D3VlNLp7FeOkKFFcxnZffsQsPO4ZXxGoV2
-         CW9MAcyoEZyX74Ev55SctVQ4ihUHx6+PJcb0iTevE0rH62GZ21V3jc39VZEO6aLmvgID
-         6zPGhZnjPZJS7THv2TclzVBtBSDvyvO+zHlGwSxhCYvLt7W51If4LmTfkRxBq3XmryLc
-         /zFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWapjganCf3A0gBnl3OD7t9As3SdX9jiEDG02k1hmG3UOFxK38Ew82i4O1NC4Q9ahEhO0/RYS1w09oPSZb0qrrcZRTfn8KkW5DQIF5T
-X-Gm-Message-State: AOJu0YwVzUkqQqWxoZKcABrpv4cRVJWsEPgwwNbdJtc/c28JG/TOJeyW
-	RpBiX2MeRZKFq1qQ3eqE5NU1BLDZVOciKQnUQ7gU0A5cjibxqHpV5sl6RgCqMEAy/ZDBD44Y2YJ
-	2u301Wh+vNDyDL4q4LZaT8iTm0pvXNSg5H9uK9A==
-X-Google-Smtp-Source: AGHT+IEgApdXc0FTtI/Xj8zQmgelnm3yr/jZQQiEnnLxc8JkipkVIQosbx1ZbD1ANvA85SasBfj8sm5x8fx4Ig2fyKk=
-X-Received: by 2002:a25:fc22:0:b0:dc7:421d:bcc0 with SMTP id
- v34-20020a25fc22000000b00dc7421dbcc0mr968151ybd.32.1713932913048; Tue, 23 Apr
- 2024 21:28:33 -0700 (PDT)
+	s=arc-20240116; t=1713932985; c=relaxed/simple;
+	bh=q5W9H19vXmzx0UW0GfZKEuwH98Exrq5h+lk0uURqxuw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=E6pa8Ukoc2tfjxKgyes55BR7SanRsa+zcTEu0vWbwpendzyuf30MaJA/zAs2fgDyb/ZzUeLMPHXtXeHqDiblpuSGZ31OIuNk3zonWhDJmHb9tP7gjW/KxrH8sjJvF/Nn0OmX9JjvfbVJkPcjrR0jA9kWfcjtvt92SiNCj1nNWKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VPQsb1KZTzXlLL;
+	Wed, 24 Apr 2024 12:26:11 +0800 (CST)
+Received: from kwepemm600020.china.huawei.com (unknown [7.193.23.147])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3D04118007D;
+	Wed, 24 Apr 2024 12:29:40 +0800 (CST)
+Received: from [10.174.179.160] (10.174.179.160) by
+ kwepemm600020.china.huawei.com (7.193.23.147) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 24 Apr 2024 12:29:39 +0800
+Message-ID: <0145f5db-1adf-46d1-1a2e-41230ab1e462@huawei.com>
+Date: Wed, 24 Apr 2024 12:29:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240216062642.247504-3-jhp@endlessos.org> <20240301214117.GA408641@bhelgaas>
-In-Reply-To: <20240301214117.GA408641@bhelgaas>
-From: Jian-Hong Pan <jhp@endlessos.org>
-Date: Wed, 24 Apr 2024 12:27:57 +0800
-Message-ID: <CAPpJ_eejyughPK4JXfjNdOvZegEy30tEusjPk4ESkvCQJCbPHg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] PCI/ASPM: Fix L1.2 parameters when enable link state
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>, David Box <david.e.box@linux.intel.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Damien Le Moal <dlemoal@kernel.org>, 
-	Nirmal Patel <nirmal.patel@linux.intel.com>, 
-	Jonathan Derrick <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux@endlessos.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [RFC PATCH v2 0/2] mm: convert mm's rss stats to use atomic mode
+Content-Language: en-US
+To: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+CC: <akpm@linux-foundation.org>, <dennisszhou@gmail.com>,
+	<shakeelb@google.com>, <jack@suse.cz>, <surenb@google.com>,
+	<kent.overstreet@linux.dev>, <mhocko@suse.cz>, <vbabka@suse.cz>,
+	<yuzhao@google.com>, <yu.ma@intel.com>, <wangkefeng.wang@huawei.com>,
+	<sunnanyong@huawei.com>
+References: <20240418142008.2775308-1-zhangpeng362@huawei.com>
+From: "zhangpeng (AS)" <zhangpeng362@huawei.com>
+In-Reply-To: <20240418142008.2775308-1-zhangpeng362@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600020.china.huawei.com (7.193.23.147)
 
-Bjorn Helgaas <helgaas@kernel.org> =E6=96=BC 2024=E5=B9=B43=E6=9C=882=E6=97=
-=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=885:41=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> In subject:
->
->   PCI/ASPM: Fix L1.2 parameters before enabling L1.2
->
-> > +     if (state & link->aspm_capable & ASPM_STATE_L1_2_MASK) {
-> > +             parent_l1ss_cap =3D aspm_get_l1ss_cap(parent);
-> > +             child_l1ss_cap =3D aspm_get_l1ss_cap(child);
-> > +             aspm_calc_l12_info(link, parent_l1ss_cap, child_l1ss_cap)=
-;
->
-> Why doesn't this happen already via normal enumeration?  It looks like
-> this path should do it even without this patch:
->
->   pcie_aspm_init_link_state
->     pcie_aspm_cap_init
->       aspm_l1ss_init
+On 2024/4/18 22:20, Peng Zhang wrote:
 
-I watch the VMD remapped PCI devices' power states during this path.
-Their power states stay at "unknown" until someone sets their power
-state to "D0".
-And, because their power states stay at "unknown", the L1.2 of the
-link between VMD remapped PCIe Root Port and NVMe gets wrong configs
-when system goes through this path.
-So, system has to calculate the L1.2 information again after set PCI
-devices' power state to D0.
+Any suggestions or opinions are welcome. Could someone please review
+this patch series?
+Thanks!
 
-Sorry for the late reply.  Got my laptop back recently.
+> From: ZhangPeng <zhangpeng362@huawei.com>
+>
+> Since commit f1a7941243c1 ("mm: convert mm's rss stats into
+> percpu_counter"), the rss_stats have converted into percpu_counter,
+> which convert the error margin from (nr_threads * 64) to approximately
+> (nr_cpus ^ 2). However, the new percpu allocation in mm_init() causes a
+> performance regression on fork/exec/shell. Even after commit 14ef95be6f55
+> ("kernel/fork: group allocation/free of per-cpu counters for mm struct"),
+> the performance of fork/exec/shell is still poor compared to previous
+> kernel versions.
+>
+> To mitigate performance regression, we delay the allocation of percpu
+> memory for rss_stats. Therefore, we convert mm's rss stats to use
+> percpu_counter atomic mode. For single-thread processes, rss_stat is in
+> atomic mode, which reduces the memory consumption and performance
+> regression caused by using percpu. For multiple-thread processes,
+> rss_stat is switched to the percpu mode to reduce the error margin.
+> We convert rss_stats from atomic mode to percpu mode only when the
+> second thread is created.
+>
+> After lmbench test, we can get 2% ~ 4% performance improvement
+> for lmbench fork_proc/exec_proc/shell_proc and 6.7% performance
+> improvement for lmbench page_fault (before batch mode[1]).
+>
+> The test results are as follows:
+>               base           base+revert        base+this patch
+>
+> fork_proc    416.3ms        400.0ms  (3.9%)    398.6ms  (4.2%)
+> exec_proc    2095.9ms       2061.1ms (1.7%)    2047.7ms (2.3%)
+> shell_proc   3028.2ms       2954.7ms (2.4%)    2961.2ms (2.2%)
+> page_fault   0.3603ms       0.3358ms (6.8%)    0.3361ms (6.7%)
+>
+> [1] https://lore.kernel.org/all/20240412064751.119015-1-wangkefeng.wang@huawei.com/
+>
+> ChangeLog:
+> v2->v1:
+> - Convert rss_stats from atomic mode to percpu mode only when
+>    the second thread is created per Jan Kara.
+> - Compared with v1, the performance data may be different due to
+>    different test machines.
+>
+> ZhangPeng (2):
+>    percpu_counter: introduce atomic mode for percpu_counter
+>    mm: convert mm's rss stats to use atomic mode
+>
+>   include/linux/mm.h             | 50 +++++++++++++++++++++++++++++-----
+>   include/linux/percpu_counter.h | 43 +++++++++++++++++++++++++++--
+>   include/trace/events/kmem.h    |  4 +--
+>   kernel/fork.c                  | 18 +++++++-----
+>   lib/percpu_counter.c           | 31 +++++++++++++++++++--
+>   5 files changed, 125 insertions(+), 21 deletions(-)
+>
+-- 
+Best Regards,
+Peng
 
-Jian-Hong Pan
-
-> > +     }
-> >       pcie_config_aspm_link(link, policy_to_aspm_state(link));
-> >
-> >       link->clkpm_default =3D (state & PCIE_LINK_STATE_CLKPM) ? 1 : 0;
-> > --
-> > 2.43.2
-> >
