@@ -1,48 +1,25 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D284E1EF1A;
-	Wed, 24 Apr 2024 08:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52C7436D
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 08:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713945755; cv=none; b=tRjQGiacZq//j6nWd/6/KV6EIOSkKxvy02pXMZJV4MAlK5QtGnwF66TlNuCB5EB8kEVGPN8RQ3TcKlGRHhFUAJE2pxlRlUH6HOuSI0MHpP7oEjJ7t/JPQOaVWkG9ePKKGa4lzDRgnbCp2x3+C++Qt7yCG4l1zoPYQwFJqzXQ1c8=
+	t=1713946028; cv=none; b=qYouvTGKOMn/hIfj/ENlB058ckYK+wYANIZ5B6CDcz4KyVxHiYaZglpMK7ooDMJIbOxYhG48tjsqvsZ5REE7bmQNUPifvH7ac2QeiiI/SFSVky8WDS3fAY/prjg19j6AjeoFl2ySiseBpyXown9vqFJo7o3RhwlL693/Hz4BcIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713945755; c=relaxed/simple;
-	bh=PLuiIItih2q98cMHNdO9+pRyWIVtVPMk4w0qTfXTBjc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WjkDYefA0am1RorCWcPylnRoC4mOaafvI3dbDVHMUwV9r1Zlx1fzD1zjIo15Oy8VHqF6V3m4Xaq9CyOgdgcotVjJpHhv2yg3cO313BX8A4XWRfY2MHLKLTySxI9oDGW7R4dN++w+LC7OsNannSU5r6fE3mR15XoCtPbpNhTamVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=X6H4A+iz; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="X6H4A+iz"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43O6X87I014952;
-	Wed, 24 Apr 2024 08:01:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=/ZTsXSeLStGaaspxew24zd5tpWbGzfrVHxcwSdmdCOU=; b=X6
-	H4A+izNhgwQ29gC7MRegHNj0Mcs3wHa3bVxtlawjMSfoEPPL/7omGT/Tv+Ku3buE
-	URX+JQ7m4hGEZFeecORKxijzUfWQc5adp3RQVNWxUw0QSSOTzCm6l6TF7FziCJGU
-	Jvy/SYLKApmTGheofFIEMeHiAE04yOTYGZyveN6LYNac4w5mkLBn4Z7idbv/hzw3
-	Ox8lVlBFkYYitxxD13fqV+YhAJYlGFF2EI/Yk8YUUoCBZFktWOxLLOWNQZ1YFUvv
-	bbJOi4zehaVEdi7HAr3KFMnKddLsLGaOG+JkJFpU5js17f3QDBTe0DsZgFfXn0dV
-	0cR15VhyHh48Bvh4r97w==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xpv9g884f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 08:01:51 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43O81oFY001068
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 08:01:50 GMT
-Received: from [10.216.52.243] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 24 Apr
- 2024 01:01:45 -0700
-Message-ID: <3c4fa69c-8ee3-43c9-b328-3efd9c948230@quicinc.com>
-Date: Wed, 24 Apr 2024 13:31:45 +0530
+	s=arc-20240116; t=1713946028; c=relaxed/simple;
+	bh=kdOy2K+ZN+F0va8Jer7NoUqu8Cq6WNl+H9rDHKKRJ30=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IS1JetcCYpCsll0uzWCoZHAxf8BCNtFTB+jIfNpJW+CD2vzz//2UHbPSL1/5yyNKb4+cgDL/MbGEv4wgOorXB1ZQiiDpKEKj4+q33Ni16Cj081d+iY0VVNUuj5JpDakti9Wfgnpwx+MfZ5QsbvNVt1Blw5IEzBxvvTr8zt9xPH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57379339;
+	Wed, 24 Apr 2024 01:07:33 -0700 (PDT)
+Received: from [10.57.74.127] (unknown [10.57.74.127])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23DBD3F64C;
+	Wed, 24 Apr 2024 01:07:04 -0700 (PDT)
+Message-ID: <6c418d70-a75d-4019-a0f5-56a61002d37a@arm.com>
+Date: Wed, 24 Apr 2024 09:07:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,103 +27,112 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] arm64: dts: qcom: sc7280: Remove CTS/RTS configuration
-Content-Language: en-US
-To: Bjorn Andersson <quic_bjorande@quicinc.com>
-CC: <cros-qcom-dts-watchers@chromium.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <swboyd@chromium.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rajpat@codeaurora.org>,
-        <mka@chromium.org>, <rojay@codeaurora.org>,
-        <quic_msavaliy@quicinc.com>, <quic_anupkulk@quicinc.com>
-References: <20240416105650.2626-1-quic_vdadhani@quicinc.com>
- <Zh9Sd4QVsN9TWomO@hu-bjorande-lv.qualcomm.com>
-From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-In-Reply-To: <Zh9Sd4QVsN9TWomO@hu-bjorande-lv.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: WArcAWvHv0L1dX0XOv8rqdvDwO1gulDx
-X-Proofpoint-GUID: WArcAWvHv0L1dX0XOv8rqdvDwO1gulDx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-24_05,2024-04-23_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- suspectscore=0 clxscore=1015 mlxlogscore=999 malwarescore=0 adultscore=0
- mlxscore=0 phishscore=0 lowpriorityscore=0 spamscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2404240034
+Subject: Re: [RFC PATCH 1/5] mm: memory: extend finish_fault() to support
+ large folio
+Content-Language: en-GB
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: willy@infradead.org, david@redhat.com, wangkefeng.wang@huawei.com,
+ 21cnbao@gmail.com, ying.huang@intel.com, shy828301@gmail.com,
+ ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1713755580.git.baolin.wang@linux.alibaba.com>
+ <358aefb1858b63164894d7d8504f3dae0b495366.1713755580.git.baolin.wang@linux.alibaba.com>
+ <6aa25e2a-a6b6-4ab7-8300-053ca3c0d748@arm.com>
+ <c48ae381-f073-4b20-84ae-bd5e9e56ce29@linux.alibaba.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <c48ae381-f073-4b20-84ae-bd5e9e56ce29@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-
-
-On 4/17/2024 10:09 AM, Bjorn Andersson wrote:
-> On Tue, Apr 16, 2024 at 04:26:50PM +0530, Viken Dadhaniya wrote:
->> Remove CTS and RTS pinctrl configuration for UART5 node as
->> it's designed for debug UART for all the board variants of the
->> sc7280 chipset.
->>
->> Also change compatible string to debug UART.
->>
+On 24/04/2024 04:23, Baolin Wang wrote:
 > 
-> Why are you posting this on the public mailing list without first
-> addressing the feedback and questions I gave you on the internal review
-> list?
 > 
-> Now you wasted the time of our community members, just to receive the
-> same feedback I gave you last week.
-> 
-> Regards,
-> Bjorn
-> 
-
-Sorry, I missed you feedback due to incorrect mail filler.
-
->> Fixes: 38cd93f413fd ("arm64: dts: qcom: sc7280: Update QUPv3 UART5 DT node")
->> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/sc7280.dtsi | 14 ++------------
->>   1 file changed, 2 insertions(+), 12 deletions(-)
+> On 2024/4/23 19:03, Ryan Roberts wrote:
+>> On 22/04/2024 08:02, Baolin Wang wrote:
+>>> Add large folio mapping establishment support for finish_fault() as a
+>>> preparation,
+>>> to support multi-size THP allocation of anonymous shared pages in the following
+>>> patches.
+>>>
+>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>> ---
+>>>   mm/memory.c | 25 ++++++++++++++++++-------
+>>>   1 file changed, 18 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/mm/memory.c b/mm/memory.c
+>>> index b6fa5146b260..094a76730776 100644
+>>> --- a/mm/memory.c
+>>> +++ b/mm/memory.c
+>>> @@ -4766,7 +4766,10 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+>>>   {
+>>>       struct vm_area_struct *vma = vmf->vma;
+>>>       struct page *page;
+>>> +    struct folio *folio;
+>>>       vm_fault_t ret;
+>>> +    int nr_pages, i;
+>>> +    unsigned long addr;
+>>>         /* Did we COW the page? */
+>>>       if ((vmf->flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED))
+>>> @@ -4797,22 +4800,30 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+>>>               return VM_FAULT_OOM;
+>>>       }
+>>>   +    folio = page_folio(page);
+>>> +    nr_pages = folio_nr_pages(folio);
+>>> +    addr = ALIGN_DOWN(vmf->address, nr_pages * PAGE_SIZE);
 >>
->> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
->> index 38c183b2bb26..2a6b4c4639d1 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
->> @@ -1440,12 +1440,12 @@
->>   			};
->>   
->>   			uart5: serial@994000 {
->> -				compatible = "qcom,geni-uart";
->> +				compatible = "qcom,geni-debug-uart";
->>   				reg = <0 0x00994000 0 0x4000>;
->>   				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
->>   				clock-names = "se";
->>   				pinctrl-names = "default";
->> -				pinctrl-0 = <&qup_uart5_cts>, <&qup_uart5_rts>, <&qup_uart5_tx>, <&qup_uart5_rx>;
->> +				pinctrl-0 = <&qup_uart5_tx>, <&qup_uart5_rx>;
->>   				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
->>   				power-domains = <&rpmhpd SC7280_CX>;
->>   				operating-points-v2 = <&qup_opp_table>;
->> @@ -5397,16 +5397,6 @@
->>   				function = "qup04";
->>   			};
->>   
->> -			qup_uart5_cts: qup-uart5-cts-state {
->> -				pins = "gpio20";
->> -				function = "qup05";
->> -			};
->> -
->> -			qup_uart5_rts: qup-uart5-rts-state {
->> -				pins = "gpio21";
->> -				function = "qup05";
->> -			};
->> -
->>   			qup_uart5_tx: qup-uart5-tx-state {
->>   				pins = "gpio22";
->>   				function = "qup05";
->> -- 
->> 2.17.1
+>> I'm not sure this is safe. IIUC, finish_fault() is called for any file-backed
+>> mapping. So you could have a situation where part of a (regular) file is mapped
+>> in the process, faults and hits in the pagecache. But the folio returned by the
+>> pagecache is bigger than the portion that the process has mapped. So you now end
+>> up mapping beyond the VMA limits? In the pagecache case, you also can't assume
+>> that the folio is naturally aligned in virtual address space.
+> 
+> Good point. Yes, I think you are right, I need consider the VMA limits, and I
+> should refer to the calculations of the start pte and end pte in do_fault_around().
+
+You might also need to be careful not to increase reported RSS. I have a vague
+recollection that David once mentioned a problem with fault-around because it
+causes the reported RSS to increase for the process and this could lead to
+different decisions in other places. IIRC Redhat had an advisory somewhere with
+suggested workaround being to disable fault-around. For the anon-shared memory
+case, it shouldn't be a problem because the user has opted into allocating
+bigger blocks, but there may be a need to ensure we don't also start eagerly
+mapping regular files beyond what fault-around is configured for.
+
+> 
+>>>       vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+>>> -                      vmf->address, &vmf->ptl);
+>>> +                       addr, &vmf->ptl);
+>>>       if (!vmf->pte)
+>>>           return VM_FAULT_NOPAGE;
+>>>         /* Re-check under ptl */
+>>> -    if (likely(!vmf_pte_changed(vmf))) {
+>>> -        struct folio *folio = page_folio(page);
+>>> -
+>>> -        set_pte_range(vmf, folio, page, 1, vmf->address);
+>>> -        ret = 0;
+>>> -    } else {
+>>> +    if (nr_pages == 1 && vmf_pte_changed(vmf)) {
+>>>           update_mmu_tlb(vma, vmf->address, vmf->pte);
+>>>           ret = VM_FAULT_NOPAGE;
+>>> +        goto unlock;
+>>> +    } else if (nr_pages > 1 && !pte_range_none(vmf->pte, nr_pages)) {
 >>
+>> I think you have grabbed this from do_anonymous_page()? But I'm not sure it
+>> works in the same way here as it does there. For the anon case, if userfaultfd
+>> is armed, alloc_anon_folio() will only ever allocate order-0. So we end up in
+> 
+> IMO, the userfaultfd validation should do in the vma->vm_ops->fault() callback,
+> to make sure the nr_pages is always 1 if userfaultfd is armed.
+
+OK. Are you saying there is already logic to do that today? Great!
+
+> 
+>> the vmf_pte_changed() path, which will allow overwriting a uffd entry. But here,
+>> there is nothing stopping nr_pages being greater than 1 when there could be a
+>> uffd entry present, and you will fail due to the pte_range_none() check. (see
+>> pte_marker_handle_uffd_wp()).
+> 
+> So if we do the userfaultfd validation in ->fault() callback, then here we can
+> use the same logic as with anonymous case.
+
