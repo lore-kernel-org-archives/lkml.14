@@ -1,97 +1,127 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD8C16EBEF
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 23:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BD4156993
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 23:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714002000; cv=none; b=VwHi1kQd5aL6Jy/Vz+cbAM2AXy0hBpNOqlph7qsWjB8IYiz+WVPHOo37V96BS6M1+9KI35X+5HMFfh44fUwVPI9Vmexfgkk+ubr9cLEYFemoy2fHCcWoMJeH4xoHamcI/z7DS3OPAivdgJb+7ge2yo9tHsrH/tPFQW6Mey6VSy8=
+	t=1714002076; cv=none; b=n41u4ckJGsF5yH7t0xx5jeACJLVYA1qWbKyRUQSkFImudsfwUpCijaTN9ziX+R57PHhe8MnOJC0GjhfzMCuwGLfTTSLlbbpPNA37Wny9hk8L3dVnaGxP5z2+wzQZHZI9n3RDAwhMZ6X/6l8oAe2GeYok4xlu1z8lzNq0YZUbfAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714002000; c=relaxed/simple;
-	bh=S333S4sIPV+E0xMd8ucx9SmBeKuTCXKxVi0OsYUitzI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DRP5E1DwcJ8JvYmBW53K7JD6gBK97fLsk8OWZvsRGaQ5OS4juO8Wl7yUsRigHCRcYPuqAt4jCUNs4GdiSaBs+PUjqJD78Rn+xM6Sok5ao9a/1jtQaXVs2Ezsz3kMqcmc5JAQtqHrMK/+ryvgpZct3utOP+afSYG9cGjiM5gXDk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g1dLJazu; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714002076; c=relaxed/simple;
+	bh=6/nCZHN2ot48niRYtILsWxW3A5Rhs7kQzyWs5jyek1M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RhveRFwiJtMBVjcfzGIETiM2afod0xDD4XN5o0iFTh7Y+PdavB1PobPmt9VpOGwKOLXNwXR6k5PHYvEJDSQuZizG4gl8Rs4WcMGh22rFcTKYrS5A219kK9DuDfi0DB4L8/zTKiY0ZUa5ggdQGMuMv6s8O7MBDcpU3cbVPTplrOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QnY8CZJh; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g1dLJazu"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dbed179f0faso1220339276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 16:39:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QnY8CZJh"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e8bbcbc2b7so3870105ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 16:41:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714001998; x=1714606798; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4lbiDAQdRMQUnTwkJFNqDelP8XC5ywPFYlZpytL71Sk=;
-        b=g1dLJazu1CFtSqM0QQvvJ4p2y2NZv6pcjxhWVOlMEKcy8jKpk7uFslZJUoIgjvIP3o
-         opyqK+tv/sToA5osY3JxwmSGsGImu9fn8aKys52uSiBSO1xquqsHPCmIERFY+XhIvq2T
-         sbuAQgqEkX7x/PfcmAGXNjCT0rBpWAS8KpvcDSchr5HRXEyi+r3p9mkgztN4QaWP3T0t
-         zI2SnUfzUBk2uQMzxVvsaH3Y4adtdHP1h99SedZyqV0MX/yVwlPM4nTZcKZJ9NRp1pwR
-         D1dG+GPa98Q+5lyr8JbBOyZtwNBugoJ5aZKdFmkaA9VHkr6qxYnAyXWQomM9Gfy3MSwa
-         0+EQ==
+        d=chromium.org; s=google; t=1714002074; x=1714606874; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EoToNmnIGQ/tl3VHTK0FT9JY72AxGKijH26JKi5+fVQ=;
+        b=QnY8CZJhTsPFSi4w4PkrRWtrY1WmkKbA8QV/LCygPM8cq72JVRsp/LY1JMt9sP/7F2
+         jAWYr781FitO9fYKdWKDoGf+CxTtc2Y3vE6AfcR4BkuyCucigVIPd5c/t0K9+Qrss6EH
+         UX4MWVzui3Kq07TwzMy11bPT5NtYa7k2yZxRA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714001998; x=1714606798;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4lbiDAQdRMQUnTwkJFNqDelP8XC5ywPFYlZpytL71Sk=;
-        b=syR6/K37lTmkDp4iDkmbR5+bqhzZg41Gx06dFqMX4nmvkUSQh8FrgPbfaWIOOT2vho
-         eOjMgCpMLaHA8sqDPGdmG2u+pNvpzQ+B1bHQweJ2hjd958hFHO3iF8vdOEvHafDNcFBH
-         a6pGNm/m+rldh/gcB+b2Hot6PrMLKgme16NmifbcuGQxOj8luc0vH0bGK5hPFoeuQamx
-         PAvmSPTR6iI2ULSNcrTVdXwvQpB7h9IUnVEPmD/KVNfqnUUiAuvGKtwXW9l/GvD62mZ3
-         v6Kar2KtZsY1H8SmfKI3PJ9MUVBUaeo6rXFAvZnTZujEsI0bLd/gp5DtGyeEPkH4ZkkX
-         d0fw==
-X-Forwarded-Encrypted: i=1; AJvYcCVVlTPgBYIauKa69diwgS9hTPaiJauP+e67+B5wzEsp8SwJL1GpgtFACymIwo8UooAXR3Xe9dwBgRmLSjOHB5/uRYR/V5bAgnVQxqhN
-X-Gm-Message-State: AOJu0YzqWLlq/S+t7SehBRdcym5Net/+OCMQK0qc3fSzYyGM4dQyKR8+
-	c6MLhyG8dt3K95Mn+uvGDyDQQfDdBavBSxEK3OmqmviNOsSbnEiOkhPDSh5kX0OQLVnXvhZdYar
-	QofSQbEL/MkDMqffTpV4iNnyb4FVI4YakJ+Q78g==
-X-Google-Smtp-Source: AGHT+IFbCEKpEBJRqFVkfoarP6YfnOgjBQGtumnt+gwnMFyhoUY0mANCP/DL9e2l0oGwk5Nf7M7RID79c6RIpYBEm9M=
-X-Received: by 2002:a25:c7ca:0:b0:de5:8427:d66f with SMTP id
- w193-20020a25c7ca000000b00de58427d66fmr1166099ybe.4.1714001997820; Wed, 24
- Apr 2024 16:39:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714002074; x=1714606874;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EoToNmnIGQ/tl3VHTK0FT9JY72AxGKijH26JKi5+fVQ=;
+        b=IKKgqiuaoFvA6KnsUagYbJ0DS9krtllf2OhRlkmku29tuyiqGyFJZIvb3p+eK9hCzR
+         fkLh8/GnX7/vA+EsSpLJgap0x7ng7UUPiACYbMqtiv8KmsR/p8DYbQiaqzHpIvgs+6tV
+         Co/FzoO2/FmhORZx8R4B641EnNLQlIjVRq+TLVENbZaauT7wJSc9UWCMnJcgxrVMhEOD
+         OvHRARwXy9qs1nlEEzZ2EP2hQYrHcQxrJz5beyN7b4bMoQlfJkTZ+5llvqzSDAtNw8ZF
+         prFDvzD2EmZ+6K8rL/pwJluQfTJckhKTIdDVYXMZnXpf4A2p6SHXv0rZfWxEInrxq1uL
+         a+Yw==
+X-Forwarded-Encrypted: i=1; AJvYcCXYfRlKx+DR9FIiFpFKmBDgKd1m78V7ee7jC+6eohfa2aTc9chbX/PhVtoI9U4/oAbV6m4wrjAPVRiQmxfHmllfPWoenzbO67uSwVVM
+X-Gm-Message-State: AOJu0YyBCbJASyNrhxhn+7ZjtK3hjEEz4iCXflWX5cyUZL/LIinNMjd2
+	Hq86uZISl0kvbuvzrGXklAImriCHkaEfZwHHtgZGq6bhgtbqmQu5kl+SgxhBLA==
+X-Google-Smtp-Source: AGHT+IEKgCjBpENw0+PWDNYZyL454MuCp/jPYNsO+pEjvBJa9o+e+CAFfi7+1nI4ZhFCYvLI+RA//w==
+X-Received: by 2002:a17:903:2302:b0:1e3:d0fd:236c with SMTP id d2-20020a170903230200b001e3d0fd236cmr5913125plh.37.1714002074531;
+        Wed, 24 Apr 2024 16:41:14 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id p23-20020a1709027ed700b001d8f111804asm12691608plb.113.2024.04.24.16.41.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 16:41:14 -0700 (PDT)
+Date: Wed, 24 Apr 2024 16:41:13 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Abhinav Jain <jain.abhinav177@gmail.com>
+Cc: tony.luck@intel.com, gpiccoli@igalia.com,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com,
+	Julia Lawall <julia.lawall@inria.fr>
+Subject: Re: [PATCH] pstore/ram: Replace of_node_put with __free() for
+ automatic cleanup
+Message-ID: <202404241639.3F455ECCD@keescook>
+References: <20240415161409.8375-1-jain.abhinav177@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424-ayn-odin2-initial-v1-0-e0aa05c991fd@gmail.com> <20240424-ayn-odin2-initial-v1-6-e0aa05c991fd@gmail.com>
-In-Reply-To: <20240424-ayn-odin2-initial-v1-6-e0aa05c991fd@gmail.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 25 Apr 2024 02:39:47 +0300
-Message-ID: <CAA8EJppXj=DyT0hEW05mAjgzHS+H2iiJ-M=MfJPgkWfztX=V8g@mail.gmail.com>
-Subject: Re: [PATCH 06/10] arm64: dts: qcom: sm8550: Add UART15
-To: wuxilin123@gmail.com
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Junhao Xie <bigfoot@classfun.cn>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Tengfei Fan <quic_tengfan@quicinc.com>, 
-	Molly Sophia <mollysophia379@gmail.com>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240415161409.8375-1-jain.abhinav177@gmail.com>
 
-On Wed, 24 Apr 2024 at 18:30, Xilin Wu via B4 Relay
-<devnull+wuxilin123.gmail.com@kernel.org> wrote:
->
-> From: Xilin Wu <wuxilin123@gmail.com>
->
-> Add uart15 node for UART bus present on sm8550 SoC.
->
-> Signed-off-by: Molly Sophia <mollysophia379@gmail.com>
-> Signed-off-by: Xilin Wu <wuxilin123@gmail.com>
+On Mon, Apr 15, 2024 at 04:14:09PM +0000, Abhinav Jain wrote:
+> Add __free(device_node) to the parent_node struct declaration.
+> Move declaration to initialization for ensuring scope sanity.
+> Remove of_node_put from parent_node struct.
+> 
+> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+> Signed-off-by: Abhinav Jain <jain.abhinav177@gmail.com>
 > ---
->  arch/arm64/boot/dts/qcom/sm8550.dtsi | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
+>  fs/pstore/ram.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index b1a455f42e93..14f2f4864e48 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -644,7 +644,6 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+>  			    struct ramoops_platform_data *pdata)
+>  {
+>  	struct device_node *of_node = pdev->dev.of_node;
+> -	struct device_node *parent_node;
+>  	struct resource *res;
+>  	u32 value;
+>  	int ret;
+> @@ -704,14 +703,13 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+>  	 * we're not a child of "reserved-memory" and mimicking the
+>  	 * expected behavior.
+>  	 */
+> -	parent_node = of_get_parent(of_node);
+> +	struct device_node *parent_node __free(device_node) = of_node_parent(of_node);
 
+Please don't move variable definitions into the middle of the function
+body. :)
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>  	if (!of_node_name_eq(parent_node, "reserved-memory") &&
+>  	    !pdata->console_size && !pdata->ftrace_size &&
+>  	    !pdata->pmsg_size && !pdata->ecc_info.ecc_size) {
+>  		pdata->console_size = pdata->record_size;
+>  		pdata->pmsg_size = pdata->record_size;
+>  	}
+> -	of_node_put(parent_node);
 
+So this change is functionally fine, but there's really no good reason
+to do this -- there is no fancy error handling here, so there's no
+benefit to making this change. It doesn't really help readability.
+
+-Kees
+
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.34.1
+> 
 
 -- 
-With best wishes
-Dmitry
+Kees Cook
