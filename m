@@ -1,133 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63261581F2
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 07:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA94D1586D2;
+	Wed, 24 Apr 2024 07:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713943096; cv=none; b=pm23WvCU5sxKTFQA/FrhRgMIJpzpYQ+FtnW0ayjuan0nqiY/WgRFuJufBiIKnu34GQauumNiVr83kYXW9t/0S0iCB2qAa0d7nnUJZbrVSUxfm6GZRmsajpsNjUQdlYD63ADxO8rvLh4b4BDcMKRnfeCBEBK+ClKNIGRcTChllHg=
+	t=1713943099; cv=none; b=mrqmtB8t+kwdppbhBwJYdkVw2u5cuNi/Ung2V/HJgRFIBrb/mlxH88Lei2t5C3j3wB8TIGeTeq7WHgPN/KiO9Nm/kZiqBTWB3nLJOwlIb9OKlGpD9gF8fAA+q5ofeH0Cae3A38d25Tm4l9d7VK67kIDYc/9ias3zqCO2nV0/Jxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713943096; c=relaxed/simple;
-	bh=CgopBTKaZCe/lGwr/TCnJyjo+XR0f8rgTTVctbIZQKs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q6xRzX0YbTgeNrjGEUg3s9Bs5lVvkUG+WhZEju0rMomUzZY8yg7HByuvyfu2EeSWlPBPSV/1oktKKKUaExpsnQCBKArKfHajgckaHVgoc+z5bGtguRlMzNxGHdsl8QwyBK06S/M9lwFx+sj5Zdckah5d4GGozV2/t+epS9efaOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X44sDN0H; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713943099; c=relaxed/simple;
+	bh=fv+GIGOvqiVeo78BkG+zPn+Of31/+ZsuY6byizPk83M=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=D0EbTIJpWzkK+UecZ/nB81tC1dLZukuykj7JWf3m/jI0YYnmVfZIzVzEiWmyLMStd6JIlag33Kb5J867bAc8N2a1+7zEpX4PJcS3nWJxqc0wocPtrw67IJ8Fk9fJb6s4t+rQ/rD60kQtoYrH+79KFEdPH3jr8lu/8O7FBmXY+j4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XJna2nkf; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X44sDN0H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713943095; x=1745479095;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=CgopBTKaZCe/lGwr/TCnJyjo+XR0f8rgTTVctbIZQKs=;
-  b=X44sDN0HJ7vGewG3k58NKMe01QTJMgpS87I7cBYtO4u6D1XSr6vr7ROi
-   amzPlYoMqg4g9fUZqa6GGDkkKmK+D9Ky9o8MBem91BcqYs5KyWjxvR/J2
-   3rBk0KWo2ESYtZzucYnRqV4Or3ccUNLTkMB0F25jQYPLTmdxd+TzRcJfp
-   IQuxzMcwGp/APfm0JrDJenQcSoakcF6BH+iOeKlN8Z27RZs2BkfIQpyu3
-   UIIdkaPjKw1K0IPLwisY/BRLHSOKihXtCxYp5pW9kt43T+OklecOy+JzK
-   5Y8AVlQbWfrQVggkFg8MgixEW/ZrGzZ/QFCjK2bUILMvMZEzP69hIXWho
-   A==;
-X-CSE-ConnectionGUID: 4pL+UqirR5yKcdVJVa1seQ==
-X-CSE-MsgGUID: U7cJggfSRrKtKG8vg89gWA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="27073098"
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="27073098"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 00:18:14 -0700
-X-CSE-ConnectionGUID: hdRNhGS5SQ+th1Jfx+MzRw==
-X-CSE-MsgGUID: /wTxSCbaTSCZHoRz9JKW7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="24664711"
-Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
-  by fmviesa010.fm.intel.com with ESMTP; 24 Apr 2024 00:18:12 -0700
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>,
-	Jingqi Liu <Jingqi.liu@intel.com>,
-	Dimitri Sivanich <sivanich@hpe.com>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 02/18] iommu/vt-d: Use try_cmpxchg64{,_local}() in iommu.c
-Date: Wed, 24 Apr 2024 15:16:28 +0800
-Message-Id: <20240424071644.178250-3-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240424071644.178250-1-baolu.lu@linux.intel.com>
-References: <20240424071644.178250-1-baolu.lu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XJna2nkf"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43O6YeiK026977;
+	Wed, 24 Apr 2024 07:18:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id; s=qcppdkim1; bh=SIiiTzshdZnb
+	bu1Kn6CE4UY2GKQW75/stSab/emf5JE=; b=XJna2nkfoXTIZgOdFk70qFdqXN3y
+	BArphEIY96aRK9BDdQJxD5LhHX0zGXA9GJxV/wh4O7Vgae1QFtuHUz+A/GJD3LRD
+	BkybJ2MkuPgnvT4cJCgDMzJBx8c3ABzgJ7b20aUSLrkn1JPJysVtJfFMTnqAhgfc
+	d1+bkyaRXpQIaf6COKZPh4BZd8SPHGO2ZJBl6Sd/tzRMRROVJUNuO7hf/L57/IuU
+	oxD/+KjJJdqz5DYFJrx6R+0ORKvcuy2a6L/+WH5a+aGUzOePiqLlrHRiQvlTTq6S
+	flVZIAidFLR14msxNavzx7GJ4aX8qlj8TtvrbXEoCFEUMmI3PyaDtyQ3xg==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xpv9e05nx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Apr 2024 07:18:11 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 43O7I7AK006061;
+	Wed, 24 Apr 2024 07:18:07 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3xm6sm3w5m-1;
+	Wed, 24 Apr 2024 07:18:07 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43O7I7vw006055;
+	Wed, 24 Apr 2024 07:18:07 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-dikshita-hyd.qualcomm.com [10.213.110.13])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 43O7I6k9006053;
+	Wed, 24 Apr 2024 07:18:07 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 347544)
+	id 463843030; Wed, 24 Apr 2024 12:48:06 +0530 (+0530)
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+To: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dikshita Agarwal <quic_dikshita@quicinc.com>
+Subject: [PATCH] media: venus: fix use after free in vdec_close
+Date: Wed, 24 Apr 2024 12:47:50 +0530
+Message-Id: <1713943070-24085-1-git-send-email-quic_dikshita@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Yzx1oSc-SW4RbTjoohJQ-sn1EZR-AmMi
+X-Proofpoint-ORIG-GUID: Yzx1oSc-SW4RbTjoohJQ-sn1EZR-AmMi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-24_04,2024-04-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 lowpriorityscore=0 adultscore=0 spamscore=0 impostorscore=0
+ phishscore=0 mlxscore=0 suspectscore=0 clxscore=1015 malwarescore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404240031
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Uros Bizjak <ubizjak@gmail.com>
+There appears to be a possible use after free with vdec_close().
+The firmware will add buffer release work to the work queue through
+HFI callbacks as a normal part of decoding. Randomly closing the
+decoder device from userspace during normal decoding can incur
+a read after free for inst.
 
-Replace this pattern in iommu.c:
+Fix it by cancelling the work in vdec_close.
 
-    cmpxchg64{,_local}(*ptr, 0, new) != 0
-
-... with the simpler and faster:
-
-    !try_cmpxchg64{,_local}(*ptr, &tmp, new)
-
-The x86 CMPXCHG instruction returns success in the ZF flag, so this change
-saves a compare after the CMPXCHG.
-
-No functional change intended.
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Link: https://lore.kernel.org/r/20240414162454.49584-1-ubizjak@gmail.com
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 ---
- drivers/iommu/intel/iommu.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/media/platform/qcom/venus/vdec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index a7ecd90303dc..4a2afe89b464 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -865,7 +865,7 @@ static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
- 			break;
+diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
+index 29130a9..56f8a25 100644
+--- a/drivers/media/platform/qcom/venus/vdec.c
++++ b/drivers/media/platform/qcom/venus/vdec.c
+@@ -1747,6 +1747,7 @@ static int vdec_close(struct file *file)
  
- 		if (!dma_pte_present(pte)) {
--			uint64_t pteval;
-+			uint64_t pteval, tmp;
+ 	vdec_pm_get(inst);
  
- 			tmp_page = alloc_pgtable_page(domain->nid, gfp);
- 
-@@ -877,7 +877,8 @@ static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
- 			if (domain->use_first_level)
- 				pteval |= DMA_FL_PTE_XD | DMA_FL_PTE_US | DMA_FL_PTE_ACCESS;
- 
--			if (cmpxchg64(&pte->val, 0ULL, pteval))
-+			tmp = 0ULL;
-+			if (!try_cmpxchg64(&pte->val, &tmp, pteval))
- 				/* Someone else set it while we were thinking; use theirs. */
- 				free_pgtable_page(tmp_page);
- 			else
-@@ -2128,8 +2129,8 @@ __domain_mapping(struct dmar_domain *domain, unsigned long iov_pfn,
- 		/* We don't need lock here, nobody else
- 		 * touches the iova range
- 		 */
--		tmp = cmpxchg64_local(&pte->val, 0ULL, pteval);
--		if (tmp) {
-+		tmp = 0ULL;
-+		if (!try_cmpxchg64_local(&pte->val, &tmp, pteval)) {
- 			static int dumps = 5;
- 			pr_crit("ERROR: DMA PTE for vPFN 0x%lx already set (to %llx not %llx)\n",
- 				iov_pfn, tmp, (unsigned long long)pteval);
++	cancel_work_sync(&inst->delayed_process_work);
+ 	v4l2_m2m_ctx_release(inst->m2m_ctx);
+ 	v4l2_m2m_release(inst->m2m_dev);
+ 	vdec_ctrl_deinit(inst);
 -- 
-2.34.1
+2.7.4
 
