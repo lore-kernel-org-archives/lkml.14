@@ -1,257 +1,362 @@
-Received: from mx0b-0068d901.pphosted.com (mx0b-0068d901.pphosted.com [205.220.180.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F33E1CA9C;
-	Wed, 24 Apr 2024 19:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.180.35
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713985285; cv=fail; b=MgnaF69Hzams4rAG8Ou6Kr0aRTle8oFC04kGvGRqJVJcSwDBl2wPzth7TrHMht65b7lmfcYFd1smeG036Yib07RqBUXTtTrHe1/dP50ndTBy6QZvrE1ShknkPYmrs5SwGXo4JHsbmpcdbd5C4yVAUCFZhE+Lm1YSEYNYdC0Hffw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713985285; c=relaxed/simple;
-	bh=bbzYKWmuaWDC8Xx4NbiVXdjwmtgcEgyrlIZZvrTOSKg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=t5FaHYOAMb3kwOeI9badPB2UY47sVL+SbuqePSYECKSiYo4dtSWeEyBQU/aSMlIjwUexSlXAxENBR1uWT+1MMLaeGYhptdvQ2Emj2EQF+ydM7s8Mgn3Jd+XrbfzJmbAInyDNak0KtEEB0HNuhmkIbZ6tWQxvER6syn/ltYnj0VE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=biamp.com; spf=pass smtp.mailfrom=biamp.com; dkim=pass (2048-bit key) header.d=biamp.com header.i=@biamp.com header.b=AoPUldaC; dkim=pass (2048-bit key) header.d=biamp.com header.i=@biamp.com header.b=ATn5I9tr; arc=fail smtp.client-ip=205.220.180.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=biamp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=biamp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0721B7FD;
+	Wed, 24 Apr 2024 19:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713985300; cv=none; b=flXc4Qgmnesj/ZgtHkl5hNIq4V2UYW65H/qIXMQzXPS2MxKsYaTroXFgK8zoEC/aIfv1mtbS2Tb0ghzpt5sBEmF8ZlM0wklk9t/1iSMlYbvj8VuVdFvID3WWhe5nKDSEBmH/0H6INFLYFBZne7eVso6/4bD9afZQs5kW48qcYKM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713985300; c=relaxed/simple;
+	bh=AUAwhdW+M8AMnRI433zCP6rrFHe66cysjLyGIeXMbYU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kOU5+pwrWUyqVXnSSHriE79gG7VWFRkxsAgaR7fIXBipIPlILjLdpcwWR4Bquc2X54hYDOxfvlk4IsM7uQRkK4Q+nLm1XDCyIfb9B1BqHcolAf/Rz7r/8WgJR8cxZtYC/HDgMmPB02jLTEfv2tcAMi7KeR6w+VBexaArVhBS5Ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUVL1y/B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=biamp.com header.i=@biamp.com header.b="AoPUldaC";
-	dkim=pass (2048-bit key) header.d=biamp.com header.i=@biamp.com header.b="ATn5I9tr"
-Received: from pps.filterd (m0278265.ppops.net [127.0.0.1])
-	by mx0b-0068d901.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43OAqefU010703;
-	Wed, 24 Apr 2024 12:01:07 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=biamp.com; h=
-	from:to:cc:subject:date:message-id:references:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=
-	proofpoint; bh=bbzYKWmuaWDC8Xx4NbiVXdjwmtgcEgyrlIZZvrTOSKg=; b=A
-	oPUldaCFOuOVogGkOBcZs7mLN+mzSmR3IA78hwCFD0fHy5RtGq7DYfHfIyKCbzGE
-	wDk4Qiz4jDG5LMvctekRheTwZx8PmaNjUXACsma94Rd4tKFRbvNsM41knygjjr9m
-	27Q4KDGnUpfnrQiN2u7ivn/SZNiBCkvFnnyr56OzUMpJMaoyt49p1LFr+40ifP+b
-	ofYHPO8Y2kuc8/apnHCGvJYuhziXnEgJuEV3ViokfD7tO3AiaWGKGl5q5f2+O9gr
-	4M6PH023laWG2ve/peiqBaB/p00/IQ/DdQN7qybztbethr5g8fSR2tq6PYT4SxdJ
-	7IovYC2dhh0Kuoi+faCCw==
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2168.outbound.protection.outlook.com [104.47.55.168])
-	by mx0b-0068d901.pphosted.com (PPS) with ESMTPS id 3xmadvk6dt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 12:01:07 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FJ7jyaJQDFDa/rjE6rPF366ZDXEulxm1KOSRktPq5fE3vRt6n8/lAqvCSeC6J7A+rshFtrDR1IdBUow9hvA28gXufxyAuVbjJv4tXkIhZnRuC61E5U4E/OUkk/WPBGv63S2i/KmkQ4leZATWh6qfGeTLtqaxw19ctFUBPee5+JQgfPZ6703lOTRdj6cnvQ0K51cZU9B0N8ieKZupK/A0cNhmFqLn6L51Y9Bqlv/n3lgMTx2+0xedI3MbI9vhp4pRVxL9pXasrGFPESLdKVM9/2paoMHLfs2WaDxps2JR+AC/XpAllUHlts+jITyI8HBKcIipZjpTamMrDrrSwvXN8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bbzYKWmuaWDC8Xx4NbiVXdjwmtgcEgyrlIZZvrTOSKg=;
- b=aSgyczjs2QQxbUsp2boRDU8L/pxtSJKYN1CnAoK7XvFsfUXFBlkw5wPKY3Kp4/NJXeAUF+8Lk61Ev4AKZqdm7DA567t2+3L5r0w+Me/lBTFNAqZpBwy570+/YaU+tMx+J9EGuRdug35h3fpGj9I4Hz5AiFg9MLYpoWTa5QDDCb3TKwQWQ2np4Q3ge7GdYv8WOFdVQb1YSMQbFKOlKK5NKcKUFmhR8ndirbbW407q1P34jLPPz8xrM4cwvxU628ra4rwWjtg/LvW8KiE+zLqvydl0/bKqKpvtgc4H13/KIp/houJIBykf/vAWb0cyCgwmgARRPPma7GGs4reLaR7FDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=biamp.com; dmarc=pass action=none header.from=biamp.com;
- dkim=pass header.d=biamp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=biamp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bbzYKWmuaWDC8Xx4NbiVXdjwmtgcEgyrlIZZvrTOSKg=;
- b=ATn5I9trrX7fNH06kl+f03y0BD2elW4vFpIuqfIBaZD83+AMBR5E0hURjieW+oYdYvN0fICakI0PxaRdScv5rF1JGnE7gRg+PAJaToBjMX0+H7ZGX+eUmHpcyp4onkPQQ4WvDUJYnS2zCNsFr92WeiWfnd98lk4D/F4PcHBgJLZGahVBUSEujIcSemc9GZg7CyEdKaYVOhxzqMadPQYSukqgEgzf2kpMUmuvrmN5dvbFn8eJQDIFqsmlTHQwU1T5geD590qEpmYafaDqNlpjJQ9jhFJiBD75Unh8+OJkCtpx8zP8vAF7C55QbAxIfcuuzDTlJvA3dDpG7E0Oc7QZow==
-Received: from CO1PR17MB5419.namprd17.prod.outlook.com (2603:10b6:303:ec::17)
- by PH0PR17MB4357.namprd17.prod.outlook.com (2603:10b6:510:19::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Wed, 24 Apr
- 2024 19:01:05 +0000
-Received: from CO1PR17MB5419.namprd17.prod.outlook.com
- ([fe80::f48:ee61:a81b:d555]) by CO1PR17MB5419.namprd17.prod.outlook.com
- ([fe80::f48:ee61:a81b:d555%4]) with mapi id 15.20.7519.021; Wed, 24 Apr 2024
- 19:01:05 +0000
-From: Chris Wulff <Chris.Wulff@biamp.com>
-To: Pavel Hofman <pavel.hofman@ivitera.com>,
-        "linux-usb@vger.kernel.org"
-	<linux-usb@vger.kernel.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Gruber
-	<jimmyjgruber@gmail.com>, Lee Jones <lee@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v2] usb: gadget: f_uac2: Expose all string descriptors
- through configfs.
-Thread-Topic: [PATCH v2] usb: gadget: f_uac2: Expose all string descriptors
- through configfs.
-Thread-Index: AQHalYdWgtu02BG/fUykcYHBF1kPmLF1/Y0AgAAPjZuAAQFjgIAAtu3D
-Date: Wed, 24 Apr 2024 19:01:05 +0000
-Message-ID: 
- <CO1PR17MB5419DDEE71C3145C158326C6E1102@CO1PR17MB5419.namprd17.prod.outlook.com>
-References: 
- <CO1PR17MB54195BE778868AFDFE2DCB36E1112@CO1PR17MB5419.namprd17.prod.outlook.com>
- <c9928edb-8b2d-1948-40b8-c16e34cea3e2@ivitera.com>
- <CO1PR17MB541989646698286B2B13CF23E1112@CO1PR17MB5419.namprd17.prod.outlook.com>
- <9b40e148-f3eb-f8f5-bf2d-37a0a0629417@ivitera.com>
-In-Reply-To: <9b40e148-f3eb-f8f5-bf2d-37a0a0629417@ivitera.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CO1PR17MB5419:EE_|PH0PR17MB4357:EE_
-x-ms-office365-filtering-correlation-id: a8a92220-342d-44f9-e0bc-08dc6490e471
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- =?iso-8859-1?Q?pXqipC7Mvy94IFFoCeFSrnUtm0Zq0iGif8ZgjWgzrQNVwoCTxwN67Go/ln?=
- =?iso-8859-1?Q?RS4cluXzg11ZrSZ08zr6XbA9spYYtvo0doTUS9BTlfMZXjXIZ11ZrstlWD?=
- =?iso-8859-1?Q?Q4r5JrPFoTKFb27XiUjBAsqZr6pB7IiMsbvmsq8G/+u6FMtouc/vgEOK2c?=
- =?iso-8859-1?Q?KzaAHbGjWSoYlBMn0CphqU6p5kCRmnosMW1YOCXx5/bnbEpg+K5dXtqx7J?=
- =?iso-8859-1?Q?SIBuru88Q65Im2/4eU2QrU08ILQNACO+wWa+gIN5HD2+ct5b3ahWet/54e?=
- =?iso-8859-1?Q?DtrKKsRZlHDe/yU8luP7SUY9PZutH6bA0q9p00u9fXOVRLUIOfCzoN/CmK?=
- =?iso-8859-1?Q?DSigQ2mKsvkgc79vLOTkNeFx1EgDRVorfjnJzz48w8juDQrhODzL4IqIcw?=
- =?iso-8859-1?Q?cyDLm81l1YUe9qjkNKmQzixxBdMnS0U3lajbOkqw/vzHil3kwXh9UKD4ok?=
- =?iso-8859-1?Q?BWkbjPD0dyhPqsJUnrEQDXcVpbTymSjL7ExbQ0LabPuarEt3cWA3BkdnjH?=
- =?iso-8859-1?Q?auJ4OX0ebMlGxOn0/+LytNWpXl/LUxYESkyTX5K3nOc2/BzBE8GkfELLve?=
- =?iso-8859-1?Q?wXvOYBPEbYaHBvLVZOU0QODNpgAh6YMgp8XA5VNzRSIjRDlLLm4MVKqUFK?=
- =?iso-8859-1?Q?3zoI7XLMa3+D1IeBlRExiOPEaneRYhF/1cZLUE1dzPQf2IF5lbAC/RfMMJ?=
- =?iso-8859-1?Q?Bl+YAMScGwnqg70m5KtvbKOJwTBaI2iU50yahmqwYVqbr/OhF2A8W9bjSu?=
- =?iso-8859-1?Q?Rqad4IoUR9pWVoHUo1lz9ICUsgbMdFB4KdElAWXxeQpn2h7E0uq5cbspP8?=
- =?iso-8859-1?Q?Exdphhln8g7UO/RlYz9B71kz40gVXIz4IoDEqSPuPHRKKfNWFNzviWxCh5?=
- =?iso-8859-1?Q?zvA/KIdPq70M3T9O8Bf+vL/Oj5GcalwDXcuIlFMI8SV3YufjRIaiY7aQK+?=
- =?iso-8859-1?Q?XpEC3VQcZCnFEl8aYX6PeOGZMMo8xZH888WV6+padZPWvjEV5YnzdoBuq1?=
- =?iso-8859-1?Q?sKcRYdlYqFzFkJgBmJ9sH1DPEOemMOk3eeK6bvcgJEEXdHPEO/1XxtcxZi?=
- =?iso-8859-1?Q?3Mu4H6ERcGZA7AMFrNHT2jThMe4gHOBalnbJfvpsovcc4pYTo7jHa2pNJu?=
- =?iso-8859-1?Q?kln1b/oJocjE0PP4C/Z4IEbdFXj+eT+f+Wn51WYmsNixcq50DbfWbk2Mmf?=
- =?iso-8859-1?Q?BfkTACHzRTuDf+seSy5ThyQWzqGnwHEKY+4TxkVXU904Co0Jgl//6hEsv+?=
- =?iso-8859-1?Q?YjTUQF8usyFPhg2l8POCHYeyXi6vrA4szJMn7qGJIF/EPwWDH1ymrI3HQ4?=
- =?iso-8859-1?Q?tAEUN9Vkcz6AQI+eKq8DirAOeA=3D=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR17MB5419.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?iso-8859-1?Q?v1BlI3OPI1rO6WoQyGSfUaGdvxPzN5fl6p9GtESPKbycONz5YlP0ePHVDx?=
- =?iso-8859-1?Q?dGpNikOAKrj2T/m65p+UBrDTBvyDuNDA9nToztFelH9A1JtqCj0bt2Mo6t?=
- =?iso-8859-1?Q?ShRooCzVpgbyW/cd4Tqu8mvHHz22dArGIxYRayYgmdNeU17NEKzEtEVTKq?=
- =?iso-8859-1?Q?FEMsT3sa+4JWf9AjWiJx30P5AEelRP56r6f+t4YF328JCIe0F1sNC5ydxV?=
- =?iso-8859-1?Q?jimnxUn1jmk4+MVH2i8qmKyOYd2ZKFvWrFb/u/pFmHTBgTVQ720sjXDs4b?=
- =?iso-8859-1?Q?UlXunPlhvUhy2dwQHrrVziNnnd8IHceq/+rBqDLVvIiCgMecdLlPCLVSyz?=
- =?iso-8859-1?Q?M03WF6dF5RGuhcQk10vx6vlYv/NQkPilRWE1F2nIsXD3DkuhEbL90omN8F?=
- =?iso-8859-1?Q?hYI292OKdAkyPgdanPxOAkxgQIqWIxJCA4w/exiqW5aqGPK2/9lxKDI3ri?=
- =?iso-8859-1?Q?edwIeXDWme+aeicznq8oZsPK+Xk8R+l6EJd0MnWfLO3uQDhaTt7W3/bxDh?=
- =?iso-8859-1?Q?sLUm6CTj+Up9SfEgZATT2KXHn3KPS8UrDHdRnt55nyec2yQxdf1qKDIV7t?=
- =?iso-8859-1?Q?rJSjLDLuz3iqYSyFAMmiejog5bkLMfZh6DSE3AsCohVaNGPAZHvwBwBopZ?=
- =?iso-8859-1?Q?UMAN6L//5w5YM/5tTb6f6nqq0MojIOMr2lmq2F80lGz9rC6VLjPWHOm0IF?=
- =?iso-8859-1?Q?TD/Slbe8EFtif5+hCPppK8yEr5Twqyf9ineYCKjuy0eNldoXsYGuJSpFrE?=
- =?iso-8859-1?Q?Avs+gf6JEMTgapSf+MZVSk45F5Plq2zbI2aFLAOjMcszeni/y3mqLn1hpV?=
- =?iso-8859-1?Q?7Nve7XG5jpVgizjZ9MV0awxZFYk5bTDXuwUSm50j8jHkS2+5q9ueVuxrjX?=
- =?iso-8859-1?Q?xaqsDGiLRt9v3Y4HGu+NX+iwfPa8uDsCk3pa4TnFPlW5xehKrAwKeo2k7T?=
- =?iso-8859-1?Q?xFNEBDoFs5Ki6e+BAYrylieNw33IX8obAPajvPt0ALKkorqrtwdzVnmdyS?=
- =?iso-8859-1?Q?mXBNG8BC0iAUORoVMu/1wRPs37u3cX1YAP7M0dWdCcQjamfUMfeM5ULzfW?=
- =?iso-8859-1?Q?uiZALHOtRYwyTeX3+6M8UaaPctBi0juAuqOxzcdDrOgUOdver8XZE0oXpc?=
- =?iso-8859-1?Q?hkW0ooFXM7c+5/UhEPSEqYAWRslNaVLnphU92F61H5bFsHC4DDzckduraW?=
- =?iso-8859-1?Q?yoGYUB8IYCvzVFe+kguPkuFeUe4scflwnRYg6/7w2sIZKyxsKIO6PeUkEM?=
- =?iso-8859-1?Q?NvISSipcMMtFyQMMyg+85EFk2KDwbiX2IcSz1T1C1NcEWUe8vKBZviCz+z?=
- =?iso-8859-1?Q?m/n4ZIVS9ywHw8OZIMfG/2dOiM/NpyKhNsObulXDoxaG9lu0IHz67lShru?=
- =?iso-8859-1?Q?XDTKTlZVgZjt5KXZUi+WWY7fYkHHVLJFNxsHsWuzi2lCBiGhF058TJpSZH?=
- =?iso-8859-1?Q?NYRyCb8rHlLbwsAodEQ2m6g0+RLZd8geE5KLWcnHkejZNYtJxLF+OoAdp4?=
- =?iso-8859-1?Q?Hd62sDra3BYcaTvfGELOlQm5x4We9hc44Cw9/g433+XMVYgaSuq8cVq9OP?=
- =?iso-8859-1?Q?Q302vXPh/wdDBPV1VFnD3rL4XrA+qlSgtH4sMLH7UqbdU8TKvJJ/PBLVb6?=
- =?iso-8859-1?Q?njQHPforzVqF7pguv1pSjbgAXmgQKt5Qb3?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUVL1y/B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EC42C32783;
+	Wed, 24 Apr 2024 19:01:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713985300;
+	bh=AUAwhdW+M8AMnRI433zCP6rrFHe66cysjLyGIeXMbYU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gUVL1y/BKDh3ii9owcmzWkQXKwWdUgsIaP/pNHQrnybXwAIqY2XJkCN+kLscAy+zV
+	 Ziq7LcVHWWmxzyrqVPecEH+Z5ChOZj6Z5b7kS2/qfhw4CsVB0KBlkFczMnGj6Fr+YQ
+	 mk9L5t+HJCsepwn31OLY3utw4N50Fiavg1onS91kdTsJkQNXwlvBktIdwgaHW4mJWz
+	 JV087DgZjC6kokUNQEaKzJz8OHDixG4NpZEFsCVhktMypAxhsg8PLu/xZCyQlFicLh
+	 7eXC73E6ILSJtvar1DyYacdP9QZFv640GZDu9S37FLHn3YroH7yfJAwIgd28qD1UFn
+	 +Z5BhkKG0ASFg==
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5aca32d3f78so33239eaf.1;
+        Wed, 24 Apr 2024 12:01:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW6+wXcIOuvwwb0VVc5RmGDDHKw1U88ERwUgmSmdRU7WKP7ZIk3A+5pLt85gSAWNET4yNkrQ0F7hMcs7hQTJZ4k/wwGMDzZoRXIqqOP4CHYXkuKHmhVIuM/AK+Z1zT40/hKPtUGqoW+SJj1EfBU8xaUjqShReGQeJOlry0vLBviB053aHaVF0FtHkn1E7TpYw5K0eiF55gUKY5+1jrb8rp6ENCEGcTonB169A==
+X-Gm-Message-State: AOJu0YwPbuLTghc+4FAf1FCXtORHyOdpinB913PzfNCPfaSTDDUV8SXp
+	zcw1KWrecck2m0YH1urlX4Xe7AAtpw40f2BXY7rjnRL2z8YwGiDfVj8Bkb4N0FzocLbq4vXLWiT
+	DzusfIdLYCUAqlZzooaZNiI5dcEk=
+X-Google-Smtp-Source: AGHT+IGvBQ2jFo2NOYEzKPYTqsFLqDDLw5PpBktYstWvuP0UE7S+AFO3g19ze7Bwo0WYNLV3mUTJhJ2us3ywPEAtuhc=
+X-Received: by 2002:a4a:c710:0:b0:5aa:3e4f:f01e with SMTP id
+ n16-20020a4ac710000000b005aa3e4ff01emr3319234ooq.1.1713985299242; Wed, 24 Apr
+ 2024 12:01:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: biamp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR17MB5419.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8a92220-342d-44f9-e0bc-08dc6490e471
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2024 19:01:05.0439
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 341ac572-066c-46f6-bf06-b2d0c7ddf1be
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HjjBaUC8wD2EG3GsUWUtQ/HT11W+PcY87WKZ+hhiIORTsyt71ihVQD6JKL9hvLy8r3V0Neb5xvnjbz+pogJY8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR17MB4357
-X-Proofpoint-GUID: 6vVgdgR791LstFJzwdWAWtJhnpwfdg2P
-X-Proofpoint-ORIG-GUID: 6vVgdgR791LstFJzwdWAWtJhnpwfdg2P
+References: <20240422195745.5089-1-W_Armin@gmx.de>
+In-Reply-To: <20240422195745.5089-1-W_Armin@gmx.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 24 Apr 2024 21:01:27 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gLQYOWLTmpe24epb9GzV5o2qSuaP5t25eu-OXYoE2pAQ@mail.gmail.com>
+Message-ID: <CAJZ5v0gLQYOWLTmpe24epb9GzV5o2qSuaP5t25eu-OXYoE2pAQ@mail.gmail.com>
+Subject: Re: [PATCH v6] ACPI: fan: Add hwmon support
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: mlj@danelec.com, rafael.j.wysocki@intel.com, lenb@kernel.org, 
+	jdelvare@suse.com, andy.shevchenko@gmail.com, linux@roeck-us.net, 
+	linux@weissschuh.net, ilpo.jarvinen@linux.intel.com, 
+	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->From:=A0Pavel Hofman <pavel.hofman@ivitera.com>=0A=
->Sent:=A0Wednesday, April 24, 2024 3:55 AM=0A=
->>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 p_it_name=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0 playback input terminal name=0A=
->>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 p_ot_name=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0 playback output terminal name=0A=
->>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 p_fu_name=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0 playback function unit name=0A=
->>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 p_alt0_name=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0 playback alt mode 0 name=0A=
->>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 p_alt1_name=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0 playback alt mode 1 name=0A=
->>>=0A=
->>> Nacked-by: Pavel Hofman <pavel.hofman@ivitera.com>=0A=
->>>=0A=
->>> I am not sure adding a numbered parameter for every additional alt mode=
-=0A=
->>> is a way to go for the future. I am not that much concerned about UAC1,=
-=0A=
->>> but IMO (at least) in UAC2 the configuration method should be flexible=
-=0A=
->>> for more alt setttings. I can see use cases with many more altsettings.=
-=0A=
->>>=0A=
->>> My proposal for adding more alt settings=0A=
->>> https://lore.kernel.org/linux-usb/35be4668-58d3-894a-72cf-de1afaacae45@=
-ivitera.com/=0A=
->>> suggested using lists to existing parameters where each item would=0A=
->>> correspond to the alt setting of the same index (+1). That would allow=
-=0A=
->>> using more altsettings easily, without having to add parameters to the=
-=0A=
->>> source code and adding configfs params. I received no feedback. I do no=
-t=0A=
->>> push the param list proposal, but I am convinced an acceptable solution=
-=0A=
->>> should be discussed thoroughly by the UAC2 gadget stakeholders.=0A=
->>>=0A=
->>> I am afraid that once p_alt1_name/c_alt1_name params are accepted, ther=
-e=0A=
->>> will be no way back because subsequent removal of configfs params could=
-=0A=
->>> be viewed as a regression for users.=0A=
->>=0A=
->> I have been thinking about this as well. The alt names are slightly diff=
-erent than the rest of the settings=0A=
->> since they also include alt mode 0. I was thinking p/c_alt1_name could b=
-e expanded to the array so=0A=
->> that the entries line up with the other settings and don't have an extra=
- entry for alt 0. Perhaps a different=0A=
->> name would make more sense.=0A=
->>=0A=
->> Along those lines, I didn't see any gadget drivers using an array of str=
-ings for anything, which is also why=0A=
->> I didn't try to do anything here that merged alt0/1 names into an array.=
- If we were to do an array of strings=0A=
->> I'm not sure what the best separator would be. Maybe ";"? The rates arra=
-y uses ",".=0A=
->>=0A=
->> This patch only exposes the existing strings to make them configurable, =
-but I don't want to do anything=0A=
->> that would preclude a nice interface for extra alt modes.=0A=
->>=0A=
->=0A=
->Thanks a lot for your response. Please can you take a look at=0A=
->https://lore.kernel.org/linux-usb/72e9b581-4a91-2319-cb9f-0bcb370f34a1@ivi=
-tera.com/T/ ?=0A=
->=0A=
->If the params in the upper level were to stand as defaults for the=0A=
->altsettings (and for the existing altsetting 1 if no specific altset=0A=
->subdir configs were given), maybe the naming xxx_alt1_xxx could become a=
-=0A=
->bit confusing. E.g. p_altx_name or p_alt_non0_name?=0A=
-=0A=
-I am in favor of the subdirs for alt mode settings, with the main config op=
-tions acting as the default/single=0A=
-configuration as it is today.=0A=
-=0A=
-I can change these patches from c/p_alt1_name to c/p_altx_name if nobody ob=
-jects to that, or I could remove=0A=
-the alt name from this patch set if anyone thinks this needs more discussio=
-n. I don't actually need to set=0A=
-the alt name for my use case, but included it for completeness.=0A=
-=0A=
--- Chris Wulff=
+On Mon, Apr 22, 2024 at 9:58=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> Currently, the driver does only support a custom sysfs
+> interface to allow userspace to read the fan speed.
+> Add support for the standard hwmon interface so users
+> can read the fan speed with standard tools like "sensors".
+>
+> Tested with a custom ACPI SSDT.
+>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+
+I need Guenter to tell me that this is fine with him.
+
+Also please see one nit below.
+
+> ---
+> Changes since v5:
+> - fix coding style issues
+> - replace double break with return
+> - add missing includes
+>
+> Changes since v4:
+> - fix spelling issues
+> - check power values for overflow condition too
+>
+> Changes since v3:
+> - drop fault attrs
+> - rework initialization
+>
+> Changes since v2:
+> - add support for fanX_target and power attrs
+>
+> Changes since v1:
+> - fix undefined reference error
+> - fix fan speed validation
+> - coding style fixes
+> - clarify that the changes are compile-tested only
+> - add hwmon maintainers to cc list
+> ---
+>  drivers/acpi/Makefile    |   1 +
+>  drivers/acpi/fan.h       |   9 +++
+>  drivers/acpi/fan_core.c  |   4 +
+>  drivers/acpi/fan_hwmon.c | 169 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 183 insertions(+)
+>  create mode 100644 drivers/acpi/fan_hwmon.c
+>
+> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+> index 39ea5cfa8326..61ca4afe83dc 100644
+> --- a/drivers/acpi/Makefile
+> +++ b/drivers/acpi/Makefile
+> @@ -77,6 +77,7 @@ obj-$(CONFIG_ACPI_TINY_POWER_BUTTON)  +=3D tiny-power-b=
+utton.o
+>  obj-$(CONFIG_ACPI_FAN)         +=3D fan.o
+>  fan-objs                       :=3D fan_core.o
+>  fan-objs                       +=3D fan_attr.o
+> +fan-$(CONFIG_HWMON)            +=3D fan_hwmon.o
+>
+>  obj-$(CONFIG_ACPI_VIDEO)       +=3D video.o
+>  obj-$(CONFIG_ACPI_TAD)         +=3D acpi_tad.o
+> diff --git a/drivers/acpi/fan.h b/drivers/acpi/fan.h
+> index f89d19c922dc..db25a3898af7 100644
+> --- a/drivers/acpi/fan.h
+> +++ b/drivers/acpi/fan.h
+> @@ -10,6 +10,8 @@
+>  #ifndef _ACPI_FAN_H_
+>  #define _ACPI_FAN_H_
+>
+> +#include <linux/kconfig.h>
+> +
+>  #define ACPI_FAN_DEVICE_IDS    \
+>         {"INT3404", }, /* Fan */ \
+>         {"INTC1044", }, /* Fan for Tiger Lake generation */ \
+> @@ -57,4 +59,11 @@ struct acpi_fan {
+>  int acpi_fan_get_fst(struct acpi_device *device, struct acpi_fan_fst *fs=
+t);
+>  int acpi_fan_create_attributes(struct acpi_device *device);
+>  void acpi_fan_delete_attributes(struct acpi_device *device);
+> +
+> +#if IS_REACHABLE(CONFIG_HWMON)
+> +int devm_acpi_fan_create_hwmon(struct acpi_device *device);
+> +#else
+> +static inline int devm_acpi_fan_create_hwmon(struct acpi_device *device)=
+ { return 0; };
+> +#endif
+> +
+>  #endif
+> diff --git a/drivers/acpi/fan_core.c b/drivers/acpi/fan_core.c
+> index ff72e4ef8738..7cea4495f19b 100644
+> --- a/drivers/acpi/fan_core.c
+> +++ b/drivers/acpi/fan_core.c
+> @@ -336,6 +336,10 @@ static int acpi_fan_probe(struct platform_device *pd=
+ev)
+>                 if (result)
+>                         return result;
+>
+> +               result =3D devm_acpi_fan_create_hwmon(device);
+> +               if (result)
+> +                       return result;
+> +
+>                 result =3D acpi_fan_create_attributes(device);
+>                 if (result)
+>                         return result;
+> diff --git a/drivers/acpi/fan_hwmon.c b/drivers/acpi/fan_hwmon.c
+> new file mode 100644
+> index 000000000000..34a524c285a5
+> --- /dev/null
+> +++ b/drivers/acpi/fan_hwmon.c
+> @@ -0,0 +1,169 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Hwmon interface for the ACPI Fan driver.
+> + *
+> + * Copyright (C) 2024 Armin Wolf <W_Armin@gmx.de>
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/limits.h>
+> +#include <linux/units.h>
+> +
+> +#include "fan.h"
+> +
+> +/* Returned when the ACPI fan does not support speed reporting */
+> +#define FAN_SPEED_UNAVAILABLE  U32_MAX
+> +#define FAN_POWER_UNAVAILABLE  U32_MAX
+> +
+> +static struct acpi_fan_fps *acpi_fan_get_current_fps(struct acpi_fan *fa=
+n, u64 control)
+> +{
+> +       unsigned int i;
+> +
+> +       for (i =3D 0; i < fan->fps_count; i++) {
+> +               if (fan->fps[i].control =3D=3D control)
+> +                       return &fan->fps[i];
+> +       }
+> +
+> +       return NULL;
+> +}
+> +
+> +static umode_t acpi_fan_is_visible(const void *drvdata, enum hwmon_senso=
+r_types type, u32 attr,
+> +                                  int channel)
+> +{
+> +       const struct acpi_fan *fan =3D drvdata;
+> +       unsigned int i;
+> +
+> +       switch (type) {
+> +       case hwmon_fan:
+> +               switch (attr) {
+> +               case hwmon_fan_input:
+> +                       return 0444;
+> +               case hwmon_fan_target:
+> +                       /*
+> +                        * When in fine grain control mode, not every fan=
+ control value
+> +                        * has an associated fan performance state.
+> +                        */
+> +                       if (fan->fif.fine_grain_ctrl)
+> +                               return 0;
+> +
+> +                       return 0444;
+> +               default:
+> +                       return 0;
+> +               }
+> +       case hwmon_power:
+> +               switch (attr) {
+> +               case hwmon_power_input:
+> +                       /*
+> +                        * When in fine grain control mode, not every fan=
+ control value
+> +                        * has an associated fan performance state.
+> +                        */
+> +                       if (fan->fif.fine_grain_ctrl)
+> +                               return 0;
+> +
+> +                       /*
+> +                        * When all fan performance states contain no val=
+id power data,
+> +                        * when the associated attribute should not be cr=
+eated.
+> +                        */
+> +                       for (i =3D 0; i < fan->fps_count; i++) {
+> +                               if (fan->fps[i].power !=3D FAN_POWER_UNAV=
+AILABLE)
+> +                                       return 0444;
+> +                       }
+> +
+> +                       return 0;
+> +               default:
+> +                       return 0;
+> +               }
+> +       default:
+> +               return 0;
+> +       }
+> +}
+> +
+> +static int acpi_fan_read(struct device *dev, enum hwmon_sensor_types typ=
+e, u32 attr, int channel,
+> +                        long *val)
+> +{
+> +       struct acpi_device *adev =3D to_acpi_device(dev->parent);
+> +       struct acpi_fan *fan =3D dev_get_drvdata(dev);
+> +       struct acpi_fan_fps *fps;
+> +       struct acpi_fan_fst fst;
+> +       int ret;
+> +
+> +       ret =3D acpi_fan_get_fst(adev, &fst);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       switch (type) {
+> +       case hwmon_fan:
+> +               switch (attr) {
+> +               case hwmon_fan_input:
+> +                       if (fst.speed =3D=3D FAN_SPEED_UNAVAILABLE)
+> +                               return -ENODATA;
+> +
+> +                       if (fst.speed > LONG_MAX)
+> +                               return -EOVERFLOW;
+> +
+> +                       *val =3D fst.speed;
+> +                       return 0;
+> +               case hwmon_fan_target:
+> +                       fps =3D acpi_fan_get_current_fps(fan, fst.control=
+);
+> +                       if (!fps)
+> +                               return -ENODATA;
+> +
+> +                       if (fps->speed > LONG_MAX)
+> +                               return -EOVERFLOW;
+> +
+> +                       *val =3D fps->speed;
+> +                       return 0;
+> +               default:
+> +                       return -EOPNOTSUPP;
+> +               }
+> +       case hwmon_power:
+> +               switch (attr) {
+> +               case hwmon_power_input:
+> +                       fps =3D acpi_fan_get_current_fps(fan, fst.control=
+);
+> +                       if (!fps)
+> +                               return -ENODATA;
+> +
+> +                       if (fps->power =3D=3D FAN_POWER_UNAVAILABLE)
+> +                               return -ENODATA;
+> +
+> +                       if (fps->power > LONG_MAX / MICROWATT_PER_MILLIWA=
+TT)
+> +                               return -EOVERFLOW;
+> +
+> +                       *val =3D fps->power * MICROWATT_PER_MILLIWATT;
+> +                       return 0;
+> +               default:
+> +                       return -EOPNOTSUPP;
+> +               }
+> +       default:
+> +               return -EOPNOTSUPP;
+> +       }
+> +}
+> +
+> +static const struct hwmon_ops acpi_fan_ops =3D {
+> +       .is_visible =3D acpi_fan_is_visible,
+> +       .read =3D acpi_fan_read,
+> +};
+
+I would add "hwmon" to the names of functions and variables related to
+hwmon.  Something like
+
++static const struct hwmon_ops acpi_fan_hwmon_ops =3D {
++       .is_visible =3D acpi_fan_hwmon_is_visible,
++       .read =3D acpi_fan_hwmon_read,
++};
+
+Otherwise, it looks fine to me.
+
+> +
+> +static const struct hwmon_channel_info * const acpi_fan_info[] =3D {
+> +       HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT | HWMON_F_TARGET),
+> +       HWMON_CHANNEL_INFO(power, HWMON_P_INPUT),
+> +       NULL
+> +};
+> +
+> +static const struct hwmon_chip_info acpi_fan_chip_info =3D {
+> +       .ops =3D &acpi_fan_ops,
+> +       .info =3D acpi_fan_info,
+> +};
+> +
+> +int devm_acpi_fan_create_hwmon(struct acpi_device *device)
+> +{
+> +       struct acpi_fan *fan =3D acpi_driver_data(device);
+> +       struct device *hdev;
+> +
+> +       hdev =3D devm_hwmon_device_register_with_info(&device->dev, "acpi=
+_fan", fan,
+> +                                                   &acpi_fan_chip_info, =
+NULL);
+> +       return PTR_ERR_OR_ZERO(hdev);
+> +}
+> --
