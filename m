@@ -1,214 +1,218 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03518158A24
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 09:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF49158A39;
+	Wed, 24 Apr 2024 09:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713950070; cv=none; b=KZRlorVoCXw39vWNpAe9OWFzbBOdcQarnPNzbD9uI4xaXG3SQ+mRQgc6tTIV5iuK1UkP7rPPgAoH37Vt1IUUtZdmUO5MnRdNOogcWrNlrDVTvc00SxyY9quBilTV7B1tp0d89e3qcyvJ66iszo23iN8U0YysV/x+7aBG/jpuG9Q=
+	t=1713950097; cv=none; b=Ijvdoybqb01kqglkXavlVtUzfR4FTP0x5E6o2zqMezXQeAuebeZ0NAxn25d41rpuKlaFoKSLX3LAoHmMNCQQhO7w4p3gloCNIqE7QesccJ+BYB4gGMSh3hhqZMYTo8czBzgQf1xxDTHsF5DXF3thtg+p6p0wuxgxUUneMqBhqcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713950070; c=relaxed/simple;
-	bh=ilQkqTiAzILx/yJBQLtF7RojF/EHXAM02n5LGc5JLDE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hr5680QtfJ9baBVSCuM7RSGdnuMy0SwgWV57L5aTmeACg+5QIGvcN7D6sCBdM3ZxaqeVsU6URm9SLjlZqkk0f58XOidvFXfyzlXyRGK42+UnutK72/JR7snnEukguOZpQrl88gHHK8kbZ7VQMXQ9YebI0/5BasJK9KbmUsd369g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=JunUivel; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1713950097; c=relaxed/simple;
+	bh=ckYAOfk1/FIb5K+Tr4TGfc8dZNaVO8jL2KEnE8c2EVI=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=ZAef/xMl1q2vDS/WkD+rRugNgawyNqZUv88kCXcnnXyGsz0Y8iTnl74yEpberp2AQEXUCKpGmno14CEhGmQw1BdhSNZJ2VYPXQ3v3IRP0gI3YzO7tvZl2nKiO5Pgkm9d8AoYcaVAPbW9wtD15Lf09J/tdaXL/Jz0fu9QNRIK4W0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=dJk2Qdb+; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JunUivel"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6114c9b4d83so54121387b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 02:14:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1713950068; x=1714554868; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GTco7mxS+ulj3dwD6VzZfzNjOi6ZGcI49PMNrYSvDSw=;
-        b=JunUivelRDIwkvbbwzvZu23P0W4XiUbIcCPXZe5Hi77UD+dOuw1fdonpULP38qUTgK
-         dCzhoSVfBqVGpLVas5xcSDJYX5QsdUjFy7mbAkeihrVJZaEgpDzofeHDhyukIbuzpAJN
-         2ZEojR+GmcmYuBM+rlUvi/5jQSm+T0+gPEUsQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713950068; x=1714554868;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GTco7mxS+ulj3dwD6VzZfzNjOi6ZGcI49PMNrYSvDSw=;
-        b=c1wG4JAUYr1xMA/vXLb5d1s/Sh+ved8apUjByrucJ/CYJykckwMoEjqvkJHgxSSAIT
-         MhNbYNouWHZeMczPeJZGz54pEEQSfSbO0CGjWhzzFPUtvguqW84lrquytt0jFmyGfRDN
-         N8sii1FFB66g1B0oTIJ/PgknkKFybh6H1Wsm7ujbhKLJgRqrCFDHcdCQlR88TfAzIrPY
-         p+85eiQQHGiFONHzoTNfgp1DoV7cOtI9TVMb1h/k8vSIMJPXyGOFiIoD7gEbOlG7XheK
-         Zf/04lYw8PM856O8Gfb0BZnf43ijupPoF4CPX0D+26RUBFwOYYBhDZMxOvoiq5S/+WKf
-         ABCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXIOVZhnoB+5JYy9+0470JxazhnveyzOVZfJHcklcCh/DgrG/Dm0d+o7Ow8oJnk2TMHTgT+4KKo/7rFVy8xhcy1Kuzcn7j9PZzc7+8I
-X-Gm-Message-State: AOJu0YxalHyynNoXC50YTGW+k/Y6sE+k++G0wrl/n+mT6OEyDgMGaC73
-	UglNvq8YfVQyFWFJItBg3AncrdUnJY+5YEnfHQNF/fPBqvtI3o6Q79cNW13+9pLUDDzIsWwERWx
-	Q6KXfhImZmJ0hu9hAJXCyLG1WkrZBSMF6SlrI
-X-Google-Smtp-Source: AGHT+IHB3eLVjxK/mcL2/CZATrOmM1VTvtnsiUe9eTfJRkmQL5S1ZXNV5kGzVFzjnQRU4HACmHFZ+0nmh6+vA1foEFw=
-X-Received: by 2002:a05:690c:630c:b0:61b:3402:805f with SMTP id
- ho12-20020a05690c630c00b0061b3402805fmr2212653ywb.10.1713950067778; Wed, 24
- Apr 2024 02:14:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dJk2Qdb+"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240424091452euoutp018d32a87403c09ec3284b1820dcc61152~JLIctnk_j1934419344euoutp01e;
+	Wed, 24 Apr 2024 09:14:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240424091452euoutp018d32a87403c09ec3284b1820dcc61152~JLIctnk_j1934419344euoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1713950092;
+	bh=ckYAOfk1/FIb5K+Tr4TGfc8dZNaVO8jL2KEnE8c2EVI=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=dJk2Qdb+5NZlvG0pw1skm9nIi0jBW7NY1Rx59E4q6uAaiVeYmy+1sk66V3ah2/fRh
+	 oUFwQhpooaNfNMs409nZSVF2kH4GLEGeyAoPP1LeRUVP7ISgakxDnjgKYD8EWuluHO
+	 jVumWgia0ASNzTwDOxm/7vEyJk+3MAZmSWh0ig2A=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240424091452eucas1p2ae3dca0db3a3d3cd5ef43b44bc5ee346~JLIchjll33059930599eucas1p2l;
+	Wed, 24 Apr 2024 09:14:52 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 4A.D6.09624.B8DC8266; Wed, 24
+	Apr 2024 10:14:51 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240424091451eucas1p2b367b33fffc78c7115f4cad3f25c7fc9~JLIb0o7RO2873528735eucas1p21;
+	Wed, 24 Apr 2024 09:14:51 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240424091451eusmtrp18e85332306747f62aa2d257179288289~JLIbyDvk32046520465eusmtrp1Q;
+	Wed, 24 Apr 2024 09:14:51 +0000 (GMT)
+X-AuditID: cbfec7f2-bfbff70000002598-ba-6628cd8b22c5
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id 58.15.08810.B8DC8266; Wed, 24
+	Apr 2024 10:14:51 +0100 (BST)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240424091450eusmtip25406f5b114df1bd3a728cc683d822294~JLIbgYeY_2751327513eusmtip2Z;
+	Wed, 24 Apr 2024 09:14:50 +0000 (GMT)
+Received: from localhost (106.110.32.44) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Wed, 24 Apr 2024 10:14:50 +0100
+Date: Wed, 24 Apr 2024 09:46:43 +0200
+From: Joel Granados <j.granados@samsung.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Konrad Dybcio <konrad.dybcio@linaro.org>, Luis Chamberlain
+	<mcgrof@kernel.org>, <josh@joshtriplett.org>, Kees Cook
+	<keescook@chromium.org>, Eric Biederman <ebiederm@xmission.com>, Iurii
+	Zaikin <yzaikin@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
+	Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas
+	Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>, Stephen
+	Boyd <sboyd@kernel.org>, Andy Lutomirski <luto@amacapital.net>, Will Drewry
+	<wad@chromium.org>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
+	<peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Daniel
+	Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider
+	<vschneid@redhat.com>, Petr Mladek <pmladek@suse.com>, John Ogness
+	<john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy
+	<anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
+	Balbir Singh <bsingharora@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
+	<john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
+	KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song
+	<yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Stanislav Fomichev
+	<sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+	<linux-fsdevel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <tools@kernel.org>
+Subject: Re: [PATCH v3 00/10] sysctl: Remove sentinel elements from kernel
+ dir
+Message-ID: <20240424074643.7tbx3qwuxbmmldf2@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240422152626.175569-1-ast@fiberby.net> <CAHHeUGWsz=fhTSqnNiTphB5TRcf4ZyNsEov+vqtUEBiT+XCEag@mail.gmail.com>
-In-Reply-To: <CAHHeUGWsz=fhTSqnNiTphB5TRcf4ZyNsEov+vqtUEBiT+XCEag@mail.gmail.com>
-From: Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>
-Date: Wed, 24 Apr 2024 14:44:15 +0530
-Message-ID: <CAHHeUGUHMGp9bxXk9FoMaNQD42gBxs5JpWpqaUKzm8LEHOB2yA@mail.gmail.com>
-Subject: Re: [PATCH net-next] bnxt_en: flower: validate control flags
-To: =?UTF-8?B?QXNiasO4cm4gU2xvdGggVMO4bm5lc2Vu?= <ast@fiberby.net>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Michael Chan <michael.chan@broadcom.com>, 
-	Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000fb3c670616d418cd"
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="e4xa67t7irhq6xtx"
+Content-Disposition: inline
+In-Reply-To: <311c8b64-be13-4740-a659-3a14cf68774a@kernel.org>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA2WTfUxTVxjGc+49vbdlVC/F6BFcFlGYOEENLjuZH4PFJTcxGg1To9FhBxcx
+	QutacMriAhtzteraCdWsfNMAaoFJ+VAGAiNoAYFKsfJVEEE3+VAEQaZIGc2tmcn++z3v+zwn
+	z/vHEZKSJtpLeEQWyylk0mgfyg2W335lCTjbsipyXaXmUzw9k0riyic9EE++6qHxi3ozha2D
+	NgpfGkqEOG2omcaG7JckTrMkQfxYW0biufIkGteZa2j8w43LBC6/lwlwfYp+fpElx28aiinc
+	q9FB3Hw2BlfemSKwKvk6xH9XnyewxXKNxlU3GyFu/yONwvW/t0BsLEwQ4NyONgIXnLkiwJ3a
+	xwAnP/sLYEO+H7bWZhHYmDJLY/P5WgLPDU4JcLWqn8CO+8UQW/8ZgbiyOIfC5vxZCpeYdCRu
+	LX5IYlX9fOGyW9M07lHP0bjfWC7AeRU7gtexD0ZnIVuQUQDY1IQ2yJZe6SLYCn0vzSZVd9Ns
+	limOLbm8mjVUDRGsutNKst0jm1nT1TMUa79fRbHPWltpNjtBR7LanFqwc/F+t00RXPSR45xi
+	7ZZDblHPxqbhsQzPEyVTeSABZDBqIBIiZgPqs6fQauAmlDCXAcoZeAjVQDgvJgGyUU6PhHkB
+	0OSTiLd++0WDy58P0FS/1SXmTWXNtS5RApDlfCZ0RiDji8b+7ABOppg1yDJqJ528iPFHHbPT
+	AieTzLgYmdQHnOzJ7ES6+85XRUIxE4ysZf0kzx6o8bdHkPefQI5qlcDZlGS8Ub5D6ByLmC1o
+	rKSB5psuR1OGPsjzKdRU2k04uyHm5XtovFEr4Bdbkf5KpSvgiYbNpS5ehu4kn4N8IBmgGsdz
+	mhdGgPISpwjetREl3XvkSoQg3U/nKGcjxCxAnU89+KIL0IXySyQ/FiPVaQnv9kPGvlGoBSv0
+	75ymf+c0/X+n8eM1KKtygvrf+COUlz1C8rwZFRWNwSxAXwVLuDhlzGFOuV7GfRuolMYo42SH
+	A8PlMSYw/8XuOMwTN0D68HhgHSCEoA6snA8PXDPeBV5QJpdxPovEr9+sjJSII6Qn4zmFPEwR
+	F80p64C3EPosEftGfMBJmMPSWO4oxx3jFG+3hFDklUAsXYy8D6alfxxwcKHp88Yw310dA3t3
+	/fyLYZPUhmw7pj1mNhu2m59s834RAKMkC38165ragmqSbIlvNKNfV/TXl30pXi4Nk+3WuIc+
+	z6Ycn8Uy/oUen3y3Qh79fMOao4VVXxiFqSJuNijfSxEbfvdU82v/4b6KD6sT6+x7fjw5c33p
+	ue9917bk1kyc3n9xcpDclz6x6vg4N1y0dWP6UY1961cXtO2LbPnh2+tT2ovW53YF3Bx46VYR
+	GMoGk6Kea617MynPyJnqg0GHzF6h8RsOlN0zauNupW0J2TuT6Ray3f/27i73BuSuEs+OOXov
+	tnfuk+15Gr9MI7/qF92no7958P5glsEHKqOk61eTCqX0XzVl10/dBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe1BUZRjG/c45nLMwbR0B8wssbNFSiIXl1osJYzk1B0ntj8aGrKFNlkvC
+	Lu0CZVc0snXVxIRKQC4iAkJyWdg0CBZmYTGRy8ZNQUKFdRFGQiUgWGiXtcmZ/vvN8z7PM++8
+	83080nGMduHFShMlcqk4TkA7UJcX9UNeh69siPJJPWUPM/NZJNSaBih4MDfAwH2dngbDrR4a
+	fhjbT0H2WBsDBfl/kZDdkUrBaFoNCUuaVAaa9A0MHLhQTICmOxeBLj3TMsiTwUJrJQ3Xj2VQ
+	0HY4HmovTxOgPPEzBbfrjxLQ0VHBQN2vlyj4/ZdsGnTlVygo/SnFDgr7uggoO1RiB/1powhO
+	3DUiKCh6DgzaPAJK080M6I9qCVi6NW0H9cphAhZ7KykwzI5TUFt5mgZ9kZkGdVUGCe2VN0hQ
+	6iwL1zTPMDCgWmJguFRjB2cv7tjiw/0xYaa4spwyxGWldFFcdclVgruYeZ3hUuuvMVxeVRKn
+	LvbgCurGCE7VbyC5a+PBXNW5QzQ32FtHc3fb2xkuPyWD5NJOa9EbT74t3CyXJSVK1sbIFInB
+	gt0i8BWKgkDo6x8kFPm9+O4m3wCBd8jmSElcbLJE7h3ynjCmprWdSsh2+ji/vYpMQdmsCtnz
+	MOuPB78vYFTIgefIFiI8YahnbIM1uPJBj52NnfBCr4q2maYQnq2YeJhQI6zO7kdWF8Wux5ON
+	fctMsy/gjolB0srO7EbcZ56xswZIdoqPx28XENaBE7sDD36npazMZ7dgQ83wcsCRTSdwhekL
+	m74SXzo5suwh2WQ819BrYZ6FXXHRIs8q27MheFLd+nDrZ/F0wRBl48/xfbMRpSGnzEeaMh9p
+	yvyvySZ74P7FMeJ/sic+mz9O2jgYnz8/SeUh5hxyliQp4qPjFSKhQhyvSJJGC/fI4quQ5Z1r
+	WubUF1DOnSlhEyJ4qAmtsyRvVpR2IhdKKpNKBM78vxfWRTnyI8X7PpHIZRHypDiJogkFWK54
+	nHRZtUdm+TTSxAhRoE+AyD8wyCcgKNBPsJofmqAUO7LR4kTJXokkQSL/N0fw7F1SiK8cDDnK
+	6tlQnW/0zFJ6oSnliRVeEPjyytHH5z/UyeuSxwc+8o5y6NMWJ0QPHO8pb9QbX50Qh3jKfzto
+	DIrddmTbmq2793drj5Tv8nQTFU09M8KLYt25tcE3vzV5N9N9qq0Kqvodxi28M/CV+tSi9027
+	Ws7Uhjt8kzXyGeV1ZjUZmrvh9RL7gzdO5o4qDwg+iOBeemp+U1tA2JzYEYfpXMOeH+rURBrd
+	jS3Nd3B/qCd/1ZK9TPzaMWeloTtt8EBA19wpb+S64upbP/rV7uOPf93+56d1qnJtdf3OqZ2U
+	e+Ob/uFPb0SpjGbq3liFyc1fbWrY7rmeNu+dFH85je8ZK7fLHxNQihixyIOUK8T/ADjLgnJ8
+	BAAA
+X-CMS-MailID: 20240424091451eucas1p2b367b33fffc78c7115f4cad3f25c7fc9
+X-Msg-Generator: CA
+X-RootMTR: 20240422144945eucas1p28e7c508cd36f19cd2191febe02f943f1
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240422144945eucas1p28e7c508cd36f19cd2191febe02f943f1
+References: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
+	<36a1ea2f-92c2-4183-a892-00c5b48c419b@linaro.org>
+	<CGME20240422144945eucas1p28e7c508cd36f19cd2191febe02f943f1@eucas1p2.samsung.com>
+	<311c8b64-be13-4740-a659-3a14cf68774a@kernel.org>
 
---000000000000fb3c670616d418cd
-Content-Type: text/plain; charset="UTF-8"
+--e4xa67t7irhq6xtx
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 22, 2024 at 10:51=E2=80=AFPM Sriharsha Basavapatna
-<sriharsha.basavapatna@broadcom.com> wrote:
->
-> On Mon, Apr 22, 2024 at 8:58=E2=80=AFPM Asbj=C3=B8rn Sloth T=C3=B8nnesen =
-<ast@fiberby.net> wrote:
-> >
-> > This driver currently doesn't support any control flags.
-> >
-> > Use flow_rule_match_has_control_flags() to check for control flags,
-> > such as can be set through `tc flower ... ip_flags frag`.
-> >
-> > In case any control flags are masked, flow_rule_match_has_control_flags=
-()
-> > sets a NL extended error message, and we return -EOPNOTSUPP.
-> >
-> > Only compile-tested.
-> >
-> > Signed-off-by: Asbj=C3=B8rn Sloth T=C3=B8nnesen <ast@fiberby.net>
-> > ---
-> >  drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c b/drivers/net=
-/ethernet/broadcom/bnxt/bnxt_tc.c
-> > index 273c9ba48f09..d2ca90407cce 100644
-> > --- a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
-> > +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
-> > @@ -370,6 +370,7 @@ static int bnxt_tc_parse_flow(struct bnxt *bp,
-> >                               struct bnxt_tc_flow *flow)
-> >  {
-> >         struct flow_rule *rule =3D flow_cls_offload_flow_rule(tc_flow_c=
-md);
-> > +       struct netlink_ext_ack *extack =3D tc_flow_cmd->common.extack;
-> >         struct flow_dissector *dissector =3D rule->match.dissector;
-> >
-> >         /* KEY_CONTROL and KEY_BASIC are needed for forming a meaningfu=
-l key */
-> > @@ -380,6 +381,9 @@ static int bnxt_tc_parse_flow(struct bnxt *bp,
-> >                 return -EOPNOTSUPP;
-> >         }
-> >
-> > +       if (flow_rule_match_has_control_flags(rule, extack))
-> > +               return -EOPNOTSUPP;
-> > +
-> >         if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_BASIC)) {
-> >                 struct flow_match_basic match;
-> >
-> > --
-> > 2.43.0
-> >
-> >
->
-> Thanks for this fix, it looks good. I need some time to test this; I
-> will get back to you in a few days.
-> -Harsha
+On Mon, Apr 22, 2024 at 04:49:27PM +0200, Krzysztof Kozlowski wrote:
+> On 22/04/2024 16:27, Konrad Dybcio wrote:
+> >=20
+> >=20
+> > On 3/28/24 16:44, Joel Granados wrote:
+> >> What?
+> >> These commits remove the sentinel element (last empty element) from the
+> >> sysctl arrays of all the files under the "kernel/" directory that use a
+> >> sysctl array for registration. The merging of the preparation patches
+> >> [1] to mainline allows us to remove sentinel elements without changing
+> >> behavior. This is safe because the sysctl registration code
+> >> (register_sysctl() and friends) use the array size in addition to
+> >> checking for a sentinel [2].
+> >=20
+> > Hi,
+> >=20
+> > looks like *this* "patch" made it to the sysctl tree [1], breaking b4
+> > for everyone else (as there's a "--- b4-submit-tracking ---" magic in
+> > the tree history now) on next-20240422
+> >=20
+> > Please drop it (again, I'm only talking about this empty cover letter).
+>=20
+> Just to clarify, in case it is not obvious:
+> Please *do not merge your own trees* into kernel.org repos. Instead use
+> b4 shazam to pick up entire patchset, even if it is yours. b4 allows to
+> merge/apply also the cover letter, if this is your intention.
+Noted. Will adjust my workflow to just use B4 to bring stuff into the
+sysctl-next tree.
 
-Reviewed-by: Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>
-Tested-by: Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>
+>=20
+> With b4 shazam you would get proper Link tags and not break everyone's
+> b4 workflow on next. :/
+Ok. Sorry for the noise.
 
---000000000000fb3c670616d418cd
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+>=20
+> Best regards,
+> Krzysztof
+>=20
 
-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
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBWcwggRPoAMCAQICDAGseBnUOryiK+cWfTANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAwODE3MzRaFw0yNTA5MTAwODE3MzRaMIGg
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xHjAcBgNVBAMTFVNyaWhhcnNoYSBCYXNhdmFwYXRuYTExMC8G
-CSqGSIb3DQEJARYic3JpaGFyc2hhLmJhc2F2YXBhdG5hQGJyb2FkY29tLmNvbTCCASIwDQYJKoZI
-hvcNAQEBBQADggEPADCCAQoCggEBANGVy7il6qkWFiW5c4+kohP7xrKuKgQsfDqhhdfOx4FvPMTF
-A9S2FwTdDOPuDNiSdR2+KK3JzqRLtBCSHV80dlEzwnOgLnlKkFQZvASsdXFtP9j56nc/ni7V4q9G
-Ob5RVSl61kWgHXVmZYj+SqUEKdNy1opV5mitkOJHa9zhftMojx+ylauLeBDp7lEjgg5xFPme6KGV
-GkD3dAbV6M4mQWaR6RpcUU4Jk+Og3FCDkG8PIxRKia+tBqfj2IGoR9LIlX8WZ/hhHTmkkwnsfr59
-kjjPMh9o02jAvOzf/CLmWENkxup5gyPmlM8xAVlqZmn0EtlzxEg2YqBHkRb1s1NNPi0CAwEAAaOC
-AeMwggHfMA4GA1UdDwEB/wQEAwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0
-dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2Ey
-MDIwLmNydDBBBggrBgEFBQcwAYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3Bl
-cnNvbmFsc2lnbjJjYTIwMjAwTQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEW
-Jmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0f
-BEIwQDA+oDygOoY4aHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
-MmNhMjAyMC5jcmwwLQYDVR0RBCYwJIEic3JpaGFyc2hhLmJhc2F2YXBhdG5hQGJyb2FkY29tLmNv
-bTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAd
-BgNVHQ4EFgQUXHovQBXsYr3/QkkF+EruxqF3ajswDQYJKoZIhvcNAQELBQADggEBAKHfsxL3xirL
-i7ilaAfW67MeZRrOqvgw4nXhuj+QzkDDZ4QCb6IEYs1B783CbRNC0Vohjtesr+GKJyeTTRqP/Ca2
-tPHjp5VJ3mZZ7Vu1Gnwj5kicRlSs3p7UVzpstr/cGn3oRz4Pby+VIbPftHCyUdrUOocITnz17hmR
-JryVxNcbPcjGdGhThv3mdEDg2RCrFR1X0jlSAsLbQn83Agls1OHzBPHuudbspjj3/jJGD8gsIcnx
-dgaqC7WHdB3zZutGigdpsmj/fxrvqbTUW8ZakCTtc8C57oDCeoBI4L+KAaFoHOJjVlWaQ3g9Fefa
-eiXd6ovtpOAc/1MAXvMftuX+mQIxggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQK
-ExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNp
-Z24gMiBDQSAyMDIwAgwBrHgZ1Dq8oivnFn0wDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkE
-MSIEILoWmteMT5H22ba/Nr/GSnHEXTidaTB4nPuqjmY7AIPJMBgGCSqGSIb3DQEJAzELBgkqhkiG
-9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDQyNDA5MTQyOFowaQYJKoZIhvcNAQkPMVwwWjALBglg
-hkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0B
-AQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAE0fhBLIGVFDoj
-0zl9uC+5tUo2oxDVVDOxjSEB98d0Ptv8CB5VmPnDcdk+4A072UsS036fo8nirNqDScRSjQSj8Ltz
-BVrgkhdAP5nxjr+Vcvjl3KVSCTtWRfnMrmg1oxOpDqu9MDcPiCN5ydU+Fel8AJcNGxemMGAI7Qzt
-txHiZvq90DyepJqsrTGz88piGMBe6xDsxuw+vxtfuCxX4dtr+mdrej+mvBK2/arwAU8jA/00C+rX
-CKIAZ9PNNG9tagbsVT2gk5ID2PWDlDNz7BAaKedSadn7ZoUpdFP/35JjZF6MzT0pTUerfZV+ZQbJ
-Rr413Iu7rx/lIdt13YnvZtpy
---000000000000fb3c670616d418cd--
+--=20
+
+Joel Granados
+
+--e4xa67t7irhq6xtx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmYouOIACgkQupfNUreW
+QU/ggQv/S58YFVDAfIt0i7JUaMK3V3kdvdHjGyf7P3yKMCjO1Y8oU9jKWWu0SzQb
+2JjTa5f2+p5z5hD2b2OB/fuyeq4KD56IVcRSiX/exvzi0Rd2IvQ6Y+sT1A77r/Ll
+rbeXad9tPEpLPL1+UvaDqqceMFLLT3T+0TPZs2PJJ9GUXFBl3267j7Ob7NtZJbis
+MBW5b0+iQ/FuTN3EOFVGzbMJdfSFsPt6tbmRquQjR5IGLWnWSeaWq2yboAsj0WkF
+q0tDkQC6RtC6jQvo030XK94gM3HsiCppgK48ko2+rFuz+etQjaJq/Uv0fnEOjaWh
+Ppf6nNh7BhCW2ndDbUz3Bp1yjQ5rB+waaumtZCuB3t2rLq4aN0ZxLtBdY07k0LzH
+zrHMBPgKGgZuECR6GtDycoBBl4CLXHTK9FvDwBVXo4TVsdcfbUoFITt1K6dixC0T
+WUaV74JBxV0J7ETfcyGVj3dJwpqj9ZigGrTBZXy+71bNhHlzWrgYfuwaKnttRdqj
+32LatdvC
+=ADqx
+-----END PGP SIGNATURE-----
+
+--e4xa67t7irhq6xtx--
