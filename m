@@ -1,93 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D177156880
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 05:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E951553A9
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 05:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713936914; cv=none; b=D7SLkxki2kcINc5ZBBAP1dSCBd/IbAG0fw9Ljv0RauRdTy0brg1hCb78sSR3ehjeL/Zvowebibroy0ZyPVu5xO0KyTch2sQF2rWPmJkJH8vxcMIRDAFKMsYthOyKvc7s2sVTaW2Mly3UR4I5ohmii8knK/OrSWeMFWY892r2VIc=
+	t=1713936935; cv=none; b=VKAhOYDXT5VxxxiScAJp6AHyyh2tOmj1x4v5fPgvROFIL/GHwDV/YP6e7C2FtG7YzrA1EoUn80S4xDCR7SXOZJubUSxzGzS7wFddMEbLmrn1D/1uqYkwI9r6amdeMgWDzqsRmn20vuaQ3ebp7t+nJohI12ENhMj8rkiKQ6j+Flo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713936914; c=relaxed/simple;
-	bh=Jn60dYRd1TpXyCZr+gNbLZI2wVr5L4k3MosQ5rxQ7qI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a0MpnedCSB0fC6zblL8ytP5y0D7ZhPw95Yr2nuZhUTSlRrIUWkRF+hAske3la9vrLAot8yNkkLHlapMgRT8NxyghPjDo3yvxc4Pw+03PoOY1wJi3rNYla4+K3TgqwVkRJBBGOiHbhWxoHHgVBBli+QBlMUx7oYQwufsdiYtHcWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=me6Gb6RE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713936935; c=relaxed/simple;
+	bh=6nlV4wKxfrlEmIzRqvvA320tp0LjMhonuKXAFTpzlsA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LHiejfD49hfSHzPESTfRqeWuryR8rwIU6Fqrg0QhlnBPuMxM5huK0+sm65egwiVcI5S+BVtvIV/hQYnbJwWscYtHdZWRYqiB7I6MmZO2MWdjKh0lJCTU1Aq3t1FWcDiHpBOl3VCeI+3ylrLAaCaLD3I12BVVuQNT1n3FKfSEtVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=B8QZs9Py; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="me6Gb6RE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD0DC2BD11;
-	Wed, 24 Apr 2024 05:35:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713936913;
-	bh=Jn60dYRd1TpXyCZr+gNbLZI2wVr5L4k3MosQ5rxQ7qI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=me6Gb6REqEGYDSgYaLVysK5rTC3FApIW8/DgWMIAHN4p1u3QswSoRh8VwHmCNdEdi
-	 0Qp4yfmWcMElMmp2jdFRidrf5pJblWD6ehNyj7NhuTtJL6NwWCa7EI/hZvfbxr3EN5
-	 jafbO1E2767NcasRIql5YRa+uRfshrdkUjYIKwWUEXleEE8k6igrPElxn6D9JClkJN
-	 7CdIvrfgctJqUr1rbwnX3vycp+ezdY+W/ShyfQ8bBJiHv8Ws4vsjn+lH876yefNL64
-	 1eC10b8vRgryE9PfJZzMDsC2x7n/wHqriZRAxFCBgnXR7FKmwnSgB5iT2/U0V12trg
-	 dzgsY7rSaJVoA==
-Date: Tue, 23 Apr 2024 22:35:11 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexandre Chartre <alexandre.chartre@oracle.com>,
-	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	KP Singh <kpsingh@kernel.org>, Waiman Long <longman@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 2/5] cpu/speculation: Fix CPU mitigation defaults for
- !x86
-Message-ID: <20240424053511.grt6tgt34wwpvzog@treble>
-References: <cover.1713559768.git.jpoimboe@kernel.org>
- <9d3c997264829d0e2b28718222724ae8f9e7d8b4.1713559768.git.jpoimboe@kernel.org>
- <ZiMHu--agdvt4Rl1@google.com>
- <ZifBT9N0QivOZ2L_@google.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="B8QZs9Py"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1713936933; x=1745472933;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=6nlV4wKxfrlEmIzRqvvA320tp0LjMhonuKXAFTpzlsA=;
+  b=B8QZs9PykSewgBmKHKE76A6es41SUQKv86fq9TZU6TjGAXHntPefa1WA
+   aSvpzi7WaNcd4jNgGMcvDGkwnYrzXPS2U56sJGFeKwXf6ZbiDkcoCzmZ0
+   OlPXEi7531Jgw1CKyS9ut7rrjTFveyUIDVkofz5M9EKZSKvu1MrJQQLlf
+   80Px8McFqcY0UeSm0Jsu5IM7/t/p0IeqyA228ihIXd/9MdON1XWYXjsRc
+   r2SOpRB7cfJgcSORiC3O2BzNLYJm/eMxquKZ1eXS0opHd3fWhJNQv/jEJ
+   AycU1o2Sy/1EcnUBAqfwjWRdOJQF4l5ruNZgPeIv+ateLcCOwMgnKH85B
+   Q==;
+X-CSE-ConnectionGUID: 66HgaiTNS5a1XaeqM3EXdg==
+X-CSE-MsgGUID: LkjvCPGyTs2RY/zYBD1ODg==
+X-IronPort-AV: E=Sophos;i="6.07,225,1708412400"; 
+   d="scan'208";a="22410968"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Apr 2024 22:35:32 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 23 Apr 2024 22:35:10 -0700
+Received: from che-lt-i67131.microchip.com (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Tue, 23 Apr 2024 22:35:00 -0700
+From: Manikandan Muralidharan <manikandan.m@microchip.com>
+To: <sam@ravnborg.org>, <bbrezillon@kernel.org>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>, <lee@kernel.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <Hari.PrasathGE@microchip.com>, <Balamanikandan.Gunasundar@microchip.com>,
+	<Durai.ManickamKR@microchip.com>, <Nayabbasha.Sayed@microchip.com>,
+	<Dharma.B@microchip.com>, <Varshini.Rajendran@microchip.com>,
+	<Balakrishnan.S@microchip.com>, <Charan.Pedumuru@microchip.com>, "Manikandan
+ Muralidharan" <manikandan.m@microchip.com>, Durai Manickam KR
+	<durai.manickamkr@microchip.com>
+Subject: [PATCH RESEND v9 5/8] drm: atmel-hlcdc: add DPI mode support for XLCDC
+Date: Wed, 24 Apr 2024 11:03:48 +0530
+Message-ID: <20240424053351.589830-6-manikandan.m@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240424053351.589830-1-manikandan.m@microchip.com>
+References: <20240424053351.589830-1-manikandan.m@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZifBT9N0QivOZ2L_@google.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Tue, Apr 23, 2024 at 07:10:23AM -0700, Sean Christopherson wrote:
-> On Fri, Apr 19, 2024, Sean Christopherson wrote:
-> > On Fri, Apr 19, 2024, Josh Poimboeuf wrote:
-> > > CPU speculative execution mitigations were inadvertently disabled on
-> > > non-x86 arches by the following commit:
-> > > 
-> > >  f337a6a21e2f ("x86/cpu: Actually turn off mitigations by default for SPECULATION_MITIGATIONS=n")
-> > > 
-> > > Fix it by replacing CONFIG_SPECULATION_MITIGATIONS with a new generic
-> > > CONFIG_CPU_MITIGATIONS option and moving the x86-specific mitigations to
-> > > a separate menu which depends on CONFIG_CPU_MITIGATIONS.
-> > 
-> > Ah drat, I didn't check my mailbox until after Cc'ing Linus my own version[*].
-> > 
-> > I don't have a strong preference between the two, though I do think it's worth
-> > nothing that this will (obvioulsy) allow disabling mitigations at compile time
-> > on all architectures, which may or may not be desirable.
-> > 
-> > [*] https://lore.kernel.org/all/20240420000556.2645001-2-seanjc@google.com
-> 
-> Josh, when you get a chance, can you weigh in on my menu-preserving approach?
-> 
-> I want to get this resolved asap so that we're not scrambing on Friday again :-)
+Add support for Display Pixel Interface (DPI) Compatible Mode
+support in atmel-hlcdc driver for XLCDC IP along with legacy
+pixel mapping. DPI mode BIT is configured in LCDC_CFG5 register.
 
-Yeah, yours looks good.  Lemme go ack.
+Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+[durai.manickamkr@microchip.com: update DPI mode bit using is_xlcdc flag]
+Signed-off-by: Durai Manickam KR <durai.manickamkr@microchip.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+---
+ .../gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c    | 21 +++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+index 98a98b5fca85..fdd3a6bc0f79 100644
+--- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
++++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+@@ -30,10 +30,12 @@
+  *
+  * @base: base CRTC state
+  * @output_mode: RGBXXX output mode
++ * @dpi: output DPI mode
+  */
+ struct atmel_hlcdc_crtc_state {
+ 	struct drm_crtc_state base;
+ 	unsigned int output_mode;
++	u8 dpi;
+ };
+ 
+ static inline struct atmel_hlcdc_crtc_state *
+@@ -170,6 +172,8 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
+ 
+ 		if (adj->flags & DRM_MODE_FLAG_NHSYNC)
+ 			cfg |= ATMEL_HLCDC_HSPOL;
++	} else {
++		cfg |= state->dpi << 11;
+ 	}
+ 
+ 	regmap_update_bits(regmap, ATMEL_HLCDC_CFG(5),
+@@ -177,7 +181,9 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
+ 			   ATMEL_HLCDC_VSPDLYS | ATMEL_HLCDC_VSPDLYE |
+ 			   ATMEL_HLCDC_DISPPOL | ATMEL_HLCDC_DISPDLY |
+ 			   ATMEL_HLCDC_VSPSU | ATMEL_HLCDC_VSPHO |
+-			   ATMEL_HLCDC_GUARDTIME_MASK | ATMEL_HLCDC_MODE_MASK,
++			   ATMEL_HLCDC_GUARDTIME_MASK |
++			   (crtc->dc->desc->is_xlcdc ? ATMEL_XLCDC_MODE_MASK |
++			   ATMEL_XLCDC_DPI : ATMEL_HLCDC_MODE_MASK),
+ 			   cfg);
+ 
+ 	clk_disable_unprepare(crtc->dc->hlcdc->sys_clk);
+@@ -380,7 +386,15 @@ static int atmel_hlcdc_crtc_select_output_mode(struct drm_crtc_state *state)
+ 
+ 	hstate = drm_crtc_state_to_atmel_hlcdc_crtc_state(state);
+ 	hstate->output_mode = fls(output_fmts) - 1;
+-
++	if (crtc->dc->desc->is_xlcdc) {
++		/* check if MIPI DPI bit needs to be set */
++		if (fls(output_fmts) > 3) {
++			hstate->output_mode -= 4;
++			hstate->dpi = 1;
++		} else {
++			hstate->dpi = 0;
++		}
++	}
+ 	return 0;
+ }
+ 
+@@ -484,6 +498,7 @@ static struct drm_crtc_state *
+ atmel_hlcdc_crtc_duplicate_state(struct drm_crtc *crtc)
+ {
+ 	struct atmel_hlcdc_crtc_state *state, *cur;
++	struct atmel_hlcdc_crtc *c = drm_crtc_to_atmel_hlcdc_crtc(crtc);
+ 
+ 	if (WARN_ON(!crtc->state))
+ 		return NULL;
+@@ -495,6 +510,8 @@ atmel_hlcdc_crtc_duplicate_state(struct drm_crtc *crtc)
+ 
+ 	cur = drm_crtc_state_to_atmel_hlcdc_crtc_state(crtc->state);
+ 	state->output_mode = cur->output_mode;
++	if (c->dc->desc->is_xlcdc)
++		state->dpi = cur->dpi;
+ 
+ 	return &state->base;
+ }
 -- 
-Josh
+2.25.1
+
