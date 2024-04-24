@@ -1,115 +1,97 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B88A16D30C
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 17:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD7413777A
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 17:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713980086; cv=none; b=aUTxKHVqk8rYwML86m4wyjEDT2Vs6xeUB7Z8OSa7T6GenRX62hzBwtIsPTqv5w0N5yuRvpbiqxTKRK3UUSyCn2Nb166G2vazdntu3n+Q21wPDqJ+ynanOJxTEGLuZQOHO+q3/w4L0ozA4I9yEEaCnW8asrrD86nvkn4fwrJRjTQ=
+	t=1713980150; cv=none; b=PF4FBPL2EGBsxIKDtdkBUjzxwsgsaZHfqrUUyznLntGVjjcyxByFxjqPzvpKZ8wY00vMb3yci+ehhRpCb7EgYIqFMjGgwGqMpcOkPvNBDnMut8GdIJPtyFbQj6q/lSAnOAFAKTirOOVfbL/Fwu+d7AWg6F0FgwC6ditvtyxFAdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713980086; c=relaxed/simple;
-	bh=0t5zBAwB0yYcTvfpv4eEYbhAtBD/SDq4k781nwZcxtw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ywb0hK35Iu1bVFHmMFCTmxkwZoLTC98JHHsf+u+dClB2LFWbE/5+/mMFNJpHzQHOp9l7yC+BeOnI6wOprF8y5jXdL/nAeFB/HetflOA2aqV137ksEYXrrrKb2gEseSrKJKmfFHkAfAkfgTAEbAVUjUbHhENCVT2Wazk3CfDXLuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F22A3113E
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 10:35:10 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 003C13F7BD
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 10:34:42 -0700 (PDT)
-Date: Wed, 24 Apr 2024 18:34:32 +0100
-From: Liviu Dudau <liviu.dudau@arm.com>
-To: =?utf-8?Q?Adri=C3=A1n?= Larumbe <adrian.larumbe@collabora.com>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	kernel@collabora.com, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] drm/panthor: Enable fdinfo for memory stats
-Message-ID: <ZilCqPlJiTLfNQcG@e110455-lin.cambridge.arm.com>
-References: <20240423213240.91412-1-adrian.larumbe@collabora.com>
- <20240423213240.91412-4-adrian.larumbe@collabora.com>
+	s=arc-20240116; t=1713980150; c=relaxed/simple;
+	bh=Zx21olM6TIaTxOuCCMQe79AYeFL/GNrR4k4CavTnoaI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sod3Q8YOAn8D/b5W/SWwOp/GHczPi+VYsCkNjVpq2k4SRh3NoJ09PwUd3yeOKLACfbi1wCFUZCUr/49jrEIvyW33TgAMFEDMW4dcU7sxDmtdhwUgtkfceGcYMqj83q4KL9Ui6E10zHywqQzfmE1WLePbEbg6rb5faI1zjI2wKsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5owhCdw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5owhCdw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1D0CC113CD;
+	Wed, 24 Apr 2024 17:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713980149;
+	bh=Zx21olM6TIaTxOuCCMQe79AYeFL/GNrR4k4CavTnoaI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=C5owhCdw5/jNzo4EXhhD4qYlKIO1w4wRmFxlqkBkF429P6nWjaizzpCPRdYDgUO/x
+	 SFiBdn+15eoCMyccee/urI38e+ynLSuKp/oRoN4mXM/96/svlcmanFAqODmcSDvge4
+	 wQUonhmhf9DHZrBZ0566qz+IvE3nLr0oa5Dbj2DFK8GjZL8pOZBVEY7gomsn1nnq3V
+	 zXlJjhYzKKd3GhhFaRPG/6hJ7YlaoS2bI7miAeNHl+NSRH9PC9IpnVc5GbCr+q6VZP
+	 vOVbdrolEmedOWq4aNmfhYeT7Rortcgcv7OsjBze8oH93rpjK5BSoWefTalpogDFvI
+	 49H/wulrmnuww==
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>,
+	stable@kernel.org
+Subject: [PATCH] f2fs: fix false alarm on invalid block address
+Date: Wed, 24 Apr 2024 17:35:48 +0000
+Message-ID: <20240424173548.1515606-1-jaegeuk@kernel.org>
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240423213240.91412-4-adrian.larumbe@collabora.com>
 
-Hello,
+f2fs_ra_meta_pages can try to read ahead on invalid block address which is
+not the corruption case.
 
-On Tue, Apr 23, 2024 at 10:32:36PM +0100, Adrián Larumbe wrote:
-> When vm-binding an already-created BO, the entirety of its virtual size is
-> then backed by system memory, so its RSS is always the same as its virtual
-> size.
+Cc: <stable@kernel.org> # v6.9+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=218770
+Fixes: 31f85ccc84b8 ("f2fs: unify the error handling of f2fs_is_valid_blkaddr")
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+---
+ fs/f2fs/checkpoint.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-How is that relevant to this patch? Or to put it differently: how are your
-words describing your code change here?
-
-> 
-> Also, we consider a PRIME imported BO to be resident if its matching
-> dma_buf has an open attachment, which means its backing storage had already
-> been allocated.
-
-Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
-
-Best regards,
-Liviu
-
-> 
-> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
-> ---
->  drivers/gpu/drm/panthor/panthor_gem.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/panthor/panthor_gem.c
-> index d6483266d0c2..386c0dfeeb5f 100644
-> --- a/drivers/gpu/drm/panthor/panthor_gem.c
-> +++ b/drivers/gpu/drm/panthor/panthor_gem.c
-> @@ -143,6 +143,17 @@ panthor_gem_prime_export(struct drm_gem_object *obj, int flags)
->  	return drm_gem_prime_export(obj, flags);
->  }
->  
-> +static enum drm_gem_object_status panthor_gem_status(struct drm_gem_object *obj)
-> +{
-> +	struct panthor_gem_object *bo = to_panthor_bo(obj);
-> +	enum drm_gem_object_status res = 0;
-> +
-> +	if (bo->base.base.import_attach || bo->base.pages)
-> +		res |= DRM_GEM_OBJECT_RESIDENT;
-> +
-> +	return res;
-> +}
-> +
->  static const struct drm_gem_object_funcs panthor_gem_funcs = {
->  	.free = panthor_gem_free_object,
->  	.print_info = drm_gem_shmem_object_print_info,
-> @@ -152,6 +163,7 @@ static const struct drm_gem_object_funcs panthor_gem_funcs = {
->  	.vmap = drm_gem_shmem_object_vmap,
->  	.vunmap = drm_gem_shmem_object_vunmap,
->  	.mmap = panthor_gem_mmap,
-> +	.status = panthor_gem_status,
->  	.export = panthor_gem_prime_export,
->  	.vm_ops = &drm_gem_shmem_vm_ops,
->  };
-> -- 
-> 2.44.0
-> 
-
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index 5d05a413f451..55d444bec5c0 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -179,22 +179,22 @@ static bool __f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
+ 		break;
+ 	case META_SIT:
+ 		if (unlikely(blkaddr >= SIT_BLK_CNT(sbi)))
+-			goto err;
++			goto check_only;
+ 		break;
+ 	case META_SSA:
+ 		if (unlikely(blkaddr >= MAIN_BLKADDR(sbi) ||
+ 			blkaddr < SM_I(sbi)->ssa_blkaddr))
+-			goto err;
++			goto check_only;
+ 		break;
+ 	case META_CP:
+ 		if (unlikely(blkaddr >= SIT_I(sbi)->sit_base_addr ||
+ 			blkaddr < __start_cp_addr(sbi)))
+-			goto err;
++			goto check_only;
+ 		break;
+ 	case META_POR:
+ 		if (unlikely(blkaddr >= MAX_BLKADDR(sbi) ||
+ 			blkaddr < MAIN_BLKADDR(sbi)))
+-			goto err;
++			goto check_only;
+ 		break;
+ 	case DATA_GENERIC:
+ 	case DATA_GENERIC_ENHANCE:
+@@ -228,6 +228,7 @@ static bool __f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
+ 	return true;
+ err:
+ 	f2fs_handle_error(sbi, ERROR_INVALID_BLKADDR);
++check_only:
+ 	return false;
+ }
+ 
 -- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+2.44.0.769.g3c40516874-goog
+
