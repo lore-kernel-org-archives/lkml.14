@@ -1,205 +1,124 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A4313DBB6;
-	Wed, 24 Apr 2024 10:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E1913DDD9
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 10:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713956281; cv=none; b=YeSWrLmRjAFVEVbZrKbBkihhSkmTuq8J2Cmoek3XkhOsPWjSF7XVFyuc00cfazLkCtfKliyB0Bn/WfO7j5XjSoTt/CPTqMef7IGeVtzKv6JzqfRogokoVP4G3EjmNrs9pD5XOp1OpzjOZRWLDGgChBwrlS7UpzPUqwL/EoXu0ZI=
+	t=1713956323; cv=none; b=fVqotjiMHS3X5HVCP9qLMwgd+NO+LJOBlPhkpDMu0VlirTxCDfSDW2QCq3s5RgFpCHC4ZKbJURXrhgF5EahFKiMMn9I+wr3XpsL969G5CuCR/CzJtTTWJAbD/bSKaDmhdWUChh4opXSHOi3n+aZObgZRoLPgQWf5qeoNcnamqGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713956281; c=relaxed/simple;
-	bh=tRS2Dc6k4cHvFQvqwEyy6MnuweR/Dsimsz7u5sHttWQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R6TAr+mpUMTlT+sepVyt2QliRnw4TO9y2xuP3kD7HIvwy25yJFQvPAS0l58NFqWWJbmfXVcJ040Cfa6c7lWAffK3TLs1NY9pqstwtX/PfYknEfBlWghAny/STRVPiObXNcli9rXZjsLN/tMNF2UW163V08SWG/IQAvtah87Ou2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YUy1Mr1J; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=J/cQvrL5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YUy1Mr1J; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=J/cQvrL5; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1713956323; c=relaxed/simple;
+	bh=kD/apsZpQUjTX7GTpEZPSs6owgYA8C9LjrS5GfwTJcI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TLrMkSdhi0qPLSgIp105h4zZvuOBt9rDGxTa0+Dzq+MAxFmuz9e+76wn21/9P3kUOjXpoxubYfQ0WME90OjoYxd+5QkOHGXG3IobcirBPYDvOwo60FH00uGv5lQ0zqxrrGk8x/0/Qg/G/7s5N/1XanqvbYaN0wgL+j1Co7XUkaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=hYjytBgs; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YUy1Mr1J";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="J/cQvrL5";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YUy1Mr1J";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="J/cQvrL5"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 286216144C;
-	Wed, 24 Apr 2024 10:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713956278; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zepJMi+/FmAphXDQSDExadHqtRjvIFiQoMCvNpYvve8=;
-	b=YUy1Mr1JRvB2R7AR3ds8ByBJDyF+FV0oRRvwl7d1HhfNOTk7mRICDX83XeVD+0a+7jT3Ka
-	uzvaIZYBtWtu4yjYvhyQ/jfY3D4mlMbZWbfkwi5BElrYbEfa2iWCo5Xy3TE8ovMZkB61e9
-	3tKqjS2MklBlR/Ws/B44uzqq/axYiqU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713956278;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zepJMi+/FmAphXDQSDExadHqtRjvIFiQoMCvNpYvve8=;
-	b=J/cQvrL5Q5gRvCcb0IN9BRmKlbN9EwB0hEysYf72sKbbHcxMMJVXuWGXk0qzN7pTIgH4xC
-	GwJ1Q8YrxLdlp7Cw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713956278; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zepJMi+/FmAphXDQSDExadHqtRjvIFiQoMCvNpYvve8=;
-	b=YUy1Mr1JRvB2R7AR3ds8ByBJDyF+FV0oRRvwl7d1HhfNOTk7mRICDX83XeVD+0a+7jT3Ka
-	uzvaIZYBtWtu4yjYvhyQ/jfY3D4mlMbZWbfkwi5BElrYbEfa2iWCo5Xy3TE8ovMZkB61e9
-	3tKqjS2MklBlR/Ws/B44uzqq/axYiqU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713956278;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zepJMi+/FmAphXDQSDExadHqtRjvIFiQoMCvNpYvve8=;
-	b=J/cQvrL5Q5gRvCcb0IN9BRmKlbN9EwB0hEysYf72sKbbHcxMMJVXuWGXk0qzN7pTIgH4xC
-	GwJ1Q8YrxLdlp7Cw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9AE6D13690;
-	Wed, 24 Apr 2024 10:57:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id sWGSIrXlKGYiUwAAD6G6ig
-	(envelope-from <clopez@suse.de>); Wed, 24 Apr 2024 10:57:57 +0000
-From: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: seanjc@google.com,
-	=?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v3] KVM: X86: improve documentation for KVM_CAP_X86_BUS_LOCK_EXIT
-Date: Wed, 24 Apr 2024 12:56:18 +0200
-Message-Id: <20240424105616.29596-1-clopez@suse.de>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20231116133628.5976-1-clopez@suse.de>
-References: <20231116133628.5976-1-clopez@suse.de>
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="hYjytBgs"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2a58209b159so4495020a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 03:58:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessos.org; s=google; t=1713956321; x=1714561121; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kRfjSJt5RkWOkpKr1nWCFYWHFIH729SNz+JrUUaI0rQ=;
+        b=hYjytBgsUxKlNk/qnPTBZX40M22NkvcFBcmI8ueiotcO2917/SDH7T9FpBcp+zn+e0
+         Wxw//VpBsJ5JEO0ETnBF0S55ZkbClQbdW3jTEO2o5bnAXECLS8hiORKvlcU7a6UUGs0R
+         CB0PieFb50sA9MEgutret3WmRn9gqxyQr6tZvo3RZRrQ0q437Gmep4Y3I5T9vPBYkvtW
+         CuC2TLrpCa8Z1BMdFcAW4dPBMYYbQa8kGLWpVV9NgI2CJrOGQ5fduQl945i9zskUed1i
+         0iHwXJsm3aRbBh1Z3U+AAYbtG+HiQq12aX33VrqzSYjCltDTUU+hj/Rx2Be1ILsAoZzA
+         a/Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713956321; x=1714561121;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kRfjSJt5RkWOkpKr1nWCFYWHFIH729SNz+JrUUaI0rQ=;
+        b=QHpy2roaO7MN8BpY2ZCAFqzOW7/XZYvlwuUJo+5YS07fhysI3+A6t9lJEjncjZrTlt
+         foDI4wTawGIBZUwtcEs1r/bfeT5+P/ObTG12/mAgIXPLzByu9iPDwfyYRAFLoFp/PuLi
+         ykar6hVCa1d+b2jOZyr6BYhJAFnm6yTPLhTCc9rIdCsErxTegwihljJSSx8XN4hfT//V
+         63wZNiWIHTh4s2bzvZBBZi9bT9YMdjJm9eTBqvE9KzX1BThYobvm8+g3CvaAaTGKbIOs
+         RDUXni+p3+DHRXCXJojlNy1dBDsnDEJGwl3XNRbqpV0TzUIESOxNNtZdtgJaO56U+Oyp
+         Ba4A==
+X-Forwarded-Encrypted: i=1; AJvYcCXgOXgbj6FFetR9giIp5m+S/YeZQjDkUgm1EpYNzYj7sfBOpAXDz9JGSDVrk1w9mfx9EgO3x+tfWm6AihUM/lQWIi0EWmZq+05bjudv
+X-Gm-Message-State: AOJu0YxzAgkce7TBY0KV4TJSnd1PcY71TTLcvRELOeDOjTXWTPt1HYI/
+	vn0yIa0LTeuNm+cJRUL/zjqTZdPD4UkxoGvwX0nqCB7+sXaLTVK4lyLr2Z4V+KU=
+X-Google-Smtp-Source: AGHT+IFKwBUnoOK2cd/JCwlF3MM8wqAOfAu2VAcCmWPnhbbCxfrg7Jje/eziYBdrDq8HoubQ0JQnoQ==
+X-Received: by 2002:a17:90b:b14:b0:2a8:1fdf:b1b0 with SMTP id bf20-20020a17090b0b1400b002a81fdfb1b0mr1729628pjb.29.1713956321493;
+        Wed, 24 Apr 2024 03:58:41 -0700 (PDT)
+Received: from localhost.localdomain ([123.51.167.56])
+        by smtp.googlemail.com with ESMTPSA id cu22-20020a17090afa9600b002ac5335f554sm957852pjb.1.2024.04.24.03.58.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 03:58:40 -0700 (PDT)
+From: Jian-Hong Pan <jhp@endlessos.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>,
+	David Box <david.e.box@linux.intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jian-Hong Pan <jhp@endlessos.org>
+Subject: [PATCH v5 0/4] PCI: vmd: Enable PCI PM's L1 substates of remapped PCIe Root Port and NVMe
+Date: Wed, 24 Apr 2024 18:58:15 +0800
+Message-ID: <20240424105814.21690-2-jhp@endlessos.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email]
-X-Spam-Score: -3.30
-X-Spam-Flag: NO
 
-Improve the description for the KVM_CAP_X86_BUS_LOCK_EXIT capability,
-fixing a few typos, grammarm and clarifying the purpose of the ioctl.
+Re-send for the version information.
 
-Signed-off-by: Carlos López <clopez@suse.de>
----
-v3: Added Sean Christopherson's suggestions
-v2: Corrected the name of the KVM_RUN_X86_BUS_LOCK flag
+Notice the VMD remapped PCIe Root Port and NVMe have PCI PM L1 substates
+capability, but they are disabled originally.
 
- Documentation/virt/kvm/api.rst | 52 ++++++++++++++++++----------------
- 1 file changed, 27 insertions(+), 25 deletions(-)
+Here is a failed example on ASUS B1400CEAE with enabled VMD:
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 0b5a33ee71ee..a1d78e06a1ad 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -6416,9 +6416,9 @@ More architecture-specific flags detailing state of the VCPU that may
- affect the device's behavior. Current defined flags::
- 
-   /* x86, set if the VCPU is in system management mode */
--  #define KVM_RUN_X86_SMM     (1 << 0)
-+  #define KVM_RUN_X86_SMM          (1 << 0)
-   /* x86, set if bus lock detected in VM */
--  #define KVM_RUN_BUS_LOCK    (1 << 1)
-+  #define KVM_RUN_X86_BUS_LOCK     (1 << 1)
-   /* arm64, set for KVM_EXIT_DEBUG */
-   #define KVM_DEBUG_ARCH_HSR_HIGH_VALID  (1 << 0)
- 
-@@ -7757,29 +7757,31 @@ Valid bits in args[0] are::
-   #define KVM_BUS_LOCK_DETECTION_OFF      (1 << 0)
-   #define KVM_BUS_LOCK_DETECTION_EXIT     (1 << 1)
- 
--Enabling this capability on a VM provides userspace with a way to select
--a policy to handle the bus locks detected in guest. Userspace can obtain
--the supported modes from the result of KVM_CHECK_EXTENSION and define it
--through the KVM_ENABLE_CAP.
--
--KVM_BUS_LOCK_DETECTION_OFF and KVM_BUS_LOCK_DETECTION_EXIT are supported
--currently and mutually exclusive with each other. More bits can be added in
--the future.
--
--With KVM_BUS_LOCK_DETECTION_OFF set, bus locks in guest will not cause vm exits
--so that no additional actions are needed. This is the default mode.
--
--With KVM_BUS_LOCK_DETECTION_EXIT set, vm exits happen when bus lock detected
--in VM. KVM just exits to userspace when handling them. Userspace can enforce
--its own throttling or other policy based mitigations.
--
--This capability is aimed to address the thread that VM can exploit bus locks to
--degree the performance of the whole system. Once the userspace enable this
--capability and select the KVM_BUS_LOCK_DETECTION_EXIT mode, KVM will set the
--KVM_RUN_BUS_LOCK flag in vcpu-run->flags field and exit to userspace. Concerning
--the bus lock vm exit can be preempted by a higher priority VM exit, the exit
--notifications to userspace can be KVM_EXIT_BUS_LOCK or other reasons.
--KVM_RUN_BUS_LOCK flag is used to distinguish between them.
-+Enabling this capability on a VM provides userspace with a way to select a
-+policy to handle the bus locks detected in guest. Userspace can obtain the
-+supported modes from the result of KVM_CHECK_EXTENSION and define it through
-+the KVM_ENABLE_CAP. The supported modes are mutually-exclusive.
-+
-+This capability allows userspace to force VM exits on bus locks detected in the
-+guest, irrespective whether or not the host has enabled split-lock detection
-+(which triggers an #AC exception that KVM intercepts). This capability is
-+intended to mitigate attacks where a malicious/buggy guest can exploit bus
-+locks to degrade the performance of the whole system.
-+
-+If KVM_BUS_LOCK_DETECTION_OFF is set, KVM doesn't force guest bus locks to VM
-+exit, although the host kernel's split-lock #AC detection still applies, if
-+enabled.
-+
-+If KVM_BUS_LOCK_DETECTION_EXIT is set, KVM enables a CPU feature that ensures
-+bus locks in the guest trigger a VM exit, and KVM exits to userspace for all
-+such VM exits, e.g. to allow userspace to throttle the offending guest and/or
-+apply some other policy-based mitigation. When exiting to userspace, KVM sets
-+KVM_RUN_X86_BUS_LOCK in vcpu-run->flags, and conditionally sets the exit_reason
-+to KVM_EXIT_X86_BUS_LOCK.
-+
-+Note! Detected bus locks may be coincident with other exits to userspace, i.e.
-+KVM_RUN_X86_BUS_LOCK should be checked regardless of the primary exit reason if
-+userspace wants to take action on all detected bus locks.
- 
- 7.23 KVM_CAP_PPC_DAWR1
- ----------------------
+10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor PCIe Controller (rev 01) (prog-if 00 [Normal decode])
+    ...
+    Capabilities: [200 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+        	  PortCommonModeRestoreTime=45us PortTPowerOnTime=50us
+        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+        	   T_CommonMode=45us LTR1.2_Threshold=101376ns
+        L1SubCtl2: T_PwrOn=50us
+
+10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express])
+    ...
+    Capabilities: [900 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
+                  PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
+        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+                   T_CommonMode=0us LTR1.2_Threshold=0ns
+        L1SubCtl2: T_PwrOn=10us
+
+According to "PCIe r6.0, sec 5.5.4", to config the link between the PCIe
+Root Port and the child device correctly:
+* Ensure both devices are in D0 before enabling PCI-PM L1 PM Substates.
+* Ensure L1.2 parameters: Common_Mode_Restore_Times, T_POWER_ON and
+  LTR_L1.2_THRESHOLD are programmed properly on both devices before enable
+  bits for L1.2.
+
+Prepare this series to fix that.
+
+Jian-Hong Pan (4):
+  PCI: vmd: Set PCI devices to D0 before enable PCI PM's L1 substates
+  PCI/ASPM: Add notes about enabling PCI-PM L1SS to pci_enable_link_state(_locked)
+  PCI/ASPM: Introduce aspm_get_l1ss_cap()
+  PCI/ASPM: Fix L1.2 parameters when enable link state
+
+ drivers/pci/controller/vmd.c | 13 ++++++++----
+ drivers/pci/pcie/aspm.c      | 41 ++++++++++++++++++++++++++++--------
+ 2 files changed, 41 insertions(+), 13 deletions(-)
+
 -- 
-2.35.3
+2.44.0
 
