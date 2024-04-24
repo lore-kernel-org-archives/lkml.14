@@ -1,169 +1,209 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2048.outbound.protection.outlook.com [40.107.95.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3815D15EFA1;
-	Wed, 24 Apr 2024 13:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713965501; cv=fail; b=kL1wnRS/zbuuriaFipbWjC9Mj2HDwLsh8qxanHQf5H4mrBX7HCTPtN+Bp6sXXHPMWpRIfWB4vvE+//zZCuFo0D8XCr9QFhP4caHzzW2fI1gdGzml1xFApiS9PcwzcWD3vC7YyjFASbIVUP5QThEAGNMsdZcWY4heT0bqmuviQzg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713965501; c=relaxed/simple;
-	bh=SdR8AK9p5eXkXVsxuQJGJMTlfnSMm8NrhQSC3qadvTo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mjwPClzwBQUIpW9GE0U8KnPkTcwNu9hPxor/OPfU9ZdwVz22Pd62cG8BXa5WSHxzIz6pprlZxtejl7EhaOA+W1urGqqIsvH8NxNQtQcysJ1HcdtMYWbIZ44STwoW2hxp+BS180JzpALyctR9K0sbIWdGzSlyC+Nd7DtYFnILTig=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=I5bBNyCJ; arc=fail smtp.client-ip=40.107.95.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A4715EFDB
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713965511; cv=none; b=LfwsWCtJNxqkuuUtTyTfLTEFVqOkR5iikkJvncMVq5g2XqIzsbO5H1WxJajroowEEgYVTYGBoJeqjnvWKV+sSRv9YiupVi0eAD11eMF7N56cp9tu4Y0hF4+BQwvloFWunome7Cbwc2tJv5GF6SmEKcRrklAMxpkJk6o/norFkQ8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713965511; c=relaxed/simple;
+	bh=Ko741lJ/ldYXv4i0oGqQdI/UMYYb5nwDUjoO+M/FcWs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ogk/5/mXxh5MOvCV+Y0w4eTA/ETBPCTy2YMrYEaBTzUN73QG/co7d+kBwEYol0rlIL74O/l6NIykIwzuxPxy4DzG/Xudec7xQJn1KVila0+L9CwD+R9R9lBAxMZw+ShDYVwK96kbgdO+rhTZH3rNNYT06Bpwf5B5VuxznrwFE08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=o1c7H11N; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="I5bBNyCJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jAAq6J9VPTadhzgwiyCgdSef4KdCIyA1ksKJTAflgvkap5qx2J5qy4KRGTo0NiujyW1Ue+/kOk0p0pYp1V+qmnhVmuPwKtsW0EO4lkN9GIS9XcI85ooBqokBO11ty+hp5TzoYsGYOirJgnjT23LunI801Z1uFy0+tliAwr+T4X6LzWhuCraVfDc+sfb6Z0GpE9aTT3w7KRYBO2ZSstFeTSe/5z81itfWfWhR2LANlcA7Jw7p7PFpZSuYj/wWOmM8wop6+49wdkClN/+gndA5NOtz/N0wv5e6QYn3JDY/GE53EtWrGGHNbZ1A9Yht7io59mvdXt2z4HrtSCTmgDjCNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6V1UnlOS3EMUCV6lMUtqtDUSLw94CQZRNztlwUtCjPU=;
- b=Jb0Q0hHPCLHwAzhGHjZCwbHFTZcPatv3X15juaH1U2YfRj9UZ+fQOrWrB/J45/qx7XlgdngfcIva495Qn7Fp7xfU3oihOLTfYcqBkjYegNdGjj0oCAaCodZloJhU84tQR/nOlPCnzTgN838fPRcwMPu+EJby1B+26yhwzymuGUt79wVdjolHmATkJNIZt0my/WUmV/GRF7HlKf2Q5Q3lhYH1d/cLMdY1TeGIloqisHV2GGQLbNFyE4+KK75rOU+USsTh9aMdIKXAnPeqwG4Tu5PnhSG0CHA3cVS/CCjhaV/l5Nt8+cC2gM1T14wv/PumHK3hGtLTnms42E6bgBqtTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6V1UnlOS3EMUCV6lMUtqtDUSLw94CQZRNztlwUtCjPU=;
- b=I5bBNyCJU193Hy+APAV2lfyWHm/DmwtBioHwxHsrhw+gXypVhxj0WAHStxsTBjSu7bhAiI/ql9C3bU6+oh2slXHw7H0462n6kadpwe2r33LojQMV84IJCVzEWVpjp2FR9gDT9C9FXBRmNKs1DIvDOM734usF3JW1mQLCyJO2ft989Dx3DWrNHLhWGPPGGCxjrZil/w2NLsLPox4SFtfdoSADJS8aQcB04mYnPlezNw9/vFSUEtZ83Y+akYeEGfXMwuy4P0YVYOFsty9cQGZljaGdpp+Tf8uzaM9y1Y1evMZ9LPgTApEpxHG4KkELvdetj/hiClPNyWWeT1Kt3JYavg==
-Received: from DM5PR07CA0113.namprd07.prod.outlook.com (2603:10b6:4:ae::42) by
- MN0PR12MB6032.namprd12.prod.outlook.com (2603:10b6:208:3cc::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.46; Wed, 24 Apr
- 2024 13:31:37 +0000
-Received: from DS2PEPF00003446.namprd04.prod.outlook.com
- (2603:10b6:4:ae:cafe::74) by DM5PR07CA0113.outlook.office365.com
- (2603:10b6:4:ae::42) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.23 via Frontend
- Transport; Wed, 24 Apr 2024 13:31:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- DS2PEPF00003446.mail.protection.outlook.com (10.167.17.73) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7519.19 via Frontend Transport; Wed, 24 Apr 2024 13:31:36 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 24 Apr
- 2024 06:31:16 -0700
-Received: from dev-r-vrt-155.mtr.labs.mlnx (10.126.230.35) by
- rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 24 Apr 2024 06:31:10 -0700
-From: Danielle Ratson <danieller@nvidia.com>
-To: <netdev@vger.kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <corbet@lwn.net>, <linux@armlinux.org.uk>,
-	<sdf@google.com>, <kory.maincent@bootlin.com>,
-	<maxime.chevallier@bootlin.com>, <vladimir.oltean@nxp.com>,
-	<przemyslaw.kitszel@intel.com>, <ahmed.zaki@intel.com>,
-	<richardcochran@gmail.com>, <shayagr@amazon.com>, <paul.greenwalt@intel.com>,
-	<jiri@resnulli.us>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <mlxsw@nvidia.com>, <petrm@nvidia.com>,
-	<idosch@nvidia.com>, <danieller@nvidia.com>
-Subject: [PATCH net-next v5 06/10] net: sfp: Add more extended compliance codes
-Date: Wed, 24 Apr 2024 16:30:19 +0300
-Message-ID: <20240424133023.4150624-7-danieller@nvidia.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240424133023.4150624-1-danieller@nvidia.com>
-References: <20240424133023.4150624-1-danieller@nvidia.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="o1c7H11N"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a58872c07d8so183037066b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 06:31:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1713965508; x=1714570308; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=c4Hl4NLqdGzUXg705Rji8mLCpex1Aip+oeFMwQ83Pz0=;
+        b=o1c7H11NGeEvYwcYHuneWmjy8k77qZsHZk77W0ZRWm0neowxACgqwu94VyF+EoyIgE
+         cNJxHNjQdmwfzCAuXcCh4CFh8A1CDmIy5XVyZhVYEk1SH4GeBS3rnOSjE4rqsqUpWTMb
+         Vk3msQ34kkvW7LewttXcz47Ro9hvIppbLyB4T/9g8ZC7jymPTwb5IkORZtx+eMmz060f
+         881zl2+kmC/12hZtKE4RVIvCzzA8oq1neu9HwAbOqghNtg4gxkVcDHNHqQGbznmy2C7q
+         dmC+eX63tUvIDTeCxjupJ+/LG6YCjpkCyspX/FBBQd4J8L1caZRpZgJ2nqqzSOgABQ4W
+         pzog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713965508; x=1714570308;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c4Hl4NLqdGzUXg705Rji8mLCpex1Aip+oeFMwQ83Pz0=;
+        b=tE+zRqfr5DBwY2GXGLjWnJ6epCCTpqrc1wcDOxKH2BphFdmHnWWbJqpPCTHu1lCmzJ
+         sR1hFtIZyrrwhYGpQs4Mj9I4BLNo3S4357FKp+V7bjr8Y27cFigYgS4h5LgZ8HYAak8F
+         awlrdlLPUUVcPG0QCFtYn7K4jGf3s4uN1+nh0+TZ3+OG4IFEFyKqb5kZMEazkZWDna1M
+         xG7u3K8Kt9XFK2DtZTLTT4OHKk8f4ZgY54uNLwjX2fgUiSyOSaYjQwRZrwx/b4fdc4/r
+         W7USiCA6JdTtJzBWrv5MElMhMvoCkuc0w74tFmqI3tt9ffvhn4zIyCV/Xo9OG00fgbTK
+         z5jg==
+X-Forwarded-Encrypted: i=1; AJvYcCXxvWyEuuEzD93Y+SLpNsMj3U0pHxlHj6ZGbj81YMihH+M8u6FSPbKU3peNt3BXLwYc+qL5yLu7Mj6puUeWzEGajcxb8bhzs4Hr8Bdf
+X-Gm-Message-State: AOJu0YxSyMkZ0/NOJWJEeeJPGtxVMK21RqaigCD3XmeyTGfHwvbVn9FY
+	snmaBTni3j6pcUaW+uB7l7zCmGYwy4q/iwAAU5HUNniqUQEnu99MWjJ6eEI+4KA=
+X-Google-Smtp-Source: AGHT+IHJr3FYf/AKBS+rmpvAdd9+nzsoRwO0qpaGPs8V42zr8lIg6pDSo29AqeA/dSfcoTYiSYnHzQ==
+X-Received: by 2002:a17:906:a2cf:b0:a55:75f7:42fb with SMTP id by15-20020a170906a2cf00b00a5575f742fbmr6308275ejb.24.1713965507864;
+        Wed, 24 Apr 2024 06:31:47 -0700 (PDT)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id gw5-20020a170906f14500b00a523be56940sm8351416ejb.136.2024.04.24.06.31.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 06:31:47 -0700 (PDT)
+Date: Wed, 24 Apr 2024 15:31:46 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Atish Kumar Patra <atishp@rivosinc.com>
+Cc: Ian Rogers <irogers@google.com>, Anup Patel <anup@brainfault.org>, 
+	Samuel Holland <samuel.holland@sifive.com>, Atish Patra <atishp@atishpatra.org>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Mark Rutland <mark.rutland@arm.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] perf: RISC-V: Check standard event availability
+Message-ID: <20240424-7b4434122a8c1cf1c1173403@orel>
+References: <20240103165438.633054-1-samuel.holland@sifive.com>
+ <CAOnJCUJ4rC+Rrs6GV4t+=NWA=LtTZix5Nk1VzgP9CK-3+5-jAg@mail.gmail.com>
+ <06e71142-e113-40ac-b2c2-b20893aa714f@sifive.com>
+ <a4c4c9f2-9fe1-4c22-a99c-1667481ddd6b@rivosinc.com>
+ <CAAhSdy1yoCMtR52X7tS6dB2x_ysgA8K4hSSXH044bbq2uFY7jQ@mail.gmail.com>
+ <CAP-5=fX5JRYxZ26buLujSVP7roQTaWofqdiX1y1rAKQ70Yu+QQ@mail.gmail.com>
+ <CAHBxVyGuxQLTnBUiK2w=9atqNXs0sWC9KcWjssgzhNnbp_Z-mg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF00003446:EE_|MN0PR12MB6032:EE_
-X-MS-Office365-Filtering-Correlation-Id: 486e89f2-20a9-4ffa-7e56-08dc6462ddb6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?FPlJwzyfs1ZYI+1sZ5P4Dai5FehC4mgZYpo+BaTJmrPwycTq2aTJ3wbWzZvU?=
- =?us-ascii?Q?hLpTF87zOtfU2ql9bfWJvnc+PG535f0LSFei+Jiq8rteYS/TapKfPzqqnJwf?=
- =?us-ascii?Q?yPiuBOum4XRANNh08xlZ/OAlwddTXksbWdgM31h8c+fhv6S35OCGKJid2FfE?=
- =?us-ascii?Q?8hHv7mEFKVDoPvj/ywjZcQRZziREPfgzva4jNVPv834BvRaFSMIVUP37375W?=
- =?us-ascii?Q?cGkltBTBARqNsiaK1sMXyr0KG1hE+3pvL2Rx8DwkMpGkEWdCXPAAIZa+WvSh?=
- =?us-ascii?Q?bRjOSS5gwYtsGcpBPEWzhTtEtGWY7MFOtt/x0dcqNtcYVDy7kw8ZeDMi1hnZ?=
- =?us-ascii?Q?tgcJbthyhDHKabGY6h65mOphUdBZbW/rniMqnNcUdAyser0OotgveN/DEJlq?=
- =?us-ascii?Q?sTAgkuWk3LOCOUvrgsUIXUAFT5q9Loi3yWSU3tGtQ4yT/xdunxGUH2pIUpZC?=
- =?us-ascii?Q?L6ybGuw7eIix9Y6Ov4ow89tA+0sWku8iDJsFeHmu3/+gUXF/rKkLgq9ittM+?=
- =?us-ascii?Q?AeyoHIO+VpGASCrlkS5mF1byo6FuT/yfpSJr1rc7rXxcD3ZepKXnSOih8ZIU?=
- =?us-ascii?Q?v2KSte9/sran4d6nA/DeTtukuG8EgZTe8ygGhznTL+fCHj0xPqVyR9d150dG?=
- =?us-ascii?Q?zKFxVUHEpZjkRBXJAdJn392+355TKOkxgpE6xHw54lIWB/0WDXiKNg41vh07?=
- =?us-ascii?Q?zAwYrgLTey/bavX+6t1UkuA5FzTcwPnYCRd0GUgifayyXJobxGfaAjeqTFrm?=
- =?us-ascii?Q?m8moLfC/DZsCWAMFo8dc0ZmL1AUU8eMbBrP6CRQdD64i7zd8zv595wNvyE9k?=
- =?us-ascii?Q?BRRMrZAYSQ1+7M8J/wu9owb5Rwg/6G8TVD8ANzEJvqEcIj0f+O7xsJnBZ4O5?=
- =?us-ascii?Q?jNS/VYk3tQL7IErQpd+5Wlj+SMNxaD/qDVcLprVn4JzVRjaFLw3Sxoqe/quY?=
- =?us-ascii?Q?fDCAaFX34+9EWGJN+hpTaCZR4lTwKfgv/g7izU/ED2/5QQkhJlbcmzBvDbZk?=
- =?us-ascii?Q?dY9gxc+tL0A95jFFkhsh9on4zFuqpXzrXfmteAHLMd1eeQ2bhXhUL5wHhqO8?=
- =?us-ascii?Q?5BS8zRJEk8af2x92xftuXVBY2Kwxo8Bcv8jbGgeQyYW4NfMzmXjn6miwj5Ep?=
- =?us-ascii?Q?6KJx7UMOX7oQpaUYGtgqlFJRaabChhz7xew8421bWgr3aqNzM3F62FYyEkfZ?=
- =?us-ascii?Q?R3CicF/xkfKb8n6k6UiK0aE8rLQiYh1wiXarOCrHvlgj+Px9zX1zxFyJBaC4?=
- =?us-ascii?Q?bjAlK4P0Rtz0w8qUN4ScuXHDy4jGoYWIY1rNaf9MuezBOztWZROzOLwxCCyj?=
- =?us-ascii?Q?yfkDLv7iRzy463E+PI/HrmOeEKa3CvapGq5iEyLlwhlNhooWBpuEfd5BbGzg?=
- =?us-ascii?Q?VSJ4HrtZ1qgwgNZtAYsQGIIfBpHJ?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(82310400014)(376005)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 13:31:36.7033
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 486e89f2-20a9-4ffa-7e56-08dc6462ddb6
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF00003446.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6032
+In-Reply-To: <CAHBxVyGuxQLTnBUiK2w=9atqNXs0sWC9KcWjssgzhNnbp_Z-mg@mail.gmail.com>
 
-SFF-8024 is used to define various constants re-used in several SFF
-SFP-related specifications.
+On Tue, Apr 23, 2024 at 05:36:43PM -0700, Atish Kumar Patra wrote:
+> On Mon, Apr 22, 2024 at 8:44 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > On Mon, Apr 15, 2024 at 9:07 PM Anup Patel <anup@brainfault.org> wrote:
+> > >
+> > > On Tue, Apr 16, 2024 at 5:31 AM Atish Patra <atishp@rivosinc.com> wrote:
+> > > >
+> > > > On 4/10/24 18:40, Samuel Holland wrote:
+> > > > > Hi Atish,
+> > > > >
+> > > > > On 2024-03-18 2:44 PM, Atish Patra wrote:
+> > > > >> On Wed, Jan 3, 2024 at 8:54 AM Samuel Holland <samuel.holland@sifive.com> wrote:
+> > > > >>>
+> > > > >>> The RISC-V SBI PMU specification defines several standard hardware and
+> > > > >>> cache events. Currently, all of these events appear in the `perf list`
+> > > > >>> output, even if they are not actually implemented. Add logic to check
+> > > > >>> which events are supported by the hardware (i.e. can be mapped to some
+> > > > >>> counter), so only usable events are reported to userspace.
+> > > > >>>
+> > > > >>
+> > > > >> Thanks for the patch.
+> > > > >> This adds tons of SBI calls at every boot for a use case which is at
+> > > > >> best confusing for a subset of users who actually wants to run perf.
+> > > > >
+> > > > > I should have been clearer in the patch description. This is not just a cosmetic
+> > > > > change; because perf sees these as valid events, it tries to use them in
+> > > > > commands like `perf stat`. When the error from SBI_EXT_PMU_COUNTER_CFG_MATCH
+> > > > > causes the ->add() callback to fail, this prevents any other events from being
+> > > > > scheduled on that same CPU (search can_add_hw in kernel/events/core.c). That is
+> > > > > why the dTLB/iTLB miss counts are missing in the "before" example below.
+> > > > >
+> > > >
+> > > > Thanks for explaining the problem. I can reproduce it in qemu as well if
+> > > > enough number of invalid events given on the command line and the
+> > > > workload is short enough.
+> > > >
+> > > > >> This probing can be done at runtime by invoking the
+> > > > >> pmu_sbi_check_event from pmu_sbi_event_map.
+> > > > >> We can update the event map after that so that it doesn't need to
+> > > > >> invoke pmu_sbi_check_event next time.
+> > > > >
+> > > > > I tried to implement this suggestion, but it did not work. The SBI interface
+> > > > > does not distinguish between "none of the counters can monitor the specified
+> > > > > event [because the event is unsupported]" and "none of the counters can monitor
+> > > > > the specified event [because the counters are busy]". It is not sufficient for
+> > > > > the kernel to verify that at least one counter is available before performing
+> > > > > the check, because certain events may only be usable on a subset of counters
+> > > > > (per riscv,event-to-mhpmcounters), and the kernel does not know that mapping.
+> > > > >
+> > > >
+> > > > Yeah. My suggestion was to fix the perf list issue which is different
+> > > > than the issue reported now.
+> > > >
+> > > > > As a result, checking for event support is only reliable when none of the
+> > > > > counters are in use. So the check can be asynchronous/deferred to later in the
+> > > > > boot process, but I believe it still needs to be performed for all events before
+> > > > > userspace starts using the counters.
+> > > > >
+> > > >
+> > > > We should defer it a work queue for sure. We can also look at improving
+> > > > SBI PMU extension to support bulk matching behavior as well.
+> > > >
+> > > > However, I think a better solution would be to just rely on the json
+> > > > file mappings instead of making SBI calls. We are going to have the
+> > > > event encoding and mappings in the json in the future.
+> > >
+> > > The problem with JSON based event encoding is how to deal in-case
+> > > we are running inside Guest/VM because Host could be anything.
+> > >
+> > > IMO, the JSON based approach is not suitable for SBI PMU. For now,
+> > > we either defer the work using the work queue or keep the approach
+> > > of this patch as-is.
+> > >
+> > > The good part about SBI PMU extension is that we do have a standard
+> > > set of events and we only need a way to discover supported standard
+> > > events with a minimum number of SBI calls. It is better to add a new
+> > > SBI PMU call to assist supported event discovery which will also
+> > > help us virtualize it.
+> > >
+> > > Regards,
+> > > Anup
+> >
+> > +Ian Rogers
+> >
+> > `perf list` will already filter some events depending on whether the
+> > PMU supports them, for example, legacy cache events. I think we can
+> > extend this to json events.
+> >
+> 
+> Yes. That's what I was thinking as well. However, that may be a
+> problem in virtualization
+> as Anup pointed out.
+> 
+> As per my understanding, cloud providers provide json files for VMs
+> based on the host
+> architecture and allow migration only between hosts with the same
+> family of cpu. In RISC-V, the mapfile.csv works based on 3 registers
+> indicating marchid, mimpid, and mvendorid. Thus, the json file has to
+> be tied with the host machine it is going to be run.
 
-Add SFF-8024 extended compliance code definitions for CMIS compliant
-modules and use them in the next patch to determine the firmware flashing
-work.
+This is also my understanding. That is, that cloud instances typically
+dedicate CPUs to VMs and don't try to present CPU models to VMs which
+don't exactly match the host's CPUs. The remaining concern would be if
+the hypervisor doesn't emulate/passthrough everything the json describes
+for the host CPU type.
 
-Signed-off-by: Danielle Ratson <danieller@nvidia.com>
-Reviewed-by: Petr Machata <petrm@nvidia.com>
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
----
- include/linux/sfp.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+However, this is just "typical" clouds. All bets are off for general
+virtualization, as Anup points out.
 
-diff --git a/include/linux/sfp.h b/include/linux/sfp.h
-index 55c0ab17c9e2..46c145fa855d 100644
---- a/include/linux/sfp.h
-+++ b/include/linux/sfp.h
-@@ -284,6 +284,12 @@ enum {
- 	SFF8024_ID_QSFP_8438		= 0x0c,
- 	SFF8024_ID_QSFP_8436_8636	= 0x0d,
- 	SFF8024_ID_QSFP28_8636		= 0x11,
-+	SFF8024_ID_QSFP_DD		= 0x18,
-+	SFF8024_ID_OSFP			= 0x19,
-+	SFF8024_ID_DSFP			= 0x1B,
-+	SFF8024_ID_QSFP_PLUS_CMIS	= 0x1E,
-+	SFF8024_ID_SFP_DD_CMIS		= 0x1F,
-+	SFF8024_ID_SFP_PLUS_CMIS	= 0x20,
- 
- 	SFF8024_ENCODING_UNSPEC		= 0x00,
- 	SFF8024_ENCODING_8B10B		= 0x01,
--- 
-2.43.0
+> 
+> We will end up doing the same if we only rely on the json file to
+> filter events in the future. Please let me know if the assumption is
+> incorrect.
+> 
+> If we allow a SBI call route to discover which events are supported,
+> the guest can always support legacy events on any host even though it
+> doesn't have a json file.
 
+Yes, I think we need a solution which works even without a json file,
+since a VM may use a special mvendorid,marchid,mimpid triplet to
+describe a more generic CPU type. Unless we also create json files
+for these VCPUs, or provide other event discovery mechanisms, then
+the VMs will not have anything.
+
+Thanks,
+drew
