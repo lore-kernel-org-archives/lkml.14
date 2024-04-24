@@ -1,208 +1,224 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375A0158A04;
-	Wed, 24 Apr 2024 07:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87A7158A35;
+	Wed, 24 Apr 2024 07:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713945575; cv=none; b=dG87/rS3k5UPnTXB6+l4DUZ5dpX1o24p9VpT8wIbQknAKBj8itqyXhfswbFHrbFEfg0MtsryEsROiy11Fw6avdRwZr43CploBcQuno+uOCQHRmv7C6egtCvs9e7EvJlA8YhtR8IRAcK0+vN9G2yBjYQknyi2MaKMYt568Q60Rr0=
+	t=1713945581; cv=none; b=tWR23Wh5pW1Mqh+pUTPkfwFvf9N26vKal9bWdX9u8U2tVAyf9WECQVwCm0/Hsw7dKQU4quHzpMW1rEcvwUPxzOX+rY4jO0ltNt1nyPR3A02sfBv469L1bH9UXJ9HAqiGfrwaYBfOQvnw/YrGTVX1j1pLyic38ermQObg+fzJXZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713945575; c=relaxed/simple;
-	bh=csO/FoGDnIqZPOwAfcbC3nX1T7SQM6BW0okYxFMh2/c=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=LO6LpPPEsgYn8ZNT02G6aMWZlRPdgd3YoqA4t8QvJmJJvBYsGrxyJ0bwOmqwsPchDLjjIjLSvAgnH8i71wpdqp4e71YERjN8Vx6g1J7GCJOeLvUiHLiwR7lmBSNMNnAE1VKwzQaGnDc5ykSsIZezIaOFHJY27mXP+7+wzD159oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=i2PJh4MZ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="i2PJh4MZ"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43O6X04K016507;
-	Wed, 24 Apr 2024 07:59:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id; s=qcppdkim1; bh=PEH4sUji3MUL
-	6m2mb+lBXxIoyjAO5ggAPg0WEO6ThWQ=; b=i2PJh4MZVSEqOo1JbTD8XMIAAc0g
-	FBviwqZMAp6q6Hca/ogvFpHznnsSak5C91w7/QfDNAiLAc8VVyHqR+JsH3FMJ8fs
-	0rP4jW9YvzkXWsxxtnd8AI3EuYrEMAvhRKd68N3o2loU4N2bMkEDqpVr8D5V0uxG
-	y0DNGeMbWZA92zA8yyeika9pKoaLRZbnr7iACF9tv+puQ3n4/wk+LTrqh8gJo+nu
-	N//X49F37Kx5SZhfgpz0AyxZ9a8NmqmquYs2FB6c1NvE7wcEcVxSsYeNtWVzgG9s
-	dcZLhcrgzH5XV7xwpemaX1Es68tdQSLVf6pLC/vaQhJDDLnoJkmely4rDA==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xpv9kr80c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 07:58:59 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 43O7wuTA007257;
-	Wed, 24 Apr 2024 07:58:56 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3xm6sktqje-1;
-	Wed, 24 Apr 2024 07:58:56 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43O7pKHj030861;
-	Wed, 24 Apr 2024 07:58:56 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-vdadhani-hyd.qualcomm.com [10.213.106.28])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 43O7wudp007248;
-	Wed, 24 Apr 2024 07:58:56 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 4047106)
-	id D1C3C5001C1; Wed, 24 Apr 2024 13:28:54 +0530 (+0530)
-From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-To: cros-qcom-dts-watchers@chromium.org, andersson@kernel.org,
-        konrad.dybcio@linaro.org, swboyd@chromium.org, robh@kernel.org,
-        krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org, conor+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rajpat@codeaurora.org, mka@chromium.org, rojay@codeaurora.org,
-        luca.weiss@fairphone.com
-Cc: quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com,
-        Viken Dadhaniya <quic_vdadhani@quicinc.com>
-Subject: [PATCH v2] arm64: dts: qcom: sc7280: Remove CTS/RTS configuration
-Date: Wed, 24 Apr 2024 13:28:53 +0530
-Message-Id: <20240424075853.11445-1-quic_vdadhani@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: r-TmsRXwjrRnVb4aGGvhmSVyWlnfnxfk
-X-Proofpoint-GUID: r-TmsRXwjrRnVb4aGGvhmSVyWlnfnxfk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-24_05,2024-04-23_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- clxscore=1011 priorityscore=1501 adultscore=0 lowpriorityscore=0
- mlxlogscore=999 impostorscore=0 phishscore=0 spamscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404240034
+	s=arc-20240116; t=1713945581; c=relaxed/simple;
+	bh=WbWk4n31QeckdqgahpTtUAt10qf6aHsmn+QrC5ik3lE=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Vn0FQNyDwP3G9m6HmNBE3pTivIS0OTSuBl7D2MnE1RBsqT5YMP1zuAZ3A883Rp+dRUtTLe1Ghc9i390jSX/8olUB3sDWYDAl+HYBdOx+s9yKV/d9JeH/FWtdh6n6EjPrIS4TrV2Q40rwhLNcpDuWU15tx5bCptZannYMf4mYe2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VPWXq16YRzNtQC;
+	Wed, 24 Apr 2024 15:56:59 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6E77E18007D;
+	Wed, 24 Apr 2024 15:59:30 +0800 (CST)
+Received: from [10.174.178.185] (10.174.178.185) by
+ canpemm500010.china.huawei.com (7.192.105.118) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 24 Apr 2024 15:59:30 +0800
+Subject: Re: [PATCH v2] jbd2: avoid mount failed when commit block is partial
+ submitted
+To: Andreas Dilger <adilger@dilger.ca>
+References: <20240413013056.1830515-1-yebin10@huawei.com>
+ <F8B008EE-22F4-4A3C-A80D-545104520D7D@dilger.ca>
+CC: Theodore Ts'o <tytso@mit.edu>, Ext4 Developers List
+	<linux-ext4@vger.kernel.org>, Linux Kernel Mailing List
+	<linux-kernel@vger.kernel.org>, Jan Kara <jack@suse.cz>
+From: "yebin (H)" <yebin10@huawei.com>
+Message-ID: <6628BBE1.7070002@huawei.com>
+Date: Wed, 24 Apr 2024 15:59:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.1.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <F8B008EE-22F4-4A3C-A80D-545104520D7D@dilger.ca>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
-For IDP variant, GPIO 20/21 is used by camera use case and camera
-driver is not able acquire these GPIOs as it is acquired by UART5
-driver as RTS/CTS pin.
 
-UART5 is designed for debug UART for all the board variants of the
-sc7280 chipset and RTS/CTS configuration is not required for debug
-uart usecase.
 
-Remove CTS/RTS configuration for UART5 instance and change compatible
-string to debug UART.
-
-Remove overwriting compatible property from individual target specific
-file as it is not required.
-
-Fixes: 38cd93f413fd ("arm64: dts: qcom: sc7280: Update QUPv3 UART5 DT node")
-Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-
----
-v1 -> v2:
-- Remove compatible property from target specific file.
-- Update commit log.
----
- arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts |  1 -
- arch/arm64/boot/dts/qcom/qcm6490-idp.dts           |  1 -
- arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts       |  1 -
- arch/arm64/boot/dts/qcom/sc7280-idp.dtsi           |  1 -
- arch/arm64/boot/dts/qcom/sc7280-qcard.dtsi         |  1 -
- arch/arm64/boot/dts/qcom/sc7280.dtsi               | 14 ++------------
- 6 files changed, 2 insertions(+), 17 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts b/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
-index f3432701945f..8cd2fe80dbb2 100644
---- a/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
-+++ b/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
-@@ -864,7 +864,6 @@
- };
- 
- &uart5 {
--	compatible = "qcom,geni-debug-uart";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-index 47ca2d000341..107302680f56 100644
---- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-@@ -658,7 +658,6 @@
- };
- 
- &uart5 {
--	compatible = "qcom,geni-debug-uart";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-index a085ff5b5fb2..7256b51eb08f 100644
---- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-@@ -632,7 +632,6 @@
- };
- 
- &uart5 {
--	compatible = "qcom,geni-debug-uart";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-index a0059527d9e4..7370aa0dbf0e 100644
---- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-@@ -495,7 +495,6 @@
- };
- 
- &uart5 {
--	compatible = "qcom,geni-debug-uart";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280-qcard.dtsi b/arch/arm64/boot/dts/qcom/sc7280-qcard.dtsi
-index f9b96bd2477e..7d1d5bbbbbd9 100644
---- a/arch/arm64/boot/dts/qcom/sc7280-qcard.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280-qcard.dtsi
-@@ -427,7 +427,6 @@
- };
- 
- uart_dbg: &uart5 {
--	compatible = "qcom,geni-debug-uart";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-index fc9ec367e3a5..246fb7919d27 100644
---- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-@@ -1440,12 +1440,12 @@
- 			};
- 
- 			uart5: serial@994000 {
--				compatible = "qcom,geni-uart";
-+				compatible = "qcom,geni-debug-uart";
- 				reg = <0 0x00994000 0 0x4000>;
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
- 				clock-names = "se";
- 				pinctrl-names = "default";
--				pinctrl-0 = <&qup_uart5_cts>, <&qup_uart5_rts>, <&qup_uart5_tx>, <&qup_uart5_rx>;
-+				pinctrl-0 = <&qup_uart5_tx>, <&qup_uart5_rx>;
- 				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
- 				power-domains = <&rpmhpd SC7280_CX>;
- 				operating-points-v2 = <&qup_opp_table>;
-@@ -5407,16 +5407,6 @@
- 				function = "qup04";
- 			};
- 
--			qup_uart5_cts: qup-uart5-cts-state {
--				pins = "gpio20";
--				function = "qup05";
--			};
--
--			qup_uart5_rts: qup-uart5-rts-state {
--				pins = "gpio21";
--				function = "qup05";
--			};
--
- 			qup_uart5_tx: qup-uart5-tx-state {
- 				pins = "gpio22";
- 				function = "qup05";
--- 
-2.17.1
+On 2024/4/14 7:27, Andreas Dilger wrote:
+> On Apr 12, 2024, at 7:30 PM, Ye Bin <yebin10@huawei.com> wrote:
+>> We encountered a problem that the file system could not be mounted in
+>> the power-off scenario. The analysis of the file system mirror shows that
+>> only part of the data is written to the last commit block.
+>> The valid data of the commit block is concentrated in the first sector.
+>> However, the data of the entire block is involved in the checksum calculation.
+>> For different hardware, the minimum atomic unit may be different.
+>> If the checksum of a committed block is incorrect, clear the data except the
+>> 'commit_header' and then calculate the checksum. If the checkusm is correct,
+>> it is considered that the block is partially committed.
+> I think this is a clever solution to the problem, thanks for submitting
+> the patch.
+>
+>> However, if there are valid description/revoke blocks, it is considered
+>> that the data is abnormal and the log replay is stopped.
+> It would be possible to use the r_count of records in the revoke block
+> to determine how much of the revoke block is unused and could be zeroed
+> out to recompute the partial checksum?  That should be relatively safe
+> to try, as long as r_count is itself checked to fit within the block
+> before the memory is zeroed, to avoid overflowing the temporary buffer size:
+>
+>         r_count <= journal_revoke_records_per_block(journal)
+>
+>
+> It is open for discussion how much corruption should be allowed in the
+> journal, since it can be very destructive to copy corrupted blocks from
+> one place in the journal exactly into important metadata blocks across
+> the whole filesystem.  That said, the checksums *should* avoid this kind
+> of problem, and revoke blocks do not contain "metadata" that is copied
+> into the filesystem but only block numbers to skip.  It is "less bad" if
+> this was wrong, and having an incomplete journal replay due to minor
+> corruption that is causing boot failure is also a problem that should be
+> avoided if it can safely be done.
+>
+>
+> Additional comments inline below:
+>
+>> Signed-off-by: Ye Bin <yebin10@huawei.com>
+>> ---
+>> fs/jbd2/recovery.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++
+>> 1 file changed, 48 insertions(+)
+>>
+>> diff --git a/fs/jbd2/recovery.c b/fs/jbd2/recovery.c
+>> index 1f7664984d6e..eb0e026f3109 100644
+>> --- a/fs/jbd2/recovery.c
+>> +++ b/fs/jbd2/recovery.c
+>> @@ -443,6 +443,27 @@ static int jbd2_commit_block_csum_verify(journal_t *j, void *buf)
+>> 	return provided == cpu_to_be32(calculated);
+>> }
+>>
+>> +static bool jbd2_commit_block_csum_partial_verify(journal_t *j, void *buf)
+>> +{
+> (style) if this is named jbd2_commit_block_csum_verify_partial() then
+> it would sort together with jbd2_commit_block_csum_verify() and would
+> be easier to find with tag completion and grep in the future.
+>
+>> +	struct commit_header *h;
+>> +	__be32 provided;
+>> +	__u32 calculated;
+>> +	void *tmpbuf;
+>> +
+>> +	tmpbuf = kzalloc(j->j_blocksize, GFP_KERNEL);
+>> +	if (!tmpbuf)
+>> +		return false;
+>> +
+>> +	memcpy(tmpbuf, buf, sizeof(struct commit_header));
+>> +	h = tmpbuf;
+>> +	provided = h->h_chksum[0];
+>> +	h->h_chksum[0] = 0;
+>> +	calculated = jbd2_chksum(j, j->j_csum_seed, tmpbuf, j->j_blocksize);
+>> +	kfree(tmpbuf);
+>> +
+>> +	return provided == cpu_to_be32(calculated);
+>> +}
+>> +
+>> static int jbd2_block_tag_csum_verify(journal_t *j, journal_block_tag_t *tag,
+>> 				      journal_block_tag3_t *tag3,
+>> 				      void *buf, __u32 sequence)
+>> @@ -479,6 +500,7 @@ static int do_one_pass(journal_t *journal,
+>> 	int			descr_csum_size = 0;
+>> 	int			block_error = 0;
+>> 	bool			need_check_commit_time = false;
+>> +	bool                    has_partial_commit = false;
+>> 	__u64			last_trans_commit_time = 0, commit_time;
+>>
+>> 	/*
+>> @@ -590,6 +612,14 @@ static int do_one_pass(journal_t *journal,
+>> 					next_log_block);
+>> 			}
+>>
+>> +			if (pass == PASS_SCAN && has_partial_commit) {
+>> +				pr_err("JBD2: Detect validate descriptor block %lu after incomplete commit block\n",
+> (minor) it isn't clear to me what this error message is trying to say?
+> Should it be something like "detected invalid descriptor block ..."?
+>
+>> +				       next_log_block);
+>> +				err = -EFSBADCRC;
+>> +				brelse(bh);
+>> +				goto failed;
+>> +			}
+>> +
+>> 			/* If it is a valid descriptor block, replay it
+>> 			 * in pass REPLAY; if journal_checksums enabled, then
+>> 			 * calculate checksums in PASS_SCAN, otherwise,
+>> @@ -810,6 +840,14 @@ static int do_one_pass(journal_t *journal,
+>> 			if (pass == PASS_SCAN &&
+>> 			    !jbd2_commit_block_csum_verify(journal,
+>> 							   bh->b_data)) {
+>> +				if (jbd2_commit_block_csum_partial_verify(
+> If this function was restructured a bit then the code flow would not need
+> to get more complex than it already is.  Something like:
+>
+> 			if (pass == PASS_SCAN &&
+> 			    !(jbd2_commit_block_csum_verify(journal,
+> 							    bh->b_data) ||
+> 			      (has_partial_commit =
+> 			       jbd2_commit_block_csum_verify_partial(journal,
+> 							    bh->b_data))) {
+>
+> The pr_notice() can be printed by jbd2_commit_block_csum_partial_verify()
+> if the partial checksum is valid, so no need for goto and chksum_ok label.
+I modified it according to your idea, and found that the logic will be 
+faulty when the checksum
+is not enabled.
+>
+>> +					pr_notice("JBD2: Find incomplete commit block in transaction %u block %lu\n",
+>> +						  next_commit_ID, next_log_block);
+>> +					has_partial_commit = true;
+>> +					goto chksum_ok;
+>> +				}
+>> 			chksum_error:
+>> 				if (commit_time < last_trans_commit_time)
+>> 					goto ignore_crc_mismatch;
+>> @@ -824,6 +862,7 @@ static int do_one_pass(journal_t *journal,
+>> 				}
+>> 			}
+>> 			if (pass == PASS_SCAN) {
+>> +			chksum_ok:
+>> 				last_trans_commit_time = commit_time;
+>> 				head_block = next_log_block;
+>> 			}
+>> @@ -843,6 +882,15 @@ static int do_one_pass(journal_t *journal,
+>> 					  next_log_block);
+>> 				need_check_commit_time = true;
+>> 			}
+>> +
+>> +			if (pass == PASS_SCAN && has_partial_commit) {
+>> +				pr_err("JBD2: Detect validate revoke block %lu after incomplete commit block\n",
+> Similarly, I find this error message hard to understand.  Maybe "detected invalid revoke block ..."?
+>
+>> +				       next_log_block);
+>> +				err = -EFSBADCRC;
+>> +				brelse(bh);
+>> +				goto failed;
+>> +			}
+>> +
+>> 			/* If we aren't in the REVOKE pass, then we can
+>> 			 * just skip over this block. */
+>> 			if (pass != PASS_REVOKE) {
+>> --
+>> 2.31.1
+>>
+>
+> Cheers, Andreas
+>
+>
+>
+>
+>
 
