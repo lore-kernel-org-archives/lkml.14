@@ -1,128 +1,151 @@
-Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CA115B576;
-	Wed, 24 Apr 2024 12:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4624815ADB8;
+	Wed, 24 Apr 2024 12:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713963599; cv=none; b=A5jDNZ44oONk38aZ5CMlWTCvRjVT2NRl+8N39KGMdVYVpBVCxwyIGSC9u7+cKF9wM6iIMhsN/9KPsCs18VhZCyn1jjBazEf5vYlde9z5fit18mIOzZfKWArsR/XdW6UJ13tFf9C5+cqnWS/LlxIytthZYRrun/gCohT1FH0NMLE=
+	t=1713963601; cv=none; b=UYUh7PgNB4pUOAib2NBOHx7OtAd9Yg2Ldf6kgGvYLZqfsoeV5GkKif7KHb5VaHzS5p+kg9uNaM8mKaGLeDuS4LND1qiXQ/PDaYfLjT9cLnDp+XZ4OWPd6aiEw8n9MWv3f0QY/1A12a+7dHR+RlcJXsJhniiXR60ngho5fP7FOUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713963599; c=relaxed/simple;
-	bh=kamfKpDUAuUVYKc3JD6fhJN/bs5aaqGFBEBTvufzKSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ciHFUfx0mWhSGKhwwTSETTe8YoV+1zgR/0krI7gdcBhm85O5LjbILd9JJnFtaKFqYTCR8YvMhQcerRlVSKVd8x7OdIMIg4u5OVDi5c7tZEZR/Jx5Xn4hSiNCopLsTE+tOe8b3vaHliEP7W1jeACDo91YPMc9Bh1YQVB8OxU9kb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=m2Opc8GE; arc=none smtp.client-ip=195.181.215.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="m2Opc8GE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1713963589; bh=kamfKpDUAuUVYKc3JD6fhJN/bs5aaqGFBEBTvufzKSA=;
-	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-	b=m2Opc8GEH5y1OCPgcUHTFE55CkaXhDFNC4qU5zJuox4opmWh69YhB6n2wMWjbLBew
-	 iA9GtdDPXTHD7fXEV5ewxEJen0QK5Byy+ZQrWJWDnxEvXD2onLoNfnFu1kqiijSerA
-	 m/BxquIGSzeUxD7Eitsp/l5Uuxbg6yxVAETYL/EE=
-Date: Wed, 24 Apr 2024 14:59:48 +0200
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Aren Moynihan <aren@peacevolution.org>, 
-	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-iio@vger.kernel.org, phone-devel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	Willow Barraco <contact@willowbarraco.fr>
-Subject: Re: [PATCH v2 2/6] iio: light: stk3310: Implement vdd supply and
- power it off during suspend
-Message-ID: <5qqil7ltqhdeabml6toqpcy773uhjxgwaz3txpy4kv4sz55o2y@hmar674eey7s>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>, Aren Moynihan <aren@peacevolution.org>, 
-	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-iio@vger.kernel.org, phone-devel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	Willow Barraco <contact@willowbarraco.fr>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20240423223309.1468198-2-aren@peacevolution.org>
- <20240423223309.1468198-4-aren@peacevolution.org>
- <CAHp75VeRDSPvpmSbUyZPp0RMoTOE193U2ma18qxv_qZQKLCq8g@mail.gmail.com>
+	s=arc-20240116; t=1713963601; c=relaxed/simple;
+	bh=6Yy7m/6CzXiExG1qEJxxc9fYsBWXedfhGZTx/aOQ58k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EML/tXcrsYmNg8JPEmU8u5LGs0KJgqhKN2gI4PT2aySGpK6o8kmTxh5fegmJsBar+ogYY+9JBKFzs9Yxk3tvqSD7NHAf1Q4c7N6ds/fTi0NsmxjxPBthgtZAuLSvndWiF99mo8fgiWkUA+VFRHfp4gODa48d8Gb9aya2ruQ4JMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a524ecaf215so701199766b.2;
+        Wed, 24 Apr 2024 05:59:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713963597; x=1714568397;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bZpXDLWdbY5cxtVKR5gQdGHFoKg4O1yoZrRZTfWHXEU=;
+        b=EGzCv4dOQFnCIUPYodSHgrTVT6q/HuntRurdy1lPQZvVic2k2+VYfyEC5coIiW2ahZ
+         lGMKjHPH1sDd5VLbtaSd+zt5TQ0KmcQz5bnhnvl1ccI0azwk1N0437OB+YbLK7K89PI/
+         FaOqrlEbuUeXh3jKkBqPQ69YtLhNC9PRlsBME2MvI+iwlX9aGNBHHJBKWyZDAO6/Wm2x
+         fmOZsLlzksx5HrPBhz1A/WQOReBka5S9YSW1OkylROjVd1gzZ6TsvigWvlwIGetJnpQ4
+         OKZOnn0NKBJj7K4Tdx7fIPbOu4oklmww+fJG2jdyKvKC6Jf8nonqHhBUdJwz/gigJg06
+         c8/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVIV59K3FBaDeYEJMeoPzLgOljA6wYEOFa3lZ9TlJ8XigYLh8hMj40y3mR2Xze2gvn+gRrEUkuN01k+ac7OqytmZnMSKCZCP7CBTmBZ0PZVYvj42koxhUdzv5yVarC5TwTADp/a+A==
+X-Gm-Message-State: AOJu0YyDLK+85DyNzt+7hR9HCSdcSKOhXOTDARrPqM2+CuPpiDZSvF7P
+	d3RxK3MPwQAKR0SmPiUPiwnfxSkAiVVEoYirVpDeRmqxYTHNZyi6
+X-Google-Smtp-Source: AGHT+IF/RV0/1XswegILNQyeX/GUzV1RYykInrtqHpdfC1ZxMCeLSWwtzZwxtUJZYZPRpwl7qXgTJQ==
+X-Received: by 2002:a17:906:d142:b0:a58:828b:554e with SMTP id br2-20020a170906d14200b00a58828b554emr1607782ejb.71.1713963597341;
+        Wed, 24 Apr 2024 05:59:57 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-003.fbsv.net. [2a03:2880:30ff:3::face:b00c])
+        by smtp.gmail.com with ESMTPSA id lu10-20020a170906faca00b00a52299d8eecsm8214771ejb.135.2024.04.24.05.59.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 05:59:56 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: leit@meta.com,
+	cgroups@vger.kernel.org (open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)),
+	linux-mm@kvack.org (open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] memcg: Fix data-race KCSAN bug in rstats
+Date: Wed, 24 Apr 2024 05:59:39 -0700
+Message-ID: <20240424125940.2410718-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VeRDSPvpmSbUyZPp0RMoTOE193U2ma18qxv_qZQKLCq8g@mail.gmail.com>
 
-On Wed, Apr 24, 2024 at 02:16:06AM GMT, Andy Shevchenko wrote:
-> On Wed, Apr 24, 2024 at 1:41 AM Aren Moynihan <aren@peacevolution.org> wrote:
-> >
-> > From: Ondrej Jirman <megi@xff.cz>
-> >
-> > VDD power input can be used to completely power off the chip during
-> > system suspend. Do so if available.
-> 
-> ...
-> 
-> >         ret = stk3310_init(indio_dev);
-> >         if (ret < 0)
-> > -               return ret;
-> > +               goto err_vdd_disable;
-> 
-> This is wrong. You will have the regulator being disabled _before_
-> IRQ. Note, that the original code likely has a bug which sets states
-> before disabling IRQ and removing a handler.
+A data-race issue in memcg rstat occurs when two distinct code paths
+access the same 4-byte region concurrently. KCSAN detection triggers the
+following BUG as a result.
 
-How so? stk3310_init is called before enabling the interrupt.
+	BUG: KCSAN: data-race in __count_memcg_events / mem_cgroup_css_rstat_flush
 
-Original code has a bug that IRQ is enabled before registering the
-IIO device, so if IRQ is triggered before registration, iio_push_event
-from IRQ handler may be called on a not yet registered IIO device.
+	write to 0xffffe8ffff98e300 of 4 bytes by task 5274 on cpu 17:
+	mem_cgroup_css_rstat_flush (mm/memcontrol.c:5850)
+	cgroup_rstat_flush_locked (kernel/cgroup/rstat.c:243 (discriminator 7))
+	cgroup_rstat_flush (./include/linux/spinlock.h:401 kernel/cgroup/rstat.c:278)
+	mem_cgroup_flush_stats.part.0 (mm/memcontrol.c:767)
+	memory_numa_stat_show (mm/memcontrol.c:6911)
+<snip>
 
-Never saw it happen, though. :)
+	read to 0xffffe8ffff98e300 of 4 bytes by task 410848 on cpu 27:
+	__count_memcg_events (mm/memcontrol.c:725 mm/memcontrol.c:962)
+	count_memcg_event_mm.part.0 (./include/linux/memcontrol.h:1097 ./include/linux/memcontrol.h:1120)
+	handle_mm_fault (mm/memory.c:5483 mm/memory.c:5622)
+<snip>
 
-kind regards,
-	o.
+	value changed: 0x00000029 -> 0x00000000
 
-> Side note, you may make the driver neater with help of
-> 
->   struct device *dev = &client->dev;
-> 
-> defined in this patch.
-> 
-> ...
-> 
-> >  static int stk3310_suspend(struct device *dev)
-> >  {
-> >         struct stk3310_data *data;
-> 
-> >         data = iio_priv(i2c_get_clientdata(to_i2c_client(dev)));
-> 
-> Side note: This may be updated (in a separate change) to use
-> dev_get_drvdata() directly.
-> 
-> Jonathan, do we have something like iio_priv_from_drvdata(struct
-> device *dev)? Seems many drivers may utilise it.
-> 
-> >  }
-> 
-> ...
-> 
-> >  static int stk3310_resume(struct device *dev)
-> 
-> Ditto.
-> 
-> --
-> With Best Regards,
-> Andy Shevchenko
+The race occurs because two code paths access the same "stats_updates"
+location. Although "stats_updates" is a per-CPU variable, it is remotely
+accessed by another CPU at
+cgroup_rstat_flush_locked()->mem_cgroup_css_rstat_flush(), leading to
+the data race mentioned.
+
+Considering that memcg_rstat_updated() is in the hot code path, adding
+a lock to protect it may not be desirable, especially since this
+variable pertains solely to statistics.
+
+Therefore, annotating accesses to stats_updates with READ/WRITE_ONCE()
+can prevent KCSAN splats and potential partial reads/writes.
+
+Suggested-by: Shakeel Butt <shakeel.butt@linux.dev>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ mm/memcontrol.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index fabce2b50c69..3c99457b36a1 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -715,6 +715,7 @@ static inline void memcg_rstat_updated(struct mem_cgroup *memcg, int val)
+ {
+ 	struct memcg_vmstats_percpu *statc;
+ 	int cpu = smp_processor_id();
++	unsigned int stats_updates;
+ 
+ 	if (!val)
+ 		return;
+@@ -722,8 +723,9 @@ static inline void memcg_rstat_updated(struct mem_cgroup *memcg, int val)
+ 	cgroup_rstat_updated(memcg->css.cgroup, cpu);
+ 	statc = this_cpu_ptr(memcg->vmstats_percpu);
+ 	for (; statc; statc = statc->parent) {
+-		statc->stats_updates += abs(val);
+-		if (statc->stats_updates < MEMCG_CHARGE_BATCH)
++		stats_updates = READ_ONCE(statc->stats_updates) + abs(val);
++		WRITE_ONCE(statc->stats_updates, stats_updates);
++		if (stats_updates < MEMCG_CHARGE_BATCH)
+ 			continue;
+ 
+ 		/*
+@@ -731,9 +733,9 @@ static inline void memcg_rstat_updated(struct mem_cgroup *memcg, int val)
+ 		 * redundant. Avoid the overhead of the atomic update.
+ 		 */
+ 		if (!memcg_vmstats_needs_flush(statc->vmstats))
+-			atomic64_add(statc->stats_updates,
++			atomic64_add(stats_updates,
+ 				     &statc->vmstats->stats_updates);
+-		statc->stats_updates = 0;
++		WRITE_ONCE(statc->stats_updates, 0);
+ 	}
+ }
+ 
+@@ -5845,7 +5847,7 @@ static void mem_cgroup_css_rstat_flush(struct cgroup_subsys_state *css, int cpu)
+ 			}
+ 		}
+ 	}
+-	statc->stats_updates = 0;
++	WRITE_ONCE(statc->stats_updates, 0);
+ 	/* We are in a per-cpu loop here, only do the atomic write once */
+ 	if (atomic64_read(&memcg->vmstats->stats_updates))
+ 		atomic64_set(&memcg->vmstats->stats_updates, 0);
+-- 
+2.43.0
+
