@@ -1,210 +1,123 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6355C156675
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 05:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A1E13CFAD;
+	Wed, 24 Apr 2024 05:46:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713937462; cv=none; b=PMmQ1vgi+uW+KzMtt+3JV+4c6pt+cR3dAOGoFPTXhKfjAHLBfeWFY5xZdb4ADx+e+i1tXd73e8hLrTV8hMuwmc6MSpclAK4KSuEEm3i24KEtxJpI6m262ZNwTodJwiORP/wV/s24wCNLTNIGL5juXoTDzq/m5Gv20XNo7KDvMpU=
+	t=1713937576; cv=none; b=k9ee/JWn4aRpzEB2yimx0EukBFjFxkLwZ+sCRUA+n6z6oyWvgbMQcDhtc655d4Zd5LUjNbRjOu/mBKRZ8txoeeDx4WSkuIowunuJU8SJ1MjfPrg5D/OW9ah5vI5fdRKcYufvq6PNaWoulB9xdIAqPYz3lVceVMr5/6s816k67dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713937462; c=relaxed/simple;
-	bh=Tsukt/u+x+bfuUgjj0ucX/lXEUi04xh/6bzDgekdZdI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OMZLrVKDHyWg3Gz05UMq5/n4Tsk16stdumj3urTpSUM+QlLjL1126Ph90IWkGvyZjg120wPvq/ikLopEBC/jbQKemufzoy9p28IjbWIQtXdxAPlaicuMlKFEqOIRD7Jq9sIjEQMbDgVcEN3dmb4d6ekiYx1d+3mZBjDAn+pnK68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LedwhX4f; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713937576; c=relaxed/simple;
+	bh=uwxUJBzuUS3WaFJagRhqzdd7FDplM881l5RFTKnaqg0=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=B9IUBGmk/lFaDeVgtjEHfQFeYudTiMVJCb/CKeJxuGcgK0bYXaTBPNXPqLKJMcR7ODmPyxNzOXxeTjnPl6+LLubtFmdEQArII6/jlKrBDr9idghM9JAQOf86Z48lbawepICQGtgvGagOZF8OyiIp4sIBNhekEebxV3/apEc6tRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lqXq62DI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LedwhX4f"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a55b10bfd30so205249566b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2024 22:44:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713937459; x=1714542259; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=jlneV0689N8HaAgnKrA8+c/XGpL5OqjXfyjAo9Y+EUk=;
-        b=LedwhX4fnBBGFUSibiLwDXq69JAHO9/f7vimfuppckluu9lcTOAaaKO+BvGDHt6S4P
-         5bEYhOxyDCfjDKLpxDdN+APn8q4EVX/rm1eNtrqS6xchBsEfRl+Tt/q/rtUIGSQeCqpQ
-         ApjJTNtuPlGBHz6FnWQz04yEq97uRl/oSRXh1doWpAnjBhx6cp1x8fcXOAI6+H3hOcmF
-         ErFWYQzuOdRVA7zPpmbfTurPFirfxgmnjL197wO1zItsmUAAE0rCHHr4KNhicY3EK7RV
-         Gjr4bFm7jktzZMq9LZmIbLE3UNqOyVbuMiiBEXyT8WnvB92K+KAV1GsbFDSUsrmfqK/D
-         OPCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713937459; x=1714542259;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jlneV0689N8HaAgnKrA8+c/XGpL5OqjXfyjAo9Y+EUk=;
-        b=WU70tCS8xoMmEABFrUqmrSVoY3kSn0IY47Q9AKXM8bwZNav12I0EHN/0zM/M4lcdLi
-         BwQGHwC/BtI6kz9Hz6+D5BejOdx3wndqCnvDQQHiRQ/0pwA5Qkc23OMqhRp5sShXn3G1
-         VSxsWp/uiQesAUCXKJ8zhgTgJvMJTdJHUHwwb9MYinSc08IL+WAvY5mQpsk/vZ66LYZ5
-         l9WKtUnaQfDvfvneG4PSPAj/qKfobMsBfG4XQFZUUHFik0+iD+KugWpZmRQ4mNib41LP
-         BlYp0bcFt2DAXFCugTGSHYUIX2WW8vhVBbWJoYvV/t2KURZklj3M+21URkpjubZcba86
-         mP0A==
-X-Forwarded-Encrypted: i=1; AJvYcCWdKVmLfT5ztvcaZRV13TVxxB4SrhUoNRjBeJ9yCE8R47lKOqcX95lv3NnKWH9ozs9IIGMm4jkJXdMChRwxIoleurqXZ5eXwzRSpgOF
-X-Gm-Message-State: AOJu0YzRdrdiXtkDXDHErnRbqE6ZJk0eZaqB3DEogYI7uv4O/Kw++GyX
-	EXsQ6oO591s4f0ulRvvFfVn+H/2/wcul3o0GMen7frD/1U+8EPbvUYI0zTua9T8=
-X-Google-Smtp-Source: AGHT+IEk1XTgtoIQ2MS41hy3SMrupyasfBYe9OpfN9uyWGTfq1hYSolqElIpWbXLbKClxt9S4tM+XQ==
-X-Received: by 2002:a05:6402:2033:b0:572:325a:8515 with SMTP id ay19-20020a056402203300b00572325a8515mr241936edb.36.1713937458625;
-        Tue, 23 Apr 2024 22:44:18 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id s3-20020a056402164300b00562d908daf4sm7429161edx.84.2024.04.23.22.44.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 22:44:18 -0700 (PDT)
-Message-ID: <4824ad5c-0250-43cb-8f92-ec5e6c9c49af@linaro.org>
-Date: Wed, 24 Apr 2024 07:44:16 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lqXq62DI"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43O0jCrE006734;
+	Wed, 24 Apr 2024 05:46:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id; s=qcppdkim1; bh=b2Nj9uwekS1C
+	wRhb+sjbn8p7cNsJyk7FOMTsrfPdKQM=; b=lqXq62DIOSklUMrt8xjk12ZU5/Qt
+	ukSrXHCZiQxvqF3+M7w/pTcM7SzhvtE/WIJo8m8xQ1JIlzJPu5hOdsgtiybjA9av
+	80+3B2kIWw2Rf6jE3/LdBLsKXtaV2ywPBzT1nPKWq7ACHG0w5OoRd7EYNpD0F14L
+	uY4+IjWQjA1YgFrHQ+P8rCh+HcsVyU8qQjFC0LpwI93C1RAVW02g40S8IXmvOp5z
+	0WWdi2O1AUUY4ZqykO8hLrlir6RrKtWrhKKHBQllcIEt/aoZyWlZRlVejp3QdzVf
+	w09ECN8aATA+uR+/a+Zr6N1gQdJj8zWaV3NteAQh1Zp+8/KDcK8XpNnSKQ==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xpcxejhx4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Apr 2024 05:46:10 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 43O5k5Q9000560;
+	Wed, 24 Apr 2024 05:46:05 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3xm6skt5p9-1;
+	Wed, 24 Apr 2024 05:46:05 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43O5k5Nf000526;
+	Wed, 24 Apr 2024 05:46:05 GMT
+Received: from hu-maiyas-hyd.qualcomm.com (hu-vdadhani-hyd.qualcomm.com [10.213.106.28])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 43O5k5s1000518;
+	Wed, 24 Apr 2024 05:46:05 +0000
+Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 4047106)
+	id C66C55001C1; Wed, 24 Apr 2024 11:16:04 +0530 (+0530)
+From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+To: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org,
+        krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org, conor+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmitry.baryshkov@linaro.org
+Cc: quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com,
+        Viken Dadhaniya <quic_vdadhani@quicinc.com>
+Subject: [PATCH v2] arm64: dts: qcom: qcm6490-rb3: Enable gpi-dma and qup node
+Date: Wed, 24 Apr 2024 11:16:02 +0530
+Message-Id: <20240424054602.5731-1-quic_vdadhani@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: vQNICJ2goF1RpE3nOSfzfWeW_hxx8-Am
+X-Proofpoint-ORIG-GUID: vQNICJ2goF1RpE3nOSfzfWeW_hxx8-Am
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-24_03,2024-04-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ mlxlogscore=774 phishscore=0 impostorscore=0 priorityscore=1501
+ clxscore=1011 spamscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404240024
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 2/2] memory: tegra: make sid and broadcast regions
- optional
-To: Sumit Gupta <sumitg@nvidia.com>, "robh@kernel.org" <robh@kernel.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>, "maz@kernel.org"
- <maz@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>,
- Thierry Reding <treding@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
- Ashish Mhetre <amhetre@nvidia.com>, Bibek Basu <bbasu@nvidia.com>
-References: <20240412130540.28447-1-sumitg@nvidia.com>
- <20240412130540.28447-3-sumitg@nvidia.com>
- <06849796-f896-4cff-842c-118d86e94a6b@linaro.org>
- <1aab0272-85ea-e3a1-7d68-27ab4f1e1993@nvidia.com>
- <6506b2e8-c7f2-460d-b17d-55b731fac1ac@linaro.org>
- <e1d4e915-08c9-c2e0-f882-6d7cd9500c96@nvidia.com>
- <d27d0784-7f88-4351-943e-5c464a7d95df@linaro.org>
- <95f8e4b5-23af-90cb-4dae-2922e8e71920@nvidia.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <95f8e4b5-23af-90cb-4dae-2922e8e71920@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 24/04/2024 07:27, Sumit Gupta wrote:
-> 
-> 
->>>
->>>>>>>
->>>>>>>     static inline u32 mc_readl(const struct tegra_mc *mc, unsigned long offset)
->>>>>>> diff --git a/drivers/memory/tegra/tegra186.c b/drivers/memory/tegra/tegra186.c
->>>>>>> index 1b3183951bfe..716582255eeb 100644
->>>>>>> --- a/drivers/memory/tegra/tegra186.c
->>>>>>> +++ b/drivers/memory/tegra/tegra186.c
->>>>>>> @@ -26,20 +26,16 @@
->>>>>>>     static int tegra186_mc_probe(struct tegra_mc *mc)
->>>>>>>     {
->>>>>>>          struct platform_device *pdev = to_platform_device(mc->dev);
->>>>>>> +     struct resource *res;
->>>>>>>          unsigned int i;
->>>>>>> -     char name[8];
->>>>>>> +     char name[14];
->>>>>>
->>>>>> How is it relevant? I don't see this being used in your diff.
->>>>>>
->>>>>>
->>>>>> Best regards,
->>>>>> Krzysztof
->>>>>>
->>>>>
->>>>> Did this change for below warning coming with 'W=1'.
->>>>>
->>>>> ../drivers/memory/tegra/tegra186.c: In function tegra186_mc_probe:
->>>>> ../drivers/memory/tegra/tegra186.c:51:49: warning: %u directive output
->>>>> may be truncated writing between 1 and 10 bytes into a region of size 6
->>>>> [8;;https://gc
->>>>> c.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat-truncation=-Wformat-truncation=8;;]
->>>>>       51 |                 snprintf(name, sizeof(name), "ch%u", i);
->>>>>          |                                                 ^~
->>>>> ../drivers/memory/tegra/tegra186.c:51:46: note: directive argument in
->>>>> the range [0, 4294967294]
->>>>>       51 |                 snprintf(name, sizeof(name), "ch%u", i);
->>>>>          |                                              ^~~~~~
->>>>> ../drivers/memory/tegra/tegra186.c:51:17: note: snprintf output between
->>>>> 4 and 13 bytes into a destination of size 8
->>>>>       51 |                 snprintf(name, sizeof(name), "ch%u", i);
->>>>>          |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>>>
->>>> I asked how this is relevant to this change and you answer there is a
->>>> warning. If the warning was there, your answer is really just deflecting
->>>> the topic, so obviously this is new warning. Which part of code uses
->>>> longer name?
->>>>
->>>> BTW, really, such answers do not make review of your code smoother.
->>>>
->>>> Best regards,
->>>> Krzysztof
->>>>
->>>
->>> Apologies for not explaining it earlier.
->>>
->>> I increased the buffer size to suppress a static check warning in the
->>> existing code due to big range of 'unsigned int i', if copied to small
->>> name buffer.
->>>
->>> Seems like the warning is harmless as the maximum value of num_channels
->>> is 16. I will remove it and keep the buffer size as 8 in the next
->>> version.
->>>
->>
->> That's not the point. For the third time: how is it relevant to this
->> change here? Was or was not the warning before?
->>
-> 
-> This is not relevant to the change here. The warning was before as well.
+Enable gpi-dma0, gpi-dma1 and qupv3_id_1 nodes for
+buses usecase on RB3gen2.
 
-OK, fixing the warning is always a good idea, but this *must* be always
-separate patch, with its own explanation and rationale, and warning message.
+Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+---
 
-Best regards,
-Krzysztof
+v1 -> v2:
+- Move gpi node to correct place.
+- Update commit log.
+---
+ arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+index a085ff5b5fb2..577bf8560d1e 100644
+--- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
++++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+@@ -530,6 +530,14 @@
+ 			   <GCC_WPSS_RSCP_CLK>;
+ };
+ 
++&gpi_dma0 {
++	status = "okay";
++};
++
++&gpi_dma1 {
++	status = "okay";
++};
++
+ &i2c1 {
+ 	status = "okay";
+ 
+@@ -606,6 +614,10 @@
+ 	status = "okay";
+ };
+ 
++&qupv3_id_1 {
++	status = "okay";
++};
++
+ &remoteproc_adsp {
+ 	firmware-name = "qcom/qcs6490/adsp.mbn";
+ 	status = "okay";
+-- 
+2.17.1
 
