@@ -1,229 +1,163 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD0015CD53
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3D015CD7B;
+	Wed, 24 Apr 2024 13:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713966584; cv=none; b=DsSNnCpypL/90eGehKo7gFK9KyTVpXqB4TeLrv4pIaI1WzyX73wO+wvIhEE0vKxAbpnOEPWn702ERDpQ/ZHlqvcaZ5M5NJ+haqm0qCuVm38cwnDgWz2RcpFI1EtscL9srF0thYPDGfktklP1NALcQHC05GfQKEfaeKyipOq6qPs=
+	t=1713966598; cv=none; b=Ka+dqlIz5ZEO7f/tRs+g0Idxriv/JPT0AdeJqS4ZAOB35/PGtMis1waKbsBKZwhMkiQeLHaEMJcuOfej4lijAHXjH04ZrrWXzaVWC3xazY65OqRBpK6H8gh8U4rTV4q49jPA9cZlSh4jrCldUNn2uUBrT8wgidNQUknrpwJ5KxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713966584; c=relaxed/simple;
-	bh=AqknXv1NqiTdlllA1B+FsxVP9Gj0QfESOH4ACduGvkw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IrgR8mS5JmLmkl8+l+3fqh+HseUxfSosyz/3rZy3BKNBdGbCzPr0ENQinGoPQJs9PLVp95xl1tR8mWloQDUbimeRfHOSY6wU7nLoBj6qXOBnuJbdpEmLtxER3STWis0BVuO8XI3C5Bsxiv7i87VYZxBntGDcWYEqZl7xjGG2WDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=e+SKJShN; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1713966598; c=relaxed/simple;
+	bh=MouoPKar+X5yIWVQYlP03da96aYzk+t63W2CcZPjafI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=aJM19kMYQTVPJhnJOCea74bMVDZVEBLs1fU/MsM2xsdy3w7zRoX54u4TjAJ4552tNE0rL6usYMgKgVpamwQljl/Gu/Wng5yCpSh7Lmt4WkFX8Wn5bKiF0fZyYjvNxT1aNA6BOSE0IIbDb06EI3jQmm8dT5Yy8wFHSnesqQRxC2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RM8AjmSY; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="e+SKJShN"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1713966578; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=cMUGdl9jNnlRyNkMOzdJJPy7mvaoUfHQxqz9NDcpeS0=;
-	b=e+SKJShN/EXn9jkl3iH+JxU9elE29Zbp1ne2FMSRDvbbefny7McetuaDcXMcQ75DXohedRZm+QcId69J6N6yDVIVrIRsnpnZeRH1sl9ZtNhcgVVq8yWFAFcdQSZUvOyojeQ299PF/oSj5Hrsmn/8P3WdWyRwALbVrJBaK6RE3Os=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R531e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045046011;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0W5COgTr_1713966574;
-Received: from 192.168.0.106(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W5COgTr_1713966574)
-          by smtp.aliyun-inc.com;
-          Wed, 24 Apr 2024 21:49:36 +0800
-Message-ID: <813fe7fd-3004-4e8b-801d-95c33559a025@linux.alibaba.com>
-Date: Wed, 24 Apr 2024 21:49:34 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RM8AjmSY"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2a4df5d83c7so4771810a91.0;
+        Wed, 24 Apr 2024 06:49:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713966596; x=1714571396; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iwhsTYLZsnUNQpsQtO3gTMvucJ5x+wdSVZX3hNQvMgk=;
+        b=RM8AjmSYtZ/AgbjTTKlUmg1DEDFiH+9AFAeK3yFMlOcrRUAY9RecIf8nZVyJUGmxCX
+         p4/KZBHwtbR9Svm1wa5/FdenmGya09a6zyno00geiJz+9nfNbIcEeeOYPcHZiL2Rwwfx
+         QyX6SjYsdt9/DRQxGF6KLceXRpUsAzyRlE0m9h/TcgTAuDU5azoUZ7oMhiU64rPWPp1H
+         u4bxf408xlpnsEh79Pm47kPXD74+nE8Lf94ztDLhzG1e4ozvVwwviCqjOmq6RWaNruMi
+         N4HMVW3s8Ijk2LZk2Zj1+9wTDPpbZB6ZpJkAbs10zKLvPNy26HU/O+LZ3xsss3ea9wEu
+         uSOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713966596; x=1714571396;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iwhsTYLZsnUNQpsQtO3gTMvucJ5x+wdSVZX3hNQvMgk=;
+        b=lkbO1TDnncUr/AGui87wJUzUdu1fpsAmYD2QhFQEG8phpCPQjCGzwUId2qmtyyde+Y
+         VDY6JiUwh+YCsZPyRDkf1v+8deOmioi6nz3XoXEswCAxvJmyXu/YdHheEfFDcoQ+zel9
+         zGJ9cxRIEaz5TxRPIAtS5Sz6rC7uK31OfVMNY5Wgm0Hl/DBJ4SWt4iUPPLo8SqwcnvLh
+         CI+Ur7GSVRZafgpmexISPFw9xF97uGl+qLVE1MuwuZYsovLuiRawgTs3bfEdgCjbjkyW
+         t1gLND9OCG644OomQNUQoetVX4HEPbLe+EIMvsXggWnhed1jRZaURFg2RSeHCzu6SIjm
+         ePwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVlNPHE/+1SJiGNyBM4CR4AH/12M7JFzD0bwQwZjk827LUqAfhC9PLXC1Ls7Lrb5OCXCmJvCiIU2iGpG7reZqletlHC4InG
+X-Gm-Message-State: AOJu0Yxx+iewSOltK9Xe4L3W5y+aC9ZLwesEfBvHu2ntG+triXsZjSr2
+	Mku5h1GAoBgq4WBwHqTCgGee6go5q4MW/ncj/bv6y33aIL2kTRgI3t+M7A==
+X-Google-Smtp-Source: AGHT+IFEJAw3gteyOgCigI4HVi5QkUInRC3VACf+vMdl3oxlxOPCiOCFxVlBBRDga8OOCaDPbAIMlA==
+X-Received: by 2002:a17:90a:a417:b0:2ab:d82e:1afb with SMTP id y23-20020a17090aa41700b002abd82e1afbmr2721321pjp.16.1713966596319;
+        Wed, 24 Apr 2024 06:49:56 -0700 (PDT)
+Received: from localhost ([198.11.176.14])
+        by smtp.gmail.com with ESMTPSA id ck16-20020a17090afe1000b002a2f6da006csm11273223pjb.52.2024.04.24.06.49.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2024 06:49:55 -0700 (PDT)
+From: Lai Jiangshan <jiangshanlai@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Sam Sun <samsun1006219@gmail.com>,
+	xingwei lee <xrivendell7@gmail.com>,
+	syzkaller-bugs@googlegroups.com,
+	Lai Jiangshan <jiangshan.ljs@antgroup.com>,
+	stable@vger.kernel.org,
+	Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: [PATCH V2] workqueue: Fix divide error in wq_update_node_max_active()
+Date: Wed, 24 Apr 2024 21:51:54 +0800
+Message-Id: <20240424135155.1339671-1-jiangshanlai@gmail.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
+In-Reply-To: <CAEkJfYPGS1_4JqvpSo0=FM0S1ytB8CEbyreLTtWpR900dUZymw@mail.gmail.com>
+References: <CAEkJfYPGS1_4JqvpSo0=FM0S1ytB8CEbyreLTtWpR900dUZymw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/5] add mTHP support for anonymous share pages
-To: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org,
- hughd@google.com
-Cc: willy@infradead.org, david@redhat.com, wangkefeng.wang@huawei.com,
- 21cnbao@gmail.com, ying.huang@intel.com, shy828301@gmail.com,
- ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1713755580.git.baolin.wang@linux.alibaba.com>
- <4b998e7d-153f-48cc-a9bb-8c84bb675581@arm.com>
- <c1f68109-7665-4905-996f-f1067dfa2cb6@linux.alibaba.com>
- <80b5f87e-c156-4ccc-98f0-96f1fd864273@arm.com>
- <ef4f15dd-da31-4a1e-bec5-62a7002c4f7c@linux.alibaba.com>
- <5b8b22e7-6355-4b08-b5b5-1e33ebae6f16@arm.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <5b8b22e7-6355-4b08-b5b5-1e33ebae6f16@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
 
+Yue Sun and xingwei lee reported a divide error bug in
+wq_update_node_max_active():
 
-On 2024/4/24 18:01, Ryan Roberts wrote:
-> On 24/04/2024 10:55, Baolin Wang wrote:
->>
->>
->> On 2024/4/24 16:26, Ryan Roberts wrote:
->>> On 24/04/2024 07:55, Baolin Wang wrote:
->>>>
->>>>
->>>> On 2024/4/23 18:41, Ryan Roberts wrote:
->>>>> On 22/04/2024 08:02, Baolin Wang wrote:
->>>>>> Anonymous pages have already been supported for multi-size (mTHP) allocation
->>>>>> through commit 19eaf44954df, that can allow THP to be configured through the
->>>>>> sysfs interface located at
->>>>>> '/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled'.
->>>>>>
->>>>>> However, the anonymous shared pages will ignore the anonymous mTHP rule
->>>>>> configured through the sysfs interface, and can only use the PMD-mapped
->>>>>> THP, that is not reasonable. Many implement anonymous page sharing through
->>>>>> mmap(MAP_SHARED | MAP_ANONYMOUS), especially in database usage scenarios,
->>>>>> therefore, users expect to apply an unified mTHP strategy for anonymous pages,
->>>>>> also including the anonymous shared pages, in order to enjoy the benefits of
->>>>>> mTHP. For example, lower latency than PMD-mapped THP, smaller memory bloat
->>>>>> than PMD-mapped THP, contiguous PTEs on ARM architecture to reduce TLB miss
->>>>>> etc.
->>>>>
->>>>> This sounds like a very useful addition!
->>>>>
->>>>> Out of interest, can you point me at any workloads (and off-the-shelf
->>>>> benchmarks
->>>>> for those workloads) that predominantly use shared anon memory?
->>>>
->>>> As far as I know, some database related workloads make extensive use of shared
->>>> anonymous page, such as PolarDB[1] in our Alibaba fleet, or MySQL likely also
->>>> uses shared anonymous memory. And I still need to do some investigation to
->>>> measure the performance.
->>>>
->>>> [1] https://github.com/ApsaraDB/PolarDB-for-PostgreSQL
->>>
->>> Thanks for the pointer!
->>>
->>>>
->>>>>> The primary strategy is that, the use of huge pages for anonymous shared pages
->>>>>> still follows the global control determined by the mount option "huge="
->>>>>> parameter
->>>>>> or the sysfs interface at '/sys/kernel/mm/transparent_hugepage/shmem_enabled'.
->>>>>> The utilization of mTHP is allowed only when the global 'huge' switch is
->>>>>> enabled.
->>>>>> Subsequently, the mTHP sysfs interface
->>>>>> (/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled)
->>>>>> is checked to determine the mTHP size that can be used for large folio
->>>>>> allocation
->>>>>> for these anonymous shared pages.
->>>>>
->>>>> I'm not sure about this proposed control mechanism; won't it break
->>>>> compatibility? I could be wrong, but I don't think shmem's use of THP used to
->>>>> depend upon the value of /sys/kernel/mm/transparent_hugepage/enabled? So it
->>>>
->>>> Yes, I realized this after more testing.
->>>>
->>>>> doesn't make sense to me that we now depend upon the
->>>>> /sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled values (which by
->>>>> default disables all sizes except 2M, which is set to "inherit" from
->>>>> /sys/kernel/mm/transparent_hugepage/enabled).
->>>>>
->>>>> The other problem is that shmem_enabled has a different set of options
->>>>> (always/never/within_size/advise/deny/force) to enabled (always/madvise/never)
->>>>>
->>>>> Perhaps it would be cleaner to do the same trick we did for enabled; Introduce
->>>>> /mm/transparent_hugepage/hugepage-XXkb/shmem_enabled, which can have all the
->>>>> same values as the top-level /sys/kernel/mm/transparent_hugepage/shmem_enabled,
->>>>> plus the additional "inherit" option. By default all sizes will be set to
->>>>> "never" except 2M, which is set to "inherit".
->>>>
->>>> Sounds good to me. But I do not want to copy all same values from top-level
->>>> '/sys/kernel/mm/transparent_hugepage/shmem_enabled':
->>>> always within_size advise never deny force
->>>>
->>>> For mTHP's shmem_enabled interface, we can just keep below values:
->>>> always within_size advise never
->>>>
->>>> Cause when checking if mTHP can be used for anon shmem, 'deny' is equal to
->>>> 'never', and 'force' is equal to 'always'.
->>>
->>> I'll admit it wasn't completely clear to me after reading the docs, but my rough
->>> understanding is:
->>>
->>>    - /sys/kernel/mm/transparent_hugepage/shmem_enabled controls
->>>      mmap(SHARED|ANON) allocations (mostly; see rule 3)
->>>    - huge=... controls tmpfs allocations
->>>    - deny and force in shmem_enabled are equivalent to never and always for
->>>      mmap(SHARED|ANON) but additionally override all tmpfs mounts so they act as
->>>      if they were mounted with huge=never or huge=always
->>>
->>> Is that correct? If so, then I think it still makes sense to support per-size
->>
->> Correct.
->>
->>> deny/force. Certainly if a per-size control is set to "inherit" and the
->>> top-level control is set to deny or force, you would need that to mean something.
->>
->> IMHO, the '/mm/transparent_hugepage/hugepage-XXkb/shmem_enabled' interface
->> should only control the anonymous shmem. And 'huge=' controls tmpfs allocation,
->> so we should not use anonymous control to override tmpfs control, which seems a
->> little mess?
-> 
-> I agree it would be cleaner to only handle mmap(SHARED|ANON) here, and leave the
-> tmpfs stuff for another time. But my point is that
-> /mm/transparent_hugepage/shmem_enabled already interferes with tmpfs if the
-> value is deny or force. So if you have:
-> 
-> echo deny > /mm/transparent_hugepage/shmem_enabled
+divide error: 0000 [#1] PREEMPT SMP KASAN PTI
+CPU: 1 PID: 21 Comm: cpuhp/1 Not tainted 6.9.0-rc5 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+RIP: 0010:wq_update_node_max_active+0x369/0x6b0 kernel/workqueue.c:1605
+Code: 24 bf 00 00 00 80 44 89 fe e8 83 27 33 00 41 83 fc ff 75 0d 41
+81 ff 00 00 00 80 0f 84 68 01 00 00 e8 fb 22 33 00 44 89 f8 99 <41> f7
+fc 89 c5 89 c7 44 89 ee e8 a8 24 33 00 89 ef 8b 5c 24 04 89
+RSP: 0018:ffffc9000018fbb0 EFLAGS: 00010293
+RAX: 00000000000000ff RBX: 0000000000000001 RCX: ffff888100ada500
+RDX: 0000000000000000 RSI: 00000000000000ff RDI: 0000000080000000
+RBP: 0000000000000001 R08: ffffffff815b1fcd R09: 1ffff1100364ad72
+R10: dffffc0000000000 R11: ffffed100364ad73 R12: 0000000000000000
+R13: 0000000000000100 R14: 0000000000000000 R15: 00000000000000ff
+FS:  0000000000000000(0000) GS:ffff888135c00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb8c06ca6f8 CR3: 000000010d6c6000 CR4: 0000000000750ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ workqueue_offline_cpu+0x56f/0x600 kernel/workqueue.c:6525
+ cpuhp_invoke_callback+0x4e1/0x870 kernel/cpu.c:194
+ cpuhp_thread_fun+0x411/0x7d0 kernel/cpu.c:1092
+ smpboot_thread_fn+0x544/0xa10 kernel/smpboot.c:164
+ kthread+0x2ed/0x390 kernel/kthread.c:388
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:244
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
 
-IIUC, this global control will cause shmem_is_huge() to always return 
-false, so no matter how 
-'/mm/transparent_hugepage/hugepage-xxxkB/shmem_enabled' is set, 
-anonymous shmem will not use mTHP. No?
+After analysis, it happens when all of the CPUs in a workqueue's affinity
+get offine.
 
-> echo inherit > /mm/transparent_hugepage/hugepage-64kB/shmem_enabled
-> 
-> What does that mean?
-> 
->>
->>>>> Of course the huge= mount option would also need to take a per-size option in
->>>>> this case. e.g. huge=2048kB:advise,64kB:always
->>>>
->>>> IMO, I do not want to change the global 'huge=' mount option, which can control
->>>> both anon shmem and tmpfs, but mTHP now is only applied for anon shmem. So let's
->>>
->>> How does huge= control anon shmem? I thought it was only for mounted
->>> filesystems; so tmpfs? Perhaps my mental model for how this works is broken...
->>
->> Sorry for noise, you are right. So this is still the reason I don't want to
->> change the semantics of 'huge=', which is used to control tmpfs.
->>
->>>> keep it be same with the global sysfs interface:
->>>> /sys/kernel/mm/transparent_hugepage/shmem_enabled.
->>>>
->>>> For tmpfs large folio strategy, I plan to address it later, and we may need more
->>>> discussion to determine if it should follow the file large folio strategy or not
->>>> (no investigation now).
->>>
->>> OK. But until you get to tmpfs, you'll need an interim definition for what it
->>> means if a per-size control is set to "inherit" and the top-level control is set
->>> to deny/force.
->>>
->>>>
->>>> Thanks for reviewing.
->>>
->>> No problem! Thanks for doing the work!
->>>
->>>>
->>>>>> TODO:
->>>>>>     - More testing and provide some performance data.
->>>>>>     - Need more discussion about the large folio allocation strategy for a
->>>>>> 'regular
->>>>>> file' operation created by memfd_create(), for example using ftruncate(fd) to
->>>>>> specify
->>>>>> the 'file' size, which need to follow the anonymous mTHP rule too?
->>>>>>     - Do not split the large folio when share memory swap out.
->>>>>>     - Can swap in a large folio for share memory.
->>>>>>
->>>>>> Baolin Wang (5):
->>>>>>      mm: memory: extend finish_fault() to support large folio
->>>>>>      mm: shmem: add an 'order' parameter for shmem_alloc_hugefolio()
->>>>>>      mm: shmem: add THP validation for PMD-mapped THP related statistics
->>>>>>      mm: shmem: add mTHP support for anonymous share pages
->>>>>>      mm: shmem: add anonymous share mTHP counters
->>>>>>
->>>>>>     include/linux/huge_mm.h |   4 +-
->>>>>>     mm/huge_memory.c        |   8 ++-
->>>>>>     mm/memory.c             |  25 +++++++---
->>>>>>     mm/shmem.c              | 107 ++++++++++++++++++++++++++++++----------
->>>>>>     4 files changed, 108 insertions(+), 36 deletions(-)
->>>>>>
+The problem can be easily reproduced by:
+
+ # echo 8 > /sys/devices/virtual/workqueue/<any-wq-name>/cpumask
+ # echo 0 > /sys/devices/system/cpu/cpu3/online
+
+Use the default max_actives for nodes when all of the CPUs in the
+workqueue's affinity get offline to fix the problem.
+
+Reported-by: Yue Sun <samsun1006219@gmail.com>
+Reported-by: xingwei lee <xrivendell7@gmail.com>
+Link: https://lore.kernel.org/lkml/CAEkJfYPGS1_4JqvpSo0=FM0S1ytB8CEbyreLTtWpR900dUZymw@mail.gmail.com/
+Fixes: 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
+Cc: stable@vger.kernel.org
+Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+---
+Changed from v1:
+	when total_cpus==0, use the default values for max_active
+	instead of forcing total_cpus>=1
+[v1]: https://lore.kernel.org/lkml/20240423124548.1253842-1-jiangshanlai@gmail.com/
+
+ kernel/workqueue.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 0066c8f6c154..0105e3c82df4 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1594,6 +1594,15 @@ static void wq_update_node_max_active(struct workqueue_struct *wq, int off_cpu)
+ 	if (off_cpu >= 0)
+ 		total_cpus--;
+ 
++	/* If all CPUs of the wq get offline, use the default values */
++	if (unlikely(!total_cpus)) {
++		for_each_node(node)
++			wq_node_nr_active(wq, node)->max = min_active;
++
++		wq_node_nr_active(wq, NUMA_NO_NODE)->max = max_active;
++		return;
++	}
++
+ 	for_each_node(node) {
+ 		int node_cpus;
+ 
+-- 
+2.19.1.6.gb485710b
+
