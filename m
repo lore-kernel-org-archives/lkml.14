@@ -1,183 +1,110 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CD5158DDD;
-	Wed, 24 Apr 2024 13:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF53A15B986;
+	Wed, 24 Apr 2024 13:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713966148; cv=none; b=FHCzjS9GKjK+Cd/eVvOl1oyLOGF1gWCBJVSzg86CZ/QaLmN5dQIotMZT96urTN1UIn9h+faueHoSPmKEuY9p9TOHf3R2+xlSVzShceY//8qKbRKNp9RaydvccOPOvQA3dBSsZ9dezpnhyRE/zHCO/ddif+pJ6KlEI0eGluuprYE=
+	t=1713966191; cv=none; b=bFNmZE+wIeSV2K28GadXTkZtzKeriEz4O5lnKuBoB/9BzOq5jcXN9TRb4h12KxHbRBFMvGuNyZEJvT9XJ+//osEPUwfi0XCxn27DiNEF5+Cc3ioZipijM+ZBR3a5KpsPbsLNN70T8PzXcrqzGdXtT+5wMVdjzWxD9pSfd+IH0F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713966148; c=relaxed/simple;
-	bh=bNx8k2bgyvRuen8Wg8IeG/ZTMn7ghMosAG2nurMOmkw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I1B8TZt+0vw4rIKU1PAmF72FPmVMXqqVfLshHHymE8fYU1TO8ku29g/LggIxut2NrIxXCUCyGTnwOYnI8H5X2D4HEYMAvP4/zdKzUVcwtYdzu0z53pfegmqqVwMgzuq1WyEZMp8nho2DSWFXEyBXi/0ngdExrfULPPoj6uyknRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PIYwUILg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xf4MurGk; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PIYwUILg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xf4MurGk; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1713966191; c=relaxed/simple;
+	bh=EWAIznzUX0DHOlahRpLSJ/x5hLx2THJ0Nhx/H7hZWYw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o3uKQdhDSEC51X9IW4heoiXLc/Y75S1du3CKWcNBrr8rXq5zF0oYgjngBvYQv1qOdUBzwYaDfFAC2eryRzzwBpWAkv6RtCw4nxXd7dZxnF0a4HyEfWil6NLQfLNA7DqbkkcmdmU6GzBLzU5sIb5X6KR1kre+kz/mfLGRFjg1rhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=X1O+trFs; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PIYwUILg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xf4MurGk";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PIYwUILg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xf4MurGk"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4E1FC66E58;
-	Wed, 24 Apr 2024 13:42:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713966144; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hg2qv+cKjg7lV92iv/LpJqsoqWYIPU+fAiMDC1vNkJ8=;
-	b=PIYwUILgn5mj7wcUSy00BMiX9xKR6H24XQQq4ebj+dW+Vl8ajUxzIPATCfc/09/PBKcVCF
-	fsWPHHocdGReX2JP8VQnAoML1grkNnCnXsRbDcLtZ5WwWZEp9Din5dB4fWpdHyvE4iBGYM
-	j0zL8YxdYIxkDGenRxU3LH7IWwJdzH8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713966144;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hg2qv+cKjg7lV92iv/LpJqsoqWYIPU+fAiMDC1vNkJ8=;
-	b=xf4MurGk5Ir4zd5WHE56JnEVwf7EDfCuhghqAkp+ILXhLX91wj+fASNqGMEjEfsSseSOTc
-	ZPPRzJf1pglOouDQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=PIYwUILg;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=xf4MurGk
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713966144; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hg2qv+cKjg7lV92iv/LpJqsoqWYIPU+fAiMDC1vNkJ8=;
-	b=PIYwUILgn5mj7wcUSy00BMiX9xKR6H24XQQq4ebj+dW+Vl8ajUxzIPATCfc/09/PBKcVCF
-	fsWPHHocdGReX2JP8VQnAoML1grkNnCnXsRbDcLtZ5WwWZEp9Din5dB4fWpdHyvE4iBGYM
-	j0zL8YxdYIxkDGenRxU3LH7IWwJdzH8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713966144;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hg2qv+cKjg7lV92iv/LpJqsoqWYIPU+fAiMDC1vNkJ8=;
-	b=xf4MurGk5Ir4zd5WHE56JnEVwf7EDfCuhghqAkp+ILXhLX91wj+fASNqGMEjEfsSseSOTc
-	ZPPRzJf1pglOouDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3803313690;
-	Wed, 24 Apr 2024 13:42:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id mMiDDEAMKWb7BgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 24 Apr 2024 13:42:24 +0000
-Date: Wed, 24 Apr 2024 15:42:34 +0200
-Message-ID: <87jzkmdghh.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-	linux-sound@vger.kernel.org
-Subject: Re: regression/bisected/6.9 commit 587d67fd929ad89801bcc429675bda90d53f6592 decrease 30% of gaming performance
-In-Reply-To: <87pluedgx5.wl-tiwai@suse.de>
-References: <CABXGCsNmEtrN9DK-XmESaPm_1xpXm8A+juE+44Jf6AK5JE0+TQ@mail.gmail.com>
-	<874jcl7e83.wl-tiwai@suse.de>
-	<CABXGCsMmRFW3EYJ3UvNd-LO7ZTOyoNqjc_3OAmaCDSL=LuxJqg@mail.gmail.com>
-	<87v851e2di.wl-tiwai@suse.de>
-	<CABXGCsNMBRUaY-V8mhUQKdq+CQW5+eGUWL_YCJWXo0cgh9bGJQ@mail.gmail.com>
-	<87h6glt9zc.wl-tiwai@suse.de>
-	<CABXGCsMcazRvmiN4XtiHQCE9=dB=M=VsRqB=v+RPmtuhBL29DA@mail.gmail.com>
-	<a6f4e20ea2a68f56a7d2c4d76280bca44d6bf421.camel@gmail.com>
-	<CABXGCsPdqfXeZUw1ocx8O3NdOEb+h4yQ77+zdNpcwP_4JrYXuQ@mail.gmail.com>
-	<CABXGCsMTbmU4CP8CHUqRVXWkGiErFtEVG4COy6RSRWsAuK_-CQ@mail.gmail.com>
-	<87pluedgx5.wl-tiwai@suse.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="X1O+trFs"
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id E9574600A7;
+	Wed, 24 Apr 2024 13:42:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1713966185;
+	bh=EWAIznzUX0DHOlahRpLSJ/x5hLx2THJ0Nhx/H7hZWYw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=X1O+trFsOgKa62JcfLSbuM0jHkDfDyHFfKNmEg+YxkjXEz3RJC9jULsnBaTlg11MX
+	 GOxef++oKDXDEJeHDHckE235YLIYyAF+CfgiYfauHu6M+LjZ+oLGoFv6p/2OT69ksn
+	 4fdYVhForzGduvlLAi4fvxvzXwDWdfJxQLQYozEHoeoYB+JfKIMsDBnt2sP2GVlIXh
+	 YyKflYYtgDtBrAhBQg9FC081zDTnH0wBKQHVpR1moDOf1hvfOXh7djXpiOpn/1NfuZ
+	 vzTTYn1uVT6dRBSJpam84mELLNd4/YVmaq+DAL98TpLwixT8gG71z8mKzWzwnv/Qqh
+	 ZrI0/mSonGWYg==
+Received: by x201s (Postfix, from userid 1000)
+	id 967542044F0; Wed, 24 Apr 2024 13:42:52 +0000 (UTC)
+From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
+To: netdev@vger.kernel.org
+Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
+	linux-kernel@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Ariel Elior <aelior@marvell.com>,
+	Manish Chopra <manishc@marvell.com>
+Subject: [PATCH net-next] net: qede: flower: validate control flags
+Date: Wed, 24 Apr 2024 13:42:48 +0000
+Message-ID: <20240424134250.465904-1-ast@fiberby.net>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,mega.nz:url,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,perf-with-revert-587d67fd929a-beb45974dd49.data:url,perf-with-revert-587d67fd929a.data:url]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 4E1FC66E58
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -3.51
 
-On Wed, 24 Apr 2024 15:33:10 +0200,
-Takashi Iwai wrote:
-> 
-> On Wed, 24 Apr 2024 15:21:26 +0200,
-> Mikhail Gavrilov wrote:
-> > 
-> > On Thu, Apr 18, 2024 at 11:22 AM Mikhail Gavrilov
-> > <mikhail.v.gavrilov@gmail.com> wrote:
-> > >
-> > > On Tue, Apr 2, 2024 at 12:29 AM <mikhail.v.gavrilov@gmail.com> wrote:
-> > > >
-> > > > On Mon, 2024-04-01 at 21:50 +0500, Mikhail Gavrilov wrote:
-> > > > > On Mon, Apr 1, 2024 at 7:48 PM Takashi Iwai <tiwai@suse.de> wrote:
-> > > > > >
-> > > > > >
-> > > > > > Then it shouldn't be dmix/dsnoop.  You'd better try profiling
-> > > > > > what's
-> > > > > > going on there.  e.g. try to get perf results with and without the
-> > > > > > commit.
-> > > > >
-> > > > >
-> > > > > Here is original perf files:
-> > > > > [1] perf-with-revert-587d67fd929a.data -
-> > > > > https://mega.nz/file/EpZmXbgL#vEnxuODoB__jM6TwV6XbwC_TWMMqvT7qaWkJU22JY48
-> > > > > [2] perf-with-revert-587d67fd929a-beb45974dd49.data -
-> > > > > https://mega.nz/file/0lI31CDA#hKsv6vX7t5u-Sx1_p2E7-Y32-z5VFPlW2Y793oM-JRU
-> > > > >
-> > >
-> > > Excuse me. Can you have time to look in my perf files?
-> > >
-> > 
-> > This is a friendly reminder
-> 
-> Honestly speaking, it's your role to analyze what's going on.
-> Such a performance issue is pretty much dependent on the installed
-> system, so giving a perf data to me won't help much, unfortunately.
+This driver currently doesn't support any flower control flags.
 
-That said, maybe the first thing you can try would be to check who is
-actually calling the corresponding function
-(snd_timer_close_locked()).  Put a debug print or a tracing hook to
-watch out for figuring out.  If the commit was really relevant, it
-must be called very frequently and concurrently, and I don't know
-really who does it except for dmix/dsnoop.
+Implement check for control flags, such as can be set through
+`tc flower ... ip_flags frag`.
 
+Since qede_parse_flow_attr() are called by both qede_add_tc_flower_fltr()
+and qede_flow_spec_to_rule(), as the latter doesn't having access to
+extack, then flow_rule_*_control_flags() can't be used in this driver.
 
-Takashi
+This patch therefore re-implements flow_rule_match_has_control_flags(),
+but with error messaging via DP_NOTICE, instead of NL_SET_ERR_MSG_FMT_MOD.
+
+So in case any control flags are masked, we call DP_NOTICE() and
+return -EOPNOTSUPP.
+
+Only compile-tested.
+
+Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+---
+
+This is AFAICT the last driver which didn't validate these flags.
+
+$ git grep FLOW_DISSECTOR_KEY_CONTROL drivers/
+$ git grep 'flow_rule_.*_control_flags' drivers/
+
+ drivers/net/ethernet/qlogic/qede/qede_filter.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_filter.c b/drivers/net/ethernet/qlogic/qede/qede_filter.c
+index a5ac21a0ee33..40f72e700d8e 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_filter.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_filter.c
+@@ -1843,6 +1843,19 @@ qede_parse_flow_attr(struct qede_dev *edev, __be16 proto,
+ 		return -EPROTONOSUPPORT;
+ 	}
+ 
++	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_CONTROL)) {
++		struct flow_match_control match;
++
++		flow_rule_match_control(rule, &match);
++
++		if (match.mask->flags) {
++			DP_NOTICE(edev,
++				  "Unsupported match on control.flags %#x",
++				  match.mask->flags);
++			return -EOPNOTSUPP;
++		}
++	}
++
+ 	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_BASIC)) {
+ 		struct flow_match_basic match;
+ 
+-- 
+2.43.0
+
