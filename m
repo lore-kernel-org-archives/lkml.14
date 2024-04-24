@@ -1,99 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtpcmd01-g.aruba.it (smtpcmd01-g.aruba.it [62.149.158.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852231D52B
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 08:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4C1142915
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 08:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.158.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713947929; cv=none; b=fSyXUS+MAn0AQTnibPeZdjri3rkCkrVfPLdCOfjoSkNLv4vwkZkZqZH55YvruI8WXBzoJT7TlgqK2ZoBmLHCmlbkb+ojo8ZuuP4jexJPkyM7DzDzPaHdNQp6un3rUzjz8cbsbc1F93DURWN7yDtnU5qeCszC/kZ2oIKvjIOu0OQ=
+	t=1713947975; cv=none; b=BUf92aFNoySSSREhxtL/9Wbcvzcpc8FjSVqIr4fnVYPm5WN5gG5cqjIiPNuHWrkdLexGtXQ3s8JAAH3dXfwpD056/D/JZwJVmQRfJA8yi2dLmOYfi20YX8JI0JkHpSXa/1f2aZZKKnwXb7yFUelsTm8gqrqoF0jAEAmdEBud6mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713947929; c=relaxed/simple;
-	bh=hMMvxpDfbjDULv1fmXRnELIn09JQOXoi13BP9n0Ktzo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HmvoycvbPdpqlM39ClGRKiLqSjufbEE8Gg5Dng0sJRx1IxzfnoC7XCQk9CMjmNKTAL1fVDqWcGH+HtmM2lX7akdI6k3UjUvdJCsZTxmy+HV+ivrCLDBNf8ateCHbg4FrP1g8XcAPoUfly1yMG0zXMzPNCDp13b6l36qeLkj6ywU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=duzIhUsy; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713947975; c=relaxed/simple;
+	bh=3+0nlzHW2JT0q5k/SQ97Gsuh5F72SEJngTlpyLTO/2I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LOiG/vzOtKCZfgEO2X8FjJ6iLBRO2rfj+vIiSyDVs00Zdwtcqd3FZrvTbXmLg/ELJAUDJpvHdb4dCTrWARgHQ6PRsKhjzI6BcO3+uxJcJNy0iiRFN0ya+0V/dbfE6rCBlQsTAZEg1lMwtraejMICfkUSnj5rwDcjrRAj40r9ufw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=AR+gfgSC; arc=none smtp.client-ip=62.149.158.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="duzIhUsy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713947929; x=1745483929;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hMMvxpDfbjDULv1fmXRnELIn09JQOXoi13BP9n0Ktzo=;
-  b=duzIhUsyQ6vjwkTaGsJmxpJSFD2i3M5sWE+Yt9+vY4slbPL6D8og1zph
-   0mmYWACGyWP9LB/pgczZSyLASUN4Tx3XG36JoKo+WXzwSnQ9YAvBHph6S
-   y2xNsNxkPVj3j/+0nPTDRUIUq5VEljiBVgv+NQz6N/DRVVP0aTbumjyAK
-   7/G3ruv6F0NBEvt6RcdznEj9yKJ5kXE1FSYF3IrHES5k4Y5199fcZtqx3
-   yygl0Oa1GbOiJSQHWZ66KFJpk5FBh5bRcnI1OFFJUfPaxLv+Br+2Ws034
-   R8agCo8KiKR7aVOsKmeY3zLANL5uWgPojpr0n+/XKgxy4KuYUEXeBc92B
-   Q==;
-X-CSE-ConnectionGUID: +uLxZ/PUTg2sqhJuWVLiIg==
-X-CSE-MsgGUID: Tmdh/qC0TOmpQclm7wKzqA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="13398958"
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="13398958"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 01:38:48 -0700
-X-CSE-ConnectionGUID: +3UgJW18TYqRu6s+Kb1SXw==
-X-CSE-MsgGUID: BmfrGwObTz612CZwmk9qVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="24711899"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP; 24 Apr 2024 01:38:43 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 3DCFA28A; Wed, 24 Apr 2024 11:38:42 +0300 (EEST)
-Date: Wed, 24 Apr 2024 11:38:42 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
-	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>, 
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Tao Liu <ltao@redhat.com>
-Subject: Re: [PATCHv10 04/18] cpu/hotplug, x86/acpi: Disable CPU offlining
- for ACPI MADT wakeup
-Message-ID: <k4t62qfiyapfh2hjp4bpnaa4bmtlajpm5q4an3qs4jimhldcwv@wtrp63ofrfk6>
-References: <20240409113010.465412-1-kirill.shutemov@linux.intel.com>
- <20240409113010.465412-5-kirill.shutemov@linux.intel.com>
- <20240423160258.GBZifbsuoTIbWDapej@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="AR+gfgSC"
+Received: from engicam.com ([146.241.29.4])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id zY75r7sLxwy3rzY75rdAoY; Wed, 24 Apr 2024 10:36:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1713947785; bh=3+0nlzHW2JT0q5k/SQ97Gsuh5F72SEJngTlpyLTO/2I=;
+	h=From:To:Subject:Date:MIME-Version;
+	b=AR+gfgSCukrCyVF+RQqon2vcgZK3OMxsvdFMCDTP3HYyjC0Bxn9vAnh2w+Oqy6hqv
+	 onwoiiP0Pt7fm9wIkItkY42dfImj8bCoUWrPXjpBPa9A6rTtlG6rozebDEi2A59ZgR
+	 uZqs5hTpnCshY+LxESmg3PyCIawr+tYqaPnsuxcBGbluQyhZIbURL7vz/MM4PRfbpt
+	 lYWffLUvU16t0dhy0xCnirzDHJ5u7a1i3syveqidUX/YNmqbCd7fecXh+6HlMnWTW+
+	 6bs3oiND7M6Igj1oZgrLswFRPyMHbzGWY//dh/MO+gNmoZ6ocZwh+Xj4QrW9jl+UBm
+	 E7QoMAzkTWaLQ==
+From: Fabio Aiuto <fabio.aiuto@engicam.com>
+To: Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Fabio Aiuto <fabio.aiuto@engicam.com>
+Subject: [PATCH v4 0/3] arm64: dts: imx93: add i.Core MX93 EDIMM 2.0 board
+Date: Wed, 24 Apr 2024 10:36:04 +0200
+Message-Id: <20240424083607.11162-1-fabio.aiuto@engicam.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240423160258.GBZifbsuoTIbWDapej@fat_crate.local>
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfLnkJ1sozcfJ7Qr4uSLykER/wdjEN2xKC/4+pcCxAVGWkQWGbemRyNplRye8aE0lehC5Jxfro8d+ukwv8DIC9nEd2yIJbjatQyQzzw90sNFQsMKmKIbM
+ I/9cQb4rIuioNRT8hd1Jr9wHNBzr3eX1DtEFP8JGautdX0Tj20acemKUVYnVTtGX08948yMityF6UDebQTT8+9uoaIp/OkvcxXb2lDfCVFeTnHrvHT2j2cm0
+ l/QNhof5Xkn+wUSgq8BYPxSpR+JBezFkrvlg8EJ9UDYiV4iTJ0JniSsWJQMMjhOFx4S9fGeSaBBnwVVCPcPW41A9/W8jRBhm9chKByD7kBTTZRvSipGw2umk
+ vYeiRKL6DIMOmjQdErFaeKw2y7Cy0nt/0yFHmo77oi36K03Xge+XNoCBzXZLDNOePzWdosvd+WyKJLHGesVJ7xRweO27TyB3RmOhTK0aZJijDa7Z9eVpBEvg
+ zUdXZ29cA+AXs2HS4G8sX/yzZeRe1emWMlrlkIydpLNIbj9F3lCkypZgXEU=
 
-On Tue, Apr 23, 2024 at 06:02:58PM +0200, Borislav Petkov wrote:
-> > 
-> > Currently CPU hotplug is prevented based on the confidential computing
-> > attribute which is set for Intel TDX. But TDX is not the only possible
-> > user of the wake up method.
-> > 
-> > Disable CPU offlining on ACPI MADT wakeup enumeration.
-> 
-> Something's missing in that "justification". It should explain why
-> CC_ATTR_HOTPLUG_DISABLED is not needed anymore.
+Hello all,
 
-It was wrong from beginning. If ACPI MADT wake up method is used on the
-platform, we cannot handle offline, regardless if it is TDX or not.
+this patchset adds support for i.Core MX93 EDIMM 2.0 Starter Kit,
+a SoM + Evaluation Board combination from Engicam.
 
-> And looking at patch 3, I'm still unclear as to why this change is done.
-> Is it that the "ACPI MADT mailbox wakeup method" is going to be used by
-> TDX guests now too so that you don't need CC_ATTR_HOTPLUG_DISABLED
-> anymore?
+The number of patch has diminished to 3, for I dropped the
+patch introducing a change in nxp,pca9450 binding which has
+been already submitted in regulator tree.
 
-ACPI MADT is the only wakeup method supported in TDX guests. But offline
-is broken is because of ACPI MADT, not because of TDX.
+(Dropped also regulator tree maintainers as recipients for
+they aren't anymore involved in this patchset)
+
+This patchset introduces just basic functionality for board.
+
+Thanks in advance,
+
+fabio
+---
+v3 ---> v4:
+	- drop wl_reg_on regulator in favor of
+	  mmc-pwrseq-simple
+v2 ---> v3:
+        - fixed dtschema warnings
+        - added Acked/Reviewed-by tags
+        - removed regulator-always-on on
+          bt_reg_on
+        - fixed clock rate assignment on
+          sgtl5000 node
+        - added wdog_b-warm-reset; property in pmic
+        - fixed indentation issue
+
+v1 ---> v2:
+        - dropped patch updating nxp,pca9450 binding
+        - fixed indentation issue
+        - fixed missing space issue
+        - improved naming of regulator nodes
+        - removed unneeded include
+        - fixed email recipients
+
+Fabio Aiuto (3):
+  dt-bindings: arm: fsl: add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
+  arm64: dts: imx93: add Engicam i.Core MX93 SoM
+  arm64: dts: imx93: Add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
+
+ .../devicetree/bindings/arm/fsl.yaml          |   7 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx93-icore-mx93-edimm2.dts | 344 ++++++++++++++++++
+ .../boot/dts/freescale/imx93-icore-mx93.dtsi  | 271 ++++++++++++++
+ 4 files changed, 623 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93.dtsi
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.34.1
+
