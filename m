@@ -1,99 +1,139 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C3515CD6F
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCC315B0EE;
+	Wed, 24 Apr 2024 13:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713966203; cv=none; b=BkrOD3P38RMICUNS0WffJu95WpEHNAtULQu7vZY0JJXj0nedCBLZ1Z0T5LyUtD+7Ha09alFUlGeaxBivM+xKPnEjIDG30YrsOgQRDH4PVMqiJ7YUs89IGCr+TqDB8SaeO1XxPPqDGRQQGMltO/sskRQZzJ9mur9GBXbHXWzJ1jo=
+	t=1713966250; cv=none; b=tlfMkySDi4y9rj9j0A7vtko9EHeUOakJSyJ152E3EhLcHjPue/fF7aaKFdOYr/KFflZuJG9qrb92bxq9vuEW+5b6gs3l+GnI3Kyc7OfaydfBFv5dSJ9bklfPrMRkj9wSlXUpVBK0/o+TgDHm7yoTQh07QIpmYOayI7wYWPlMGts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713966203; c=relaxed/simple;
-	bh=WurC4JwQmzaxrRQycgmw9MlhFVx5IeXYPoUFvDn6lrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T8Pujtsw3gUEtOEmtU4d3yqzRawTsySaJmArPQCYddwanpZ0XxTnyKBSvc9LT49L36nBxNM1yzrHtl4Zlc5fgSA8QWeHgQnz8zcJtebwuuIXeUuBpU+uykJgpJ3X3DHbYLstD37L1Bl7Gk2O/KTDJpw1HfWYxfgykrswkC+cEAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=R0AoJhVK; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1713966250; c=relaxed/simple;
+	bh=Ucq2BSmkL5zSlPBzg282tu4WZOkfAlJeYB6yCzltLbg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qXiZThx39iR2cSx+JoMG0ZXKvh6JHqDWNnqCKNahsOBYBvB7DeTP8wCWfa29mj2acUL0JEksMZvcL28UFedRmr4uHaTKkd2d5sHA4al6rPzVdk1J7o/vEEwkUrchANciDvE/74G/1oFd2rkqGEEHemlOXWjT6BNk5MSxP90k214=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=J39LvF+0; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="R0AoJhVK"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BEAFD40E016B;
-	Wed, 24 Apr 2024 13:43:12 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id kNSHp48GgiPs; Wed, 24 Apr 2024 13:43:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1713966188; bh=Te5U16BC9bjsw/BpRjzJDnQvupDI/m4XSsshA5Q3WmQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R0AoJhVKcHnvdx7J0skZJBFlEBHmAjIJd/DM5vN2kB55oiofH/IbRXKkhp4bEe3SW
-	 80l6TMA3TZKQ3VqD4WOO1XLs2VgOGQ9O2Ub4LL6Slt8Ki/71vJHBSzBSbHodapj9FE
-	 LrX90YJYNB8A2qO6kvjVasqaonGAV0xmO56R8zn4igJ59GZqisY4R2gXVpwH+h9Nqq
-	 2kRsBobRvsPZAQRvwPrG7HDuLkEzUZkAKCZtna9tsp29PbrLAbbHkzeYQkxp65M4tM
-	 wvPtD4Uz/G1Jy8Cmal9ORWlJQ8bCwEgWFMMCS9R7XQvHtn6yuJoWzX4vAiRLX9+Obe
-	 5OWedxp5bs1oXe/pt2nHHM28J+KDKWkhZ6OeVhEM5izQ4BxmqF+F2ZQQ1ZVk4kZDMB
-	 XKJAaVWgCpxpZA8HPTv9H1G2+LTi10WrUo0jmHd1WyZ9S2jh4YtTIKkZDaZ9r59xd2
-	 DibI04h82GqcCutIarsKYVowKvYPlIxgfqmxcrmnSc4P81igtGUGWD0d+20oex1Evs
-	 us6o8GrPhVVG6kNxvbM886HTCKPxAOK5TW85pkFvWsF1Upv6j6EgELH8oYv6brZFRA
-	 ZQC4r7YMZEbS/PK3EITdmUAW+4lZ2Q/2OZQFfLJvxpPvOrDi0Jxr0GUnHgviDyth5a
-	 TtRl8F8HMqZny8ExrEzyYF7w=
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 392E540E0192;
-	Wed, 24 Apr 2024 13:42:55 +0000 (UTC)
-Date: Wed, 24 Apr 2024 15:42:48 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Will Deacon <will@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 2/2] cpu: Ignore "mitigations" kernel parameter if
- CPU_MITIGATIONS=n
-Message-ID: <20240424134248.GCZikMWA8EvlhGEYC7@fat_crate.local>
-References: <20240420000556.2645001-1-seanjc@google.com>
- <20240420000556.2645001-3-seanjc@google.com>
- <20240424053940.3ypivvztvv35dpu7@treble>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="J39LvF+0"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43OCIRVk003998;
+	Wed, 24 Apr 2024 15:43:37 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=aq6HJzenYCPlUr4ZBUMBSoIBJyV/GLFc2LlLruqkb7c=; b=J3
+	9LvF+0jClr6GkGQngcwrN0W8PrRZ4Cg0DSlUgTMKk/GeUi1K4W1WpLxLbNDkfj1b
+	TaYIiYvTtsORfSkbMUc2qlyqAh25B7hRsa6OoOK8NDMvpI70P5krWonKF1gw8uVJ
+	f10V1EPGTAbY0V2BZWm/xlnMPrhw86EAlKoUzZYMsYPGd9kchWUGI4G+8loXN55n
+	uBlcpucSkQ5Wnr7yBPUdbMhQfBi1QSDQRreVimhHeXVoGAOlAeHaw+5zCr/VB4wJ
+	8WGxUOldG9cQrPVPFu2Yoqeu/28o3ChNwHa2ExxlDgeULl6jisD5rZzI/0bppzYo
+	8lxDQ2V9HZLohZubdALg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xm4ee08k9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Apr 2024 15:43:37 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7D44640044;
+	Wed, 24 Apr 2024 15:43:33 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8F5EA220B5F;
+	Wed, 24 Apr 2024 15:42:51 +0200 (CEST)
+Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 24 Apr
+ 2024 15:42:50 +0200
+Message-ID: <b89d0531-067f-4356-91b0-ed7434cee3d7@foss.st.com>
+Date: Wed, 24 Apr 2024 15:42:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240424053940.3ypivvztvv35dpu7@treble>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ARM: dts: stm32: add PWR regulators support on stm32mp131
+To: Marek Vasut <marex@denx.de>, <linux-arm-kernel@lists.infradead.org>
+CC: Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>,
+        <kernel@dh-electronics.com>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20240319040528.104932-1-marex@denx.de>
+Content-Language: en-US
+From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <20240319040528.104932-1-marex@denx.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-24_11,2024-04-24_01,2023-05-22_02
 
-On Tue, Apr 23, 2024 at 10:39:40PM -0700, Josh Poimboeuf wrote:
-> On Fri, Apr 19, 2024 at 05:05:55PM -0700, Sean Christopherson wrote:
-> > +#ifdef CONFIG_CPU_MITIGATIONS
-> >  extern bool cpu_mitigations_off(void);
-> >  extern bool cpu_mitigations_auto_nosmt(void);
-> > +#else
-> > +static inline bool cpu_mitigations_off(void)
-> > +{
-> > +	return false;
-> > +}
+Hi Marek
+
+On 3/19/24 05:05, Marek Vasut wrote:
+> This patch adds STM32 PWR regulators DT support on stm32mp131.
+> This requires TFA to clear RCC_SECCFGR, is disabled by default
+> and can only be enabled on board DT level.
 > 
-> This should probably return true?
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> ---
+> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: kernel@dh-electronics.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> ---
+>   arch/arm/boot/dts/st/stm32mp131.dtsi | 24 ++++++++++++++++++++++++
+>   1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/st/stm32mp131.dtsi b/arch/arm/boot/dts/st/stm32mp131.dtsi
+> index 3900f32da797b..58b8ae759998d 100644
+> --- a/arch/arm/boot/dts/st/stm32mp131.dtsi
+> +++ b/arch/arm/boot/dts/st/stm32mp131.dtsi
+> @@ -1092,6 +1092,30 @@ rcc: rcc@50000000 {
+>   				 <&scmi_clk CK_SCMI_LSI>;
+>   		};
+>   
+> +		pwr_regulators: pwr@50001000 {
+> +			compatible = "st,stm32mp1,pwr-reg";
+> +			reg = <0x50001000 0x10>;
+> +			status = "disabled";
+> +
+> +			reg11: reg11 {
+> +				regulator-name = "reg11";
+> +				regulator-min-microvolt = <1100000>;
+> +				regulator-max-microvolt = <1100000>;
+> +			};
+> +
+> +			reg18: reg18 {
+> +				regulator-name = "reg18";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +			};
+> +
+> +			usb33: usb33 {
+> +				regulator-name = "usb33";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +			};
+> +		};
+> +
+>   		exti: interrupt-controller@5000d000 {
+>   			compatible = "st,stm32mp13-exti", "syscon";
+>   			interrupt-controller;
 
-Right, I'll fix it up while applying and send them linuswards this
-weekend so that 6.9 releases fixed.
+Applied on stm32-next.
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Cheers
+Alex
