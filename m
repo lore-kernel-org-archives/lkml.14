@@ -1,432 +1,206 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from gardel.0pointer.net (gardel.0pointer.net [85.214.157.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2847FBA3;
-	Thu, 25 Apr 2024 09:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA9284D3C;
+	Thu, 25 Apr 2024 09:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.157.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714039005; cv=none; b=b4Gp4mntrGbMN5TG2CU+0Z/hIFPcKoC7s102CjsT5IDL4N3PyH+fv4/wfw9ZjsHrCIIravGG5jCUySUUATPcEPH+y+YaITbJGmOiwo04asMUCq3RgEL1mRMsYFzCL9NHuehtszGukTpjIeBRpb52071KWsZAVrNoUr/oIt53N94=
+	t=1714039145; cv=none; b=XVMmDIOFvWeAPQSskykXiZZx6gMHD3NH5PPusezzBzjuVqZ61bFcuRiBgdkmN7KcJUQGcdruYARGg0uRzxBnPYjDPlZiKEx5korzr38v02r+0brPKenjQyUKJoAo7wRaGUSxnT8coI5poL28ss2uvyz/9cLY9B9ONt0mSCIQ8e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714039005; c=relaxed/simple;
-	bh=XYDT/4oDCAdIWOLWYH63E6kOErsy91C4cjww4e4djR4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NlSXcIjIWunPs5raavc70TQamxWANbjLsz+jQlyRVte2BoKVrLtmW5Am/sePL+WrcTt7eS4WOpkIKCh7He1t1E4ySyu3sTnZ/a44npV7b6lJaw5y108qQFApaKVh7u0YdFjyI5nJG6lKhCrBtm1UU6y4pVqaS0vMeVs9JD9hNZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQB8F39mgz6D9Lj;
-	Thu, 25 Apr 2024 17:56:29 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6413C1400CD;
-	Thu, 25 Apr 2024 17:56:39 +0800 (CST)
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 25 Apr
- 2024 10:56:38 +0100
-Date: Thu, 25 Apr 2024 10:56:37 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Marc Zyngier <maz@kernel.org>, <linuxarm@huawei.com>
-CC: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, "James Morse"
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Ingo Molnar
-	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: Re: [PATCH v7 11/16] irqchip/gic-v3: Add support for ACPI's
- disabled but 'online capable' CPUs
-Message-ID: <20240425105637.000030a7@huawei.com>
-In-Reply-To: <20240425102806.00003683@Huawei.com>
-References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
-	<20240418135412.14730-12-Jonathan.Cameron@huawei.com>
-	<20240422114020.0000294f@Huawei.com>
-	<87plugthim.wl-maz@kernel.org>
-	<20240424135438.00001ffc@huawei.com>
-	<20240425102806.00003683@Huawei.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+	s=arc-20240116; t=1714039145; c=relaxed/simple;
+	bh=xHhXT4WcWwUQdi5jvWEFm+xkFr/4SW6w8eomcm5GoVw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ujCXhrpQIPvDO/mjtOeMQSjPg2bbWHRnNWfcXkSbPj8ObufuFhQ+evRGp2WAQ+d0sON4hE7msm70elM68VYIvsI2diH2QEZ6y5oXG4UeTgy7Ny3j4VYx7scHh8CALhUDDyqS8L79HJgncbmFXTlB5bEhfQNhs82IOAwrhWcpuLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de; spf=pass smtp.mailfrom=0pointer.de; arc=none smtp.client-ip=85.214.157.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0pointer.de
+Received: from gardel-login.0pointer.net (gardel-mail [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
+	by gardel.0pointer.net (Postfix) with ESMTP id E1736E80EF2;
+	Thu, 25 Apr 2024 11:58:52 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+	id 43FE4160029; Thu, 25 Apr 2024 11:58:52 +0200 (CEST)
+Date: Thu, 25 Apr 2024 11:58:52 +0200
+From: Lennart Poettering <mzxreary@0pointer.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Mikko Rapeli <mikko.rapeli@linaro.org>, linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH] efi: expose TPM event log to userspace via sysfs
+Message-ID: <ZiopXE6-AucAB9NM@gardel-login>
+References: <20240422112711.362779-1-mikko.rapeli@linaro.org>
+ <6e751959b9056884c1b9d3ba23e303d1737d8763.camel@HansenPartnership.com>
+ <ZiZhSfgeAdrbnaVL@nuoska>
+ <CAC_iWjKA-xRH=3FK+=woXsB8AW4+_mVhJhUQnL8iFKxGzOwKiA@mail.gmail.com>
+ <e3038141413e25350f0e53496f7a7af1bf8419cf.camel@HansenPartnership.com>
+ <CAC_iWj+zbs2tq_nMASDX6pgCAP23+PpctJFiu9=mgOVDz8Trzw@mail.gmail.com>
+ <e1da76ca4c7fe9319aaac5f8ff6eb46db433ec60.camel@HansenPartnership.com>
+ <CAC_iWjLH=SDoTw_Pgr2hOKHkjEp_dKqwpUe9j6a=_WNW9UcxKw@mail.gmail.com>
+ <CAMj1kXGHT2wULF2zwNM_QxD29dRW_dtFX2sOvsLahPiRVB61qg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMj1kXGHT2wULF2zwNM_QxD29dRW_dtFX2sOvsLahPiRVB61qg@mail.gmail.com>
 
-On Thu, 25 Apr 2024 10:28:06 +0100
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+On Mi, 24.04.24 19:15, Ard Biesheuvel (ardb@kernel.org) wrote:
 
-> On Wed, 24 Apr 2024 13:54:38 +0100
-> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
->=20
-> > On Tue, 23 Apr 2024 13:01:21 +0100
-> > Marc Zyngier <maz@kernel.org> wrote:
-> >  =20
-> > > On Mon, 22 Apr 2024 11:40:20 +0100,
-> > > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:   =20
-> > > >=20
-> > > > On Thu, 18 Apr 2024 14:54:07 +0100
-> > > > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> > > >      =20
-> > > > > From: James Morse <james.morse@arm.com>
-> > > > >=20
-> > > > > To support virtual CPU hotplug, ACPI has added an 'online capable=
-' bit
-> > > > > to the MADT GICC entries. This indicates a disabled CPU entry may=
- not
-> > > > > be possible to online via PSCI until firmware has set enabled bit=
- in
-> > > > > _STA.
-> > > > >=20
-> > > > > This means that a "usable" GIC is one that is marked as either en=
-abled,
-> > > > > or online capable. Therefore, change acpi_gicc_is_usable() to che=
-ck both
-> > > > > bits. However, we need to change the test in gic_acpi_match_gicc(=
-) back
-> > > > > to testing just the enabled bit so the count of enabled distribut=
-ors is
-> > > > > correct.
-> > > > >=20
-> > > > > What about the redistributor in the GICC entry? ACPI doesn't want=
- to say.
-> > > > > Assume the worst: When a redistributor is described in the GICC e=
-ntry,
-> > > > > but the entry is marked as disabled at boot, assume the redistrib=
-utor
-> > > > > is inaccessible.
-> > > > >=20
-> > > > > The GICv3 driver doesn't support late online of redistributors, s=
-o this
-> > > > > means the corresponding CPU can't be brought online either. Clear=
- the
-> > > > > possible and present bits.
-> > > > >=20
-> > > > > Systems that want CPU hotplug in a VM can ensure their redistribu=
-tors
-> > > > > are always-on, and describe them that way with a GICR entry in th=
-e MADT.
-> > > > >=20
-> > > > > When mapping redistributors found via GICC entries, handle the ca=
-se
-> > > > > where the arch code believes the CPU is present and possible, but=
- it
-> > > > > does not have an accessible redistributor. Print a warning and cl=
-ear
-> > > > > the present and possible bits.
-> > > > >=20
-> > > > > Signed-off-by: James Morse <james.morse@arm.com>
-> > > > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>    =
- =20
-> > > >=20
-> > > > +CC Marc,
-> > > >=20
-> > > > Whilst this has been unchanged for a long time, I'm not 100% sure
-> > > > we've specifically drawn your attention to it before now.
-> > > >=20
-> > > > Jonathan
-> > > >      =20
-> > > > >=20
-> > > > > ---
-> > > > > v7: No Change.
-> > > > > ---
-> > > > >  drivers/irqchip/irq-gic-v3.c | 21 +++++++++++++++++++--
-> > > > >  include/linux/acpi.h         |  3 ++-
-> > > > >  2 files changed, 21 insertions(+), 3 deletions(-)
-> > > > >=20
-> > > > > diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-g=
-ic-v3.c
-> > > > > index 10af15f93d4d..66132251c1bb 100644
-> > > > > --- a/drivers/irqchip/irq-gic-v3.c
-> > > > > +++ b/drivers/irqchip/irq-gic-v3.c
-> > > > > @@ -2363,11 +2363,25 @@ gic_acpi_parse_madt_gicc(union acpi_subta=
-ble_headers *header,
-> > > > >  				(struct acpi_madt_generic_interrupt *)header;
-> > > > >  	u32 reg =3D readl_relaxed(acpi_data.dist_base + GICD_PIDR2) & G=
-IC_PIDR2_ARCH_MASK;
-> > > > >  	u32 size =3D reg =3D=3D GIC_PIDR2_ARCH_GICv4 ? SZ_64K * 4 : SZ_=
-64K * 2;
-> > > > > +	int cpu =3D get_cpu_for_acpi_id(gicc->uid);
-> > > > >  	void __iomem *redist_base;
-> > > > > =20
-> > > > >  	if (!acpi_gicc_is_usable(gicc))
-> > > > >  		return 0;
-> > > > > =20
-> > > > > +	/*
-> > > > > +	 * Capable but disabled CPUs can be brought online later. What =
-about
-> > > > > +	 * the redistributor? ACPI doesn't want to say!
-> > > > > +	 * Virtual hotplug systems can use the MADT's "always-on" GICR =
-entries.
-> > > > > +	 * Otherwise, prevent such CPUs from being brought online.
-> > > > > +	 */
-> > > > > +	if (!(gicc->flags & ACPI_MADT_ENABLED)) {
-> > > > > +		pr_warn_once("CPU %u's redistributor is inaccessible: this CPU=
- can't be brought online\n", cpu);
-> > > > > +		set_cpu_present(cpu, false);
-> > > > > +		set_cpu_possible(cpu, false);
-> > > > > +		return 0;
-> > > > > +	}     =20
-> > >=20
-> > > It seems dangerous to clear those this late in the game, given how
-> > > disconnected from the architecture code this is. Are we sure that
-> > > nothing has sampled these cpumasks beforehand?   =20
-> >=20
-> > Hi Marc,
-> >=20
-> > Any firmware that does this is being considered as buggy already
-> > but given it is firmware and the spec doesn't say much about this,
-> > there is always the possibility.
-> >=20
-> > Not much happens between the point where these are setup and
-> > the point where the the gic inits and this code runs, but even if caref=
-ul
-> > review showed it was fine today, it will be fragile to future changes.
-> >=20
-> > I'm not sure there is a huge disadvantage for such broken firmware in
-> > clearing these masks from the point of view of what is used throughout
-> > the rest of the kernel. Here I think we are just looking to prevent the=
- CPU
-> > being onlined later.
-> >=20
-> > We could add a set_cpu_broken() with appropriate mask.
-> > Given this is very arm64 specific I'm not sure Rafael will be keen on
-> > us checking such a mask in the generic ACPI code, but we could check it=
- in
-> > arch_register_cpu() and just not register the cpu if it matches.
-> > That will cover the vCPU hotplug case.
-> >=20
-> > Does that sounds sensible, or would you prefer something else? =20
->=20
-> Hi Marc
->=20
-> Some experiments later (faking this on a physical board - I never liked
-> CPU 120 anyway!) and using a different mask brings it's own minor pain.
->=20
-> When all the rest of the CPUs are brought up cpuhp_bringup_mask() is call=
-ed
-> on cpu_present_mask so we need to do a dance in there to use a temporary
-> mask with broken cpus removed.  I think it makes sense to cut that out
-> at the top of the cpuhp_bringup_mask() pile of actions rather than trying
-> to paper over each actual thing that is dying... (looks like an infinite =
-loop
-> somewhere but I haven't tracked down where yet).
->=20
-> I'll spin a patch so you can see what it looks like, but my concern is
-> we are just moving the risk from early users of these masks to later cases
-> where code assumes cpu_present_mask definitely means they are present.
-> That is probably a small set of cases but not nice either.
->=20
-> Looks like one of those cases where we need to pick the lesser of two evi=
-ls
-> which is probably still the cpu_broken_mask approach.
->=20
-> On plus side if we decide to go back to the original approach having seen
-> that I already have the code :)
->=20
-> Jonathan
->=20
+> > > > > > > [    0.000000] efi: ESRT=0xf0ea5040 TPMFinalLog=0xf0ea9040
+> > > > > > > RTPROP=0xf0ea7040 SMBIOS=0xf0ea3000 TPMEventLog=0xeb3b3040
+> > > > > > > INITRD=0xeb3b2040 RNG=0xe5c0f040 MEMRESERVE=0xe5c0e040
+> > > > > > >
+> > > > > > > Different boards use different TPM HW and drivers so compiling
+> > > > > > > all these in is possible but a bit ugly. systemd recently
+> > > > > > > gained support for a specific tpm2.target which makes TPM
+> > > > > > > support modular and also works with kernel modules for some TPM
+> > > > > > > use cases but not rootfs encryption.
+> > > > > > >
+> > > > > > > In my test case we have a kernel+initramfs uki binary which is
+> > > > > > > loaded by EFI firmware as a secure boot binary. TPM support on
+> > > > > > > various boards is visible in devicetree but not as ACPI table
+> > > > > > > entries. systemd currently detect TPM2 support either via ACPI
+> > > > > > > table /sys/firmware/acpi/tables/TPM2 or TPM entry or via
+> > > > > > > firmware measurement via
+> > > > > > > /sys/kernel/security/tpm0/binary_bios_measurements
+> > > > > > > .
+> > > > > >
+> > > > > > One corner case worth noting here is that scanning the device
+> > > > > > tree won't always work for non-ACPI systems... The reason is that
+> > > > > > a firmware TPM (running in OP-TEE) might or might not have a DT
+> > > > > > entry, since OP-TEE can discover the device dynamically and
+> > > > > > doesn't always rely on a DT entry.
+> > > > > >
+> > > > > > I don't particularly love the idea that an EventLog existence
+> > > > > > automatically means a TPM will be there, but it seems that
+> > > > > > systemd already relies on that and it does solve the problem we
+> > > > > > have.
+> > > > >
+> > > > > Well, quite. That's why the question I was interested in, perhaps
+> > > > > not asked as clearly as it could be is: since all the TPM devices
+> > > > > rely on discovery mechanisms like ACPI or DT or the like which are
+> > > > > ready quite early, should we simply be auto loading the TPM drivers
+> > > > > earlier?
+> > > >
+> > > > This would be an elegant way to solve this and on top of that, we
+> > > > have a single discovery mechanism from userspace -- e.g ls /dev/tpmX.
+> > > > But to answer that we need more feedback from systemd. What 'earlier'
+> > > > means? Autload it from the kernel before we go into launching the
+> > > > initrd?
+> > >
+> > > Right, so this is another timing problem: we can't autoload modules
+> > > *before* they appear in the filesystem and presumably they're on the
+> > > initrd, so auto loading must be post initrd mount (and init execution)
+> > > but otherwise quite early?
+> >
+> > Exactly. But is that enough?
 
-Patch on top of this series.  If no one shouts before I have it ready I'll
-roll a v8 with the mask introduction as a new patch and the other changes p=
-ushed into
-appropriate patches.
+General purpose distros typically don't build all TPM drivers into the
+kernel, but ship some in the initrd instead. Then, udev is responsible
+for iterating all buses/devices and auto-loading the necessary
+drivers. Each loaded bus driver might make more devices available for
+which more drivers then need to be loaded, and so on. Some of the
+busses are "slow" in the sense that we don't really know a precise
+time when we know that all devices have now shown up, there might
+always be slow devices that haven't popped up yet. Iterating through
+the entire tree of devices in sysfs is often quite slow in itself too,
+it's one of the most time consuming parts of the boot in fact. This
+all is done asynchronously hence: we enumerate/trigger/kmod all
+devices as quickly as we can, but we continue doing other stuff at the
+same time.
 
-=46rom 361b76f36bfb4ff74fdceca7ebf14cfa43cae4a9 Mon Sep 17 00:00:00 2001
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Date: Wed, 24 Apr 2024 17:42:49 +0100
-Subject: [PATCH] cpu: Add broken cpu mask to mark CPUs where inconsistent
- firmware means we can't start them.
+Of course that means that other stuff sometimes has to *wait* for
+devices to show up. For example, if a harddisk shall be mounted, it
+needs to be found/probed/kmod'ed first. Hence that's what we do: the
+fscking/mounting of a file system is delayed exactly as long as it
+takes for the block device it is for to show up.
 
-On ARM64, it is not currently possible to use CPUs where the GICC entry
-in ACPI specifies that it is online capable but not enabled. Only
-always enabled entries are supported.
+systemd these days makes use of the TPM — if available — for various
+purposes, such as disk encryption, measuring boot phases and system
+identity and various other things. Now, for the purpose of disk
+encryption, we need to wait for two things: the hard drive, and the
+TPM to be probed/driver loaded/accessible. /etc/fstab tells us pretty
+explicitly what bloock device to wait for, hence it's easy. But
+waiting for a TPM is harder: we might need it for disk encryption, but
+we don't know right-away if there actually *is* a TPM device to show
+up, and hence don't know whether to wait for it or not.
 
-Previously if this condition was met, the present and possible cpu masks
-were cleared for the relevant cpus.  However, those masks may already
-have been used by other code so this is not known to be safe.
+In systemd we hence check early if firmware reported that it measured
+something into a TPM during early boot. If not, then we have no
+measured boot, and we don't have to wait for the TPM. (Of course,
+there could possibly be a TPM that the firmware didn't use, but even
+if, there's no real point in waiting for it, since a TPM is not that
+interesting if your firmware didn't protect the boot with it/filled
+the PCRs with data). If however we see that firmware measured
+something into the TPM, then we deduce from that that Linux will probably
+find the device too sooner or later, we just need to give the udev
+enumerate/trigger/kmod logic enough time. And so we tell the disk
+encryption stuff to wait for a TPM to show up before we continue. This
+works quite well in the x86/acpi/uefi world.
 
-An alternative is to use an additional mask (broken) and check that
-in the subset of places where these CPUs might be onlined or the
-infrastructure to indicate this is possible created.
-Specifically in bringup_nonboot_cpus() and in arch_register_cpu().
+There, we check for the efi tpm event log + the ACPI TPM table as
+indication whether TPM was used by firmware. Note that we are not
+interested in the *contents* of the log or the table to determine if
+we shall wait for a tpm device, we just care about the
+*existence*. i.e. it's two access() calls that check if the two
+things exist in sysfs.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- arch/arm64/kernel/smp.c      |  3 +++
- drivers/irqchip/irq-gic-v3.c |  3 +--
- include/linux/cpumask.h      | 19 +++++++++++++++++++
- kernel/cpu.c                 |  8 +++++++-
- 4 files changed, 30 insertions(+), 3 deletions(-)
+On ACPI-less arm platforms this check doesn't work. And we are looking
+for a sensible replacement: i.e. something that tells us that the
+firmware found, initialized, and measured stuff into a TPM and that is
+enough for us to assume that sooner or later it will also be probed
+and be accessible in Linux/udev/…, too.
 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index ccb6ad347df9..39cd6a7c40d8 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -513,6 +513,9 @@ int arch_register_cpu(int cpu)
- 	    IS_ENABLED(CONFIG_ACPI_HOTPLUG_CPU))
- 		return -EPROBE_DEFER;
-=20
-+	if (cpu_broken(cpu)) /* Inconsistent firmware - can't online */
-+		return -ENODEV;
-+
- #ifdef CONFIG_ACPI_HOTPLUG_CPU
- 	/* For now block anything that looks like physical CPU Hotplug */
- 	if (invalid_logical_cpuid(cpu) || !cpu_present(cpu)) {
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 66132251c1bb..a0063eb6484d 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -2377,8 +2377,7 @@ gic_acpi_parse_madt_gicc(union acpi_subtable_headers =
-*header,
- 	 */
- 	if (!(gicc->flags & ACPI_MADT_ENABLED)) {
- 		pr_warn_once("CPU %u's redistributor is inaccessible: this CPU can't be =
-brought online\n", cpu);
--		set_cpu_present(cpu, false);
--		set_cpu_possible(cpu, false);
-+		set_cpu_broken(cpu);
- 		return 0;
- 	}
-=20
-diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-index 4b202b94c97a..70a93ad8e590 100644
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -96,6 +96,7 @@ static inline void set_nr_cpu_ids(unsigned int nr)
-  *     cpu_enabled_mask  - has bit 'cpu' set iff cpu can be brought online
-  *     cpu_online_mask  - has bit 'cpu' set iff cpu available to scheduler
-  *     cpu_active_mask  - has bit 'cpu' set iff cpu available to migration
-+ *     cpu_broken_mask  - has bit 'cpu' set iff the cpu should never be on=
-lined
-  *
-  *  If !CONFIG_HOTPLUG_CPU, present =3D=3D possible, and active =3D=3D onl=
-ine.
-  *
-@@ -130,12 +131,14 @@ extern struct cpumask __cpu_enabled_mask;
- extern struct cpumask __cpu_present_mask;
- extern struct cpumask __cpu_active_mask;
- extern struct cpumask __cpu_dying_mask;
-+extern struct cpumask __cpu_broken_mask;
- #define cpu_possible_mask ((const struct cpumask *)&__cpu_possible_mask)
- #define cpu_online_mask   ((const struct cpumask *)&__cpu_online_mask)
- #define cpu_enabled_mask   ((const struct cpumask *)&__cpu_enabled_mask)
- #define cpu_present_mask  ((const struct cpumask *)&__cpu_present_mask)
- #define cpu_active_mask   ((const struct cpumask *)&__cpu_active_mask)
- #define cpu_dying_mask    ((const struct cpumask *)&__cpu_dying_mask)
-+#define cpu_broken_mask   ((const struct cpumask *)&__cpu_broken_mask)
-=20
- extern atomic_t __num_online_cpus;
-=20
-@@ -1073,6 +1076,12 @@ set_cpu_dying(unsigned int cpu, bool dying)
- 		cpumask_clear_cpu(cpu, &__cpu_dying_mask);
- }
-=20
-+static inline void
-+set_cpu_broken(unsigned int cpu)
-+{
-+	cpumask_set_cpu(cpu, &__cpu_broken_mask);
-+}
-+
- /**
-  * to_cpumask - convert a NR_CPUS bitmap to a struct cpumask *
-  * @bitmap: the bitmap
-@@ -1159,6 +1168,11 @@ static inline bool cpu_dying(unsigned int cpu)
- 	return cpumask_test_cpu(cpu, cpu_dying_mask);
- }
-=20
-+static inline bool cpu_broken(unsigned int cpu)
-+{
-+	return cpumask_test_cpu(cpu, cpu_broken_mask);
-+}
-+
- #else
-=20
- #define num_online_cpus()	1U
-@@ -1197,6 +1211,11 @@ static inline bool cpu_dying(unsigned int cpu)
- 	return false;
- }
-=20
-+static inline bool cpu_broken(unsigned int cpu)
-+{
-+	return false;
-+}
-+
- #endif /* NR_CPUS > 1 */
-=20
- #define cpu_is_offline(cpu)	unlikely(!cpu_online(cpu))
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 537099bf5d02..f8b73a11869e 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1907,12 +1907,15 @@ static inline bool cpuhp_bringup_cpus_parallel(unsi=
-gned int ncpus) { return fals
-=20
- void __init bringup_nonboot_cpus(unsigned int max_cpus)
- {
-+	static const struct cpumask tmp_mask __initdata;
-+
- 	/* Try parallel bringup optimization if enabled */
- 	if (cpuhp_bringup_cpus_parallel(max_cpus))
- 		return;
-=20
-+	cpumask_andnot(&tmp_mask, cpu_present_mask, cpu_broken_mask);
- 	/* Full per CPU serialized bringup */
--	cpuhp_bringup_mask(cpu_present_mask, max_cpus, CPUHP_ONLINE);
-+	cpuhp_bringup_mask(&tmp_mask, max_cpus, CPUHP_ONLINE);
- }
-=20
- #ifdef CONFIG_PM_SLEEP_SMP
-@@ -3129,6 +3132,9 @@ EXPORT_SYMBOL(__cpu_active_mask);
- struct cpumask __cpu_dying_mask __read_mostly;
- EXPORT_SYMBOL(__cpu_dying_mask);
-=20
-+struct cpumask __cpu_broken_mask __ro_after_init;
-+EXPORT_SYMBOL(__cpu_broken_mask);
-+
- atomic_t __num_online_cpus __read_mostly;
- EXPORT_SYMBOL(__num_online_cpus);
-=20
---=20
-2.39.2
+This check is done very very early in userspace (early initrd), at a
+moment in time where no devices have been probed yet.
 
+How precisely we do the check is up for discussion. All we care about
+is an answer to the question "Did firmware find and make use/measure
+into a TPM device? yes/no". And we want to be able to answer that
+question very early in userspace, without having to actually probe
+hardware/busses/drivers/….
 
->=20
->=20
-> >=20
-> > Jonathan
-> >=20
-> >=20
-> >=20
-> >=20
-> >=20
-> >=20
-> >  =20
-> > >=20
-> > > Thanks,
-> > >=20
-> > > 	M.
-> > >    =20
-> >=20
-> >=20
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel =20
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+And yes, the test we implemented on x86/acpu/uefi might actually come
+to the wrong conclusion, because Linux might lack a driver for a TPM
+the firmware supports. But right now there are few reports this is
+actually a problem, Linux TPM support seems to be quite OK
+IRL. Moreover, there's an override via the kernel cmdline
+(systemd.tpm2_wait=0) for the cases where the logic fails.
 
+> What I would like to know is which API systemd is attempting to use,
+> and which -apparently- may never become available if no TPM is exposed
+> by the kernel.
+
+We want a trivial check whether it's likely Linux is going to expose a
+TPM device eventually.
+
+And yes, as mentioned, there might be cases where Linux lacks a driver
+for something the firmware support. But as long as this is not the
+common case we are good.
+
+> Ideally, we should be able to take inspiration from the probe deferral
+> work, and return -EAGAIN to convey that it is too early to signal
+> either success or permanent failure.
+
+We need an early check, so that we can dealy FDE setup, that we can
+delay our first boot phase measurements and so on. An kernel interface
+that just tells us "we don't have a tpm yet, we might have one one
+day, or not, we don't know yet" is useless to us.
+
+> Exposing random firmware assets directly to user space to make guesses
+> about this doesn't seem like a very robust approach to this issue.
+
+If you give us a generic flag file that says "firmware found and used
+a tpm" somewhere in sysfs that abstracts the details how it detects
+that is enough for us. i.e. i don't care if the kenrel abstracts this
+or if we do more explicit checks in userspace. All i care is that it's
+just a few access(F_OK) checks away for us.
+
+Lennart
+
+--
+Lennart Poettering, Berlin
