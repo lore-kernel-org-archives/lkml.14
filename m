@@ -1,58 +1,74 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F83017F37C;
-	Thu, 25 Apr 2024 22:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78DF181BAA;
+	Thu, 25 Apr 2024 22:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714082842; cv=none; b=jHG3Nu+gUsKfy5i0J/6nustWlE1fyiTp4QUaRHTqOhzKH8OzfPTjY/RD9WA1L4Q1O/wlnAAMGNLHgtqx8M5L26vyb5jS5oVTfTm4AwSfw7KEGcFMeY+0JVFTHFqGG3aP2xJWQkoJr6FJJD7T2ID464DZLNvU2uZ7IwRo1f6nbY0=
+	t=1714082847; cv=none; b=RYe1jNPkZhr0V08cTvn0wzW9gUQtJGrcQBjo8Hu+qOwFpLHS+8ATNvOHazR3dzML72mx1B9jfr0ROhlu6deRj2xNtQUyYLMnM/r2kVdN8mIEWdPRPKmTtDoE0DNwV38XLYIVEoCPaMvVsuVhPqWSmHLvqRiuummHvkUOq3ur878=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714082842; c=relaxed/simple;
-	bh=xW5D0AJDPSU5A/+eb+O10+/Z0Uzde0cSge0o0CivJsI=;
+	s=arc-20240116; t=1714082847; c=relaxed/simple;
+	bh=1SF70NTHCTRYZByoZHjPlVMIlx5+KlolbViI5fbMAFc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=miWq1bGzmCcacb3104FutxAS6D46z0m6hwuyFYdhd4/B0ZmeoJH/EdS0e5awuRdud3u523PG08L0XML0UMCbMv70NLS1udb4+CJJBy1/ZJ+x5EqUaYP0Jrz1MtygFqT+LXzMpvjtiV+0M0WgNBwdHSwH7x7NXkl3t83ByfH/5P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	 MIME-Version; b=fcIzSJQVSlmSgG2HNU689oHVVFwTFWoIpR8nZqFC/SM/urlp+EKpR0ZdG4P6FLbABmurC8+61q5LYijq02MOIFHmr+QYCh7iRS2qvImzT2IurO5xHoyNGAlSyOVVkgIOs0iPAG4HNK1Y8+ltZHlEcAMuETfPM0q9pnRvzwdoeQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aWgAaHoe; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3c5f7a3a127so57854b6e.0;
-        Thu, 25 Apr 2024 15:07:20 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aWgAaHoe"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-78ebc7e1586so253708385a.1;
+        Thu, 25 Apr 2024 15:07:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714082845; x=1714687645; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o13Arm3Rvf2gFBkSt1a4X4Ztws3UYrTbZey0ecJRfQk=;
+        b=aWgAaHoebYKrJJtwJGNR8OseIiNKLeS8As7AO1O3ck7AT7D1PAA9pt/5sk+WPmHCeo
+         T1np7nK6QfQCiyiWwNHWKqV2aTVtjEGch1vGnX9Vod1VZvaDFANPKCNSS84DAti3zPlk
+         U524QNpeABWlNgFIGRd/BGvF86f6W4fXgLoQCh49IWeHzKRI8f0IbyX4vCpopGUNZ9SI
+         a/f4BoXCCDkyNPuRtLL9Ly/cyStqM0ULqgyha7gHLxqG0Rz96iRPd6d+BVZyNKSeRCsy
+         fzh8stSCcTClb0cD7/SD/93tI2kRsL+OoViU9X/3Q/QZRiP6n4SLaxw/mz86cvN/J55W
+         HMjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714082840; x=1714687640;
+        d=1e100.net; s=20230601; t=1714082845; x=1714687645;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nB6sdF7ZT2w7lYhw/XLWMRpdlEQQxivt35Hb9FtYEA4=;
-        b=CecIKH1ESHLdt/vwzCX85c3qXgDJ2CuUSbxllCTq3hWds7gpnenXtOOaPz5nsMQtR+
-         ve4TFubN7j5/xATT3gCwgzYKwa+sYE1D9Q5m7PpahuvH9em+IL+02A3Za42BtiK+Q2z7
-         JfUOW3IbMlN3GiVQVinx1adCBtsToL/Zdm2s3m5YIHZcXFXk+Loit7isTMgC8xBV/HKN
-         yuU54RJLrHYdl2KRcslw7vbCQhMJg8vbBXm7ZxZ/OoK1nrIhE0PK/uXok30YUaY1xjiX
-         wvHSEfU6tFYXNVgZhYiR8Ow8Fcxb0L+KbMrZvocWvv51AvqkV7jUwmB3Y72Ee6OPgXX9
-         OPzg==
-X-Forwarded-Encrypted: i=1; AJvYcCWq7uc3v+bFmFJ7PRUFqMEi9yljrbvS2GSqFtzA7JA4ZiUpN9mjiKZy84+oB0Rfxl3wZHhtKrCTLNJJEQzYByyG2kfyaxKv7YLwQl7y
-X-Gm-Message-State: AOJu0YzZsYmGGrfP7w5jBfGLA/JkEW/KCrhFPaH6cWHP5tp1HVh/fLvJ
-	jHQYq2zADs8iHFqB95YPo3GG64MTAxndt+hkh5O1d0m+1YgzVG/fIGir91U4
-X-Google-Smtp-Source: AGHT+IFTLYQOtDKukzZ2CiKwcNjWdiffw6kNmAkr9+apA39RTZI7invH/+p4ORH+TKEGqVRy/8qcZg==
-X-Received: by 2002:a05:6808:1985:b0:3c8:3076:f54f with SMTP id bj5-20020a056808198500b003c83076f54fmr1220361oib.1.1714082839739;
-        Thu, 25 Apr 2024 15:07:19 -0700 (PDT)
-Received: from sean-ThinkPad-T450s.lan ([207.191.35.252])
-        by smtp.gmail.com with ESMTPSA id a9-20020aca1a09000000b003c76f98321esm1514421oia.41.2024.04.25.15.07.18
+        bh=o13Arm3Rvf2gFBkSt1a4X4Ztws3UYrTbZey0ecJRfQk=;
+        b=V61uZ5kA0C5hvNHBPJEzg14LNEpm6/iUbg3eg0tRNzWPyUYhoTwlqXM6Y5qvkdVC5B
+         uVtyc4CRWeUMI7j3ISmoyedSwZOtn8cihe+rZhW3qX+tdubomDzeLGyycSxNLfW1+3Dl
+         ZgBkB3IRzzo6TsBwwr9RV5y9wZrsDfaUWxr3NBt2mKHXRj79RgWKlzEmexn++U8B0tOn
+         Mmm3q95p7se9Lx9plSdDSZg8ddlzRQjAnCrswOFP140o8CLmW1VMnduIrOGkQENbdb2y
+         sUSh/2z0UntGZtVQjTrorh/Rn/5kzX7B6f1TdEEgDlzibaE1GfO/RsC585L6clkzawro
+         Hi6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXlOHPEV4wGQOiEu+XYNASLgGiZmluYuFaHV1qPO2xwLM7EWxS58JLH7wE6rwe+PhsPm1oHb9/SpPOI6RgZerXOp0iU1+Ynea6NfF+2HmlxrQqxBaIeOTxbDxG5XsmQrOSpSxLI
+X-Gm-Message-State: AOJu0YxvypzBTAqMp6LtAnignvE2BwmZYaI8WT57dhjl2C/i/L4hbglT
+	iOaw4/7cuIYijBaIpdKClL4LsTPZOWHTwjf4HagFp5ZKPbKCsN75
+X-Google-Smtp-Source: AGHT+IEb3tH4zRjlqCsGO2g1hapDLeFj3TNbvP15N+hZRE3y0OUF1M5cOm0vomLmYYrjn/g4e+xsGg==
+X-Received: by 2002:a05:6214:250d:b0:69f:3c1d:201 with SMTP id gf13-20020a056214250d00b0069f3c1d0201mr7242034qvb.16.1714082844800;
+        Thu, 25 Apr 2024 15:07:24 -0700 (PDT)
+Received: from stbirv-lnx-1.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id q2-20020a0c9a42000000b006a044503615sm4692891qvd.72.2024.04.25.15.07.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 15:07:18 -0700 (PDT)
-From: sean.wang@kernel.org
-To: marcel@holtmann.org,
-	johan.hedberg@gmail.com,
-	luiz.dentz@gmail.com
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
+        Thu, 25 Apr 2024 15:07:23 -0700 (PDT)
+From: Doug Berger <opendmb@gmail.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	bcm-kernel-feedback-list@broadcom.com,
+	netdev@vger.kernel.or,
 	linux-kernel@vger.kernel.org,
-	Hao Qin <hao.qin@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>
-Subject: [PATCH v3 5/5] Bluetooth: btusb: mediatek: add MT7922 subsystem reset
-Date: Thu, 25 Apr 2024 15:06:31 -0700
-Message-Id: <986bef1b3b92452ca0d212ccd9b2bbe1267f320a.1714082459.git.sean.wang@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <dfd3a5830333e9b59ad1a1458aac8ac2fe28027a.1714082459.git.sean.wang@kernel.org>
-References: <dfd3a5830333e9b59ad1a1458aac8ac2fe28027a.1714082459.git.sean.wang@kernel.org>
+	Doug Berger <opendmb@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/3] net: bcmgenet: synchronize EXT_RGMII_OOB_CTRL access
+Date: Thu, 25 Apr 2024 15:06:48 -0700
+Message-Id: <20240425220650.2138801-2-opendmb@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240425220650.2138801-1-opendmb@gmail.com>
+References: <20240425220650.2138801-1-opendmb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,53 +77,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Hao Qin <hao.qin@mediatek.com>
+The EXT_RGMII_OOB_CTRL register can be written from different
+contexts. It is predominantly written from the adjust_link
+handler which is synchronized by the phydev->lock, but can
+also be written from a different context when configuring the
+mii in bcmgenet_mii_config().
 
-Add the support of MT7922 bluetooth subsystem reset that was called the
-auto revert to self-recover from the fatal error in the controller like
-the host encounters HCI cmd timeout or the controller crashes.
+The chances of contention are quite low, but it is conceivable
+that adjust_link could occur during resume when WoL is enabled
+so use the phydev->lock synchronizer in bcmgenet_mii_config()
+to be sure.
 
-Co-developed-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: Hao Qin <hao.qin@mediatek.com>
+Fixes: afe3f907d20f ("net: bcmgenet: power on MII block for all MII modes")
+Cc: stable@vger.kernel.org
+Signed-off-by: Doug Berger <opendmb@gmail.com>
 ---
-v3: split from the v2 to make the patch do one thing in a patch.
----
- drivers/bluetooth/btusb.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/genet/bcmmii.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 6cfeec2118e9..3485fefc8bad 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -3002,7 +3002,16 @@ static int btusb_mtk_subsys_reset(struct hci_dev *hdev, u32 dev_id)
- 	u32 val;
- 	int err;
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+index 9ada89355747..86a4aa72b3d4 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -2,7 +2,7 @@
+ /*
+  * Broadcom GENET MDIO routines
+  *
+- * Copyright (c) 2014-2017 Broadcom
++ * Copyright (c) 2014-2024 Broadcom
+  */
  
--	if (dev_id == 0x7925) {
-+	if (dev_id == 0x7922) {
-+		btusb_mtk_uhw_reg_read(data, MTK_BT_SUBSYS_RST, &val);
-+		val |= 0x00002020;
-+		btusb_mtk_uhw_reg_write(data, MTK_BT_SUBSYS_RST, val);
-+		btusb_mtk_uhw_reg_write(data, MTK_EP_RST_OPT, 0x00010001);
-+		btusb_mtk_uhw_reg_read(data, MTK_BT_SUBSYS_RST, &val);
-+		val |= BIT(0);
-+		btusb_mtk_uhw_reg_write(data, MTK_BT_SUBSYS_RST, val);
-+		msleep(100);
-+	} else if (dev_id == 0x7925) {
- 		btusb_mtk_uhw_reg_read(data, MTK_BT_RESET_REG_CONNV3, &val);
- 		val |= (1 << 5);
- 		btusb_mtk_uhw_reg_write(data, MTK_BT_RESET_REG_CONNV3, val);
-@@ -3042,6 +3051,9 @@ static int btusb_mtk_subsys_reset(struct hci_dev *hdev, u32 dev_id)
- 	if (err < 0)
- 		bt_dev_err(hdev, "Reset timeout");
+ #include <linux/acpi.h>
+@@ -275,6 +275,7 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
+ 	 * block for the interface to work, unconditionally clear the
+ 	 * Out-of-band disable since we do not need it.
+ 	 */
++	mutex_lock(&phydev->lock);
+ 	reg = bcmgenet_ext_readl(priv, EXT_RGMII_OOB_CTRL);
+ 	reg &= ~OOB_DISABLE;
+ 	if (priv->ext_phy) {
+@@ -286,6 +287,7 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
+ 			reg |= RGMII_MODE_EN;
+ 	}
+ 	bcmgenet_ext_writel(priv, reg, EXT_RGMII_OOB_CTRL);
++	mutex_unlock(&phydev->lock);
  
-+	if (dev_id == 0x7922)
-+		btusb_mtk_uhw_reg_write(data, MTK_UDMA_INT_STA_BT, 0x000000FF);
-+
- 	btusb_mtk_id_get(data, 0x70010200, &val);
- 	if (!val)
- 		bt_dev_err(hdev, "Can't get device id, subsys reset fail.");
+ 	if (init)
+ 		dev_info(kdev, "configuring instance for %s\n", phy_name);
 -- 
-2.25.1
+2.34.1
 
