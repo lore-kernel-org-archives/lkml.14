@@ -1,210 +1,213 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F9A14A615;
-	Thu, 25 Apr 2024 13:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A39149C58
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 13:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714051392; cv=none; b=shk3ieeLQThKWFvgfqswYFivEkMIklKmY6TKZRRv5iciQFmoZR14CfKqHSFvwAtWWmlJE43mLNg6KPLDZTFcLbQE7swWKWEGfow9yNKeYGdjkkiWkYA6RcB1smScfcV6rToVljlU2WSPgHg+zpyYRdckpZiSDim6rJm5ktsRK2w=
+	t=1714051422; cv=none; b=UGedk15WHb7l8wc3U3Zr5wdeLclQfTqEZTU5CKE5DYa7eXpsK7+UklFVXdllpVGb8yFldHHMpXs9O4K8mj04L+g0uqrug6MId7L/g8OACuiENEjwq9IdGLsnRXfwdHCzu0bEhg9nvxHf6EKty7wSm4KfAl8YhkjwFIp13Y7Tc8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714051392; c=relaxed/simple;
-	bh=j2xIiE3AY5vB90b1oFVvadTR9sNvBchDafZ+psVCxPY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MBdxy3ukzt2zp1CH6dW2D8XhtGkZqwz7T/b6VJN2pnOk+ddh9qrUvwdg+N0qJXN9SpXLi23dyDrxooHWt9lESr0jqOZWQIsdyjJnvsPx7+qzyvciVqj3JSjocUy6f66ZM/KT2f2ygFdgyiM4caug6qhUEaKGOTjSrVhaPo6pLeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VQGkZ4QvZz4f3kpF;
-	Thu, 25 Apr 2024 21:23:02 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 7E7931A016E;
-	Thu, 25 Apr 2024 21:23:07 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBEqWSpmHu+2Kw--.61462S12;
-	Thu, 25 Apr 2024 21:23:07 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	djwong@kernel.org,
-	hch@infradead.org,
-	brauner@kernel.org,
-	david@fromorbit.com,
-	chandanbabu@kernel.org,
-	tytso@mit.edu,
-	jack@suse.cz,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com
-Subject: [PATCH v5 8/9] iomap: make iomap_write_end() return a boolean
-Date: Thu, 25 Apr 2024 21:13:34 +0800
-Message-Id: <20240425131335.878454-9-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240425131335.878454-1-yi.zhang@huaweicloud.com>
-References: <20240425131335.878454-1-yi.zhang@huaweicloud.com>
+	s=arc-20240116; t=1714051422; c=relaxed/simple;
+	bh=2BTXCw+6vC31dUTeKdIMEsyHikhtPpKJtrh+xSZfBw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VOSp0NUk77EegX4OLNwVEjJBKas1U1EaZxW+bq+llelof7fG6nqXz+7o9AL4DnvqhxQNiBsdk8ZAfHGv8Ht+i7mjKg7QMO1YOdXn057OT0dT3TQHpIhTWN8bbc/RTt6Ng3ZOPd/pqIkzRLXDUAnprQFsNcAawkRdmaaWX/6vh4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vo9XqYqo; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vo9XqYqo"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e83a2a4f2cso6092655ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 06:23:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714051419; x=1714656219; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4rnjNjenfTwjulfe8NiDD/HuQ2B2O5By8Tzxa2258wk=;
+        b=Vo9XqYqoAROOZqvz61KFpl+urz4JiLx956pPWW4FPoxDEG4H3DvcHq0UAnfwhSNEtd
+         AyXrI1brYqlRXtBFRWHwdAcxRL8IqfIX1s1iWk1WYzs1e9d5gkC0SWtRdlPXMuG0sIIT
+         FiaY8+zsSmJeBg24kNUE7cj2nDFp8b9HIEiE7cDGrDzp6C/OgM1Ps0BHu85MMQOIWcv4
+         oHTQrP/goYXTHj8xNc6hWZtn1ZNL8nwOuzoO0UAbYVMxhXF9zZ1Vm+egZSMxSt9+POwp
+         mQNFoOcYwsmJlNVaECahwu05OpzI9x1GJbsLtdX2hw3IPHtpzz738DPHKfjtdmrHVM2K
+         ojyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714051419; x=1714656219;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4rnjNjenfTwjulfe8NiDD/HuQ2B2O5By8Tzxa2258wk=;
+        b=XBKdq7j79H7JghgNYUOUkq3GwMQJ8IPCWXYb1vfqBhz/TedEmwpgUirXNfVThvLeCo
+         f3ImjkBbTeEoK7S632R8yb+p5E+PiJcEeVvXOuh0mtBcWqSs2O8Z0WZnRK/KPrXbPWrD
+         WNmV+wMuusiBPx7EurPpdvBXV6gd/9kJO6bFyFU5KDWDWmh04hUA+hhq5uIJTNkcVVX/
+         ZjFEQSe1Hm+0xfUuTmH19EUvO1ESMbM9OOY4PWdjTq2HNNdsXirus/fvafFFwqrs9mCa
+         cTcgxKTEzex11LGdwIljcSauJPU/XtRJ3qMD3dzIRrRx86zH9jtDn7YqememeBbEXZRn
+         lnPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWzSXLxUg+/AmZE6aSsBqfq0zrXMxgP7NmD6B57TBV2KsrUQY3tGJsZiJuhS/FsHNnDmKKA8DfapZsH5V3j58g0wFKg6jc5HSqqx1UL
+X-Gm-Message-State: AOJu0YxfbnURM5Pd3rgpjeR9pluYvb6IOL9dhTYXhJNrbNMBJactOm3D
+	TB0YdG2QdHKEJjEWfJ6jtVSl1Wa7SdFAfmmEO6XC7XiyBmt5tD3fj79CJzQ7Vw==
+X-Google-Smtp-Source: AGHT+IGQgE4up32nxXIDaz9S5N6qgK3mFXrWlujwJLi1C9Z9wCvM86apKS3py4JfB6t9GkbA4djMvQ==
+X-Received: by 2002:a17:902:edd0:b0:1ea:2753:2b9f with SMTP id q16-20020a170902edd000b001ea27532b9fmr5225787plk.20.1714051419049;
+        Thu, 25 Apr 2024 06:23:39 -0700 (PDT)
+Received: from thinkpad ([120.60.75.221])
+        by smtp.gmail.com with ESMTPSA id d8-20020a170902b70800b001e4fdcf67desm13749895pls.299.2024.04.25.06.23.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Apr 2024 06:23:38 -0700 (PDT)
+Date: Thu, 25 Apr 2024 18:53:30 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, johan+linaro@kernel.org,
+	bmasney@redhat.com, djakov@kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	vireshk@kernel.org, quic_vbadigan@quicinc.com,
+	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
+	quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org
+Subject: Re: [PATCH v11 4/6] arm64: dts: qcom: sm8450: Add OPP table support
+ to PCIe
+Message-ID: <20240425132330.GD3449@thinkpad>
+References: <20240423-opp_support-v11-0-15fdd40b0f95@quicinc.com>
+ <20240423-opp_support-v11-4-15fdd40b0f95@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgCXaBEqWSpmHu+2Kw--.61462S12
-X-Coremail-Antispam: 1UD129KBjvJXoWxXFy3JFW3GrWDZF1kKFW3Wrg_yoW7JrWUpr
-	yDK398CFs7Ja17urn5JFy3Zr1Yk34fGrW2krW7G3y3AFn0yrW7K3WrGa4jvF1rJ3s7Ar1f
-	JF4vya4rWF1UAr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQ
-	SdkUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+In-Reply-To: <20240423-opp_support-v11-4-15fdd40b0f95@quicinc.com>
 
-From: Zhang Yi <yi.zhang@huawei.com>
+On Tue, Apr 23, 2024 at 02:36:58PM +0530, Krishna chaitanya chundru wrote:
+> PCIe host controller driver needs to choose the appropriate performance
+> state of RPMh power domain and interconnect bandwidth based on the PCIe
+> data rate.
+> 
+> Hence, add the OPP table support to specify RPMh performance states and
+> interconnect peak bandwidth.
+> 
+> It should be noted that the different link configurations may share the
+> same aggregate bandwidth, e.g., a 2.5 GT/s x2 link and a 5.0 GT/s x1
+> link have the same bandwidth and share the same OPP entry.
+> 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
-For now, we can make sure iomap_write_end() always return 0 or copied
-bytes, so instead of return written bytes, convert to return a boolean
-to indicate the copied bytes have been written to the pagecache.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/iomap/buffered-io.c | 48 +++++++++++++++++++++++++++---------------
- 1 file changed, 31 insertions(+), 17 deletions(-)
+- Mani
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 854fa3d4b1c8..176a9ea502ba 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -828,7 +828,7 @@ static int iomap_write_begin(struct iomap_iter *iter, loff_t pos,
- 	return status;
- }
- 
--static size_t __iomap_write_end(struct inode *inode, loff_t pos, size_t len,
-+static bool __iomap_write_end(struct inode *inode, loff_t pos, size_t len,
- 		size_t copied, struct folio *folio)
- {
- 	flush_dcache_folio(folio);
-@@ -845,14 +845,14 @@ static size_t __iomap_write_end(struct inode *inode, loff_t pos, size_t len,
- 	 * redo the whole thing.
- 	 */
- 	if (unlikely(copied < len && !folio_test_uptodate(folio)))
--		return 0;
-+		return false;
- 	iomap_set_range_uptodate(folio, offset_in_folio(folio, pos), len);
- 	iomap_set_range_dirty(folio, offset_in_folio(folio, pos), copied);
- 	filemap_dirty_folio(inode->i_mapping, folio);
--	return copied;
-+	return true;
- }
- 
--static size_t iomap_write_end_inline(const struct iomap_iter *iter,
-+static void iomap_write_end_inline(const struct iomap_iter *iter,
- 		struct folio *folio, loff_t pos, size_t copied)
- {
- 	const struct iomap *iomap = &iter->iomap;
-@@ -867,20 +867,31 @@ static size_t iomap_write_end_inline(const struct iomap_iter *iter,
- 	kunmap_local(addr);
- 
- 	mark_inode_dirty(iter->inode);
--	return copied;
- }
- 
--/* Returns the number of bytes copied.  May be 0.  Cannot be an errno. */
--static size_t iomap_write_end(struct iomap_iter *iter, loff_t pos, size_t len,
-+/*
-+ * Returns true if all copied bytes have been written to the pagecache,
-+ * otherwise return false.
-+ */
-+static bool iomap_write_end(struct iomap_iter *iter, loff_t pos, size_t len,
- 		size_t copied, struct folio *folio)
- {
- 	const struct iomap *srcmap = iomap_iter_srcmap(iter);
- 
--	if (srcmap->type == IOMAP_INLINE)
--		return iomap_write_end_inline(iter, folio, pos, copied);
--	if (srcmap->flags & IOMAP_F_BUFFER_HEAD)
--		return block_write_end(NULL, iter->inode->i_mapping, pos, len,
--				       copied, &folio->page, NULL);
-+	if (srcmap->type == IOMAP_INLINE) {
-+		iomap_write_end_inline(iter, folio, pos, copied);
-+		return true;
-+	}
-+
-+	if (srcmap->flags & IOMAP_F_BUFFER_HEAD) {
-+		size_t bh_written;
-+
-+		bh_written = block_write_end(NULL, iter->inode->i_mapping, pos,
-+					len, copied, &folio->page, NULL);
-+		WARN_ON_ONCE(bh_written != copied && bh_written != 0);
-+		return bh_written == copied;
-+	}
-+
- 	return __iomap_write_end(iter->inode, pos, len, copied, folio);
- }
- 
-@@ -945,7 +956,8 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- 			flush_dcache_folio(folio);
- 
- 		copied = copy_folio_from_iter_atomic(folio, offset, bytes, i);
--		written = iomap_write_end(iter, pos, bytes, copied, folio);
-+		written = iomap_write_end(iter, pos, bytes, copied, folio) ?
-+			  copied : 0;
- 
- 		/*
- 		 * Update the in-memory inode size after copying the data into
-@@ -1323,6 +1335,7 @@ static loff_t iomap_unshare_iter(struct iomap_iter *iter)
- 		int status;
- 		size_t offset;
- 		size_t bytes = min_t(u64, SIZE_MAX, length);
-+		bool ret;
- 
- 		status = iomap_write_begin(iter, pos, bytes, &folio);
- 		if (unlikely(status))
-@@ -1334,9 +1347,9 @@ static loff_t iomap_unshare_iter(struct iomap_iter *iter)
- 		if (bytes > folio_size(folio) - offset)
- 			bytes = folio_size(folio) - offset;
- 
--		bytes = iomap_write_end(iter, pos, bytes, bytes, folio);
-+		ret = iomap_write_end(iter, pos, bytes, bytes, folio);
- 		__iomap_put_folio(iter, pos, bytes, folio);
--		if (WARN_ON_ONCE(bytes == 0))
-+		if (WARN_ON_ONCE(!ret))
- 			return -EIO;
- 
- 		cond_resched();
-@@ -1385,6 +1398,7 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
- 		int status;
- 		size_t offset;
- 		size_t bytes = min_t(u64, SIZE_MAX, length);
-+		bool ret;
- 
- 		status = iomap_write_begin(iter, pos, bytes, &folio);
- 		if (status)
-@@ -1399,9 +1413,9 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
- 		folio_zero_range(folio, offset, bytes);
- 		folio_mark_accessed(folio);
- 
--		bytes = iomap_write_end(iter, pos, bytes, bytes, folio);
-+		ret = iomap_write_end(iter, pos, bytes, bytes, folio);
- 		__iomap_put_folio(iter, pos, bytes, folio);
--		if (WARN_ON_ONCE(bytes == 0))
-+		if (WARN_ON_ONCE(!ret))
- 			return -EIO;
- 
- 		pos += bytes;
+> ---
+>  arch/arm64/boot/dts/qcom/sm8450.dtsi | 77 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> index 615296e13c43..2e047aba220b 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> @@ -1855,7 +1855,35 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+>  			pinctrl-names = "default";
+>  			pinctrl-0 = <&pcie0_default_state>;
+>  
+> +			operating-points-v2 = <&pcie0_opp_table>;
+> +
+>  			status = "disabled";
+> +
+> +			pcie0_opp_table: opp-table {
+> +				compatible = "operating-points-v2";
+> +
+> +				/* GEN 1 x1 */
+> +				opp-2500000 {
+> +					opp-hz = /bits/ 64 <2500000>;
+> +					required-opps = <&rpmhpd_opp_low_svs>;
+> +					opp-peak-kBps = <250000 1>;
+> +				};
+> +
+> +				/* GEN 2 x1 */
+> +				opp-5000000 {
+> +					opp-hz = /bits/ 64 <5000000>;
+> +					required-opps = <&rpmhpd_opp_low_svs>;
+> +					opp-peak-kBps = <500000 1>;
+> +				};
+> +
+> +				/* GEN 3 x1 */
+> +				opp-8000000 {
+> +					opp-hz = /bits/ 64 <8000000>;
+> +					required-opps = <&rpmhpd_opp_nom>;
+> +					opp-peak-kBps = <984500 1>;
+> +				};
+> +			};
+> +
+>  		};
+>  
+>  		pcie0_phy: phy@1c06000 {
+> @@ -1982,7 +2010,56 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+>  			pinctrl-names = "default";
+>  			pinctrl-0 = <&pcie1_default_state>;
+>  
+> +			operating-points-v2 = <&pcie1_opp_table>;
+> +
+>  			status = "disabled";
+> +
+> +			pcie1_opp_table: opp-table {
+> +				compatible = "operating-points-v2";
+> +
+> +				/* GEN 1 x1 */
+> +				opp-2500000 {
+> +					opp-hz = /bits/ 64 <2500000>;
+> +					required-opps = <&rpmhpd_opp_low_svs>;
+> +					opp-peak-kBps = <250000 1>;
+> +				};
+> +
+> +				/* GEN 1 x2 and GEN 2 x1 */
+> +				opp-5000000 {
+> +					opp-hz = /bits/ 64 <5000000>;
+> +					required-opps = <&rpmhpd_opp_low_svs>;
+> +					opp-peak-kBps = <500000 1>;
+> +				};
+> +
+> +				/* GEN 2 x2 */
+> +				opp-10000000 {
+> +					opp-hz = /bits/ 64 <10000000>;
+> +					required-opps = <&rpmhpd_opp_low_svs>;
+> +					opp-peak-kBps = <1000000 1>;
+> +				};
+> +
+> +				/* GEN 3 x1 */
+> +				opp-8000000 {
+> +					opp-hz = /bits/ 64 <8000000>;
+> +					required-opps = <&rpmhpd_opp_nom>;
+> +					opp-peak-kBps = <984500 1>;
+> +				};
+> +
+> +				/* GEN 3 x2 and GEN 4 x1 */
+> +				opp-16000000 {
+> +					opp-hz = /bits/ 64 <16000000>;
+> +					required-opps = <&rpmhpd_opp_nom>;
+> +					opp-peak-kBps = <1969000 1>;
+> +				};
+> +
+> +				/* GEN 4 x2 */
+> +				opp-32000000 {
+> +					opp-hz = /bits/ 64 <32000000>;
+> +					required-opps = <&rpmhpd_opp_nom>;
+> +					opp-peak-kBps = <3938000 1>;
+> +				};
+> +			};
+> +
+>  		};
+>  
+>  		pcie1_phy: phy@1c0e000 {
+> 
+> -- 
+> 2.42.0
+> 
+
 -- 
-2.39.2
-
+மணிவண்ணன் சதாசிவம்
