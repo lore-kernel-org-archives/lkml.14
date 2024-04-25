@@ -1,83 +1,94 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF6A1494C4;
-	Thu, 25 Apr 2024 12:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E119827715;
+	Thu, 25 Apr 2024 12:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714049368; cv=none; b=jrs5ds9Sy8ngV3LcbpKjtYZW5uWRCpucFTq/HNxGMJytmVankLamptNrDRrj94yVP3w1aO39IXsiejTDWfIAnJO2FqqduQt1BUa2uO3amFm+exNxzK4RMgi3jD8eWcZWqcNya2xGkZuFhDR1weYW4fn4khZMbP3nxiECmZASIEw=
+	t=1714049386; cv=none; b=Vhtob1+9dKZt0fZN+iNBSR1tZGPg9nC2a1dq12C90H1SdzSV8t739xh7KF0ZrSl0PIXqYkiMhjfgMb4F+QJRcUQItjYmSzopYoRWF7iqzC5W52syoK4Oy3YqAZYlKolhlw8LBnFahvBQwyafRgXIgSNrczIuWolBidyLHis+f9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714049368; c=relaxed/simple;
-	bh=18cQvZb4ODs7lrECMHCH9NKnIsA3RHnLJppWoKGsy6Q=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=HyxXKzSgOVC45Iuliy2RWT9RGXOefmOTmjQ2dbblLvlMpllWqbvYHTlMZEjuHl+JIk5/bKx9ZkzJ7j4snqdUW7e+IPhMhos9XmKEjdFgHPnriZM4rZgBBTzv3RulurOXGs3JmHfo/Ro0VEEXHX6vCePe6CsMeXZgPrQTyDfYDI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4VQFzZ0Crpz8XrS3;
-	Thu, 25 Apr 2024 20:49:14 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.99.176])
-	by mse-fl1.zte.com.cn with SMTP id 43PCnC15071050;
-	Thu, 25 Apr 2024 20:49:12 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp03[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Thu, 25 Apr 2024 20:49:15 +0800 (CST)
-Date: Thu, 25 Apr 2024 20:49:15 +0800 (CST)
-X-Zmail-TransId: 2afb662a514b6fd-99358
-X-Mailer: Zmail v1.0
-Message-ID: <202404252049158858OT9IpNshMmQC1itDY1B1@zte.com.cn>
+	s=arc-20240116; t=1714049386; c=relaxed/simple;
+	bh=Q0rC6Dg58DuHJs63AQMz3PHeklpFh0kC3hGfFEJpx5g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WLtN5nRoqRsiu+u01vmm22xxUX98rkaaXpp3dDtH6IQfdCY9uPPTZbpbCGP0G+vWdGMTuqsK7RR10utWFbfe6JukB8K5MVhky9F1qiYTEQwZgaHd0L9hh1L0+9IdLDx5jktbt6xArMixmweI7JdiUd1NX7PZzVoW4Uz0LNbKmFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=qTgf5U0F; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qTgf5U0F"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=qG/+pHxKsF0EjW0aqfIbxlagHCNmLhwnFQVaN8EkrzI=; b=qTgf5U0FU8QWZno94l4Qit5vhd
+	2gOVOZHD/qrfAxf9yqFl/Gui9Xh8UKSAv+qlpXToy+NUlp8TEdhg11ZE4fr/scCGtsLssCnNF9WGm
+	BHytA9YXTYwqGGn7WL5Y7QimDOeh5bPA8EA1V53qxsh83fWMsARGbgKwoe83TAYeYY8w=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rzyXa-00DywX-3U; Thu, 25 Apr 2024 14:49:30 +0200
+Date: Thu, 25 Apr 2024 14:49:30 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: MD Danish Anwar <danishanwar@ti.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Diogo Ivo <diogo.ivo@siemens.com>, Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, srk@ti.com,
+	Vignesh Raghavendra <vigneshr@ti.com>, r-gunasekaran@ti.com,
+	Roger Quadros <rogerq@kernel.org>
+Subject: Re: [PATCH net-next] net: ti: icssg_prueth: Add SW TX / RX
+ Coalescing based on hrtimers
+Message-ID: <2a4bea87-04bf-4373-8220-69650b435710@lunn.ch>
+References: <20240424091823.1814136-1-danishanwar@ti.com>
+ <98588a89-4970-4d75-be8a-ac410d77789f@lunn.ch>
+ <1c5809f2-b69d-48d1-8c27-285f164ebeb8@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <akpm@linux-foundation.org>
-Cc: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <shr@devkernel.io>, <david@redhat.com>, <xu.xin16@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHRdIGtzbTogYWRkIGtzbSBpbnZvbHZlbWVudCBpbmZvcm1hdGlvbiBmb3IgZWFjaCBwcm9jZXNz?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 43PCnC15071050
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 662A514A.000/4VQFzZ0Crpz8XrS3
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c5809f2-b69d-48d1-8c27-285f164ebeb8@ti.com>
 
-From: xu xin <xu.xin16@zte.com.cn>
+> I did some benchmarking today with,
+> 	1. Default driver (without any IRQ coalescing enabled)
+> 	2. IRQ Coalescing (With this patch)
+> 	3. Default IRQ Coalescing (Suggested by you in the above patch)
+> 
+> I have pasted the full logs at [1].
+> 
+> Below are the final numbers,
+> 
+> ==============================================================
+> Method                  | Tput_TX | CPU_TX | Tput_RX | CPU_RX |
+> ==============================================================
+> Default Driver           943 Mbps    31%      517 Mbps  38%   |
+> IRQ Coalescing (Patch)   943 Mbps    28%      518 Mbps  25%   |
+> Default IRQ Coalescing   942 Mbps    32%      521 Mbps  25%   |
+> ==============================================================
+> 
+> I see that the performance number is more or less same for all three
+> methods only the CPU load seems to be varying. The IRQ coalescing patch
+> (using hrtimer) seems to improve the cpu load by 3-4% in TX and 13% in
+> RX. Whereas the default method that you have suggested doesn't give any
+> improvemnet in tx however cpu load improves in RX with the same amount
+> as method 2.
+> 
+> Please let me know if this patch is OK to you based on the benchmarking?
 
-In /proc/<pid>/ksm_stat, Add two extra ksm involvement items including
-MMF_VM_MERGEABLE and MMF_VM_MERGE_ANY. It helps administrators to
-better know the system's KSM behavior at process level.
+It is good to include benchmark results in patches which claim to
+improve performance. Please add the default and the patch version
+results to the commit message.
 
-MMF_VM_MERGEABLE: yes/no
-	whether a process'mm is added by madvise() into the candidate list
-	of KSM or not.
-MMF_VM_MERGE_ANY: yes/no
-	whether a process'mm is added by prctl at process level into the
-candidate list of KSM or not.
+The numbers show your more complex version does bring benefits, so it
+is O.K. to use it. I just wounder how many other drivers would benefit
+from a one line change.
 
-Signed-off-by: xu xin <xu.xin16@zte.com.cn>
----
- fs/proc/base.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 18550c071d71..421594b8510c 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -3217,6 +3217,10 @@ static int proc_pid_ksm_stat(struct seq_file *m, struct pid_namespace *ns,
- 		seq_printf(m, "ksm_zero_pages %lu\n", mm->ksm_zero_pages);
- 		seq_printf(m, "ksm_merging_pages %lu\n", mm->ksm_merging_pages);
- 		seq_printf(m, "ksm_process_profit %ld\n", ksm_process_profit(mm));
-+		seq_printf(m, "MMF_VM_MERGEABLE: %s\n",
-+				test_bit(MMF_VM_MERGEABLE, &mm->flags) ? "yes" : "no");
-+		seq_printf(m, "MMF_VM_MERGE_ANY: %s\n",
-+				test_bit(MMF_VM_MERGE_ANY, &mm->flags) ? "yes" : "no");
- 		mmput(mm);
- 	}
-
--- 
-2.15.2
+	Andrew
