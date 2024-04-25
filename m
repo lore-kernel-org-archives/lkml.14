@@ -1,206 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4ED715666C;
-	Thu, 25 Apr 2024 22:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFCD17AD7F
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 22:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714082836; cv=none; b=QhnNObX+T7k/z+X6g6ymAksQ2OVDnqIcaZcznmzso72NOb2TeYnaO/2WzqRDPziahajcsJDRY9bL3o3TkunhEPYcD1Up4cejAXbRs4vcXqHRHIi8EakX3wuAhxkyVoksEeN4tG33EfR/gkiykBcUgmmNndK8tKE4JUC0PauOYjE=
+	t=1714082837; cv=none; b=LXi47qVDb6C/ada0lcZZBoVdF3ODYoxLJnPmWEV4bFDgkM/WUFrPMD4PAPDWE4mQYL+Gj5UWOIH9isDzN04jRjYG85Vc35rU1IjEOZF1/EirXuZesNvRuFp5D23DPKFJyf0338Fj7HGLSiK0GHZFN3Jr0XGmzmwgItffjmCNENI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714082836; c=relaxed/simple;
-	bh=y9NaE8bHO9umSWYJ/4fIGZrgKTsHtPMSKPMLFGWt/hU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MQ8DFZ7BlXDR6KR6GsnbNOHNaV0nV/WLFEMVG1ZqYeGnPkV9dBTlgEfQy6zZeZmF5t0id/RA9VOKXAQNkOwrnwD+rsL/rnLApZ9d/MNgtXAFTWjvLTqOhpZ0aOw9cK97Qu4nlEhjd7qt4KTLANQFNe/Mz3OUMJhXEmVohXvCG+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i17fEzuN; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714082837; c=relaxed/simple;
+	bh=u5YCPBbfU1mP1ZcMWk36sIHt5zaVaIMvB2Iu7ja/E7E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UzPs0lNhhbUzwAkbX9m4NUXOJkyLMfhCn1sEK0qgs9j3XQ+HxQJHcv5UAS8BJ6IOLBTTtdlloI0J3H2X3FyLryVhSaLq71GuRhsBtiBF/L+0NH6MAcTkI6neV/v1Wmmu577/rlx06HP+4fndixxMXvboAfRCCXSbSLV86q/cBOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e9cw9/CY; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i17fEzuN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714082834; x=1745618834;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=y9NaE8bHO9umSWYJ/4fIGZrgKTsHtPMSKPMLFGWt/hU=;
-  b=i17fEzuNq/YalhwaJaTLn5LUjgHPnyDKWOY+tdAoz73Czkkr42zW6rUL
-   nC2aee4rzMBaoMz3baLH8e+Qbw3KTBtEtNlXCv5Nio7GlVqoCyToglV5h
-   WSjXZ1f7vkrUp5wooQmsmAeblUr4bMssWf9t9bIsOl1uq0ByiQt1ufmc1
-   LNsNbmbpyVzy4G+dBPSfsGPDqjLHfmk63FionxaMyL/VFeGBdMlU8DFl6
-   KmcK7mxoaUgC451sv1I0aZ3Ynd9QcvNq/2YeH62oevOlqovCDNDWtC60I
-   hYoF51kKukrUSKAHRVHV5cwZkJnfOPsJmj0w4flVknpOK+8yGQOGrUiAO
-   Q==;
-X-CSE-ConnectionGUID: Od5IVERcRnmn7prVibtMZw==
-X-CSE-MsgGUID: MsIkhe9PRuesZRypoKHGNg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="13585399"
-X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
-   d="scan'208";a="13585399"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 15:07:12 -0700
-X-CSE-ConnectionGUID: vTmcthekRiCRdZy5hzyYNQ==
-X-CSE-MsgGUID: 3OS/yAfTQMi17VSa1M0d0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
-   d="scan'208";a="25185086"
-Received: from rchatre-ws.ostc.intel.com ([10.54.69.144])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 15:07:12 -0700
-From: Reinette Chatre <reinette.chatre@intel.com>
-To: isaku.yamahata@intel.com,
-	pbonzini@redhat.com,
-	erdemaktas@google.com,
-	vkuznets@redhat.com,
-	seanjc@google.com,
-	vannapurve@google.com,
-	jmattson@google.com,
-	mlevitsk@redhat.com,
-	xiaoyao.li@intel.com,
-	chao.gao@intel.com,
-	rick.p.edgecombe@intel.com
-Cc: reinette.chatre@intel.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V5 2/4] KVM: x86: Make nsec per APIC bus cycle a VM variable
-Date: Thu, 25 Apr 2024 15:07:00 -0700
-Message-Id: <ae75ce37c6c38bb4efd10a0a41932984c40b24ac.1714081726.git.reinette.chatre@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e9cw9/CY"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-69b5a87505cso7952596d6.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 15:07:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714082835; x=1714687635; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l4ObHrHeCFN64wSM7NzDkDxv31XoYnyH95XTbkMwAw0=;
+        b=e9cw9/CY6i0xlBJP6qFWPjOsypShBrWsjbCWApNc87snjya5wPbF0Tdy+H9fVk2QB8
+         /DA6rj00GQRNAnm0ZZVg/P45kyXwGynCvlukfhyiIf5nIeqM+PT2v+EFutsbZpeZmCNF
+         sVHZv2yXkk4qTlVik81Wc4oYtAOXhja1VeLxcYdjoB8JIrsZ0T9UZQA+xAolZKs7Q7fd
+         s2P2YXYHSsyk3aw0DD/ktLrCE778W80zJdK1H23l2ldExrl8+UYusMCMibz6Aa7puivD
+         xuXYOIrfy9ECM4cFtQXX0Atsbg9Giy0HPte828xNsqEJCfCTUmZo8d8jOghsJLi99Gxw
+         Vmtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714082835; x=1714687635;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l4ObHrHeCFN64wSM7NzDkDxv31XoYnyH95XTbkMwAw0=;
+        b=ulmIcBzLvDUUu2KLAGKn0jshqko9EqR0DZ/0SLDoodS7GIjp5Z9N/Jv3aTti/9k53o
+         vUxnA3BEY0J70M14Mc4VMdP8OpOVDiYeYBTFGzJ+npgijX1qAldzlbHzPzy6HeOkK9O6
+         ROaKltGsWmEoAadEU4KEmtvvwYwo5icPSCKFT1vKiM3My8xWmI+FNMbw/GNBU848Pv0r
+         ZzmGEO+GFn7pcv4/p2VVQrPZJQtQEL3Lm5sVd0HoHETeQvdFmio22rQTz0/2KqJfFwHi
+         c9OToUspx3FtT3dDWunHl9Jwm8bkkH/lMh8ke5dwHS9VOFsgt+GMDlYSiaH2flkLMi6E
+         HeGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUDV3fin+58jJsXYb6nntZXoUOs1LB6RahB013TDvJITS5GZWqdRiT2p9HguqfZgJc7abPvIK4e1U4kKc/ffDk+XMcTvzmF5QjPYDtN
+X-Gm-Message-State: AOJu0YyOo9hARK3b91xgs3Vgi+ROEpdNPP8S44FLouYyeuAcFcfrUFtG
+	ISEsJAThi6TgSfBaC0w7tLeKLerK7rSnAK4pT0hzxHAfNeA6QeKI
+X-Google-Smtp-Source: AGHT+IGqJk481KilBvF8wWSKLr3U6m+erKzHSeB5ufvUpq0IUcSwAObTcUjGEwOO70aZiiVWjvTnJg==
+X-Received: by 2002:ad4:5dcb:0:b0:6a0:9493:a053 with SMTP id m11-20020ad45dcb000000b006a09493a053mr1196354qvh.59.1714082835071;
+        Thu, 25 Apr 2024 15:07:15 -0700 (PDT)
+Received: from stbirv-lnx-1.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id q2-20020a0c9a42000000b006a044503615sm4692891qvd.72.2024.04.25.15.07.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Apr 2024 15:07:14 -0700 (PDT)
+From: Doug Berger <opendmb@gmail.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	bcm-kernel-feedback-list@broadcom.com,
+	netdev@vger.kernel.or,
+	linux-kernel@vger.kernel.org,
+	Doug Berger <opendmb@gmail.com>
+Subject: [PATCH 0/3] net: bcmgenet: protect contended accesses
+Date: Thu, 25 Apr 2024 15:06:47 -0700
+Message-Id: <20240425220650.2138801-1-opendmb@gmail.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1714081725.git.reinette.chatre@intel.com>
-References: <cover.1714081725.git.reinette.chatre@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+Some registers may be modified by parallel execution contexts and
+require protections to prevent corruption.
 
-Introduce the VM variable "nanoseconds per APIC bus cycle" in
-preparation to make the APIC bus frequency configurable.
+A review of the driver revealed the need for these additional
+protections.
 
-The TDX architecture hard-codes the core crystal clock frequency to
-25MHz and mandates exposing it via CPUID leaf 0x15. The TDX architecture
-does not allow the VMM to override the value.
+Doug Berger (3):
+  net: bcmgenet: synchronize EXT_RGMII_OOB_CTRL access
+  net: bcmgenet: synchronize use of bcmgenet_set_rx_mode()
+  net: bcmgenet: synchronize UMAC_CMD access
 
-In addition, per Intel SDM:
-    "The APIC timer frequency will be the processor’s bus clock or core
-     crystal clock frequency (when TSC/core crystal clock ratio is
-     enumerated in CPUID leaf 0x15) divided by the value specified in
-     the divide configuration register."
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c   | 16 ++++++++++++++--
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h   |  4 +++-
+ .../net/ethernet/broadcom/genet/bcmgenet_wol.c   |  8 +++++++-
+ drivers/net/ethernet/broadcom/genet/bcmmii.c     |  6 +++++-
+ 4 files changed, 29 insertions(+), 5 deletions(-)
 
-The resulting 25MHz APIC bus frequency conflicts with the KVM hardcoded
-APIC bus frequency of 1GHz.
-
-Introduce the VM variable "nanoseconds per APIC bus cycle" to prepare
-for allowing userspace to tell KVM to use the frequency that TDX mandates
-instead of the default 1Ghz. Doing so ensures that the guest doesn't have
-a conflicting view of the APIC bus frequency.
-
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-[reinette: rework changelog]
-Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
----
-Changes v5:
-- Add Rick's Reviewed-by tag.
-
-Changes v4:
-- Reword changelog to address comments related to "bus clock" vs
-  "core crystal clock" frequency. (Xiaoyao)
-- Typo in changelog ("APIC APIC" -> "APIC").
-- Change logic "APIC bus cycles per nsec" -> "nanoseconds per
-  APIC bus cycle".
-
-Changes V3:
-- Update commit message.
-- Dropped apic_bus_frequency according to Maxim Levitsky.
-
-Changes v2:
-- No change.
-
- arch/x86/include/asm/kvm_host.h | 1 +
- arch/x86/kvm/hyperv.c           | 3 ++-
- arch/x86/kvm/lapic.c            | 6 ++++--
- arch/x86/kvm/lapic.h            | 2 +-
- arch/x86/kvm/x86.c              | 1 +
- 5 files changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 1d13e3cd1dc5..f2735582c7e0 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1358,6 +1358,7 @@ struct kvm_arch {
- 
- 	u32 default_tsc_khz;
- 	bool user_set_tsc;
-+	u64 apic_bus_cycle_ns;
- 
- 	seqcount_raw_spinlock_t pvclock_sc;
- 	bool use_master_clock;
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 1030701db967..5c31e715d2ad 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -1737,7 +1737,8 @@ static int kvm_hv_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata,
- 		data = (u64)vcpu->arch.virtual_tsc_khz * 1000;
- 		break;
- 	case HV_X64_MSR_APIC_FREQUENCY:
--		data = div64_u64(1000000000ULL, APIC_BUS_CYCLE_NS);
-+		data = div64_u64(1000000000ULL,
-+				 vcpu->kvm->arch.apic_bus_cycle_ns);
- 		break;
- 	default:
- 		kvm_pr_unimpl_rdmsr(vcpu, msr);
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index cf37586f0466..3e66a0a95999 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1547,7 +1547,8 @@ static u32 apic_get_tmcct(struct kvm_lapic *apic)
- 		remaining = 0;
- 
- 	ns = mod_64(ktime_to_ns(remaining), apic->lapic_timer.period);
--	return div64_u64(ns, (APIC_BUS_CYCLE_NS * apic->divide_count));
-+	return div64_u64(ns, (apic->vcpu->kvm->arch.apic_bus_cycle_ns *
-+			      apic->divide_count));
- }
- 
- static void __report_tpr_access(struct kvm_lapic *apic, bool write)
-@@ -1965,7 +1966,8 @@ static void start_sw_tscdeadline(struct kvm_lapic *apic)
- 
- static inline u64 tmict_to_ns(struct kvm_lapic *apic, u32 tmict)
- {
--	return (u64)tmict * APIC_BUS_CYCLE_NS * (u64)apic->divide_count;
-+	return (u64)tmict * apic->vcpu->kvm->arch.apic_bus_cycle_ns *
-+		(u64)apic->divide_count;
- }
- 
- static void update_target_expiration(struct kvm_lapic *apic, uint32_t old_divisor)
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index a20cb006b6c8..51e09f5a7fc5 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -16,7 +16,7 @@
- #define APIC_DEST_NOSHORT		0x0
- #define APIC_DEST_MASK			0x800
- 
--#define APIC_BUS_CYCLE_NS       1
-+#define APIC_BUS_CYCLE_NS_DEFAULT	1
- 
- #define APIC_BROADCAST			0xFF
- #define X2APIC_BROADCAST		0xFFFFFFFFul
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index e9ef1fa4b90b..10e6315103f4 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -12629,6 +12629,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 	raw_spin_unlock_irqrestore(&kvm->arch.tsc_write_lock, flags);
- 
- 	kvm->arch.default_tsc_khz = max_tsc_khz ? : tsc_khz;
-+	kvm->arch.apic_bus_cycle_ns = APIC_BUS_CYCLE_NS_DEFAULT;
- 	kvm->arch.guest_can_read_msr_platform_info = true;
- 	kvm->arch.enable_pmu = enable_pmu;
- 
 -- 
 2.34.1
 
