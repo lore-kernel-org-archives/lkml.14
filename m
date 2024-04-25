@@ -1,56 +1,56 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0393155723;
-	Thu, 25 Apr 2024 21:37:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DDE1E880;
+	Thu, 25 Apr 2024 21:37:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714081044; cv=none; b=joPiBbP1o6iuckEmlSxYxOsTop/PXhV5KTt5lmxanbK8rs6Lf8dOeitb9A6hwOelZVnePeFQQMb2Gi3fTihilvGcB8QV2hWqJn3TFHVAm8fxGH1OPZiwsPsh8BooSmxAbrXhGJvxrPM0BCZQUKHC20hRi4rCQ143stewlTLMSGU=
+	t=1714081045; cv=none; b=ROjSrdEcKXPWKdGpPKpEAMdX1PSZowRLctgLR6EyXBQw/6mf9kKD8dWrnIpWRFHj0c3B9k1o/vyk/0rRfF2QinPhWsA9gqrsVU8bdMJVQrJCqqz8pNVU+NExEsMZv9y69Sg2GBhs5Fky00L0TccJUK/kQ5ep/hooN8Hrpfa24gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714081044; c=relaxed/simple;
-	bh=za60WtJZgyodEJD3+BcnQ6/x4NW2Vic+q7+Gt+fxXEE=;
+	s=arc-20240116; t=1714081045; c=relaxed/simple;
+	bh=PstmOnLB1y+SZhW8qwId6xQcDH/lYicXrI15Ug8VQX4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uMWecK5+vNYuc1N5AAPfBi5Pd1IoqW/GzQbp/pwvrNzrrGIq5No+Ao9zuz3hNYVz6yHd/cD3kyMDWGimaMrCpT2LMdVGtbWOv1i8MhCSqxU11ylPc/JMpWNO3gW/UQRonUshV+z+pfSCbeAX4UyEB/MtJG67W/Ymb6yRuSOAwi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MHQWc5uF; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=m7UuZGr8e4i3F7MsfGP/sjO14qsGwDJQKx1QPQbLAG85+ypnDE39nZWzQq7O38ahLBplyhSe3YaxcKDGQsoSYcbm5ex/xqChrYhK4YK3DcEzeDpq03yaYnO/honHaliBtBAITvAipG31pBKfo1E5NhN1RYDSkSgsBcEM3AfAgeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ak36ax/V; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MHQWc5uF"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ak36ax/V"
 Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43PLRVK4023936;
-	Thu, 25 Apr 2024 21:37:14 GMT
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43PLRZpQ023945;
+	Thu, 25 Apr 2024 21:37:08 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : content-transfer-encoding
- : mime-version; s=pp1; bh=XAxbyUkP0g3gzbGZZ6aByvgoZ5xZGFD66bvEFkyE9Qs=;
- b=MHQWc5uFNxuYWrbczj2wNIO1GUNElB76483lqHXlMFoQrp1ioEB4TpNju1ifUWPx+kBx
- YqvZJGV0p/q61FIGQm51fFnc8bf4AhVpZs/iPHoZCCn9mNQNu2kbgXrPriz7wrpWmYRd
- tn1RW239N5jyYRuoZQJfeojIrr0PX6FcVPhHAzoneza1Pw/N6gk0pri9FZdrMc2T6KV3
- CxCdW3aqXffsWcDf+V9pJb9rPdVyPW3wpl0uQ4qyrugwNYIfObxNwL5QYmT0+hhiiGLN
- DzVH9wJC8BYAUraKtNi5h7lRT7rnFemLfIGow4J74rclN+SvCL+/CnZWINwRDOgQNEq1 EA== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xqy3qg0gm-1
+ : mime-version; s=pp1; bh=vljfLK7IdmW1h+WmlMs60MBJIB+Xr90wGR2klKX6RpU=;
+ b=Ak36ax/VDbcK9GhBIGMVPhy1edgiJbFugxBDNfkVGZU/Pc5S3oDUCGQI8kM9RgfX5bqa
+ 4F6z5nSSqHu3ts3aChW/LvqLXPN2hmIjsPJjtyy+ySdGXGu+gFP5TyKaAEtffVArMmx3
+ 9Eb65bnejXjkGnjui0z40Z4/80HFJjdqOCM7dr6kfWsIjUGHxHed4IDEwmfPBs9PwwPd
+ Vvm3OQMa9o7KLK9cLslhlpIhGRHz6Yj80aNypUVXXdHGBhRj0cjynjvBUMQQBdRUtJNa
+ lafZVwC9Nr9rRiX24BEtrouz4NSlPaI2vjHB/yyeUqWD06171C0th+KtfxjWV0h1xdQN ww== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xqy3qg0gc-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 21:37:13 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43PJHKQl015289;
-	Thu, 25 Apr 2024 21:37:12 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xmshmm10g-1
+	Thu, 25 Apr 2024 21:37:07 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43PLK7O4029905;
+	Thu, 25 Apr 2024 21:37:06 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xmr1tvck6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 21:37:12 +0000
+	Thu, 25 Apr 2024 21:37:06 +0000
 Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43PLb9D061866302
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43PLb3Gc48693872
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 25 Apr 2024 21:37:11 GMT
+	Thu, 25 Apr 2024 21:37:06 GMT
 Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2BCBB58054;
-	Thu, 25 Apr 2024 21:37:09 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id B04F458062;
+	Thu, 25 Apr 2024 21:37:03 +0000 (GMT)
 Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7A7F858045;
-	Thu, 25 Apr 2024 21:37:08 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 0832E58050;
+	Thu, 25 Apr 2024 21:37:03 +0000 (GMT)
 Received: from slate16.aus.stglabs.ibm.com (unknown [9.61.133.34])
 	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 25 Apr 2024 21:37:08 +0000 (GMT)
+	Thu, 25 Apr 2024 21:37:02 +0000 (GMT)
 From: Eddie James <eajames@linux.ibm.com>
 To: linux-aspeed@lists.ozlabs.org
 Cc: eajames@linux.ibm.com, devicetree@vger.kernel.org,
@@ -58,15 +58,15 @@ Cc: eajames@linux.ibm.com, devicetree@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-i2c@vger.kernel.org,
         lakshmiy@us.ibm.com, robh@kernel.org, krzk+dt@kernel.org,
         conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au
-Subject: [PATCH v3 08/14] dt-bindings: fsi: ast2600-fsi-master: Switch to yaml format
-Date: Thu, 25 Apr 2024 16:36:55 -0500
-Message-Id: <20240425213701.655540-9-eajames@linux.ibm.com>
+Subject: [PATCH v3 01/14] dt-bindings: spi: Document the IBM Power SPI controller
+Date: Thu, 25 Apr 2024 16:36:48 -0500
+Message-Id: <20240425213701.655540-2-eajames@linux.ibm.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240425213701.655540-1-eajames@linux.ibm.com>
 References: <20240425213701.655540-1-eajames@linux.ibm.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: fC9HcqtJvCEq1YE_eGJzuMPPZeTGWSQf
-X-Proofpoint-GUID: fC9HcqtJvCEq1YE_eGJzuMPPZeTGWSQf
+X-Proofpoint-ORIG-GUID: L2CB35zkDOgx9l7mycCD7d5qdof1u4bU
+X-Proofpoint-GUID: L2CB35zkDOgx9l7mycCD7d5qdof1u4bU
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
@@ -84,136 +84,76 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogs
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2404010000 definitions=main-2404250157
 
-Switch to yaml for the AST2600 FSI master documentation.
+The IBM Power chips have a basic SPI controller. Document it.
 
 Signed-off-by: Eddie James <eajames@linux.ibm.com>
 ---
- .../fsi/aspeed,ast2600-fsi-master.yaml        | 72 +++++++++++++++++++
- .../bindings/fsi/fsi-master-aspeed.txt        | 36 ----------
- 2 files changed, 72 insertions(+), 36 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/fsi/aspeed,ast2600-fsi-master.yaml
- delete mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
+ .../devicetree/bindings/spi/ibm,p10-spi.yaml  | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/ibm,p10-spi.yaml
 
-diff --git a/Documentation/devicetree/bindings/fsi/aspeed,ast2600-fsi-master.yaml b/Documentation/devicetree/bindings/fsi/aspeed,ast2600-fsi-master.yaml
+diff --git a/Documentation/devicetree/bindings/spi/ibm,p10-spi.yaml b/Documentation/devicetree/bindings/spi/ibm,p10-spi.yaml
 new file mode 100644
-index 000000000000..f053e3e1d259
+index 000000000000..9bf57b621c1f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/fsi/aspeed,ast2600-fsi-master.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/spi/ibm,p10-spi.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
++$id: http://devicetree.org/schemas/spi/ibm,p10-spi.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Aspeed FSI master
++title: IBM SPI Controller
 +
 +maintainers:
 +  - Eddie James <eajames@linux.ibm.com>
 +
 +description:
-+  The AST2600 and later contain two identical FSI masters. They share a
-+  clock and have a separate interrupt line and output pins.
++  A basic SPI controller found on IBM Power chips, accessed over FSI. This
++  node will always be a child node of an ibm,fsi2spi node.
 +
 +properties:
 +  compatible:
 +    enum:
-+      - "aspeed,ast2600-fsi-master"
-+      - "aspeed,ast2700-fsi-master"
++      - ibm,p10-spi
 +
 +  reg:
 +    maxItems: 1
 +
-+  clocks:
-+    maxItems: 1
-+
-+  cfam-reset-gpios:
-+    maxItems: 1
-+    description:
-+      Output GPIO pin for CFAM reset
-+
-+  fsi-routing-gpios:
-+    maxItems: 1
-+    description:
-+      Output GPIO pin for setting the FSI mux (internal or cabled)
-+
-+  fsi-mux-gpios:
-+    maxItems: 1
-+    description:
-+      Input GPIO pin for detecting the desired FSI mux state
-+
-+  interrupts:
-+    maxItems: 1
-+
-+allOf:
-+  - $ref: fsi-controller.yaml#
-+
 +required:
 +  - compatible
 +  - reg
-+  - clocks
-+  - interrupts
++
++allOf:
++  - $ref: spi-controller.yaml#
 +
 +unevaluatedProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/clock/ast2600-clock.h>
-+    #include <dt-bindings/gpio/aspeed-gpio.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    fsi-master@1e79b000 {
-+        compatible = "aspeed,ast2600-fsi-master";
-+        reg = <0x1e79b000 0x94>;
-+        interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&pinctrl_fsi1_default>;
-+        clocks = <&syscon ASPEED_CLK_GATE_FSICLK>;
-+        fsi-routing-gpios = <&gpio0 ASPEED_GPIO(Q, 7) GPIO_ACTIVE_HIGH>;
-+        fsi-mux-gpios = <&gpio0 ASPEED_GPIO(B, 0) GPIO_ACTIVE_HIGH>;
-+        cfam-reset-gpios = <&gpio0 ASPEED_GPIO(Q, 0) GPIO_ACTIVE_LOW>;
++    fsi2spi@1c00 {
++        compatible = "ibm,fsi2spi";
++        reg = <0x1c00 0x400>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        spi@0 {
++            compatible = "ibm,p10-spi";
++            reg = <0>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            eeprom@0 {
++                compatible = "atmel,at25";
++                reg = <0>;
++                size = <0x80000>;
++                address-width = <24>;
++                pagesize = <256>;
++                spi-max-frequency = <1000000>;
++            };
++        };
 +    };
-diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt b/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
-deleted file mode 100644
-index 9853fefff5d8..000000000000
---- a/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
-+++ /dev/null
-@@ -1,36 +0,0 @@
--Device-tree bindings for AST2600 FSI master
---------------------------------------------
--
--The AST2600 contains two identical FSI masters. They share a clock and have a
--separate interrupt line and output pins.
--
--Required properties:
-- - compatible: "aspeed,ast2600-fsi-master"
-- - reg: base address and length
-- - clocks: phandle and clock number
-- - interrupts: platform dependent interrupt description
-- - pinctrl-0: phandle to pinctrl node
-- - pinctrl-names: pinctrl state
--
--Optional properties:
-- - cfam-reset-gpios: GPIO for CFAM reset
--
-- - fsi-routing-gpios: GPIO for setting the FSI mux (internal or cabled)
-- - fsi-mux-gpios: GPIO for detecting the desired FSI mux state
--
--
--Examples:
--
--    fsi-master {
--        compatible = "aspeed,ast2600-fsi-master", "fsi-master";
--        reg = <0x1e79b000 0x94>;
--	interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_fsi1_default>;
--	clocks = <&syscon ASPEED_CLK_GATE_FSICLK>;
--
--	fsi-routing-gpios = <&gpio0 ASPEED_GPIO(Q, 7) GPIO_ACTIVE_HIGH>;
--	fsi-mux-gpios = <&gpio0 ASPEED_GPIO(B, 0) GPIO_ACTIVE_HIGH>;
--
--	cfam-reset-gpios = <&gpio0 ASPEED_GPIO(Q, 0) GPIO_ACTIVE_LOW>;
--    };
 -- 
 2.39.3
 
