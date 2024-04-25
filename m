@@ -1,132 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A138152526;
-	Thu, 25 Apr 2024 21:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF23152526;
+	Thu, 25 Apr 2024 21:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714081918; cv=none; b=PJWTB7aThL65ue6JOo/yeUZBnRMJ3uwxovIfHHFqtHnHJ7E1TL+rekVa1oqGqIa9FZOM1xQBpy3WiaDi2CeNx9YQdbuhTR7MaXhGkjPVNlNodHl6NuIyRbJPMSNol09XqaF+YcclJwZsX57mTmF7k4jcoQAUkRQAK6Q2t/SxJVg=
+	t=1714081926; cv=none; b=bvzQoCW74ZMEhZ2bAafjLy6ApBeW8mtFGQCTljSqX26cWJEdiN8TF5qMJA6SKO6ThBBRywSlzTQ0MMbxybxqyyS+LFI+93HYNdHGdQrGgCqEahksjE0SuMFbxf4hbfqyKvLrhrvy+djJjCi8rrn8ifSed7l+GVvleQNxVHJ9294=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714081918; c=relaxed/simple;
-	bh=x+dBzqNSH49rZazhRf4nqK+tLEJjJqmYYDFM1eu5ETs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eS5wT4LwQ5c23ndf6+pKYt+1tL1xLF5efvJZd4KaoeWFu7ECieMQzYRYeUQ2y2GfiIh91IqKWcQCU6nw5Bu9vfTeVXQTFYpttFaHHPNl1aEvs14/zDKeVZWhsg6hLlzJ1lSifdYmC32ktTUuBkKegdppSmwo7a3T5ruyEtmKCjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cxskvaVk; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714081926; c=relaxed/simple;
+	bh=2TQXo2YMYhg/mBJxKuqafaOEZef1g+SCKODQN1pqdkU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d04lSxytpi9ImwJVqdfUOiK/ucqWs3nthxeRXsVPWqbpKi6MzI9jZaiRH1xNbmwN34jK4+BXaL01LebvT/fzyuA8k39POoOJFE+UTMYtX7te9JB1JJKUd5IYo6XBwnD5RBBuO1dFiUY9ovjDsVLMSXastw1XqqFowEes7hVc2Vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Hn/BXb7V; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cxskvaVk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714081918; x=1745617918;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=x+dBzqNSH49rZazhRf4nqK+tLEJjJqmYYDFM1eu5ETs=;
-  b=cxskvaVkGvvKVhPLWzJAAimwTVJ5Xo5Qe6Ewu9wH2vFJvGzTU5G8PSbi
-   PRpM/VXSUY4yyxypL6W6MDio2TleC3rpoMBwBkwaE7USrP9f6jqKJHC1U
-   SV9NLE5WSREqaF1adhVC+6sJiSktt9xg6O69GHdPmV/EgX2SDz5wwTMuo
-   rcygdZpl9ti1VnjU22OCwVrdUK1fNEKqdv5daVN6zcrNTyxq4lNdKZ/E6
-   U5pFW2Y4rkehEMNTfpp6dUdlNizG/9HsbyL7sx09vwDf0FSVWjbMrtesq
-   tWgDV1/MILnUJPGvz1aT09Mlo8GcAx7+U2bjybqOeG7Fe+/OW8CivAM1P
-   Q==;
-X-CSE-ConnectionGUID: +5ILbMkmSuGW0THV7ZyCew==
-X-CSE-MsgGUID: WxaTiXdvR6mgP8/e0A0vmg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="20952678"
-X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
-   d="scan'208";a="20952678"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 14:51:56 -0700
-X-CSE-ConnectionGUID: u7et1VtPTn+s4+O2D7fzWg==
-X-CSE-MsgGUID: IfshLvBcT+Kec7dLt4kotA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
-   d="scan'208";a="25208713"
-Received: from mmubarik-mobl3.amr.corp.intel.com (HELO [10.212.65.9]) ([10.212.65.9])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 14:51:55 -0700
-Message-ID: <3cf80056-e62d-4be1-9716-4c843ae2f88c@linux.intel.com>
-Date: Thu, 25 Apr 2024 14:51:42 -0700
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Hn/BXb7V"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43PL4mA7006203;
+	Thu, 25 Apr 2024 21:51:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type; s=qcppdkim1; bh=/ZM8SPXr7udKkYr/SDUm
+	noP1IOgbHf5SfkdSPWJ27XA=; b=Hn/BXb7VlfVhXcf95E7VPUe0a9UrXrgtP7oo
+	qle+qxpkSK4bF3tosWhE8XUbI8nYVVFgypE9whUerAz/fbof6F1pjnJO6sHahuKG
+	l9OAPF+CBj6xotXTAbJaSJwtrJ85GZtoZa3NVx7CzNEJ7CLYdVVNiPzF2/FlkfnG
+	VpDbUevTW4ZPBhvx22F5evzuH+LQ5XYSDMHHnFdeb785M2A3FWP+25i6iHWFtiTE
+	ObwXu8g3sRZOPKTMosVDnlowS/lbnkVaVCa0viKooXY4xVb2952FMe4IgnxQRT07
+	YqF2KnL2iu/H06vgp81L9m5nVrurHfPVA2kGSnELd0L91jrCDw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xqrwwrya0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Apr 2024 21:51:40 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43PLpdcq024569
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Apr 2024 21:51:39 GMT
+Received: from hu-wcheng-lv.qualcomm.com (10.49.16.6) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 25 Apr 2024 14:51:39 -0700
+From: Wesley Cheng <quic_wcheng@quicinc.com>
+To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
+        <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
+        <lgirdwood@gmail.com>, <andersson@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <gregkh@linuxfoundation.org>,
+        <Thinh.Nguyen@synopsys.com>, <broonie@kernel.org>,
+        <bgoswami@quicinc.com>, <tiwai@suse.com>, <robh@kernel.org>,
+        <konrad.dybcio@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, Wesley Cheng <quic_wcheng@quicinc.com>
+Subject: [PATCH v20 10/41] ASoC: dt-bindings: qcom,q6dsp-lpass-ports: Add USB_RX port
+Date: Thu, 25 Apr 2024 14:50:54 -0700
+Message-ID: <20240425215125.29761-11-quic_wcheng@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240425215125.29761-1-quic_wcheng@quicinc.com>
+References: <20240425215125.29761-1-quic_wcheng@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: dell-laptop: Implement platform_profile
-To: Mario Limonciello <mario.limonciello@amd.com>,
- Lyndon Sanche <lsanche@lyndeno.ca>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
- <pali@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Dell.Client.Kernel@dell.com
-References: <20240425172758.67831-1-lsanche@lyndeno.ca>
- <a6009bed-aa34-4a3f-91f5-23937e915132@amd.com>
- <24c7a9ea-7755-4270-a338-4701c8e262e2@app.fastmail.com>
- <ae6a5b66-86e9-44cd-8484-1d218e7bc72c@amd.com>
-Content-Language: en-US
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-In-Reply-To: <ae6a5b66-86e9-44cd-8484-1d218e7bc72c@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ImwJpJ3mamCAFMc3goEj0kRyqN-wU6lZ
+X-Proofpoint-ORIG-GUID: ImwJpJ3mamCAFMc3goEj0kRyqN-wU6lZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-25_21,2024-04-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ mlxscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 phishscore=0
+ mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2404010003 definitions=main-2404250159
 
+Q6DSP supports handling of USB playback audio data if USB audio offloading
+is enabled.  Add a new definition for the USB_RX AFE port, which is
+referenced when the AFE port is started.
 
-On 4/25/24 13:28, Mario Limonciello wrote:
-> On 4/25/2024 15:24, Lyndon Sanche wrote:
->> On Thu, Apr 25, 2024, at 2:07 PM, Mario Limonciello wrote:
->>> + Srinivas
->>>
->>> On 4/25/2024 12:27, Lyndon Sanche wrote:
->>>> Some Dell laptops support configuration of preset
->>>> fan modes through smbios tables.
->>>>
->>>> If the platform supports these fan modes, set up
->>>> platform_profile to change these modes. If not
->>>> supported, skip enabling platform_profile.
->>>>
->>>> Signed-off-by: Lyndon Sanche <lsanche@lyndeno.ca>
->>>> ---
->>>
->>> When you developed this was it using a Dell Intel or Dell AMD system?
->>>
->>> If it was an Intel system, did you test it with thermald installed and
->>> active?
->>>
->>> I'm wondering how all this stuff jives with the stuff that thermald
->>> does.  I don't know if they fight for any of the same "resources".
->>
->> Thank you for your response.
->>
->> I did my development and testing on a Dell Intel system. Specifically 
->> the XPS 15 9560 with i7-7700HQ.
->>
->> I do have thermald running, though I admit I am not really aware of 
->> what exactly it does, besides being related to thermals in some way.
->>
->> I normally set the thermal mode with Dell's smbios-thermal-ctl 
->> program. I am not too sure all the values that the bios configures on 
->> it's own depending on the provided mode, so I am not sure if thermald 
->> conflicts. But my understanding is that would be out of scope of this 
->> driver, since we are only telling the bios what we want at a high level.
->>
->> Lyndon
->
-> Yeah it's not say it's a "new" conflict, it would just become a lot 
-> more prevalent since software like GNOME and KDE use 
-> power-profiles-daemon to manipulate the new power profile you're 
-> exporting from the driver.
->
-> If there really is no conflict, then great!
-> If there is a conflict then I was just wondering if there needs to be 
-> an easy way to turn on/off the profile support when thermald is in use.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+---
+ include/dt-bindings/sound/qcom,q6dsp-lpass-ports.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-This shouldn't be in conflict as this should be directly changing some 
-settings in BIOS. BIOS should send some notification, if it wants some 
-changes in thermal tables used by thermald.
-
-
-Thanks,
-
-Srinivas
-
-
+diff --git a/include/dt-bindings/sound/qcom,q6dsp-lpass-ports.h b/include/dt-bindings/sound/qcom,q6dsp-lpass-ports.h
+index 39f203256c4f..6d1ce7f5da51 100644
+--- a/include/dt-bindings/sound/qcom,q6dsp-lpass-ports.h
++++ b/include/dt-bindings/sound/qcom,q6dsp-lpass-ports.h
+@@ -139,6 +139,7 @@
+ #define DISPLAY_PORT_RX_5	133
+ #define DISPLAY_PORT_RX_6	134
+ #define DISPLAY_PORT_RX_7	135
++#define USB_RX			136
+ 
+ #define LPASS_CLK_ID_PRI_MI2S_IBIT	1
+ #define LPASS_CLK_ID_PRI_MI2S_EBIT	2
