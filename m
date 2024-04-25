@@ -1,160 +1,192 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EA314A0BF;
-	Thu, 25 Apr 2024 15:45:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5AC14C5A1
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 15:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714059956; cv=none; b=ZqB8TKFZFnzRaObA50j33iYmylzpewHVx+dG0G4Fl4w1MHotrN8r4ME/sdAApowGJIJWFenr4gq59dT4yDwP3cKPCynC75k+1imPiltSEsoDBg3wLB35JvDnnCQfay9j9mw9L+xiEivLK7yQUP61LqjwmJi//9vcBWZl5JBntLQ=
+	t=1714059968; cv=none; b=tLeCwd9KC1Z4j/rRUHr+Fj45sS2TnbKCTPKpV2i5QebntY92FVDWtBgGj6Hha1YXXbUkdYK+MmXzb1v21+sO+YamwleHDkuf1zGP0OBCjg/euGi1B7lzR+sBPfc9iKalcjcYun7Le5qPE6dP60BCA4lMrPvKkqbmTf0uhYE+u98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714059956; c=relaxed/simple;
-	bh=aLNOpU0TwtjAVJpMES4C7c9D1YU51qnuvStJZTDomSs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R9RABA3+Ba8foK06orfVF+9gNijkBLfLd2U5XqtuZrDKhDtRGRrboiHCA8N/eWxy7LTzMojucT5N3vR3O+WoaczjBTBq74XIizuys5g525Mbmjg9wrdAs22kV1kkN6xiBzQCs6SQ7f11342PhUz9vPhRSxXCIGCKSBNUkFh7NLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=y4hL6NT2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Hj4n6C0W; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=y4hL6NT2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Hj4n6C0W; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1714059968; c=relaxed/simple;
+	bh=ARPhOPhDgTEQgJncPtrsgbR8sVcAO1VcNK+RH2Rvv7E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hZm7Ff8a3Lufj3cxmLNC4sXt2JFCJPSVZE1GYu6m5hJlo3K00Zvg5+y+pqrnaV8C6hBcgEsRsyAk0aINrpFzshOt5SKxwoZEAKu/Tvki46H9l5VTnbZLWuCNDoTjOMLma2DPUYhNgnw6hJ1iCtuXIKSCPmG/w3XB1OYgWSoxIHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yXP2Ic6W; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="y4hL6NT2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Hj4n6C0W";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="y4hL6NT2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Hj4n6C0W"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 22F345BEDD;
-	Thu, 25 Apr 2024 15:45:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714059952; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YKPCz/g8F0wqv3JnYeaXQhQSP8CzjdejwZMbbBUL74A=;
-	b=y4hL6NT2nKBm+Lw0yT9iuzbqw6I+9M3yfEErI6MkUHOcw/+R8y5Lk3kDncMCbjYIgyROTe
-	v0Vx9cYwjsMfF392vJ3UTQBx6ai1XpFUORWrix1qp4WIjk3ZBpaJVue3VFq7O6+5ar6dp+
-	Nx8QD6b++XI8FrSJnU6nGOfttmZAnzk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714059952;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YKPCz/g8F0wqv3JnYeaXQhQSP8CzjdejwZMbbBUL74A=;
-	b=Hj4n6C0WmzL869N0tc8I6xMA3pEeUEXlu+lZ3T487I2dn65em9sqGr+vzUUcoEUWJTuO3X
-	KOTIjMxciHEbIWBg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714059952; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YKPCz/g8F0wqv3JnYeaXQhQSP8CzjdejwZMbbBUL74A=;
-	b=y4hL6NT2nKBm+Lw0yT9iuzbqw6I+9M3yfEErI6MkUHOcw/+R8y5Lk3kDncMCbjYIgyROTe
-	v0Vx9cYwjsMfF392vJ3UTQBx6ai1XpFUORWrix1qp4WIjk3ZBpaJVue3VFq7O6+5ar6dp+
-	Nx8QD6b++XI8FrSJnU6nGOfttmZAnzk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714059952;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YKPCz/g8F0wqv3JnYeaXQhQSP8CzjdejwZMbbBUL74A=;
-	b=Hj4n6C0WmzL869N0tc8I6xMA3pEeUEXlu+lZ3T487I2dn65em9sqGr+vzUUcoEUWJTuO3X
-	KOTIjMxciHEbIWBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6B2EE1393C;
-	Thu, 25 Apr 2024 15:45:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id l/JqE696KmamFwAAD6G6ig
-	(envelope-from <jdelvare@suse.de>); Thu, 25 Apr 2024 15:45:51 +0000
-Date: Thu, 25 Apr 2024 17:45:49 +0200
-From: Jean Delvare <jdelvare@suse.de>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-i2c@vger.kernel.org, Andi Shyti <andi.shyti@kernel.org>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] i2c: i801: remove printout on handled timeouts
-Message-ID: <20240425174549.236a9efe@endymion.delvare>
-In-Reply-To: <20240423121322.28460-2-wsa+renesas@sang-engineering.com>
-References: <20240423121322.28460-1-wsa+renesas@sang-engineering.com>
-	<20240423121322.28460-2-wsa+renesas@sang-engineering.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yXP2Ic6W"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5724e69780bso278973a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 08:46:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714059965; x=1714664765; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=wCdxJ+q4o3pPwabMdF8nZZpueZWNvS6ScA7rit1v9g4=;
+        b=yXP2Ic6Wim+7n8MwPWojLInIF7f+vLFEv1td5ZrUzAT4WQeiqfzxriEoWPdihzaNDt
+         2VGTXp3x6ap8HyC+TbM5qRZVAwafwT/F6F428bYaEA8t+BbG1OXQ673A9MDs5izSSJ7t
+         CU/PVttdVqZc1ayqGPx4czgQN2q6PDXqpAeWaEyZSs6iAwTSbXDY7yIYKdEPXrXOZXV+
+         DMoa2fwc0+TTvIII1rCKl48t8FNJKjya9IASn4h75qKgL+pw3CuMI9IHHD9Vgbr5FV/e
+         ZmLUcg5NygOyAre8/nPEBVAwZFq1+h2WXYwuixBxMsGGj8DNv5hZf1wjEfbYs2TU2NBf
+         DWOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714059965; x=1714664765;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wCdxJ+q4o3pPwabMdF8nZZpueZWNvS6ScA7rit1v9g4=;
+        b=IWeNjsB5QndNOutnWvQIIuRh7DZFSm67kvpEhdHPn8+kpllfzuzNSjw6S9seP+TaEz
+         fO7p+WE4PKLluJ1hUpnlpFJ7hr/wk8B5nv9thCR2SBQIkrTeZHxVBCYEYKBRDZdDGsL8
+         44f64BuKdUjvLld3M+muqEhDL1+13Ozz8FVHsAO5QR9QNYHpyzADJHCTWIbuXaONzj0K
+         ePG5tAHrljBZHmbTzsjS5OV45UfEXiggN9xWnNjL3xU2H1BXkW6kEYHvwt/xTU2+Uz2d
+         3UpS0EqWnfeRU3jb1EYpRLZBndhq7Z65uscdua/nP1wjPPqXdPMFFnkTIuwYnX0w32D8
+         qQBg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8V/BkUMHZyB4FwaTjWKx+YHWc0IKI7kD2TsYfTZWH4KosfRPm8ZZNpilzWZwi+KKpia7rEOLD48wK0EmTWT6kJ55ySUNdLM3Hpt1A
+X-Gm-Message-State: AOJu0Yw/XGB5WV3Fm77FkRw8Njf0ddjlhJ6R68XUpP8FAYi7hZbIiEgz
+	VlWQPHcV/oTaiPXI4AoPicKeMTxnIkboQ8a5taMvn4UZaRSLB/YF6WKGzvNaZuN9xqT4XzwGQ5O
+	S1c0=
+X-Google-Smtp-Source: AGHT+IGjb9BIma2IPdK9VWrOvvIht6IG4eG7JsAANZbuKMobxKYONjCipGocbaFdCGFyQRQnFZaCew==
+X-Received: by 2002:a50:d4d2:0:b0:56d:e6f6:f73c with SMTP id e18-20020a50d4d2000000b0056de6f6f73cmr3670436edj.42.1714059965005;
+        Thu, 25 Apr 2024 08:46:05 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id i19-20020a50fc13000000b0056fed8e7817sm8916217edr.20.2024.04.25.08.46.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Apr 2024 08:46:04 -0700 (PDT)
+Message-ID: <b79b5323-196f-41bc-b47a-d350c49d769a@linaro.org>
+Date: Thu, 25 Apr 2024 17:46:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] dt-bindings: hwmon: max31790: Add
+ maxim,pwmout-pin-as-tach-input property
+To: Guenter Roeck <linux@roeck-us.net>,
+ Chanh Nguyen <chanh@amperemail.onmicrosoft.com>,
+ Conor Dooley <conor@kernel.org>
+Cc: Chanh Nguyen <chanh@os.amperecomputing.com>,
+ Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Justin Ledford
+ <justinledford@google.com>, devicetree@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+ Open Source Submission <patches@amperecomputing.com>,
+ Phong Vo <phong@os.amperecomputing.com>,
+ Thang Nguyen <thang@os.amperecomputing.com>,
+ Quan Nguyen <quan@os.amperecomputing.com>
+References: <20240414042246.8681-1-chanh@os.amperecomputing.com>
+ <20240414042246.8681-4-chanh@os.amperecomputing.com>
+ <13b195e6-cbbd-4f74-a6fa-d874cb4aaa45@linaro.org>
+ <065243cc-09cf-4087-8842-bd4394fb324f@amperemail.onmicrosoft.com>
+ <d549cf2b-a7fa-4644-8fcb-3c420503ee01@amperemail.onmicrosoft.com>
+ <20240423-gallantly-slurp-24adbfbd6f09@spud>
+ <ab5cfd8c-0e88-4194-a77e-5ffbb6890319@amperemail.onmicrosoft.com>
+ <396b47f5-9604-44ab-881f-94d0664bcab8@roeck-us.net>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <396b47f5-9604-44ab-881f-94d0664bcab8@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -1.74
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.74 / 50.00];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	BAYES_HAM(-0.44)[78.70%];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,sang-engineering.com:email,suse.de:email]
 
-On Tue, 23 Apr 2024 14:13:18 +0200, Wolfram Sang wrote:
-> I2C and SMBus timeouts are not something the user needs to be informed
-> about on controller level. The client driver may know if that really is
-> a problem and give more detailed information to the user. The controller
-> should just pass this information upwards. Remove the printout and turn
-> the SMBus-specific termination message to debug.
+On 25/04/2024 16:05, Guenter Roeck wrote:
+> On 4/25/24 03:33, Chanh Nguyen wrote:
+>>
+>>
+>> On 24/04/2024 00:02, Conor Dooley wrote:
+>>> [EXTERNAL EMAIL NOTICE: This email originated from an external sender. Please be mindful of safe email handling and proprietary information protection practices.]
+>>>
+>>
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  drivers/i2c/busses/i2c-i801.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> The quote doesn't make much sense.
 > 
-> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-> index e577abc776c1..d2d2a6dbe29f 100644
-> --- a/drivers/i2c/busses/i2c-i801.c
-> +++ b/drivers/i2c/busses/i2c-i801.c
-> @@ -399,9 +399,7 @@ static int i801_check_post(struct i801_priv *priv, int status)
->  	 * If the SMBus is still busy, we give up
->  	 */
->  	if (unlikely(status < 0)) {
-> -		dev_err(&priv->pci_dev->dev, "Transaction timeout\n");
->  		/* try to stop the current command */
-> -		dev_dbg(&priv->pci_dev->dev, "Terminating the current operation\n");
->  		outb_p(SMBHSTCNT_KILL, SMBHSTCNT(priv));
->  		usleep_range(1000, 2000);
->  		outb_p(0, SMBHSTCNT(priv));
-> @@ -410,7 +408,7 @@ static int i801_check_post(struct i801_priv *priv, int status)
->  		status = inb_p(SMBHSTSTS(priv));
->  		if ((status & SMBHSTSTS_HOST_BUSY) ||
->  		    !(status & SMBHSTSTS_FAILED))
-> -			dev_err(&priv->pci_dev->dev,
-> +			dev_dbg(&priv->pci_dev->dev,
->  				"Failed terminating the transaction\n");
->  		return -ETIMEDOUT;
->  	}
+>> Sorry Conor, there may be confusion here. I mean the mapping of the PWM output to the TACH input, which is on the MAX31790, and it is not sure a common feature on all fan controllers.
+>>
+> 
+> I think the term "mapping" is a bit confusing here.
+> 
+> tach-ch, as I understand it, is supposed to associate a tachometer input
+> with a pwm output, meaning the fan speed measured with the tachometer input
+> is expected to change if the pwm output changes.
+> 
+> On MAX31790, it is possible to configure a pwm output pin as tachometer input pin.
+> That is something completely different. Also, the association is fixed.
+> If the first pwm channel is used as tachometer channel, it would show up as 7th
+> tachometer channel. If the 6th pwm channel is configured to be used as tachometer
+> input, it would show up as 12th tachometer channel.
+> 
+> Overall, the total number of channels on MAX31790 is always 12. 6 of them
+> are always tachometer inputs, the others can be configured to either be a
+> pwm output or a tachometer input.
+> 
+> pwm outputs on MAX31790 are always tied to the matching tachometer inputs
+> (pwm1 <--> tach1 etc) and can not be reconfigured, meaning tach-ch for
+> channel X would always be X.
+> 
+>> I would like to open a discussion about whether we should use the tach-ch property on the fan-common.yaml
+>>
+>> I'm looking forward to hearing comments from everyone. For me, both tach-ch and vendor property are good.
+>>
+> 
+> I am not even sure how to define tach-ch to mean "use the pwm output pin
+> associated with this tachometer input channel not as pwm output
+> but as tachometer input". That would be a boolean, not a number.
 
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Thanks for explanation. So this is basically pin controller function
+choice - kind of output or input, although not in terms of GPIO.
 
--- 
-Jean Delvare
-SUSE L3 Support
+Shouldn't we have then fan children which will be consumers of PWMs?
+Having a consumer makes pin PWM output. Then tach-ch says which pins are
+tachometer for given fan? Just like aspeed,g6-pwm-tach.yaml has?
+
+Best regards,
+Krzysztof
+
