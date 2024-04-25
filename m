@@ -1,129 +1,121 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CAA149C58;
-	Thu, 25 Apr 2024 13:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E38149C70;
+	Thu, 25 Apr 2024 13:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714051739; cv=none; b=KrtcORWvTs+2ai5fnsb56caQvJCKlDx6zRn+vfGL+AAhAAPb8bZAkY9O+JJ7AgZc27ucislVzbCn/F58+TbLxS66mJB59QEkHMz4KQucX9pDUvNvMyF6lHRy+s6EET25TAMf2QgwB2Rq2/jpKiLEkZWTQ5pmK2ybzPfWSolfsp4=
+	t=1714051758; cv=none; b=nr81e9XkUS+lk+j/lboK7wYdx7V/TZ8kQtPObW5+eaUeFG5sjstYNuhGODhxk3NNHqPaX/YQaWl2K+3bve1OSzITP/0WzEV1nJNjdPaV8xyWbnWC3/YykKoaODjDJQAmVpxrE5uoRXVqqQhMrY/rWfB8Gshv8Cw2R4su1tG0UQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714051739; c=relaxed/simple;
-	bh=8bcsrA2Lq0ga4FH436fKGxyE6fNRzCVVCCyK4htyjZY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FyQvdyZHrYZtAQt2Iq17en9g9qoHGzyPT2KBhjfyxA00aeFFTdelfjER0nwjUpMwCoojP0yH0JmAqCJTLqhi4TijcP52zxVahfw7AA0BwHxSxU5rsbzSF4gcplFbc7f2r9iMRRkMj6pCeSW97plcleeINzhrypqMpjgDeUttxHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VQGnq4kGPz1R5Vs;
-	Thu, 25 Apr 2024 21:25:51 +0800 (CST)
-Received: from kwepemm600005.china.huawei.com (unknown [7.193.23.191])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9EA5A1800AA;
-	Thu, 25 Apr 2024 21:28:54 +0800 (CST)
-Received: from huawei.com (10.50.165.33) by kwepemm600005.china.huawei.com
- (7.193.23.191) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 25 Apr
- 2024 21:28:54 +0800
-From: Longfang Liu <liulongfang@huawei.com>
-To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
-CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@openeuler.org>, <liulongfang@huawei.com>
-Subject: [PATCH v6 1/5] hisi_acc_vfio_pci: extract public functions for container_of
-Date: Thu, 25 Apr 2024 21:23:18 +0800
-Message-ID: <20240425132322.12041-2-liulongfang@huawei.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20240425132322.12041-1-liulongfang@huawei.com>
-References: <20240425132322.12041-1-liulongfang@huawei.com>
+	s=arc-20240116; t=1714051758; c=relaxed/simple;
+	bh=wskz/AmsaP1lhsfbNrm1mdT4szU5tDRPLVfU0H5AD8Q=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=CJ/KW5hGqHXbphLsm+4R8weJnhQuvlBLP9J9faHU70v731eVJH81oNlVOdIS5fF3x1qyndnjmyvkPfOvfhQnqkBzFunemrquAGhuROI1WFoYEUps4PuXpaxUO/SKT5TkBQhB013thTyAuMZVREqteJPPX4OM1Y38yQQWRgCHYXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Wnt7oiI5; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wnt7oiI5"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43PD28UN005279;
+	Thu, 25 Apr 2024 13:29:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=etx9ghK6vaLriQU+/XjIUoOHCizC2xGLldFfgXXdbEo=;
+ b=Wnt7oiI5YeOgUd2vxzu9EnRLJ+Xlm7ErBahpBNx4dIIu8eE+MPxlDwxSq0p8FG4OjlY+
+ en0wG8vCe/LT07VucDiBUzfpHhSaARLXzAD1L+iqsQTh65RN2PzO/aut6wC2uHB/xz1c
+ FLXoMcerR/v5yXTGmWekn6IXXGDD8zqVqbOfB5FWkZTsSKz088blo+axJ6Yd1QgnHSMy
+ 84QgwyPyIWSM7vbOyDTfneH+fVjHhZHyQLbuYuSUfskuTOT7gAnoYjT3itgJmiEzyD72
+ niYUDW3IrhZP2Fdt9oduGEnojEP35gAlqHMbw5JOZ6PtGdi2McDjW9Lqrz2lurooI1KM hg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xqqpwr228-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Apr 2024 13:29:07 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43PDT7Hi013788;
+	Thu, 25 Apr 2024 13:29:07 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xqqpwr221-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Apr 2024 13:29:07 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43PD40ra005352;
+	Thu, 25 Apr 2024 13:29:06 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xmx3crpbx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Apr 2024 13:29:05 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43PDT0va42991884
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 25 Apr 2024 13:29:02 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A473420049;
+	Thu, 25 Apr 2024 13:29:00 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3D78520040;
+	Thu, 25 Apr 2024 13:29:00 +0000 (GMT)
+Received: from [9.152.224.141] (unknown [9.152.224.141])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 25 Apr 2024 13:29:00 +0000 (GMT)
+Message-ID: <23cff564-a65c-4db6-a386-2a7e56be84c8@linux.ibm.com>
+Date: Thu, 25 Apr 2024 15:29:00 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v6 07/11] net/smc: register loopback-ism into
+ SMC-D device list
+Content-Language: en-US
+To: Wenjia Zhang <wenjia@linux.ibm.com>, Wen Gu <guwen@linux.alibaba.com>,
+        twinkler@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, jaka@linux.ibm.com
+Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
+        tonylu@linux.alibaba.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org
+References: <20240414040304.54255-1-guwen@linux.alibaba.com>
+ <20240414040304.54255-8-guwen@linux.alibaba.com>
+ <ef936c58-e87c-4078-a4dc-ed7313dba2a3@linux.ibm.com>
+From: Alexandra Winter <wintera@linux.ibm.com>
+In-Reply-To: <ef936c58-e87c-4078-a4dc-ed7313dba2a3@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: EpMIQ47RwUwKg1qn6GATtcSYn5LIp0y-
+X-Proofpoint-GUID: mx6fJ0iRSsp-atADs5qci4ckRHoC4wcK
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600005.china.huawei.com (7.193.23.191)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-25_13,2024-04-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=859 adultscore=0
+ phishscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 bulkscore=0 impostorscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404250098
 
-In the current driver, vdev is obtained from struct
-hisi_acc_vf_core_device through the container_of function.
-This method is used in many places in the driver. In order to
-reduce this repetitive operation, It was extracted into
-a public function.
 
-Signed-off-by: Longfang Liu <liulongfang@huawei.com>
----
- .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 21 ++++++++++---------
- 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-index 9a3e97108ace..45351be8e270 100644
---- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-+++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-@@ -630,6 +630,12 @@ static void hisi_acc_vf_disable_fds(struct hisi_acc_vf_core_device *hisi_acc_vde
- 	}
- }
- 
-+static struct hisi_acc_vf_core_device *hisi_acc_get_vf_dev(struct vfio_device *vdev)
-+{
-+	return container_of(vdev, struct hisi_acc_vf_core_device,
-+			    core_device.vdev);
-+}
-+
- static void hisi_acc_vf_reset(struct hisi_acc_vf_core_device *hisi_acc_vdev)
- {
- 	hisi_acc_vdev->vf_qm_state = QM_NOT_READY;
-@@ -1033,8 +1039,7 @@ static struct file *
- hisi_acc_vfio_pci_set_device_state(struct vfio_device *vdev,
- 				   enum vfio_device_mig_state new_state)
- {
--	struct hisi_acc_vf_core_device *hisi_acc_vdev = container_of(vdev,
--			struct hisi_acc_vf_core_device, core_device.vdev);
-+	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(vdev);
- 	enum vfio_device_mig_state next_state;
- 	struct file *res = NULL;
- 	int ret;
-@@ -1075,8 +1080,7 @@ static int
- hisi_acc_vfio_pci_get_device_state(struct vfio_device *vdev,
- 				   enum vfio_device_mig_state *curr_state)
- {
--	struct hisi_acc_vf_core_device *hisi_acc_vdev = container_of(vdev,
--			struct hisi_acc_vf_core_device, core_device.vdev);
-+	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(vdev);
- 
- 	mutex_lock(&hisi_acc_vdev->state_mutex);
- 	*curr_state = hisi_acc_vdev->mig_state;
-@@ -1280,8 +1284,7 @@ static long hisi_acc_vfio_pci_ioctl(struct vfio_device *core_vdev, unsigned int
- 
- static int hisi_acc_vfio_pci_open_device(struct vfio_device *core_vdev)
- {
--	struct hisi_acc_vf_core_device *hisi_acc_vdev = container_of(core_vdev,
--			struct hisi_acc_vf_core_device, core_device.vdev);
-+	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(core_vdev);
- 	struct vfio_pci_core_device *vdev = &hisi_acc_vdev->core_device;
- 	int ret;
- 
-@@ -1304,8 +1307,7 @@ static int hisi_acc_vfio_pci_open_device(struct vfio_device *core_vdev)
- 
- static void hisi_acc_vfio_pci_close_device(struct vfio_device *core_vdev)
- {
--	struct hisi_acc_vf_core_device *hisi_acc_vdev = container_of(core_vdev,
--			struct hisi_acc_vf_core_device, core_device.vdev);
-+	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(core_vdev);
- 	struct hisi_qm *vf_qm = &hisi_acc_vdev->vf_qm;
- 
- 	iounmap(vf_qm->io_base);
-@@ -1320,8 +1322,7 @@ static const struct vfio_migration_ops hisi_acc_vfio_pci_migrn_state_ops = {
- 
- static int hisi_acc_vfio_pci_migrn_init_dev(struct vfio_device *core_vdev)
- {
--	struct hisi_acc_vf_core_device *hisi_acc_vdev = container_of(core_vdev,
--			struct hisi_acc_vf_core_device, core_device.vdev);
-+	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(core_vdev);
- 	struct pci_dev *pdev = to_pci_dev(core_vdev->dev);
- 	struct hisi_qm *pf_qm = hisi_acc_get_pf_qm(pdev);
- 
--- 
-2.24.0
+On 25.04.24 13:29, Wenjia Zhang wrote:
+>> +    if (!smcd->pnetid[0]) {
+>> +        fentry = list_first_entry_or_null(&smcd_dev_list.list,
+>> +                          struct smcd_dev, list);
+>> +        if (fentry && smc_ism_is_loopback(fentry))
+>> +            list_add(&smcd->list, &fentry->list);
+>> +        else
+>> +            list_add(&smcd->list, &smcd_dev_list.list);
+>> +    } else {
+>>           list_add_tail(&smcd->list, &smcd_dev_list.list);
+>> -    else
+>> -        list_add(&smcd->list, &smcd_dev_list.list);
+>> +    }
+> 
+> Nit: here the pair of curly brackets are unnecessary.
 
+Actually
+https://www.kernel.org/doc/html/latest/process/coding-style.html#codingstyle
+tells you to use those braces.
