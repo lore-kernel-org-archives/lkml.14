@@ -1,146 +1,140 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E40149C79
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 14:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFED1494BB
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 14:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714056127; cv=none; b=DuYhZvtjZ4xGG5JicH+osOUF4aJzjCv66YQRNwtFvrYuivIbaFUwsMAjx9ffbQjnk265ltjzsD3hVTCfA63f1+6YhCcW3qiVjDYWPAoYpSsdkAsf7K/XwPjEmYkAO1TU7RxKcd56gNh500IK0qi3qwzaKXIDFYN2KhczNB+MEoo=
+	t=1714056162; cv=none; b=Nu2NdJEuKOXpZPNPY8ShZ8ueFBlgWhFjVqjPViRLV0ObIbtqfAmS2TwhYc/n0GeFQhcrHU6nXCoIJxNLTrLdZFdTyjTTyLrB1RDzJyjDRReTibR/QDwGLLmgA3trC9Nt7veZrovibyWtB5YH0F0gVDCsFXhpx30ByboeuajgWtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714056127; c=relaxed/simple;
-	bh=2HTb1/D2zJKsTz0x8dg2JPZ7AoAiGX0TfTBOVZ7lUok=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PzN+LZUWT6kBj0oT+4VPb6IC7WiftppBpHDl4as3l8GH58c6Z7q/Es++6e2NANXiXv6C3oANUafEELUk+Jg6pLmA13xmURJS8PGK6brgBpiUwcqU7acxu7c+zTFdlTi0ty35ro6d8bSygn1J5k2H42rQI+pqoREPLlz05WACpaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x4Wwt5C6; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1714056162; c=relaxed/simple;
+	bh=1Q39ooJCtCdZ42SEdijjI3QfTDUMYcoSf0TS9OtWyMU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V4U/9z0nr3HiAGN5w+mVD46lpQ/OneZPdJPOdnthNmJhZGZwtbxv6Fqf8ThotehnANjsyFwFkMyLM1BkZJOko0FVv4OKgdTMYovZlsNmNpDrmYQZo/sdyiBaUSFEBCAmIzuqCOlppW7l5A1a/h+JnZByryhr+AfRDZO2HQtizcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=h1I2HmzP; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x4Wwt5C6"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de5823bd7eeso2353032276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 07:42:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714056125; x=1714660925; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lDWCaTYULwF8F3zi592tmuoj8LcUAihXwO8QYVH28dw=;
-        b=x4Wwt5C6hHRlcYDRs995liII8ZAoKfJ/K+N8bnJmVXX2igKQ7cMdCugkF51lNBM9Op
-         P6hjJKUzNHAb9hkUtPhOWcFZHYjm97E3EZ+J6bJrLpKmgg4mQ5uJrHN4IQwHGbNpvxEP
-         S2JwivEI1xD1IuUD422B+FRmrHvRpNFUWuWK03UBJA1l70O9wYS+WByYZGStRykVZh2/
-         9EzKxkpElQH1Qd367hEAjELuWkofggcE7SgC6WEeQZGMK9d3fIRJBT+tT2xfSpeVj1aA
-         FDmQ9TN2CzewaSN/aAzpySL4zYwCk+KlJpscn6sbBp2Mi8qR9u1KuOWCmi+u2OsSuM7I
-         Gx3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714056125; x=1714660925;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lDWCaTYULwF8F3zi592tmuoj8LcUAihXwO8QYVH28dw=;
-        b=B7U2LGAKH+8UgQIUzXKhvugL4kY797TSKYb0enAW/T+s/CWxUtOSMPRTr77rMdYU1j
-         ehOigMnuVCNlTAY5YeqHDtBEOXMdeZNtwYplDt+1MaUeKEvLxks4OY6qsvQPWExPv0j2
-         pQRg/SvOJzW9TxGMZEkCHf8pQ0FCWt/Lm5uKDyImRd/zQBlc2a+/OP0ad9NahuEdltyq
-         E/zKXZb4bFt4GLBZ5O6GUFUT1s34aBkSyRC48N5FC8D6o8FVKPr8vNJ++3J49rBjwhbD
-         DVI9Sz7UCxp96ViO8RAybUJl417o5q8+PeqfCN+eQtkNM5DEb+6TwnhFTg8PN5HwIQpt
-         Vuhw==
-X-Forwarded-Encrypted: i=1; AJvYcCXmEQEc5FZJeX+a8QopTAzgUNu6KwuEmbGx8gd0S7vNBuoaEuVVKAPPaSycXTOV65zWnJXPn63mBdr0XGYvzkFMR0I/KOzWipwu+pEM
-X-Gm-Message-State: AOJu0Ywb37wzqNuwc0+yfgAV0H4+Sgw2Dv+12+ysV9ySHXHN5nrYw8en
-	wWwdMiYCzKm0JWFqSVwxWrFU4M41VT/exs0knGwCKpsCQZ3gWDeRg9NaQgdVAgL7eHh6JJxuWGW
-	L3A==
-X-Google-Smtp-Source: AGHT+IF/g7wUX2d++6yDgZVRNlO+BsKqxODd8ENXt8KXPp295gAemRTfNn6a6plk1Xwk4cOuJTp3H44r+mI=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:c12:b0:de4:6624:b763 with SMTP id
- fs18-20020a0569020c1200b00de46624b763mr945449ybb.0.1714056125345; Thu, 25 Apr
- 2024 07:42:05 -0700 (PDT)
-Date: Thu, 25 Apr 2024 07:42:03 -0700
-In-Reply-To: <64cc46778ccc93e28ec8d39b3b4e31842154f382.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="h1I2HmzP"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43P87NXd011560;
+	Thu, 25 Apr 2024 07:42:09 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=pfpt0220; bh=YypH+pGp
+	IYpH7WBXp4Imc9+sq/Tm4UKy97IIMOK/RmE=; b=h1I2HmzPehkCQA8VqgZ2uRpM
+	CNdbcdzsWEscAb6q/QQG+uemI3EWCJubtfmLGWEHAhmWw6L8gBPWuSo/pvnLeaky
+	boeFe7mYAikMbpV0T+exSJ4AtVJDDLRmKViaqN48Ilh+v82zS9q0nzMzeRtwh4n7
+	4Iu7RKQQ9UtevKSG9pCL+0Vlio6DO+z28bDu4nou8t3u0HwL4YWTikf2Tv1OsaGD
+	PCjuu9vGjIK3YiTQS4fyZXsfAoe+v9zXFhKwc+JbYLyc5ciL9jEhf+outlA21jn4
+	0mvgghEzS0/ko8IaJbHgpF+GNllcv24RkGiu53vz1UKsii0seDMen/6an9lWhQ==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3xpxn1gh38-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Apr 2024 07:42:09 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 25 Apr 2024 07:42:07 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Thu, 25 Apr 2024 07:42:07 -0700
+Received: from cn10ka.sclab.marvell.com (unknown [10.106.49.40])
+	by maili.marvell.com (Postfix) with ESMTP id 5A78E3F705F;
+	Thu, 25 Apr 2024 07:42:07 -0700 (PDT)
+From: Tanmay Jagdale <tanmay@marvell.com>
+To: <will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>,
+        <nicolinc@nvidia.com>, <mshavit@google.com>,
+        <baolu.lu@linux.intel.com>, <thunder.leizhen@huawei.com>,
+        <set_pte_at@outlook.com>, <smostafa@google.com>
+CC: <sgoutham@marvell.com>, <gcherian@marvell.com>, <jcm@jonmasters.org>,
+        <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+        <linux-kernel@vger.kernel.org>, Tanmay Jagdale <tanmay@marvell.com>
+Subject: [PATCH V3 0/2] iommu/arm-smmu-v3: Add support for ECMDQ register mode 
+Date: Thu, 25 Apr 2024 07:41:50 -0700
+Message-ID: <20240425144152.52352-1-tanmay@marvell.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240309012725.1409949-1-seanjc@google.com> <20240309012725.1409949-9-seanjc@google.com>
- <ZfRtSKcXTI/lAQxE@intel.com> <ZfSLRrf1CtJEGZw2@google.com>
- <1e063b73-0f9a-4956-9634-2552e6e63ee1@intel.com> <ZgyBckwbrijACeB1@google.com>
- <ZilmVN0gbFlpnHO9@google.com> <64cc46778ccc93e28ec8d39b3b4e31842154f382.camel@intel.com>
-Message-ID: <Zipru9eB9oDOOuxf@google.com>
-Subject: Re: [PATCH v6 8/9] KVM: VMX: Open code VMX preemption timer rate mask
- in its accessor
-From: Sean Christopherson <seanjc@google.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: Xiaoyao Li <xiaoyao.li@intel.com>, "luto@kernel.org" <luto@kernel.org>, Xin3 Li <xin3.li@intel.com>, 
-	"x86@kernel.org" <x86@kernel.org>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "peterz@infradead.org" <peterz@infradead.org>, 
-	Zhao1 Liu <zhao1.liu@intel.com>, "mingo@redhat.com" <mingo@redhat.com>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	Shan Kang <shan.kang@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: QhpJ5mRwvPbdKsHu3Utpc3UIhtEWJvg4
+X-Proofpoint-ORIG-GUID: QhpJ5mRwvPbdKsHu3Utpc3UIhtEWJvg4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-25_14,2024-04-25_01,2023-05-22_02
 
-On Thu, Apr 25, 2024, Kai Huang wrote:
-> On Wed, 2024-04-24 at 13:06 -0700, Sean Christopherson wrote:
-> > > > static inline u32 vmx_basic_vmcs_mem_type(u64 vmx_basic)
-> > > > {
-> > > > 	return (vmx_basic & GENMASK_ULL(53, 50)) >>
-> > > > 		VMX_BASIC_MEM_TYPE_SHIFT;
-> > > > }
-> > > > 
-> > > > looks not intuitive than original patch.
-> > > 
-> > > Yeah, agreed, that's taking the worst of both worlds.  I'll update patch 5 to drop
-> > > VMX_BASIC_MEM_TYPE_SHIFT when effectively "moving" it into vmx_basic_vmcs_mem_type().
-> > 
-> > Drat.  Finally getting back to this, dropping VMX_BASIC_MEM_TYPE_SHIFT doesn't
-> > work because it's used by nested_vmx_setup_basic(), as is VMX_BASIC_VMCS_SIZE_SHIFT,
-> > which is presumably why past me kept them around.
-> > 
-> > I'm leaning towards keeping things as proposed in this series.  I don't see us
-> > gaining a third copy, or even a third user, i.e. I don't think we are creating a
-> > future problem by open coding the shift in vmx_basic_vmcs_mem_type().  And IMO
-> > code like this
-> > 
-> > 	return (vmx_basic & VMX_BASIC_MEM_TYPE_MASK) >>
-> > 	       VMX_BASIC_MEM_TYPE_SHIFT;
-> > 
-> > is an unnecessary obfuscation when there is literally one user (the accessor).
-> > 
-> > Another idea would be to delete VMX_BASIC_MEM_TYPE_SHIFT and VMX_BASIC_VMCS_SIZE_SHIFT,
-> > and either open code the values or use local const variables, but that also seems
-> > like a net negative, e.g. splits the effective definitions over too many locations.
-> 
-> Alternatively, we can add macros like below to <asm/vmx.h> close to
-> vmx_basic_vmcs_size() etc, so it's straightforward to see.
-> 
-> +#define VMX_BSAIC_VMCS12_SIZE	((u64)VMCS12_SIZE << 32)
-> +#define VMX_BASIC_MEM_TYPE_WB	(MEM_TYPE_WB << 50)
+Resending the patches by Zhen Lei <thunder.leizhen@huawei.com> that add
+support for SMMU ECMDQ feature.
 
-Hmm, it's a bit hard to see it's specifically VMCS12 size, and given that prior
-to this series, VMX_BASIC_MEM_TYPE_WB = 6, I'm hesitant to re-introduce/redefine
-that macro with a different value.
+Tested this feature on a Marvell SoC by implementing a smmu-test driver.
+This test driver spawns a thread per CPU and each thread keeps sending
+map, table-walk and unmap requests for a fixed duration.
 
-What if we add a helper in vmx.h to encode the VMCS info?  Then the #defines for
-the shifts can go away because the open coded shifts are colocated and more
-obviously related.  E.g.
+Using this test driver, we compared ECMDQ vs SMMU with software batching
+support and saw ~5% improvement with ECMDQ. Performance numbers are
+mentioned below:
 
-  static inline u64 vmx_basic_encode_vmcs_info(u32 revision, u16 size, u8 memtype)
-  {
-	return revision | ((u64)size << 32) | ((u64)memtype << 50);
-  }
+                   Total Requests  Average Requests  Difference
+                                      Per CPU         wrt ECMDQ
+-----------------------------------------------------------------
+ECMDQ                 239286381       2991079
+CMDQ Batch Size 1     228232187       2852902         -4.62%
+CMDQ Batch Size 32    233465784       2918322         -2.43%
+CMDQ Batch Size 64    231679588       2895994         -3.18%
+CMDQ Batch Size 128   233189030       2914862         -2.55%
+CMDQ Batch Size 256   230965773       2887072         -3.48%
 
 
-and
+v2 --> v3:
+1. Rebased on linux 6.9-rc5
 
-  static void nested_vmx_setup_basic(struct nested_vmx_msrs *msrs)
-  {
-	/*
-	 * This MSR reports some information about VMX support. We
-	 * should return information about the VMX we emulate for the
-	 * guest, and the VMCS structure we give it - not about the
-	 * VMX support of the underlying hardware.
-	 */
-	msrs->basic = vmx_basic_encode_vmcs_info(VMCS12_REVISION, VMCS12_SIZE,
-						 X86_MEMTYPE_WB);
+v1 --> v2:
+1. Drop patch "iommu/arm-smmu-v3: Add arm_smmu_ecmdq_issue_cmdlist() for
+non-shared ECMDQ" in v1
+2. Drop patch "iommu/arm-smmu-v3: Add support for less than one ECMDQ
+per core" in v1
+3. Replace rwlock with IPI to support lockless protection against the
+write operation to bit
+   'ERRACK' during error handling and the read operation to bit 'ERRACK'
+during command insertion. 
+4. Standardize variable names.
+-	struct arm_smmu_ecmdq *__percpu	*ecmdq;
++	struct arm_smmu_ecmdq *__percpu	*ecmdqs;
 
-	msrs->basic |= VMX_BASIC_TRUE_CTLS
-	if (cpu_has_vmx_basic_inout())
-		msrs->basic |= VMX_BASIC_INOUT;
-  }
+5. Add member 'iobase' to struct arm_smmu_device to record the start
+physical
+   address of the SMMU, to replace translation operation
+(vmalloc_to_pfn(smmu->base) << PAGE_SHIFT)
++	phys_addr_t			iobase;
+-	smmu_dma_base = (vmalloc_to_pfn(smmu->base) << PAGE_SHIFT);
+
+6. Cancel below union. Whether ECMDQ is enabled is determined only based
+on 'ecmdq_enabled'.
+-	union {
+-		u32			nr_ecmdq;
+-		u32			ecmdq_enabled;
+-	};
++	u32				nr_ecmdq;
++	bool				ecmdq_enabled;
+
+7. Eliminate some sparse check warnings. For example.
+-	struct arm_smmu_ecmdq *ecmdq;
++	struct arm_smmu_ecmdq __percpu *ecmdq;
+
+
+Zhen Lei (2):
+  iommu/arm-smmu-v3: Add support for ECMDQ register mode
+  iommu/arm-smmu-v3: Ensure that a set of associated commands are
+    inserted in the same ECMDQ
+
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 261 +++++++++++++++++++-
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h |  33 +++
+ 2 files changed, 286 insertions(+), 8 deletions(-)
+
+-- 
+2.34.1
+
