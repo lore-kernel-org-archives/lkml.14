@@ -1,115 +1,153 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from gardel.0pointer.net (gardel.0pointer.net [85.214.157.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC81200BF;
-	Thu, 25 Apr 2024 11:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F5B200BF;
+	Thu, 25 Apr 2024 11:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.157.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714043539; cv=none; b=X4uhkS2HiCKOroQTBWE+fdLJ6BPj1K5tderjYZKfP2pYGCGuWIBuxIEv7r7lQXbwETMm+YHTJHmyrciBBSVSmUvm0D2no2aT62Dcw76qxzY2eiBstxA0ykv62sJOEBcLFJK4Lb4aZjM+n9/R2wrriiG843Q3cozc36z6To4vsUc=
+	t=1714043598; cv=none; b=GqKDqswDGCIoh9H4NayEBV/vP03lm2Q9KzwyJjD89rpy6b5eChxYdUN2cSM1LpDf8KgJWKgjwWt/lefn4AUaVmAA0OTa9bwOmWBfMExBWc7+xzmx2f+MrzgfTazeH16tRUMAkQdbLquI01v8MymagmjzsSgzyNKzLXvzTBuit7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714043539; c=relaxed/simple;
-	bh=iqQqPqYqACrh9TGAaoZjcz+DJ2+3d5B5bVNJL98qTn0=;
-	h=Message-ID:Date:From:MIME-Version:To:CC:Subject:References:
-	 In-Reply-To:Content-Type; b=Ldfr0fU4suSn2XMbB7In6n5f3Dn51Hymkeo/z4yzYYUJ0xsixRx0iv8HofvGmPurx7VDzm25YFarYkg/C+WdWy7lGXPvjiqVTblQXPoJyWAD5uWrC64r0fplCCME6x3gStH2TXpcGCjpjSzHgQrxikP1bqbsOO33xxeV3R6LpQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=hisilicon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VQCpM3Gmlzcb1f;
-	Thu, 25 Apr 2024 19:11:07 +0800 (CST)
-Received: from kwepemd500014.china.huawei.com (unknown [7.221.188.63])
-	by mail.maildlp.com (Postfix) with ESMTPS id 801151800AA;
-	Thu, 25 Apr 2024 19:12:12 +0800 (CST)
-Received: from [10.67.121.2] (10.67.121.2) by kwepemd500014.china.huawei.com
- (7.221.188.63) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Thu, 25 Apr
- 2024 19:12:11 +0800
-Message-ID: <662A3A8B.8030602@hisilicon.com>
-Date: Thu, 25 Apr 2024 19:12:11 +0800
-From: Wei Xu <xuwei5@hisilicon.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:24.0) Gecko/20100101 Thunderbird/24.2.0
+	s=arc-20240116; t=1714043598; c=relaxed/simple;
+	bh=qLuQmqXTg5JpCiFHAVm2b1XWjFdgkQJM5cyksxqz0pU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p3s9a2alqVdYlqPO53447TzjOFuTztJQTlEOWYwu7QsxTXikgjOuT+HNfoVyRfnlFEWV9kdleSjo2ApIZQvvZn7EUoB/y5ssAYGytwU/Vnv24M2+bNkQyfIVuY6l2ggOucdwAevMmdQ1HpWVbpQpTiMbkMgqLV+lXKIFHfOtrkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de; spf=pass smtp.mailfrom=0pointer.de; arc=none smtp.client-ip=85.214.157.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0pointer.de
+Received: from gardel-login.0pointer.net (gardel-mail [85.214.157.71])
+	by gardel.0pointer.net (Postfix) with ESMTP id BE710E80EF2;
+	Thu, 25 Apr 2024 13:13:11 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+	id 271D9160029; Thu, 25 Apr 2024 13:13:10 +0200 (CEST)
+Date: Thu, 25 Apr 2024 13:13:09 +0200
+From: Lennart Poettering <mzxreary@0pointer.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Mikko Rapeli <mikko.rapeli@linaro.org>, linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH] efi: expose TPM event log to userspace via sysfs
+Message-ID: <Zio6xeRbld_tzH0B@gardel-login>
+References: <6e751959b9056884c1b9d3ba23e303d1737d8763.camel@HansenPartnership.com>
+ <ZiZhSfgeAdrbnaVL@nuoska>
+ <CAC_iWjKA-xRH=3FK+=woXsB8AW4+_mVhJhUQnL8iFKxGzOwKiA@mail.gmail.com>
+ <e3038141413e25350f0e53496f7a7af1bf8419cf.camel@HansenPartnership.com>
+ <CAC_iWj+zbs2tq_nMASDX6pgCAP23+PpctJFiu9=mgOVDz8Trzw@mail.gmail.com>
+ <e1da76ca4c7fe9319aaac5f8ff6eb46db433ec60.camel@HansenPartnership.com>
+ <CAC_iWjLH=SDoTw_Pgr2hOKHkjEp_dKqwpUe9j6a=_WNW9UcxKw@mail.gmail.com>
+ <CAMj1kXGHT2wULF2zwNM_QxD29dRW_dtFX2sOvsLahPiRVB61qg@mail.gmail.com>
+ <ZiopXE6-AucAB9NM@gardel-login>
+ <CAMj1kXETZ3L2QEZjD8=zr9FY11FGkf5KktXoSixjpGxWS4h8sA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/9] arm64: dts: hisilicon: hip05: move non-MMIO node
- out of soc
-References: <20240402193148.62323-1-krzk@kernel.org> <171394159880.43787.12383182687947213751.b4-ty@linaro.org> <6628B1E9.1050300@hisilicon.com> <7adfe10b-cfb6-4242-9520-dd9819bf7f43@linaro.org> <6ce7bc63-1c47-4e3d-a3af-8f229f1c36f7@linaro.org>
-In-Reply-To: <6ce7bc63-1c47-4e3d-a3af-8f229f1c36f7@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemd500014.china.huawei.com (7.221.188.63)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMj1kXETZ3L2QEZjD8=zr9FY11FGkf5KktXoSixjpGxWS4h8sA@mail.gmail.com>
 
-Hi Krzysztof, 
+On Do, 25.04.24 12:36, Ard Biesheuvel (ardb@kernel.org) wrote:
 
-On 2024/4/24 16:37, Krzysztof Kozlowski wrote:
-> On 24/04/2024 09:23, Krzysztof Kozlowski wrote:
->> On 24/04/2024 09:16, Wei Xu wrote:
->>> Hi Krzysztof,
->>>
->>> On 2024/4/24 14:54, Krzysztof Kozlowski wrote:
->>>>
->>>> On Tue, 02 Apr 2024 21:31:40 +0200, Krzysztof Kozlowski wrote:
->>>>> Non-MMIO devices, which are BTW not really part of the SoC, should not
->>>>> be within simple-bus, as reported by dtc W=1 warning:
->>>>>
->>>>>   hip05.dtsi:301.30-305.5: Warning (simple_bus_reg): /soc/refclk200mhz: missing or empty reg/ranges property
->>>>>
->>>>>
->>>>
->>>> Almost a month passed, no replies from maintainers about picking it up. Dunno,
->>>> looks abandoned, so let me grab this. If anyone else wants to pick it up, let
->>>> me know.
->>>>
->>>
->>> Sorry for the late reply!
->>> I am applying these patches which are in the following git repo.
->>>   https://github.com/hisilicon/linux-hisi/tree/next/dt64
->>>
->>> And it is fine to me to go through your git tree.
->>> Thanks!
->>
->> So you picked them up? Why you did not notify anyone? b4 does it almost
->> automatically. How anyone can know what is happening with the patches?
->>
->> I will drop them from my tree.
+> > systemd these days makes use of the TPM — if available — for various
+> > purposes, such as disk encryption, measuring boot phases and system
+> > identity and various other things. Now, for the purpose of disk
+> > encryption, we need to wait for two things: the hard drive, and the
+> > TPM to be probed/driver loaded/accessible. /etc/fstab tells us pretty
+> > explicitly what bloock device to wait for, hence it's easy. But
+> > waiting for a TPM is harder: we might need it for disk encryption, but
+> > we don't know right-away if there actually *is* a TPM device to show
+> > up, and hence don't know whether to wait for it or not.
+> >
+>
+> I take it this means that the LUKS metadata lacks a 'this key is
+> sealed into the TPM' bit?
 
-Series applied to the HiSilicon arm64 dt tree:
-https://github.com/hisilicon/linux-hisi/tree/next/dt64
+Well, it does carry that info. But this is of no relevance
+really. typically luks has multiple keys enrolled, and which slot(s) to
+use is really up to the moment of invocation, depending on what is available.
 
-> 
-> One more thing:
-> 
-> Even though you applied these patches few days ago, they are still not
-> in linux-next (as of next-20240423), which suggests your tree is not in
-> next.
-> 
-> Please read entire presentation "Beginner Linux kernel maintainer's
-> toolbox" from LPC 2023 and improve your workflow by:
-> 1. Properly notifying patch status.
-> 2. Being part of the integration tree.
-> 3. ... and more, as explained in above talk.
-> 
-> There is a link to video and slides:
-> https://lpc.events/event/17/contributions/1498/
+moreover, i used disk encryption as one example, but we have more
+users of TPM. for example we measure early in the initrd that we are
+now in the initd, and when we leave the initrd we measure that we are
+now gone. we also have a tool that sets up the TPM SRK. All that stuff
+is supposed to be run if a TPM is available, but delayed just enough
+until the TPM actually shows up, but no more. So for all of that stuff
+we must have a way to delay tings correctly.
 
-I have went through your slide which is very helpful and detailed.
-Thanks!
+> So exposing the physical address of the TPM event log is probably not
+> what we want here.
+>
+> Note that the TPM event log table is a Linux/efistub construct,
+> whereas the TPM final log table actually comes from the firmware
+> directly. So the former only exists if the EFI stub executed first,
+> and managed to invoke the TCG protocol etc. OTOH, the TPM final log is
+> TPM2 only, so it doesn't exist on TPM 1.2
 
-Best Regards,
-Wei
+(side note: in systemd we do not care about tpm 1.2 anymore, we only
+support tpm2, and treat systems with just tpm 1.2 like systems that
+have no tpm).
 
-> 
-> Best regards,
-> Krzysztof
-> 
-> .
-> 
+> Another thing we need to consider is TDX, which exposes a pseudo-TPM
+> which does not support sealing, along with a CC protocol similar to
+> the TCG2 protocol. This code will use the event log infrastructure as
+> well: there are discussions going on at the moment whether we can
+> improve the way these protocols are combined.
+
+The way the delay for a tpm device is actually implemented in systemd
+is somewhat generic: there's a target unit called
+"tpm2.target". Typically we just delay its activation until a
+/dev/tpmrm0 device shows up, if the firmware check suggested that. But
+you could also stuff all kinds of other stuff before that. For exampe,
+we could also delay it until some userspace service is running that
+turns the local security tech into a "fake" tpm device or similar. So
+from our side it's entirely pluggable already, and supports other ways
+to synchronize properly on a TPM being available, people can plug in
+whatever they need there for the synchronization.
+
+However, our primary focus is to cover nicely the typical/generic
+systems that have a discrete TPM or ftpm that just needs some generic
+driver probing/loading to be available.
+
+Or in other words: i am fully aware that a tpm-like device can be
+provided by various means. For now, with this firmware flag file thing
+we primarily care about the simple case where it's just driver loading
+that we need to do.
+
+> So we should define a scope here:
+> - do we need TPM1.2 support?
+
+For our systemd usecase, that's a clear no.
+
+> - do we need non-EFI boot support?
+
+My own focus is EFI. systemd supports non-EFI of course. If people
+care about non-EFI I am sure they'd be thankful if we could provide a
+similar automatism
+
+> - do we need to do anything in particular for FDE on TDX, which has a
+> TPM event log but no TPM is likely to appear.
+
+I'd ignore that for now. And if they provide a software tpm-like device
+eventually they just have to plug in the service that provides it
+before tpm2.target and be done with it. I think we have an acceptable
+approach for that already.
+
+> I am fine with adding a sysfs node under /sys/firmware/efi that
+> exposes some of this information, e.g.,
+> linux_efi_tpm_eventlog::version, but not the physical address of the
+> table.
+
+Yeah, the physical address is of no interest to us. We just need to
+know the existance, and that independently of any actualy tpm device
+having shown up. i.e. existance of
+/sys/kernel/security/tpm0/binary_bios_measurements would be good
+enough for is if it was available without "tpm0" actually being
+around...
+
+Lennart
+
+--
+Lennart Poettering, Berlin
