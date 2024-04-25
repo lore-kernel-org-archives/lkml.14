@@ -1,246 +1,236 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307CF153834;
-	Thu, 25 Apr 2024 20:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578F8153809;
+	Thu, 25 Apr 2024 20:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714077826; cv=none; b=U0QtVxCfQap6iiy/HTonUDCE02cnCwhkBSrLh9oR2cusYQ/h1s2lUyY2JpCv9IvN0WakvkVN1JBHl2WOVkP3TClRuRcvu2hvF3Ebu84HmuSTwsf4zevlZkdOhBLDDLl/az5lQIzhsOeqaqyOLyf/juMUe9HGXiKjlcPxU4RL7jY=
+	t=1714077855; cv=none; b=f+Qqn1A7nqtO8V5FCeN10nOAR09IlaJGMfL7wxLqqg77QcwaoS6SGIhMBMGoprE7TQVXpF6JrX4w8MqEPxJYR+K8pIVZxW2zlXXFJp0yaAZTcWxhF9PNIoijRFkgmS1rPARHQC4AfiG17Bz7A5faNazyok9i6+LKfIWoplylxtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714077826; c=relaxed/simple;
-	bh=/Bry/LrWz5s3cSAoG/NRli3XyUXM2aR+pdRh6BaisJI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cgKIwssdIe+aI454K/EGysOjJcM8DE0QIrw0q7QgKn4rx1DwTMBxhu5Nda+UDBAbw3DSoI71b0zflqIiF2dZzqH2M7xtyGPk09G5/0v2POD6e+QtAdufYEh2i4uyXUsdnn7ZTMbLjdWTZIovCjVVgurA/QEfkCvseTvBu8FhCjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fDAKMudm; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714077855; c=relaxed/simple;
+	bh=WyRKRpDdDWspxjCjUuscQqnxFO2RBD2WTOpPg6Fwpw0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JsJ5XX2g1gaF6Sfm8GtzGBOW5m800H5/mv7cRY18G9xx8uMpj493ZCuVH9W3Ub1cihZ15nhyovGPQZ6AgGEz6upWrDv7v6S1UnXJD1GsQHjlw8nYqJ8VLq/vaUfgUn/wfH6kgOh6AhM8tKP1vqFTD+zoy0olRUb1BopOF+SEav4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Lt2kjDsz; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fDAKMudm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714077824; x=1745613824;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/Bry/LrWz5s3cSAoG/NRli3XyUXM2aR+pdRh6BaisJI=;
-  b=fDAKMudml7s8S6cbiBZM3eQJ6rPz4KH+enecXg4i1ooepCevzeOjdkql
-   jGFXq78l6AbvHhNWSUXdrFEPyp6VG9uXwxGrcDeafs9dEL246heZjVX7Q
-   nVhcuvAVMCjD8jILYwxz00/yYk0CKnLRVuQD4Nid8xXrxM2Of7k74nhLI
-   Dq8ZNV94FCInvtqHOvu+KJhQ66nKKMQE1fPdtbgwBzNt0czRUMSP3UJ92
-   dwIyuMOnDqP1GhTCKdpTFEk7wXRgxk2otudArTTM3YBAJ+vYYUxGC0+CW
-   s+kUnWDIFY3jqkzm8NtXsS5fWy3Qliy0kef8UOEyg8iJkjaqUBhtpa/rs
-   g==;
-X-CSE-ConnectionGUID: +9cD1Oj7S/CzpudElRlSXA==
-X-CSE-MsgGUID: HdguReztRk+01jG1fIOD+g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="12732535"
-X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
-   d="scan'208";a="12732535"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 13:43:43 -0700
-X-CSE-ConnectionGUID: 7KgeubM6TomVXo4FwsgdrA==
-X-CSE-MsgGUID: HalkeOTpSIGqjCfc+OhXKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
-   d="scan'208";a="25609924"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 13:43:44 -0700
-Received: from [10.212.96.44] (kliang2-mobl1.ccr.corp.intel.com [10.212.96.44])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 1266C206DFCE;
-	Thu, 25 Apr 2024 13:43:40 -0700 (PDT)
-Message-ID: <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com>
-Date: Thu, 25 Apr 2024 16:43:39 -0400
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Lt2kjDsz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=tq5X8zmN+3k5A79fjsOahtoee5I5v66qJtvAbIOuA/0=; b=Lt2kjDszrhUtpDwANofp1SHp1c
+	Tdsdb8Mbw2ACXHtyZvmIRF2ickkBKO0xNEKrwZiflhZQNJS4JkvSEvt+GRGkh+jfzdN6G22QEyX2T
+	1YfaIyTpjgZ+nh7tkY8ZpI+jOXcO8OvLb53EpbaiDrkbp1nix/fMCmmBisSQ9S1LuCo5EXvRv3iJ0
+	XfxyUt6lRoVwRlTa0gqDxKUlW97ExfduqAePjzuVTvYOk4iTOaiqXYlniMQZvXXJ7GFOhP4Pa0xcL
+	eQzSdrcgb+TlND+gC3Qz9tF5iMwZqZE8qIAT2QX2pCKweoCimN1CrgsK5ydJq1qvbSFgvwaskPJSQ
+	uFjrzW7Q==;
+Received: from 201-42-129-95.dsl.telesp.net.br ([201.42.129.95] helo=steammachine.lan)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1s05wW-008iV5-LF; Thu, 25 Apr 2024 22:43:45 +0200
+From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	"Boqun Feng" <boqun.feng@gmail.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"Paul Turner" <pjt@google.com>,
+	linux-api@vger.kernel.org,
+	"Christian Brauner" <brauner@kernel.org>,
+	"Florian Weimer" <fw@deneb.enyo.de>,
+	David.Laight@ACULAB.COM,
+	carlos@redhat.com,
+	"Peter Oskolkov" <posk@posk.io>,
+	"Alexander Mikhalitsyn" <alexander@mihalicyn.com>,
+	"Chris Kennelly" <ckennelly@google.com>,
+	"Ingo Molnar" <mingo@redhat.com>,
+	"Darren Hart" <dvhart@infradead.org>,
+	"Davidlohr Bueso" <dave@stgolabs.net>,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
+	libc-alpha@sourceware.org,
+	"Steven Rostedt" <rostedt@goodmis.org>,
+	"Jonathan Corbet" <corbet@lwn.net>,
+	"Noah Goldstein" <goldstein.w.n@gmail.com>,
+	"Daniel Colascione" <dancol@google.com>,
+	longman@redhat.com,
+	kernel-dev@igalia.com
+Subject: [RFC PATCH 0/1] Add FUTEX_SPIN operation
+Date: Thu, 25 Apr 2024 17:43:31 -0300
+Message-ID: <20240425204332.221162-1-andrealmeid@igalia.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: Mingwei Zhang <mizhang@google.com>
-Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
- Sean Christopherson <seanjc@google.com>, maobibo <maobibo@loongson.cn>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
- peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
- jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com
-References: <ZiaX3H3YfrVh50cs@google.com>
- <d8f3497b-9f63-e30e-0c63-253908d40ac2@loongson.cn>
- <d980dd10-e4c4-4774-b107-77b320cec9f9@linux.intel.com>
- <b5e97aa1-7683-4eff-e1e3-58ac98a8d719@loongson.cn>
- <1ec7a21c-71d0-4f3e-9fa3-3de8ca0f7315@linux.intel.com>
- <5279eabc-ca46-ee1b-b80d-9a511ba90a36@loongson.cn>
- <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
- <b3868bf5-4e16-3435-c807-f484821fccc6@loongson.cn>
- <CAL715W++maAt2Ujfvmu1pZKS4R5EmAPebTU_h9AB8aFbdLFrTQ@mail.gmail.com>
- <f843298c-db08-4fde-9887-13de18d960ac@linux.intel.com>
- <Zikeh2eGjwzDbytu@google.com>
- <7834a811-4764-42aa-8198-55c4556d947b@linux.intel.com>
- <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
- <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com>
- <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Hi,
 
+In the last LPC, Mathieu Desnoyers and I presented[0] a proposal to extend the
+rseq interface to be able to implement spin locks in userspace correctly. Thomas
+Gleixner agreed that this is something that Linux could improve, but asked for
+an alternative proposal first: a futex operation that allows to spin a user
+lock inside the kernel. This patchset implements a prototype of this idea for
+further discussion.
 
-On 2024-04-25 4:16 p.m., Mingwei Zhang wrote:
-> On Thu, Apr 25, 2024 at 9:13 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2024-04-25 12:24 a.m., Mingwei Zhang wrote:
->>> On Wed, Apr 24, 2024 at 8:56 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
->>>>
->>>>
->>>> On 4/24/2024 11:00 PM, Sean Christopherson wrote:
->>>>> On Wed, Apr 24, 2024, Dapeng Mi wrote:
->>>>>> On 4/24/2024 1:02 AM, Mingwei Zhang wrote:
->>>>>>>>> Maybe, (just maybe), it is possible to do PMU context switch at vcpu
->>>>>>>>> boundary normally, but doing it at VM Enter/Exit boundary when host is
->>>>>>>>> profiling KVM kernel module. So, dynamically adjusting PMU context
->>>>>>>>> switch location could be an option.
->>>>>>>> If there are two VMs with pmu enabled both, however host PMU is not
->>>>>>>> enabled. PMU context switch should be done in vcpu thread sched-out path.
->>>>>>>>
->>>>>>>> If host pmu is used also, we can choose whether PMU switch should be
->>>>>>>> done in vm exit path or vcpu thread sched-out path.
->>>>>>>>
->>>>>>> host PMU is always enabled, ie., Linux currently does not support KVM
->>>>>>> PMU running standalone. I guess what you mean is there are no active
->>>>>>> perf_events on the host side. Allowing a PMU context switch drifting
->>>>>>> from vm-enter/exit boundary to vcpu loop boundary by checking host
->>>>>>> side events might be a good option. We can keep the discussion, but I
->>>>>>> won't propose that in v2.
->>>>>> I suspect if it's really doable to do this deferring. This still makes host
->>>>>> lose the most of capability to profile KVM. Per my understanding, most of
->>>>>> KVM overhead happens in the vcpu loop, exactly speaking in VM-exit handling.
->>>>>> We have no idea when host want to create perf event to profile KVM, it could
->>>>>> be at any time.
->>>>> No, the idea is that KVM will load host PMU state asap, but only when host PMU
->>>>> state actually needs to be loaded, i.e. only when there are relevant host events.
->>>>>
->>>>> If there are no host perf events, KVM keeps guest PMU state loaded for the entire
->>>>> KVM_RUN loop, i.e. provides optimal behavior for the guest.  But if a host perf
->>>>> events exists (or comes along), the KVM context switches PMU at VM-Enter/VM-Exit,
->>>>> i.e. lets the host profile almost all of KVM, at the cost of a degraded experience
->>>>> for the guest while host perf events are active.
->>>>
->>>> I see. So KVM needs to provide a callback which needs to be called in
->>>> the IPI handler. The KVM callback needs to be called to switch PMU state
->>>> before perf really enabling host event and touching PMU MSRs. And only
->>>> the perf event with exclude_guest attribute is allowed to create on
->>>> host. Thanks.
->>>
->>> Do we really need a KVM callback? I think that is one option.
->>>
->>> Immediately after VMEXIT, KVM will check whether there are "host perf
->>> events". If so, do the PMU context switch immediately. Otherwise, keep
->>> deferring the context switch to the end of vPMU loop.
->>>
->>> Detecting if there are "host perf events" would be interesting. The
->>> "host perf events" refer to the perf_events on the host that are
->>> active and assigned with HW counters and that are saved when context
->>> switching to the guest PMU. I think getting those events could be done
->>> by fetching the bitmaps in cpuc.
->>
->> The cpuc is ARCH specific structure. I don't think it can be get in the
->> generic code. You probably have to implement ARCH specific functions to
->> fetch the bitmaps. It probably won't worth it.
->>
->> You may check the pinned_groups and flexible_groups to understand if
->> there are host perf events which may be scheduled when VM-exit. But it
->> will not tell the idx of the counters which can only be got when the
->> host event is really scheduled.
->>
->>> I have to look into the details. But
->>> at the time of VMEXIT, kvm should already have that information, so it
->>> can immediately decide whether to do the PMU context switch or not.
->>>
->>> oh, but when the control is executing within the run loop, a
->>> host-level profiling starts, say 'perf record -a ...', it will
->>> generate an IPI to all CPUs. Maybe that's when we need a callback so
->>> the KVM guest PMU context gets preempted for the host-level profiling.
->>> Gah..
->>>
->>> hmm, not a fan of that. That means the host can poke the guest PMU
->>> context at any time and cause higher overhead. But I admit it is much
->>> better than the current approach.
->>>
->>> The only thing is that: any command like 'perf record/stat -a' shot in
->>> dark corners of the host can preempt guest PMUs of _all_ running VMs.
->>> So, to alleviate that, maybe a module parameter that disables this
->>> "preemption" is possible? This should fit scenarios where we don't
->>> want guest PMU to be preempted outside of the vCPU loop?
->>>
->>
->> It should not happen. For the current implementation, perf rejects all
->> the !exclude_guest system-wide event creation if a guest with the vPMU
->> is running.
->> However, it's possible to create an exclude_guest system-wide event at
->> any time. KVM cannot use the information from the VM-entry to decide if
->> there will be active perf events in the VM-exit.
-> 
-> Hmm, why not? If there is any exclude_guest system-wide event,
-> perf_guest_enter() can return something to tell KVM "hey, some active
-> host events are swapped out. they are originally in counter #2 and
-> #3". If so, at the time when perf_guest_enter() returns, KVM will ack
-> that and keep it in its pmu data structure.
+With FUTEX2_SPIN flag set during a futex_wait(), the futex value is expected to
+be the PID of the lock owner. Then, the kernel gets the task_struct of the
+corresponding PID, and checks if it's running. It spins until the futex
+is awaken, the task is scheduled out or if a timeout happens.  If the lock owner
+is scheduled out at any time, then the syscall follows the normal path of
+sleeping as usual.
 
-I think it's possible that someone creates !exclude_guest event after
-the perf_guest_enter(). The stale information is saved in the KVM. Perf
-will schedule the event in the next perf_guest_exit(). KVM will not know it.
+If the futex is awaken and we are spinning, we can return to userspace quickly,
+avoid the scheduling out and in again to wake from a futex_wait(), thus
+speeding up the wait operation.
 
-> 
-> Now, when doing context switching back to host at just VMEXIT, KVM
-> will check this data and see if host perf context has something active
-> (of course, they are all exclude_guest events). If not, deferring the
-> context switch to vcpu boundary. Otherwise, do the proper PMU context
-> switching by respecting the occupied counter positions on the host
-> side, i.e., avoid doubling the work on the KVM side.
-> 
-> Kan, any suggestion on the above approach? 
+I didn't manage to find a good mechanism to prevent race conditions between
+setting *futex = PID in userspace and doing find_get_task_by_vpid(PID) in kernel
+space, giving that there's enough room for the original PID owner exit and such
+PID to be relocated to another unrelated task in the system. I didn't performed
+benchmarks so far, as I hope to clarify if this interface makes sense prior to
+doing measurements on it.
 
-I think we can only know the accurate event list at perf_guest_exit().
-You may check the pinned_groups and flexible_groups, which tell if there
-are candidate events.
+This implementation has some debug prints to make it easy to inspect what the
+kernel is doing, so you can check if the futex woke during spinning or if
+just slept as the normal path:
 
-> Totally understand that
-> there might be some difficulty, since perf subsystem works in several
-> layers and obviously fetching low-level mapping is arch specific work.
-> If that is difficult, we can split the work in two phases: 1) phase
-> #1, just ask perf to tell kvm if there are active exclude_guest events
-> swapped out; 2) phase #2, ask perf to tell their (low-level) counter
-> indices.
->
+[ 6331] futex_spin: spinned 64738 times, sleeping
+[ 6331] futex_spin: woke after 1864606 spins
+[ 6332] futex_spin: woke after 1820906 spins
+[ 6351] futex_spin: spinned 1603293 times, sleeping
+[ 6352] futex_spin: woke after 1848199 spins
 
-If you want an accurate counter mask, the changes in the arch specific
-code is required. Two phases sound good to me.
+[0] https://lpc.events/event/17/contributions/1481/
 
-Besides perf changes, I think the KVM should also track which counters
-need to be saved/restored. The information can be get from the EventSel
-interception.
+You can find a small snippet to play with this interface here:
 
-Thanks,
-Kan
->>
->> The perf_guest_exit() will reload the host state. It's impossible to
->> save the guest state after that. We may need a KVM callback. So perf can
->> tell KVM whether to save the guest state before perf reloads the host state.
->>
->> Thanks,
->> Kan
->>>>
->>>>
->>>>>
->>>>> My original sketch: https://lore.kernel.org/all/ZR3eNtP5IVAHeFNC@googlecom
->>>
-> 
+---
+
+/*
+ * futex2_spin example, by André Almeida <andrealmeid@igalia.com>
+ *
+ * gcc spin.c -o spin
+ */
+
+#define _GNU_SOURCE
+#include <err.h>
+#include <errno.h>
+#include <linux/futex.h>
+#include <linux/sched.h>
+#include <pthread.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/mman.h>
+#include <unistd.h>
+
+#define __NR_futex_wake 454
+#define __NR_futex_wait 455
+
+#define WAKE_WAIT_US	10000
+#define FUTEX2_SPIN	0x08
+#define STACK_SIZE	(1024 * 1024)
+
+#define FUTEX2_SIZE_U32	0x02
+#define FUTEX2_PRIVATE	FUTEX_PRIVATE_FLAG
+
+#define timeout_ns  30000000
+
+void *futex;
+
+static inline int futex2_wake(volatile void *uaddr, unsigned long mask, int nr, unsigned int flags)
+{
+	return syscall(__NR_futex_wake, uaddr, mask, nr, flags);
+}
+
+static inline int futex2_wait(volatile void *uaddr, unsigned long val, unsigned long mask,
+			      unsigned int flags, struct timespec *timo, clockid_t clockid)
+{
+	return syscall(__NR_futex_wait, uaddr, val, mask, flags, timo, clockid);
+}
+
+void waiter_fn()
+{
+	struct timespec to;
+	unsigned int flags = FUTEX2_PRIVATE | FUTEX2_SIZE_U32 | FUTEX2_SPIN;
+
+	uint32_t child_pid = *(uint32_t *) futex;
+
+	clock_gettime(CLOCK_MONOTONIC, &to);
+	to.tv_nsec += timeout_ns;
+	if (to.tv_nsec >= 1000000000) {
+		to.tv_sec++;
+		to.tv_nsec -= 1000000000;
+	}
+
+	printf("waiting on PID %d...\n", child_pid);
+	if (futex2_wait(futex, child_pid, ~0U, flags, &to, CLOCK_MONOTONIC))
+		printf("waiter failed errno %d\n", errno);
+
+	puts("waiting done");
+}
+
+int function(int n)
+{
+	return n + n;
+}
+
+#define CHILD_LOOPS 500000
+
+static int child_fn(void *arg)
+{
+	int i, n = 2;
+
+	for (i = 0; i < CHILD_LOOPS; i++)
+		n = function(n);
+
+	futex2_wake(futex, ~0U, 1, FUTEX2_SIZE_U32 | FUTEX_PRIVATE_FLAG);
+
+	puts("child thread is done");
+
+	return 0;
+}
+
+int main() {
+	uint32_t child_pid = 0;
+	char *stack;
+
+	futex = &child_pid;
+
+	stack = mmap(NULL, STACK_SIZE, PROT_READ | PROT_WRITE,
+			MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
+
+	if (stack == MAP_FAILED)
+		err(EXIT_FAILURE, "mmap");
+
+	child_pid = clone(child_fn, stack + STACK_SIZE, CLONE_VM, NULL);
+
+	waiter_fn();
+
+	usleep(WAKE_WAIT_US * 10);
+
+	return 0;
+}
+
+---
+
+André Almeida (1):
+  futex: Add FUTEX_SPIN operation
+
+ include/uapi/linux/futex.h |  2 +-
+ kernel/futex/futex.h       |  6 ++-
+ kernel/futex/waitwake.c    | 79 +++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 83 insertions(+), 4 deletions(-)
+
+-- 
+2.44.0
+
