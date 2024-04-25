@@ -1,329 +1,277 @@
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B18F149E0A;
-	Thu, 25 Apr 2024 15:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004DD38398
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 15:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714058803; cv=none; b=iBptSMK0LIzxTb6d6jK9QljVXkZ3nihc/VsYc4pRlX9LFNSpURV2jfJ/JeImQdacuepLcelABKx7/6FnmUJG37/1sYHu9WViGjddrrHIBpPjiZREirH9ud2yj7OyYJ1nrLCivqlXbD0VIt/XDOuOGH23o8inr7WuuUt1E3dZoUw=
+	t=1714058906; cv=none; b=gHV3CBkRXXXyFvOnu4Ou1fRCisD732Yf5OY0LVk5DdqFpXrTTGxX1JwPRHGCqMx1i2wIr6TQWYEk5kgzNW9EXjSTMo+5Z9SSh2kvWF+th24pbNNt4l3e8dVvHDBsOS3kR5QMu4++ejUHIBhLY3q+Twq/2Pns2XdZbro0aIacRD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714058803; c=relaxed/simple;
-	bh=KW0Nkti79XbKCumQk4b9EtfcbKYjbSCL9yD0xbL3PJY=;
-	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
-	 Content-Type:Subject; b=uWe++ZndIPv+4mTgMbykppQvJQAiuEDMHJfNqKnhdgR8oNseYh/DW35fU8m1cGkNXFuiy+BnUDJQEpTSUG8NM1r/1sKYXy9Tvqr+AJEpNoioIcongtJjlqVUzPuZZIbJUyQpQ2Q6tmPNO/5EGhrNAD554Y0NCfgxdAc8gSMvvKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=NXXWc0fc; arc=none smtp.client-ip=162.243.120.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+	s=arc-20240116; t=1714058906; c=relaxed/simple;
+	bh=0MbU3ChM8J2OnKuV3kYt/AmgV4Mh4O7LMoj+BzpMwiE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nDCM3hNtCVbPUy7bLdmPJbqBoW8Ijvi7+1FxBBYLkLZV9dTWvYU2bqbt6zeWG+5p7o1gakyWUpxya5yODOcfBgaIcPPug3E1+nIObUfIODcNRpOE17Al4M5FMm741f/uU/40bbW8srdXwNbF8D0yp52hme3oa2P0DSjj+Fu7shA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cpj7wH+H; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="NXXWc0fc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
-	:Date:subject:date:message-id:reply-to;
-	bh=2pZRkuVDIwUEfDKVZREz6rLgGL1jQIqIXjSG7zaftQk=; b=NXXWc0fcXcJd6xK3EPs4GcCmUU
-	RZmbmgmWM5Uh0hz2/SdKzgjCLXDm1YXHkmWg84PFX+M0kM3MKbGfBG70vOMXudAyVZ6OSvgk+Fnv8
-	9m6vLLH+bgDsDwsfkR5D6zSkcn6U/aLCE9sm0/hdXzY1fYGdN8ZfN/03c6g0NYikpssw=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:36886 helo=pettiford)
-	by mail.hugovil.com with esmtpa (Exim 4.92)
-	(envelope-from <hugo@hugovil.com>)
-	id 1s00z5-0003UQ-NR; Thu, 25 Apr 2024 11:26:07 -0400
-Date: Thu, 25 Apr 2024 11:26:02 -0400
-From: Hugo Villeneuve <hugo@hugovil.com>
-To: Konstantin Pugin <rilian.la.te@ya.ru>
-Cc: krzk@kernel.org, conor@kernel.org, lkp@intel.com, vz@mleia.com,
- robh@kernel.org, jcmvbkbc@gmail.com, nicolas.ferre@microchip.com,
- manikanta.guntupalli@amd.com, corbet@lwn.net, ychuang3@nuvoton.com,
- u.kleine-koenig@pengutronix.de, Maarten.Brock@sttls.nl, Konstantin Pugin
- <ria.freelander@gmail.com>, Andy Shevchenko <andy@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
- <jirislaby@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Herve Codina
- <herve.codina@bootlin.com>, Andrew Jones <ajones@ventanamicro.com>, Hugo
- Villeneuve <hvilleneuve@dimonoff.com>, Lech Perczak
- <lech.perczak@camlingroup.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org
-Message-Id: <20240425112602.57610aad643525a0e9973ff6@hugovil.com>
-In-Reply-To: <20240424191908.32565-4-rilian.la.te@ya.ru>
-References: <20240424191908.32565-1-rilian.la.te@ya.ru>
-	<20240424191908.32565-4-rilian.la.te@ya.ru>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cpj7wH+H"
+Message-ID: <2ccef0f9-dc56-447c-8220-7f18a51c9db6@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1714058902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nBajfC+xmlQaaxn7hJsHEIxPtAljDf6touR8fnAKxjs=;
+	b=cpj7wH+H187fHQiQfp90z7TICktZ24vTxEcDC9zXA0sFZx45advxDNu5mwJQ2Zkpb+eoc7
+	XB9nDYGroVl8qm4WZ8Txcl11q8eJLEVbAeapwkZBXsZkFNLikeXmJNn3Fy+WDN75/fyatU
+	77uv30kEuOYprLa329tqZh4gqknfZ4c=
+Date: Thu, 25 Apr 2024 11:28:17 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Subject: Re: [PATCH 1/3] phy: zynqmp: Store instance instead of type
+To: Michal Simek <michal.simek@amd.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ linux-phy@lists.infradead.org
+Cc: Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ Kishon Vijay Abraham I <kishon@kernel.org>
+References: <20240422185803.3575319-1-sean.anderson@linux.dev>
+ <20240422185803.3575319-2-sean.anderson@linux.dev>
+ <702f0ca6-7edb-4328-92e8-1853ba010910@amd.com>
+ <0a57a33b-62da-4a8c-9f07-52c45cd5c57e@linux.dev>
+ <4c625bb5-4f2c-4cff-9d65-7b6aa26a52c4@amd.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <4c625bb5-4f2c-4cff-9d65-7b6aa26a52c4@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	* -2.7 NICE_REPLY_A Looks like a legit reply (A)
-Subject: Re: [PATCH v8 3/3] serial: sc16is7xx: add support for EXAR
- XR20M1172 UART
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 24 Apr 2024 22:18:54 +0300
-Konstantin Pugin <rilian.la.te@ya.ru> wrote:
-
-Hi Konstantin,
-
-> From: Konstantin Pugin <ria.freelander@gmail.com>
-> 
-> XR20M1172 register set is mostly compatible with SC16IS762, but it has
-> a support for additional division rates of UART with special DLD register.
-
--> "... but it supports additional division rates with special..."
-
-> So, add handling this register by appropriate devicetree bindings.
-
-I am not sure about this, support for DLD is added in the driver,
-not in device tree. You can probably drop that sentence?
-
-> 
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> Signed-off-by: Konstantin Pugin <ria.freelander@gmail.com>
-> ---
->  drivers/tty/serial/Kconfig         |  3 +-
->  drivers/tty/serial/sc16is7xx.c     | 61 ++++++++++++++++++++++++++++--
->  drivers/tty/serial/sc16is7xx.h     |  1 +
->  drivers/tty/serial/sc16is7xx_i2c.c |  1 +
->  drivers/tty/serial/sc16is7xx_spi.c |  1 +
->  5 files changed, 62 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index 4fdd7857ef4d..9d0438cfe147 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1029,7 +1029,7 @@ config SERIAL_SC16IS7XX_CORE
->  	select SERIAL_SC16IS7XX_SPI if SPI_MASTER
->  	select SERIAL_SC16IS7XX_I2C if I2C
->  	help
-> -	  Core driver for NXP SC16IS7xx UARTs.
-> +	  Core driver for NXP SC16IS7xx and compatible UARTs.
->  	  Supported ICs are:
->  
->  	    SC16IS740
-> @@ -1038,6 +1038,7 @@ config SERIAL_SC16IS7XX_CORE
->  	    SC16IS752
->  	    SC16IS760
->  	    SC16IS762
-> +	    XR20M1172 (Exar)
->  
->  	  The driver supports both I2C and SPI interfaces.
->  
-> diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-> index dfcc804f558f..09c9e52d7ec2 100644
-> --- a/drivers/tty/serial/sc16is7xx.c
-> +++ b/drivers/tty/serial/sc16is7xx.c
-> @@ -10,6 +10,7 @@
->  #undef DEFAULT_SYMBOL_NAMESPACE
->  #define DEFAULT_SYMBOL_NAMESPACE SERIAL_NXP_SC16IS7XX
->  
-> +#include <linux/bitfield.h>
->  #include <linux/clk.h>
->  #include <linux/delay.h>
->  #include <linux/device.h>
-> @@ -68,6 +69,7 @@
->  /* Special Register set: Only if ((LCR[7] == 1) && (LCR != 0xBF)) */
->  #define SC16IS7XX_DLL_REG		(0x00) /* Divisor Latch Low */
->  #define SC16IS7XX_DLH_REG		(0x01) /* Divisor Latch High */
-> +#define XR20M117X_DLD_REG		(0x02) /* Divisor Fractional Register */
-
-Remove "Register".
-
-Also, DLD register needs EFR[4] = 1 to be accessed, so maybe add this
-to the comment:
-
-/* Divisor Fractional (requires EFR[4] = 1) */
-
-
->  
->  /* Enhanced Register set: Only if (LCR == 0xBF) */
->  #define SC16IS7XX_EFR_REG		(0x02) /* Enhanced Features */
-> @@ -221,6 +223,20 @@
->  #define SC16IS7XX_TCR_RX_HALT(words)	((((words) / 4) & 0x0f) << 0)
->  #define SC16IS7XX_TCR_RX_RESUME(words)	((((words) / 4) & 0x0f) << 4)
->  
-> +/*
-> + * Divisor Fractional Register bits (EXAR extension).
-> + * EXAR hardware is mostly compatible with SC16IS7XX, but supports additional feature:
-> + * 4x and 8x divisor, instead of default 16x. It has a special register to program it.
-> + * Bits 0 to 3 is fractional divisor, it used to set value of last 16 bits of
-> + * uartclk * (16 / divisor) / baud, in case of default it will be uartclk / baud.
-> + * Bits 4 and 5 used as switches, and should not be set to 1 simultaneously.
-> + */
-> +
-> +#define XR20M117X_DLD_16X			0
-> +#define XR20M117X_DLD_DIV_MASK			GENMASK(3, 0)
-> +#define XR20M117X_DLD_8X			BIT(4)
-> +#define XR20M117X_DLD_4X			BIT(5)
-> +
->  /*
->   * TLR register bits
->   * If TLR[3:0] or TLR[7:4] are logical 0, the selectable trigger levels via the
-> @@ -523,6 +539,13 @@ const struct sc16is7xx_devtype sc16is762_devtype = {
->  };
->  EXPORT_SYMBOL_GPL(sc16is762_devtype);
->  
-> +const struct sc16is7xx_devtype xr20m1172_devtype = {
-> +	.name		= "XR20M1172",
-> +	.nr_gpio	= 8,
-> +	.nr_uart	= 2,
-> +};
-> +EXPORT_SYMBOL_GPL(xr20m1172_devtype);
-> +
->  static bool sc16is7xx_regmap_volatile(struct device *dev, unsigned int reg)
->  {
->  	switch (reg) {
-> @@ -555,18 +578,43 @@ static bool sc16is7xx_regmap_noinc(struct device *dev, unsigned int reg)
->  	return reg == SC16IS7XX_RHR_REG;
->  }
->  
-> +static bool sc16is7xx_has_dld(struct device *dev)
-> +{
-> +	struct sc16is7xx_port *s = dev_get_drvdata(dev);
-> +
-> +	if (s->devtype == &xr20m1172_devtype)
-> +		return true;
-> +	return false;
-> +}
-> +
->  static int sc16is7xx_set_baud(struct uart_port *port, int baud)
->  {
->  	struct sc16is7xx_one *one = to_sc16is7xx_one(port, port);
-> -	u8 lcr;
-> +	unsigned long clk = port->uartclk, div, div16;
-> +	bool has_dld = sc16is7xx_has_dld(port->dev);
-> +	u8 dld_mode = XR20M117X_DLD_16X;
->  	u8 prescaler = 0;
-> -	unsigned long clk = port->uartclk, div = clk / 16 / baud;
-> +	u8 divisor = 16;
-> +	u8 lcr;
-> +
-> +	if (has_dld && DIV_ROUND_CLOSEST(clk, baud) < 16)
-> +		divisor = rounddown_pow_of_two(DIV_ROUND_CLOSEST(clk, baud));
-> +
-> +	div16 = (clk * 16) / divisor / baud;
-> +	div = div16 / 16;
->  
->  	if (div >= BIT(16)) {
->  		prescaler = SC16IS7XX_MCR_CLKSEL_BIT;
->  		div /= 4;
->  	}
->  
-> +	/* Count additional divisor for EXAR devices */
-> +	if (divisor == 8)
-> +		dld_mode = XR20M117X_DLD_8X;
-> +	if (divisor == 4)
-> +		dld_mode = XR20M117X_DLD_4X;
-> +	dld_mode |= FIELD_PREP(XR20M117X_DLD_DIV_MASK, div16);
-> +
->  	/* Enable enhanced features */
->  	sc16is7xx_efr_lock(port);
->  	sc16is7xx_port_update(port, SC16IS7XX_EFR_REG,
-> @@ -587,12 +635,14 @@ static int sc16is7xx_set_baud(struct uart_port *port, int baud)
->  	regcache_cache_bypass(one->regmap, true);
->  	sc16is7xx_port_write(port, SC16IS7XX_DLH_REG, div / 256);
->  	sc16is7xx_port_write(port, SC16IS7XX_DLL_REG, div % 256);
-> +	if (has_dld)
-> +		sc16is7xx_port_write(port, XR20M117X_DLD_REG, dld_mode);
->  	regcache_cache_bypass(one->regmap, false);
->  
->  	/* Restore LCR and access to general register set */
->  	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, lcr);
->  
-> -	return DIV_ROUND_CLOSEST(clk / 16, div);
-> +	return DIV_ROUND_CLOSEST(clk / divisor, div);
->  }
->  
->  static void sc16is7xx_handle_rx(struct uart_port *port, unsigned int rxlen,
-> @@ -1002,6 +1052,8 @@ static void sc16is7xx_set_termios(struct uart_port *port,
->  				  const struct ktermios *old)
->  {
->  	struct sc16is7xx_one *one = to_sc16is7xx_one(port, port);
-> +	bool has_dld = sc16is7xx_has_dld(port->dev);
-> +	u8 divisor = has_dld ? 4 : 16
-
-This still breaks compilation. I noted in V7 of the patch to fix this,
-but obviously you didn't do it, altough you mention that you would do
-it in your reply to me, and you also mention doing it in your cover
-letter...
-
-This means you didn't test your patchset V8 before sending it. You
-really need to properly test _before_ sending a new patchset.
-
-
-Hugo.
-
-
-
-
->  	unsigned int lcr, flow = 0;
->  	int baud;
->  	unsigned long flags;
-> @@ -1084,7 +1136,7 @@ static void sc16is7xx_set_termios(struct uart_port *port,
->  	/* Get baud rate generator configuration */
->  	baud = uart_get_baud_rate(port, termios, old,
->  				  port->uartclk / 16 / 4 / 0xffff,
-> -				  port->uartclk / 16);
-> +				  port->uartclk / divisor);
->  
->  	/* Setup baudrate generator */
->  	baud = sc16is7xx_set_baud(port, baud);
-> @@ -1684,6 +1736,7 @@ void sc16is7xx_remove(struct device *dev)
->  EXPORT_SYMBOL_GPL(sc16is7xx_remove);
->  
->  const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] = {
-> +	{ .compatible = "exar,xr20m1172",	.data = &xr20m1172_devtype, },
->  	{ .compatible = "nxp,sc16is740",	.data = &sc16is74x_devtype, },
->  	{ .compatible = "nxp,sc16is741",	.data = &sc16is74x_devtype, },
->  	{ .compatible = "nxp,sc16is750",	.data = &sc16is750_devtype, },
-> diff --git a/drivers/tty/serial/sc16is7xx.h b/drivers/tty/serial/sc16is7xx.h
-> index afb784eaee45..eb2e3bc86f15 100644
-> --- a/drivers/tty/serial/sc16is7xx.h
-> +++ b/drivers/tty/serial/sc16is7xx.h
-> @@ -28,6 +28,7 @@ extern const struct sc16is7xx_devtype sc16is750_devtype;
->  extern const struct sc16is7xx_devtype sc16is752_devtype;
->  extern const struct sc16is7xx_devtype sc16is760_devtype;
->  extern const struct sc16is7xx_devtype sc16is762_devtype;
-> +extern const struct sc16is7xx_devtype xr20m1172_devtype;
->  
->  const char *sc16is7xx_regmap_name(u8 port_id);
->  
-> diff --git a/drivers/tty/serial/sc16is7xx_i2c.c b/drivers/tty/serial/sc16is7xx_i2c.c
-> index 3ed47c306d85..839de902821b 100644
-> --- a/drivers/tty/serial/sc16is7xx_i2c.c
-> +++ b/drivers/tty/serial/sc16is7xx_i2c.c
-> @@ -46,6 +46,7 @@ static const struct i2c_device_id sc16is7xx_i2c_id_table[] = {
->  	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
->  	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
->  	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
-> +	{ "xr20m1172",	(kernel_ulong_t)&xr20m1172_devtype, },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(i2c, sc16is7xx_i2c_id_table);
-> diff --git a/drivers/tty/serial/sc16is7xx_spi.c b/drivers/tty/serial/sc16is7xx_spi.c
-> index 73df36f8a7fd..2b278282dbd0 100644
-> --- a/drivers/tty/serial/sc16is7xx_spi.c
-> +++ b/drivers/tty/serial/sc16is7xx_spi.c
-> @@ -69,6 +69,7 @@ static const struct spi_device_id sc16is7xx_spi_id_table[] = {
->  	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
->  	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
->  	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
-> +	{ "xr20m1172",	(kernel_ulong_t)&xr20m1172_devtype, },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(spi, sc16is7xx_spi_id_table);
-> -- 
-> 2.44.0
+On 4/24/24 02:38, Michal Simek wrote:
 > 
 > 
+> On 4/23/24 17:02, Sean Anderson wrote:
+>> On 4/23/24 02:25, Michal Simek wrote:
+>>>
+>>>
+>>> On 4/22/24 20:58, Sean Anderson wrote:
+>>>> The phy "type" is just the combination of protocol and instance, and is
+>>>> never used apart from that. Store the instance directly, instead of
+>>>> converting to a type first. No functional change intended.
+>>>>
+>>>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+>>>> ---
+>>>>
+>>>>    drivers/phy/xilinx/phy-zynqmp.c | 107 +++++++-------------------------
+>>>>    1 file changed, 24 insertions(+), 83 deletions(-)
+>>>>
+>>>> diff --git a/drivers/phy/xilinx/phy-zynqmp.c b/drivers/phy/xilinx/phy-zynqmp.c
+>>>> index f72c5257d712..b507ed4c3053 100644
+>>>> --- a/drivers/phy/xilinx/phy-zynqmp.c
+>>>> +++ b/drivers/phy/xilinx/phy-zynqmp.c
+>>>> @@ -146,22 +146,6 @@
+>>>>    /* Total number of controllers */
+>>>>    #define CONTROLLERS_PER_LANE        5
+>>>>    -/* Protocol Type parameters */
+>>>> -#define XPSGTR_TYPE_USB0        0  /* USB controller 0 */
+>>>> -#define XPSGTR_TYPE_USB1        1  /* USB controller 1 */
+>>>> -#define XPSGTR_TYPE_SATA_0        2  /* SATA controller lane 0 */
+>>>> -#define XPSGTR_TYPE_SATA_1        3  /* SATA controller lane 1 */
+>>>> -#define XPSGTR_TYPE_PCIE_0        4  /* PCIe controller lane 0 */
+>>>> -#define XPSGTR_TYPE_PCIE_1        5  /* PCIe controller lane 1 */
+>>>> -#define XPSGTR_TYPE_PCIE_2        6  /* PCIe controller lane 2 */
+>>>> -#define XPSGTR_TYPE_PCIE_3        7  /* PCIe controller lane 3 */
+>>>> -#define XPSGTR_TYPE_DP_0        8  /* Display Port controller lane 0 */
+>>>> -#define XPSGTR_TYPE_DP_1        9  /* Display Port controller lane 1 */
+>>>> -#define XPSGTR_TYPE_SGMII0        10 /* Ethernet SGMII controller 0 */
+>>>> -#define XPSGTR_TYPE_SGMII1        11 /* Ethernet SGMII controller 1 */
+>>>> -#define XPSGTR_TYPE_SGMII2        12 /* Ethernet SGMII controller 2 */
+>>>> -#define XPSGTR_TYPE_SGMII3        13 /* Ethernet SGMII controller 3 */
+>>>> -
+>>>>    /* Timeout values */
+>>>>    #define TIMEOUT_US            1000
+>>>>    @@ -184,7 +168,8 @@ struct xpsgtr_ssc {
+>>>>    /**
+>>>>     * struct xpsgtr_phy - representation of a lane
+>>>>     * @phy: pointer to the kernel PHY device
+>>>> - * @type: controller which uses this lane
+>>>> + * @instance: instance of the protocol type (such as the lane within a
+>>>> + *            protocol, or the USB/Ethernet controller)
+>>>>     * @lane: lane number
+>>>>     * @protocol: protocol in which the lane operates
+>>>>     * @skip_phy_init: skip phy_init() if true
+>>>> @@ -193,7 +178,7 @@ struct xpsgtr_ssc {
+>>>>     */
+>>>>    struct xpsgtr_phy {
+>>>>        struct phy *phy;
+>>>> -    u8 type;
+>>>> +    u8 instance;
+>>>>        u8 lane;
+>>>>        u8 protocol;
+>>>>        bool skip_phy_init;
+>>>> @@ -330,8 +315,8 @@ static int xpsgtr_wait_pll_lock(struct phy *phy)
+>>>>          if (ret == -ETIMEDOUT)
+>>>>            dev_err(gtr_dev->dev,
+>>>> -            "lane %u (type %u, protocol %u): PLL lock timeout\n",
+>>>> -            gtr_phy->lane, gtr_phy->type, gtr_phy->protocol);
+>>>> +            "lane %u (protocol %u, instance %u): PLL lock timeout\n",
+>>>> +            gtr_phy->lane, gtr_phy->protocol, gtr_phy->instance);
+>>>>          return ret;
+>>>>    }
+>>>> @@ -643,8 +628,7 @@ static int xpsgtr_phy_power_on(struct phy *phy)
+>>>>         * cumulating waits for both lanes. The user is expected to initialize
+>>>>         * lane 0 last.
+>>>>         */
+>>>> -    if (gtr_phy->protocol != ICM_PROTOCOL_DP ||
+>>>> -        gtr_phy->type == XPSGTR_TYPE_DP_0)
+>>>> +    if (gtr_phy->protocol != ICM_PROTOCOL_DP || !gtr_phy->instance)
+>>>>            ret = xpsgtr_wait_pll_lock(phy);
+>>>>          return ret;
+>>>> @@ -674,73 +658,33 @@ static const struct phy_ops xpsgtr_phyops = {
+>>>>     * OF Xlate Support
+>>>>     */
+>>>>    -/* Set the lane type and protocol based on the PHY type and instance number. */
+>>>> +/* Set the lane protocol and instance based on the PHY type and instance number. */
+>>>>    static int xpsgtr_set_lane_type(struct xpsgtr_phy *gtr_phy, u8 phy_type,
+>>>>                    unsigned int phy_instance)
+>>>>    {
+>>>>        unsigned int num_phy_types;
+>>>> -    const int *phy_types;
+>>>>          switch (phy_type) {
+>>>> -    case PHY_TYPE_SATA: {
+>>>> -        static const int types[] = {
+>>>> -            XPSGTR_TYPE_SATA_0,
+>>>> -            XPSGTR_TYPE_SATA_1,
+>>>> -        };
+>>>> -
+>>>> -        phy_types = types;
+>>>> -        num_phy_types = ARRAY_SIZE(types);
+>>>> +    case PHY_TYPE_SATA:
+>>>> +        num_phy_types = 2;
+>>>>            gtr_phy->protocol = ICM_PROTOCOL_SATA;
+>>>>            break;
+>>>> -    }
+>>>> -    case PHY_TYPE_USB3: {
+>>>> -        static const int types[] = {
+>>>> -            XPSGTR_TYPE_USB0,
+>>>> -            XPSGTR_TYPE_USB1,
+>>>> -        };
+>>>> -
+>>>> -        phy_types = types;
+>>>> -        num_phy_types = ARRAY_SIZE(types);
+>>>> +    case PHY_TYPE_USB3:
+>>>> +        num_phy_types = 2;
+>>>>            gtr_phy->protocol = ICM_PROTOCOL_USB;
+>>>>            break;
+>>>> -    }
+>>>> -    case PHY_TYPE_DP: {
+>>>> -        static const int types[] = {
+>>>> -            XPSGTR_TYPE_DP_0,
+>>>> -            XPSGTR_TYPE_DP_1,
+>>>> -        };
+>>>> -
+>>>> -        phy_types = types;
+>>>> -        num_phy_types = ARRAY_SIZE(types);
+>>>> +    case PHY_TYPE_DP:
+>>>> +        num_phy_types = 2;
+>>>>            gtr_phy->protocol = ICM_PROTOCOL_DP;
+>>>>            break;
+>>>> -    }
+>>>> -    case PHY_TYPE_PCIE: {
+>>>> -        static const int types[] = {
+>>>> -            XPSGTR_TYPE_PCIE_0,
+>>>> -            XPSGTR_TYPE_PCIE_1,
+>>>> -            XPSGTR_TYPE_PCIE_2,
+>>>> -            XPSGTR_TYPE_PCIE_3,
+>>>> -        };
+>>>> -
+>>>> -        phy_types = types;
+>>>> -        num_phy_types = ARRAY_SIZE(types);
+>>>> +    case PHY_TYPE_PCIE:
+>>>> +        num_phy_types = 4;
+>>>>            gtr_phy->protocol = ICM_PROTOCOL_PCIE;
+>>>>            break;
+>>>> -    }
+>>>> -    case PHY_TYPE_SGMII: {
+>>>> -        static const int types[] = {
+>>>> -            XPSGTR_TYPE_SGMII0,
+>>>> -            XPSGTR_TYPE_SGMII1,
+>>>> -            XPSGTR_TYPE_SGMII2,
+>>>> -            XPSGTR_TYPE_SGMII3,
+>>>> -        };
+>>>> -
+>>>> -        phy_types = types;
+>>>> -        num_phy_types = ARRAY_SIZE(types);
+>>>> +    case PHY_TYPE_SGMII:
+>>>> +        num_phy_types = 4;
+>>>>            gtr_phy->protocol = ICM_PROTOCOL_SGMII;
+>>>>            break;
+>>>> -    }
+>>>>        default:
+>>>>            return -EINVAL;
+>>>>        }
+>>>> @@ -748,7 +692,7 @@ static int xpsgtr_set_lane_type(struct xpsgtr_phy *gtr_phy, u8 phy_type,
+>>>>        if (phy_instance >= num_phy_types)
+>>>>            return -EINVAL;
+>>>>    -    gtr_phy->type = phy_types[phy_instance];
+>>>> +    gtr_phy->instance = phy_instance;
+>>>>        return 0;
+>>>>    }
+>>>>    @@ -756,14 +700,11 @@ static int xpsgtr_set_lane_type(struct xpsgtr_phy *gtr_phy, u8 phy_type,
+>>>>     * Valid combinations of controllers and lanes (Interconnect Matrix).
+>>>>     */
+>>>>    static const unsigned int icm_matrix[NUM_LANES][CONTROLLERS_PER_LANE] = {
+>>>> -    { XPSGTR_TYPE_PCIE_0, XPSGTR_TYPE_SATA_0, XPSGTR_TYPE_USB0,
+>>>> -        XPSGTR_TYPE_DP_1, XPSGTR_TYPE_SGMII0 },
+>>>> -    { XPSGTR_TYPE_PCIE_1, XPSGTR_TYPE_SATA_1, XPSGTR_TYPE_USB0,
+>>>> -        XPSGTR_TYPE_DP_0, XPSGTR_TYPE_SGMII1 },
+>>>> -    { XPSGTR_TYPE_PCIE_2, XPSGTR_TYPE_SATA_0, XPSGTR_TYPE_USB0,
+>>>> -        XPSGTR_TYPE_DP_1, XPSGTR_TYPE_SGMII2 },
+>>>> -    { XPSGTR_TYPE_PCIE_3, XPSGTR_TYPE_SATA_1, XPSGTR_TYPE_USB1,
+>>>> -        XPSGTR_TYPE_DP_0, XPSGTR_TYPE_SGMII3 }
+>>>> +    /* PCIe, SATA, USB, DP, SGMII */
+>>>> +    { 0, 0, 0, 1, 0 },
+>>>> +    { 1, 1, 0, 0, 1 },
+>>>> +    { 2, 0, 0, 1, 2 },
+>>>> +    { 3, 1, 1, 0, 3 },
+>>>
+>>>
+>>> Do you think that this is more understandable than was before?
+>>
+>> Yes. This better matches the documentation. And now it is easier to
+>> programmatically access the index. Before we might have
+>>
+>> protocol = ICM_PROTOCOL_USB
+>> type = XPSGTR_TYPE_USB0
+>>
+>> and the instance is there in the type name, but we can't access it. Now
+>> we have
+>>
+>> instance = 0
+>>
+>> and it is easy to determine which instance we have.
 > 
+> Numbers itself means in PCIE, SATA and DP number of lanes used but
+> there is only single controller. In USB and SGMII case it is one lane
+> per controller which is different information pointing to controller
+> ID.
 
+Yeah, the instance is really just to validate the devicetree binding.
+It's not used in the driver except to determine the lane to wait for PLL
+lock on in a multi-lane configuration.
 
--- 
-Hugo Villeneuve
+> I didn't look at this driver for a while but at least for this array I
+> would prefer to extend comment above to describe position of
+> controllers and connected lanes and explain what that numbers really
+> means.
+
+OK, I will expand the comment for v2.
+
+--Sean
