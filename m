@@ -1,162 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D187C14F118;
-	Thu, 25 Apr 2024 18:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781F214E2CC;
+	Thu, 25 Apr 2024 18:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714071535; cv=none; b=L7kED5D++cDotw8mIEf+/MmCKGkTM94tYDJe+P+9BvrYm1YQZRmoBeLN6gSx60+WTGYExanck803t1/doC2V/41RnHjJSWYnDDltlFxthKB2THA2R7p4am9jQS+7fcaEoP9HBgACJFXS5byIGm1HH0soePjTz0VATt0+o5dwolU=
+	t=1714071582; cv=none; b=IJFrliSOC/SR0Fl268EMd/7+mdImyuzO6zE28AR9ih2qFWZnBC5bPhfjy18+Ku2a3wL2ntWVMOetQZoccWWmHZe7UxbPZVnMlv/a1TXevb2/0T7Lb+wQi/YuXn1R7jkJDdl4vj1o+a0Blsq/txUOGUiVd6XxNj6EUNYed7BpJBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714071535; c=relaxed/simple;
-	bh=4Sx4sYmGqoS09z606peTfqhN5qWJQdHwsKYaEAQY4ZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vc+7Nki6/Lb+jdWv4q+2PuQG+p30+TrqkcZ/4+gHXO0Y1p6OlA3ieCb95l9SnHdAgWqZIDxWJH56XLdCnZjZDqkmXPBj7/GEPQNXKq82hidHoIDKwGF1RxGYvHgLVsfuWDBR2xi4y3n//DoMHEiu20gA0OOph0v/T6fdUOddJ8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVHp0Iqo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714071582; c=relaxed/simple;
+	bh=W1jleSnAzaiTkRZrgdNKbc8caMPKFs8+4nzn+DPMNlw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fLhzvy9lR908RPhViX+yBHNrmmRkLZatVYbdFzGw4k/p/1K7wEoD0GdqI8+flloMjAC9u96HefGaD4/d+KL3F3DXJv+PEW8pO6iTk+sPb6YAboZ6p5f/ggOPqZXmXJLdRWLIAQBo3n5/28/JRWCRFgosC4QEWw7ZI/UVVAKlE94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TOgwzaAl; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVHp0Iqo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3084C113CC;
-	Thu, 25 Apr 2024 18:58:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714071535;
-	bh=4Sx4sYmGqoS09z606peTfqhN5qWJQdHwsKYaEAQY4ZI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fVHp0Iqo1nNOv0NlQqAY6MhJrIELR+vsYbhGImeZDbSWcT4lW+ZcU4UpL5S0hDyIc
-	 +1My9aExWwxuIsW7gwdJ9GtsfR2gTOYyrp6GgRn6FrhFzYGTmQOml2ZQOXmVayL1Tl
-	 n8/98w4QwClbVknf/1f0vjjSINn8ULQZFKw3+Vs/DrxuYcvDN3NwNydUeSYl7w8QWz
-	 GT5081UEmq4ev4W5jFHcMY7RqaAuD6SZ5cpdRBDgyGvwxlaUUBDfYlFKsOuJNOa9Or
-	 kUfYfwdTghRSosdcG3qHRaprxMU+Eddt+M4JDdDl64naVSkKybOkgLQ9+3Cqi7d+uO
-	 RJEX3JxoRGeSg==
-Date: Thu, 25 Apr 2024 15:58:50 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Veronika Molnarova <vmolnaro@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf test: Be more tolerant of metricgroup failures
-Message-ID: <Ziqn6nPtxHCc6RpR@x1>
-References: <20240403164818.3431325-1-irogers@google.com>
- <CAGa8GX5MhP3FUhafN5QivHaE3Fg+p5MgvTq3SW6MQy4NeZ1sYQ@mail.gmail.com>
- <CAP-5=fU_EvN-bSjwbWMP8R+WyG-jeAQ1p4ziyejy2FCH0kgYig@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TOgwzaAl"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43PEP8FO013847;
+	Thu, 25 Apr 2024 18:59:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=W1jleSnAzaiTkRZrgdNKbc8caMPKFs8+4nzn+DPMNlw=; b=TO
+	gwzaAl+F09iIn7kr8AsNWX/nRO7Gryl9chXZrysYrfdpJyqy5eT+plzotzwwWI3Z
+	yDybu11dzKq8yACGyvhXIn/Ob/QCegiO2BCD49oq2RHwnX4sn8xuwT3xAuVeT0Ji
+	ZI1KavkYVkHKtBgIHYjBwFohAps41JEMfcy5pDzTSmGp7tgP8ihwSZXSIolZzFyF
+	y/4oRcpxK8U0iVYZwcM2UXb8plhTPMPCKAtoj7IUlF8yPiDMkifUKG7bF+elt+AG
+	N45fZNEftehAgpx/dekJupq0c7jHfrsweYkTBvByY98fiws0CIbCeTuY9S30g3ZG
+	yFVh1dEDhVuA8/EU9iAg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xqrwwrng3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Apr 2024 18:59:36 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43PIxZEQ030335
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Apr 2024 18:59:35 GMT
+Received: from [10.110.58.36] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 25 Apr
+ 2024 11:59:35 -0700
+Message-ID: <22bfac62-5476-9e8f-e5a4-381cf5ae7a04@quicinc.com>
+Date: Thu, 25 Apr 2024 11:59:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU_EvN-bSjwbWMP8R+WyG-jeAQ1p4ziyejy2FCH0kgYig@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v2 2/4] dt-bindings: pinctrl: qcom,pmic-gpio: Add PMIH0108
+ and PMD8028 support
+Content-Language: en-US
+To: Rob Herring <robh+dt@kernel.org>
+CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_subbaram@quicinc.com>,
+        <quic_collinsd@quicinc.com>, <quic_jprakash@quicinc.com>
+References: <20240326220628.2392802-1-quic_amelende@quicinc.com>
+ <20240326220628.2392802-3-quic_amelende@quicinc.com>
+ <CAL_JsqLZkU_74JK-BGOe83-redCi_TcV3dOOZs9DX3jThHfXrw@mail.gmail.com>
+From: Anjelique Melendez <quic_amelende@quicinc.com>
+In-Reply-To: <CAL_JsqLZkU_74JK-BGOe83-redCi_TcV3dOOZs9DX3jThHfXrw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: mWJmo5NWXpS-fRBK6WbBb_4dnvZy3VwP
+X-Proofpoint-ORIG-GUID: mWJmo5NWXpS-fRBK6WbBb_4dnvZy3VwP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-25_19,2024-04-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
+ mlxscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 phishscore=0
+ mlxlogscore=681 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2404010003 definitions=main-2404250136
 
-On Mon, Apr 22, 2024 at 08:42:17AM -0700, Ian Rogers wrote:
-> On Mon, Apr 22, 2024 at 4:51 AM Veronika Molnarova <vmolnaro@redhat.com> wrote:
-> >
-> > Hi Ian,
-> >
-> > On Wed, Apr 3, 2024 at 6:48 PM Ian Rogers <irogers@google.com> wrote:
-> >>
-> >> Previously "set -e" meant any non-zero exit code from perf stat would
-> >> cause a test failure. As a non-zero exit happens when there aren't
-> >> sufficient permissions, check for this case and make the exit code
-> >> 2/skip for it.
-> >>
-> >> Signed-off-by: Ian Rogers <irogers@google.com>
-> >> ---
-> >>  .../perf/tests/shell/stat_all_metricgroups.sh | 28 +++++++++++++++----
-> >>  1 file changed, 22 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
-> >> index 55ef9c9ded2d..d6db192b9f18 100755
-> >> --- a/tools/perf/tests/shell/stat_all_metricgroups.sh
-> >> +++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
-> >> @@ -1,9 +1,7 @@
-> >> -#!/bin/sh
-> >> +#!/bin/bash
-> >>  # perf all metricgroups test
-> >>  # SPDX-License-Identifier: GPL-2.0
-> >>
-> >> -set -e
-> >> -
-> >>  ParanoidAndNotRoot()
-> >>  {
-> >>    [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
-> >> @@ -14,11 +12,29 @@ if ParanoidAndNotRoot 0
-> >>  then
-> >>    system_wide_flag=""
-> >>  fi
-> >> -
-> >> +err=0
-> >>  for m in $(perf list --raw-dump metricgroups)
-> >>  do
-> >>    echo "Testing $m"
-> >> -  perf stat -M "$m" $system_wide_flag sleep 0.01
-> >> +  result=$(perf stat -M "$m" $system_wide_flag sleep 0.01 2>&1)
-> >> +  result_err=$?
-> >> +  if [[ $result_err -gt 0 ]]
-> >> +  then
-> >> +    if [[ "$result" =~ \
-> >> +          "Access to performance monitoring and observability operations is limited" ]]
-> >> +    then
-> >> +      echo "Permission failure"
-> >> +      echo $result
-> >> +      if [[ $err -eq 0 ]]
-> >> +      then
-> >> +        err=2 # Skip
-> >> +      fi
-> >> +    else
-> >> +      echo "Metric group $m failed"
-> >> +      echo $result
-> >> +      err=1 # Fail
-> >> +    fi
-> >> +  fi
-> >>  done
-> >>
-> >> -exit 0
-> >> +exit $err
-> >> --
-> >> 2.44.0.478.gd926399ef9-goog
-> >>
-> >>
-> >
-> > The patch looks good and thanks for taking care of it.
-> >
-> > Just wanted to check what is the desired outcome for metric groups
-> > with events that are invalid in per-thread mode causing the test to fail.
-> >
-> > ```
-> > $ ./stat_all_metricgroups.sh
-> > Testing smi
-> > Metric group smi failed
-> > Error: Invalid event (msr/smi/u) in per-thread mode, enable system wide with '-a'.
-> > ```
-> >
-> > Wouldn't it be better if in these cases the test would result in skip instead of fail?
-> 
-> Hi Veronika,
-> 
-> I agree that fail isn't best here. I'm wondering:
-> 
->  - why doesn't msr/smi/ support per-thread mode? Can't we save/restore
-> the count on a context switch? The implementation is here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/arch/x86/events/msr.c?h=perf-tools-next#n234
-> There's clearly something going on as pperf appears to have other restrictions:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/arch/x86/events/msr.c?h=perf-tools-next#n115
-> I'm wondering if aggregation is working right if these counters are
-> more than per hyperthread (I'm guessing why the restrictions exist).
-> 
->  - the tool error message is doing pretty good. In the test I guess we
-> can spot the per-thread error and turn the fail to a skip. It's a
-> shame to bucket things as skip, but it seems easier than listing
-> metrics in the test or spotting particular events.
-> 
-> I can do a v2 to add this.
-
-Ok, I'll wait for v2 then.
-
-- Arnaldo
+On 4/23/2024 10:02 AM, Rob Herring wrote:
+> It took me a bit to find, but you've got a typo here. The result is
+> this "if" schema is always true unless you actually have an instance
+> with the typo too. Please send a fix.
+Thanks for finding typo! Fix is here: https://lore.kernel.org/all/20240425185603.3295450-1-quic_amelende@quicinc.com/
