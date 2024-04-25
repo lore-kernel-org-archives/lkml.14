@@ -1,212 +1,223 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29123C466
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 06:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81625249F9
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 06:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714025958; cv=none; b=LSx6sqNsYaBw/muElDB2y3zqz4P3IxlDrig00dNorKmL6md1U6Wj3/YQ8CQmbTlQ568myUTOi/eSppmDKVzPEY2RRoQiFZF+AeIJA0oNkqkB/kl2AxPQ6jqcRE+5LFUxDloSljSAyeVMyJyLz0n5ozmOJiSeIu49L63CunBQpik=
+	t=1714026021; cv=none; b=Lst7OgkhFeg5BRh+0oR77k2Oq26PIzwI0QJCwfzthhAz7w7aW28AloXckhK+gs/OotuKeXTmcz/SPsBDsof0qNXvZQcE+Puguv/pKiw3Rq+LjR55yYkLEv4oKs7lITjr8Zz8uA4+5SiZH1V3QDpTVa6siVwpF+zEPD87pGEuFUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714025958; c=relaxed/simple;
-	bh=//DNsUlBgI0vlLJDyF69vHpBDYm1UWrZbGpkoCdLwuo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FlW7JOrMEUJaaLHgI5kSvPU/pLsM76CKVzxhH0NAOao8Ct65u00uJ6FxllC5FmzjCoejhIP90k8znH7AxakfsvlSkAP58/m/zIf+ZIdj80RxvbzhO9Wfn3az+pdlDJPnVG0pRL+Wo+XAw16Efsf5BzXn0k75Z5QrNUj+svxp7/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=CwuXZPem; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1714026021; c=relaxed/simple;
+	bh=b2FXiK/eZeX/I3Uy3/f2pyW186iYyxkPDAjw64klGrw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oxxvD3D+dWjomEOEAaK/YwENZh381ZEFbj0pACEqPr1mYjkCLZ2edrkxmPJg+bUk2i/KuymOFI7occW2XKojGdjfLezXEE3QtukeLQ7C1dWBKSeE2VaYvOFMi+g44AVJcEB2EXtmFjdi+r64nezs+CJ4ReQvOK9HXXug5ECevrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Hh21TI8L; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="CwuXZPem"
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 4AD9D3FE51
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 06:19:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1714025949;
-	bh=HoVegtVV8p+Gh2AomBAcQ2xl6o91liRpQqxeqe2byac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=CwuXZPemIJqjgsV2TDJ7MM0quiF/bUSR7AlpLSpOV1ldX5Od2QfumOXanazVcyvHl
-	 TLZk7HoKbFOlUnVQNCIcIWbtYycGXohlTHpshCF8PJnsjZvHglKOutgnISvtQDhcDE
-	 tDxoXST1Bpj7Y9oniPG6hzSIjLy0PAWWHF9kwF9zvxnflOmMfmQqKp0xu4xZgeZ5tA
-	 SSWyRYMK/mZF0u2ZiBZ0R9ZC6b2Cd8taE3suM/6Roc0TCahzKB16LtguDf/3a34w1U
-	 23u1LDTNEsZly1oDug7tI+VVZIexRPhUwqdMeos2kYHeboApbcOntXxT7fqniETVGt
-	 4fRdWBMncGWaw==
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-56e7187af0fso266233a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 23:19:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714025949; x=1714630749;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HoVegtVV8p+Gh2AomBAcQ2xl6o91liRpQqxeqe2byac=;
-        b=MrYhjrqRSoQTz8/46mz5XU8kpHK52yW4UpADGOsbTCakpT+TR+NVNRZfeomhy9hY6D
-         denbnXJc7HmZkNz+bHH7jMaORtFbp5J/ONrV9oZgcVnjryAX0MjdjZnEctRLO4C+NVBN
-         WoyW9JkBIgvrRvIsbGb4qG5+4yU9YdCwQHwuvhI7WQJ3mqwjANqGxCDlGh7zECxO+Jei
-         /kugfB2vpvGhX4Tb3gThi10EEjnLDw8mF5amznQbg7lpHaKjqyah6CJfmCb/aIpix4S3
-         fwVBbXdEgFuHwpUPL2D+a2jQckQDo4jSNlleRotZ51r9IngOL6XWT8r054GwON7i3d7Z
-         sSyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyDuAD52kndF+5vigRVcH52cAz36+vp0LFTuEeri/LooSPrEJup/vETMJCUp+tm+fYPR1+6vPT4XfbJk4LyGLre7mUgzb9tHgFZh3z
-X-Gm-Message-State: AOJu0YzuDdfxnq2i6qfY+NanQz1y7mEMgtJYB60sdPC4x1AELygJ6LBc
-	3FJ/l+bXvRaFKmmO5pjpArDaxuJBDt6eNVwRBnEUzE6Szcta3ohxLgd0dXY98xz8vb3aiQRkq4C
-	RsGeChJni326hYQF78Lxqs1RvKoBSE4zJhD0V/5DpMnLovHo0fT0k+hP32SEnd4kEp2k8Ki2fa6
-	VY3g==
-X-Received: by 2002:a05:6402:2033:b0:572:325a:851a with SMTP id ay19-20020a056402203300b00572325a851amr2448517edb.10.1714025948829;
-        Wed, 24 Apr 2024 23:19:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEmz2xFXYeIc9DsevrrNqsLxot9gX+ty/nFrxSqWAYAoTEBo9LkdsRfBz18/zGUn4b5HLfSjA==
-X-Received: by 2002:a05:6402:2033:b0:572:325a:851a with SMTP id ay19-20020a056402203300b00572325a851amr2448483edb.10.1714025948178;
-        Wed, 24 Apr 2024 23:19:08 -0700 (PDT)
-Received: from localhost (host-82-49-69-7.retail.telecomitalia.it. [82.49.69.7])
-        by smtp.gmail.com with ESMTPSA id c7-20020a0564021f8700b0057000ecadb0sm8680895edc.8.2024.04.24.23.19.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 23:19:07 -0700 (PDT)
-Date: Thu, 25 Apr 2024 08:19:04 +0200
-From: Andrea Righi <andrea.righi@canonical.com>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/bpf: Add ring_buffer__consume_n test.
-Message-ID: <Zin12J-emVljvVrJ@gpd>
-References: <20240420155904.1450768-1-andrea.righi@canonical.com>
- <ZiVy9bYrX-w24huD@krava>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Hh21TI8L"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1714026015; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=xrJ1UEBMRIsaPvWFfYlp/8GNV4xLZP2PW8psa9EgH/U=;
+	b=Hh21TI8LrpI7VRPFizWQRIGXOefhfrcCAh6ENOjzB0vVhuih49X/Bs1WQ2iz9s3lc7HGGJ7BNiyfcvkB7Y6803t76lKHwoQ+IL7FvwfCHkV+2yTcqa5+dOI56rB9CKOnfFpuXDcULqrESsCI3LwEMgaKRdN3+a9t63S9n2qleG8=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045046011;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0W5EQGGR_1714026012;
+Received: from 30.97.56.61(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W5EQGGR_1714026012)
+          by smtp.aliyun-inc.com;
+          Thu, 25 Apr 2024 14:20:13 +0800
+Message-ID: <8c0d6358-3c16-4a57-822c-04b3b3403fe6@linux.alibaba.com>
+Date: Thu, 25 Apr 2024 14:20:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZiVy9bYrX-w24huD@krava>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/5] add mTHP support for anonymous share pages
+To: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: willy@infradead.org, david@redhat.com, wangkefeng.wang@huawei.com,
+ 21cnbao@gmail.com, ying.huang@intel.com, shy828301@gmail.com,
+ ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1713755580.git.baolin.wang@linux.alibaba.com>
+ <4b998e7d-153f-48cc-a9bb-8c84bb675581@arm.com>
+ <c1f68109-7665-4905-996f-f1067dfa2cb6@linux.alibaba.com>
+ <80b5f87e-c156-4ccc-98f0-96f1fd864273@arm.com>
+ <ef4f15dd-da31-4a1e-bec5-62a7002c4f7c@linux.alibaba.com>
+ <5b8b22e7-6355-4b08-b5b5-1e33ebae6f16@arm.com>
+ <813fe7fd-3004-4e8b-801d-95c33559a025@linux.alibaba.com>
+ <76f816dd-3bbf-48c9-a630-3787051cf289@arm.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <76f816dd-3bbf-48c9-a630-3787051cf289@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 21, 2024 at 10:11:33PM +0200, Jiri Olsa wrote:
-...
-> >  static struct test_ringbuf_map_key_lskel *skel_map_key;
-> > +static struct test_ringbuf_n_lskel *skel_n;
+
+
+On 2024/4/24 22:20, Ryan Roberts wrote:
+> On 24/04/2024 14:49, Baolin Wang wrote:
+>>
+>>
+>> On 2024/4/24 18:01, Ryan Roberts wrote:
+>>> On 24/04/2024 10:55, Baolin Wang wrote:
+>>>>
+>>>>
+>>>> On 2024/4/24 16:26, Ryan Roberts wrote:
+>>>>> On 24/04/2024 07:55, Baolin Wang wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 2024/4/23 18:41, Ryan Roberts wrote:
+>>>>>>> On 22/04/2024 08:02, Baolin Wang wrote:
+>>>>>>>> Anonymous pages have already been supported for multi-size (mTHP) allocation
+>>>>>>>> through commit 19eaf44954df, that can allow THP to be configured through the
+>>>>>>>> sysfs interface located at
+>>>>>>>> '/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled'.
+>>>>>>>>
+>>>>>>>> However, the anonymous shared pages will ignore the anonymous mTHP rule
+>>>>>>>> configured through the sysfs interface, and can only use the PMD-mapped
+>>>>>>>> THP, that is not reasonable. Many implement anonymous page sharing through
+>>>>>>>> mmap(MAP_SHARED | MAP_ANONYMOUS), especially in database usage scenarios,
+>>>>>>>> therefore, users expect to apply an unified mTHP strategy for anonymous
+>>>>>>>> pages,
+>>>>>>>> also including the anonymous shared pages, in order to enjoy the benefits of
+>>>>>>>> mTHP. For example, lower latency than PMD-mapped THP, smaller memory bloat
+>>>>>>>> than PMD-mapped THP, contiguous PTEs on ARM architecture to reduce TLB miss
+>>>>>>>> etc.
+>>>>>>>
+>>>>>>> This sounds like a very useful addition!
+>>>>>>>
+>>>>>>> Out of interest, can you point me at any workloads (and off-the-shelf
+>>>>>>> benchmarks
+>>>>>>> for those workloads) that predominantly use shared anon memory?
+>>>>>>
+>>>>>> As far as I know, some database related workloads make extensive use of shared
+>>>>>> anonymous page, such as PolarDB[1] in our Alibaba fleet, or MySQL likely also
+>>>>>> uses shared anonymous memory. And I still need to do some investigation to
+>>>>>> measure the performance.
+>>>>>>
+>>>>>> [1] https://github.com/ApsaraDB/PolarDB-for-PostgreSQL
+>>>>>
+>>>>> Thanks for the pointer!
+>>>>>
+>>>>>>
+>>>>>>>> The primary strategy is that, the use of huge pages for anonymous shared
+>>>>>>>> pages
+>>>>>>>> still follows the global control determined by the mount option "huge="
+>>>>>>>> parameter
+>>>>>>>> or the sysfs interface at
+>>>>>>>> '/sys/kernel/mm/transparent_hugepage/shmem_enabled'.
+>>>>>>>> The utilization of mTHP is allowed only when the global 'huge' switch is
+>>>>>>>> enabled.
+>>>>>>>> Subsequently, the mTHP sysfs interface
+>>>>>>>> (/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled)
+>>>>>>>> is checked to determine the mTHP size that can be used for large folio
+>>>>>>>> allocation
+>>>>>>>> for these anonymous shared pages.
+>>>>>>>
+>>>>>>> I'm not sure about this proposed control mechanism; won't it break
+>>>>>>> compatibility? I could be wrong, but I don't think shmem's use of THP used to
+>>>>>>> depend upon the value of /sys/kernel/mm/transparent_hugepage/enabled? So it
+>>>>>>
+>>>>>> Yes, I realized this after more testing.
+>>>>>>
+>>>>>>> doesn't make sense to me that we now depend upon the
+>>>>>>> /sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled values (which by
+>>>>>>> default disables all sizes except 2M, which is set to "inherit" from
+>>>>>>> /sys/kernel/mm/transparent_hugepage/enabled).
+>>>>>>>
+>>>>>>> The other problem is that shmem_enabled has a different set of options
+>>>>>>> (always/never/within_size/advise/deny/force) to enabled
+>>>>>>> (always/madvise/never)
+>>>>>>>
+>>>>>>> Perhaps it would be cleaner to do the same trick we did for enabled;
+>>>>>>> Introduce
+>>>>>>> /mm/transparent_hugepage/hugepage-XXkb/shmem_enabled, which can have all the
+>>>>>>> same values as the top-level
+>>>>>>> /sys/kernel/mm/transparent_hugepage/shmem_enabled,
+>>>>>>> plus the additional "inherit" option. By default all sizes will be set to
+>>>>>>> "never" except 2M, which is set to "inherit".
+>>>>>>
+>>>>>> Sounds good to me. But I do not want to copy all same values from top-level
+>>>>>> '/sys/kernel/mm/transparent_hugepage/shmem_enabled':
+>>>>>> always within_size advise never deny force
+>>>>>>
+>>>>>> For mTHP's shmem_enabled interface, we can just keep below values:
+>>>>>> always within_size advise never
+>>>>>>
+>>>>>> Cause when checking if mTHP can be used for anon shmem, 'deny' is equal to
+>>>>>> 'never', and 'force' is equal to 'always'.
+>>>>>
+>>>>> I'll admit it wasn't completely clear to me after reading the docs, but my
+>>>>> rough
+>>>>> understanding is:
+>>>>>
+>>>>>     - /sys/kernel/mm/transparent_hugepage/shmem_enabled controls
+>>>>>       mmap(SHARED|ANON) allocations (mostly; see rule 3)
+>>>>>     - huge=... controls tmpfs allocations
+>>>>>     - deny and force in shmem_enabled are equivalent to never and always for
+>>>>>       mmap(SHARED|ANON) but additionally override all tmpfs mounts so they
+>>>>> act as
+>>>>>       if they were mounted with huge=never or huge=always
+>>>>>
+>>>>> Is that correct? If so, then I think it still makes sense to support per-size
+>>>>
+>>>> Correct.
+>>>>
+>>>>> deny/force. Certainly if a per-size control is set to "inherit" and the
+>>>>> top-level control is set to deny or force, you would need that to mean
+>>>>> something.
+>>>>
+>>>> IMHO, the '/mm/transparent_hugepage/hugepage-XXkb/shmem_enabled' interface
+>>>> should only control the anonymous shmem. And 'huge=' controls tmpfs allocation,
+>>>> so we should not use anonymous control to override tmpfs control, which seems a
+>>>> little mess?
+>>>
+>>> I agree it would be cleaner to only handle mmap(SHARED|ANON) here, and leave the
+>>> tmpfs stuff for another time. But my point is that
+>>> /mm/transparent_hugepage/shmem_enabled already interferes with tmpfs if the
+>>> value is deny or force. So if you have:
+>>>
+>>> echo deny > /mm/transparent_hugepage/shmem_enabled
+>>
+>> IIUC, this global control will cause shmem_is_huge() to always return false, so
+>> no matter how '/mm/transparent_hugepage/hugepage-xxxkB/shmem_enabled' is set,
+>> anonymous shmem will not use mTHP. No?
 > 
-> seems like there's no need for this to be static variable
-
-Can you elaborate more? I think we want these pointers to be static to
-limit the scope to this file, no?
-
+> No, that's not how '/mm/transparent_hugepage/hugepage-xxxkB/enabled' works, and
+> I think '/mm/transparent_hugepage/hugepage-xxxkB/shmem_enabled' should follow
+> the established pattern.
 > 
-> >  static struct test_ringbuf_lskel *skel;
-> >  static struct ring_buffer *ringbuf;
-> >  
-> > @@ -326,6 +328,67 @@ static void ringbuf_subtest(void)
-> >  	test_ringbuf_lskel__destroy(skel);
-> >  }
-> >  
-> > +/*
-> > + * Test ring_buffer__consume_n() by producing N_TOT_SAMPLES samples in the ring
-> > + * buffer, via getpid(), and consuming them in chunks of N_SAMPLES.
-> > + */
-> > +#define N_TOT_SAMPLES	32
-> > +#define N_SAMPLES	4
-> > +
-> > +/* Sample value to verify the callback validity */
-> > +#define SAMPLE_VALUE	42L
-> > +
-> > +static int process_n_sample(void *ctx, void *data, size_t len)
-> > +{
-> > +	struct sample *s = data;
-> > +
-> > +	CHECK(s->value != SAMPLE_VALUE,
-> > +	      "sample_value", "exp %ld, got %ld\n", SAMPLE_VALUE, s->value);
+> For anon-private, each size is controlled by its
+> /mm/transparent_hugepage/hugepage-xxxkB/enabled value. Unless that value is
+> "inherit", in which case the value in /mm/transparent_hugepage/enabled is used
+> for that size.
 > 
-> I think we should use ASSERT macros instead in the new code
-
-Good catch, I'll change this to an ASSERT_EQ().
-
+> That approach enables us to 1) maintain back-compat and 2) control each size
+> independently
 > 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void ringbuf_n_subtest(void)
-> > +{
-> > +	int err, i;
-> > +
-> > +	skel_n = test_ringbuf_n_lskel__open();
-> > +	if (!ASSERT_OK_PTR(skel_n, "test_ringbuf_n_lskel__open"))
-> > +		return;
-> > +
-> > +	skel_n->maps.ringbuf.max_entries = getpagesize();
-> > +	skel_n->bss->pid = getpid();
-> > +
-> > +	err = test_ringbuf_n_lskel__load(skel_n);
-> > +	if (!ASSERT_OK(err, "test_ringbuf_n_lskel__load"))
-> > +		goto cleanup;
-> > +
-> > +	ringbuf = ring_buffer__new(skel_n->maps.ringbuf.map_fd,
-> > +				   process_n_sample, NULL, NULL);
-> > +	if (!ASSERT_OK_PTR(ringbuf, "ring_buffer__new"))
-> > +		goto cleanup;
-> > +
-> > +	err = test_ringbuf_n_lskel__attach(skel_n);
-> > +	if (!ASSERT_OK(err, "test_ringbuf_n_lskel__attach"))
-> > +		goto cleanup_ringbuf;
-> > +
-> > +	/* Produce N_TOT_SAMPLES samples in the ring buffer by calling getpid() */
-> > +	skel->bss->value = SAMPLE_VALUE;
+> 1) is met because the default is that all sizes are initially set to "never",
+> except the PMD-size (e.g. /mm/transparent_hugepage/hugepage-2048kB/enabled)
+> which is initially set to inherit. So any mTHP unaware SW can still modify
+> /mm/transparent_hugepage/enabled and it will still only apply to PMD size.
 > 
-> skel_n ?
+> 2) is met because mTHP aware SW can come along and e.g. enable the 64K size
+> (echo always > /mm/transparent_hugepage/hugepage-64kB/enabled) without having to
+> modify the value in /mm/transparent_hugepage/enabled.
 
-Absolutely... I'm suprised that it works actually, I guess pure luck
-(unluck) to reuse the old pointer and have value mapped to the same
-location. Anyway, I'll fix this.
+Thanks for explanation. Initially, I want to make 
+‘/mm/transparent_hugepage/shmem_enabled’ be a global control for huge 
+page, but I think it should follow the same strategy as anon mTHP as you 
+said.
 
+>>> echo inherit > /mm/transparent_hugepage/hugepage-64kB/shmem_enabled
+>>>
+>>> What does that mean?
 > 
-> > +	for (i = 0; i < N_TOT_SAMPLES; i++)
-> > +		syscall(__NR_getpgid);
-> > +
-> > +	/* Consume all samples from the ring buffer in batches of N_SAMPLES */
-> > +	for (i = 0; i < N_TOT_SAMPLES; i += err) {
-> > +		err = ring_buffer__consume_n(ringbuf, N_SAMPLES);
-> > +		ASSERT_EQ(err, N_SAMPLES, "rb_consume");
-> > +	}
-> > +
-> 
-> SNIP
-> 
-> > diff --git a/tools/testing/selftests/bpf/progs/test_ringbuf_n.c b/tools/testing/selftests/bpf/progs/test_ringbuf_n.c
-> > new file mode 100644
-> > index 000000000000..b98b5bb20699
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/bpf/progs/test_ringbuf_n.c
-> > @@ -0,0 +1,52 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +// Copyright (c) 2024 Andrea Righi <andrea.righi@canonical.com>
-> > +
-> > +#include <linux/bpf.h>
-> > +#include <sched.h>
-> > +#include <unistd.h>
-> > +#include <bpf/bpf_helpers.h>
-> > +#include "bpf_misc.h"
-> > +
-> > +char _license[] SEC("license") = "GPL";
-> > +
-> > +#define TASK_COMM_LEN 16
-> > +
-> > +struct sample {
-> > +	int pid;
-> > +	int seq;
-> 
-> seq does not seem to be checked, is it needed?
+> So I think /mm/transparent_hugepage/hugepage-xxxkB/shmem_enabled will need to
+> support the deny and force values. When applied to non-PMD sizes, "deny" can
+> just be a noop for now, because there was no way to configure a tmpfs mount for
+> non-PMD size THP in the first place. But I'm not sure what to do with "force"?
 
-seq is not used at all, I can definitely drop it.
-
-Thanks for the review! I'll send a v2.
-
--Andrea
+OK. And I also prefer that "force" should be a noop too, since anon 
+shmem control should not configure tmpfs huge page allocation.
