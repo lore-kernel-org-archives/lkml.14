@@ -1,33 +1,66 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C045149E0E
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 17:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A309B14D719;
+	Thu, 25 Apr 2024 17:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714064839; cv=none; b=D2tl4Ny2L3CzUdGhP8UOCgO0v24ZIG5/MfpUg/fk5MyEx+LCbKIvP1n/OAQa17QlnJL0htjrybTKs1o7KJh/McDYmHevGwjY+4LzZ3OglKiUMv9MtrpSEnMytsBMboXv6Z8TSng182cEXXCDecvDgaEOGc4NNNhaDbCMOIUdX+k=
+	t=1714064947; cv=none; b=kG252/c4TlpSkeF3cjsVSDCtAMnMCyXFkqUeNbkM+XZRGaHjPdBtuYgFanWnXOqXTgSVSChjhhzvr8EBwoofZz92XzJYsMPaoy6OQ6c4sVT4xn8n1n3T9ha6Lzbg/Qz2GnivmzsJ9we36wJRAoibDaLDhvaAnctBJdn1o31Qgi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714064839; c=relaxed/simple;
-	bh=tHJXdKY1e6AqpOg19P28+P4MIhlfRIV7LEXxAPsKJ0c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=brwnmaxMqtRLl1gI94WcvMpJdCW+HiQNB0cGxg4cOVXsAlDyILigzJiCbFKUDTRJ0OTplluLnXNHzjC+uagVtNW4zZS0JDNnJ6+gEhF4YEzGNO8bhHG2IykynUJS/nO5Bjii073gKBn2+6+AtMhtiC2ejolrexmqMmgosE62Akc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EC501007;
-	Thu, 25 Apr 2024 10:07:43 -0700 (PDT)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D1813F793;
-	Thu, 25 Apr 2024 10:07:14 -0700 (PDT)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Zi Yan <zi.yan@cs.rutgers.edu>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-mm@kvack.org,
+	s=arc-20240116; t=1714064947; c=relaxed/simple;
+	bh=Poecu4f5dpmnBhjDNs+GIeQe2EIjAchr4YDeOe285sY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FTNAsaWlHisZFKz/qK/kuqXEX2tqNH+FHZtT2D4GKBGZdHvfXxcnHrWQELxAMsA1CksBOnTk7wJw61WxymbM21lH2V+Dd5uCwkRDgM8QBJZFi8gYENebngJ0G8JFrrGFRlOEo/bH2D+rvok6AeLVVsZlaveMeHgY8uQhNdkkq7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jkWbr/6p; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jkWbr/6p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714064945; x=1745600945;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Poecu4f5dpmnBhjDNs+GIeQe2EIjAchr4YDeOe285sY=;
+  b=jkWbr/6pVf+q7nDAdAkQ5Sbbg7NIYIansS9XocwBXSe6K+BBUmJwfB+U
+   0AIDbs6iXFHtJC8zY8dtEdBlCBT9LM6OB5T8Yp3EPRvPRD4LKrwDbEC8T
+   9HV/vZ6rgGIkkRYQua1T0hzG498ygeQa6CIGAbNOIWXs3+0TsvacqcyNv
+   wctkMNaJacGCQBKkUt6nm/D/Q/1vRQR7erPRGS4+cpMHHa59nIZr4qwss
+   ouxI2oSm8YubxN89h0q7opeuqweooH+I36oMoA17pTtAjq/zrK7A/pKrR
+   Rv+T40HpDAFmdzuiMMVW8zJI2k2tA3N+4KnNTvtm5WqTk4pDImBlIEfZz
+   w==;
+X-CSE-ConnectionGUID: dXvqx40WQyCbbmFekygugw==
+X-CSE-MsgGUID: 0Sqye04VRG+EEohv0dpnyw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="9618905"
+X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
+   d="scan'208";a="9618905"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 10:09:04 -0700
+X-CSE-ConnectionGUID: LqkwhMLARgq9KjVdNaAqPw==
+X-CSE-MsgGUID: X+Lavs6MTwqvEI8THCiJtg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
+   d="scan'208";a="29945986"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa004.jf.intel.com with ESMTP; 25 Apr 2024 10:09:03 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 8B5E75B2; Thu, 25 Apr 2024 20:09:01 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-mmc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] mm: Fix race between __split_huge_pmd_locked() and GUP-fast
-Date: Thu, 25 Apr 2024 18:07:04 +0100
-Message-Id: <20240425170704.3379492-1-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.25.1
+Cc: Aubin Constans <aubin.constans@microchip.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Subject: [PATCH v2 2/2] mmc: atmel-mci: Switch to use dev_err_probe()
+Date: Thu, 25 Apr 2024 20:08:45 +0300
+Message-ID: <20240425170900.3767990-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20240425170900.3767990-1-andriy.shevchenko@linux.intel.com>
+References: <20240425170900.3767990-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,90 +69,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-__split_huge_pmd_locked() can be called for a present THP, devmap or
-(non-present) migration entry. It calls pmdp_invalidate()
-unconditionally on the pmdp and only determines if it is present or not
-based on the returned old pmd. This is a problem for the migration entry
-case because pmd_mkinvalid(), called by pmdp_invalidate() must only be
-called for a present pmd.
+Switch to use dev_err_probe() to simplify the error path and
+unify a message template.
 
-On arm64 at least, pmd_mkinvalid() will mark the pmd such that any
-future call to pmd_present() will return true. And therefore any
-lockless pgtable walker could see the migration entry pmd in this state
-and start interpretting the fields as if it were present, leading to
-BadThings (TM). GUP-fast appears to be one such lockless pgtable walker.
-I suspect the same is possible on other architectures.
-
-Fix this by only calling pmdp_invalidate() for a present pmd. And for
-good measure let's add a warning to the generic implementation of
-pmdp_invalidate(). I've manually reviewed all other
-pmdp_invalidate[_ad]() call sites and believe all others to be
-conformant.
-
-This is a theoretical bug found during code review. I don't have any
-test case to trigger it in practice.
-
-Fixes: 84c3fc4e9c56 ("mm: thp: check pmd migration entry in common path")
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
+ drivers/mmc/host/atmel-mci.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-Applies on top of v6.9-rc5. Passes all the mm selftests on arm64.
-
-Thanks,
-Ryan
-
-
- mm/huge_memory.c     | 5 +++--
- mm/pgtable-generic.c | 2 ++
- 2 files changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 89f58c7603b2..80939ad00718 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2513,12 +2513,12 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
- 	 * for this pmd), then we flush the SMP TLB and finally we write the
- 	 * non-huge version of the pmd entry with pmd_populate.
- 	 */
--	old_pmd = pmdp_invalidate(vma, haddr, pmd);
-
--	pmd_migration = is_pmd_migration_entry(old_pmd);
-+	pmd_migration = is_pmd_migration_entry(*pmd);
- 	if (unlikely(pmd_migration)) {
- 		swp_entry_t entry;
-
-+		old_pmd = *pmd;
- 		entry = pmd_to_swp_entry(old_pmd);
- 		page = pfn_swap_entry_to_page(entry);
- 		write = is_writable_migration_entry(entry);
-@@ -2529,6 +2529,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
- 		soft_dirty = pmd_swp_soft_dirty(old_pmd);
- 		uffd_wp = pmd_swp_uffd_wp(old_pmd);
- 	} else {
-+		old_pmd = pmdp_invalidate(vma, haddr, pmd);
- 		page = pmd_page(old_pmd);
- 		folio = page_folio(page);
- 		if (pmd_dirty(old_pmd)) {
-diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
-index 4fcd959dcc4d..74e34ea90656 100644
---- a/mm/pgtable-generic.c
-+++ b/mm/pgtable-generic.c
-@@ -198,6 +198,7 @@ pgtable_t pgtable_trans_huge_withdraw(struct mm_struct *mm, pmd_t *pmdp)
- pmd_t pmdp_invalidate(struct vm_area_struct *vma, unsigned long address,
- 		     pmd_t *pmdp)
- {
-+	VM_WARN_ON(!pmd_present(*pmdp));
- 	pmd_t old = pmdp_establish(vma, address, pmdp, pmd_mkinvalid(*pmdp));
- 	flush_pmd_tlb_range(vma, address, address + HPAGE_PMD_SIZE);
- 	return old;
-@@ -208,6 +209,7 @@ pmd_t pmdp_invalidate(struct vm_area_struct *vma, unsigned long address,
- pmd_t pmdp_invalidate_ad(struct vm_area_struct *vma, unsigned long address,
- 			 pmd_t *pmdp)
- {
-+	VM_WARN_ON(!pmd_present(*pmdp));
- 	return pmdp_invalidate(vma, address, pmdp);
- }
- #endif
---
-2.25.1
+diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
+index 9ae3ce14db50..8199d9620075 100644
+--- a/drivers/mmc/host/atmel-mci.c
++++ b/drivers/mmc/host/atmel-mci.c
+@@ -632,10 +632,8 @@ static int atmci_of_init(struct atmel_mci *host)
+ 	u32 slot_id;
+ 	int err;
+ 
+-	if (!np) {
+-		dev_err(dev, "device node not found\n");
+-		return ERR_PTR(-EINVAL);
+-	}
++	if (!np)
++		return dev_err_probe(dev, -EINVAL, "device node not found\n");
+ 
+ 	for_each_child_of_node(np, cnp) {
+ 		if (of_property_read_u32(cnp, "reg", &slot_id)) {
+@@ -2551,7 +2549,7 @@ static int atmci_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	if (!nr_slots) {
+-		dev_err(dev, "init failed: no slot defined\n");
++		dev_err_probe(dev, ret, "init failed: no slot defined\n");
+ 		goto err_init_slot;
+ 	}
+ 
+@@ -2560,8 +2558,7 @@ static int atmci_probe(struct platform_device *pdev)
+ 		                                  &host->buf_phys_addr,
+ 						  GFP_KERNEL);
+ 		if (!host->buffer) {
+-			ret = -ENOMEM;
+-			dev_err(dev, "buffer allocation failed\n");
++			ret = dev_err_probe(dev, -ENOMEM, "buffer allocation failed\n");
+ 			goto err_dma_alloc;
+ 		}
+ 	}
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
