@@ -1,96 +1,127 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2BA7149C79
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 14:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C68149E0F
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 14:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714054216; cv=none; b=GmKjqiyI/NlbhDXbFaRoULw388GjTsezqG78c3nlcM1rS+YTROttbO7dVWAnp3Jw96f5tvscVMXrYLYaEhxyX8RG0Nqp7Stf9evJKHNkKVMquJf8PU5v7C5VitRVyIn/OWAdzLSQk/BRdoY+qkdZxZnh5RI0aQCd2Gnf+qlYOgg=
+	t=1714054217; cv=none; b=n+74/Lc6iUJaFcAO5yAKN6UZwGQ6aN+Cb0clY1CvRau9d6L98kZw3i9NG51TMM7XlIvuRLUiXq1K1TNu9Ct5qsMWRY8IsmVxV5MVx//Zv94M4JVDtLDnicsUr/MNdmxtUVYr+NjqHiC0gwuL4FmlB+uJDgDHy+ns+GkSqjfFutQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714054216; c=relaxed/simple;
-	bh=PMcrQr7vfTZSRSNcRmkCpyQp7LWBnFY770gK/C5SUSk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CJjCKzS9qye0fx3GZ39zsKtoDSxc/qjRJWEsO0gsLY2rE5WhBgiQtEePqXJrrcsWMUAR4Sp3Kl7RMLHe9bwAULOBMxRxkp/Omal4FnUiyLEnARkLV4PNgZ5SdWK5qlV0JzchNzHijQBF+ZMGdfW6rv69En+PPKSnqaYI4Ufpvc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mKpb3Fly; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1714054217; c=relaxed/simple;
+	bh=BItV8R6H9q+R+pZ30mC6aRJAXYs4oMTWPeQORV5rSpA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=CeZQpDQOo0GR17nFAjr09pGwdzpGFkbvygAI+6NrkMCYkjYxjMuGbc/t9lSmGUlYdlssCtpNNanYsQwWljDKc8ugniWGTuv67idG3HCuMNpDymsl0A1u6vOgCKfgw+wI1KW94Oi//cUvJ1xM2k8HWwQZ3WMJ7keQY52ts89Lsuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uzpqxT4t; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mKpb3Fly"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2351c03438cso408597fac.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 07:10:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uzpqxT4t"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61b7a24b843so16720327b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 07:10:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1714054213; x=1714659013; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/EIvcYkNNA7uNCHReQKx+DoUp53lMP7MDiBbZ5jB3G0=;
-        b=mKpb3FlyRk44HMN9uezQae6MeQSwZ107oJt0ulYJ5nBVmj4A3A7lp0y0WaaRQyVObP
-         Du/eHRzlA/hviFHvjSYTxzdhVFydjLZMlihRhCFMYFsnxfWu1c8UHTf/VgVA1LY4PxMT
-         eqZARisR0YCl8o/E7fzS3WFnSO6gzS84fxv2jlVGADiEfBUF6njP7By8HVzHiR5cQG+6
-         F3LNAT1kg6vAfuURYk8v8SFX4k6hKBwtF5cBFjS9mxv1fhrsTxjlPKjzZjhbIwia21Lu
-         UDadC7YV2P13PUcbfgye4ZT78SOFcyTjAYetKIR7AW+06T8qX4x7010+NniHYdgBWh4C
-         EPgQ==
+        d=google.com; s=20230601; t=1714054214; x=1714659014; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ny6k5In1yh/dXdoAix2kKCvHY5SPtsFGuRUZpDcPe/0=;
+        b=uzpqxT4tJtpGc8OCKCA894g0fUkvcbHhG50Kz2J34kc4Pq8Rycd9yo1u3hc8r+p8iY
+         dhMrAoc1UcoXSZgnOGFvPBrqBwl/z2t/+4A5H2p27WioEcHIV9W9RG6ALzxwqBazrc2q
+         Ed0oQNQH80LFsDBriaWbYzXlwiKIoDWm5+JwuqZFMRZ4Jb+X6iJwGs2V1Lxf7B5Y63N4
+         0TMZS2LG+GXpcA5BGNqF7pErHgwuv2GYNky/FSTc70cKNHJUNhmUTnsHq9fMLre2gs+5
+         LLcCSysOsHuRi1pucIPMc7GBj6EM3zH84kXruHb4rRr9hPu2X6JDzYFChQ3UYBWGwVNy
+         PQWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714054213; x=1714659013;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/EIvcYkNNA7uNCHReQKx+DoUp53lMP7MDiBbZ5jB3G0=;
-        b=OMn0BXpkp4PXuEpOWuDIfuUCAOqioc/jahIvwWvvg7G9Kmimju9DHHHuCBp7Ot2Ndc
-         ex9bDPoSpedt6Snn8jSHKR/nvgYfpPoQVRSFl9JM26f5lGsYADcU14MuR9p485NLYmr2
-         2G530DLxL7idF9qQ07CzaFqUp/QnwUos/sCLMmT3QTWzZ0t/IDXi+iMaekA6dNuDcko0
-         FiB2tln0fmBqjylnC1dffsPCbtgSqZ3kVYjxHqpDnO/KUIB9nYL+Sik1y0TZdPB9e78R
-         KPrrJkmCEG4nf7DpuKrlbUYjbnNLKGX7kZRutqOByU9NrB2Z4mxEaWI8uuDFTOvwBYNz
-         939Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXZ25mmpWQT9FEBGd0oVFwJNkRuhe99eqPh90vIlHntpPytCAwqqeB6LqTPDsHCukvP7u/YiM44A3L2WcHx1xM5cg9H7JzK0sgwQzlR
-X-Gm-Message-State: AOJu0Yz15UEzLEDB6HDHtr0WXe4iJcLsX0EVxdzkXpL2Cr8euRRSRHYi
-	DIzUSFyqrQXSd3BpwZlFmyZ0zv4BTfuXROZZh7MM6r7C2/qouL3B/pGpoFD1neA=
-X-Google-Smtp-Source: AGHT+IGPh8BWqW4vel5Qzl3DF4uhNTmrKORgW/O0L3hxpcKmJ6L/waBufcrQ+V8+zzseyb0YDKubeg==
-X-Received: by 2002:a05:6870:e408:b0:22e:b2b4:f00b with SMTP id n8-20020a056870e40800b0022eb2b4f00bmr6380665oag.39.1714054212707;
-        Thu, 25 Apr 2024 07:10:12 -0700 (PDT)
-Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id pz8-20020a056871e48800b0023b5203fc58sm294786oac.37.2024.04.25.07.10.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 07:10:12 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH 0/2] iio: adc: ad7944: implement chain mode support
-Date: Thu, 25 Apr 2024 09:09:58 -0500
-Message-ID: <20240425-iio-ad7944-chain-mode-v1-0-9d9220ff21e1@baylibre.com>
-X-Mailer: git-send-email 2.43.2
+        d=1e100.net; s=20230601; t=1714054214; x=1714659014;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ny6k5In1yh/dXdoAix2kKCvHY5SPtsFGuRUZpDcPe/0=;
+        b=V9cwCHiOnDCj3NgFBUXePL5CPS+0CeYTXJT01K2r2qDt3Ex15/QKzFaVW9IlJau8Vg
+         zgxDaWAdj9dYST2MFGaW1EBWw/kS7pBFFoiU9EdtpODZWN8VTHlKpwv23OyPLV6+W32r
+         gx3zm1SAcicel6zuKH51hV+2NWpQVd+EPXZaYcm5Zvu42WrTXUkfUS4YOiJUP1B2QTsB
+         1XHD9GmPAnCb10ztn89MT8vuURo0T0XUZKGSgx71mSdgFRXGCNthMMqDB2xkXCzJkBdo
+         dIsNdThOv8O9wW2F+y1VyOpKDZr+oBddZyerIqLxMg/bsFm1q79/0Nx/f8jgNaB3v7X6
+         rqrg==
+X-Forwarded-Encrypted: i=1; AJvYcCWV3j3Vq0sZqovGz7odEq+MQg9rUmX/OiXeOtJnGHC0a/Jguo5cjyNuAtBjuWHAzO504SJ7gC2wEpIyfTtz0hdOzPEgsuPSewCJegye
+X-Gm-Message-State: AOJu0YxfUVolqd86+jzt6iDkw2+8fkeWLHayjlftBzGoqwGeSkd7zlVa
+	rWGBLJxtp+p1vgQkSpCQ5pvyh3cpYK25f46c37SneBEFZ9NcCKQu2A8iLaHMlvIg2yQM0DSFcsK
+	8Mg==
+X-Google-Smtp-Source: AGHT+IFL9wPrQFDopC/chIeNLVS3VPuSmUroG6L2BUybtR2TPtd/K09nmBBgvgCzzy630jRdsmnmqufyNAM=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a81:bb4f:0:b0:614:428:e4f9 with SMTP id
+ a15-20020a81bb4f000000b006140428e4f9mr1132555ywl.6.1714054214658; Thu, 25 Apr
+ 2024 07:10:14 -0700 (PDT)
+Date: Thu, 25 Apr 2024 07:10:13 -0700
+In-Reply-To: <DS0PR11MB6373B95FF222DD6939CFEFC6DC172@DS0PR11MB6373.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.12.4
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240423221521.2923759-1-seanjc@google.com> <20240423221521.2923759-2-seanjc@google.com>
+ <DS0PR11MB6373B95FF222DD6939CFEFC6DC172@DS0PR11MB6373.namprd11.prod.outlook.com>
+Message-ID: <ZipjhYUIAQMMkXci@google.com>
+Subject: Re: [PATCH 1/4] KVM: x86: Add a struct to consolidate host values,
+ e.g. EFER, XCR0, etc...
+From: Sean Christopherson <seanjc@google.com>
+To: Wei W Wang <wei.w.wang@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
 
-This series adds support and documentation for the chain mode wiring
-configuration to the ad7944 driver. In this configuration, multiple
-chips are daisy-chained together in series via the SPI data lines.
-So it appears on the SPI bus as a single device with multiple channels.
+On Thu, Apr 25, 2024, Wei W Wang wrote:
+> On Wednesday, April 24, 2024 6:15 AM, Sean Christopherson wrote:
+> > @@ -403,7 +403,7 @@ static void vmx_update_fb_clear_dis(struct kvm_vcpu
+> > *vcpu, struct vcpu_vmx *vmx)
+> >  	 * and VM-Exit.
+> >  	 */
+> >  	vmx->disable_fb_clear
+> > = !cpu_feature_enabled(X86_FEATURE_CLEAR_CPU_BUF) &&
+> > -				(host_arch_capabilities &
+> > ARCH_CAP_FB_CLEAR_CTRL) &&
+> > +				(kvm_host.arch_capabilities &
+> > ARCH_CAP_FB_CLEAR_CTRL) &&
+> 
+> The line of code appears to be lengthy. It would be preferable to limit it to under
+> 80 columns per line.
 
----
-David Lechner (2):
-      iio: adc: ad7944: add support for chain mode
-      docs: iio: ad7944: add documentation for chain mode
+I agree that staying under 80 is generally preferred, but I find this
 
- Documentation/iio/ad7944.rst |  30 ++++++-
- drivers/iio/adc/ad7944.c     | 186 ++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 204 insertions(+), 12 deletions(-)
----
-base-commit: b80ad8e3cd2712b78b98804d1f59199680d8ed91
-change-id: 20240424-iio-ad7944-chain-mode-f5c4e6a856f6
+	vmx->disable_fb_clear = (kvm_host.arch_capabilities & ARCH_CAP_FB_CLEAR_CTRL) &&
+				!boot_cpu_has_bug(X86_BUG_MDS) &&
+				!boot_cpu_has_bug(X86_BUG_TAA);
 
-Best regards,
--- 
-David Lechner <dlechner@baylibre.com>
+much more readable than this
 
+	vmx->disable_fb_clear = (kvm_host.arch_capabilities &
+			 	 ARCH_CAP_FB_CLEAR_CTRL) &&
+				!boot_cpu_has_bug(X86_BUG_MDS) &&
+				!boot_cpu_has_bug(X86_BUG_TAA);
+
+We should shorten the name to arch_caps, but I don't think that's a net positive,
+e.g. unless we do a bulk rename, it'd diverge from several other functions/variables,
+and IMO it would be less obvious that the field holds MSR_IA32_ARCH_CAPABILITIES.
+
+> >  				!boot_cpu_has_bug(X86_BUG_MDS) &&
+> >  				!boot_cpu_has_bug(X86_BUG_TAA);
+> > 
+
+> > @@ -325,11 +332,8 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
+> > gpa_t cr2_or_gpa,
+> >  			    int emulation_type, void *insn, int insn_len);
+> > fastpath_t handle_fastpath_set_msr_irqoff(struct kvm_vcpu *vcpu);
+> > 
+> > -extern u64 host_xcr0;
+> > -extern u64 host_xss;
+> > -extern u64 host_arch_capabilities;
+> > -
+> >  extern struct kvm_caps kvm_caps;
+> > +extern struct kvm_host_values kvm_host;
+> 
+> Have you considered merging the kvm_host_values and kvm_caps into one unified
+> structure?
+
+No really.  I don't see any benefit, only the downside of having to come up with
+a name that is intuitive when reading code related to both.
+
+> (If the concern is about naming, we could brainstorm a more encompassing term
+> for them)
