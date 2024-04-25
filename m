@@ -1,182 +1,232 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CD514D6F6
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 16:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F05114E2D4
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 16:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714062150; cv=none; b=kFUkumIYpynsXKQDSGsk8Gfozl3LEEqMXFgL8Xgx4eTau5MqDecwaW6n5sw4L/F+DkSnInUJgeqnhVGuVYNLeo9wivlZPk40FVg7iNwfeQBsYUKorFnXHzcJhFTqYjm20MqMAi0e5NMXPaMSmbduN4tjEI9WW8HzMwzc+hDAlZ8=
+	t=1714062154; cv=none; b=H/3MwkGlqw+uuGdV5FCQXSuGVH1KtRhmSuuc3u/Fh6IydObjCjSHRQ3ot2zokxM/lOunfcEjIkaGfouJyEZZ45TTbYqV1ftejPYiogp53/4eKX5ON0dwldN3hbJs8HRqAJeabFEQlCN7SsamKGiEpBYIJ2JKRO2AQJVd/mSm6JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714062150; c=relaxed/simple;
-	bh=MDAUkdPnGzKG6chVud66+86ptfSgJ9KB44HVfsQFna8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k4vTgvLqRFkkbzX8A1DZ+Otif4i8xeJcRWH6MdVXrzhaIjvpPXEeSQLvt3syBVN1hNg2trd2+FMwAScbqA0wlFsMh13A0WaQ66ju+d+7+aReNtuIgLAbdBVwSDlrA7H6TNbPDJX67js6qadvcFHyOK7+lFKhAD8dhLvJHFukNf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bTW2y76Y; arc=none smtp.client-ip=209.85.166.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1714062154; c=relaxed/simple;
+	bh=ZL8HHYvCq0ak38rqDJmiytamD3EVrDPvUPTuEJqpEhQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tf8EqIFGM0cr9Oc7KDiQx5WxP7gNetZAKMFXw1Hn4jhq1NsYCM5h7I4aJJ/PbsUygibGgKrBW1IO+AYdXqSEmTh0/wvAdqrVC31XrFHCoSOde9ALf86lNZteMsY9p8HWJSPTDaws//1tqxjwDbFnECcvhRBvO6O3CZpx+Zp30JI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LEbxTe29; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bTW2y76Y"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7d6b362115eso8732439f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 09:22:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LEbxTe29"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-de54b28c3b7so1305517276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 09:22:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1714062148; x=1714666948; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tZwpXS/k0DYed9wD5OBUEJ5ypdpSnZbheBH2rdFMtPA=;
-        b=bTW2y76YgHaHc6KB1MhvC43eovk1JFB7R42GEEGwApT83OWEkcKfjVabJ7hyn1Ynp4
-         qJ7pNAz8/i958EUH0F77Z/ph+LeZvTa6ubMMyFG1THOi28/zeaGWwtAPDfz1DiGvDTg8
-         23QFIGZ8H8MnIu9Q6nTps/dMHb/bierZgVkYE=
+        d=linaro.org; s=google; t=1714062151; x=1714666951; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QuQKIElXV0SROcK8jcZmdA0uu9zMqYotio4ffi8Z6+c=;
+        b=LEbxTe29jVmoBHkq4AdkUuHbo+RvXlq5q2OWVuSs+KIe7np2AeDPx0DGBg8ON0Ic33
+         xGuDnjbcNmQyIzwm5S6r3jMoYgyihfcAPjd5N2UIy1RoCf1F61IArzDYdeIX5LI4VGaY
+         WP/zCdsVLuP1Fb3PCfG3LGIhUOl6YXHL7Tbiha5PZHWzA/8mhLlqcIwHmb4eiN5tT7rJ
+         AGvdpg9MhNpNbT2gHt3tXaT1bFqyR0o6YONBUwWdZZr8iGhx3vlWAQlC8owuq7kLHGFL
+         YNA1IQK9Qdvn37+Kt2qjvK8PAHy+tqzmqkOYVh7n1giGgmGqRZe979ygoavnmJoZ249W
+         Jqug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714062148; x=1714666948;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tZwpXS/k0DYed9wD5OBUEJ5ypdpSnZbheBH2rdFMtPA=;
-        b=VUxdnVgUQxwLCPGGc03oEw479hvY8D4uH5aXoi9TSwODR7Z7PCt/M71aBxaE7O5G2d
-         wI61Bt2iKzDHKwW+wJJRvBdaL6WLtz1GiaK9Bwvn+vvYA655Y5mXVzRiUwVPIvOjSd/E
-         a8vfEw2g+DwjaUYvDInEi9WHto1ZUU28CIkoVlLCHphX/DPegeuINk8byo1C4byzFhBb
-         X+BXPYvrz+7HS91F3HAp5V2oI+n8JEuiO4p3PgrafTtDKkPYKPlBC5k93ruvSDaxQiOw
-         wVgnbjGTK0oZWaqNRoZhPbZQByKKrKqwyNIpF5xV6eglRYl/JYc4o8l5RAZvveJSWvUS
-         QD9w==
-X-Forwarded-Encrypted: i=1; AJvYcCVKI/A09PhAUlH1IBZ1GAevkrJrHCea8HlS1N1Oc62u2Clv4h8TmsnAVcDLKkXMV5jyWTQbSoxbvYvJTdbUkcNi6JZ6XFanBOgJUNSU
-X-Gm-Message-State: AOJu0Ywz18oL3eKrjwrf71P1Peymg6/TA3jjgrJeOujQO3BgITZljaX0
-	VMWfbXBFnLIP9iItFKPWm6dTjEvhUDwMBLNvnQfIXJTTmLn63gZWvdLK2WgoZRE=
-X-Google-Smtp-Source: AGHT+IFwsbdYoXOctiJAidygEpyjdbBI6reVPMMOFHtDCREzxeaCqAED6LqVik99m0cV8ef76M2rcQ==
-X-Received: by 2002:a6b:ea07:0:b0:7da:cdf3:7bec with SMTP id m7-20020a6bea07000000b007dacdf37becmr160971ioc.1.1714062147803;
-        Thu, 25 Apr 2024 09:22:27 -0700 (PDT)
-Received: from [192.168.43.82] ([223.185.79.208])
-        by smtp.gmail.com with ESMTPSA id m2-20020a638c02000000b005e857e39b10sm13196097pgd.56.2024.04.25.09.22.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Apr 2024 09:22:27 -0700 (PDT)
-Message-ID: <763ee03a-817d-4833-b42f-e5b4bd25dc7f@linuxfoundation.org>
-Date: Thu, 25 Apr 2024 10:22:11 -0600
+        d=1e100.net; s=20230601; t=1714062151; x=1714666951;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QuQKIElXV0SROcK8jcZmdA0uu9zMqYotio4ffi8Z6+c=;
+        b=j28ASFLC0OhQeddMV+5wQ53ApgoQRTgtYGDlpr0qRMInrFDlOMnPXuZfIe6iT+Ms+X
+         8tHSdzMqTTS7rMbZEQ6duGGHfY7Dy3i31PQyTNvrjRGTrOwGnoxYbM7Twn3L2dJ7PegR
+         IV2qi3w4IyaDQm1knpH8JiYJcu+nQjS8/LSfTAphTMHum+1LrnnUFYd50ezyvZs3dj/I
+         DK6cx7BeHgpH4RzlfVXw+jq0aiTclD5uOErIxmIsZspL3R+nVTQPJ5t/a5y+3HxGC88g
+         TKmCvpbFJOkOnhsHgvJbS0XD1W1nc+QSFyF+V8xnoR28+iL5JC49EfnD8krfNmhqhBNC
+         o/Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCWkS0YKyDlEkR2t3vq/bI0a+S33ZILba+My57pUBfuUWZyLHPv8gD/PY9AeCsoQt+Gww35OHLeN20iz012nQwq5JXVZSBfr/8SsYItr
+X-Gm-Message-State: AOJu0YxYtzR6wn9bUA/NdKZ3FBbyw+vFX91mJkQuOip9raWixbkpJDCP
+	HMFJsOll//Ju5Bvqa6NHBUA6TxdMSX3TxamFKaurJuUULfHSpPt3IfH+70GdnlmJtlFlgAAfixr
+	qwMeBDCFpVVqYhSEnT54F/mp9/tPNkBsNxXK2Ng==
+X-Google-Smtp-Source: AGHT+IF5TaRHu5ItnLprFQocrPIpCid1nu3FlhjNGqHAmBNXTDnP5h3zw+WrUOGh1XiiPqUPXLenvuW0xtyAakEgjck=
+X-Received: by 2002:a25:26cd:0:b0:de4:5d4a:aa93 with SMTP id
+ m196-20020a2526cd000000b00de45d4aaa93mr110721ybm.23.1714062151678; Thu, 25
+ Apr 2024 09:22:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 25/35] KVM: selftests: Convert lib's mem regions to
- KVM_SET_USER_MEMORY_REGION2
-To: Sean Christopherson <seanjc@google.com>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, Shuah Khan <shuah@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Huacai Chen <chenhuacai@kernel.org>,
- Michael Ellerman <mpe@ellerman.id.au>, Anup Patel <anup@brainfault.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>, kvm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>,
- Xu Yilun <yilun.xu@intel.com>, Chao Peng <chao.p.peng@linux.intel.com>,
- Fuad Tabba <tabba@google.com>, Jarkko Sakkinen <jarkko@kernel.org>,
- Anish Moorthy <amoorthy@google.com>, David Matlack <dmatlack@google.com>,
- Yu Zhang <yu.c.zhang@linux.intel.com>,
- Isaku Yamahata <isaku.yamahata@intel.com>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8?=
- =?UTF-8?Q?n?= <mic@digikod.net>, Vlastimil Babka <vbabka@suse.cz>,
- Vishal Annapurve <vannapurve@google.com>,
- Ackerley Tng <ackerleytng@google.com>,
- Maciej Szmigiero <mail@maciej.szmigiero.name>,
- David Hildenbrand <david@redhat.com>, Quentin Perret <qperret@google.com>,
- Michael Roth <michael.roth@amd.com>, Wang <wei.w.wang@intel.com>,
- Liam Merwick <liam.merwick@oracle.com>,
- Isaku Yamahata <isaku.yamahata@gmail.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Naresh Kamboju <naresh.kamboju@linaro.org>,
- Anders Roxell <anders.roxell@linaro.org>,
- Benjamin Copeland <ben.copeland@linaro.org>,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20231027182217.3615211-1-seanjc@google.com>
- <20231027182217.3615211-26-seanjc@google.com>
- <69ae0694-8ca3-402c-b864-99b500b24f5d@moroto.mountain>
- <3848a9ad-07aa-48da-a2b7-264c4a990b5b@linuxfoundation.org>
- <ZipyPYR8Nv_usoU4@google.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <ZipyPYR8Nv_usoU4@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240420021429.454-1-jszhang@kernel.org>
+In-Reply-To: <20240420021429.454-1-jszhang@kernel.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 25 Apr 2024 18:21:56 +0200
+Message-ID: <CAPDyKFrmhCN5bW31JuBA7QPXuCnSbCnkXyCFwAss3SfFUWEeWQ@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: sdhci-of-dwcmshc: Add tuning support for Sophgo
+ CV1800B and SG200X
+To: Jisheng Zhang <jszhang@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/25/24 09:09, Sean Christopherson wrote:
-> On Thu, Apr 25, 2024, Shuah Khan wrote:
->> On 4/25/24 08:12, Dan Carpenter wrote:
->>> On Fri, Oct 27, 2023 at 11:22:07AM -0700, Sean Christopherson wrote:
->>>> Use KVM_SET_USER_MEMORY_REGION2 throughout KVM's selftests library so that
->>>> support for guest private memory can be added without needing an entirely
->>>> separate set of helpers.
->>>>
->>>> Note, this obviously makes selftests backwards-incompatible with older KVM
->>>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->>>> versions from this point forward.
->>>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->>>
->>> Is there a way we could disable the tests on older kernels instead of
->>> making them fail?  Check uname or something?  There is probably a
->>> standard way to do this...  It's these tests which fail.
->>
->> They shouldn't fail - the tests should be skipped on older kernels.
-> 
-> Ah, that makes sense.  Except for a few outliers that aren't all that interesting,
-> all KVM selftests create memslots, so I'm tempted to just make it a hard requirement
-> to spare us headache, e.g.
-> 
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index b2262b5fad9e..4b2038b1f11f 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -2306,6 +2306,9 @@ void __attribute((constructor)) kvm_selftest_init(void)
->          /* Tell stdout not to buffer its content. */
->          setbuf(stdout, NULL);
->   
-> +       __TEST_REQUIRE(kvm_has_cap(KVM_CAP_USER_MEMORY2),
-> +                      "KVM selftests from v6.8+ require KVM_SET_USER_MEMORY_REGION2");
+On Sat, 20 Apr 2024 at 04:28, Jisheng Zhang <jszhang@kernel.org> wrote:
+>
+> Implement the .platform_execute_tuning for Sophgo CV1800B and SG200X.
+> Some code is borrowed from sdhci-esdhc-imx.c. The tuning result is
+> similar as the one of SoC vendor's SDK.
+>
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
+Applied for next, thanks!
+
+Kind regards
+Uffe
+
+
+> ---
+>
+> Since v1:
+>  - use usleep_range() instead of mdelay() as suggested by Adrian
+>
+>  drivers/mmc/host/sdhci-of-dwcmshc.c | 112 ++++++++++++++++++++++++++++
+>  1 file changed, 112 insertions(+)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> index ab4b964d4058..7b55acd9830c 100644
+> --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
+> +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> @@ -66,6 +66,10 @@
+>  #define CV18XX_SDHCI_PHY_CONFIG                        0x4c
+>  #define  CV18XX_PHY_TX_BPS                     BIT(0)
+>
+> +#define CV18XX_TUNE_MAX                                128
+> +#define CV18XX_TUNE_STEP                       1
+> +#define CV18XX_RETRY_TUNING_MAX                        50
 > +
->          kvm_selftest_arch_init();
->   }
-> 
+>  /* Rockchip specific Registers */
+>  #define DWCMSHC_EMMC_DLL_CTRL          0x800
+>  #define DWCMSHC_EMMC_DLL_RXCLK         0x804
+> @@ -685,6 +689,113 @@ static void cv18xx_sdhci_reset(struct sdhci_host *host, u8 mask)
+>         sdhci_writel(host, val, priv->vendor_specific_area1 + CV18XX_SDHCI_PHY_TX_RX_DLY);
+>  }
+>
+> +static void cv18xx_sdhci_set_tap(struct sdhci_host *host, int tap)
+> +{
+> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +       struct dwcmshc_priv *priv = sdhci_pltfm_priv(pltfm_host);
+> +       u16 clk;
+> +       u32 val;
+> +
+> +       clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+> +       clk &= ~SDHCI_CLOCK_CARD_EN;
+> +       sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+> +
+> +       val = sdhci_readl(host, priv->vendor_specific_area1 + CV18XX_SDHCI_MSHC_CTRL);
+> +       val &= ~CV18XX_LATANCY_1T;
+> +       sdhci_writel(host, val, priv->vendor_specific_area1 + CV18XX_SDHCI_MSHC_CTRL);
+> +
+> +       val =  (FIELD_PREP(CV18XX_PHY_TX_DLY_MSK, 0) |
+> +               FIELD_PREP(CV18XX_PHY_TX_SRC_MSK, CV18XX_PHY_TX_SRC_INVERT_CLK_TX) |
+> +               FIELD_PREP(CV18XX_PHY_RX_DLY_MSK, tap));
+> +       sdhci_writel(host, val, priv->vendor_specific_area1 + CV18XX_SDHCI_PHY_TX_RX_DLY);
+> +
+> +       sdhci_writel(host, 0, priv->vendor_specific_area1 + CV18XX_SDHCI_PHY_CONFIG);
+> +
+> +       clk |= SDHCI_CLOCK_CARD_EN;
+> +       sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+> +       usleep_range(1000, 2000);
+> +}
+> +
+> +static int cv18xx_retry_tuning(struct mmc_host *mmc, u32 opcode, int *cmd_error)
+> +{
+> +       int ret, retry = 0;
+> +
+> +       while (retry < CV18XX_RETRY_TUNING_MAX) {
+> +               ret = mmc_send_tuning(mmc, opcode, NULL);
+> +               if (ret)
+> +                       return ret;
+> +               retry++;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void cv18xx_sdhci_post_tuning(struct sdhci_host *host)
+> +{
+> +       u32 val;
+> +
+> +       val = sdhci_readl(host, SDHCI_INT_STATUS);
+> +       val |= SDHCI_INT_DATA_AVAIL;
+> +       sdhci_writel(host, val, SDHCI_INT_STATUS);
+> +
+> +       sdhci_reset(host, SDHCI_RESET_CMD | SDHCI_RESET_DATA);
+> +}
+> +
+> +static int cv18xx_sdhci_execute_tuning(struct sdhci_host *host, u32 opcode)
+> +{
+> +       int min, max, avg, ret;
+> +       int win_length, target_min, target_max, target_win_length;
+> +
+> +       min = max = 0;
+> +       target_win_length = 0;
+> +
+> +       sdhci_reset_tuning(host);
+> +
+> +       while (max < CV18XX_TUNE_MAX) {
+> +               /* find the mininum delay first which can pass tuning */
+> +               while (min < CV18XX_TUNE_MAX) {
+> +                       cv18xx_sdhci_set_tap(host, min);
+> +                       if (!cv18xx_retry_tuning(host->mmc, opcode, NULL))
+> +                               break;
+> +                       min += CV18XX_TUNE_STEP;
+> +               }
+> +
+> +               /* find the maxinum delay which can not pass tuning */
+> +               max = min + CV18XX_TUNE_STEP;
+> +               while (max < CV18XX_TUNE_MAX) {
+> +                       cv18xx_sdhci_set_tap(host, max);
+> +                       if (cv18xx_retry_tuning(host->mmc, opcode, NULL)) {
+> +                               max -= CV18XX_TUNE_STEP;
+> +                               break;
+> +                       }
+> +                       max += CV18XX_TUNE_STEP;
+> +               }
+> +
+> +               win_length = max - min + 1;
+> +               /* get the largest pass window */
+> +               if (win_length > target_win_length) {
+> +                       target_win_length = win_length;
+> +                       target_min = min;
+> +                       target_max = max;
+> +               }
+> +
+> +               /* continue to find the next pass window */
+> +               min = max + CV18XX_TUNE_STEP;
+> +       }
+> +
+> +       cv18xx_sdhci_post_tuning(host);
+> +
+> +       /* use average delay to get the best timing */
+> +       avg = (target_min + target_max) / 2;
+> +       cv18xx_sdhci_set_tap(host, avg);
+> +       ret = mmc_send_tuning(host->mmc, opcode, NULL);
+> +
+> +       dev_dbg(mmc_dev(host->mmc), "tuning %s at 0x%x ret %d\n",
+> +               ret ? "failed" : "passed", avg, ret);
+> +
+> +       return ret;
+> +}
+> +
+>  static const struct sdhci_ops sdhci_dwcmshc_ops = {
+>         .set_clock              = sdhci_set_clock,
+>         .set_bus_width          = sdhci_set_bus_width,
+> @@ -721,6 +832,7 @@ static const struct sdhci_ops sdhci_dwcmshc_cv18xx_ops = {
+>         .get_max_clock          = dwcmshc_get_max_clock,
+>         .reset                  = cv18xx_sdhci_reset,
+>         .adma_write_desc        = dwcmshc_adma_write_desc,
+> +       .platform_execute_tuning = cv18xx_sdhci_execute_tuning,
+>  };
+>
+>  static const struct sdhci_pltfm_data sdhci_dwcmshc_pdata = {
 > --
-> 
-> but it's also easy enough to be more precise and skip only those that actually
-> create memslots.
-
-This is approach is what is recommended in kselfest document. Rubn as many tests
-as possible and skip the ones that can't be run due to unmet dependencies.
-
-> 
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index b2262b5fad9e..b21152adf448 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -944,6 +944,9 @@ int __vm_set_user_memory_region2(struct kvm_vm *vm, uint32_t slot, uint32_t flag
->                  .guest_memfd_offset = guest_memfd_offset,
->          };
->   
-> +       __TEST_REQUIRE(kvm_has_cap(KVM_CAP_USER_MEMORY2),
-> +                      "KVM selftests from v6.8+ require KVM_SET_USER_MEMORY_REGION2");
-> +
->          return ioctl(vm->fd, KVM_SET_USER_MEMORY_REGION2, &region);
->   }
->   
-> @@ -970,6 +973,9 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
->          size_t mem_size = npages * vm->page_size;
->          size_t alignment;
->   
-> +       __TEST_REQUIRE(kvm_has_cap(KVM_CAP_USER_MEMORY2),
-> +                      "KVM selftests from v6.8+ require KVM_SET_USER_MEMORY_REGION2");
-> +
->          TEST_ASSERT(vm_adjust_num_guest_pages(vm->mode, npages) == npages,
->                  "Number of guest pages is not compatible with the host. "
->                  "Try npages=%d", vm_adjust_num_guest_pages(vm->mode, npages));
-> --
-
-thanks,
--- Shuah
+> 2.43.0
+>
