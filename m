@@ -1,25 +1,37 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 951F528F7;
-	Thu, 25 Apr 2024 09:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C14184D0D;
+	Thu, 25 Apr 2024 09:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714037558; cv=none; b=Hu439UqBATg02B8PDPyW6G9oxuqMn4ZG8hDWedtaT8bGzrLT81fklduBYwNcOpSF9MjkCI55YHwkTZeJLK0eSXi09cFXiq/XcokpOZD2RIIEXrdLHlzr/UXuNrHYr46D5IGbWtg3lfykhCS/ECC1ilGNHzptYBzCB8tAtWpBRcY=
+	t=1714037601; cv=none; b=S+CIHUcEwpsBdA+FSlCGiYkr2iXhtN7ao5si3gizoEE/p9Urx1j1QGY9Zqmgu+7p7Qx6GBM18v0ihTn0vg1SeF2eddzE0D35P4SeymCTd0LuDBQtCp/Q28ozWrXE6brTtLnNkJ9YrymKTmFv91FnXT4HnMXhWY7m5yhgztr3Uys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714037558; c=relaxed/simple;
-	bh=vAAPcR08Lfk7tNRCkcxaWVf2F2/2MEJYOvGihhU5akI=;
+	s=arc-20240116; t=1714037601; c=relaxed/simple;
+	bh=bYBBBONI6emX61ioif4BoxQH1QXZYaWJIll/t+Fju9k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q91twtLFLShnWtTkVkpeu1fv9ZJ2rzagpPOHLDmYItSicRtyJlynM9LV6xUS2Z+V8zwJM0Vh8V6uFMdHBPd2Ur6oBnomFWedo+VadzUuc6L4SnB0PW86EIBk6nuHq6IlaL9UGIoR9Cz4oPYPMomEZf2rGN3JnOnxMes7aH21Xkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A12E1007;
-	Thu, 25 Apr 2024 02:32:58 -0700 (PDT)
-Received: from [192.168.1.216] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3232C3F64C;
-	Thu, 25 Apr 2024 02:32:27 -0700 (PDT)
-Message-ID: <1d360b13-ea7a-4d13-bb16-ab3d0688ddd2@arm.com>
-Date: Thu, 25 Apr 2024 10:32:25 +0100
+	 In-Reply-To:Content-Type; b=kVAj7jYcix4KLdYVUSKqvzBFjZ7Xwv463qOVQLoHV68VV7EgbD2LNpbjqYwkQ5Yq+vBAs4sMD+qY5zQODfT903IWKn7HnXNB6MnkFLCz9OyJBvYEWn5qK9xUU4xrR5jNYST6SL/p/rItuocZeiv3Kmgq91/uEYB8nngbHEaYc3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=U5Ld14Nr; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="U5Ld14Nr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=mTFvKavRYvl65ZTJWrbvt4xMi66fJbqKJd1ndJa0LB4=;
+	t=1714037599; x=1714469599; b=U5Ld14NrRC69jQ02N/CKP8u2KZ9HQ2pox/W8q66iMBpAMLh
+	+ADoYtyVOcY2TfabpHoikHkjGlQUIvdCbsrppr2n2sCv7BdgMkvUBLTLLg7ZseZx6R7IlZ3JFibgG
+	36+R2TxZ5PSoM+ua1hSlmajMYZ3j3YpphPu3e3TapvlaM2zt1r9jCBP+SoAwJv/GegS25Mx1lqDlO
+	/7mnmtntUNiFiiecuHfD3kZTJlk+ipJXMdFqPO+29i/UpX/aN3RU+XW1T2iEnUPh7xqzEOJuR/h5W
+	oEC2Cjrwb3mZLejnums7umo0+ZTl2ZeCNS2t4++fq0YthYIX7d8FrUcFui+N99bQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rzvTZ-0000vn-6B; Thu, 25 Apr 2024 11:33:09 +0200
+Message-ID: <9fb128b1-d625-477f-8a16-aade00b13bc6@leemhuis.info>
+Date: Thu, 25 Apr 2024 11:33:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,248 +39,125 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [EXTERNAL] Re: [PATCH v7 5/7] coresight: tmc: Add support for
- reading crash data
-To: Linu Cherian <lcherian@marvell.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "coresight@lists.linaro.org" <coresight@lists.linaro.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "robh+dt@kernel.org" <robh+dt@kernel.org>,
- "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- Sunil Kovvuri Goutham <sgoutham@marvell.com>,
- George Cherian <gcherian@marvell.com>,
- Anil Kumar Reddy H <areddy3@marvell.com>, Tanmay Jagdale
- <tanmay@marvell.com>, "mike.leach@linaro.org" <mike.leach@linaro.org>,
- "leo.yan@linaro.org" <leo.yan@linaro.org>
-References: <20240307033625.325058-1-lcherian@marvell.com>
- <20240307033625.325058-6-lcherian@marvell.com>
- <d707430f-00ee-4427-a9e4-6e42bc5b6aa9@arm.com>
- <PH0PR18MB5002D42E980EDF6317051B77CE092@PH0PR18MB5002.namprd18.prod.outlook.com>
- <a7b8d15f-5bcf-4774-a5b2-eb95d6174c43@arm.com>
- <PH0PR18MB5002CFB5DD77312CE0337896CE132@PH0PR18MB5002.namprd18.prod.outlook.com>
- <02191345-7048-4839-aecf-0e34479d49ef@arm.com>
- <PH0PR18MB5002E428481F88D92EA9FA22CE172@PH0PR18MB5002.namprd18.prod.outlook.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <PH0PR18MB5002E428481F88D92EA9FA22CE172@PH0PR18MB5002.namprd18.prod.outlook.com>
+Subject: Re: regression fixes sitting in subsystem git trees for a week or
+ longer
+To: Benjamin Tissoires <bentiss@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Jiri Kosina <jikos@kernel.org>, Douglas Anderson <dianders@chromium.org>,
+ Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Kenny Levinsen <kl@kl.wtf>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20240331182440.14477-1-kl@kl.wtf>
+ <14d1b38e-0f11-4852-9c52-92b4bedb0a77@leemhuis.info>
+ <CAO-hwJJtK2XRHK=HGaNUFb3mQhY5XbNGeCQwuAB0nmG2bjHX-Q@mail.gmail.com>
+ <a810561a-14f3-412e-9903-acaba7a36160@leemhuis.info>
+ <CAHk-=wjy_ph9URuFt-pq+2AJ__p7gFDx=yzVSCsx16xAYvNw9g@mail.gmail.com>
+ <87698732-5439-42bd-b2b2-864bb4f3b3ec@leemhuis.info>
+ <qcd5klmhyx23rowpbm4egshm6hemhh4stq7r6soblnuul55524@yyktdlowepw7>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <qcd5klmhyx23rowpbm4egshm6hemhh4stq7r6soblnuul55524@yyktdlowepw7>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1714037599;69439cdb;
+X-HE-SMSGID: 1rzvTZ-0000vn-6B
 
+On 25.04.24 10:44, Benjamin Tissoires wrote:
+> On Apr 25 2024, Thorsten Leemhuis wrote:
+>> On 24.04.24 20:53, Linus Torvalds wrote:
+>>> On Wed, 24 Apr 2024 at 09:56, Thorsten Leemhuis
+>>> <regressions@leemhuis.info> wrote:
+>> [...]
+>> And the arch linux wiki even documents a workaround:
+>> https://wiki.archlinux.org/title/Lenovo_ThinkPad_Z16_Gen_2#Initialization_failure
+>>
+>> Those are just the reports and discussions I found. And you know how
+>> it is: many people that struggle will never report a problem.
+> 
+> short FYI, (I've Cc-ed you on the PR), but I just sent the PR for HID,
+> which includes this fix.
 
+Great, many thx. Saw it right after sending my mail... :-/
 
-On 25/04/2024 03:07, Linu Cherian wrote:
-> Hi James,
+>> Is cherry picking from -next as easy for you? Maintainers sometimes
+>> improve small details when merging a fix, so it might be better to
+>> take fixes from there instead of pulling them from lore.
 > 
->> -----Original Message-----
->> From: James Clark <james.clark@arm.com>
->> Sent: Monday, April 22, 2024 1:48 PM
->> To: Linu Cherian <lcherian@marvell.com>; Suzuki K Poulose
->> <suzuki.poulose@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org; coresight@lists.linaro.org; linux-
->> kernel@vger.kernel.org; robh+dt@kernel.org;
->> krzysztof.kozlowski+dt@linaro.org; conor+dt@kernel.org;
->> devicetree@vger.kernel.org; Sunil Kovvuri Goutham
->> <sgoutham@marvell.com>; George Cherian <gcherian@marvell.com>; Anil
->> Kumar Reddy H <areddy3@marvell.com>; Tanmay Jagdale
->> <tanmay@marvell.com>; mike.leach@linaro.org; leo.yan@linaro.org
->> Subject: [EXTERNAL] Re: [PATCH v7 5/7] coresight: tmc: Add support for
->> reading crash data
->>
->> Prioritize security for external emails: Confirm sender and content safety
->> before clicking links or opening attachments
->>
->> ----------------------------------------------------------------------
->>
->>
->> On 21/04/2024 03:49, Linu Cherian wrote:
->>> Hi James,
->>>
->>>> -----Original Message-----
->>>> From: James Clark <james.clark@arm.com>
->>>> Sent: Monday, April 15, 2024 2:59 PM
->>>> To: Linu Cherian <lcherian@marvell.com>; Suzuki K Poulose
->>>> <suzuki.poulose@arm.com>
->>>> Cc: linux-arm-kernel@lists.infradead.org; coresight@lists.linaro.org;
->>>> linux- kernel@vger.kernel.org; robh+dt@kernel.org;
->>>> krzysztof.kozlowski+dt@linaro.org; conor+dt@kernel.org;
->>>> devicetree@vger.kernel.org; Sunil Kovvuri Goutham
->>>> <sgoutham@marvell.com>; George Cherian <gcherian@marvell.com>;
->> Anil
->>>> Kumar Reddy H <areddy3@marvell.com>; Tanmay Jagdale
->>>> <tanmay@marvell.com>; mike.leach@linaro.org; leo.yan@linaro.org
->>>> Subject: Re: [EXTERNAL] Re: [PATCH v7 5/7] coresight: tmc: Add
->>>> support for reading crash data
->>>>
->>>>
->>>>
->>>> On 15/04/2024 05:01, Linu Cherian wrote:
->>>>> Hi James,
->>>>>
->>>>>> -----Original Message-----
->>>>>> From: James Clark <james.clark@arm.com>
->>>>>> Sent: Friday, April 12, 2024 3:36 PM
->>>>>> To: Linu Cherian <lcherian@marvell.com>; Suzuki K Poulose
->>>>>> <suzuki.poulose@arm.com>
->>>>>> Cc: linux-arm-kernel@lists.infradead.org;
->>>>>> coresight@lists.linaro.org;
->>>>>> linux- kernel@vger.kernel.org; robh+dt@kernel.org;
->>>>>> krzysztof.kozlowski+dt@linaro.org; conor+dt@kernel.org;
->>>>>> devicetree@vger.kernel.org; Sunil Kovvuri Goutham
->>>>>> <sgoutham@marvell.com>; George Cherian <gcherian@marvell.com>;
->>>> Anil
->>>>>> Kumar Reddy H <areddy3@marvell.com>; Tanmay Jagdale
->>>>>> <tanmay@marvell.com>; mike.leach@linaro.org; leo.yan@linaro.org
->>>>>> Subject: [EXTERNAL] Re: [PATCH v7 5/7] coresight: tmc: Add support
->>>>>> for reading crash data
->>>>>>
->>>>>> Prioritize security for external emails: Confirm sender and content
->>>>>> safety before clicking links or opening attachments
->>>>>>
->>>>>> -------------------------------------------------------------------
->>>>>> --
->>>>>> -
->>>>>>
->>>>>>
->>>>>> On 07/03/2024 03:36, Linu Cherian wrote:
->>>>>>> * Introduce a new mode CS_MODE_READ_CRASHDATA for reading
->> trace
->>>>>>>   captured in previous crash/watchdog reset.
->>>>>>>
->>>>>>> * Add special device files for reading ETR/ETF crash data.
->>>>>>>
->>>>>>> * User can read the crash data as below
->>>>>>>
->>>>>>>   For example, for reading crash data from tmc_etf sink
->>>>>>>
->>>>>>>   #dd if=/dev/crash_tmc_etfXX of=~/cstrace.bin
->>>>>>>
->>>>>>> Signed-off-by: Anil Kumar Reddy <areddy3@marvell.com>
->>>>>>> Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
->>>>>>> Signed-off-by: Linu Cherian <lcherian@marvell.com>
->>>>>>> ---
->>>>>>> Changelog from v6:
->>>>>>> * Removed read_prevboot flag in sysfs
->>>>>>> * Added special device files for reading crashdata
->>>>>>> * Renamed CS mode READ_PREVBOOT to READ_CRASHDATA
->>>>>>> * Setting the READ_CRASHDATA mode is done as part of file open.
->>>>>>>
->>>>>>
->>>>>> [...]
->>>>>>
->>>>>>> @@ -619,6 +740,19 @@ static int tmc_probe(struct amba_device
->>>>>>> *adev,
->>>>>> const struct amba_id *id)
->>>>>>>  		coresight_unregister(drvdata->csdev);
->>>>>>>  	else
->>>>>>>  		pm_runtime_put(&adev->dev);
->>>>>>> +
->>>>>>> +	if (!is_tmc_reserved_region_valid(dev))
->>>>>>> +		goto out;
->>>>>>> +
->>>>>>> +	drvdata->crashdev.name =
->>>>>>> +		devm_kasprintf(dev, GFP_KERNEL, "%s_%s",
->> "crash",
->>>>>> desc.name);
->>>>>>> +	drvdata->crashdev.minor = MISC_DYNAMIC_MINOR;
->>>>>>> +	drvdata->crashdev.fops = &tmc_crashdata_fops;
->>>>>>> +	ret = misc_register(&drvdata->crashdev);
->>>>>>> +	if (ret)
->>>>>>> +		pr_err("%s: Failed to setup dev interface for
->> crashdata\n",
->>>>>>> +		       desc.name);
->>>>>>> +
->>>>>>
->>>>>> Is this all optional after the is_tmc_reserved_region_valid()?
->>>>>> Skipping to out seems to be more like an error condition, but in
->>>>>> this case it's not? Having it like this makes it more difficult to
->>>>>> add extra steps to the probe function. You could move it to a
->>>>>> function and flip
->>>> the condition which would be clearer:
->>>>>>
->>>>>
->>>>> Ack.
->>>>>
->>>>>>    if (is_tmc_reserved_region_valid(dev))
->>>>>>       register_crash_dev_interface(drvdata);
->>>>>>
->>>
->>> Did you meant changing the condition of "is_tmc_reserved_region_valid"
->> by "flip the condition".
->>> If yes, that’s not required IMHO, since the reserved region is still valid.
->>>
->>
->> By flip I mean remove the !. You had this:
->>
->>   	if (!is_tmc_reserved_region_valid(dev))
->> 		goto out;
->>
->> But instead you should put your registration code in a function, remove the !
->> and replace the goto with a function:
->>
->>     if (is_tmc_reserved_region_valid(dev))
->>         ret = register_crash_dev_interface(drvdata);
->>
->> Where register_crash_dev_interface() is everything you added in between
->> the goto and the out: label. The reason is that you've made it impossible to
->> extend the probe function with new behavior without having to understand
->> that this new bit must always come last. Otherwise new behavior would also
->> be skipped over if the reserved region doesn't exist.
->>
-> 
-> Thanks. That’s clear to me.
-> 
->>> IIUC, the idea here is to not to fail the tmc_probe due to an error
->>> condition in register_crash_dev_interface,  so that the normal condition is
->> not affected. Also the error condition can be notified to the user using a
->> pr_dbg / pr_err.
->>>
->>> Thanks.
->>>
->>
->> I'm not sure I follow exactly what you mean here, but for the one error
->> condition you are checking for on the call to misc_register() you can still
->> return that from the new function and check it in the probe.
-> 
-> Actually was trying to clarify that we may not want to fail the probe due to a failure in the register_crash_dev_interface, since the normal trace operations could continue without crash_dev interface.(Tracing with or without the reserved region doesn’t get affected as well).
->  Please see the changes below. That way the changes are simpler. 
-> 
-> 
-> @@ -507,6 +628,18 @@ static u32 tmc_etr_get_max_burst_size(struct device *dev)
->         return burst_size;
->  }
-> 
-> +static void register_crash_dev_interface(struct tmc_drvdata * drvdata,
-> +                                        const char *name)
-> +{
-> +       drvdata->crashdev.name =
-> +               devm_kasprintf(&drvdata->csdev->dev, GFP_KERNEL, "%s_%s", "crash", name);
-> +       drvdata->crashdev.minor = MISC_DYNAMIC_MINOR;
-> +       drvdata->crashdev.fops = &tmc_crashdata_fops;
-> +       if (misc_register(&drvdata->crashdev))
-> +               dev_dbg(&drvdata->csdev->dev,
-> +                       "Failed to setup user interface for crashdata\n");
-> +}
-> +
->  static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
->  {
->         int ret = 0;
-> @@ -619,6 +752,10 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
->                 coresight_unregister(drvdata->csdev);
->         else
->                 pm_runtime_put(&adev->dev);
-> +
-> +       if (is_tmc_reserved_region_valid(dev))
-> +               register_crash_dev_interface(drvdata, desc.name);
-> +
->  out:
->         return ret;
->  }
-> 
-> Thanks.
-> Linu Cherian.
+> Maybe one suggestion that might help to reduce these kind of situations
+> in the future: can you configure your bot to notify the maintainers
+> after a couple of days that the patch has been merged that it would be
+> nice if they could send the PR to Linus?
 
-Looks good to me!
+Yes, that is an idea in the long run, but I'm not sure if it's wise now
+or later. People easily get annoyed by these mails (which I totally
+understand!) and then will start hating the bot or regression tracking
+in general. That's why I'm really careful here.
+
+There are also the subsystems that regularly flush their fixes shortly
+before a new -rc, so they likely never want to see such reminders. And
+sending them right after a new -rc is better than nothing, but not ideal
+either.
+
+IOW: it's complicated. :-/
+
+> In this case I bet Jiri forgot to send it because he was overloaded and
+> so was I.
+
+Understood and no worries. But this became a good opportunity to raise
+the general problem, as that is something that bugs me. Sorry. Hope you
+don't mind to much that I used that chance.
+
+> So a friendly reminder could make things go faster.
+
+I'll already did this occasionally manually, but that of course does not
+scale. Sometimes I wonder if it would be more efficient for nearly all
+of us if subsystems just flushed their -fixes branch shortly before each
+new -rc, as Linus apparently is not bothered by PRs that contain just a
+change or two. But that of course creates work for each of the subsystem
+maintainers, unless they creates scripts to handle that work nearly for
+free (it seems to me the x86 folks have something like that).
+
+Of course that would mean...
+
+> And maybe, before sending the reminder, if you could also check that the
+> target branch hasn't been touched in 2 days that would prevent annoyances
+> when we just added a commit and want to let it stay in for-next for 24h
+> before sending the full branch.
+
+...that nothing big or slightly dangerous should be merged to -fixes
+branches on Fridays.
+
+>> P.S: Wondering if I should team up with the kernel package maintainers
+>> of Arch Linux, Fedora, and openSUSE and start a git tree based on the
+>> latest stable tree with additional fixes and reverts for regressions
+>> not yet fixed upstream...[1] But that feels kinda wrong: it IMHO
+>> would be better to resolve those problems quickly in the proper
+>> upstream trees.
+> 
+> I would also say that this is wrong. Unless all regressions go through
+> your tree and you then send PR to Linus, [...]
+
+Ohh, sorry, I was not clear here, as that would be totally wrong --
+fixes definitely should go through the subsystems trees, as they have
+the knowledge and the infra to check them (hmm, maybe a dedicated tree
+might make sense for the smaller subsystems, but let's ignore that).
+
+What I meant was just a tree those distros could merge into their
+kernels to quickly resolve issues that upstream is slow to fix. But that
+obviously has downsides, too. And is yet more work.
+
+> However, do you have some kind of dashboard that you could share with
+> the package maintainers? This way they could easily compare the not-yet
+> applied fixes with their bugs and decide to backport them themselves.
+
+I have for the kernel overall, but nothing subsystem specific. But that
+is pretty high on my todo list, as...
+
+> In other words: let others do the hard work, you are doing a lot already
+
+...I'm very well aware of this. :-/
+
+Ciao, Thorsten
