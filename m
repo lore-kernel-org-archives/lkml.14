@@ -1,75 +1,85 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC27149C52;
-	Thu, 25 Apr 2024 13:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23B214F78;
+	Thu, 25 Apr 2024 13:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714053460; cv=none; b=TairpnsXZDS/1f7JVHvb8DQKPQNFBt0I41mp8hDnTnIHfCGcpeWchdrC3hsGU7jeVYDLNJvwHW84Tcnnp6eVO1/PF7TMxk5H1LupgF/PANrOsCpCoAXqViALq+CLg1ukuMRipxsxu5xSEkYyP7qC8U0jqYivZh7Jq1L1EzRwbR0=
+	t=1714053563; cv=none; b=qssTDMTbA4LUlYANQR9hsZtjEd9DExCbVsVnqOeZdLm7AidWA4WTIfweG3R9yzOfy6dd6/CD0ZgVo7opLLQhR2GZEg8e2u7jAWypyUfOdab0ka+hbjDEo6ctQMEzxhdSq8z6Afoavp6ygmHg9+wD7S7FyfipGrgq4wCKWECpjGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714053460; c=relaxed/simple;
-	bh=b7iRYarz0L9curo6TcKMEBGzkwuUKcQbSldR2fvyduQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Fyv+AfMKodujNC5v/2b3SsvNj/gGOrG05EuZWsHTkDr3X1AwvZ9J3IGB+YzMZbLP0TsH1zR7QiaKvCBilxIH2Cp95RrQ2jv/vKKi+Lqw7fYZYnKu1/HsPc+0H1hiHKZbiA+kuxcpje6puSv5Sgn4KDKdnnxk2THq4FzqY7BCrMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=rY8+Hc8L reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1714053563; c=relaxed/simple;
+	bh=7XPwbTtYNJ82q4u31jANKwtM62X1Kmb7YAJriAR2NHU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DsMxYDRAOYAzlaPwfFg90HFroZrvT46BbwiW6ZoOJe2JJBV3sLCGRh3rnrHnyJL+2O97p+e36tp0tk+yr5BRMRrsuQISOegdQLYo5h2xFQBk7Z6KeRSBi5jWtmG69kqMhu9s7PdY5axKh0yWf55qwV9nacYBCjtPLki8dQN4VEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=inzWYlpf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="rY8+Hc8L"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.0.0)
- id 3760a7682697599b; Thu, 25 Apr 2024 15:57:30 +0200
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 5FBD166DF20;
-	Thu, 25 Apr 2024 15:57:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1714053450;
-	bh=b7iRYarz0L9curo6TcKMEBGzkwuUKcQbSldR2fvyduQ=;
-	h=From:To:Cc:Subject:Date;
-	b=rY8+Hc8LcWPI0UuDNsKLnlvLYOS80hA3dcUlx0cwIn2+sfe/BzCreWI2s9/a5DiLR
-	 QuiyLWK+kxdSsJyxND0q8Rsc+DR44JcI+gE+6y7kXh2YM4hYm5uxjJ3zKK41hcV5Ha
-	 aFuAg9jJD0uy44d2q7/KNvaMtT/t3qZ3kiqri3hUwh3mBPh5hf46DMLE3cBK3uf/zX
-	 hD6N0IiimVomJhjLBbehOROG5NGe5xULMrTCvBADhNSWkSa9M6mun5PC+i2p2Rl9FF
-	 SFEPc+xSIjnd81al5c8/EUZtowpohGEr0yi0X3t8006R30M62zPoMIU993Y4LG6W2z
-	 9p1DdcsrECkCg==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Lukasz Luba <lukasz.luba@arm.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>
-Subject:
- [PATCH v1 0/3] thermal/debugfs: Fix a memory leak on removal and locking
-Date: Thu, 25 Apr 2024 15:46:41 +0200
-Message-ID: <12427744.O9o76ZdvQC@kreacher>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="inzWYlpf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39ED3C113CC;
+	Thu, 25 Apr 2024 13:59:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714053562;
+	bh=7XPwbTtYNJ82q4u31jANKwtM62X1Kmb7YAJriAR2NHU=;
+	h=From:Subject:Date:To:Cc:From;
+	b=inzWYlpfOB57pGRJsSDZhct7V+z/IFItBEWjlEQo8OMb3Qqh+1dqhcRGgXJmcDt+B
+	 KWXV9NVzg1qptn5NOSFZqPraPbnlnC6sr9YvMPMzVZJjJi4Vm732e/I4Pi3ZIkpob+
+	 4ioA/BAv3uBVx7IriErznyPDi2Mqys0sceuYETW77Meomwv4B2l5lz/2mhMkXGHL3w
+	 vhm1VhJx1dmZGcuolOyvzcWT8pASJyDIXiXyDoXPcrb0EtdU0YtnMATvRwdjJnxYbk
+	 nXzHX2b2w05z/NAS0hehhuV3xpJp7VMKsDxMm2Y/JVIeR9TNPKcAutg3VgJ3qnykOZ
+	 eXVzNEbBP0fsw==
+From: Benjamin Tissoires <bentiss@kernel.org>
+Subject: [PATCH 0/3] bpf_wq followup series
+Date: Thu, 25 Apr 2024 15:59:11 +0200
+Message-Id: <20240425-bpf-next-v1-0-1d8330e6c643@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudeljedgjedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepieduhffgteetgfeuvdehudettdeuueeuhedvfffgjeehffevhfekheelvedvvdffnecuffhomhgrihhnpehgihhtrdhithenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeehpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomhdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrgh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAK9hKmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDEyNT3aSCNN281IoSXSNDQxNjUwNTC/NUYyWg8oKi1LTMCrBR0bG1tQA
+ ogEMaWgAAAA==
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1714053558; l=732;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=7XPwbTtYNJ82q4u31jANKwtM62X1Kmb7YAJriAR2NHU=;
+ b=2dcgMFCdGfR+ou2s/eZmMomjgv0RQMXcR4yRwQxvRZ3cGBFTzuTW6Ed5J5tF3ebaKcceEcQTy
+ Gtdu7UCLFq5C0fl43+MGRfwVKou9PU8D3URz09dqvOOZ3JXN1/IHgew
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-Hi Everyone,
+Few patches that should have been there from day 1.
 
-This series fixes a memory leak on thermal zone removal caused by the
-thermal debug code and two locking issues that may cause the kernel to
-crash due to race conditions.
+Anyway, they are coming now.
 
-Please review urgently.
+Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+---
+Benjamin Tissoires (3):
+      bpf: do not walk twice the map on free
+      bpf: do not walk twice the hash map on free
+      selftests/bpf: drop an unused local variable
 
-The series applies on top of the linux-next branch in linux-pm.git.
+ kernel/bpf/arraymap.c                       | 15 ++++++++-------
+ kernel/bpf/hashtab.c                        | 16 +++++-----------
+ tools/testing/selftests/bpf/prog_tests/wq.c |  2 --
+ 3 files changed, 13 insertions(+), 20 deletions(-)
+---
+base-commit: 52578f7f53ff8fe3a8f6f3bc8b5956615c07a16e
+change-id: 20240425-bpf-next-2114350587e3
 
-It is also present in the thermal-core-next branch in that tree.
-
-Thanks!
-
-
+Best regards,
+-- 
+Benjamin Tissoires <bentiss@kernel.org>
 
