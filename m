@@ -1,142 +1,244 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC531149C41;
-	Thu, 25 Apr 2024 12:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2733B1494C3
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 12:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714049389; cv=none; b=DEieyZ/wRgCYR1A2wiCTyQmNlRDp0YnsxB0ZE7RsNFJPxF132mlyJ7pj7uojX5S7P/dgTWOxZ3va538578ykgIQS6SonSQuHh0uSgFnIK/UlaaA4CtmQErD+/Zp9/EAui3S9IYqi/rVGc2TvfjbWt+T5ac8pQgPSWnxVAQG7AHo=
+	t=1714049401; cv=none; b=Jont64VAtIkDI20e80ouclBeYUGSUQdTOxckmFrfcM/DrTvP8TPPhDLh7gCcGIvLJfuP74wmKKOt34edzxC0gKXC6For6eIUc2Ll47vvmtLUrkFhOS1pVXXp0lGmkhmIeR6rH2+1t2gSEe2nrbbNFREazOiaiwLFPzW6ccSsCWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714049389; c=relaxed/simple;
-	bh=TRTPpsVvtSlamQNa6WIDCztS4UVt83J5kzZZOXt95FA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V6Zfi9nRpHrUm5/lF9s3QTIiGGFEDVgsY3GRWUAOGAztv89ZPZEkPd+Km0X+D+dtoUfxQ84o0qzGxKvQDiHZ02Jmo0GCT29A/ncRkApkK0KE+eQuyMVHA2dbp+4AhqpdT7QC1jXnSguKroueEtct3TTiOup9Y0M1wGzurasKPPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.97.1)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1rzyXc-0000000033E-3DOF;
-	Thu, 25 Apr 2024 12:49:32 +0000
-Date: Thu, 25 Apr 2024 13:49:28 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: arinc.unal@arinc9.com
-Cc: DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Bartel Eerdekens <bartel.eerdekens@constell8.be>,
-	mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next v2 00/15] MT7530 DSA Subdriver Improvements Act
- IV
-Message-ID: <ZipRWJZ9c7ZzQd4N@makrotopia.org>
-References: <20240422-for-netnext-mt7530-improvements-4-v2-0-a75157ba76ad@arinc9.com>
+	s=arc-20240116; t=1714049401; c=relaxed/simple;
+	bh=5zHyuNB2I8aWOEEr179pEKRqtqNCcY1pQ85Qo6n17w8=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=fJWqWZqnT8NozjjLhWwxFfUhq01BkoEar8Wc97uOuM3n08Z70RpAdHnHCVKFCdIPW3YQ87fbBkVrvHxccozfxyM2O7LMYYwDsW8ONDbZ3YAkIrzRGcDg3AD6Oi8ARoZYBH5tc4/M42F4TIHNcZqADZQzx9HCDRwvZ30yeKXNga0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aoLHM/p3; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aoLHM/p3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714049399; x=1745585399;
+  h=date:from:to:cc:subject:message-id;
+  bh=5zHyuNB2I8aWOEEr179pEKRqtqNCcY1pQ85Qo6n17w8=;
+  b=aoLHM/p3joyzrZiMVbC0f7kyXrgJSqEfzKVlFK58/KOJ1oEE8jbmKBZu
+   YCWyZUPTSkvzD7Q81+XiniJjm55DEhp+KKmfGgIdw00GRmKYKx8ihdBIY
+   3LU1pMtGPbeoZNXy+v2lXfChh7gKQ42im8NhV7F3pEaRrz3VoR0vBP8al
+   TnmaK6S8FSI6auA17xUNmImxca09wCsmPvaCUmtG/NV++LcTmo8ByPMyP
+   JJunJQxrqwPoSmtySwMc4XhDQI3atCB3nqOzyPwC+2BCCfr78sw+uDP6T
+   W3nDdJoQjUAn66ykIZwhU6Uts3dBgdZz42CzR0npK9CuyF31zSYYS/PKG
+   w==;
+X-CSE-ConnectionGUID: HvG9tY3zRWWE2NaFUY4deg==
+X-CSE-MsgGUID: xnmQTonnQoutqGXMtq+2lA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="9579440"
+X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
+   d="scan'208";a="9579440"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 05:49:58 -0700
+X-CSE-ConnectionGUID: Qfo4rWN1Tzy7nuKZqp/H1w==
+X-CSE-MsgGUID: fDjao00cRue/QfhVGckmhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
+   d="scan'208";a="29833351"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 25 Apr 2024 05:49:57 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rzyXy-0002M4-1g;
+	Thu, 25 Apr 2024 12:49:54 +0000
+Date: Thu, 25 Apr 2024 20:49:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/cache] BUILD SUCCESS
+ 931be446c6cbc15691dd499957e961f4e1d56afb
+Message-ID: <202404252058.EHNpaBUk-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240422-for-netnext-mt7530-improvements-4-v2-0-a75157ba76ad@arinc9.com>
 
-On Mon, Apr 22, 2024 at 10:15:07AM +0300, Arınç ÜNAL via B4 Relay wrote:
-> Hello!
-> 
-> This is the forth patch series with the goal of simplifying the MT7530 DSA
-> subdriver and improving support for MT7530, MT7531, and the switch on the
-> MT7988 SoC.
-> 
-> I have done a simple ping test to confirm basic communication on all switch
-> ports on MCM and standalone MT7530, and MT7531 switch with this patch
-> series applied.
-> 
-> MT7621 Unielec, MCM MT7530:
-> 
-> rgmii-only-gmac0-mt7621-unielec-u7621-06-16m.dtb
-> gmac0-and-gmac1-mt7621-unielec-u7621-06-16m.dtb
-> 
-> tftpboot 0x80008000 mips-uzImage.bin; tftpboot 0x83000000 mips-rootfs.cpio.uboot; tftpboot 0x83f00000 $dtb; bootm 0x80008000 0x83000000 0x83f00000
-> 
-> MT7622 Bananapi, MT7531:
-> 
-> gmac0-and-gmac1-mt7622-bananapi-bpi-r64.dtb
-> 
-> tftpboot 0x40000000 arm64-Image; tftpboot 0x45000000 arm64-rootfs.cpio.uboot; tftpboot 0x4a000000 $dtb; booti 0x40000000 0x45000000 0x4a000000
-> 
-> MT7623 Bananapi, standalone MT7530:
-> 
-> rgmii-only-gmac0-mt7623n-bananapi-bpi-r2.dtb
-> gmac0-and-gmac1-mt7623n-bananapi-bpi-r2.dtb
-> 
-> tftpboot 0x80008000 arm-zImage; tftpboot 0x83000000 arm-rootfs.cpio.uboot; tftpboot 0x83f00000 $dtb; bootz 0x80008000 0x83000000 0x83f00000
-> 
-> This patch series finalises the patch series linked below.
-> 
-> https://lore.kernel.org/r/20230522121532.86610-1-arinc.unal@arinc9.com
-> 
-> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/cache
+branch HEAD: 931be446c6cbc15691dd499957e961f4e1d56afb  x86/resctrl: Add tracepoint for llc_occupancy tracking
 
-I've imported the series to OpenWrt as pending patch and (briefly)
-tested it myself on MT7988 and MT7986+MT7531 hardware, with very little
-changes so it would apply on Linux 6.1 and Linux 6.6.
+elapsed time: 1459m
 
-https://git.openwrt.org/?p=openwrt/openwrt.git;a=commit;h=d40691a5fb9415976bc917d1d96a0a6da99f2dc1
+configs tested: 167
+configs skipped: 3
 
-So for the whole series:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Tested-by: Daniel Golle <daniel@makrotopia.org>
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                          axs101_defconfig   gcc  
+arc                          axs103_defconfig   gcc  
+arc                                 defconfig   gcc  
+arc                         haps_hs_defconfig   gcc  
+arc                     nsimosci_hs_defconfig   gcc  
+arc                 nsimosci_hs_smp_defconfig   gcc  
+arc                   randconfig-001-20240425   gcc  
+arc                   randconfig-002-20240425   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                          collie_defconfig   gcc  
+arm                                 defconfig   clang
+arm                        multi_v7_defconfig   gcc  
+arm                   randconfig-001-20240425   clang
+arm                   randconfig-002-20240425   clang
+arm                   randconfig-003-20240425   clang
+arm                   randconfig-004-20240425   clang
+arm                         s3c6400_defconfig   gcc  
+arm                          sp7021_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240425   gcc  
+arm64                 randconfig-002-20240425   gcc  
+arm64                 randconfig-003-20240425   gcc  
+arm64                 randconfig-004-20240425   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240425   gcc  
+csky                  randconfig-002-20240425   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240425   clang
+hexagon               randconfig-002-20240425   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240425   gcc  
+i386         buildonly-randconfig-003-20240425   gcc  
+i386         buildonly-randconfig-006-20240425   gcc  
+i386                  randconfig-004-20240425   gcc  
+i386                  randconfig-013-20240425   gcc  
+i386                  randconfig-014-20240425   gcc  
+i386                  randconfig-015-20240425   gcc  
+i386                  randconfig-016-20240425   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240425   gcc  
+loongarch             randconfig-002-20240425   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                        stmark2_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                       lemote2f_defconfig   gcc  
+mips                     loongson1c_defconfig   gcc  
+mips                    maltaup_xpa_defconfig   gcc  
+mips                      pic32mzda_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240425   gcc  
+nios2                 randconfig-002-20240425   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                            defconfig   gcc  
+openrisc                    or1ksim_defconfig   gcc  
+openrisc                 simple_smp_defconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240425   gcc  
+parisc                randconfig-002-20240425   gcc  
+parisc64                         alldefconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                      ep88xc_defconfig   gcc  
+powerpc               randconfig-001-20240425   gcc  
+powerpc               randconfig-002-20240425   gcc  
+powerpc               randconfig-003-20240425   clang
+powerpc                    sam440ep_defconfig   gcc  
+powerpc                     tqm8540_defconfig   gcc  
+powerpc64             randconfig-001-20240425   gcc  
+powerpc64             randconfig-002-20240425   gcc  
+powerpc64             randconfig-003-20240425   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv             nommu_k210_sdcard_defconfig   gcc  
+riscv                 randconfig-001-20240425   gcc  
+riscv                 randconfig-002-20240425   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240425   gcc  
+s390                  randconfig-002-20240425   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                 kfr2r09-romimage_defconfig   gcc  
+sh                    randconfig-001-20240425   gcc  
+sh                    randconfig-002-20240425   gcc  
+sh                          rsk7201_defconfig   gcc  
+sh                          rsk7264_defconfig   gcc  
+sh                        sh7757lcr_defconfig   gcc  
+sh                   sh7770_generic_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240425   gcc  
+sparc64               randconfig-002-20240425   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240425   gcc  
+um                    randconfig-002-20240425   clang
+um                           x86_64_defconfig   clang
+x86_64       buildonly-randconfig-002-20240425   gcc  
+x86_64       buildonly-randconfig-006-20240425   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   clang
+x86_64                randconfig-004-20240425   gcc  
+x86_64                randconfig-005-20240425   gcc  
+x86_64                randconfig-011-20240425   gcc  
+x86_64                randconfig-014-20240425   gcc  
+x86_64                randconfig-072-20240425   gcc  
+x86_64                randconfig-073-20240425   gcc  
+x86_64                randconfig-076-20240425   gcc  
+x86_64                          rhel-8.3-func   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20240425   gcc  
+xtensa                randconfig-002-20240425   gcc  
+xtensa                         virt_defconfig   gcc  
+xtensa                    xip_kc705_defconfig   gcc  
 
-I will review the patches individually in the next days.
-
-
-> ---
-> Changes in v2:
-> - Add two new patches to the end.
-> - Patch 13
->   - Add the missing patch log.
-> - Link to v1: https://lore.kernel.org/r/20240419-for-netnext-mt7530-improvements-4-v1-0-6d852ca79b1d@arinc9.com
-> 
-> ---
-> Arınç ÜNAL (15):
->       net: dsa: mt7530: disable EEE abilities on failure on MT7531 and MT7988
->       net: dsa: mt7530: refactor MT7530_PMCR_P()
->       net: dsa: mt7530: rename p5_intf_sel and use only for MT7530 switch
->       net: dsa: mt7530: rename mt753x_bpdu_port_fw enum to mt753x_to_cpu_fw
->       net: dsa: mt7530: refactor MT7530_MFC and MT7531_CFC, add MT7531_QRY_FFP
->       net: dsa: mt7530: refactor MT7530_HWTRAP and MT7530_MHWTRAP
->       net: dsa: mt7530: move MT753X_MTRAP operations for MT7530
->       net: dsa: mt7530: return mt7530_setup_mdio & mt7531_setup_common on error
->       net: dsa: mt7530: define MAC speed capabilities per switch model
->       net: dsa: mt7530: get rid of function sanity check
->       net: dsa: mt7530: refactor MT7530_PMEEECR_P()
->       net: dsa: mt7530: get rid of mac_port_validate member of mt753x_info
->       net: dsa: mt7530: use priv->ds->num_ports instead of MT7530_NUM_PORTS
->       net: dsa: mt7530: do not pass port variable to mt7531_rgmii_setup()
->       net: dsa: mt7530: explain exposing MDIO bus of MT7531AE better
-> 
->  drivers/net/dsa/mt7530.c | 294 +++++++++++++++++++++++------------------------
->  drivers/net/dsa/mt7530.h | 289 ++++++++++++++++++++++++----------------------
->  2 files changed, 297 insertions(+), 286 deletions(-)
-> ---
-> base-commit: e1bc03d8372ac081810c2956cd244ed9899f9a02
-> change-id: 20240320-for-netnext-mt7530-improvements-4-95430d150c05
-> 
-> Best regards,
-> -- 
-> Arınç ÜNAL <arinc.unal@arinc9.com>
-> 
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
