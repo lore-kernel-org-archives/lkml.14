@@ -1,123 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from read.uberspace.de (read.uberspace.de [185.26.156.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A881494BF;
-	Thu, 25 Apr 2024 16:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8341614C587
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 16:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714060990; cv=none; b=R2/FG6xEhD1nSZ8xidYK4HdbV/q5XkVGOvKm1A3AOm+HT6672SF/VYu9n3M/y7bSLVnUQvdsmbueACJb18z8+sq9ZntcQfk0IDeIVQPEqkUXdpeHU5B9dhlauRNm5AcJOP5aIIR01DgoEiDCcZm9a3GbjpdGjq4tfknBWJezRfw=
+	t=1714061014; cv=none; b=YM3aLrHjrt3pThw3nlAYwEUFBF5KB1jkXJnR6umlmx6P+WolmcrybLg41g0bY2Ftrl4p8ChtbswBQSstyzCO6oi8M4GbJqtZ76RrI/MnG/SJZGDO7lJ5nIN132ca6zUgexPJDTGp0aVIHGizVvFxwdSWGHWBkDPhcqLB7CU67No=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714060990; c=relaxed/simple;
-	bh=3hP3govGe0OHHTR4xCJ9CZzV7UIniHmuOXenpQjPGHM=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=jpayrqBEwoLX2VKWaHLXNEYGswEFqxEmckzBDEXWbhluJWVWhsdoeInocvAl6APkvZ9bwbwMUHeYh3l17uD6FFqqKF9g/NTYlqn5Y7PO+Tw0QFKkilr4xooBJUaJpSMhir4VvJ389bypBvmVsJndFtIhQDpyoVAzqwp2hnNUCM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWS/aITh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714061014; c=relaxed/simple;
+	bh=xNNR/wUpIxuzrAufWGl/DeCwf0nh9qPTmwwaiUo3cnU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nvvDW8VF4GGX3Sx2g7ULQgha/QRRLtDUo+mKYkRiIdZszC6x9T0tBm2tzVl/5rKylKZ7LltCdQBEeXNBfM8cZzjrXDrkOmawQvrKvo8Iz/footsRE2ZSedWk+Z073ut8rElqwqxHcnATG6O1e4LFMR8VuTW4//Vc27xw13wRjn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=florommel.de; spf=pass smtp.mailfrom=florommel.de; dkim=fail (0-bit key) header.d=florommel.de header.i=@florommel.de header.b=if+UMpp3 reason="key not found in DNS"; arc=none smtp.client-ip=185.26.156.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=florommel.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=florommel.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWS/aITh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACBA9C113CE;
-	Thu, 25 Apr 2024 16:03:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714060990;
-	bh=3hP3govGe0OHHTR4xCJ9CZzV7UIniHmuOXenpQjPGHM=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=pWS/aIThsXtBIX+S9GHI0HOm1qEbdbgE3Mv/ZcTnQ9kLV0W7SOP1KgU+O79ook+wV
-	 24PedWk/FlcF36EhhcLbn88aAkgn/rLgqrG/ErHpOsUURYJO0zippRVB8jhvCHBcE5
-	 9E1pYkNz3+5vAppMZ4SrfUlEQzjSPAy4ZFtQBpZKFiPQy8IehsCSCvr45hRe4ZNjBY
-	 fxJoOw4DMGvU5ZavFFlKFYoByumDNYBUwTLbeG3P7C1NlJo++2iG25jSXjwD4px6eE
-	 ZQQllJgrFU7HnhlQbp17Lu56AFaxVqYCLuUoGgnz1WyuoBNt9+G1lSnWLkPTUpJBT9
-	 2D2ZPlFbqjH1Q==
-From: Kalle Valo <kvalo@kernel.org>
-To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Cc: Wu Yunchuan <yunchuan@nfschina.com>,  Johannes Berg
- <johannes.berg@intel.com>,  "Breno Leitao" <leitao@debian.org>,
-  <linux-wireless@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <lvc-project@linuxtesting.org>,
-  <syzbot+1bc2c2afd44f820a669f@syzkaller.appspotmail.com>
-Subject: Re: [PATCH v2] wifi: ar5523: enable proper endpoint verification
-References: <20240408121425.29392-1-n.zhandarovich@fintech.ru>
-	<171406032921.2967849.6111681305541795423.kvalo@kernel.org>
-Date: Thu, 25 Apr 2024 18:58:19 +0300
-In-Reply-To: <171406032921.2967849.6111681305541795423.kvalo@kernel.org>
-	(Kalle Valo's message of "Thu, 25 Apr 2024 15:52:23 +0000 (UTC)")
-Message-ID: <87a5lhh1t0.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=florommel.de header.i=@florommel.de header.b="if+UMpp3"
+Received: (qmail 30710 invoked by uid 990); 25 Apr 2024 15:36:38 -0000
+Authentication-Results: read.uberspace.de;
+	auth=pass (plain)
+Received: from unknown (HELO unkown) (::1)
+	by read.uberspace.de (Haraka/3.0.1) with ESMTPSA; Thu, 25 Apr 2024 17:36:37 +0200
+From: Florian Rommel <mail@florommel.de>
+To: Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>
+Cc: Kuan-Ying Lee <Kuan-Ying.Lee@mediatek.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Deepak Gupta <debug@rivosinc.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	Florian Rommel <mail@florommel.de>
+Subject: [PATCH 3/4] scripts/gdb: Make get_thread_info accept pointers
+Date: Thu, 25 Apr 2024 17:35:00 +0200
+Message-ID: <20240425153501.749966-4-mail@florommel.de>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240425153501.749966-1-mail@florommel.de>
+References: <20240425153501.749966-1-mail@florommel.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Bar: -----
+X-Rspamd-Report: REPLY(-4) BAYES_HAM(-2.99722) MID_CONTAINS_FROM(1) MIME_GOOD(-0.1) R_MISSING_CHARSET(0.5)
+X-Rspamd-Score: -5.59722
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=florommel.de; s=uberspace;
+	h=from:to:cc:subject:date;
+	bh=xNNR/wUpIxuzrAufWGl/DeCwf0nh9qPTmwwaiUo3cnU=;
+	b=if+UMpp33eD8jvzlf3x4MCEysYOpDE0DI8Z+EW1cVgQr2KvtIWi2UvgA57uWFuqro/7Um6CIY2
+	kMRu2eCLEjid0StnfLgZWxavb90h9YQPoLGFZ9dcuca87OPuHIgw6jpIQamARhebgbVWan8A9Zg2
+	nqYR+cYkN3zcfkUKpOxTN1YyXSd2EpDr/dlNxv0Xk77FyiS0cAj9IqzB/vJBqYqzZmUeaKgoyqTG
+	V5msunxNXu5KCg0CgOc/r0hcoafQn521Gw2ewSZ3PwmcskH+YDrrshvSXGtRzfwFSTMKlHjzoecv
+	AZauQ+P8ovMwJohbLFgKzN/Chdx6aogFzUzoaPCmciDDJq4nRNCxR4Ig3KucMqgW66Jf/4Zr6Aip
+	CANAA9RBBk5955H3N3cEcvYT8SErWkKuUXjVlFmycNenkOFgw6TtjHDMXiBSyGTAuGJ28yUn/c7K
+	81IMFfYZxPEb4O1+Od3dJpaJyLul7Cd9FH4z5i1hjHI22kjiyo28M78MNXWVtk7GNv5TZF609ZHT
+	QhkDYcBnseHMQGfTgacRZcLhwuRDxIFQml+rtF0xdVQdlaWYC48NqIMLRpjDouJ8/b5eMfrJUPMy
+	w1SC2DBagPMCmH3XZI+LBImT/hlGvYzisD34OgiQl3RbOsrMP3Xub1MkErlU7Lm1/rRdgnSDuRHk
+	Y=
 
-Kalle Valo <kvalo@kernel.org> writes:
+get_thread_info ($lx_thread_info) only accepted a dereferenced task
+parameter.  Passing a pointer to a task_struct (like $lx_per_cpu does with
+KGDB) threw an exception.
 
-> Nikita Zhandarovich <n.zhandarovich@fintech.ru> wrote:
->
->> Syzkaller reports [1] hitting a warning about an endpoint in use
->> not having an expected type to it.
->> 
->> Fix the issue by checking for the existence of all proper
->> endpoints with their according types intact.
->> 
->> Sadly, this patch has not been tested on real hardware.
->> 
->> [1] Syzkaller report:
->> ------------[ cut here ]------------
->> usb 1-1: BOGUS urb xfer, pipe 3 != type 1
->> WARNING: CPU: 0 PID: 3643 at drivers/usb/core/urb.c:504
->> usb_submit_urb+0xed6/0x1880 drivers/usb/core/urb.c:504
->> ...
->> Call Trace:
->>  <TASK>
->>  ar5523_cmd+0x41b/0x780 drivers/net/wireless/ath/ar5523/ar5523.c:275
->>  ar5523_cmd_read drivers/net/wireless/ath/ar5523/ar5523.c:302 [inline]
->>  ar5523_host_available drivers/net/wireless/ath/ar5523/ar5523.c:1376 [inline]
->>  ar5523_probe+0x14b0/0x1d10 drivers/net/wireless/ath/ar5523/ar5523.c:1655
->>  usb_probe_interface+0x30f/0x7f0 drivers/usb/core/driver.c:396
->>  call_driver_probe drivers/base/dd.c:560 [inline]
->>  really_probe+0x249/0xb90 drivers/base/dd.c:639
->>  __driver_probe_device+0x1df/0x4d0 drivers/base/dd.c:778
->>  driver_probe_device+0x4c/0x1a0 drivers/base/dd.c:808
->>  __device_attach_driver+0x1d4/0x2e0 drivers/base/dd.c:936
->>  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:427
->>  __device_attach+0x1e4/0x530 drivers/base/dd.c:1008
->>  bus_probe_device+0x1e8/0x2a0 drivers/base/bus.c:487
->>  device_add+0xbd9/0x1e90 drivers/base/core.c:3517
->>  usb_set_configuration+0x101d/0x1900 drivers/usb/core/message.c:2170
->>  usb_generic_driver_probe+0xbe/0x100 drivers/usb/core/generic.c:238
->>  usb_probe_device+0xd8/0x2c0 drivers/usb/core/driver.c:293
->>  call_driver_probe drivers/base/dd.c:560 [inline]
->>  really_probe+0x249/0xb90 drivers/base/dd.c:639
->>  __driver_probe_device+0x1df/0x4d0 drivers/base/dd.c:778
->>  driver_probe_device+0x4c/0x1a0 drivers/base/dd.c:808
->>  __device_attach_driver+0x1d4/0x2e0 drivers/base/dd.c:936
->>  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:427
->>  __device_attach+0x1e4/0x530 drivers/base/dd.c:1008
->>  bus_probe_device+0x1e8/0x2a0 drivers/base/bus.c:487
->>  device_add+0xbd9/0x1e90 drivers/base/core.c:3517
->>  usb_new_device.cold+0x685/0x10ad drivers/usb/core/hub.c:2573
->>  hub_port_connect drivers/usb/core/hub.c:5353 [inline]
->>  hub_port_connect_change drivers/usb/core/hub.c:5497 [inline]
->>  port_event drivers/usb/core/hub.c:5653 [inline]
->>  hub_event+0x26cb/0x45d0 drivers/usb/core/hub.c:5735
->>  process_one_work+0x9bf/0x1710 kernel/workqueue.c:2289
->>  worker_thread+0x669/0x1090 kernel/workqueue.c:2436
->>  kthread+0x2e8/0x3a0 kernel/kthread.c:376
->>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:306
->>  </TASK>
->> 
->> Reported-and-tested-by: syzbot+1bc2c2afd44f820a669f@syzkaller.appspotmail.com
->> Fixes: b7d572e1871d ("ar5523: Add new driver")
->> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
->
-> Does anyone have a real device to test this? I have had so much problems with
-> syzbot fixes in the past that I'm hesitant to take such patches without
-> testing.
+With this patch, both (dereferenced values and pointers) are accepted.
 
-Actually should we just remove ar5523 driver? Has anyone heard anyone
-using this driver still?
+Before (on x86, KGDB):
+>>> p $lx_per_cpu(cpu_info)
+Traceback (most recent call last):
+  File "./scripts/gdb/linux/cpus.py", line 158, in invoke
+    return per_cpu(var_ptr, cpu)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "./scripts/gdb/linux/cpus.py", line 42, in per_cpu
+    cpu = get_current_cpu()
+          ^^^^^^^^^^^^^^^^^
+  File "./scripts/gdb/linux/cpus.py", line 33, in get_current_cpu
+    return tasks.get_thread_info(tasks.get_task_by_pid(tid))['cpu']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "./scripts/gdb/linux/tasks.py", line 88, in get_thread_info
+    if task.type.fields()[0].type == thread_info_type.get_type():
+       ~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
 
+Signed-off-by: Florian Rommel <mail@florommel.de>
+---
+ scripts/gdb/linux/tasks.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/gdb/linux/tasks.py b/scripts/gdb/linux/tasks.py
+index 6793d6e86e77..62348397c1f5 100644
+--- a/scripts/gdb/linux/tasks.py
++++ b/scripts/gdb/linux/tasks.py
+@@ -85,7 +85,7 @@ thread_info_type = utils.CachedType("struct thread_info")
+ 
+ def get_thread_info(task):
+     thread_info_ptr_type = thread_info_type.get_type().pointer()
+-    if task.type.fields()[0].type == thread_info_type.get_type():
++    if task_type.get_type().fields()[0].type == thread_info_type.get_type():
+         return task['thread_info']
+     thread_info = task['stack'].cast(thread_info_ptr_type)
+     return thread_info.dereference()
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+2.44.0
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
