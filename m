@@ -1,86 +1,47 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6664414A4DD;
-	Thu, 25 Apr 2024 14:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4925714B07F;
+	Thu, 25 Apr 2024 14:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714054723; cv=none; b=IJrqO+Mkw4dflh+cD9dMWjn8cS63bODupdvjeUCvoXKr7tvsJSecZ0gLeZPT+EWOqGL/3EYj2XrXW9b27GX9tSxlA5fGGm48WHCWtpq5r/mvNXGbwbWDhFTzqWAUrrxMvNPOiJ/rR+67q2Js0OK0D5bJtohrHWwy+tF9/0B4JTQ=
+	t=1714054725; cv=none; b=plSO4qk/OghDzLTwqOWgY+fqrEmY9WcVq/TY02cPzh9TgYrsUBY7YO8NwprEBhj6C1SVZ5Jo9dfF4lhEOK5FAggND+t1TnQDU5R8hu8WxVjQywny+X5F3M0AJzvIP01CrBFRpdQBIUxaISHFYXM6uSriRycssDz74/G02uTh7C0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714054723; c=relaxed/simple;
-	bh=5eMBfUoMBCijCucBrYyXb5iM12NH5j3cQUyWi3Km8qU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ATb9aJO1nl6zNHJBOPOwjM/k8LQKYqaWbouyW2LQEmqpAC0l62SCsQl4H9Yn+NC1sveUUiwU9iIQcpTDCeEXJ3vQQ671vnU3aUJ0zz4hiwOHc2el1rmjJY4HjcKScyLHDilxoiUl+Vq3Mi8DL665OP3rnDZnU9/chyUQAGZd8k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LQyGM5tk; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714054725; c=relaxed/simple;
+	bh=wr/k54/ZbmkJrW0gFVZmsbDqX6q/04QoSGB4f9Qio68=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=r/yESSODd4nyMsHXbhOfLMRUsEMhEBNU+edKY775tmBcai7++g7pm/8cPC1DiqRW0p9iVayHz9bN+akKxgAelaTD9cxPhJR/KV2zzqknTvzoEQxt6yJZED0IjmQvGBAX8vSgwNPq61Y9hPXLXGDrBubceDo+Yc5NxXDhv9YMP3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uq2MEd/V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LQyGM5tk"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e825c89532so162465ad.2;
-        Thu, 25 Apr 2024 07:18:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714054720; x=1714659520; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VJIN0mq5LX930XVge9ngeqBSR6yoC+cL9OxlPKOkaa8=;
-        b=LQyGM5tkXvxPv4zOSYAhfi29xScO4Ivx1TJpN8hkYyFCsGhWwXSvz2WknZ0L41Qgu9
-         5wwhMZSshyTKuzIIvhV4yVx+JnKuN2RUBMHCS4lOORcLvmWjikPxwZZa/0lnRiQ/fjbz
-         anosOI8F/iiTIyxHQ/HtL56/ugdE8+fz7JuZKR8OrnsbrIIRPhTmdurA4MY8CCtyvJsW
-         ZjjeJT1PWFF2PtTjAEc6qoVK420q0v6t9rkOZuEmatLE7QLAsb6ogZonPE3vioSRlIBr
-         rAKAoQPZ+1XblyCE5h+488hYX3FcktPYvKdMlg0DrXdV5718exSlrnhela5jtIQciUfv
-         Y2Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714054720; x=1714659520;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VJIN0mq5LX930XVge9ngeqBSR6yoC+cL9OxlPKOkaa8=;
-        b=asW7/gYklwwTbqPXnPR6w/Huv7cY6HChaQL/sHay80Pf9Hgr6pqB5HssoqXEehvOSO
-         O41PSeYJ1jVCyqjcT+22WxPaXo4iQxqdtKy0FKlRq/dYpj/KaiNXKljnoPMqYiXqMKJ3
-         IzfZtAvdpjITO62UWMwg3rU+44WPMFB7ocdMPitqRLqdYdBqpzFYrxSrhlqozobHU4Q5
-         xxEzZ28QCctGHFprnpOuix4yW8LYpnlg+ssvj6zoJzSMiofN3/5yjJV8ozrVdVrbRyeo
-         G+M2NOWuzD3ixCJRMiJ1UPsA9AOz7eF5oJOX8s7BXJZozpP+Wn2QlU337EpAaGy6Ba66
-         d7Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjyZhzCAHJ1KztQgpjZa4+G0UaHtAg6UwRRWExS1clRGNtqwVkBZGW3o2zpueKMoL198Dn/w2cI1zGNsZrrBR2igB8swAXECYLGh0dkS2QqLx1JyNiAmtBRVrMtASVU3zruNgFDdXCRslNDwHEa6An1qazbeaAYTpb59qgjkA2Lv9zYmhMUX4wA0Ge7dFjQB43zIEnHvcJtteT5ciQ7RbwRVHun5i3UHbog562
-X-Gm-Message-State: AOJu0YyfcuNWSbi9go/kIQyNWXXSJU2YnqW8FvIATw17bVclnKBusJ2O
-	qmKxiPraGBzBY2514mx98v+CLPk8nCv3NhvVJ9Nmi9fHh/bLJ0wt
-X-Google-Smtp-Source: AGHT+IGQTJjuEcM6aEJrfwoGu0krNnwqsY1Gws+dsheyTKe47mC9goJtJ6zOFSf/pjdMiEkhR/vqNw==
-X-Received: by 2002:a05:6a20:12cb:b0:1ad:8df7:6127 with SMTP id v11-20020a056a2012cb00b001ad8df76127mr4572257pzg.0.1714054719469;
-        Thu, 25 Apr 2024 07:18:39 -0700 (PDT)
-Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id go20-20020a056a003b1400b006e6233563cesm13162397pfb.218.2024.04.25.07.18.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 07:18:38 -0700 (PDT)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: colyli@suse.de,
-	kent.overstreet@linux.dev,
-	msakai@redhat.com,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	akpm@linux-foundation.org
-Cc: bfoster@redhat.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	jserv@ccns.ncku.edu.tw,
-	linux-bcache@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	linux-bcachefs@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Kuan-Wei Chiu <visitorckw@gmail.com>,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v4 01/16] perf/core: Fix several typos
-Date: Thu, 25 Apr 2024 22:18:11 +0800
-Message-Id: <20240425141826.840077-2-visitorckw@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240425141826.840077-1-visitorckw@gmail.com>
-References: <20240425141826.840077-1-visitorckw@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uq2MEd/V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D9B9C3277B;
+	Thu, 25 Apr 2024 14:18:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714054724;
+	bh=wr/k54/ZbmkJrW0gFVZmsbDqX6q/04QoSGB4f9Qio68=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=uq2MEd/VbFTsTKhY/bgmCW/Dsfw62uIx7LwnY0NMPiED+g0w52R+vS3XyFRQi6Qsy
+	 o4YoaSu+3eQai48eccTaQaeOyT8sYAMU6agb2dXPrGM+PiNkWEwBvaU1eOEgI7xlrW
+	 4KtKcDbR1Rs2wExkTQs7DTHISPF0t+o5tj5e5zPdOJPpcES16Lihw0HOs3tUNk4LJP
+	 1elMI/BQsGh3bWZozn9QTILN29UAJ+lGvCxcf1XOypuGQcUm+i3PG8wktk1Va+PjGO
+	 9XcnYWA4JzhabA5oRTlC3zejvXh3aL/rklavhhEeoBl01iw0I38u8GoyHCzfOBtzXi
+	 +E4zMjy6ICdgw==
+From: Frederic Weisbecker <frederic@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	rcu <rcu@vger.kernel.org>
+Subject: [PATCH 2/4] rcu/nocb: Fix segcblist state machine stale comments about timers
+Date: Thu, 25 Apr 2024 16:18:33 +0200
+Message-ID: <20240425141835.19776-3-frederic@kernel.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240425141835.19776-1-frederic@kernel.org>
+References: <20240425141835.19776-1-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,53 +50,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace 'artifically' with 'artificially'.
-Replace 'irrespecive' with 'irrespective'.
-Replace 'futher' with 'further'.
-Replace 'sufficent' with 'sufficient'.
+The (de-)offloading process used to take care about the NOCB timer when
+it depended on the per-rdp NOCB locking. However this isn't the case
+anymore for a long while. It can now safely be armed and run during the
+(de-)offloading process, which doesn't care about it anymore.
 
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Update the comments accordingly.
+
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 ---
- kernel/events/core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/linux/rcu_segcblist.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 724e6d7e128f..10ac2db83f14 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -534,7 +534,7 @@ void perf_sample_event_took(u64 sample_len_ns)
- 	__this_cpu_write(running_sample_length, running_len);
- 
- 	/*
--	 * Note: this will be biased artifically low until we have
-+	 * Note: this will be biased artificially low until we have
- 	 * seen NR_ACCUMULATED_SAMPLES. Doing it this way keeps us
- 	 * from having to maintain a count.
- 	 */
-@@ -596,10 +596,10 @@ static inline u64 perf_event_clock(struct perf_event *event)
-  *
-  * Event groups make things a little more complicated, but not terribly so. The
-  * rules for a group are that if the group leader is OFF the entire group is
-- * OFF, irrespecive of what the group member states are. This results in
-+ * OFF, irrespective of what the group member states are. This results in
-  * __perf_effective_state().
-  *
-- * A futher ramification is that when a group leader flips between OFF and
-+ * A further ramification is that when a group leader flips between OFF and
-  * !OFF, we need to update all group member times.
-  *
-  *
-@@ -891,7 +891,7 @@ static int perf_cgroup_ensure_storage(struct perf_event *event,
- 	int cpu, heap_size, ret = 0;
- 
- 	/*
--	 * Allow storage to have sufficent space for an iterator for each
-+	 * Allow storage to have sufficient space for an iterator for each
- 	 * possibly nested cgroup plus an iterator for events with no cgroup.
- 	 */
- 	for (heap_size = 1; css; css = css->parent)
+diff --git a/include/linux/rcu_segcblist.h b/include/linux/rcu_segcblist.h
+index 1e5b4ef167ca..8018045989af 100644
+--- a/include/linux/rcu_segcblist.h
++++ b/include/linux/rcu_segcblist.h
+@@ -80,8 +80,7 @@ struct rcu_cblist {
+  *  |       SEGCBLIST_RCU_CORE | SEGCBLIST_LOCKING | SEGCBLIST_OFFLOADED       |
+  *  |                                                                          |
+  *  | Callbacks processed by rcu_core() from softirqs or local                 |
+- *  | rcuc kthread, while holding nocb_lock. Waking up CB and GP kthreads,     |
+- *  | allowing nocb_timer to be armed.                                         |
++ *  | rcuc kthread, while holding nocb_lock. Waking up CB and GP kthreads.     |
+  *  ----------------------------------------------------------------------------
+  *                                         |
+  *                                         v
+@@ -183,8 +182,7 @@ struct rcu_cblist {
+  *  |                SEGCBLIST_RCU_CORE | SEGCBLIST_LOCKING                    |
+  *  |                                                                          |
+  *  | Callbacks processed by rcu_core() from softirqs or local                 |
+- *  | rcuc kthread, while holding nocb_lock. Forbid nocb_timer to be armed.    |
+- *  | Flush pending nocb_timer.                                                |
++ *  | rcuc kthread, while holding nocb_lock.                                   |
+  *  ----------------------------------------------------------------------------
+  *                                      |
+  *                                      v
 -- 
-2.34.1
+2.44.0
 
