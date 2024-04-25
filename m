@@ -1,28 +1,28 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9058E149DEC;
-	Thu, 25 Apr 2024 13:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E7E14A614;
+	Thu, 25 Apr 2024 13:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714051390; cv=none; b=ONUt71U66ueNE7InoQztV4v+Usmgy58ehid6fJFSJkDSuF7Ro17agzyvGgf+K5qYowrQHDnMEm3yxXW2MgO1V1Jt61+5LMTw8n+F8H+Qbltgvy/p/Lox4uIjbO6dGd46sXLb6OLZ8ryOjHV/dkDqvSS3pnae2n/+ecDHZFW8Mgc=
+	t=1714051392; cv=none; b=aBkN7WKflfE6WU4j8eOEQUrh8fjLJRBDoB2CMeusP/9iOFn2DTHYMJKuu0+1JSEFyPbDo29inyaKgYngx8vNTdkcZGikmLAQHAVoFXHuLbLFa07qFdSkhbnM+Xd1U8CXrd943Rq3URjw3qV6WtdxGjX+dhmRktv0gHGDAn2SlGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714051390; c=relaxed/simple;
-	bh=zIeSjJNQpUGix72xtxA5Vo0qvD65js2yiyhGJyfzuLk=;
+	s=arc-20240116; t=1714051392; c=relaxed/simple;
+	bh=3EKUU7VAvYU4nPbBt7h9Nh4luL9rsU127qF3CpGr1m4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IDpOg7fggqTi6UJL9U05VxgHf473xcpDIwmNrj+QMjugz6913Wt9JwXyyJV9Bsj/Zs+XijsU7zwphBEPeGELJ2k+bX80dHMNEEgqD2chEwxIEvqg3i0SRLQiEbSIIyRhTrb5uu7dXFc7FuumYd9LUiWtqHPz96YhxHZxKlENFds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=GlLqDrnxt4jRFE1QNbFIMKm5iU2yNAqddVHiIdk8JBLjulSH7MV5sQEVx5/428fL37cK3wYR7nzntbQRBMmkStKy5lE2R3Spxhz/gNn3bfkWbaMjOzFb9ufyuOQmFPTDywfe0T1TG2nuMTfTlZXRz3KXBCsN2e8bM+KL1AZDZoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VQGkS0tj1z4f3nJV;
-	Thu, 25 Apr 2024 21:22:56 +0800 (CST)
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VQGkX39Qjz4f3kjM;
+	Thu, 25 Apr 2024 21:23:00 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 5EEFC1A1129;
-	Thu, 25 Apr 2024 21:23:05 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 04D9D1A0F87;
+	Thu, 25 Apr 2024 21:23:08 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBEqWSpmHu+2Kw--.61462S8;
-	Thu, 25 Apr 2024 21:23:05 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgCXaBEqWSpmHu+2Kw--.61462S13;
+	Thu, 25 Apr 2024 21:23:07 +0800 (CST)
 From: Zhang Yi <yi.zhang@huaweicloud.com>
 To: linux-xfs@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org
@@ -38,9 +38,9 @@ Cc: linux-kernel@vger.kernel.org,
 	yi.zhang@huaweicloud.com,
 	chengzhihao1@huawei.com,
 	yukuai3@huawei.com
-Subject: [PATCH v5 4/9] xfs: convert delayed extents to unwritten when zeroing post eof blocks
-Date: Thu, 25 Apr 2024 21:13:30 +0800
-Message-Id: <20240425131335.878454-5-yi.zhang@huaweicloud.com>
+Subject: [PATCH v5 9/9] iomap: do some small logical cleanup in buffered write
+Date: Thu, 25 Apr 2024 21:13:35 +0800
+Message-Id: <20240425131335.878454-10-yi.zhang@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240425131335.878454-1-yi.zhang@huaweicloud.com>
 References: <20240425131335.878454-1-yi.zhang@huaweicloud.com>
@@ -51,11 +51,11 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgCXaBEqWSpmHu+2Kw--.61462S8
-X-Coremail-Antispam: 1UD129KBjvJXoWxWw47Kw4fCw4UJF4DuryDKFg_yoWrGrWrpF
-	Zagw13GrsrGw13Zw4fAF15Wr1F93Z5Cr4UJry5Xws3Z34aqr4IgryIy3Wjqry8Cws3A3Wj
-	vF4jgas2934qvaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPF14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID:cCh0CgCXaBEqWSpmHu+2Kw--.61462S13
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZrykWry8urWrAFW5Kr18Grg_yoW8GrWkpF
+	nxKaykurW0qwsruF1kAFnruFWqya93Gry7GrW8Gw45urs8ArWYgFy0gayj9a48Jr93CryS
+	vr4qy348J3W5Ar7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
 	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
@@ -65,122 +65,51 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxWw47Kw4fCw4UJF4DuryDKFg_yoWrGrWrpF
 	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
 	kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
 	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUOBTY
-	UUUUU
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
+	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQ
+	SdkUUUUU=
 X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
 From: Zhang Yi <yi.zhang@huawei.com>
 
-Current clone operation could be non-atomic if the destination of a file
-is beyond EOF, user could get a file with corrupted (zeroed) data on
-crash.
+Since iomap_write_end() can never return a partial write length, the
+comparison between written, copied and bytes becomes useless, just
+merge them with the unwritten branch.
 
-The problem is about preallocations. If you write some data into a file:
-
-	[A...B)
-
-and XFS decides to preallocate some post-eof blocks, then it can create
-a delayed allocation reservation:
-
-	[A.........D)
-
-The writeback path tries to convert delayed extents to real ones by
-allocating blocks. If there aren't enough contiguous free space, we can
-end up with two extents, the first real and the second still delalloc:
-
-	[A....C)[C.D)
-
-After that, both the in-memory and the on-disk file sizes are still B.
-If we clone into the range [E...F) from another file:
-
-	[A....C)[C.D)      [E...F)
-
-then xfs_reflink_zero_posteof() calls iomap_zero_range() to zero out the
-range [B, E) beyond EOF and flush it. Since [C, D) is still a delalloc
-extent, its pagecache will be zeroed and both the in-memory and on-disk
-size will be updated to D after flushing but before cloning. This is
-wrong, because the user can see the size change and read the zeroes
-while the clone operation is ongoing.
-
-We need to keep the in-memory and on-disk size before the clone
-operation starts, so instead of writing zeroes through the page cache
-for delayed ranges beyond EOF, we convert these ranges to unwritten and
-invalidate any cached data over that range beyond EOF.
-
-Suggested-by: Dave Chinner <david@fromorbit.com>
 Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
-Changes since v4:
+ fs/iomap/buffered-io.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-Move the delalloc converting hunk before searching the COW fork. Because
-if the file has been reflinked and copied on write,
-xfs_bmap_extsize_align() aligned the range of COW delalloc extent, after
-the writeback, there might be some unwritten extents left over in the
-COW fork that overlaps the delalloc extent we found in data fork.
-
-  data fork  ...wwww|dddddddddd...
-  cow fork          |uuuuuuuuuu...
-                    ^
-                  i_size
-
-In my v4, we search the COW fork before checking the delalloc extent,
-goto found_cow tag and return unconverted delalloc srcmap in the above
-case, so the delayed extent in the data fork will have no chance to
-convert to unwritten, it will lead to delalloc extent residue and break
-generic/522 after merging patch 6.
-
- fs/xfs/xfs_iomap.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index 236ee78aa75b..2857ef1b0272 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -1022,6 +1022,24 @@ xfs_buffered_write_iomap_begin(
- 		goto out_unlock;
- 	}
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 176a9ea502ba..0926d216a5af 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -975,11 +975,6 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
  
-+	/*
-+	 * For zeroing, trim a delalloc extent that extends beyond the EOF
-+	 * block.  If it starts beyond the EOF block, convert it to an
-+	 * unwritten extent.
-+	 */
-+	if ((flags & IOMAP_ZERO) && imap.br_startoff <= offset_fsb &&
-+	    isnullstartblock(imap.br_startblock)) {
-+		xfs_fileoff_t eof_fsb = XFS_B_TO_FSB(mp, XFS_ISIZE(ip));
-+
-+		if (offset_fsb >= eof_fsb)
-+			goto convert_delay;
-+		if (end_fsb > eof_fsb) {
-+			end_fsb = eof_fsb;
-+			xfs_trim_extent(&imap, offset_fsb,
-+					end_fsb - offset_fsb);
-+		}
-+	}
-+
- 	/*
- 	 * Search the COW fork extent list even if we did not find a data fork
- 	 * extent.  This serves two purposes: first this implements the
-@@ -1167,6 +1185,17 @@ xfs_buffered_write_iomap_begin(
- 	xfs_iunlock(ip, lockmode);
- 	return xfs_bmbt_to_iomap(ip, iomap, &imap, flags, 0, seq);
+ 		if (old_size < pos)
+ 			pagecache_isize_extended(iter->inode, old_size, pos);
+-		if (written < bytes)
+-			iomap_write_failed(iter->inode, pos + written,
+-					   bytes - written);
+-		if (unlikely(copied != written))
+-			iov_iter_revert(i, copied - written);
  
-+convert_delay:
-+	xfs_iunlock(ip, lockmode);
-+	truncate_pagecache(inode, offset);
-+	error = xfs_bmapi_convert_delalloc(ip, XFS_DATA_FORK, offset,
-+					   iomap, NULL);
-+	if (error)
-+		return error;
+ 		cond_resched();
+ 		if (unlikely(written == 0)) {
+@@ -989,6 +984,9 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
+ 			 * halfway through, might be a race with munmap,
+ 			 * might be severe memory pressure.
+ 			 */
++			iomap_write_failed(iter->inode, pos, bytes);
++			iov_iter_revert(i, copied);
 +
-+	trace_xfs_iomap_alloc(ip, offset, count, XFS_DATA_FORK, &imap);
-+	return 0;
-+
- found_cow:
- 	seq = xfs_iomap_inode_sequence(ip, 0);
- 	if (imap.br_startoff <= offset_fsb) {
+ 			if (chunk > PAGE_SIZE)
+ 				chunk /= 2;
+ 			if (copied) {
 -- 
 2.39.2
 
