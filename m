@@ -1,169 +1,114 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC011210E6;
-	Thu, 25 Apr 2024 10:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3612D1CD23;
+	Thu, 25 Apr 2024 10:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714041471; cv=none; b=GgEuBCqzhmPrA9aQpjgJBG+Is7rB1IB+O4CnzPMKPdERpWbf+0VWma0xdou/XWYK4H9XSgpt8RZIzh5SV5Q+wPdI5J+SgwWl3WbA37/gXNKpe6KbbvZJxXQ1JIvS2cDOZK/TMBcHPEyu809QHaUhzDylQj7+GWOJ0nz7HFBXIOU=
+	t=1714041498; cv=none; b=uuO8m6thXNw228GO/OxiuJ5DZMl0ywLlw9A3xPWkquNrwKZUG3LWK4qvk5kmor0DoC8S4dadRh4dujRA89RVoYqidX7QlfEoykApWh1MuOOIyTtixtosP6G2znMLY9wSwLqEyYg9oCHwlA6wqigxtZ+DJ/QJs9+sbA1wC0q1oow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714041471; c=relaxed/simple;
-	bh=CFoH42OIvTROq01T7YqM+I62dzAY/y5oN09zfkoGmHY=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=mtzhNwl8C71xl+thUrRRdGCitn3vA+7e328lHyM66OoT7cyW4tfLTGjna0LsycqOi43bN+Y98JV+Bh1FyuoNCmYRfZHEEmvwrYK0k+9nx0vebNWJ8PalAs/D/4qFmmWhrzMmoN969QLtn9cays1aku1cMKL8qlQpD3NkVd4kWZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0B0311A0276;
-	Thu, 25 Apr 2024 12:37:47 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7DE961A0258;
-	Thu, 25 Apr 2024 12:37:46 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 8F8D3181D0FB;
-	Thu, 25 Apr 2024 18:37:44 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: abelvesa@kernel.org,
-	peng.fan@nxp.com,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	imx@lists.linux.dev,
-	shengjiu.wang@gmail.com
-Cc: linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: imx: imx8mp: Add delay after power up
-Date: Thu, 25 Apr 2024 18:19:24 +0800
-Message-Id: <1714040364-17127-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1714041498; c=relaxed/simple;
+	bh=s0flc0O0ENfWyvDrw9EUrpvhWQMG2H4AQk5/xSXi9Dw=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=SDRQ0uvpBoMq+S84ETHGNz1wwmNQvaVglf+EoqB8cu1gwKbAvj8AFulIRXo0FcyxUjqt+7vc4Yytl/hIYA31HK4/M8Y8QmF6JKwNNp1nrZyj/1cTM1r5uQYFrTX9EJ8NW1pKv4gwvSMMqrf8YmI68GmwoFgAEQFA+ciVGqQaTMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2H7/B80; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2H7/B80"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0076C113CE;
+	Thu, 25 Apr 2024 10:38:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714041497;
+	bh=s0flc0O0ENfWyvDrw9EUrpvhWQMG2H4AQk5/xSXi9Dw=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=r2H7/B80LbmXbUwobGpFjbK/uHkJiSDy7N0XJdAWDAh4l8mZuGdqrQpJtcKT+kdQ7
+	 AiE9BX2JqCRSz+9ordjnrN8awj/1lEX7HEiw+n9iCzvADATTwFzNZG8tW1+monKTlS
+	 tr6fM7SSkZslpGTsr6n6EEF8FQzwqW1s2vmjwJXqgnxOUZP9zBi90O3yTEPnRvMNYu
+	 Oj9Hq3kr2Rtu5gA+ldv7kBzGbzzzD8FIAYbVf+XBnALVK7MCQWAdNYraNC8NkXlcz2
+	 4gKHq49/OyhhDb2vXe/4F1ZhQTIXPSvM2hQ/KigtwnxDobf0QNMWpOtsCd8WXFnKqc
+	 237EvN37jx1EA==
+Date: Thu, 25 Apr 2024 05:38:16 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+From: Rob Herring <robh@kernel.org>
+To: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Cc: Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, 
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ quic_rohkumar@quicinc.com, linux-arm-msm@vger.kernel.org, 
+ Banajit Goswami <bgoswami@quicinc.com>, quic_pkumpatl@quicinc.com, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ alsa-devel@alsa-project.org, Conor Dooley <conor+dt@kernel.org>
+In-Reply-To: <20240425091857.2161088-2-quic_mohs@quicinc.com>
+References: <20240425091857.2161088-1-quic_mohs@quicinc.com>
+ <20240425091857.2161088-2-quic_mohs@quicinc.com>
+Message-Id: <171404149555.2167007.16345461403970586923.robh@kernel.org>
+Subject: Re: [PATCH v3 1/7] ASoC: dt-bindings: document wcd937x Audio Codec
 
-According to comments in drivers/pmdomain/imx/gpcv2.c:
 
-	/* request the ADB400 to power up */
-	if (domain->bits.hskreq) {
-		regmap_update_bits(domain->regmap, domain->regs->hsk,
-				   domain->bits.hskreq, domain->bits.hskreq);
+On Thu, 25 Apr 2024 14:48:51 +0530, Mohammad Rafi Shaik wrote:
+> From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+> 
+> Document the Qualcomm WCD9370/WCD9375 Audio Codec and the soundwire
+> devices can be found on Qualcomm QCM6490 based platforms.
+> 
+> The Qualcomm WCD9370/WCD9375 Audio Codec communicates
+> with the host SoC over 2 Soundwire links to provide:
+> - 3 TX ADC paths with 4 differential AMIC inputs
+> - 6 DMIC inputs that are shared with AMIC input
+> - 4 Microphone BIAS
+> - RX paths with 4 PAs – HPHL/R, EAR and AUX
+> - Stereo Headphone output
+> - MBHC engine for Headset Detection
+> 
+> Co-developed-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+> ---
+>  .../bindings/sound/qcom,wcd937x-sdw.yaml      | 78 +++++++++++++++++++
+>  .../bindings/sound/qcom,wcd937x.yaml          | 58 ++++++++++++++
+>  2 files changed, 136 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml
+>  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd937x.yaml
+> 
 
-		/*
-		 * ret = regmap_read_poll_timeout(domain->regmap, domain->regs->hsk, reg_val,
-		 *				  (reg_val & domain->bits.hskack), 0,
-		 *				  USEC_PER_MSEC);
-		 * Technically we need the commented code to wait handshake. But that needs
-		 * the BLK-CTL module BUS clk-en bit being set.
-		 *
-		 * There is a separate BLK-CTL module and we will have such a driver for it,
-		 * that driver will set the BUS clk-en bit and handshake will be triggered
-		 * automatically there. Just add a delay and suppose the handshake finish
-		 * after that.
-		 */
-	}
+My bot found errors running 'make dt_binding_check' on your patch:
 
-The BLK-CTL module needs to add delay to wait for a handshake request finished
-before accessing registers, which is just after the enabling of power domain.
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/sound/qcom,wcd937x.yaml:30:11: [warning] wrong indentation: expected 4 but found 10 (indentation)
+./Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml:34:13: [warning] wrong indentation: expected 6 but found 12 (indentation)
+./Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml:34:17: [warning] too many spaces before colon (colons)
+./Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml:46:13: [warning] wrong indentation: expected 6 but found 12 (indentation)
+./Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml:46:17: [warning] too many spaces before colon (colons)
 
-Otherwise there is error:
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/qcom,wcd937x.example.dtb: codec: compatible:0: 'sdw20217010a00' was expected
+	from schema $id: http://devicetree.org/schemas/sound/qcom,wcd937x.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/qcom,wcd937x.example.dtb: codec: 'reg' is a required property
+	from schema $id: http://devicetree.org/schemas/sound/qcom,wcd937x.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/qcom,wcd937x.example.dtb: codec: '#sound-dai-cells', 'qcom,micbias1-microvolt', 'qcom,micbias2-microvolt', 'qcom,micbias3-microvolt', 'qcom,micbias4-microvolt', 'qcom,rx-device', 'qcom,tx-device', 'reset-gpios', 'vdd-buck-supply', 'vdd-mic-bias-supply', 'vdd-px-supply', 'vdd-rxtx-supply' do not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/sound/qcom,wcd937x.yaml#
 
-[    2.180834] SError Interrupt on CPU1, code 0x00000000bf000002 -- SError
-[    2.180849] CPU: 1 PID: 48 Comm: kworker/u16:2 Not tainted 6.9.0-rc5-next-20240424-00003-g21cec88845c6 #171
-[    2.180856] Hardware name: NXP i.MX8MPlus EVK board (DT)
-[    2.180861] Workqueue: events_unbound deferred_probe_work_func
-[    2.180878] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    2.180885] pc : clk_imx8mp_audiomix_runtime_resume+0x34/0x44
-[    2.180900] lr : pm_generic_runtime_resume+0x2c/0x44
-[    2.180910] sp : ffff800083423a20
-[    2.180913] x29: ffff800083423a20 x28: 0000000000000000 x27: 0000000000000000
-[    2.180922] x26: ffff0000c0e4e410 x25: 0000000000000000 x24: 0000000000000000
-[    2.180935] x23: 0000000000000000 x22: ffff0000c02afd20 x21: 0000000000000000
-[    2.180945] x20: ffff0000c162a000 x19: ffff0000c0e52810 x18: ffffffffffffffff
-[    2.180959] x17: 0000000000000000 x16: 0000000000000100 x15: ffff8000834239f0
-[    2.180970] x14: ffff0000c03d0a1c x13: ffff0000c0a03440 x12: 00000000000003c7
-[    2.180982] x11: 0000000000000000 x10: ffff8000825010ba x9 : 0000000000000008
-[    2.180993] x8 : 0000000000000008 x7 : 0000000000000000 x6 : 0000000000000000
-[    2.181005] x5 : ffff8000838b0000 x4 : ffff0000c0e66088 x3 : ffff8000813852c0
-[    2.181018] x2 : 0000000000000000 x1 : 0000000000000004 x0 : ffff8000838b0300
-[    2.181035] Kernel panic - not syncing: Asynchronous SError Interrupt
-[    2.181038] CPU: 1 PID: 48 Comm: kworker/u16:2 Not tainted 6.9.0-rc5-next-20240424-00003-g21cec88845c6 #171
-[    2.181047] Hardware name: NXP i.MX8MPlus EVK board (DT)
-[    2.181050] Workqueue: events_unbound deferred_probe_work_func
-[    2.181064] Call trace:
-[    2.181066]  dump_backtrace+0x90/0xe8
-[    2.181080]  show_stack+0x18/0x24
-[    2.181091]  dump_stack_lvl+0x34/0x8c
-[    2.181104]  dump_stack+0x18/0x24
-[    2.181117]  panic+0x39c/0x3d0
-[    2.181129]  nmi_panic+0x48/0x94
-[    2.181142]  arm64_serror_panic+0x6c/0x78
-[    2.181149]  do_serror+0x3c/0x70
-[    2.181157]  el1h_64_error_handler+0x30/0x48
-[    2.181164]  el1h_64_error+0x64/0x68
-[    2.181171]  clk_imx8mp_audiomix_runtime_resume+0x34/0x44
-[    2.181183]  __genpd_runtime_resume+0x30/0x80
-[    2.181195]  genpd_runtime_resume+0x110/0x244
-[    2.181205]  __rpm_callback+0x48/0x1d8
-[    2.181213]  rpm_callback+0x68/0x74
-[    2.181224]  rpm_resume+0x468/0x6c0
-[    2.181234]  __pm_runtime_resume+0x50/0x94
-[    2.181243]  pm_runtime_get_suppliers+0x60/0x8c
-[    2.181258]  __driver_probe_device+0x48/0x12c
-[    2.181268]  driver_probe_device+0xd8/0x15c
-[    2.181278]  __device_attach_driver+0xb8/0x134
-[    2.181290]  bus_for_each_drv+0x84/0xe0
-[    2.181302]  __device_attach+0x9c/0x188
-[    2.181312]  device_initial_probe+0x14/0x20
-[    2.181323]  bus_probe_device+0xac/0xb0
-[    2.181334]  deferred_probe_work_func+0x88/0xc0
-[    2.181344]  process_one_work+0x150/0x290
-[    2.181357]  worker_thread+0x2f8/0x408
-[    2.181370]  kthread+0x110/0x114
-[    2.181381]  ret_from_fork+0x10/0x20
-[    2.181391] SMP: stopping secondary CPUs
-[    2.181400] Kernel Offset: disabled
-[    2.181403] CPU features: 0x0,00000040,00100000,4200421b
-[    2.181407] Memory Limit: none
-[    2.463040] ---[ end Kernel panic - not syncing: Asynchronous SError Interrupt ]---
+doc reference errors (make refcheckdocs):
 
-Fixes: 1496dd413b2e ("clk: imx: imx8mp: Add pm_runtime support for power saving")
-Reported-by: Francesco Dolcini <francesco@dolcini.it>
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- drivers/clk/imx/clk-imx8mp-audiomix.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240425091857.2161088-2-quic_mohs@quicinc.com
 
-diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
-index e4231e9c8f05..cb44c460548e 100644
---- a/drivers/clk/imx/clk-imx8mp-audiomix.c
-+++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/clk-provider.h>
-+#include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/io.h>
- #include <linux/mod_devicetable.h>
-@@ -362,6 +363,12 @@ static int clk_imx8mp_audiomix_runtime_suspend(struct device *dev)
- 
- static int clk_imx8mp_audiomix_runtime_resume(struct device *dev)
- {
-+	/*
-+	 * According to the drivers/pmdomain/imx/gpcv2.c
-+	 * need to wait for handshake request to propagate
-+	 */
-+	udelay(5);
-+
- 	clk_imx8mp_audiomix_save_restore(dev, false);
- 
- 	return 0;
--- 
-2.34.1
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
