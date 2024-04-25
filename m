@@ -1,57 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79501EB3E
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 11:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5672263A
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 11:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714042918; cv=none; b=i4cN4fDe0CTCyjDd5pQtAsXeWqR4kenCI1sl0FSQ0tRYyZN54zrr/arJXCtLtKTuXm/OWhc2dIqkZ7P6oA1EloH1MJ4fJHPyPEtbXCFYpGnWYBjWnAwuNVpjyfUmX6gd0881QG1NET1aRY6yFIlTYb+6a5ugNv7JLjebBs6HfEs=
+	t=1714042919; cv=none; b=d4+KdOxHzt1sYt+5MMCJrDyhBwr/FIdHokO8vyhsntAo33so6XM8RYHxYQkghjKXzbYkTmysSbgRmSnM444AZGcs0Lzl/TYdaOxyKBftN7b26l6fNgnFtIS8v+iR62vUpv1uE2XUSGSRKvFIZYnn8Mx9rovix1WyHQGGi5+UdN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714042918; c=relaxed/simple;
-	bh=J8JNHH5jxuyS3NlCBc/iWMwx7Bvw3C4Sv3E+pZUfzVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=M+BcbK/MdqPF97XY2X+XVIsPm7U8JHF2AUMgJlu8UU/mfzFyrIqrQpnRvFbCmiYDcRYlg0BjkYVoX5zQ2/p1SzKdfZQc0PN/ooLeQ/J71j+IQooXsLIroSmC12LV9bwERWdWkynjbQ8Eswblca1gl23KocJA3pM0k1ukn0r/MXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IYAdT0Ew; arc=none smtp.client-ip=192.198.163.15
+	s=arc-20240116; t=1714042919; c=relaxed/simple;
+	bh=BCvT0q3m+Nv6iLM1VPhxYvOhmAsOoouUkOeIWGtAJbA=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=rx+cCPI4Iax8WDzZrxeYNS+rTTnTLG2Z6/dGd6YdxmTVVtlAm42x82Edc4YhH4h7gn0JLXANx/78Xg55E26PlperuTx4nplDtj1JG0vc6aejjswiLBE6+iy62pETuG4QRxlUhbd3CvmWoBeL8RRoJkH97fUnY2Ku1aDBg3UI3Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m84xEvZj; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IYAdT0Ew"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m84xEvZj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714042917; x=1745578917;
+  t=1714042918; x=1745578918;
   h=date:from:to:cc:subject:message-id;
-  bh=J8JNHH5jxuyS3NlCBc/iWMwx7Bvw3C4Sv3E+pZUfzVQ=;
-  b=IYAdT0Ewe3713HWNJtb6snAQ+0kaB56aG4aRO02z0kTGAd6/WHZK+AnY
-   98gAwuT7+I+v0wITtgYcYBZ4m23gov3KnbhL8dBkxBplo7jKIDyOB13r2
-   LXfSIrY9qCB1vi/rNsP7/6k6R5u5eEi3CgZ2kY5VaFJLJsD5UlnMjmq05
-   3MXYPmF19vueDvZTRONYz8Sz8fx8RnDABD16FwpSfw4eBYmoayLGGCde9
-   RocxzwwMEIVlZNEQqd1LuxggwirS32cKyxuWBZYL7wGG/yoSKb5wTetCx
-   FQQXSfbuTKW0fatTvssQIlbn4/U/gKNjPgsopZOyQR+3uoia2SAXyjlAI
-   A==;
-X-CSE-ConnectionGUID: xqrTmsTJTDSp+onrbLFQew==
-X-CSE-MsgGUID: ogaglKwRR/K4BQyTNBf/HQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="9878448"
+  bh=BCvT0q3m+Nv6iLM1VPhxYvOhmAsOoouUkOeIWGtAJbA=;
+  b=m84xEvZjVHdALkt89UvcTeG4sTxd7q+SYJZ+33nALCDF4qLE1nuoQwn1
+   73g0y3NYOrHbCedUgCQ7BsLbNI6MqljdYcUnXmuFI1bEjilzJp+CbQ1rU
+   Oi/63KrQVbebGtxRQ0IeIkQSLaZGWIdYs3k/gqj62I7sMqNK50tHDQJOs
+   SeC5AEeg47rEwVIQVThaAsWGMGQ33glWVbhO0zU0JMNH4z6uPJ//iuGFk
+   5K5rtpZ8bN4xERFHNqiQGboUIy/lHK2allBIqXW7AQ+fyTnMXMaQdywCn
+   1yZwUO21EexUCgIIsZGp1b17Unoe+Rh5w4u1D9lgFeknuvE0s1ODk++E3
+   w==;
+X-CSE-ConnectionGUID: 6l5prci8SWi0gvasn5zAvA==
+X-CSE-MsgGUID: BLYkYG2sRrK2YGE/IUZF6w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="9590417"
 X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
-   d="scan'208";a="9878448"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 04:01:56 -0700
-X-CSE-ConnectionGUID: SzBdKnc2Suul4vBClPjZeA==
-X-CSE-MsgGUID: +NsRQa/NReuEfm2rbWdUFQ==
+   d="scan'208";a="9590417"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 04:01:57 -0700
+X-CSE-ConnectionGUID: hX4qCejARweJLQo6LuQNWA==
+X-CSE-MsgGUID: UuY+W4boR0yxa/700/7T8Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
-   d="scan'208";a="29825921"
+   d="scan'208";a="25452870"
 Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 25 Apr 2024 04:01:55 -0700
+  by orviesa006.jf.intel.com with ESMTP; 25 Apr 2024 04:01:54 -0700
 Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rzwrQ-0002Hp-1U;
+	id 1rzwrQ-0002Hm-1P;
 	Thu, 25 Apr 2024 11:01:52 +0000
-Date: Thu, 25 Apr 2024 19:01:44 +0800
+Date: Thu, 25 Apr 2024 19:01:12 +0800
 From: kernel test robot <lkp@intel.com>
 To: "x86-ml" <x86@kernel.org>
 Cc: linux-kernel@vger.kernel.org
-Subject: [tip:sched/core] BUILD SUCCESS
- 97450eb909658573dcacc1063b06d3d08642c0c1
-Message-ID: <202404251941.JCTGaWJs-lkp@intel.com>
+Subject: [tip:locking/core] BUILD SUCCESS
+ 532453e7aa78f3962fb4d86caf40ff81ebf62160
+Message-ID: <202404251909.5I9tCh6w-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,12 +59,12 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
-branch HEAD: 97450eb909658573dcacc1063b06d3d08642c0c1  sched/pelt: Remove shift of thermal clock
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/core
+branch HEAD: 532453e7aa78f3962fb4d86caf40ff81ebf62160  locking/pvqspinlock/x86: Use _Q_LOCKED_VAL in PV_UNLOCK_ASM macro
 
-elapsed time: 1473m
+elapsed time: 1472m
 
-configs tested: 150
+configs tested: 138
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -77,9 +77,7 @@ alpha                               defconfig   gcc
 arc                              allmodconfig   gcc  
 arc                               allnoconfig   gcc  
 arc                              allyesconfig   gcc  
-arc                          axs103_defconfig   gcc  
 arc                                 defconfig   gcc  
-arc                         haps_hs_defconfig   gcc  
 arc                     nsimosci_hs_defconfig   gcc  
 arc                 nsimosci_hs_smp_defconfig   gcc  
 arc                   randconfig-001-20240425   gcc  
@@ -87,7 +85,6 @@ arc                   randconfig-002-20240425   gcc
 arm                              allmodconfig   gcc  
 arm                               allnoconfig   clang
 arm                              allyesconfig   gcc  
-arm                          collie_defconfig   gcc  
 arm                                 defconfig   clang
 arm                        multi_v7_defconfig   gcc  
 arm64                             allnoconfig   gcc  
@@ -102,9 +99,7 @@ csky                             allyesconfig   gcc
 csky                                defconfig   gcc  
 csky                  randconfig-001-20240425   gcc  
 csky                  randconfig-002-20240425   gcc  
-hexagon                          allmodconfig   clang
 hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
 hexagon                             defconfig   clang
 i386                             allmodconfig   gcc  
 i386                              allnoconfig   gcc  
@@ -134,7 +129,6 @@ microblaze                          defconfig   gcc
 mips                             allmodconfig   gcc  
 mips                              allnoconfig   gcc  
 mips                             allyesconfig   gcc  
-mips                     loongson1c_defconfig   gcc  
 nios2                            allmodconfig   gcc  
 nios2                             allnoconfig   gcc  
 nios2                            allyesconfig   gcc  
@@ -150,15 +144,12 @@ parisc                            allnoconfig   gcc
 parisc                              defconfig   gcc  
 parisc                randconfig-001-20240425   gcc  
 parisc                randconfig-002-20240425   gcc  
-parisc64                         alldefconfig   gcc  
 parisc64                            defconfig   gcc  
 powerpc                           allnoconfig   gcc  
 powerpc                          allyesconfig   clang
 powerpc                      ep88xc_defconfig   gcc  
 powerpc               randconfig-001-20240425   gcc  
 powerpc               randconfig-002-20240425   gcc  
-powerpc                    sam440ep_defconfig   gcc  
-powerpc                     tqm8540_defconfig   gcc  
 powerpc64             randconfig-001-20240425   gcc  
 powerpc64             randconfig-002-20240425   gcc  
 powerpc64             randconfig-003-20240425   gcc  
@@ -183,7 +174,6 @@ sh                    randconfig-001-20240425   gcc
 sh                    randconfig-002-20240425   gcc  
 sh                          rsk7201_defconfig   gcc  
 sh                          rsk7264_defconfig   gcc  
-sh                        sh7757lcr_defconfig   gcc  
 sh                   sh7770_generic_defconfig   gcc  
 sparc                            allmodconfig   gcc  
 sparc                             allnoconfig   gcc  
@@ -212,14 +202,12 @@ x86_64                randconfig-014-20240425   gcc
 x86_64                randconfig-072-20240425   gcc  
 x86_64                randconfig-073-20240425   gcc  
 x86_64                randconfig-076-20240425   gcc  
-x86_64                          rhel-8.3-func   gcc  
 x86_64                          rhel-8.3-rust   clang
 x86_64                               rhel-8.3   gcc  
 xtensa                            allnoconfig   gcc  
 xtensa                           allyesconfig   gcc  
 xtensa                randconfig-001-20240425   gcc  
 xtensa                randconfig-002-20240425   gcc  
-xtensa                         virt_defconfig   gcc  
 xtensa                    xip_kc705_defconfig   gcc  
 
 -- 
