@@ -1,659 +1,133 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5666E85262
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 09:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7498005B;
+	Thu, 25 Apr 2024 09:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714038842; cv=none; b=CsI5M7/93O8FCrSxl2tHFTqUWTds0YuqS2oiDKNK8JHfUUla1Ujo4X25X/iOqPXAvrDbVQ2LYUFsG1eW89/W7EPq+qptfNjxasWsUhGGzAoh5m0+3VZ6eAd8OCqTsUVMjSHLeVWFZ6UO7CqxLGrORvZQkZ62apz1sa8JwPH+nlg=
+	t=1714038880; cv=none; b=s6lmNnML70stmfUGi3+EWRFOBOTpodZgblAltrpzyi/aocLgBlI+qhWzsBIBmDceNGlN+YE1MJkgfOgX7Mr/wr4b9vqlkMW/giEsb0bUYgi5xm721NPlpmKgfCtS6GNlnX5P2l9In1RjJyYG9OBGBHSYDB0vrtWzx5CCrIqjnpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714038842; c=relaxed/simple;
-	bh=n8vlU+XM8z3wB/fXZKSaZJArUMjegdv2NMyY9ymyFkY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PW9KMItlMQeuX5bBseUAx1sX17bghZzplc/BdhXMJDBl872EXCjAOc3In5PnLzgb1UXcC2iTmip/Itdp0Uin7SEi+pMIndZux+H5Onmzq/GiOSHgoeskAJnMr8b3tFLi7VWV8b3AYvfRRjW7660p6iiblrHCfqDUHF+IRt/lB18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1ZcmB1/X; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714038880; c=relaxed/simple;
+	bh=Hdtl/Gl5j4mz5TOTXpgnpl6AGib4dz13JCTXnJ9K0IQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hOiunMD/Z/D0mKrP4LChKtysgTXHPzRdrunNfj/yYRY78GmE0E6X5RYgPc/vdrU+ZF1ppFaeNsHFOm2MyDKFO8JcUrOuCn0jraE5WRmQYh5yurYMZwZZ/zyt1vnINfZf1rkVG1vQCJKkh+Trz7Zl9eTP3WfMGLXTAktLGtQKkKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k8YA98lt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1ZcmB1/X"
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-7ed38f80242so250335241.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 02:54:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714038839; x=1714643639; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2S4ZtYAwV4UTFyGGvlfOuiO1B8y2ezWGPKFTIKxi00o=;
-        b=1ZcmB1/XXfTiNS1S4siWi7XthJMkonIzHT7ZlFJe+P4oOzbUb6nngQbDAWhojLPmR1
-         tlte1zqbus68Bt7M9HN5j3XRVeGLPvhuYqbu4vIcuS+jjcg4OWDpOBSMMClLlsbiIev9
-         Cm7m0zCc2dwJYbhkaOMbhmI2r1nnDczzs0dsLqay/Fxr7fbvUApuFYnviCHkmBknEcBP
-         7T7fDgZw2rXvEbI5sm8khOI7oLpqae7T08u5qkp0CohjPaNe0DtoKMfiGcZbm5L9aLxf
-         WrNcl7AnYhaz9eu7Ob/rDFbJt0l/m7JbdqT6/0gmCXL1XT/nv8ia/CB598Tiv/svgq3H
-         CJmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714038839; x=1714643639;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2S4ZtYAwV4UTFyGGvlfOuiO1B8y2ezWGPKFTIKxi00o=;
-        b=iFC2aYiAR7q5cdZjdB/wpQoSSR3n3DE2qK4YGkzLGZvcm74RB/OdItedWWWTysydS7
-         j27Rm+bqQ1BXD01NWUGpUslY8b9LYMjrIhZAsfZ9lym+XMV7/+y5b3vwPfK78ddyHflG
-         KeaBeIBPr7vtMpS9+uSsZdu84daGiWwEqueRNPg60p2GF3boWCABdzvuPZ+te03gtkWG
-         4/M9pAHSh3XUNWKDkJjOuUMKYikuiYL5LPleemgVn5+tX1rLjCZTGtSKQo3VUTDu2vDp
-         0zuELytEBwO7P+bsvNA9uDQraDVk0wdoIu/J6b6Fn7T+2syNnrP1wc1D5H0U/rkYWpII
-         m6sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVzPrZWF739eTFs6VTeNBYJportUKcVQpQjUAozM1EbJ/GYFgsVKIfdYxxH0Fn8fF1Ys7rKctQr+gipoHpPiDkzfuHhldiTHr6vXrC8
-X-Gm-Message-State: AOJu0Yyxg1QBac1zcMq0ENlvM6o1Mom0tKjNM8ri36tRfq0GcAHh4w+k
-	bW+WLzgp/A8PlVxPULPDcvCjhKoAgrlIAyO9zMWhoVWDT+DNqqiv24ARaWp1dI27vmlJpuJaGfc
-	REkrZxfJC71q7+42iCeZYAyuMt7AuYRXoVrIl
-X-Google-Smtp-Source: AGHT+IFCf96b/8rN1I/j0zet+Ph8wQszLYqyZmPfsby4JB1xvMf0BWiQIrmpfRGoF/fvks0lP7Tj4Xe4rXCwOjelin0=
-X-Received: by 2002:a05:6102:162a:b0:47c:1f69:f132 with SMTP id
- cu42-20020a056102162a00b0047c1f69f132mr189601vsb.34.1714038838785; Thu, 25
- Apr 2024 02:53:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k8YA98lt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B87C113CC;
+	Thu, 25 Apr 2024 09:54:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714038879;
+	bh=Hdtl/Gl5j4mz5TOTXpgnpl6AGib4dz13JCTXnJ9K0IQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k8YA98ltaLXaJTJqkcZkD545MewKPful8f3DJvecUQ2AXDbIXGi/tNhNzJi7Cpq6q
+	 TtFnRyIaTVNi7vAGNYLZSb0jbqijAMGOtFGtj+bWZA9xbG82+lRoRquboibW8RrK6Q
+	 6R4CZjiCkOSqhr83X3hq0pAhj+VMq4y/tOPKKFkEmUWhrKXNG+gjKz/e3EGs+2x1YC
+	 6zHP5iH5YvKvCQKyKOfCgQkpddE8DdKZCSvB5t7QLtSqkKPlN/D5wHHloGxN0vVnLH
+	 JfM1RHpkNZQ6NM3+U9p/72vo7tqYi/N1l4HG8jQA8XgTnx4NVlp7PWnRQKQXJRqUde
+	 ocfS5j046avvA==
+Date: Thu, 25 Apr 2024 11:54:28 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: stsp <stsp2@yandex.ru>
+Cc: linux-kernel@vger.kernel.org, Stefan Metzmacher <metze@samba.org>, 
+	Eric Biederman <ebiederm@xmission.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Andy Lutomirski <luto@kernel.org>, Jan Kara <jack@suse.cz>, Jeff Layton <jlayton@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>, 
+	David Laight <David.Laight@aculab.com>, linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, Christian =?utf-8?B?R8O2dHRzY2hl?= <cgzones@googlemail.com>
+Subject: Re: [PATCH v4 0/2] implement OA2_INHERIT_CRED flag for openat2()
+Message-ID: <20240425-ausfiel-beabsichtigen-a2ef9126ebda@brauner>
+References: <20240424105248.189032-1-stsp2@yandex.ru>
+ <20240424-schummeln-zitieren-9821df7cbd49@brauner>
+ <6b46528a-965f-410a-9e6f-9654c5e9dba2@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240412084056.1733704-1-steven.price@arm.com>
- <20240412084309.1733783-1-steven.price@arm.com> <20240412084309.1733783-18-steven.price@arm.com>
-In-Reply-To: <20240412084309.1733783-18-steven.price@arm.com>
-From: Fuad Tabba <tabba@google.com>
-Date: Thu, 25 Apr 2024 10:53:22 +0100
-Message-ID: <CA+EHjTzHJjtp4uMXN8RN4j=J-j2VdMQUhPr607EPzxTYUhMURQ@mail.gmail.com>
-Subject: Re: [PATCH v2 17/43] arm64: RME: Allow VMM to set RIPAS
-To: Steven Price <steven.price@arm.com>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
-	Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>, 
-	James Morse <james.morse@arm.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei <alexandru.elisei@arm.com>, 
-	Christoffer Dall <christoffer.dall@arm.com>, linux-coco@lists.linux.dev, 
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6b46528a-965f-410a-9e6f-9654c5e9dba2@yandex.ru>
 
-Hi,
+On Wed, Apr 24, 2024 at 08:50:30PM +0300, stsp wrote:
+> 24.04.2024 19:09, Christian Brauner пишет:
+> > This smells ripe enough to serve as an attack vector in non-obvious
+> > ways. And in general this has the potential to confuse the hell out
+> > unsuspecting userspace.
+> 
+> Unsuspecting user-space will simply
+> not use this flag. What do you mean?
+> 
+> 
+> >   They can now suddenly get sent such
+> > special-sauce files
+> 
+> There are no any special files.
+> This flag helps you to open a file on
+> which you currently have no perms
+> to open, but had those in the past.
+> 
+> 
+> >   such as this that they have no way of recognizing as
+> > there's neither an FMODE_* flag nor is the OA2_* flag recorded so it's
+> > not available in F_GETFL.
+> > 
+> > There's not even a way to restrict that new flag because no LSM ever
+> > sees it. So that behavior might break LSM assumptions as well.
+> > 
+> > And it is effectively usable to steal credentials. If process A opens a
+> > directory with uid/gid 0 then sends that directory fd via AF_UNIX or
+> > something to process B then process B can inherit the uid/gid of process
+> 
+> No, it doesn't inherit anything.
+> The inheritance happens only for
+> a duration of an open() call, helping
+> open() to succeed. The creds are
+> reverted when open() completed.
+> 
+> The only theoretically possible attack
+> would be to open some file you'd never
+> intended to open. Also note that a
+> very minimal sed of creds is overridden:
+> fsuid, fsgid, groupinfo.
+> 
+> > A by specifying OA2_* with no way for process A to prevent this - not
+> > even through an LSM.
+> 
+> If process B doesn't use that flag, it
+> inherits nothing, no matter what process
+> A did or passed via a socket.
+> So an unaware process that doesn't
+> use that flag, is completely unaffected.
 
-On Fri, Apr 12, 2024 at 9:43=E2=80=AFAM Steven Price <steven.price@arm.com>=
- wrote:
->
-> Each page within the protected region of the realm guest can be marked
-> as either RAM or EMPTY. Allow the VMM to control this before the guest
-> has started and provide the equivalent functions to change this (with
-> the guest's approval) at runtime.
->
-> When transitioning from RIPAS RAM (1) to RIPAS EMPTY (0) the memory is
-> unmapped from the guest and undelegated allowing the memory to be reused
-> by the host. When transitioning to RIPAS RAM the actual population of
-> the leaf RTTs is done later on stage 2 fault, however it may be
-> necessary to allocate additional RTTs to represent the range requested.
->
-> When freeing a block mapping it is necessary to temporarily unfold the
-> RTT which requires delegating an extra page to the RMM, this page can
-> then be recovered once the contents of the block mapping have been
-> freed. A spare, delegated page (spare_page) is used for this purpose.
->
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->  arch/arm64/include/asm/kvm_rme.h |  16 ++
->  arch/arm64/kvm/mmu.c             |   8 +-
->  arch/arm64/kvm/rme.c             | 390 +++++++++++++++++++++++++++++++
->  3 files changed, 411 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kv=
-m_rme.h
-> index 915e76068b00..cc8f81cfc3c0 100644
-> --- a/arch/arm64/include/asm/kvm_rme.h
-> +++ b/arch/arm64/include/asm/kvm_rme.h
-> @@ -96,6 +96,14 @@ void kvm_realm_destroy_rtts(struct kvm *kvm, u32 ia_bi=
-ts);
->  int kvm_create_rec(struct kvm_vcpu *vcpu);
->  void kvm_destroy_rec(struct kvm_vcpu *vcpu);
->
-> +void kvm_realm_unmap_range(struct kvm *kvm,
-> +                          unsigned long ipa,
-> +                          u64 size,
-> +                          bool unmap_private);
-> +int realm_set_ipa_state(struct kvm_vcpu *vcpu,
-> +                       unsigned long addr, unsigned long end,
-> +                       unsigned long ripas);
-> +
->  #define RME_RTT_BLOCK_LEVEL    2
->  #define RME_RTT_MAX_LEVEL      3
->
-> @@ -114,4 +122,12 @@ static inline unsigned long rme_rtt_level_mapsize(in=
-t level)
->         return (1UL << RME_RTT_LEVEL_SHIFT(level));
->  }
->
-> +static inline bool realm_is_addr_protected(struct realm *realm,
-> +                                          unsigned long addr)
-> +{
-> +       unsigned int ia_bits =3D realm->ia_bits;
-> +
-> +       return !(addr & ~(BIT(ia_bits - 1) - 1));
-> +}
-> +
->  #endif
-> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-> index 46f0c4e80ace..8a7b5449697f 100644
-> --- a/arch/arm64/kvm/mmu.c
-> +++ b/arch/arm64/kvm/mmu.c
-> @@ -310,6 +310,7 @@ static void invalidate_icache_guest_page(void *va, si=
-ze_t size)
->   * @start: The intermediate physical base address of the range to unmap
->   * @size:  The size of the area to unmap
->   * @may_block: Whether or not we are permitted to block
-> + * @only_shared: If true then protected mappings should not be unmapped
->   *
->   * Clear a range of stage-2 mappings, lowering the various ref-counts.  =
-Must
->   * be called while holding mmu_lock (unless for freeing the stage2 pgd b=
-efore
-> @@ -317,7 +318,7 @@ static void invalidate_icache_guest_page(void *va, si=
-ze_t size)
->   * with things behind our backs.
->   */
->  static void __unmap_stage2_range(struct kvm_s2_mmu *mmu, phys_addr_t sta=
-rt, u64 size,
-> -                                bool may_block)
-> +                                bool may_block, bool only_shared)
+The point is that the original opener has no way to prevent his creds
+being abused by a completely unrelated process later on. Something I've
+clearly explained in my mail.
 
-I found the new added only_shared  parameter to be a bit confusing,
-since this patch also introduces kvm_realm_unmap_range(..., bool
-unmap_private), where unmap_private has a different meaning, which I
-think is really unmap_all.. It might be better if the parameter meant
-the same thing everywhere.  Having helpers to sort this out, similar
-to what you have with realm_unmap_range_*() might be even clearer.
+> 
+> > The permission checking model that we have right now is already baroque.
+> > I see zero reason to add more complexity for the sake of "lightweight
+> > sandboxing". We have LSMs and namespaces for stuff like this.
+> > 
+> > NAK.
+> 
+> I don't think it is fair to say NAK
+> without actually reading the patch
+> or asking its author for clarifications.
+> Even though you didn't ask, I provided
+> my clarifications above, as I find that
+> a polite action.
 
-Thanks,
-/fuad
+I'm not sure what you don't understand or why you need further
+clarification. Your patch allows any opener using your new flag to steal
+the uid/gid/whatever from the original opener. It was even worse in the
+first version where the whole struct cred of the original opener was
+used. It's obviously a glaring security hole that's opened up by this.
 
->  {
->         struct kvm *kvm =3D kvm_s2_mmu_to_kvm(mmu);
->         phys_addr_t end =3D start + size;
-> @@ -330,7 +331,7 @@ static void __unmap_stage2_range(struct kvm_s2_mmu *m=
-mu, phys_addr_t start, u64
->
->  static void unmap_stage2_range(struct kvm_s2_mmu *mmu, phys_addr_t start=
-, u64 size)
->  {
-> -       __unmap_stage2_range(mmu, start, size, true);
-> +       __unmap_stage2_range(mmu, start, size, true, false);
->  }
->
->  static void stage2_flush_memslot(struct kvm *kvm,
-> @@ -1771,7 +1772,8 @@ bool kvm_unmap_gfn_range(struct kvm *kvm, struct kv=
-m_gfn_range *range)
->
->         __unmap_stage2_range(&kvm->arch.mmu, range->start << PAGE_SHIFT,
->                              (range->end - range->start) << PAGE_SHIFT,
-> -                            range->may_block);
-> +                            range->may_block,
-> +                            range->only_shared);
->
->         return false;
->  }
-> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-> index 629a095bea61..9e5983c51393 100644
-> --- a/arch/arm64/kvm/rme.c
-> +++ b/arch/arm64/kvm/rme.c
-> @@ -79,6 +79,12 @@ static phys_addr_t __alloc_delegated_page(struct realm=
- *realm,
->         return phys;
->  }
->
-> +static phys_addr_t alloc_delegated_page(struct realm *realm,
-> +                                       struct kvm_mmu_memory_cache *mc)
-> +{
-> +       return __alloc_delegated_page(realm, mc, GFP_KERNEL);
-> +}
-> +
->  static void free_delegated_page(struct realm *realm, phys_addr_t phys)
->  {
->         if (realm->spare_page =3D=3D PHYS_ADDR_MAX) {
-> @@ -94,6 +100,151 @@ static void free_delegated_page(struct realm *realm,=
- phys_addr_t phys)
->         free_page((unsigned long)phys_to_virt(phys));
->  }
->
-> +static int realm_rtt_create(struct realm *realm,
-> +                           unsigned long addr,
-> +                           int level,
-> +                           phys_addr_t phys)
-> +{
-> +       addr =3D ALIGN_DOWN(addr, rme_rtt_level_mapsize(level - 1));
-> +       return rmi_rtt_create(virt_to_phys(realm->rd), phys, addr, level)=
-;
-> +}
-> +
-> +static int realm_rtt_fold(struct realm *realm,
-> +                         unsigned long addr,
-> +                         int level,
-> +                         phys_addr_t *rtt_granule)
-> +{
-> +       unsigned long out_rtt;
-> +       int ret;
-> +
-> +       ret =3D rmi_rtt_fold(virt_to_phys(realm->rd), addr, level, &out_r=
-tt);
-> +
-> +       if (RMI_RETURN_STATUS(ret) =3D=3D RMI_SUCCESS && rtt_granule)
-> +               *rtt_granule =3D out_rtt;
-> +
-> +       return ret;
-> +}
-> +
-> +static int realm_destroy_protected(struct realm *realm,
-> +                                  unsigned long ipa,
-> +                                  unsigned long *next_addr)
-> +{
-> +       unsigned long rd =3D virt_to_phys(realm->rd);
-> +       unsigned long addr;
-> +       phys_addr_t rtt;
-> +       int ret;
-> +
-> +loop:
-> +       ret =3D rmi_data_destroy(rd, ipa, &addr, next_addr);
-> +       if (RMI_RETURN_STATUS(ret) =3D=3D RMI_ERROR_RTT) {
-> +               if (*next_addr > ipa)
-> +                       return 0; /* UNASSIGNED */
-> +               rtt =3D alloc_delegated_page(realm, NULL);
-> +               if (WARN_ON(rtt =3D=3D PHYS_ADDR_MAX))
-> +                       return -1;
-> +               /* ASSIGNED - ipa is mapped as a block, so split */
-> +               ret =3D realm_rtt_create(realm, ipa,
-> +                                      RMI_RETURN_INDEX(ret) + 1, rtt);
-> +               if (WARN_ON(ret)) {
-> +                       free_delegated_page(realm, rtt);
-> +                       return -1;
-> +               }
-> +               /* retry */
-> +               goto loop;
-> +       } else if (WARN_ON(ret)) {
-> +               return -1;
-> +       }
-> +       ret =3D rmi_granule_undelegate(addr);
-> +
-> +       /*
-> +        * If the undelegate fails then something has gone seriously
-> +        * wrong: take an extra reference to just leak the page
-> +        */
-> +       if (WARN_ON(ret))
-> +               get_page(phys_to_page(addr));
-> +
-> +       return 0;
-> +}
-> +
-> +static void realm_unmap_range_shared(struct kvm *kvm,
-> +                                    int level,
-> +                                    unsigned long start,
-> +                                    unsigned long end)
-> +{
-> +       struct realm *realm =3D &kvm->arch.realm;
-> +       unsigned long rd =3D virt_to_phys(realm->rd);
-> +       ssize_t map_size =3D rme_rtt_level_mapsize(level);
-> +       unsigned long next_addr, addr;
-> +       unsigned long shared_bit =3D BIT(realm->ia_bits - 1);
-> +
-> +       if (WARN_ON(level > RME_RTT_MAX_LEVEL))
-> +               return;
-> +
-> +       start |=3D shared_bit;
-> +       end |=3D shared_bit;
-> +
-> +       for (addr =3D start; addr < end; addr =3D next_addr) {
-> +               unsigned long align_addr =3D ALIGN(addr, map_size);
-> +               int ret;
-> +
-> +               next_addr =3D ALIGN(addr + 1, map_size);
-> +
-> +               if (align_addr !=3D addr || next_addr > end) {
-> +                       /* Need to recurse deeper */
-> +                       if (addr < align_addr)
-> +                               next_addr =3D align_addr;
-> +                       realm_unmap_range_shared(kvm, level + 1, addr,
-> +                                                min(next_addr, end));
-> +                       continue;
-> +               }
-> +
-> +               ret =3D rmi_rtt_unmap_unprotected(rd, addr, level, &next_=
-addr);
-> +               switch (RMI_RETURN_STATUS(ret)) {
-> +               case RMI_SUCCESS:
-> +                       break;
-> +               case RMI_ERROR_RTT:
-> +                       if (next_addr =3D=3D addr) {
-> +                               next_addr =3D ALIGN(addr + 1, map_size);
-> +                               realm_unmap_range_shared(kvm, level + 1, =
-addr,
-> +                                                        next_addr);
-> +                       }
-> +                       break;
-> +               default:
-> +                       WARN_ON(1);
-> +               }
-> +       }
-> +}
-> +
-> +static void realm_unmap_range_private(struct kvm *kvm,
-> +                                     unsigned long start,
-> +                                     unsigned long end)
-> +{
-> +       struct realm *realm =3D &kvm->arch.realm;
-> +       ssize_t map_size =3D RME_PAGE_SIZE;
-> +       unsigned long next_addr, addr;
-> +
-> +       for (addr =3D start; addr < end; addr =3D next_addr) {
-> +               int ret;
-> +
-> +               next_addr =3D ALIGN(addr + 1, map_size);
-> +
-> +               ret =3D realm_destroy_protected(realm, addr, &next_addr);
-> +
-> +               if (WARN_ON(ret))
-> +                       break;
-> +       }
-> +}
-> +
-> +static void realm_unmap_range(struct kvm *kvm,
-> +                             unsigned long start,
-> +                             unsigned long end,
-> +                             bool unmap_private)
-> +{
-> +       realm_unmap_range_shared(kvm, RME_RTT_MAX_LEVEL - 1, start, end);
-> +       if (unmap_private)
-> +               realm_unmap_range_private(kvm, start, end);
-> +}
-> +
->  u32 kvm_realm_ipa_limit(void)
->  {
->         return u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_S2SZ);
-> @@ -190,6 +341,30 @@ static int realm_rtt_destroy(struct realm *realm, un=
-signed long addr,
->         return ret;
->  }
->
-> +static int realm_create_rtt_levels(struct realm *realm,
-> +                                  unsigned long ipa,
-> +                                  int level,
-> +                                  int max_level,
-> +                                  struct kvm_mmu_memory_cache *mc)
-> +{
-> +       if (WARN_ON(level =3D=3D max_level))
-> +               return 0;
-> +
-> +       while (level++ < max_level) {
-> +               phys_addr_t rtt =3D alloc_delegated_page(realm, mc);
-> +
-> +               if (rtt =3D=3D PHYS_ADDR_MAX)
-> +                       return -ENOMEM;
-> +
-> +               if (realm_rtt_create(realm, ipa, level, rtt)) {
-> +                       free_delegated_page(realm, rtt);
-> +                       return -ENXIO;
-> +               }
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  static int realm_tear_down_rtt_level(struct realm *realm, int level,
->                                      unsigned long start, unsigned long e=
-nd)
->  {
-> @@ -265,6 +440,68 @@ static int realm_tear_down_rtt_range(struct realm *r=
-ealm,
->                                          start, end);
->  }
->
-> +/*
-> + * Returns 0 on successful fold, a negative value on error, a positive v=
-alue if
-> + * we were not able to fold all tables at this level.
-> + */
-> +static int realm_fold_rtt_level(struct realm *realm, int level,
-> +                               unsigned long start, unsigned long end)
-> +{
-> +       int not_folded =3D 0;
-> +       ssize_t map_size;
-> +       unsigned long addr, next_addr;
-> +
-> +       if (WARN_ON(level > RME_RTT_MAX_LEVEL))
-> +               return -EINVAL;
-> +
-> +       map_size =3D rme_rtt_level_mapsize(level - 1);
-> +
-> +       for (addr =3D start; addr < end; addr =3D next_addr) {
-> +               phys_addr_t rtt_granule;
-> +               int ret;
-> +               unsigned long align_addr =3D ALIGN(addr, map_size);
-> +
-> +               next_addr =3D ALIGN(addr + 1, map_size);
-> +
-> +               ret =3D realm_rtt_fold(realm, align_addr, level, &rtt_gra=
-nule);
-> +
-> +               switch (RMI_RETURN_STATUS(ret)) {
-> +               case RMI_SUCCESS:
-> +                       if (!WARN_ON(rmi_granule_undelegate(rtt_granule))=
-)
-> +                               free_page((unsigned long)phys_to_virt(rtt=
-_granule));
-> +                       break;
-> +               case RMI_ERROR_RTT:
-> +                       if (level =3D=3D RME_RTT_MAX_LEVEL ||
-> +                           RMI_RETURN_INDEX(ret) < level) {
-> +                               not_folded++;
-> +                               break;
-> +                       }
-> +                       /* Recurse a level deeper */
-> +                       ret =3D realm_fold_rtt_level(realm,
-> +                                                  level + 1,
-> +                                                  addr,
-> +                                                  next_addr);
-> +                       if (ret < 0)
-> +                               return ret;
-> +                       else if (ret =3D=3D 0)
-> +                               /* Try again at this level */
-> +                               next_addr =3D addr;
-> +                       break;
-> +               default:
-> +                       return -ENXIO;
-> +               }
-> +       }
-> +
-> +       return not_folded;
-> +}
-> +
-> +static int realm_fold_rtt_range(struct realm *realm,
-> +                               unsigned long start, unsigned long end)
-> +{
-> +       return realm_fold_rtt_level(realm, get_start_level(realm) + 1,
-> +                                   start, end);
-> +}
-> +
->  static void ensure_spare_page(struct realm *realm)
->  {
->         phys_addr_t tmp_rtt;
-> @@ -295,6 +532,147 @@ void kvm_realm_destroy_rtts(struct kvm *kvm, u32 ia=
-_bits)
->         WARN_ON(realm_tear_down_rtt_range(realm, 0, (1UL << ia_bits)));
->  }
->
-> +void kvm_realm_unmap_range(struct kvm *kvm, unsigned long ipa, u64 size,
-> +                          bool unmap_private)
-> +{
-> +       unsigned long end =3D ipa + size;
-> +       struct realm *realm =3D &kvm->arch.realm;
-> +
-> +       end =3D min(BIT(realm->ia_bits - 1), end);
-> +
-> +       ensure_spare_page(realm);
-> +
-> +       realm_unmap_range(kvm, ipa, end, unmap_private);
-> +
-> +       realm_fold_rtt_range(realm, ipa, end);
-> +}
-> +
-> +static int find_map_level(struct realm *realm,
-> +                         unsigned long start,
-> +                         unsigned long end)
-> +{
-> +       int level =3D RME_RTT_MAX_LEVEL;
-> +
-> +       while (level > get_start_level(realm)) {
-> +               unsigned long map_size =3D rme_rtt_level_mapsize(level - =
-1);
-> +
-> +               if (!IS_ALIGNED(start, map_size) ||
-> +                   (start + map_size) > end)
-> +                       break;
-> +
-> +               level--;
-> +       }
-> +
-> +       return level;
-> +}
-> +
-> +int realm_set_ipa_state(struct kvm_vcpu *vcpu,
-> +                       unsigned long start,
-> +                       unsigned long end,
-> +                       unsigned long ripas)
-> +{
-> +       struct kvm *kvm =3D vcpu->kvm;
-> +       struct realm *realm =3D &kvm->arch.realm;
-> +       struct realm_rec *rec =3D &vcpu->arch.rec;
-> +       phys_addr_t rd_phys =3D virt_to_phys(realm->rd);
-> +       phys_addr_t rec_phys =3D virt_to_phys(rec->rec_page);
-> +       struct kvm_mmu_memory_cache *memcache =3D &vcpu->arch.mmu_page_ca=
-che;
-> +       unsigned long ipa =3D start;
-> +       int ret =3D 0;
-> +
-> +       while (ipa < end) {
-> +               unsigned long next;
-> +
-> +               ret =3D rmi_rtt_set_ripas(rd_phys, rec_phys, ipa, end, &n=
-ext);
-> +
-> +               if (RMI_RETURN_STATUS(ret) =3D=3D RMI_ERROR_RTT) {
-> +                       int walk_level =3D RMI_RETURN_INDEX(ret);
-> +                       int level =3D find_map_level(realm, ipa, end);
-> +
-> +                       if (walk_level < level) {
-> +                               ret =3D realm_create_rtt_levels(realm, ip=
-a,
-> +                                                             walk_level,
-> +                                                             level,
-> +                                                             memcache);
-> +                               if (!ret)
-> +                                       continue;
-> +                       } else {
-> +                               ret =3D -EINVAL;
-> +                       }
-> +
-> +                       break;
-> +               } else if (RMI_RETURN_STATUS(ret) !=3D RMI_SUCCESS) {
-> +                       WARN(1, "Unexpected error in %s: %#x\n", __func__=
-,
-> +                            ret);
-> +                       ret =3D -EINVAL;
-> +                       break;
-> +               }
-> +               ipa =3D next;
-> +       }
-> +
-> +       if (ripas =3D=3D RMI_EMPTY && ipa !=3D start)
-> +               kvm_realm_unmap_range(kvm, start, ipa - start, true);
-> +
-> +       return ret;
-> +}
-> +
-> +static int realm_init_ipa_state(struct realm *realm,
-> +                               unsigned long ipa,
-> +                               unsigned long end)
-> +{
-> +       phys_addr_t rd_phys =3D virt_to_phys(realm->rd);
-> +       int ret;
-> +
-> +       while (ipa < end) {
-> +               unsigned long next;
-> +
-> +               ret =3D rmi_rtt_init_ripas(rd_phys, ipa, end, &next);
-> +
-> +               if (RMI_RETURN_STATUS(ret) =3D=3D RMI_ERROR_RTT) {
-> +                       int err_level =3D RMI_RETURN_INDEX(ret);
-> +                       int level =3D find_map_level(realm, ipa, end);
-> +
-> +                       if (WARN_ON(err_level >=3D level))
-> +                               return -ENXIO;
-> +
-> +                       ret =3D realm_create_rtt_levels(realm, ipa,
-> +                                                     err_level,
-> +                                                     level, NULL);
-> +                       if (ret)
-> +                               return ret;
-> +                       /* Retry with the RTT levels in place */
-> +                       continue;
-> +               } else if (WARN_ON(ret)) {
-> +                       return -ENXIO;
-> +               }
-> +
-> +               ipa =3D next;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int kvm_init_ipa_range_realm(struct kvm *kvm,
-> +                                   struct kvm_cap_arm_rme_init_ipa_args =
-*args)
-> +{
-> +       int ret =3D 0;
-> +       gpa_t addr, end;
-> +       struct realm *realm =3D &kvm->arch.realm;
-> +
-> +       addr =3D args->init_ipa_base;
-> +       end =3D addr + args->init_ipa_size;
-> +
-> +       if (end < addr)
-> +               return -EINVAL;
-> +
-> +       if (kvm_realm_state(kvm) !=3D REALM_STATE_NEW)
-> +               return -EINVAL;
-> +
-> +       ret =3D realm_init_ipa_state(realm, addr, end);
-> +
-> +       return ret;
-> +}
-> +
->  /* Protects access to rme_vmid_bitmap */
->  static DEFINE_SPINLOCK(rme_vmid_lock);
->  static unsigned long *rme_vmid_bitmap;
-> @@ -418,6 +796,18 @@ int kvm_realm_enable_cap(struct kvm *kvm, struct kvm=
-_enable_cap *cap)
->         case KVM_CAP_ARM_RME_CREATE_RD:
->                 r =3D kvm_create_realm(kvm);
->                 break;
-> +       case KVM_CAP_ARM_RME_INIT_IPA_REALM: {
-> +               struct kvm_cap_arm_rme_init_ipa_args args;
-> +               void __user *argp =3D u64_to_user_ptr(cap->args[1]);
-> +
-> +               if (copy_from_user(&args, argp, sizeof(args))) {
-> +                       r =3D -EFAULT;
-> +                       break;
-> +               }
-> +
-> +               r =3D kvm_init_ipa_range_realm(kvm, &args);
-> +               break;
-> +       }
->         default:
->                 r =3D -EINVAL;
->                 break;
-> --
-> 2.34.1
->
+Let alone that the justification "It's useful for some lightweight
+sandboxing" is absolutely not sufficient to justify substantial shifts
+in the permission model.
+
+The NAK stands.
