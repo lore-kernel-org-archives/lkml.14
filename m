@@ -1,129 +1,206 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7977D78C68;
-	Thu, 25 Apr 2024 07:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD4F3CF5E;
+	Thu, 25 Apr 2024 07:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714029046; cv=none; b=nY2cwvS7qVvoD3kDdQ7SeDKaEPb/ThH9B6mNWORWuh6paBS8UtA2CLEfkAd+uiDJV87fo4TGTq/cHGsXRaCn5lo5tJ6hMuOqwSe8Z4y3U3KIu4pnlLWdMTrlVlMF6483ToPP9ZKDMei9sYcH5kKUU+0j58WamuYGfx7zrYjT8uw=
+	t=1714029254; cv=none; b=dAx52MDaa94sqdngmsr4p/5DnEPnH1fdWswlk8sJCeS7ACx1Gxjp/1jYp3P0iGAsk8Auctth0sucfi01YMrBctAEhNYvWc0r5Gk1oECy+DRSIJYVz58t6W5IFshxJMqevOFokJx14Ntm0CSYmdmAuvNz7y23qhfiIj3AUQeQu0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714029046; c=relaxed/simple;
-	bh=kVdanrygML7WMWCF+U4FROQEQJChZ6vP0VXIWpnlWN8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZnydIqG7WtGTsAi7k5sDIWyXCVuAcAJ5jkJkZXMpiMOltk/IUA3l4iiatplNMhpymF1PCDrK5k4FK2NhHave7QD3u0m0hOYaafnrbWM2eGhrA+5PSkyYTfgrYrjk/Xz9mzAXEtruLN8bKu8QPvrAopWjwMLngTPqCEIvldZaLhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=JmqSWEwV; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1714029254; c=relaxed/simple;
+	bh=Uw5k8snV45DhizBJ9JPEOBZducDLygG+f5i+Ls5pmA0=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=YtvB6+aTUEVk8COFrm6DG4OfKsX2ZAf2keugh72V6sw4JEZy+cPpHTj4bj3mD0tM/QI4WX1JxqlJzxicreUjkFWu+Qjt0OuHpsXMXIyZsV5751TFhcDhTXyXkGEYvW9BfXrE8DuO4+jHwPl6VCZPfw0eJtAMUw8XbkSxODHks5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NkFkTG2A; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="JmqSWEwV"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43P5JN18001017;
-	Thu, 25 Apr 2024 03:10:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=DKIM;
-	 bh=vZE3dDYjiNiwBmKcRBw52oa20oOecqUXbqZevdQvLd8=; b=JmqSWEwVFv95
-	mJ2Is+3vx3Di9i0b/8zdsobp4ypCrHWyPVxGVtBatETuzfTXL1GpXXHML3nbO6zp
-	UNgYLyF9NJnBRmbkd9hMzII6dAbnLM3nPatCa36LDn27f/aF9IEHZjruEclrxYbS
-	a1VzNTZgiBV+hPPdVpAOPHu2dp6ieMU/j+b03wX68B5yqeYZ+gSXOhOU42fyve4B
-	9UCcE93iZSySBKthMekEdDnaUSqkBdsJiq65tgYGk1KeOMAAujx3NTb55O1LH+NN
-	L5oKPy0XoZDRV2ZKw61CZtb4YPFNlVn81rgUmBwsUiid9xh7bjpfBUNNmAtWWnCz
-	xLSA9ToxLQ==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3xq3qmbcj4-1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NkFkTG2A"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43P2jExE001827;
+	Thu, 25 Apr 2024 07:14:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=OPIXK7D3p+DrH1TF2OY64X+UHr1QtuBR8aKkWrFHsYA=; b=Nk
+	FkTG2Aedng8VcjMQArU8om7cPPYPXKikWSYwljzfjA68F++N8PdAcxRqusvVsVJp
+	D8g2RTf/WaimUkzMniGrtW1/G4/QBAmG64yhLbtjqbtXf7TshkiU9kuBVksNN6LD
+	m8DEc3NrzO3uhKT1e75g2Ggy9jaY5TMXGSd0HooyKFUi06ZiYe8EJ93Mc5cnoXBD
+	3veRZGcijGiigQ1+KuCOMCdAESaNd0KFuTZqezv4QRImqDmpaNGIwuWgnWZIWdyb
+	5efG+6+fvjDq0qLxfPlbMxY7sUulhEQepDPSwr+AJE7aRiNcl9RHjIrVVIQ0NCu/
+	f6XJY9UihSsI0UW5SO7w==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xqenhrsuy-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 03:10:18 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 43P7AHUr023012
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 25 Apr 2024 03:10:17 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 25 Apr
- 2024 03:10:16 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Thu, 25 Apr 2024 03:10:16 -0400
-Received: from JSANBUEN-L01.ad.analog.com (JSANBUEN-L01.ad.analog.com [10.117.220.64])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 43P79tHk006908;
-	Thu, 25 Apr 2024 03:10:08 -0400
-From: Jose Ramon San Buenaventura <jose.sanbuenaventura@analog.com>
-To: <linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>
-CC: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
-        Rob
- Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor
- Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Delphine CC
- Chiu <Delphine_CC_Chiu@Wiwynn.com>,
-        Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v3 1/2] dt-bindings: hwmon: adm1275: add adm1281
-Date: Thu, 25 Apr 2024 15:09:47 +0800
-Message-ID: <20240425070948.25788-2-jose.sanbuenaventura@analog.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240425070948.25788-1-jose.sanbuenaventura@analog.com>
-References: <20240425070948.25788-1-jose.sanbuenaventura@analog.com>
+	Thu, 25 Apr 2024 07:14:02 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43P7E1x4021022
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Apr 2024 07:14:02 GMT
+Received: from hu-vvalluru-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 25 Apr 2024 00:13:58 -0700
+Date: Thu, 25 Apr 2024 12:43:54 +0530
+From: Venkata Prahlad Valluru <quic_vvalluru@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_abhinavk@quicinc.com>,
+        <quic_nankam@quicinc.com>
+Subject: [PATCH] arm64: dts: qcom: qcs6490-rb3gen2: enable hdmi bridge
+Message-ID: <20240425071354.GA12900@hu-vvalluru-hyd.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: fUYlksadv3bjdOQOiHa1OidhndxUoYIX
-X-Proofpoint-ORIG-GUID: fUYlksadv3bjdOQOiHa1OidhndxUoYIX
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Yl6rC1WRpP1-43TSVpgpoTTrp5ghBaXr
+X-Proofpoint-GUID: Yl6rC1WRpP1-43TSVpgpoTTrp5ghBaXr
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-04-25_06,2024-04-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=971 adultscore=0
- lowpriorityscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
- spamscore=0 impostorscore=0 bulkscore=0 mlxscore=0 phishscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404250050
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 adultscore=1 clxscore=1011
+ priorityscore=1501 phishscore=0 mlxlogscore=999 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
+ definitions=main-2404250050
 
-Add support for the adm1281 Hot-Swap Controller and Digital Power
-and Energy Monitor
+Enable lt9611uxc bridge for qcs6490 rb3 gen2 platform.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Jose Ramon San Buenaventura <jose.sanbuenaventura@analog.com>
+Signed-off-by: Prahlad Valluru <quic_vvalluru@quicinc.com>
 ---
- Documentation/devicetree/bindings/hwmon/adi,adm1275.yaml | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 86 ++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/adi,adm1275.yaml b/Documentation/devicetree/bindings/hwmon/adi,adm1275.yaml
-index b68061294..5b076d677 100644
---- a/Documentation/devicetree/bindings/hwmon/adi,adm1275.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/adi,adm1275.yaml
-@@ -5,7 +5,7 @@
- $id: http://devicetree.org/schemas/hwmon/adi,adm1275.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+index a085ff5b5fb2..ff963f94c0e3 100644
+--- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
++++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+@@ -51,6 +51,18 @@
+ 			};
+ 		};
+ 	};
++	
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		label = "HDMI";
++		type = "a";
++
++		port {
++			hdmi_con: endpoint {
++				remote-endpoint = <&lt9611_out>;
++			};
++		};
++	};
  
--title: Analog Devices ADM1075/ADM127x/ADM129x digital power monitors
-+title: Analog Devices ADM1075/ADM127x/ADM1281/ADM129x digital power monitors
+ 	reserved-memory {
+ 		xbl_mem: xbl@80700000 {
+@@ -530,6 +542,45 @@
+ 			   <GCC_WPSS_RSCP_CLK>;
+ };
  
- maintainers:
-   - Krzysztof Kozlowski <krzk@kernel.org>
-@@ -27,6 +27,7 @@ properties:
-       - adi,adm1275
-       - adi,adm1276
-       - adi,adm1278
-+      - adi,adm1281
-       - adi,adm1293
-       - adi,adm1294
++&i2c0 {
++	clock-frequency = <400000>;
++	status = "okay";
++
++	lt9611_codec: hdmi-bridge@2b {
++		compatible = "lontium,lt9611uxc";
++		reg = <0x2b>;
++
++		interrupts-extended = <&tlmm 24 IRQ_TYPE_EDGE_FALLING>;
++		reset-gpios = <&pm7250b_gpios 2 GPIO_ACTIVE_HIGH>;
++
++		vcc-supply = <&vreg_l11c_2p8>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&lt9611_irq_pin &lt9611_rst_pin>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				lt9611_a: endpoint {
++					remote-endpoint = <&mdss_dsi0_out>;
++				};
++			};
++
++			port@2 {
++				reg = <2>;
++
++				lt9611_out: endpoint {
++					remote-endpoint = <&hdmi_con>;
++				};
++			};
++		};
++	};
++};
++
+ &i2c1 {
+ 	status = "okay";
  
-@@ -91,6 +92,7 @@ allOf:
-           contains:
-             enum:
-               - adi,adm1278
-+              - adi,adm1281
-               - adi,adm1293
-               - adi,adm1294
-     then:
+@@ -602,6 +653,21 @@
+ 	status = "okay";
+ };
+ 
++&mdss_dsi {
++        vdda-supply = <&vreg_l6b_1p2>;
++        status = "okay";
++};
++
++&mdss_dsi0_out {
++        remote-endpoint = <&lt9611_a>;
++        data-lanes = <0 1 2 3>;
++};
++
++&mdss_dsi_phy {
++        vdds-supply = <&vreg_l10c_0p88>;
++        status = "okay";
++};
++
+ &qupv3_id_0 {
+ 	status = "okay";
+ };
+@@ -711,3 +777,23 @@
+ 	function = "gpio";
+ 	bias-disable;
+ };
++
++&pm7250b_gpios {
++        lt9611_rst_pin: lt9611-rst-state {
++                pins = "gpio2";
++                function = "normal";
++
++                output-high;
++                input-disable;
++                power-source = <0>;
++        };
++};
++
++&tlmm {
++        lt9611_irq_pin: lt9611-irq {
++                pins = "gpio24";
++                function = "gpio";
++                drive-strength = <8>;
++                bias-disable;
++        };
++};
 -- 
-2.39.2
+2.17.1
 
