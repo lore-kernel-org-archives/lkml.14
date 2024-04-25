@@ -1,129 +1,111 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B94DF513
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 16:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE83149E0E;
+	Thu, 25 Apr 2024 16:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714063538; cv=none; b=JLlF89ZnydNsaU4qQvyU53v/wZEiTeii6t+AQyUU8sd4fAsl1sD8Rh0IBoC5mYDk6EBE2wlUBJzB2X2gbn8zZJ7fGyXxQPDtre4vYjfdi2KVgANqpVliJaxQr7uM8mJBdWQRHashYDkurLsNxWPlzA9h5OmIsmH3OeNdG7HdTIs=
+	t=1714063590; cv=none; b=LdDq0enzlP66UDfkvVSP7ZZ0D6KsE4CdKq41tGGiEmq62fsDdSiTyq6j8jF25io5xpU07Le2Ax7tQBHHqUMA8U8LpaPGwAoou8zzA4d9f0qhlYVaBQoDVYDLLXTeVVbGz7I3DXxiYeq0ZsspAljIO//2rpxAvgjlJHcqVZ/l95k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714063538; c=relaxed/simple;
-	bh=Amc/VhCaPuRfNE4c/UsFD95U+kTr2gWqvp2bPp82p24=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=inM2mQhBvl0+9hNU/YVjk3WOATujft2/9+GcJ2X48lNuopqfEPC9/xz/ymvwEtfuFlvfA3HtUkUAO0Oa3poSVppXkQidvyn0t1R38+h96QoeK81F77hSrNyJXi0rLFRTAKekGLLoXU5Qn1aBNE48svuoghJT5UQ1Xl83FuHtIj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XthInoz8; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714063590; c=relaxed/simple;
+	bh=ysF7TXAsd4zm/OuIu16TsdOJ8lw2epFcOFfDOSyjUUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j1r6OE3Q97pJ2kw57vShPqVOr4C85rIwE3JUAxQAwYlWuoTlWqq29dlG/G/2iEfSGWs3jfKxirJb8gialo5P8FK/MzB87JbqghmOeSp/7aOH52osBKPsp+V42r03PxNHQhKWHwMGDp+ffV8Sb1wmMcyx1pKoYOcFYisazGC96tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jti/QiDy; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XthInoz8"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-de46b113a5dso1341040276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 09:45:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714063534; x=1714668334; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eWQqHUbAAiSySnIsemSx25Y73dqsXlz6lqamDtL75KQ=;
-        b=XthInoz889q19LIYnd4dxHxjC10noyEEpacYxXANDNN8IDP5XeQXBOtc65TCU7iY9C
-         ZFOdnN9B5DejP/TG0tddktvVu7n9LlH+yFRdVgQBLRcErJF6YaI0HGu5Hyb1hNuQ7Z2W
-         zyZHNFFLmYZH+kKRw2NvM6mfnPh4HZF0CRgpoPKlyIc/96vPx/wKcxHdrhxkwVai5X57
-         8XAmABXiGn+yK2oLWmsr1cWTlYVngSOKUkZll41jNiQRJFxtd2Nj6FZo5k/NA6Eo3sRa
-         LII7x5cyW0/5XOb94tM3OWqlC156LUHRKoUZDUbXRQvkRkYacPFUL4l6hEefmDw4m41V
-         eupQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714063534; x=1714668334;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eWQqHUbAAiSySnIsemSx25Y73dqsXlz6lqamDtL75KQ=;
-        b=lm6SvF/DljsU044h51sXmhXeYyw+J3iQDtttYwN0p1V9tj3Iw3q9Wv4+e1sGUn7o0E
-         M/AGC+ozIt2oArk6BsSiKI9F9WXmeUrv/ltTtdzzbiZYc4Kgg+/7opkw8lG51lBiE0kx
-         sK+YS1xzvcxCgpzgRYpauccT7v5mvEWzJs7nGmFie0X4OEMf2A+nXoPONUoJCr23/n2R
-         X3FgFBLBTorjDpoD5MZiQfdB95YGd4HN0gPHsmiL6ZY4v1aaNrog6GYPB8OdWFVIXFI7
-         zWAXq6e+tSsIqceTDYa2qiHMFKijvk8qzxYgbkTajYhWS2642hSiW/MTd5UxLuv0h3GX
-         vGSw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9eqGonN2Q9AtpFogWYh9SFSZaaMaQoW9nuSkcNqNCx3Ju7f3qAJd6jwjIW4RwK53cvHC9l8FL0rAccM7AA4Np2NoiH66B5THz8+k8
-X-Gm-Message-State: AOJu0YxsZ5G5LaFU8uFoV8ZpJkgmFbFOHsW5clHQ9jjSHFTrffvOSvL6
-	94FCIr4oSPoEjWf3lZxWdKnKj6YF3cOeo00JC7ud13grrzn/TRlWti4ALVJb7wfMPy8GUrAzOWj
-	tovJta7L3bmIviF12GiLQ4RFutqJTb7OKavpx7A==
-X-Google-Smtp-Source: AGHT+IE6E0yGMivLHEIzi4cVQrlqrcgIk/WXjie4Wzsi6F0u2PMmSvmweB2JnuzBk12npMsW/6HfizfFtt+TW3hNbCM=
-X-Received: by 2002:a25:fc11:0:b0:de5:5706:b955 with SMTP id
- v17-20020a25fc11000000b00de55706b955mr243062ybd.4.1714063534487; Thu, 25 Apr
- 2024 09:45:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jti/QiDy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714063587; x=1745599587;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ysF7TXAsd4zm/OuIu16TsdOJ8lw2epFcOFfDOSyjUUs=;
+  b=Jti/QiDyH1ceRRyVrlZYBoPVo7Pr++JbhwccBpnPaI5A+AQwhlM3P6T9
+   CPUmIYzpwqVOpe8rXWxqZ8iGTNaWMVHqcapafKRqzd2PWFyzxX+tXs974
+   M9PPoEHd5hC3cDK962gqfAvtP4V/E9yPU7iHskQS1dBhVHL5GgJELUjD3
+   DIbxtlS1oDcQF8Vmzj96AJGSQOUuoEJB/Z4j2GU8dBq+9oVSafryIEdSm
+   sS9+q9DP1Yk8wPn2wRoO+s9thty9oKm9Rk/xDd3qghUUupP/mxYc9ZZmE
+   KYXbiBvq8WK4+LWvwWmumVbyHrSQ/xi+YevcarnP4M13EVgjSA2cklZUg
+   g==;
+X-CSE-ConnectionGUID: ZIAN8y6uQxWivzKykqrgCw==
+X-CSE-MsgGUID: 9ceAPrpGQYuLYV1xCytXGA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="9592438"
+X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
+   d="scan'208";a="9592438"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 09:46:26 -0700
+X-CSE-ConnectionGUID: rMgnQaGYRO2JqGOTe9UkHw==
+X-CSE-MsgGUID: hrs+5haTSKW8KY+vWSbgNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
+   d="scan'208";a="25226349"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa010.fm.intel.com with ESMTP; 25 Apr 2024 09:46:23 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id D8DAF288; Thu, 25 Apr 2024 19:46:21 +0300 (EEST)
+Date: Thu, 25 Apr 2024 19:46:21 +0300
+From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Rick P Edgecombe <rick.p.edgecombe@intel.com>, 
+	Tina Zhang <tina.zhang@intel.com>, Dave Hansen <dave.hansen@intel.com>, 
+	Hang Yuan <hang.yuan@intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	Kai Huang <kai.huang@intel.com>, Bo2 Chen <chen.bo@intel.com>, 
+	"sagis@google.com" <sagis@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, Erdem Aktas <erdemaktas@google.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	Isaku Yamahata <isaku.yamahata@intel.com>
+Subject: Re: [PATCH v19 007/130] x86/virt/tdx: Export SEAMCALL functions
+Message-ID: <faopalgfi6wwphg5ufki6nkwl54tsmzp3nvwgtwksg7fwktsti@zqhlij7ndyfl>
+References: <e6e8f585-b718-4f53-88f6-89832a1e4b9f@intel.com>
+ <bd21a37560d4d0695425245658a68fcc2a43f0c0.camel@intel.com>
+ <54ae3bbb-34dc-4b10-a14e-2af9e9240ef1@intel.com>
+ <ZfR4UHsW_Y1xWFF-@google.com>
+ <ay724yrnkvsuqjffsedi663iharreuu574nzc4v7fc5mqbwdyx@6ffxkqo3x5rv>
+ <39e9c5606b525f1b2e915be08cc95ac3aecc658b.camel@intel.com>
+ <m536wofeimei4wdronpl3xlr3ljcap3zazi3ffknpxzdfbrzsr@plk4veaz5d22>
+ <ZiFlw_lInUZgv3J_@google.com>
+ <7otbchwoxaaqxoxjfqmifma27dmxxo4wlczyee5pv2ussguwyw@uqr2jbmawg6b>
+ <ZiLLrzGqSIxoirwx@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240422105355.1622177-1-claudiu.beznea.uj@bp.renesas.com> <CAMuHMdXHhsdOgTiDdqMwAMvb-m_VBqOcTRPURx_upc2AtmBTfA@mail.gmail.com>
-In-Reply-To: <CAMuHMdXHhsdOgTiDdqMwAMvb-m_VBqOcTRPURx_upc2AtmBTfA@mail.gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 25 Apr 2024 18:44:58 +0200
-Message-ID: <CAPDyKFrhPjuOR5iC+zy+SCJv5yoWU0fX8FfDbt9nrM6VRCjmNw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/8] clk: renesas: rzg2l: Add support for power domains
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Claudiu <claudiu.beznea@tuxon.dev>
-Cc: mturquette@baylibre.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZiLLrzGqSIxoirwx@google.com>
 
-On Wed, 24 Apr 2024 at 16:34, Geert Uytterhoeven <geert@linux-m68k.org> wro=
-te:
->
-> Hi Ulf,
->
-> On Mon, Apr 22, 2024 at 12:54=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.de=
-v> wrote:
-> > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >
-> > Series adds support for power domains on rzg2l driver.
-> >
-> > RZ/G2L kind of devices support a functionality called MSTOP (module
-> > stop/standby). According to hardware manual the module could be switch
-> > to standby after its clocks are disabled. The reverse order of operatio=
-n
-> > should be done when enabling a module (get the module out of standby,
-> > enable its clocks etc).
-> >
-> > In [1] the MSTOP settings were implemented by adding code in driver
-> > to attach the MSTOP state to the IP clocks. But it has been proposed
-> > to implement it as power domain. The result is this series.
-> >
-> > The DT bindings were updated with power domain IDs (plain integers
-> > that matches the DT with driver data structures). The current DT
-> > bindings were updated with module IDs for the modules listed in tables
-> > with name "Registers for Module Standby Mode" (see HW manual) exception
-> > being RZ/G3S where, due to the power down functionality, the DDR,
-> > TZCDDR, OTFDE_DDR were also added.
-> >
-> > Domain IDs were added to all SoC specific bindings.
-> >
-> > Thank you,
-> > Claudiu Beznea
-> >
-> > Changes in v4:
-> > - dropped the pwrdn functionality until it is better understanded
-> > - dropped patch "clk: renesas: rzg2l-cpg: Add suspend/resume
-> >   support for power domains" from v3; this will be replaced
-> >   by propertly calling device_set_wakup_path() in serial console
-> >   driver
-> > - instantiated the watchdog domain in r8a08g045 clock driver; this
-> >   allow applying r9a08g045 clock patch w/o affecting watchdog and later=
-,
-> >   after all good with watchdog patches series at [2], only patch
-> >   "arm64: dts: renesas: r9a08g045: Update #power-domain-cells =3D <1>"
-> >   will need to be applied
->
-> Are you happy with this series?  I would like to queue patches 1-7 in
-> renesas-clk for v6.10 (i.e. this week).
+On Fri, Apr 19, 2024 at 12:53:19PM -0700, Sean Christopherson wrote:
+> > But I guess we can make a *few* wrappers that covers all needed cases.
+> 
+> Yeah.  I suspect two will suffice.  One for the calls that say at or below four
+> inputs, and one for the fat ones like ReportFatalError that use everything under
+> the sun.
 
-Yes, the series looks good to me! For the series, feel free to add:
+I ended up with three helpers:
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+  - tdvmcall_trampoline() as you proposed.
+  
+  - tdvmcall_report_fatal_error() that does ReportFatalError specificly.
+    Pointer to char array as an input. Never returns: no need to
+    save/restore registers.
 
-Kind regards
-Uffe
+  - hv_tdx_hypercall(). Hyper-V annoyingly uses R8 and RDX as parameters :/
+
+> Not sure, haven't looked at them recently.  At a glance, something similar?  The
+> use of high registers instead of RDI and RSI is damn annoying :-/
+
+I defined three helpers: TDCALL_0(), TDCALL_1() and TDCALL_5(). All takes 4
+input arguments.
+
+I've updated the WIP branch with the new version:
+
+https://github.com/intel/tdx/commits/guest-tdx-asm/
+
+Any feedback is welcome.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
