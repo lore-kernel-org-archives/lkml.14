@@ -1,87 +1,86 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71460149E1B
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 13:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD1B14A604;
+	Thu, 25 Apr 2024 13:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714053571; cv=none; b=hOKomM/2r/kFQyQ1x7Z1p6t/nZt/JmIewBmbBur4kElnZbmAQLzwtZksRg49FLOf2Y3IFdkADsrviibhx9qg5liBgVcjSA1XwFdXzdFQBEqDm5U/pIWugjhk6F2BUG8xZhQCzamYRhDNAXYeN7nbn5QgtLV6aPw5wSeHVUnJJ/g=
+	t=1714053574; cv=none; b=SAn26BdrTDPIj0tDPBDNouKmRdwVkTE97HsGVWBFr5iEogoh7J144MTHen0uArwOrB4NnWSPTuhCNMEo2xU+r2pI1EwcvqAXunoPRfle9oQUWTfRNt4XC9gBb96yEU7m/04kBvOt/2VmJVq+KLvdyN3aUi9vf4t1Y/IVvo2vz2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714053571; c=relaxed/simple;
-	bh=bxaYAw3KFAukICHyA8ZADUCzO0ruG6dtxRHo2LheGEA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GbsISD1t+N2/d+/0lYhnMVnXrzDMPkj+XAEE5YO1pHMwZafijqRImJzbnDWQiL3Tmqo0/3Myzd2bbPMvW7R7wCDMGEsCcfiprdBsU9EAc7uMCIp0b+2M1q9sM6CJQXsF8bn8fAJTgzzmX9U4+zJq2q0JrJouItPmdhGTjX4PDDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr; spf=pass smtp.mailfrom=freebox.fr; dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b=UxJThwJg; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freebox.fr
+	s=arc-20240116; t=1714053574; c=relaxed/simple;
+	bh=mvQkfgZuYmY613uCDbNKQpDIm4TePVAqpmobfYU+0So=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=oZ2Kv9yvgenoeDm3U9Rx27q7ypn6AHuCx3Jo0Nv7QuzwfOCJKWK3Hp4vNeYvcXjq9gM04U8Qpo7MJ945GrHU9GBSLDtCA2fc4NSMVhdb2QmQzwaTG2aoTgbqAjgWgabxexdfGBVmVpR7fgiIm06OXEkyyFMYOBUVdOgGGEmqPpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RpIzGoKf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b="UxJThwJg"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41b21ed19f5so6541575e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 06:59:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=freebox-fr.20230601.gappssmtp.com; s=20230601; t=1714053566; x=1714658366; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=c/c8R+r2wKwqushYa97j544g6TTlix/kEzEOUalKigY=;
-        b=UxJThwJgBtkepgF1e2axhmQymFrdcSCPr3zvjzvCuk7gyndAT79kCcUYiyYx5dN+qP
-         4O0sGl/qmW0exa9XtppR3DKQxj0tJgWb+Lpyn4WoVn+CQEVzk6owEyU9JzC0zAslRTp0
-         mF0bzrqCVgFvk6c3LX/7VrvPb+g4F852pSTMobrCPfQZzpbX9eJIIhxAVd2hZYi/SNkL
-         5nbQ+aYkwYbaK/+jVGgXeNOyrpm/IWdAOY51gqOEU+37RJhneIqE642QjZyUIp92J7/T
-         AvIpwpzUn61WykowEgeWlEnrSYEUJTmzAdo3KOImCl2SftlPa7UZjFHJi9TA7nfJRsPP
-         4Aow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714053566; x=1714658366;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c/c8R+r2wKwqushYa97j544g6TTlix/kEzEOUalKigY=;
-        b=ekXKAQbtvJv6k9A+YJnNRoyBsf4zESNt/bB8kdyLDcgcJpfpYYh/aMscB6HtZW43cM
-         oD3FV/mZjMgkT5J19PdZc/j6Am5DcZHJ/eMr1trzFf/9HMD+aFoKA2gr5AHlIUVnrlvJ
-         QgFH/Y35rTBVvVlnB5YvSzsUl9q5PRKlMp0DOjRJIU/JVVR4YymQGzTR6c+EdH94c2n9
-         09WaGp6ZS7GFCbExeOP8jR1OgUnqm6QOVO4poR9XbbH8mphTEnq+r9YqJOD4DGsIA4ky
-         S/N2jIE1ff+MceusIlw1CLVNEqgXW+Gvuac2zntSWTxm6V4iOYgW5HnusGA8xfb6SQQ/
-         qQ/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVQwED3UriihLbVCcs4Ld9MgwaT13vBt8P72yFq75PtWUh8dpS7SO4dDxFf6tePxMFWscgLBTvoRjkOqDPly/5DUFK2CD3E5nGN1xPv
-X-Gm-Message-State: AOJu0YwX1DkmYQRcFb4e+jbZ52/Qc/H5cRrplEmiQGepruFIgzCgynZu
-	jHWYqaE1BlXHAz72YB/w4gBijzjwpKAY1xW/xo1Oh4PRSBftAFDpwk0g/ZdZNNQ=
-X-Google-Smtp-Source: AGHT+IHcVSLzRPPOv8+VkqJn3b1N+UKHe0ajTrqk97KpyD5BrgPSvbqWpwe4PKtfGo8kjhQZEZa7bQ==
-X-Received: by 2002:a05:600c:4f8f:b0:419:f9ae:e50 with SMTP id n15-20020a05600c4f8f00b00419f9ae0e50mr4641377wmq.37.1714053565674;
-        Thu, 25 Apr 2024 06:59:25 -0700 (PDT)
-Received: from fbxleo.iliad.local (freebox.vlq16.iliad.fr. [213.36.7.13])
-        by smtp.gmail.com with ESMTPSA id o12-20020a05600c4fcc00b00418a6d62ad0sm31479464wmq.34.2024.04.25.06.59.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 06:59:25 -0700 (PDT)
-From: =?UTF-8?q?L=C3=A9o=20DUBOIN?= <lduboin@freebox.fr>
-To: linus.walleij@linaro.org
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?L=C3=A9o=20DUBOIN?= <lduboin@freebox.fr>
-Subject: [PATCH 0/2] pinctrl: core: fix untreated named gpio ranges in pinctrl_pins_show()
-Date: Thu, 25 Apr 2024 15:58:00 +0200
-Message-ID: <cover.1714049455.git.lduboin@freebox.fr>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RpIzGoKf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6714AC2BD10;
+	Thu, 25 Apr 2024 13:59:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714053573;
+	bh=mvQkfgZuYmY613uCDbNKQpDIm4TePVAqpmobfYU+0So=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=RpIzGoKfMwG9Sy2keGCgECx5MrqT4aUQq3SLROhwFRMMU1zg9No7S3PBUQvGHdQRA
+	 IxMWAJ5nq16lXH9J5gcTDpu694NH+a5fblNnshkkiFxGjge+FDwdvPpZIewvYfmSJD
+	 gPVBpxNIraFliMqaqtEO/TPma90jQsFmdHw6Z2xwfeffTFW6FFpGlrMMOtdkZYfFZZ
+	 9a+B6VuSA2DRpg/KyacJF0BHBm0bWhsTi+E5T1gTTauBlqAoh+gwwc33Nb6x9lsrfR
+	 QdF2P2ajcsrJZEEw+8mCJY4yRu/uXGdrSCWwHW/CSK84lrPkYwWtyADXPuhvtjq4Jk
+	 3REvTRA8PSAgw==
+From: Benjamin Tissoires <bentiss@kernel.org>
+Date: Thu, 25 Apr 2024 15:59:14 +0200
+Subject: [PATCH 3/3] selftests/bpf: drop an unused local variable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240425-bpf-next-v1-3-1d8330e6c643@kernel.org>
+References: <20240425-bpf-next-v1-0-1d8330e6c643@kernel.org>
+In-Reply-To: <20240425-bpf-next-v1-0-1d8330e6c643@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1714053558; l=693;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=mvQkfgZuYmY613uCDbNKQpDIm4TePVAqpmobfYU+0So=;
+ b=ANTc6jeClzDBFOPpM80AN3a7UfMY3nh1T6nvJC96+/nDJNEFJLTR8q8OMZORC7QiGHNIOe/jA
+ EvcXmz5JKKqCyA6GVB45OLYFlnnZ5pO8cgPAoDysHyH10c1lsM8O5kC
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-This series covers errors I encountered with the pinctrl_pins_show()
-function when dealing with named gpio ranges generated through the
-device tree using 'gpio-ranges-group-names'.
+Some copy/paste leftover, this is never used
 
-These errors were introduced with the original implementation in 
-f1b206cf7c57561ea156798f323b0541a783bd2f.
+Fixes: e3d9eac99afd ("selftests/bpf: wq: add bpf_wq_init() checks")
+Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+---
+ tools/testing/selftests/bpf/prog_tests/wq.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Léo DUBOIN (2):
-  pinctrl: core: take into account the pins array in pinctrl_pins_show()
-  pinctrl: core: reset gpio_device in loop in pinctrl_pins_show()
-
- drivers/pinctrl/core.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+diff --git a/tools/testing/selftests/bpf/prog_tests/wq.c b/tools/testing/selftests/bpf/prog_tests/wq.c
+index c4bacd3160e1..99e438fe12ac 100644
+--- a/tools/testing/selftests/bpf/prog_tests/wq.c
++++ b/tools/testing/selftests/bpf/prog_tests/wq.c
+@@ -36,7 +36,5 @@ void serial_test_wq(void)
+ 
+ void serial_test_failures_wq(void)
+ {
+-	LIBBPF_OPTS(bpf_test_run_opts, topts);
+-
+ 	RUN_TESTS(wq_failures);
+ }
 
 -- 
-2.42.0
+2.44.0
 
