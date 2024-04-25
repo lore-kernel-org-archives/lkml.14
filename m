@@ -1,133 +1,198 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98D0D149E05;
-	Thu, 25 Apr 2024 15:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE7C149E05;
+	Thu, 25 Apr 2024 15:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714060699; cv=none; b=DIH/nzbh+6rKR85ZEXNI095l90hDW1aYxPlJNwAygP88Kjq1YKUPK1hpfVnUXG8/ydm1oZGmOXk4lkikkQfIsZloL5FRAEDHx5ddNKS7k0Jl2plvHKN2wcWQ1MHg3qqLkIVDuWsSlGcFNqHAnyMZVY6eNeB4AHokT8trk9ez8Ag=
+	t=1714060706; cv=none; b=MeZ5JqnxNjkDnG7V57Yf2RKWVZVrc1oDpf8Y8z6TrKi6EVbZWMiTH7ALJSDcUeroIzxdZFbf6e7tJqMUPrcBCitHbHWhBO7cy3LHWEw4KkodRqrvwZV3grpZQUeROb55LLxxAbJDM3MfyvJofcOIze/IUC+uVdO38cQ7UbQYrSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714060699; c=relaxed/simple;
-	bh=f2EiSgp8zlHR9yB6BJrFYtDILE/zqRT/fk/hI9IqEgc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mlt2CSi12NtJ7vncCl89tTY+s1Je8dSjO0Y5HApQoYK7X9n3S52f+Ek0GkhgIvmb8ROSEIiUq66kbNVohh59FvGFNxzulx8EgZLuV90VXSQd+kzIYClEiln7yKQVV/h4Klz49PEcsqi4G+yxV6HM5FUrJuXC/6HSKXRwAH9cODo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 399DA1007;
-	Thu, 25 Apr 2024 08:58:45 -0700 (PDT)
-Received: from [10.57.56.40] (unknown [10.57.56.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 166443F73F;
-	Thu, 25 Apr 2024 08:58:13 -0700 (PDT)
-Message-ID: <4195a811-7084-42fe-ad10-27d898fb3196@arm.com>
-Date: Thu, 25 Apr 2024 16:58:13 +0100
+	s=arc-20240116; t=1714060706; c=relaxed/simple;
+	bh=OxG/QwOLFpTqJqioQwvBPSs3kg69DSi3qMbneBAzDeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YsY5MbIQfPoURwFVYRxkQvUKiSspXUBQxait9NcMxWOZRBjrAmLuIKPMoYDGxo19NOKW3a3JJl7Y5GWAiBTKdM9HOFigBbaqofum3NW1HpUGxvGvecz28zwEdYYQci2fUXHmazlN3zEz1edRJayjKZMM+TGjUsy8BNyiCAS5cRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=eHnj5UQC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=dezGulnG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gBx+i3ZL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WNnfGfMb; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="eHnj5UQC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="dezGulnG";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gBx+i3ZL";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WNnfGfMb"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3DEB95BF28;
+	Thu, 25 Apr 2024 15:58:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714060703; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LTL/RRFbpvk/+mxrp2TJpSluJhlsQ2v73kcoSRWVGhE=;
+	b=eHnj5UQCzV0zNnpUZ924ax6ZKfd40F7KYQoI8HzJnDEDLW3gASgaxWtXN5PlMdCqrmxkGy
+	emmB7ET2pkVBpLoIyXl72ypf6w7BtuGBk9Xr4OZmiw0B0pjeeVUk0fx9QdIKBN/XgooVGF
+	bmOkC/+aXmCGJrXyFWk+1I6BPrcS/oo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714060703;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LTL/RRFbpvk/+mxrp2TJpSluJhlsQ2v73kcoSRWVGhE=;
+	b=dezGulnGTk4qBg8G8dYpBDLJyWDu5hsA8Otf+SfM2Ch3UZ6NeItmL8nbc4fLgKbQNT8LsD
+	9PVMRL2Wn6s2WpBw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=gBx+i3ZL;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=WNnfGfMb
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714060702; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LTL/RRFbpvk/+mxrp2TJpSluJhlsQ2v73kcoSRWVGhE=;
+	b=gBx+i3ZLtMmip8gNfQiPjMMQ0wKkImktVreGs+zMgnqKx8Ll/dCVKKdqU0Cs+OH8UXXgut
+	V9z8G8YtyyBHqvo7K6PglFKDkK9tiriblWJt0WLuaFzE4D/09e31ZnnnTGjhRRsibRdguk
+	Lzo3jy39kRGW3b4P2zjfzYKGKjpK2m8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714060702;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LTL/RRFbpvk/+mxrp2TJpSluJhlsQ2v73kcoSRWVGhE=;
+	b=WNnfGfMbL1lk3g5SDW720qUCxh+Lz9Md4whWA2zq5Dcwe+FfD8EqOq7FpwQ/kKRMSEb3eK
+	I3uES+suPrONTuDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 887691393C;
+	Thu, 25 Apr 2024 15:58:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id N86UGp19KmZBGwAAD6G6ig
+	(envelope-from <jdelvare@suse.de>); Thu, 25 Apr 2024 15:58:21 +0000
+Date: Thu, 25 Apr 2024 17:58:19 +0200
+From: Jean Delvare <jdelvare@suse.de>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-i2c@vger.kernel.org, Andi Shyti <andi.shyti@kernel.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] i2c: ali1535: remove printout on handled timeouts
+Message-ID: <20240425175819.20c1d9aa@endymion.delvare>
+In-Reply-To: <20240423121322.28460-3-wsa+renesas@sang-engineering.com>
+References: <20240423121322.28460-1-wsa+renesas@sang-engineering.com>
+	<20240423121322.28460-3-wsa+renesas@sang-engineering.com>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/43] KVM: Prepare for handling only shared mappings
- in mmu_notifier events
-To: Fuad Tabba <tabba@google.com>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
- Sean Christopherson <seanjc@google.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-References: <20240412084056.1733704-1-steven.price@arm.com>
- <20240412084309.1733783-1-steven.price@arm.com>
- <20240412084309.1733783-2-steven.price@arm.com>
- <CA+EHjTwDaP6qULmjEGH=Eye=vjFikr9iJHEyzzX+cr_sH57vcA@mail.gmail.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <CA+EHjTwDaP6qULmjEGH=Eye=vjFikr9iJHEyzzX+cr_sH57vcA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 3DEB95BF28
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_THREE(0.00)[4];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TAGGED_RCPT(0.00)[renesas];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sang-engineering.com:email,suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
 
-On 25/04/2024 10:48, Fuad Tabba wrote:
-> Hi,
-> 
-> On Fri, Apr 12, 2024 at 9:43 AM Steven Price <steven.price@arm.com> wrote:
->>
->> From: Sean Christopherson <seanjc@google.com>
->>
->> Add flags to "struct kvm_gfn_range" to let notifier events target only
->> shared and only private mappings, and write up the existing mmu_notifier
->> events to be shared-only (private memory is never associated with a
->> userspace virtual address, i.e. can't be reached via mmu_notifiers).
->>
->> Add two flags so that KVM can handle the three possibilities (shared,
->> private, and shared+private) without needing something like a tri-state
->> enum.
->>
->> Link: https://lore.kernel.org/all/ZJX0hk+KpQP0KUyB@google.com
->> Signed-off-by: Sean Christopherson <seanjc@google.com>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>  include/linux/kvm_host.h | 2 ++
->>  virt/kvm/kvm_main.c      | 7 +++++++
->>  2 files changed, 9 insertions(+)
->>
->> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
->> index 48f31dcd318a..c7581360fd88 100644
->> --- a/include/linux/kvm_host.h
->> +++ b/include/linux/kvm_host.h
->> @@ -268,6 +268,8 @@ struct kvm_gfn_range {
->>         gfn_t start;
->>         gfn_t end;
->>         union kvm_mmu_notifier_arg arg;
->> +       bool only_private;
->> +       bool only_shared;
->>         bool may_block;
->>  };
->>  bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range);
->> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
->> index fb49c2a60200..3486ceef6f4e 100644
->> --- a/virt/kvm/kvm_main.c
->> +++ b/virt/kvm/kvm_main.c
->> @@ -633,6 +633,13 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
->>                          * the second or later invocation of the handler).
->>                          */
->>                         gfn_range.arg = range->arg;
->> +
->> +                       /*
->> +                        * HVA-based notifications aren't relevant to private
->> +                        * mappings as they don't have a userspace mapping.
->> +                        */
->> +                       gfn_range.only_private = false;
->> +                       gfn_range.only_shared = true;
->>                         gfn_range.may_block = range->may_block;
-> 
-> I'd discussed this with Sean when he posted this earlier. Having two
-> booleans to encode three valid states could be confusing. In response,
-> Sean suggested using an enum instead:
-> https://lore.kernel.org/all/ZUO1Giju0GkUdF0o@google.com/
+Hi Wolfram,
 
-That would work fine too! Unless I've missed it Sean hasn't posted an
-updated patch. My assumption is that this will get merged (in whatever
-form) before the rest of the series as part of that other series. It
-shouldn't be too hard to adapt.
-
-Thanks,
-
-Steve
-
-> Cheers,
-> /fuad
+On Tue, 23 Apr 2024 14:13:19 +0200, Wolfram Sang wrote:
+> I2C and SMBus timeouts are not something the user needs to be informed
+> about on controller level. The client driver may know if that really is
+> a problem and give more detailed information to the user. The controller
+> should just pass this information upwards. Remove the printout.
 > 
->>
->>                         /*
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  drivers/i2c/busses/i2c-ali1535.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
 > 
-> 
->> --
->> 2.34.1
->>
-> 
+> diff --git a/drivers/i2c/busses/i2c-ali1535.c b/drivers/i2c/busses/i2c-ali1535.c
+> index 461eb23f9d47..9d7b4efe26ad 100644
+> --- a/drivers/i2c/busses/i2c-ali1535.c
+> +++ b/drivers/i2c/busses/i2c-ali1535.c
+> @@ -285,10 +285,8 @@ static int ali1535_transaction(struct i2c_adapter *adap)
+>  		 && (timeout++ < MAX_TIMEOUT));
+>  
+>  	/* If the SMBus is still busy, we give up */
+> -	if (timeout > MAX_TIMEOUT) {
+> +	if (timeout > MAX_TIMEOUT)
+>  		result = -ETIMEDOUT;
+> -		dev_err(&adap->dev, "SMBus Timeout!\n");
+> -	}
+>  
+>  	if (temp & ALI1535_STS_FAIL) {
+>  		result = -EIO;
+> @@ -313,10 +311,8 @@ static int ali1535_transaction(struct i2c_adapter *adap)
+>  	}
+>  
+>  	/* check to see if the "command complete" indication is set */
+> -	if (!(temp & ALI1535_STS_DONE)) {
+> +	if (!(temp & ALI1535_STS_DONE))
+>  		result = -ETIMEDOUT;
+> -		dev_err(&adap->dev, "Error: command never completed\n");
+> -	}
+>  
+>  	dev_dbg(&adap->dev, "Transaction (post): STS=%02x, TYP=%02x, "
+>  		"CMD=%02x, ADD=%02x, DAT0=%02x, DAT1=%02x\n",
 
+I'm skeptical about that one, although this might be mainly an issue
+with the code flow rather than your proposed changes.
+
+There are 2 conditions which cause result to be set to -ETIMEDOUT.
+After removing the messages, there's no way to differentiate between
+these two cases, which could make bug investigation more difficult.
+
+Another concern is that it is possible (at least theoretically) to hit
+the first timeout condition and NOT return -TIMEDOUT. This is because
+the code flow tests a number of conditions in a non-exclusive way, so
+errnos may overwrite each other. I don't like this design. The
+consequence is that the calling device driver may not be able to report
+the timeout, while this was the reason you gave for removing the
+message.
+
+That being said, this is a very old driver, maintained in best effort
+mode, I actually very much doubt it has any user left, so there's
+little point in spending too much time on this. My gut feeling is that
+the first "result = -ETIMEDOUT" isn't actually needed in practice and
+will always be overwritten by another errno later in the code flow
+(possibly the second "result = -ETIMEDOUT"). So most likely your change
+is safe.
+
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+
+-- 
+Jean Delvare
+SUSE L3 Support
