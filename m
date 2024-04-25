@@ -1,71 +1,109 @@
-Received: from mail115-24.sinamail.sina.com.cn (mail115-24.sinamail.sina.com.cn [218.30.115.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0212212BF28
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 22:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2895E12BF28;
+	Thu, 25 Apr 2024 22:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714085854; cv=none; b=V4YD/BWfbRSE/Rx4AUNbs5pZ223RPO4E9NKC04107PHVp5cKlISU3QHcu5hjGF9FQc8d8xitYsqnrr2MnxjYc6f/B5kyeaVrcRX1sYaD6RsP1TaGdu2GhjSJsfZ0qJ6j7C+AGJCvHscLdi1B4jncsdZIlcyrq1K3UE5OObzfCjo=
+	t=1714085889; cv=none; b=UKjIzWySvO4bE+i+R07JJinYA6FOo2fgfdBFLJ3wQsJ0Ok25V2DCMWZBkQBYtSET2LC27Og0tYkdXfrFfv03nMyQkP9h1Lncpdki3gcPrmb5lFvQhoHvgaKk2sdzBM2nGSLhUCDDRygz1qY/K/P0Xw/qlOeyUpgQChD9V6DnhaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714085854; c=relaxed/simple;
-	bh=LGzbZC8/xoQQsXyfN11J1Puhk0Soqjo6+qmLU5QDD1k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EAbJKQ8hrgqMgA4iwy1CnlElbcCLjhym3n9Z6hvI7hSs+7CNg3dC2iam+uCX9HUEnPM1tA1y75YVkbhiYcBfbVUkAbxHmHV9KSWWyYtvX6PWx+nbpPt2u6jjBZc2izV1uYIqoWE6Yh1aewBnLyJKmFAJB0phYJcF6qGhBLEhMc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([116.24.11.235])
-	by sina.com (10.75.12.45) with ESMTP
-	id 662ADF4300003BBD; Thu, 26 Apr 2024 06:55:01 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 31961131457685
-X-SMAIL-UIID: F35C7840F749482288CF30E0B3AFBC17-20240426-065501-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+c6a1953c27ace6cc34e5@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [usb?] WARNING in wdm_rxwork/usb_submit_urb (2)
-Date: Fri, 26 Apr 2024 06:55:01 +0800
-Message-Id: <20240425225501.3242-1-hdanton@sina.com>
-In-Reply-To: <00000000000092e8f90616e4627f@google.com>
-References: 
+	s=arc-20240116; t=1714085889; c=relaxed/simple;
+	bh=KZ6d6tmhKGWfhPvc5pe1zvmWKH4eLy2i/SVKQGqyco4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=c1vIRoD0mqVvzd8eT81Nx2JjmImmwuRoGApm7OfcIEB5r5siU77rQvOIqfyBWoBcXS7m1f/U+fkG12v5/s/R8XCY5r65N4mlj/rmGVwdfN2HctNxdKYVFd8toU0YMA5PjN9VHxnOPywOXT5opCRreZhCqQ36x9VUUBYu/SZ04Z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQHjP+/I; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQHjP+/I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3902C113CC;
+	Thu, 25 Apr 2024 22:58:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714085888;
+	bh=KZ6d6tmhKGWfhPvc5pe1zvmWKH4eLy2i/SVKQGqyco4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XQHjP+/IEP3Hod/NE4TIvhSjSrvdrjAy9k2SyFIAJjFzNY8+Nh3Sx4POcNt5btuMm
+	 3im4slzGoWYkGm7TS50kvWPPVYBYIGT0/MZhkPK2muqrQmmbWC0GyjmcZ0ybOYTxW9
+	 SMkcyLR9W1KlZ7QqBNuRE0iMGbU80vuL7IHG1jEi41QYuf83RSpP92ZQTtRVvOQLlr
+	 v3hS48+RITvJrg9TWBKbL4CriqzPOg3Tsg+Vt50QKETrvCXiqDRTehoqDAJ9x/Y1u/
+	 a3230EtuGUq8KzmygdeZcglcAOIPu4ukSmpzRXKV2jvztr04ZgWZjoIRpRbueNQj+A
+	 zP3uYbLEZ8C/g==
+Date: Thu, 25 Apr 2024 15:58:04 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+Cc: j.granados@samsung.com, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Alexander
+ Aring <alex.aring@gmail.com>, Stefan Schmidt <stefan@datenfreihafen.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>, David Ahern
+ <dsahern@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, Matthieu Baerts
+ <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Geliang Tang
+ <geliang@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Remi
+ Denis-Courmont <courmisch@gmail.com>, Allison Henderson
+ <allison.henderson@oracle.com>, David Howells <dhowells@redhat.com>, Marc
+ Dionne <marc.dionne@auristor.com>, Marcelo Ricardo Leitner
+ <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, Wenjia Zhang
+ <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>, "D. Wythe"
+ <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>, Wen Gu
+ <guwen@linux.alibaba.com>, Trond Myklebust
+ <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, Chuck
+ Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil
+ Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
+ <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Jon Maloy
+ <jmaloy@redhat.com>, Ying Xue <ying.xue@windriver.com>, Martin Schiller
+ <ms@dev.tdt.de>, Pablo Neira Ayuso <pablo@netfilter.org>, Jozsef Kadlecsik
+ <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>, Roopa Prabhu
+ <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, Simon Horman
+ <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>, Joerg Reuter
+ <jreuter@yaina.de>, Luis Chamberlain <mcgrof@kernel.org>, Kees Cook
+ <keescook@chromium.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dccp@vger.kernel.org,
+ linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org,
+ rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
+ linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org,
+ linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+ linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ coreteam@netfilter.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org
+Subject: Re: [PATCH v4 1/8] net: Remove the now superfluous sentinel
+ elements from ctl_table array
+Message-ID: <20240425155804.66f3bed5@kernel.org>
+In-Reply-To: <20240425-jag-sysctl_remset_net-v4-1-9e82f985777d@samsung.com>
+References: <20240425-jag-sysctl_remset_net-v4-0-9e82f985777d@samsung.com>
+	<20240425-jag-sysctl_remset_net-v4-1-9e82f985777d@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 24 Apr 2024 21:40:22 -0700
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    a160e1202ca3 usb: dwc3: qcom: Add multiport suspend/resume..
-> git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166f3d27180000
+On Thu, 25 Apr 2024 14:02:59 +0200 Joel Granados via B4 Relay wrote:
+> -	for (i =3D 0; i < ARRAY_SIZE(mpls_table) - 1; i++)
+> +	for (i =3D 0; i < tabel_size; i++)
+>  		table[i].data =3D (char *)net + (uintptr_t)table[i].data;
+> =20
+>  	net->mpls.ctl =3D register_net_sysctl_sz(net, "net/mpls", table,
+> -					       ARRAY_SIZE(mpls_table));
+> +					       tabel_size);
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git  usb-testing
+../net/mpls/af_mpls.c: In function =E2=80=98mpls_net_init=E2=80=99:
+../net/mpls/af_mpls.c:2676:25: error: =E2=80=98tabel_size=E2=80=99 undeclar=
+ed (first use in this function); did you mean =E2=80=98table_size=E2=80=99?
+ 2676 |         for (i =3D 0; i < tabel_size; i++)
+      |                         ^~~~~~~~~~
+      |                         table_size
+../net/mpls/af_mpls.c:2676:25: note: each undeclared identifier is reported=
+ only once for each function it appears in
+../net/mpls/af_mpls.c:2660:16: warning: unused variable =E2=80=98table_size=
+=E2=80=99 [-Wunused-variable]
+ 2660 |         size_t table_size =3D ARRAY_SIZE(mpls_table);
+      |                ^~~~~~~~~~
+--=20
+netdev FAQ tl;dr:
+ - designate your patch to a tree - [PATCH net] or [PATCH net-next]
+ - for fixes the Fixes: tag is required, regardless of the tree
+ - don't post large series (> 15 patches), break them up
+ - don't repost your patches within one 24h period
 
---- x/drivers/usb/class/cdc-wdm.c
-+++ y/drivers/usb/class/cdc-wdm.c
-@@ -311,11 +311,12 @@ static void wdm_int_callback(struct urb
- 		&& !test_bit(WDM_DISCONNECTING, &desc->flags)
- 		&& !test_bit(WDM_SUSPENDING, &desc->flags)) {
- 		rv = usb_submit_urb(desc->response, GFP_ATOMIC);
-+		if (rv)
-+			clear_bit(WDM_RESPONDING, &desc->flags);
- 		dev_dbg(&desc->intf->dev, "submit response URB %d\n", rv);
- 	}
- 	spin_unlock_irqrestore(&desc->iuspin, flags);
- 	if (rv < 0) {
--		clear_bit(WDM_RESPONDING, &desc->flags);
- 		if (rv == -EPERM)
- 			return;
- 		if (rv == -ENOMEM) {
---
+pw-bot: cr
