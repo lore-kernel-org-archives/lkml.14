@@ -1,37 +1,46 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BF923CE;
-	Thu, 25 Apr 2024 20:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67FF631;
+	Thu, 25 Apr 2024 20:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714077031; cv=none; b=gHt4iwXJqqrg1N5sDUCkSg5Fbt9JKkrOExEFciFfajl52sdR/a0obsnbo5Eiw7ehJsabJMLMrwd7lr2nwDTHAkmsIDI3FqSjweol7DHRC+NUNA/Nsxx2X+BbWB4bcmG2I4kom9zgFnyFByEJGmUgWBIGhcI3OgnNbjjyLZI9I0w=
+	t=1714077076; cv=none; b=If+X7nva/sJYryWZMxb3GvjUBw0gMXqUoUuFmwTNR2xibRg9ld34bieydSRxy5M9h0jtwKhiN94K/whDihze/+EaxU6Z6su1eeNOdj7CyqrIjJx6/4M7PEEzNVb/J3GITWyHnV9LmCz1nJI7d2HjkeV2fszAsbtIv2z+3EkLDDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714077031; c=relaxed/simple;
-	bh=hfdus2p+bM7iWg6TlBkavoSM/qj2oyLi4fBlb3KBeW4=;
+	s=arc-20240116; t=1714077076; c=relaxed/simple;
+	bh=Os/ETrNyhqvrY0Al2gTdoVvSC4IYDspRfev++Ei3nXk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M/7QTSgAVAtRKhcMsrlpvOA7qt85A0UfXqbZGjDNfL6HNFs/SQSOh6vXIXa+oJh+TjrIWLQPVAYznjO3I7aYWJuAiitV7V8wdUBmLJ3Ofmx9CGxv2KK1HfqtvTuSZvVGfUAMp6VeX5jeiCZ9x88K6V41E/JdngxjmQkhe2P5kz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=so3IsTwO; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=FeS3pZxGflTswBskb4NGiE5PPzs9v6y4dA2xsz+HC3MSwMdnqbCdhkIhWGGvkWifcJiDXYkiSZHbz60UW4MfsmnyNu/VbAuerlvkqVsA9AaCBgcaD+7B58tumIo0Ibvf6ZuFTLqsvGkU+Y4jMW6xKWSZA4uBqugdbLON5YPFbr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DzsWM7X4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="so3IsTwO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1714077024;
-	bh=hfdus2p+bM7iWg6TlBkavoSM/qj2oyLi4fBlb3KBeW4=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DzsWM7X4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46694C113CC;
+	Thu, 25 Apr 2024 20:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714077076;
+	bh=Os/ETrNyhqvrY0Al2gTdoVvSC4IYDspRfev++Ei3nXk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=so3IsTwO1ivEkwveyqFCciND8gTG+gMmvHEUsRHL/MI+2CPbGphn/wnS9CHoTWP73
-	 32OB017oWa6UzKDblylTtZHQfWcUj0orRLYTsIHaTia+smoY/EwPm56d4W84pZZvsD
-	 xeBWAHufEYq1ystLD6u81x8ufEDTMJywW0YXOpaU=
-Date: Thu, 25 Apr 2024 22:30:24 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Willy Tarreau <w@1wt.eu>
-Cc: Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 0/2] tools/nolibc: implement strtol() and friends
-Message-ID: <ed4ab3db-71a2-4f3f-bafe-f1a71d1c66a7@t-8ch.de>
-References: <20240425-nolibc-strtol-v1-0-bfeef7846902@weissschuh.net>
- <ZiqFL02n3+4EKFMV@1wt.eu>
+	b=DzsWM7X4G54YvQRbsLkWUUuW6W5vNovWQIF0gpDFSwm8vrb06tXukhWaR9DOs7DH0
+	 Yr5kjn+9GEiX7dhQUX5uQ99bp2nao4usQL1XHDdayCCq/QAu65OxNga/zSJ6ntYBLx
+	 RASjvV9bPVVLDV7ezYeSTx2/gHWJ35Q+dl6zWAwxjeo1FocK4ZETUyL5NjXYe34si5
+	 tmIPafoKkN+yukJiHFQzHfedK1JOalgAsH6bOsU3wHSa/WrMXkfxrd9fh9IY6UfA1c
+	 MZPh2qYpzmXD4rfligEiNvnWgX5Dv23v/LVhK6fsWp2OmHhsDr3fF8o3X0Qf8WNO5l
+	 PlyPoKTwPrjuA==
+Received: by pali.im (Postfix)
+	id DD30070C; Thu, 25 Apr 2024 22:31:13 +0200 (CEST)
+Date: Thu, 25 Apr 2024 22:31:13 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Lyndon Sanche <lsanche@lyndeno.ca>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dell.Client.Kernel@dell.com
+Subject: Re: [PATCH] platform/x86: dell-laptop: Implement platform_profile
+Message-ID: <20240425203113.eokpgdjj6hmxhdj3@pali>
+References: <20240425172758.67831-1-lsanche@lyndeno.ca>
+ <20240425201213.apwdxazbdbjddtpr@pali>
+ <d31486b6-d71d-4985-adb1-2425f19b0b5c@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,26 +50,79 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZiqFL02n3+4EKFMV@1wt.eu>
+In-Reply-To: <d31486b6-d71d-4985-adb1-2425f19b0b5c@app.fastmail.com>
+User-Agent: NeoMutt/20180716
 
-On 2024-04-25 18:30:39+0000, Willy Tarreau wrote:
-> Hi again Thomas,
+On Thursday 25 April 2024 14:27:32 Lyndon Sanche wrote:
+> On Thu, Apr 25, 2024, at 2:12 PM, Pali Rohár wrote:
+> > On Thursday 25 April 2024 11:27:57 Lyndon Sanche wrote:
+> >> +int thermal_init(void)
+> >> +{
+> >> +	int ret;
+> >> +	int supported_modes;
+> >> +
+> >> +	ret = thermal_get_supported_modes(&supported_modes);
+> >> +
+> >> +	if (ret != 0 || supported_modes == 0)
+> >> +		return -ENXIO;
+> >> +
+> >> +	thermal_handler = kzalloc(sizeof(*thermal_handler), GFP_KERNEL);
+> >> +	if (!thermal_handler)
+> >> +		return -ENOMEM;
+> >> +	thermal_handler->profile_get = thermal_platform_profile_get;
+> >> +	thermal_handler->profile_set = thermal_platform_profile_set;
+> >> +
+> >> +	if ((supported_modes >> DELL_QUIET) & 1)
+> >> +		set_bit(PLATFORM_PROFILE_QUIET, thermal_handler->choices);
+> >> +	if ((supported_modes >> DELL_COOL_BOTTOM) & 1)
+> >> +		set_bit(PLATFORM_PROFILE_COOL, thermal_handler->choices);
+> >> +	if ((supported_modes >> DELL_BALANCED) & 1)
+> >> +		set_bit(PLATFORM_PROFILE_BALANCED, thermal_handler->choices);
+> >> +	if ((supported_modes >> DELL_PERFORMANCE) & 1)
+> >> +		set_bit(PLATFORM_PROFILE_PERFORMANCE, thermal_handler->choices);
+> >> +
+> >> +	platform_profile_register(thermal_handler);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +void thermal_cleanup(void)
+> >> +{
+> >> +	platform_profile_remove();
+> >> +	kfree(thermal_handler);
+> >> +}
+> >> +
+> >>  static struct led_classdev mute_led_cdev = {
+> >>  	.name = "platform::mute",
+> >>  	.max_brightness = 1,
+> >> @@ -2266,6 +2480,11 @@ static int __init dell_init(void)
+> >>  		mute_led_registered = true;
+> >>  	}
+> >>  
+> >> +	// Do not fail module if thermal modes not supported,
+> >> +	// just skip
+> >> +	if (thermal_init() != 0)
+> >> +		pr_warn("Unable to setup platform_profile, skipping");
+> >
+> > I think that -ENOMEM error should be failure of the loading the driver.
+> > It does not make sense to continue of memory allocation failed.
+> >
+> > On the other hand when the thermal modes are not support (e.g. old
+> > Latitude models) then there should not be a warning message. It is
+> > expected that on systems without thermal modes the setup fails.
 > 
-> On Thu, Apr 25, 2024 at 06:09:25PM +0200, Thomas Weißschuh wrote:
-> > I wanted to implement sscanf() for ksft_min_kernel_version() and this is
-> > a prerequisite for it.
-> > 
-> > It's also useful on its own so it gets its own submission.
-> > 
-> > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> Thank you for your feedback.
 > 
-> Nice work, thank you. For the whole series, modulo my small comments on
-> 2/2:
+> I agree with your suggestion. -ENOMEM would indicate something bigger is amiss. I can add a check:
+> 
+> If -ENOMEM, fail driver.
+> If anything other error, skip, but do not show a message.
+> 
+> Lyndon
 
-Thanks for those great catches!
-
-I addressed them and pushed the result to nolibc/next.
-
->   Acked-by: Willy Tarreau <w@1wt.eu>
-
-Thomas
+Maybe you can simplify it more. thermal_init() could return 0 also for
+the case when thermal modes are not supported. And dell_init() then can
+unconditionally fail when thermal_init() returns non-zero value. It has
+benefit that in case thermal_init() is extended in future for some other
+fatal error, it would not be required to update also caller to handle
+another error (and not just ENOMEM).
