@@ -1,132 +1,118 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72B167A1A
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 07:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CCE5D477;
+	Thu, 25 Apr 2024 07:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714031258; cv=none; b=oI4kJXF9g1HrP3xDHZKIrHd31Wsvpm8kVvsUI46Zo46SjnscZjkALy3wkeJGzZobq4EAjvstVJrjTbRJb2ixSXajEzNVt3n/yo/jaTRoMuJ8zu7otM9zBzkkx2Y5MuoCdnRGVZ/V0fFSFnl1A/M2yVw1djqnlLCtrxeJwikzgx0=
+	t=1714031335; cv=none; b=MfiNw1Ic6mKVDn9nuJYW8B7em7lEVoNHzipyJHJ1Z6MuOmuKhUsI/VHHUKqe7r0II238hm0j5xST1RepoMbHiqyKSjBirDi/Z3hNJfwJpHSa9cx1MmGvZ2kTjyHScAi+YG80qrhawD9J1P0Vl88LseYhZpVsORAywduncAYa+So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714031258; c=relaxed/simple;
-	bh=iAHuugcSZ7gNPb/Zbw8nWBC0N1+7iJ0C+P+QylIbZeI=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=j8TaU1ratCHY/tLfKh/zIGkNY1KQPkmEUOYu9BoOMSYEE5K0MUKql8Jw3WUI7qcV2Lmqfnb2iadtUTgg5znKIYQCif6e1Mn5aQ/JQk00wjtlcz+83qR8rpIpp/VdLx/xKJIPdJz2vAgh6MrGTntjqeO0hxPXU8WGkpy8QdsC6Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MiLEZv0/; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MiLEZv0/"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-41b4fd421c8so1577365e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 00:47:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714031255; x=1714636055; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wPJqdD/Tzg33ESGXWGEoqq776wvQs8gtsYLZyLqRGzk=;
-        b=MiLEZv0/6U0i4DDNEjAOPSBy5yEQ2ACgSdUsahVRPVIvcy1j/1RD4VYsuzkxfsCC9C
-         3jSsOX0rwowBgrnbr8B2+LkmX+YMwemh1YpgUJQlpYIZaCEsi60t47Zria5RC041CnoY
-         jVVZZPJto+uhdn+zwuRYezh+CmlM4HMyJ0W2W7kauLkki9pjvjdgUnKBdYVP5usRPvVA
-         D0XyAPygqnsrajisQQubFALcRMb2KlLHaJ8lcYDie2kR0a1/jvqIz+nHx2csNFijKGum
-         Xy7qqwGG+QfLdGxudbXP/St6zgoSCRs3iispAru8qM3l5+4WznVJUePeo7lF8dxIY2HL
-         9Gig==
+	s=arc-20240116; t=1714031335; c=relaxed/simple;
+	bh=QWzMqnvNDE3uWpTxgV5Wt0uL05nTU10AMdyKsaDyklo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=erq9r3H6ntdhqxpOFq9UnIwMUtT9WXcA8NBggdrGotswXbrHpMtjnTDROcgg2WVlaRV9Q/9ciGhMTVWsVrieaLNiEdylD9KfeqJpPGJUjLmkz4vEwNQf4wYVWYbUMmR/v69n9ffbFOv66Nw7Ic/e+LSbvgOaSB2TB9cfBjrwkPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-617cd7bd929so6972277b3.3;
+        Thu, 25 Apr 2024 00:48:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714031255; x=1714636055;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wPJqdD/Tzg33ESGXWGEoqq776wvQs8gtsYLZyLqRGzk=;
-        b=PKJrMMThrdDZiT5vj/OPZQbJXBQKpkUmlQsINlI1tI9OtJXrrk+1bJEQ6kQIBorbZJ
-         uKW9fHF9kGnYDOCKNC9KlpJaGkghB/wPtIgayftLFJtLJyBs45+J4drIWrkeSRMTYlKv
-         69w1xsebImvFb1Rie0PwbC9sbC7GnkSbr4Mv7m6I2yIhjwIqKU3XL+DALKDe+RpAIUxZ
-         K6tgABmMQk4vhpkDjl/8UIxVorbecdxWJmTIWVUjHJ/Crl/MtgfVLhFGzw+Bd39Y+7nm
-         k4E3vPAfJ5ifwIrfAovUQXGtXLxLhA6IF/IhA0rrWxw/NMoy6KWl2kjLQphlChbWVn8c
-         hD0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWwuz0wqQ9C6xntKLifvFE1Euz8XiYa0ETwKf4T20TxdOUTxdlChXc5lWLx7hFU5WYbgO8XsEusRNSHMR1RiIX7czLTFZo1FuDgTzcz
-X-Gm-Message-State: AOJu0YzNDcWiW1Xta2kCQJDjze3np5hd3UZENIjRvoplNdJrLJ6ZPNJi
-	4A8oCE//ipXGko6PIXJg5+WNTOEuqSeEgo0BsIoQnEwzgj4PFlVDR1z4nZaSb6Q=
-X-Google-Smtp-Source: AGHT+IGttzD9sok4hMZTxcAKeLHuq311JK4wtR4ABqpIEMGOh2yM6/pg2BssKk4024XY4L3VCE4gqA==
-X-Received: by 2002:a05:600c:3b8e:b0:41a:aa6:b68c with SMTP id n14-20020a05600c3b8e00b0041a0aa6b68cmr3882881wms.6.1714031254803;
-        Thu, 25 Apr 2024 00:47:34 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:15c7:bd9c:c500:ed62? ([2a01:e0a:982:cbb0:15c7:bd9c:c500:ed62])
-        by smtp.gmail.com with ESMTPSA id e6-20020a05600c4e4600b0041b43e301e8sm1384692wmq.42.2024.04.25.00.47.33
+        d=1e100.net; s=20230601; t=1714031332; x=1714636132;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jCeLs5NAma1XU37XgksPfxny5o1JTn/LLmRqHaQAAv4=;
+        b=oBTZ/fM+KgsoyB6VwO+2xK6hqHtiXcghR+qvILjU7p5ICnoi2zNFMqQZEJUnYD2ZFe
+         ODZ8uBCLBW/+pTauzs9Nch2CHbDEdOJnXDDZ7vFvqsiJs5FjhmqhD0TTsjiX6o+ZABLB
+         MqeM/f5VhREVHK2sXsCUZMT505PzRqVC9x9qxoy6uefmjlsg5+RtOMSzAhnLZpLcZyt5
+         +ieCj6eWidYQjwzKtp+YXG8I86lUg0M8BemwTOM++uq5EcxDnhf/UCs+tSgAQSPxkk+Z
+         j6tsFCdf/XkD684u6vnv7f0OGevERxRQPdwCvQDo17wEpK49jAhzQITlmrS8vv0eVeH+
+         bpqA==
+X-Forwarded-Encrypted: i=1; AJvYcCXjoI9DSIO39MCFkBW4GB8avXjTsTUTQ4HEbnmQE1JOnaCJyW8MjhYR7JTlpIsopiLQdpL41J+QpGsy68wfHwVPchlCjKm9RQ164GmrvKJWyecREB8xM7gFJVsrDtxA9D9h2cM15M/L8ODZ/icDOiC1M9FsT2fypgPf5KnD3tbvgWrKQVU=
+X-Gm-Message-State: AOJu0YzQjJMUiKJ1MDL+xgC+Q57rSGHbrCrKv0EvpMl5iq2H2yel9Zir
+	n17A/QjliZ/p2RmqHf2qeS4oAm0WoE3RecWCgy6BeLnk93gLQj/2i5MZuSNyfCA=
+X-Google-Smtp-Source: AGHT+IE8f1uBQL5109KAnWBYTJPPcWetC/Iced96NtbTjIMA1h56Su4gVQVTQW5GAZS82XBh7TnJJg==
+X-Received: by 2002:a05:690c:64c3:b0:61a:dc61:25e2 with SMTP id ht3-20020a05690c64c300b0061adc6125e2mr5247377ywb.49.1714031332194;
+        Thu, 25 Apr 2024 00:48:52 -0700 (PDT)
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
+        by smtp.gmail.com with ESMTPSA id y76-20020a0dd64f000000b00609f4170662sm3444253ywd.54.2024.04.25.00.48.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Apr 2024 00:47:34 -0700 (PDT)
-Message-ID: <16de57e6-39c1-4528-b9a7-8b8af2ec6880@linaro.org>
-Date: Thu, 25 Apr 2024 09:47:33 +0200
+        Thu, 25 Apr 2024 00:48:51 -0700 (PDT)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6184acc1ef3so6633687b3.0;
+        Thu, 25 Apr 2024 00:48:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWqzvnLZ8UI4QbwgPaqbVZqQymjU2WOO1r8Z04I7cVK+BGwlU9DyNL/8YvCugB6ZqwYfF9Myoym4kfjHnandmfM6KIo/MtISDxTuMXf/WROio32h1I5ZJ5vdpMH85qP4/Elah6pk754IlgKDWe0H0rGkFR5AtCTUTks6iU/Ec6w+g2wAr4=
+X-Received: by 2002:a25:109:0:b0:de5:5aaa:7881 with SMTP id
+ 9-20020a250109000000b00de55aaa7881mr5977202ybb.49.1714031331725; Thu, 25 Apr
+ 2024 00:48:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 1/2] drm/bridge: chipone-icn6211: drop driver owner
- assignment
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Jagan Teki <jagan@amarulasolutions.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20240330202741.83867-1-krzysztof.kozlowski@linaro.org>
- <ul5vzz54kppxo6zkr7k6seejmmlgp3d4dqfzjlj5la3e5ltolo@ug5dtoknkibu>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <ul5vzz54kppxo6zkr7k6seejmmlgp3d4dqfzjlj5la3e5ltolo@ug5dtoknkibu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240425070936.547100-1-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20240425070936.547100-1-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 25 Apr 2024 09:48:39 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX_uojDmx3pH--KsBcae=1VmcNupedGBwovVQcU+z14sg@mail.gmail.com>
+Message-ID: <CAMuHMdX_uojDmx3pH--KsBcae=1VmcNupedGBwovVQcU+z14sg@mail.gmail.com>
+Subject: Re: [RFT PATCH v2] serial: core: Call device_set_awake_path() for
+ console port
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, tony@atomide.com, 
+	andriy.shevchenko@linux.intel.com, l.sanfilippo@kunbus.com, 
+	tglx@linutronix.de, geert+renesas@glider.be, ulf.hansson@linaro.org, 
+	peng.fan@nxp.com, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Dmitry,
+On Thu, Apr 25, 2024 at 9:09=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev> =
+wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> In case the UART port is used as a console, no_console_suspend is
+> available in bootargs and UART port is part of a software-controlled powe=
+r
+> domain we need to call device_set_awake_path(). This lets the power
+> domain core code know that this domain should not be powered off
+> during system suspend. Otherwise, the UART port power domain is turned of=
+f,
+> nothing is printed while suspending and the suspend/resume process is
+> blocked. This was detected on the Renesas RZ/G3S SoC while adding support
+> for power domains.
+>
+> Based on code investigation, this issue is present on other SoCs (e.g.,
+> Renesas R-Mobile A1 [1], IMX8QXP [2]) and different SoCs have particular
+> implementation to handle it. Due to this the patch added the call of
+> device_set_awake_path() in uart_suspend_port() instead of having it in
+> the platform specific UART driver.
+>
+> [1] https://elixir.bootlin.com/linux/v6.9-rc5/source/drivers/pmdomain/ren=
+esas/rmobile-sysc.c#L116
+> [2] https://elixir.bootlin.com/linux/v6.9-rc5/source/drivers/pmdomain/imx=
+/scu-pd.c#L357
+>
+> Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-On 24/04/2024 11:12, Dmitry Baryshkov wrote:
-> On Sat, Mar 30, 2024 at 09:27:40PM +0100, Krzysztof Kozlowski wrote:
->> Core in mipi_dsi_driver_register() already sets the .owner, so driver
->> does not need to.
->>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> ---
->>   drivers/gpu/drm/bridge/chipone-icn6211.c | 1 -
->>   1 file changed, 1 deletion(-)
->>
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> 
-> 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I tried to apply them but you already applied them... could you make sure to notify the list when applying ?
+Works fine on R-Mobile APE6 with console suspend support removed from
+rmobile-sysc.c
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thanks,
-Neil
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
