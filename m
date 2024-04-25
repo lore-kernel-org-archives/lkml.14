@@ -1,104 +1,183 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA7514A091
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 13:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5199E149C52;
+	Thu, 25 Apr 2024 14:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714053593; cv=none; b=pHvSrdOoFmO12Lwzw8RQAsLWYylMBuYJul2/Qob8VuuGZ3MeDLy8wIqSw1lK5ol++qi6IHuhYblwonw3bhJhO7I+7hmBM5zhj75EiYFjCQiBOzeLxxY3nk7LUztPE1imB/grbkfcfEdH4NbH7+OLjelAsucaLqGgQnSn7yORhQA=
+	t=1714053673; cv=none; b=iMhrsdf1LRVm40ofpbYuQyvXrIt+RJq+geygG/qCL2C7jmu/fbRdlUVaDzUXkJqwjprBvZrw3wU5cQ4FUWondSE0lrzDLZyA6eg9gJUpzYYF9HSLBEl1XwJjCrOw9yn6fUgKzEwr/5z/FShJOte5eK6+xZ0ym5i8dQPCWe9yQjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714053593; c=relaxed/simple;
-	bh=mUZACTmIvN9VpSJnu+37t6kjVWpWjqK6pTbjUJgvM2c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l0wr8aD1TTJMpe84MpBQKryFsdmPtbXvP/pcP94+e/NCuSFoUlfB+2GekTr5g1LQYo1fnluJuon7+MynLtF8q+NiOsiWOHSIloEHUlxfVxXbP1skkD6j1kzb2xKbX8cDi7pWipi/fg2bkUD7SFZCorjlLIzpHSXXn2DojhECiJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr; spf=pass smtp.mailfrom=freebox.fr; dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b=X63ezSel; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freebox.fr
+	s=arc-20240116; t=1714053673; c=relaxed/simple;
+	bh=Nb/EYWJi0ha97Uh0+IpoBR6DF1ibajY3g34psIbNSQU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mTFA1e3Xj0QOzWYcXIfAuYc/MqKN2yH4lqsbchTQz8TQjzVf4QZgFaxq3vWsJnq9N0jYB2VvAJuRQWXIKehVKrHbxufZvZsffcIkLNelby8RjRWWs5aeQO0i3mdqG+YKalp+ptehHuXhUw9nREVPPVNGTTK0I1FzaGikz8NHpeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hjFvDYeI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b="X63ezSel"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-41adf155cffso7626735e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 06:59:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=freebox-fr.20230601.gappssmtp.com; s=20230601; t=1714053589; x=1714658389; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QyGh/Qwq5NmQyuXE/qEzsm92r8+stUz1K4JXovBXMG0=;
-        b=X63ezSeloXRmXYmLesLrM27SmZ1LKGqrzeFCZo0ENlPq1UUApAfPejgVmKqmaE2l5y
-         sQb4jryIocbCAf08vh0xAAP6ntn3DcV+bvlQBKAy8dDSBArXRLHd65VijYJ9w9SAPhny
-         q6o/rfa7cL7iW8GCKemp5cJIIwabxIeEZxn822ogbTHz2vPiiIGyFPvkYsuhgYJWPAaE
-         DJ02yoZE/vuSdceJC89ug4+5BpV5bK7jB3jwqAdeD5pxrnqUM2EjRaUshQnhGePVP+OO
-         GGPalkrxii7qpZ4Fs57lhVEysaHWXaCvCHXU6qGLei7EeuE9vV/FDAYyEo/3sUrtUXbA
-         EEtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714053589; x=1714658389;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QyGh/Qwq5NmQyuXE/qEzsm92r8+stUz1K4JXovBXMG0=;
-        b=QnynpAd65k+QEgkHhrtd4poVJiraL7y3L/7jmsfs3A4T5dYwTTx0GXmwswYQ72mEQ3
-         7f5prtkod+y2RomXKnuKD7fVONuiknAACuc/fkFQ/4ZCISgW05UJLEaT/JuNW2yBwo9x
-         XzpHCEdiphUSNU53jMsFMgzgrZfHpxvmSiu4PUJHr8tBPTtaX0m4BM1HTuz/kro41ELB
-         qtP+d6HM0d9gPLj2FO8NzPRFApT+O7NXR2DSqT9V40RbP24pByVv4R6Uec5QZVi6jGZ+
-         U/4boTd3haiq7G5DLciJFygTd0aT1MEEMbI9o4MZUaCzfo3DWRtfrWviegT972dWFft9
-         gr8w==
-X-Forwarded-Encrypted: i=1; AJvYcCVY3mLux69mdM0bVj7/3JWh1tReKHKl7F7h25ZyePPmHzGaEDGi7+Y5dRgR/keaCWQ+W+Rgk/dvScOXccI/lcOun4areR8HI3ZHRpVG
-X-Gm-Message-State: AOJu0Yw5TVkiysQyBn0ZKjCUgI4HNiZULIZjTTHM5AFVUqRK+Y5GbZjC
-	JRVrEZA6d9/GObfjYQn++fve5YYCchU8BPe7MasTLznWLh9S57wJEwsSX3O9bTw=
-X-Google-Smtp-Source: AGHT+IFYPfy7I3CXLjJMhD1uN28B2VhtrX5AMAV4Szqw3ZykCF+dF8pQtGiVV57q6XpkZbeoQLiaqA==
-X-Received: by 2002:a05:600c:1988:b0:41a:c92:d323 with SMTP id t8-20020a05600c198800b0041a0c92d323mr4457143wmq.10.1714053589161;
-        Thu, 25 Apr 2024 06:59:49 -0700 (PDT)
-Received: from fbxleo.iliad.local (freebox.vlq16.iliad.fr. [213.36.7.13])
-        by smtp.gmail.com with ESMTPSA id o12-20020a05600c4fcc00b00418a6d62ad0sm31479464wmq.34.2024.04.25.06.59.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 06:59:48 -0700 (PDT)
-From: =?UTF-8?q?L=C3=A9o=20DUBOIN?= <lduboin@freebox.fr>
-To: linus.walleij@linaro.org
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?L=C3=A9o=20DUBOIN?= <lduboin@freebox.fr>
-Subject: [PATCH 2/2] pinctrl: core: reset gpio_device in loop in pinctrl_pins_show()
-Date: Thu, 25 Apr 2024 15:58:02 +0200
-Message-ID: <c40d0634abefa19e689ffd450e0f48a8d63c4fc4.1714049455.git.lduboin@freebox.fr>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <cover.1714049455.git.lduboin@freebox.fr>
-References: <cover.1714049455.git.lduboin@freebox.fr>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hjFvDYeI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 994CAC113CC;
+	Thu, 25 Apr 2024 14:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714053672;
+	bh=Nb/EYWJi0ha97Uh0+IpoBR6DF1ibajY3g34psIbNSQU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hjFvDYeI8tBC/vJpFmCbM0Q/jPU6llQsaNTX6uuZ8JAqXizv4rYwjiTJv/i5k2mdV
+	 sUZBl8r622lC20BT8TWYYnJaSPctmzJ+ZMXb4JuDYtzKMju5AvQhLRxaFj/+Pc9o8l
+	 G9wi0BTW+ABisEetDdqzeU+GY6+h7LXi4RzXNLC5Xl4opLr4w2GDhKoHpUYAR0Yqq0
+	 fCV6CQcigf+hFVpQ6Q8V0fvZygKjmeR+SkLyjuwVZUIZ7Ts6HQKXgHxIbflIs7bdOC
+	 qxWpaOOskjvNw3ttmF9RAiwo/3O4uF2O6h0YfzbqnX7LHrVMRF6wjRgeAjD+OD9dNs
+	 tlN6w40rIcD7Q==
+Date: Thu, 25 Apr 2024 19:31:06 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Qiang Yu <quic_qianyu@quicinc.com>
+Cc: quic_jhugo@quicinc.com, mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	quic_cang@quicinc.com, quic_mrana@quicinc.com
+Subject: Re: [PATCH v4 3/3] bus: mhi: host: pci_generic: Add edl callback to
+ enter EDL
+Message-ID: <20240425140106.GG3449@thinkpad>
+References: <1713868417-37856-1-git-send-email-quic_qianyu@quicinc.com>
+ <1713868417-37856-4-git-send-email-quic_qianyu@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1713868417-37856-4-git-send-email-quic_qianyu@quicinc.com>
 
-We were not resetting the pointer to the associated gpio_device once
-we are done displaying a pin's information.
+On Tue, Apr 23, 2024 at 06:33:37PM +0800, Qiang Yu wrote:
+> Some of the MHI modems like SDX65 based ones are capable of entering the EDL
+> mode as per the standard triggering mechanism defined in the MHI spec v1.2. So
+> let's add a common mhi_pci_generic_edl_trigger() function that triggers the EDL
+> mode in the device when user writes to the /sys/bus/mhi/devices/.../trigger_edl
+> file.
+> 
+> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
 
-This meant that once we reached the end of a gpio-range, if there
-were pins right after it that did not belong to any known range,
-they would be associated with the previous range's gpio device.
+Same comment as previous.
 
-This resulted in those pins appearing as <4294966783:old_gdev> instead
-of the expected <0:?> (due to gpio_num being -1).
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Signed-off-by: Léo DUBOIN <lduboin@freebox.fr>
----
- drivers/pinctrl/core.c | 1 +
- 1 file changed, 1 insertion(+)
+> ---
+>  drivers/bus/mhi/host/pci_generic.c | 45 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
+> index 51639bf..c65eaa8 100644
+> --- a/drivers/bus/mhi/host/pci_generic.c
+> +++ b/drivers/bus/mhi/host/pci_generic.c
+> @@ -27,12 +27,16 @@
+>  #define PCI_VENDOR_ID_THALES	0x1269
+>  #define PCI_VENDOR_ID_QUECTEL	0x1eac
+>  
+> +#define MHI_EDL_DB			91
+> +#define MHI_EDL_COOKIE			0xEDEDEDED
+> +
+>  /**
+>   * struct mhi_pci_dev_info - MHI PCI device specific information
+>   * @config: MHI controller configuration
+>   * @name: name of the PCI module
+>   * @fw: firmware path (if any)
+>   * @edl: emergency download mode firmware path (if any)
+> + * @edl_trigger: capable of triggering EDL mode in the device (if supported)
+>   * @bar_num: PCI base address register to use for MHI MMIO register space
+>   * @dma_data_width: DMA transfer word size (32 or 64 bits)
+>   * @mru_default: default MRU size for MBIM network packets
+> @@ -44,6 +48,7 @@ struct mhi_pci_dev_info {
+>  	const char *name;
+>  	const char *fw;
+>  	const char *edl;
+> +	bool edl_trigger;
+>  	unsigned int bar_num;
+>  	unsigned int dma_data_width;
+>  	unsigned int mru_default;
+> @@ -292,6 +297,7 @@ static const struct mhi_pci_dev_info mhi_qcom_sdx75_info = {
+>  	.name = "qcom-sdx75m",
+>  	.fw = "qcom/sdx75m/xbl.elf",
+>  	.edl = "qcom/sdx75m/edl.mbn",
+> +	.edl_trigger = true,
+>  	.config = &modem_qcom_v2_mhiv_config,
+>  	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
+>  	.dma_data_width = 32,
+> @@ -302,6 +308,7 @@ static const struct mhi_pci_dev_info mhi_qcom_sdx65_info = {
+>  	.name = "qcom-sdx65m",
+>  	.fw = "qcom/sdx65m/xbl.elf",
+>  	.edl = "qcom/sdx65m/edl.mbn",
+> +	.edl_trigger = true,
+>  	.config = &modem_qcom_v1_mhiv_config,
+>  	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
+>  	.dma_data_width = 32,
+> @@ -312,6 +319,7 @@ static const struct mhi_pci_dev_info mhi_qcom_sdx55_info = {
+>  	.name = "qcom-sdx55m",
+>  	.fw = "qcom/sdx55m/sbl1.mbn",
+>  	.edl = "qcom/sdx55m/edl.mbn",
+> +	.edl_trigger = true,
+>  	.config = &modem_qcom_v1_mhiv_config,
+>  	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
+>  	.dma_data_width = 32,
+> @@ -928,6 +936,40 @@ static void health_check(struct timer_list *t)
+>  	mod_timer(&mhi_pdev->health_check_timer, jiffies + HEALTH_CHECK_PERIOD);
+>  }
+>  
+> +static int mhi_pci_generic_edl_trigger(struct mhi_controller *mhi_cntrl)
+> +{
+> +	void __iomem *base = mhi_cntrl->regs;
+> +	void __iomem *edl_db;
+> +	int ret = 0;
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 901f2f9bf850..ad878196ada9 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -1670,6 +1670,7 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
- 		seq_printf(s, "pin %d (%s) ", pin, desc->name);
- 
- #ifdef CONFIG_GPIOLIB
-+		gdev = NULL;
- 		gpio_num = -1;
- 		list_for_each_entry(range, &pctldev->gpio_ranges, node) {
- 			if (range->pins != NULL) {
+No need to initialize 'ret'.
+
+- Mani
+
+> +	u32 val;
+> +
+> +	ret = mhi_device_get_sync(mhi_cntrl->mhi_dev);
+> +	if (ret) {
+> +		dev_err(mhi_cntrl->cntrl_dev, "Failed to wakeup the device\n");
+> +		return ret;
+> +	}
+> +
+> +	pm_wakeup_event(&mhi_cntrl->mhi_dev->dev, 0);
+> +	mhi_cntrl->runtime_get(mhi_cntrl);
+> +
+> +	ret = mhi_get_channel_doorbell_offset(mhi_cntrl, &val);
+> +	if (ret)
+> +		goto err_get_chdb;
+> +
+> +	edl_db = base + val + (8 * MHI_EDL_DB);
+> +
+> +	mhi_cntrl->write_reg(mhi_cntrl, edl_db + 4, upper_32_bits(MHI_EDL_COOKIE));
+> +	mhi_cntrl->write_reg(mhi_cntrl, edl_db, lower_32_bits(MHI_EDL_COOKIE));
+> +
+> +	mhi_soc_reset(mhi_cntrl);
+> +
+> +err_get_chdb:
+> +	mhi_cntrl->runtime_put(mhi_cntrl);
+> +	mhi_device_put(mhi_cntrl->mhi_dev);
+> +
+> +	return ret;
+> +}
+> +
+>  static int mhi_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	const struct mhi_pci_dev_info *info = (struct mhi_pci_dev_info *) id->driver_data;
+> @@ -962,6 +1004,9 @@ static int mhi_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	mhi_cntrl->runtime_put = mhi_pci_runtime_put;
+>  	mhi_cntrl->mru = info->mru_default;
+>  
+> +	if (info->edl_trigger)
+> +		mhi_cntrl->edl_trigger = mhi_pci_generic_edl_trigger;
+> +
+>  	if (info->sideband_wake) {
+>  		mhi_cntrl->wake_get = mhi_pci_wake_get_nop;
+>  		mhi_cntrl->wake_put = mhi_pci_wake_put_nop;
+> -- 
+> 2.7.4
+> 
+> 
+
 -- 
-2.42.0
-
+மணிவண்ணன் சதாசிவம்
