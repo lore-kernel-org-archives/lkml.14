@@ -1,87 +1,231 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748D1156647;
-	Thu, 25 Apr 2024 23:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA93B156F3D
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 23:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714088399; cv=none; b=gX5tTu9Ah7rw1qcmmqH0RwQ5MCcCUkRNhy8uQgJZv0voMCyoEme9J8ayjjotxYnI3mcZ8k5UzldBUZP/f1bS5lbM/UsMmT1quNVMKrcSTWz5ZFBCnCjYHUzCq8PCpVbTX7m5y52HqOTiMEGdzK81sURxN9aOg0LvC8NY0+htE7Y=
+	t=1714088400; cv=none; b=G+LgP4YRsj4RIgqpR1u0O0V/qiRKix0MlktKYKf2FFkc2Zcw/JqdYyKF2J2/bK9+s9omcfw4iWka3GaAw+UCW8A+8rApqaHp14Ly1ayHTxOQ7miScc/yq2lOKMkAmaF6CKBtki5ciFgqLD2gJ7HAfb362Gds5F6dKKUC9ftHs/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714088399; c=relaxed/simple;
-	bh=/oN2iGCiL+NicvCJAspV+Q8NPoc1Br/lYrDCPGBMVNM=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=MuXe4UCXdApURbcNhgzlxNL14VzY5cf324o6kkD+gI3P0euEd8HwqhEODdQ7MlRCu+W3c1ldqsDyuBFPS0ugs6wv7/ooaylfizChptMNBhehARg1aTd5LDnrx0dw+UneT77VRYkWk8LJNNnmyh0Lv8qxaVKrjQ2z0OcfXlrUcf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8NJRlYV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714088400; c=relaxed/simple;
+	bh=u0lb4oEcZFhRwqHLflAlZi4AVPo3Csa5cR5x94rnGgU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=jCZs6RC90rfYrSRYTCf0xKbTXqVABRRK+rpVN2j8Ymx4c7owaGODrJm9WMPNQiVSN5RR1gUnW14I9IAhD+aZ+gQS6POutv4b/ng9GOwyFgpIh/k6lqJyuNjL+6ChuXQtG7MUO54WvnmU08kpRHIYxjeo9rN8wzmXAvl5d/i+bFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mbjGI7qx; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q8NJRlYV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE7D7C113CC;
-	Thu, 25 Apr 2024 23:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714088399;
-	bh=/oN2iGCiL+NicvCJAspV+Q8NPoc1Br/lYrDCPGBMVNM=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=Q8NJRlYVdYooFr1LJ/zQYNSD6DtJ+hQ5FyOs+/6W/ul3ud90x5zt6Ex1RbYGoZKV3
-	 qukqvWj3AjRmAlVs0x6RbdfjulyPHFvJCcKppdTVfIL7ZnRUB8FhhOkpv8c+lwDg1q
-	 IywI4SQ8AxQr3gtPN9Cc2b8e0grCqC11wf7zb7LXbHxOJ4Zrb5w40lRnNpWLR4kXjR
-	 uZLkWrEKMZN9puXb0XDvWNXd/PCsRadQS9OT70dxVerVy/1IT70IZqn6v/Y2Cf5CAq
-	 KSLOCn3d3botO3EfDUBR48FzAupB01ttVy8VqmXrc7DVrac4MHI/LyqwTlHvSXsqXx
-	 vOz9P3QoGeSeA==
-Date: Thu, 25 Apr 2024 18:39:57 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mbjGI7qx"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5cec8bc5c66so1355238a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 16:39:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714088398; x=1714693198; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=IUxUfKFq5lce0AjD/oJDwXVLlkKMz5g8I16agotNVL4=;
+        b=mbjGI7qx6U/Uo5P/vMKiZ40FneSsARjUICbK0shH+eS000q5s+aGFv7V/GpoLIhDsY
+         aLUZQdH8ki8UeIudqKoQzlULAz5l1O4KSnYyu1oO2W0b4elsC6tfDLFno2fHHiwsI2Pl
+         abTB1gD1rm5LBNkfcfGQY1U8F/5eyoEb9eHNhlOf3twiRJwctuh3iwXxn/jmCABgk/K5
+         c36rQJN7D8FnXqpuKiKf5qJ7WBcr+hsvGNHTPpUW2cvDZho/Ha8dtK4AKEo08jSACzis
+         jijq4JcsIBLqG9e6NJnP5VcIDjaSXbj/z+urJ+beuheC2/7/HlYuNrKC9F0nb6K5uoCh
+         J5HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714088398; x=1714693198;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IUxUfKFq5lce0AjD/oJDwXVLlkKMz5g8I16agotNVL4=;
+        b=SBFZeZz7ZoVKJBEV9a/AvRBpAUUlhL5iSqYENmfhI6zi23q7zjIw5ApzA/XUyIvqFZ
+         f+fUJQTZE9jR82tiJvH1jgZsVc8wr3ghlT/9Gmcf0exMtPlQ09R3wt4EywTB8VYl5QWl
+         sRFCWnvfmgNyuO6llypxoZfmIs5v6t37MmmAu/ukQf4XwCmHpC8XdTzQIZHXeJaU6G2X
+         YknVKXfUU9Vca4/5xr4rtZIn2M1VjXRKLd/yq5OeeuS6CjtnNdysbV5G9mX1K7i3eGRe
+         qioHqQDm45mytS2C78bykheZ+fGpUlOCye37/XGT3tVR0dzxjzHTo4ugWjb7CeM+tePT
+         7BTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWsmpC9cI+8KU7h/cw50t6+ZAgVXkf1qBn1Y6Kk5flV/l5oWkPx2dOoQBsB72LAGMJwP8tZNzqWAoLlN6AJuaVoFDSbx6+d6e1IIXOB
+X-Gm-Message-State: AOJu0YzPM22J3BT2n8nhstuM3iPJcs/YIhXxHvWJHp/8S/8ju4yWDkOQ
+	U1jUUuEY4umWGLbuWxuDUYUwAjVbbyk1N1SdlF0rkJgmNkOv5G21iNc1A7Fr7y5jZI4nMwSvSvk
+	3nA==
+X-Google-Smtp-Source: AGHT+IH+h5i/PU988dchPZRoVoVXuOPZqOT4+Rtk3PzisjubvPt97qk8f0RN68qdB9ceRIRH+7GBxqygKEs=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a63:2c13:0:b0:5dc:af73:89e1 with SMTP id
+ s19-20020a632c13000000b005dcaf7389e1mr3328pgs.10.1714088398066; Thu, 25 Apr
+ 2024 16:39:58 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Thu, 25 Apr 2024 16:39:49 -0700
+In-Reply-To: <20240425233951.3344485-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Eddie James <eajames@linux.ibm.com>
-Cc: linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, 
- andrew@codeconstruct.com.au, devicetree@vger.kernel.org, 
- conor+dt@kernel.org, linux-kernel@vger.kernel.org, joel@jms.id.au, 
- krzk+dt@kernel.org, linux-fsi@lists.ozlabs.org, lakshmiy@us.ibm.com, 
- linux-aspeed@lists.ozlabs.org
-In-Reply-To: <20240425213701.655540-2-eajames@linux.ibm.com>
-References: <20240425213701.655540-1-eajames@linux.ibm.com>
- <20240425213701.655540-2-eajames@linux.ibm.com>
-Message-Id: <171408839602.3902645.11975304379095234562.robh@kernel.org>
-Subject: Re: [PATCH v3 01/14] dt-bindings: spi: Document the IBM Power SPI
- controller
+Mime-Version: 1.0
+References: <20240425233951.3344485-1-seanjc@google.com>
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
+Message-ID: <20240425233951.3344485-3-seanjc@google.com>
+Subject: [PATCH 2/4] KVM: x86: Register emergency virt callback in common
+ code, via kvm_x86_ops
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Move the registration of KVM's "disable virtualization in an emergency"
+callbacks into common KVM code, using a pointer in kvm_x86_ops to provide
+each vendor's callback.
 
-On Thu, 25 Apr 2024 16:36:48 -0500, Eddie James wrote:
-> The IBM Power chips have a basic SPI controller. Document it.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> ---
->  .../devicetree/bindings/spi/ibm,p10-spi.yaml  | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/ibm,p10-spi.yaml
-> 
+There is no reason to force vendor code to do the registration, and the
+callback should be installed when kvm_x86_ops themselves are ready, i.e.
+when it's possible for .hardware_enabled() to be invoked.  E.g. TDX needs
+to do VMXON during module initialization, so registering the callback as
+part of early setup means one less thing to mess up.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/include/asm/kvm_host.h | 3 +++
+ arch/x86/kvm/svm/svm.c          | 5 +----
+ arch/x86/kvm/vmx/main.c         | 2 ++
+ arch/x86/kvm/vmx/vmx.c          | 6 +-----
+ arch/x86/kvm/vmx/x86_ops.h      | 1 +
+ arch/x86/kvm/x86.c              | 5 +++++
+ 6 files changed, 13 insertions(+), 9 deletions(-)
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/spi/ibm,p10-spi.example.dtb: fsi2spi@1c00: '#address-cells', '#size-cells', 'spi@0' do not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/fsi/ibm,fsi2spi.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240425213701.655540-2-eajames@linux.ibm.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 1d13e3cd1dc5..d64a51da150c 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -36,6 +36,7 @@
+ #include <asm/kvm_page_track.h>
+ #include <asm/kvm_vcpu_regs.h>
+ #include <asm/hyperv-tlfs.h>
++#include <asm/reboot.h>
+ 
+ #define __KVM_HAVE_ARCH_VCPU_DEBUGFS
+ 
+@@ -1606,6 +1607,8 @@ struct kvm_x86_ops {
+ 
+ 	int (*hardware_enable)(void);
+ 	void (*hardware_disable)(void);
++	cpu_emergency_virt_cb *emergency_disable;
++
+ 	void (*hardware_unsetup)(void);
+ 	bool (*has_emulated_msr)(struct kvm *kvm, u32 index);
+ 	void (*vcpu_after_set_cpuid)(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 0f3b59da0d4a..3b54243d0c22 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -4919,6 +4919,7 @@ static void *svm_alloc_apic_backing_page(struct kvm_vcpu *vcpu)
+ static struct kvm_x86_ops svm_x86_ops __initdata = {
+ 	.name = KBUILD_MODNAME,
+ 
++	.emergency_disable = svm_emergency_disable,
+ 	.check_processor_compatibility = svm_check_processor_compat,
+ 
+ 	.hardware_unsetup = svm_hardware_unsetup,
+@@ -5352,8 +5353,6 @@ static struct kvm_x86_init_ops svm_init_ops __initdata = {
+ static void __svm_exit(void)
+ {
+ 	kvm_x86_vendor_exit();
+-
+-	cpu_emergency_unregister_virt_callback(svm_emergency_disable);
+ }
+ 
+ static int __init svm_init(void)
+@@ -5369,8 +5368,6 @@ static int __init svm_init(void)
+ 	if (r)
+ 		return r;
+ 
+-	cpu_emergency_register_virt_callback(svm_emergency_disable);
+-
+ 	/*
+ 	 * Common KVM initialization _must_ come last, after this, /dev/kvm is
+ 	 * exposed to userspace!
+diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
+index 7c546ad3e4c9..3f423afc263b 100644
+--- a/arch/x86/kvm/vmx/main.c
++++ b/arch/x86/kvm/vmx/main.c
+@@ -24,6 +24,8 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
+ 
+ 	.hardware_enable = vmx_hardware_enable,
+ 	.hardware_disable = vmx_hardware_disable,
++	.emergency_disable = vmx_emergency_disable,
++
+ 	.has_emulated_msr = vmx_has_emulated_msr,
+ 
+ 	.vm_size = sizeof(struct kvm_vmx),
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index f10b5f8f364b..19bc62b60fac 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -753,7 +753,7 @@ static int kvm_cpu_vmxoff(void)
+ 	return -EIO;
+ }
+ 
+-static void vmx_emergency_disable(void)
++void vmx_emergency_disable(void)
+ {
+ 	int cpu = raw_smp_processor_id();
+ 	struct loaded_vmcs *v;
+@@ -8562,8 +8562,6 @@ static void __vmx_exit(void)
+ {
+ 	allow_smaller_maxphyaddr = false;
+ 
+-	cpu_emergency_unregister_virt_callback(vmx_emergency_disable);
+-
+ 	vmx_cleanup_l1d_flush();
+ }
+ 
+@@ -8610,8 +8608,6 @@ static int __init vmx_init(void)
+ 		pi_init_cpu(cpu);
+ 	}
+ 
+-	cpu_emergency_register_virt_callback(vmx_emergency_disable);
+-
+ 	vmx_check_vmcs12_offsets();
+ 
+ 	/*
+diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
+index 502704596c83..afddfe3747dd 100644
+--- a/arch/x86/kvm/vmx/x86_ops.h
++++ b/arch/x86/kvm/vmx/x86_ops.h
+@@ -15,6 +15,7 @@ void vmx_hardware_unsetup(void);
+ int vmx_check_processor_compat(void);
+ int vmx_hardware_enable(void);
+ void vmx_hardware_disable(void);
++void vmx_emergency_disable(void);
+ int vmx_vm_init(struct kvm *kvm);
+ void vmx_vm_destroy(struct kvm *kvm);
+ int vmx_vcpu_precreate(struct kvm *kvm);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index e9ef1fa4b90b..12e88aa2cca2 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9797,6 +9797,8 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
+ 
+ 	kvm_ops_update(ops);
+ 
++	cpu_emergency_register_virt_callback(kvm_x86_ops.emergency_disable);
++
+ 	for_each_online_cpu(cpu) {
+ 		smp_call_function_single(cpu, kvm_x86_check_cpu_compat, &r, 1);
+ 		if (r < 0)
+@@ -9847,6 +9849,7 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
+ 	return 0;
+ 
+ out_unwind_ops:
++	cpu_emergency_unregister_virt_callback(kvm_x86_ops.emergency_disable);
+ 	kvm_x86_ops.hardware_enable = NULL;
+ 	static_call(kvm_x86_hardware_unsetup)();
+ out_mmu_exit:
+@@ -9887,6 +9890,8 @@ void kvm_x86_vendor_exit(void)
+ 	static_key_deferred_flush(&kvm_xen_enabled);
+ 	WARN_ON(static_branch_unlikely(&kvm_xen_enabled.key));
+ #endif
++	cpu_emergency_unregister_virt_callback(kvm_x86_ops.emergency_disable);
++
+ 	mutex_lock(&vendor_module_lock);
+ 	kvm_x86_ops.hardware_enable = NULL;
+ 	mutex_unlock(&vendor_module_lock);
+-- 
+2.44.0.769.g3c40516874-goog
 
