@@ -1,145 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5657314F123;
-	Thu, 25 Apr 2024 18:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1695C14EC41
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 18:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714068380; cv=none; b=fWLml0a6lxbkN1oLddx+w3KPAvY7URs1ZPSzNxyHCRZTOx7vvx98Pd6GKaitZAZXNMjgpnuGozIkPZfkfrYHswdXW57Y3cejTdz4XZswOmwq450AZISW9295X6wHhjj1bsNR3ooOWXbPCnZTQ8KFIT4CiJZYRvCTjfiDFvinDc0=
+	t=1714068511; cv=none; b=GjDIjylXYyu9o0PvrfFfScCjHxiBDrTbjOq5Gy3NcmtYFAfpKUJ+3R1R2ZeMvou0eZ8jpTOK57CV1ZvosET8JKhsaVrs+Acc0UP4mNrm7qUbZmCBf4S9E3rzXSZzyfpkfqDGd9Tx9dd5wbO+rlDVY2XhYNJ9kMz/fNR5+fBssIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714068380; c=relaxed/simple;
-	bh=BDad7BMP0Go/r5l+KQ6WZzGzf90LuHfz7J8+KLDA4ZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r4WYe43C5/DA4smheaeLWNCW5nnvZNflXkmyVUhWwasoeMCX9VPUGDMwenikyTDsGB8LiDoisOJ0VpyBHB6MNDXYwu10wUKE3oRylTB3nDs14/IhNZqVrvKQv5IwUSxCFdehbmc+wp7T1Rs151M1ojCrWX3sRjnwSqcX9OgvzKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LIY81YGx; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714068511; c=relaxed/simple;
+	bh=dNk5QdHnDIyLORxtgN+YesJMvggVqKa3+rnupN3D+I4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mI2r2r9udqbN35MU/c342jPeKq0eIvQihRPxRX4wzi3p6S9iIEb5g2isGcjs7Sdx2En8DeIi078qnNDCOrjrmfsunQlTXSqXTgj+eE740oFAABbJJbMHtKZ/7vVzcQowWZ12xHBUQ0LiYslT7u05WZEyHBBF8g6RH+8fC0is8Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V6XUY3s/; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LIY81YGx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714068377; x=1745604377;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BDad7BMP0Go/r5l+KQ6WZzGzf90LuHfz7J8+KLDA4ZY=;
-  b=LIY81YGxOPyRqy6SM3nJA0RBvadfAFH4U4tU5Bt4p1LS+k4DyvjH8tOx
-   afusgvxlqCd0vT2JrcGCbBb9TjbzHlosOpmx6WUe/ZzSQF1vZTYM7h1wY
-   tUJLuZ3/0qgLBwmhsxfmXRse8h4JWaxv95sigWCR/VsyqB+MuOuW7d14R
-   k5ZIogF80d2QoyrQWERPMvD6mqd2QdnmMeNZiQ+wmJy/x+6tS6jge8X6J
-   e3T/bex9MXW+bcTx02PiVrs+0MK8PFCrhGFvWDCpQ31MypR8bdT/AdWnZ
-   0Pj9Lq/6p4NRqY7A8/Bnzr9RE+Y9shW8Y80t2QY6Dmio7JuRnQECl2OV5
-   Q==;
-X-CSE-ConnectionGUID: TsniBO3gSN2dmBGumHtexQ==
-X-CSE-MsgGUID: AiT0Ke8mSBK8rR0CzQTfYQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="12713746"
-X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
-   d="scan'208";a="12713746"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 11:06:16 -0700
-X-CSE-ConnectionGUID: AlN4B2RPSmC8whK7zIIljQ==
-X-CSE-MsgGUID: /2TQMtoURYSy30O74AOM1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
-   d="scan'208";a="29798118"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 25 Apr 2024 11:06:11 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s03U0-0002hs-2B;
-	Thu, 25 Apr 2024 18:06:08 +0000
-Date: Fri, 26 Apr 2024 02:05:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sky Huang <SkyLake.Huang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Qingfang Deng <dqfext@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	Steven Liu <Steven.Liu@mediatek.com>,
-	"SkyLake.Huang" <skylake.huang@mediatek.com>
-Subject: Re: [PATCH 2/3] net: phy: mediatek: Add mtk phy lib for token ring
- access & LED/other manipulations
-Message-ID: <202404260115.HS8G6ns3-lkp@intel.com>
-References: <20240425023325.15586-3-SkyLake.Huang@mediatek.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V6XUY3s/"
+Message-ID: <c2d41916-0b6c-43b5-98eb-514eb0511f84@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1714068507;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pWLZbxE4pquTcFK2sC6uHz/6X8LbxFLR+lPzPVowoAE=;
+	b=V6XUY3s/yowyYrBdecWJcBBkXnUn9+9vpFbwK551wN0+SOKm7Ff2XWsn51YCUPrf/rvTp8
+	XV+KCTJFl8kG4+enR5m5IrjJWtqxw3bhA6oldYM7RLoHR533pmt+TyCqldHz1i9anb39Dk
+	NxlgmjdC29r1KEjl3IkSDTm6grqK3sc=
+Date: Fri, 26 Apr 2024 02:08:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240425023325.15586-3-SkyLake.Huang@mediatek.com>
+Subject: Re: [v1,1/3] drm/panel: ili9341: Correct use of device property APIs
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Randy Dunlap <rdunlap@infradead.org>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Cc: Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg
+ <sam@ravnborg.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+References: <20240425142706.2440113-2-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <20240425142706.2440113-2-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Sky,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on next-20240424]
-[cannot apply to net-next/main net/main linus/master v6.9-rc5 v6.9-rc4 v6.9-rc3 v6.9-rc5]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Sky-Huang/net-phy-mediatek-Re-organize-MediaTek-ethernet-phy-drivers/20240425-103608
-base:   next-20240424
-patch link:    https://lore.kernel.org/r/20240425023325.15586-3-SkyLake.Huang%40mediatek.com
-patch subject: [PATCH 2/3] net: phy: mediatek: Add mtk phy lib for token ring access & LED/other manipulations
-config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20240426/202404260115.HS8G6ns3-lkp@intel.com/config)
-compiler: mips-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240426/202404260115.HS8G6ns3-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404260115.HS8G6ns3-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/net/phy/mediatek/mtk-phy-lib.c:51:13: warning: 'tr_write' defined but not used [-Wunused-function]
-      51 | static void tr_write(struct phy_device *phydev, u8 ch_addr, u8 node_addr, u8 data_addr, u32 tr_data)
-         |             ^~~~~~~~
->> drivers/net/phy/mediatek/mtk-phy-lib.c:33:13: warning: 'tr_read' defined but not used [-Wunused-function]
-      33 | static void tr_read(struct phy_device *phydev, u8 ch_addr, u8 node_addr, u8 data_addr,
-         |             ^~~~~~~
+Hi,
 
 
-vim +/tr_write +51 drivers/net/phy/mediatek/mtk-phy-lib.c
+On 2024/4/25 22:26, Andy Shevchenko wrote:
+> It seems driver missed the point of proper use of device property APIs.
+> Correct this by updating headers and calls respectively.
 
-    32	
-  > 33	static void tr_read(struct phy_device *phydev, u8 ch_addr, u8 node_addr, u8 data_addr,
-    34			    u16 *tr_high, u16 *tr_low)
-    35	{
-    36		phy_select_page(phydev, MTK_PHY_PAGE_EXTENDED_52B5);
-    37		__tr_read(phydev, ch_addr, node_addr, data_addr, tr_high, tr_low);
-    38		phy_restore_page(phydev, MTK_PHY_PAGE_STANDARD, 0);
-    39	}
-    40	
-    41	static void __tr_write(struct phy_device *phydev, u8 ch_addr, u8 node_addr, u8 data_addr,
-    42			       u32 tr_data)
-    43	{
-    44		__phy_write(phydev, 0x11, tr_data & 0xffff);
-    45		__phy_write(phydev, 0x12, tr_data >> 16);
-    46		dev_dbg(&phydev->mdio.dev, "tr_high write: 0x%x, tr_low write: 0x%x\n",
-    47			tr_data >> 16, tr_data & 0xffff);
-    48		tr_access(phydev, false, ch_addr, node_addr, data_addr);
-    49	}
-    50	
-  > 51	static void tr_write(struct phy_device *phydev, u8 ch_addr, u8 node_addr, u8 data_addr, u32 tr_data)
-    52	{
-    53		phy_select_page(phydev, MTK_PHY_PAGE_EXTENDED_52B5);
-    54		__tr_write(phydev, ch_addr, node_addr, data_addr, tr_data);
-    55		phy_restore_page(phydev, MTK_PHY_PAGE_STANDARD, 0);
-    56	}
-    57	
+You are using the 'seems' here exactly saying that you are not 100% sure.
+
+Please allow me to tell you the truth: This patch again has ZERO effect.
+It fix nothing. And this patch is has the risks to be wrong.
+
+Simple because the "ili9341_probe() ---> ili9341_dbi_prob()" code path
+is DT dependent.
+
+First of all, the devm_of_find_backlight() is called in ili9341_dbi_probe()
+under *non-DT* environment, devm_of_find_backlight() is just a just a
+no-op and will return NULL. NULL is not an error code, so ili9341_dbi_probe()
+won't rage quit. But the several side effect is that the backlight will
+NOT works at all.
+
+It is actually considered as fatal bug for *panels* if the backlight of
+it is not light up, at least the brightness of *won't* be able to adjust.
+What's worse, if there is no sane platform setup code at the firmware
+or boot loader stage to set a proper initial state. The screen is complete
+dark. Even though the itself panel is refreshing framebuffers, it can not
+be seen by human's eye. Simple because of no backlight.
+   
+Second, the ili9341_dbi_probe() requires additional device properties to
+be able to works very well on the rotation screen case. See the calling
+of "device_property_read_u32(dev, "rotation", &rotation)" in
+ili9341_dbi_probe() function.
+
+Combine with those two factors, it is actually can conclude that the
+panel-ilitek-ili9394 driver has the *implicit* dependency on 'OF'.
+Removing the 'OF' dependency from its Kconfig just trigger the
+leakage of such risks.
+  
+My software node related patches can help to reduce part of the potential
+risks, but it still need some extra work. And it is not landed yet.
+
+
+> Fixes: 5a04227326b0 ("drm/panel: Add ilitek ili9341 panel driver")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>   drivers/gpu/drm/panel/Kconfig                | 2 +-
+>   drivers/gpu/drm/panel/panel-ilitek-ili9341.c | 5 +++--
+>   2 files changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index e54f6f5604ed..2d4515555820 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -177,7 +177,7 @@ config DRM_PANEL_ILITEK_IL9322
+>   
+>   config DRM_PANEL_ILITEK_ILI9341
+>   	tristate "Ilitek ILI9341 240x320 QVGA panels"
+> -	depends on OF && SPI
+> +	depends on SPI
+>   	select DRM_KMS_HELPER
+>   	select DRM_GEM_DMA_HELPER
+>   	depends on BACKLIGHT_CLASS_DEVICE
+> diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9341.c b/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> index 3574681891e8..7584ddb0e441 100644
+> --- a/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> +++ b/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> @@ -22,8 +22,9 @@
+>   #include <linux/bitops.h>
+>   #include <linux/delay.h>
+>   #include <linux/gpio/consumer.h>
+> +#include <linux/mod_devicetable.h>
+>   #include <linux/module.h>
+> -#include <linux/of.h>
+> +#include <linux/property.h>
+>   #include <linux/regulator/consumer.h>
+>   #include <linux/spi/spi.h>
+>   
+> @@ -691,7 +692,7 @@ static int ili9341_dpi_probe(struct spi_device *spi, struct gpio_desc *dc,
+>   	 * Every new incarnation of this display must have a unique
+>   	 * data entry for the system in this driver.
+>   	 */
+> -	ili->conf = of_device_get_match_data(dev);
+> +	ili->conf = device_get_match_data(dev);
+>   	if (!ili->conf) {
+>   		dev_err(dev, "missing device configuration\n");
+>   		return -ENODEV;
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Sui
+
