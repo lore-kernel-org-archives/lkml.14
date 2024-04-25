@@ -1,131 +1,117 @@
-Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D8614D715;
-	Thu, 25 Apr 2024 17:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB6714A61B;
+	Thu, 25 Apr 2024 17:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714065226; cv=none; b=s5WGckP6PqTNN7cluaDtCmbDyZRyrwSZ9kGyH2hvS4FsXFGzeNKis7vRjNzs0X/eCAKJDJLGbijhOziyTntnPkTpGvmQu6/vGPMurnAMpagu7eE9ZNxDIirkalo3O441IS2zsfrbhCOzeuaGZClSoxOvyVYyjY7MZrB/GIjQArk=
+	t=1714065308; cv=none; b=EM3xrI5jxsUcv5zl8MFKiBRrvMxmSPom5JbqCLIhk/vTsEzcfHDmjKJKBnVnyhq8ZhicMuNL5Kkch1ge2fQH7YINAwItRVlRHDDl/w8vHmURMuahkkTUxJRnYHwu9pGBvIra5UyAOzfCrfQTSKe0lOKPjJy3/tBJZ5+JMirNZ+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714065226; c=relaxed/simple;
-	bh=6foYH7QWE2i5RWLOdtEMwKdsb2KccYTN2Q/k4s5TAV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=csfUj3q6qKrnAA0fMe3TVWcBVY3aqY0tGIoOHtUQemZ4Uinoicn13fDqYcT77GV35Pz+7MVFRhv8eaoBf+c6f3goVSOlqCYbDkvHsdBUnrlzJwMsqZWRnqYCl+m+5+TKtx1RE075EXyUR3VcgnA31iQ35jM6VW8e+v4rewzEVwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=BF09zJII; arc=none smtp.client-ip=161.97.139.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1714065308; c=relaxed/simple;
+	bh=m+ephHm0ktzUHv+2tMHBzb7a/y8rw/VfVyjK2cEuWxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H/hCO/Gdd8EyjZwuDKDuFt9N6GP0+48D6u1el7BGwDM4fizdJUkM3m6qZPVXZjv9n+ZdiNCGZVvUTLwdTBHC/anI0x3zDpKkvfIy1e+EWAoeJSDcZpAfG7UtNB5W/nLRIytXV5OKiXF3yoUOunYshiRsql5KHyb7wKzc1QkzMcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ExqcqHuT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="BF09zJII"
-Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
-	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1s02MW-000ZvV-2b;
-	Thu, 25 Apr 2024 18:54:21 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=tiBrh8Wfbv/jy2lIqssR5GnzyzHFN9L4ULdDhyCPprk=; b=BF09zJIItbQMvEhpMdlWf3E8C0
-	JXoGZzZXjql074j600DVKUvMXesGkXx1Hoc1orZo2Bc68sp+DNB77gDM3H4nLdC9j1W/jCw83MSdw
-	zAZZ47RtPN89pHe4xcnuzg9ENcOrEs2Nqw723CCcgelqCFrGrgcnxALBOcmmtYUJt2LGlCpN2x5i5
-	ByadWtvFh7/fsn1wGHy/KjSCtfSSw3XDWq4ggOPt9j7czgGa1MxxpzDc0R1om9PwZwcatdgfT2JuR
-	S0nh5vN6V1XTz308JYoAWPm7pdkpD0fTKy2hIJQ6n34tIe6k3w8RchR/7kklYGVrtKEHWn7xMVLun
-	PD/tzQ5A==;
-Received: from p200300c2071a02001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:c2:71a:200:1a3d:a2ff:febf:d33a] helo=aktux)
-	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1s02MU-0001dn-1K;
-	Thu, 25 Apr 2024 18:54:19 +0200
-Date: Thu, 25 Apr 2024 18:54:17 +0200
-From: Andreas Kemnade <andreas@kemnade.info>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- o.rempel@pengutronix.de, u.kleine-koenig@pengutronix.de,
- hdegoede@redhat.com, ye.xingchen@zte.com.cn, p.puschmann@pironex.com,
- linux-input@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, caleb.connolly@linaro.org
-Subject: Re: [PATCH v2 2/2] Input: edt-ft5x06 - add ft5426
-Message-ID: <20240425185417.0a5f9c19@aktux>
-In-Reply-To: <CAHp75VckoDheCN-KQ0KcSk9rE_-cXFUujurtA4sK6KAixDttQQ@mail.gmail.com>
-References: <20240404222009.670685-1-andreas@kemnade.info>
-	<20240404222009.670685-3-andreas@kemnade.info>
-	<CAHp75VeZ9U_+1rJQjr4KvvzjYQGzfKtk+BK00vqvKcVn2-yP3g@mail.gmail.com>
-	<20240405182832.4e457695@aktux>
-	<CAHp75VckoDheCN-KQ0KcSk9rE_-cXFUujurtA4sK6KAixDttQQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ExqcqHuT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFE9AC113CC;
+	Thu, 25 Apr 2024 17:15:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714065307;
+	bh=m+ephHm0ktzUHv+2tMHBzb7a/y8rw/VfVyjK2cEuWxk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ExqcqHuT/50DwLLO+RyJy0maUckYmNplHrF+X8bS2/2+2GfMfo0PeVaoA2YB49Scq
+	 +KIFcZa131OFqCqeB/NZVbKlG+XoHcmvc67iVyoy+WS+rxBaFZ8mPzMaB9XjqYhvE7
+	 FlMWWPNx2SF+4VNR6Snu6Xwllbre+37DQVbYoC1epUsfWkywWQjPNev0jm16i6/WGR
+	 9b75RZxk45nThFadmZbcjg7k4wwy2jZRIk77ZAy6M2hBn+Y51jxa9N1hYuaDVXGb2n
+	 u4Io65aoeRa2ZgS/zUX8ugjWMOdTaBR8bwG0EsB2hyVjgVQGO8/O0ZHbNOsyugWMG2
+	 6ybwhCpdakKIQ==
+Date: Thu, 25 Apr 2024 18:15:02 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Davis <afd@ti.com>, Nishanth Menon <nm@ti.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>, Hari Nagalla <hnagalla@ti.com>,
+	linux-kernel@vger.kernel.org, Tero Kristo <kristo@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-remoteproc@vger.kernel.org,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v8 1/4] dt-bindings: remoteproc: k3-m4f: Add K3 AM64x SoCs
+Message-ID: <20240425-herself-brigade-5b6b53dc5133@spud>
+References: <20240424190612.17349-1-afd@ti.com>
+ <20240424190612.17349-2-afd@ti.com>
+ <171399099843.670532.4326365049493230346.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="TCVN+A/7bPxeCTEb"
+Content-Disposition: inline
+In-Reply-To: <171399099843.670532.4326365049493230346.robh@kernel.org>
+
+
+--TCVN+A/7bPxeCTEb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 5 Apr 2024 20:21:19 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-
-> On Fri, Apr 5, 2024 at 7:28=E2=80=AFPM Andreas Kemnade <andreas@kemnade.i=
-nfo> wrote:
-> > On Fri, 5 Apr 2024 18:13:45 +0300
-> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote: =20
-> > > On Fri, Apr 5, 2024 at 1:20=E2=80=AFAM Andreas Kemnade <andreas@kemna=
-de.info> wrote: =20
+On Wed, Apr 24, 2024 at 03:36:39PM -0500, Rob Herring wrote:
 >=20
-> ...
+> On Wed, 24 Apr 2024 14:06:09 -0500, Andrew Davis wrote:
+> > From: Hari Nagalla <hnagalla@ti.com>
+> >=20
+> > K3 AM64x SoC has a Cortex M4F subsystem in the MCU voltage domain.
+> > The remote processor's life cycle management and IPC mechanisms are
+> > similar across the R5F and M4F cores from remote processor driver
+> > point of view. However, there are subtle differences in image loading
+> > and starting the M4F subsystems.
+> >=20
+> > The YAML binding document provides the various node properties to be
+> > configured by the consumers of the M4F subsystem.
+> >=20
+> > Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> > Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+> > Signed-off-by: Andrew Davis <afd@ti.com>
+> > ---
+> >  .../bindings/remoteproc/ti,k3-m4f-rproc.yaml  | 126 ++++++++++++++++++
+> >  1 file changed, 126 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-=
+m4f-rproc.yaml
+> >=20
 >=20
-> > > > @@ -1484,6 +1484,7 @@ static const struct of_device_id edt_ft5x06_o=
-f_match[] =3D {
-> > > >         { .compatible =3D "edt,edt-ft5206", .data =3D &edt_ft5x06_d=
-ata },
-> > > >         { .compatible =3D "edt,edt-ft5306", .data =3D &edt_ft5x06_d=
-ata },
-> > > >         { .compatible =3D "edt,edt-ft5406", .data =3D &edt_ft5x06_d=
-ata },
-> > > > +       { .compatible =3D "focaltech,ft5426", .data =3D &edt_ft5506=
-_data }, =20
-> > >
-> > > Why a different vendor prefix?
-> > > In case you need to use this one, keep the list sorted, currently this
-> > > splits the edt,* ones.
-> > > =20
-> > How do I know whether to use evervision or edt instead? =20
+> My bot found errors running 'make dt_binding_check' on your patch:
 >=20
-> Ask DT people, the vendor-prefixes lists both...
+> yamllint warnings/errors:
 >=20
-> > I sorted by the numbers. Looking at datasheets for other controllers I =
-see
-> > https://www.displayfuture.com/Display/datasheet/controller/FT5x06.pdf
-> > it only mentions FocalTech Systems Co., Ltd. =20
+> dtschema/dtc warnings/errors:
 >=20
-> But does the driver use that? AFAICS it uses edt. Perhaps it's due to
-> a business split, not to my knowledge anyway.
 >=20
-Well, lets cite edt-ft5x06.rst:
+> doc reference errors (make refcheckdocs):
+> Warning: Documentation/devicetree/bindings/remoteproc/ti,k3-m4f-rproc.yam=
+l references a file that doesn't exist: Documentation/devicetree/bindings/r=
+eserved-memory/reserved-memory.yaml
+> Documentation/devicetree/bindings/remoteproc/ti,k3-m4f-rproc.yaml: Docume=
+ntation/devicetree/bindings/reserved-memory/reserved-memory.yaml
 
-"The edt-ft5x06 driver is useful for the EDT "Polytouch" family of capaciti=
-ve
-touch screens. Note that it is *not* suitable for other devices based on the
-focaltec ft5x06 devices, since they contain vendor-specific firmware. In
-particular this driver is not suitable for the Nook tablet."
+The file is now in dt-schema:
+https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/rese=
+rved-memory/reserved-memory.yaml
 
-So chips from focaltech which can be equipped with different firmware? So
-edt prefix means EDT firmware?
+--TCVN+A/7bPxeCTEb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Looking around I found this:
-            if (tsdata->version =3D=3D EV_FT)
-                        swap(x, y);
-...
-               case 0x59:  /* Evervision Display with FT5xx6 TS */
-                        tsdata->version =3D EV_FT;
+-----BEGIN PGP SIGNATURE-----
 
-I need swap(x.y), I am using touchscreen-swapped-x-y property now.
-So evervision prefix?
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiqPlgAKCRB4tDGHoIJi
+0sbaAQDUEiX6pWAsD/ZrFUySgnDTCekGE9Qk4UGS04emWMM5gQEAvfTX55Juni7i
+C/c/kdcf21tIlJbRPz6ahqTIWokjAgc=
+=X94X
+-----END PGP SIGNATURE-----
 
-Regards,
-Andreas
+--TCVN+A/7bPxeCTEb--
