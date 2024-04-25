@@ -1,15 +1,16 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7BE15252B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A77015250B
 	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 19:55:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714074920; cv=none; b=E5Um92V5TJrPQIpUQsyvRgxK/eNfjfgS301w+TG0VOMF5kFWpEWNGx7dK1opgZ5e4djaVAzVP6u3cp7oOTqZMdSlbzgYvHkeVopoIesqE9OVs+eek2twzXiv5m7MLP+e3hb+on89TqODqyAgbH7HnfGRxfKHz6NxC4U7WU+nWFg=
+	t=1714074921; cv=none; b=SKnlKu9hLNvxxekzcJTs8rm334bFgdIra5e7o1mloovY6sLhwRw5CbZaThN+xrJSd9gMf83k1gR8rDI1bTLJEp14GXEKVlOba3+yJ2edoo7bPCXVHnoa1weN8bm0+g19XxgIvYndhHuKmyPZCDU0SKm7cG764znTgMdJYCSqA68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714074920; c=relaxed/simple;
-	bh=dxy1KX4GUlQJ1bd/0sTBKFC5lh0bMqAEeERz/HhOghc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I+REgDk0inC0mtRIcs3kKobyOar2YrW4BqY+ouMsqZzjLGX2pRZZjC9alG5kai+vumhYejXb9wjcTBUs2mdhTGRTxvCBXsIe8mpWJD/ktEbwjUMtqZdx1futkHmxDh+XYwF1iRSSF+tnnek2E24N8X1TabEifTAOMto1F7DHeZg=
+	s=arc-20240116; t=1714074921; c=relaxed/simple;
+	bh=20aN88zHAaaE7qI4lJaDymBfFXqYf9mSZVUZZrCxKd8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=WSJVWHlOAyS5Wpufxm8qCA8H0WhGyiQ+kRYazbT2MwRlbtByEn07RzddkM318SxQZb2u/zJ+Wz3zS+QawxRizjICoNQpBVvAdofbJ7jSXLm4o6YrNeZH0GKhmQSrP13WICROtAuqjpLFkfti9jcjWm6kdLv6meztlx7H8mGQ2Lc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
@@ -17,7 +18,7 @@ Received: from i53875b01.versanet.de ([83.135.91.1] helo=phil.lan)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1s05BX-0005vK-6p; Thu, 25 Apr 2024 21:55:11 +0200
+	id 1s05BY-0005vK-29; Thu, 25 Apr 2024 21:55:12 +0200
 From: Heiko Stuebner <heiko@sntech.de>
 To: heiko@sntech.de
 Cc: quentin.schulz@theobroma-systems.com,
@@ -26,11 +27,14 @@ Cc: quentin.schulz@theobroma-systems.com,
 	dri-devel@lists.freedesktop.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] drm/rockchip: vop2: two fixes from working on DSI enablement
-Date: Thu, 25 Apr 2024 21:55:04 +0200
-Message-Id: <20240425195506.2935955-1-heiko@sntech.de>
+	linux-kernel@vger.kernel.org,
+	Heiko Stuebner <heiko.stuebner@cherry.de>
+Subject: [PATCH 2/2] drm/rockchip: vop2: configure layers for vp3 on rk3588
+Date: Thu, 25 Apr 2024 21:55:06 +0200
+Message-Id: <20240425195506.2935955-3-heiko@sntech.de>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240425195506.2935955-1-heiko@sntech.de>
+References: <20240425195506.2935955-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,31 +43,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-While working on enabling DSI support on rk3588 I stumbled across the issue
-of the display staying black while both the vop2 and dsi drivers were
-claiming to be running just fine.
+From: Heiko Stuebner <heiko.stuebner@cherry.de>
 
-After a bit of checking I found that I got DSI output on VP3 when HDMI
-on VP0 was at least associated in the DTS, but not without.
+The rk3588 VOP2 has 4 video-ports, yet the driver currently only
+configures the first 3, as used on the rk3568.
 
-Andy's patch [0] helped and is definitly necessary, but did not fix the
-problem completely. The missing thing was that VP3 is rk3588-specific
-(rk3568 only has 3 video-ports, not 4 like rk3588) and the layers of
-VP3 never got configured.
+Add another block to configure the vp3 as well, if applicable.
 
-Patch2 fixes this.
-
-
-[0] https://lore.kernel.org/dri-devel/20240422101905.32703-2-andyshrk@163.com/
-
-Heiko Stuebner (2):
-  drm/rockchip: vop2: fix rk3588 dp+dsi maxclk verification
-  drm/rockchip: vop2: configure layers for vp3 on rk3588
-
- drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 16 ++++++++++++++--
+Fixes: 5a028e8f062f ("drm/rockchip: vop2: Add support for rk3588")
+Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+---
+ drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 12 ++++++++++++
  drivers/gpu/drm/rockchip/rockchip_drm_vop2.h |  1 +
- 2 files changed, 15 insertions(+), 2 deletions(-)
+ 2 files changed, 13 insertions(+)
 
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+index 523880a4e8e74..1a327a9ed7ee4 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+@@ -2303,6 +2303,7 @@ static void vop2_setup_alpha(struct vop2_video_port *vp)
+ static void vop2_setup_layer_mixer(struct vop2_video_port *vp)
+ {
+ 	struct vop2 *vop2 = vp->vop2;
++	const struct vop2_data *vop2_data = vop2->data;
+ 	struct drm_plane *plane;
+ 	u32 layer_sel = 0;
+ 	u32 port_sel;
+@@ -2344,6 +2345,17 @@ static void vop2_setup_layer_mixer(struct vop2_video_port *vp)
+ 	else
+ 		port_sel |= FIELD_PREP(RK3568_OVL_PORT_SET__PORT2_MUX, 8);
+ 
++	/* configure vp3 */
++	if (vop2_data->soc_id == 3588) {
++		struct vop2_video_port *vp3 = &vop2->vps[3];
++
++		if (vp3->nlayers)
++			port_sel |= FIELD_PREP(RK3588_OVL_PORT_SET__PORT3_MUX,
++				(vp3->nlayers + vp2->nlayers + vp1->nlayers + vp0->nlayers - 1));
++		else
++			port_sel |= FIELD_PREP(RK3588_OVL_PORT_SET__PORT3_MUX, 8);
++	}
++
+ 	layer_sel = vop2_readl(vop2, RK3568_OVL_LAYER_SEL);
+ 
+ 	ofs = 0;
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
+index 615a16196aff6..f46fb795414e1 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
+@@ -489,6 +489,7 @@ enum dst_factor_mode {
+ #define RK3588_OVL_PORT_SEL__CLUSTER2			GENMASK(21, 20)
+ #define RK3568_OVL_PORT_SEL__CLUSTER1			GENMASK(19, 18)
+ #define RK3568_OVL_PORT_SEL__CLUSTER0			GENMASK(17, 16)
++#define RK3588_OVL_PORT_SET__PORT3_MUX			GENMASK(15, 12)
+ #define RK3568_OVL_PORT_SET__PORT2_MUX			GENMASK(11, 8)
+ #define RK3568_OVL_PORT_SET__PORT1_MUX			GENMASK(7, 4)
+ #define RK3568_OVL_PORT_SET__PORT0_MUX			GENMASK(3, 0)
 -- 
 2.39.2
 
