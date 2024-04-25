@@ -1,146 +1,103 @@
-Received: from mail.schimsalabim.eu (vps01.schimsalabim.eu [85.214.219.45])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084841CFA9;
-	Thu, 25 Apr 2024 11:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972BD84DEE;
+	Thu, 25 Apr 2024 11:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714043122; cv=none; b=YHMfctuccjCXs+rP2Ct0qa6l4Cjnte6vt0YQcei/qSgXDOntB3YB+Om4wcbLA2C4/96C8bdAiOG/idi1+K8IiJCOBA1VGa03nS8sb389+tGnBUjv4TnpMbsaNrNCcsTEQLwv49SWpIKFobHMK21Lq3snQZ36N2qQSe+V5QlNLNc=
+	t=1714043179; cv=none; b=mH6FhVzdlojaxNKy1ZJW2uIq9A/T8lJaHBhRJy97T20/5kzgEAl96ytdVOcWkf4TGnZAEZpAA8DRArNc9X79PxnPgfh1UehtzGnE6qjPt5o+NrxF49ePF8ZmUR3nCPhcMrKol9WXaGQW8Cny9vu4e3bhGJODCn+dmFk/ekN7c7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714043122; c=relaxed/simple;
-	bh=R6sayboPC5Q+DTt0RvBB94u+E4yjWkvlzV6GPTzDwAY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V7pWA9bVlxngX1PmgHlVeC/26bR17VKI+mDdYRqAdctrMrUIewNTcwnsRkNFIWUASSvWiJXs4x+DvngxamBSG6HlhiQhsNWnes/O9eI/TodIO16ltg5ohHoB+ytHcFye2JNr7PzX646/lPj+gd1kW7NjjaIGUPf8qPfNZbzPbE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=schimsalabim.eu; spf=pass smtp.mailfrom=schimsalabim.eu; arc=none smtp.client-ip=85.214.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=schimsalabim.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=schimsalabim.eu
-Received: from [192.168.0.158] (82-217-109-137.cable.dynamic.v4.ziggo.nl [82.217.109.137])
-	(authenticated bits=0)
-	by h2374449.stratoserver.net (8.14.7/8.14.7) with ESMTP id 43PB42GA030072
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 25 Apr 2024 13:04:02 +0200
-Message-ID: <e256942d-eba1-4800-bd02-c490167dea12@schimsalabim.eu>
-Date: Thu, 25 Apr 2024 13:03:56 +0200
+	s=arc-20240116; t=1714043179; c=relaxed/simple;
+	bh=7MlyFh3idC/2fg0ESo5n3eeC4q0V5+E+zLSKJ2s9SHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XI5c5Xp6Vv1nDaPnIHrxHQjw4dW47ScwbesD8499ZQTJv5d87P2BS61jVAxT6PvaOjcAQNzKamGkSKhxLCPSzpier6h1Tm2Vme4xDYqaj2fxZr2l9WqrydQSaBH4LpOXU77XoZH0cJlB7QjYIt5G+pRDd88a7kvfUY0a8IDMYb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QA0+PpbW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QA0+PpbW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47578C113CC;
+	Thu, 25 Apr 2024 11:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714043179;
+	bh=7MlyFh3idC/2fg0ESo5n3eeC4q0V5+E+zLSKJ2s9SHQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QA0+PpbW+unPO/3OhxSkHI6SXnfE21R3j24oMVNz3bAvF54ZzOebzEUS3vW2THGU6
+	 yqKI5qjU4V2gSKMbbC4qhAafnLYFVc5rp4GIKXauX7uNOXh3c67RS37Z6hIWUGAxft
+	 jv8K4JKR22rGCexGrlU4QVcSEha90mZLn2/wX1PoSp7qwPN74pSgGg+RVAhJ29ahAL
+	 7yrinZjLs8Q6EYVXYVYvY4wIMNUieIPlJuzakSSur8IuzJqBo+8BJVOujTxVKTVVdy
+	 NHK/f4KxFKiXuX8gHbgFrvtr3eHmoeRF05v7kOJP3/Rv95aljDMalLRJSjUs5vYVJD
+	 z3T0koqHw3r6g==
+Date: Thu, 25 Apr 2024 13:06:13 +0200
+From: Alexey Gladkov <legion@kernel.org>
+To: Helge Deller <deller@gmx.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>, kbd@lists.linux.dev,
+	linux-api@vger.kernel.org, linux-fbdev@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] VT: Add KDFONTINFO ioctl
+Message-ID: <Zio5JfRBvzxuVUbX@example.org>
+References: <cover.1712080158.git.legion@kernel.org>
+ <cover.1713375378.git.legion@kernel.org>
+ <bd2755e7b6ebe9b49e82d04d9908a176e0fe2f15.1713375378.git.legion@kernel.org>
+ <9019dc74-35ad-43d7-8763-cea3da93e9c1@gmx.de>
+ <ZiD50WZZv3OOad7L@example.org>
+ <9993ad2d-48a8-43be-ae41-4b8d710c1ea7@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: sunxi: DMIC: Add controls for adjusting the mic
- gains
-To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-        Ban Tao <fengzheng923@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>
-Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        linux-kernel@vger.kernel.org
-References: <20240422150213.4040734-1-joao@schimsalabim.eu>
- <5772237.DvuYhMxLoT@jernej-laptop>
-Content-Language: en-US
-From: Joao Schim <joao@schimsalabim.eu>
-In-Reply-To: <5772237.DvuYhMxLoT@jernej-laptop>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <9993ad2d-48a8-43be-ae41-4b8d710c1ea7@gmx.de>
 
-On 4/24/24 20:42, Jernej Škrabec wrote:
-> Hi Joao,
-Hi Jernej,  thanks for your prompt response.
->
-> Dne ponedeljek, 22. april 2024 ob 17:02:13 GMT +2 je Joao Schim napisal(a):
->> The AllWinner H6 and later SoCs that sport a DMIC block contain a set of registers to control
->> the gain (left + right) of each of the four supported channels.
->>
->> Add ASoC controls for changing each of the stereo channel gains using alsamixer and alike
-> Add SoB tag.
-Yeah, i realized that too late. Thanks for bringing that to my 
-attention. I will add it in v1.
->
->> ---
->>   sound/soc/sunxi/sun50i-dmic.c | 34 ++++++++++++++++++++++++++++++++++
->>   1 file changed, 34 insertions(+)
->>
->> diff --git a/sound/soc/sunxi/sun50i-dmic.c b/sound/soc/sunxi/sun50i-dmic.c
->> index c76628bc86c6..f8613d8c3462 100644
->> --- a/sound/soc/sunxi/sun50i-dmic.c
->> +++ b/sound/soc/sunxi/sun50i-dmic.c
->> @@ -14,6 +14,7 @@
->>   #include <sound/dmaengine_pcm.h>
->>   #include <sound/pcm_params.h>
->>   #include <sound/soc.h>
->> +#include <sound/tlv.h>
->>   
->>   #define SUN50I_DMIC_EN_CTL			(0x00)
->>   	#define SUN50I_DMIC_EN_CTL_GLOBE			BIT(8)
->> @@ -43,6 +44,17 @@
->>   	#define SUN50I_DMIC_CH_NUM_N_MASK			GENMASK(2, 0)
->>   #define SUN50I_DMIC_CNT				(0x2c)
->>   	#define SUN50I_DMIC_CNT_N				(1 << 0)
->> +#define SUN50I_DMIC_D0D1_VOL_CTR		(0x30)
->> +	#define SUN50I_DMIC_D0D1_VOL_CTR_0R			(0)
->> +	#define SUN50I_DMIC_D0D1_VOL_CTR_0L			(8)
->> +	#define SUN50I_DMIC_D0D1_VOL_CTR_1R			(16)
->> +	#define SUN50I_DMIC_D0D1_VOL_CTR_1L			(24)
->> +#define SUN50I_DMIC_D2D3_VOL_CTR                (0x34)
->> +        #define SUN50I_DMIC_D2D3_VOL_CTR_2R                     (0)
->> +        #define SUN50I_DMIC_D2D3_VOL_CTR_2L                     (8)
->> +        #define SUN50I_DMIC_D2D3_VOL_CTR_3R                     (16)
->> +        #define SUN50I_DMIC_D2D3_VOL_CTR_3L                     (24)
->> +
->>   #define SUN50I_DMIC_HPF_CTRL			(0x38)
->>   #define SUN50I_DMIC_VERSION			(0x50)
->>   
->> @@ -273,8 +285,30 @@ static const struct of_device_id sun50i_dmic_of_match[] = {
->>   };
->>   MODULE_DEVICE_TABLE(of, sun50i_dmic_of_match);
->>   
->> +static const DECLARE_TLV_DB_SCALE(sun50i_dmic_vol_scale, -12000, 75, 1);
-> DECLARE_TLV_DB_SCALE is old name, SNDRV_CTL_TLVD_DECLARE_DB_SCALE should be
-> used instead.
-I can't seem to find that define in HEAD. what code-base are you 
-referring to that i should checkout ?
->
-> Other than that, it looks fine.
+On Thu, Apr 25, 2024 at 12:33:28PM +0200, Helge Deller wrote:
+> >>> diff --git a/include/uapi/linux/kd.h b/include/uapi/linux/kd.h
+> >>> index 8ddb2219a84b..68b715ad4d5c 100644
+> >>> --- a/include/uapi/linux/kd.h
+> >>> +++ b/include/uapi/linux/kd.h
+> >>> @@ -185,6 +185,20 @@ struct console_font {
+> >>>
+> >>>    #define KD_FONT_FLAG_DONT_RECALC 	1	/* Don't recalculate hw charcell size [compat] */
+> >>>
+> >>> +/* font information */
+> >>> +
+> >>> +#define KD_FONT_INFO_FLAG_LOW_SIZE	_BITUL(0) /* 256 */
+> >>> +#define KD_FONT_INFO_FLAG_HIGH_SIZE	_BITUL(1) /* 512 */
+> >>
+> >> Do we really need those bits?
+> >> You set a default min/max font size in con_font_info() above,
+> >> and all drivers can override those values.
+> >> So, there are always min/max sizes available.
+> >
+> > These bits are not about the minimum and maximum glyph size, but about the
+> > number of glyphs in the font.
+> >
+> > Maybe this is an overkill, but sticon has this check:
+> >
+> > if ((w < 6) || (h < 6) || (w > 32) || (h > 32) || (vpitch != 32)
+> >      || (op->charcount != 256 && op->charcount != 512))
+> >
+> > [ to be honest, I don’t know why this driver doesn’t accept a glyph of
+> > width 4 ]
+> 
+> I think there was no technical limitation when I added that.
+> It's just that the font would be so small...
 
-Thanks.
+If so, then I can remove min_height/min_width from the ioctl structure.
+And most likely the flags can also be left empty since at the moment all
+drivers support 512.
 
-> Best regards,
-> Jernej
->
->> +
->> +static const struct snd_kcontrol_new sun50i_dmic_controls[] = {
->> +
->> +        SOC_DOUBLE_TLV("DMIC Channel 0 Capture Volume", SUN50I_DMIC_D0D1_VOL_CTR,
->> +                       SUN50I_DMIC_D0D1_VOL_CTR_0L, SUN50I_DMIC_D0D1_VOL_CTR_0R,
->> +                       0xFF, 0, sun50i_dmic_vol_scale),
->> +        SOC_DOUBLE_TLV("DMIC Channel 1 Capture Volume", SUN50I_DMIC_D0D1_VOL_CTR,
->> +                       SUN50I_DMIC_D0D1_VOL_CTR_1L, SUN50I_DMIC_D0D1_VOL_CTR_1R,
->> +                       0xFF, 0, sun50i_dmic_vol_scale),
->> +        SOC_DOUBLE_TLV("DMIC Channel 2 Capture Volume", SUN50I_DMIC_D2D3_VOL_CTR,
->> +                       SUN50I_DMIC_D2D3_VOL_CTR_2L, SUN50I_DMIC_D2D3_VOL_CTR_2R,
->> +                       0xFF, 0, sun50i_dmic_vol_scale),
->> +        SOC_DOUBLE_TLV("DMIC Channel 3 Capture Volume", SUN50I_DMIC_D2D3_VOL_CTR,
->> +                       SUN50I_DMIC_D2D3_VOL_CTR_3L, SUN50I_DMIC_D2D3_VOL_CTR_3R,
->> +                       0xFF, 0, sun50i_dmic_vol_scale),
->> +
->> +
->> +};
->> +
->>   static const struct snd_soc_component_driver sun50i_dmic_component = {
->>   	.name           = "sun50i-dmic",
->> +	.controls	= sun50i_dmic_controls,
->> +	.num_controls	= ARRAY_SIZE(sun50i_dmic_controls),
->>   };
->>   
->>   static int sun50i_dmic_runtime_suspend(struct device *dev)
->>
->
->
->
-Kind regards,
+> > I thought it would be worth fixing the maximum number of requirements in
+> > the drivers since I started adding a new ioctl.
+> 
+> Ok.
+> 
+> Helge
+> 
 
-Joao
+-- 
+Rgrds, legion
 
