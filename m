@@ -1,152 +1,176 @@
-Received: from smtpout43.security-mail.net (smtpout43.security-mail.net [85.31.212.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BF9811F1
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 09:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=85.31.212.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714035908; cv=fail; b=Tt6hsaMZDOQUc5aiquBZ8OVOxccZzAcxcqML5kcvV2i2aSR5rvtM9KJZlCbIi3/iR2xyWQbu5bkRkhGkI3RLf0ZJZnyQFHmXxg4cOgqoSDKaalSYDNQgmD0S8mXJCu7JjXPYAoSGiyR5JPESpNxS+WG99im6/X+VZFrXDMQjN0Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714035908; c=relaxed/simple;
-	bh=P2OgT4oiGhqV/evenJNDxeiw54qSxD2m6pl0rkrHjEo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=SQfYSMmvQi95RFPIiSGVB8DT35IN0d2yeWw/oU5d+/lrI354mpqwvLRkKVfr3iCoWiYLPiThIZH/10ZmFpkAznAoOMQzDjQ1vC3lYIfRZlnOwcZ2Hh3K62zcoat0qrZ/tikhuIsYBTxqzVqldJNzjXLHN76cvcf0iTps9Xv0KTY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com; spf=pass smtp.mailfrom=kalrayinc.com; dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=VW/rVdra; dkim=fail (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=nLCleP3T reason="signature verification failed"; arc=fail smtp.client-ip=85.31.212.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kalrayinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="VW/rVdra";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="nLCleP3T"
-Received: from localhost (fx306.security-mail.net [127.0.0.1])
-	by fx306.security-mail.net (Postfix) with ESMTP id 0A22335D245
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 11:03:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kalrayinc.com;
-	s=sec-sig-email; t=1714035789;
-	bh=P2OgT4oiGhqV/evenJNDxeiw54qSxD2m6pl0rkrHjEo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=VW/rVdraLtn22TEJstKHnyA/m2bWi1jfW82muj7CNlQoFkzGuh5Y6r4VNkzv8IhF/
-	 pS++N/2yMX9WF0ieKECiAAVlNNLex3ep83lrSoQZxxqLuTmncYvO9XHuyRbEKZq+D5
-	 BhkbGY0IwVafdsYF/9ASbU327DcAj/RaxqtsHulc=
-Received: from fx306 (fx306.security-mail.net [127.0.0.1]) by
- fx306.security-mail.net (Postfix) with ESMTP id A831035CC0B; Thu, 25 Apr
- 2024 11:03:08 +0200 (CEST)
-Received: from PR0P264CU014.outbound.protection.outlook.com
- (mail-francecentralazlp17012010.outbound.protection.outlook.com
- [40.93.76.10]) by fx306.security-mail.net (Postfix) with ESMTPS id
- 641EF35D0D9; Thu, 25 Apr 2024 11:03:07 +0200 (CEST)
-Received: from PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:14b::6)
- by MRZP264MB2216.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:16::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Thu, 25 Apr
- 2024 09:03:06 +0000
-Received: from PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM
- ([fe80::7a6f:1976:3bf3:aa39]) by PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM
- ([fe80::7a6f:1976:3bf3:aa39%4]) with mapi id 15.20.7519.021; Thu, 25 Apr
- 2024 09:03:06 +0000
-X-Virus-Scanned: E-securemail
-Secumail-id: <28e.662a1c4b.5f698.0>
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KrYtFbNOypP/h0+BmBDl8OGY6MJlq8etEBWi8ctOkb/ia4DikdI7KWv+3qRVENNpSs0dx6H+ACaEohfemaQKwxAmYSdwM1hQclA/P5dtcrOaxlLB6t0TSWQRMkQ68KJw7buC09vQkyItKg+Ye+cOaZ4elE9b98JLBugwyTIXDYxyHJDPSB0vkTyWXaONK00iM7aPt4r+FWTx/R0hU1lsUIfVY9fYwgWrqbCC43ttnFsYbHNpQmjL4h9VumTTTWhmJxLshbkLKM7XKtzOd8P37yoNUsWhaTiTe1gunVOjYJJdj7QOiV75MhrVlV8CVncsF82MA5k0Y/HHS22xIBrKWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microsoft.com; s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Op295gJUkAK2D6d7yJPOvxMNJZ3cn6ZtJ4dPv04StSc=;
- b=GKFcIdolcjfpmdHjCg73WNausD0gN192NKA3oYRPVqBxGnIIo1yLKqaIjaM7yyyFZdOyysGUxx2hqRk4dtP7FY5Tp9EUrZ6pz7tNDfJu4uKJjQc1gNqoBtGMAtxNYmIXP4eEIUuar9QZ11vKX1+TMzZxAmF8PPX3XVaY4RAopcpYPYsCM5Xq1Xy5ZUUwcukb/Ghk7k1FmhoPkiPrea0nlhEvUpQFf3OR9xGAiECjMjcL7yG+xIdlvobOPIWdguc6oT7fIoyY5Pv+L9FCdTbd4jug+5C5cF/KUlhbVkwzKDRC8ZnLu3+pH+c5Yb42Kega/Mrtx3CUSWC2oE98ranBUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kalrayinc.com; dmarc=pass action=none
- header.from=kalrayinc.com; dkim=pass header.d=kalrayinc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalrayinc.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Op295gJUkAK2D6d7yJPOvxMNJZ3cn6ZtJ4dPv04StSc=;
- b=nLCleP3TN2aMfYs3uE7pEi8/Ai+uys8Bmb3JlBow+AG81TshmLDLUehhwD1I4Y/RWzeoiXgT7HLAWrDPkbzL55FBO2Xdi6vRpXnDwZzOc/LM5N8BoJhDA9LbomJm1BFBHt6YRdczB9bHePQ7+K5gP0S/MVB+0Ze0tUsyYfEnFk7JwnZoFRVwIy5BaCTFBUM45O+qyDDit4JpkqUBBOE/lqLZ5Bi7m8yqSxLsdwlEcqajgj0hI5T6UZRkj/YIdY1NUdfIqaxN/3oYjGLPikK0PwDe17Zb2Qr0JhyTlWEMsxJ+sGhb8v/W98yFWCWNCrNQjdpk6tvlZh7X/yvNBcUgaw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=kalrayinc.com;
-Message-ID: <54706eff-da72-43aa-a91f-e31f0fb972fe@kalrayinc.com>
-Date: Thu, 25 Apr 2024 11:03:03 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 000/141] 6.1.88-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-References: <20240423213853.356988651@linuxfoundation.org>
-Content-Language: fr
-From: Yann Sionneau <ysionneau@kalrayinc.com>
-In-Reply-To: <20240423213853.356988651@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0PR02CA0203.eurprd02.prod.outlook.com
- (2603:10a6:20b:28f::10) To PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:14b::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 037B884A3E
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 09:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714035933; cv=none; b=DC2HeTLm43bVqS+OPFwqaPqtx36ILgFJ8rfkleeDZ2WUADoFvIhnAfguZZtz1CS1511KO48tLDfIvqz/MdqsrlJECGDm3vBDXRSm9QHECDgTmpzDUDU0dJeXaOcKbxm/4WQpdv4JcfZbP4pxRiQ61PjM9ZDPJkztHoGy6J6kKxU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714035933; c=relaxed/simple;
+	bh=jKdDN83Sg3wKgLW0oaOTv64O6mlNERng15yOVqOGyHU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=o0EJPCy9uKlIx2+Vtd4eimTtOVMHy+OT4AVeb8YYBb058hnLh51ATzCSXs3cHEQrXaGjM/B6C50bAj/m5oLeDn5XGHgE9YsA7ZgT2Vx97YS2Ghz+VDvJkx27fc+v0AoB92fiGBrPmoXrEEQYH58vXNq2un/uXoaCOP62hfJG+jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-36a20206746so8420355ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 02:05:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714035931; x=1714640731;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MYYJEtGwjYtju3TSltRQOcQTw+yzoQFCs3kL+/L9Sxs=;
+        b=gwiaIlTxfJDbI4ZH73X2T87Wn2ABaacF+jsd4+xj0UFJbbl6NvLuTAgvEC+NgCgX8c
+         YhqEKPCzj9ipYT2aYt1DJu26slg8+dqSM7YJCSvw9h4+sf81SRMvq+7B2BJ1FO+If00p
+         Aq7yHIoP8D0SnZNBX7tTlL1bThW6Phy47miFTi2dnZ8Ll/gDMUkRhomrhoPCV66O3mq9
+         OF1VLi31XrGdeLvGt4tIMWMh5bdeGAzbLZFJRPyLIVaf4cI9+RP7czksFHpa7OhwNzQ+
+         GqR0HRfZff2G64frhGhjiAsXnYhM7Ige9B/DzsW81zk0lEH9OJ54lLftYjx3KXmV61ei
+         KFjw==
+X-Forwarded-Encrypted: i=1; AJvYcCV+aTh9yj1U4+44pmDeQPZq5H9YscBB58SwSjX1AsRObeCNa/rSTW/HBZRApdB2xfAJJBzPQmHFEC3BxRWsdwur6RoV7XnuGI3IyXik
+X-Gm-Message-State: AOJu0Yx8l58c8FxbM/djZvD6UIRFe61WEg35E4uG9XvU0Rw5hzoftkzx
+	8keMDpmrimggD8urAR96Ijkburt1owZAYs9LvvllEG+rtU/NTt6j5bbbyvfmKzyTrYB51xhms6P
+	tDl+B/cdXnXKe5YgklqAvQgNkrLKBv3ixr0wm84//z72uGuUVrIUHbMY=
+X-Google-Smtp-Source: AGHT+IEAZxyA8Z966Oma0dPTuGW7/CL68U9I83mE1UlF1rHfyCrampmWNgaI0Z4cH7a5pNtwg/zN7y0yl/9GCJNYXlXW5hqprIHt
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PR0P264MB3481:EE_|MRZP264MB2216:EE_
-X-MS-Office365-Filtering-Correlation-Id: 554aeafc-9111-4eef-4d85-08dc650684f8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YYHYJFztUCXQBf3xA9o6h3PyGZdfLw6YNkpt2yBS+trPKUlJISdvvG1rK00s4WV8GtmSaEUCctJ3dCzwmiRmlaBl4T0ItYgzoXHbrPO2Bng/hdp78TPNZ0xcRvL2MWPAFa9Knz7RZJU3UMTF0T43zQzi2PtCSeq3ClXIqdO5ScOcrsD8QnSDkW7DsbhftA69d33croCttwWYaTO/hCmyVcZLVCQZg1t7DzBbACDgsm0EP5QPsTU/cjJVQhIvyS7znsRmkyggDTGL7sK1MoG+HQa19LyRZ6BnxreKp9sNc20Z4GY2p0GR1diJw+0yq4sGgeRxTTrEToQqwSUXRU4Nu7NqN5zINwx6ulBIdqAm9gKAmvXhNmsnOO7mt+BGJnTECpBF/iJb4pIFAJFM49qoRPbGJgPZOHI6Ub6gLdIwXZMQ7DY19SyWo36/xgCIVOaE6J8QYFwastFOifAflu/OnTVawFlMwBD1Odlb5skaPsen/AFbOqqwg8XbEXIEP+S4pWNvzt57LqYdCWXbo6TjJuKj/NGnAo7D6klvXf1Rnu5gAgBHvEYiOH0KN2SvJfe0KMSJMyz8n7JsIdClQ1DuPxWg+DcheY9ID75r7CGas/eVM7BSCiGYy/tscj2PKzvwqo2E7q0h2snbGfgdxegcB8KAbIxLGU1GLkpJ5l7S0cZ6D4VSQz1plUxkBgMp7uaRd2Scu9bWTETH1lC+sY5xr5Zu6EV+1mIZ5bwsYPFRm7cMFhYIXgzhkxG7ukuDwBv/8mAa7ejSfnqsmtDS5jwcr4Psda6Gb7vKSkchPzeEReR10t9ev8NK1eQWbiQdEuBHXl4X+HLcpIEbetOv4r7Fo2XxRZwGYuuv7j3wLfigQlzL1nIOBA8yt6mQMDlqXGu2cySmHsUZmfANQOiNDY+qpapTQpiio6HOYKjcTTm4qNAINgGKICRpJaaA2gtlgr15AWp
- YE2LYO3mGRPhdpIKOpQq/ArfUXdS8UydR6qtWR/ST54sOiw3xb38QdhRVgdbZ/5fCby0Hsg+hY9yLEe7Ei77BeiuHpuK/W33NlnZrspAVALG1E/z05tcwjrqvry59eu19IIs6LBImoQhCQUjOs8XxBLeTnOI65iht6Ep+D6U5sIk+selNAkRd3rCkp9/f4TN8KMcT0KyYfybcazSWytaxOKRiD0iV+aoczbzqMr0gQQZS9gmsUmQlgKWiuj+DpezSuyxf8zlqNDrVbEAJlJg2ZK1Z0OssU1IITbrck9NpWs1Wg9dHKHpWOwW320Rh6/lT+eRFoZG058G4L12vHg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(376005)(1800799015);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 2V2ys4e+nS+AVpGMK2COs/A4VHIemAp1E4wLj/K+iEwoOn/qFup/UOiuq0U5XxLT7ynlOh1jp0fo/Gg0PJUNPQ2Q/suOsJI5sVobZTlvhj16rd0NluIYhwRsgzrMs3+Uwcpp2YfleDCC+8o9yoHuQ9UNHXRc4pDsg2A4jOSZyGDn5olHpLakyGEnOnlRRe2JYB3VKDzJd1aurydCPjaNg040e6G/O2TaEifVEbSbgaaT82S83x7AfuIx9BiiqBYPtwXWwxl+6xScNHbBSEueC+TWzE24dJKfJGLo0hN5wc2im33JE6oS5TgV+SWGCjA1s/jOmiFBuuqf+oKFw3RQ0qdupLydIqwtCFe2RKN/iou6+L/RpxL09jyisxuH0SeRkpKWvJsX3FVLG3PhkULehtK4zRCVpveLqBAMEtX06lmGBwBo5N1C5AvZz/8zOLFc8z7pMQR8zaAS9FBUwL1olOIkv6+6u1ilSPgtcsDOxYqbJa24FvWCbeD2qzycY6la2TclchmNbB7+ozyrZ3wuAgNi8zxg53lGnVGBtVtLT2Xdj+G/Gw/aKYSXisf2eH/ZduXSvNp/+nsufWv/rksurFEqnYmPZW0AKI3IFg7V1O0qwM/R4qIg8K3QOc2Z97qDAXwqU+zj5B9BRk1/FbB1qj0nJQ2jHXOT/rewf5lOVi4HptqKItMvUA77P9ScR4KCeiTPven1sz3zdEQvBhCSp+UQdzTsxMnwhlbe5vPr6m69Ueb+chN1X7Tt0GwKs1a25KngsRMG0sA448YkxAJ3MFXXxLnf3szsHs2PkKrYMjkPayRJfqnspn9t+n3SBpVVSNqVBOu9QgPA6gjyHK2oLhWrsLpF9tQlcwVvHv2J2mwCVPiKE83hiekHmbZVuAjS36OWlLyBurLU1DcFZ1f+ECPy/i6wf35NPBSfVrD8PE6pp3DZNh9K32xAhZ94qI+m
- mmleeiZfaxtkT5iCKpM/6IctrGmgqC1mPsFzzWbHdvdQ+bbfCIbZYnZMQL6vRLAMNzBrMUX0ZAW51R2I6i6eUV3oSo+AQy3hIAEwYh3256J3w3Zm0tSGK7csDn3AkbZyxhWUT6yq7mHfWI9R6L4fjEjVruHtvjfJ0DgiBgXZDTDofhtS8mwihPdxYpUNvBu11KegG9/PzqjeF24jWuV9n70YBGLjkmNP7RmsVFR9XONwUNRhMy7UE4STmmXsv43b3vko1xp8UVmtIEXztgEZykZudGuERsymXNn5+9hx+osv8I1rAoRE0t19ptZbd1Fw2Wg7ndSslFpAcPzwlfEDrYv3JAufacru3Thvp4CJGOy4aT/xULnaqk71i5bc9/l+bGqaJCFet2i30/XwMd0ceaL1AjTjf2Z4pfME7ua65TLLYEy5Ful4LFudkOORLaizzpJxPkfxoHpw32WeNHhwN/6NFZ2uDvjPgnmP/aqVrTPAmwZJeoPtiHkloJoRVXRlMWe93I9OfqPLAK2t/CEiiziMTPH3KuK+SW6bdXVNQygpDdU7Upn22NYWgkN4O/ZiQ0BMV/Y3hG/FqdqBrbmWp9ahXWJdKAiDCCsSs3m+2OkZRbHCbG0PhODOkaRHL7Cy4tshcLue+X6D53rcwuUfSQ==
-X-OriginatorOrg: kalrayinc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 554aeafc-9111-4eef-4d85-08dc650684f8
-X-MS-Exchange-CrossTenant-AuthSource: PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2024 09:03:06.1176
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8931925d-7620-4a64-b7fe-20afd86363d3
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cHNbeUESGQDv/efLHemOJDRniI4Ta8USQrrxfOUZQC0pW6Cp47bwbPhoC3H6epFzvDHq6UcjlJ/RTiBGf/ETIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MRZP264MB2216
-X-ALTERMIMEV2_out: done
+X-Received: by 2002:a05:6e02:1845:b0:36c:307b:7f08 with SMTP id
+ b5-20020a056e02184500b0036c307b7f08mr24786ilv.0.1714035931214; Thu, 25 Apr
+ 2024 02:05:31 -0700 (PDT)
+Date: Thu, 25 Apr 2024 02:05:31 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d006b20616e8168d@google.com>
+Subject: [syzbot] [udf?] kernel BUG in submit_bh_wbc (2)
+From: syzbot <syzbot+5f682cd029581f9edfd1@syzkaller.appspotmail.com>
+To: VEfanov@ispras.ru, jack@suse.com, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, vefanov@ispras.ru
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Greg,
+Hello,
 
-Le 4/23/24 à 23:37, Greg Kroah-Hartman a écrit :
-> This is the start of the stable review cycle for the 6.1.88 release.
-> There are 141 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 25 Apr 2024 21:38:28 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.88-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
+syzbot found the following issue on:
 
-I tested 6.1.88-rc1 (cde450ef0f2f5) on Kalray kvx arch (not upstream 
-yet) and everything looks good!
+HEAD commit:    e88c4cfcb7b8 Merge tag 'for-6.9-rc5-tag' of git://git.kern..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=10288be8980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5a05c230e142f2bc
+dashboard link: https://syzkaller.appspot.com/bug?extid=5f682cd029581f9edfd1
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e4cd6b180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f27380980000
 
-It ran on real hw (k200, k200lp and k300 boards), on qemu as well as on 
-our internal instruction set simulator (ISS).
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/124765f3f2cd/disk-e88c4cfc.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/0e2773bfa348/vmlinux-e88c4cfc.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/66c56fe803c8/bzImage-e88c4cfc.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/a47950266a82/mount_0.gz
 
-Tests were run on several interfaces/drivers (usb, qsfp ethernet, eMMC, 
-PCIe endpoint+RC, SPI, remoteproc, uart, iommu). LTP and uClibc-ng 
-testsuites are also run without any regression.
+The issue was bisected to:
 
-Everything looks fine to us.
+commit 1e0d4adf17e7ef03281d7b16555e7c1508c8ed2d
+Author: Vladislav Efanov <VEfanov@ispras.ru>
+Date:   Thu Feb 2 14:04:56 2023 +0000
 
-Tested-by: Yann Sionneau <ysionneau@kalrayinc.com>
+    udf: Check consistency of Space Bitmap Descriptor
 
--- 
-Yann
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155c96a0980000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=175c96a0980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=135c96a0980000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5f682cd029581f9edfd1@syzkaller.appspotmail.com
+Fixes: 1e0d4adf17e7 ("udf: Check consistency of Space Bitmap Descriptor")
+
+UDF-fs: INFO Mounting volume 'LinuxUDF', timestamp 2022/11/22 14:59 (1000)
+------------[ cut here ]------------
+kernel BUG at fs/buffer.c:2768!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
+CPU: 1 PID: 5075 Comm: syz-executor330 Not tainted 6.9.0-rc5-syzkaller-00042-ge88c4cfcb7b8 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+RIP: 0010:submit_bh_wbc+0x546/0x560 fs/buffer.c:2768
+Code: 04 7c ff be 00 10 00 00 48 c7 c7 80 ad 47 8e 4c 89 fa e8 1d 33 c6 02 e9 95 fe ff ff e8 93 04 7c ff 90 0f 0b e8 8b 04 7c ff 90 <0f> 0b e8 83 04 7c ff 90 0f 0b e8 7b 04 7c ff 90 0f 0b e8 73 04 7c
+RSP: 0018:ffffc9000340f858 EFLAGS: 00010293
+RAX: ffffffff8219fbe5 RBX: 0000000000000000 RCX: ffff88802f7b9e00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffff8219f743 R09: 1ffff1100ee296cb
+R10: dffffc0000000000 R11: ffffed100ee296cc R12: 0000000000000000
+R13: ffff88807714b658 R14: 0000000000000000 R15: 1ffff1100ee296cb
+FS:  00005555792e0380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000066c7e0 CR3: 0000000075a64000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ submit_bh fs/buffer.c:2809 [inline]
+ __bh_read fs/buffer.c:3074 [inline]
+ bh_read_nowait include/linux/buffer_head.h:417 [inline]
+ __block_write_begin_int+0x12d0/0x1a70 fs/buffer.c:2134
+ __block_write_begin fs/buffer.c:2154 [inline]
+ block_write_begin+0x9b/0x1e0 fs/buffer.c:2213
+ udf_write_begin+0x10d/0x1a0 fs/udf/inode.c:261
+ generic_perform_write+0x322/0x640 mm/filemap.c:3974
+ udf_file_write_iter+0x2fd/0x660 fs/udf/file.c:111
+ call_write_iter include/linux/fs.h:2110 [inline]
+ new_sync_write fs/read_write.c:497 [inline]
+ vfs_write+0xa84/0xcb0 fs/read_write.c:590
+ ksys_write+0x1a0/0x2c0 fs/read_write.c:643
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f7c2bb82679
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff23ee0518 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fff23ee06e8 RCX: 00007f7c2bb82679
+RDX: 0000000000000010 RSI: 0000000020000600 RDI: 0000000000000004
+RBP: 00007f7c2bbf5610 R08: 00007fff23ee06e8 R09: 00007fff23ee06e8
+R10: 00007fff23ee06e8 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007fff23ee06d8 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:submit_bh_wbc+0x546/0x560 fs/buffer.c:2768
+Code: 04 7c ff be 00 10 00 00 48 c7 c7 80 ad 47 8e 4c 89 fa e8 1d 33 c6 02 e9 95 fe ff ff e8 93 04 7c ff 90 0f 0b e8 8b 04 7c ff 90 <0f> 0b e8 83 04 7c ff 90 0f 0b e8 7b 04 7c ff 90 0f 0b e8 73 04 7c
+RSP: 0018:ffffc9000340f858 EFLAGS: 00010293
+RAX: ffffffff8219fbe5 RBX: 0000000000000000 RCX: ffff88802f7b9e00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffff8219f743 R09: 1ffff1100ee296cb
+R10: dffffc0000000000 R11: ffffed100ee296cc R12: 0000000000000000
+R13: ffff88807714b658 R14: 0000000000000000 R15: 1ffff1100ee296cb
+FS:  00005555792e0380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000066c7e0 CR3: 0000000075a64000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
