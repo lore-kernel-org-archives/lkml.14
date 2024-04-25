@@ -1,121 +1,122 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B25543AA8;
-	Thu, 25 Apr 2024 16:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0B21DFEF
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 16:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714062649; cv=none; b=safE84RucIt82NCr4qUPUQ27r6xc7QWHx7lCNaCowEnb2w7phRGeza1iyCPp8Lx9Fl3P1WFyf5k4d/SinMFZfypZBOHv0DFYQfKG9UMwU9qxJTDMArWTYhOre97iqZ0LDteVNfUyRaan1hc5N+nI/8eY/lEVsDVMqB2vgzCi+CE=
+	t=1714062664; cv=none; b=nNFcWYh+Es2EpIZZamtE8mQlfhjgIDaHp8Ng8rBN1fFATPcUJnzmntJ+TLAfiOpLpwx45ew6l6erjiqHM6vgQVA/kIdUNNkMqaaRdYTkf4Wc7Dvm9s6u/IOlY+hLeMGzKoiYNAoFioArdtBcl/Xs+jBXsxKtuVqyTIAUu7XqSzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714062649; c=relaxed/simple;
-	bh=DKGLfC/7PKhg5OTJlNJxSCiY4zEAe3yMefBF6ZZFWqI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O+nU/+gG88CLuPZ3L/sUZ+EsWweARNWFmYkJJrX0cRyJNAo3FbXww4hCbp3/PUgsPYj3OKqQ4dYs15drPLpPpBGHksCRZMfZU0icNTho6464N8v+CyanEek+k0AXcIJQJlzImi740Uutnwc2SKc//+WPBaKkV/ssY91/+6QjQsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EQLC7G6Y; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714062664; c=relaxed/simple;
+	bh=8QT4wCkiEvoE5CtKsOvw2EHV/0k7lOv71PaUreO/D44=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Mr0XMzZPr32rYOybtk6p8abYuHelQJiVXgI6PJSvN2Dc7E17OxDLnBV7nOm9AX//aAlkjKHtqmF3cAi/I3xJo9du4xJQjBxIAziS3s0DlXw63mSwzUH7cCNQ4GbDt8wYcNn51U0DqH2pkugzjP5nDV7m8uuho5eJxhEb+oxaTNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oDJ537ID; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQLC7G6Y"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6181d032bf9so11654947b3.3;
-        Thu, 25 Apr 2024 09:30:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oDJ537ID"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61891efba06so20613747b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 09:31:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714062647; x=1714667447; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M+m8AgMN5pHo9IgY4LAWVapky7s6aKz0htkJdTk1MDQ=;
-        b=EQLC7G6YtAkJ1KuzR+jCtNVnYwFlT2BefM1WaN9z1IziJV5UGSKapinDNNAxcM/R8n
-         g4soueMWk1plh5Pwko4NWNINcWxawztVB8LZwR6d4Jsu0tLWeD4lgqmHKsOXVfjsUGxv
-         JNDaqEJJ+srxMrt3jh4H/k+2c9dKwux6pB3zpMIdalLXc76jpwSVGvWYc/EEpDKRF2jt
-         TZGVfC4w7moTAz2RMmuRQMVHADZ+5n+fQcU211sOEGYnPiC6wdizdRBqfohvt2QINgXL
-         l3PMl4SDZKyyqNw/UMdXjo7nGWm3bGlJbdaQFfwfoPMNDv2cOarnsA5Pzx7znpNe6qIV
-         s55g==
+        d=google.com; s=20230601; t=1714062661; x=1714667461; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wuEvZw0xsxqnkJCMkgLTL9fi/8XUYBdqC5QY5sOCErc=;
+        b=oDJ537IDZtrd4cxe/XN9mbLvdn2CvO/sGQQOt/JZMAMXRh/sXUQRfA3hJbHyXd1fgR
+         tQri3Pzvf2C1JJ/h/xziUwC8RyoV61f8F9R9RKo6SmuePNy77Wmq0iK/ln6xJ8gYeH2b
+         eCAzty7Kbq4INSaYuZbKM4dJdcsMJrTQIMoJsJCEMPFPYhblKZJl6fcvlFXWfF44Lay7
+         Z3uOd8fAN+zzoW0hbCOHhvbGNni42Ed99RQGAyIOqjqe0q7Tq+hnJCZTN9VGGfslPINm
+         DGfKIxGkF809kvd5DGsHdtutKVRvab+TXsICwjb7MOmAFlP7q/HVIH7721MVUcICxPru
+         qpQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714062647; x=1714667447;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M+m8AgMN5pHo9IgY4LAWVapky7s6aKz0htkJdTk1MDQ=;
-        b=SdZeqZBnvMq1+plToh+IeYYNVHPBK2hiQ3sEtTnpRh4/vpiM+7HjWtg6p/38NTKqJ9
-         CVB/Ej4nrwNnGsOjHzecTjFcjaepFKUfQ5U4qelTdt/F9StWwuqz55duNBQ2BO3KT/cX
-         k+xklwIK4J8cfhXY3l6TGyXbhPiUDwQh+9wZMBm/Aavr8R069EfC7e1PzkJDzN/DUt4C
-         1EkRf8fBDcKz38XJHBGlQ0QYinYrZuhnCPa+o7NF8d8v8QyvrxivEKO5KPhbRWchplkh
-         aITh8uLTUpm/Sxgjt09qYnxapwVZvgtxbtQt3GlfKmwlClayWVeWxk12fBrtIpTcd4/e
-         t4EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVy5GT0ZXeJxRgH2Gy5hFnjHA2nClJ77XQy1DhkPY4faIvJcfxpa5zYRwJ/ZlxTo8DGFB0KbSmumjJNaNqqDcd7n7WijUnt3eQ2sh71VTFgTI7lu1u6f61SxzqWtTL2zUFJmGQ3I8nAAQ==
-X-Gm-Message-State: AOJu0Ywpbw08f1nvkfPfL6eCLGuicuCgUKoOS6mM7LYWmrhXnsfNOzun
-	uv2D8tUM7Dqn2k3uX0zeVO+pvuX9kP9DpSqTdGEXDAqskUjLIgU6TgChGhDpCC63eYeTuI+N6/B
-	pv20nDK2fv7L4j/qCa5mDyN4bqcGBm33S
-X-Google-Smtp-Source: AGHT+IHZnPPBZAczUy6Xgh4mycbDLzssxxJSCyYbyPgwtlSwrRzUTGcN9pIZNf7yBuUZ9/5GlBbTrQGYvB2baVhmIlM=
-X-Received: by 2002:a05:690c:7086:b0:61b:1718:7302 with SMTP id
- jg6-20020a05690c708600b0061b17187302mr6546946ywb.31.1714062647409; Thu, 25
- Apr 2024 09:30:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714062661; x=1714667461;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wuEvZw0xsxqnkJCMkgLTL9fi/8XUYBdqC5QY5sOCErc=;
+        b=fcS0Hpil+sJfhxU+rbPKXYHaWyA5+dxNdyyb8tq2jDJz4yaYK/3ObQ6AhcVhsQ1+Di
+         adMucTA53WgJ9bTfPl04kC84QUKh6lewiuOwGmgoSm9/8ZN5PUMhpTuXdC5N4ICH7Eg9
+         AskoG+hKWhmsBJMWDft77jckRLkCclCm9cWnMe8w013MIKZVwOGfNbnA5mkQ1wxFKGTn
+         DrtBZY8BuH3a0lNeWvhPpj9ZTduF2cvNOusUsvsSyLGcEqdnmYWCzO5J28iw0RXQLsPH
+         sLeRSrC2hbwqdMhZlQJt0S/iQwcRtU++xv6wN4Oos/m/XZ2HJyDVQ1oTucyw6pOViJ6Q
+         r0bw==
+X-Forwarded-Encrypted: i=1; AJvYcCUoYVBwYFLx4UYbg6P76hczUWuvjQLq7lATbrTL75ufSfhLWVH580SYKrWyGjEVUQNFQAsG4hw/r1KFwLMeYsB7PBt0LQDQNo478prm
+X-Gm-Message-State: AOJu0YyHMRWKS87nIcs+Ww5DSyW/0LqN2zSnJkapxXLGqmkEbuV8kgWk
+	1NCfPa2fMz3tVEtzaChodXJfc0uAc3n0OJ9TEW4N8lZFrYKCtG2CnAQ5/Lanoryxa0iYUFMQ1pp
+	Ong==
+X-Google-Smtp-Source: AGHT+IF7ewIFf4asaLVdd36tPhS/2ZhvyuhQ5JaF/1Gy7paYiH3nJdGJyIbHKj5e9VA3LCVIDmZCPxJhvX4=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a0d:e386:0:b0:61a:b2d4:a3fb with SMTP id
+ m128-20020a0de386000000b0061ab2d4a3fbmr1243077ywe.8.1714062661606; Thu, 25
+ Apr 2024 09:31:01 -0700 (PDT)
+Date: Thu, 25 Apr 2024 09:30:59 -0700
+In-Reply-To: <9c6119dacac30750defb2b799f1a192c516ac79c.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240425162829.2370614-1-robertcnelson@gmail.com>
-In-Reply-To: <20240425162829.2370614-1-robertcnelson@gmail.com>
-From: Robert Nelson <robertcnelson@gmail.com>
-Date: Thu, 25 Apr 2024 11:30:20 -0500
-Message-ID: <CAOCHtYj5sJGzzZdXHsH2gmQ_VgMS8JfTBLjg0aE9vRrVujgS6Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: arm: ti: Add BeagleY-AI
-To: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	linux kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Andrew Davis <afd@ti.com>, Nishanth Menon <nm@ti.com>, 
-	Jared McArthur <j-mcarthur@ti.com>, Jason Kridner <jkridner@beagleboard.org>, 
-	Deepak Khatri <lorforlinux@beagleboard.org>, Drew Fustini <drew@beagleboard.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <ZiKoqMk-wZKdiar9@google.com> <deb9ccacc4da04703086d7412b669806133be047.camel@intel.com>
+ <ZiaWMpNm30DD1A-0@google.com> <3771fee103b2d279c415e950be10757726a7bd3b.camel@intel.com>
+ <Zib76LqLfWg3QkwB@google.com> <6e83e89f145aee496c6421fc5a7248aae2d6f933.camel@intel.com>
+ <d0563f077a7f86f90e72183cf3406337423f41fe.camel@intel.com>
+ <ZifQiCBPVeld-p8Y@google.com> <61ec08765f0cd79f2d5ea1e2acf285ea9470b239.camel@intel.com>
+ <9c6119dacac30750defb2b799f1a192c516ac79c.camel@intel.com>
+Message-ID: <ZiqFQ1OSFM4OER3g@google.com>
+Subject: Re: [PATCH v19 023/130] KVM: TDX: Initialize the TDX module when
+ loading the KVM intel kernel module
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: Tina Zhang <tina.zhang@intel.com>, Hang Yuan <hang.yuan@intel.com>, 
+	Bo2 Chen <chen.bo@intel.com>, "sagis@google.com" <sagis@google.com>, 
+	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Erdem Aktas <erdemaktas@google.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	Isaku Yamahata <isaku.yamahata@intel.com>, 
+	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 25, 2024 at 11:28=E2=80=AFAM Robert Nelson <robertcnelson@gmail=
-.com> wrote:
->
-> This board is based on ti,j722s family using the am67a variation.
->
-> https://beagley-ai.org/
-> https://openbeagle.org/beagley-ai/beagley-ai
->
-> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-> CC: Rob Herring <robh@kernel.org>
-> CC: Andrew Davis <afd@ti.com>
-> CC: Nishanth Menon <nm@ti.com>
-> CC: Jared McArthur <j-mcarthur@ti.com>
-> CC: Jason Kridner <jkridner@beagleboard.org>
-> CC: Deepak Khatri <lorforlinux@beagleboard.org>
-> CC: Drew Fustini <drew@beagleboard.org>
-> ---
-> Changes since v1:
->  - switched to the TI model am67a over the family name j722s
-> ---
->  Documentation/devicetree/bindings/arm/ti/k3.yaml | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documenta=
-tion/devicetree/bindings/arm/ti/k3.yaml
-> index 52b51fd7044e..201378cdbd93 100644
-> --- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
-> +++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
-> @@ -134,6 +134,7 @@ properties:
->        - description: K3 J722S SoC and Boards
->          items:
->            - enum:
-> +              - beagle,am67a-beagley-ai
->                - ti,j722s-evm
->            - const: ti,j722s
->
-> --
-> 2.39.2
->
+On Tue, Apr 23, 2024, Kai Huang wrote:
+> On Tue, 2024-04-23 at 22:59 +0000, Huang, Kai wrote:
+> > > Right, but that doesn't say why the #UD occurred.=C2=A0 The macro dre=
+sses it up in
+> > > TDX_SW_ERROR so that KVM only needs a single parser, but at the end o=
+f the day
+> > > KVM is still only going to see that SEAMCALL hit a #UD.
+> >=20
+> > Right.=C2=A0 But is there any problem here?=C2=A0 I thought the point w=
+as we can
+> > just use the error code to tell what went wrong.
+>=20
+> Oh, I guess I was replying too quickly.  From the spec, #UD happens when
+>=20
+> 	IF not in VMX operation or inSMM or inSEAM or=C2=A0
+> 			((IA32_EFER.LMA & CS.L) =3D=3D 0)
+>  		THEN #UD;
+>=20
+> Are you worried about #UD was caused by other cases rather than "not in
+> VMX operation"?
 
-Rob, after discussions with TI, we changed the name of this board from
-beagle,j722s-beagley-ai to beagle,am67a-beagley-ai so i didn't apply
-your original ack from v1...
+Yes.
+=20
+> But it's quite obvious the other 3 cases are not possible, correct?
 
-Regards
+The spec I'm looking at also has:
 
---=20
-Robert Nelson
-https://rcn-ee.com/
+	If IA32_VMX_PROCBASED_CTLS3[5] is 0.
+
+And anecdotally, I know of at least one crash in our production environment=
+ where
+a VMX instruction hit a seemingly spurious #UD, i.e. it's not impossible fo=
+r a
+ucode bug or hardware defect to cause problems.  That's obviously _extremel=
+y_
+unlikely, but that's why I emphasized that sanity checking CR4.VMXE is chea=
+p.
+Practically speaking it costs nothing, so IMO it's worth adding even if the=
+ odds
+of it ever being helpful are one-in-and-million.
