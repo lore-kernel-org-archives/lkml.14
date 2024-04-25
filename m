@@ -1,143 +1,152 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071FA28F7;
-	Thu, 25 Apr 2024 09:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC1284E06
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 09:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714038426; cv=none; b=Qdesylhg19Lqigk+P6x2IjYf/mjHaxeUbyJtsb9febjzNixmqYYvDrwJ6G2lVPHyMDVELgPX/kViV8l43WlMXcYCfFdIHqcygpz5tOeopQ8V1nSkaGEAP/MfKFve/pwAnb/++5hSWCo2V4MNR2Bf0YK4geXakfzQMRQTXCLxkxo=
+	t=1714038569; cv=none; b=RdXWt2eZJOkQ/4KRvQVYZztU8HwIMJD+3XnK4KJ0a/6/mgCsMqt2SQsGIRHJWh9vsWh7l9goeojAotuBTGVPUKE8y4enBKTbumDiPxDfspd+AZdpMmoIaEDxTWs479rU8H7J/tqBYFjJtr4ptzqfFJxT3RGpWaWc8kzTFk8wASU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714038426; c=relaxed/simple;
-	bh=cWcKy8wTf68qm1RgtwCQ421qsXZI/HZiPuKSe+DWeVg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JK6qKqQd5iLM+UrkeBko0HLwvTfTlSks4yfI6rTRAw/iEJ+ptYflwwR7zMwagP1DS+ogF7MOuk3nFUpMLLpmFLmhihTECpdJGb6Pq34tnEA5kbBBm2nY02q72OboAdRufGlsYipqtUTNovfrC65o6X5Tg04M9hWRRvoqNL1Jg8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=THniLMa7; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1714038569; c=relaxed/simple;
+	bh=35aW69QPE+lCEJiyyhy9K78gc5bTQ0CCX9ATNwOcmrY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y+sA+YPW2lWA6xI057ffHxK98vHFQbKgWrIMOp0IIlpJY9sVgB7sIh6cb7qy9JGHls6DgQSP12on1SO5oAx92EiR7BDi2fyA5114xSbsxogLa3xKrCubwokiz/ZozcVVNFVMhMw+zN5PYmn4g3wPx+3sPv5flHUQUAq/CALHujg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dW5sVIxC; arc=none smtp.client-ip=209.85.217.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="THniLMa7"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id A8FE0100002;
-	Thu, 25 Apr 2024 12:46:43 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1714038403; bh=0095HjdshMuyZmQBsZxSIJdEf89TFu4eDlupLRN2pos=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=THniLMa7kVAsoWHHt1N22NXKUvRGedGQuSJKmkuu+SaW6Y60w1QD1jOvxybOKfuY5
-	 G6bna1OX7+Y+141AxzhVvYXqvIg4KLCLFTZO/65iJv+Q2pa+pLX/cDtv9ttPc5VjXY
-	 QRJSYO+s0P/hN9QcvAcJBHThL6aHMnG0WgxTzT4t/5GxSkUUOSzONoeeoKiwAhnpL0
-	 xaRZOzKSiE3v414CG7gDUuPF5vbDi+DE89Bx75AmlgtPd+Ha5YO58u6YpKAMKHuhiQ
-	 uECKC41VgYk9MLIukL8D4O5jeAMTX4u/KRX4uwfYirhx0XiA3ty0ePzobHUPdBOzN9
-	 0X3+/1vPJYLjA==
-Received: from mx1.t-argos.ru.ru (mail.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Thu, 25 Apr 2024 12:45:55 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 25 Apr
- 2024 12:45:46 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Jonathan Chocron <jonnyc@amazon.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=
-	<kw@linux.com>, Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH v2] PCI: dwc: al: Fix potential NULL dereference
-Date: Thu, 25 Apr 2024 12:45:38 +0300
-Message-ID: <20240425094538.15570-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240328180126.23574-1-amishin@t-argos.ru>
-References: 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dW5sVIxC"
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-47a0f54fb13so336937137.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 02:49:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714038567; x=1714643367; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tClP56HRC4jtLkyQNL35pL67xVeU0Fa8cWNQ8DcTkjY=;
+        b=dW5sVIxC34/UKwEhLrDvZQB1q44rzx6pOA3BqtXgaM46wjukJcG4kxyvq2Sjl1ppkf
+         dA09IwEC76tG8p9rG9dDPJghLMI9xvAYCB7kp9bywikyc5FaAupZltIUfkuDI+UNXWTp
+         Sd2HPP2KEHbUhCSLj7gOQF07cJjoXdmpOi8yzRxX+gaSRNbsuLRdKwhWEWoxFYPv80d3
+         Oy0wflZiWgAzAKHdbg6uH42KNbIZt7GGfhUBcxYLQmJgnZfrPYOMmEhBtinnhuv3wS1i
+         DQDawGAzhz9PSEyQpbPo8M/L1N3oSSAvo/KskPjzUwX852oGlo+e0GZmXqHMSdUGVLvO
+         vJKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714038567; x=1714643367;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tClP56HRC4jtLkyQNL35pL67xVeU0Fa8cWNQ8DcTkjY=;
+        b=hTLqRuBv3DIj6X8a7R6hAAsZxsMSAOFhcI1NAp+HldUDHMfqDnkvVqOBHhZiSVnkAU
+         HP3bFwyr8rTWZga5qx1rxw3Nsg0ANgnZ2jw2VqEzL14F7az5NF2I8v21o0nNH851xDvc
+         az/MQsM3FcdyQJMYBje3P+SJF3HXrAsYKgdM3x1gTXeiWCDGgdXoRMOdsRh0jYEPNo7u
+         YsZi421eqKbL/rLRF6XE41vSAH68MMXzePwd2xDeCZYX17ycKggUpkxdxDkASWkz4i+W
+         H7Ubd7kc5LISd+XbH/ScC7o/4ZVTuCEz3nBa/Oe76DTPk8OQKWCq7s0/aLP7xWomUEn8
+         9IgA==
+X-Forwarded-Encrypted: i=1; AJvYcCWyS0DWXFSvSzMrOYwSPjo+t7dJf8JGihyifHXcjegyfq6rILTN4M+S3C15o/Zfb5Xla52480gXS76qo+aRmjSg5kFzBZuKjDiEPJgV
+X-Gm-Message-State: AOJu0YxJ1ZtCo0NMQoBepfcSJhaLFyTw4jOfOQII4ROGIIjNaqpyx35x
+	hjXuTJBH1FKMSodnvSWiiJjqDYTZo1DuIq+jN3L4TQbQrgGQv3QkKtriiEaanRk09gblM13Pyzp
+	PQXWO7dZc4fKoYYuDN+vct2Pw24sH5wcnVI3o
+X-Google-Smtp-Source: AGHT+IEC/dRlxbrk0648Rxs8czpEdv4hXYFhGbXj3jiK+CmRCTvqhbhhoKq/K5RAClwxB81VEQO2Gra7meS06C6gGrs=
+X-Received: by 2002:a05:6102:11eb:b0:47b:9ca3:e03d with SMTP id
+ e11-20020a05610211eb00b0047b9ca3e03dmr4935716vsg.11.1714038567115; Thu, 25
+ Apr 2024 02:49:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184913 [Apr 25 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1;t-argos.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/04/25 08:19:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/04/24 23:31:00 #24963607
-X-KSMG-AntiVirus-Status: Clean, skipped
+References: <20240412084056.1733704-1-steven.price@arm.com>
+ <20240412084309.1733783-1-steven.price@arm.com> <20240412084309.1733783-2-steven.price@arm.com>
+In-Reply-To: <20240412084309.1733783-2-steven.price@arm.com>
+From: Fuad Tabba <tabba@google.com>
+Date: Thu, 25 Apr 2024 10:48:50 +0100
+Message-ID: <CA+EHjTwDaP6qULmjEGH=Eye=vjFikr9iJHEyzzX+cr_sH57vcA@mail.gmail.com>
+Subject: Re: [PATCH v2 01/43] KVM: Prepare for handling only shared mappings
+ in mmu_notifier events
+To: Steven Price <steven.price@arm.com>
+Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
+	Sean Christopherson <seanjc@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>, 
+	Oliver Upton <oliver.upton@linux.dev>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>, 
+	Alexandru Elisei <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>, 
+	linux-coco@lists.linux.dev, 
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In al_pcie_config_prepare() resource_list_first_type() may return
-NULL which is later dereferenced. Fix this bug by adding NULL check.
+Hi,
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+On Fri, Apr 12, 2024 at 9:43=E2=80=AFAM Steven Price <steven.price@arm.com>=
+ wrote:
+>
+> From: Sean Christopherson <seanjc@google.com>
+>
+> Add flags to "struct kvm_gfn_range" to let notifier events target only
+> shared and only private mappings, and write up the existing mmu_notifier
+> events to be shared-only (private memory is never associated with a
+> userspace virtual address, i.e. can't be reached via mmu_notifiers).
+>
+> Add two flags so that KVM can handle the three possibilities (shared,
+> private, and shared+private) without needing something like a tri-state
+> enum.
+>
+> Link: https://lore.kernel.org/all/ZJX0hk+KpQP0KUyB@google.com
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>  include/linux/kvm_host.h | 2 ++
+>  virt/kvm/kvm_main.c      | 7 +++++++
+>  2 files changed, 9 insertions(+)
+>
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 48f31dcd318a..c7581360fd88 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -268,6 +268,8 @@ struct kvm_gfn_range {
+>         gfn_t start;
+>         gfn_t end;
+>         union kvm_mmu_notifier_arg arg;
+> +       bool only_private;
+> +       bool only_shared;
+>         bool may_block;
+>  };
+>  bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range);
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index fb49c2a60200..3486ceef6f4e 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -633,6 +633,13 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva=
+_range(struct kvm *kvm,
+>                          * the second or later invocation of the handler)=
+.
+>                          */
+>                         gfn_range.arg =3D range->arg;
+> +
+> +                       /*
+> +                        * HVA-based notifications aren't relevant to pri=
+vate
+> +                        * mappings as they don't have a userspace mappin=
+g.
+> +                        */
+> +                       gfn_range.only_private =3D false;
+> +                       gfn_range.only_shared =3D true;
+>                         gfn_range.may_block =3D range->may_block;
 
-Fixes: 0f71c60ffd26 ("PCI: dwc: Remove storing of PCI resources")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
-v2: Add return code processing
+I'd discussed this with Sean when he posted this earlier. Having two
+booleans to encode three valid states could be confusing. In response,
+Sean suggested using an enum instead:
+https://lore.kernel.org/all/ZUO1Giju0GkUdF0o@google.com/
 
- drivers/pci/controller/dwc/pcie-al.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+Cheers,
+/fuad
 
-diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
-index 6dfdda59f328..933854c3575b 100644
---- a/drivers/pci/controller/dwc/pcie-al.c
-+++ b/drivers/pci/controller/dwc/pcie-al.c
-@@ -242,18 +242,24 @@ static struct pci_ops al_child_pci_ops = {
- 	.write = pci_generic_config_write,
- };
- 
--static void al_pcie_config_prepare(struct al_pcie *pcie)
-+static int al_pcie_config_prepare(struct al_pcie *pcie)
- {
- 	struct al_pcie_target_bus_cfg *target_bus_cfg;
- 	struct dw_pcie_rp *pp = &pcie->pci->pp;
- 	unsigned int ecam_bus_mask;
-+	struct resource_entry *ft;
- 	u32 cfg_control_offset;
-+	struct resource *bus;
- 	u8 subordinate_bus;
- 	u8 secondary_bus;
- 	u32 cfg_control;
- 	u32 reg;
--	struct resource *bus = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS)->res;
- 
-+	ft = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS);
-+	if (!ft)
-+		return -EINVAL;
-+
-+	bus = ft->res;
- 	target_bus_cfg = &pcie->target_bus_cfg;
- 
- 	ecam_bus_mask = (pcie->ecam_size >> PCIE_ECAM_BUS_SHIFT) - 1;
-@@ -287,6 +293,8 @@ static void al_pcie_config_prepare(struct al_pcie *pcie)
- 	       FIELD_PREP(CFG_CONTROL_SEC_BUS_MASK, secondary_bus);
- 
- 	al_pcie_controller_writel(pcie, cfg_control_offset, reg);
-+
-+	return 0;
- }
- 
- static int al_pcie_host_init(struct dw_pcie_rp *pp)
-@@ -305,7 +313,9 @@ static int al_pcie_host_init(struct dw_pcie_rp *pp)
- 	if (rc)
- 		return rc;
- 
--	al_pcie_config_prepare(pcie);
-+	rc = al_pcie_config_prepare(pcie);
-+	if (rc < 0)
-+		return rc;
- 
- 	return 0;
- }
--- 
-2.30.2
+>
+>                         /*
 
+
+> --
+> 2.34.1
+>
