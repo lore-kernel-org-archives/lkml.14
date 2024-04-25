@@ -1,47 +1,69 @@
-Received: from mail.netfilter.org (mail.netfilter.org [217.70.188.207])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8539C28F7;
-	Thu, 25 Apr 2024 09:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.188.207
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D43584D0D;
+	Thu, 25 Apr 2024 09:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714037776; cv=none; b=PfqC2BF1CA0X1otmjN9yBPu4nR/vb/Mz1p0WETVhXaoFpanBQChifQ4Ir7yWJH+427/7TA7WzripVCp5dAsyDOFSdCJmh2TNJ6yxZSxX650B+V5t7fJKdhk70/vusXE8joeQt9xV6aJK6YyvAM1VaT7nD54XunPMsV3dK8qy0rM=
+	t=1714037817; cv=none; b=KbF/795+4rbD1EK+8ou/pRrmTd5D/02menh8eE1niyswSAnJS4NFEFKV/QlpPGMEGBBtmYWGbHiS6icxab3Ety8+WP/jeOitmLfOiWiw050ch9T4llhaN7zcMb0f2OVLFH2UYvhaCWmG+fR75AfB1UPzPLSkt4iPE8Y2D6XYw+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714037776; c=relaxed/simple;
-	bh=Bj0ZQY1fsfYT5ptnAo2M/eBI3dM8XVsmZlPJfOdCnWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DRJ2JhNCZ/T5unc2xqc+Cx/Ugjs5K8yru/mb6f1yD6LqFXm30bHIIFcdhy6lgn7IiWsT9T+JGxICQnzpKRcWFNygxN9/n64SAzXDA/BNegdXxXYsvVeCxCEiQbin36F5dcWI8gMXbaxfEzPj3gtcXzNDjoCJ+hGGhgAVcyEWz94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=netfilter.org; arc=none smtp.client-ip=217.70.188.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
-Date: Thu, 25 Apr 2024 11:36:11 +0200
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: linke li <lilinke99@qq.com>
-Cc: xujianhao01@gmail.com, Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] netfilter: mark racy access on ext->gen_id
-Message-ID: <ZiokCzm41m21CxLR@calendula>
-References: <tencent_284407955020261D1B2BD142194A87C9EB0A@qq.com>
+	s=arc-20240116; t=1714037817; c=relaxed/simple;
+	bh=3pcvK761P/K013DEjR4SL5qt0B7VaKS/V6j9YjhSotg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Oh2EcoBlmKsDDBJDZxAgH9jhnweKrt1xHqfVnAOEirU/x76+DNCXvV+fh4pUZRnK+0es1taxoswTXdehRlKTQGsQjrLTba6vBcX2ENINWAREeeaDpm1S5NWGja1NDrrEjDspsXDPFVVaqxlD8jRGIi9L4Nl1kbCcebitKOwb6FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VQ9dX4nXQzXlPP;
+	Thu, 25 Apr 2024 17:33:20 +0800 (CST)
+Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8D879180A9F;
+	Thu, 25 Apr 2024 17:36:51 +0800 (CST)
+Received: from hulk-vt.huawei.com (10.67.174.26) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 25 Apr 2024 17:36:51 +0800
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
+To: <longman@redhat.com>, <lizefan.x@bytedance.com>, <tj@kernel.org>,
+	<hannes@cmpxchg.org>
+CC: <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] cgroup/cpuset: Remove outdated comment in sched_partition_write()
+Date: Thu, 25 Apr 2024 09:30:16 +0000
+Message-ID: <20240425093016.1068567-1-xiujianfeng@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <tencent_284407955020261D1B2BD142194A87C9EB0A@qq.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
 
-On Tue, Apr 23, 2024 at 07:50:22PM +0800, linke li wrote:
-> In __nf_ct_ext_find(), ext->gen_id can be changed by 
-> nf_ct_ext_valid_post(), using WRITE_ONCE. Mark data races on ext->gen_id
-> as benign using READ_ONCE. 
-> 
-> This patch is aimed at reducing the number of benign races reported by
-> KCSAN in order to focus future debugging effort on harmful races.
+The comment here is outdated and can cause confusion, from the code
+perspective, there’s also no need for new comment, so just remove it.
 
-There are a more uses ext->gen_id in the code, my understanding this
-patch is just a stub.
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+---
+ kernel/cgroup/cpuset.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index f5443c039619..a10e4bd0c0c1 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -3774,9 +3774,6 @@ static ssize_t sched_partition_write(struct kernfs_open_file *of, char *buf,
+ 
+ 	buf = strstrip(buf);
+ 
+-	/*
+-	 * Convert "root" to ENABLED, and convert "member" to DISABLED.
+-	 */
+ 	if (!strcmp(buf, "root"))
+ 		val = PRS_ROOT;
+ 	else if (!strcmp(buf, "member"))
+-- 
+2.34.1
+
