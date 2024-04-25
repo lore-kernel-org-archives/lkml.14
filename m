@@ -1,72 +1,74 @@
-Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C638E14AD38
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 15:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.120.2.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD61C14B07A;
+	Thu, 25 Apr 2024 15:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714057507; cv=none; b=RjOtmJ1HBXyv6PpjTWPoMk3Y3IiWLQ9ZrO1gPQ6Tpl+BNuvEgSKyWDufxSnHNDeY9L6TG/MHA7p+bfEigB6Int9pT8v3rkd5Vmoj0AqC+6dwTF+dIpSH4nDcOc82UshggB/mlMAfHQoxvIJJRtH0QZ9ksTIT7rdwjrtB9Gsq+tI=
+	t=1714057507; cv=none; b=V60H/8cvK8EC3Q9lu5I2GDxGCOdd5iYzeSBJkVTwewKGWCN/O1THfkA0pxsJMhOeZS3dIHQroFAD9aFazum/+epvsAJa2R75PCFmAgPDpfu6RZExRPEv5nIaRy9Ww1QNBhVcVvBQqzCVw2u/FS6pnVibGkOhb9PlJnLYDPQydsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714057507; c=relaxed/simple;
-	bh=7GgKCZNA8YG4pda2cJjsXOmL0hF/aMYRDuq0OcqOcYg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WA2joxapQw5FWBwRj2/dVl0R86ev3FejUg3q1brLwS5VUjVN6siptcy1VwpFk+LO1H390YFRi6qcicYaI/chU9HnNnpfE+f6vCKZ+d91I2kgsu3CEFH1pntwCBMeALpPhXH2MGCHcnhbGA57jfGDwHGkv570ijQxu+PAuFogxbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn; spf=pass smtp.mailfrom=sjtu.edu.cn; arc=none smtp.client-ip=202.120.2.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sjtu.edu.cn
-Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
-	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id 05E30100460AA;
-	Thu, 25 Apr 2024 22:55:57 +0800 (CST)
-Received: from zhaoyf.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
-	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id D655C380D11;
-	Thu, 25 Apr 2024 22:55:52 +0800 (CST)
-From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
-To: jaegeuk@kernel.org,
-	chao@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	Yifan Zhao <zhaoyifan@sjtu.edu.cn>
-Subject: [f2fs-dev] [PATCH] f2fs: remove redundant parameter in is_next_segment_free()
-Date: Thu, 25 Apr 2024 22:55:28 +0800
-Message-ID: <20240425145528.2925372-1-zhaoyifan@sjtu.edu.cn>
-X-Mailer: git-send-email 2.44.0
+	bh=Ad9CMeQCfwBbypuBlH9YPi1w4Sfr5suUraBUndAtP30=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ozEnvcJLH0+f7WzjN1zFOnMUcH8kUPGPSVcZ/XfuUKUxt30kSzb4/bHfQNZfr70/MhXagJU9Kn1mMw8pHloqgSIDBmSm9PTkk/+6fNBp192xc8M+wDtvFJoQcjLBEoaFuZ+byKL1KrkFK7WNoF1DHo0m0vFFmgfbwnkx169Bmpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=qcMS9Dci; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qcMS9Dci"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Ce5t81AR4LLzMmw7ptIOBPkiZfOh30AXyQ1jcb4c9X0=; b=qcMS9Dciv3ySUmIgtvGkMaGAdY
+	h7bYPEdhfM3QW5df/VVQPAEl41AXD8vzCGBPPRhH6Aa1Ji5E+Jy9MNL+4skbUXRJp63qWDiQyFhGe
+	hNIQJYIy2Upvh0Rg+NaG60GKh1dt/clUxZo5JrH40RWLH5fqXVkTWabwgrnQTX7COgaM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1s00eY-00DzlT-0q; Thu, 25 Apr 2024 17:04:50 +0200
+Date: Thu, 25 Apr 2024 17:04:50 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Sky Huang <SkyLake.Huang@mediatek.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Qingfang Deng <dqfext@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Steven Liu <Steven.Liu@mediatek.com>
+Subject: Re: [PATCH 1/3] net: phy: mediatek: Re-organize MediaTek ethernet
+ phy drivers
+Message-ID: <8d9ef4a5-9bf5-4f59-89d0-86722f90e8eb@lunn.ch>
+References: <20240425023325.15586-1-SkyLake.Huang@mediatek.com>
+ <20240425023325.15586-2-SkyLake.Huang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240425023325.15586-2-SkyLake.Huang@mediatek.com>
 
-is_next_segment_free() takes a redundant `type` parameter. Remove it.
+On Thu, Apr 25, 2024 at 10:33:23AM +0800, Sky Huang wrote:
+> From: "SkyLake.Huang" <skylake.huang@mediatek.com>
+> 
+> Re-organize MediaTek ethernet phy driver files and get ready to integrate
+> some common functions and add new 2.5G phy driver.
+> mtk-ge.c: MT7530 Gphy on MT7621 & MT7531 Gphy
+> mtk-ge-soc.c: Built-in Gphy on MT7981 & Built-in switch Gphy on MT7988
+> mtk-2p5ge.c: Planned for built-in 2.5G phy on MT7988
+> 
+> Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
 
-Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
----
- fs/f2fs/segment.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 2206199e8099..8d63ddfe4a77 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -2645,7 +2645,7 @@ static void write_current_sum_page(struct f2fs_sb_info *sbi,
- }
- 
- static int is_next_segment_free(struct f2fs_sb_info *sbi,
--				struct curseg_info *curseg, int type)
-+				struct curseg_info *curseg)
- {
- 	unsigned int segno = curseg->segno + 1;
- 	struct free_segmap_info *free_i = FREE_I(sbi);
-@@ -3073,8 +3073,7 @@ static bool need_new_seg(struct f2fs_sb_info *sbi, int type)
- 	if (!is_set_ckpt_flags(sbi, CP_CRC_RECOVERY_FLAG) &&
- 	    curseg->seg_type == CURSEG_WARM_NODE)
- 		return true;
--	if (curseg->alloc_type == LFS &&
--	    is_next_segment_free(sbi, curseg, type) &&
-+	if (curseg->alloc_type == LFS && is_next_segment_free(sbi, curseg) &&
- 	    likely(!is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
- 		return true;
- 	if (!f2fs_need_SSR(sbi) || !get_ssr_segment(sbi, type, SSR, 0))
--- 
-2.44.0
-
+    Andrew
