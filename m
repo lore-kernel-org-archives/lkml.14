@@ -1,47 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A29B14C582;
-	Thu, 25 Apr 2024 14:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EB414D458;
+	Thu, 25 Apr 2024 14:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714054727; cv=none; b=t40UBMnHGSU3uhzbzpPXM7JbRk30jXIanNjqqh2z9yrf4LvaffkwPDglYTpdcWiqhiDSyWS4Qif8F1fZFvP4PoS6KYaoKVLShnmsMl/WwBahzwIFXbIFl8x5PR6rwh/+puon8lP/VoCoU3aPXehhF5QZssLykxOXq6eJ0+/255o=
+	t=1714054736; cv=none; b=jl0KQAM302FB3eKOH3po7BZGxM6uVhn+5J8qNUvIlpJYzWUfswl/bEs15gLnxsBcoMDHWfyFdTibvPOWm6yzUoQmh/lzOa1pkm8MnlE5xMdSF+RSqiFYtn5S01JtjYhKV5LkMdxXagWOBaqm/oxgAf7LWhDDtQbEG/a3y9lPKjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714054727; c=relaxed/simple;
-	bh=ESWbSHtB1sYd2PNOZW05mP2/usjIna6lAAdILv9hbEY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d89ON1QMpv3BhLDiaH/50pB9vAc16TOnzPX/nzih00lW3VVEbxnufass32065yIgVRV5HAzlQ4u2bnGy9tzUbu5IghQMmSrn9eojgI6qR1H3OzOuoPEjKgoABFAPArfemWKe56i3+h3rFL1uUTQSiE42xepltlpb4GA8PZEIhpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sa9k12wG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714054736; c=relaxed/simple;
+	bh=UBPaGDck/ZA8B0UL+DhBHPe29q64aPeqGGeJM+dyuCI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=deQe+5oCK0GgB8unnZGtAeAdgAvVlAxX9laj3guithbe5ecOlLPsMkl1IfDyDCCf2cmGNoey944h7Nu0sQSt2I981ThOgTSYO8I8SNAGM7rkuvHRC3J+cvZjvZf1zh3HWvuE33tRQU7h4KG+Vr4dml4f14wJ8RMXMrNS3GXXDOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AYSBz15Y; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sa9k12wG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AE44C113CC;
-	Thu, 25 Apr 2024 14:18:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714054727;
-	bh=ESWbSHtB1sYd2PNOZW05mP2/usjIna6lAAdILv9hbEY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sa9k12wGGpGxbwkeOxvRohUxeGWIFa1fhZhkmCr1ReENT05AfWrV1Fo7ied5033sh
-	 OatNNCPNFC5LytBie2c5YEw2QnmwtVRV6ospXdvXn1l7/sgbwQNIJveLEhcLtnb9CF
-	 lMXJoaoDXm9G8QIdBDlmiDB80zchT5VC82QBVC3Cjo0wGqZadvMVSd695P+GjhCh7t
-	 b3F2B4YXXAs1G6P7Uytl/ctdyl+9uV60mZmeP3pN1ahGqZXVluzTcK33JOY5wqEUS5
-	 l/Ot1aU/dl26brbLfyOebtoRRdQckWL4KGErejHMXmbfPLQLMipbXfqhXmxaAxTBGu
-	 2kPSh7JsIb+ow==
-From: Frederic Weisbecker <frederic@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	rcu <rcu@vger.kernel.org>
-Subject: [PATCH 3/4] rcu/nocb: Use kthread parking instead of ad-hoc implementation
-Date: Thu, 25 Apr 2024 16:18:34 +0200
-Message-ID: <20240425141835.19776-4-frederic@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240425141835.19776-1-frederic@kernel.org>
-References: <20240425141835.19776-1-frederic@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYSBz15Y"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6f055602a7aso60966b3a.2;
+        Thu, 25 Apr 2024 07:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714054734; x=1714659534; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lTCyLQe7nDmHhot+qoQJ7m3IRrdaLewXsdsXjVzXU/A=;
+        b=AYSBz15Ytuiq08/PrnZ/hs47WW+nLhFk4JWTeyUwRdUcrxH0fY78/r4TX9SIiMateZ
+         FoJWiYEYMGSfr8jsKyTtXi2+UtLdmnddvXAfeuJFaNZlqRruQvPf6/ESexDiisPBqdbU
+         Hg9wxMW9MQXyfxb/EVyuJp1buy4tGSvJryzBnC7eF3gNnCZSRO0PnO04E0X1A51BlDL7
+         0KkUVOmeeoL3uf2mkGE5kueE7J1U+7+adIZ8BwMRGfdBWxMHQ97t4UubaPBgmGVk4/lZ
+         85uMiXXXposjDJBWSp/Z9csxnbDa3YxZUP2DHyGQTbG1hx/ee5rWPCC7MxdHy+4K+Q3U
+         WXTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714054734; x=1714659534;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lTCyLQe7nDmHhot+qoQJ7m3IRrdaLewXsdsXjVzXU/A=;
+        b=Uiy/4GOv6KMRpgQV3H4+TOam5eelVVUwwhJLgEKVAO4nkNb0ry6dHjx7nIqxgSRN7x
+         ILyZGAJPhyEYrsjkCbdRPwtBAI/ayrQx67hsBzJCtD5CmRUcpsHjyO+zeklwefQoeMkC
+         AQgYzc1EPgc4eyYblP9WzuNZRePa6wF1hVExzjUCi4ICjYLWxwfOmVuqLIoaeGEwNDdc
+         YcaGw9mxxg2Jc0OLR5He2yT5sM3+6cITw6KeFTUSQ9MWWOwGMQgoaUQW54xdx+YR9nRF
+         qEwFZGin5hW1ChhBiio3Sf6RHHyxji7udpjgi2loKWO5ezQS4IFdTlmo1taKcC6yayzg
+         gBcg==
+X-Forwarded-Encrypted: i=1; AJvYcCWa7e5fUgCWoKV1/xXDAxx9SlLTEPNLjJDOmTX+UZzJDwRDxtHxnhvj3Kl8z088BvXb/kjwBSjwJVnjLx6tNivGpduMsvtNEj8InewSgPpnYR/qGwX8te7eqOM3hOYBEOGKExLSo29qToa3NHhQnzph+yTX5/4S/68amU+1eRkdnFH4IBIk7ti1QCaUtN9+K98/34ZBJKxM4+5kLw8FGa1ix+NQXkpB1fMGHGZx
+X-Gm-Message-State: AOJu0YxDa1ooAtH3jIkFP+oMpdln4DcN612crOLgY0C/J6RoeaiuGE+y
+	qDaWZPA3ZdtM1+qKgKVx70Kg4q4c+LFcRlhHY0aC6jSAhUga1YeS
+X-Google-Smtp-Source: AGHT+IGSbzNQ5Q2aqH8WFK/GHmRpJ8KMmzSOnYvA2G4nUIb6W2LU6jdyzHGGdGp79WdrjZhsPJZu3Q==
+X-Received: by 2002:a05:6a20:9055:b0:1a3:c621:da8d with SMTP id e21-20020a056a20905500b001a3c621da8dmr5190788pzc.1.1714054733442;
+        Thu, 25 Apr 2024 07:18:53 -0700 (PDT)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id go20-20020a056a003b1400b006e6233563cesm13162397pfb.218.2024.04.25.07.18.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Apr 2024 07:18:52 -0700 (PDT)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: colyli@suse.de,
+	kent.overstreet@linux.dev,
+	msakai@redhat.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	akpm@linux-foundation.org
+Cc: bfoster@redhat.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	jserv@ccns.ncku.edu.tw,
+	linux-bcache@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Kuan-Wei Chiu <visitorckw@gmail.com>
+Subject: [PATCH v4 04/16] lib min_heap: Add type safe interface
+Date: Thu, 25 Apr 2024 22:18:14 +0800
+Message-Id: <20240425141826.840077-5-visitorckw@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240425141826.840077-1-visitorckw@gmail.com>
+References: <20240425141826.840077-1-visitorckw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,399 +88,399 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Upon NOCB deoffloading, the rcuo kthread must be forced to sleep
-until the corresponding rdp is ever offloaded again. The deoffloader
-clears the SEGCBLIST_OFFLOADED flag, wakes up the rcuo kthread which
-then notices that change and clears in turn its SEGCBLIST_KTHREAD_CB
-flag before going to sleep, until it ever sees the SEGCBLIST_OFFLOADED
-flag again, should a re-offloading happen.
+Implement a type-safe interface for min_heap using strong type
+pointers instead of void * in the data field. This change includes
+adding small macro wrappers around functions, enabling the use of
+__minheap_cast and __minheap_obj_size macros for type casting and
+obtaining element size. This implementation removes the necessity of
+passing element size in min_heap_callbacks. Additionally, introduce the
+MIN_HEAP_PREALLOCATED macro for preallocating some elements.
 
-Upon NOCB offloading, the rcuo kthread must be forced to wake up and
-handle callbacks until the corresponding rdp is ever deoffloaded again.
-The offloader sets the SEGCBLIST_OFFLOADED flag, wakes up the rcuo
-kthread which then notices that change and sets in turn its
-SEGCBLIST_KTHREAD_CB flag before going to check callbacks, until it
-ever sees the SEGCBLIST_OFFLOADED flag cleared again, should a
-de-offloading happen again.
-
-This is all a crude ad-hoc and error-prone kthread (un-)parking
-re-implementation.
-
-Consolidate the behaviour with the appropriate API instead.
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Link: https://lkml.kernel.org/ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu
+Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
 ---
- include/linux/rcu_segcblist.h |  81 +++++++++++------------
- kernel/rcu/tree_nocb.h        | 117 ++++++++++------------------------
- 2 files changed, 71 insertions(+), 127 deletions(-)
+Changes in v4:
+- Change struct initializations to use designated initializers.
 
-diff --git a/include/linux/rcu_segcblist.h b/include/linux/rcu_segcblist.h
-index 8018045989af..ba95c06675e1 100644
---- a/include/linux/rcu_segcblist.h
-+++ b/include/linux/rcu_segcblist.h
-@@ -84,31 +84,31 @@ struct rcu_cblist {
-  *  ----------------------------------------------------------------------------
-  *                                         |
-  *                                         v
-- *                        -----------------------------------
-- *                        |                                 |
-- *                        v                                 v
-- *  ---------------------------------------  ----------------------------------|
-- *  |        SEGCBLIST_RCU_CORE   |       |  |     SEGCBLIST_RCU_CORE   |      |
-- *  |        SEGCBLIST_LOCKING    |       |  |     SEGCBLIST_LOCKING    |      |
-- *  |        SEGCBLIST_OFFLOADED  |       |  |     SEGCBLIST_OFFLOADED  |      |
-- *  |        SEGCBLIST_KTHREAD_CB         |  |     SEGCBLIST_KTHREAD_GP        |
-- *  |                                     |  |                                 |
-- *  |                                     |  |                                 |
-- *  | CB kthread woke up and              |  | GP kthread woke up and          |
-- *  | acknowledged SEGCBLIST_OFFLOADED.   |  | acknowledged SEGCBLIST_OFFLOADED|
-- *  | Processes callbacks concurrently    |  |                                 |
-- *  | with rcu_core(), holding            |  |                                 |
-- *  | nocb_lock.                          |  |                                 |
-- *  ---------------------------------------  -----------------------------------
-- *                        |                                 |
-- *                        -----------------------------------
-+ *  ----------------------------------------------------------------------------
-+ *  |        SEGCBLIST_RCU_CORE | SEGCBLIST_LOCKING | SEGCBLIST_OFFLOADED      |
-+ *  |                              + unparked CB kthread                       |
-+ *  |                                                                          |
-+ *  | CB kthread got unparked and processes callbacks concurrently with        |
-+ *  | rcu_core(), holding nocb_lock.                                           |
-+ *  ---------------------------------------------------------------------------
-+ *                                         |
-+ *                                         v
-+ *  ---------------------------------------------------------------------------|
-+ *  |                           SEGCBLIST_RCU_CORE |                           |
-+ *  |                           SEGCBLIST_LOCKING |                            |
-+ *  |                           SEGCBLIST_OFFLOADED |                          |
-+ *  |                           SEGCBLIST_KTHREAD_GP                           |
-+ *  |                           + unparked CB kthread                          |
-+ *  |                                                                          |
-+ *  | GP kthread woke up and acknowledged nocb_lock.                           |
-+ *  ---------------------------------------- -----------------------------------
-  *                                         |
-  *                                         v
-  *  |--------------------------------------------------------------------------|
-- *  |                           SEGCBLIST_LOCKING    |                         |
-- *  |                           SEGCBLIST_OFFLOADED  |                         |
-+ *  |                           SEGCBLIST_LOCKING |                            |
-+ *  |                           SEGCBLIST_OFFLOADED |                          |
-  *  |                           SEGCBLIST_KTHREAD_GP |                         |
-- *  |                           SEGCBLIST_KTHREAD_CB                           |
-+ *  |                           + unparked CB kthread                          |
-  *  |                                                                          |
-  *  |   Kthreads handle callbacks holding nocb_lock, local rcu_core() stops    |
-  *  |   handling callbacks. Enable bypass queueing.                            |
-@@ -124,8 +124,8 @@ struct rcu_cblist {
-  *  |--------------------------------------------------------------------------|
-  *  |                           SEGCBLIST_LOCKING    |                         |
-  *  |                           SEGCBLIST_OFFLOADED  |                         |
-- *  |                           SEGCBLIST_KTHREAD_CB |                         |
-  *  |                           SEGCBLIST_KTHREAD_GP                           |
-+ *  |                           + unparked CB kthread                          |
-  *  |                                                                          |
-  *  |   CB/GP kthreads handle callbacks holding nocb_lock, local rcu_core()    |
-  *  |   ignores callbacks. Bypass enqueue is enabled.                          |
-@@ -136,8 +136,8 @@ struct rcu_cblist {
-  *  |                           SEGCBLIST_RCU_CORE   |                         |
-  *  |                           SEGCBLIST_LOCKING    |                         |
-  *  |                           SEGCBLIST_OFFLOADED  |                         |
-- *  |                           SEGCBLIST_KTHREAD_CB |                         |
-  *  |                           SEGCBLIST_KTHREAD_GP                           |
-+ *  |                           + unparked CB kthread                          |
-  *  |                                                                          |
-  *  |   CB/GP kthreads handle callbacks holding nocb_lock, local rcu_core()    |
-  *  |   handles callbacks concurrently. Bypass enqueue is disabled.            |
-@@ -149,40 +149,31 @@ struct rcu_cblist {
-  *  |--------------------------------------------------------------------------|
-  *  |                           SEGCBLIST_RCU_CORE   |                         |
-  *  |                           SEGCBLIST_LOCKING    |                         |
-- *  |                           SEGCBLIST_KTHREAD_CB |                         |
-  *  |                           SEGCBLIST_KTHREAD_GP                           |
-+ *  |                           + unparked CB kthread                          |
-  *  |                                                                          |
-  *  |   CB/GP kthreads and local rcu_core() handle callbacks concurrently      |
-- *  |   holding nocb_lock. Wake up CB and GP kthreads if necessary.            |
-+ *  |   holding nocb_lock. Wake up GP kthread if necessary.                    |
-  *  ----------------------------------------------------------------------------
-  *                                      |
-  *                                      v
-- *                     -----------------------------------
-- *                     |                                 |
-- *                     v                                 v
-- *  ---------------------------------------------------------------------------|
-- *  |                                     |                                    |
-- *  |        SEGCBLIST_RCU_CORE |         |       SEGCBLIST_RCU_CORE |         |
-- *  |        SEGCBLIST_LOCKING  |         |       SEGCBLIST_LOCKING  |         |
-- *  |        SEGCBLIST_KTHREAD_CB         |       SEGCBLIST_KTHREAD_GP         |
-- *  |                                     |                                    |
-- *  | GP kthread woke up and              |   CB kthread woke up and           |
-- *  | acknowledged the fact that          |   acknowledged the fact that       |
-- *  | SEGCBLIST_OFFLOADED got cleared.    |   SEGCBLIST_OFFLOADED got cleared. |
-- *  |                                     |   The CB kthread goes to sleep     |
-- *  | The callbacks from the target CPU   |   until it ever gets re-offloaded. |
-- *  | will be ignored from the GP kthread |                                    |
-- *  | loop.                               |                                    |
-+ *  |--------------------------------------------------------------------------|
-+ *  |                           SEGCBLIST_RCU_CORE   |                         |
-+ *  |                           SEGCBLIST_LOCKING    |                         |
-+ *  |                           + unparked CB kthread                          |
-+ *  |                                                                          |
-+ *  |   GP kthread woke up and acknowledged the fact that SEGCBLIST_OFFLOADED  |
-+ *  |   got cleared. The callbacks from the target CPU will be ignored from the|
-+ *  |   GP kthread loop.                                                       |
-  *  ----------------------------------------------------------------------------
-- *                      |                                 |
-- *                      -----------------------------------
-  *                                      |
-  *                                      v
-  *  ----------------------------------------------------------------------------
-  *  |                SEGCBLIST_RCU_CORE | SEGCBLIST_LOCKING                    |
-+ *  |                          + parked CB kthread                             |
-  *  |                                                                          |
-- *  | Callbacks processed by rcu_core() from softirqs or local                 |
-- *  | rcuc kthread, while holding nocb_lock.                                   |
-+ *  | CB kthread is parked. Callbacks processed by rcu_core() from softirqs or |
-+ *  | local rcuc kthread, while holding nocb_lock.                             |
-  *  ----------------------------------------------------------------------------
-  *                                      |
-  *                                      v
-diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
-index 3f85577bddd4..808c9a19fe1d 100644
---- a/kernel/rcu/tree_nocb.h
-+++ b/kernel/rcu/tree_nocb.h
-@@ -635,8 +635,7 @@ static void call_rcu_nocb(struct rcu_data *rdp, struct rcu_head *head,
- 	}
+ drivers/md/dm-vdo/repair.c     |  9 ++--
+ drivers/md/dm-vdo/slab-depot.c |  5 +--
+ include/linux/min_heap.h       | 79 ++++++++++++++++++++++------------
+ kernel/events/core.c           | 11 ++---
+ lib/test_min_heap.c            | 13 +++---
+ 5 files changed, 70 insertions(+), 47 deletions(-)
+
+diff --git a/drivers/md/dm-vdo/repair.c b/drivers/md/dm-vdo/repair.c
+index defc9359f10e..48c266fa07b6 100644
+--- a/drivers/md/dm-vdo/repair.c
++++ b/drivers/md/dm-vdo/repair.c
+@@ -51,6 +51,8 @@ struct recovery_point {
+ 	bool increment_applied;
+ };
+ 
++MIN_HEAP(struct numbered_block_mapping, replay_heap);
++
+ struct repair_completion {
+ 	/* The completion header */
+ 	struct vdo_completion completion;
+@@ -97,7 +99,7 @@ struct repair_completion {
+ 	 * order, then original journal order. This permits efficient iteration over the journal
+ 	 * entries in order.
+ 	 */
+-	struct min_heap replay_heap;
++	struct replay_heap replay_heap;
+ 	/* Fields tracking progress through the journal entries. */
+ 	struct numbered_block_mapping *current_entry;
+ 	struct numbered_block_mapping *current_unfetched_entry;
+@@ -163,14 +165,13 @@ static void swap_mappings(void *item1, void *item2)
  }
  
--static int nocb_gp_toggle_rdp(struct rcu_data *rdp,
--			       bool *wake_state)
-+static int nocb_gp_toggle_rdp(struct rcu_data *rdp)
+ static const struct min_heap_callbacks repair_min_heap = {
+-	.elem_size = sizeof(struct numbered_block_mapping),
+ 	.less = mapping_is_less_than,
+ 	.swp = swap_mappings,
+ };
+ 
+ static struct numbered_block_mapping *sort_next_heap_element(struct repair_completion *repair)
  {
- 	struct rcu_segcblist *cblist = &rdp->cblist;
- 	unsigned long flags;
-@@ -650,8 +649,6 @@ static int nocb_gp_toggle_rdp(struct rcu_data *rdp,
- 		 * We will handle this rdp until it ever gets de-offloaded.
- 		 */
- 		rcu_segcblist_set_flags(cblist, SEGCBLIST_KTHREAD_GP);
--		if (rcu_segcblist_test_flags(cblist, SEGCBLIST_KTHREAD_CB))
--			*wake_state = true;
- 		ret = 1;
- 	} else if (!rcu_segcblist_test_flags(cblist, SEGCBLIST_OFFLOADED) &&
- 		   rcu_segcblist_test_flags(cblist, SEGCBLIST_KTHREAD_GP)) {
-@@ -660,8 +657,6 @@ static int nocb_gp_toggle_rdp(struct rcu_data *rdp,
- 		 * We will ignore this rdp until it ever gets re-offloaded.
- 		 */
- 		rcu_segcblist_clear_flags(cblist, SEGCBLIST_KTHREAD_GP);
--		if (!rcu_segcblist_test_flags(cblist, SEGCBLIST_KTHREAD_CB))
--			*wake_state = true;
- 		ret = 0;
- 	} else {
- 		WARN_ON_ONCE(1);
-@@ -877,16 +872,15 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
- 	}
+-	struct min_heap *heap = &repair->replay_heap;
++	struct replay_heap *heap = &repair->replay_heap;
+ 	struct numbered_block_mapping *last;
  
- 	if (rdp_toggling) {
--		bool wake_state = false;
- 		int ret;
- 
--		ret = nocb_gp_toggle_rdp(rdp_toggling, &wake_state);
-+		ret = nocb_gp_toggle_rdp(rdp_toggling);
- 		if (ret == 1)
- 			list_add_tail(&rdp_toggling->nocb_entry_rdp, &my_rdp->nocb_head_rdp);
- 		else if (ret == 0)
- 			list_del(&rdp_toggling->nocb_entry_rdp);
--		if (wake_state)
--			swake_up_one(&rdp_toggling->nocb_state_wq);
-+
-+		swake_up_one(&rdp_toggling->nocb_state_wq);
- 	}
- 
- 	my_rdp->nocb_gp_seq = -1;
-@@ -913,16 +907,9 @@ static int rcu_nocb_gp_kthread(void *arg)
- 	return 0;
+ 	if (heap->nr == 0)
+@@ -1117,7 +1118,7 @@ static void recover_block_map(struct vdo_completion *completion)
+ 	 * Organize the journal entries into a binary heap so we can iterate over them in sorted
+ 	 * order incrementally, avoiding an expensive sort call.
+ 	 */
+-	repair->replay_heap = (struct min_heap) {
++	repair->replay_heap = (struct replay_heap) {
+ 		.data = repair->entries,
+ 		.nr = repair->block_map_entry_count,
+ 		.size = repair->block_map_entry_count,
+diff --git a/drivers/md/dm-vdo/slab-depot.c b/drivers/md/dm-vdo/slab-depot.c
+index 46e4721e5b4f..f6ae6956f321 100644
+--- a/drivers/md/dm-vdo/slab-depot.c
++++ b/drivers/md/dm-vdo/slab-depot.c
+@@ -3309,7 +3309,6 @@ static void swap_slab_statuses(void *item1, void *item2)
  }
  
--static inline bool nocb_cb_can_run(struct rcu_data *rdp)
--{
--	u8 flags = SEGCBLIST_OFFLOADED | SEGCBLIST_KTHREAD_CB;
--
--	return rcu_segcblist_test_flags(&rdp->cblist, flags);
--}
--
- static inline bool nocb_cb_wait_cond(struct rcu_data *rdp)
+ static const struct min_heap_callbacks slab_status_min_heap = {
+-	.elem_size = sizeof(struct slab_status),
+ 	.less = slab_status_is_less_than,
+ 	.swp = swap_slab_statuses,
+ };
+@@ -3509,7 +3508,7 @@ static int get_slab_statuses(struct block_allocator *allocator,
+ static int __must_check vdo_prepare_slabs_for_allocation(struct block_allocator *allocator)
  {
--	return nocb_cb_can_run(rdp) && !READ_ONCE(rdp->nocb_cb_sleep);
-+	return !READ_ONCE(rdp->nocb_cb_sleep) || kthread_should_park();
- }
+ 	struct slab_status current_slab_status;
+-	struct min_heap heap;
++	MIN_HEAP(struct slab_status, heap) heap;
+ 	int result;
+ 	struct slab_status *slab_statuses;
+ 	struct slab_depot *depot = allocator->depot;
+@@ -3521,7 +3520,7 @@ static int __must_check vdo_prepare_slabs_for_allocation(struct block_allocator
+ 		return result;
  
- /*
-@@ -934,21 +921,19 @@ static void nocb_cb_wait(struct rcu_data *rdp)
- 	struct rcu_segcblist *cblist = &rdp->cblist;
- 	unsigned long cur_gp_seq;
- 	unsigned long flags;
--	bool needwake_state = false;
- 	bool needwake_gp = false;
--	bool can_sleep = true;
- 	struct rcu_node *rnp = rdp->mynode;
+ 	/* Sort the slabs by cleanliness, then by emptiness hint. */
+-	heap = (struct min_heap) {
++	heap = (struct heap) {
+ 		.data = slab_statuses,
+ 		.nr = allocator->slab_count,
+ 		.size = allocator->slab_count,
+diff --git a/include/linux/min_heap.h b/include/linux/min_heap.h
+index d52daf45861b..87737cadb9a5 100644
+--- a/include/linux/min_heap.h
++++ b/include/linux/min_heap.h
+@@ -7,45 +7,53 @@
+ #include <linux/types.h>
  
--	do {
--		swait_event_interruptible_exclusive(rdp->nocb_cb_wq,
--						    nocb_cb_wait_cond(rdp));
--
--		if (READ_ONCE(rdp->nocb_cb_sleep)) {
--			WARN_ON(signal_pending(current));
--			trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("WokeEmpty"));
--		}
--	} while (!nocb_cb_can_run(rdp));
-+	swait_event_interruptible_exclusive(rdp->nocb_cb_wq,
-+					    nocb_cb_wait_cond(rdp));
-+	if (kthread_should_park()) {
-+		kthread_parkme();
-+	} else if (READ_ONCE(rdp->nocb_cb_sleep)) {
-+		WARN_ON(signal_pending(current));
-+		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("WokeEmpty"));
-+	}
+ /**
+- * struct min_heap - Data structure to hold a min-heap.
+- * @data: Start of array holding the heap elements.
++ * Data structure to hold a min-heap.
+  * @nr: Number of elements currently in the heap.
+  * @size: Maximum number of elements that can be held in current storage.
++ * @data: Pointer to the start of array holding the heap elements.
++ * @preallocated: Start of the static preallocated array holding the heap elements.
+  */
+-struct min_heap {
+-	void *data;
+-	int nr;
+-	int size;
+-};
++#define MIN_HEAP_PREALLOCATED(_type, _name, _nr)	\
++struct _name {	\
++	int nr;	\
++	int size;	\
++	_type *data;	\
++	_type preallocated[_nr];	\
++}
++
++#define MIN_HEAP(_type, _name) MIN_HEAP_PREALLOCATED(_type, _name, 0)
++
++typedef MIN_HEAP(char, min_heap_char) min_heap_char;
++
++#define __minheap_cast(_heap)		(typeof((_heap)->data[0]) *)
++#define __minheap_obj_size(_heap)	sizeof((_heap)->data[0])
  
-+	WARN_ON_ONCE(!rcu_rdp_is_offloaded(rdp));
+ /**
+  * struct min_heap_callbacks - Data/functions to customise the min_heap.
+- * @elem_size: The nr of each element in bytes.
+  * @less: Partial order function for this heap.
+  * @swp: Swap elements function.
+  */
+ struct min_heap_callbacks {
+-	int elem_size;
+ 	bool (*less)(const void *lhs, const void *rhs);
+ 	void (*swp)(void *lhs, void *rhs);
+ };
  
- 	local_irq_save(flags);
- 	rcu_momentary_dyntick_idle();
-@@ -971,37 +956,16 @@ static void nocb_cb_wait(struct rcu_data *rdp)
- 		raw_spin_unlock_rcu_node(rnp); /* irqs remain disabled. */
+ /* Sift the element at pos down the heap. */
+ static __always_inline
+-void min_heapify(struct min_heap *heap, int pos,
++void __min_heapify(min_heap_char *heap, int pos, size_t elem_size,
+ 		const struct min_heap_callbacks *func)
+ {
+ 	void *left, *right;
+ 	void *data = heap->data;
+-	void *root = data + pos * func->elem_size;
++	void *root = data + pos * elem_size;
+ 	int i = pos, j;
+ 
+ 	/* Find the sift-down path all the way to the leaves. */
+ 	for (;;) {
+ 		if (i * 2 + 2 >= heap->nr)
+ 			break;
+-		left = data + (i * 2 + 1) * func->elem_size;
+-		right = data + (i * 2 + 2) * func->elem_size;
++		left = data + (i * 2 + 1) * elem_size;
++		right = data + (i * 2 + 2) * elem_size;
+ 		i = func->less(left, right) ? i * 2 + 1 : i * 2 + 2;
  	}
  
--	if (rcu_segcblist_test_flags(cblist, SEGCBLIST_OFFLOADED)) {
--		if (!rcu_segcblist_test_flags(cblist, SEGCBLIST_KTHREAD_CB)) {
--			rcu_segcblist_set_flags(cblist, SEGCBLIST_KTHREAD_CB);
--			if (rcu_segcblist_test_flags(cblist, SEGCBLIST_KTHREAD_GP))
--				needwake_state = true;
--		}
--		if (rcu_segcblist_ready_cbs(cblist))
--			can_sleep = false;
--	} else {
--		/*
--		 * De-offloading. Clear our flag and notify the de-offload worker.
--		 * We won't touch the callbacks and keep sleeping until we ever
--		 * get re-offloaded.
--		 */
--		WARN_ON_ONCE(!rcu_segcblist_test_flags(cblist, SEGCBLIST_KTHREAD_CB));
--		rcu_segcblist_clear_flags(cblist, SEGCBLIST_KTHREAD_CB);
--		if (!rcu_segcblist_test_flags(cblist, SEGCBLIST_KTHREAD_GP))
--			needwake_state = true;
--	}
--
--	WRITE_ONCE(rdp->nocb_cb_sleep, can_sleep);
--
--	if (rdp->nocb_cb_sleep)
-+	if (!rcu_segcblist_ready_cbs(cblist)) {
-+		WRITE_ONCE(rdp->nocb_cb_sleep, true);
- 		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("CBSleep"));
-+	} else {
-+		WRITE_ONCE(rdp->nocb_cb_sleep, false);
-+	}
+@@ -54,31 +62,37 @@ void min_heapify(struct min_heap *heap, int pos,
+ 		i = i * 2 + 1;
  
- 	rcu_nocb_unlock_irqrestore(rdp, flags);
- 	if (needwake_gp)
- 		rcu_gp_kthread_wake();
--
--	if (needwake_state)
--		swake_up_one(&rdp->nocb_state_wq);
+ 	/* Backtrack to the correct location. */
+-	while (i != pos && func->less(root, data + i * func->elem_size))
++	while (i != pos && func->less(root, data + i * elem_size))
+ 		i = (i - 1) / 2;
+ 
+ 	/* Shift the element into its correct place. */
+ 	j = i;
+ 	while (i != pos) {
+ 		i = (i - 1) / 2;
+-		func->swp(data + i * func->elem_size, data + j * func->elem_size);
++		func->swp(data + i * elem_size, data + j * elem_size);
+ 	}
  }
  
++#define min_heapify(_heap, _pos, _func)	\
++	__min_heapify((min_heap_char *)_heap, _pos, __minheap_obj_size(_heap), _func)
++
+ /* Floyd's approach to heapification that is O(nr). */
+ static __always_inline
+-void min_heapify_all(struct min_heap *heap,
++void __min_heapify_all(min_heap_char *heap, size_t elem_size,
+ 		const struct min_heap_callbacks *func)
+ {
+ 	int i;
+ 
+ 	for (i = heap->nr / 2 - 1; i >= 0; i--)
+-		min_heapify(heap, i, func);
++		__min_heapify(heap, i, elem_size, func);
+ }
+ 
++#define min_heapify_all(_heap, _func)	\
++	__min_heapify_all((min_heap_char *)_heap, __minheap_obj_size(_heap), _func)
++
+ /* Remove minimum element from the heap, O(log2(nr)). */
+ static __always_inline
+-void min_heap_pop(struct min_heap *heap,
++void __min_heap_pop(min_heap_char *heap, size_t elem_size,
+ 		const struct min_heap_callbacks *func)
+ {
+ 	void *data = heap->data;
+@@ -88,27 +102,33 @@ void min_heap_pop(struct min_heap *heap,
+ 
+ 	/* Place last element at the root (position 0) and then sift down. */
+ 	heap->nr--;
+-	memcpy(data, data + (heap->nr * func->elem_size), func->elem_size);
+-	min_heapify(heap, 0, func);
++	memcpy(data, data + (heap->nr * elem_size), elem_size);
++	__min_heapify(heap, 0, elem_size, func);
+ }
+ 
++#define min_heap_pop(_heap, _func)	\
++	__min_heap_pop((min_heap_char *)_heap, __minheap_obj_size(_heap), _func)
++
  /*
-@@ -1094,17 +1058,8 @@ static int rdp_offload_toggle(struct rcu_data *rdp,
- 	bool wake_gp = false;
+  * Remove the minimum element and then push the given element. The
+  * implementation performs 1 sift (O(log2(nr))) and is therefore more
+  * efficient than a pop followed by a push that does 2.
+  */
+ static __always_inline
+-void min_heap_pop_push(struct min_heap *heap,
+-		const void *element,
++void __min_heap_pop_push(min_heap_char *heap,
++		const void *element, size_t elem_size,
+ 		const struct min_heap_callbacks *func)
+ {
+-	memcpy(heap->data, element, func->elem_size);
+-	min_heapify(heap, 0, func);
++	memcpy(heap->data, element, elem_size);
++	__min_heapify(heap, 0, elem_size, func);
+ }
  
- 	rcu_segcblist_offload(cblist, offload);
--
--	if (rdp->nocb_cb_sleep)
--		rdp->nocb_cb_sleep = false;
- 	rcu_nocb_unlock_irqrestore(rdp, flags);
++#define min_heap_pop_push(_heap, _element, _func)	\
++	__min_heap_pop_push((min_heap_char *)_heap, _element, __minheap_obj_size(_heap), _func)
++
+ /* Push an element on to the heap, O(log2(nr)). */
+ static __always_inline
+-void min_heap_push(struct min_heap *heap, const void *element,
++void __min_heap_push(min_heap_char *heap, const void *element, size_t elem_size,
+ 		const struct min_heap_callbacks *func)
+ {
+ 	void *data = heap->data;
+@@ -120,17 +140,20 @@ void min_heap_push(struct min_heap *heap, const void *element,
  
--	/*
--	 * Ignore former value of nocb_cb_sleep and force wake up as it could
--	 * have been spuriously set to false already.
--	 */
--	swake_up_one(&rdp->nocb_cb_wq);
--
- 	raw_spin_lock_irqsave(&rdp_gp->nocb_gp_lock, flags);
- 	// Queue this rdp for add/del to/from the list to iterate on rcuog
- 	WRITE_ONCE(rdp_gp->nocb_toggling_rdp, rdp);
-@@ -1161,19 +1116,11 @@ static long rcu_nocb_rdp_deoffload(void *arg)
- 		if (wake_gp)
- 			wake_up_process(rdp_gp->nocb_gp_kthread);
+ 	/* Place at the end of data. */
+ 	pos = heap->nr;
+-	memcpy(data + (pos * func->elem_size), element, func->elem_size);
++	memcpy(data + (pos * elem_size), element, elem_size);
+ 	heap->nr++;
  
--		/*
--		 * If rcuo[p] kthread spawn failed, directly remove SEGCBLIST_KTHREAD_CB.
--		 * Just wait SEGCBLIST_KTHREAD_GP to be cleared by rcuog.
--		 */
--		if (!rdp->nocb_cb_kthread) {
--			rcu_nocb_lock_irqsave(rdp, flags);
--			rcu_segcblist_clear_flags(&rdp->cblist, SEGCBLIST_KTHREAD_CB);
--			rcu_nocb_unlock_irqrestore(rdp, flags);
--		}
--
- 		swait_event_exclusive(rdp->nocb_state_wq,
--					!rcu_segcblist_test_flags(cblist,
--					  SEGCBLIST_KTHREAD_CB | SEGCBLIST_KTHREAD_GP));
-+				      !rcu_segcblist_test_flags(cblist,
-+								SEGCBLIST_KTHREAD_GP));
-+		if (rdp->nocb_cb_kthread)
-+			kthread_park(rdp->nocb_cb_kthread);
+ 	/* Sift child at pos up. */
+ 	for (; pos > 0; pos = (pos - 1) / 2) {
+-		child = data + (pos * func->elem_size);
+-		parent = data + ((pos - 1) / 2) * func->elem_size;
++		child = data + (pos * elem_size);
++		parent = data + ((pos - 1) / 2) * elem_size;
+ 		if (func->less(parent, child))
+ 			break;
+ 		func->swp(parent, child);
+ 	}
+ }
+ 
++#define min_heap_push(_heap, _element, _func)	\
++	__min_heap_push((min_heap_char *)_heap, _element, __minheap_obj_size(_heap), _func)
++
+ #endif /* _LINUX_MIN_HEAP_H */
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 10ac2db83f14..55930479599b 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3698,13 +3698,14 @@ static void swap_ptr(void *l, void *r)
+ 	swap(*lp, *rp);
+ }
+ 
++MIN_HEAP(struct perf_event *, perf_event_min_heap);
++
+ static const struct min_heap_callbacks perf_min_heap = {
+-	.elem_size = sizeof(struct perf_event *),
+ 	.less = perf_less_group_idx,
+ 	.swp = swap_ptr,
+ };
+ 
+-static void __heap_add(struct min_heap *heap, struct perf_event *event)
++static void __heap_add(struct perf_event_min_heap *heap, struct perf_event *event)
+ {
+ 	struct perf_event **itrs = heap->data;
+ 
+@@ -3738,7 +3739,7 @@ static noinline int visit_groups_merge(struct perf_event_context *ctx,
+ 	struct perf_cpu_context *cpuctx = NULL;
+ 	/* Space for per CPU and/or any CPU event iterators. */
+ 	struct perf_event *itrs[2];
+-	struct min_heap event_heap;
++	struct perf_event_min_heap event_heap;
+ 	struct perf_event **evt;
+ 	int ret;
+ 
+@@ -3747,7 +3748,7 @@ static noinline int visit_groups_merge(struct perf_event_context *ctx,
+ 
+ 	if (!ctx->task) {
+ 		cpuctx = this_cpu_ptr(&perf_cpu_context);
+-		event_heap = (struct min_heap){
++		event_heap = (struct perf_event_min_heap){
+ 			.data = cpuctx->heap,
+ 			.nr = 0,
+ 			.size = cpuctx->heap_size,
+@@ -3760,7 +3761,7 @@ static noinline int visit_groups_merge(struct perf_event_context *ctx,
+ 			css = &cpuctx->cgrp->css;
+ #endif
  	} else {
- 		/*
- 		 * No kthread to clear the flags for us or remove the rdp from the nocb list
-@@ -1181,8 +1128,7 @@ static long rcu_nocb_rdp_deoffload(void *arg)
- 		 * but we stick to paranoia in this rare path.
- 		 */
- 		rcu_nocb_lock_irqsave(rdp, flags);
--		rcu_segcblist_clear_flags(&rdp->cblist,
--				SEGCBLIST_KTHREAD_CB | SEGCBLIST_KTHREAD_GP);
-+		rcu_segcblist_clear_flags(&rdp->cblist, SEGCBLIST_KTHREAD_GP);
- 		rcu_nocb_unlock_irqrestore(rdp, flags);
+-		event_heap = (struct min_heap){
++		event_heap = (struct perf_event_min_heap){
+ 			.data = itrs,
+ 			.nr = 0,
+ 			.size = ARRAY_SIZE(itrs),
+diff --git a/lib/test_min_heap.c b/lib/test_min_heap.c
+index 7b01b4387cfb..dd5c0fa862ab 100644
+--- a/lib/test_min_heap.c
++++ b/lib/test_min_heap.c
+@@ -11,6 +11,8 @@
+ #include <linux/printk.h>
+ #include <linux/random.h>
  
- 		list_del(&rdp->nocb_entry_rdp);
-@@ -1282,8 +1228,10 @@ static long rcu_nocb_rdp_offload(void *arg)
- 	wake_gp = rdp_offload_toggle(rdp, true, flags);
- 	if (wake_gp)
- 		wake_up_process(rdp_gp->nocb_gp_kthread);
++MIN_HEAP(int, min_heap_test);
 +
-+	kthread_unpark(rdp->nocb_cb_kthread);
-+
- 	swait_event_exclusive(rdp->nocb_state_wq,
--			      rcu_segcblist_test_flags(cblist, SEGCBLIST_KTHREAD_CB) &&
- 			      rcu_segcblist_test_flags(cblist, SEGCBLIST_KTHREAD_GP));
+ static __init bool less_than(const void *lhs, const void *rhs)
+ {
+ 	return *(int *)lhs < *(int *)rhs;
+@@ -30,7 +32,7 @@ static __init void swap_ints(void *lhs, void *rhs)
+ }
  
- 	/*
-@@ -1468,7 +1416,7 @@ void __init rcu_init_nohz(void)
- 		if (rcu_segcblist_empty(&rdp->cblist))
- 			rcu_segcblist_init(&rdp->cblist);
- 		rcu_segcblist_offload(&rdp->cblist, true);
--		rcu_segcblist_set_flags(&rdp->cblist, SEGCBLIST_KTHREAD_CB | SEGCBLIST_KTHREAD_GP);
-+		rcu_segcblist_set_flags(&rdp->cblist, SEGCBLIST_KTHREAD_GP);
- 		rcu_segcblist_clear_flags(&rdp->cblist, SEGCBLIST_RCU_CORE);
- 	}
- 	rcu_organize_nocb_kthreads();
-@@ -1526,11 +1474,16 @@ static void rcu_spawn_cpu_nocb_kthread(int cpu)
- 	mutex_unlock(&rdp_gp->nocb_gp_kthread_mutex);
- 
- 	/* Spawn the kthread for this CPU. */
--	t = kthread_run(rcu_nocb_cb_kthread, rdp,
--			"rcuo%c/%d", rcu_state.abbr, cpu);
-+	t = kthread_create(rcu_nocb_cb_kthread, rdp,
-+			   "rcuo%c/%d", rcu_state.abbr, cpu);
- 	if (WARN_ONCE(IS_ERR(t), "%s: Could not start rcuo CB kthread, OOM is now expected behavior\n", __func__))
- 		goto end;
- 
-+	if (rcu_rdp_is_offloaded(rdp))
-+		wake_up_process(t);
-+	else
-+		kthread_park(t);
-+
- 	if (IS_ENABLED(CONFIG_RCU_NOCB_CPU_CB_BOOST) && kthread_prio)
- 		sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
- 
+ static __init int pop_verify_heap(bool min_heap,
+-				struct min_heap *heap,
++				struct min_heap_test *heap,
+ 				const struct min_heap_callbacks *funcs)
+ {
+ 	int *values = heap->data;
+@@ -63,13 +65,12 @@ static __init int test_heapify_all(bool min_heap)
+ {
+ 	int values[] = { 3, 1, 2, 4, 0x8000000, 0x7FFFFFF, 0,
+ 			 -3, -1, -2, -4, 0x8000000, 0x7FFFFFF };
+-	struct min_heap heap = {
++	struct min_heap_test heap = {
+ 		.data = values,
+ 		.nr = ARRAY_SIZE(values),
+ 		.size =  ARRAY_SIZE(values),
+ 	};
+ 	struct min_heap_callbacks funcs = {
+-		.elem_size = sizeof(int),
+ 		.less = min_heap ? less_than : greater_than,
+ 		.swp = swap_ints,
+ 	};
+@@ -96,13 +97,12 @@ static __init int test_heap_push(bool min_heap)
+ 	const int data[] = { 3, 1, 2, 4, 0x80000000, 0x7FFFFFFF, 0,
+ 			     -3, -1, -2, -4, 0x80000000, 0x7FFFFFFF };
+ 	int values[ARRAY_SIZE(data)];
+-	struct min_heap heap = {
++	struct min_heap_test heap = {
+ 		.data = values,
+ 		.nr = 0,
+ 		.size =  ARRAY_SIZE(values),
+ 	};
+ 	struct min_heap_callbacks funcs = {
+-		.elem_size = sizeof(int),
+ 		.less = min_heap ? less_than : greater_than,
+ 		.swp = swap_ints,
+ 	};
+@@ -129,13 +129,12 @@ static __init int test_heap_pop_push(bool min_heap)
+ 	const int data[] = { 3, 1, 2, 4, 0x80000000, 0x7FFFFFFF, 0,
+ 			     -3, -1, -2, -4, 0x80000000, 0x7FFFFFFF };
+ 	int values[ARRAY_SIZE(data)];
+-	struct min_heap heap = {
++	struct min_heap_test heap = {
+ 		.data = values,
+ 		.nr = 0,
+ 		.size =  ARRAY_SIZE(values),
+ 	};
+ 	struct min_heap_callbacks funcs = {
+-		.elem_size = sizeof(int),
+ 		.less = min_heap ? less_than : greater_than,
+ 		.swp = swap_ints,
+ 	};
 -- 
-2.44.0
+2.34.1
 
