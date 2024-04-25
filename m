@@ -1,101 +1,138 @@
-Received: from read.uberspace.de (read.uberspace.de [185.26.156.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93AA12C466
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 15:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB80414BF90;
+	Thu, 25 Apr 2024 15:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714059851; cv=none; b=pJzuTviQ0KvYtFNSdy02Bp8O7sYkdO5EfpKbGny5uSfHKwSltG/8O4YqISt16HaTBoIlr6qZBClS/X4vbb6gphBQvJc+I4gOBDtirmI5fcl4MqX0nxKhCRLqTKetgX7cGm/gSlGNVrsiq2d+QhQ1F6gjr1tn0Ehsa3ZnFxcg4iY=
+	t=1714059852; cv=none; b=eydTmPku6QQ8EFtGs95CLoBruAseEA+6gMVIhPGApfzm94yS4gz3ufKBHlNSW9kYm2XwinvcMPBYZaQFF4HXMUeYwGuzb2S+zqEx9a+bHBUlawWz3rdR36hfPHlSQHBzJ9TBkB80KW0E65hxJbTSnDKAyiPwI+C0OyvqtMkQAao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714059851; c=relaxed/simple;
-	bh=rKhcjnXo7EOIqnD76pPnNap0PU85LBwHgM50XLVgpJw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ite8XJvVNUJ3obyePGGE4h2zkY8DCuU57gfQGGwxiqe7vOYJrHCaUenR1QsNLcFm1Knl3i5LTCxM9/UniW6+5zTQmXiICnNevB2Hn3JW7cAZZaD8lg78L3e8SihUYN1efj4R6WMZ2FMzg4c/1fPYuOFOIVeF0I+4wP8UKm3S23c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=florommel.de; spf=pass smtp.mailfrom=florommel.de; dkim=fail (0-bit key) header.d=florommel.de header.i=@florommel.de header.b=s8o6289M reason="key not found in DNS"; arc=none smtp.client-ip=185.26.156.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=florommel.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=florommel.de
+	s=arc-20240116; t=1714059852; c=relaxed/simple;
+	bh=kA/D6zVPXYWszEjkvYSf0smpFm+zOmzsl5H0CAhJfi0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SS2ePyuRoSJ31A6I0AQdAz6KgPFcHr/mLm027hGv83Z7c7A+0f6TZbBQGxbJGZsmdJrDmaneFEFlBvRH0zx3F/GIVaL6J7WT2H2pJSgVkXZEuy/DXa5kq/jQg2NKQQQhwhRs1GRwwYhiWvUwehQjA8DDvD+8SzzVAawn6nvcmGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jy7Tb4TZ; arc=none smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=florommel.de header.i=@florommel.de header.b="s8o6289M"
-Received: (qmail 30677 invoked by uid 990); 25 Apr 2024 15:36:37 -0000
-Authentication-Results: read.uberspace.de;
-	auth=pass (plain)
-Received: from unknown (HELO unkown) (::1)
-	by read.uberspace.de (Haraka/3.0.1) with ESMTPSA; Thu, 25 Apr 2024 17:36:37 +0200
-From: Florian Rommel <mail@florommel.de>
-To: Jan Kiszka <jan.kiszka@siemens.com>,
-	Kieran Bingham <kbingham@kernel.org>
-Cc: Kuan-Ying Lee <Kuan-Ying.Lee@mediatek.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Deepak Gupta <debug@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	Florian Rommel <mail@florommel.de>
-Subject: [PATCH 2/4] scripts/gdb: Fix parameter handling in $lx_per_cpu
-Date: Thu, 25 Apr 2024 17:34:59 +0200
-Message-ID: <20240425153501.749966-3-mail@florommel.de>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240425153501.749966-1-mail@florommel.de>
-References: <20240425153501.749966-1-mail@florommel.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jy7Tb4TZ"
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-479de34dc36so437506137.1;
+        Thu, 25 Apr 2024 08:44:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714059850; x=1714664650; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iR/AyfcnU5bia8L6mI9WG+m8xZ5cR1LfRzpwQN9yZhM=;
+        b=Jy7Tb4TZ3plaBKNRou6OAt6K1d/cyc63bV4OKR4GlkzrcvcUtiVTYKk/2SJADwB2bg
+         EaF8yatdbsewdhJpwiSJdqqyGxMvfGAZgo07ros0jH3qAKMBz3AtBL2ziWS7B0vfi9JZ
+         +abpzwwIScZ21hSB94XHAturTZNhZlGFGR/q0HEk+4Ryed+f5Fhg5B5RRq0+loxreBPh
+         Fj5mZvC3cVI76ANQ9YC/GI4NHsqa315hachBA14UaEMbeM2r4qCCb4GzF3CnTRxP/5xx
+         1ZQ6MrAXpMx1eV5S6XVniItC6z0nj2m/zwieZUvQmdZZ6nMyo9CyOCOQUR/z03OnjXev
+         S7Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714059850; x=1714664650;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iR/AyfcnU5bia8L6mI9WG+m8xZ5cR1LfRzpwQN9yZhM=;
+        b=eQFerOCUEW7cBYHJMzitf+DgVxjk8NVrF5GZu2/KcftqQXuSbIRCvxZgtEkZhxSly7
+         54tAJnRbarNNRIpxPI/C7sFbMvObH6LNI9GUBk8w5dd1OOJ77jrca+kP8KWCOxRovxaW
+         6YtfIrF/ChwyR4Sd44ol10MuQAzhkNTegJ8Z30srKT7+61gF73dfA3NvvJniN3gSjTM3
+         H9tubieJzejolIZv89n6ikaUrcRFpI/8Lc6i0L4hZWGgTzioMIudghdDmH4yYLQWZl4Z
+         h+2pxxoUrK3Z/zKLzZ5hV/ZbLMBIGDesh1MaIcDtCdr9MrYIwJqPn4NT9lSAHMqyRf+q
+         XB0w==
+X-Forwarded-Encrypted: i=1; AJvYcCURDHHdN4x6iYPZbM3fCsKnJAg1OwPeO5kKMTIOWImWm/NK89qyf5ozEBWokvsJBuZMCbgJz2x2PQ35AFKNdEM5EDyF2OscmPrrkkb/2wRZqxk1tqILpKBFgegGeDMe5r6Jelr6E7cz7yUUeivPyyCrI+HhGgBR6g2P+/Vstbz+cZ5vHenOCorAoKaioojmSS7gm7DbZwLQIRMwj12wW2GQbPVAg526
+X-Gm-Message-State: AOJu0Yx6sMi1kdwGjoziNiyo1JLDXpnPRnwvkJq8WfhIm3Hv6+bLiJ3p
+	4Y1t59Mmitk7YK1QLvI/zBJTGVKFnC97Z8kuCfdjL4n1HKKOO5jKT3pGig5g9819jSwwcRoy5Ak
+	TcAeJNT8xLZO+aSEzLnRJNYkD+Jk=
+X-Google-Smtp-Source: AGHT+IFxZFKxyvkvDsztzyBVqo6Z2bFHlhiyFlQQf6hu37wkpPlB+vINFBMirYxG2K7XXSgfChsLzeevVqM7rx5Erkg=
+X-Received: by 2002:a05:6122:552:b0:4cb:fc25:7caa with SMTP id
+ y18-20020a056122055200b004cbfc257caamr7129680vko.14.1714059849704; Thu, 25
+ Apr 2024 08:44:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Bar: ----
-X-Rspamd-Report: REPLY(-4) BAYES_HAM(-2.999346) MID_CONTAINS_FROM(1) MIME_GOOD(-0.1) SUBJECT_HAS_CURRENCY(1) R_MISSING_CHARSET(0.5)
-X-Rspamd-Score: -4.599346
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=florommel.de; s=uberspace;
-	h=from:to:cc:subject:date;
-	bh=rKhcjnXo7EOIqnD76pPnNap0PU85LBwHgM50XLVgpJw=;
-	b=s8o6289MZARO/X/Z0VB9amQLyMNS/bZtWfozd/ZPxw5DbaHlseMDtTsKmEpcwgCav6cUJchfu/
-	Xt60+GOWgYMi5rbp33stbGgmvADMzLo7hyBV3R+oHqxKQKzJyVvUtoPgy4BZae2XHIo+X1gyu2Kr
-	vhI5fY7bm7+dOz4dftXM0lqdTjhBjR+qwS2XN15jdC45eSRSf1sn4+G0+Yl20FPnQPIWansL6l0r
-	FI7gDjIbP22PUUO9ZDSO/w8o2K6LKGWQ0Hv9KdI29E/ZjY0K9SvNvhs/B+1J+vbEJDp1QFKqz7Gg
-	YXlTF9uhowo9UCC4LmW/HcRqtL07jvT0kaiekINKMIEb+RddhkA69YSrYnLvcB4TGtZEsOlb+wwZ
-	z5Iy00uRvr6Vj0t0IgRys0zv3HhD2imd6uGMCW+9+ix3dMCKba5SQyN338OEZPck8fu0xd0Q+SV7
-	IxXGpFu1evMeceEQTKI9o5Vd9bD8s8ZdoQxJbZ7RWx6CKmo614G8rCUxbjmBAuXc34aLgtiRwHvJ
-	APcTHZQeK8fUidtGeQo0Co3UHro/LdoS9yiMW9EmxqmXJNRm9wYT3Rcd9nGz/x2rYenuVoQfHm6B
-	SmqeEzMoMguT78ITakw4c9EMeDjshewNvJXSMiG9eV+0lVz5X+KxinDTV5xoZDAPyYAsUsdjINVJ
-	s=
+References: <20240423182428.704159-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240423182428.704159-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <7a3d4b8a-e89e-499e-92b7-9f63fbc84011@kernel.org>
+In-Reply-To: <7a3d4b8a-e89e-499e-92b7-9f63fbc84011@kernel.org>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Thu, 25 Apr 2024 16:43:28 +0100
+Message-ID: <CA+V-a8uz0OrsM1AxqtpeHB0f1+F6aEqHGp_t3_OPhh0ZqJ26HQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: mmc: renesas,sdhi: Group single const
+ value items into an enum list
+To: Krzysztof Kozlowski <krzk@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Before, the script tried to get the address by constructing a pointer to
-the parameter (by name).  However, since GDB now passes the parameter as a
-GdbValue, we cannot get its name.  Instead, we retrieve the address through
-GdbValue's address attribute.
+Hi Krzysztof,
 
-Before:
->>> p $lx_per_cpu(cpu_info)
-Traceback (most recent call last):
-  File "./scripts/gdb/linux/cpus.py", line 152, in invoke
-    var_ptr = gdb.parse_and_eval("&" + var_name.string())
-                                       ^^^^^^^^^^^^^^^^^
-gdb.error: Trying to read string with inappropriate type `struct cpuinfo_x86'.
+Thank you for the review.
 
-Signed-off-by: Florian Rommel <mail@florommel.de>
----
- scripts/gdb/linux/cpus.py | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+On Wed, Apr 24, 2024 at 6:42=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On 23/04/2024 20:24, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Group single const value items into an enum list.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> > v1->v2
+> > - Updated commit message
+> > - Grouped single const value items into an enum list.
+> > ---
+> >  .../devicetree/bindings/mmc/renesas,sdhi.yaml  | 18 +++++++-----------
+> >  1 file changed, 7 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml b/=
+Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+> > index 29f2400247eb..2bf90095742b 100644
+> > --- a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+> > +++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+> > @@ -13,15 +13,13 @@ properties:
+> >    compatible:
+> >      oneOf:
+> >        - items:
+> > -          - const: renesas,sdhi-sh73a0  # R-Mobile APE6
+> > -      - items:
+> > -          - const: renesas,sdhi-r7s72100 # RZ/A1H
+> > -      - items:
+> > -          - const: renesas,sdhi-r7s9210 # SH-Mobile AG5
+> > -      - items:
+> > -          - const: renesas,sdhi-r8a73a4 # R-Mobile APE6
+> > -      - items:
+> > -          - const: renesas,sdhi-r8a7740 # R-Mobile A1
+> > +          - enum:
+>
+> You wanted to drop the items, but I still see it here.
+>
+Ah, I missed that.
 
-diff --git a/scripts/gdb/linux/cpus.py b/scripts/gdb/linux/cpus.py
-index cba589e5b57d..2b51a3abd363 100644
---- a/scripts/gdb/linux/cpus.py
-+++ b/scripts/gdb/linux/cpus.py
-@@ -152,9 +152,8 @@ Note that VAR has to be quoted as string."""
-     def __init__(self):
-         super(PerCpu, self).__init__("lx_per_cpu")
- 
--    def invoke(self, var_name, cpu=-1):
--        var_ptr = gdb.parse_and_eval("&" + var_name.string())
--        return per_cpu(var_ptr, cpu)
-+    def invoke(self, var, cpu=-1):
-+        return per_cpu(var.address, cpu)
- 
- 
- PerCpu()
--- 
-2.44.0
+> > +              - renesas,sdhi-sh73a0  # R-Mobile APE6
+> > +              - renesas,sdhi-r7s72100 # RZ/A1H
+> > +              - renesas,sdhi-r7s9210 # SH-Mobile AG5
+> > +              - renesas,sdhi-r8a73a4 # R-Mobile APE6
+> > +              - renesas,sdhi-r8a7740 # R-Mobile A1
+> > +              - renesas,sdhi-mmc-r8a77470 # RZ/G1C
+>
+> Keep list alphabetically ordered.
+>
+This list is sorted based on SoC, I will sort it  alphabetically.
 
+Geert is that OK with you?
+
+Cheers,
+Prabhakar
