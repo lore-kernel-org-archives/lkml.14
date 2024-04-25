@@ -1,131 +1,77 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8FE2149E0E;
-	Thu, 25 Apr 2024 16:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6FC1EB5B;
+	Thu, 25 Apr 2024 16:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714062613; cv=none; b=MdojujL4AR10YmL4IhmnhyZNf1wHg+jbAKOUUA/A4oA7Ev2LGkZvpIOMZSvKisCDZCnxu2X/DPY9MsifM6Ji5UTAizduwERmjFVQKNaQ2i7HIOLc4Jt6lZ5TxWh9hPdDDp2j1+uPpDdd3C+b35um+AFRXMFq/ucu83Yff66g6C4=
+	t=1714062633; cv=none; b=mIab+4AK7G9bXLibEw32xjFOAsxDgmTw5w/pu7o2WJy+At+9MuppC2Cy1lz09TO5kVMYC5fMCoUSZEKrzn1ve8dIsZGo47pmFJPAUM4yT4I2Gt9fMaxrsvlz8v2WQ5/5jKV87cjSzSHXwqD7zkAIjwJ3W5g05qzQGPJ4yuyIIWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714062613; c=relaxed/simple;
-	bh=4tiu3lluDCUyH1jCN9NdtrvFzD+WUo0RiCTeeEv2v64=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kVLrBhow2uACifPkUzoLijKDAUQMMd9LjoV5HQhZXRrA473jYQ6wN2LH9QF673/jPf2hODSCShrJdAXgCndF7kIxd2/6UQhWXhHoQhFaEwovHeKZUBH3k8wW6X4JrMB2GcbuayfmEZub8/VFyzgMqkL0Q8dWeGSOv2XQy9vuHdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by mail.home.local (8.17.1/8.17.1/Submit) id 43PGTI2Z017225;
-	Thu, 25 Apr 2024 18:29:18 +0200
-Date: Thu, 25 Apr 2024 18:29:18 +0200
-From: Willy Tarreau <w@1wt.eu>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/2] tools/nolibc: implement strtol() and friends
-Message-ID: <ZiqE3nYSj79rc7il@1wt.eu>
-References: <20240425-nolibc-strtol-v1-0-bfeef7846902@weissschuh.net>
- <20240425-nolibc-strtol-v1-2-bfeef7846902@weissschuh.net>
+	s=arc-20240116; t=1714062633; c=relaxed/simple;
+	bh=jsV+g6dcp/pIHqii76sajx5QrBvzDbI+qZjPqKdiJd0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=q9u6byww6sERN9y84Prv+ob1mkGn0RM9p5z0vdOERgwtS6qbkyto8xIs+LziMxf070y6MANrJMiSDE1igLQrOcAljVpodVmvAHQKFZy7l1atoS/3ZQDDmC69VKX09fqKOARWgc7+iksO8ukxNvSA6RSJscsmYY7GR8e1sufl8t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uDkHDscP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uDkHDscP"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 16B92C2BD10;
+	Thu, 25 Apr 2024 16:30:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714062633;
+	bh=jsV+g6dcp/pIHqii76sajx5QrBvzDbI+qZjPqKdiJd0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=uDkHDscPm4NVqXcNvLEVDtE0NMKO4lqqPrv2MlzVRfTZEE/mhaePesGRuT4JpQCSy
+	 /zk1xVQ8s8NrcPpkR3UQXZH9/GSuAl6SetXcBI4Qd/V3erkQYhn/lbSpx1ng5EOF/7
+	 wherGFQ2HpYMICMQBy9g3XYBmiS2MwDDfW+PHsJdunXOE4M93cFP/UEpXAnyzix0W2
+	 o5TwpGQDaeXZXoHQAi7bF9R4kyh88Xcm9sxFz9N5+6ytoTKIb+xEXWCjs7xLet/yok
+	 zKqwAL4fvEwZ/cbG4GLK9UtghvPIO0qeRvFlSKL4uCTlG9HAPAvDsOMkdchbrp1RMG
+	 6iINxv+Hg4ZMg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F0F7DC43140;
+	Thu, 25 Apr 2024 16:30:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240425-nolibc-strtol-v1-2-bfeef7846902@weissschuh.net>
+Subject: Re: [PATCH] Bluetooth: qca: fix wcn3991 device address check
+From: patchwork-bot+bluetooth@kernel.org
+Message-Id: 
+ <171406263298.12899.12245456534188638302.git-patchwork-notify@kernel.org>
+Date: Thu, 25 Apr 2024 16:30:32 +0000
+References: <20240425075503.24357-1-johan+linaro@kernel.org>
+In-Reply-To: <20240425075503.24357-1-johan+linaro@kernel.org>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: marcel@holtmann.org, luiz.dentz@gmail.com,
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, dianders@chromium.org, quic_janathot@quicinc.com
 
-Hi Thomas,
+Hello:
 
-On Thu, Apr 25, 2024 at 06:09:27PM +0200, Thomas Weißschuh wrote:
-> The implementation always works on uintmax_t values.
+This patch was applied to bluetooth/bluetooth-next.git (master)
+by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
+
+On Thu, 25 Apr 2024 09:55:03 +0200 you wrote:
+> Qualcomm Bluetooth controllers may not have been provisioned with a
+> valid device address and instead end up using the default address
+> 00:00:00:00:5a:ad.
 > 
-> This is inefficient when only 32bit are needed.
-> However for all functions this only happens for strtol() on 32bit
-> platforms.
+> This address is now used to determine if a controller has a valid
+> address or if one needs to be provided through devicetree or by user
+> space before the controller can be used.
+> 
+> [...]
 
-That's indeed very useful! I think there's two small bugs below where
-the second one hides the first one:
+Here is the summary with links:
+  - Bluetooth: qca: fix wcn3991 device address check
+    https://git.kernel.org/bluetooth/bluetooth-next/c/0a0f9014b784
 
-> +static __attribute__((unused))
-> +uintmax_t __strtox(const char *nptr, char **endptr, int base, intmax_t lower_limit, uintmax_t upper_limit)
-> +{
-> +	const char signed_ = lower_limit != 0;
-> +	unsigned char neg = 0, overflow = 0;
-> +	uintmax_t val = 0, limit, old_val;
-> +	char c;
-> +
-> +	if (base < 0 || base > 35) {
-                        ^^^^^^^^^
-should be 36 otherwise you won't support [0-9a-z].
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-> +		SET_ERRNO(EINVAL);
-> +		goto out;
-> +	}
-(...)
-> +		if (c > base)
-> +			goto out;
 
-This should be "c >= base" otherwise 'z' is accepted in base 35 for
-example. I think it could be useful to add one more test covering base
-36 to make sure all chars pass ?
-
-> +	if (endptr)
-> +		*endptr = (char *)nptr;
-> +	return (neg ? -1 : 1) * val;
-
-I just checked to see what the compiler does on this and quite frequently
-it emits a multiply while the other approach involving only a negation is
-always at least as short:
-
-	return neg ? -val : val;
-
-E.g. here's the test code:
-
-  long fct1(long neg, long val)
-  {
-        return (neg ? -1 : 1) * val;
-  }
-
-  long fct2(long neg, long val)
-  {
-        return neg ? -val : val;
-  }
-
-- on x86_64 with gcc-13.2 -Os:
-
-  0000000000000000 <fct1>:
-     0:   f7 df                   neg    %edi
-     2:   48 19 c0                sbb    %rax,%rax
-     5:   48 83 c8 01             or     $0x1,%rax
-     9:   48 0f af c6             imul   %rsi,%rax
-     d:   c3                      ret    
-  
-  000000000000000e <fct2>:
-     e:   48 89 f0                mov    %rsi,%rax
-    11:   85 ff                   test   %edi,%edi
-    13:   74 03                   je     18 <fct2+0xa>
-    15:   48 f7 d8                neg    %rax
-    18:   c3                      ret    
-
-- on riscv64 with 13.2 -Os:
-
-  0000000000000000 <fct1>:
-     0:   c509                    beqz    a0,a 
-     2:   557d                    li      a0,-1
-     4:   02b50533                mul     a0,a0,a1
-     8:   8082                    ret
-     a:   4505                    li      a0,1
-     c:   bfe5                    j       4
-  
-  000000000000000e <fct2>:
-     e:   c119                    beqz    a0,14
-    10:   40b005b3                neg     a1,a1
-    14:   852e                    mv      a0,a1
-    16:   8082                    ret
-
-So IMHO it would be better to go the simpler way even if these are just a
-few bytes (and possibly ones less mul on some slow archs).
-
-Thanks!
-Willy
