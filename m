@@ -1,151 +1,107 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D443A268
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 07:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FDEC3A268;
+	Thu, 25 Apr 2024 07:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714029766; cv=none; b=iiT1YDP3wrYsQuyyT5osWCkb731SP2AWB7LtBTCJI1S8VcC0Y/9E+TJloqld+7mfoMJbtSpP4ztO59AoRc+Z2zxOvOImCV2M6Un126IE+0N/T0wIqbDF7e94eSwr0WYzvifZw2fcGcY8EP/VhtLi2ne0jiP2a7PXPeAUZZyoJB8=
+	t=1714029808; cv=none; b=UZuO/1dhYzjRIoDQqY/lR8GXKO3I1sSWRU/ohEVX0RMgQsWkoPChWg+GpX9TYREbRccApl7J2rGITy6kNUqtR3ClR2yGHbM62MAa9UfCNHBBgbZqrJlw2h28myjQZah3Nhbkz135NqzGjWEW+n2HNz0tIzViuaWeRBsPOxAaJxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714029766; c=relaxed/simple;
-	bh=nWP0uJlqGHLcY558e1BVtlGLpdNXHwpcc1niEhs6pd8=;
+	s=arc-20240116; t=1714029808; c=relaxed/simple;
+	bh=A/4Kk+ecoj6p93X8Ek2vHbx5mGDcRoxKNP+8wWGtgUc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pqLcZxam68Gk4PDLc+RGZiYviLDjH2sGYXMH8sVWmuNCi1o/C1SMsjhGDd3FqUlmPUDT5l+TBLsymi2XgAQfxBVaG4dkmRsbOCkfBJqB0c8uPL020Cvoy4sx01CQqOJahDMowr5InRw6aH6M0cTB9ei9GYXeWIcLVMZ+9nN4rkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uGg1s3Vu; arc=none smtp.client-ip=209.85.161.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=aCzh5LAr4YKTJW03VKIDdrt5gl2aLmZuGuUaUnmd1fc5Fm7r1Nx60D83pWiByvl63cwbUp52pSrGFe/0t86HzFj0ydAFj9DZcnJQQNMcdjHvl59VY9Xoow6FIqms7WS+95XYI+F+fVkHmTHugULJ62Rd/DarN691HAHVx/ifjFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i/G+iImO; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uGg1s3Vu"
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5aa2551d33dso457711eaf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 00:22:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/G+iImO"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-572347c2ba8so607043a12.3;
+        Thu, 25 Apr 2024 00:23:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714029763; x=1714634563; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714029805; x=1714634605; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=K1eBQVaboKafOVXFDPe1fYNkoEELHKBEMQnicl+9GfA=;
-        b=uGg1s3VuO1ZrDMAKhwrGugBMMh5Xvq7fXC2PPR/D+RD95dtVh5/0rxv383Go1HNqOL
-         dogilihB7fc44lN4Yx1LoRys7imZQv5xwdVOKDcbpVb8Ogzsnq8HWxN3N1lmyUCKzH0N
-         WScoGJTvLzrW/zzU1YITjVYURysztZs2xU//R4FdB51usk6plGwqQbriQhFGxjshcLOU
-         7ntt4JIDA1Fe/9hjnGCflzDa7UQ0DM4Pq+UzckrrLZ3qZa2OrvMh/DR4xzrcmreJWuhf
-         D+c0gd2RyB5eIMaZyrHJO/yYku3ZPffi5VyFRvtuipeqKxhKSFegGgNXbyYDeuWAeC1t
-         pxEQ==
+        bh=A/4Kk+ecoj6p93X8Ek2vHbx5mGDcRoxKNP+8wWGtgUc=;
+        b=i/G+iImO/wcySpB33jryMD1918BsOJNH/eETO/BgrOyXUOgJivQ7Yu3Y/nOpAWv62K
+         AYKvsnHchc/gCL62toK/EV+g1GsMFYpuemBLPFjTdy4AOYWDal+CAdJ8pIQrpMKjgwzo
+         X0wvPRnT8f2z01/SaAEnJQt4aBRS+kNDBIy8aOrchLLdVagYA990KWLSkbsYMnW2PCvt
+         uVRoHL3iuZOwd+STQjbOAkBdjR6YTsTGX7OkmW4Va90usLDZunbG3nCD54B8ePZ5izzK
+         GrBE4lTG4tFnCI42Bb4XqDgLQiJCF8+6e6Ymg4EwKbb2LKMHsrUsyNL+rxHsm0s4mZTX
+         BaRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714029763; x=1714634563;
+        d=1e100.net; s=20230601; t=1714029806; x=1714634606;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=K1eBQVaboKafOVXFDPe1fYNkoEELHKBEMQnicl+9GfA=;
-        b=XYltMYqxBwiYGKE/bwzyPy8GmKfOR+2FZI/IW/uHmoxyE7RvsA1KhNU6spLHhdKw+7
-         Uee01ck8ZW+VPHTs6BpER6ZXSzoHMOIkkaCcD31rJg+YRj+sypV/HpmKyIjypsik+3X4
-         +ASFOaEDD1QwE0e1k4AmgFKhD0cD/MlwpZZcIZp4xX+KQhYUTGcTsp0iAMPl0L1ZWBlS
-         9BeRR9WmjhaNcjeIIGmPWqfeJmE+OSDuRCPdyXxd+gQbC38OcpcD1gJ2Z5FlufapP/Ub
-         lmaj3C/T/X0lkndhjJxbz4hCU2ViC91sFHGwCxhaLb/hc8YFnzL9CVEXNiE6OGTDJi66
-         pi2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUlu9rBn0IjvTJIK/sY1YT5ySAd/0qw5WmXBtwg4Aww4S5rhGDudB4RSHoA1DJkMOLbJMaWp8QbF93Pwd/4v0srSiA6JyvK8JzMiS4T
-X-Gm-Message-State: AOJu0YzL6dHt9U5oxbhghlSox6vtHES23TCaR2kMHnIGkQjNMZJid4H8
-	WeszETXUTgKtmu/FDFRUaHWN5RPU29sridNE6VrWyu7LiV5dOllIXLo4NGALfaZLeI2bOQViL7p
-	WWeU/WsOssBAjVe3wl3q6vb9aq9ynG1vAzGkM
-X-Google-Smtp-Source: AGHT+IH1PWHwg9n77tQRksuEOzxZE4efRPhvf6GNA0HjKXxBwPeDgkZXXC4Zay2WtZe+7P2OqcWBKdLsNkwwG4F8L/Y=
-X-Received: by 2002:a4a:e689:0:b0:5af:4b3c:e2f8 with SMTP id
- u9-20020a4ae689000000b005af4b3ce2f8mr4532348oot.0.1714029763326; Thu, 25 Apr
- 2024 00:22:43 -0700 (PDT)
+        bh=A/4Kk+ecoj6p93X8Ek2vHbx5mGDcRoxKNP+8wWGtgUc=;
+        b=R9DbzWctnESvYQtXGHdEr/YvrG/SKRlRnr+xlyE7Uuw079EGILMnsd4kwW2f6Mx2hr
+         VUplqJu1TWxLWtfqEX46nxmpzkMJ/pd39V82hW/XUbD25nbqGkQcthEnBpJrpnaakFhd
+         wUau6aKD5UnS2vmVj0UtXC8Hda8wMJODS2unKfJKuWqhEmUVLVRrqHYjnf2zs5mCTq87
+         DGSdaGIv92bBIVVDcVAJu71+pfXzlr1i4ybYXzCFEpW0oiruPihxI6VsM7SBn3xxpGLp
+         w818nfr7pOkqPlSJRfZ4qlxYVYoa9wekvz/45oJInWFV7ZYc52iwBgAeh8oG9lSNvCbf
+         vh1A==
+X-Forwarded-Encrypted: i=1; AJvYcCUbw4FWCuuUEQ7VkSYXKsUny225LzBBGx9mNthuYp59Yso6dc1CWGjh2DoG6JZoC6ak6hwbOMGfs+hU2ISQVWlh4gn9x4orKJWzyzfdNzmFerMsgIABLnWBlnZCJ+tpE7Pfe8kXb8jCuka03RQKBvgDXjHn4/wYGTG+uyj7CTHgwsaSXKUmgA==
+X-Gm-Message-State: AOJu0YxL9bCyLLZPTxIHw2wSdSplNGEkqguUbg/7GX3uGHcUOwi4D1Lk
+	VPDqixnVratcP2KYupd8eVrgHx6hP7Pkor0ye975yNHse5G+0ASCCF1ghPvFvXZ02qLMICZhu+E
+	QgHnwQcC5UZ6ZaNkpebKK2Bf2w2A=
+X-Google-Smtp-Source: AGHT+IEnj6asV4dQ7pWNGOS519gonypRgW5g4IX/Ggz2tgJLhFLFeVhxInVks58EbeT6yPIr6CPGr7NzMG46lDt6/Pg=
+X-Received: by 2002:a17:907:700c:b0:a55:9a35:5e9d with SMTP id
+ wr12-20020a170907700c00b00a559a355e9dmr3083273ejb.42.1714029805371; Thu, 25
+ Apr 2024 00:23:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240410164558.316665885@linutronix.de> <20240410165552.572304080@linutronix.de>
- <20240418163811.GA23440@redhat.com> <20240418181821.GA26239@redhat.com>
- <20240419110632.GA3198@redhat.com> <87sezbu69x.ffs@tglx> <87plufttru.ffs@tglx>
-In-Reply-To: <87plufttru.ffs@tglx>
-From: Andrei Vagin <avagin@google.com>
-Date: Thu, 25 Apr 2024 00:22:31 -0700
-Message-ID: <CAEWA0a6E1=XouGERJtUa7R6Aia2azeOOF02_=cbjCPdB4gyZKA@mail.gmail.com>
-Subject: Re: [patch V2 26/50] signal: Get rid of resched_timer logic
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Oleg Nesterov <oleg@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	John Stultz <jstultz@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
-	Eric Biederman <ebiederm@xmission.com>
+References: <20240424191908.32565-1-rilian.la.te@ya.ru> <20240424191908.32565-3-rilian.la.te@ya.ru>
+ <CAHp75VfpRBDTjnZCdOKK+YWZKJ+wbjsg-n4wxjA7qVE0L1WSxw@mail.gmail.com>
+In-Reply-To: <CAHp75VfpRBDTjnZCdOKK+YWZKJ+wbjsg-n4wxjA7qVE0L1WSxw@mail.gmail.com>
+From: "Konstantin P." <ria.freelander@gmail.com>
+Date: Thu, 25 Apr 2024 10:25:41 +0300
+Message-ID: <CAF1WSuxAFHbSVAV1r2cDzZms=T_Qg6y3qbgU5rrjySuAd3FUNw@mail.gmail.com>
+Subject: Re: [PATCH v8 2/3] dt-bindings: sc16is7xx: Add compatible line for
+ XR20M1172 UART
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Konstantin Pugin <rilian.la.te@ya.ru>, krzk@kernel.org, conor@kernel.org, lkp@intel.com, 
+	vz@mleia.com, robh@kernel.org, jcmvbkbc@gmail.com, 
+	nicolas.ferre@microchip.com, manikanta.guntupalli@amd.com, corbet@lwn.net, 
+	ychuang3@nuvoton.com, u.kleine-koenig@pengutronix.de, Maarten.Brock@sttls.nl, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>, Lech Perczak <lech.perczak@camlingroup.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 23, 2024 at 6:48=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de=
-> wrote:
+On Wed, Apr 24, 2024 at 10:34=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> On Tue, Apr 23 2024 at 23:18, Thomas Gleixner wrote:
-> > On Fri, Apr 19 2024 at 13:06, Oleg Nesterov wrote:
-> >> Today SI_TIMER < 0. We could introduce SI_TIMER_KERNEL > 0 with the mi=
-nimal
-> >> changes, but this can't help because the commit 66dd34ad31e59 allows t=
-o send
-> >> any siginfo to itself.
->
-> Well that predates the __SI_CODE() removal. So I doubt it's required
-> today, but what do I know about CRIU.
-
-CRIU needs to restore siginfo-s of pending signals so that a task sees
-the same siginfo in a signal handler as it would be without
-checkpoint/restore. CRIU will not be affected, if rt_sigqueueinfo denies
-any non-negative si_code that is never reported by the kernel.
-
-> >> Otoh, I have no idea how CRIU restores the posix timers. If a process =
-has
-> >> a pending blocked SI_TIMER signal, then I guess it actually needs to e=
-nqueue
-> >> this signal at restore time, but resched_timer will be never true?
+> On Wed, Apr 24, 2024 at 10:19=E2=80=AFPM Konstantin Pugin <rilian.la.te@y=
+a.ru> wrote:
 > >
-> > It can't restore the correct sys_si_private value because that is
-> > nowhere exposed to user space.
+> > From: Konstantin Pugin <ria.freelander@gmail.com>
+> >
+> > EXAR XR20M1172 UART is mostly register-compatible with NXP SPI UARTs.
+> > It will be handled by same driver, so, it makes sense to add DT
+> > definition for these block into driver's documentation.
+>
+> blocks
+>
+> ...
+>
+> > Reviewed-by: Andy Shevchenko <andy@kernel.org>
+>
+> Hmm... Did I? IIRC I only reviewed patches 1 and 3. Am I mistaken?
 
-We are open to ideas how it can be restored properly.
+I think it is my mistake, not yours. If you want, I can do a new
+version without a tag.
 
->
-> It is exposed via PTRACE_PEEKSIGINFO, but it's useless.
-
-When PTRACE_PEEKSIGINFO was added, it didn't expose it.  Then it was
-changed by cc731525f26a ("signal: Remove kernel internal si_code magic").
-
-The idea of PTRACE_PEEKSIGINFO is to get a siginfo that a process would
-see in a signal handler.
-
->
-> > There is no special treatment for SI_TIMER, so the signal restore might
-> > just end up queueing a random extra SI_TIMER signal if there was one
-> > pending.
->
-> It does. The sys_si_private value is not going to match the timer side
-> value and obviously the missing prealloc flag prevents it from trying to
-> rearm the timer.
->
-> > I checked the CRIU source and it looks like this just "works" by
-> > reconstructing and rearming the timer with the last expiry value. As
-> > that is in the past it will fire immediately and queue the signal.
->
-> It's not necessarily in the past, but it will fire eventually and in the
-> case of a blocked signal there will be two SI_TIMER signals queued.
->
-> So the patch is not completely wrong except that there is nothing which
-> prevents setting sys_si_private via rt_sigqueueinfo(), but that's
-> obviously a solvable problem. With that solved the condition:
->
->                 *resched_timer =3D
->                         (first->flags & SIGQUEUE_PREALLOC) &&
->                         (info->si_code =3D=3D SI_TIMER) &&
->                         (info->si_sys_private);
->
-> really can be reduced to:
->
->        info->code =3D=3D SI_TIMER && info->si_sys_private
->
-> In fact it makes a lot of sense _not_ to allow user space to set
-> info->si_sys_private because that's a kernel internal value and should
-> never be exposed to user space in the first place.
-
-We can zero out all of them in rt_sigqueueinfo.
-
-Thanks,
-Andrei
+> --
+> With Best Regards,
+> Andy Shevchenko
