@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B03D15574E
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 18:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA60915624B
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 18:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714068883; cv=none; b=EyGlvj4sOx6rpNGtWPVR3CemY8Aym1SetLrL3T1AbAVk85ybFj/ADTD3KuA5M5vcSWyp+jTiMAhBsIVfdWeq44ieBF6RybruDKoNFtDHwnBtwwILbr83VnljkL1cMAJTPbUXFL83Db+b64edl4anzqgz+BCGK/AkWqMaJQbn3F4=
+	t=1714068887; cv=none; b=qUFF1hNOIaiSvNCjNKqAXzg3BH5iKZ6506TeMGSkyYHAomOzvrCI0lY293mu7XqUr5Zm1X1Fn2d9B+9n/oyFw23GSIafmvOZphe5OMQKZO6/wirZ6/qfQKRWujuzzYZql2so5epOwNkLYcXy5xwlF5qEBiQ8FYTKGnOVPmCka+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714068883; c=relaxed/simple;
-	bh=XQbuCE10iEXL6Hj41mbGLp/9CQA2+KEDclppIVQzUqI=;
+	s=arc-20240116; t=1714068887; c=relaxed/simple;
+	bh=247P5YIdaIT018imI0/FIsolw28zSgLr6OXAMGjYu4k=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NwUq0nzgNvkEsSr9+OKWun8VW+7Vgtj2HI5HFAV9Tv+EAS+oKYq6MyuFHu2ueTjbVwDhHtZuZntCiNw2g4A5W/SShi0rbQe3kJCnldQSmgdmQAP6pgaENYL3sWKIc5oxR2GzVum3GQgUKupacKol9xy1YuDyy+3IyoTHvBacSPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eDAfGkxY; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=iG9zELxCBJi3dqpTCLiOx14YF2Eay2veBIVoDIasJylXG6I5cT1uMwd97+kfxZZZHv/1IflJbChFxh/7kFH34M2igCV0Tv7EVpMBAOAQQvYkMtURdPE6MHAFUxNk8HgCRmwIuiAi00OORDkVMv82ZwPzVLTTuQmZ6v8sEHkVCLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GUjHHqXX; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eDAfGkxY"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de59e612376so838968276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 11:14:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GUjHHqXX"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5e4f312a995so1129387a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 11:14:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714068881; x=1714673681; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714068885; x=1714673685; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=iXAD1gTtiwO6R5kc5FsGGbiVN1kl1k4gITxMp5dXiKA=;
-        b=eDAfGkxYy589HlReu2v+v08ULFTE4L3nA7ftceBq/ImSOM76BJzAUpdvc1MNml4n7w
-         V/mi9B06kW/rRx0U9zQJw7izsrek0FlhNT2mPLWxCe0roEjOiPveIaT1X5bm4PpcDDap
-         m4K7SrI1pbjfjrlM8H9JnCQ9tfBlR5kb1FFlElcUDZhoMxOsZtVQVc5tugIdjzBEbmc4
-         UEs6VV3FQs4eyv+hPNcBAVueCp9k6pjnULvxl8CeGu0dCVAIbSQDBMi94tvfrY0VgizL
-         Sig8zYO4L8sYK9HnTLmhrTPgPVwAdYrE+8CiJU6M3ZKy//JWnIkJ0ZVcaXny+BlaYYVP
-         NwfA==
+        bh=aNpP1eW5DP+TAfE/NjGLi9NUaYZsZjI/uTGRPzZPo4M=;
+        b=GUjHHqXX8gP+CwPGBOYzK9I7kFPOLFy8gUhL3rM4BtNb1lfCnrBlpJrtXf8OBq+Yvi
+         zXHtNofv/WBOwl+YHZMo8chv2MN1MNk8HyKm94WNmlPqXzg/Hf1hOF0wd+QUQeJrHKaA
+         ycKSohc0mAL5x8Srj8oTC4JYa3pXlA76W9gIdU4bZoRtKXLEPlh7oEYNKoYsl29j83Qj
+         T+WhOcOldOviG7QLjtjvIVPEq6zJ/mh0v5F5JLqSqVjwZcHLSeGsO0L6V3xDCpnzcD8p
+         c2rhKGOskRFAu1OFj7ORkG+tX1n19O+npMSNl3cejrl4JH2OFb9mqbt5x8Z/1mPG7a2/
+         aJ7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714068881; x=1714673681;
+        d=1e100.net; s=20230601; t=1714068885; x=1714673685;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=iXAD1gTtiwO6R5kc5FsGGbiVN1kl1k4gITxMp5dXiKA=;
-        b=nAzIAHNXIRvahFoW4pu94UHAQij8Clsbq8kDPgNbNAzhdHErn8IMpcyZs7XtNYlGzn
-         NjUOXzxXVUPzMyRptq4yxRg1XDE9v6VRuCGkR+pR/pgztwVCpQULr38mcaqmrGqUccwb
-         UozNIKvKDdGuAQdoHMy1J89RfbAvka6qozs4DUrVHKGbs+Anm+q0ODRI35cqYwVp68lq
-         ZmruExyJTIc2++QJk5k7uU5oRmjdcOsvoqM7TQ9/dVlWDQTBBQyOnraKG+hfhN7jEbxw
-         TIKtqjXAuzQrdw68SOxeHbx94OL+C0Fu4Dtu2QB019/ggcWdNVcLBSKgk3tECWv3q5S+
-         xK4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXMhQfSF+7DpeIXAIy7zv7onnPtKdAG99ZnbW0zEtQ8WiAwxTPZdEjAZKW10LFuXiP+3ibdvlNl46TIt7L/lMEj6BnGi4zPhSKZO7mL
-X-Gm-Message-State: AOJu0Yz9jYy0cv9damDOmBVzhGAB2oq9w1PzK/h4n7y6IGFu6a/WMNeI
-	gEeo+1NgWK5828enj3RuApexXp1NFLRul2g0rmGDdzfjqFZRjzQVHpVLvDI8diWiYfNXZdbpQKO
-	odw==
-X-Google-Smtp-Source: AGHT+IGUU5V15PYJLb/rvGrpR2O7b0dqV3NWp9gPiWq1USgUBru2IcuP3QcVb64fWJwVI+urhXDfqHkISlY=
+        bh=aNpP1eW5DP+TAfE/NjGLi9NUaYZsZjI/uTGRPzZPo4M=;
+        b=KrbpzHwqS6f/vG+CPKED2kvsUHNhUEud/qyWZaN/T0WWpAHUAOgmNGgBImgOl2+yRS
+         bdudptKY/wcPBAWDiZ3o84IYTkMsCzZihf80pXZFxcevwxeU15Rhz6g5sGJA7WBaJF5w
+         ttgRYElKTQhP2F8Ind11XKFKNGEx8cK1ziBk1L8m8qQSbbUEB+yQqnfnAmuxdCyPB9R6
+         zr+6BIYg7AqrMdUuPZylC7N+nc1679xu69FLx7TMwculVxHd9Pi3YoFOhv0Mb//ixOza
+         hhbXy1mEVN5OBHtBAy0qE6rgtf4fVlEaxXpIgakbigaC/Ez/rjoobNoePjoNm/t+3OFe
+         yx9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVwa6+5L/4h5Pu4TqGAUGbMqEI7VenxUWqJVeto3polIzkeK5/ZJcnyElwJo4LxsXrfx0UOAshn2P0XUI59NqovKq5H22CsKaZi/mPn
+X-Gm-Message-State: AOJu0YwuN9MdXFg2hjD4H8YSwJvkMj+abx0JmvtNRQPWMfxlkfd/3luB
+	mSygC4wE4ElPKppvgTXUh94NEP0Gw+lK1Vui+2c7gvuK6f0MBCUUNBJwa8iRMV9NnRT+jG8xI/f
+	Dfw==
+X-Google-Smtp-Source: AGHT+IF+pktbKA5ERhhI9ACh0DvxCWS2IxmYMfxElb+yYd48b/kvPmDGRCometGGY/kYmjTT7Oe1ih0b4Y0=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:1006:b0:dcd:3a37:65 with SMTP id
- w6-20020a056902100600b00dcd3a370065mr55877ybt.7.1714068881182; Thu, 25 Apr
- 2024 11:14:41 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a65:6556:0:b0:5dc:1b0a:48e1 with SMTP id
+ a22-20020a656556000000b005dc1b0a48e1mr1095pgw.1.1714068885143; Thu, 25 Apr
+ 2024 11:14:45 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 25 Apr 2024 11:14:19 -0700
+Date: Thu, 25 Apr 2024 11:14:21 -0700
 In-Reply-To: <20240425181422.3250947-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,157 +61,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240425181422.3250947-1-seanjc@google.com>
 X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Message-ID: <20240425181422.3250947-8-seanjc@google.com>
-Subject: [PATCH 07/10] KVM: x86: Funnel all fancy MSR return value handling
- into a common helper
+Message-ID: <20240425181422.3250947-10-seanjc@google.com>
+Subject: [PATCH 09/10] KVM: x86: Suppress failures on userspace access to
+ advertised, unsupported MSRs
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Tom Lendacky <thomas.lendacky@amd.com>, Weijiang Yang <weijiang.yang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add a common helper, kvm_do_msr_access(), to invoke the "leaf" APIs that
-are type and access specific, and more importantly to handle errors that
-are returned from the leaf APIs.  I.e. turn kvm_msr_ignored_check() from a
-a helper that is called on an error, into a trampoline that detects errors
-*and* applies relevant side effects, e.g. logging unimplemented accesses.
+Extend KVM's suppression of failures due to a userspace access to an
+unsupported, but advertised as a "to save" MSR to all MSRs, not just those
+that happen to reach the default case statements in kvm_get_msr_common()
+and kvm_set_msr_common().  KVM's soon-to-be-established ABI is that if an
+MSR is advertised to userspace, then userspace is allowed to read the MSR,
+and write back the value that was read, i.e. why an MSR is unsupported
+doesn't change KVM's ABI.
 
-Because the leaf APIs are used for guest accesses, userspace accesses, and
-KVM accesses, and because KVM supports restricting access to MSRs from
-userspace via filters, the error handling is subtly non-trivial.  E.g. KVM
-has had at least one bug escape due to making each "outer" function handle
-errors.  See commit 3376ca3f1a20 ("KVM: x86: Fix KVM_GET_MSRS stack info
-leak").
+Practically speaking, this is very nearly a nop, as the only other paths
+that return KVM_MSR_RET_UNSUPPORTED are {svm,vmx}_get_feature_msr(), and
+it's unlikely, though not impossible, that userspace is using KVM_GET_MSRS
+on unsupported MSRs.
+
+The primary goal of moving the suppression to common code is to allow
+returning KVM_MSR_RET_UNSUPPORTED as appropriate throughout KVM, without
+having to manually handle the "is userspace accessing an advertised"
+waiver.  I.e. this will allow formalizing KVM's ABI without incurring a
+high maintenance cost.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/x86.c | 86 +++++++++++++++++++++++-----------------------
- 1 file changed, 43 insertions(+), 43 deletions(-)
+ arch/x86/kvm/x86.c | 27 +++++++++------------------
+ 1 file changed, 9 insertions(+), 18 deletions(-)
 
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index c0727df18e92..a0506878d58e 100644
+index 04a5ae853774..4c91189342ff 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -319,25 +319,40 @@ u64 __read_mostly host_xcr0;
+@@ -527,6 +527,15 @@ static __always_inline int kvm_do_msr_access(struct kvm_vcpu *vcpu, u32 msr,
+ 	if (ret != KVM_MSR_RET_UNSUPPORTED)
+ 		return ret;
  
- static struct kmem_cache *x86_emulator_cache;
- 
--/*
-- * When called, it means the previous get/set msr reached an invalid msr.
-- * Return true if we want to ignore/silent this failed msr access.
-- */
--static bool kvm_msr_ignored_check(u32 msr, u64 data, bool write)
-+typedef int (*msr_access_t)(struct kvm_vcpu *vcpu, u32 index, u64 *data,
-+			    bool host_initiated);
-+
-+static __always_inline int kvm_do_msr_access(struct kvm_vcpu *vcpu, u32 msr,
-+					     u64 *data, bool host_initiated,
-+					     enum kvm_msr_access rw,
-+					     msr_access_t msr_access_fn)
- {
--	const char *op = write ? "wrmsr" : "rdmsr";
--
--	if (ignore_msrs) {
--		if (report_ignored_msrs)
--			kvm_pr_unimpl("ignored %s: 0x%x data 0x%llx\n",
--				      op, msr, data);
--		/* Mask the error */
--		return true;
--	} else {
-+	const char *op = rw == MSR_TYPE_W ? "wrmsr" : "rdmsr";
-+	int ret;
-+
-+	BUILD_BUG_ON(rw != MSR_TYPE_R && rw != MSR_TYPE_W);
-+
 +	/*
-+	 * Zero the data on read failures to avoid leaking stack data to the
-+	 * guest and/or userspace, e.g. if the failure is ignored below.
++	 * Userspace is allowed to read MSRs, and write '0' to MSRs, that KVM
++	 * reports as to-be-saved, even if an MSR isn't fully supported.
++	 * Simply check that @data is '0', which covers both the write '0' case
++	 * and all reads (in which case @data is zeroed on failure; see above).
 +	 */
-+	ret = msr_access_fn(vcpu, msr, data, host_initiated);
-+	if (ret && rw == MSR_TYPE_R)
-+		*data = 0;
++	if (host_initiated && !*data && kvm_is_msr_to_save(msr))
++		return 0;
 +
-+	if (ret != KVM_MSR_RET_UNSUPPORTED)
-+		return ret;
-+
-+	if (!ignore_msrs) {
+ 	if (!ignore_msrs) {
  		kvm_debug_ratelimited("unhandled %s: 0x%x data 0x%llx\n",
--				      op, msr, data);
--		return false;
-+				      op, msr, *data);
-+		return ret;
+ 				      op, msr, *data);
+@@ -4163,14 +4172,6 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		if (kvm_pmu_is_valid_msr(vcpu, msr))
+ 			return kvm_pmu_set_msr(vcpu, msr_info);
+ 
+-		/*
+-		 * Userspace is allowed to write '0' to MSRs that KVM reports
+-		 * as to-be-saved, even if an MSRs isn't fully supported.
+-		 */
+-		if (msr_info->host_initiated && !data &&
+-		    kvm_is_msr_to_save(msr))
+-			break;
+-
+ 		return KVM_MSR_RET_UNSUPPORTED;
  	}
-+
-+	if (report_ignored_msrs)
-+		kvm_pr_unimpl("ignored %s: 0x%x data 0x%llx\n", op, msr, *data);
-+
-+	return 0;
- }
+ 	return 0;
+@@ -4522,16 +4523,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		if (kvm_pmu_is_valid_msr(vcpu, msr_info->index))
+ 			return kvm_pmu_get_msr(vcpu, msr_info);
  
- static struct kmem_cache *kvm_alloc_emulator_cache(void)
-@@ -1705,16 +1720,8 @@ static int kvm_get_feature_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data,
- 
- static int do_get_feature_msr(struct kvm_vcpu *vcpu, unsigned index, u64 *data)
- {
--	int r;
+-		/*
+-		 * Userspace is allowed to read MSRs that KVM reports as
+-		 * to-be-saved, even if an MSR isn't fully supported.
+-		 */
+-		if (msr_info->host_initiated &&
+-		    kvm_is_msr_to_save(msr_info->index)) {
+-			msr_info->data = 0;
+-			break;
+-		}
 -
--	/* Unconditionally clear the output for simplicity */
--	*data = 0;
--	r = kvm_get_feature_msr(vcpu, index, data, true);
--
--	if (r == KVM_MSR_RET_UNSUPPORTED && kvm_msr_ignored_check(index, 0, false))
--		r = 0;
--
--	return r;
-+	return kvm_do_msr_access(vcpu, index, data, true, MSR_TYPE_R,
-+				 kvm_get_feature_msr);
- }
- 
- static bool __kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer)
-@@ -1901,16 +1908,17 @@ static int __kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data,
- 	return static_call(kvm_x86_set_msr)(vcpu, &msr);
- }
- 
-+static int _kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data,
-+			bool host_initiated)
-+{
-+	return __kvm_set_msr(vcpu, index, *data, host_initiated);
-+}
-+
- static int kvm_set_msr_ignored_check(struct kvm_vcpu *vcpu,
- 				     u32 index, u64 data, bool host_initiated)
- {
--	int ret = __kvm_set_msr(vcpu, index, data, host_initiated);
--
--	if (ret == KVM_MSR_RET_UNSUPPORTED)
--		if (kvm_msr_ignored_check(index, data, true))
--			ret = 0;
--
--	return ret;
-+	return kvm_do_msr_access(vcpu, index, &data, host_initiated, MSR_TYPE_W,
-+				 _kvm_set_msr);
- }
- 
- /*
-@@ -1949,16 +1957,8 @@ int __kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data,
- static int kvm_get_msr_ignored_check(struct kvm_vcpu *vcpu,
- 				     u32 index, u64 *data, bool host_initiated)
- {
--	int ret = __kvm_get_msr(vcpu, index, data, host_initiated);
--
--	if (ret == KVM_MSR_RET_UNSUPPORTED) {
--		/* Unconditionally clear *data for simplicity */
--		*data = 0;
--		if (kvm_msr_ignored_check(index, 0, false))
--			ret = 0;
--	}
--
--	return ret;
-+	return kvm_do_msr_access(vcpu, index, data, host_initiated, MSR_TYPE_R,
-+				 __kvm_get_msr);
- }
- 
- static int kvm_get_msr_with_filter(struct kvm_vcpu *vcpu, u32 index, u64 *data)
+ 		return KVM_MSR_RET_UNSUPPORTED;
+ 	}
+ 	return 0;
 -- 
 2.44.0.769.g3c40516874-goog
 
