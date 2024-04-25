@@ -1,107 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE4184DFC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB9484E06;
 	Thu, 25 Apr 2024 09:20:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714036827; cv=none; b=t0x4VXSQyStnKvXn8E/rt+VvvhjwXcgpO7QxxAnA9xqQn4JoTVAlrQi55prvXmciPf5sv9j+48oJ6NkrWuEGSoFtty/boTkd/LmQUDUKqBBTvp//hM7qoEKjThJ15QBDSFH2ApAW4ECIJIgZN++6TXa0dnze3bJjkENZUBZsnzo=
+	t=1714036827; cv=none; b=R4fy3G6NL5KZyF2lSf9jnrLsBrEYLJ8Uys0ENnCG7d43WJq2rj2gosNwIKylMmgJQObN9hTNXcjREg+Box9W75g71xPmSF9JlflCRxwEcKcrZBAvTjvI+2oJ6cl8rh3iAzSa8vFHIL2Hcj4ak2tXP68rlTlLjS9R/kvbdADFncE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714036827; c=relaxed/simple;
-	bh=b5xHrUaTH8w38xvavMQn5oxGZmYM/ryuyekrAQ4JJJs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y2vjJ9rZPgcQSr2r+OzX2SBdL7KrYm9niJwT/c0mtKDlS2e/3Cp1rzCH9oTS0WqZNB3EZ2BUJiq0HsT1VSnQnAzfEgQKEnyVILS1DnGtdaTkLF0maZtQ2iyPfrozixFnqN1w7hsOctb469jbmm3s46PWlUq5+/2aSDVuXe7JiJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: 4OGhaSXxQxSJx/b/Bw4dSw==
-X-CSE-MsgGUID: ZyOa2snTQiOCkGECz5W/rg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="32201143"
-X-IronPort-AV: E=Sophos;i="6.07,228,1708416000"; 
-   d="scan'208";a="32201143"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 02:20:25 -0700
-X-CSE-ConnectionGUID: 7jK+zlw0SRCZVKs9+SRg7A==
-X-CSE-MsgGUID: BkXce46QTKCVC1YFPVtR8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,228,1708416000"; 
-   d="scan'208";a="25099980"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 02:20:21 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1rzvH7-00000000wZV-32jl;
-	Thu, 25 Apr 2024 12:20:17 +0300
-Date: Thu, 25 Apr 2024 12:20:17 +0300
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	linux-kernel@vger.kernel.org,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
-	Lee Jones <lee@kernel.org>, Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Duanqiang Wen <duanqiangwen@net-swift.com>,
-	"open list:SYNOPSYS DESIGNWARE I2C DRIVER" <linux-i2c@vger.kernel.org>,
-	"open list:WANGXUN ETHERNET DRIVER" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 1/4] i2c: designware: Create shared header hosting driver
- name
-Message-ID: <ZiogUS3yN5lXT-GH@smile.fi.intel.com>
-References: <20240423233622.1494708-1-florian.fainelli@broadcom.com>
- <20240423233622.1494708-2-florian.fainelli@broadcom.com>
- <ZihLSKe_BHxasBql@surfacebook.localdomain>
- <59b7ba5a-14a8-497e-8cf8-53bdf4e8cb8e@linux.intel.com>
+	bh=sTm+PpZ6Ap0xhC7BqDac2mgtIkGMWqrMZth1L9PQtPc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=K+D+f7gdzyiA2fNnfSCT+TefD0e3VT/7MMwYh10t4rS5noKxz9J13aiJeRXb2lJdBnj9Kx/bcc0Z6zSjKy2Kq2zFpH53aPiC0JpxUQP53mt2+k7P9eQoB4h08Eb7GLRw12WM+x2YuVZCmBpTsUk+lQHpsfCiCoFNHs4fTybeW/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DbnQadNM; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DbnQadNM"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43P9Ihnf020018;
+	Thu, 25 Apr 2024 09:20:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=TBTKZrt
+	UVFKfLaVcB4puOBOrdyhWFnI8hrjDAzeTHZ0=; b=DbnQadNMxgJrSDqUYZRxzgM
+	az+LVfmRiLuDfoG8zuKdpzOR/iQkvt2Lo1iDvhefabcYCt3Kec4VTgYD7S+7n4ql
+	+PV/7Iruh4zyHhxMeVmvVqX9Fq/KSdR6itT6tuYM/RxY3I04pyCGmne9YML6GQVm
+	vLl8dbap+gK1Tp/PRNJ0eHz6aajF2KfnULB4VPMTFOdKt352kP10YdS7yVK08eEl
+	KELJ3bqHenSjLzcyIOlP90slBsWAViTA0qNM1Kd1P33p+IkwbDvVZ+flIY0wKmQv
+	jYOhTYJD73YDjFQVXZ9QgNwjL1ZwJ82IwtE2wmD2OCbmyH389zIpnuJjKS0DK9Q=
+	=
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xqenghk89-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Apr 2024 09:20:07 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43P9K6KV032065
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Apr 2024 09:20:06 GMT
+Received: from hu-mohs-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 25 Apr 2024 02:20:01 -0700
+From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Banajit Goswami
+	<bgoswami@quicinc.com>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+	<broonie@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela
+	<perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>
+CC: <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_rohkumar@quicinc.com>,
+        <quic_pkumpatl@quicinc.com>,
+        Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Subject: [PATCH v3 0/7] ASoC: codecs: wcd937x: add wcd937x audio codec support
+Date: Thu, 25 Apr 2024 14:48:50 +0530
+Message-ID: <20240425091857.2161088-1-quic_mohs@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <59b7ba5a-14a8-497e-8cf8-53bdf4e8cb8e@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 280RT4kbRjzCyZQpAd9oV2kETDLFx3SO
+X-Proofpoint-ORIG-GUID: 280RT4kbRjzCyZQpAd9oV2kETDLFx3SO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-25_09,2024-04-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ mlxlogscore=705 priorityscore=1501 phishscore=0 adultscore=0
+ malwarescore=0 spamscore=0 bulkscore=0 lowpriorityscore=0 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404250066
 
-On Thu, Apr 25, 2024 at 11:33:02AM +0300, Jarkko Nikula wrote:
-> On 4/24/24 2:59 AM, Andy Shevchenko wrote:
-> > Tue, Apr 23, 2024 at 04:36:19PM -0700, Florian Fainelli kirjoitti:
-> > > We have a number of drivers that reference the string "i2c_designware"
-> > > yet this is copied all over the places with opportunities for this
-> > > string being mis-used. Create a shared header that defines this as a
-> > > constant that other drivers can reference.
+This patchset adds support for Qualcomm WCD9370/WCD9375 codec.
 
-...
+Qualcomm WCD9370/WCD9375 Codec is a standalone Hi-Fi audio codec IC
+connected over SoundWire. This device has two SoundWire devices, RX and
+TX respectively supporting 3 x ADCs, ClassH, Ear, Aux PA, 2xHPH,
+6 DMICs and MBHC.
 
-> > >   #include <linux/i2c.h>
-> > > +#include <linux/i2c-designware.h>
-> > 
-> > Can it be hidden in the subfolder?
+For codec driver to be functional it would need both tx and rx Soundwire devices
+to be up and this is taken care by using device component framework and device-links
+are used to ensure proper pm dependencies. Ex tx does not enter suspend
+before rx or codec is suspended.
 
-...
+This patchset along with other SoundWire patches on the list
+have been tested on QCM6490 IDP device.
 
-> > > -#define DRIVER_NAME "i2c-designware-pci"
-> > > +#define DRIVER_NAME I2C_DESIGNWARE_NAME "-pci"
-> > 
-> > Oh, this makes all the things hard to read.
-> > 
-> > >   /* Work with hotplug and coldplug */
-> > > -MODULE_ALIAS("i2c_designware-pci");
-> > > +MODULE_ALIAS(DRIVER_NAME);
-> > 
-> > I believe we shouldn't use MODULE_ALIAS() without real justification.
-> > 
-> I think MODULE_ALIAS() is even needless here since this device is not added
-> from another driver but loaded only for known PCI IDs in device table.
+Changes since v2:
+ - Used common qcom,wcd93xx-common.yaml. removed duplicate properties.
+ - Merged bindings patches "v2-0001" and "v2-0003" in single patch for easy review.
+ - Fixed dt binding check errors.
+ - Added missing "qcom,wcd9375-codec" in v3-0001 dt binding patch.
+ - Added constraints on values in v3-0001 binding patch as suggested by Krzysztof
+ - Fix the typo mistake in v2 cover letter
+ 
+Changes since v1:
+ - Split the patch per driver for easier review as suggested by Krzysztof
+ - Used devm_gpiod_get api to get reset gpio as suggested by Krzysztof
 
-The patch that removes it got reverted :-( and then removed completely from PR.
+Prasad Kumpatla (7):
+  ASoC: dt-bindings: document wcd937x Audio Codec
+  ASoC: codecs: wcd937x: add wcd937x codec driver
+  ASoC: codecs: wcd937x-sdw: add SoundWire driver
+  ASoC: codecs: wcd937x: add basic controls
+  ASoC: codecs: wcd937x: add playback dapm widgets
+  ASoC: codecs: wcd937x: add capture dapm widgets
+  ASoC: codecs: wcd937x: add audio routing and Kconfig
 
+ .../bindings/sound/qcom,wcd937x-sdw.yaml      |   78 +
+ .../bindings/sound/qcom,wcd937x.yaml          |   58 +
+ sound/soc/codecs/Kconfig                      |   20 +
+ sound/soc/codecs/Makefile                     |    7 +
+ sound/soc/codecs/wcd937x-sdw.c                | 1147 +++++++
+ sound/soc/codecs/wcd937x.c                    | 3036 +++++++++++++++++
+ sound/soc/codecs/wcd937x.h                    |  653 ++++
+ 7 files changed, 4999 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd937x.yaml
+ create mode 100644 sound/soc/codecs/wcd937x-sdw.c
+ create mode 100644 sound/soc/codecs/wcd937x.c
+ create mode 100644 sound/soc/codecs/wcd937x.h
+
+
+base-commit: 5e4f84f18c4ee9b0ccdc19e39b7de41df21699dd
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
