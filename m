@@ -1,155 +1,116 @@
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7D012C463;
-	Thu, 25 Apr 2024 18:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 642A21514DE;
+	Thu, 25 Apr 2024 18:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714071322; cv=none; b=IXKAyDMSJbkrt6yL0M5KyqGAUUivI2gvvHjh/7wG/rTe69v6mXJdoCBgXb51w/UolM2J2S8QWAv1EIk4D9ugYGWy6qem2/ZrR/EC3OvZWwSRXrKR62ZU6tzt1MPW2g8JkkN2EXjqGFddrxUeD9+2TzSRzYZEoPiW0sFdAPK2ckA=
+	t=1714071337; cv=none; b=BQhDJE2OX0CqzJMpO9NSbqIFq7BwhPseb+2yrNa301knWLeVVqkKWktnQ+Yl+pzcrG0KECofgeDj5kh4EojdeBLuGWdtRdIK2FLMTy5DcRkVl+DXMcvYmo2DUrw8+nZe2iuEH0ujq14kaLEj1uaT6yXQHeuNO5xMfWntyDx2onM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714071322; c=relaxed/simple;
-	bh=KxmqUt8F4G/yFxz+7kc5MS3j/R0QuocSr2+7FqOmYCc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zb8d51HHqaSjbwmrsnq9piOdADxeiHqqBLFVeODMCr3H/harT1hThFsVrVsZ2dSJw99PMS3xQpY7VmBQU00PSKWD5NDxIGWA61b+nfT1lplj//j2MrNR068LpXTi7ZCUEp3VYnd6uSvySkKl1y1ujKd/6Jwprxk3RUEqxCQybso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R3PNXc21; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R3PNXc21"
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-4dcc7c1055bso426136e0c.0;
-        Thu, 25 Apr 2024 11:55:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714071320; x=1714676120; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hEcc77KCdofgKqsZ5QkU1749SvUlrYrgYmbv43ylHCc=;
-        b=R3PNXc21UZReHh15nBNsyKFwiAR7mZ7zoJIIgirhxnVDKIEoEi4zXCgwwlDhSpg0Ws
-         uFYmXO+iP7F+/lQaSmiuCWzvMSaY6Wf6wrEA3z+llkZd9xGVfSCbHBP5PwTXDN8VrpCl
-         3xoQWDlxcqEwsR2Qm4jdygLsCU2EMfeOZD2LBlPnAxFKQZLEOgd22uGAuQE/FcAO0UCi
-         dgM2U/QaxSIRiwu2zoe+wOlU9+9Li852EdazkjviO7mbM6mq3bbqKNgTZOQQmpMV2KmL
-         n5fD9GhjdTheSrVHXOTpSW8R/sZf/3RqkWj7IvpeqX3bc6Ryxo8qvyIaPuS/JZh2k6bM
-         1jdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714071320; x=1714676120;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hEcc77KCdofgKqsZ5QkU1749SvUlrYrgYmbv43ylHCc=;
-        b=c+zq8B8b/nyvqn4DzTlRtehRy3Zbc0+dapCEuFpkPU94Y4ryVkwgOm4ztPJoTKoQal
-         YPSRO2jzMFfNMbHUlYE0xhhQtAZmgJtxqjKYKuGvt7S9ox79G7V47MZLXZ5ZIuxvlMoQ
-         MZe6JuUpCiDwu611lHzOQTH1DBDA7VC3dS9ThhYsArLfeLdZzJI2kzNI3TQ6nujTi1S+
-         XpCQ4odHbs35Cc3Q4RDHe97Jf2lRJRkC4wdpNfAXCyOl1CHYJ1xG6wEvQeoWso5P9++d
-         +HuIfGLHCG0TD7t0zNn756o40nuskLdO+8ukBL8BTsgoXKJczvnabd62MOPSJPeXm69r
-         a7YQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWm2eVz0UM45rY0jDwM44yf+JsB3HhLn0nMVX25ZWflNQCxWVRkh7DeM88nFBwUGMFxItt52YZ2e0azFrd9Li8xZxrTxez0JNTyAdp14ukzzP2zufaNuqln4hhz2zk9OfcL8mJrcJ6fZJumbKu66ByK1+LOdoNDNtGwt9FncQuWy+9TWVmPhyU2oeq3VAKszbFFwpIhkRjtiVZAF3KKAPeJXoKdYf3s
-X-Gm-Message-State: AOJu0Yx8UXSURWlbdlDf61hL2k7Vyj4Y+LNNIko0ndgs5Z4WVqDAegg8
-	DoODjLbo8aXT9Riwj7HRh8yIuT1l4s7usZnnYGXDo+18csjZI0968LGzgGHtcsNZTTox9yav06f
-	pSChY+TeuAhAO0klsKv3m9j7P6Aw=
-X-Google-Smtp-Source: AGHT+IH3cOqIGPXstDyU3923hybok8dAgkstSnmJLdFF2hNDRjN4yiEFqkBac1FjonK9+ljxBsrX6YCYEFlx6EWRM4o=
-X-Received: by 2002:a05:6122:201c:b0:4c9:a9c9:4b3b with SMTP id
- l28-20020a056122201c00b004c9a9c94b3bmr321734vkd.9.1714071318808; Thu, 25 Apr
- 2024 11:55:18 -0700 (PDT)
+	s=arc-20240116; t=1714071337; c=relaxed/simple;
+	bh=FxDmiqcpQtTAg8MwB+A5Ghr03gw4rpc4QbTB94+pWZQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FGmxAv75RUCW9CO9eobY7EVxbbMc3CGwjbGLTP2CJnjXTtYVQKmXw/XHZXEuNlB7vkMCFg1V6UXy2MYILHNK42//jgPFU4TlZ6zYRbBN+cFYF14WtnK29CSeMmXnl14QyqU0TE7y1FSMvjlNENdK4zGykrP/aPYdMQBa6bzM6lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DEAF2F;
+	Thu, 25 Apr 2024 11:56:03 -0700 (PDT)
+Received: from [10.57.75.39] (unknown [10.57.75.39])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0CF03F793;
+	Thu, 25 Apr 2024 11:55:33 -0700 (PDT)
+Message-ID: <ce95f95d-c004-4814-bdb0-d230731084d3@arm.com>
+Date: Thu, 25 Apr 2024 19:55:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240423182428.704159-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240423182428.704159-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <7a3d4b8a-e89e-499e-92b7-9f63fbc84011@kernel.org> <CA+V-a8uz0OrsM1AxqtpeHB0f1+F6aEqHGp_t3_OPhh0ZqJ26HQ@mail.gmail.com>
- <CAMuHMdV=CTUQNm6OZN0Ck-nXKme8vZ2Ld2rDxHfQZkP2VdnNeQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdV=CTUQNm6OZN0Ck-nXKme8vZ2Ld2rDxHfQZkP2VdnNeQ@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 25 Apr 2024 19:54:37 +0100
-Message-ID: <CA+V-a8t+G07MXjgHw23-+hQ_OB0Qu+QxeSPwHoy9t1DHChbN+g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: mmc: renesas,sdhi: Group single const
- value items into an enum list
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/3] thermal/debugfs: Pass cooling device state to
+ thermal_debug_cdev_add()
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>
+References: <5774279.DvuYhMxLoT@kreacher> <2181352.irdbgypaU6@kreacher>
+ <e9be06af-48bf-45ec-8d6d-6147d20b6780@arm.com>
+ <CAJZ5v0i=HS_-S3N7ixK=FM0S=7o21cfW5jXMq=AWObwGpUkPdA@mail.gmail.com>
+ <CAJZ5v0ik_EqSXzTkowz=ha-U+JU+=KtqEMwD5+r329og2d4t=A@mail.gmail.com>
+ <4f21ee21-0178-4d50-a535-4d530baf82d1@arm.com>
+ <CAJZ5v0je44QB=dBObgDd-1pJweXdj5ZC-7sEyrOjyJ+c=n9xPQ@mail.gmail.com>
+Content-Language: en-US
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <CAJZ5v0je44QB=dBObgDd-1pJweXdj5ZC-7sEyrOjyJ+c=n9xPQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Geert,
 
-On Thu, Apr 25, 2024 at 6:11=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Thu, Apr 25, 2024 at 5:44=E2=80=AFPM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Wed, Apr 24, 2024 at 6:42=E2=80=AFAM Krzysztof Kozlowski <krzk@kerne=
-l.org> wrote:
-> > > On 23/04/2024 20:24, Prabhakar wrote:
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > Group single const value items into an enum list.
-> > > >
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
-om>
-> > > > ---
-> > > > v1->v2
-> > > > - Updated commit message
-> > > > - Grouped single const value items into an enum list.
-> > > > ---
-> > > >  .../devicetree/bindings/mmc/renesas,sdhi.yaml  | 18 +++++++-------=
-----
-> > > >  1 file changed, 7 insertions(+), 11 deletions(-)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yam=
-l b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-> > > > index 29f2400247eb..2bf90095742b 100644
-> > > > --- a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-> > > > +++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-> > > > @@ -13,15 +13,13 @@ properties:
-> > > >    compatible:
-> > > >      oneOf:
-> > > >        - items:
-> > > > -          - const: renesas,sdhi-sh73a0  # R-Mobile APE6
-> > > > -      - items:
-> > > > -          - const: renesas,sdhi-r7s72100 # RZ/A1H
-> > > > -      - items:
-> > > > -          - const: renesas,sdhi-r7s9210 # SH-Mobile AG5
-> > > > -      - items:
-> > > > -          - const: renesas,sdhi-r8a73a4 # R-Mobile APE6
-> > > > -      - items:
-> > > > -          - const: renesas,sdhi-r8a7740 # R-Mobile A1
-> > > > +          - enum:
-> > >
-> > > You wanted to drop the items, but I still see it here.
-> > >
-> > Ah, I missed that.
-> >
-> > > > +              - renesas,sdhi-sh73a0  # R-Mobile APE6
-> > > > +              - renesas,sdhi-r7s72100 # RZ/A1H
-> > > > +              - renesas,sdhi-r7s9210 # SH-Mobile AG5
-> > > > +              - renesas,sdhi-r8a73a4 # R-Mobile APE6
-> > > > +              - renesas,sdhi-r8a7740 # R-Mobile A1
-> > > > +              - renesas,sdhi-mmc-r8a77470 # RZ/G1C
-> > >
-> > > Keep list alphabetically ordered.
-> > >
-> > This list is sorted based on SoC, I will sort it  alphabetically.
-> >
-> > Geert is that OK with you?
->
-> Usually we sort alphabetically by compatible value.
->
-Thank you for the confirmation.
 
-> (FTR, sh73a0 is sometimes called r8a73a0).
->
-Got that.
+On 4/25/24 19:53, Rafael J. Wysocki wrote:
+> On Thu, Apr 25, 2024 at 8:42 PM Lukasz Luba <lukasz.luba@arm.com> wrote:
+>>
+>>
+>>
+>> On 4/25/24 14:00, Rafael J. Wysocki wrote:
+>>> On Thu, Apr 25, 2024 at 2:36 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>>>>
+>>>> Hi Lukasz,
+>>>>
+>>>> On Thu, Apr 25, 2024 at 12:02 PM Lukasz Luba <lukasz.luba@arm.com> wrote:
+>>>>>
+>>>>> Hi Rafael,
+>>>>>
+>>>>> On 4/23/24 19:00, Rafael J. Wysocki wrote:
+>>>>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>>>>
+>>>>>> If cdev_dt_seq_show() runs before the first state transition of a cooling
+>>>>>> device, it will not print any state residency information for it, even
+>>>>>> though it might be reasonably expected to print residency information for
+>>>>>> the initial state of the cooling device.
+>>>>>>
+>>>>>> For this reason, rearrange the code to get the initial state of a cooling
+>>>>>> device at the registration time and pass it to thermal_debug_cdev_add(),
+>>>>>> so that the latter can create a duration record for that state which will
+>>>>>> allow cdev_dt_seq_show() to print its residency information.
+>>>>>>
+>>>>>> Fixes: 755113d76786 ("thermal/debugfs: Add thermal cooling device debugfs information")
+>>>>>> Reported-by: Lukasz Luba <lukasz.luba@arm.com>
+>>>>>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>>>> ---
+>>>>>>     drivers/thermal/thermal_core.c    |    9 +++++++--
+>>>>>>     drivers/thermal/thermal_debugfs.c |   12 ++++++++++--
+>>>>>>     drivers/thermal/thermal_debugfs.h |    4 ++--
+>>>>>>     3 files changed, 19 insertions(+), 6 deletions(-)
+>>>>>>
+>>>>>
+>>>>> I'm trying to test it on my board and do the review, but faced issue.
+>>>>> For some reason I couldn't apply that patch on the latest bleeding-edge
+>>>>> branch.
+>>>>> Could you help me in this please? Is there something missing in the
+>>>>> patch set (like one more fist patch)?
+>>>>
+>>>> I messed up the ordering of patches (patch [2/3] should be the last
+>>>> one in the series) and on top of that, you'll need a small rebase on
+>>>> that patch.
+>>>>
+>>>> Sorry about this, I'll send a v2.
+>>>
+>>> Actually, the ordering was OK, but the rebase of the second patch is
+>>> still needed.  I'll send a v2.
+>>
+>> Thanks, I've seen it. That v2 applies smoothly and runs on the board.
+>> I'll test it and review.
+> 
+> Thank you!
+> 
+> Please also see
+> 
+> https://lore.kernel.org/linux-pm/12427744.O9o76ZdvQC@kreacher/
+> 
+> which is actually more urgent because the fixes there address more
+> serious issues (I would even consider them as 6.9-rc material).
 
-Cheers,
-Prabhakar
+Yes, I've read that patches' headers and glanced through the code.
+I'll do the review & testing on them as well today.
+
