@@ -1,48 +1,48 @@
 Received: from nbd.name (nbd.name [46.4.11.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B191D12AAC6;
-	Thu, 25 Apr 2024 15:04:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A651494BC;
+	Thu, 25 Apr 2024 15:04:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714057486; cv=none; b=rfH5DaHz05ypdZcp8RHjXgyXeBze2yBHkSS1uRQ1+Y1zgsez3DxrHcif28bjLZYqnWrUJ2y5imnatwMR/P8stKW2hwXh0FTSmsh0XN2Z8bTCl2Es9F4z28tqtN8Rb9uEaxX6hpQhMmm0N/0f05losjOk3iLdO9OUgnkznrabA7E=
+	t=1714057487; cv=none; b=qBxbxZqTRYvzuuCSKb19RiFYwzGnnO+pjFTJI3NF1z8urV/G9qBfi3YeZTZ45r5YrxhpjiS232aSUs83Pk1haTxyPy7DRt/oNBq/f2W2DJPgdRBkrRmNUR6NcQMZrXuPYvkV4+jjIdhfDHoIkXeVpQVp9axxVjCxYJshokeEZf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714057486; c=relaxed/simple;
-	bh=8NeEE50o/WAF7alz523Mftf7uWVPcr6hQyPB9rlVopU=;
+	s=arc-20240116; t=1714057487; c=relaxed/simple;
+	bh=rfWhza06Spi4Hmgao/jjF5+RD0V7hH+qByjzdOaLVPo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c0x2Sr9g5+bnmv9S2IECV1XyOBDMqR6Ds5QjrY9FUUZbm9BlS5WEtHFGYVdE9ozt6nFxKyN+VL7JIo6qEoEUPIFsqbRsV4pYEtR7b7N/ktC4YNPeIZmiGpVC8W5nao3x46pa1IQtNotpQDiraNNi1UHdvzayiP9j0gvLDhGr+0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=SEuX8jlN; arc=none smtp.client-ip=46.4.11.11
+	 MIME-Version; b=YvFb+gOETxN3lExaEGiFQN7+bQBu+zH3FP+qtK+W4lAe3yOTsLjl0NeY8FSS+4QwPuqrlEqjShgBN/QEw+uhNhg7WTslfM0bVI6gCJvQN8t6iBYtKAPqqWzZ3PrfjxywJ6DXBJuKQqFfjxKXzNZRj07O+dEnf2oLeBDZPU5Ppnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=evN6QcE0; arc=none smtp.client-ip=46.4.11.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="SEuX8jlN"
+	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="evN6QcE0"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
 	s=20160729; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=tDIhibAnoiRO2OlDgF5FLoNbCcri4UG1OGQ0HjCzYwU=; b=SEuX8jlNPizloEeHmgbL72blD/
-	KXHENMhshaTigm/P3jaU3S48aytd4QCqnG2q+RdKy/ycPQfPTL22qQOTtJHp0xiiSkhbfoFeC/ryA
-	9fJQ3R8TLPX9LELIn/Kf2iG4wCQ7AA8Skx54vRikvV9GwKNWlZm9Ph+l2Bd+HH5JovDM=;
+	bh=FBzmWuyeGQqeU8ZhMlRuHdG7CFzadwIozxD4IOxprZw=; b=evN6QcE0hgOJeC/thBn6LF0gIc
+	v46GL8brxDikke8ijLyeULAMzi6+sVu0M+5pXn2NIj8d5Wum1/uPvvrdgHFWAiyF/TvVik1N2ez0V
+	p08ppxSJL9fg0CRUb24fEnAYtuTnhpm0B6VMtAhHKUW2wMPHZcHVqCDn5jqVn1Mj1LXA=;
 Received: from p54ae9c93.dip0.t-ipconnect.de ([84.174.156.147] helo=localhost.localdomain)
 	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
 	(Exim 4.96)
 	(envelope-from <nbd@nbd.name>)
-	id 1s00eJ-007MWz-2k;
-	Thu, 25 Apr 2024 17:04:35 +0200
+	id 1s00eL-007MWz-1G;
+	Thu, 25 Apr 2024 17:04:37 +0200
 From: Felix Fietkau <nbd@nbd.name>
 To: netdev@vger.kernel.org,
 	Eric Dumazet <edumazet@google.com>,
 	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
+	Paolo Abeni <pabeni@redhat.com>,
+	David Ahern <dsahern@kernel.org>
 Cc: willemdebruijn.kernel@gmail.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next v2 3/5] net: add code for TCP fraglist GRO
-Date: Thu, 25 Apr 2024 17:04:26 +0200
-Message-ID: <20240425150432.44142-4-nbd@nbd.name>
+Subject: [PATCH v2 net-next v2 4/5] net: create tcp_gro_lookup helper function
+Date: Thu, 25 Apr 2024 17:04:28 +0200
+Message-ID: <20240425150432.44142-6-nbd@nbd.name>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240425150432.44142-1-nbd@nbd.name>
 References: <20240425150432.44142-1-nbd@nbd.name>
@@ -54,76 +54,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This implements fraglist GRO similar to how it's handled in UDP, however
-no functional changes are added yet. The next change adds a heuristic for
-using fraglist GRO instead of regular GRO.
+This pulls the flow port matching out of tcp_gro_receive, so that it can be
+reused for the next change, which adds the TCP fraglist GRO heuristic.
 
 Signed-off-by: Felix Fietkau <nbd@nbd.name>
 ---
- net/ipv4/tcp_offload.c   | 22 ++++++++++++++++++++++
- net/ipv6/tcpv6_offload.c |  9 +++++++++
- 2 files changed, 31 insertions(+)
+ include/net/tcp.h      |  1 +
+ net/ipv4/tcp_offload.c | 41 +++++++++++++++++++++++++----------------
+ 2 files changed, 26 insertions(+), 16 deletions(-)
 
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index ffc9371fe9de..a3f09aa44487 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -2198,6 +2198,7 @@ void tcp_v4_destroy_sock(struct sock *sk);
+ 
+ struct sk_buff *tcp_gso_segment(struct sk_buff *skb,
+ 				netdev_features_t features);
++struct sk_buff *tcp_gro_lookup(struct list_head *head, struct tcphdr *th);
+ struct sk_buff *tcp_gro_receive(struct list_head *head, struct sk_buff *skb);
+ INDIRECT_CALLABLE_DECLARE(int tcp4_gro_complete(struct sk_buff *skb, int thoff));
+ INDIRECT_CALLABLE_DECLARE(struct sk_buff *tcp4_gro_receive(struct list_head *head, struct sk_buff *skb));
 diff --git a/net/ipv4/tcp_offload.c b/net/ipv4/tcp_offload.c
-index e455f884190c..68157130c264 100644
+index 68157130c264..520fd425ab19 100644
 --- a/net/ipv4/tcp_offload.c
 +++ b/net/ipv4/tcp_offload.c
-@@ -336,6 +336,19 @@ struct sk_buff *tcp_gro_receive(struct list_head *head, struct sk_buff *skb)
- 	flush |= (ntohl(th2->seq) + skb_gro_len(p)) ^ ntohl(th->seq);
- 	flush |= skb_cmp_decrypted(p, skb);
+@@ -247,6 +247,27 @@ struct sk_buff *tcp_gso_segment(struct sk_buff *skb,
+ 	return segs;
+ }
  
-+	if (NAPI_GRO_CB(p)->is_flist) {
-+		flush |= (__force int)(flags ^ tcp_flag_word(th2));
-+		flush |= skb->ip_summed != p->ip_summed;
-+		flush |= skb->csum_level != p->csum_level;
-+		flush |= !pskb_may_pull(skb, skb_gro_offset(skb));
-+		flush |= NAPI_GRO_CB(p)->count >= 64;
++struct sk_buff *tcp_gro_lookup(struct list_head *head, struct tcphdr *th)
++{
++	struct tcphdr *th2;
++	struct sk_buff *p;
 +
-+		if (flush || skb_gro_receive_list(p, skb))
-+			mss = 1;
++	list_for_each_entry(p, head, list) {
++		if (!NAPI_GRO_CB(p)->same_flow)
++			continue;
 +
++		th2 = tcp_hdr(p);
++		if (*(u32 *)&th->source ^ *(u32 *)&th2->source) {
++			NAPI_GRO_CB(p)->same_flow = 0;
++			continue;
++		}
++
++		return p;
++	}
++
++	return NULL;
++}
++
+ struct sk_buff *tcp_gro_receive(struct list_head *head, struct sk_buff *skb)
+ {
+ 	struct sk_buff *pp = NULL;
+@@ -284,24 +305,12 @@ struct sk_buff *tcp_gro_receive(struct list_head *head, struct sk_buff *skb)
+ 	len = skb_gro_len(skb);
+ 	flags = tcp_flag_word(th);
+ 
+-	list_for_each_entry(p, head, list) {
+-		if (!NAPI_GRO_CB(p)->same_flow)
+-			continue;
+-
+-		th2 = tcp_hdr(p);
+-
+-		if (*(u32 *)&th->source ^ *(u32 *)&th2->source) {
+-			NAPI_GRO_CB(p)->same_flow = 0;
+-			continue;
+-		}
+-
+-		goto found;
+-	}
+-	p = NULL;
+-	goto out_check_final;
++	p = tcp_gro_lookup(head, th);
++	if (!p)
 +		goto out_check_final;
-+	}
-+
- 	if (flush || skb_gro_receive(p, skb)) {
- 		mss = 1;
- 		goto out_check_final;
-@@ -402,6 +415,15 @@ INDIRECT_CALLABLE_SCOPE int tcp4_gro_complete(struct sk_buff *skb, int thoff)
- 	const struct iphdr *iph = ip_hdr(skb);
- 	struct tcphdr *th = tcp_hdr(skb);
  
-+	if (NAPI_GRO_CB(skb)->is_flist) {
-+		skb_shinfo(skb)->gso_type |= SKB_GSO_FRAGLIST | SKB_GSO_TCPV4;
-+		skb_shinfo(skb)->gso_segs = NAPI_GRO_CB(skb)->count;
-+
-+		__skb_incr_checksum_unnecessary(skb);
-+
-+		return 0;
-+	}
-+
- 	th->check = ~tcp_v4_check(skb->len - thoff, iph->saddr,
- 				  iph->daddr, 0);
- 
-diff --git a/net/ipv6/tcpv6_offload.c b/net/ipv6/tcpv6_offload.c
-index b3b8e1f6b92a..c97d55cf036f 100644
---- a/net/ipv6/tcpv6_offload.c
-+++ b/net/ipv6/tcpv6_offload.c
-@@ -32,6 +32,15 @@ INDIRECT_CALLABLE_SCOPE int tcp6_gro_complete(struct sk_buff *skb, int thoff)
- 	const struct ipv6hdr *iph = ipv6_hdr(skb);
- 	struct tcphdr *th = tcp_hdr(skb);
- 
-+	if (NAPI_GRO_CB(skb)->is_flist) {
-+		skb_shinfo(skb)->gso_type |= SKB_GSO_FRAGLIST | SKB_GSO_TCPV6;
-+		skb_shinfo(skb)->gso_segs = NAPI_GRO_CB(skb)->count;
-+
-+		__skb_incr_checksum_unnecessary(skb);
-+
-+		return 0;
-+	}
-+
- 	th->check = ~tcp_v6_check(skb->len - thoff, &iph->saddr,
- 				  &iph->daddr, 0);
- 	skb_shinfo(skb)->gso_type |= SKB_GSO_TCPV6;
+-found:
+ 	/* Include the IP ID check below from the inner most IP hdr */
++	th2 = tcp_hdr(p);
+ 	flush = NAPI_GRO_CB(p)->flush;
+ 	flush |= (__force int)(flags & TCP_FLAG_CWR);
+ 	flush |= (__force int)((flags ^ tcp_flag_word(th2)) &
 -- 
 2.44.0
 
