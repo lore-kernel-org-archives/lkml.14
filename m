@@ -1,84 +1,181 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08C784FBC
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 09:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D8984D1C
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 09:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714036728; cv=none; b=oXt9IpFEcTBjaHEzIwT8fAutLxYZ3aLZQCQ0hEnd0hEHfX5lkk8jzUSCquMCuCXZsoxBJHINYw1gfZNRj+S1mAoymDUXl9RCZ3FIVUNEbhip2AeyvwACZ6bgsEV8MdabR4DKtfMSd7QHf3lXeGARj3AAlg5GaZFR3FNrtuXyz9I=
+	t=1714036744; cv=none; b=Agz1Ns44N+lUsjkUudczZIyA7bgS52g+alUfxEGCdfTRUUQ8n/iwGeI5d4QwCXbX6auTPg0GonJipeBpnhwmzzmK9SaJWFSFAPq/Xn3ofYqhAKQ1pgxS5B2gxJI/XPimbBfHTbUJmFfqmjawB6TFn7bel9KA6216OZ1reCCjiVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714036728; c=relaxed/simple;
-	bh=nLZE1rziuB8Cd4inrqdYD6bDm7SjRGECbSDY54hucVM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c5OoMqejgJH4+vFq7VZJWvZcEUtawqWF6svahgfe47tmOet0rU3f1lVmn9Itse3FFPz/d0MrjnPdf+rj68PtsF45HFKu7qBqIeqarqgnou5nqqm4quQgSXcyJGm3RmHVZo9Mn+h345+8L75BfZ/gwnMB/6YBFgfsnGrcZFaLDeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-01 (Coremail) with SMTP id qwCowABnbBjhHypmRq4sAA--.4146S2;
-	Thu, 25 Apr 2024 17:18:26 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: joro@8bytes.org,
-	will@kernel.org,
-	robin.murphy@arm.com,
-	heiko@sntech.de,
-	jeffy.chen@rock-chips.com
-Cc: iommu@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] iommu/rockchip: Add missing check for of_find_device_by_node
-Date: Thu, 25 Apr 2024 17:18:13 +0800
-Message-Id: <20240425091813.965003-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1714036744; c=relaxed/simple;
+	bh=9ukg3ruu+ax3frqEmm5ZMZBZr8axWQjOXc7tfBTfkIE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=ibu+p1zUpcAlU2EHHej5lm4oEWuvcVcADxpjQc2oIWTrPwLfRlhFKS+AL7zyQOYu9MOYG+Botm/dmqyXHk6Nk/q44j3cfWYEd/zEKNKAK+VzOSkG2Z5Ej3RVbbo67yMc6JWn0g/wuDx7yW5eDxT1pgSzI05lKrhejVUO9P8BR7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=n2jmnZOj; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="n2jmnZOj"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240425091901euoutp02c81fb13751ff4081aaea8d0f0e00f9c7~Je1Wuy3au1614216142euoutp02i
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 09:19:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240425091901euoutp02c81fb13751ff4081aaea8d0f0e00f9c7~Je1Wuy3au1614216142euoutp02i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1714036741;
+	bh=VVybz3ArjG9SCkgGYI737DCfD9gNvfNWH5pq4og9JqM=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=n2jmnZOj+xfBxkwgxzN+y5rOEAcx0ppo65WLIu2F1N449bWFdBSSWszstKMIwiXLQ
+	 rr4yoyL2siZ2vXjJdzF6REikIPFheYS+MCpVaAdg3m5j8ZUh23Rt0+FZuTx5FkcrOB
+	 GukJEehdYMcVVm6slV+J3BbFPUBuaStmW+zfum9o=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20240425091900eucas1p1645037da54c87e6c9656aeaf90ded5bb~Je1WXRL1z0566605666eucas1p16;
+	Thu, 25 Apr 2024 09:19:00 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 95.FA.09624.4002A266; Thu, 25
+	Apr 2024 10:19:00 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240425091900eucas1p190e706ee0812ddf335f73a19a0d1d2fe~Je1V4M4BG0531605316eucas1p1z;
+	Thu, 25 Apr 2024 09:19:00 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240425091900eusmtrp2f52e83848f5a5dc3139f028e2f6c11d2~Je1V2Y63_0050200502eusmtrp2C;
+	Thu, 25 Apr 2024 09:19:00 +0000 (GMT)
+X-AuditID: cbfec7f2-bfbff70000002598-87-662a200478bf
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id 26.5D.08810.4002A266; Thu, 25
+	Apr 2024 10:19:00 +0100 (BST)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240425091859eusmtip17ec77fc46434a61640e187bdbde9790d~Je1U5fpUe1005310053eusmtip1Y;
+	Thu, 25 Apr 2024 09:18:59 +0000 (GMT)
+Message-ID: <6fcfe1bb-a1e9-4d7c-aff7-e572bcdf5d31@samsung.com>
+Date: Thu, 25 Apr 2024 11:18:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowABnbBjhHypmRq4sAA--.4146S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7XryxKFW5XrWxuF13XF45trb_yoWfGFc_W3
-	48uFnxWr4vyrs0kw12q34xWrZFkasIvrnrZrWjkw1SyFyDWr1xXw10vr4kJFW7Wr1jyF9r
-	Kryj93yfCryUWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbVkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc2xSY4AK67AK6r4fMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-	b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-	nxnUUI43ZEXa7VUjMmh5UUUUU==
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 2/2] drm/bridge: samsung-dsim: Fix porch
+ calcalcuation rounding
+To: Adam Ford <aford173@gmail.com>, dri-devel@lists.freedesktop.org
+Cc: marex@denx.de, aford@beaconembedded.com, Frieder Schrempf
+	<frieder.schrempf@kontron.de>, Inki Dae <inki.dae@samsung.com>, Jagan Teki
+	<jagan@amarulasolutions.com>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil
+	Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+	<jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
+	Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Marco Felsch
+	<m.felsch@pengutronix.de>, Michael Tretter <m.tretter@pengutronix.de>,
+	linux-kernel@vger.kernel.org
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20240211230931.188194-2-aford173@gmail.com>
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0yTVxjHc95bS13NS8X0qCwsTeo2BhV0l+NQdLAPb/ww8QOhzjip8goo
+	VNaKii5NXTKUkrECLpYKpUAVRAXHAO1FXHERKrFuTFipJV2dCRfpsBbY5iLO9t2Fb//zPL/n
+	8n9y+LjoLLWaX6g8zKqUiiIJJSB6b/95L5l4LXF/ir1KinwPhnBkH6nkocGfmzHkbwkT6EVv
+	NY7uz89S6MvzbhLV+PUEmuvSU2iisQMg18wIgSqqLTz0k62eQk9sIzjqbXvJNYV6CDRTfhKg
+	8ooLJJq1egGqMY2RqHummty6krkS8pPMVKsWZ0zGQYK5sWAmGKtxnMecO11HMi2OKYzpaq+g
+	mO9HWkhmUD+MMb5RB8WYXDsYf+UAxnz1PIWp6m4HzLdDJ7JiPxZsymOLCo+wqnXpuYKCCVMz
+	KGmIPXb3mRNogVeoAzF8SL8Nv6j8DdcBAV9EtwEY/s6FRxIieg7AW82ZnA4D2BTQ6AA/WrDY
+	9hnHtwL4dc2PPI4JAaib/jSihXQ6ND+pjfYhaClcMFdQXDwWuuoeERG9kk6Afq8hWruClsO5
+	2stRPo7OhK7nC1hkAE5PkTAY6CEjCZwWQ++jRiyiKToV6oK6aNMYeiMc6wwQHJMArwXro24g
+	XSeA7gttBGfzQzjqtFKcXgGnB7p5nI6HL6yNGFdwCkDzX/5/HnoAtRNewFFp0Od+RkX84/Sb
+	sNO2jgt/AO/a+kjuLMuhJxjLLbEc1vSexbmwEJ4uF3H0Wmgc6PhvrPOHYVwPJMYldzEusWlc
+	Ysf4/1wzINqBmC1VF+ez6lQle1SmVhSrS5X5sn2HirvAy787tDjw9DpomA7J+gHGB/0A8nFJ
+	nHAs9MZ+kTBPUXacVR3aoyotYtX9YA2fkIiF0rwEVkTnKw6zB1m2hFX9m8X4Mau12EaLnecY
+	29RwxpBxgp+5xYEb5TnSTkOZSJlrzbnxiWPzVfUBbZY0OTm+YFmVopA4fyltWNZPTrzfcW7+
+	ZsaZK7MlijUWeUpn31GVXZz99KYntHPVPct7W2tvuak7RXWnLiUOY9nhpDS1Z9d6zWPBXsXv
+	l+ud78g0+vVOtKPVZEieHZw0d2zw5fBSai9+vm3t1Z6DoodvJckSdH2/Bu4odkv+8GSLPkr0
+	/SI/ucwWL08/Ml6m2feNRHN7qHi+fdX9LfOTDzIeOirr418db7zmyRqdlC7GPd4buL45EFPl
+	toe3l1qOhUbJd8VNvKTggazdhlfyct2vo10bBMGmPd21249LCHWBIjURV6kVfwNriKwIKgQA
+	AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDKsWRmVeSWpSXmKPExsVy+t/xu7osClppBnevMlvcuX2a2WL31W52
+	ixPXFzFZ3F/8mcXi/7aJzBZXvr5ns+hdeo7VYtL9CSwWXzZNYLN4Pn8do8XJN1dZLDonLmG3
+	uLxrDpvFh11AU7atAKpb+HEri8WbtkZGi7bOZawW73feYrSYNO8mq8WWNxNZHUQ91n68z+rx
+	cnkDs8e8WSdYPPZ+W8DisXPWXXaP2R0zWT0W73nJ5LFpVSebx5Gri1k9Tky4xORx59oeNo95
+	JwM97ncfZ/Lo/2vg0bdlFaPH5tPVAYJRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbm
+	sVZGpkr6djYpqTmZZalF+nYJehnP5y1iLJgrWHH210HGBsZbvF2MHBwSAiYS/1bUdDFycQgJ
+	LGWUWHbgGUsXIydQXEbi5LQGVghbWOLPtS42iKL3jBJzXu5kA0nwCthJLPgwmRnEZhFQlfi2
+	oBMqLihxcuYTsEGiAvIS92/NYAexhQUiJG5ObQKzRQScJU7+/cYEMpRZ4DWrxLdb5xghNuxm
+	lPh5YS3YVGYBcYlbT+YzgdhsAoYSXW+7wDZwClhK3Fz/kAWixkyia2sXI4QtL7H97RzmCYxC
+	s5AcMgvJqFlIWmYhaVnAyLKKUSS1tDg3PbfYUK84Mbe4NC9dLzk/dxMjMNlsO/Zz8w7Gea8+
+	6h1iZOJgPMQowcGsJMJ786NGmhBvSmJlVWpRfnxRaU5q8SFGU2BoTGSWEk3OB6a7vJJ4QzMD
+	U0MTM0sDU0szYyVxXs+CjkQhgfTEktTs1NSC1CKYPiYOTqkGpnn1qROTT87T2TuBSbxu5/9F
+	fZtMb29yfnPy/9yDTw4kSkyf7SG9cJlc3KWjK4uZeNb8yr9eZPNO+nCNWkZ59ZbtVz+5T3hw
+	zECXb2t2yHbhIueDkcu/r5bivLpj0rF/EmwXXgdvYe66aLPLLEpU+O0N9qKP3EvWffY42l6/
+	uHpp1TtRqQnNQt4FHJc29r39URZ/o+X/XZPJfzo4uU38V7Gm3eqweq9z+GDsrZlmXtGLpTm8
+	Oye0Hy8rsD6uvjNM9BlXa/1ptrI3x1PSlx6YYrhj/8MNBhoRAlwuXs/KUw3Pcyw+kL6yZM25
+	KKWSGf3r3HbZz978NPX0hOPiPK9iGnUFGE119TqcRYvZX+3IyVFiKc5INNRiLipOBADu2C4P
+	vwMAAA==
+X-CMS-MailID: 20240425091900eucas1p190e706ee0812ddf335f73a19a0d1d2fe
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20240211230945eucas1p1863deb244ef4fdc68825ff01d082e270
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240211230945eucas1p1863deb244ef4fdc68825ff01d082e270
+References: <20240211230931.188194-1-aford173@gmail.com>
+	<CGME20240211230945eucas1p1863deb244ef4fdc68825ff01d082e270@eucas1p1.samsung.com>
+	<20240211230931.188194-2-aford173@gmail.com>
 
-Add check for the return value of of_find_device_by_node() and return
-the error if it fails in order to avoid NULL pointer dereference.
+On 12.02.2024 00:09, Adam Ford wrote:
+> When using video sync pulses, the HFP, HBP, and HSA are divided between
+> the available lanes if there is more than one lane.  For certain
+> timings and lane configurations, the HFP may not be evenly divisible.
+> If the HFP is rounded down, it ends up being too small which can cause
+> some monitors to not sync properly. In these instances, adjust htotal
+> and hsync to round the HFP up, and recalculate the htotal.
+>
+> Tested-by: Frieder Schrempf <frieder.schrempf@kontron.de> # Kontron BL i.MX8MM with HDMI monitor
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 
-Fixes: 5fd577c3eac3 ("iommu/rockchip: Use OF_IOMMU to attach devices automatically")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/iommu/rockchip-iommu.c | 2 ++
- 1 file changed, 2 insertions(+)
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
-index 4b369419b32c..1225c1df6ef6 100644
---- a/drivers/iommu/rockchip-iommu.c
-+++ b/drivers/iommu/rockchip-iommu.c
-@@ -1152,6 +1152,8 @@ static int rk_iommu_of_xlate(struct device *dev,
- 		return -ENOMEM;
- 
- 	iommu_dev = of_find_device_by_node(args->np);
-+	if (!iommu_dev)
-+		return -ENODEV;
- 
- 	data->iommu = platform_get_drvdata(iommu_dev);
- 	data->iommu->domain = &rk_identity_domain;
+> ---
+> V2:  No changes
+>
+> diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/bridge/samsung-dsim.c
+> index 8476650c477c..52939211fe93 100644
+> --- a/drivers/gpu/drm/bridge/samsung-dsim.c
+> +++ b/drivers/gpu/drm/bridge/samsung-dsim.c
+> @@ -1606,6 +1606,27 @@ static int samsung_dsim_atomic_check(struct drm_bridge *bridge,
+>   		adjusted_mode->flags |= (DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC);
+>   	}
+>   
+> +	/*
+> +	 * When using video sync pulses, the HFP, HBP, and HSA are divided between
+> +	 * the available lanes if there is more than one lane.  For certain
+> +	 * timings and lane configurations, the HFP may not be evenly divisible.
+> +	 * If the HFP is rounded down, it ends up being too small which can cause
+> +	 * some monitors to not sync properly. In these instances, adjust htotal
+> +	 * and hsync to round the HFP up, and recalculate the htotal. Through trial
+> +	 * and error, it appears that the HBP and HSA do not appearto need the same
+> +	 * correction that HFP does.
+> +	 */
+> +	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE && dsi->lanes > 1) {
+> +		int hfp = adjusted_mode->hsync_start - adjusted_mode->hdisplay;
+> +		int remainder = hfp % dsi->lanes;
+> +
+> +		if (remainder) {
+> +			adjusted_mode->hsync_start += remainder;
+> +			adjusted_mode->hsync_end   += remainder;
+> +			adjusted_mode->htotal      += remainder;
+> +		}
+> +	}
+> +
+>   	return 0;
+>   }
+>   
+
+Best regards
 -- 
-2.25.1
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
