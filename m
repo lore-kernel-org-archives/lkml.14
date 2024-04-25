@@ -1,48 +1,32 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mail.kaechele.ca (mail.kaechele.ca [54.39.219.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CDA1C6A8;
-	Thu, 25 Apr 2024 03:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682031CFBC;
+	Thu, 25 Apr 2024 03:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.39.219.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714015465; cv=none; b=fyiSGMjbt1v3uVt1eF6YqimModjb6YXxPQYvMXb6OX3BiwT1wWlAANXMd1WXL+GqC+vOSd8yDqhT1Y5lYGasd18fL2+lFldWjnhy+mTwtLEd5IP/knpELCfjQeIr3QqkYL6QmKU7nEktmLOxVrS1gPNCnebeVTmppenrJQOJt8c=
+	t=1714015572; cv=none; b=D90XAff/2NnREsi/pwSdc/ExRjGIJBRr2R+nST3rvjzer4KNuA6YmzI+sSTTuzo9mwHiIH6n1E+HYneSHd15nLPeq6zfRd2UHXLGR5sT47RNljaDSyvhLkiONhRhQIkx74fORGUJ61BS16DD1HIqR1cBwimiOYElEg8a3/dhtXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714015465; c=relaxed/simple;
-	bh=xqwdcJLe5JFwyevAFUDSA4T8Wpv1E+ZMopzpR7lD1Tw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JpwlK4Sfpw217zqyR6pYYyNN7ow7gzaJg+3ubh3DaCSVKAvosP1xdwDHJLorAT/BaiLQmqVOEdRj0Gv6a8jwWkxje8TnzToOgJo28RHhOc5YhHOvhwrJGPp60RbyOfbbNRkAsSHNVab8pvQ8vbOssQ2SLs/EbFoZAHVjQ2LbeGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=i8nXoS8K; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1714015572; c=relaxed/simple;
+	bh=wK5vyYcwPVAWU7hn2RU6otvN8hIlPdrQoWg66De1424=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=OwEM4hpPMGyf47ntXGdtosft1GcS3sycFFyQDiBEoFQ3cs7bLSwpfRL2d1S44xfJnwRDNVwhcuACDUJBx7/cg5hKmVbFIcaMRdqB34IpwAVVEHyHDot8iCyMfNOgbkLYcKC3DRVhuymReXkw4e9CFnggxLN1fC1TqiupwfHJV2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaechele.ca; spf=pass smtp.mailfrom=kaechele.ca; dkim=pass (1024-bit key) header.d=kaechele.ca header.i=@kaechele.ca header.b=Y+jLAUpP; arc=none smtp.client-ip=54.39.219.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaechele.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaechele.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="i8nXoS8K"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43P3BtjO017292;
-	Thu, 25 Apr 2024 03:24:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=GDJttSaAJHCIVva3XnzqMpczfz0WpHXgk6knXs3cmB8=; b=i8
-	nXoS8KtjCgPZLJIsTfs0Xn5j94dtBGIMK8BOp6bL5iolmReU6MNzmDGDXjsKiUUL
-	4kIwAZYu1fq47zkjXSzrCWIYxBNhnEH5sztCr9gLPsVmurVn9Q6j274xCaBvFoo4
-	ZAKACmJ3ccS/UgSQVGvN7BXFlpppHhEvEzfw5Wdk5GGnTHgZGYwg3Cu/7+OSEc5q
-	TQ0daLVdvkQf28imB3+VHJbt5oHqF3ouFG7FZ9MX1bLgyZS+sLp8WqKGBqlOPSe4
-	nY93p8KsSjOITmoW/yE2Mv2Urg9r86BlV7rOC7djT7YBeppLon2CmtaLRI6Nc3dA
-	zqWsVwUcKXE1MZi4q0uw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xqenkg2ch-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 03:24:10 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43P3O8kF021777
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 03:24:08 GMT
-Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 24 Apr
- 2024 20:24:02 -0700
-Message-ID: <708b5097-b41c-4c5b-9fe2-aaa578e8c6f1@quicinc.com>
-Date: Thu, 25 Apr 2024 11:23:59 +0800
+	dkim=pass (1024-bit key) header.d=kaechele.ca header.i=@kaechele.ca header.b="Y+jLAUpP"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 511D5C005F;
+	Wed, 24 Apr 2024 23:27:32 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaechele.ca; s=201907;
+	t=1714015654; h=from:subject:date:message-id:to:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=wKQqhvjCnwePtvQuR8aaJD84f/wV5y4ev28hOd21474=;
+	b=Y+jLAUpP9rCQVlobVGwI+p2IoQe2g4z9xbgr1HoOwoU9MH936nMo2kcwBrvwNt2i5PNr27
+	XNY7V7w1NHVCX9luL2MzblAFN2HQ37uQ44/IEFYOq7UrBtgT60o4vGL2f0PBDjRonGsDr2
+	wOyDeuTaG4pW/ytfgeFdM6H2dPQRZ4o=
+Message-ID: <d51409a2-d336-4b93-9506-a2bb0c9a7ef4@kaechele.ca>
+Date: Wed, 24 Apr 2024 23:26:02 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,477 +34,296 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/4] arm64: dts: qcom: aim300: add AIM300 AIoT
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <keescook@chromium.org>,
-        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <kernel@quicinc.com>, Qiang Yu <quic_qianyu@quicinc.com>,
-        Ziyue Zhang
-	<quic_ziyuzhan@quicinc.com>
-References: <20240424024508.3857602-1-quic_tengfan@quicinc.com>
- <20240424024508.3857602-5-quic_tengfan@quicinc.com>
- <CAA8EJpqAkxy9aXw=nr-H0iguD8zRdkviWvMn-h==v1qzeRXc1Q@mail.gmail.com>
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-In-Reply-To: <CAA8EJpqAkxy9aXw=nr-H0iguD8zRdkviWvMn-h==v1qzeRXc1Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [PATCH v4 2/4] HID: Add Himax HX83102J touchscreen driver
+To: Allen_Lin <allencl_lin@hotmail.com>, dmitry.torokhov@gmail.com,
+ robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor@kernel.org,
+ jikos@kernel.org, benjamin.tissoires@redhat.com,
+ linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240417074115.1137885-1-allencl_lin@hotmail.com>
+ <TY0PR06MB561105A3386E9D76F429110D9E0F2@TY0PR06MB5611.apcprd06.prod.outlook.com>
+Content-Language: en-US
+From: Felix Kaechele <felix@kaechele.ca>
+In-Reply-To: <TY0PR06MB561105A3386E9D76F429110D9E0F2@TY0PR06MB5611.apcprd06.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 0mEXBxPJv1SxY1KQvAKqrkvVcgS3saxx
-X-Proofpoint-GUID: 0mEXBxPJv1SxY1KQvAKqrkvVcgS3saxx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-25_02,2024-04-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- mlxlogscore=999 priorityscore=1501 impostorscore=0 malwarescore=0
- bulkscore=0 lowpriorityscore=0 spamscore=0 adultscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404250023
+X-Last-TLS-Session-Version: TLSv1.3
 
+Hey there,
 
+I've recently been working on adding HX83100A support to the already 
+existing himax_hx83112b driver. So I thought I'd take a look at this, too.
 
-On 4/25/2024 7:50 AM, Dmitry Baryshkov wrote:
-> On Wed, 24 Apr 2024 at 05:46, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
->>
->> Add AIM300 AIoT Carrier board DTS support, including usb, UART, PCIe,
->> I2C functions support.
->> Here is a diagram of AIM300 AIoT Carrie Board and SoM
->>   +--------------------------------------------------+
->>   |             AIM300 AIOT Carrier Board            |
->>   |                                                  |
->>   |           +-----------------+                    |
->>   |power----->| Fixed regulator |---------+          |
->>   |           +-----------------+         |          |
->>   |                                       |          |
->>   |                                       v VPH_PWR  |
->>   | +----------------------------------------------+ |
->>   | |                          AIM300 SOM |        | |
->>   | |                                     |VPH_PWR | |
->>   | |                                     v        | |
->>   | |   +-------+       +--------+     +------+    | |
->>   | |   | UFS   |       | QCS8550|     |PMIC  |    | |
->>   | |   +-------+       +--------+     +------+    | |
->>   | |                                              | |
->>   | +----------------------------------------------+ |
->>   |                                                  |
->>   |                    +----+          +------+      |
->>   |                    |USB |          | UART |      |
->>   |                    +----+          +------+      |
->>   +--------------------------------------------------+
->>
->> Co-developed-by: Qiang Yu <quic_qianyu@quicinc.com>
->> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
->> Co-developed-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
->> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
->> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/Makefile             |   1 +
->>   .../boot/dts/qcom/qcs8550-aim300-aiot.dts     | 343 ++++++++++++++++++
->>   2 files changed, 344 insertions(+)
->>   create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
->>
->> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
->> index f63abb43e9fe..c46c10d85697 100644
->> --- a/arch/arm64/boot/dts/qcom/Makefile
->> +++ b/arch/arm64/boot/dts/qcom/Makefile
->> @@ -96,6 +96,7 @@ dtb-$(CONFIG_ARCH_QCOM)       += qcm6490-idp.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)        += qcs404-evb-1000.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)        += qcs404-evb-4000.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)        += qcs6490-rb3gen2.dtb
->> +dtb-$(CONFIG_ARCH_QCOM)        += qcs8550-aim300-aiot.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)        += qdu1000-idp.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)        += qrb2210-rb1.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)        += qrb4210-rb2.dtb
->> diff --git a/arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts b/arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
->> new file mode 100644
->> index 000000000000..146bf6ea9e6a
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
->> @@ -0,0 +1,343 @@
->> +// SPDX-License-Identifier: BSD-3-Clause
->> +/*
->> + * Copyright (c) 2023-2024, Qualcomm Innovation Center, Inc. All rights reserved.
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include <dt-bindings/leds/common.h>
->> +#include "qcs8550-aim300.dtsi"
->> +#include "pm8010.dtsi"
->> +#include "pmr735d_a.dtsi"
->> +#include "pmr735d_b.dtsi"
->> +
->> +/ {
->> +       model = "Qualcomm Technologies, Inc. QCS8550 AIM300 AIOT";
->> +       compatible = "qcom,qcs8550-aim300-aiot", "qcom,qcs8550-aim300", "qcom,qcs8550",
->> +                    "qcom,sm8550";
->> +
->> +       aliases {
->> +               serial0 = &uart7;
->> +       };
->> +
->> +       chosen {
->> +               stdout-path = "serial0:115200n8";
->> +       };
->> +
->> +       gpio-keys {
->> +               compatible = "gpio-keys";
->> +
->> +               pinctrl-0 = <&volume_up_n>;
->> +               pinctrl-names = "default";
->> +
->> +               key-volume-up {
->> +                       label = "Volume Up";
->> +                       debounce-interval = <15>;
->> +                       gpios = <&pm8550_gpios 6 GPIO_ACTIVE_LOW>;
->> +                       linux,code = <KEY_VOLUMEUP>;
->> +                       linux,can-disable;
->> +                       wakeup-source;
->> +               };
->> +       };
->> +
->> +       pmic-glink {
->> +               compatible = "qcom,sm8550-pmic-glink", "qcom,pmic-glink";
->> +               #address-cells = <1>;
->> +               #size-cells = <0>;
->> +               orientation-gpios = <&tlmm 11 GPIO_ACTIVE_HIGH>;
->> +
->> +               connector@0 {
->> +                       compatible = "usb-c-connector";
->> +                       reg = <0>;
->> +                       power-role = "dual";
->> +                       data-role = "dual";
->> +
->> +                       ports {
->> +                               #address-cells = <1>;
->> +                               #size-cells = <0>;
->> +
->> +                               port@0 {
->> +                                       reg = <0>;
->> +
->> +                                       pmic_glink_hs_in: endpoint {
->> +                                               remote-endpoint = <&usb_1_dwc3_hs>;
->> +                                       };
->> +                               };
->> +
->> +                               port@1 {
->> +                                       reg = <1>;
->> +
->> +                                       pmic_glink_ss_in: endpoint {
->> +                                               remote-endpoint = <&redriver_ss_out>;
->> +                                       };
->> +                               };
->> +
->> +                               port@2 {
->> +                                       reg = <2>;
->> +
->> +                                       pmic_glink_sbu: endpoint {
->> +                                               remote-endpoint = <&fsa4480_sbu_mux>;
->> +                                       };
->> +                               };
->> +                       };
->> +               };
->> +       };
->> +
->> +       vph_pwr: regulator-vph-pwr {
->> +               compatible = "regulator-fixed";
->> +               regulator-name = "vph_pwr";
->> +               regulator-min-microvolt = <3700000>;
->> +               regulator-max-microvolt = <3700000>;
->> +
->> +               regulator-always-on;
->> +               regulator-boot-on;
->> +       };
->> +};
->> +
->> +&apps_rsc {
->> +       regulators-0 {
->> +               vdd-bob1-supply = <&vph_pwr>;
->> +               vdd-bob2-supply = <&vph_pwr>;
->> +       };
->> +
->> +       regulators-3 {
->> +               vdd-s4-supply = <&vph_pwr>;
->> +               vdd-s5-supply = <&vph_pwr>;
->> +       };
->> +
->> +       regulators-4 {
->> +               vdd-s4-supply = <&vph_pwr>;
->> +       };
->> +
->> +       regulators-5 {
->> +               vdd-s1-supply = <&vph_pwr>;
->> +               vdd-s2-supply = <&vph_pwr>;
->> +               vdd-s3-supply = <&vph_pwr>;
->> +               vdd-s4-supply = <&vph_pwr>;
->> +               vdd-s5-supply = <&vph_pwr>;
->> +               vdd-s6-supply = <&vph_pwr>;
->> +       };
->> +};
->> +
->> +&i2c_hub_2 {
->> +       status = "okay";
->> +
->> +       typec-mux@42 {
->> +               compatible = "fcs,fsa4480";
->> +               reg = <0x42>;
->> +
->> +               vcc-supply = <&vreg_bob1>;
->> +
->> +               mode-switch;
->> +               orientation-switch;
->> +
->> +               port {
->> +                       fsa4480_sbu_mux: endpoint {
->> +                               remote-endpoint = <&pmic_glink_sbu>;
->> +                       };
->> +               };
->> +       };
->> +
->> +       typec-retimer@1c {
->> +               compatible = "onnn,nb7vpq904m";
->> +               reg = <0x1c>;
->> +
->> +               vcc-supply = <&vreg_l15b_1p8>;
->> +
->> +               orientation-switch;
->> +               retimer-switch;
->> +
->> +               ports {
->> +                       #address-cells = <1>;
->> +                       #size-cells = <0>;
->> +
->> +                       port@0 {
->> +                               reg = <0>;
->> +
->> +                               redriver_ss_out: endpoint {
->> +                                       remote-endpoint = <&pmic_glink_ss_in>;
->> +                               };
->> +                       };
->> +
->> +                       port@1 {
->> +                               reg = <1>;
->> +
->> +                               redriver_ss_in: endpoint {
->> +                                       data-lanes = <3 2 1 0>;
->> +                                       remote-endpoint = <&usb_dp_qmpphy_out>;
->> +                               };
->> +                       };
->> +               };
->> +       };
->> +};
->> +
->> +&mdss_dsi0 {
->> +       status = "okay";
->> +
->> +       panel@0 {
->> +               compatible = "visionox,vtdr6130";
->> +               reg = <0>;
->> +
->> +               pinctrl-0 = <&dsi_active>, <&te_active>;
->> +               pinctrl-1 = <&dsi_suspend>, <&te_suspend>;
->> +               pinctrl-names = "default", "sleep";
->> +
->> +               reset-gpios = <&tlmm 133 GPIO_ACTIVE_LOW>;
->> +
->> +               vci-supply = <&vreg_l13b_3p0>;
->> +               vdd-supply = <&vreg_l11b_1p2>;
->> +               vddio-supply = <&vreg_l12b_1p8>;
->> +
->> +               port {
->> +                       panel0_in: endpoint {
->> +                               remote-endpoint = <&mdss_dsi0_out>;
->> +                       };
->> +               };
->> +       };
->> +};
->> +
->> +&mdss_dsi0_out {
->> +       remote-endpoint = <&panel0_in>;
->> +       data-lanes = <0 1 2 3>;
->> +};
->> +
->> +&mdss_dsi0_phy {
->> +       status = "okay";
->> +};
->> +
->> +&pcie0 {
->> +       pinctrl-0 = <&pcie0_default_state>;
->> +       pinctrl-names = "default";
->> +
->> +       status = "okay";
->> +};
->> +
->> +&pcie0_phy {
->> +       status = "okay";
->> +};
->> +
->> +&pcie1 {
->> +       pinctrl-0 = <&pcie1_default_state>;
->> +       pinctrl-names = "default";
->> +
->> +       status = "okay";
->> +};
->> +
->> +&pcie1_phy {
->> +       status = "okay";
->> +};
->> +
->> +&pm8550_gpios {
->> +       volume_up_n: volume-up-n-state {
->> +               pins = "gpio6";
->> +               function = "normal";
->> +               power-source = <1>;
->> +               bias-pull-up;
->> +               input-enable;
->> +       };
->> +};
->> +
->> +&pon_pwrkey {
->> +       status = "okay";
->> +};
->> +
->> +&pon_resin {
->> +       linux,code = <KEY_VOLUMEDOWN>;
->> +
->> +       status = "okay";
->> +};
->> +
->> +&qupv3_id_0 {
->> +       status = "okay";
->> +};
->> +
->> +&remoteproc_adsp {
->> +       firmware-name = "qcom/qcs8550/adsp.mbn",
->> +                       "qcom/qcs8550/adsp_dtbs.elf";
->> +       status = "okay";
->> +};
->> +
->> +&remoteproc_cdsp {
->> +       firmware-name = "qcom/qcs8550/cdsp.mbn",
->> +                       "qcom/qcs8550/cdsp_dtbs.elf";
->> +       status = "okay";
->> +};
->> +
->> +&swr1 {
->> +       status = "okay";
->> +};
->> +
->> +&swr2 {
->> +       status = "okay";
->> +};
->> +
->> +&tlmm {
->> +       gpio-reserved-ranges = <32 8>;
->> +
->> +       dsi_active: dsi-active-state {
->> +               pins = "gpio133";
->> +               function = "gpio";
->> +               drive-strength = <8>;
->> +               bias-disable;
->> +       };
->> +
->> +       dsi_suspend: dsi-suspend-state {
->> +               pins = "gpio133";
->> +               function = "gpio";
->> +               drive-strength = <2>;
->> +               bias-pull-down;
->> +       };
->> +
->> +       te_active: te-active-state {
->> +               pins = "gpio86";
->> +               function = "mdp_vsync";
->> +               drive-strength = <2>;
->> +               bias-pull-down;
->> +       };
->> +
->> +       te_suspend: te-suspend-state {
->> +               pins = "gpio86";
->> +               function = "mdp_vsync";
->> +               drive-strength = <2>;
->> +               bias-pull-down;
->> +       };
->> +};
->> +
->> +&uart7 {
->> +       status = "okay";
->> +};
->> +
->> +&usb_1 {
->> +       status = "okay";
->> +};
->> +
->> +&usb_1_dwc3 {
->> +       dr_mode = "otg";
+First of all, thank you for providing documented code. The vendor 
+released code is much harder to parse and understand, especially given 
+that there is almost no commentary.
+With the chip family having strong similarities between chips this is 
+helpful for my HX83100A additions to the himax_hx83112b driver.
+
+As far as I understand (and given that I have no access to data sheets 
+and register maps) HX83112B and HX83100A are I2C, not SPI, and also 
+don't emit HID packets internally, but a custom event data structure.
+So there are certainly some differences with that.
+But registers and sequences are identical, even with the different 
+busses involved.
+
+I'm sure there could be some value in combining efforts for both 
+drivers. At the same time I see that this is supposed to go in as a hid 
+driver, not into input/touchscreen. So I don't know how practical 
+combining things would be. So  my comments below may possibly be 
+irrelevant if the HX83102J is the only HID over SPI chip in the family.
+
+My comments inline are based on what I learned from studying the vendor 
+driver at https://github.com/HimaxSoftware/HX83112_Android_Driver and 
+https://github.com/HimaxSoftware/HX83100_Android_Driver
+
+On 2024-04-17 03:41, Allen_Lin wrote:
+> Add a new driver for Himax HX83102J touchscreen controllers.
+> This driver supports Himax IC using the SPI interface to
+> acquire HID packets.
 > 
-> OTG is default and can be dropped.
-
-OTG will be dropped.
-
+> After confirmed the IC's exsitence the driver loads the firmware
+> image from flash to get the HID report descriptor, VID and PID.
+> And use those information to register HID device.
 > 
->> +       usb-role-switch;
-> 
-> Please move to SoC dtsi and drop from board files.
-
-This will be moved to SoC dtsi.
-
-> 
->> +};
->> +
->> +&usb_1_dwc3_hs {
->> +       remote-endpoint = <&pmic_glink_hs_in>;
->> +};
->> +
->> +&usb_1_dwc3_ss {
->> +       remote-endpoint = <&usb_dp_qmpphy_usb_ss_in>;
-> 
-> This too.
-
-This will be moved to SoC dtsi.
-
-> 
->> +};
->> +
->> +&usb_1_hsphy {
->> +       status = "okay";
->> +};
->> +
->> +&usb_dp_qmpphy {
->> +       orientation-switch;
-> 
-> This too
-
-This will be moved to SoC dtsi.
-
-> 
->> +
->> +       status = "okay";
->> +};
->> +
->> +&usb_dp_qmpphy_out {
->> +       remote-endpoint = <&redriver_ss_in>;
->> +};
->> +
->> +&usb_dp_qmpphy_usb_ss_in {
->> +       remote-endpoint = <&usb_1_dwc3_ss>;
-> 
-> And this.
-
-This will be moved to SoC dtsi.
-
-> 
->> +};
->> --
->> 2.25.1
->>
-> 
+> Signed-off-by: Allen_Lin <allencl_lin@hotmail.com>
+> ---
+>   MAINTAINERS             |    1 +
+>   drivers/hid/Kconfig     |    7 +
+>   drivers/hid/Makefile    |    2 +
+>   drivers/hid/hid-himax.c | 1768 +++++++++++++++++++++++++++++++++++++++
+>   drivers/hid/hid-himax.h |  288 +++++++
+>   5 files changed, 2066 insertions(+)
+>   create mode 100644 drivers/hid/hid-himax.c
+>   create mode 100644 drivers/hid/hid-himax.h
 > 
 
--- 
-Thx and BRs,
-Tengfei Fan
+...
+
+> diff --git a/drivers/hid/hid-himax.c b/drivers/hid/hid-himax.c
+> new file mode 100644
+> index 000000000000..f8a417e07f0c
+> --- /dev/null
+> +++ b/drivers/hid/hid-himax.c
+> @@ -0,0 +1,1768 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Himax hx83102j SPI Driver Code for HID.
+> + *
+> + * Copyright (C) 2024 Himax Corporation.
+> + */
+
+...
+
+> +/**
+> + * hx83102j_sense_off() - Stop MCU and enter safe mode
+> + * @ts: Himax touch screen data
+> + * @check_en: Check if need to ensure FW is stopped by its owne process
+> + *
+> + * Sense off is a process to make sure the MCU inside the touch chip is stopped.
+> + * The process has two stage, first stage is to request FW to stop. Write
+> + * HIMAX_REG_DATA_FW_GO_SAFEMODE to HIMAX_REG_ADDR_CTRL_FW tells the FW to stop by its own.
+> + * Then read back the FW status to confirm the FW is stopped. When check_en is true,
+> + * the function will resend the stop FW command until the retry limit reached.
+> + * There maybe a chance that the FW is not stopped by its own, in this case, the
+> + * safe mode in next stage still stop the MCU, but FW internal flag may not be
+> + * configured correctly. The second stage is to enter safe mode and reset TCON.
+> + * Safe mode is a mode that the IC circuit ensure the internal MCU is stopped.
+> + * Since this IC is TDDI, the TCON need to be reset to make sure the IC is ready
+> + * for next operation.
+> + *
+> + * Return: 0 on success, negative error code on failure
+> + */
+> +static int hx83102j_sense_off(struct himax_ts_data *ts, bool check_en)
+> +{
+> +	int ret;
+> +	u32 retry_cnt;
+> +	const u32 stop_fw_retry_limit = 35;
+> +	const u32 enter_safe_mode_retry_limit = 5;
+> +	const union himax_dword_data safe_mode = {
+> +		.dword = cpu_to_le32(HIMAX_REG_DATA_FW_GO_SAFEMODE)
+> +	};
+> +	union himax_dword_data data;
+> +
+> +	dev_info(ts->dev, "%s: check %s\n", __func__, check_en ? "True" : "False");
+> +	if (!check_en)
+> +		goto without_check;
+> +
+> +	for (retry_cnt = 0; retry_cnt < stop_fw_retry_limit; retry_cnt++) {
+> +		if (retry_cnt == 0 ||
+> +		    (data.byte[0] != HIMAX_REG_DATA_FW_GO_SAFEMODE &&
+> +		    data.byte[0] != HIMAX_REG_DATA_FW_RE_INIT &&
+> +		    data.byte[0] != HIMAX_REG_DATA_FW_IN_SAFEMODE)) {
+> +			ret = himax_mcu_register_write(ts, HIMAX_REG_ADDR_CTRL_FW,
+> +						       safe_mode.byte, 4);
+> +			if (ret < 0) {
+> +				dev_err(ts->dev, "%s: stop FW failed\n", __func__);
+> +				return ret;
+> +			}
+> +		}
+> +		usleep_range(10000, 11000);
+> +
+> +		ret = himax_mcu_register_read(ts, HIMAX_REG_ADDR_FW_STATUS, data.byte, 4);
+> +		if (ret < 0) {
+> +			dev_err(ts->dev, "%s: read central state failed\n", __func__);
+> +			return ret;
+> +		}
+> +		if (data.byte[0] != HIMAX_REG_DATA_FW_STATE_RUNNING) {
+> +			dev_info(ts->dev, "%s: Do not need wait FW, Status = 0x%02X!\n", __func__,
+> +			  data.byte[0]);
+> +			break;
+> +		}
+> +
+> +		ret = himax_mcu_register_read(ts, HIMAX_REG_ADDR_CTRL_FW, data.byte, 4);
+> +		if (ret < 0) {
+> +			dev_err(ts->dev, "%s: read ctrl FW failed\n", __func__);
+> +			return ret;
+> +		}
+> +		if (data.byte[0] == HIMAX_REG_DATA_FW_IN_SAFEMODE)
+> +			break;
+> +	}
+> +
+> +	if (data.byte[0] != HIMAX_REG_DATA_FW_IN_SAFEMODE)
+> +		dev_warn(ts->dev, "%s: Failed to stop FW!\n", __func__);
+> +
+> +without_check:
+> +	for (retry_cnt = 0; retry_cnt < enter_safe_mode_retry_limit; retry_cnt++) {
+> +		/* set Enter safe mode : 0x31 ==> 0x9527 */
+> +		data.word[0] = cpu_to_le16(HIMAX_HX83102J_SAFE_MODE_PASSWORD);
+> +		ret = himax_write(ts, HIMAX_AHB_ADDR_PSW_LB, NULL, data.byte, 2);
+> +		if (ret < 0) {
+> +			dev_err(ts->dev, "%s: enter safe mode failed\n", __func__);
+> +			return ret;
+> +		}
+> +
+> +		/* Check enter_save_mode */
+> +		ret = himax_mcu_register_read(ts, HIMAX_REG_ADDR_FW_STATUS, data.byte, 4);
+> +		if (ret < 0) {
+> +			dev_err(ts->dev, "%s: read central state failed\n", __func__);
+> +			return ret;
+> +		}
+> +
+> +		if (data.byte[0] == HIMAX_REG_DATA_FW_STATE_SAFE_MODE) {
+> +			dev_info(ts->dev, "%s: Safe mode entered\n", __func__);
+> +			/* Reset TCON */
+> +			data.dword = cpu_to_le32(HIMAX_REG_DATA_TCON_RST);
+> +			ret = himax_mcu_register_write(ts, HIMAX_HX83102J_REG_ADDR_TCON_RST,
+> +						       data.byte, 4);
+> +			if (ret < 0) {
+> +				dev_err(ts->dev, "%s: reset TCON failed\n", __func__);
+> +				return ret;
+> +			}
+> +			usleep_range(1000, 1100);
+> +			return 0;
+> +		}
+> +		usleep_range(5000, 5100);
+> +		hx83102j_pin_reset(ts);
+> +	}
+> +	dev_err(ts->dev, "%s: failed!\n", __func__);
+> +
+> +	return -EIO;
+> +}
+> +
+
+Used generically across HX831xx family (except HX83100A): 
+https://github.com/HimaxSoftware/HX83112_Android_Driver/blob/939400d4d4bf614bbeff51e1986760b47dde9eab/hxchipset/himax_ic_incell_core.c#L404
+
+Also, HIMAX_HX83102J_SAFE_MODE_PASSWORD doesn't seem specific to the 
+HX83102J.
+This actually apply to a number of the HIMAX_HX83102J_* defines 
+throughout the code.
+
+> +/**
+> + * hx83102j_chip_detect() - Check if the touch chip is HX83102J
+> + * @ts: Himax touch screen data
+> + *
+> + * This function is used to check if the touch chip is HX83102J. The process
+> + * start with a hardware reset to the touch chip, then knock the IC bus interface
+> + * to wakeup the IC bus interface. Then sense off the MCU to prevent bus conflict
+> + * when reading the IC ID. The IC ID is read from the IC register, and compare
+> + * with the expected ID. If the ID is matched, the chip is HX83102J. Due to display
+> + * IC initial code may not ready before the IC ID is read, the function will retry
+> + * to read the IC ID for several times to make sure the IC ID is read correctly.
+> + * In any case, the SPI bus shouldn't have error when reading the IC ID, so the
+> + * function will return error if the SPI bus has error. When the IC is not HX83102J,
+> + * the function will return -ENODEV.
+> + *
+> + * Return: 0 on success, negative error code on failure
+> + */
+> +static int hx83102j_chip_detect(struct himax_ts_data *ts)
+> +{
+> +	int ret;
+> +	u32 retry_cnt;
+> +	const u32 read_icid_retry_limit = 5;
+> +	const u32 ic_id_mask = GENMASK(31, 8);
+> +	union himax_dword_data data;
+> +
+> +	hx83102j_pin_reset(ts);
+> +	ret = himax_mcu_interface_on(ts);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = hx83102j_sense_off(ts, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (retry_cnt = 0; retry_cnt < read_icid_retry_limit; retry_cnt++) {
+> +		ret = himax_mcu_register_read(ts, HIMAX_REG_ADDR_ICID, data.byte, 4);
+> +		if (ret) {
+> +			dev_err(ts->dev, "%s: Read IC ID Fail\n", __func__);
+> +			return ret;
+> +		}
+> +
+> +		data.dword = le32_to_cpu(data.dword);
+> +		if ((data.dword & ic_id_mask) == HIMAX_REG_DATA_ICID) {
+> +			ts->ic_data.icid = data.dword;
+> +			dev_info(ts->dev, "%s: Detect IC HX83102J successfully\n", __func__);
+> +			return 0;
+> +		}
+> +	}
+> +	dev_err(ts->dev, "%s: Read driver ID register Fail! IC ID = %X,%X,%X\n", __func__,
+> +	  data.byte[3], data.byte[2], data.byte[1]);
+> +
+> +	return -ENODEV;
+> +}
+> +
+
+Same here, this is also used generically across all chips in the family 
+(except HX83100A).
+
+...
+
+> +/**
+> + * hx83102j_read_event_stack() - Read event stack from touch chip
+> + * @ts: Himax touch screen data
+> + * @buf: Buffer to store the data
+> + * @length: Length of data to read
+> + *
+> + * This function is used to read the event stack from the touch chip. The event stack
+> + * is an AHB output buffer, which store the touch report data.
+> + *
+> + * Return: 0 on success, negative error code on failure
+> + */
+> +static int hx83102j_read_event_stack(struct himax_ts_data *ts, u8 *buf, u32 length)
+> +{
+> +	u32 i;
+> +	int ret;
+> +	const u32 max_trunk_sz = ts->spi_xfer_max_sz - HIMAX_BUS_R_HLEN;
+> +
+> +	for (i = 0; i < length; i += max_trunk_sz) {
+> +		ret = himax_read(ts, HIMAX_AHB_ADDR_EVENT_STACK, buf + i,
+> +				 min(length - i, max_trunk_sz));
+> +		if (ret) {
+> +			dev_err(ts->dev, "%s: read event stack error!\n", __func__);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+
+Again, generic across HX831xx (except HX83100A).
+
+Regards,
+Felix
