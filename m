@@ -1,57 +1,69 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CC8171663;
-	Thu, 25 Apr 2024 22:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1FD156242;
+	Thu, 25 Apr 2024 22:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714082836; cv=none; b=JH5JIp+U2WE0N9y70YJ5JYwW+FniF6Hsrq2JNdKs43/42+gwNxjaov3BwqCEqmhqj8CMFMSb4a/ISfPLQZ01HCZ5LcxKChYaZX616EzvX/lJ++gLjlcXaOMQPHmW83cgo34+zZT+gofR12HaCM0OOVcaoInPAFAUBHNZV+CGUH0=
+	t=1714082835; cv=none; b=WkY7liyaNs0CEANJa9UechP17Ed6DRKmv4ypHg+7AiAyh2OTbwi06e3MyJ+quNgN57CcxaqrIB+5Ayg4ABQE7iRd8Lm98hc6MsxuDwVku8atdHN36fBkxWKuL88H6Rlr0+CNJc3qzLKv/MShlZxgmpfVFRkDnpbTQsKzfOctg+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714082836; c=relaxed/simple;
-	bh=13D6JKK2klk5hO/uMY8wEvGkd6yHJImAi0ZXLYZZe5o=;
+	s=arc-20240116; t=1714082835; c=relaxed/simple;
+	bh=1qDixauO6x0Pyd9QSSsnF1wJukXfiH4Aj2/qUYukcgg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fzK+54SIS/BHeVNyalfXEbZ3KrIper5s7LUJ90GtKnxGDSoRB6eJp++5fbHlJA28NCslGNgooyDOcDR/GIoY7Qe2Pp/qkKAG/dR1fKTkpR8e2UX+cPbKZWe7Z2J8kRsJdFDrqq9Tn/VKAx0uS0NRIy4BcJqGpNcVp6SQhYcHQe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6eba841d83cso341013a34.2;
-        Thu, 25 Apr 2024 15:07:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714082834; x=1714687634;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aOSUTMsrzGUh+EZaDgRrzzwhmdgrzIn+vCN9MSjqzbg=;
-        b=Wh9A/NCfx4JiBswaUIyBz/O7VE1rDERKyx89a1lDZQtuczR1XacRtn7P0RxHajXVJs
-         tv16pHx0GynzZxv1DSyObcs77e4/xnQ+hy1w4WzXdMx/xtmXaUVWpARRiT7GKUBW49MY
-         Eyued7HdZENJEdk8Q0fL0oB/wYC+LLXXGqj+r70YdZbVRjlasOO/pFBaM5iL6mgq+UlH
-         Wmdw58aUlA2/tR0ryhj2WMHVRlsAW5hEKfrmbpmRx9YhyxAcDXCdZzn0b0rysfJX6MgU
-         IBGYx3V0b5CKzsvGS/y3ZEE4FybgMPlsrj90Je8HafPRHNk8rDfYDj39b8AfE6Qoav3Z
-         eZDg==
-X-Forwarded-Encrypted: i=1; AJvYcCXfqxCrXonRlVi/Kq9PhXHQ9LMw7SKyNozkZFRQIE9rJ1Ms9hgon8RLKfd00fIqIn1lwcAQiczFdIMutShqAoiyQP/a1+rUH+329/pG
-X-Gm-Message-State: AOJu0Yy/U6tEW9MjXvWiSSr1d93ZoVZ41T2RCzHOmRKQRSUCba9FPhWN
-	MNHG4rO1F6bqfIDXlx79nqc+IiAr4B03oZZ01aZLilgmxbnCcLfe
-X-Google-Smtp-Source: AGHT+IG6gSzPWbwWp5355tnnWnT7Vm9ciJl/9skpqxx0WDAK641I6qUFYo2xHAnEVdPXyLh3QBgctg==
-X-Received: by 2002:a05:6808:189e:b0:3c8:4d54:94d with SMTP id bi30-20020a056808189e00b003c84d54094dmr1149679oib.4.1714082834143;
-        Thu, 25 Apr 2024 15:07:14 -0700 (PDT)
-Received: from sean-ThinkPad-T450s.lan ([207.191.35.252])
-        by smtp.gmail.com with ESMTPSA id a9-20020aca1a09000000b003c76f98321esm1514421oia.41.2024.04.25.15.07.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 15:07:12 -0700 (PDT)
-From: sean.wang@kernel.org
-To: marcel@holtmann.org,
-	johan.hedberg@gmail.com,
-	luiz.dentz@gmail.com
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Sean Wang <sean.wang@mediatek.com>
-Subject: [PATCH v3 2/5] Bluetooth: btmtk: apply the common btmtk_fw_get_filename
-Date: Thu, 25 Apr 2024 15:06:28 -0700
-Message-Id: <9c22c80334d5a895e9d47681d57d6c7965f3c086.1714082459.git.sean.wang@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <dfd3a5830333e9b59ad1a1458aac8ac2fe28027a.1714082459.git.sean.wang@kernel.org>
-References: <dfd3a5830333e9b59ad1a1458aac8ac2fe28027a.1714082459.git.sean.wang@kernel.org>
+	 MIME-Version; b=pgQVYTrM9U1ApNMlexiAeFYdPZJUMqfrdolAVxUTSiZ+BBKg5EVSlfSmTukMcYxcHBExtcKKGqOuZh3m21dZ6Gu2SnlsGaRQnePEWyYO+RcOpXbVj/0MET++7TsIF/wbmk39aZwrdJ61qXZtS8T9F0FMMAoilUspcckKmhf//9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i7P0PYrr; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i7P0PYrr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714082833; x=1745618833;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=1qDixauO6x0Pyd9QSSsnF1wJukXfiH4Aj2/qUYukcgg=;
+  b=i7P0PYrrt8zMEnHgMolHBrGNC/KrDc6f2kQGNdyd4FMiXzGvpo5oJrYj
+   3aaOx2RHgtPZC67sL3CDp2Pin9Yb7qBzkjM1OyHhJPxh79h2nzk4U9mPD
+   e2w99tnrHxY44yvIi6l+oWBdClWlhl/CJ79dYa7vsEB0m3VVw50ec66+y
+   j92KcHxceK6IZoOsJqL44mwP6C+yH/CszZQGPj5LrClugGPmrTBeBfmjx
+   glOkX0GBMFcaPfrHm4rY2dVJB9GBZjNSpNo0nwD3Al4ePUECwTOWV7e8w
+   QqBRdHWYyib5yNVOsHbInyx+oBIuZwvdancyRceF9h7vBWX0oXtKdXDU9
+   w==;
+X-CSE-ConnectionGUID: c/dSdYIWRqSLNBEppRiUSQ==
+X-CSE-MsgGUID: GElXD7oXRyKGZN5sOmlATQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="13585398"
+X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
+   d="scan'208";a="13585398"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 15:07:11 -0700
+X-CSE-ConnectionGUID: oawdXQ3fTtWsBkoUVQFeSg==
+X-CSE-MsgGUID: JobcZGFiTgObl/H5GHSx/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
+   d="scan'208";a="25185083"
+Received: from rchatre-ws.ostc.intel.com ([10.54.69.144])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 15:07:12 -0700
+From: Reinette Chatre <reinette.chatre@intel.com>
+To: isaku.yamahata@intel.com,
+	pbonzini@redhat.com,
+	erdemaktas@google.com,
+	vkuznets@redhat.com,
+	seanjc@google.com,
+	vannapurve@google.com,
+	jmattson@google.com,
+	mlevitsk@redhat.com,
+	xiaoyao.li@intel.com,
+	chao.gao@intel.com,
+	rick.p.edgecombe@intel.com
+Cc: reinette.chatre@intel.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V5 1/4] KVM: x86: hyper-v: Calculate APIC bus frequency for Hyper-V
+Date: Thu, 25 Apr 2024 15:06:59 -0700
+Message-Id: <76a659d0898e87ebd73ee7c922f984a87a6ab370.1714081726.git.reinette.chatre@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1714081725.git.reinette.chatre@intel.com>
+References: <cover.1714081725.git.reinette.chatre@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,57 +72,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Apply the common btmtk_fw_get_filename to avoid the similar coding in each
-driver.
+Remove APIC_BUS_FREQUENCY and calculate it based on nanoseconds per APIC
+bus cycle.  APIC_BUS_FREQUENCY is used only for HV_X64_MSR_APIC_FREQUENCY.
+The MSR is not frequently read, calculate it every time.
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+There are two constants related to the APIC bus frequency:
+APIC_BUS_FREQUENCY and APIC_BUS_CYCLE_NS.
+Only one value is required because one can be calculated from the other:
+   APIC_BUS_CYCLES_NS = 1000 * 1000 * 1000 / APIC_BUS_FREQUENCY.
+
+Remove APIC_BUS_FREQUENCY and instead calculate it when needed.
+This prepares for support of configurable APIC bus frequency by
+requiring to change only a single variable.
+
+Suggested-by: Maxim Levitsky <maximlevitsky@gmail.com>
+Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+Reviewed-by: Maxim Levitsky <maximlevitsky@gmail.com>
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+[reinette: rework changelog]
+Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
 ---
-v3: first added to the series
----
- drivers/bluetooth/btmtksdio.c |  6 +++---
- drivers/bluetooth/btusb.c     | 10 ++--------
- 2 files changed, 5 insertions(+), 11 deletions(-)
+Changes v5:
+- Add Rick's Reviewed-by tag.
 
-diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.c
-index ff4868c83cd8..10bf273120d6 100644
---- a/drivers/bluetooth/btmtksdio.c
-+++ b/drivers/bluetooth/btmtksdio.c
-@@ -1117,9 +1117,9 @@ static int btmtksdio_setup(struct hci_dev *hdev)
- 			return err;
- 		}
+Changes v4:
+- Modify subject to match custom: "KVM: x86/hyperv:" ->
+  "KVM: x86: hyper-v:" and use standard capitalization for Hyper-V
+  ("hyper-v" -> "Hyper-V").
+- Rework changelog to remove pronouns ("we").
+- Change logic in commit log: "APIC bus cycles per NS" -> "nanoseconds
+  per APIC bus cycle".
+- Fix typos. (Maxim and Xiaoyao)
+- Add Maxim and Xiaoyao's Reviewed-by tags.
+- Add Maxim's "Suggested-by".
+
+Changes v3:
+- Newly added according to Maxim Levitsky suggestion.
+
+ arch/x86/kvm/hyperv.c | 2 +-
+ arch/x86/kvm/lapic.h  | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 8a47f8541eab..1030701db967 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -1737,7 +1737,7 @@ static int kvm_hv_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata,
+ 		data = (u64)vcpu->arch.virtual_tsc_khz * 1000;
+ 		break;
+ 	case HV_X64_MSR_APIC_FREQUENCY:
+-		data = APIC_BUS_FREQUENCY;
++		data = div64_u64(1000000000ULL, APIC_BUS_CYCLE_NS);
+ 		break;
+ 	default:
+ 		kvm_pr_unimpl_rdmsr(vcpu, msr);
+diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+index 0a0ea4b5dd8c..a20cb006b6c8 100644
+--- a/arch/x86/kvm/lapic.h
++++ b/arch/x86/kvm/lapic.h
+@@ -17,7 +17,6 @@
+ #define APIC_DEST_MASK			0x800
  
--		snprintf(fwname, sizeof(fwname),
--			 "mediatek/BT_RAM_CODE_MT%04x_1_%x_hdr.bin",
--			 dev_id & 0xffff, (fw_version & 0xff) + 1);
-+		btmtk_fw_get_filename(fwname, sizeof(fwname), dev_id,
-+				      fw_version);
-+
- 		err = mt79xx_setup(hdev, fwname);
- 		if (err < 0)
- 			return err;
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 7835170b1d66..bad6a9888dca 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -3123,14 +3123,8 @@ static int btusb_mtk_setup(struct hci_dev *hdev)
- 	case 0x7922:
- 	case 0x7961:
- 	case 0x7925:
--		if (dev_id == 0x7925)
--			snprintf(fw_bin_name, sizeof(fw_bin_name),
--				 "mediatek/mt%04x/BT_RAM_CODE_MT%04x_1_%x_hdr.bin",
--				 dev_id & 0xffff, dev_id & 0xffff, (fw_version & 0xff) + 1);
--		else
--			snprintf(fw_bin_name, sizeof(fw_bin_name),
--				 "mediatek/BT_RAM_CODE_MT%04x_1_%x_hdr.bin",
--				 dev_id & 0xffff, (fw_version & 0xff) + 1);
-+		btmtk_fw_get_filename(fw_bin_name, sizeof(fw_bin_name), dev_id,
-+				      fw_version);
+ #define APIC_BUS_CYCLE_NS       1
+-#define APIC_BUS_FREQUENCY      (1000000000ULL / APIC_BUS_CYCLE_NS)
  
- 		err = btmtk_setup_firmware_79xx(hdev, fw_bin_name,
- 						btusb_mtk_hci_wmt_sync);
+ #define APIC_BROADCAST			0xFF
+ #define X2APIC_BROADCAST		0xFFFFFFFFul
 -- 
-2.25.1
+2.34.1
 
