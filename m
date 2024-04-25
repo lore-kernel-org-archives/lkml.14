@@ -1,125 +1,138 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0496615664D
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 21:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52CCA155A2A
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 21:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714081566; cv=none; b=C3mvqYmBjiHwP3ZUvqarRyjT16XDYGW8inRFFbE5ve0eoEw9sJG1zOO2WYqgYeF14H/7Gk36P8jI5730Wu8hyx2Qznc4T77yAweaNIoi1902UGjwraPrYvCi7JKgdhIjYaVX21lK/zu6slKC3mnjcteDoVKXzdj4lzv3lUvs7Ds=
+	t=1714081868; cv=none; b=OnRiehoP6Sw4t/L9jaJwZsjCb1BLZWTxsCypCkPhAOsgg/IrOOrcehYeI4GfEie6L51MNXQYt53dPErKifKuszZ6ofL8HUVg7ni+mSWmU0qDGqGbpAeSW6+Lzu1WZwaqk4ixMqMtlIFutWfITrSq/rw9MT0uqyxTa74zW7S2Ew0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714081566; c=relaxed/simple;
-	bh=ddLKxs1S7s/ADJE035dpDCdlheH8Ec/EUB9hgxSWCqA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ClGWuoP0eCoTYWg5+IY90tkHAZKUCjja2AaXFUpId704kPjiSHHwENQ8wfYDrD6vIKr6iUYMDxOuSz9lSDbkKIXkygYWJa+/tptzs1naPNkh7ZgAMAESY/dos0a6UvcL68jRB7MwQ4xjCjvekUm00mkTNzWl0Does/bRnPsy44U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kSkLWvbg; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1714081868; c=relaxed/simple;
+	bh=3Nm6o5NkMzlB/jHfTxtH892aVBFo5WfUDbQsHwxXAVQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m2gu+74Upw6TTnOwm3EiJ0VclXaO73wyNjHS0xOZRvb+8+J9p0oyZ7azbSQKHM5hy289r30tVKQkh2sify8vZalnFBIK40v2Jwoz9+wl/+kjRf5x0VSzW8HYU1H3ZiVKk92pK645VV5zcl1SxC6YhOp/0N797WJa6lce+byPx7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iTP04GtN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kSkLWvbg"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5d8dd488e09so1688331a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 14:46:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714081564; x=1714686364; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=s9g005zQ0uoPXb33P7XvBANrUcDvwGxhLLo5EvZW0qw=;
-        b=kSkLWvbg9oxhLeu4v+HlAcmDuMvp/TTyiIxrPO+Km5RX/EntkNjXgZDBRuDfgwewoT
-         ddYYDw0g/r1E0G1QsMEMXC7bkcQ2JNGli1QfsoCaghQhA+ZEh4YdQXiesFhgp0Fd5gGZ
-         f7IopQ4+W8w0TB4+vzeoNVwMeRUmp1YQfvTcHOLogHR3kp5exTbIwZvjwPFRY/ZgMPe6
-         mEU2au01Tjk2oSiqO4CHiWWQgmuSFZ3ThrhcMZBSTfjlrFVZV/Wksjb0NbkUBuYFAIUu
-         HRvmQ1XECZBXWxtxxfX4usJjxSNUSmsXjoHGtnCfBtQP9xljJY21sEgKGZm8ALbWJf9e
-         D3Hw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iTP04GtN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714081866;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mZ64zo85kCJtWJwvl7vf6Q3Npfm0Ixx/GbPFgDEHD+U=;
+	b=iTP04GtNJlNE4Abtah2n9OHf+KdL1EMc0GEhBKZE98qdJnG5mefcTBShhuEk1QFOPyP3e/
+	HhxBkFPuIBAWHXSIGoj1HWXdcDVaYG0JCoQRW+t9HbSk+z3iaYkvkorWZv5fuE8geL+Rvf
+	deNWjct+fIZcT1y+l9D5LWsyRAdP2pk=
+Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
+ [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-401-miFnAVJvPXCwWyVL5rn5PA-1; Thu, 25 Apr 2024 17:51:04 -0400
+X-MC-Unique: miFnAVJvPXCwWyVL5rn5PA-1
+Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-61b2abd30fdso27589197b3.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 14:51:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714081564; x=1714686364;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=s9g005zQ0uoPXb33P7XvBANrUcDvwGxhLLo5EvZW0qw=;
-        b=SpclIlBj+dLI9Fk+Eg0ocEgo4FPiIozbCDp0/wHw7euQeTohBWjPH7aWS7YyQrwhdA
-         LyXay136qd9KZPcb/RSMjLE+lUkSblG24Rpu/cXvWzoxJwiB6NiCa8yc9onCXllGxCAL
-         G9h8gHGJJuDk3Cx9lYP/7T7QAudkI8VmOm4p9c2Yg1Q0bh9XI/rvZ12ZaXsGex7HZ3r8
-         //aSxPyq5YwoSOh/Pmk1cQxMzPRVeYYKuBRIA0Uehw0Nokn7lu9xI8lEyChVdhDG3ZvQ
-         NfwFJEOP0NBWtdWPTAv3j8bi20tBQu1EBcZmIj8poX8sAIyK16H+bxXiCxMSy/MlUI+g
-         9TYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUw8vhSq7XDC2Rgcnvwj4LjupHZT1aEhJEakF6B/2aRdUsoGDGiwymUIBUob9AopPav2LS5Ep0I/V498cyAXdrJHtZ6I+dRmxV+O/1w
-X-Gm-Message-State: AOJu0Yykc96hy6g25fayi8pGGgC2ten7yfwt3d/PO0+oBETklDdQTF36
-	qeyFBqXGgb9AI+B6+tdsI90iId20N5WiI0xfQ+/qqDSTmUUQvAQighdyo7hsas61ZVIUUBSmhjE
-	rrw==
-X-Google-Smtp-Source: AGHT+IF/LRU+EJ/onrc6UqwR3rdQDKd/KzJxGXef0/+6lFJNaOGOLGDyuSBxzSg57E/OPctPDy+9bf178I4=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:2005:0:b0:5f7:fca4:6d2f with SMTP id
- g5-20020a632005000000b005f7fca46d2fmr25355pgg.7.1714081564026; Thu, 25 Apr
- 2024 14:46:04 -0700 (PDT)
-Date: Thu, 25 Apr 2024 14:46:02 -0700
-In-Reply-To: <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com>
+        d=1e100.net; s=20230601; t=1714081864; x=1714686664;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mZ64zo85kCJtWJwvl7vf6Q3Npfm0Ixx/GbPFgDEHD+U=;
+        b=pNHljplZTKHRdel0lkWwyIlKr0WRAR+p4j9yjyBi/Y5GGgVPJ2oJG2AnYOwGkToyoL
+         2lJAWR0ZVQ6ep7euYiN3KtXBDXB+uR4TZ5oBFnjkQ9sG0QMYw4IOjpNOAnqT201zyAbU
+         XWdgBRuXLB7TmIf+CUnDZKspTSXFg/eGUssRx4QVjzHV+bbWwBc2LzrMVN8RsGaz8YR3
+         KjbhZpuV5TsYy723UE4JHqQJFOZjEFMGlbby3F5qyda5x4OdG69lIeCwhH3ekn6Nkm58
+         OWZqb0QXMWuqcKMT2J63UqChgSQoEy6iI5tphqdRLBDKxzHVJVethdHRh3+k2NJ4xL3A
+         NRxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXlk0zoiHyzZl1T7KVLq5T+oVqY1XPwuokQAUkNE/tp0iUkOC1CnlQygY9Mi31TgWejQRsy8O7BnTE9ShYyaTA1IM2XH34vabTyAf9k
+X-Gm-Message-State: AOJu0YwV0rIBYkUpe0wOyJEJQ15cFA8twXwc2ihvd3RbLwP8b+ePOoNh
+	zKA+5J26TXg8qaNvvoA92mNGZNo4yZ70meEDxbAEh4LvMgv8qhtvHPJ3CYK7s/dDmsOx9enAGgT
+	ZoZfHqMPkDoLRmqNQWNyGY3eH5H9o65Ltwaz7f96eNBikF8d6QJFtMc1s7faXeg==
+X-Received: by 2002:a25:8307:0:b0:dd9:4a30:8d5b with SMTP id s7-20020a258307000000b00dd94a308d5bmr868742ybk.57.1714081864053;
+        Thu, 25 Apr 2024 14:51:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFYIRhYW5rlQF+BvTSNoB37adNkV2ZQoUUdMLZlCCrD98FfE2nAXbCFmByVAyFnwbE/wVdmHA==
+X-Received: by 2002:a25:8307:0:b0:dd9:4a30:8d5b with SMTP id s7-20020a258307000000b00dd94a308d5bmr868728ybk.57.1714081863751;
+        Thu, 25 Apr 2024 14:51:03 -0700 (PDT)
+Received: from [10.26.1.93] ([66.187.232.136])
+        by smtp.gmail.com with ESMTPSA id ol13-20020ac8414d000000b0043a6611f95asm363430qtb.91.2024.04.25.14.51.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Apr 2024 14:51:03 -0700 (PDT)
+Message-ID: <c4aa31c3-8008-4b56-aa78-96fdc23f618d@redhat.com>
+Date: Thu, 25 Apr 2024 17:51:01 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
- <b3868bf5-4e16-3435-c807-f484821fccc6@loongson.cn> <CAL715W++maAt2Ujfvmu1pZKS4R5EmAPebTU_h9AB8aFbdLFrTQ@mail.gmail.com>
- <f843298c-db08-4fde-9887-13de18d960ac@linux.intel.com> <Zikeh2eGjwzDbytu@google.com>
- <7834a811-4764-42aa-8198-55c4556d947b@linux.intel.com> <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
- <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com> <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
- <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com>
-Message-ID: <ZirPGnSDUzD-iWwc@google.com>
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-From: Sean Christopherson <seanjc@google.com>
-To: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mingwei Zhang <mizhang@google.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	maobibo <maobibo@loongson.cn>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
-	peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com, 
-	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
-	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] x86: Trust initial offset in architectural TSC-adjust
+ MSRs
+To: Daniel J Blueman <daniel@quora.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ Steffen Persvold <sp@numascale.com>,
+ James Cleverdon <james.cleverdon.external@eviden.com>,
+ Dimitri Sivanich <sivanich@hpe.com>, Steve Wahl <steve.wahl@hpe.com>,
+ Frank Ramsay <frank.ramsay@hpe.com>, Russ Anderson <rja@hpe.com>
+References: <20240419085146.175665-1-daniel@quora.org>
+Content-Language: en-US
+From: Prarit Bhargava <prarit@redhat.com>
+In-Reply-To: <20240419085146.175665-1-daniel@quora.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 25, 2024, Kan Liang wrote:
-> On 2024-04-25 4:16 p.m., Mingwei Zhang wrote:
-> > On Thu, Apr 25, 2024 at 9:13=E2=80=AFAM Liang, Kan <kan.liang@linux.int=
-el.com> wrote:
-> >> It should not happen. For the current implementation, perf rejects all
-> >> the !exclude_guest system-wide event creation if a guest with the vPMU
-> >> is running.
-> >> However, it's possible to create an exclude_guest system-wide event at
-> >> any time. KVM cannot use the information from the VM-entry to decide i=
-f
-> >> there will be active perf events in the VM-exit.
-> >=20
-> > Hmm, why not? If there is any exclude_guest system-wide event,
-> > perf_guest_enter() can return something to tell KVM "hey, some active
-> > host events are swapped out. they are originally in counter #2 and
-> > #3". If so, at the time when perf_guest_enter() returns, KVM will ack
-> > that and keep it in its pmu data structure.
->=20
-> I think it's possible that someone creates !exclude_guest event after
+On 4/19/24 04:51, Daniel J Blueman wrote:
+> When the BIOS configures the architectural TSC-adjust MSRs on secondary
+> sockets to correct a constant inter-chassis offset, after Linux brings
+> the cores online, the TSC sync check later resets the core-local MSR to
+> 0, triggering HPET fallback and leading to performance loss.
+> 
+> Fix this by unconditionally using the initial adjust values read from the
+> MSRs. Trusting the initial offsets in this architectural mechanism is a
+> better approach than special-casing workarounds for specific platforms.
+> 
+> Signed-off-by: Daniel J Blueman <daniel@quora.org>
+> Reviewed-by: Steffen Persvold <sp@numascale.com>
+> Reviewed-by: James Cleverdon <james.cleverdon.external@eviden.com>
+> Reviewed-by: Dimitri Sivanich <sivanich@hpe.com>
+> Cc: Steve Wahl <steve.wahl@hpe.com>
+> Cc: Prarit Bhargava <prarit@redhat.com>
+> Cc: Frank Ramsay <frank.ramsay@hpe.com>
+> Cc: Russ Anderson <rja@hpe.com>
+> ---
+> Changes in v2:
+> - Maintain comment based on feedback
+> - Rebase against v6.9-rc4
+> 
+>   arch/x86/kernel/tsc_sync.c | 6 ++----
+>   1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/tsc_sync.c b/arch/x86/kernel/tsc_sync.c
+> index 1123ef3ccf90..4334033658ed 100644
+> --- a/arch/x86/kernel/tsc_sync.c
+> +++ b/arch/x86/kernel/tsc_sync.c
+> @@ -193,11 +193,9 @@ bool tsc_store_and_check_tsc_adjust(bool bootcpu)
+>   	cur->warned = false;
+>   
+>   	/*
+> -	 * If a non-zero TSC value for socket 0 may be valid then the default
+> -	 * adjusted value cannot assumed to be zero either.
+> +	 * The default adjust value cannot be assumed to be zero on any socket.
+>   	 */
+> -	if (tsc_async_resets)
+> -		cur->adjusted = bootval;
+> +	cur->adjusted = bootval;
+>   
+>   	/*
+>   	 * Check whether this CPU is the first in a package to come up. In
 
-I assume you mean an exclude_guest=3D1 event?  Because perf should be in a =
-state
-where it rejects exclude_guest=3D0 events.
+This covers the concerns raise by HPE (cc'd) on this patch.
 
-> the perf_guest_enter(). The stale information is saved in the KVM. Perf
-> will schedule the event in the next perf_guest_exit(). KVM will not know =
-it.
+Reviewed-by: Prarit Bhargava <prarit@redhat.com>
 
-Ya, the creation of an event on a CPU that currently has guest PMU state lo=
-aded
-is what I had in mind when I suggested a callback in my sketch:
+P.
 
- :  D. Add a perf callback that is invoked from IRQ context when perf wants=
- to
- :     configure a new PMU-based events, *before* actually programming the =
-MSRs,
- :     and have KVM's callback put the guest PMU state
-
-It's a similar idea to TIF_NEED_FPU_LOAD, just that instead of a common chu=
-nk of
-kernel code swapping out the guest state (kernel_fpu_begin()), it's a callb=
-ack
-into KVM.
