@@ -1,124 +1,162 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935291509B1
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 18:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D187C14F118;
+	Thu, 25 Apr 2024 18:58:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714071518; cv=none; b=Ov8at9KAGo2LrdCS/o+7fQPzNodd958cgot0ZgpSdGj1wB4paVf4+2sG5RkOc9JUYxuo+Lpasre0r0XZ87bJbAOH7i2AAVE0xc65RKdUK8D+0HZe0MhELcMrjlDKQL4oy8YbC2vnl4v9mC+FpLFBFHAZ/OU1/8vb8vtDgtbBBPM=
+	t=1714071535; cv=none; b=L7kED5D++cDotw8mIEf+/MmCKGkTM94tYDJe+P+9BvrYm1YQZRmoBeLN6gSx60+WTGYExanck803t1/doC2V/41RnHjJSWYnDDltlFxthKB2THA2R7p4am9jQS+7fcaEoP9HBgACJFXS5byIGm1HH0soePjTz0VATt0+o5dwolU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714071518; c=relaxed/simple;
-	bh=OVpsYfA8Qvyh7CR1+bvLaN9uwU+c3vdVxNAvJVeMlHk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kI5iW/Of25HHbZDZnXlndIV8swK2EvfKJ69X38OVGn6vaxjMmXJybE7w95hdFD+8BfXQzVB48k+iyBlXoGBXczpA++TlT316cfAd19j+iDPd1G8XRWcMUhJxgFDGmnCTYNOl+aQh6KZf41uri3YNUnWR8nMY3lY/F0QOjkEPi78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=O2tq0uoX; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1714071535; c=relaxed/simple;
+	bh=4Sx4sYmGqoS09z606peTfqhN5qWJQdHwsKYaEAQY4ZI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vc+7Nki6/Lb+jdWv4q+2PuQG+p30+TrqkcZ/4+gHXO0Y1p6OlA3ieCb95l9SnHdAgWqZIDxWJH56XLdCnZjZDqkmXPBj7/GEPQNXKq82hidHoIDKwGF1RxGYvHgLVsfuWDBR2xi4y3n//DoMHEiu20gA0OOph0v/T6fdUOddJ8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVHp0Iqo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="O2tq0uoX"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2def8e58471so16168731fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 11:58:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1714071514; x=1714676314; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ce4eWZ96+PrDKbqu3JpH3mxBstfm8l4HTUGuvQBwL34=;
-        b=O2tq0uoXJdvJEReh3iYL6qanMPcCXV3+BCB4zB+04uKxo64KWrSXgHT+Fn60fRktgJ
-         oKNkwhebQN1cbviut4hcvnH+Jyp1wdWB/SinhTQPWmikxoge48vp11yDSpfvOtzayxPd
-         Fy7fcMGKmWxt9+ozmxMz5Ai6Dz/IHLI86IUZ8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714071514; x=1714676314;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ce4eWZ96+PrDKbqu3JpH3mxBstfm8l4HTUGuvQBwL34=;
-        b=T14PBOv4gzW9hmje9oOJXnpT+etuMY2LQc1ryAjfiyYZh+XSFdZZlDtVgNT5yeqdBr
-         AKalJMxe/MqITPqmfgP8nb/yMbU9BK9FhyU6meoKF/pV6PU/T36APGNLjYQy8/fRi7Bv
-         L1cdWxP4yo2lOUgIWK8mDSwiA11KSHjbRYv+D/lMX5dLAtoSRSOj0hmXtM00PnbwX2Cn
-         hvRIbq4WxU0EfbPVX6WPVixivkIVUrJMc2t5R7+0QRN7alzVBUfZVwUyDBPvSWFXNI9R
-         dAXJci4xbXcncDtkXZxgwKOpk+l/qw9z7cmEdkwCzi4B3PgA2V+zlZyk7IftgCBOTOMn
-         UCQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0wS1IXnidT7sFsRfIqDQ/6Qe2RiwlM8nYFZ400+iyFBb+vkgFopAW5+6/4kOnx1EXC89Osskbr4DMXemDF0KRpOdFcXj4XejgQ01q
-X-Gm-Message-State: AOJu0YzVnE3pAUuBpmaMiGIVzFQMLc46K0tIzDZFNkcorrs7F5mfebn/
-	cfYSyAJJCziwQNpXUPNc1IsVvHVJrGGcMQzCT25aiSbNuN513kXh9mxChHUnEsfs69tzlhA3j3x
-	VgRjqLQ==
-X-Google-Smtp-Source: AGHT+IHNs/SpKuvCrXuc6DDaL++aT7tTsWuBtaCrpuJ/KGFN9FgOFhcNiBAnpPeIcpps9CIm1LkieQ==
-X-Received: by 2002:a2e:a1c5:0:b0:2d6:c749:17bc with SMTP id c5-20020a2ea1c5000000b002d6c74917bcmr183194ljm.31.1714071514465;
-        Thu, 25 Apr 2024 11:58:34 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id f26-20020a2e6a1a000000b002d8d0c91f55sm2451671ljc.2.2024.04.25.11.58.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Apr 2024 11:58:33 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5176f217b7bso2449236e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 11:58:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUjFVZOUWqMfW5ILouCyUdazKbGlR5xb25+by2nzZkHJ+U59EjG8NnZ5RcYZGWIdLo05XKEOmredlKpfaQKLppqbOPmFMo5uOtdf3E4
-X-Received: by 2002:a05:6512:ba7:b0:51a:fc86:fc6d with SMTP id
- b39-20020a0565120ba700b0051afc86fc6dmr218319lfv.22.1714071512772; Thu, 25 Apr
- 2024 11:58:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVHp0Iqo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3084C113CC;
+	Thu, 25 Apr 2024 18:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714071535;
+	bh=4Sx4sYmGqoS09z606peTfqhN5qWJQdHwsKYaEAQY4ZI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fVHp0Iqo1nNOv0NlQqAY6MhJrIELR+vsYbhGImeZDbSWcT4lW+ZcU4UpL5S0hDyIc
+	 +1My9aExWwxuIsW7gwdJ9GtsfR2gTOYyrp6GgRn6FrhFzYGTmQOml2ZQOXmVayL1Tl
+	 n8/98w4QwClbVknf/1f0vjjSINn8ULQZFKw3+Vs/DrxuYcvDN3NwNydUeSYl7w8QWz
+	 GT5081UEmq4ev4W5jFHcMY7RqaAuD6SZ5cpdRBDgyGvwxlaUUBDfYlFKsOuJNOa9Or
+	 kUfYfwdTghRSosdcG3qHRaprxMU+Eddt+M4JDdDl64naVSkKybOkgLQ9+3Cqi7d+uO
+	 RJEX3JxoRGeSg==
+Date: Thu, 25 Apr 2024 15:58:50 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Veronika Molnarova <vmolnaro@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf test: Be more tolerant of metricgroup failures
+Message-ID: <Ziqn6nPtxHCc6RpR@x1>
+References: <20240403164818.3431325-1-irogers@google.com>
+ <CAGa8GX5MhP3FUhafN5QivHaE3Fg+p5MgvTq3SW6MQy4NeZ1sYQ@mail.gmail.com>
+ <CAP-5=fU_EvN-bSjwbWMP8R+WyG-jeAQ1p4ziyejy2FCH0kgYig@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJZ5v0iUUmMUo86vBzYJjL4NjoFzpDwD1+c292aP+T++PLv6vQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iUUmMUo86vBzYJjL4NjoFzpDwD1+c292aP+T++PLv6vQ@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 25 Apr 2024 11:58:16 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj8J78-12QfAoKaLdRi2g1=_U7sv02POShjotcJ6t4nzw@mail.gmail.com>
-Message-ID: <CAHk-=wj8J78-12QfAoKaLdRi2g1=_U7sv02POShjotcJ6t4nzw@mail.gmail.com>
-Subject: Re: [GIT PULL] ACPI fixes for v6.9-rc6
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fU_EvN-bSjwbWMP8R+WyG-jeAQ1p4ziyejy2FCH0kgYig@mail.gmail.com>
 
-On Thu, 25 Apr 2024 at 10:46, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
->  - Fix bit offset computation in MASK_VAL() macro used for applying
->    a bitmask to a new CPPC register value (Jarred White).
+On Mon, Apr 22, 2024 at 08:42:17AM -0700, Ian Rogers wrote:
+> On Mon, Apr 22, 2024 at 4:51 AM Veronika Molnarova <vmolnaro@redhat.com> wrote:
+> >
+> > Hi Ian,
+> >
+> > On Wed, Apr 3, 2024 at 6:48 PM Ian Rogers <irogers@google.com> wrote:
+> >>
+> >> Previously "set -e" meant any non-zero exit code from perf stat would
+> >> cause a test failure. As a non-zero exit happens when there aren't
+> >> sufficient permissions, check for this case and make the exit code
+> >> 2/skip for it.
+> >>
+> >> Signed-off-by: Ian Rogers <irogers@google.com>
+> >> ---
+> >>  .../perf/tests/shell/stat_all_metricgroups.sh | 28 +++++++++++++++----
+> >>  1 file changed, 22 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
+> >> index 55ef9c9ded2d..d6db192b9f18 100755
+> >> --- a/tools/perf/tests/shell/stat_all_metricgroups.sh
+> >> +++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
+> >> @@ -1,9 +1,7 @@
+> >> -#!/bin/sh
+> >> +#!/bin/bash
+> >>  # perf all metricgroups test
+> >>  # SPDX-License-Identifier: GPL-2.0
+> >>
+> >> -set -e
+> >> -
+> >>  ParanoidAndNotRoot()
+> >>  {
+> >>    [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
+> >> @@ -14,11 +12,29 @@ if ParanoidAndNotRoot 0
+> >>  then
+> >>    system_wide_flag=""
+> >>  fi
+> >> -
+> >> +err=0
+> >>  for m in $(perf list --raw-dump metricgroups)
+> >>  do
+> >>    echo "Testing $m"
+> >> -  perf stat -M "$m" $system_wide_flag sleep 0.01
+> >> +  result=$(perf stat -M "$m" $system_wide_flag sleep 0.01 2>&1)
+> >> +  result_err=$?
+> >> +  if [[ $result_err -gt 0 ]]
+> >> +  then
+> >> +    if [[ "$result" =~ \
+> >> +          "Access to performance monitoring and observability operations is limited" ]]
+> >> +    then
+> >> +      echo "Permission failure"
+> >> +      echo $result
+> >> +      if [[ $err -eq 0 ]]
+> >> +      then
+> >> +        err=2 # Skip
+> >> +      fi
+> >> +    else
+> >> +      echo "Metric group $m failed"
+> >> +      echo $result
+> >> +      err=1 # Fail
+> >> +    fi
+> >> +  fi
+> >>  done
+> >>
+> >> -exit 0
+> >> +exit $err
+> >> --
+> >> 2.44.0.478.gd926399ef9-goog
+> >>
+> >>
+> >
+> > The patch looks good and thanks for taking care of it.
+> >
+> > Just wanted to check what is the desired outcome for metric groups
+> > with events that are invalid in per-thread mode causing the test to fail.
+> >
+> > ```
+> > $ ./stat_all_metricgroups.sh
+> > Testing smi
+> > Metric group smi failed
+> > Error: Invalid event (msr/smi/u) in per-thread mode, enable system wide with '-a'.
+> > ```
+> >
+> > Wouldn't it be better if in these cases the test would result in skip instead of fail?
+> 
+> Hi Veronika,
+> 
+> I agree that fail isn't best here. I'm wondering:
+> 
+>  - why doesn't msr/smi/ support per-thread mode? Can't we save/restore
+> the count on a context switch? The implementation is here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/arch/x86/events/msr.c?h=perf-tools-next#n234
+> There's clearly something going on as pperf appears to have other restrictions:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/arch/x86/events/msr.c?h=perf-tools-next#n115
+> I'm wondering if aggregation is working right if these counters are
+> more than per hyperthread (I'm guessing why the restrictions exist).
+> 
+>  - the tool error message is doing pretty good. In the test I guess we
+> can spot the per-thread error and turn the fail to a skip. It's a
+> shame to bucket things as skip, but it seems easier than listing
+> metrics in the test or spotting particular events.
+> 
+> I can do a v2 to add this.
 
-Honestly, that code should never have used GENMASK() in the first place.
+Ok, I'll wait for v2 then.
 
-When a helper macro is more complicated than just doing the obvious
-thing without it, it's not a helper macro any more.
-
-Doing
-
-    GENMASK(((reg)->bit_width) - 1, 0)
-
-is literally more work than just doing the obvious thing
-
-    ((1ul << (reg)->bit_width) - 1)
-
-and using that "helper" macro was actually more error-prone too as
-shown by this example, because of the whole "inclusive or not" issue.
-
-BUT!
-
-Even with that simpler model, that's still entirely buggy, since 'val'
-is 64-bit, and these GENMASK tricks only work on 'long'.
-
-Which happens to be ok on x86-64, of course, and maybe in practice all
-fields are less than 32 bits in width anyway so maybe it even works on
-32-bit, but this all smells HORRIBLY WRONG.
-
-And no, the fix is *NOT* to make that GENVAL() mindlessly just be
-GENVAL_ULL().  That fixes the immediate bug, but it shows - once again
-- how mindlessly using "helper macros" is not the right thing to do.
-
-When that macro now has had TWO independent bugs, how about you just
-write it out with explicit types and without any broken "helpers":
-
-   static inline u64 MASK_VAL(const struct cpc_reg *reg, u64 val)
-   {
-        u64 mask = (1ull << reg->bit_width)-1;
-        return (val >> reg->bit_offset) & mask;
-   }
-
-which is a few more lines, but doesn't that make it a whole lot more readable?
-
-And maybe this time, it's not a buggy mess?
-
-               Linus
+- Arnaldo
