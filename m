@@ -1,162 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D9B149E0C;
-	Thu, 25 Apr 2024 14:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A8E149E0C;
+	Thu, 25 Apr 2024 14:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714054691; cv=none; b=CSGm8KkspagAMveNwGz+yE1JukJi4oyQUxPyWKt6er3OMuwIgUPgEc0TK179uKSfYWMHX1f1a1dN9wrvf3RCUJ0SdpmbKgB6L7x0L/mjTCUh3gZUgR4Bi1DB1mov4GUIzUmcZQ+ATffnNDUfVNTqwsvlyXgQ2oHDSFrWcMdmH7E=
+	t=1714054716; cv=none; b=TMkHDJHbkov98GX9F7jmqkk5HPA+1pU0XnjqVH7tr3ZX6yLi9aRG5w0bKsVeWZf8AntbEOJ6z4huIG2mRkZV7cpWny1bzNqTxaI30Xe1kww3YHOKPTSCiGDe+tf+fFFB/4MRhcBjBvWiyvSPZuJqgtPoIBRML1o4wdQPTqXZzQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714054691; c=relaxed/simple;
-	bh=qs3IbBARNXEGNRHB5Qimg74EcvDIsLw0NrUCyJRdsoc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VvYS/5WKVXgiCt91vVPVzk0niDVMRsszM/vxP1hmTJUbIIgZaCZ2G3gM1f1BFK4OLrFpgFrqCEAwUNiw4HtVvoM9w0YJGThOP0j9R+rMwI2psAZFyCru85w6IfvN9CwXegMDFkZkT/vzkXRZYxevz67BtEnmTDjUTR+pRsKAUvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TefVK+1D; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714054716; c=relaxed/simple;
+	bh=nxOjcL0P74qvHOhUa3G1KBblKkFTMO6kAC1ncKWnWeE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Jp5HCvq7lzz3JZzrgOEqMgPLHQNOXWke4EdfGvd0mGDFbAEzkT4ZATq+NfHYGQHW3C1RA/hmoarAuFFnHuW+kHdEfNNkBcE/cdc/1F2sD2l9oltRsaXSLbY6rxX657TCoHbrvSvIpNeNWXVF8SSCyBh4nQ0xBAVY7DHT56yu+Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mi+I7ng9; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TefVK+1D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714054690; x=1745590690;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qs3IbBARNXEGNRHB5Qimg74EcvDIsLw0NrUCyJRdsoc=;
-  b=TefVK+1DvKLDVaD0OdBeqcfAXBijNHPlztlRIOdc0+u/iiupfW6alynB
-   +H+SgSNkL2MPIblAdU8bfQP0jRJQTrTtBfh8VzjZE1kHbNuIYSKsCHbFA
-   tT6bzZXjePETW2Z5n3qFQMdwhXvK+jj6FbteXNfw/yasCxZtd3YkC2PNY
-   dhxKsXlLxDNG+IXTstgoFVG1Cxj44NhPfJwRJTex+VLzNn97Yy5/1BCOB
-   1O7HdfvlGhaT85SIlEEG8h7ROFnI8Gf6t7knW0LZc4ez9vTFGmao9Gkuz
-   J63+i8pEgLC2z9/Y6dmvjfG9yC0tZQ62ngeNraForJoyv62plHI1Vlukn
-   g==;
-X-CSE-ConnectionGUID: t2DJFfuHTAySMnxpoCffYw==
-X-CSE-MsgGUID: EPPWUPsGR+W0AfuG8h2gSQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="9903241"
-X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
-   d="scan'208";a="9903241"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 07:18:09 -0700
-X-CSE-ConnectionGUID: qqUc1iwgQFC8nC9vvfJAdg==
-X-CSE-MsgGUID: 2pUNRhOVQdCBRTP6nLF8jg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
-   d="scan'208";a="25152778"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.242.48]) ([10.124.242.48])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 07:18:05 -0700
-Message-ID: <44177c13-b755-4d64-9763-1d4dfe0dfa4f@intel.com>
-Date: Thu, 25 Apr 2024 22:18:02 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mi+I7ng9"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1ead2c5f3f0so107855ad.0;
+        Thu, 25 Apr 2024 07:18:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714054714; x=1714659514; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SpcFxjVoRf/8zZFpl0pURM6bbS9rd+3CtG1qRJbE4oM=;
+        b=mi+I7ng9P0wPJThgggB3DA6prhhWagplopwMYLvf382EdbmbVYm4tUfV1ZHiTNdMCz
+         ivyaWj6owGJs+KTRU/y//yz7d6tGdPirMW82tG8+MC6bjcfTFU+bozo6lLmiQ0THOnXB
+         pVTi8ZX5JJXEyCUyROCujb1RN1ME611Mpm/zn6G1+Fs1/E1/OqNwP/KNsmeH2Urff4Nx
+         VICQ51CxjcGFNuVE6CeRzTKajI1Tsh27P0kUXiISzN4DtHs4ErRvjBW3F3vkg25fgY+l
+         ijYV2B5f+CnqnYftEnjxXVoYowx9Z6Z4M/qGBxxBZgQ1X46+VE4bXOy0JnHHVb63sjIo
+         llNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714054714; x=1714659514;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SpcFxjVoRf/8zZFpl0pURM6bbS9rd+3CtG1qRJbE4oM=;
+        b=mEcuTSG0syPAKuHLIMVkkXJzf24Iaz9SKRMBLNjwq8ymm0/p6jxwUVcOlngMZgVtup
+         +zAVjLdKKZbjcZ545fLi8xC1a6DyN4MTno/FpJjyeA5C+qW3J48DHWWFtwoTDwh0rhkd
+         kqDa58ry7Y+yI4VQZqk9eklhQuo7UHd9uuVNgWLvMMKY1RBHrEoUeIaPHgzrycqZ4yGa
+         FIGfrvqS90BJM77p26Bmnjt+LNDNQNfYPYsZzczgmwZnwNxY1x/L5F3nWWyVxafD4tt6
+         686JpercvnKXK5flXxEF7UlY9zMqQRq4wkX5g1bB3jEYfBLPWdugGXaYmRYlX2voaoPn
+         MmJw==
+X-Forwarded-Encrypted: i=1; AJvYcCWBIcjQ9VQh5URWOWAyhz7wP+Neq5TjwLmzvvhIrBFu4TQ7ffHKzvoVKdjir8BFHw15rQN/UQJsx/CO3WGtPqBi8ioFRslUTwXoDzwbK4WZ1QSa9JFMN7hIP675UD5+LkFqi0RPs+N+oE5DzLsyJsBjJxZkcF1Z3rT1w2j75pDvwqmQx4dt91eWqDzXwrnaCJ4WJYpzP/1WtOf03TNjhVBft3W5LFzRk3xiJI4F
+X-Gm-Message-State: AOJu0YzGi1bbjiOvK2W7ozEgdRHQSoIyIov2mbUrSn7BLhltcOxei7+F
+	IfqGwswHeaulxkZzzxTfZK7gJhCJfA7/EoOYw4Y/gL2OZ+rSRT57
+X-Google-Smtp-Source: AGHT+IFFwWUen0aR7eKwdpRgMzVD+6uL8RAt9TmXJdXVYBDk+NjjHhRAaa/zcyng5BqcXFQvtoTOsA==
+X-Received: by 2002:aa7:8a50:0:b0:6ec:ceb5:e5de with SMTP id n16-20020aa78a50000000b006ecceb5e5demr7018753pfa.0.1714054714442;
+        Thu, 25 Apr 2024 07:18:34 -0700 (PDT)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id go20-20020a056a003b1400b006e6233563cesm13162397pfb.218.2024.04.25.07.18.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Apr 2024 07:18:33 -0700 (PDT)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: colyli@suse.de,
+	kent.overstreet@linux.dev,
+	msakai@redhat.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	akpm@linux-foundation.org
+Cc: bfoster@redhat.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	jserv@ccns.ncku.edu.tw,
+	linux-bcache@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Kuan-Wei Chiu <visitorckw@gmail.com>
+Subject: [PATCH v4 00/16] treewide: Refactor heap related implementation
+Date: Thu, 25 Apr 2024 22:18:10 +0800
+Message-Id: <20240425141826.840077-1-visitorckw@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 8/9] KVM: VMX: Open code VMX preemption timer rate mask
- in its accessor
-To: Sean Christopherson <seanjc@google.com>
-Cc: Zhao Liu <zhao1.liu@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, Shan Kang <shan.kang@intel.com>,
- Kai Huang <kai.huang@intel.com>, Xin Li <xin3.li@intel.com>
-References: <20240309012725.1409949-1-seanjc@google.com>
- <20240309012725.1409949-9-seanjc@google.com> <ZfRtSKcXTI/lAQxE@intel.com>
- <ZfSLRrf1CtJEGZw2@google.com>
- <1e063b73-0f9a-4956-9634-2552e6e63ee1@intel.com>
- <ZgyBckwbrijACeB1@google.com> <ZilmVN0gbFlpnHO9@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <ZilmVN0gbFlpnHO9@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/25/2024 4:06 AM, Sean Christopherson wrote:
-> On Tue, Apr 02, 2024, Sean Christopherson wrote:
->> On Mon, Apr 01, 2024, Xiaoyao Li wrote:
->>> On 3/16/2024 1:54 AM, Sean Christopherson wrote:
->>>> On Fri, Mar 15, 2024, Zhao Liu wrote:
->>>>> On Fri, Mar 08, 2024 at 05:27:24PM -0800, Sean Christopherson wrote:
->>>>>> Use vmx_misc_preemption_timer_rate() to get the rate in hardware_setup(),
->>>>>> and open code the rate's bitmask in vmx_misc_preemption_timer_rate() so
->>>>>> that the function looks like all the helpers that grab values from
->>>>>> VMX_BASIC and VMX_MISC MSR values.
->>>>
->>>> ...
->>>>
->>>>>> -#define VMX_MISC_PREEMPTION_TIMER_RATE_MASK	GENMASK_ULL(4, 0)
->>>>>>    #define VMX_MISC_SAVE_EFER_LMA			BIT_ULL(5)
->>>>>>    #define VMX_MISC_ACTIVITY_HLT			BIT_ULL(6)
->>>>>>    #define VMX_MISC_ACTIVITY_SHUTDOWN		BIT_ULL(7)
->>>>>> @@ -162,7 +161,7 @@ static inline u32 vmx_basic_vmcs_mem_type(u64 vmx_basic)
->>>>>>    static inline int vmx_misc_preemption_timer_rate(u64 vmx_misc)
->>>>>>    {
->>>>>> -	return vmx_misc & VMX_MISC_PREEMPTION_TIMER_RATE_MASK;
->>>>>> +	return vmx_misc & GENMASK_ULL(4, 0);
->>>>>>    }
->>>>>
->>>>> I feel keeping VMX_MISC_PREEMPTION_TIMER_RATE_MASK is clearer than
->>>>> GENMASK_ULL(4, 0), and the former improves code readability.
->>>>>
->>>>> May not need to drop VMX_MISC_PREEMPTION_TIMER_RATE_MASK?
->>>>
->>>> I don't necessarily disagree, but in this case I value consistency over one
->>>> individual case.  As called out in the changelog, the motivation is to make
->>>> vmx_misc_preemption_timer_rate() look like all the surrounding helpers.
->>>>
->>>> _If_ we want to preserve the mask, then we should add #defines for vmx_misc_cr3_count(),
->>>> vmx_misc_max_msr(), etc.
->>>>
->>>> I don't have a super strong preference, though I think my vote would be to not
->>>> add the masks and go with this patch.  These helpers are intended to be the _only_
->>>> way to access the fields, i.e. they effectively _are_ the mask macros, just in
->>>> function form.
->>>>
->>>
->>> +1.
->>>
->>> However, it seems different for vmx_basic_vmcs_mem_type() in patch 5, that I
->>> just recommended to define the MASK.
->>>
->>> Because we already have
->>>
->>> 	#define VMX_BASIC_MEM_TYPE_SHIFT	50
->>>
->>> and it has been used in vmx/nested.c,
->>>
->>> static inline u32 vmx_basic_vmcs_mem_type(u64 vmx_basic)
->>> {
->>> 	return (vmx_basic & GENMASK_ULL(53, 50)) >>
->>> 		VMX_BASIC_MEM_TYPE_SHIFT;
->>> }
->>>
->>> looks not intuitive than original patch.
->>
->> Yeah, agreed, that's taking the worst of both worlds.  I'll update patch 5 to drop
->> VMX_BASIC_MEM_TYPE_SHIFT when effectively "moving" it into vmx_basic_vmcs_mem_type().
-> 
-> Drat.  Finally getting back to this, dropping VMX_BASIC_MEM_TYPE_SHIFT doesn't
-> work because it's used by nested_vmx_setup_basic(), as is VMX_BASIC_VMCS_SIZE_SHIFT,
-> which is presumably why past me kept them around.
-> 
-> I'm leaning towards keeping things as proposed in this series.  
+This patch series focuses on several adjustments related to heap
+implementation. Firstly, a type-safe interface has been added to the
+min_heap, along with the introduction of several new functions to
+enhance its functionality. Additionally, the heap implementation for
+bcache and bcachefs has been replaced with the generic min_heap
+implementation from include/linux. Furthermore, several typos have been
+corrected.
 
-If it goes this way, I beg for a comment above the code to explain. 
-Otherwise, people might send patch to use defined MARCO in the future.
+Previous discussion with Kent Overstreet:
+https://lkml.kernel.org/ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu
 
-> I don't see us
-> gaining a third copy, or even a third user, i.e. I don't think we are creating a
-> future problem by open coding the shift in vmx_basic_vmcs_mem_type().  And IMO
-> code like this
-> 
-> 	return (vmx_basic & VMX_BASIC_MEM_TYPE_MASK) >>
-> 	       VMX_BASIC_MEM_TYPE_SHIFT;
-> 
-> is an unnecessary obfuscation when there is literally one user (the accessor).
-> 
-> Another idea would be to delete VMX_BASIC_MEM_TYPE_SHIFT and VMX_BASIC_VMCS_SIZE_SHIFT,
-> and either open code the values or use local const variables, but that also seems
-> like a net negative, e.g. splits the effective definitions over too many locations.
+Regards,
+Kuan-Wei
+
+---
+
+You can preview this patch series on the 'refactor-heap-v4' branch of
+the repository at the following link:
+
+https://github.com/visitorckw/linux.git
+
+Changes in v4:
+- Change struct initializations to use designated initializers.
+- Replace memcpy() with func->swp() in heap_del() due to issues with
+  set_backpointer in bcachefs when setting idx.
+- Fix an error in ec_stripes_heap_swap() where
+  ec_stripes_heap_set_backpointer() should be called after swapping.
+
+Changes in v3:
+- Avoid heap->heap.nr to eliminate the nested types.
+- Add MIN_HEAP_PREALLOCATED macro for preallocating some elements.
+- Use min_heap_sift_up() in min_heap_push().
+- Fix a bug in heap_del() where we should copy the last element to
+  'data + idx * element_size' instead of 'data'.
+- Add testcases for heap_del().
+- Fix bugs in bcache/bcachefs patches where the parameter types in
+  some compare functions should have been 'type **', but were
+  mistakenly written as 'type *'.
+
+Changes in v2:
+- Add attribute __always_unused to the compare and swap functions
+  that do not use the args parameter.
+- Rename min_heapify() to min_heap_sift_down().
+- Update lib/test_min_heap.c to use min_heap_init().
+- Refine the commit message for bcache and bcachefs.
+- Adjust the order of patches in the patch series.
+
+Link to v3: https://lore.kernel.org/20240406164727.577914-1-visitorckw@gmail.com
+Link to v2: https://lore.kernel.org/20240320145417.336208-1-visitorckw@gmail.com
+Link to v1: https://lkml.kernel.org/20240319180005.246930-1-visitorckw@gmail.com
+
+Kuan-Wei Chiu (16):
+  perf/core: Fix several typos
+  bcache: Fix typo
+  bcachefs: Fix typo
+  lib min_heap: Add type safe interface
+  lib min_heap: Add min_heap_init()
+  lib min_heap: Add min_heap_peek()
+  lib min_heap: Add min_heap_full()
+  lib min_heap: Add args for min_heap_callbacks
+  lib min_heap: Add min_heap_sift_up()
+  lib min_heap: Add min_heap_del()
+  lib min_heap: Update min_heap_push() and min_heap_pop() to return bool
+    values
+  lib min_heap: Rename min_heapify() to min_heap_sift_down()
+  lib min_heap: Update min_heap_push() to use min_heap_sift_up()
+  lib/test_min_heap: Add test for heap_del()
+  bcache: Remove heap-related macros and switch to generic min_heap
+  bcachefs: Remove heap-related macros and switch to generic min_heap
+
+ drivers/md/bcache/alloc.c      |  64 ++++++++---
+ drivers/md/bcache/bcache.h     |   2 +-
+ drivers/md/bcache/bset.c       |  84 ++++++++++-----
+ drivers/md/bcache/bset.h       |  14 +--
+ drivers/md/bcache/btree.c      |  17 ++-
+ drivers/md/bcache/extents.c    |  53 ++++++----
+ drivers/md/bcache/movinggc.c   |  41 +++++--
+ drivers/md/bcache/sysfs.c      |   2 +
+ drivers/md/bcache/util.c       |   2 +-
+ drivers/md/bcache/util.h       |  67 +-----------
+ drivers/md/bcache/writeback.c  |   3 +
+ drivers/md/dm-vdo/repair.c     |  19 ++--
+ drivers/md/dm-vdo/slab-depot.c |  14 +--
+ fs/bcachefs/clock.c            |  43 ++++++--
+ fs/bcachefs/clock_types.h      |   2 +-
+ fs/bcachefs/ec.c               |  76 ++++++++-----
+ fs/bcachefs/ec_types.h         |   2 +-
+ fs/bcachefs/util.c             |   2 +-
+ fs/bcachefs/util.h             | 118 +--------------------
+ include/linux/min_heap.h       | 188 +++++++++++++++++++++++++--------
+ kernel/events/core.c           |  29 ++---
+ lib/test_min_heap.c            |  75 +++++++++----
+ 22 files changed, 522 insertions(+), 395 deletions(-)
+
+-- 
+2.34.1
 
