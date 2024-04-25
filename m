@@ -1,93 +1,72 @@
-Received: from smtp.smtpout.orange.fr (smtp-14.smtpout.orange.fr [80.12.242.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4654684FA9;
-	Thu, 25 Apr 2024 10:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82245D477;
+	Thu, 25 Apr 2024 10:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.245.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714039435; cv=none; b=pN/kjsZ9PrBRh1+D05nvR5VYUlocbQ3gN24sPrdc7Cm4VZCg15HWev19Fd4jY6SnjvF091BEJQ2OR3llAXt6Vldc0ry+2+0aTy/UMe/oa9vfKbV/hUtFl/CJZRTTj0cjGOohNtforxCJditFSLdg7EtTT7Y6yCI+lRqd6s1M/WI=
+	t=1714039474; cv=none; b=cTRWSAMg1jh4JCiGiGttdQdWCbTGvdro+1tWmKe6zC/uQaeGYQIzZmL0u257rLXRyU6bhUShE8tDCD5l8YFfwMvBiiKpzGmMIMhcHZpA42expoG++wJUcKFOSmmRknXVSVQce42eCjXTMHPN8BWo+MOG6gyrdpJl96PFrCBvMKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714039435; c=relaxed/simple;
-	bh=7GYrDHi2wc98+LxSD11rnonpx3B7ff5rAPOELGHgubk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FCaTz8+Kfxc3h5qa7LrxzCSng1ZD7EsDQbCrrzyGbkorTVFVgflZPSprfDONwRkUqaGvwrMQQdWc3LvlszRNIRkRJuAlxvqwh2lHz2yVXS1EpAt/qApTtpAV6wsZWMH5yze7Fw/jc0zBKkzVlIOVqk2K0u94sPaxnOYJAjEAm+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=QlStIszc; arc=none smtp.client-ip=80.12.242.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="QlStIszc"
-Received: from localhost.localdomain ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id zvxAr3Z51CEcGzvxAryaUS; Thu, 25 Apr 2024 12:03:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1714039425;
-	bh=4dV+3BwCxRrU83DUCeOBwVJF38fNi8MvgvnSmXXVELI=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=QlStIszc4Xr3fHlScsb3ATG/XjVV5B9xVmfLF6iB1o7JoWR0q8XYFM7FE3eMFe0Op
-	 xPGV5wq9+VY0SF/Fm2CO/kLK+VE6dqkVKW2jNJOrzni20viGhc0ORVD7gr/Z12D4WX
-	 s1JxBsRX0vkLfI3eXcbeiEPO6yhw1f3mY9EjjZ0/rdf/jjIGnfPo19KutPamSsRije
-	 I6UiAXYy6S6ZxVr1U4A+NTmMsckpci6Y2Ne002NU+AHp/MGRy1Hqg9eq9UULY3paRi
-	 6/RIuzaisV0Oc+csj4vopJNZU9TcB8g/84a+udD5r8FMtOfW/tjbUXNSL3aE+YOO2q
-	 vPoe4D0iZepPw==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 25 Apr 2024 12:03:45 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Arend van Spriel <arend.vanspriel@broadcom.com>,
-	Kalle Valo <kvalo@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com
-Subject: [PATCH] wifi: brcmfmac: remove unused brcmf_usb_image struct
-Date: Thu, 25 Apr 2024 12:03:18 +0200
-Message-ID: <23afd8c1733ad087ce2399a07a30d689aef861d5.1714039373.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1714039474; c=relaxed/simple;
+	bh=T4/SvwSb/RpceslN4TdWuVNb2RScrhueN/tYDCHMa3E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I0/cB7oOrUoUPYctDxiF0ENQ9y4M0W3vC4McmQ1mb3zdkGUOwyWPX5/f3DZIGAwcGkfoBif5F+kU23Z6o70GcUn1jHJBSP87qOq3+uX8mF19UK1+kCGa66cUNUCntkxR3JBMXqSXI93oYZXoh3V8OtQa7Pi6kjkZJZxox7ElZVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de; spf=pass smtp.mailfrom=strlen.de; arc=none smtp.client-ip=91.216.245.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strlen.de
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1rzvxa-000733-M9; Thu, 25 Apr 2024 12:04:10 +0200
+Date: Thu, 25 Apr 2024 12:04:10 +0200
+From: Florian Westphal <fw@strlen.de>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>, linke li <lilinke99@qq.com>,
+	xujianhao01@gmail.com, Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netfilter: mark racy access on ext->gen_id
+Message-ID: <20240425100410.GB29182@breakpoint.cc>
+References: <tencent_284407955020261D1B2BD142194A87C9EB0A@qq.com>
+ <ZiokCzm41m21CxLR@calendula>
+ <CANn89iLxRgYSsFokDo327B4CwwwN9B1Q8e+OHvQenn0a5SfxDQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANn89iLxRgYSsFokDo327B4CwwwN9B1Q8e+OHvQenn0a5SfxDQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-struct brcmf_usb_image was added in the initial commit 71bb244ba2fd5
-("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets") and updated
-in commit 803599d40418 ("brcmfmac: store usb fw images in local linked
-list.")
-
-Its only usage was removed in commit 52f98a57d8c1 ("brcmfmac: remove
-firmware list from USB driver").
-
-Remove the structure definition now. This saves a few lines of code.
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c | 7 -------
- 1 file changed, 7 deletions(-)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-index 0ccf735316c2..9a105e6debe1 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-@@ -117,13 +117,6 @@ struct bootrom_id_le {
- 	__le32 boardrev;	/* Board revision */
- };
+Eric Dumazet <edumazet@google.com> wrote:
+> > There are a more uses ext->gen_id in the code, my understanding this
+> > patch is just a stub.
+> 
+> Anyway, ext->gen_id was already read and stored in @this_id
+> 
+> I would probably avoid reading it a second time.
  
--struct brcmf_usb_image {
--	struct list_head list;
--	s8 *fwname;
--	u8 *image;
--	int image_len;
--};
--
- struct brcmf_usbdev_info {
- 	struct brcmf_usbdev bus_pub; /* MUST BE FIRST */
- 	spinlock_t qlock;
--- 
-2.44.0
+> diff --git a/net/netfilter/nf_conntrack_extend.c
+> b/net/netfilter/nf_conntrack_extend.c
+> index dd62cc12e7750734fec9be8a90fd0defcbc815e0..747797b20bc7417a2b7270d84f62d24991a4b982
+> 100644
+> --- a/net/netfilter/nf_conntrack_extend.c
+> +++ b/net/netfilter/nf_conntrack_extend.c
+> @@ -141,7 +141,7 @@ void *__nf_ct_ext_find(const struct nf_ct_ext *ext, u8 id)
+>         if (!__nf_ct_ext_exist(ext, id))
+>                 return NULL;
+> 
+> -       if (this_id == 0 || ext->gen_id == gen_id)
+> +       if (this_id == 0 || this_id == gen_id)
+>                 return (void *)ext + ext->offset[id];
+> 
+>         return NULL;
+> 
 
+Right, that should work, unconfirmed entries are not exposed to other
+cpus and confirmed entries get their id set to 0.
