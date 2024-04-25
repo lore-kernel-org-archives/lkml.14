@@ -1,221 +1,151 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4891CF8A;
-	Thu, 25 Apr 2024 15:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3361494BF;
+	Thu, 25 Apr 2024 15:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714060083; cv=none; b=T6hllSw5Sph29pYFvGCzqXxAf1bfwqQExOBE7I9hb7l4i3MtIgZZchkPrTk664miTgMBpJqtsSxPeXvpjnQtOGMXMbdbAJV6TQZr3cAwe0E82SntWlGsBkV20mbqiDgd01lOpVOBHlMaU4T8kzYGkfhHvWc/PeyoQYJ4z75tJ+k=
+	t=1714060094; cv=none; b=WQ1gF2jkPxfmCd0TEe/Tmvwkd6IgF+SHU8zCk+zCL8cHa/BKv69TWaETP8noxVduWGx6vrJY+zQwvPohYaepdWPWZURNpiiKbFF3d9z+nokU2rrbQ0CfsCfws0pefuTezZ3jnxbAfqSM4wnql+CqaEqfzsG/0Et1arDS6cEqwhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714060083; c=relaxed/simple;
-	bh=vRl3nerpRfMSVNdi2yLByaHezOdTcLaQL5k4oJE5Jx0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f2j5VgZwKZP0F0S1yv24qZlhiZ52fQ38czseq4w9s3X+8yf9RuX4suoT4BbvNYdv2LEkGAqtQ4RFMP+XEYG4VIkC4UP38muRahMmdFQXWztcYPIlhIEfqtUAZoPmFItkR1JFCwmMs6ZjkzeK5jzDGVzJk4olMqDPT1oZFIVLKWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=hbwfSz8U reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1714060094; c=relaxed/simple;
+	bh=IsAL6MSVVb0st0Jwbse2d6xJSQLj/y4fLVjgYoKxfLw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZTyuQNKHNt3YpVAGuXkxD8QpkcCKZWVsA1ogFIKOnmpYYtGXNAgdj+5I0xo/3I4rbLJaPBW8uulMBI87fFrIK3F4uOCbRim/lYHqpJ4n/7B0nSiXdnyLO49V6iMxjlD35fS4OWXrOJWOqVWwdUpUUZFlEPvNNzcYcSLOyGHqKwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=p0D3vHvY; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="hbwfSz8U"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.0.0)
- id af50854ee9ed0a10; Thu, 25 Apr 2024 17:47:58 +0200
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 3308466DF31;
-	Thu, 25 Apr 2024 17:47:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1714060078;
-	bh=vRl3nerpRfMSVNdi2yLByaHezOdTcLaQL5k4oJE5Jx0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=hbwfSz8UspzW8rjFdkmLtLc+FpOwVaJcJDoDJX5jlRmHDixcSCCHcMQqKBElPMAoR
-	 ELou1a6skzjjhL+wLSQBI66gqA8RR10u1twRbCJhIuFbLQeOhhHriR6f/iBt6Unejq
-	 7ztp9wEx3gstD2FCYglWnBNaQ2vnGEiB4aCQxuUuq+f2p9iKx4wPUyOoqWq66SATUu
-	 kysupLnoiHUUTdLnfDoyN362soZb5+a/NamwbGl7sTjlbVV4EdtF+V7VAPFUaYkDqw
-	 Ny5ZY6uoggwt12vnp83TYGXjt9ucy2tWv6lZUI107ObtNZ6rgIFafJLn8qRFZOMuMt
-	 twqwCdyJwa/Lg==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Lukasz Luba <lukasz.luba@arm.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>
-Subject:
- [Alternative][PATCH v1 2/3] thermal/debugfs: Fix two locking issues with
- thermal zone debug
-Date: Thu, 25 Apr 2024 17:47:57 +0200
-Message-ID: <5780690.DvuYhMxLoT@kreacher>
-In-Reply-To: <1888579.tdWV9SEqCh@kreacher>
-References: <12427744.O9o76ZdvQC@kreacher> <1888579.tdWV9SEqCh@kreacher>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="p0D3vHvY"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43PDESOr021448;
+	Thu, 25 Apr 2024 17:46:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=selector1; bh=4NMVoNz
+	2ja0mKMA3zgF7rxaTumBVu43eHSfBqn+yggE=; b=p0D3vHvYlFwZHcf7hV/v3de
+	Uc5+XgJ57P+DbpLWYQACVBnDzPoKmDmPoAlc3NJ38Ps5ez2VBy12W24CUp9/IbaL
+	ZQAWrOuTMjma+2AD9rc3FSxD5HOG9aOM4u3Pm8qnMoaAYDaVZnMsFfJCbHYFM4zM
+	qCAdfhYCG8fjNHXDpi2gn2vNS7KxnsSsawOsBHElZutUZ1kMufedlb25+cOPXk6S
+	9SWQ7XgnX2F36BXQbZbUCRiHYzpBmjjSIX9tvEyF5Kjs9psIcVc3DToH6fPEsX4P
+	OpYs3fy5KiO86yrx2+rU/od5VVi8KwCSoW0H8bBxoGb//zTGO/Ksqy1tZpCXlLg=
+	=
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xm51wen46-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Apr 2024 17:46:51 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A1F5E4002D;
+	Thu, 25 Apr 2024 17:46:38 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 43D512258BA;
+	Thu, 25 Apr 2024 17:46:04 +0200 (CEST)
+Received: from localhost (10.48.86.112) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 25 Apr
+ 2024 17:46:03 +0200
+From: Patrick Delaunay <patrick.delaunay@foss.st.com>
+To: Alexandre TORGUE <alexandre.torgue@foss.st.com>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC: Patrick Delaunay <patrick.delaunay@foss.st.com>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH] arm64: dts: st: add power domain on stm32mp25
+Date: Thu, 25 Apr 2024 17:45:55 +0200
+Message-ID: <20240425174519.1.I443a218decda670093bc621165e3052db14d4c02@changeid>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudeljedgleefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepfeduudeutdeugfelffduieegiedtueefledvjeegffdttefhhffhtefhleejgfetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeehpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomhdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrgh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-25_15,2024-04-25_01,2023-05-22_02
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Add power domains on STM32MP25x SoC for supported low power modes:
+- CPU_PD0/1: domain for idle of each core Cortex A35 (CStop)
+- CLUSTER_PD: D1 domain with Stop1 and LP-Stop1 modes support when
+  the Cortex A35 cluster and each device assigned to CPU1=CA35
+  are deactivated
+- RET_PD: D1 domain retention (VDDCore is reduced) to support
+          the LPLV-Stop1 mode
 
-With the current thermal zone locking arrangement in the debugfs code,
-user space can open the "mitigations" file for a thermal zone before
-the zone's debugfs pointer is set which will result in a NULL pointer
-dereference in tze_seq_start().
-
-Moreover, thermal_debug_tz_remove() is not called under the thermal
-zone lock, so can run in parallel with the other functions accessing
-the thermal zone's struct thermal_debugfs object.  Then, it may clear
-tz->debugfs after one of those functions has checked it and the
-struct thermal_debugfs object may be freed prematurely.
-
-To address the first problem, pass a pointer to the thermal zone's
-struct thermal_debugfs object to debugfs_create_file() in
-thermal_debug_tz_add() and make tze_seq_start(), tze_seq_next(),
-tze_seq_stop(), and tze_seq_show() retrieve it from s->private
-instead of a pointer to the thermal zone object.  This will ensure
-that tz_debugfs will be valid across the "mitigations" file accesses
-until thermal_debugfs_remove_id() called by thermal_debug_tz_remove()
-removes that file.
-
-To address the second problem, use tz->lock in thermal_debug_tz_remove()
-around the tz->debugfs value check (in case the same thermal zone is
-removed at the same time in two differet threads) and its reset to NULL.
-
-Fixes: 7ef01f228c9f ("thermal/debugfs: Add thermal debugfs information for mitigation episodes")
-Cc :6.8+ <stable@vger.kernel.org> # 6.8+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Patrick Delaunay <patrick.delaunay@foss.st.com>
 ---
 
-This is an alternative fix for the issues addressed by
+ arch/arm64/boot/dts/st/stm32mp251.dtsi | 16 ++++++++++++++++
+ arch/arm64/boot/dts/st/stm32mp253.dtsi |  9 +++++++++
+ 2 files changed, 25 insertions(+)
 
-https://lore.kernel.org/linux-pm/1888579.tdWV9SEqCh@kreacher/
-
-and I slightly prefer it, because it is less intrusive and makes
-the thermal zone debug code more consistent with the analogous code
-for cdevs.
-
-Accordingly, I've replace the above with this patch in the
-thermal-core-next branch in linux-pm.git.
-
----
- drivers/thermal/thermal_debugfs.c |   34 ++++++++++++++++++++++------------
- 1 file changed, 22 insertions(+), 12 deletions(-)
-
-Index: linux-pm/drivers/thermal/thermal_debugfs.c
-===================================================================
---- linux-pm.orig/drivers/thermal/thermal_debugfs.c
-+++ linux-pm/drivers/thermal/thermal_debugfs.c
-@@ -139,11 +139,13 @@ struct tz_episode {
-  * we keep track of the current position in the history array.
-  *
-  * @tz_episodes: a list of thermal mitigation episodes
-+ * @tz: thermal zone this object belongs to
-  * @trips_crossed: an array of trip points crossed by id
-  * @nr_trips: the number of trip points currently being crossed
-  */
- struct tz_debugfs {
- 	struct list_head tz_episodes;
-+	struct thermal_zone_device *tz;
- 	int *trips_crossed;
- 	int nr_trips;
+diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+index af1444bf9442..4beb0a0bef4f 100644
+--- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+@@ -18,6 +18,8 @@ cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			reg = <0>;
+ 			enable-method = "psci";
++			power-domains = <&CPU_PD0>;
++			power-domain-names = "psci";
+ 		};
+ 	};
+ 
+@@ -104,6 +106,20 @@ intc: interrupt-controller@4ac00000 {
+ 	psci {
+ 		compatible = "arm,psci-1.0";
+ 		method = "smc";
++
++		CPU_PD0: power-domain-cpu0 {
++			#power-domain-cells = <0>;
++			power-domains = <&CLUSTER_PD>;
++		};
++
++		CLUSTER_PD: power-domain-cluster {
++			#power-domain-cells = <0>;
++			power-domains = <&RET_PD>;
++		};
++
++		RET_PD: power-domain-retention {
++			#power-domain-cells = <0>;
++		};
+ 	};
+ 
+ 	timer {
+diff --git a/arch/arm64/boot/dts/st/stm32mp253.dtsi b/arch/arm64/boot/dts/st/stm32mp253.dtsi
+index af48e82efe8a..79c02ef2e51e 100644
+--- a/arch/arm64/boot/dts/st/stm32mp253.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp253.dtsi
+@@ -12,6 +12,8 @@ cpu1: cpu@1 {
+ 			device_type = "cpu";
+ 			reg = <1>;
+ 			enable-method = "psci";
++			power-domains = <&CPU_PD1>;
++			power-domain-names = "psci";
+ 		};
+ 	};
+ 
+@@ -20,4 +22,11 @@ arm-pmu {
+ 			     <GIC_SPI 369 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-affinity = <&cpu0>, <&cpu1>;
+ 	};
++
++	psci {
++		CPU_PD1: power-domain-cpu1 {
++			#power-domain-cells = <0>;
++			power-domains = <&CLUSTER_PD>;
++		};
++	};
  };
-@@ -710,8 +712,7 @@ out:
- 
- static void *tze_seq_start(struct seq_file *s, loff_t *pos)
- {
--	struct thermal_zone_device *tz = s->private;
--	struct thermal_debugfs *thermal_dbg = tz->debugfs;
-+	struct thermal_debugfs *thermal_dbg = s->private;
- 	struct tz_debugfs *tz_dbg = &thermal_dbg->tz_dbg;
- 
- 	mutex_lock(&thermal_dbg->lock);
-@@ -721,8 +722,7 @@ static void *tze_seq_start(struct seq_fi
- 
- static void *tze_seq_next(struct seq_file *s, void *v, loff_t *pos)
- {
--	struct thermal_zone_device *tz = s->private;
--	struct thermal_debugfs *thermal_dbg = tz->debugfs;
-+	struct thermal_debugfs *thermal_dbg = s->private;
- 	struct tz_debugfs *tz_dbg = &thermal_dbg->tz_dbg;
- 
- 	return seq_list_next(v, &tz_dbg->tz_episodes, pos);
-@@ -730,15 +730,15 @@ static void *tze_seq_next(struct seq_fil
- 
- static void tze_seq_stop(struct seq_file *s, void *v)
- {
--	struct thermal_zone_device *tz = s->private;
--	struct thermal_debugfs *thermal_dbg = tz->debugfs;
-+	struct thermal_debugfs *thermal_dbg = s->private;
- 
- 	mutex_unlock(&thermal_dbg->lock);
- }
- 
- static int tze_seq_show(struct seq_file *s, void *v)
- {
--	struct thermal_zone_device *tz = s->private;
-+	struct thermal_debugfs *thermal_dbg = s->private;
-+	struct thermal_zone_device *tz = thermal_dbg->tz_dbg.tz;
- 	struct thermal_trip_desc *td;
- 	struct tz_episode *tze;
- 	const char *type;
-@@ -816,6 +816,8 @@ void thermal_debug_tz_add(struct thermal
- 
- 	tz_dbg = &thermal_dbg->tz_dbg;
- 
-+	tz_dbg->tz = tz;
-+
- 	tz_dbg->trips_crossed = kzalloc(sizeof(int) * tz->num_trips, GFP_KERNEL);
- 	if (!tz_dbg->trips_crossed) {
- 		thermal_debugfs_remove_id(thermal_dbg);
-@@ -824,20 +826,30 @@ void thermal_debug_tz_add(struct thermal
- 
- 	INIT_LIST_HEAD(&tz_dbg->tz_episodes);
- 
--	debugfs_create_file("mitigations", 0400, thermal_dbg->d_top, tz, &tze_fops);
-+	debugfs_create_file("mitigations", 0400, thermal_dbg->d_top,
-+			    thermal_dbg, &tze_fops);
- 
- 	tz->debugfs = thermal_dbg;
- }
- 
- void thermal_debug_tz_remove(struct thermal_zone_device *tz)
- {
--	struct thermal_debugfs *thermal_dbg = tz->debugfs;
-+	struct thermal_debugfs *thermal_dbg;
- 	struct tz_episode *tze, *tmp;
- 	struct tz_debugfs *tz_dbg;
- 	int *trips_crossed;
- 
--	if (!thermal_dbg)
-+	mutex_lock(&tz->lock);
-+
-+	thermal_dbg = tz->debugfs;
-+	if (!thermal_dbg) {
-+		mutex_unlock(&tz->lock);
- 		return;
-+	}
-+
-+	tz->debugfs = NULL;
-+
-+	mutex_unlock(&tz->lock);
- 
- 	tz_dbg = &thermal_dbg->tz_dbg;
- 
-@@ -850,8 +862,6 @@ void thermal_debug_tz_remove(struct ther
- 		kfree(tze);
- 	}
- 
--	tz->debugfs = NULL;
--
- 	mutex_unlock(&thermal_dbg->lock);
- 
- 	thermal_debugfs_remove_id(thermal_dbg);
-
-
+-- 
+2.25.1
 
