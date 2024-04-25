@@ -1,119 +1,135 @@
-Received: from msa.smtpout.orange.fr (msa-217.smtpout.orange.fr [193.252.23.217])
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF86816;
-	Thu, 25 Apr 2024 00:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4029115B3
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 00:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714005743; cv=none; b=j/MDqKtBhLDKh/bURHp8/xb0h4OlOHETPDggi6QbIu48AXhAAqk6SPjUWOFKqdcwRWHIwnx+GNdtQsPYQBtMgjnjnQBBcN7HB0h/xetg32mRNkUrNBSXQg7PnLS5M6fCkefx2le8bGdrqYnXRPbk2eChKLVW2D7ahzRNM6a72Qk=
+	t=1714005796; cv=none; b=g6wPg2/U2pXTmu2Rzi/rlEU3FF63QP5zBqP6Oqji72cIWqZBFiCAhZZDwzUqIrmP3FEiXIAQ0DeCgU2g0neBlPRK8oIc+FsYeieA7d7Nk/0XEgUMzbRAH2aV83gnWJusznnwGDOGoSwwO/OIDg7z9M2dVVz4oPa1Zefu5paYEx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714005743; c=relaxed/simple;
-	bh=Hre7W80W6Sa6/1VsF3RTEXPkgnH7ao/VPskpGPGZYhA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TjjDbzIU8G/bnXMbuRAGfs7vPhIi8eK3I6YRw2Nx8mll0fklt5iE+k0LBGLjTPI598pSAHrLsCnPunBRE1HadWSP0cHNc8A1gCB9VgnA5bGfkysfyp2RmwUwGpiSgGoThIVfHK0oTSXAQnioZYZX2XC2VRtC9vJLKnWTckVJMbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Rewpzcqr; arc=none smtp.client-ip=193.252.23.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1714005796; c=relaxed/simple;
+	bh=236gG8N4hj2YoDKj8i1xC+LA41Hwr3up0ZGcQlhtubw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jZdu2SUKj6KcY5juzI3BsjV2aErgAM8o0ON2GC0aO+FA3dceBVP1Zm/MRavQBl1oMpNCKGRxXrTPIJna1ie5E0cXMBFEB0as30nbwZ/kp+67/sfwxkErcyNCQSSEpdtokVcyslKWzTh/GhLbzbKQnXUQEtgQjdMq6ZXysuaD9eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amacapital.net; spf=pass smtp.mailfrom=amacapital.net; dkim=pass (2048-bit key) header.d=amacapital-net.20230601.gappssmtp.com header.i=@amacapital-net.20230601.gappssmtp.com header.b=Ls+97lZT; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amacapital.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amacapital.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Rewpzcqr"
-Received: from [192.168.1.37] ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id zZxwrgXWsHa8WzZxwrW7sY; Wed, 24 Apr 2024 12:35:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713954909;
-	bh=h2zecfNezQcLS7/TPEc/i/RBRBH4yoSAoRIJo8Y12us=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=RewpzcqrFLLCX8GSjycSHK/O7YxBxMhCOig8ckghUv80CaJFslEskHhJ1Y8ioT2Hu
-	 tQkdEdydNfFXFCgq/t5JH+UCKBSCRD0QQKPW2FXw53Z3qAQ+i5dCDtotEqjXk5A7Jh
-	 4lmyuc5ygkVRv32F1a528mNyAo+WgSTElkNu4YopJ//yCdVRXZciBexmZeS/kUPJxT
-	 geFAUo18k7wvt00zkCqux9gJGwpUuC1zCh86UOu72UcqLLKBtZvMlfk4Ex0fjgOwH9
-	 6KfIOFqKj2C657lUcx2eEGGMBzSXh6GKymFn0DmcYZNvr6e/ZbgYmcn4MypF44DIfw
-	 3pQZzecB/H2+A==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 24 Apr 2024 12:35:09 +0200
-X-ME-IP: 86.243.17.157
-Message-ID: <93c12354-2e4d-4b21-bc96-eeb55442e365@wanadoo.fr>
-Date: Wed, 24 Apr 2024 12:35:04 +0200
+	dkim=pass (2048-bit key) header.d=amacapital-net.20230601.gappssmtp.com header.i=@amacapital-net.20230601.gappssmtp.com header.b="Ls+97lZT"
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4daa91c0344so155994e0c.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2024 17:43:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20230601.gappssmtp.com; s=20230601; t=1714005794; x=1714610594; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fR7n1uhPFN3B2i3X955I2o/YTQLtqjqYe3qbWIU7RC4=;
+        b=Ls+97lZTFoJ2/KChiAz0ijZpt+w8uKkyx0sDOpeeR2wRJst8ppj7IQMNXK9YVsfify
+         KoldSLY5TOixc/CYJyNmoOIazKBu0O+8EAqWAX2KkZ9TAs0DCI8gxS9zjsxYjn1CKJH7
+         PbXCVxti/h7UYwMEyc3k3ILN4giSD9R5dq1B1UKU80WGrP7FUY+jrywp8RsI/yMW1O/o
+         Ec3sLVg0flnk54tkfSDXo5pofBMFom1oY/kALI1e7e6RTggr/8BP48Jy9/KGp6A9c1m5
+         69ZFDoNxsXokabU95Vt4hFjFP5loY+NeWmG/5sPqG2tKPo6FF6QUc8CVEwBb2O7951xc
+         Hp5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714005794; x=1714610594;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fR7n1uhPFN3B2i3X955I2o/YTQLtqjqYe3qbWIU7RC4=;
+        b=VrXd8mSvEqlQ5IfoymIEjcYWH/cke985QQ7x/p+jVKsfApF1Qr/3k1q1Gdy2cBawIP
+         XSbeD0dzADaWS324FjdqxiwerEI3/uhyBGk2DTfW91rUl3BeJtYSqlWOQFUgFMn024sN
+         0B//zMF+h+fTH+o4XQ0KlcwqiMjCfgSfBEgSJ0v7n9jQs1V3qsK4wKM0f5J3aqzOsy7P
+         c1koBU55G6CSTTINM7UoNHyImX7WhGq1b86rX5qhRrEc7r3NJSNpMqgHbiRU3zRhvuXv
+         fZU10Hv4AakW0C6kQbpetQMGI80lw005RV192IX9TNAQbVvKcWF5Zy9s850bNeuVP3U3
+         r9Vw==
+X-Gm-Message-State: AOJu0YykPz/yKBiUQvqFvByA22hDbu2PptbubcrR9+r+vVxFdDK9wiQ3
+	ypt7kQLpcPvxengzjnkqoQ9xK1NfWExGt+wxC6Mc0VRdTs0GMosa8aR1CUeZ5kiZBz8o9t3ThMy
+	bwI/GI6VrKsLYO3neAaf5x+uhstfhgyhfpZE8
+X-Google-Smtp-Source: AGHT+IGDxdao24yBIAE6mF2nR1EaA/sS73/iozSWk/HWHCQsnJdooMo1NGAL8N9vsDwXEby001pQKmbZiPPUcRArhTo=
+X-Received: by 2002:a05:6122:790:b0:4d4:1ec7:76e5 with SMTP id
+ k16-20020a056122079000b004d41ec776e5mr4505317vkr.16.1714005793771; Wed, 24
+ Apr 2024 17:43:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 6/7] regulator: Add refactored mtk-dvfsrc-regulator
- driver
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: amergnat@baylibre.com, broonie@kernel.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, djakov@kernel.org, gustavoars@kernel.org,
- henryc.chen@mediatek.com, keescook@chromium.org, kernel@collabora.com,
- krzysztof.kozlowski+dt@linaro.org, lgirdwood@gmail.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
- matthias.bgg@gmail.com, robh@kernel.org, wenst@chromium.org
-References: <20240424095416.1105639-1-angelogioacchino.delregno@collabora.com>
- <20240424095416.1105639-7-angelogioacchino.delregno@collabora.com>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240424095416.1105639-7-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240423110148.13114-1-stsp2@yandex.ru> <4D2A1543-273F-417F-921B-E9F994FBF2E8@amacapital.net>
+ <0e2e48be-86a8-418c-95b1-e8ca17469198@yandex.ru>
+In-Reply-To: <0e2e48be-86a8-418c-95b1-e8ca17469198@yandex.ru>
+From: Andy Lutomirski <luto@amacapital.net>
+Date: Wed, 24 Apr 2024 17:43:02 -0700
+Message-ID: <CALCETrWswr5jAzD9BkdCqLX=d8vReO8O9dVmZfL7HXdvwkft9g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] implement OA2_INHERIT_CRED flag for openat2()
+To: stsp <stsp2@yandex.ru>
+Cc: linux-kernel@vger.kernel.org, Stefan Metzmacher <metze@samba.org>, 
+	Eric Biederman <ebiederm@xmission.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Andy Lutomirski <luto@kernel.org>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+	Alexander Aring <alex.aring@gmail.com>, linux-fsdevel@vger.kernel.org, 
+	linux-api@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
+	=?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>, 
+	Aleksa Sarai <cyphar@cyphar.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Le 24/04/2024 à 11:54, AngeloGioacchino Del Regno a écrit :
-> The previous driver never worked, and never got even compiled because
-> it was missing the DVFSRC driver entirely, including needed neaders.
-> 
-> This is a full (or nearly full) refactoring of the MediaTek DVFSRC
-> controlled Regulators driver, retaining support for the MT6873, MT8183
-> and MT8192 SoC, and adding MT8195.
-> 
-> As part of the refactoring, this driver is now probed using its own
-> devicetree compatible, as this is a child of the main DVFSRC driver
-> and gets probed as a subnode of that.
-> 
-> Reviewed-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->   drivers/regulator/mtk-dvfsrc-regulator.c | 196 +++++++++++++++++++++++
->   1 file changed, 196 insertions(+)
->   create mode 100644 drivers/regulator/mtk-dvfsrc-regulator.c
-> 
+On Wed, Apr 24, 2024 at 3:57=E2=80=AFAM stsp <stsp2@yandex.ru> wrote:
+>
+> 23.04.2024 19:44, Andy Lutomirski =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >> On Apr 23, 2024, at 4:02=E2=80=AFAM, Stas Sergeev <stsp2@yandex.ru> wr=
+ote:
+> >>
+> >> =EF=BB=BFThis patch-set implements the OA2_INHERIT_CRED flag for opena=
+t2() syscall.
+> >> It is needed to perform an open operation with the creds that were in
+> >> effect when the dir_fd was opened. This allows the process to pre-open
+> >> some dirs and switch eUID (and other UIDs/GIDs) to the less-privileged
+> >> user, while still retaining the possibility to open/create files withi=
+n
+> >> the pre-opened directory set.
+> > I like the concept, as it=E2=80=99s a sort of move toward a capability =
+system. But I think that making a dirfd into this sort of capability would =
+need to be much more explicit. Right now, any program could do this entirel=
+y by accident, and applying OA2_INHERIT_CRED to an fd fished out of /proc s=
+eems hazardous.
+>
+> While I still don't quite understand
+> the threat of /proc symlinks, I posted
+> v4 which disallows them.
+>
 
-...
+I like that, but you're blocking it the wrong way.  My concern is that
+someone does dfd =3D open("/proc/PID/fd/3") and then openat(dfd, ...,
+OA2_INHERIT_CRED);  IIRC open("/proc/PID/fd/3") is extremely magical
+and returns the _same open file description_ (struct file) as PID's fd
+3.
 
-> +static int dvfsrc_vcore_regulator_probe(struct platform_device *pdev)
-> +{
-> +	struct regulator_config config = { .dev = &pdev->dev };
-> +	const struct dvfsrc_regulator_pdata *pdata;
-> +	int i;
-> +
-> +	pdata = device_get_match_data(&pdev->dev);
-> +	if (!pdata)
-> +		return -EINVAL;
-> +
-> +	for (i = 0; i < pdata->size; i++) {
-> +		struct regulator_desc *vrdesc = &pdata->descs[i];
-> +		struct regulator_dev *rdev;
-> +
-> +		rdev = devm_regulator_register(&pdev->dev, vrdesc, &config);
-> +		if (IS_ERR(rdev)) {
-> +			dev_err(&pdev->dev, "failed to register %s\n", vrdesc->name);
-> +			return PTR_ERR(rdev);
+> > So perhaps if an open file description for a directory could have somet=
+hing like FMODE_CRED, and if OA2_INHERIT_CRED also blocked .., magic links,=
+ symlinks to anywhere above the dirfd (or maybe all symlinks) and absolute =
+path lookups, then this would be okay.
+>
+> So I think this all is now done.
 
-Hi,
+But you missed the FMODE_CRED part!
 
-Nit: (in case of v6)
+So here's the problem: right now, in current Linux, a dirfd pointing
+to a directory that you can open anyway doesn't convey any new powers.
+So, if I'm a regular program, and I do open("/etc", O_PATH), I get an
+fd.  And if I get an fd pointing at /etc from somewhere else, I get
+the same thing (possibly with different f_cred, but f_cred is largely
+a hack to restrict things that would otherwise be insecure because
+they were designed a bit wrong from the beginning).
 
-	dev_err_probe()?
+But, with your patch, these fds suddenly convey a very strong
+privilege: that of their f_cred *over the entire subtree to which they
+refer*.  And you can attack it using exactly your intended use case:
+if any program opens a dirfd and then drops privileges, well, oops, it
+didn't actually fully drop privilege.
 
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-
-...
-
-CJ
-
+So I think that, if this whole concept has any chance of working well,
+it needs to be opt-in *at the time of the original open*.  So a
+privilege-carrying open would be an entirely new option like
+O_CAPTURE_CREDS or FMODE_CREDS.  And OA2_INHERIT_CREDS is rejected if
+the dirfd doesn't have that special mode.
