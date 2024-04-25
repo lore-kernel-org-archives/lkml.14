@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A343BBE6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08708149DED;
 	Thu, 25 Apr 2024 15:08:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714057683; cv=none; b=jbcPvtKdirCoL88IeDaUCA6yzrujEj/AA09PNWm09sqZsT3ZbXkzv3ZyAgpx13qBX1cI2OPBrTLKDTy17TB+qHUGv5+MiU8TQzabBIWkXAnmrgyoF9vrJBmYiYzG+c7KqUJgwkzTMSDNUtspC3R16XxJeQF4PMQfg1CoRq/inE4=
+	t=1714057683; cv=none; b=s14w9/kJMLx5ozXK/elwHzSX39kLUWAuJiYgP5M+f328Lmz7TRlyaq+54f0kXONY0fgY0n+5u5qFgnDj0N9xXa+UB4VJ4L4KrIgSKXuDhxJwTNzUNs8IkAEcM3PEm92G57nv+TttqW9QIrDrTxwjEwGgrwmyMd/roJ+4RybdeN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714057683; c=relaxed/simple;
-	bh=m74eck4gMpgLFFE08BXb5e06v+Za3er5MGng6KoZ4tA=;
+	bh=NNHVq9t4iKrTMq4fxSxo6DTIwdtIEd3+82VP57BUIMg=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=PvPXOCElrhIF+Pui7YkxpEYcxWdH2Y5Khd1PxDSX9rDVO3CE4xhbWnG3pAmLe9s+/GcVL3P0IcF7lp1/gO8IISg1TjWOujkq/nia+h+3T8yuwLSLdnAIvmic7BwENcP2NwP5RblTTbY+6roBOHgeEux1otKZY+EmVA7zeMRhZ3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xOUKbG9P; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=auyRLV2z; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=SSMsru1IKVUXjSzH3rlrZzZu4Gx3Y22bt3z4YqgW5Hhycs73ksn7kXhPoNo6bEo2pNb+9sh2t/Jdu8qSmZQ4R5fmXIU7Wjv9wI1iwBccy/CAIh7fcRWIcBJ8N1flsj/2JkdsueWRWm05MhopdgAQztUYqb7F+w//XYzpjwwSvvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N+gy4MAy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Xs/pXU9+; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xOUKbG9P";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="auyRLV2z"
-Date: Thu, 25 Apr 2024 15:07:59 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N+gy4MAy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Xs/pXU9+"
+Date: Thu, 25 Apr 2024 15:08:00 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1714057680;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hagq2h2jnnv75srLIprAocYGXcrvhuL6tYuMjuGpuwg=;
-	b=xOUKbG9PfkuhbGh+cVJ4omuyahJKxX98L27N2ZeQnsar6g1L5ZohNvMKDcb7PEEuQbJQIJ
-	kFYSB22ufru9VYpbs4BoNEhzVNuUhzW4katdpbxXB8iQTSJzuaXv7U8GqXKrA5BNtqtvTl
-	reNbTbKAibuST/hW08be/yOKmSazmdAGqj6LN88CFaQjCiwi0bef39en8jg7s3p0WnEWDF
-	RlEbkhVH0e4okFoT+shm/ex3yomNmXx95up/VxVMibYfElmK+0gkckOn+9ITXtoadWTufX
-	czFRuy8Hfsvbpvqy2IV66PBdsfZnrMFZhRaHH+LwZaAc1PWOfZHjHkaozMn7tQ==
+	bh=SJS7ea85x1R9XV1GCvkLnH4pfJbXmRYUWjINCnB8N3c=;
+	b=N+gy4MAydGeXSwlPrcEjciHRDKzrTeijgsLzG/R5X5r1bfOfavbiGrMbBn6nz3A3i/82oI
+	KYwvJE7ueSXuj4BKxprl+D1pYnlsgeYy4WoF07Y70OOk7Y2fbsyw1v43RRXEEd5sZAESsK
+	65Jb57CLgacpc41xrMlJwIzrWR3R2qY9oMf1evRz9/NdVJw32U6aGzLhQmcjyu4xL30V7e
+	PM3xeCnOKHgSfEkW5CL10YEBsbXwBnfM2xk+lD63YLKQVdwEnC47UpMJ0bQjh8fESM/FFI
+	VDtrZXc4zs0AwfcN+SUDTbbNpKF/IvTifS8OUJiX5V5gkG2oFtUrKWBe0alwew==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1714057680;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,20 +38,21 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hagq2h2jnnv75srLIprAocYGXcrvhuL6tYuMjuGpuwg=;
-	b=auyRLV2zIO1FsLQh1KjcAeH8Yww109LBnqswt29IkpoX7Ia7XrcokgoQph5vq4xJwP3rXK
-	8Of67MqGQ+jH+qBg==
+	bh=SJS7ea85x1R9XV1GCvkLnH4pfJbXmRYUWjINCnB8N3c=;
+	b=Xs/pXU9+KMMHkyPl9HyNWf9u2tpXlBfJtaJg2ojJN/+n2u3BGsqdhMdvNB8CkaV4cva5yv
+	3xtzHZtJm4hgmWBg==
 From: "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/sev] x86/sev: Make the VMPL0 checking more straight forward
+Subject: [tip: x86/sev] x86/sev: Shorten struct name snp_secrets_page_layout
+ to snp_secrets_page
 Cc: Tom Lendacky <thomas.lendacky@amd.com>,
  "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3Ced01ddf04bfb475596b24b634fd26cffaa85173a=2E17139?=
+In-Reply-To: =?utf-8?q?=3Cbc8d58302c6ab66c3beeab50cce3ec2c6bd72d6c=2E17139?=
  =?utf-8?q?74291=2Egit=2Ethomas=2Elendacky=40amd=2Ecom=3E?=
-References: =?utf-8?q?=3Ced01ddf04bfb475596b24b634fd26cffaa85173a=2E171397?=
+References: =?utf-8?q?=3Cbc8d58302c6ab66c3beeab50cce3ec2c6bd72d6c=2E171397?=
  =?utf-8?q?4291=2Egit=2Ethomas=2Elendacky=40amd=2Ecom=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,7 +60,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171405767963.10875.6117170160698989836.tip-bot2@tip-bot2>
+Message-ID: <171405768009.10875.7342315793126644345.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,81 +70,152 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/sev branch of tip:
 
-Commit-ID:     e2f4c8c319abd1afbedb7a31877cb569265db1b4
-Gitweb:        https://git.kernel.org/tip/e2f4c8c319abd1afbedb7a31877cb569265db1b4
+Commit-ID:     1e52550729dafb41b12652a985d3df6cfa99cb88
+Gitweb:        https://git.kernel.org/tip/1e52550729dafb41b12652a985d3df6cfa99cb88
 Author:        Tom Lendacky <thomas.lendacky@amd.com>
-AuthorDate:    Wed, 24 Apr 2024 10:57:59 -05:00
+AuthorDate:    Wed, 24 Apr 2024 10:57:57 -05:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Thu, 25 Apr 2024 16:14:25 +02:00
+CommitterDate: Thu, 25 Apr 2024 16:13:51 +02:00
 
-x86/sev: Make the VMPL0 checking more straight forward
+x86/sev: Shorten struct name snp_secrets_page_layout to snp_secrets_page
 
-Currently, the enforce_vmpl0() function uses a set argument when modifying
-the VMPL1 permissions used to test for VMPL0. If the guest is not running
-at VMPL0, the guest self-terminates.
-
-The function is just a wrapper for a fixed RMPADJUST function. Eliminate
-the function and perform the RMPADJUST directly.
+Ending a struct name with "layout" is a little redundant, so shorten the
+snp_secrets_page_layout name to just snp_secrets_page.
 
 No functional change.
 
+  [ bp: Rename the local pointer to "secrets" too for more clarity. ]
+
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/ed01ddf04bfb475596b24b634fd26cffaa85173a.1713974291.git.thomas.lendacky@amd.com
+Link: https://lore.kernel.org/r/bc8d58302c6ab66c3beeab50cce3ec2c6bd72d6c.1713974291.git.thomas.lendacky@amd.com
 ---
- arch/x86/boot/compressed/sev.c | 35 +++++++++++++--------------------
- 1 file changed, 14 insertions(+), 21 deletions(-)
+ arch/x86/include/asm/sev.h              |  2 +-
+ arch/x86/kernel/sev.c                   |  6 ++---
+ drivers/virt/coco/sev-guest/sev-guest.c | 28 ++++++++++++------------
+ 3 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index 5ad0ff4..0457a9d 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -335,26 +335,6 @@ finish:
- 		sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SEV_ES_GEN_REQ);
- }
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index 7f57382..48bc397 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -140,7 +140,7 @@ struct secrets_os_area {
+ #define VMPCK_KEY_LEN		32
  
--static void enforce_vmpl0(void)
--{
--	u64 attrs;
--	int err;
--
--	/*
--	 * RMPADJUST modifies RMP permissions of a lesser-privileged (numerically
--	 * higher) privilege level. Here, clear the VMPL1 permission mask of the
--	 * GHCB page. If the guest is not running at VMPL0, this will fail.
--	 *
--	 * If the guest is running at VMPL0, it will succeed. Even if that operation
--	 * modifies permission bits, it is still ok to do so currently because Linux
--	 * SNP guests are supported only on VMPL0 so VMPL1 or higher permission masks
--	 * changing is a don't-care.
--	 */
--	attrs = 1;
--	if (rmpadjust((unsigned long)&boot_ghcb_page, RMP_PG_SIZE_4K, attrs))
--		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_NOT_VMPL0);
--}
--
- /*
-  * SNP_FEATURES_IMPL_REQ is the mask of SNP features that will need
-  * guest side implementation for proper functioning of the guest. If any
-@@ -588,7 +568,20 @@ void sev_enable(struct boot_params *bp)
- 		if (!(get_hv_features() & GHCB_HV_FT_SNP))
- 			sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
+ /* See the SNP spec version 0.9 for secrets page format */
+-struct snp_secrets_page_layout {
++struct snp_secrets_page {
+ 	u32 version;
+ 	u32 imien	: 1,
+ 	    rsvd1	: 31;
+diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+index 38ad066..790e481 100644
+--- a/arch/x86/kernel/sev.c
++++ b/arch/x86/kernel/sev.c
+@@ -648,7 +648,7 @@ static u64 __init get_secrets_page(void)
  
--		enforce_vmpl0();
-+		/*
-+		 * Enforce running at VMPL0.
-+		 *
-+		 * RMPADJUST modifies RMP permissions of a lesser-privileged (numerically
-+		 * higher) privilege level. Here, clear the VMPL1 permission mask of the
-+		 * GHCB page. If the guest is not running at VMPL0, this will fail.
-+		 *
-+		 * If the guest is running at VMPL0, it will succeed. Even if that operation
-+		 * modifies permission bits, it is still ok to do so currently because Linux
-+		 * SNP guests running at VMPL0 only run at VMPL0, so VMPL1 or higher
-+		 * permission mask changes are a don't-care.
-+		 */
-+		if (rmpadjust((unsigned long)&boot_ghcb_page, RMP_PG_SIZE_4K, 1))
-+			sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_NOT_VMPL0);
+ static u64 __init get_snp_jump_table_addr(void)
+ {
+-	struct snp_secrets_page_layout *layout;
++	struct snp_secrets_page *secrets;
+ 	void __iomem *mem;
+ 	u64 pa, addr;
+ 
+@@ -662,9 +662,9 @@ static u64 __init get_snp_jump_table_addr(void)
+ 		return 0;
  	}
  
- 	if (snp && !(sev_status & MSR_AMD64_SEV_SNP_ENABLED))
+-	layout = (__force struct snp_secrets_page_layout *)mem;
++	secrets = (__force struct snp_secrets_page *)mem;
+ 
+-	addr = layout->os_area.ap_jump_table_pa;
++	addr = secrets->os_area.ap_jump_table_pa;
+ 	iounmap(mem);
+ 
+ 	return addr;
+diff --git a/drivers/virt/coco/sev-guest/sev-guest.c b/drivers/virt/coco/sev-guest/sev-guest.c
+index 87f2418..654290a 100644
+--- a/drivers/virt/coco/sev-guest/sev-guest.c
++++ b/drivers/virt/coco/sev-guest/sev-guest.c
+@@ -59,7 +59,7 @@ struct snp_guest_dev {
+ 	 */
+ 	struct snp_guest_msg secret_request, secret_response;
+ 
+-	struct snp_secrets_page_layout *layout;
++	struct snp_secrets_page *secrets;
+ 	struct snp_req_data input;
+ 	union {
+ 		struct snp_report_req report;
+@@ -743,26 +743,26 @@ static const struct file_operations snp_guest_fops = {
+ 	.unlocked_ioctl = snp_guest_ioctl,
+ };
+ 
+-static u8 *get_vmpck(int id, struct snp_secrets_page_layout *layout, u32 **seqno)
++static u8 *get_vmpck(int id, struct snp_secrets_page *secrets, u32 **seqno)
+ {
+ 	u8 *key = NULL;
+ 
+ 	switch (id) {
+ 	case 0:
+-		*seqno = &layout->os_area.msg_seqno_0;
+-		key = layout->vmpck0;
++		*seqno = &secrets->os_area.msg_seqno_0;
++		key = secrets->vmpck0;
+ 		break;
+ 	case 1:
+-		*seqno = &layout->os_area.msg_seqno_1;
+-		key = layout->vmpck1;
++		*seqno = &secrets->os_area.msg_seqno_1;
++		key = secrets->vmpck1;
+ 		break;
+ 	case 2:
+-		*seqno = &layout->os_area.msg_seqno_2;
+-		key = layout->vmpck2;
++		*seqno = &secrets->os_area.msg_seqno_2;
++		key = secrets->vmpck2;
+ 		break;
+ 	case 3:
+-		*seqno = &layout->os_area.msg_seqno_3;
+-		key = layout->vmpck3;
++		*seqno = &secrets->os_area.msg_seqno_3;
++		key = secrets->vmpck3;
+ 		break;
+ 	default:
+ 		break;
+@@ -897,8 +897,8 @@ static void unregister_sev_tsm(void *data)
+ 
+ static int __init sev_guest_probe(struct platform_device *pdev)
+ {
+-	struct snp_secrets_page_layout *layout;
+ 	struct sev_guest_platform_data *data;
++	struct snp_secrets_page *secrets;
+ 	struct device *dev = &pdev->dev;
+ 	struct snp_guest_dev *snp_dev;
+ 	struct miscdevice *misc;
+@@ -916,7 +916,7 @@ static int __init sev_guest_probe(struct platform_device *pdev)
+ 	if (!mapping)
+ 		return -ENODEV;
+ 
+-	layout = (__force void *)mapping;
++	secrets = (__force void *)mapping;
+ 
+ 	ret = -ENOMEM;
+ 	snp_dev = devm_kzalloc(&pdev->dev, sizeof(struct snp_guest_dev), GFP_KERNEL);
+@@ -924,7 +924,7 @@ static int __init sev_guest_probe(struct platform_device *pdev)
+ 		goto e_unmap;
+ 
+ 	ret = -EINVAL;
+-	snp_dev->vmpck = get_vmpck(vmpck_id, layout, &snp_dev->os_area_msg_seqno);
++	snp_dev->vmpck = get_vmpck(vmpck_id, secrets, &snp_dev->os_area_msg_seqno);
+ 	if (!snp_dev->vmpck) {
+ 		dev_err(dev, "invalid vmpck id %d\n", vmpck_id);
+ 		goto e_unmap;
+@@ -938,7 +938,7 @@ static int __init sev_guest_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, snp_dev);
+ 	snp_dev->dev = dev;
+-	snp_dev->layout = layout;
++	snp_dev->secrets = secrets;
+ 
+ 	/* Allocate the shared page used for the request and response message. */
+ 	snp_dev->request = alloc_shared_pages(dev, sizeof(struct snp_guest_msg));
