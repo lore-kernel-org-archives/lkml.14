@@ -1,93 +1,99 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74938614D
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 10:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B8515D477;
+	Thu, 25 Apr 2024 10:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714040301; cv=none; b=BfGQs9HLNvZ4uwa9iURDsdf23GFS8LMbusApFLpLYHufvbrKJjtgvOzEdeLgkBfd5ZbJeYhAz5Sgd5rXbuZt5I+/0v/wIqQmHQF3PJagtpLaBbR98EBXU2Dg4Z5Tnrdad19Tt9CldwSMSNS5xVmDdmzGLhvcbNUHkLZL0UgKJWc=
+	t=1714040364; cv=none; b=U9en/363kDOcA31yCesWJJU/10bZttUTdw3kk0lgb4iP9mVU/9LT76toAddPqMx57o324gvQ5yBZ4ufQnt32AwQMgrXyHaVt37YW5xomgbui5y2KonIJrK3V45Yuvz8fMaLNd8I2F77zkyzHfjSrXNg7+zy3kEM7adS7TfvLjbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714040301; c=relaxed/simple;
-	bh=qpx9spVeO8CkWFjQ72oQekACDvn3i/PHgcVhhu25UTc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oFbQInRBwOKIpNJ0JOsSJgNBaz6/ZNl/owvkFkbXQDSGJdSbe/OGO2SxDLduCcqfXRBNRjzt0NtFJpk24iHtJR9QsEhHk6Qn53UfwdlE+h8lSWsa0xq7AmlWdbjm6mhdVrXORkdzzhknKGHHa+anxXYGKtJqZWSQYDAXlSp06H8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=gXoWfZaL; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="gXoWfZaL"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1714040297; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=QcCGmMZke9wNUqDSX//NGSJSaxDB+PepcH2WxN5WEqo=;
-	b=gXoWfZaLXRG3rQuUUH2JZfgR0/KI3yErqZFobq5FlEzG/5yJc+IgspoH7ffIyY5iCX/tdxEl4+e5wItSbJhZ80PV3g55HsZxYXUhZ2sn5FFX6IOiinl/UATbu3YNA9tN1YxJmaF7tvaCejq1ssD5rrfmVadx/YgMnQxuLAZLMlo=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R461e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=llfl@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W5F8.U6_1714040295;
-Received: from localhost(mailfrom:llfl@linux.alibaba.com fp:SMTPD_---0W5F8.U6_1714040295)
-          by smtp.aliyun-inc.com;
-          Thu, 25 Apr 2024 18:18:16 +0800
-From: "Kun(llfl)" <llfl@linux.alibaba.com>
-To: Joerg Roedel <joro@8bytes.org>,
-	Vasant Hegde <vasant.hegde@amd.com>
-Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] iommu/amd: Fix memory leak in alloc_pci_segment()
-Date: Thu, 25 Apr 2024 18:17:20 +0800
-Message-ID: <a06d50c3a82214a82ccb88c22aa4e4a1d595b39c.1714040214.git.llfl@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1714040364; c=relaxed/simple;
+	bh=CO0oG3tcPoAXzns4+gVCxaDMq9og+CQjT5fProCOaYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K1PhFs5Omqf+39P6V+RRp+e68aLle5ILFkZNrKy/ZxIB31XjtZgEHNEKJHsv1HHaBeGg8a5ElOIDqce5Xuj6x9RRaCvaRFEnftKANYbkDL7BphXnPa39sQhybfsB31KIRQNk46ofe6R8ND4IRGorx7aLsfuxhXS+WjHHsasIQTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7F6F2F;
+	Thu, 25 Apr 2024 03:19:50 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.21.118])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98E2B3F64C;
+	Thu, 25 Apr 2024 03:19:18 -0700 (PDT)
+Date: Thu, 25 Apr 2024 11:19:15 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Kees Cook <keescook@chromium.org>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Jakub Kicinski <kuba@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Uros Bizjak <ubizjak@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+	netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/4] locking/atomic/x86: Silence intentional wrapping
+ addition
+Message-ID: <ZiouI6rM8x83nXUF@FVFF77S0Q05N>
+References: <20240424191225.work.780-kees@kernel.org>
+ <20240424191740.3088894-1-keescook@chromium.org>
+ <20240424224141.GX40213@noisy.programming.kicks-ass.net>
+ <202404241542.6AFC3042C1@keescook>
+ <20240424225436.GY40213@noisy.programming.kicks-ass.net>
+ <20240424230500.GG12673@noisy.programming.kicks-ass.net>
+ <202404241621.8286B8A@keescook>
+ <20240425092812.GB21980@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240425092812.GB21980@noisy.programming.kicks-ass.net>
 
-Fix the memory leak issue that occurs when resource allocation fails in
-alloc_pci_segment(). The dev_table, alias_table, and rlookup_table were
-introduced individually in three commits. But they all fail to release
-allocated resources when other allocations fail.
+On Thu, Apr 25, 2024 at 11:28:12AM +0200, Peter Zijlstra wrote:
+> On Wed, Apr 24, 2024 at 04:30:50PM -0700, Kees Cook wrote:
+> 
+> > > That is, anything that actively warns about signed overflow when build
+> > > with -fno-strict-overflow is a bug. If you want this warning you have to
+> > > explicitly mark things.
+> > 
+> > This is confusing UB with "overflow detection". We're doing the latter.
+> 
+> Well, all of this is confusing to me because it is not presented
+> coherently.
+> 
+> The traditional 'must not let signed overflow' is because of the UB
+> nonsense, which we fixed.
+> 
+> > > Signed overflow is not UB, is not a bug.
+> > > 
+> > > Now, it might be unexpected in some places, but fundamentally we run on
+> > > 2s complement and expect 2s complement. If you want more, mark it so.
+> > 
+> > Regular C never provided us with enough choice in types to be able to
+> > select the overflow resolution strategy. :( So we're stuck mixing
+> > expectations into our types.
+> 
+> Traditionally C has explicit wrapping for unsigned and UB on signed. We
+> fixed the UB, so now expect wrapping for everything.
+> 
+> You want to add overflow, so you should make that a special and preserve
+> semantics for existing code.
+> 
+> Also I would very strongly suggest you add an overflow qualifier to the
+> type system and please provide sane means of qualifier manipulation --
+> stripping qualifiers is painful :/
 
-Fixes: 04230c119930 ("iommu/amd: Introduce per PCI segment device table")
-Fixes: 99fc4ac3d297 ("iommu/amd: Introduce per PCI segment alias_table"),
-Fixes: eda797a27795 ("iommu/amd: Introduce per PCI segment rlookup table").
-Reported-by: Xuchun Shang <xuchun.shang@linux.alibaba.com>
-Signed-off-by: Kun(llfl) <llfl@linux.alibaba.com>
----
- drivers/iommu/amd/init.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+I agree that having an overflow/nooverflow qualifier that's separate from
+signed/unsigned would make more sense than inferring that from signed vs
+unsigned.
 
-diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-index ac6754a85f35..4ce567f39473 100644
---- a/drivers/iommu/amd/init.c
-+++ b/drivers/iommu/amd/init.c
-@@ -1642,13 +1642,22 @@ static struct amd_iommu_pci_seg *__init alloc_pci_segment(u16 id,
- 	list_add_tail(&pci_seg->list, &amd_iommu_pci_seg_list);
- 
- 	if (alloc_dev_table(pci_seg))
--		return NULL;
-+		goto alloc_dev_fail;
- 	if (alloc_alias_table(pci_seg))
--		return NULL;
-+		goto alloc_alias_fail;
- 	if (alloc_rlookup_table(pci_seg))
--		return NULL;
-+		goto alloc_rlookup_fail;
- 
- 	return pci_seg;
-+
-+alloc_rlookup_fail:
-+	free_rlookup_table(pci_seg);
-+alloc_alias_fail:
-+	free_alias_table(pci_seg);
-+alloc_dev_fail:
-+	free_dev_table(pci_seg);
-+	kfree(pci_seg);
-+	return NULL;
- }
- 
- static struct amd_iommu_pci_seg *__init get_pci_segment(u16 id,
--- 
-2.43.0
-
+Mark.
