@@ -1,120 +1,71 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F632156238;
-	Thu, 25 Apr 2024 21:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005ED156645;
+	Thu, 25 Apr 2024 21:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714081114; cv=none; b=AmsXeFk2iDJRp/Du/qXmRz/335YoiUJ1neZWrmndBnkjNHCLAsBC/QZ+c0LrSxoNf3y372uc5EcUbSw4W0Ue3j2G6mnie3YJZrQ5YN8dHSIHYzZmOt1HWWMPLUI/4ghBZf+02fKdh9tyzb1H/+t2ecO8G8uXl1xYgu5BDbsZh3c=
+	t=1714081124; cv=none; b=BD+7hKVQ2z+1PE8VpSceOr00zjSETIuVAnd58mQaSbYdwD3FTJf8kRqXQkIOXML/lPK7vDl+gS4nXIg5gBIERi+BiAIVrsN83FjDeiVxivmn3iFtSZDn0PO9FVeX32/cXrv513/oHWjGD9PWJlJmLD0MEXPdW8YpBOfUhu7ajwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714081114; c=relaxed/simple;
-	bh=ZzZpuf30gm9fgPJpUej7zSiJrVWdAqhvGLJs2wKAa5U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HhoaWR3CjFoC9TJmmbV3KMAcBcydLfU8myyAdO1pkJgZqYiQUx+qr0siKfchxrKh6Wh+551Xrq4cxhQHhfBcg6es0nhbKkbiOYsPjXuvTFjhDrXh8pcOdCi6ZDF9viCI3RGnOoLDOLetJIa4WieHPsfwFD74gDC5BviE0QWN78M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gRJs8bO9; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1714081124; c=relaxed/simple;
+	bh=c/w30T3d2xLjoPV7BOj7cdIM3uDt5brThstTtJMw1qw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=eVWREov6IcO76Q9TN5lmIqAx2l0aWd1Xf/sTKa71FeGkxQpvZ0g1GTR5EyqTR7FkGuwCsvORrh2qnrNDi78tutCpkqvVjgB/YWGy7KiE+oSj73nhG6FYidwqgjRx4MEC8bRGe/Cs7EFz3jJwSL9KIIjH/0bD+xVaYIODF46f85k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=HIApaua1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gRJs8bO9"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43PLKQol026603;
-	Thu, 25 Apr 2024 21:38:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=hD+3oKEwrdglUs74wBoHtIHvwJ7T5xADfEPIoMQkUzk=;
- b=gRJs8bO9794MWStUVFS9KuyRt8ta1WyhVuqS0WqfKKBFjfLU15ctMk7SZpzwL0tXiSk8
- yM8Iq2m7ExiSOsewoh3D2vTzT+T5CV57oR2hGhAF5uZiFyOaDQJ2FrFFvLBCBb5cUvvF
- fp8z9QOPEoS6ExmEaDfiJyRAluZxiVhXlTPzBjflT9QDQFjXro2VrnhIEp3fwlYd7Cyy
- +jf/261yMB0j+iTFmamcvwtcslAKIPhIhNnkO0NCU3gKzPl/1ewQM0IG0PyU/sA7tY3O
- 9bmu+T9BviHnOo+hdw3DlSM9tSx3gDNvjj7W1DoPoRcRN07O//a3ThEfRLyEgIN9zNuw BQ== 
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xqxyxg15k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 21:38:21 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43PLPW11023065;
-	Thu, 25 Apr 2024 21:37:07 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xms1pc5g3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 21:37:07 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43PLb4v240567366
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 25 Apr 2024 21:37:06 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8625858061;
-	Thu, 25 Apr 2024 21:37:04 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C886258045;
-	Thu, 25 Apr 2024 21:37:03 +0000 (GMT)
-Received: from slate16.aus.stglabs.ibm.com (unknown [9.61.133.34])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 25 Apr 2024 21:37:03 +0000 (GMT)
-From: Eddie James <eajames@linux.ibm.com>
-To: linux-aspeed@lists.ozlabs.org
-Cc: eajames@linux.ibm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
-        linux-spi@vger.kernel.org, linux-i2c@vger.kernel.org,
-        lakshmiy@us.ibm.com, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au
-Subject: [PATCH v3 02/14] dt-bindings: fsi: fsi2spi: Document SPI controller child nodes
-Date: Thu, 25 Apr 2024 16:36:49 -0500
-Message-Id: <20240425213701.655540-3-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240425213701.655540-1-eajames@linux.ibm.com>
-References: <20240425213701.655540-1-eajames@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="HIApaua1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49ECCC113CE;
+	Thu, 25 Apr 2024 21:38:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1714081123;
+	bh=c/w30T3d2xLjoPV7BOj7cdIM3uDt5brThstTtJMw1qw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HIApaua1Lra3WV8XfIDrQSiFAgLFluP6pDWigAGa+kys+mss6Iar5kIVbzQv4MGFC
+	 PXHzGlBiBpU2dHYpxJcvCKdIQUpIuljiylgUK4Gke54aTMqZAVAbWzyWxVm3nxNVgO
+	 uC3RQrfd4XIvRR2eZJK0bW4GTZhD55zJ93BFXebs=
+Date: Thu, 25 Apr 2024 14:38:42 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>, Matthew Wilcox
+ <willy@infradead.org>, Kees Cook <keescook@chromium.org>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] alloc_tag: Tighten file permissions on /proc/allocinfo
+Message-Id: <20240425143842.fe54147e4073c7d5e8b48d7b@linux-foundation.org>
+In-Reply-To: <CAJuCfpGiRFAOp-aqpVk6GRpG=4LEF3XyuV_LijzwDYRHKqHWWg@mail.gmail.com>
+References: <20240425200844.work.184-kees@kernel.org>
+	<w6nbxvxt3itugrvtcvnayj5ducoxifwbffd7qh6vcastw77mse@2ugphwusgttz>
+	<ZirCbPR1XwX2WJSX@casper.infradead.org>
+	<64cngpnwyav4odustofs6hgsh7htpc5nu23tx4lb3vxaltmqf2@sxn63f2gg4gu>
+	<CAJuCfpGiRFAOp-aqpVk6GRpG=4LEF3XyuV_LijzwDYRHKqHWWg@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: vcEMAkgwmyUnsQI6xNliCHreWVege3uw
-X-Proofpoint-GUID: vcEMAkgwmyUnsQI6xNliCHreWVege3uw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-25_21,2024-04-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- clxscore=1015 mlxlogscore=999 adultscore=0 bulkscore=0 malwarescore=0
- spamscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
- definitions=main-2404250157
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The FSI2SPI bridge has several SPI controllers behind it, which
-should be documented. Also, therefore the node needs to specify
-address and size cells.
+On Thu, 25 Apr 2024 14:21:39 -0700 Suren Baghdasaryan <surenb@google.com> wrote:
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- .../devicetree/bindings/fsi/ibm,fsi2spi.yaml          | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+> > > > The side effect of locking down more and more reporting interfaces is
+> > > > that programs that consume those interfaces now have to run as root.
+> > >
+> > > sudo cat /proc/allocinfo | analyse-that-fie
+> >
+> > Even that is still an annoyance, but I'm thinking more about a future
+> > daemon to collect this every n seconds - that really shouldn't need to
+> > be root.
+> 
+> Yeah, that would preclude some nice usecases. Could we maybe use
+> CAP_SYS_ADMIN checks instead? That way we can still use it from a
+> non-root process?
 
-diff --git a/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml b/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
-index e2ca0b000471..512d6d4dff3c 100644
---- a/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
-+++ b/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
-@@ -24,6 +24,17 @@ properties:
-     items:
-       - description: FSI slave address
- 
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+patternProperties:
-+  "^spi@[0-9a-f]+$":
-+    $ref: /schemas/spi/ibm,p10-spi.yaml
-+    description: Child node describing underlying SPI controller
-+
- required:
-   - compatible
-   - reg
--- 
-2.39.3
+I'm inclined to keep Kees's 0400.  Yes it's a hassle but security is
+always a hassle.  Let's not make Linux less secure, especially for
+people who aren't even using /proc/allocinfo.
 
+If someone really wants 0666 then they can chmod the thing from
+initscripts, can't they?
