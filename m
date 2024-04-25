@@ -1,204 +1,136 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2134.outbound.protection.partner.outlook.cn [139.219.17.134])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41881D53F;
-	Thu, 25 Apr 2024 10:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.134
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714042159; cv=fail; b=TeKkvhfKGm3aoAh6q4w5Ce5mVsASSbBvJ3GuVGi2w+e1IfnopjQCKKHpCIP02g2l2tWSwefoFinwBNpB1q0VEf/k2+jnsMXFWZua15w1WicL9GvOM/lAmzx/ma1l5CfBTYDBSdGtW1vRrVwNiI7hIWMrwc0UfX1fuODueqyNuqg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714042159; c=relaxed/simple;
-	bh=r/FvD5mzhwtZr3q/59/b2r6HYho0ugaGzs1g/ew49WQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=M/EvCW7+YnBADs1USkl2NbmLL99S70ZauYF3Q4CRvk1iIBF/NiEe/8i3WI26HchB3A+K/MdDzGNQRBUd0nT6MLBnJNZovb+/vZsk+vTJPBfKIUrxJ222iM65RBQjaGITcjy0j3wkgPoRtPlEUerNzUw77Oy4z9Hi9Z0IdPlUNLY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hKowYrrvd/MljGiXqHGO1CRUZsY5M/w93VhTZGfnc6H+YkFVrRB6CgteIbCTYlwSleuc2pioYl9CSePK0HOB1Ewi+KrIVzYx6ROPYKe5ZnNNehQAikGQg+hAn0TvVvyKfUPoqxGGT67JTaY87kknwPKKBZEgg5+VeDw6/L/oszFjHgQQk+vhj0rscAb9gjueCENvYKIYYGZyH3G6eukuv8cZqCZXRHMmiLDIbf7ytzbXulYWmQ3wIJGT0TFDrckDKMjheJHLYIeujn0vORuYbMM2NvI0G1CGTVhx8robNhR/aRoGBlLkiKvTp8wrGWR5wm81jOdv+3mVv9UubDluEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fxIDl4HLV9bJC7hy01jnyiv1VF4IpHjXIeN+QCog/Hg=;
- b=E9SvDi1unNgBTXlQwgpqxNkfAXMslLs++u6nuaYrQKST7k6n9kgvESdTICbEMStSm7E8ZkqFw/SW3l38W8tVLBglfFUKt1DStp02GwvR6hPeHiVKD6MhCDRTyqPOLFNFkQ++dn7bvBhTCi9QLlBnF5+Uq00rtEJmDouVoGSO4Y2YmYOYySDlAHxQ30OGpvrPnNvSjM2f8lHa8pa9i36rUAYY8pBBlJSDDjiI08yoNfnnLwk3XWXxTnTU6RWKLEs+kPbD4WkuAYePo7Z61eMI7H4P2z3mwR2trRJ4jxf68O/x7xveAj7G1+YSzg4S1xVjiNuW1NfDnM5+2o3PtwfQHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:20::14) by SH0PR01MB0491.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:7::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Thu, 25 Apr
- 2024 10:49:12 +0000
-Received: from SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
- ([fe80::e0a:f88a:cad1:dc1c]) by SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
- ([fe80::e0a:f88a:cad1:dc1c%7]) with mapi id 15.20.7472.044; Thu, 25 Apr 2024
- 10:49:12 +0000
-From: Joshua Yeong <joshua.yeong@starfivetech.com>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	conor@kernel.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	joshua.yeong@starfivetech.com,
-	leyfoon.tan@starfivetech.com,
-	jeeheng.sia@starfivetech.com
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH v4 2/2] dt-bindings: cache: Add docs for StarFive Starlink cache controller
-Date: Thu, 25 Apr 2024 18:48:41 +0800
-Message-Id: <20240425104841.72379-3-joshua.yeong@starfivetech.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240425104841.72379-1-joshua.yeong@starfivetech.com>
-References: <20240425104841.72379-1-joshua.yeong@starfivetech.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: NT0PR01CA0023.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:c::19) To SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:20::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F441D53F;
+	Thu, 25 Apr 2024 10:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714042344; cv=none; b=pl+BjdEL4T1U3qpw1nFQwcIFJ2DG3DURDApUjZh+wwmhlWv+qyPXjI/pVMgelBg7Hb51hPjFFKcvI5gaBlcQ290opdQBeG9C04BcvqNcxm5S6JykfasukHc5DfFbmDG8cBn2T+gFEa6DxkWi3EuMTcBpeoMvdMtHQJpGzF0hxTU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714042344; c=relaxed/simple;
+	bh=pShO0c7KzGz61XItFLkgN19PQLdEoC1UOl8AH5BK24A=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=DlL/W/d4c62F8bIVJfnhkDNpCuAE941VD8vbOohi7bgk5jIicslrzUtrHWtqfcV0nvrFRkwT3DiaaARg0GNMgfJBAQe4Pgh03qIsdagf4BQmegbQlRiOcr1rkqiW4nqS+9Z5RCxDWxDJMGj/pmKEmmurjVYIHfUYNdyBcCgL3LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vSV0dd/e; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=89X14WQJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vSV0dd/e";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="89X14WQJ"
+Date: Thu, 25 Apr 2024 10:52:11 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1714042336;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tPZfu3AAsXB7okaVcD/0QHI6MFbUYpenoIlPfWwqYVM=;
+	b=vSV0dd/e8rNJqu5sh667dn9uRXAPUI1X0eh18ubVedkH7q91ekOfrXS3r8KqqGpgKj601z
+	m19TAGy+PBgDYp3WKc2wAEDEDtA/2YYC9/pRC0MZag+H/sLeZ236cCEISmVgtdzBKNm0h4
+	XSu/ecCzyH3RhC1HDwrQ6+D6VWaMSNzQnMUwEMhpslt2ghnHXcwmd03g4L6M+j0ctoARus
+	kRcNaxZNU3lQL3u5db85t08jA+oVciHnLpy9R15cBSlTWJpaoU+yXuaivJ1YR0lFlQN0EC
+	dzc6IGFTuD1T9otQAOmnUE2CPZqBXJHyivGqGZ8PW5gFS7mcFJOZRAAP7/hAPw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1714042336;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tPZfu3AAsXB7okaVcD/0QHI6MFbUYpenoIlPfWwqYVM=;
+	b=89X14WQJuPMuauRViNPa8IcTCeTPWWHi2tseiO030s+cpNW/F1m6J+p6eT+4zGEwqy6nI8
+	sLRHAyLjP/Z99ICw==
+From: "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cpu] x86/bugs: Switch to new Intel CPU model defines
+Cc: Tony Luck <tony.luck@intel.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240424181506.41673-1-tony.luck@intel.com>
+References: <20240424181506.41673-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SH0PR01MB0841:EE_|SH0PR01MB0491:EE_
-X-MS-Office365-Filtering-Correlation-Id: 47a980ff-09e8-4f92-3d7b-08dc651557d4
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	RmPgWCmxFy6UozOA/0wyyk4uBIcH4LUmbesa+SoFoNav2cqm2oRb2Lll/mx60uNA8tnoo5jSmfe+OpcRoH+NBdRo8H0VHCwpoWRuXfnfJKqy0NT7uP0wlxaP4LkAkUHR/vZqp79/urEzpy65swxh0oNlk9MR+ctEhzI1tU6VieotS44rQNEyPhlvp9Q3m953n5pkdU3/oEW0geMT5vRv+Z80t3rfH0V4AaHDc6RUPFd0upt8EN36j2cGr8jomWtlnDfmNMYFWC6GUsDywqMwX8JjcZPCmkCWt8BR5sPak5Er9kltylWLo4RUYA8bv2WlmiN/1/Yd5OKbJqa9LjxMJ2LmmjFYK2LKWL/X96uNTbXWrOJf6SZ4oNHmpHG+tEpcyKmghrnRlNDED4FsBgv5UOckLIxVR2p9UYqY5eS0gAOLtla4n5WlGDNr4TuBtHTIL/tQNbNRNGR50CgQuckiezheoODBGVW4N1bSOtOP6wtLQdxC2Oq8UNMt6LblSY7GnC/cW60ojnjiDxO4tS3tYx9sUc72PDoEBDG8y6g2nUDD7vtuCkE/zDeTWjRjfg6SNBvysbny9Diuht6Sw6Qmnmwt4eB0hEDUndDDBFlRl3qT16dwYifNnFfOMaEpeWHM01AnuBtP0XQ03K3KCYHwjA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(52116005)(366007)(41320700004)(1800799015)(7416005)(38350700005)(921011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?IeLKnNaRUKuZs43fXbG3M42Uu67NMv2LpJ51AtlAtGiMscRlHf6Zac4uT6eg?=
- =?us-ascii?Q?2UggLZK3Qst6QxSWBLlkMO0vq9g+DXDlRS1vcQRkifTdx/pB+GPJDgL/egJ2?=
- =?us-ascii?Q?/5S4nuXkbzNkRORbh9jq04bX3ifUxRi6N7DVVN+0TgLUQH00fuwtjVZphQ/l?=
- =?us-ascii?Q?G8oD+FFxb8Scyx5hDVF8UGtliCe9dcWdgVuA2eRvnwYZugj5968qjCeQ1LYB?=
- =?us-ascii?Q?PAXP7K23UhhdRkDYCrv+cEeshtZzzxwyDNeAqXNyHyy8Z3WYwEjfToc3wPvm?=
- =?us-ascii?Q?zF/es1YwGsEkE+90MWRVbnVR8RETTYDsa2VCY7FEvVySRrcVEyBhj/7r/y+O?=
- =?us-ascii?Q?gSXUuW+S3rx6YR4tWGsZM3tqZ+2/rPUY8eJJ+cF22pero7wqLFmLalvSbG6y?=
- =?us-ascii?Q?+q7A2f5htxJys4kZnWXhKWHi+Zj+GXz1zlb09BwQCDEBIhhpVSo693iaGmFm?=
- =?us-ascii?Q?Z5J2L53KianTzio1DiJxfA25TUgP7QkwhvNDaxoI+MJxqhCnJSLghGvg9A4x?=
- =?us-ascii?Q?NJmyusmX/mH1vZz359XB8y3H5e3mA6yyflyLUPwfrrb3ISGsL424dlciPVJ9?=
- =?us-ascii?Q?N4kXCLANdNn710suFd13kSlMpN3WDSxxpJGSe5lJpkR5XGFXw0ko3V3zrMUB?=
- =?us-ascii?Q?3YUyp3Gpeu2GfoRA/gvWXEseKkVzf8RU6/9NTxizAVlgS8TkKQU0iC1+Qbkr?=
- =?us-ascii?Q?T42DkmwNcuPu5YhD0D8FCcw1iABvscU6N83wwSuh8INtVU1v87jei5/VGw4s?=
- =?us-ascii?Q?eeE6MnYpgWBETvruh07ReCB/I2MQlQy024mvfEmKh2wa1hZ1d4cMEpo5ReRN?=
- =?us-ascii?Q?dle7J4p23XjS83ZFn71voxSjvn2Z+b1Wv9H6VIfgpVwRS8jKI07/0spxzqNS?=
- =?us-ascii?Q?rn62GXJCFXjlVA8qERfj5uavLsSuiLsc6agtufroarF/FmRkLkcO2g4LOR0+?=
- =?us-ascii?Q?uO216LTVwi8+IcVvDLxQUBsmuseJjDpOjnxpDyPhn970NfRheGb9Jrga9za9?=
- =?us-ascii?Q?dbO6p9WwG3xEHQWUCWumndXhbsfveNKO54qRKmwgADgXgBtl7xeRYWGCkHQn?=
- =?us-ascii?Q?Fvhbal1Fq+aFK2igu0RqFiB80S2j8Cy1zaxTDXVQh7QM/BzmGhN+8a3FEEwP?=
- =?us-ascii?Q?p5YDI7sjHDZD2DVZEjYZsSlFnVMzNi1mZMf8U8FYPcSuNIbbZ7ZkZRrhmn/8?=
- =?us-ascii?Q?xJAN+nOFISms1IA4vpFaoAchzOiZqgMnXGNGDsM0PUbP29SQBWiip/gX1rnP?=
- =?us-ascii?Q?2CZ7lDw7D9QGcnSCE/xzMhHrmgnHn9hLs46KHFZxQbNEwUKsmXkzzfRTsFzt?=
- =?us-ascii?Q?27d3L08WDozx6MauIs+gQoQi4I91RkMS59FZujZqMJZ5v87cpMdGYziVbBst?=
- =?us-ascii?Q?11MmIvqkJpVdto5aWIeMgJtoaTQHmETWT7QWKXRcCJJaMeyj/08ex+0UhQEF?=
- =?us-ascii?Q?53WIIQd9Fr1R59pPMm85UY/pGBKbsr33MLT8I7SeeWHRvDmg0ZzPWPMZY8XJ?=
- =?us-ascii?Q?Wpsp4yP/NQhrhCuIEymf9OORfzMjxDOUENrUftgl0idfkkbScxyhLXAwDbs1?=
- =?us-ascii?Q?XcyMh4rjoS4eD1GRuHSkldpNLjmLVDPfIx2BiK2RxrEOav0G/jM1MyTKw9fO?=
- =?us-ascii?Q?Dy0/NK8rj3Q4Ris+C6VUtKg=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47a980ff-09e8-4f92-3d7b-08dc651557d4
-X-MS-Exchange-CrossTenant-AuthSource: SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2024 10:49:12.4319
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: L/e+yJa3fXDhlR2pWp+jyDvjzTDkAyZnBMaXCkTq6JvEETtXDEbB9TwaZ31uewYQpYaUeqVVgKJPzW3gcdXodk+BL/RqLo6G9js/7S2QMt8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SH0PR01MB0491
+Message-ID: <171404233198.10875.13057892909385015693.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Add DT binding documentation used by StarFive's
-Starlink cache controller.
+The following commit has been merged into the x86/cpu branch of tip:
 
-Signed-off-by: Joshua Yeong <joshua.yeong@starfivetech.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Commit-ID:     8a28b0220266e2b8290e696d4b21c88f32e6aeb1
+Gitweb:        https://git.kernel.org/tip/8a28b0220266e2b8290e696d4b21c88f32e6aeb1
+Author:        Tony Luck <tony.luck@intel.com>
+AuthorDate:    Wed, 24 Apr 2024 11:15:06 -07:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Thu, 25 Apr 2024 12:27:25 +02:00
+
+x86/bugs: Switch to new Intel CPU model defines
+
+New CPU #defines encode vendor and family as well as model.
+
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Link: https://lore.kernel.org/r/20240424181506.41673-1-tony.luck@intel.com
 ---
- .../cache/starfive,jh8100-starlink-cache.yaml | 66 +++++++++++++++++++
- 1 file changed, 66 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/cache/starfive,jh8100-starlink-cache.yaml
+ arch/x86/kernel/cpu/bugs.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/cache/starfive,jh8100-starlink-cache.yaml b/Documentation/devicetree/bindings/cache/starfive,jh8100-starlink-cache.yaml
-new file mode 100644
-index 000000000000..6d61098e388b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/cache/starfive,jh8100-starlink-cache.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/cache/starfive,jh8100-starlink-cache.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: StarFive StarLink Cache Controller
-+
-+maintainers:
-+  - Joshua Yeong <joshua.yeong@starfivetech.com>
-+
-+description:
-+  StarFive's StarLink Cache Controller manages the L3 cache shared between
-+  clusters of CPU cores. The cache driver enables RISC-V non-standard cache
-+  management as an alternative to instructions in the RISC-V Zicbom extension.
-+
-+allOf:
-+  - $ref: /schemas/cache-controller.yaml#
-+
-+# We need a select here so we don't match all nodes with 'cache'
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - starfive,jh8100-starlink-cache
-+
-+  required:
-+    - compatible
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: starfive,jh8100-starlink-cache
-+      - const: cache
-+
-+  reg:
-+    maxItems: 1
-+
-+unevaluatedProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - cache-block-size
-+  - cache-level
-+  - cache-sets
-+  - cache-size
-+  - cache-unified
-+
-+examples:
-+  - |
-+      soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        cache-controller@15000000 {
-+          compatible = "starfive,jh8100-starlink-cache", "cache";
-+          reg = <0x0 0x15000000 0x0 0x278>;
-+          cache-block-size = <64>;
-+          cache-level = <3>;
-+          cache-sets = <8192>;
-+          cache-size = <0x400000>;
-+          cache-unified;
-+        };
-+      };
--- 
-2.25.1
-
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index ca295b0..32d86dd 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -26,7 +26,7 @@
+ #include <asm/msr.h>
+ #include <asm/vmx.h>
+ #include <asm/paravirt.h>
+-#include <asm/intel-family.h>
++#include <asm/cpu_device_id.h>
+ #include <asm/e820/api.h>
+ #include <asm/hypervisor.h>
+ #include <asm/tlbflush.h>
+@@ -2390,20 +2390,20 @@ static void override_cache_bits(struct cpuinfo_x86 *c)
+ 	if (c->x86 != 6)
+ 		return;
+ 
+-	switch (c->x86_model) {
+-	case INTEL_FAM6_NEHALEM:
+-	case INTEL_FAM6_WESTMERE:
+-	case INTEL_FAM6_SANDYBRIDGE:
+-	case INTEL_FAM6_IVYBRIDGE:
+-	case INTEL_FAM6_HASWELL:
+-	case INTEL_FAM6_HASWELL_L:
+-	case INTEL_FAM6_HASWELL_G:
+-	case INTEL_FAM6_BROADWELL:
+-	case INTEL_FAM6_BROADWELL_G:
+-	case INTEL_FAM6_SKYLAKE_L:
+-	case INTEL_FAM6_SKYLAKE:
+-	case INTEL_FAM6_KABYLAKE_L:
+-	case INTEL_FAM6_KABYLAKE:
++	switch (c->x86_vfm) {
++	case INTEL_NEHALEM:
++	case INTEL_WESTMERE:
++	case INTEL_SANDYBRIDGE:
++	case INTEL_IVYBRIDGE:
++	case INTEL_HASWELL:
++	case INTEL_HASWELL_L:
++	case INTEL_HASWELL_G:
++	case INTEL_BROADWELL:
++	case INTEL_BROADWELL_G:
++	case INTEL_SKYLAKE_L:
++	case INTEL_SKYLAKE:
++	case INTEL_KABYLAKE_L:
++	case INTEL_KABYLAKE:
+ 		if (c->x86_cache_bits < 44)
+ 			c->x86_cache_bits = 44;
+ 		break;
