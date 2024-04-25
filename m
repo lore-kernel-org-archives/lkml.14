@@ -1,97 +1,119 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D377F486;
-	Thu, 25 Apr 2024 08:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4E47FBB4;
+	Thu, 25 Apr 2024 08:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714035174; cv=none; b=aYGpJc6AmtUGwE+Vl/bGXKhjbCz/r1/BBjFVKIfTcA4outpucsnb8oGfdx7WO+krrmVRJag3LV4EaitOHTaJ/7aLSqRGIMWtgsPuQPlLKVncDrhvREyvC1yHSPR0E+bMAdSbYYYAYhTnDcpU1de5xx12kmZ26BiEPpqyuxFv3WI=
+	t=1714035200; cv=none; b=TG6L4TppqUKSvaYpKVi7s/G8OX/etq56RwpcYatmn72wOViaN9f3m/dhuCvSPRkc9XBD2jZbRgWlTEx7UuMEpmj78I2lBJgUtB2nnL3UscLRwA82hMsya7Uik4cBJZ/xukjiVvigKrRv0WotKI5JSeR/oLKnjufMBrcg/lJQ75o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714035174; c=relaxed/simple;
-	bh=2ii76LUBj9Ob19+f2whv+RVZumtvMFFoj0WwOmyLIt0=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=ao5sl5IWpyoDek6F6JF+utecVMQCIUsmDzAT0xk/pvp/QYfwIg71IfJ4EQs/FMhNcEmpt5/HWnrcpEaqdOzCYv6HltYDkyQ90JMtos+7zlwTi6wl/iXoioI0QEid6C8flc8PDcY6PuyDb2TP4Bl5lZPhS76Qo6on+G8p9tG3USs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=dIfdBXPI; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1714035200; c=relaxed/simple;
+	bh=39w5XQsRAGKnURUuXsQ1Wk8XgraObcOPly8hISIv0IE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MaKcqaLt733L7UuVP31Qw6x0pvp0iDCODaHf+yi18LJK3+QUIo/0IZAvvA3nVaaQej5pqVgfBhB8Id3TAc5eEXzxIMqxihJvO30tLSJr6lliCxP4h1Mj8v44irwt+Gh6hdYwnQD1gSashr0753g5Dtsxmw+tOmc357vtDiff7bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BgQ6XWu4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="dIfdBXPI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1714035117; x=1714639917; i=markus.elfring@web.de;
-	bh=2ii76LUBj9Ob19+f2whv+RVZumtvMFFoj0WwOmyLIt0=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=dIfdBXPIujAhwTh6VZnWtncvA1XWiKqV9vpmVx6mtVKkAZ7C8ihefH1HCRvrH5ep
-	 I+sZZEO/50ZvJcBLfa9cg1dIuGapn7oIVC/UKYrWQT9fJlUQGqisN3JMVLrsS2k8C
-	 lxYiUrwi4R9M9J1/J9KJnFryPFEZgCzK/PvUXqBa55tzsBGo3ttIqzqMS47M0YmFU
-	 XjsufLLyLN9ZdVyHpVCPqJIIwFqgrBOkPrzMnZKGzk2F0NPOkJP2zBAHXHkUF/wI9
-	 /203G0Qb5/JOkJdR/f/1VFCLWJU5VZKDahErizDNM9HMhGZYoXoivB/ENICtwOG+W
-	 gYjApMmG+MBiuJNjIQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MRW2D-1sNLPF40Qf-00NUmb; Thu, 25
- Apr 2024 10:51:57 +0200
-Message-ID: <6e028bfa-9063-42ac-b40f-cf17a81c2af2@web.de>
-Date: Thu, 25 Apr 2024 10:51:53 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BgQ6XWu4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53AFFC113CC;
+	Thu, 25 Apr 2024 08:53:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714035200;
+	bh=39w5XQsRAGKnURUuXsQ1Wk8XgraObcOPly8hISIv0IE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BgQ6XWu4j//NQ+XzmO9Edx2/vMnfoCNacDVh0oH6Igb9ft6E2ihSDh5gTNGuNBf2V
+	 9ALM3rKYjIQP8K0QnFcPOz6R7zhQ3nuAo6Jw0/bCIOhRHj2QYCS0L4UE/tzAWg2a/k
+	 mKycos2AMlSnwKLkFzY2So29mkpIjYmIYvKDNgrug0F91n+ZOLHbuh9wQH1aiR+peQ
+	 j97t1YIB5I/8A8z73fWpma6KnBND+XcB3y5eh6iLfFYVOF9aDsC6OES1hEm6BayZKF
+	 eHjxGjhzz8HVgO2XLyqdNhLSskCSBg3PYMZzT+cyyhuFN/P9vcXiNFcPiv6yKeJdbx
+	 pR9r4ZFdyHTWg==
+Date: Thu, 25 Apr 2024 10:53:10 +0200
+From: Benjamin Tissoires <bentiss@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH bpf-next v2 12/16] selftests/bpf: wq: add bpf_wq_init()
+ checks
+Message-ID: <v7avo5guriv6vbxt25m6bf4gs6ifblolxsui2vmswkyavim4c6@w6yposzvdxtg>
+References: <20240420-bpf_wq-v2-0-6c986a5a741f@kernel.org>
+ <20240420-bpf_wq-v2-12-6c986a5a741f@kernel.org>
+ <CAEf4BzbqmrucgeXX9+Hgnhefne-go9nHYPmh_+JwuMHeNNsv-g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
- linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Jameson Thies <jthies@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Benson Leung <bleung@google.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Hans de Goede <hdegoede@redhat.com>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Prashant Malani <pmalani@chromium.org>,
- Rajaram Regupathy <rajaram.regupathy@intel.com>,
- Saranya Gopal <saranya.gopal@intel.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-References: <20240424014821.4154159-2-jthies@google.com>
-Subject: Re: [PATCH v2 1/4] usb: typec: ucsi: Fix null deref in trace
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240424014821.4154159-2-jthies@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MWIAd9tfE9Cl5DWSBlawdxc9rLXN4r3w9oVfMsROo9DFxAP9QSb
- dAN5xhx39A6eJxpcr09q4YAV5nIQda6BWSBQrr3iHiQ9Y6JZm0SFInuOSpWh/yELwxqOoob
- 9yiOlZC1rEZLPD//da/dOOGv0mPtYh2Q+7Quv9Zzg6a2dDM8q2XN3iutK6lkbuRhoLxDduv
- Dovre41suigX1sdGsANlA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:82+JCbADl/Q=;8624TNLGloARLOYQ/BOLV+yGdVj
- tRYpiSQQIjL3i73JQ6pzaVWf4ROTq73TDcxAFVMTQivqidd3asU5pIHmHYQ21sgSYa2DWuM1u
- Ask9GZR9uCK5j43oaBoHQmvv2kWliElxtpcOMlZe1ZdXTaAudOnLQGewybrzEV7Av44h0qh9J
- UG54OdL/iJwJP4UcwgwN0AKGTf7GCAWd5LKEDrYpAY/5HmMqegr4x6WUb8XhNJJaXIIA1g5+L
- asGyFg2JlK6QcAkMa6n4fOWhNXjyGjgkhM1OpR/jQaskTU+xIuyLqppuGLKCnbE1yIUTolRyO
- ETCHoNDJDJJkcdnmlQ4J/R+y/aDC7ieB5LVLzJURXLmyjCK+UtYcQ/bnPrjaoljlsK7kIoVEx
- 6qqtnmvq0VovcVOWntybaAu89CdGzsZ0BKCcGjMk1tHV3ZYtbwk8YSPXQQft1nxV1wCKSBg0r
- NNVR2gB4LFQkgtV0SMk5GGgRnI0//fxAO+Zb/cukiRXpXgqgyyQC99CjxQ1daa4kEPTXxDcz/
- iOAIev88+eyHDm23vE3vGj11niorw5Xn34hsnCc/sHBbeDbr6IvZcIVQg9CnVcwXGYTOULCSp
- j4kCYRCah/NPB1B1wHa6re98hlx7vmblpTn3QXXD1J6i3EfXch2X193YY5EBJ9kg0OCaOGrKh
- ld+zLLhNeRMAlExFy5EUOTxSW+0anFoKlmXp17hTPHuEVH/G8Rc9BpVjWwmP0qB3jLIRMlH9A
- TYlmjYdkTH/22/XwVSbc+NqcwFl2Pr5zv6Xnd19LbOl4ZmExDVvdDk5Qq16Um3oSLCjaMsrAA
- k6gea/TJZQ0IAvFXJQuTYftUJZTX+oALHCqiquNotVzQ8=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzbqmrucgeXX9+Hgnhefne-go9nHYPmh_+JwuMHeNNsv-g@mail.gmail.com>
 
-=E2=80=A6
-> ucsi_register_altmode checks IS_ERR on returned pointer and treats
-> NULL as valid. This results in a null deref when
-> trace_ucsi_register_altmode is called.
-=E2=80=A6
+On Apr 24 2024, Andrii Nakryiko wrote:
+> On Sat, Apr 20, 2024 at 2:10 AM Benjamin Tissoires <bentiss@kernel.org> wrote:
+> >
+> > Allows to test if allocation/free works
+> >
+> > Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+> >
+> > ---
+> >
+> > changes in v2:
+> > - dropped mark_precise checks
+> > ---
+> >  tools/testing/selftests/bpf/bpf_experimental.h  |  1 +
+> >  tools/testing/selftests/bpf/prog_tests/wq.c     |  8 +++
+> >  tools/testing/selftests/bpf/progs/wq.c          | 10 ++++
+> >  tools/testing/selftests/bpf/progs/wq_failures.c | 78 +++++++++++++++++++++++++
+> >  4 files changed, 97 insertions(+)
+> >
+> > diff --git a/tools/testing/selftests/bpf/bpf_experimental.h b/tools/testing/selftests/bpf/bpf_experimental.h
+> > index 3329ea080865..785b91b629be 100644
+> > --- a/tools/testing/selftests/bpf/bpf_experimental.h
+> > +++ b/tools/testing/selftests/bpf/bpf_experimental.h
+> > @@ -470,4 +470,5 @@ extern int bpf_iter_css_new(struct bpf_iter_css *it,
+> >  extern struct cgroup_subsys_state *bpf_iter_css_next(struct bpf_iter_css *it) __weak __ksym;
+> >  extern void bpf_iter_css_destroy(struct bpf_iter_css *it) __weak __ksym;
+> >
+> > +extern int bpf_wq_init(struct bpf_wq *wq, void *p__map, unsigned int flags) __weak __ksym;
+> >  #endif
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/wq.c b/tools/testing/selftests/bpf/prog_tests/wq.c
+> > index 9a07b8bc2c52..26ab69796103 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/wq.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/wq.c
+> > @@ -2,6 +2,7 @@
+> >  /* Copyright (c) 2024 Benjamin Tissoires */
+> >  #include <test_progs.h>
+> >  #include "wq.skel.h"
+> > +#include "wq_failures.skel.h"
+> >
+> >  void serial_test_wq(void)
+> >  {
+> > @@ -9,3 +10,10 @@ void serial_test_wq(void)
+> >
+> >         RUN_TESTS(wq);
+> >  }
+> > +
+> > +void serial_test_failures_wq(void)
+> > +{
+> > +       LIBBPF_OPTS(bpf_test_run_opts, topts);
+> > +
+> 
+> unused leftover?
 
-Can it be nicer to use the term =E2=80=9Cnull pointer dereference=E2=80=9D=
- for
-the commit message here?
+Oops, yeah. Looks like it.
 
-Regards,
-Markus
+I'll send a removal of it while fixing 9/16
+
+Cheers,
+Benjamin
+
+> 
+> > +       RUN_TESTS(wq_failures);
+> > +}
+> 
+> [...]
