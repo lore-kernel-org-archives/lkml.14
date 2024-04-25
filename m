@@ -1,89 +1,112 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265FC6CDA5;
-	Thu, 25 Apr 2024 07:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFF26F069;
+	Thu, 25 Apr 2024 07:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714029040; cv=none; b=uZlhU/LfITufdr6wUyubmn7V68w/ZlTtzgNBBFxXy8bUwO01JD1et/nSI0mp7VLDgueIne3fITim+YnlqFAhs+pEgdNN6rxk/Zj2zxO9lJq1zbr3218wWdisDtRsno2+CyirAzvAvpVOwdFPn2Nmhvjdz3kt18Hz7V5BGdSQI2o=
+	t=1714029043; cv=none; b=rvBgOXRku/XWVRVWB0b6llJMCLKavZzniK6gTWhZz3XETEUkWVDl0Kp2UkDu0/3PWUU+jF5G7kHTYAqWFeAY5jxcASw8OUce0vnQpV19RlXfNMnKFbHN5ULMkLvYjmsJ0szdoHuzncM5TGa+dOZf8IkTGE4XRmitEhrFliw9rcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714029040; c=relaxed/simple;
-	bh=rmNCwj/QZXocvFu/SV+UsAbq1yc1Onrw5e/MM6tpI4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gieOt1pLr+D0qMK4OYcfBKCyFuFyZJ7Do7RWMt3ayutKnlctUSr2Giaov9NdiRm4Za70PQzA3qkWCBKWf1/H9AA4Nu5ldrBgQ/XdgGVcB+r1Ht+ee3gDsTp/K9jbn607DyqrWZKqMU3wvsVD4YOAM1Fwrm2yuESrIdV3F2KqHVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=MmasBUph; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1714029043; c=relaxed/simple;
+	bh=OicsjI5hve5UOp2RU+b4OIl85M9vxjPjINQgH+1vvfs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VCT6fVxD557HEYGtoy7F5j8/JVrTf7kA/eJ44HD/ZG3g6MZkF0i35USs1xUJKTee4Thel0Ziw3fRphTK7V70GBMELyu0Au/9c36dpHsjLn4XcN8zZKcDBL37rHRm4xtsjrlP6NE8Y1DeHPUJ2YDdRQixbWZSDB4rU6q7c1lRocM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=HwPhI3xo; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="MmasBUph"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1714029027;
-	bh=rmNCwj/QZXocvFu/SV+UsAbq1yc1Onrw5e/MM6tpI4o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MmasBUphC0hDmcDselWsqNDchcFNLbtyyIXYaTEfQv4BLOsVbY80KeyHb5BvHn9uV
-	 mXfX+53b9fklgAHnv4JHOlIL0SSIIXm5AmCALLJVlcCrmQacW/Cc+9xB5aBl8A7Dwb
-	 B9LRLV8RKBn3hp3tvoCofURazzoY7NMe3hrGTd84=
-Date: Thu, 25 Apr 2024 09:10:27 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, 
-	Joel Granados <j.granados@samsung.com>, Kees Cook <keescook@chromium.org>, 
-	Eric Dumazet <edumazet@google.com>, Dave Chinner <david@fromorbit.com>, 
-	linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-mm@kvack.org, linux-security-module@vger.kernel.org, bpf@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
-	kexec@lists.infradead.org, linux-hardening@vger.kernel.org, bridge@lists.linux.dev, 
-	lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, 
-	linux-sctp@vger.kernel.org, linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
- of sysctl handlers
-Message-ID: <9e657181-866a-4626-82d0-e0030051b003@t-8ch.de>
-References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <20240424201234.3cc2b509@kernel.org>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="HwPhI3xo"
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43P57Uvg000945;
+	Thu, 25 Apr 2024 03:10:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=DKIM; bh=8v8v9Or7KoY1
+	qlT2j9aqexZMdaKJjYew5gQOnI4G+6o=; b=HwPhI3xoRGn4tYqydhKx/VoNcvEH
+	hc55Ka9f8DL/T3rAJc202NuJCI1Of52XI6mciKPU0PJ7RYIxKA90cTJ9tyXmblPo
+	ZEhomudUgM+WHHc+YbrRZj3ZEEXw7Ccvd4suV2Gkjr9ZI9zvdlBlPIiVoosxCB9p
+	8Vrp7ABJiD9zqzxQCelslg+KhS2ftwpPyJw1nnJITmG19N0H03oWbLMXSvFR1vfg
+	WqVfw4XSTiM61IEijA7zoO/Lk7xBhpD5v553ZIk0XRHw4MOzo6srSaaHthNrkx0N
+	mRsx+PqAoBU9DZj1yn4ttrVX5EoSFuC0aM/ZXKFNyLg9dwxtTptrts8Pew==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3xq3qmbchq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Apr 2024 03:10:14 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 43P7AD42023009
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 25 Apr 2024 03:10:13 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 25 Apr 2024 03:10:12 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 25 Apr 2024 03:10:12 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Thu, 25 Apr 2024 03:10:12 -0400
+Received: from JSANBUEN-L01.ad.analog.com (JSANBUEN-L01.ad.analog.com [10.117.220.64])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 43P79tHj006908;
+	Thu, 25 Apr 2024 03:09:58 -0400
+From: Jose Ramon San Buenaventura <jose.sanbuenaventura@analog.com>
+To: <linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>
+CC: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+        "Rob
+ Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Delphine CC
+ Chiu" <Delphine_CC_Chiu@Wiwynn.com>
+Subject: [PATCH v3 0/2] Add adm1281 support
+Date: Thu, 25 Apr 2024 15:09:46 +0800
+Message-ID: <20240425070948.25788-1-jose.sanbuenaventura@analog.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240424201234.3cc2b509@kernel.org>
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: uxnUrTglTl1R9yfRuAprsipuzKoOy6DJ
+X-Proofpoint-ORIG-GUID: uxnUrTglTl1R9yfRuAprsipuzKoOy6DJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-25_06,2024-04-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
+ spamscore=0 impostorscore=0 bulkscore=0 mlxscore=0 phishscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404250050
 
-On 2024-04-24 20:12:34+0000, Jakub Kicinski wrote:
-> On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Weißschuh wrote:
-> > The series was split from my larger series sysctl-const series [0].
-> > It only focusses on the proc_handlers but is an important step to be
-> > able to move all static definitions of ctl_table into .rodata.
-> 
-> Split this per subsystem, please.
+CHANGELOG:
 
-Unfortunately this would introduce an enormous amount of code churn.
+v2 -> v3:
+        - removed extra boolean member in adm1275_data structure
+        - refactored commit message        
 
-The function prototypes for each callback have to stay consistent.
-So a another callback member ("proc_handler_new") is needed and users
-would be migrated to it gradually.
+v1 -> v2:
+        - removed STATUS_CML case in read_byte_data function 
 
-But then *all* definitions of "struct ctl_table" throughout the tree need to
-be touched.
-In contrast, the proposed series only needs to change the handler
-implementations, not their usage sites.
+Jose Ramon San Buenaventura (2):
+  dt-bindings: hwmon: adm1275: add adm1281
+  hwmon: pmbus: adm1275: add adm1281 support
 
-There are many, many more usage sites than handler implementations.
-
-Especially, as the majority of sysctl tables use the standard handlers
-(proc_dostring, proc_dobool, ...) and are not affected by the proposed
-aproach at all.
-
-And then we would have introduced a new handler name "proc_handler_new"
-and maybe have to do the whole thing again to rename it back to
-the original and well-known "proc_handler".
-
-
-Of course if somebody has a better aproach, I'm all ears.
+ .../devicetree/bindings/hwmon/adi,adm1275.yaml     |  4 +++-
+ Documentation/hwmon/adm1275.rst                    | 14 +++++++++++---
+ drivers/hwmon/pmbus/Kconfig                        |  4 ++--
+ drivers/hwmon/pmbus/adm1275.c                      |  7 +++++--
+ 4 files changed, 21 insertions(+), 8 deletions(-)
 
 
-Thomas
+base-commit: 96fca68c4fbf77a8185eb10f7557e23352732ea2
+-- 
+2.39.2
+
