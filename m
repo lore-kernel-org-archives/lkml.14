@@ -1,57 +1,57 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CEB155A4E
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 18:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C02150990
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 18:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714068885; cv=none; b=Qku98BVXO7Zd9xc6rcImmOQ8FrAI9+iAJnMJu/hh3BYqIkvazvRuzM5QETHFAoLDjx/pXQQE3dkkr+PIiy3gPVj1koBuhqN6zgitiSyHHqoxIyGfy0iUSYmyD0jrkNb6qdmZyeyaWv6ThpFZ8dmFJZl5kCVG6JRDielay1COpUo=
+	t=1714068889; cv=none; b=JsO4X7RNYutxhp8vcxBAqqdFufcrDj5sTQ/8YYxMgKfgSiK5syBSOH7r6Vc8xv48Rw/JMV99Xi768Ha6X2kCowkCZ+t12ZpdfgfQO9Nr/qXdLkBHgOvS8F0IQAE8+uMNeEnlnK6OBDH02EsAkwVW01IluZzJWG0nRzBCK2wUVqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714068885; c=relaxed/simple;
-	bh=EBMKPetibCe1fk8IIl6DuzqE13SDO5ENAO3qdArUqpw=;
+	s=arc-20240116; t=1714068889; c=relaxed/simple;
+	bh=h3nH2RXwDRleABI7UvTpJNwiSjFJO/iubybYunLFYQY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=I19nfbRGIVYG9wzdEEGD1R9fuf7NYQAll4nLLNv7+RXQNOLnnqWJiOWyLqg/zmuWWfDH/dc1N+xE9M3xyqBvTgIwx8J7S/cLubl7DBLJAE4rLaxXhn8XjOknCEfw19h7oNLz0W2/9LPcEFm6Kk6flbi/uodPuPTypux9RWGLw40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BpoEmEE/; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=M5xB7pIkVNNr+fuOSDnv4X7FGFhvpshf35sf7lPZirrO7XiaRV55FXEXR/+9f9/NWY7/sFzkpiswKqIdAnVfccqGy7c2ueSWvIUvQ09vro67UXUmLnrWBo/BgIPJAL0+HpmHPlRzP8+3jiod9c10E0KXuVA5C/gt9W8Fgs97D0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f6jRa0OD; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BpoEmEE/"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6ed2f4e685bso1273732b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 11:14:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f6jRa0OD"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6150e36ca0dso23829217b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 11:14:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714068883; x=1714673683; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714068887; x=1714673687; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=FIOMYYhe7hoUfRGO54+WDBb/x/QzKRVyKe5KVJBy8Sk=;
-        b=BpoEmEE/+S2erZHCXyjCcY0SnRUnsOZguR8+YaV9tp8SSoDCL0qBAMhWvyQ7FB32f2
-         lAb2VO52Qd5eokg8mDofg7aBaRDActr4TvYf6Q80i26Rusoc7nTPPAKaTmH+BaYN+6NI
-         0OZtZ4RByoya/zyHOeBVs8G2p81JVdNWEVt50dFFJis5EXpdDs8byMMofOpHhK6sfPkO
-         nCurIXxMED2TKir4XB6Ei1UtkuIjdBNsjdJMHkiDxLW45lilM0Eve1Zx3o9TJwE0kCOE
-         wuOJBOfVBcOqY+sprYvw3ADYwRFv5e10SAUC5kjP2+m/ITCFYZLNKy4qQXbWy2RvBh/Y
-         KK3A==
+        bh=7x2xDm7ORIVYu8+DJIH/haFx3NIITex91VRf9yc3OHU=;
+        b=f6jRa0ODT67ORWX27GVK/+mTZ31jdHbXp/6k3hpIfU/jHbO8lCsZAAGv8q6TDhrwnt
+         iGlQdIiqywZdu8dD5gZSdyqYjXuGKkJhCy5DuFfcf8ZCG3gNuSJpTz6a5SZGZIJUrLnB
+         XUHPvzcNBNIqNru0lO1hPsf02GKQrU7y9s4eXm7swjbYswE+UOp5jWWTtBkFRulndO7f
+         F5hQbSwxevLP4xxsPF3U1N35v9yyPGyHDL0IU5+3p2BZdthJ7ZDDTaH7MMkg6SgQ81Xf
+         9jqp3FZQo43e5Je8X6t32xRuPg1MSz9Qm/vgRi2EECB1PUJ/TzJA58TdDk0ONWNB2Scm
+         g8Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714068883; x=1714673683;
+        d=1e100.net; s=20230601; t=1714068887; x=1714673687;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FIOMYYhe7hoUfRGO54+WDBb/x/QzKRVyKe5KVJBy8Sk=;
-        b=MsLso1HvjCWTkXL3Ig5JknHQbcHdzsnkNFoeh5nG5mS6LJxP7+n/9J3hcmOyc/8Zsl
-         ygCdATbbzAeyi+ocQiUTtPo5ScGQsI8xm3Z+ack39ekbKfWR9ttdq5ys2GkFAjYXJCor
-         M4hf2vDWlY2DbBKOjBzsSQ6uYIHx0IOTQp+dBJmyFsiAmpCx3A39/FNZaKr7Qh5p++v8
-         MjjYziubKSFda6mM+TlFRq/BqYFa+3dH7Ubpc4HzVi3m22jGzfR7i8HGVy66+dh8+DyX
-         UVxRsGGLVqUHdSOlA1IgZvb0TapnMzNCqycebURKWIflsWKKSexIKtFIzmnjNPJwUHJ/
-         x3tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVaknj9Qw7pAYxOfdJnz85qEC4xFaf7z0fqeJ3fuZI85imZJP8ZiLFq/7lLMDs4+05qyHJrZ7AHh1Gp4p7GXPn5seuRWcH9jlgfN/d2
-X-Gm-Message-State: AOJu0YwKxdvclnZveu28zLDxGTn2KwBszVKGuDSNzOl6NQU8Bhs2jepX
-	mTUEbPylV5o1moCiojaiJoZg4IZds2/4gjDRmEuQLQgglsVvyK6CokD6jdiYbN+TJAfGPHwmmvQ
-	/JQ==
-X-Google-Smtp-Source: AGHT+IHAReYHzQ+UaXLGIDLEHp2zod/ikcL6IlTa1/Jlexj3BDRolEdIdLsCPfxdpltJjtWg17vzoLARWeg=
+        bh=7x2xDm7ORIVYu8+DJIH/haFx3NIITex91VRf9yc3OHU=;
+        b=Cy082AkguOVPdJjxeeip4K7FNo6LTuSRGoyEG2sHA6UTuBU8bZDvUpKbLP/b8zjG7f
+         sp/uek9dRL89kbCW2iRDQnXh666uK+rOcCNyU1/9xH1DKlvwpTk3a82fUf9Gww6DwD0R
+         INP+ySUsABhztJN7rhC17NTIgRAUtMiSKfpxUzQbQpdPRHlpOoF1YxfetyfkcCj3s3yg
+         HOIkZEZG5oU4c2cO4k17J3itGHzj+D6Od0KGVlfAaVs6clXeWvRhPRh/WvLvnrL/kOT+
+         J7+hPrenXuL57fMn+Tvc0w86BBVyNT1Hv0oOHzklE99/KgYc3Z8MQ4PKZQL+TyPSbTkK
+         xnKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXclZMwCOfmvfeo4E014G5beWW27xo1Dnk/FSyX96yJcrFd0qTe+vtQyxULyLlo8wQHlRrA9jZyFs4Km/qxFp69DP5VSP+k0mKdT9b0
+X-Gm-Message-State: AOJu0YxpjEgR9gBpFoVQJQshWrwT2H/mNlVr+j8McrC1RsLG81wUYUIb
+	Ag2WV0rrsFoBkWk9KOd9Oji5cKJwglAa6ff52V1nR0hIzHJ0AAv3wimf0/7K4SuDq704IMYoHZ8
+	39Q==
+X-Google-Smtp-Source: AGHT+IHGxfcO/CIV3+AB7r4yk31j4bBnsDca+v9/E+BSPM3jBz9ZdrHoD7SFSvI0zaKSkrDLyCCPkzvrZLU=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a00:8cc6:b0:6ec:f3e8:46a8 with SMTP id
- ij6-20020a056a008cc600b006ecf3e846a8mr38817pfb.1.1714068883127; Thu, 25 Apr
- 2024 11:14:43 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a81:a106:0:b0:61a:d016:60ff with SMTP id
+ y6-20020a81a106000000b0061ad01660ffmr36102ywg.2.1714068887134; Thu, 25 Apr
+ 2024 11:14:47 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 25 Apr 2024 11:14:20 -0700
+Date: Thu, 25 Apr 2024 11:14:22 -0700
 In-Reply-To: <20240425181422.3250947-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,419 +61,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240425181422.3250947-1-seanjc@google.com>
 X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Message-ID: <20240425181422.3250947-9-seanjc@google.com>
-Subject: [PATCH 08/10] KVM: x86: Hoist x86.c's global msr_* variables up above kvm_do_msr_access()
+Message-ID: <20240425181422.3250947-11-seanjc@google.com>
+Subject: [PATCH 10/10] KVM: x86: Suppress userspace access failures on
+ unsupported, "emulated" MSRs
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Tom Lendacky <thomas.lendacky@amd.com>, Weijiang Yang <weijiang.yang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Move the definitions of the various MSR arrays above kvm_do_msr_access()
-so that kvm_do_msr_access() can query the arrays when handling failures,
-e.g. to squash errors if userspace tries to read an MSR that isn't fully
-supported, but that KVM advertised as being an MSR-to-save.
+Extend KVM's suppression of userspace MSR access failures to MSRs that KVM
+reports as emulated, but are ultimately unsupported, e.g. if the VMX MSRs
+are emulated by KVM, but are unsupported given the vCPU model.
 
-No functional change intended.
-
+Suggested-by: Weijiang Yang <weijiang.yang@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/x86.c | 368 ++++++++++++++++++++++-----------------------
- 1 file changed, 184 insertions(+), 184 deletions(-)
+ arch/x86/kvm/x86.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index a0506878d58e..04a5ae853774 100644
+index 4c91189342ff..14cfa25ef0e7 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -319,6 +319,190 @@ u64 __read_mostly host_xcr0;
- 
- static struct kmem_cache *x86_emulator_cache;
- 
-+/*
-+ * The three MSR lists(msrs_to_save, emulated_msrs, msr_based_features) track
-+ * the set of MSRs that KVM exposes to userspace through KVM_GET_MSRS,
-+ * KVM_SET_MSRS, and KVM_GET_MSR_INDEX_LIST.  msrs_to_save holds MSRs that
-+ * require host support, i.e. should be probed via RDMSR.  emulated_msrs holds
-+ * MSRs that KVM emulates without strictly requiring host support.
-+ * msr_based_features holds MSRs that enumerate features, i.e. are effectively
-+ * CPUID leafs.  Note, msr_based_features isn't mutually exclusive with
-+ * msrs_to_save and emulated_msrs.
-+ */
-+
-+static const u32 msrs_to_save_base[] = {
-+	MSR_IA32_SYSENTER_CS, MSR_IA32_SYSENTER_ESP, MSR_IA32_SYSENTER_EIP,
-+	MSR_STAR,
-+#ifdef CONFIG_X86_64
-+	MSR_CSTAR, MSR_KERNEL_GS_BASE, MSR_SYSCALL_MASK, MSR_LSTAR,
-+#endif
-+	MSR_IA32_TSC, MSR_IA32_CR_PAT, MSR_VM_HSAVE_PA,
-+	MSR_IA32_FEAT_CTL, MSR_IA32_BNDCFGS, MSR_TSC_AUX,
-+	MSR_IA32_SPEC_CTRL, MSR_IA32_TSX_CTRL,
-+	MSR_IA32_RTIT_CTL, MSR_IA32_RTIT_STATUS, MSR_IA32_RTIT_CR3_MATCH,
-+	MSR_IA32_RTIT_OUTPUT_BASE, MSR_IA32_RTIT_OUTPUT_MASK,
-+	MSR_IA32_RTIT_ADDR0_A, MSR_IA32_RTIT_ADDR0_B,
-+	MSR_IA32_RTIT_ADDR1_A, MSR_IA32_RTIT_ADDR1_B,
-+	MSR_IA32_RTIT_ADDR2_A, MSR_IA32_RTIT_ADDR2_B,
-+	MSR_IA32_RTIT_ADDR3_A, MSR_IA32_RTIT_ADDR3_B,
-+	MSR_IA32_UMWAIT_CONTROL,
-+
-+	MSR_IA32_XFD, MSR_IA32_XFD_ERR,
-+};
-+
-+static const u32 msrs_to_save_pmu[] = {
-+	MSR_ARCH_PERFMON_FIXED_CTR0, MSR_ARCH_PERFMON_FIXED_CTR1,
-+	MSR_ARCH_PERFMON_FIXED_CTR0 + 2,
-+	MSR_CORE_PERF_FIXED_CTR_CTRL, MSR_CORE_PERF_GLOBAL_STATUS,
-+	MSR_CORE_PERF_GLOBAL_CTRL, MSR_CORE_PERF_GLOBAL_OVF_CTRL,
-+	MSR_IA32_PEBS_ENABLE, MSR_IA32_DS_AREA, MSR_PEBS_DATA_CFG,
-+
-+	/* This part of MSRs should match KVM_INTEL_PMC_MAX_GENERIC. */
-+	MSR_ARCH_PERFMON_PERFCTR0, MSR_ARCH_PERFMON_PERFCTR1,
-+	MSR_ARCH_PERFMON_PERFCTR0 + 2, MSR_ARCH_PERFMON_PERFCTR0 + 3,
-+	MSR_ARCH_PERFMON_PERFCTR0 + 4, MSR_ARCH_PERFMON_PERFCTR0 + 5,
-+	MSR_ARCH_PERFMON_PERFCTR0 + 6, MSR_ARCH_PERFMON_PERFCTR0 + 7,
-+	MSR_ARCH_PERFMON_EVENTSEL0, MSR_ARCH_PERFMON_EVENTSEL1,
-+	MSR_ARCH_PERFMON_EVENTSEL0 + 2, MSR_ARCH_PERFMON_EVENTSEL0 + 3,
-+	MSR_ARCH_PERFMON_EVENTSEL0 + 4, MSR_ARCH_PERFMON_EVENTSEL0 + 5,
-+	MSR_ARCH_PERFMON_EVENTSEL0 + 6, MSR_ARCH_PERFMON_EVENTSEL0 + 7,
-+
-+	MSR_K7_EVNTSEL0, MSR_K7_EVNTSEL1, MSR_K7_EVNTSEL2, MSR_K7_EVNTSEL3,
-+	MSR_K7_PERFCTR0, MSR_K7_PERFCTR1, MSR_K7_PERFCTR2, MSR_K7_PERFCTR3,
-+
-+	/* This part of MSRs should match KVM_AMD_PMC_MAX_GENERIC. */
-+	MSR_F15H_PERF_CTL0, MSR_F15H_PERF_CTL1, MSR_F15H_PERF_CTL2,
-+	MSR_F15H_PERF_CTL3, MSR_F15H_PERF_CTL4, MSR_F15H_PERF_CTL5,
-+	MSR_F15H_PERF_CTR0, MSR_F15H_PERF_CTR1, MSR_F15H_PERF_CTR2,
-+	MSR_F15H_PERF_CTR3, MSR_F15H_PERF_CTR4, MSR_F15H_PERF_CTR5,
-+
-+	MSR_AMD64_PERF_CNTR_GLOBAL_CTL,
-+	MSR_AMD64_PERF_CNTR_GLOBAL_STATUS,
-+	MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR,
-+};
-+
-+static u32 msrs_to_save[ARRAY_SIZE(msrs_to_save_base) +
-+			ARRAY_SIZE(msrs_to_save_pmu)];
-+static unsigned num_msrs_to_save;
-+
-+static const u32 emulated_msrs_all[] = {
-+	MSR_KVM_SYSTEM_TIME, MSR_KVM_WALL_CLOCK,
-+	MSR_KVM_SYSTEM_TIME_NEW, MSR_KVM_WALL_CLOCK_NEW,
-+
-+#ifdef CONFIG_KVM_HYPERV
-+	HV_X64_MSR_GUEST_OS_ID, HV_X64_MSR_HYPERCALL,
-+	HV_X64_MSR_TIME_REF_COUNT, HV_X64_MSR_REFERENCE_TSC,
-+	HV_X64_MSR_TSC_FREQUENCY, HV_X64_MSR_APIC_FREQUENCY,
-+	HV_X64_MSR_CRASH_P0, HV_X64_MSR_CRASH_P1, HV_X64_MSR_CRASH_P2,
-+	HV_X64_MSR_CRASH_P3, HV_X64_MSR_CRASH_P4, HV_X64_MSR_CRASH_CTL,
-+	HV_X64_MSR_RESET,
-+	HV_X64_MSR_VP_INDEX,
-+	HV_X64_MSR_VP_RUNTIME,
-+	HV_X64_MSR_SCONTROL,
-+	HV_X64_MSR_STIMER0_CONFIG,
-+	HV_X64_MSR_VP_ASSIST_PAGE,
-+	HV_X64_MSR_REENLIGHTENMENT_CONTROL, HV_X64_MSR_TSC_EMULATION_CONTROL,
-+	HV_X64_MSR_TSC_EMULATION_STATUS, HV_X64_MSR_TSC_INVARIANT_CONTROL,
-+	HV_X64_MSR_SYNDBG_OPTIONS,
-+	HV_X64_MSR_SYNDBG_CONTROL, HV_X64_MSR_SYNDBG_STATUS,
-+	HV_X64_MSR_SYNDBG_SEND_BUFFER, HV_X64_MSR_SYNDBG_RECV_BUFFER,
-+	HV_X64_MSR_SYNDBG_PENDING_BUFFER,
-+#endif
-+
-+	MSR_KVM_ASYNC_PF_EN, MSR_KVM_STEAL_TIME,
-+	MSR_KVM_PV_EOI_EN, MSR_KVM_ASYNC_PF_INT, MSR_KVM_ASYNC_PF_ACK,
-+
-+	MSR_IA32_TSC_ADJUST,
-+	MSR_IA32_TSC_DEADLINE,
-+	MSR_IA32_ARCH_CAPABILITIES,
-+	MSR_IA32_PERF_CAPABILITIES,
-+	MSR_IA32_MISC_ENABLE,
-+	MSR_IA32_MCG_STATUS,
-+	MSR_IA32_MCG_CTL,
-+	MSR_IA32_MCG_EXT_CTL,
-+	MSR_IA32_SMBASE,
-+	MSR_SMI_COUNT,
-+	MSR_PLATFORM_INFO,
-+	MSR_MISC_FEATURES_ENABLES,
-+	MSR_AMD64_VIRT_SPEC_CTRL,
-+	MSR_AMD64_TSC_RATIO,
-+	MSR_IA32_POWER_CTL,
-+	MSR_IA32_UCODE_REV,
-+
-+	/*
-+	 * KVM always supports the "true" VMX control MSRs, even if the host
-+	 * does not.  The VMX MSRs as a whole are considered "emulated" as KVM
-+	 * doesn't strictly require them to exist in the host (ignoring that
-+	 * KVM would refuse to load in the first place if the core set of MSRs
-+	 * aren't supported).
-+	 */
-+	MSR_IA32_VMX_BASIC,
-+	MSR_IA32_VMX_TRUE_PINBASED_CTLS,
-+	MSR_IA32_VMX_TRUE_PROCBASED_CTLS,
-+	MSR_IA32_VMX_TRUE_EXIT_CTLS,
-+	MSR_IA32_VMX_TRUE_ENTRY_CTLS,
-+	MSR_IA32_VMX_MISC,
-+	MSR_IA32_VMX_CR0_FIXED0,
-+	MSR_IA32_VMX_CR4_FIXED0,
-+	MSR_IA32_VMX_VMCS_ENUM,
-+	MSR_IA32_VMX_PROCBASED_CTLS2,
-+	MSR_IA32_VMX_EPT_VPID_CAP,
-+	MSR_IA32_VMX_VMFUNC,
-+
-+	MSR_K7_HWCR,
-+	MSR_KVM_POLL_CONTROL,
-+};
-+
-+static u32 emulated_msrs[ARRAY_SIZE(emulated_msrs_all)];
-+static unsigned num_emulated_msrs;
-+
-+/*
-+ * List of MSRs that control the existence of MSR-based features, i.e. MSRs
-+ * that are effectively CPUID leafs.  VMX MSRs are also included in the set of
-+ * feature MSRs, but are handled separately to allow expedited lookups.
-+ */
-+static const u32 msr_based_features_all_except_vmx[] = {
-+	MSR_AMD64_DE_CFG,
-+	MSR_IA32_UCODE_REV,
-+	MSR_IA32_ARCH_CAPABILITIES,
-+	MSR_IA32_PERF_CAPABILITIES,
-+};
-+
-+static u32 msr_based_features[ARRAY_SIZE(msr_based_features_all_except_vmx) +
-+			      (KVM_LAST_EMULATED_VMX_MSR - KVM_FIRST_EMULATED_VMX_MSR + 1)];
-+static unsigned int num_msr_based_features;
-+
-+/*
-+ * All feature MSRs except uCode revID, which tracks the currently loaded uCode
-+ * patch, are immutable once the vCPU model is defined.
-+ */
-+static bool kvm_is_immutable_feature_msr(u32 msr)
-+{
-+	int i;
-+
-+	if (msr >= KVM_FIRST_EMULATED_VMX_MSR && msr <= KVM_LAST_EMULATED_VMX_MSR)
-+		return true;
-+
-+	for (i = 0; i < ARRAY_SIZE(msr_based_features_all_except_vmx); i++) {
-+		if (msr == msr_based_features_all_except_vmx[i])
-+			return msr != MSR_IA32_UCODE_REV;
-+	}
-+
-+	return false;
-+}
-+
-+static bool kvm_is_msr_to_save(u32 msr_index)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < num_msrs_to_save; i++) {
-+		if (msrs_to_save[i] == msr_index)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- typedef int (*msr_access_t)(struct kvm_vcpu *vcpu, u32 index, u64 *data,
- 			    bool host_initiated);
- 
-@@ -1448,178 +1632,6 @@ int kvm_emulate_rdpmc(struct kvm_vcpu *vcpu)
- }
- EXPORT_SYMBOL_GPL(kvm_emulate_rdpmc);
- 
--/*
-- * The three MSR lists(msrs_to_save, emulated_msrs, msr_based_features) track
-- * the set of MSRs that KVM exposes to userspace through KVM_GET_MSRS,
-- * KVM_SET_MSRS, and KVM_GET_MSR_INDEX_LIST.  msrs_to_save holds MSRs that
-- * require host support, i.e. should be probed via RDMSR.  emulated_msrs holds
-- * MSRs that KVM emulates without strictly requiring host support.
-- * msr_based_features holds MSRs that enumerate features, i.e. are effectively
-- * CPUID leafs.  Note, msr_based_features isn't mutually exclusive with
-- * msrs_to_save and emulated_msrs.
-- */
--
--static const u32 msrs_to_save_base[] = {
--	MSR_IA32_SYSENTER_CS, MSR_IA32_SYSENTER_ESP, MSR_IA32_SYSENTER_EIP,
--	MSR_STAR,
--#ifdef CONFIG_X86_64
--	MSR_CSTAR, MSR_KERNEL_GS_BASE, MSR_SYSCALL_MASK, MSR_LSTAR,
--#endif
--	MSR_IA32_TSC, MSR_IA32_CR_PAT, MSR_VM_HSAVE_PA,
--	MSR_IA32_FEAT_CTL, MSR_IA32_BNDCFGS, MSR_TSC_AUX,
--	MSR_IA32_SPEC_CTRL, MSR_IA32_TSX_CTRL,
--	MSR_IA32_RTIT_CTL, MSR_IA32_RTIT_STATUS, MSR_IA32_RTIT_CR3_MATCH,
--	MSR_IA32_RTIT_OUTPUT_BASE, MSR_IA32_RTIT_OUTPUT_MASK,
--	MSR_IA32_RTIT_ADDR0_A, MSR_IA32_RTIT_ADDR0_B,
--	MSR_IA32_RTIT_ADDR1_A, MSR_IA32_RTIT_ADDR1_B,
--	MSR_IA32_RTIT_ADDR2_A, MSR_IA32_RTIT_ADDR2_B,
--	MSR_IA32_RTIT_ADDR3_A, MSR_IA32_RTIT_ADDR3_B,
--	MSR_IA32_UMWAIT_CONTROL,
--
--	MSR_IA32_XFD, MSR_IA32_XFD_ERR,
--};
--
--static const u32 msrs_to_save_pmu[] = {
--	MSR_ARCH_PERFMON_FIXED_CTR0, MSR_ARCH_PERFMON_FIXED_CTR1,
--	MSR_ARCH_PERFMON_FIXED_CTR0 + 2,
--	MSR_CORE_PERF_FIXED_CTR_CTRL, MSR_CORE_PERF_GLOBAL_STATUS,
--	MSR_CORE_PERF_GLOBAL_CTRL, MSR_CORE_PERF_GLOBAL_OVF_CTRL,
--	MSR_IA32_PEBS_ENABLE, MSR_IA32_DS_AREA, MSR_PEBS_DATA_CFG,
--
--	/* This part of MSRs should match KVM_INTEL_PMC_MAX_GENERIC. */
--	MSR_ARCH_PERFMON_PERFCTR0, MSR_ARCH_PERFMON_PERFCTR1,
--	MSR_ARCH_PERFMON_PERFCTR0 + 2, MSR_ARCH_PERFMON_PERFCTR0 + 3,
--	MSR_ARCH_PERFMON_PERFCTR0 + 4, MSR_ARCH_PERFMON_PERFCTR0 + 5,
--	MSR_ARCH_PERFMON_PERFCTR0 + 6, MSR_ARCH_PERFMON_PERFCTR0 + 7,
--	MSR_ARCH_PERFMON_EVENTSEL0, MSR_ARCH_PERFMON_EVENTSEL1,
--	MSR_ARCH_PERFMON_EVENTSEL0 + 2, MSR_ARCH_PERFMON_EVENTSEL0 + 3,
--	MSR_ARCH_PERFMON_EVENTSEL0 + 4, MSR_ARCH_PERFMON_EVENTSEL0 + 5,
--	MSR_ARCH_PERFMON_EVENTSEL0 + 6, MSR_ARCH_PERFMON_EVENTSEL0 + 7,
--
--	MSR_K7_EVNTSEL0, MSR_K7_EVNTSEL1, MSR_K7_EVNTSEL2, MSR_K7_EVNTSEL3,
--	MSR_K7_PERFCTR0, MSR_K7_PERFCTR1, MSR_K7_PERFCTR2, MSR_K7_PERFCTR3,
--
--	/* This part of MSRs should match KVM_AMD_PMC_MAX_GENERIC. */
--	MSR_F15H_PERF_CTL0, MSR_F15H_PERF_CTL1, MSR_F15H_PERF_CTL2,
--	MSR_F15H_PERF_CTL3, MSR_F15H_PERF_CTL4, MSR_F15H_PERF_CTL5,
--	MSR_F15H_PERF_CTR0, MSR_F15H_PERF_CTR1, MSR_F15H_PERF_CTR2,
--	MSR_F15H_PERF_CTR3, MSR_F15H_PERF_CTR4, MSR_F15H_PERF_CTR5,
--
--	MSR_AMD64_PERF_CNTR_GLOBAL_CTL,
--	MSR_AMD64_PERF_CNTR_GLOBAL_STATUS,
--	MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR,
--};
--
--static u32 msrs_to_save[ARRAY_SIZE(msrs_to_save_base) +
--			ARRAY_SIZE(msrs_to_save_pmu)];
--static unsigned num_msrs_to_save;
--
--static const u32 emulated_msrs_all[] = {
--	MSR_KVM_SYSTEM_TIME, MSR_KVM_WALL_CLOCK,
--	MSR_KVM_SYSTEM_TIME_NEW, MSR_KVM_WALL_CLOCK_NEW,
--
--#ifdef CONFIG_KVM_HYPERV
--	HV_X64_MSR_GUEST_OS_ID, HV_X64_MSR_HYPERCALL,
--	HV_X64_MSR_TIME_REF_COUNT, HV_X64_MSR_REFERENCE_TSC,
--	HV_X64_MSR_TSC_FREQUENCY, HV_X64_MSR_APIC_FREQUENCY,
--	HV_X64_MSR_CRASH_P0, HV_X64_MSR_CRASH_P1, HV_X64_MSR_CRASH_P2,
--	HV_X64_MSR_CRASH_P3, HV_X64_MSR_CRASH_P4, HV_X64_MSR_CRASH_CTL,
--	HV_X64_MSR_RESET,
--	HV_X64_MSR_VP_INDEX,
--	HV_X64_MSR_VP_RUNTIME,
--	HV_X64_MSR_SCONTROL,
--	HV_X64_MSR_STIMER0_CONFIG,
--	HV_X64_MSR_VP_ASSIST_PAGE,
--	HV_X64_MSR_REENLIGHTENMENT_CONTROL, HV_X64_MSR_TSC_EMULATION_CONTROL,
--	HV_X64_MSR_TSC_EMULATION_STATUS, HV_X64_MSR_TSC_INVARIANT_CONTROL,
--	HV_X64_MSR_SYNDBG_OPTIONS,
--	HV_X64_MSR_SYNDBG_CONTROL, HV_X64_MSR_SYNDBG_STATUS,
--	HV_X64_MSR_SYNDBG_SEND_BUFFER, HV_X64_MSR_SYNDBG_RECV_BUFFER,
--	HV_X64_MSR_SYNDBG_PENDING_BUFFER,
--#endif
--
--	MSR_KVM_ASYNC_PF_EN, MSR_KVM_STEAL_TIME,
--	MSR_KVM_PV_EOI_EN, MSR_KVM_ASYNC_PF_INT, MSR_KVM_ASYNC_PF_ACK,
--
--	MSR_IA32_TSC_ADJUST,
--	MSR_IA32_TSC_DEADLINE,
--	MSR_IA32_ARCH_CAPABILITIES,
--	MSR_IA32_PERF_CAPABILITIES,
--	MSR_IA32_MISC_ENABLE,
--	MSR_IA32_MCG_STATUS,
--	MSR_IA32_MCG_CTL,
--	MSR_IA32_MCG_EXT_CTL,
--	MSR_IA32_SMBASE,
--	MSR_SMI_COUNT,
--	MSR_PLATFORM_INFO,
--	MSR_MISC_FEATURES_ENABLES,
--	MSR_AMD64_VIRT_SPEC_CTRL,
--	MSR_AMD64_TSC_RATIO,
--	MSR_IA32_POWER_CTL,
--	MSR_IA32_UCODE_REV,
--
--	/*
--	 * KVM always supports the "true" VMX control MSRs, even if the host
--	 * does not.  The VMX MSRs as a whole are considered "emulated" as KVM
--	 * doesn't strictly require them to exist in the host (ignoring that
--	 * KVM would refuse to load in the first place if the core set of MSRs
--	 * aren't supported).
--	 */
--	MSR_IA32_VMX_BASIC,
--	MSR_IA32_VMX_TRUE_PINBASED_CTLS,
--	MSR_IA32_VMX_TRUE_PROCBASED_CTLS,
--	MSR_IA32_VMX_TRUE_EXIT_CTLS,
--	MSR_IA32_VMX_TRUE_ENTRY_CTLS,
--	MSR_IA32_VMX_MISC,
--	MSR_IA32_VMX_CR0_FIXED0,
--	MSR_IA32_VMX_CR4_FIXED0,
--	MSR_IA32_VMX_VMCS_ENUM,
--	MSR_IA32_VMX_PROCBASED_CTLS2,
--	MSR_IA32_VMX_EPT_VPID_CAP,
--	MSR_IA32_VMX_VMFUNC,
--
--	MSR_K7_HWCR,
--	MSR_KVM_POLL_CONTROL,
--};
--
--static u32 emulated_msrs[ARRAY_SIZE(emulated_msrs_all)];
--static unsigned num_emulated_msrs;
--
--/*
-- * List of MSRs that control the existence of MSR-based features, i.e. MSRs
-- * that are effectively CPUID leafs.  VMX MSRs are also included in the set of
-- * feature MSRs, but are handled separately to allow expedited lookups.
-- */
--static const u32 msr_based_features_all_except_vmx[] = {
--	MSR_AMD64_DE_CFG,
--	MSR_IA32_UCODE_REV,
--	MSR_IA32_ARCH_CAPABILITIES,
--	MSR_IA32_PERF_CAPABILITIES,
--};
--
--static u32 msr_based_features[ARRAY_SIZE(msr_based_features_all_except_vmx) +
--			      (KVM_LAST_EMULATED_VMX_MSR - KVM_FIRST_EMULATED_VMX_MSR + 1)];
--static unsigned int num_msr_based_features;
--
--/*
-- * All feature MSRs except uCode revID, which tracks the currently loaded uCode
-- * patch, are immutable once the vCPU model is defined.
-- */
--static bool kvm_is_immutable_feature_msr(u32 msr)
--{
--	int i;
--
--	if (msr >= KVM_FIRST_EMULATED_VMX_MSR && msr <= KVM_LAST_EMULATED_VMX_MSR)
--		return true;
--
--	for (i = 0; i < ARRAY_SIZE(msr_based_features_all_except_vmx); i++) {
--		if (msr == msr_based_features_all_except_vmx[i])
--			return msr != MSR_IA32_UCODE_REV;
--	}
--
--	return false;
--}
--
- /*
-  * Some IA32_ARCH_CAPABILITIES bits have dependencies on MSRs that KVM
-  * does not yet virtualize. These include:
-@@ -3770,18 +3782,6 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
- 	mark_page_dirty_in_slot(vcpu->kvm, ghc->memslot, gpa_to_gfn(ghc->gpa));
+@@ -491,7 +491,7 @@ static bool kvm_is_immutable_feature_msr(u32 msr)
+ 	return false;
  }
  
 -static bool kvm_is_msr_to_save(u32 msr_index)
--{
--	unsigned int i;
--
--	for (i = 0; i < num_msrs_to_save; i++) {
--		if (msrs_to_save[i] == msr_index)
--			return true;
--	}
--
--	return false;
--}
--
- int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
++static bool kvm_is_advertised_msr(u32 msr_index)
  {
- 	u32 msr = msr_info->index;
+ 	unsigned int i;
+ 
+@@ -500,6 +500,11 @@ static bool kvm_is_msr_to_save(u32 msr_index)
+ 			return true;
+ 	}
+ 
++	for (i = 0; i < num_emulated_msrs; i++) {
++		if (emulated_msrs[i] == msr_index)
++			return true;
++	}
++
+ 	return false;
+ }
+ 
+@@ -529,11 +534,11 @@ static __always_inline int kvm_do_msr_access(struct kvm_vcpu *vcpu, u32 msr,
+ 
+ 	/*
+ 	 * Userspace is allowed to read MSRs, and write '0' to MSRs, that KVM
+-	 * reports as to-be-saved, even if an MSR isn't fully supported.
++	 * advertises to userspace, even if an MSR isn't fully supported.
+ 	 * Simply check that @data is '0', which covers both the write '0' case
+ 	 * and all reads (in which case @data is zeroed on failure; see above).
+ 	 */
+-	if (host_initiated && !*data && kvm_is_msr_to_save(msr))
++	if (host_initiated && !*data && kvm_is_advertised_msr(msr))
+ 		return 0;
+ 
+ 	if (!ignore_msrs) {
 -- 
 2.44.0.769.g3c40516874-goog
 
