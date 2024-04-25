@@ -1,25 +1,26 @@
 Received: from read.uberspace.de (read.uberspace.de [185.26.156.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB0712C466
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 15:43:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89E514B086
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 15:43:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714059810; cv=none; b=UM24aIf4sLbL1M5br8NmeZvpW+wItO92IHEC2blbR0mlGZ2dX+EyFKwLGdDEqalHWVQEvRjSaLgOoG427erw1+mbzo+92lZYTRQHEVV7XkCVVTQXFkOMzOuou/ZsnR7kRoMbWJb0oMu8lZbYsMQeNZpCehe0nwegfGQuVlmjKjA=
+	t=1714059821; cv=none; b=jgSkcb6vO7ZyJW/coPmahV0SDAhBTOyphCeGsPMg6e4nQLT+AAGIqjeaOoTePkgasmV/RDwOvj1yzMxWQx7j0QOF14uo2ugohof9NJrqFCdQ7zG89Hk6N5KOUKxw72Y7FTYq4f6bOczYhVnUqRmPoa1TdsB9XkoUb+APYzMMt0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714059810; c=relaxed/simple;
-	bh=xG7fDb+6M9Dl+PPdjce0c6L8V0dt39ywKTrpjxmF/cM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fG0zCRXIMcDPnw1llLwF1pzSvo+xiguM2YgsDhqGQCIjtgN+9eZlCpnujGVqoEVQgsbhqdS7pyCSa7jJ1P172drzdn7+9b9StOGiXlhjsTvxstzGAijsysIkeTj+BPPUumqOwKxbAU8+I3cFL0fCsN11CEXhStgMPzU5gncfh+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=florommel.de; spf=pass smtp.mailfrom=florommel.de; dkim=fail (0-bit key) header.d=florommel.de header.i=@florommel.de header.b=XY7JoNks reason="key not found in DNS"; arc=none smtp.client-ip=185.26.156.133
+	s=arc-20240116; t=1714059821; c=relaxed/simple;
+	bh=PFSo08OuHGBuBBReLB/w3zYNHRv/sFj6evMDpx6HkYE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=c26Ww1O26L4Z9s+cM6bCTsqNWPvGerZpBVwf9KZA4Wxpoit0VmYoMSoWQ2/wtqtIwJt+/UbKGmfbDfNn0T1chQlKXqixPeckvQ+e8fznldEcnddXWdIvodQUq+33kHW8k56x5LuWIDWa654v02ZCEExS22m5Qf2NqY3QatWoQHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=florommel.de; spf=pass smtp.mailfrom=florommel.de; dkim=fail (0-bit key) header.d=florommel.de header.i=@florommel.de header.b=Zp4TGPi7 reason="key not found in DNS"; arc=none smtp.client-ip=185.26.156.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=florommel.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=florommel.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=florommel.de header.i=@florommel.de header.b="XY7JoNks"
-Received: (qmail 30584 invoked by uid 990); 25 Apr 2024 15:36:36 -0000
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=florommel.de header.i=@florommel.de header.b="Zp4TGPi7"
+Received: (qmail 30745 invoked by uid 990); 25 Apr 2024 15:36:38 -0000
 Authentication-Results: read.uberspace.de;
 	auth=pass (plain)
 Received: from unknown (HELO unkown) (::1)
-	by read.uberspace.de (Haraka/3.0.1) with ESMTPSA; Thu, 25 Apr 2024 17:36:36 +0200
+	by read.uberspace.de (Haraka/3.0.1) with ESMTPSA; Thu, 25 Apr 2024 17:36:38 +0200
 From: Florian Rommel <mail@florommel.de>
 To: Jan Kiszka <jan.kiszka@siemens.com>,
 	Kieran Bingham <kbingham@kernel.org>
@@ -30,10 +31,12 @@ Cc: Kuan-Ying Lee <Kuan-Ying.Lee@mediatek.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org,
 	Florian Rommel <mail@florommel.de>
-Subject: [PATCH 0/4] scripts/gdb: Fixes for $lx_current and $lx_per_cpu
-Date: Thu, 25 Apr 2024 17:34:57 +0200
-Message-ID: <20240425153501.749966-1-mail@florommel.de>
+Subject: [PATCH 4/4] scripts/gdb: Fix detection of current CPU in KGDB
+Date: Thu, 25 Apr 2024 17:35:01 +0200
+Message-ID: <20240425153501.749966-5-mail@florommel.de>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240425153501.749966-1-mail@florommel.de>
+References: <20240425153501.749966-1-mail@florommel.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,54 +44,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Bar: ++
-X-Rspamd-Report: MID_CONTAINS_FROM(1) BAYES_HAM(-0.092597) MIME_GOOD(-0.1) SUBJECT_HAS_CURRENCY(1) R_MISSING_CHARSET(0.5)
-X-Rspamd-Score: 2.307402
+X-Rspamd-Bar: ----
+X-Rspamd-Report: REPLY(-4) BAYES_HAM(-2.030286) MID_CONTAINS_FROM(1) MIME_GOOD(-0.1) R_MISSING_CHARSET(0.5)
+X-Rspamd-Score: -4.630286
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
 	d=florommel.de; s=uberspace;
 	h=from:to:cc:subject:date;
-	bh=xG7fDb+6M9Dl+PPdjce0c6L8V0dt39ywKTrpjxmF/cM=;
-	b=XY7JoNks1kpuyB5HfDLkrosls/g+gp1P/6wl7xevkMBC0GXCTsfrjlxbRE4c3AQ4BvD+r2hCK/
-	+IRpYHMRDF6CSDOzCJVi/bkf6ZACX2EJKhxTUQt1QXv7+9C/5s4OyUvO+GO65NHICi8gpckWgX9Q
-	SEi5I+95Lh/86nMhtUsmz18cH4yCEDdjciCerXfBYB6mQsY6D0krCIrx0VZAQfgDW0ryYKuQGNGi
-	VsGPnsHEz+Lclou6FA1TK4bR9rS6+9mUN2cDm2KXP91zUV+sl9cPesEWwc4M7bHiD00qLxAOJ3TA
-	v0HkEOFIu4dfi9Oohu+1Z5IyH3i/GVCocIoGw9bfrZ1LrV8/UDjEN/ip16o3FFKEtBkcii1GcGk4
-	zsyd4eWQGbAbC/y99e6dvBb+KZ4cC9six3FyZP53MYIe8y1bCn1Z3p28S01hV2FX6UkEMqOVIm1y
-	jUqQOBvIp9nCulga/q2ma/knsSJ+kUeE30Ax6+zXz65IunCSfFLHxNWlw66++Of6w854acNlOvXz
-	qoBpjJVyLCC3pRb7DTvHDa37pcPiaGNnjhw6pkJvFKHSufhWFoCE43JME79KGA5gjqe3SWWbZAoy
-	ayRM3tN9Ry9Tu6URuv4wudyHq0upw4A5km0tI5rMhSW6RsjwyvfCfPb0apde07ZO17jxEzj5N8SA
-	A=
+	bh=PFSo08OuHGBuBBReLB/w3zYNHRv/sFj6evMDpx6HkYE=;
+	b=Zp4TGPi7xeJSc9YTX8EtU6Bx65jEzXjlS2pZzWZw+oRi6lIqFGL7CNR+h/AV9q6h+DGepffBht
+	VB/3wG9PGeQ6+i3jnkWHoP9JBTB2EqFJ4X2qo5V5w1Ula/HBbDxSRTZKq0HZx1EfmR0pILMPbkGZ
+	aL0DZikfMFCDaYo2iU53Ev48kB5QzYzj+8qdr+rLpsOZchEinkGKJ6TAg3fwJ6zGPNjaZ36WArR8
+	iSs9Yq2ryvClBlKIiRtJLHQmIcmjd1ogUevu49EjI+x3eOeCAiv4gh8YGxvsN0bVUzlGNbppiVfh
+	fuRjGGAaVbYpnC0XTOVLTIOhjLH1ed7vrCVphm8Ahl2kWFNuw2+694U11gP2nFFNgxGHWTNO1xkD
+	ijX2N5mJ/wYIez/oYb+ONmutitIXFhsfUhOgeD0yxgCjuLYZ3rboiMoykqOSHY4FfdWHJvSOcMLu
+	IFGdDM7K9Mktv+6CZYmCm2VaHeaHl2HB+iSF5ovrV6MGPXPQs4zmYisDDfwWSjfzRLtc+KOmahyk
+	XEDQ8GsiZDVEQ7wuPkvxr4OyUlIBMJxPHz7U+DUG2IF7zcIrY4eAZVE13ZHrmVLjcdOn3IKuftbN
+	nQT+OZRirC3vYkkh4UePpSjKS4V4eY0+0MsACCXmRGqj7XFihNW27LcPiEMJ9KEIP4TH+qhrOp2D
+	8=
 
-Hi all,
+Directly read the current CPU number from the kgdb_active variable.
 
-This series fixes several bugs in the GDB scripts related to the
-$lx_current and $lx_per_cpu functions.  The changes were tested with
-GDB 10, 11, 12, 13, and 14.
+Before, the active CPU was obtained through the current task, which
+required searching the task list for the pid of GDB's selected thread.
+Obtaining the pid was buggy:
+GDB may use selected_thread().ptid[1] (LWPID) instead of .ptid[2] (TID) to
+store the threads pid; see
+https://sourceware.org/gdb/current/onlinedocs/gdb.html/Threads-In-Python.html
+As a result, the detection could return the wrong CPU number, leading to
+incorrect results for $lx_per_cpu and $lx_current.
 
-Patch 1 fixes false-negative results when probing for KGDB
+As a side effect, the patch significantly speeds up $lx_per_cpu and
+$lx_current in KGDB by avoiding the task-list iteration.
 
-Patch 2 fixes the $lx_per_cpu function, which is currently non-functional
-in QEMU-GDB and KGDB.
+Signed-off-by: Florian Rommel <mail@florommel.de>
+---
+ scripts/gdb/linux/cpus.py | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-Patch 3 fixes an additional bug in $lx_per_cpu that occurs with KGDB.
-
-Patch 4 fixes the incorrect detection of the current CPU number in KGDB,
-which silently breaks $lx_per_cpu and $lx_current.
-
-Regards,
-Flo
-
-Florian Rommel (4):
-  scripts/gdb: Fix failing KGDB detection during probe
-  scripts/gdb: Fix parameter handling in $lx_per_cpu
-  scripts/gdb: Make get_thread_info accept pointers
-  scripts/gdb: Fix detection of current CPU in KGDB
-
- scripts/gdb/linux/cpus.py  | 11 +++--------
- scripts/gdb/linux/tasks.py |  2 +-
- scripts/gdb/linux/utils.py |  2 +-
- 3 files changed, 5 insertions(+), 10 deletions(-)
-
+diff --git a/scripts/gdb/linux/cpus.py b/scripts/gdb/linux/cpus.py
+index 2b51a3abd363..2f11c4f9c345 100644
+--- a/scripts/gdb/linux/cpus.py
++++ b/scripts/gdb/linux/cpus.py
+@@ -26,11 +26,7 @@ def get_current_cpu():
+     if utils.get_gdbserver_type() == utils.GDBSERVER_QEMU:
+         return gdb.selected_thread().num - 1
+     elif utils.get_gdbserver_type() == utils.GDBSERVER_KGDB:
+-        tid = gdb.selected_thread().ptid[2]
+-        if tid > (0x100000000 - MAX_CPUS - 2):
+-            return 0x100000000 - tid - 2
+-        else:
+-            return tasks.get_thread_info(tasks.get_task_by_pid(tid))['cpu']
++        return gdb.parse_and_eval("kgdb_active.counter")
+     else:
+         raise gdb.GdbError("Sorry, obtaining the current CPU is not yet "
+                            "supported with this gdb server.")
 -- 
 2.44.0
 
