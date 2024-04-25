@@ -1,53 +1,63 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BED32B9D9;
-	Thu, 25 Apr 2024 16:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AF414D457;
+	Thu, 25 Apr 2024 16:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714063167; cv=none; b=LlV1Lv7amb+VIUkUYM1ole5VmAxbsvLJdw9cwoPb2KC8c5lwnWW7XBvg8NfRD6uoTwajgHPbRIyL+TQivfdQymY1ZRaqC/cM04dwGBIsvib1YDFLo29GBi4AJf8pZcMBWZEMzLuWFC4zeG1W9+4iG3gZUcgsWePcDa5L7TJoTzE=
+	t=1714063168; cv=none; b=UA+c9CYVFtOAuzvlCqHnSp54JJ/rBdIK9IhsnvWHFOvZsDj8JYqzsGALCdbQFaQth099tz12FjWXLFGwxJBJHi9ZoQM62vGuBkI4h77Rj/n4uJq8XtX+IQs6Lud2vv59KIgd1Jmio7HLRn8dOXW2MwJCA9V1/3gy1kZ6v8QcF/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714063167; c=relaxed/simple;
-	bh=zMGiiRm4aUgUe7MdkObk4e9O32713KMqKLgbY0yJxjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a4amr+ZBlGavyIYncQmec8F/zJSY57pID0AUe4yD7l7ZW3NOYsmu5lLTGgLJWOU3Aw4lceHL5bUgS0TtkQT8JHjxzC8jyIckUCneWrsr9MfVQ0qilGOu1pPJ2QebAYpmaLYaZQ71YrNNxbKOm1ytEd8wx9vazHvmDykXL3dmttc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by mail.home.local (8.17.1/8.17.1/Submit) id 43PGUdr8017257;
-	Thu, 25 Apr 2024 18:30:39 +0200
-Date: Thu, 25 Apr 2024 18:30:39 +0200
-From: Willy Tarreau <w@1wt.eu>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 0/2] tools/nolibc: implement strtol() and friends
-Message-ID: <ZiqFL02n3+4EKFMV@1wt.eu>
-References: <20240425-nolibc-strtol-v1-0-bfeef7846902@weissschuh.net>
+	s=arc-20240116; t=1714063168; c=relaxed/simple;
+	bh=3xGzcdlOOjdjNul1Y7kXaLAiPLmVyjUyTRl4QVGvt94=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ULLLCHJXwxJBJF6WNknNM7ZUW6vuv7PoO1/FaZZdOdbwpDJzrjGL7ZhuBC088RASaPXgtbyTyDgUVAe4FYcb0W46RxMjsgNXeRtNNsMx/4Tt5INgzW0eUqDhjwieEmvqOYz8/zbfqBD65421/8P9RSQeoUtvFm4/0yWQ+HawiKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ShqDV8pL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ShqDV8pL"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3D047C2BD11;
+	Thu, 25 Apr 2024 16:39:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714063168;
+	bh=3xGzcdlOOjdjNul1Y7kXaLAiPLmVyjUyTRl4QVGvt94=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=ShqDV8pLQNpLbPbrF2xrUl+GNjtSdxJi1/NbKq8Ei6E4VayNxiwhNtKt7XH2cKITU
+	 UDRRl99kqop9BtCUg4mYEiocrn3bB8zePYULA8CRI3ATaUORe342RyPiD3k/vqUTDL
+	 CEx8qWeK6t/P4w1LQ6A9yoRrZZ3b6HJFlCw5SXsatuj+s6LJSktX+X4+NoIcDUwlE2
+	 lOIjDTxaqs8Na8Smxhp3T0oZ2aev0PhlU7AnVhf/wxxQRkfCQTnBFHvANt+osbhUil
+	 6lALrtFG4kX5yOeYfWXcekPoRUo8f51FqDgW6RLYenmf881uMzQjHeDq6pe611CoiM
+	 ftm2fo5e1YnFg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2D58AC595C5;
+	Thu, 25 Apr 2024 16:39:28 +0000 (UTC)
+Subject: Re: [GIT PULL] 5th round of fixes for nfsd-6.9
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <Zipmj7eGXGHMMDC5@tissot.1015granger.net>
+References: <Zipmj7eGXGHMMDC5@tissot.1015granger.net>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <Zipmj7eGXGHMMDC5@tissot.1015granger.net>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.9-5
+X-PR-Tracked-Commit-Id: 8ddb7142c8ab37371c6fd167a8aded97922c6268
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e33c4963bf536900f917fb65a687724d5539bc21
+Message-Id: <171406316817.18419.15158705947533998443.pr-tracker-bot@kernel.org>
+Date: Thu, 25 Apr 2024 16:39:28 +0000
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240425-nolibc-strtol-v1-0-bfeef7846902@weissschuh.net>
 
-Hi again Thomas,
+The pull request you sent on Thu, 25 Apr 2024 10:19:59 -0400:
 
-On Thu, Apr 25, 2024 at 06:09:25PM +0200, Thomas Weiﬂschuh wrote:
-> I wanted to implement sscanf() for ksft_min_kernel_version() and this is
-> a prerequisite for it.
-> 
-> It's also useful on its own so it gets its own submission.
-> 
-> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.9-5
 
-Nice work, thank you. For the whole series, modulo my small comments on
-2/2:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e33c4963bf536900f917fb65a687724d5539bc21
 
-  Acked-by: Willy Tarreau <w@1wt.eu>
+Thank you!
 
-Cheers,
-willy
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
