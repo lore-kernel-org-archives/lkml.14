@@ -1,335 +1,674 @@
-Received: from mx08-0063e101.pphosted.com (mx08-0063e101.pphosted.com [185.183.31.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E9A1CFA9;
-	Thu, 25 Apr 2024 10:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=185.183.31.155
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714041775; cv=fail; b=M56I/o/S+mARzPw9+HRFHMTlxrum577T4quEBrDMgt403ftB3Wg0W9BnR0ktM6Ed5HHCrHjJtEysN9OHxi+QvGbHvc9nrTzXAdtoSMY68dI7sLpTXeZY5i7Hor0cphQFYGHXcK2FlvLGg2hEKLsEG4PBsOHnQAu7FNpBJI3+f7E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714041775; c=relaxed/simple;
-	bh=mrOm59xfa6uhmiR9Z8gMRUO+H2HPiZq+kOv4LVdrFhM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pTuPHPAWG64VfjHhPETP/rhRKMc9WaD+GPu1UWXirZ4WThcmmkhLS6CNeWVB44OagU6nZ7KJSpCZSGcSBf4Sx8NcP1J04vqMRknDe0sF+o02m2lcqwBgjzLgycS/xGBDMYjcw05U8yKDmAPHUwBJvxzC227Vd7/5nuZTdfh69TE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=blaize.com; spf=pass smtp.mailfrom=blaize.com; dkim=pass (1024-bit key) header.d=BLAIZE.COM header.i=@BLAIZE.COM header.b=MKzKkyFk; arc=fail smtp.client-ip=185.183.31.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=blaize.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=blaize.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189BE20314
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 10:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714041824; cv=none; b=agzbUQQt8wiopCyoB/XmapCbSq1DJ5CeFIycYK5jvoB3OziXcnmJ3LxckGbjUP5LLbsHlYOhZ3RLVUW4N9vzT37zHnGftjMnDuhxmS/zMIsWLtkB/yTlGIBR/EnXXjiEpd3/OvaWP3VpZWOcVoJR8xGX1xzoFzCLrL8a+GEiU5k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714041824; c=relaxed/simple;
+	bh=fqFUdvZJzGZPWoyL4Hx08aIEoDNcY1pcvOTCZWhVoqg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b61TI88VG80gNffIGGyvJmf3vx9sBp3UlDNy8mFpAZxRRSITSDG+fDj+k8Firko4QzsH14PTxqrZbcAsbdlSKEe/dKKxJ2JgbE2LVV1pLebYeWV5YV8DQDwlCplOJb0wT7plRAQpWHFS4T/1CCPN9oQTRw4bRNgKjqYhx9wG6n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MXVOpYkI; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=BLAIZE.COM header.i=@BLAIZE.COM header.b="MKzKkyFk"
-Received: from pps.filterd (m0247494.ppops.net [127.0.0.1])
-	by mx08-0063e101.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43PAgENX028039;
-	Thu, 25 Apr 2024 11:42:14 +0100
-Received: from ma0pr01cu009.outbound.protection.outlook.com (mail-southindiaazlp17010001.outbound.protection.outlook.com [40.93.131.1])
-	by mx08-0063e101.pphosted.com (PPS) with ESMTPS id 3xnxsfs4cx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 11:42:14 +0100 (BST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L4iKiqTl9LBLz92ny+M3ngxN6goI5jbuau3EkudeyflRT4AGwiO7N1sOR57gnHAcn4TwDLJTQCxxOnQ11qDyhoFTRw6Xx+PsZu1ymqEIS4dkZ3E8/5ayOFPiIiUzSohIW53SWMB6+d1Sb5qEJ2pjTWzmIm5EsKn+D/YbTlywFWN41EvuwUEq9ZhlS6r67TDiFP3CR9Vcaq5AcsK14pA50v++gd3rpYbOPfQ+htaIZUhTemlYhfA8OkL4wAElpt9tOEqbVYl8SBbBPsSmNhV20N1Z2Igv/WBECBdO5QSJbKRroM576l1LxvoR9Na281Kgirjm8/J0gB0zUWIJnyZpwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KU8cgZ9oi4XTfbHkZ2cp1p6eFmxvEWuZGMf7AXnLaJQ=;
- b=S/Rxiw8ePN7JQ7gJsT+C9xaTwd34Tacpcj4v8YtzxAR2/Tq3mTllddkag80NU/4XlCPgsohu+E118TgkNFC5ellQZdsT2Lhr+J3RDPgrYfYFMd8KdNA+F0RxFHWifG2jNC+b91Gj3MvFmfNZ/3Lsdwr++OVKvkzVrHx6YCd6KobD3iZfnlvEMyR4OFtKATuziZ5xdx7+7q6wEu/V6P+x1Qh/ab23EatAWyWcgfceQ9vy1iu1jyq2gOxXsvxC+phAuhNTocOmIHmHUZyXtL9F0PGIPBHZS13LxP3VUquRUjmyjOEyKxLdeAGTyZaQJo+THvGliJHqRYFiAfeFdg1KRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=blaize.com; dmarc=pass action=none header.from=blaize.com;
- dkim=pass header.d=blaize.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=BLAIZE.COM;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KU8cgZ9oi4XTfbHkZ2cp1p6eFmxvEWuZGMf7AXnLaJQ=;
- b=MKzKkyFk8FWXWAeKsNO53MehGLk3yQF0MUYF+zkQ/V0/jBR3k3A5fddo5RLPfZnPweLm42CcNnw2mhDHurHrUYtxSO2IB7x+N2diYesBUzKEGzBRdm3Wle499R1lDlOfA2oRKtskvTEQk6OC+kAS3R0PpAgXD8tNap+YAUJP6/c=
-Received: from MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:12a::5)
- by MA0PR01MB7441.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:39::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22; Thu, 25 Apr
- 2024 10:42:08 +0000
-Received: from MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::309a:12cf:74a4:5655]) by MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::309a:12cf:74a4:5655%3]) with mapi id 15.20.7472.044; Thu, 25 Apr 2024
- 10:42:08 +0000
-Message-ID: <a5282012-d38c-4a02-9292-8eab156ddb98@blaize.com>
-Date: Thu, 25 Apr 2024 11:41:56 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/5] arm64: Add initial support for Blaize BLZP1600 CB2
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-        "conor+dt@kernel.org" <conor+dt@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>,
-        "olof@lixom.net" <olof@lixom.net>, Neil Jones <neil.jones@blaize.com>,
-        Matt Redfearn <matthew.redfearn@blaize.com>,
-        James Cowgill <james.cowgill@blaize.com>,
-        "heiko.stuebner@cherry.de" <heiko.stuebner@cherry.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "macromorgan@hotmail.com" <macromorgan@hotmail.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "hvilleneuve@dimonoff.com" <hvilleneuve@dimonoff.com>,
-        "andre.przywara@arm.com" <andre.przywara@arm.com>,
-        "rafal@milecki.pl" <rafal@milecki.pl>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "andersson@kernel.org" <andersson@kernel.org>,
-        "konrad.dybcio@linaro.org" <konrad.dybcio@linaro.org>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        "neil.armstrong@linaro.org" <neil.armstrong@linaro.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "nfraprado@collabora.com" <nfraprado@collabora.com>,
-        "u-kumar1@ti.com" <u-kumar1@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-References: <20240425091403.17483-1-nikolaos.pasaloukos@blaize.com>
- <20240425091403.17483-5-nikolaos.pasaloukos@blaize.com>
- <9b24ffdf-1247-4164-9841-6063106d76ea@linaro.org>
-Content-Language: en-GB
-From: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
-In-Reply-To: <9b24ffdf-1247-4164-9841-6063106d76ea@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LNXP123CA0003.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:d2::15) To MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:12a::5)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MXVOpYkI"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4dabc6f141bso186513e0c.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 03:43:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714041820; x=1714646620; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R7rLGiiPExNNew19pGqIBhjQqamOgwQ5bR+kzuGePys=;
+        b=MXVOpYkIDTjao9DIGaMYgtYWUY41aIo97bY2uIiGfbcoQW2c+TR5zEAGM3GIiPMaln
+         oDwh3OIiqpFiq+onKYVYv9EChOZ6X47fgjV18r+UwcJimC5jI/GWTrypyegLTBAf6JfD
+         4mrycR4KskymRCK7qPEkZXm+3VLusAFots5aAUUn0X1b4og3j6o11pMILHq4Ehyh9LBd
+         R/qeypa3AmV+ssCeaJ1WQ67nLQo4rYAEE7gTzId9ADDew1JYHX34i4t0IlXZC+tZ0OF5
+         yGx85IE956x23Uk505KHlXOevmko54Iaf2NXIPp40ok/5Nkc+RLpb5El7MLglwvuh6hh
+         Fjxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714041820; x=1714646620;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R7rLGiiPExNNew19pGqIBhjQqamOgwQ5bR+kzuGePys=;
+        b=mHyWqlMP0c4fHTsAF7yfkngpmQqbTqwM7DL0UdpsUW6lskMogwH15ZkJd9UqzFNrBO
+         UhiRx1DoL20U/CN1iEPPht1UCsJ2NzfqQYgZByRYnzhMhQlGFOZK+V4KIGGREA/KqRoF
+         +c32HcwF9L2zJJbrXMK98NqCFFjXHgRJ6oDp58PUb6MT0kdJHvO8121CyZ0oVSiaYw63
+         wsl0fx2x7+wXr/HacanGiTHO1sPXi3hCnkifbCMRQaBSqKh9vVhzviTyx+fL5IZATUAd
+         XUdLNatmlgJdC74psayk9UcHzbiDZFH5tYbyNPxJyCSHzMUSjhZi8ivEg6hjtfN0P9kc
+         DEvg==
+X-Forwarded-Encrypted: i=1; AJvYcCVr2/fbbPwGqSA6tzvoKv/TT14wjuraRMXfniNWTMOsc6SGuvhVIJbNiwXfO7QIBl4+1D4poO60iSeod9DVHRxkgEW5qwmYKDjPnr9H
+X-Gm-Message-State: AOJu0YyFpJ66V1Fq97AUwhbYKzATCwzbDTRMiJMEjJuJmfjDtmFWS32b
+	yXv1Ae4l7PS4kAadfQy7Nhu6Z5xQSxHTwX6FMevrT2toWpobPKinu+dJ562Fm1Uyk0unRG++7Ml
+	1thsIpx0B4KUnBTersceJgSpEoREhWEiq3LJxkg/lw7yBxtbbTb2k
+X-Google-Smtp-Source: AGHT+IEQNopBfH4UHuMt9CNIrGOvefcY71mESIetJvt0mNN3SQ+HA70eNwnXsXVjaMTeIkgW/ps8K2N9uekxp9gDLhU=
+X-Received: by 2002:a05:6122:32c3:b0:4d3:1ef2:c97d with SMTP id
+ ck3-20020a05612232c300b004d31ef2c97dmr6247607vkb.2.1714041819651; Thu, 25 Apr
+ 2024 03:43:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0PR01MB10184:EE_|MA0PR01MB7441:EE_
-X-MS-Office365-Filtering-Correlation-Id: ff497718-c6c7-4836-a612-08dc65145af3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230031|376005|1800799015|7416005|366007|921011;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?R0F6VG9XOWxvNnNYdE5zQk1OSmZtTW9mbGtYL1VsUkl3Z3RJN2ZZRFhPV3hs?=
- =?utf-8?B?OW4wQVcyTUZaOVhkYVVBa0JoaFNwSG1QWnR4eFo3VUFTcEE4SjhDYVZLWlFa?=
- =?utf-8?B?NXl4cE51aVBMSkVXb2NOeE5uczU4dGlVa09vN2dlYkQ0dzNaN3ViRUF0UWV0?=
- =?utf-8?B?Y0Vzc2VXK2JOYTNUUlBQOGg1QmFGSkFOeUdXQjFTeXRycmZpczdtcnBteVI2?=
- =?utf-8?B?T1FRMEN2djN4SmN1V3E2N3Y2TnlvUjkzMlk3UHRuL2hSd01tMVQ3ZGNPVnpK?=
- =?utf-8?B?WUtHc2hKWXgrTGNjOUYvZ0djVkpUZDk4UmpsbXZUTGYwMm5lZEl4YmEvcnNi?=
- =?utf-8?B?NjBXZlVKWkYvZGdmVEdheG00YXRwUGZiMUl0dkIvZWpvMGJGSHE4QVEzNFNF?=
- =?utf-8?B?OWxSenBpMW1ZL1Q1WDhWdm4xNGVBR0FEWXNBVGRTTWtqNkFGWkUyK0VOTHo5?=
- =?utf-8?B?bS9TT0xKelNZNEVjR3RQT1lKcm9nVDhkcmpkUU56c203T0ZqNEw5ang0OWVn?=
- =?utf-8?B?V3JoNVQybGk4c2NVZzJpbzBNZ0RNWGJFY3lnVktsM3VlWTY2T21GQk5udXU0?=
- =?utf-8?B?cHpJYUtYU2ZnL0I5NEJSRFRjcnNlaG5Jd0puVkk3MDFWRFRLbHluSzgwYjM0?=
- =?utf-8?B?TWcySlZ1andGc1pWV2RmYndHcHVpbVhoOFVhUGtiUFJPVDVaYlZyTWV2RDNj?=
- =?utf-8?B?QUN2NkVucnR6ZFZsYkNCV09SZVFZT2diZklNdDE2ZUxhNFdHRHkwTERNaGwv?=
- =?utf-8?B?dW95Vm0yNklQcWtRNjd1R3dxZnpmcnhZVVBOS3M3NnhiYy9tR1F3V25mdnVw?=
- =?utf-8?B?dVlqOTZPWnUwMmhPVDdRdmlrVlJsUmplYnBSOHFnaktkZ1dEQ0h2a1RkcDdX?=
- =?utf-8?B?TXdnVnBhZXhIT0wxdjVkWVVUSStIMWhNWWFRMVBON2NBQmE1cmY0WWt5UVdr?=
- =?utf-8?B?ZDMxZm5QeFpWKytnQmlUK2RxVitKL0tzTzVKelE0c0lERnoxSHZDN044UytQ?=
- =?utf-8?B?YTBrdW51dkxTWloybmhtbUUwdE9uV2Z1Sm1VYWRoTitJazFLV2dPMGR4eXVi?=
- =?utf-8?B?czB3aDhYaXBKRzBBbng1Z2l1YlFPNkNZWTRaTFRoUmJHK3VTSE9NUjl1akFD?=
- =?utf-8?B?bkJaSGZVV0pScGpYaFdKblZzTkY0SkVXRzdydDJDciswVThad25sYTVwMUx5?=
- =?utf-8?B?RklRN0dOclViSFRZSHhzSmlyeUN3dDlFN2dDazhUMGdlN3RjbG5SY0N4K0g4?=
- =?utf-8?B?dnIvNVBIRGJGYzRQNkphRFErTVJubkhieG83alZCZFA0U2FpZ1dZVkVKRjRM?=
- =?utf-8?B?U3E3YzYvL0hTZExWYUgwWTQyY2hTOVUzc0VWcXZqZGlDOXlDZmlwWUZNczBY?=
- =?utf-8?B?bXM1TUtDWWg5Wi96V0w3V1lldVNWWEtKMStUSFJoRTQxWHR0ZnlqN1ZHcTRM?=
- =?utf-8?B?azhTb203bjZNRzZQbEtLblNRbko1SmxETWtoVDB1b1dkV1RWeWROV0N0anhm?=
- =?utf-8?B?aDdNOVp2cHFMM2ZSSnVGeWVOUTVIOXY1MVJvY0prd0lHY0hUdXRuQ0sxblZn?=
- =?utf-8?B?MEFsRDRtRUhnSkpCSnFySnBzZGdaUkNwRncyRThNTk5hYStQN25kVmNRRjUw?=
- =?utf-8?B?VXFWeFgycHpjb2hLUk9adFZJZlRlWTZ4VnhnMElVbEduOFNVelhVQnY1Y0Jh?=
- =?utf-8?B?Y3NxZW1EdFNKSzBjUlR6YWdSS0RkZkhkRytsT0dSVStscEIvVU9WdFUxdDhJ?=
- =?utf-8?Q?xYqPFQrukForSWqyqcRrABy1mEwan/+syLFyZCU?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007)(921011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?ZzhFaXUzNHorbmVQVENyNnVzTkdENng2QmJMYXZadDRpVDRkYmk4VE96NVg5?=
- =?utf-8?B?R0RtendFSDdHc1RNNXU3SmVLdHJUSTg2Q3VSRk9sWjhJR0RmUzRvVC9nV3Iy?=
- =?utf-8?B?VHFaUGVDczZJZ3ZuN216Y1pLU3NHSm1wZVVhRmwzR3I4QndQQmZlQzlsdXY2?=
- =?utf-8?B?NEdHMEJyL3JUYVNhTHNiRkRSdjhZNHdLMitQRC96M3B5NUpaWFFLaHpBcjRY?=
- =?utf-8?B?WUw3a1ZQbHdLMmRkSFVib1NnY0orblhMbStMbU5KUlVlNVhvU2pLK3ZubG9X?=
- =?utf-8?B?OEI4OVhZY2tRWG0rRlh0d1AyeVkyTnNmMkR6Ymg5eTZTL0Z0azlIaUpPWldn?=
- =?utf-8?B?UTdDNjNyZ2JSeDl1Vk9xWXoycHpCRUxEQm5rTWc0Q0hvNFM5UUllV1N1bC8y?=
- =?utf-8?B?VCtzV1pkTHNpUkR3RFhqVG9zMkZybFB5ZjdWNDFxVm1WeHE2Um9lVEhTZUla?=
- =?utf-8?B?WGFyZnE5N25Ta2p6aDl5Ull4a0pHamtuYnR5VUIrbmhvU01LZDdwcGlPeGFj?=
- =?utf-8?B?WnJ6QnppTDF0eVFRSjJQOFFxb2RzL1poR1ZOU3hSb1E2NDFld2h2VGMzN1Q3?=
- =?utf-8?B?YkR1Y3RLaC9weFg4aDdjd0hTQmJMd3RaZ3VPYmhlcjBEQmxqQVRsdWlTWjdT?=
- =?utf-8?B?MTNxdEsxeUNYMTIzTFdOM1VxejVkQktlZVpUdzg2TGJVNlpOMVhxRUx2ajVC?=
- =?utf-8?B?US8zRWNzZ0JZZFgxa1N1dlYveGZoaFhVWFNiQ0hORG1lSk14ZVJjdXFuMk9L?=
- =?utf-8?B?MTJxN1NoMGdLZE5FV09yMHJIc1U5Rjl2K3NaOExJVVRGRTRZT0lVQ05RcXZk?=
- =?utf-8?B?UkFTV1lTQUovVUx0NjU5OEZTa3dHM1Zpa1gvUlRpWnBMRHZldC9SME4zL2NU?=
- =?utf-8?B?U084RUxxWGcvZThzUjBQSVNjeXNFcVpRUU93ZFZjcHRrUnRsSCtKOFY3S3hZ?=
- =?utf-8?B?ekVodDNrdlRzL1JaOWp2bkRWUVN1VkJEaUczNEFSSVQzQ1dLS2JWdGMxZ3FV?=
- =?utf-8?B?UHlSZEtmMGlORFlpdnZKSVNWaDBzRDVqc1BucFl1aSs4OW11WW43bFE5UE5F?=
- =?utf-8?B?R0dJV1ZadTlsbmt1UDVDc1JaWm1CQWtXNGZFY2NzUkNxU2ZxSDhTbTNPb2Rx?=
- =?utf-8?B?bkw0WmpJOFo4QXhzdHNvU2hOZ0tMUjRBVlF1cXZyd3hSNTVIbGZkVlNZdEFK?=
- =?utf-8?B?RHRlQkVUVzhDNXY0N1JXT0xVR0IyL3RIMVkvMGtnam9xbU9SUTlQWk9CZzAy?=
- =?utf-8?B?eUQ3YVJJZHprZmZwSTBOK0NXRVF2bXVYemlHWncvQytkTi9kQVo3N2o3dXBs?=
- =?utf-8?B?Q0lEdi9WMXdKa2ZJZ0x4dGRJeDdPQ0pYUHJiQUdMNUxPZ0c0Nm9kRGJWaGRh?=
- =?utf-8?B?azZoRmt4WTdDZDRqVVVNUGY1WDkvblRsVnJLZmQwTmZqaHhVVnEwZFJQLzVZ?=
- =?utf-8?B?cStIQmR3ekVORGVpbEtqbjk2YkFwSEUvMm13NTdvUGwxSm5NRERUWFdFZlV0?=
- =?utf-8?B?Ni9Rcmc2bG5BTTlQNTNTVDdPc2ZFMkJQcUVERjU2ZDRnS3pFakZFOVR4RW00?=
- =?utf-8?B?WElWVCthdU1NM2NkbFRuVkN6eTZyTkZEbWoveXI4RitlbjBZb0h4VEZBVWlJ?=
- =?utf-8?B?YW1NdURIK2ZKcmxYZWVCWHlFUzFscTBxZGpSY1VvV2lFUkRubWxTaVJJV01D?=
- =?utf-8?B?TFhDK0xkdjBOOHh6eWRDU1VybHhYTUdaeDk0L09OS2RxU01yUE0zOXFZVDN6?=
- =?utf-8?B?WThFWTBKcUcrWDJmU1hxK1VGR2xjWW1wVE1iWnIxcjRmUG5DS1FreVlqSlJL?=
- =?utf-8?B?QjAyWEZ6Q3R0alZQd2hZL3dCUnhQYzZWRkQySEd6QWVUSmxnem8wT0pXREJI?=
- =?utf-8?B?YStlNVA4OUJXRVBLT1lpUjRNeEdZS2FxOG5qcjByWEREQVNSeUlvekkvSUNO?=
- =?utf-8?B?TUk0SnptbmRRK2R5MWZVaXdrRzh1K0FNOHlwR0xSVU5tMURxN1o1c1lDK3gr?=
- =?utf-8?B?SzRBSzJFbXJvTnlQQWZ0U2dKMmNkZ0tQUVgyRUt0eGd6ZThBdG04WmIwZzNr?=
- =?utf-8?B?SnhLNW9XazdZS3JZa2cwbktoTHZFRGtsVXlyMk9RbGFZcHI3YTErTWw4Z2xq?=
- =?utf-8?B?Ry9kKzVjajFSNWVRaytDZHRKaS9IRk92aE8yTVZVUlpZckpwZWJOUEYwbU93?=
- =?utf-8?B?VjA4N3NjQ3VzUnQwRVVuTU1RRDBRQzdUZ0xIWExnZDQrOUs0RUtVS212TnNW?=
- =?utf-8?Q?1J/xfIqFKyL5o/5UxpSAaM4on/6Ty/v25o8QsFx7lg=3D?=
-X-OriginatorOrg: blaize.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff497718-c6c7-4836-a612-08dc65145af3
-X-MS-Exchange-CrossTenant-AuthSource: MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2024 10:42:08.4179
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 9d1c3c89-8615-4064-88a7-bb1a8537c779
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kpin4ZZl4z3eWJ9rSkCIwaY9Yz0XPx59ph5wobT0jel/xse5bENgiINsUsc+SM2klQdLEaRSptm8iA+daZfGUojpyOLBT4ZokhyAG47l1sA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0PR01MB7441
-X-Proofpoint-GUID: WcEJ6CLi5XsRTELj0J6dvkD-qoic-GgA
-X-Proofpoint-ORIG-GUID: WcEJ6CLi5XsRTELj0J6dvkD-qoic-GgA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-25_10,2024-04-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
- spamscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.21.0-2404010002 definitions=main-2404250077
+References: <20240412084056.1733704-1-steven.price@arm.com>
+ <20240412084309.1733783-1-steven.price@arm.com> <20240412084309.1733783-22-steven.price@arm.com>
+In-Reply-To: <20240412084309.1733783-22-steven.price@arm.com>
+From: Fuad Tabba <tabba@google.com>
+Date: Thu, 25 Apr 2024 11:43:02 +0100
+Message-ID: <CA+EHjTyr1swQ4ONE2oVnWU5uPkcq2WDNYDRA8eK29-4BQDcCLw@mail.gmail.com>
+Subject: Re: [PATCH v2 21/43] arm64: RME: Runtime faulting of memory
+To: Steven Price <steven.price@arm.com>
+Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
+	Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>, 
+	James Morse <james.morse@arm.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei <alexandru.elisei@arm.com>, 
+	Christoffer Dall <christoffer.dall@arm.com>, linux-coco@lists.linux.dev, 
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 25/04/2024 10:21, Krzysztof Kozlowski wrote:
-> On 25/04/2024 11:15, Niko Pasaloukos wrote:
->> Adds support for the Blaize CB2 development board based on
->> BLZP1600 SoC. This consists of a Carrier-Board-2 and a SoM.
-> 
-> Subject: missing dts prefix.
-> 
-> 
-> ...
-> 
->> +
->> +/ {
->> +	interrupt-parent = <&gic>;
->> +	#address-cells = <2>;
->> +	#size-cells = <1>;
->> +
->> +	cpus {
->> +		#address-cells = <2>;
->> +		#size-cells = <0>;
->> +
->> +		cpu0: cpu@0 {
->> +			compatible = "arm,cortex-a53";
->> +			device_type = "cpu";
->> +			enable-method = "psci";
->> +			reg = <0x0 0x0>;
->> +			next-level-cache = <&l2>;
->> +		};
->> +
->> +		cpu1: cpu@1 {
->> +			compatible = "arm,cortex-a53";
->> +			device_type = "cpu";
->> +			enable-method = "psci";
->> +			reg = <0x0 0x1>;
->> +			next-level-cache = <&l2>;
->> +		};
->> +
->> +		l2: l2-cache0 {
->> +			compatible = "cache";
->> +			cache-level = <2>;
->> +			cache-unified;
->> +		};
->> +	};
->> +
->> +	timer {
->> +		compatible = "arm,armv8-timer";
->> +		interrupts = /* Physical Secure PPI */
->> +			     <GIC_PPI 13 (GIC_CPU_MASK_RAW(0x3) |
->> +					  IRQ_TYPE_LEVEL_LOW)>,
->> +			     /* Physical Non-Secure PPI */
->> +			     <GIC_PPI 14 (GIC_CPU_MASK_RAW(0x3) |
->> +					  IRQ_TYPE_LEVEL_LOW)>,
->> +			     /* Hypervisor PPI */
->> +			     <GIC_PPI 10 (GIC_CPU_MASK_RAW(0x3) |
->> +					  IRQ_TYPE_LEVEL_LOW)>,
->> +			     /* Virtual PPI */
->> +			     <GIC_PPI 11 (GIC_CPU_MASK_RAW(0x3) |
->> +					  IRQ_TYPE_LEVEL_LOW)>;
->> +	};
->> +
->> +	psci {
->> +		compatible = "arm,psci-1.0", "arm,psci-0.2";
->> +		method = "smc";
->> +	};
->> +
->> +	pmu {
-> 
-> Nodes in top-level look randomly ordered. Any reason why not using DTS
-> coding style in this regard?
-> 
->> +		compatible = "arm,cortex-a53-pmu";
->> +		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
->> +			     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
->> +		interrupt-affinity = <&cpu0>, <&cpu1>;
->> +	};
->> +
->> +	sram@0 {
->> +		/*
->> +		 * On BLZP1600 there is no general purpose (non-secure) SRAM.
->> +		 * A small DDR memory space has been reserved for general use.
->> +		 */
->> +		compatible = "mmio-sram";
->> +		reg = <0x0 0x00000000 0x00001000>;
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges = <0 0x0 0x00000000 0x1000>;
-> 
-> ranges follow reg
-> 
->> +
->> +		/* SCMI reserved buffer space on DDR space */
->> +		scmi0_shm: scmi-sram@800 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0x800 0x80>;
->> +		};
->> +	};
->> +
->> +	firmware {
->> +		scmi {
->> +			compatible = "arm,scmi-smc";
->> +			arm,smc-id = <0x82002000>;
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			shmem = <&scmi0_shm>;
->> +
->> +			scmi_clk: protocol@14 {
->> +				reg = <0x14>;
->> +				#clock-cells = <1>;
->> +			};
->> +
->> +			scmi_rst: protocol@16 {
->> +				reg = <0x16>;
->> +				#reset-cells = <1>;
->> +			};
->> +		};
->> +	};
->> +
->> +	soc {
-> 
-> This does not cause dtbs_check W=1 warnings? Surprising a bit... This
-> should cause big fat warning, so I have doubts patchset was tested.
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
+Hi,
 
-No it doesn't cause any warnings. I did:
-make arch=arm64 dt_binding_check
-make arch=arm64 dtbs_check W=1
-I don't get any warnings. Could you please let me know what kind of
-warning I should get? Am I doing something wrong and I don't get
-the warning?
+On Fri, Apr 12, 2024 at 9:44=E2=80=AFAM Steven Price <steven.price@arm.com>=
+ wrote:
+>
+> At runtime if the realm guest accesses memory which hasn't yet been
+> mapped then KVM needs to either populate the region or fault the guest.
+>
+> For memory in the lower (protected) region of IPA a fresh page is
+> provided to the RMM which will zero the contents. For memory in the
+> upper (shared) region of IPA, the memory from the memslot is mapped
+> into the realm VM non secure.
+>
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>  arch/arm64/include/asm/kvm_emulate.h |  10 ++
+>  arch/arm64/include/asm/kvm_rme.h     |  10 ++
+>  arch/arm64/kvm/mmu.c                 | 119 +++++++++++++++-
+>  arch/arm64/kvm/rme.c                 | 199 ++++++++++++++++++++++++---
+>  4 files changed, 316 insertions(+), 22 deletions(-)
+>
+> diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/as=
+m/kvm_emulate.h
+> index 2209a7c6267f..d40d998d9be2 100644
+> --- a/arch/arm64/include/asm/kvm_emulate.h
+> +++ b/arch/arm64/include/asm/kvm_emulate.h
+> @@ -629,6 +629,16 @@ static inline bool kvm_realm_is_created(struct kvm *=
+kvm)
+>         return kvm_is_realm(kvm) && kvm_realm_state(kvm) !=3D REALM_STATE=
+_NONE;
+>  }
+>
+> +static inline gpa_t kvm_gpa_stolen_bits(struct kvm *kvm)
+> +{
+> +       if (kvm_is_realm(kvm)) {
+> +               struct realm *realm =3D &kvm->arch.realm;
+> +
+> +               return BIT(realm->ia_bits - 1);
+> +       }
+> +       return 0;
+> +}
+> +
+>  static inline bool vcpu_is_rec(struct kvm_vcpu *vcpu)
+>  {
+>         if (static_branch_unlikely(&kvm_rme_is_available))
+> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kv=
+m_rme.h
+> index 749f2eb97bd4..48c7766fadeb 100644
+> --- a/arch/arm64/include/asm/kvm_rme.h
+> +++ b/arch/arm64/include/asm/kvm_rme.h
+> @@ -103,6 +103,16 @@ void kvm_realm_unmap_range(struct kvm *kvm,
+>                            unsigned long ipa,
+>                            u64 size,
+>                            bool unmap_private);
+> +int realm_map_protected(struct realm *realm,
+> +                       unsigned long base_ipa,
+> +                       struct page *dst_page,
+> +                       unsigned long map_size,
+> +                       struct kvm_mmu_memory_cache *memcache);
+> +int realm_map_non_secure(struct realm *realm,
+> +                        unsigned long ipa,
+> +                        struct page *page,
+> +                        unsigned long map_size,
+> +                        struct kvm_mmu_memory_cache *memcache);
+>  int realm_set_ipa_state(struct kvm_vcpu *vcpu,
+>                         unsigned long addr, unsigned long end,
+>                         unsigned long ripas);
+> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+> index 8a7b5449697f..50a49e4e2020 100644
+> --- a/arch/arm64/kvm/mmu.c
+> +++ b/arch/arm64/kvm/mmu.c
+> @@ -325,8 +325,13 @@ static void __unmap_stage2_range(struct kvm_s2_mmu *=
+mmu, phys_addr_t start, u64
+>
+>         lockdep_assert_held_write(&kvm->mmu_lock);
+>         WARN_ON(size & ~PAGE_MASK);
+> -       WARN_ON(stage2_apply_range(mmu, start, end, kvm_pgtable_stage2_un=
+map,
+> -                                  may_block));
+> +
+> +       if (kvm_is_realm(kvm))
+> +               kvm_realm_unmap_range(kvm, start, size, !only_shared);
+> +       else
+> +               WARN_ON(stage2_apply_range(mmu, start, end,
+> +                                          kvm_pgtable_stage2_unmap,
+> +                                          may_block));
+>  }
+>
+>  static void unmap_stage2_range(struct kvm_s2_mmu *mmu, phys_addr_t start=
+, u64 size)
+> @@ -340,7 +345,11 @@ static void stage2_flush_memslot(struct kvm *kvm,
+>         phys_addr_t addr =3D memslot->base_gfn << PAGE_SHIFT;
+>         phys_addr_t end =3D addr + PAGE_SIZE * memslot->npages;
+>
+> -       stage2_apply_range_resched(&kvm->arch.mmu, addr, end, kvm_pgtable=
+_stage2_flush);
+> +       if (kvm_is_realm(kvm))
+> +               kvm_realm_unmap_range(kvm, addr, end - addr, false);
+> +       else
+> +               stage2_apply_range_resched(&kvm->arch.mmu, addr, end,
+> +                                          kvm_pgtable_stage2_flush);
+>  }
+>
+>  /**
+> @@ -997,6 +1006,10 @@ void stage2_unmap_vm(struct kvm *kvm)
+>         struct kvm_memory_slot *memslot;
+>         int idx, bkt;
+>
+> +       /* For realms this is handled by the RMM so nothing to do here */
+> +       if (kvm_is_realm(kvm))
+> +               return;
+> +
+>         idx =3D srcu_read_lock(&kvm->srcu);
+>         mmap_read_lock(current->mm);
+>         write_lock(&kvm->mmu_lock);
+> @@ -1020,6 +1033,7 @@ void kvm_free_stage2_pgd(struct kvm_s2_mmu *mmu)
+>         if (kvm_is_realm(kvm) &&
+>             (kvm_realm_state(kvm) !=3D REALM_STATE_DEAD &&
+>              kvm_realm_state(kvm) !=3D REALM_STATE_NONE)) {
+> +               unmap_stage2_range(mmu, 0, (~0ULL) & PAGE_MASK);
+>                 write_unlock(&kvm->mmu_lock);
+>                 kvm_realm_destroy_rtts(kvm, pgt->ia_bits);
+>                 return;
+> @@ -1383,6 +1397,69 @@ static bool kvm_vma_mte_allowed(struct vm_area_str=
+uct *vma)
+>         return vma->vm_flags & VM_MTE_ALLOWED;
+>  }
+>
+> +static int realm_map_ipa(struct kvm *kvm, phys_addr_t ipa,
+> +                        kvm_pfn_t pfn, unsigned long map_size,
+> +                        enum kvm_pgtable_prot prot,
+> +                        struct kvm_mmu_memory_cache *memcache)
+> +{
+> +       struct realm *realm =3D &kvm->arch.realm;
+> +       struct page *page =3D pfn_to_page(pfn);
+> +
+> +       if (WARN_ON(!(prot & KVM_PGTABLE_PROT_W)))
+> +               return -EFAULT;
+> +
+> +       if (!realm_is_addr_protected(realm, ipa))
+> +               return realm_map_non_secure(realm, ipa, page, map_size,
+> +                                           memcache);
+> +
+> +       return realm_map_protected(realm, ipa, page, map_size, memcache);
+> +}
+> +
+> +static int private_memslot_fault(struct kvm_vcpu *vcpu,
+> +                                phys_addr_t fault_ipa,
+> +                                struct kvm_memory_slot *memslot)
+> +{
+> +       struct kvm *kvm =3D vcpu->kvm;
+> +       gpa_t gpa_stolen_mask =3D kvm_gpa_stolen_bits(kvm);
+> +       gfn_t gfn =3D (fault_ipa & ~gpa_stolen_mask) >> PAGE_SHIFT;
+> +       bool is_priv_gfn =3D !((fault_ipa & gpa_stolen_mask) =3D=3D gpa_s=
+tolen_mask);
+> +       bool priv_exists =3D kvm_mem_is_private(kvm, gfn);
+> +       struct kvm_mmu_memory_cache *memcache =3D &vcpu->arch.mmu_page_ca=
+che;
+> +       int order;
+> +       kvm_pfn_t pfn;
+> +       int ret;
+> +
+> +       if (priv_exists !=3D is_priv_gfn) {
+> +               kvm_prepare_memory_fault_exit(vcpu,
+> +                                             fault_ipa & ~gpa_stolen_mas=
+k,
+> +                                             PAGE_SIZE,
+> +                                             kvm_is_write_fault(vcpu),
+> +                                             false, is_priv_gfn);
+> +
+> +               return 0;
+> +       }
+> +
+> +       if (!is_priv_gfn) {
+> +               /* Not a private mapping, handling normally */
+> +               return -EAGAIN;
+> +       }
+> +
+> +       if (kvm_gmem_get_pfn(kvm, memslot, gfn, &pfn, &order))
+> +               return 1; /* Retry */
 
-Kind regards,
-Niko
+You don't need to pass a variable to hold the order if you don't need
+it. You can pass NULL.
+
+I am also confused about the return, why do you return 1 regardless of
+the reason kvm_gmem_get_pfn() fails?
+
+> +       ret =3D kvm_mmu_topup_memory_cache(memcache,
+> +                                        kvm_mmu_cache_min_pages(vcpu->ar=
+ch.hw_mmu));
+> +       if (ret)
+> +               return ret;
+
+If this fails you should release the page you got earlier (e.g.,
+kvm_release_pfn_clean()), or you could move it before
+kvm_gmem_get_pfn().
+
+> +       /* FIXME: Should be able to use bigger than PAGE_SIZE mappings */
+> +       ret =3D realm_map_ipa(kvm, fault_ipa, pfn, PAGE_SIZE, KVM_PGTABLE=
+_PROT_W,
+> +                            memcache);
+> +       if (!ret)
+> +               return 1; /* Handled */
+
+Should also release the page if it fails. Speaking of which,
+where/when do you eventually release the page?
+
+Cheers,
+/fuad
+
+> +       return ret;
+> +}
+> +
+>  static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>                           struct kvm_memory_slot *memslot, unsigned long =
+hva,
+>                           bool fault_is_perm)
+> @@ -1402,10 +1479,19 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, =
+phys_addr_t fault_ipa,
+>         long vma_pagesize, fault_granule;
+>         enum kvm_pgtable_prot prot =3D KVM_PGTABLE_PROT_R;
+>         struct kvm_pgtable *pgt;
+> +       gpa_t gpa_stolen_mask =3D kvm_gpa_stolen_bits(vcpu->kvm);
+>
+>         if (fault_is_perm)
+>                 fault_granule =3D kvm_vcpu_trap_get_perm_fault_granule(vc=
+pu);
+>         write_fault =3D kvm_is_write_fault(vcpu);
+> +
+> +       /*
+> +        * Realms cannot map protected pages read-only
+> +        * FIXME: It should be possible to map unprotected pages read-onl=
+y
+> +        */
+> +       if (vcpu_is_rec(vcpu))
+> +               write_fault =3D true;
+> +
+>         exec_fault =3D kvm_vcpu_trap_is_exec_fault(vcpu);
+>         VM_BUG_ON(write_fault && exec_fault);
+>
+> @@ -1478,7 +1564,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, ph=
+ys_addr_t fault_ipa,
+>         if (vma_pagesize =3D=3D PMD_SIZE || vma_pagesize =3D=3D PUD_SIZE)
+>                 fault_ipa &=3D ~(vma_pagesize - 1);
+>
+> -       gfn =3D fault_ipa >> PAGE_SHIFT;
+> +       gfn =3D (fault_ipa & ~gpa_stolen_mask) >> PAGE_SHIFT;
+>         mte_allowed =3D kvm_vma_mte_allowed(vma);
+>
+>         vfio_allow_any_uc =3D vma->vm_flags & VM_ALLOW_ANY_UNCACHED;
+> @@ -1538,7 +1624,8 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, ph=
+ys_addr_t fault_ipa,
+>          * If we are not forced to use page mapping, check if we are
+>          * backed by a THP and thus use block mapping if possible.
+>          */
+> -       if (vma_pagesize =3D=3D PAGE_SIZE && !(force_pte || device)) {
+> +       /* FIXME: We shouldn't need to disable this for realms */
+> +       if (vma_pagesize =3D=3D PAGE_SIZE && !(force_pte || device || kvm=
+_is_realm(kvm))) {
+>                 if (fault_is_perm && fault_granule > PAGE_SIZE)
+>                         vma_pagesize =3D fault_granule;
+>                 else
+> @@ -1584,6 +1671,9 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, ph=
+ys_addr_t fault_ipa,
+>          */
+>         if (fault_is_perm && vma_pagesize =3D=3D fault_granule)
+>                 ret =3D kvm_pgtable_stage2_relax_perms(pgt, fault_ipa, pr=
+ot);
+> +       else if (kvm_is_realm(kvm))
+> +               ret =3D realm_map_ipa(kvm, fault_ipa, pfn, vma_pagesize,
+> +                                   prot, memcache);
+>         else
+>                 ret =3D kvm_pgtable_stage2_map(pgt, fault_ipa, vma_pagesi=
+ze,
+>                                              __pfn_to_phys(pfn), prot,
+> @@ -1638,6 +1728,7 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu)
+>         struct kvm_memory_slot *memslot;
+>         unsigned long hva;
+>         bool is_iabt, write_fault, writable;
+> +       gpa_t gpa_stolen_mask =3D kvm_gpa_stolen_bits(vcpu->kvm);
+>         gfn_t gfn;
+>         int ret, idx;
+>
+> @@ -1693,8 +1784,15 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu)
+>
+>         idx =3D srcu_read_lock(&vcpu->kvm->srcu);
+>
+> -       gfn =3D fault_ipa >> PAGE_SHIFT;
+> +       gfn =3D (fault_ipa & ~gpa_stolen_mask) >> PAGE_SHIFT;
+>         memslot =3D gfn_to_memslot(vcpu->kvm, gfn);
+> +
+> +       if (kvm_slot_can_be_private(memslot)) {
+> +               ret =3D private_memslot_fault(vcpu, fault_ipa, memslot);
+> +               if (ret !=3D -EAGAIN)
+> +                       goto out;
+> +       }
+> +
+>         hva =3D gfn_to_hva_memslot_prot(memslot, gfn, &writable);
+>         write_fault =3D kvm_is_write_fault(vcpu);
+>         if (kvm_is_error_hva(hva) || (write_fault && !writable)) {
+> @@ -1738,6 +1836,7 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu)
+>                  * of the page size.
+>                  */
+>                 fault_ipa |=3D kvm_vcpu_get_hfar(vcpu) & ((1 << 12) - 1);
+> +               fault_ipa &=3D ~gpa_stolen_mask;
+>                 ret =3D io_mem_abort(vcpu, fault_ipa);
+>                 goto out_unlock;
+>         }
+> @@ -1819,6 +1918,10 @@ bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_r=
+ange *range)
+>         if (!kvm->arch.mmu.pgt)
+>                 return false;
+>
+> +       /* We don't support aging for Realms */
+> +       if (kvm_is_realm(kvm))
+> +               return true;
+> +
+>         return kvm_pgtable_stage2_test_clear_young(kvm->arch.mmu.pgt,
+>                                                    range->start << PAGE_S=
+HIFT,
+>                                                    size, true);
+> @@ -1831,6 +1934,10 @@ bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_=
+gfn_range *range)
+>         if (!kvm->arch.mmu.pgt)
+>                 return false;
+>
+> +       /* We don't support aging for Realms */
+> +       if (kvm_is_realm(kvm))
+> +               return true;
+> +
+>         return kvm_pgtable_stage2_test_clear_young(kvm->arch.mmu.pgt,
+>                                                    range->start << PAGE_S=
+HIFT,
+>                                                    size, false);
+> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+> index 4aab507f896e..72f6f5f542c4 100644
+> --- a/arch/arm64/kvm/rme.c
+> +++ b/arch/arm64/kvm/rme.c
+> @@ -606,6 +606,170 @@ static int fold_rtt(struct realm *realm, unsigned l=
+ong addr, int level)
+>         return 0;
+>  }
+>
+> +int realm_map_protected(struct realm *realm,
+> +                       unsigned long base_ipa,
+> +                       struct page *dst_page,
+> +                       unsigned long map_size,
+> +                       struct kvm_mmu_memory_cache *memcache)
+> +{
+> +       phys_addr_t dst_phys =3D page_to_phys(dst_page);
+> +       phys_addr_t rd =3D virt_to_phys(realm->rd);
+> +       unsigned long phys =3D dst_phys;
+> +       unsigned long ipa =3D base_ipa;
+> +       unsigned long size;
+> +       int map_level;
+> +       int ret =3D 0;
+> +
+> +       if (WARN_ON(!IS_ALIGNED(ipa, map_size)))
+> +               return -EINVAL;
+> +
+> +       switch (map_size) {
+> +       case PAGE_SIZE:
+> +               map_level =3D 3;
+> +               break;
+> +       case RME_L2_BLOCK_SIZE:
+> +               map_level =3D 2;
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       if (map_level < RME_RTT_MAX_LEVEL) {
+> +               /*
+> +                * A temporary RTT is needed during the map, precreate it=
+,
+> +                * however if there is an error (e.g. missing parent tabl=
+es)
+> +                * this will be handled below.
+> +                */
+> +               realm_create_rtt_levels(realm, ipa, map_level,
+> +                                       RME_RTT_MAX_LEVEL, memcache);
+> +       }
+> +
+> +       for (size =3D 0; size < map_size; size +=3D PAGE_SIZE) {
+> +               if (rmi_granule_delegate(phys)) {
+> +                       struct rtt_entry rtt;
+> +
+> +                       /*
+> +                        * It's possible we raced with another VCPU on th=
+e same
+> +                        * fault. If the entry exists and matches then ex=
+it
+> +                        * early and assume the other VCPU will handle th=
+e
+> +                        * mapping.
+> +                        */
+> +                       if (rmi_rtt_read_entry(rd, ipa, RME_RTT_MAX_LEVEL=
+, &rtt))
+> +                               goto err;
+> +
+> +                       // FIXME: For a block mapping this could race at =
+level
+> +                       // 2 or 3...
+> +                       if (WARN_ON((rtt.walk_level !=3D RME_RTT_MAX_LEVE=
+L ||
+> +                                    rtt.state !=3D RMI_ASSIGNED ||
+> +                                    rtt.desc !=3D phys))) {
+> +                               goto err;
+> +                       }
+> +
+> +                       return 0;
+> +               }
+> +
+> +               ret =3D rmi_data_create_unknown(rd, phys, ipa);
+> +
+> +               if (RMI_RETURN_STATUS(ret) =3D=3D RMI_ERROR_RTT) {
+> +                       /* Create missing RTTs and retry */
+> +                       int level =3D RMI_RETURN_INDEX(ret);
+> +
+> +                       ret =3D realm_create_rtt_levels(realm, ipa, level=
+,
+> +                                                     RME_RTT_MAX_LEVEL,
+> +                                                     memcache);
+> +                       WARN_ON(ret);
+> +                       if (ret)
+> +                               goto err_undelegate;
+> +
+> +                       ret =3D rmi_data_create_unknown(rd, phys, ipa);
+> +               }
+> +               WARN_ON(ret);
+> +
+> +               if (ret)
+> +                       goto err_undelegate;
+> +
+> +               phys +=3D PAGE_SIZE;
+> +               ipa +=3D PAGE_SIZE;
+> +       }
+> +
+> +       if (map_size =3D=3D RME_L2_BLOCK_SIZE)
+> +               ret =3D fold_rtt(realm, base_ipa, map_level);
+> +       if (WARN_ON(ret))
+> +               goto err;
+> +
+> +       return 0;
+> +
+> +err_undelegate:
+> +       if (WARN_ON(rmi_granule_undelegate(phys))) {
+> +               /* Page can't be returned to NS world so is lost */
+> +               get_page(phys_to_page(phys));
+> +       }
+> +err:
+> +       while (size > 0) {
+> +               unsigned long data, top;
+> +
+> +               phys -=3D PAGE_SIZE;
+> +               size -=3D PAGE_SIZE;
+> +               ipa -=3D PAGE_SIZE;
+> +
+> +               WARN_ON(rmi_data_destroy(rd, ipa, &data, &top));
+> +
+> +               if (WARN_ON(rmi_granule_undelegate(phys))) {
+> +                       /* Page can't be returned to NS world so is lost =
+*/
+> +                       get_page(phys_to_page(phys));
+> +               }
+> +       }
+> +       return -ENXIO;
+> +}
+> +
+> +int realm_map_non_secure(struct realm *realm,
+> +                        unsigned long ipa,
+> +                        struct page *page,
+> +                        unsigned long map_size,
+> +                        struct kvm_mmu_memory_cache *memcache)
+> +{
+> +       phys_addr_t rd =3D virt_to_phys(realm->rd);
+> +       int map_level;
+> +       int ret =3D 0;
+> +       unsigned long desc =3D page_to_phys(page) |
+> +                            PTE_S2_MEMATTR(MT_S2_FWB_NORMAL) |
+> +                            /* FIXME: Read+Write permissions for now */
+> +                            (3 << 6) |
+> +                            PTE_SHARED;
+> +
+> +       if (WARN_ON(!IS_ALIGNED(ipa, map_size)))
+> +               return -EINVAL;
+> +
+> +       switch (map_size) {
+> +       case PAGE_SIZE:
+> +               map_level =3D 3;
+> +               break;
+> +       case RME_L2_BLOCK_SIZE:
+> +               map_level =3D 2;
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       ret =3D rmi_rtt_map_unprotected(rd, ipa, map_level, desc);
+> +
+> +       if (RMI_RETURN_STATUS(ret) =3D=3D RMI_ERROR_RTT) {
+> +               /* Create missing RTTs and retry */
+> +               int level =3D RMI_RETURN_INDEX(ret);
+> +
+> +               ret =3D realm_create_rtt_levels(realm, ipa, level, map_le=
+vel,
+> +                                             memcache);
+> +               if (WARN_ON(ret))
+> +                       return -ENXIO;
+> +
+> +               ret =3D rmi_rtt_map_unprotected(rd, ipa, map_level, desc)=
+;
+> +       }
+> +       if (WARN_ON(ret))
+> +               return -ENXIO;
+> +
+> +       return 0;
+> +}
+> +
+>  static int populate_par_region(struct kvm *kvm,
+>                                phys_addr_t ipa_base,
+>                                phys_addr_t ipa_end,
+> @@ -617,7 +781,6 @@ static int populate_par_region(struct kvm *kvm,
+>         int idx;
+>         phys_addr_t ipa;
+>         int ret =3D 0;
+> -       struct page *tmp_page;
+>         unsigned long data_flags =3D 0;
+>
+>         base_gfn =3D gpa_to_gfn(ipa_base);
+> @@ -639,9 +802,8 @@ static int populate_par_region(struct kvm *kvm,
+>                 goto out;
+>         }
+>
+> -       tmp_page =3D alloc_page(GFP_KERNEL);
+> -       if (!tmp_page) {
+> -               ret =3D -ENOMEM;
+> +       if (!kvm_slot_can_be_private(memslot)) {
+> +               ret =3D -EINVAL;
+>                 goto out;
+>         }
+>
+> @@ -714,31 +876,36 @@ static int populate_par_region(struct kvm *kvm,
+>                 for (offset =3D 0; offset < map_size && !ret;
+>                      offset +=3D PAGE_SIZE, page++) {
+>                         phys_addr_t page_ipa =3D ipa + offset;
+> +                       kvm_pfn_t priv_pfn;
+> +                       int order;
+>
+> -                       ret =3D realm_create_protected_data_page(realm, p=
+age_ipa,
+> -                                                              page, tmp_=
+page,
+> -                                                              data_flags=
+);
+> +                       ret =3D kvm_gmem_get_pfn(kvm, memslot,
+> +                                              page_ipa >> PAGE_SHIFT,
+> +                                              &priv_pfn, &order);
+> +                       if (ret)
+> +                               break;
+> +
+> +                       ret =3D realm_create_protected_data_page(
+> +                                       realm, page_ipa,
+> +                                       pfn_to_page(priv_pfn),
+> +                                       page, data_flags);
+>                 }
+> +
+> +               kvm_release_pfn_clean(pfn);
+> +
+>                 if (ret)
+> -                       goto err_release_pfn;
+> +                       break;
+>
+>                 if (level =3D=3D 2) {
+>                         ret =3D fold_rtt(realm, ipa, level);
+>                         if (ret)
+> -                               goto err_release_pfn;
+> +                               break;
+>                 }
+>
+>                 ipa +=3D map_size;
+> -               kvm_release_pfn_dirty(pfn);
+> -err_release_pfn:
+> -               if (ret) {
+> -                       kvm_release_pfn_clean(pfn);
+> -                       break;
+> -               }
+>         }
+>
+>         mmap_read_unlock(current->mm);
+> -       __free_page(tmp_page);
+>
+>  out:
+>         srcu_read_unlock(&kvm->srcu, idx);
+> --
+> 2.34.1
+>
