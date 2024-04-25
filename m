@@ -1,43 +1,43 @@
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FC614A600;
-	Thu, 25 Apr 2024 15:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1397C14AD26;
+	Thu, 25 Apr 2024 15:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714059987; cv=none; b=bdHLhNSv/NML4pT/ecpmKLSiiZ+ypXL21HKC80MpCoA5AFxKz6Q4oFdJB5pvO4o4NOlvm4F/GWy5CWtr+ylWeNkFYIdNkMi3a+UdC/LRkbwL7VvzniRUf/GcqRJK4OtaMv3xHnUNdg1IH/TAGdqDFRmFMpRg+vAQDbe9CP8wySg=
+	t=1714060002; cv=none; b=DNt04mmvqjtZ92HNBkIUxX2S0Ug0IcR8z/GuC8w4mzrU6IS768BvICPeoyu0CUveuNpbWhVvCmbWxgkQnrAxaCJArCy6um3pTcPAiuA7zIHTv7EVoJSOYkB4D9OFWufFb4KPMPIV6DoBRpY+8X7VwE8Fs8YevS2bkLh3gKzu998=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714059987; c=relaxed/simple;
-	bh=BdnPwz8X5VjIlyxGHTHB1xmygmV3v31FLtNCSVMN0D4=;
+	s=arc-20240116; t=1714060002; c=relaxed/simple;
+	bh=Wyk9bt4qzmsPvR7NHjsvjFtMkQK/718z5azMohImAFw=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a8IzXX26VG5FoljMm0PUZhyg5jwdhUYBL+FcmU1jCUoTM+keO8JN34qdnDbzaEGNvVUsjUIqfZqQ00evQ5lFcBu9WfQlD61qVVVMoRwMjXXIMmIuLCi2ZoU3tFCToKs8R+Sp/gO4tgYtq/731Kw1x6Sov6sARVpptcq6wsg7L8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=HMZCcv4d; arc=none smtp.client-ip=185.70.40.133
+	 MIME-Version:Content-Type; b=eaNUJ70kygufh6muGq6EL4Y4aB5w+98aXiEbJgPRkMm2p6ttdtXHKTnESW7uirnbpn0OTo85bKePlRvg13WdElMWfJQByvWHtw+VhnDPii/AKVoDxzNTuhLzVNBl58JyeqnAV6FSmqCpsEMLhKw7DYByl/91gGN+/QPC0+/TIUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=c+vZktst; arc=none smtp.client-ip=185.70.43.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="HMZCcv4d"
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="c+vZktst"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1714059977; x=1714319177;
-	bh=7jYU4x9SG+HzxaQPBZY9kv9tKEO30Ph+k3fkjG3u5NU=;
+	s=protonmail; t=1714059734; x=1714318934;
+	bh=Wyk9bt4qzmsPvR7NHjsvjFtMkQK/718z5azMohImAFw=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector;
-	b=HMZCcv4d0BzKDpblcZGIwbOk3RmoAhA/+tFRH63hwaUiN4O86P6ylvMu1HKbeE+AU
-	 zHAQgUzL8N5vjrvfWjPFkgEYnyyhHV5d6r04PJAym1bBsX9T7e8adQy0u4bSQtu3BX
-	 bpZbFiu5Hzc4KnKODFcP9smXpANOcclBMQDmNDF0TfxBuHRMxD4szqeHKx8PJXi5nu
-	 C7AO959VexM/iJIJ5YeoFsfGh+kErnwPHeR3Or8pvg0aOkf/BygIY9DER4fGM1Z4Dr
-	 S6ha4tT7WwlKX5BemzU210QuVwlmAV+qregOx2x9knfQ0UdbnngE7U5pJSapoBQShZ
-	 m+IUKkNmNsVGg==
-Date: Thu, 25 Apr 2024 15:46:14 +0000
+	b=c+vZktstzqmumilwh4SmQsmw/94/34SJn1O2b/KVRNNeStAWCQdZkIrpRdbjHsHwv
+	 5vzX+Q3MOcdFLGkA5zjOSjrAihARVkLEaNf/ugG9lvbNiIBDmm7/CVnwQGGLXGdR5v
+	 fxqxjZVPSjOaMp2GlviQN5yg4n94c/XywjFe6jXI1tzV9AYxzfQdVPV9TUGBmbr0e4
+	 BOZOCUrY1WXBXq6QDW4yru+c0X/Ul2TIN6DYc9RgyZGC23Dyv9h6CNX0j+od1OOtA2
+	 lpbmqI3Jpa8+BDhPELNuhT1jIATFHcXQyRdetphKhCj2pLJa5nAFgJVgXTFw8Xy0yx
+	 e96rVEXYBFKyw==
+Date: Thu, 25 Apr 2024 15:42:06 +0000
 To: Lyude Paul <lyude@redhat.com>, dri-devel@lists.freedesktop.org
 From: Benno Lossin <benno.lossin@proton.me>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 2/4] WIP: drm: Introduce rvkms
-Message-ID: <c04294b3-a08a-44af-b74a-27f6b873c6b8@proton.me>
-In-Reply-To: <6a16f0023b62beba4658677bebcc4786da1ea4be.camel@redhat.com>
-References: <20240322221305.1403600-1-lyude@redhat.com> <20240322221305.1403600-3-lyude@redhat.com> <b41f707d-7e06-4c1a-93f0-d74ee242b650@proton.me> <6a16f0023b62beba4658677bebcc4786da1ea4be.camel@redhat.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, Asahi Lina <lina@asahilina.net>, Martin Rodriguez Reboredo <yakoyoku@gmail.com>, FUJITA Tomonori <fujita.tomonori@gmail.com>, Danilo Krummrich <dakr@redhat.com>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 1/4] WIP: rust: Add basic KMS bindings
+Message-ID: <c28a17d4-ea8e-4d35-9c7a-3b796ef7409d@proton.me>
+In-Reply-To: <9fd1fea40f5d053e371bd076d9cb095ba3d77d93.camel@redhat.com>
+References: <20240322221305.1403600-1-lyude@redhat.com> <20240322221305.1403600-2-lyude@redhat.com> <0785452f-7714-4384-838b-879e0b224c3c@proton.me> <9fd1fea40f5d053e371bd076d9cb095ba3d77d93.camel@redhat.com>
 Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 045ae0f74a45c39b91a85c78c275bb36ea47dee4
+X-Pm-Message-ID: 1e089611015051b5d61a372ac5af4555d099dc5c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,50 +47,25 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On 22.04.24 03:54, Lyude Paul wrote:
-> On Wed, 2024-03-27 at 21:06 +0000, Benno Lossin wrote:
->> On 22.03.24 23:03, Lyude Paul wrote:
->>> +
->>> +pub(crate) type Connector =3D connector::Connector<DriverConnector>;
->>> +
->>> +impl connector::DriverConnector for DriverConnector {
->>> +    type Initializer =3D impl PinInit<Self, Error>;
->>> +
->>> +    type State =3D ConnectorState;
->>> +
->>> +    type Driver =3D RvkmsDriver;
->>> +
->>> +    type Args =3D ();
->>> +
->>> +    fn new(dev: &Device<Self::Driver>, args: Self::Args) ->
->>> Self::Initializer {
+On 22.04.24 03:47, Lyude Paul wrote:
+> On Wed, 2024-03-27 at 20:50 +0000, Benno Lossin wrote:
+>> Hi,
 >>
->> And then here just return `Self`.
->>
->> This works, since there is a blanket impl `PinInit<T, E> for T`.
->>
->> Looking at how you use this API, I am not sure if you actually need
->> pin-init for the type that implements `DriverConnector`.
->> Do you need to store eg `Mutex<T>` or something else that needs
->> pin-init in here in a more complex driver?
+>> I just took a quick look and commented on the things that stuck
+>> out to me. Some general things:
+>> - several `unsafe` blocks have missing SAFETY comments,
+>> - missing documentation and examples.
 >=20
-> Most likely yes - a lot of drivers have various private locks contained
-> within their subclassed mode objects. I'm not sure we will in rvkms's
-> connector since vkms doesn't really do much with connectors - but we at
-> a minimum be using pinned types (spinlocks and hrtimers) in our
-> DriverCrtc implementation once I've started implementing support for
-> vblanks[1]
->=20
-> [1]
-> https://www.kernel.org/doc/html/v6.9-rc5/gpu/drm-kms.html?highlight=3Dvbl=
-ank#vertical-blanking
->=20
-> In nova (the main reason I'm working on rvkms in the first place),
-> we'll definitely have locks in our connectors and possibly other types.
+> This is really early on - so I had wanted to post a WIP before I
+> actually wrote up everything to make sure I'm going in the right
+> direction (I'm certainly not planning on leaving things undocumented
+> when this is actually ready for submission :).
 
-I see, in that case it would be a good idea to either have an RFC of
-the nova driver (or something else that needs pinned types) as
-motivation for why it needs to be pin-initialized.
+No worries, I just wanted to point out everything that I found.
+
+One thing that I missed was your "RFC WIP" in your cover letter. I think
+that it's a good idea to put "RFC" onto every patch, that way people
+without context immediately know that it is not yet ready.
 
 --=20
 Cheers,
