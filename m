@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D45214D2AC
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 15:40:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CC714D701
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 15:40:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714059631; cv=none; b=XwAVOVx4zVqBR27l6xs09OFsaqzuMBvpb8uQl438q3JjLsLVAG7imoaQNrompB+icp4cLON0sYPHDdxFrPO9cc+p9hRJiiKcVLEsW5Gj9bp05d4Ux01o4g3/Vqdcty1yqbAKI9uo3lKsQryQe7W3zUXK+1Xc0NpRixHzS0ildXY=
+	t=1714059632; cv=none; b=QRRu5L4Xx30Q363dHAWchob+UQnwnKboUSlnbu3bdAo6FGJWFKwC/UvCKK12Q/SzrXF5t28La7lK6dhJ2wPeMwqbGf+9bTIRTZAq+tyfhYNR8iPhKP27+2ClINjWe8UdLtv+ITzLpaKjPdqUUhN0wLDSiPev1t63bwjw7DO5+ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714059631; c=relaxed/simple;
-	bh=+J9HVSfkiiiwIOMHIiD69N9uDI01zWrTSRF943HQCRM=;
+	s=arc-20240116; t=1714059632; c=relaxed/simple;
+	bh=bGIBA6DPr0bJFT701J0z+3vINk9dWTIDvIiKasrikLA=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=sbn5iNU4AJIJ6F5uyjOPiq5iX0qIlFl/mSxc6Wliw4K2WEs2yueVce25o2PDFqm3lySk8L0dDdYtVoSmRTsZyK9ThhT+bKiAKT410zjLfkUGeJ28QAN8wyGCpw/pWB5f2WG8aRUPF2lu+rzpxBBqIHipXchtj3wBnMdQZm+c7n0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CDQBt/Rn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=RZaDSEO/8qvL7TjbMSWoIccZyNtfDKu1Fb2U/TteloomJmGHFzHUWuuTNch1YX3bUyKw3hjN22V9A8BdxWYTlZb9b+MZLKS4dzx0Dgj+SFES3VmGcvrxMI+vZND/CJPthlyvsg9QFp6UQfc5ogKNHwKyX8HYsj3Dj6d9DzkcAfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uiGYOPlo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CDQBt/Rn"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D476DC4AF0C;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uiGYOPlo"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CC548C3277B;
 	Thu, 25 Apr 2024 15:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1714059630;
-	bh=+J9HVSfkiiiwIOMHIiD69N9uDI01zWrTSRF943HQCRM=;
+	bh=bGIBA6DPr0bJFT701J0z+3vINk9dWTIDvIiKasrikLA=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=CDQBt/RnL+hCvvecUUxLvjOWHEDFZtqpVeAA/GtJzqsA9z+gI5rVbVSm60OywPEAY
-	 KrYOHF2eB4FFGhSDEqS+FGeZGPFijTYDf+CbNA4RT1ITOE8QO3Pgk868icottoNcIc
-	 9M8540txYpY2D2DteERQYNPYJq1yhlQFX86IVeD5rIOSRuszDHZgFR+xh8f+/939HH
-	 k3MRBvvnyiKHcwFx/P1b2lG0LnV7E+t1vcIjJhtQAd4fjPjDFZEzUk4Ru/kntk2a93
-	 Mp6cput4H2azdK64RGx/7y+OMTnyZp6IwF8WgWjinEs9P9RJjcxiqXVSJhOJeMzOzG
-	 1I4dVLO1pihlA==
+	b=uiGYOPlohvijFtjLNvRWpfmRaIeGzwkPccqaeDuTE7OQngrm5I9pZT2fcsBSV6aJg
+	 j95LtJT/CkYKbK5ZT3Cfz8gQTtXc9ZU8UBaQIzIytkwayRIGVvPATeto4qtpsSxuNM
+	 a2vX86aSirnCcz+Sq699X4Tez+20NTpF2QgJSVelPWcUQRR6/ocZr7jG67eeFGFCtG
+	 iVY1ILgMnCN+EdeR2dld7NtBEpWpn4r2vWn1XCatkAn+gDnqwWYf29oXRXOoH6lC1A
+	 exEhBQT4bRDLiX4GnXfSNhu3PqCu77i+TrNuBDJrIh5XTWGpql+reqq9eVp55wTr/y
+	 qIqARoRpIogFg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C9556CF21C2;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C2AD6C595C5;
 	Thu, 25 Apr 2024 15:40:30 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,33 +37,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH] f2fs: use helper to print zone condition
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix false alarm on invalid block address
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <171405963082.10966.9576807283536776270.git-patchwork-notify@kernel.org>
+ <171405963079.10966.9092542666312689265.git-patchwork-notify@kernel.org>
 Date: Thu, 25 Apr 2024 15:40:30 +0000
-References: <20240423112759.4081008-1-bo.wu@vivo.com>
-In-Reply-To: <20240423112759.4081008-1-bo.wu@vivo.com>
-To: Wu Bo <bo.wu@vivo.com>
-Cc: jaegeuk@kernel.org, chao@kernel.org, wubo.oduw@gmail.com,
- linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
+References: <20240424173548.1515606-1-jaegeuk@kernel.org>
+In-Reply-To: <20240424173548.1515606-1-jaegeuk@kernel.org>
+To: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ stable@kernel.org
 
 Hello:
 
 This patch was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Tue, 23 Apr 2024 05:27:59 -0600 you wrote:
-> To make code clean, use blk_zone_cond_str() to print debug information.
+On Wed, 24 Apr 2024 17:35:48 +0000 you wrote:
+> f2fs_ra_meta_pages can try to read ahead on invalid block address which is
+> not the corruption case.
 > 
-> Signed-off-by: Wu Bo <bo.wu@vivo.com>
-> ---
->  fs/f2fs/segment.c | 17 +++--------------
->  1 file changed, 3 insertions(+), 14 deletions(-)
+> Cc: <stable@kernel.org> # v6.9+
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=218770
+> Fixes: 31f85ccc84b8 ("f2fs: unify the error handling of f2fs_is_valid_blkaddr")
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> 
+> [...]
 
 Here is the summary with links:
-  - [f2fs-dev] f2fs: use helper to print zone condition
-    https://git.kernel.org/jaegeuk/f2fs/c/3763f9effcdc
+  - [f2fs-dev] f2fs: fix false alarm on invalid block address
+    https://git.kernel.org/jaegeuk/f2fs/c/b864ddb57eb0
 
 You are awesome, thank you!
 -- 
