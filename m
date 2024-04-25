@@ -1,149 +1,391 @@
-Received: from forward500c.mail.yandex.net (forward500c.mail.yandex.net [178.154.239.208])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7D712BF04;
-	Thu, 25 Apr 2024 12:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC81912BF04;
+	Thu, 25 Apr 2024 12:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714048810; cv=none; b=bZlljtHcokslMiauyEFnTu+e9JqoQc/3SsrEaHk4h/O1jipO/5pWXvy0YXZ2iNpmW806fX7WOR90yfnqlW3lQdon/ioEA9h/qisdTYG4EW3GDU0MKpZXanugeUq/u6So9oOJSa+mFGC2kWqM1fUXWM4NQUMB0rQJk2gQ98Xhzhg=
+	t=1714048937; cv=none; b=qSmrMjSpYRT0AZB+pvWBwatHSOz9OvMAl8LyZwp79AipEpF24RpgjTZHa66LXjF7qcAivHHcTMm2iEQtLtceUC4hA8ch/e7yUp/5oxq1eR6SJggwI7PhgI2hdEycPEl5NCDM34AS83Mtz/bBOhAmuQ8CTsdJHm8G4CzrL9xfTg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714048810; c=relaxed/simple;
-	bh=6vkPmtDiLE+/0ji3+ctV49AgPYWn3Mz5TJN/ESYCMos=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GxpvbdtaQtKVZiOLZ2IYBrzAZrL+4cnKCckDYxEUB+M9hNWSvsij2gFpk1oLFpyDGZL9RhxuX/2iE5QF1lvHdQ/8Xdt3nvVqYl1oKAEH1f9I6k3FWWbkcPscUkFUO9PXSyoAhkaNnRZa4jb0Jt1HN/lU3XFJOEqs/Xk8qvPyhcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=VS2JAjlp; arc=none smtp.client-ip=178.154.239.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1714048937; c=relaxed/simple;
+	bh=Xd08opKedHrtsU4GnsZbUiXElSa9U0/jkuoALRq3DZw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ToyWAcKDUpDOJXgD/ilPJOhRwW3QLGsppQeFlg8hCAOvXGzauWE3chuw/8dOhXM7ptDJChmwqjVQzxm7T4nBJnC+iv307T7nmxZjLuP7yaXE023MTH7trvLGVbnGmlOVQQEjE/ph0LF3+kEIqjtch4VmXDSabuP8qGZMVsG6RRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ij7oVQmi; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="VS2JAjlp"
-Received: from mail-nwsmtp-smtp-production-main-36.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-36.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:c0e:0:640:c281:0])
-	by forward500c.mail.yandex.net (Yandex) with ESMTPS id 1866561532;
-	Thu, 25 Apr 2024 15:39:58 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-36.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id tdLplpYVsKo0-YxQbXXna;
-	Thu, 25 Apr 2024 15:39:57 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1714048797; bh=bcA6ElicbT39XJDeRPmuUikJSa8KgSxn19jArvtuNfg=;
-	h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
-	b=VS2JAjlpNHO4g0QFJPCVOac0ldhMWQ9eQr28iHEADsrdWY2iu28fW33yGZ6mQ3bj7
-	 ggh3ZF75iIMTd0ZHoztyQmzsawi+V1fg8zWpY8o2G0md4HczmY1gLrN1RqPVQj/v82
-	 fH3JVA77UI0fjmWePCpqcfODngkm/Avxe7p9tvEA=
-Authentication-Results: mail-nwsmtp-smtp-production-main-36.iva.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-Message-ID: <8b136077-af77-4371-9e67-7ae339efc3c1@yandex.ru>
-Date: Thu, 25 Apr 2024 15:39:54 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ij7oVQmi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714048936; x=1745584936;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Xd08opKedHrtsU4GnsZbUiXElSa9U0/jkuoALRq3DZw=;
+  b=ij7oVQmixMX5go7zjoiieegSJIiC9FpzV+dECme6hc/Ce/p9yr+KwEwg
+   aeviq23W+pogOotFYTfhpv+RkmSHC2LtRqWhviRUGIHgVOdp+9HJ/g8en
+   7qYtVCkZwG8tzcM7Ub8jPQfiNnX2IlhCK2aR5FY02JWkRNngrw6aXWZHT
+   eUPO/HwLdKBpY1aXrrEDyv+Q1T/3imhWDwrYkRZ51YvgtVncDpxCXAfQ+
+   Dw8StnNd6mBdM+Vp6a953CbmL+kviKXosoWKOKHlrkMJzeVVlmYMo1uDx
+   df55aTp/Rb0Y0iZNBG3aaTJTMRoMm6H7rpRw5fl5aFFeI4/0FReXTe9Ql
+   w==;
+X-CSE-ConnectionGUID: ZpeM2JNFRjafSKQlzu0Zuw==
+X-CSE-MsgGUID: +V8ND44PRVSWylxUpLf2ow==
+X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="9555807"
+X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
+   d="scan'208";a="9555807"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 05:42:15 -0700
+X-CSE-ConnectionGUID: feb0LlWDTY6pGqiTfw9FeA==
+X-CSE-MsgGUID: i5mRVIGfShCstltnol8NSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
+   d="scan'208";a="62539171"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa001.jf.intel.com with ESMTP; 25 Apr 2024 05:42:12 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id EA79253E; Thu, 25 Apr 2024 15:42:10 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	=?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Helge Deller <deller@gmx.de>,
+	linux-fbdev@vger.kernel.org
+Subject: [PATCH v1 1/1] drm/ili9341: Remove the duplicative driver
+Date: Thu, 25 Apr 2024 15:42:07 +0300
+Message-ID: <20240425124208.2255265-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] implement OA2_INHERIT_CRED flag for openat2()
-Content-Language: en-US
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Stefan Metzmacher <metze@samba.org>,
- Eric Biederman <ebiederm@xmission.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Andy Lutomirski <luto@kernel.org>,
- Jan Kara <jack@suse.cz>, Jeff Layton <jlayton@kernel.org>,
- Chuck Lever <chuck.lever@oracle.com>, Alexander Aring
- <alex.aring@gmail.com>, David Laight <David.Laight@aculab.com>,
- linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
- Paolo Bonzini <pbonzini@redhat.com>,
- =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
-References: <20240424105248.189032-1-stsp2@yandex.ru>
- <20240424-schummeln-zitieren-9821df7cbd49@brauner>
- <6b46528a-965f-410a-9e6f-9654c5e9dba2@yandex.ru>
- <20240425-ausfiel-beabsichtigen-a2ef9126ebda@brauner>
- <df51f2fd-385a-47bf-a072-a8988a801d52@yandex.ru>
- <20240425-loslassen-hexen-a1664a579ea1@brauner>
-From: stsp <stsp2@yandex.ru>
-In-Reply-To: <20240425-loslassen-hexen-a1664a579ea1@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-25.04.2024 15:08, Christian Brauner пишет:
->> But I am sure you still don't understand
->> what exactly the patch does, so why not
->> to ask instead of asserting?
->> You say uid/gid can be stolen, but no,
->> it can't: the creds are reverted. Only
->> fsuid/fsgid (and caps in v2 of the patch)
->> actually affect openat2(), but nothing is
->> "leaked" after openat2() finished.
-> I say "stolen" because the original opener has no say in this.
+First of all, the driver was introduced when it was already
+two drivers available for Ilitek 9341 panels.
 
-The initial idea was to keep this all
-within a single-process boundary. It
-wasn't coded that way though. :(
+Second, the most recent (fourth!) driver has incorporated this one
+and hence, when enabled, it covers the provided functionality.
 
+Taking into account the above, remove duplicative driver and make
+maintenance and support eaiser for everybody.
 
->   You're
-> taking their fsuid/fsgid and groups and overriding creds for the
-> duration of the lookup and open. Something the original opener never
-> consented to. But let's call it "borrowed" if you're hung up on
-> terminology here.
+Also see discussion [1] for details about Ilitek 9341 duplication
+code.
 
-Not a terminology: you were explicitly
-talking about uid/gid, blaming a v2 of
-my patch. But v2 was not any more
-harmful than others and uid/gid cannot
-be leaked even there.
-But I don't mind: if now you realize v2
-is not a leak for uid/gid, then we are on
-the same track.
+Link: https://lore.kernel.org/r/ZXM9pG-53V4S8E2H@smile.fi.intel.com [1]
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpu/drm/tiny/Kconfig   |  13 --
+ drivers/gpu/drm/tiny/Makefile  |   1 -
+ drivers/gpu/drm/tiny/ili9341.c | 253 ---------------------------------
+ 3 files changed, 267 deletions(-)
+ delete mode 100644 drivers/gpu/drm/tiny/ili9341.c
 
-> But ultimately it's the same complaint: the original opener has no way
-> of controlling this behavior.
-
-It wasn't clear if the opener should
-control that behaviour, or maybe instead
-that all should be limited within a single
-process?
-Andy Lutomirski's explanation made it
-clear that even if the openers are the
-same, the control is still needed. So now
-this argument is undeniable.
-
-
->   Once ignored in my first reply, and now
-> again conveniently cut off again. Let alone all the other objections.
-
-Sorry but your complains were about
-stealing uid/gid in v2, which were clearly
-wrong. But this is a matter of the past.
-
-> And fwiw, the same way you somehow feel like I haven't read your patch
-> it seems you to consistently underestimate the implications of this
-> change. Which is really strange because it's pretty obvious. It's
-> effectively temporary setuid/setgid with some light limitations.
-
-Temporary cred override is quite common
-within the current code AFAICS when I grep
-it for override_creds() call.
-
-> Leaking directory descriptors across security boundaries becomes a lot
-> more interesting with this patch applied. Something which has happened
-> multiple times already and heavily figures in container escapes. And the
-> RESOLVE_BENEATH/IN_ROOT restrictions only stave off symlink (and magic
-> link) attacks. If a directory fd is leaked a container can take the
-> fsuid/fsgid/groups from the original opener of that directory and write
-> to disk with whatever it resolves to in that namespace's idmapping. It's
-> basically a nice way to puzzle together arbitrary fsuid/fsgid and
-> idmapping pairs in whatever namespace the opener happens to be in.
-
-Yes, so the opt-in flag is undeniably needed.
-
-> And to the "unsuspecting userspace" point you dismissed earlier.
-> Providing a dirfd to a lesser privileged process isn't horrendously
-> dangerous right now. But with this change it sure is. For stuff like
-> libpathrs or systemd's fdstore this change has immediate security
-> implications.
-
-So am I getting your point correctly:
-- process A uses the opt-in flag (eg O_CAPTURE_CREDS)
-   and passes the fd to "unsuspecting userspace" B.
-- process B is not going to use O_INHERIT_CREDS,
-   but it now still can't drop his privs fully.
-
-Is this what you mean?
+diff --git a/drivers/gpu/drm/tiny/Kconfig b/drivers/gpu/drm/tiny/Kconfig
+index f6889f649bc1..2ab07bd0bb44 100644
+--- a/drivers/gpu/drm/tiny/Kconfig
++++ b/drivers/gpu/drm/tiny/Kconfig
+@@ -134,19 +134,6 @@ config TINYDRM_ILI9225
+ 
+ 	  If M is selected the module will be called ili9225.
+ 
+-config TINYDRM_ILI9341
+-	tristate "DRM support for ILI9341 display panels"
+-	depends on DRM && SPI
+-	select DRM_KMS_HELPER
+-	select DRM_GEM_DMA_HELPER
+-	select DRM_MIPI_DBI
+-	select BACKLIGHT_CLASS_DEVICE
+-	help
+-	  DRM driver for the following Ilitek ILI9341 panels:
+-	  * YX240QV29-T 2.4" 240x320 TFT (Adafruit 2.4")
+-
+-	  If M is selected the module will be called ili9341.
+-
+ config TINYDRM_ILI9486
+ 	tristate "DRM support for ILI9486 display panels"
+ 	depends on DRM && SPI
+diff --git a/drivers/gpu/drm/tiny/Makefile b/drivers/gpu/drm/tiny/Makefile
+index 76dde89a044b..37cc9b27e79d 100644
+--- a/drivers/gpu/drm/tiny/Makefile
++++ b/drivers/gpu/drm/tiny/Makefile
+@@ -10,7 +10,6 @@ obj-$(CONFIG_DRM_SIMPLEDRM)		+= simpledrm.o
+ obj-$(CONFIG_TINYDRM_HX8357D)		+= hx8357d.o
+ obj-$(CONFIG_TINYDRM_ILI9163)		+= ili9163.o
+ obj-$(CONFIG_TINYDRM_ILI9225)		+= ili9225.o
+-obj-$(CONFIG_TINYDRM_ILI9341)		+= ili9341.o
+ obj-$(CONFIG_TINYDRM_ILI9486)		+= ili9486.o
+ obj-$(CONFIG_TINYDRM_MI0283QT)		+= mi0283qt.o
+ obj-$(CONFIG_TINYDRM_REPAPER)		+= repaper.o
+diff --git a/drivers/gpu/drm/tiny/ili9341.c b/drivers/gpu/drm/tiny/ili9341.c
+deleted file mode 100644
+index 47b61c3bf145..000000000000
+--- a/drivers/gpu/drm/tiny/ili9341.c
++++ /dev/null
+@@ -1,253 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0+
+-/*
+- * DRM driver for Ilitek ILI9341 panels
+- *
+- * Copyright 2018 David Lechner <david@lechnology.com>
+- *
+- * Based on mi0283qt.c:
+- * Copyright 2016 Noralf Trønnes
+- */
+-
+-#include <linux/backlight.h>
+-#include <linux/delay.h>
+-#include <linux/gpio/consumer.h>
+-#include <linux/module.h>
+-#include <linux/property.h>
+-#include <linux/spi/spi.h>
+-
+-#include <drm/drm_atomic_helper.h>
+-#include <drm/drm_drv.h>
+-#include <drm/drm_fbdev_generic.h>
+-#include <drm/drm_gem_atomic_helper.h>
+-#include <drm/drm_gem_dma_helper.h>
+-#include <drm/drm_managed.h>
+-#include <drm/drm_mipi_dbi.h>
+-#include <drm/drm_modeset_helper.h>
+-#include <video/mipi_display.h>
+-
+-#define ILI9341_FRMCTR1		0xb1
+-#define ILI9341_DISCTRL		0xb6
+-#define ILI9341_ETMOD		0xb7
+-
+-#define ILI9341_PWCTRL1		0xc0
+-#define ILI9341_PWCTRL2		0xc1
+-#define ILI9341_VMCTRL1		0xc5
+-#define ILI9341_VMCTRL2		0xc7
+-#define ILI9341_PWCTRLA		0xcb
+-#define ILI9341_PWCTRLB		0xcf
+-
+-#define ILI9341_PGAMCTRL	0xe0
+-#define ILI9341_NGAMCTRL	0xe1
+-#define ILI9341_DTCTRLA		0xe8
+-#define ILI9341_DTCTRLB		0xea
+-#define ILI9341_PWRSEQ		0xed
+-
+-#define ILI9341_EN3GAM		0xf2
+-#define ILI9341_PUMPCTRL	0xf7
+-
+-#define ILI9341_MADCTL_BGR	BIT(3)
+-#define ILI9341_MADCTL_MV	BIT(5)
+-#define ILI9341_MADCTL_MX	BIT(6)
+-#define ILI9341_MADCTL_MY	BIT(7)
+-
+-static void yx240qv29_enable(struct drm_simple_display_pipe *pipe,
+-			     struct drm_crtc_state *crtc_state,
+-			     struct drm_plane_state *plane_state)
+-{
+-	struct mipi_dbi_dev *dbidev = drm_to_mipi_dbi_dev(pipe->crtc.dev);
+-	struct mipi_dbi *dbi = &dbidev->dbi;
+-	u8 addr_mode;
+-	int ret, idx;
+-
+-	if (!drm_dev_enter(pipe->crtc.dev, &idx))
+-		return;
+-
+-	DRM_DEBUG_KMS("\n");
+-
+-	ret = mipi_dbi_poweron_conditional_reset(dbidev);
+-	if (ret < 0)
+-		goto out_exit;
+-	if (ret == 1)
+-		goto out_enable;
+-
+-	mipi_dbi_command(dbi, MIPI_DCS_SET_DISPLAY_OFF);
+-
+-	mipi_dbi_command(dbi, ILI9341_PWCTRLB, 0x00, 0xc1, 0x30);
+-	mipi_dbi_command(dbi, ILI9341_PWRSEQ, 0x64, 0x03, 0x12, 0x81);
+-	mipi_dbi_command(dbi, ILI9341_DTCTRLA, 0x85, 0x00, 0x78);
+-	mipi_dbi_command(dbi, ILI9341_PWCTRLA, 0x39, 0x2c, 0x00, 0x34, 0x02);
+-	mipi_dbi_command(dbi, ILI9341_PUMPCTRL, 0x20);
+-	mipi_dbi_command(dbi, ILI9341_DTCTRLB, 0x00, 0x00);
+-
+-	/* Power Control */
+-	mipi_dbi_command(dbi, ILI9341_PWCTRL1, 0x23);
+-	mipi_dbi_command(dbi, ILI9341_PWCTRL2, 0x10);
+-	/* VCOM */
+-	mipi_dbi_command(dbi, ILI9341_VMCTRL1, 0x3e, 0x28);
+-	mipi_dbi_command(dbi, ILI9341_VMCTRL2, 0x86);
+-
+-	/* Memory Access Control */
+-	mipi_dbi_command(dbi, MIPI_DCS_SET_PIXEL_FORMAT, MIPI_DCS_PIXEL_FMT_16BIT);
+-
+-	/* Frame Rate */
+-	mipi_dbi_command(dbi, ILI9341_FRMCTR1, 0x00, 0x1b);
+-
+-	/* Gamma */
+-	mipi_dbi_command(dbi, ILI9341_EN3GAM, 0x00);
+-	mipi_dbi_command(dbi, MIPI_DCS_SET_GAMMA_CURVE, 0x01);
+-	mipi_dbi_command(dbi, ILI9341_PGAMCTRL,
+-			 0x0f, 0x31, 0x2b, 0x0c, 0x0e, 0x08, 0x4e, 0xf1,
+-			 0x37, 0x07, 0x10, 0x03, 0x0e, 0x09, 0x00);
+-	mipi_dbi_command(dbi, ILI9341_NGAMCTRL,
+-			 0x00, 0x0e, 0x14, 0x03, 0x11, 0x07, 0x31, 0xc1,
+-			 0x48, 0x08, 0x0f, 0x0c, 0x31, 0x36, 0x0f);
+-
+-	/* DDRAM */
+-	mipi_dbi_command(dbi, ILI9341_ETMOD, 0x07);
+-
+-	/* Display */
+-	mipi_dbi_command(dbi, ILI9341_DISCTRL, 0x08, 0x82, 0x27, 0x00);
+-	mipi_dbi_command(dbi, MIPI_DCS_EXIT_SLEEP_MODE);
+-	msleep(100);
+-
+-	mipi_dbi_command(dbi, MIPI_DCS_SET_DISPLAY_ON);
+-	msleep(100);
+-
+-out_enable:
+-	switch (dbidev->rotation) {
+-	default:
+-		addr_mode = ILI9341_MADCTL_MX;
+-		break;
+-	case 90:
+-		addr_mode = ILI9341_MADCTL_MV;
+-		break;
+-	case 180:
+-		addr_mode = ILI9341_MADCTL_MY;
+-		break;
+-	case 270:
+-		addr_mode = ILI9341_MADCTL_MV | ILI9341_MADCTL_MY |
+-			    ILI9341_MADCTL_MX;
+-		break;
+-	}
+-	addr_mode |= ILI9341_MADCTL_BGR;
+-	mipi_dbi_command(dbi, MIPI_DCS_SET_ADDRESS_MODE, addr_mode);
+-	mipi_dbi_enable_flush(dbidev, crtc_state, plane_state);
+-out_exit:
+-	drm_dev_exit(idx);
+-}
+-
+-static const struct drm_simple_display_pipe_funcs ili9341_pipe_funcs = {
+-	DRM_MIPI_DBI_SIMPLE_DISPLAY_PIPE_FUNCS(yx240qv29_enable),
+-};
+-
+-static const struct drm_display_mode yx240qv29_mode = {
+-	DRM_SIMPLE_MODE(240, 320, 37, 49),
+-};
+-
+-DEFINE_DRM_GEM_DMA_FOPS(ili9341_fops);
+-
+-static const struct drm_driver ili9341_driver = {
+-	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC,
+-	.fops			= &ili9341_fops,
+-	DRM_GEM_DMA_DRIVER_OPS_VMAP,
+-	.debugfs_init		= mipi_dbi_debugfs_init,
+-	.name			= "ili9341",
+-	.desc			= "Ilitek ILI9341",
+-	.date			= "20180514",
+-	.major			= 1,
+-	.minor			= 0,
+-};
+-
+-static const struct of_device_id ili9341_of_match[] = {
+-	{ .compatible = "adafruit,yx240qv29" },
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(of, ili9341_of_match);
+-
+-static const struct spi_device_id ili9341_id[] = {
+-	{ "yx240qv29", 0 },
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(spi, ili9341_id);
+-
+-static int ili9341_probe(struct spi_device *spi)
+-{
+-	struct device *dev = &spi->dev;
+-	struct mipi_dbi_dev *dbidev;
+-	struct drm_device *drm;
+-	struct mipi_dbi *dbi;
+-	struct gpio_desc *dc;
+-	u32 rotation = 0;
+-	int ret;
+-
+-	dbidev = devm_drm_dev_alloc(dev, &ili9341_driver,
+-				    struct mipi_dbi_dev, drm);
+-	if (IS_ERR(dbidev))
+-		return PTR_ERR(dbidev);
+-
+-	dbi = &dbidev->dbi;
+-	drm = &dbidev->drm;
+-
+-	dbi->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+-	if (IS_ERR(dbi->reset))
+-		return dev_err_probe(dev, PTR_ERR(dbi->reset), "Failed to get GPIO 'reset'\n");
+-
+-	dc = devm_gpiod_get_optional(dev, "dc", GPIOD_OUT_LOW);
+-	if (IS_ERR(dc))
+-		return dev_err_probe(dev, PTR_ERR(dc), "Failed to get GPIO 'dc'\n");
+-
+-	dbidev->backlight = devm_of_find_backlight(dev);
+-	if (IS_ERR(dbidev->backlight))
+-		return PTR_ERR(dbidev->backlight);
+-
+-	device_property_read_u32(dev, "rotation", &rotation);
+-
+-	ret = mipi_dbi_spi_init(spi, dbi, dc);
+-	if (ret)
+-		return ret;
+-
+-	ret = mipi_dbi_dev_init(dbidev, &ili9341_pipe_funcs, &yx240qv29_mode, rotation);
+-	if (ret)
+-		return ret;
+-
+-	drm_mode_config_reset(drm);
+-
+-	ret = drm_dev_register(drm, 0);
+-	if (ret)
+-		return ret;
+-
+-	spi_set_drvdata(spi, drm);
+-
+-	drm_fbdev_generic_setup(drm, 0);
+-
+-	return 0;
+-}
+-
+-static void ili9341_remove(struct spi_device *spi)
+-{
+-	struct drm_device *drm = spi_get_drvdata(spi);
+-
+-	drm_dev_unplug(drm);
+-	drm_atomic_helper_shutdown(drm);
+-}
+-
+-static void ili9341_shutdown(struct spi_device *spi)
+-{
+-	drm_atomic_helper_shutdown(spi_get_drvdata(spi));
+-}
+-
+-static struct spi_driver ili9341_spi_driver = {
+-	.driver = {
+-		.name = "ili9341",
+-		.of_match_table = ili9341_of_match,
+-	},
+-	.id_table = ili9341_id,
+-	.probe = ili9341_probe,
+-	.remove = ili9341_remove,
+-	.shutdown = ili9341_shutdown,
+-};
+-module_spi_driver(ili9341_spi_driver);
+-
+-MODULE_DESCRIPTION("Ilitek ILI9341 DRM driver");
+-MODULE_AUTHOR("David Lechner <david@lechnology.com>");
+-MODULE_LICENSE("GPL");
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
