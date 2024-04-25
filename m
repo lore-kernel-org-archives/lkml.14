@@ -1,135 +1,107 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD04169946
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 07:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187936A352
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 07:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714028988; cv=none; b=UoC5shkDJzTlBHi+iDDIm3jkC2SMB/bqnkbU+joL5kF4tbtag2XSJ8InlhtK+ffAdjHPRxniz2znmbqzjJyrqtZa7w+L/V9el6mZ3o39pSbqrq+wTmFRrNaIPJcBqa6xRCRChb2jipzYChUv0q3PQYshSg8AOnJMMPulu6aYybg=
+	t=1714029003; cv=none; b=VWp2UpdCHj2GTGy0As+aqhckCgFK+PsNDDs8K1zSCYqrdfN8o0k3d9zCqUbC2r+Fwq0LUIv1b4rO+4pB8Nq56FpqmK1rHOKWG3o0PQ9LWNph6/zyePZpmga7UQIDkHTtfowqItTDh8irKShv7vm6AJpnvMFPFodVe1A4EDhEjEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714028988; c=relaxed/simple;
-	bh=i5csNzvKyzY2KMUo9Pio2GiNuzzW6XfxG41GjBSLsac=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ImhxInSvAl0/9xkhgKLuBehTSYotZYQ12z7hRU8JU41VnjjQ8S6TXli334RQTgykro+TgZKW7cjkPobTUaJJwwyOhEoTHNX9OKrYBCnJpSUu81mcuo+GZjI8eQ7IGrfix5STISW9sjg1AKPI3+01JeYcPivy58HQz5QBQQf90ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Jp78PMpa; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1714029003; c=relaxed/simple;
+	bh=kFy2c2MMRc7/mbY6XyHT0rM8BuRQOTFXPjjUtO+dJqw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=C9OrffgkxObqOks9d0pdZT9TJP+wcsSqFT/AVZ53tJfp6N0zI4Qj9e5RSoYNBPUX6/qarPOAcHOVR/hmP96hjs02ecQCku2FhTviJM2K64NyPFNdPaVeBk7jvzAdXRgwpItBFQVqMh3Ykj8Isfi1H/buf+CRL8aqXECYYQ7Vbbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=w10Qpr/b; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Jp78PMpa"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-41b4fd421c8so1353295e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 00:09:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w10Qpr/b"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a55ab922260so82958966b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 00:10:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1714028983; x=1714633783; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AQYF0WsVGtCo94Lb/d7hDTJ0GE5m3M9fEwjH6JMfTuk=;
-        b=Jp78PMpayEci9dugJllY9Tf2BIvaDqxcYGvOCvkWBJ5OQswdbCTymX4MlHzIW408jC
-         z/8IQuoEDlI4r+9/Q0khKbxp+6bXstuuMYkLfYklfkMKlFAXcc2Dgmpt/Ijv9ulofyU5
-         JmNhXDkW5giZL6W1hlObz42PO5B7WUvv/uG0J4n4TkgEaZFE3Sw4JxS7zryf420ZiAfZ
-         Dy8yd8l7H9cT3n9azbK/Y5rIdoMa8xpFCfNSdk4mWR31BNXazzGJSu0w5AlXoBRQsgaN
-         A9J9TD6j31fCBhmzPo1dcqd5xYqokn7NHHKMWcX/wPcWgH5MhSvazhu5CVKSRLLB7JXa
-         ttRQ==
+        d=linaro.org; s=google; t=1714029000; x=1714633800; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pKbtdaZh3aa5WKKWvhlJ2SkTdhHq3DflemRgyxWAUJY=;
+        b=w10Qpr/baTrdev26UCwAElEdXPrUBSkYufqNP5zfAEBPRP7y9riJj519ad6u9vEIiT
+         uJXlUC7az14fnUo9PUgtJYkMo3sFq7KOIef3WcvR42FRgoAaWeaaBazrBgCs1SkWsXt9
+         wdiK/zmH3zine7A6vms5+7DI8RvBpZyludQ6i2R0jiIFAOsHTyqM6QvfYfDBhT9nzLpS
+         i/Hofu/VxHWSkj0fMl2l6vvS3jEt4R0qS9VdvZ5267NkOhNVH6sZVgSuiO+t1YQ71C9F
+         G9HMg5zuV7RGo5BLWsMAOURV7+ODBeOe9vDpj0qEO93B0S4Nt65tyNSKlrXEQpAQ1esO
+         ATZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714028983; x=1714633783;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AQYF0WsVGtCo94Lb/d7hDTJ0GE5m3M9fEwjH6JMfTuk=;
-        b=lM4AVS3qB3mz1LX5QNydL4+ETRz8185j4EhJXIB3JGVdwalFhCpwZFBNJn3dZi5Jhg
-         /YhhB581v/6fC72K95aHD5m/V90kMWByWxuBLMNJrwv4utaLYJGoX+Ij1GqxdPdzhTr7
-         1KHWuRiL9HMm4urroykbsS7elJyM2rHjhr0r3t0Q1zGTNs98Vmslr+0TyfLtrHy6vsUC
-         7Tw3sDYrApQwUbodSrHl5Hgn0/nZPlaj0lWn/RlXivgUajwyXU/jWX4OoBb/iMj/WPNl
-         bNadcianLMEnyC/M1gJFyeqS9T5d5XG8qXS07y/O5mI14NHXZR33Oxt3YhFC2gzGlICX
-         63zA==
-X-Gm-Message-State: AOJu0YxfG7aSH09Rs8l93YQn/y2+4baSOFKsRv4XS/M23lD7bJhfr+gR
-	6o+bPY2iWqLPyXNJrl2mwRFYqgzrTUq+Ph3FZHyru+E0ReWpR7Snf/K6mp0ZscY=
-X-Google-Smtp-Source: AGHT+IHJkzXfp5uKvrRKk7fveyZHLxowyJC99U0qlzXF2CleQH23oiAt0ns4de/tUOZmilj4QuBnRw==
-X-Received: by 2002:a05:600c:19ca:b0:41a:141c:e199 with SMTP id u10-20020a05600c19ca00b0041a141ce199mr3737837wmq.8.1714028983029;
-        Thu, 25 Apr 2024 00:09:43 -0700 (PDT)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.53])
-        by smtp.gmail.com with ESMTPSA id v11-20020a05600c444b00b00418d5b16f85sm26234186wmn.21.2024.04.25.00.09.41
+        d=1e100.net; s=20230601; t=1714029000; x=1714633800;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pKbtdaZh3aa5WKKWvhlJ2SkTdhHq3DflemRgyxWAUJY=;
+        b=FDEr+P8cBN2KP4IaaSoCCnjU1epgctYoYjr6KrnaF+iEflH6zYYGxx6/KTy/C7eeJD
+         73Od+z+hNfQmZ8kM83zjW3yHcVf3yBP6uemxvch6kpQWdtgqGTQFY1BJaI3WKLtBCh4M
+         opZXumJUerzM8VvzU47ylpyIrd8rfDIXPKfB3sZ646+IczY0J+jFrqyGOkwiFklDM95w
+         F5QPR8DSVFPi2yCSUo8As7tmxSpXXbNBOdkqvqvJTo9pc1JPxHxqy3EMr1oxuW9VW5hr
+         ZSSgu8tokdOAYXL+tnTQtfv9SN3S2QdiwQfGx+zBl/rDL6puFD4pCsA/w0MnT95QYqru
+         OX3g==
+X-Forwarded-Encrypted: i=1; AJvYcCW5V5Zrv7ymrQlWKz+Pn4etyveUEmzmyItA8xaTkb4WjnwlvzY/rkSV1uo1/7/duhqN00z5g59RQbpjFAPdwAWKuQxdbTYrxdW9FQg5
+X-Gm-Message-State: AOJu0YySupZGqU3pkCVg2y1NhG4Kev/edAHyfgJpF90HoCP3pf3j3PLm
+	6qKEht9vSLk8Oy1OdKCSx5Cyg2aNcH2BU7MPi+4Q8Vn+gNUU31Xze/ZoyCnRtZw=
+X-Google-Smtp-Source: AGHT+IEs7Co328LLOzTBckFT/nv1oG4AADn4/nugSXCSJvSnYFZ91QkC3IWACxkGxn3XSoA8+ThZGQ==
+X-Received: by 2002:a17:906:e0c7:b0:a51:f463:cfa6 with SMTP id gl7-20020a170906e0c700b00a51f463cfa6mr3235443ejb.29.1714029000353;
+        Thu, 25 Apr 2024 00:10:00 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id z6-20020a170906434600b00a518c69c4e3sm9136727ejm.23.2024.04.25.00.09.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 00:09:42 -0700 (PDT)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	tony@atomide.com,
-	andriy.shevchenko@linux.intel.com,
-	l.sanfilippo@kunbus.com,
-	tglx@linutronix.de,
-	geert+renesas@glider.be,
-	ulf.hansson@linaro.org,
-	peng.fan@nxp.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	claudiu.beznea@tuxon.dev,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [RFT PATCH v2] serial: core: Call device_set_awake_path() for console port
-Date: Thu, 25 Apr 2024 10:09:36 +0300
-Message-Id: <20240425070936.547100-1-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
+        Thu, 25 Apr 2024 00:09:59 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Peter Griffin <peter.griffin@linaro.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Chanwoo Choi <cw00.choi@samsung.com>, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240423-hsi0-gs101-v1-1-2c3ddb50c720@linaro.org>
+References: <20240423-hsi0-gs101-v1-0-2c3ddb50c720@linaro.org>
+ <20240423-hsi0-gs101-v1-1-2c3ddb50c720@linaro.org>
+Subject: Re: (subset) [PATCH 1/3] dt-bindings: clock: google,gs101-clock:
+ add HSI0 clock management unit
+Message-Id: <171402899869.8385.7722233712941698013.b4-ty@linaro.org>
+Date: Thu, 25 Apr 2024 09:09:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-
-In case the UART port is used as a console, no_console_suspend is
-available in bootargs and UART port is part of a software-controlled power
-domain we need to call device_set_awake_path(). This lets the power
-domain core code know that this domain should not be powered off
-during system suspend. Otherwise, the UART port power domain is turned off,
-nothing is printed while suspending and the suspend/resume process is
-blocked. This was detected on the Renesas RZ/G3S SoC while adding support
-for power domains.
-
-Based on code investigation, this issue is present on other SoCs (e.g.,
-Renesas R-Mobile A1 [1], IMX8QXP [2]) and different SoCs have particular
-implementation to handle it. Due to this the patch added the call of
-device_set_awake_path() in uart_suspend_port() instead of having it in
-the platform specific UART driver.
-
-[1] https://elixir.bootlin.com/linux/v6.9-rc5/source/drivers/pmdomain/renesas/rmobile-sysc.c#L116
-[2] https://elixir.bootlin.com/linux/v6.9-rc5/source/drivers/pmdomain/imx/scu-pd.c#L357
-
-Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
-Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
-
-Changes in v2:
-- used device_set_awake_path() instead of device_set_wakeup_path()
-- moved the support in uart_suspend_port() to make it generic for
-  other drivers
-- fixed typos in commit description
-- updated the commit description to reflect the new changes and the fact
-  that support may be applied to other SoCs
-- added Suggested-by tag; this was initially proposed by Ulf to move it
-  in the serial driver then Geert propose to have it more generic in
-  uart_suspend_port()
+X-Mailer: b4 0.13.0
 
 
- drivers/tty/serial/serial_core.c | 1 +
- 1 file changed, 1 insertion(+)
+On Tue, 23 Apr 2024 15:31:03 +0100, André Draszik wrote:
+> Add dt-schema documentation and clock IDs for the high speed interface
+> 0 HSI0 clock management unit. This is used (amongst others) for USB.
+> 
+> While the usual (sed) script has been used to derive the linux clock
+> IDs from the data sheet, one manual tweak was applied to fix a typo
+> which we don't want to carry:
+>     HSI0_USPDPDBG_USER -> HSI0_USBDPDBG_USER (note USB vs USP).
+> 
+> [...]
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index d8d797a7a1e3..6270baab668c 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -2409,6 +2409,7 @@ int uart_suspend_port(struct uart_driver *drv, struct uart_port *uport)
- 			uport->ops->stop_rx(uport);
- 			uart_port_unlock_irq(uport);
- 		}
-+		device_set_awake_path(uport->dev);
- 		goto unlock;
- 	}
- 
+Applied, thanks!
+
+[1/3] dt-bindings: clock: google,gs101-clock: add HSI0 clock management unit
+      https://git.kernel.org/krzk/linux/c/dbf76c0d3da8d18a46f75130bdfae7b3b54407c5
+
+Best regards,
 -- 
-2.39.2
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
