@@ -1,148 +1,79 @@
-Received: from smtpdh20-2.aruba.it (smtpdh20-2.aruba.it [62.149.155.165])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4427912AAD5
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 11:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.155.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C4612BE89
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 11:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714045795; cv=none; b=tIR4ULVpaLcCLXYoVPN+yarAExYJjq4sXFx4HkHXGJ1keTbC1KYB9ZOPimC1PWHRZCqIi0gw37boNRhtQ8vs4IN9N6PBLIyPj3/nMl+aviKCP8w3lapPoM6A4H1NEErfA3H5R8hZ/oCtYwLn4FmxWA/Xck+Gzfue++T/v7RSN2g=
+	t=1714045800; cv=none; b=gDsLfxwBBmeKvooEYvq2Ei+rDe2qM5UCu8wJIVi6hr8AxCZmx5ODWI3bDQN7M4gKJ2lPqhhX3J7T2GKAtRpgMIcI+b3qmrwsvDhRgxf7kRiR0OY5WDzMCfd8/nPv0b1XX/CcQS0MvVgxOUhe7dtY3C7WNtTDGztH/iSPnfV08wU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714045795; c=relaxed/simple;
-	bh=QMwi5pZTWg2gTDWDgL+t923p+F1W347CVXo4YkprfRU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e1MNH9ZOlZRnYS3RODPeDiEBetSUUvXlhP9JCh97pTcAZOP3n9EUPlL+qA9jMj19V2XVrK3UFyvOMpJKtVDYLJoN2TSTcqxa7bGu+Uo7JGJFERYkmaOtJ/AdRAN3g+TBShCjZEZkKIgYrR8CTI9Z743AWri7HJghoyPhUviKTGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=luR1IsIF; arc=none smtp.client-ip=62.149.155.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
+	s=arc-20240116; t=1714045800; c=relaxed/simple;
+	bh=P8V7MCi9hduS/hZkRXSgoYkKYCb9Aj7iqmWztCrkDM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hk4hVYA1IkLEdEFXYEclNlangfh+C/LpNMbGBKy4w3Puyf0mDwcBW7+XoMgtMEJVo6ApdLUDLEa9s7+XIgIKh9Siwa0RLob1JZ5pGfdVxpEXN2MJS0XLux6K+maSL3CwZbeVxyEhaS/kX1D/DB1/n8bkQ1brQyigK7zyjy6sNWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XRFkJtJW; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="luR1IsIF"
-Received: from [192.168.1.58] ([79.0.204.227])
-	by Aruba Outgoing Smtp  with ESMTPSA
-	id zxYmr07EK9WDgzxYmrAmWg; Thu, 25 Apr 2024 13:46:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1714045601; bh=QMwi5pZTWg2gTDWDgL+t923p+F1W347CVXo4YkprfRU=;
-	h=Date:MIME-Version:Subject:To:From:Content-Type;
-	b=luR1IsIFMbvuZG8STGHbiG12/Gm5idza8AOQNj+nWamWQpnFqsqQdQ2CVgN8a5UUx
-	 gKpTTeaaIo0oxuZK4BiVpsRdzc6gQ01TWOCrCUvbUeqwFPtYFyg/9GPrmWwL6xVp7D
-	 hcpXi4fuHbL3/QiC8bShQRVx+JiwEHYuH1guFPa7PbLIFZAtArZa93oDgoi6pY1Y6s
-	 OtakJwC1q3Jwxe+g02hyewCrY86o5r38ZYCfBdJQy6oQknrVPfbp1IP5ZwSdxJt8o6
-	 vgTWzzov/U31NgTY1yX7HlXQdoYNqd28J9TgGZv07CB65n+dp6wFsF0b3+dCBvoFo2
-	 ayV4mZGqy/7QA==
-Message-ID: <80e759c4-8016-488b-859a-25a07cc2094f@enneenne.com>
-Date: Thu, 25 Apr 2024 13:46:40 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XRFkJtJW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Oifw9qpN855aTC4DmsgN7sJLcbfvYepEMTuQVWv2urU=; b=XRFkJtJWZj5kAwdOO6wmYxN4wd
+	UwxVp5cVEbLRnswZP16F810uwmr2MZwOo5ksRiuMLd/eRnvXCEpiU5DQsF8FAk3KveUsv7JiFguLb
+	DNhbHxWiAodeawjNXlEX0fB5vWCCCsgP5PgxwbRBoklQXy0UraPF6/pZHUZ9RuOHsna/qukGHX+s4
+	qMd2e9GVZQRrjTXRPo4Uehh8+6WB2g96wt7sOoafXC5qqngz5jPXu6fwJJPM7wAQLezuFxoU+RF3h
+	+aiKc6+raTVCSG0K0n0rA8bsaxaUDcP3AUF7gjW9OGv9upPCRCmm+7SjqGRjTiSpsN9elEEdpiZ1t
+	gkimiX0Q==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rzxbp-0000000ErD3-2v8o;
+	Thu, 25 Apr 2024 11:49:50 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 575D6300439; Thu, 25 Apr 2024 13:49:49 +0200 (CEST)
+Date: Thu, 25 Apr 2024 13:49:49 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Luis Machado <luis.machado@arm.com>
+Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+	linux-kernel@vger.kernel.org, kprateek.nayak@amd.com,
+	wuyun.abel@bytedance.com, tglx@linutronix.de, efault@gmx.de,
+	nd <nd@arm.com>, John Stultz <jstultz@google.com>
+Subject: Re: [RFC][PATCH 08/10] sched/fair: Implement delayed dequeue
+Message-ID: <20240425114949.GH12673@noisy.programming.kicks-ass.net>
+References: <20240405102754.435410987@infradead.org>
+ <20240405110010.631664251@infradead.org>
+ <3888d7c8-660e-479c-8c10-8295204e5f36@arm.com>
+ <1461277e-af68-41e7-947c-9178b55810b1@arm.com>
+ <20240425104220.GE21980@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] pps: clients: gpio: Bypass edge's direction check
- when not needed
-To: Bastien Curutchet <bastien.curutchet@bootlin.com>
-Cc: linux-kernel@vger.kernel.org,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
- christophercordahi@nanometrics.ca
-References: <20240410113502.73038-1-bastien.curutchet@bootlin.com>
- <1f7f5b2f-54d4-4dc1-90ff-b896c930faed@enneenne.com>
- <5bda0980-2373-4284-bda4-89f0c6944e76@bootlin.com>
- <eb64ec08-2ae3-48bb-9f84-3cec362280b2@enneenne.com>
- <27196117-32bc-4892-b545-d9cf43a89f0a@bootlin.com>
- <c1e93cfe-371c-4855-9a13-b4b453bb9e88@enneenne.com>
- <28c5456d-535c-4ed9-b13a-fab7f50412be@bootlin.com>
- <9255124b-958e-4ab4-a812-67ad5d36e16d@enneenne.com>
- <6f064bd8-7937-4634-8a39-13ee5bcd6193@bootlin.com>
- <d4b4fb72-79e7-4e06-a038-4645574a799b@bootlin.com>
-From: Rodolfo Giometti <giometti@enneenne.com>
-Content-Language: en-US, it, it-IT
-In-Reply-To: <d4b4fb72-79e7-4e06-a038-4645574a799b@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfDkMftp2TQYyrHaggmTqYI9eOZJm2I4Vimahe+nP4783IdLFNvvgOlhrle9cEWUyd7/cR6wCVacqrsNOZ42bk+ezmvvIkTR2lqJJfSd5QESH7d2jdNxn
- cHQxdM2LxXh+VNP+yySDLnL8QQgNSLi0oLiuO0ki7skzN6VD2DK8GochIb7B80Yum95Fa83JZxcwjCO5MxzEGOXsIYmMvcm8Q416u0mNpxl+R7Rg+mljCvcJ
- epUuKrdkJce1jtxivzj+mA+rTIPBx4v7gP3RDij9VeXtI5vqqOp7TGr1I16vye6Qbr6EXh62cZ/ZUyphMRapMudSHSYMnh20qIGYhE1mXKpjQiYgQ13QzCTI
- I32mTE4CVw2LVFpjp1IAZDNwCF8UIA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240425104220.GE21980@noisy.programming.kicks-ass.net>
 
-On 25/04/24 08:11, Bastien Curutchet wrote:
-> Hi Rodolfo,
+On Thu, Apr 25, 2024 at 12:42:20PM +0200, Peter Zijlstra wrote:
+
+> > I wonder if the delayed dequeue logic is having an unwanted effect on the calculation of
+> > utilization/load of the runqueue and, as a consequence, we're scheduling things to run on
+> > higher OPP's in the big cores, leading to poor decisions for energy efficiency.
 > 
-> 
-> On 4/12/24 14:20, Bastien Curutchet wrote:
->> Hi Rodolfo,
->>
->> On 4/12/24 08:44, Rodolfo Giometti wrote:
->>> On 11/04/24 14:44, Bastien Curutchet wrote:
->>>>>
->>>>> However we should think very well about this modification since it could be 
->>>>> the case where we have a device sending both assert and clear events but we 
->>>>> wish to catch just the asserts... in this case we will get doubled asserts!
->>>>>
->>>>
->>>> My understanding is that clear events are to be captured only when this
->>>> capture_clear boolean is set. If it is not set, the PPS_CAPTURECLEAR
->>>> flag is not added to pps_source_info->mode and get_irqf_trigger_flags()
->>>> will return only one edge flag (rising or falling depending on
->>>> assert-falling-edge DT property).
->>>
->>> Yes. You are right.
->>>
->>>> By the way, I see that the capture_clear is never set since the legacy
->>>> platform data support has been dropped (commit ee89646619ba).
->>>
->>> I see, but it can be re-enabled in the future... In this scenario, I think we 
->>> should add a DT entry to enable this special behavior. Maybe we can also add 
->>> a warning as below: >
->>> static irqreturn_t pps_gpio_irq_handler(int irq, void *data)
->>> {
->>>          ...
->>>          if ((rising_edge && !info->assert_falling_edge) ||
->>>                          (!rising_edge && info->assert_falling_edge))
->>>                  pps_event(info->pps, &ts, PPS_CAPTUREASSERT, data);
->>>          else if (info->capture_clear &&
->>>                          ((rising_edge && info->assert_falling_edge) ||
->>>                          (!rising_edge && !info->assert_falling_edge)))
->>>                  pps_event(info->pps, &ts, PPS_CAPTURECLEAR, data);
->>>      else
->>>          dev_warn_ratelimited(dev, "no ASSERT or CAPTURE event? "
->>>              "Maybe you need support-tiny-assert-pulse?");
->>>
->>>          return IRQ_HANDLED;
->>> }
->>>
->>
->> I'm not sure a DT entry is needed. IMO there are two cases:
->>   1) capture_clear is unset. We need to capture only assert events,
->>      interrupt will be triggered by assert edge only so there is no need
->>      to check GPIO state: we can use the bypass.
->>   2) capture_clear is set. We need to capture assert and/or clear
->>      events, interrupt will be triggered by both assert and clear edges
->>      so we can't avoid the GPIO state checking to distinguish clear
->>      events from assert events: we can't use the bypass.
->>
->> So if we bypass the GPIO's state check when capture_clear is unset and
->> leave current behavior when capture_clear is set:
->>   - case 1) will be more efficient and we won't lose tiny pulses anymore
->>   - case 2) is unchanged: we still might lose tiny pulses but as bypass
->> can't be done here, I think that we can't do better.
->>
->> I agree that adding warning when the handler is left without triggering
->> a pps event can be useful, I can add it in a V3 version.
->>
-> 
-> Would this be OK for you ? If yes, I'll send a V3 version without DT
-> entry but with an additional warning.
+> Notably util_est_update() gets delayed. Given we don't actually do an
+> enqueue when a delayed task gets woken, it didn't seem to make sense to
+> update that sooner.
 
-Sorry, I completely missed this e-mail! :(
+The PELT runnable values will be inflated because of delayed dequeue.
+cpu_util() uses those in the @boost case, and as such this can indeed
+affect things.
 
-OK, I agree.
+This can also slightly affect the cgroup case, but since the delay goes
+away as contention goes away, and the cgroup case must already assume
+worst case overlap, this seems limited.
 
-Ciao,
-
-Rodolfo
-
--- 
-GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-Linux Device Driver                          giometti@linux.it
-Embedded Systems                     phone:  +39 349 2432127
-UNIX programming
-
+/me goes ponder things moar.
