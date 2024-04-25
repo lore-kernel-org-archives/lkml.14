@@ -1,124 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6646C14A0AD;
-	Thu, 25 Apr 2024 13:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71460149E1B
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 13:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714053570; cv=none; b=UHWUskXIeeeT/s/e2WMUotcYORq+qKq9WNlhCPEuUn1HLKRIJyc3OmRcsAS5ktpQL9I/KLCT7gnYDxIg8MFggtH1if1bfnFgzVCbx8gMerDWxwU6BUCcVPJ/yia8illxVvIEpk7PCpIRtksudADbDh+1ehOKUIF/EFcqKizfk2c=
+	t=1714053571; cv=none; b=hOKomM/2r/kFQyQ1x7Z1p6t/nZt/JmIewBmbBur4kElnZbmAQLzwtZksRg49FLOf2Y3IFdkADsrviibhx9qg5liBgVcjSA1XwFdXzdFQBEqDm5U/pIWugjhk6F2BUG8xZhQCzamYRhDNAXYeN7nbn5QgtLV6aPw5wSeHVUnJJ/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714053570; c=relaxed/simple;
-	bh=/jfDurkkyTX1CjxTQWI9/U9pueeszadMVJLu6GiEwj0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CQBYUo6bJbXE6eQuMEX2jmxrofo7u9ogMPgii1CReUGbo6xVdA5o4Puh1sVehMqOmmeXImimULRehvh6sMbhMHlJJN0ao5ixs6A9bLywAAhcATTp47bAVSNYHfOuXFUOBVN2c9peBTHbUIBsGBqeBWQeCwEG0Lml7e4TGQHRU5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HNE5RsAg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714053571; c=relaxed/simple;
+	bh=bxaYAw3KFAukICHyA8ZADUCzO0ruG6dtxRHo2LheGEA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GbsISD1t+N2/d+/0lYhnMVnXrzDMPkj+XAEE5YO1pHMwZafijqRImJzbnDWQiL3Tmqo0/3Myzd2bbPMvW7R7wCDMGEsCcfiprdBsU9EAc7uMCIp0b+2M1q9sM6CJQXsF8bn8fAJTgzzmX9U4+zJq2q0JrJouItPmdhGTjX4PDDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr; spf=pass smtp.mailfrom=freebox.fr; dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b=UxJThwJg; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freebox.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HNE5RsAg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA319C3277B;
-	Thu, 25 Apr 2024 13:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714053570;
-	bh=/jfDurkkyTX1CjxTQWI9/U9pueeszadMVJLu6GiEwj0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=HNE5RsAgTaZoxrIvlG1EZ6FNVeBiolN9FzELHstT8/YZC48DrHK8K1+Z2hi5wlfjB
-	 IM8VM/RB4xTlPAfw0BetGUQ3zZewCaIPD2SZcNtgBC2fCnHIlc7GOxaiK7oua15rJb
-	 vp2k7f4kWXcVWMLkVNIFnc6ilydDxJxicpUbd/9nyL/mu9TIDV6MB0u/BeKB6jR3Jz
-	 FxO6qS2LBhun3RpAuDHASQfDrEbEendMRGjHw6kHuruOeMZ46rlfp3IxtXKnVXP/CJ
-	 JW/9GtEK/3SylZATP/21S1nSKenKfpo+1F8HvzCMxnl67Nwu213DntyRBu7WbReUpM
-	 mgGaNCNQRF0Ww==
-From: Benjamin Tissoires <bentiss@kernel.org>
-Date: Thu, 25 Apr 2024 15:59:13 +0200
-Subject: [PATCH 2/3] bpf: do not walk twice the hash map on free
+	dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b="UxJThwJg"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41b21ed19f5so6541575e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 06:59:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=freebox-fr.20230601.gappssmtp.com; s=20230601; t=1714053566; x=1714658366; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c/c8R+r2wKwqushYa97j544g6TTlix/kEzEOUalKigY=;
+        b=UxJThwJgBtkepgF1e2axhmQymFrdcSCPr3zvjzvCuk7gyndAT79kCcUYiyYx5dN+qP
+         4O0sGl/qmW0exa9XtppR3DKQxj0tJgWb+Lpyn4WoVn+CQEVzk6owEyU9JzC0zAslRTp0
+         mF0bzrqCVgFvk6c3LX/7VrvPb+g4F852pSTMobrCPfQZzpbX9eJIIhxAVd2hZYi/SNkL
+         5nbQ+aYkwYbaK/+jVGgXeNOyrpm/IWdAOY51gqOEU+37RJhneIqE642QjZyUIp92J7/T
+         AvIpwpzUn61WykowEgeWlEnrSYEUJTmzAdo3KOImCl2SftlPa7UZjFHJi9TA7nfJRsPP
+         4Aow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714053566; x=1714658366;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c/c8R+r2wKwqushYa97j544g6TTlix/kEzEOUalKigY=;
+        b=ekXKAQbtvJv6k9A+YJnNRoyBsf4zESNt/bB8kdyLDcgcJpfpYYh/aMscB6HtZW43cM
+         oD3FV/mZjMgkT5J19PdZc/j6Am5DcZHJ/eMr1trzFf/9HMD+aFoKA2gr5AHlIUVnrlvJ
+         QgFH/Y35rTBVvVlnB5YvSzsUl9q5PRKlMp0DOjRJIU/JVVR4YymQGzTR6c+EdH94c2n9
+         09WaGp6ZS7GFCbExeOP8jR1OgUnqm6QOVO4poR9XbbH8mphTEnq+r9YqJOD4DGsIA4ky
+         S/N2jIE1ff+MceusIlw1CLVNEqgXW+Gvuac2zntSWTxm6V4iOYgW5HnusGA8xfb6SQQ/
+         qQ/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVQwED3UriihLbVCcs4Ld9MgwaT13vBt8P72yFq75PtWUh8dpS7SO4dDxFf6tePxMFWscgLBTvoRjkOqDPly/5DUFK2CD3E5nGN1xPv
+X-Gm-Message-State: AOJu0YwX1DkmYQRcFb4e+jbZ52/Qc/H5cRrplEmiQGepruFIgzCgynZu
+	jHWYqaE1BlXHAz72YB/w4gBijzjwpKAY1xW/xo1Oh4PRSBftAFDpwk0g/ZdZNNQ=
+X-Google-Smtp-Source: AGHT+IHcVSLzRPPOv8+VkqJn3b1N+UKHe0ajTrqk97KpyD5BrgPSvbqWpwe4PKtfGo8kjhQZEZa7bQ==
+X-Received: by 2002:a05:600c:4f8f:b0:419:f9ae:e50 with SMTP id n15-20020a05600c4f8f00b00419f9ae0e50mr4641377wmq.37.1714053565674;
+        Thu, 25 Apr 2024 06:59:25 -0700 (PDT)
+Received: from fbxleo.iliad.local (freebox.vlq16.iliad.fr. [213.36.7.13])
+        by smtp.gmail.com with ESMTPSA id o12-20020a05600c4fcc00b00418a6d62ad0sm31479464wmq.34.2024.04.25.06.59.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Apr 2024 06:59:25 -0700 (PDT)
+From: =?UTF-8?q?L=C3=A9o=20DUBOIN?= <lduboin@freebox.fr>
+To: linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?L=C3=A9o=20DUBOIN?= <lduboin@freebox.fr>
+Subject: [PATCH 0/2] pinctrl: core: fix untreated named gpio ranges in pinctrl_pins_show()
+Date: Thu, 25 Apr 2024 15:58:00 +0200
+Message-ID: <cover.1714049455.git.lduboin@freebox.fr>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240425-bpf-next-v1-2-1d8330e6c643@kernel.org>
-References: <20240425-bpf-next-v1-0-1d8330e6c643@kernel.org>
-In-Reply-To: <20240425-bpf-next-v1-0-1d8330e6c643@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1714053558; l=2311;
- i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
- bh=/jfDurkkyTX1CjxTQWI9/U9pueeszadMVJLu6GiEwj0=;
- b=Mz0bcCjh5PHLLrFEt0aDcjPvdnjN285NxBvdb63Pfw6n7lah+bC7DmxGNCp7JMh4WAhpXyb1x
- UrYXaq5DWWZB4TGvBQtqBxpb+smpQMVI3NtB3RmAWaay6gpNWQu/nmE
-X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
- pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-If someone stores both a timer and a workqueue in a hash map, on free, we
-would walk it twice.
-Add a check in htab_free_malloced_timers_or_wq and free the timers
-and workqueues if they are present.
+This series covers errors I encountered with the pinctrl_pins_show()
+function when dealing with named gpio ranges generated through the
+device tree using 'gpio-ranges-group-names'.
 
-Fixes: 246331e3f1ea ("bpf: allow struct bpf_wq to be embedded in arraymaps and hashmaps")
-Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
----
- kernel/bpf/hashtab.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+These errors were introduced with the original implementation in 
+f1b206cf7c57561ea156798f323b0541a783bd2f.
 
-diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-index 0179183c543a..20162ae741e9 100644
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -1515,7 +1515,7 @@ static void delete_all_elements(struct bpf_htab *htab)
- 	migrate_enable();
- }
- 
--static void htab_free_malloced_timers_or_wq(struct bpf_htab *htab, bool is_timer)
-+static void htab_free_malloced_timers_or_wq(struct bpf_htab *htab)
- {
- 	int i;
- 
-@@ -1527,10 +1527,10 @@ static void htab_free_malloced_timers_or_wq(struct bpf_htab *htab, bool is_timer
- 
- 		hlist_nulls_for_each_entry(l, n, head, hash_node) {
- 			/* We only free timer on uref dropping to zero */
--			if (is_timer)
-+			if (btf_record_has_field(htab->map.record, BPF_TIMER))
- 				bpf_obj_free_timer(htab->map.record,
- 						   l->key + round_up(htab->map.key_size, 8));
--			else
-+			if (btf_record_has_field(htab->map.record, BPF_WORKQUEUE))
- 				bpf_obj_free_workqueue(htab->map.record,
- 						       l->key + round_up(htab->map.key_size, 8));
- 		}
-@@ -1544,18 +1544,12 @@ static void htab_map_free_timers_and_wq(struct bpf_map *map)
- 	struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
- 
- 	/* We only free timer and workqueue on uref dropping to zero */
--	if (btf_record_has_field(htab->map.record, BPF_TIMER)) {
-+	if (btf_record_has_field(htab->map.record, BPF_TIMER | BPF_WORKQUEUE)) {
- 		if (!htab_is_prealloc(htab))
--			htab_free_malloced_timers_or_wq(htab, true);
-+			htab_free_malloced_timers_or_wq(htab);
- 		else
- 			htab_free_prealloced_timers(htab);
- 	}
--	if (btf_record_has_field(htab->map.record, BPF_WORKQUEUE)) {
--		if (!htab_is_prealloc(htab))
--			htab_free_malloced_timers_or_wq(htab, false);
--		else
--			htab_free_prealloced_wq(htab);
--	}
- }
- 
- /* Called when map->refcnt goes to zero, either from workqueue or from syscall */
+Léo DUBOIN (2):
+  pinctrl: core: take into account the pins array in pinctrl_pins_show()
+  pinctrl: core: reset gpio_device in loop in pinctrl_pins_show()
+
+ drivers/pinctrl/core.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
 -- 
-2.44.0
+2.42.0
 
