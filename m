@@ -1,125 +1,162 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A0A12AACA
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 12:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286FF12BE8C;
+	Thu, 25 Apr 2024 12:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714046580; cv=none; b=PtZXETF9swJhEiLloKWTXQ0zk/oxLO2WAtvPT6vPkfjSsQ6W8p5/nTjP0CDYtPleqo15l5i/DyOS4Szkk2Kdx3dGrhAYAzq3YAvSE/X9gV9x89vWBWKuAUGKKqNqc23eEXQ5xMIF3ahSBrjiulsxsCjlDbkwVMpcONjOwPnJZz8=
+	t=1714046620; cv=none; b=qj18crh8BELH29BsNFAlJWQLB8oxsdp4+sL1A0TI5tNhEh6u2HD1K5WPWxSbzcvbfnMrKMumm5quPdq0wQM06qUjG5cjihRjrx9koMeIHyfkCUzz2+a371sBF4BKJk33zfHxjPCp8WmXJnLhE2AFIIKbnymt3qBPxtrjElroOIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714046580; c=relaxed/simple;
-	bh=jphqvKLIukinGvb9JMFC352rTpP7/8VXNF6oX6moPJg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rXDPa4H/LXxOZq1Lhx5OFP78JDBCPn0fFXRmAmxPaMe8Blf+X24bZmLuNumZU5GthQb5P/8ZfR5OoE6VlJXNX4w/inQq34syx2duCsQyMuHeh31mA1yWD5wG91ZWwDUJehqfvoh8hPlU54+jeQVb2oU/z57Sbmxfbg9NzQuNi8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bzEEEkKb; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714046620; c=relaxed/simple;
+	bh=OaWenH2ecs+TvT40FvZfeCOsMkIprLb3i+uRB7TGjxw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=FV93sLpUYMis5hOMH2TIbBgxV7zATDkg9LnxkDyIPVLORwD2aSaQw+w/S4B1MeCPidbLz9j/TRl4AvDeXrvaI0aS7w53kjF0z+w6oWCtoV9UPIu8W1mxSBvboHfyDZgYBqDmZ0UD705ofz0jZ4me7NC9eziULip+nsfxEune4qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iebj8Wwz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bzEEEkKb"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-343d7ff2350so725591f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 05:02:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714046578; x=1714651378; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AZtgfXbbk2xQsw1Lmj4dmQHGao3EmNipVbMSfwpwCWw=;
-        b=bzEEEkKbvW6eGqugSTDMMWOARDxCjrBsB73AuYu3mBKufCDyBoIybIf87+O8o/cYlo
-         8dnUdZWz7hHWcsuR391z2Ojkb/pqqxZqlQCHdC9bYZibdNsvuloWttCqT6b+XqmLs4Uv
-         48OkKDEBz208iJOfdVhxV5zKokj68aeJKRxLGZ6kpVaNuokK5jDs2vFgsAlG3QyMuBq5
-         VwKvIsDJBDYPid3YjzSDE2MX8GJsE1DbbKcCmdBGjKYCi93pw9si3bzybCHJJSzcPQ9a
-         WcWzOPre5zrY/q+I0opcdwYUupRIXZA/bVJR06FpAjSm/HHD48shBQnHYzjWRnbAbEMz
-         2zFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714046578; x=1714651378;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AZtgfXbbk2xQsw1Lmj4dmQHGao3EmNipVbMSfwpwCWw=;
-        b=l8wfFoeJL+SYo1vLk+1B5iGYhfEG0MCFVop9NNbu2hZiuGhO++Vshus2RxbyMj2nwK
-         YQhfhNJssgnuiePHRV6StGBhndqhXAf+26vsQsGVEfxNwR0gFFv0MQ/IZ8zZ9dpiCfhr
-         EQ7nsR+uhSRllV9lqL+tLDSXr6FSAR8Vy/7BUn0bsFzswr7bku/RCRiY887W/AKaTu/s
-         I4iFbCRLfqqs/OV2JLBSzeKp23p9wMinlzjNG6UzsFcnFrM5IsEqzRYVHgp0fWEyKdXP
-         +PzsKPdpQGbjJT1RYc+CVQlmyJn6hXk9N///DRSgIRr86GiV9/xbWV6fqBzRCM09tmIN
-         swsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUuB9QaotRIICMcJV3hO6IYiytLV8qA87L74Dheus3U+f6nv4DFcfbNhGHSTDPLyoxe70URmkYHjzoP0MYR0tJN0fGgGd/jWZzt/35U
-X-Gm-Message-State: AOJu0YznU4G5O6L9pi1GakwaEQrKV5JaZ1o9j5UCowKg8Jh/9wq4t6he
-	POFdhF9+R+yC0uueW6wtpAg29JNmDn1ayuoB4x3cmQ8m1qGocMSZn98CG8oqgw4=
-X-Google-Smtp-Source: AGHT+IEzZdSed4XOrE4rETuECmfdaxcVqf4C7+1LXgTcZDv2J71RTHhX+CpK/z2WbiePkXS0N6SWDw==
-X-Received: by 2002:adf:eeca:0:b0:34b:147f:df67 with SMTP id a10-20020adfeeca000000b0034b147fdf67mr3840631wrp.53.1714046577733;
-        Thu, 25 Apr 2024 05:02:57 -0700 (PDT)
-Received: from [10.1.1.109] ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id w20-20020adfe054000000b0034a366f26b0sm18062178wrh.87.2024.04.25.05.02.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 05:02:57 -0700 (PDT)
-Message-ID: <52403f522a4f7513c5ee5dae48856988f7141825.camel@linaro.org>
-Subject: Re: [PATCH v2 06/14] arm64: dts: exynos: gs101: Add ufs, ufs-phy
- and ufs regulator dt nodes
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Peter Griffin <peter.griffin@linaro.org>, mturquette@baylibre.com, 
- sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-  vkoul@kernel.org, kishon@kernel.org, alim.akhtar@samsung.com,
- avri.altman@wdc.com,  bvanassche@acm.org, s.nawrocki@samsung.com,
- cw00.choi@samsung.com,  jejb@linux.ibm.com, martin.petersen@oracle.com, 
- James.Bottomley@HansenPartnership.com, ebiggers@kernel.org
-Cc: linux-scsi@vger.kernel.org, linux-phy@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, tudor.ambarus@linaro.org, 
-	saravanak@google.com, willmcvicker@google.com
-Date: Thu, 25 Apr 2024 13:02:55 +0100
-In-Reply-To: <20240423205006.1785138-7-peter.griffin@linaro.org>
-References: <20240423205006.1785138-1-peter.griffin@linaro.org>
-	 <20240423205006.1785138-7-peter.griffin@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3-1 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iebj8Wwz"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C99DDC4AF0D;
+	Thu, 25 Apr 2024 12:03:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714046619;
+	bh=OaWenH2ecs+TvT40FvZfeCOsMkIprLb3i+uRB7TGjxw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=iebj8WwzVL+A712aOjHvZVb2LDpFpEXkLkDox4BuouovfrBfBVUMjnHmA74kMziQS
+	 4cHR1usXK+N+fXrqjsv4xvQc6YxHwsWkHC87xg9fKYFf/RuNH9PwidOHG0S1lKx7ym
+	 iDFthYA3S5oiN3sbuleUqmqzTIPLPvtclvT1Dc+5KWOaEfBLsg8affCkYJQ31su65D
+	 nKmidiXn1JyIriN6kbCvm20TFBJkZisMTtHGFKi7zwlGb5okklYWqlRwGjxGoP9cz6
+	 /5yuraskJdE0xbQFscPVQnZlV7treb/SA3ZSnhb+dhxQNMD8/Ff7wjhA0+DFm9bYNc
+	 /2yrmqf9aE7Gg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE61C4345F;
+	Thu, 25 Apr 2024 12:03:39 +0000 (UTC)
+From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+Date: Thu, 25 Apr 2024 14:03:01 +0200
+Subject: [PATCH v4 3/8] net: rds: Remove the now superfluous sentinel
+ elements from ctl_table array
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240425-jag-sysctl_remset_net-v4-3-9e82f985777d@samsung.com>
+References: <20240425-jag-sysctl_remset_net-v4-0-9e82f985777d@samsung.com>
+In-Reply-To: <20240425-jag-sysctl_remset_net-v4-0-9e82f985777d@samsung.com>
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Alexander Aring <alex.aring@gmail.com>, 
+ Stefan Schmidt <stefan@datenfreihafen.org>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, David Ahern <dsahern@kernel.org>, 
+ Steffen Klassert <steffen.klassert@secunet.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, 
+ Remi Denis-Courmont <courmisch@gmail.com>, 
+ Allison Henderson <allison.henderson@oracle.com>, 
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
+ Xin Long <lucien.xin@gmail.com>, Wenjia Zhang <wenjia@linux.ibm.com>, 
+ Jan Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, 
+ Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>, 
+ Trond Myklebust <trond.myklebust@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+ Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>, 
+ Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>, 
+ Pablo Neira Ayuso <pablo@netfilter.org>, 
+ Jozsef Kadlecsik <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>, 
+ Roopa Prabhu <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, 
+ Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>, 
+ Joerg Reuter <jreuter@yaina.de>, Luis Chamberlain <mcgrof@kernel.org>, 
+ Kees Cook <keescook@chromium.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dccp@vger.kernel.org, linux-wpan@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org, 
+ rds-devel@oss.oracle.com, linux-afs@lists.infradead.org, 
+ linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
+ linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+ coreteam@netfilter.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
+ Joel Granados <j.granados@samsung.com>
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1604;
+ i=j.granados@samsung.com; h=from:subject:message-id;
+ bh=Yhw5Yxzxk2wGoyQtTfioNjf4XA/aQJR8HoqakSkFmW8=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYqRpZ+ciA/HHVt65phSNWtFyMUOJjaO+muN
+ giwMjY3le8uKokBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmKkaWAAoJELqXzVK3
+ lkFPOOIL/RVvW0sG7aSSd5w2F2A7rKvXffRk6l2MMFhUVSA6mTgxTTtWKiAhcdH+Tph9HS0xjmb
+ RA5qTObl2piNudwds595bpBh95SUaFWXs+JaFvoz7rGQmLq0dR/7urynVoO1BqoA31AE4h1YT0M
+ hAAfyOIbTk/udmGJ7p8l3AbnOgb78NrsEVEm0R8IB1HKkCgMar3/u9R3umnS5eogtXQ0Zw7ZqLO
+ KwVsn3LDTckfU3Sum2vYvUNHfnYapZWvtLUWtLq72l1XHaeZTAQertUKq+EI25OEPZHUzoS0Afj
+ Xym9aOv/GqdERSwT9o4YBfc3fKFNTDCUrypJ3Zkd8LHJEhpzf517Sgwk9yp+EslSoGB+z0nlREK
+ QHhojWNrCN6900i+pIoWMcQ8vil4s35QVwP6KT9Utum5DqUrYFW1SnEaTb7uWZfODcUmXZ/LJ1N
+ qEN10dnIE9hBxDnuqmPt93EnnCIbvnv2EUkwHt1cQrZv7AdS0yVsdYnDYBtntWfYGqzCT90iZh3
+ wo=
+X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
+ auth_id=70
+X-Original-From: Joel Granados <j.granados@samsung.com>
+Reply-To: j.granados@samsung.com
 
-On Tue, 2024-04-23 at 21:49 +0100, Peter Griffin wrote:
-> Enable the ufs controller, ufs phy and ufs regulator in device tree.
->=20
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
-> =C2=A0.../boot/dts/exynos/google/gs101-oriole.dts=C2=A0=C2=A0 | 18 ++++++=
-++++
-> =C2=A0arch/arm64/boot/dts/exynos/google/gs101.dtsi=C2=A0 | 36 +++++++++++=
-++++++++
-> =C2=A02 files changed, 54 insertions(+)
->=20
+From: Joel Granados <j.granados@samsung.com>
 
-[...]
+This commit comes at the tail end of a greater effort to remove the
+empty elements at the end of the ctl_table arrays (sentinels) which
+will reduce the overall build time size of the kernel and run time
+memory bloat by ~64 bytes per sentinel (further information Link :
+https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-> +
-> +		ufs_0: ufs@14700000 {
-> +			compatible =3D "google,gs101-ufs";
-> +			reg =3D <0x14700000 0x200>,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 <0x14701100 0x200>,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 <0x14780000 0xa000>,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 <0x14600000 0x100>;
-> +			reg-names =3D "hci", "vs_hci", "unipro", "ufsp";
-> +			interrupts =3D <GIC_SPI 532 IRQ_TYPE_LEVEL_HIGH 0>;
-> +			clocks =3D <&cmu_hsi2 CLK_GOUT_HSI2_UFS_EMBD_I_ACLK>,
-> +				 <&cmu_hsi2 CLK_GOUT_HSI2_UFS_EMBD_I_CLK_UNIPRO>,
-> +				 <&cmu_hsi2 CLK_GOUT_HSI2_UFS_EMBD_I_FMP_CLK>,
-> +				 <&cmu_hsi2 CLK_GOUT_HSI2_QE_UFS_EMBD_HSI2_ACLK>,
-> +				 <&cmu_hsi2 CLK_GOUT_HSI2_QE_UFS_EMBD_HSI2_PCLK>,
-> +				 <&cmu_hsi2 CLK_GOUT_HSI2_SYSREG_HSI2_PCLK>;
-> +			clock-names =3D "core_clk", "sclk_unipro_main", "fmp",
-> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "ufs_aclk", "ufs_pclk", "sysreg";
-> +			freq-table-hz =3D <0 0>, <0 0>, <0 0>, <0 0>, <0 0>, <0 0>;
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&ufs_rst_n &ufs_refclk_out>;
+* Remove sentinel element from ctl_table structs.
 
-The preferred order is pinctrl-0 before pinctrl-names (similar to clock-nam=
-es and reg-names).
+Signed-off-by: Joel Granados <j.granados@samsung.com>
+---
+ net/rds/ib_sysctl.c | 1 -
+ net/rds/sysctl.c    | 1 -
+ net/rds/tcp.c       | 1 -
+ 3 files changed, 3 deletions(-)
 
-Other than that,
+diff --git a/net/rds/ib_sysctl.c b/net/rds/ib_sysctl.c
+index e4e41b3afce7..2af678e71e3c 100644
+--- a/net/rds/ib_sysctl.c
++++ b/net/rds/ib_sysctl.c
+@@ -103,7 +103,6 @@ static struct ctl_table rds_ib_sysctl_table[] = {
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_dointvec,
+ 	},
+-	{ }
+ };
+ 
+ void rds_ib_sysctl_exit(void)
+diff --git a/net/rds/sysctl.c b/net/rds/sysctl.c
+index e381bbcd9cc1..025f518a4349 100644
+--- a/net/rds/sysctl.c
++++ b/net/rds/sysctl.c
+@@ -89,7 +89,6 @@ static struct ctl_table rds_sysctl_rds_table[] = {
+ 		.mode           = 0644,
+ 		.proc_handler   = proc_dointvec,
+ 	},
+-	{ }
+ };
+ 
+ void rds_sysctl_exit(void)
+diff --git a/net/rds/tcp.c b/net/rds/tcp.c
+index 2dba7505b414..d8111ac83bb6 100644
+--- a/net/rds/tcp.c
++++ b/net/rds/tcp.c
+@@ -86,7 +86,6 @@ static struct ctl_table rds_tcp_sysctl_table[] = {
+ 		.proc_handler   = rds_tcp_skbuf_handler,
+ 		.extra1		= &rds_tcp_min_rcvbuf,
+ 	},
+-	{ }
+ };
+ 
+ u32 rds_tcp_write_seq(struct rds_tcp_connection *tc)
 
-Acked-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+-- 
+2.43.0
+
 
