@@ -1,109 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2895E12BF28;
-	Thu, 25 Apr 2024 22:58:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F84155A57
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 23:00:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714085889; cv=none; b=UKjIzWySvO4bE+i+R07JJinYA6FOo2fgfdBFLJ3wQsJ0Ok25V2DCMWZBkQBYtSET2LC27Og0tYkdXfrFfv03nMyQkP9h1Lncpdki3gcPrmb5lFvQhoHvgaKk2sdzBM2nGSLhUCDDRygz1qY/K/P0Xw/qlOeyUpgQChD9V6DnhaU=
+	t=1714086032; cv=none; b=tNOJCwndqPBN3RW9jOebJvhBuT88PN1wEYi57emYdKgX/4r85rhp/QRErUJxeXHMe2a9awjPH4z4XLOsberQ/UpfoEwjubSV39IQ1PjpkzSu/6Sqct9M3HGO2mYxB9KFD7GCUydx6FlQ6JSJY1sGieZJfSdEos7yZdUekBYhGtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714085889; c=relaxed/simple;
-	bh=KZ6d6tmhKGWfhPvc5pe1zvmWKH4eLy2i/SVKQGqyco4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c1vIRoD0mqVvzd8eT81Nx2JjmImmwuRoGApm7OfcIEB5r5siU77rQvOIqfyBWoBcXS7m1f/U+fkG12v5/s/R8XCY5r65N4mlj/rmGVwdfN2HctNxdKYVFd8toU0YMA5PjN9VHxnOPywOXT5opCRreZhCqQ36x9VUUBYu/SZ04Z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQHjP+/I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714086032; c=relaxed/simple;
+	bh=BWCTdQoP4/3RTZr8W9fHb98CWImR4UwdaKkH2m5RqW8=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=NeM+j0RnsL5jLA2Elb2sokvX9T0QY+BmT2Bed+t9W1kd+SAo8WBxgWrludpi2nrLOc4i7yL17AjAvW0f3WjkfdQYikdKImGKEcTtDwwWBL6/YCdOwfG3MUQK0WPBYdsfpY35pfaDp8nrZYMgZrDCRNPl2Ud0dcfukbDaEXfSRlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jjtB6vTq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQHjP+/I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3902C113CC;
-	Thu, 25 Apr 2024 22:58:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jjtB6vTq"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C9AB5C2BD10;
+	Thu, 25 Apr 2024 23:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714085888;
-	bh=KZ6d6tmhKGWfhPvc5pe1zvmWKH4eLy2i/SVKQGqyco4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XQHjP+/IEP3Hod/NE4TIvhSjSrvdrjAy9k2SyFIAJjFzNY8+Nh3Sx4POcNt5btuMm
-	 3im4slzGoWYkGm7TS50kvWPPVYBYIGT0/MZhkPK2muqrQmmbWC0GyjmcZ0ybOYTxW9
-	 SMkcyLR9W1KlZ7QqBNuRE0iMGbU80vuL7IHG1jEi41QYuf83RSpP92ZQTtRVvOQLlr
-	 v3hS48+RITvJrg9TWBKbL4CriqzPOg3Tsg+Vt50QKETrvCXiqDRTehoqDAJ9x/Y1u/
-	 a3230EtuGUq8KzmygdeZcglcAOIPu4ukSmpzRXKV2jvztr04ZgWZjoIRpRbueNQj+A
-	 zP3uYbLEZ8C/g==
-Date: Thu, 25 Apr 2024 15:58:04 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Cc: j.granados@samsung.com, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Alexander
- Aring <alex.aring@gmail.com>, Stefan Schmidt <stefan@datenfreihafen.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>, David Ahern
- <dsahern@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Matthieu Baerts
- <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Geliang Tang
- <geliang@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Remi
- Denis-Courmont <courmisch@gmail.com>, Allison Henderson
- <allison.henderson@oracle.com>, David Howells <dhowells@redhat.com>, Marc
- Dionne <marc.dionne@auristor.com>, Marcelo Ricardo Leitner
- <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, Wenjia Zhang
- <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>, "D. Wythe"
- <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>, Wen Gu
- <guwen@linux.alibaba.com>, Trond Myklebust
- <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, Chuck
- Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil
- Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
- <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Jon Maloy
- <jmaloy@redhat.com>, Ying Xue <ying.xue@windriver.com>, Martin Schiller
- <ms@dev.tdt.de>, Pablo Neira Ayuso <pablo@netfilter.org>, Jozsef Kadlecsik
- <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>, Roopa Prabhu
- <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, Simon Horman
- <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>, Joerg Reuter
- <jreuter@yaina.de>, Luis Chamberlain <mcgrof@kernel.org>, Kees Cook
- <keescook@chromium.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, dccp@vger.kernel.org,
- linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
- linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org,
- rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
- linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org,
- linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
- linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org
-Subject: Re: [PATCH v4 1/8] net: Remove the now superfluous sentinel
- elements from ctl_table array
-Message-ID: <20240425155804.66f3bed5@kernel.org>
-In-Reply-To: <20240425-jag-sysctl_remset_net-v4-1-9e82f985777d@samsung.com>
-References: <20240425-jag-sysctl_remset_net-v4-0-9e82f985777d@samsung.com>
-	<20240425-jag-sysctl_remset_net-v4-1-9e82f985777d@samsung.com>
+	s=k20201202; t=1714086030;
+	bh=BWCTdQoP4/3RTZr8W9fHb98CWImR4UwdaKkH2m5RqW8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=jjtB6vTqT3a9Zz29gTXjtQc9dFEWhS9QDTCNo677903vNbrF2txz30kOE/0m1jUyM
+	 csIAlicgoFX4AgPKWzlQUiT3gU6e4/vFrvuJ7wqF/ytVAu8TpYzpGNYWZrAF1Aus4p
+	 MoYhlYUhEwGAmH/ZbMUUm8lYcjYolFUwfwZEIqNiZpyW1KyHZfekIGBZN4qk3yJi1T
+	 WKElBZI9BnSZ+PMCka+MbSyGcl/J22lFI6j8+D7qMiKpwr6chtsoHzAsb4BBXfYBzU
+	 rtvVHBG4BFQus6/EgsiSTSGyOHB3tX2Xq0QlbTJC7tF7uiK7d9UDRw7LVdwyFTY0Nu
+	 G2FaiXYezK2Xg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B3BFEC43140;
+	Thu, 25 Apr 2024 23:00:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3 0/2] RISC-V: Test th.sxstatus.MAEE bit before enabling MAEE
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <171408603073.8761.4519771274981632479.git-patchwork-notify@kernel.org>
+Date: Thu, 25 Apr 2024 23:00:30 +0000
+References: <20240407213236.2121592-1-christoph.muellner@vrull.eu>
+In-Reply-To: <20240407213236.2121592-1-christoph.muellner@vrull.eu>
+To: =?utf-8?q?Christoph_M=C3=BCllner_=3Cchristoph=2Emuellner=40vrull=2Eeu=3E?=@ci.codeaurora.org
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+ philipp.tomsich@vrull.eu, bjorn@kernel.org, dbarboza@ventanamicro.com,
+ heiko@sntech.de, cooper.qu@linux.alibaba.com, zhiwei_liu@linux.alibaba.com,
+ eric.huang@linux.alibaba.com, alistair.francis@wdc.com,
+ ajones@ventanamicro.com, conor@kernel.org, dqfext@gmail.com, alex@ghiti.fr,
+ samuel.holland@sifive.com
 
-On Thu, 25 Apr 2024 14:02:59 +0200 Joel Granados via B4 Relay wrote:
-> -	for (i =3D 0; i < ARRAY_SIZE(mpls_table) - 1; i++)
-> +	for (i =3D 0; i < tabel_size; i++)
->  		table[i].data =3D (char *)net + (uintptr_t)table[i].data;
-> =20
->  	net->mpls.ctl =3D register_net_sysctl_sz(net, "net/mpls", table,
-> -					       ARRAY_SIZE(mpls_table));
-> +					       tabel_size);
+Hello:
 
-../net/mpls/af_mpls.c: In function =E2=80=98mpls_net_init=E2=80=99:
-../net/mpls/af_mpls.c:2676:25: error: =E2=80=98tabel_size=E2=80=99 undeclar=
-ed (first use in this function); did you mean =E2=80=98table_size=E2=80=99?
- 2676 |         for (i =3D 0; i < tabel_size; i++)
-      |                         ^~~~~~~~~~
-      |                         table_size
-../net/mpls/af_mpls.c:2676:25: note: each undeclared identifier is reported=
- only once for each function it appears in
-../net/mpls/af_mpls.c:2660:16: warning: unused variable =E2=80=98table_size=
-=E2=80=99 [-Wunused-variable]
- 2660 |         size_t table_size =3D ARRAY_SIZE(mpls_table);
-      |                ^~~~~~~~~~
---=20
-netdev FAQ tl;dr:
- - designate your patch to a tree - [PATCH net] or [PATCH net-next]
- - for fixes the Fixes: tag is required, regardless of the tree
- - don't post large series (> 15 patches), break them up
- - don't repost your patches within one 24h period
+This series was applied to riscv/linux.git (fixes)
+by Palmer Dabbelt <palmer@rivosinc.com>:
 
-pw-bot: cr
+On Sun,  7 Apr 2024 23:32:34 +0200 you wrote:
+> Currently, the Linux kernel suffers from a boot regression when running
+> on the c906 QEMU emulation. Details have been reported here by Björn Töpel:
+>   https://lists.gnu.org/archive/html/qemu-devel/2024-01/msg04766.html
+> 
+> The main issue is, that Linux enables XTheadMae for CPUs that have a T-Head
+> mvendorid but QEMU maintainers don't want to emulate a CPU that uses
+> reserved bits in PTEs. See also the following discussion for more
+> context:
+>   https://lists.gnu.org/archive/html/qemu-devel/2024-02/msg00775.html
+> 
+> [...]
+
+Here is the summary with links:
+  - [v3,1/2] riscv: thead: Rename T-Head PBMT to MAE
+    https://git.kernel.org/riscv/c/6179d4a21300
+  - [v3,2/2] riscv: T-Head: Test availability bit before enabling MAE errata
+    https://git.kernel.org/riscv/c/65b71cc35cc6
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
