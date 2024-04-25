@@ -1,171 +1,170 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC36155723
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 21:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A922773C;
+	Thu, 25 Apr 2024 21:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714080917; cv=none; b=FKC9EtkFbW7KB9deawpjghxrrjmg9R5OWghJKLuTSC95mobR2Ly2Z3tmlnqU8YwCZqD/lA2JFcUATnvUiuwV7FEP6JOvPXkwQQofxI0qzaKACV1OmtN4RZquJhBuT3U9+ZZCN8IXp4I1lyu/a9zRtDAen82ytbxO/QdjCVHFhkE=
+	t=1714081042; cv=none; b=T3+zbL82t6nppFWXBXKWM5mo79tAyByFor/UxWzRmJYmzT15+L7An/qO331UOxR9S2IBtWGsumBMjYfem0ipum9TBHqRTqAK+zWiS2FBqu7HJJXDrsAclrVMyzqHji8OK8WJkOvNhnRd0iUVy7Ean5IUxz3bVfoavTsYPaUcRNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714080917; c=relaxed/simple;
-	bh=2qnfxzwBZ+1IL0G1LGYLrncnZO5VsqWJdO3vHTL8sE0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kbZdHz18C93htBgkMptrdNJ4yh48ZWYSI/c72W+JA46a3yocMguGI+jXuaK1bUBfHkA4Wm4bmCDr/cnrXzEAZ1JmhU8k/2VIE0ReL7H4L4R9DthZQWefNlwfiGcMYcLXCw981AlWb/DQ+gLM6M4U5ZmrrHDRXk74C3hC9e8Ybz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zIEs2nrq; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714081042; c=relaxed/simple;
+	bh=AdrzoqKPN4RP0il9nDX1O4yS/5reXKrTPa5K17RHazM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KOKP2Q1/z43E52zsPFWYA8wTsNALgCPFOoFS+sPZuNMP3JWf7KmBGjincZQcKKIBPjC6PwfVrgEmqMYz3td68YooEorwzuCHe2jPsNuylqoXxEGaH8je3iUZiSHE8F4s9J/YK7Wt7hX44Hr4t/VrOMvkWnagtHClv7oOMh2ml+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eyxHIgjy; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zIEs2nrq"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dc236729a2bso1521051276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 14:35:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714080915; x=1714685715; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dNAVjZRL3SNvhEv7UtPjNVw2qSZLNXEHiDVYNBop7Cg=;
-        b=zIEs2nrqO3yO9rI/l50CxSWuWlEnVu0aVTy68lWKm6PAGnFHe55G+yxIqqbDk6w2ef
-         bZyxADXa0JJtf9apSYz7nbiZ1PFZlKD1xJ6QYmpWy6M5S9lviDwU+QjI3wB0vHHatDXK
-         7nQiGkaetqvNPlPFLKQh86Ef64ZAuKT+gZ/gGf9GFUbUx9Um6G2vgYSNYAJUUeeGI9E3
-         KxnUWMV22hbZjh0NKkwonQCDSb1ykK7Pw0WsAb9SQBcGAEF9Ubbi4j57rAOe7tinbUtq
-         n6FRtN0EpyZys6jX3FKdcPfeN3OhRVzhaJntcMHuMkGcAWnclQDROROWIkWN/YAxXGA8
-         NwjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714080915; x=1714685715;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dNAVjZRL3SNvhEv7UtPjNVw2qSZLNXEHiDVYNBop7Cg=;
-        b=SzmPJGA6mBZRiipHDuTERDiLY+FxsDAzXOTzzDWTnHUQ83i0ZENRsn4lN8MZdmA7FS
-         y6RM7jUM98n6dh9GHqpW1xO61lZa9bGz3v/jwEWXOtUwnPkIA368Zers/A0MJYJxwdkl
-         g2feKWKz+C01rUKNEcWp2dGokcBsASqjbLg7aK/Rzq+VVEiR1vbgSZkr+kVNIjQel7FD
-         VLeF5ZKCIrydkkkis+URpSGymtKNipmN7dp3FUNkcRKUQAdEHlAVid3E447jS9aAmje/
-         Nn+PqUllZuHcavfuJimEVuY5zFda8tMxPGnS1AcX6f3BQwjIXAmaj7t8KDaZexId/z1u
-         jeww==
-X-Forwarded-Encrypted: i=1; AJvYcCWKyGTpQBYgi9jdn6TMC8siB0HHxfOmH4pqSskosvN6Wagq9AwsKIrnoqTQGUYjV5wOvrQcbK3suxzOpnxSweXa0WvUO8nUskICbBiA
-X-Gm-Message-State: AOJu0YyG2ERMPcxnwm7655Vp/Wa0ibZctrXV0cLZLoS5npzSaug3dYNV
-	QEs6KgIUUFsV4PqqQ+gHG2EPpw5ctyThiJ27aPS6ZaTo2bNI7NnQ4rRXo4B0uyWLG0YqYYeCVpG
-	ByMI76AI2AiJ0elfOGQ3pIZGVnY3Tbo2xZ/O8
-X-Google-Smtp-Source: AGHT+IGQ7MeXm0dvILJ0AXWrIM9WmgMhHcldUahIe6fZQn6xXrjGpkS7ue/fUW0Lq66Lii1hOI5w9eO9wnXdvzFvETU=
-X-Received: by 2002:a25:c5cb:0:b0:de5:56ca:759b with SMTP id
- v194-20020a25c5cb000000b00de556ca759bmr991751ybe.2.1714080914454; Thu, 25 Apr
- 2024 14:35:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eyxHIgjy"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43PLS90l025680;
+	Thu, 25 Apr 2024 21:37:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : content-transfer-encoding
+ : mime-version; s=pp1; bh=JyabUK1mNnNA8JMPYj/be1jhpJEd0MeRmp5EnyVnktk=;
+ b=eyxHIgjyCkAVsV5Eihlpb3RvkLbACIdhp1f3UCBoW7OieJ8RukgpThRCqwQRHrjOID22
+ SbLwSHewpQFEDPOTI47ckv/QqSY4dt5CvLb7SPQ8lYqrcAzY3K5YbvCaXTbv1U5F0byO
+ sLBr2WrXmeGhSDmK/9slXmdP3hPoLr8x3cSKNvE7MmAYA2gkbaVMxrPVojOtNrrzeLuj
+ EIJjgx/tawFK/sXNntTAv54cu8C00Vyt/4f54RTvUp4UaTh1yDROxfmI67sKDP/w0qZR
+ sw9X5BkW3cIqxwSNf3k3Q8LgpBKtZr6veVf9ZLUPDpZRYisWlEDFeZT3IKr9ZGIdXHUw bg== 
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xqy3qg0gh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Apr 2024 21:37:12 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43PKfltr028341;
+	Thu, 25 Apr 2024 21:37:11 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xmtr2upju-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Apr 2024 21:37:11 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43PLb7Z728836522
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 25 Apr 2024 21:37:09 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 958A358060;
+	Thu, 25 Apr 2024 21:37:07 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E3A4D58045;
+	Thu, 25 Apr 2024 21:37:06 +0000 (GMT)
+Received: from slate16.aus.stglabs.ibm.com (unknown [9.61.133.34])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 25 Apr 2024 21:37:06 +0000 (GMT)
+From: Eddie James <eajames@linux.ibm.com>
+To: linux-aspeed@lists.ozlabs.org
+Cc: eajames@linux.ibm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
+        linux-spi@vger.kernel.org, linux-i2c@vger.kernel.org,
+        lakshmiy@us.ibm.com, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au
+Subject: [PATCH v3 06/14] dt-bindings: fsi: Document the FSI controller common properties
+Date: Thu, 25 Apr 2024 16:36:53 -0500
+Message-Id: <20240425213701.655540-7-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240425213701.655540-1-eajames@linux.ibm.com>
+References: <20240425213701.655540-1-eajames@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 5TDr2M2OzFukzCAhHnaCDew7u399F6f1
+X-Proofpoint-GUID: 5TDr2M2OzFukzCAhHnaCDew7u399F6f1
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240321163705.3067592-1-surenb@google.com> <202404241852.DC4067B7@keescook>
- <3eyvxqihylh4st6baagn6o6scw3qhcb6lapgli4wsic2fvbyzu@h66mqxcikmcp>
- <CAJuCfpFtj7MVY+9FaKfq0w7N1qw8=jYifC0sBUAySk=AWBhK6Q@mail.gmail.com> <202404251254.FE91E2FD8@keescook>
-In-Reply-To: <202404251254.FE91E2FD8@keescook>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 25 Apr 2024 14:35:03 -0700
-Message-ID: <CAJuCfpHcz+GVjFqcjxq4=tCzJyPZFFRATWDNChyEUyV_Ru+g5A@mail.gmail.com>
-Subject: Re: [PATCH v6 00/37] Memory allocation profiling
-To: Kees Cook <keescook@chromium.org>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>, akpm@linux-foundation.org, mhocko@suse.com, 
-	vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
-	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
-	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, 
-	will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
-	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
-	nathan@kernel.org, dennis@kernel.org, jhubbard@nvidia.com, tj@kernel.org, 
-	muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org, 
-	pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com, 
-	dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com, 
-	ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org, 
-	ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org, 
-	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com, 
-	elver@google.com, dvyukov@google.com, songmuchun@bytedance.com, 
-	jbaron@akamai.com, aliceryhl@google.com, rientjes@google.com, 
-	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
-	cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-25_21,2024-04-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ clxscore=1015 mlxscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
+ lowpriorityscore=0 suspectscore=0 impostorscore=0 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404250157
 
-On Thu, Apr 25, 2024 at 1:01=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> On Thu, Apr 25, 2024 at 08:39:37AM -0700, Suren Baghdasaryan wrote:
-> > On Wed, Apr 24, 2024 at 8:26=E2=80=AFPM Kent Overstreet
-> > <kent.overstreet@linux.dev> wrote:
-> > >
-> > > On Wed, Apr 24, 2024 at 06:59:01PM -0700, Kees Cook wrote:
-> > > > On Thu, Mar 21, 2024 at 09:36:22AM -0700, Suren Baghdasaryan wrote:
-> > > > > Low overhead [1] per-callsite memory allocation profiling. Not ju=
-st for
-> > > > > debug kernels, overhead low enough to be deployed in production.
-> > > >
-> > > > Okay, I think I'm holding it wrong. With next-20240424 if I set:
-> > > >
-> > > > CONFIG_CODE_TAGGING=3Dy
-> > > > CONFIG_MEM_ALLOC_PROFILING=3Dy
-> > > > CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=3Dy
-> > > >
-> > > > My test system totally freaks out:
-> > > >
-> > > > ...
-> > > > SLUB: HWalign=3D64, Order=3D0-3, MinObjects=3D0, CPUs=3D4, Nodes=3D=
-1
-> > > > Oops: general protection fault, probably for non-canonical address =
-0xc388d881e4808550: 0000 [#1] PREEMPT SMP NOPTI
-> > > > CPU: 0 PID: 0 Comm: swapper Not tainted 6.9.0-rc5-next-20240424 #1
-> > > > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 0=
-2/06/2015
-> > > > RIP: 0010:__kmalloc_node_noprof+0xcd/0x560
-> > > >
-> > > > Which is:
-> > > >
-> > > > __kmalloc_node_noprof+0xcd/0x560:
-> > > > __slab_alloc_node at mm/slub.c:3780 (discriminator 2)
-> > > > (inlined by) slab_alloc_node at mm/slub.c:3982 (discriminator 2)
-> > > > (inlined by) __do_kmalloc_node at mm/slub.c:4114 (discriminator 2)
-> > > > (inlined by) __kmalloc_node_noprof at mm/slub.c:4122 (discriminator=
- 2)
-> > > >
-> > > > Which is:
-> > > >
-> > > >         tid =3D READ_ONCE(c->tid);
-> > > >
-> > > > I haven't gotten any further than that; I'm EOD. Anyone seen anythi=
-ng
-> > > > like this with this series?
-> > >
-> > > I certainly haven't. That looks like some real corruption, we're in s=
-lub
-> > > internal data structures and derefing a garbage address. Check kasan =
-and
-> > > all that?
-> >
-> > Hi Kees,
-> > I tested next-20240424 yesterday with defconfig and
-> > CONFIG_MEM_ALLOC_PROFILING enabled but didn't see any issue like that.
-> > Could you share your config file please?
->
-> Well *that* took a while to .config bisect. I probably should have found
-> it sooner, but CONFIG_DEBUG_KMEMLEAK=3Dy is what broke me. Without that,
-> everything is lovely! :)
->
-> I can reproduce it now with:
->
-> $ make defconfig kvm_guest.config
-> $ ./scripts/config -e CONFIG_MEM_ALLOC_PROFILING -e CONFIG_DEBUG_KMEMLEAK
+Since there are multiple FSI controllers documented, the common
+properties should be documented separately and then referenced
+from the specific controller documentation.
 
-Thanks! I'll use this to reproduce the issue and will see if we can
-handle that recursion in a better way.
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+---
+ .../bindings/fsi/fsi-controller.yaml          | 65 +++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fsi/fsi-controller.yaml
 
->
-> -Kees
->
-> --
-> Kees Cook
+diff --git a/Documentation/devicetree/bindings/fsi/fsi-controller.yaml b/Documentation/devicetree/bindings/fsi/fsi-controller.yaml
+new file mode 100644
+index 000000000000..9e917295996d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fsi/fsi-controller.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/fsi/fsi-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: FSI Controller Common Properties
++
++maintainers:
++  - Eddie James <eajames@linux.ibm.com>
++
++description:
++  FSI (FRU (Field Replaceable Unit) Service Interface) is a two wire bus. The
++  FSI bus is connected to a CFAM (Common FRU Access Macro) which contains
++  various engines such as I2C controllers, SPI controllers, etc.
++
++properties:
++  "#address-cells":
++    const: 2
++
++  "#size-cells":
++    const: 0
++
++  no-scan-on-init:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      The FSI controller cannot scan the bus during initialization.
++
++patternProperties:
++  "cfam@[0-9a-f],[0-9a-f]":
++    type: object
++    properties:
++      chip-id:
++        $ref: /schemas/types.yaml#/definitions/uint32
++
++      reg:
++        maxItems: 1
++
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 1
++
++    required:
++      - reg
++
++    additionalProperties: true
++
++additionalProperties: true
++
++examples:
++  - |
++    fsi@3400 {
++        #address-cells = <2>;
++        #size-cells = <0>;
++        compatible = "fsi-controller";
++        reg = <0x3400 0x400>;
++
++        cfam@0,0 {
++            #address-cells = <1>;
++            #size-cells = <1>;
++            reg = <0 0>;
++        };
++    };
+-- 
+2.39.3
+
