@@ -1,121 +1,156 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FF5126F06;
-	Thu, 25 Apr 2024 09:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7208D84D2D;
+	Thu, 25 Apr 2024 09:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714037692; cv=none; b=KOspLiokMDzkFsIuvrBS63QUD3vdIseAmHoSqKzHV3s3kToYn4LcpYtcnZCN4hHfSSW4qGGxXJrTzHTd6G3y5Op5nsX3/HHMg/httsP6vk9rU3BWiaP/ilFEVncED6ofpx7/Nuf2W3zOiiJWns3duMBWbp773iApZMVrMY/izlw=
+	t=1714037719; cv=none; b=tuVTsoMesUkajJklpcwPqnr0yzAvKQgYQ06buVGDSRnpC5/biRV6DGeEgR7k3ASMW92AgZvLJzzbhlL7I975YS6gAvGBJQq4j/0l9m9lKtrf/pSXmUC6Tw3GbrvQcmhYfB8uQamOe7HUK99zkFVZIKIUaEQkPRDdL1JkLGfP1DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714037692; c=relaxed/simple;
-	bh=O9wfJFdvuefwvtqzySphBgFrqWueWAbN+WGq++1wxKs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PJraLjgeO38MakcvBW0HRu8v3m+s5/78oVGNFtMXVophmGgNpwMroBkTfnuYOR75oxHlDluXOeAPS71pnNpFENa9oA+Q2hJjW6zR6KkNxzQYEXs2zUIRt3H34uj90OmNeXmE3SBl6IxGGvskvDWK7OIQyh5dpMCUWk45skm54/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ysu7+YgJ; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714037719; c=relaxed/simple;
+	bh=SI8dYxg4nlJIfknRlpUsqJy0WPDol6IUX4YbYt9uIGc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T7kB69BBQ10AF1r3hlK20MeINiYv2YmyUMB3b/JJPhf+TKYyevWLPcqpvdw7oloHtXuOWMMydmyfMaoLkLNhiJT3lF5tf2tjtl3RtMQQLKJd2RyZmelwnoLU4RZh7aF2QnQqXWHkDAFHdpQnjv4mbGACEkuLuojqLjnzpxlmq6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=O9cWtCRY; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ysu7+YgJ"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-516ef30b16eso839775e87.3;
-        Thu, 25 Apr 2024 02:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714037689; x=1714642489; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vnD0omPzrWfWLdKhFymv2hUrXX8nXsK7L5p1vlVD4ng=;
-        b=Ysu7+YgJyheznGL9VA9kHXwMAOpGXa3zUkvNEH55VPpP6iV4kdR2ozMKoIE2Q8dpj2
-         BydR+9FQTj6k7+3Qfsf9Slz4Tlgv2XwX8X2sd+JMywMGlx16pzLnnraolmTkj+Jt7rLe
-         632SP9rK8u7XkqwVlc8oyjiczoqTrQt/9xxQzkn5S2c0zAuApHsSyChY7qjyLrOSGjEG
-         r0LR7g7YI5JYxi6ImX2HkHGrg1YbeFi48UZlvhPVoTGAHTFmx2+UTCrsXWKat2G2uWAl
-         VEi4ViFG86qKhjDO5PzgvX8LCqcsmUz1TgDQx1O6HOjcRwwU4kjxhRROepcq7X2sb29N
-         ZDPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714037689; x=1714642489;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vnD0omPzrWfWLdKhFymv2hUrXX8nXsK7L5p1vlVD4ng=;
-        b=mBNjehkGZ9wv8d+RzA3NVCnCOa4BCVzwbVZ5pF+SJ/cnpcaOqLASbMUwjx9iz3CH4A
-         nEOt1/immuW0GPVlBPXxnoiJPiismrlfTW4aKVo7fx2/oZG0ZRif3bhVxRi0vUpSTsyB
-         1UFJObJTdPeG/NGobbXgRUz5UWVNdUTkfgvPXRQdp43QsdcjYWdZC95SQQI2/XTJuNpO
-         KCefW8VATr6PGeshHAlmDu+cagqkJhrx5LFHkdEJ0A2yPuMFc2qCS473YYRlFr350+Zv
-         dRjqsS8frtY/4P7z1IsAP+JegR/AjVBFIFfAI10nxpa2VZk4xfc515XDTA5n7lfBQJA6
-         n0RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXOi5kVMhIOi7w5b3UGozehaBMcHF0FnVUGYD2qh6ilL0JNRTevd5UaLVwJsjZy7e1WAKIQGPkv1SxtMyII2T0i7GSym72u+SHuvBhxkDEToao4Rul0liVQ4aOPHQDZps5sXC1vKEqJhOmkWRuiXhnZevE3QVMOEI5fnc2hnkGRPFdjphlszFxvDxVaBqbiPLd2PkOb3epbnTBjbrGt25o6/OqK
-X-Gm-Message-State: AOJu0YzIO0n3Lx5HW2aWKT2bRBIhXUl6b4koHbqaEjrsxzf+ATrlpNeA
-	Yb/kEumS+CvFrVWCTCdQf7kSlD8+yuVWURE8Mii6GCUV1nErvOKT
-X-Google-Smtp-Source: AGHT+IHYgtPbcyGjxp9azAySSkNvUGJnVnuEhRmauc3oUtMj9W3wY74hlU+ZsIlNOYoIINrtLKKkoA==
-X-Received: by 2002:ac2:598f:0:b0:516:d0e3:9275 with SMTP id w15-20020ac2598f000000b00516d0e39275mr3345368lfn.11.1714037688538;
-        Thu, 25 Apr 2024 02:34:48 -0700 (PDT)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id fc21-20020a056512139500b0051b0703a923sm1545727lfb.131.2024.04.25.02.34.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 02:34:48 -0700 (PDT)
-Date: Thu, 25 Apr 2024 12:34:45 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Romain Gantois <romain.gantois@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
-	Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next v4 2/5] net: stmmac: introduce pcs_init/pcs_exit
- stmmac operations
-Message-ID: <a2ste62mw6nxfnaptv4gossylrrahplyh3e3bwsy7ayoohpts7@hdfrjctclbbm>
-References: <20240424-rzn1-gmac1-v4-0-852a5f2ce0c0@bootlin.com>
- <20240424-rzn1-gmac1-v4-2-852a5f2ce0c0@bootlin.com>
- <qf637dtkakxbumefbei3qrhbpyxgerjwn72ixp5xh6mc6yjbda@6z6tm6hk7fki>
- <27279f1a-e718-a8cf-ecfc-40f45bf6c500@bootlin.com>
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="O9cWtCRY"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id BA7DE100002;
+	Thu, 25 Apr 2024 12:23:46 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1714037026; bh=DPLnFAg5Eyfks9NW8S+aGjEu3lnapyvcLprsK9kTWQg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=O9cWtCRYMZOPnwu/CbHaVCze+o3cfoGbTZWhj7JT4G+4hDDbXlptzxE/t0Dvkh2W5
+	 Zi3F2LgoYBk9NGiMyhJhqLVt0QeKR4KSM2sHySwyT4NY7tFBJmVrcNDTzSi0Z6cEI3
+	 91gntxVtarQVc65WNgmdWeLN9hT8n2oCU0+a5Lj/AzHUinFWnUPHEO23u7fINoBTdJ
+	 zD+Ia/YgLB5fq/cu13J36uaG3ZYSWsveDdgrPG7devDZO0eTmVDkoWzVxhl9iG5tZ8
+	 QxEq4mu4EbMgCOGc/yOzopjWRG4iWGY/+WBUxA+ZtkigqhtmWAHfkmuxcut62Nr14V
+	 F72me3ZMmRe3g==
+Received: from mx1.t-argos.ru.ru (mail.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Thu, 25 Apr 2024 12:22:21 +0300 (MSK)
+Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 25 Apr
+ 2024 12:22:00 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Rob Herring <robh@kernel.org>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=
+	<kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>, Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	<u.kleine-koenig@pengutronix.de>, Serge Semin <fancer.lancer@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>, Yoshihiro Shimoda
+	<yoshihiro.shimoda.uh@renesas.com>, Damien Le Moal <dlemoal@kernel.org>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+Subject: [PATCH v2] PCI: dwc: keystone: Fix potential NULL dereference
+Date: Thu, 25 Apr 2024 12:21:35 +0300
+Message-ID: <20240425092135.13348-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240329051947.28900-1-amishin@t-argos.ru>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <27279f1a-e718-a8cf-ecfc-40f45bf6c500@bootlin.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184912 [Apr 25 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;t-argos.ru:7.1.1;127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/04/25 08:19:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/04/24 23:31:00 #24963607
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Wed, Apr 24, 2024 at 06:33:30PM +0200, Romain Gantois wrote:
-> Hi Serge,
-> 
-> On Wed, 24 Apr 2024, Serge Semin wrote:
-> 
-> > Once again. There is a ready-to-use stmmac_xpcs_setup() method. Which
-> > is currently intended for the XPCS setups. Let's collect all the
-> > PCS-related stuff in a single place there. That will make code cleaner
-> > and easier to read. This was discussed on v3:
-> > 
-> > https://lore.kernel.org/netdev/42chuecdt7dpgm6fcrtt2crifvv5hflmtnmdrw5fvk3r7pwjgu@hlcv56dbeosf/
-> > 
-> > You agreed to do that, but just ignored in result. I'll repeat what I
-> > said in v3:
-> 
-> Yeah sorry I took a quick look at your merged patches and thought that 
-> stmmac_xpcs_setup() had been repurposed in the meantime, but it seems like I was 
-> just confused about that.
-> 
-> > It doesn't look as that much hard thing to do, but will cause having a
-> > better readable code by providing a single coherent function for all
-> > PCS'es.
-> 
-> Sure, I'll get to it in v5.
+In ks_pcie_setup_rc_app_regs() resource_list_first_type() may return
+NULL which is later dereferenced. Fix this bug by adding NULL check.
 
-Awesome! Thanks.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
--Serge(y)
+Fixes: 0f71c60ffd26 ("PCI: dwc: Remove storing of PCI resources")
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+---
+v2: Add return code processing
 
-> 
-> Thanks,
-> 
-> -- 
-> Romain Gantois, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+ drivers/pci/controller/dwc/pci-keystone.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index 844de4418724..5c6786d9f3e9 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -382,17 +382,22 @@ static void ks_pcie_clear_dbi_mode(struct keystone_pcie *ks_pcie)
+ 	} while (val & DBI_CS2);
+ }
+ 
+-static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
++static int ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
+ {
+ 	u32 val;
+ 	u32 num_viewport = ks_pcie->num_viewport;
+ 	struct dw_pcie *pci = ks_pcie->pci;
+ 	struct dw_pcie_rp *pp = &pci->pp;
+-	u64 start, end;
++	struct resource_entry *ft;
+ 	struct resource *mem;
++	u64 start, end;
+ 	int i;
+ 
+-	mem = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM)->res;
++	ft = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
++	if (!ft)
++		return -EINVAL;
++
++	mem = ft->res;
+ 	start = mem->start;
+ 	end = mem->end;
+ 
+@@ -403,7 +408,7 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
+ 	ks_pcie_clear_dbi_mode(ks_pcie);
+ 
+ 	if (ks_pcie->is_am6)
+-		return;
++		return 0;
+ 
+ 	val = ilog2(OB_WIN_SIZE);
+ 	ks_pcie_app_writel(ks_pcie, OB_SIZE, val);
+@@ -420,6 +425,8 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
+ 	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
+ 	val |= OB_XLAT_EN_VAL;
+ 	ks_pcie_app_writel(ks_pcie, CMD_STATUS, val);
++
++	return 0;
+ }
+ 
+ static void __iomem *ks_pcie_other_map_bus(struct pci_bus *bus,
+@@ -814,7 +821,10 @@ static int __init ks_pcie_host_init(struct dw_pcie_rp *pp)
+ 		return ret;
+ 
+ 	ks_pcie_stop_link(pci);
+-	ks_pcie_setup_rc_app_regs(ks_pcie);
++	ret = ks_pcie_setup_rc_app_regs(ks_pcie);
++	if (ret < 0)
++		return ret;
++
+ 	writew(PCI_IO_RANGE_TYPE_32 | (PCI_IO_RANGE_TYPE_32 << 8),
+ 			pci->dbi_base + PCI_IO_BASE);
+ 
+-- 
+2.30.2
+
