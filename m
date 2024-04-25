@@ -1,153 +1,254 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129B16E605
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 07:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B370B6E5E8
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 07:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714031866; cv=none; b=fmav9sg5sHIV6nWHhOJZbzDM5g8hntjM4DbDMO1axapninGwrX6diCx4g/AwU1KSrG90X+FusOQSn2D7YRl3ReWKLiuPdn7mS1mKCVDOvOFojaSu/BTcdZRBtIQTP+b42AjWO+iypI690k9/u5Jovl7Wx7L53TDg5XJWHAJW9Hg=
+	t=1714031970; cv=none; b=VMLbVQmFZMKbIWIcD1t1x308dH9J5rv4RhAmJ36kE+3r6ttumNHZ1FysmLcxf85CZDluqCoEu0mLGDzto3FnnXt4E3xm9ehhXwJMYBYSSclPYe0HS+EOhIjqHYYx716Y4xhjIawoTZpE8qpp8UH/hPuGUdxbWybsdKwNux95xyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714031866; c=relaxed/simple;
-	bh=PBSIenB57GzBOC3DNr8CreMwJgWwbmdkburzd3odZfI=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=hjmiFRGuMiDIVZrBRlL50MEIWo8NVHLxoiRcipyEaQ9LY3+CPP55UBIqesMLuI7hN7sqi6DLMSt8RmPO2AQ2q17RsnIR9lWG6HFLy1KFlYatzayKM4gH78TQINDBPTNvy5cZ67ksulFPSI/ScI+CbusCmpYwQ1ZLENzmNOxezv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QnkjS4YI; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QnkjS4YI"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-41adf3580dbso3884075e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 00:57:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714031863; x=1714636663; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8zlRN8GDdJRPh97Fl0bz7cJhpbCIiQnJ+fEE7Z9TrLA=;
-        b=QnkjS4YItWZ39Z/xMN0XPD30R0GK6JQefXwutLIdSW4gPXeKm94TZXwxB1DjpWxjb3
-         MJJ1uNPzodww2xnmL13XoUuondd/AakoeUv4ukXW8UzvPQB9qft7jn+ASAtHiCaDP490
-         hBsvUAjCJWEn6Yr6Nbz4f4vdt81Td2RD7HaeiF8TQqexDM4ipOAG3sTNu8fz/C41CTM5
-         xW66L5Qdjn0wy7kgulISRB3w9X73hJireu0hGRNbVuiyanlyAY1CTqhIPnoqtLu9HR0w
-         FylJqdMeqozM/fuMH3IXkKkAb40Fd2iDrwYE4WiLx4ak0uyQ1zkfy/ovL6ZZ++EunV7a
-         eJlA==
+	s=arc-20240116; t=1714031970; c=relaxed/simple;
+	bh=4E2jjArPD80nZDvKsau4iFP2yOxkv1kQVMOziuyPbNw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=pqZbfAMY8I7rRQKBt6MMjpGrFyMtBFYre/fov/Mx4U6XxQ/fKt3vCgh5+qF6TAKp1OP1vkkHdouA3DfPaZDSVmYPPlj7yabzcTQFfwfL1U975vBAeFM8KaSqC8X6/2KsuYRfjvz0dq54sNavyFX+IneB+RQgtMgRP0GJ024OfVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7da41c44e78so75704839f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 00:59:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714031863; x=1714636663;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8zlRN8GDdJRPh97Fl0bz7cJhpbCIiQnJ+fEE7Z9TrLA=;
-        b=nS6KACOmq/pv59QR+C4a4KSOlfhQin6MZEagNmY2qc8T4xg08WYtuATML2DfNLml+l
-         Co8b3YfoBvJWtdesw0df95g4hgadnA2n+AO6myhw8zONTWy9xi+TEuBYq6K1PBqvLj1R
-         4ui0jafHufk58LVPJhXwZ+brFlw2P6LWNV3qqtnkVVwy+nEJvY8wOSxvwB4lMXhNvjSB
-         F30+vHmXcNEVsXl2XH4RRdoF9/PWGE9kJwh10ufzXH98gmRYbQYb23KH+eCfEeXrgkoL
-         mEtxZwV4RBf2fTAvqlHt7WYFRoq1ssMahpYy96SAeYhj2h5abPYhpevEFnKrVdGitoFY
-         rP9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVQUVjwrKKaIPYIkJ48pqROJGcFlOpSwndK+r7gMywUJMJJL5SVTVPiFPkmUbyZq+6gxVhQpytvYJzQUNLT/Fm3hAmtH4O1Y2xqsRXI
-X-Gm-Message-State: AOJu0YwYeUpNh0ZcqNTxng4pudBq/muK2oKTQz5KMLSVXCQXb2ysIocl
-	WueFbn/Lw3/N1o11bTUI+Hhjw+sSRTiUnjAEB0zszSUseCL9aAFn88t10f1znh0=
-X-Google-Smtp-Source: AGHT+IEpMpy5TC3zOgYRtvmVoIm1qs4qkyA+/az+AVHs/P5SNCTPkiTTQpAEom45V2JdpFsBAoc5Dw==
-X-Received: by 2002:a05:600c:4694:b0:419:f4d6:463b with SMTP id p20-20020a05600c469400b00419f4d6463bmr1330537wmo.14.1714031862971;
-        Thu, 25 Apr 2024 00:57:42 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:15c7:bd9c:c500:ed62? ([2a01:e0a:982:cbb0:15c7:bd9c:c500:ed62])
-        by smtp.gmail.com with ESMTPSA id m25-20020a05600c3b1900b0041816c3049csm26579080wms.11.2024.04.25.00.57.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Apr 2024 00:57:42 -0700 (PDT)
-Message-ID: <bed21ca2-54c0-473d-b84b-2b404899a050@linaro.org>
-Date: Thu, 25 Apr 2024 09:57:40 +0200
+        d=1e100.net; s=20230601; t=1714031968; x=1714636768;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JI+ig1oD7MIpva3UZKvQJUrH9KBuWaizU7Bv3AWmx54=;
+        b=YNtFkeT4mafbsbiFDy5AfnIFeU+jhKFM/r4B2ssbMbrT8KA38opxAhCPepHbgbcC6C
+         yVLnmS+/TQm5bC2HmRaXdHJxMko1FlquqSGoSN9e3ug+glb57j/R0pFbPZwtk8QF0I7W
+         vp5TSK4ztdCMA/BKvlP9MSoerDyrdzUybUZsAZP8FCEFpd0BYrqZOs1FPIr7ak82Gjqg
+         nFF2+NdUJGWbl1KVZgZfVM2hKwEiDl93ce9X43pfzshMtU+8DsCES8WfCCwOVinecAUZ
+         9lUSw4eIPCntrqWmpZtuzR6+n/FAsT9/d96/DSYv1HxiluOjQJ90q8hJRkZlD8iHXZ3m
+         56og==
+X-Forwarded-Encrypted: i=1; AJvYcCV5NTfwAp8U7PiGVJW2pz0sbm7VB9OFPZ7ZklqNQAut+HFGL1pX7dRAn02RoP2mbFyZIFNU3hI8qgSEuNBTmQ0rgAjDckVwuo6sWKOr
+X-Gm-Message-State: AOJu0YxWgjHrzEzjC6U9c4MWbWfg4yR8j0XqBvYJcTEkzzQnlhJiWzLL
+	QIDXwxAo1n9PAfJUO9l+RlaVSbhCv6YvuOxis/BnFdq6YO7l8qr0LmQflVOpSSQrpv5XSVLm5gv
+	RhGM765Lsb0gJ2cEaG8WbKxWVLSe2mEdM4+7zRj1DWLWRFTn/eQYmzfc=
+X-Google-Smtp-Source: AGHT+IGv97Rgi1WZRIcMix4Ifbuj6lYQ7t4S8OvA23TOmAF6oP/ZkCcorNQ53P8MUtzSLUyEWvkcBhuWlqaTXCnga6qRKS/dJbuv
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 02/10] pwm: Add SI-EN SN3112 PWM support
-To: Junhao Xie <bigfoot@classfun.cn>, Konrad Dybcio
- <konrad.dybcio@linaro.org>, wuxilin123@gmail.com,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jessica Zhang
- <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Bjorn Andersson <andersson@kernel.org>,
- Tengfei Fan <quic_tengfan@quicinc.com>,
- Molly Sophia <mollysophia379@gmail.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-arm-msm@vger.kernel.org
-References: <20240424-ayn-odin2-initial-v1-0-e0aa05c991fd@gmail.com>
- <20240424-ayn-odin2-initial-v1-2-e0aa05c991fd@gmail.com>
- <af62742c-8d6d-4fa9-b2e4-f83253e6e388@linaro.org>
- <361fc6a0-f0d0-49b2-b885-3b197294ec9f@classfun.cn>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <361fc6a0-f0d0-49b2-b885-3b197294ec9f@classfun.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:60cc:b0:7da:eb31:7c9d with SMTP id
+ ft12-20020a05660260cc00b007daeb317c9dmr66653iob.2.1714031967858; Thu, 25 Apr
+ 2024 00:59:27 -0700 (PDT)
+Date: Thu, 25 Apr 2024 00:59:27 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000094036c0616e72a1d@google.com>
+Subject: [syzbot] [f2fs?] KASAN: slab-out-of-bounds Read in f2fs_get_node_info
+From: syzbot <syzbot+3694e283cf5c40df6d14@syzkaller.appspotmail.com>
+To: chao@kernel.org, jaegeuk@kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 25/04/2024 02:57, Junhao Xie wrote:
-> On 2024/4/25 03:37, Konrad Dybcio wrote:
->> On 4/24/24 17:29, Xilin Wu via B4 Relay wrote:
->>> From: Junhao Xie <bigfoot@classfun.cn>
->>>
->>> Add a new driver for the SI-EN SN3112 12-channel 8-bit PWM LED controller.
->>>
->>> Signed-off-by: Junhao Xie <bigfoot@classfun.cn>
->>> ---
->> [...]
->>> +    return sn3112_write_reg(priv, SN3112_REG_PWM_EN + reg,
->>> +                priv->pwm_en_reg[reg]);
->>
->> This looks like a weird reimplementation of regmap_update_bits
->>
-> 
-> We cannot use regmap_update_bits because this chip does not support read command.
-> It will discard all read command.
+Hello,
 
-You could use regmap cache with all registers marked as cacheable, but not sure it's worth
-doing this.
+syzbot found the following issue on:
 
-Neil
+HEAD commit:    ed30a4a51bb1 Linux 6.9-rc5
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1116bc30980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5a05c230e142f2bc
+dashboard link: https://syzkaller.appspot.com/bug?extid=3694e283cf5c40df6d14
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1128486b180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1516bc30980000
 
-> 
->>> +}
->>> +
-> [...]
->>
->> devm_pwmchip_add?
->>
->> Konrad
-> 
-> Thank you for your reply, I will fix them.
-> 
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/7a2e1a02882c/disk-ed30a4a5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/329966999344/vmlinux-ed30a4a5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/1befbdf4dcac/bzImage-ed30a4a5.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/42ddf2738cf7/mount_0.gz
 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+3694e283cf5c40df6d14@syzkaller.appspotmail.com
+
+F2FS-fs (loop0): Mounted with checkpoint version = 48b305e4
+==================================================================
+BUG: KASAN: slab-out-of-bounds in f2fs_test_bit fs/f2fs/f2fs.h:2933 [inline]
+BUG: KASAN: slab-out-of-bounds in current_nat_addr fs/f2fs/node.h:213 [inline]
+BUG: KASAN: slab-out-of-bounds in f2fs_get_node_info+0xece/0x1200 fs/f2fs/node.c:600
+Read of size 1 at addr ffff88807a58c76c by task syz-executor280/5076
+
+CPU: 1 PID: 5076 Comm: syz-executor280 Not tainted 6.9.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0x169/0x550 mm/kasan/report.c:488
+ kasan_report+0x143/0x180 mm/kasan/report.c:601
+ f2fs_test_bit fs/f2fs/f2fs.h:2933 [inline]
+ current_nat_addr fs/f2fs/node.h:213 [inline]
+ f2fs_get_node_info+0xece/0x1200 fs/f2fs/node.c:600
+ f2fs_xattr_fiemap fs/f2fs/data.c:1848 [inline]
+ f2fs_fiemap+0x55d/0x1ee0 fs/f2fs/data.c:1925
+ ioctl_fiemap fs/ioctl.c:220 [inline]
+ do_vfs_ioctl+0x1c07/0x2e50 fs/ioctl.c:838
+ __do_sys_ioctl fs/ioctl.c:902 [inline]
+ __se_sys_ioctl+0x81/0x170 fs/ioctl.c:890
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f60d34ae739
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffc9f2f1148 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007ffc9f2f1318 RCX: 00007f60d34ae739
+RDX: 0000000020000040 RSI: 00000000c020660b RDI: 0000000000000004
+RBP: 00007f60d3527610 R08: 0000000000000000 R09: 00007ffc9f2f1318
+R10: 000000000000551a R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffc9f2f1308 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+
+Allocated by task 5076:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
+ __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:387
+ kasan_kmalloc include/linux/kasan.h:211 [inline]
+ __do_kmalloc_node mm/slub.c:3966 [inline]
+ __kmalloc_node_track_caller+0x24e/0x4e0 mm/slub.c:3986
+ kmemdup+0x2a/0x60 mm/util.c:131
+ init_node_manager fs/f2fs/node.c:3268 [inline]
+ f2fs_build_node_manager+0x8cc/0x2870 fs/f2fs/node.c:3329
+ f2fs_fill_super+0x583c/0x8120 fs/f2fs/super.c:4540
+ mount_bdev+0x20a/0x2d0 fs/super.c:1658
+ legacy_get_tree+0xee/0x190 fs/fs_context.c:662
+ vfs_get_tree+0x90/0x2a0 fs/super.c:1779
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3352
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount+0x2d9/0x3c0 fs/namespace.c:3875
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff88807a58c700
+ which belongs to the cache kmalloc-64 of size 64
+The buggy address is located 44 bytes to the right of
+ allocated 64-byte region [ffff88807a58c700, ffff88807a58c740)
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x7a58c
+flags: 0xfff80000000800(slab|node=0|zone=1|lastcpupid=0xfff)
+page_type: 0xffffffff()
+raw: 00fff80000000800 ffff888015041640 ffffea0000aa6400 dead000000000004
+raw: 0000000000000000 0000000000200020 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x12c40(GFP_NOFS|__GFP_NOWARN|__GFP_NORETRY), pid 4536, tgid 106643948 (udevd), ts 4536, free_ts 43042041281
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1ea/0x210 mm/page_alloc.c:1534
+ prep_new_page mm/page_alloc.c:1541 [inline]
+ get_page_from_freelist+0x3410/0x35b0 mm/page_alloc.c:3317
+ __alloc_pages+0x256/0x6c0 mm/page_alloc.c:4575
+ __alloc_pages_node include/linux/gfp.h:238 [inline]
+ alloc_pages_node include/linux/gfp.h:261 [inline]
+ alloc_slab_page+0x5f/0x160 mm/slub.c:2175
+ allocate_slab mm/slub.c:2338 [inline]
+ new_slab+0x84/0x2f0 mm/slub.c:2391
+ ___slab_alloc+0xc73/0x1260 mm/slub.c:3525
+ __slab_alloc mm/slub.c:3610 [inline]
+ __slab_alloc_node mm/slub.c:3663 [inline]
+ slab_alloc_node mm/slub.c:3835 [inline]
+ __do_kmalloc_node mm/slub.c:3965 [inline]
+ __kmalloc+0x2e5/0x4a0 mm/slub.c:3979
+ kmalloc include/linux/slab.h:632 [inline]
+ kzalloc include/linux/slab.h:749 [inline]
+ tomoyo_encode2 security/tomoyo/realpath.c:45 [inline]
+ tomoyo_encode+0x26f/0x540 security/tomoyo/realpath.c:80
+ tomoyo_realpath_from_path+0x59e/0x5e0 security/tomoyo/realpath.c:283
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_path_number_perm+0x23a/0x880 security/tomoyo/file.c:723
+ tomoyo_path_mknod+0x176/0x1b0 security/tomoyo/tomoyo.c:252
+ security_path_mknod+0xf8/0x150 security/security.c:1791
+ may_o_create fs/namei.c:3319 [inline]
+ lookup_open fs/namei.c:3460 [inline]
+ open_last_lookups fs/namei.c:3566 [inline]
+ path_openat+0xc7c/0x3240 fs/namei.c:3796
+ do_filp_open+0x235/0x490 fs/namei.c:3826
+ do_sys_openat2+0x13e/0x1d0 fs/open.c:1406
+ do_sys_open fs/open.c:1421 [inline]
+ __do_sys_openat fs/open.c:1437 [inline]
+ __se_sys_openat fs/open.c:1432 [inline]
+ __x64_sys_openat+0x247/0x2a0 fs/open.c:1432
+page last free pid 4528 tgid 4528 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1141 [inline]
+ free_unref_page_prepare+0x97b/0xaa0 mm/page_alloc.c:2347
+ free_unref_page+0x37/0x3f0 mm/page_alloc.c:2487
+ __slab_free+0x31b/0x3d0 mm/slub.c:4192
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x5e/0xc0 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x14f/0x170 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x23/0x80 mm/kasan/common.c:322
+ kasan_slab_alloc include/linux/kasan.h:201 [inline]
+ slab_post_alloc_hook mm/slub.c:3798 [inline]
+ slab_alloc_node mm/slub.c:3845 [inline]
+ __do_kmalloc_node mm/slub.c:3965 [inline]
+ __kmalloc+0x1e2/0x4a0 mm/slub.c:3979
+ kmalloc include/linux/slab.h:632 [inline]
+ kzalloc include/linux/slab.h:749 [inline]
+ tomoyo_encode2 security/tomoyo/realpath.c:45 [inline]
+ tomoyo_encode+0x26f/0x540 security/tomoyo/realpath.c:80
+ tomoyo_realpath_from_path+0x59e/0x5e0 security/tomoyo/realpath.c:283
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_path_number_perm+0x23a/0x880 security/tomoyo/file.c:723
+ tomoyo_path_mknod+0x176/0x1b0 security/tomoyo/tomoyo.c:252
+ security_path_mknod+0xf8/0x150 security/security.c:1791
+ may_o_create fs/namei.c:3319 [inline]
+ lookup_open fs/namei.c:3460 [inline]
+ open_last_lookups fs/namei.c:3566 [inline]
+ path_openat+0xc7c/0x3240 fs/namei.c:3796
+ do_filp_open+0x235/0x490 fs/namei.c:3826
+ do_sys_openat2+0x13e/0x1d0 fs/open.c:1406
+ do_sys_open fs/open.c:1421 [inline]
+ __do_sys_openat fs/open.c:1437 [inline]
+ __se_sys_openat fs/open.c:1432 [inline]
+ __x64_sys_openat+0x247/0x2a0 fs/open.c:1432
+
+Memory state around the buggy address:
+ ffff88807a58c600: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+ ffff88807a58c680: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+>ffff88807a58c700: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+                                                          ^
+ ffff88807a58c780: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+ ffff88807a58c800: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
