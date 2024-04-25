@@ -1,105 +1,69 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9371A1D524
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 03:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B772110F;
+	Thu, 25 Apr 2024 03:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714015574; cv=none; b=HeHHfUewg/vfJoO5kyg7Rgf4PCr+d6B/gVKY+MVx3RXr3HhqmuVTy2BgFwhlb4dyvYWxBqr2Qtj8j5RnTsumfRo8UuAdBAtR6lWRR9OPAnV2V9M5uUGJPzH/REVtFcSHmvLRIbXaUdFfY49lwB/+87Jmh7rcWiJNhmVikg2ik5I=
+	t=1714015625; cv=none; b=cxkAZQmqvePMIA/eLFD5/HWHXwxCU+WCGvcq16yIAJoWoMaJ6SDV5z+d0hVMcfS55drivpErXrQFD5VdLylJbU+EUbh8P+rikVTyWwMclXjUPx6vNla7zvLD0JNIb8usARltrV/F5ttYpqt1/O8GfnfGcALmr4ZiButxRVW+Zm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714015574; c=relaxed/simple;
-	bh=88mSEe2XHZvT1rBs/fYya7T2WNxPEAzzgRRezEnLHpg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nzr35g+JRr/BwlAc1y+eW+9f9dXunvTvHG5coq4SGetTCnf9teean13EsSPqRj4OCKFtSWeRrjU/9/QlYh/gqBvj2d6YM6HpshlRgiK3GFmwjQe5O4eBFzt3JoxScahDzO4lFNLJ1jeoTkBjp/lKf3lUbCNPn9FEdSdJtmnJ+2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SB/UBFh9; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1714015625; c=relaxed/simple;
+	bh=My5MFhg/Ti3D+MPt/VmtN9NQVsT2BKm8TXTOezs6Y4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vs1tCr6o+XEZ+2oicUjASWhqg8Ni9Ygq48Tha7pAhoE3MYZCHV4GlJkhr5vLT4e8jb36EVRmkMxSkxnB94F3R6J9T2+vsEM7wQ5OPBwF3QgH0RsN0F83TQz31L/te1vza+nLTd2zu590QTxgkpN+rViUJh9Ap2xwQAjnIaDF2xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LmjBzoOm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SB/UBFh9"
-Date: Wed, 24 Apr 2024 23:25:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714015569;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B4E11bh0mnSYCbs7XlFu6X7DBUDw+NgzQF2QoLRfZq4=;
-	b=SB/UBFh9p4EtaUdmuFy3Y/2llf6hAFYeqTBTCq9EEsoT+vbVj3Dlf1lTZDFcjgmVyftRCV
-	Waevx5gMLX6VuaMH0g7owkCnFmE0q6eqUFo94c3PjotScdKb99fpqHnymmit8v+7TmVjp+
-	fv6zDMYTkmqCw9Lze8Tza4V/pRVw9Ow=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Kees Cook <keescook@chromium.org>
-Cc: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org, 
-	mhocko@suse.com, vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev, 
-	mgorman@suse.de, dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
-	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, peterz@infradead.org, 
-	juri.lelli@redhat.com, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, 
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, 
-	peterx@redhat.com, david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, 
-	masahiroy@kernel.org, nathan@kernel.org, dennis@kernel.org, jhubbard@nvidia.com, 
-	tj@kernel.org, muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org, 
-	pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, 
-	hughd@google.com, andreyknvl@gmail.com, ndesaulniers@google.com, vvvvvv@google.com, 
-	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com, 
-	penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com, 
-	elver@google.com, dvyukov@google.com, songmuchun@bytedance.com, jbaron@akamai.com, 
-	aliceryhl@google.com, rientjes@google.com, minchan@google.com, kaleshsingh@google.com, 
-	kernel-team@android.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
-	cgroups@vger.kernel.org
-Subject: Re: [PATCH v6 00/37] Memory allocation profiling
-Message-ID: <3eyvxqihylh4st6baagn6o6scw3qhcb6lapgli4wsic2fvbyzu@h66mqxcikmcp>
-References: <20240321163705.3067592-1-surenb@google.com>
- <202404241852.DC4067B7@keescook>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LmjBzoOm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FB85C113CC;
+	Thu, 25 Apr 2024 03:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714015625;
+	bh=My5MFhg/Ti3D+MPt/VmtN9NQVsT2BKm8TXTOezs6Y4k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=LmjBzoOmzmB104dVQfa8NJPB2d6PEG8tidOzXPlYVOCXAG6JZmbm3Fg0Z2qi7Cq/D
+	 rQ+5LLt5b9NTo7Ahrmxg6LUxuJeTw3igz4OWgDTEx1ScbGfCa7+0eN8iq2r7EM0JF4
+	 wTLEFmlqlF6e8axwzr1iZcBeYsrfNrK7qNJ4aCtthsXA/gqcpLfmdN1rgkzYGMfTDi
+	 aWLI/n/EAH0ByPXpLkW7svrHtaFxgM7+UXdcXI0Ypkv1HoJAa7gmyoAtPlDbVBfuds
+	 qfox/053+0paESXy1hHl493DCj919CJFySRcCBE0REB3M1aZHlpbF9FPivtZS2/Dez
+	 CDlw/cIrzuz7A==
+Date: Wed, 24 Apr 2024 20:27:03 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>, Randy Dunlap
+ <rdunlap@infradead.org>, Johannes Berg <johannes.berg@intel.com>, Breno
+ Leitao <leitao@debian.org>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang
+ Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Long Li <longli@microsoft.com>, Souradeep
+ Chakrabarti <schakrabarti@linux.microsoft.com>, Konstantin Taranov
+ <kotaranov@microsoft.com>, Yury Norov <yury.norov@gmail.com>,
+ linux-hyperv@vger.kernel.org, shradhagupta@microsoft.com
+Subject: Re: [PATCH net-next v2 1/2] net: Add sysfs atttributes for max_mtu
+ min_mtu
+Message-ID: <20240424202703.29f1b59a@kernel.org>
+In-Reply-To: <1713954817-30133-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1713954774-29953-1-git-send-email-shradhagupta@linux.microsoft.com>
+	<1713954817-30133-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202404241852.DC4067B7@keescook>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 24, 2024 at 06:59:01PM -0700, Kees Cook wrote:
-> On Thu, Mar 21, 2024 at 09:36:22AM -0700, Suren Baghdasaryan wrote:
-> > Low overhead [1] per-callsite memory allocation profiling. Not just for
-> > debug kernels, overhead low enough to be deployed in production.
-> 
-> Okay, I think I'm holding it wrong. With next-20240424 if I set:
-> 
-> CONFIG_CODE_TAGGING=y
-> CONFIG_MEM_ALLOC_PROFILING=y
-> CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=y
-> 
-> My test system totally freaks out:
-> 
-> ...
-> SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
-> Oops: general protection fault, probably for non-canonical address 0xc388d881e4808550: 0000 [#1] PREEMPT SMP NOPTI
-> CPU: 0 PID: 0 Comm: swapper Not tainted 6.9.0-rc5-next-20240424 #1
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
-> RIP: 0010:__kmalloc_node_noprof+0xcd/0x560
-> 
-> Which is:
-> 
-> __kmalloc_node_noprof+0xcd/0x560:
-> __slab_alloc_node at mm/slub.c:3780 (discriminator 2)
-> (inlined by) slab_alloc_node at mm/slub.c:3982 (discriminator 2)
-> (inlined by) __do_kmalloc_node at mm/slub.c:4114 (discriminator 2)
-> (inlined by) __kmalloc_node_noprof at mm/slub.c:4122 (discriminator 2)
-> 
-> Which is:
-> 
->         tid = READ_ONCE(c->tid);
-> 
-> I haven't gotten any further than that; I'm EOD. Anyone seen anything
-> like this with this series?
+On Wed, 24 Apr 2024 03:33:37 -0700 Shradha Gupta wrote:
+> Add sysfs attributes to read max_mtu and min_mtu value for
+> network devices
 
-I certainly haven't. That looks like some real corruption, we're in slub
-internal data structures and derefing a garbage address. Check kasan and
-all that?
+Absolutely pointless. You posted v1, dumping this as a driver
+specific value, even tho it's already reported by the core...
+And you can't even produce a meaningful commit message longer
+than one sentence.
+
+This is not meeting the bar. Please get your patches reviewed
+internally at Microsoft by someone with good understanding of
+Linux networking before you post.
