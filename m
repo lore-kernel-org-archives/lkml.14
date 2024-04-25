@@ -1,94 +1,262 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFCD17AD7F
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 22:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCFF179949;
+	Thu, 25 Apr 2024 22:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714082837; cv=none; b=LXi47qVDb6C/ada0lcZZBoVdF3ODYoxLJnPmWEV4bFDgkM/WUFrPMD4PAPDWE4mQYL+Gj5UWOIH9isDzN04jRjYG85Vc35rU1IjEOZF1/EirXuZesNvRuFp5D23DPKFJyf0338Fj7HGLSiK0GHZFN3Jr0XGmzmwgItffjmCNENI=
+	t=1714082837; cv=none; b=Z1vERTeFAbtA/riMyvj4wYZ5Y2GotFIrqwZ6fYVTuJEKrzVbEiM5vgdulEMIJT/5+/CGbrpvj4/EVb6LQcz4mPkhpbsCBzpdPnPwYkqsP5Mhv+s5QCYvMXrwFR86ep1c60VkZr/QB7au2moWRRw0vIZW6guVsUbgclKCNzmI1LQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714082837; c=relaxed/simple;
-	bh=u5YCPBbfU1mP1ZcMWk36sIHt5zaVaIMvB2Iu7ja/E7E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UzPs0lNhhbUzwAkbX9m4NUXOJkyLMfhCn1sEK0qgs9j3XQ+HxQJHcv5UAS8BJ6IOLBTTtdlloI0J3H2X3FyLryVhSaLq71GuRhsBtiBF/L+0NH6MAcTkI6neV/v1Wmmu577/rlx06HP+4fndixxMXvboAfRCCXSbSLV86q/cBOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e9cw9/CY; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=JTl16X5bj/MmJ0bJePdBwMZKkUZ2jYt38s2m5j8ERRc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aNm9mlc6QOe9BfvVwv2dRDB4fr9wMIBBWGPBHyWrR/NDFtud17DgJQLGjXQgcqBthk1u9XNCdLLHHqJVyByh5T7Vom+EGR664gy+kSiM0mJ3E0AWzv+bVofKYIipFrLoWWh9Bw7ainU7mNPOWRsCJDCaXZDHodefhiEzrfTK4VQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c+6mi16P; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e9cw9/CY"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-69b5a87505cso7952596d6.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 15:07:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714082835; x=1714687635; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=l4ObHrHeCFN64wSM7NzDkDxv31XoYnyH95XTbkMwAw0=;
-        b=e9cw9/CY6i0xlBJP6qFWPjOsypShBrWsjbCWApNc87snjya5wPbF0Tdy+H9fVk2QB8
-         /DA6rj00GQRNAnm0ZZVg/P45kyXwGynCvlukfhyiIf5nIeqM+PT2v+EFutsbZpeZmCNF
-         sVHZv2yXkk4qTlVik81Wc4oYtAOXhja1VeLxcYdjoB8JIrsZ0T9UZQA+xAolZKs7Q7fd
-         s2P2YXYHSsyk3aw0DD/ktLrCE778W80zJdK1H23l2ldExrl8+UYusMCMibz6Aa7puivD
-         xuXYOIrfy9ECM4cFtQXX0Atsbg9Giy0HPte828xNsqEJCfCTUmZo8d8jOghsJLi99Gxw
-         Vmtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714082835; x=1714687635;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l4ObHrHeCFN64wSM7NzDkDxv31XoYnyH95XTbkMwAw0=;
-        b=ulmIcBzLvDUUu2KLAGKn0jshqko9EqR0DZ/0SLDoodS7GIjp5Z9N/Jv3aTti/9k53o
-         vUxnA3BEY0J70M14Mc4VMdP8OpOVDiYeYBTFGzJ+npgijX1qAldzlbHzPzy6HeOkK9O6
-         ROaKltGsWmEoAadEU4KEmtvvwYwo5icPSCKFT1vKiM3My8xWmI+FNMbw/GNBU848Pv0r
-         ZzmGEO+GFn7pcv4/p2VVQrPZJQtQEL3Lm5sVd0HoHETeQvdFmio22rQTz0/2KqJfFwHi
-         c9OToUspx3FtT3dDWunHl9Jwm8bkkH/lMh8ke5dwHS9VOFsgt+GMDlYSiaH2flkLMi6E
-         HeGg==
-X-Forwarded-Encrypted: i=1; AJvYcCUDV3fin+58jJsXYb6nntZXoUOs1LB6RahB013TDvJITS5GZWqdRiT2p9HguqfZgJc7abPvIK4e1U4kKc/ffDk+XMcTvzmF5QjPYDtN
-X-Gm-Message-State: AOJu0YyOo9hARK3b91xgs3Vgi+ROEpdNPP8S44FLouYyeuAcFcfrUFtG
-	ISEsJAThi6TgSfBaC0w7tLeKLerK7rSnAK4pT0hzxHAfNeA6QeKI
-X-Google-Smtp-Source: AGHT+IGqJk481KilBvF8wWSKLr3U6m+erKzHSeB5ufvUpq0IUcSwAObTcUjGEwOO70aZiiVWjvTnJg==
-X-Received: by 2002:ad4:5dcb:0:b0:6a0:9493:a053 with SMTP id m11-20020ad45dcb000000b006a09493a053mr1196354qvh.59.1714082835071;
-        Thu, 25 Apr 2024 15:07:15 -0700 (PDT)
-Received: from stbirv-lnx-1.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id q2-20020a0c9a42000000b006a044503615sm4692891qvd.72.2024.04.25.15.07.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 15:07:14 -0700 (PDT)
-From: Doug Berger <opendmb@gmail.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	bcm-kernel-feedback-list@broadcom.com,
-	netdev@vger.kernel.or,
-	linux-kernel@vger.kernel.org,
-	Doug Berger <opendmb@gmail.com>
-Subject: [PATCH 0/3] net: bcmgenet: protect contended accesses
-Date: Thu, 25 Apr 2024 15:06:47 -0700
-Message-Id: <20240425220650.2138801-1-opendmb@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c+6mi16P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714082835; x=1745618835;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=JTl16X5bj/MmJ0bJePdBwMZKkUZ2jYt38s2m5j8ERRc=;
+  b=c+6mi16PrnTkT+LSkT/4eoNurnbr1mmrrOQZvz3VHkoILBMXrVEGS7iE
+   0T5YtszKnObDaSYgdai6WWYMrFHFmhxo3DiL5mdMFFK8eHE59ghD74w3m
+   5mKDZaHgdK8wbUXgOfQT6cStrSApO1+xMQKic5zbS+4utAC5ds79fBX2Q
+   09hwyBohkTmBG9NfQl74dan7YEAxKNMMCd/LrxLuxFWLV8O/FewC18cgQ
+   PvCCJAgyLqsI02oCcMNFBygNJK/W/bc1qhIROauPB5ByZlkB5etSP1WAY
+   1HBG6UQv6z1OFTNy4tCf0YBCqbIOBlQNf/ZbVhuaCR4MXoQu/YplWe+nX
+   A==;
+X-CSE-ConnectionGUID: rV3aXN13Qvq68ya70YYWTw==
+X-CSE-MsgGUID: EX6W0NKPQa6teORcnFCqzw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="13585404"
+X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
+   d="scan'208";a="13585404"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 15:07:12 -0700
+X-CSE-ConnectionGUID: FvHonqxtRE2EyLhryIWq9w==
+X-CSE-MsgGUID: PR+gXpIJTkqgG3N6K0UOmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
+   d="scan'208";a="25185089"
+Received: from rchatre-ws.ostc.intel.com ([10.54.69.144])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 15:07:12 -0700
+From: Reinette Chatre <reinette.chatre@intel.com>
+To: isaku.yamahata@intel.com,
+	pbonzini@redhat.com,
+	erdemaktas@google.com,
+	vkuznets@redhat.com,
+	seanjc@google.com,
+	vannapurve@google.com,
+	jmattson@google.com,
+	mlevitsk@redhat.com,
+	xiaoyao.li@intel.com,
+	chao.gao@intel.com,
+	rick.p.edgecombe@intel.com
+Cc: reinette.chatre@intel.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V5 3/4] KVM: x86: Add a capability to configure bus frequency for APIC timer
+Date: Thu, 25 Apr 2024 15:07:01 -0700
+Message-Id: <6748a4c12269e756f0c48680da8ccc5367c31ce7.1714081726.git.reinette.chatre@intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1714081725.git.reinette.chatre@intel.com>
+References: <cover.1714081725.git.reinette.chatre@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Some registers may be modified by parallel execution contexts and
-require protections to prevent corruption.
+From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-A review of the driver revealed the need for these additional
-protections.
+Add KVM_CAP_X86_APIC_BUS_CYCLES_NS capability to configure the APIC
+bus clock frequency for APIC timer emulation.
+Allow KVM_ENABLE_CAPABILITY(KVM_CAP_X86_APIC_BUS_CYCLES_NS) to set the
+frequency in nanoseconds. When using this capability, the user space
+VMM should configure CPUID leaf 0x15 to advertise the frequency.
 
-Doug Berger (3):
-  net: bcmgenet: synchronize EXT_RGMII_OOB_CTRL access
-  net: bcmgenet: synchronize use of bcmgenet_set_rx_mode()
-  net: bcmgenet: synchronize UMAC_CMD access
+Vishal reported that the TDX guest kernel expects a 25MHz APIC bus
+frequency but ends up getting interrupts at a significantly higher rate.
 
- drivers/net/ethernet/broadcom/genet/bcmgenet.c   | 16 ++++++++++++++--
- drivers/net/ethernet/broadcom/genet/bcmgenet.h   |  4 +++-
- .../net/ethernet/broadcom/genet/bcmgenet_wol.c   |  8 +++++++-
- drivers/net/ethernet/broadcom/genet/bcmmii.c     |  6 +++++-
- 4 files changed, 29 insertions(+), 5 deletions(-)
+The TDX architecture hard-codes the core crystal clock frequency to
+25MHz and mandates exposing it via CPUID leaf 0x15. The TDX architecture
+does not allow the VMM to override the value.
 
+In addition, per Intel SDM:
+    "The APIC timer frequency will be the processor’s bus clock or core
+     crystal clock frequency (when TSC/core crystal clock ratio is
+     enumerated in CPUID leaf 0x15) divided by the value specified in
+     the divide configuration register."
+
+The resulting 25MHz APIC bus frequency conflicts with the KVM hardcoded
+APIC bus frequency of 1GHz.
+
+The KVM doesn't enumerate CPUID leaf 0x15 to the guest unless the user
+space VMM sets it using KVM_SET_CPUID. If the CPUID leaf 0x15 is
+enumerated, the guest kernel uses it as the APIC bus frequency. If not,
+the guest kernel measures the frequency based on other known timers like
+the ACPI timer or the legacy PIT. As reported by Vishal the TDX guest
+kernel expects a 25MHz timer frequency but gets timer interrupt more
+frequently due to the 1GHz frequency used by KVM.
+
+To ensure that the guest doesn't have a conflicting view of the APIC bus
+frequency, allow the userspace to tell KVM to use the same frequency that
+TDX mandates instead of the default 1Ghz.
+
+There are several options to address this:
+1. Make the KVM able to configure APIC bus frequency (this series).
+   Pro: It resembles the existing hardware.  The recent Intel CPUs
+        adapts 25MHz.
+   Con: Require the VMM to emulate the APIC timer at 25MHz.
+2. Make the TDX architecture enumerate CPUID leaf 0x15 to configurable
+   frequency or not enumerate it.
+   Pro: Any APIC bus frequency is allowed.
+   Con: Deviates from TDX architecture.
+3. Make the TDX guest kernel use 1GHz when it's running on KVM.
+   Con: The kernel ignores CPUID leaf 0x15.
+4. Change CPUID leaf 0x15 under TDX to report the crystal clock frequency
+   as 1 GHz.
+   Pro: This has been the virtual APIC frequency for KVM guests for 13
+        years.
+   Pro: This requires changing only one hard-coded constant in TDX.
+   Con: It doesn't work with other VMMs as TDX isn't specific to KVM.
+   Con: Core crystal clock frequency is also used to calculate TSC
+        frequency.
+   Con: If it is configured to value different from hardware, it will
+        break the correctness of INTEL-PT Mini Time Count (MTC) packets
+        in TDs.
+
+Reported-by: Vishal Annapurve <vannapurve@google.com>
+Closes: https://lore.kernel.org/lkml/20231006011255.4163884-1-vannapurve@google.com/
+Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Co-developed-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+---
+Changes v5:
+- Rename capability KVM_CAP_X86_APIC_BUS_FREQUENCY ->
+  KVM_CAP_X86_APIC_BUS_CYCLES_NS. (Xiaoyao Li)
+- Add Rick's Reviewed-by tag.
+
+Changes v4:
+- Rework implementation following Sean's guidance in:
+  https://lore.kernel.org/all/ZdjzIgS6EAeCsUue@google.com/
+- Reword con #2 to acknowledge feedback. (Sean)
+- Add the "con" information from Xiaoyao during earlier review of v2.
+- Rework changelog to address comments related to "bus clock" vs
+  "core crystal clock" frequency. (Xiaoyao)
+- Drop snippet about impact on TSC deadline timer emulation. (Maxim)
+- Drop Maxim Levitsky's "Reviewed-by" tag due to many changes to patch
+  since tag received.
+- Switch "Subject:" to match custom "KVM: X86:" -> "KVM: x86:"
+
+Changes v3:
+- Added reviewed-by Maxim Levitsky.
+- Minor update of the commit message.
+
+Changes v2:
+- Add check if vcpu isn't created.
+- Add check if lapic chip is in-kernel emulation.
+- Fix build error for i386.
+- Add document to api.rst.
+- Typo in the commit message.
+
+ Documentation/virt/kvm/api.rst | 17 +++++++++++++++++
+ arch/x86/kvm/x86.c             | 27 +++++++++++++++++++++++++++
+ include/uapi/linux/kvm.h       |  1 +
+ 3 files changed, 45 insertions(+)
+
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index f0b76ff5030d..f014cd9b2217 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -8063,6 +8063,23 @@ error/annotated fault.
+ 
+ See KVM_EXIT_MEMORY_FAULT for more information.
+ 
++7.35 KVM_CAP_X86_APIC_BUS_CYCLES_NS
++-----------------------------------
++
++:Architectures: x86
++:Target: VM
++:Parameters: args[0] is the desired APIC bus clock rate, in nanoseconds
++:Returns: 0 on success, -EINVAL if args[0] contains an invalid value for the
++          frequency or if any vCPUs have been created, -ENXIO if a virtual
++          local APIC has not been created using KVM_CREATE_IRQCHIP.
++
++This capability sets VM's APIC bus clock frequency, used by KVM's in-kernel
++virtual APIC when emulating APIC timers.  KVM's default value can be retrieved
++by KVM_CHECK_EXTENSION.
++
++Note: Userspace is responsible for correctly configuring CPUID 0x15, a.k.a. the
++core crystal clock frequency, if a non-zero CPUID 0x15 is exposed to the guest.
++
+ 8. Other capabilities.
+ ======================
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 10e6315103f4..fa6954c9a9d2 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4715,6 +4715,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_MEMORY_FAULT_INFO:
+ 		r = 1;
+ 		break;
++	case KVM_CAP_X86_APIC_BUS_CYCLES_NS:
++		r = APIC_BUS_CYCLE_NS_DEFAULT;
++		break;
+ 	case KVM_CAP_EXIT_HYPERCALL:
+ 		r = KVM_EXIT_HYPERCALL_VALID_MASK;
+ 		break;
+@@ -6755,6 +6758,30 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 		}
+ 		mutex_unlock(&kvm->lock);
+ 		break;
++	case KVM_CAP_X86_APIC_BUS_CYCLES_NS: {
++		u64 bus_cycle_ns = cap->args[0];
++		u64 unused;
++
++		r = -EINVAL;
++		/*
++		 * Guard against overflow in tmict_to_ns(). 128 is the highest
++		 * divide value that can be programmed in APIC_TDCR.
++		 */
++		if (!bus_cycle_ns ||
++		    check_mul_overflow((u64)U32_MAX * 128, bus_cycle_ns, &unused))
++			break;
++
++		r = 0;
++		mutex_lock(&kvm->lock);
++		if (!irqchip_in_kernel(kvm))
++			r = -ENXIO;
++		else if (kvm->created_vcpus)
++			r = -EINVAL;
++		else
++			kvm->arch.apic_bus_cycle_ns = bus_cycle_ns;
++		mutex_unlock(&kvm->lock);
++		break;
++	}
+ 	default:
+ 		r = -EINVAL;
+ 		break;
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 2190adbe3002..6a4d9432ab11 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -917,6 +917,7 @@ struct kvm_enable_cap {
+ #define KVM_CAP_MEMORY_ATTRIBUTES 233
+ #define KVM_CAP_GUEST_MEMFD 234
+ #define KVM_CAP_VM_TYPES 235
++#define KVM_CAP_X86_APIC_BUS_CYCLES_NS 236
+ 
+ struct kvm_irq_routing_irqchip {
+ 	__u32 irqchip;
 -- 
 2.34.1
 
