@@ -1,43 +1,56 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011041DDCE;
-	Thu, 25 Apr 2024 11:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F324F12AAC4
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 11:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714044446; cv=none; b=IKxpBP2L4JGfNXdxt9FGDUmKuyZ+rNykog+Qcdgtdk0miS/Jf2kthpZQv2ipsZnVx4LAm6qT7lDzWOwCOx+qR06Ttj7N1d/zjwqrSdEdeWTkmMtMaNi2Wmzn3koKzZY2Kvwa3wUnQ5Ma41Pzq64kfZLnploqmO5G0y2vwuKiC1s=
+	t=1714044552; cv=none; b=J1xm6UsoJnRgcFBHIHRTmOMdMv662EHcr4R+3ocHSCE1+KmQdREm39ezNoip2YLfh9MDuLmngzO1SnRZNgPz0V6FE5ZgmTZgqxMvY8HAnKYeEZ9uUXAGOBdXevAbI+g5n4JdZCiEQTKFrmdX7vtVMMv9FTcIweAJEfsntRkqzag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714044446; c=relaxed/simple;
-	bh=/xag3OkcGEyfkLOWbreP2qxcC/ujNSwQZVNR+WIcJbw=;
+	s=arc-20240116; t=1714044552; c=relaxed/simple;
+	bh=EotpqrOTCgxv/fcwPtWq0HslLgdSIeDoKLBq2nO36gA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nWyj+P8h54o5JWwx2XYN4Z/FQCrwpUlYr+z78WJbh1XifDvlBwkWIWlu4m1p2OZuGCNPXX4BqTzYh2W6oSa8TdkxJrx+uzkAddPnuwM0jSx9Qpu9+7dqGyAUGuZu+6at1oAOTaAqwYgF2MlFJlXDtkX6pcDXw4l3QvkZDfpYuok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRKJ93uq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UlhzTEC6k+/U4nChjrmInThHSwrYIfXv2ZOqi7oC0kgQJkFHh/xD4r3cDCpyr3g1MbkoQv3MaDP2L5L7Zx1pEoX61mxgRI9JnF3NiiJ9+CsbCqv1X1e5qQSYEXQm0Hsu7UUxbXBIi+TVDGbtiMyMHwQFqymLFIHpLbP3iOcY6+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CXQU9aim; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRKJ93uq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 872C5C113CC;
-	Thu, 25 Apr 2024 11:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714044445;
-	bh=/xag3OkcGEyfkLOWbreP2qxcC/ujNSwQZVNR+WIcJbw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mRKJ93uqcY3f24wDK0kXzBjcPBV39G7QObjuc4CmkQfRv5R+mMpJ1b6/J6H5u2HIm
-	 t3h5+32yZNa9AnoOJhEsPXOxE743fBO/ZLvaD3SlDtF8Xs+uMfOxHE4vQafUCmrTeS
-	 RauCHvdPX8zvNEuF1uoAtnZsVbEL6F3JQU4ITMpZeHMVpsbaStweISAUZ6NSPwqYK1
-	 Bznvw3m7I67nKaMSLncnqLg+qkh3IpEMtvfeKnmZfr3+eXQJE4Y4h22qAAkj/prqE7
-	 l7Z0jthgvYfF/3lWJ+ZN1Mj9l+O5eeFJL9TnW2NlZSe49x5nzyjc40EKQCg+px2KUW
-	 1T6j/jrkd3wfw==
-Date: Thu, 25 Apr 2024 16:47:58 +0530
-From: Naveen N Rao <naveen@kernel.org>
-To: Gautam Menghani <gautam@linux.ibm.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	aneesh.kumar@kernel.org, npiggin@gmail.com, Vaibhav Jain <vaibhav@linux.ibm.com>, 
-	linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v5 RESEND] arch/powerpc/kvm: Add support for reading VPA
- counters for pseries guests
-Message-ID: <ne4jzv6dyremumuulw6c5zcwgncz5igsesfmlazg4jxmkaz3te@jpqv3qfo7jlb>
-References: <20240402070656.28441-1-gautam@linux.ibm.com>
- <aauzmvtbpgxbr4aa3s4k33cdi7fljs5q4ifn5x2swncz7dtvam@gclohylavkpl>
- <ualscagnpj54rvn33ncaznp7ibvvqulhrmq46qsg73wokgswxy@naopf7leuk66>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CXQU9aim"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=LucgZsZ2fF1q3sR6F54UyCTR1dPpRoPMHDd0YAuRUvo=; b=CXQU9aimWDuO+U40QmpbKD9IcQ
+	+Ld66VDCp4qb61vF9gpeawozVsbjOqRLtb/ptV4UE9qVwT8SMdx9e/aBLcgmhsqQAvJXkqZe/bZrW
+	dnS8C1YsWn35J9URgOUA8pH9QjoRG2FpL2AZOtJmWTe1e2XpWZBHToPL8S8CFYHOlbuSvNXC+p/ES
+	tvUT8Be6m+24MXCpAanuRtZ7yji3NBn7/3ObLHGkSyn3/Dz5SViFEKNySIvDaDzw6bFuCudctHMiV
+	S4QS4VbZrW6blMUIBhB7YfCbmcOgYTap/ZtNbBY+AsBe1DSW+6JmeC8Ww9V44UFCZEEXQum2soge1
+	K+UlOSjw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rzxHb-0000000EqUK-2lh6;
+	Thu, 25 Apr 2024 11:28:56 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 51B6D300439; Thu, 25 Apr 2024 13:28:55 +0200 (CEST)
+Date: Thu, 25 Apr 2024 13:28:55 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mike Galbraith <efault@gmx.de>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>, mingo@redhat.com,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+	linux-kernel@vger.kernel.org, wuyun.abel@bytedance.com,
+	tglx@linutronix.de, Chen Yu <yu.c.chen@intel.com>,
+	Oliver Sang <oliver.sang@intel.com>
+Subject: Re: [RFC][PATCH 08/10] sched/fair: Implement delayed dequeue
+Message-ID: <20240425112855.GF21980@noisy.programming.kicks-ass.net>
+References: <20240405102754.435410987@infradead.org>
+ <20240405110010.631664251@infradead.org>
+ <557be85d-e1c1-0835-eebd-f76e32456179@amd.com>
+ <ec6f811b9977eeef1b3f1b3fb951fda066fd95f5.camel@gmx.de>
+ <14330cf4-8d9e-1e55-7717-653b800e5cee@amd.com>
+ <747627a1414f1f33d0c237f555494149d6937800.camel@gmx.de>
+ <2b9f7617f2b2130bb6270504ec3858f15d463f1d.camel@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,70 +59,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ualscagnpj54rvn33ncaznp7ibvvqulhrmq46qsg73wokgswxy@naopf7leuk66>
+In-Reply-To: <2b9f7617f2b2130bb6270504ec3858f15d463f1d.camel@gmx.de>
 
-On Wed, Apr 24, 2024 at 11:08:38AM +0530, Gautam Menghani wrote:
-> On Mon, Apr 22, 2024 at 09:15:02PM +0530, Naveen N Rao wrote:
-> > On Tue, Apr 02, 2024 at 12:36:54PM +0530, Gautam Menghani wrote:
-> > >  static int kvmhv_vcpu_entry_nestedv2(struct kvm_vcpu *vcpu, u64 
-> > >  time_limit,
-> > >  				     unsigned long lpcr, u64 *tb)
-> > >  {
-> > > @@ -4130,6 +4161,11 @@ static int kvmhv_vcpu_entry_nestedv2(struct kvm_vcpu *vcpu, u64 time_limit,
-> > >  	kvmppc_gse_put_u64(io->vcpu_run_input, KVMPPC_GSID_LPCR, lpcr);
-> > >  
-> > >  	accumulate_time(vcpu, &vcpu->arch.in_guest);
-> > > +
-> > > +	/* Enable the guest host context switch time tracking */
-> > > +	if (unlikely(trace_kvmppc_vcpu_exit_cs_time_enabled()))
-> > > +		kvmhv_set_l2_accumul(1);
-> > > +
-> > >  	rc = plpar_guest_run_vcpu(0, vcpu->kvm->arch.lpid, vcpu->vcpu_id,
-> > >  				  &trap, &i);
-> > >  
-> > > @@ -4156,6 +4192,10 @@ static int kvmhv_vcpu_entry_nestedv2(struct kvm_vcpu *vcpu, u64 time_limit,
-> > >  
-> > >  	timer_rearm_host_dec(*tb);
-> > >  
-> > > +	/* Record context switch and guest_run_time data */
-> > > +	if (kvmhv_get_l2_accumul())
-> > > +		do_trace_nested_cs_time(vcpu);
-> > > +
-> > >  	return trap;
-> > >  }
-> > 
-> > I'm assuming the counters in VPA are cumulative, since you are zero'ing 
-> > them out on exit. If so, I think a better way to implement this is to 
-> > use TRACE_EVENT_FN() and provide tracepoint registration and 
-> > unregistration functions. You can then enable the counters once during 
-> > registration and avoid repeated writes to the VPA area. With that, you 
-> > also won't need to do anything before vcpu entry. If you maintain 
-> > previous values, you can calculate the delta and emit the trace on vcpu 
-> > exit. The values in VPA area can then serve as the cumulative values.
-> > 
+On Thu, Apr 18, 2024 at 06:24:59PM +0200, Mike Galbraith wrote:
+> The root cause seems to be doing the delay dequeue business on
+> exiting tasks. 
+
+> ---
+>  kernel/sched/fair.c |    5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> This approach will have a problem. The context switch times are reported
-> in the L1 LPAR's CPU's VPA area. Consider the following scenario:
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5374,6 +5374,7 @@ dequeue_entity(struct cfs_rq *cfs_rq, st
+>  		update_curr(cfs_rq);
 > 
-> 1. L1 has 2 cpus, and L2 has 1 cpu
-> 2. L2 runs on L1's cpu0 for a few seconds, and the counter values go to
-> 1 million
-> 3. We are maintaining a copy of values of VPA in separate variables, so
-> those variables also have 1 million.
-> 4. Now if L2's vcpu is migrated to another L1 cpu, that L1 cpu's VPA
-> counters will start from 0, so if we try to get delta value, we will end
-> up doing 0 - 1 million, which would be wrong.
+>  		if (sched_feat(DELAY_DEQUEUE) && sleep &&
+> +		    !(entity_is_task(se) && (task_of(se)->flags & PF_EXITING)) &&
+>  		    !entity_eligible(cfs_rq, se)) {
+>  			if (cfs_rq->next == se)
+>  				cfs_rq->next = NULL;
 
-I'm assuming you mean migrating the task. If we maintain the previous 
-readings in paca, it should work I think.
+So I think this can be easier done in dequeue_task_fair(), where we
+still know this is a task.
 
-> 
-> The aggregation logic in this patch works as we zero out the VPA after
-> every switch, and maintain aggregation in a vcpu->arch
+Perhaps something like (I'll test later):
 
-Are the cumulative values of the VPA counters of no significance? We 
-lose those with this approach. Not sure if we care.
+	if (p->flags & PF_EXITING)
+		flags &= ~DEQUEUE_SLEEP;
 
-
-- Naveen
-
+But now I need to go think about the case of removing a cgroup...
+*urgh*.
