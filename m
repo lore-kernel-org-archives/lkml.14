@@ -1,195 +1,183 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1224500E;
-	Thu, 25 Apr 2024 16:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDCB12C466
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 16:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714062362; cv=none; b=qkS+9/ty32MGBZM8vwqQQDDPT0HkNceF5ZAeJsYvHtrpQasRTHMvpMEX8E6dq4E/n8pkPEv7G8jk1+psXkpolibnQghKPut5QsCIorjWESy48p6JKMsKcQ0YMjlXtUUWSuN7ppGusWDNPd8sFgYYnshgZEMqNpRfOQldYKpgTF4=
+	t=1714062429; cv=none; b=hPvM2lQaeEsecHpTTcG7sVFz6aLvBMToZwrg8fbspHfGA1MUT4BxTo2o/OxaSKsjTm90y2e/eEJDQsUT4yL9j6mN6cfWPscrGtGR8WyU/XzBQCd4pyyfOY0gjChRFtGDn/+n3Vd1W/8K+70UloSE7MC9dK2K+sSZqBhkSmXmFH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714062362; c=relaxed/simple;
-	bh=TxvnLVnHCzLYr5N2HFp/nczLdov6mGmacGR7PuTbNPY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Xxxfz7cq/PqV/fUK8OsMOpZtE2b2oDsAey2S3EQuYUVYZ3hzQ/caWBwgPMk7zEGpioCHE4ssK2iLANLM/Dd4oIT5uLVyJewUAwwZhGiJUnQKR5UB+B1FUoaz+44vEVEs6B6NDj4fjQPkTfGC2I9jD+lKrW0/3H6O5+9asxQM7H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ml5U5uNP; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714062429; c=relaxed/simple;
+	bh=p7/5jJEknNzH52HmWmbdfokTUKdPfNcKZg7IYy4as+M=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=RnmaZWBil/xkXWZPLbYDc0lHjJuyENQSodbCu5BR7Qn7KbRu4te/EpYh5APsbgsKDAsDYAR+JBwccZTsfozkpVxRKqEfaaQIEQuKMmX7Xef9WVnRd6nS5jrBlYemS4wbkFcnUaEPVsMwOo2pdDfF3ZrTMydKCna/zFczm/OlzW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WOXMhsSw; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ml5U5uNP"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-516d264d0e4so2090504e87.0;
-        Thu, 25 Apr 2024 09:26:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714062359; x=1714667159; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DxO2oNlSzGM7kBMrDEAxbo8f0S+NuBcTPULwJPIkD1w=;
-        b=Ml5U5uNPQww9OYEpahZSaB2jGYWNLeYhwnj1QGjDvMt2x5IyEC+vbmD/H3WpK45aqc
-         kPzCzNJndHTnuuPUgjkhqaLafkobbGtWbk9ch0cl1LH81ofT1U34CcNoR6621FjPORae
-         S41S8ukklPG9hAZNwi45L6Sy3XqXfcViK3apWQVnE5TSmBSQLBM0eFzwfSq/btfaIhs6
-         9/oZTCNbm9cTqOrBWOrlb15WFXu8j2MTnXAqLn11TP8S4eru8v+eaGFEyRJODaNXvPCN
-         5zj5NNsZYgguNYu1J9q/yKMMLaJ5yHCJICh2q5if+4pJ53F+ZFfli3Rwc0d56zmlh+9x
-         EZ/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714062359; x=1714667159;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DxO2oNlSzGM7kBMrDEAxbo8f0S+NuBcTPULwJPIkD1w=;
-        b=p2h49kQh4sTGnMngxoQAiKg/a4aJxrj7bmMvZPLjIrAypjYQvW9yV0YaSWWTDwRQsw
-         mEYHTwvE1ENkm4u3nWga97TkqOMpTapAaD17c9VT3JVbV91gdigb8JOImVBYlRNCnJK5
-         b7kfowedbGBkZ7XoDyQ8y8NbmBHLoeX7g9Nlf0nYAtKD2qbltKL/GDcAOw663p2H/tBC
-         NNtJEjejkL68Atfk7KaXxLS5Somawv9+XlOTtQFR4Bh7ZHqSkbaG3/7ZFI1DOEn62eHr
-         hHZLrPuZakQXjck3J4ZOpGyaneq4+cP7CoZcrkF9NoPKCEVv2a8WyPavjko2m65XT3dc
-         uIfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX001Yhv30dMVq+ujqH118JxM4ldXWJ+aj+8b7/RvHJY2Oyu5uNJtygaYnt+uVENQ5cS/sk3GIxIP522cKE2vJU9p8aVpArySy04bAPVngGbunXrW5G58NIGB/nscB5ABWRchinG2SQLfykMa11vFQmqi8su/bPevgWxQmDZzyH5K9V0WjoFA==
-X-Gm-Message-State: AOJu0YytzBmstKK5Lyjz0PW5Qpy63XOAdS1R6ZwglMYW5p5TnUGqPmA9
-	zmtFJRX9Rmw7dNz2xgPIKUSHscPBxpxcifrMzc/pKaM9wYhU4Myv
-X-Google-Smtp-Source: AGHT+IFpUL/ltxk0Un9ie7MK4i1cxn3QTf0qOcrWXxoJLk4IsyJxBA+VOMT+7HF1zDbPrQmBhSjPiA==
-X-Received: by 2002:a19:3855:0:b0:518:f4e9:201c with SMTP id d21-20020a193855000000b00518f4e9201cmr1093178lfj.16.1714062358954;
-        Thu, 25 Apr 2024 09:25:58 -0700 (PDT)
-Received: from pratik-IdeaPad.lan (customer-145-40-29-195.stosn.net. [145.40.29.195])
-        by smtp.googlemail.com with ESMTPSA id d42-20020a0565123d2a00b0051aef948b0asm1893471lfv.201.2024.04.25.09.25.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 09:25:58 -0700 (PDT)
-From: Pratik Farkase <pratikfarkase94@gmail.com>
-X-Google-Original-From: Pratik Farkase <pratik.farkase@wsisweden.com>
-To: 
-Cc: Pratik Farkase <pratik.farkase@wsisweden.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Pratik Farkase <pratikfarkase94@gmail.com>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v4] dt-bindings: serial: brcm,bcm2835-aux-uart: convert to dtschema
-Date: Thu, 25 Apr 2024 18:25:50 +0200
-Message-Id: <20240425162554.13576-1-pratik.farkase@wsisweden.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WOXMhsSw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714062427; x=1745598427;
+  h=date:from:to:cc:subject:message-id;
+  bh=p7/5jJEknNzH52HmWmbdfokTUKdPfNcKZg7IYy4as+M=;
+  b=WOXMhsSwqD7NnFN4wSm83JKTqCQLN/V0wrUHnOU/bTXqAOWtyqh80WBx
+   RYzhdORpQRFxqU5lzsDeYi/nQBb+egsoOi8XZdfhZjJRevARyrigZUpJc
+   iTMmTB1OWb63pC35s1nQmyLDieWKnYUruSbDEUmuja/+/PcEheUSLyoc2
+   3QrpuJQ142+fXeM6AlbVEzaBE7imBAtIJHB0QW334+d3gOgWLLfoduWfK
+   Dy2vW89LpXxnL1bgbvgG33sogaPcQe9ViPCZSCL10b7bbvRguHdoRKLFo
+   4HNu73K3Ih/6JMGc+VHLAd0eT4IcwSTTRbqizPcPY0I3lweq9EUMyPDmd
+   w==;
+X-CSE-ConnectionGUID: mxNLi9rmQaasHMKHu5yASA==
+X-CSE-MsgGUID: 0OMfFSFRQX2RW6nEdH4IJg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="9589075"
+X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
+   d="scan'208";a="9589075"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 09:27:07 -0700
+X-CSE-ConnectionGUID: l2DntHY9QWm2xfQM0Sns0A==
+X-CSE-MsgGUID: 64vB+KuJTzKS0Krs1z9nXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
+   d="scan'208";a="25221977"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 25 Apr 2024 09:27:06 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s01w7-0002b5-2K;
+	Thu, 25 Apr 2024 16:27:03 +0000
+Date: Fri, 26 Apr 2024 00:26:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Subject: [gustavoars:testing/WFAMNAE-next20240424-CbC] BUILD SUCCESS
+ bebcd7097d3b1b92e3f246f7f3248f241f99d04f
+Message-ID: <202404260032.yaC1cjKY-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Convert the Broadcom BCM2835 Auxiliary UART to newer DT schema.
-Created DT schema based on the .txt file which had
-`compatible`, `reg` `clocks` and `interrupts` as the
-required properties. This binding is used by Broadcom BCM2835
-SOC used in some Raspberry PI boards.
-Changes from original file:
-Implemented complete example which the original txt binding lacked.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/WFAMNAE-next20240424-CbC
+branch HEAD: bebcd7097d3b1b92e3f246f7f3248f241f99d04f  wifi: rtlwifi: Avoid -Wflex-array-member-not-at-end warnings
 
-Acked-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Pratik Farkase <pratik.farkase@wsisweden.com>
----
-Changes in v4
-- Added Acked-by flag
----
-Changes in v3
-- Removed unecessary headers from example
-- Removed the `uart1` label
-- Added Reviewed-by flag
----
-Changes in v2
-- Updated Maintainers list according to feedback
-- Fixed typo `Auxiliar` to `Auxiliary`
----
----
- .../bindings/serial/brcm,bcm2835-aux-uart.txt | 18 --------
- .../serial/brcm,bcm2835-aux-uart.yaml         | 46 +++++++++++++++++++
- 2 files changed, 46 insertions(+), 18 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.txt
- create mode 100644 Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.yaml
+elapsed time: 1604m
 
-diff --git a/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.txt b/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.txt
-deleted file mode 100644
-index b5cc6297cd1b..000000000000
---- a/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.txt
-+++ /dev/null
-@@ -1,18 +0,0 @@
--* BCM2835 AUXILIAR UART
--
--Required properties:
--
--- compatible: "brcm,bcm2835-aux-uart"
--- reg: The base address of the UART register bank.
--- interrupts: A single interrupt specifier.
--- clocks: Clock driving the hardware; used to figure out the baud rate
--  divisor.
--
--Example:
--
--	uart1: serial@7e215040 {
--		compatible = "brcm,bcm2835-aux-uart";
--		reg = <0x7e215040 0x40>;
--		interrupts = <1 29>;
--		clocks = <&aux BCM2835_AUX_CLOCK_UART>;
--	};
-diff --git a/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.yaml b/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.yaml
-new file mode 100644
-index 000000000000..8a31eb56b865
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/serial/brcm,bcm2835-aux-uart.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: BCM2835 AUXILIARY UART
-+
-+maintainers:
-+  - Pratik Farkase <pratikfarkase94@gmail.com>
-+  - Florian Fainelli <florian.fainelli@broadcom.com>
-+  - Stefan Wahren <wahrenst@gmx.net>
-+
-+allOf:
-+  - $ref: serial.yaml
-+
-+properties:
-+  compatible:
-+    const: brcm,bcm2835-aux-uart
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/bcm2835-aux.h>
-+    serial@7e215040 {
-+        compatible = "brcm,bcm2835-aux-uart";
-+        reg = <0x7e215040 0x40>;
-+        interrupts = <1 29>;
-+        clocks = <&aux BCM2835_AUX_CLOCK_UART>;
-+    };
+configs tested: 106
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                      axs103_smp_defconfig   gcc  
+arc                                 defconfig   gcc  
+arc                        nsim_700_defconfig   gcc  
+arc                   randconfig-001-20240425   gcc  
+arc                   randconfig-002-20240425   gcc  
+arm                               allnoconfig   clang
+arm                                 defconfig   clang
+arm                      integrator_defconfig   clang
+arm                        keystone_defconfig   gcc  
+arm                       omap2plus_defconfig   gcc  
+arm                   randconfig-001-20240425   clang
+arm                   randconfig-002-20240425   clang
+arm                   randconfig-003-20240425   clang
+arm                   randconfig-004-20240425   clang
+arm                       spear13xx_defconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240425   gcc  
+arm64                 randconfig-002-20240425   gcc  
+arm64                 randconfig-003-20240425   gcc  
+arm64                 randconfig-004-20240425   gcc  
+csky                              allnoconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240425   gcc  
+csky                  randconfig-002-20240425   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386         buildonly-randconfig-001-20240425   gcc  
+i386         buildonly-randconfig-002-20240425   clang
+i386         buildonly-randconfig-003-20240425   gcc  
+i386         buildonly-randconfig-004-20240425   clang
+i386         buildonly-randconfig-005-20240425   clang
+i386         buildonly-randconfig-006-20240425   gcc  
+i386                  randconfig-001-20240425   clang
+i386                  randconfig-002-20240425   clang
+i386                  randconfig-003-20240425   clang
+i386                  randconfig-004-20240425   gcc  
+i386                  randconfig-005-20240425   clang
+i386                  randconfig-006-20240425   clang
+i386                  randconfig-011-20240425   clang
+i386                  randconfig-012-20240425   clang
+i386                  randconfig-013-20240425   gcc  
+i386                  randconfig-014-20240425   gcc  
+i386                  randconfig-015-20240425   gcc  
+i386                  randconfig-016-20240425   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240425   gcc  
+m68k                             alldefconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                        omega2p_defconfig   clang
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                     tqm8555_defconfig   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+xtensa                            allnoconfig   gcc  
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
