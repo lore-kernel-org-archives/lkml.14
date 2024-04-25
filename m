@@ -1,180 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5172149C41;
-	Thu, 25 Apr 2024 14:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF05C1494BC;
+	Thu, 25 Apr 2024 14:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714056898; cv=none; b=IA+ZcEdv3mOdJ+ieNlYm06SSYcgJYuxajqgcZsoky09AJCnMlSRbZXXgs/7JZW61iSjnIYdx7raadN1NXiCIyl7oS6EyZvZq5v31gMu0ojPnVM5gUja+XJSPbl390l7ANx0K6XE0EpPXVaAku56KTnzZSdrHNf29js73dRzUUfk=
+	t=1714057036; cv=none; b=el0mm4IMxyACvVO1e14QaDCP90x91E1hWVGHZ3od08g2zi0j2xFEFQX9A1lgiUWr6mEwYiRvQtcUSQx4CEUP0mbrc8x6xktPk6GTsMvqMZW4S+MzN7YJX/kB9RZQibg51pjQ8rzBXt3vl0K+lRAC902AfevU1zNFxHPsMvrO7B4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714056898; c=relaxed/simple;
-	bh=yNCCIWfTdCHNbBmFYCUt3xawJB1iwtxv9VFt8rE3G1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TIJamHqa4Z7VKIhvZ9cIwgGB5lAsOgrOAxNGmNHeRfpdAjTyCuADWzBEgK+/q9mMvMFbjAlqz8bO8nZiOm8F2l8E16bhOTqfKb+RNOxlfJ1jE5Lz5YJ2pzXxdngpK1U2Jqv6KtvqbcqWHxdBqQ16qZR8Run5GbxeCq0WO7j1C8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bzdJCssO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714057036; c=relaxed/simple;
+	bh=C+itTDL3A8PImRFwW+2p6GQPM8DKabS7q7T2fAZamHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=i/doet/D29p/5iGs60yYNX4g2k/gNJLqmX004Z+ZqAahNN2e9Jrb5UwANUIWB4fL7Fmh2sXHq4eVoHw6TwbZTZOdXJllgNhFhWob8eD4i19/tKh2lQrjldNRaWfLHy9R07324O71k8ddiy3S5pGN4BZtUt+oumXcVni5mtAQ/G8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dTuTsP+I; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bzdJCssO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06E88C113CC;
-	Thu, 25 Apr 2024 14:54:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714056898;
-	bh=yNCCIWfTdCHNbBmFYCUt3xawJB1iwtxv9VFt8rE3G1w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bzdJCssO1ICrAOCQc/lVqsQ+4sNZ8MvSv5xfsY4MhdgJF10Io5m3+8je76QfRZUOI
-	 pwGRK5WkZ/9aw+nHtcwwHyLP9MWzXnqDqI5garNYuaB/2065vtmBW4qqbNZ0CvHKAC
-	 +jgqRTaJ+P20CU4rKOLKW2PgNMqjboZHdItPvpIMZ29d4/Q1DDKicxkO73aoLfTjv8
-	 M1xPF3B+zvqEw+PV50IJfdo3p8Uz5RLa9slmE/610+leoFiMVcz3a2EMssFzBg+f/C
-	 TgZ8QI8+0VQ4L9uv1sM5yIg13zkMAdg98q6HLTjXFrm3jcdL4XLecxij0uyDhW3PBC
-	 TMGVqyjREWHbA==
-Date: Thu, 25 Apr 2024 20:24:50 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Qiang Yu <quic_qianyu@quicinc.com>
-Cc: quic_jhugo@quicinc.com, mhi@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	quic_cang@quicinc.com, quic_mrana@quicinc.com
-Subject: Re: [PATCH v5 1/3] bus: mhi: host: Add sysfs entry to force device
- to enter EDL
-Message-ID: <20240425145450.GH3449@thinkpad>
-References: <1713928915-18229-1-git-send-email-quic_qianyu@quicinc.com>
- <1713928915-18229-2-git-send-email-quic_qianyu@quicinc.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dTuTsP+I"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C1A4DC000E;
+	Thu, 25 Apr 2024 14:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1714057031;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mLXxiz1Ky5nDojL/VVZQzWe2VuDpGkCwUW5hLfQwjTQ=;
+	b=dTuTsP+IJ5VW2lbM1ddRFj2We5xV5pmpubZYOL40eP5CzdUdw4HK5hI/TwjkkNGitqI+V7
+	EHOb4rX02VdKbmDDCzSRX1vu9J/lThB2MJ6N70EWe7YgWaaAEv405hgbnVa6wwCnwuxiTt
+	GvhRuv8tcGdo0UgWKU2YH9VbpOWAhRQnTW6ENgMphNngVpxIaGXKVZgw7evXyYNY1WYuiV
+	h6OPRKqksC7aSKUsrcHlDBh9GI0+dPtOt3txV1HaeyAdNf4XIdzNwrF+rcrOmx6fgRq3X0
+	P78gjr4+e+1X5wHYQaicz7vR4RECbCk06gHgHwtKf5oCSo0YhJHRp8wFj1+0SQ==
+Date: Thu, 25 Apr 2024 16:57:08 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Jiri Pirko <jiri@resnulli.us>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Andrew Lunn
+ <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Kyle Swenson
+ <kyle.swenson@est.tech>, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH net-next v3 0/3] net: pse-pd: Fixes for few small issues
+Message-ID: <20240425165708.62637485@kmaincent-XPS-13-7390>
+In-Reply-To: <20240425074205.28677540@kernel.org>
+References: <20240423-fix_poe-v3-0-e50f32f5fa59@bootlin.com>
+	<ZiebQLdu9dOh1v-T@nanopsycho>
+	<20240425103110.33c02857@kmaincent-XPS-13-7390>
+	<20240425070619.601d5e40@kernel.org>
+	<20240425163002.5894c5e5@kmaincent-XPS-13-7390>
+	<20240425074205.28677540@kernel.org>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1713928915-18229-2-git-send-email-quic_qianyu@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Wed, Apr 24, 2024 at 11:21:53AM +0800, Qiang Yu wrote:
-> Add sysfs entry to allow users of MHI bus force device to enter EDL.
-> Considering that the way to enter EDL mode varies from device to device and
-> some devices even do not support EDL. Hence, add a callback edl_trigger in
-> mhi controller as part of the sysfs entry to be invoked and MHI core will
-> only create EDL sysfs entry for mhi controller that provides edl_trigger
-> callback. All of the process a specific device required to enter EDL mode
-> can be placed in this callback.
-> 
-> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
-> Reviewed-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+On Thu, 25 Apr 2024 07:42:05 -0700
+Jakub Kicinski <kuba@kernel.org> wrote:
 
-All 3 patches are applied to mhi-next with my reported changes! Since you are
-doing upstreaming for some time, you should know that the changelog _must_ be
-present in the patches itself or in the cover letter.
+> On Thu, 25 Apr 2024 16:30:02 +0200 Kory Maincent wrote:
+> > > Could you experiment with tweaking the posting?
+> > > Maybe we can "bisect" the problem.   =20
+> >=20
+> > Do you want me to like post a v5 with the "pw-bot: cr" tag? But if I pu=
+t the
+> > tag only on the cover letter it won't work then.
+> > Maybe on all patches? =20
+>=20
+> Probably not worth posting for a test. I'll try to be more careful when
+> applying in the future, we can experiment with real postings.
+>=20
+> > Was it the same for the PoE support patch series? =20
+>=20
+> Yeah, I had to apply that one manually.
 
-- Mani
+Does this patch series is on the same state?
+https://lore.kernel.org/netdev/20240422-feature_ptp_netnext-v11-0-f14441f2a=
+1d8@bootlin.com/
 
-> ---
->  Documentation/ABI/stable/sysfs-bus-mhi | 13 +++++++++++++
->  drivers/bus/mhi/host/init.c            | 33 +++++++++++++++++++++++++++++++++
->  include/linux/mhi.h                    |  2 ++
->  3 files changed, 48 insertions(+)
-> 
-> diff --git a/Documentation/ABI/stable/sysfs-bus-mhi b/Documentation/ABI/stable/sysfs-bus-mhi
-> index 1a47f9e..b44f467 100644
-> --- a/Documentation/ABI/stable/sysfs-bus-mhi
-> +++ b/Documentation/ABI/stable/sysfs-bus-mhi
-> @@ -29,3 +29,16 @@ Description:	Initiates a SoC reset on the MHI controller.  A SoC reset is
->                  This can be useful as a method of recovery if the device is
->                  non-responsive, or as a means of loading new firmware as a
->                  system administration task.
-> +
-> +What:           /sys/bus/mhi/devices/.../trigger_edl
-> +Date:           April 2024
-> +KernelVersion:  6.9
-> +Contact:        mhi@lists.linux.dev
-> +Description:    Writing a non-zero value to this file will force devices to
-> +                enter EDL (Emergency Download) mode. This entry only exists for
-> +                devices capable of entering the EDL mode using the standard EDL
-> +                triggering mechanism defined in the MHI spec v1.2. Once in EDL
-> +                mode, the flash programmer image can be downloaded to the
-> +                device to enter the flash programmer execution environment.
-> +                This can be useful if user wants to use QDL (Qualcomm Download,
-> +                which is used to download firmware over EDL) to update firmware.
-> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
-> index 44f9349..7104c18 100644
-> --- a/drivers/bus/mhi/host/init.c
-> +++ b/drivers/bus/mhi/host/init.c
-> @@ -127,6 +127,30 @@ static ssize_t soc_reset_store(struct device *dev,
->  }
->  static DEVICE_ATTR_WO(soc_reset);
->  
-> +static ssize_t trigger_edl_store(struct device *dev,
-> +			       struct device_attribute *attr,
-> +			       const char *buf, size_t count)
-> +{
-> +	struct mhi_device *mhi_dev = to_mhi_device(dev);
-> +	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
-> +	unsigned long val;
-> +	int ret;
-> +
-> +	ret = kstrtoul(buf, 10, &val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (!val)
-> +		return -EINVAL;
-> +
-> +	ret = mhi_cntrl->edl_trigger(mhi_cntrl);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_WO(trigger_edl);
-> +
->  static struct attribute *mhi_dev_attrs[] = {
->  	&dev_attr_serial_number.attr,
->  	&dev_attr_oem_pk_hash.attr,
-> @@ -1018,6 +1042,12 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
->  	if (ret)
->  		goto err_release_dev;
->  
-> +	if (mhi_cntrl->edl_trigger) {
-> +		ret = sysfs_create_file(&mhi_dev->dev.kobj, &dev_attr_trigger_edl.attr);
-> +		if (ret)
-> +			goto err_release_dev;
-> +	}
-> +
->  	mhi_cntrl->mhi_dev = mhi_dev;
->  
->  	mhi_create_debugfs(mhi_cntrl);
-> @@ -1051,6 +1081,9 @@ void mhi_unregister_controller(struct mhi_controller *mhi_cntrl)
->  	mhi_deinit_free_irq(mhi_cntrl);
->  	mhi_destroy_debugfs(mhi_cntrl);
->  
-> +	if (mhi_cntrl->edl_trigger)
-> +		sysfs_remove_file(&mhi_dev->dev.kobj, &dev_attr_trigger_edl.attr);
-> +
->  	destroy_workqueue(mhi_cntrl->hiprio_wq);
->  	kfree(mhi_cntrl->mhi_cmd);
->  	kfree(mhi_cntrl->mhi_event);
-> diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-> index cde01e1..d968e1a 100644
-> --- a/include/linux/mhi.h
-> +++ b/include/linux/mhi.h
-> @@ -353,6 +353,7 @@ struct mhi_controller_config {
->   * @read_reg: Read a MHI register via the physical link (required)
->   * @write_reg: Write a MHI register via the physical link (required)
->   * @reset: Controller specific reset function (optional)
-> + * @edl_trigger: CB function to trigger EDL mode (optional)
->   * @buffer_len: Bounce buffer length
->   * @index: Index of the MHI controller instance
->   * @bounce_buf: Use of bounce buffer
-> @@ -435,6 +436,7 @@ struct mhi_controller {
->  	void (*write_reg)(struct mhi_controller *mhi_cntrl, void __iomem *addr,
->  			  u32 val);
->  	void (*reset)(struct mhi_controller *mhi_cntrl);
-> +	int (*edl_trigger)(struct mhi_controller *mhi_cntrl);
->  
->  	size_t buffer_len;
->  	int index;
-> -- 
-> 2.7.4
-> 
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
