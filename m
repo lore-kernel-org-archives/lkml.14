@@ -1,124 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731E067A1A;
-	Thu, 25 Apr 2024 07:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129B16E605
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 07:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714031763; cv=none; b=PGckPVOi1WSQy2bwE/StrM+XHWjh2g2xwNOR9BRhFrRWFp/dUtNRbMXyFHi/7bXImH8NRg6Gzqzm/HKW8IfDrQluJJR8Yj5167CVXbK/BtTNZW7VLQVkO3Nke5qAB5Su2Q5OZVK8X6zICxjwSsbYvjTwdkwfqOHzb1ZBFa6qb1U=
+	t=1714031866; cv=none; b=fmav9sg5sHIV6nWHhOJZbzDM5g8hntjM4DbDMO1axapninGwrX6diCx4g/AwU1KSrG90X+FusOQSn2D7YRl3ReWKLiuPdn7mS1mKCVDOvOFojaSu/BTcdZRBtIQTP+b42AjWO+iypI690k9/u5Jovl7Wx7L53TDg5XJWHAJW9Hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714031763; c=relaxed/simple;
-	bh=FbilVvwlenLgeiFq6bKzJ8zy6ljmHZoUoBSejCx9WMg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P/uaanyTB/YKlv28BmSyZg1sFN8dNeJFKVCwVwLA+Khe7pBR1nPDKvhXB/oNeQGE2KJ1jBBviJpNOohQWuTFW9JodhOT2qB91h7FLngYsf7mO/eE8L0kEfxZMTrwqMj8XRRTkHQAUxI639h8UerNvX2mhFPFbc0my2a/bgSAAbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pctJuYQ8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714031866; c=relaxed/simple;
+	bh=PBSIenB57GzBOC3DNr8CreMwJgWwbmdkburzd3odZfI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=hjmiFRGuMiDIVZrBRlL50MEIWo8NVHLxoiRcipyEaQ9LY3+CPP55UBIqesMLuI7hN7sqi6DLMSt8RmPO2AQ2q17RsnIR9lWG6HFLy1KFlYatzayKM4gH78TQINDBPTNvy5cZ67ksulFPSI/ScI+CbusCmpYwQ1ZLENzmNOxezv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QnkjS4YI; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pctJuYQ8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 520FCC113CC;
-	Thu, 25 Apr 2024 07:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714031762;
-	bh=FbilVvwlenLgeiFq6bKzJ8zy6ljmHZoUoBSejCx9WMg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=pctJuYQ8pjN/iOl9OiJoGq/5tMceS3K58mDHUL2521Sko39SPcBrT4oTNNROs3NGa
-	 28KY82pxVQGtSoZgMpUuddTdjpjEhSGktT3uegc//Nuaq84yTOw5OtBiYEmgUk++D6
-	 O3zI09xrPaSrmk6sw2+nRxQ0xzej4ZXkd47/xCLrGHsKuwrCiRRY+E2euNPWr9N1ck
-	 ESUoA6t8nBQFGy756uMBALGFDBuWlkmbYd0Bbxq7RCV79kSBo177kaphMdWFGFCPhb
-	 RXaDDivf5E8e3EyDNOkbc4LsW/haQitICqSgP4i6/Ey9c2xMJgVhtJ8lrSPqdwJR6C
-	 Qv4WPlPzVzgcw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1rztxZ-000000006Lk-32dS;
-	Thu, 25 Apr 2024 09:56:01 +0200
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	stable@vger.kernel.org,
-	Doug Anderson <dianders@chromium.org>,
-	Janaki Ramaiah Thota <quic_janathot@quicinc.com>
-Subject: [PATCH] Bluetooth: qca: fix wcn3991 device address check
-Date: Thu, 25 Apr 2024 09:55:03 +0200
-Message-ID: <20240425075503.24357-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QnkjS4YI"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-41adf3580dbso3884075e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 00:57:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714031863; x=1714636663; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8zlRN8GDdJRPh97Fl0bz7cJhpbCIiQnJ+fEE7Z9TrLA=;
+        b=QnkjS4YItWZ39Z/xMN0XPD30R0GK6JQefXwutLIdSW4gPXeKm94TZXwxB1DjpWxjb3
+         MJJ1uNPzodww2xnmL13XoUuondd/AakoeUv4ukXW8UzvPQB9qft7jn+ASAtHiCaDP490
+         hBsvUAjCJWEn6Yr6Nbz4f4vdt81Td2RD7HaeiF8TQqexDM4ipOAG3sTNu8fz/C41CTM5
+         xW66L5Qdjn0wy7kgulISRB3w9X73hJireu0hGRNbVuiyanlyAY1CTqhIPnoqtLu9HR0w
+         FylJqdMeqozM/fuMH3IXkKkAb40Fd2iDrwYE4WiLx4ak0uyQ1zkfy/ovL6ZZ++EunV7a
+         eJlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714031863; x=1714636663;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8zlRN8GDdJRPh97Fl0bz7cJhpbCIiQnJ+fEE7Z9TrLA=;
+        b=nS6KACOmq/pv59QR+C4a4KSOlfhQin6MZEagNmY2qc8T4xg08WYtuATML2DfNLml+l
+         Co8b3YfoBvJWtdesw0df95g4hgadnA2n+AO6myhw8zONTWy9xi+TEuBYq6K1PBqvLj1R
+         4ui0jafHufk58LVPJhXwZ+brFlw2P6LWNV3qqtnkVVwy+nEJvY8wOSxvwB4lMXhNvjSB
+         F30+vHmXcNEVsXl2XH4RRdoF9/PWGE9kJwh10ufzXH98gmRYbQYb23KH+eCfEeXrgkoL
+         mEtxZwV4RBf2fTAvqlHt7WYFRoq1ssMahpYy96SAeYhj2h5abPYhpevEFnKrVdGitoFY
+         rP9A==
+X-Forwarded-Encrypted: i=1; AJvYcCVQUVjwrKKaIPYIkJ48pqROJGcFlOpSwndK+r7gMywUJMJJL5SVTVPiFPkmUbyZq+6gxVhQpytvYJzQUNLT/Fm3hAmtH4O1Y2xqsRXI
+X-Gm-Message-State: AOJu0YwYeUpNh0ZcqNTxng4pudBq/muK2oKTQz5KMLSVXCQXb2ysIocl
+	WueFbn/Lw3/N1o11bTUI+Hhjw+sSRTiUnjAEB0zszSUseCL9aAFn88t10f1znh0=
+X-Google-Smtp-Source: AGHT+IEpMpy5TC3zOgYRtvmVoIm1qs4qkyA+/az+AVHs/P5SNCTPkiTTQpAEom45V2JdpFsBAoc5Dw==
+X-Received: by 2002:a05:600c:4694:b0:419:f4d6:463b with SMTP id p20-20020a05600c469400b00419f4d6463bmr1330537wmo.14.1714031862971;
+        Thu, 25 Apr 2024 00:57:42 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:15c7:bd9c:c500:ed62? ([2a01:e0a:982:cbb0:15c7:bd9c:c500:ed62])
+        by smtp.gmail.com with ESMTPSA id m25-20020a05600c3b1900b0041816c3049csm26579080wms.11.2024.04.25.00.57.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Apr 2024 00:57:42 -0700 (PDT)
+Message-ID: <bed21ca2-54c0-473d-b84b-2b404899a050@linaro.org>
+Date: Thu, 25 Apr 2024 09:57:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 02/10] pwm: Add SI-EN SN3112 PWM support
+To: Junhao Xie <bigfoot@classfun.cn>, Konrad Dybcio
+ <konrad.dybcio@linaro.org>, wuxilin123@gmail.com,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jessica Zhang
+ <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Tengfei Fan <quic_tengfan@quicinc.com>,
+ Molly Sophia <mollysophia379@gmail.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-arm-msm@vger.kernel.org
+References: <20240424-ayn-odin2-initial-v1-0-e0aa05c991fd@gmail.com>
+ <20240424-ayn-odin2-initial-v1-2-e0aa05c991fd@gmail.com>
+ <af62742c-8d6d-4fa9-b2e4-f83253e6e388@linaro.org>
+ <361fc6a0-f0d0-49b2-b885-3b197294ec9f@classfun.cn>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <361fc6a0-f0d0-49b2-b885-3b197294ec9f@classfun.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Qualcomm Bluetooth controllers may not have been provisioned with a
-valid device address and instead end up using the default address
-00:00:00:00:5a:ad.
+On 25/04/2024 02:57, Junhao Xie wrote:
+> On 2024/4/25 03:37, Konrad Dybcio wrote:
+>> On 4/24/24 17:29, Xilin Wu via B4 Relay wrote:
+>>> From: Junhao Xie <bigfoot@classfun.cn>
+>>>
+>>> Add a new driver for the SI-EN SN3112 12-channel 8-bit PWM LED controller.
+>>>
+>>> Signed-off-by: Junhao Xie <bigfoot@classfun.cn>
+>>> ---
+>> [...]
+>>> +    return sn3112_write_reg(priv, SN3112_REG_PWM_EN + reg,
+>>> +                priv->pwm_en_reg[reg]);
+>>
+>> This looks like a weird reimplementation of regmap_update_bits
+>>
+> 
+> We cannot use regmap_update_bits because this chip does not support read command.
+> It will discard all read command.
 
-This address is now used to determine if a controller has a valid
-address or if one needs to be provided through devicetree or by user
-space before the controller can be used.
+You could use regmap cache with all registers marked as cacheable, but not sure it's worth
+doing this.
 
-It turns out that the WCN3991 controllers used in Chromium Trogdor
-machines use a different default address, 39:98:00:00:5a:ad, which also
-needs to be marked as invalid so that the correct address is fetched
-from the devicetree.
+Neil
 
-Qualcomm has unfortunately not yet provided any answers as to whether
-the 39:98 encodes a hardware id and if there are other variants of the
-default address that needs to be handled by the driver.
-
-For now, add the Trogdor WCN3991 default address to the device address
-check to avoid having these controllers start with the default address
-instead of their assigned addresses.
-
-Fixes: 00567f70051a ("Bluetooth: qca: fix invalid device address check")
-Cc: stable@vger.kernel.org      # 6.5
-Cc: Doug Anderson <dianders@chromium.org>
-Cc: Janaki Ramaiah Thota <quic_janathot@quicinc.com>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- drivers/bluetooth/btqca.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-
-Luiz and Doug,
-
-As the offending commit is now on its way into 6.9, let's just add the
-default address that the Trogdor machines uses to the address check.
-
-We can always amend this when/if Qualcomm provides some more details,
-or, in the worst case, when users report that they need to re-pair their
-Bluetooth gadgets if there are further variations of the default
-address.
-
-Johan
-
-
-
-diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-index 216826c31ee3..cfa71708397b 100644
---- a/drivers/bluetooth/btqca.c
-+++ b/drivers/bluetooth/btqca.c
-@@ -16,6 +16,7 @@
- #define VERSION "0.1"
- 
- #define QCA_BDADDR_DEFAULT (&(bdaddr_t) {{ 0xad, 0x5a, 0x00, 0x00, 0x00, 0x00 }})
-+#define QCA_BDADDR_WCN3991 (&(bdaddr_t) {{ 0xad, 0x5a, 0x00, 0x00, 0x98, 0x39 }})
- 
- int qca_read_soc_version(struct hci_dev *hdev, struct qca_btsoc_version *ver,
- 			 enum qca_btsoc_type soc_type)
-@@ -638,8 +639,10 @@ static int qca_check_bdaddr(struct hci_dev *hdev)
- 	}
- 
- 	bda = (struct hci_rp_read_bd_addr *)skb->data;
--	if (!bacmp(&bda->bdaddr, QCA_BDADDR_DEFAULT))
-+	if (!bacmp(&bda->bdaddr, QCA_BDADDR_DEFAULT) ||
-+	    !bacmp(&bda->bdaddr, QCA_BDADDR_WCN3991)) {
- 		set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
-+	}
- 
- 	kfree_skb(skb);
- 
--- 
-2.43.2
+> 
+>>> +}
+>>> +
+> [...]
+>>
+>> devm_pwmchip_add?
+>>
+>> Konrad
+> 
+> Thank you for your reply, I will fix them.
+> 
 
