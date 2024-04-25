@@ -1,88 +1,96 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774AE14A4DD;
-	Thu, 25 Apr 2024 14:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F9F149C41
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 14:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714055415; cv=none; b=nymhe/S9PtGIBK3ckIUCrcuacQsu3V2NiRLfntohr4IQLlMlsH0VJmfveOTLPVoKOyVc/pTEfkl11FBkA1p8i6qDefu/nTt8eDodCFz6fPBmzDcosk1IvN3I4/U0KFvpjRKCiYDDMXsBn125d4QtUYxMrPUIDdEwv1fEgLLTqFs=
+	t=1714055446; cv=none; b=St/OjU1UEV9NaIgN0VtN1IIqt0JWKEaA3XPNCfAWquwhIzy7AsY/nN5meEUox1TeyKnxf+yN6Fjb5mKfMQTithJpGnwFio11tjkMT94og+6VMEzysInUTEp0h5eAih7rIPfwlpay0xx0PIt8mOLI2Rqhj584lX0IZdl1r0gpEUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714055415; c=relaxed/simple;
-	bh=TEW1mcZD9eKXNx7NEGVW7zx92fjFU0ygxRhQm5D3gt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r7gJ6W4G2aFkAZyvO0wfBtPE0jqIpfdPe/FW0i+zr2OLRgDyAq5LTtok287V21FwGCEOem7bid7R1UjYfHfeVWOJsaDJatb5ABAHp5u4GSu1XUk1c6wwdug22Dd9AtwMHLlfjs4WS43oTXN1a+NCSq//emMgMvrs0dX/p32L7Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kYH3808D; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1714055446; c=relaxed/simple;
+	bh=DLzP+3Hp24Q60ySS9izVdIdMXy4Y3mqooLkZvnVRdM4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=UTetoDKnktZs1j5EiV7cOhpdM08VhwYyQuhE03jSikguKlqYqIk+KnJa0BBt9KO5P27a2bULIbC9CK7u1vx2gQ882XkPzs4A9c4M15VSJWV/swzDmxL+Jrx+CiA+6aA1aUXBEDAAbiwtU+rTpOFsQqAwCDqsL54kNfFsp4FEUkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1REExwm0; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kYH3808D"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6207540010;
-	Thu, 25 Apr 2024 14:30:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714055405;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TEW1mcZD9eKXNx7NEGVW7zx92fjFU0ygxRhQm5D3gt0=;
-	b=kYH3808DYYExVlgH8uPTwp7AfZX5ZmagrS5zr7XMxoNIFdeT5JWrDxygAuA6ljrkavT8sM
-	jAl4B/XGssFjE5/po7i8V0BjJ5fvhBA8T6hxOvF2KSNYbiKeQdOYRhINQPHZ1UuMOf0wXs
-	yNLhUNFsXRbp+IKrLQjN4RbAtAf32o6lF2MWbmvO3Ibt1bF/BM/3LOFVtyGWkfqcRzITek
-	opWhLKCxP3LN+ZICJMx56w6+6jBJQ57IwTmXKkMo04dbTypUkG2mg9I+N+9+d1Jfsne/07
-	qf7au1F+xWTvU+Uv0mTor7O6rXuDYfKJpyS9XLZwGIIhq6GJM2K5gibzXOHDXg==
-Date: Thu, 25 Apr 2024 16:30:02 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Jiri Pirko <jiri@resnulli.us>, Oleksij Rempel <o.rempel@pengutronix.de>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Andrew Lunn
- <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Kyle Swenson
- <kyle.swenson@est.tech>, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH net-next v3 0/3] net: pse-pd: Fixes for few small issues
-Message-ID: <20240425163002.5894c5e5@kmaincent-XPS-13-7390>
-In-Reply-To: <20240425070619.601d5e40@kernel.org>
-References: <20240423-fix_poe-v3-0-e50f32f5fa59@bootlin.com>
-	<ZiebQLdu9dOh1v-T@nanopsycho>
-	<20240425103110.33c02857@kmaincent-XPS-13-7390>
-	<20240425070619.601d5e40@kernel.org>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1REExwm0"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5e4df21f22dso1050560a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 07:30:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714055444; x=1714660244; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OidfOhKfgKTQSCP/Z51uFSAKtD0oyBSVMoiDS/URY9A=;
+        b=1REExwm06q7TMragHwHUgwYcPztEyYkITRJuzNKmmN01XcFNtpV24Tmew719/yIwUP
+         5c5UlY4yURxdEwemi1ioVm6v8eqGQ3O49eUBU66htH0ZlGlZC282FcAZ5+6oBenZF7J4
+         ihxnuSH6PKHrDOADTmrxuRi9GoZwvfR80yBu4cn9A6SUtB0vjdSzx3tDXmigGgTDi/o7
+         D+bfxFyCvB/Qu4fZ9/fHswo+wuNZzFQfCU+axestTXgj05NWlKEgNi4VYtpf1k73YL/0
+         IY2I9JU9u/yrE0ubYGrcT7WlyadQkCTQsNRu4kMDzKxxunsWUNOtFxO0nj8mUA4lnSeH
+         dp4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714055444; x=1714660244;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OidfOhKfgKTQSCP/Z51uFSAKtD0oyBSVMoiDS/URY9A=;
+        b=j9mIJDlCQzrWMtSPnV9a5OyURKh4L1afhVyIg9FAI/P+NbtsohALcDWZf/rLdazpMZ
+         2vhImDzn7Ew4a35uYdvmd/RuyuGpwgMSbd6ZlGSa+PjHpPqs2HMk4WnGWRzGeHvitPYc
+         F9ZpbDpq070ydonzxzttoMGr047H9zu3H0xz6MnZgAlskn2fWwFA4nF+qg0QHXwIEX7K
+         v88q4UzSxTx08PLakv/tpQgnF4BJppLmwkgvt3kSU5gSPuNU2eC0gfnnJPT79ne4xMk1
+         v0MjchPbOP/CaPoIrAuPnGj7Z29p96/QadI091upXYOPQTcmzpAqUlHIULQfY1d0coJp
+         y0jA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2XDaF0p3F/RmwE9Rh047Vr8ssmMpTRYIMUYnVZY+Kk18xFh9Ho7JY6JX97+eGV4tBNa9VGttDbK+jWgbp0GtSf1HVfwZeyazbZbix
+X-Gm-Message-State: AOJu0YykU4NMnSkMEUrlt5imVFG6V5Zz5F2dO8vw4HqNgI0kfCBNp2w+
+	SQedKTaOWX8Y2xWevBRvkZ9MlqhpLd1sQHa784h+CIdkme+fdW3jD/n7pM8L3ppvRUWZelSXyQN
+	tYw==
+X-Google-Smtp-Source: AGHT+IHAff1VD29O3wmP83ETaXK4RYSPcQ9B5eo1n44lKxTDPCjOxG2hCPXznlRe/zQW81Q0SxEekAv2Y3Q=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a02:621:b0:5f4:36ab:acad with SMTP id
+ bz33-20020a056a02062100b005f436abacadmr13452pgb.5.1714055444144; Thu, 25 Apr
+ 2024 07:30:44 -0700 (PDT)
+Date: Thu, 25 Apr 2024 07:30:42 -0700
+In-Reply-To: <4a66f882-12bf-4a07-a80a-a1600e89a103@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: kory.maincent@bootlin.com
+Mime-Version: 1.0
+References: <20240423165328.2853870-1-seanjc@google.com> <4a66f882-12bf-4a07-a80a-a1600e89a103@intel.com>
+Message-ID: <ZippEkpjrEsGh5mj@google.com>
+Subject: Re: [PATCH 0/3] KVM: x86: Fix supported VM_TYPES caps
+From: Sean Christopherson <seanjc@google.com>
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, 25 Apr 2024 07:06:19 -0700
-Jakub Kicinski <kuba@kernel.org> wrote:
+On Thu, Apr 25, 2024, Xiaoyao Li wrote:
+> On 4/24/2024 12:53 AM, Sean Christopherson wrote:
+> > Fix a goof where KVM fails to re-initialize the set of supported VM types,
+> > resulting in KVM overreporting the set of supported types when a vendor
+> > module is reloaded with incompatible settings.  E.g. unload kvm-intel.ko,
+> > reload with ept=0, and KVM will incorrectly treat SW_PROTECTED_VM as
+> > supported.
+> 
+> Hah, this reminds me of the bug of msrs_to_save[] and etc.
+> 
+>    7a5ee6edb42e ("KVM: X86: Fix initialization of MSR lists")
 
-> On Thu, 25 Apr 2024 10:31:10 +0200 Kory Maincent wrote:
-> > Your reviewed-by tag has not been taken in the commit merged.
-> > It seems patchwork does not take the cover letter tag reply into
-> > account, I think only b4 does. =20
->=20
-> Sorry about that.
-> The problem is that patchwork doesn't correctly group the cover letter
-> in your postings. Not sure why.=20
+Yeah, and we had the same bug with allow_smaller_maxphyaddr
 
-Weird, I used b4 so it should work.
+  88213da23514 ("kvm: x86: disable the narrow guest module parameter on unload")
 
-> Could you experiment with tweaking the posting?
-> Maybe we can "bisect" the problem.
+If the side effects of linking kvm.ko into kvm-{amd,intel}.ko weren't so painful
+for userspace, I would more seriously consider pursuing that in advance of
+multi-KVM[*].  Because having KVM be fully self-contained has some *really* nice
+properties, e.g. eliminates this entire class of bugs, eliminates a huge pile of
+exports, etc.
 
-Do you want me to like post a v5 with the "pw-bot: cr" tag? But if I put the
-tag only on the cover letter it won't work then. Maybe on all patches?
-Was it the same for the PoE support patch series?
-If so, we could look at it with my future patch series that will bring new
-features to PoE.
+ : > Since the symbols in the new module are invisible outside, I recommend:
+ : > new kvm_intel.ko = kvm_intel.ko + kvm.ko
+ : > new kvm_amd.ko = kvm_amd.ko + kvm.ko
+ : 
+ : Yeah, Paolo also suggested this at LPC.
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+[*] https://lore.kernel.org/all/ZWYtDGH5p4RpGYBw@google.com
