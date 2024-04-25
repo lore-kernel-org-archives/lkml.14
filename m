@@ -1,133 +1,102 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9392C1514D9
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 18:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8C314F116
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 19:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714071585; cv=none; b=N8bxoCx+snx701tq9fYo/FnQS3T1hiiOCztJPyAi1eueK1dcIWkYhx8uKGqjgn0sA0e4KZxsJd2YJBeIHUxVMPSqBBB7DHUHyv15ubxYc12TO2ZinAFDobok9Ar2FWf3l2Zc98qfRpyRUyYjNj8kgVk6ftgnbJcy+Lg4TXaw8e4=
+	t=1714071694; cv=none; b=Dt9j5BEFTeMrdms3o4/DgqIQCNrxQg7zJ9AAOJDhvZ8dgKCbIHqlKPsqiyXHHUdYiGsQhClaKDxhkwgnBvixt0Ox4c3BRZ4J8I2xiOXJFfzPwNFkvTl/meM2XvJ0kO43E+GXN7bJONzzTamXmTZj1hPBgxq5hlJi9+HNO5lTBNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714071585; c=relaxed/simple;
-	bh=5C6zNSy4/2fDi0G/VYNh1plSgWvrbg3nFQBR/aDxNik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=IT1C1A0BuFqU85EcIzM8FI517FJen1AYGdDbFLUdMvolimOkqVwwObv5eu1i89Rx2ipYy0AMsFAeoaKqgW6mrvdpIPuRO2F5kQrliOnWmdEfDpf/VqVz+2LJWexXRdv0TzhvSvmzefjoM2fxIVDpq1WpRWdFYkRfm7Ml+pJ4sj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EF1JDHJJ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1714071694; c=relaxed/simple;
+	bh=JeXz2/TFeNnXiSq/81VOk+f7TlrQg/8jpIhKlDJ3Qcc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G+2fXxGpNS810dUMbbg62jQbhiLSeVTaU6N1+w/0x0IxTpfIR1GxSZZgaXdktfrt48aD/90vr5yBNmIa7h7AbiPpJmNAzww1qJ90K8AHENjEe4Fuq0CmV7PqnzMdznCjjocgpCy2nzDhwx/z5o/QDpyqvDjAE853ISL51Y+z+dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Iq9a5Joh; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EF1JDHJJ"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43PEYjV4002706;
-	Thu, 25 Apr 2024 18:59:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=LpWQj2agrBscOTWLDNZ2TUQqcQ07PBdL0wdDCx/qiRo=; b=EF
-	1JDHJJjiRG6WGlfF2Oc5UdptJ6hIV2+ogBIqwjhmPo2dkwVjY2Q61+HhonI7zXaL
-	Y+jkVXwCwJ/jCVMP0uX9tzWniEyCf0z6DgCI3sDipIIwwgaqwbSdxi2RdvDnkCRb
-	j58t2Y5juxsm2LbCEIAn48pmx+NHsSo9kEpAxX3t7nI9uQbvo2kXGqUGDAQ2ob1q
-	4zkcdDnorIzvg076Y7LMQX82yHsYJKCby7m7Bdr1Eorg1JYoBSulIChAGCs5jb7l
-	bHrsKYXMvnGEfZPOJtK+mNQzG1i2ZThvR6T56dylubKr8968CPh8EEAO2clrHXUQ
-	bC7gjR9w+QD4U8OEpUzg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xqrwwrnfu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 18:59:25 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43PIxOKs030249
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 18:59:24 GMT
-Received: from [10.226.59.182] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 25 Apr
- 2024 11:59:23 -0700
-Message-ID: <8c55dba5-6308-685e-13da-e728197d8101@quicinc.com>
-Date: Thu, 25 Apr 2024 12:59:22 -0600
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Iq9a5Joh"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56e477db7fbso1947249a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 12:01:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1714071691; x=1714676491; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=S+CfDSUKDWMFi6696XWhw/F7Vcz9ViYAQl2uJokcaMA=;
+        b=Iq9a5JohsTpZ1Plw8lZtgNq/zWMOnM/vDa6gZR988KJL3wzjPGq9S1AdIubOwOi8CH
+         NPpmx9mtAibp77SJE81y/Z4W08avKFQ5qUZQ8IR2OfV8DUFBdPKD7igii1OzhoNYfDFr
+         PzqrW1WJmyNn5Z5FOd5FWMytOdAVjucQnXWuo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714071691; x=1714676491;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S+CfDSUKDWMFi6696XWhw/F7Vcz9ViYAQl2uJokcaMA=;
+        b=Quktd02UrDV6MrWfe3WqX1oLeKyLsg5HdBqlnFPtAV3wEJDc13DULjqrRXtSaePY6C
+         LrNIU8srdGYRT8gT09sJYXAa6UIX/vFs5Tyv2OZjaApdhc3d/cROmVx3UdvnxMMR1CLQ
+         6XsUway49VY0ARW3FsCNISCG5hexNw81+F1wxj5OKz1UZsIs2IeCUtiqMy03Uwn54XjO
+         PN7EgOCDCG6o9kl/Wtr4IloFoOV8musDui7lCEhpbqnI2j+JsZAnSVczfluUCjyjwERu
+         6eEoXSDnMMcE809NCoPaRYMFYfY/WDCU/2B3tuIeqacd2VH8fqxxXMoZeFhQI+A5UBjW
+         /LrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUiQXnGywyW5+BrxRDgkEM6DpTagfwBeKuCOnS96jal1MjkiB9kZix12MKkxp+2yStv/oI9RQvboJQcPkj4Ikgxr4oFe5ObqKbasmko
+X-Gm-Message-State: AOJu0YzrNXUJSmc6UNb+z43WvK5iZkw+8o4eX/R5NnhJQobnY7yfT4xJ
+	7EPZK/x3EkDSdAireE+uIT+XSGLFEtIHAQgnpa8D5LMv/0/qd2WdrC81+FRPItrV/MijP8O0gcH
+	9MJtb3A==
+X-Google-Smtp-Source: AGHT+IEpEOmzuU0uvdtl+1QWTeFNdgXPem9OIVUcQMproT8Vne7NEiQfFhiI6dHExnuAeMhhGUvjAQ==
+X-Received: by 2002:a50:f68f:0:b0:571:be31:500b with SMTP id d15-20020a50f68f000000b00571be31500bmr406020edn.25.1714071691007;
+        Thu, 25 Apr 2024 12:01:31 -0700 (PDT)
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
+        by smtp.gmail.com with ESMTPSA id c26-20020aa7c99a000000b00572405680e8sm709026edt.21.2024.04.25.12.01.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Apr 2024 12:01:29 -0700 (PDT)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a524ecaf215so174274266b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 12:01:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVvXwgWJ5uRnVevPYNi2VEgahKwFHpz8GeLhpeYAFI4i0VkW1QK/hTCUHjI+YWz5EfzSYa2I8vtKZvs+vzFCRvGaLAMq9+4RLE2saIw
+X-Received: by 2002:a17:907:76a4:b0:a57:b828:5f4b with SMTP id
+ jw4-20020a17090776a400b00a57b8285f4bmr452572ejc.58.1714071688536; Thu, 25 Apr
+ 2024 12:01:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH] drm/etnaviv: Create an accel device node if compute-only
-Content-Language: en-US
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>, <linux-kernel@vger.kernel.org>
-CC: Oded Gabbay <ogabbay@kernel.org>, Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner
-	<christian.gmeiner@gmail.com>,
-        David Airlie <airlied@gmail.com>, Daniel
- Vetter <daniel@ffwll.ch>,
-        <etnaviv@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>
-References: <20240424063753.3740664-1-tomeu@tomeuvizoso.net>
-From: Jeffrey Hugo <quic_jhugo@quicinc.com>
-In-Reply-To: <20240424063753.3740664-1-tomeu@tomeuvizoso.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 2PY6mTTuSoTIfvx0SDz3oNbowXinSuZ6
-X-Proofpoint-ORIG-GUID: 2PY6mTTuSoTIfvx0SDz3oNbowXinSuZ6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-25_19,2024-04-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
- mlxscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 adultscore=0 priorityscore=1501 phishscore=0
- mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2404010003 definitions=main-2404250136
+References: <CAJZ5v0iUUmMUo86vBzYJjL4NjoFzpDwD1+c292aP+T++PLv6vQ@mail.gmail.com>
+ <CAHk-=wj8J78-12QfAoKaLdRi2g1=_U7sv02POShjotcJ6t4nzw@mail.gmail.com>
+In-Reply-To: <CAHk-=wj8J78-12QfAoKaLdRi2g1=_U7sv02POShjotcJ6t4nzw@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 25 Apr 2024 12:01:12 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgg2hknXUtxq8F7caSmbtRNpss0zhDwv505L25dfQBXDA@mail.gmail.com>
+Message-ID: <CAHk-=wgg2hknXUtxq8F7caSmbtRNpss0zhDwv505L25dfQBXDA@mail.gmail.com>
+Subject: Re: [GIT PULL] ACPI fixes for v6.9-rc6
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/24/2024 12:37 AM, Tomeu Vizoso wrote:
-> If we expose a render node for NPUs without rendering capabilities, the
-> userspace stack will offer it to compositors and applications for
-> rendering, which of course won't work.
-> 
-> Userspace is probably right in not questioning whether a render node
-> might not be capable of supporting rendering, so change it in the kernel
-> instead by exposing a /dev/accel node.
-> 
-> Before we bring the device up we don't know whether it is capable of
-> rendering or not (depends on the features of its blocks), so first try
-> to probe a rendering node, and if we find out that there is no rendering
-> hardware, abort and retry with an accel node.
-> 
-> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> Cc: Oded Gabbay <ogabbay@kernel.org>
+On Thu, 25 Apr 2024 at 11:58, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> When that macro now has had TWO independent bugs, how about you just
+> write it out with explicit types and without any broken "helpers":
+>
+>    static inline u64 MASK_VAL(const struct cpc_reg *reg, u64 val)
+>    {
+>         u64 mask = (1ull << reg->bit_width)-1;
+>         return (val >> reg->bit_offset) & mask;
+>    }
+>
+> which is a few more lines, but doesn't that make it a whole lot more readable?
+>
+> And maybe this time, it's not a buggy mess?
 
-I hope Oded chimes in as Accel maintainer.  I think Airlie/Vetter had 
-also previously mentioned they'd have opinions on what is Accel vs DRM.
+Just to clarify: that was written in the MUA, and entirely untested.
+Somebody should still verify it, but really, with already now two
+bugs, that macro needs fixing for good, and the "for good" should be
+looking at least _something_ like the above.
 
-This gets a nack from me in its current state.  This is not a strong 
-nack, and I don't want to discourage you.  I think there is a path forward.
+And despite needing fixing, I've done the pull, since bug #2 is at
+least less bad than bug#1 was.
 
-The Accel subsystem documentation says that accel drivers will reside in 
-drivers/accel/ but this does not.
-
-Also, the commit text for "accel: add dedicated minor for accelerator 
-devices" mentions -
-
-"for drivers that
-declare they handle compute accelerator, using a new driver feature
-flag called DRIVER_COMPUTE_ACCEL. It is important to note that this
-driver feature is mutually exclusive with DRIVER_RENDER. Devices that
-want to expose both graphics and compute device char files should be
-handled by two drivers that are connected using the auxiliary bus
-framework."
-
-I don't see any of that happening here (two drivers connected by aux 
-bus, one in drivers/accel).
-
-I think this is the first case we've had of a combo DRM/Accel usecase, 
-and so there isn't an existing example to refer you to on how to 
-structure things.  I think you are going to be the first example where 
-we figure all of this out.
-
-On a more implementation note, ioctls for Accel devices should not be 
-marked DRM_RENDER_ALLOW.  Seems like your attempt to reuse as much of 
-the code as possible trips over this.
-
--Jeff
+                   Linus
