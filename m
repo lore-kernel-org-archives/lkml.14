@@ -1,329 +1,246 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE56315381B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307CF153834;
 	Thu, 25 Apr 2024 20:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714077825; cv=none; b=G89dwNuTNbmwGJvEvVV3OelI7f4CR9wi9JSiAV5mNw0KdTxlPXoyKKy2mVRYib/Jss5D7lnmkxILstwcrVKTvVfZBTkqBteMt0NZVaNSnFFaUi5m6nwScGAUaNa1KvIGQ1n6tcQqFO8CyT+G1A6EhMI+gWLwzRBWm63slNy4+cU=
+	t=1714077826; cv=none; b=U0QtVxCfQap6iiy/HTonUDCE02cnCwhkBSrLh9oR2cusYQ/h1s2lUyY2JpCv9IvN0WakvkVN1JBHl2WOVkP3TClRuRcvu2hvF3Ebu84HmuSTwsf4zevlZkdOhBLDDLl/az5lQIzhsOeqaqyOLyf/juMUe9HGXiKjlcPxU4RL7jY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714077825; c=relaxed/simple;
-	bh=SQ00Biuzgi8ooOKmj4SDQQLUJ9vx5PPWa/yT4EKopUs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KJT9rP+8BSlGqU/HJTJNRKUHQWT6a27kwxgt58ULIA7AqBvcf9qMc8AkdN6S4IoPehU0kukcnbwIDmOv7LO8ulDlrn2NMhGa8p3EWq0G4emLcfSdNFL9dEbSocrb+lIDhsVSd5GNeTK+HygOpYdX32mc3q77zUS3H7UojGdPSPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J5ZeiFT4; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714077826; c=relaxed/simple;
+	bh=/Bry/LrWz5s3cSAoG/NRli3XyUXM2aR+pdRh6BaisJI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cgKIwssdIe+aI454K/EGysOjJcM8DE0QIrw0q7QgKn4rx1DwTMBxhu5Nda+UDBAbw3DSoI71b0zflqIiF2dZzqH2M7xtyGPk09G5/0v2POD6e+QtAdufYEh2i4uyXUsdnn7ZTMbLjdWTZIovCjVVgurA/QEfkCvseTvBu8FhCjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fDAKMudm; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J5ZeiFT4"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5e152c757a5so973354a12.2;
-        Thu, 25 Apr 2024 13:43:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714077823; x=1714682623; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1gI9GtX2kU2O+gI3EzYjJFlSgaBQf6k4DIS3uLiY3BU=;
-        b=J5ZeiFT4KOLnAaQnP1QEHH/ltoWHfneGQLSMvzJfz7pTsV4W7ZKeIHZCznoMv5WFlU
-         HPeeTBPSldcZTAA5XzggZemaEmR4adsdTbMLLqzpkY/67QXiyPwKaEMwJnxTdsvv3uNC
-         JsCAvTC6h2eIv6XAN4iz2x5CXYV4yo/Qo6UjwmsAM/DBa/6bvFN6kc+dFsoC2mn/fDx2
-         RuGe1NRUhdPyfZ4p47n1LWxDc6ebobJimNAclByfQCNHUNNrT7lAu802NhQbtQ0gks0Z
-         y0blGYNZzvyGJNPmEYZ4SUXOi4HsEtyy/WE0u9nxugbj4Xp0Al8GqB6QMko62Nb00B/E
-         OJiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714077823; x=1714682623;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1gI9GtX2kU2O+gI3EzYjJFlSgaBQf6k4DIS3uLiY3BU=;
-        b=jKJEB4E2FpiiPTa7J/zFVYJK90FLi4s8GG+IEjnD89k2qdzWpTlq7NfJZBfbO4H91g
-         ShHmjyFqkN2W1u+6GCf/7b+rwu/H6ZTP5jbP7A0PRVPAZDvK0Aso1ttKPJFFCVfHDcS5
-         D8hpSvjBCvfOgwBx+/cyweCoHmsWnDwBSrtSEU8CkFAWhqhWAjaSJZA76vwajKeexvah
-         qXJ7IXVrjXPLFVu5cgwgA/1nhFCxOUsnnxDjlyFJ8NTBwXDLoXiAoyXWARIklXbMGmeu
-         IAFpyryhHmqUNHpKquTpd9vPfcU/4FJveiY5Vwi4ym8Fqjvj/KakHyzgd8XyyqgLTKBO
-         VdWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUliVTy9cpglN4G4OJ6EEF//fTqfOJ/mYhrW5AFjKjQ3gDZoitOE41/f4MrdVAXD5px53SBo15Gg4HoAj+f+cNOxRfogsxpN4ZcNgn+fmOa8YXNvIpyVpeY5n75BmugLBWz
-X-Gm-Message-State: AOJu0YxKxcOHVI4lWqmLnQNJZalrm4Z/h4vcJ86xug0bLHVw39SE27Ym
-	JahX1oGxFfzajtNxNWlGduVS3N/5eyhKgYELebh/20EzYpi4Q1p6x/ZyAkiZZWOTg4uiOQ6Ptfd
-	47/n/bX0J1uzJ/pZNgu2nTUfS7ok=
-X-Google-Smtp-Source: AGHT+IFTFS8ouyJ8nLmy+93w5RtLBwRt63tqP78ViX1kn334RBkekxMginP1hbtj1x9tbPoLxWGu1XDSuDtNLzlHmj0=
-X-Received: by 2002:a17:90a:7895:b0:2aa:e719:3901 with SMTP id
- x21-20020a17090a789500b002aae7193901mr777681pjk.20.1714077823135; Thu, 25 Apr
- 2024 13:43:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fDAKMudm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714077824; x=1745613824;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/Bry/LrWz5s3cSAoG/NRli3XyUXM2aR+pdRh6BaisJI=;
+  b=fDAKMudml7s8S6cbiBZM3eQJ6rPz4KH+enecXg4i1ooepCevzeOjdkql
+   jGFXq78l6AbvHhNWSUXdrFEPyp6VG9uXwxGrcDeafs9dEL246heZjVX7Q
+   nVhcuvAVMCjD8jILYwxz00/yYk0CKnLRVuQD4Nid8xXrxM2Of7k74nhLI
+   Dq8ZNV94FCInvtqHOvu+KJhQ66nKKMQE1fPdtbgwBzNt0czRUMSP3UJ92
+   dwIyuMOnDqP1GhTCKdpTFEk7wXRgxk2otudArTTM3YBAJ+vYYUxGC0+CW
+   s+kUnWDIFY3jqkzm8NtXsS5fWy3Qliy0kef8UOEyg8iJkjaqUBhtpa/rs
+   g==;
+X-CSE-ConnectionGUID: +9cD1Oj7S/CzpudElRlSXA==
+X-CSE-MsgGUID: HdguReztRk+01jG1fIOD+g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="12732535"
+X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
+   d="scan'208";a="12732535"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 13:43:43 -0700
+X-CSE-ConnectionGUID: 7KgeubM6TomVXo4FwsgdrA==
+X-CSE-MsgGUID: HalkeOTpSIGqjCfc+OhXKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
+   d="scan'208";a="25609924"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 13:43:44 -0700
+Received: from [10.212.96.44] (kliang2-mobl1.ccr.corp.intel.com [10.212.96.44])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 1266C206DFCE;
+	Thu, 25 Apr 2024 13:43:40 -0700 (PDT)
+Message-ID: <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com>
+Date: Thu, 25 Apr 2024 16:43:39 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424173550.16359-1-puranjay@kernel.org> <20240424173550.16359-3-puranjay@kernel.org>
- <CAEf4BzZOFye13KdBUKA7E=41NVNy5fOzF3bxFzaeZAzkq0kh-w@mail.gmail.com>
- <mb61pwmollpfh.fsf@kernel.org> <CAEf4BzZe-rtewAvDeNwqoud+x+fTraiLM1mzdvae_5yNrWsWyg@mail.gmail.com>
- <mb61po79x9sqr.fsf@kernel.org>
-In-Reply-To: <mb61po79x9sqr.fsf@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 25 Apr 2024 13:43:31 -0700
-Message-ID: <CAEf4BzbxehG2_K8=xqfOdB4_FGVfdO3qaFMhQpvsc5JZg=NkUg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 2/2] bpf, arm64: inline bpf_get_smp_processor_id()
- helper
-To: Puranjay Mohan <puranjay@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Zi Shen Lim <zlim.lnx@gmail.com>, Xu Kuohai <xukuohai@huawei.com>, 
-	Florent Revest <revest@chromium.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+To: Mingwei Zhang <mizhang@google.com>
+Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
+ Sean Christopherson <seanjc@google.com>, maobibo <maobibo@loongson.cn>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
+ peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
+ jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
+ irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
+ chao.gao@intel.com
+References: <ZiaX3H3YfrVh50cs@google.com>
+ <d8f3497b-9f63-e30e-0c63-253908d40ac2@loongson.cn>
+ <d980dd10-e4c4-4774-b107-77b320cec9f9@linux.intel.com>
+ <b5e97aa1-7683-4eff-e1e3-58ac98a8d719@loongson.cn>
+ <1ec7a21c-71d0-4f3e-9fa3-3de8ca0f7315@linux.intel.com>
+ <5279eabc-ca46-ee1b-b80d-9a511ba90a36@loongson.cn>
+ <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
+ <b3868bf5-4e16-3435-c807-f484821fccc6@loongson.cn>
+ <CAL715W++maAt2Ujfvmu1pZKS4R5EmAPebTU_h9AB8aFbdLFrTQ@mail.gmail.com>
+ <f843298c-db08-4fde-9887-13de18d960ac@linux.intel.com>
+ <Zikeh2eGjwzDbytu@google.com>
+ <7834a811-4764-42aa-8198-55c4556d947b@linux.intel.com>
+ <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
+ <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com>
+ <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 25, 2024 at 11:56=E2=80=AFAM Puranjay Mohan <puranjay@kernel.or=
-g> wrote:
->
-> Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
->
-> > On Thu, Apr 25, 2024 at 3:14=E2=80=AFAM Puranjay Mohan <puranjay@kernel=
-.org> wrote:
-> >>
-> >> Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
-> >>
-> >> > On Wed, Apr 24, 2024 at 10:36=E2=80=AFAM Puranjay Mohan <puranjay@ke=
-rnel.org> wrote:
-> >> >>
-> >> >> As ARM64 JIT now implements BPF_MOV64_PERCPU_REG instruction, inlin=
-e
-> >> >> bpf_get_smp_processor_id().
-> >> >>
-> >> >> ARM64 uses the per-cpu variable cpu_number to store the cpu id.
-> >> >>
-> >> >> Here is how the BPF and ARM64 JITed assembly changes after this com=
-mit:
-> >> >>
-> >> >>                                          BPF
-> >> >>                                         =3D=3D=3D=3D=3D
-> >> >>               BEFORE                                       AFTER
-> >> >>              --------                                     -------
-> >> >>
-> >> >> int cpu =3D bpf_get_smp_processor_id();           int cpu =3D bpf_g=
-et_smp_processor_id();
-> >> >> (85) call bpf_get_smp_processor_id#229032       (18) r0 =3D 0xffff8=
-00082072008
-> >> >>                                                 (bf) r0 =3D r0
-> >> >
-> >> > nit: hmm, you are probably using a bit outdated bpftool, it should b=
-e
-> >> > emitted as:
-> >> >
-> >> > (bf) r0 =3D &(void __percpu *)(r0)
-> >>
-> >> Yes, I was using the bpftool shipped with the distro. I tried it again
-> >> with the latest bpftool and it emitted this as expected.
-> >
-> > Cool, would be nice to update the commit message with the right syntax
-> > for next revision, thanks!
-> >
->
-> Sure, will do.
->
-> >>
-> >> >
-> >> >>                                                 (61) r0 =3D *(u32 *=
-)(r0 +0)
-> >> >>
-> >> >>                                       ARM64 JIT
-> >> >>                                      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-> >> >>
-> >> >>               BEFORE                                       AFTER
-> >> >>              --------                                     -------
-> >> >>
-> >> >> int cpu =3D bpf_get_smp_processor_id();      int cpu =3D bpf_get_sm=
-p_processor_id();
-> >> >> mov     x10, #0xfffffffffffff4d0           mov     x7, #0xffff8000f=
-fffffff
-> >> >> movk    x10, #0x802b, lsl #16              movk    x7, #0x8207, lsl=
- #16
-> >> >> movk    x10, #0x8000, lsl #32              movk    x7, #0x2008
-> >> >> blr     x10                                mrs     x10, tpidr_el1
-> >> >> add     x7, x0, #0x0                       add     x7, x7, x10
-> >> >>                                            ldr     w7, [x7]
-> >> >>
-> >> >> Performance improvement using benchmark[1]
-> >> >>
-> >> >>              BEFORE                                       AFTER
-> >> >>             --------                                     -------
-> >> >>
-> >> >> glob-arr-inc   :   23.817 =C2=B1 0.019M/s      glob-arr-inc   :   2=
-4.631 =C2=B1 0.027M/s
-> >> >> arr-inc        :   23.253 =C2=B1 0.019M/s      arr-inc        :   2=
-3.742 =C2=B1 0.023M/s
-> >> >> hash-inc       :   12.258 =C2=B1 0.010M/s      hash-inc       :   1=
-2.625 =C2=B1 0.004M/s
-> >> >>
-> >> >> [1] https://github.com/anakryiko/linux/commit/8dec900975ef
-> >> >>
-> >> >> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
-> >> >> ---
-> >> >>  kernel/bpf/verifier.c | 11 ++++++++++-
-> >> >>  1 file changed, 10 insertions(+), 1 deletion(-)
-> >> >>
-> >> >
-> >> > Besides the nits, lgtm.
-> >> >
-> >> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> >> >
-> >> >> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> >> >> index 9715c88cc025..3373be261889 100644
-> >> >> --- a/kernel/bpf/verifier.c
-> >> >> +++ b/kernel/bpf/verifier.c
-> >> >> @@ -20205,7 +20205,7 @@ static int do_misc_fixups(struct bpf_verifi=
-er_env *env)
-> >> >>                         goto next_insn;
-> >> >>                 }
-> >> >>
-> >> >> -#ifdef CONFIG_X86_64
-> >> >> +#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
-> >> >
-> >> > I think you can drop this, we are protected by
-> >> > bpf_jit_supports_percpu_insn() check and newly added inner #if/#elif
-> >> > checks?
-> >>
-> >> If I remove this and later add support of percpu_insn on RISCV without
-> >> inlining bpf_get_smp_processor_id() then it will cause problems here
-> >> right? because then the last 5-6 lines inside this if(){} will be
-> >> executed for RISCV.
-> >
-> > Just add
-> >
-> > #else
-> > return -EFAULT;
->
-> I don't think we can return.
 
-ah, because it's not an error condition, right
 
->
-> > #endif
-> >
-> > ?
-> >
-> > I'm trying to avoid this duplication of the defined(CONFIG_xxx) checks
-> > for supported architectures.
->
-> Does the following look correct?
->
-> I will do it like this:
->
->                 /* Implement bpf_get_smp_processor_id() inline. */
->                 if (insn->imm =3D=3D BPF_FUNC_get_smp_processor_id &&
->                     prog->jit_requested && bpf_jit_supports_percpu_insn()=
-) {
->                         /* BPF_FUNC_get_smp_processor_id inlining is an
->                          * optimization, so if pcpu_hot.cpu_number is eve=
-r
->                          * changed in some incompatible and hard to suppo=
-rt
->                          * way, it's fine to back out this inlining logic
->                          */
-> #if defined(CONFIG_X86_64)
->                         insn_buf[0] =3D BPF_MOV32_IMM(BPF_REG_0, (u32)(un=
-signed long)&pcpu_hot.cpu_number);
->                         insn_buf[1] =3D BPF_MOV64_PERCPU_REG(BPF_REG_0, B=
-PF_REG_0);
->                         insn_buf[2] =3D BPF_LDX_MEM(BPF_W, BPF_REG_0, BPF=
-_REG_0, 0);
->                         cnt =3D 3;
-> #elif defined(CONFIG_ARM64)
->                         struct bpf_insn cpu_number_addr[2] =3D { BPF_LD_I=
-MM64(BPF_REG_0, (u64)&cpu_number) };
->
->                         insn_buf[0] =3D cpu_number_addr[0];
->                         insn_buf[1] =3D cpu_number_addr[1];
->                         insn_buf[2] =3D BPF_MOV64_PERCPU_REG(BPF_REG_0, B=
-PF_REG_0);
->                         insn_buf[3] =3D BPF_LDX_MEM(BPF_W, BPF_REG_0, BPF=
-_REG_0, 0);
->                         cnt =3D 4;
-> #else
->                         goto next_insn;
-> #endif
+On 2024-04-25 4:16 p.m., Mingwei Zhang wrote:
+> On Thu, Apr 25, 2024 at 9:13 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2024-04-25 12:24 a.m., Mingwei Zhang wrote:
+>>> On Wed, Apr 24, 2024 at 8:56 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+>>>>
+>>>>
+>>>> On 4/24/2024 11:00 PM, Sean Christopherson wrote:
+>>>>> On Wed, Apr 24, 2024, Dapeng Mi wrote:
+>>>>>> On 4/24/2024 1:02 AM, Mingwei Zhang wrote:
+>>>>>>>>> Maybe, (just maybe), it is possible to do PMU context switch at vcpu
+>>>>>>>>> boundary normally, but doing it at VM Enter/Exit boundary when host is
+>>>>>>>>> profiling KVM kernel module. So, dynamically adjusting PMU context
+>>>>>>>>> switch location could be an option.
+>>>>>>>> If there are two VMs with pmu enabled both, however host PMU is not
+>>>>>>>> enabled. PMU context switch should be done in vcpu thread sched-out path.
+>>>>>>>>
+>>>>>>>> If host pmu is used also, we can choose whether PMU switch should be
+>>>>>>>> done in vm exit path or vcpu thread sched-out path.
+>>>>>>>>
+>>>>>>> host PMU is always enabled, ie., Linux currently does not support KVM
+>>>>>>> PMU running standalone. I guess what you mean is there are no active
+>>>>>>> perf_events on the host side. Allowing a PMU context switch drifting
+>>>>>>> from vm-enter/exit boundary to vcpu loop boundary by checking host
+>>>>>>> side events might be a good option. We can keep the discussion, but I
+>>>>>>> won't propose that in v2.
+>>>>>> I suspect if it's really doable to do this deferring. This still makes host
+>>>>>> lose the most of capability to profile KVM. Per my understanding, most of
+>>>>>> KVM overhead happens in the vcpu loop, exactly speaking in VM-exit handling.
+>>>>>> We have no idea when host want to create perf event to profile KVM, it could
+>>>>>> be at any time.
+>>>>> No, the idea is that KVM will load host PMU state asap, but only when host PMU
+>>>>> state actually needs to be loaded, i.e. only when there are relevant host events.
+>>>>>
+>>>>> If there are no host perf events, KVM keeps guest PMU state loaded for the entire
+>>>>> KVM_RUN loop, i.e. provides optimal behavior for the guest.  But if a host perf
+>>>>> events exists (or comes along), the KVM context switches PMU at VM-Enter/VM-Exit,
+>>>>> i.e. lets the host profile almost all of KVM, at the cost of a degraded experience
+>>>>> for the guest while host perf events are active.
+>>>>
+>>>> I see. So KVM needs to provide a callback which needs to be called in
+>>>> the IPI handler. The KVM callback needs to be called to switch PMU state
+>>>> before perf really enabling host event and touching PMU MSRs. And only
+>>>> the perf event with exclude_guest attribute is allowed to create on
+>>>> host. Thanks.
+>>>
+>>> Do we really need a KVM callback? I think that is one option.
+>>>
+>>> Immediately after VMEXIT, KVM will check whether there are "host perf
+>>> events". If so, do the PMU context switch immediately. Otherwise, keep
+>>> deferring the context switch to the end of vPMU loop.
+>>>
+>>> Detecting if there are "host perf events" would be interesting. The
+>>> "host perf events" refer to the perf_events on the host that are
+>>> active and assigned with HW counters and that are saved when context
+>>> switching to the guest PMU. I think getting those events could be done
+>>> by fetching the bitmaps in cpuc.
+>>
+>> The cpuc is ARCH specific structure. I don't think it can be get in the
+>> generic code. You probably have to implement ARCH specific functions to
+>> fetch the bitmaps. It probably won't worth it.
+>>
+>> You may check the pinned_groups and flexible_groups to understand if
+>> there are host perf events which may be scheduled when VM-exit. But it
+>> will not tell the idx of the counters which can only be got when the
+>> host event is really scheduled.
+>>
+>>> I have to look into the details. But
+>>> at the time of VMEXIT, kvm should already have that information, so it
+>>> can immediately decide whether to do the PMU context switch or not.
+>>>
+>>> oh, but when the control is executing within the run loop, a
+>>> host-level profiling starts, say 'perf record -a ...', it will
+>>> generate an IPI to all CPUs. Maybe that's when we need a callback so
+>>> the KVM guest PMU context gets preempted for the host-level profiling.
+>>> Gah..
+>>>
+>>> hmm, not a fan of that. That means the host can poke the guest PMU
+>>> context at any time and cause higher overhead. But I admit it is much
+>>> better than the current approach.
+>>>
+>>> The only thing is that: any command like 'perf record/stat -a' shot in
+>>> dark corners of the host can preempt guest PMUs of _all_ running VMs.
+>>> So, to alleviate that, maybe a module parameter that disables this
+>>> "preemption" is possible? This should fit scenarios where we don't
+>>> want guest PMU to be preempted outside of the vCPU loop?
+>>>
+>>
+>> It should not happen. For the current implementation, perf rejects all
+>> the !exclude_guest system-wide event creation if a guest with the vPMU
+>> is running.
+>> However, it's possible to create an exclude_guest system-wide event at
+>> any time. KVM cannot use the information from the VM-entry to decide if
+>> there will be active perf events in the VM-exit.
+> 
+> Hmm, why not? If there is any exclude_guest system-wide event,
+> perf_guest_enter() can return something to tell KVM "hey, some active
+> host events are swapped out. they are originally in counter #2 and
+> #3". If so, at the time when perf_guest_enter() returns, KVM will ack
+> that and keep it in its pmu data structure.
 
-yep, I just wrote a large comment about goto next_insns above and then
-saw you already proposed that :) Yep, I think this is the way.
+I think it's possible that someone creates !exclude_guest event after
+the perf_guest_enter(). The stale information is saved in the KVM. Perf
+will schedule the event in the next perf_guest_exit(). KVM will not know it.
 
->                         new_prog =3D bpf_patch_insn_data(env, i + delta, =
-insn_buf, cnt);
->                         if (!new_prog)
->                                 return -ENOMEM;
->
->                         delta    +=3D cnt - 1;
->                         env->prog =3D prog =3D new_prog;
->                         insn      =3D new_prog->insnsi + i + delta;
->                         goto next_insn;
->                 }
->
->
-> >>
-> >> >
-> >> >>                 /* Implement bpf_get_smp_processor_id() inline. */
-> >> >>                 if (insn->imm =3D=3D BPF_FUNC_get_smp_processor_id =
-&&
-> >> >>                     prog->jit_requested && bpf_jit_supports_percpu_=
-insn()) {
-> >> >> @@ -20214,11 +20214,20 @@ static int do_misc_fixups(struct bpf_veri=
-fier_env *env)
-> >> >>                          * changed in some incompatible and hard to=
- support
-> >> >>                          * way, it's fine to back out this inlining=
- logic
-> >> >>                          */
-> >> >> +#if defined(CONFIG_X86_64)
-> >> >>                         insn_buf[0] =3D BPF_MOV32_IMM(BPF_REG_0, (u=
-32)(unsigned long)&pcpu_hot.cpu_number);
-> >> >>                         insn_buf[1] =3D BPF_MOV64_PERCPU_REG(BPF_RE=
-G_0, BPF_REG_0);
-> >> >>                         insn_buf[2] =3D BPF_LDX_MEM(BPF_W, BPF_REG_=
-0, BPF_REG_0, 0);
-> >> >>                         cnt =3D 3;
-> >> >> +#elif defined(CONFIG_ARM64)
-> >> >> +                       struct bpf_insn cpu_number_addr[2] =3D { BP=
-F_LD_IMM64(BPF_REG_0, (u64)&cpu_number) };
-> >> >>
-> >> >
-> >> > this &cpu_number offset is not guaranteed to be within 4GB on arm64?
-> >>
-> >> Unfortunately, the per-cpu section is not placed in the first 4GB and
-> >> therefore the per-cpu pointers are not 32-bit on ARM64.
-> >
-> > I see. It might make sense to turn x86-64 code into using MOV64_IMM as
-> > well to keep more of the logic common. Then it will be just the
-> > difference of an offset that's loaded. Give it a try?
->
-> I think MOV64_IMM would have more overhead than MOV32_IMM and if we can
-> use it in x86-64 we should keep doing it that way. Wdyt?
+> 
+> Now, when doing context switching back to host at just VMEXIT, KVM
+> will check this data and see if host perf context has something active
+> (of course, they are all exclude_guest events). If not, deferring the
+> context switch to vcpu boundary. Otherwise, do the proper PMU context
+> switching by respecting the occupied counter positions on the host
+> side, i.e., avoid doubling the work on the KVM side.
+> 
+> Kan, any suggestion on the above approach? 
 
-My assumption (which I didn't check) was that BPF JITs should optimize
-such MOV64_IMM that have a constant fitting within 32-bits with a
-faster and smaller instruction. But I'm fine leaving it as is, of
-course.
+I think we can only know the accurate event list at perf_guest_exit().
+You may check the pinned_groups and flexible_groups, which tell if there
+are candidate events.
 
+> Totally understand that
+> there might be some difficulty, since perf subsystem works in several
+> layers and obviously fetching low-level mapping is arch specific work.
+> If that is difficult, we can split the work in two phases: 1) phase
+> #1, just ask perf to tell kvm if there are active exclude_guest events
+> swapped out; 2) phase #2, ask perf to tell their (low-level) counter
+> indices.
 >
-> >>
-> >> >
-> >> >> +                       insn_buf[0] =3D cpu_number_addr[0];
-> >> >> +                       insn_buf[1] =3D cpu_number_addr[1];
-> >> >> +                       insn_buf[2] =3D BPF_MOV64_PERCPU_REG(BPF_RE=
-G_0, BPF_REG_0);
-> >> >> +                       insn_buf[3] =3D BPF_LDX_MEM(BPF_W, BPF_REG_=
-0, BPF_REG_0, 0);
-> >> >> +                       cnt =3D 4;
-> >> >> +#endif
-> >> >>                         new_prog =3D bpf_patch_insn_data(env, i + d=
-elta, insn_buf, cnt);
-> >> >>                         if (!new_prog)
-> >> >>                                 return -ENOMEM;
-> >> >> --
-> >> >> 2.40.1
-> >> >>
+
+If you want an accurate counter mask, the changes in the arch specific
+code is required. Two phases sound good to me.
+
+Besides perf changes, I think the KVM should also track which counters
+need to be saved/restored. The information can be get from the EventSel
+interception.
+
+Thanks,
+Kan
+>>
+>> The perf_guest_exit() will reload the host state. It's impossible to
+>> save the guest state after that. We may need a KVM callback. So perf can
+>> tell KVM whether to save the guest state before perf reloads the host state.
+>>
+>> Thanks,
+>> Kan
+>>>>
+>>>>
+>>>>>
+>>>>> My original sketch: https://lore.kernel.org/all/ZR3eNtP5IVAHeFNC@googlecom
+>>>
+> 
