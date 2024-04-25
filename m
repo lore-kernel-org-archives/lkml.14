@@ -1,177 +1,159 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43741494D1;
-	Thu, 25 Apr 2024 13:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB7212BE8C;
+	Thu, 25 Apr 2024 13:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714052888; cv=none; b=g45d/bJWS++AymiPaa3ytPMdGtrgzZDuoORYl5lg8gjgOFpTTYZEXPSL3hLA5zJJjbPc6MjdefPh+DAtMi26nf4hcK+k8iXhFL+D4Cr0GPeRemlJEJK48UgdVqOqIdndBGIIRsUCiLHisH8Sl6b93Vuhj2Bi3V1gNJm0zi9XgJs=
+	t=1714052956; cv=none; b=ueq/eLwH47+lmJzS5reHilaNbY1YDEO74EJs/xP01/WOjUsP4Fca79sbdp6W2+JBaSeyjGjq66Eef8L4Cz+Mer8/52yCF6+e2EztxieUzsoQPVc9O0F3DefzhoCFf3S7pkdqQy7ET7HMBh8CW1WlyZiogawfU2p15TsGY4AeWe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714052888; c=relaxed/simple;
-	bh=VVDERpYPM9KQxilgs5G//sA0Lmaf+Mjj63KOyRayoYA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=knl2qqPhwvcorxkmwa9RVZnlSTCpFZLQPx6vaQJqMHyg3+Qlzl/UxwVSL8DfilychZVAdgc9G2A0H1nimxaQBGIfezXbwxX+73dPwuAXWqiAzHZl39tsX5xZlCMmg2YsYp29ecpWJpJ3THQPCUiFEIBx+ZyevGVj8n133qUZ3Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=boLIi6R+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1714052956; c=relaxed/simple;
+	bh=UABaLNDUohCl0645e4BmsPLeNTsTr5PF33yT0Dxpmv4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J02WhJf3Rcioxbikn/FXc1s6y3o8dkkqcOug6O8MYAk6vHcYUSnhfE0AZyfiaa7mprh3XSnM8kYGIJvPUwYYg1geXnDvlmAvCtENCBVTKxqeSgLAzN/9YtYkaVmkqg86n+J2V3cz7zmK9lUogsbFR4b2yIJnrrh0kwSl0aZJsjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TBeNTQ2N; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="boLIi6R+"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43P9x6BW001380;
-	Thu, 25 Apr 2024 13:47:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=WDD9ufnAdqz8oMuirK7+5
-	QxXew2z3pBpsyZ1Jwjt7L0=; b=boLIi6R+6EfAd0ae5YFqCZ81/Hcff19XR94gu
-	iRsxQV1cj1qWjqclIGYpAeEZja6LSsJkRF5rNT8MzrdzmGPrHzL1i05N+UkikQ3X
-	0+89IcHIvmiXoJ20jRXLqu4Ee2xQLX3EexEe174jlZlD3PposanJIvn/mzMcUNO/
-	QZGN4KTJw35jC5TYBfB/scxiPv6KXGhxAO0mbmQvR79s3yaSUlaK2sx5I+/4alyv
-	i/GSMof8oBYZns6RLweS8+DgpyTgq2REasrVjSVsOXf0CjTaUdceHHbplgqvrv+6
-	P7d4ZWtoGbuBEo6ND8TqrAVkRIG+8n2l/QHvaTCG57coyc53Q==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xqn0wgtwj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 13:47:29 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43PDlRlJ019865
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 13:47:27 GMT
-Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 25 Apr 2024 06:47:27 -0700
-Date: Thu, 25 Apr 2024 06:47:26 -0700
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
-To: Johan Hovold <johan@kernel.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Jaiganesh Narayanan <njaigane@codeaurora.org>,
-        Doug Anderson
-	<dianders@chromium.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: qcom: Fix behavior in abscense of open-drain
- support
-Message-ID: <Zipe7u/9ajRXa81U@hu-bjorande-lv.qualcomm.com>
-References: <20240424-tlmm-open-drain-v1-1-9dd2041f0532@quicinc.com>
- <ZipGRl_QC_x83MFt@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TBeNTQ2N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714052954; x=1745588954;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=UABaLNDUohCl0645e4BmsPLeNTsTr5PF33yT0Dxpmv4=;
+  b=TBeNTQ2NoY4ldsXfcZP4uPVFv6fHLxisohYXMS7483LtYmMsxx30/bRx
+   lAAELsOwA0KA0pWMh+44DZTlkSmAKWTicszmzjfACAWmbumrANGDwIlbL
+   BGDp3xPtAPRUPLdjz4/RkkUsKpl7Aelo4ykGXEEi0QzAXZGSCVyk+FOCW
+   eDUGsDvqFXGnE0YxHuMEIXHFreOCGNhjlaeTlRKvR0Wi48MX2lGbR2YWo
+   vOIUC3WYicTHJ5P3DlTMwO7FPMU2NdddAip/4XhNbCQcQ0DnT2vzZL67B
+   Z7mwu+Hd1oq0fLgf44r33AxgKgI5WJ42tQRNwdtwCQNkKYa/bzn9IQrjo
+   A==;
+X-CSE-ConnectionGUID: KXbpwhvXSj6F/ypU38mOdw==
+X-CSE-MsgGUID: ZflvdNCOQWGaV/CrztfM3w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="12677354"
+X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
+   d="scan'208";a="12677354"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 06:49:13 -0700
+X-CSE-ConnectionGUID: HdfkPoJMRjC8j34JKqhd+A==
+X-CSE-MsgGUID: OnWENRT+Q26p2Cz5NM4pgw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
+   d="scan'208";a="25061843"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 06:49:10 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rzzTH-000000010uZ-42lL;
+	Thu, 25 Apr 2024 16:49:07 +0300
+Date: Thu, 25 Apr 2024 16:49:07 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sui Jingfeng <sui.jingfeng@linux.dev>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	dri-devel@lists.freedesktop.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v2] software node: Implement device_get_match_data fwnode
+ callback
+Message-ID: <ZipfU50mWIuRQpzy@smile.fi.intel.com>
+References: <20240422164658.217037-1-sui.jingfeng@linux.dev>
+ <Zie3ebHOEpWHj1qV@smile.fi.intel.com>
+ <d5bc1e73-a553-451e-ab74-f5f0ca259c6b@linux.dev>
+ <hcltp2bbxxg2t7ibmzgiib7mgbwgmvzwnnq6mochdh7c4h76r3@bxj6yk5zq64e>
+ <ZikE4qOVO7rgIs9a@smile.fi.intel.com>
+ <CAA8EJpr1FSjizAh6Dp5Bmux3NrGYh=BfHFL4D1fa87Og4ymY0w@mail.gmail.com>
+ <Zikck2FJb4-PgXX0@smile.fi.intel.com>
+ <kucey3jsydjye3ndflns3cqolcpizhnxgzz3fkmcatlnpbnwrk@22ulsqfh2vf6>
+ <Zik3AjiWkytSVn-1@smile.fi.intel.com>
+ <c81f770b-5fe4-4212-bfce-fedb3fced94e@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <ZipGRl_QC_x83MFt@hovoldconsulting.com>
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: dadqXKE7q0Kd3I_QQxoWGIW_xYmiAZfD
-X-Proofpoint-GUID: dadqXKE7q0Kd3I_QQxoWGIW_xYmiAZfD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-25_13,2024-04-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- impostorscore=0 malwarescore=0 phishscore=0 suspectscore=0 mlxscore=0
- mlxlogscore=999 lowpriorityscore=0 bulkscore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404250100
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c81f770b-5fe4-4212-bfce-fedb3fced94e@linux.dev>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Apr 25, 2024 at 02:02:14PM +0200, Johan Hovold wrote:
-> On Wed, Apr 24, 2024 at 08:45:31PM -0700, Bjorn Andersson wrote:
-> > When a GPIO is configured as OPEN_DRAIN gpiolib will in
-> > gpiod_direction_output() attempt to configure the open-drain property of
-> > the hardware and if this fails fall back to software emulation of this
-> > state.
-> > 
-> > The TLMM block in most Qualcomm platform does not implement such
-> > functionality, so this call would be expected to fail. But due to lack
-> > of checks for this condition, the zero-initialized od_bit will cause
-> > this request to silently corrupt the lowest bit in the config register
-> > (which typically is part of the bias configuration) and happily continue
-> > on.
-> > 
-> > Fix this by checking if the od_bit value is unspecified and if so fail
-> > the request to avoid the unexpected state, and to make sure the software
-> > fallback actually kicks in.
+On Thu, Apr 25, 2024 at 09:42:53PM +0800, Sui Jingfeng wrote:
+> On 2024/4/25 00:44, Andy Shevchenko wrote:
+> > On Wed, Apr 24, 2024 at 07:34:54PM +0300, Dmitry Baryshkov wrote:
+> > > On Wed, Apr 24, 2024 at 05:52:03PM +0300, Andy Shevchenko wrote:
+> > > > On Wed, Apr 24, 2024 at 04:34:39PM +0300, Dmitry Baryshkov wrote:
+> > > > > On Wed, 24 Apr 2024 at 16:11, Andy Shevchenko
+> > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > On Wed, Apr 24, 2024 at 12:37:16AM +0300, Dmitry Baryshkov wrote:
+> > > > > > > On Wed, Apr 24, 2024 at 12:49:18AM +0800, Sui Jingfeng wrote:
+> > > > > > > > On 2024/4/23 21:28, Andy Shevchenko wrote:
+> > > > > > > > > On Tue, Apr 23, 2024 at 12:46:58AM +0800, Sui Jingfeng wrote:
+
+...
+
+> > > > > > > But let me throw an argument why this patch (or something similar) looks
+> > > > > > > to be necessary.
+> > > > > > > 
+> > > > > > > Both on DT and non-DT systems the kernel allows using the non-OF based
+> > > > > > > matching. For the platform devices there is platform_device_id-based
+> > > > > > > matching.
+> > > > > > > 
+> > > > > > > Currently handling the data coming from such device_ids requires using
+> > > > > > > special bits of code, e.g. platform_get_device_id(pdev)->driver_data to
+> > > > > > > get the data from the platform_device_id. Having such codepaths goes
+> > > > > > > against the goal of unifying DT and non-DT paths via generic property /
+> > > > > > > fwnode code.
+> > > > > > > 
+> > > > > > > As such, I support Sui's idea of being able to use device_get_match_data
+> > > > > > > for non-DT, non-ACPI platform devices.
+> > > > > > I'm not sure I buy this. We have a special helpers based on the bus type to
+> > > > > > combine device_get_match_data() with the respective ID table crawling, see
+> > > > > > the SPI and I²C cases as the examples.
+> > > > > I was thinking that we might be able to deprecate these helpers and
+> > > > > always use device_get_match_data().
+> > > > True, but that is orthogonal to swnode match_data support, right?
+> > > > There even was (still is?) a patch series to do something like a new
+> > > > member to struct device_driver (? don't remember) to achieve that.
+> > > Maybe the scenario was not properly described in the commit message, or
+> > > maybe I missed something. The usecase that I understood from the commit
+> > > message was to use instatiated i2c / spi devices, which means
+> > > i2c_device_id / spi_device_id. The commit message should describe why
+> > > the usecase requires using 'compatible' property and swnode. Ideally it
+> > > should describe how these devices are instantiated at the first place.
+> > Yep. I also do not clearly understand the use case and why we need to have
+> > a board file, because the swnodes all are about board files that we must not
+> > use for the new platforms.
 > 
-> Fortunately, this is currently not a problem as the gpiochip driver does
-> not implement the set_config() callback, which means that the attempt to
-> change the pin configuration currently always fails with -ENOTSUP (see
-> gpio_do_set_config()).
+> Would you like to tell us what's the 'board file'?
 > 
+> I am asking because I can not understand those two words at all.
+> I'm really don't know what's the meanings of 'board file'.
 
-You're right. I was convinced that I implemented set_config() and got
-lost in the indirections.
+Hmm... This is very well established term meaning the hard coded platform
+description (you may consider that as "device tree" written in C inside
+the Linux kernel). There are plenty of legacy platforms still exist in
+the Linux kernel source tree, you may find examples, like (first comes
+to mind) arch/arm/mach-pxa/spitz.c.
 
-> Specifically, this means that the software fallback kicks in, which I
-> had already verified.
+> Do you means that board file is something like the dts, or
+> somethings describe the stuff on the motherboard but outside
+> the CPU?
 > 
-
-I thought you did, and found this strange.
-
-> Now, perhaps there is some other path which can allow you to end up
-> here, but it's at least not via gpiod_direction_output().
+> Does the hardware IP core belong to the "board file"?
 > 
-> The msm pinctrl binding does not allow 'drive-open-drain' so that path
-> should also be ok unless you have a non-conformant devicetree.
-> 
+> Can we using more concrete vocabulary instead of the vague
+> vocabulary to communicate?
 
-Looking at it again, I believe you're right and this is currently dead
-code, waiting to screw us over once someone opens up the code path I
-thought I fixed...
+Most of (I though 100% before this message) the Linux kernel developers
+_know_ this term, sorry that you maybe young enough :-)
 
-> > It is assumed for now that no implementation will come into existence
-> > with BIT(0) being the open-drain bit, simply for convenience sake.
-> > 
-> > Fixes: 13355ca35cd1 ("pinctrl: qcom: ipq4019: add open drain support")
-> 
-> I guess hardware open-drain mode has never been properly tested on
-> ipq4019.
-> 
-
-I see no other explanation. Perhaps there were additional changes in the
-downstream tree where that change came from.
-
-> > Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
-> > ---
-> >  drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
-> >  drivers/pinctrl/qcom/pinctrl-msm.h | 3 ++-
-> >  2 files changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > index aeaf0d1958f5..329474dc21c0 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> > +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > @@ -313,6 +313,8 @@ static int msm_config_reg(struct msm_pinctrl *pctrl,
-> >  			*mask |= BIT(g->i2c_pull_bit) >> *bit;
-> >  		break;
-> >  	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> > +		if (!g->od_bit)
-> > +			return -EOPNOTSUPP;
-> 
-> I believe this should be -ENOTSUPP, which the rest of the driver and
-> subsystem appear to use.
-> 
-
-Both error codes are used in across gpio/pinctrl subsystems. I first
-went ENOTSUPP but folded, perhaps too easily, when checkpatch told me
-EOPNOTSUPP was better.
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-I'm leaning towards us reverting the ipq4019 patch, rather than try
-complete the patch, but will give this some more thought before spinning
-v2.
-
-Thank you,
-Bjorn
-
-> >  		*bit = g->od_bit;
-> >  		*mask = 1;
-> >  		break;
-> 
-> Johan
