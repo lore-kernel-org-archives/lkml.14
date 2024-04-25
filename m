@@ -1,369 +1,324 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2059.outbound.protection.outlook.com [40.107.104.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DAD81AA3
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 09:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714035950; cv=none; b=a1xAu+S9tPb2WRqICwNc2v0pTlBNwMuBlKJa9Z6Rx8Fzv3RMXXi0uuunoyaJQ42uXaULK5sEQnCBHTlLtrmsNLweQ7OI1ZnqauhpZE9Yb6Jhy7PqbZdesS7RSH4AFTgcC8zUkUCClncheAQK0SV6QnOjNJ1WIF78dW41LhmeqIo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714035950; c=relaxed/simple;
-	bh=wN09IT6B9svVG9MSbQFVbrmNzDMbbZpTjBc7aYkXS7E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SR68+PVemh13Un32K5I0UWKBaDHlTVnIN2xvnc1fH7G472/LcKUEK3N2QM0CPAy898kAs0Sjm9tl1BVJUCkwhBHrJTFDoMVHioVO6rpRET94r/Vf3fRVWhXY7le00s4nY77aYLy574HPQHnltRF4b4+RP7F6SYnLj/1whE4xpIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QPBVXMSU; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4F58289C;
+	Thu, 25 Apr 2024 09:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714035965; cv=fail; b=fVl4LMMwCdtw5oCKUlrRXRpKFrIWT0JuvzxBru0AGkChVQfZkr2sIxfkXwxYRaTHt+rzeJni6LzyMoJHREXTSaSAcuVwlvmSBJvDciNw6C4uzL9fLFnF4zAVSJuRUnemGoE7zs2F/gueO0Jbubupc21oZ4KqXSBUPvCiWPLWq4A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714035965; c=relaxed/simple;
+	bh=rRq9O22K9eU8qtFwG/9uz+wN6WeMu2Yq1Me3zglNfPo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=MbaIZxGVnNjtFQh/0MMTfDe+gCxq3UBlEDhGPYO5RFX61qO/SmRDKHwy/+OaKoeWGRD48ffrS4BufiAPgs4ZdZuqk6rhlwom28L8UZByZvjpmzVjBPaETSF+L/7vm186lL5If/1/6xqJcsM6/TnEKHA7ADCHGTEZ9fTi6l2v7yY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Ji7AtjCl; arc=fail smtp.client-ip=40.107.104.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QPBVXMSU"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1714035938; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=EF2Iu2skwwn1SYvF2vDSYrIbUNPJaVughKfpjGvpDTc=;
-	b=QPBVXMSUQvq6xtLtoHV11n1lZDMjZnKT4mR2SvXeCDzJy+cZx7zzUzE1BbmG7a/bDsYzeJjoS2J0WW/OkdwqgI48+uEyB76Vo03cK52/i+dCld2uVqjRsGaMm80/40/AZy8Ej3Ey8DEyIh6+mjMlnOLNLiXO1uUccUWIqpm0Vck=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032014031;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0W5F.c.w_1714035934;
-Received: from 30.97.56.61(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W5F.c.w_1714035934)
-          by smtp.aliyun-inc.com;
-          Thu, 25 Apr 2024 17:05:36 +0800
-Message-ID: <bc92c74e-80e2-4065-9b61-46adacdfd17a@linux.alibaba.com>
-Date: Thu, 25 Apr 2024 17:05:34 +0800
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ji7AtjCl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TJ/2jM/uIVUTZColoe9Eqq3PLlQoJfeu4a6Xv8xTWNRZgKkUSvZypc+2X8LTxT+wGF0zcx+gWGKUCZDtCmS9dkOag8JN8SMmlqUxE2GDqiUdgIPn+xCZbPCOXdDwkd6J5AEFXNhR3cb0ORwOnFDmWJPBIBR+C57U6dogIvkR79Bp0F7JqB9i0LQpZyMZOk1ufgrEc3C9SmXOOZNB2M3A0ji5PCE17RcnkVoWJChrWyj81wqIK/8/ra7OmMWKMWVV6yHXkdaMudq64CzCiriRdFEUxNy1P5K/+9rvhTbXatJYJj4xabPm3bwTnB3dWQIKuX/pq+9rux7LK2Ss+PDrdw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bAuw+E2EPrp1ffpnEbTWcuHc5HKDozRTQ7V4EKVdARQ=;
+ b=eGGmlbhpmoedEd6xkiVYS3LdWxSG68ac+QxqxB7PybIXJLWm6RLNbgtdPtFH5BAyvNxBUcoTqEBAsR0uaZTYdWy4E2vvPiGqXJFO4xdfk+Syp+GmX9IVzG0stiyTaDGs/MJGltf3RghAGcL2GN0Zob9yCPkjUU4qpj/47ka0wiirxnqCCp7Ed6ue3E6v7L3+PUPxP96nynlIu2RfBvBA/AA0m/axIw9MLOGB1Sn6G/sZZzUDJ0SkH/g9ChEXI5Zkr0n7ARyQ6il+sMAZ4eZUWI8dYcZOfuMmvVz5WSHnMiSCswpYwJLp7lB9sY7j0ePsyJUPSXaNGsyyYOPnnZgK4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bAuw+E2EPrp1ffpnEbTWcuHc5HKDozRTQ7V4EKVdARQ=;
+ b=Ji7AtjClWlzEHxURUw5tpm7s99CXv1BOR1ofEfv0en2Mue6P+q7HAn1vPALPe9A84aXRFb5uz0xSOHtorntogk+TLTVAOqOuHOIp33/m9ddKWi7AB8AvQ0siZoZk3XooerhFGnkIg/aXBuj+fzh50kW4qfbdyT8UMTrg6IFHe5o=
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by PA2PR04MB10334.eurprd04.prod.outlook.com (2603:10a6:102:417::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Thu, 25 Apr
+ 2024 09:06:00 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7472.044; Thu, 25 Apr 2024
+ 09:06:00 +0000
+From: Peng Fan <peng.fan@nxp.com>
+To: Rob Herring <robh@kernel.org>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+CC: Linus Walleij <linus.walleij@linaro.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo
+	<shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Peng
+ Fan <peng.fan@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi
+	<cristian.marussi@arm.com>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 1/2] dt-bindings: firmware: arm,scmi: Add properties
+ for i.MX95 Pinctrl OEM extensions
+Thread-Topic: [PATCH v2 1/2] dt-bindings: firmware: arm,scmi: Add properties
+ for i.MX95 Pinctrl OEM extensions
+Thread-Index: AQHakTp0F0gZzKwEJ0KLehvuXBXWtLF32SuAgADPKOA=
+Date: Thu, 25 Apr 2024 09:06:00 +0000
+Message-ID:
+ <DU0PR04MB9417C67342B1DD6CC299B4CE88172@DU0PR04MB9417.eurprd04.prod.outlook.com>
+References: <20240418-pinctrl-scmi-oem-v1-v2-0-3a555a3c58c3@nxp.com>
+ <20240418-pinctrl-scmi-oem-v1-v2-1-3a555a3c58c3@nxp.com>
+ <20240424193007.GA329896-robh@kernel.org>
+In-Reply-To: <20240424193007.GA329896-robh@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|PA2PR04MB10334:EE_
+x-ms-office365-filtering-correlation-id: ecd6c50c-f6ff-48dc-d640-08dc6506ed1a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?gmGPOv+qgJRhjaAaCTLL0biUeKELtUMIiwAAaoSvDxHaDsIoZOVyOs4ypaHP?=
+ =?us-ascii?Q?YXiXg69tJOCnv5DCFUmOhjk4tfU443DwT48LjcJT0T1uT3ywSGeyi9XhLDCW?=
+ =?us-ascii?Q?da4kuZFBVQBh8jA1RhFTUH4n06waGa/M91yFVV6YxqLPd6iT0mgjqCukh1yT?=
+ =?us-ascii?Q?V1IvPnhGYnrmJLLj5SjMvFHOCJz/z2Xv2/wkKe0bSqhsr3oVCsZOfyDcaRqD?=
+ =?us-ascii?Q?sTApMpk4chChGEZGemz8kBAirA5R/fWY5+39591zV0L/H5cOwiX8xBU2quh0?=
+ =?us-ascii?Q?NO3eTK1Mvx+T2xPpHiWw5iiWDoD23TYLKs5viw/Ngvjkwe8PnBUc4OMAqfKi?=
+ =?us-ascii?Q?lkSJdAWG9E4AVvLGfdKqpIona4reCaM4SkfANjChWL8UhzZnmW+rmvDD/3DB?=
+ =?us-ascii?Q?Pqo4SSEWrfdl0VO1pnnMFPoO0zFkw75wwM3984mDu9exogPwPY8mtizxbrsP?=
+ =?us-ascii?Q?3oN1U+/SWb2JEDqb1+y/WC0ayOw2UO7/fO15Hzy6GfFvEsErN9mR58ej7yGv?=
+ =?us-ascii?Q?GcvKRFacsVCCHNm6pwQi5y0cCSe3Ik29ASMt58OqfcpaMb301boBEickIBIq?=
+ =?us-ascii?Q?vNVjVKBcWpRXSE/OHMsR54Kj5H0BmXHCLgO8pHHu0TmVJU7eK9wSnW6PhBVM?=
+ =?us-ascii?Q?5/9lSxFtFkzYHT5a/U4zQ6l9onCaqDxFeawfVrYDgyPlSOgtRX1rwcxAw0rv?=
+ =?us-ascii?Q?tysHFvcpyIG722Yl7uk007QJsSj1GD74hOhaEijfFqs4ttsf7FZWs72hB8/N?=
+ =?us-ascii?Q?Umu+/ujmtsCa3O49/JqKXUHetlkz/d6Qz7V1TfUETppmUuSXABmVqBeQp87K?=
+ =?us-ascii?Q?COcbKeZLPm6udNr2N0s3vX4M0aOyLDLi90BGvYAZ76GpSDs9stGfiyvozfrG?=
+ =?us-ascii?Q?obqD7+kDUsrFEI9WU+9t13KUCh8M1Tq1uxhNDP8QNrpIVplgjbf9YaEHFHHe?=
+ =?us-ascii?Q?b8u01MFkknamGKUWIxV/Bvfik94f/8YtaXFj+eRoSG7ECCApJdq0ejDAVYmf?=
+ =?us-ascii?Q?93SWgqwS/0jyk8/HAa03U4JHc4eBd7k3PnHpnXBFyV70kjmwx6IRhL0IVY26?=
+ =?us-ascii?Q?jIzsL1z0I9GhQVXBU3+JoU38svasFOBfiJ1spWJK9jcA10P+W6JWKYAXrvbi?=
+ =?us-ascii?Q?WESC0QGOKNvsQnGXlfMAzva0vnNBJd+fsI3JfA07j2voGH0o85/G5izrbGon?=
+ =?us-ascii?Q?4gx2hpc9BYJapuPXNbp/pun2cXRBFHcFPEp3kZI2sAFe3zfPSr69+SwlSyi2?=
+ =?us-ascii?Q?TwVo6+wtmEipgc5dJb4G4JN5KFO3ifvt1HF0Ksjnmw3Ty2SlzW0q59evJLDn?=
+ =?us-ascii?Q?kyiVoIVcrTSbDQbftnpCBs9wDV/bKJuuemJ+E7+cKPJL3g=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?nrPWP8Y16FWF/euAGZcGwu3iTtH9XPaKRO2AQZZJPG6p/l/B9nRu/VXKWZH1?=
+ =?us-ascii?Q?cYPSIdlD5XMWcpEJOLP1sAc1YR/iJoJaEdP22XccN+Yvc/UDTDhUs6AFP+co?=
+ =?us-ascii?Q?WABxxjFKo4jErUzGnfN7SAVz+U2/6qG/3QVsUssjRMrf6I+JwkhG7DYPffu3?=
+ =?us-ascii?Q?ZYccLPFrMFI4Qsp3HGf3DkmjXSWIhGlnKQngYPJrPIuk2IjkpMIWjSZ4R2pT?=
+ =?us-ascii?Q?KEDb+VdRSnqZI81u4Mc+eLHrFNvt2NQ9ZTHaX6ITXHaQqN25dC13cc1/siDO?=
+ =?us-ascii?Q?qhoFDESU8GonP0FNVN4gpCF70/rr/7AdTr+7lB4ptFptkGPziraedVBq4Cr/?=
+ =?us-ascii?Q?/Nh4DARW8bX5jeSlY9maV68HtvhlkO40rbzyzijJoajs6C+Wz0FUXRdswWq1?=
+ =?us-ascii?Q?0MtrJFYjHmcsqPfull7SW1BmD9dsu1j6mUixiQS2PM2yGtjYDduyqLDuapbu?=
+ =?us-ascii?Q?z2AAbfKrkFlHHSx2rf335W5BpJJzVMLBH8G8LLb3dQCBak0HaCwkkxVReTDp?=
+ =?us-ascii?Q?+iTt4ky1AsJIxpbhTvDjI809EWeMENyr2TLFgewqawE99Abat94yubPMqAYH?=
+ =?us-ascii?Q?p0ak0Ph90+3xGKb2PUZt34iiCbLcJ4c4L3uo5PynbeobrGxJs8tJapU/xZHn?=
+ =?us-ascii?Q?pqVM43jnbQ4XiHYrIj7eIMmh28qv2pdJLIt3qata11XtFErpoLL/ZmquWQcz?=
+ =?us-ascii?Q?URFTenLJQkP7Na2oIrWiLFFGXGuBvSoqspdKxPAEKR9ISqoZXNCT5Tt7A7zn?=
+ =?us-ascii?Q?OSPcf/6O0QJxyoB2/ef9i7lAsJ+t62hshNkLsbhuymkdP1S6ME+I5pFYouRq?=
+ =?us-ascii?Q?TX6GoXm7wuvpYSZ/snIEXUlfvXgCoMJPK6841gWt2yDOmqqd2XLBCyYfiInM?=
+ =?us-ascii?Q?0ppcI058VaYFpeW/0+j9oKxp7P3deHLVNF9GtUIK2etsVWbi1A3PpAeuRtTe?=
+ =?us-ascii?Q?5sfRquDsiz3rzlZ2YwN/JHoduWcqD3MM8dkb6SXD9P+XPg5HNNwHp3nmMJ8q?=
+ =?us-ascii?Q?xXXy4NEM3zDewiiIa3zXMrdN9yV2+SxGlB8KY+nIZl4bIycy6lRI8x3oS9o8?=
+ =?us-ascii?Q?wMlrK4NX01T1smcVBMuTmlfGMbgMxCFkY2418CY5KYHS1LY33i7HONS3DjlM?=
+ =?us-ascii?Q?SRitMjpq2XK5Bo9527XlUxSLSqJLF62OX7SLBslfINV5uOfaCmqdTWy2/qmv?=
+ =?us-ascii?Q?kWS5xb/TT+Bub45d5+/iB66OwLGvK5Jexvu/r4drQwFoNf60SBNABqEHQ/+p?=
+ =?us-ascii?Q?W6hqKZHBJrMoWlxYPpBdrhJfa/LV4iI4uevjJMawaklfiptW3y+sBmsZgwSS?=
+ =?us-ascii?Q?gK5DwtSQwBvcZfjDapu7QnxUcgXl5i/lFKrkIE4F5vvSFs0n0/mfTlXxuTxt?=
+ =?us-ascii?Q?/KoZ5Qoqv/cQ/dwjtjVKEZrST9WJfdb1UMN6ARwKDE5Cq8ehrIweAeXPWqHD?=
+ =?us-ascii?Q?LE0pUrYmesbLMQOxEoWLf3NhNg6jWaXJ/oRwv9H2blqhppOb6t5lwwLMXyVP?=
+ =?us-ascii?Q?N4WFtXWgpeK756R1iI3Daz8XrQERkLQ3N8c3BTuCSopV7JZW0oylAho7s+gm?=
+ =?us-ascii?Q?3IRjQdJfOqyZ5Y4gxw8=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/5] add mTHP support for anonymous share pages
-To: David Hildenbrand <david@redhat.com>, Ryan Roberts
- <ryan.roberts@arm.com>, akpm@linux-foundation.org, hughd@google.com
-Cc: willy@infradead.org, wangkefeng.wang@huawei.com, 21cnbao@gmail.com,
- ying.huang@intel.com, shy828301@gmail.com, ziy@nvidia.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1713755580.git.baolin.wang@linux.alibaba.com>
- <4b998e7d-153f-48cc-a9bb-8c84bb675581@arm.com>
- <c1f68109-7665-4905-996f-f1067dfa2cb6@linux.alibaba.com>
- <80b5f87e-c156-4ccc-98f0-96f1fd864273@arm.com>
- <ef4f15dd-da31-4a1e-bec5-62a7002c4f7c@linux.alibaba.com>
- <5b8b22e7-6355-4b08-b5b5-1e33ebae6f16@arm.com>
- <813fe7fd-3004-4e8b-801d-95c33559a025@linux.alibaba.com>
- <76f816dd-3bbf-48c9-a630-3787051cf289@arm.com>
- <8c0d6358-3c16-4a57-822c-04b3b3403fe6@linux.alibaba.com>
- <4204b5f6-21f0-4aa2-a625-3dd2f416b649@arm.com>
- <94ae96f7-79ce-4b3f-a272-6af62d01a3f8@redhat.com>
- <71c1e953-84f9-4d47-bd4c-725a447627df@arm.com>
- <bf005e0f-6fda-4068-8af6-5f8c00257de7@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <bf005e0f-6fda-4068-8af6-5f8c00257de7@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ecd6c50c-f6ff-48dc-d640-08dc6506ed1a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2024 09:06:00.1485
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AguWZBalBz90yNTsIDAVpHIrIaKceZIkxVmqTUIQwVDY+fzFkmfI9g1Wks7BqBDTewEEI224UF2/6AXPDn6hHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10334
+
+Hi Rob,
+
+> Subject: Re: [PATCH v2 1/2] dt-bindings: firmware: arm,scmi: Add properti=
+es
+> for i.MX95 Pinctrl OEM extensions
+>=20
+> On Thu, Apr 18, 2024 at 10:53:17AM +0800, Peng Fan (OSS) wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > i.MX95 Pinctrl is managed by SCMI firmware using OEM extensions. This
+> > patch is to add i.MX95 Pinctrl OEM extensions properties.
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >  .../devicetree/bindings/firmware/arm,scmi.yaml     |  9 ++-
+> >  .../bindings/firmware/nxp,imx95-scmi-pinctrl.yaml  | 66
+> > ++++++++++++++++++++++
+> >  2 files changed, 72 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+
+....
+
+> > +
+> > +title: i.MX System Control and Management Interface (SCMI) Pinctrl
+> > +Protocol
+> > +
+> > +maintainers:
+> > +  - Peng Fan <peng.fan@arm.com>
+> > +
+> > +patternProperties:
+> > +  '[a-f0-9]+$':
+> > +    type: object
+> > +    unevaluatedProperties: false
+> > +
+> > +    properties:
+> > +      pins:
+> > +        $ref: /schemas/types.yaml#/definitions/string
+> > +        description: name of the pin
+> > +        items:
+> > +          enum: [ daptdi, daptmsswdio, daptclkswclk, daptdotraceswo,
+> > +                  gpioio00, gpioio01, gpioio02, gpioio03, gpioio04,
+>=20
+> ioio?
+
+Yes. The name is exported from SCMI firmware.
+
+>=20
+> > +                  gpioio05, gpioio06, gpioio07, gpioio08, gpioio09,
+> > +                  gpioio10, gpioio11, gpioio12, gpioio13, gpioio14,
+> > +                  gpioio15, gpioio16, gpioio17, gpioio18, gpioio19,
+> > +                  gpioio20, gpioio21, gpioio22, gpioio23, gpioio24,
+> > +                  gpioio25, gpioio26, gpioio27, gpioio28, gpioio29,
+> > +                  gpioio30, gpioio31, gpioio32, gpioio33, gpioio34,
+> > +                  gpioio35, gpioio36, gpioio37, ccmclko1, ccmclko2,
+> > +                  ccmclko3, ccmclko4, enet1mdc, enet1mdio, enet1td3,
+> > +                  enet1td2, enet1td1, enet1td0, enet1txctl, enet1txc,
+> > +                  enet1rxctl, enet1rxc, enet1rd0, enet1rd1, enet1rd2,
+> > +                  enet1rd3, enet2mdc, enet2mdio, enet2td3, enet2td2,
+> > +                  enet2td1, enet2td0, enet2txctl, enet2txc, enet2rxctl=
+,
+> > +                  enet2rxc, enet2rd0, enet2rd1, enet2rd2, enet2rd3,
+> > +                  sd1clk, sd1cmd, sd1data0, sd1data1, sd1data2, sd1dat=
+a3,
+> > +                  sd1data4, sd1data5, sd1data6, sd1data7, sd1strobe,
+> > +                  sd2vselect, sd3clk, sd3cmd, sd3data0, sd3data1,
+> > +                  sd3data2, sd3data3, xspi1data0, xspi1data1, xspi1dat=
+a2,
+> > +                  xspi1data3, xspi1data4, xspi1data5, xspi1data6,
+> > +                  xspi1data7, xspi1dqs, xspi1sclk, xspi1ss0b, xspi1ss1=
+b,
+> > +                  sd2cdb, sd2clk, sd2cmd, sd2data0, sd2data1, sd2data2=
+,
+> > +                  sd2data3, sd2resetb, i2c1scl, i2c1sda, i2c2scl, i2c2=
+sda,
+> > +                  uart1rxd, uart1txd, uart2rxd, uart2txd, pdmclk,
+> > +                  pdmbitstream0, pdmbitstream1, sai1txfs, sai1txc,
+> > +                  sai1txd0, sai1rxd0, wdogany, fccuerr0 ]
+> > +
+> > +      nxp,func-id:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        description: Indicates the PAD connections which function
+> > + module
+>=20
+> The description makes no sense...
+
+I will use below description in v3:
+For each pin, there are up to 8 muxing options (called ALT modes). For exam=
+ple:
+Select 1 of 5 iomux modes to be used for pad: DAP_TCLK_SWCLK.
+000b - Select mux mode: ALT0 mux port: JTAG_MUX_TCK of instance: jtag_mux
+010b - Select mux mode: ALT2 mux port: CAN4_RX of instance: imx95_wakeupmix=
+_top
+100b - Select mux mode: ALT4 mux port: FLEXIO1_FLEXIO30 of instance: imx95_=
+wakeupmix_top
+101b - Select mux mode: ALT5 mux port: GPIO3_IO30 of instance: imx95_wakeup=
+mix_top
+110b - Select mux mode: ALT6 mux port: LPUART5_CTS_B of instance: imx95_wak=
+eupmix_top
+The nxp,func-id property is selecting one ALT mode.
+
+>=20
+> > +
+> > +      nxp,pin-conf:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        description: The PAD configuration
+>=20
+> PAD stands for? Or is it pin configuration as the property name says?
+
+It is pin configuration which includes pull up/down, drive strength and etc=
+.
+
+>=20
+> This is just a raw register values?=20
+
+Yes.
+
+Why can't standard pinctrl properties be
+> used here. What's the point of using SCMI pinctrl if you are just shuttli=
+ng
+> register values to SCMI?
+
+Standard pinctrl properties will need more memory in our SCMI
+firmware design. We have limited on-chip memory for SCMI firmware usage.
 
 
+>=20
+> > +
+> > +      nxp,daisy-id:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        description: The select input register ID
+> > +
+> > +      nxp,daisy-conf:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        description: The select input register value
+>=20
+> I remember some daisy chaining stuff in iomuxc, but otherwise
+>=20
+> What's the relationship between these 2 properties? Is it valid if only
+> 1 is present? I doubt it.
 
-On 2024/4/25 16:57, David Hildenbrand wrote:
-> On 25.04.24 10:46, Ryan Roberts wrote:
->> On 25/04/2024 09:26, David Hildenbrand wrote:
->>> On 25.04.24 10:17, Ryan Roberts wrote:
->>>> On 25/04/2024 07:20, Baolin Wang wrote:
->>>>>
->>>>>
->>>>> On 2024/4/24 22:20, Ryan Roberts wrote:
->>>>>> On 24/04/2024 14:49, Baolin Wang wrote:
->>>>>>>
->>>>>>>
->>>>>>> On 2024/4/24 18:01, Ryan Roberts wrote:
->>>>>>>> On 24/04/2024 10:55, Baolin Wang wrote:
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> On 2024/4/24 16:26, Ryan Roberts wrote:
->>>>>>>>>> On 24/04/2024 07:55, Baolin Wang wrote:
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> On 2024/4/23 18:41, Ryan Roberts wrote:
->>>>>>>>>>>> On 22/04/2024 08:02, Baolin Wang wrote:
->>>>>>>>>>>>> Anonymous pages have already been supported for multi-size 
->>>>>>>>>>>>> (mTHP)
->>>>>>>>>>>>> allocation
->>>>>>>>>>>>> through commit 19eaf44954df, that can allow THP to be 
->>>>>>>>>>>>> configured
->>>>>>>>>>>>> through the
->>>>>>>>>>>>> sysfs interface located at
->>>>>>>>>>>>> '/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled'.
->>>>>>>>>>>>>
->>>>>>>>>>>>> However, the anonymous shared pages will ignore the 
->>>>>>>>>>>>> anonymous mTHP rule
->>>>>>>>>>>>> configured through the sysfs interface, and can only use 
->>>>>>>>>>>>> the PMD-mapped
->>>>>>>>>>>>> THP, that is not reasonable. Many implement anonymous page 
->>>>>>>>>>>>> sharing
->>>>>>>>>>>>> through
->>>>>>>>>>>>> mmap(MAP_SHARED | MAP_ANONYMOUS), especially in database usage
->>>>>>>>>>>>> scenarios,
->>>>>>>>>>>>> therefore, users expect to apply an unified mTHP strategy 
->>>>>>>>>>>>> for anonymous
->>>>>>>>>>>>> pages,
->>>>>>>>>>>>> also including the anonymous shared pages, in order to 
->>>>>>>>>>>>> enjoy the
->>>>>>>>>>>>> benefits of
->>>>>>>>>>>>> mTHP. For example, lower latency than PMD-mapped THP, 
->>>>>>>>>>>>> smaller memory
->>>>>>>>>>>>> bloat
->>>>>>>>>>>>> than PMD-mapped THP, contiguous PTEs on ARM architecture to 
->>>>>>>>>>>>> reduce TLB
->>>>>>>>>>>>> miss
->>>>>>>>>>>>> etc.
->>>>>>>>>>>>
->>>>>>>>>>>> This sounds like a very useful addition!
->>>>>>>>>>>>
->>>>>>>>>>>> Out of interest, can you point me at any workloads (and 
->>>>>>>>>>>> off-the-shelf
->>>>>>>>>>>> benchmarks
->>>>>>>>>>>> for those workloads) that predominantly use shared anon memory?
->>>>>>>>>>>
->>>>>>>>>>> As far as I know, some database related workloads make 
->>>>>>>>>>> extensive use of
->>>>>>>>>>> shared
->>>>>>>>>>> anonymous page, such as PolarDB[1] in our Alibaba fleet, or 
->>>>>>>>>>> MySQL likely
->>>>>>>>>>> also
->>>>>>>>>>> uses shared anonymous memory. And I still need to do some 
->>>>>>>>>>> investigation to
->>>>>>>>>>> measure the performance.
->>>>>>>>>>>
->>>>>>>>>>> [1] https://github.com/ApsaraDB/PolarDB-for-PostgreSQL
->>>>>>>>>>
->>>>>>>>>> Thanks for the pointer!
->>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>>>> The primary strategy is that, the use of huge pages for 
->>>>>>>>>>>>> anonymous shared
->>>>>>>>>>>>> pages
->>>>>>>>>>>>> still follows the global control determined by the mount 
->>>>>>>>>>>>> option "huge="
->>>>>>>>>>>>> parameter
->>>>>>>>>>>>> or the sysfs interface at
->>>>>>>>>>>>> '/sys/kernel/mm/transparent_hugepage/shmem_enabled'.
->>>>>>>>>>>>> The utilization of mTHP is allowed only when the global 
->>>>>>>>>>>>> 'huge' switch is
->>>>>>>>>>>>> enabled.
->>>>>>>>>>>>> Subsequently, the mTHP sysfs interface
->>>>>>>>>>>>> (/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled)
->>>>>>>>>>>>> is checked to determine the mTHP size that can be used for 
->>>>>>>>>>>>> large folio
->>>>>>>>>>>>> allocation
->>>>>>>>>>>>> for these anonymous shared pages.
->>>>>>>>>>>>
->>>>>>>>>>>> I'm not sure about this proposed control mechanism; won't it 
->>>>>>>>>>>> break
->>>>>>>>>>>> compatibility? I could be wrong, but I don't think shmem's 
->>>>>>>>>>>> use of THP
->>>>>>>>>>>> used to
->>>>>>>>>>>> depend upon the value of 
->>>>>>>>>>>> /sys/kernel/mm/transparent_hugepage/enabled?
->>>>>>>>>>>> So it
->>>>>>>>>>>
->>>>>>>>>>> Yes, I realized this after more testing.
->>>>>>>>>>>
->>>>>>>>>>>> doesn't make sense to me that we now depend upon the
->>>>>>>>>>>> /sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled 
->>>>>>>>>>>> values
->>>>>>>>>>>> (which by
->>>>>>>>>>>> default disables all sizes except 2M, which is set to 
->>>>>>>>>>>> "inherit" from
->>>>>>>>>>>> /sys/kernel/mm/transparent_hugepage/enabled).
->>>>>>>>>>>>
->>>>>>>>>>>> The other problem is that shmem_enabled has a different set 
->>>>>>>>>>>> of options
->>>>>>>>>>>> (always/never/within_size/advise/deny/force) to enabled
->>>>>>>>>>>> (always/madvise/never)
->>>>>>>>>>>>
->>>>>>>>>>>> Perhaps it would be cleaner to do the same trick we did for 
->>>>>>>>>>>> enabled;
->>>>>>>>>>>> Introduce
->>>>>>>>>>>> /mm/transparent_hugepage/hugepage-XXkb/shmem_enabled, which 
->>>>>>>>>>>> can have all
->>>>>>>>>>>> the
->>>>>>>>>>>> same values as the top-level
->>>>>>>>>>>> /sys/kernel/mm/transparent_hugepage/shmem_enabled,
->>>>>>>>>>>> plus the additional "inherit" option. By default all sizes 
->>>>>>>>>>>> will be set to
->>>>>>>>>>>> "never" except 2M, which is set to "inherit".
->>>>>>>>>>>
->>>>>>>>>>> Sounds good to me. But I do not want to copy all same values 
->>>>>>>>>>> from
->>>>>>>>>>> top-level
->>>>>>>>>>> '/sys/kernel/mm/transparent_hugepage/shmem_enabled':
->>>>>>>>>>> always within_size advise never deny force
->>>>>>>>>>>
->>>>>>>>>>> For mTHP's shmem_enabled interface, we can just keep below 
->>>>>>>>>>> values:
->>>>>>>>>>> always within_size advise never
->>>>>>>>>>>
->>>>>>>>>>> Cause when checking if mTHP can be used for anon shmem, 
->>>>>>>>>>> 'deny' is equal to
->>>>>>>>>>> 'never', and 'force' is equal to 'always'.
->>>>>>>>>>
->>>>>>>>>> I'll admit it wasn't completely clear to me after reading the 
->>>>>>>>>> docs, but my
->>>>>>>>>> rough
->>>>>>>>>> understanding is:
->>>>>>>>>>
->>>>>>>>>>       - /sys/kernel/mm/transparent_hugepage/shmem_enabled 
->>>>>>>>>> controls
->>>>>>>>>>         mmap(SHARED|ANON) allocations (mostly; see rule 3)
->>>>>>>>>>       - huge=... controls tmpfs allocations
->>>>>>>>>>       - deny and force in shmem_enabled are equivalent to 
->>>>>>>>>> never and
->>>>>>>>>> always for
->>>>>>>>>>         mmap(SHARED|ANON) but additionally override all tmpfs 
->>>>>>>>>> mounts so they
->>>>>>>>>> act as
->>>>>>>>>>         if they were mounted with huge=never or huge=always
->>>>>>>>>>
->>>>>>>>>> Is that correct? If so, then I think it still makes sense to 
->>>>>>>>>> support
->>>>>>>>>> per-size
->>>>>>>>>
->>>>>>>>> Correct.
->>>>>>>>>
->>>>>>>>>> deny/force. Certainly if a per-size control is set to 
->>>>>>>>>> "inherit" and the
->>>>>>>>>> top-level control is set to deny or force, you would need that 
->>>>>>>>>> to mean
->>>>>>>>>> something.
->>>>>>>>>
->>>>>>>>> IMHO, the 
->>>>>>>>> '/mm/transparent_hugepage/hugepage-XXkb/shmem_enabled' interface
->>>>>>>>> should only control the anonymous shmem. And 'huge=' controls 
->>>>>>>>> tmpfs
->>>>>>>>> allocation,
->>>>>>>>> so we should not use anonymous control to override tmpfs 
->>>>>>>>> control, which
->>>>>>>>> seems a
->>>>>>>>> little mess?
->>>>>>>>
->>>>>>>> I agree it would be cleaner to only handle mmap(SHARED|ANON) 
->>>>>>>> here, and leave
->>>>>>>> the
->>>>>>>> tmpfs stuff for another time. But my point is that
->>>>>>>> /mm/transparent_hugepage/shmem_enabled already interferes with 
->>>>>>>> tmpfs if the
->>>>>>>> value is deny or force. So if you have:
->>>>>>>>
->>>>>>>> echo deny > /mm/transparent_hugepage/shmem_enabled
->>>>>>>
->>>>>>> IIUC, this global control will cause shmem_is_huge() to always 
->>>>>>> return
->>>>>>> false, so
->>>>>>> no matter how 
->>>>>>> '/mm/transparent_hugepage/hugepage-xxxkB/shmem_enabled' is set,
->>>>>>> anonymous shmem will not use mTHP. No?
->>>>>>
->>>>>> No, that's not how 
->>>>>> '/mm/transparent_hugepage/hugepage-xxxkB/enabled' works, and
->>>>>> I think '/mm/transparent_hugepage/hugepage-xxxkB/shmem_enabled' 
->>>>>> should follow
->>>>>> the established pattern.
->>>>>>
->>>>>> For anon-private, each size is controlled by its
->>>>>> /mm/transparent_hugepage/hugepage-xxxkB/enabled value. Unless that 
->>>>>> value is
->>>>>> "inherit", in which case the value in 
->>>>>> /mm/transparent_hugepage/enabled is used
->>>>>> for that size.
->>>>>>
->>>>>> That approach enables us to 1) maintain back-compat and 2) control 
->>>>>> each size
->>>>>> independently
->>>>>>
->>>>>> 1) is met because the default is that all sizes are initially set 
->>>>>> to "never",
->>>>>> except the PMD-size (e.g. 
->>>>>> /mm/transparent_hugepage/hugepage-2048kB/enabled)
->>>>>> which is initially set to inherit. So any mTHP unaware SW can 
->>>>>> still modify
->>>>>> /mm/transparent_hugepage/enabled and it will still only apply to 
->>>>>> PMD size.
->>>>>>
->>>>>> 2) is met because mTHP aware SW can come along and e.g. enable the 
->>>>>> 64K size
->>>>>> (echo always > /mm/transparent_hugepage/hugepage-64kB/enabled) 
->>>>>> without
->>>>>> having to
->>>>>> modify the value in /mm/transparent_hugepage/enabled.
->>>>>
->>>>> Thanks for explanation. Initially, I want to make
->>>>> ‘/mm/transparent_hugepage/shmem_enabled’ be a global control for 
->>>>> huge page, but
->>>>> I think it should follow the same strategy as anon mTHP as you said.
->>>>>
->>>>>>>> echo inherit > /mm/transparent_hugepage/hugepage-64kB/shmem_enabled
->>>>>>>>
->>>>>>>> What does that mean?
->>>>>>
->>>>>> So I think /mm/transparent_hugepage/hugepage-xxxkB/shmem_enabled 
->>>>>> will need to
->>>>>> support the deny and force values. When applied to non-PMD sizes, 
->>>>>> "deny" can
->>>>>> just be a noop for now, because there was no way to configure a 
->>>>>> tmpfs mount for
->>>>>> non-PMD size THP in the first place. But I'm not sure what to do 
->>>>>> with "force"?
->>>>>
->>>>> OK. And I also prefer that "force" should be a noop too, since anon 
->>>>> shmem
->>>>> control should not configure tmpfs huge page allocation.
->>>>
->>>> I guess technically they won't be noops, but (for the non-PMD-sizes) 
->>>> "force"
->>>> will be an alias for "always" and "deny" will be an alias for "never"?
->>>>
->>>> I was just a bit concerned about later changing that behavior to 
->>>> also impact
->>>> tmpfs once tmpfs supports mTHP; could that cause breaks? But 
->>>> thinking about it,
->>>> I don't see that as a problem.
->>>
->>> Is the question what should happen if we "inherit" "force" or if someone
->>> specifies "force" for a mTP size explicitly?
->>
->> Well I think it amounts to the same thing; there isn't much point in 
->> forbidding
->> "force" to be set directly because it can still be set indirectly through
->> "inherit". We can't forbid indirectly setting it, because "inherit" 
->> could be set
->> first, then the top-level shmem_enabled changed to "force" after - and we
->> wouldn't want to fail that.
-> 
-> The default for PMD should be "inherit", for the other mTHP sizes it 
-> should be "never".
-> 
-> So we should fail if:
-> * Setting top-level to "force" when any non-PMD size is "inherit"
-> * Setting "inherit" of a non-PMD size when the top-level is force
+The scmi firmware will convert the daisy-id into register address, and
+write the daisy-conf value into the register.
 
-IMO, for tmpfs this is true, but for anon shmem, this 2 cases should not 
-fail.
+ Looks like an address and value pair. Either the
+> schema needs to define allowed combinations
 
-So I think we should allow this configuration, but for tmpfs huge page 
-allocation, we will not check the mTHP.
+The firmware will check whether id and conf is valid, is there a need to de=
+fine
+allowed combinations? There will be lots of check to define allowed
+combinations.
 
-> Both will only happen if someone messes with the mTHP configuration 
-> manually.
-> 
-> And we should only offer "force" as an option for PMD-sized mTHP as long 
-> as the others are not supported. See below.
-> 
->>
->> So I think the question is just 'what should happen when "force" is 
->> configured
->> for a non-PMD-sized mTHP'?
-> 
-> We should hide it and not offer a configuration toggle that is inactive.
-> 
-> If someone wants to sense support for other mTHP "force" settings in the 
-> future, they can just parse if the "shmem_enabled" toggle offers "force" 
-> as an option. Then they know that it can actually be enabled and will 
-> also do what is promised.
+ or design the properties in a
+> way you don't have too. IOW, make a single property that's a tuple of reg=
+ister
+> ID and value.
 
-Sounds good to me.
+Define tuple will make the property not able to use linux generic pinconf
+driver. The current parse_dt_cfg for custom_dt_params only support a
+single u32 value and not easy to support tuple.
+
+
+So could we just ignore the allowed combinations and use not tuple?
+
+Thanks,
+Peng.
+
+>=20
+> Rob
+
