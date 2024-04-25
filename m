@@ -1,85 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B80914A0BF
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 14:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B784149DFF
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 14:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714055236; cv=none; b=RCmoMF5iL0Ib/Aro3LA6CvTVV+fhjYmpijPsa/SV6jEEkFZwJvNB3gV+Xnk4k6l4LvGci2WG5IHKkiQrELCCb4ts277IHRfxPMJnDKjK195hy4RvLuKV0sbNaMFH5xHUGC0GHrk63diKaqwYRSgPlK+3OtJHQujVCr/VHhmcGFI=
+	t=1714055272; cv=none; b=dNEnTiH2xDMd/FxciG2AjgluW15nr4ikeBAjrgHblyi5C7oUpqFYPZSDpzffEXG46G55jws9qcXUU3r4WnZFdDDbjPvx8hR3ocT3ROuB+6p6Nq28+PjrAQavgok9CUzxCdK48ISc9yGnCO0OqvQpRb8qccT10y99XYGWos51N3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714055236; c=relaxed/simple;
-	bh=AMj8GBIK2qx9hLs4ADXwTtXqaHbEx9/BpDAwkFfqL8g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Uy5zvP38g7AcJhPKk0P6przDSiIRmRWD7+LWGww5ILEuDQW2yFEp2OyvrN3haIlCA+4/OA92/WJI3z4aUXBKrVbSJWLGIDOKvtcRzb6S5T4YLvpwv3O0wWLaAnZl2o8V+mrpA8sxCxgW2nJii+H9vMWWsuqK19gntCbIRKqLhp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PiN7Pdu/; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PiN7Pdu/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714055235; x=1745591235;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=AMj8GBIK2qx9hLs4ADXwTtXqaHbEx9/BpDAwkFfqL8g=;
-  b=PiN7Pdu/yn1qg0w1avhXcAa3Doj/2HX+cR0WVZ9NmmZodZU/BQ1a5NP3
-   dl5x+qQTDf+SRQJDyDmwLY17lGfXCIdRgoRmvzljUkzD9nH+9ESCqWElI
-   hJJAV+PZEDC9bemfSrg0ULsJvuUEShgFBAjLckhjjt1hUmmRBCxU7t9/8
-   G0ozvmqI+eP4eEOxHergajZln6apuGGmks3ugUqBQLWm0fJvjV5OS+APb
-   VsK0RIjvy3bjiSvzfL96NnoSYs4/uDnT8qJVexZoZwb9nOzAHmbts5EKJ
-   ZTS5ZKfEkgvYkBtifhC0XlqOvHvgwN94157WxEjhukWHCvdx2ubYJeG2d
-   Q==;
-X-CSE-ConnectionGUID: c0xMNg2dR6KPM7CLibYDqg==
-X-CSE-MsgGUID: w0FQY3kpTwKqSWEtBh47jw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="10281373"
-X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
-   d="scan'208";a="10281373"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 07:27:11 -0700
-X-CSE-ConnectionGUID: mk5t2bsNSIyut26pxbla8g==
-X-CSE-MsgGUID: dm/FMWDlS7KOCXXTemblqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
-   d="scan'208";a="56027432"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 25 Apr 2024 07:27:08 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id EAD35557; Thu, 25 Apr 2024 17:27:06 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v1 0/3] drm/panel: ili9341: Obvious fixes
-Date: Thu, 25 Apr 2024 17:26:16 +0300
-Message-ID: <20240425142706.2440113-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	s=arc-20240116; t=1714055272; c=relaxed/simple;
+	bh=mJWIOq23bs7ji+Fl4ndMwX8erxoXcwpt0Cw321wXBWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CN6ygtyGyVye2Ath5a+vy4vk4603BebqTu7sCCJSXb6TzvNbC0pQr4sVFoYQEI+SpRVw0b8tm9Gr4qzo9fU6/+XgZTbb6llQYdNiosPYq7TFUfk6rzZUAfoZV1/ZjUultkPXUc/GZz5KdiSPBxeBdbi7Hth/ltH6DWCyx87kjNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93FFA1007;
+	Thu, 25 Apr 2024 07:28:18 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8421E3F64C;
+	Thu, 25 Apr 2024 07:27:47 -0700 (PDT)
+Date: Thu, 25 Apr 2024 16:27:37 +0200
+From: Beata Michalska <beata.michalska@arm.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	ionela.voinescu@arm.com, vanshikonda@os.amperecomputing.com,
+	will@kernel.org, catalin.marinas@arm.com,
+	vincent.guittot@linaro.org, sumitg@nvidia.com,
+	yang@os.amperecomputing.com, lihuisong@huawei.com,
+	viresh.kumar@linaro.org
+Subject: Re: [PATCH v5 2/5] arm64: amu: Rule out potential use after free
+Message-ID: <ZipoWUErkebDKXYd@arm.com>
+References: <20240417093848.1555462-1-beata.michalska@arm.com>
+ <20240417093848.1555462-3-beata.michalska@arm.com>
+ <20240418105052.zvkomz5yeayie4ph@bogus>
+ <ZiFCfwEvdJxg6Hth@arm.com>
+ <20240424102527.3s4ebjnaai2md5pa@bogus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240424102527.3s4ebjnaai2md5pa@bogus>
 
-A few obvious fixes to the driver.
+On Wed, Apr 24, 2024 at 11:25:27AM +0100, Sudeep Holla wrote:
+> On Thu, Apr 18, 2024 at 05:55:43PM +0200, Beata Michalska wrote:
+> > On Thu, Apr 18, 2024 at 11:50:52AM +0100, Sudeep Holla wrote:
+> > > On Wed, Apr 17, 2024 at 10:38:45AM +0100, Beata Michalska wrote:
+> > > > For the time being, the amu_fie_cpus cpumask is being exclusively used
+> > > > by the AMU-related internals of FIE support and is guaranteed to be
+> > > > valid on every access currently made. Still the mask is not being
+> > > > invalidated on one of the error handling code paths, which leaves
+> > > > a soft spot with potential risk of uaf for CPUMASK_OFFSTACK cases.
+> > > > To make things sound, set the cpumaks pointer explicitly to NULL upon
+> > > > failing to register the cpufreq notifier.
+> > > > Note that, due to the quirks of CPUMASK_OFFSTACK, this change needs to
+> > > > be wrapped with grim ifdefing (it would be better served by
+> > > > incorporating this into free_cpumask_var ...)
+> > > >
+> > >
+> > > Yes it doesn't look neat.
+> > >
+> > > > Signed-off-by: Beata Michalska <beata.michalska@arm.com>
+> > > > ---
+> > > >  arch/arm64/kernel/topology.c | 6 +++++-
+> > > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+> > > > index 1a2c72f3e7f8..3c814a278534 100644
+> > > > --- a/arch/arm64/kernel/topology.c
+> > > > +++ b/arch/arm64/kernel/topology.c
+> > > > @@ -244,8 +244,12 @@ static int __init init_amu_fie(void)
+> > > >
+> > > >  	ret = cpufreq_register_notifier(&init_amu_fie_notifier,
+> > > >  					CPUFREQ_POLICY_NOTIFIER);
+> > > > -	if (ret)
+> > > > +	if (ret) {
+> > > >  		free_cpumask_var(amu_fie_cpus);
+> > > > +#ifdef CONFIG_CPUMASK_OFFSTACK
+> > > > +		amu_fie_cpus = NULL;
+> > > > +#endif
+> > > > +	}
+> > >
+> > > Instead of this #ifdeffery, I was wondering if we can actually do the
+> > > allocation in init_amu_fie_callback() the first time it gets called
+> > > checking if amu_fie_cpus is NULL. init_amu_fie_callback() must get called
+> > > only if the cpufreq_register_notifier() succeeds right ?
+> > >
+> 
+> > Delayed allocation ... I guess this will do the trick.
+> 
+> I prefer that if we can't find any other alternative. Do you see any issues
+> with that ? That said I am fine if Will/Catalin is happy with this.
+>
+We could actually move it up further to amu_fie_setup and potentially save on
+memory if none of the present CPUs have valid AMU counters. This is unlikely but
+still. So it could look like:
 
-Andy Shevchenko (3):
-  drm/panel: ili9341: Correct use of device property APIs
-  drm/panel: ili9341: Respect deferred probe
-  drm/panel: ili9341: Use predefined error codes
+--- a/arch/arm64/kernel/topology.c
++++ b/arch/arm64/kernel/topology.c
+@@@ -297,7 -194,7 +297,8 @@@ static void amu_fie_setup(const struct
+        int cpu;
 
- drivers/gpu/drm/panel/Kconfig                |  2 +-
- drivers/gpu/drm/panel/panel-ilitek-ili9341.c | 13 +++++++------
- 2 files changed, 8 insertions(+), 7 deletions(-)
+        /* We are already set since the last insmod of cpufreq driver */
+++      if (cpumask_available(amu_fie_cpus) &&
+--      if (unlikely(cpumask_subset(cpus, amu_fie_cpus)))
+++          unlikely(cpumask_subset(cpus, amu_fie_cpus)))
+                return;
 
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+        for_each_cpu(cpu, cpus) {
+@@@ -305,6 -202,6 +306,10 @@@
+                        return;
+        }
 
+++      if (!cpumask_available(amu_fie_cpus) &&
+++              !zalloc_cpumask_var(&amu_fie_cpus, GFP_KERNEL))
+++              return;
+++
+
+In both cases we risk not setting up AMUs for FIE for all or some CPUs
+if we fail to allocate the memory but I guess we are already there.
+@Ionela: What do you think?
+
+> > > Also I don't see anyone calling amu_fie_setup(), so where do you think
+> > > the possible use after free could occur for amu_fie_cpus. Just thinking
+> > > out loud to check if I missed anything.
+> > >
+> > You haven't missed anything. Currently the uaf is purely theoretical as the code
+> > that relies on that mask will only be executed if we have succeeded to register
+> > the amu fie support: so far so good.
+> 
+> Yes it is better to handle it even if it is theoretical.
+> 
+> I assume you get some compiler error if you assign unconditionally and
+> if(IS_ENABLED()) also doesn't work in this case as it would still give
+> error ?
+Yes, the #if is needed to exclude it from compilation if !CPUMASK_OFFSTACK.
+
+---
+BR
+Beata
+> 
+> --
+> Regards,
+> Sudeep
