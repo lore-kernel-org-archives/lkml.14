@@ -1,152 +1,123 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB4927473;
-	Thu, 25 Apr 2024 06:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B22B27473
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 06:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714025660; cv=none; b=i7kTpgoeKfhO8NGaX+rve9k/jj0peSPIydU0O0afBBgrz0kpMOHNzhpE7emN54x+oC3P77tQuG2n8vhnoqCeeWuJf8bSc7z9UjQvH2UCawdp6k39AXk7dVRJtQ/8UKyy17Iqv8ierBlcy1UVUjlw4gcwUwYBWRd4l41TWPbIRJY=
+	t=1714025705; cv=none; b=Zw7Z2PnvA18jPRM9tSdpqo5aIG5FgodMPS96Gx9sAMrCtpF16HC02PayLQHVOjgmAdFSe/S8fZWK9zzNUXXgjRrxTTCiJGdlpmfyKsfvipoP4QxBzEbjluw90wYAlIpfSqTswnYYrXUVXtWZsMgMf56a4SmgPefWSDZ/N0oRFgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714025660; c=relaxed/simple;
-	bh=CRrjSsRbZZXBe3Zg1o6lhtldh9D/juwsek3Ag08YBpY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CuLhyDboeArDaSxSuzKQPQX5gqU+X4GyP8p62u30wnSKuLvwEBhPo3iVNlvsMUtJnsOcO2xAuDEQfBpBjI05fbvUD7BpC769Ngk3EwT0txffL86C4kd/unepNF3+sX1Y13OsKIOJueSM+cgX20wcKya3VwdTpfF/Hb+esO+1HPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ehncrRY8; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehncrRY8"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-6082fd3e96eso481777a12.1;
-        Wed, 24 Apr 2024 23:14:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714025658; x=1714630458; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=P+cnrqP7ROZMYIZmqn7REt8CdXQIz/KakKw0fvi+u8k=;
-        b=ehncrRY8cmRafg0ysC+haERsyOjzcUwJmQpLoxvqi6sQR4GB3HOJ3dox8TX3Rrmo4D
-         lKQSpSsYiJta6+RA7OVjuNp02j3YE31zRuUQnoXberqwhvraTtyGcGFp8c655GmAf9Is
-         0ZsEbqZU2AfCQF/gmIn9RDV7DwjJEQMhWnzcVhbgocq1nxRXIXkvbT1nsRE2h4+WPkrC
-         +Lz/Df3DldSfpcBJjoGJXsH/VtO9CsOoi0FZ03oMB5La5qk2xo5uc99YPZ0dp1WxsPTa
-         /jvj7RfSfwQtLVhyR0D3gelu22vl6ltAgrJwplSq5cUdQywc5SNol+XcgzBpugtW2zof
-         avXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714025658; x=1714630458;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=P+cnrqP7ROZMYIZmqn7REt8CdXQIz/KakKw0fvi+u8k=;
-        b=ftT5qiPu3qsGWvAIS298DsK9geOKVp9QgqPt8vbFSJgnl4zrEv3DVYgBW4c/JgASHE
-         SnTZ3KB7brL/ky52PwRxViuRwwuy/DlqnpZqBy4zdqHexNlTtFQgAMdSiOhPHuHeztRn
-         7z3K13ypmuPj8HvhHArhL/wD0cb9ee7cYa2uIsKAzpo1Br4DYE1fUQbB3WckHoPxenzA
-         UN5xPtVqrncwEjtxCSTWSp2rzH7fa/48dAiPKKyQn1EFKSrFNVUS5IMjK/SzlvfynU6D
-         5zA/aBAO8ieJdgTd7JpiFK7ODmqgYcP/VDVfolP4Ki8I5CW452OVi8QMgnvO4MU6+8fR
-         xu/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWnWmaj0mV0/9u5nsQ6LqQf3i8Pdv7/4FesoKqswhTw4mEQPhwmzdSAbpVi3Ovq9DdiWngI+eYKAReC4II+AW+q2qxcqw+z2pS20Zy/HET3Jm22SBRFXLhxr746CiKw5uVS1aQl4qhDpakM
-X-Gm-Message-State: AOJu0YzFQQOqzna6Y0oFtUf9o7BEbEdSRDUlE26Qm7LK03WjnxZpflih
-	CcPPSjYC0PK+SPgNQqrIqOLpRaC+e4d1B1311OmAhRSVatONkipW2FmKZxYw
-X-Google-Smtp-Source: AGHT+IHs42AUj8gwluZCiYM0AKuesrQTubnz7h1dTGYRvbTsCK1ahmnIaAw4hwETEPrlhp7SKP1wKw==
-X-Received: by 2002:a05:6a20:7285:b0:1a7:5402:8a92 with SMTP id o5-20020a056a20728500b001a754028a92mr5639944pzk.31.1714025658299;
-        Wed, 24 Apr 2024 23:14:18 -0700 (PDT)
-Received: from shresth-aspirea71576g.abesec.ac.in ([139.5.197.146])
-        by smtp.gmail.com with ESMTPSA id r6-20020a17090a5c8600b002ade3490b4asm6461667pji.22.2024.04.24.23.14.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 23:14:17 -0700 (PDT)
-From: Shresth Prasad <shresthprasad7@gmail.com>
-To: davem@davemloft.net,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org
-Cc: sparclinux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	javier.carrasco.cruz@gmail.com,
-	Shresth Prasad <shresthprasad7@gmail.com>,
-	Julia Lawall <julia.lawall@inria.fr>
-Subject: [PATCH][next] tty: sunsu: Simplify device_node cleanup by using __free
-Date: Thu, 25 Apr 2024 11:33:04 +0530
-Message-ID: <20240425060303.8045-2-shresthprasad7@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1714025705; c=relaxed/simple;
+	bh=KsjKRFHHKQ+0GZOnUi9xLCWM4ubx9cXXQiLPw7we0eA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mXopc4gaHqVXIMMsLmkrI6KapI5pvFQ/83DNSLsIVqGtIQxdeOQwrvDtF6DIMbw3c39prg3j/ihSviM7ER5S1A2nlLQtfohZv3tWp21xRGFkn9PnNwziiaa5cdeMnyMZDDh0tPihEek/74KXqr/xlwOR4/bfvZxSjxYiSE7wopE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rzsNW-0005pe-V0; Thu, 25 Apr 2024 08:14:42 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rzsNT-00EDGW-EW; Thu, 25 Apr 2024 08:14:39 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rzsNT-008Mht-17;
+	Thu, 25 Apr 2024 08:14:39 +0200
+Date: Thu, 25 Apr 2024 08:14:39 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Xilin Wu <wuxilin123@gmail.com>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Junhao Xie <bigfoot@classfun.cn>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Bjorn Andersson <andersson@kernel.org>, 
+	Tengfei Fan <quic_tengfan@quicinc.com>, Molly Sophia <mollysophia379@gmail.com>, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 02/10] pwm: Add SI-EN SN3112 PWM support
+Message-ID: <nuq56pinjqonlo4crfibtb2ddlwvldurkphomsyyqp6iupqpbk@u6kun3qvstw2>
+References: <20240424-ayn-odin2-initial-v1-0-e0aa05c991fd@gmail.com>
+ <20240424-ayn-odin2-initial-v1-2-e0aa05c991fd@gmail.com>
+ <af62742c-8d6d-4fa9-b2e4-f83253e6e388@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rl24wix7isqmyofu"
+Content-Disposition: inline
+In-Reply-To: <af62742c-8d6d-4fa9-b2e4-f83253e6e388@linaro.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Add `__free` function attribute to `ap` and `match` pointer
-initialisations which ensure that the pointers are freed as soon as they
-go out of scope, thus removing the need to manually free them using
-`of_node_put`.
 
-This also removes the need for the `goto` statement and the `rc`
-variable.
+--rl24wix7isqmyofu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-Signed-off-by: Shresth Prasad <shresthprasad7@gmail.com>
----
- drivers/tty/serial/sunsu.c | 37 +++++++++++--------------------------
- 1 file changed, 11 insertions(+), 26 deletions(-)
+Hello,
 
-diff --git a/drivers/tty/serial/sunsu.c b/drivers/tty/serial/sunsu.c
-index 67a5fc70bb4b..0f463da5e7ce 100644
---- a/drivers/tty/serial/sunsu.c
-+++ b/drivers/tty/serial/sunsu.c
-@@ -1382,44 +1382,29 @@ static inline struct console *SUNSU_CONSOLE(void)
- 
- static enum su_type su_get_type(struct device_node *dp)
- {
--	struct device_node *ap = of_find_node_by_path("/aliases");
--	enum su_type rc = SU_PORT_PORT;
-+	struct device_node *ap __free(device_node) =
-+			    of_find_node_by_path("/aliases");
- 
- 	if (ap) {
- 		const char *keyb = of_get_property(ap, "keyboard", NULL);
- 		const char *ms = of_get_property(ap, "mouse", NULL);
--		struct device_node *match;
- 
- 		if (keyb) {
--			match = of_find_node_by_path(keyb);
-+			struct device_node *match __free(device_node) =
-+					    of_find_node_by_path(keyb);
- 
--			/*
--			 * The pointer is used as an identifier not
--			 * as a pointer, we can drop the refcount on
--			 * the of__node immediately after getting it.
--			 */
--			of_node_put(match);
--
--			if (dp == match) {
--				rc = SU_PORT_KBD;
--				goto out;
--			}
-+			if (dp == match)
-+				return SU_PORT_KBD;
- 		}
- 		if (ms) {
--			match = of_find_node_by_path(ms);
-+			struct device_node *match __free(device_node) =
-+					    of_find_node_by_path(ms);
- 
--			of_node_put(match);
--
--			if (dp == match) {
--				rc = SU_PORT_MS;
--				goto out;
--			}
-+			if (dp == match)
-+				return SU_PORT_MS;
- 		}
- 	}
--
--out:
--	of_node_put(ap);
--	return rc;
-+	return SU_PORT_PORT;
- }
- 
- static int su_probe(struct platform_device *op)
--- 
-2.44.0
+On Wed, Apr 24, 2024 at 09:37:25PM +0200, Konrad Dybcio wrote:
+> On 4/24/24 17:29, Xilin Wu via B4 Relay wrote:
+> > +
+> > +	/* use random value to apply changes */
+> > +	ret =3D sn3112_write_reg(priv, SN3112_REG_APPLY, 0x66);
+>=20
+> "a random value"? sounds suspicious..
 
+I smiled about that one, too, remembering https://xkcd.com/221/
+
+> [...]
+> > +#if IS_ENABLED(CONFIG_GPIOLIB)
+> > +	/* enable hardware shutdown pin */
+> > +	if (priv->sdb)
+> > +		gpiod_set_value(priv->sdb, 1);
+> > +#endif
+> > +
+> > +	/* power-off sn5112 power vdd */
+> > +	regulator_disable(priv->vdd);
+> > +
+> > +	pwmchip_remove(chip);
+>=20
+> devm_pwmchip_add?
+
+Note using devm_xyz only works if all requests before are also using
+devm. (There are a few exceptions, but these need proper thinking and
+extensive commenting.)
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--rl24wix7isqmyofu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYp9M4ACgkQj4D7WH0S
+/k5jTgf+JqJAnfN3fXmdz5yWJWeCDGj4DZTK3E0EJ2lu7asHWc+Pp6fM19DKN/F0
+dsr14eDwjo1po1ptkFeRa04QeB7yeqMay3j0d5X4XUOm/SIHEI2Mn/ky5ZlVOwr7
+ciorY8ICvuZ4YI/4306YGVmlbcndaA9ubGwykp0c9JYUqdSMWgwBGy4dVqHoKPmR
+RiM2SBTJAVd5Qw2LmSMMZ+uU25dWYCiM4eHrkbphTMhYItgqvTWkZhiTEdDVmU/p
+2RqsoyKgfJKcMfW8eF31vZd7qkRjPErqQU76uzhW0Cm9nPDJERrXkkB+fGEzOcAh
+6ros37wvCLEtFIp5fA2kOsh/PhCMeQ==
+=Hs3D
+-----END PGP SIGNATURE-----
+
+--rl24wix7isqmyofu--
