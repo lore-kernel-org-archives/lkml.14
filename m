@@ -1,493 +1,187 @@
-Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB5906D1B2;
-	Thu, 25 Apr 2024 07:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE07767A1A
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 07:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714031126; cv=none; b=jWhhH4bpHvJ5y62aAsIYDE1ql1MhGrIZu70BQHPeE/eHD6CtntrM4H0WOZOytXbA01JJo6Mfd+mZ4JXEKmx0+1SStO2kGBf1Cc0ZJldc1FFcpQ7wrcLhnY9MPq81qjEs4c6dE6sYy10u3hiyPbtlKbaebQUyzfQaw8ngczgvPBk=
+	t=1714031249; cv=none; b=IiNoIpFcYn3VNOcAw5mu7xGN6oeFpIhlSyvgGYIV5+8KXPomBJcPASTncULnYCEC4ReHgJWAmyGBSqxu3BO+GqLwCA4hxHiIKUaRXPZbSJwVOkng7yJvhsNaJ4eu/pcZh3hZC6MYCLUrRxoiZ+k5vjJUWbxmKnKNE4HT29m9/vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714031126; c=relaxed/simple;
-	bh=VyVIK4VwCWdzWudkUznmfXi2Qb/mujoR4SSNKIzavXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z+FPc6A/syhTTvlJFSR4G7DhGBerudBSap39dmAqijGT/mtZDh71lI5/hmRkePy9eSByoS7YliEubjNVaviJQpoaTua44mZjd2mpQ7OYaF0IGrzdfkdeB5LwJltiT/IRw+B1fp+1Bc8htYXJr1p/nobqgOIKd4E58KqjuyDCfqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=JXEpiGD3; arc=none smtp.client-ip=123.58.177.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1714031249; c=relaxed/simple;
+	bh=qiKGRSHdGdyXnEluj1bfHE3GLYCMmIz+vDxNZnqQIb4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lWi703S7DhCzMUILTlf8AvOaVkO/p9duZrUX4jvw6wNEWVpwIfjyReoQjxOfusgZTWSJ+y9KqLp+76IgFAa1qGGpIVPudqIj9yuAsPVAQoDTYJEYpmNDb5hr7kyrhINNW+5QH94Y5ivaayuIKETmwvzLZl0lsWU0wjiX0scJSFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V6s9EG8u; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="JXEpiGD3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=65NqtfO/wl6k2WVO+Y5sdspsaqGP+Y3i/nlu5d51B7U=;
-	b=JXEpiGD34F4OjXk6l9GohPFa9ISCapDASFUWIXzmkWJb4IxnMo64Rpbmyf2E1r
-	udgWebZ7UF5Vl++SCLRAm4+xNLag9wYWIukl2gW8QllD/JbKc8m0Bn+puPXkOZMC
-	4YeRfhRJBo9lbVDDFuNGgZW/QHOH7SDPFfkjZlgF9vnRE=
-Received: from dragon (unknown [223.68.79.243])
-	by smtp2 (Coremail) with SMTP id C1UQrAD3P47TCSpm96V0BA--.485S3;
-	Thu, 25 Apr 2024 15:44:21 +0800 (CST)
-Date: Thu, 25 Apr 2024 15:44:19 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Fabio Aiuto <fabio.aiuto@engicam.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Matteo Lisi <matteo.lisi@engicam.com>,
-	Mirko Ardinghi <mirko.ardinghi@engicam.com>
-Subject: Re: [PATCH v3 3/3] arm64: dts: imx93: Add Engicam i.Core MX93 EDIMM
- 2.0 Starter Kit
-Message-ID: <ZioJ032d0ZgwKbli@dragon>
-References: <20240419144953.8700-1-fabio.aiuto@engicam.com>
- <20240419144953.8700-4-fabio.aiuto@engicam.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V6s9EG8u"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-34c1a17da03so132720f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 00:47:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714031246; x=1714636046; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=KO8qMaMD1WGtlgcA7W/Jq2+QozvRzg9eops1qALAJHY=;
+        b=V6s9EG8uXmBZDqBecGLqi7qYQbTg6SxWipNyH+mll/EqQfaeKTNK3gJzTOXJgv6hF1
+         klppAPqCi9wcOk8p/HryAeDcDPoPHi/cx2vM15ZAYVdyBqNNk6px5sXJg4eqwGhqSUxw
+         WE54y7VAYly73ipEsBUNr0WK4uPm+ru4R6GqjGHOAaQ4152EksQsPdLKuviFRb5vKobU
+         vQsK+TqE5HAY5aqr2OyfjsFJWsPZyX4qFVAMAp2ios2CO/0Kdwxj6SMShkFh4DUHlbRi
+         G9DLCBO1c1zoWN7+7i6ZpHdXKYoS7+CPvCN/zKxySENsGW2p7EVuOvRRK2sZtHITHnEy
+         XReA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714031246; x=1714636046;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KO8qMaMD1WGtlgcA7W/Jq2+QozvRzg9eops1qALAJHY=;
+        b=JUNK/SgRFVtzhslRt11Pz2Xdz5W/vYqnAbKUlBW8Bkf/5/6huL2bH9wJxWM7BOJiEj
+         RQ0WgxqmzW/Fczvey3n8acBozgsKw7rQ3fLLtKNQhp0E2R0TiiZX3FugNSfj/srG/1t/
+         VdP5hPmaSJCQGSxShyY1OCIZgHoAYgq+yBJEg2rRlo4LAvP7/kBmSLX8VCn1lE0X5je4
+         /ETDzpvh9bZxNaRUH+ATqdQuARRmvTyLOhIdJpv4f0v+KG7gmYQ/zignGzDURe/0yhwD
+         EfHK2iaxmzIDfKt2nG/1dEmuanmhDe1hNrK5Vh+urJ/zaRBN+3xCiY0vwHFEWsOPNy3J
+         mRSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDe9OwjoEKBjYPydlW1q/BH16YxXX75vO0ETgxgW3A9B7lq0+ZqK5Zj5aMciYP2ULb8Yo29ykwfm/e+prPVbKdfIZbiB0/McTzQvLB
+X-Gm-Message-State: AOJu0Yx5MU4ecg9Vq75fGclmMsH7pFqfS2Ep2VOF8fuKsoMcXPZ84lip
+	fHMZ++i9SI9+a7SXdDuz6E7jdSB/q9NR0NGyIiHqxYy7AygA6oKPnf8EygczKok=
+X-Google-Smtp-Source: AGHT+IHNJWEoIupqYCqnrknBlU5kEwSAVatdxAbl9PzA1MI4fM4js5TgSQnEtljhjy8byIOgYS3ezQ==
+X-Received: by 2002:a5d:410e:0:b0:34a:4ad9:a93f with SMTP id l14-20020a5d410e000000b0034a4ad9a93fmr3909203wrp.55.1714031246146;
+        Thu, 25 Apr 2024 00:47:26 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id j6-20020a5d5646000000b0034b19cb1531sm9426224wrw.59.2024.04.25.00.47.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Apr 2024 00:47:25 -0700 (PDT)
+Message-ID: <cf7200d3-f60a-446b-b9cc-1f63e3c90740@linaro.org>
+Date: Thu, 25 Apr 2024 09:47:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240419144953.8700-4-fabio.aiuto@engicam.com>
-X-CM-TRANSID:C1UQrAD3P47TCSpm96V0BA--.485S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Zr47tryDtF4xGw15Kr45Jrb_yoWDtrWrpr
-	ZxA398GrZ2qr18J343X3ZIkF13Gw4kCasF9rnrXFy8AryDZasrJr15Krn8Cr4UCrZ8Zw4Y
-	vF90vFW2kFnxK3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jz7KsUUUUU=
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDhXLZVszYhoIKgAAsH
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/7] phy: exynos5-usbdrd: use
+ exynos_get_pmu_regmap_by_phandle() for PMU regs
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Peter Griffin
+ <peter.griffin@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Will McVicker <willmcvicker@google.com>, Roy Luo <royluo@google.com>,
+ kernel-team@android.com, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+References: <20240423-usb-phy-gs101-v1-0-ebdcb3ac174d@linaro.org>
+ <20240423-usb-phy-gs101-v1-2-ebdcb3ac174d@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240423-usb-phy-gs101-v1-2-ebdcb3ac174d@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 19, 2024 at 04:49:53PM +0200, Fabio Aiuto wrote:
-> i.Core MX93 is a NXP i.MX93 based SoM by Enigcam which
-> needs to be mounted on top of Engicam baseboards.
+On 23/04/2024 19:06, André Draszik wrote:
+> Some Exynos based SoCs like Tensor gs101 protect the PMU registers for
+> security hardening reasons so that they are only write accessible in
+> EL3 via an SMC call.
 > 
-> Add support for EDIMM 2.0 Starter Kit hosting
-> i.Core MX93.
+> The Exynos PMU driver handles this transparently when using
+> exynos_get_pmu_regmap_by_phandle().
 > 
-> Starter Kit main features:
+> Switch to using that API to support such SoCs. As this driver now no
+> longer depends on mfd syscon remove that header and Kconfig dependency.
 > 
-> 2x LVDS interfaces
-> HDMI output
-> Audio out
-> Mic in
-> Micro SD card slot
-> USB 3.0 A port
-> 3x USB 2.0 A port
-> Gb Ethernet
-> 2x CAN bus, 3x UART interfaces
-> SIM card slot
-> M.2 KEY_B slot
-> 
-> Cc: Matteo Lisi <matteo.lisi@engicam.com>
-> Cc: Mirko Ardinghi <mirko.ardinghi@engicam.com>
-> Signed-off-by: Fabio Aiuto <fabio.aiuto@engicam.com>
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
 > ---
->  arch/arm64/boot/dts/freescale/Makefile        |   1 +
->  .../dts/freescale/imx93-icore-mx93-edimm2.dts | 347 ++++++++++++++++++
->  2 files changed, 348 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
+>  drivers/phy/samsung/Kconfig              | 1 -
+>  drivers/phy/samsung/phy-exynos5-usbdrd.c | 4 ++--
+>  2 files changed, 2 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 045250d0a040..d26c0a458a44 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -226,6 +226,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-tqma8xqp-mba8xx.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8ulp-evk.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx93-11x11-evk.dtb
-> +dtb-$(CONFIG_ARCH_MXC) += imx93-icore-mx93-edimm2.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx93-phyboard-segin.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxca.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxla.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts b/arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
-> new file mode 100644
-> index 000000000000..470e1098d3eb
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
-> @@ -0,0 +1,347 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright 2022 NXP
-> + * Copyright 2024 Engicam s.r.l.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "imx93-icore-mx93.dtsi"
-> +
-> +/ {
-> +	model = "Engicam i.Core MX93 - EDIMM 2 Starterkit";
-> +	compatible = "engicam,icore-mx93-edimm2", "engicam,icore-mx93",
-> +		     "fsl,imx93";
-> +
-> +	aliases {
-> +		rtc1 = &bbnsm_rtc;
-> +	};
-> +
-> +	bt_reg_on: regulator-btregon {
-> +		compatible = "regulator-gpio";
-> +		regulator-name = "BT_REG_ON";
-> +		regulator-min-microvolt = <100000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		states = <3300000 0x1>, <100000 0x0>;
-> +		gpios = <&gpio2 19 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = &lpuart1;
-> +	};
+> diff --git a/drivers/phy/samsung/Kconfig b/drivers/phy/samsung/Kconfig
+> index f10afa3d7ff5..bb63fa710803 100644
+> --- a/drivers/phy/samsung/Kconfig
+> +++ b/drivers/phy/samsung/Kconfig
+> @@ -82,7 +82,6 @@ config PHY_EXYNOS5_USBDRD
+>  	depends on HAS_IOMEM
+>  	depends on USB_DWC3_EXYNOS
+>  	select GENERIC_PHY
+> -	select MFD_SYSCON
+>  	default y
+>  	help
+>  	  Enable USB DRD PHY support for Exynos 5 SoC series.
+> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> index 04171eed5b16..ac208b89f5a6 100644
+> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> @@ -18,9 +18,9 @@
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/mutex.h>
+> -#include <linux/mfd/syscon.h>
+>  #include <linux/regmap.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/soc/samsung/exynos-pmu.h>
+>  #include <linux/soc/samsung/exynos-regs-pmu.h>
 
-Could you move 'chosen' node before regulators?
+This is getting out of hand: shall we expect to convert all the drivers
+from generic syscon to Exynos-specific API? What if one driver is some
+shared IP, like DWC USB3 controller?
 
-> +
-> +	reg_1v8_sgtl: regulator-1v8-sgtl {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "1v8_sgtl";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	reg_3v3_avdd_sgtl: regulator-3v3-avdd-sgtl {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "3v3_avdd_sgtl";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	reg_3v3_sgtl: regulator-3v3-sgtl {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "3v3_sgtl";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		linux,cma {
-> +			compatible = "shared-dma-pool";
-> +			reusable;
-> +			alloc-ranges = <0 0x80000000 0 0x40000000>;
-> +			size = <0 0x10000000>;
-> +			linux,cma-default;
-> +		};
-> +
-> +		rsc_table: rsc-table@2021f000 {
-> +			reg = <0 0x2021f000 0 0x1000>;
-> +			no-map;
-> +		};
-> +
-> +		vdevbuffer: vdevbuffer@a4020000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0 0xa4020000 0 0x100000>;
-> +			no-map;
-> +		};
-> +
-> +		vdev0vring0: vdev0vring0@a4000000 {
-> +			reg = <0 0xa4000000 0 0x8000>;
-> +			no-map;
-> +		};
-> +
-> +		vdev0vring1: vdev0vring1@a4008000 {
-> +			reg = <0 0xa4008000 0 0x8000>;
-> +			no-map;
-> +		};
-> +
-> +		vdev1vring0: vdev1vring0@a4000000 {
-> +			reg = <0 0xa4010000 0 0x8000>;
-> +			no-map;
-> +		};
-> +
-> +		vdev1vring1: vdev1vring1@a4018000 {
-> +			reg = <0 0xa4018000 0 0x8000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	sound {
-> +		compatible = "simple-audio-card";
-> +		simple-audio-card,name = "imx93-sgtl5000";
-> +		simple-audio-card,format = "i2s";
-> +		simple-audio-card,bitclock-master = <&dailink_master>;
-> +		simple-audio-card,frame-master = <&dailink_master>;
-> +		/*simple-audio-card,mclk-fs = <1>;*/
+I already commented on Google hwrng driver: I prefer to keep the syscon
+API and change the syscon driver to expose proper regmap. IOW, use
+generic API syscon_regmap_lookup_by_phandle() and the type of regmap
+returned is defined by the provider (so node pointed by phandle).
 
-Have a newline between properties and child node.
-
-> +		simple-audio-card,cpu {
-> +			sound-dai = <&sai3>;
-> +		};
-> +
-> +		dailink_master: simple-audio-card,codec {
-> +			sound-dai = <&sgtl5000>;
-> +			clocks = <&clk IMX93_CLK_SAI3_IPG>;
-> +		};
-> +	};
-> +
-> +	usdhc3_pwrseq: usdhc3-pwrseq {
-
-Can we drop it, as it's unused?
-
-> +		compatible = "mmc-pwrseq-simple";
-
-It controls nothing, neither clock nor GPIO?
-
-> +	};
-> +
-> +	wl_reg_on: regulator-wlregon {
-> +		compatible = "regulator-gpio";
-> +		regulator-name = "WL_REG_ON";
-> +		regulator-min-microvolt = <100000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		states = <3300000 0x1>, <100000 0x0>;
-> +		gpios = <&gpio2 22 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +		vin-supply = <&bt_reg_on>;
-> +	};
-> +};
-> +
-> +&cm33 {
-> +	mbox-names = "tx", "rx", "rxdb";
-> +	mboxes = <&mu1 0 1>,
-> +		 <&mu1 1 1>,
-> +		 <&mu1 3 1>;
-> +	memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>,
-> +			<&vdev1vring0>, <&vdev1vring1>, <&rsc_table>;
-> +	status = "okay";
-> +};
-> +
-> +&flexcan1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_flexcan1>;
-> +	fsl,stop-mode = <&aonmix_ns_gpr 0x10 4>;
-> +	status = "okay";
-> +};
-> +
-> +&flexcan2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_flexcan2>;
-> +	fsl,stop-mode = <&aonmix_ns_gpr 0x10 4>;
-> +	status = "okay";
-> +};
-> +
-> +&lpi2c1 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	clock-frequency = <400000>;
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&pinctrl_lpi2c1>;
-> +	pinctrl-1 = <&pinctrl_lpi2c1>;
-> +	status = "okay";
-> +
-> +	pcf8523: rtc@68 {
-> +		compatible = "nxp,pcf8523";
-> +		reg = <0x68>;
-> +	};
-> +
-> +	sgtl5000: codec@a {
-
-audio-codec for the node name.  And we should sort slave nodes in unit-address.
-
-> +		compatible = "fsl,sgtl5000";
-> +		status = "okay";
-
-'compatible' first, 'reg' second, and 'status' last. 
-
-> +		#sound-dai-cells = <0>;
-> +		reg = <0x0a>;
-> +		clocks = <&clk IMX93_CLK_SAI3_GATE>;
-> +		VDDA-supply = <&reg_3v3_avdd_sgtl>;
-> +		VDDIO-supply = <&reg_3v3_sgtl>;
-> +		VDDD-supply = <&reg_1v8_sgtl>;
-> +	};
-> +};
-> +
-> +&lpuart1 { /* console */
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart1>;
-> +	status = "okay";
-> +};
-> +
-> +&lpuart5 { /* RS485 */
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart5>;
-> +	status = "okay";
-> +};
-> +
-> +&lpuart8 { /* RS232 */
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart8>;
-> +	status = "okay";
-> +};
-> +
-> +&micfil {
-> +	#sound-dai-cells = <0>;
-> +	assigned-clocks = <&clk IMX93_CLK_PDM>;
-> +	assigned-clock-parents = <&clk IMX93_CLK_AUDIO_PLL>;
-> +	assigned-clock-rates = <196608000>;
-> +	status = "okay";
-> +};
-> +
-> +&mu1 {
-> +	status = "okay";
-> +};
-> +
-> +&mu2 {
-> +	status = "okay";
-> +};
-> +
-> +&sai1 {
-> +	#sound-dai-cells = <0>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_sai1>;
-> +	assigned-clocks = <&clk IMX93_CLK_SAI1>;
-> +	assigned-clock-parents = <&clk IMX93_CLK_AUDIO_PLL>;
-> +	assigned-clock-rates = <12288000>;
-> +	status = "okay";
-> +};
-> +
-> +&sai3 {
-> +	pinctrl-names = "default";
-> +	#sound-dai-cells = <0>;
-> +	pinctrl-0 = <&pinctrl_sai3>;
-
-pinctrl-0 right after pinctrl-names.
-
-> +	assigned-clocks = <&clk IMX93_CLK_SAI3>;
-> +	assigned-clock-parents = <&clk IMX93_CLK_AUDIO_PLL>;
-> +	assigned-clock-rates = <24576000>;
-> +	fsl,sai-mclk-direction-output;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc3 { /* WiFi */
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> +	pinctrl-0 = <&pinctrl_usdhc3>, <&pinctrl_laird>;
-> +	pinctrl-1 = <&pinctrl_usdhc3>, <&pinctrl_laird>;
-> +	pinctrl-2 = <&pinctrl_usdhc3>, <&pinctrl_laird>;
-> +	vmmc-supply = <&wl_reg_on>;
-> +	bus-width = <4>;
-> +	no-1-8-v;
-> +	non-removable;
-> +	max-frequency = <25000000>;
-> +	status = "okay";
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-
-Drop newline and move them before pinctrl-names.
-
-> +
-> +	brcmf: bcrmf@1 {
-> +		reg = <1>;
-> +		compatible = "brcm,bcm4329-fmac";
-
-Flip the order.
-
-> +	};
-> +};
-> +
-> +&wdog3 {
-> +	status = "okay";
-> +};
-> +
-> +&iomuxc {
-> +
-
-Drop newline.
-
-> +	pinctrl_flexcan1: flexcan1grp {
-> +		fsl,pins = <
-> +			MX93_PAD_PDM_CLK__CAN1_TX		0x139e
-> +			MX93_PAD_PDM_BIT_STREAM0__CAN1_RX	0x139e
-> +		>;
-> +	};
-> +
-> +	pinctrl_flexcan2: flexcan2grp {
-> +		fsl,pins = <
-> +			MX93_PAD_GPIO_IO25__CAN2_TX	0x139e
-> +			MX93_PAD_GPIO_IO27__CAN2_RX	0x139e
-
-Try to vertically align hex values.
-
-> +		>;
-> +	};
-> +
-> +	pinctrl_laird: lairdgrp {
-> +		fsl,pins = <
-> +			MX93_PAD_GPIO_IO22__GPIO2_IO22		0x31e // WL_REG_ON
-> +			MX93_PAD_GPIO_IO19__GPIO2_IO19		0x31e // BT_REG_ON
-
-/* ... */ for comments.
-
-Shawn
-
-> +		>;
-> +	};
-> +
-> +	pinctrl_lpi2c1: lpi2c1grp {
-> +		fsl,pins = <
-> +			MX93_PAD_I2C1_SCL__LPI2C1_SCL		0x40000b9e
-> +			MX93_PAD_I2C1_SDA__LPI2C1_SDA		0x40000b9e
-> +		>;
-> +	};
-> +
-> +	pinctrl_sai1: sai1grp {
-> +		fsl,pins = <
-> +			MX93_PAD_SAI1_TXC__SAI1_TX_BCLK		0x31e
-> +			MX93_PAD_SAI1_TXFS__SAI1_TX_SYNC	0x31e
-> +			MX93_PAD_SAI1_TXD0__SAI1_TX_DATA00	0x31e
-> +			MX93_PAD_SAI1_RXD0__SAI1_RX_DATA00	0x31e
-> +		>;
-> +	};
-> +
-> +	pinctrl_sai3: sai3grp {
-> +		fsl,pins = <
-> +			MX93_PAD_GPIO_IO26__SAI3_TX_SYNC	0x31e
-> +			MX93_PAD_GPIO_IO16__SAI3_TX_BCLK	0x31e
-> +			MX93_PAD_GPIO_IO17__SAI3_MCLK		0x31e
-> +			MX93_PAD_GPIO_IO21__SAI3_TX_DATA00	0x31e
-> +			MX93_PAD_GPIO_IO20__SAI3_RX_DATA00	0x31e
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart1: uart1grp {
-> +		fsl,pins = <
-> +			MX93_PAD_UART1_RXD__LPUART1_RX		0x31e
-> +			MX93_PAD_UART1_TXD__LPUART1_TX		0x31e
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart5: uart5grp {
-> +		fsl,pins = <
-> +			MX93_PAD_GPIO_IO01__LPUART5_RX		0x31e
-> +			MX93_PAD_GPIO_IO00__LPUART5_TX		0x31e
-> +			MX93_PAD_GPIO_IO02__LPUART5_CTS_B	0x31e
-> +			MX93_PAD_GPIO_IO03__LPUART5_RTS_B	0x31e
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart8: uart8grp {
-> +		fsl,pins = <
-> +			MX93_PAD_GPIO_IO13__LPUART8_RX		0x31e
-> +			MX93_PAD_GPIO_IO12__LPUART8_TX		0x31e
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc3: usdhc3grp {
-> +		fsl,pins = <
-> +			MX93_PAD_SD3_CLK__USDHC3_CLK		0x17fe
-> +			MX93_PAD_SD3_CMD__USDHC3_CMD		0x13fe
-> +			MX93_PAD_SD3_DATA0__USDHC3_DATA0	0x13fe
-> +			MX93_PAD_SD3_DATA1__USDHC3_DATA1        0x13fe
-> +			MX93_PAD_SD3_DATA2__USDHC3_DATA2        0x13fe
-> +			MX93_PAD_SD3_DATA3__USDHC3_DATA3        0x13fe
-> +		>;
-> +	};
-> +};
-> -- 
-> 2.34.1
-> 
+Best regards,
+Krzysztof
 
