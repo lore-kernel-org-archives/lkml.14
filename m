@@ -1,51 +1,52 @@
 Received: from mx08-0063e101.pphosted.com (mx08-0063e101.pphosted.com [185.183.31.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D7A83CBD;
-	Thu, 25 Apr 2024 09:15:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6197B83CA1;
+	Thu, 25 Apr 2024 09:15:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=185.183.31.155
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714036556; cv=fail; b=awE0dBePdh0KVY3rHPZGB3xXFqYRi+8cZFnEdGZopPraajmsXFEttvFv+T5IJyp89kn/pSLzP/X88LkP3aBtQdv6eA7KVbh7f+te4tPJSKRnKNCs9OzFZlvL2N8cYNJwDM8EIavSwjtzWOUd3hlFVFW53KAyWXwRSaHeXKMpGe8=
+	t=1714036557; cv=fail; b=e8JLrD0ntiYLgNqHgCRK8CL3LqbdSr4CuglmIivalkAZb0umEE1qyN+eseJiQ1geBPkC4nYDs2ouFpQZGnn3Ix5cE14UNtwx4SP2Kmhehz4HtVKHlKmYl6EqZrc4poG4XnbEAnwfsE6IeprrVgw5olGY9ffkF/WelVkXvHmjhb0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714036556; c=relaxed/simple;
-	bh=O/3lKcXKfMib4ZzXKQ7LXw5VQ9jPJ4seRooZBf6bCMU=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=kxHK9AEFI0JIHRrdFSEf2TXrLwqC3uionM4rBH4d3ix8BK6Cu7I03CEFG6kvajI0NB8qBWwTQtInrXrE2U46lzpnDfeL7xOAcHnmDj0o7/Vw0qWXFj/va/sfCx37N3Nic3YvEDJStsLqlGMDO+dTbxVrnvFsg90FGBEoiOvnq1Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=blaize.com; spf=pass smtp.mailfrom=blaize.com; dkim=pass (1024-bit key) header.d=BLAIZE.COM header.i=@BLAIZE.COM header.b=VJf7B6JE; arc=fail smtp.client-ip=185.183.31.155
+	s=arc-20240116; t=1714036557; c=relaxed/simple;
+	bh=otmeC8jNafY2a53LwD5fZGOGAbu254cR10zN1XIA1Wk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=BihWE5Wg9NuDU56QsKp5JUo99WM9ILvQ9sS2TcSw40ItDFntGTovoexpadQ70yVz9RuDqpBoDLFaEtX3+Ny1FOpncS8vo3XzsiEBowO270E2j89ku5XsV97oT3iu0mjtcXfTP1kzUUkIxEzECuM4Ok74VV2Fj52mvLuMPxtTU/4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=blaize.com; spf=pass smtp.mailfrom=blaize.com; dkim=pass (1024-bit key) header.d=BLAIZE.COM header.i=@BLAIZE.COM header.b=RGQLDUJs; arc=fail smtp.client-ip=185.183.31.155
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=blaize.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=blaize.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=BLAIZE.COM header.i=@BLAIZE.COM header.b="VJf7B6JE"
+	dkim=pass (1024-bit key) header.d=BLAIZE.COM header.i=@BLAIZE.COM header.b="RGQLDUJs"
 Received: from pps.filterd (m0247494.ppops.net [127.0.0.1])
-	by mx08-0063e101.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43P9FHIQ011746;
-	Thu, 25 Apr 2024 10:15:17 +0100
+	by mx08-0063e101.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43P9FHIR011746;
+	Thu, 25 Apr 2024 10:15:18 +0100
 Received: from pnzpr01cu001.outbound.protection.outlook.com (mail-centralindiaazlp17011007.outbound.protection.outlook.com [40.93.132.7])
-	by mx08-0063e101.pphosted.com (PPS) with ESMTPS id 3xnxsfs3k5-1
+	by mx08-0063e101.pphosted.com (PPS) with ESMTPS id 3xnxsfs3k5-2
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 10:15:17 +0100 (BST)
+	Thu, 25 Apr 2024 10:15:18 +0100 (BST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TwjJ5k7EmYaw89MJfFB7tQrBL0m/qb6NVsQM12EF7eZ2hH6I4JAd1wlJ/xFzkY9KZQrY81owwS3Dco6nDVKuJbVj1LRxQxNj9BTxhZaQKBMiWIuaZMx+irSxH+HMihhVfjmCSU7cpX5PVkTUGDxn6zKnBRAqzJzkeoohxvDZtpfjnR/Blxb9T9ar9kSEc+8zo9vDZqQ/M1/RUpRxDZR4OBHoJlmL+cgGvXqVY43brCoBn5/zCsiot+k1ew3wBAca/z5MNWYwqYgdyB7UY/9xe26xDiDrtFHa4wgyeYFSKov5LADGaH98JMGp+SjXKMu0Ki8ZXrGrJcwW+ooPneKX0A==
+ b=WqwKEqkEIVoIiVkXheU9v0PeFZFb4amAx4cEOH8rIu9q52LbfigPS8mQIQNzasFJkWFTMouHHguSb7kOrkyevb/s1pSWL46/BI+j57tX6egArRsJiLZqy08UQJruC5zcSVsfxv0SkJBxFJfGKwxMAG25+aRU+xVr+vFAsiMhTzK1eeCeWgUPDxAyxLk/8kFPPi++2uZhgad69VL50Lhfe+bc0XFowNFR9Yd3amNvQLzRzle+l/JRVj6LXnBQNo4OorC6wWPFxGfXJzXG7OoG/3BuETzLytod+tmsQKx8AYzEKYz1bs4rBMAi8bqHthXeUXdJQtNj27PsYHs9FhGyWg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BG4zghH1G9D1hBeXwBwp4hC0//HqEFy3/vMiCBzKj+Y=;
- b=EiclmpfKo1pkjA98phH+ULjFMndfjiVmAlE/0n1IYwibr2Jd8OTimAcshwF3NpGa3uQXG3UQjwhZWSV52flKQ+zGaFltZc20cSxwqF1FVCAoi5+OBZPLX4P5px2bkh160a9F8rAdeysI/vpkkdlzGcdJ4jJq4G2AfIFaYqWv/cQ7lexM7g35d+E/VGTMnk42sCGFc0Fs6zE9l5tdiEJG44OVSg0XFnnORuvxLKqnKkUBCr3vsOcPH7vCzOFq6BFTusWjLOjVaq901VTMyAP7DuWZkrrp/pb45lbfxhZbGyX8pfSflxiPG+Bd+fAnR/6Bd2dE253jk3iDnaykf0pFiw==
+ bh=E//GxHF8CuON8Ap8NdTk+Gsl36aGz+QEVeS+5zOVUQM=;
+ b=kj1YnE4fcxVw+5ED4jxBFiT0GHaxbsEQd3j2AUAVqXRP3X8sv/IIz4ichfU0qzBzLksU0Gb39oIVUcpmJNqhCUI+Eu3Alp34XDetPmRLSlWLeQ0USJBlAB2d+nn2HQ+Rf8KdrQWiRlRVFynKTpIu2RHVkuKkVQ7slOVPdYETn+vSoqfEBq2Ftxf/I3LakQtxwJ5OLmOgGV2kyKpC2vP7T+bElk7DxBsMulsxzRSMc/TY62NycLoR4kO8Ctw6iMQFRmN88SDjO5OfEhr+mVjIpB6gGm+MH4yQIiH1tLvKRKxJ0Fm0L6U4/GcQ29Prlf0C8/Ofr4Uj8UaOo+Kn7WXbsw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=blaize.com; dmarc=pass action=none header.from=blaize.com;
  dkim=pass header.d=blaize.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=BLAIZE.COM;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BG4zghH1G9D1hBeXwBwp4hC0//HqEFy3/vMiCBzKj+Y=;
- b=VJf7B6JEYqFw39G0p1yVlx2XayTCutDunljfTEgXZZ600hylhTfv1u9FiQ1gw1BwK5lgktYITIO3JYP5bzQTesJfQhYqD9g+1Fu2RO7RtZEvK09VR3Bdvvm5W/kuO+l8/ejP2fPKIWc3xe7d+HRZ0dG90JEpc3Hd3CUbGddYUGY=
+ bh=E//GxHF8CuON8Ap8NdTk+Gsl36aGz+QEVeS+5zOVUQM=;
+ b=RGQLDUJs4N1CGTyzh/W6oGbh4aBgjzeGIbEND0KIHWjZ5lYsviDKSX/6QAXZvyQOAARgvFnUK6NpChtwXOB92gDjfz5Ofba3+9KMzG3f3sIoWnTEy+vdyMKkV4yUWwGgI1TwAAdgKFFn5kfRO3shWCshWgAuJhWQ9aMJS1q6+zw=
 Received: from MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:12a::5)
  by PN0PR01MB9905.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:14c::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.46; Thu, 25 Apr
- 2024 09:15:02 +0000
+ 2024 09:15:04 +0000
 Received: from MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
  ([fe80::309a:12cf:74a4:5655]) by MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
  ([fe80::309a:12cf:74a4:5655%3]) with mapi id 15.20.7472.044; Thu, 25 Apr 2024
- 09:15:02 +0000
+ 09:15:04 +0000
 From: Niko Pasaloukos <nikolaos.pasaloukos@blaize.com>
 To: "robh@kernel.org" <robh@kernel.org>,
         "krzysztof.kozlowski+dt@linaro.org"
@@ -88,78 +89,79 @@ To: "robh@kernel.org" <robh@kernel.org>,
 CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v3 0/5] Add support for Blaize BLZP1600 SoC
-Thread-Topic: [PATCH v3 0/5] Add support for Blaize BLZP1600 SoC
-Thread-Index: AQHalvENke//ZUoLCkKFp1wpsKgs6A==
-Date: Thu, 25 Apr 2024 09:15:02 +0000
-Message-ID: <20240425091403.17483-1-nikolaos.pasaloukos@blaize.com>
+Subject: [PATCH v3 2/5] dt-bindings: arm: blaize: Add Blaize BLZP1600 SoC
+Thread-Topic: [PATCH v3 2/5] dt-bindings: arm: blaize: Add Blaize BLZP1600 SoC
+Thread-Index: AQHalvEO42bqaUXUz0uYtplzKtu8VA==
+Date: Thu, 25 Apr 2024 09:15:04 +0000
+Message-ID: <20240425091403.17483-3-nikolaos.pasaloukos@blaize.com>
+References: <20240425091403.17483-1-nikolaos.pasaloukos@blaize.com>
+In-Reply-To: <20240425091403.17483-1-nikolaos.pasaloukos@blaize.com>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: MA0PR01MB10184:EE_|PN0PR01MB9905:EE_
-x-ms-office365-filtering-correlation-id: bbacbaae-cf89-4e9c-ebc2-08dc65083067
+x-ms-office365-filtering-correlation-id: 75d519ff-1813-4298-d989-08dc6508315f
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
 x-microsoft-antispam-message-info: 
- =?iso-8859-1?Q?VuhFnFNHEETvlZQp0KaG2FT7BvhymfLkEePFDU21fI4f3ktA0ptl2uY/68?=
- =?iso-8859-1?Q?xITcKlWWCzVjJxHEV/qO2M/vUpJzHKMvDB11ScuzEMKErbVsVSIbR07MVG?=
- =?iso-8859-1?Q?EI0xZWEHLl7rNj8TlFTbXqOU3zu4dHlAnTs7asP7H03IgeU0rfVhH/P5V8?=
- =?iso-8859-1?Q?8uqBvNt1LDU1HMTpcBJmjRAASxHNaJRFAWnMrSJ+Td0vV+Rjv++8sH4B4O?=
- =?iso-8859-1?Q?DhB+CYpUd172v4GfY/3AtrWMTz+EkrRKXK9+RSaA5VrOJO1wYWbcilSYXO?=
- =?iso-8859-1?Q?foibUh9dQ9Jt9Jno5omXKFlAXy2I05Y5mPyfDmHS430Z0xtNC1WnGL4SYN?=
- =?iso-8859-1?Q?UrRAJeur8xa2du4iAg3e80H4G1fUZV4PX+akMnLyyb0ufMLINjaC7MENy/?=
- =?iso-8859-1?Q?/tstgWrKS4YV6iOGU7mZesPQR089u+YNfzp4pmGZ8kjrHtqpAkE0XVBv0q?=
- =?iso-8859-1?Q?yYz5OKy6fco4UG9ErxjrNuEa4CM+pHW6HsC701cY2URVWS1JcWcHf/67gR?=
- =?iso-8859-1?Q?XekE95HFP7dgRz+VKCiHaZIbIwFN0TP8r/Dx3ngVMWxZN9+ZgF/b5HjDot?=
- =?iso-8859-1?Q?2uc0j+gj7EJwv/r0MWoQ0wVBbmWm3nfU18+O/wliCw7uV/O21HxRFNWcKf?=
- =?iso-8859-1?Q?Vs/NkpWxaYLB7N5lx4VWbVMdjsfw5CHBUO9DjLpZayxLaBKslM08RDhuL+?=
- =?iso-8859-1?Q?EfCZjZD4V5MZxBQD2wIeSFBhl0CjlQisreJhNRlJBTXe+rVGd7nYX39Uvj?=
- =?iso-8859-1?Q?Xt6nOjvEmaq3pu63X0jly2/e7VA5Cjwi9UIzJXOZXDabyADJOxY9s9okRZ?=
- =?iso-8859-1?Q?mzz5NQAKavpNPlWVkwjHIfnWzuIw3QwQZLaAAwQm5iu68L127iyZnpWxcC?=
- =?iso-8859-1?Q?181CcpJ7TtCHld6q+Nx30ghUi9KNClcleplE+JesYmZVDhzkysl1fCkxXN?=
- =?iso-8859-1?Q?QGDtsCzaWztfK/lcHobLXiEGJOYxoSqrTAsgM8rAaxW91pCO2qghNRR8HM?=
- =?iso-8859-1?Q?/mMCrdzAju7jthReY4nBpO7UPsivRv8VstdTq8PPVdP+7YPLU2uclaW8On?=
- =?iso-8859-1?Q?42TLhW+WSJO9ncZmcMQK8zPWaxrFh3hBds+cqFSGeZiPW6oEB3ATjlHIrt?=
- =?iso-8859-1?Q?qNHe07HmSiMzHRJ3eZXlcZLHVfry/asSOy9CCKUwRsWsdO8s9nZqvR16gx?=
- =?iso-8859-1?Q?dZFRzLas3BPvM4KZCFG81bsZRT290PaRwhYFp1eXwheJB7vLjBHRxNVQd5?=
- =?iso-8859-1?Q?9ZPWuBrV+McKzAPBrAtsRCf9qzx2ML+/Jrt0owKglMxpVaD31bdaDAw1uX?=
- =?iso-8859-1?Q?TBFrKqamEMrZONwrgOz9OtP5Mt0+pNG7afnEbIM0Jpzle14P91oV7U+P//?=
- =?iso-8859-1?Q?osMs4ux4Sl5SJNOMxnqPaoHIHLjm06GzMcyZu0uat1+HnsLcH8uC8=3D?=
+ =?iso-8859-1?Q?tn0DxFPuiC0VW9b6r04eGQVYJs0P0sUodwFzeBrFLtFkhm2+wRNClA9M2r?=
+ =?iso-8859-1?Q?g6ZjmulhwdnLvRJv8KzlUm0g0OQpwEn21ebF4XCtp8xLb7cUiJ6iW/ay9M?=
+ =?iso-8859-1?Q?DAIi7lnoR/1ZdkfmkUwTasFdb/vR0c3q+Ia9t2lNWV5FmcX2RJyGO6I2wP?=
+ =?iso-8859-1?Q?mhWDbvyADiYg4PBvIalz+OBi9bKAFwKSRYsm66s4We3BR2OBVht/42ZH66?=
+ =?iso-8859-1?Q?2KKmNehcLW8AJ+39aufFzAGRsds3f8Vrfwb9wB/IgsnsxwVI9/YwIGW/DK?=
+ =?iso-8859-1?Q?pN3l5Hjff+HameE/Deot6XatfN6GyOWsoFpnq33dJIsam/gLNhaXtmVOy1?=
+ =?iso-8859-1?Q?22mBtDu3G3Oe6UqCUpT10NtekhLCpuH/PUG8RKVpg5t88tHGjdPgnNSPHZ?=
+ =?iso-8859-1?Q?29DwRUiyG3cVw2fnjYc/r2p+ywwLNmf+dlwWu2x0PFCdUllBxDCoH933gt?=
+ =?iso-8859-1?Q?NH1KvQNUDZbo7jeMfDl2Cm7iotS33JyVBQv/h3BrA76M8Sz6S5zJLkQUTx?=
+ =?iso-8859-1?Q?l/IAI3GX+EFWsEj9uPSbh8y9L/OlJkvb7GdWknKFzX7eydXLlc9mq6h2zz?=
+ =?iso-8859-1?Q?v6/izVuRX/ETSvaz2+SKAFUunbSHrdhcb5x1pGBJs7hRofNvLerhEXwp3f?=
+ =?iso-8859-1?Q?jwJRoH2mIzquvpEoO2Zy+YFrfgVamhDp8+6vi+XvL5o1RADx3SPch9Wrug?=
+ =?iso-8859-1?Q?Sf13rYml/+CM2rp6HLwQWUf89pJ64rznhyOF69bHhwBe/L+BqkY0sxFzzy?=
+ =?iso-8859-1?Q?HxVR8+9P4OJ4G/sPzOVrVVxedyQZ/2f5gVI4kuOLQClzCdQa86CcLN+vip?=
+ =?iso-8859-1?Q?oXPQ6KX/pQce+bnoTp8DGEapqnZ8qb6dVSpecUP6mOkbnDSvO88EpVM2Ip?=
+ =?iso-8859-1?Q?BCxNk/tnXKpTEOf6ITiSSSmeg2XWgJWrA5On1imN2CjJ0K4SHfL2f9NLYo?=
+ =?iso-8859-1?Q?50kBtq0mkbmgYXyU3yM4iJtIdq1lCq8j/bZOOj5ZfDHsbZZfssIovNdJ/k?=
+ =?iso-8859-1?Q?OhQ6Ev3dkd5zQcJ/GHyRhmQK4fAjVo09N15WEU73z892j0+7vq8f8D7HXK?=
+ =?iso-8859-1?Q?H4f140r5C8lXHhRgb17TN3ZJdAianZLXySrdkGCvaTBHt62/inmQzGdAqi?=
+ =?iso-8859-1?Q?Z8hC96yCm+4PQThpPM5SzxEKaB6HgxkkDJltc5aw+F7wAm0R5MdYDbTOuu?=
+ =?iso-8859-1?Q?548k6QD/0b8fRXoyPB7+7+eaDznVBFfES83NrGsm3kzRd/hG8irVPFwiSg?=
+ =?iso-8859-1?Q?QJLvM9jGc6eqhhXdipXZHCQoxvGntmJJLdUlui6leATQUdauouuuNSrjbM?=
+ =?iso-8859-1?Q?wYKtXV8+ia1PuqcsoU5zLxGBQgHHvDn+UcJdxttxg3Lq4o8=3D?=
 x-forefront-antispam-report: 
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(7416005)(921011)(38070700009);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0: 
- =?iso-8859-1?Q?hkBXA0p63YHgpvKAxKOfbv5KfTiqOnvEFg+0n6mD5VTrHnjfP+gb2DFHd3?=
- =?iso-8859-1?Q?lug+eW/djyZaOqwGohDrurAWpZ/KZndzB51tT7I7V7LAZYz9Uz1TxWnd5Z?=
- =?iso-8859-1?Q?4nkljRkAssGrJzejYFJa8CDKvwxmekwaxAvZ3FAPRhq5FNzN0Bh2E5MBB6?=
- =?iso-8859-1?Q?vNDAurrEoi0y+5bKPBbd5/4QIsDk76NB3IX7vabJuv45JXb4pZPeZnezwC?=
- =?iso-8859-1?Q?iFo7fEkT2ubH2wRgZDq1Z9HFzk4fB2NKm0eduJl0D4zhrKbK+Eru0NviD6?=
- =?iso-8859-1?Q?kNVbDb3QVkImezCoM+8VWV2fqKUvHTjeA3lXl6JeAIo/O+FKEfdulrzI/e?=
- =?iso-8859-1?Q?F2CKSM1vkpgk3Mr8mOj0ov9sa5544maRMX1sve2OdFniSds/rE+YbTI/tC?=
- =?iso-8859-1?Q?kMwKY0uFo0W/+BztYQhOUq20qjvDS1uDW0xNeN3bFtL6Fpfc++GfGGbzbA?=
- =?iso-8859-1?Q?UyPITVKN0+PR/D2S5dggakuWstFNf9b/IahVq7xbqwg1lIxTKtsMQY2235?=
- =?iso-8859-1?Q?Sm2KjsvISRok/dBbCKJT8HIlBDtFLnNL0LY96neahWpwQBJ/v5zsuTdsB3?=
- =?iso-8859-1?Q?XpyrCeKI8rk/oAxDWUij0vn77LiCALJf26GWC1oYskBPq4QoTacP5lPZGt?=
- =?iso-8859-1?Q?nl9ySO3+0kRy9NZpvDJY4brg8lDtLz5X0JlzXdN5rjQuhIO27/7C2iLwpR?=
- =?iso-8859-1?Q?bfxJpBGcY4ulv5JgarAXsLwmjczu5iLa7rzLCezJrg0As7gE38H61VBYUR?=
- =?iso-8859-1?Q?VsIVd2FYoQvERigOMNWPTrxOiOEKsbpFpRkjJPs1YKkGNmxQCeu+Y4IlDR?=
- =?iso-8859-1?Q?SD2M9Hs9FKaM5KoReqxWusbNXfGXTVq9kYV/bWcfmjz0Aovo2qOGA513XE?=
- =?iso-8859-1?Q?GOLPu+o3aea5ySZHu8RmJaKv+R1GyhA+JY+krg1f58mvrgX1ZIkP5RD+wF?=
- =?iso-8859-1?Q?Fk63NaaYP9Vcbe7FrqM8QLN7fPg+hyyMYmE5pyJix2ysEOZRinZUEcdPYD?=
- =?iso-8859-1?Q?ZXQRmcelmS5RQ29a8zQh8Be7Q2C+AQrujCno8g3NL6ON9jqhFjlrSUihRi?=
- =?iso-8859-1?Q?qcAg593mRGVWCVtdUTK0VLIfiTz4FzkOuKEzSkwirx4xZwJmmpflKYcBGD?=
- =?iso-8859-1?Q?B7RF31QinRsgocJPr+sl0OcBa/dlW/whMW4YugNssSPVbGAg21Zv1aAbd3?=
- =?iso-8859-1?Q?4KlLyjyERrvtQpvCCoX2qsxRb3228SWKT2JN1JQ9C38ZaFZoAOl+sbrgd/?=
- =?iso-8859-1?Q?MUTKJJ2/aIZPl3sEl1mZHwxeI/iVtLtteFSADow/KqoOJWyl1nXJ22HhXP?=
- =?iso-8859-1?Q?b/iD5HUozvGGncjihgVRLnLFuxVDYxNMAN2ns+B+3FU/NcxOocf4xlw0YY?=
- =?iso-8859-1?Q?z/TFQ39FeURhgL9ISICBqJ0XqkGYYNfiquNgppRqabHW3iaYEMrmz4sM14?=
- =?iso-8859-1?Q?pHIJ4PGT7swkLu4R2XqyRdjXqUcOKyDlhQqzg6n4wNiz9gTsVuw/hopG1w?=
- =?iso-8859-1?Q?1uTWfsUHZjOpw2a8cK1CvzZzL/X+KMqHus87da8koQ/bWLY4zagBy2rOXV?=
- =?iso-8859-1?Q?Peyad0OxC5BcYw+bMSjO2pHJHaJEimGTZAGgV7Fny55WS4NkENOS2b4p7h?=
- =?iso-8859-1?Q?4S4MnXZSuj0tJae+PsgVUPupBe4dtAzoc2tf+tFFdo1xDYW3fkQFH1uw?=
+ =?iso-8859-1?Q?j4m1RKP8IjcGeDTiQOsrKpfuM57Q7GdFbiRfFqTUdg5T41KRHyqHPcN47v?=
+ =?iso-8859-1?Q?FlXx++QPTmDMlTDWb9GxMuniHTITjao6Aqn2MMIYzZRuIGrHuKWlfF1Hq4?=
+ =?iso-8859-1?Q?jnaOR8BbQnnrfTcoo+cx1PJTvZ8GZF3B7egKqV0RwegdQlyOI9vg30XpPF?=
+ =?iso-8859-1?Q?NcJhyGkdWJ3zMCfcOipg1+creZe10EdMS9rSDY1xe7v5x/c6A03nzCa92T?=
+ =?iso-8859-1?Q?fxtn4Y3JVYEyI+xCVd3IPEdqiauyq8u6HL8UsGbT/YaHN/Y6k9bWn8xgs+?=
+ =?iso-8859-1?Q?OvQj36B0to4Ywf+L2jcoRFopCQuuvTEnFffwRD6HLNeZrhr/mTu6nDPtgB?=
+ =?iso-8859-1?Q?ssqYnUG42/durBlslRsKENMq3YGbETenAASWIj1pxMYEBLxmTCQ96qNwSv?=
+ =?iso-8859-1?Q?KafV0MAI6h9UhR+9Vh4mjpwIKdMkDppIhBncXfvzHA9T8sQq71aMrLfA+x?=
+ =?iso-8859-1?Q?kogKsM/pAWFWwS49Ek/CgsuFfemBibkDSxTsLpk2UiUjXSN+nIxkTTEpDR?=
+ =?iso-8859-1?Q?Ih04G/sNEia2JnEgi/8I/AY5U0n023ImhZegbgHTy8Euhtp3OIzLyOJX52?=
+ =?iso-8859-1?Q?rIFWjDlqNSfbTmmaeVn8nLPrEby69jKU+cCxU9ut5j7+m4LzXp2zuFtp3a?=
+ =?iso-8859-1?Q?PDMJkSbVo7K06W50qi5MdbJY3ENFEy7NG8FvtxcDwMnKU//O3KA86V0AjQ?=
+ =?iso-8859-1?Q?BeOaJ0EO2VLfhUmvRijD8c8bBR2yr8BiEW6JZt54Y+EFPN/X7WBc/++l4D?=
+ =?iso-8859-1?Q?I7GRFOtJsyPtQUsXc9zBYKkWX35SVIq2uX84Coo7SNABz3O3Xhy9/FWyOt?=
+ =?iso-8859-1?Q?an0lMZeUR5+9s1GB7de7BDkBYyZFgNHgeGeFisUOB7dFQqUlB2o1G6AAwb?=
+ =?iso-8859-1?Q?28tkYyYllVX/vDHWG4hvbpWDqPVbfJs5Or43v2XLtq8mRnerLR9py4x9MG?=
+ =?iso-8859-1?Q?SgqbLJGrZo9TaTYaUJOx24FKwkPhP8DFmQLv8wophnKQy49oA0Iqfd8uHe?=
+ =?iso-8859-1?Q?ffEYufEimu61ccFoNYbTsEKPMN0h2FZR3DeHFl0qd7m9jj+gfWy+36hvF9?=
+ =?iso-8859-1?Q?8igxdi3eaShfzZvnSqd/QJ2D6V4OHJNWIT/4QtfBXI1KngAU7JKIWtyBOV?=
+ =?iso-8859-1?Q?XRTuKFYgkO2NAF8IAH+g9PsrrFBta7L61PUT9FjYPz3hXV/1xcXfuVF9tF?=
+ =?iso-8859-1?Q?sNG4kEJ7N8hTu4bK3LIluHCQNk9t4vVz5VLRmgx4EU4GYwKqQvhv2vgJJa?=
+ =?iso-8859-1?Q?2ai1E5pZcoH+pHrvSm6K/2a2dPkBLbzkbJcEn0HvNKQNIMlp+/m8gQqG1g?=
+ =?iso-8859-1?Q?x5SXEapPrvjaf+EfeMIg/QJ4x0SmjZy22L/BXjCRi2wI5ij7yL7FUleXNl?=
+ =?iso-8859-1?Q?XhE/N/VrXufZuVy7N+1O9LI3mkgyYiE80eWH5++wtU7XmjWunOqnfYAwqB?=
+ =?iso-8859-1?Q?N2FJrdu3A8gXrPFXcuuvTs4QlzTMHtnNIZqwJ6CM1QzLeUV6ELZcd7+ZD1?=
+ =?iso-8859-1?Q?MBwRYzMkCaaxh/3rlFn4O92YoXZkMAB307x3DX7cwTP6uMJM0MJLIgsEPE?=
+ =?iso-8859-1?Q?B48gCsLxHV95QBTbp4287hicTE43oACos89g5GuyL9ksxR1WXjEWSMICwl?=
+ =?iso-8859-1?Q?ZgDHoIbCkuUKprr5THZSkDILmksGWiTSR8GuypPvC9jNUE+4TG1hEx1A?=
  =?iso-8859-1?Q?=3D=3D?=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
@@ -172,62 +174,85 @@ MIME-Version: 1.0
 X-OriginatorOrg: blaize.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbacbaae-cf89-4e9c-ebc2-08dc65083067
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2024 09:15:02.5662
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75d519ff-1813-4298-d989-08dc6508315f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2024 09:15:04.1897
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 9d1c3c89-8615-4064-88a7-bb1a8537c779
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fywGipQWOoRRcbW/tsg1yQagffRonEaPxVLcnpMhgLk4/rP8gQ73UpJqasCBbEWz425cjBZlKdiXmFfUvOLZK/1AGyqtxV2R+drG+COGPmk=
+X-MS-Exchange-CrossTenant-userprincipalname: Gft9pGp3eKRagMxZUP1ZzbmEFHVZI/0SI6zXgWW50ptXpddkS+rQuV+4uasZ3wd9gqMzrArcth/MA4N9simRuiWsOoXIOwqDHOAXoxgI9Ac=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0PR01MB9905
-X-Proofpoint-GUID: 7A1PHE9FuFtbUGrvWOmMwXVUIG6uug5X
-X-Proofpoint-ORIG-GUID: 7A1PHE9FuFtbUGrvWOmMwXVUIG6uug5X
+X-Proofpoint-GUID: jMH1v95-LTk3s9ZepMh7A3l8lN28qkud
+X-Proofpoint-ORIG-GUID: jMH1v95-LTk3s9ZepMh7A3l8lN28qkud
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-04-25_09,2024-04-25_01,2023-05-22_02
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  phishscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
- spamscore=0 bulkscore=0 mlxlogscore=663 malwarescore=0 clxscore=1011
+ spamscore=0 bulkscore=0 mlxlogscore=984 malwarescore=0 clxscore=1015
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.21.0-2404010002 definitions=main-2404250066
 
-Adds basic support for the Blaize BLZP1600 SoC.
-This SoC contains two cores of Cortex-A53 CPUs, one Blaize
-Graph Streaming Processor (GSP) and several other IPs.
+Add device tree bindings for the Blaize BLZP1600 CB2
+development board (carrier board), which uses the
+BLZP1600 SoM.
 
-V3 changes:
- * Removed unnecessary dt-bindings
- * Update SoBs
-
-V2 changes:
- * Update SoBs
- * `make dtbs_check` has no warnings
- * Fix dts names and removed dead code
- * DTS is separated from anything else
-
-Nikolaos Pasaloukos (5):
-  dt-bindings: Add Blaize vendor prefix
-  dt-bindings: arm: blaize: Add Blaize BLZP1600 SoC
-  arm64: Add Blaize BLZP1600 SoC family
-  arm64: Add initial support for Blaize BLZP1600 CB2
-  arm64: defconfig: Enable ARCH_BLAIZE_BLZP1600
-
- .../devicetree/bindings/arm/blaize.yaml       |  40 ++++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- arch/arm64/Kconfig.platforms                  |   5 +
- arch/arm64/boot/dts/Makefile                  |   1 +
- arch/arm64/boot/dts/blaize/Makefile           |   2 +
- .../boot/dts/blaize/blaize-blzp1600-cb2.dts   |  84 +++++++
- .../boot/dts/blaize/blaize-blzp1600-som.dtsi  |  23 ++
- .../boot/dts/blaize/blaize-blzp1600.dtsi      | 209 ++++++++++++++++++
- arch/arm64/configs/defconfig                  |   1 +
- 9 files changed, 367 insertions(+)
+Reviewed-by: James Cowgill <james.cowgill@blaize.com>
+Reviewed-by: Matt Redfearn <matt.redfearn@blaize.com>
+Reviewed-by: Neil Jones <neil.jones@blaize.com>
+Signed-off-by: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
+---
+ .../devicetree/bindings/arm/blaize.yaml       | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/arm/blaize.yaml
- create mode 100644 arch/arm64/boot/dts/blaize/Makefile
- create mode 100644 arch/arm64/boot/dts/blaize/blaize-blzp1600-cb2.dts
- create mode 100644 arch/arm64/boot/dts/blaize/blaize-blzp1600-som.dtsi
- create mode 100644 arch/arm64/boot/dts/blaize/blaize-blzp1600.dtsi
 
+diff --git a/Documentation/devicetree/bindings/arm/blaize.yaml b/Documentat=
+ion/devicetree/bindings/arm/blaize.yaml
+new file mode 100644
+index 000000000000..8034aeb7a2b4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/blaize.yaml
+@@ -0,0 +1,40 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/blaize.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Blaize Platforms
++
++maintainers:
++  - James Cowgill <james.cowgill@blaize.com>
++  - Matt Redfearn <matt.redfearn@blaize.com>
++  - Neil Jones <neil.jones@blaize.com>
++  - Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
++
++description: |
++  Blaize Platforms using SoCs designed by Blaize Inc.
++
++  The products currently based on the BLZP1600 SoC:
++
++  - BLZP1600-SoM: SoM module
++  - BLZP1600-CB2: Development board CB2 based on BLZP1600-SoM
++
++  The compatible property should follow the format:
++
++  compatible =3D "blaize,blzp1600-cb2", "blaize,blzp1600";
++
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
++      - description: Blaize BLZP1600 based boards
++        items:
++          - enum:
++              - blaize,blzp1600-cb2
++          - const: blaize,blzp1600
++
++additionalProperties: true
++
++...
 --=20
 2.34.1
 
