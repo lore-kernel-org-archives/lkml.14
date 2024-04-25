@@ -1,120 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3EF1494D2
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 13:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F49149C79;
+	Thu, 25 Apr 2024 13:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714053349; cv=none; b=D/odUhHV1yrKQrarm9uBLa+1l38oWK83S4F/0sLqr4wI2MevmjXs3EEoTZIEvPm2fHbOiZLXGJj+m984Ymv1QTNTEEeXFqZ3BKW8Rw6PQjikxcQF94ukJjp9czxkX6cw58exTA4fXANLMYq+8ZRz2LWJsIQLklT5G7RqirLuokg=
+	t=1714053386; cv=none; b=lE7a6BQ3vS+o3Rjv6bHidBIuSfIrREfe9dkHH4uuVHo9Tu2fceQONG9TpWFZVV12Y+kTZuMrIgmx+C1yhm0bnDT2nGc26J6BVDioxpUyZIL5mvwGUzzaRdPmEVAGnPGPiWC+yXfTX34EzxGLV1tlEBJg30Sx1vPJ7iGPh+Qb2wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714053349; c=relaxed/simple;
-	bh=0gOGWX754Dme5o75hzHeRnF10h1sIbteWYGixJF88Zo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GQTrudu7074kz+GfpLgt/cAeAmJuFmEOtXcj9NiUTxXbCCbeeWRhU3FPwZk8Stdjq4SBLNKsoHwyTkcmd4JgHeL0nn1vPUiPTr6UmnMEXoAf5FhiPDz5Fjlkk+hUyZPGF+xK0BwBgL3gRL13lQIiEdj7/73mpssrva3EW/skq08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NXzcqdVf; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714053386; c=relaxed/simple;
+	bh=trRlCRIhok4K59HDr3TSHDjRs6Ztr8A4LtpNXzJMUDo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ErAV/EwKl38IgY7DYe5ZZEBjb9E/pWx9V9kDvI38WhA8B2qZwHGTdm4/WqT4goBOspy54vTY8vUs+YsJBl+GTKlnBDKLPoJLtcxMJsmQLdXHsjhnJk6/EIlD3gx5AqPtF9d/KIYyyjRV0k56DywijBUG07Pd9XjWI0gambB3ybI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=i/i3e+Xe; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NXzcqdVf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714053346;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SIrQNZSOyGumQ4W9WyC3jnI0g+lXhd8s1D7EZMPy8ok=;
-	b=NXzcqdVffiHt64vMyfUbOK2s1qDvJuvE7RWuGPRinoCD05KNWh2NcIXehdc8b9hsXH5fKn
-	BqC/JbQWn3g18clYILOR8/aHBQgxjNfm7zXcOGTSJKhLkBU4POABhTFrRMlJUzemIJ4zFC
-	yMbEVWs+yVSCGPY5ZhHmR8txU1Pp9UY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-274-Aqd1LsKTOJ6ER0lihQRU_Q-1; Thu, 25 Apr 2024 09:55:40 -0400
-X-MC-Unique: Aqd1LsKTOJ6ER0lihQRU_Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C8D481827141;
-	Thu, 25 Apr 2024 13:55:38 +0000 (UTC)
-Received: from bfoster (unknown [10.22.16.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7127DEC686;
-	Thu, 25 Apr 2024 13:55:38 +0000 (UTC)
-Date: Thu, 25 Apr 2024 09:57:54 -0400
-From: Brian Foster <bfoster@redhat.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Sam Sun <samsun1006219@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, djwong@kernel.org,
-	chandan.babu@oracle.com, syzkaller-bugs@googlegroups.com,
-	xrivendell7@gmail.com
-Subject: Re: [Linux kernel bug] KASAN: slab-out-of-bounds Read in xlog_cksum
-Message-ID: <ZiphYrREkQvxkE-U@bfoster>
-References: <CAEkJfYO++C-pxyqzfoXFKEvmMQEnrgkQ2QcG6radAWJMqdXQCQ@mail.gmail.com>
- <ZipWt03PhXs2Yc84@infradead.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i/i3e+Xe"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43PDuBeW046241;
+	Thu, 25 Apr 2024 08:56:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1714053371;
+	bh=gH0LZfwLoD7Vua+dAHDFyt7sRvRv22zG5/DbbbrI7hM=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=i/i3e+XewVr69cwoI8dAEQWSZd87IpQQaaa5GkT9EowRLKxSIq5PjM+i+CwdGVB+z
+	 q7i3wzPiCOiJatXCpKneLFIVqraIt3bpADvP2cw6ZZrQHFOaEflbwoASJPAH82/f3M
+	 phNB+Lkwih1Lv7e1vt9fi+6ONYqshA3hC/bHcitM=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43PDuAhX121733
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 25 Apr 2024 08:56:10 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 25
+ Apr 2024 08:56:10 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 25 Apr 2024 08:56:10 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43PDuAxi025299;
+	Thu, 25 Apr 2024 08:56:10 -0500
+Date: Thu, 25 Apr 2024 08:56:10 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Andrejs Cainikovs <andrejs.cainikovs@gmail.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Andrejs Cainikovs <andrejs.cainikovs@toradex.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] arm64: dts: k3-am625-verdin: enable nau8822 pll
+Message-ID: <20240425135610.6c6ysoejefuazm63@privatize>
+References: <20240418105730.120913-1-andrejs.cainikovs@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <ZipWt03PhXs2Yc84@infradead.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+In-Reply-To: <20240418105730.120913-1-andrejs.cainikovs@gmail.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Thu, Apr 25, 2024 at 06:12:23AM -0700, Christoph Hellwig wrote:
-> This triggers the workaround for really old xfsprogs putting in a
-> bogus h_size:
-> 
-> [   12.101992] XFS (loop0): invalid iclog size (0 bytes), using lsunit (65536 bytes)
-> 
-> but then calculates the log recovery buffer size based on the actual
-> on-disk h_size value.  The patch below open codes xlog_logrec_hblks and
-> fixes this particular reproducer.  But I wonder if we should limit the
-> workaround.  Brian, you don't happpen to remember how old xfsprogs had
-> to be to require your workaround (commit a70f9fe52daa8)?
-> 
+On 12:57-20240418, Andrejs Cainikovs wrote:
+[...]
 
-No, but a little digging turns up xfsprogs commit 20fbd4593ff2 ("libxfs:
-format the log with valid log record headers"), which I think is what
-you're looking for..? That went in around v4.5 or so, so I suppose
-anything earlier than that is affected.
+> Signed-off-by: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
+> ---
+> This patch requires https://lore.kernel.org/all/20240409121719.337709-1-andrejs.cainikovs@gmail.com/ to be applied,
+> if not the audio will just stop working because no code will ever enable the required clock to the codec.
 
-Brian
-
-> diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-> index b445e8ce4a7d21..b3ea546508dc93 100644
-> --- a/fs/xfs/xfs_log_recover.c
-> +++ b/fs/xfs/xfs_log_recover.c
-> @@ -2999,7 +2999,7 @@ xlog_do_recovery_pass(
->  	int			error = 0, h_size, h_len;
->  	int			error2 = 0;
->  	int			bblks, split_bblks;
-> -	int			hblks, split_hblks, wrapped_hblks;
-> +	int			hblks = 1, split_hblks, wrapped_hblks;
->  	int			i;
->  	struct hlist_head	rhash[XLOG_RHASH_SIZE];
->  	LIST_HEAD		(buffer_list);
-> @@ -3055,14 +3055,16 @@ xlog_do_recovery_pass(
->  		if (error)
->  			goto bread_err1;
->  
-> -		hblks = xlog_logrec_hblks(log, rhead);
-> -		if (hblks != 1) {
-> -			kvfree(hbp);
-> -			hbp = xlog_alloc_buffer(log, hblks);
-> +		if ((rhead->h_version & cpu_to_be32(XLOG_VERSION_2)) &&
-> +		    h_size > XLOG_HEADER_CYCLE_SIZE) {
-> +			hblks = DIV_ROUND_UP(h_size, XLOG_HEADER_CYCLE_SIZE);
-> +			if (hblks > 1) {
-> +				kvfree(hbp);
-> +				hbp = xlog_alloc_buffer(log, hblks);
-> +			}
->  		}
->  	} else {
->  		ASSERT(log->l_sectBBsize == 1);
-> -		hblks = 1;
->  		hbp = xlog_alloc_buffer(log, 1);
->  		h_size = XLOG_BIG_RECORD_BSIZE;
->  	}
-> 
-
+Thanks. lets wait for the dependency patch to be merged to master, and
+once done, please resubmit this patch. I am going to guess for the next
+cycle.
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
