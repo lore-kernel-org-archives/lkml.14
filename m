@@ -1,129 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054097F486;
-	Thu, 25 Apr 2024 09:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE4184DFC;
+	Thu, 25 Apr 2024 09:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714036817; cv=none; b=DUD0AGdRTp1z21YiYXyYxsGNaMKycfD/WmDb2AaVZr32VWemtgFTEy2+3+cyT5hdMX40Tz9kHgkyWjip6Br5M/2CVSKBaPZfcfi37KiaKuiKt6uaelXK6o3ihQ9wIyKC2UoiQIS65S21nbae19LyonTtC801LIw+TAumP6gGewI=
+	t=1714036827; cv=none; b=t0x4VXSQyStnKvXn8E/rt+VvvhjwXcgpO7QxxAnA9xqQn4JoTVAlrQi55prvXmciPf5sv9j+48oJ6NkrWuEGSoFtty/boTkd/LmQUDUKqBBTvp//hM7qoEKjThJ15QBDSFH2ApAW4ECIJIgZN++6TXa0dnze3bJjkENZUBZsnzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714036817; c=relaxed/simple;
-	bh=scq4jbe+JsWNWHK4RGuhKPW6OdFPwBIJt/gcCKwEELE=;
+	s=arc-20240116; t=1714036827; c=relaxed/simple;
+	bh=b5xHrUaTH8w38xvavMQn5oxGZmYM/ryuyekrAQ4JJJs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OEnCmK5dYTL3BJmUoeN5LRKsvOlnjzbg1fimm395RqzHBqNPeA7DOKF4RWY0RBFdrbXMhGg8n1Bv7qtGo+6rVSFBfhxiL9Jtx0KtlIqDPD3dpHPJdX+ajtDLLIV3ydSn09fntmE0EAcYUelCG6Z4PV5SvwtNqzRSDPg5EJrhKBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qh8fEvfr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qh8fEvfr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D875FC113CC;
-	Thu, 25 Apr 2024 09:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714036816;
-	bh=scq4jbe+JsWNWHK4RGuhKPW6OdFPwBIJt/gcCKwEELE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qh8fEvfrYgQxU69d6HTI7SeE7dK1kinWQIKJrq8+RzHCuqLvK2ZRcyW3Gn8ig34vf
-	 nOJnOoMryesFtgTYuzsCqmrr3qD893xVzquGrbTzX5owFdqLS2V+ByxZ2trlFVNVhw
-	 BSAE5MadUJiesNHUll6WNQpJmMQaQ238AbtqZGZJDlZ4HLsiXpICGvVobpAzNyfm8k
-	 L6DPbL4WJ1VKv4XtWAYikhegJrt1aggASINWXiZU+KLsdnopuAW8bt+uqNBEcFpozW
-	 /X81BvRA77/2p7SU8gJXSditzwbjrnCW/0IZ9EvX3+YUF0tRmGHJVfH8ConMaRwhsK
-	 jMUhvbNx67D3g==
-Date: Thu, 25 Apr 2024 11:20:04 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Cc: amir73il@gmail.com, hu1.chen@intel.com, miklos@szeredi.hu, 
-	malini.bhandaru@intel.com, tim.c.chen@intel.com, mikko.ylinen@intel.com, 
-	lizhen.you@intel.com, linux-unionfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] overlayfs: Optimize override/revert creds
-Message-ID: <20240425-nullnummer-pastinaken-c8cf2f7c41f3@brauner>
-References: <20240403021808.309900-1-vinicius.gomes@intel.com>
- <20240424-befund-unantastbar-9b0154bec6e7@brauner>
- <87a5liy3le.fsf@intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y2vjJ9rZPgcQSr2r+OzX2SBdL7KrYm9niJwT/c0mtKDlS2e/3Cp1rzCH9oTS0WqZNB3EZ2BUJiq0HsT1VSnQnAzfEgQKEnyVILS1DnGtdaTkLF0maZtQ2iyPfrozixFnqN1w7hsOctb469jbmm3s46PWlUq5+/2aSDVuXe7JiJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+X-CSE-ConnectionGUID: 4OGhaSXxQxSJx/b/Bw4dSw==
+X-CSE-MsgGUID: ZyOa2snTQiOCkGECz5W/rg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="32201143"
+X-IronPort-AV: E=Sophos;i="6.07,228,1708416000"; 
+   d="scan'208";a="32201143"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 02:20:25 -0700
+X-CSE-ConnectionGUID: 7jK+zlw0SRCZVKs9+SRg7A==
+X-CSE-MsgGUID: BkXce46QTKCVC1YFPVtR8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,228,1708416000"; 
+   d="scan'208";a="25099980"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 02:20:21 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy.shevchenko@gmail.com>)
+	id 1rzvH7-00000000wZV-32jl;
+	Thu, 25 Apr 2024 12:20:17 +0300
+Date: Thu, 25 Apr 2024 12:20:17 +0300
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	linux-kernel@vger.kernel.org,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
+	Lee Jones <lee@kernel.org>, Jiawen Wu <jiawenwu@trustnetic.com>,
+	Mengyuan Lou <mengyuanlou@net-swift.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Duanqiang Wen <duanqiangwen@net-swift.com>,
+	"open list:SYNOPSYS DESIGNWARE I2C DRIVER" <linux-i2c@vger.kernel.org>,
+	"open list:WANGXUN ETHERNET DRIVER" <netdev@vger.kernel.org>
+Subject: Re: [PATCH 1/4] i2c: designware: Create shared header hosting driver
+ name
+Message-ID: <ZiogUS3yN5lXT-GH@smile.fi.intel.com>
+References: <20240423233622.1494708-1-florian.fainelli@broadcom.com>
+ <20240423233622.1494708-2-florian.fainelli@broadcom.com>
+ <ZihLSKe_BHxasBql@surfacebook.localdomain>
+ <59b7ba5a-14a8-497e-8cf8-53bdf4e8cb8e@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87a5liy3le.fsf@intel.com>
+In-Reply-To: <59b7ba5a-14a8-497e-8cf8-53bdf4e8cb8e@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Apr 24, 2024 at 12:15:25PM -0700, Vinicius Costa Gomes wrote:
-> Christian Brauner <brauner@kernel.org> writes:
-> 
-> > On Tue, Apr 02, 2024 at 07:18:05PM -0700, Vinicius Costa Gomes wrote:
-> >> Hi,
-> >> 
-> >> Changes from RFC v3:
-> >>  - Removed the warning "fixes" patches, as they could hide potencial
-> >>    bugs (Christian Brauner);
-> >>  - Added "cred-specific" macros (Christian Brauner), from my side,
-> >>    added a few '_' to the guards to signify that the newly introduced
-> >>    helper macros are preferred.
-> >>  - Changed a few guard() to scoped_guard() to fix the clang (17.0.6)
-> >>    compilation error about 'goto' bypassing variable initialization;
-> >> 
-> >> Link to RFC v3:
-> >> 
-> >> https://lore.kernel.org/r/20240216051640.197378-1-vinicius.gomes@intel.com/
-> >> 
-> >> Changes from RFC v2:
-> >>  - Added separate patches for the warnings for the discarded const
-> >>    when using the cleanup macros: one for DEFINE_GUARD() and one for
-> >>    DEFINE_LOCK_GUARD_1() (I am uncertain if it's better to squash them
-> >>    together);
-> >>  - Reordered the series so the backing file patch is the first user of
-> >>    the introduced helpers (Amir Goldstein);
-> >>  - Change the definition of the cleanup "class" from a GUARD to a
-> >>    LOCK_GUARD_1, which defines an implicit container, that allows us
-> >>    to remove some variable declarations to store the overriden
-> >>    credentials (Amir Goldstein);
-> >>  - Replaced most of the uses of scoped_guard() with guard(), to reduce
-> >>    the code churn, the remaining ones I wasn't sure if I was changing
-> >>    the behavior: either they were nested (overrides "inside"
-> >>    overrides) or something calls current_cred() (Amir Goldstein).
-> >> 
-> >> New questions:
-> >>  - The backing file callbacks are now called with the "light"
-> >>    overriden credentials, so they are kind of restricted in what they
-> >>    can do with their credentials, is this acceptable in general?
-> >
-> > Until we grow additional users, I think yes. Just needs to be
-> > documented.
-> >
-> 
-> Will add some documentation for it, then.
-> 
-> >>  - in ovl_rename() I had to manually call the "light" the overrides,
-> >>    both using the guard() macro or using the non-light version causes
-> >>    the workload to crash the kernel. I still have to investigate why
-> >>    this is happening. Hints are appreciated.
-> >
-> > Do you have a reproducer? Do you have a splat from dmesg?
-> 
-> Just to be sure, with this version of the series the crash doesn't
-> happen. It was only happening when I was using the guard() macro
-> everywhere.
-> 
-> I just looked at my crash collection and couldn't find the splats, from
-> what I remember I lost connection to the machine, and wasn't able to
-> retrieve the splat.
-> 
-> I believe the crash and clang 17 compilation error point to the same
-> problem, that in ovl_rename() some 'goto' skips the declaration of the
-> (implicit) variable that the guard() macro generates. And it ends up
-> doing a revert_creds_light() on garbage memory when ovl_rename()
-> returns.
+On Thu, Apr 25, 2024 at 11:33:02AM +0300, Jarkko Nikula wrote:
+> On 4/24/24 2:59 AM, Andy Shevchenko wrote:
+> > Tue, Apr 23, 2024 at 04:36:19PM -0700, Florian Fainelli kirjoitti:
+> > > We have a number of drivers that reference the string "i2c_designware"
+> > > yet this is copied all over the places with opportunities for this
+> > > string being mis-used. Create a shared header that defines this as a
+> > > constant that other drivers can reference.
 
-If this is a compiler bug this warrants at least a comment in the commit
-message because right now people will be wondering why that place
-doesn't use a guard. Ideally we can just use guards everywhere though
-and report this as a bug against clang, I think.
+...
 
-> 
-> (if you want I can try and go back to "guard() everywhere" and try a bit
-> harder to get a splat)
-> 
-> Does that make sense?
+> > >   #include <linux/i2c.h>
+> > > +#include <linux/i2c-designware.h>
+> > 
+> > Can it be hidden in the subfolder?
 
-Yes.
+...
+
+> > > -#define DRIVER_NAME "i2c-designware-pci"
+> > > +#define DRIVER_NAME I2C_DESIGNWARE_NAME "-pci"
+> > 
+> > Oh, this makes all the things hard to read.
+> > 
+> > >   /* Work with hotplug and coldplug */
+> > > -MODULE_ALIAS("i2c_designware-pci");
+> > > +MODULE_ALIAS(DRIVER_NAME);
+> > 
+> > I believe we shouldn't use MODULE_ALIAS() without real justification.
+> > 
+> I think MODULE_ALIAS() is even needless here since this device is not added
+> from another driver but loaded only for known PCI IDs in device table.
+
+The patch that removes it got reverted :-( and then removed completely from PR.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
