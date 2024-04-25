@@ -1,234 +1,193 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B64E15251C
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 19:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8354714EC4A
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 19:40:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714074001; cv=none; b=o15MP6yiI2qZDb4TppW37yJp9HAMO/vVCjkVF36f+/Smuv9YyFlOGidvDCN+daRlPjNDgio9KQbGmdPDqHej91Bpo4oeZ2AcnZj5gh7GhB75LNLMJeoVHH/gQgosKG6H2UYzlLdAFFPtW0skEBooNfZmUfMpvul7N9dq8UIENS4=
+	t=1714074046; cv=none; b=aoSUXc7TZHUBSDN1mRodiZrCjN53f+YArSimkUUDVlqQRNvp9ySIV9icgxkqbofuCHRSNbUcnkiRORYKnW8PzJFj2bNDWDkrXe9ejxTR73GEnokIJATz0iEpWXqg/eLNhYwkRjR6d8AjK8bOniQMfCvE08ePQzM7BQadj3//50s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714074001; c=relaxed/simple;
-	bh=eonC85eoFtBJtpDL59x2N+cpTWUJEFnuEMfzaBkKfbA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VhibZs+qYo7CJiYLkhkPQP2/hmr2vz9zlZrOE43vl7PQz2sVdx5X1itKHZwU1oX1NKvggJUnfJEJpsWYB63LxV0pCSa/Gx1lTLL7oec8Qo7GRBMrOGV3P3DvSltZ1JIbSKfbTBIvAWipTgQDo67ho4B2aVsQemLdrEBEOPq2bYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=upL2gC1L; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1714074046; c=relaxed/simple;
+	bh=NxRn6wwHeZl2W6m95OUrYBSMLuu68n9JunWUCNzxpKY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=RiyQmIreU4uaR6Ok9nU2sMDG+2rG1txIeG935Vq+2gRHkN1kLd7PzMZyDUB49yQbIKojPiWlWWVeuq5ECnRAIPWW/vZc2Qg2h7+/hZWiUIONOOhCLE712m7hY6B7xDpErv3ykPuKSevghczOe8C1HhwwJ9Mg9Nkv2XZCeeJGC3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=nT4RwQjZ; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="upL2gC1L"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6ecec796323so1500971b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 12:39:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1714073998; x=1714678798; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FuEzACDgvxR/jlPdG6IpUjcsXiIpoPyyUaqA1tLQdL8=;
-        b=upL2gC1L8CFSqUuAPyKO3LEYl+hZzyh/EtbUL57j/HmavW4/e3cAvek43PkBql8iHa
-         XdJw3djlCml+IQdFbF/tAbHy+vy0UOlsye6N2tcbbm+oIaOArEX5OFD8TKBshJY76WSc
-         xjptYUd6tgTFxM0GyomxKYXz1ma/2g3lZB1+Pc7OG4a1y6uAj8P6gDvTFvJJibk6tHuU
-         utagmLn40wGJHYRVI02Sb9nv9wsA8Caua8kf7phCollEcZvFKE36t1Ro6LVxV6nRi/Bx
-         06kbZv4JjveSU5lFSD1My0n6hcZq06n/kKsz11IlioFwhwOmIi5ePXrATt4DSNZpkDq8
-         Skvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714073998; x=1714678798;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FuEzACDgvxR/jlPdG6IpUjcsXiIpoPyyUaqA1tLQdL8=;
-        b=ItV7ibO+Tt83LOB78Go0gJIqvTqDMZF2C9R92x4wwv9Ivtv7s740Jtr6JmXplNE0NN
-         QYEEnOGuEUWq0LeVaHACGkJBpJNsu9PukLecJTQtbCL3GzWQJ5TlfwcF28GygDFE77WC
-         ipwZIvrFT10CS0AFG65ey4c8UQ3EcXj/f1HLYb2qE8JPnDMXlCkhzcXPHtnjdetTCLzH
-         eCjIpxIlTTHhD+8dXMO+s0CxWDF7HJG6GmnaGii2hmYmMiOtmVDg9bAJtI/jwzzD5Lzt
-         2Sw6uiAptrcPE9y+O8GjK6ACvReFhqsSU5PEqBXClen+nhSmOY6nzA4+nukh+6gmUov3
-         sYNA==
-X-Gm-Message-State: AOJu0Yx9DIHQhSwGRi7FM6rgWVXx/JRC1rdJIdlzkIX1IMbIIxL16rFB
-	wV3CTr4gc1d7xXpjjvyKcp3d8BJCBxe40BhcCp4cg8gnjaeovMNZKvV6sUHDou97IZ2kljn8dPf
-	0
-X-Google-Smtp-Source: AGHT+IHWwmGuvBVQMoylwvzXz3CnnNRk0Jt2cal/7gbWtOpzPMnzFmO8NffRKGYa6qFriuIqRhnFMA==
-X-Received: by 2002:a05:6a20:dc95:b0:1aa:9595:4261 with SMTP id ky21-20020a056a20dc9500b001aa95954261mr722289pzb.22.1714073998176;
-        Thu, 25 Apr 2024 12:39:58 -0700 (PDT)
-Received: from atishp.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id fk12-20020a056a003a8c00b006e6a684a6ddsm13525487pfb.220.2024.04.25.12.39.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 12:39:57 -0700 (PDT)
-From: Atish Patra <atishp@rivosinc.com>
-To: linux-kernel@vger.kernel.org
-Cc: Atish Patra <atishp@rivosinc.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	linux-riscv@lists.infradead.org,
-	kvm-riscv@lists.infradead.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Will Deacon <will@kernel.org>
-Subject: [kvm-riscv/for-next 2/2] drivers/perf: riscv: Fix RV32 snapshot overflow use case
-Date: Thu, 25 Apr 2024 16:29:32 -0700
-Message-Id: <20240425232933.4111680-3-atishp@rivosinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240425232933.4111680-1-atishp@rivosinc.com>
-References: <20240425232933.4111680-1-atishp@rivosinc.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nT4RwQjZ"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240425194035euoutp0178463ec110d1be1b0e3ea7cea2a4a638~JnUDkCe-p1887518875euoutp01y
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 19:40:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240425194035euoutp0178463ec110d1be1b0e3ea7cea2a4a638~JnUDkCe-p1887518875euoutp01y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1714074035;
+	bh=+ve4YzZPSzdZ+iyibvf0yaqAhYlUh+0zk0V42/Z+YIg=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=nT4RwQjZLbNKK3ZXH8LXA+L749MfFdKG9pEfyQ68SB1/pZDi4aIlVBXooQyu2TVg8
+	 qHZgZHzS0Kno0EI6VuLpcSHLJUAeN3qp3YrV3+nKVj9FE4b6qwk87ccn6i6mHEqtq0
+	 Ec1CD4srUUuUu106509GC4eX+jE9RG4kLsDwgFmc=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20240425194034eucas1p10c61dbd2c10c7bb4da3435267dc04cf7~JnUC0H6uU1754517545eucas1p1K;
+	Thu, 25 Apr 2024 19:40:34 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges3new.samsung.com (EUCPMTA) with SMTP id 3C.01.09620.2B1BA266; Thu, 25
+	Apr 2024 20:40:34 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240425194033eucas1p2c1e98d1c55c970e246087e2dab180e84~JnUCPRHI62101121011eucas1p2T;
+	Thu, 25 Apr 2024 19:40:33 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240425194033eusmtrp227da945401031d3afe99d684284ef0d5~JnUCOzDG_2742827428eusmtrp2U;
+	Thu, 25 Apr 2024 19:40:33 +0000 (GMT)
+X-AuditID: cbfec7f5-d31ff70000002594-a2-662ab1b26f49
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 70.AF.09010.1B1BA266; Thu, 25
+	Apr 2024 20:40:33 +0100 (BST)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240425194033eusmtip17d3bc8e97a0af5fefdf5d9fdf2bcd9d2~JnUB2lUxd1368613686eusmtip1X;
+	Thu, 25 Apr 2024 19:40:33 +0000 (GMT)
+Message-ID: <21ea292a-b1d1-43e2-92ab-9f1f63aaf729@samsung.com>
+Date: Thu, 25 Apr 2024 21:40:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] usb: chipidea: move ci_ulpi_init after the phy
+ initialization
+To: Michael Grzeschik <m.grzeschik@pengutronix.de>, Peter Chen
+	<peter.chen@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20240328-chipidea-phy-misc-v1-1-907d9de5d4df@pengutronix.de>
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnleLIzCtJLcpLzFFi42LZduzned1NG7XSDE5PF7ZoXryezeLyrjls
+	FouWtTJbbGm7wmTxa/8mFgdWj02rOtk89s9dw+7R/9fA4/MmuQCWKC6blNSczLLUIn27BK6M
+	tfvPMxbMEK34umAFcwNjj2AXIyeHhICJxIkDPYxdjFwcQgIrGCXaF11ih3C+MEqsP7oGKvOZ
+	UWLC2V5WmJYNS59CVS1nlNg18RAbhPORUWLb7ktgVbwCdhJnZr1lBrFZBFQlGp8/YIKIC0qc
+	nPmEBcQWFZCXuH9rBjuILSwQInF51RmwQSICnYwS21u+ADVzcDALWEv83JcPUsMsIC5x68l8
+	sDlsAoYSXW+72EBsTgEvie9Nr1khauQltr+dwwwyR0LgBIfEzS0bmCHOdpG4NHs9lC0s8er4
+	FnYIW0bi/06QoSAN7YwSC37fh3ImMEo0PL/FCFFlLXHn3C82iIs0Jdbv0ocIO0qsbL3MDhKW
+	EOCTuPFWEOIIPolJ26YzQ4R5JTrahCCq1SRmHV8Ht/bghUvMExiVZiEFyywkb85C8s4shL0L
+	GFlWMYqnlhbnpqcWG+ellusVJ+YWl+al6yXn525iBKaZ0/+Of93BuOLVR71DjEwcjIcYJTiY
+	lUR4b37USBPiTUmsrEotyo8vKs1JLT7EKM3BoiTOq5oinyokkJ5YkpqdmlqQWgSTZeLglGpg
+	kj/PK7vd4ZWx9Q3BOdMPLriXN+VkXX3ulkM/xZzvzr7VdMZ37sNTZ7IjCvYIbldbktL98NTs
+	Ci2xvtTntrWCbm3hErZr9sUu3/xa82jb5xR77zmCi+6n5bzazSDFcpBFSoFvr9WG5FXhctGb
+	OIJaljeK/OnkNZr49N2NeL+rInnL1sw6bPJasGLS3dJHCzb/DujcsX1yUFix4r/rCxIkOJcb
+	Xbl1Oud89JWL0qdLVV/7SnbkZTTqlHve/LVHvq/0LH9balSjzfnLOzJaBQ5sdJvv4p0Wuvq0
+	walDG8z38PcouBxVDWfWMf5t7bqKx1tJ0tRKqZjlM3N+TPAlf/PW31/OXV7n6CUVZrFs4ey7
+	SizFGYmGWsxFxYkAegJTe6IDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAIsWRmVeSWpSXmKPExsVy+t/xu7obN2qlGWz+pGnRvHg9m8XlXXPY
+	LBYta2W22NJ2hcni1/5NLA6sHptWdbJ57J+7ht2j/6+Bx+dNcgEsUXo2RfmlJakKGfnFJbZK
+	0YYWRnqGlhZ6RiaWeobG5rFWRqZK+nY2Kak5mWWpRfp2CXoZa/efZyyYIVrxdcEK5gbGHsEu
+	Rk4OCQETiQ1Ln7J3MXJxCAksZZS4v2MOI0RCRuLktAZWCFtY4s+1LjaIoveMErfez2ADSfAK
+	2EmcmfWWGcRmEVCVaHz+gAkiLihxcuYTFhBbVEBe4v6tGewgtrBAiMTlVWfABokIdDNKrNjX
+	CLSBg4NZwFri5758kBohAU+J/qcQi5kFxCVuPZkPNpNNwFCi620X2F5OAS+J702voWrMJLq2
+	djFC2PIS29/OYZ7AKDQLyRmzkIyahaRlFpKWBYwsqxhFUkuLc9Nzi430ihNzi0vz0vWS83M3
+	MQKjatuxn1t2MK589VHvECMTB+MhRgkOZiUR3psfNdKEeFMSK6tSi/Lji0pzUosPMZoCw2Ii
+	s5Rocj4wrvNK4g3NDEwNTcwsDUwtzYyVxHk9CzoShQTSE0tSs1NTC1KLYPqYODilGphi9ix/
+	PfMGA/97uePT+evNtIK3sFYfvFivW3fzdu/J2u3rO716f9qqd0+55OAoubdlkgRj776I71sW
+	ZJ1TNDBr3762eY3+PtPg7dcyZ0gf7J60appK4/UiP5d6n6J19+cuL9foOB0R9MB7ZsHKuZEM
+	xW9S5lZtZ5qZfsHwvk2RmSyPd6XZ4pxP1W8WuWpF8ebc1C+o3ff89dII7dLtqbzm9w98PK5h
+	edt5cdCDlACFilfCn6s+lr3ZcDFQu/EHc3e9wkwNIVeZVxc2fqp4EH+z6XNSuBDDdHfmFVO1
+	HT7fsWIXYqqMX9gzy7Jrve7ibyvPsZpOv+cdnB+8eP6ltz18r7iWvzJ4+PDr6opv4TeUWIoz
+	Eg21mIuKEwEY5nfmMwMAAA==
+X-CMS-MailID: 20240425194033eucas1p2c1e98d1c55c970e246087e2dab180e84
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20240425194033eucas1p2c1e98d1c55c970e246087e2dab180e84
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240425194033eucas1p2c1e98d1c55c970e246087e2dab180e84
+References: <20240328-chipidea-phy-misc-v1-1-907d9de5d4df@pengutronix.de>
+	<CGME20240425194033eucas1p2c1e98d1c55c970e246087e2dab180e84@eucas1p2.samsung.com>
 
-The shadow copy alogirthm is implemented incorrectly. This patch fixes
-the behavior by keeping a per cpu shadow copy of the counter values to
-avoid clobbering for the cases where system more than XLEN counters and
-the overflown counter index are beyond XLEN. This issue can only be
-observed only in RV32 if an SBI implementation assigns logical counters
-ids greater than XLEN or firmware counter overflow is supported in the
-future.
+Dear All,
 
-Fixes : commit 22f5dac41004d ("drivers/perf: riscv: Implement SBI PMU snapshot function")
+On 02.04.2024 08:23, Michael Grzeschik wrote:
+> The function ci_usb_phy_init is already handling the
+> hw_phymode_configure path which is also only possible after we have
+> a valid phy. So we move the ci_ulpi_init after the phy initialization
+> to be really sure to be able to communicate with the ulpi phy.
+>
+> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
 
-Signed-off-by: Atish Patra <atishp@rivosinc.com>
----
- drivers/perf/riscv_pmu_sbi.c   | 49 +++++++++++++++++++---------------
- include/linux/perf/riscv_pmu.h |  2 ++
- 2 files changed, 30 insertions(+), 21 deletions(-)
+This patch landed in linux-next some time ago as commit 22ffd399e6e7 
+("usb: chipidea: move ci_ulpi_init after the phy initialization"). 
+Unfortunately it breaks host USB operation on DragonBoard410c 
+(arch/arm64/boot/dts/qcom/apq8016-sbc.dts). There is no error nor 
+warning in the kernel log besides the information about deferred probe 
+on the chipidea controller:
 
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index 2694110f1cff..98aaeb13e9db 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -588,6 +588,7 @@ static int pmu_sbi_snapshot_setup(struct riscv_pmu *pmu, int cpu)
- 		return sbi_err_map_linux_errno(ret.error);
- 	}
- 
-+	memset(cpu_hw_evt->snapshot_cval_shcopy, 0, sizeof(u64) * RISCV_MAX_COUNTERS);
- 	cpu_hw_evt->snapshot_set_done = true;
- 
- 	return 0;
-@@ -605,7 +606,7 @@ static u64 pmu_sbi_ctr_read(struct perf_event *event)
- 	union sbi_pmu_ctr_info info = pmu_ctr_list[idx];
- 
- 	/* Read the value from the shared memory directly only if counter is stopped */
--	if (sbi_pmu_snapshot_available() & (hwc->state & PERF_HES_STOPPED)) {
-+	if (sbi_pmu_snapshot_available() && (hwc->state & PERF_HES_STOPPED)) {
- 		val = sdata->ctr_values[idx];
- 		return val;
- 	}
-@@ -769,36 +770,38 @@ static inline void pmu_sbi_stop_hw_ctrs(struct riscv_pmu *pmu)
- 	struct cpu_hw_events *cpu_hw_evt = this_cpu_ptr(pmu->hw_events);
- 	struct riscv_pmu_snapshot_data *sdata = cpu_hw_evt->snapshot_addr;
- 	unsigned long flag = 0;
--	int i;
-+	int i, idx;
- 	struct sbiret ret;
--	unsigned long temp_ctr_values[64] = {0};
--	unsigned long ctr_val, temp_ctr_overflow_mask = 0;
-+	u64 temp_ctr_overflow_mask = 0;
- 
- 	if (sbi_pmu_snapshot_available())
- 		flag = SBI_PMU_STOP_FLAG_TAKE_SNAPSHOT;
- 
-+	/* Reset the shadow copy to avoid save/restore any value from previous overflow */
-+	memset(cpu_hw_evt->snapshot_cval_shcopy, 0, sizeof(u64) * RISCV_MAX_COUNTERS);
-+
- 	for (i = 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
- 		/* No need to check the error here as we can't do anything about the error */
- 		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP, i * BITS_PER_LONG,
- 				cpu_hw_evt->used_hw_ctrs[i], flag, 0, 0, 0);
- 		if (!ret.error && sbi_pmu_snapshot_available()) {
- 			/* Save the counter values to avoid clobbering */
--			temp_ctr_values[i * BITS_PER_LONG + i] = sdata->ctr_values[i];
--			/* Save the overflow mask to avoid clobbering */
--			if (BIT(i) & sdata->ctr_overflow_mask)
--				temp_ctr_overflow_mask |= BIT(i + i * BITS_PER_LONG);
-+			for_each_set_bit(idx, &cpu_hw_evt->used_hw_ctrs[i], BITS_PER_LONG) {
-+				cpu_hw_evt->snapshot_cval_shcopy[i * BITS_PER_LONG + idx] =
-+							sdata->ctr_values[idx];
-+				/* Save the overflow mask to avoid clobbering */
-+				if (BIT(idx) & sdata->ctr_overflow_mask)
-+					temp_ctr_overflow_mask |= BIT(idx + i * BITS_PER_LONG);
-+			}
- 		}
- 	}
- 
--	/* Restore the counter values to the shared memory */
-+	/* Restore the counter values to the shared memory for used hw counters */
- 	if (sbi_pmu_snapshot_available()) {
--		for (i = 0; i < 64; i++) {
--			ctr_val = temp_ctr_values[i];
--			if (ctr_val)
--				sdata->ctr_values[i] = ctr_val;
--			if (temp_ctr_overflow_mask)
--				sdata->ctr_overflow_mask = temp_ctr_overflow_mask;
--		}
-+		for_each_set_bit(idx, cpu_hw_evt->used_hw_ctrs, RISCV_MAX_COUNTERS)
-+			sdata->ctr_values[idx] = cpu_hw_evt->snapshot_cval_shcopy[idx];
-+		if (temp_ctr_overflow_mask)
-+			sdata->ctr_overflow_mask = temp_ctr_overflow_mask;
- 	}
- }
- 
-@@ -850,7 +853,7 @@ static inline void pmu_sbi_start_ovf_ctrs_sbi(struct cpu_hw_events *cpu_hw_evt,
- static inline void pmu_sbi_start_ovf_ctrs_snapshot(struct cpu_hw_events *cpu_hw_evt,
- 						   u64 ctr_ovf_mask)
- {
--	int idx = 0;
-+	int i, idx = 0;
- 	struct perf_event *event;
- 	unsigned long flag = SBI_PMU_START_FLAG_INIT_SNAPSHOT;
- 	u64 max_period, init_val = 0;
-@@ -863,7 +866,7 @@ static inline void pmu_sbi_start_ovf_ctrs_snapshot(struct cpu_hw_events *cpu_hw_
- 			hwc = &event->hw;
- 			max_period = riscv_pmu_ctr_get_width_mask(event);
- 			init_val = local64_read(&hwc->prev_count) & max_period;
--			sdata->ctr_values[idx] = init_val;
-+			cpu_hw_evt->snapshot_cval_shcopy[idx] = init_val;
- 		}
- 		/*
- 		 * We do not need to update the non-overflow counters the previous
-@@ -871,10 +874,14 @@ static inline void pmu_sbi_start_ovf_ctrs_snapshot(struct cpu_hw_events *cpu_hw_
- 		 */
- 	}
- 
--	for (idx = 0; idx < BITS_TO_LONGS(RISCV_MAX_COUNTERS); idx++) {
-+	for (i = 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
-+		/* Restore the counter values to relative indices for used hw counters */
-+		for_each_set_bit(idx, &cpu_hw_evt->used_hw_ctrs[i], BITS_PER_LONG)
-+			sdata->ctr_values[idx] =
-+					cpu_hw_evt->snapshot_cval_shcopy[idx + i * BITS_PER_LONG];
- 		/* Start all the counters in a single shot */
- 		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, idx * BITS_PER_LONG,
--			  cpu_hw_evt->used_hw_ctrs[idx], flag, 0, 0, 0);
-+			  cpu_hw_evt->used_hw_ctrs[i], flag, 0, 0, 0);
- 	}
- }
- 
-@@ -898,7 +905,7 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
- 	int lidx, hidx, fidx;
- 	struct riscv_pmu *pmu;
- 	struct perf_event *event;
--	unsigned long overflow;
-+	u64 overflow;
- 	u64 overflowed_ctrs = 0;
- 	struct cpu_hw_events *cpu_hw_evt = dev;
- 	u64 start_clock = sched_clock();
-diff --git a/include/linux/perf/riscv_pmu.h b/include/linux/perf/riscv_pmu.h
-index c3fa90970042..701974639ff2 100644
---- a/include/linux/perf/riscv_pmu.h
-+++ b/include/linux/perf/riscv_pmu.h
-@@ -45,6 +45,8 @@ struct cpu_hw_events {
- 	phys_addr_t snapshot_addr_phys;
- 	/* Boolean flag to indicate setup is already done */
- 	bool snapshot_set_done;
-+	/* A shadow copy of the counter values to avoid clobbering during multiple SBI calls */
-+	u64 snapshot_cval_shcopy[RISCV_MAX_COUNTERS];
- };
- 
- struct riscv_pmu {
+platform ci_hdrc.0: deferred probe pending: (reason unknown)
+
+Tomorrow I will try to investigate which operation during driver probe 
+triggers it. If there is anything else to check that might help fixing 
+this issue, let me know.
+
+> ---
+>   drivers/usb/chipidea/core.c | 8 ++++----
+>   drivers/usb/chipidea/ulpi.c | 5 -----
+>   2 files changed, 4 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+> index 835bf2428dc6e..bada13f704b62 100644
+> --- a/drivers/usb/chipidea/core.c
+> +++ b/drivers/usb/chipidea/core.c
+> @@ -1084,10 +1084,6 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+>   		return -ENODEV;
+>   	}
+>   
+> -	ret = ci_ulpi_init(ci);
+> -	if (ret)
+> -		return ret;
+> -
+>   	if (ci->platdata->phy) {
+>   		ci->phy = ci->platdata->phy;
+>   	} else if (ci->platdata->usb_phy) {
+> @@ -1142,6 +1138,10 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+>   		goto ulpi_exit;
+>   	}
+>   
+> +	ret = ci_ulpi_init(ci);
+> +	if (ret)
+> +		return ret;
+> +
+>   	ci->hw_bank.phys = res->start;
+>   
+>   	ci->irq = platform_get_irq(pdev, 0);
+> diff --git a/drivers/usb/chipidea/ulpi.c b/drivers/usb/chipidea/ulpi.c
+> index dfec07e8ae1d2..89fb51e2c3ded 100644
+> --- a/drivers/usb/chipidea/ulpi.c
+> +++ b/drivers/usb/chipidea/ulpi.c
+> @@ -68,11 +68,6 @@ int ci_ulpi_init(struct ci_hdrc *ci)
+>   	if (ci->platdata->phy_mode != USBPHY_INTERFACE_MODE_ULPI)
+>   		return 0;
+>   
+> -	/*
+> -	 * Set PORTSC correctly so we can read/write ULPI registers for
+> -	 * identification purposes
+> -	 */
+> -	hw_phymode_configure(ci);
+>   
+>   	ci->ulpi_ops.read = ci_ulpi_read;
+>   	ci->ulpi_ops.write = ci_ulpi_write;
+>
+> ---
+> base-commit: 5bab5dc780c9ed0c69fc2f828015532acf4a7848
+> change-id: 20240328-chipidea-phy-misc-b3f2bc814784
+>
+> Best regards,
+
+Best regards
 -- 
-2.34.1
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
