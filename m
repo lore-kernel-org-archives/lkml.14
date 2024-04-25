@@ -1,110 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A42714D716;
-	Thu, 25 Apr 2024 15:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C638E14AD38
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 15:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.120.2.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714057499; cv=none; b=KidPL0Y0MdhQv7/j3TOv1yaPqT/z9NaB3qYnxD/P4JXk/1Orp1vAGaPEZgZ4o9Eh2N9/N5XNzy/Qw+79Qlq3nCHmBDoE3frgFdNkCV6FP+6ympsjK+AZHzx8MerVjhg+wjg7arxIK17vAADSXRDnfp0pfPcjNex6kOcj/9l37F4=
+	t=1714057507; cv=none; b=RjOtmJ1HBXyv6PpjTWPoMk3Y3IiWLQ9ZrO1gPQ6Tpl+BNuvEgSKyWDufxSnHNDeY9L6TG/MHA7p+bfEigB6Int9pT8v3rkd5Vmoj0AqC+6dwTF+dIpSH4nDcOc82UshggB/mlMAfHQoxvIJJRtH0QZ9ksTIT7rdwjrtB9Gsq+tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714057499; c=relaxed/simple;
-	bh=Ebs59IXexhzqLXqVggapRFuVaAJDANXqVUimkFuzG2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iz2cF3J2PW1d8+25wmziIgcRnLrE/Wi9wJxMgBnM5NGuY/C/vdBeuLHxi3Gs35jrGNMfnFmHCDgMQ955jnmSAz2QnV24zmAHoG14UKFeSL5GjqP3BGMotijzW0qf9C95WjNJaT46xGjKCqBJDyiF7Z5CNpNcqMcePM+dF2FqLlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EEIKu4Eo; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EEIKu4Eo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714057498; x=1745593498;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ebs59IXexhzqLXqVggapRFuVaAJDANXqVUimkFuzG2I=;
-  b=EEIKu4Eov+xtIbAUMByelqaVYNn+95PMWNES9FukOmIkv+aqXHLM1oZg
-   LYYrHfzOY3jw2jDDKplEcE/RmKmg7k11ZXe0J6Eam1RAPhqrE3KvTKiPw
-   TvTthpFUdFl82fMrlpKsnEmFUNK60dPskG8WbKZnB092yi3sLHVdniK3X
-   7kmRtpOEXAEeAeOyEJ4vTlMoXSmMKfpCHqlzpNUwLGffX0r7e1TcaWcia
-   eclWTk7DoijBxl1+3BaAv9RdeNOxUl7dc703Oj3D9TsUR32i1Pggs67d2
-   M3L0yVZRP7VPyltvEBnIbp3beft1kkwYbOxWgImB4X+gVKcyEy97GoZ0F
-   w==;
-X-CSE-ConnectionGUID: mBdWe2olSQCQ9A6FP5FMZA==
-X-CSE-MsgGUID: wmL8M6AqTxeWSq7KjSwxjg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="27206832"
-X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
-   d="scan'208";a="27206832"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 08:04:57 -0700
-X-CSE-ConnectionGUID: dj7BiCPeTHSZbsuGpPWT7A==
-X-CSE-MsgGUID: JTzKIusPSDCIclQtHdW4rA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
-   d="scan'208";a="29887001"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 08:04:54 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s00eY-000000012AE-3W0q;
-	Thu, 25 Apr 2024 18:04:50 +0300
-Date: Thu, 25 Apr 2024 18:04:50 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-	David Lechner <dlechner@baylibre.com>, Helge Deller <deller@gmx.de>,
-	linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] drm/ili9341: Remove the duplicative driver
-Message-ID: <ZipxEk9Lpff1kB7b@smile.fi.intel.com>
-References: <20240425124208.2255265-1-andriy.shevchenko@linux.intel.com>
- <20240425-perky-myrtle-gorilla-e1e24f@penduick>
+	s=arc-20240116; t=1714057507; c=relaxed/simple;
+	bh=7GgKCZNA8YG4pda2cJjsXOmL0hF/aMYRDuq0OcqOcYg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WA2joxapQw5FWBwRj2/dVl0R86ev3FejUg3q1brLwS5VUjVN6siptcy1VwpFk+LO1H390YFRi6qcicYaI/chU9HnNnpfE+f6vCKZ+d91I2kgsu3CEFH1pntwCBMeALpPhXH2MGCHcnhbGA57jfGDwHGkv570ijQxu+PAuFogxbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn; spf=pass smtp.mailfrom=sjtu.edu.cn; arc=none smtp.client-ip=202.120.2.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sjtu.edu.cn
+Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
+	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id 05E30100460AA;
+	Thu, 25 Apr 2024 22:55:57 +0800 (CST)
+Received: from zhaoyf.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
+	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id D655C380D11;
+	Thu, 25 Apr 2024 22:55:52 +0800 (CST)
+From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+To: jaegeuk@kernel.org,
+	chao@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+Subject: [f2fs-dev] [PATCH] f2fs: remove redundant parameter in is_next_segment_free()
+Date: Thu, 25 Apr 2024 22:55:28 +0800
+Message-ID: <20240425145528.2925372-1-zhaoyifan@sjtu.edu.cn>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240425-perky-myrtle-gorilla-e1e24f@penduick>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 25, 2024 at 04:58:06PM +0200, Maxime Ripard wrote:
-> Hi,
-> 
-> On Thu, Apr 25, 2024 at 03:42:07PM +0300, Andy Shevchenko wrote:
-> > First of all, the driver was introduced when it was already
-> > two drivers available for Ilitek 9341 panels.
-> > 
-> > Second, the most recent (fourth!) driver has incorporated this one
-> > and hence, when enabled, it covers the provided functionality.
-> > 
-> > Taking into account the above, remove duplicative driver and make
-> > maintenance and support eaiser for everybody.
-> > 
-> > Also see discussion [1] for details about Ilitek 9341 duplication
-> > code.
-> > 
-> > Link: https://lore.kernel.org/r/ZXM9pG-53V4S8E2H@smile.fi.intel.com [1]
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> I think it should be the other way around and we should remove the
-> mipi-dbi handling from panel/panel-ilitek-ili9341.c
+is_next_segment_free() takes a redundant `type` parameter. Remove it.
 
-Then please do it! I whining already for a few years about this.
+Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+---
+ fs/f2fs/segment.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-> It's basically two drivers glued together for no particular reason and
-> handling two very different use cases which just adds more complexity
-> than it needs to.
-> 
-> And it's the only driver doing so afaik, so it's definitely not "least
-> surprise" compliant.
-
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 2206199e8099..8d63ddfe4a77 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -2645,7 +2645,7 @@ static void write_current_sum_page(struct f2fs_sb_info *sbi,
+ }
+ 
+ static int is_next_segment_free(struct f2fs_sb_info *sbi,
+-				struct curseg_info *curseg, int type)
++				struct curseg_info *curseg)
+ {
+ 	unsigned int segno = curseg->segno + 1;
+ 	struct free_segmap_info *free_i = FREE_I(sbi);
+@@ -3073,8 +3073,7 @@ static bool need_new_seg(struct f2fs_sb_info *sbi, int type)
+ 	if (!is_set_ckpt_flags(sbi, CP_CRC_RECOVERY_FLAG) &&
+ 	    curseg->seg_type == CURSEG_WARM_NODE)
+ 		return true;
+-	if (curseg->alloc_type == LFS &&
+-	    is_next_segment_free(sbi, curseg, type) &&
++	if (curseg->alloc_type == LFS && is_next_segment_free(sbi, curseg) &&
+ 	    likely(!is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
+ 		return true;
+ 	if (!f2fs_need_SSR(sbi) || !get_ssr_segment(sbi, type, SSR, 0))
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.44.0
 
