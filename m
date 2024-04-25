@@ -1,135 +1,152 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84263D0AF
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 06:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB4927473;
+	Thu, 25 Apr 2024 06:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714025488; cv=none; b=fHOH/TYADCiVEuOa2sQp6YxLP1ugek2U5tCb+5NBGKMi3QRSafEh6Jsj5K5HOP41ShLdS7l6M2AKld0Amlanhas4E+7B0u/UNjT36FC5GHgqmgDxdp+MZCZQRQxTJJo4g4EDZT6AbemP/V2fcCTlauR5T6UagMbWj1qqHKSYCDQ=
+	t=1714025660; cv=none; b=i7kTpgoeKfhO8NGaX+rve9k/jj0peSPIydU0O0afBBgrz0kpMOHNzhpE7emN54x+oC3P77tQuG2n8vhnoqCeeWuJf8bSc7z9UjQvH2UCawdp6k39AXk7dVRJtQ/8UKyy17Iqv8ierBlcy1UVUjlw4gcwUwYBWRd4l41TWPbIRJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714025488; c=relaxed/simple;
-	bh=p0hpYpxGMt97VjbYVT85DiU8Lp8LED9dvYRFtoc70HM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=FS5WszLHcIa/XuIAo+onnPVwJKvW3aGNNhRDQwiMukDHoLafuz69tku4uDVrULb5UUtYGayH8sXjDWSVHWT22/xv4Pkw+tk019xp5d35pH4gduewAI4SgYQiFV5ZyENT8jjUh3lx3qOjfCnYwJLSEYLqpyKkxLhxumqrfftmhzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=EVHPE1B1; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1714025660; c=relaxed/simple;
+	bh=CRrjSsRbZZXBe3Zg1o6lhtldh9D/juwsek3Ag08YBpY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CuLhyDboeArDaSxSuzKQPQX5gqU+X4GyP8p62u30wnSKuLvwEBhPo3iVNlvsMUtJnsOcO2xAuDEQfBpBjI05fbvUD7BpC769Ngk3EwT0txffL86C4kd/unepNF3+sX1Y13OsKIOJueSM+cgX20wcKya3VwdTpfF/Hb+esO+1HPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ehncrRY8; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="EVHPE1B1"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 997A960003;
-	Thu, 25 Apr 2024 06:11:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714025482;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZhtOqdObLMFfH2uLM0X/i9rtom0+D5PtyZSHhXmLZx8=;
-	b=EVHPE1B1beL0YKPpWgRV/cKJAHS+xA4/JMdGxqFgelknOP2BelLO7etQNEl10+acPhwMyb
-	ySlIfn0cxw+rxnJygM+MXJ2T96hOYO6alZWHLyUSfNpcAm32x4Rd46Ey0+68QGHEVv6p3y
-	RCx7CG2Ytf5oYJojIb/C4/7Kt8y+dtMkMPMf9FWzARFtwwmKGqtfu8/FBWHyKEgh+ttIss
-	M3BW8+ViHvZ5TsgbrK47CHM7nsUJoxtzFmeb+/nysA0yF9Crg9Rvse3HWxVexXf5hhBlrt
-	8MbQpRVbx1VuZc+aLDG+jI7deGh0K/DYWsXeKoM6GZI984Iu7m/Ej0BMz+yEXA==
-Message-ID: <d4b4fb72-79e7-4e06-a038-4645574a799b@bootlin.com>
-Date: Thu, 25 Apr 2024 08:11:21 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehncrRY8"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-6082fd3e96eso481777a12.1;
+        Wed, 24 Apr 2024 23:14:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714025658; x=1714630458; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=P+cnrqP7ROZMYIZmqn7REt8CdXQIz/KakKw0fvi+u8k=;
+        b=ehncrRY8cmRafg0ysC+haERsyOjzcUwJmQpLoxvqi6sQR4GB3HOJ3dox8TX3Rrmo4D
+         lKQSpSsYiJta6+RA7OVjuNp02j3YE31zRuUQnoXberqwhvraTtyGcGFp8c655GmAf9Is
+         0ZsEbqZU2AfCQF/gmIn9RDV7DwjJEQMhWnzcVhbgocq1nxRXIXkvbT1nsRE2h4+WPkrC
+         +Lz/Df3DldSfpcBJjoGJXsH/VtO9CsOoi0FZ03oMB5La5qk2xo5uc99YPZ0dp1WxsPTa
+         /jvj7RfSfwQtLVhyR0D3gelu22vl6ltAgrJwplSq5cUdQywc5SNol+XcgzBpugtW2zof
+         avXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714025658; x=1714630458;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P+cnrqP7ROZMYIZmqn7REt8CdXQIz/KakKw0fvi+u8k=;
+        b=ftT5qiPu3qsGWvAIS298DsK9geOKVp9QgqPt8vbFSJgnl4zrEv3DVYgBW4c/JgASHE
+         SnTZ3KB7brL/ky52PwRxViuRwwuy/DlqnpZqBy4zdqHexNlTtFQgAMdSiOhPHuHeztRn
+         7z3K13ypmuPj8HvhHArhL/wD0cb9ee7cYa2uIsKAzpo1Br4DYE1fUQbB3WckHoPxenzA
+         UN5xPtVqrncwEjtxCSTWSp2rzH7fa/48dAiPKKyQn1EFKSrFNVUS5IMjK/SzlvfynU6D
+         5zA/aBAO8ieJdgTd7JpiFK7ODmqgYcP/VDVfolP4Ki8I5CW452OVi8QMgnvO4MU6+8fR
+         xu/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWnWmaj0mV0/9u5nsQ6LqQf3i8Pdv7/4FesoKqswhTw4mEQPhwmzdSAbpVi3Ovq9DdiWngI+eYKAReC4II+AW+q2qxcqw+z2pS20Zy/HET3Jm22SBRFXLhxr746CiKw5uVS1aQl4qhDpakM
+X-Gm-Message-State: AOJu0YzFQQOqzna6Y0oFtUf9o7BEbEdSRDUlE26Qm7LK03WjnxZpflih
+	CcPPSjYC0PK+SPgNQqrIqOLpRaC+e4d1B1311OmAhRSVatONkipW2FmKZxYw
+X-Google-Smtp-Source: AGHT+IHs42AUj8gwluZCiYM0AKuesrQTubnz7h1dTGYRvbTsCK1ahmnIaAw4hwETEPrlhp7SKP1wKw==
+X-Received: by 2002:a05:6a20:7285:b0:1a7:5402:8a92 with SMTP id o5-20020a056a20728500b001a754028a92mr5639944pzk.31.1714025658299;
+        Wed, 24 Apr 2024 23:14:18 -0700 (PDT)
+Received: from shresth-aspirea71576g.abesec.ac.in ([139.5.197.146])
+        by smtp.gmail.com with ESMTPSA id r6-20020a17090a5c8600b002ade3490b4asm6461667pji.22.2024.04.24.23.14.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 23:14:17 -0700 (PDT)
+From: Shresth Prasad <shresthprasad7@gmail.com>
+To: davem@davemloft.net,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org
+Cc: sparclinux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	javier.carrasco.cruz@gmail.com,
+	Shresth Prasad <shresthprasad7@gmail.com>,
+	Julia Lawall <julia.lawall@inria.fr>
+Subject: [PATCH][next] tty: sunsu: Simplify device_node cleanup by using __free
+Date: Thu, 25 Apr 2024 11:33:04 +0530
+Message-ID: <20240425060303.8045-2-shresthprasad7@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] pps: clients: gpio: Bypass edge's direction check
- when not needed
-From: Bastien Curutchet <bastien.curutchet@bootlin.com>
-To: Rodolfo Giometti <giometti@enneenne.com>
-Cc: linux-kernel@vger.kernel.org,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
- christophercordahi@nanometrics.ca
-References: <20240410113502.73038-1-bastien.curutchet@bootlin.com>
- <1f7f5b2f-54d4-4dc1-90ff-b896c930faed@enneenne.com>
- <5bda0980-2373-4284-bda4-89f0c6944e76@bootlin.com>
- <eb64ec08-2ae3-48bb-9f84-3cec362280b2@enneenne.com>
- <27196117-32bc-4892-b545-d9cf43a89f0a@bootlin.com>
- <c1e93cfe-371c-4855-9a13-b4b453bb9e88@enneenne.com>
- <28c5456d-535c-4ed9-b13a-fab7f50412be@bootlin.com>
- <9255124b-958e-4ab4-a812-67ad5d36e16d@enneenne.com>
- <6f064bd8-7937-4634-8a39-13ee5bcd6193@bootlin.com>
-Content-Language: en-US
-In-Reply-To: <6f064bd8-7937-4634-8a39-13ee5bcd6193@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: bastien.curutchet@bootlin.com
 
-Hi Rodolfo,
+Add `__free` function attribute to `ap` and `match` pointer
+initialisations which ensure that the pointers are freed as soon as they
+go out of scope, thus removing the need to manually free them using
+`of_node_put`.
 
+This also removes the need for the `goto` statement and the `rc`
+variable.
 
-On 4/12/24 14:20, Bastien Curutchet wrote:
-> Hi Rodolfo,
-> 
-> On 4/12/24 08:44, Rodolfo Giometti wrote:
->> On 11/04/24 14:44, Bastien Curutchet wrote:
->>>>
->>>> However we should think very well about this modification since it 
->>>> could be the case where we have a device sending both assert and 
->>>> clear events but we wish to catch just the asserts... in this case 
->>>> we will get doubled asserts!
->>>>
->>>
->>> My understanding is that clear events are to be captured only when this
->>> capture_clear boolean is set. If it is not set, the PPS_CAPTURECLEAR
->>> flag is not added to pps_source_info->mode and get_irqf_trigger_flags()
->>> will return only one edge flag (rising or falling depending on
->>> assert-falling-edge DT property).
->>
->> Yes. You are right.
->>
->>> By the way, I see that the capture_clear is never set since the legacy
->>> platform data support has been dropped (commit ee89646619ba).
->>
->> I see, but it can be re-enabled in the future... In this scenario, I 
->> think we should add a DT entry to enable this special behavior. Maybe 
->> we can also add a warning as below: >
->> static irqreturn_t pps_gpio_irq_handler(int irq, void *data)
->> {
->>          ...
->>          if ((rising_edge && !info->assert_falling_edge) ||
->>                          (!rising_edge && info->assert_falling_edge))
->>                  pps_event(info->pps, &ts, PPS_CAPTUREASSERT, data);
->>          else if (info->capture_clear &&
->>                          ((rising_edge && info->assert_falling_edge) ||
->>                          (!rising_edge && !info->assert_falling_edge)))
->>                  pps_event(info->pps, &ts, PPS_CAPTURECLEAR, data);
->>      else
->>          dev_warn_ratelimited(dev, "no ASSERT or CAPTURE event? "
->>              "Maybe you need support-tiny-assert-pulse?");
->>
->>          return IRQ_HANDLED;
->> }
->>
-> 
-> I'm not sure a DT entry is needed. IMO there are two cases:
->   1) capture_clear is unset. We need to capture only assert events,
->      interrupt will be triggered by assert edge only so there is no need
->      to check GPIO state: we can use the bypass.
->   2) capture_clear is set. We need to capture assert and/or clear
->      events, interrupt will be triggered by both assert and clear edges
->      so we can't avoid the GPIO state checking to distinguish clear
->      events from assert events: we can't use the bypass.
-> 
-> So if we bypass the GPIO's state check when capture_clear is unset and
-> leave current behavior when capture_clear is set:
->   - case 1) will be more efficient and we won't lose tiny pulses anymore
->   - case 2) is unchanged: we still might lose tiny pulses but as bypass
-> can't be done here, I think that we can't do better.
-> 
-> I agree that adding warning when the handler is left without triggering
-> a pps event can be useful, I can add it in a V3 version.
-> 
+Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+Signed-off-by: Shresth Prasad <shresthprasad7@gmail.com>
+---
+ drivers/tty/serial/sunsu.c | 37 +++++++++++--------------------------
+ 1 file changed, 11 insertions(+), 26 deletions(-)
 
-Would this be OK for you ? If yes, I'll send a V3 version without DT
-entry but with an additional warning.
+diff --git a/drivers/tty/serial/sunsu.c b/drivers/tty/serial/sunsu.c
+index 67a5fc70bb4b..0f463da5e7ce 100644
+--- a/drivers/tty/serial/sunsu.c
++++ b/drivers/tty/serial/sunsu.c
+@@ -1382,44 +1382,29 @@ static inline struct console *SUNSU_CONSOLE(void)
+ 
+ static enum su_type su_get_type(struct device_node *dp)
+ {
+-	struct device_node *ap = of_find_node_by_path("/aliases");
+-	enum su_type rc = SU_PORT_PORT;
++	struct device_node *ap __free(device_node) =
++			    of_find_node_by_path("/aliases");
+ 
+ 	if (ap) {
+ 		const char *keyb = of_get_property(ap, "keyboard", NULL);
+ 		const char *ms = of_get_property(ap, "mouse", NULL);
+-		struct device_node *match;
+ 
+ 		if (keyb) {
+-			match = of_find_node_by_path(keyb);
++			struct device_node *match __free(device_node) =
++					    of_find_node_by_path(keyb);
+ 
+-			/*
+-			 * The pointer is used as an identifier not
+-			 * as a pointer, we can drop the refcount on
+-			 * the of__node immediately after getting it.
+-			 */
+-			of_node_put(match);
+-
+-			if (dp == match) {
+-				rc = SU_PORT_KBD;
+-				goto out;
+-			}
++			if (dp == match)
++				return SU_PORT_KBD;
+ 		}
+ 		if (ms) {
+-			match = of_find_node_by_path(ms);
++			struct device_node *match __free(device_node) =
++					    of_find_node_by_path(ms);
+ 
+-			of_node_put(match);
+-
+-			if (dp == match) {
+-				rc = SU_PORT_MS;
+-				goto out;
+-			}
++			if (dp == match)
++				return SU_PORT_MS;
+ 		}
+ 	}
+-
+-out:
+-	of_node_put(ap);
+-	return rc;
++	return SU_PORT_PORT;
+ }
+ 
+ static int su_probe(struct platform_device *op)
+-- 
+2.44.0
 
-
-Best regards,
-Bastien
