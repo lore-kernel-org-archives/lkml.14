@@ -1,251 +1,211 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2068.outbound.protection.outlook.com [40.107.237.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91306149C72;
-	Thu, 25 Apr 2024 14:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714054374; cv=fail; b=IUR4ZI2x96uXPxfStNnIPfWw5Po28m5CT/vglpdKvhg1yv/gU8uDiPsSzSqWeUgAJVwOGp/C97W6SiicSoCdrHMfy7faAJhmuBfQ2m0NUwmSbjAIc+YkD4QoiG5nYU+l+8FVDvlqI/gF7DzT+gKwH43iO91YhGgIxhpMz7+uZq8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714054374; c=relaxed/simple;
-	bh=B6WHt+CH5Hy9yO81kX6Dp7XYlv+MG2xS8PvPmAxCPJ8=;
-	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=VmvFXJIoHPeEukqX1ZQ6mfAU0rpZwQbbFfX721dTuXo0CXHw8E+FkCgjWkNN9DhvrKFbkl8RxHCZzwmigEccwgwX1knkC/L+tis1AMqQpFSv+rXlRfAWdHyi/nCnGPHuSvmm3Z0IjF11buumwCQFHVEUC19mdd4yc8bnJXi5sSY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cbF74ojF; arc=fail smtp.client-ip=40.107.237.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cbF74ojF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eWCCckN9NSupOpS7pJa4v2mZz2GrereKaua0F8eqCsJU6FhagvCfMkFzf3dNA7xyU5O0RlVbAUZFNTX82MaabTRuBjLCVdkTNmLh0Bu3dso5aHOccNlsaABEM4PJjnPSAH4wA2RDqHGQj8wO0ETsfRqOn1Jyf2zjcw+emCpZV5jIcSEXq/dHgKlVpylDP3D6ZhV0TncW3Jbh5Hfok2MGDVb9r77BUONQQEigD0o1aBPtC9PbLSDhClMtMMslg8avJwsoiUhK+2kQwaCT2k1Sk/NLUEEyO4GBIdzZgUGq9Ur441KA8ok21ttWSj2CUMu7kPz2Hzf5B3c7J0fsYZE4Ww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bJZ49GcJFAaGr0VugH+a5oJzm9AM9XDTgu1Xhcp0dD4=;
- b=iqNGYdO3Whx0vg14BEOXxox6xTMfQQpyBazq+5IrcgMdxNeOmEAWWRwa+tRazni+MR0gVAoLgdZdxWrBWrB+83X9xGHDMLdltIuYNnu2qEmCmylVl4zMd9GJlfpWLps5VPU/napRmWM3w4UU1+YPQ8sn8P3AIsnRBgi/RMWreC1EdqlspQ4z1acJDHRq2GvNeke8ptPXCdLhNqRj55LZ8L8Lh7u+lYmpwSJO8GgI8TjBNcCjAw9+In3RNWmaRJdCx7OE6hO+593vqK5fPM1bkubbTgXIqsA9JZu0JLHpQscd6sLt71//kFBpuBYE+swsnRwKC3SUWlj3oizhbNeCyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bJZ49GcJFAaGr0VugH+a5oJzm9AM9XDTgu1Xhcp0dD4=;
- b=cbF74ojF8yiNUxWHtCJ4N/gRqvle1TBWY8+zC+OSZm1QBKocexsfKrvc1Rj5DSMhQPcQmj8KXWHbPN9KHrobeRMvUYoKyedTrS6jErcvZktuWwbQvyb9zH0A0k5YWKLrHAghnvh4uQVh08Vl3/kHiHwWDZvJt3jwGPA++2L86CM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com (2603:10b6:408:40::20)
- by MW4PR12MB8612.namprd12.prod.outlook.com (2603:10b6:303:1ec::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.24; Thu, 25 Apr
- 2024 14:12:48 +0000
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::43a5:ed10:64c2:aba3]) by BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::43a5:ed10:64c2:aba3%7]) with mapi id 15.20.7472.044; Thu, 25 Apr 2024
- 14:12:48 +0000
-Message-ID: <e0d10606-4472-4cde-b55d-34180efad42b@amd.com>
-Date: Thu, 25 Apr 2024 10:12:44 -0400
-User-Agent: Mozilla Thunderbird
-Cc: yazen.ghannam@amd.com, linux-edac@vger.kernel.org,
- linux-kernel@vger.kernel.org, tony.luck@intel.com, x86@kernel.org,
- Avadhut.Naik@amd.com, John.Allen@amd.com
-Subject: Re: [PATCH v2 07/16] x86/mce/amd: Simplify DFR handler setup
-Content-Language: en-US
-To: Borislav Petkov <bp@alien8.de>, robert.richter@amd.com
-References: <20240404151359.47970-1-yazen.ghannam@amd.com>
- <20240404151359.47970-8-yazen.ghannam@amd.com>
- <20240424190658.GHZilYUvw1KfSfVd_e@fat_crate.local>
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-In-Reply-To: <20240424190658.GHZilYUvw1KfSfVd_e@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN9PR03CA0216.namprd03.prod.outlook.com
- (2603:10b6:408:f8::11) To BN8PR12MB3108.namprd12.prod.outlook.com
- (2603:10b6:408:40::20)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2109B149E15
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 14:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714054413; cv=none; b=mZz7CQXEBPqg0CFsQZuwKC2H+41i7b489HKPYecd2pVyS44djSiqPnOggu8wHiZMkk/GiUlx0hqW9UDsHn40w8YD4Z86RfSLo0W+jekjmARaJX4GgD1xLtjt9X7wfW6hisAs0tfgN0ZfujP+gKcFcatEoH7nMnmq3gAVs30gnuo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714054413; c=relaxed/simple;
+	bh=4Pp/R16B0hhv6jPvjxj7zKcAs1uGAmjDt8rBaIovcXs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=VQFANypMCevs6wU3Jjnhp9C2imuIMPxMNEc9LGaadldl7/SpAi4OE88Ajwb73Z/JpvAAyw5BrKS9ZSPniCXUmqjLBg3VHIydv1mdgnva5QfLfdlkKFiSsemJDGUYDJR5nYNzkiX4UEn4uBk/jELBKOYCkE759lZlpoBjipBk6DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7de9cd658acso97312139f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 07:13:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714054411; x=1714659211;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qApprIgtf1alYZr45QCirqwx+Cv0ZvRNG+Ka09GgaVw=;
+        b=vbo7PsmyEG9iwGZIpEXhkpQvUgxL5jMajYsxo25EOzKqjXQEGTyvrx3ExkA7CDPY02
+         rb3zgwr1biXtD8GJFL5epMryqDdHEv3UpNfoQXdwLApOKFdxGVnEvVgCKR1OUX8Sh54v
+         gYMoHzwC7tG7pt7f9Y0jF4gnbnkBAg4eNDYuTwpHWZHlispWsJeYxrbEpoCltX8LeoSX
+         h8xs3YU3v3HQ77HWi7P7yaIngcawV4M3nvZQVh4j4Yhdskt73lsAoRLOVWbInnnhJjBI
+         5NJR40xtM5XtqYeOaZGcgoKJyTaFqFzTIkgC9pT5fUs5+vELbQWi4dGyh23j7u4nWtyJ
+         lMkw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZUPE3glYAu4iGrr+neIsRxjMmxrz9/4zlyxt7qIwz1tpHhyixiemMGtQAjnxAWKuf8ymJYv6hmrEhsH42kwLBS5TkBq6faXQVzm6a
+X-Gm-Message-State: AOJu0Yzscc40lftAz033P5gVYcpGAK4NclyEbvYPGL0vyDzIDhXIK/OD
+	e3KTZf8SsQoSZ2C93fTu/bCUpqKy5hhRt1Z/k++5abnHDNmvfSoT3PuNijxwtxHhAcWXU1UyiB9
+	zO6YB7SdAq+qc5gUc60pzO492w+AqK8Pd8nigY2ywGuoYIhy+oiyV/FA=
+X-Google-Smtp-Source: AGHT+IHgrGr0WNeFrQD1ALpJ5LgSlgsC++wevaIxIXV0EAhz8t5pHZgAaAvvifwMBzxuaAwl2ZAVYPKrPL0yymmvXMmbWHwz26pU
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3108:EE_|MW4PR12MB8612:EE_
-X-MS-Office365-Filtering-Correlation-Id: c4adc1f8-3aa9-4383-abd2-08dc6531c8fa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|366007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aEhpRzQrNWxYVGZXa1kwb1ZFZ21FSjJmUnZqWVhRVTVuSnlSeFJWbHBYOG40?=
- =?utf-8?B?WmZGbXVEZkVCK3lSbXlJWGlsMmcxQjNWemZVL2F4MmZLdXpuVXFTTzM1cTJJ?=
- =?utf-8?B?bGtzY09udkQ5RUxZSFNDMkluK3A5a0lPZzFlWG1DS01ic3o0RzljRC92SnQx?=
- =?utf-8?B?S200OVcwUHNaL3d5b3Z3aWxidzh6Q2VodTRsYXhXVGExYkNvQm9mbWFOdHBy?=
- =?utf-8?B?NWQ3STVUYVVobzhZWWRvZkVGSzVna1MvVXhFK21lT3NJZ0Y4eXJZN3dOOS9t?=
- =?utf-8?B?eHVCQ0wrM29rbGZTR05iVEwrSktVbkpTcGN2S1NITU5WNFdtUWY5ZFZqL2F4?=
- =?utf-8?B?UGtvbndINEhGdFZpM1A2ZlNnekpNTFNnQzlmWnhnRW1sM3cxalhFZDdTZFN3?=
- =?utf-8?B?NWpoQ3lncC8zNEhOU3QwYllDV3VSbWNoZnF0Z1NnQXdzSVpjSlZVTGZzUTI1?=
- =?utf-8?B?SmNHY25OeDFzQTlRM1J0dDB2cUcreG0ydHlZa2VaK3JJdFZ6Y0xNUVZaUmEz?=
- =?utf-8?B?Z0VuVmg0eklVekdnMlZNL0VsRjVVMVN5RUFEY3c3YUwwVFQzVlJVbUJWbDlV?=
- =?utf-8?B?dXdlV0k3MlVLUHh6QXpGK2pBeCtjRnRPa2pBRUh3WlM4cGQrTmpZMzZpd2Np?=
- =?utf-8?B?ZURFdjdMa2FoZFpDRVRla0NRdDJxVnA0WUNGM1AxcVFtNmtqL2oyb1pnMW16?=
- =?utf-8?B?Mzl1MW5sN3pDWk16VWtPZzVRaWRIcFR2UVVQTk10S2pGaGs2S294TTNveTZZ?=
- =?utf-8?B?bUZDVE16TXN4enczK1BMNnQ1UjRrWG1DTWRBTG4waGdoa0FTQ3NuRW5CVTM2?=
- =?utf-8?B?VjRrcDE5dlJGeFB2U0FML2NUaWpYMkQ3d2tiRno1Z0hlOFJHYTFuZDV3ck1t?=
- =?utf-8?B?cVY0Wi9IeFNHMXhITFpWaVVrbGNrekVMd0RLaXIycnhxK2NyQ2RMOWZJZTZG?=
- =?utf-8?B?SmdSQ3V4UnduQUNJcklTdHNWcUpOQmhJRnUzUS9xWkRSVEorQnhJKzlNTHlr?=
- =?utf-8?B?SWM1Q2pFSlA0dE5lZ1dnQjZBQnExOU1GK3B2V1llOTFJRUU5QXVDOWFlSDNh?=
- =?utf-8?B?RTd4c0FMWXVsVkI5QnJsRG1mdGNIN2NLUWM1ejJpeWNBQTJZNVhTSUhndzE2?=
- =?utf-8?B?UGVnK1dMMzhWT0R1U3NvTWlYMzZScllNWkxKQVQ0bWtTU01XaTRhWjdTOXNh?=
- =?utf-8?B?YXMzWWdLb2VrTFNaNnNzQXFveXM1ZGxvd0pRMVUxZjNmYXBSQnFNeHduQXBo?=
- =?utf-8?B?ZUNTdmdaWXJ5QUgyN0FVQ2hqSE9wMThKL3FMazB3YWRxN1VVeW1NRXBKbzVm?=
- =?utf-8?B?OFdMYjFnRTV4cjdwc1JNNlZpL3IzNldJVi9XVXBEVjlqQkFJdHpYcHBGY2da?=
- =?utf-8?B?MWNBUTRkWkVYakY2aTRKa1phcFRpVjZ1MlhTWWVwcFJMWXFrNlJOdDZveUJB?=
- =?utf-8?B?dDJ5bG9GeUZ6NkVXYVJCbWF5OHJLUm4vYkVjU0k0U2ErMEEzaUwrSWdSb1k3?=
- =?utf-8?B?dGFjV3BweGNxa2d1Y1BLWkpUVWRoMG45UStwSUhCYUY4dUJLaW4vdWc4L09a?=
- =?utf-8?B?MUNQTjdtdllqWVNxQVY2TmVRV3hQN0hXdGkyRit4QVYzTFhWYldhc1FnODBL?=
- =?utf-8?B?NXNqbk55RGNObzB5M21DMm9QdDFkOUVHTWY5NDVmR0NTUUxZYkpzdjVZVzZv?=
- =?utf-8?B?d0xKbHZ1d2YzanQ1cWFGNUFGQ0tKalhFSy9XUXN5N3h6VU4vYWhvWXJRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?M3grVVdpeVFRWDk1T3kxVEQ4bGJlU2J5dXNzL3dXajliUE1ndjVzM3JaMm9T?=
- =?utf-8?B?VE90UG5ONWVYMDFLY2lsaGxUc1dOZzhCYW1TTDM2SFg5UktsZFluUy9odjZ5?=
- =?utf-8?B?MEJEVE9Fc0p6aHR0MEd2M1pvMkJJeVg1aGMzWGFzVlEzOFhUSmVFVUdQQnZG?=
- =?utf-8?B?S1FHRll6cnMrNmpDYXEwTEtwNmx3NHR4VEhpaDRJQWNnMlBrc3hIbk8ySm45?=
- =?utf-8?B?SktGZHZuTC9CTVNRMy8zVGgzdDFFZHUrZHZxQnZhblNRVE1Od2didzJubTZt?=
- =?utf-8?B?c2N1eUlJQW5xbEZ1OHZNckxVRzh4SXdnVXRLRFQxcEI5R3RqcVRYVlhnVldm?=
- =?utf-8?B?UFBVWE85MjFYbkVZVTZLakNEdFJRTndNeFdlZTVwSTRXUUpDY0ZHQnBvQURv?=
- =?utf-8?B?bWxyUUpVUC90NHlFVUpiUnA3MXBzNDUwdkNvZzRKV3FUUitkcEcvQjZVazN2?=
- =?utf-8?B?M3h1bUtQT1VCaXdkdG1nU3o3SFNKS0Q2bExOdmJLdXoybG5uM3drR2tDd0xq?=
- =?utf-8?B?SUFMTTlQaHZhczJlMmV4NVVscWlqUFNvemZwNS9LMUJBTXEwNk02REExTEM2?=
- =?utf-8?B?Z0gvbk4zMEtqby9idXJMOHlPZnZieWJwMWJWeHJsUC8zQWNWd0M4Z0lETWZ4?=
- =?utf-8?B?T215ZnBOUFR4VHFUZlBkS0cyTXFudWx5T2JWU25iRVJNZTZwS3hOMUVoV0Nh?=
- =?utf-8?B?emdYRFdxemhMSGVMNDJteGtzVGxubkNMa2Zlb0xpZW9TWmpRcnNPeWFsT2hi?=
- =?utf-8?B?dlViR2ttUGNVb0FwZHpVY3JUK0FvYXQ0YzdmcUdRd0thRlFhaEM1dHliRTBM?=
- =?utf-8?B?eEFZU2p5VTNaLytDM003WVFOUXV0SGozZ3NoZnNzSGIwSWJCTWhNT0xCSzU1?=
- =?utf-8?B?WjFpS1dsMithWitPcXdLK29tamlRTVB3QSs1a2NYVGp6R0tSSnlrdkFkSGRS?=
- =?utf-8?B?aU1JNmxiUTN2Yk45Z0EyYjlhUDR1T1RqK1Q3c0dzaTIzRHR3bkRlL1lLcWlN?=
- =?utf-8?B?blFDZ0VrTmJWcGxoeDYzd3RWUTRMUVJqRitZazhRcWg0RmViMGxvZjZPbGNK?=
- =?utf-8?B?elF3dkFtaG5kY1dDM2J2Rm1YT1NDMkV1eU5TelRMUlFycTJDdU1lblI4OWFl?=
- =?utf-8?B?a3RzcitiVEVHcHRHODdUdDJPdnFLdUtGU3RwV2VXZU5OK2IxbDdtK1NMaS9P?=
- =?utf-8?B?dDcyV09RQlJYOXF4NG13UGc4SjNCOEVRWW9qdFNaUWVDNk5aY3htREZFdk5T?=
- =?utf-8?B?ODVwZkttR0RvUVd2clR2Y1YzSWhhMVAyOUtqcWlPNkRlS2E2VUpjK3ZyZmxP?=
- =?utf-8?B?OFdKN1pNazZET201dkFhTGtlMXJsVDZnSkJVL2FwK0NUQU5xN29qT3JuQ01N?=
- =?utf-8?B?K0k4MS9IZ2orcENUZnA5UlY0eXBBMVlJcVdqZWN0SHhUNnNTQUxMVXFyczF4?=
- =?utf-8?B?WC84MWZhNlRMd1NIZUhUR3MvNkJsZVVWVk1BdlpUTlN5NVJ4ZHdQOWxNYVFG?=
- =?utf-8?B?b0dtSG16TUxmOTFDQmh3M0NQTEs1RDh6OTNSOU5kRFNOUkQ0c2hTZFVJNWln?=
- =?utf-8?B?dUtnYWJVekR0SXp2QzMwOGRodlFGbVZSTGdHdk5BUFhtTWgvQVJKVE11Zk5P?=
- =?utf-8?B?dVc0OHlLM1BXMWhmZEJIUzk5WmZCcXIzNEhVVG5ESlFsNkRwZm5oVVlISzVB?=
- =?utf-8?B?SmJPUXhBUkprUmZWa2lkWXVHZ1BYUWxqTmhYc3BYamJNTE5kNXc2SW12MGU2?=
- =?utf-8?B?ejRpMUJkWFltS3Q1QkpQeXhpczZGZFRMbW9nNEpOUjJkSUFUL3IrNmhNZmNY?=
- =?utf-8?B?RWhHN0RQT0NnaHIxT1pKT3dSWTJCazh3UE1xOGlVbWZIK3o5RXgyZnZ5M0FV?=
- =?utf-8?B?NXFQbUc4RC9xOTNEdWxXZjM4bkJSMVI5VEFabE5CV0dvam9RZThVbWtkajZl?=
- =?utf-8?B?NHRGWlBSMVZUWlRlVTRabng2b09YekpzSkQ1cWlleHAxREcrZ0RMa2s1RU1W?=
- =?utf-8?B?ZGcyTkt2R01lb1c2NjlSMVJ0OWtqV2FjVUsrcnFzcmVFVUVadGFMOURSTUpz?=
- =?utf-8?B?MlhSY3lJRVpjTTMzSmhTUGp6dkRlc1JiMFR3U3pKRStiZ01TdkYrMFUyR1JY?=
- =?utf-8?Q?b1NMAmJpjD3d6FfZWT8p2O6on?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4adc1f8-3aa9-4383-abd2-08dc6531c8fa
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3108.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2024 14:12:48.0367
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Lr5/UofYqw160LAHKVPfQmL03MYc4klaNxqGxmlCINlxgfVNp5xSqQJ34ArZ7HuXdG3XAnWTZoQRtop9lGKd3w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB8612
+X-Received: by 2002:a05:6602:6d0d:b0:7d6:1df1:bf08 with SMTP id
+ im13-20020a0566026d0d00b007d61df1bf08mr204565iob.3.1714054411294; Thu, 25 Apr
+ 2024 07:13:31 -0700 (PDT)
+Date: Thu, 25 Apr 2024 07:13:31 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004fb3bb0616ec64d9@google.com>
+Subject: [syzbot] [ntfs3?] KASAN: slab-out-of-bounds Read in ntfs_check_attr_def
+From: syzbot <syzbot+977fab364b7723c33cc3@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ntfs3@lists.linux.dev, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/24/2024 3:06 PM, Borislav Petkov wrote:
-> On Thu, Apr 04, 2024 at 10:13:50AM -0500, Yazen Ghannam wrote:
->> AMD systems with the SUCCOR feature can send an APIC LVT interrupt for
->> deferred errors. The LVT offset is 0x2 by convention, i.e. this is the
->> default as listed in hardware documentation.
->>
->> However, the MCA registers may list a different LVT offset for this
->> interrupt. The kernel should honor the value from the hardware.
-> 
-> There's this "may" thing again.
-> 
+Hello,
 
-Right, I should say "the microarchitecture allows it". :)
+syzbot found the following issue on:
 
-> Is this enablement for some future hw too or do you really trust the
-> value in MSR_CU_DEF_ERR is programmed correctly in all cases?
-> 
+HEAD commit:    7b4f2bc91c15 Add linux-next specific files for 20240418
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=12d0cbab180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ae644165a243bf62
+dashboard link: https://syzkaller.appspot.com/bug?extid=977fab364b7723c33cc3
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13098e73180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13c667cb180000
 
-I trust the value from hardware.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/524a18e6c5be/disk-7b4f2bc9.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/029f1b84d653/vmlinux-7b4f2bc9.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/c02d1542e886/bzImage-7b4f2bc9.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/99fbe84e14e4/mount_0.gz
 
-The intention here is to simplify the code for general maintenance and to make
-later patches easier.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+977fab364b7723c33cc3@syzkaller.appspotmail.com
 
->> Simplify the enable flow by using the hardware-provided value. Any
->> conflicts will be caught by setup_APIC_eilvt(). Conflicts on production
->> systems can be handled as quirks, if needed.
-> 
-> Well, which systems support succor?
-> 
-> I'd like to test this on them before we face all the quirkery. :)
-> 
+loop0: detected capacity change from 0 to 4096
+ntfs3: loop0: Different NTFS sector size (4096) and media sector size (512).
+==================================================================
+BUG: KASAN: slab-out-of-bounds in ntfs_check_attr_def+0x2e4/0x690 fs/ntfs3/fsntfs.c:2712
+Read of size 4 at addr ffff88802e910b20 by task syz-executor175/5088
 
-All Zen/SMCA systems. I don't recall any issues in this area.
+CPU: 1 PID: 5088 Comm: syz-executor175 Not tainted 6.9.0-rc4-next-20240418-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0x169/0x550 mm/kasan/report.c:488
+ kasan_report+0x143/0x180 mm/kasan/report.c:601
+ ntfs_check_attr_def+0x2e4/0x690 fs/ntfs3/fsntfs.c:2712
+ ntfs_fill_super+0x38ff/0x42e0 fs/ntfs3/super.c:1452
+ get_tree_bdev+0x3f7/0x570 fs/super.c:1615
+ vfs_get_tree+0x90/0x2a0 fs/super.c:1780
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3352
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount+0x2d9/0x3c0 fs/namespace.c:3875
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ff236c2b8ba
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffc7927a838 EFLAGS: 00000286 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007ffc7927a840 RCX: 00007ff236c2b8ba
+RDX: 000000002001f180 RSI: 000000002001f1c0 RDI: 00007ffc7927a840
+RBP: 0000000000000004 R08: 00007ffc7927a880 R09: 000000000001f1ed
+R10: 0000000000000005 R11: 0000000000000286 R12: 00007ffc7927a880
+R13: 0000000000000003 R14: 0000000000200000 R15: 0000000000000001
+ </TASK>
 
-Some later Family 15h systems (Carrizo?) had it. But I don't know if it was
-used in production. It was slightly before my time.
+Allocated by task 5088:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
+ __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:387
+ kasan_kmalloc include/linux/kasan.h:211 [inline]
+ __do_kmalloc_node mm/slub.c:4078 [inline]
+ __kmalloc_noprof+0x200/0x400 mm/slub.c:4091
+ kmalloc_noprof include/linux/slab.h:664 [inline]
+ ntfs_fill_super+0x3898/0x42e0 fs/ntfs3/super.c:1440
+ get_tree_bdev+0x3f7/0x570 fs/super.c:1615
+ vfs_get_tree+0x90/0x2a0 fs/super.c:1780
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3352
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount+0x2d9/0x3c0 fs/namespace.c:3875
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-> That area has been plagued by hw snafus if you look at
-> setup_APIC_eilvt() and talk to uncle Robert. :-P
->
+The buggy address belongs to the object at ffff88802e910a00
+ which belongs to the cache kmalloc-256 of size 256
+The buggy address is located 76 bytes to the right of
+ allocated 212-byte region [ffff88802e910a00, ffff88802e910ad4)
 
-Right, I found this:
-27afdf2008da ("apic, x86: Use BIOS settings for IBS and MCE threshold
-interrupt LVT offsets")
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x2e910
+head: order:1 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff80000000040(head|node=0|zone=1|lastcpupid=0xfff)
+page_type: 0xffffefff(slab)
+raw: 00fff80000000040 ffff888015041b40 ffffea0000b48380 0000000000000002
+raw: 0000000000000000 0000000080100010 00000001ffffefff 0000000000000000
+head: 00fff80000000040 ffff888015041b40 ffffea0000b48380 0000000000000002
+head: 0000000000000000 0000000080100010 00000001ffffefff 0000000000000000
+head: 00fff80000000001 ffffea0000ba4401 ffffffffffffffff 0000000000000000
+head: 0000000000000002 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 1, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1, tgid 133977591 (swapper/0), ts 1, free_ts 0
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1f3/0x230 mm/page_alloc.c:1476
+ prep_new_page mm/page_alloc.c:1484 [inline]
+ get_page_from_freelist+0x2ce2/0x2d90 mm/page_alloc.c:3446
+ __alloc_pages_noprof+0x256/0x6c0 mm/page_alloc.c:4704
+ __alloc_pages_node_noprof include/linux/gfp.h:244 [inline]
+ alloc_pages_node_noprof include/linux/gfp.h:271 [inline]
+ alloc_slab_page+0x5f/0x120 mm/slub.c:2259
+ allocate_slab+0x5a/0x2e0 mm/slub.c:2422
+ new_slab mm/slub.c:2475 [inline]
+ ___slab_alloc+0xcd1/0x14b0 mm/slub.c:3624
+ __slab_alloc+0x58/0xa0 mm/slub.c:3714
+ __slab_alloc_node mm/slub.c:3767 [inline]
+ slab_alloc_node mm/slub.c:3945 [inline]
+ __do_kmalloc_node mm/slub.c:4077 [inline]
+ kmalloc_node_track_caller_noprof+0x286/0x440 mm/slub.c:4098
+ __do_krealloc mm/slab_common.c:1190 [inline]
+ krealloc_noprof+0x7d/0x120 mm/slab_common.c:1223
+ add_sysfs_param+0xca/0x7f0 kernel/params.c:654
+ kernel_add_sysfs_param+0xb4/0x130 kernel/params.c:817
+ param_sysfs_builtin+0x16e/0x1f0 kernel/params.c:856
+ param_sysfs_builtin_init+0x31/0x40 kernel/params.c:990
+ do_one_initcall+0x248/0x880 init/main.c:1263
+ do_initcall_level+0x157/0x210 init/main.c:1325
+ do_initcalls+0x3f/0x80 init/main.c:1341
+page_owner free stack trace missing
 
-Which is basically the same idea: use what is in the register.
+Memory state around the buggy address:
+ ffff88802e910a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88802e910a80: 00 00 00 00 00 00 00 00 00 00 04 fc fc fc fc fc
+>ffff88802e910b00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                               ^
+ ffff88802e910b80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88802e910c00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
-But it looks there was an issue with IBS on Family 10h.
 
-Is this the only case of a real issue? If so, then why apply this method to
-the THR and DFR interrupts?
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Robert, were there any other issues?
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
->> @@ -595,17 +584,15 @@ static void deferred_error_interrupt_enable(struct cpuinfo_x86 *c)
->>  	if (rdmsr_safe(MSR_CU_DEF_ERR, &low, &high))
->>  		return;
->>  
->> +	/*
->> +	 * Trust the value from hardware.
->> +	 * If there's a conflict, then setup_APIC_eilvt() will throw an error.
->> +	 */
->>  	def_new = (low & MASK_DEF_LVTOFF) >> 4;
->> -	if (!(low & MASK_DEF_LVTOFF)) {
->> -		pr_err(FW_BUG "Your BIOS is not setting up LVT offset 0x2 for deferred error IRQs correctly.\n");
->> -		def_new = DEF_LVT_OFF;
->> -		low = (low & ~MASK_DEF_LVTOFF) | (DEF_LVT_OFF << 4);
->> -	}
->> +	if (setup_APIC_eilvt(def_new, DEFERRED_ERROR_VECTOR, APIC_EILVT_MSG_FIX, 0))
->> +		return;
->>  
->> -	def_offset = setup_APIC_deferred_error(def_offset, def_new);
->> -	if ((def_offset == def_new) &&
->> -	    (deferred_error_int_vector != amd_deferred_error_interrupt))
->> -		deferred_error_int_vector = amd_deferred_error_interrupt;
-> 
-> There was a reason for that - deferred_error_int_vector is a global var
-> and you're calling enable_deferred_error_interrupt() on each CPU.
->
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Right, and all CPUs should use the same APIC LVT offset. If they differ, then
-setup_APIC_eilvt() will fail above and return.
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-Why check "if X != Y, then X = Y"? Why not just unconditionally do "X = Y"?
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
->> +	deferred_error_int_vector = amd_deferred_error_interrupt;
->>  
->>  	if (!mce_flags.smca)
->>  		low = (low & ~MASK_DEF_INT_TYPE) | DEF_INT_TYPE_APIC;
-> 
-> Thx.
-> 
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-Thanks,
-Yazen
+If you want to undo deduplication, reply with:
+#syz undup
