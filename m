@@ -1,263 +1,112 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2069.outbound.protection.outlook.com [40.107.94.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FFBEA4;
-	Fri, 26 Apr 2024 01:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714094629; cv=fail; b=sk9aO96fBYbC1P+sLUHoc5iWA6akVepOH1wAEBvUtA9rkuX9ZzbrLoqcNWRH3hXl9rPz8Z/6+JXFfeuEvaIOl5CN9Lgz/djr0QCeGe7afXE/GOjsiR+LlGpAVMDn2OVsp5XW9PsAK+7dU/eC6UluQP/G9kGIYpLs+lA/EjaKd8k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714094629; c=relaxed/simple;
-	bh=DB8L34wpEvw0NgfZhwYqK58tTuf6dbrpKmQh77KJxkw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=IcWXNRAdC+lfgP8dLyWmrTiBOfkf7e+mr7gTd1NETaaIPEoXDf3InznAjZqOKPrsZmS00wK+h3VwvdivvQ1K571I9uXFlNOK0FuubOaAu3pN3oO0c3cvmyZUV/YZ2UQ1bUV0GsUZMfhwHnTuVSBBCBYbfUGfKIlfAsdDWHekKiA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EcGORuo6; arc=fail smtp.client-ip=40.107.94.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82185184D
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 01:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714094660; cv=none; b=AESuuyhmBCq7ZeppgT7z2mQkYzgSVyxaAm8eXsuRmn6WMFmuethZdgNXCtZuHG91N5sI6Fm2gqMDeCO/k+QGJamShtQuNYsfcAMxCxl/FqAxVQrZ5CkaCYeUxp7+POeG1HxhNAmEKkym5B1KmjQ/okJjgFenkLwwFIUhdHGEkxg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714094660; c=relaxed/simple;
+	bh=dZWiA2Ve5wwLdM4H6cElVHbi4Ey09vnby20FDRH/V9I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=g/twxDGe/6LgN+q0arFZyXxVAMH4VfWUQI1jy4XAgnIOsI0k/N2C26eI7pH09Qp4gyortNYPogV5wnlRJV8N4oNkRlakonmfF42p/dC0L4GhjJLnjlWSW+qZ//HCblwdr/Q8YH8xFoXIlzvLR8zmD0/clzc2e5dzcmr1qFCVlL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=usp.br; spf=pass smtp.mailfrom=usp.br; dkim=pass (2048-bit key) header.d=usp.br header.i=@usp.br header.b=qohgE+dZ; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=usp.br
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=usp.br
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EcGORuo6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UQkuGFyxbi8H/daGIS5fAjF/Q1E4o4tjMW/gqIcz4MrDJ3CVx/OAvuO88kdSFAAtPdIopQGRyM0d9UsgviJG6SXY7D1+lZqZq8I5M++GYfVgohS19SJPgYuZfanWUwCQ5ScUnnqkLS7NDKYtcQqo7GwlgGDChxTIBMm+BcnzAb6fLc6oznC8mlLWCd6VZmS4lBm3O6khkCFpiIDleQ+sxbp+bviTzkPHJ2gpUFbhCPM2R3P8wKyVU+fPi+HEMDsJIWoTMdaZuLPHJDD7oEMYKihTR7cm9AOXFpEbNB4iNCSo9ar12pgwxA552CzHyXD5gfulV1ScjvmOBXxnN4ehQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8+koj8rsI6Eud8YP0tylbb8/d2lynl/kwGmitGx+sEQ=;
- b=fbSmqkbG5RI+FItr2pOWH6K8GmsPB2pVJiUMu+C01yyZ6H01osWZcbVkdm055tZRwCtsAhdnUFMyST8/wlI6vNwSCHqV9e5bJ+NqpJN1RCePOpoanBCkm1EkeMLLM1cONJF81K+g3e/5lrx6JeS/ZN/h6xJWJbxsCgqaqLZb39UT+u2NCSg+piHBaHJjZcmL9syaZ5i4sD+F5Lz2MDCIphSVTZXz7bHiPExgBqt5bcrV+hnSZINK6a7kTU3qr8Uqxqfr+ZevpOc0r+2X1HqPi3LIyFz3r5jBIiUswLvtzhg052Nds4bpfM78gaEWDfpHXYXbi5RzNGhS5ImPT4GbYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8+koj8rsI6Eud8YP0tylbb8/d2lynl/kwGmitGx+sEQ=;
- b=EcGORuo6juDCOs78dFjwXFosOzU9VrC/vniTqcOJF/Wd4wJEDHECc5XqaW3ss0hydhdsjq93uzfwhZ7JIRSQWbsRr0KbAGSbjCYTHHmn7yYDmFm5LIyqj0fTi9983pMkka4sRZmQguyGHFx8eXxqplwu1GprzbPJ5ldT/f0ud5QKpwEitSDkcGfyq8CsM3LyUqp535VFy2Bnv1kHJPjbV8tkFW2qNHp6RhTkAJb0IRFTQvn+AG3YMqdhGM5Eq+p8q8Xh8Ed0wYRCKUT7akz/iAEJ2OvCgfhQahJ2kE0iYPZJFwrm5Al/60oJ1ErVAipAkEL8QO62sW5sgCLar5RFGA==
-Received: from BN0PR04CA0089.namprd04.prod.outlook.com (2603:10b6:408:ea::34)
- by SJ0PR12MB5662.namprd12.prod.outlook.com (2603:10b6:a03:429::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.24; Fri, 26 Apr
- 2024 01:23:43 +0000
-Received: from BN2PEPF000044A2.namprd02.prod.outlook.com
- (2603:10b6:408:ea:cafe::85) by BN0PR04CA0089.outlook.office365.com
- (2603:10b6:408:ea::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.23 via Frontend
- Transport; Fri, 26 Apr 2024 01:23:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BN2PEPF000044A2.mail.protection.outlook.com (10.167.243.153) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7519.19 via Frontend Transport; Fri, 26 Apr 2024 01:23:43 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 25 Apr
- 2024 18:23:25 -0700
-Received: from [10.110.48.28] (10.126.230.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 25 Apr
- 2024 18:23:24 -0700
-Message-ID: <1a406a5f-1336-4051-a722-04b9ea2f54df@nvidia.com>
-Date: Thu, 25 Apr 2024 18:23:24 -0700
+	dkim=pass (2048-bit key) header.d=usp.br header.i=@usp.br header.b="qohgE+dZ"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2a58209b159so1389502a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 18:24:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=usp.br; s=usp-google; t=1714094658; x=1714699458; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4XTXjNi5Gsgixf7+CF9tdY9WwNZpzvpF4TetBpKpSXk=;
+        b=qohgE+dZib+J2Ep8DN9oPtAfQhBcQXzNvvjNBVzNStQVRWm4gnZNqQZsRTGBO746sO
+         DonPN0eDv07Pmx0HTQNz0FIKt2JQGXyfrwbY5J1iyw1bU8stnUcm0jZ5ZBO5s34UD0rW
+         k6Lut9RWUOBuopKgUkSQ++X6yQAdJOOhoIGs1GL2XY9Z/n+nTk29kN+QMjxjpevE4SO7
+         ha3UZOn9XcU9kQ1yzv63HeXa7DuykEkuKnCXcz2/gfxyx4TIWeppMDUy6aOgYc3HMgeu
+         WD6jTNwvogcISZUBX5Qh2JbWhJRHCY9CElVLD4Uidq1JVwz4xeVHqE4GIhYd2dpbfxpA
+         egCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714094658; x=1714699458;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4XTXjNi5Gsgixf7+CF9tdY9WwNZpzvpF4TetBpKpSXk=;
+        b=QUCrIpZnndUZC7uLyN4EJVU2jLFWunyBCt94balFzOB+W6mn2cXoBUJnQUUeclWGn0
+         8vNEfVJkClEUQtCjqTpwO2oLSD5kJubgJNN2A/et/6fbrq5+ph1JzWRlU1dgebsfuw8m
+         5Q9nHe/5GVoL9p77turduivWXMuSsynfycx4ONHgLCVthnpiW8PsLT3eDeAr9CVBuEL1
+         0BEy+96AxDMpR85ZOpyd0XQuoVU6zhc5Gti8XeqJCQxj8SJSgi/pO9Ctg4Ka8MrPeIaS
+         7MjeX4KePa8Aj4DoCA/HXVb6ODuKrmFEC/Hm6pg70m4o6U93YE8bOXTaIw9S36OAY3Xq
+         qv8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUG8y/mNj/h1YbSOcmB69OcJH84MoyjscxNdofSeWhOky1VqlrbyCfR/fZd9QzrGCFOXpyv8NorhbFpCEJ1LiNRhmGez6SafS1kIqiq
+X-Gm-Message-State: AOJu0YwFoD0NTjecfPH3SS8sgSdbF2qWD3QhLyYWUehTcEdXsS/Wh2jd
+	yV+1xc+dTnv8wiyDKOvED+0QsXAssrHc9mmKc9+1JzA9oS062H9B0X8qEjnRtH0=
+X-Google-Smtp-Source: AGHT+IH/brXLbpspcT58oxUEUY0gzcfLVnFrX2PcsjzI336kgn1k36NMQPQvvQoYXnnJkDlqar5k6w==
+X-Received: by 2002:a17:90a:a50c:b0:2af:893a:4962 with SMTP id a12-20020a17090aa50c00b002af893a4962mr1313308pjq.10.1714094657911;
+        Thu, 25 Apr 2024 18:24:17 -0700 (PDT)
+Received: from ASUSLaptop-X513EAN.. ([2804:14c:81:903a:9968:e871:2529:9bcd])
+        by smtp.gmail.com with ESMTPSA id p8-20020a17090a930800b002a513cc466esm15294305pjo.45.2024.04.25.18.24.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Apr 2024 18:24:17 -0700 (PDT)
+From: Gustavo <ogustavo@usp.br>
+X-Google-Original-From: Gustavo <gustavenrique01@gmail.com>
+To: lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	jic23@kernel.org
+Cc: Gustavo <gustavenrique01@gmail.com>,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bruna Lopes <brunaafl@usp.br>
+Subject: [PATCH 1/3] iio: adc: ad799x: change 'unsigned' to 'unsigned int' declaration
+Date: Thu, 25 Apr 2024 22:23:11 -0300
+Message-Id: <20240426012313.2295067-2-gustavenrique01@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240426012313.2295067-1-gustavenrique01@gmail.com>
+References: <20240426012313.2295067-1-gustavenrique01@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] mm/khugepaged: replace page_mapcount() check by
- folio_likely_mapped_shared()
-To: David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-doc@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, "Kirill A . Shutemov"
-	<kirill.shutemov@linux.intel.com>, Zi Yan <ziy@nvidia.com>, Yang Shi
-	<yang.shi@linux.alibaba.com>, Ryan Roberts <ryan.roberts@arm.com>
-References: <20240424122630.495788-1-david@redhat.com>
- <73de5556-e574-4ed7-a7fb-c4648e46206b@nvidia.com>
- <ZinZSDTMXjPjAHLe@casper.infradead.org>
- <18b9acc9-9dc8-4857-83d1-952c94b69e01@nvidia.com>
- <7273b0d6-06e7-4741-b77b-b49949c46d63@redhat.com>
-Content-Language: en-US
-From: John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <7273b0d6-06e7-4741-b77b-b49949c46d63@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044A2:EE_|SJ0PR12MB5662:EE_
-X-MS-Office365-Filtering-Correlation-Id: f0ec8ca9-6603-418d-3153-08dc658f8315
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|36860700004|7416005|1800799015|376005|82310400014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RktIUGxGcGFHUHRlVUxXUU1EQXhjVTk4bUNaSmt3UHBwbVFTQ2tGYVJxSlZZ?=
- =?utf-8?B?OVRITXBaeTd1aUV0cENicmIwdzR0c1FJZHRBNmlicmp3eExjcVhJUTdVSVR0?=
- =?utf-8?B?RFcwVWp1UUw1YkgxQXlYcDE1OUZ3U1NtcEl5NDZBZ3Y0TFgwU013eGpvSUp6?=
- =?utf-8?B?TkdvQTlQNlp2RUgwbHJZV0FvM1BuVmZ0bXRWTWNoVnJPRS90Nk5LNWZSMnFT?=
- =?utf-8?B?ZkE5Q2lDeGVEVHB6RWNqOXZoTjJqTThMbDA5dTd4dnh1dnVXRFpCNEIyVENr?=
- =?utf-8?B?ajc3QXRPdy9TZUJsbmFHaDdBcUMxM0NDOW95WjRDNyt1Vi9jMkFXRXk0Z002?=
- =?utf-8?B?UmkxZ1NWM2o0eEd2bjY2Y2YxNnFGTnFScnYvUEN5VDZDcHYvV1pyNXUweXlJ?=
- =?utf-8?B?RW0xNElsUkdmU3hXaDhHS0g5aStvblpMcWZlRWdkMWtZbHBVanRBYnRQc1JP?=
- =?utf-8?B?dHpxaEhqbzRIeUdlV1laYlkxN3V0RFIvYnduVjB1WFNCcjhnU0VvcmNKdVhB?=
- =?utf-8?B?eHNSODBtZjg5aEdacHJSSFBGVXJDN3oxa3hodnlFN2V6UnZsY0dFUGpQVXlQ?=
- =?utf-8?B?R0tMMkJabk1tRE5kRDYzWDVYaE1KNjlFZWZralk5NzhSYUZQM0FETExzSEhl?=
- =?utf-8?B?bVk0bXU3Rlh4OGJzbWQ1QXpNWU9KVG1Ra21haXoraUtwcHVEajJoZWZkWG9U?=
- =?utf-8?B?VHNNQWYzNWxRZUQxWERNbzNjek5PQUlHQUpaRXdEdmU3M1dNajAvOHIvTHZ6?=
- =?utf-8?B?dVVRK2ZXeGRTU3g3dDB0Q3o5cUQraHhaMk9TTDgrVjRJd0pDbW9ld2c1WGM5?=
- =?utf-8?B?c1BGZ3BFSnZqeGYxRktRWTd3U2VCWXBsRWNCc0FtNzU4ako2RmxnVXdQZUxi?=
- =?utf-8?B?OFMyVXRoYlY5dEhIYWdFaGlLd25iMTVXSFBVSWIvYTRaNElBZjJzeG96MDN1?=
- =?utf-8?B?Y2NmeE9NT1M1emE0U2xPQlhTS29qL29CYlRSM2xoVFkxVHVNaXdSOHlnWVdL?=
- =?utf-8?B?c0RzeWNuQk95ajNvWUpwV2F0QUIrdDZEek9reUNiaG1GOWkzV1h4bDJmQThW?=
- =?utf-8?B?QTR2REZ1czhuOHhqbUNMOHNucmJ1YW9GdnFMcnhkSlBEUkNsYi8ybTJNTTFQ?=
- =?utf-8?B?NXVVbm9CM3JTWjNpdmpHcnI3NWQwcGFkaWhnWUhkUHhIZ0h1K1NmTFQxV3J0?=
- =?utf-8?B?UlZ1OUxQeEtGZFRlUjRWUGpjS0g3dzJpOVBSSDlrR0xPZHkvOEd0VjljNVVw?=
- =?utf-8?B?QUN1bHoxN0JrZUFRTThKbkpFVmtCRlI1S0tFTjg0VnJ3c3E3NWpzOWZhanpl?=
- =?utf-8?B?dkw1NWpKdVVDQ0ptNy9VWkNaL2dEZjkyZ3ZOVFl1blo1SXloSlJlUXZEWDF5?=
- =?utf-8?B?bXJmMlExZ3ZQWXl4VjZxendmeFlqRTRsNjNteFZiQXpwZXcrUkx1a2dKMDIx?=
- =?utf-8?B?Y2F3UXBJYzhkUGRsVlBodFJyUUtoNHJvdjE0dmxTd2VrVjUrMmlSWXRBNVdO?=
- =?utf-8?B?b3ZsdGs1eERYTjZuRm1JcmhjV1VOczlPcnhGVGxoN3RBenlIdHBKL241SXlC?=
- =?utf-8?B?NlhBNU9NbVBtV2h0akpsRFdRZFlkcndnekhhaW84SFI3Zlc4ZlJzTzRqVmk0?=
- =?utf-8?B?eXRVUEQvRWdMUXNScXhPeFI2dDdGWlk5Q3RJWVpiU2dpYlF1L0VNdlZuVklS?=
- =?utf-8?B?OFFhenpiWXZXWURkV1pKTy8wckRBZXNhK3c1RGpPRDgzWnBBSklLODA1U09x?=
- =?utf-8?B?ai9MUUtZY24zbG5FbXBUZlRFV2RZRmhEL21FK0RuTHQ5RDdOelppOFdBTVBt?=
- =?utf-8?B?YjZGUFFiemNJcUlyVVZiYTN1aDlDUHdDK25SRklGTVRVL0U4Y0JsU1pEaSth?=
- =?utf-8?Q?k6fKK4T/OjblI?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(36860700004)(7416005)(1800799015)(376005)(82310400014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2024 01:23:43.1356
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0ec8ca9-6603-418d-3153-08dc658f8315
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044A2.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5662
 
-On 4/25/24 1:06 AM, David Hildenbrand wrote:
-> On 25.04.24 07:40, John Hubbard wrote:
->> On 4/24/24 9:17 PM, Matthew Wilcox wrote:
->>> On Wed, Apr 24, 2024 at 09:00:50PM -0700, John Hubbard wrote:
-...
-> We'll talk more about all that at LSF/MM in the mapcount session. A spoiler:
+Prefer 'unsigned int' instead of bare use of 'unsigned' declarations to
+to improve code readbility.
 
-Looking forward to it. And as an aside, this year it feels like the mm
-code is changing relatively fast. So many large and small improvements
-have happened or are in progress.
+Co-developed-by: Bruna Lopes <brunaafl@usp.br>
+Signed-off-by: Bruna Lopes <brunaafl@usp.br>
+Signed-off-by: Gustavo <gustavenrique01@gmail.com>
+---
+ drivers/iio/adc/ad799x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
-> 
-> page_mapcount() in the context of large folios:
-> * Is a misunderstood function (e.g., page_mapcount() vs page_count()
->    checks, mapped = !page_mapcount() checks).
-> * Is a misleading function (e.g., page_mapped() == folio_mapped() but
->    page_mapcount() != folio_mapcount())
-> 
-> We could just rename it to "folio_precise_page_mapcount()", but then, once we tackle the subpage mapcount optimizations (initially using a separate kernel config toggle), we'll have to teach each caller about an alternative that gets the job done, and it's not that easy to prevent further reuse around the kernel.
-> 
-> If you look at linux-next, we're down to 5 page_mapcount() calls in fs/proc/, so I'll relocate it to fs/proc/internal.h to prevent any further use - once the s390x change lands in the next merge window.
-> 
-> Regarding the subpage mapcount optimizations, I can further add:
-> * (un)map performance improvements for PTE-mapped THP
-> * Preparation for folio_order() > PMD_ORDER, where the current scheme
->    won't scale and needs further adjustments/complexity to even keep it
->    working
-> * Preparation for hugetlb-like vmemmap optimizations until we have
->    memdescs / dynamically allocated folios
-> * (Paving the way for partially mapping hugetlb folios that faced
->     similar issues? Not sure if that ever gets real, though)
-> 
-> Is this patch ahead of its time? LSF/MM is just around the corner, and I'm planning on posting the other relevant patches in the next months.
-
-I think so, yes. There is a lot of context required to understand the
-motivation, and more required in order to figure out if it is safe,
-and if it still provides "good" behavior.
-
-I still think it's mostly harmless, though, so being ahead of its time
-is not necessarily an indictment. :)
-
-> 
->>
->>>>> The khugepage MM selftests keep working as expected, including:
->>>>>
->>>>>     Run test: collapse_max_ptes_shared (khugepaged:anon)
->>>>>     Allocate huge page... OK
->>>>>     Share huge page over fork()... OK
->>>>>     Trigger CoW on page 255 of 512... OK
->>>>>     Maybe collapse with max_ptes_shared exceeded.... OK
->>>>>     Trigger CoW on page 256 of 512... OK
->>>>>     Collapse with max_ptes_shared PTEs shared.... OK
->>>>>     Check if parent still has huge page... OK
->>>>
->>>> Well, a word of caution! These tests do not (yet) cover either of
->>>> the interesting new cases that folio_likely_mapped_shared() presents:
->>>> KSM or hugetlbfs interactions. In other words, false positives.
->>>
->>> Hmm ... KSM never uses large folios and hugetlbfs is disjoint from
->>> khugepaged?
-> 
-> Right, folio_likely_mapped_shared() behaves exactly like page_mapcount() would for (small) KSM folios, so no change for them.
-> 
-> Thankfully, hugetlb is out of the picture this time.
-> 
->>>
->>
->> Oh good. I thought we might have had a testing hole, but no.
-> 
-> Thanks for having a look!
-> 
-> I'm only a bit concerned about folio_likely_mapped_shared() "false negatives" (detecting exclusive although shared), until we have a more precise folio_likely_mapped_shared() variant to not unexpectedly waste memory.
-> 
-> Imagine someone would be setting "khugepaged_max_ptes_shared=0", and then we have an area where (I think this is the extreme case):
-> 
-> * We map 256 subpages of a 2M folio that are shared 256 times with a
->    child process.
-> * We don't map the first subpage.
-> * One PTE maps another page and is pte_write().
-> * 255 PTEs are pte_none().
-> 
-> folio_likely_mapped_shared() would return "false".
-> 
-> But then my thinking is:
-> * We are already wasting 256 subpages that are free in the 2M folio.
->    Sure, we might be able to relaim it when deferred splitting.
-> * Why would someone set khugepaged_max_ptes_shared=0 but leave
->    khugepaged_max_ptes_none set that high that we would allow 255
->    pte_none?
-> * If the child is a short-living subprocess, we don't really care
-> * Any futher writes to unbacked/R/O PTEs in that PMD area would COW and
->    consume memory.
-> 
-> So I had to use more and more "ifs" to construct a scenario where we might end up wasting 1M of memory, at which point I decided "this is really a corner case" and likely not worth the worry.
-> 
-> If we run into real issues, though, it will be easy to just inline page_mapcount() here to resolve it; but the less special-casing the better.
-> 
-
-OK. I'll need to think through some more of these cases. And meanwhile, I
-was poking around from the other direction: just injection test it by
-pasting in "true" or "false", in place of calling folio_likely_mapped_shared().
-And see what changes.
-
-The "true" test lets me fail several khugepaged selftests, while the "false"
-test just increases the counter in /proc/vmstat.
-
-That's more of a black box way of poking at it, just to have another facet
-of testing. Because it is good to ensure that we really do have test
-coverage if we're changing the code. Anyway, just ideas.
-
-
-thanks,
+diff --git a/drivers/iio/adc/ad799x.c b/drivers/iio/adc/ad799x.c
+index b757cc45c4de..3040575793a2 100644
+--- a/drivers/iio/adc/ad799x.c
++++ b/drivers/iio/adc/ad799x.c
+@@ -128,7 +128,7 @@ struct ad799x_state {
+ 	struct regulator		*vref;
+ 	/* lock to protect against multiple access to the device */
+ 	struct mutex			lock;
+-	unsigned			id;
++	unsigned int			id;
+ 	u16				config;
+ 
+ 	u8				*rx_buf;
+@@ -253,7 +253,7 @@ static int ad799x_update_scan_mode(struct iio_dev *indio_dev,
+ 	}
+ }
+ 
+-static int ad799x_scan_direct(struct ad799x_state *st, unsigned ch)
++static int ad799x_scan_direct(struct ad799x_state *st, unsigned int ch)
+ {
+ 	u8 cmd;
+ 
 -- 
-John Hubbard
-NVIDIA
+2.34.1
 
