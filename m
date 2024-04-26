@@ -1,140 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BBB1422C6
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 09:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379E013DDD5;
+	Fri, 26 Apr 2024 09:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714124038; cv=none; b=Sqw5tmEH6tJZzbudPu1/CvESoJLeXTaej/r+0F3lbHzqW5ohZl51ZPUPQDBMhYMc7sxvZM0krFW/9dGs4ULMoeoYd/AlfTBXPa0IdgKNIQKH5U2HgDDuQwBuWYNs/pBJ/5VL1K9dxvB0gv2ITpXXy5geb8YxGbC46L9DlzbR9iA=
+	t=1714124147; cv=none; b=jieQGVnfHcuDX15axuZzf2eVEp/sFQMa3yTWQrpngRyXX+KMvaCXb+89MOV24SXNkj0B7iJ/yrhEUKC1AU+41Dd7vP0vU8oqoH8yDeJvyYAwMCTBCWtEFGG8QjNprRSUPN1m+JY3n3GeSavPg+1SUREk1Hw5KwYl60pAPUKOh6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714124038; c=relaxed/simple;
-	bh=HF9FygCkrUCOWv1FRx+lwLlEuJ62OvrqDXz7ynsbe8s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AokXjCdk0rpimrWvMyHhi51yhH/n+Z0yCNH3J+hOwHo42RQ1wsKcCw/eiw4I6vvHKbPXCwAOS2jGizyb4grpjL/EYPetCeFFKu9gxyyXNOCK3ssM8YNTeT6FVsC77ZLnBdzay21038i7HAn0Vtg1Snr8CbNiVcxHcHITkhMstto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jVQjZxoL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jVQjZxoL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 821A3C113CD;
-	Fri, 26 Apr 2024 09:33:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714124038;
-	bh=HF9FygCkrUCOWv1FRx+lwLlEuJ62OvrqDXz7ynsbe8s=;
-	h=From:To:Cc:Subject:Date:From;
-	b=jVQjZxoL58daYHJEOErMTjYz+2gxxdXEQDbVkU1O+yBl0YDklLpTtxyKQAySLlFdX
-	 lZ5XS2LtUwv1aaf3xZ46QaKH0xD94sScQdmhdWxw/EIVZdwVc8WNE1z6czWGpMjMaD
-	 JDUlWHm3W0CAXueuuKp0XAYcQlbJ3pHO84nS/m08Eu2y4zdUB8RSef/pG2Ude5UOCH
-	 yMj/hYMM/gIIkwimjjO/itS/WyfvfaABPm1ptvfbp3M92Mv+J0KXlVz4QiZLrN/t48
-	 QUxgGinOY9QdRXima3utm8VPqpy1/XslL12yD5KU0x0O+x2hm2pGv4HaCBgHlh8a8Y
-	 JRyuZPb7/ZhvQ==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>,
-	Yunlei He <heyunlei@oppo.com>
-Subject: [PATCH] f2fs: fix to avoid allocating WARM_DATA segment for direct IO
-Date: Fri, 26 Apr 2024 17:33:48 +0800
-Message-Id: <20240426093348.377018-1-chao@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1714124147; c=relaxed/simple;
+	bh=lBnA2OQ+jqFhTDwT4ra2MmJag4tWEJrVaHZ+YlurzVQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=owFBcTjoArstG92VadEHUBC/hy0jWXM1ZePHqAtSDvslcDLhI7meXXHktzElw8BW549Su+ciyzDGKcQQe/q3BCUnxdbOH2QtllhGQEshydJlzFdF3j9F1o6X/RDN/Bgx75AcyQr6Ph+U3u2gUMs9V4EV7Qvkbfj7g2UniQsKGSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-518a56cdc03so2203630e87.1;
+        Fri, 26 Apr 2024 02:35:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714124143; x=1714728943;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bg6BhgrtGVlqx1sac+sbQ4/qS3Kek+r68BVa3EwPNFc=;
+        b=ZG8tA/sRMGVQS3p3+R2lm9EU0mS3NPQY91YZ5SMaYVGVwZe+MUF+EXwDgDqccy/9pC
+         eOjyH/OiwcQY6oTib3unY/UQcKYOouFe9JuxmiQzmCO3B3DWH6rGC2Jc+NktQ66aP30y
+         +5wET/ttlQh+lL2G48YgRHM2Ox8cesmuBgtb27UUcqi4tmcfleeTuk1a3Bean0sw0D9d
+         yAuLPyN4IuYC1hMtI2A9xayRCQjiu/s29gM4NNqc9nhF9q9SNhOYkLNEWSq4sdF+sytS
+         bkXCf1TUAa8dxWxWfhSdihHCwDSNl4OxwgpxP1/F9tk9mp3da8nLLJoOFFEo5hJuYqIQ
+         RhsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpqo+gIpB8/LteI+iKZe32HGn7pHXaYP2I+ZNTds68JngXr9AigVuQMcS3Z7laXAFf/G5DWi36tIxmgc50se6oMzEyZgbXL99v5owz4i228cwuFsAkMSLeOIz3h3RgTXx5szNrj0w+kebTngmz
+X-Gm-Message-State: AOJu0YxZB9rFMI6x+tAp/tJcSQZsgnBrI+qSK7BOHjZhuLV8PavLtb4H
+	PaaGNudTZgiCOSZ8T2EFdZOCbHHO9RmYjW618uL1tBjWXj+Wx1BBCisgGgnzC1o=
+X-Google-Smtp-Source: AGHT+IFWRq72IP69xrZfVjOtv6D5H4GvTGI4/jiXv60/G99F6kW6EsiIKpVEb0ZBo60DGzzvaomb6Q==
+X-Received: by 2002:ac2:5dca:0:b0:516:d692:5e0b with SMTP id x10-20020ac25dca000000b00516d6925e0bmr1079878lfq.54.1714124143066;
+        Fri, 26 Apr 2024 02:35:43 -0700 (PDT)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id e2-20020a056512090200b0051b0f4e1b0dsm1861421lft.276.2024.04.26.02.35.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Apr 2024 02:35:42 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5196c755e82so2457840e87.0;
+        Fri, 26 Apr 2024 02:35:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW0t8pcUGeqxdpfMvVudy6totLNnRZGZ/ZwKQLJw9nHZRChy4hv/dh5S/QgQW6sS+dIVPcZVgb4WAipJOEIfzFVJqiiyDp5ziDWoYpd4dNRozUB3m0t/k2avIcKOKxGwqMO7RCSstFJ/CG0kT51
+X-Received: by 2002:ac2:58ca:0:b0:518:e69b:25a2 with SMTP id
+ u10-20020ac258ca000000b00518e69b25a2mr1216657lfo.45.1714124142488; Fri, 26
+ Apr 2024 02:35:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240426072006.358802-1-iam@sung-woo.kim> <cff764c2-a3d1-4a12-9260-54122e7a1fef@moroto.mountain>
+In-Reply-To: <cff764c2-a3d1-4a12-9260-54122e7a1fef@moroto.mountain>
+From: Sungwoo Kim <iam@sung-woo.kim>
+Date: Fri, 26 Apr 2024 05:35:01 -0400
+X-Gmail-Original-Message-ID: <CAJNyHp+eCq1p_gTbxAJBKouAw-oQ=j5xwyjk5o-91pf_hGdrAg@mail.gmail.com>
+Message-ID: <CAJNyHp+eCq1p_gTbxAJBKouAw-oQ=j5xwyjk5o-91pf_hGdrAg@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: L2CAP: Fix slab-use-after-free in l2cap_send_cmd
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: daveti@purdue.edu, Marcel Holtmann <marcel@holtmann.org>, 
+	Johan Hedberg <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If active_log is not 6, we never use WARM_DATA segment, let's
-avoid allocating WARM_DATA segment for direct IO.
+On Fri, Apr 26, 2024 at 5:16=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
+>
+> On Fri, Apr 26, 2024 at 03:20:05AM -0400, Sungwoo Kim wrote:
+> > diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+> > index 84fc70862..a8f414ab8 100644
+> > --- a/net/bluetooth/l2cap_core.c
+> > +++ b/net/bluetooth/l2cap_core.c
+> > @@ -3953,6 +3953,9 @@ static struct l2cap_chan *l2cap_connect(struct l2=
+cap_conn *conn,
+> >       if (!chan)
+> >               goto response;
+> >
+> > +     l2cap_chan_hold(chan);
+> > +     l2cap_chan_lock(chan);
+> > +
+> >       /* For certain devices (ex: HID mouse), support for authenticatio=
+n,
+> >        * pairing and bonding is optional. For such devices, inorder to =
+avoid
+> >        * the ACL alive for too long after L2CAP disconnection, reset th=
+e ACL
+> > @@ -4041,6 +4044,11 @@ static struct l2cap_chan *l2cap_connect(struct l=
+2cap_conn *conn,
+> >               chan->num_conf_req++;
+> >       }
+> >
+> > +     if (chan) {
+> > +             l2cap_chan_unlock(chan);
+> > +             l2cap_chan_put(chan);
+> > +     }
+> > +
+> >       return chan;
+>         ^^^^^^^^^^^^
+> This doesn't fix the bug because we're returning chan.
+>
+> As soon as you call l2cap_chan_put() then chan will be freed by in the
+> other thread which is doing l2cap_conn_del() resulting in a use after
+> free in the caller.
 
-Signed-off-by: Yunlei He <heyunlei@oppo.com>
-Signed-off-by: Chao Yu <chao@kernel.org>
----
- fs/f2fs/data.c    |  3 ++-
- fs/f2fs/f2fs.h    |  2 +-
- fs/f2fs/file.c    |  5 +++--
- fs/f2fs/segment.c | 11 +++++++++--
- 4 files changed, 15 insertions(+), 6 deletions(-)
+Thank you for pointing this out.
+No caller uses the return value of l2cap_connect() if the kernel
+versions >=3D v6.9.
+So, l2cap_connect() can return void.
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index bee1e45f76b8..0c516c653f05 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -4179,7 +4179,8 @@ static int f2fs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 	map.m_lblk = bytes_to_blks(inode, offset);
- 	map.m_len = bytes_to_blks(inode, offset + length - 1) - map.m_lblk + 1;
- 	map.m_next_pgofs = &next_pgofs;
--	map.m_seg_type = f2fs_rw_hint_to_seg_type(inode->i_write_hint);
-+	map.m_seg_type = f2fs_rw_hint_to_seg_type(F2FS_I_SB(inode),
-+						inode->i_write_hint);
- 	if (flags & IOMAP_WRITE)
- 		map.m_may_create = true;
- 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index e8ff301eaf32..6dd50a6075c0 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3747,7 +3747,7 @@ int f2fs_build_segment_manager(struct f2fs_sb_info *sbi);
- void f2fs_destroy_segment_manager(struct f2fs_sb_info *sbi);
- int __init f2fs_create_segment_manager_caches(void);
- void f2fs_destroy_segment_manager_caches(void);
--int f2fs_rw_hint_to_seg_type(enum rw_hint hint);
-+int f2fs_rw_hint_to_seg_type(struct f2fs_sb_info *sbi, enum rw_hint hint);
- enum rw_hint f2fs_io_type_to_rw_hint(struct f2fs_sb_info *sbi,
- 			enum page_type type, enum temp_type temp);
- unsigned int f2fs_usable_segs_in_sec(struct f2fs_sb_info *sbi,
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 856a5d3bd6bf..23601d747716 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -4643,7 +4643,8 @@ static int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *iter,
- 
- 	map.m_may_create = true;
- 	if (dio) {
--		map.m_seg_type = f2fs_rw_hint_to_seg_type(inode->i_write_hint);
-+		map.m_seg_type = f2fs_rw_hint_to_seg_type(sbi,
-+						inode->i_write_hint);
- 		flag = F2FS_GET_BLOCK_PRE_DIO;
- 	} else {
- 		map.m_seg_type = NO_CHECK_TYPE;
-@@ -4696,7 +4697,7 @@ static void f2fs_dio_write_submit_io(const struct iomap_iter *iter,
- {
- 	struct inode *inode = iter->inode;
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
--	int seg_type = f2fs_rw_hint_to_seg_type(inode->i_write_hint);
-+	int seg_type = f2fs_rw_hint_to_seg_type(sbi, inode->i_write_hint);
- 	enum temp_type temp = f2fs_get_segment_temp(seg_type);
- 
- 	bio->bi_write_hint = f2fs_io_type_to_rw_hint(sbi, DATA, temp);
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 8313d6aeaf41..94f3380be04c 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3358,8 +3358,14 @@ int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range)
- 	return err;
- }
- 
--int f2fs_rw_hint_to_seg_type(enum rw_hint hint)
-+int f2fs_rw_hint_to_seg_type(struct f2fs_sb_info *sbi, enum rw_hint hint)
- {
-+	if (F2FS_OPTION(sbi).active_logs == 2)
-+		return CURSEG_HOT_DATA;
-+	else if (F2FS_OPTION(sbi).active_logs == 4)
-+		return CURSEG_COLD_DATA;
-+
-+	/* active_log == 6 */
- 	switch (hint) {
- 	case WRITE_LIFE_SHORT:
- 		return CURSEG_HOT_DATA;
-@@ -3499,7 +3505,8 @@ static int __get_segment_type_6(struct f2fs_io_info *fio)
- 				is_inode_flag_set(inode, FI_HOT_DATA) ||
- 				f2fs_is_cow_file(inode))
- 			return CURSEG_HOT_DATA;
--		return f2fs_rw_hint_to_seg_type(inode->i_write_hint);
-+		return f2fs_rw_hint_to_seg_type(F2FS_I_SB(inode),
-+						inode->i_write_hint);
- 	} else {
- 		if (IS_DNODE(fio->page))
- 			return is_cold_node(fio->page) ? CURSEG_WARM_NODE :
--- 
-2.40.1
+One caller uses the return value of l2cap_connect() in v4.19 <=3D the
+kernel versions <=3D v6.8.
+In this case, the caller should unlock and put a channel.
 
+Question: Can different patches be applied for different versions like
+the above?
+
+Thanks,
+Sungwoo Kim.
