@@ -1,196 +1,162 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADC91FC4;
-	Fri, 26 Apr 2024 12:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A22F3715E
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 12:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714134704; cv=none; b=dx3eE5CG07U1SSvGJVqNxdTdR6Uns9LvqiCpTHIirHJjx/jpZL4ZPOResOsVZi3KOkbVDyIKqL53ewGP1OS17sFdu+BXEM0uZ2nEKKzl6erkXFtrrUzBnPNz+/6LZCQ/u0Q9mRFy7qcvzjixiG1n8r6OORxl4jLdLu73p5gEAtU=
+	t=1714134883; cv=none; b=LycA8JU+8TLqYDT44hcNuySEgrYMM7YcfW9ikpoDu0Xe9c7i231DzyVF7SInINmuXiJjzzy2FuEDvMNc7S0uxUcfw8pkdB1f2aZ9pCVaHZx82crNeTMJo/XBST68QuYFmebExqpId1Yp45Pt5czI2wBZIIKX2rw/c4WBhoTEUbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714134704; c=relaxed/simple;
-	bh=YiNnz+/Lu7XW/l9qCAF8dwwGvrtUSUSbywiQs82oG18=;
-	h=Date:Message-Id:From:To:Cc:Subject:In-Reply-To; b=lM5PnyrOBDXGr+P+XoJmXSs+Zy41VZEE0JmxUBprkYOxaZQqu1P1w3pcw0mxV/TlCb3p03S1EF7D149qfOg/QOv/F5dq/VzULJNWMqB/2qUPw24ooohqM1A50RUzj3IWZez14wTQa4ITlRAorljMu0mmpuN4e7XEOnCj0+xBM5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cCRwoqPL; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714134883; c=relaxed/simple;
+	bh=e6PDpd9m5aNs9GktJ5+u/HJ8JwVHiegREXNQkYESuRk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KJ+lZZAH3fHdeHfkkTicCl0vCBVEWvXEOEPRGuAOYBAocxy9yRH1ZBgEY49qUdkwspmtRi6sfYOm8LxDjqIJb3rbFU3FYXg10DyO+deTuLl5cppV0qxyWTvhN9fH5dqjqV59KZ5CKSIHy4U+S3k5mabjjoSLVrEZEmLCKk8eW5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qpIMwmIy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cCRwoqPL"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5d3912c9a83so1327986a12.3;
-        Fri, 26 Apr 2024 05:31:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714134702; x=1714739502; darn=vger.kernel.org;
-        h=in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=J8Us4I6GJMAPX/prvPDNnLBblFA4s8DcYEpyh+B6ghE=;
-        b=cCRwoqPL7Dve9jDUK7qOCpaweiPea3vNWqq2sLSojR1+IEgtuc2aVyrHfuN3b6I7H7
-         6D3nNzPqLQlktC2Hhyi0pLPGkCMSoVuhm0frjKrC65JOmqu2TtffWVppBONENAHNOn1A
-         wx3ECT9hdFyykm5tFAbCL6ANBANlg1Jl7MPV7Nlq+w93RaH8fziR/1R1W1ZsZmA/KXD0
-         MuZJw+PbhNQBLAsVlWrN/l1g7dwbnd6SMqod05UOqqeHEju9o1Dkgyjq26FBy2Wp8prz
-         QLcgst5gO29Cd5TQEVibXRmNGzMLFoqFfdFc0VDqCxC94dODYsI75VD5XpHDPYTFxz3X
-         B2UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714134702; x=1714739502;
-        h=in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=J8Us4I6GJMAPX/prvPDNnLBblFA4s8DcYEpyh+B6ghE=;
-        b=CxNeMqBaTdfh8+vNeKioiuMKtiiie5RtPxBFKBmJNI57cwpwkM0NO/++hH4CXvflp8
-         rLYGJQxqFps/PtDhf8yMrnxQMncSeSmgRZhJFlMipFux8SqbWHB+A/fHN9ixZU08Eu12
-         SJBVfwKfcxBxmkswqwLOSeNuXebY9U6fgoc3PtUayydeJr4mW0HHxB+QdglMsKDhGWAn
-         DTlb5uVCDfx4lisX3cLAjZGMqFOsxPtw22I2a0Ry2RlJnrQCebKKQOKPH8ATACJ9ByUm
-         TIONfgYqDg9LGKhhvAxFGvxNxe02x4IC+o5dA1F8bdMYZBBmkb+CcdN9BnG2Zl0eT995
-         1Kvw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3IzSrr3828JN8KFWmtgCg8poeTAiyRNbP5x1dTC1HCyNKVe3mFAR6XueymLUd34EMS9mw2AZs9ZiXjyEJ0scISNrUkC3AaAtoYSOeyTsjfUURXA+0YtluISFdoSKFjKfqiuw4/k9bFw==
-X-Gm-Message-State: AOJu0YyyKgB9lW8ReQqBTo+ftBYpu9m4y+qukX1cb+kknhbeaKQcdq5Y
-	R4KElvxj+XNtjp1LI6v4DlF3lsKTNcCVnzcYC56/JuSuS1EMLkQe
-X-Google-Smtp-Source: AGHT+IEyOzmKwpDmulsfDNoUUZ4lLr23Xmfs3rqvSkEEanKKcGelrlV3zG53JyLe5jufdjgg9tzgjw==
-X-Received: by 2002:a17:90b:489:b0:2a4:f53d:e6bc with SMTP id bh9-20020a17090b048900b002a4f53de6bcmr2579977pjb.15.1714134702100;
-        Fri, 26 Apr 2024 05:31:42 -0700 (PDT)
-Received: from dw-tp ([171.76.87.172])
-        by smtp.gmail.com with ESMTPSA id p4-20020a17090ac00400b002a3a154b974sm14510942pjt.55.2024.04.26.05.31.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 05:31:39 -0700 (PDT)
-Date: Fri, 26 Apr 2024 18:01:33 +0530
-Message-Id: <87frv8nw4a.fsf@gmail.com>
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Zhang Yi <yi.zhang@huaweicloud.com>, linux-ext4@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, hch@infradead.org, djwong@kernel.org, david@fromorbit.com, willy@infradead.org, zokeefe@google.com, yi.zhang@huawei.com, yi.zhang@huaweicloud.com, chengzhihao1@huawei.com, yukuai3@huawei.com, wangkefeng.wang@huawei.com
-Subject: Re: [PATCH v4 02/34] ext4: check the extent status again before inserting delalloc block
-In-Reply-To: <20240410142948.2817554-3-yi.zhang@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qpIMwmIy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A980C113CD;
+	Fri, 26 Apr 2024 12:34:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714134882;
+	bh=e6PDpd9m5aNs9GktJ5+u/HJ8JwVHiegREXNQkYESuRk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qpIMwmIyoyiZWggw8h4sZWS0KrLfPxF5ZR+sKaUI9LwBk5tgMhX44Dy2Ckm01o0+T
+	 YH3xfg1P8/1Iwb0UszWcSIroApZpv+QxlubysfBHGPBjTYHiJFphsQ6LiiJr6GC/Hc
+	 Oi4HZifg2pJH1MpNXuI67mtK3BJStMWef3RcqVQ6udoPR4Id91FWUUGAoF44ZKmLdF
+	 tdCHBwY9vXbhKJBF54Ca+FJmkzu9k9K71oeHBov9ZVh+HXt4OtATjn1KTq7UFxNZNl
+	 nbYkDShm2DTiWnPiKF31tT395Z6dQi/GxlTtvCRfm9LLda6St1xaG2aWFc/Q/YF8E/
+	 eOJYJXGEGYjeg==
+Date: Fri, 26 Apr 2024 09:29:33 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 1/1 fyi] tools headers x86 cpufeatures: Sync with the
+ kernel sources to pick TDX, Zen, APIC MSR fence changes
+Message-ID: <ZiueLXPqjHGqVcgJ@x1>
+References: <ZirIx4kPtJwGFZS0@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZirIx4kPtJwGFZS0@x1>
 
-Zhang Yi <yi.zhang@huaweicloud.com> writes:
+On Thu, Apr 25, 2024 at 06:19:07PM -0300, Arnaldo Carvalho de Melo wrote:
+> tldr; Just FYI, I'm carrying this on the perf tools tree.
 
-> From: Zhang Yi <yi.zhang@huawei.com>
->
-> Now we lookup extent status entry without holding the i_data_sem before
-> inserting delalloc block, it works fine in buffered write path and
-> because it holds i_rwsem and folio lock, and the mmap path holds folio
-> lock, so the found extent locklessly couldn't be modified concurrently.
-> But it could be raced by fallocate since it allocate block whitout
-> holding i_rwsem and folio lock.
->
-> ext4_page_mkwrite()             ext4_fallocate()
->  block_page_mkwrite()
->   ext4_da_map_blocks()
->    //find hole in extent status tree
->                                  ext4_alloc_file_blocks()
->                                   ext4_map_blocks()
->                                    //allocate block and unwritten extent
->    ext4_insert_delayed_block()
->     ext4_da_reserve_space()
->      //reserve one more block
->     ext4_es_insert_delayed_block()
->      //drop unwritten extent and add delayed extent by mistake
->
-> Then, the delalloc extent is wrong until writeback, the one more
-> reserved block can't be release any more and trigger below warning:
->
->  EXT4-fs (pmem2): Inode 13 (00000000bbbd4d23): i_reserved_data_blocks(1) not cleared!
->
-> Hold i_data_sem in write mode directly can fix the problem, but it's
-> expansive, we should keep the lockless check and check the extent again
-> once we need to add an new delalloc block.
+Sorry about the subject line, reused from a previous sync, will fix it
+up.
 
-Hi Zhang, 
-
-It's a nice finding. I was wondering if this was caught in any of the
-xfstests?
-
-I have reworded some of the commit message, feel free to use it if you
-think this version is better. The use of which path uses which locks was
-a bit confusing in the original commit message.
-
-<reworded from your original commit msg>
-
-ext4_da_map_blocks(), first looks up the extent status tree for any
-extent entry with i_data_sem held in read mode. It then unlocks
-i_data_sem, if it can't find an entry and take this lock in write
-mode for inserting a new da entry.
-
-This is ok between -
-1. ext4 buffered-write path v/s ext4_page_mkwrite(), because of the
-folio lock
-2. ext4 buffered write path v/s ext4 fallocate because of the inode
-lock.
-
-But this can race between ext4_page_mkwrite() & ext4 fallocate path - 
-
- ext4_page_mkwrite()             ext4_fallocate()
-  block_page_mkwrite()
-   ext4_da_map_blocks()
-    //find hole in extent status tree
-                                  ext4_alloc_file_blocks()
-                                   ext4_map_blocks()
-                                    //allocate block and unwritten extent
-    ext4_insert_delayed_block()
-     ext4_da_reserve_space()
-      //reserve one more block
-     ext4_es_insert_delayed_block()
-      //drop unwritten extent and add delayed extent by mistake
-
-Then, the delalloc extent is wrong until writeback and the extra
-reserved block can't be released any more and it triggers below warning:
-
-  EXT4-fs (pmem2): Inode 13 (00000000bbbd4d23): i_reserved_data_blocks(1) not cleared!
-
-This patch fixes the problem by looking up extent status tree again
-while the i_data_sem is held in write mode. If it still can't find
-any entry, then we insert a new da entry into the extent status tree.
-
->
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+- Arnaldo
+ 
+> Full explanation:
+> 
+> There used to be no copies, with tools/ code using kernel headers
+> directly. From time to time tools/perf/ broke due to legitimate kernel
+> hacking. At some point Linus complained about such direct usage. Then we
+> adopted the current model.
+> 
+> The way these headers are used in perf are not restricted to just
+> including them to compile something.
+> 
+> There are sometimes used in scripts that convert defines into string
+> tables, etc, so some change may break one of these scripts, or new MSRs
+> may use some different #define pattern, etc.
+> 
+> E.g.:
+> 
+>   $ ls -1 tools/perf/trace/beauty/*.sh | head -5
+>   tools/perf/trace/beauty/arch_errno_names.sh
+>   tools/perf/trace/beauty/drm_ioctl.sh
+>   tools/perf/trace/beauty/fadvise.sh
+>   tools/perf/trace/beauty/fsconfig.sh
+>   tools/perf/trace/beauty/fsmount.sh
+>   $
+>   $ tools/perf/trace/beauty/fadvise.sh
+>   static const char *fadvise_advices[] = {
+>         [0] = "NORMAL",
+>         [1] = "RANDOM",
+>         [2] = "SEQUENTIAL",
+>         [3] = "WILLNEED",
+>         [4] = "DONTNEED",
+>         [5] = "NOREUSE",
+>   };
+>   $
+> 
+> The tools/perf/check-headers.sh script, part of the tools/ build
+> process, points out changes in the original files.
+> 
+> So its important not to touch the copies in tools/ when doing changes in
+> the original kernel headers, that will be done later, when
+> check-headers.sh inform about the change to the perf tools hackers.
+> 
+> To pick the changes from:
+> 
+>   95a6ccbdc7199a14 ("x86/bhi: Mitigate KVM by default")
+>   ec9404e40e8f3642 ("x86/bhi: Add BHI mitigation knob")
+>   be482ff9500999f5 ("x86/bhi: Enumerate Branch History Injection (BHI) bug")
+>   0f4a837615ff925b ("x86/bhi: Define SPEC_CTRL_BHI_DIS_S")
+>   7390db8aea0d64e9 ("x86/bhi: Add support for clearing branch history at syscall entry")
+> 
+> This causes these perf files to be rebuilt and brings some X86_FEATURE
+> that will be used when updating the copies of
+> tools/arch/x86/lib/mem{cpy,set}_64.S with the kernel sources:
+> 
+>       CC       /tmp/build/perf/bench/mem-memcpy-x86-64-asm.o
+>       CC       /tmp/build/perf/bench/mem-memset-x86-64-asm.o
+> 
+> And addresses this perf build warning:
+> 
+>   Warning: Kernel ABI header differences:
+>     diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Daniel Sneddon <daniel.sneddon@linux.intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > ---
->  fs/ext4/inode.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 6a41172c06e1..118b0497a954 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -1737,6 +1737,7 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
->  		if (ext4_es_is_hole(&es))
->  			goto add_delayed;
+>  tools/arch/x86/include/asm/cpufeatures.h | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+> index a38f8f9ba6572912..3c7434329661c66e 100644
+> --- a/tools/arch/x86/include/asm/cpufeatures.h
+> +++ b/tools/arch/x86/include/asm/cpufeatures.h
+> @@ -461,11 +461,15 @@
 >  
-> +found:
->  		/*
->  		 * Delayed extent could be allocated by fallocate.
->  		 * So we need to check it.
-> @@ -1781,6 +1782,24 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
+>  /*
+>   * Extended auxiliary flags: Linux defined - for features scattered in various
+> - * CPUID levels like 0x80000022, etc.
+> + * CPUID levels like 0x80000022, etc and Linux defined features.
+>   *
+>   * Reuse free bits when adding new feature flags!
+>   */
+>  #define X86_FEATURE_AMD_LBR_PMC_FREEZE	(21*32+ 0) /* AMD LBR and PMC Freeze */
+> +#define X86_FEATURE_CLEAR_BHB_LOOP	(21*32+ 1) /* "" Clear branch history at syscall entry using SW loop */
+> +#define X86_FEATURE_BHI_CTRL		(21*32+ 2) /* "" BHI_DIS_S HW control available */
+> +#define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* "" BHI_DIS_S HW control enabled */
+> +#define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* "" Clear branch history at vmexit using SW loop */
 >  
->  add_delayed:
->  	down_write(&EXT4_I(inode)->i_data_sem);
-> +	/*
-> +	 * Lookup extents tree again under i_data_sem, make sure this
-> +	 * inserting delalloc range haven't been delayed or allocated
-> +	 * whitout holding i_rwsem and folio lock.
-> +	 */
-
-page fault path (ext4_page_mkwrite does not take i_rwsem) and fallocate
-path (no folio lock) can race. Make sure we lookup the extent status
-tree here again while i_data_sem is held in write mode, before inserting
-a new da entry in the extent status tree.
-
-
-> +	if (ext4_es_lookup_extent(inode, iblock, NULL, &es)) {
-> +		if (!ext4_es_is_hole(&es)) {
-> +			up_write(&EXT4_I(inode)->i_data_sem);
-> +			goto found;
-> +		}
-> +	} else if (!ext4_has_inline_data(inode)) {
-> +		retval = ext4_map_query_blocks(NULL, inode, map);
-> +		if (retval) {
-> +			up_write(&EXT4_I(inode)->i_data_sem);
-> +			return retval;
-> +		}
-> +	}
-> +
->  	retval = ext4_insert_delayed_block(inode, map->m_lblk);
->  	up_write(&EXT4_I(inode)->i_data_sem);
->  	if (retval)
+>  /*
+>   * BUG word(s)
+> @@ -515,4 +519,5 @@
+>  #define X86_BUG_SRSO			X86_BUG(1*32 + 0) /* AMD SRSO bug */
+>  #define X86_BUG_DIV0			X86_BUG(1*32 + 1) /* AMD DIV0 speculation bug */
+>  #define X86_BUG_RFDS			X86_BUG(1*32 + 2) /* CPU is vulnerable to Register File Data Sampling */
+> +#define X86_BUG_BHI			X86_BUG(1*32 + 3) /* CPU is affected by Branch History Injection */
+>  #endif /* _ASM_X86_CPUFEATURES_H */
 > -- 
-> 2.39.2
+> 2.44.0
+> 
