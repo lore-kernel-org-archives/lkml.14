@@ -1,117 +1,150 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792A0140360
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 10:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7913977F30;
+	Fri, 26 Apr 2024 10:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714128099; cv=none; b=GbwKJxKDexTpN1RoeQpEva66BRSDmBMBMX8p9mw15DOxKDf2EDJZotP8zCkD7p0UWngnteNROaV0PQIY4nifd9SgtcvydSe88bPDAAaxQnSU+Xol9ZZh2XUnmwL9L9wMc8abHTXqh2LW9FC6y0BZyDXsPohqp7uaTgvadQT5pwk=
+	t=1714128157; cv=none; b=sYLmdIERL7rd1EFmwzNcuMK22RPUIPFPgvdRXnVxkek46C1NMHVaaBp+TMESgx84woJmtPZGFojK8vCg0xw+Q0GkwxTN/fHcyq9kRAJHDHtXtCNScu61qWECG+qMmvZnKTR2qLw5OrWET6uhvAiPqf7HkMDuWBDkzgYGif2NJzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714128099; c=relaxed/simple;
-	bh=n9yKBX8qjigC7/F1M8bGWOMSsRVeFv1nqroVB06gU6s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OUmlXHtOYFwlcKDZIInvqeASvRBb5tFNCh0JuXQpOAKecHpduHPdwJUxmHxmDa8yeJYH0XppN7AvfD0R+wpG7CHZgXS4AbNPe10fL4okR3GkvI9kAYWSMmRAM9MsH455vLFHU6U31Zfd313uM/4mjibRB2QL8FS957wsEmTGmtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gGKSthFZ; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714128157; c=relaxed/simple;
+	bh=5jZaOy2PhOKuK73pSktlLzYYq/UWVVx/cSl8pNjughE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=K8zmsSAH3Uklt+sRIlNmcwm0Bsg2WLN1DnYKqPSKcB4svKT6hLYikVx6fVRs6NISN9Z/bUxcx3IwCi+a1qeZv6HMgfgHXbHwU+GPhknQBWbI2EFG9KP9HpHbaZ70P0VjGC8RsaWgGx7npoCxYVTj9MfXyfSXXrOTptg2IH2MhAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BMYqoYBg; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gGKSthFZ"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d8a2cbe1baso27630241fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 03:41:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714128096; x=1714732896; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rbXwx/HNBBmagZEhDQ/BaLCRVM/2fRQKE1iroB24Qwo=;
-        b=gGKSthFZvkA+Zib+3mbp41VlANM9omptCOYSOjA479RlBErhZXCDEpbMJXX7qrOFt0
-         oobkbbebp7v6BMFUh+wGtUURdS4ndLfhWn1AP8JZEOy5lvvwAaVyH+Z5krFsY1gJY04L
-         JcC/cnEX1lpzbb9RoUjICQHvhaLPQihaPW933nRmKCjdv3sZZFBapyhq6pnKRVliT9w8
-         bkOAde3yVqpf2eo1X0wzhdiHSGE788tgBxj2kO1lF52aYRfRwP+p0Xv5S/IQbW8SsLdr
-         iahP31LUeNNFeaGSUk6h9DKaiXXv36NOWpa2Tb4BkYrfGajKXCg34Vg1H0U8H86Xm+rN
-         X5BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714128096; x=1714732896;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rbXwx/HNBBmagZEhDQ/BaLCRVM/2fRQKE1iroB24Qwo=;
-        b=YqDeUGCZOIDutBQ4JWV1AMVaOlnVJH89J8IsxLgYGDsDlEcnWFXRtd5/uWPqDjtpbq
-         KAJNNSS13ns/r5pCPXxMmju2ktfvBhenazP00cmNid859hedyrRerQPM2slxG635v4qt
-         XHEYCYicW0mn/tLGjn36/wrT3oCOKeM5EYRYmT8qAyHkbEti8ClmooQTPFJ54ybMo2If
-         OSn3b2Y1yBr1nJvilQm1v9Nb/SAB8oxDT7wt0oj8hZiV+4TQZ6rFQV5LijFm+Hq2jvGc
-         us98NVTRr+ESbtCXfmcsSvsPK8RMZqwXGaYwQmHw9Lg4L6D4S/M2eGgTmLOAuHYzAQXy
-         Qhxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVxDt41pHSoXxE+31jGivlyI76L5BbMyIvwtwltpKWV/oxwhjD0lUWcnCDxdGf/Bz4O13V9ARDahwus3AlQ6OjPNm84EQyTzE3NidPg
-X-Gm-Message-State: AOJu0YyF2jBOD421MaEz9C8knReD3sU7s+bEoLuOK61sbBpD96Fde/wl
-	HFcEaZMDj7y+lIVNEYIoZ1OA2HanjDvzru7WlwAzLnkVD/E1lEHJPPyjGXY9HM8=
-X-Google-Smtp-Source: AGHT+IHiylD7VQWD1+ej27FAWnFwoUKQ+ZEhfuiu1lnbA/xYwpsUIFHWtBloSi6kC41eD+L1ByFyIQ==
-X-Received: by 2002:a2e:a1c6:0:b0:2da:36be:1b4a with SMTP id c6-20020a2ea1c6000000b002da36be1b4amr1770332ljm.19.1714128095556;
-        Fri, 26 Apr 2024 03:41:35 -0700 (PDT)
-Received: from gpeter-l.lan ([2a0d:3344:2e8:8510:63cc:9bae:f542:50e4])
-        by smtp.gmail.com with ESMTPSA id o14-20020a05600c510e00b00419f572671dsm22035335wms.20.2024.04.26.03.41.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 03:41:35 -0700 (PDT)
-From: Peter Griffin <peter.griffin@linaro.org>
-To: vkoul@kernel.org,
-	kishon@kernel.org,
-	krzysztof.kozlowski@linaro.org
-Cc: linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	tudor.ambarus@linaro.org,
-	andre.draszik@linaro.org,
-	saravanak@google.com,
-	willmcvicker@google.com,
-	kernel-team@android.com,
-	Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 2/2] phy: samsung-ufs: ufs: exit on first reported error
-Date: Fri, 26 Apr 2024 11:41:29 +0100
-Message-ID: <20240426104129.2211949-3-peter.griffin@linaro.org>
-X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-In-Reply-To: <20240426104129.2211949-1-peter.griffin@linaro.org>
-References: <20240426104129.2211949-1-peter.griffin@linaro.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BMYqoYBg"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43Q5dPXV021276;
+	Fri, 26 Apr 2024 10:42:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:from:to:cc:references
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=y2MVu4mhZFEgMJCbHWI/1+jaRluiMvPd1GS4dy8pZOk=; b=BM
+	YqoYBgh6NVvdOvYfTbMTxTdk3uvrtuOWlz3A45bNkksfyk5xGgf5PuytrLpp0+OW
+	nTjwJpGeqg0P+6c4SMtVxoQ3PF6PZJIQzgFJH6S63EBrpEfzcR+rKHt8kHekjBLb
+	WcW+bzzXKSXVPW2gY+Wza9Ze6BPb2oTAcdv3vvUJDXvM45nCygw2abFXXtGBu1Yz
+	WUwmSoJWef1uSfVFRxEAhiZ/o3kaU003+iTzB0t6BRabSpH8/wgp99r9Yalcv28C
+	8LHKUzR1NTPgueKqsZbz6/tTVExju5cXpMuDdt/h5WcWqs0AvbsG/xl2s2zB6APw
+	Ykg3xjbe2x3Wxil/MFiA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xr1ne9r4j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 10:42:22 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43QAgLDZ018475
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 10:42:21 GMT
+Received: from [10.216.47.179] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 26 Apr
+ 2024 03:42:13 -0700
+Message-ID: <c10c94c4-5239-46d3-9b41-95e3c943e969@quicinc.com>
+Date: Fri, 26 Apr 2024 16:12:07 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Bluetooth: qca: fix invalid device address check
+Content-Language: en-US
+From: Janaki Ramaiah Thota <quic_janathot@quicinc.com>
+To: Johan Hovold <johan@kernel.org>
+CC: Doug Anderson <dianders@chromium.org>,
+        Johan Hovold
+	<johan+linaro@kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        "Luiz
+ Augusto von Dentz" <luiz.dentz@gmail.com>,
+        Matthias Kaehlcke
+	<mka@chromium.org>,
+        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>, Stephen Boyd
+	<swboyd@chromium.org>,
+        <quic_mohamull@quicinc.com>, <quic_hbandi@quicinc.com>
+References: <20240416091509.19995-1-johan+linaro@kernel.org>
+ <CAD=FV=UBHvz2S5bd8eso030-E=rhbAypz_BnO-vmB1vNo+4Uvw@mail.gmail.com>
+ <Zid6lfQMlDp3HQ67@hovoldconsulting.com>
+ <CAD=FV=XoBwYmYGTdFNYMtJRnm6VAGf+-wq-ODVkxQqN3XeVHBw@mail.gmail.com>
+ <ZioW9IDT7B4sas4l@hovoldconsulting.com>
+ <c9ea5867-2db2-4f64-a1e3-f6c2836dd45d@quicinc.com>
+ <Zip9vMHa2x-uW-pf@hovoldconsulting.com>
+ <bb0e1baf-7e64-463a-8638-d403c7a29317@quicinc.com>
+In-Reply-To: <bb0e1baf-7e64-463a-8638-d403c7a29317@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: MLPPBesPkqd5KEe_zglqxKt6jhGKWm84
+X-Proofpoint-GUID: MLPPBesPkqd5KEe_zglqxKt6jhGKWm84
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-26_09,2024-04-26_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ priorityscore=1501 impostorscore=0 adultscore=0 bulkscore=0
+ lowpriorityscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404260070
 
-To preserve the err value, exit the loop immediately if an error
-is returned.
 
-Fixes: f2c6d0fa197a ("phy: samsung-ufs: use exynos_get_pmu_regmap_by_phandle() to obtain PMU regmap")
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- drivers/phy/samsung/phy-samsung-ufs.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Hi Johan,
 
-diff --git a/drivers/phy/samsung/phy-samsung-ufs.c b/drivers/phy/samsung/phy-samsung-ufs.c
-index ffc46c953ed6..6c5d41552649 100644
---- a/drivers/phy/samsung/phy-samsung-ufs.c
-+++ b/drivers/phy/samsung/phy-samsung-ufs.c
-@@ -99,12 +99,18 @@ static int samsung_ufs_phy_calibrate(struct phy *phy)
- 
- 	for_each_phy_lane(ufs_phy, i) {
- 		if (ufs_phy->ufs_phy_state == CFG_PRE_INIT &&
--		    ufs_phy->drvdata->wait_for_cal)
-+		    ufs_phy->drvdata->wait_for_cal) {
- 			err = ufs_phy->drvdata->wait_for_cal(phy, i);
-+			if (err)
-+				goto out;
-+		}
- 
- 		if (ufs_phy->ufs_phy_state == CFG_POST_PWR_HS &&
--		    ufs_phy->drvdata->wait_for_cdr)
-+		    ufs_phy->drvdata->wait_for_cdr) {
- 			err = ufs_phy->drvdata->wait_for_cdr(phy, i);
-+			if (err)
-+				goto out;
-+		}
- 	}
- 
- 	/**
--- 
-2.44.0.769.g3c40516874-goog
+Please note BDA values listed below are in the firmware (FW) data
+order, but the actual BDA value should be in the reverse of that order.
 
+On 4/26/2024 11:53 AM, Janaki Ramaiah Thota wrote:
+> 
+> 
+> On 4/25/2024 9:28 PM, Johan Hovold wrote:
+>> Hi Janaki,
+>>
+>> On Thu, Apr 25, 2024 at 08:31:50PM +0530, Janaki Ramaiah Thota wrote:
+>>
+>>> Apologies for the delay. As of now, we have observed the following
+>>> values in the upstream firmware files for default BD addresses.
+>>> We will confirm ASAP if there are any changes.
+>>>
+>>> ---------------------------------------------------------
+>>> |   BDA            |      Chipset                       |
+>>> ---------------------------------------------------------
+>>> | 20 00 00 10 80 39  | WCN3988 with ROM Version 0x0200    |
+>>> ---------------------------------------------------------
+>>> | 00 08 74 12 80 39  |  WCN3988 with ROM Version 0x0201    |
+>>> ---------------------------------------------------------
+>>> | 00 07 64 21 90 39  |  WCN3990                    |
+>>> ---------------------------------------------------------
+>>
+>> Thanks a lot for these. I see now that the default Trogdor address Doug
+>> reported (39:98:00:00:5a:ad) appears to comes from the fw too:
+>>
+>>     $ od -x crnv32.bin | grep 5aad
+>>
+>>     0000020 0000 0000 5aad 0000 3998 0008 0008 0000
+>>
+>> which means that patch I sent this morning should be all that is needed
+>> for those machines at least.
+>>
+> 
+> Yes correct, it will work for Trogdor
+> 
+>> Can you please confirm that all the WCN39xx have OTP storage for an
+>> address that an OEM can choose to use?
+>>
+> 
+> We are checking with internal FW team, will confirm on it.
+> 
+>> If that's not the case then we could simplify things by always marking
+>> their addresses as invalid, but I assume that they all have address
+>> storage.
+>>
+>> Johan
+> 
+> -Janakiram
+
+-Janaki Ram
