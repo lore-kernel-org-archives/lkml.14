@@ -1,163 +1,97 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71065157463;
-	Fri, 26 Apr 2024 16:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0EB514900B
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 16:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714147262; cv=none; b=hCoFxeO5mRBE7HieDriLrI5l23l4vZHpRwF8sEL8/R6UtE/+uE+7tLAimrFAkEr/i7v3mvrcT+yHRn5UlQ0uKndKrUouIXCIBh0HV1oYAuzEh5Z6SJayZoi0FASY1x4HKIjoReUj43jZS62xRep9KxPXZ2+scftINFVWnzfIEIs=
+	t=1714147402; cv=none; b=Lj/N7b1CsqiqPAkfZXokuWwo+KSkBaVHkeDzBe4OnVjftC/RNYDttjiA2X9GCUR2RX5LULP+LC/aNe9iG6TzJq1YFY48bDpKOHb1m8/mGkaYKcbum+4JI2fEZbs4/G73eD89yrikCiYfKjFoFA73AUCI71tCKcIeiUwuQZIZ/Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714147262; c=relaxed/simple;
-	bh=uulYlAkCUz11COWeZOP+CzKbGlqVCgeSXf4Xrw39bQg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rCtjNqSPBG7nxl2u8kQJms9rha1WwbmZ6tacZ2Zx176ORTmvLyzjR4mbbaJQdgHFSbUZ88uBBEFnDG30789fqBHgwFM6JdjX98P4Gx7eQe2MOwUv9S5UfqzZyJYha6AUG7Pp7eMrRgifcpkzfsoVPuBs11VB5444GMxq0u3lA/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=F7Byt8J4; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1714147402; c=relaxed/simple;
+	bh=2bqLUBm8g+fTErDsw3AoG3Opk8G6JUruHIHjkz0DdlQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ete0vWOOcY8qvxzqFP4TQT2/Vap8csdYlzKTNWJNlFsUO+lfe3ZGd7ym0qbyREZvlvJ3E/Rsnz3FTlDH3bLFAHaPFigN65/Odk8wF1P2r7ZFSxyRPgMzdZM+rw1AksK/HNrOK2RoZv5Rx1fWk3S4Wg0miVr7muVCzVMk54IysgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Z5AT4aCH; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="F7Byt8J4"
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 37FCC884F3;
-	Fri, 26 Apr 2024 18:00:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1714147250;
-	bh=dLpoxPvvgiNhLq6wWoquSG/kLA+2IkGrgHtcMPVbqTg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=F7Byt8J41Nr3+ZuOu+e1nlotRJfZKjoMWnH9uY/GvbLcAwtiQHyUxRzAPgoIq23rl
-	 9NSY1IuO/1boW/8uMSl3ZaxFLmhB/lixjFmp6YUJxuGI06fKzQE2+v4pAKt9BmcGhL
-	 k5gO/9+czmd5py0AjXJBdYvhQTBtHInv7dxMsmbxGVcnoW0t8GV/O5hFEp+5r8i2Qq
-	 wOkhW80/CgojCeuewAaqVl0i0qmmxP2Nr9v2xh1iawpBamunc4ZThBN6UuH/zTFVFJ
-	 b/Fpo/URooZLlUBh9J6yN32sdCVrx3EOO1XBBLoH18vMe5lWLA0/Z+4W+zSQrgCTTU
-	 CyyQ/RJ3oToQQ==
-Message-ID: <56f2d023-82d5-4910-8c4e-68e9d62bd1fe@denx.de>
-Date: Fri, 26 Apr 2024 16:53:50 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Z5AT4aCH"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d8a2cbe1baso32363551fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 09:03:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1714147398; x=1714752198; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9vAUdsTCR2PnKMamTrwyk474FOGzS7dCZMJ7/drYNGg=;
+        b=Z5AT4aCHoBvguMKkTs6KXr+8+LTUEjiBNAwHSFecPU/kd7gLrWW7lp0JDRvqx/1f/L
+         /0jPTFgYi4kW+yebvfSudvvb9tUiBuhBqz3spdV1zAIaozUAQlIC+s/jzEV7+/LaVpKY
+         XPYlE3m8BbNZEKQWK/5Fp2cDEdCmfe3jBJIqshR9CMZjqf/u15x3xyvIQb53Wx8Ytzsr
+         eopmEnv+/qQXraePb28MdtoQI6oLPDqL1yw8ST+OO5BYCqfCJ09bWn4fOzHQ8Yv57mcP
+         51q3gS/+IqrkFOloeqkji/yUSlTnse/ec7pFI7ZAVY+YMrS5AQ2d8FrsECRtWd6sH4UD
+         44JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714147398; x=1714752198;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9vAUdsTCR2PnKMamTrwyk474FOGzS7dCZMJ7/drYNGg=;
+        b=Xg1CHu+hjdySx5IdypVGfAuYcu4Krzry8EgikH/cdN++ALtUsAVjhGapTwVYGZz0qC
+         Sa6W/4P4p36Y6IZaYIVaI9HpNhZwmmZKxBpXyp/VFdRtYRMx9Ao8sxtoiqmRMFiWKFfG
+         AQUMCvcUwmTOym/QmDfAa8NvrOIgUr0VYMPwUW//427mWBcD0mWR8IyL6dWO8LyUDniT
+         GtL1oZmk2kqFLy/gFfVH6EhFDZRL7R69aIBZZcfRIL+lR8og7U8Smjv98SrwMIf5UO2B
+         BoWiXO5TEYDMDKHjvmwF96lNPbeldKBpRFt2MKlnGC+5F+ihXNdAIDsqOe4j/VkUdd1n
+         ezuw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9jO8WsxYmbg3ATheIzD8G5zcIPIfdHzPN33JVGfaYmZbHMRn2Z/5Y8pmawOyxvbRSu06ea++lUML3MiPrtC+oyH3ra3dn4f14Y1Aw
+X-Gm-Message-State: AOJu0Ywfkt4UuFxCp/+HSYwiEqYcwLt4CEnKU01fo2CGk5Z2eC+o9Zq0
+	zJx94xXClHAy8YmpTHwW9chbhHOGZVTkBaVihhfrn9UnkHOJ23NsG0MS2UIUnAY=
+X-Google-Smtp-Source: AGHT+IFZVBNi2xUBOvk7vvZqb2k5iPH7tOf6qAZxXIoF5HheGesLAylF10j55jmXO8j3H5I/limBAw==
+X-Received: by 2002:a2e:92c2:0:b0:2d7:1323:6792 with SMTP id k2-20020a2e92c2000000b002d713236792mr2751149ljh.43.1714147397625;
+        Fri, 26 Apr 2024 09:03:17 -0700 (PDT)
+Received: from toaster.lan ([2a01:e0a:3c5:5fb1:1926:f73e:8b99:1c0a])
+        by smtp.googlemail.com with ESMTPSA id p14-20020a05600c1d8e00b0041bab13cd74sm1271408wms.17.2024.04.26.09.03.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 09:03:17 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-amlogic@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] drm/meson: fix hdmi auxiliary system operation without display
+Date: Fri, 26 Apr 2024 18:02:52 +0200
+Message-ID: <20240426160256.3089978-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/11] net: stmmac: dwmac-stm32: rework glue to
- simplify management
-To: Christophe Roullier <christophe.roullier@foss.st.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Richard Cochran <richardcochran@gmail.com>, Jose Abreu
- <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240426125707.585269-1-christophe.roullier@foss.st.com>
- <20240426125707.585269-4-christophe.roullier@foss.st.com>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <20240426125707.585269-4-christophe.roullier@foss.st.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 
-On 4/26/24 2:56 PM, Christophe Roullier wrote:
-> Change glue to be more generic and manage easily next stm32 products.
-> The goal of this commit is to have one stm32mp1_set_mode function which
-> can manage different STM32 SOC. SOC can have different SYSCFG register
-> bitfields. so in pmcsetr we defined the bitfields corresponding to the SOC.
-> 
-> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
-> ---
->   .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 76 +++++++++++++------
->   1 file changed, 51 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> index c92dfc4ecf57..68a02de25ac7 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> @@ -23,10 +23,6 @@
->   
->   #define SYSCFG_MCU_ETH_MASK		BIT(23)
->   #define SYSCFG_MP1_ETH_MASK		GENMASK(23, 16)
-> -#define SYSCFG_PMCCLRR_OFFSET		0x40
-> -
-> -#define SYSCFG_PMCR_ETH_CLK_SEL		BIT(16)
-> -#define SYSCFG_PMCR_ETH_REF_CLK_SEL	BIT(17)
->   
->   /* CLOCK feed to PHY*/
->   #define ETH_CK_F_25M	25000000
-> @@ -46,9 +42,6 @@
->    * RMII  |   1	 |   0	  |   0	   |  n/a  |
->    *------------------------------------------
->    */
-> -#define SYSCFG_PMCR_ETH_SEL_MII		BIT(20)
-> -#define SYSCFG_PMCR_ETH_SEL_RGMII	BIT(21)
-> -#define SYSCFG_PMCR_ETH_SEL_RMII	BIT(23)
->   #define SYSCFG_PMCR_ETH_SEL_GMII	0
->   #define SYSCFG_MCU_ETH_SEL_MII		0
->   #define SYSCFG_MCU_ETH_SEL_RMII		1
-> @@ -90,19 +83,33 @@ struct stm32_dwmac {
->   	int eth_ref_clk_sel_reg;
->   	int irq_pwr_wakeup;
->   	u32 mode_reg;		 /* MAC glue-logic mode register */
-> +	u32 mode_mask;
->   	struct regmap *regmap;
->   	u32 speed;
->   	const struct stm32_ops *ops;
->   	struct device *dev;
->   };
->   
-> +struct stm32_syscfg_pmcsetr {
-> +	u32 eth1_clk_sel;
-> +	u32 eth1_ref_clk_sel;
-> +	u32 eth1_selmii;
-> +	u32 eth1_sel_rgmii;
-> +	u32 eth1_sel_rmii;
-> +	u32 eth2_clk_sel;
-> +	u32 eth2_ref_clk_sel;
-> +	u32 eth2_sel_rgmii;
-> +	u32 eth2_sel_rmii;
-> +};
+CEC and ARC should work even when HDMI is not actively used for the
+display but it is not the case with Amlogic HDMI.
 
-[...]
+This is important for devices such as sound bars which may use DSI
+to display a UI and HDMI for CEC/ARC. A display is not required for these
+functions
 
-> @@ -487,8 +502,19 @@ static struct stm32_ops stm32mp1_dwmac_data = {
->   	.suspend = stm32mp1_suspend,
->   	.resume = stm32mp1_resume,
->   	.parse_data = stm32mp1_parse_data,
-> -	.syscfg_eth_mask = SYSCFG_MP1_ETH_MASK,
-> -	.clk_rx_enable_in_suspend = true
-> +	.clk_rx_enable_in_suspend = true,
-> +	.syscfg_clr_off = 0x44,
-> +	.pmcsetr = {
-> +		.eth1_clk_sel		= BIT(16),
-> +		.eth1_ref_clk_sel	= BIT(17),
-> +		.eth1_selmii		= BIT(20),
-> +		.eth1_sel_rgmii		= BIT(21),
-> +		.eth1_sel_rmii		= BIT(23),
-> +		.eth2_clk_sel		= 0,
-> +		.eth2_ref_clk_sel	= 0,
-> +		.eth2_sel_rgmii		= 0,
-> +		.eth2_sel_rmii		= 0
-> +	}
->   };
+This patchset fixes the problem.
 
-Is this structure really necessary ?
+Jerome Brunet (2):
+  drm/meson: dw-hdmi: power up phy on device init
+  drm/meson: dw-hdmi: add bandgap setting for g12
 
-It seems the MP15 single ethernet config bitfield is at offset 16.
-MP13 has two bitfields, one at offset 16, the other at offset 24 .
+ drivers/gpu/drm/meson/meson_dw_hdmi.c | 70 ++++++++++++---------------
+ 1 file changed, 31 insertions(+), 39 deletions(-)
 
-All you need to do is figure out which of the two MACs you are 
-configuring, and then shift the bitfield mask by 16 or 24, since the 
-bits are at the same offset for both bitfields.
-
-See the matching upstream U-Boot commit for how this shift can be done:
-a440d19c6c91 ("net: dwc_eth_qos: Add DT parsing for STM32MP13xx platform")
+-- 
+2.43.0
 
