@@ -1,162 +1,129 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001EB14A60A
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DCC18C1F;
+	Fri, 26 Apr 2024 15:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714145751; cv=none; b=CWUDGWVOkgY8A74VvGFHgPr8LDEmsY+oF1NO9G/48xoVVi1y0zaqB1oNBocKWc66rtPaVuopw2/VhayDmpP5cumUWz+Lcb9qB+l0yWzY+XsXr8kRAVc9lrrKb86EsN/h3XlUoC900s3S3c6khBt3dDWCuBlhq38Q5UT45cAenoo=
+	t=1714145866; cv=none; b=P9eaipX2/nI1saqlRTMuI9GGSTpC6TZR51QMcK27dxmZRf2ZnnWIktXM8ydDZN5a4cZ6gXg4hdfRAgD6fkQIWgKr/0Lc/sGi/3pXdrEVFLElF8IzJu64wB1XCypl5aAG00NIOcEEqZOD23asDQFjy6AxXDbH4alAXhoCGs0DBBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714145751; c=relaxed/simple;
-	bh=7DxziED0ZQhl0kzXbnS5g+C5iVifnnI6Wue7exIjip4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IkNjZI6LNDUe6ixupOpuCdPcsbkDntkE/ORtPPtGASgGBw8in6LmY1NXA2NfTbPTmuFpcvZNaemNGElj3RQwN3Yro/MwyQDnIXmyNyv0NaxP75YJxhBNDls20ASVSdl+5OtsxFQlFxXRFXYRzMStgmjPsQpA4nngOB3gicbq+Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ee0X/xRL; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714145866; c=relaxed/simple;
+	bh=Rck3V7A+RmzHoKveKNNk6Uc4pHjWyyyyaJfC/10inZ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=B/slYgDpoaLXgqlopv3EAx1jPqLhFFfcGzj5vbERIfscMEVSUTMXmeYRj/gLUrQETwn6JeUz2u3U3qfY0HKcA0q+tY4105s3NvobaH4AcobNnbA+URRPCspani788BNb5qVKuoTllp2JeTtZU0z76Vyt9a6IAIbXBbmE5xuY4FI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gy4Ip7jz; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ee0X/xRL"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-439884be4efso13368991cf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 08:35:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gy4Ip7jz"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41ba1ba55e8so4171695e9.1;
+        Fri, 26 Apr 2024 08:37:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714145744; x=1714750544; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1714145863; x=1714750663; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=y3tPCtKmB8e7QI9Lq/uJ6hWU4RympZM66D1lrj8aR8o=;
-        b=ee0X/xRLHvhcmuO7v5BobSbzJb7MJBMg1XRIzmLQ2+ud/QEqD+O3Bn+gzA1bynb2hs
-         5AOIbW4lrZh4yJmFiaY5Hqxr3OgyXBmQlF9/uW5vYTyT3vlrFZXISh8Gij0SLVZ3mbPu
-         QxQKjf4AFsNsJBq6I4/IC4DVCzKXWtSg6bGj8=
+        bh=0fnllMvw5rV4aVeEqjprC/GqDGLK/jA5NIktH0d4s7A=;
+        b=gy4Ip7jz77e1Y6+0q7kz7y02BBvpkh4TUXUN4eEoB9d/dPX2qGbD3DGY6Aa6830U/k
+         IaRqgZE7u8AaRNlSCi490ZOwGoDsHBQOFZ9HPCNwrWFOJotAN8MgcXAup0vUDzRoG5sp
+         1L4dYwODrTWR+my9HoHF775qx4DSMpD92aeNUpXKVwgmSucQPao9ClnlSqHjZUi31Qcm
+         ZfzeFNH3jdUHo3d9SmW2BMEvn0gOaBwN6xtNVErhOCljnw4nGuHloqXIadD5AnovKKm5
+         Zknh3lt6E/nJNo7o9ZtU4PyDzhyFTdwM+wf27fMRWlTpZEO4y7IhRR+ZzsTSA7wEuv/x
+         6JDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714145744; x=1714750544;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1714145863; x=1714750663;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=y3tPCtKmB8e7QI9Lq/uJ6hWU4RympZM66D1lrj8aR8o=;
-        b=ZsK8kFQ2Kqze6Hf7XyOY8GK/ALkMGqMpnnHHmYbnjoGMpUZf3TeXsPnjCILMhsQqFs
-         vFVx09gaeYgyLeUoP4GYNlNeKZr4i5gQSJz2RX4DDGsO2qTvTEYSAUz01qXUma/mG8vc
-         498dtqfjBkgJ48xB97HkVHyz953jw9gxYYn+9sJjWZe1qKCbRghWPNo8EoBzuYi3IoKY
-         Dyw2dbD4tVN/AY0UQ4UIWRrs8wfLB5NnK1vSoAOLWh+PZjBrPBek2CkKl/wN+PHv5kzc
-         mc5nrEp2D6Mm7EpIX3KZCqnprXrOlYpVtYaqakIl/twETX5DrrI91DOQn0spLDPpux8+
-         LwTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXylyFruDW+2gjTszCbZ6bU+H+atKdQfqh1BjPvKa/xKMBRcbabUBXuKQjFfYj9UHDXxtyX6iJztaGQ9hMQFwDhLEofX9DZz/kMx97c
-X-Gm-Message-State: AOJu0YyCPYAhKzWRHBVSySMvaC4Vj5Vh0saHklfIBYLbLcqI2DjPDvml
-	Dh137FmTGk0DhRHZ0qM1Y4nXVCDpwf6jw//r/i0sdfeiqF3LYgJXQ2mvDF8COi7Uu23f1ZA4TxA
-	=
-X-Google-Smtp-Source: AGHT+IHLmb4uI/lkW6z4EZzUcSly7hblCWu2Uefyy2IXJzEzrn9unFD8V57AiHIG9kvRnnz8HSTRpA==
-X-Received: by 2002:a05:622a:30b:b0:437:bec6:733c with SMTP id q11-20020a05622a030b00b00437bec6733cmr3509858qtw.33.1714145743685;
-        Fri, 26 Apr 2024 08:35:43 -0700 (PDT)
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com. [209.85.160.180])
-        by smtp.gmail.com with ESMTPSA id he28-20020a05622a601c00b00437543e5307sm8020763qtb.40.2024.04.26.08.35.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Apr 2024 08:35:43 -0700 (PDT)
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-439b1c72676so451851cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 08:35:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV4A0AokU0WbXgIHmAiQKW8YpqQtb7nDsd/SAMfIG5OJ2oG9fTiMnzxQmc36ABiEYymh/cf2pmsXo5r1CtoQabuN3Cnz6/S7DqHZ7jr
-X-Received: by 2002:ac8:6895:0:b0:437:7a02:d66c with SMTP id
- m21-20020ac86895000000b004377a02d66cmr225822qtq.25.1714145739600; Fri, 26 Apr
- 2024 08:35:39 -0700 (PDT)
+        bh=0fnllMvw5rV4aVeEqjprC/GqDGLK/jA5NIktH0d4s7A=;
+        b=chI2jZ7mF6k2GkCuGrLyyLE5M9XJL9Nh+6P964qPnKhml68oYvs6Pue4tSDFOP/aoo
+         23ZR1dyKfwW+L1IukUgnqydMIZl4WSpqPUPiJemYr0NRz6EInGu61ABncWoK+FHTCuyf
+         jVKm7kwLzsuQk0G6lQz34TUPs6n8Fap7/gIQgOKiZbuA4Fl3gxQXGNcxXRSkcrfv7xCq
+         DKpy+pTgg2CUvsuT2DGx/HiIe7KTwOxlfRX1rBD1DrogE4qxJ1d3LjUXnpDJE/gGcJ8u
+         wG5FH8Ulb+c7IdCiAxpWMP+2zBXeZnnFNyI6z0GrBS0NlfEH9d+DWgbx5pZGsrmti6gs
+         f3CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFhTIvlvGCPiXmppQpTQ3FTCKe1VN5tYEZ6waLbANVDttc9E/N7BmMRmXlIRzpZOKjDTSMCOEU9Z+eMWVhvNjcBZ/RD8gmq+YU5kfJedVZhFKiYQ0HfKwnjYYHQ25Po4GMneM15RJGjg==
+X-Gm-Message-State: AOJu0YwJ8fbAf+y7mS+0RI87LhhyV2YLOejwVIV+34XntYDTGl0SZWkA
+	mN2fm/pTat9hv+DGJeAYMCscWS3+p9wvpjvIF/P0gfUDq816bpmh
+X-Google-Smtp-Source: AGHT+IF86aCF2y03zjD72DabiUs318EzT1BZ/WTa9OJV2HjgTF93fx7CNQA08TDph3S28W4TYeipuA==
+X-Received: by 2002:a05:600c:1988:b0:41a:7ab1:fd98 with SMTP id t8-20020a05600c198800b0041a7ab1fd98mr2473420wmq.21.1714145863392;
+        Fri, 26 Apr 2024 08:37:43 -0700 (PDT)
+Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
+        by smtp.gmail.com with ESMTPSA id w17-20020a05600c475100b004162d06768bsm35189838wmo.21.2024.04.26.08.37.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 08:37:43 -0700 (PDT)
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: Samuel Holland <samuel@sholland.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>
+Subject:
+ Re: [PATCH v1 1/1] leds: sun50i-a100: Use match_string() helper to simplify
+ the code
+Date: Fri, 26 Apr 2024 17:37:42 +0200
+Message-ID: <3557566.iIbC2pHGDl@jernej-laptop>
+In-Reply-To: <20240426152515.872917-1-andriy.shevchenko@linux.intel.com>
+References: <20240426152515.872917-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424172017.1.Id15fae80582bc74a0d4f1338987fa375738f45b9@changeid>
- <87pludq2g0.fsf@intel.com> <CAD=FV=W+Pcr+voBkcfeE_UC+ukN_hLXgoqMk0watROWRXe_2dg@mail.gmail.com>
- <beqsovvdkvn63prt3c6b3epb6tachff35vpaf62dfkwof7kwht@u3p7bkv7owro>
-In-Reply-To: <beqsovvdkvn63prt3c6b3epb6tachff35vpaf62dfkwof7kwht@u3p7bkv7owro>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 26 Apr 2024 08:35:24 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WxYoFYefdZ4PQ=QF5aHpeWoC3qM1b5d2vf_qBH90ZMQw@mail.gmail.com>
-Message-ID: <CAD=FV=WxYoFYefdZ4PQ=QF5aHpeWoC3qM1b5d2vf_qBH90ZMQw@mail.gmail.com>
-Subject: Re: [PATCH] drm/mipi-dsi: Reduce driver bloat of mipi_dsi_*_write_seq()
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>, dri-devel@lists.freedesktop.org, 
-	Javier Martinez Canillas <javierm@redhat.com>, Neil Armstrong <neil.armstrong@linaro.org>, linus.walleij@linaro.org, 
-	Cong Yang <yangcong5@huaqin.corp-partner.google.com>, 
-	lvzhaoxiong@huaqin.corp-partner.google.com, Hsin-Yi Wang <hsinyi@google.com>, 
-	Sam Ravnborg <sam@ravnborg.org>, Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-Hi,
+Dne petek, 26. april 2024 ob 17:25:15 GMT +2 je Andy Shevchenko napisal(a):
+> match_string() returns the array index of a matching string.
+> Use it instead of the open-coded implementation.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/leds/leds-sun50i-a100.c | 14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/leds/leds-sun50i-a100.c b/drivers/leds/leds-sun50i-a100.c
+> index 62d21c3a3575..119eff9471f0 100644
+> --- a/drivers/leds/leds-sun50i-a100.c
+> +++ b/drivers/leds/leds-sun50i-a100.c
+> @@ -252,18 +252,16 @@ static int sun50i_a100_ledc_parse_format(struct device *dev,
+>  					 struct sun50i_a100_ledc *priv)
+>  {
+>  	const char *format = "grb";
+> -	u32 i;
+> +	int i;
+>  
+>  	device_property_read_string(dev, "allwinner,pixel-format", &format);
+>  
+> -	for (i = 0; i < ARRAY_SIZE(sun50i_a100_ledc_formats); i++) {
+> -		if (!strcmp(format, sun50i_a100_ledc_formats[i])) {
+> -			priv->format = i;
+> -			return 0;
+> -		}
+> -	}
+> +	i = match_string(sun50i_a100_ledc_formats, ARRAY_SIZE(sun50i_a100_ledc_formats), format);
+> +	if (i < 0)
+> +		return dev_err_probe(dev, i, "Bad pixel format '%s'\n", format);
 
-On Thu, Apr 25, 2024 at 8:03=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> On Thu, Apr 25, 2024 at 10:04:49AM -0700, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Thu, Apr 25, 2024 at 1:19=E2=80=AFAM Jani Nikula <jani.nikula@linux.=
-intel.com> wrote:
-> > >
-> > > > @@ -279,6 +281,8 @@ enum mipi_dsi_dcs_tear_mode {
-> > > >
-> > > >  ssize_t mipi_dsi_dcs_write_buffer(struct mipi_dsi_device *dsi,
-> > > >                                 const void *data, size_t len);
-> > > > +ssize_t mipi_dsi_dcs_write_buffer_chatty(struct mipi_dsi_device *d=
-si,
-> > > > +                                      const void *data, size_t len=
-);
-> > > >  ssize_t mipi_dsi_dcs_write(struct mipi_dsi_device *dsi, u8 cmd,
-> > > >                          const void *data, size_t len);
-> > > >  ssize_t mipi_dsi_dcs_read(struct mipi_dsi_device *dsi, u8 cmd, voi=
-d *data,
-> > > > @@ -317,14 +321,10 @@ int mipi_dsi_dcs_get_display_brightness_large=
-(struct mipi_dsi_device *dsi,
-> > > >  #define mipi_dsi_generic_write_seq(dsi, seq...)                   =
-             \
-> > > >       do {                                                         =
-          \
-> > > >               static const u8 d[] =3D { seq };                     =
-            \
-> > > > -             struct device *dev =3D &dsi->dev;                    =
-            \
-> > > >               int ret;                                             =
-          \
-> > > > -             ret =3D mipi_dsi_generic_write(dsi, d, ARRAY_SIZE(d))=
-;           \
-> > > > -             if (ret < 0) {                                       =
-          \
-> > > > -                     dev_err_ratelimited(dev, "transmit data faile=
-d: %d\n", \
-> > > > -                                         ret);                    =
-          \
-> > > > +             ret =3D mipi_dsi_generic_write_chatty(dsi, d, ARRAY_S=
-IZE(d));    \
-> > > > +             if (ret < 0)                                         =
-          \
-> > > >                       return ret;                                  =
-          \
-> > > > -             }                                                    =
-          \
-> > > >       } while (0)
->
->
-> Reading the thread makes me wonder whether we should be going into
-> slightly other direction:
->
-> Add __must_check() to mipi_dsi_ writing functions,
->
-> #define mipi_dsi_dcs_whatever_write(dsi, cmd, seq...)   \
->         ({                                              \
->                 static const u8 d[] =3D { cmd, seq };     \
->                 mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));    \
->         })
->
-> Then in panel drivers we actually have to explicitly handle the return
-> code (either by dropping to the error label or by just returning an
-> error).
+I know that old code used dev_err_probe() without reason, but could you change
+it to ordinary dev_err()? dev_err_probe() is useful only when return code could
+be -EPROBE_DEFER. This is clearly not the case here.
 
-Given the sheer number of init commands needed by some panels (see
-j606f_boe_init_sequence() for instance) I'm still convinced that we
-want something that allows people to write their init code in a way
-that's not quite so verbose. It sounds as if Jani is OK w/ the
-proposal of using the "accumulated return value" (proposal #2 I had).
-I'm hoping you're OK w/ that too...
+Best regards,
+Jernej
 
--Doug
+>  
+> -	return dev_err_probe(dev, -EINVAL, "Bad pixel format '%s'\n", format);
+> +	priv->format = i;
+> +	return 0;
+>  }
+>  
+>  static void sun50i_a100_ledc_set_format(struct sun50i_a100_ledc *priv)
+> 
+
+
+
+
