@@ -1,52 +1,51 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC701208AF;
-	Fri, 26 Apr 2024 20:03:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5F620B0E;
+	Fri, 26 Apr 2024 20:03:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714161788; cv=none; b=pahRN99076vs+1IRoBiJkRCGVmJEADhsWtGxboX4WFxF8roSmstyCWckeNBrT9jYNPgPwbUe0DnJX+067waOtJxGHtYy7EibP1k7c58M9o+x5IC1eSDhx6IleZ/HS3fxG8t2IzDYyBmoqoSOpdUxwq6P48TDB5Qv9cIXj4Xx2ng=
+	t=1714161790; cv=none; b=RbFWqQd0a9d4uXMcRCW077ekYjyTzLz5+Vn59T/+dk6KAabJza/PpTHuhDdne6g7HXbZBB2im6ktFeGrFyF0ltEK4zjekayZgeYhLZoYohQLT+z/o/HFx7oCpolNKbbmJCujotJBcZxQ7dQq2ZrEi08ElH3IcwYqN6bbktwDdLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714161788; c=relaxed/simple;
-	bh=Mq+HIvBiRfXqX7bq1lJIJQ9QW1/+6x26EYOzLbZxohA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=c6Gtr2NJbx9fi7tUqMVRoDj+2KwemIad/035UKOZKZgQvm3YGPvWyQZZjtbeex7tgULDbosSxcFEFX1+tW3v9Np/KCLUcfEPF0vaZZYwXT3s+0YuRo84/03ihuJP5M1JegVXAolZ6XqFnnW679VrB6CYQgHFSrXTTt282ATye64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cuK8mgWC; arc=none smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1714161790; c=relaxed/simple;
+	bh=MQrw189mSdY7NBUzhGsS6Mgn4V5Yfcwv6OWmhi7qkaM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=cvf3gsx/ofL0KOhRLk1LzhsepM25kb6PvTnnjxXthBT1t002FqSMyNjdylhGMLeTNfJGglP8xfeLExnywa2yBJPuyCJ0GuF1mdC18g7UrlQtBWOeMBVtkbxPysdKW3NPqjgr27MIQ8jTi0RSXaIRapVkOdC9MZSOqDm7WvWjBTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y2oE1WoA; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cuK8mgWC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y2oE1WoA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714161787; x=1745697787;
-  h=from:subject:date:message-id:mime-version:
-   content-transfer-encoding:to:cc;
-  bh=Mq+HIvBiRfXqX7bq1lJIJQ9QW1/+6x26EYOzLbZxohA=;
-  b=cuK8mgWCptBDl8wueIv3g8KnABfIBBa43DWs3I/eH1xpC19JGHIwIzW0
-   qtz9ZWAAyBkYADAAj0RXII9DXuxwp07nGX0ayfNSKKNh5u/EHzClo6KBI
-   HrR5gzJWyLym/kixjUT7cKqVEzR4J/attvbn8y7huFQ6NVcpY+MPRwF9k
-   wYaZMVJIag0JvSJAiWF9NjbX8AefW3t5VetqEfSTeeEG9r4FeW/NG95XM
-   ULdRZcZgdaDgW35LfXJuBt/MrFLGDAf0RiJHHFNL+MX2ZNhVPpxygJdQ3
-   iSwHd7ox3dVKSUdKwJ9+JPTub2NByB2Zu1Gz4TYrpRz7zWr2IWy+T47P6
-   g==;
-X-CSE-ConnectionGUID: CYfZzpiITgW4BgpGhf24bw==
-X-CSE-MsgGUID: quzStg/eQH6Bp2WiXnq0/w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="9787163"
+  t=1714161789; x=1745697789;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=MQrw189mSdY7NBUzhGsS6Mgn4V5Yfcwv6OWmhi7qkaM=;
+  b=Y2oE1WoAWpJPPz4OjW9FiatTzXAkJWQJly3Qa3wn7ofyv3jko4cgkbvU
+   C35GTytzYr6cEuiAwRUlCKynYbTEDS4jgoy/bJdspXk78UxEafncoZ5xB
+   Ok/KBw5J2pd+WBSwxNT7sScqFoqM6jfOAUrYGgwSnFr91qpFOZMX+1s1Z
+   a+Fl3diuXdolZk4PbBqb6Ni95NXE5ZgK0WbA1kkJWYkWxqFQZnRtFzaWY
+   E8NNoM4WpJkGqE/HkyAm76Mzxj76AS1T5P/TtvMLNIyAogwdzc4Qya/H+
+   TQc4lOKgWS1ORTh3lmPwbJmRc2VTgMhMMRKqqDyK+lZFD0fiFCsMmNMTU
+   w==;
+X-CSE-ConnectionGUID: DV+A4Z0GQna35xTt3YAezQ==
+X-CSE-MsgGUID: Uy/ZVpPSRV6v9lVdnneEBA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="9787178"
 X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="9787163"
+   d="scan'208";a="9787178"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 13:03:06 -0700
-X-CSE-ConnectionGUID: e0o/VpuZQaeWZc6Nd3Pjsw==
-X-CSE-MsgGUID: ISuVIbRnTHCF0MvS+8y3GQ==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 13:03:08 -0700
+X-CSE-ConnectionGUID: iAbgHUg/Si6poJtzpLuvtg==
+X-CSE-MsgGUID: nwRcpTaCTxuUMXq8QeGmcQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="25516139"
+   d="scan'208";a="25516146"
 Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.209.176.246])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 13:03:05 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 13:03:07 -0700
 From: Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH v3 0/2] efi/cxl-cper: Report CXL CPER events through
- tracing
-Date: Fri, 26 Apr 2024 13:02:58 -0700
-Message-Id: <20240426-cxl-cper3-v3-0-6ade7dfc849e@intel.com>
+Date: Fri, 26 Apr 2024 13:03:00 -0700
+Subject: [PATCH v3 2/2] cxl/pci: Process CPER events
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,10 +54,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAHIILGYC/02MywqDMBBFf0Wybkqc8b3qf5Qu7GRSA1YlkWAR/
- 71RKHV5LvecVXh2lr1oklU4DtbbcYiAl0RQ1w4vllZHFqAgUwBK0tJLmtihRMV5DmVtaixE/E+
- OjV2O1v0RubN+Ht3nSId0X3+V6lQJqVSyaFs0KWZIBd3sMHN/pfEt9kqAv5kBnE2IZk5aY1kZ0
- up5Nrdt+wKk1Vs23AAAAA==
+Message-Id: <20240426-cxl-cper3-v3-2-6ade7dfc849e@intel.com>
+References: <20240426-cxl-cper3-v3-0-6ade7dfc849e@intel.com>
+In-Reply-To: <20240426-cxl-cper3-v3-0-6ade7dfc849e@intel.com>
 To: Dave Jiang <dave.jiang@intel.com>, 
  Dan Williams <dan.j.williams@intel.com>, 
  Jonathan Cameron <jonathan.cameron@huawei.com>, 
@@ -69,73 +67,118 @@ Cc: Dan Carpenter <dan.carpenter@linaro.org>,
  Alison Schofield <alison.schofield@intel.com>, 
  Vishal Verma <vishal.l.verma@intel.com>, Ard Biesheuvel <ardb@kernel.org>, 
  linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Tony Luck <tony.luck@intel.com>, 
- Borislav Petkov <bp@alien8.de>
+ linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
 X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1714161785; l=2068;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1714161785; l=2912;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=Mq+HIvBiRfXqX7bq1lJIJQ9QW1/+6x26EYOzLbZxohA=;
- b=nlX+XmIEYn5bLLKXFjPw8b3YJxtR6DsOTI4QuOaR0qOT43FN3rMoeQBeS4iIo0TpQYm2wnkdk
- NTyTlzZOQjNCd459/a59z2OeeC2prP/oy11j6lJj4JxatErN1T1Azyb
+ bh=MQrw189mSdY7NBUzhGsS6Mgn4V5Yfcwv6OWmhi7qkaM=;
+ b=7Db9HWuEzkf7xIj8mYb6fwrZqo581HQOg4hsJrHBRTkUCXUgXH7GP1zlFENuEWfnSu6vL2SE2
+ E9H1LKVjzOWDxmmsB+F0/iamG75ZCVbha2adogQfyxP2m3bbhW27iks
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-If a device is configured for firmware first CXL event records are not
-sent directly to the host, rather they are reported through the EFI
-Common Platform Error Records (CPER).  EFI 2.10 Section N.2.14 defines
-the CXL CPER to wrap a mostly CXL event payload.
+If the firmware has configured CXL event support to be firmware first
+the OS will receive those events through CPER records.  The CXL layer has
+unique DPA to HPA knowledge and existing event trace parsing in
+place.[0]
 
-The CXL sub-system uniquely has DPA to HPA translation information.[0]
-It also already has event decoding/tracing.  Such translations are very
-useful for users to determine which system issues may correspond to
-specific hardware events.
-
-The restructuring of the event data structures in 6.8 made sharing the
-data between CPER/event logs more efficient.  Now re-wire the sending of
-CPER records to the CXL sub-system.
-
-Series status/background
-========================
-
-Smita and Jonathan have been a great help with this series.  Once again
-thank you.
-
-Unfortunately, with all the churn surrounding the bug which Dan
-Carpenter found the maintainers were force to revert this work.
-
-Testing
-=======
-
-Continue to use my quick hack in debugfs to facilitate easier testing.[1]
+Add a CXL CPER work item and register it with the GHES code to process
+CPER events.
 
 [0]
 Link: https://lore.kernel.org/all/cover.1711598777.git.alison.schofield@intel.com/
-[1]
-Link: https://github.com/weiny2/linux-kernel/commit/9b1f33314e8488506dbad63dc1c896386d4803d6
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
-Changes in v3:
-- djbw: drop patch which traces errors if CXL is not loaded
-- djbw: Let CXL layer declare work struct.  Leave kfifo management in
-  GHES layer
-- Link to v2: https://lore.kernel.org/r/20240422-cxl-cper3-v2-0-5cdd378fcd0b@intel.com
 
 ---
-Ira Weiny (2):
-      acpi/ghes: Process CXL Component Events
-      cxl/pci: Process CPER events
-
- drivers/acpi/apei/ghes.c  | 110 ++++++++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/pci.c         |  71 +++++++++++++++++++++++++++++-
- include/linux/cxl-event.h |  27 ++++++++++++
- 3 files changed, 207 insertions(+), 1 deletion(-)
+Changes:
+[djbw: declare work struct here]
 ---
-base-commit: e33c4963bf536900f917fb65a687724d5539bc21
-change-id: 20240220-cxl-cper3-30e55279f936
+ drivers/cxl/pci.c | 71 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 70 insertions(+), 1 deletion(-)
 
-Best regards,
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 2ff361e756d6..74876c9835e8 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -974,6 +974,75 @@ static struct pci_driver cxl_pci_driver = {
+ 	},
+ };
+ 
+-module_pci_driver(cxl_pci_driver);
++#define CXL_EVENT_HDR_FLAGS_REC_SEVERITY GENMASK(1, 0)
++static void cxl_handle_cper_event(enum cxl_event_type ev_type,
++				  struct cxl_cper_event_rec *rec)
++{
++	struct cper_cxl_event_devid *device_id = &rec->hdr.device_id;
++	struct pci_dev *pdev __free(pci_dev_put) = NULL;
++	enum cxl_event_log_type log_type;
++	struct cxl_dev_state *cxlds;
++	unsigned int devfn;
++	u32 hdr_flags;
++
++	pr_debug("CPER event %d for device %u:%u:%u.%u\n", ev_type,
++		 device_id->segment_num, device_id->bus_num,
++		 device_id->device_num, device_id->func_num);
++
++	devfn = PCI_DEVFN(device_id->device_num, device_id->func_num);
++	pdev = pci_get_domain_bus_and_slot(device_id->segment_num,
++					   device_id->bus_num, devfn);
++	if (!pdev)
++		return;
++
++	guard(device)(&pdev->dev);
++	if (pdev->driver != &cxl_pci_driver)
++		return;
++
++	cxlds = pci_get_drvdata(pdev);
++	if (!cxlds)
++		return;
++
++	/* Fabricate a log type */
++	hdr_flags = get_unaligned_le24(rec->event.generic.hdr.flags);
++	log_type = FIELD_GET(CXL_EVENT_HDR_FLAGS_REC_SEVERITY, hdr_flags);
++
++	cxl_event_trace_record(cxlds->cxlmd, log_type, ev_type,
++			       &uuid_null, &rec->event);
++}
++
++static void cxl_cper_work_fn(struct work_struct *work)
++{
++	struct cxl_cper_work_data wd;
++
++	while (cxl_cper_kfifo_get(&wd))
++		cxl_handle_cper_event(wd.event_type, &wd.rec);
++}
++static DECLARE_WORK(cxl_cper_work, cxl_cper_work_fn);
++
++static int __init cxl_pci_driver_init(void)
++{
++	int rc;
++
++	rc = pci_register_driver(&cxl_pci_driver);
++	if (rc)
++		return rc;
++
++	rc = cxl_cper_register_work(&cxl_cper_work);
++	if (rc)
++		pci_unregister_driver(&cxl_pci_driver);
++
++	return rc;
++}
++
++static void __exit cxl_pci_driver_exit(void)
++{
++	cxl_cper_unregister_work(&cxl_cper_work);
++	cancel_work_sync(&cxl_cper_work);
++	pci_unregister_driver(&cxl_pci_driver);
++}
++
++module_init(cxl_pci_driver_init);
++module_exit(cxl_pci_driver_exit);
+ MODULE_LICENSE("GPL v2");
+ MODULE_IMPORT_NS(CXL);
+
 -- 
-Ira Weiny <ira.weiny@intel.com>
+2.44.0
 
