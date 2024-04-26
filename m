@@ -1,122 +1,211 @@
-Received: from forward206a.mail.yandex.net (forward206a.mail.yandex.net [178.154.239.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449EA1474CA;
-	Fri, 26 Apr 2024 13:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E599E1482FD
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 13:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714138769; cv=none; b=INIEnX/7F83jKb8EUv1wE7YhcU+Svvxei4lJY2BFak0VldCt27l1oo8vdi6J0ES047P/+wfllAcxR/U9W0o/lUx7xRPGpg+mJvLaB/+Z0DQpdWzMSEiJ5s6IKAS6MXqbpftDeTYbdiB+BgyJr9R1kRJgiCJJ66XXEMtZoy+HMrM=
+	t=1714138772; cv=none; b=OAshoQn0iwAvS91cNUWVKjKfLzhflHXY4tjpeZN1NgMqb3O6G6M63DDoslXSq10GEf+JA9dUOeGaqINBoNlZeEis07stWRnFGXW5LZivSCoG0FA1/zaPXPA9N/91fUHGIiyIVWpcI5TwW1SVZYlH7u5xxSJtKMkCwDwgucNxdW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714138769; c=relaxed/simple;
-	bh=Ud4bj59xe7FFvd86owQCtAKt6fi+lWLRuVzs9/4jMsg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G93GwIvCr8GpKBevpvYU03jn/RI5vJAIHsFUFpLf0BPA+1WFTek7icrTsTE2twMmnLz5psL2xvCx6pro253y7zysvj0D4xfYzUzPrAzVCw+eeXM2exbcgTUf3WUHqVQV0CHrdBR1kCfJNGyTJY2Ev7IjIDJY4UI/W+lPfaP9Rng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=vt9xLVEP; arc=none smtp.client-ip=178.154.239.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="vt9xLVEP"
-Received: from forward101a.mail.yandex.net (forward101a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d101])
-	by forward206a.mail.yandex.net (Yandex) with ESMTPS id 4229E669DE;
-	Fri, 26 Apr 2024 16:34:12 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net [IPv6:2a02:6b8:c0d:230c:0:640:f8e:0])
-	by forward101a.mail.yandex.net (Yandex) with ESMTPS id EC7E060B62;
-	Fri, 26 Apr 2024 16:34:03 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 2YN3P0DXnmI0-C8aWD0Fy;
-	Fri, 26 Apr 2024 16:34:03 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1714138443; bh=+yY0DYJlOGkiuHYMe8mvayuLQSZwCYa0RIUgNaua8b8=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=vt9xLVEPGm014UZZsQwL78282PrqfastPLSt9CWkWMauPJGuvzTGJkqVWNhoxdY6j
-	 Epk7BedZlJj3LitYbAGgP2trSfDLnYjL9YSYnFY5PaJySqJctsv3mqTlOSLgjBzadb
-	 qXOXbYORw+zs1JfVbikDf4oRAAsni33Nr3BCVXNk=
-Authentication-Results: mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Stas Sergeev <stsp2@yandex.ru>
-To: linux-kernel@vger.kernel.org
-Cc: Stas Sergeev <stsp2@yandex.ru>,
-	Stefan Metzmacher <metze@samba.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Andy Lutomirski <luto@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	linux-fsdevel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	=?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>
-Subject: [PATCH v5 0/3] implement OA2_CRED_INHERIT flag for openat2()
-Date: Fri, 26 Apr 2024 16:33:07 +0300
-Message-ID: <20240426133310.1159976-1-stsp2@yandex.ru>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1714138772; c=relaxed/simple;
+	bh=xQG636t56irLd7QlrLgCELtUTnbIs3dPNnISC3eJ3Ak=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Tv9Y1sEMv05fqkC9KHvTpEFCb9G/Bbnmo0PsCZA0eG7KoT6Co3ghd/nO/RgcYFICNxRbD800RHGY2mzqPnWKZJ65OyUA/imC7GOlJcOb/E9SDcAEtUBahhyPxQuRWXHTWJZP8HxymOyttTGU1mUescmwrYxTcUH55Dk3+vI20p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7deb5674fb7so4405139f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 06:39:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714138770; x=1714743570;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pYcuiD61Y2aUE9kLnvAupz925R4UqfASkhNIIITFwDs=;
+        b=M0TSEOdkOv+LWv0CyqtoTFYr6qy7hMx8mZmYCY5buksTGKXkYRmu+nNAocWe3rmL1P
+         XSnyCvYVWvrhE+YKZqlzZgaQIY1p6ja5zAyQqay6uQxEOywFwCVERSurzVXRjtDSL2nF
+         8hmWNIGjN4Wgn38NvWfR9at64YnK3MkdlPIKLpXvdCo1/PlOYCU1jM5BodiaXN1uSy0K
+         /2EprmfM+dE6Ektu7N/Wio+m+vhimH0rfDnzAIJtOA3Ry1AC3RjnPvxUmZ65ZyRnVRYk
+         pgQyJFM0BCHDQGKy4dlbHytwdaaHvIJvq4cW+lJuPpmN4npo9eNprc3wWr+HklSkouEk
+         MUvA==
+X-Forwarded-Encrypted: i=1; AJvYcCWya8ue59B/+l+tBDhuXQlAsNIxvdzvRRDIyo4EYkb7RMQmFIkHbVaAR8ti6dPujQYR1rq61gFcvH7F1EaiIVymLb4Kx7S7DO4FGPum
+X-Gm-Message-State: AOJu0YwdM1Q6M9vtNXumf143pP4oWmKrMCTtFxNygLfY6xTKAbTx8/Vy
+	6+q1ZZMj3lHLOT60FuF9weRXJkLDq4vul77JtRxAJTZPF39Li9xsaM0GPVx1F1XojKDEZuUJ1Pk
+	wyNPboyKAJUlIFL1qNC2r2OmHvwCxHrEESacS2dgWn0kfu4uw+TdffE8=
+X-Google-Smtp-Source: AGHT+IGC31garpHytpUAe7Z5+B6Ida6v6OoSp44YzCuqm7uwAQmpSOG8I+yAFDZOJkOZCIZvJFae6y50NUBmKQeNgpBf90JZA9pe
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:948b:b0:487:3dc3:c47f with SMTP id
+ kz11-20020a056638948b00b004873dc3c47fmr146705jab.6.1714138770206; Fri, 26 Apr
+ 2024 06:39:30 -0700 (PDT)
+Date: Fri, 26 Apr 2024 06:39:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007e812306170008d1@google.com>
+Subject: [syzbot] [bluetooth?] possible deadlock in hci_dev_do_close (2)
+From: syzbot <syzbot+c55f7bc8d4809b2bad59@syzkaller.appspotmail.com>
+To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-This patch-set implements the OA2_CRED_INHERIT flag for openat2() syscall.
-It is needed to perform an open operation with the creds that were in
-effect when the dir_fd was opened, if the dir was opened with O_CRED_ALLOW
-flag. This allows the process to pre-open some dirs and switch eUID
-(and other UIDs/GIDs) to the less-privileged user, while still retaining
-the possibility to open/create files within the pre-opened directory set.
+Hello,
 
-The sand-boxing is security-oriented: symlinks leading outside of a
-sand-box are rejected. /proc magic links are rejected. fds opened with
-O_CRED_ALLOW are always closed on exec() and cannot be passed via unix
-socket.
-The more detailed description (including security considerations)
-is available in the log messages of individual patches.
+syzbot found the following issue on:
 
-Changes in v5:
-- rename OA2_INHERIT_CRED to OA2_CRED_INHERIT
-- add an "opt-in" flag O_CRED_ALLOW as was suggested by many reviewers
-- stop using 64bit types, as suggested by
-  Christian Brauner <brauner@kernel.org>
-- add BUILD_BUG_ON() for VALID_OPENAT2_FLAGS, based on Christian Brauner's
-  comments
-- fixed problems reported by patch-testing bot
-- made O_CRED_ALLOW fds not passable via unix sockets and exec(),
-  based on Christian Brauner's comments
+HEAD commit:    bb7a2467e6be Add linux-next specific files for 20240426
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1337aaa0980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6a0288262dd108
+dashboard link: https://syzkaller.appspot.com/bug?extid=c55f7bc8d4809b2bad59
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Changes in v4:
-- add optimizations suggested by David Laight <David.Laight@ACULAB.COM>
-- move security checks to build_open_flags()
-- force RESOLVE_NO_MAGICLINKS as suggested by Andy Lutomirski <luto@kernel.org>
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Changes in v3:
-- partially revert v2 changes to avoid overriding capabilities.
-  Only the bare minimum is overridden: fsuid, fsgid and group_info.
-  Document the fact the full cred override is unwanted, as it may
-  represent an unneeded security risk.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/5175af7dda64/disk-bb7a2467.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/70db0462e868/vmlinux-bb7a2467.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/3217fb825698/bzImage-bb7a2467.xz
 
-Changes in v2:
-- capture full struct cred instead of just fsuid/fsgid.
-  Suggested by Stefan Metzmacher <metze@samba.org>
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c55f7bc8d4809b2bad59@syzkaller.appspotmail.com
 
-CC: Stefan Metzmacher <metze@samba.org>
-CC: Eric Biederman <ebiederm@xmission.com>
-CC: Alexander Viro <viro@zeniv.linux.org.uk>
-CC: Andy Lutomirski <luto@kernel.org>
-CC: Christian Brauner <brauner@kernel.org>
-CC: Jan Kara <jack@suse.cz>
-CC: Jeff Layton <jlayton@kernel.org>
-CC: Chuck Lever <chuck.lever@oracle.com>
-CC: Alexander Aring <alex.aring@gmail.com>
-CC: David Laight <David.Laight@ACULAB.COM>
-CC: linux-fsdevel@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-CC: linux-api@vger.kernel.org
-CC: Paolo Bonzini <pbonzini@redhat.com>
-CC: Christian Göttsche <cgzones@googlemail.com>
+Bluetooth: hci6: Opcode 0x0c1a failed: -110
+Bluetooth: hci6: Error when powering off device on rfkill (-110)
+======================================================
+WARNING: possible circular locking dependency detected
+6.9.0-rc5-next-20240426-syzkaller #0 Not tainted
+------------------------------------------------------
+kworker/0:3/5122 is trying to acquire lock:
+ffff88805c0888d0 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
+ffff88805c0888d0 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ffff88805c0888d0 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: start_flush_work kernel/workqueue.c:4113 [inline]
+ffff88805c0888d0 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: __flush_work+0xe6/0xd00 kernel/workqueue.c:4172
 
--- 
-2.44.0
+but task is already holding lock:
+ffff88805c089060 (&hdev->req_lock){+.+.}-{3:3}, at: hci_dev_do_close+0x28/0x90 net/bluetooth/hci_core.c:559
 
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (&hdev->req_lock){+.+.}-{3:3}:
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
+       __mutex_lock_common kernel/locking/mutex.c:608 [inline]
+       __mutex_lock+0x136/0xd70 kernel/locking/mutex.c:752
+       hci_cmd_sync_work+0x1ec/0x400 net/bluetooth/hci_sync.c:309
+       process_one_work kernel/workqueue.c:3222 [inline]
+       process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3303
+       worker_thread+0x86d/0xd70 kernel/workqueue.c:3384
+       kthread+0x2f0/0x390 kernel/kthread.c:389
+       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+-> #0 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}:
+       check_prev_add kernel/locking/lockdep.c:3134 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
+       validate_chain+0x18cb/0x58e0 kernel/locking/lockdep.c:3869
+       __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
+       touch_work_lockdep_map kernel/workqueue.c:3885 [inline]
+       start_flush_work kernel/workqueue.c:4139 [inline]
+       __flush_work+0x73c/0xd00 kernel/workqueue.c:4172
+       __cancel_work_sync+0xbc/0x110 kernel/workqueue.c:4322
+       hci_cmd_sync_clear+0x30/0x220 net/bluetooth/hci_sync.c:588
+       hci_dev_close_sync+0xbae/0x1060 net/bluetooth/hci_sync.c:5188
+       hci_dev_do_close+0x30/0x90 net/bluetooth/hci_core.c:561
+       hci_rfkill_set_block+0x232/0x300 net/bluetooth/hci_core.c:992
+       rfkill_set_block+0x1f1/0x440 net/rfkill/core.c:346
+       rfkill_epo+0x84/0x180 net/rfkill/core.c:466
+       __rfkill_handle_global_op net/rfkill/input.c:60 [inline]
+       rfkill_op_handler+0x121/0x280 net/rfkill/input.c:108
+       process_one_work kernel/workqueue.c:3222 [inline]
+       process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3303
+       worker_thread+0x86d/0xd70 kernel/workqueue.c:3384
+       kthread+0x2f0/0x390 kernel/kthread.c:389
+       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&hdev->req_lock);
+                               lock((work_completion)(&hdev->cmd_sync_work));
+                               lock(&hdev->req_lock);
+  lock((work_completion)(&hdev->cmd_sync_work));
+
+ *** DEADLOCK ***
+
+5 locks held by kworker/0:3/5122:
+ #0: ffff888015080948 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3197 [inline]
+ #0: ffff888015080948 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3303
+ #1: ffffc9000387fd00 ((rfkill_op_work).work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3198 [inline]
+ #1: ffffc9000387fd00 ((rfkill_op_work).work){+.+.}-{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3303
+ #2: ffffffff8f8b13e8 (rfkill_global_mutex){+.+.}-{3:3}, at: rfkill_epo+0x4f/0x180 net/rfkill/core.c:462
+ #3: ffff88805c089060 (&hdev->req_lock){+.+.}-{3:3}, at: hci_dev_do_close+0x28/0x90 net/bluetooth/hci_core.c:559
+ #4: ffffffff8e333ba0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
+ #4: ffffffff8e333ba0 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ #4: ffffffff8e333ba0 (rcu_read_lock){....}-{1:2}, at: start_flush_work kernel/workqueue.c:4113 [inline]
+ #4: ffffffff8e333ba0 (rcu_read_lock){....}-{1:2}, at: __flush_work+0xe6/0xd00 kernel/workqueue.c:4172
+
+stack backtrace:
+CPU: 0 PID: 5122 Comm: kworker/0:3 Not tainted 6.9.0-rc5-next-20240426-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Workqueue: events rfkill_op_handler
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2187
+ check_prev_add kernel/locking/lockdep.c:3134 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3253 [inline]
+ validate_chain+0x18cb/0x58e0 kernel/locking/lockdep.c:3869
+ __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
+ touch_work_lockdep_map kernel/workqueue.c:3885 [inline]
+ start_flush_work kernel/workqueue.c:4139 [inline]
+ __flush_work+0x73c/0xd00 kernel/workqueue.c:4172
+ __cancel_work_sync+0xbc/0x110 kernel/workqueue.c:4322
+ hci_cmd_sync_clear+0x30/0x220 net/bluetooth/hci_sync.c:588
+ hci_dev_close_sync+0xbae/0x1060 net/bluetooth/hci_sync.c:5188
+ hci_dev_do_close+0x30/0x90 net/bluetooth/hci_core.c:561
+ hci_rfkill_set_block+0x232/0x300 net/bluetooth/hci_core.c:992
+ rfkill_set_block+0x1f1/0x440 net/rfkill/core.c:346
+ rfkill_epo+0x84/0x180 net/rfkill/core.c:466
+ __rfkill_handle_global_op net/rfkill/input.c:60 [inline]
+ rfkill_op_handler+0x121/0x280 net/rfkill/input.c:108
+ process_one_work kernel/workqueue.c:3222 [inline]
+ process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3303
+ worker_thread+0x86d/0xd70 kernel/workqueue.c:3384
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
