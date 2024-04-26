@@ -1,88 +1,101 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD10713C9A7;
-	Fri, 26 Apr 2024 09:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D44913C9A7;
+	Fri, 26 Apr 2024 09:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714124937; cv=none; b=fuwa4W9n5idZg4ym7kfaMhZNTQqpELZBcsanmjkctVDRza3YO1cP8scjc941j55LMf1Ml8Y4rvswa3uufbhq3gmYysZPgWTxeE8gsV2/Mzl9UgmVuozWoWU8BJWjg8I5fDuM3PIDDNzZqfCSbEK98pkM0lxmWESG7y8aGnbqhgI=
+	t=1714124949; cv=none; b=r5PnlhzFwIpWPwNsQ47/ONJ/vY3KD7z9kehB4/sSrfhI2rMwTOV4QV3YH1oVhw70RPYmI28GBM4Pown+X597eTWcxexthEeBhlpazH1mkwx+XkKkrRF9+sBZlrn1nTfreDQeGyDiRbsz7XNmT/Rrgg52K15pxFL/RhBR1PblPw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714124937; c=relaxed/simple;
-	bh=HlWarb/RqnkOtCuXVRll0DMgrQQt7Rgvj2Uz8IobGpM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AJJHE9KA/zZWpNU3S8yBaZ43o/8LG07l7pevDFJIOWLJbPBRqwkjPUwHiPItid7DJgzvfdBOeQI1JudacqTZxBkTR4Lt/KHW8KUJ7xOaVDheoB6B80/oyG9/QWJ+DRasBJ330O7Dtfnh5bcrCll6KYZELp2TvAyhIMvk7pzhHQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
+	s=arc-20240116; t=1714124949; c=relaxed/simple;
+	bh=f0pnAMVgnef8kxy0zW8+L4guOLodpzNcya5RGzZzom0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Bu3lK7BwPmSHLLpIuR3A9MiW3dkCzun14qCiH3zM8x0C/EnysHDaqLjG134KglsFYkyJgXLk1sKFTbpIKqBkvTcOXIKNhXL0DSgdAGeQW5OTC/AK+nlF47RJk7NGUzIXaXJ3Cl8FdZ1tCVe0YFqbFlLnKp8Jg/kAOXqFb83JW+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FgOldmJl; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-516d2600569so2359278e87.0;
-        Fri, 26 Apr 2024 02:48:54 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FgOldmJl"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41adf3580dbso11415045e9.0;
+        Fri, 26 Apr 2024 02:49:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714124946; x=1714729746; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OTqofDDyhWS27DTBkyA9Wn/ozYeD7cxzwbx1fLDfXq4=;
+        b=FgOldmJleKXf2cgz3fAxUMtii1adNFJaphWFChRNUhjweuCUUB3sdRnTmCo34pAHz7
+         hjJ+8XyfckWINKYKgYJl5PtL9+hGAi5yfYS8VEsYF2cQPJGe3Z8eMUxG31FEFuLNsx7l
+         fzpcXofIEh3xmxmx3+TxzBzh4CHTNi7gfY378CMbfm4kxIBCNzqN27H3DZ7sVSZxDM7+
+         4jdjCRgn9UUbvT2xpVs9cWP4nMaPKXcCe+53fC7eU43JdjA7XXkW1aSNQXX/h94butTT
+         O91nViO/vR8Zcf/EnO56ISOa5nO5GPtEkxDMDGJkVmXnt88/SRsocja5StBo82NZdN9t
+         Kxrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714124933; x=1714729733;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=22asdptnAUD8ROjJFV/g/b9ZWATdUhzJEJjpw7rWP4s=;
-        b=xUthC2DYuIoTx0lwU5SYkYpBrjyqmR52rbnZ3UhSzDwYGogoW/THvDzbrlrejlJtkk
-         NBRZe5EoBHlerPVY2EObkcCY219LsUwQHiuQ/p29B9Qlw52PlsyDQqV0ykfJG30Jdu5H
-         Dhg9nMsgcEVjNdIkafniRHjzQUzLGRlRIJR0P1YhYIRlAb1vmfVlMRUkMiXgojpgMfll
-         omHWssmHHVUogVTpw91iCHcJct7jTLxDnsJ2Gx+iHQfA6IqBR9cgXwBWNYZ33+203kz5
-         unShRiE/HHRTiiQXSa1IVTaHYM/Su1vgeOUREDY1557vuTtYgENi/fKYmGlAsOMSMy08
-         Msxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVcHkI97O+zAM3H2BjsJ+IsIauqEvSgMjaKVAZBu/8BZ9y8NT4Aklewn9SHaWC7O6hWVEZw0EjP9qpOxILI/fZHlhlZppnf/QgW9b0wOZC7FrtBTMUveoNGcQj+QWyJAXpalRxhE4xH+gczFj0B0efGuMMP1+LnwgHYSWP22ThW6E2R+t4w0kXPGxucrNzR
-X-Gm-Message-State: AOJu0Yxjf4XZVK6STbMx4OmjV09UvAO6/G7iIiwdeKb2aOQy4xXXng8y
-	9jtLJf3+4a/Dzng7joyrkajnAsVuIB2q7xE8XsQAq4v5ItTJct5nzAys0iZwtfM=
-X-Google-Smtp-Source: AGHT+IFsy69PUmzf0eQz4ncObIQpgW+YrBvniXIfSzgPlzrmntEKYS1EIaeyca4jY9N+LMuSyJDWLQ==
-X-Received: by 2002:ac2:5108:0:b0:516:d18b:eae8 with SMTP id q8-20020ac25108000000b00516d18beae8mr1426665lfb.41.1714124932695;
-        Fri, 26 Apr 2024 02:48:52 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id x4-20020ac25dc4000000b0051bb0022c78sm1189404lfq.191.2024.04.26.02.48.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Apr 2024 02:48:52 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-518f8a69f82so2211596e87.2;
-        Fri, 26 Apr 2024 02:48:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVhnJfmrP8b2YAMteFEYIV3QG36pCBY+qjeyORyHf3QfZ2mjMopVEKGb6vrr8RMblb0TXpARhp9jEcHkkIS/cv66waoyVMSQ1BwS23bSTryPmnZQFDOkvVPzpD2XI7eLNHj+oa82b08kyxUyIoPy8nj/3cV6TJxxjHgLvWUu/rxJY/jeAsWo19YZ05JUX22
-X-Received: by 2002:ac2:5b8b:0:b0:519:2d60:d71b with SMTP id
- o11-20020ac25b8b000000b005192d60d71bmr1400339lfn.22.1714124932298; Fri, 26
- Apr 2024 02:48:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714124946; x=1714729746;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OTqofDDyhWS27DTBkyA9Wn/ozYeD7cxzwbx1fLDfXq4=;
+        b=hpXrpjMTmYk3o+XggJkNCfZB3Rl3cA1WdZ3ui5aCo81xYC+1pFwW5IH6HQjbWOAoPY
+         YqGD/1o67o5h09/cpe/i1jBrTmnBU75Oid22DO8Fc7oZ/wt57b5c7wF9YQHDs73lEqxb
+         8CysPpjWSfdlRe7V6T6IRxH5M+d2ChIenljwy2QX69IqlgQnXOBCwPkHZbPw7Tq7pWBR
+         3F35rVqklJV0mUukVxVKghVllhObD5Q2MlMrn0sYoiDhBtMvHClbdyWYnk+JEUmvKfPC
+         BhU+ex+v2GfUeQNASwv8sOuOum7OULey8wcao84waKp5a6TELfz9QPoxKH74tmWu+1jG
+         4MWw==
+X-Forwarded-Encrypted: i=1; AJvYcCXx7fI+FzD60HYTdg3ZlBdTO+uudlEI6JwBaygCJFQAZ33mHz4O3zg1YTt3VlMitJMu/Mh9Ev8dOLt/+Eje+yu0xW4kxitbUz6eMxrJ
+X-Gm-Message-State: AOJu0Yy0oyf2ooz5YDjnWI12ZQ28ZqJq3gid837dV6GO2e84Q5dXxlRz
+	EN0vQ2utKj8vDIrcbuSj963F4kbPY+lgx2f9hzcVimzxgInvS5c0
+X-Google-Smtp-Source: AGHT+IEnEbGzWwb5BtL05FOeJSjU5tiXoKG2o7C40aXQG1lwfb02NqLf7df70RE0rq1MKonJ92sK/A==
+X-Received: by 2002:a05:600c:3509:b0:418:de31:7148 with SMTP id h9-20020a05600c350900b00418de317148mr1930550wmq.3.1714124946253;
+        Fri, 26 Apr 2024 02:49:06 -0700 (PDT)
+Received: from localhost (craw-09-b2-v4wan-169726-cust2117.vm24.cable.virginm.net. [92.238.24.70])
+        by smtp.gmail.com with ESMTPSA id d4-20020adfe2c4000000b0034a3a0a753asm20338400wrj.100.2024.04.26.02.49.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 02:49:05 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Lucas De Marchi <lucas.demarchi@intel.com>,
+	Oded Gabbay <ogabbay@kernel.org>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/xe: Fix spelling mistake "forcebly" -> "forcibly"
+Date: Fri, 26 Apr 2024 10:49:04 +0100
+Message-Id: <20240426094904.816033-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240426072006.358802-1-iam@sung-woo.kim> <964b0005-3a9d-499b-91d3-171a3c917b4a@web.de>
- <CAJNyHp+WFONaNbZVK3tPcT=9obEiuE3MvQzJK++HP-ffNdfX0w@mail.gmail.com> <dd466a68-f3ae-4dc1-8389-6adc463735db@moroto.mountain>
-In-Reply-To: <dd466a68-f3ae-4dc1-8389-6adc463735db@moroto.mountain>
-From: Sungwoo Kim <iam@sung-woo.kim>
-Date: Fri, 26 Apr 2024 05:48:11 -0400
-X-Gmail-Original-Message-ID: <CAJNyHpKEKoOKGsh8RSn+Tt=0mawG4Bz6LKwq3H2UFwuGuXH0vQ@mail.gmail.com>
-Message-ID: <CAJNyHpKEKoOKGsh8RSn+Tt=0mawG4Bz6LKwq3H2UFwuGuXH0vQ@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: L2CAP: Fix slab-use-after-free in l2cap_send_cmd
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Markus Elfring <Markus.Elfring@web.de>, linux-bluetooth@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	"Dave (Jing) Tian" <daveti@purdue.edu>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Marcel Holtmann <marcel@holtmann.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 26, 2024 at 5:38=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
-.org> wrote:
->
-> Please just ignore Markus.  A lot of people have asked him to stop
-> commenting on commit messages but he doesn't listen.  Here is a message
-> from yesterday:
->
-> https://lore.kernel.org/all/2024042547-shimmy-guileless-c7f2@gregkh/
->
-> 1) It doesn't matter at all if there is anyone in the To: header.
-> 2) You are allowed to ask questions.
-> 3) Yes, the commit message will need to be changed but first fix the bug
->    and then we can worry about the commit message.
->
-> regards,
-> dan carpenter
->
->
+There is a spelling mistake in a drm_dbg message. Fix it.
 
-Thank you for letting me know :)
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/gpu/drm/xe/xe_device.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
+index bb4fbae5edb6..b61f8356e23e 100644
+--- a/drivers/gpu/drm/xe/xe_device.c
++++ b/drivers/gpu/drm/xe/xe_device.c
+@@ -788,7 +788,7 @@ u64 xe_device_uncanonicalize_addr(struct xe_device *xe, u64 address)
+ void xe_device_declare_wedged(struct xe_device *xe)
+ {
+ 	if (xe->wedged.mode == 0) {
+-		drm_dbg(&xe->drm, "Wedged mode is forcebly disabled\n");
++		drm_dbg(&xe->drm, "Wedged mode is forcibly disabled\n");
+ 		return;
+ 	}
+ 
+-- 
+2.39.2
+
