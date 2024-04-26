@@ -1,209 +1,68 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75A21487E7;
-	Fri, 26 Apr 2024 13:55:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8921487E7;
+	Fri, 26 Apr 2024 13:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714139738; cv=none; b=WNMQzsJVEiPKNR0JoLoojv6y/xjsiTq55ShKxTX9CAcRNUVPxNvfDgtPS0xlUArEna2zT49+fZDSFOulpYJFg8BOemGK9TLcbYiKfoA9FDVQpbw8TAVnU2/Rmh7fCWxwIMe3eUErP2E2H1OzIz7bc2QrocidRCTeqDPX8qiuTBI=
+	t=1714139744; cv=none; b=XfD5ZqITZDvWhaorX68U678J49cvdEQYGFY2SPdhyiDvH9Gmx4wjXDq8OQiERk45oJLKh8yvOztfT/XQbYRgZ81tHuClH+42NjXbWlRTr0g+B1OtIY2D7dKCw9+03vlYpSl6jyMiAmhRS+ZhDNyz1gDjpwNml0zYaGyXg2FnQ0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714139738; c=relaxed/simple;
-	bh=hEA5/Ucs+6BfCQuaOqwWg2FdB+Ojyaz3tsyjeG3E9BI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aMHjHJzmCrSl4mS4vwDJZsPI+L8xZQs0OHfGULVNKLaBayqR1WiayKrkhQSNDyaiBOZSH9fXiPOZpBCw9NvO55XpNuPpBtdKP9dwz96l0DIyksu0NZAN0N8/Lf8RiU1Cqe01ZcEaKUFwNSkP9wruDFHS9dCrAGGSq/Pzu1k6RZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQvLm6XS2z6K6J9;
-	Fri, 26 Apr 2024 21:53:04 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9DCAF140A70;
-	Fri, 26 Apr 2024 21:55:33 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 26 Apr 2024 14:55:32 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
-	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
-	<justin.he@arm.com>, <jianyong.wu@arm.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v8 08/16] ACPI: Add post_eject to struct acpi_scan_handler for cpu hotplug
-Date: Fri, 26 Apr 2024 14:51:18 +0100
-Message-ID: <20240426135126.12802-9-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
-References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1714139744; c=relaxed/simple;
+	bh=UbY+ExOiqPp3H3piUK3cAIwA80EItQL1YsmY71g3gIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KGhp/Sg2V8grGu/JIvkue8zucHwwVxqdPUz+mOnijDaD+1tQlgKUzDrhvcxOZwYJNvlOvoRFD04oJNxeDS4YL6snoPlti9SPZhbvWCeK5pT8n79jwvQgozg0mAQ0mhHVbPRls4uJ6vmRGojgsThC0IvVMFRpium3Tdvp21eJd/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wq3WFSfS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wq3WFSfS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D865C113CD;
+	Fri, 26 Apr 2024 13:55:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1714139743;
+	bh=UbY+ExOiqPp3H3piUK3cAIwA80EItQL1YsmY71g3gIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=wq3WFSfS2sElJ7Hs1e/HlvhMlSIefIBTNkW/FXDV7NZp9kYLCdddl1JH8flEXyQQZ
+	 FBitLBASbbEpo80pF+5jodBDqTzniulOry9y46lTKQwSdwZdhIbMutmsFJQUUyTGFm
+	 ADYvITYipGpV/rnDc7gqdxep4lwBnxz6bEc48ODk=
+Date: Fri, 26 Apr 2024 15:55:40 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: lumingyindetect@126.com
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com,
+	jirislaby@kernel.or
+Subject: Re: [PATCH] serial: 8250_lpss: Fix memory leak in lpss8250_probe()
+Message-ID: <2024042652-even-mud-476d@gregkh>
+References: <20240426133959.1294012-1-lumingyindetect@126.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240426133959.1294012-1-lumingyindetect@126.com>
 
-From: James Morse <james.morse@arm.com>
+On Fri, Apr 26, 2024 at 02:39:59PM +0100, lumingyindetect@126.com wrote:
+> From: LuMingYin <lumingyindetect@126.com>
+> 
+> The return statements at line 347 and line 351 in the lpss8250_probe() function result in a memory leak of the variable pdev.
+> Add a label named free_irq_vectors in the lpss8250_probe() function to release the memory area pointed to by pdev.
+> Modify the two return statements mentioned above to jump to the label "free_irq_vectors" instead.
+> 
+> Fixes: e88c4cfcb7b888ac374916806f86c17d8ecaeb67 ("serial: 8250_lpss: fix memory in lpss8250_probe()")
+> 
+> Signed-off-by: LuMingYin <lumingyindetect@126.com>
 
-struct acpi_scan_handler has a detach callback that is used to remove
-a driver when a bus is changed. When interacting with an eject-request,
-the detach callback is called before _EJ0.
+Please stop and read all of the instructions provide, and then go read
+the "how to submit your first patch" tutorial at kernelnewbies.org and
+compare that to what you have been sending here.
 
-This means the ACPI processor driver can't use _STA to determine if a
-CPU has been made not-present, or some of the other _STA bits have been
-changed. acpi_processor_remove() needs to know the value of _STA after
-_EJ0 has been called.
+You also keep sending stuff to quickly, patches should be, at the most,
+sent once a day, and even then, that would be very quick.
 
-Add a post_eject callback to struct acpi_scan_handler. This is called
-after acpi_scan_hot_remove() has successfully called _EJ0. Because
-acpi_scan_check_and_detach() also clears the handler pointer,
-it needs to be told if the caller will go on to call
-acpi_bus_post_eject(), so that acpi_device_clear_enumerated()
-and clearing the handler pointer can be deferred.
-An extra flag is added to flags field introduced in the previous
-patch to achieve this.
+Relax, take the weekend off, and come back next week with a proper
+change based on the documentation.
 
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Gavin Shan <gshan@redhat.com>
-Tested-by: Miguel Luis <miguel.luis@oracle.com>
-Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+thanks,
 
----
-v8: No change.
----
- drivers/acpi/acpi_processor.c |  4 ++--
- drivers/acpi/scan.c           | 30 +++++++++++++++++++++++++++---
- include/acpi/acpi_bus.h       |  1 +
- 3 files changed, 30 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-index 88108aecbcfa..179d0dcc3847 100644
---- a/drivers/acpi/acpi_processor.c
-+++ b/drivers/acpi/acpi_processor.c
-@@ -475,7 +475,7 @@ static int acpi_processor_add(struct acpi_device *device,
- 
- #ifdef CONFIG_ACPI_HOTPLUG_CPU
- /* Removal */
--static void acpi_processor_remove(struct acpi_device *device)
-+static void acpi_processor_post_eject(struct acpi_device *device)
- {
- 	struct acpi_processor *pr;
- 
-@@ -643,7 +643,7 @@ static struct acpi_scan_handler processor_handler = {
- 	.ids = processor_device_ids,
- 	.attach = acpi_processor_add,
- #ifdef CONFIG_ACPI_HOTPLUG_CPU
--	.detach = acpi_processor_remove,
-+	.post_eject = acpi_processor_post_eject,
- #endif
- 	.hotplug = {
- 		.enabled = true,
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index fb5427caf0f4..7ebb3f9cea42 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -245,6 +245,7 @@ static int acpi_scan_try_to_offline(struct acpi_device *device)
- }
- 
- #define ACPI_SCAN_CHECK_FLAG_STATUS	BIT(0)
-+#define ACPI_SCAN_CHECK_FLAG_EJECT	BIT(1)
- 
- static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
- {
-@@ -273,8 +274,6 @@ static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
- 	if (handler) {
- 		if (handler->detach)
- 			handler->detach(adev);
--
--		adev->handler = NULL;
- 	} else {
- 		device_release_driver(&adev->dev);
- 	}
-@@ -284,6 +283,28 @@ static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
- 	 */
- 	acpi_device_set_power(adev, ACPI_STATE_D3_COLD);
- 	adev->flags.initialized = false;
-+
-+	/* For eject this is deferred to acpi_bus_post_eject() */
-+	if (!(flags & ACPI_SCAN_CHECK_FLAG_EJECT)) {
-+		adev->handler = NULL;
-+		acpi_device_clear_enumerated(adev);
-+	}
-+	return 0;
-+}
-+
-+static int acpi_bus_post_eject(struct acpi_device *adev, void *not_used)
-+{
-+	struct acpi_scan_handler *handler = adev->handler;
-+
-+	acpi_dev_for_each_child_reverse(adev, acpi_bus_post_eject, NULL);
-+
-+	if (handler) {
-+		if (handler->post_eject)
-+			handler->post_eject(adev);
-+
-+		adev->handler = NULL;
-+	}
-+
- 	acpi_device_clear_enumerated(adev);
- 
- 	return 0;
-@@ -301,6 +322,7 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
- 	acpi_handle handle = device->handle;
- 	unsigned long long sta;
- 	acpi_status status;
-+	uintptr_t flags = ACPI_SCAN_CHECK_FLAG_EJECT;
- 
- 	if (device->handler && device->handler->hotplug.demand_offline) {
- 		if (!acpi_scan_is_offline(device, true))
-@@ -313,7 +335,7 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
- 
- 	acpi_handle_debug(handle, "Ejecting\n");
- 
--	acpi_bus_trim(device);
-+	acpi_scan_check_and_detach(device, (void *)flags);
- 
- 	acpi_evaluate_lck(handle, 0);
- 	/*
-@@ -336,6 +358,8 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
- 	} else if (sta & ACPI_STA_DEVICE_ENABLED) {
- 		acpi_handle_warn(handle,
- 			"Eject incomplete - status 0x%llx\n", sta);
-+	} else {
-+		acpi_bus_post_eject(device, NULL);
- 	}
- 
- 	return 0;
-diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-index 5de954e2b18a..d5c0fb413697 100644
---- a/include/acpi/acpi_bus.h
-+++ b/include/acpi/acpi_bus.h
-@@ -129,6 +129,7 @@ struct acpi_scan_handler {
- 	bool (*match)(const char *idstr, const struct acpi_device_id **matchid);
- 	int (*attach)(struct acpi_device *dev, const struct acpi_device_id *id);
- 	void (*detach)(struct acpi_device *dev);
-+	void (*post_eject)(struct acpi_device *dev);
- 	void (*bind)(struct device *phys_dev);
- 	void (*unbind)(struct device *phys_dev);
- 	struct acpi_hotplug_profile hotplug;
--- 
-2.39.2
-
+greg k-h
