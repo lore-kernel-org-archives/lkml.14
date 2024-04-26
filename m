@@ -1,105 +1,88 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E962C142E64
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 10:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39546142E64;
+	Fri, 26 Apr 2024 10:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714126786; cv=none; b=XO+Q6xmU5Dz6vZk9rT1hVP6xDmT4lqlCUEzBnhXknjVYPQiy5RpdebH89+Sa2lgIw2xh/v59QrebKy6FF5Y7tEwXxWShHChMquv4PJLFriym365xJsMsXuM8J/J85weFoXKIpeWk172RvH6xRsSBygIl5FiuOdcxj9eVc9E5huc=
+	t=1714126828; cv=none; b=B1E6bRUDR0oGJuREG5fspRHYYFgX+gegZUY+YHPYFeRJEFNgofEGM/bo4hzQLcjK1bjPKdkW7vh1Vr64EZYmn8/R0V2qiHmq1NjnukibqAj6s5MWDNE8vogtk/k0L6Q+bYh1Q4pl1JW50cH02HznsTG0TDJGxPRtxh/kpvGeDp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714126786; c=relaxed/simple;
-	bh=UAxxECnbYC3eWIpdi9AkC/VdzIgX+WSNOuGazRYhHRI=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PlHN8Z6oCNizGBFbWGCqOLEDNJx4z8c4kXoQ+TlP7KBveUu74upQAGrPxrL25RC3QGoHdhHIcH3ZImSFkhkps6Naal+IAEu4r4zy6W4obPg9DWXauQ4jNbOJiW4q/UsBTe8bZVUECHl3+0gIXPZ8umGibtAksHaF7ZW905ZjemM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VQpbK2fKyzcb4b;
-	Fri, 26 Apr 2024 18:18:37 +0800 (CST)
-Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
-	by mail.maildlp.com (Postfix) with ESMTPS id D907618005C;
-	Fri, 26 Apr 2024 18:19:42 +0800 (CST)
-Received: from [10.67.120.192] (10.67.120.192) by
- kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 26 Apr 2024 18:19:42 +0800
-Message-ID: <cdeb2fe2-9e97-478b-9834-96a8d39701a8@huawei.com>
-Date: Fri, 26 Apr 2024 18:19:42 +0800
+	s=arc-20240116; t=1714126828; c=relaxed/simple;
+	bh=xvoKNHa/ZpIVIBwyN+89zRcKPdpGyfcVEh9uW/gH6HA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=FamuT9Y/T0cpSgt1QIZr/UF2dT/pVD0BW8IthsKds433CA6D90kwkAelx1mXt1uYSjuXY5EiDYnOfqmzhhW+MVdoF5W73BDp0rLImoRQ7uigi7D7wfUXWUxFCd2sRP4+3IKskc7x5qdgUiIdhuPNHLCmLsGSgG81AkeCh2CG6tU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fvS9qy2R; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fvS9qy2R"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C0A73C113CE;
+	Fri, 26 Apr 2024 10:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714126827;
+	bh=xvoKNHa/ZpIVIBwyN+89zRcKPdpGyfcVEh9uW/gH6HA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=fvS9qy2R1GGUCn82fMLnfoT3DEC/Ri3ki7hPEqFYyo87x6cGv8S0kQMX00zjtTjG9
+	 b71ntpZtED1ZUq2OlwrBYUdnDCx8TXxILmPSv5jZ1GsIva4YdVR3DrBs0TiSabEJni
+	 sVNBy+WYnKb6/qWnJowZoVPTaVbFFHKsWKdYpF7pK1PpvSI8dVQV8W1n6RkP6itPCu
+	 XA4XHdRmjytKLmchQ+EugjWdTQ1n4cCb53u0UgHsdy8+xTgM41SMvwxfYCild/VQ5x
+	 OS0neUSfMIW38JbdlFCD/+Rpn1LlX5UcBjcPw0w1xV9ISGDyLoJqz/xPJdaVsnBXxf
+	 jOqtLYnMIL0yw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id ADCBEC54BA8;
+	Fri, 26 Apr 2024 10:20:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <shaojijie@huawei.com>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linuxarm@huawei.com>,
-	<prime.zeng@hisilicon.com>, <chenhao418@huawei.com>
-Subject: Re: [PATCH 1/3] drivers/perf: hisi_pcie: Fix out-of-bound access when
- valid event group
-To: Junhao He <hejunhao3@huawei.com>, <will@kernel.org>,
-	<jonathan.cameron@huawei.com>, <yangyicong@huawei.com>
-References: <20240425124627.13764-1-hejunhao3@huawei.com>
- <20240425124627.13764-2-hejunhao3@huawei.com>
-From: Jijie Shao <shaojijie@huawei.com>
-In-Reply-To: <20240425124627.13764-2-hejunhao3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600007.china.huawei.com (7.193.23.208)
+Content-Transfer-Encoding: 8bit
+Subject: Re: [net-next PATCH v6 0/5] net: hsr: Add support for HSR-SAN (RedBOX)
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171412682770.25431.50996926778696217.git-patchwork-notify@kernel.org>
+Date: Fri, 26 Apr 2024 10:20:27 +0000
+References: <20240423124908.2073400-1-lukma@denx.de>
+In-Reply-To: <20240423124908.2073400-1-lukma@denx.de>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: netdev@vger.kernel.org, pabeni@redhat.com, casper.casan@gmail.com,
+ andrew@lunn.ch, edumazet@google.com, olteanv@gmail.com, davem@davemloft.net,
+ kuba@kernel.org, o.rempel@pengutronix.de, Tristram.Ha@microchip.com,
+ bigeasy@linutronix.de, r-gunasekaran@ti.com, horms@kernel.org,
+ n.zhandarovich@fintech.ru, m-karicheri2@ti.com, jiri@resnulli.us,
+ dan.carpenter@linaro.org, william.xuanziyang@huawei.com, syoshida@redhat.com,
+ ricardo@marliere.net, linux-kernel@vger.kernel.org
 
-Reviewed-by: Jijie Shao<shaojijie@huawei.com>
+Hello:
 
-on 2024/4/25 20:46, Junhao He wrote:
-> The perf tool allows users to create event groups through following
-> cmd [1], but the driver does not check whether the array index is out of
-> bounds when writing data to the event_group array. If the number of events
-> in an event_group is greater than HISI_PCIE_MAX_COUNTERS, the memory write
-> overflow of event_group array occurs.
->
-> Add array index check to fix the possible array out of bounds violation,
-> and return directly when write new events are written to array bounds.
->
-> There are 9 different events in an event_group.
-> [1] perf stat -e '{pmu/event1/, ... ,pmu/event9/}'
->
-> Fixes: 8404b0fbc7fb ("drivers/perf: hisi: Add driver for HiSilicon PCIe PMU")
-> Signed-off-by: Junhao He <hejunhao3@huawei.com>
-> ---
->   drivers/perf/hisilicon/hisi_pcie_pmu.c | 14 +++++++++++++-
->   1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-> index 5d1f0e9fdb08..dba399125658 100644
-> --- a/drivers/perf/hisilicon/hisi_pcie_pmu.c
-> +++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-> @@ -350,15 +350,27 @@ static bool hisi_pcie_pmu_validate_event_group(struct perf_event *event)
->   			return false;
->   
->   		for (num = 0; num < counters; num++) {
-> +			/*
-> +			 * If we find a related event, then it's a valid group
-> +			 * since we don't need to allocate a new counter for it.
-> +			 */
->   			if (hisi_pcie_pmu_cmp_event(event_group[num], sibling))
->   				break;
->   		}
->   
-> +		/*
-> +		 * Otherwise it's a new event but if there's no available counter,
-> +		 * fail the check since we cannot schedule all the events in
-> +		 * the group simultaneously.
-> +		 */
-> +		if (num == HISI_PCIE_MAX_COUNTERS)
-> +			return false;
-> +
->   		if (num == counters)
->   			event_group[counters++] = sibling;
->   	}
->   
-> -	return counters <= HISI_PCIE_MAX_COUNTERS;
-> +	return true;
->   }
->   
->   static int hisi_pcie_pmu_event_init(struct perf_event *event)
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Tue, 23 Apr 2024 14:49:03 +0200 you wrote:
+> This patch set provides v6 of HSR-SAN (RedBOX) as well as hsr_redbox.sh
+> test script.
+> 
+> The most straightforward way to test those patches is to use buildroot
+> (2024.02.01) to create rootfs and QEMU based environment to run x86_64
+> Linux.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,v6,1/5] net: hsr: Provide RedBox support (HSR-SAN)
+    https://git.kernel.org/netdev/net-next/c/5055cccfc2d1
+  - [net-next,v6,2/5] test: hsr: Remove script code already implemented in lib.sh
+    https://git.kernel.org/netdev/net-next/c/680fda4f6714
+  - [net-next,v6,3/5] test: hsr: Move common code to hsr_common.sh file
+    https://git.kernel.org/netdev/net-next/c/154a82cb64be
+  - [net-next,v6,4/5] test: hsr: Extract version agnostic information from ping command output
+    https://git.kernel.org/netdev/net-next/c/40b90bf60ce1
+  - [net-next,v6,5/5] test: hsr: Add test for HSR RedBOX (HSR-SAN) mode of operation
+    https://git.kernel.org/netdev/net-next/c/542e645c4a4d
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
