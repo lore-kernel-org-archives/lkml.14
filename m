@@ -1,94 +1,166 @@
-Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
+Received: from server02.seltendoof.de (server02.seltendoof.de [168.119.48.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB43469D;
-	Fri, 26 Apr 2024 16:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5534A2B9AF;
+	Fri, 26 Apr 2024 16:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.48.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714149087; cv=none; b=QacFyPiI6dFQz5XX9DaSS2RwRGiTEw9RJ4VbziV9Gkzrc/KWyCLiRBAckivQJs462i2VsX3S2oCu1qDmOZCA1cA7Djs1fOB4pLJyIGqAa+4WhNLfjnX3cE2tGQaqg/1/wba+pEClUYeciyI1jU0K1V7m8KnDGtWTHOtROeSXpg8=
+	t=1714149130; cv=none; b=TlIjW6HirTetfEGaxb8CoEx5tWLBJuJ6lIjqoNGCAHsqmdJjETsQb4TAWuH0zlYti9bpH5wRupvun2SXcCU19wZadFsPBfpZtKySr8XHSsrUC6NGeRf6GFTlgk4HfLT1RYdkcR7o5K+/7UciY1mgTmbZBb2qwWadEn2f8Z+yKbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714149087; c=relaxed/simple;
-	bh=7dZ7krTYAZxq8cPoPdHSIbY+K7yXIIJx3qWxQhJ/RRk=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=HDeaKGWWM+6FKQfSBnILJSQM4g232iG90fbqndQ+LN+GR2rBbj/jtirYLRH4lvL2O6hwNB+AQcN5M+sDIK2mMn7dZk4yg7LMZRo4kEJFkYlv/Uryr+VNEk6AsqFFDGUgDHfOun2/+XLSPztyJj1rWNNO6gSDmVmhZXNdB1TTE5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=Qip71L1C; arc=none smtp.client-ip=94.231.106.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
+	s=arc-20240116; t=1714149130; c=relaxed/simple;
+	bh=fGe0JQqXwScJg7nYQvWsn+u/6hpAOG8C2NbPdKgaIgQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XyKD7TsKUnd1pLPzl/yv6wt25uLb8Y3yGITQps9DbNEpNZTrNwNRkhhbOe22tHraTMY1hzZD5WENxUPE7yRYyPE/0BRdo8Do+qQZllJKYm+JDsFxVrj4vDAyqpp6RjLC/jNNIQjrT47xiPtBbaAhIGW/nuNQVYlw8sL9gTCP2dQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de; spf=pass smtp.mailfrom=seltendoof.de; dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b=U1nKbjcn; arc=none smtp.client-ip=168.119.48.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seltendoof.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="Qip71L1C"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.simply.com (Simply.com) with ESMTP id 4VQysF4BZqz681r;
-	Fri, 26 Apr 2024 18:31:13 +0200 (CEST)
-Received: from [10.10.15.10] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by smtp.simply.com (Simply.com) with ESMTPSA id 4VQysD6C6Lz681M;
-	Fri, 26 Apr 2024 18:31:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
-	s=unoeuro; t=1714149073;
-	bh=7dZ7krTYAZxq8cPoPdHSIbY+K7yXIIJx3qWxQhJ/RRk=;
-	h=Date:From:Subject:To:References:In-Reply-To;
-	b=Qip71L1CB2hsoOlwuKmcv17dZwZJcIodp8s9eiGLiE2SdJKEkPWTctJVORe6CHLyw
-	 w1vgSpFi5Etpn/M8S373xPLJoB8krfHcRZKzkUxQEs9wK1YY2FZkFjRYS1WsI7YWxh
-	 vepEI2N+D2i5R7QMzj66NgwXNxt6h05IqlTiooW4=
-Message-ID: <7749e9f4-2540-4618-8689-b6bb757f9cd0@gaisler.com>
-Date: Fri, 26 Apr 2024 18:31:12 +0200
+	dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b="U1nKbjcn"
+From: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seltendoof.de;
+	s=2023072701; t=1714148463;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cFD0pvg4orrZWH7JCCIWvQcxitlwJBZqeb1sFDYG+1Y=;
+	b=U1nKbjcnG/dajzWMm81Rovn1ZBNp4KKwvZKHpnd1e71VjBKWrgmLZsbKnPBzDpCzVlXXi7
+	hzTrib9bZXcJfBA5DmYzjniFPX6aJ7IOWU+DoaFUNle4H+/ZgBxSVK6n4SLGL6fYLbTC+t
+	ypqv1ZGJm2kVwohG3v34yfEGi6vRrDC9urr/J+/2ckMwXrPaIzVG9mXhlO2p0kkqJRCSA+
+	IJki4rz0+T7VgPXW4lVEF7p2hiAyW1qtWOWEi1nb5Nfa/dgVXj2zoSLX/7DQETYuIrsyaF
+	z3yvB8IbANBk0Mic2y7iIlx4NBKMEHXmBqQlKWb7UGXSNO1CZPNhGuHTksTaxw==
+To: cgzones@googlemail.com
+Cc: Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Jens Axboe <axboe@kernel.dk>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	io-uring@vger.kernel.org
+Subject: [PATCH v3 1/2] fs: rename struct xattr_ctx to kernel_xattr_ctx
+Date: Fri, 26 Apr 2024 18:20:15 +0200
+Message-ID: <20240426162042.191916-2-cgoettsche@seltendoof.de>
+In-Reply-To: <20240426162042.191916-1-cgoettsche@seltendoof.de>
+References: <20240426162042.191916-1-cgoettsche@seltendoof.de>
+Reply-To: cgzones@googlemail.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: Re: [PATCH v2 00/28] sparc32: sunset sun4m and sun4d
-To: Sam Ravnborg <sam@ravnborg.org>, "David S. Miller" <davem@davemloft.net>,
- Arnd Bergmann <arnd@kernel.org>, Helge Deller <deller@gmx.de>,
- Randy Dunlap <rdunlap@infradead.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
- Kjetil Oftedal <oftedal@gmail.com>, Thomas Zimmermann <tzimmermann@suse.de>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alan Stern <stern@rowland.harvard.edu>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, sparclinux@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-sound@vger.kernel.org
-References: <20240309-sunset-v2-0-f09912574d2c@ravnborg.org>
- <20240423180216.GA906720@ravnborg.org>
-Content-Language: en-US
-In-Reply-To: <20240423180216.GA906720@ravnborg.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2024-04-23 20:02, Sam Ravnborg wrote:
-> Please let me know if you expect me to rebase this on for-next.
-> I have not yet tried if there are merge conflicts but can take a look in
-> a some days if required.
+From: Christian Göttsche <cgzones@googlemail.com>
 
-My local testing branch for this patchset rebased with trivial fixups,
-so no immediate rebase and resubmission is needed. I do run into some
-strange problems on SMP with this patchset plus your CAS patchset, that
-I do not get when I rebase the Linux patches from our kernel release
-that has my CAS patchset. With no CAS at all these things fails even
-worse, so do I need one or the other for these tests.
+Rename the struct xattr_ctx to increase distinction with the about to be
+added user API struct xattr_args.
 
-I will need to dig deeper into figuring out the problems seems to be due
-to something in any of your two patchsets in themselves or if it is
-something else. I do need some additional fixes from our kernel release
-for SMP to work properly, so it could also be that there is something
-with my combination of your patches and my patches adapted on top of
-yours.
+No functional change.
 
-There are also some needed fixes for LEON that relies upon code removed
-in this patchset. Maybe the best solution for that would be if I submit
-those and you then rebase upon them.
+Suggested-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+---
+v3: added based on feedback
+---
+ fs/internal.h    |  8 ++++----
+ fs/xattr.c       | 10 +++++-----
+ io_uring/xattr.c |  2 +-
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
-> That is assuming you agree with the sunset of the sun platforms...
+diff --git a/fs/internal.h b/fs/internal.h
+index 7ca738904e34..1caa6a8f666f 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -260,7 +260,7 @@ struct xattr_name {
+ 	char name[XATTR_NAME_MAX + 1];
+ };
+ 
+-struct xattr_ctx {
++struct kernel_xattr_ctx {
+ 	/* Value of attribute */
+ 	union {
+ 		const void __user *cvalue;
+@@ -276,11 +276,11 @@ struct xattr_ctx {
+ 
+ ssize_t do_getxattr(struct mnt_idmap *idmap,
+ 		    struct dentry *d,
+-		    struct xattr_ctx *ctx);
++		    struct kernel_xattr_ctx *ctx);
+ 
+-int setxattr_copy(const char __user *name, struct xattr_ctx *ctx);
++int setxattr_copy(const char __user *name, struct kernel_xattr_ctx *ctx);
+ int do_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
+-		struct xattr_ctx *ctx);
++		struct kernel_xattr_ctx *ctx);
+ int may_write_xattr(struct mnt_idmap *idmap, struct inode *inode);
+ 
+ #ifdef CONFIG_FS_POSIX_ACL
+diff --git a/fs/xattr.c b/fs/xattr.c
+index f8b643f91a98..941aab719da0 100644
+--- a/fs/xattr.c
++++ b/fs/xattr.c
+@@ -590,7 +590,7 @@ EXPORT_SYMBOL_GPL(vfs_removexattr);
+  * Extended attribute SET operations
+  */
+ 
+-int setxattr_copy(const char __user *name, struct xattr_ctx *ctx)
++int setxattr_copy(const char __user *name, struct kernel_xattr_ctx *ctx)
+ {
+ 	int error;
+ 
+@@ -620,7 +620,7 @@ int setxattr_copy(const char __user *name, struct xattr_ctx *ctx)
+ }
+ 
+ int do_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
+-		struct xattr_ctx *ctx)
++		struct kernel_xattr_ctx *ctx)
+ {
+ 	if (is_posix_acl_xattr(ctx->kname->name))
+ 		return do_set_acl(idmap, dentry, ctx->kname->name,
+@@ -636,7 +636,7 @@ setxattr(struct mnt_idmap *idmap, struct dentry *d,
+ 	int flags)
+ {
+ 	struct xattr_name kname;
+-	struct xattr_ctx ctx = {
++	struct kernel_xattr_ctx ctx = {
+ 		.cvalue   = value,
+ 		.kvalue   = NULL,
+ 		.size     = size,
+@@ -719,7 +719,7 @@ SYSCALL_DEFINE5(fsetxattr, int, fd, const char __user *, name,
+  */
+ ssize_t
+ do_getxattr(struct mnt_idmap *idmap, struct dentry *d,
+-	struct xattr_ctx *ctx)
++	struct kernel_xattr_ctx *ctx)
+ {
+ 	ssize_t error;
+ 	char *kname = ctx->kname->name;
+@@ -754,7 +754,7 @@ getxattr(struct mnt_idmap *idmap, struct dentry *d,
+ {
+ 	ssize_t error;
+ 	struct xattr_name kname;
+-	struct xattr_ctx ctx = {
++	struct kernel_xattr_ctx ctx = {
+ 		.value    = value,
+ 		.kvalue   = NULL,
+ 		.size     = size,
+diff --git a/io_uring/xattr.c b/io_uring/xattr.c
+index 44905b82eea8..28b8f7b1af7c 100644
+--- a/io_uring/xattr.c
++++ b/io_uring/xattr.c
+@@ -18,7 +18,7 @@
+ 
+ struct io_xattr {
+ 	struct file			*file;
+-	struct xattr_ctx		ctx;
++	struct kernel_xattr_ctx		ctx;
+ 	struct filename			*filename;
+ };
+ 
+-- 
+2.43.0
 
-I do agree with the idea in general, but being busy with other things I
-have had little time to dig into this lately.
-
-Thanks,
-Andreas
