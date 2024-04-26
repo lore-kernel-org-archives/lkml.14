@@ -1,120 +1,110 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379E013DDD5;
-	Fri, 26 Apr 2024 09:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADC1813DDD5;
+	Fri, 26 Apr 2024 09:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714124147; cv=none; b=jieQGVnfHcuDX15axuZzf2eVEp/sFQMa3yTWQrpngRyXX+KMvaCXb+89MOV24SXNkj0B7iJ/yrhEUKC1AU+41Dd7vP0vU8oqoH8yDeJvyYAwMCTBCWtEFGG8QjNprRSUPN1m+JY3n3GeSavPg+1SUREk1Hw5KwYl60pAPUKOh6k=
+	t=1714124162; cv=none; b=rRMMjeNSCpQ/V+lypd4hR+3qAvHISCuhW1EMT+IxKruApMWEO2Ivoc8okO+Td3RTLDUa/w5Coq10IcP2lS3JRwnmE0yJHl8gk8rKgTqL/cDuE/19MDhBtzeCevu5EZTqoyfxH9BUhe6289aBrkz/cTQzYIiqJXWiaOZqDtO4bnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714124147; c=relaxed/simple;
-	bh=lBnA2OQ+jqFhTDwT4ra2MmJag4tWEJrVaHZ+YlurzVQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=owFBcTjoArstG92VadEHUBC/hy0jWXM1ZePHqAtSDvslcDLhI7meXXHktzElw8BW549Su+ciyzDGKcQQe/q3BCUnxdbOH2QtllhGQEshydJlzFdF3j9F1o6X/RDN/Bgx75AcyQr6Ph+U3u2gUMs9V4EV7Qvkbfj7g2UniQsKGSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-518a56cdc03so2203630e87.1;
-        Fri, 26 Apr 2024 02:35:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714124143; x=1714728943;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bg6BhgrtGVlqx1sac+sbQ4/qS3Kek+r68BVa3EwPNFc=;
-        b=ZG8tA/sRMGVQS3p3+R2lm9EU0mS3NPQY91YZ5SMaYVGVwZe+MUF+EXwDgDqccy/9pC
-         eOjyH/OiwcQY6oTib3unY/UQcKYOouFe9JuxmiQzmCO3B3DWH6rGC2Jc+NktQ66aP30y
-         +5wET/ttlQh+lL2G48YgRHM2Ox8cesmuBgtb27UUcqi4tmcfleeTuk1a3Bean0sw0D9d
-         yAuLPyN4IuYC1hMtI2A9xayRCQjiu/s29gM4NNqc9nhF9q9SNhOYkLNEWSq4sdF+sytS
-         bkXCf1TUAa8dxWxWfhSdihHCwDSNl4OxwgpxP1/F9tk9mp3da8nLLJoOFFEo5hJuYqIQ
-         RhsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUpqo+gIpB8/LteI+iKZe32HGn7pHXaYP2I+ZNTds68JngXr9AigVuQMcS3Z7laXAFf/G5DWi36tIxmgc50se6oMzEyZgbXL99v5owz4i228cwuFsAkMSLeOIz3h3RgTXx5szNrj0w+kebTngmz
-X-Gm-Message-State: AOJu0YxZB9rFMI6x+tAp/tJcSQZsgnBrI+qSK7BOHjZhuLV8PavLtb4H
-	PaaGNudTZgiCOSZ8T2EFdZOCbHHO9RmYjW618uL1tBjWXj+Wx1BBCisgGgnzC1o=
-X-Google-Smtp-Source: AGHT+IFWRq72IP69xrZfVjOtv6D5H4GvTGI4/jiXv60/G99F6kW6EsiIKpVEb0ZBo60DGzzvaomb6Q==
-X-Received: by 2002:ac2:5dca:0:b0:516:d692:5e0b with SMTP id x10-20020ac25dca000000b00516d6925e0bmr1079878lfq.54.1714124143066;
-        Fri, 26 Apr 2024 02:35:43 -0700 (PDT)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id e2-20020a056512090200b0051b0f4e1b0dsm1861421lft.276.2024.04.26.02.35.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Apr 2024 02:35:42 -0700 (PDT)
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5196c755e82so2457840e87.0;
-        Fri, 26 Apr 2024 02:35:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW0t8pcUGeqxdpfMvVudy6totLNnRZGZ/ZwKQLJw9nHZRChy4hv/dh5S/QgQW6sS+dIVPcZVgb4WAipJOEIfzFVJqiiyDp5ziDWoYpd4dNRozUB3m0t/k2avIcKOKxGwqMO7RCSstFJ/CG0kT51
-X-Received: by 2002:ac2:58ca:0:b0:518:e69b:25a2 with SMTP id
- u10-20020ac258ca000000b00518e69b25a2mr1216657lfo.45.1714124142488; Fri, 26
- Apr 2024 02:35:42 -0700 (PDT)
+	s=arc-20240116; t=1714124162; c=relaxed/simple;
+	bh=vT9giKtFcg61enkBZkXpg92QD6V+SFbh+XlHX2mLqwk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QwW2fj3QGqOjwsxweXGyxOuRRn1b5ujR07l8VLLbS0Nc1RAaYF+0taUptAt/KRvqZqUf8pFPIFDBtLzSQ9Tg3cP8f1YQflKyYpWBQszdGZx0wFR7DEsnBckxeZryM9rJYspboMYmG7l//mSp/oAZLMZcVofaEZNguJQu1VIJUuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B894F2F4;
+	Fri, 26 Apr 2024 02:36:21 -0700 (PDT)
+Received: from [10.57.66.9] (unknown [10.57.66.9])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B89B33F64C;
+	Fri, 26 Apr 2024 02:35:52 -0700 (PDT)
+Message-ID: <4416568e-79d4-465f-8d47-a199b3b69ca4@arm.com>
+Date: Fri, 26 Apr 2024 10:35:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240426072006.358802-1-iam@sung-woo.kim> <cff764c2-a3d1-4a12-9260-54122e7a1fef@moroto.mountain>
-In-Reply-To: <cff764c2-a3d1-4a12-9260-54122e7a1fef@moroto.mountain>
-From: Sungwoo Kim <iam@sung-woo.kim>
-Date: Fri, 26 Apr 2024 05:35:01 -0400
-X-Gmail-Original-Message-ID: <CAJNyHp+eCq1p_gTbxAJBKouAw-oQ=j5xwyjk5o-91pf_hGdrAg@mail.gmail.com>
-Message-ID: <CAJNyHp+eCq1p_gTbxAJBKouAw-oQ=j5xwyjk5o-91pf_hGdrAg@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: L2CAP: Fix slab-use-after-free in l2cap_send_cmd
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: daveti@purdue.edu, Marcel Holtmann <marcel@holtmann.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] thermal/debugfs: Prevent use-after-free from
+ occurring after cdev removal
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>
+References: <12427744.O9o76ZdvQC@kreacher> <13503555.uLZWGnKmhe@kreacher>
+ <2740417.mvXUDI8C0e@kreacher>
+Content-Language: en-US
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <2740417.mvXUDI8C0e@kreacher>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 26, 2024 at 5:16=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
-.org> wrote:
->
-> On Fri, Apr 26, 2024 at 03:20:05AM -0400, Sungwoo Kim wrote:
-> > diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-> > index 84fc70862..a8f414ab8 100644
-> > --- a/net/bluetooth/l2cap_core.c
-> > +++ b/net/bluetooth/l2cap_core.c
-> > @@ -3953,6 +3953,9 @@ static struct l2cap_chan *l2cap_connect(struct l2=
-cap_conn *conn,
-> >       if (!chan)
-> >               goto response;
-> >
-> > +     l2cap_chan_hold(chan);
-> > +     l2cap_chan_lock(chan);
-> > +
-> >       /* For certain devices (ex: HID mouse), support for authenticatio=
-n,
-> >        * pairing and bonding is optional. For such devices, inorder to =
-avoid
-> >        * the ACL alive for too long after L2CAP disconnection, reset th=
-e ACL
-> > @@ -4041,6 +4044,11 @@ static struct l2cap_chan *l2cap_connect(struct l=
-2cap_conn *conn,
-> >               chan->num_conf_req++;
-> >       }
-> >
-> > +     if (chan) {
-> > +             l2cap_chan_unlock(chan);
-> > +             l2cap_chan_put(chan);
-> > +     }
-> > +
-> >       return chan;
->         ^^^^^^^^^^^^
-> This doesn't fix the bug because we're returning chan.
->
-> As soon as you call l2cap_chan_put() then chan will be freed by in the
-> other thread which is doing l2cap_conn_del() resulting in a use after
-> free in the caller.
 
-Thank you for pointing this out.
-No caller uses the return value of l2cap_connect() if the kernel
-versions >=3D v6.9.
-So, l2cap_connect() can return void.
 
-One caller uses the return value of l2cap_connect() in v4.19 <=3D the
-kernel versions <=3D v6.8.
-In this case, the caller should unlock and put a channel.
+On 4/26/24 10:28, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Since thermal_debug_cdev_remove() does not run under cdev->lock, it can
+> run in parallel with thermal_debug_cdev_state_update() and it may free
+> the struct thermal_debugfs object used by the latter after it has been
+> checked against NULL.
+> 
+> If that happens, thermal_debug_cdev_state_update() will access memory
+> that has been freed already causing the kernel to crash.
+> 
+> Address this by using cdev->lock in thermal_debug_cdev_remove() around
+> the cdev->debugfs value check (in case the same cdev is removed at the
+> same time in two different threads) and its reset to NULL.
+> 
+> Fixes: 755113d76786 ("thermal/debugfs: Add thermal cooling device debugfs information")
+> Cc :6.8+ <stable@vger.kernel.org> # 6.8+
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> v1 -> v2: Add missing mutex_unlock() (Lukasz).
+> 
+> ---
+>   drivers/thermal/thermal_debugfs.c |   14 +++++++++++---
+>   1 file changed, 11 insertions(+), 3 deletions(-)
+> 
+> Index: linux-pm/drivers/thermal/thermal_debugfs.c
+> ===================================================================
+> --- linux-pm.orig/drivers/thermal/thermal_debugfs.c
+> +++ linux-pm/drivers/thermal/thermal_debugfs.c
+> @@ -505,15 +505,23 @@ void thermal_debug_cdev_add(struct therm
+>    */
+>   void thermal_debug_cdev_remove(struct thermal_cooling_device *cdev)
+>   {
+> -	struct thermal_debugfs *thermal_dbg = cdev->debugfs;
+> +	struct thermal_debugfs *thermal_dbg;
+>   
+> -	if (!thermal_dbg)
+> +	mutex_lock(&cdev->lock);
+> +
+> +	thermal_dbg = cdev->debugfs;
+> +	if (!thermal_dbg) {
+> +		mutex_unlock(&cdev->lock);
+>   		return;
+> +	}
+> +
+> +	cdev->debugfs = NULL;
+> +
+> +	mutex_unlock(&cdev->lock);
+>   
+>   	mutex_lock(&thermal_dbg->lock);
+>   
+>   	thermal_debugfs_cdev_clear(&thermal_dbg->cdev_dbg);
+> -	cdev->debugfs = NULL;
+>   
+>   	mutex_unlock(&thermal_dbg->lock);
+>   
+> 
+> 
+> 
+> 
 
-Question: Can different patches be applied for different versions like
-the above?
+It looks good now
 
-Thanks,
-Sungwoo Kim.
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
