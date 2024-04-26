@@ -1,127 +1,136 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AC2BE4A;
-	Fri, 26 Apr 2024 19:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204E02032A;
+	Fri, 26 Apr 2024 19:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714159106; cv=none; b=bSis19HSW+PVP5izWhiktSN2HfAIUdXWvzh5h8ysMS+8+BwPzCklP7RhFdqcC8a2vvTismMTUKOvy+1jDZiRloL32PNd5zBXBFwmlMVlh6D0fjo6aUGaZhrfCgMGxDTex8TcRHzV3CxyQt9xRt+AE6gBFlHw8UqyQ/66yB9GSkI=
+	t=1714159119; cv=none; b=OxBi/D2MULNfLTuKr+1fxO4DYgItbJ71WJN/caMhn9pYjRMRI1c9mO2qahkdE7X4DaOxOrwUcTocxPU8cCcGZwj3QJJR3qd0Jd5cxw7wIfY9c5FBwp2qkh8S5BIZB9TVx+hj8rmM3gzyTj5bETTY4XKZnVoF6fgjoZTv4TfdpGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714159106; c=relaxed/simple;
-	bh=438/ZQiq5iRawfVdd1FY58I+HIjcB9icOdPfLvQJQ6M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eN5hYqBi+kyfOUwj1TTlehb6uObbdDJeuZgpK+Rimk6a3vGxVsSk4M5C3Nxz18IrxNAM1HKYFL88KFP1Dxk9OU9oFTU9URpTlBbtFPEwkKOTLuMwES35eoOUpflhaB9BU0GSvozgINKNFhlwrJ7sP32KenMxo7pZCZ1y8Lx3VRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id AE71E100FC294;
-	Fri, 26 Apr 2024 21:18:15 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 5EEC3AF872; Fri, 26 Apr 2024 21:18:15 +0200 (CEST)
-Date: Fri, 26 Apr 2024 21:18:15 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: gregkh@linuxfoundation.org,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Marc Herbert <marc.herbert@intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-coco@lists.linux.dev, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 1/3] sysfs: Fix crash on empty group attributes array
-Message-ID: <Ziv9984CJeQ4muZy@wunner.de>
-References: <170863444851.1479840.10249410842428140526.stgit@dwillia2-xfh.jf.intel.com>
- <170863445442.1479840.1818801787239831650.stgit@dwillia2-xfh.jf.intel.com>
- <ZiYrzzk9Me1aksmE@wunner.de>
- <662beb6ad280f_db82d29458@dwillia2-xfh.jf.intel.com.notmuch>
+	s=arc-20240116; t=1714159119; c=relaxed/simple;
+	bh=nsZCppXmh8lxPmCUagHvnCSHS+UbJBgIFsgwfI9awYY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NJ5Bwt5zHXjVWEyBgv3lt6repFCDUl23CigZYwnouw3tO3I2DvF1suu95DBbccmiiYeFk3QpKuD5LpGJ9H6TvzabUYJhum/2i+S0DmI4/o4tJ+aWvzxBVVVx7safyGHLsDxNL762sqP4XXc4Hn0PsS9FcqZvY5ilrUHp/HdFq2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Pl28dfna; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Pl28dfna"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43QJICN6116104;
+	Fri, 26 Apr 2024 14:18:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1714159092;
+	bh=IUAoumEhy+wq6Tu6vsgEuKclmExrdXZar+JrMRHsA5Q=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=Pl28dfnaRKqoau+A+nDvWZM6lkRvR75DV5kO2Hcl8YHk57ydFfDn/+JbIU2wvhfOp
+	 +Tww68PBw/G/teKRmbDiA+B1CZhqWIKgqgtcd1wYy1nKmvJhLQdeCK1VKlvhgaMrfX
+	 IyCBEnLHGPcKQ9wWlIDaHKpaGaxuzLVq86TrEcfE=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43QJICTk001742
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 26 Apr 2024 14:18:12 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 26
+ Apr 2024 14:18:12 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 26 Apr 2024 14:18:12 -0500
+Received: from ula0226330.dhcp.ti.com (ula0226330.dhcp.ti.com [128.247.81.8])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43QJIB7N028593;
+	Fri, 26 Apr 2024 14:18:12 -0500
+From: Andrew Davis <afd@ti.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier
+	<mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Nishanth
+ Menon <nm@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero Kristo
+	<kristo@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Hari Nagalla
+	<hnagalla@ti.com>
+CC: <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Andrew Davis <afd@ti.com>
+Subject: [PATCH v9 4/5] arm64: dts: ti: k3-am625-sk: Add M4F remoteproc node
+Date: Fri, 26 Apr 2024 14:18:10 -0500
+Message-ID: <20240426191811.32414-5-afd@ti.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240426191811.32414-1-afd@ti.com>
+References: <20240426191811.32414-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <662beb6ad280f_db82d29458@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Fri, Apr 26, 2024 at 10:59:06AM -0700, Dan Williams wrote:
-> Lukas Wunner wrote:
-> > > --- a/fs/sysfs/group.c
-> > > +++ b/fs/sysfs/group.c
-> > > @@ -33,10 +33,10 @@ static void remove_files(struct kernfs_node *parent,
-> > >  
-> > >  static umode_t __first_visible(const struct attribute_group *grp, struct kobject *kobj)
-> > >  {
-> > > -	if (grp->attrs && grp->is_visible)
-> > > +	if (grp->attrs && grp->attrs[0] && grp->is_visible)
-> > >  		return grp->is_visible(kobj, grp->attrs[0], 0);
-> > >  
-> > > -	if (grp->bin_attrs && grp->is_bin_visible)
-> > > +	if (grp->bin_attrs && grp->bin_attrs[0] && grp->is_bin_visible)
-> > >  		return grp->is_bin_visible(kobj, grp->bin_attrs[0], 0);
-> > >  
-> > >  	return 0;
-> > 
-> > I'm wondering why 0 is returned by default and not SYSFS_GROUP_INVISIBLE.
-> > 
-> > An empty attribute list (containing just the NULL sentinel) will now
-> > result in the attribute group being visible as an empty directory.
-> > 
-> > I thought the whole point was to hide such empty directories.
-> > 
-> > Was it a conscious decision to return 0?
-> > Did you expect breakage if SYSFS_GROUP_INVISIBLE is returned?
-> 
-> Yes, the history is here:
-> 
->     https://lore.kernel.org/all/YwZCPdPl2T+ndzjU@kroah.com/
-> 
-> ...where an initial attempt to hide empty group directories resulted in
-> boot failures. The concern is that there might be user tooling that
-> depends on that empty directory. So the SYSFS_GROUP_INVISIBLE behavior
-> can only be enabled by explicit result from an is_visible() handler.
-> 
-> That way there is no regression potential for legacy cases where the
-> empty directory might matter.
+From: Hari Nagalla <hnagalla@ti.com>
 
-The problem is that no ->is_visible() or ->is_bin_visible() callback
-is ever invoked for an empty attribute group.  So there is nothing
-that could return SYSFS_GROUP_INVISIBLE.
+The AM62x SoCs of the TI K3 family have a Cortex M4F core in the MCU
+domain. This core can be used by non safety applications as a remote
+processor. When used as a remote processor with virtio/rpmessage IPC,
+two carveout reserved memory nodes are needed. The first region is used
+as a DMA pool for the rproc device, and the second region will furnish
+the static carveout regions for the firmware memory.
 
-It is thus impossible to hide them.
+The current carveout addresses and sizes are defined statically for
+each rproc device. The M4F processor does not have an MMU, and as such
+requires the exact memory used by the firmware to be set-aside.
 
-Even though an attribute group may be declared empty, attributes may
-dynamically be added it to it using sysfs_add_file_to_group().
+Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+Signed-off-by: Andrew Davis <afd@ti.com>
+---
+ .../arm64/boot/dts/ti/k3-am62x-sk-common.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Case in point:  I'm declaring an empty attribute group named
-"spdm_signatures_group" in this patch, to which attributes are
-dynamically added:
+diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
+index 3c45782ab2b78..167bec5c80006 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
+@@ -48,6 +48,18 @@ ramoops@9ca00000 {
+ 			pmsg-size = <0x8000>;
+ 		};
+ 
++		mcu_m4fss_dma_memory_region: m4f-dma-memory@9cb00000 {
++			compatible = "shared-dma-pool";
++			reg = <0x00 0x9cb00000 0x00 0x100000>;
++			no-map;
++		};
++
++		mcu_m4fss_memory_region: m4f-memory@9cc00000 {
++			compatible = "shared-dma-pool";
++			reg = <0x00 0x9cc00000 0x00 0xe00000>;
++			no-map;
++		};
++
+ 		secure_tfa_ddr: tfa@9e780000 {
+ 			reg = <0x00 0x9e780000 0x00 0x80000>;
+ 			alignment = <0x1000>;
+@@ -457,6 +469,13 @@ mbox_m4_0: mbox-m4-0 {
+ 	};
+ };
+ 
++&mcu_m4fss {
++	mboxes = <&mailbox0_cluster0 &mbox_m4_0>;
++	memory-region = <&mcu_m4fss_dma_memory_region>,
++			<&mcu_m4fss_memory_region>;
++	status = "okay";
++};
++
+ &usbss0 {
+ 	bootph-all;
+ 	status = "okay";
+-- 
+2.39.2
 
-https://github.com/l1k/linux/commit/ca420b22af05
-
-Because it is impossible to hide the group, every PCI device exposes
-it as an empty directory in sysfs, even if it doesn't support CMA
-(PCI device authentication).
-
-Fortunately the next patch in the series adds a single bin_attribute
-"next_requester_nonce" to the attribute group.  Now I can suddenly
-hide the group on devices incapable of CMA, because an
-->is_bin_visible() callback is executed:
-
-https://github.com/l1k/linux/commit/8248bc34630e
-
-So in this case I'm able to dodge the bullet because the empty
-signatures/ directory for CMA-incapable devices is only briefly
-visible in the series.  Nobody will notice unless they apply
-only a subset of the series.
-
-But I want to raise awareness that the inability to hide
-empty attribute groups feels awkward.
-
-Thanks,
-
-Lukas
