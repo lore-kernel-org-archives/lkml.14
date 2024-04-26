@@ -1,122 +1,156 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4B013C3EC
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 07:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D798913C3E1
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 07:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714117512; cv=none; b=hpyGhfhe9Of+yplBLHfhO/8hHHblm3aYl+1BOmC2I1Se0i+MK7QiLF60ndM6+z7QCo7bUN6vS05FsK2NgOa788VxxfmzLnfMsA9oq5wDleOZxel+wjd0MOSVPizMOLgHK/dGMYsQfzT4rJ13PnFUeZwZarcDdJcoLGfg3UmKWZM=
+	t=1714117664; cv=none; b=bh5rrYiLPskm5vcjwI6kw8THJE4BANT4fXpXUMAQuz5jIUqNUN4MT3M57ach00E76UP+U0Si/m//BAXmIMl2jwjsTF0b9EQfCpdCS2jxUKst6WslFEDhrgcajVetRHuXS9a1B+xeWIMuSxXYKsO0jd6UMvKdQAdcVubYMJHd9VU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714117512; c=relaxed/simple;
-	bh=rUd+NDHbSv3c2fwov86iAf1+ncoc84+vbeTpHpltIo0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dIumIUkE7KonkLgCyTQHvQAW+e8AXFZJKRH/dfyHbGY6rYNbKGbP0GdFk42TyRY+kTLkYvIBv2f6fkOCxgCT/tXRQAWqhKFW+SFtX9I7Ka2HQgF0J+jph1wWYms2cmt/BubA/X5FekIcwF/gOgVGKPsq9xtheJuflCiNyokgTEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ajCoFuxz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714117664; c=relaxed/simple;
+	bh=8mSG1fMDjDDohnUwndjQ8rYQ+klC8a+dxukU+MstjXc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d0jrNiI16nUYJEjjikABEXQHkxWMwphS3P1nNE8XRkths73XC/xGa6s3nTcEofXjHmI5Kx8KvFPHJ+McQeAFbAniFTOFXEZoZZMV9xOH/KNQAuuRwPZG+RlMSEzS+vxbAE0U2cqvRIB7mS680ae5T+YWgTQUvnzLalOBNxChkJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4WXJPV8s; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ajCoFuxz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714117510;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rUd+NDHbSv3c2fwov86iAf1+ncoc84+vbeTpHpltIo0=;
-	b=ajCoFuxzW0GCZywPfev17TU6RO3q8rjYN+D6xG3oFfdEi9qoj95XZvtG3EBznwF9/2GLgI
-	1xzE+tmnZZ4hN80afJTAPTwB+AJp0W0HqiBTM9kg5/ldo3RrbXe+lhMdG+2Y1BBgxIIXsG
-	eCZFLy+BiDNhd/YjBEyHZoEI/b6AOnE=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-330-XAhAAsEJMDyvE33bslc7DA-1; Fri, 26 Apr 2024 03:45:08 -0400
-X-MC-Unique: XAhAAsEJMDyvE33bslc7DA-1
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-79085537977so968385a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 00:45:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4WXJPV8s"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-571e13cd856so9336a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 00:47:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714117661; x=1714722461; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jIAWLJTmoesX+sQpDbnk16DWBHfM7w6XqP7pg4sMby0=;
+        b=4WXJPV8sWXMKohoA1wfiejyL3+/UMfZu9mfnjUhDbeb5VQHC9AAtUHb+aPVswJwNPO
+         4azTi7OljRQM40vIO/AwaEnekTFnJAFVgcaKHLe2YH+LUa7TNintT+Zvk7seZ7bf12ao
+         iLrhWNBrNw11JV2E2xXgeWaNwKhlAn/w3WjXBI8F2qiyNMLQ0iC3xloozwnEQgGiwkf5
+         7CRiNlHMi7mF9REpOhgvy0jHJ/RoqoZm69Xooht0LMkENWLM+VzjeQarS/OB5n8h17XJ
+         XWeECDkaqPZj6vFsaET4P3+s5/Ndoc1J7zsx9K2gZtfPTQZk1ZkJLztTa5Ns2HNJeM5P
+         IRrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714117508; x=1714722308;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rUd+NDHbSv3c2fwov86iAf1+ncoc84+vbeTpHpltIo0=;
-        b=NFIjgwUWsdBpQzUJ6KJMib9D/zqx66+khmvCQ301wPx9VzxwD07FUx+PCX90DAGpW3
-         HbTz5f6xJB8KddDq2aiPtbW9Mu3ACa4VSqmLpLKwDAWN+aO+KbET/3DzwobBIkGHCBv6
-         KM2QdYpE2pzqM4ZVZ25gIjh7rvo631C5PFXJQTrQgyKvIcpS5BrUz0QHI5k9QRpaLF+6
-         HZth2tXcQ+RY/IiC/1Tp1H/SncsoayhppN0pmoeylHrtdMkCraOLuc+W74hn0OPlFOvA
-         yEfA2luUkVq3rGRJsrMX7AaH0FMMdiwYn7kZ8ZgYj4oqwhYB9No/uAqf7aLzfczqYYvn
-         ktPA==
-X-Forwarded-Encrypted: i=1; AJvYcCXyVbPYA/S3RBF5MZ6G0pq2OIdXjwzXk0LY8CY+tb8ofwyTgCw2S9339vKdBXWRbd6INHQuIB0fOhBrJr5Jzkivva6Mu8OkLXa7SELn
-X-Gm-Message-State: AOJu0YydzYdJDiRo58NITAMVoauB7GAk3ozPymgj+g+bWkfrPq4OnSFY
-	hD/ty3tPxvIREH9fb+ReRhK6e9z+XgTaAOuzEit5TwrJWrNJkBYyr561SuE2GzXlVjM0JRP+Key
-	ZbY0PVcF4oEVCxIeIW9kee+iaaueRunrmfnGacnvpLTG/6rMm0ybNktb/fQDlhg==
-X-Received: by 2002:a05:620a:1998:b0:790:b14a:f3b2 with SMTP id bm24-20020a05620a199800b00790b14af3b2mr268119qkb.0.1714117508089;
-        Fri, 26 Apr 2024 00:45:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGBpIQQ4Cw0i6lKebwdcfxqWo1Ele2lBbNOsET58txmVyPf0uijghKM0MhFbnu1UARMdDHjxg==
-X-Received: by 2002:a05:620a:1998:b0:790:b14a:f3b2 with SMTP id bm24-20020a05620a199800b00790b14af3b2mr268091qkb.0.1714117507816;
-        Fri, 26 Apr 2024 00:45:07 -0700 (PDT)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id f10-20020a05620a15aa00b0079061110054sm5937871qkk.13.2024.04.26.00.45.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 00:45:07 -0700 (PDT)
-Message-ID: <e36256905e924df9690202671e1797d6214592df.camel@redhat.com>
-Subject: Re: [PATCH v6 04/10] PCI: Make devres region requests consistent
-From: Philipp Stanner <pstanner@redhat.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Bjorn Helgaas <bhelgaas@google.com>, Sam
- Ravnborg <sam@ravnborg.org>, dakr@redhat.com, 
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org
-Date: Fri, 26 Apr 2024 09:45:04 +0200
-In-Reply-To: <20240424201236.GA504035@bhelgaas>
-References: <20240424201236.GA504035@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        d=1e100.net; s=20230601; t=1714117661; x=1714722461;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jIAWLJTmoesX+sQpDbnk16DWBHfM7w6XqP7pg4sMby0=;
+        b=IAVl/93IepC/+3gFnHI3SE0bCIeiUIBEEYW0jdM6UoeF8iH0Lvi8Yzzrt1XhzxbvzV
+         Uh89aIfApw4hRAtLWefhiLHG8d/BIDWJtFx84r0XIfcLapCyjS+n9tdnDr3goeiGiSWJ
+         rr2cId/4YwR6HNacxisJD3Yd6x7PyyLmMOSNlIk9rzqHiF4ABlQpmMMEM24p3XpCXCAI
+         NIFZWUZwd1HOUwWAv06fVtJGZbwvcGsyuDAPkgF5WnQuMbrgf2+Bb/Ai3sHWUq7lQHJh
+         lm0U3MonfY5PsF5TM01p2j3Dsx/LrQYC26uEb/JIhxNYEYGQNd+OD0CWGhTC8RzSnX78
+         V31Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWZNsaD5jqTA1kZDgmJHe7jGJEmN47G6z0TS07qvoGaKIJQ1+BbFOntsG8Ed/CCVVszou2QBvgrAR84zajGzszA31zXRIaONuujsMVD
+X-Gm-Message-State: AOJu0YzRzTRp6nG0ZAq+8dJTgAUcfYRcEn7YAhPr6K1dirGMsrGEGXht
+	pVK2GRitt5NNcHdJ+gHoK9+jwAkspi8IR8ngp3AbiErZq7+ZTGSTEqbr1FIFNOY8foz4CNJCelv
+	QJDmSkvx6E/2z5Qy42996zRf3V/0jEhx1jhxz
+X-Google-Smtp-Source: AGHT+IFLQr0sMyzpOSJIY4p9nJ8GQ5UqSgfsVWNy79rCWkQWJ+N3qUGVbAAzCKpzk3SQnvP5E/G4ifq2QAYKBlWFbus=
+X-Received: by 2002:a05:6402:309a:b0:572:554b:ec4f with SMTP id
+ de26-20020a056402309a00b00572554bec4fmr54744edb.3.1714117660971; Fri, 26 Apr
+ 2024 00:47:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240426065143.4667-1-nbd@nbd.name> <20240426065143.4667-4-nbd@nbd.name>
+In-Reply-To: <20240426065143.4667-4-nbd@nbd.name>
+From: Eric Dumazet <edumazet@google.com>
+Date: Fri, 26 Apr 2024 09:47:30 +0200
+Message-ID: <CANn89iL-4CB3-+mMtBQapXV7EaCzOWOU1MRp4X1tUtjaXfbk=Q@mail.gmail.com>
+Subject: Re: [PATCH v3 net-next v3 3/6] net: add code for TCP fraglist GRO
+To: Felix Fietkau <nbd@nbd.name>
+Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	willemdebruijn.kernel@gmail.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2024-04-24 at 15:12 -0500, Bjorn Helgaas wrote:
-> On Mon, Apr 08, 2024 at 10:44:16AM +0200, Philipp Stanner wrote:
-> > Now that pure managed region request functions are available, the
-> > implementation of the hybrid-functions which are only sometimes
-> > managed
-> > can be made more consistent and readable by wrapping those
-> > always-managed functions.
-> >=20
-> > Implement a new pcim_ function for exclusively requested regions.
-> > Have the pci_request / release functions call their pcim_
-> > counterparts.
-> > Remove the now surplus region_mask from struct pci_devres.
->=20
-> This looks like two patches; could they be separated?
->=20
-> =C2=A0 - Convert __pci_request_region() etc to the new pcim model
->=20
-> =C2=A0 - Add pcim_request_region_exclusive()
->=20
-> IORESOURCE_EXCLUSIVE was added by e8de1481fd71 ("resource: allow MMIO
-> exclusivity for device drivers") in 2008 to help debug an e1000e
-> problem.=C2=A0 In the 16 years since, there's only been one new PCI-
-> related
-> use (ne_pci_probe()), and we don't add a user of
-> pcim_request_region_exclusive() in this series, so I would defer it
-> until somebody wants it.
-
-Alright, sounds reasonable to me.
-Since pcim_request_region_exclusive() can be dropped we can also omit
-separating this patch to begin with I'd say.
-
-P.
+On Fri, Apr 26, 2024 at 8:51=E2=80=AFAM Felix Fietkau <nbd@nbd.name> wrote:
+>
+> This implements fraglist GRO similar to how it's handled in UDP, however
+> no functional changes are added yet. The next change adds a heuristic for
+> using fraglist GRO instead of regular GRO.
+>
+> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+> ---
+>  net/ipv4/tcp_offload.c   | 22 ++++++++++++++++++++++
+>  net/ipv6/tcpv6_offload.c |  9 +++++++++
+>  2 files changed, 31 insertions(+)
+>
+> diff --git a/net/ipv4/tcp_offload.c b/net/ipv4/tcp_offload.c
+> index c493e95e09a5..ffd6b7a4163a 100644
+> --- a/net/ipv4/tcp_offload.c
+> +++ b/net/ipv4/tcp_offload.c
+> @@ -332,6 +332,19 @@ struct sk_buff *tcp_gro_receive(struct list_head *he=
+ad, struct sk_buff *skb)
+>         flush |=3D (ntohl(th2->seq) + skb_gro_len(p)) ^ ntohl(th->seq);
+>         flush |=3D skb_cmp_decrypted(p, skb);
+>
+> +       if (NAPI_GRO_CB(p)->is_flist) {
 
 
->=20
-> Bjorn
->=20
+Please add unlikely() for all NAPI_GRO_CB(p)->is_flist checks added in
+this patch.
 
+> +               flush |=3D (__force int)(flags ^ tcp_flag_word(th2));
+> +               flush |=3D skb->ip_summed !=3D p->ip_summed;
+> +               flush |=3D skb->csum_level !=3D p->csum_level;
+> +               flush |=3D !pskb_may_pull(skb, skb_gro_offset(skb));
+> +               flush |=3D NAPI_GRO_CB(p)->count >=3D 64;
+> +
+> +               if (flush || skb_gro_receive_list(p, skb))
+> +                       mss =3D 1;
+> +
+> +               goto out_check_final;
+> +       }
+> +
+>         if (flush || skb_gro_receive(p, skb)) {
+>                 mss =3D 1;
+>                 goto out_check_final;
+> @@ -398,6 +411,15 @@ INDIRECT_CALLABLE_SCOPE int tcp4_gro_complete(struct=
+ sk_buff *skb, int thoff)
+>         const struct iphdr *iph =3D ip_hdr(skb);
+>         struct tcphdr *th =3D tcp_hdr(skb);
+>
+> +       if (NAPI_GRO_CB(skb)->is_flist) {
+> +               skb_shinfo(skb)->gso_type |=3D SKB_GSO_FRAGLIST | SKB_GSO=
+_TCPV4;
+> +               skb_shinfo(skb)->gso_segs =3D NAPI_GRO_CB(skb)->count;
+> +
+> +               __skb_incr_checksum_unnecessary(skb);
+> +
+> +               return 0;
+> +       }
+> +
+>         th->check =3D ~tcp_v4_check(skb->len - thoff, iph->saddr,
+>                                   iph->daddr, 0);
+>
+> diff --git a/net/ipv6/tcpv6_offload.c b/net/ipv6/tcpv6_offload.c
+> index b3b8e1f6b92a..c97d55cf036f 100644
+> --- a/net/ipv6/tcpv6_offload.c
+> +++ b/net/ipv6/tcpv6_offload.c
+> @@ -32,6 +32,15 @@ INDIRECT_CALLABLE_SCOPE int tcp6_gro_complete(struct s=
+k_buff *skb, int thoff)
+>         const struct ipv6hdr *iph =3D ipv6_hdr(skb);
+>         struct tcphdr *th =3D tcp_hdr(skb);
+>
+> +       if (NAPI_GRO_CB(skb)->is_flist) {
+> +               skb_shinfo(skb)->gso_type |=3D SKB_GSO_FRAGLIST | SKB_GSO=
+_TCPV6;
+> +               skb_shinfo(skb)->gso_segs =3D NAPI_GRO_CB(skb)->count;
+> +
+> +               __skb_incr_checksum_unnecessary(skb);
+> +
+> +               return 0;
+> +       }
+> +
+>         th->check =3D ~tcp_v6_check(skb->len - thoff, &iph->saddr,
+>                                   &iph->daddr, 0);
+>         skb_shinfo(skb)->gso_type |=3D SKB_GSO_TCPV6;
+> --
+> 2.44.0
+>
