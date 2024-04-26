@@ -1,220 +1,144 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB30A13D529
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 17:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAAC615FD01
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 17:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714152456; cv=none; b=LctFPWN+UwzWC5B3sK2CdJZKmivIBBWsvvpQf5owGL6GYdJqZB4PI1VcWxW22wanVddci4Zi1CXPwe0AXfBV+k7GB2RcskBoN7lA3oxEqQ4t+rvmS9jF2s8PAUSVM19++lw1j2rIQJxAk7mCXcrkM33xKA0HklYGUYQiGCRy5P0=
+	t=1714152496; cv=none; b=JSQ1AqGrvQLRWN+4GuJ4P+Y+CnugWKZYs/9OtLQ1ZDAW/3UYSoK38k10j+o2LmHYFJ8PwDPC02xCT71yt4o9+dB4L247NiP9AFjvXsF0fVcNFrZqRH4xgHJQ7VaI0tHCByQkJa931jGiD5166xUgzC9RvYCUEQGfKRylbgUQwns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714152456; c=relaxed/simple;
-	bh=CQbW8bFR+5CgJO4xI+Gz7Vs+daMlPtddT/SebYdgPcc=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=ARqmQJbZJklPfQBWxsmQ7KSJtFs6kAc1w0agQtNdJXePpxAJGLP6qV9yr48wbSDaT3VBDnHqzpRCFRQOlaemKQ2NBcvZXQ9XfoKWly8885OUrwuda6NIQcSkehklX9QgMBXJIbDoniTeUG6+kNmPZMreQqAJD20zQnKMfc3aHUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=gyw4c2r+; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1714152496; c=relaxed/simple;
+	bh=VGNC3FuUBoY4XLfaPkzu73wiRNiQjMii3/Pcgyeoeas=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=Eguplfr3AaohfDmwXM7LKGykXk9jcLTOX4aNH/ddEqcdxPcsFiNV8k3M76FUFvo7iy6ZcNqJlSVctJE72N8ox0ZmVtFiEMQwyXGlwFO0qAaOZdhhI+JBzEZ+BOphIR5LIrSeJoLohy6WPAcztHJGKX40GsTywV6zQRXyXXrOvo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=bw24h3lc; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gyw4c2r+"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 43QGqYiM2606441
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 26 Apr 2024 09:52:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 43QGqYiM2606441
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024041401; t=1714150357;
-	bh=P1DjMKrM/knIFGSMl2AY75fhjxkSvrXCAaSH3ZCdtdw=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=gyw4c2r+EEQICek1iuBElC5tvBNZ0mOP/DONV6gvtj/rK8/Wbsd4xfdAIAQ5/6mSr
-	 PQIaeS6AXmDlVUU7mX0MjLtj5Gcao4yyQvhuLvfoiORx0qu9kHjV6CNin+rSd3PWNl
-	 lCZCDlCtBzSEFH6DNK47sK2/hAMk5ulOB2rOBWQlC37FME9L4d6eHQzIO7AWc4HHyn
-	 oo64LeHAev2ioxLCWkIm5pSTaBB1dWDiL4XM4f/kxcJlylIwDmaMR7NYmeGlh5pa0p
-	 hT1j1AWHtxSCYndTudqnoJJ4esp3pHfZS/3TyJDFihxXF2LGelEtUp3sWxMxb8Em4b
-	 OFGoO0Cm4hCxg==
-Date: Fri, 26 Apr 2024 09:52:30 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Byungchul Park <byungchul@sk.com>, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        jbohac@suse.cz, dyoung@redhat.com
-CC: kernel_team@skhynix.com, linux-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D_x86/e820=3A_apply_=27mem=3D=27_boot_co?=
- =?US-ASCII?Q?mmand_while_reserving_memory_using_boot=5Fparams?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20240426044018.GA24557@system.software.com>
-References: <20240423102320.GA47818@system.software.com> <20240424010313.25264-1-byungchul@sk.com> <20240426044018.GA24557@system.software.com>
-Message-ID: <B5CC9695-EFBF-405E-B5D2-69B2B6BC00FD@zytor.com>
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="bw24h3lc"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6eff2be3b33so2333431b3a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 10:28:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1714152494; x=1714757294; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jVaQO4aOOoD5HFv/yuXIkEx3ckF+ESud5GzmK3URHMk=;
+        b=bw24h3lc2dTa9Rt1uIh95D1cTFppfiSKMi11IXIzRCE9AInKdioU9mHMC/7WxNPhqD
+         bX2PO4rM6IXBWqiFTBVQmhTWtGjsvzfF7KCPH8VrOB38nOduML9c43aVT7RXthR2ncUj
+         l0b1VqmvkfuruELygOEDSzSsesVYc0yjtvPELqPl8DhM3UmWZXYJSj6T95ne4ooZL41a
+         G0bUkr5EyCHbYuCKMV/bqkPMvu6Mi5lTiv7QcqlhdJLhzLsdF8znKanWmwovSNp3ajia
+         JOpIF49TgX1OfSjxlv5UnyfZeaaCiWOUTvvA030cKWXh9hzhvw34CH+R0uKDELh75nlh
+         Z1QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714152494; x=1714757294;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jVaQO4aOOoD5HFv/yuXIkEx3ckF+ESud5GzmK3URHMk=;
+        b=gkr8aPB88DXtmZOhgMN5lwLG8fyNh9X+fHQeNcmJZrut79szHRjs7RnoGYDFJkshjr
+         gPMQGctMKAIbmcaG6rr1mT2RB3lFdgkoX4oN+KYThSwK9Z6bpHidZn5qmfpAnXfVesi0
+         y643uYQcUvQs4BZgJJ9nH/UVwJ/4jSieIiH9hp8Sx+552fnlPpxLpARZSeL3keyEOL8k
+         D3xt4iqkaJS35md+J7vykEo41topaXM4yMSxynKSHU0HieqwAr9kcdZ+M7AR0glzUNg3
+         Uhz/ZGMbSHRKapIqxkkW8MyAvoezVTzAp8ZBmz1VHGB3E235btiuGVyTpvpow3o81+Cp
+         E49w==
+X-Forwarded-Encrypted: i=1; AJvYcCUnGv+3/9gDpxmUKSRRi8sjCtxcBFLxcVFuIo3c1UZQw2KBFqtFs4N/6VTkDEG/ZNvVsTXJ1/aFQ8xccQYlcx31hxjBbPlZosFKOTH9
+X-Gm-Message-State: AOJu0YyoyreTNLPl8+XWNQ2Mk9BkxdQ480RpZmiLJAGJ48oDHFZVsWEA
+	TenufbzLHG+taBfkTFFmyTHI0cNj2Y2pE+SRUqFggjbbG6kiPZREpWBX22pK2Gc=
+X-Google-Smtp-Source: AGHT+IF5ZhmO7eX8nkSZYElD9vu5AkgvriEyIvfRabLVo+Eb+eHgs+Ia3e9odQQKRsC00z8QgP072g==
+X-Received: by 2002:a05:6a20:43a9:b0:1aa:5b05:7926 with SMTP id i41-20020a056a2043a900b001aa5b057926mr4853573pzl.39.1714152493907;
+        Fri, 26 Apr 2024 10:28:13 -0700 (PDT)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id fm8-20020a056a002f8800b006ed059cdf02sm15099295pfb.116.2024.04.26.10.28.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 10:28:13 -0700 (PDT)
+Date: Fri, 26 Apr 2024 10:28:13 -0700 (PDT)
+X-Google-Original-Date: Fri, 26 Apr 2024 10:28:08 PDT (-0700)
+Subject:     Re: [PATCH 1/2] perf daemon: Fix the warning about time_t
+In-Reply-To: <20240305120501.1785084-2-ben717@andestech.com>
+CC: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+  Mark Rutland <mark.rutland@arm.com>, alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+  adrian.hunter@intel.com, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+  dylan@andestech.com, tim609@andestech.com, ben717@andestech.com
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: ben717@andestech.com
+Message-ID: <mhng-8fa791ba-8c58-44c9-a4fd-f40ab808042b@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On April 25, 2024 9:40:18 PM PDT, Byungchul Park <byungchul@sk=2Ecom> wrote=
-:
->On Wed, Apr 24, 2024 at 10:03:13AM +0900, Byungchul Park wrote:
->> I might miss something=2E  Please lemme know if I go wrong=2E  Thanks=
-=2E
+On Tue, 05 Mar 2024 04:05:00 PST (-0800), ben717@andestech.com wrote:
+> In the 32-bit platform, the size of time_t is still 64 bits. Thus, use
+> PRIu64 to resolve the format problem.
 >
->I started to work on it since I wanted to limit memory boundary using
->'mem=3D' boot command but it doesn't work=2E  However, while looking arou=
-nd
->the code in more detail, I found the issue is about which one should
->have higher priority between:
+> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
+> ---
+>  tools/perf/builtin-daemon.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 >
->   1=2E boot command limiting memory boundary e=2Eg=2E 'mem=3D',
->   2=2E setup data of memory map from bootloader, boot_params=2E
+> diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
+> index 83954af36753..0b6ffd51c475 100644
+> --- a/tools/perf/builtin-daemon.c
+> +++ b/tools/perf/builtin-daemon.c
+> @@ -23,6 +23,7 @@
+>  #include <sys/signalfd.h>
+>  #include <sys/wait.h>
+>  #include <poll.h>
+> +#include <inttypes.h>
+>  #include "builtin.h"
+>  #include "perf.h"
+>  #include "debug.h"
+> @@ -688,7 +689,7 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
+>  			/* lock */
+>  			csv_sep, daemon->base, "lock");
 >
->Based on the current code, setup data from bootloader has higher
->priority than boot command so the setup data can overwrite the user
->defined limit specified in boot command=2E  Is it inteded?
+> -		fprintf(out, "%c%lu",
+> +		fprintf(out, "%c%" PRIu64 "",
+>  			/* session up time */
+>  			csv_sep, (curr - daemon->start) / 60);
 >
->   If yes, I should stop posting=2E
->   If not, I will keep posting with the following - v3=2E
+> @@ -700,7 +701,7 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
+>  				daemon->base, SESSION_OUTPUT);
+>  			fprintf(out, "  lock:    %s/lock\n",
+>  				daemon->base);
+> -			fprintf(out, "  up:      %lu minutes\n",
+> +			fprintf(out, "  up:      %" PRIu64 " minutes\n",
+>  				(curr - daemon->start) / 60);
+>  		}
+>  	}
+> @@ -727,7 +728,7 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
+>  				/* session ack */
+>  				csv_sep, session->base, SESSION_ACK);
 >
->	Byungchul
+> -			fprintf(out, "%c%lu",
+> +			fprintf(out, "%c%" PRIu64 "",
+>  				/* session up time */
+>  				csv_sep, (curr - session->start) / 60);
 >
->---
->
->diff --git a/arch/x86/kernel/e820=2Ec b/arch/x86/kernel/e820=2Ec
->index 6f1b379e3b38=2E=2E3bc593235b76 100644
->--- a/arch/x86/kernel/e820=2Ec
->+++ b/arch/x86/kernel/e820=2Ec
->@@ -879,6 +879,7 @@ static void __init early_panic(char *msg)
-> }
->=20
-> static int userdef __initdata;
->+static u64 userdef_mem_limit;
->=20
-> /* The "mem=3Dnopentium" boot option disables 4MB page tables on 32-bit =
-kernels: */
-> static int __init parse_memopt(char *p)
->@@ -905,7 +906,10 @@ static int __init parse_memopt(char *p)
-> 	if (mem_size =3D=3D 0)
-> 		return -EINVAL;
->=20
->-	e820__range_remove(mem_size, ULLONG_MAX - mem_size, E820_TYPE_RAM, 1);
->+	if (userdef_mem_limit)
->+		userdef_mem_limit =3D min(userdef_mem_limit, mem_size);
->+	else
->+		userdef_mem_limit =3D mem_size;
->=20
-> #ifdef CONFIG_MEMORY_HOTPLUG
-> 	max_mem_size =3D mem_size;
->@@ -966,7 +970,10 @@ static int __init parse_memmap_one(char *p)
-> 		else
-> 			e820__range_remove(start_at, mem_size, 0, 0);
-> 	} else {
->-		e820__range_remove(mem_size, ULLONG_MAX - mem_size, E820_TYPE_RAM, 1);
->+		if (userdef_mem_limit)
->+			userdef_mem_limit =3D min(userdef_mem_limit, mem_size);
->+		else
->+			userdef_mem_limit =3D mem_size;
-> 	}
->=20
-> 	return *p =3D=3D '\0' ? 0 : -EINVAL;
->@@ -1050,6 +1057,11 @@ void __init e820__reserve_setup_data(void)
-> void __init e820__finish_early_params(void)
-> {
-> 	if (userdef) {
->+		if (userdef_mem_limit)
->+			e820__range_remove(userdef_mem_limit,
->+					ULLONG_MAX - userdef_mem_limit,
->+					E820_TYPE_RAM, 1);
->+
-> 		if (e820__update_table(e820_table) < 0)
-> 			early_panic("Invalid user supplied memory map");
->=20
->---
->> 	Byungchul
->>=20
->> Changes from v1
->> 	1=2E before - handle boot_mem_limit assuming the default is U64_MAX=2E
->> 	   after  - handle boot_mem_limit assuming the default is 0=2E
->>=20
->> --->8---
->> >From e8bf247d6024b35af5300914dcff9135df9c1d66 Mon Sep 17 00:00:00 2001
->> From: Byungchul Park <byungchul@sk=2Ecom>
->> Date: Wed, 24 Apr 2024 09:55:25 +0900
->> Subject: [PATCH v2] x86/e820: apply 'mem=3D' boot command while reservi=
-ng memory using boot_params
->>=20
->> When a user specifies 'mem=3D' boot command, it's expected to limit the
->> maximum address of usable memory for the kernel no matter what the
->> memory map source is=2E  However, 'mem=3D' boot command doesn't work si=
-nce
->> it doesn't respect it when reserving memory using boot_params=2E
->>=20
->> Applied the restriction when reserving memory using boot_params=2E  Whi=
-le
->> at it, renamed mem_size to a more specific name, boot_mem_limit=2E
->>=20
->> Signed-off-by: Byungchul Park <byungchul@sk=2Ecom>
->> ---
->>  arch/x86/kernel/e820=2Ec | 15 +++++++++------
->>  1 file changed, 9 insertions(+), 6 deletions(-)
->>=20
->> diff --git a/arch/x86/kernel/e820=2Ec b/arch/x86/kernel/e820=2Ec
->> index 6f1b379e3b38=2E=2Ee3f716128caf 100644
->> --- a/arch/x86/kernel/e820=2Ec
->> +++ b/arch/x86/kernel/e820=2Ec
->> @@ -880,11 +880,11 @@ static void __init early_panic(char *msg)
->> =20
->>  static int userdef __initdata;
->> =20
->> +static u64 boot_mem_limit;
->> +
->>  /* The "mem=3Dnopentium" boot option disables 4MB page tables on 32-bi=
-t kernels: */
->>  static int __init parse_memopt(char *p)
->>  {
->> -	u64 mem_size;
->> -
->>  	if (!p)
->>  		return -EINVAL;
->> =20
->> @@ -899,16 +899,16 @@ static int __init parse_memopt(char *p)
->>  	}
->> =20
->>  	userdef =3D 1;
->> -	mem_size =3D memparse(p, &p);
->> +	boot_mem_limit =3D memparse(p, &p);
->> =20
->>  	/* Don't remove all memory when getting "mem=3D{invalid}" parameter: =
-*/
->> -	if (mem_size =3D=3D 0)
->> +	if (boot_mem_limit =3D=3D 0)
->>  		return -EINVAL;
->> =20
->> -	e820__range_remove(mem_size, ULLONG_MAX - mem_size, E820_TYPE_RAM, 1)=
-;
->> +	e820__range_remove(boot_mem_limit, ULLONG_MAX - boot_mem_limit, E820_=
-TYPE_RAM, 1);
->> =20
->>  #ifdef CONFIG_MEMORY_HOTPLUG
->> -	max_mem_size =3D mem_size;
->> +	max_mem_size =3D boot_mem_limit;
->>  #endif
->> =20
->>  	return 0;
->> @@ -1036,6 +1036,9 @@ void __init e820__reserve_setup_data(void)
->>  		early_memunmap(data, len);
->>  	}
->> =20
->> +	if (boot_mem_limit)
->> +		e820__range_remove(boot_mem_limit, ULLONG_MAX - boot_mem_limit,
->> +				E820_TYPE_RESERVED_KERN, 1);
->>  	e820__update_table(e820_table);
->> =20
->>  	pr_info("extended physical RAM map:\n");
->> --=20
->> 2=2E17=2E1
+> @@ -745,7 +746,7 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
+>  				session->base, SESSION_CONTROL);
+>  			fprintf(out, "  ack:     %s/%s\n",
+>  				session->base, SESSION_ACK);
+> -			fprintf(out, "  up:      %lu minutes\n",
+> +			fprintf(out, "  up:      %" PRIu64 " minutes\n",
+>  				(curr - session->start) / 60);
+>  		}
+>  	}
 
-mem=3D typically should cap the usable memory at that address=2E At one po=
-int in history we also allowed it to add memory at the top, but modern syst=
-ems have too complex memory maps; the memmap=3D option can be used for that=
-, however=2E
+Sorry I missed this earlier, but IIUC this one is actually incorrect: on 
+most 32-bit platforms time_t is 32 bits, it was later extended to 64 
+bits.  RISC-V is special because the work to make time_t 64-bit had 
+started when we submitted the port, so we just jumped straight to the 
+legacy-free uABI (after some headaches).
+
+So IIUC this would introduce a warning for some other targets.  Either 
+way I shouldn't have picked it up as it's not a RISC-V patch (this is a 
+generic perf file), so I'm going to drop it from fixes.
+
+Sorry for the confusion!
