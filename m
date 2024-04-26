@@ -1,149 +1,114 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3435C146A7E;
-	Fri, 26 Apr 2024 12:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E632213E88A;
+	Fri, 26 Apr 2024 12:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714135824; cv=none; b=vC/FWVUI8xPXnW1nzjoBfuAzmOmBZX0fynjL9JzO2VDLumxeDToxMm79vQQ4+Pqj6KP1YOowRN257cGiHvfmJQ2vqA25SzmEwvBsPgBKBWF5DOd4FqR0RvJRMRQ/f0rvTLtYntJtSl9yqj0dSqFwTSFz6ViJalzZKSLjOG6TSo0=
+	t=1714135917; cv=none; b=VM/7n+lti8erbVmuTAuVQtR2ha5xd29I4nI0/N77RcMwcoXatGLHVOd+Lllt+XzUefTszgidsCE7Ldp1eNDDO+r+Z3Ia9eWdYqnE2vmRbFDrHOoTafl90+dTvLEX/fOTESCDhgmlXJE1Ln4BWz2dW/vK0uqLT2lQSXAiNgW96oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714135824; c=relaxed/simple;
-	bh=zQgcqjDLU4rXiwYQKS1OFiTU6+v3iMUTYfNZyPzyHP4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sj7OoiNbX4BTPL8NLyqx29wfZ1Vd6P2J/4+34ApSkg73AAdwGTMPzT7bt0kl++hOH16Wk13AZcn8atDVOlsGih5srsWxlIOr6VMBEfMCArdy0UqUDCxN0cPCE+nUKvcQ6B24rXwGHc94emO0ltsDezfDTG8Ld99C/4AooL05pEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PLoiJEXY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=P7ja7n9F; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PLoiJEXY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=P7ja7n9F; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1714135917; c=relaxed/simple;
+	bh=C7edbZ7NMwTLg39d0mj+uf5rqp23pLUcF27EjZiqoOw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uw6Xqgi41sMufpPnUH8nAsbt5ihUr4d0VURN96iZA3pFMjB7VU583tBQbyRe000y8BcwUoXuBataHv/VK2I3yxSjm6GVyqEuTdzNDU9CwrBTRa0uj2b+WbcJICc/Y8vaiSufOooz8Blwe3LM8u8xw79lGwYptJoaKSSfMEsxxrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uo+FlEzK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PLoiJEXY";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="P7ja7n9F";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PLoiJEXY";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="P7ja7n9F"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B2C9C5D0B6;
-	Fri, 26 Apr 2024 12:43:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714135416; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O7XH3EvW1LrbRnIuU9A2pUcjAGgJdRh2s3ZQN36W5UU=;
-	b=PLoiJEXYkAAu+kmpjrkAiuoP6q/nP7wCfKKBZ8esRlunuBwGHpkwIc+fm/h06mj1yeKa8k
-	hZ+fsXfeOnA4AevG9pGfU38YsCqMNK6WLFmLD5iNsdbva3AZev0RCf9NugScv7keXwielX
-	gwn7wtC1lyhTbx3r/Jir7QZcy/O7xAo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714135416;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O7XH3EvW1LrbRnIuU9A2pUcjAGgJdRh2s3ZQN36W5UU=;
-	b=P7ja7n9FWoBrHTj8A89XPDP00j5HzgT55nzox/OYFvbaiCoSq7xk81QBGdu5LjvkfqDWpH
-	PkHO/LeCj1PberAA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714135416; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O7XH3EvW1LrbRnIuU9A2pUcjAGgJdRh2s3ZQN36W5UU=;
-	b=PLoiJEXYkAAu+kmpjrkAiuoP6q/nP7wCfKKBZ8esRlunuBwGHpkwIc+fm/h06mj1yeKa8k
-	hZ+fsXfeOnA4AevG9pGfU38YsCqMNK6WLFmLD5iNsdbva3AZev0RCf9NugScv7keXwielX
-	gwn7wtC1lyhTbx3r/Jir7QZcy/O7xAo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714135416;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O7XH3EvW1LrbRnIuU9A2pUcjAGgJdRh2s3ZQN36W5UU=;
-	b=P7ja7n9FWoBrHTj8A89XPDP00j5HzgT55nzox/OYFvbaiCoSq7xk81QBGdu5LjvkfqDWpH
-	PkHO/LeCj1PberAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ECAB01398B;
-	Fri, 26 Apr 2024 12:43:35 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id BKtNOHehK2ZkVgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 26 Apr 2024 12:43:35 +0000
-Date: Fri, 26 Apr 2024 14:43:46 +0200
-Message-ID: <877cgks399.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Rajashekar kuruva <quic_kuruva@quicinc.com>
-Cc: <srinivas.kandagatla@linaro.org>,
-	<mathias.nyman@intel.com>,
-	<perex@perex.cz>,
-	<conor+dt@kernel.org>,
-	<corbet@lwn.net>,
-	<lgirdwood@gmail.com>,
-	<andersson@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>,
-	<gregkh@linuxfoundation.org>,
-	<Thinh.Nguyen@synopsys.com>,
-	<broonie@kernel.org>,
-	<bgoswami@quicinc.com>,
-	<tiwai@suse.com>,
-	<robh@kernel.org>,
-	<konrad.dybcio@linaro.org>,
-	<linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>,
-	<linux-sound@vger.kernel.org>,
-	<linux-usb@vger.kernel.org>,
-	<linux-arm-msm@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>,
-	<alsa-devel@alsa-project.org>
-Subject: Re: [PATCH] [RFC PATCH] ALSA: usb-audio: endpoint: Prevent NULL pointer deference in snd_usb_endpoint_close
-In-Reply-To: <20240426122511.547755-1-quic_kuruva@quicinc.com>
-References: <20240426122511.547755-1-quic_kuruva@quicinc.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uo+FlEzK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B200C113CD;
+	Fri, 26 Apr 2024 12:51:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714135916;
+	bh=C7edbZ7NMwTLg39d0mj+uf5rqp23pLUcF27EjZiqoOw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uo+FlEzKuyJ+Dk4AFWz7hPEpdj2h80DNRmcM2eLlbvNHrQeNHWNbL3X05aLtBOHoi
+	 U2EYj8QjTRPdzmWCX2JUjcYRoeH3AjrS1v02ND6lY/zruUaglTt4zKXFChriaK4n2N
+	 8JMgydGQ9tWxrYV8+A4QYo4PtuI10Ae0YwldXYkf1kCgTxNd+ggqh2s/CQVStaWuCY
+	 ANAfjYvtRsIpXbqVgn+GahpWfJbfC2GU4ScgJ8MLIjguPxaB7dU1wcWaKPS18oIDjm
+	 sCZPVnkETN5iAAn1tGhHh4ajPuCSNf6LAQw+SAa9K4u4QOPiaM7y1NzO6sA4BGYvBU
+	 FrXwH1QYczXhA==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2de232989aaso23670841fa.1;
+        Fri, 26 Apr 2024 05:51:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX/nhnPmvOH+E1SnF/AGBO3zvfNhxnQMyjz99EtupxeonQt+jyoInjC/NliATN/7si4mhS+j/9ZAGANr36E/zZtScvffGuHWpm/9pMmD/ujMuA39h3Gj8DY96GhpvB+YRie0jCWGyq/Tg==
+X-Gm-Message-State: AOJu0YyK8LOyrA8OpMtUjJ0fEBgSLqLXacnTjTtWjH/EWdlFjs3b3S2O
+	ptIe0q2pHnOu9DiAS4cEwK8p0Xn0JuHkK5kqgV/EEUeMyJa9CQ2nvouSvMUaHdI7CyZG60rbO+W
+	jstKuqnMUcFfy4JXdP9+8eFSydg==
+X-Google-Smtp-Source: AGHT+IFSFyINrv8wT7arwvyPBnjADNddyOF8lWGUSuwveMOJGkmAYUl4rJj/SaMFmQ+EQyF49+4RKr1pX1bDOgTZScI=
+X-Received: by 2002:a05:651c:210b:b0:2d8:4637:4062 with SMTP id
+ a11-20020a05651c210b00b002d846374062mr1933367ljq.28.1714135914731; Fri, 26
+ Apr 2024 05:51:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Flag: NO
-X-Spam-Score: -0.63
-X-Spam-Level: 
-X-Spamd-Result: default: False [-0.63 / 50.00];
-	BAYES_HAM(-1.83)[93.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linaro.org,intel.com,perex.cz,kernel.org,lwn.net,gmail.com,linuxfoundation.org,synopsys.com,quicinc.com,suse.com,vger.kernel.org,alsa-project.org];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[]
+MIME-Version: 1.0
+References: <20240425074835.760134-1-patrick.delaunay@foss.st.com>
+ <20240425163035.GA2783061-robh@kernel.org> <28aeb8b1-72f1-4dd9-b433-f5b693150475@foss.st.com>
+In-Reply-To: <28aeb8b1-72f1-4dd9-b433-f5b693150475@foss.st.com>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 26 Apr 2024 07:51:40 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+KGd2tumATzhJu0aZDZ0C1k9VGm5_xxTiE1RE2KHs0hA@mail.gmail.com>
+Message-ID: <CAL_Jsq+KGd2tumATzhJu0aZDZ0C1k9VGm5_xxTiE1RE2KHs0hA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] ARM: st: use a correct pwr compatible for stm32mp15
+To: Patrick DELAUNAY <patrick.delaunay@foss.st.com>
+Cc: Alexandre TORGUE <alexandre.torgue@foss.st.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Olivier Moysan <olivier.moysan@foss.st.com>, 
+	Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>, Pascal Paillet <p.paillet@foss.st.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 26 Apr 2024 14:25:11 +0200,
-Rajashekar kuruva wrote:
-> 
-> When multiple plug-in and plug-out events occur,
-> there is a risk of encountering a NULL pointer dereference
-> leading to a kernel panic during a headset use-case.
-> this issue arises in the snd_usb_endpoint_close function
+On Fri, Apr 26, 2024 at 6:42=E2=80=AFAM Patrick DELAUNAY
+<patrick.delaunay@foss.st.com> wrote:
+>
+> Hi,
+>
+> On 4/25/24 18:30, Rob Herring wrote:
+> > On Thu, Apr 25, 2024 at 09:48:31AM +0200, Patrick Delaunay wrote:
+> >> This patchset removes the unexpected comma in the PWR compatible
+> >> "st,stm32mp1,pwr-reg" and uses a new compatible "st,stm32mp1-pwr-reg"
+> >> in STM3MP15 device trees.
+> > Why? I don't see any warnings from this. Yes, we wouldn't new cases
+> > following this pattern, but I don't think it is worth maintaining
+> > support for both strings. We're stuck with it. And the only way to
+> > maintain forward compatibility is:
+>
+>
+> Yes, no warning because the compatible string are not yet checked by tool=
+s.
 
-Such a scenario can't happen: ep->iface_ref is changed only in
-chip->mutex lock, hence it can't be NULL there.
+What do you mean? There's a schema for it, so it is checked. I ran the
+tools and there's no warning. If there was a warning, I'd fix the
+tools in this case.
 
+> I propose this patch to avoid the usage of this compatible for other SoC
+> in STM32MP1 family.
+>
+>
+> I see the invalid compatible string when I reviewed the U-Boot patch to
+> add the PWR node for STM32MP13 family:
+>
+> https://patchwork.ozlabs.org/project/uboot/patch/20240319024534.103299-1-=
+marex@denx.de/
+>
 
-thanks,
+Perhaps you should add SoC specific compatible string instead.
 
-Takashi
+> So I prefer change the PWR binding before to have the same patch applied
+> on Linux device tree
+>
+> > compatible =3D "st,stm32mp1-pwr-reg", "st,stm32mp1,pwr-reg";
+>
+>
+> Yes, I will update the SoC patch with you proposal.
+
+NO! We don't want to support that.
+
+We have *tons* of examples in DT which don't follow recommended
+patterns and we're stuck with them. This is no different. We can get
+away with changing node names, but that's about it.
+
+Rob
