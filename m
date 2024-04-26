@@ -1,119 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B441E13D52F;
-	Fri, 26 Apr 2024 08:32:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C8B21379;
+	Fri, 26 Apr 2024 08:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714120332; cv=none; b=haWEOI+7SSue+syBSyTWLkIs8nLPTtqVU+x9wW9KUmSPagxNFNvkohkT5nfvwAZ6+bh6MVqgqqU5m3M0uW007GEdGqhaC4B/hgSrxkIx7nc8X4/ccSvWJxlQk4ZDZkdGjLUd3JjoEFfea/RSTLlcHFsf85uL1dOFZiK4BiITKoA=
+	t=1714120359; cv=none; b=XkiC70+udWbPx1TdHkiXZ5Gl85enj1IED1xmY1XRLem+UmVcNvSTvPbDClX3Zhpe+oy/Zq+8OqNgIzSiWUKutUjsM9VLf0IVzClGY6xV534Q0a6oZvgou4wTNG/DDcTMHbc4DoQGAaa98PFhDz7jKDEe/sIpbvzraQvP1da7UiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714120332; c=relaxed/simple;
-	bh=+AOj3OMDSB3feHYUPdQfVhUVtDWDdcImqVlO1v4xpng=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d4yTNvNciG6F2KxfthpWPe879IjVVOii7I592AN79HB+9qBhcmHkq03D4g3j+IRSgegoqfikD2DD0rKmxNror5Y8UyYoNENPAGSj1jPnOWFR2yND0pzvMRW9+GUbly1Eg3mt4oZivJEKVU6aELbc5YjpYysFWgMkIGxUdm5zXJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQ8mtMLc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714120359; c=relaxed/simple;
+	bh=JPzmIyrTXDfjqDAST+PV0hnEHHxODh7jJkm7vCutels=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bUmrTHcvubFmjPw+9FA3RDuovt7w9P5Jf3ouB19yQtno2WW2dTWgeK6pMBiJIXZbBq4b9JEYSzJxC+SBxJKCiE6aQ/3KNioI+5ukatzoTBQpbcqvPZfO6Id7wpBD4u1gPPHEx/G1lBG/7vNOnWnL6YFqsyi6luvzOjWP5cw9/4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=b7ZatGXx; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQ8mtMLc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5724C2BD10;
-	Fri, 26 Apr 2024 08:32:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714120332;
-	bh=+AOj3OMDSB3feHYUPdQfVhUVtDWDdcImqVlO1v4xpng=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vQ8mtMLcrimNPX91Y2YQmvdQw4cikExY2pLxFz+/UT+e9TLir0xOZ3FBo5RrzGpzb
-	 JWR44T3XJshDZMYXiba7l/A544v2LOC9MQLrngwOyrxDozIHscwKHoIb5QIGzqfNXg
-	 hlLFV/4Q2E5d2sHTZ7tlXh/zsv1dp1lvJElyqwmb0wchrenBmob4Dc1MtkVQ+MEtdh
-	 7oC9vfii7ckW0bsH176/J480uOF/fn8rgcExibP+RvW506G6An6Z0c8ibMrhm9JIVO
-	 4Z8XvkBOO1+QWHViSo081jrAt8THz37irqAEYTIKSADYbtZr55Yu4BB7vII7ZC4wKk
-	 Q8kmGiXMxjpQQ==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mike Rapoport <rppt@kernel.org>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v6 16/16] bpf: remove CONFIG_BPF_JIT dependency on CONFIG_MODULES of
-Date: Fri, 26 Apr 2024 11:28:54 +0300
-Message-ID: <20240426082854.7355-17-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240426082854.7355-1-rppt@kernel.org>
-References: <20240426082854.7355-1-rppt@kernel.org>
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="b7ZatGXx"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 776511C0080; Fri, 26 Apr 2024 10:32:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1714120348;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y0dysf36aM5avB8c3yAupwYZYTudX4kjUfayQHr8SSA=;
+	b=b7ZatGXxsSYhR8l8hZJRyGFW+LOr6qOGfutf+6Zm1P93RkDEUXMhKbTq6Vb+4x8qd1/MSK
+	vozQMYgkGMFXitwkhVsSrNpvzMaOIobS45adwv4yKpTz8zordqplMkYEwt7hX30h5lSRJ6
+	F1ESRL67V725AzzD/gtl2JuSFrK6Uz4=
+Date: Fri, 26 Apr 2024 10:32:27 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+	Matthew Wilcox <willy@infradead.org>,
+	Kees Cook <keescook@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] alloc_tag: Tighten file permissions on /proc/allocinfo
+Message-ID: <Zitmm2SWucJA1Bdb@duo.ucw.cz>
+References: <20240425200844.work.184-kees@kernel.org>
+ <w6nbxvxt3itugrvtcvnayj5ducoxifwbffd7qh6vcastw77mse@2ugphwusgttz>
+ <ZirCbPR1XwX2WJSX@casper.infradead.org>
+ <64cngpnwyav4odustofs6hgsh7htpc5nu23tx4lb3vxaltmqf2@sxn63f2gg4gu>
+ <CAJuCfpGiRFAOp-aqpVk6GRpG=4LEF3XyuV_LijzwDYRHKqHWWg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="b3R0spGM4QxycKkW"
+Content-Disposition: inline
+In-Reply-To: <CAJuCfpGiRFAOp-aqpVk6GRpG=4LEF3XyuV_LijzwDYRHKqHWWg@mail.gmail.com>
 
-From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 
-BPF just-in-time compiler depended on CONFIG_MODULES because it used
-module_alloc() to allocate memory for the generated code.
+--b3R0spGM4QxycKkW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Since code allocations are now implemented with execmem, drop dependency of
-CONFIG_BPF_JIT on CONFIG_MODULES and make it select CONFIG_EXECMEM.
+Hi!
 
-Suggested-by: Björn Töpel <bjorn@kernel.org>
-Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
----
- kernel/bpf/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > The /proc/allocinfo file exposes a tremendous about of informatio=
+n about
+> > > > > kernel build details, memory allocations (obviously), and potenti=
+ally
+> > > > > even image layout (due to ordering). As this is intended to be co=
+nsumed
+> > > > > by system owners (like /proc/slabinfo), use the same file permiss=
+ions as
+> > > > > there: 0400.
+> > > >
+> > > > Err...
+> > > >
+> > > > The side effect of locking down more and more reporting interfaces =
+is
+> > > > that programs that consume those interfaces now have to run as root.
+> > >
+> > > sudo cat /proc/allocinfo | analyse-that-fie
+> >
+> > Even that is still an annoyance, but I'm thinking more about a future
+> > daemon to collect this every n seconds - that really shouldn't need to
+> > be root.
+>=20
+> Yeah, that would preclude some nice usecases. Could we maybe use
+> CAP_SYS_ADMIN checks instead? That way we can still use it from a
+> non-root process?
 
-diff --git a/kernel/bpf/Kconfig b/kernel/bpf/Kconfig
-index bc25f5098a25..f999e4e0b344 100644
---- a/kernel/bpf/Kconfig
-+++ b/kernel/bpf/Kconfig
-@@ -43,7 +43,7 @@ config BPF_JIT
- 	bool "Enable BPF Just In Time compiler"
- 	depends on BPF
- 	depends on HAVE_CBPF_JIT || HAVE_EBPF_JIT
--	depends on MODULES
-+	select EXECMEM
- 	help
- 	  BPF programs are normally handled by a BPF interpreter. This option
- 	  allows the kernel to generate native code when a program is loaded
--- 
-2.43.0
+CAP_SYS_ADMIN is really not suitable, as it can do changes to the
+system. On working system, allocinfo is really not dangerous, it just
+may make exploits harder. CAP_KERNEL_OBSERVER or something...
 
+								Pavel
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
+
+--b3R0spGM4QxycKkW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZitmmwAKCRAw5/Bqldv6
+8iSqAKCKKro6xd8WHDcLsDlqyKCPFqd44gCfZhN+HF+SZvKopvK94yJ3xCHoKGY=
+=VeNA
+-----END PGP SIGNATURE-----
+
+--b3R0spGM4QxycKkW--
