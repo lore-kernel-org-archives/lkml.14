@@ -1,29 +1,29 @@
 Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF0114533F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE8214533D;
 	Fri, 26 Apr 2024 10:15:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714126535; cv=none; b=e2B7NgzZ0vGUAq0FEMNFtTUPfvm6cEquBUOVjonLyVbDEvHPl7KiF9nI2r2V1v5rnIoi+j4tlef3C4sye7WcSHTvwdKwqWA+qNzAmR0SzC1/mxegI9Wj/aETpB9VsbDwLqXupGN+j2gXTh1SRxoQePLCa1KyFvNVtU919Z9hdAw=
+	t=1714126535; cv=none; b=NgHCITDWqfc05dEgAsOK/3UNJJz6PngiE3knIyAnUXNSZRTgQJBfoTJyXMk4DMvBdzFasobf3U0gaD+F2kYn/XpwvFNaqBjBYg9Tf5C5zRN0len9nUy2582UqNxsQeu0WGkBC1CwozrD0sEhVVOARjw0kGhgT9OnSEcxAfWNWTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714126535; c=relaxed/simple;
-	bh=G3Wwdo3FPiA96PnLKat2NQ9X0yHFlG8SloyDTzFTpOg=;
+	bh=EyNcns5pQgclKYHILemdW7rew+42rQDhCJV9u1hRB3Y=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZvQeZqgqBgLK4LFC9sD5i/oLaRLbVmRw4DUwTpP6D6hKZNV3ChK+HYA2oNPDy+lWbZOsf8AmpbeVor+iBoRADDyEDCU6q8tr2JwvxJMD5teUxC5ZlD+z9zDnnFm1fmXDXOj6QvTRHfeAJuXW8FO2nGaDkZ+phzVB9v2IB7LPDLY=
+	 MIME-Version:Content-Type; b=hPOk15pGNHtGnplWvZVw/QTRdjSMAIE8rh/TTgNF0OGP6T2MxeRwUiLZZERf0JghMDA1aLv2vTarD7481+YONmGKXWjFPeXYtCZhnIWIe1bTFry9n/AAqlyNxq1x7SruEdJIG7nyJ87gCdgVnkEvi81oRUkfizGvmAC+BSgMFsg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VQpS632V5zvQQS;
-	Fri, 26 Apr 2024 18:12:22 +0800 (CST)
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VQpRx3jQszwV9T;
+	Fri, 26 Apr 2024 18:12:13 +0800 (CST)
 Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
-	by mail.maildlp.com (Postfix) with ESMTPS id AE01118009D;
+	by mail.maildlp.com (Postfix) with ESMTPS id 71C9718009D;
 	Fri, 26 Apr 2024 18:15:26 +0800 (CST)
 Received: from localhost.localdomain (10.50.165.33) by
  kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 26 Apr 2024 18:15:22 +0800
+ 15.1.2507.35; Fri, 26 Apr 2024 18:15:20 +0800
 From: Jijie Shao <shaojijie@huawei.com>
 To: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
 	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
@@ -31,9 +31,9 @@ To: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
 CC: <shenjian15@huawei.com>, <wangjie125@huawei.com>,
 	<liuyonglong@huawei.com>, <shaojijie@huawei.com>, <chenhao418@huawei.com>,
 	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH V2 net 6/7] net: hns3: fix port vlan filter not disabled issue
-Date: Fri, 26 Apr 2024 18:00:44 +0800
-Message-ID: <20240426100045.1631295-7-shaojijie@huawei.com>
+Subject: [PATCH V2 net 2/7] net: hns3: change type of numa_node_mask as nodemask_t
+Date: Fri, 26 Apr 2024 18:00:40 +0800
+Message-ID: <20240426100045.1631295-3-shaojijie@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20240426100045.1631295-1-shaojijie@huawei.com>
 References: <20240426100045.1631295-1-shaojijie@huawei.com>
@@ -48,56 +48,110 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
  kwepemm600007.china.huawei.com (7.193.23.208)
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Peiyang Wang <wangpeiyang1@huawei.com>
 
-According to hardware limitation, for device support modify
-VLAN filter state but not support bypass port VLAN filter,
-it should always disable the port VLAN filter. but the driver
-enables port VLAN filter when initializing, if there is no
-VLAN(except VLAN 0) id added, the driver will disable it
-in service task. In most time, it works fine. But there is
-a time window before the service task shceduled and net device
-being registered. So if user adds VLAN at this time, the driver
-will not update the VLAN filter state,  and the port VLAN filter
-remains enabled.
+It provides nodemask_t to describe the numa node mask in kernel. To
+improve transportability, change the type of numa_node_mask as nodemask_t.
 
-To fix the problem, if support modify VLAN filter state but not
-support bypass port VLAN filter, set the port vlan filter to "off".
-
-Fixes: 184cd221a863 ("net: hns3: disable port VLAN filter when support function level VLAN filter control")
-Fixes: 2ba306627f59 ("net: hns3: add support for modify VLAN filter state")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Fixes: 38caee9d3ee8 ("net: hns3: Add support of the HNAE3 framework")
+Signed-off-by: Peiyang Wang <wangpeiyang1@huawei.com>
 Signed-off-by: Jijie Shao <shaojijie@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h               | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 6 ++++--
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h   | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 7 ++++---
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h | 2 +-
+ 5 files changed, 11 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+index f19f1e1d1f9f..133c94646c21 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+@@ -897,7 +897,7 @@ struct hnae3_handle {
+ 		struct hnae3_roce_private_info rinfo;
+ 	};
+ 
+-	u32 numa_node_mask;	/* for multi-chip support */
++	nodemask_t numa_node_mask; /* for multi-chip support */
+ 
+ 	enum hnae3_port_base_vlan_state port_base_vlan_state;
+ 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 5dc8593c97be..018069b12de6 100644
+index ff6a2ed23ddb..62ddce05fa2b 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -9910,6 +9910,7 @@ static int hclge_set_vlan_protocol_type(struct hclge_dev *hdev)
- static int hclge_init_vlan_filter(struct hclge_dev *hdev)
- {
- 	struct hclge_vport *vport;
-+	bool enable = true;
- 	int ret;
- 	int i;
+@@ -1766,7 +1766,8 @@ static int hclge_vport_setup(struct hclge_vport *vport, u16 num_tqps)
  
-@@ -9929,8 +9930,12 @@ static int hclge_init_vlan_filter(struct hclge_dev *hdev)
- 		vport->cur_vlan_fltr_en = true;
- 	}
+ 	nic->pdev = hdev->pdev;
+ 	nic->ae_algo = &ae_algo;
+-	nic->numa_node_mask = hdev->numa_node_mask;
++	bitmap_copy(nic->numa_node_mask.bits, hdev->numa_node_mask.bits,
++		    MAX_NUMNODES);
+ 	nic->kinfo.io_base = hdev->hw.hw.io_base;
  
-+	if (test_bit(HNAE3_DEV_SUPPORT_VLAN_FLTR_MDF_B, hdev->ae_dev->caps) &&
-+	    !test_bit(HNAE3_DEV_SUPPORT_PORT_VLAN_BYPASS_B, hdev->ae_dev->caps))
-+		enable = false;
-+
- 	return hclge_set_vlan_filter_ctrl(hdev, HCLGE_FILTER_TYPE_PORT,
--					  HCLGE_FILTER_FE_INGRESS, true, 0);
-+					  HCLGE_FILTER_FE_INGRESS, enable, 0);
+ 	ret = hclge_knic_setup(vport, num_tqps,
+@@ -2458,7 +2459,8 @@ static int hclge_init_roce_base_info(struct hclge_vport *vport)
+ 
+ 	roce->pdev = nic->pdev;
+ 	roce->ae_algo = nic->ae_algo;
+-	roce->numa_node_mask = nic->numa_node_mask;
++	bitmap_copy(roce->numa_node_mask.bits, nic->numa_node_mask.bits,
++		    MAX_NUMNODES);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index e821dd2f1528..37527b847f2f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -891,7 +891,7 @@ struct hclge_dev {
+ 
+ 	u16 fdir_pf_filter_count; /* Num of guaranteed filters for this PF */
+ 	u16 num_alloc_vport;		/* Num vports this driver supports */
+-	u32 numa_node_mask;
++	nodemask_t numa_node_mask;
+ 	u16 rx_buf_len;
+ 	u16 num_tx_desc;		/* desc num of per tx queue */
+ 	u16 num_rx_desc;		/* desc num of per rx queue */
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index 0aa9beefd1c7..b57111252d07 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -412,7 +412,8 @@ static int hclgevf_set_handle_info(struct hclgevf_dev *hdev)
+ 
+ 	nic->ae_algo = &ae_algovf;
+ 	nic->pdev = hdev->pdev;
+-	nic->numa_node_mask = hdev->numa_node_mask;
++	bitmap_copy(nic->numa_node_mask.bits, hdev->numa_node_mask.bits,
++		    MAX_NUMNODES);
+ 	nic->flags |= HNAE3_SUPPORT_VF;
+ 	nic->kinfo.io_base = hdev->hw.hw.io_base;
+ 
+@@ -2082,8 +2083,8 @@ static int hclgevf_init_roce_base_info(struct hclgevf_dev *hdev)
+ 
+ 	roce->pdev = nic->pdev;
+ 	roce->ae_algo = nic->ae_algo;
+-	roce->numa_node_mask = nic->numa_node_mask;
+-
++	bitmap_copy(roce->numa_node_mask.bits, nic->numa_node_mask.bits,
++		    MAX_NUMNODES);
+ 	return 0;
  }
  
- static int hclge_init_vlan_type(struct hclge_dev *hdev)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+index a73f2bf3a56a..cccef3228461 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+@@ -236,7 +236,7 @@ struct hclgevf_dev {
+ 	u16 rss_size_max;	/* HW defined max RSS task queue */
+ 
+ 	u16 num_alloc_vport;	/* num vports this driver supports */
+-	u32 numa_node_mask;
++	nodemask_t numa_node_mask;
+ 	u16 rx_buf_len;
+ 	u16 num_tx_desc;	/* desc num of per tx queue */
+ 	u16 num_rx_desc;	/* desc num of per rx queue */
 -- 
 2.30.0
 
