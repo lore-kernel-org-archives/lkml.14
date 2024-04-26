@@ -1,70 +1,71 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62F9B647;
-	Fri, 26 Apr 2024 18:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B921125B2
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 18:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714156439; cv=none; b=JgG9Bec41602lockqIrq8Xv1O4X50iAHScVgc1RkPOk6hW4Q90mjNqkRu+BRETut2Ju3rBacWfSUg1ZYtNmzgCKR8MK41IpxTeTki5rnYWzR7z7mEMMMk1+ctfWkn8bjAC0vcvpsceyuhqHUbkRC30a8rKYThk7lDJy2lMQwHR4=
+	t=1714156448; cv=none; b=N2RY+tffMiSyN/Ig4607JSMRheNCXsDOdfP6SbKlBr0koB+5EEJdlT+UMFb3XDwuuodqKJ1rpxP5rFWMURzvLMC8AGZc96d/pKH+7NTY+XEaQXp2ZuR2hOaZU1c9tqgG7/S/WbsjD6FzgUUjbghOCdV9UVfHxR5SJz4IsnB0ps0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714156439; c=relaxed/simple;
-	bh=LoAsra1hA9i9hkLZaYnURR7KfFIun2hW6cOATiB4DqQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GXkoNTOnSTJ9ZqUMCJrGrTubF61yfA+co1+A2p9s9MEOe4eAMI6HOe/s2BHmgVO/ZPgCcAJcWUfxKU0Dbx/uTK79R54VhpQTRB9hwlKB2GRoZHOA2yu4d+nfw9i6u6gmLeJL/XhuT3AaQz2Y/Q3Qkzkc3LACdJVC2CYYoqZPbpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=nSloEz6e; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1714156448; c=relaxed/simple;
+	bh=veT0sDsyrl73mCujRdcKEc2AtCFryNFecy2sFtWamoE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k+9rUytcgvt9l0AGz+H1OhP7FE/ib3r1YJlWpuf3kIS7Y9tiNKs8SgBZ6lYQz22eY4oX9ral0G+oknKzLe9VVoCyge1UKAskqSM3JMx2zfDrYK6FfbBhOpS04kEC4InhdwobFbGLx38llN4hKRVfJ9zce4JtaA53ceGOWDy1e5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=vVVU2/Ct; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="nSloEz6e"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43QEke4q031592;
-	Fri, 26 Apr 2024 20:33:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=hKZXTK2FODJbQu15bxlxQQSDaW8wFVSOMjE/gPb6e+U=; b=nS
-	loEz6e9A5V2zfuNgKHxraVujS54Xqpj74J3N2HOWE9V+/ie3VD71D1w2ew+A64/I
-	98wKB1MYQE/NZlGvvHFGdxg15BCtkdb5v2Wb++4LAxzFd9sprWIbEZT7geQR/H05
-	WD0Gj+R+4Y0kpctfVC3SXUxqw9n7IyZ3lwICTplUohlWZEV2wN+rpNwjj5d9jBKN
-	hCcxgOk8BZUO22OIfPl4k3ZmldNlOzDrIl6Lam/9kKTOAsKCNs0T1xMNfwoXPfB9
-	VnBXehz2K2kknIh1/LcjPefwFt0RXLxGUYLchGEFcXtIyK07hPNLhsKP4/3Wl1Yc
-	AqzQj+Laf4fgLV1pHAzg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xmq9115ca-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 20:33:43 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5959440045;
-	Fri, 26 Apr 2024 20:33:39 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C51C322FA35;
-	Fri, 26 Apr 2024 20:32:58 +0200 (CEST)
-Received: from localhost (10.48.86.112) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 26 Apr
- 2024 20:32:58 +0200
-From: Patrick Delaunay <patrick.delaunay@foss.st.com>
-To: Alexandre TORGUE <alexandre.torgue@foss.st.com>,
-        Liam Girdwood
-	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Pascal
- Paillet <p.paillet@foss.st.com>
-CC: Patrick Delaunay <patrick.delaunay@foss.st.com>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v2 1/2] dt-bindings: regulator: st,stm32mp1-pwr-reg: add compatible for STM32MP13
-Date: Fri, 26 Apr 2024 20:32:50 +0200
-Message-ID: <20240426203245.v2.1.Ia0a99d90acb512aa020a6e7a8cca8cc1b71f1759@changeid>
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="vVVU2/Ct"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e3e84a302eso19791975ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 11:34:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1714156446; x=1714761246; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pZoSwzLi6xvTIvtNVms/jlVvWAfvYtCLM7lzp/fumoA=;
+        b=vVVU2/Ct3D4r2pjJ2u3DuoB0ifAiZURDotWsnzPg8nxXXw9YkeMRN6cieUZGPlPzMX
+         MqTsJnI6khIFz+q5hkcs0CUXKEUv88CDwSoel4Mvr+R9QJwsFrlZULYwll/ba9T1GTz+
+         xHVf6eo1eoKnSks0UCOmH4o2MKl+zoHnkiS18=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714156446; x=1714761246;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pZoSwzLi6xvTIvtNVms/jlVvWAfvYtCLM7lzp/fumoA=;
+        b=nJFuMPUovZS4/3HIIWh09dOxszjDp3rrnW1ESiwnFeIRzzVHZletuUoyI0Mnj6KPka
+         0AIpvKLJuSYU3xXVN0Ruu7ZefwWCx18POJE+Mc+hnzt3MONPBoVkCcI0VWg1FlUnIPB9
+         dRBQYhoZoCCN9/gjiQDFMlQHLeMlRc06cBiWc9Av/zGFG/7u2G4N2GlJAXS/D3+R+bX+
+         xooO9De6crFfftnJFxt1zZ4xqbSToVXytbHzkPMGzula/rsuDBq7bhU5qK7XI8Xfawj6
+         lND7amVIOZUEICMIwu1er1Crkm60Mm0U/KVRIZCIJbA+D4gizxO52kndEn68a30z/f3y
+         6uqg==
+X-Gm-Message-State: AOJu0YyQ+XKhMDXxkua8w2g4NhF/UijAeWlh5IUoUrUD43RVfbc2al9D
+	qyeWQn94z0Y50xIyVfCN3RNp5vyDSJgycxC28r6N33b0KHA95FtFMZqZKMVqekz5Ipp50ZzqyXq
+	dmUpgfrqYw5F5diy++H5JrmcvL+byCN3lKix/Qoz/XjM3HTmAXaXw5qF5IfG7RQy4zo0CHehVy7
+	kO37P1L7lNy9kkIflAXbdF9YGBJB64ItYaM5giR8wX7EM=
+X-Google-Smtp-Source: AGHT+IHnG5xfPC7t9g3uaoL8prAXxXW+Go6YADGhLzvoUqn+vtXCfvI59SkJt+SVoMBVTy4FuT5Pxw==
+X-Received: by 2002:a17:902:c40f:b0:1e4:4537:40ab with SMTP id k15-20020a170902c40f00b001e4453740abmr4026315plk.12.1714156446226;
+        Fri, 26 Apr 2024 11:34:06 -0700 (PDT)
+Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
+        by smtp.gmail.com with ESMTPSA id j23-20020a170902759700b001deecb4f897sm15713152pll.100.2024.04.26.11.34.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 11:34:05 -0700 (PDT)
+From: Joe Damato <jdamato@fastly.com>
+To: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	tariqt@nvidia.com,
+	saeedm@nvidia.com
+Cc: mkarsten@uwaterloo.ca,
+	gal@nvidia.com,
+	nalramli@fastly.com,
+	Joe Damato <jdamato@fastly.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	linux-rdma@vger.kernel.org (open list:MELLANOX MLX4 core VPI driver),
+	Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH net-next v2 0/3] mlx4: Add support for netdev-genl API
+Date: Fri, 26 Apr 2024 18:33:52 +0000
+Message-Id: <20240426183355.500364-1-jdamato@fastly.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240426183253.1360098-1-patrick.delaunay@foss.st.com>
-References: <20240426183253.1360098-1-patrick.delaunay@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,39 +73,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-26_16,2024-04-26_02,2023-05-22_02
 
-Add new compatible "st,stm32mp13-pwr-reg" for STM32MP13 SoC family.
+Greetings:
 
-Signed-off-by: Patrick Delaunay <patrick.delaunay@foss.st.com>
----
+Welcome to v2.
 
-Changes in v2:
-- update for Rob review, only add compatible for STM32MP13 family
+This series adds support to mlx4 for the netdev-genl API which makes it
+much easier for users and user programs to map NAPI IDs back to
+ifindexes, queues, and IRQs. This is extremely useful for a number of
+use cases, including epoll-based busy poll.
 
- .../devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml    | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+In addition, this series includes a patch to generate per-queue
+statistics using the netlink API, as well.
 
-diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
-index c9586d277f41..b0c6c62a84ea 100644
---- a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
-+++ b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
-@@ -11,7 +11,9 @@ maintainers:
- 
- properties:
-   compatible:
--    const: st,stm32mp1,pwr-reg
-+    oneOf:
-+    - const: st,stm32mp1,pwr-reg
-+    - const: st,stm32mp13-pwr-reg
- 
-   reg:
-     maxItems: 1
+To facilitate the stats, patch 1/3 makes use of an existing field,
+"dropped" which was already being exported in the ethtool stats by the
+driver, but was never incremented. As of patch 1/3, it is now being
+incremented by the driver in an appropriate place and used in patch 3/3
+as alloc_fail.
+
+Please note: I do not have access to mlx4 hardware, but I've been
+working closely with Martin Karsten from University of Waterloo (CC'd)
+who has very graciously tested my patches on their mlx4 hardware (hence
+his Tested-by attribution in each commit). His latest research work is
+particularly interesting [1] and this series helps to support that (and
+future) work.
+
+Martin has re-tested this v2 using Jakub's tool [2] and the
+stats.pkt_byte_sum and stats.qstat_by_ifindex tests passed.
+
+[1]: https://dl.acm.org/doi/pdf/10.1145/3626780
+[2]: https://lore.kernel.org/lkml/20240423175718.4ad4dc5a@kernel.org/
+
+Thanks,
+Joe
+
+v1 -> v2:
+ - Patch 1/3 now initializes dropped to 0.
+ - Patch 2/3 fix use of uninitialized qtype warning.
+ - Patch 3/3 includes several changes:
+   - mlx4_get_queue_stats_rx and mlx4_get_queue_stats_tx check if i is
+     valid before proceeding.
+   - All initialization to 0xff for stats fields has been omit. The
+     network stack does this before calling into the driver functions, so
+     I've adjusted the driver functions to only set values if there is
+     data to set, leaving the network stack's 0xff in place if not.
+   - mlx4_get_base_stats set all stat fields to 0 individually if there
+     are RX and TX queues.
+
+Joe Damato (3):
+  net/mlx4: Track RX allocation failures in a stat
+  net/mlx4: link NAPI instances to queues and IRQs
+  net/mlx4: support per-queue statistics via netlink
+
+ drivers/net/ethernet/mellanox/mlx4/en_cq.c    | 14 ++++
+ .../net/ethernet/mellanox/mlx4/en_netdev.c    | 79 +++++++++++++++++++
+ drivers/net/ethernet/mellanox/mlx4/en_port.c  |  5 +-
+ drivers/net/ethernet/mellanox/mlx4/en_rx.c    |  4 +-
+ drivers/net/ethernet/mellanox/mlx4/mlx4_en.h  |  1 +
+ 5 files changed, 101 insertions(+), 2 deletions(-)
+
 -- 
 2.25.1
 
