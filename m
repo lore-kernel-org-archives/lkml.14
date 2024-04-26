@@ -1,165 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D325D149C4B;
-	Fri, 26 Apr 2024 15:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2681A149C7B
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714146443; cv=none; b=e/kNjVAljz9zZ9wpAL149O+oqKXqmqBinlccbQ588T6usLiwhpN7LBbMajizaylRs0hxoyN0crZSxqjDmmP3v2k652WmscsOdobPcUBHl+ZZO+XTRSF6mFIjiDpl25zhRpEas+ypqFywFoy+O2odtkGFtax2yL0kcTwo6LTaE7c=
+	t=1714146452; cv=none; b=iB9KBrHGIdEtcC8SFkeb7eoIeIRhu4heuYgyHbZV++vU88ZSKLr4S3zom7wF/uJ7V5SP/vkMlzliDi/hFtOfOPc5FW4l2iddSAzRsQTxyZM0GLSYqf43vKJ6gyGNSRBp+yF5g85uuQzbLYe7dqifmgn4bHwB/Ck+3i2uJADB5g4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714146443; c=relaxed/simple;
-	bh=ND7IVRkE83qoPcEOBhEWCyxEP9oWqtsDaYNPykQg7KQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KSOr4xxVay+TrXsC6nj/Wl0e9C9Mnx4ZpgL0BK8dN1ek1/I9+uPlVthmuo3Wa4SPPbF7F4BYKJHB9IvSLNBVsk41JJlXlhM9kClsDdFeryjVPJNh39BAGqU3ndBMGxTZMCzLmdx7zwbiYkDDRyn1z1tAyUxolOwf75EfKYjnCS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c/XSHe1f; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714146452; c=relaxed/simple;
+	bh=3kv3W8HCdfkaWDUxqPPBqvTTgtgtiGVVw92b0grhvFY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Ep2ZR1DaqaDXNYaKm1tffaazOO6l/PtlvkQezIh5gFxOLqr1VpzgdqB13EDFYHH1g02/JqZ0LQQ20V428+MHdmWj9U9CrKSuz81SmqjZReaxYSbqp9iGb+rcBLkv31bPZKmQzDgmoiDmdY8EQPGbqXMFhslqQ/iWy7/acn/ZTEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p50eQb72; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c/XSHe1f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714146442; x=1745682442;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ND7IVRkE83qoPcEOBhEWCyxEP9oWqtsDaYNPykQg7KQ=;
-  b=c/XSHe1foBVNmXvAOkBKo9zFxfx+xHUkBvq029Dgrkmastlkv3pmAfQM
-   tpZCummXc5/f/EG+96qUe7iEaX52uDhIY1pldzXo6YqlZNIEGsayzqvGF
-   X5iEuf5sT1LZ6uo4AT40ZwjfVbApkGclEGdaAXvbb2auwSTjGYsOY3Thi
-   ltexsHoq/WScf/nrjvJtUIedcgMD2Jqus7NKeeaaEZlkR4MIYV6xPAUDF
-   KW38ahU3OyD7X02T+oQ2Uiq+X99AsMWM09Wxo0XnSmDsEhZUQoWtl/ozo
-   lvNacNngEexS4y8fmyDMY0ZEk1LG2xt/vJdA+L7tZe0bQWgPl2Uktkcuk
-   w==;
-X-CSE-ConnectionGUID: lBR2wfJFTauyNP52pSrIYw==
-X-CSE-MsgGUID: h2s9EaIUS1C9u/g0W7xTVQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="9747736"
-X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="9747736"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 08:47:21 -0700
-X-CSE-ConnectionGUID: W1DJyWexQii1pugr08vRcw==
-X-CSE-MsgGUID: ANV2GgyESfiahgxPhkXgOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="30252216"
-Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by orviesa005.jf.intel.com with ESMTP; 26 Apr 2024 08:47:17 -0700
-Received: from lincoln.igk.intel.com (lincoln.igk.intel.com [10.102.21.235])
-	by irvmail002.ir.intel.com (Postfix) with ESMTP id 43B302FC42;
-	Fri, 26 Apr 2024 16:47:15 +0100 (IST)
-From: Larysa Zaremba <larysa.zaremba@intel.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
-	alan.brady@intel.com,
-	maciej.fijalkowski@intel.com,
-	jesse.brandeburg@intel.com,
-	Emil Tantilov <emil.s.tantilov@intel.com>,
-	Pavan Kumar Linga <pavan.kumar.linga@intel.com>,
-	joshua.a.hay@intel.com,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Igor Bagnucki <igor.bagnucki@intel.com>
-Subject: [PATCH iwl-net] idpf: Interpret .set_channels() input differently
-Date: Fri, 26 Apr 2024 17:41:22 +0200
-Message-ID: <20240426154125.235977-1-larysa.zaremba@intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p50eQb72"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61b028ae5easo41020527b3.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 08:47:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714146450; x=1714751250; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2E9JoSWwd8nVZWjHSk8NyMAJBnorcWNH5AMDyGnL6Dw=;
+        b=p50eQb72zDQe3QRayW0+C1Ticmi/NdxCzcJCY5/hrodEeFBl+nZhLXVr8EfXMxEcMv
+         EY+AlQiLXXmKysYjTli68C8Nwhbi3prP4ROIL494mOWr3xBCAnr+oT12gvy1JJUipSjH
+         3Z+9aBX7LlUKhk0+29mcJPhjbZEOXAjOGHkaRi4TfmOtRU7GH+1XTG6AnQx48Na0QkDk
+         FEt1LhyRyCQkuNIEbE3Ql49UpO0bCSVYrA0UW/JOjtoTdx2exTmcVA7CGoD6Ok/QSDtH
+         GHg84hbm+Pjv+fmWtiBXAVokL+tPNCXPIMZ+Sjnfqv/y6muuJlTxVOfuE9iMnazqmrR5
+         a9Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714146450; x=1714751250;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2E9JoSWwd8nVZWjHSk8NyMAJBnorcWNH5AMDyGnL6Dw=;
+        b=AHNEut1IjA7xzQ3K8Jv+it+SWd4amrvx3aW0meg2UbpFpYECg1d1Vw9wggydchQYDM
+         DSJtz5N6I+ndFbFG1QEV5hbytSLidpBtfh6Fs90KHjlsQxMoZpzc9to/u5Ow2IWxFi2H
+         pkvdY+3Hk3AMNyO4hKbq0K0IvqH0mm9ZiOc70HhIXsLIrQ0LST2jUJeu1+b2Odc0+ELa
+         ayjMXmT+VipGOAY7hzs2halKbYeKMZPHBGUQ2T0iQMqBNhcwY3EDclnwCZEb+U1lbMh3
+         cf9SBMCAX9GVM+45aHfN937bGUA5bXfzvZLLtFFcZShV0DTzaR3TyQQdzJMcunSNwZXp
+         +VIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGsXP5EhVwJFG9XNL4UwVJDJc6VnrCmsQO2aIGSVpl/lAFqkw8oR7ynPMAOukDv6L9MFdymZz2eq79af0+D5K0+lyVP3YGZuXuLguM
+X-Gm-Message-State: AOJu0Yw9O0sRXTG2dbMjJtmeCDoPXgGpuUzwAABBeDfNNc82TcPl8dzg
+	OkanMS3KrGKmcWaWtaxhf2/4TmAMHZDPiJv7F2nddZEp162/3X5XMx8NGuAx+3ubaPPT2wSj446
+	uMA==
+X-Google-Smtp-Source: AGHT+IF3FSBZIrw+Ee5KLhA7Zd1dn/48qyZF8Ne2lnAcIov1+3/MDN/HY98TTWsNvj3V2JUe1s1WrbhQb1M=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a0d:df44:0:b0:615:e53:1c1 with SMTP id
+ i65-20020a0ddf44000000b006150e5301c1mr675860ywe.7.1714146450107; Fri, 26 Apr
+ 2024 08:47:30 -0700 (PDT)
+Date: Fri, 26 Apr 2024 08:47:28 -0700
+In-Reply-To: <7f3001de041334b5c196b5436680473786a21816.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240423165328.2853870-1-seanjc@google.com> <4a66f882-12bf-4a07-a80a-a1600e89a103@intel.com>
+ <ZippEkpjrEsGh5mj@google.com> <7f3001de041334b5c196b5436680473786a21816.camel@intel.com>
+Message-ID: <ZivMkK5PJbCQXnw2@google.com>
+Subject: Re: [PATCH 0/3] KVM: x86: Fix supported VM_TYPES caps
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: Xiaoyao Li <xiaoyao.li@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Unlike ice, idpf does not check, if user has requested at least 1 combined
-channel. Instead, it relies on a check in the core code. Unfortunately, the
-check does not trigger for us because of the hacky .set_channels()
-interpretation logic that is not consistent with the core code.
+On Fri, Apr 26, 2024, Kai Huang wrote:
+> On Thu, 2024-04-25 at 07:30 -0700, Sean Christopherson wrote:
+> > On Thu, Apr 25, 2024, Xiaoyao Li wrote:
+> > > On 4/24/2024 12:53 AM, Sean Christopherson wrote:
+> > > > Fix a goof where KVM fails to re-initialize the set of supported VM=
+ types,
+> > > > resulting in KVM overreporting the set of supported types when a ve=
+ndor
+> > > > module is reloaded with incompatible settings.  E.g. unload kvm-int=
+el.ko,
+> > > > reload with ept=3D0, and KVM will incorrectly treat SW_PROTECTED_VM=
+ as
+> > > > supported.
+> > >=20
+> > > Hah, this reminds me of the bug of msrs_to_save[] and etc.
+> > >=20
+> > >    7a5ee6edb42e ("KVM: X86: Fix initialization of MSR lists")
+> >=20
+> > Yeah, and we had the same bug with allow_smaller_maxphyaddr
+> >=20
+> >   88213da23514 ("kvm: x86: disable the narrow guest module parameter on=
+ unload")
+> >=20
+> > If the side effects of linking kvm.ko into kvm-{amd,intel}.ko weren't s=
+o painful
+> > for userspace,=C2=A0
+> >=20
+>=20
+> Do we have any real side effects for _userspace_ here?
 
-This naturally leads to user being able to trigger a crash with an invalid
-input. This is how:
+kvm.ko ceasing to exist, and "everything" being tied to the vendor module i=
+s the
+big problem.  E.g. params from the kernel command line for kvm.??? will bec=
+ome
+ineffective, etc.  Some of that can be handled in the kernel, e.g. KVM can =
+create
+a sysfs symlink so that the accesses through sysfs continue to work, but AF=
+AIK
+params don't supporting such aliasing/links.
 
-1. ethtool -l <IFNAME> -> combined: 40
-2. ethtool -L <IFNAME> rx 0 tx 0
-   combined number is not specified, so command becomes {rx_count = 0,
-   tx_count = 0, combined_count = 40}.
-3. ethnl_set_channels checks, if there is at least 1 RX and 1 TX channel,
-   comparing (combined_count + rx_count) and (combined_count + tx_count)
-   to zero. Obviously, (40 + 0) is greater than zero, so the core code
-   deems the input OK.
-4. idpf interprets `rx 0 tx 0` as 0 channels and tries to proceed with such
-   configuration.
-
-The issue has to be solved fundamentally, as current logic is also known to
-cause AF_XDP problems in ice [0].
-
-Interpret the command in a way that is more consistent with ethtool
-manual [1] (--show-channels and --set-channels) and new ice logic.
-
-Considering that in the idpf driver only the difference between RX and TX
-queues forms dedicated channels, change the correct way to set number of
-channels to:
-
-ethtool -L <IFNAME> combined 10 /* For symmetric queues */
-ethtool -L <IFNAME> combined 8 tx 2 rx 0 /* For asymmetric queues */
-
-[0] https://lore.kernel.org/netdev/20240418095857.2827-1-larysa.zaremba@intel.com/
-[1] https://man7.org/linux/man-pages/man8/ethtool.8.html
-
-Fixes: 02cbfba1add5 ("idpf: add ethtool callbacks")
-Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Reviewed-by: Igor Bagnucki <igor.bagnucki@intel.com>
-Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
----
- .../net/ethernet/intel/idpf/idpf_ethtool.c    | 21 ++++++-------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_ethtool.c b/drivers/net/ethernet/intel/idpf/idpf_ethtool.c
-index 986d429d1175..1cf3067a9c31 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_ethtool.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_ethtool.c
-@@ -222,14 +222,19 @@ static int idpf_set_channels(struct net_device *netdev,
- 			     struct ethtool_channels *ch)
- {
- 	struct idpf_vport_config *vport_config;
--	u16 combined, num_txq, num_rxq;
- 	unsigned int num_req_tx_q;
- 	unsigned int num_req_rx_q;
- 	struct idpf_vport *vport;
-+	u16 num_txq, num_rxq;
- 	struct device *dev;
- 	int err = 0;
- 	u16 idx;
- 
-+	if (ch->rx_count && ch->tx_count) {
-+		netdev_err(netdev, "Dedicated RX or TX channels cannot be used simultaneously\n");
-+		return -EINVAL;
-+	}
-+
- 	idpf_vport_ctrl_lock(netdev);
- 	vport = idpf_netdev_to_vport(netdev);
- 
-@@ -239,20 +244,6 @@ static int idpf_set_channels(struct net_device *netdev,
- 	num_txq = vport_config->user_config.num_req_tx_qs;
- 	num_rxq = vport_config->user_config.num_req_rx_qs;
- 
--	combined = min(num_txq, num_rxq);
--
--	/* these checks are for cases where user didn't specify a particular
--	 * value on cmd line but we get non-zero value anyway via
--	 * get_channels(); look at ethtool.c in ethtool repository (the user
--	 * space part), particularly, do_schannels() routine
--	 */
--	if (ch->combined_count == combined)
--		ch->combined_count = 0;
--	if (ch->combined_count && ch->rx_count == num_rxq - combined)
--		ch->rx_count = 0;
--	if (ch->combined_count && ch->tx_count == num_txq - combined)
--		ch->tx_count = 0;
--
- 	num_req_tx_q = ch->combined_count + ch->tx_count;
- 	num_req_rx_q = ch->combined_count + ch->rx_count;
- 
--- 
-2.43.0
-
+I don't think there are any deal breakers, but I don't expect it to Just Wo=
+rk either.
