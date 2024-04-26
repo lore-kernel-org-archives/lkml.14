@@ -1,132 +1,278 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E63D2D03D
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 21:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE12374DD
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 21:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714167177; cv=none; b=FapX19inS6gI8LZc3pvPML6ypkAfqZ56+84iA3hs25reZKr43KKcqQwWOZ0OqgqtIU05RWPwVOz9zPKb02sMMRm8rhN5tJasyjERC7ZHYNQDYb36kCyB6B2smMA6qpE8TYBDk1ztFXGgHgNyWLmr6vRXAUOVdsehp2P2/ZyV6Lo=
+	t=1714167196; cv=none; b=hPAllq1SG2iskLYGdKGUQ7OLwUd6NB7uctpIuu1wBjBxBxpBAUPMxLh+R0lMiz/C6wF7RIzFfivJuUnN6Ej75ATKCGwFEgJpREuMGTDN+2BYT4Zk0/2u/MKUlYX4UaDDnalRk3j9LxMMFcxllDV4YpiLmgm8k7V2Ik86eT1k3p0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714167177; c=relaxed/simple;
-	bh=5yVvzpp+oJSa4jitf6n/YGYnKEChJkRzzuJlcPCJLSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CDQoOAx/6n4OhkgRy898ihhTJ925IVcBTWDP7CnVFCUHwCjr5rP1m0ZK5yQBNx5AUlno0s7Wqf47JXezLaD85KzQYLJmfXLvwocUYvYfvjstd9Xvoe58VYiO/LNY5YzrPguaChWElhWON9psw1Hkdpr5EUOtAQlCLnm+AsXYIhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1rC8vS3K; arc=none smtp.client-ip=209.85.166.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714167196; c=relaxed/simple;
+	bh=kxnGaLzCx36ImG3jzFPNGZvnlVs5FtG14IIFMoRjSAM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=njRTSiTi9Sdp164MKalqU5LmHYm2TM7pzGa8U2W/TScPpvPw9QHzPPAInh4x5yHoMo5mcVESKFIUEt7cVUdL8OaYVUV5IwkhiGHifdVeKGUgp76LQnrSWk0OEzGiToVYHipPdHYivOQgdJQQEwlKdwFIBjjH1fNxeCP69BhDCkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QUGKUOVT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1rC8vS3K"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7da1d81d042so107838539f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 14:32:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714167175; x=1714771975; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XapD3Vo/MqdiQRWrwhL6vAMNi8r75ljjq7FJu80J9ZI=;
-        b=1rC8vS3KljB6I2aoHNlx3zyjrbJWGFKK1ZNREj6m13Id+83V+Ry6sjYxruzibz7DKw
-         If572zAqvVbgZuYvyAfe398jcTDO7oEgoXLGLKw5DAfjPth3fDeBo52ESByDnIc525Ou
-         ukX0ROs6YKbymATl/RkmkY5d4Br6h0afmBoNsGqlp93PyoKEi/FsX1Hgy2/bDW273qam
-         dbl1VggfKuq0La8IdSi44JsjBAqIIvtIzzt1yWUZ3BhTzT+UkDZqFDsqxTkrpHuvEYFM
-         YhsG2Q+YBvh9Wa0GIFCYsDVdIKxVhlXz124EMF3ZTJU0lOqgTxrLcLb5NeaKSk1RQ9oG
-         LWjg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QUGKUOVT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714167194;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=HTxgqruqHfJleI+BsiKGjG0w4odgnXdiSmb5CNOjsgc=;
+	b=QUGKUOVT4BnqsqyZEcmrK9HvDUeUpy8/4BZ0r24rf+fZPiBU9SqccfCCAdsx3hVUDIq7c3
+	zo29VQDEYiOizBj1j5CYQbBczMqWRkh8UFEQoV1P0OJiiOaYBBL04PrDiAXYy2qdXoV/qq
+	QD8X71SGRRJKQx2Sbw3sMykKTHYUy1w=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-231-e4CkGW0mNcWYhbONp_QUYQ-1; Fri, 26 Apr 2024 17:33:12 -0400
+X-MC-Unique: e4CkGW0mNcWYhbONp_QUYQ-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-34b5bece899so1671029f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 14:33:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714167175; x=1714771975;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XapD3Vo/MqdiQRWrwhL6vAMNi8r75ljjq7FJu80J9ZI=;
-        b=q7VHYirOjoUkc0imwBXz+g7PtHC2wOg9Gou550TxZUFw68egGMye7OoW2RAxjB+2mL
-         buHr2rcxwA4CtiRGCnJLu4bIc+Y3wfP4HrtCKkka10SHPuX72sM0BRxCqGUA9znD0i3f
-         Osn0buipcdNDJQhMBB3A5ED188mPmllsHChhY1X5ZDtoHxmJCEPZDPq5xVvtwWqD0wjE
-         luTdelYrzWQi3Yk3/yy5vpNEYxQoNUVEyrdAXH93s0bb5X38YDhFMdrUtq5a0AzTNSh8
-         UuTEn+JeJCtFxnuwRRttss1cmQ2g+Svc6tg3xDqHDdftFcwOdQBtlio7ArUaTEkaUHiJ
-         ltbA==
-X-Forwarded-Encrypted: i=1; AJvYcCWd66q/SudX5n9+sxmmL8YeoH0BKlYErDwNJ3W79jeG5lo9APzZ5v1aMiP1cYjYDHuBjCOgY2VrYCnWOQOavSKTgF6w3Ke16B+EUi0z
-X-Gm-Message-State: AOJu0Yx2noh167G9TLU6FfiWdhwXjn3kAUyLiNtgdNIRe/VgzwQ4Yvu8
-	itn5/pxUMWL47u6H840NyTV6sJdPt90qiA6BFLlhWlKSAe44Z+Sg8ljirb6oiA==
-X-Google-Smtp-Source: AGHT+IFoiCg3OWmOf8Xqm+Gm5428k85SPoCpAbrANz2kTgoAcSMf8TRwNrwGQKHHoyB814lzfQGPTw==
-X-Received: by 2002:a5d:8d16:0:b0:7da:1896:9e7b with SMTP id p22-20020a5d8d16000000b007da18969e7bmr3901716ioj.20.1714167175399;
-        Fri, 26 Apr 2024 14:32:55 -0700 (PDT)
-Received: from google.com (195.121.66.34.bc.googleusercontent.com. [34.66.121.195])
-        by smtp.gmail.com with ESMTPSA id g3-20020a05660226c300b007deaecfe190sm369755ioo.7.2024.04.26.14.32.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 14:32:54 -0700 (PDT)
-Date: Fri, 26 Apr 2024 21:32:52 +0000
-From: Justin Stitt <justinstitt@google.com>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, 
-	Nick Desaulniers <ndesaulniers@google.com>, Kees Cook <keescook@chromium.org>, 
-	Bill Wendling <morbo@google.com>, Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [RFC PATCH 2/9] x86/purgatory: Simplify stack handling
-Message-ID: <pgsqflimo7d2ozhpmdrmscx25mxs5lypcvwq6mgjs7uixsxvsl@5papnq46mwbs>
-References: <20240424155309.1719454-11-ardb+git@google.com>
- <20240424155309.1719454-13-ardb+git@google.com>
- <20240424182659.GA2126602@dev-arch.thelio-3990X>
+        d=1e100.net; s=20230601; t=1714167191; x=1714771991;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HTxgqruqHfJleI+BsiKGjG0w4odgnXdiSmb5CNOjsgc=;
+        b=QvA0kebL9p1cRnb/cxSS8Ajt4Ug4eg3w9fd2uQNKxeH3KkdLd6VVFdojAer4ouIGPP
+         fmn1uMj+nFvOi/UK5hcTIiM1dRpfnyx1JUEWROdUvPcFTeM2RaPpf5yQow3+C2ZAwdKq
+         sIOMjMqfYi8BWmF1PmyYttKbuPaybd+7qLFIbaeDxo2tHNgsrBGIrvsCfqUwboGuuE/R
+         07J0OtASpzKKbalUg2ReRRga2FqWE9XP659v5rlS7XDPRLY1x0IRtZF2tdzPjRFcNB0p
+         sCAYzXzDv1QEuP+ieL7W2OuD+dtYTvkU16pAEVTyLVF0rlgVo2PoLVK6JYWWRxhGg3WA
+         zWFw==
+X-Gm-Message-State: AOJu0YwP8ObbDGs2xH5ZRP1RCbO/GLYxK8MrilUwJ+GgRlEeBZLMSbCr
+	uE36BnTob7FM9BYaTdUdO3u9v+HEqD5ByMD/pueac0QLd3U6/1cwbI8WfmqqrIYjhFLf7p20NsI
+	/Ymvtrd27OmK4Kfq2hwnL1N8JTykutx9mpr0s+N8LELVH0VNSrqECow/d/bd+HA==
+X-Received: by 2002:adf:e70b:0:b0:34c:5f6e:1720 with SMTP id c11-20020adfe70b000000b0034c5f6e1720mr554775wrm.60.1714167191491;
+        Fri, 26 Apr 2024 14:33:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFM1bRgkh0yb/MsAsyuNGZmpW4/Rz7FCY0YwSzgR+rZNpVvpkuS+p8nE7OJ5gTd+vbJaBdFtw==
+X-Received: by 2002:adf:e70b:0:b0:34c:5f6e:1720 with SMTP id c11-20020adfe70b000000b0034c5f6e1720mr554751wrm.60.1714167190989;
+        Fri, 26 Apr 2024 14:33:10 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c726:6100:20f2:6848:5b74:ca82? (p200300cbc726610020f268485b74ca82.dip0.t-ipconnect.de. [2003:cb:c726:6100:20f2:6848:5b74:ca82])
+        by smtp.gmail.com with ESMTPSA id e15-20020a05600c218f00b004146e58cc35sm35152816wme.46.2024.04.26.14.33.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Apr 2024 14:33:10 -0700 (PDT)
+Message-ID: <fb3bd167-748a-4548-a94f-9194443c0bc3@redhat.com>
+Date: Fri, 26 Apr 2024 23:33:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240424182659.GA2126602@dev-arch.thelio-3990X>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] mm/gup: consistently name GUP-fast functions
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
+ Jason Gunthorpe <jgg@nvidia.com>, John Hubbard <jhubbard@nvidia.com>,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, x86@kernel.org
+References: <20240402125516.223131-1-david@redhat.com>
+ <20240402125516.223131-2-david@redhat.com>
+ <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com> <Ziuv2jLY1wgBITiP@x1n>
+ <ZivScN8-Uoi9eye8@x1n> <8b42a24d-caf0-46ef-9e15-0f88d47d2f21@redhat.com>
+ <Ziwal-SucIye3hPM@x1n>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Ziwal-SucIye3hPM@x1n>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On Wed, Apr 24, 2024 at 11:26:59AM -0700, Nathan Chancellor wrote:
-> On Wed, Apr 24, 2024 at 05:53:12PM +0200, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> > 
-> > The x86 purgatory, which does little more than verify a SHA-256 hash of
-> > the loaded segments, currently uses three different stacks:
-> > - one in .bss that is used to call the purgatory C code
-> > - one in .rodata that is only used to switch to an updated code segment
-> >   descriptor in the GDT
-> > - one in .data, which allows it to be prepopulated from the kexec loader
-> >   in theory, but this is not actually being taken advantage of.
-> > 
-> > Simplify this, by dropping the latter two stacks, as well as the loader
-> > logic that programs RSP.
-> > 
-> > Both the stacks in .bss and .data are 4k aligned, but 16 byte alignment
-> > is more than sufficient.
-> > 
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> >  arch/x86/include/asm/kexec.h      |  1 -
-> >  arch/x86/kernel/kexec-bzimage64.c |  8 --------
-> >  arch/x86/purgatory/entry64.S      |  8 --------
-> >  arch/x86/purgatory/setup-x86_64.S |  2 +-
-> >  arch/x86/purgatory/stack.S        | 18 ------------------
+>>
+>>> Hmm, so when I enable 2M hugetlb I found ./cow is even failing on x86.
+>>>
+>>>     # ./cow  | grep -B1 "not ok"
+>>>     # [RUN] vmsplice() + unmap in child ... with hugetlb (2048 kB)
+>>>     not ok 161 No leak from parent into child
+>>>     --
+>>>     # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with hugetlb (2048 kB)
+>>>     not ok 215 No leak from parent into child
+>>>     --
+>>>     # [RUN] vmsplice() before fork(), unmap in parent after fork() ... with hugetlb (2048 kB)
+>>>     not ok 269 No leak from child into parent
+>>>     --
+>>>     # [RUN] vmsplice() + unmap in parent after fork() ... with hugetlb (2048 kB)
+>>>     not ok 323 No leak from child into parent
+>>>
+>>> And it looks like it was always failing.. perhaps since the start?  We
+>>
+>> Yes!
+>>
+>> commit 7dad331be7816103eba8c12caeb88fbd3599c0b9
+>> Author: David Hildenbrand <david@redhat.com>
+>> Date:   Tue Sep 27 13:01:17 2022 +0200
+>>
+>>      selftests/vm: anon_cow: hugetlb tests
+>>      Let's run all existing test cases with all hugetlb sizes we're able to
+>>      detect.
+>>      Note that some tests cases still fail. This will, for example, be fixed
+>>      once vmsplice properly uses FOLL_PIN instead of FOLL_GET for pinning.
+>>      With 2 MiB and 1 GiB hugetlb on x86_64, the expected failures are:
+>>       # [RUN] vmsplice() + unmap in child ... with hugetlb (2048 kB)
+>>       not ok 23 No leak from parent into child
+>>       # [RUN] vmsplice() + unmap in child ... with hugetlb (1048576 kB)
+>>       not ok 24 No leak from parent into child
+>>       # [RUN] vmsplice() before fork(), unmap in parent after fork() ... with hugetlb (2048 kB)
+>>       not ok 35 No leak from child into parent
+>>       # [RUN] vmsplice() before fork(), unmap in parent after fork() ... with hugetlb (1048576 kB)
+>>       not ok 36 No leak from child into parent
+>>       # [RUN] vmsplice() + unmap in parent after fork() ... with hugetlb (2048 kB)
+>>       not ok 47 No leak from child into parent
+>>       # [RUN] vmsplice() + unmap in parent after fork() ... with hugetlb (1048576 kB)
+>>       not ok 48 No leak from child into parent
+>>
+>> As it keeps confusing people (until somebody cares enough to fix vmsplice), I already
+>> thought about just disabling the test and adding a comment why it happens and
+>> why nobody cares.
 > 
-> This needs a small fix up to build.
+> I think we should, and when doing so maybe add a rich comment in
+> hugetlb_wp() too explaining everything?
+
+Likely yes. Let me think of something.
+
 > 
->   make[6]: *** No rule to make target 'arch/x86/purgatory/stack.o', needed by 'arch/x86/purgatory/purgatory.ro'.
+>>
+>>> didn't do the same on hugetlb v.s. normal anon from that regard on the
+>>> vmsplice() fix.
+>>>
+>>> I drafted a patch to allow refcount>1 detection as the same, then all tests
+>>> pass for me, as below.
+>>>
+>>> David, I'd like to double check with you before I post anything: is that
+>>> your intention to do so when working on the R/O pinning or not?
+>>
+>> Here certainly the "if it's easy it would already have done" principle applies. :)
+>>
+>> The issue is the following: hugetlb pages are scarce resources that cannot usually
+>> be overcommitted. For ordinary memory, we don't care if we COW in some corner case
+>> because there is an unexpected reference. You temporarily consume an additional page
+>> that gets freed as soon as the unexpected reference is dropped.
+>>
+>> For hugetlb, it is problematic. Assume you have reserved a single 1 GiB hugetlb page
+>> and your process uses that in a MAP_PRIVATE mapping. Then it calls fork() and the
+>> child quits immediately.
+>>
+>> If you decide to COW, you would need a second hugetlb page, which we don't have, so
+>> you have to crash the program.
+>>
+>> And in hugetlb it's extremely easy to not get folio_ref_count() == 1:
+>>
+>> hugetlb_fault() will do a folio_get(folio) before calling hugetlb_wp()!
+>>
+>> ... so you essentially always copy.
 > 
+> Hmm yes there's one extra refcount. I think this is all fine, we can simply
+> take all of them into account when making a CoW decision.  However crashing
+> an userspace can be a problem for sure.
 
-I was trying to reproduce this build failure, but to no avail. I am
-curious what your build target / build command was.
+Right, and a simple reference from page migration or some other PFN 
+walker would be sufficient for that.
 
-It is clear that stack.S has been removed so your change makes sense, I
-don't doubt that -- I just cannot get that specific error message you
-encountered (what is a .ro file supposed to be, anyway?).
+I did not dare being responsible for that, even though races are rare :)
 
-> diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-> index acc09799af2a..2b6b2fb033d6 100644
-> --- a/arch/x86/purgatory/Makefile
-> +++ b/arch/x86/purgatory/Makefile
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  OBJECT_FILES_NON_STANDARD := y
->  
-> -purgatory-y := purgatory.o stack.o setup-x86_$(BITS).o sha256.o entry64.o string.o
-> +purgatory-y := purgatory.o setup-x86_$(BITS).o sha256.o entry64.o string.o
->  
->  targets += $(purgatory-y)
->  PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
+The vmsplice leak is not worth that: hugetlb with MAP_PRIVATE to 
+COW-share data between processes with different privilege levels is not 
+really common.
 
-Thanks
-Justin
+> 
+>>
+>>
+>> At that point I walked away from that, letting vmsplice() be fixed at some point. Dave
+>> Howells was close at some point IIRC ...
+>>
+>> I had some ideas about retrying until the other reference is gone (which cannot be a
+>> longterm GUP pin), but as vmsplice essentially does without FOLL_PIN|FOLL_LONGTERM,
+>> it's quit hopeless to resolve that as long as vmsplice holds longterm references the wrong
+>> way.
+>>
+>> ---
+>>
+>> One could argue that fork() with hugetlb and MAP_PRIVATE is stupid and fragile: assume
+>> your child MM is torn down deferred, and will unmap the hugetlb page deferred. Or assume
+>> you access the page concurrently with fork(). You'd have to COW and crash the program.
+>> BUT, there is a horribly ugly hack in hugetlb COW code where you *steal* the page form
+>> the child program and crash your child. I'm not making that up, it's horrible.
+> 
+> I didn't notice that code before; doesn't sound like a very responsible
+> parent..
+> 
+> Looks like either there come a hugetlb guru who can make a decision to
+> break hugetlb ABI at some point, knowing that nobody will really get
+> affected by it, or that's the uncharted area whoever needs to introduce
+> hugetlb v2.
+
+I raised this topic in the past, and IMHO we either (a) never should 
+have added COW support; or (b) added COW support by using ordinary 
+anonymous memory (hey, partial mappings of hugetlb pages! ;) ).
+
+After all, COW is an optimization to speed up fork and defer copying. It 
+relies on memory overcommit, but that doesn't really apply to hugetlb, 
+so we fake it ...
+
+One easy ABI break I had in mind was to simply *not* allow COW-sharing 
+of anon hugetlb folios; for example, simply don't copy the page into the 
+child. Chances are there are not really a lot of child processes that 
+would fail ... but likely we would break *something*. So there is no 
+easy way out :(
+
+
+-- 
+Cheers,
+
+David / dhildenb
+
