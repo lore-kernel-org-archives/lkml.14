@@ -1,187 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CA11482EB
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 13:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D804A1482EF;
+	Fri, 26 Apr 2024 13:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714139682; cv=none; b=VYfLjvvrNCy6XbNJjERdVfZk+K13yAQl3s7UQxLQsOw63+gcy8PSMVIPD18qcQ3UqRYdSoS7J5tqqmXXsWU6U2D4n8f3RJBs8kmu46no9hK3O5MOZyCVsxyjxgFZrbjh/EafZFisn0uAPnHOuXcvR50J2UOPwfljdi68lpOu5Ho=
+	t=1714139706; cv=none; b=osSJlDX2roYhG5K/tZXnSwj2RyrqKfnAeMkQYnF4f8FhT75TwMQPTlXCkSkqPMkxtCV54Bqv4UpyvF6CLB0tWjNQoqq3g6f3NZZpCLR9jvpAs17BLCjrYsBPc++qN/rgiQm9WDt2cQjWnGDc+AkFMnPftDigrWrvY8tDR7AgFqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714139682; c=relaxed/simple;
-	bh=KCGvinQ94pasaC0yesrfVS37dImELT/sByZcuALkkgY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JPtBZgXqMY0aGU4h7RFBEmyzZJCpqmNQ1zviU2Jh/hLBj6lujHH76OYzbROAxUr4aA7o7hn7i9y+FY55h26O7+kI68bdON28T9VKB3mhEsQ42mE3SqmPOVxiV7/4S2PRRbZW61fi/TAM+YYu0JwTN/zSWMJ+PSfrMVppwkoDs08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V7Ma5Tnn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V7Ma5Tnn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714139679;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WXzg55UNGF+ubjZE2+OFVJ9vlVX3fwUMCwPAWdRnKtI=;
-	b=V7Ma5TnnVzYSzvOv9GyojJmNJjvEAVlll+xbpMqS9lt/kOnasaZJt6/fUY3XEmqR/H5UXo
-	aIIx2JltwAPOOSlPskTXJP+j+3h99z1nhyyf4vAQvjdApJTy4ZDBdfdMEN3FZBlhk5kRvV
-	XKYI+EueG6JrzBOMblt49m4yrv3W8B0=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-388-Ey0ZawgWO0OwEILJifd8KA-1; Fri, 26 Apr 2024 09:54:37 -0400
-X-MC-Unique: Ey0ZawgWO0OwEILJifd8KA-1
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-78f008cb479so3267185a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 06:54:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714139677; x=1714744477;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WXzg55UNGF+ubjZE2+OFVJ9vlVX3fwUMCwPAWdRnKtI=;
-        b=HIVHCoSiQo8l/7DiwbxBoxcstbvWoJr5l9xV2ek3Zrf/y0cjEQHxM/xtP/rxXg4+e6
-         5Vxy4+Z1zx7NtaiNlm0KVCQhxlSZKdg7XHbuKCfvJzk3iFAsgPsQ/TR8N0COk7xnQnNt
-         Co9YZu+7lkKkSs/ggT2CRkMnzJ8tzhbXYnyATBHmS/DIk8zFkBQ7op0Iy3TeXHF3DvCL
-         6SdRMnXJLDZbBjA/jOVyNM3Jm12IanSITfExajoV8c84yhe5gA0PENlAY385ligeLMyN
-         rhUfVveq9PYHmWNK/9meU4A2Lc/kdcGuI8ILGflKPDxD/3+wZaPNGUU9xE3vbFBq/Wln
-         nJow==
-X-Forwarded-Encrypted: i=1; AJvYcCWUzYVpPhfD3VulEUS9gm33lwg5ystq3sQHL4zgrXGBfSmB+r/Z7euuhbVQ+h0Ad+bXEoPibbnAaQELiRELs3Hbw1JQUHx1Thm/WB1w
-X-Gm-Message-State: AOJu0YwvjgWnB0FvEBVwR3jm/NN2Q8+V2wbfYNa4Wy45dYC5mkU4uZMG
-	6ND6AcI7jwfztYWAtNX2QJJX0m/lwClFKYy6Dij2aYilOipaitUYrzvr2vxNv5crXpS68lAkSBS
-	rGnErQnbg2BrlZE9QJ4EdQ0f3tyTSyue/0eTKa0z59RZMQ1FHCXvjWbAla7UR0hbYOXQf7g==
-X-Received: by 2002:a05:620a:1aaa:b0:790:98be:4cc9 with SMTP id bl42-20020a05620a1aaa00b0079098be4cc9mr2966485qkb.6.1714139676506;
-        Fri, 26 Apr 2024 06:54:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHVmEjzcMxKjM7Nh6FWEAWEijr1jAB0CV7Rmv1BMhzxskt4GL/bzsE7DJkfbgEV3HMrnwlhvA==
-X-Received: by 2002:a05:620a:1aaa:b0:790:98be:4cc9 with SMTP id bl42-20020a05620a1aaa00b0079098be4cc9mr2966447qkb.6.1714139675859;
-        Fri, 26 Apr 2024 06:54:35 -0700 (PDT)
-Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id m21-20020ae9e015000000b007908bd7a309sm2541679qkk.111.2024.04.26.06.54.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 06:54:35 -0700 (PDT)
-Date: Fri, 26 Apr 2024 09:54:33 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	David Hildenbrand <david@redhat.com>,
-	Mike Rapoport <rppt@linux.ibm.com>,
-	Shivansh Vij <shivanshvij@outlook.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] arm64/mm: Add uffd write-protect support
-Message-ID: <ZiuyGXt0XWwRgFh9@x1n>
-References: <20240424111017.3160195-1-ryan.roberts@arm.com>
- <20240424111017.3160195-3-ryan.roberts@arm.com>
- <Zijzrje2FDXsSojP@x1n>
- <e0fdf7b9-39d6-4eb3-b740-9c110b75182f@arm.com>
+	s=arc-20240116; t=1714139706; c=relaxed/simple;
+	bh=Qd27B0CcTyL73Pi9Pcj+U7bKKa7uHGvRH9GI7EG3dGU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Esh829Fy9qkI3tb//2RsjzMNpWsSlDzxVp7NpqoxxRbBt0x6BxlUiP+JxXpVDAw6HKUxJ6qNOemXptSgevyJyMg5JWCkiFgCE2zN4anKsB0XaYHhDzLxbvS7H6fAc//fX9J0v4FxrjSUYKnE6gOZhLg3P9IUhQzp2uA1NRpO5cE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQvNq0Fblz6DBLn;
+	Fri, 26 Apr 2024 21:54:51 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id AC288140A87;
+	Fri, 26 Apr 2024 21:55:02 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 26 Apr 2024 14:55:01 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
+	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v8 07/16] ACPI: scan: switch to flags for acpi_scan_check_and_detach()
+Date: Fri, 26 Apr 2024 14:51:17 +0100
+Message-ID: <20240426135126.12802-8-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
+References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e0fdf7b9-39d6-4eb3-b740-9c110b75182f@arm.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, Apr 26, 2024 at 02:17:41PM +0100, Ryan Roberts wrote:
-> + Muhammad Usama Anjum <usama.anjum@collabora.com>
-> 
-> Hi Peter, Muhammad,
-> 
-> 
-> On 24/04/2024 12:57, Peter Xu wrote:
-> > Hi, Ryan,
-> > 
-> > On Wed, Apr 24, 2024 at 12:10:17PM +0100, Ryan Roberts wrote:
-> >> Let's use the newly-free PTE SW bit (58) to add support for uffd-wp.
-> >>
-> >> The standard handlers are implemented for set/test/clear for both pte
-> >> and pmd. Additionally we must also track the uffd-wp state as a pte swp
-> >> bit, so use a free swap entry pte bit (3).
-> >>
-> >> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> > 
-> > Looks all sane here from userfault perspective, just one comment below.
-> > 
-> >> ---
-> >>  arch/arm64/Kconfig                    |  1 +
-> >>  arch/arm64/include/asm/pgtable-prot.h |  8 ++++
-> >>  arch/arm64/include/asm/pgtable.h      | 55 +++++++++++++++++++++++++++
-> >>  3 files changed, 64 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> >> index 7b11c98b3e84..763e221f2169 100644
-> >> --- a/arch/arm64/Kconfig
-> >> +++ b/arch/arm64/Kconfig
-> >> @@ -255,6 +255,7 @@ config ARM64
-> >>  	select SYSCTL_EXCEPTION_TRACE
-> >>  	select THREAD_INFO_IN_TASK
-> >>  	select HAVE_ARCH_USERFAULTFD_MINOR if USERFAULTFD
-> >> +	select HAVE_ARCH_USERFAULTFD_WP if USERFAULTFD
-> >>  	select TRACE_IRQFLAGS_SUPPORT
-> >>  	select TRACE_IRQFLAGS_NMI_SUPPORT
-> >>  	select HAVE_SOFTIRQ_ON_OWN_STACK
-> >> diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
-> >> index ef952d69fd04..f1e1f6306e03 100644
-> >> --- a/arch/arm64/include/asm/pgtable-prot.h
-> >> +++ b/arch/arm64/include/asm/pgtable-prot.h
-> >> @@ -20,6 +20,14 @@
-> >>  #define PTE_DEVMAP		(_AT(pteval_t, 1) << 57)
-> >>  #define PTE_PROT_NONE		(PTE_UXN)		 /* Reuse PTE_UXN; only when !PTE_VALID */
-> >>  
-> >> +#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
-> >> +#define PTE_UFFD_WP		(_AT(pteval_t, 1) << 58) /* uffd-wp tracking */
-> >> +#define PTE_SWP_UFFD_WP		(_AT(pteval_t, 1) << 3)	 /* only for swp ptes */
-> 
-> I've just noticed code in task_mmu.c:
-> 
-> static int pagemap_scan_pmd_entry(pmd_t *pmd, unsigned long start,
-> 				  unsigned long end, struct mm_walk *walk)
-> {
-> 	...
-> 
-> 	if (!p->arg.category_anyof_mask && !p->arg.category_inverted &&
-> 	    p->arg.category_mask == PAGE_IS_WRITTEN &&
-> 	    p->arg.return_mask == PAGE_IS_WRITTEN) {
-> 		for (addr = start; addr < end; pte++, addr += PAGE_SIZE) {
-> 			unsigned long next = addr + PAGE_SIZE;
-> 
-> 			if (pte_uffd_wp(ptep_get(pte))) <<<<<<
-> 				continue;
-> 
-> 			...
-> 		}
-> 	}
-> }
-> 
-> As far as I can see, you don't know that the pte is present when you do this. So
-> does this imply that the UFFD-WP bit is expected to be in the same position for
-> both present ptes and swap ptes? I had assumed pte_uffd_wp() was for present
-> ptes and pte_swp_uffd_wp() was for swap ptes.
-> 
-> As you can see, the way I've implemented this for arm64 the bit is in a
-> different position for these 2 cases. I've just done a slightly different
-> implementation that changes the first patch in this series quite a bit and a
-> bunch of pagemap_ioctl mm kselftests are now failing. I think this is the root
-> cause, but haven't proven it definitively yet.
-> 
-> I'm inclined towords thinking the above is a bug and should be fixed so that I
-> can store the bit in different places. What do you think?
+Precursor patch adds the ability to pass a uintptr_t of flags into
+acpi_scan_check_and detach() so that additional flags can be
+added to indicate whether to defer portions of the eject flow.
+The new flag follows in the next patch.
 
-Yep I agree.
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+Reviewed-by: Gavin Shan <gshan@redhat.com>
+Tested-by: Miguel Luis <miguel.luis@oracle.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Even on x86_64 they should be defined differently.  It looks like some
-sheer luck the test constantly pass on x86 even if it checked the wrong one.
+---
+v8: No change (tags picked up)
+---
+ drivers/acpi/scan.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-Worth checking all the relevant paths in the pagemap code to make sure it's
-checked, e.g. I also see one fast path above this chunk of code which looks
-like to have the same issue.
-
-Thanks,
-
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 7c157bf92695..fb5427caf0f4 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -244,13 +244,16 @@ static int acpi_scan_try_to_offline(struct acpi_device *device)
+ 	return 0;
+ }
+ 
+-static int acpi_scan_check_and_detach(struct acpi_device *adev, void *check)
++#define ACPI_SCAN_CHECK_FLAG_STATUS	BIT(0)
++
++static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
+ {
+ 	struct acpi_scan_handler *handler = adev->handler;
++	uintptr_t flags = (uintptr_t)p;
+ 
+-	acpi_dev_for_each_child_reverse(adev, acpi_scan_check_and_detach, check);
++	acpi_dev_for_each_child_reverse(adev, acpi_scan_check_and_detach, p);
+ 
+-	if (check) {
++	if (flags & ACPI_SCAN_CHECK_FLAG_STATUS) {
+ 		acpi_bus_get_status(adev);
+ 		/*
+ 		 * Skip devices that are still there and take the enabled
+@@ -288,7 +291,9 @@ static int acpi_scan_check_and_detach(struct acpi_device *adev, void *check)
+ 
+ static void acpi_scan_check_subtree(struct acpi_device *adev)
+ {
+-	acpi_scan_check_and_detach(adev, (void *)true);
++	uintptr_t flags = ACPI_SCAN_CHECK_FLAG_STATUS;
++
++	acpi_scan_check_and_detach(adev, (void *)flags);
+ }
+ 
+ static int acpi_scan_hot_remove(struct acpi_device *device)
+@@ -2600,7 +2605,9 @@ EXPORT_SYMBOL(acpi_bus_scan);
+  */
+ void acpi_bus_trim(struct acpi_device *adev)
+ {
+-	acpi_scan_check_and_detach(adev, NULL);
++	uintptr_t flags = 0;
++
++	acpi_scan_check_and_detach(adev, (void *)flags);
+ }
+ EXPORT_SYMBOL_GPL(acpi_bus_trim);
+ 
 -- 
-Peter Xu
+2.39.2
 
