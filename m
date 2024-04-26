@@ -1,51 +1,45 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F3B1487E7;
-	Fri, 26 Apr 2024 13:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DC21487E7;
+	Fri, 26 Apr 2024 13:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714139768; cv=none; b=WBnZSmHPjHl+W3dQc4p/o3NlfcwTyD+4t7YZUwfm6Gn4eNIjnLTRIgtWc7Gd52qn4YQ61UrDurmpgQZhBOHpwf1V1ualvhh+5/m3pGXeJ8+6DuV3+J7nfg8EBDb9dFEsNefekcPz9DIkXfMoDNbChqVYcMlGnD+LRpDxtwe6sP4=
+	t=1714139770; cv=none; b=DIhzYEOrMQ+J243hGkmZa+GzfDhHRveTTgj19F/RnSgI9qCu946mNMG3vKfgWAUMGG1gTJNWhADEi+AsSEssTLTdXlLb+UuVLS7b9GgIpwpsDoytX6mRtzsmFmlUUGVhiEaQPAwOHDJf5CD70jnLjuJlBcdfEg/OhCiQPci2+h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714139768; c=relaxed/simple;
-	bh=fOszkkX23sBJOMvmYgu8nscMaWNwiYDO1qYK+ouql6E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mk7hZ7WE+TzNl1c3pum6Orc+DHVYfmbpx7FHszfuFLXgdAvPYHFpWnya7HVQ3SR4asaOKX4VaAgrD9scZqIjimcMfzdwCZT3/lIOaLpPzmDb3x5QZ41iAYVyrTz34msqAengzdo/H/Ovs+lCysdt44zhszsVzdyh+i7WQUOjiAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQvMM5cR4z6K6XR;
-	Fri, 26 Apr 2024 21:53:35 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7C30E140594;
-	Fri, 26 Apr 2024 21:56:04 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 26 Apr 2024 14:56:03 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
-	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
-	<justin.he@arm.com>, <jianyong.wu@arm.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v8 09/16] arm64: acpi: Move get_cpu_for_acpi_id() to a header
-Date: Fri, 26 Apr 2024 14:51:19 +0100
-Message-ID: <20240426135126.12802-10-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
-References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1714139770; c=relaxed/simple;
+	bh=0+zg+HziepsJXdpuYfXEg99K1gcbh+aTdTuGOHhJCk8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l0Yuu3o/mPLBn3woccMZLy7UW4UOQlCMrMaCmkwms6VT7BZItO3PN1gELtcITGck3DAVok4TY+YmtBE2kIYhk4f0wF8LjwLfzOT3csdw/5JBhmn2f+hQXTSUrmJTOonxBLlZ8OaljHvqnHEo8nb3OEc1aYJouxanFJXu1WWkkWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXZy47Tm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXZy47Tm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A74FC2BD10;
+	Fri, 26 Apr 2024 13:56:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714139769;
+	bh=0+zg+HziepsJXdpuYfXEg99K1gcbh+aTdTuGOHhJCk8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FXZy47TmOUSg3WqWMcMut1Z7zIiZ4tmxrMRafdj5yH1iWAAh+yHzXlHbaNlxGA5Ot
+	 CV1+3AWLq9oEj0+MZ7uk/d+XiQu63zslESmwEqQQX9z6z0W+R1wuNRxIP5T9PM2c04
+	 jfx9fVrA+LYvBpDU0VnsR0E+lIOIAY2091nAM2v+fX30k0457MkPQ9idi8rce6dtT6
+	 AAyOfHXcG2It/3dta/8aCg923akzlajAkTsmmr6Juu0iRFGp2wry9p+icBkfFRDYg7
+	 3L1heWYtSAESsX+VLYZC+GmrUGY2MfMugWazphB0375F0QSv4ZJVzqzrd5+L9906bz
+	 c1IgnoFFGR6wQ==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: dri-devel@lists.freedesktop.org
+Cc: linux-kbuild@vger.kernel.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] drm: move DRM-related CONFIG options into DRM submenu
+Date: Fri, 26 Apr 2024 22:56:02 +0900
+Message-Id: <20240426135602.2500125-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,81 +47,88 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-From: James Morse <james.morse@arm.com>
+When you create a submenu using the 'menu' syntax, there is no
+ambiguity about its end because the code between 'menu' and 'endmenu'
+becomes the submenu.
 
-ACPI identifies CPUs by UID. get_cpu_for_acpi_id() maps the ACPI UID
-to the Linux CPU number.
+In contrast, 'menuconfig' does not have the corresponding end marker.
+Instead, the end of the submenu is inferred from symbol dependencies.
 
-The helper to retrieve this mapping is only available in arm64's NUMA
-code.
+This is detailed in Documentation/kbuild/kconfig-language.rst, starting
+line 348. It outlines two methods to place the code under the submenu:
 
-Move it to live next to get_acpi_id_for_cpu().
+ (1) Open an if-block immediately after 'menuconfig', enclosing the
+     submenu content within it
 
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Gavin Shan <gshan@redhat.com>
-Tested-by: Miguel Luis <miguel.luis@oracle.com>
-Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Acked-by: Hanjun Guo <guohanjun@huawei.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+ (2) Add 'depends on' to every symbol intended for the submenu
 
+Many subsystems opt for (1) because it reliably maintains the submenu
+structure.
+
+The DRM subsystem adopts (2). The submenu ends when the sequence of
+'depends on DRM' breaks. It can be confirmed by running a GUI frontend
+such as 'make menuconfig' and visiting the DRM menu:
+
+    < > Direct Rendering Manager (XFree86 4.1.0 and higher DRI support)  ----
+
+If you toggle this, you will notice most of the DRM-related options
+appear below it, not in the submenu.
+
+I highly recommend the approach (1). Obviously, (2) is not reliable,
+as the submenu breaks whenever someone forgets to add 'depends on DRM'.
+
+This commit encloses the entire DRM configuration with 'if DRM' and
+'endif', except for DRM_PANEL_ORIENTATION_QUIRKS.
+
+Note:
+ Now, 'depends on DRM' properties inside the if-block are all redundant.
+ I leave it as follow-up cleanups.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 ---
-v8: Picked up tags.
----
- arch/arm64/include/asm/acpi.h | 11 +++++++++++
- arch/arm64/kernel/acpi_numa.c | 11 -----------
- 2 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
-index 6792a1f83f2a..bc9a6656fc0c 100644
---- a/arch/arm64/include/asm/acpi.h
-+++ b/arch/arm64/include/asm/acpi.h
-@@ -119,6 +119,17 @@ static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
- 	return	acpi_cpu_get_madt_gicc(cpu)->uid;
- }
+Changes in v2:
+  - Rebased onto next-20240426
+
+ drivers/gpu/drm/Kconfig | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index 959b19a04101..7df15543a70a 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -29,6 +29,8 @@ menuconfig DRM
+ 	  details.  You should also select and configure AGP
+ 	  (/dev/agpgart) support if it is available for your platform.
  
-+static inline int get_cpu_for_acpi_id(u32 uid)
-+{
-+	int cpu;
++if DRM
 +
-+	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
-+		if (uid == get_acpi_id_for_cpu(cpu))
-+			return cpu;
-+
-+	return -EINVAL;
-+}
-+
- static inline void arch_fix_phys_package_id(int num, u32 slot) { }
- void __init acpi_init_cpus(void);
- int apei_claim_sea(struct pt_regs *regs);
-diff --git a/arch/arm64/kernel/acpi_numa.c b/arch/arm64/kernel/acpi_numa.c
-index e51535a5f939..0c036a9a3c33 100644
---- a/arch/arm64/kernel/acpi_numa.c
-+++ b/arch/arm64/kernel/acpi_numa.c
-@@ -34,17 +34,6 @@ int __init acpi_numa_get_nid(unsigned int cpu)
- 	return acpi_early_node_map[cpu];
- }
+ config DRM_MIPI_DBI
+ 	tristate
+ 	depends on DRM
+@@ -439,10 +441,6 @@ config DRM_HYPERV
+ config DRM_EXPORT_FOR_TESTS
+ 	bool
  
--static inline int get_cpu_for_acpi_id(u32 uid)
--{
--	int cpu;
+-# Separate option because drm_panel_orientation_quirks.c is shared with fbdev
+-config DRM_PANEL_ORIENTATION_QUIRKS
+-	tristate
 -
--	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
--		if (uid == get_acpi_id_for_cpu(cpu))
--			return cpu;
--
--	return -EINVAL;
--}
--
- static int __init acpi_parse_gicc_pxm(union acpi_subtable_headers *header,
- 				      const unsigned long end)
- {
+ config DRM_LIB_RANDOM
+ 	bool
+ 	default n
+@@ -463,3 +461,9 @@ config DRM_WERROR
+ 	  this config option is disabled by default.
+ 
+ 	  If in doubt, say N.
++
++endif
++
++# Separate option because drm_panel_orientation_quirks.c is shared with fbdev
++config DRM_PANEL_ORIENTATION_QUIRKS
++	tristate
 -- 
-2.39.2
+2.40.1
 
