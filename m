@@ -1,129 +1,105 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DCC18C1F;
-	Fri, 26 Apr 2024 15:37:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1D318C1F;
+	Fri, 26 Apr 2024 15:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714145866; cv=none; b=P9eaipX2/nI1saqlRTMuI9GGSTpC6TZR51QMcK27dxmZRf2ZnnWIktXM8ydDZN5a4cZ6gXg4hdfRAgD6fkQIWgKr/0Lc/sGi/3pXdrEVFLElF8IzJu64wB1XCypl5aAG00NIOcEEqZOD23asDQFjy6AxXDbH4alAXhoCGs0DBBg=
+	t=1714145881; cv=none; b=u79COUNUn4hoa8ysWNHK/eFj0VwCmAseHFp/S0MXjmsDI8jpqv3QoCr4ZWZX9EL5EePziG1cBKJaYoSrCxEiOQwGK2T6WISzUEjsZkAVeQE4cf85zPhshbx+4JlkC4Dh0Atf3YR6SlsNQHc3jYW6gkcg+7lpAht8Vn8r3fkCBq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714145866; c=relaxed/simple;
-	bh=Rck3V7A+RmzHoKveKNNk6Uc4pHjWyyyyaJfC/10inZ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B/slYgDpoaLXgqlopv3EAx1jPqLhFFfcGzj5vbERIfscMEVSUTMXmeYRj/gLUrQETwn6JeUz2u3U3qfY0HKcA0q+tY4105s3NvobaH4AcobNnbA+URRPCspani788BNb5qVKuoTllp2JeTtZU0z76Vyt9a6IAIbXBbmE5xuY4FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gy4Ip7jz; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714145881; c=relaxed/simple;
+	bh=c0vyoVzitYc/zSN8C3BrJHOUwCVElAyP9Xh4ECQgFnE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PfBoVHFfQFrpJszUWVB+DBK8csd1MiPbxagEMvg0vaEBspJP4tsZaojhO+q4CADUkoScO7o+mAeZZUNWaqbfP2qNlN6KGATOPEEVP7APCp3+LgP4XNQuhaVnDuc4Q8H194rjAwSdWORS4mWJcgzALk78XWuyfTDoGlk3+mbxdh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ah9UPkSd; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gy4Ip7jz"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41ba1ba55e8so4171695e9.1;
-        Fri, 26 Apr 2024 08:37:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714145863; x=1714750663; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0fnllMvw5rV4aVeEqjprC/GqDGLK/jA5NIktH0d4s7A=;
-        b=gy4Ip7jz77e1Y6+0q7kz7y02BBvpkh4TUXUN4eEoB9d/dPX2qGbD3DGY6Aa6830U/k
-         IaRqgZE7u8AaRNlSCi490ZOwGoDsHBQOFZ9HPCNwrWFOJotAN8MgcXAup0vUDzRoG5sp
-         1L4dYwODrTWR+my9HoHF775qx4DSMpD92aeNUpXKVwgmSucQPao9ClnlSqHjZUi31Qcm
-         ZfzeFNH3jdUHo3d9SmW2BMEvn0gOaBwN6xtNVErhOCljnw4nGuHloqXIadD5AnovKKm5
-         Zknh3lt6E/nJNo7o9ZtU4PyDzhyFTdwM+wf27fMRWlTpZEO4y7IhRR+ZzsTSA7wEuv/x
-         6JDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714145863; x=1714750663;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0fnllMvw5rV4aVeEqjprC/GqDGLK/jA5NIktH0d4s7A=;
-        b=chI2jZ7mF6k2GkCuGrLyyLE5M9XJL9Nh+6P964qPnKhml68oYvs6Pue4tSDFOP/aoo
-         23ZR1dyKfwW+L1IukUgnqydMIZl4WSpqPUPiJemYr0NRz6EInGu61ABncWoK+FHTCuyf
-         jVKm7kwLzsuQk0G6lQz34TUPs6n8Fap7/gIQgOKiZbuA4Fl3gxQXGNcxXRSkcrfv7xCq
-         DKpy+pTgg2CUvsuT2DGx/HiIe7KTwOxlfRX1rBD1DrogE4qxJ1d3LjUXnpDJE/gGcJ8u
-         wG5FH8Ulb+c7IdCiAxpWMP+2zBXeZnnFNyI6z0GrBS0NlfEH9d+DWgbx5pZGsrmti6gs
-         f3CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXFhTIvlvGCPiXmppQpTQ3FTCKe1VN5tYEZ6waLbANVDttc9E/N7BmMRmXlIRzpZOKjDTSMCOEU9Z+eMWVhvNjcBZ/RD8gmq+YU5kfJedVZhFKiYQ0HfKwnjYYHQ25Po4GMneM15RJGjg==
-X-Gm-Message-State: AOJu0YwJ8fbAf+y7mS+0RI87LhhyV2YLOejwVIV+34XntYDTGl0SZWkA
-	mN2fm/pTat9hv+DGJeAYMCscWS3+p9wvpjvIF/P0gfUDq816bpmh
-X-Google-Smtp-Source: AGHT+IF86aCF2y03zjD72DabiUs318EzT1BZ/WTa9OJV2HjgTF93fx7CNQA08TDph3S28W4TYeipuA==
-X-Received: by 2002:a05:600c:1988:b0:41a:7ab1:fd98 with SMTP id t8-20020a05600c198800b0041a7ab1fd98mr2473420wmq.21.1714145863392;
-        Fri, 26 Apr 2024 08:37:43 -0700 (PDT)
-Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
-        by smtp.gmail.com with ESMTPSA id w17-20020a05600c475100b004162d06768bsm35189838wmo.21.2024.04.26.08.37.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 08:37:43 -0700 (PDT)
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Samuel Holland <samuel@sholland.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
- Chen-Yu Tsai <wens@csie.org>
-Subject:
- Re: [PATCH v1 1/1] leds: sun50i-a100: Use match_string() helper to simplify
- the code
-Date: Fri, 26 Apr 2024 17:37:42 +0200
-Message-ID: <3557566.iIbC2pHGDl@jernej-laptop>
-In-Reply-To: <20240426152515.872917-1-andriy.shevchenko@linux.intel.com>
-References: <20240426152515.872917-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ah9UPkSd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714145880; x=1745681880;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=c0vyoVzitYc/zSN8C3BrJHOUwCVElAyP9Xh4ECQgFnE=;
+  b=ah9UPkSdAok5gp+76hp8kzqwfUnb+TLaoSGDHWV/0VmNNLnrF3r7pzdh
+   0x47INsSX7LCqeSyDhxmuWTxeu75qnZvDJ5ZXhfXsYPWvs9d3irrto3+1
+   9JP61OA4d1v21rRPmb/7FlbEVXVAmRmGkPsiRv7ER5MKMxictvXg1ZS/x
+   7nCxQbAvSvi5ZUcEIJYHEvne1+ZCEn3VmEj/44Uctr67671MQ3jNniOgd
+   AW8kHF0prKtid0v/sCec3NjcJM62oRXOqW2bCcIN/lGUutNzMZGlKtMWB
+   6k+YHv91OGVjcEHT6qcwIOEMIKUYbPNBNpIPfxgQJdHQVCh53b/0+BQRO
+   A==;
+X-CSE-ConnectionGUID: aWHf+pTtSROd7fPs/3biNw==
+X-CSE-MsgGUID: VRIXkjsCQACE2ZTAk4R9CQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="13673353"
+X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
+   d="scan'208";a="13673353"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 08:37:59 -0700
+X-CSE-ConnectionGUID: 5v4iPZWMSEGb6qBNSctDnQ==
+X-CSE-MsgGUID: o9PGFEQpQ7yaAVRdrId0XQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
+   d="scan'208";a="25528965"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 08:37:57 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s0Ne6-00000001MfR-1aTp;
+	Fri, 26 Apr 2024 18:37:54 +0300
+Date: Fri, 26 Apr 2024 18:37:54 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: lumingyindetect@126.com, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+	gregkh@linuxfoundation.org, jirislaby@kernel.org,
+	LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
+Subject: Re: [PATCH] serial: 8250_lpss: Fix memory leak in lpss8250_probe()
+Message-ID: <ZivKUr0hyJOixLgL@smile.fi.intel.com>
+References: <20240426114716.1275085-1-lumingyindetect@126.com>
+ <87d376e4-84f1-48c3-8c5d-955f706f3bfb@moroto.mountain>
+ <Ziu-HUUE43xsjnia@smile.fi.intel.com>
+ <047e490b-0dbf-49b7-9506-996f0053e92d@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <047e490b-0dbf-49b7-9506-996f0053e92d@moroto.mountain>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Dne petek, 26. april 2024 ob 17:25:15 GMT +2 je Andy Shevchenko napisal(a):
-> match_string() returns the array index of a matching string.
-> Use it instead of the open-coded implementation.
+On Fri, Apr 26, 2024 at 06:32:33PM +0300, Dan Carpenter wrote:
+> On Fri, Apr 26, 2024 at 05:45:49PM +0300, Andy Shevchenko wrote:
+> > On Fri, Apr 26, 2024 at 04:53:18PM +0300, Dan Carpenter wrote:
+> > 
+> > > > Fixes: e88c4cfcb7b888ac374916806f86c17d8ecaeb67
+> > > 
+> > > This is the wrong hash and the format is wrong.  It should be:
+> > > 
+> > > Fixes: 254cc7743e84 ("serial: 8250_lpss: Switch over to MSI interrupts")
+> > 
+> > Since you are here, just pay attention that this does NOT fix anything
+> > as it uses pcim_enable_device(). I hope smatch won't stumble over this
+> > and produce false positives.
+> > 
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/leds/leds-sun50i-a100.c | 14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
+> Ah...  No, this isn't a Smatch warning.  I think I tried to add it but
+> was told it was wrong because I have this in my unpublished code.  :P
 > 
-> diff --git a/drivers/leds/leds-sun50i-a100.c b/drivers/leds/leds-sun50i-a100.c
-> index 62d21c3a3575..119eff9471f0 100644
-> --- a/drivers/leds/leds-sun50i-a100.c
-> +++ b/drivers/leds/leds-sun50i-a100.c
-> @@ -252,18 +252,16 @@ static int sun50i_a100_ledc_parse_format(struct device *dev,
->  					 struct sun50i_a100_ledc *priv)
->  {
->  	const char *format = "grb";
-> -	u32 i;
-> +	int i;
->  
->  	device_property_read_string(dev, "allwinner,pixel-format", &format);
->  
-> -	for (i = 0; i < ARRAY_SIZE(sun50i_a100_ledc_formats); i++) {
-> -		if (!strcmp(format, sun50i_a100_ledc_formats[i])) {
-> -			priv->format = i;
-> -			return 0;
-> -		}
-> -	}
-> +	i = match_string(sun50i_a100_ledc_formats, ARRAY_SIZE(sun50i_a100_ledc_formats), format);
-> +	if (i < 0)
-> +		return dev_err_probe(dev, i, "Bad pixel format '%s'\n", format);
-
-I know that old code used dev_err_probe() without reason, but could you change
-it to ordinary dev_err()? dev_err_probe() is useful only when return code could
-be -EPROBE_DEFER. This is clearly not the case here.
-
-Best regards,
-Jernej
-
->  
-> -	return dev_err_probe(dev, -EINVAL, "Bad pixel format '%s'\n", format);
-> +	priv->format = i;
-> +	return 0;
->  }
->  
->  static void sun50i_a100_ledc_set_format(struct sun50i_a100_ledc *priv)
+> // Are these affected by pcim_enable_device()?
+> //      { "pci_alloc_irq_vectors", ALLOC, 0, "$",  &int_one, &int_max },
+> //      { "pci_free_irq_vectors", RELEASE, 0, "$" },
 > 
+> So when we're using pcim_enable_device(), calling pci_free_irq_vectors()
+> is harmless but not necessary?
 
+Yes, precisely.
 
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
