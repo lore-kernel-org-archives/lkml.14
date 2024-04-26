@@ -1,86 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C0C159585;
-	Fri, 26 Apr 2024 17:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1E114B093
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 17:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714152592; cv=none; b=fpy0CUuOImGAe+5QebKhERVqzxNeP09HqyROl7BOBf3ytPpBhJYf5zTtb0szglKBzpYdhxMWnicN5X67FkzW59eKJ35X8rCcJ46Q+wdDMyPipxWbkessKdo4yrcvkpuETMGvu/HsI1kHjt4nmj0AU6yyAdih/PLT/3Q71Bk93Wc=
+	t=1714152646; cv=none; b=P1a1fmrmV+XbOTNoXtJIf0kPA40pFz1JXjJ80OqF1LGWWFoDgXyyvj54lRyjJb4B6Hor1rkhJ+uxeo9GaNd8o5WQDzRJVZtuH2fMWt434O0D/Azd/1LKV8Rb5JnPf8lFCXvzzbWF3zzQ3vhEbD0szrcvHrbhxJSvpwTGpw+LnpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714152592; c=relaxed/simple;
-	bh=BJdT96jPIV46Cyv8V9wT3gVr7uDS8d+LlcDE6fFZ5jc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HJHW2tPZrxWDq5DgSYTrxRKbXZAkmtCSmZFAvQCukqBJUxapUrLKzX03q7NtBsjCfa6m8qVL+TB9irAsZv6QSyLP/bdVP876aqJOBNQWJNr/c+Edo+XqmYPwNIdcN/tw4CzsKQWllOytZEc39jssd0+K0toQBATrZMLTVkZxoBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9eZYhzH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714152646; c=relaxed/simple;
+	bh=XmyroCOnmviDu4Ck4ZtK15VVLAuJClkARAyXC4T8ES0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LSW/2iCU40YC09isgUjZVqLJnO9PwT83S+EtAtCvGaj8aAtgX1baXyCWAyObWKhcDAj/VmllDNw7Jm8+DpXYEJ9V1aBQVF6460Tjr5QNdG82H70U/OizuCkL5qNTyDMTvhyiD92cwRJkaiiMmn3p8lKYQq0y+oHYlmTHwtWmWRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=ybaW9O92; arc=none smtp.client-ip=185.125.25.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9eZYhzH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B77FCC2BD11;
-	Fri, 26 Apr 2024 17:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714152591;
-	bh=BJdT96jPIV46Cyv8V9wT3gVr7uDS8d+LlcDE6fFZ5jc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=R9eZYhzHYbpCnw6emCRuXhNy5ntEmQkWwRLKu9hOvtlqozJvxMqPqqPq/diTjElXy
-	 KfXWyYfFERQ662OTH/H7Av8hdK/0hO4EjyF+tmB71c35nnnwiG9XliWCncaI0HVDmF
-	 SmO0NoDzfAJF7D7eiP7o6x7l2397ESMNRvOJViOSA83cIlT5qnr5H0gIqGSRo/Kfjx
-	 onOt5AHSXo/CB/KhpyC1epHpCFWPQTH4F1MLcEK7ugrtc8X3LAmNB6Z7t1nL/7BGXZ
-	 HcVqy/CSWQWw3HE3dI+MnxpKYPJus2iberq132qKojJ7dO2uTWocJSW/JSBC/mXf6s
-	 ncG38ur5oyuqQ==
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5acf5723325so635413eaf.0;
-        Fri, 26 Apr 2024 10:29:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWXGNKiH2go4dlVOhs5/SWZ+AM6Rto17pagIMLYVd4936/b21WMZZHKc2ZXjrmMOdZSjdbbayaAQt4a0ucohmCk1NovBGbM5PcVBBxSrja5PHJtVkiw1EUjIYL4dbzr+t6lccy7hwd2uw==
-X-Gm-Message-State: AOJu0Yx+odBv4d/ZwfAbsdkpEY7FCwHvobObE1+hKXyHAWJg1wpGkHhO
-	20sDB/wIbXCDMa+LTHcTxnjvda5M5xyRiwpSsBW+7m7b2sYO6ZWSytvi0DZGpKWTrW38DD1VpIo
-	Evk1fMx5nkcmdXsl8aI8N6TF6P2Y=
-X-Google-Smtp-Source: AGHT+IEKbrS5Zi5PgkIPEXoqOznTo0BLcEvDy7UJ48p8ejOZzjyXJV2c3/hcdXqwf9hgqMpGLXG8v8ZUUihaib9nqLs=
-X-Received: by 2002:a05:6820:e09:b0:5a7:db56:915c with SMTP id
- el9-20020a0568200e0900b005a7db56915cmr3849839oob.1.1714152590854; Fri, 26 Apr
- 2024 10:29:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="ybaW9O92"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VR0150jMtz8QN;
+	Fri, 26 Apr 2024 19:23:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1714152184;
+	bh=XmyroCOnmviDu4Ck4ZtK15VVLAuJClkARAyXC4T8ES0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ybaW9O92jMrO9fZeWdXMslpug+ijbruA5Vzjynavgy5KJICYZsnZePbTVT9ZXpech
+	 GUKr96JbQGfadFMuaKTNbNaOlMfD7ZyGpzSElvOCPIj0vzVkJ7TrEihC02+aLSRphb
+	 u+SweEFJO0UnezdX/vTvUbf+Zn+cszBf3O2i4Nl4=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VR0141kwvzdNd;
+	Fri, 26 Apr 2024 19:23:04 +0200 (CEST)
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: Christian Brauner <brauner@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Mark Brown <broonie@kernel.org>,
+	Shengyu Li <shengyu.li.evgeny@gmail.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	"David S . Miller" <davem@davemloft.net>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Will Drewry <wad@chromium.org>,
+	kernel test robot <oliver.sang@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v1 1/5] selftests/pidfd: Fix config for pidfd_setns_test
+Date: Fri, 26 Apr 2024 19:22:48 +0200
+Message-ID: <20240426172252.1862930-2-mic@digikod.net>
+In-Reply-To: <20240426172252.1862930-1-mic@digikod.net>
+References: <20240426172252.1862930-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240426094850.757123-1-yu.c.chen@intel.com>
-In-Reply-To: <20240426094850.757123-1-yu.c.chen@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 26 Apr 2024 19:29:39 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0i5XhOzLr+9yrjzgM+GntFHFW+pQGV6EnHfNEoatXjjOg@mail.gmail.com>
-Message-ID: <CAJZ5v0i5XhOzLr+9yrjzgM+GntFHFW+pQGV6EnHfNEoatXjjOg@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: tools: pfrut: Print the update_cap field during
- capability query
-To: Chen Yu <yu.c.chen@intel.com>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-acpi@vger.kernel.org, 
-	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-On Fri, Apr 26, 2024 at 11:50=E2=80=AFAM Chen Yu <yu.c.chen@intel.com> wrot=
-e:
->
-> There is request from the end user to print this field to better
-> query what type of update capability is supported on this platform.
->
-> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> ---
->  tools/power/acpi/tools/pfrut/pfrut.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/tools/power/acpi/tools/pfrut/pfrut.c b/tools/power/acpi/tool=
-s/pfrut/pfrut.c
-> index 388c9e3ad040..44a9ecbd91e8 100644
-> --- a/tools/power/acpi/tools/pfrut/pfrut.c
-> +++ b/tools/power/acpi/tools/pfrut/pfrut.c
-> @@ -174,6 +174,8 @@ void print_cap(struct pfru_update_cap_info *cap)
->                 exit(1);
->         }
->
-> +       printf("update capability:%d\n", cap->update_cap);
-> +
->         uuid_unparse(cap->code_type, uuid);
->         printf("code injection image type:%s\n", uuid);
->         printf("fw_version:%d\n", cap->fw_version);
-> --
+Required by switch_timens() to open /proc/self/ns/time_for_children.
 
-Applied as 6.10 material, thanks!
+CONFIG_GENERIC_VDSO_TIME_NS is not available on UML, so pidfd_setns_test
+cannot be run successfully on this architecture.
+
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: 2b40c5db73e2 ("selftests/pidfd: add pidfd setns tests")
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Link: https://lore.kernel.org/r/20240426172252.1862930-2-mic@digikod.net
+---
+ tools/testing/selftests/pidfd/config | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/testing/selftests/pidfd/config b/tools/testing/selftests/pidfd/config
+index f6f2965e17af..6133524710f7 100644
+--- a/tools/testing/selftests/pidfd/config
++++ b/tools/testing/selftests/pidfd/config
+@@ -3,5 +3,7 @@ CONFIG_IPC_NS=y
+ CONFIG_USER_NS=y
+ CONFIG_PID_NS=y
+ CONFIG_NET_NS=y
++CONFIG_TIME_NS=y
++CONFIG_GENERIC_VDSO_TIME_NS=y
+ CONFIG_CGROUPS=y
+ CONFIG_CHECKPOINT_RESTORE=y
+-- 
+2.44.0
+
