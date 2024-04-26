@@ -1,149 +1,233 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2FD140389
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 13:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD3A140389;
+	Fri, 26 Apr 2024 13:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714139606; cv=none; b=G6clkKznKKZfdwbOUHebEHeYdwIx9z5u3cT+aqZIuLdihSp94woUe8caNQvmtticaeWsVmwxtwX/TyyOuA/q/XP86qcqpWknjdTtXQKMDkDIntzarn2RRug9Qx8HQkClLzh0I8IzdEwRcQblyipb64libpcmjRHEc8ZEIFD6ud0=
+	t=1714139613; cv=none; b=ayMyOdTTJXGwIyCT1XSGOGk7xw1P5VhM98awaNg/QGaEkeTaKO85QfeIhDwLmzT8gMwBPCFcrWwusnV69qJBYKYc1DyPEzf+2TfM7acoz1zqoiKxmZqFtHeSFQ7kkVwtPE1fw2CweP7v6PbrcYchqsQKURGy9LBrMgutt8n4p7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714139606; c=relaxed/simple;
-	bh=kfoxr5MPT8Y3C1vwEbZQqbvK0Cu7jbe/sUQY8skyjXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jVUANPNWE/iFIX2vJJa2ZyAEXOpYUMabHYm25RE4ByxLtxSxKxbgFVkXI23drycjWYWsEFr5wB/mhkgMFaX+Q3XSNpdLRK7tri4Ts8z1lHpLAmZ2v1LwdoKv/NSfW4ziNVtQzHmN4jigQQcGE1INkV0hIS/P4tkBFzTWenY6Vog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mzeUyjnD; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mzeUyjnD"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-41ba1ba55ebso2944065e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 06:53:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714139603; x=1714744403; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TcMN14IZtAud1SzWuvyCQx4H2upUNwp8wShEfmdsMaU=;
-        b=mzeUyjnDwBpDeAXWorypUmlLrH/Gd1qmU3W4/8w+dVJ8SEgdApiWU/WXsgXnkkjaoI
-         OaRwIIqe3LfuZ+igE1uhhaGaMu6+OUISuDhM884em52UBwhjlossdvl1fntzACjb/OWh
-         7r39KkdwYWrDZDy94xzZapJrdusN4pNe4rwNznLei22AywR9JyLHIMjFErbRi9xP8FN/
-         RZQ5RbDvVeNs6UV4L4tO+EA+O8up3SbkPxG1UaxD8DGRWWQXIrKhzLNFq3ybENTXbmL3
-         E00+qY6KQBWGnMReM3DKvYeQL+/zIgsS/C0Ru8+FfZN28AH4EVK8poz14bOZ09/xpIkW
-         Dqzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714139603; x=1714744403;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TcMN14IZtAud1SzWuvyCQx4H2upUNwp8wShEfmdsMaU=;
-        b=nuwgw50bSn4cX8/kFMnqpCpUbv7GbbrOlFBEEu8f9bAEG9DIt59MUzBaT/ClJDiXJV
-         vFloYlm0JMgLADjUZ0d5eHDsV8gM4AnsiLq3G4QONpl+hMx28mf6iNJ4Tq9n/eYc6ndF
-         VNKI++KTA+z+4B2B5o8E6Ed/iUcvtOgoydioFHkXpP/ZgVJwPuQ8/OB9c1OUGFy8SxA2
-         4lE/QbDT75xC6yhjJ9SquwTJ7jDpGv4hwSYtvFqcwmr8gXPpdOgPsIK3f6VUSrZGEIec
-         lCYDfL8tuUNrs0JdAjhWibBZo4CB5ZuILPiAvE9uj4ouHyZr0V3TTlKF7E5dsWGvam9i
-         CyOA==
-X-Gm-Message-State: AOJu0YzRh5Oo+NXQMv8sgrhOG2SBgX5rC/ZoV9Lz2Rs4EcrtscacexeJ
-	g6vM5DEfUi8lJV7f5/jJ/VCzN4dpH8eJ626F7Rkt7S4uuCJ46ArfAprHlHyGeNE=
-X-Google-Smtp-Source: AGHT+IE83jWZzVOng5zKH0QSGdpbtE4+Wt+APtbatCw3dZ/Qc0dSNlMokp6KwGnYkxFdJsCiBVpVKw==
-X-Received: by 2002:a05:600c:474d:b0:41a:408b:dbd4 with SMTP id w13-20020a05600c474d00b0041a408bdbd4mr2373100wmo.7.1714139603241;
-        Fri, 26 Apr 2024 06:53:23 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id q15-20020a05600c46cf00b00416e2c8b290sm35048249wmo.1.2024.04.26.06.53.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 06:53:22 -0700 (PDT)
-Date: Fri, 26 Apr 2024 16:53:18 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: lumingyindetect@126.com
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com,
-	gregkh@linuxfoundation.org, jirislaby@kernel.org,
-	LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
-Subject: Re: [PATCH] serial: 8250_lpss: Fix memory leak in lpss8250_probe()
-Message-ID: <87d376e4-84f1-48c3-8c5d-955f706f3bfb@moroto.mountain>
-References: <20240426114716.1275085-1-lumingyindetect@126.com>
+	s=arc-20240116; t=1714139613; c=relaxed/simple;
+	bh=L4AJqhcz4JyUcgl/balbPTr8ZkFOqiMjxbdfQ3jG8+o=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WND2S3qIGj+3JXo3SvfmWq9/Swfq6Z1TWg3AImwt7K1nbAKb3eINk3gNvh34sEdEPVRMnbq1ixMENkOL0EMIkLAk+c/fOV+AEinIp8uVR9o9CKBHwyRdoW/i39XjTD/UjbtfGV0qrJ8yZLzzEDm59XGCUB0Fdj22CU3YhGWm/7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQvM13cXQz6DB7r;
+	Fri, 26 Apr 2024 21:53:17 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2BC9D140C72;
+	Fri, 26 Apr 2024 21:53:29 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 26 Apr 2024 14:53:28 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
+	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v8 04/16] ACPI: processor: Move checks and availability of acpi_processor earlier
+Date: Fri, 26 Apr 2024 14:51:14 +0100
+Message-ID: <20240426135126.12802-5-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
+References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240426114716.1275085-1-lumingyindetect@126.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Run scripts/checkpatch.pl --strict on your patch.
+Make the per_cpu(processors, cpu) entries available earlier so that
+they are available in arch_register_cpu() as ARM64 will need access
+to the acpi_handle to distinguish between acpi_processor_add()
+and earlier registration attempts (which will fail as _STA cannot
+be checked).
 
-WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
-#15: 
-In the execution logic of the lpss8250_probe() function, the function may directly return via a return statement at either line 347 or line 351.
-WARNING: Please use correct Fixes: style 'Fixes: <12 chars of sha1> ("<title line>")' - ie: 'Fixes: 12dadc409c2b ("Linux 6.8.7")'
-#19: 
-Fixes: e88c4cfcb7b888ac374916806f86c17d8ecaeb67
+Reorder the remove flow to clear this per_cpu() after
+arch_unregister_cpu() has completed, allowing it to be used in
+there as well.
 
-On Fri, Apr 26, 2024 at 12:47:16PM +0100, lumingyindetect@126.com wrote:
-> From: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Fix this email address.
+Note that on x86 for the CPU hotplug case, the pr->id prior to
+acpi_map_cpu() may be invalid. Thus the per_cpu() structures
+must be initialized after that call or after checking the ID
+is valid (not hotplug path).
 
-> 
-> In the execution logic of the lpss8250_probe() function, the function may directly return via a return statement at either line 347 or line 351.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-The line numbers are not important and they change all the time.
-Instead say "if pcim_iomap() or lpss->board->setup() fail then ...".
+---
+v8: On buggy bios detection when setting per_cpu structures
+    do not carry on.
+    Fix up the clearing of per cpu structures to remove unwanted
+    side effects and ensure an error code isn't use to reference them.
+---
+ drivers/acpi/acpi_processor.c | 79 +++++++++++++++++++++--------------
+ 1 file changed, 48 insertions(+), 31 deletions(-)
 
-> Unlike lines 357 or 361, where the return statement is used directly without releasing the dynamically allocated memory region pointed to by the variable pdev, causing a memory leak of the variable pdev.
-> In the lpss8250_probe() function, I added a label named "free_irq_vectors" to release the dynamically allocated memory region pointed to by the variable pdev, and replaced the two return statements mentioned above with goto statements to this label.
-
-Just say "Use a goto to release this memory".  No need to explain
-further.
-
-> 
-> Fixes: e88c4cfcb7b888ac374916806f86c17d8ecaeb67
-
-This is the wrong hash and the format is wrong.  It should be:
-
-Fixes: 254cc7743e84 ("serial: 8250_lpss: Switch over to MSI interrupts")
-
-> 
-> Signed-off-by: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
-> ---
->  drivers/tty/serial/8250/8250_lpss.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
-> index c3cd6cb9ac80..fa9fd4dc86c7 100644
-> --- a/drivers/tty/serial/8250/8250_lpss.c
-> +++ b/drivers/tty/serial/8250/8250_lpss.c
-> @@ -344,11 +344,11 @@ static int lpss8250_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	uart.port.mapbase = pci_resource_start(pdev, 0);
->  	uart.port.membase = pcim_iomap(pdev, 0, 0);
->  	if (!uart.port.membase)
-> -		return -ENOMEM;
-> +		goto free_irq_vectors;
-
-This needs to be:
-
-	if (!uart.port.membase) {
-		ret = -ENOMEM;
-		goto free_irq_vectors;
-	}
-
-regards,
-dan carpenter
-
->  
->  	ret = lpss->board->setup(lpss, &uart.port);
->  	if (ret)
-> -		return ret;
-> +		goto free_irq_vectors;
->  
->  	dw8250_setup_port(&uart.port);
->  
-> @@ -367,6 +367,7 @@ static int lpss8250_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  
->  err_exit:
->  	lpss->board->exit(lpss);
-> +free_irq_vectors:
->  	pci_free_irq_vectors(pdev);
->  	return ret;
->  }
+diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+index ba0a6f0ac841..3b180e21f325 100644
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -183,8 +183,38 @@ static void __init acpi_pcc_cpufreq_init(void) {}
+ #endif /* CONFIG_X86 */
+ 
+ /* Initialization */
++static DEFINE_PER_CPU(void *, processor_device_array);
++
++static bool acpi_processor_set_per_cpu(struct acpi_processor *pr,
++				       struct acpi_device *device)
++{
++	BUG_ON(pr->id >= nr_cpu_ids);
++	/*
++	 * Buggy BIOS check.
++	 * ACPI id of processors can be reported wrongly by the BIOS.
++	 * Don't trust it blindly
++	 */
++	if (per_cpu(processor_device_array, pr->id) != NULL &&
++	    per_cpu(processor_device_array, pr->id) != device) {
++		dev_warn(&device->dev,
++			 "BIOS reported wrong ACPI id %d for the processor\n",
++			 pr->id);
++		/* Give up, but do not abort the namespace scan. */
++		return false;
++	}
++	/*
++	 * processor_device_array is not cleared on errors to allow buggy BIOS
++	 * checks.
++	 */
++	per_cpu(processor_device_array, pr->id) = device;
++	per_cpu(processors, pr->id) = pr;
++
++	return true;
++}
++
+ #ifdef CONFIG_ACPI_HOTPLUG_CPU
+-static int acpi_processor_hotadd_init(struct acpi_processor *pr)
++static int acpi_processor_hotadd_init(struct acpi_processor *pr,
++				      struct acpi_device *device)
+ {
+ 	int ret;
+ 
+@@ -198,8 +228,15 @@ static int acpi_processor_hotadd_init(struct acpi_processor *pr)
+ 	if (ret)
+ 		goto out;
+ 
++	if (!acpi_processor_set_per_cpu(pr, device)) {
++		acpi_unmap_cpu(pr->id);
++		goto out;
++	}
++
+ 	ret = arch_register_cpu(pr->id);
+ 	if (ret) {
++		/* Leave the processor device array in place to detect buggy bios */
++		per_cpu(processors, pr->id) = NULL;
+ 		acpi_unmap_cpu(pr->id);
+ 		goto out;
+ 	}
+@@ -217,7 +254,8 @@ static int acpi_processor_hotadd_init(struct acpi_processor *pr)
+ 	return ret;
+ }
+ #else
+-static inline int acpi_processor_hotadd_init(struct acpi_processor *pr)
++static inline int acpi_processor_hotadd_init(struct acpi_processor *pr,
++					     struct acpi_device *device)
+ {
+ 	return -ENODEV;
+ }
+@@ -316,10 +354,13 @@ static int acpi_processor_get_info(struct acpi_device *device)
+ 	 *  because cpuid <-> apicid mapping is persistent now.
+ 	 */
+ 	if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
+-		int ret = acpi_processor_hotadd_init(pr);
++		int ret = acpi_processor_hotadd_init(pr, device);
+ 
+ 		if (ret)
+ 			return ret;
++	} else {
++		if (!acpi_processor_set_per_cpu(pr, device))
++			return 0;
+ 	}
+ 
+ 	/*
+@@ -365,8 +406,6 @@ static int acpi_processor_get_info(struct acpi_device *device)
+  * (cpu_data(cpu)) values, like CPU feature flags, family, model, etc.
+  * Such things have to be put in and set up by the processor driver's .probe().
+  */
+-static DEFINE_PER_CPU(void *, processor_device_array);
+-
+ static int acpi_processor_add(struct acpi_device *device,
+ 					const struct acpi_device_id *id)
+ {
+@@ -395,28 +434,6 @@ static int acpi_processor_add(struct acpi_device *device,
+ 	if (result) /* Processor is not physically present or unavailable */
+ 		return 0;
+ 
+-	BUG_ON(pr->id >= nr_cpu_ids);
+-
+-	/*
+-	 * Buggy BIOS check.
+-	 * ACPI id of processors can be reported wrongly by the BIOS.
+-	 * Don't trust it blindly
+-	 */
+-	if (per_cpu(processor_device_array, pr->id) != NULL &&
+-	    per_cpu(processor_device_array, pr->id) != device) {
+-		dev_warn(&device->dev,
+-			"BIOS reported wrong ACPI id %d for the processor\n",
+-			pr->id);
+-		/* Give up, but do not abort the namespace scan. */
+-		goto err;
+-	}
+-	/*
+-	 * processor_device_array is not cleared on errors to allow buggy BIOS
+-	 * checks.
+-	 */
+-	per_cpu(processor_device_array, pr->id) = device;
+-	per_cpu(processors, pr->id) = pr;
+-
+ 	dev = get_cpu_device(pr->id);
+ 	if (!dev) {
+ 		result = -ENODEV;
+@@ -469,10 +486,6 @@ static void acpi_processor_remove(struct acpi_device *device)
+ 	device_release_driver(pr->dev);
+ 	acpi_unbind_one(pr->dev);
+ 
+-	/* Clean up. */
+-	per_cpu(processor_device_array, pr->id) = NULL;
+-	per_cpu(processors, pr->id) = NULL;
+-
+ 	cpu_maps_update_begin();
+ 	cpus_write_lock();
+ 
+@@ -480,6 +493,10 @@ static void acpi_processor_remove(struct acpi_device *device)
+ 	arch_unregister_cpu(pr->id);
+ 	acpi_unmap_cpu(pr->id);
+ 
++	/* Clean up. */
++	per_cpu(processor_device_array, pr->id) = NULL;
++	per_cpu(processors, pr->id) = NULL;
++
+ 	cpus_write_unlock();
+ 	cpu_maps_update_done();
+ 
+-- 
+2.39.2
 
