@@ -1,97 +1,92 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBDE147C7D
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 13:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.7])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6880D147C95;
+	Fri, 26 Apr 2024 13:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714138854; cv=none; b=q4I7ax3MNJP20rAz1XTc6cJH4pKrU/cD2Onh1VEOxkZKjn44Xy7aUhHdy5mjreP29MAG0IloVUHhwWZjRDo9fIQK8YbGMLy+A0ZkUtu1HEdq+nwBo6nWb+um9vejmcrvDJKSocOnUGgt/uppgxoNi2gJp7ulZSLG6ShE4FRlVW4=
+	t=1714138871; cv=none; b=g+jBfQ1iydTBX/kLJsabMPmuZ/43AxUIDrZ8G9Xd5xehiV94xNuBtlGk7YfkhenENRHNr1mIl/GWuiCkyp80hDenj9Stgts97P914uIS5biAoLsLGUERrivcLdE+CN0rciVpTXiaEqYQuEF2Z+52ic2aNm6cO0T+PFyTCGI36ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714138854; c=relaxed/simple;
-	bh=qSR9KdDtou4elM0dFMdXIBi+jhpmshH2TEdB7PPNUzY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=X/ETkDB5i1MCJmFW4zQF+lw+aIA6q1JMjFEP0EmUxowt77xC1+AI+7G8kT4eg1EssgqqQEbgo1B4LtLJ/etOzfIIKrljuR1NOcY2uozBig0MzKdkMgzU2dhg4B1QzXbLCKlGSXBBE85LbLJRJgZi0jTtt6YREnmXj5XuA4KGgR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=edkAi9YZ; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1714138871; c=relaxed/simple;
+	bh=UXjzwyHD3xU06AXyGFYmDxIwYgvujORr2saZ8aiLHQY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QiRRV3nWMSz3QGHiq9cc0iAW3jafI5MpR4MYfVMMsolJbEBp52i824GBp8OolV9VhTjp5UEuCpF9G6P/4NUkW0+3dun7p3jQDMoat+KrcSfRnVSWvrm/ICKlYCiERcdgq6XfQHBgO8DMeGPMsiL2fobg5PnOXXCOcdQ/peJ2Nw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=kMhA+QR7; arc=none smtp.client-ip=117.135.210.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="edkAi9YZ"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7d9a64f140dso20168139f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 06:40:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1714138852; x=1714743652; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+xyNmLTuWEvR72GEYCrL1zsIHBKSa0ehqFFEtMyryas=;
-        b=edkAi9YZffOLOLGTJY1+vu0uEJ6hu+Ubudm0SeI8FWgRiYb0H7QBxEkNOe87Tz+NYI
-         nOLI3UTrmKxU2sYPnU4tYzoA32axjVZPsb5HsMUre5n3cYPA6JlzQlSGKMfNxkSaC+q/
-         ZSt8uKUAFS8P/dWB+3NSCvz+HFIRD1eHAE7A1RQC3dddoYJwLmhQx/kiW0qiez7tCdLE
-         Tx8SHF4t82W81E3Yppw0fdkHLggugAcILU8o8OhLJJvQQltjVe5TKPZjtSzxvWbkoK7u
-         vADQg8opR2CwDHD+dhS02w8mv2L2uI1STlVfK1noTn8TY2f2AMS8YiPcUjBLEkHVclBp
-         u8rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714138852; x=1714743652;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+xyNmLTuWEvR72GEYCrL1zsIHBKSa0ehqFFEtMyryas=;
-        b=o6VtukuLY0mQfJfGbafVmuu0GBKCqWsBw55+fO0Jws43yDhE8dxJktdLFnNjqz3l/0
-         EvKVSKMyXYyNTtmdGgTdSu7GEmxMjYa2ZdXTnzaIz6tAxB8+joqiN+AhdEcSSJesFeyc
-         3FAJYT+YA/oS7USXxrsCKVMmFqfeUzFjdspnsIsRuSUMZJ1i1r+byemLixbHEyKI0fko
-         22nycayfGKORBHjdK6irZ9Kl947wfHVhuIrrqxSj15ruriwQDQBSg/6FTTG60lWNoGt1
-         ps1tWc5RV0hoXP/s3j8vk3Hp++e/sm8W4xFPZQ53OMEEwjD/BUr/ddJUhuyD/rqK1i0J
-         1ZZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWVoW5IbN9eU31Qcx7qloHupfSz2a0nyqirRNT+NvW+3gFnPx0cTFjQ+k7S4p5hA0/mwdnys/lXI87w3Fjk541697Dnzwt3DUu7GROa
-X-Gm-Message-State: AOJu0Yw5CLmte0jQRRUDT1HMOLKxY5PK9vcS5nR6yJEF4s/BGWDhixJB
-	4Ms07lgbLlGKWylF7a9LSyV8iF3GMvdFRSOSNxBpB0Da20em+zfQFoKXghvP5iA=
-X-Google-Smtp-Source: AGHT+IF3mQB5HbulQg2CkJsEpbjz+y2/5fbhgBJ11VqFeOjJoS9ZZYtH/6hDcxbjMNxULlO5LHj3bw==
-X-Received: by 2002:a5d:8ac8:0:b0:7da:8d35:8a5e with SMTP id e8-20020a5d8ac8000000b007da8d358a5emr3331600iot.2.1714138852673;
-        Fri, 26 Apr 2024 06:40:52 -0700 (PDT)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id j13-20020a0566022ccd00b007dead4fd0efsm255275iow.18.2024.04.26.06.40.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 06:40:51 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linke li <lilinke99@qq.com>
-Cc: xujianhao01@gmail.com, Andrew Morton <akpm@linux-foundation.org>, 
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <tencent_0B517C25E519D3D002194E8445E86C04AD0A@qq.com>
-References: <tencent_0B517C25E519D3D002194E8445E86C04AD0A@qq.com>
-Subject: Re: [PATCH] sbitmap: use READ_ONCE to access map->word
-Message-Id: <171413885096.211722.564458609126458139.b4-ty@kernel.dk>
-Date: Fri, 26 Apr 2024 07:40:50 -0600
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="kMhA+QR7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=AocrA
+	75mqcRUL0QWSUoM3dEaQjCJ8gV8EQHfgGHvBrE=; b=kMhA+QR7pv2AWw5e3Q7yi
+	qXUpN6oisGUAxmMLrGJZYlPua9etZBOrZpzTVLDhAwsgUUnRG1ueNKZGhLG/uMtD
+	gQKwCT8VwpjRXTDiGLxQUnY7DM1jAftB/rif5mC0Kb9NtNL9Wni6nHijgc/t+Og4
+	elXEy4XbmvMNUB560Q7anc=
+Received: from localhost.localdomain (unknown [111.198.54.11])
+	by gzga-smtp-mta-g1-5 (Coremail) with SMTP id _____wDnL5KwritmM0DuBQ--.25861S2;
+	Fri, 26 Apr 2024 21:40:01 +0800 (CST)
+From: lumingyindetect@126.com
+To: linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.or,
+	LuMingYin <lumingyindetect@126.com>
+Subject: [PATCH] serial: 8250_lpss: Fix memory leak in lpss8250_probe()
+Date: Fri, 26 Apr 2024 14:39:59 +0100
+Message-Id: <20240426133959.1294012-1-lumingyindetect@126.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.5-dev-2aabd
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnL5KwritmM0DuBQ--.25861S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7KryfAFW5WF1UJFW8GF4fuFg_yoW8XFWDpF
+	s0kFsIkFy0q3WIga40yr4jqF15uFWxX347CrZrC3sI9rZIyF97tF1ftFy7tF10grWktFnF
+	ya1UtF45Ca4UXFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07js0edUUUUU=
+X-CM-SenderInfo: poxpx0hj1l0vphwhu3a6rslhhfrp/1tbiEBXM9mVLbFpVzQAAs-
 
+From: LuMingYin <lumingyindetect@126.com>
 
-On Fri, 26 Apr 2024 18:34:44 +0800, linke li wrote:
-> In __sbitmap_queue_get_batch(), map->word is read several times, and
-> update atomically using atomic_long_try_cmpxchg(). But the first two read
-> of map->word is not protected.
-> 
-> This patch moves the statement val = READ_ONCE(map->word) forward,
-> eliminating unprotected accesses to map->word within the function.
-> It is aimed at reducing the number of benign races reported by KCSAN in
-> order to focus future debugging effort on harmful races.
-> 
-> [...]
+The return statements at line 347 and line 351 in the lpss8250_probe() function result in a memory leak of the variable pdev.
+Add a label named free_irq_vectors in the lpss8250_probe() function to release the memory area pointed to by pdev.
+Modify the two return statements mentioned above to jump to the label "free_irq_vectors" instead.
 
-Applied, thanks!
+Fixes: e88c4cfcb7b888ac374916806f86c17d8ecaeb67 ("serial: 8250_lpss: fix memory in lpss8250_probe()")
 
-[1/1] sbitmap: use READ_ONCE to access map->word
-      commit: 6ad0d7e0f4b68f87a98ea2b239123b7d865df86b
+Signed-off-by: LuMingYin <lumingyindetect@126.com>
+---
+ drivers/tty/serial/8250/8250_lpss.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Best regards,
+diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
+index c3cd6cb9ac80..fa9fd4dc86c7 100644
+--- a/drivers/tty/serial/8250/8250_lpss.c
++++ b/drivers/tty/serial/8250/8250_lpss.c
+@@ -344,11 +344,11 @@ static int lpss8250_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	uart.port.mapbase = pci_resource_start(pdev, 0);
+ 	uart.port.membase = pcim_iomap(pdev, 0, 0);
+ 	if (!uart.port.membase)
+-		return -ENOMEM;
++		goto free_irq_vectors;
+ 
+ 	ret = lpss->board->setup(lpss, &uart.port);
+ 	if (ret)
+-		return ret;
++		goto free_irq_vectors;
+ 
+ 	dw8250_setup_port(&uart.port);
+ 
+@@ -367,6 +367,7 @@ static int lpss8250_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 
+ err_exit:
+ 	lpss->board->exit(lpss);
++free_irq_vectors:
+ 	pci_free_irq_vectors(pdev);
+ 	return ret;
+ }
 -- 
-Jens Axboe
-
-
+2.25.1
 
