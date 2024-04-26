@@ -1,140 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDDB146D55
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 10:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA249147C96
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 10:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714128611; cv=none; b=R2luaSi3da2MNUMAoFW0W9XTMEE+8lEVsxlwR8lC+HKhtz8NFdFKui56o9KORcpYAf4g025uMDZUqXeUT3ZBT8HA2z8D2tc1BQHYJETqXHUFxMOCGOJ+kCJhk4c1KMQjULOQ4hACGyFmMxXC9j8b2xcqY//jWybS1BXa8CHOsOQ=
+	t=1714128620; cv=none; b=Wfgo/c+IKbV7hoMrczDdbHIC0g9yu91tVAPvfoBP0W56Rrkco4xuWzd3ZOXXMMfEHOgV1tlCn2NxLcJL37dy20PPa5q0NcARkrTgkMVlkNwMbjeeQCYwDPZyer3/434O2wP9r99QJjnxYEkCaL6mg6sCv/aiBzUdHhtigPaMYQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714128611; c=relaxed/simple;
-	bh=jh0NGErGqzNPQk8HfQs0ty56UQwvTZ9Efo3G7pxJW+w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QCxj2oyH20kq0YJbmjTHju5Xqrf9Pv4O2oWwVcmm4wWTfN/GAeo7ukJFIGwhZXWXtIapzP6nb9qm9StPscX0ifPZwLUa6l1DSWuR+hg+GntkYvTF9ADrpwfOTQVaq8WPt8FOYgfzYh3ik6pYToeaYK1cjcFgiKwzcx6BXy1W2fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y1P2dZb8; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714128620; c=relaxed/simple;
+	bh=FuzOVXheiVv7xE1rNAxDrlXsKwwbB9QAEj4QR2FTsPQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oTW3qX/ZfKfJWF2vVgq0VtuYgxFwpJG3rmeL2SMZZUwAu2lDzY+tbe3eOoJbyjNeztC0iAEw2KbwB+2jcxTsOA4cLP5m40K5sCBs/G/6552P6KQLvAg209aakqjqOeTUkHgtfzuCY6+A5siStLYqPwZWQWxPPMvH9x4UjgeYPRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AYsKy8SH; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y1P2dZb8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714128608;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tBEVlwbbJPUSSW/SmfUHJkSUS/tMVeS+WCfEWVSGRSA=;
-	b=Y1P2dZb8xYs8OuK0Y5iTw7hkANNqWyeomB/f1FMC3n23rOdAp2dn42C3wZL1P/idDmgPY/
-	3+0kc3W7F5Ti/s5JVWLXjrjUCz0Xa7lYGgK45ay1UE5bH6a3uALVcAsVoAmf2UY9cO38tM
-	Pj3mhaV1X32D72K12J8LF5QOyF1CAho=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-45-5Yg46B-nOiKz1AZOqAwBOA-1; Fri, 26 Apr 2024 06:50:05 -0400
-X-MC-Unique: 5Yg46B-nOiKz1AZOqAwBOA-1
-Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-6eb7eddbd08so2424403a34.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 03:50:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AYsKy8SH"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2dac77cdf43so24005791fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 03:50:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714128617; x=1714733417; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HYVEhcdcodZToII5Jgm0JuBVl2Djk/tDBTwMQ5vfKAc=;
+        b=AYsKy8SHyUO1HmRqz6uQmqEUo60chnpifDYFJT4xn5gckTWOGwWyo9a06z+M8rvE+T
+         qI4q+5kLvBd8xEOG9yuScGpxH0xXe8epzFQey0D0VMI/00XBQwkqZ8fQJZ4mhg8GOzMx
+         QUtvqnSKstIhvn82SJkOEOMi4W7fPlU0GJqYexzhZLiiT9/IN0lFOmxFZweuL5CWOawy
+         SaRfAlBny4M99Nn2hL0bV5ZiKwXFDKTlLqsCy2FBlrjc9XgOebddWcL9+AlCSDXhoZog
+         PpTqDYXX6aWhofQ5/ob3Vs25gaeSeZD6v4NTChICNC8IsT08Vmu2+EJ+eEMujRg+qyNB
+         d0nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714128605; x=1714733405;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tBEVlwbbJPUSSW/SmfUHJkSUS/tMVeS+WCfEWVSGRSA=;
-        b=uRRg1v/yg+oe1PIkcGSbPVIta/m3YYafDztsNexQCNe76XTELOKXiQintI3o1dUlSF
-         1pPG5dy2nD+Gzvthu1z7Uk5F4UUMvVLP8hoD+VlyumXxEiP3X6xflf54pUHLi50SkYim
-         0VS4Rpk3R1lSizcLD2H1HMNXIAeJfgSxg9Q77wIzJo+kky3J6AKV1T4ry2i14hKIiGz9
-         7RyWaFtXiHPxVsrzNKDHAMKl/upaq7S6Cafh1kKG+bEcRYmqzg7n1HXfAL/10sil4d5a
-         tb8x57vrMhaRI+QvlbrTwciFo+Pkqgy+FeE/VCwtjaClKZ2diTDR+hr+dqobGIWmUtpx
-         89qw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1fYJv0kbVEmF6OYmOIohWIkBaZAOF5XwVi8O+d7BRapI3OKJLC7QtBJpwdtbB3CzwMcYmEPtQlhFNot1wOZcke9067o+Eg7UAXORd
-X-Gm-Message-State: AOJu0YycIUhIP/nvjFZpx+4Y/HuohvIl2/LhTnnN6O7n0M2Gh8YA2i0z
-	fFu1wQdrAjPiRiTmUiRtIdoF8Qddo0h/54UTNSVf1yRGKuPhHbJdo1tdL4/AIUmgGMJzz5aGmc1
-	1T9O70MXy2nc/MJOR7LFpZa51caUhBGJCtfBwQg5QlQtRY+kcMBS86eUO/sfH/A==
-X-Received: by 2002:a05:6830:453:b0:6eb:cddf:a783 with SMTP id d19-20020a056830045300b006ebcddfa783mr2269773otc.26.1714128604907;
-        Fri, 26 Apr 2024 03:50:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEMwtq9AaLj7a7CoLw8WnO6n+wHmWUkrG5Ru4V9/wZCrwSv2FNYib3sVt3Sw6963MwbFEf/QQ==
-X-Received: by 2002:a05:6830:453:b0:6eb:cddf:a783 with SMTP id d19-20020a056830045300b006ebcddfa783mr2269757otc.26.1714128604644;
-        Fri, 26 Apr 2024 03:50:04 -0700 (PDT)
-Received: from rh.redhat.com (p200300c93f4cc600a5cdf10de606b5e2.dip0.t-ipconnect.de. [2003:c9:3f4c:c600:a5cd:f10d:e606:b5e2])
-        by smtp.gmail.com with ESMTPSA id vv26-20020a05620a563a00b007907b57aa1fsm3888019qkn.12.2024.04.26.03.50.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 03:50:04 -0700 (PDT)
-From: Sebastian Ott <sebott@redhat.com>
-To: linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: [PATCH v2 5/6] KVM: arm64: show writable masks for feature registers
-Date: Fri, 26 Apr 2024 12:49:49 +0200
-Message-ID: <20240426104950.7382-6-sebott@redhat.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240426104950.7382-1-sebott@redhat.com>
-References: <20240426104950.7382-1-sebott@redhat.com>
+        d=1e100.net; s=20230601; t=1714128617; x=1714733417;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HYVEhcdcodZToII5Jgm0JuBVl2Djk/tDBTwMQ5vfKAc=;
+        b=gv5ITlDZanxYsuE+kyUBstlv41lu+z12XBGVCH+TPHT5xEDhppiU2o45ShC6WhvST2
+         gyzDtr5JqHd/fxyQ/jclxnINj/Sm+Ju4ru7ASax0x+LQ48zwPSV0BeaIlYa3cEpxScX5
+         lX7DaKF/QnOwilCRtAJpQxEG/iYbeAZfSMBwglC9ZYM/tdOO/JQwJ/iRTsF6AEiKF/9l
+         xRszXn9iyMQ8xL4mz6aEu7/Sc3k89q/oLiV3jvZPmHW4sjUi/cn7EIefaMjSK5g7BDyP
+         B8zx6TX2T/4qkR4DHAmb9T15ggc5F/6Y0VY7+Wm1v6XWkmPMdXIaPgkF5dwF9YpBJMLI
+         uqfw==
+X-Forwarded-Encrypted: i=1; AJvYcCVT79H+QPxehAGqgqRPZ+3vV6yeEUgQAULuEMKralzhgX2r/irhrpFyl30AwzE/Ok6aiyXj0uzDFdIF7KPvR9NYcGQ22Ve8xmafV0fW
+X-Gm-Message-State: AOJu0Yy0a4GxiyyYce7r8kE31vFvaqPKYEfl8CJWpmhhwR9TILfIWY/i
+	sKUGRASDlKqw0h0v3+a4ZtVPtq/zb+I8BFnAKIjmsSDtU9VbVO5Nm9R6k4pJCzY=
+X-Google-Smtp-Source: AGHT+IE4JW1izzJ5u7fX0sAs2CaHdt0F4q9Sx8DVfzdc22pNB1/b5brFPMK4wZu1LsSKe3QahTXkaw==
+X-Received: by 2002:a2e:bc1e:0:b0:2db:6bf5:2991 with SMTP id b30-20020a2ebc1e000000b002db6bf52991mr1846002ljf.20.1714128616906;
+        Fri, 26 Apr 2024 03:50:16 -0700 (PDT)
+Received: from [192.168.2.107] ([79.115.63.100])
+        by smtp.gmail.com with ESMTPSA id r30-20020adfb1de000000b00343e392829dsm22272972wra.97.2024.04.26.03.50.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Apr 2024 03:50:16 -0700 (PDT)
+Message-ID: <1db611ee-b02c-4b40-8e35-70bbbcba7165@linaro.org>
+Date: Fri, 26 Apr 2024 11:50:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] dt-bindings: clock: google,gs101-clock: add HSI2
+ clock management unit
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Peter Griffin <peter.griffin@linaro.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240426-hsi0-gs101-v2-0-2157da8b63e3@linaro.org>
+ <20240426-hsi0-gs101-v2-1-2157da8b63e3@linaro.org>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20240426-hsi0-gs101-v2-1-2157da8b63e3@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Instead of using ~0UL provide the actual writable mask for
-non-id feature registers in the output of the
-KVM_ARM_GET_REG_WRITABLE_MASKS ioctl.
 
-Explicitely set the mask for CLIDR_EL1 to make sure we present
-the same value to userspace than before.
 
-This changes the mask for the CTR_EL0 register in the output
-of the KVM_ARM_GET_REG_WRITABLE_MASKS ioctl.
+On 4/26/24 11:03, André Draszik wrote:
+> +        clock-names:
+> +          items:
+> +            - const: oscclk
+> +            - const: bus
+> +            - const: pcie
+> +            - const: ufs_embd
+> +            - const: mmc_card
 
-Signed-off-by: Sebastian Ott <sebott@redhat.com>
----
- arch/arm64/kvm/sys_regs.c | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
-
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 2fe3492ba3c4..7d5d55e5c16a 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -2532,7 +2532,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
- 
- 	{ SYS_DESC(SYS_CCSIDR_EL1), access_ccsidr },
- 	{ SYS_DESC(SYS_CLIDR_EL1), access_clidr, reset_clidr, CLIDR_EL1,
--	  .set_user = set_clidr },
-+	  .set_user = set_clidr, .val = ~0UL },
- 	{ SYS_DESC(SYS_CCSIDR2_EL1), undef_access },
- 	{ SYS_DESC(SYS_SMIDR_EL1), undef_access },
- 	{ SYS_DESC(SYS_CSSELR_EL1), access_csselr, reset_unknown, CSSELR_EL1 },
-@@ -4087,20 +4087,11 @@ int kvm_vm_ioctl_get_reg_writable_masks(struct kvm *kvm, struct reg_mask_range *
- 		if (!is_feature_id_reg(encoding) || !reg->set_user)
- 			continue;
- 
--		/*
--		 * For ID registers, we return the writable mask. Other feature
--		 * registers return a full 64bit mask. That's not necessary
--		 * compliant with a given revision of the architecture, but the
--		 * RES0/RES1 definitions allow us to do that.
--		 */
--		if (is_id_reg(encoding)) {
--			if (!reg->val ||
--			    (is_aa32_id_reg(encoding) && !kvm_supports_32bit_el0()))
--				continue;
--			val = reg->val;
--		} else {
--			val = ~0UL;
-+		if (!reg->val ||
-+		    (is_aa32_id_reg(encoding) && !kvm_supports_32bit_el0())) {
-+			continue;
- 		}
-+		val = reg->val;
- 
- 		if (put_user(val, (masks + KVM_ARM_FEATURE_ID_RANGE_INDEX(encoding))))
- 			return -EFAULT;
--- 
-2.42.0
-
+I wonder whether we can get rid of the _embd and _card.
