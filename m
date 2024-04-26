@@ -1,133 +1,122 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward206a.mail.yandex.net (forward206a.mail.yandex.net [178.154.239.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB38A1487DD
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 13:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449EA1474CA;
+	Fri, 26 Apr 2024 13:39:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714138718; cv=none; b=fGO5h2tldECq02dkOG+feHTtfuzOG3hqx2NbFyFWs0QzTd7zS7i67BQEo+4/DERZqiNVlf0cR5phqV0WYRe2mdnKmphcKjdI3lKFnV8HJJcWEyuQVkXDmyhf+VRsE5ZD9fwpYrvp9m7NmyfJcXQhg+wZ1YsBr0ZNtyFT+T8upMY=
+	t=1714138769; cv=none; b=INIEnX/7F83jKb8EUv1wE7YhcU+Svvxei4lJY2BFak0VldCt27l1oo8vdi6J0ES047P/+wfllAcxR/U9W0o/lUx7xRPGpg+mJvLaB/+Z0DQpdWzMSEiJ5s6IKAS6MXqbpftDeTYbdiB+BgyJr9R1kRJgiCJJ66XXEMtZoy+HMrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714138718; c=relaxed/simple;
-	bh=ZmIYYUt0QcbC0Veeq4Fmo5dE3JV8iq7sEVsLahwG0es=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fGvh3e2PiToav5Tg3sqqvyfCFzUwaq9BiTf/PrZpZaPS2akk5SpO0E1uLWBpYxO63Rtcb7omf5mY0b4uvJNUyfF8uMge4Ll9xHevMEaYOmLqeeUods6bsDU8XAqW76DMiIEGe34Ggnp/ul3fw16RRpcIekaLfGYstvZ+OIHlyx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D6K88qWU; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714138769; c=relaxed/simple;
+	bh=Ud4bj59xe7FFvd86owQCtAKt6fi+lWLRuVzs9/4jMsg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G93GwIvCr8GpKBevpvYU03jn/RI5vJAIHsFUFpLf0BPA+1WFTek7icrTsTE2twMmnLz5psL2xvCx6pro253y7zysvj0D4xfYzUzPrAzVCw+eeXM2exbcgTUf3WUHqVQV0CHrdBR1kCfJNGyTJY2Ev7IjIDJY4UI/W+lPfaP9Rng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=vt9xLVEP; arc=none smtp.client-ip=178.154.239.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D6K88qWU"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-345522f7c32so827538f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 06:38:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714138715; x=1714743515; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AX1t+YE1cBl5MQLmH5bPrWGcz0Ebchp9QnAASzx5oG4=;
-        b=D6K88qWUQqxBT2SQHLvY7BaEfoHioMxCa4hmYyR56N+mKgP0idkJZR72KjxG3YpymT
-         3rO5cr3GOyJTdtbyD8b9A//Wg+646WPKM/de4/c0ggLPHpfYnIA5I5P/fDaSnanwTwwz
-         0sxVZBcJnNTzYP48NAGXwfPHUsAkQmSiDGnQboqPzQ3bI/LUf843eyekZebmbxmQIFcy
-         yMceTfxB/bxk9ftkVyeZiUoKei58uSWsekZVJhWBWknDS+bNgdWLx+pczrnGXmoGJY6R
-         qunCMF+mNRDoHe+i1fChVZYKhY3c7FXfgCVay8Pr2NO6cYqbJfFQ2i3yu6Tv1/CJBxXA
-         WpVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714138715; x=1714743515;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AX1t+YE1cBl5MQLmH5bPrWGcz0Ebchp9QnAASzx5oG4=;
-        b=CjJzXQ2/Xc32y8qmx05FHuUC1e6K9m4IlKtefPUQMCWZD6sPLLVApGYh2zXzh1iB66
-         yQCRWMqJVIlT8wxbjk8Oj8WKsELIsm/n2CyInYosp1rl31SEJ+5joelg7Wme0xw6tIL0
-         rjo9HhvhKaHvxUBkrqaoTJ4Wd+K8+rUFspIHShUCdvu9J6gwWeQrGBx8zc3cYdMmH4Qq
-         /a0HdE/yJ9BpWfeKjOAybB8XoAsf7bJ11XzRf/dbQH1MP51ZOVFT3wOX35RsCWvA81R7
-         mCWupHEVMw25Yw/jda+ShibITiWPf09IFd1OFb/dvINmK56ei/mwqD1FWBcm9XqbEztO
-         kY/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXUNf48tqTWm1WV5wc6zCDQJ4mkz2XRg8RVUpT3V46cLLF2/gVlX3dqEdfiATLn85FeldBq0q6RF3rR6XCWFTDTl/xesrgkPdDNnA6w
-X-Gm-Message-State: AOJu0YwqsxsmSX3ULBNQoTFGGihxKY4bsn+1PGUdwIyyIZcp/SPactax
-	lsZOTiTI3cYBFxtlXNNkb3BG1mcPmnHtQYXYwNG9UiAtQvvIlsgmanXHm3OcytI=
-X-Google-Smtp-Source: AGHT+IFTTh4iakkkfqbFYU7oLhsNchB50w3aO7hEduSjteZTlE4Y7Y4KaHOlWbEsAZDxFgk08i6IsQ==
-X-Received: by 2002:adf:fcd2:0:b0:343:7fa6:4393 with SMTP id f18-20020adffcd2000000b003437fa64393mr1870301wrs.38.1714138715070;
-        Fri, 26 Apr 2024 06:38:35 -0700 (PDT)
-Received: from gpeter-l.lan ([2a0d:3344:2e8:8510:63cc:9bae:f542:50e4])
-        by smtp.gmail.com with ESMTPSA id p3-20020a5d6383000000b00341b451a31asm22327689wru.36.2024.04.26.06.38.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 06:38:34 -0700 (PDT)
-From: Peter Griffin <peter.griffin@linaro.org>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	alim.akhtar@samsung.com
-Cc: devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tudor.ambarus@linaro.org,
-	andre.draszik@linaro.org,
-	saravanak@google.com,
-	willmcvicker@google.com,
-	kernel-team@android.com,
-	Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v3 4/4] arm64: dts: exynos: gs101: enable ufs, phy on oriole & define ufs regulator
-Date: Fri, 26 Apr 2024 14:38:24 +0100
-Message-ID: <20240426133824.2283144-5-peter.griffin@linaro.org>
-X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-In-Reply-To: <20240426133824.2283144-1-peter.griffin@linaro.org>
-References: <20240426133824.2283144-1-peter.griffin@linaro.org>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="vt9xLVEP"
+Received: from forward101a.mail.yandex.net (forward101a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d101])
+	by forward206a.mail.yandex.net (Yandex) with ESMTPS id 4229E669DE;
+	Fri, 26 Apr 2024 16:34:12 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net [IPv6:2a02:6b8:c0d:230c:0:640:f8e:0])
+	by forward101a.mail.yandex.net (Yandex) with ESMTPS id EC7E060B62;
+	Fri, 26 Apr 2024 16:34:03 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 2YN3P0DXnmI0-C8aWD0Fy;
+	Fri, 26 Apr 2024 16:34:03 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1714138443; bh=+yY0DYJlOGkiuHYMe8mvayuLQSZwCYa0RIUgNaua8b8=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=vt9xLVEPGm014UZZsQwL78282PrqfastPLSt9CWkWMauPJGuvzTGJkqVWNhoxdY6j
+	 Epk7BedZlJj3LitYbAGgP2trSfDLnYjL9YSYnFY5PaJySqJctsv3mqTlOSLgjBzadb
+	 qXOXbYORw+zs1JfVbikDf4oRAAsni33Nr3BCVXNk=
+Authentication-Results: mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Stas Sergeev <stsp2@yandex.ru>
+To: linux-kernel@vger.kernel.org
+Cc: Stas Sergeev <stsp2@yandex.ru>,
+	Stefan Metzmacher <metze@samba.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Andy Lutomirski <luto@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	linux-fsdevel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	=?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>
+Subject: [PATCH v5 0/3] implement OA2_CRED_INHERIT flag for openat2()
+Date: Fri, 26 Apr 2024 16:33:07 +0300
+Message-ID: <20240426133310.1159976-1-stsp2@yandex.ru>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Enable ufs & ufs phy nodes for Oriole. Also define the ufs regulator node.
+This patch-set implements the OA2_CRED_INHERIT flag for openat2() syscall.
+It is needed to perform an open operation with the creds that were in
+effect when the dir_fd was opened, if the dir was opened with O_CRED_ALLOW
+flag. This allows the process to pre-open some dirs and switch eUID
+(and other UIDs/GIDs) to the less-privileged user, while still retaining
+the possibility to open/create files within the pre-opened directory set.
 
-ufs regulator is a stub until full s2mpg11 slave pmic support is added.
-The gpio defined is for the BOOTLD0 (gs101) signal connected to
-UFS_EN(s2mpg11) gpio enabled voltage rail for UFS.
+The sand-boxing is security-oriented: symlinks leading outside of a
+sand-box are rejected. /proc magic links are rejected. fds opened with
+O_CRED_ALLOW are always closed on exec() and cannot be passed via unix
+socket.
+The more detailed description (including security considerations)
+is available in the log messages of individual patches.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- .../boot/dts/exynos/google/gs101-oriole.dts    | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Changes in v5:
+- rename OA2_INHERIT_CRED to OA2_CRED_INHERIT
+- add an "opt-in" flag O_CRED_ALLOW as was suggested by many reviewers
+- stop using 64bit types, as suggested by
+  Christian Brauner <brauner@kernel.org>
+- add BUILD_BUG_ON() for VALID_OPENAT2_FLAGS, based on Christian Brauner's
+  comments
+- fixed problems reported by patch-testing bot
+- made O_CRED_ALLOW fds not passable via unix sockets and exec(),
+  based on Christian Brauner's comments
 
-diff --git a/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts b/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
-index 6be15e990b65..fb32f6ce2a4d 100644
---- a/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
-+++ b/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
-@@ -53,6 +53,15 @@ button-power {
- 			wakeup-source;
- 		};
- 	};
-+
-+	/* TODO: Remove this once S2MPG11 slave PMIC is implemented  */
-+	ufs_0_fixed_vcc_reg: regulator-0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "ufs-vcc";
-+		gpio = <&gpp0 1 GPIO_ACTIVE_HIGH>;
-+		regulator-boot-on;
-+		enable-active-high;
-+	};
- };
- 
- &ext_24_5m {
-@@ -106,6 +115,15 @@ &serial_0 {
- 	status = "okay";
- };
- 
-+&ufs_0 {
-+	status = "okay";
-+	vcc-supply = <&ufs_0_fixed_vcc_reg>;
-+};
-+
-+&ufs_0_phy {
-+	status = "okay";
-+};
-+
- &usi_uart {
- 	samsung,clkreq-on; /* needed for UART mode */
- 	status = "okay";
+Changes in v4:
+- add optimizations suggested by David Laight <David.Laight@ACULAB.COM>
+- move security checks to build_open_flags()
+- force RESOLVE_NO_MAGICLINKS as suggested by Andy Lutomirski <luto@kernel.org>
+
+Changes in v3:
+- partially revert v2 changes to avoid overriding capabilities.
+  Only the bare minimum is overridden: fsuid, fsgid and group_info.
+  Document the fact the full cred override is unwanted, as it may
+  represent an unneeded security risk.
+
+Changes in v2:
+- capture full struct cred instead of just fsuid/fsgid.
+  Suggested by Stefan Metzmacher <metze@samba.org>
+
+CC: Stefan Metzmacher <metze@samba.org>
+CC: Eric Biederman <ebiederm@xmission.com>
+CC: Alexander Viro <viro@zeniv.linux.org.uk>
+CC: Andy Lutomirski <luto@kernel.org>
+CC: Christian Brauner <brauner@kernel.org>
+CC: Jan Kara <jack@suse.cz>
+CC: Jeff Layton <jlayton@kernel.org>
+CC: Chuck Lever <chuck.lever@oracle.com>
+CC: Alexander Aring <alex.aring@gmail.com>
+CC: David Laight <David.Laight@ACULAB.COM>
+CC: linux-fsdevel@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-api@vger.kernel.org
+CC: Paolo Bonzini <pbonzini@redhat.com>
+CC: Christian Göttsche <cgzones@googlemail.com>
+
 -- 
-2.44.0.769.g3c40516874-goog
+2.44.0
 
