@@ -1,210 +1,122 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6976BFBC
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12569824B3
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714145246; cv=none; b=TOAo+gn4U9X+1w6G/HPuU2c+LOzNwP+ByKNvSDV5S/hTv4XcS2LePi1nYOMUf271eLeB0v8LCcgMDDYz6csMcyrm7h8e7/d9XlNUo6Jb8Mc03Nc8F13ProB9w/bO6itQp/xpOFjBAWDUTKdGplPTDRHVOmKdCujTbMNsbjO2Zts=
+	t=1714145307; cv=none; b=Hq6Lbyu5nRxQnqib8nDxCHh1gZ48gf/0o0KvXLMXHIGPTtfX1QAPqw65tu09d+eAoftxhRLbREieFgWRcjkZBM/+U/FeFzZSVnjfBVtndV1deTkqp4n0A83eWm304MDPWevY7z5ry+vtF944aL/CZGQouhLmIcVOMCStuknZne4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714145246; c=relaxed/simple;
-	bh=ZZ+RnJlJbAkfYlZ7sIg3Yx8WUTcSSyzOy2QNd/ilGJs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V2KwbzNkS3JOJgZw+/t7Ke09ecXOSlrRLrhUMxU22QWtOYO8eacFVqrxnIwvb2jUDCK87MVjUrCkkeXy1L1VNhbTFGYMOtztaKwyY4Q4Zr51t1k3urIsFUZF0iUnykwqyt8N0YjRMn/5YChYd3QhrPRDgWjN+ObTLN/NLa024Rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-61ab6faf179so22350767b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 08:27:23 -0700 (PDT)
+	s=arc-20240116; t=1714145307; c=relaxed/simple;
+	bh=4VyWsxlGEIu53oKuIILv9zWJlbPO/mHfes72GPHmjG4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=DmHfyN2dhMPMzmkiuCfwiS53vZ51oZ7QwE/PpOFGHxmjxMmLiF1evKI1D05L6UTRvO/Mejp7LXJM5jCmbkY0f2aDJ/zw6DHPYR0r2fJb2L0r2a+nIWnfgc45V1WXtcPLUh8rYbn4XOBT7Ww2B76n+zDiXyZJZGlYv1Wxkf3erws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PJv+/VHk; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PJv+/VHk"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1eb1471c7dbso5511015ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 08:28:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714145305; x=1714750105; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=D+UDqDG3emdl+nwdFJP3bYWMhdA98juEbDMYnX+rP1E=;
+        b=PJv+/VHk4jnQZImQ0D+scqckc/10xbjLetAvmjZrZ0y+lZ+HZWkNuTMDdJB91clNTz
+         ndj7QlYwg4o7ZQPXtDchSF2+0x5l113ZV7g5G9+w2k9YxjdM+XAJNiVMZSZWaXSAmcJa
+         FaCPyn1IUfA6dPEPMbW65EXH3A2cMrrbkGIgFqbW2FQY037IVrwI6e2PxFs+NWl7Odt/
+         DUO/W/MI8RNlcgmwITnLcJj54YmUPmkhOF8R4bZeBYRF6JDSrrFBa7tOfaH7parJZSN/
+         ReR1JRA/KhuyOEr6NOthWdcKXp7vi5AIDcWPfYAvvnwYx/nMduieh4qHeVGqIZkcgSKS
+         gCow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714145241; x=1714750041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fFoJsTVO578QAmPNPRqBRhs1rZBCXCjYAZQiDdaNowM=;
-        b=Ji6QXA+qcldKJWWPLU8qo4I7BXN6xLToBViLZxAjwSU/tvXBd+7RjCQHs5NIdvo4a/
-         h/7v/qOj9gNfAPxc6eDN2ff5J7ZpTygvCoOqpHYqKoX/zt/BOM4I5wpk9MgNCkr2XEIE
-         mFyGgCZLuhn13vNgQJ2VYDzqFIkzohsdoT6CAHEIQyyFLewK7zLmrq9/2s+zvscXWlbN
-         d6HQquTUwnS6/6XOKshuzUR9wLrN9iTB7xX9U0bBtKUjOENTqtiCjSdCX5hfsAwtKfBw
-         AXj1Ig3xCvyI6gesaKx1Nwy4Nhd3NF2BKVd6LJ4CYcEpoOHdjQwrdnpwBrpY4SsRI4KL
-         f6Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCWECW5pNXHwujbiRZl3EKD4R+8ZUIorcOHrW/7mfJIPz+4m9PPQg+vX3zLQuOqda/q4o9uzWicHdHLHM52T0mnatYsnOgozcr4hAbVI
-X-Gm-Message-State: AOJu0YzNZ/2Y/88w8e3BvwstYHiV1wdADJdqKXMR7H5iwtS3Xr5qQWFk
-	O17ZH93FfnFBqFgHu0iTWY2ldPfwVRXMotOcgA4kR7oTLSkQUJpN9bt7DZX8
-X-Google-Smtp-Source: AGHT+IFD4rR8Esa8BSTO6xQFt89jkDLO1PCl42waXGhFRhVCTgETYMbWjm9ANbz2NbS+WwxOtW+F0w==
-X-Received: by 2002:a05:690c:f88:b0:61a:d455:3dc6 with SMTP id df8-20020a05690c0f8800b0061ad4553dc6mr3929669ywb.11.1714145241258;
-        Fri, 26 Apr 2024 08:27:21 -0700 (PDT)
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
-        by smtp.gmail.com with ESMTPSA id o19-20020a0dcc13000000b00617e3c07229sm4062116ywd.20.2024.04.26.08.27.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Apr 2024 08:27:20 -0700 (PDT)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-617cd7bd929so23898827b3.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 08:27:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUgHfGl3C3i11orQ6MrOuJXPI+wlfx2hZuzxkmsxGGW9nPKZ/rbQnbRw9mfJ+5TdLsjN7+/eo6IfFBJOjNgOx9nyjiK0htG7PsKWMUG
-X-Received: by 2002:a25:83c6:0:b0:de4:8061:48c5 with SMTP id
- v6-20020a2583c6000000b00de4806148c5mr3868976ybm.15.1714145240522; Fri, 26 Apr
- 2024 08:27:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714145305; x=1714750105;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=D+UDqDG3emdl+nwdFJP3bYWMhdA98juEbDMYnX+rP1E=;
+        b=Q8CLJUkIcNMji1WZ99NQgQiLRYFIFywP0LBpZMJfY1IzndibNmyfHbI1WvKTRmMIYG
+         KK0Bi+SmY+tn2NofgrX49bsbj0ceXhqULVzw3HPfNaA2z60kayWxbkADEbwR3+IFNTK7
+         LZoz2MvUYAysMFfN40h+JozDBLtxRezeT0Ej1Ra7/2KDrez1IKkj99sJuMopevsc0agf
+         Cvi+w0iDK40O5McaWr3zmIIRtiNC/DnivKvLwyZIhJE7IrLANI1QSAbtWtyJuHyRRIMc
+         tyGct21RbYHOZnhQ/5aKxXfpeLKMzby7PjPWrxR55rqXJEipt36YmoDVcQITCDvgZEyX
+         +l/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUbHmIs4L4hBNJJreFVfrCa6FWjlLkcFT+HkKlkKB8tdmnToYo8g0roqChryvTUyBgEchLPnV+N/CXYeWrrsi4nh8dGsg9gO410+nDv
+X-Gm-Message-State: AOJu0Yxr59b/qIOINMNhKrBEdZ0m/KeWvnSW1vWtk9wMjpjvcTjCRlBS
+	AK5DNc+CHPE8Xghh0WpGZjjPiun1+Pw4Q8yHmEqEyBz92kt+faCIKrP+3jNq+5jPAkdNmi4+I/Y
+	reA==
+X-Google-Smtp-Source: AGHT+IEKAOJy9LE0IASl5+cq5pyOm1jFXSWEx8qeF7jYZYv+R0oJ4OP+XQggJcMl7v+26T8Uy0nO92maOOc=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:903:41c2:b0:1e6:624c:f1b8 with SMTP id
+ u2-20020a17090341c200b001e6624cf1b8mr815ple.0.1714145305134; Fri, 26 Apr 2024
+ 08:28:25 -0700 (PDT)
+Date: Fri, 26 Apr 2024 08:28:23 -0700
+In-Reply-To: <970c8891af05d0cb3ccb6eab2d67a7def3d45f74.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <ZbFd5TZ_pi7q3hso@casper.infradead.org> <94713e86-30a8-4828-959d-bd95800149e4@rasmusvillemoes.dk>
-In-Reply-To: <94713e86-30a8-4828-959d-bd95800149e4@rasmusvillemoes.dk>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 26 Apr 2024 17:27:08 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUp3fOkAttk2FKJTh5svaiMwgu4JZ8utPeHghU4TQLE-w@mail.gmail.com>
-Message-ID: <CAMuHMdUp3fOkAttk2FKJTh5svaiMwgu4JZ8utPeHghU4TQLE-w@mail.gmail.com>
-Subject: Re: [RFC] Printing numbers in SI units
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Matthew Wilcox <willy@infradead.org>, Petr Mladek <pmladek@suse.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <e324ff5e47e07505648c0092a5370ac9ddd72f0b.1708933498.git.isaku.yamahata@intel.com>
+ <2daf03ae-6b5a-44ae-806e-76d09fb5273b@linux.intel.com> <20240313171428.GK935089@ls.amr.corp.intel.com>
+ <52bc2c174c06f94a44e3b8b455c0830be9965cdf.camel@intel.com>
+ <1d1da229d4bd56acabafd2087a5fabca9f48c6fc.camel@intel.com>
+ <20240319215015.GA1994522@ls.amr.corp.intel.com> <CA+EHjTxFZ3kzcMCeqgCv6+UsetAUUH4uSY_V02J1TqakM=HKKQ@mail.gmail.com>
+ <970c8891af05d0cb3ccb6eab2d67a7def3d45f74.camel@intel.com>
+Message-ID: <ZivIF9vjKcuGie3s@google.com>
+Subject: Re: [PATCH v19 011/130] KVM: Add new members to struct kvm_gfn_range
+ to operate on
+From: Sean Christopherson <seanjc@google.com>
+To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
+Cc: "tabba@google.com" <tabba@google.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
+	Tina Zhang <tina.zhang@intel.com>, Kai Huang <kai.huang@intel.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, Bo2 Chen <chen.bo@intel.com>, 
+	"sagis@google.com" <sagis@google.com>, 
+	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>, 
+	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, Erdem Aktas <erdemaktas@google.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	Hang Yuan <hang.yuan@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Rasmus,
+On Fri, Apr 26, 2024, Rick P Edgecombe wrote:
+> On Fri, 2024-04-26 at 08:39 +0100, Fuad Tabba wrote:
+> > > I'm fine with those names. Anyway, I'm fine with wither way, two bools or
+> > > enum.
+> > 
+> > I don't have a strong opinion, but I'd brought it up in a previous
+> > patch series. I think that having two bools to encode three states is
+> > less intuitive and potentially more bug prone, more so than the naming
+> > itself (i.e., _only):
 
-On Wed, Jan 24, 2024 at 11:43=E2=80=AFPM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
-> On 24/01/2024 19.58, Matthew Wilcox wrote:
-> > I was looking at hugetlbfs and it has several snippets of code like
-> > this:
-> >
-> >         string_get_size(huge_page_size(h), 1, STRING_UNITS_2, buf, 32);
-> >         pr_warn("HugeTLB: allocating %u of page size %s failed node%d. =
- Only allocated %lu hugepages.\n",
-> >                 h->max_huge_pages_node[nid], buf, nid, i);
-> >
-> > That's not terribly ergonomic, so I wondered if I could do better.
-> > Unfortunately, I decided to do it using the SPECIAL flag which GCC
-> > warns about.  But I've written the code now, so I'm sending it out in
-> > case anybody has a better idea for how to incorporate it.
->
-> Well, something that gcc will warn about with Wformat isn't gonna fly,
-> obviously. But my man page also mentions ' as a possible flag for d
-> conversions:
->
->        '      For decimal conversion (i, d, u, f, F, g, G) the output is
-> to be grouped with thousands'
->               grouping characters if the locale information indicates any=
-.
+Hmm, yeah, I buy that argument.  We could even harded further by poisoning '0'
+to force KVM to explicitly.  Aha!  And maybe use a bitmap?
 
-> Obviously, our printf wouldn't implement that, [...]
+	enum {
+		BUGGY_KVM_INVALIDATION		= 0,
+		PROCESS_SHARED			= BIT(0),
+		PROCESS_PRIVATE			= BIT(1),
+		PROCESS_PRIVATE_AND_SHARED	= PROCESS_SHARED | PROCESS_PRIVATE,
+	};
 
-Why not? ;-)
+> > https://lore.kernel.org/all/ZUO1Giju0GkUdF0o@google.com/
+> 
+> Currently in our internal branch we switched to:
+> exclude_private
+> exclude_shared
+> 
+> It came together bettter in the code that uses it.
 
-Old Gmail-white-space-damaged patch below, which I wrote when I got
-fed up with meticulously counting zeros in GHz-range clock
-frequencies...
+If the choice is between an enum and exclude_*, I would strongly prefer the enum.
+Using exclude_* results in inverted polarity for the code that triggers invalidations.
 
-Author: Geert Uytterhoeven <geert+renesas@glider.be>
-Date:   Thu Aug 11 13:52:46 2016 +0200
+> But I started to wonder if we actually really need exclude_shared. For TDX
+> zapping private memory has to be done with more care, because it cannot be re-
+> populated without guest coordination. But for shared memory if we are zapping a
+> range that includes both private and shared memory, I don't think it should hurt
+> to zap the shared memory.
 
-    lib/vsprintf.c: Add support for thousands' grouping
-
-    Use an underscore as the grouping character.
-
-    TODO:
-      - Documentation
-      - Self test
-      - Do we want to use this in /sys/kernel/debug/clk/clk_summary ?
-        RFC patch, compatibility was already broken by commit
-        e55a839a7a1c561b ("clk: add clock protection mechanism to clk
-        core")
-
-    Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-    ---
-    Originally I wanted to use grouping by 4 for octal and hexadecimal
-    numbers.  Unfortunately gcc prints a warning when using the grouping
-    character with octal and hexadecimal numbers:
-
-        warning: ''' flag used with '%x' gnu_printf format [-Wformat=3D]
-        warning: ''' flag used with '%o' gnu_printf format [-Wformat=3D]
-
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index f4a8bfacb70befbc..51e516cf4cc68156 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -414,6 +414,9 @@ int num_to_str(char *buf, int size, unsigned long
-long num, unsigned int width)
- #define ZEROPAD        16              /* pad with zero, must be 16
-=3D=3D '0' - ' ' */
- #define SMALL  32              /* use lowercase in hex (must be 32 =3D=3D =
-0x20) */
- #define SPECIAL        64              /* prefix hex with "0x", octal
-with "0" */
-+#define GROUP  128             /* thousands' grouping */
-+// warning: ''' flag used with '%x' gnu_printf format [-Wformat=3D]
-+// warning: ''' flag used with '%o' gnu_printf format [-Wformat=3D]
-
- static_assert(SIGN =3D=3D 1);
- static_assert(ZEROPAD =3D=3D ('0' - ' '));
-@@ -462,7 +465,7 @@ char *number(char *buf, char *end, unsigned long long n=
-um,
-        char sign;
-        char locase;
-        int need_pfx =3D ((spec.flags & SPECIAL) && spec.base !=3D 10);
--       int i;
-+       int i, j;
-        bool is_zero =3D num =3D=3D 0LL;
-        int field_width =3D spec.field_width;
-        int precision =3D spec.precision;
-@@ -511,6 +514,11 @@ char *number(char *buf, char *end, unsigned long long =
-num,
-                i =3D put_dec(tmp, num) - tmp;
-        }
-
-+       /* take into account grouping characters */
-+       j =3D i;
-+       if (spec.flags & GROUP)
-+               i +=3D (j - 1) / 3;
-+
-        /* printing 100 using %2d gives "100", not "00" */
-        if (i > precision)
-                precision =3D i;
-@@ -559,10 +567,16 @@ char *number(char *buf, char *end, unsigned long long=
- num,
-                ++buf;
-        }
-        /* actual digits of result */
--       while (--i >=3D 0) {
-+       while (--j >=3D 0) {
-                if (buf < end)
--                       *buf =3D tmp[i];
-+                       *buf =3D tmp[j];
-                ++buf;
-+               if ((spec.flags & GROUP) && j && !(j % 3)) {
-+                       if (buf < end)
-+                               // FIXME '\''
-+                               *buf =3D '_';
-+                       ++buf;
-+               }
-        }
-        /* trailing space padding */
-        while (--field_width >=3D 0) {
-@@ -2567,6 +2581,7 @@ int format_decode(const char *fmt, struct
-printf_spec *spec)
-                case ' ': spec->flags |=3D SPACE;   break;
-                case '#': spec->flags |=3D SPECIAL; break;
-                case '0': spec->flags |=3D ZEROPAD; break;
-+               case '\'': spec->flags |=3D GROUP;  break;
-                default:  found =3D false;
-                }
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Hell no, I am not risking taking on more baggage in KVM where userspace or some
+other subsystem comes to rely on KVM spuriously zapping SPTEs in response to an
+unrelated userspace action.  
