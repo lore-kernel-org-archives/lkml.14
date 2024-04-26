@@ -1,74 +1,120 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82E778C66
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 03:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B46878C62;
+	Fri, 26 Apr 2024 03:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714102565; cv=none; b=KogthuyGHKCG638TA1bH5McWPmED2f5dxmpZA0ZqyFctCkhd/g7KWh1HpvREasnOEEnj/seg3PWNj+fgRjJk5xHZQImZWTfdEaifMwRSgtnayW1MquKD1kNe8nXIirwRcmihTbOzgiukrQ+Fn0ccFhuKJWlvIkFRMPNPQTQClg8=
+	t=1714102586; cv=none; b=ZJMuj0b9htHTZqMxGCGirKVdUTsMjbTlz3u+Yk+npIcIAC4sSqZq4xjwNm2Yf7VBQm6fzjxENyBpII53Sh2qRzbuxC20jKcb268Y+ux8SzOtRYo+SppgAsl087oj9aV1EgAT3CaJQatkL9abenkI0pQH//jecU99stdy+LzwH4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714102565; c=relaxed/simple;
-	bh=Fisk//vwkHKDONtGyDN9Tu18w9nNBcCShAzfkk5gOR4=;
+	s=arc-20240116; t=1714102586; c=relaxed/simple;
+	bh=Ocikva22THq9PBTO61gJ+rASfUWRbAU8cbS5LgaAepQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dOcR1KsvZOUwBbsIQTnGQHSq/b5et5N23m7ktJngg1VYPfgZE2717BXnmU72rgDazb9YOgZ4SvBk246juZ1ZB888l9rj14ahU//7jES7mZKfFdvRJP7P+uvy2g+8W4I8bA8NC6Ly1eEzG5vwcEI0668f7S4hVnp5kb3MxUziIfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=n0/t/b22; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=tPnBcTnxO7m8gKmGVEOqsJJAUL1a93U8PUMGyE9GKERfANYge/+G7LpL7rikQu/QmvEw5l7CWnCOZpUxZez52aCEVXNlQUmcEvgDqyP3q8dcEvysZATPiii7O0vQ7mB6gTDlA3Y3F37yYTFsMtJ+6EXvr9k4fm8AIqRi42YrceA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L+ZC0yNi; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="n0/t/b22"
-Date: Thu, 25 Apr 2024 23:35:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714102560;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lq3jgwFI2eK/AqWBdtP6e/tZJSaoaYtrwOh2KTK58ww=;
-	b=n0/t/b22wNfnfb8kn3HKpoqJIT2HgbpGFQFvB0fPF5W1kCMBBJh/oioE9zEBOOKEY8ENDH
-	BdbxgZ0l0epQSInQ0e8AS1RzHYvqUj6cKIWbiuN3qRQMtywrBwNCZtkYINLR9HIKUnCiM+
-	JMsj2hnyJlzxPQuPWIP59dlq5gTlCLI=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Kees Cook <keescook@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] alloc_tag: Tighten file permissions on /proc/allocinfo
-Message-ID: <lztkbmwlx5h4more5pfvgfi7y4qj676hfemndmyipaslg2i4ui@cqnkmnoj46lp>
-References: <20240425200844.work.184-kees@kernel.org>
- <w6nbxvxt3itugrvtcvnayj5ducoxifwbffd7qh6vcastw77mse@2ugphwusgttz>
- <ZirCbPR1XwX2WJSX@casper.infradead.org>
- <64cngpnwyav4odustofs6hgsh7htpc5nu23tx4lb3vxaltmqf2@sxn63f2gg4gu>
- <202404251532.F8860056AE@keescook>
- <20240425164718.e8e187dd0c5b0a87371d8316@linux-foundation.org>
- <sxcyj2gif2avyx2disz62sfe3hot24w4rtszgl2dtqadegtnek@xjkozdbd6yzp>
- <202404251740.81F21E54@keescook>
- <qzi5ss4h4ou6yfbzadoamqocvvzviuh3eeefpv5qfkcvrrejfo@qptmu2y6u7qj>
- <ZisetKVI2Lnzucm9@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+ZC0yNi"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3bbbc6b4ed1so1081082b6e.2;
+        Thu, 25 Apr 2024 20:36:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714102584; x=1714707384; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z8cFtVpbfNqJH56tTzxhsPWmtdud93WLdQtJ36KpwUE=;
+        b=L+ZC0yNiKVIiMtoAZi6J6JWbCVNPs2+QAWPeCKjPrN+Yht92sj1pTUVAmNF/TTpjhd
+         qVOQR9aq8LZHtxxUPQD0xVyesuoeQ6wpDNqZuAQ0A8AodhyewnQbKceTLv6+Vc4pOrKi
+         rV3hxnvGdEaNB3GyIV7BzR8NKnVw7bfV8zRTlYPQ2C3l57DEmjTBgavPT6SjT95h0N5s
+         lS/vWe0gJy3QdPpoOxvU1zKW/2RtSSjxg+A5dLDhb1cFNbbkRLyU6Cj6lK+Tr96LXSOf
+         qc4Sjf6LNp6f1ikg3RpW9RbVelPEQ9W8ZpSi5M1/5i52gmXoMziKwrv4cZhBZ9SAkt4/
+         MhUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714102584; x=1714707384;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z8cFtVpbfNqJH56tTzxhsPWmtdud93WLdQtJ36KpwUE=;
+        b=G2KZHJaBWs5/lGQXagHZapFp1hcz/Lh8g+mIoi8SHMb//9hsLt7xnskBIXPF9aMzHU
+         8SeD9ZxC9EFCi5yzfGSf9CH3Gwu8Be4aKATslqre+yROlzs/VjO2i9fcHvUdAxtKBFrf
+         DIlLjl+zzvaLGUFcn2Z+yS+Nb0kMpvbyd+Drz+YoyGXG2v9RDY6/+zM0vVpRL1XvGYUD
+         cWv1Ucu8OYm+npIHpfGAorxXEdOfSJbG0i0LJV0HVrc70tNZeADGZ0pOaw3CjEKyATNp
+         6lYDI6DnY0eda+NQyh4UB9NBK28KHi5awgxXvNkMO+VAi3a8Elnkw9JKWwJj9KdP89bD
+         +WFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXeXITXE0UZcFPw6oNoVR8WJDpLMbYVWYePb3DGFs3ch0NxZ0Q4I6PUTaOKT0A9/qViGIxs5CFu23sKhu3pxG8G/47axnqWVA5a3xkxAvSQiAaQ1rUz9WzQdlsJZyqCFxs56HSDFM+CynbT+l45cXc7WRhny2S/M3/VPowthhTW6sKgZZJ4GUKanNKf7ZYc/a8HEoO4A1S71SE1whoH0P5EL4WbgYUgHid/1D+tO1JNH3q1f/M+wuEmPRIHRA==
+X-Gm-Message-State: AOJu0YzLmRtGNLL2aSSl1JJccUgAD56zd4nJj27r1orHs47LkqPbuDkj
+	mqr9p6EzmQWjrs9crxhuXO2iw1kBA7lcSNnUH90NmkQtAurjhlG3
+X-Google-Smtp-Source: AGHT+IHBLFRWKXEYGxFCF54F3pVkYNxRnt0ZLU+mSTWXVXW5HHsRpGcBmTNLh/DFqy2C7n5xKmynJg==
+X-Received: by 2002:a05:6808:13cd:b0:3c8:4dcb:3d8e with SMTP id d13-20020a05680813cd00b003c84dcb3d8emr2189161oiw.37.1714102584292;
+        Thu, 25 Apr 2024 20:36:24 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id t3-20020a635343000000b005f077dce0f6sm13740028pgl.31.2024.04.25.20.36.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Apr 2024 20:36:22 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 05F3C18462BCF; Fri, 26 Apr 2024 10:36:19 +0700 (WIB)
+Date: Fri, 26 Apr 2024 10:36:19 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Wesley Cheng <quic_wcheng@quicinc.com>, srinivas.kandagatla@linaro.org,
+	mathias.nyman@intel.com, perex@perex.cz, conor+dt@kernel.org,
+	corbet@lwn.net, lgirdwood@gmail.com, andersson@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, gregkh@linuxfoundation.org,
+	Thinh.Nguyen@synopsys.com, broonie@kernel.org, bgoswami@quicinc.com,
+	tiwai@suse.com, robh@kernel.org, konrad.dybcio@linaro.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-sound@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
+	alsa-devel@alsa-project.org, Mao Zhu <zhumao001@208suo.com>,
+	Ran Sun <sunran001@208suo.com>, Xiang wangx <wangxiang@cdjrlc.com>,
+	Shaomin Deng <dengshaomin@cdjrlc.com>,
+	Charles Han <hanchunchao@inspur.com>,
+	Attreyee M <tintinm2017@gmail.com>
+Subject: Re: [PATCH v20 41/41] ASoC: doc: Add documentation for SOC USB
+Message-ID: <ZishMx1mSpnbWq0P@archie.me>
+References: <20240425215125.29761-1-quic_wcheng@quicinc.com>
+ <20240425215125.29761-42-quic_wcheng@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="P89L7XsIZU/s9H0u"
 Content-Disposition: inline
-In-Reply-To: <ZisetKVI2Lnzucm9@casper.infradead.org>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20240425215125.29761-42-quic_wcheng@quicinc.com>
 
-On Fri, Apr 26, 2024 at 04:25:40AM +0100, Matthew Wilcox wrote:
-> On Thu, Apr 25, 2024 at 08:58:34PM -0400, Kent Overstreet wrote:
-> > On Thu, Apr 25, 2024 at 05:43:33PM -0700, Kees Cook wrote:
-> > > All this said, I'm still not excited about any of these files living
-> > > in /proc at all -- we were supposed to use /sys for this kind of thing,
-> > > but its interface wasn't great for this kind of more "free-form" data,
-> > > and debugfs isn't good for production interfaces. /proc really should
-> > > only have pid information -- we end up exposing these top-level files to
-> > > every mount namespace with a /proc mount. :( But that's a yet-to-be-solved
-> > > problem...
-> > 
-> > It really wouldn't be that hard to relax the 4k file limit in sysfs.
-> 
-> It's a lot harder to relax the GregKH opposition to multiple values per
-> file in sysfs.
 
-Which makes no sense for columnar data.
+--P89L7XsIZU/s9H0u
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Apr 25, 2024 at 02:51:25PM -0700, Wesley Cheng wrote:
+> With the introduction of the soc-usb driver, add documentation highlighti=
+ng
+> details on how to utilize the new driver and how it interacts with
+> different components in USB SND and ASoC.  It provides examples on how to
+> implement the drivers that will need to be introduced in order to enable
+> USB audio offloading.
+>=20
+
+The doc LGTM, thanks!
+
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--P89L7XsIZU/s9H0u
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZishLwAKCRD2uYlJVVFO
+o5DJAQD+rkyBnIMvpNNaVk9L86LrDuJEbiHqinPevfblrJEMzwEAq9C11BX6KHIX
+RW6EYUrw/Ayfy0D/ZGZo/aorFkUhrQM=
+=d3kj
+-----END PGP SIGNATURE-----
+
+--P89L7XsIZU/s9H0u--
