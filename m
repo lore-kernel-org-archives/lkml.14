@@ -1,162 +1,106 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835D213CF99;
-	Fri, 26 Apr 2024 11:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB6114532B;
+	Fri, 26 Apr 2024 11:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714132528; cv=none; b=DBvg7C5MzPvnv/0DcCTG0HbGO88YMlOq4lVYmlt/j0elgWd2rvIxUE5uoOftsIoIVQQsmTnC8nO2KAtqmKIOI+8H333N3kk/3iTMwDInhC9zVkC92XOA2buoX2iCf0JOOZ7P/4B+LhXTP1d/GCop5iTiUXu95zgi5zuFwteXWR8=
+	t=1714132566; cv=none; b=T6pkEWUp70bZGu6x3FD9/wxTbu6ut6Q8aCCsLUTMY7xPazMVcPX4zNWWL4pGDdsE2R+BA+XWsoB4s2WMOo8Vl48X1lo5TFOsAUPMtMZOP35d2QewaRyGsGVNYQRRHwIgWDUPDwoDzz69tbSxKuZyDbihpRFLb9FIQrmRjyDUx/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714132528; c=relaxed/simple;
-	bh=r8Yt3anXN1vUUKfLUBfHTd3DWwQ6mszASIVqJfELd2Y=;
-	h=Date:Message-Id:From:To:Cc:Subject:In-Reply-To; b=YfRbYLbnTiHvLiwAC71MQRcFN31sITbBwPwlcLeVxPcqtCXvv5EnTSsqOwQARS5jAekInLyJkvhP3/wVLyhZbaF0Jq0UpI0giM5vD13LptV/YssMBOdKsNvbs97+vR23uY+fD/baNcziQTmxuLs3J5EZ/P7sBCy+y8T+sgU6Y5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IcDuYQwB; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714132566; c=relaxed/simple;
+	bh=+EUMFgaAnHE2mRqkj9+zWiZV5V9J0wQMZlt3hdmkiTU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ft1eV3lazG85Iy8ZZgmenL7NRY3cNqd/dfzJ/V5qGAR/HY33wAdmx6m0APgyZn+pJTYZeKY1e/BrAf770rXYvzfRHiE/VEpjvhucbFqS41mWY8ETDGyuAnoXW7S+QcYAe/0VXNu6b4SCog+zPGb4PAP/fAq6wrt6Snfp+fhOz14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UJBKf0JB; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IcDuYQwB"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1e36b7e7dd2so17381615ad.1;
-        Fri, 26 Apr 2024 04:55:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714132526; x=1714737326; darn=vger.kernel.org;
-        h=in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5JEso13ULMuURfYi/Pq/VHWb8qnGq4WPHzsbPJPnYSY=;
-        b=IcDuYQwB5F5NMx1cHgDv88uIZq4xBIeY8860qz8czb6L3OGCk0AzBGDpMtUvhzWJ5g
-         oy2QK6YeEQE1R7QmnZSh0jriVpzKMyvnpfwdrnywt+3DHeJe9inNpPS2VFJ1IRymDhoq
-         wH7I5zsnsLFveZLhQcVLl6zSAP0lcsJEj/d9QEXLj+LfcghfkrZ3n0ogoQTegThOXzaa
-         jJNQWw0Lvf8p3+MTmzwpYJDSs78RGMZzWPDJ6HB02HLXaiwIcaZrCxDdxZvjdnTllfmk
-         DtAoh7S5WfQL7Kk2709d3BXYaqVFcyxMsYZEha7jowd+/+fSvXMqsxbJafi5TS7WkxN9
-         tR7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714132526; x=1714737326;
-        h=in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5JEso13ULMuURfYi/Pq/VHWb8qnGq4WPHzsbPJPnYSY=;
-        b=JCzX/YeX4sQ/fPRWIHSSgE32bdeyhuDEK+IbB/ebW0JdqTuL1RNfrdofto7cVRTtRw
-         iobs2gzF0PA0MycjiNl9aN2yjb2BL9LDCymlPwqq5y4fpIGUVPTeOstMFT7im+tDDAmH
-         sNzVOlCGkDtLupLLEAlCG+WNr4WYnFT7NauTsSAgmr1IkH2QOxgHaYXucuu8IAvDaDAl
-         fgvEDttnfY7G2gBCYvXetvZUVYH+h0qaKpqCfXLTOAqBw0ExzyJvfM0+KFqNak+50VsN
-         F9pUYtApQAx5JkfOE7yI5/91IFNUykbY/gpTMxhTE0swmXh1mJT3efFJ+JWs1QzONolb
-         UMjg==
-X-Forwarded-Encrypted: i=1; AJvYcCXcX3T8FwFcANOb0K+Dpuz3C4dfjcho34J6Iy6/WMR6NExTc72dsWixZ5C1auN0cO0HnSf35+bHFoSLguUMYm9ZMdzVqqIU64oaq51Tdy3JbeOAfLa7XOBzVdyQ+SZCT9lE1PBgT9LyJw==
-X-Gm-Message-State: AOJu0YxDDDyNKyjDG+0d38hmnI/4MP0qaBMnt3rcol7XPxPjLTHXlkLc
-	Fd93GxeEk0S6PnYFq0Z6On9iV0KYfbpk2AnqUHZ908ED45SAmxLk
-X-Google-Smtp-Source: AGHT+IFtJ+Gpm3oDitTkbUHH52GvIU+9HkHSBaiQPMMFJTKHjouSTLIyggXLWnO2qxHj1zJvDnv66w==
-X-Received: by 2002:a17:902:f68d:b0:1e8:418b:7640 with SMTP id l13-20020a170902f68d00b001e8418b7640mr2415097plg.48.1714132525737;
-        Fri, 26 Apr 2024 04:55:25 -0700 (PDT)
-Received: from dw-tp ([171.76.87.172])
-        by smtp.gmail.com with ESMTPSA id q16-20020a17090311d000b001e9685ad053sm10214490plh.248.2024.04.26.04.55.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 04:55:24 -0700 (PDT)
-Date: Fri, 26 Apr 2024 17:25:09 +0530
-Message-Id: <87il04nxsy.fsf@gmail.com>
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Zhang Yi <yi.zhang@huaweicloud.com>, linux-ext4@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, hch@infradead.org, djwong@kernel.org, david@fromorbit.com, willy@infradead.org, zokeefe@google.com, yi.zhang@huawei.com, yi.zhang@huaweicloud.com, chengzhihao1@huawei.com, yukuai3@huawei.com, wangkefeng.wang@huawei.com
-Subject: Re: [PATCH v4 01/34] ext4: factor out a common helper to query extent map
-In-Reply-To: <20240410142948.2817554-2-yi.zhang@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UJBKf0JB"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43QBXULo013500;
+	Fri, 26 Apr 2024 11:56:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=fj9S6m73g9Hrm1xkyDOWa9yyXx6DnqKX4by4DKYV1QU=;
+ b=UJBKf0JB0+u8fWq7udQkKcspGIGUf/ngPnV0DCwk+uphJm9lOuTtxJNCgDjrhWS9Jqpv
+ JBFUHu2OgNijDMpAZ80yl7xTvxIkO7W7Pa8B+tA4odeN/4rj1Naibca7sty9e+Iu5hAw
+ IUhOtfs0JuBSrvC8VsCdeKYweobw2sXpNo+Wc2+olPeaZRJJCoMq4yC174rhEzIAyEbE
+ gXTCmfydvYWUkpzwQWu7OCF39k+B7KIz0xW4LInAjDTsAlsKzYXWxTxUtorPcvVQqysg
+ SWBn3cVL4LaMe8CaeEvwkpGOP6qySaBHxgLugKTHnXEUfMknN9fVmj+ZWuWhBb3q1n/h Wg== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xrbgbg1vt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 11:56:03 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43QA6ogn015430;
+	Fri, 26 Apr 2024 11:51:02 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xmshmqchg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 11:51:02 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43QBouEc55050546
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 26 Apr 2024 11:50:58 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BD7562004D;
+	Fri, 26 Apr 2024 11:50:56 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7C36520040;
+	Fri, 26 Apr 2024 11:50:56 +0000 (GMT)
+Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.66])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 26 Apr 2024 11:50:56 +0000 (GMT)
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Cc: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        svens@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        borntraeger@de.ibm.com
+Subject: [PATCH v2 0/2] s390/pgtable: misc small improvements
+Date: Fri, 26 Apr 2024 13:50:54 +0200
+Message-ID: <20240426115056.31768-1-imbrenda@linux.ibm.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: IE-7gLEeZpE2X5bN4haLWwEg0uIkzs6w
+X-Proofpoint-GUID: IE-7gLEeZpE2X5bN4haLWwEg0uIkzs6w
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-26_12,2024-04-26_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ spamscore=0 adultscore=0 suspectscore=0 malwarescore=0 phishscore=0
+ priorityscore=1501 clxscore=1015 lowpriorityscore=0 mlxscore=0
+ mlxlogscore=749 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404260079
 
-Zhang Yi <yi.zhang@huaweicloud.com> writes:
+This series has two small improvements for the s390 page tables. they
+fix some small inconsistencies and missing things.
 
-> From: Zhang Yi <yi.zhang@huawei.com>
->
-> Factor out a new common helper ext4_map_query_blocks() from the
-> ext4_da_map_blocks(), it query and return the extent map status on the
-> inode's extent path, no logic changes.
->
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-> ---
->  fs/ext4/inode.c | 57 +++++++++++++++++++++++++++----------------------
->  1 file changed, 32 insertions(+), 25 deletions(-)
+The first aligns the layout of large puds with that of large pmds;
+there is no reason for the large pud read and write softbits to be
+swapped compared to large pmds.
 
-Looks good to me. Straight forward refactoring.
-Feel free to add - 
+The second adds a few bits to _SEGMENT_ENTRY_BITS,
+_SEGMENT_ENTRY_HARDWARE_BITS and _SEGMENT_ENTRY_HARDWARE_BITS_LARGE;
+those bits are supposed to always be zero, the current code was working
+correctly since those bits were being ignored and always left set to
+zero. The patch also introduces _REGION3_ENTRY_HARDWARE_BITS and
+_REGION3_ENTRY_HARDWARE_BITS_LARGE, for completeness, which are the
+bitmasks of the hardware bits for normal puds and large puds.
 
-Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
 
->
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 537803250ca9..6a41172c06e1 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -453,6 +453,35 @@ static void ext4_map_blocks_es_recheck(handle_t *handle,
->  }
->  #endif /* ES_AGGRESSIVE_TEST */
->  
-> +static int ext4_map_query_blocks(handle_t *handle, struct inode *inode,
-> +				 struct ext4_map_blocks *map)
-> +{
-> +	unsigned int status;
-> +	int retval;
-> +
-> +	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
-> +		retval = ext4_ext_map_blocks(handle, inode, map, 0);
-> +	else
-> +		retval = ext4_ind_map_blocks(handle, inode, map, 0);
-> +
-> +	if (retval <= 0)
-> +		return retval;
-> +
-> +	if (unlikely(retval != map->m_len)) {
-> +		ext4_warning(inode->i_sb,
-> +			     "ES len assertion failed for inode "
-> +			     "%lu: retval %d != map->m_len %d",
-> +			     inode->i_ino, retval, map->m_len);
-> +		WARN_ON(1);
-> +	}
-> +
-> +	status = map->m_flags & EXT4_MAP_UNWRITTEN ?
-> +			EXTENT_STATUS_UNWRITTEN : EXTENT_STATUS_WRITTEN;
-> +	ext4_es_insert_extent(inode, map->m_lblk, map->m_len,
-> +			      map->m_pblk, status);
-> +	return retval;
-> +}
-> +
->  /*
->   * The ext4_map_blocks() function tries to look up the requested blocks,
->   * and returns if the blocks are already mapped.
-> @@ -1744,33 +1773,11 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
->  	down_read(&EXT4_I(inode)->i_data_sem);
->  	if (ext4_has_inline_data(inode))
->  		retval = 0;
-> -	else if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
-> -		retval = ext4_ext_map_blocks(NULL, inode, map, 0);
->  	else
-> -		retval = ext4_ind_map_blocks(NULL, inode, map, 0);
-> -	if (retval < 0) {
-> -		up_read(&EXT4_I(inode)->i_data_sem);
-> -		return retval;
-> -	}
-> -	if (retval > 0) {
-> -		unsigned int status;
-> -
-> -		if (unlikely(retval != map->m_len)) {
-> -			ext4_warning(inode->i_sb,
-> -				     "ES len assertion failed for inode "
-> -				     "%lu: retval %d != map->m_len %d",
-> -				     inode->i_ino, retval, map->m_len);
-> -			WARN_ON(1);
-> -		}
-> -
-> -		status = map->m_flags & EXT4_MAP_UNWRITTEN ?
-> -				EXTENT_STATUS_UNWRITTEN : EXTENT_STATUS_WRITTEN;
-> -		ext4_es_insert_extent(inode, map->m_lblk, map->m_len,
-> -				      map->m_pblk, status);
-> -		up_read(&EXT4_I(inode)->i_data_sem);
-> -		return retval;
-> -	}
-> +		retval = ext4_map_query_blocks(NULL, inode, map);
->  	up_read(&EXT4_I(inode)->i_data_sem);
-> +	if (retval)
-> +		return retval;
->  
->  add_delayed:
->  	down_write(&EXT4_I(inode)->i_data_sem);
-> -- 
-> 2.39.2
+Claudio Imbrenda (2):
+  s390/pgtable: switch read and write softbits for puds
+  s390/pgtable: introduce _REGION3_ENTRY_HARDWARE_BITS_LARGE
+
+ arch/s390/include/asm/pgtable.h | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+-- 
+2.44.0
+
