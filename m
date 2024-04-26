@@ -1,100 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtpcmd11116.aruba.it (smtpcmd11116.aruba.it [62.149.156.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FD922338
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 07:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA6113AD25
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 07:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714117263; cv=none; b=lcbxTclc9US33XeKpAuf7mY5/Y9NjOkCgC0amQc/PFAYmpieg4/jQVsrXglU8fFRQZovA2UJOskh0epCSjUcktuxIgy7mbC4zNVSpoeDJ2r6fmIEk10W55wV0b6lB86lmdAk2O2CwBSDCHAHgbw3z7w0pcXvJSC/5ZuNerHn0DE=
+	t=1714117296; cv=none; b=eZGsvAFwKTGqKdNsUhsSleH2xs2QiX7EyWyk7Yh96dOcz/oNIQdHFmIMWp2PS5QX4X+svqZgaVkQ/iUJ8Zc92a2K9Py1Dwimd0F1G8wumDvas1LpBb+OiaaohGPWRWeaDTAK9Uk6hmXe66vmqSba9EqVbNde7ZNJfUvyGKHqWvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714117263; c=relaxed/simple;
-	bh=a33sSvhsy7w8Kh3QHnL7F3iWxGtqcRtc9AZE85+hn7Q=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=iwlNk4vGyw1puzqhbhjZSPgQYG8JpXZhaHDhZDRVnF5pg9LZ3Zck1OQ8QRE3XhdR/03Hx01pH/Fy/ymBWO+WxFGy4K2X8oHIfA6rXnPcB3kcyDSVdWg1w6VLBAN+rkHzhsUHWLO0J0E7T5m+4fAnySJVX82qU2341ptbFYDwfQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H+D/jY9/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714117296; c=relaxed/simple;
+	bh=kG0sH08nf1lQkdLAh/Se5aSDHgpHWfmeFbkpYB7n+go=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F7MX4fsM2KPkBOkQU7Yoriz8rzewOI716aR6NC7HleZiLVbRpEv0GRo/rLfw9AGmcFWuTBvzQGNJbOPCAcQBfAsbAizrQDHpYtw0M+HLpMhFYuCopMmxJ1mE42X+o/h3xg/xUwuZnFuDYZLKatEWXCxxNxecmux6F2gABzM69zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=dw96fj/5; arc=none smtp.client-ip=62.149.156.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H+D/jY9/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714117260;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8ckphtQtVPyzmtTEJZjcavjTJN2bI8fj5SZ69O4ugW4=;
-	b=H+D/jY9/q8qJURomNwhM+GWgduOb3rLGILmdz9LBCHhfgO08opaP+LsFlvpwO7mj7gZWNb
-	QT/aZu2o+8h8u9JwHHCmgAkWa3OTwoICHjz/pAb2Wjv2zwDPVeLoaJ1e00mhxKAMO0H5N8
-	NKqGEr/mu4xFVJ4ShVgSkyElaIhQaC4=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-280-Pdjurq_MNPGagr7Tk27mhQ-1; Fri,
- 26 Apr 2024 03:40:55 -0400
-X-MC-Unique: Pdjurq_MNPGagr7Tk27mhQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 993BE3C025B3;
-	Fri, 26 Apr 2024 07:40:54 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.200])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 11903C26A4D;
-	Fri, 26 Apr 2024 07:40:50 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240424191740.3088894-1-keescook@chromium.org>
-References: <20240424191740.3088894-1-keescook@chromium.org> <20240424191225.work.780-kees@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: dhowells@redhat.com, Mark Rutland <mark.rutland@arm.com>,
-    Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-    Boqun Feng <boqun.feng@gmail.com>,
-    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-    Borislav Petkov <bp@alien8.de>,
-    Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-    "H. Peter Anvin" <hpa@zytor.com>, Jakub Kicinski <kuba@kernel.org>,
-    Catalin Marinas <catalin.marinas@arm.com>,
-    Arnd Bergmann <arnd@arndb.de>,
-    Andrew Morton <akpm@linux-foundation.org>,
-    "David S. Miller" <davem@davemloft.net>,
-    David Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>,
-    Paolo Abeni <pabeni@redhat.com>,
-    "Paul E. McKenney" <paulmck@kernel.org>,
-    Uros Bizjak <ubizjak@gmail.com>, linux-kernel@vger.kernel.org,
-    linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-    netdev@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/4] locking/atomic/x86: Silence intentional wrapping addition
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="dw96fj/5"
+Received: from engicam.com ([146.241.21.121])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id 0GA2s5OJj7AmW0GA2sQ97q; Fri, 26 Apr 2024 09:38:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1714117103; bh=kG0sH08nf1lQkdLAh/Se5aSDHgpHWfmeFbkpYB7n+go=;
+	h=From:To:Subject:Date:MIME-Version;
+	b=dw96fj/5iee+aghzWTOm4dI0qFU3ychT+WtgiicUnxkCjc7g1k5LFmCT3vvwpxNao
+	 dbIhNktoTPo+gn12Q+CEYtb5bo3qv81kvmvdaDT77bw5/ZgnRABu1Scis+1i7EjDvm
+	 pIw67l79aEdBoyvYpWwHXw20uH+srrzYr/iWwrpy57TCOQdhq3fYE3x8fLMdAJ59w7
+	 rID0lcbLV1iTiZWRiLkfzghapud1uiIy4zPEJzEkrUAGOvUY4VNWavF2bPuxYQXXDw
+	 uNIa+ToptAA4VACWTmt64BoF+Bmra/DsPN/1Hc6C+OuK5DbtVP3QhJnq7tPsbiKNBs
+	 4zd6S1SgD9mrg==
+From: Fabio Aiuto <fabio.aiuto@engicam.com>
+To: Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Fabio Aiuto <fabio.aiuto@engicam.com>
+Subject: [PATCH v5 0/3] arm64: dts: imx93: add i.Core MX93 EDIMM 2.0 board
+Date: Fri, 26 Apr 2024 09:38:17 +0200
+Message-Id: <20240426073820.6466-1-fabio.aiuto@engicam.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2100616.1714117250.1@warthog.procyon.org.uk>
-Date: Fri, 26 Apr 2024 08:40:50 +0100
-Message-ID: <2100617.1714117250@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfOP/R9R9D0dRC011s99UnezOhO224WLuz8m20iBhLh8XM/hLiOX7ktXNTlZyyEDLVmTHEQYTcC0BSZCLfQVotkc8xt9M0NDT47qpeR0DY7eQt0XiR6D0
+ Swp71vIaYH+W8FN/WK5ljcTuXRxFM+Par06q7Nz+k521lVJswF8KNi7XGracgoC6SqJWMSvW7vxjT9cCmckb2hYbikd2CTHkPRCpACGsXRheaFr7xfLOwoH6
+ kgJczQ5r9RXcwzfSKANtQgnEeiDfcE8lFSpk6/1bgQKB8613y/sjP8sVZ3nusuHfnydk5M+R4pnlo91gLmpHLLCrQ8EkSYPkpGUvAlOEMsYEWbw2V+sRWU2g
+ TbqqPRwEw0pD0TwpjmoiifR8fw8fcMnUPy+c8svXhTZ6Cw0DwdiG7WrW4A8iO9Dor5VpXjfOBSi++6Mspx7h52fX9vgBS2B/kLpehLb1cxcdPKtpWz4Js34a
+ /Ik5sEc4IPW1Wbki/e6YM9i0ZGegC74Mbmw8ZCoQkgkTD1QPB9/RNF8CrcEfLXO3KEnE9SZr4/qwBsdk
 
-Kees Cook <keescook@chromium.org> wrote:
+Hello all,
 
-> -	return i + xadd(&v->counter, i);
-> +	return wrapping_add(int, i, xadd(&v->counter, i));
+this patchset adds support for i.Core MX93 EDIMM 2.0 Starter Kit,
+a SoM + Evaluation Board combination from Engicam.
 
-Ewww.  Can't you just mark the variable as wrapping in some way, either by:
+The number of patch has diminished to 3, for I dropped the
+patch introducing a change in nxp,pca9450 binding which has
+been already submitted in regulator tree.
 
-	unsigned int __cyclic counter;
+(Dropped also regulator tree maintainers as recipients for
+they aren't anymore involved in this patchset)
 
-or, to use rxrpc packet sequence numbers as an example:
+This patchset introduces just basic functionality for board.
 
-	typedef unsigned int __cyclic rxrpc_seq_t;
+Thanks in advance,
 
-	rxrpc_seq_t	tx_top;
+fabio
+---
+v4 ---> v5:
+	- done some property reorder, indentation fixes,
+	  node rename, drop/add new-lines
+	- fixed line wrap in 2nd patch commit log
+	- added Reviewed-by tag
+v3 ---> v4:
+        - drop wl_reg_on regulator in favor of
+          mmc-pwrseq-simple
+v2 ---> v3:
+        - fixed dtschema warnings
+        - added Acked/Reviewed-by tags
+        - removed regulator-always-on on
+          bt_reg_on
+        - fixed clock rate assignment on
+          sgtl5000 node
+        - added wdog_b-warm-reset; property in pmic
+        - fixed indentation issue
+v1 ---> v2:
+        - dropped patch updating nxp,pca9450 binding
+        - fixed indentation issue
+        - fixed missing space issue
+        - improved naming of regulator nodes
+        - removed unneeded include
+        - fixed email recipients
 
-Then you can get the compiler to spit out a warning if you use <, <=, > or >=
-on the numbers as an added bonus.  (You should use before() and after()
-instead).
 
-David
+Fabio Aiuto (3):
+  dt-bindings: arm: fsl: add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
+  arm64: dts: imx93: add Engicam i.Core MX93 SoM
+  arm64: dts: imx93: Add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
+
+ .../devicetree/bindings/arm/fsl.yaml          |   7 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx93-icore-mx93-edimm2.dts | 343 ++++++++++++++++++
+ .../boot/dts/freescale/imx93-icore-mx93.dtsi  | 269 ++++++++++++++
+ 4 files changed, 620 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93.dtsi
+
+-- 
+2.34.1
 
