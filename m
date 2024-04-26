@@ -1,222 +1,91 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-236.mail.qq.com (out203-205-221-236.mail.qq.com [203.205.221.236])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45C617FF
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 03:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D2617FF;
+	Fri, 26 Apr 2024 03:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.236
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714102117; cv=none; b=I12mDbU+5sFCdfiMOw5DLRLWQDBdU6j1n5MJE9Hu1tWrlQ8Bv+i4eF7S+wrow+2gDpXt22mBFaZPcvBDUlKraSRb+bgRzw4+1j0cU3tTJ9uSdx7sCPXtRofUfvc7AvPWsELpaClsezQfznR3wU3ULD0F7w7RMP6SuCw8fFevds0=
+	t=1714102192; cv=none; b=TXEmLPjCulBv6x8UcphmKbodjSZfwhCFNtZjIEuTCuGrJQfJWtrkTh+SQ2Vtdi3qsaAVxPZX+tHdBClbcMOgUoYcxuNdFZHH5ZC52k3woqhRBXaF/4esJkex1RbkQMCsbc1pQq76iyYpD4f547tpioO+f3Qm0Mcn/tEg5mjS/Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714102117; c=relaxed/simple;
-	bh=VYhhBchJTr5KyucGYEtHNfSJQ7QKp37QoCKoqzZ4yQ8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OzzjXCa0OM17zyZy9H2qRbz3yaAzJe8Wy+NmlRiJ6Kw7r+bqb27HNIyuyhlrHq8u4EEI+FAmzFZDByxC8MW7oh6Yy59gbv4GD2We8HXmPhxK2+AunHTGpL397PpNfzdy5LjcJUXpt7AMc/UXwxelngccVSWrJbJgCBpNb0ZUzrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gkNsjSu4; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714102192; c=relaxed/simple;
+	bh=OvfqhcQfXKS6rGycDA26/7o4eZJGT3gbJHvgOxtGbj4=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=po9NqVHqwx6RrEgj93FanIbBj5RHXquej7ZyHp27BAZd4bzWqIyQwfFsLPwsLLn+613qdJRdAvc4gubMiyBuy2bqDOISTpTT0KVcZQicCB4K4xFYZ+QdxrqRuHTMNw4y1nFBtGoRVLfeoOl8UEuqUjGWcyVOR0P/xwSgSpW4dcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=kOeL5vCb; arc=none smtp.client-ip=203.205.221.236
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gkNsjSu4"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4dcf9659603so448345e0c.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 20:28:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714102114; x=1714706914; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CyHxC41lHfusFiTgDcGJmDgmhY96MrkI4VAWat9lk0A=;
-        b=gkNsjSu46CdCoMuf94xBclnlK9nazPEC5zT2ArkD4gMoLIdZaSXR2DeTxHTvmNDZsn
-         8cmE4UW6KOwnIcdEIQki+W0Irpl3vSAR2k+PFpMdrAVx0/W6QQZUAAJ1a1VrK4Cxb/ln
-         liCfIpvfiVnbUBuEdDO6gw+TG7bTWYTvYh/EM4HmoFLFh6k5gTJDcemT8A4+gazkCYRM
-         DhQARK/cMMab3QxS6Ath+DHJmbhOhs4PSiBf6udyJYS0upuiHpnxAbIneUVX2sd1QLdK
-         dDFQrwOvQek5oU2fKucDeLfZa5Sd7QIEydDSeTC4IIWh/Kx0PzfXvTzORbzbN+LotB7o
-         fTJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714102114; x=1714706914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CyHxC41lHfusFiTgDcGJmDgmhY96MrkI4VAWat9lk0A=;
-        b=kEPsdehPYXstqXtJ9qnvnRyx7JOS8CdDLItWMehLdUCpSVdhjVKa9nJbnHcSKzFuKm
-         fdkSxn9jeDjM0LbOY98Ly/94m4HUgHmJqPeerWgXcXX5TbUXpm8U5HRHbkBY7TbNT/FQ
-         bgapYf8Pxbin05+v6C2CEEuDqSGlEFtz7kRJLTgDMYeanyC1ScfrfC5++d/PPPUPZDTy
-         bh88SUr2ST/Sf4ha0X4VF2OrmKVTC+QwrqlKDdqZNuMndD767cBERdu7GNitfxSnz9hO
-         khxnEIhXXNb06p2OScMrEopSnQ6fER3FSZyNobGwxhxYkggYZrQdRaGWH/6qkr4+9AwF
-         RZig==
-X-Forwarded-Encrypted: i=1; AJvYcCXEihIWccNBvPCBPxdcm26ZH4g9otTaJLDUin9mIP5rqu1W8CLMGmyihxFKqtbdVrIXFlQ4jYCSMxfiJFL/g2/entFSE7xELgL60SCJ
-X-Gm-Message-State: AOJu0YznUbxfm5HmvqyF4RjsCi0N0iH9xmlviqDLzWN8dGpIcaLuCNeo
-	KIxVp0uAoesEqzWdwXu6lyY5ix2Sy2+2B9qeiP8orqllC5+Kw6n/FDYyZwZSfMyyDOxJ34ruzjm
-	+VSTzpQKulFU2aj5reyLb2vHhmys=
-X-Google-Smtp-Source: AGHT+IHHV9qmt/bnW4eu4JuN4hMYG1Vu/q/MSh/GsaDPNA2tdn/uecOBpGwt+YPK2O0cHKjTnBIqVgI8Ku77KnE4XGY=
-X-Received: by 2002:a05:6122:3d15:b0:4d4:126b:2c8 with SMTP id
- ga21-20020a0561223d1500b004d4126b02c8mr1537871vkb.9.1714102114546; Thu, 25
- Apr 2024 20:28:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="kOeL5vCb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1714101882; bh=YbWm0yuE8+IGfwGx/G8xrzovevOvaafkCSPh5TsqX8s=;
+	h=From:To:Cc:Subject:Date;
+	b=kOeL5vCbgidmz6Em6RjSrcYx3TCzx/qzhcQozpJt6OCDpmFXLHUOloAmlcop6Sey6
+	 0ncTE4GlDGse4t3CUJODjbk2xEVMMn+ZMV4YU7rZ1SeDrloyVzMoR2Oe9/xCDPBEDl
+	 knZPTvGed2ySMbbcfRWEUAI1rvYGCZ+UYgickNVU=
+Received: from localhost.localdomain ([58.213.8.145])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 627802A8; Fri, 26 Apr 2024 11:24:39 +0800
+X-QQ-mid: xmsmtpt1714101879tocg2lgcy
+Message-ID: <tencent_F9B2296C93928D6F68FF0C95C33475C68209@qq.com>
+X-QQ-XMAILINFO: MtZ6QPwsmM9Xvp8tJWGGOOumDXDeOWCX4xyOG3f81mbjIoVYvvGJLO4etvNtaL
+	 QpfxbOGwyQHutU9GnvR+xL5foYawQOSq1RnD5wFXADm8ajm2Ki8lLw7grr42T1P1cqu+QFSA/Zty
+	 mjUm845QLvulRTqkpe7XnjjWP9aWyO5cccJ2Ddg9x0x/v/Zhsv5BLHxKFKItwsDGOeSk8x33F22k
+	 xO1pT7EzPAVBcFlPakl9sNJZItErLKhHynJ0HaIXc7mKNXByHHsx3OJHB8ZpmdSSF18bERehKCc+
+	 vPkJDqk7Q68fuW16gXDozBUh2UHPOxMAS7QM7te9IyeyW2h7SCsYiYzQFNwv4+wbPXuKD6UzUKZe
+	 ItqUqoG0ME6p6yP8OSbYngJpVrTaWJdHBB21tc5PuQkxl3sLFd6M6Qf7X3z637YgfUPjGmNckU3T
+	 lnAAR9J5NFnrgva/1Ue5jbv2Gu12dDUl2MVQQx4y8jkdSyJDDdIxneuk8oUxGe9O4ZHKxycv1Sq4
+	 vtbI9GvHyD0jYqA66LIE+uRsOTniz6ZqBIusI72G3HWEN2zrLW8qF6OgOjuwaVAKRxVGjh1RsSkm
+	 2F51rlWoYLdECwMlrO2vduA7gBrAZQgRVIhDEuXMrBX+yRf14ogb5+wUmcxtGXc7L19KYI6PsfDh
+	 UQEqBSulWLD2kX7ttDB9WybeNdywnxnwnzaEhkd4+Ie+ziYTw84/dKUODDSM3oiM/JJxj3zUJJ7A
+	 9HN61OLdBg3YlyveEe32oVjzPrr08iJd6W2dmxes4BA4R44sHHSEFtzfmoHH8t4Ol5sP7Q3fo1Eg
+	 Ra4/674WGrccJb2uzNmlxoDODiEP9LKmkr19Z2px3v7eemPyKf51kRh7/m1EFiMv78fwoSTp7MP8
+	 dJok/9esQukjkWspA1DqtP5lUbihQnTr8qvylrNGDyIj8Lk2zhtIF6PuK8AuwYfU8Xk+PTEYwR+K
+	 zgWQyOnGgTCir+PPHQIs84PE7JAjX7LkbUhOomQ88y6BmYL02uavHUyld30P2hP7zxnRoBBTfKf1
+	 nivAkd6g==
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: linke li <lilinke99@qq.com>
+To: 
+Cc: xujianhao01@gmail.com,
+	linke li <lilinke99@qq.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	io-uring@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] io_uring/msg_ring: reuse ctx->submitter_task read using READ_ONCE instead of re-reading it
+Date: Fri, 26 Apr 2024 11:24:37 +0800
+X-OQ-MSGID: <20240426032438.11830-1-lilinke99@qq.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240425211136.486184-1-zi.yan@sent.com> <CAGsJ_4wa0LskQkoZf9r5bG5+wEkyfCYveMBSTbuDe0=t1QetTg@mail.gmail.com>
- <6C31DF81-94FB-4D09-A3B8-0CED2AD8EDDB@nvidia.com> <CAGsJ_4xzb8RrEuPEbnvR4GbDWuoGCYL4FsC3TObOifAZ4CHGOA@mail.gmail.com>
- <730660D2-E1BA-4A2E-B99C-2F160F9D9A9B@nvidia.com>
-In-Reply-To: <730660D2-E1BA-4A2E-B99C-2F160F9D9A9B@nvidia.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 26 Apr 2024 11:28:23 +0800
-Message-ID: <CAGsJ_4yNSKdft-G=4X2Dr5HJ-axh-8SohGW7nkUfTYrsNFr9_Q@mail.gmail.com>
-Subject: Re: [PATCH v4] mm/rmap: do not add fully unmapped large folio to
- deferred split list
-To: Zi Yan <ziy@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Yang Shi <shy828301@gmail.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, David Hildenbrand <david@redhat.com>, 
-	Lance Yang <ioworker0@gmail.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 26, 2024 at 10:50=E2=80=AFAM Zi Yan <ziy@nvidia.com> wrote:
->
-> On 25 Apr 2024, at 22:23, Barry Song wrote:
->
-> > On Fri, Apr 26, 2024 at 9:55=E2=80=AFAM Zi Yan <ziy@nvidia.com> wrote:
-> >>
-> >> On 25 Apr 2024, at 21:45, Barry Song wrote:
-> >>
-> >>> On Fri, Apr 26, 2024 at 5:11=E2=80=AFAM Zi Yan <zi.yan@sent.com> wrot=
-e:
-> >>>>
-> >>>> From: Zi Yan <ziy@nvidia.com>
-> >>>>
-> >>>> In __folio_remove_rmap(), a large folio is added to deferred split l=
-ist
-> >>>> if any page in a folio loses its final mapping. But it is possible t=
-hat
-> >>>> the folio is fully unmapped and adding it to deferred split list is
-> >>>> unnecessary.
-> >>>>
-> >>>> For PMD-mapped THPs, that was not really an issue, because removing =
-the
-> >>>> last PMD mapping in the absence of PTE mappings would not have added=
- the
-> >>>> folio to the deferred split queue.
-> >>>>
-> >>>> However, for PTE-mapped THPs, which are now more prominent due to mT=
-HP,
-> >>>> they are always added to the deferred split queue. One side effect
-> >>>> is that the THP_DEFERRED_SPLIT_PAGE stat for a PTE-mapped folio can =
-be
-> >>>> unintentionally increased, making it look like there are many partia=
-lly
-> >>>> mapped folios -- although the whole folio is fully unmapped stepwise=
-.
-> >>>>
-> >>>> Core-mm now tries batch-unmapping consecutive PTEs of PTE-mapped THP=
-s
-> >>>> where possible starting from commit b06dc281aa99 ("mm/rmap: introduc=
-e
-> >>>> folio_remove_rmap_[pte|ptes|pmd]()"). When it happens, a whole PTE-m=
-apped
-> >>>> folio is unmapped in one go and can avoid being added to deferred sp=
-lit
-> >>>> list, reducing the THP_DEFERRED_SPLIT_PAGE noise. But there will sti=
-ll be
-> >>>> noise when we cannot batch-unmap a complete PTE-mapped folio in one =
-go
-> >>>> -- or where this type of batching is not implemented yet, e.g., migr=
-ation.
-> >>>>
-> >>>> To avoid the unnecessary addition, folio->_nr_pages_mapped is checke=
-d
-> >>>> to tell if the whole folio is unmapped. If the folio is already on
-> >>>> deferred split list, it will be skipped, too.
-> >>>>
-> >>>> Note: commit 98046944a159 ("mm: huge_memory: add the missing
-> >>>> folio_test_pmd_mappable() for THP split statistics") tried to exclud=
-e
-> >>>> mTHP deferred split stats from THP_DEFERRED_SPLIT_PAGE, but it does =
-not
-> >>>> fix the above issue. A fully unmapped PTE-mapped order-9 THP was sti=
-ll
-> >>>> added to deferred split list and counted as THP_DEFERRED_SPLIT_PAGE,
-> >>>> since nr is 512 (non zero), level is RMAP_LEVEL_PTE, and inside
-> >>>> deferred_split_folio() the order-9 folio is folio_test_pmd_mappable(=
-).
-> >>>>
-> >>>> Signed-off-by: Zi Yan <ziy@nvidia.com>
-> >>>> Reviewed-by: Yang Shi <shy828301@gmail.com>
-> >>>> ---
-> >>>>  mm/rmap.c | 8 +++++---
-> >>>>  1 file changed, 5 insertions(+), 3 deletions(-)
-> >>>>
-> >>>> diff --git a/mm/rmap.c b/mm/rmap.c
-> >>>> index a7913a454028..220ad8a83589 100644
-> >>>> --- a/mm/rmap.c
-> >>>> +++ b/mm/rmap.c
-> >>>> @@ -1553,9 +1553,11 @@ static __always_inline void __folio_remove_rm=
-ap(struct folio *folio,
-> >>>>                  * page of the folio is unmapped and at least one pa=
-ge
-> >>>>                  * is still mapped.
-> >>>>                  */
-> >>>> -               if (folio_test_large(folio) && folio_test_anon(folio=
-))
-> >>>> -                       if (level =3D=3D RMAP_LEVEL_PTE || nr < nr_p=
-mdmapped)
-> >>>> -                               deferred_split_folio(folio);
-> >>>> +               if (folio_test_large(folio) && folio_test_anon(folio=
-) &&
-> >>>> +                   list_empty(&folio->_deferred_list) &&
-> >>>> +                   ((level =3D=3D RMAP_LEVEL_PTE && atomic_read(map=
-ped)) ||
-> >>>> +                    (level =3D=3D RMAP_LEVEL_PMD && nr < nr_pmdmapp=
-ed)))
-> >>>> +                       deferred_split_folio(folio);
-> >>>
-> >>> Hi Zi Yan,
-> >>> in case a mTHP is mapped by two processed (forked but not CoW yet), i=
-f we
-> >>> unmap the whole folio by pte level in one process only, are we still =
-adding this
-> >>> folio into deferred list?
-> >>
-> >> No. Because the mTHP is still fully mapped by the other process. In te=
-rms of code,
-> >> nr will be 0 in that case and this if condition is skipped. nr is only=
- increased
-> >> from 0 when one of the subpages in the mTHP has no mapping, namely pag=
-e->_mapcount
-> >> becomes negative and last is true in the case RMAP_LEVEL_PTE.
-> >
-> > Ok. i see, so "last" won't be true?
-> >
-> > case RMAP_LEVEL_PTE:
-> > do {
-> > last =3D atomic_add_negative(-1, &page->_mapcount);
-> >    if (last && folio_test_large(folio)) {
-> >        last =3D atomic_dec_return_relaxed(mapped);
-> >        last =3D (last < ENTIRELY_MAPPED);
-> > }
-> >
-> > if (last)
-> >      nr++;
-> > } while (page++, --nr_pages > 0);
-> > break;
->
-> Right, because for every subpage its corresponding
-> last =3D atomic_add_negative(-1, &page->_mapcount); is not true after the=
- unmapping.2
+In io_msg_exec_remote(), ctx->submitter_task is read using READ_ONCE at
+the beginning of the function, checked, and then re-read from
+ctx->submitter_task, voiding all guarantees of the checks. Reuse the value
+that was read by READ_ONCE to ensure the consistency of the task struct
+throughout the function.
 
-if a mTHP is mapped only by one process, and we unmap it entirely, we will
-get nr > 0, then we are executing adding it into deferred_list? so it seems
-atomic_read(mapped) is preventing this case from adding deferred_list?
+Signed-off-by: linke li <lilinke99@qq.com>
+---
+ io_uring/msg_ring.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I wonder if  it is possible to fixup nr to 0 from the first place?
-for example
-/* we are doing an entire unmapping */
-if (page=3D=3D&folio->page && nr_pages =3D=3D  folio_nr_pages(folio))
-...
+diff --git a/io_uring/msg_ring.c b/io_uring/msg_ring.c
+index cd6dcf634ba3..d74670b39ed6 100644
+--- a/io_uring/msg_ring.c
++++ b/io_uring/msg_ring.c
+@@ -83,7 +83,7 @@ static int io_msg_exec_remote(struct io_kiocb *req, task_work_func_t func)
+ 		return -EOWNERDEAD;
+ 
+ 	init_task_work(&msg->tw, func);
+-	if (task_work_add(ctx->submitter_task, &msg->tw, TWA_SIGNAL))
++	if (task_work_add(task, &msg->tw, TWA_SIGNAL))
+ 		return -EOWNERDEAD;
+ 
+ 	return IOU_ISSUE_SKIP_COMPLETE;
+-- 
+2.39.3 (Apple Git-146)
 
->
->
-> --
-> Best Regards,
-> Yan, Zi
