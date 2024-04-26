@@ -1,195 +1,266 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2072.outbound.protection.outlook.com [40.107.22.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55D9EBE;
-	Fri, 26 Apr 2024 03:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714100701; cv=fail; b=qumNT3oxMm6+fi+pm668oL1W0EK+C1zqUO3Yt58cTW1REmK3Hc+qwdTYQh6CHBqZ+HmQot2/P4M6yI0a7s0Ptcfhi8HoPAQV6T8MhBOy/M43NPvrK/TM8QLRH5eLW0cuGOGfpKoORRDmyOLcaTAo3854hjRX2wZo8O2k3tjBKzs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714100701; c=relaxed/simple;
-	bh=dqDp19YMgqfW1gTRtuYyAoC6nHVhSqa+ICgb3e7CpS0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=cieMhmglcVLJcWUWo11emN0pWhRIgCLJwzIrCuDMaNpX7yjHqMBhNXFYZVhr1Am7jdq2C9GNRyoIgQo5XPnsqFEkTSJLeMHU5tpmesI/CJIi9AzKJ0d511oGvGJPIGN6Dbo+qfz0djGILkwu3YxIN6sHBuMiJBQPEMocYrvOIEc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=LW+MS2LF; arc=fail smtp.client-ip=40.107.22.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02334EBE
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 03:12:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714101138; cv=none; b=B4VmV7E12M+kE4NUX07qlnED+kIPGhbArqoCw2+93DFOxEl7C0CNfhDoBnYOo9BrTQjINXfdOhlwZrom2PrbUCvJ6taE3MOLRho2cmnffIkZkklMldUZurpkKcdDfkCX3lqHqag+IF0vjMV99eNNGWfCXXST2UsentC4q2smNbg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714101138; c=relaxed/simple;
+	bh=cP0kCvI96rwsPcehcUWq7JTzqJql2pkoDE2HMCeaWeU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=KJ0Bd4H7rdGFSecXdHbqdK5awrCK6S7vfJIuztLI+BTW3SNloT7ycpjR7Lx5/eeKX1vCZ3c0oXNrDZIv8no9vxXjDpaoThVIaSwH6Gt5qpOouV16fujE+hbaKaVg4du2yvgu08iWmYyp+0WdlNlPXIbh5O1Kj5s1rPTbJCX1o3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R8UIKpbj; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LW+MS2LF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U4yN7+dW/NWbbSG+zwGjgqL1HrGJYo9GThwf0V82VL5EcuIeRLXw2trN1mqXdf1LzbW353WASZOOHvpaORffOMGC0F95UUnRYmEcUOt56hN+VykzDQa9yPE7UaPoKnJRl0CC4pr1kblC26Rs8G1m9uFbahe02wsRDwW1Az4SxiPdyLs1WjcyXNciPVyt7ZDJyFUdo//nK9tUKzqq3v8Jz7H0TxKDgTPS3mlOaEwXmJNcgy5VfZpmgKxz1WCWvuMTFW3q6P/Ng6kR9J0qaHIQHLbnzDR+Q/niKHuFC3IG8jGGEohVne3SOy5wRSakkfVUBhS9RhSA/yoxCGBcO2D03w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dqDp19YMgqfW1gTRtuYyAoC6nHVhSqa+ICgb3e7CpS0=;
- b=DGzZFRmU315T2x4REIRasebMpoUXWqrdPPwow2OIJwPSJR5Tvr2tKik7WQse4XaSScj0d23jNdYD5TyagNTLAWnaHAi8t58yh4wWZRkiqIX9SNVwooI/JXM7+S/uvvOgERN2k5vmAYewpRE5Yo48nYnhFcLbPOgN/ClE+LaleVrXZAu4xFUCSXChR+bEsk36xgNsQVloLvTt6hhPJXkwsJUhfLmxEJvRncSTQkrg47y7G0hPvHID+AwDMs4MAuj/3u4br9nGrNu8xFFrAIWlJcK4IN1wvPPT9oMX+pebLaXQNTykVjLmyf3nvJTp+DZn+z6y7RCKvFg8W+b4cbclLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dqDp19YMgqfW1gTRtuYyAoC6nHVhSqa+ICgb3e7CpS0=;
- b=LW+MS2LFYux8IzJSUCJhw84w3cA/SaQMCzNCbkiWWK3lX4p7xXQ9y4Ghm8mFKYBLRlpZtp5IXxOA3QDNNhWmAe2q1JBRHb/U3kdy6vhaycA8QoNYgQ29IuuE6HbiGjBZudGGV+q8C1egv2iJbYNscTzcfY7tV0SyJiAaz9yM1Ww=
-Received: from PA4PR04MB9638.eurprd04.prod.outlook.com (2603:10a6:102:273::20)
- by PAXPR04MB8783.eurprd04.prod.outlook.com (2603:10a6:102:20e::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22; Fri, 26 Apr
- 2024 03:04:56 +0000
-Received: from PA4PR04MB9638.eurprd04.prod.outlook.com
- ([fe80::2274:2bca:7778:b464]) by PA4PR04MB9638.eurprd04.prod.outlook.com
- ([fe80::2274:2bca:7778:b464%7]) with mapi id 15.20.7472.044; Fri, 26 Apr 2024
- 03:04:56 +0000
-From: David Lin <yu-hao.lin@nxp.com>
-To: Brian Norris <briannorris@chromium.org>
-CC: Marcel Holtmann <marcel@holtmann.org>, "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Kalle
- Valo <kvalo@kernel.org>, "francesco@dolcini.it" <francesco@dolcini.it>, Pete
- Hsieh <tsung-hsien.hsieh@nxp.com>, rafael.beims <rafael.beims@toradex.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: RE: [EXT] [PATCH v10 0/2] wifi: mwifiex: add code to support host
- mlme
-Thread-Topic: [EXT] [PATCH v10 0/2] wifi: mwifiex: add code to support host
- mlme
-Thread-Index:
- AQHakXD8ZSzvjLENHE+cjdiIi3WD9LFu+PhwgAEpDwCAA9ThQIABL2MAgAShB4CAACKgQA==
-Date: Fri, 26 Apr 2024 03:04:56 +0000
-Message-ID:
- <PA4PR04MB9638228A6867C1844AEDB740D1162@PA4PR04MB9638.eurprd04.prod.outlook.com>
-References: <20240418060626.431202-1-yu-hao.lin@nxp.com>
- <0ED16BAB-6E7D-487C-BBCA-E63FEF37C60D@holtmann.org>
- <PA4PR04MB963815B9FDA6119683A28CADD10E2@PA4PR04MB9638.eurprd04.prod.outlook.com>
- <6CB59E09-F34E-4986-AA88-8EC4EE5E71DF@holtmann.org>
- <PA4PR04MB9638B62BC25F773C6922A4BCD10D2@PA4PR04MB9638.eurprd04.prod.outlook.com>
- <ZiLlPOvKlfCySZwF@google.com>
- <PA4PR04MB96383D46C1187C237DFC7988D1122@PA4PR04MB9638.eurprd04.prod.outlook.com>
- <PA4PR04MB96389E67F826216C44FE19FFD1112@PA4PR04MB9638.eurprd04.prod.outlook.com>
- <CA+ASDXODhWc2vhvScov=_vWyocbdks6HeMwKqRGacDogjX2=HA@mail.gmail.com>
-In-Reply-To:
- <CA+ASDXODhWc2vhvScov=_vWyocbdks6HeMwKqRGacDogjX2=HA@mail.gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PA4PR04MB9638:EE_|PAXPR04MB8783:EE_
-x-ms-office365-filtering-correlation-id: ba34cb8f-3f5f-4406-6802-08dc659da70f
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|1800799015|376005|366007|38070700009;
-x-microsoft-antispam-message-info:
- =?utf-8?B?a1Q0Qy95eXpxMlE5b3RZYUl4YlIxVDYxWXM2OUtDSjJtd3N4dVJjOG9nS3VZ?=
- =?utf-8?B?bmNNRE5HQmxQVkdzN0JDLzJEOHBUbStuQWplcENlZzhkaUN0OHdOWHhCWnVi?=
- =?utf-8?B?djRRZ0g4K1h1a3lUUzMxRHF3Z1l1N0tRZk9NYmRRTWdOT1BFMW13VmpCRnh5?=
- =?utf-8?B?amlPVXF1TnhibkxQMHg1Z2phem5XZVJOOGpzcllDUVR0bWJUUnR6MkhpREc5?=
- =?utf-8?B?RkEzMHE0dEpnd0g1cmFCQUdiTytwU2pxUW1HcFFuemt0eUc3anR2d093elA4?=
- =?utf-8?B?aXo1VDZSODFkUm9KMU8ycHRFQUV5bTZnZ0hSa25KbXFuS2NjQUxpQkRVM0R0?=
- =?utf-8?B?anpLUlpiK0l2bG9QanpBZHNLeWNJU1hIUzI0S0dweUdUcHBYRTZrOHFjODZy?=
- =?utf-8?B?MXFzUFY2aUp4bll4TkM1ZTg0NFl5dThHNGVVdFRXVG8xRE1MZlhsNUZTbXlH?=
- =?utf-8?B?ODhoUkpkUVRMN05ITU94aVBQWmdkR1dCcW94bVplb1o3dUJ2dG5LWGJJSnJ6?=
- =?utf-8?B?ZXJsVk1XMjJyNDlObGFobFVMMDF2eWhzSlFQaFErVzN4Q2F6ZXAwWGk2UzNo?=
- =?utf-8?B?QWVUSnYxbjdTT0xNT2F3aTJsZUxOSGxzQXZIaXB6cGFuTVUyRytKVGRoY2pI?=
- =?utf-8?B?eHFUR0pvNFQyeGk1RzhEUUdpaHB1Z3pwMDdtdmJUUHo5eFoxQXVRZXBodGpW?=
- =?utf-8?B?OWZuU050TjZoTlNIS3VYQVRTZFdBMzQ0bDN4TGs2ZEh1a3hMaTFQSGoydlpy?=
- =?utf-8?B?RjI1Vjd2S0d2TjZFcFNnSGdjUCtZdTJjejZxdEd6OGNxZGt4eVgvSjlHMkhV?=
- =?utf-8?B?aG5wLzY3UHhaMDJmTnE2TWhBSkZ0R2RDYXh3OXdBZHNiay8rZXIvY3lGQkhV?=
- =?utf-8?B?WVFBZDdVdUxIdnVsRnMzTUZlMDRkVy9IZWE4cFhHajdNQkV1YVdWKzcyOE9O?=
- =?utf-8?B?N0Y3b2hhelJZeWIxK2RaK0RUMGZMalBLMVU4cENkYXNmWktRcjlxek85anZu?=
- =?utf-8?B?d3QrVnc1ZDh3akxzK2ZGcThYRWl4WTJCRFBnbDVRcTlSSGV1aktwdm03MWRT?=
- =?utf-8?B?b3ZLZXN4dGxhVm9tOW5RNjlBYkJmWjVycEJhSjJIRVB2K2NlQUN4V21EdWxN?=
- =?utf-8?B?OWdWcWtFa3JVRmNBSnlRczBsSHZpalMrVkRpaFIwdmdnalp5eXFQWWIrL2lF?=
- =?utf-8?B?VWtSWXRzT1Fwb3U5dmxaYWdBNkgvejRHUWRnMHRBTmRqSEtMYUd3eHBsWVc1?=
- =?utf-8?B?amJ6dndLWEZ2c3lIb2JTWGh6bS9OTWdmckNvN2ZKeE5TOXh3U3M5d2Z5TWdB?=
- =?utf-8?B?WFBaYmN6N3YwWVRnYmg0ZnFuRjhUeGxHSkpUMHExT3dXVXYydTRqUHJFRkRk?=
- =?utf-8?B?ZlZpV29qWnI3WFFxQkMzWnViNW1XNUZFYkhCaVdMcittRDhFWTVsK1NqSFdY?=
- =?utf-8?B?bDlYNFlNTi8vek1FdXhVMGFYNytIVTdVTUtucUdXSElPSzBWOHBBc1F3cTgz?=
- =?utf-8?B?WCtNOWVZV1U5RUxnK0hhT1VkRy8vdHpUb1AxVWNrRExWU3FWUmE4NnRRRE5C?=
- =?utf-8?B?TmJzNUkyVzFDdWhtR0t3Sk1FWlBvWFlQaHZTRHAzMDVNU2RCbHBWcXBJc1Zq?=
- =?utf-8?B?L0VmcnRoeEpyeG14YkZUZUl4cjdYZ3g1MU5Lb1dhNXI0SWJpTlV0NktvenJP?=
- =?utf-8?B?MW16ZktoVUJMUlZXZElkMGtsS0c5bHEyNWl2cEd2RXZCSnlBYjFZNGFGVktB?=
- =?utf-8?B?RHpZdko2S3NrSmtQNFhvRHJpaXJSWENLRnZxaFFTb285VW5tNHM5eitmc09u?=
- =?utf-8?B?OUtJQ25lZWF1OVBOM0VXQT09?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?QStzTXE3Z0RmcWZNa0lzUmtrVnBwVUdFRmF4dERKVTdXV2htNVNXQWRrTTdX?=
- =?utf-8?B?bGRuSlV0NTVONEdUR08veGphTG8wNm9odnUwU3pqNTdYSVlWbE9TMEdLVHp3?=
- =?utf-8?B?RTFUZGdsLzk2SVJidlNGY3RpNUpWWDNYRkd0Yjl1SGI4eFVqMkQ5VVlpMEhL?=
- =?utf-8?B?dzN0cncwdE0yZCsrVms5b0Myb1RIWVJwN3JLWlltNmRBWllNWkl4aU1tV2Rt?=
- =?utf-8?B?c0lxT0VSRlZKK04vc24rNkVEaFF4c1BTNWNaYjdIcDhtd3c0bkdsQVlZaDgz?=
- =?utf-8?B?a2laUEFQS1krWS9ZL3hCZTFYMTFLRGpQVStBQ29sNHgrNVB3c1JWUy9lMXhK?=
- =?utf-8?B?MWxoajdjdmxkY1hwSEhhdzFRVVdTMnA3VGIrOUFZeXhmTjdJYXkxK01aNlVQ?=
- =?utf-8?B?R3FaVE9EL3lwTmc1eExBaUl5UkszZDZHeEgwTUZqSGJyeGJiOGhnQitsZ09T?=
- =?utf-8?B?OTV5Yjl1STVSbUp5RWlCYk9xOGtTVnIxcEc3d2VHZXEyUHRoamU2MmxBbVcw?=
- =?utf-8?B?MXdHL0hzUGttR1g4dzdBZFRoWDNsMTJOZlU5TUZSVE9WSnZUTm14b0t6SG5y?=
- =?utf-8?B?SmpzZy94dmt2M2F4RlRBc0U4cWl0V2oxM3RsRXY2eGhkcGU3ajhLNnZHQUpr?=
- =?utf-8?B?ejlLd1drTzlwajhUNGZIMlloamZacjFWU2ovblA1RXdiRndtQmlUSDFnUWhV?=
- =?utf-8?B?cmgzOHR4enFlWTB4ekFsNXM2U1lNMDFLUnFlNGlLOWpkWjh4bC9PL0ZTcWVW?=
- =?utf-8?B?by82dVNDcGsrUzZNT1hHQk5WOU9GTTNQQVJQS1JJcDk2SHdRbVpwMUtkZTVv?=
- =?utf-8?B?eTZhdmZVN2dmZXQ0MU94ZzB4K3gzeGg5MVkzcDNSM0RkaWd0Y3FLOWNGTzlB?=
- =?utf-8?B?ZGE4cFliM0FTbW4xeXRqY1IzQ3lVVXprUUowdjJpUCtOVVJDQUV5cEs4dVh5?=
- =?utf-8?B?UVNRQW43S2htU1pVclNmQjFvcXhtSlhWMWdrZVBmY1VEbE1KMElWTFFQNG1u?=
- =?utf-8?B?aEdMZmZTL0xuQkJaN3JGVXBaUjNPTWtXb2dVL1doUzd3UUNnNDdtVlZZRS9w?=
- =?utf-8?B?SFhXRGEwTG5PRnl6cXhrQThNdHlaNHZVcWc1RG5NbnNlc0txajdFdmFUMFBZ?=
- =?utf-8?B?U1VzSi9WTmNEN0hWNWduRk1peURvNHZhNTFqaGlkU0pyakp4SmRTZEQrc2Nw?=
- =?utf-8?B?Wmc0Nm5pNGM1MEhzQnRNV0ZJZ3c5a2t3eVBuNGNycVFDMkt5ODRPNk9Rb3RH?=
- =?utf-8?B?bGRsQ0dOajIzcjdFWGFacHJVZ1J1ZUdzM29VZjZlYktrVll1RkxlcVppdi9h?=
- =?utf-8?B?a3V3R3dmcXM0K1BhS0liTEhvaGFLbDNLQU9FSlo4UzJVSldLZkxBNHJLVU5h?=
- =?utf-8?B?TDFyd29od3ovdXVzTmVQRVY3ZC83VTBmV0JFOXdXRWp5QVovenMwK1VRRncv?=
- =?utf-8?B?NXQ0QzVVYkhQREhNeGF3RnoyZHZlUC9MZzdjQjJheFc5MzVrUllaMHMvaEZT?=
- =?utf-8?B?UURldnBETlI4T1VpTDN4RVgwMnFoc2ZLR0tZNCt3eDE2eWtzS21YUVM1ck1J?=
- =?utf-8?B?N1BkRzdQdVhpdXRNcjQxQlA0RDQ4aG52SW5nRjB1dDkwMTRhTmtzM3p5QXJr?=
- =?utf-8?B?SEtucXNYdmQvWTlMMVM5OXRhMFhYT2dJMmt2b0RNMjd6Q0VnS09nMklrcFpr?=
- =?utf-8?B?cU9oS251TFhKUHZBNC9KZ1V1b2ZqSUQzSGJFaGsyVkxialFzVXRRdldkdlBx?=
- =?utf-8?B?VXlvV1h0YUtGN0NMbFZocmxEUFNqaVh1Mkp5ZnhaK3kvSG0vdDZDaHI0ZlBZ?=
- =?utf-8?B?T29STm9BMUEwWTlNUFZ1QVZkYW82VGZSN3hvdjd6Y25qUUcvZ3psaEtkSFB4?=
- =?utf-8?B?OW0wMjdTdEdMNGg4ajFOYit1aGRlVTVOUk81MWRrRmc5TzM2SDB5QzdGaVJq?=
- =?utf-8?B?bHRjdUl4V2QvNUdWTHVhVTl5OXMra1Jja1NIcnR0RUxrZldnUnpBaWU3ZGtN?=
- =?utf-8?B?RGJSWVd3MldJUVdBcVhscWhaeG9TOWh5WlF4TjhyQTU1ZnRtZHliVk04a2pY?=
- =?utf-8?B?bzJYV0R0Q0d1V3NOdlQ2bW1tQkhMU1hpVDNwaXpaUmdCYjI2clRXdlJrQVNk?=
- =?utf-8?Q?tAdQ=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R8UIKpbj"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-571c22d9de4so2446045a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 20:12:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714101135; x=1714705935; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lzJxgcz5m8G1EM1ywnq84RC3ba8Z9yxAODKAr5+fyo4=;
+        b=R8UIKpbjIcZtDbWd4EhJNGJFYjRHfch3TvP81P7AzIhb+IHUlAcITkso2sqgYLiePD
+         V1K7uOpGHR5fAuwsHeWC8M+VDKzwJdl60n/u2gCTL8wkGRa0tOKWSFjsJTE2N5xF2SBE
+         j6GCbAvhttlSeWW/ym/vJftDpeuCAv69+IidJpSILbAVKL2xPfPGo4RNOJfJXZ+KP1CQ
+         nivQDWg1u+w5HCXXY7H+hmy1LRCb4MvYI3gzI/H3isc9RJjJpi8keouPqBHdkslD+//+
+         LwPbojr8JG23JmRULnQ6oubdInVf2oDs52k9Q/Fbs6dowwB9lcYa1pARDs6XWH6OA3a4
+         AZtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714101135; x=1714705935;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lzJxgcz5m8G1EM1ywnq84RC3ba8Z9yxAODKAr5+fyo4=;
+        b=fVJSehrb4RFybYkx5RrBnKaBxPg2IwIisM+BzXT4804P2mvEUBeERQQJLQRwI0Xbwi
+         6r6uu+ADqf5+oN2lAdj6jdULQUljro4ORTbZWULtjfQzXWhtB8DX8YzwqHZwF/ys6SoW
+         QwWyzO0dzrSh2gYb6ie3EVBwjGn4zY4srHFMByp+RZJHHQ7SmXGStgRRIrVio+8+8mGm
+         eeOrC3le3h81AWtSGT4iUpYO0dYgIEllWjGSaKrG9WPI72bZKcq5mJ0ooXahYccySpIQ
+         Wu3F6OEA3ymZgeGsEEBD8mFyPZpzHLXVUeBcgbww8dHa1pKliisQ/ZsdnFSl+OakbdzU
+         CFTw==
+X-Forwarded-Encrypted: i=1; AJvYcCXLFEM4W5Vi+KlDcjjkcWvjE6oW6n0Jn1YKMVvJXONKAAPA4gdS4OTi5lu4LR91KL9Z7vtf6QkIVQbI58Kwaqa5frjl0IN6uZ1/HFU5
+X-Gm-Message-State: AOJu0YzGXabLRbC3g/USDJ8sMMAZxhttd+foA1EuFNXgUxnYmWGmbe/z
+	NMByCUDxL6XkxzIv/DL6ImDo0fIRie8Btzr+nGQHyRhor9/0a4hfgYwgQFyGS1sqN1akaQxm+Ix
+	FN33M3+UZYNm3FyB/XoptbMjtBhv6daoJ
+X-Google-Smtp-Source: AGHT+IETZzj7+KbUL8RVv/0sv9PH6DI1lOTUGAYPSnXI4E0GBHIUrWfWmHBNHqMLo2MbNCBKiE8BB2UQSeMVrN8YiOQ=
+X-Received: by 2002:a17:906:e17:b0:a52:6c23:fa90 with SMTP id
+ l23-20020a1709060e1700b00a526c23fa90mr1039563eji.1.1714101135116; Thu, 25 Apr
+ 2024 20:12:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9638.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba34cb8f-3f5f-4406-6802-08dc659da70f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2024 03:04:56.6727
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ybwIA3FKmrs7jY/6B6WYivs/3RMn6yX5XBjkoonVq6n/i4r/zf1Ih0pL2pf7tpsN6adpu0hFs4ng+FGmXqjiYQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8783
+From: Dave Airlie <airlied@gmail.com>
+Date: Fri, 26 Apr 2024 13:12:03 +1000
+Message-ID: <CAPM=9tzOc8ybNWouvj+Zz2kZy1iXVDgJ9v3yi_Owfz+jp2tqkw@mail.gmail.com>
+Subject: [git pull] drm fixes for 6.8-rc6
+To: Linus Torvalds <torvalds@linux-foundation.org>, Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-PiBGcm9tOiBCcmlhbiBOb3JyaXMgPGJyaWFubm9ycmlzQGNocm9taXVtLm9yZz4NCj4gU2VudDog
-RnJpZGF5LCBBcHJpbCAyNiwgMjAyNCA5OjAwIEFNDQo+IFRvOiBEYXZpZCBMaW4gPHl1LWhhby5s
-aW5AbnhwLmNvbT4NCj4gQ2M6IE1hcmNlbCBIb2x0bWFubiA8bWFyY2VsQGhvbHRtYW5uLm9yZz47
-IGxpbnV4LXdpcmVsZXNzQHZnZXIua2VybmVsLm9yZzsNCj4gTEtNTCA8bGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZz47IEthbGxlIFZhbG8gPGt2YWxvQGtlcm5lbC5vcmc+Ow0KPiBmcmFuY2Vz
-Y29AZG9sY2luaS5pdDsgUGV0ZSBIc2llaCA8dHN1bmctaHNpZW4uaHNpZWhAbnhwLmNvbT47IHJh
-ZmFlbC5iZWltcw0KPiA8cmFmYWVsLmJlaW1zQHRvcmFkZXguY29tPjsgRnJhbmNlc2NvIERvbGNp
-bmkNCj4gPGZyYW5jZXNjby5kb2xjaW5pQHRvcmFkZXguY29tPg0KPiBTdWJqZWN0OiBSZTogW0VY
-VF0gW1BBVENIIHYxMCAwLzJdIHdpZmk6IG13aWZpZXg6IGFkZCBjb2RlIHRvIHN1cHBvcnQgaG9z
-dA0KPiBtbG1lDQo+IA0KPiBDYXV0aW9uOiBUaGlzIGlzIGFuIGV4dGVybmFsIGVtYWlsLiBQbGVh
-c2UgdGFrZSBjYXJlIHdoZW4gY2xpY2tpbmcgbGlua3Mgb3INCj4gb3BlbmluZyBhdHRhY2htZW50
-cy4gV2hlbiBpbiBkb3VidCwgcmVwb3J0IHRoZSBtZXNzYWdlIHVzaW5nIHRoZSAnUmVwb3J0DQo+
-IHRoaXMgZW1haWwnIGJ1dHRvbg0KPiANCj4gDQo+IEhpIERhdmlkLA0KPiANCj4gT24gTW9uLCBB
-cHIgMjIsIDIwMjQgYXQgNzoyOeKAr1BNIERhdmlkIExpbiA8eXUtaGFvLmxpbkBueHAuY29tPiB3
-cm90ZToNCj4gPiAgICAgICAgIEkgd29uZGVyIGNhbiBwYXRjaCB2MTAgYmUgYWNjZXB0ZWQgYnkg
-eW91Pw0KPiANCj4gSSB0b29rIGFub3RoZXIgc3RlcCBiYWNrIHRvIHNlZSB3aGF0IE1hcmNlbCBo
-YWQgdG8gc2F5IGFib3V0IGV4dGVybmFsX2F1dGgsIGFzDQo+IEkgd2FzIG5vdCBmYW1pbGlhciB3
-aXRoIGl0LCBhbmQgaXQgZGlkbid0IGNvbWUgdXAgaW4gZGlzY3Vzc2lvbiB3aXRoIEpvaGFubmVz
-DQo+IGVhcmxpZXIuIElmIHdlIGhhdmUgYWdyZWVtZW50IGV4dGVybmFsX2F1dGggaXMgaW5hcHBy
-b3ByaWF0ZSwgdGhlbiBJJ2xsIHJldmlzaXQNCj4gdjEwLiBUaGF0IG1heSB0YWtlIHNvbWUgdGlt
-ZSB0aG91Z2gsIGFzIEknbGwgYmUgcHJlb2NjdXBpZWQgbmV4dCB3ZWVrLg0KPiANCj4gQnJpYW4N
-Cg0KVGhhbmtzIGFuZCB0YWtlIHlvdXIgdGltZS4NCg0KRGF2aWQNCg==
+Hi Linus,
+
+Regular weekly merge request, mostly amdgpu and misc bits in
+xe/etnaviv/gma500 and some core changes. Nothing too outlandish, seems
+to be about normal for this time of release.
+
+Regards,
+Dave.
+
+drm-fixes-2024-04-26:
+drm fixes for 6.9-rc6
+
+atomic-helpers:
+- Fix memory leak in drm_format_conv_state_copy()
+
+fbdev:
+- fbdefio: Fix address calculation
+
+amdgpu:
+- Suspend/resume fix
+- Don't expose gpu_od directory if it's empty
+- SDMA 4.4.2 fix
+- VPE fix
+- BO eviction fix
+- UMSCH fix
+- SMU 13.0.6 reset fixes
+- GPUVM flush accounting fix
+- SDMA 5.2 fix
+- Fix possible UAF in mes code
+
+amdkfd:
+- Eviction fence handling fix
+- Fix memory leak when GPU memory allocation fails
+- Fix dma-buf validation
+- Fix rescheduling of restore worker
+- SVM fix
+
+gma500:
+- Fix crash during boot
+
+etnaviv:
+- fix GC7000 TX clock gating
+- revert NPU UAPI changes
+
+xe:
+- Fix error paths on managed allocations
+- Fix PF/VF relay messages
+The following changes since commit ed30a4a51bb196781c8058073ea720133a65596f:
+
+  Linux 6.9-rc5 (2024-04-21 12:35:54 -0700)
+
+are available in the Git repository at:
+
+  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2024-04-26
+
+for you to fetch changes up to 3a8534035c0747610312f9552898a0ece10ef8a7:
+
+  Merge tag 'drm-xe-fixes-2024-04-25' of
+https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
+(2024-04-26 12:56:58 +1000)
+
+----------------------------------------------------------------
+drm fixes for 6.9-rc6
+
+atomic-helpers:
+- Fix memory leak in drm_format_conv_state_copy()
+
+fbdev:
+- fbdefio: Fix address calculation
+
+amdgpu:
+- Suspend/resume fix
+- Don't expose gpu_od directory if it's empty
+- SDMA 4.4.2 fix
+- VPE fix
+- BO eviction fix
+- UMSCH fix
+- SMU 13.0.6 reset fixes
+- GPUVM flush accounting fix
+- SDMA 5.2 fix
+- Fix possible UAF in mes code
+
+amdkfd:
+- Eviction fence handling fix
+- Fix memory leak when GPU memory allocation fails
+- Fix dma-buf validation
+- Fix rescheduling of restore worker
+- SVM fix
+
+gma500:
+- Fix crash during boot
+
+etnaviv:
+- fix GC7000 TX clock gating
+- revert NPU UAPI changes
+
+xe:
+- Fix error paths on managed allocations
+- Fix PF/VF relay messages
+
+----------------------------------------------------------------
+Alex Deucher (1):
+      drm/amdgpu/sdma5.2: use legacy HDP flush for SDMA2/3
+
+Christian Gmeiner (1):
+      Revert "drm/etnaviv: Expose a few more chipspecs to userspace"
+
+Dave Airlie (4):
+      Merge tag 'amd-drm-fixes-6.9-2024-04-24' of
+https://gitlab.freedesktop.org/agd5f/linux into drm-fixes
+      Merge tag 'drm-misc-fixes-2024-04-25' of
+https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
+      Merge tag 'drm-etnaviv-fixes-2024-04-25' of
+https://git.pengutronix.de/git/lst/linux into drm-fixes
+      Merge tag 'drm-xe-fixes-2024-04-25' of
+https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
+
+Derek Foreman (1):
+      drm/etnaviv: fix tx clock gating on some GC7000 variants
+
+Felix Kuehling (3):
+      drm/amdkfd: Fix eviction fence handling
+      drm/amdgpu: Update BO eviction priorities
+      drm/amdkfd: Fix rescheduling of restore worker
+
+Himal Prasad Ghimiray (2):
+      drm/xe: Remove sysfs only once on action add failure
+      drm/xe: call free_gsc_pkt only once on action add failure
+
+Jack Xiao (1):
+      drm/amdgpu/mes: fix use-after-free issue
+
+Joshua Ashton (1):
+      drm/amd/display: Set color_mgmt_changed to true on unsuspend
+
+Lang Yu (2):
+      drm/amdkfd: make sure VM is ready for updating operations
+      drm/amdgpu/umsch: don't execute umsch test when GPU is in reset/suspend
+
+Lijo Lazar (2):
+      drm/amdgpu: Assign correct bits for SDMA HDP flush
+      drm/amd/pm: Restore config space after reset
+
+Lucas Stach (1):
+      drm/atomic-helper: fix parameter order in
+drm_format_conv_state_copy() call
+
+Ma Jun (1):
+      drm/amdgpu/pm: Remove gpu_od if it's an empty directory
+
+Michal Wajdeczko (1):
+      drm/xe/guc: Fix arguments passed to relay G2H handlers
+
+Mukul Joshi (2):
+      drm/amdgpu: Fix leak when GPU memory allocation fails
+      drm/amdkfd: Add VRAM accounting for SVM migration
+
+Nam Cao (1):
+      fbdev: fix incorrect address computation in deferred IO
+
+Patrik Jakobsson (1):
+      drm/gma500: Remove lid code
+
+Peyton Lee (1):
+      drm/amdgpu/vpe: fix vpe dpm setup failed
+
+Prike Liang (1):
+      drm/amdgpu: Fix the ring buffer size for queue VM flush
+
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c   | 35 ++++++----
+ drivers/gpu/drm/amd/amdgpu/amdgpu_mes.c            |  1 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_object.c         |  2 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_umsch_mm.c       |  3 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vpe.c            |  2 +-
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c             |  3 +-
+ drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c             |  3 +-
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c              |  2 -
+ drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c           |  3 +-
+ drivers/gpu/drm/amd/amdgpu/sdma_v5_2.c             | 26 ++++---
+ drivers/gpu/drm/amd/amdgpu/vpe_v6_1.c              | 14 ++--
+ drivers/gpu/drm/amd/amdkfd/kfd_migrate.c           | 16 ++++-
+ drivers/gpu/drm/amd/amdkfd/kfd_process.c           | 15 ++--
+ drivers/gpu/drm/amd/amdkfd/kfd_svm.c               |  2 +-
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |  1 +
+ drivers/gpu/drm/amd/pm/amdgpu_pm.c                 |  7 ++
+ .../gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_6_ppt.c   | 25 +++++++
+ drivers/gpu/drm/drm_gem_atomic_helper.c            |  4 +-
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c              | 24 +------
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.h              | 12 ----
+ drivers/gpu/drm/etnaviv/etnaviv_hwdb.c             | 34 ---------
+ drivers/gpu/drm/gma500/Makefile                    |  1 -
+ drivers/gpu/drm/gma500/psb_device.c                |  5 +-
+ drivers/gpu/drm/gma500/psb_drv.h                   |  9 ---
+ drivers/gpu/drm/gma500/psb_lid.c                   | 80 ----------------------
+ drivers/gpu/drm/xe/xe_gt.c                         |  4 +-
+ drivers/gpu/drm/xe/xe_gt_ccs_mode.c                | 19 ++---
+ drivers/gpu/drm/xe/xe_gt_ccs_mode.h                |  2 +-
+ drivers/gpu/drm/xe/xe_guc_ct.c                     |  4 +-
+ drivers/gpu/drm/xe/xe_huc.c                        |  9 +--
+ drivers/video/fbdev/core/fb_defio.c                |  2 +-
+ include/uapi/drm/etnaviv_drm.h                     |  5 --
+ 32 files changed, 131 insertions(+), 243 deletions(-)
+ delete mode 100644 drivers/gpu/drm/gma500/psb_lid.c
