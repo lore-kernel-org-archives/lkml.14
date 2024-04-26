@@ -1,332 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45187208CA;
-	Fri, 26 Apr 2024 20:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8254E171A5;
+	Fri, 26 Apr 2024 20:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714161790; cv=none; b=Tn5EBuCI1qykorFQ61jksz7STLCE0sX6l4nQPmA1Iof99N3boE7XRfejuGSJmaftHxDtZRHN52tLnXwVkDakkjwy5MjyRicUQkxI2kOOud2DYw720+d59i1wnx+IzL9VSe8YIsOSPr40/D9IcxWQLynG8PhyXgmeKXPFTbyY/AY=
+	t=1714161869; cv=none; b=QJCEvAfFrB6lh70p5v4FHjZ74Ga263QwYQIpL4Hq9JdheIWyl+ncL7iFiAW8W0nSTmCxbJY7RQo17LZ7hUpg9ijGyYWF/hmjvHRPudx1uJou/Awza1z3SqmHW4pc0W8jQBn8gqbinlemNzEngmuPd/69g38uCDyuBrbmJunRzsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714161790; c=relaxed/simple;
-	bh=F/ZpLt5mL5j8/Mowvno1eE6OPUHz5rYnhyxW0OzTeLI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=s8JGmqTxNd3EJtRV5iwETdfhY5b61AdoA/uTsl1V6y7TXDsf+J3ASqoSsVK7chyKkpTCingZRULp1d9+eGwrqmxeEB32SYRJBFnI8TRi5fnTJ8HpPrkxKXt28/5AcFkh6EYbaxmbo7NMAD74WGLr2OhE54J3R48H0FEpWBYuf30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mbGT03zf; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714161869; c=relaxed/simple;
+	bh=4Y/1SNbJpP6Iq6bpaDNDG2do5EqjdK+s/ofDm4Cz0GM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=K1nW0SrFmx3MZLpY9PxpYwquDMhLnn4Cd3309/U2rhHMOhjJ8xE6eTYaspn4RqZP405mIjV4qh+L8Mdm+T25L4HedyJg7I/HoYm+eTmrJqiyLFbAdc51QPR9TDdm5SJzHgWbvCqywt3zBhRn650S/KlQMfdD/xU0Q/oGzWVM7LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LTutAkMA; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mbGT03zf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714161789; x=1745697789;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=F/ZpLt5mL5j8/Mowvno1eE6OPUHz5rYnhyxW0OzTeLI=;
-  b=mbGT03zfgVftkp2gDiEM+tqsrCslvD9pBMeHn5RGlwQcOUmu6OlwUYHC
-   fdKmVJ36lzMI1C/KZxKNe6jZPwaHR1pSnIgdxXyfFK8bsCbl/731JrW9N
-   ojqErsOafLgxBjSnH9Yl0dK5CiR4QVh3dgJNIfOoqRpoALlKSfcs0ZFtE
-   WlCimNvdiySzFa+rm2I5XEhklL8pmmu9wUhvG9vIc5Y9LQ+uqJ+vLq547
-   rmiiXGoGncvIloo5UUajVDN3+EkEPazde7I7lxZz0tijugQJuVqVj9Roo
-   VFx4K9BVCH7ZSWvtg+qI9AhzdjKL1RUOuSPL3SQygJY4wKUeyxltFBPNF
-   g==;
-X-CSE-ConnectionGUID: 6TR6OPGNTZe+QZXLBIKVNQ==
-X-CSE-MsgGUID: hIN+0/n9S0W681sAyoGMqw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="9787171"
-X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="9787171"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 13:03:07 -0700
-X-CSE-ConnectionGUID: XIjHDFD2Sj6Cv5b/JM7F1A==
-X-CSE-MsgGUID: 2GymRFcBRlSI0xhtFHv6hg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="25516142"
-Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.209.176.246])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 13:03:06 -0700
-From: Ira Weiny <ira.weiny@intel.com>
-Date: Fri, 26 Apr 2024 13:02:59 -0700
-Subject: [PATCH v3 1/2] acpi/ghes: Process CXL Component Events
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LTutAkMA"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43QCBwdj013759;
+	Fri, 26 Apr 2024 20:03:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=CVAZFTsLc+ZUqoicJEH8S6rIGArbQdqBeftallr55BM=; b=LT
+	utAkMA83j3mmHOC5EsZVXQFScJhAWIiDmS8EZZ4zx+ionvatYbvZqsiDHEfColcc
+	7kCdPpAoqcqMyi/cELiDp7YnXq5mKUSf9pFl/VQ+68TA1K2PDLZq14FrAsdZ+sRc
+	5I1uSrAgY4z0vN/tS46aJGRrZPqzUNRhGPORUtSInegHg7NHitHelXU6yuFRRa7O
+	slbqL4ICvyNl4k9ruQfB6OGdpY9qYtwxiITczJ+mBsayfGrEqrVO/u7akFNr/c15
+	w9OA2Gv8q9x0tF4yvDw54aMxyIEqQjy8rk+zm79qCigYm90O6E38t9ED39FwJ7aV
+	s4VUIExgbu0B8W4k2QJA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xr35ettv5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 20:03:19 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43QK3Hd7016370
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 20:03:18 GMT
+Received: from [10.110.6.235] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 26 Apr
+ 2024 13:03:17 -0700
+Message-ID: <a24aac59-961f-0a1a-4558-61e333c6fa7f@quicinc.com>
+Date: Fri, 26 Apr 2024 13:03:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240426-cxl-cper3-v3-1-6ade7dfc849e@intel.com>
-References: <20240426-cxl-cper3-v3-0-6ade7dfc849e@intel.com>
-In-Reply-To: <20240426-cxl-cper3-v3-0-6ade7dfc849e@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, 
- Dan Williams <dan.j.williams@intel.com>, 
- Jonathan Cameron <jonathan.cameron@huawei.com>, 
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, 
- Shiju Jose <shiju.jose@huawei.com>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, 
- Yazen Ghannam <yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Ard Biesheuvel <ardb@kernel.org>, 
- linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Tony Luck <tony.luck@intel.com>, 
- Borislav Petkov <bp@alien8.de>
-X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1714161785; l=8069;
- i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=F/ZpLt5mL5j8/Mowvno1eE6OPUHz5rYnhyxW0OzTeLI=;
- b=XtKF+roJ18hxwc/sOqn2c+h/zSvEYi586NHQsJdkmYTdXE3FVGZdm6oHIA6byrKa2XFzRyF9m
- zURdrjfTXBAAu5R2g7FYh/foNyiC+Wh7P4CjmWvccLydScZaf9dNM4/
-X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
- pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v20 08/41] usb: host: xhci-mem: Allow for interrupter
+ clients to choose specific index
+Content-Language: en-US
+To: =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?=
+	<amadeuszx.slawinski@linux.intel.com>,
+        <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
+        <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
+        <lgirdwood@gmail.com>, <andersson@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <gregkh@linuxfoundation.org>,
+        <Thinh.Nguyen@synopsys.com>, <broonie@kernel.org>,
+        <bgoswami@quicinc.com>, <tiwai@suse.com>, <robh@kernel.org>,
+        <konrad.dybcio@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>
+References: <20240425215125.29761-1-quic_wcheng@quicinc.com>
+ <20240425215125.29761-9-quic_wcheng@quicinc.com>
+ <60c17b0c-8069-4019-b062-3b3cb892297b@linux.intel.com>
+From: Wesley Cheng <quic_wcheng@quicinc.com>
+In-Reply-To: <60c17b0c-8069-4019-b062-3b3cb892297b@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: g6oaGlBmz1dhPebrOegIfxkgZhb6mMgK
+X-Proofpoint-ORIG-GUID: g6oaGlBmz1dhPebrOegIfxkgZhb6mMgK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-26_17,2024-04-26_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=718
+ lowpriorityscore=0 malwarescore=0 spamscore=0 bulkscore=0 impostorscore=0
+ phishscore=0 priorityscore=1501 clxscore=1011 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
+ definitions=main-2404260139
 
-BIOS can configure memory devices as firmware first.  This will send CXL
-events to the firmware instead of the OS.  The firmware can then inform
-the OS of these events via UEFI.
+Hi Amadeusz,
 
-UEFI v2.10 section N.2.14 defines a Common Platform Error Record (CPER)
-format for CXL Component Events.  The format is mostly the same as the
-CXL Common Event Record Format.  The difference lies in the use of a
-GUID as the CPER Section Type which matches the UUID defined in CXL 3.1
-Table 8-43.
+On 4/26/2024 6:24 AM, Amadeusz Sławiński wrote:
+> On 4/25/2024 11:50 PM, Wesley Cheng wrote:
+>> Some clients may operate only on a specific XHCI interrupter instance.
+>> Allow for the associated class driver to request for the interrupter that
+>> it requires.
+>>
+>> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+>> ---
+> 
+> (...)
+> 
+>> -
+>> -    /* Find available secondary interrupter, interrupter 0 is 
+>> reserved for primary */
+>> +    /* Find available secondary interrupter, interrupter 0 is 
+>> reserverd for primary */
+> 
+> You introduce a typo in here.
 
-Currently a configuration such as this will trace a non standard event
-in the log omitting useful details of the event.  In addition the CXL
-sub-system contains additional region and HPA information useful to the
-user.[0]
+Thanks for the review!  Will fix it.
 
-The CXL code is required to be called from process context as it needs
-to take a device lock.  The GHES code may be in interrupt context.  This
-complicated the use of a callback.  Dan Williams suggested the use of
-work items as an atomic way of switching between the callback execution
-and a default handler.[1]
-
-The use of a kfifo simplifies queue processing by providing lock free
-fifo operations.  cxl_cper_kfifo_get() allows easier management of the
-kfifo between the ghes and cxl modules.
-
-CXL 3.1 Table 8-127 requires a device to have a queue depth of 1 for
-each of the four event logs.  A combined queue depth of 32 is chosen to
-provide room for 8 entries of each log type.
-
-Add GHES support to detect CXL CPER records.  Add the ability for the
-CXL sub-system to register a work queue to process the events.
-
-This patch adds back the functionality which was removed to fix the
-report by Dan Carpenter[2].
-
-[0]
-Link: https://lore.kernel.org/all/cover.1711598777.git.alison.schofield@intel.com/
-[1]
-Link: https://lore.kernel.org/all/65d111eb87115_6c745294ac@dwillia2-xfh.jf.intel.com.notmuch/
-[2]
-Link: https://lore.kernel.org/all/b963c490-2c13-4b79-bbe7-34c6568423c7@moroto.mountain/
-
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
----
-Changes:
-[iweiny: fix checkpatch errors despite formatting changes in if
-	 statement]
-[djbw: better define the choice of 32 kfifo entries]
-[djbw: let CXL layer declare work struct and handle sync to simplify
-       GHES code]
----
- drivers/acpi/apei/ghes.c  | 110 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/cxl-event.h |  27 ++++++++++++
- 2 files changed, 137 insertions(+)
-
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 512067cac170..2247a1535b52 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -26,6 +26,8 @@
- #include <linux/interrupt.h>
- #include <linux/timer.h>
- #include <linux/cper.h>
-+#include <linux/cleanup.h>
-+#include <linux/cxl-event.h>
- #include <linux/platform_device.h>
- #include <linux/mutex.h>
- #include <linux/ratelimit.h>
-@@ -33,6 +35,7 @@
- #include <linux/irq_work.h>
- #include <linux/llist.h>
- #include <linux/genalloc.h>
-+#include <linux/kfifo.h>
- #include <linux/pci.h>
- #include <linux/pfn.h>
- #include <linux/aer.h>
-@@ -673,6 +676,101 @@ static void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
- 	schedule_work(&entry->work);
- }
- 
-+/* CXL Event record UUIDs are formated as GUIDs and reported in section type */
-+
-+/*
-+ * General Media Event Record
-+ * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-+ */
-+#define CPER_SEC_CXL_GEN_MEDIA_GUID					\
-+	GUID_INIT(0xfbcd0a77, 0xc260, 0x417f,				\
-+		  0x85, 0xa9, 0x08, 0x8b, 0x16, 0x21, 0xeb, 0xa6)
-+
-+/*
-+ * DRAM Event Record
-+ * CXL rev 3.0 section 8.2.9.2.1.2; Table 8-44
-+ */
-+#define CPER_SEC_CXL_DRAM_GUID						\
-+	GUID_INIT(0x601dcbb3, 0x9c06, 0x4eab,				\
-+		  0xb8, 0xaf, 0x4e, 0x9b, 0xfb, 0x5c, 0x96, 0x24)
-+
-+/*
-+ * Memory Module Event Record
-+ * CXL rev 3.0 section 8.2.9.2.1.3; Table 8-45
-+ */
-+#define CPER_SEC_CXL_MEM_MODULE_GUID					\
-+	GUID_INIT(0xfe927475, 0xdd59, 0x4339,				\
-+		  0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74)
-+
-+/* Room for 8 entries for each of the 4 event log queues */
-+#define CXL_CPER_FIFO_DEPTH 32
-+DEFINE_KFIFO(cxl_cper_fifo, struct cxl_cper_work_data, CXL_CPER_FIFO_DEPTH);
-+
-+/* Synchronize schedule_work() with cxl_cper_work changes */
-+static DEFINE_SPINLOCK(cxl_cper_work_lock);
-+struct work_struct *cxl_cper_work;
-+
-+static void cxl_cper_post_event(enum cxl_event_type event_type,
-+				struct cxl_cper_event_rec *rec)
-+{
-+	struct cxl_cper_work_data wd;
-+
-+	if (rec->hdr.length <= sizeof(rec->hdr) ||
-+	    rec->hdr.length > sizeof(*rec)) {
-+		pr_err(FW_WARN "CXL CPER Invalid section length (%u)\n",
-+		       rec->hdr.length);
-+		return;
-+	}
-+
-+	if (!(rec->hdr.validation_bits & CPER_CXL_COMP_EVENT_LOG_VALID)) {
-+		pr_err(FW_WARN "CXL CPER invalid event\n");
-+		return;
-+	}
-+
-+	guard(spinlock_irqsave)(&cxl_cper_work_lock);
-+
-+	if (!cxl_cper_work)
-+		return;
-+
-+	wd.event_type = event_type;
-+	memcpy(&wd.rec, rec, sizeof(wd.rec));
-+
-+	if (!kfifo_put(&cxl_cper_fifo, wd)) {
-+		pr_err_ratelimited("CXL CPER kfifo overflow\n");
-+		return;
-+	}
-+
-+	schedule_work(cxl_cper_work);
-+}
-+
-+int cxl_cper_register_work(struct work_struct *work)
-+{
-+	if (cxl_cper_work)
-+		return -EINVAL;
-+
-+	guard(spinlock)(&cxl_cper_work_lock);
-+	cxl_cper_work = work;
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_cper_register_work, CXL);
-+
-+int cxl_cper_unregister_work(struct work_struct *work)
-+{
-+	if (cxl_cper_work != work)
-+		return -EINVAL;
-+
-+	guard(spinlock)(&cxl_cper_work_lock);
-+	cxl_cper_work = NULL;
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_cper_unregister_work, CXL);
-+
-+int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd)
-+{
-+	return kfifo_get(&cxl_cper_fifo, wd);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_cper_kfifo_get, CXL);
-+
- static bool ghes_do_proc(struct ghes *ghes,
- 			 const struct acpi_hest_generic_status *estatus)
- {
-@@ -707,6 +805,18 @@ static bool ghes_do_proc(struct ghes *ghes,
- 		}
- 		else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
- 			queued = ghes_handle_arm_hw_error(gdata, sev, sync);
-+		} else if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID)) {
-+			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
-+
-+			cxl_cper_post_event(CXL_CPER_EVENT_GEN_MEDIA, rec);
-+		} else if (guid_equal(sec_type, &CPER_SEC_CXL_DRAM_GUID)) {
-+			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
-+
-+			cxl_cper_post_event(CXL_CPER_EVENT_DRAM, rec);
-+		} else if (guid_equal(sec_type, &CPER_SEC_CXL_MEM_MODULE_GUID)) {
-+			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
-+
-+			cxl_cper_post_event(CXL_CPER_EVENT_MEM_MODULE, rec);
- 		} else {
- 			void *err = acpi_hest_get_payload(gdata);
- 
-diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
-index 03fa6d50d46f..a0067c49e2ca 100644
---- a/include/linux/cxl-event.h
-+++ b/include/linux/cxl-event.h
-@@ -3,6 +3,8 @@
- #ifndef _LINUX_CXL_EVENT_H
- #define _LINUX_CXL_EVENT_H
- 
-+#include <linux/workqueue_types.h>
-+
- /*
-  * Common Event Record Format
-  * CXL rev 3.0 section 8.2.9.2.1; Table 8-42
-@@ -140,4 +142,29 @@ struct cxl_cper_event_rec {
- 	union cxl_event event;
- } __packed;
- 
-+struct cxl_cper_work_data {
-+	enum cxl_event_type event_type;
-+	struct cxl_cper_event_rec rec;
-+};
-+
-+#ifdef CONFIG_ACPI_APEI_GHES
-+int cxl_cper_register_work(struct work_struct *work);
-+int cxl_cper_unregister_work(struct work_struct *work);
-+int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd);
-+#else
-+static inline int cxl_cper_register_work(struct work_struct *work);
-+{
-+	return 0;
-+}
-+
-+static inline int cxl_cper_unregister_work(struct work_struct *work);
-+{
-+	return 0;
-+}
-+static inline int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd)
-+{
-+	return 0;
-+}
-+#endif
-+
- #endif /* _LINUX_CXL_EVENT_H */
-
--- 
-2.44.0
-
+Thanks
+Wesley Cheng
