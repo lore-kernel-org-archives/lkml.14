@@ -1,284 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2076.outbound.protection.outlook.com [40.107.255.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2B4143889;
-	Fri, 26 Apr 2024 10:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714127227; cv=none; b=LzULGTOIKA5u4L40yfCzF00K9ON+64W+YCIQr6RcqoKENdBukR4hgZsxUcdThB+2SHqnX5mWTEIW36L8an2n/gEwpXfEf4wHNlVnAZ9xqHyJlC+moumyYJTvB+lhlJtLbHeb48rqCw0IFkqyN669lWLVQbZiwh9R174zoc6vxOM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714127227; c=relaxed/simple;
-	bh=ogdfpTSv7psc3Klm1D9XfroiXN2VW40F38W066AD6Dc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PyxNEOtzY3v4M09axyky/QDxx47DEBG92YfEkFjR7Hj1LJRkSmtCN1yAIwiLbc7ZsDp7zNzTO0ZLxYu84grl/YltEPe2pSIlODVS+pKRv/7QSccAqiCKEUTm1q9TjOf1haHDHAfPlLyMoJApy5JRC+bRHeyMS7T4b69WL3q74gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UQgJv2Be; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A562A13D299
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 10:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714127348; cv=fail; b=q/d3MjkHRB/reVhR7nYbR9EQKvukfKkhxRauE4VQfiyop1MQRSdRW0ZbRjBGwg1kAoQCXiuZDJ9TOcrbAcIJ/n7XDypzDSyxBbA4ybyn59MtjL9MboFD+gUqWIsYZOkMCngcAraEY2pONzA27sIxyb/egAB/YxnSb/hh7aFV14U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714127348; c=relaxed/simple;
+	bh=mrobb/409msy4HFELkhl/GU2Cd/JuGq7DjxBYZGqV/E=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=VS/Yiijv+CwHMBj4hIVTEPZs5LE1MuYbHpuy4PSUIRjeB80VMW2gpZC31yhCAZq/oU0Jh+JgGw4728VyvZ2aEO7GzYdCXTrNUki+yeSazz3hJEpPwCaPrGwvgchmWwOpPt0c/13L64ng7F4jiXA+XidWMp/Spsv6JbDCwV4RbmM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=Ng0BlcXz; arc=fail smtp.client-ip=40.107.255.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UQgJv2Be"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27913C113CD;
-	Fri, 26 Apr 2024 10:26:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714127227;
-	bh=ogdfpTSv7psc3Klm1D9XfroiXN2VW40F38W066AD6Dc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UQgJv2Be/d3f7gY4YhCGiZ0nGCXTvXtF2lPoaOp8IvkvodT5XjgiaHz5C4NLUeZez
-	 /jZxQw52aEsmg5BRaBxrOZVL2xZGpI/5NDrT2ndx/IkxWkM/1f2pUeB3SZyzl6FGE5
-	 onzdvpPGAiCnB6b6d7OFml9shofr4lNXi4DdQtAeg8Qz2kZ5ayaapf27d0fHhjuN/9
-	 9vk/bZulZVRR+mLNev30oQKEjxw7vcowhW2/lMJupR3Ia3nZHvZ00hD7z33c4iNkSZ
-	 +et4evTt8wY83wZd/mwDkmnWoYuB2TwKRbuSNMdHvR32j2Vrg7Mgu64ubgBE5dIuvs
-	 a2vPuR57n6gaA==
-Date: Fri, 26 Apr 2024 12:26:57 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	linux-kernel@vger.kernel.org, "Paul E . McKenney" <paulmck@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>, 
-	linux-api@vger.kernel.org, Florian Weimer <fw@deneb.enyo.de>, David.Laight@aculab.com, 
-	carlos@redhat.com, Peter Oskolkov <posk@posk.io>, 
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>, Chris Kennelly <ckennelly@google.com>, 
-	Ingo Molnar <mingo@redhat.com>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, libc-alpha@sourceware.org, Steven Rostedt <rostedt@goodmis.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Noah Goldstein <goldstein.w.n@gmail.com>, 
-	Daniel Colascione <dancol@google.com>, longman@redhat.com, kernel-dev@igalia.com
-Subject: Re: [RFC PATCH 0/1] Add FUTEX_SPIN operation
-Message-ID: <20240426-gaumen-zweibeinig-3490b06e86c2@brauner>
-References: <20240425204332.221162-1-andrealmeid@igalia.com>
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="Ng0BlcXz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ed+XvsW/FFIYsTlrdYENa+WiYZDRyO+aWV76eubHa+CDyrfZVA6Ba6vVlj4LL2pEaxAqeRpAzt97qJLcYzTTD1u8BIuEiRhTM4EAgS5mmAneofqtgH4KTq9yB1kgvUfxUlV24VMaX8JI3iLqFKrBf3WJuywIcjykJyfWLenIbYkjP60AkH09IIHQs75SD8Gevz8JiN6/ZKCk3NQ4Nrs2CbnJf82/Fr9d8PBIJQoO6JuyG0kDb1DZvtEkngcH9uoLT71Uo5Ii8PODZqw4kYj+C2egXSpKzcT29kT4SLRd4IRaFSom69XZF5hrQ2shFMRgJXiu9mcZPRD8HK+9gZHPtQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KeLJeX3O4Txo+vHM7p7PtpqCm/6M4TOvP4/GCeM0234=;
+ b=j4D9XAHaTFAJ4RY+KARviMAjLI3iK6bRaXKSo5r6Vz36SnzfwinXd7Qt+GeiwhWYXufhNvl5/LtlpTNGBoRAp8E+e09jOHBH+jj4g52CDvOND66uzXKCmT4Rp861+eT74+x5eWGgwagTrV0Tp4/D2cbzrQsKWeyw7JQI7ySSh/WxQzqi+bBFsyLt1fHTLCGOoh0SlusV/luerUj6Mi/MPma3pCl93AKUlwOMq/ftUsxRyG4++qMvf2K771j+wHXtyJ8Qk/DDW6QxspYgbSaRWHJguOOlTygvumNGQTevw2LMRoOquwYteC+aMq64PtWAXmRf/5lqpBasSzp4xM0vcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KeLJeX3O4Txo+vHM7p7PtpqCm/6M4TOvP4/GCeM0234=;
+ b=Ng0BlcXz6/Gf43gMRWi2CSY/GQaN4HgTWNXx3Ds5FWKo6Bbu1N6PUKLKht5lD30CaRzZSlqibOt22sO9WQIzcqLQPTYpkh/6KB+Eh65Igxv/loCkod75e4jKMgIfdUzpWxr2PHMM9HbXNUF/q/tI8T1JpE1vq250ErE9mry+I5AlCjxZY4xf1+nWjdGZwwBGLBpewxP56M+xOL18Q7rRQGI0BVbAFck6yan4+KBfE+S794KV2n+XBgaUuIkTHH05xJ7hVlysXQ7ftSS7doYt1vzYtArxUYz7cjZDkVN2l1bMy68ckjbMP0wZ/6yk7wNF08qKcY7nqw/Aa6Q8mjweAw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from PSAPR06MB4486.apcprd06.prod.outlook.com (2603:1096:301:89::11)
+ by TYZPR06MB6213.apcprd06.prod.outlook.com (2603:1096:400:33f::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.46; Fri, 26 Apr
+ 2024 10:29:02 +0000
+Received: from PSAPR06MB4486.apcprd06.prod.outlook.com
+ ([fe80::43cb:1332:afef:81e5]) by PSAPR06MB4486.apcprd06.prod.outlook.com
+ ([fe80::43cb:1332:afef:81e5%5]) with mapi id 15.20.7472.044; Fri, 26 Apr 2024
+ 10:29:02 +0000
+From: Wu Bo <bo.wu@vivo.com>
+To: Jaegeuk Kim <jaegeuk@kernel.org>,
+	Chao Yu <chao@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Wu Bo <wubo.oduw@gmail.com>,
+	Wu Bo <bo.wu@vivo.com>,
+	Liao Yuanhong <liaoyuanhong@vivo.com>
+Subject: [PATCH] f2fs: fix block migration when section is not aligned to pow2
+Date: Fri, 26 Apr 2024 04:41:56 -0600
+Message-Id: <20240426104156.321701-1-bo.wu@vivo.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0120.apcprd02.prod.outlook.com
+ (2603:1096:4:92::36) To PSAPR06MB4486.apcprd06.prod.outlook.com
+ (2603:1096:301:89::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240425204332.221162-1-andrealmeid@igalia.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PSAPR06MB4486:EE_|TYZPR06MB6213:EE_
+X-MS-Office365-Filtering-Correlation-Id: e488d09f-7383-4b12-30c1-08dc65dbb129
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?jA8558ioamMzf0abNGEAJBkGUJeYPKlKIZRGWdTTchdmx0CfwFjB6s6f5vV7?=
+ =?us-ascii?Q?EnvLHTHdxbdzZPmd3cVdR4uo7hCsqq5XFt7/RFtiUTk1OqeiW5z39XcpFvbm?=
+ =?us-ascii?Q?U8eRD6isubw0qJgpGTMF5+hJKExBZvUlx/GW4Z99WIJhdExquKWNbe09LoDp?=
+ =?us-ascii?Q?3i3hu7BaJPp6hpawV2s85U/CqZMfA5xxYyKYm+sWwtp9BrhUWsCMy8HBi1M/?=
+ =?us-ascii?Q?Zg5psJUpP+Zm5KNLNcdWmkLcJ3YdCJR79rsN2zimydb0ULcVdlLR8Qq1cXy2?=
+ =?us-ascii?Q?+JiV+0v6GL+P2O+rvaObsHblkT+83PCAiGXHCteV6i8ivR2WECXXiy65xDQT?=
+ =?us-ascii?Q?fLXEi4phaPSDv9E+O7sS1nVjVBhDTwdDNMMlFVZBEkJAlMLkTZ7So1SZ/qUA?=
+ =?us-ascii?Q?C3M/vFoQwttD8zL03H/xGxixvaEpPxI66Wgz7ywgydvom/9l1yEJW6gDB03x?=
+ =?us-ascii?Q?gUTrcOfbB8ok0RR5+pByAvQ4A7t6TASABbO8WLjcj+2jskbXY7yBXtLmPY7y?=
+ =?us-ascii?Q?EzElu1FxfafERHW+ro0mwsCCyjW1wbr/TbFslN674/4kyWivPppLh/g3CoBt?=
+ =?us-ascii?Q?JlgU+WGBaAcccuofCSb6COX5gbg9VWtNRSggAHRuIeRK+iRMjw9i5tVR9bOh?=
+ =?us-ascii?Q?TfRNwvn3sshuShH7K7K/PxbtN8vuLYRdqb0Yd9Q2xQi88+TvtPy5GguFV8rn?=
+ =?us-ascii?Q?cWnb2+QgK/nl/TTSSqajLTJOCmV+Ntrta4lFGc1z3o683ZBKmBXyealP7SFv?=
+ =?us-ascii?Q?30Hq7pyaFMeKNPgZ8Z3OMrLfMHhx/n5FDUBzGFUsyv8bKy08BVaM/sKTNjNz?=
+ =?us-ascii?Q?+xnFnhEhHHjf0PeYcnX65dFVEHBbpCmJVMLravpsuzTCbSJ25MLVDRbGdlsb?=
+ =?us-ascii?Q?L31Q1ENcTxtnd2+OXMOkW3qnwzGzo0cPRAzgXAkSik8O/ckM+7m/yf38QWzo?=
+ =?us-ascii?Q?8fKBhAULyn9LsD5dH16k9Tlo4toYqXQ0on4gPPX7ps6ffTwUVA2izscJpFCT?=
+ =?us-ascii?Q?kSPBK9+lsTIXsiw1waMNwXn6tWfayOXPy4rerDv0UqW+TYi96SltxtVwbY/C?=
+ =?us-ascii?Q?pU1RDmNt94copXjOUTqF2Q9MKiVgTtOShkGlfyi4vr584LqCXp8T/ERxezBq?=
+ =?us-ascii?Q?ere1PgwuHabAceoiKN4gj2YSFstn5Z8W1On1QAPehSwK3G3MsDQjZoVdvnyF?=
+ =?us-ascii?Q?M8FaCm/lbBGxdSPh+ztO+9Zu09CLMszO2YcHzcwy3ueeg0fOaB5/3Eg5eZPM?=
+ =?us-ascii?Q?EFvRDJA0iFGRnZNoOSwUxreiaFkpgNfDtHtNnUYiyhg70lmmbd2poVmc53zt?=
+ =?us-ascii?Q?+my4J5Pg9RqtwOT/n83HR113VRvPlfB594ne1erDj3n12Q=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR06MB4486.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(52116005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?1DdmpUaanuFBF3l/+UB+XO0C3Krqrf83f+PePuFzvIXJpY46by5DPl/acwAB?=
+ =?us-ascii?Q?VPGB+D/qEigywW/bvsvmUdLqrUWhmohhNfzzdcOAXNvrS+jkhk5WY74kiSkR?=
+ =?us-ascii?Q?hIzB52SMxGv83pDcbznrLSj9oDnhXMSSN/q7duQ/X36vpPuHMnL8lgkwVWyN?=
+ =?us-ascii?Q?CE+XqipVDafNof4oVoOFHdudElzGTB9VKlUNJQbfcvLe6FgWpwTx6+WnO7fV?=
+ =?us-ascii?Q?u8i9tpM/lsUR32lCwwgBb4L/C8H+jY5APP3q6qVTywu6bdfuvaEtXy1ugr4V?=
+ =?us-ascii?Q?GRtt4sMsWQm4Z2onRrIiQWrb8LarFyqZx4WmaEgfK4wHd+h/YptAdgZwQrze?=
+ =?us-ascii?Q?2YxoBWLN3A5aEAXAwc1Y1NLopEoGi+wMWi/RIYqvpPHa9dekdukEe0IAFrpP?=
+ =?us-ascii?Q?lRftfFOPOGVEUj573d5se9SJ8TndVIn1XfkB0qtLoWc5eX8baY3JMR4hQYfM?=
+ =?us-ascii?Q?8KPn3U1MBpWySG2kVtJbkH1jGd87uTnRaWo3BhfbYBupCW8CaWtSAD0x/dwL?=
+ =?us-ascii?Q?dPjnWnBya/kq/RonN3vhPDOenqAqegA/CJDkSo3mBTFSNVXRuaqi+F/TTz3i?=
+ =?us-ascii?Q?uCg2vgosvP06d0WGDBIvzPvkAcYjJjG6G6ImSjPTskfMpjSSQgmUvije8K+g?=
+ =?us-ascii?Q?9qfHT0JtEYx+g5AVJajEqhyMlOKwwORSxgdHydR5dHZEN73fUTWgQhLnSD6p?=
+ =?us-ascii?Q?fFak9vIdq5rlTzoWLmVFCB3iwDwAgt3F6cOREBGZeTEX7hD4tD7ofcI7IToh?=
+ =?us-ascii?Q?14tpG3LiBNgME5tjTEoj6si/YVBH82XakoSSXbJJ6lr8dz9Y0jynLgloJH2i?=
+ =?us-ascii?Q?oXUwRiK+B1sOBpHf1H+9upAq6u7G8pB1ClByzh+QWLu5VD5Bpps0mhGYJIfb?=
+ =?us-ascii?Q?TD5vkDqaiaBamNY4oFiCMSEnpiFSPmLMghuurtSW1dCWEJY5TFaQhaIINSl6?=
+ =?us-ascii?Q?vKKpn/I5TD8i1HKglxCHFd6oBA+asuYDCz6aeyfV6s2Pi7cR6hFvVbSmbMa2?=
+ =?us-ascii?Q?mAJ1K3wkOjQG2iK4yiADWnCT2mS3WGjdqFt7r65SVEFzsR1Cn4eBRiZWD0Bb?=
+ =?us-ascii?Q?rPZbUGAvImci5ZZy4zS6nGVIIJGxZ24xdQYVCCBwp+fYJWQ2L+8WnSdDzBem?=
+ =?us-ascii?Q?zrS4MLwNyLbkuoRIrGPOE4fUEFuQqJvcp0qbFH1o9EMSsOXpFYoCWQmmKGJy?=
+ =?us-ascii?Q?gu88XffjxbCQ5iEBrK13OvR4h9IfCAhOXQRPcd3wJzp72PjlM1RuVrg80v1X?=
+ =?us-ascii?Q?lnKd80yE63kZjvZwsiAR6sujLhPuIHu1ISaV0sDm/X/n9PhByWkSpJ49vlxG?=
+ =?us-ascii?Q?cK9dHGc4zhHFZtt5G1nCvDzNb10Irm+Vvb2QX3ln3+/Wd17c9KGsqjZR+34O?=
+ =?us-ascii?Q?BZOZY/Pkd4DEBWrUlYLQlOcpUHGiXPhBY3eFmcDGwzZgXScLtDVo8QzlrCxP?=
+ =?us-ascii?Q?PExFjTOySc14tEF351c1i6Q+1XwTzOBddfn1XF8qjRLzYvF8J+BkAF/rlQkB?=
+ =?us-ascii?Q?CXTZlIn0rmx3eol3/6iUoKXl/ejkeKdYOQdUOonBb4+/930Fb6fmlq0Z66wo?=
+ =?us-ascii?Q?w3ymBkNeuiTO5x5n0tffHSALrAJSyoZWp5DsD7Gj?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e488d09f-7383-4b12-30c1-08dc65dbb129
+X-MS-Exchange-CrossTenant-AuthSource: PSAPR06MB4486.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2024 10:29:02.6699
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qdr76ncX8iBPG42aHtnxTz0b0iHpwfKHwwkJI+iHRqJPCNxF+HSN28QI/4kT2SSAxtZCLdG9/rMMc9EVP0wziQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB6213
 
-On Thu, Apr 25, 2024 at 05:43:31PM -0300, André Almeida wrote:
-> Hi,
-> 
-> In the last LPC, Mathieu Desnoyers and I presented[0] a proposal to extend the
-> rseq interface to be able to implement spin locks in userspace correctly. Thomas
-> Gleixner agreed that this is something that Linux could improve, but asked for
-> an alternative proposal first: a futex operation that allows to spin a user
-> lock inside the kernel. This patchset implements a prototype of this idea for
-> further discussion.
-> 
-> With FUTEX2_SPIN flag set during a futex_wait(), the futex value is expected to
-> be the PID of the lock owner. Then, the kernel gets the task_struct of the
-> corresponding PID, and checks if it's running. It spins until the futex
-> is awaken, the task is scheduled out or if a timeout happens.  If the lock owner
-> is scheduled out at any time, then the syscall follows the normal path of
-> sleeping as usual.
-> 
-> If the futex is awaken and we are spinning, we can return to userspace quickly,
-> avoid the scheduling out and in again to wake from a futex_wait(), thus
-> speeding up the wait operation.
-> 
-> I didn't manage to find a good mechanism to prevent race conditions between
-> setting *futex = PID in userspace and doing find_get_task_by_vpid(PID) in kernel
-> space, giving that there's enough room for the original PID owner exit and such
-> PID to be relocated to another unrelated task in the system. I didn't performed
+As for zoned-UFS, f2fs section size is forced to zone size. And zone
+size may not aligned to pow2.
 
-One option would be to also allow pidfds. Starting with v6.9 they can be
-used to reference individual threads.
+Fixes: 859fca6b706e ("f2fs: swap: support migrating swapfile in aligned write mode")
+Signed-off-by: Liao Yuanhong <liaoyuanhong@vivo.com>
+Signed-off-by: Wu Bo <bo.wu@vivo.com>
+---
+ fs/f2fs/data.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-So for the really fast case where you have multiple threads and you
-somehow may really do care about the impact of the atomic_long_inc() on
-pidfd_file->f_count during fdget() (for the single-threaded case the
-increment is elided), callers can pass the TID. But in cases where the
-inc and put aren't a performance sensitive, you can use pidfds.
-
-So something like the _completely untested_ below:
-
-diff --git a/kernel/futex/waitwake.c b/kernel/futex/waitwake.c
-index 94feac92cf4f..b842680aa7e0 100644
---- a/kernel/futex/waitwake.c
-+++ b/kernel/futex/waitwake.c
-@@ -4,6 +4,9 @@
- #include <linux/sched/task.h>
- #include <linux/sched/signal.h>
- #include <linux/freezer.h>
-+#include <linux/cleanup.h>
-+#include <linux/file.h>
-+#include <uapi/linux/pidfd.h>
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index d9494b5fc7c1..7ff5ad3fd5dc 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -3904,7 +3904,6 @@ static int check_swap_activate(struct swap_info_struct *sis,
+ 	int nr_extents = 0;
+ 	unsigned long nr_pblocks;
+ 	unsigned int blks_per_sec = BLKS_PER_SEC(sbi);
+-	unsigned int sec_blks_mask = BLKS_PER_SEC(sbi) - 1;
+ 	unsigned int not_aligned = 0;
+ 	int ret = 0;
  
- #include "futex.h"
+@@ -3942,8 +3941,8 @@ static int check_swap_activate(struct swap_info_struct *sis,
+ 		pblock = map.m_pblk;
+ 		nr_pblocks = map.m_len;
  
-@@ -385,19 +388,29 @@ static int futex_spin(struct futex_hash_bucket *hb, struct futex_q *q,
- 		       struct hrtimer_sleeper *timeout, void __user *uaddr, u32 val)
- {
- 	struct task_struct *p;
--	u32 pid, uval;
-+	struct pid *pid;
-+	u32 pidfd, uval;
- 	unsigned int i = 0;
+-		if ((pblock - SM_I(sbi)->main_blkaddr) & sec_blks_mask ||
+-				nr_pblocks & sec_blks_mask ||
++		if ((pblock - SM_I(sbi)->main_blkaddr) % blks_per_sec ||
++				nr_pblocks % blks_per_sec ||
+ 				!f2fs_valid_pinned_area(sbi, pblock)) {
+ 			bool last_extent = false;
  
- 	if (futex_get_value_locked(&uval, uaddr))
- 		return -EFAULT;
- 
--	pid = uval;
-+	pidfd = uval;
-+	CLASS(fd, f)(pidfd);
- 
--	p = find_get_task_by_vpid(pid);
--	if (!p) {
--		printk("%s: no task found with PID %d\n", __func__, pid);
--		return -EAGAIN;
--	}
-+	if (!f.file)
-+		return -EBADF;
-+
-+	pid = pidfd_pid(f.file);
-+	if (IS_ERR(pid))
-+		return PTR_ERR(pid);
-+
-+	if (f.file->f_flags & PIDFD_THREAD)
-+		p = get_pid_task(pid, PIDTYPE_PID); /* individual thread */
-+	else
-+		p = get_pid_task(pid, PIDTYPE_TGID); /* thread-group leader */
-+	if (!p)
-+		return -ESRCH;
- 
- 	if (unlikely(p->flags & PF_KTHREAD)) {
- 		put_task_struct(p);
+-- 
+2.25.1
 
-
-> benchmarks so far, as I hope to clarify if this interface makes sense prior to
-> doing measurements on it.
-> 
-> This implementation has some debug prints to make it easy to inspect what the
-> kernel is doing, so you can check if the futex woke during spinning or if
-> just slept as the normal path:
-> 
-> [ 6331] futex_spin: spinned 64738 times, sleeping
-> [ 6331] futex_spin: woke after 1864606 spins
-> [ 6332] futex_spin: woke after 1820906 spins
-> [ 6351] futex_spin: spinned 1603293 times, sleeping
-> [ 6352] futex_spin: woke after 1848199 spins
-> 
-> [0] https://lpc.events/event/17/contributions/1481/
-> 
-> You can find a small snippet to play with this interface here:
-> 
-> ---
-> 
-> /*
->  * futex2_spin example, by André Almeida <andrealmeid@igalia.com>
->  *
->  * gcc spin.c -o spin
->  */
-> 
-> #define _GNU_SOURCE
-> #include <err.h>
-> #include <errno.h>
-> #include <linux/futex.h>
-> #include <linux/sched.h>
-> #include <pthread.h>
-> #include <stdint.h>
-> #include <stdio.h>
-> #include <stdlib.h>
-> #include <sys/mman.h>
-> #include <unistd.h>
-> 
-> #define __NR_futex_wake 454
-> #define __NR_futex_wait 455
-> 
-> #define WAKE_WAIT_US	10000
-> #define FUTEX2_SPIN	0x08
-> #define STACK_SIZE	(1024 * 1024)
-> 
-> #define FUTEX2_SIZE_U32	0x02
-> #define FUTEX2_PRIVATE	FUTEX_PRIVATE_FLAG
-> 
-> #define timeout_ns  30000000
-> 
-> void *futex;
-> 
-> static inline int futex2_wake(volatile void *uaddr, unsigned long mask, int nr, unsigned int flags)
-> {
-> 	return syscall(__NR_futex_wake, uaddr, mask, nr, flags);
-> }
-> 
-> static inline int futex2_wait(volatile void *uaddr, unsigned long val, unsigned long mask,
-> 			      unsigned int flags, struct timespec *timo, clockid_t clockid)
-> {
-> 	return syscall(__NR_futex_wait, uaddr, val, mask, flags, timo, clockid);
-> }
-> 
-> void waiter_fn()
-> {
-> 	struct timespec to;
-> 	unsigned int flags = FUTEX2_PRIVATE | FUTEX2_SIZE_U32 | FUTEX2_SPIN;
-> 
-> 	uint32_t child_pid = *(uint32_t *) futex;
-> 
-> 	clock_gettime(CLOCK_MONOTONIC, &to);
-> 	to.tv_nsec += timeout_ns;
-> 	if (to.tv_nsec >= 1000000000) {
-> 		to.tv_sec++;
-> 		to.tv_nsec -= 1000000000;
-> 	}
-> 
-> 	printf("waiting on PID %d...\n", child_pid);
-> 	if (futex2_wait(futex, child_pid, ~0U, flags, &to, CLOCK_MONOTONIC))
-> 		printf("waiter failed errno %d\n", errno);
-> 
-> 	puts("waiting done");
-> }
-> 
-> int function(int n)
-> {
-> 	return n + n;
-> }
-> 
-> #define CHILD_LOOPS 500000
-> 
-> static int child_fn(void *arg)
-> {
-> 	int i, n = 2;
-> 
-> 	for (i = 0; i < CHILD_LOOPS; i++)
-> 		n = function(n);
-> 
-> 	futex2_wake(futex, ~0U, 1, FUTEX2_SIZE_U32 | FUTEX_PRIVATE_FLAG);
-> 
-> 	puts("child thread is done");
-> 
-> 	return 0;
-> }
-> 
-> int main() {
-> 	uint32_t child_pid = 0;
-> 	char *stack;
-> 
-> 	futex = &child_pid;
-> 
-> 	stack = mmap(NULL, STACK_SIZE, PROT_READ | PROT_WRITE,
-> 			MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
-> 
-> 	if (stack == MAP_FAILED)
-> 		err(EXIT_FAILURE, "mmap");
-> 
-> 	child_pid = clone(child_fn, stack + STACK_SIZE, CLONE_VM, NULL);
-> 
-> 	waiter_fn();
-> 
-> 	usleep(WAKE_WAIT_US * 10);
-> 
-> 	return 0;
-> }
-> 
-> ---
-> 
-> André Almeida (1):
->   futex: Add FUTEX_SPIN operation
-> 
->  include/uapi/linux/futex.h |  2 +-
->  kernel/futex/futex.h       |  6 ++-
->  kernel/futex/waitwake.c    | 79 +++++++++++++++++++++++++++++++++++++-
->  3 files changed, 83 insertions(+), 4 deletions(-)
-> 
-> -- 
-> 2.44.0
-> 
