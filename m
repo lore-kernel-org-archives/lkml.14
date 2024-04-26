@@ -1,97 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFBF1DA58;
-	Fri, 26 Apr 2024 22:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D332C6B7;
+	Fri, 26 Apr 2024 22:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714169120; cv=none; b=CrGBnu4XTw0/xV16wKMSPHpuFgKhvO6hK4Y9k7HvaMtT3ZiJZcvNVpRp2oHj9oVk0a/ROcoPQEL1O1rD/k8O1Ek4XulPR2WZn7ZeaRv/cM5WBDXgJvcA4OEqd6ptUHlGW0IdsfS0+cSxsWq4wfkT4mLyixO5HM8OKCpQF6cPinU=
+	t=1714169300; cv=none; b=V6nkYnDFpb2fcswdQR4bFqDDj4r4Roc3gTfwLBU3bTJ8WQV3LkD0/C23HyhLx7KevSJG2jS/3KSancp00bq8V5c6tbcVg85lrpoy3bby/beEFjFJQhhyOSI0TdizSvLsdNXSDcnjLmVkjSMYcl1k5TIu6sc4984lSGVpul0iQCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714169120; c=relaxed/simple;
-	bh=VyS48PH4ud8RtFzaXZ3ON83gF15PZu0jVfnp77DittY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=o9PuiF0pfHbDAsE+6LCz2Jr6swX4pHn0CRU3nYDiqlAJstZKE3NY5b82Q6jIBfPeMXoJl04/eFLSU1mrZZzqimR5mhutLLGbF+yhUveeVFxRYw99l2IbK1mf2AqFS0ThyJXUkJ16oyVUX38vEaMY+RVFBm7hSKCU6UbxLdQ35Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FX0v2uej; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714169300; c=relaxed/simple;
+	bh=0khILg54FT/sDBrzWK5mNL6qNVmfbtcLyd+OTVQdtoU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pf7tT9/yTl3JuhjgZRZ6LB05H4bOgsHv2Um+yQIEmrhsZYJfGzfq7Zb++21kW8R4Nl0tWaAW6+zYQSUeoKG08zscuR1lLM7yh4KrGSwBuxrBglBMiM1IoGKsgJdJQNgqjuuBvVT6mhRMq1wIX/vOwQZrK8/u5rHKONMcvAEVaoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XiAPYb6t; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FX0v2uej"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E6CBC113CD;
-	Fri, 26 Apr 2024 22:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714169119;
-	bh=VyS48PH4ud8RtFzaXZ3ON83gF15PZu0jVfnp77DittY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=FX0v2uejd8DLUN0rvJ9OGxQAv4Exdi1srQY658DvzNnrdxp0arbVZO5pyOZCgMJ1V
-	 bgGJ1Gp9NAGx/5VJK8shPJF6Bd/W9esIkIWA7MGyZ7OpGl5GOSjFN0OdE4OTSQG04o
-	 5zvtrgvLq2dFRIR5vLLFMcUSrh6MzfMVNtoIA4NX8GhVs4zYQrWQt4YxaW+ZRpH0We
-	 l+gtupzUi963nqGn14xYFypXRvvRLQqKjAm6e0L554/RWQGy84mWBlQlKcLD4y77dK
-	 nFINtvzct0zafhqBHUT6uO5JZzxCXmUP78LFp5ISf8GhAq0GPwKgnqgTMB3+EHbxfU
-	 QYYEIIvHeSZFQ==
-Date: Fri, 26 Apr 2024 17:05:17 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v1 1/1] PCI/MSI: Make error path handling follow the
- standard pattern
-Message-ID: <20240426220517.GA609655@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XiAPYb6t"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-de596c078c2so2316503276.0;
+        Fri, 26 Apr 2024 15:08:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714169298; x=1714774098; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0khILg54FT/sDBrzWK5mNL6qNVmfbtcLyd+OTVQdtoU=;
+        b=XiAPYb6tRt3fA84i+wAAyzsq8knS7Ik8jZxt5ebiFI9/1vc5xulY36+ie9LN+FxYfo
+         9+q7sFeCgfG2mW+KWY+VsYBushZuxgQ7ChZ3jiZZniGBSruTxR+lZ8m2rBVGCvlMqx8b
+         sM3UhSGyEBzKzHOqrLnkpz9wmtkhSIuHcHbgzAheY/4bVFLxuq3Q4Nc6qj1Xi6mwV7Cd
+         cgobJwi7OZhaltCKcNTnt9Jt2n+Gi+5Au9z1nXv+Ya0fTq5lGZfTu+3U6XBmLyXx3wOs
+         dHpASih3/Z4itkZb5h4OwSZ3Muu5a/jHLiWLZdWCAU+PDI8m879CH0oHUNtJ3dvyMGrA
+         fTeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714169298; x=1714774098;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0khILg54FT/sDBrzWK5mNL6qNVmfbtcLyd+OTVQdtoU=;
+        b=xN+cZJbRG3NuP73E8h68eEw1admeA8L8bNz5G1SM/TRMM1fDdcIs/JgN69hoj7Soka
+         47Zuoy7TZ4KYMCuwC1iN/OIu842rK0xRYyAg8qZXevJjOAcaSJMBJd/7kl3sEsbg11DH
+         6z4fAWOM7O9SpZPGBGNqKL10Hci311GaCI4kz6COMeBebINkVxJaTfuoThXoHjaZH+IJ
+         C49vxfQiiRi2JvIRJ0Zf02CK8x8j8/kunSNHxE6fBmu5VFmPQ9o7Xd4++501w0XJZ1Wu
+         EhqPnQsK4DlKjT4v8w2j3xztWEtHRrJ7H42tTE9R7TFedKxbW24PHs8rEvKJbve6xchQ
+         05fg==
+X-Forwarded-Encrypted: i=1; AJvYcCWnlnVZLixhnXTbubdXLWSx9Uk5id0J3UEsv0U3jGGRaJxc5F3w98HZZE53WNN95MNyDLFUej29DJbqfHjSWb3uyOCXpfmhpABh+JSVl54/LSAQLZLF3+AZTspLiNmah+wn3HQ2MDIpJa9R7yJLoyO0wh2gIDm1QRm/ykQ6thhRc0GVycEZiTY=
+X-Gm-Message-State: AOJu0YyiRCzFSBZNmeUV0vkWz1Ii4VVmMcqIcXM/p5R6EyT+RI+15hE4
+	8UKEdsz6ncwOWuNu3y95A7vRe1nI2jlkHyGuq/JbSsdZJtep/s+me0BRYFQfipioJDoArX1qgIr
+	S9ILkLtoB5mIeUiLOUFIhZ4vo/2c=
+X-Google-Smtp-Source: AGHT+IGATzNR3kaBbDpb0EkDU4wV4HvJlDtd4NArx1rLPtzu8SyJ9NkwXfooBm54KAjIyFV9MaKB/H1WtIXS9Q4VarU=
+X-Received: by 2002:a25:d845:0:b0:de5:a15a:7118 with SMTP id
+ p66-20020a25d845000000b00de5a15a7118mr4144739ybg.42.1714169298049; Fri, 26
+ Apr 2024 15:08:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240426144039.557907-1-andriy.shevchenko@linux.intel.com>
+References: <20240424-tlmm-open-drain-v1-1-9dd2041f0532@quicinc.com> <ZipGRl_QC_x83MFt@hovoldconsulting.com>
+In-Reply-To: <ZipGRl_QC_x83MFt@hovoldconsulting.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Date: Fri, 26 Apr 2024 15:08:06 -0700
+Message-ID: <CAN8TOE_Vd9c2eYgomhu_ukofTeO9eK8Yhrtt-8BQckmJnGfj6w@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: qcom: Fix behavior in abscense of open-drain support
+To: Johan Hovold <johan@kernel.org>
+Cc: Bjorn Andersson <quic_bjorande@quicinc.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Jaiganesh Narayanan <njaigane@codeaurora.org>, 
+	Doug Anderson <dianders@chromium.org>, linux-arm-msm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 26, 2024 at 05:40:39PM +0300, Andy Shevchenko wrote:
-> Make error path handling follow the standard pattern, i.e.
-> checking for errors first. This makes code much more easier
-> to read and understand despite being a bit longer.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Hi Johan, Bjorn,
 
-Applied to pci/msi for v6.10, thanks!
+On Thu, Apr 25, 2024 at 5:02=E2=80=AFAM Johan Hovold <johan@kernel.org> wro=
+te:
+>
+> On Wed, Apr 24, 2024 at 08:45:31PM -0700, Bjorn Andersson wrote:
+> > When a GPIO is configured as OPEN_DRAIN gpiolib will in
+> > gpiod_direction_output() attempt to configure the open-drain property o=
+f
+> > the hardware and if this fails fall back to software emulation of this
+> > state.
+> >
+> > The TLMM block in most Qualcomm platform does not implement such
+> > functionality, so this call would be expected to fail. But due to lack
+> > of checks for this condition, the zero-initialized od_bit will cause
+> > this request to silently corrupt the lowest bit in the config register
+> > (which typically is part of the bias configuration) and happily continu=
+e
+> > on.
 
-I like this style much better too.
+Apologies if I broke something here. Both the pinctrl subsystem and
+the wide world of diverse QCOM chips can be complicated beasts. I
+definitely could have missed things along the way. (And on first
+glance, it seems like you may have found one. I definitely did not
+consider the gpiod_direction_output() "emulation" behavior here when
+submitting this.)
 
-> ---
->  drivers/pci/msi/msi.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
-> index 682fa877478f..c5625dd9bf49 100644
-> --- a/drivers/pci/msi/msi.c
-> +++ b/drivers/pci/msi/msi.c
-> @@ -86,9 +86,11 @@ static int pcim_setup_msi_release(struct pci_dev *dev)
->  		return 0;
->  
->  	ret = devm_add_action(&dev->dev, pcim_msi_release, dev);
-> -	if (!ret)
-> -		dev->is_msi_managed = true;
-> -	return ret;
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev->is_msi_managed = true;
-> +	return 0;
->  }
->  
->  /*
-> @@ -99,9 +101,10 @@ static int pci_setup_msi_context(struct pci_dev *dev)
->  {
->  	int ret = msi_setup_device_data(&dev->dev);
->  
-> -	if (!ret)
-> -		ret = pcim_setup_msi_release(dev);
-> -	return ret;
-> +	if (ret)
-> +		return ret;
-> +
-> +	return pcim_setup_msi_release(dev);
->  }
->  
->  /*
-> -- 
-> 2.43.0.rc1.1336.g36b5255a03ac
-> 
+But I can't tell based on subsequent conversation: are you observing a
+real problem, or is this a theoretical one that only exists if the
+gpiochip driver adds set_config() support?
+
+> > Fix this by checking if the od_bit value is unspecified and if so fail
+> > the request to avoid the unexpected state, and to make sure the softwar=
+e
+> > fallback actually kicks in.
+>
+> Fortunately, this is currently not a problem as the gpiochip driver does
+> not implement the set_config() callback, which means that the attempt to
+> change the pin configuration currently always fails with -ENOTSUP (see
+> gpio_do_set_config()).
+>
+> Specifically, this means that the software fallback kicks in, which I
+> had already verified.
+>
+> Now, perhaps there is some other path which can allow you to end up
+> here, but it's at least not via gpiod_direction_output().
+>
+> The msm pinctrl binding does not allow 'drive-open-drain' so that path
+> should also be ok unless you have a non-conformant devicetree.
+
+The ipq4019 binding does:
+https://git.kernel.org/linus/99d19f5a48ee6fbc647935de458505e9308078e3
+
+This is used in OpenWrt device trees.
+
+> > It is assumed for now that no implementation will come into existence
+> > with BIT(0) being the open-drain bit, simply for convenience sake.
+> >
+> > Fixes: 13355ca35cd1 ("pinctrl: qcom: ipq4019: add open drain support")
+>
+> I guess hardware open-drain mode has never been properly tested on
+> ipq4019.
+
+It was quite some time ago that I wrote and tested this, and per the
+above, I easily could have missed things. (Plus, the open drain
+configuration may not have much practical effect on the systems in
+question, so certain errors may not even be observable.)
+
+But I do recall seeing the code in question activate. And inspection
+shows that the pinconf_apply_setting() -> ... msm_config_group_set()
+path is non-dead code here, for appropriate device trees.
+
+I can try to fire up my development devices again and see what's up if
+that helps, but I won't have time to do that in the next few days.
+
+Brian
