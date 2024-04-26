@@ -1,117 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584DA1448C0;
-	Fri, 26 Apr 2024 10:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638A6142E62
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 10:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714128708; cv=none; b=WmRp1kVGP1Q2aVVPiXKbFGGau6K5K+/odDKeFEpUsvpgO/TyxS9v+oq+7U3SgN7BgzpKV40sPGq7s+FjDhhsTmtt3iNfz+h9YEZF6jmi8UuSAKenPgUX2n9f58DPrhLHFfCsDFQ+cautZTrWlI3zis/DVl3eMhQinIboGq28d58=
+	t=1714128903; cv=none; b=PQSIkhbgzmQTx9ODui7br+zikMH9yz7oAnltum+gn0zvb5zLZg8l89Kjh13gGbJesyT/dxf/FzjrCzzkD9Wy1AO7lSkpg3bO47ZL4MW1NkwLLv6aMRor+uKQIidIw7N3cECylHxn+uj9mvfe1+FQo3xbKrvG/pTblSs8L3JbStc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714128708; c=relaxed/simple;
-	bh=F7/0p0viB4fCK8ImI6PRs/n4wSopc0v7ppeGo6pKuYQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lwdunoCK1SCj1IkfNJsbgH6zh9wDJ9y94uW8+/rchR4uV/p3awurTicTc82V8yVYoT8kMRXOaocSXTRGtk7JtJu7Of+jOWMnyPdkxYO4QufMLuTCf9joGNUtyh7Ei8UtQZtgo6N2QSkqtE//g/UEA1Qzs5wZPce8KF1gkAFhErc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OdakEkNm; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714128903; c=relaxed/simple;
+	bh=DIyBYigJJ/qTpLE5EewD87Aphyv6LkbS9QtWMPjRHd0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Shr90tMYg9ItIGv8vHK0SOlzW31rnIqJPuDvygsUH7vvHiR1xvaKFMKqGvDXrVcUfbdE79VFLPmSS42bemCWusC7kL70RZqXsoL6d5B1twtlejiUIuKn+5jvNJ4XPqx5W5J/kCQ7xtxT+aCe8dA6j7ZD9WVVUJfXwOn+g3KfNH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DuSafFZI; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OdakEkNm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714128706; x=1745664706;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=F7/0p0viB4fCK8ImI6PRs/n4wSopc0v7ppeGo6pKuYQ=;
-  b=OdakEkNmYLeNxtr7aLU3xOREDumNTCjotWB9zqOA7mjgjKX2ZxWb04lS
-   fJ91aQVwJBjxR5VgcrDcu852O9ensaRDzGojR7qKH5ToBdrXBl17MX81X
-   bgYE5dCV02JbwGg5FMOlbwWkv4iICk/KktGLJgAnZBRoruy5lqIoeb2bM
-   omxuM+0mBxAkUplAXmmXs1NTdJr1kplEVOK3eE9YAtfI/Re/kD69eXP9i
-   6lDYR+a4G+VMarYFLwrN/fiez/NIVpNkJCsxbc2e3jI/kDf+POhlbC/1p
-   0/WQ4LYNHbwj6IPW9K4dam1q4X4KNwQ26oEl7IhXTTaNc6kxalf7YQaGY
-   Q==;
-X-CSE-ConnectionGUID: sPCilrY1T8iPh9NxgXuG9A==
-X-CSE-MsgGUID: LsHNVpMhSVKSGVwlmTXwNg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="20546301"
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="20546301"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 03:51:45 -0700
-X-CSE-ConnectionGUID: U20o4/gzTHa/C6ijBtIRvw==
-X-CSE-MsgGUID: US2qCHoVT8+owcn7ICSj9A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="30200794"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.43])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 03:51:43 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 26 Apr 2024 13:51:40 +0300 (EEST)
-To: lumingyindetect@126.com
-cc: LKML <linux-kernel@vger.kernel.org>, 
-    linux-serial <linux-serial@vger.kernel.org>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>, 
-    LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
-Subject: Re: [PATCH] Fix a memory leak in the function lpss8250_probe
-In-Reply-To: <20240426104535.1238368-1-lumingyindetect@126.com>
-Message-ID: <79a30533-7504-9a53-8f8a-ca16817c1ee5@linux.intel.com>
-References: <20240426104535.1238368-1-lumingyindetect@126.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DuSafFZI"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2da08b06e0dso21354951fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 03:55:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714128899; x=1714733699; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=DIyBYigJJ/qTpLE5EewD87Aphyv6LkbS9QtWMPjRHd0=;
+        b=DuSafFZIzN52bdTGiaUJXRuSPumFMeA/xpFEKs6SMZaZL/v22SGx2Cu6pVaXyatGYo
+         zWiZzHcO6PusXJcQvQ2BADO7i8rkGcjlbUjPUp5zp3T3etUGonr0XcACuz5wDTvZ3SDN
+         UlHf44D5XXlrp0JlwDrNUFWM7WkpurF/ajL7Mt+Yt/RlSiQO9Z7yox7n7soiiVyv/REG
+         r9pwAKf1tybC35POhsjiKMsgxuKOlO5xpsW+hTi43sc6mbkwMTWErj1zk+7A0YgcDn6K
+         zsggJhgDsf4TRi25aFwPhFRTuqfHUtK6lyl2DjTG1xUaiPz/Gw9FySv+IZ0ZSNLA2iZh
+         BhPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714128899; x=1714733699;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DIyBYigJJ/qTpLE5EewD87Aphyv6LkbS9QtWMPjRHd0=;
+        b=Xh9UAUjPpGqOF+QFTkYC+yAroFUxXR5wEzB/GyE5ARISrOxpP4qpPTfIn5IJ7/QaRp
+         wUWkZjrl25t+LdWqWmUF2wYN0q1r/vM61aooZqHRHT+3kmGbnKfapn9kkGwHl4UKNlNj
+         E8co+Ad6llsJGV46iy4e0Y6i/qI4GBxISbQhVsqM3PJIUwh1REN+N6/k3bU9+nwrDik5
+         MUeTtaWxEd26KGDt+3O5PRE+Ks0uM1M2geJqODm/pTL9WDLS8E1nCaAuTtJu/RuwunGa
+         uQ/TGVFdt+NpRd5S1SfrlZrB1EkBFsYEq3x2Zh+LHbQlt/DJcocbb2hqxlqrp0G437Fp
+         iCOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSrdS22f0q3ieBsm2GnkSUXvABnoWUaL2ssMBJPVEwWoICKZXzFERGejs3YXTXmbuojVVU46/PftZB7cd59EtqcmYsTg9cDhZojFfj
+X-Gm-Message-State: AOJu0YzVCzl84zITQVyICs2MPYP/9bjw/FCK+U2bLFBnjyCIs2IowIo1
+	7DUXq5wrC3oIzEmUOoVzmUs4ATO0mBBLsu+5CW/7osZZXDfhPlITw9gIqvq3UPE=
+X-Google-Smtp-Source: AGHT+IFyC/4QrUfmFma/svm6P7ncU0LS1OeE3p4iwwLxVeaF0tQ3vYyuoA8eoICoNDNcv4AhdWdRLw==
+X-Received: by 2002:a2e:be0f:0:b0:2df:48a:b8d9 with SMTP id z15-20020a2ebe0f000000b002df048ab8d9mr1837667ljq.35.1714128899379;
+        Fri, 26 Apr 2024 03:54:59 -0700 (PDT)
+Received: from [10.1.1.109] ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id n6-20020a05600c3b8600b0041892e839bcsm30822115wms.33.2024.04.26.03.54.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 03:54:59 -0700 (PDT)
+Message-ID: <8023ea8c1eab725baf0389fe34b918bb5dd924c8.camel@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: samsung: google,gs101-pinctrl
+ needs a clock
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki
+ <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Peter
+ Griffin <peter.griffin@linaro.org>, semen.protsenko@linaro.org
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker
+	 <willmcvicker@google.com>, kernel-team@android.com, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 26 Apr 2024 11:54:57 +0100
+In-Reply-To: <013f2da9-1d91-4b62-b5b7-d603d0c09aef@kernel.org>
+References: <20240425-samsung-pinctrl-busclock-v1-0-898a200abe68@linaro.org>
+	 <20240425-samsung-pinctrl-busclock-v1-1-898a200abe68@linaro.org>
+	 <56a32a2d-2f6f-4f7b-8359-6f3062c010e2@kernel.org>
+	 <013f2da9-1d91-4b62-b5b7-d603d0c09aef@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 
-On Fri, 26 Apr 2024, lumingyindetect@126.com wrote:
+On Thu, 2024-04-25 at 20:18 +0200, Krzysztof Kozlowski wrote:
+> On 25/04/2024 20:15, Krzysztof Kozlowski wrote:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 properties:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 contains:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 c=
+onst: google,gs101-pinctrl
+> > > +=C2=A0=C2=A0=C2=A0 then:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 required:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - clocks
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - clock-names
+> >=20
+> > else:
+> > =C2=A0 properties:
+> > =C2=A0=C2=A0=C2=A0 clocks: false
+> > =C2=A0=C2=A0=C2=A0 clock-names: false
+> >=20
+> > but anyway this is all a bit fragile, because pinctrl is not a driver
+> > and you rely on initcall ordering.
+>=20
+> It is a driver, although initcall ordering is still there. Anyway, it's
+> the first soc requiring clock for pinctrl
 
-> From: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
-> 
-> In the lpss8250_probe function in the 8250_lpss.c file, the program may directly return at either line 347 or line 351, without jumping to the error handling label to release the dynamically allocated memory region pointed to by the variable pdev, as done at line 357 or line 361. This fix introduces a new label named free_irq_vectors to release the dynamically allocated memory region pointed to by pdev, thereby fixing the memory leak defect.
+If I see it right, E850 has similar gates, and like on gs101 they're curren=
+tly
+also all marked as CLK_IGNORE_UNUSED in the e850 clock driver with a commen=
+t that
+a driver update is needed. I've added Sam.
 
-Hi,
-
-You left most of my comments unaddressed. :-( Please don't send a new 
-version unless you've addressed all the comments.
-
-> Signed-off-by: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
-> ---
-
-You also need to name version of the patch on subject line and provide the 
-version history here underneath --- line.
-
->  drivers/tty/serial/8250/8250_lpss.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
-> index c3cd6cb9ac80..fa9fd4dc86c7 100644
-> --- a/drivers/tty/serial/8250/8250_lpss.c
-> +++ b/drivers/tty/serial/8250/8250_lpss.c
-> @@ -344,11 +344,11 @@ static int lpss8250_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	uart.port.mapbase = pci_resource_start(pdev, 0);
->  	uart.port.membase = pcim_iomap(pdev, 0, 0);
->  	if (!uart.port.membase)
-> -		return -ENOMEM;
-> +		goto free_irq_vectors;
->  
->  	ret = lpss->board->setup(lpss, &uart.port);
->  	if (ret)
-> -		return ret;
-> +		goto free_irq_vectors;
->  
->  	dw8250_setup_port(&uart.port);
->  
-> @@ -367,6 +367,7 @@ static int lpss8250_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  
->  err_exit:
->  	lpss->board->exit(lpss);
-> +free_irq_vectors:
->  	pci_free_irq_vectors(pdev);
->  	return ret;
->  }
-> 
-
--- 
- i.
+Cheers,
+Andre'
 
