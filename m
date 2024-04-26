@@ -1,63 +1,166 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DCA9149018;
-	Fri, 26 Apr 2024 15:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D3814885D;
+	Fri, 26 Apr 2024 15:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714144084; cv=none; b=ltJzUWNJg35iTcvQIkuk5a7MR6s6nTZtLfAFGdL+omZtSFYu8sFXYCk+BFO6mrGUl0WAmVzZge5Cq4YFdeoMW7ADM3ekOXY8ooYNuQ/HFBH5ThryR5BOQG5wIG7w9KjoGRLtnGBxI1UKyEP/rHWYK7DoVkQJSiMIRnmMKQLuoEU=
+	t=1714144125; cv=none; b=B211gA+zjNMN6X0PTfIT41S0H2TOR0d+qM0WzYnCQlEUc+tnOGKxBd5eXRIjxMNxUzNx2JgxKF8L0P7A9MxLxpwStM4PK3pHw/XaNa8eAp0PqEoYP9RZjAA0r6Jkm4+q2U+gweMvRLkTvx+v7LOzgGMjbbIfKs/YAKySbjpjUI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714144084; c=relaxed/simple;
-	bh=uLgzTLdOyl35giOTcWBj09wMqWIlQXtQzl5b9SWWQ+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n11nyjJB//kh/72hcr2qHnOTN3U75iv5Yjan7iE83qlxvwEnGAf47rlbVqLwyEWBekmniaH2w0pn64sesC0xjrqgfXVuvZyTq9H5DJrOaMiBoobr655xjb+jeoY/g/cTmf6mcprR/xM3HPdOFPqQRgJadVfnKMRMJ0bpBxWAujY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59A241007;
-	Fri, 26 Apr 2024 08:08:30 -0700 (PDT)
-Received: from [192.168.1.216] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9811B3F73F;
-	Fri, 26 Apr 2024 08:07:58 -0700 (PDT)
-Message-ID: <b2c02eb9-0940-4770-a4b7-22d2af8078db@arm.com>
-Date: Fri, 26 Apr 2024 16:07:56 +0100
+	s=arc-20240116; t=1714144125; c=relaxed/simple;
+	bh=UGBS6UWaXM1p5rTzuuVlN3dBmXfGiZm+cK1RKFexZvc=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RSaFNx43RiYZl1+qjZaCkQSZeAPHQFAoV21wteuwf7FFuNiyrPAzXu5Yf/tD25K0W4lLG0TPYtZr57dAXkZQpxY+RA9uLdiV9r/LarpaRpfsgwJJq11Z6qn9mTu0r7u8EYR9iHIQAZjuwBHZqgYTSp0I8aG7im7/59jBDrxhEj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=evDT79gS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VbIG4GZT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XxlbJUAG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lXxQTYOC; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="evDT79gS";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VbIG4GZT";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XxlbJUAG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lXxQTYOC"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id EB8135D23E;
+	Fri, 26 Apr 2024 15:08:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714144114; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/RIal2x/fOxrYv19regwNkcgG8g/gUeT8uDQISy/Mj8=;
+	b=evDT79gSCBT5QeOYt6WVCxDps7iHTc4O2FfiaTNK6t+g3H79iGVj5r9Y6Lkgo6Avfsn/Pi
+	uzKqICSkLFBBBrP5ekfOrdkguCd38w2xluYyG9TsGq+SkVQl7I2oYFsMR/IZKZ5YoviFUt
+	FkqiNpjsA+3rHux+P4o85rYe6BsRyCg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714144114;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/RIal2x/fOxrYv19regwNkcgG8g/gUeT8uDQISy/Mj8=;
+	b=VbIG4GZTMxUGY62z/vBjGhiRgYa31nl+h7HIVDvexGZpg1/cmvqmeATiHQyFC81htXazYz
+	/mHhv7ItLdJlJYDw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714144113; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/RIal2x/fOxrYv19regwNkcgG8g/gUeT8uDQISy/Mj8=;
+	b=XxlbJUAGF3muCA8b0lx1Xqty/94yLat2QlpNGpZLiCwHe6wzP6VNaW6BUEdRCOKFHZUjjv
+	69cI+s9qhvfVJcglT8mzXQAZW1szOiQ9gM0j0d3CWsCcMvYOHa2mRRZl8ENfO71rVSA8pI
+	AeT6w0zR6QEp/re9BWgwWiffwDkFAnU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714144113;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/RIal2x/fOxrYv19regwNkcgG8g/gUeT8uDQISy/Mj8=;
+	b=lXxQTYOCCXo18CBHN+JZqzwBFes4+s7brVZT6E30GjfK+VjLQnthnHH9JyM0TGASmUuDYd
+	+GAoQmslDCZjdaBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AC7A81398B;
+	Fri, 26 Apr 2024 15:08:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id qBhYKHHDK2b1fAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 26 Apr 2024 15:08:33 +0000
+Date: Fri, 26 Apr 2024 17:08:44 +0200
+Message-ID: <87il042mbn.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Ivan Orlov <ivan.orlov0322@gmail.com>
+Cc: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] ALSA: kunit: make read-only array buf_samples static const
+In-Reply-To: <81a9e3c2-2c44-406e-af19-90d9dcfe4a92@gmail.com>
+References: <20240425160754.114716-1-colin.i.king@gmail.com>
+	<20240425232250.GA205425@workstation.local>
+	<81a9e3c2-2c44-406e-af19-90d9dcfe4a92@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 0/2] Fix Coresight instruction synthesis logic
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Tanmay Jagdale <tanmay@marvell.com>
-Cc: john.g.garry@oracle.com, will@kernel.org, mike.leach@linaro.org,
- leo.yan@linux.dev, suzuki.poulose@arm.com, peterz@infradead.org,
- mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com,
- linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- sgoutham@marvell.com, gcherian@marvell.com, lcherian@marvell.com
-References: <20240404180731.7006-1-tanmay@marvell.com> <Ziqm0QYfGbYjF6xh@x1>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <Ziqm0QYfGbYjF6xh@x1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[sakamocchi.jp,gmail.com,perex.cz,suse.com,vger.kernel.org];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Score: -1.80
+X-Spam-Flag: NO
 
-
-
-On 25/04/2024 19:54, Arnaldo Carvalho de Melo wrote:
-> On Thu, Apr 04, 2024 at 11:37:29PM +0530, Tanmay Jagdale wrote:
->> When we use perf to catpure Coresight trace and generate instruction
->> trace using 'perf script', we get the following output:
->>
->> # perf record -e cs_etm/@tmc_etr0/ -C 9 taskset -c 9 sleep 1
->> # perf script --itrace=i1ns --ns -Fcomm,tid,pid,time,cpu,event,ip,sym,addr,symoff,flags,callindent
+On Fri, 26 Apr 2024 14:05:34 +0200,
+Ivan Orlov wrote:
 > 
-> Applies cleanly, can some Coresight people review this and provide a
-> Reviewed-by?
+> On 4/26/24 00:22, Takashi Sakamoto wrote:
+> > Hi,
+> > 
+> > On Thu, Apr 25, 2024 at 05:07:54PM +0100, Colin Ian King wrote:
+> >> Don't populate the read-only array buf_samples on the stack at
+> >> run time, instead make it static const.
+> >> 
+> >> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> >> ---
+> >>   sound/core/sound_kunit.c | 2 +-
+> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >> 
+> >> diff --git a/sound/core/sound_kunit.c b/sound/core/sound_kunit.c
+> >> index eb90f62228c0..e34c4317f5eb 100644
+> >> --- a/sound/core/sound_kunit.c
+> >> +++ b/sound/core/sound_kunit.c
+> >> @@ -167,7 +167,7 @@ static void _test_fill_silence(struct kunit *test, struct snd_format_test_data *
+> >>     static void test_format_fill_silence(struct kunit *test)
+> >>   {
+> >> -	u32 buf_samples[] = { 10, 20, 32, 64, 129, SILENCE_BUFFER_MAX_FRAMES };
+> >> +	static const u32 buf_samples[] = { 10, 20, 32, 64, 129, SILENCE_BUFFER_MAX_FRAMES };
+> >>   	u8 *buffer;
+> >>   	u32 i, j;
+> > 
+> > Reviewed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+> > 
+> > We can see the other similar cases in the kunit file. I'll post the fix
+> > later.
+> > 
 > 
-> Thanks!
+> Hi Takashi,
 > 
+> Hmm, correct me if I'm wrong, but I don't see any other significant
+> allocations on the stack in the test.
 
-Reviewed-by: James Clark <james.clark@arm.com>
+I guess he meant slightly different ones
+  https://lore.kernel.org/r/20240425233653.218434-1-o-takashi@sakamocchi.jp
+
+
+Takashi
