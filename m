@@ -1,54 +1,57 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BE57604D
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 03:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988F178C66
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 03:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714103009; cv=none; b=sTbpwHqkfzerK92Jj+6LXpLABoN3ij0CjcFZ+shLSA75hjVXmcAu6zRQtx1LRegXocYI5rnfhduMk+WM0d/vXROsARszzi/Q3GxI8wvXKoaR3LduY5n+hmimWmYftDjOtr9TPlbfhCR4KfAlaOpIyAe4/4sP+7do8fs/iVaot5k=
+	t=1714103010; cv=none; b=FU7rdTlN1L/L+VaQW+Bh0tVXp/YZazKbu0za1o6m25fhiunBdRQd7Zdq7d1PnXdAAZrkPnE1mmuizEra0acENYqiysBORcvfhSfgjzkQpQ09rvxnm2opun2CBZlTYjqdofgLlu3bL84ffIgU3s9Az91SVJj7XsIuy/0xOmzn9pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714103009; c=relaxed/simple;
-	bh=tDWeS9EyfVzdb9+b53fsi52JTEQiv3F8/xYZ8HRdDKQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=KqaG7p343Mh8OCOn/NYmut3m9vXEB7FlIe0dHzvGqktCvoT9yWBhZgleIq+GW7XPZAFFnpK4cq4bL5f55mhB/xakeiK9qYRPK+SyEB+/lQHkCz9K5E7zUF9nmue+gSMq/nf0wtqvAlqt6o9GQ1nDk7/YD9Ai+TkgW6LqKPHYly0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=BYf61GvY; arc=none smtp.client-ip=209.85.160.169
+	s=arc-20240116; t=1714103010; c=relaxed/simple;
+	bh=3z+GXuQGkWoDNcuvF/alZVLngGHITQXAlp4EnS0+nzc=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NxR8IVvDlU7RQGvr/ZD03h6is19dGwiMDNvkEBFLbh6PVzzRJvWuDpuBru/ej1+M62Rba5b2k9FXFEKp89Lecyxo1pLS6CgEpzubbHYZH3kOHFNsWsxftFlAxnoiLiwEg/uD8CLcAMZfT8x9aIgGDooSpqIbY878ieDyRUkcwCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=D0E/MEca; arc=none smtp.client-ip=209.85.160.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="BYf61GvY"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4376157292fso11262191cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 20:43:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="D0E/MEca"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4365c1451d4so11449801cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 20:43:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1714103006; x=1714707806; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cjep24xOYUjfKLkGIt5Xg15kGd3msBByaQ3pAIEh0mM=;
-        b=BYf61GvYUnF2TTRC814RtCj7Jgt4au0+4X2s48k/PAgcayVMRSoDIYyb7/T2r8+gZk
-         9g+jXcAfqG0aaf+bQvVm+HtgLisCoEVoczDwIt46ENd/qiobLYVmUBVzeC4jHYB6TxHA
-         ahEmsBWWheDlETvzHZ0KHhv0DQamjmogdwdBO1h77jSecm+MDMMC6r6xqG+XckV3I5cs
-         j+BDdQUuBI0HeAPJI9/2r2hP/UxlSYqXn+zSS/UGE/z5x4YIORfseB8cfpjZyyRQokzM
-         QaFy10fSn8vuXAudMO5k7eXs2NKXH3dzKHSe/5WSV0ZG+rK3+zDzSdALX22uZRdmbeRA
-         YLPw==
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1714103007; x=1714707807; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GURCfQOZVuUrKhF3OYuy9zEmklzBEXgHfus1Ew76lR0=;
+        b=D0E/MEcaVUca9EgN+Gu4xAHiryQIW2fSYwh/A62FAD8M5FXI1BM1qAid+vJrIqFHHK
+         CBI+rUIxP8wCkecZcgQTUE2OGJRvubB584ssMV3k21Mz66vuc0wp/NohWvnwzYrYG7G7
+         jK9ojxZM2cGg7eu5Xr1Q2GUDcbWeG6DymM2m83XBfbjPunt7LYOU463wWHenzjQwk72a
+         jRU8CAI+OJIzGgFqJ9uCJGpf7cwzgg8Y00JqsUMad7KMfpR/yAGQtMCkJjjVCDG7RE57
+         ed5g4qvvBl+t5tJkTbR61fGpl530bf50sQ+DtYgImfJXhtv56tIEdh+wSHcNz/0dfOWg
+         wO8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714103006; x=1714707806;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cjep24xOYUjfKLkGIt5Xg15kGd3msBByaQ3pAIEh0mM=;
-        b=SqBZrVPC7f1cidsARClFSVcKOVHtvs1EWZluydzX7sFnCNi2GAqmt6v/bPC919cYjV
-         7cloaxUIoZ4dyRuEqC7oBaoX8OMu7RvdsDOeSwwoe/BJLmzlb095BNdHyEi8smc8EpVX
-         QvdIyOqJ53mnY31C5441PKympuo6Zui0wS7kF2qeG65WHmDZPgQ8fDz6dugAOUcsgm76
-         cTS1P7337viIQHgTOXlkQzD1IzrjzTqgxLKrUudBBdmcl2FoSPWsWHOHWjCDz2XNbp4D
-         kDkDM7kzCaWua9ToKEHOidQKO7tMO6xOA/WYA17s6PawlnSiGB2WGQkR81Hj1huvBdLs
-         RNQA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0Xh7Y26NqPouPNgHzpFtDCpl3vC9O2sWc3yaa62STJkwWo6QC6xeG3yNQYTumNbYoFAk2eHgIzgdnny8oz1MfMuJr5N1KRqDhJfN9
-X-Gm-Message-State: AOJu0Yzum7YpLgs1M5xAZ2Q6WwOlEXyay6RRd2FiTpxoKIhLuiCYfc14
-	z1Vc29B77Tx35fiwPejXhzacHUGb2Esb2JXvecxDy/YlPjlw6T+duRoyg2qhk4w=
-X-Google-Smtp-Source: AGHT+IFuoNJDhVkOL87F6xMutiaC8xqNWrWB8I1N4j8YVN/IGWVNHKOf3F9BvXbF9SFqhbkbEzFqrA==
-X-Received: by 2002:ac8:7dc1:0:b0:437:9877:333 with SMTP id c1-20020ac87dc1000000b0043798770333mr1787129qte.35.1714103006289;
-        Thu, 25 Apr 2024 20:43:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714103007; x=1714707807;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GURCfQOZVuUrKhF3OYuy9zEmklzBEXgHfus1Ew76lR0=;
+        b=a53KuBMqVdq8/NPfglVlrV+cbeS7ZQJ2YayMSlaNM5Vx71cdmpsfmOZljX7bgsKFjm
+         gQNNgpm4tNq3g4pV3nIpJW63fgI5xamo9W+8Bsh1X7yWDY339/Ki7du1MGsejBLVD9Mn
+         75j6SaowOSkN0+kM26ePxfTp/u4Hvwut748Rdi/krdfG4JcgWNumQY8X4sXYoMmI9cCC
+         HOfeEE47GfmpnklSBgC2934ozpFlMdNS3qRTPaGT4XDKb61od0jzxqQMiQKGH3RerkJ0
+         4G4aZHVpKYo+tsjssHtpoljxafuANVdTe1Ko9JW+vC/ONLujJLONbDyUEpuEo/MlHPfQ
+         HtuA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0zcepMT1BB3bjzM/YzoZH2oGKyX9/3mywoIpB61M7QUqMKFd0q7On/1KPOOkiQ3U47Vd6Ps1tP61PoC0pMu7B0FA2p2TsGwa+xB41
+X-Gm-Message-State: AOJu0YylFfhK4oT1KsDksHIi7cyq71rbJDPk50x+TeN7ZnKDpDS7whBy
+	Fm/IPKDxatCXHi2FkohRTU8Olp+14ACG8C74O+FYNCoKnQoZUHkSiHusuR0fMoI=
+X-Google-Smtp-Source: AGHT+IHx2jRF9sHZe0ji37o0f9d/WxOmNqlXZKb8rptZFsjIiM8LnbaBigJJCVNFjwy+WUFUifGdEw==
+X-Received: by 2002:ac8:7f0e:0:b0:437:a1a2:f832 with SMTP id f14-20020ac87f0e000000b00437a1a2f832mr2149126qtk.11.1714103007410;
+        Thu, 25 Apr 2024 20:43:27 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (129.177.85.34.bc.googleusercontent.com. [34.85.177.129])
-        by smtp.gmail.com with ESMTPSA id c6-20020ac80546000000b00436bb57faddsm7540815qth.25.2024.04.25.20.43.25
+        by smtp.gmail.com with ESMTPSA id c6-20020ac80546000000b00436bb57faddsm7540815qth.25.2024.04.25.20.43.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 20:43:26 -0700 (PDT)
+        Thu, 25 Apr 2024 20:43:27 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: akpm@linux-foundation.org,
 	linux-mm@kvack.org,
@@ -61,10 +64,12 @@ To: akpm@linux-foundation.org,
 	will@kernel.org,
 	robin.murphy@arm.com,
 	iommu@lists.linux.dev
-Subject: [RFC v2 0/3] iommu/intel: Free empty page tables on unmaps
-Date: Fri, 26 Apr 2024 03:43:20 +0000
-Message-ID: <20240426034323.417219-1-pasha.tatashin@soleen.com>
+Subject: [RFC v2 2/3] iommu/intel: synchronize page table map and unmap operations
+Date: Fri, 26 Apr 2024 03:43:22 +0000
+Message-ID: <20240426034323.417219-3-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
+In-Reply-To: <20240426034323.417219-1-pasha.tatashin@soleen.com>
+References: <20240426034323.417219-1-pasha.tatashin@soleen.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,59 +78,140 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changelog
-================================================================
-v2: Use mapcount instead of refcount
-    Synchronized with IOMMU Observability changes.
-================================================================
+Since, we are going to update  parent page table entries when lower
+level page tables become emtpy and we add them to the free list.
+We need a way to synchronize the operation.
 
-This series frees empty page tables on unmaps. It intends to be a
-low overhead feature.
+Use domain->pgd_lock to protect all map and unmap operations.
+This is reader/writer lock. At the beginning everything is going to be
+read only mode, however, later, when free page table on unmap is added
+we will add a writer section as well.
 
-The read-writer lock is used to synchronize page table, but most of
-time the lock is held is reader. It is held as a writer for short
-period of time when unmapping a page that is bigger than the current
-iova request. For all other cases this lock is read-only.
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+---
+ drivers/iommu/intel/iommu.c | 21 +++++++++++++++++++--
+ drivers/iommu/intel/iommu.h |  3 +++
+ 2 files changed, 22 insertions(+), 2 deletions(-)
 
-page->mapcount is used in order to track number of entries at each page
-table.
-
-Microbenchmark data using iova_stress[1]:
-
-Base:
-$ ./iova_stress -s 16
-dma_size:       4K iova space: 16T iommu: ~  32847M time:   36.074s
-
-Fix:
-$ ./iova_stress -s 16
-dma_size:       4K iova space: 16T iommu: ~     27M time:   38.870s
-
-The test maps/unmaps 4K pages and cycles through the IOVA space in a tight loop.
-Base uses 32G of memory, and test completes in 36.074s
-Fix uses 0G of memory, and test completes in 38.870s.
-
-I believe the proposed fix is a good compromise in terms of complexity/
-scalability. A more scalable solution would be to spread read/writer
-lock per-page table, and user page->private field to store the lock
-itself.
-
-However, since iommu already has some protection: i.e. no-one touches
-the iova space of the request map/unmap we can avoid the extra complexity
-and rely on a single per page table RW lock, and be in a reader mode
-most of the time.
-
-[1] https://github.com/soleen/iova_stress
-
-Pasha Tatashin (3):
-  iommu/intel: Use page->_mapcount to count number of entries in IOMMU
-  iommu/intel: synchronize page table map and unmap operations
-  iommu/intel: free empty page tables on unmaps
-
- drivers/iommu/intel/iommu.c | 154 ++++++++++++++++++++++++++++--------
- drivers/iommu/intel/iommu.h |  42 ++++++++--
- drivers/iommu/iommu-pages.h |  30 +++++--
- 3 files changed, 180 insertions(+), 46 deletions(-)
-
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 1bfb6eccad05..8c7e596728b5 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -995,11 +995,13 @@ static void dma_pte_free_pagetable(struct dmar_domain *domain,
+ 				   unsigned long last_pfn,
+ 				   int retain_level)
+ {
++	read_lock(&domain->pgd_lock);
+ 	dma_pte_clear_range(domain, start_pfn, last_pfn);
+ 
+ 	/* We don't need lock here; nobody else touches the iova range */
+ 	dma_pte_free_level(domain, agaw_to_level(domain->agaw), retain_level,
+ 			   domain->pgd, 0, start_pfn, last_pfn);
++	read_unlock(&domain->pgd_lock);
+ 
+ 	/* free pgd */
+ 	if (start_pfn == 0 && last_pfn == DOMAIN_MAX_PFN(domain->gaw)) {
+@@ -1093,9 +1095,11 @@ static void domain_unmap(struct dmar_domain *domain, unsigned long start_pfn,
+ 	    WARN_ON(start_pfn > last_pfn))
+ 		return;
+ 
++	read_lock(&domain->pgd_lock);
+ 	/* we don't need lock here; nobody else touches the iova range */
+ 	dma_pte_clear_level(domain, agaw_to_level(domain->agaw),
+ 			    domain->pgd, 0, start_pfn, last_pfn, freelist);
++	read_unlock(&domain->pgd_lock);
+ 
+ 	/* free pgd */
+ 	if (start_pfn == 0 && last_pfn == DOMAIN_MAX_PFN(domain->gaw)) {
+@@ -2088,6 +2092,7 @@ __domain_mapping(struct dmar_domain *domain, unsigned long iov_pfn,
+ 
+ 	pteval = ((phys_addr_t)phys_pfn << VTD_PAGE_SHIFT) | attr;
+ 
++	read_lock(&domain->pgd_lock);
+ 	while (nr_pages > 0) {
+ 		uint64_t tmp;
+ 
+@@ -2097,8 +2102,10 @@ __domain_mapping(struct dmar_domain *domain, unsigned long iov_pfn,
+ 
+ 			pte = pfn_to_dma_pte(domain, iov_pfn, &largepage_lvl,
+ 					     gfp);
+-			if (!pte)
++			if (!pte) {
++				read_unlock(&domain->pgd_lock);
+ 				return -ENOMEM;
++			}
+ 			first_pte = pte;
+ 
+ 			lvl_pages = lvl_to_nr_pages(largepage_lvl);
+@@ -2158,6 +2165,7 @@ __domain_mapping(struct dmar_domain *domain, unsigned long iov_pfn,
+ 			pte = NULL;
+ 		}
+ 	}
++	read_unlock(&domain->pgd_lock);
+ 
+ 	return 0;
+ }
+@@ -3829,6 +3837,7 @@ static int md_domain_init(struct dmar_domain *domain, int guest_width)
+ 	domain->pgd = iommu_alloc_page_node(domain->nid, GFP_ATOMIC);
+ 	if (!domain->pgd)
+ 		return -ENOMEM;
++	rwlock_init(&domain->pgd_lock);
+ 	domain_flush_cache(domain, domain->pgd, PAGE_SIZE);
+ 	return 0;
+ }
+@@ -4074,11 +4083,15 @@ static size_t intel_iommu_unmap(struct iommu_domain *domain,
+ 	unsigned long start_pfn, last_pfn;
+ 	int level = 0;
+ 
++	read_lock(&dmar_domain->pgd_lock);
+ 	/* Cope with horrid API which requires us to unmap more than the
+ 	   size argument if it happens to be a large-page mapping. */
+ 	if (unlikely(!pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT,
+-				     &level, GFP_ATOMIC)))
++				     &level, GFP_ATOMIC))) {
++		read_unlock(&dmar_domain->pgd_lock);
+ 		return 0;
++	}
++	read_unlock(&dmar_domain->pgd_lock);
+ 
+ 	if (size < VTD_PAGE_SIZE << level_to_offset_bits(level))
+ 		size = VTD_PAGE_SIZE << level_to_offset_bits(level);
+@@ -4145,8 +4158,10 @@ static phys_addr_t intel_iommu_iova_to_phys(struct iommu_domain *domain,
+ 	int level = 0;
+ 	u64 phys = 0;
+ 
++	read_lock(&dmar_domain->pgd_lock);
+ 	pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level,
+ 			     GFP_ATOMIC);
++	read_unlock(&dmar_domain->pgd_lock);
+ 	if (pte && dma_pte_present(pte))
+ 		phys = dma_pte_addr(pte) +
+ 			(iova & (BIT_MASK(level_to_offset_bits(level) +
+@@ -4801,8 +4816,10 @@ static int intel_iommu_read_and_clear_dirty(struct iommu_domain *domain,
+ 		struct dma_pte *pte;
+ 		int lvl = 0;
+ 
++		read_lock(&dmar_domain->pgd_lock);
+ 		pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &lvl,
+ 				     GFP_ATOMIC);
++		read_unlock(&dmar_domain->pgd_lock);
+ 		pgsize = level_size(lvl) << VTD_PAGE_SHIFT;
+ 		if (!pte || !dma_pte_present(pte)) {
+ 			iova += pgsize;
+diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
+index e5c1eb23897f..2f38b087ea4f 100644
+--- a/drivers/iommu/intel/iommu.h
++++ b/drivers/iommu/intel/iommu.h
+@@ -615,6 +615,9 @@ struct dmar_domain {
+ 		struct {
+ 			/* virtual address */
+ 			struct dma_pte	*pgd;
++
++			/* Synchronizes pgd map/unmap operations */
++			rwlock_t	pgd_lock;
+ 			/* max guest address width */
+ 			int		gaw;
+ 			/*
 -- 
 2.44.0.769.g3c40516874-goog
 
