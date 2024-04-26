@@ -1,204 +1,171 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39EE24B21;
-	Fri, 26 Apr 2024 16:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2932A148FF6
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 16:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714150035; cv=none; b=Bu0fB8eFliKhbkUeySGkQ248JaHOO32D8uWXumpDd1/5VSv2umu2e/29bwWS8AiJDsLRL+HdMSOJsW6bknkB/GHe8s2E1065X2l2fH61CTHkstfhC/7nrpqZ8W/LQ4kWfvQZqvjTBvm/gN8Pm4EA1KKfnz81ccnViAS6ut2znYU=
+	t=1714150197; cv=none; b=EA+IzO9gVy5EeQEQCW/ex8xFj79b+jNNm96SIn3FVDmHVAu8sE39pwqv87Bkw4gJ4Ra9HJQhN3hejEBW7F0Tv9afvcaVxnp+qQJ7k1+ojWJnYh4cBlEwJPneHSLQQA/+Atj/cURO2HELGnk/8r0EXN+t5bGVufj3vy/BLdGhxXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714150035; c=relaxed/simple;
-	bh=jfWjPGIScqlbTDAnTTHGrdwchCO7+CZVPkoOw2v3wV0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Go+HMbsplFFQcsMwLhQvmIS47YHbgkkG5TWh5M0e7FoWJ8qB0dx+bxCNNj7bGRbnU4DU6pyjqfbEq1vqS811JWAYg4ELoikv3ZkYubVrQpMLltVU9+KcLTXWLAmWMXu6unD5FZCghMHst8KP70hgC77sqQ8MQJorTGqjQ90Lho0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RCtVqu1t; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714150197; c=relaxed/simple;
+	bh=dAIh0mYrFaN2fm+UCmMxFACIbmH36yeNdbSzckFjm1c=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=WeD5AFscNxluoo8XAA3lUpa4N1XnVJDhlUeyBMNjGnF3OI4UHgZ34osgdcp6DkX7Ak0LwXH18MZGJl/2XBsF2J9ohfH/Dqfp93i7VXJ3csGwkHZ9wxPwG9kXtw0/lcqT1M/RtMmyxNuoEuBx3B6M+qgj9koepuTod4BePABXDqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UL62sLzf; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RCtVqu1t"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e5715a9ebdso20175625ad.2;
-        Fri, 26 Apr 2024 09:47:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UL62sLzf"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61b75ef0453so45018647b3.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 09:49:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714150033; x=1714754833; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sQn2ppMWd1uOjL7uqzuPwPjat8fxQZ3r4Xgq8M/reJc=;
-        b=RCtVqu1tpAT/QYUfHRyM28M6Tx64es1qhCMcF/lP67ARhgh1/fsqXIqI23eZqjejQV
-         UC6Ad0wrCzIxdcqS4X0sW47Qqi0GoLdqbQaiHlOVzDH2VU3IavN22CFhP7NM5BlQlCSK
-         TdW8A+L4Z5ln0pRpwnbHXk58wc35T+NZBKz3WNb2tnjBcErhcCRjpt8X+Ykpsle+KiVr
-         1K5++DYPNJOjVz9Jv6KvQ+r7GASc4irLIPjmhiehneyNQpM16ZyqtcQ88Zl+GMPMesxj
-         H6z2vNA+8l5HeC/FbKEGUPpLzu92vgvK3Dkt9kKpgxUUg8+ZHuNLt8Hp9914kYSYMGD9
-         zuCw==
+        d=google.com; s=20230601; t=1714150195; x=1714754995; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4ewX/DowDnqHcwiaRF/iXxVQlOHg+443y/+RR0GCm0w=;
+        b=UL62sLzfBcQm3mdNRySbmOaGEkFhscXij4Yz4mV73nsZN1Syw75WkBPF9mTPot+s4R
+         OZk7rQLuiHzojKIxe5iibiE9MKGfb1JQtcEvnZRx5lvtq6xohGzfM2FtRAAwYfT65thM
+         +R1OPa2S4AWDo1GH2egMGpEvM4wzLBKEM4/kdRMrxgtfLn/0B43SksWWFUZ91gdJIP46
+         8efeJovSrJOGpQkqMMen/aoq+DJSqxJm+ww+yConRK/CHpCw/X7QWiDh3Ox8PYff21WM
+         w7WH35KfqNv8K0xK/AgXi/Su/x8opg5HHHlcrhOWn3YsnlJ6ZWsbZyUeu4ZR1Po9VKHG
+         WIXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714150033; x=1714754833;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sQn2ppMWd1uOjL7uqzuPwPjat8fxQZ3r4Xgq8M/reJc=;
-        b=lx5V+IVQJZbtK0MTRkJgYN9lVVeghvoI4fZVpVzXcoyRZkmOIgLFoJRW74tfhTOLkO
-         Vbw+hGF/kkZ/kbcnTPp+0XdMdRRbMvdsTdxg0Kyqeu3JHTXA6brcsqr9Ym2S2zKie+MB
-         I3PMnhD8hYNBdj1TkXmJ0zOQBfQrs6u+WYzEX+VCYgAwubPzRZP8fYgnSzhSirvB2i1x
-         yBDTDFGNY8+Afs54LL6PNVWCxGJyDrDZ/qowq6vSOavEk4Ez1Hbp5OfpyE2IN76yPJ97
-         E+80reDCQK4VZ9751wmaIWVLw/+mpqCH2I56874Dj9WQcudlVv/IDm3iKqwQAajSgCE3
-         XOdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxi3JFwHyEs/snaeTBlh7fkNTMz9y9FdnyqfGZPp+TNOZTH+XVnBZ8XnK1BUFwakbgouWUUAKI2uBMJyaLIPAPd12suE/5cw2JXZcH
-X-Gm-Message-State: AOJu0YwG3dXWadrpZf9h+0BpOeO0LCBsWimP9/dQuPhBB0JChGHGhMPw
-	lLxVNp0BXgdvOJkrX5WghpKWkvnrxhp0dsm06GeJbxJTFFCq/la0
-X-Google-Smtp-Source: AGHT+IFHwuV5UcmP2zAhp9tIF5BJVXGc6sYdl7MFsQgMTTVUUw38ID/F1HlogJCOkDP6ZhPiVFL7gA==
-X-Received: by 2002:a17:902:d492:b0:1dd:2eed:52a5 with SMTP id c18-20020a170902d49200b001dd2eed52a5mr225645plg.37.1714150033037;
-        Fri, 26 Apr 2024 09:47:13 -0700 (PDT)
-Received: from kernel.. ([2402:e280:214c:86:dcce:3490:50a1:90df])
-        by smtp.gmail.com with ESMTPSA id q5-20020a17090311c500b001d8f81ecea1sm15766839plh.172.2024.04.26.09.47.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 09:47:12 -0700 (PDT)
-From: R Sundar <prosunofficial@gmail.com>
-To: heikki.krogerus@linux.intel.com,
-	gregkh@linuxfoundation.org,
-	neil.armstrong@linaro.org,
-	dmitry.baryshkov@linaro.org,
-	u.kleine-koenig@pengutronix.de,
-	christophe.jaillet@wanadoo.fr
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	javier.carrasco.cruz@gmail.com,
-	R Sundar <prosunofficial@gmail.com>
-Subject: [PATCH v5 linux-next] usb:typec:mux: remove indentation for common path
-Date: Fri, 26 Apr 2024 22:17:05 +0530
-Message-Id: <20240426164705.2717-1-prosunofficial@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1714150195; x=1714754995;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4ewX/DowDnqHcwiaRF/iXxVQlOHg+443y/+RR0GCm0w=;
+        b=dvesBugaX9zrP5ekZ8Dviq0s/iFzU1tytlt1lfJj6+EvwCZ8CsX8tF/Ozu39kf4H4/
+         h5lGlZdTqyddA6vr2qID1FZOwW7AlnjpMU0I3PNzCALTb6Q8vlZrtv6DUtEhTL+HbX5W
+         TiviQNXTzUZw60wZDqGDDJ3nj38CQ3b/d4lxalIyFcpxT407ZDfur1f3dqP3G2jYrAYi
+         fUys0s0ZMiaYpev0AmgfrlroL4GYqXA4mi4h4Zr/BE8sO3tYDm+Fp6CwlnH6G72w5BBj
+         fx7rvDLDhaj7rMuxS4MADhMmQYmg+zV7qG/IDwUIZtFw4VIuTg1bH7eXci+tbHlr6PE8
+         8DMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV28YMQuTwk58k6CDoX3p1W613//Xj+g4yXlIzHEGaESOrorjEdUAkap1DxAdFdrAG3LLKM2Eo6BNt6+ATsIpNPmioSFCf/x9AToIFz
+X-Gm-Message-State: AOJu0YyHm1weh1iWIZtsfFOUf4Kem+QAArJGuKS/+6LUwMgN6eI1vVp8
+	SQuvbMs3aM4M+wQgF4QsWtpvFKI/N45Skeo7fa0h9636Wx6r3XA2BZD5n8CqVV92CgpNiUyDgv9
+	brw==
+X-Google-Smtp-Source: AGHT+IErOpsXYuqKrycMnqqvdiscCxh5dYOEbzYBM+0/tFZOu07aaZY0igiIEOsj02AJwMtScSS7N0P/6uY=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a81:8488:0:b0:615:19db:8ee0 with SMTP id
+ u130-20020a818488000000b0061519db8ee0mr664141ywf.1.1714150195245; Fri, 26 Apr
+ 2024 09:49:55 -0700 (PDT)
+Date: Fri, 26 Apr 2024 09:49:53 -0700
+In-Reply-To: <21d284d23a7565beb9a0d032c97cc2a2d4e3988a.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <e324ff5e47e07505648c0092a5370ac9ddd72f0b.1708933498.git.isaku.yamahata@intel.com>
+ <2daf03ae-6b5a-44ae-806e-76d09fb5273b@linux.intel.com> <20240313171428.GK935089@ls.amr.corp.intel.com>
+ <52bc2c174c06f94a44e3b8b455c0830be9965cdf.camel@intel.com>
+ <1d1da229d4bd56acabafd2087a5fabca9f48c6fc.camel@intel.com>
+ <20240319215015.GA1994522@ls.amr.corp.intel.com> <CA+EHjTxFZ3kzcMCeqgCv6+UsetAUUH4uSY_V02J1TqakM=HKKQ@mail.gmail.com>
+ <970c8891af05d0cb3ccb6eab2d67a7def3d45f74.camel@intel.com>
+ <ZivIF9vjKcuGie3s@google.com> <21d284d23a7565beb9a0d032c97cc2a2d4e3988a.camel@intel.com>
+Message-ID: <ZivazWQw1oCU8VBC@google.com>
+Subject: Re: [PATCH v19 011/130] KVM: Add new members to struct kvm_gfn_range
+ to operate on
+From: Sean Christopherson <seanjc@google.com>
+To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Tina Zhang <tina.zhang@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hang Yuan <hang.yuan@intel.com>, 
+	Kai Huang <kai.huang@intel.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "sagis@google.com" <sagis@google.com>, 
+	Bo Chen <chen.bo@intel.com>, 
+	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>, "tabba@google.com" <tabba@google.com>, 
+	Erdem Aktas <erdemaktas@google.com>, 
+	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	Isaku Yamahata <isaku.yamahata@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Nitpick, Mostly common path will not be indented.  so rewritten this
-function to check device_node pointer is null and removed common path
-indentation.
+On Fri, Apr 26, 2024, Rick P Edgecombe wrote:
+> On Fri, 2024-04-26 at 08:28 -0700, Sean Christopherson wrote:
+> > If the choice is between an enum and exclude_*, I would strongly prefer the
+> > enum.  Using exclude_* results in inverted polarity for the code that
+> > triggers invalidations.
+> 
+> Right, the awkwardness lands in that code.
+> 
+> The processing code looks nice though:
+> https://lore.kernel.org/kvm/5210e6e6e2eb73b04cb7039084015612479ae2fe.camel@intel.com/
 
-Signed-off-by: R Sundar <prosunofficial@gmail.com>
----
+Heh, where's your bitmask abuse spirit?  It's a little evil (and by "evil" I mean
+awesome), but the need to process different roots is another good argument for an
+enum+bitmask.
 
-Fixed nitpicks in code according to comments received on other patch as
-below:
+enum tdp_mmu_root_types {
+	KVM_SHARED_ROOTS = KVM_PROCESS_SHARED,
+	KVM_PRIVATE_ROOTS = KVM_PROCESS_PRIVATE,
+	KVM_VALID_ROOTS = BIT(2),
+	KVM_ANY_VALID_ROOT = KVM_SHARED_ROOT | KVM_PRIVATE_ROOT | KVM_VALID_ROOT,
+	KVM_ANY_ROOT = KVM_SHARED_ROOT | KVM_PRIVATE_ROOT,
+}
+static_assert(!(KVM_SHARED_ROOTS & KVM_VALID_ROOTS));
+static_assert(!(KVM_PRIVATE_ROOTS & KVM_VALID_ROOTS));
+static_assert(KVM_PRIVATE_ROOTS == (KVM_SHARED_ROOTS << 1));
 
-[ Nit, this function should be rewritten to not work like this, the
-"common" path should not be indented, but only the exception (i.e. bail
-if ep is not allocated properly.) ]
-https://lore.kernel.org/all/2024041103-doornail-professor-7c1e@gregkh/
+/*
+ * Returns the next root after @prev_root (or the first root if @prev_root is
+ * NULL).  A reference to the returned root is acquired, and the reference to
+ * @prev_root is released (the caller obviously must hold a reference to
+ * @prev_root if it's non-NULL).
+ *
+ * Returns NULL if the end of tdp_mmu_roots was reached.
+ */
+static struct kvm_mmu_page *tdp_mmu_next_root(struct kvm *kvm,
+					      struct kvm_mmu_page *prev_root,
+					      enum tdp_mmu_root_types types)
+{
+	bool only_valid = types & KVM_VALID_ROOTS;
+	struct kvm_mmu_page *next_root;
 
-Goal is to get rid of of_node_put,but sending this patch first to do one
-thing at a time.
+	/*
+	 * While the roots themselves are RCU-protected, fields such as
+	 * role.invalid are protected by mmu_lock.
+	 */
+	lockdep_assert_held(&kvm->mmu_lock);
 
-Changes since v1 - fixed the typo error for spell from identation to
-indentation
+	rcu_read_lock();
 
-Changes since v2 - Shifted the indentation to one level left for the
-switch cases as per coding style.
+	if (prev_root)
+		next_root = list_next_or_null_rcu(&kvm->arch.tdp_mmu_roots,
+						  &prev_root->link,
+						  typeof(*prev_root), link);
+	else
+		next_root = list_first_or_null_rcu(&kvm->arch.tdp_mmu_roots,
+						   typeof(*next_root), link);
 
-Changes since v3 - Added descriptive subject for the patch and checked
-from and sign-off having same name.
+	while (next_root) {
+		if ((!only_valid || !next_root->role.invalid) &&
+		    (types & (KVM_SHARED_ROOTS << is_private_sp(root))) &&
+		    kvm_tdp_mmu_get_root(next_root))
+			break;
 
-Changes since v4 - Fixed name in signed-off-by as in documents.
+		next_root = list_next_or_null_rcu(&kvm->arch.tdp_mmu_roots,
+				&next_root->link, typeof(*next_root), link);
+	}
 
-Patches link:
-------------
-v1  - https://lore.kernel.org/all/20240420145522.15018-1-prosunofficial@gmail.com/
-v2  - https://lore.kernel.org/linux-usb/20240420164927.15290-1-prosunofficial@gmail.com/
-v3  - https://lore.kernel.org/all/20240421011647.3027-1-prosunofficial@gmail.com/
-v4  - https://lore.kernel.org/all/20240424150718.5006-1-prosunofficial@gmail.com/
+	rcu_read_unlock();
 
- drivers/usb/typec/mux/nb7vpq904m.c | 68 +++++++++++++++---------------
- 1 file changed, 34 insertions(+), 34 deletions(-)
+	if (prev_root)
+		kvm_tdp_mmu_put_root(kvm, prev_root);
 
-diff --git a/drivers/usb/typec/mux/nb7vpq904m.c b/drivers/usb/typec/mux/nb7vpq904m.c
-index b17826713753..f7a00b388876 100644
---- a/drivers/usb/typec/mux/nb7vpq904m.c
-+++ b/drivers/usb/typec/mux/nb7vpq904m.c
-@@ -320,47 +320,47 @@ static int nb7vpq904m_parse_data_lanes_mapping(struct nb7vpq904m *nb7)
- 	int ret, i, j;
- 
- 	ep = of_graph_get_endpoint_by_regs(nb7->client->dev.of_node, 1, 0);
-+	if (!ep)
-+		return 0;
- 
--	if (ep) {
--		ret = of_property_count_u32_elems(ep, "data-lanes");
--		if (ret == -EINVAL)
--			/* Property isn't here, consider default mapping */
--			goto out_done;
--		if (ret < 0)
--			goto out_error;
--
--		if (ret != DATA_LANES_COUNT) {
--			dev_err(&nb7->client->dev, "expected 4 data lanes\n");
--			ret = -EINVAL;
--			goto out_error;
--		}
--
--		ret = of_property_read_u32_array(ep, "data-lanes", data_lanes, DATA_LANES_COUNT);
--		if (ret)
--			goto out_error;
-+	ret = of_property_count_u32_elems(ep, "data-lanes");
-+	if (ret == -EINVAL)
-+		/* Property isn't here, consider default mapping */
-+		goto out_done;
-+	if (ret < 0)
-+		goto out_error;
-+
-+	if (ret != DATA_LANES_COUNT) {
-+		dev_err(&nb7->client->dev, "expected 4 data lanes\n");
-+		ret = -EINVAL;
-+		goto out_error;
-+	}
- 
--		for (i = 0; i < ARRAY_SIZE(supported_data_lane_mapping); i++) {
--			for (j = 0; j < DATA_LANES_COUNT; j++) {
--				if (data_lanes[j] != supported_data_lane_mapping[i][j])
--					break;
--			}
-+	ret = of_property_read_u32_array(ep, "data-lanes", data_lanes, DATA_LANES_COUNT);
-+	if (ret)
-+		goto out_error;
- 
--			if (j == DATA_LANES_COUNT)
-+	for (i = 0; i < ARRAY_SIZE(supported_data_lane_mapping); i++) {
-+		for (j = 0; j < DATA_LANES_COUNT; j++) {
-+			if (data_lanes[j] != supported_data_lane_mapping[i][j])
- 				break;
- 		}
- 
--		switch (i) {
--		case NORMAL_LANE_MAPPING:
--			break;
--		case INVERT_LANE_MAPPING:
--			nb7->swap_data_lanes = true;
--			dev_info(&nb7->client->dev, "using inverted data lanes mapping\n");
-+		if (j == DATA_LANES_COUNT)
- 			break;
--		default:
--			dev_err(&nb7->client->dev, "invalid data lanes mapping\n");
--			ret = -EINVAL;
--			goto out_error;
--		}
-+	}
-+
-+	switch (i) {
-+	case NORMAL_LANE_MAPPING:
-+		break;
-+	case INVERT_LANE_MAPPING:
-+		nb7->swap_data_lanes = true;
-+		dev_info(&nb7->client->dev, "using inverted data lanes mapping\n");
-+		break;
-+	default:
-+		dev_err(&nb7->client->dev, "invalid data lanes mapping\n");
-+		ret = -EINVAL;
-+		goto out_error;
- 	}
- 
- out_done:
--- 
-2.34.1
+	return next_root;
+}
 
+#define __for_each_tdp_mmu_root_yield_safe(_kvm, _root, _as_id, _types)		\
+	for (_root = tdp_mmu_next_root(_kvm, NULL, _types);			\
+	     ({ lockdep_assert_held(&(_kvm)->mmu_lock); }), _root;		\
+	     _root = tdp_mmu_next_root(_kvm, _root, _types))			\
+		if (_as_id >= 0 && kvm_mmu_page_as_id(_root) != _as_id) {	\
+		} else
+
+#define for_each_valid_tdp_mmu_root_yield_safe(_kvm, _root, _as_id)		\
+	__for_each_tdp_mmu_root_yield_safe(_kvm, _root, _as_id, KVM_ANY_VALID_ROOT)
+
+#define for_each_tdp_mmu_root_yield_safe(_kvm, _root)				\
+	for (_root = tdp_mmu_next_root(_kvm, NULL, KVM_ANY_ROOT);		\
+	     ({ lockdep_assert_held(&(_kvm)->mmu_lock); }), _root;		\
+	     _root = tdp_mmu_next_root(_kvm, _root, KVM_ANY_ROOT))
