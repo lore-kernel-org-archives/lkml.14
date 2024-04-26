@@ -1,189 +1,153 @@
-Received: from mx07-001d1705.pphosted.com (mx07-001d1705.pphosted.com [185.132.183.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8629E3C46B;
-	Fri, 26 Apr 2024 23:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=185.132.183.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714173522; cv=fail; b=YSuIBDkFwVtBISdKqA7oq40zQ9GO3VU7bsGzQAM39x/Bp3bSvsYemv7fM5qkZehTzVNxXzujVI1Ef39RKbPQrmGvGN0quDrIJqO98s3J8TwonsDC+mJJ/Ed2b6ZV8ZV8nVO6OUQFNu4pfR9/bvCyBeZUHh5siRavCklxYI+5Vpc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714173522; c=relaxed/simple;
-	bh=itbhcWH9Tp87Ca8LXErp7Y2nQOVNeK43yZrCGYQ0jZY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oQwzcUv0cxKdyjLnoo9JEHZWksVJA5s50SA6OamYdiOKRCE40EMIKA50ZNDyedAcdyeztHTsPLsb0dH4Em2mTb6uso5J8FYm4cQqnyeRoXSweI5rX8icU/q1t1RsqjHREPxuvmoXZvD1o1U3C0Aenmpf4o9C0FW4X6IkBbreMHM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=fRo6YmDY; arc=fail smtp.client-ip=185.132.183.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323083987B;
+	Fri, 26 Apr 2024 23:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714173653; cv=none; b=SSAmcA2WP1wATXaAVJJJKSFBBPu1dCeRwwBJXdjjOAI4yHge1FTQvg4BUv1K7fAgHSNPpO/EILjK4toTSJ+pJ0wU+x/0UkbmDrRdq8M2pki/QnDbt0eeaJ/4qCVkjKa1jHh9c4xJ+ab6RjRciVzCTrXaV9sWhq8uMF37DdyG4Cs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714173653; c=relaxed/simple;
+	bh=+SUwcMe57diWdtLlUgXI6q0655FAOJ9vlqZ2w5se5pk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s0UU/7O1MDqSYdQXtJOaZ52ClAr0RbFrJWOw8jfUw9b5IWsj+YD9llQBpDSSb9EDTOj/15z/53ynXK6n8Next60kYTm6lYL2hULlAOpLpxcATU4oEHRR8+dzTFJlKjHXkbN/OfWHvjXxJdiSMrT0OqYWnzdYMzFBW08kUD9cS9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gxKpmV0r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="fRo6YmDY"
-Received: from pps.filterd (m0209326.ppops.net [127.0.0.1])
-	by mx08-001d1705.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43QMlQ33010819;
-	Fri, 26 Apr 2024 23:18:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sony.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=S1;
- bh=7XbsT6CcTT1JpmWtU/q3A0R3lxsKKiviJ8s/kaVyQvQ=;
- b=fRo6YmDYl0aRTMG3FQwuYLSxd/Ctg6wcy7MOc9aFHjAymQzS3jS62UqDaPaEumvErNk/
- q4G7/mqrLC2AsLZrlkDp0LxAEyLfCZ4tBKZuxCAfRGWoRyulVo7EVubh5F1moacmvA9s
- 0W+8fxvTQiqJk5oa7wbnax5XFwJDnylc+GO0wiimqtH5KmDrv2SfLa6TlfC882jz7dCl
- hQZkuVo0maCgnZqHi4KtckYoibYzhgQPvimk+mUH052jSuB9zG07LbgcNkz+mfM6yyga
- LvtCimhRg8tqEHrkveOXOPwge+/qaxwmdTJxt5ccmfVOq9PqWH/tGbruiPil0So0RTl1 5w== 
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2100.outbound.protection.outlook.com [104.47.70.100])
-	by mx08-001d1705.pphosted.com (PPS) with ESMTPS id 3xqwmj1b8m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 26 Apr 2024 23:18:19 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YZV+7UTW/wfmR1ZGP8MrUTlKGlRGvHqjcMBysB4u5fGNRdsSvI2MunsbA07OJ0PYzr9zZlSPo7dsRKO7OGIRXeW60qi/+7zeVIZNf3Ea6+7zh2waYz5L6xnkiLuu+zfQ5XdZegyNQM20ZWjmRbbc1iKGs8HTFX4Qtc/n2ZKWNbWkVJdD9vjZFP6biGLbA2bsuaDKmITnRAlIFDPs3zk6KoUTM6Uaa22d9wTzDJXkNite2OVxX+wzbaAW8XB++cra01DcqlBVkdh9rlD6KszE0IjIi9KmEusY/gPBVLacjCtrm9giVBpXfIAtTMHPALjmw/q/zrbcjlDhkmzova6IDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7XbsT6CcTT1JpmWtU/q3A0R3lxsKKiviJ8s/kaVyQvQ=;
- b=ICIYbdiISugxNpOpW7wMWyuHcmAKNuKCLQtNd55SEYiPre/h86dO1QhjH4UDtmeu8N/dHEBGJ3RkqFpfJOO12lMQUtaV/OZLQKcnfKqwZZ2ql4MnwmAFclcVo0iNZsjNlxYUo+VDf9RqfqBiQF0os48mCi+T1mAyROxivA98+YAo8D1Az5yjrITiZlnuyw8mr/cVD36YEYAGUSKfo560eqVkJ8JBoRjXd9JU4Kmhlcd8oM2AuJzT8I4/sRO1LP4TMZPUt5rHBngMqHBpD4zPuj+X8dbX7W7wmA3kQB7xe7cyzWRU2n42wqlHf5HbOXQq4FxmHrVud9YE8lIrPugEEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
- dkim=pass header.d=sony.com; arc=none
-Received: from SA3PR13MB6372.namprd13.prod.outlook.com (2603:10b6:806:37d::13)
- by PH7PR13MB5594.namprd13.prod.outlook.com (2603:10b6:510:130::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Fri, 26 Apr
- 2024 23:18:15 +0000
-Received: from SA3PR13MB6372.namprd13.prod.outlook.com
- ([fe80::2dee:b93e:d9f:d7b6]) by SA3PR13MB6372.namprd13.prod.outlook.com
- ([fe80::2dee:b93e:d9f:d7b6%5]) with mapi id 15.20.7472.044; Fri, 26 Apr 2024
- 23:18:14 +0000
-From: "Bird, Tim" <Tim.Bird@sony.com>
-To: Greg KroahHartman <gregkh@linuxfoundation.org>,
-        Sasha Levin
-	<sashal@kernel.org>, "corbet@lwn.net" <corbet@lwn.net>
-CC: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "workflows@vger.kernel.org" <workflows@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] docs: stable-kernel-rules: fix typo sent->send
-Thread-Topic: [PATCH] docs: stable-kernel-rules: fix typo sent->send
-Thread-Index: AdqYL9089+sCb2j3Si+txixVqLkj6w==
-Date: Fri, 26 Apr 2024 23:18:14 +0000
-Message-ID: 
- <SA3PR13MB63726A746C847D7C0919C25BFD162@SA3PR13MB6372.namprd13.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA3PR13MB6372:EE_|PH7PR13MB5594:EE_
-x-ms-office365-filtering-correlation-id: f2b70fb1-05f6-4de6-b950-08dc66472634
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- =?us-ascii?Q?0QEgeV7vO6iODve+ZS9QgtlsDxd/fIDLeS3PIqNNrrlAA2isD1PZMPWj18oo?=
- =?us-ascii?Q?cRigobolPggMYtzdLk7m/ekrxNpWDonXOQLyflBsf9HD8LACIeB70ywB7kDz?=
- =?us-ascii?Q?n0FTLD3FIXUFrHpwLHF7GlTiz0merIt5OzCWF48pZPGjJ3AUkMf8ioE6cixz?=
- =?us-ascii?Q?D+G59t7Wz+qSaGuPxrTvtXa8paw82KaHT7LinLgyM8ec6k999SJ6I0KcAvKx?=
- =?us-ascii?Q?bZlficiDnLR919GJ4932Gd/fihrc/hqFbugxGwLMi5BW9rSG5pcP542eu4Ux?=
- =?us-ascii?Q?EdDMEQ8u2iA4Cc6jA1xo+PCBDpTZ+ZGDrVY3NJSqwPKSYbIJaiEvdSQXelQp?=
- =?us-ascii?Q?+WS6pX3VARx4G+7h4tJzGk1+WUf5tDon34/cxCyNDvreDmtHvQMfZxPOBzsv?=
- =?us-ascii?Q?MQDygZ3TaXFRYWs+8ui+gvHvmo5ILsIBTTB7DKbT2HZLHu6YiEjudzr/TYRL?=
- =?us-ascii?Q?0KthSGhbW6EFSaiVqG7beKJom+p4iGL2vSombNEWcDf0XWBtr8Zp8lfp7kKi?=
- =?us-ascii?Q?9XdXq0Flyt3NigHnAKTb8iMVSP0VeRj55hr5koIvSsk5BW2Qz85JF5HfdwnZ?=
- =?us-ascii?Q?0caa2SHjNewbRZNpSQlfVXJdpHo89zWI72YkJM1VzV90egvL++YfwcHl721G?=
- =?us-ascii?Q?qpggOEOJSP4IXrGekL4RJhD/u/9FcjsIgvVxUgfPGC3VHgXNBLTuzw5C+aeD?=
- =?us-ascii?Q?RpOrymd8YojXy/2rim99XHtXX7lo9eyIRjPpZ/8xNM3MfpXjsZ+7ho+iT+61?=
- =?us-ascii?Q?F9Ulu/hqHKhZmvV1ajQXOZ1371Zzajmg0i59A6PBVT7Cmq8G7VR0FvpHdXqv?=
- =?us-ascii?Q?F91Y1vdDeHr6iZiLIJWaA9jHF++ME5fKQlz8e2H3Q1Dq8cpFxM3oh6/GLX/s?=
- =?us-ascii?Q?Q6xzbkJBt7IZo8ca0ykfWG/sTrtwZRGxI9j6FF3CiRj7XSluR7RCuSORG6XB?=
- =?us-ascii?Q?Ry2VBo6Z6ShjivsDSIaLugTImw0KMj84wgwdZplzLkwDqo5Ugk/pyIEzs2UA?=
- =?us-ascii?Q?dX6INaQTh/hQf3W1/1Tfp1dopT5YxKIqUIUn/2rbtyuEpzAGs3nVobnvnrdW?=
- =?us-ascii?Q?qjTDaB0FRG3EXzxDMpLydcW4iW5H5fsToFxB8f0ppJIIwMUN9l3PYqHiH3WZ?=
- =?us-ascii?Q?gO+wtbuYRrRfBmYXgHvxkyGuKp2SriG2COacv9TVy5DEwf+9LaOnbj9Lklgb?=
- =?us-ascii?Q?JDEFQd/Im1nmXocIAtIaqSnjaNSwZJmJHpUEsGjVSkLCx5XBpAkXQEGRTY8h?=
- =?us-ascii?Q?kU/z3xmFv9nHRFQV338yiQTFVf26bT/sZNHUi0vS0K6798mNuqDgP7EHmK3J?=
- =?us-ascii?Q?xjie+TWE4VnKnyz0tl/LXF4fjk52Gmk4Rwh2XNoerzyh9g=3D=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR13MB6372.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?H0+LoZXp9uP0VgWkUw94dE1gvZZkvAT3Ot8XCAjMu4xZ6DM6yp9aLZAmw8u4?=
- =?us-ascii?Q?IcKX8LOtLbA2xzn7rjhDqZzbsxZzQa+qJqSH+pL2gBNSipNFJZu4OmNRdUGM?=
- =?us-ascii?Q?qZ8opyCc0emR9H/WY6w1oXpCR/7A5vGW4vzdhuiYgMFGCJGHRaUBjRzW+4QN?=
- =?us-ascii?Q?+1t5mWmVrLNEzPU0Hv7Tl0/8KCdqJADlLt8FYlPdFndxmL8zALkCwsqThcoB?=
- =?us-ascii?Q?xyMoGWiLGM6dhHGEuLhHIexohKRaqxEKOomutNoCRv3+xu5plku8hqIwZxWm?=
- =?us-ascii?Q?nl/cIJGOHD/z+b/GyUsJb44bVtMfe4kPCG7N+FwPdSKQbonvwMwp5lIunAg4?=
- =?us-ascii?Q?NxOJ3bwl+8TFNWYt7HfxbtkCEAejmbZReybWL1GIhZ7QGewy1W4e77vuIxER?=
- =?us-ascii?Q?rjohv9SzopZntTMBl3C/M8UMapCIgIM3h1gOU3vg5TL5hTOBKv50C+KqMpT+?=
- =?us-ascii?Q?tOPq2oAY+Gk7YbCNdqPb69wIglP4yr64SnRNgoJ+dagGzGJ9mOmK7xXt3+Ck?=
- =?us-ascii?Q?A/lPLpLeYVIy4UYr/k4Sh5BTHzAA2ZcjKrhuUwX/6t9fYmzHMtPKfT+pKpt3?=
- =?us-ascii?Q?yBwMjZP5w809+fF4Uivvcd2MKQ6pL/euqXBWjM0zf0aygEaM6ZoD3W1RNsII?=
- =?us-ascii?Q?ysXIi6P2j18lCjDSXGAoZ3+8HCHjN/x9bIbOKoC1qi+ztxzUHs5A2ENycglK?=
- =?us-ascii?Q?Vc8PlVvk+b6f9F4ZHui6Gn/zMjNIA2UaduW6kERvjAlB4yyYj6juSG/tNVt7?=
- =?us-ascii?Q?Fzq+NtEHAxypBbqTUSKh/3zphJzmnLeDNTndnZxfTISQ4VFXHS/R8hviv1TZ?=
- =?us-ascii?Q?4/Bn9pnVD0mYopsNwDSd0vYwB3b3I+l+OoDVPpNc5kbrBc39FILeUrhpuffk?=
- =?us-ascii?Q?Q/wWk1TMQbKmqVY2yCdWzhQB2MtCerXFxYJXmGI6vkyUBkOViZ5MeO9+Iyuh?=
- =?us-ascii?Q?WTEOMVaPSVt/l+Bj3C1+OVjTFtHZUp1vnyNWd+C9CyaFUGGS25vU8NLNFdA+?=
- =?us-ascii?Q?+RkUPWzkmr34UX+qkKA0/3gX1xvsaQKe5UFgncV3DeWK0kTj0Gbqw9t80wVo?=
- =?us-ascii?Q?G/URDIIkdJwWs8pXVmnPw8D2+Hdb0hdPPhmkWco3UUej3ZKjNUPlf4bu8c9K?=
- =?us-ascii?Q?cZdo0XWvvWJbvszbw04fq1ufhN33WSMCtuKy6zs5qnwZGn81UUNj5j5fLVqG?=
- =?us-ascii?Q?rQJ9IM1C/P9ljJCrVG0ByFsd9xZ+Z+DzrR62UVla2tPZlK5xAIXlksrApoJX?=
- =?us-ascii?Q?sCd930RlrR/LikRsfSjcfc4JUxvtm7j7Q9CyqS/ulZ3F2xPY64cfY6O/rjMa?=
- =?us-ascii?Q?+GjEvgaXk2OBgzH79QxOKroGSadkI9kuQj3fcdVaHLv4mVmV2Hvd9sTdFp1R?=
- =?us-ascii?Q?Y5tZmrNT7WtRHNYq4VV+q6hgSGwGU8XOis5HTAVtRbplrp/qut86FHvfIdP1?=
- =?us-ascii?Q?ha9DQuEU4NYqzZQIhSPSffhcxrPc3httnX4OUi6Hj38rvtiTTP1eQGNU92jZ?=
- =?us-ascii?Q?Pjgd8Fh3dmXvAqCqZPVmF33JAGJ7pyKNu3HkfbAKdpCJh1esG286VLXu6HKG?=
- =?us-ascii?Q?LLCmX9F3X30UFOEXqvA=3D?=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gxKpmV0r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B24B5C113CD;
+	Fri, 26 Apr 2024 23:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714173652;
+	bh=+SUwcMe57diWdtLlUgXI6q0655FAOJ9vlqZ2w5se5pk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gxKpmV0rsgWXseELIKE60wEGvsQpyrmUjkP8PBG2Z6RnzHTSGqOcGbVhUHRUXSmc2
+	 y4qDecMEnpbtKkoa928L4IOZppxa0tDKRTn/wO0WV5JDMXI52lwNyITBE8pxR7L4yF
+	 rcs3ngpWeqbVfwc7QG/uwsXm109mTd7j6Ad5fsUTvQ165FbhgMpIHHGHF+nPh6gMZF
+	 EEgFc22Zh0vB8QXTnD+zuQOSXftAP73C9uDoZfZY9VHINBbMWW8KbRhoKULDAjSLLt
+	 5FPuQWzOVxIEiSlw/Fh+sFPs+NoumpOVWuYYWjhv7o4WzesbcIXHQXJu4Hg1VG1BLH
+	 8XvszxoCpd14A==
+Date: Fri, 26 Apr 2024 16:20:52 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Dave Chinner <david@fromorbit.com>
+Cc: syzbot <syzbot+1619d847a7b9ba3a9137@syzkaller.appspotmail.com>,
+	chandan.babu@oracle.com, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [xfs?] possible deadlock in xfs_fs_dirty_inode
+Message-ID: <20240426232052.GT360919@frogsfrogsfrogs>
+References: <000000000000fee02e0616f8fdff@google.com>
+ <20240426163008.GO360919@frogsfrogsfrogs>
+ <ZiwbDbYUJgH7t+G6@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	CmSQY49FRg9kYijfaU8e1FmMcbxAX2JhNNQjPF396IXGuJZ1Z+9qxBrKNMG15Mrgcw5d5YFApZ9tuCarxSSENfz5k5mIbuHSdCIjcYh3BJM+UcgpqNubVdTo0ah0uwO4uzJQsrZyihNIzXJQZhsxeBGk3c+bfuh33S8C2Jzby+8kNk7szXHnlkTYoUv4X5sWJGmHeJc2OJJgqKv+O9Sjs6vIMMpfwT/xxVEi96RA61AZNam4yYji7BjqZey83hHBgqNY0z3winVf6gRsOFgt+iNlK/IYkFQnX9DdXhhR7FUu/xnz+ws0aHsMCwsRcnFhR5Wj5Vss4Wq0eOV2fq+RZ3gCKO0CiOGAHLMh9nRS2tufo26OeeuTHvW+n7X5mGPkvmaU4T2K9e6lT8zS4sEqApHv4pz62qRZEvClBcL77CakvXw0Nsls65B0bmOmWnhC5l6FxVuDZuXnahETU/vZSk2q96U4bFOMVai1Uol2UsmNQdyLItCEmfRyWH1JC8SSMZGA8QYV7F+VZJo95QHmoVqCNGCFToZf7ZMml+vTQ6kZzJq2tz4p5dY52sllj+WrzXF1Q7CE0HVs2Q/Cp5RafePpwsuhTpAQ36Jv2nsKY0MEGm7x83DCT2+zo3SkkM2e
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR13MB6372.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2b70fb1-05f6-4de6-b950-08dc66472634
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2024 23:18:14.9425
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3v9YDdm8JF97U4DJAyg4DI30Lf5f2lMY0C1I6eZ6AYkPA6MDN20SqhTyJlzEnMkLUbltbr8y0O9t7YPsWm9isw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR13MB5594
-X-Proofpoint-ORIG-GUID: ohsrkNaTD2Z36_GOXhioY5103Ut9JRwR
-X-Proofpoint-GUID: ohsrkNaTD2Z36_GOXhioY5103Ut9JRwR
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-X-Sony-Outbound-GUID: ohsrkNaTD2Z36_GOXhioY5103Ut9JRwR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-26_20,2024-04-26_02,2023-05-22_02
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZiwbDbYUJgH7t+G6@dread.disaster.area>
 
+On Sat, Apr 27, 2024 at 07:22:21AM +1000, Dave Chinner wrote:
+> On Fri, Apr 26, 2024 at 09:30:08AM -0700, Darrick J. Wong wrote:
+> > On Thu, Apr 25, 2024 at 10:15:29PM -0700, syzbot wrote:
+> > > Hello,
+> > > 
+> > > syzbot found the following issue on:
+> > > 
+> > > HEAD commit:    3b68086599f8 Merge tag 'sched_urgent_for_v6.9_rc5' of git:..
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=158206bb180000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=f47e5e015c177e57
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=1619d847a7b9ba3a9137
+> > > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> > > 
+> > > Unfortunately, I don't have any reproducer for this issue yet.
+> > > 
+> > > Downloadable assets:
+> > > disk image: https://storage.googleapis.com/syzbot-assets/caa90b55d476/disk-3b680865.raw.xz
+> > > vmlinux: https://storage.googleapis.com/syzbot-assets/17940f1c5e8f/vmlinux-3b680865.xz
+> > > kernel image: https://storage.googleapis.com/syzbot-assets/b03bd6929a1c/bzImage-3b680865.xz
+> > > 
+> > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > > Reported-by: syzbot+1619d847a7b9ba3a9137@syzkaller.appspotmail.com
+> > > 
+> > > ======================================================
+> > > WARNING: possible circular locking dependency detected
+> > > 6.9.0-rc4-syzkaller-00274-g3b68086599f8 #0 Not tainted
+> > > ------------------------------------------------------
+> > > kswapd0/81 is trying to acquire lock:
+> > > ffff8881a895a610 (sb_internal#3){.+.+}-{0:0}, at: xfs_fs_dirty_inode+0x158/0x250 fs/xfs/xfs_super.c:689
+> > > 
+> > > but task is already holding lock:
+> > > ffffffff8e428e80 (fs_reclaim){+.+.}-{0:0}, at: balance_pgdat mm/vmscan.c:6782 [inline]
+> > > ffffffff8e428e80 (fs_reclaim){+.+.}-{0:0}, at: kswapd+0xb20/0x30c0 mm/vmscan.c:7164
+> > > 
+> > > which lock already depends on the new lock.
+> > > 
+> > > 
+> > > the existing dependency chain (in reverse order) is:
+> > > 
+> > > -> #2 (fs_reclaim){+.+.}-{0:0}:
+> > >        lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
+> > >        __fs_reclaim_acquire mm/page_alloc.c:3698 [inline]
+> > >        fs_reclaim_acquire+0x88/0x140 mm/page_alloc.c:3712
+> > >        might_alloc include/linux/sched/mm.h:312 [inline]
+> > >        slab_pre_alloc_hook mm/slub.c:3746 [inline]
+> > >        slab_alloc_node mm/slub.c:3827 [inline]
+> > >        kmalloc_trace+0x47/0x360 mm/slub.c:3992
+> > >        kmalloc include/linux/slab.h:628 [inline]
+> > >        add_stack_record_to_list mm/page_owner.c:177 [inline]
+> 
+> There's the GFP_KERNEL allocation being warned about again.
+> 
+> > >        inc_stack_record_count mm/page_owner.c:219 [inline]
+> > >        __set_page_owner+0x561/0x810 mm/page_owner.c:334
+> > >        set_page_owner include/linux/page_owner.h:32 [inline]
+> > >        post_alloc_hook+0x1ea/0x210 mm/page_alloc.c:1534
+> > >        prep_new_page mm/page_alloc.c:1541 [inline]
+> > >        get_page_from_freelist+0x3410/0x35b0 mm/page_alloc.c:3317
+> > >        __alloc_pages+0x256/0x6c0 mm/page_alloc.c:4575
+> > >        __alloc_pages_node include/linux/gfp.h:238 [inline]
+> > >        alloc_pages_node include/linux/gfp.h:261 [inline]
+> > >        alloc_slab_page+0x5f/0x160 mm/slub.c:2175
+> > >        allocate_slab mm/slub.c:2338 [inline]
+> > >        new_slab+0x84/0x2f0 mm/slub.c:2391
+> > >        ___slab_alloc+0xc73/0x1260 mm/slub.c:3525
+> > >        __slab_alloc mm/slub.c:3610 [inline]
+> > >        __slab_alloc_node mm/slub.c:3663 [inline]
+> > >        slab_alloc_node mm/slub.c:3835 [inline]
+> > >        kmem_cache_alloc+0x252/0x340 mm/slub.c:3852
+> > >        kmem_cache_zalloc include/linux/slab.h:739 [inline]
+> > >        xfs_btree_alloc_cursor fs/xfs/libxfs/xfs_btree.h:679 [inline]
+> > >        xfs_refcountbt_init_cursor+0x65/0x2a0 fs/xfs/libxfs/xfs_refcount_btree.c:367
+> > >        xfs_reflink_find_shared fs/xfs/xfs_reflink.c:147 [inline]
+> > >        xfs_reflink_trim_around_shared+0x53a/0x9d0 fs/xfs/xfs_reflink.c:194
+> > >        xfs_buffered_write_iomap_begin+0xebf/0x1b40 fs/xfs/xfs_iomap.c:1062
+> > 
+> > Hm.  We've taken an ILOCK in xfs_buffered_write_iomap_begin, and now
+> > we're allocating a btree cursor but we don't have PF_MEMALLOC_NOFS set,
+> > nor do we pass GFP_NOFS.
+> > 
+> > Ah, because nothing in this code path sets PF_MEMALLOC_NOFS explicitly,
+> > nor does it create a xfs_trans_alloc_empty, which would set that.  Prior
+> > to the removal of kmem_alloc, I think we were much more aggressive about
+> > GFP_NOFS usage.
+> > 
+> > Seeing as we're about to walk a btree, we probably want the empty
+> > transaction to guard against btree cycle livelocks.
+> 
+> Nothing like that is needed or desired, this is a just a bug in the
+> memory allocation tracking code...
 
-Change 'sent' to 'send'
+Not needed because it doesn't address the root cause of these two syzbot
+reports?  Or did you actually analyze the refcount btree code and
+discover that there's no possibility of livelocking on btree cycles?
 
-Signed-off-by: Tim Bird <tim.bird@sony.com>
----
- Documentation/process/stable-kernel-rules.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--D
 
-diff --git a/Documentation/process/stable-kernel-rules.rst b/Documentation/=
-process/stable-kernel-rules.rst
-index 1704f1c686d0..3178bef6fca3 100644
---- a/Documentation/process/stable-kernel-rules.rst
-+++ b/Documentation/process/stable-kernel-rules.rst
-@@ -78,7 +78,7 @@ in the sign-off area. Once the patch is mainlined it will=
- be applied to the
- stable tree without anything else needing to be done by the author or
- subsystem maintainer.
-=20
--To sent additional instructions to the stable team, use a shell-style inli=
-ne
-+To send additional instructions to the stable team, use a shell-style inli=
-ne
- comment:
-=20
-  * To specify any additional patch prerequisites for cherry picking use th=
-e
---=20
-2.25.1
-
+> -Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
+> 
