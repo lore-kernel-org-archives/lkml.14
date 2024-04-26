@@ -1,254 +1,181 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E23313F436
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 13:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E685813F436
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 13:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714137429; cv=none; b=pNFt+B4SAW8XzcOCK/e5bQI43xnNe8P6CGUr9WMt8sI5HHcaBulAlZ+Ms+CkrrvasaoMSvbEW3zghoOCai8A8I6pk/n0whoc2O5q4lH20n2eKUpnVkvxpgF16KI7HGloe+yY6ABqAqeLnpoabtr/2yCqJvaD/FRAF6UPjrcJEMo=
+	t=1714137468; cv=none; b=dDHzkpxbzZyfNHBnOpSFtergC+BfKKC46yHYnd8tVyhNO+pc+gcSv7lva7EbxHok63lGficxNEiiuQoHIQ1wTTSgpXnLXsi1opQFx1vS2Hdok3RV85mJDyUYjCQzhc70XNFW/xaMe+qfy6ZJCJ1qXUYKoxft2n8+1RPsg5moy4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714137429; c=relaxed/simple;
-	bh=6xJkYSjXZMTETygonL1loleKjt+Enc6a14jiWYObQOM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=koMg4lm9AJspbA70ZNyENxi2qUczjhby3HCVgZ+UvV0pNFBbz4HpYOijjn4zp6I4pNZO9o8QWSuICv/UitzrRbblvuygSs99C7rrIrf2CqVdja0+H/ePsxthMRfEcOmd2p+t7mXHHvPrEb3FQyOqOMO7y17GjhmxYLUrc/n3f5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KB4S8eP8; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KB4S8eP8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714137429; x=1745673429;
-  h=date:from:to:cc:subject:message-id;
-  bh=6xJkYSjXZMTETygonL1loleKjt+Enc6a14jiWYObQOM=;
-  b=KB4S8eP8dV/J/OgkKd+kxPiYeBSzCwHl3NMsLSbuzItfqbWV0gO7jmii
-   Y4m2f4pB9Q2GYCAeXGGyNpTvVlFAlGK7Z65HeNzPEtcPhVdE3EPLeEx1p
-   maDo4r+gYn+9qbWtNbCfRPGg77eEd+bGJIb9myvqgVjpnZSUl+0IQg6lB
-   /lSvRcgZI28CiWOD33iuI9TA4KdDnsdhy2vLdehgWtltJH2PjOeHa8cmw
-   aWrF1ZCdViyp92boTPMZDY/zF9n/vj/QTFjY9yFxuFSACtx9zpXkYna0Z
-   j1//QsHfJk59jJW1PnRPXbbEeupR9SsODc5R0Mwnp9cEketswXxNERhcf
-   g==;
-X-CSE-ConnectionGUID: G5H3GIV1T+CDrvsYQrFx6A==
-X-CSE-MsgGUID: X1PLRBAuR7CD+7XKcKaHmg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="27325499"
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="27325499"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 06:16:51 -0700
-X-CSE-ConnectionGUID: iPDY2M/WRDySHfVL2vEvvw==
-X-CSE-MsgGUID: 8jNi5jR+ThmU71nFLAWkpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="25383399"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 26 Apr 2024 06:16:50 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s0LRX-0003ja-0l;
-	Fri, 26 Apr 2024 13:16:47 +0000
-Date: Fri, 26 Apr 2024 21:16:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:irq/core] BUILD SUCCESS
- 382d2ffe86efb1e2fa803d2cf17e5bfc34e574f3
-Message-ID: <202404262137.52pgZhBQ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1714137468; c=relaxed/simple;
+	bh=XAujDe9U2zoAonjlvY4B+dkOrmfQa7ff40A99FvKMFs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rGRdy9y43sz2zm3eTimPN2mJIJXFQvaa7LBr0+EtqsjwDV40O3QX8B5TrKrUb07cOfj6UZVqW+n/4e/s7gdpkt07sMqyXD0gFT4WOeE5LpWIO/L/FGll2X22pT9aBNjPBZI7zmtAoqhI699tW3bH03Ph4wD0vZr1Zif9c+6NWbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EEA051007;
+	Fri, 26 Apr 2024 06:18:12 -0700 (PDT)
+Received: from [10.57.64.176] (unknown [10.57.64.176])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 116FC3F793;
+	Fri, 26 Apr 2024 06:17:42 -0700 (PDT)
+Message-ID: <e0fdf7b9-39d6-4eb3-b740-9c110b75182f@arm.com>
+Date: Fri, 26 Apr 2024 14:17:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] arm64/mm: Add uffd write-protect support
+Content-Language: en-GB
+To: Peter Xu <peterx@redhat.com>,
+ Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Joey Gouly <joey.gouly@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ David Hildenbrand <david@redhat.com>, Mike Rapoport <rppt@linux.ibm.com>,
+ Shivansh Vij <shivanshvij@outlook.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240424111017.3160195-1-ryan.roberts@arm.com>
+ <20240424111017.3160195-3-ryan.roberts@arm.com> <Zijzrje2FDXsSojP@x1n>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <Zijzrje2FDXsSojP@x1n>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
-branch HEAD: 382d2ffe86efb1e2fa803d2cf17e5bfc34e574f3  irqchip/gic-v3-its: Remove BUG_ON in its_vpe_irq_domain_alloc
++ Muhammad Usama Anjum <usama.anjum@collabora.com>
 
-elapsed time: 1454m
+Hi Peter, Muhammad,
 
-configs tested: 177
-configs skipped: 3
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+On 24/04/2024 12:57, Peter Xu wrote:
+> Hi, Ryan,
+> 
+> On Wed, Apr 24, 2024 at 12:10:17PM +0100, Ryan Roberts wrote:
+>> Let's use the newly-free PTE SW bit (58) to add support for uffd-wp.
+>>
+>> The standard handlers are implemented for set/test/clear for both pte
+>> and pmd. Additionally we must also track the uffd-wp state as a pte swp
+>> bit, so use a free swap entry pte bit (3).
+>>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> 
+> Looks all sane here from userfault perspective, just one comment below.
+> 
+>> ---
+>>  arch/arm64/Kconfig                    |  1 +
+>>  arch/arm64/include/asm/pgtable-prot.h |  8 ++++
+>>  arch/arm64/include/asm/pgtable.h      | 55 +++++++++++++++++++++++++++
+>>  3 files changed, 64 insertions(+)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 7b11c98b3e84..763e221f2169 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -255,6 +255,7 @@ config ARM64
+>>  	select SYSCTL_EXCEPTION_TRACE
+>>  	select THREAD_INFO_IN_TASK
+>>  	select HAVE_ARCH_USERFAULTFD_MINOR if USERFAULTFD
+>> +	select HAVE_ARCH_USERFAULTFD_WP if USERFAULTFD
+>>  	select TRACE_IRQFLAGS_SUPPORT
+>>  	select TRACE_IRQFLAGS_NMI_SUPPORT
+>>  	select HAVE_SOFTIRQ_ON_OWN_STACK
+>> diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
+>> index ef952d69fd04..f1e1f6306e03 100644
+>> --- a/arch/arm64/include/asm/pgtable-prot.h
+>> +++ b/arch/arm64/include/asm/pgtable-prot.h
+>> @@ -20,6 +20,14 @@
+>>  #define PTE_DEVMAP		(_AT(pteval_t, 1) << 57)
+>>  #define PTE_PROT_NONE		(PTE_UXN)		 /* Reuse PTE_UXN; only when !PTE_VALID */
+>>  
+>> +#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
+>> +#define PTE_UFFD_WP		(_AT(pteval_t, 1) << 58) /* uffd-wp tracking */
+>> +#define PTE_SWP_UFFD_WP		(_AT(pteval_t, 1) << 3)	 /* only for swp ptes */
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240426   gcc  
-arc                   randconfig-002-20240426   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240426   clang
-arm                   randconfig-002-20240426   gcc  
-arm                   randconfig-003-20240426   gcc  
-arm                   randconfig-004-20240426   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240426   gcc  
-arm64                 randconfig-002-20240426   gcc  
-arm64                 randconfig-003-20240426   clang
-arm64                 randconfig-004-20240426   gcc  
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240426   gcc  
-csky                  randconfig-002-20240426   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240426   clang
-hexagon               randconfig-002-20240426   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240426   gcc  
-i386         buildonly-randconfig-002-20240426   clang
-i386         buildonly-randconfig-003-20240426   gcc  
-i386         buildonly-randconfig-004-20240426   gcc  
-i386         buildonly-randconfig-005-20240426   clang
-i386         buildonly-randconfig-006-20240426   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240426   gcc  
-i386                  randconfig-002-20240426   clang
-i386                  randconfig-003-20240426   gcc  
-i386                  randconfig-004-20240426   gcc  
-i386                  randconfig-005-20240426   gcc  
-i386                  randconfig-006-20240426   clang
-i386                  randconfig-011-20240426   gcc  
-i386                  randconfig-012-20240426   clang
-i386                  randconfig-013-20240426   clang
-i386                  randconfig-014-20240426   clang
-i386                  randconfig-015-20240426   clang
-i386                  randconfig-016-20240426   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240426   gcc  
-loongarch             randconfig-002-20240426   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                            gpr_defconfig   clang
-mips                           rs90_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240426   gcc  
-nios2                 randconfig-002-20240426   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-openrisc                  or1klitex_defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240426   gcc  
-parisc                randconfig-002-20240426   gcc  
-parisc64                            defconfig   gcc  
-powerpc                    adder875_defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                  iss476-smp_defconfig   gcc  
-powerpc                   motionpro_defconfig   clang
-powerpc                 mpc837x_rdb_defconfig   gcc  
-powerpc               randconfig-001-20240426   clang
-powerpc               randconfig-002-20240426   gcc  
-powerpc               randconfig-003-20240426   clang
-powerpc                     tqm8540_defconfig   gcc  
-powerpc                        warp_defconfig   gcc  
-powerpc64             randconfig-001-20240426   gcc  
-powerpc64             randconfig-002-20240426   gcc  
-powerpc64             randconfig-003-20240426   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240426   clang
-riscv                 randconfig-002-20240426   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240426   clang
-s390                  randconfig-002-20240426   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                         ap325rxa_defconfig   gcc  
-sh                                  defconfig   gcc  
-sh                 kfr2r09-romimage_defconfig   gcc  
-sh                    randconfig-001-20240426   gcc  
-sh                    randconfig-002-20240426   gcc  
-sh                          rsk7201_defconfig   gcc  
-sh                          rsk7269_defconfig   gcc  
-sh                           se7722_defconfig   gcc  
-sh                           se7751_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240426   gcc  
-sparc64               randconfig-002-20240426   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240426   gcc  
-um                    randconfig-002-20240426   gcc  
-um                           x86_64_defconfig   clang
-x86_64                           alldefconfig   gcc  
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240426   clang
-x86_64       buildonly-randconfig-002-20240426   gcc  
-x86_64       buildonly-randconfig-003-20240426   clang
-x86_64       buildonly-randconfig-004-20240426   clang
-x86_64       buildonly-randconfig-005-20240426   gcc  
-x86_64       buildonly-randconfig-006-20240426   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240426   gcc  
-x86_64                randconfig-002-20240426   gcc  
-x86_64                randconfig-003-20240426   gcc  
-x86_64                randconfig-004-20240426   clang
-x86_64                randconfig-005-20240426   clang
-x86_64                randconfig-006-20240426   clang
-x86_64                randconfig-011-20240426   clang
-x86_64                randconfig-012-20240426   gcc  
-x86_64                randconfig-013-20240426   gcc  
-x86_64                randconfig-014-20240426   gcc  
-x86_64                randconfig-015-20240426   gcc  
-x86_64                randconfig-016-20240426   clang
-x86_64                randconfig-071-20240426   clang
-x86_64                randconfig-072-20240426   clang
-x86_64                randconfig-073-20240426   clang
-x86_64                randconfig-074-20240426   gcc  
-x86_64                randconfig-075-20240426   gcc  
-x86_64                randconfig-076-20240426   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240426   gcc  
-xtensa                randconfig-002-20240426   gcc  
+I've just noticed code in task_mmu.c:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+static int pagemap_scan_pmd_entry(pmd_t *pmd, unsigned long start,
+				  unsigned long end, struct mm_walk *walk)
+{
+	...
+
+	if (!p->arg.category_anyof_mask && !p->arg.category_inverted &&
+	    p->arg.category_mask == PAGE_IS_WRITTEN &&
+	    p->arg.return_mask == PAGE_IS_WRITTEN) {
+		for (addr = start; addr < end; pte++, addr += PAGE_SIZE) {
+			unsigned long next = addr + PAGE_SIZE;
+
+			if (pte_uffd_wp(ptep_get(pte))) <<<<<<
+				continue;
+
+			...
+		}
+	}
+}
+
+As far as I can see, you don't know that the pte is present when you do this. So
+does this imply that the UFFD-WP bit is expected to be in the same position for
+both present ptes and swap ptes? I had assumed pte_uffd_wp() was for present
+ptes and pte_swp_uffd_wp() was for swap ptes.
+
+As you can see, the way I've implemented this for arm64 the bit is in a
+different position for these 2 cases. I've just done a slightly different
+implementation that changes the first patch in this series quite a bit and a
+bunch of pagemap_ioctl mm kselftests are now failing. I think this is the root
+cause, but haven't proven it definitively yet.
+
+I'm inclined towords thinking the above is a bug and should be fixed so that I
+can store the bit in different places. What do you think?
+
+Thanks,
+Ryan
+
+>> +#else
+>> +#define PTE_UFFD_WP		(_AT(pteval_t, 0))
+>> +#define PTE_SWP_UFFD_WP		(_AT(pteval_t, 0))
+>> +#endif /* CONFIG_HAVE_ARCH_USERFAULTFD_WP */
+>> +
+>>  /*
+>>   * This bit indicates that the entry is present i.e. pmd_page()
+>>   * still points to a valid huge page in memory even if the pmd
+>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+>> index 23aabff4fa6f..3f4748741fdb 100644
+>> --- a/arch/arm64/include/asm/pgtable.h
+>> +++ b/arch/arm64/include/asm/pgtable.h
+>> @@ -271,6 +271,34 @@ static inline pte_t pte_mkdevmap(pte_t pte)
+>>  	return set_pte_bit(pte, __pgprot(PTE_DEVMAP | PTE_SPECIAL));
+>>  }
+>>  
+>> +#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
+>> +static inline int pte_uffd_wp(pte_t pte)
+>> +{
+>> +	bool wp = !!(pte_val(pte) & PTE_UFFD_WP);
+>> +
+>> +#ifdef CONFIG_DEBUG_VM
+>> +	/*
+>> +	 * Having write bit for wr-protect-marked present ptes is fatal, because
+>> +	 * it means the uffd-wp bit will be ignored and write will just go
+>> +	 * through. See comment in x86 implementation.
+>> +	 */
+>> +	WARN_ON_ONCE(wp && pte_write(pte));
+>> +#endif
+> 
+> Feel free to drop this line, see:
+> 
+> https://lore.kernel.org/r/20240417212549.2766883-1-peterx@redhat.com
+> 
+> It's still in mm-unstable only.
+> 
+> AFAICT ARM64 also is supported by check_page_table, I also checked ARM's
+> ptep_modify_prot_commit() which uses set_pte_at(), so it should cover
+> everything in a superior way already.
+> 
+> With that dropped, feel free to add:
+> 
+> Acked-by: Peter Xu <peterx@redhat.com>
+> 
+> Thanks,
+> 
+
