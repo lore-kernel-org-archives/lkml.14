@@ -1,127 +1,135 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
+Received: from us-smtp-delivery-44.mimecast.com (us-smtp-delivery-44.mimecast.com [207.211.30.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14411148841;
-	Fri, 26 Apr 2024 15:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE28C148841
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.211.30.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714144412; cv=none; b=Iy7EU3SiYSm82Jfjfk7AfxJcF2ZlOJi+AtQ5eLA13yfPp6FsgCJxr1+IHWlhAi2PC8KpKe0JZrGS/BpUE/l/pc+QvvSobo+w3zMUiklh1KusY3mrZDktVGchMyhvJDsqhujPCgAGE0btv7/B6pJTozIjHPgNrXgW+PPK/NCll5U=
+	t=1714144441; cv=none; b=E4eYr588vFdwGs27j5meZAV3jzQMNBbcYroCAbMqBI68vvIrrjbkLOhgYnThtFddWRMuRhsvwkWmpVHcTV9P2EWCwo4r00nCn87sl9B1AF/xgwX5eGT1dUQQWmNgUClYYddvijWafi55d5IupkNPGPmTJiw1pn85ROHLiqa44tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714144412; c=relaxed/simple;
-	bh=OVAcxKVWCr0cVxx6IPinXqZ82ZD2FZUL7lrWQzu5m3A=;
+	s=arc-20240116; t=1714144441; c=relaxed/simple;
+	bh=/5QVirdnw7ZwA7vkg/j+WG0o2OISZH7RAn/4/rQYtJs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g4lJQiKzKKhxm2tPukZ6yEMbK4ripCO7FvJGLvAss+LB1xkDwKFrOqMbVtiFTsw4Ubd2Ov9pgXuVn99N+I2MorOWbHmvtF5h6e4vIX5K0ONA+P/ayOPB/q5qfVwn88P/9URHmFFEouv74mCe8RQp0wtZuUg7dG2NzGUQewUbPnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=ABHvjftG; arc=none smtp.client-ip=212.227.126.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="ABHvjftG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1714144403; x=1714749203; i=christian@heusel.eu;
-	bh=OVAcxKVWCr0cVxx6IPinXqZ82ZD2FZUL7lrWQzu5m3A=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ABHvjftGT0Nk3HBK1fiPfDov+IDVymBD7H7YU7emp8EJf43BI+/DVBuovADzBOQy
-	 9E5D6DGsGbW9sSZwkRYZ+l6+u9+ZtfopSdi/q03blpgmHOQ/D8rDRXSnpC4ACIl/R
-	 o/Dh4as+a9ZEYmCm9b+YpzVKA9G9cOzuZs9aJxDO1gnUKeWEsDR1ayilUwY7VkY3r
-	 atlM687qTOxjmh4d2I0XP08IZaRZTMPpvPKTo7TbdHSLwWHyeP2FeHVHNM6+JRqYN
-	 Hvgi99PhkmXK3q7y4Gc8nzazJYWXbS0EpJMEELjMleXcJEsKR3dsqaWi3lZIXYR7k
-	 zcfFeqVUvJx7hqQ/Bw==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([80.187.67.249]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MZTa2-1sE6gn1Mk2-00WUQI; Fri, 26 Apr 2024 17:07:31 +0200
-Date: Fri, 26 Apr 2024 17:07:29 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: lumingyindetect <lumingyindetect@126.com>
-Cc: Markus Elfring <Markus.Elfring@web.de>, linux-serial@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Jiri Slaby <jirislaby@kernel.org>
-Subject: Re: [PATCH] serial: 8250_lpss: Fix memory leak in lpss8250_probe()
-Message-ID: <xoqjkheigkwozgpckrdpyrfwzw33gjs564plbhbujzfdqwhcti@bsvrni5a624e>
-References: <20240426114716.1275085-1-lumingyindetect@126.com>
- <42c5d1f0-d16a-483b-8bb1-4c5768aa3a8c@web.de>
- <4e6966e0.a07e.18f1a7f7863.Coremail.lumingyindetect@126.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=GSUyCn5YDt4xPpKUXWPEhQpUfnmLvgPgb0ZBR3qa94QDifE8mnxBgNR8ePFaCz+dlEpYjCaY6FC4pbQDqE/K1pXMmocZXPdcg8Nfh+0dMXTxOqsdQuCwNVwf0QNdJUL4IBEaJEZrFQ06pp7Se8bn8RQFH0hHlmEeq87AjqnhavI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=none smtp.mailfrom=queasysnail.net; arc=none smtp.client-ip=207.211.30.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=queasysnail.net
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-465-w0zvaQ4fM4Wn9feoiW-OqQ-1; Fri, 26 Apr 2024 11:13:48 -0400
+X-MC-Unique: w0zvaQ4fM4Wn9feoiW-OqQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 049EF1049C97;
+	Fri, 26 Apr 2024 15:13:47 +0000 (UTC)
+Received: from hog (unknown [10.39.193.137])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4E8DF2166B31;
+	Fri, 26 Apr 2024 15:13:38 +0000 (UTC)
+Date: Fri, 26 Apr 2024 17:13:37 +0200
+From: Sabrina Dubroca <sd@queasysnail.net>
+To: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	David Ahern <dsahern@kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Remi Denis-Courmont <courmisch@gmail.com>,
+	Allison Henderson <allison.henderson@oracle.com>,
+	David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	Wenjia Zhang <wenjia@linux.ibm.com>,
+	Jan Karcher <jaka@linux.ibm.com>,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>,
+	Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>, Roopa Prabhu <roopa@nvidia.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>,
+	Joerg Reuter <jreuter@yaina.de>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dccp@vger.kernel.org,
+	linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
+	linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
+	linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+	linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org, bridge@lists.linux.dev,
+	lvs-devel@vger.kernel.org, Joel Granados <j.granados@samsung.com>
+Subject: Re: [PATCH v5 5/8] net: Remove ctl_table sentinel elements from
+ several networking subsystems
+Message-ID: <ZivEOtGOWVc0W8Th@hog>
+References: <20240426-jag-sysctl_remset_net-v5-0-e3b12f6111a6@samsung.com>
+ <20240426-jag-sysctl_remset_net-v5-5-e3b12f6111a6@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qlpmab66ws2khlm3"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4e6966e0.a07e.18f1a7f7863.Coremail.lumingyindetect@126.com>
-X-Provags-ID: V03:K1:BJSzN70N91LqLh0w0cohyxHpkNGCi7Es93xSvdmob6OTS6JRc7N
- MrZOLp8DUt0HrkNl9f/Xy05GJi2sWIaO8IH7epsxbrri/Jqgn8XcT0e4usgLQTImX5HSYgD
- jlUpl2v9E1wJNSejsg/F1RKvL6rtiNFavCu/B8lVVLebP+eyuGPeSyoZN1WANsqR8rGENTt
- IH8gomiSalf5ki+mzCyng==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:h0eGSJvPrfo=;l9RT6DJoa/wuUZb+AfO1LhYfqsG
- 8zK2nxNUJ7iTDdqdNlgO739LoW+B6kaMm9721WjnhF+TNhOYkVhppWGyCEgplLJyzc+vC/woY
- FjFdmjC7Ju9+sbKh+88Rx69Ec+BH6v0U2PXcEMMY8NxsEgHE+JEiqczKYCjyEyPPn0Tx5YMp9
- fgIlrIS+4wbFSEDawzCG1uur08+ofjTUSSt6bBCtEpqWVgCYeX5dpa/JMBdEU1AiCB2nNzdX5
- qouexPsDVbL+jLlF+SUoYGSj63Sg0GxbxguUOgI4wMnvArS1vrUApopNOgvJJiKe0WPPbtcdA
- DI+II290Levat0yfMCzmCjsdvF+gjFx+lqrkmkSpG1LjcC2rlPhM11z3XJLXr7GSj6r2aTfTR
- Qo1nD7sb7IZ62RqsQ/bIXBlvBXNugps7XQhRdTY/RJ1BSXsy7mLLlAvqFWvM3iNoVvf9iuiB8
- lfqVvlYDD0j7YoeQJ8YnUn+oh4l7/Z8UTlAJXfbWjyjabQBz+rpGOO0BYSK5majISxwxjQDQD
- JBHwfSdtuEYcjRAG2Af8kwvWRy0ubseGYVQ/uo/c6tgLY8ZYNb0b3fTDHyJIDwRF3IS/OXech
- NkuY7OyVKXEmsAKnn0H9Aoeo2ty3Qn/zDdQbskUorb/JMedb3a87oRe7shB2LVwOr8qhcchyx
- 80SMKAqW8NOtCc2hNuJYIHq8b6/PjtTOLwMSSDqL9h4iCZwLmapP3N9CdbOZAW2yDlDUzryMO
- rtMEx6tWk1Fnya9EtYfGR5+lFBSAZWJsRDw8gCfoNy20aZQILHSkHY=
+In-Reply-To: <20240426-jag-sysctl_remset_net-v5-5-e3b12f6111a6@samsung.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+
+2024-04-26, 12:46:57 +0200, Joel Granados via B4 Relay wrote:
+> diff --git a/net/smc/smc_sysctl.c b/net/smc/smc_sysctl.c
+> index a5946d1b9d60..bd0b7e2f8824 100644
+> --- a/net/smc/smc_sysctl.c
+> +++ b/net/smc/smc_sysctl.c
+> @@ -90,7 +90,6 @@ static struct ctl_table smc_table[] = {
+>  		.extra1		= &conns_per_lgr_min,
+>  		.extra2		= &conns_per_lgr_max,
+>  	},
+> -	{  }
+>  };
+
+There's an ARRAY_SIZE(smc_table) - 1 in smc_sysctl_net_init, shouldn't
+the -1 be removed like you did in other patches?
 
 
---qlpmab66ws2khlm3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+int __net_init smc_sysctl_net_init(struct net *net)
+{
+	struct ctl_table *table;
 
-On 24/04/26 09:01PM, lumingyindetect wrote:
-> Dear Markus,
->
-> Thank you for your patient guidance and advice! This is my first time submitting a patch, and I haven't fully understood the meaning of "add a commit subject for this tag" yet. Could you please provide some examples or guidance on how to add it? I appreciate your help!
->
-> Best regards,
-> LuMingYin
+	table = smc_table;
+	if (!net_eq(net, &init_net)) {
+		int i;
 
-Hey LuMingYin,
+		table = kmemdup(table, sizeof(smc_table), GFP_KERNEL);
+		if (!table)
+			goto err_alloc;
 
-just for your information that while he means well the advice from
-Markus is not always shared by other maintainers and their inablility to
-adapt to such feedback got them banned for a while on lkml. See i.e.
-https://lore.kernel.org/all/2024042547-shimmy-guileless-c7f2@gregkh/
-for an instance where greg is sending a relevant reply to one of their
-requested changes / feedback to patches.
+		for (i = 0; i < ARRAY_SIZE(smc_table) - 1; i++)
+			table[i].data += (void *)net - (void *)&init_net;
+	}
 
-So just evaluate for yourself whether the feedback makes sense and just
-go along of the official documentation[0] and feedback you get from the
-relevant subsystem maintainers.
+	net->smc.smc_hdr = register_net_sysctl_sz(net, "net/smc", table,
+						  ARRAY_SIZE(smc_table));
+[...]
 
-Cheers,
-chris
+-- 
+Sabrina
 
-[0]: https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html
-
---qlpmab66ws2khlm3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmYrwzAACgkQwEfU8yi1
-JYVbMxAAvKybMp/z4Oapf3lItgsKsaqCqtaaeTpi3qPqwtX8ZUkbpJh2QxJ5dUph
-YPJ+7HSMRtEY9S19Qt8d5GnTG2L/wXEPk5bMVIrizs/5tXfT5Gp05wfbKUKHZUqF
-3m5n2Y1O9deSaFAKngJxwtM9qdRfRlF7Oef5+pX9IpooxNf1hgSwq9xlNryv0yhF
-8wxT9e3e/4EdQcPeJl6S/lUr6KDH32+sotVipPEUevqNitr8h0MsP+H5CLj3B2Cr
-9OxmbMTmuhla2dEzJuTFRJdrc424LaKml3qMARpGrsuLH8NbIQBGWmm2CeaCpQd3
-5qYnlrsf/IFR2t2+dCc9TVbYdOHYFazcc6NVclNI5Eaifnsh1gGiDTxNGK7kChKU
-1g6USkDOTicC9mLO/+hHDkoI4NzgulriDLHuZJF0mBzBlMXQm4H65TZ4ubIO0Vva
-YFAKuGJ/D46gPuWGIKxSykZKMLOgn0hoIsvY3FPriUXTWEzsh0aQQafzZlO0aPHW
-uk/Nz0yw4Ot5krRNltpAed4kuQd/24tQNrkEIwbkivzLIfd4MkFUD3q7DN2Bzkru
-7mXcE6hUNDN+LSGd4mctl4xQe++mKbUw9N8OM9hliry8G7nS+pIpCZIvXlcoFEIO
-yPRtXTgFGYZ32ctg/baGBtGgXxbC4qgo5j31wVZUFZuQuto692M=
-=iecE
------END PGP SIGNATURE-----
-
---qlpmab66ws2khlm3--
