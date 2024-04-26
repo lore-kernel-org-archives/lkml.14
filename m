@@ -1,101 +1,149 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AB0140389;
-	Fri, 26 Apr 2024 13:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2FD140389
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 13:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714139582; cv=none; b=pw1xvfQyCVnyRiJDOzIQgxDWi3SL1deOTXlAJCkoCnC5j0hKY0QFjttUhaVvqB9WoV+zmaZEbzeVcnUJBH/9JOryGsXFkHM3rBFnP+2u7DeD1jGX7acsnM75F0UaYDy/qVKhkx2YggQu0AvWA24ExXLpAvavabTeoj8unpjdxK8=
+	t=1714139606; cv=none; b=G6clkKznKKZfdwbOUHebEHeYdwIx9z5u3cT+aqZIuLdihSp94woUe8caNQvmtticaeWsVmwxtwX/TyyOuA/q/XP86qcqpWknjdTtXQKMDkDIntzarn2RRug9Qx8HQkClLzh0I8IzdEwRcQblyipb64libpcmjRHEc8ZEIFD6ud0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714139582; c=relaxed/simple;
-	bh=KRQx/jhSBpJ+0bXJyFoiwePzWCxc8iV5eQ951SofEq0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vEF91wlA64l2JWJR+tfLVQmVBfTuKkytsfVB4n4nhp4fw3t++h7+NTp6QpTQIlyaLwk0FFfAAjz4DHUllfuU0HYIG4awxPU6V1lSZjZ1H3q6Ja1GW7uFgurh2LAEVDmIesG7cOpw40SAT4nKBgQ4nwRRG4bp0ZrrnwHgB+lXCEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQvLQ3b19z6DBLP;
-	Fri, 26 Apr 2024 21:52:46 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 28136140C72;
-	Fri, 26 Apr 2024 21:52:58 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 26 Apr 2024 14:52:57 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
-	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
-	<justin.he@arm.com>, <jianyong.wu@arm.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v8 03/16] ACPI: processor: Drop duplicated check on _STA (enabled + present)
-Date: Fri, 26 Apr 2024 14:51:13 +0100
-Message-ID: <20240426135126.12802-4-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
-References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1714139606; c=relaxed/simple;
+	bh=kfoxr5MPT8Y3C1vwEbZQqbvK0Cu7jbe/sUQY8skyjXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jVUANPNWE/iFIX2vJJa2ZyAEXOpYUMabHYm25RE4ByxLtxSxKxbgFVkXI23drycjWYWsEFr5wB/mhkgMFaX+Q3XSNpdLRK7tri4Ts8z1lHpLAmZ2v1LwdoKv/NSfW4ziNVtQzHmN4jigQQcGE1INkV0hIS/P4tkBFzTWenY6Vog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mzeUyjnD; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mzeUyjnD"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-41ba1ba55ebso2944065e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 06:53:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714139603; x=1714744403; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TcMN14IZtAud1SzWuvyCQx4H2upUNwp8wShEfmdsMaU=;
+        b=mzeUyjnDwBpDeAXWorypUmlLrH/Gd1qmU3W4/8w+dVJ8SEgdApiWU/WXsgXnkkjaoI
+         OaRwIIqe3LfuZ+igE1uhhaGaMu6+OUISuDhM884em52UBwhjlossdvl1fntzACjb/OWh
+         7r39KkdwYWrDZDy94xzZapJrdusN4pNe4rwNznLei22AywR9JyLHIMjFErbRi9xP8FN/
+         RZQ5RbDvVeNs6UV4L4tO+EA+O8up3SbkPxG1UaxD8DGRWWQXIrKhzLNFq3ybENTXbmL3
+         E00+qY6KQBWGnMReM3DKvYeQL+/zIgsS/C0Ru8+FfZN28AH4EVK8poz14bOZ09/xpIkW
+         Dqzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714139603; x=1714744403;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TcMN14IZtAud1SzWuvyCQx4H2upUNwp8wShEfmdsMaU=;
+        b=nuwgw50bSn4cX8/kFMnqpCpUbv7GbbrOlFBEEu8f9bAEG9DIt59MUzBaT/ClJDiXJV
+         vFloYlm0JMgLADjUZ0d5eHDsV8gM4AnsiLq3G4QONpl+hMx28mf6iNJ4Tq9n/eYc6ndF
+         VNKI++KTA+z+4B2B5o8E6Ed/iUcvtOgoydioFHkXpP/ZgVJwPuQ8/OB9c1OUGFy8SxA2
+         4lE/QbDT75xC6yhjJ9SquwTJ7jDpGv4hwSYtvFqcwmr8gXPpdOgPsIK3f6VUSrZGEIec
+         lCYDfL8tuUNrs0JdAjhWibBZo4CB5ZuILPiAvE9uj4ouHyZr0V3TTlKF7E5dsWGvam9i
+         CyOA==
+X-Gm-Message-State: AOJu0YzRh5Oo+NXQMv8sgrhOG2SBgX5rC/ZoV9Lz2Rs4EcrtscacexeJ
+	g6vM5DEfUi8lJV7f5/jJ/VCzN4dpH8eJ626F7Rkt7S4uuCJ46ArfAprHlHyGeNE=
+X-Google-Smtp-Source: AGHT+IE83jWZzVOng5zKH0QSGdpbtE4+Wt+APtbatCw3dZ/Qc0dSNlMokp6KwGnYkxFdJsCiBVpVKw==
+X-Received: by 2002:a05:600c:474d:b0:41a:408b:dbd4 with SMTP id w13-20020a05600c474d00b0041a408bdbd4mr2373100wmo.7.1714139603241;
+        Fri, 26 Apr 2024 06:53:23 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id q15-20020a05600c46cf00b00416e2c8b290sm35048249wmo.1.2024.04.26.06.53.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 06:53:22 -0700 (PDT)
+Date: Fri, 26 Apr 2024 16:53:18 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: lumingyindetect@126.com
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com,
+	gregkh@linuxfoundation.org, jirislaby@kernel.org,
+	LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
+Subject: Re: [PATCH] serial: 8250_lpss: Fix memory leak in lpss8250_probe()
+Message-ID: <87d376e4-84f1-48c3-8c5d-955f706f3bfb@moroto.mountain>
+References: <20240426114716.1275085-1-lumingyindetect@126.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240426114716.1275085-1-lumingyindetect@126.com>
 
-The ACPI bus scan will only result in acpi_processor_add() being called
-if _STA has already been checked and the result is that the
-processor is enabled and present.  Hence drop this additional check.
+Run scripts/checkpatch.pl --strict on your patch.
 
-Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
-Reviewed-by: Gavin Shan <gshan@redhat.com>
-Tested-by: Miguel Luis <miguel.luis@oracle.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
+#15: 
+In the execution logic of the lpss8250_probe() function, the function may directly return via a return statement at either line 347 or line 351.
+WARNING: Please use correct Fixes: style 'Fixes: <12 chars of sha1> ("<title line>")' - ie: 'Fixes: 12dadc409c2b ("Linux 6.8.7")'
+#19: 
+Fixes: e88c4cfcb7b888ac374916806f86c17d8ecaeb67
 
----
-V8: No change (tags added)
----
- drivers/acpi/acpi_processor.c | 6 ------
- 1 file changed, 6 deletions(-)
+On Fri, Apr 26, 2024 at 12:47:16PM +0100, lumingyindetect@126.com wrote:
+> From: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Fix this email address.
 
-diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-index 7fc924aeeed0..ba0a6f0ac841 100644
---- a/drivers/acpi/acpi_processor.c
-+++ b/drivers/acpi/acpi_processor.c
-@@ -186,17 +186,11 @@ static void __init acpi_pcc_cpufreq_init(void) {}
- #ifdef CONFIG_ACPI_HOTPLUG_CPU
- static int acpi_processor_hotadd_init(struct acpi_processor *pr)
- {
--	unsigned long long sta;
--	acpi_status status;
- 	int ret;
- 
- 	if (invalid_phys_cpuid(pr->phys_id))
- 		return -ENODEV;
- 
--	status = acpi_evaluate_integer(pr->handle, "_STA", NULL, &sta);
--	if (ACPI_FAILURE(status) || !(sta & ACPI_STA_DEVICE_PRESENT))
--		return -ENODEV;
--
- 	cpu_maps_update_begin();
- 	cpus_write_lock();
- 
--- 
-2.39.2
+> 
+> In the execution logic of the lpss8250_probe() function, the function may directly return via a return statement at either line 347 or line 351.
+
+The line numbers are not important and they change all the time.
+Instead say "if pcim_iomap() or lpss->board->setup() fail then ...".
+
+> Unlike lines 357 or 361, where the return statement is used directly without releasing the dynamically allocated memory region pointed to by the variable pdev, causing a memory leak of the variable pdev.
+> In the lpss8250_probe() function, I added a label named "free_irq_vectors" to release the dynamically allocated memory region pointed to by the variable pdev, and replaced the two return statements mentioned above with goto statements to this label.
+
+Just say "Use a goto to release this memory".  No need to explain
+further.
+
+> 
+> Fixes: e88c4cfcb7b888ac374916806f86c17d8ecaeb67
+
+This is the wrong hash and the format is wrong.  It should be:
+
+Fixes: 254cc7743e84 ("serial: 8250_lpss: Switch over to MSI interrupts")
+
+> 
+> Signed-off-by: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
+> ---
+>  drivers/tty/serial/8250/8250_lpss.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
+> index c3cd6cb9ac80..fa9fd4dc86c7 100644
+> --- a/drivers/tty/serial/8250/8250_lpss.c
+> +++ b/drivers/tty/serial/8250/8250_lpss.c
+> @@ -344,11 +344,11 @@ static int lpss8250_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	uart.port.mapbase = pci_resource_start(pdev, 0);
+>  	uart.port.membase = pcim_iomap(pdev, 0, 0);
+>  	if (!uart.port.membase)
+> -		return -ENOMEM;
+> +		goto free_irq_vectors;
+
+This needs to be:
+
+	if (!uart.port.membase) {
+		ret = -ENOMEM;
+		goto free_irq_vectors;
+	}
+
+regards,
+dan carpenter
+
+>  
+>  	ret = lpss->board->setup(lpss, &uart.port);
+>  	if (ret)
+> -		return ret;
+> +		goto free_irq_vectors;
+>  
+>  	dw8250_setup_port(&uart.port);
+>  
+> @@ -367,6 +367,7 @@ static int lpss8250_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  
+>  err_exit:
+>  	lpss->board->exit(lpss);
+> +free_irq_vectors:
+>  	pci_free_irq_vectors(pdev);
+>  	return ret;
+>  }
 
