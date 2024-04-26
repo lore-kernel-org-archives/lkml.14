@@ -1,105 +1,112 @@
-Received: from forward500c.mail.yandex.net (forward500c.mail.yandex.net [178.154.239.208])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CF5339A0;
-	Fri, 26 Apr 2024 11:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79295145341;
+	Fri, 26 Apr 2024 11:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714131706; cv=none; b=a3eMt0kg8Ld0f2sv94uWcx2gQCsdYswMkHNtZDJtE1fqpHx39d5YnBAudfvZD/bkCOo030F+2niALsVlOzRX1mdSZBGm8NuoUuxubhNeHucD5NMGuO2DW9Hvx2ZXnK1VzW059ubvIVu2y5zYZ+aj4GzDkv8efH/3CBXy+T3NLEc=
+	t=1714131713; cv=none; b=Nyuig7NrS4Gf2aWmU5rLBGGe2/qPG8jQeqXD69tyOT6A7zMH+C2ykC3UMWodCkpLCqmaM01/yck+Be0dHncSRp/wOM1TMVjra1uMf0lEAFSgfaWikbHHhB0AtTHNj1zcguqJCQg68JIFImypF70emjgpdfI7mK8vLo88/0V9hZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714131706; c=relaxed/simple;
-	bh=zuhkMVswz3nX9ahbwxLQHhCv51dyDPVtxNyyq5Mwy7o=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oA8unY184kUjQPI3HmDIIwXO56obCP0+enX9jm62g1AY0YYBtyGN3w7hsC6PZQJe8n733E2TFOTs8P8pPbU6p8bJ6qZ/NJ3nElkM8lWn89riCdWdSciZlLCiHezSG0bfMvMzZOg4Ws0ry5VBvCxZFch48Jp2hDaY8raamUMdVmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=nKQZh/XK; arc=none smtp.client-ip=178.154.239.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
+	s=arc-20240116; t=1714131713; c=relaxed/simple;
+	bh=060C0eRyK2crDEUo4GFbKKDarWvNJFdiUqBTqnc9Udg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=KIIuPgUu4p5tdH7GuLPUR3MDN5BPyhUHYpsHSG9IMbdmC7a23T0Zo3sI06OUsXVG6hjY1mriM+k3LvtRFDuRXpmQF8bBDU1QGTbcpBVvBbhWk2jvOeeNKgUhrSSps4m5vG+ASi4RE8Bn5DzQX/h2tuj1rxRb+u/MukiS1LL5zH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lMU7B8Sk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="nKQZh/XK"
-Received: from mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net [IPv6:2a02:6b8:c11:49a3:0:640:a0c5:0])
-	by forward500c.mail.yandex.net (Yandex) with ESMTPS id F27FA613FE;
-	Fri, 26 Apr 2024 14:41:36 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id ZfL6gG5Pna60-JEqgUJH4;
-	Fri, 26 Apr 2024 14:41:36 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
-	t=1714131696; bh=zuhkMVswz3nX9ahbwxLQHhCv51dyDPVtxNyyq5Mwy7o=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=nKQZh/XKsBbqRu2leMCnXvz3d+vPP3eFsIK9dNvvmTdRZSZCVb/JU06wJ6jRtXMVk
-	 KiCYQpls8NcEma39p8zlOHcxHPtAT2wH7TAZnlL6MhvZH6N2knIApBvKgpIvakozGl
-	 it2jLW2kjmAASp4El05dG35QTQaxhcq+BFYIT+zE=
-Authentication-Results: mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <65ded0d9629fa0922d58fe230cbfb9ec0c8673f5.camel@maquefel.me>
-Subject: Re: [PATCH v2 0/4] DONOTMERGE: ep93xx-clk from ep93xx device tree
- conversion
-From: Nikita Shubin <nikita.shubin@maquefel.me>
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>,  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Linus Walleij
- <linus.walleij@linaro.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>
-Date: Fri, 26 Apr 2024 14:41:35 +0300
-In-Reply-To: <20240408-ep93xx-clk-v2-0-9c5629dec2dd@maquefel.me>
-References: <20240408-ep93xx-clk-v2-0-9c5629dec2dd@maquefel.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.4 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lMU7B8Sk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDC84C113CD;
+	Fri, 26 Apr 2024 11:41:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714131713;
+	bh=060C0eRyK2crDEUo4GFbKKDarWvNJFdiUqBTqnc9Udg=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=lMU7B8SknPTVtxDHVYvvYmHeak7SID/R2+WrjbQuJDD0dZaXJsNbun+p5KHqZ5P6D
+	 iKuO9oKPAVBoYcVt2XyKj7vyPVRRV6xDMF8rZmDFk+dEQKyv0lCwHTWL8FhRkacUv3
+	 ixOxDYQj4uI9Mrij6z4TEC4wYpJvdUBmF8n/oL/gkEeScLm/7OrLYP6qA79Ur9WUQ9
+	 sPb9JsmvKX9nrPh02b45ZzXbou1AyGpOLV0eI/mibSVT4WmUJyQSlp7KKQprJytG0m
+	 k8g1Kbuiu31UdIf8jxxFIo5leJihWoGI9zZtxTOqEuQvwHfijYTBPMAFjkay4enuQZ
+	 bpPFlr/ixgNPA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 26 Apr 2024 14:41:47 +0300
+Message-Id: <D0U0Z7L2IWN4.IDJXDHZYHDF5@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, "Ilias Apalodimas"
+ <ilias.apalodimas@linaro.org>, "Lennart Poettering"
+ <lennart@poettering.net>
+Subject: Re: [PATCH] efi: expose TPM event log to userspace via sysfs
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Mikko Rapeli" <mikko.rapeli@linaro.org>, "Ard Biesheuvel"
+ <ardb@kernel.org>, <linux-efi@vger.kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240422112711.362779-1-mikko.rapeli@linaro.org>
+In-Reply-To: <20240422112711.362779-1-mikko.rapeli@linaro.org>
 
-SGkgU3RlcGhlbiwKCkNvdWxkIHlvdSBwbGVhc2UgbG9vayBpbnRvIHYyIHNlcmllcyA/CgpPbiBT
-dW4sIDIwMjQtMDQtMTQgYXQgMTM6MDMgKzAzMDAsIE5pa2l0YSBTaHViaW4gdmlhIEI0IFJlbGF5
-IHdyb3RlOgo+IFRoZSBnb2FsIGlzIHRvIHJlY2lldmUgQUNLcy4KPiAKPiBUaGlzIGlzIGEgZnJh
-Y3Rpb24gb2YgdjkgImVwOTN4eCBkZXZpY2UgdHJlZSBjb252ZXJzaW9uIiBzZXJpZXM6Cj4gCj4g
-aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjQwMzI2LWVwOTN4eC12OS0wLTE1NmUyYWU1
-ZGZjOEBtYXF1ZWZlbC5tZS8KPiAKPiBUaGUgY2xrIGRyaXZlciBmb3IgZXA5M3h4IHdhcyBjb252
-ZXJ0ZWQgdG8gQVVYIGRldmljZSwgYXMgc3VnZ2VzdGVkCj4gb3JpZ2luYWxseSBieSBTdGVwaGVu
-IEJveWQuCj4gCj4gU2lnbmVkLW9mZi1ieTogTmlraXRhIFNodWJpbiA8bmlraXRhLnNodWJpbkBt
-YXF1ZWZlbC5tZT4KPiAtLS0KPiBDaGFuZ2VzIGluIHYyOgo+IC0gc29jOiBBZGQgU29DIGRyaXZl
-ciBmb3IgQ2lycnVzIGVwOTN4eDoKPiDCoCAtIGFkZGVkIF9faW5pdCBmb3IgZXA5M3h4X2FkZXZf
-YWxsb2MoKSwKPiBlcDkzeHhfY29udHJvbGxlcl9yZWdpc3RlcigpCj4gwqAgLSBhZGRlZCBzdGF0
-aWMsIF9faW5pdGNvbnN0IGZvciBwaW5jdHJsX25hbWVzW10KPiDCoCAtIGNsayByZXZpc2lvbiBm
-b3IgU1BJIGlzIG5vdyByZXNvbHZlZCBoZXJlIHRocm91Z2ggZGlmZmVyZW50bHkKPiBuYW1lZAo+
-IMKgwqDCoCBjbGsgZGV2aWNlCj4gwqAgLSBtb3JlIHZlcmJvc2UgS2NvbmZpZyBkZXNjcmlwdGlv
-bgo+IAo+IMKgIE5PVEU6ICJvZiIgaW5jbHVkZXMgYXJlIHJlcXVpcmVkIHVuZm9ydHVuYXRlbHku
-Cj4gCj4gLSBjbGs6IGVwOTN4eDogYWRkIERUIHN1cHBvcnQgZm9yIENpcnJ1cyBFUDkzeHg6Cj4g
-wqAgLSBkcm9wcGVkIGluY2x1ZGVzCj4gwqAgLSBkcm9wcGVkIGVwOTN4eF9zb2NfdGFibGVbXQo+
-IMKgIC0gYWRkIGRpZmZlcmVudCBuYW1lZCBjbGsgYW5kIGRyb3BwZWQgaW52b2x2ZWQgaW5jbHVk
-ZXMKPiDCoCAtIG1vdmVkIHBsbCdzIGFuZCBmY2xrLCBoY2xrLCBwY2xrIGluaXQgdG8gc2VwYXJh
-dGUgZnVuY3Rpb24KPiDCoCAtIGZpeGVkIGVwOTN4eF9jbGtfaWRzW10gZXhwbGljaXQgbGluZXMK
-PiDCoAo+IMKgIE5PVEU6IGNsa19od19yZWdpc3Rlcl9kaXYoKSBpcyBjbGstZXA5eHggaW50ZXJu
-YWwgZnVuY3Rpb24gd2hpY2gKPiB1c2VzCj4gwqAgZGV2bS4KPiAKPiAtLS0KPiBOaWtpdGEgU2h1
-YmluICg0KToKPiDCoMKgwqDCoMKgIEFSTTogZXA5M3h4OiBhZGQgcmVnbWFwIGF1eF9kZXYKPiDC
-oMKgwqDCoMKgIGNsazogZXA5M3h4OiBhZGQgRFQgc3VwcG9ydCBmb3IgQ2lycnVzIEVQOTN4eAo+
-IMKgwqDCoMKgwqAgZHQtYmluZGluZ3M6IHNvYzogQWRkIENpcnJ1cyBFUDkzeHgKPiDCoMKgwqDC
-oMKgIHNvYzogQWRkIFNvQyBkcml2ZXIgZm9yIENpcnJ1cyBlcDkzeHgKPiAKPiDCoC4uLi9iaW5k
-aW5ncy9hcm0vY2lycnVzL2NpcnJ1cyxlcDkzMDEueWFtbMKgwqDCoMKgwqDCoMKgwqAgfMKgIDM4
-ICsKPiDCoC4uLi9iaW5kaW5ncy9zb2MvY2lycnVzL2NpcnJ1cyxlcDkzMDEtc3lzY29uLnlhbWzC
-oCB8wqAgOTQgKysrCj4gwqBkcml2ZXJzL2Nsay9LY29uZmlnwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgOCArCj4gwqBk
-cml2ZXJzL2Nsay9NYWtlZmlsZcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoCAxICsKPiDCoGRyaXZlcnMvY2xrL2Nsay1lcDkz
-eHguY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-fCA4MzQKPiArKysrKysrKysrKysrKysrKysrKysKPiDCoGRyaXZlcnMvc29jL0tjb25maWfCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCB8wqDCoCAxICsKPiDCoGRyaXZlcnMvc29jL01ha2VmaWxlwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDEgKwo+IMKgZHJp
-dmVycy9zb2MvY2lycnVzL0tjb25maWfCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgfMKgIDE3ICsKPiDCoGRyaXZlcnMvc29jL2NpcnJ1cy9NYWtlZmlsZcKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgMiArCj4g
-wqBkcml2ZXJzL3NvYy9jaXJydXMvc29jLWVwOTN4eC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgfCAyNTIgKysrKysrKwo+IMKgaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9j
-ay9jaXJydXMsZXA5MzAxLXN5c2Nvbi5owqDCoCB8wqAgNDYgKysKPiDCoGluY2x1ZGUvbGludXgv
-c29jL2NpcnJ1cy9lcDkzeHguaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKg
-IDI2ICsKPiDCoDEyIGZpbGVzIGNoYW5nZWQsIDEzMjAgaW5zZXJ0aW9ucygrKQo+IC0tLQo+IGJh
-c2UtY29tbWl0OiBmZWM1MGRiNzAzM2VhNDc4NzczYjE1OWUwZTJlZmIxMzUyNzBlM2I3Cj4gY2hh
-bmdlLWlkOiAyMDI0MDQwOC1lcDkzeHgtY2xrLTY1N2ExMzU3ZGU2Nwo+IAo+IEJlc3QgcmVnYXJk
-cywKCg==
+On Mon Apr 22, 2024 at 2:27 PM EEST, Mikko Rapeli wrote:
+> Userspace needs to know if TPM kernel drivers need to be loaded
+> and related services started early in the boot if TPM device
+> is used and available. If EFI firmware has used TPM device
+> to e.g. measure binaries, then many of them also provide the TPM
 
+What are the other uses cases? TPM settings and reset (clear), i.e.
+machine owner use cases? I think "e.g." is not needed here and it
+confuses a bit.
+
+> log to kernel in addition to the actual TPM device side measurements.
+> Expose availability of TPM event log to userspace via
+> /sys/firmware/efi/tpm_log. If the file exists, then firmware
+> provided a TPM event log to kernel, and userspace init should also
+> queue TPM module loading and other early boot services for TPM support.
+>
+> Enables systemd to support TPM drivers as modules when rootfs is
+> encrypted with the TPM device.
+
+"Enabling systemd" is not an unambiguous sequence of events, as far
+as I know.
+
+Please describe what the changes are done to  the kernel, and how they
+help to enable whatever systemd wants it. This is way too abstract to
+work as "a pitch".
+
+>
+> Sample output from a arm64 qemu machine with u-boot based EFI firmware
+> and swtpm:
+>
+> root@trs-qemuarm64:~# dmesg|grep TPMEvent
+> [    0.000000] efi: TPMFinalLog=3D0xbd648040 RTPROP=3D0xbd646040 SMBIOS3.=
+0=3D0xbe6ad000 TPMEventLog=3D0xbd5f9040 INITRD=3D0xbd5f7040 RNG=3D0xbd5f604=
+0  MEMRESERVE=3D0xbd5f5040
+> root@trs-qemuarm64:~# ls -l /sys/firmware/efi/tpm_log
+> -r-------- 1 root root 4096 Apr 22 10:31 /sys/firmware/efi/tpm_log
+> root@trs-qemuarm64:~# cat /sys/firmware/efi/tpm_log
+> TPMEventLog=3D0xbd5f9040
+> root@trs-qemuarm64:~# cat /sys/firmware/efi/systab
+> SMBIOS3=3D0xbe6ad000
+>
+> Other similar information is currently in /sys/firmware/efi/systab but
+> for new exported variables a one-variable-per-file sysfs interface
+> is preferred according to comments in systab_show()
+> drivers/firmware/efi/efi.c
+>
+> See also:
+> https://github.com/systemd/systemd/pull/32314
+> https://lists.freedesktop.org/archives/systemd-devel/2024-April/050206.ht=
+ml
+>
+> Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+> Cc: Lennart Poettering <lennart@poettering.net>
+> Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
+
+I'd recommend to test this also with hardware. Easy options for ARM
+are:
+
+1. Raspberry Pi 3B+. It has broken TrustZone that allows supply your
+   own payloads. OP-TEE supports this.
+2. Get https://thepihut.com/products/letstrust-tpm-for-raspberry-pi.
+
+BR, Jarkko
