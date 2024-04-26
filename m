@@ -1,152 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2086.outbound.protection.outlook.com [40.107.102.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1388717CD;
-	Fri, 26 Apr 2024 01:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714096010; cv=none; b=UgUud2jg6c8BRZy9XbP/fvvyGHd/Q7T9FDbLn9LGEG9bv0ZpqyeDnh5/wqjRmQgRK0cIwJx9JZclRfiMcq7dzAA/8/Ttbs5FJzFeERAIO15v3HXKd3zSMUzcCyVp9fUYfczvu23fU+HW3WjCFkShPMQijAhoH58t+y6HenaSmPs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714096010; c=relaxed/simple;
-	bh=pvsz6Y7tz8tUTnzdHVdbRBcFs4F7XLbUl6m/bU8Y3GU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BN9XyYnyByENqsaf9BOJiw0NI4zjYUD7v8R0tcjvw7Ur/frpyvfwEcXnOAu0N9p/VGYGK9cwG4P3g49eUx/lelWG65RRM7pCVL1XIuXWF2mEeluF+yOvl6APGVOd75QbqxDqsb01+HP8o/vQW0NaFh/UOd84SA0Dbkbxz9RUM/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WIk04bDM; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF6463AE
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 01:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714096030; cv=fail; b=Y8O8Q770vfMEsmDa/eCH3PfdAODGjF7inENPQYonBXWaSo0z7m+1iI3NBcVI2eZhZyB76V85s5N4GUtJlFoLIwlF5FYuvZSI4+osCo9c1zMZAG3gEfY1V8/j6TT9u0WGF6Qx2OrZs1gMgWleLGzk9w8RugEOB0BgHA4lEWsJPT0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714096030; c=relaxed/simple;
+	bh=hwwT9H/oGn76bzA6oJXfl6Mnh9FriKvJKYJtwcWGjlU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=QyyY605+Varh91AorskYrLMZT/hwl31QFjavI8eRWYkM7hp5VL3P3riDXJPSzEH1d91wgNyHq7kHa7TtlejdJG52oGhz5+XT9tQoYrrf6LixOvysLPu7NJYwMLZmCDlueoSPkaXLZ8gJHAtD27yNkWJW4dJvzEQEO4KRPwe1dJw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=28aR4mJT; arc=fail smtp.client-ip=40.107.102.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WIk04bDM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714096008; x=1745632008;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=pvsz6Y7tz8tUTnzdHVdbRBcFs4F7XLbUl6m/bU8Y3GU=;
-  b=WIk04bDMU2KLWokv1TvtOp7Bdd6eMrzSi+R4AZPo+HgSaFVi4UKfdl/g
-   bNiongcuzE2WKlLUQcqBY8NYKyKqo4IbgBczUftez5QzqvDsdXMZB6ylp
-   V5b9EevlDccUP+BZ9LiPulrEnuAmezLpIz70rQ6Rhzl/oO5WQLYO1h867
-   fJeFYsktxCKd864TidC1LA83f9gpgFjbYczvz+9VzOqZASfWidhVbmo+X
-   9ZtZ1Xq3alyjIjfnABJ+MmQ8xNniecXZkf77/Uixg4qSp1KYi1Y5lipUV
-   qXTzhCAU3334zNHzdJI4lSi4NY5foIt9B3vxBiR1Pfd8+8SK8ANu9W0aB
-   Q==;
-X-CSE-ConnectionGUID: N/KCDj1xTp25FovZXk7itw==
-X-CSE-MsgGUID: 9k4AQKcdT/2rcBJajNbIfw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="21239943"
-X-IronPort-AV: E=Sophos;i="6.07,231,1708416000"; 
-   d="scan'208";a="21239943"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 18:46:47 -0700
-X-CSE-ConnectionGUID: ovHcXCKTQdu5MWqIjgnzsg==
-X-CSE-MsgGUID: uCATs3BCQFubIHsdmVPbjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,231,1708416000"; 
-   d="scan'208";a="56209325"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.127]) ([10.124.245.127])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 18:46:43 -0700
-Message-ID: <77913327-2115-42b5-850a-04ef0581faa7@linux.intel.com>
-Date: Fri, 26 Apr 2024 09:46:40 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="28aR4mJT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QCJBHA5aTlGPSGSY8hAcNOeWcT2kD6yBt2ilDyRRJh41nPGCmA90fn3LvlvruxkaiLobt2J45MeZgbgANN8s9VQiwa6OaHPsWIMrosjXNP2k8gsYGl9nPlyR58GeBuNaDM+hfb5hHkvbVVOOSk6ZcAIXyq4Yu7FVjkGlBk4ig6xM1nPYEHXLZZjYNJzT8HILXpQBT4wP9B+30E6Lt+HwZ/SaFmz6kKBpCO++65P7AzrL/dRZyBEDjQa8QMslpwzIAarqFy82A1+OEAhYDP0qXFBmYWQFAD2jwPONDOu0j1LzRQ/hXbvw95USpdp8KvunL4FBCbjX4WnI6Is9jLxvtQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=42ED7G604v//c+W0hrRlCRdQghjY3epGqV/vPa6O1m8=;
+ b=TzK7p6Lkxfx6yN07KsCWSt2cxh+t2Gu0KHkL/2Tu1N3PMBFj2RGVfkSTFI9LOwBihRSkc0TSN7ZT9wdoVW2HeGsIH8u2bFOMH5qdq2SDaN6GGHPi6amIoNAdqWSIiFulxKBJgsTBfL4NijB8gb9HbovC/XjANl481O3jEsxDHdTj4ydH/6ZBZsQzlHpCtaB0mQVuK24TZsD/VmS38SocKBOhdfnQ22tBr2PFJTlhml47wWwThDxvxBQkcGJKBCMdV2+DnMKvnIxYxo+W6PVg+mhmMJcbvjfIjUXjIonYCItnoUSRU1/wp+0ILUD+crMObvLGoOw+eoF65OwQRI4iPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=42ED7G604v//c+W0hrRlCRdQghjY3epGqV/vPa6O1m8=;
+ b=28aR4mJT9B65EhbrQIb/HcoSJ8oYxGtC5VpbbEFDuOIrVlVrBIiRlk1MkTgfa+I1/bcMTJjJ1Pp6foSCYQQOwiO+Yo1qbv3D/RRITyW6USsXzxUBcyczqcMiK3d4qKSAyC9yvY0Y5B6jaBz6MFa9bQ7MBFAyDKvKNEKjqqfNJNo=
+Received: from BY5PR03CA0014.namprd03.prod.outlook.com (2603:10b6:a03:1e0::24)
+ by SN7PR12MB8148.namprd12.prod.outlook.com (2603:10b6:806:351::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Fri, 26 Apr
+ 2024 01:47:05 +0000
+Received: from SJ1PEPF00001CE5.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0:cafe::d5) by BY5PR03CA0014.outlook.office365.com
+ (2603:10b6:a03:1e0::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.23 via Frontend
+ Transport; Fri, 26 Apr 2024 01:47:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ SJ1PEPF00001CE5.mail.protection.outlook.com (10.167.242.21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7519.19 via Frontend Transport; Fri, 26 Apr 2024 01:47:05 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 25 Apr
+ 2024 20:47:04 -0500
+Received: from xsjanatoliy50.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Thu, 25 Apr 2024 20:47:03 -0500
+From: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
+Date: Thu, 25 Apr 2024 18:46:50 -0700
+Subject: [PATCH v2 1/2] drm: xlnx: zynqmp_dpsub: Fix few function comments
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: Sean Christopherson <seanjc@google.com>,
- Kan Liang <kan.liang@linux.intel.com>
-Cc: Mingwei Zhang <mizhang@google.com>, maobibo <maobibo@loongson.cn>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
- peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
- jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com
-References: <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
- <b3868bf5-4e16-3435-c807-f484821fccc6@loongson.cn>
- <CAL715W++maAt2Ujfvmu1pZKS4R5EmAPebTU_h9AB8aFbdLFrTQ@mail.gmail.com>
- <f843298c-db08-4fde-9887-13de18d960ac@linux.intel.com>
- <Zikeh2eGjwzDbytu@google.com>
- <7834a811-4764-42aa-8198-55c4556d947b@linux.intel.com>
- <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
- <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com>
- <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
- <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com>
- <ZirPGnSDUzD-iWwc@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <ZirPGnSDUzD-iWwc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240425-dp-live-fmt-fix-v2-1-6048e81211de@amd.com>
+References: <20240425-dp-live-fmt-fix-v2-0-6048e81211de@amd.com>
+In-Reply-To: <20240425-dp-live-fmt-fix-v2-0-6048e81211de@amd.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen
+	<tomi.valkeinen@ideasonboard.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>, Michal Simek <michal.simek@amd.com>
+CC: <dri-devel@lists.freedesktop.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, Anatoliy Klymenko
+	<anatoliy.klymenko@amd.com>, kernel test robot <lkp@intel.com>
+X-Mailer: b4 0.13.0
+Received-SPF: None (SATLEXMB03.amd.com: anatoliy.klymenko@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE5:EE_|SN7PR12MB8148:EE_
+X-MS-Office365-Filtering-Correlation-Id: 28e43bd6-3295-469e-f9b8-08dc6592c6ca
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NzBBU3ljYy80WDFxVVQwOFRiUG14TzA4eDZyaDkrdldyWFZjd2M4dWsyWHhT?=
+ =?utf-8?B?ck1jNHZUSlhZSU1peFNTZFgrSkxZKzZ5UjhUbk1hNHRJdFFXdEJwMHFiUXhw?=
+ =?utf-8?B?eXIybTV5QVR6cndDWWZsNzhoay8zaUNRL29ZK1dJWmVxS3Z5SmkrQWdrMEVr?=
+ =?utf-8?B?bFRIR2h1Z3JtRGE2aHhZN3l0NXRweWlJZndYbUxLVFEzYk92SzRBb1FuNDg0?=
+ =?utf-8?B?czk2bWtKOFpNZ0YwUGIwMFRsS0lpLzF1ZXZUL0N0dzYvWERrQ2pMcGcxWldk?=
+ =?utf-8?B?aTI0WmgweEJwYjMvdXUvQWVBV2RzK3VqNFVPNFRQSXVOSWdGbSs0ejdSWEdo?=
+ =?utf-8?B?ak42aVFUUXNiTjVYSEx5ci9FS29nWVRKWHF5aUdIVUVBdWhWZHkzQk9pcVFw?=
+ =?utf-8?B?azFlMG1mZ2Zvb3hXNTl0MFBOam1maVNHSFoyTjdqRWVWMm02TTJjU2VJQlF5?=
+ =?utf-8?B?aGtrcmhqRkNDLzdiT0lQZFBnT1hTczM5eGlTYXpuRm9kbDZRZGw2ZjQwSk5F?=
+ =?utf-8?B?Rm13dU5XWjd1YmRmV1IxZW5vZzFTVlU3UVp6Rnp2SzhNWGtxTXFkZjlZMVZw?=
+ =?utf-8?B?dlduNC9GaHRKenVGN1JVZ1hiZWhyWGNHb3ltZE54cUdjeTFCTllRTjdNbTBz?=
+ =?utf-8?B?WGhRU2NDL2J1OXZmMkVRc0dRZEdRRXBYNHFxSkt2RVE2UzB1aWhrekt0OEY5?=
+ =?utf-8?B?UmozaW5zVStlcEZVWWhtRlZOQXN6YWt4VGIwdVNYa0JJcnVQSWNVdTl2Z2RU?=
+ =?utf-8?B?engvM2U3N2tidDhCSTE5bW1EczhnaGFqMWw2ci9yRDFVQU9EY1BhelJUUjZq?=
+ =?utf-8?B?TGp5d0dJeEliMUtkMitVR1JZMzJVcWpGbFc2VHVlT3BEeGxVOEZFMGFsZXlE?=
+ =?utf-8?B?T0pLS05tdWlITkJUbEhHMnJXb2RIU1A1RjdnWFBMbDNka3h6cEdVbFBxYUU0?=
+ =?utf-8?B?RHlINFp4ZUs5dVdxdnNTR3d5cjQzdUJ0MWVhTldhOU1BdWc2aC9QRzAweEJK?=
+ =?utf-8?B?ZmJSK3hRcU52bGNEaXBGeVkya0hhRENaQW9IUC9QeXRxK05GaEVqeHJYeHNZ?=
+ =?utf-8?B?Y0QzUVI2YUJBeTBNR1F0QmdLNVBZR1BlblZVNFJ2bk4yZldlK3VacG90WERV?=
+ =?utf-8?B?OHhoYll5MUtUSWRWUE1LY3c0cHp2R2JvOHVxeldSTlR5Q0hhdEdWM0dTNWxh?=
+ =?utf-8?B?dVEvYXpwM291Mzk2S2dOekhwUko3cTM2SktadXdQUDQ3Sng4OXdOQjU4NVdk?=
+ =?utf-8?B?NUhVZHNDcWQ2MXBqc0h4UkF0WjMzZTFxdVNJa2o3c2VydGc4WThKSmcyYzlx?=
+ =?utf-8?B?dVBTUmM1Qk1vWlVGSkpETkU0cWpqNytWY010ck9ES0xSRkNWZEsrTDVhU3RL?=
+ =?utf-8?B?TCtFbzZDY0M4Tm9OemFlTVA3b29KZDFDZTBVaUhiZU03OGkxR25WQlVWVU1a?=
+ =?utf-8?B?Q2xWa1ZYSE54UjVOck93YnZmZDZTMUhUZDk3ZXBmWTd3Z2hFZ3JCbzBHREdj?=
+ =?utf-8?B?V2NmWE95eE03S0h1RlNLVXVrbmtRL2trb3NyVlJXYnFOVHI2bEJzYU93THUy?=
+ =?utf-8?B?bnJhRFo4d0JsRFRVTXRHNVNKbDJjSU1zOWhiYTczM2tkU0FRMllBWHA1U0hB?=
+ =?utf-8?B?Z1VGWDZPQW5WSEFuKzlsV2VsSEpVUGlJa2Z4S2xINGFra3JYY2pQYWlPa0FE?=
+ =?utf-8?B?NXVuRFd4YXRxQ1lvQUNoVEVIVysvUkNZdngyb1BBWlQvdmltanhIOEE3dDF0?=
+ =?utf-8?B?MWl3U1NMbWgrN2hRbkExY1RmeWY4dkllUTBlUkVTOVhwMEhqbG9mWkZDLzBs?=
+ =?utf-8?B?R0FWdThxeUtuaTE5V2Jpc3VPQ1IzU2lZQW5SUUJDS1lsa0d3UDVUd2Q0R3pz?=
+ =?utf-8?Q?WtK1QCKvhgPfK?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(1800799015)(376005)(82310400014)(7416005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2024 01:47:05.3339
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28e43bd6-3295-469e-f9b8-08dc6592c6ca
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CE5.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8148
 
+Fix arguments description for zynqmp_disp_layer_find_live_format() and
+zynqmp_disp_layer_set_live_format().
 
-On 4/26/2024 5:46 AM, Sean Christopherson wrote:
-> On Thu, Apr 25, 2024, Kan Liang wrote:
->> On 2024-04-25 4:16 p.m., Mingwei Zhang wrote:
->>> On Thu, Apr 25, 2024 at 9:13 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>>> It should not happen. For the current implementation, perf rejects all
->>>> the !exclude_guest system-wide event creation if a guest with the vPMU
->>>> is running.
->>>> However, it's possible to create an exclude_guest system-wide event at
->>>> any time. KVM cannot use the information from the VM-entry to decide if
->>>> there will be active perf events in the VM-exit.
->>> Hmm, why not? If there is any exclude_guest system-wide event,
->>> perf_guest_enter() can return something to tell KVM "hey, some active
->>> host events are swapped out. they are originally in counter #2 and
->>> #3". If so, at the time when perf_guest_enter() returns, KVM will ack
->>> that and keep it in its pmu data structure.
->> I think it's possible that someone creates !exclude_guest event after
-> I assume you mean an exclude_guest=1 event?  Because perf should be in a state
-> where it rejects exclude_guest=0 events.
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202404260616.KFGDpCDN-lkp@intel.com/
 
-Suppose should be exclude_guest=1 event, the perf event without 
-exclude_guest attribute would be blocked to create in the v2 patches 
-which we are working on.
+Signed-off-by: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
+---
+ drivers/gpu/drm/xlnx/zynqmp_disp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+index 13157da0089e..423f5f4943cc 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
++++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+@@ -940,7 +940,7 @@ zynqmp_disp_layer_find_format(struct zynqmp_disp_layer *layer,
+  * zynqmp_disp_layer_find_live_format - Find format information for given
+  * media bus format
+  * @layer: The layer
+- * @drm_fmt: Media bus format to search
++ * @media_bus_format: Media bus format to search
+  *
+  * Search display subsystem format information corresponding to the given media
+  * bus format @media_bus_format for the @layer, and return a pointer to the
+@@ -1117,7 +1117,7 @@ void zynqmp_disp_layer_set_format(struct zynqmp_disp_layer *layer,
+ /**
+  * zynqmp_disp_layer_set_live_format - Set the live video layer format
+  * @layer: The layer
+- * @info: The format info
++ * @media_bus_format: Media bus format to set
+  *
+  * NOTE: This function should not be used to set format for non-live video
+  * layer. Use zynqmp_disp_layer_set_format() instead.
 
->
->> the perf_guest_enter(). The stale information is saved in the KVM. Perf
->> will schedule the event in the next perf_guest_exit(). KVM will not know it.
-> Ya, the creation of an event on a CPU that currently has guest PMU state loaded
-> is what I had in mind when I suggested a callback in my sketch:
->
->   :  D. Add a perf callback that is invoked from IRQ context when perf wants to
->   :     configure a new PMU-based events, *before* actually programming the MSRs,
->   :     and have KVM's callback put the guest PMU state
+-- 
+2.25.1
 
-
-when host creates a perf event with exclude_guest attribute which is 
-used to profile KVM/VMM user space, the vCPU process could work at three 
-places.
-
-1. in guest state (non-root mode)
-
-2. inside vcpu-loop
-
-3. outside vcpu-loop
-
-Since the PMU state has already been switched to host state, we don't 
-need to consider the case 3 and only care about cases 1 and 2.
-
-when host creates a perf event with exclude_guest attribute to profile 
-KVM/VMM user space,  an IPI is triggered to enable the perf event 
-eventually like the following code shows.
-
-event_function_call(event, __perf_event_enable, NULL);
-
-For case 1,  a vm-exit is triggered and KVM starts to process the 
-vm-exit and then run IPI irq handler, exactly speaking 
-__perf_event_enable() to enable the perf event.
-
-For case 2, the IPI irq handler would preempt the vcpu-loop and call 
-__perf_event_enable() to enable the perf event.
-
-So IMO KVM just needs to provide a callback to switch guest/host PMU 
-state, and __perf_event_enable() calls this callback before really 
-touching PMU MSRs.
-
->
-> It's a similar idea to TIF_NEED_FPU_LOAD, just that instead of a common chunk of
-> kernel code swapping out the guest state (kernel_fpu_begin()), it's a callback
-> into KVM.
