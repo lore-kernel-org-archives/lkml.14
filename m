@@ -1,96 +1,120 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7283A1B7;
-	Fri, 26 Apr 2024 11:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D73143C70;
+	Fri, 26 Apr 2024 11:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714132142; cv=none; b=MYH9GDeI2quZz8MQWm8AMg19p+qWDVs7UTU+sz18jv4DEH3g2LPAn781xy5onEpWwVgqEPquw2vVl9OixWrQBTU4Z7hmIZqbcnnSX/3SLx8gyGe9dyQ6n75MLSbl41ft6bIBp3s0ACI+aude7BoapszGoudBX/gxwzUyVYGRwhY=
+	t=1714132274; cv=none; b=F99UxY6ki4BDf4P4szW5aYGvCAg6OgtGAj1Gu4G9FCnT6HNHarerO8Y6gPk/inXkxdCAe/34swR99JhfLApBcrAq9Xm5Ul4kq6U6Xg1iSmzqVmZDylsaXbfPnTEO6IPQrIyg3FQ5vxmWyqH1PAIGsV1xqoRgI70tyXkURK3ibYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714132142; c=relaxed/simple;
-	bh=vuIcmnGQq4w4qRhii36oQpxwxZeKTg+NU3UP9tdpmnQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h0CLBWABBF+LonSITg0im/YxbcW6xqv//aok8O8i4miyzA7P//LhcuvK3LySuLwgZLRkzCjWHLJGRk3C9xA8LQlStUT7QUuGhSWiv6L66RkwbeCKyjXOpRTgjzmLjlg5/fAlnd/J3tkF+/Fcn/XNeJUpaRIt+0FB+wgPf83L7Gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQrbL5Lklz6DBjc;
-	Fri, 26 Apr 2024 19:48:46 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 46E26140447;
-	Fri, 26 Apr 2024 19:48:58 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 26 Apr
- 2024 12:48:57 +0100
-Date: Fri, 26 Apr 2024 12:48:55 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, "James Morse"
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-	<linuxarm@huawei.com>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "Dave
- Hansen" <dave.hansen@linux.intel.com>, <justin.he@arm.com>,
-	<jianyong.wu@arm.com>
-Subject: Re: [PATCH v7 08/16] ACPI: Add post_eject to struct
- acpi_scan_handler for cpu hotplug
-Message-ID: <20240426124836.00006cde@huawei.com>
-In-Reply-To: <20240418135412.14730-9-Jonathan.Cameron@huawei.com>
-References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
-	<20240418135412.14730-9-Jonathan.Cameron@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1714132274; c=relaxed/simple;
+	bh=pUFowI5Uew0Bfbxd/9zcBIXUhLvC5pUTztv9cOZmLvQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MIJWpjj/7zEY/rSjlgZlAtSDlEDqXNDjyO1fkD8ss1sFIF+qOIIAkuBCMFILewQhxUH9qQ70rA46s+xTvQvy7r5zwPUJW+IRWcdcGOIAi4a5T0xRYc49CIGwXNaFfSIOJtewfiZJgam70ezFTEL6L8a0djKaUqPbdk9zryZQiFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LuCpuWUm; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LuCpuWUm"
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43QBbkW2006299;
+	Fri, 26 Apr 2024 11:51:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=HsCoHq+/7P37NBOty4qKIsb4+uubEDWshiCoE+9VXQ8=;
+ b=LuCpuWUm0UeZmBZN6+E9fMB90cRYAl8Pviuqa3fxMiCtYUqeCEyTK1Qq7/CLfFMy3ezv
+ 3yfCaStMv4Ixy2O4E5i9XLED1Jo5iPrvldFVQjFDTuPRduqzVvrm5rZDn41sPllD/hw0
+ 1rHczGIEdsTRQ07epzeuSEQcSSHRMRPCnOkdix7KNmvSya/vMHJprmdSMusZ/d+pjYAC
+ 3ZUhg/GIs0goTzK7XBsxPzm+OfAs6nU3zzBa/3N61AbrkEizQ4lIwa/bC5EtoheJHPQs
+ qvUJIRVap7dpXk+Ayqfjy+Jr7aP0Z+UV9ZdgQmn/cPtQGla/vt5ah3icZVQTc5jbpdhY 6w== 
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xrbj6r108-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 11:51:10 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43Q9CVZa023052;
+	Fri, 26 Apr 2024 11:51:02 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xms1pfgvu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 11:51:02 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43QBovp229622824
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 26 Apr 2024 11:50:59 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 08F2220040;
+	Fri, 26 Apr 2024 11:50:57 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C6D5E2004E;
+	Fri, 26 Apr 2024 11:50:56 +0000 (GMT)
+Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.66])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 26 Apr 2024 11:50:56 +0000 (GMT)
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Cc: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        svens@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        borntraeger@de.ibm.com
+Subject: [PATCH v2 1/2] s390/pgtable: switch read and write softbits for puds
+Date: Fri, 26 Apr 2024 13:50:55 +0200
+Message-ID: <20240426115056.31768-2-imbrenda@linux.ibm.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240426115056.31768-1-imbrenda@linux.ibm.com>
+References: <20240426115056.31768-1-imbrenda@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: CK6Nt_4wasmbzxJ_hgb3rzilyH1N7Joz
+X-Proofpoint-ORIG-GUID: CK6Nt_4wasmbzxJ_hgb3rzilyH1N7Joz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-26_12,2024-04-26_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ clxscore=1015 mlxscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0
+ mlxlogscore=660 adultscore=0 impostorscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404260079
 
-On Thu, 18 Apr 2024 14:54:04 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+There is no reason for the read and write softbits to be swapped in the
+puds compared to pmds. They are different only because the softbits for
+puds were introduced at the same time when the softbits for pmds were
+swapped.
 
-> From: James Morse <james.morse@arm.com>
-> 
-> struct acpi_scan_handler has a detach callback that is used to remove
-> a driver when a bus is changed. When interacting with an eject-request,
-> the detach callback is called before _EJ0.
-> 
-> This means the ACPI processor driver can't use _STA to determine if a
-> CPU has been made not-present, or some of the other _STA bits have been
-> changed. acpi_processor_remove() needs to know the value of _STA after
-> _EJ0 has been called.
-> 
-> Add a post_eject callback to struct acpi_scan_handler. This is called
-> after acpi_scan_hot_remove() has successfully called _EJ0. Because
-> acpi_scan_check_and_detach() also clears the handler pointer,
-> it needs to be told if the caller will go on to call
-> acpi_bus_post_eject(), so that acpi_device_clear_enumerated()
-> and clearing the handler pointer can be deferred.
-> An extra flag is added to flags field introduced in the previous
-> patch to achieve this.
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
-> Reviewed-by: Joanthan Cameron <Jonathan.Cameron@huawei.com>
+The current implementation is not wrong per se, since the macros are
+defined correctly; only the documentation does not reflect reality.
 
-Gavin's earlier review showed I can't type.
-Fixed up by dropping this RB seeing as I signed off anyway.
+With this patch, the read and write softbits for large pmd and large
+puds will have the same layout, and will match the existing
+documentation.
 
-> Reviewed-by: Gavin Shan <gshan@redhat.com>
-> Tested-by: Miguel Luis <miguel.luis@oracle.com>
-> Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-> Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
+Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Reviewed-by: Heiko Carstens <hca@linux.ibm.com>
+---
+ arch/s390/include/asm/pgtable.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
+index 60950e7a25f5..3da2995fd196 100644
+--- a/arch/s390/include/asm/pgtable.h
++++ b/arch/s390/include/asm/pgtable.h
+@@ -266,8 +266,8 @@ static inline int is_module_addr(void *addr)
+ #define _REGION3_ENTRY_DIRTY	0x2000	/* SW region dirty bit */
+ #define _REGION3_ENTRY_YOUNG	0x1000	/* SW region young bit */
+ #define _REGION3_ENTRY_LARGE	0x0400	/* RTTE-format control, large page  */
+-#define _REGION3_ENTRY_READ	0x0002	/* SW region read bit */
+-#define _REGION3_ENTRY_WRITE	0x0001	/* SW region write bit */
++#define _REGION3_ENTRY_WRITE	0x0002	/* SW region write bit */
++#define _REGION3_ENTRY_READ	0x0001	/* SW region read bit */
+ 
+ #ifdef CONFIG_MEM_SOFT_DIRTY
+ #define _REGION3_ENTRY_SOFT_DIRTY 0x4000 /* SW region soft dirty bit */
+-- 
+2.44.0
+
