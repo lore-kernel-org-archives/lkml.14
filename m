@@ -1,108 +1,146 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F6225605
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 09:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F5213C838;
+	Fri, 26 Apr 2024 09:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714122270; cv=none; b=Tzv+P6IhK86eAxWtmc4PwFfkf4CmT//wPGMyilFF8QYkorAejrkUoPTHclqLWy/Y3fpR+vF2uH+2E+JpwLvbXPQPPxDgsfaU1S9iJTJR1Uaeo7pHqVEyoy8IMGACaMLAAa8/4vcHlhq0RzBNoet2IXuwOBvckCAF70BovvAtHJU=
+	t=1714122293; cv=none; b=LQI2EEc0krgGIaIP28VYMGQkgxgq4lMKwtOILbZXjrDmKzMczYgcvS6Pvc3MhRPx6vGNiQ7a3EVj65GFN5lc65+wACpe1z+VWuhu+NR4/lV9vr0VriKcmXa+hrTr98o3CU2QjFkVlODe93siS6Y67McBQDIMIzMjZsPc0is5W80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714122270; c=relaxed/simple;
-	bh=nW7jXvCEvQnb9l7QOm8u/1qQtJrmGBsLapHtsNxqzkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nY3iYQfj55QwuBF3agmjscaZyN4TFRVhc7WMk4DeBAYP4fCVoLiLEFMTTcvYwYFQikRB1DwlSJUX6oMLCww+MEih7em0U3Ntn+XMMaqEKU5GtIr7n+GfYWni65D2uiPO/6beZ3pyfntiwZ0IdCf4spvejWxbjjLVv4BNFCbjy/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=FpOERp8U; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1714122293; c=relaxed/simple;
+	bh=pm2j1dM2p+8pNOKXWZzVY9FMSNrPURtydALmuvx+siw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DkbSOrUE45tmK98EZ3Q5dc1KG9ozJNVp3PmjNExPtGMUHk8y3Nj7Tu9H2iwM5hjTzdIBIZHkiRmzs8m9Ub+4NO84IS49Lj0ATR1cYWPINAgBj6J1uOKIXWpQ3JdxXkQLqTdLiGHTZNuwEJ6FFKqqoydkxhA+d+s6AGNO33y3umQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E7nCAB0D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="FpOERp8U"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a55b2f49206so518187866b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 02:04:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1714122267; x=1714727067; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hzl4Ufo8fPsUKZxQXQJoooQsy8g61GqJ67h+tl5OxfU=;
-        b=FpOERp8UD4XvijQD/Thldx9fZbq4orYkU3NmEDsKgY94lI2MNkyMBMB9w/VSW7WdeP
-         uxjVvzoPZvETVetc4HSFwGDAPeFqzZHTIitL5rMnqP8cwOnoh8LE6cXc5cfI8Sooq5oZ
-         0Ok4nVoDtanPFVchSGavhfOjAEzjXNBth/ysKKQB/dNeBkgXoM9bXFIU0RwPNNmiCDN5
-         6nTC75v9SamhC+71GO1E+L1ae5EBVOvW4mBL/Csuh51A2j2svLIpIUdZNyaYE0rlYW3p
-         53wcafWJUwGe58srp+czumBObuCnYEUCqVDQ6LrtkZcRYDZPxaOeRkRxBvjLmyTmolpd
-         IXoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714122267; x=1714727067;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hzl4Ufo8fPsUKZxQXQJoooQsy8g61GqJ67h+tl5OxfU=;
-        b=YZmhS00kxJYrNIN1f3YYtAAMQZz86cgke/EbSsuZ9LQq/J4b5866Dp6QpLhUE0m3L3
-         f20GCfZSBFaJCe2Tto1OsotjefLAgGa3AldQT+yNf6L8nNZy/PTPkDLZ0yRjV+CsbADJ
-         of4WHDqKKwLDKwdLddC2Z0xrGd1PEvS6cM85suuRZ2IguE0xoEYRCfGiAytNiX4k3KUt
-         PiBhWefIh6SSVNZD9GayulxNdGXh5mb35sPFVEWFycLRgR+DJTgR3QEtxBIUxUoB+J0D
-         6QEzRb4dNdR0wwyug1c1VsIGLbk2ODSO7wFIMlrdQNHVGS19zaQMtc2NfM0rEhsDI9dE
-         6pJA==
-X-Forwarded-Encrypted: i=1; AJvYcCXFcahy1hrTueka0Ott+aH9wwhn+w3xa1lQVjsHskcAcpRKisLWhqSksbAHz38kV2mmi5k0veAkiKMb122n+bxoDe2FJXCracIsLzDh
-X-Gm-Message-State: AOJu0YzutSkWbGM3/H8ACNqM1mG5DSTN43B0ecTlRX8PmNW2cADxIfXL
-	P/G4hMho3M755N5eAMbb6yklAdwZ4Jw8mvNlffRRDCiIt+sN8rR8Z5laOcbpYtY=
-X-Google-Smtp-Source: AGHT+IGGQjMoum6nDXLgZtliFReM/nKG5LCeh8eEH857A0KequuLtsB621jAkhX12QtK6pYL9HvzSQ==
-X-Received: by 2002:a17:906:c10a:b0:a58:a0b8:2a5e with SMTP id do10-20020a170906c10a00b00a58a0b82a5emr2344119ejc.26.1714122266694;
-        Fri, 26 Apr 2024 02:04:26 -0700 (PDT)
-Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id hg7-20020a170906f34700b00a4e5a6b57a2sm10343313ejb.163.2024.04.26.02.04.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 02:04:26 -0700 (PDT)
-Date: Fri, 26 Apr 2024 11:04:25 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, 
-	Conor Dooley <conor@kernel.org>, Conor Dooley <conor.dooley@microchip.com>, 
-	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, Evan Green <evan@rivosinc.com>, 
-	Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: Re: [PATCH 2/2] riscv: cpufeature: Fix extension subset checking
-Message-ID: <20240426-e532c061e4929c6e8babcb3b@orel>
-References: <20240424-cpufeature_fixes-v1-0-585e73d2226b@rivosinc.com>
- <20240424-cpufeature_fixes-v1-2-585e73d2226b@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E7nCAB0D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 131A1C113CE;
+	Fri, 26 Apr 2024 09:04:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714122293;
+	bh=pm2j1dM2p+8pNOKXWZzVY9FMSNrPURtydALmuvx+siw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=E7nCAB0DtLEbFbdOGaX777N0X0XV4k2CNMRL9+fnvIsvomps1P64c/ooLwmWfY+X3
+	 m4okEsxFdK473An+EhcsCqQAFa6HntfG69GzO2Y+yieZYm2DDILswmkgoVloKspdtP
+	 VvsfdKJZQOW0EMHg3mrm5kEAx5VQsQiSbvYkQfT6KClxI1nur6Bn602Kmvhbdg80HO
+	 ulbvVAeDYoUibKbFj7C93WkmLF8czZ4wrBp2DGQljnOy3nS0+JLHVuHrx42omnDqaO
+	 v5gh+OR+aeq+vhAzPL9PdcGUEsLKGaYo+ix57EVrPYF2e8h1i9xO3+f01vnE3kdFcL
+	 aEnMW4yULsazQ==
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2 00/14] ASoC: Constify local snd_sof_dsp_ops
+Date: Fri, 26 Apr 2024 11:03:47 +0200
+Message-Id: <20240426-n-const-ops-var-v2-0-e553fe67ae82@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240424-cpufeature_fixes-v1-2-585e73d2226b@rivosinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPRtK2YC/3WNyw6CMBBFf4XM2jH0gYIr/8Ow4DHARNOSKWk0p
+ P9uZe/ynOSeu0MgYQpwK3YQihzYuwz6VMCwdG4m5DEz6FLb0iqLDgfvwoZ+DRg7QWUuk2mq3lx
+ tD3m1Ck38PoqPNvPCYfPyOQ6i+tn/raiwxHqqDFE1NrUa7k8SR6+zlxnalNIX5tzHxa8AAAA=
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, 
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
+ Bard Liao <yung-chuan.liao@linux.intel.com>, 
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
+ Daniel Baluta <daniel.baluta@nxp.com>, 
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2676; i=krzk@kernel.org;
+ h=from:subject:message-id; bh=pm2j1dM2p+8pNOKXWZzVY9FMSNrPURtydALmuvx+siw=;
+ b=kA0DAAoBwTdm5oaLg9cByyZiAGYrbhyhrRkynmvFIgcWvJC4JAsf1b71Ti8wIkX9f1Kfu/klC
+ 4kCMwQAAQoAHRYhBN3SYig9ERsjO264qME3ZuaGi4PXBQJmK24cAAoJEME3ZuaGi4PXuo0QAIbH
+ d7a92vy0rqiQwWXMMVzg532JOBlhopM0Y5zBK9mU7tQoLdIeMgru6dkEdTZaaWFF97v6z6No6Il
+ FFf1Rb6Q0XfLaD0ZuqMOYPYJ8fFvHxnRxifpZ5xoV5wNFvCz8kiCRKpVOEIm9dN8pGcT1tsFbXK
+ Aw18iCCpB4B8xnH5f8iUfFYLy5JDsRMXlk23fSDyA6s6zNsh3mwz9dzCUpRREJvB/izLBbtTRs/
+ VRr7CJUS0vECgwnjfSC51P0fVt38YKmFIn4U3g+z8fSLu0OzkFwp62t9K7t0jBw9uEqKuWlPEzK
+ /sweW2NQCOVyQ8J1WhP26MIDP7Sv4RlGd0cMIg8QVvOpgcKDF3LlR2HbDaqB/s/918jtWdTiNTo
+ sfC9R7VtDBuHe7e4NppSo/mxHFOb1pwJga5ZAOCe8bc0aT0pAKEpqi5Ng80tYckqkUeG/Oc2C1+
+ JkaJ6E7np1NlsjfbZ/RKDNpoXKox6DqDFrzun0hpeihWUOnB9o3KSla6L+4cjywErQYkaRiaQOu
+ VlFFjkcgNa9nz6SismodUx5myDutbGPKUNTtBXa68P9U+KvwNp/zSIN78Ez+NEUlw6CPT0E3WCL
+ F/23amcVe9o6pDR9ERhoW/A+wg83tnFlGnEJN8gfzCDngQIowdzdEQdYyT4kRsUj5X7Ohu3Uvrn
+ 6O74m
+X-Developer-Key: i=krzk@kernel.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-On Wed, Apr 24, 2024 at 09:19:55AM GMT, Charlie Jenkins wrote:
-> This loop is supposed to check if ext->subset_ext_ids[j] is valid, rather
-> than if ext->subset_ext_ids[i] is valid, before setting the extension
-> id ext->subset_ext_ids[j] in isainfo->isa.
-> 
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> Fixes: 0d8295ed975b ("riscv: add ISA extension parsing for scalar crypto")
-> ---
->  arch/riscv/kernel/cpufeature.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-> index c6e27b45e192..6dff7bb1db3f 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -607,7 +607,7 @@ static int __init riscv_fill_hwcap_from_ext_list(unsigned long *isa2hwcap)
->  
->  			if (ext->subset_ext_size) {
->  				for (int j = 0; j < ext->subset_ext_size; j++) {
-> -					if (riscv_isa_extension_check(ext->subset_ext_ids[i]))
-> +					if (riscv_isa_extension_check(ext->subset_ext_ids[j]))
->  						set_bit(ext->subset_ext_ids[j], isainfo->isa);
->  				}
->  			}
-> 
-> -- 
-> 2.44.0
->
+Hi,
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Changes in v2
+=============
+- Only rebase on for-next of broonie/sound.git
+- Add tags.
+- Link to v1: https://lore.kernel.org/r/20240414-n-const-ops-var-v1-0-8f53ee5d981c@kernel.org
+
+Description
+===========
+The core code does not modify the 'struct snd_sof_dsp_ops' passed via
+pointer in various places, so this can be made pointer to const in few
+places.  This in turn allows few drivers to have the local (usually
+static) 'struct snd_sof_dsp_ops' as const which increased code safety,
+as it is now part of rodata.
+
+Not all drivers can be made safer that way. Intel and AMD rely on
+customizing that 'struct snd_sof_dsp_ops' before passing to SOF, so they
+won't benefit.  They don't lose anything., either.
+
+All further patches depend on the first four patches.
+
+Best regards,
+Krzysztof
+
+---
+Krzysztof Kozlowski (14):
+      ASoC: SOF: debug: Constify local snd_sof_dsp_ops
+      ASoC: SOF: ipc3: Constify local snd_sof_dsp_ops
+      ASoC: SOF: pcm: Constify local snd_sof_dsp_ops
+      ASoC: SOF: Constify stored pointer to snd_sof_dsp_ops
+      ASoC: SOF: intel: pci-tng: Constify snd_sof_dsp_ops
+      ASoC: SOF: intel: hda: Constify snd_sof_dsp_ops
+      ASoC: SOF: amd: acp: Constify snd_sof_dsp_ops
+      ASoC: SOF: imx8: Constify snd_sof_dsp_ops
+      ASoC: SOF: imx8m: Constify snd_sof_dsp_ops
+      ASoC: SOF: imx8ulp: Constify snd_sof_dsp_ops
+      ASoC: SOF: intel: bdw: Constify snd_sof_dsp_ops
+      ASoC: SOF: intel: byt: Constify snd_sof_dsp_ops
+      ASoC: SOF: mediatek: mt8186: Constify snd_sof_dsp_ops
+      ASoC: SOF: mediatek: mt8195: Constify snd_sof_dsp_ops
+
+ include/sound/sof.h                    | 2 +-
+ sound/soc/sof/amd/acp-common.c         | 2 +-
+ sound/soc/sof/amd/acp.h                | 2 +-
+ sound/soc/sof/debug.c                  | 2 +-
+ sound/soc/sof/imx/imx8.c               | 4 ++--
+ sound/soc/sof/imx/imx8m.c              | 2 +-
+ sound/soc/sof/imx/imx8ulp.c            | 2 +-
+ sound/soc/sof/intel/bdw.c              | 2 +-
+ sound/soc/sof/intel/byt.c              | 4 ++--
+ sound/soc/sof/intel/hda-common-ops.c   | 2 +-
+ sound/soc/sof/intel/hda.h              | 2 +-
+ sound/soc/sof/intel/pci-tng.c          | 2 +-
+ sound/soc/sof/intel/shim.h             | 2 +-
+ sound/soc/sof/ipc3-priv.h              | 6 +++---
+ sound/soc/sof/mediatek/mt8186/mt8186.c | 2 +-
+ sound/soc/sof/mediatek/mt8195/mt8195.c | 2 +-
+ sound/soc/sof/pcm.c                    | 2 +-
+ 17 files changed, 21 insertions(+), 21 deletions(-)
+---
+base-commit: efdfbbc4dcc8f98754056971f88af0f7ff906144
+change-id: 20240414-n-const-ops-var-136f395b374b
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzk@kernel.org>
+
