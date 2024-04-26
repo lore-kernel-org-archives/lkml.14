@@ -1,103 +1,122 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m3296.qiye.163.com (mail-m3296.qiye.163.com [220.197.32.96])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEFD46B8
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 01:24:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD897F8;
+	Fri, 26 Apr 2024 01:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.96
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714094676; cv=none; b=HeqL+Xw7DvSJRvzuLRFgzThbDe8mmpaDZVb7c/ZEazXrqOelcqTUUWxhOETAsWRXD7afJ42zXH/yZa6j8FLyOfi+llxXt8nc7IYM7jf0a2anfSkrl2nAFr1628W7HKC8tIOQ2lROQXDumZ2Pe37YYQtbN6fO1/9uig0fVX3rFps=
+	t=1714094799; cv=none; b=gCHkub3ucTTIesU3JFQs4gwPrrfU/8uWh6lgJGC16/ekT5cjfwDyorbyNh2KxOIy1zJPbgTReSENtM/rMm+yAllKvhbXmKNdnadL0VmjQRUDwkpQq4WpxWXthnx38L8vtva5CJ69kGyVAXy7pM6AkXBfdTSdcU/3VAAdDeU+ejM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714094676; c=relaxed/simple;
-	bh=Itx0yXPcj6JT4FRoj2WykAooUqnzpUUVPQ07Z7qUrI4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jVOvUT9wCjp7DJi8Y0G70k8cGrUHzdPwolFEDiDct9Nh+qP0v+djbRPIEVSapYMy8Rt6BFJSFyjM8kAQnWHsvxTUIbhbaexEvh3vaAMhM+byCTfcR8+8fUfyLv/uszFkfFl2fLOiBSwvqvjGJfutX6aOXFre+THerObFdR/K//E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=usp.br; spf=pass smtp.mailfrom=usp.br; dkim=pass (2048-bit key) header.d=usp.br header.i=@usp.br header.b=B2MevCAf; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=usp.br
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=usp.br
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=usp.br header.i=@usp.br header.b="B2MevCAf"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6ed691fb83eso1407858b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 18:24:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=usp.br; s=usp-google; t=1714094674; x=1714699474; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iPmMI5xgMUW3sbiVqM7WG7BhjtO5f68c9xpa9VaPLRo=;
-        b=B2MevCAf+IV3eiZkpbOCVsNS+BShHP3RBvvzAWO7ZeDRbzTqwn6Th1uxGZqOuyL9Zb
-         yk7n+XWIy0GUR0qmsbD9ttL1vOCkdWgFF9+au9emtR3zWMLzd2f4PHvbbI2RgqCOD+Vg
-         v9MdWoAd1edV7dXbxqqIBdXj2dUUXUjGaJXmDVTvXGfwCZwUD9Rgp5nUhauCDMW9vPlR
-         9z6Dzzuq1OgPS95e0f5TRpH+2sYlfj0oHZLY6LnqJTyt1NkGVlDNnREVfJgluEazmhbW
-         UMkjGRfM3y0PiPi0d+DU02BUn7PjWHbTOSQ70hBuXRm2YkSA3v2ngBpsCTUuHrzkZLkF
-         XJ5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714094674; x=1714699474;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iPmMI5xgMUW3sbiVqM7WG7BhjtO5f68c9xpa9VaPLRo=;
-        b=XIKcjA46/fSfgLVwjMtyKLWEw4XDuxpO20/ewb50lfXdLELxJs1T+rntOpiBZefDUm
-         WG2g/EN2aVpebxKBtf4nDGIGi57lghTfWAbBk1cBprxJWLfACxY6klDD8xbrBSCMwlYP
-         30A1pDQoSjZEjps4Y8uDfgz+BJSidciPXmSpDhXWSVsreFt8q9qHIy80IPTFCB/dQ8DC
-         Kb+TlO7judzlyJJ6rvfAJT+RcETCkU21J5FKmj0Hp475/YdQwzsd3OXJtpJ8ykytmME3
-         +fUSQpS0Xadk2Au3xEha0hQ+T67bEPC6V2ZpzAewJDBkJ33fKaxnn/46L+IVZ7Fj/UXW
-         8wTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmDJ+ncpF27Gf3PP3XRtBvgjkSjLjUFHSxBq/KMPuLOCa52R15abMOAlAfoc8pTrMjC1vMLOXZfGRGR1pOxJfJGI822pLsh1JmjAV8
-X-Gm-Message-State: AOJu0YzsmUpMLGt5TZ33E0KqW2C53hcoEwwJZ9XhEiS8sDVdeNHum1pI
-	PXX7wNq/D68XRm2HnrbJdd1sWE9B94rPN9syOchpvvKZLfN9AG3yIbTkwYfPdoM=
-X-Google-Smtp-Source: AGHT+IHmuERcpLua4dtmvB6rwiATxB+WN5ONxq86RoozsM7H/k9MotlC/y6I8BMnjyviQRWo6SlUsA==
-X-Received: by 2002:a05:6a21:7885:b0:1a9:6c18:7e96 with SMTP id bf5-20020a056a21788500b001a96c187e96mr1813700pzc.19.1714094673946;
-        Thu, 25 Apr 2024 18:24:33 -0700 (PDT)
-Received: from ASUSLaptop-X513EAN.. ([2804:14c:81:903a:9968:e871:2529:9bcd])
-        by smtp.gmail.com with ESMTPSA id p8-20020a17090a930800b002a513cc466esm15294305pjo.45.2024.04.25.18.24.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 18:24:33 -0700 (PDT)
-From: Gustavo <ogustavo@usp.br>
-X-Google-Original-From: Gustavo <gustavenrique01@gmail.com>
-To: lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	jic23@kernel.org
-Cc: Gustavo <gustavenrique01@gmail.com>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bruna Lopes <brunaafl@usp.br>
-Subject: [PATCH 3/3] iio: adc: ad799x: Prefer to use octal permission instead of symbolic
-Date: Thu, 25 Apr 2024 22:23:13 -0300
-Message-Id: <20240426012313.2295067-4-gustavenrique01@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240426012313.2295067-1-gustavenrique01@gmail.com>
-References: <20240426012313.2295067-1-gustavenrique01@gmail.com>
+	s=arc-20240116; t=1714094799; c=relaxed/simple;
+	bh=3xE+7K7ojONhLEDdZlIdx4TbxDGU7UCPcCuHDWCcDH4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=WyEkKf9kM3Sa+9Bip1uDPbLcZJTjKNKe2Cdbei2HNuusNk2rm3vBpug638GWgHbB1rwNNv3nQTUOodzatXwx085W01/HIQfbWUkw6ORQPRDHKfAflGYHrMyQHDfciTe4+PAVhI6n1OMsZJmR8s5Y3GuI7plpaIIh++FRXM3Cmlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=220.197.32.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
+Received: from [192.168.122.189] (unknown [218.94.118.90])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 426828601B7;
+	Fri, 26 Apr 2024 09:25:55 +0800 (CST)
+Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
+To: Gregory Price <gregory.price@memverge.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, axboe@kernel.dk,
+ John Groves <John@groves.net>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ Dongsheng Yang <dongsheng.yang.linux@gmail.com>
+References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
+ <66288ac38b770_a96f294c6@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <ef34808b-d25d-c953-3407-aa833ad58e61@easystack.cn>
+ <ZikhwAAIGFG0UU23@memverge.com>
+From: Dongsheng Yang <dongsheng.yang@easystack.cn>
+Message-ID: <bbf692ec-2109-baf2-aaae-7859a8315025@easystack.cn>
+Date: Fri, 26 Apr 2024 09:25:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <ZikhwAAIGFG0UU23@memverge.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZSB8dVk1CTkMYSUgeQktDGFUZERMWGhIXJBQOD1
+	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
+X-HM-Tid: 0a8f18024efa023ckunm426828601b7
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NDI6TDo*HzcwIxY3GFEcNAlL
+	CEhPFEhVSlVKTEpPS0JPTE5NS09NVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
+	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBT0JISTcG
 
-Octal permissions are preferred over the symbolics ones
-for readbility.
 
-Co-developed-by: Bruna Lopes <brunaafl@usp.br>
-Signed-off-by: Bruna Lopes <brunaafl@usp.br>
-Signed-off-by: Gustavo <gustavenrique01@gmail.com>
----
- drivers/iio/adc/ad799x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/ad799x.c b/drivers/iio/adc/ad799x.c
-index 9a12e562c259..0f0dcd9ca6b6 100644
---- a/drivers/iio/adc/ad799x.c
-+++ b/drivers/iio/adc/ad799x.c
-@@ -524,7 +524,7 @@ static irqreturn_t ad799x_event_handler(int irq, void *private)
- 	return IRQ_HANDLED;
- }
- 
--static IIO_DEV_ATTR_SAMP_FREQ(S_IWUSR | S_IRUGO,
-+static IIO_DEV_ATTR_SAMP_FREQ(0644,
- 			      ad799x_read_frequency,
- 			      ad799x_write_frequency);
- static IIO_CONST_ATTR_SAMP_FREQ_AVAIL("15625 7812 3906 1953 976 488 244 0");
--- 
-2.34.1
+在 2024/4/24 星期三 下午 11:14, Gregory Price 写道:
+> On Wed, Apr 24, 2024 at 02:33:28PM +0800, Dongsheng Yang wrote:
+>>
+>>
+>> 在 2024/4/24 星期三 下午 12:29, Dan Williams 写道:
+>>> Dongsheng Yang wrote:
+>>>> From: Dongsheng Yang <dongsheng.yang.linux@gmail.com>
+>>>>
+>>>> Hi all,
+>>>> 	This patchset introduce cbd (CXL block device). It's based on linux 6.8, and available at:
+>>>> 	https://github.com/DataTravelGuide/linux
+>>>>
+>>> [..]
+>>>> (4) dax is not supported yet:
+>>>> 	same with famfs, dax device is not supported here, because dax device does not support
+>>>> dev_dax_iomap so far. Once dev_dax_iomap is supported, CBD can easily support DAX mode.
+>>>
+>>> I am glad that famfs is mentioned here, it demonstrates you know about
+>>> it. However, unfortunately this cover letter does not offer any analysis
+>>> of *why* the Linux project should consider this additional approach to
+>>> the inter-host shared-memory enabling problem.
+>>>
+>>> To be clear I am neutral at best on some of the initiatives around CXL
+>>> memory sharing vs pooling, but famfs at least jettisons block-devices
+>>> and gets closer to a purpose-built memory semantic.
+>>>
+>>> So my primary question is why would Linux need both famfs and cbd? I am
+>>> sure famfs would love feedback and help vs developing competing efforts.
+>>
+>> Hi,
+>> 	Thanks for your reply, IIUC about FAMfs, the data in famfs is stored in
+>> shared memory, and related nodes can share the data inside this file system;
+>> whereas cbd does not store data in shared memory, it uses shared memory as a
+>> channel for data transmission, and the actual data is stored in the backend
+>> block device of remote nodes. In cbd, shared memory works more like network
+>> to connect different hosts.
+>>
+> 
+> Couldn't you basically just allocate a file for use as a uni-directional
+> buffer on top of FAMFS and achieve the same thing without the need for
+> additional kernel support? Similar in a sense to allocating a file on
+> network storage and pinging the remote host when it's ready (except now
+> it's fast!)
 
+I'm not entirely sure I follow your suggestion. I guess it means that 
+cbd would no longer directly manage the pmem device, but allocate files 
+on famfs to transfer data. I didn't do it this way because I considered 
+at least a few points: one of them is, cbd_transport actually requires a 
+DAX device to access shared memory, and cbd has very simple requirements 
+for space management, so there's no need to rely on a file system layer, 
+which would increase architectural complexity.
+
+However, we still need cbd_blkdev to provide a block device, so it 
+doesn't achieve "achieve the same without the need for additional kernel 
+support".
+
+Could you please provide more specific details about your suggestion?
+> 
+> (The point here is not "FAMFS is better" or "CBD is better", simply
+> trying to identify the function that will ultimately dictate the form).
+
+Thank you for your clarification. totally aggree with it, discussions 
+always make the issues clearer.
+
+Thanx
+> 
+> ~Gregory
+> 
