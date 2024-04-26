@@ -1,205 +1,141 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD24A15991F
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11309149019;
+	Fri, 26 Apr 2024 15:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714144194; cv=none; b=fVO1Mad2lMdiMmcDh9Jq13SoLScdi9XVcuTH6nRtrabk4HiqtUJq7hjsY9lR13JI1T5kyJC4JB7rgU1Tvg55Px1D/7lv6bl0olXxzwfl90Kd3vqz0ogPW+1KLi1Bu4J+3WxBhAG/iIdoL2ybn7/gsox+TytQuZDdZO12/ks3cUw=
+	t=1714144193; cv=none; b=NzeWoY066ktc1TXGuaasji2US8Ig6Fhk6gCBaa7JMtOmvRpfJHvHDUiPMwj5DQPrvpAEdWw2PFFVvfgRpS6S4PBYIIbAG++rCnh2fVYC6R8KTf3P3HErL09yqX/RslCSe8xqi4oNPPGa3OmZAVhOr2s0uiOSz2TFV6KlX1yuj5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714144194; c=relaxed/simple;
-	bh=wRxClTnVPD3QbNe2PEaO09YErOJxIs3JJuygHgyrwmk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nj97jZJmKQNt8QWapKXqwbFZMZMNc47leyhm0BsFxRiLsZ+3mklP1onbijADp/6Kw1IgshQx4S75TBlRJxhgQ2/U1VI0s2FKe8RvZRWwgmIPZf3O97ggBgiw3ZL1aHi3CJ3rL8Ra7otH6O3ZtUf6lb1jo3WlfLwjF5bM2HGq7dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 217841688;
-	Fri, 26 Apr 2024 08:10:20 -0700 (PDT)
-Received: from e133380.cambridge.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 384CA3F8A4;
-	Fri, 26 Apr 2024 08:09:49 -0700 (PDT)
-From: Dave Martin <Dave.Martin@arm.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: James Morse <james.morse@arm.com>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>,
-	Babu Moger <Babu.Moger@amd.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com,
-	lcherian@marvell.com,
-	bobo.shaobowang@huawei.com,
-	"Shaopeng Tan (Fujitsu)" <tan.shaopeng@fujitsu.com>,
-	baolin.wang@linux.alibaba.com,
-	Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>,
-	Peter Newman <peternewman@google.com>,
-	dfustini@baylibre.com,
-	amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>
-Subject: [PATCH v2 13/35] x86/resctrl: Stop using the for_each_*_rdt_resource() walkers
-Date: Fri, 26 Apr 2024 16:08:42 +0100
-Message-Id: <20240426150904.8854-13-Dave.Martin@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240426150904.8854-1-Dave.Martin@arm.com>
-References: <20240426150537.8094-1-Dave.Martin@arm.com>
- <20240426150904.8854-1-Dave.Martin@arm.com>
+	s=arc-20240116; t=1714144193; c=relaxed/simple;
+	bh=7iwWC5ZXQovuAiAHz/mYCZpJqUDhrimhennWjXiI63I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WVYFxScJCgG1X97LIffU7JGvU8L440eLBU4rMIza++HaBCAdChfB9HriKpT7ifC+SIHyMAuMiY7Z1AcGy1nLqTzyl2JGWBPn2zvhH2uuefrsqk63nBwSmTHF+vzI5hiWJZASVUaCc7cUrNnFe+AF7w25T05BMnWQ7pGY1hu6uiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sCM1FXj8; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sCM1FXj8"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43QDp3wQ000596;
+	Fri, 26 Apr 2024 15:09:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=XQj/Ylfb4d6YBPhBaIsZnSkNdqe2sNrsfE8wIOzq64w=;
+ b=sCM1FXj8xNtQFbAO2YQ9CvtF/vZPcH3UNASfAScc9zjWuvKSW2zksWdA9oZ8yWOPj5SX
+ omt4Aj6CZ/oqfcR4YYVapOC8LdiUajKe7e/cP1w+GCyE0qTxCblyGViJyTFzDYT6RJDv
+ BNilwSEjqrYa0x5mdfSSSmDzYRm1HvMH/L4eWcIrZvk5rkS2Y9Djuh2EkSaerN/4FXjw
+ WY1MQxykhi9vz5xwENLjjZX0L4CtRnF/EPjERVN1blJkNoBUNXCxPURhdjpvasJcw712
+ M2CjQGNqUj1Gm6oyLjexbiMMQGMZh6t4h2skF1VUB9+UGd93JeG0slBRWmUonLjGN9CG Eg== 
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xrdad07q9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 15:09:39 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43QCrdga023042;
+	Fri, 26 Apr 2024 15:09:37 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xms1pgcph-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 15:09:37 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43QF9Zmv1835548
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 26 Apr 2024 15:09:37 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1F48D58061;
+	Fri, 26 Apr 2024 15:09:35 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CD9E95805F;
+	Fri, 26 Apr 2024 15:09:34 +0000 (GMT)
+Received: from [9.61.156.17] (unknown [9.61.156.17])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 26 Apr 2024 15:09:34 +0000 (GMT)
+Message-ID: <47c8fd94-6137-4d84-99a9-e8ff86c6dc31@linux.ibm.com>
+Date: Fri, 26 Apr 2024 10:09:34 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/14] dt-bindings: fsi: Document the IBM SBEFIFO
+ engine
+To: Krzysztof Kozlowski <krzk@kernel.org>, linux-aspeed@lists.ozlabs.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsi@lists.ozlabs.org, linux-spi@vger.kernel.org,
+        linux-i2c@vger.kernel.org, lakshmiy@us.ibm.com, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
+        andrew@codeconstruct.com.au
+References: <20240425213701.655540-1-eajames@linux.ibm.com>
+ <20240425213701.655540-6-eajames@linux.ibm.com>
+ <5fb62fcf-36a8-4efa-9387-d0af8fcafb18@kernel.org>
+Content-Language: en-US
+From: Eddie James <eajames@linux.ibm.com>
+In-Reply-To: <5fb62fcf-36a8-4efa-9387-d0af8fcafb18@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: BJC-K6KR8dZCpa4l5BU-e4YHq2kWKUgP
+X-Proofpoint-ORIG-GUID: BJC-K6KR8dZCpa4l5BU-e4YHq2kWKUgP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-26_12,2024-04-26_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ mlxlogscore=999 malwarescore=0 mlxscore=0 spamscore=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 suspectscore=0 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404260102
 
-From: James Morse <james.morse@arm.com>
 
-The for_each_*_rdt_resource() helpers walk the architecture's array
-of structures, using the resctrl visible part as an iterator. These
-became over-complex when the structures were split into a
-filesystem and architecture-specific struct. This approach avoided
-the need to touch every call site.
+On 4/26/24 01:20, Krzysztof Kozlowski wrote:
+> On 25/04/2024 23:36, Eddie James wrote:
+>> The SBEFIFO engine provides an interface to the POWER processor
+>> Self Boot Engine (SBE).
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+>> Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+>> ---
+>
+>> +description:
+>> +  The SBEFIFO is an FSI CFAM engine that provides an interface to the
+>> +  POWER processor Self Boot Engine (SBE). This node will always be a child
+>> +  of an FSI CFAM node; see fsi.txt for details on FSI slave and CFAM
+>> +  nodes.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - ibm,p9-sbefifo
+>> +      - ibm,odyssey-sbefifo
+>> +
+>> +  reg:
+>> +    items:
+>> +      - description: FSI slave address
+>> +
+>> +  "#address-cells":
+>> +    const: 1
+>> +
+>> +  "#size-cells":
+>> +    const: 0
+>> +
+>> +patternProperties:
+>> +  "^occ(@.*)?":
+> Why unit address is optional?
 
-Once the filesystem parts of resctrl are moved to /fs/, both the
-architecture's resource array, and the definition of those structures
-is no longer accessible. To support resctrl, each architecture would
-have to provide equally complex macros.
 
-Change the resctrl code that uses these to walk through the resource_level
-enum and check the mon/alloc capable flags instead. Instances in core.c,
-and resctrl_arch_reset_resources() remain part of x86's architecture
-specific code.
+In this case, it's because we use the reg property (reflecting the unit 
+address) to indicate the processor index of the occ node. However I 
+think I should drop the unit address here, it's meaningless, there is no 
+addressing for the OCC from the SBEFIFO.
 
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
 
----
-
-Changes in v2:
-
- * [Whitespace only] Fix bogus whitespace introduced in
-   rdtgroup_create_info_dir().
-
- * [Commit message only] Typo fix:
-   s/architectures/architecture's/g
----
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c |  7 +++++-
- arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 28 +++++++++++++++++++----
- 2 files changed, 30 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-index 884b88e25141..f2315a50ea4f 100644
---- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-+++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-@@ -840,6 +840,7 @@ bool rdtgroup_cbm_overlaps_pseudo_locked(struct rdt_domain *d, unsigned long cbm
- bool rdtgroup_pseudo_locked_in_hierarchy(struct rdt_domain *d)
- {
- 	cpumask_var_t cpu_with_psl;
-+	enum resctrl_res_level i;
- 	struct rdt_resource *r;
- 	struct rdt_domain *d_i;
- 	bool ret = false;
-@@ -854,7 +855,11 @@ bool rdtgroup_pseudo_locked_in_hierarchy(struct rdt_domain *d)
- 	 * First determine which cpus have pseudo-locked regions
- 	 * associated with them.
- 	 */
--	for_each_alloc_capable_rdt_resource(r) {
-+	for (i = 0; i < RDT_NUM_RESOURCES; i++) {
-+		r = resctrl_arch_get_resource(i);
-+		if (!r->alloc_capable)
-+			continue;
-+
- 		list_for_each_entry(d_i, &r->domains, list) {
- 			if (d_i->plr)
- 				cpumask_or(cpu_with_psl, cpu_with_psl,
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 9d4c8d641615..d678fe2a2142 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -98,12 +98,17 @@ void rdt_last_cmd_printf(const char *fmt, ...)
- 
- void rdt_staged_configs_clear(void)
- {
-+	enum resctrl_res_level i;
- 	struct rdt_resource *r;
- 	struct rdt_domain *dom;
- 
- 	lockdep_assert_held(&rdtgroup_mutex);
- 
--	for_each_alloc_capable_rdt_resource(r) {
-+	for (i = 0; i < RDT_NUM_RESOURCES; i++) {
-+		r = resctrl_arch_get_resource(i);
-+		if (!r->alloc_capable)
-+			continue;
-+
- 		list_for_each_entry(dom, &r->domains, list)
- 			memset(dom->staged_config, 0, sizeof(dom->staged_config));
- 	}
-@@ -2179,6 +2184,7 @@ static int rdtgroup_mkdir_info_resdir(void *priv, char *name,
- 
- static int rdtgroup_create_info_dir(struct kernfs_node *parent_kn)
- {
-+	enum resctrl_res_level i;
- 	struct resctrl_schema *s;
- 	struct rdt_resource *r;
- 	unsigned long fflags;
-@@ -2203,7 +2209,11 @@ static int rdtgroup_create_info_dir(struct kernfs_node *parent_kn)
- 			goto out_destroy;
- 	}
- 
--	for_each_mon_capable_rdt_resource(r) {
-+	for (i = 0; i < RDT_NUM_RESOURCES; i++) {
-+		r = resctrl_arch_get_resource(i);
-+		if (!r->mon_capable)
-+			continue;
-+
- 		fflags = r->fflags | RFTYPE_MON_INFO;
- 		sprintf(name, "%s_MON", r->name);
- 		ret = rdtgroup_mkdir_info_resdir(r, name, fflags);
-@@ -2613,10 +2623,15 @@ static int schemata_list_add(struct rdt_resource *r, enum resctrl_conf_type type
- 
- static int schemata_list_create(void)
- {
-+	enum resctrl_res_level i;
- 	struct rdt_resource *r;
- 	int ret = 0;
- 
--	for_each_alloc_capable_rdt_resource(r) {
-+	for (i = 0; i < RDT_NUM_RESOURCES; i++) {
-+		r = resctrl_arch_get_resource(i);
-+		if (!r->alloc_capable)
-+			continue;
-+
- 		if (resctrl_arch_get_cdp_enabled(r->rid)) {
- 			ret = schemata_list_add(r, CDP_CODE);
- 			if (ret)
-@@ -3165,6 +3180,7 @@ static int mkdir_mondata_all(struct kernfs_node *parent_kn,
- 			     struct rdtgroup *prgrp,
- 			     struct kernfs_node **dest_kn)
- {
-+	enum resctrl_res_level i;
- 	struct rdt_resource *r;
- 	struct kernfs_node *kn;
- 	int ret;
-@@ -3183,7 +3199,11 @@ static int mkdir_mondata_all(struct kernfs_node *parent_kn,
- 	 * Create the subdirectories for each domain. Note that all events
- 	 * in a domain like L3 are grouped into a resource whose domain is L3
- 	 */
--	for_each_mon_capable_rdt_resource(r) {
-+	for (i = 0; i < RDT_NUM_RESOURCES; i++) {
-+		r = resctrl_arch_get_resource(i);
-+		if (!r->mon_capable)
-+			continue;
-+
- 		ret = mkdir_mondata_subdir_alldom(kn, r, prgrp);
- 		if (ret)
- 			goto out_destroy;
--- 
-2.34.1
-
+>
+>
+>
+> Best regards,
+> Krzysztof
+>
