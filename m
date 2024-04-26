@@ -1,153 +1,266 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9937E13F434;
-	Fri, 26 Apr 2024 17:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6542214EC4C;
+	Fri, 26 Apr 2024 17:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714153362; cv=none; b=FiLkUAwOEABFHhrBwIWInnQdc5Nm8N1VQt2hkYn2LicEjHAuD4UeCwcZPGMcAxLBQJdeLEv77WyjICyFj2mpzYwtI25NGC4BFy1CjSeGX6nnVaX98Fg470dnCNT8L4/Y2yNVkQETrztrs0L5YY3x1q64GvchlzEZQybLWkSY4dU=
+	t=1714153798; cv=none; b=awyRfxCOWdxsMXHv/T/mHje/T5/5snki4q0e9Sb9Tk01h8n+B4Vb6FKzZhWUoCvQmjKaXfKH9uR2imUP+LGp2xBxYeHYj6Mje2ifpkH3Wr27VgYoZrDM5BiZlRuZhXf+IZ0W4ZOJ8LjIVL5qS9MgUDJVppe8oq8LUUZateoBw8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714153362; c=relaxed/simple;
-	bh=iew28E6SC8pRlfabYLSUCkUcxy4Vusz3YMlLvT5iEuw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lEGwWpl3dd4qrix8bYSVFl/56Z0JaFMVwoO63GlX5Yh0aatJ4R6hxAs+/7iFVaF9jyUPESllNaDjWCYCy+p8uPCWBhkU/tTKvKPrGTWYIksUU12duHCeqq1LI22wrftB9mmLy5l94hZmiWm5n2B6yCgPqyUAq/JFaWBfg8mSFiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PWxSOA6U; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWxSOA6U"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e5c7d087e1so22100855ad.0;
-        Fri, 26 Apr 2024 10:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714153360; x=1714758160; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=S4hrJlRgAOCqHQ08bNE8svA7F79OU54ygXfhfZNWWO4=;
-        b=PWxSOA6UnzNIQqvudb3CdouD7PGP2KVSkVj3mqsQoG0NH+cecSfaKzzO0ZlhnbRBRr
-         1oJG3PtL2lpQDeGTHtGege/vPvDk7yG5y/hS9XW7BHd5uWJ55eC3CCXYRPBV5K+f4X0Z
-         htf58xppr0PTQtQ3USleX16AYcnMl3QK2bqSB728Qq3AUwTp/tiHlWxT6UbvMuhraeiu
-         Maq0ZWS3IuPsKIp5UIBufOLcmA1D+T0lV35zGCXeI40av6b2JwgTwEmqE32MNksZRp4C
-         yiMXHBJur9YcruodbLa2oXYUUXpmvfWa6DU16zA6Csmss7GhC8FqB6sTSf29fpdaNn27
-         Jr/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714153360; x=1714758160;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S4hrJlRgAOCqHQ08bNE8svA7F79OU54ygXfhfZNWWO4=;
-        b=Qg4nqhcOIcS+u9Kn6GDAhkZolkeACaHyGFsmDFDoqC5j8lF+EeVQN8lMeo1UesvZN4
-         CACkeGB3lGsE5L2GkVSxfyIKPjo9rrgSYkq/ELCIMaKLAiHcAgT0W7tJ6z/PElKuI3u5
-         KNdf2THbxby0PYsjLGggmvHozEtyF7Tg2lacDIYpXXDIDC5CSFCxzuj/FiGdjykdtW8J
-         BxBt54180QU99uEJ/rOqNQYa+YnJ/mHc6s3Df76tnIzdg7qb0fB18xcyZdxgjFuXSIFh
-         tyazzHfdkonJb8DiJ9e1/O9FgtHiTVFe9LHk1aJXGFiGnd+Oqwk38LtyDd0fYDMqBBp4
-         EQoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+Hv59w8UZgXJrZbD7Owc8BFJywq1BJ952Kv0vVgKTqKnAyGJME2iJjS0OOSY8wsprW6qgTIn7IoH8/pI+cPbCvE1aUVULGxS7XVnLs37V4dDG9dHOU//VrdPFZfetIk2Pa9DfE0U/kzjc3QxcDJ9Yk/iEd3DRk8VqGh23wNVUOB3miJSaKOKm2pcSTpLnYLl/rO4cbuDRmMBcux0lq6ar65HuX9huYeXGUlvr2k+sEqw60bQs4+SUSxO/
-X-Gm-Message-State: AOJu0YyUTZWkj1jhMgn6Img5Wpn1CgX5GvVuq6b2mhFOGGH1pfd+HM6P
-	YsseEyNdCKTjkkcONn2dhyP5XsgdaoeSX7R2RSbuBWHQU7Ageg9v
-X-Google-Smtp-Source: AGHT+IHsfwJxs/jTVVMWTyLstuBjqb0rgnC7UKoq55PNUvZUGO1Z4eF0t1rFM8Bvj3zLsHOdMn0dOg==
-X-Received: by 2002:a17:902:da88:b0:1e5:556:60e2 with SMTP id j8-20020a170902da8800b001e5055660e2mr3738573plx.5.1714153359794;
-        Fri, 26 Apr 2024 10:42:39 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x13-20020a1709027c0d00b001e85d0b6a7dsm15739246pll.293.2024.04.26.10.42.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Apr 2024 10:42:38 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <dec55581-2f50-4125-9254-c6104b0a14cf@roeck-us.net>
-Date: Fri, 26 Apr 2024 10:42:37 -0700
+	s=arc-20240116; t=1714153798; c=relaxed/simple;
+	bh=erZZi9wDZX0ZOYNS/RLIvpcm6ff+QRDxGu84IpUs1F4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mpLKZGcSd5BEVQ+clX5o+JPwEgpxef6iJTlVkBWvcbXK5soj12sGzfJbXnDVEBxjsmqVb2lAKqOqamNnINt2zGI3pUzTqBGj3xCy4Ab3qZ6WIP8YTG09LR8anUC3FGJpIJQbS+aesoDmWPEXv1QZWUuqwAsmue/w+DY8ezRwTy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VR0Y95yrxz6JBFj;
+	Sat, 27 Apr 2024 01:47:25 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8E2B51408F9;
+	Sat, 27 Apr 2024 01:49:51 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 26 Apr
+ 2024 18:49:50 +0100
+Date: Fri, 26 Apr 2024 18:49:49 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Miguel Luis <miguel.luis@oracle.com>
+CC: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, "linux-pm@vger.kernel.org"
+	<linux-pm@vger.kernel.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, "x86@kernel.org" <x86@kernel.org>, Russell King
+	<linux@armlinux.org.uk>, "Rafael J . Wysocki" <rafael@kernel.org>, "James
+ Morse" <james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
+	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, "linuxarm@huawei.com" <linuxarm@huawei.com>,
+	"justin.he@arm.com" <justin.he@arm.com>, "jianyong.wu@arm.com"
+	<jianyong.wu@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, "Sudeep
+ Holla" <sudeep.holla@arm.com>
+Subject: Re: [PATCH v8 01/16] ACPI: processor: Simplify initial onlining to
+ use same path for cold and hotplug
+Message-ID: <20240426184949.0000506d@Huawei.com>
+In-Reply-To: <2E688E98-F57F-444F-B326-5206FB6F5C1E@oracle.com>
+References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
+	<20240426135126.12802-2-Jonathan.Cameron@huawei.com>
+	<6347020E-CB49-44ED-87B2-3BB2AA2F59E0@oracle.com>
+	<2E688E98-F57F-444F-B326-5206FB6F5C1E@oracle.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] hwmon: pmbus: adm1275: add adm1281 support
-To: Conor Dooley <conor@kernel.org>
-Cc: Jose Ramon San Buenaventura <jose.sanbuenaventura@analog.com>,
- linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-i2c@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
-References: <20240425070948.25788-1-jose.sanbuenaventura@analog.com>
- <20240425070948.25788-3-jose.sanbuenaventura@analog.com>
- <1a2e6020-77d8-4299-87b0-e2b16dfb3f86@roeck-us.net>
- <20240426-emoticon-exemplary-a79b0dfad5ce@spud>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20240426-emoticon-exemplary-a79b0dfad5ce@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 4/26/24 10:01, Conor Dooley wrote:
-> On Thu, Apr 25, 2024 at 10:52:03AM -0700, Guenter Roeck wrote:
->> On 4/25/24 00:09, Jose Ramon San Buenaventura wrote:
->>> Adding support for adm1281 which is similar to adm1275
->>>
->>> Signed-off-by: Jose Ramon San Buenaventura <jose.sanbuenaventura@analog.com>
->>
->> Patch is fine, but we'll need to wait for Conor's feedback
->> regarding the compatible fallback before I can apply it.
+On Fri, 26 Apr 2024 17:21:41 +0000
+Miguel Luis <miguel.luis@oracle.com> wrote:
+
+> Hi Jonathan, 
 > 
-> Oh, I didn't realise you were waiting for me. I had deleted the thread
-> from my queue given I had already acked the patch.
+> > On 26 Apr 2024, at 16:05, Miguel Luis <miguel.luis@oracle.com> wrote:
+> > 
+> > 
+> >   
+> >> On 26 Apr 2024, at 13:51, Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> >> 
+> >> Separate code paths, combined with a flag set in acpi_processor.c to
+> >> indicate a struct acpi_processor was for a hotplugged CPU ensured that
+> >> per CPU data was only set up the first time that a CPU was initialized.
+> >> This appears to be unnecessary as the paths can be combined by letting
+> >> the online logic also handle any CPUs online at the time of driver load.
+> >> 
+> >> Motivation for this change, beyond simplification, is that ARM64
+> >> virtual CPU HP uses the same code paths for hotplug and cold path in
+> >> acpi_processor.c so had no easy way to set the flag for hotplug only.
+> >> Removing this necessity will enable ARM64 vCPU HP to reuse the existing
+> >> code paths.
+> >> 
+> >> Leave noisy pr_info() in place but update it to not state the CPU
+> >> was hotplugged.  
 > 
-> I'm not really a fan of the warn when IDs don't match thing though,
-> seems a bit unhelpful, unless you've running into scenarios where the
-> firmware tells you there's a device present but actually there's some
-> other incompatible one.
+> On a second thought, do we want to keep it? Can't we just assume that no 
+> news is good news while keeping the warn right after __acpi_processor_start ?
 
-That is pretty much what we do, because many of the chips supported by the
-driver are not or not fully compatible to each other. Sure, we could add
-more information about fully compatible chips, but in my opinion that would
-just add complexity to the driver for little if any gain.
+Good question - my inclination was to keep this in place for now as removing
+it would remove a source of information people may expect on x86 hotplug.
 
-Thanks,
-Guenter
+Then maybe propose dropping it as overly noisy kernel as a follow up
+patch after this series is merged.  Felt like a potential rat hole I didn't
+want to go down if I could avoid it.
+
+If any x86 experts want to shout that no one cares then I'll happily drop
+the print.  We've carefully made it so that on arm64 we have no way to tell
+if this is hotplug or normal cpu bring up so we can't just print it on
+hotplug.
+
+Jonathan
+
+
+> 
+> Miguel
+> 
+> >> 
+> >> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >> Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+> >> Tested-by: Miguel Luis <miguel.luis@oracle.com>
+> >> Reviewed-by: Gavin Shan <gshan@redhat.com>
+> >> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >> 
+> >> ---
+> >> v8: No change
+> >> ---
+> >> drivers/acpi/acpi_processor.c   |  1 -
+> >> drivers/acpi/processor_driver.c | 44 ++++++++++-----------------------
+> >> include/acpi/processor.h        |  2 +-
+> >> 3 files changed, 14 insertions(+), 33 deletions(-)
+> >> 
+> >> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+> >> index 7a0dd35d62c9..7fc924aeeed0 100644
+> >> --- a/drivers/acpi/acpi_processor.c
+> >> +++ b/drivers/acpi/acpi_processor.c
+> >> @@ -216,7 +216,6 @@ static int acpi_processor_hotadd_init(struct acpi_processor *pr)
+> >> * gets online for the first time.
+> >> */
+> >> pr_info("CPU%d has been hot-added\n", pr->id);
+> >> - pr->flags.need_hotplug_init = 1;
+> >> 
+> >> out:
+> >> cpus_write_unlock();
+> >> diff --git a/drivers/acpi/processor_driver.c b/drivers/acpi/processor_driver.c
+> >> index 67db60eda370..55782eac3ff1 100644
+> >> --- a/drivers/acpi/processor_driver.c
+> >> +++ b/drivers/acpi/processor_driver.c
+> >> @@ -33,7 +33,6 @@ MODULE_AUTHOR("Paul Diefenbaugh");
+> >> MODULE_DESCRIPTION("ACPI Processor Driver");
+> >> MODULE_LICENSE("GPL");
+> >> 
+> >> -static int acpi_processor_start(struct device *dev);
+> >> static int acpi_processor_stop(struct device *dev);
+> >> 
+> >> static const struct acpi_device_id processor_device_ids[] = {
+> >> @@ -47,7 +46,6 @@ static struct device_driver acpi_processor_driver = {
+> >> .name = "processor",
+> >> .bus = &cpu_subsys,
+> >> .acpi_match_table = processor_device_ids,
+> >> - .probe = acpi_processor_start,
+> >> .remove = acpi_processor_stop,
+> >> };
+> >> 
+> >> @@ -115,12 +113,10 @@ static int acpi_soft_cpu_online(unsigned int cpu)
+> >> * CPU got physically hotplugged and onlined for the first time:
+> >> * Initialize missing things.
+> >> */
+> >> - if (pr->flags.need_hotplug_init) {
+> >> + if (!pr->flags.previously_online) {
+> >> int ret;
+> >> 
+> >> - pr_info("Will online and init hotplugged CPU: %d\n",
+> >> - pr->id);
+> >> - pr->flags.need_hotplug_init = 0;
+> >> + pr_info("Will online and init CPU: %d\n", pr->id);
+> >> ret = __acpi_processor_start(device);
+> >> WARN(ret, "Failed to start CPU: %d\n", pr->id);
+> >> } else {
+> >> @@ -167,9 +163,6 @@ static int __acpi_processor_start(struct acpi_device *device)
+> >> if (!pr)
+> >> return -ENODEV;
+> >> 
+> >> - if (pr->flags.need_hotplug_init)
+> >> - return 0;
+> >> -
+> >> result = acpi_cppc_processor_probe(pr);
+> >> if (result && !IS_ENABLED(CONFIG_ACPI_CPU_FREQ_PSS))
+> >> dev_dbg(&device->dev, "CPPC data invalid or not present\n");
+> >> @@ -185,32 +178,21 @@ static int __acpi_processor_start(struct acpi_device *device)
+> >> 
+> >> status = acpi_install_notify_handler(device->handle, ACPI_DEVICE_NOTIFY,
+> >>    acpi_processor_notify, device);
+> >> - if (ACPI_SUCCESS(status))
+> >> - return 0;
+> >> + if (!ACPI_SUCCESS(status)) {
+> >> + result = -ENODEV;
+> >> + goto err_thermal_exit;
+> >> + }
+> >> + pr->flags.previously_online = 1;
+> >> 
+> >> - result = -ENODEV;
+> >> - acpi_processor_thermal_exit(pr, device);
+> >> + return 0;
+> >> 
+> >> +err_thermal_exit:
+> >> + acpi_processor_thermal_exit(pr, device);
+> >> err_power_exit:
+> >> acpi_processor_power_exit(pr);
+> >> return result;
+> >> }
+> >> 
+> >> -static int acpi_processor_start(struct device *dev)
+> >> -{
+> >> - struct acpi_device *device = ACPI_COMPANION(dev);
+> >> - int ret;
+> >> -
+> >> - if (!device)
+> >> - return -ENODEV;
+> >> -
+> >> - /* Protect against concurrent CPU hotplug operations */
+> >> - cpu_hotplug_disable();
+> >> - ret = __acpi_processor_start(device);
+> >> - cpu_hotplug_enable();
+> >> - return ret;
+> >> -}
+> >> -
+> >> static int acpi_processor_stop(struct device *dev)
+> >> {
+> >> struct acpi_device *device = ACPI_COMPANION(dev);
+> >> @@ -279,9 +261,9 @@ static int __init acpi_processor_driver_init(void)
+> >> if (result < 0)
+> >> return result;
+> >> 
+> >> - result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+> >> -   "acpi/cpu-drv:online",
+> >> -   acpi_soft_cpu_online, NULL);
+> >> + result = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+> >> +   "acpi/cpu-drv:online",
+> >> +   acpi_soft_cpu_online, NULL);
+> >> if (result < 0)
+> >> goto err;
+> >> hp_online = result;
+> >> diff --git a/include/acpi/processor.h b/include/acpi/processor.h
+> >> index 3f34ebb27525..e6f6074eadbf 100644
+> >> --- a/include/acpi/processor.h
+> >> +++ b/include/acpi/processor.h
+> >> @@ -217,7 +217,7 @@ struct acpi_processor_flags {
+> >> u8 has_lpi:1;
+> >> u8 power_setup_done:1;
+> >> u8 bm_rld_set:1;
+> >> - u8 need_hotplug_init:1;
+> >> + u8 previously_online:1;  
+> > 
+> > Reviewed-by: Miguel Luis <miguel.luis@oracle.com>
+> > 
+> > Miguel
+> >   
+> >> };
+> >> 
+> >> struct acpi_processor {
+> >> -- 
+> >> 2.39.2
+> >>   
+> >   
+> 
 
