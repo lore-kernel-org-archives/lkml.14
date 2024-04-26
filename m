@@ -1,75 +1,83 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 869CF142E62;
-	Fri, 26 Apr 2024 11:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CC31448DF;
+	Fri, 26 Apr 2024 11:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714129596; cv=none; b=HQiMwQmW2yYR2yUMF5EqmP5r5OgL3RsmcG8IpUUwflWuV2swM0Mu/ctpjxlQ1SoygOmJoQbe4Ag/VW/eJASc+Q6a2LbjGWM23yL5npEYValJ64fGBFkfeUnPoHy9J09JNvK0LZM+zh/VrRUn8dpeNVw4mwCspesH5EH+UwRBquQ=
+	t=1714129764; cv=none; b=Ndb8shDvZesjGqpgfuC8XNVjZd7nZGM73Z0juijzVxe4og15idJA/KRXhxVA2kWXCo7xjfZH7/oIchHWaa7j/IOYr7lt6Aj1qyVXukckC5t2oNFJzy35e409K37pHNLJhWube5jyuKax8JtaFGazUC2OGt9HdInlCotrTgbSrVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714129596; c=relaxed/simple;
-	bh=sEdc3Wd2Fm3DEJTPTv7niYyLcLuR3dw+/x1Hk9vi/hw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OG51pZfjqvOfj5GLNpurL8pMLU/ag70rzwbowMWZJkrbdHQQBYTLX+TxErVSbQQRnrjk4hpUJjMGp9GP4IZLtkfZTom66Ql3+/hFDnVbQzjofOS3RBi17xt8uu8DKBHixXiC7e7381uXrE5NM2xhouMRoHva2zGTe+N8gICxuus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eBiLJ1bI; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1714129764; c=relaxed/simple;
+	bh=9YJTYL0hFAFIxLg99RWUafnC/eaz4B750rx1oj19Es8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KR+aF59e+xsqoRggk8hR6E5e+fBpAIuV7yaEajkrazW/fQjXHtP3CIiqQm4fD6hbrqKo1faWsdiw409frhuZdkSJo6z/YwFHNUbzSYT5cJkBLEnErq5YJBvPPQOvSB0JyjegfGP3IDbtUqNdeIZ07bMVgLspiPlhx359JWqA6IM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=fC6mqdDL; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eBiLJ1bI"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 786D5210EF22; Fri, 26 Apr 2024 04:06:29 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 786D5210EF22
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1714129589;
-	bh=xkuHjmKRLCXBtGZZ4FZ4i74BJRj9p2Go7cH+OnO/rk0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eBiLJ1bIi33wQRtMb/OLiSGvOBQe/3ClahGrmK4squu/fn+DxBcyR1aUbt2F9CNtt
-	 djN9YxxAfntWQ71OYTFmgKXB5XhCxj72nGt5bwYROgrV8Cr6Ho6AFOxvKNNP2ZejmN
-	 DHyRC6TGRfCfZyj+IJpn1q0rtWy2QEKpQeQCOTYY=
-Date: Fri, 26 Apr 2024 04:06:29 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Breno Leitao <leitao@debian.org>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Yury Norov <yury.norov@gmail.com>, linux-hyperv@vger.kernel.org,
-	shradhagupta@microsoft.com
-Subject: Re: [PATCH net-next v2 1/2] net: Add sysfs atttributes for max_mtu
- min_mtu
-Message-ID: <20240426110629.GA19743@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1713954774-29953-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1713954817-30133-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20240424202703.29f1b59a@kernel.org>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="fC6mqdDL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1714129754;
+	bh=9YJTYL0hFAFIxLg99RWUafnC/eaz4B750rx1oj19Es8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=fC6mqdDL2aBKq7NvmWLnbLc1mAOzfFYqokstdr+KfkofTDsdLwYD5UQJQBIpJ9KLm
+	 UBKCkjKPP5tSVGzC5MKVNktFyT838ShWW9UMtBdHQdiTy8AntZ38NTXluPBQrOHySa
+	 mrvOXlecYNwLgKqgz+3nV7oomSIre4hsVs8+XKMQ=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Fri, 26 Apr 2024 13:08:58 +0200
+Subject: [PATCH 3/3] selftests: kselftest: also use strerror() on nolibc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240424202703.29f1b59a@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240426-nolibc-strerror-v1-3-76a4c9c5271d@weissschuh.net>
+References: <20240426-nolibc-strerror-v1-0-76a4c9c5271d@weissschuh.net>
+In-Reply-To: <20240426-nolibc-strerror-v1-0-76a4c9c5271d@weissschuh.net>
+To: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1714129753; l=969;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=9YJTYL0hFAFIxLg99RWUafnC/eaz4B750rx1oj19Es8=;
+ b=QHYxmeweV/vq0rJcOPRdfSZaB7V3GTzNrKTqnNthBNo2TPTt/tGEUh9Fj8PYuGyOf7K6Ks8m3
+ ZH4O1EaBLqeCH8BaZn45Xge6ZmnJswb8t/fp+vdBWvqjWq8Fk9v6ji9
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-On Wed, Apr 24, 2024 at 08:27:03PM -0700, Jakub Kicinski wrote:
-> On Wed, 24 Apr 2024 03:33:37 -0700 Shradha Gupta wrote:
-> > Add sysfs attributes to read max_mtu and min_mtu value for
-> > network devices
-> 
-> Absolutely pointless. You posted v1, dumping this as a driver
-> specific value, even tho it's already reported by the core...
-> And you can't even produce a meaningful commit message longer
-> than one sentence.
-> 
-> This is not meeting the bar. Please get your patches reviewed
-> internally at Microsoft by someone with good understanding of
-> Linux networking before you post.
-Noted, I'll do the needful going forward. Apologies.
+nolibc gained an implementation of strerror() recently.
+Use it and drop the ifdeffery.
+
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ tools/testing/selftests/kselftest.h | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/tools/testing/selftests/kselftest.h b/tools/testing/selftests/kselftest.h
+index 541bf192e30e..f4bfe98c31e4 100644
+--- a/tools/testing/selftests/kselftest.h
++++ b/tools/testing/selftests/kselftest.h
+@@ -161,15 +161,7 @@ static inline __printf(1, 2) void ksft_print_msg(const char *msg, ...)
+ 
+ static inline void ksft_perror(const char *msg)
+ {
+-#ifndef NOLIBC
+ 	ksft_print_msg("%s: %s (%d)\n", msg, strerror(errno), errno);
+-#else
+-	/*
+-	 * nolibc doesn't provide strerror() and it seems
+-	 * inappropriate to add one, just print the errno.
+-	 */
+-	ksft_print_msg("%s: %d)\n", msg, errno);
+-#endif
+ }
+ 
+ static inline __printf(1, 2) void ksft_test_result_pass(const char *msg, ...)
+
+-- 
+2.44.0
+
