@@ -1,41 +1,40 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D14713A3E3
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 05:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FC613A261;
+	Fri, 26 Apr 2024 05:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714109810; cv=none; b=DEdThnO7LTeedcci0nEysrjS862JJbmp5AojWxV+P4uXfinGLvP0NAz2u/ItQW6qsKAeUlezRsQGsSlMspZ5GARHEerYsVz5lduW09HX2fb5fH+3fSnno2NLK/172ynsgc5sbAMJ9u25ey1rv9KqM8hwTJGDWSW+jHj8jSMs+xo=
+	t=1714109863; cv=none; b=hs+hwuB1s25VUGIKJOI+tKa4Vv7RKviz/a9SDKjXFQCHakehPe7kHGsAiqMBVtaJ2l0FZGpvFK3bODsid9LNUkxzaFdZsAyfkvfYc6QEl7szknft3tZqTuZf+1AveMIyKNYVXpn/BsuIbzaLzDzL+wVCmN+JkAcwLghxzRBfbTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714109810; c=relaxed/simple;
-	bh=CNw2Y0AP8jB/x3HV5DSSYHNMON2PcPXoJ9fa+UitcrQ=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=MceKbzb5u9ZFGLAuZORSUBqvb+YIM/gsXSnI9/GZvSVQ2cCkjMw3iYXmoqhUeROSv2zW5NPD3Rc5YWWCMePkEww+m0qDdin57kdS2fElekU8csxRn/5KoMg4b6q952hrqcGR004ZgQUNYFsfeBOXUFDQI+fUl+TL+hsyVujqF1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=malaika-12.net; spf=pass smtp.mailfrom=malaika-12.net; dkim=pass (2048-bit key) header.d=malaika-12.net header.i=@malaika-12.net header.b=ElHyFnoQ; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=malaika-12.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=malaika-12.net
+	s=arc-20240116; t=1714109863; c=relaxed/simple;
+	bh=GKtOWhg2ae+RlxbYZGtFto0YazT0Bul5AcJEj3TSpjM=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=iBo/qsLzXENUmC6y1y1DawVX6G/qioD+P1kvtsNlMNOatg++cTin0gz3qRFvoxm08lHxopYHvVX1nC/bP5BaypySW4TY+G3Ilu1crAkJ+Y8mMWPMA+8as0KV/vTM7deH31GGgIyBgI/32Fk7Ir9hk0TY7BYOOQNAQGQbpxvr2mY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lSLZZ6YB; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=malaika-12.net header.i=@malaika-12.net header.b="ElHyFnoQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=malaika-12.net; s=ds202404; h=Content-Transfer-Encoding:Content-Type:
-	Subject:From:To:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=0VBnxfb65WAipnGm7jkG0NPmHc1gSmsqVXH2RNZJPXI=; b=ElHyFnoQFjvdwVP27vYH9tNqqa
-	5UYVnq7aPofWOMq3Kqfew2ZnRH3glx75u6A4TlcLmGbPOghkerixreNUuqrD89rq1fYaH5ttSajTn
-	I7/CR/N8ehPssNGSpXAzvg6f0QIO6Pn1OgCtlcXkJT6o2HoQOuXK7/CMIzb5vmxdAgGlqM4XMPOTS
-	0d1FOKNRs+u80Px2lYjJif90YD+rr/o9z5xMCcDkaI47HZZCpCQyffepNEnx6RJpp3arq7cp5XbkV
-	e4mBCn2uEvQ7+Q/PHr6N1hVOEWzgidRfLrKe5DjESCK16QokCXHJoPYI+SsIarjrrcPrtMedXMbMA
-	RqeIn+uw==;
-Received: from [2a02:fe1:7001:f100:d563:54e6:3312:27b1] (port=57322)
-	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <B7t@malaika-12.net>)
-	id 1s0EGH-00AGnF-0i
-	for linux-kernel@vger.kernel.org;
-	Fri, 26 Apr 2024 07:36:41 +0200
-Message-ID: <c02e4fca-c295-4eaf-9809-f3542fe481b2@malaika-12.net>
-Date: Fri, 26 Apr 2024 07:36:18 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lSLZZ6YB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1714109860;
+	bh=GKtOWhg2ae+RlxbYZGtFto0YazT0Bul5AcJEj3TSpjM=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=lSLZZ6YBArhCkS2XwPabXQWFbq4NQsfvcF/E1vM0/hLYuOipiz4pkPMgyfICwgBJ4
+	 +4RzM37OQoBQeTRFPpb8SFTQ4bTokD8+ljlCHSR5VNa6MKHB6OqAvDw1S3xyf5kDWB
+	 QH7UM0E83JJ+8w0p98Ac8d7pb3VKdUpKMDAqk59JL2gRX6ltGcciHrWBgykLWj1CQ4
+	 NZYXoajm36CQAJjcjO123qrdJ8BMwuCZaL3RkcRpBFx7YLbcSbQrL76sca7VL5YkPQ
+	 1Dbw3IiDqxsCViexavGDbodgz/HZ/p21Vnks5KoHrBptymAg8QD4BHu0q49eh3ZrDT
+	 03ocGxFDvaltA==
+Received: from [100.113.15.66] (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B8E7D37813A4;
+	Fri, 26 Apr 2024 05:37:33 +0000 (UTC)
+Message-ID: <e6ad2921-4da8-456a-8a31-a1e704c06329@collabora.com>
+Date: Fri, 26 Apr 2024 10:38:04 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,18 +42,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: linux-kernel@vger.kernel.org
-From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <B7t@malaika-12.net>
-Subject: Haq God
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: selftests: Add hwprobe binaries to .gitignore
+To: Charlie Jenkins <charlie@rivosinc.com>, Shuah Khan <shuah@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Andrew Jones <ajones@ventanamicro.com>
+References: <20240425-gitignore_hwprobe_artifacts-v1-1-dfc5a20da469@rivosinc.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20240425-gitignore_hwprobe_artifacts-v1-1-dfc5a20da469@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Everything I talked about can be summarized by Haq God.
+On 4/26/24 12:58 AM, Charlie Jenkins wrote:
+> The cbo and which-cpu hwprobe selftests leave their artifacts in the
+> kernel tree and end up being tracked by git. Add the binaries to the
+> hwprobe selftest .gitignore so this no longer happens.
+I've been posted comments on patches adding new tests to please put
+artifacts in the .gitignore. But still people forget or don't know about it
+as .gitignore is specific to selftests and they aren't used-to it.
 
-So rephrasing: All computerdesign can be designed according to Haq God.
-This is also compatible with Sin, and can also replace Sin in 
-electronics industry, for a total unification of electronics, operating 
-system design, and Fair Pay philosophy, all with Islamic background.
+> 
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> Fixes: a29e2a48afe3 ("RISC-V: selftests: Add CBO tests")
+> Fixes: ef7d6abb2cf5 ("RISC-V: selftests: Add which-cpus hwprobe test")
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 
-PEACE.
-https://www.youtube.com/@Ywe_Caerlyn_Samilands_East
+> ---
+>  tools/testing/selftests/riscv/hwprobe/.gitignore | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/riscv/hwprobe/.gitignore b/tools/testing/selftests/riscv/hwprobe/.gitignore
+> index 8113dc3bdd03..6e384e80ea1a 100644
+> --- a/tools/testing/selftests/riscv/hwprobe/.gitignore
+> +++ b/tools/testing/selftests/riscv/hwprobe/.gitignore
+> @@ -1 +1,3 @@
+>  hwprobe
+> +cbo
+> +which-cpus
+> 
+> ---
+> base-commit: ed30a4a51bb196781c8058073ea720133a65596f
+> change-id: 20240425-gitignore_hwprobe_artifacts-fb0f2cd3509c
+
+-- 
+BR,
+Muhammad Usama Anjum
