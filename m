@@ -1,217 +1,96 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DAE9148303
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 13:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A6C824B3
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 13:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714138772; cv=none; b=q8ngNfQOjC6bNiJQdZ06cIsNYmUKka6zmyj2YVa5wI4iFS+kESXRnZyZLkNyQ1gR7DyYgDXd2SPThrC5QmgSl4K/Bxtw4XpZ0UuoMr6pFucV/k7L2TO8x2X2gKYDzjx0a+vyZ8HCHWn3XsMcMNdq9PTcJwLyabFUQEwvzkZh6XU=
+	t=1714138854; cv=none; b=Gd/7o166zZhQs9yY02NIpJHLc05cyvDRD/phXyNpLWFnbvk2HppcKe+6lP9uwW568bbvizSvSvMrGXOLETUqm2QZr6aLN6xCJkKvG0gt7kkRljmlOCm9q4VyeymWyGOH7nJnoqMB0XwTXvaOSu6L2QtAWPDsmqbdYb20PJCQbAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714138772; c=relaxed/simple;
-	bh=QsaJjHlJj5Qim5L5Nsu+366mg121psAXifrWo0USDxA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=NTeapzlKCrEAm4KWM8WwBHU/gslZct7Cg1H/bQ1wlfEBJe09NvEONeitlvgBBBMa0iyfWEDxPnERgv186moDK5mZK+4at02T1VJDRzTaRxmuzsI07qKdxY3G2cahzw2y7+4xfvPP74VftC0Z946Yl4s/XQP30pBylZ3Wh4v1yUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d9d0936d6aso227530239f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 06:39:30 -0700 (PDT)
+	s=arc-20240116; t=1714138854; c=relaxed/simple;
+	bh=JCJDTBds+a3tbNd3ShHOf/AGk6tUWyo+qW7RdyRA9F8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=OZUp7YVwASI6Vm34crwydZpiHKYDulvIe7CtqAroFazQEXWBflLiZQmy8MYqCWQtrbENz3f+M7TsWB0UYDHGIr/xUlpXnf20x83sn1rz2w47gIn3pU4Qt70Hm6P1wOf6ka/BeLWg/aouT+V0N4xrFifCrgntt/OCzaSx3mTvPsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=vR9Qfkd/; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="vR9Qfkd/"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7d9c78cf6d4so17166739f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 06:40:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1714138851; x=1714743651; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uQVjNTLjf7VGhqiwo6xWa81d5ljtfH+fLb0sr9Vc0PA=;
+        b=vR9Qfkd/CNfgMqdHA6L1fuVG/Kf179E/6sjmL1tGBGt5/vA6kbfgcDIMBXZF4SeB1V
+         xAiLL0o5yMNjR4sMjl4/n4XdvAbpv/HQGoZMhDGNui5VtrXP9ym0xOVUcigS7bzMM3KI
+         B/hVa9WsyFukuxIX0Enqc/vhqJ4ZkKb6w8dv+GfqU/2+sJl+RBXjAcq3A3vgutfiqk1b
+         QM3ig9HI7PYleDeAa5nZaRzJp2xB7rfLhHgXlp+cgN/XeJcZ3UFNBJbOomQgksG8lJwV
+         cZr7ipv8+9tLOEvjb/zg4FbVGWAwOSH0ZhuxMrSNzFvqgUgUmEpGQokIRnrcoveEE8ei
+         TR4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714138770; x=1714743570;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UGfNVVjqWxMSxZjqD8msnPmXD86vTarzTPWqGniIPmM=;
-        b=F0EGOt2HsLOlB2WA8U6bHO+69Gt4zAmcAGpZ903d1r1fY9JcyN9COutKrbGaSQ8g9g
-         0i1BuPpfHiSmifGlgA1mK/t1j+gG/bNrl9RlJnwjfoJ3EhwYLZl9U/KszTOYrAOZB0wa
-         oGHg++2IJV9HFtcKFrOkeOahormF7kVgGRyzhKD1NyDzyJkIwGKXe0ojV+zWqJ31eVKM
-         AdKsTg2CfD8f8VuUw9vy9G+dQ1mTHWMiX/+gwlHg1HPpL1awjTtySKO44s40kwOEom55
-         rwvp+P33PU1BUnvKw0ROLM+IwSPEIBHHrYz6m3TL4LYzOuzLDAq5uZvRMZy0/aTk964l
-         OR+A==
-X-Forwarded-Encrypted: i=1; AJvYcCU/i9PzxTMlbekxjMMuQjR/e9XxxHUxfgBHVAr0Rym8BOFe+4TsFS0brFMaCS++jyfI09oGzyaCUzq1sBZOyjc0iHSpWDbzq868D8MF
-X-Gm-Message-State: AOJu0YwUMDuQ6FuAd3Z/xcE6VYKx/IK+fsFzfqIIwDfmA6kdFl0CdqbN
-	kewCqokVjxkAyorzVy/8HZixucE7js+o9luKubOaNYnqLAxaz6WpBo9iu6EbnKvIZPulq99R7hB
-	In5Tlsd00oLj5/ypP5CRr4HwNhM77WHUp+22z5UPw4hInE8NsOz3c57w=
-X-Google-Smtp-Source: AGHT+IGzeyBaJUG3OY/7s7IR44S7RUt5idFlbvH2pHkQr9+MZaQc5JuAsF3W6iw2uZQ/OMt2yLrB0Y+2e5sVdAlxVwE8OE/6S3XE
+        d=1e100.net; s=20230601; t=1714138851; x=1714743651;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uQVjNTLjf7VGhqiwo6xWa81d5ljtfH+fLb0sr9Vc0PA=;
+        b=lS3/OVDjWh6fBOQeLU08j6yzxl0xPlsPF5jIv1VRFnjARShXsBixempfD+pJT5DSgr
+         4Kvl0D6qZPMn9+sm88yVi60a2srxHVMzGMO4dc7LlrHXjo7/XnJdbzWVUqB7new6tW7a
+         eWlMrTwAaAJLIV/IM9Ip3g+PYzwhApZVx22xXan1cdEQzkWqYRvAoVCyjLT7wnWCIAm3
+         nrxP7AAGv+2zkFksPD8wMmyqkUp/Lge5MrRLb8BUf6on9EFI7Ovv5IuvPiccbaBl/hu3
+         pp4tYb89c3vvrdXDe8faspiZhuwQ0MVMa2yp+R/lVfSLZ29BkepUe8Nj0awg4XPkxEpR
+         I4tg==
+X-Forwarded-Encrypted: i=1; AJvYcCVKHTI8hLsT91r9cgYnOD3NBQZ3QddNYTqWGmBxX7cZM92bXiW1k0mEZvXp876eMcYWERbyiLDVhiMGH9utX3TKfyrV10CYwU/J59Hr
+X-Gm-Message-State: AOJu0YwVLBV6Z3j8o/HVPB2eIQLyts+ZxI60Ds99qMpzBoYbCv8dY/DN
+	Yusf5stKjICRrfnKXx6mYjf9wzOaGmJh0hOngJVDhhYdRiK0g4M7q2z/FSLEFbg=
+X-Google-Smtp-Source: AGHT+IESz+VVFibB4v7kcRuR07qQ5guc4rVZROLiXv/vGQeFvCRzC594gVmkjdesOS1PumJnF390fQ==
+X-Received: by 2002:a6b:c503:0:b0:7de:b4dc:9b8f with SMTP id v3-20020a6bc503000000b007deb4dc9b8fmr263925iof.2.1714138850823;
+        Fri, 26 Apr 2024 06:40:50 -0700 (PDT)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id j13-20020a0566022ccd00b007dead4fd0efsm255275iow.18.2024.04.26.06.40.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 06:40:50 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: linke li <lilinke99@qq.com>
+Cc: xujianhao01@gmail.com, Pavel Begunkov <asml.silence@gmail.com>, 
+ io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <tencent_F9B2296C93928D6F68FF0C95C33475C68209@qq.com>
+References: <tencent_F9B2296C93928D6F68FF0C95C33475C68209@qq.com>
+Subject: Re: [PATCH] io_uring/msg_ring: reuse ctx->submitter_task read
+ using READ_ONCE instead of re-reading it
+Message-Id: <171413885012.211722.950447967094465539.b4-ty@kernel.dk>
+Date: Fri, 26 Apr 2024 07:40:50 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:270e:b0:482:83aa:16be with SMTP id
- m14-20020a056638270e00b0048283aa16bemr195429jav.5.1714138770452; Fri, 26 Apr
- 2024 06:39:30 -0700 (PDT)
-Date: Fri, 26 Apr 2024 06:39:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000823ce8061700087a@google.com>
-Subject: [syzbot] [bluetooth?] possible deadlock in hci_unregister_dev (2)
-From: syzbot <syzbot+ab10eccaaf6fdf23dd55@syzkaller.appspotmail.com>
-To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    bb7a2467e6be Add linux-next specific files for 20240426
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13daed0f180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6a0288262dd108
-dashboard link: https://syzkaller.appspot.com/bug?extid=ab10eccaaf6fdf23dd55
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/5175af7dda64/disk-bb7a2467.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/70db0462e868/vmlinux-bb7a2467.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/3217fb825698/bzImage-bb7a2467.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ab10eccaaf6fdf23dd55@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.9.0-rc5-next-20240426-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor.0/6085 is trying to acquire lock:
-ffff8880696fc8d0 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
-ffff8880696fc8d0 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
-ffff8880696fc8d0 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: start_flush_work kernel/workqueue.c:4113 [inline]
-ffff8880696fc8d0 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: __flush_work+0xe6/0xd00 kernel/workqueue.c:4172
-
-but task is already holding lock:
-ffff8880696fd060 (&hdev->req_lock){+.+.}-{3:3}, at: hci_dev_do_close net/bluetooth/hci_core.c:559 [inline]
-ffff8880696fd060 (&hdev->req_lock){+.+.}-{3:3}, at: hci_unregister_dev+0x1d3/0x4e0 net/bluetooth/hci_core.c:2778
-
-which lock already depends on the new lock.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.5-dev-2aabd
 
 
-the existing dependency chain (in reverse order) is:
+On Fri, 26 Apr 2024 11:24:37 +0800, linke li wrote:
+> In io_msg_exec_remote(), ctx->submitter_task is read using READ_ONCE at
+> the beginning of the function, checked, and then re-read from
+> ctx->submitter_task, voiding all guarantees of the checks. Reuse the value
+> that was read by READ_ONCE to ensure the consistency of the task struct
+> throughout the function.
+> 
+> 
+> [...]
 
--> #1 (&hdev->req_lock){+.+.}-{3:3}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
-       __mutex_lock_common kernel/locking/mutex.c:608 [inline]
-       __mutex_lock+0x136/0xd70 kernel/locking/mutex.c:752
-       hci_cmd_sync_work+0x1ec/0x400 net/bluetooth/hci_sync.c:309
-       process_one_work kernel/workqueue.c:3222 [inline]
-       process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3303
-       worker_thread+0x86d/0xd70 kernel/workqueue.c:3384
-       kthread+0x2f0/0x390 kernel/kthread.c:389
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+Applied, thanks!
 
--> #0 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}:
-       check_prev_add kernel/locking/lockdep.c:3134 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
-       validate_chain+0x18cb/0x58e0 kernel/locking/lockdep.c:3869
-       __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
-       touch_work_lockdep_map kernel/workqueue.c:3885 [inline]
-       start_flush_work kernel/workqueue.c:4139 [inline]
-       __flush_work+0x73c/0xd00 kernel/workqueue.c:4172
-       __cancel_work_sync+0xbc/0x110 kernel/workqueue.c:4322
-       hci_cmd_sync_clear+0x30/0x220 net/bluetooth/hci_sync.c:588
-       hci_dev_close_sync+0xbae/0x1060 net/bluetooth/hci_sync.c:5188
-       hci_dev_do_close net/bluetooth/hci_core.c:561 [inline]
-       hci_unregister_dev+0x1db/0x4e0 net/bluetooth/hci_core.c:2778
-       vhci_release+0x83/0xd0 drivers/bluetooth/hci_vhci.c:674
-       __fput+0x406/0x8b0 fs/file_table.c:422
-       task_work_run+0x24f/0x310 kernel/task_work.c:180
-       exit_task_work include/linux/task_work.h:38 [inline]
-       do_exit+0xa27/0x27e0 kernel/exit.c:874
-       do_group_exit+0x207/0x2c0 kernel/exit.c:1023
-       __do_sys_exit_group kernel/exit.c:1034 [inline]
-       __se_sys_exit_group kernel/exit.c:1032 [inline]
-       __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1032
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[1/1] io_uring/msg_ring: reuse ctx->submitter_task read using READ_ONCE instead of re-reading it
+      commit: a4d416dc60980f741f0bfa1f34a1059c498c1b4e
 
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&hdev->req_lock);
-                               lock((work_completion)(&hdev->cmd_sync_work));
-                               lock(&hdev->req_lock);
-  lock((work_completion)(&hdev->cmd_sync_work));
-
- *** DEADLOCK ***
-
-2 locks held by syz-executor.0/6085:
- #0: ffff8880696fd060 (&hdev->req_lock){+.+.}-{3:3}, at: hci_dev_do_close net/bluetooth/hci_core.c:559 [inline]
- #0: ffff8880696fd060 (&hdev->req_lock){+.+.}-{3:3}, at: hci_unregister_dev+0x1d3/0x4e0 net/bluetooth/hci_core.c:2778
- #1: ffffffff8e333ba0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
- #1: ffffffff8e333ba0 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #1: ffffffff8e333ba0 (rcu_read_lock){....}-{1:2}, at: start_flush_work kernel/workqueue.c:4113 [inline]
- #1: ffffffff8e333ba0 (rcu_read_lock){....}-{1:2}, at: __flush_work+0xe6/0xd00 kernel/workqueue.c:4172
-
-stack backtrace:
-CPU: 0 PID: 6085 Comm: syz-executor.0 Not tainted 6.9.0-rc5-next-20240426-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2187
- check_prev_add kernel/locking/lockdep.c:3134 [inline]
- check_prevs_add kernel/locking/lockdep.c:3253 [inline]
- validate_chain+0x18cb/0x58e0 kernel/locking/lockdep.c:3869
- __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
- touch_work_lockdep_map kernel/workqueue.c:3885 [inline]
- start_flush_work kernel/workqueue.c:4139 [inline]
- __flush_work+0x73c/0xd00 kernel/workqueue.c:4172
- __cancel_work_sync+0xbc/0x110 kernel/workqueue.c:4322
- hci_cmd_sync_clear+0x30/0x220 net/bluetooth/hci_sync.c:588
- hci_dev_close_sync+0xbae/0x1060 net/bluetooth/hci_sync.c:5188
- hci_dev_do_close net/bluetooth/hci_core.c:561 [inline]
- hci_unregister_dev+0x1db/0x4e0 net/bluetooth/hci_core.c:2778
- vhci_release+0x83/0xd0 drivers/bluetooth/hci_vhci.c:674
- __fput+0x406/0x8b0 fs/file_table.c:422
- task_work_run+0x24f/0x310 kernel/task_work.c:180
- exit_task_work include/linux/task_work.h:38 [inline]
- do_exit+0xa27/0x27e0 kernel/exit.c:874
- do_group_exit+0x207/0x2c0 kernel/exit.c:1023
- __do_sys_exit_group kernel/exit.c:1034 [inline]
- __se_sys_exit_group kernel/exit.c:1032 [inline]
- __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1032
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f1eb1a7dea9
-Code: Unable to access opcode bytes at 0x7f1eb1a7de7f.
-RSP: 002b:00007ffdd8d72208 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 00007f1eb1ac93de RCX: 00007f1eb1a7dea9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000002 R08: 00007ffdd8d6ffa7 R09: 00007ffdd8d734c0
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffdd8d734c0
-R13: 00007f1eb1ac93b9 R14: 000000000001e31b R15: 0000000000000003
- </TASK>
+Best regards,
+-- 
+Jens Axboe
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
