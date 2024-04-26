@@ -1,73 +1,51 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDB1149009;
-	Fri, 26 Apr 2024 13:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4938B14D6F8;
+	Fri, 26 Apr 2024 13:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714139636; cv=none; b=MSXTA/WRNac1wSHaoqIxU2IQYBkmhz/6gM49yGsFEjpb0t4vnWe1p+SXW4uTGf8ctcoZw49eC1N9H+fbFcM4sl/tzOBevXOdCs99GDbKVnNozvTUaT/82jGdNwxnRX449C69KB6ffxaM5F7+Owfl+fKXDFRgKKfgaQd8MhUCmwI=
+	t=1714139643; cv=none; b=FlamILIcdV6xpx23ZEn8XHl8d+xeXM9OgF5rgdeuVmc9zDbUCbuQ5ZAYXGS3lEIN+I6nmrsD9QOd6h92bLXVHAAyLZChWGZ/9Rd7tjahDJUwVYhjurSSCUlWlgRPCOh00ndS0wUleUmgph4ub+wU1dl+8hSJYAFb5oJ6zLTvu80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714139636; c=relaxed/simple;
-	bh=m2yxV5B405RCZQld4AIwLovxgEUSP5z4fMOhlaEf9yI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lcVCk27ZmhOYDmU6IGplrOlAD7Fkt1jZo+dajTE1TWFWcHvD7gL82RpsuN1WuzhqakxOkOI9heM64RvXSPxrKCIV0+CvX/Gjp6GZES4+vHZoXqJduueNxfFS2JglPYfgOfqybTX90BQ9TvPIXbUpNQsUa2gNURBjm3RjW/UT2iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jEFbLxFP; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jEFbLxFP"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-34c1fff534fso1271433f8f.1;
-        Fri, 26 Apr 2024 06:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714139632; x=1714744432; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bLJ9dsSLK+nY8Hvlsn/3+HI9I2fOpNl7ItjLv5mlK7A=;
-        b=jEFbLxFPPNK9n//JdjmUmawgJ3EzZeK07I1BtlvsTvp9NGZakL678XKzbgZ4HrpA+w
-         T4VrPVzPAM6kLlYqbxMBvgcTh0XxwfISpXu6rFnrJ2vbPuD77iXdMtpiu+lHstftJF1d
-         Sq8nm1Kp7bwHQIpYtCijzHiRvKqAxURq7af55zeg/OPxEpurQe/kxfzdMJXhMjN4fy9Z
-         qcxlZIZKjIrYDurIlYfK0vF55MHaPZj9ZAnmdsbOuwclxzTdmNVyqDm4EB2BeuJFcqfB
-         u5ZJv07NekG4Zj7k9QDcC/qGMMLYei8mnNr6NANOIZxS4UZFH4qjj63AYtWQg/Q3cAZo
-         zpYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714139632; x=1714744432;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bLJ9dsSLK+nY8Hvlsn/3+HI9I2fOpNl7ItjLv5mlK7A=;
-        b=Vc8dQPnNHCZCEntGhd8ovJ4ZBlvUfm0QZRKhjamrRKCLNpwGVEDfvZIRHYXJufotVQ
-         rPgNbqICn9TgnzCmbxev1th4FDQ4jYBxDQBf/1kG/2/PmB+DkKfhonNyynQW4BaT7vSD
-         ZG1S7mZi4LrkbikP4Ox6QZufFeXq6NDkbVztC9C51VAaIQZ1JeoEXzLWeV5T+1pBPs7u
-         RbssIFeaUBfNJa0PoDwy25La5XOAj7aLwlF88Ne8pSvBD4IA4fBQKza9wfZmuHH5KsA+
-         ZXtnS58NNlnW0/PY/QQOgaXcG5v/c3GW6wq4HxYy44fvAVoQZS+Pu3SBJA5WESomlBay
-         2QnA==
-X-Forwarded-Encrypted: i=1; AJvYcCVy9LiYpWh54ZYtBKjqsTfFqVLL0ecXXnulVtryWQaVgzkAIsK6ymH13cwTCBhMMDxWvyO3LIQ89GMWF3CoI7JJbLh6FdHErqngrRkzuT4Bb0EUKQKRoQn9c/k5fSuecNm9toMOlg==
-X-Gm-Message-State: AOJu0Yz/29HBrRASGH2eBQTT/N3UqBooYpDcmbhy6gw2QGNW+chcTIHP
-	S3x2zVWfRcpPtfoVAwA8DJcBllOqiAf6phEF4xdLI/UjKb0wKi9tLnahYuZs
-X-Google-Smtp-Source: AGHT+IHEms0dC8ezv3c4Amk0JUZhJpSMYgKLuKKM9jXiTHegW2/Lhl7B/LSPhkV3pnb3KFmE0A3q9w==
-X-Received: by 2002:a5d:4386:0:b0:34b:8bf:6019 with SMTP id i6-20020a5d4386000000b0034b08bf6019mr1733253wrq.70.1714139632252;
-        Fri, 26 Apr 2024 06:53:52 -0700 (PDT)
-Received: from rbolboac.. ([2a02:2f0e:320d:e800:f4f8:b5e1:d7d4:bf65])
-        by smtp.gmail.com with ESMTPSA id k6-20020a5d6d46000000b003434f526cb5sm22302919wri.95.2024.04.26.06.53.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 06:53:51 -0700 (PDT)
-From: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	jic23@kernel.org,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	conor+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	robh@kernel.org,
-	nuno.sa@analog.com
-Cc: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
-Subject: [PATCH 6/7] dt-bindings: iio: imu: Add ADIS1657X family devices compatibles
-Date: Fri, 26 Apr 2024 16:53:38 +0300
-Message-Id: <20240426135339.185602-7-ramona.bolboaca13@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240426135339.185602-1-ramona.bolboaca13@gmail.com>
-References: <20240426135339.185602-1-ramona.bolboaca13@gmail.com>
+	s=arc-20240116; t=1714139643; c=relaxed/simple;
+	bh=665Art0HiBiadNighBepUpAUtXWYFjHh2RUYuiuQ/w4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C0mSIwv6oZRU1vTCUsdFyvF/SurDETqHBtqI58P4uTcitpvkYNrQKtADBJK0vW3NsjNcrFYp2aqDLZwOOO89TXrLeAWlIsvVP/Zd2jluiDU53wfedt8HRZJJYbAYuABB8cM9TSQW2O+wOqb/G24Qh2R7pTuUqvKxZVLtMWdwrSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQvJz2Vtkz6K6QK;
+	Fri, 26 Apr 2024 21:51:31 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 12BD2140B2A;
+	Fri, 26 Apr 2024 21:54:00 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 26 Apr 2024 14:53:59 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
+	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v8 05/16] ACPI: processor: Add acpi_get_processor_handle() helper
+Date: Fri, 26 Apr 2024 14:51:15 +0100
+Message-ID: <20240426135126.12802-6-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
+References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,71 +53,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Add ADIS1657X family devices compatibles and specify the according
-maximum SPI baudrate.
-Similarly to other ADIS1650X devices, ADIS1657X supports sync-mode
-values [0,2].
+If CONFIG_ACPI_PROCESSOR provide a helper to retrieve the
+acpi_handle for a given CPU allowing access to methods
+in DSDT.
 
-Signed-off-by: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
+Tested-by: Miguel Luis <miguel.luis@oracle.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 ---
- .../bindings/iio/imu/adi,adis16475.yaml       | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
+v8: Code simplification suggested by Rafael.
+    Fixup ;; spotted by Gavin
+---
+ drivers/acpi/acpi_processor.c | 11 +++++++++++
+ include/linux/acpi.h          |  7 +++++++
+ 2 files changed, 18 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
-index db52e7063116..9d185f7bfdcb 100644
---- a/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
-+++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
-@@ -37,6 +37,12 @@ properties:
-       - adi,adis16507-1
-       - adi,adis16507-2
-       - adi,adis16507-3
-+      - adi,adis16575-2
-+      - adi,adis16575-3
-+      - adi,adis16576-2
-+      - adi,adis16576-3
-+      - adi,adis16577-2
-+      - adi,adis16577-3
+diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+index 3b180e21f325..ecc2721fecae 100644
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -35,6 +35,17 @@ EXPORT_PER_CPU_SYMBOL(processors);
+ struct acpi_processor_errata errata __read_mostly;
+ EXPORT_SYMBOL_GPL(errata);
  
-   reg:
-     maxItems: 1
-@@ -98,6 +104,12 @@ allOf:
-               - adi,adis16507-1
-               - adi,adis16507-2
-               - adi,adis16507-3
-+              - adi,adis16575-2
-+              - adi,adis16575-3
-+              - adi,adis16576-2
-+              - adi,adis16576-3
-+              - adi,adis16577-2
-+              - adi,adis16577-3
- 
-     then:
-       properties:
-@@ -114,6 +126,23 @@ allOf:
-       dependencies:
-         adi,sync-mode: [ clocks ]
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - adi,adis16575-2
-+              - adi,adis16575-3
-+              - adi,adis16576-2
-+              - adi,adis16576-3
-+              - adi,adis16577-2
-+              - adi,adis16577-3
++acpi_handle acpi_get_processor_handle(int cpu)
++{
++	struct acpi_processor *pr;
 +
-+    then:
-+      properties:
-+        spi-max-frequency:
-+          maximum: 15000000
++	pr = per_cpu(processors, cpu);
++	if (pr)
++		return pr->handle;
 +
- unevaluatedProperties: false
++	return NULL;
++}
++
+ static int acpi_processor_errata_piix4(struct pci_dev *dev)
+ {
+ 	u8 value1 = 0;
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 34829f2c517a..9844a3f9c4e5 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -309,6 +309,8 @@ int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id,
+ int acpi_unmap_cpu(int cpu);
+ #endif /* CONFIG_ACPI_HOTPLUG_CPU */
  
- examples:
++acpi_handle acpi_get_processor_handle(int cpu);
++
+ #ifdef CONFIG_ACPI_HOTPLUG_IOAPIC
+ int acpi_get_ioapic_id(acpi_handle handle, u32 gsi_base, u64 *phys_addr);
+ #endif
+@@ -1077,6 +1079,11 @@ static inline bool acpi_sleep_state_supported(u8 sleep_state)
+ 	return false;
+ }
+ 
++static inline acpi_handle acpi_get_processor_handle(int cpu)
++{
++	return NULL;
++}
++
+ #endif	/* !CONFIG_ACPI */
+ 
+ extern void arch_post_acpi_subsys_init(void);
 -- 
-2.34.1
+2.39.2
 
