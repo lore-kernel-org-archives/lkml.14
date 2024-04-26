@@ -1,226 +1,197 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail-m24106.xmail.ntesmail.com (mail-m24106.xmail.ntesmail.com [45.195.24.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5153156644
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 16:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F2815624D;
+	Fri, 26 Apr 2024 16:12:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.24.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714147966; cv=none; b=OUhnGCVqaOJUs5+AkTuVkHFjJMV98RvLGQbxa4qXwcp6oby0y7NMRzhBtdbWRpxiE2j24QQ9xcYYphBcQFrjHEEby3vev6HSyMwAFAS4ILHJkYln04lk0swoL7D1ctyBzOGif062CF50pVr++p7sMv6I2ZHqR94PX4eamaIH+IU=
+	t=1714147979; cv=none; b=HEif2LsGdnZbwq6qfD9ugyllIOcCrNp2FJvBselDEQatic+48EQMZdR4RgmLh9zKokyjYfXED7rClo92r1faa8ZOzScBvK6c3Ke1gr86g2UaGjVyib+4gvltoo4dNEbbp5E+NcFLtKh8LA9SEaCCD4AhMW6feWJj6DV7uQkaBAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714147966; c=relaxed/simple;
-	bh=VHk3yV3ykPgBDTFB6jGO3B/kKnE4mwuV8+QA4otgjj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uWVXiMBc5JcJd0JenkczOeKnjy6L9kshfqPeLMjFQukn6sEe3kz7EwfJFOndR9TiFNTPcBhlI6Yz+1/yz42Pmf+A6QNjl6jDOhfT+sPHGqBlmxaRDm49sN7ma1UL9cVbW3zsyS3K7oH/Fg72bpXHHzUtI6IIoILwqyIIZBwzF08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LypP9JvO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LypP9JvO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714147963;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eYUqEa4yY2qzSFoFdIvLcLWvg/98iZ7Cq/Vjg2cb5Pg=;
-	b=LypP9JvOUwTJ+H67rwONo9wwRCDu7c4QosQU9i/xSC7EmmvETQP+nnNJgYw4vxqKKqI2rT
-	p6+9SIKxj7B8VcSqnaf+5p3cIiRNM+TEH2OxbP52yBiEALFUWqq9N6PaG46XJ+JZ/4ZpKC
-	y8QXaCCaiIVIz4CAWLMaud9ezd13PoQ=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-283-umXGOEZ-OmGQqVZQd0bjUQ-1; Fri, 26 Apr 2024 12:12:42 -0400
-X-MC-Unique: umXGOEZ-OmGQqVZQd0bjUQ-1
-Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-6eb607b308bso730678a34.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 09:12:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714147961; x=1714752761;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eYUqEa4yY2qzSFoFdIvLcLWvg/98iZ7Cq/Vjg2cb5Pg=;
-        b=M9JcR5HgIK7siOGqM4QR+iPPGA9/gqrRCIS7KrmkXrSXviVcDV8+3eme9NKWBLdkk7
-         0OVNJKp/46prSbPQiKW+T/1Kd6bfp1rxXIN1BiUEMkOJ1zyIYoO4V/IU7biPnkE20VT5
-         BK50z2DBvaEtv5Eb5pfTS6s7RXTPeIsEBCfAELG7Yi9S4G2YLtvUlOarSHtRUfNHk0v9
-         sGfJblW6K9rzFNaOsmD8XLu3DsWK20XHzI6gEHf/ykfqZfgdntVwOQ8bnNmsRg833dGI
-         jp5v7FcBIFbtmLozau6xHBqn9s1AQkrmeL93EUyDNQWSCgoX3mZHDmHRE+kEHOrx/Rtx
-         YaXw==
-X-Gm-Message-State: AOJu0Yxnn42KBavNxT33/+DzWsY5O3Xtdg7zxM7ef9ee3jI5KNX3Ewfo
-	iiNhBqqiPGfsLZelmYLEdd28ztYASd5j7FqPq1YRdZDIdJAMaME6paMTTdOYCGbtkgOgb4aowdz
-	updnKal7K/nOckR78rG2EDHJmNPZC7QARxqXDZYUc9fvk4Md2mefQbJUqqWhrxg==
-X-Received: by 2002:a05:6870:a40f:b0:235:3e97:ed24 with SMTP id m15-20020a056870a40f00b002353e97ed24mr3125221oal.1.1714147961405;
-        Fri, 26 Apr 2024 09:12:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFKK09FSsz1w18C9O+QSKywaneNtUpj/aPvoeb+SOH3u9egTJYXPSkxUgqSN3BOrRHAMYNm3w==
-X-Received: by 2002:a05:6870:a40f:b0:235:3e97:ed24 with SMTP id m15-20020a056870a40f00b002353e97ed24mr3125169oal.1.1714147960484;
-        Fri, 26 Apr 2024 09:12:40 -0700 (PDT)
-Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id m6-20020ac807c6000000b00434fd7d6d00sm8007149qth.2.2024.04.26.09.12.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 09:12:40 -0700 (PDT)
-Date: Fri, 26 Apr 2024 12:12:32 -0400
-From: Peter Xu <peterx@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v1 1/3] mm/gup: consistently name GUP-fast functions
-Message-ID: <ZivScN8-Uoi9eye8@x1n>
-References: <20240402125516.223131-1-david@redhat.com>
- <20240402125516.223131-2-david@redhat.com>
- <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com>
- <Ziuv2jLY1wgBITiP@x1n>
+	s=arc-20240116; t=1714147979; c=relaxed/simple;
+	bh=N0X94kNzWw2q0Lpb3KDr/8sbEe3G/viabZlzQ8Tfe4c=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=r5Ni1gQfFpHVhsg8TRI13Vu5Js2QtjedgYU5g93acfzit9rH5aytfwuWIHLk8b/LIqkCsls5M42c90t7bm9UJ6tvTV2+QRWKOhBZ7QLKXwng41/2gK3uuHoq7t+xmcjhnbJODfqqkWmkk9C1k5OLCb/sQd0SIzb3kkmQ5ykKdqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=45.195.24.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
+Received: from [192.168.122.189] (unknown [218.94.118.90])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 235B9860231;
+	Fri, 26 Apr 2024 22:53:45 +0800 (CST)
+Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
+To: Gregory Price <gregory.price@memverge.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, axboe@kernel.dk,
+ John Groves <John@groves.net>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
+ <66288ac38b770_a96f294c6@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <ef34808b-d25d-c953-3407-aa833ad58e61@easystack.cn>
+ <ZikhwAAIGFG0UU23@memverge.com>
+ <bbf692ec-2109-baf2-aaae-7859a8315025@easystack.cn>
+ <ZiuwyIVaKJq8aC6g@memverge.com>
+From: Dongsheng Yang <dongsheng.yang@easystack.cn>
+Message-ID: <98ae27ff-b01a-761d-c1c6-39911a000268@easystack.cn>
+Date: Fri, 26 Apr 2024 22:53:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Ziuv2jLY1wgBITiP@x1n>
+In-Reply-To: <ZiuwyIVaKJq8aC6g@memverge.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGUgaVk9ITB1MSh5CSUwfTVUZERMWGhIXJBQOD1
+	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
+X-HM-Tid: 0a8f1ae5e640023ckunm235b9860231
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OCo6KDo*MTc8PxQRPy5CMQEK
+	DDIKCRNVSlVKTEpPSk9ISUlOQ0hIVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
+	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBQ0JMTjcG
 
-On Fri, Apr 26, 2024 at 09:44:58AM -0400, Peter Xu wrote:
-> On Fri, Apr 26, 2024 at 09:17:47AM +0200, David Hildenbrand wrote:
-> > On 02.04.24 14:55, David Hildenbrand wrote:
-> > > Let's consistently call the "fast-only" part of GUP "GUP-fast" and rename
-> > > all relevant internal functions to start with "gup_fast", to make it
-> > > clearer that this is not ordinary GUP. The current mixture of
-> > > "lockless", "gup" and "gup_fast" is confusing.
-> > > 
-> > > Further, avoid the term "huge" when talking about a "leaf" -- for
-> > > example, we nowadays check pmd_leaf() because pmd_huge() is gone. For the
-> > > "hugepd"/"hugepte" stuff, it's part of the name ("is_hugepd"), so that
-> > > stays.
-> > > 
-> > > What remains is the "external" interface:
-> > > * get_user_pages_fast_only()
-> > > * get_user_pages_fast()
-> > > * pin_user_pages_fast()
-> > > 
-> > > The high-level internal functions for GUP-fast (+slow fallback) are now:
-> > > * internal_get_user_pages_fast() -> gup_fast_fallback()
-> > > * lockless_pages_from_mm() -> gup_fast()
-> > > 
-> > > The basic GUP-fast walker functions:
-> > > * gup_pgd_range() -> gup_fast_pgd_range()
-> > > * gup_p4d_range() -> gup_fast_p4d_range()
-> > > * gup_pud_range() -> gup_fast_pud_range()
-> > > * gup_pmd_range() -> gup_fast_pmd_range()
-> > > * gup_pte_range() -> gup_fast_pte_range()
-> > > * gup_huge_pgd()  -> gup_fast_pgd_leaf()
-> > > * gup_huge_pud()  -> gup_fast_pud_leaf()
-> > > * gup_huge_pmd()  -> gup_fast_pmd_leaf()
-> > > 
-> > > The weird hugepd stuff:
-> > > * gup_huge_pd() -> gup_fast_hugepd()
-> > > * gup_hugepte() -> gup_fast_hugepte()
-> > 
-> > I just realized that we end up calling these from follow_hugepd() as well.
-> > And something seems to be off, because gup_fast_hugepd() won't have the VMA
-> > even in the slow-GUP case to pass it to gup_must_unshare().
-> > 
-> > So these are GUP-fast functions and the terminology seem correct. But the
-> > usage from follow_hugepd() is questionable,
-> > 
-> > commit a12083d721d703f985f4403d6b333cc449f838f6
-> > Author: Peter Xu <peterx@redhat.com>
-> > Date:   Wed Mar 27 11:23:31 2024 -0400
-> > 
-> >     mm/gup: handle hugepd for follow_page()
-> > 
-> > 
-> > states "With previous refactors on fast-gup gup_huge_pd(), most of the code
-> > can be leveraged", which doesn't look quite true just staring the the
-> > gup_must_unshare() call where we don't pass the VMA. Also,
-> > "unlikely(pte_val(pte) != pte_val(ptep_get(ptep)" doesn't make any sense for
-> > slow GUP ...
+
+
+在 2024/4/26 星期五 下午 9:48, Gregory Price 写道:
+> On Fri, Apr 26, 2024 at 09:25:53AM +0800, Dongsheng Yang wrote:
+>>
+>>
+>> 在 2024/4/24 星期三 下午 11:14, Gregory Price 写道:
+>>> On Wed, Apr 24, 2024 at 02:33:28PM +0800, Dongsheng Yang wrote:
+>>>>
+>>>>
+>>>> 在 2024/4/24 星期三 下午 12:29, Dan Williams 写道:
+>>>>> Dongsheng Yang wrote:
+>>>>>> From: Dongsheng Yang <dongsheng.yang.linux@gmail.com>
+>>>>>>
+>>>>>> Hi all,
+>>>>>> 	This patchset introduce cbd (CXL block device). It's based on linux 6.8, and available at:
+>>>>>> 	https://github.com/DataTravelGuide/linux
+>>>>>>
+>>>>> [..]
+>>>>>> (4) dax is not supported yet:
+>>>>>> 	same with famfs, dax device is not supported here, because dax device does not support
+>>>>>> dev_dax_iomap so far. Once dev_dax_iomap is supported, CBD can easily support DAX mode.
+>>>>>
+>>>>> I am glad that famfs is mentioned here, it demonstrates you know about
+>>>>> it. However, unfortunately this cover letter does not offer any analysis
+>>>>> of *why* the Linux project should consider this additional approach to
+>>>>> the inter-host shared-memory enabling problem.
+>>>>>
+>>>>> To be clear I am neutral at best on some of the initiatives around CXL
+>>>>> memory sharing vs pooling, but famfs at least jettisons block-devices
+>>>>> and gets closer to a purpose-built memory semantic.
+>>>>>
+>>>>> So my primary question is why would Linux need both famfs and cbd? I am
+>>>>> sure famfs would love feedback and help vs developing competing efforts.
+>>>>
+>>>> Hi,
+>>>> 	Thanks for your reply, IIUC about FAMfs, the data in famfs is stored in
+>>>> shared memory, and related nodes can share the data inside this file system;
+>>>> whereas cbd does not store data in shared memory, it uses shared memory as a
+>>>> channel for data transmission, and the actual data is stored in the backend
+>>>> block device of remote nodes. In cbd, shared memory works more like network
+>>>> to connect different hosts.
+>>>>
+>>>
+>>> Couldn't you basically just allocate a file for use as a uni-directional
+>>> buffer on top of FAMFS and achieve the same thing without the need for
+>>> additional kernel support? Similar in a sense to allocating a file on
+>>> network storage and pinging the remote host when it's ready (except now
+>>> it's fast!)
+>>
+>> I'm not entirely sure I follow your suggestion. I guess it means that cbd
+>> would no longer directly manage the pmem device, but allocate files on famfs
+>> to transfer data. I didn't do it this way because I considered at least a
+>> few points: one of them is, cbd_transport actually requires a DAX device to
+>> access shared memory, and cbd has very simple requirements for space
+>> management, so there's no need to rely on a file system layer, which would
+>> increase architectural complexity.
+>>
+>> However, we still need cbd_blkdev to provide a block device, so it doesn't
+>> achieve "achieve the same without the need for additional kernel support".
+>>
+>> Could you please provide more specific details about your suggestion?
 > 
-> Yes it's not needed, just doesn't look worthwhile to put another helper on
-> top just for this.  I mentioned this in the commit message here:
+> Fundamentally you're shuffling bits from one place to another, the
+> ultimate target is storage located on another device as opposed to
+> the memory itself.  So you're using CXL as a transport medium.
 > 
->   There's something not needed for follow page, for example, gup_hugepte()
->   tries to detect pgtable entry change which will never happen with slow
->   gup (which has the pgtable lock held), but that's not a problem to check.
+> Could you not do the same thing with a file in FAMFS, and put all of
+> the transport logic in userland? Then you'd just have what looks like
+> a kernel bypass transport mechanism built on top of a file backed by
+> shared memory.
 > 
-> > 
-> > @Peter, any insights?
+> Basically it's unclear to me why this must be done in the kernel.
+> Performance? Explicit bypass? Some technical reason I'm missing?
+
+
+In user space, transferring data via FAMFS files poses no problem, but 
+how do we present this data to users? We cannot expect users to revamp 
+all their business I/O methods.
+
+For example, suppose a user needs to run a database on a compute node. 
+As the cloud infrastructure department, we need to allocate a block 
+storage on the storage node and provide it to the database on the 
+compute node through a certain transmission protocol (such as iSCSI, 
+NVMe over Fabrics, or our current solution, cbd). Users can then create 
+any file system they like on the block device and run the database on 
+it. We aim to enhance the performance of this block device with cbd, 
+rather than requiring the business department to adapt their database to 
+fit our shared memory-facing storage node disks.
+
+This is why we need to provide users with a block device. If it were 
+only about data transmission, we wouldn't need a block device. But when 
+it comes to actually running business operations, we need a block 
+storage interface for the upper layer. Additionally, the block device 
+layer offers many other rich features, such as RAID.
+
+If accessing shared memory in user space is mandatory, there's another 
+option: using user space block storage technologies like ublk. However, 
+this would lead to performance issues as data would need to traverse 
+back to the kernel space block device from the user space process.
+
+In summary, we need a block device sharing mechanism, similar to what is 
+provided by NBD, iSCSI, or NVMe over Fabrics, because user businesses 
+rely on the block device interface and ecosystem.
 > 
-> However I think we should pass vma in for sure, I guess I overlooked that,
-> and it didn't expose in my tests too as I probably missed ./cow.
 > 
-> I'll prepare a separate patch on top of this series and the gup-fast rename
-> patches (I saw this one just reached mm-stable), and I'll see whether I can
-> test it too if I can find a Power system fast enough.  I'll probably drop
-> the "fast" in the hugepd function names too.
+> Also, on a tangential note, you're using pmem/qemu to emulate the
+> behavior of shared CXL memory.  You should probably explain the
+> coherence implications of the system more explicitly.
+> 
+> The emulated system implements what amounts to hardware-coherent
+> memory (i.e. the two QEMU machines run on the same physical machine,
+> so coherency is managed within the same coherence domain).
+> 
+> If there is no explicit coherence control in software, then it is
+> important to state that this system relies on hardware that implements
+> snoop back-invalidate (which is not a requirement of a CXL 3.x device,
+> just a feature described by the spec that may be implemented).
 
-Hmm, so when I enable 2M hugetlb I found ./cow is even failing on x86.
+In (5) of the cover letter, I mentioned that cbd addresses cache 
+coherence at the software level:
 
-  # ./cow  | grep -B1 "not ok"
-  # [RUN] vmsplice() + unmap in child ... with hugetlb (2048 kB)
-  not ok 161 No leak from parent into child
-  --
-  # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with hugetlb (2048 kB)
-  not ok 215 No leak from parent into child
-  --
-  # [RUN] vmsplice() before fork(), unmap in parent after fork() ... with hugetlb (2048 kB)
-  not ok 269 No leak from child into parent
-  --
-  # [RUN] vmsplice() + unmap in parent after fork() ... with hugetlb (2048 kB)
-  not ok 323 No leak from child into parent
-
-And it looks like it was always failing.. perhaps since the start?  We
-didn't do the same on hugetlb v.s. normal anon from that regard on the
-vmsplice() fix.
-
-I drafted a patch to allow refcount>1 detection as the same, then all tests
-pass for me, as below.
-
-David, I'd like to double check with you before I post anything: is that
-your intention to do so when working on the R/O pinning or not?
-
-Thanks,
-
-=========
-From 7300c249738dadda1457c755b597c1551dfe8dc6 Mon Sep 17 00:00:00 2001
-From: Peter Xu <peterx@redhat.com>
-Date: Fri, 26 Apr 2024 11:41:12 -0400
-Subject: [PATCH] mm/hugetlb: Fix vmsplice case on memory leak once more
-
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- mm/hugetlb.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 417fc5cdb6ee..1ca102013561 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -5961,10 +5961,13 @@ static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
- 
- retry_avoidcopy:
- 	/*
--	 * If no-one else is actually using this page, we're the exclusive
--	 * owner and can reuse this page.
-+	 * If the page is marked exlusively owned (e.g. longterm pinned),
-+	 * we can reuse it.  Otherwise if no-one else is using this page,
-+	 * we can savely set the exclusive bit and reuse it.
- 	 */
--	if (folio_mapcount(old_folio) == 1 && folio_test_anon(old_folio)) {
-+	if (folio_test_anon(old_folio) &&
-+	    (PageAnonExclusive(&old_folio->page) ||
-+	     folio_ref_count(old_folio) == 1)) {
- 		if (!PageAnonExclusive(&old_folio->page)) {
- 			folio_move_anon_rmap(old_folio, vma);
- 			SetPageAnonExclusive(&old_folio->page);
--- 
-2.44.0
+(5) How do blkdev and backend interact through the channel?
+	a) For reader side, before reading the data, if the data in this 
+channel may be modified by the other party, then I need to flush the 
+cache before reading to ensure that I get the latest data. For example, 
+the blkdev needs to flush the cache before obtaining compr_head because 
+compr_head will be updated by the backend handler.
+	b) For writter side, if the written information will be read by others, 
+then after writing, I need to flush the cache to let the other party see 
+it immediately. For example, after blkdev submits cbd_se, it needs to 
+update cmd_head to let the handler have a new cbd_se. Therefore, after 
+updating cmd_head, I need to flush the cache to let the backend see it.
 
 
--- 
-Peter Xu
+This part of the code is indeed implemented, however, as you pointed 
+out, since I am currently using qemu/pmem for emulation, the effects of 
+this code cannot be observed.
 
+Thanx
+> 
+> ~Gregory
+> .
+> 
